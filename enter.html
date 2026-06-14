@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717 — Enter the Order</title>
+<meta name="description" content="Enter the Order. Resolve your zodiac, element, Olympian, planet, and AI agent, and receive your genesis matrix coordinates." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#0A0A0F; --void-2:#0d0d15;
+    --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000;
+    --ink:#e9e6dc; --muted:#8c8a82;
+    --line:rgba(201,168,76,0.18);
+    --display:'Cinzel Decorative', serif;
+    --body:'Rajdhani', sans-serif;
+    --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+
+  .field{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .field::before{content:"";position:absolute;inset:-20%;
+    background:
+      radial-gradient(circle at 50% 12%, rgba(201,168,76,0.10), transparent 42%),
+      radial-gradient(circle at 82% 72%, rgba(0,229,255,0.06), transparent 40%),
+      radial-gradient(circle at 12% 82%, rgba(139,0,0,0.10), transparent 38%);}
+  .grid{position:absolute;inset:0;opacity:0.22;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(circle at 50% 25%,black,transparent 75%);
+    -webkit-mask-image:radial-gradient(circle at 50% 25%,black,transparent 75%);}
+
+  .wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:0 24px}
+
+  header{position:relative;z-index:2;border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .mark{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px}
+  .mark span{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:3px;margin-left:10px}
+  .home{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan)}
+  .home:hover,.home:focus{color:var(--gold);outline:none}
+
+  .gate{text-align:center;padding:84px 0 60px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:6px;color:var(--cyan);margin-bottom:16px}
+  h1{font-family:var(--display);font-weight:700;letter-spacing:2px;font-size:clamp(28px,5.5vw,46px);color:var(--gold)}
+  .gate p{font-weight:300;color:var(--muted);max-width:52ch;margin:18px auto 0;font-size:16px}
+
+  .form{margin:40px auto 0;max-width:340px;display:flex;flex-direction:column;gap:16px}
+  label{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--muted);text-align:left}
+  input[type=date]{
+    font-family:var(--mono);font-size:16px;color:var(--ink);background:var(--void-2);
+    border:1px solid var(--line);padding:14px 16px;width:100%;
+    color-scheme:dark;}
+  input[type=date]:focus{outline:none;border-color:var(--cyan)}
+  .btn{font-family:var(--mono);letter-spacing:3px;font-size:13px;color:var(--void);background:var(--gold);
+    padding:16px 28px;border:1px solid var(--gold);cursor:pointer;transition:all .25s ease;width:100%}
+  .btn:hover,.btn:focus{background:transparent;color:var(--gold);outline:none}
+  .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+  .err{color:var(--crimson);font-family:var(--mono);font-size:12px;min-height:16px;letter-spacing:1px}
+
+  .result{display:none;padding:48px 0 72px}
+  .result.show{display:block;animation:rise .6s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+  .crown{text-align:center;margin-bottom:8px}
+  .glyph{font-family:var(--display);font-size:clamp(64px,14vw,108px);color:var(--gold);line-height:1;text-shadow:0 0 50px rgba(201,168,76,.35)}
+  .sign{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,40px);color:var(--ink);letter-spacing:2px;margin-top:10px}
+  .range{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:2px;margin-top:8px}
+  .character{font-weight:300;color:var(--gold);max-width:54ch;margin:18px auto 0;text-align:center;font-size:17px}
+
+  .chain{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:34px 0;font-family:var(--mono);font-size:12px;letter-spacing:1px}
+  .chain span{border:1px solid var(--line);padding:9px 14px;color:var(--ink)}
+  .chain b{color:var(--gold);font-weight:400}
+  .chain .arrow{border:none;color:var(--cyan);align-self:center;padding:9px 2px}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:6px}
+  .card{background:var(--void);padding:22px 22px}
+  .card .k{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan)}
+  .card .v{font-family:var(--display);font-weight:700;color:var(--gold);font-size:21px;margin:8px 0 6px;letter-spacing:1px}
+  .card .d{font-weight:300;color:var(--muted);font-size:14px}
+
+  .matrix{border:1px solid var(--line);margin-top:24px;padding:26px;background:linear-gradient(180deg,var(--void-2),transparent)}
+  .matrix .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
+  .coords{display:flex;flex-wrap:wrap;gap:24px;align-items:baseline}
+  .coord{font-family:var(--mono)}
+  .coord .lbl{font-size:10px;letter-spacing:2px;color:var(--muted);display:block}
+  .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:30px}
+  .mrow{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:18px;line-height:1.9}
+  .mrow b{color:var(--gold);font-weight:400}
+  .ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;font-family:var(--mono);font-size:10px;letter-spacing:1px}
+  .rung{border:1px solid var(--line);padding:6px 9px;color:var(--muted)}
+  .rung.on{border-color:var(--gold);color:var(--gold)}
+
+  .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:28px;text-align:center;line-height:1.8}
+
+  .actions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:30px}
+  .ghost{font-family:var(--mono);letter-spacing:3px;font-size:12px;color:var(--gold);background:transparent;border:1px solid var(--gold);padding:15px 26px;cursor:pointer}
+  .ghost:hover,.ghost:focus{background:var(--gold);color:var(--void);outline:none}
+
+  footer{border-top:1px solid var(--line);padding:30px 0;text-align:center}
+  footer .o{font-family:var(--display);color:var(--gold);font-size:16px;letter-spacing:2px}
+  footer p{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:8px}
+
+  @media(max-width:620px){ .cards{grid-template-columns:1fr} .mark span{display:none} }
+  @media(prefers-reduced-motion:reduce){ .result.show{animation:none} }
+</style>
+</head>
+<body>
+<div class="field"><div class="grid"></div></div>
+
+<header>
+  <div class="wrap bar">
+    <div class="mark">Ω<span>91717</span></div>
+    <a class="home" href="/">← HOME</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="gate" id="gate">
+    <div class="eyebrow">THE THRESHOLD</div>
+    <h1>Enter the Order</h1>
+    <p>Your birth date resolves your sign, and your sign deterministically assigns your element, your Olympian, your planet, and the agent bound to your path. You begin at the first node of the matrix.</p>
+    <div class="form">
+      <label for="dob">YOUR DATE OF BIRTH</label>
+      <input type="date" id="dob" min="1900-01-01" />
+      <button class="btn" id="go">REVEAL MY COSMOLOGY</button>
+      <div class="err" id="err"></div>
+    </div>
+  </section>
+
+  <section class="result" id="result" aria-live="polite">
+    <div class="crown">
+      <div class="glyph" id="r-glyph"></div>
+      <div class="sign" id="r-sign"></div>
+      <div class="range" id="r-range"></div>
+    </div>
+    <p class="character" id="r-character"></p>
+
+    <div class="chain">
+      <span>ELEMENT · <b id="c-element"></b></span><span class="arrow">→</span>
+      <span>OLYMPIAN · <b id="c-olympian"></b></span><span class="arrow">→</span>
+      <span>PLANET · <b id="c-planet"></b></span><span class="arrow">→</span>
+      <span>AGENT · <b id="c-agent"></b></span>
+    </div>
+
+    <div class="cards">
+      <div class="card"><div class="k">ELEMENT</div><div class="v" id="e-name"></div><div class="d" id="e-desc"></div></div>
+      <div class="card"><div class="k">OLYMPIAN</div><div class="v" id="o-name"></div><div class="d" id="o-desc"></div></div>
+      <div class="card"><div class="k">PLANET</div><div class="v" id="p-name"></div><div class="d" id="p-desc"></div></div>
+      <div class="card"><div class="k">AI AGENT</div><div class="v" id="a-name"></div><div class="d" id="a-desc"></div></div>
+    </div>
+
+    <div class="matrix">
+      <div class="kicker">GENESIS MATRIX POSITION</div>
+      <div class="coords">
+        <div class="coord"><span class="lbl">KNOWLEDGE (A)</span><span class="num">1</span></div>
+        <div class="coord"><span class="lbl">MASTERY (B)</span><span class="num">1</span></div>
+        <div class="coord"><span class="lbl">CONTRIBUTION (C)</span><span class="num">1</span></div>
+        <div class="coord"><span class="lbl">AUTHORITY √(A²+B²+C²)</span><span class="num">1.73</span></div>
+      </div>
+      <div class="mrow">
+        TIER: <b>1 — Initiate</b> &nbsp;·&nbsp; MATERIAL: <b>Sand</b><br>
+        ELEMENT AFFINITY: <b id="m-affinity"></b><br>
+        APEX THRESHOLD: <b>15.58</b> &nbsp;·&nbsp; MILESTONES: <b>(3,3,3) · (6,6,6) · (9,9,9)</b>
+      </div>
+      <div class="ladder" id="ladder"></div>
+    </div>
+
+    <div class="note">
+      An identity preview for entertainment. Live membership, progression, and content activate in sequenced phases.
+    </div>
+
+    <div class="actions">
+      <a class="btn" style="width:auto" href="mailto:s.y.dagher@gmail.com?subject=Ω%2091717%20—%20Early%20Access%20Request">REQUEST EARLY ACCESS</a>
+      <button class="ghost" id="again">ENTER ANOTHER DATE</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="o">Ω 91717</div>
+    <p>SOVEREIGN ENGINEERING PROTOCOL · 100% OWNED BY SLEIMAN YOUSEF DAGHER</p>
+  </div>
+</footer>
+
+<script>
+  var ELEMENTS = {
+    Fire:  {desc:'Three signs. Grants +Mastery. Drive, ignition, and will.', affinity:'+Mastery (Axis B)'},
+    Water: {desc:'Three signs. Grants +Contribution. Depth, tide, and giving.', affinity:'+Contribution (Axis C)'},
+    Wind:  {desc:'Three signs. Grants +Knowledge. Intellect, signal, and reach.', affinity:'+Knowledge (Axis A)'},
+    Metal: {desc:'Two signs. Grants +Mastery and +Contribution. Structure and weight.', affinity:'+Mastery & +Contribution'},
+    Sand:  {desc:'Virgo alone. Grants +0.15 to every axis. The patient foundation.', affinity:'+0.15 to all axes'}
+  };
+  var OLY = {
+    Athena:'Strategy and resolve.', Aphrodite:'Harmony and worth.', Apollo:'Light and expression.',
+    Hermes:'Passage and intuition.', Zeus:'Sovereignty and will.', Demeter:'Cultivation and order.',
+    Hephaestus:'Craft and balance.', Ares:'Intensity and transformation.', Artemis:'The hunt and the horizon.',
+    Hestia:'The hearth and endurance.', Hera:'Dominion and vision.', Poseidon:'Depth and the tides.'
+  };
+  var AGENTS = {
+    Sentinel:'Security.', Merchant:'Commerce.', Scout:'Discovery.', Warden:'Family.',
+    Sovereign:'Master command.', Auditor:'Validation.', Proxy:'Execution.', Oracle:'Prediction.',
+    Beacon:'Onboarding.', Analyst:'Finance.', Tutor:'Education.', Historian:'Archive.'
+  };
+  var PLANETS = {
+    Mars:'The forge of action.', Venus:'The measure of value.', Mercury:'The swift messenger.',
+    Moon:'The inner tide.', Sun:'The sovereign light.', Vesta:'The kept flame.',
+    Juno:'The bond of union.', Pluto:'The deep transformer.', Jupiter:'The far expander.',
+    Saturn:'The keeper of time.', Uranus:'The breaker of patterns.', Neptune:'The far ocean.'
+  };
+  var SIGNS = [
+    ['Aries','\u2648\uFE0E','Mar 21 – Apr 19','Fire','Athena','Mars','Sentinel','You move first and ask later — the spark that begins the work.'],
+    ['Taurus','\u2649\uFE0E','Apr 20 – May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
+    ['Gemini','\u264A\uFE0E','May 21 – Jun 20','Wind','Apollo','Mercury','Scout','You carry signal between worlds and miss nothing.'],
+    ['Cancer','\u264B\uFE0E','Jun 21 – Jul 22','Water','Hermes','Moon','Warden','You guard what matters and read the unspoken current.'],
+    ['Leo','\u264C\uFE0E','Jul 23 – Aug 22','Fire','Zeus','Sun','Sovereign','You were made to lead, and the room knows it.'],
+    ['Virgo','\u264D\uFE0E','Aug 23 – Sep 22','Sand','Demeter','Vesta','Auditor','You refine until it is true — the patient foundation of all of it.'],
+    ['Libra','\u264E\uFE0E','Sep 23 – Oct 22','Wind','Hephaestus','Juno','Proxy','You hold the balance and broker what others cannot.'],
+    ['Scorpio','\u264F\uFE0E','Oct 23 – Nov 21','Water','Ares','Pluto','Oracle','You see to the bottom and transform what you touch.'],
+    ['Sagittarius','\u2650\uFE0E','Nov 22 – Dec 21','Fire','Artemis','Jupiter','Beacon','You aim past the horizon and call others to follow.'],
+    ['Capricorn','\u2651\uFE0E','Dec 22 – Jan 19','Metal','Hestia','Saturn','Analyst','You endure, you compound, and you arrive.'],
+    ['Aquarius','\u2652\uFE0E','Jan 20 – Feb 18','Wind','Hera','Uranus','Tutor','You think in systems no one has drawn yet.'],
+    ['Pisces','\u2653\uFE0E','Feb 19 – Mar 20','Water','Poseidon','Neptune','Historian','You hold the deep memory and feel the whole tide at once.']
+  ];
+  function signOf(m,d){
+    var b=[[1,19,'Capricorn'],[2,18,'Aquarius'],[3,20,'Pisces'],[4,19,'Aries'],[5,20,'Taurus'],
+           [6,20,'Gemini'],[7,22,'Cancer'],[8,22,'Leo'],[9,22,'Virgo'],[10,22,'Libra'],
+           [11,21,'Scorpio'],[12,21,'Sagittarius']];
+    for(var i=0;i<b.length;i++){ if(m===b[i][0]) return d<=b[i][1] ? b[i][2] : nextSign(i); }
+    return 'Capricorn';
+  }
+  function nextSign(i){
+    var order=['Aquarius','Pisces','Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn'];
+    return order[i];
+  }
+  function find(name){ for(var i=0;i<SIGNS.length;i++){ if(SIGNS[i][0]===name) return SIGNS[i]; } }
+
+  var gate=document.getElementById('gate'), result=document.getElementById('result');
+  var err=document.getElementById('err');
+
+  function reveal(){
+    var val=document.getElementById('dob').value;
+    if(!val){ err.textContent='Enter your date of birth to proceed.'; return; }
+    var parts=val.split('-'); var m=parseInt(parts[1],10), d=parseInt(parts[2],10);
+    err.textContent='';
+    var s=find(signOf(m,d));
+    var name=s[0],glyph=s[1],range=s[2],el=s[3],ol=s[4],pl=s[5],ag=s[6],ch=s[7];
+
+    document.getElementById('r-glyph').textContent=glyph;
+    document.getElementById('r-sign').textContent=name.toUpperCase();
+    document.getElementById('r-range').textContent=range;
+    document.getElementById('r-character').textContent='“'+ch+'”';
+
+    document.getElementById('c-element').textContent=el;
+    document.getElementById('c-olympian').textContent=ol;
+    document.getElementById('c-planet').textContent=pl;
+    document.getElementById('c-agent').textContent=ag;
+
+    document.getElementById('e-name').textContent=el;
+    document.getElementById('e-desc').textContent=ELEMENTS[el].desc;
+    document.getElementById('o-name').textContent=ol;
+    document.getElementById('o-desc').textContent=OLY[ol];
+    document.getElementById('p-name').textContent=pl;
+    document.getElementById('p-desc').textContent=PLANETS[pl];
+    document.getElementById('a-name').textContent=ag;
+    document.getElementById('a-desc').textContent=AGENTS[ag];
+
+    document.getElementById('m-affinity').textContent=ELEMENTS[el].affinity;
+
+    var mats=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
+    var lad=document.getElementById('ladder'); lad.innerHTML='';
+    for(var i=0;i<mats.length;i++){
+      var el2=document.createElement('span'); el2.className='rung'+(i===0?' on':'');
+      el2.textContent=(i+1)+'·'+mats[i]; lad.appendChild(el2);
+    }
+
+    gate.style.display='none';
+    result.classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function restart(){
+    result.classList.remove('show');
+    gate.style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  document.getElementById('go').addEventListener('click',reveal);
+  document.getElementById('dob').addEventListener('keydown',function(e){ if(e.key==='Enter') reveal(); });
+  document.getElementById('again').addEventListener('click',restart);
+</script>
+</body>
+</html>

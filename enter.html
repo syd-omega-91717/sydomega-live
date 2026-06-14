@@ -148,25 +148,21 @@
 </main>
 <footer><div class="wrap"><div class="o">Ω 91717</div><p>SOVEREIGN ENGINEERING PROTOCOL · 100% OWNED BY SLEIMAN YOUSEF DAGHER</p></div></footer>
 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+<script>
+  var SUPABASE_URL = "https://ydqhzvvoyufiiqvzcjns.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
 
-  const SUPABASE_URL = "https://ydqhzvvoyufiiqvzcjns.supabase.co/rest/v1/signups";
-  const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkcWh6dnZveXVmaWlxdnpjam5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NTIxMDgsImV4cCI6MjA5NzAyODEwOH0.eOzToEKUn0sMIJnCgrJ7y9rdkvRBhATF5N-9QV_vyDM";
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-  const ELEMENTS = {
+  var ELEMENTS = {
     Fire:{desc:'Three signs. Grants +Mastery. Drive, ignition, and will.',affinity:'+Mastery (Axis B)'},
     Water:{desc:'Three signs. Grants +Contribution. Depth, tide, and giving.',affinity:'+Contribution (Axis C)'},
     Wind:{desc:'Three signs. Grants +Knowledge. Intellect, signal, and reach.',affinity:'+Knowledge (Axis A)'},
     Metal:{desc:'Two signs. Grants +Mastery and +Contribution. Structure and weight.',affinity:'+Mastery & +Contribution'},
     Sand:{desc:'Virgo alone. Grants +0.15 to every axis. The patient foundation.',affinity:'+0.15 to all axes'}
   };
-  const OLY = {Athena:'Strategy and resolve.',Aphrodite:'Harmony and worth.',Apollo:'Light and expression.',Hermes:'Passage and intuition.',Zeus:'Sovereignty and will.',Demeter:'Cultivation and order.',Hephaestus:'Craft and balance.',Ares:'Intensity and transformation.',Artemis:'The hunt and the horizon.',Hestia:'The hearth and endurance.',Hera:'Dominion and vision.',Poseidon:'Depth and the tides.'};
-  const AGENTS = {Sentinel:'Security.',Merchant:'Commerce.',Scout:'Discovery.',Warden:'Family.',Sovereign:'Master command.',Auditor:'Validation.',Proxy:'Execution.',Oracle:'Prediction.',Beacon:'Onboarding.',Analyst:'Finance.',Tutor:'Education.',Historian:'Archive.'};
-  const PLANETS = {Mars:'The forge of action.',Venus:'The measure of value.',Mercury:'The swift messenger.',Moon:'The inner tide.',Sun:'The sovereign light.',Vesta:'The kept flame.',Juno:'The bond of union.',Pluto:'The deep transformer.',Jupiter:'The far expander.',Saturn:'The keeper of time.',Uranus:'The breaker of patterns.',Neptune:'The far ocean.'};
-  const SIGNS = [
+  var OLY = {Athena:'Strategy and resolve.',Aphrodite:'Harmony and worth.',Apollo:'Light and expression.',Hermes:'Passage and intuition.',Zeus:'Sovereignty and will.',Demeter:'Cultivation and order.',Hephaestus:'Craft and balance.',Ares:'Intensity and transformation.',Artemis:'The hunt and the horizon.',Hestia:'The hearth and endurance.',Hera:'Dominion and vision.',Poseidon:'Depth and the tides.'};
+  var AGENTS = {Sentinel:'Security.',Merchant:'Commerce.',Scout:'Discovery.',Warden:'Family.',Sovereign:'Master command.',Auditor:'Validation.',Proxy:'Execution.',Oracle:'Prediction.',Beacon:'Onboarding.',Analyst:'Finance.',Tutor:'Education.',Historian:'Archive.'};
+  var PLANETS = {Mars:'The forge of action.',Venus:'The measure of value.',Mercury:'The swift messenger.',Moon:'The inner tide.',Sun:'The sovereign light.',Vesta:'The kept flame.',Juno:'The bond of union.',Pluto:'The deep transformer.',Jupiter:'The far expander.',Saturn:'The keeper of time.',Uranus:'The breaker of patterns.',Neptune:'The far ocean.'};
+  var SIGNS = [
     ['Aries','\u2648\uFE0E','Mar 21 – Apr 19','Fire','Athena','Mars','Sentinel','You move first and ask later — the spark that begins the work.'],
     ['Taurus','\u2649\uFE0E','Apr 20 – May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
     ['Gemini','\u264A\uFE0E','May 21 – Jun 20','Wind','Apollo','Mercury','Scout','You carry signal between worlds and miss nothing.'],
@@ -181,23 +177,23 @@
     ['Pisces','\u2653\uFE0E','Feb 19 – Mar 20','Water','Poseidon','Neptune','Historian','You hold the deep memory and feel the whole tide at once.']
   ];
   function signOf(m,d){
-    const b=[[1,19,'Capricorn'],[2,18,'Aquarius'],[3,20,'Pisces'],[4,19,'Aries'],[5,20,'Taurus'],[6,20,'Gemini'],[7,22,'Cancer'],[8,22,'Leo'],[9,22,'Virgo'],[10,22,'Libra'],[11,21,'Scorpio'],[12,21,'Sagittarius']];
-    const order=['Aquarius','Pisces','Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn'];
-    for(let i=0;i<b.length;i++){ if(m===b[i][0]) return d<=b[i][1]?b[i][2]:order[i]; }
+    var b=[[1,19,'Capricorn'],[2,18,'Aquarius'],[3,20,'Pisces'],[4,19,'Aries'],[5,20,'Taurus'],[6,20,'Gemini'],[7,22,'Cancer'],[8,22,'Leo'],[9,22,'Virgo'],[10,22,'Libra'],[11,21,'Scorpio'],[12,21,'Sagittarius']];
+    var order=['Aquarius','Pisces','Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn'];
+    for(var i=0;i<b.length;i++){ if(m===b[i][0]) return d<=b[i][1]?b[i][2]:order[i]; }
     return 'Capricorn';
   }
-  function find(n){ return SIGNS.find(s=>s[0]===n); }
+  function find(n){ for(var i=0;i<SIGNS.length;i++){ if(SIGNS[i][0]===n) return SIGNS[i]; } }
 
-  const gate=document.getElementById('gate'), result=document.getElementById('result'), err=document.getElementById('err');
-  let current=null;
+  var gate=document.getElementById('gate'), result=document.getElementById('result'), err=document.getElementById('err');
+  var current=null;
 
   function reveal(){
-    const val=document.getElementById('dob').value;
+    var val=document.getElementById('dob').value;
     if(!val){ err.textContent='Enter your date of birth to proceed.'; return; }
-    const p=val.split('-'); const m=parseInt(p[1],10), d=parseInt(p[2],10);
+    var p=val.split('-'); var m=parseInt(p[1],10), d=parseInt(p[2],10);
     err.textContent='';
-    const s=find(signOf(m,d));
-    const name=s[0],glyph=s[1],range=s[2],el=s[3],ol=s[4],pl=s[5],ag=s[6],ch=s[7];
+    var s=find(signOf(m,d));
+    var name=s[0],glyph=s[1],range=s[2],el=s[3],ol=s[4],pl=s[5],ag=s[6],ch=s[7];
     current={sign:name,element:el,olympian:ol,planet:pl,agent:ag};
     document.getElementById('r-glyph').textContent=glyph;
     document.getElementById('r-sign').textContent=name.toUpperCase();
@@ -212,28 +208,43 @@
     document.getElementById('p-name').textContent=pl; document.getElementById('p-desc').textContent=PLANETS[pl];
     document.getElementById('a-name').textContent=ag; document.getElementById('a-desc').textContent=AGENTS[ag];
     document.getElementById('m-affinity').textContent=ELEMENTS[el].affinity;
-    const mats=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
-    const lad=document.getElementById('ladder'); lad.innerHTML='';
-    mats.forEach((mt,i)=>{ const x=document.createElement('span'); x.className='rung'+(i===0?' on':''); x.textContent=(i+1)+'·'+mt; lad.appendChild(x); });
+    var mats=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
+    var lad=document.getElementById('ladder'); lad.innerHTML='';
+    for(var i=0;i<mats.length;i++){ var x=document.createElement('span'); x.className='rung'+(i===0?' on':''); x.textContent=(i+1)+'·'+mats[i]; lad.appendChild(x); }
     document.getElementById('join-msg').textContent=''; document.getElementById('join-msg').className='join-msg';
     document.getElementById('join').style.display='block';
     gate.style.display='none'; result.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'});
   }
-  async function join(){
-    const email=document.getElementById('join-email').value.trim();
-    const msg=document.getElementById('join-msg'); const btn=document.getElementById('join-btn');
+  function join(){
+    var email=document.getElementById('join-email').value.trim();
+    var msg=document.getElementById('join-msg'); var btn=document.getElementById('join-btn');
     if(!email || email.indexOf('@')<1){ msg.className='join-msg bad'; msg.textContent='Enter a valid email.'; return; }
     btn.disabled=true; msg.className='join-msg'; msg.textContent='Recording…';
-    try{
-      const { error } = await supabase.from('signups').insert({ email:email, sign:current.sign, element:current.element, olympian:current.olympian, planet:current.planet, agent:current.agent });
-      if(error){ msg.className='join-msg bad'; msg.textContent='Could not record — please try again.'; btn.disabled=false; return; }
+    fetch(SUPABASE_URL + "/rest/v1/signups", {
+      method:"POST",
+      headers:{
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type":"application/json",
+        "Prefer":"return=minimal"
+      },
+      body: JSON.stringify({ email:email, sign:current.sign, element:current.element, olympian:current.olympian, planet:current.planet, agent:current.agent })
+    }).then(function(res){
+      if(!res.ok){
+        return res.text().then(function(t){
+          console.log('signup error', res.status, t);
+          msg.className='join-msg bad'; msg.textContent='Could not record ('+res.status+') — please try again.'; btn.disabled=false;
+        });
+      }
       document.getElementById('join').innerHTML='<div class="join-msg ok">You are recorded among the first of the Order, '+current.sign+'. We reach you as it comes online.</div>';
-    }catch(e){ msg.className='join-msg bad'; msg.textContent='Could not record — please try again.'; btn.disabled=false; }
+    }).catch(function(e){
+      console.log(e); msg.className='join-msg bad'; msg.textContent='Could not record (network) — please try again.'; btn.disabled=false;
+    });
   }
   function restart(){ result.classList.remove('show'); gate.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
 
   document.getElementById('go').addEventListener('click',reveal);
-  document.getElementById('dob').addEventListener('keydown',e=>{ if(e.key==='Enter') reveal(); });
+  document.getElementById('dob').addEventListener('keydown',function(e){ if(e.key==='Enter') reveal(); });
   document.getElementById('join-btn').addEventListener('click',join);
   document.getElementById('again').addEventListener('click',restart);
 </script>

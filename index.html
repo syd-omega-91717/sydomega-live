@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717</title>
+<meta name="description" content="SYD OMEGA 91717 — a sovereign progression ecosystem. The Code. The Frequency. The Legacy. Protocol Ω-VOGUE-2026." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#0A0A0F;
+    --void-2:#0d0d15;
+    --gold:#C9A84C;
+    --cyan:#00E5FF;
+    --crimson:#8B0000;
+    --ink:#e9e6dc;
+    --muted:#8c8a82;
+    --line:rgba(201,168,76,0.18);
+    --display:'Cinzel Decorative', serif;
+    --body:'Rajdhani', sans-serif;
+    --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--void);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.5;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+
+  .field{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .field::before{
+    content:"";position:absolute;inset:-20%;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(201,168,76,0.10), transparent 42%),
+      radial-gradient(circle at 80% 70%, rgba(0,229,255,0.06), transparent 40%),
+      radial-gradient(circle at 12% 80%, rgba(139,0,0,0.10), transparent 38%);
+  }
+  .grid{
+    position:absolute;inset:0;opacity:0.25;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+    -webkit-mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+  }
+
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+
+  header{position:relative;z-index:2;border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .mark{font-family:var(--display);font-weight:900;color:var(--gold);font-size:24px;letter-spacing:1px}
+  .mark span{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:3px;margin-left:10px}
+  .status{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:pulse 2.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  .hero{position:relative;text-align:center;padding:96px 0 80px}
+  .omega{
+    font-family:var(--display);font-weight:900;color:var(--gold);
+    font-size:clamp(96px,20vw,200px);line-height:.9;position:relative;display:inline-block;
+    text-shadow:0 0 60px rgba(201,168,76,0.35);
+  }
+  .omega::after{
+    content:"";position:absolute;inset:-28% -28%;border-radius:50%;z-index:-1;
+    background:conic-gradient(from 0deg, transparent, rgba(201,168,76,.22), transparent 55%, rgba(0,229,255,.15), transparent);
+    animation:spin 22s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:6px;color:var(--cyan);margin:26px 0 14px}
+  h1{font-family:var(--display);font-weight:700;letter-spacing:2px;font-size:clamp(30px,6vw,58px);color:var(--ink)}
+  .tagline{font-size:clamp(16px,2.4vw,22px);font-weight:300;letter-spacing:4px;color:var(--gold);margin-top:18px;text-transform:uppercase}
+  .freq{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:3px;margin-top:22px}
+
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,4vw,34px);color:var(--gold);letter-spacing:1px;margin-bottom:18px}
+  .lead{font-size:clamp(16px,2vw,19px);font-weight:300;color:var(--ink);max-width:62ch}
+  .muted{color:var(--muted)}
+
+  .axes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  .axis{border:1px solid var(--line);padding:24px;background:linear-gradient(180deg, var(--void-2), transparent)}
+  .axis .n{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:3px}
+  .axis h3{font-family:var(--display);font-weight:700;color:var(--gold);font-size:20px;margin:10px 0 8px;letter-spacing:1px}
+  .axis p{font-weight:300;color:var(--muted);font-size:15px}
+
+  .chain{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;font-family:var(--mono);font-size:13px;letter-spacing:2px}
+  .chain span{border:1px solid var(--line);padding:10px 16px;color:var(--ink)}
+  .chain .arrow{border:none;color:var(--gold);padding:10px 4px;align-self:center}
+
+  .unlocks{list-style:none;margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .unlocks li{background:var(--void);padding:22px 24px}
+  .unlocks h4{font-family:var(--body);font-weight:600;font-size:17px;letter-spacing:1px;color:var(--gold);margin-bottom:6px}
+  .unlocks p{font-weight:300;color:var(--muted);font-size:14px}
+
+  .activation{border:1px solid var(--line);padding:30px;background:linear-gradient(180deg, rgba(139,0,0,0.06), transparent)}
+  .activation .row{display:flex;align-items:baseline;gap:14px;font-family:var(--mono);font-size:14px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .activation .row:last-child{border-bottom:none}
+  .activation .lbl{color:var(--muted);min-width:130px;letter-spacing:2px;font-size:12px}
+  .activation .on{color:var(--cyan)}
+  .activation .pend{color:var(--gold)}
+
+  .cta{text-align:center;padding:80px 0}
+  .btn{
+    display:inline-block;font-family:var(--mono);letter-spacing:3px;font-size:13px;
+    color:var(--void);background:var(--gold);padding:18px 40px;border:1px solid var(--gold);
+    transition:all .25s ease;
+  }
+  .btn:hover,.btn:focus{background:transparent;color:var(--gold);outline:none}
+  .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+  .cta .sub{font-weight:300;color:var(--muted);margin-top:18px;font-size:14px;letter-spacing:1px}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;text-align:center}
+  footer .o{font-family:var(--display);color:var(--gold);font-size:18px;letter-spacing:2px}
+  footer p{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:10px}
+
+  @media(max-width:720px){
+    .axes{grid-template-columns:1fr}
+    .unlocks{grid-template-columns:1fr}
+    .mark span{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .omega::after{animation:none}
+    .dot{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="field"><div class="grid"></div></div>
+
+<header>
+  <div class="wrap bar">
+    <div class="mark">Ω<span>91717</span></div>
+    <div class="status"><span class="dot"></span>SYSTEM ONLINE</div>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="border-top:none">
+    <div class="wrap">
+      <div class="omega">Ω</div>
+      <div class="eyebrow">PROTOCOL Ω-VOGUE-2026</div>
+      <h1>SYD OMEGA 91717</h1>
+      <div class="tagline">The Code · The Frequency · The Legacy</div>
+      <div class="freq">SOVEREIGN ENGINEERING PROTOCOL — 9.17Hz — NODE 9.9.9</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">THE PREMISE</div>
+      <h2>An ecosystem that evolves with you</h2>
+      <p class="lead">SYD OMEGA 91717 is a sovereign progression ecosystem. You enter as yourself, and the system reads who you are and grows with every verified action you take — what you learn, what you master, and what you give back. Identity, advancement, and recognition are one continuous structure rather than scattered features.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">THE PROGRESSION SPINE</div>
+      <h2>Three axes, one ascent</h2>
+      <p class="lead muted">Every action moves you along three measured axes. Your position is continuously recalculated as you advance toward the apex.</p>
+      <div class="axes">
+        <div class="axis"><div class="n">AXIS A</div><h3>Knowledge</h3><p>What you learn and consume across the system.</p></div>
+        <div class="axis"><div class="n">AXIS B</div><h3>Mastery</h3><p>What you demonstrate and achieve through performance.</p></div>
+        <div class="axis"><div class="n">AXIS C</div><h3>Contribution</h3><p>What you give back — creative, social, and economic output.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">YOUR COSMOLOGY</div>
+      <h2>A character assigned at the threshold</h2>
+      <p class="lead muted">At onboarding, your birth sign deterministically assigns your element, your house, your planet, and a dedicated guide bound to your path.</p>
+      <div class="chain">
+        <span>ZODIAC</span><span class="arrow">→</span>
+        <span>ELEMENT</span><span class="arrow">→</span>
+        <span>OLYMPIAN</span><span class="arrow">→</span>
+        <span>PLANET</span><span class="arrow">→</span>
+        <span>AI AGENT</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">WHAT MEMBERSHIP UNLOCKS</div>
+      <h2>For verified members</h2>
+      <ul class="unlocks">
+        <li><h4>A living identity</h4><p>A sovereign profile that visibly evolves in real time as you progress.</p></li>
+        <li><h4>Proof of ascent</h4><p>Certificates, trophies, and medals earned at defined milestones.</p></li>
+        <li><h4>Gated worlds</h4><p>A cinematic universe and a connected game progression, unlocked by your position.</p></li>
+        <li><h4>Twelve guides</h4><p>A network of AI agents for guidance, lore, and consultancy across domains.</p></li>
+        <li><h4>Consultancy access</h4><p>Bookable expertise across medical, legal, engineering, and business sectors.</p></li>
+        <li><h4>Heritage &amp; record</h4><p>Lineage, archives, and a permanent record of your standing within the order.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">ACTIVATION STATUS</div>
+      <h2>Coming online in sequence</h2>
+      <div class="activation">
+        <div class="row"><span class="lbl">PUBLIC PROTOCOL</span><span class="on">● ONLINE</span></div>
+        <div class="row"><span class="lbl">MEMBER ONBOARDING</span><span class="pend">○ ACTIVATING</span></div>
+        <div class="row"><span class="lbl">PROGRESSION ENGINE</span><span class="pend">○ ACTIVATING</span></div>
+        <div class="row"><span class="lbl">CONTENT &amp; AGENTS</span><span class="pend">○ PHASED</span></div>
+        <div class="row"><span class="lbl">ECONOMY LAYER</span><span class="pend">○ PENDING REVIEW</span></div>
+      </div>
+      <p class="muted" style="margin-top:18px;font-size:14px;font-weight:300">The protocol is live. Membership and modules are being switched on in sequenced phases.</p>
+    </div>
+  </section>
+
+  <section class="cta" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <a class="btn" href="mailto:s.y.dagher@gmail.com?subject=Ω%2091717%20—%20Early%20Access%20Request">REQUEST EARLY ACCESS</a>
+      <div class="sub">First members are admitted as the order comes online.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="o">Ω 91717</div>
+    <p>SOVEREIGN ENGINEERING PROTOCOL · 100% OWNED BY SLEIMAN YOUSEF DAGHER</p>
+  </div>
+</footer>
+</body>
+</html>

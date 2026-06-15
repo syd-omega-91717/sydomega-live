@@ -90,6 +90,15 @@
   .ev .ax{color:var(--gold);min-width:104px}
   .ev .nt{color:var(--ink);flex:1}
 
+  .certs{margin-top:24px;text-align:left}
+  .certs .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+  .seals{display:flex;flex-wrap:wrap;gap:12px}
+  .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,0.08),transparent);padding:16px 18px;min-width:200px;flex:1}
+  .seal .s-mark{font-family:var(--display);color:var(--gold);font-size:22px;letter-spacing:1px}
+  .seal .s-title{font-family:var(--mono);font-size:12px;color:var(--ink);letter-spacing:1px;margin-top:8px;line-height:1.5}
+  .seal .s-date{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px}
+  .certs .empty{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px}
+
   .whoami{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:26px;text-align:center}
   .whoami b{color:var(--cyan);font-weight:400}
   .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:18px;text-align:center;line-height:1.8}
@@ -159,6 +168,11 @@
       </div>
       <div class="mrow">TIER: <b id="d-tier">1</b> &nbsp;·&nbsp; MATERIAL: <b id="d-material">Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX √243 ≈ <b>15.58</b> &nbsp;·&nbsp; NEXT MILESTONE: <b id="d-next">(3,3,3)</b></div>
       <div class="ladder" id="d-ladder"></div>
+    </div>
+
+    <div class="certs">
+      <div class="kicker">CERTIFICATES OF ASCENT</div>
+      <div class="seals" id="d-certs"></div>
     </div>
 
     <div class="evt">
@@ -246,7 +260,7 @@
       const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
       prof=data;
     }catch(e){ prof=null; }
-    if(prof && prof.sign){ renderDash(prof); show(vDash); loadEvents(); }
+    if(prof && prof.sign){ renderDash(prof); show(vDash); loadEvents(); loadCerts(); }
     else { document.getElementById('gate-err').textContent=''; show(vGate); }
   }
 
@@ -291,7 +305,7 @@
     btn.disabled=false;
     if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+'). Try again.'; console.log('save error',error); return; }
     const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
-    renderDash(data||prof); show(vDash); loadEvents();
+    renderDash(data||prof); show(vDash); loadEvents(); loadCerts();
   }
 
   function renderDash(prof){
@@ -332,10 +346,14 @@
     const { data, error } = await supabase.rpc('log_evolution', { p_axis:axis, p_note:note });
     btn.disabled=false;
     if(error){ msg.className='msg bad'; msg.textContent='Could not record ('+(error.code||error.message||'')+').'; console.log('rpc error',error); return; }
-    msg.className='msg ok'; msg.textContent='Recorded. Your matrix advanced.';
+    msg.className='msg'; msg.textContent='';
     document.getElementById('ev-note').value='';
     if(data){ renderDash(data); }
     loadEvents();
+    const before = document.getElementById('d-certs').querySelectorAll('.seal').length;
+    const after = await loadCerts();
+    if(after > before){ msg.className='msg ok'; msg.textContent='A new Certificate of Ascent has been issued — well earned.'; }
+    else { msg.className='msg ok'; msg.textContent='Recorded. Your matrix advanced.'; }
   }
 
   async function loadEvents(){
@@ -353,6 +371,24 @@
         row.appendChild(ax); row.appendChild(nt); box.appendChild(row);
       });
     }catch(e){ box.innerHTML=''; }
+  }
+
+  async function loadCerts(){
+    if(!currentUser) return 0;
+    const box=document.getElementById('d-certs');
+    try{
+      const { data } = await supabase.from('certificates').select('milestone,title,issued_at').eq('user_id',currentUser.id).order('milestone',{ascending:true});
+      box.innerHTML='';
+      if(!data || !data.length){ box.innerHTML='<div class="empty">No certificates yet — reach node (3,3,3) to earn your first seal.</div>'; return 0; }
+      data.forEach(c=>{
+        const card=document.createElement('div'); card.className='seal';
+        const mk=document.createElement('div'); mk.className='s-mark'; mk.textContent='Ω · '+c.milestone;
+        const ti=document.createElement('div'); ti.className='s-title'; ti.textContent=c.title;
+        const dt=document.createElement('div'); dt.className='s-date'; dt.textContent='ISSUED '+(c.issued_at? new Date(c.issued_at).toLocaleDateString() : '');
+        card.appendChild(mk); card.appendChild(ti); card.appendChild(dt); box.appendChild(card);
+      });
+      return data.length;
+    }catch(e){ box.innerHTML=''; return 0; }
   }
 
   document.getElementById('btn-signup').addEventListener('click',signUp);

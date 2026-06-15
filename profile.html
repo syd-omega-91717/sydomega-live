@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717 — Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
+    --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000;
+    --ink:#e9e6dc; --muted:#85837b; --acc:#C9A84C;
+    --line:rgba(201,168,76,0.16);
+    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 28% 16%,rgba(201,168,76,.07),transparent 40%),radial-gradient(circle at 82% 84%,rgba(0,229,255,.05),transparent 42%)}
+  a{color:inherit;text-decoration:none}
+  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
+  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
+  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
+  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
+  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
+  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
+  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
+  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
+  .nav .lk{color:var(--muted);cursor:default}
+  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
+  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+
+  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}
+  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+  .user{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px}
+  .user .lvl{border:1px solid var(--gold);color:var(--gold);padding:8px 12px;text-align:center;line-height:1.3}
+  .user .lvl b{display:block;font-family:var(--display);font-size:15px} .user .lvl span{font-size:8px;letter-spacing:2px;color:var(--muted)}
+
+  .phead{display:flex;gap:26px;align-items:center;margin:26px 0;flex-wrap:wrap}
+  .pglyph{font-family:var(--display);font-size:clamp(70px,12vw,110px);color:var(--acc);line-height:1;text-shadow:0 0 40px rgba(255,255,255,.08)}
+  .pmeta{flex:1;min-width:240px}
+  .psign{font-family:var(--display);font-weight:700;font-size:clamp(26px,4vw,40px);color:var(--ink);letter-spacing:2px}
+  .nrow{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .pname-in{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:11px 14px;min-width:220px;color-scheme:dark}
+  .pname-in:focus{outline:none;border-color:var(--cyan)}
+  .btn{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:11px 18px;border:1px solid var(--gold);cursor:pointer}
+  .btn:hover{background:transparent;color:var(--gold)}
+  .pmsg{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:8px}
+  .psub{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:10px;line-height:1.8}
+  .psub b{color:var(--acc);font-weight:400}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+  .cell{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px}
+  .cell .l{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan)}
+  .cell .v{font-family:var(--display);font-weight:700;color:var(--gold);font-size:22px;margin-top:8px}
+  .cell .v.acc{color:var(--acc)}
+  .cell .s{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px}
+
+  .character{font-family:var(--body);font-weight:300;color:var(--acc);font-size:18px;margin:22px 0;text-align:center;letter-spacing:.3px}
+
+  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:22px;margin-top:18px}
+  .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
+  .seals{display:flex;flex-wrap:wrap;gap:10px}
+  .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,.08),transparent);padding:13px 15px;min-width:180px;flex:1}
+  .seal .sm{font-family:var(--display);color:var(--gold);font-size:18px}
+  .seal .st{font-family:var(--mono);font-size:11px;color:var(--ink);margin-top:6px;line-height:1.4}
+  .seal .sd{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:6px}
+  .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .log{max-height:360px;overflow-y:auto}
+  .ev{font-family:var(--mono);font-size:12px;color:var(--muted);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:12px;align-items:baseline}
+  .ev:last-child{border-bottom:none}
+  .ev .ax{color:var(--gold);min-width:96px} .ev .nt{color:var(--ink);flex:1} .ev .dt{color:var(--muted);font-size:10px;white-space:nowrap}
+
+  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
+  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
+  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
+  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
+  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
+  #app{display:none}
+  @media(max-width:980px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+</style>
+</head>
+<body>
+<div id="gate" class="gate-card" style="display:none">
+  <div class="g">Ω</div>
+  <h2 id="gate-h">Access Your Profile</h2>
+  <p id="gate-p">Sign in to view your sovereign profile.</p>
+  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+</div>
+
+<div class="shell" id="app">
+  <aside class="side">
+    <div class="brand">Ω SYD OMEGA<small>9 1 7 1 7</small></div>
+    <nav class="nav">
+      <a href="/dashboard.html">DASHBOARD</a>
+      <a class="on" href="#">PROFILE</a>
+      <a href="/dashboard.html#matrix">9×9×9 MATRIX</a>
+      <a href="/dashboard.html#agent">AI COMMAND</a>
+      <a href="/hall.html">HALL OF THE ORDER</a>
+      <a href="/">PUBLIC SITE</a>
+      <div class="sec">PHASE II — ACTIVATING</div>
+      <div class="lk">ACADEMY <span class="ph">SOON</span></div>
+      <div class="lk">CONSULTANCY <span class="ph">SOON</span></div>
+      <div class="lk">MEDIA HUB <span class="ph">SOON</span></div>
+    </nav>
+    <div class="out" id="logout">LOG OUT →</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="t">MEMBER PROFILE<small>SYD OMEGA 91717</small></div>
+      <div class="user"><span class="lvl"><b id="u-tier">1</b><span>TIER</span></span></div>
+    </div>
+
+    <div class="phead">
+      <div class="pglyph" id="p-glyph">Ω</div>
+      <div class="pmeta">
+        <div class="psign" id="p-sign"></div>
+        <div class="nrow">
+          <input class="pname-in" id="p-name" placeholder="Set a display name" maxlength="40" />
+          <button class="btn" id="p-save">SAVE NAME</button>
+        </div>
+        <div class="pmsg" id="p-msg"></div>
+        <div class="psub" id="p-sub"></div>
+      </div>
+    </div>
+
+    <p class="character" id="p-char"></p>
+
+    <div class="grid">
+      <div class="cell"><div class="l">ELEMENT</div><div class="v acc" id="c-element"></div><div class="s" id="c-aff"></div></div>
+      <div class="cell"><div class="l">OLYMPIAN</div><div class="v" id="c-olympian"></div><div class="s">patron deity</div></div>
+      <div class="cell"><div class="l">PLANET</div><div class="v" id="c-planet"></div><div class="s">ruling body</div></div>
+      <div class="cell"><div class="l">AGENT</div><div class="v acc" id="c-agent"></div><div class="s" id="c-dom"></div></div>
+    </div>
+
+    <div class="grid" style="margin-top:14px">
+      <div class="cell"><div class="l">KNOWLEDGE · A</div><div class="v" id="x-a">1.00</div></div>
+      <div class="cell"><div class="l">MASTERY · B</div><div class="v" id="x-b">1.00</div></div>
+      <div class="cell"><div class="l">CONTRIBUTION · C</div><div class="v" id="x-c">1.00</div></div>
+      <div class="cell"><div class="l">AUTHORITY · TIER · MATERIAL</div><div class="v" id="x-auth">1.73</div><div class="s" id="x-tm">Tier 1 · Sand</div></div>
+    </div>
+
+    <div class="card">
+      <div class="h">CERTIFICATES OF ASCENT</div>
+      <div class="seals" id="d-certs"></div>
+    </div>
+
+    <div class="card">
+      <div class="h">FULL EVOLUTION LOG</div>
+      <div class="log" id="d-events"></div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+  const SIGNS=[
+    ['Aries','\u2648\uFE0E','Mar 21 – Apr 19','Fire','Athena','Mars','Sentinel','You move first and ask later — the spark that begins the work.'],
+    ['Taurus','\u2649\uFE0E','Apr 20 – May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
+    ['Gemini','\u264A\uFE0E','May 21 – Jun 20','Wind','Apollo','Mercury','Scout','You carry signal between worlds and miss nothing.'],
+    ['Cancer','\u264B\uFE0E','Jun 21 – Jul 22','Water','Hermes','Moon','Warden','You guard what matters and read the unspoken current.'],
+    ['Leo','\u264C\uFE0E','Jul 23 – Aug 22','Fire','Zeus','Sun','Sovereign','You were made to lead, and the room knows it.'],
+    ['Virgo','\u264D\uFE0E','Aug 23 – Sep 22','Sand','Demeter','Vesta','Auditor','You refine until it is true — the patient foundation of all of it.'],
+    ['Libra','\u264E\uFE0E','Sep 23 – Oct 22','Wind','Hephaestus','Juno','Proxy','You hold the balance and broker what others cannot.'],
+    ['Scorpio','\u264F\uFE0E','Oct 23 – Nov 21','Water','Ares','Pluto','Oracle','You see to the bottom and transform what you touch.'],
+    ['Sagittarius','\u2650\uFE0E','Nov 22 – Dec 21','Fire','Artemis','Jupiter','Beacon','You aim past the horizon and call others to follow.'],
+    ['Capricorn','\u2651\uFE0E','Dec 22 – Jan 19','Metal','Hestia','Saturn','Analyst','You endure, you compound, and you arrive.'],
+    ['Aquarius','\u2652\uFE0E','Jan 20 – Feb 18','Wind','Hera','Uranus','Tutor','You think in systems no one has drawn yet.'],
+    ['Pisces','\u2653\uFE0E','Feb 19 – Mar 20','Water','Poseidon','Neptune','Historian','You hold the deep memory and feel the whole tide at once.']
+  ];
+  function find(n){ for(var i=0;i<SIGNS.length;i++){ if(SIGNS[i][0]===n) return SIGNS[i]; } return null; }
+  const MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
+  const ELEM_ACCENT={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
+  const ELEM_AFF={Fire:'+Mastery (B)',Water:'+Contribution (C)',Wind:'+Knowledge (A)',Metal:'+Mastery & +Contribution',Sand:'+0.15 all axes'};
+  const AGENT_DOMAIN={Sentinel:'SECURITY',Analyst:'FINANCE',Historian:'ARCHIVE',Tutor:'EDUCATION',Merchant:'COMMERCE',Proxy:'EXECUTION',Oracle:'PREDICTION',Scout:'DISCOVERY',Warden:'FAMILY',Auditor:'VALIDATION',Beacon:'ONBOARDING',Sovereign:'MASTER'};
+
+  let user=null, prof=null;
+
+  function render(){
+    var s=find(prof.sign);
+    var acc=ELEM_ACCENT[prof.element]||'#C9A84C';
+    document.documentElement.style.setProperty('--acc',acc);
+    var a=Number(prof.axis_a!=null?prof.axis_a:1),b=Number(prof.axis_b!=null?prof.axis_b:1),c=Number(prof.axis_c!=null?prof.axis_c:1);
+    var auth=Math.sqrt(a*a+b*b+c*c);
+    var tier=Math.max(1,Math.min(9,Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
+    document.getElementById('p-glyph').textContent=s?s[1]:'\u03A9';
+    document.getElementById('p-sign').textContent=(prof.sign||'').toUpperCase();
+    document.getElementById('p-name').value=prof.display_name||'';
+    document.getElementById('u-tier').textContent=tier;
+    var joined = prof.created_at ? new Date(prof.created_at).toLocaleDateString() : '—';
+    document.getElementById('p-sub').innerHTML='SIGNED IN AS <b>'+user.email+'</b><br>JOINED <b>'+joined+'</b> · ORDER MEMBER';
+    document.getElementById('p-char').textContent=s?('“'+s[7]+'”'):'';
+    document.getElementById('c-element').textContent=prof.element||'';
+    document.getElementById('c-aff').textContent=ELEM_AFF[prof.element]||'';
+    document.getElementById('c-olympian').textContent=prof.olympian||'';
+    document.getElementById('c-planet').textContent=prof.planet||'';
+    document.getElementById('c-agent').textContent=prof.agent||'';
+    document.getElementById('c-dom').textContent=AGENT_DOMAIN[prof.agent]||'';
+    document.getElementById('x-a').textContent=a.toFixed(2);
+    document.getElementById('x-b').textContent=b.toFixed(2);
+    document.getElementById('x-c').textContent=c.toFixed(2);
+    document.getElementById('x-auth').textContent=auth.toFixed(2);
+    document.getElementById('x-tm').textContent='Tier '+tier+' · '+(MATS[tier-1]||'');
+  }
+  async function loadCerts(){
+    var box=document.getElementById('d-certs');
+    try{
+      var r=await supabase.from('certificates').select('milestone,title,issued_at').eq('user_id',user.id).order('milestone',{ascending:true});
+      box.innerHTML='';
+      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No certificates yet — reach node (3,3,3) to earn your first seal.</div>'; return; }
+      r.data.forEach(function(c){ var d=document.createElement('div'); d.className='seal'; var dt=c.issued_at?new Date(c.issued_at).toLocaleDateString():''; d.innerHTML='<div class="sm">Ω · '+c.milestone+'</div><div class="st">'+c.title+'</div><div class="sd">ISSUED '+dt+'</div>'; box.appendChild(d); });
+    }catch(e){ box.innerHTML=''; }
+  }
+  async function loadEvents(){
+    var box=document.getElementById('d-events');
+    try{
+      var r=await supabase.from('evolution_events').select('axis,note,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(60);
+      box.innerHTML=''; var names={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'};
+      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No events recorded yet.</div>'; return; }
+      r.data.forEach(function(e){ var row=document.createElement('div'); row.className='ev'; var dt=e.created_at?new Date(e.created_at).toLocaleDateString():''; var ax=document.createElement('span'); ax.className='ax'; ax.textContent=names[e.axis]||e.axis; var nt=document.createElement('span'); nt.className='nt'; nt.textContent=e.note||''; var d=document.createElement('span'); d.className='dt'; d.textContent=dt; row.appendChild(ax); row.appendChild(nt); row.appendChild(d); box.appendChild(row); });
+    }catch(e){ box.innerHTML=''; }
+  }
+  async function saveName(){
+    var v=document.getElementById('p-name').value.trim();
+    var msg=document.getElementById('p-msg'), btn=document.getElementById('p-save');
+    btn.disabled=true; msg.style.color='var(--cyan)'; msg.textContent='Saving…';
+    var r=await supabase.from('profiles').update({display_name:v}).eq('id',user.id);
+    btn.disabled=false;
+    if(r.error){ msg.style.color='var(--crimson)'; msg.textContent='Could not save ('+(r.error.code||r.error.message||'')+').'; return; }
+    prof.display_name=v; msg.style.color='var(--cyan)'; msg.textContent='Name saved.';
+  }
+
+  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+
+  async function boot(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('Access Your Profile','Sign in to view your sovereign profile.'); return; }
+    user=sess.user;
+    var pr=await supabase.from('profiles').select('*').eq('id',user.id).maybeSingle();
+    prof=pr.data;
+    if(!prof || !prof.sign){ showGate('Set Your Cosmology','Set your cosmology first to build your profile.'); return; }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+    render(); loadCerts(); loadEvents();
+  }
+
+  document.getElementById('p-save').addEventListener('click',saveName);
+  document.getElementById('p-name').addEventListener('keydown',function(e){ if(e.key==='Enter') saveName(); });
+  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  boot();
+</script>
+</body>
+</html>

@@ -329,7 +329,7 @@
       const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
       prof=data;
     }catch(e){ prof=null; }
-    if(prof && prof.sign){ renderDash(prof); show(vDash); loadEvents(); loadCerts(); }
+    if(prof && prof.sign){ window.location.href='/dashboard.html'; return; }
     else { document.getElementById('gate-err').textContent=''; show(vGate); }
   }
 
@@ -374,7 +374,7 @@
     btn.disabled=false;
     if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+'). Try again.'; console.log('save error',error); return; }
     const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
-    renderDash(data||prof); show(vDash); loadEvents(); loadCerts();
+    window.location.href='/dashboard.html'; return;
   }
 
   function renderDash(prof){

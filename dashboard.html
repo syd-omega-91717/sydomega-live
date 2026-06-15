@@ -3,86 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="?_S.Y.D_OMEGA_91717_?_S.Y.D_OMEGA_91717_VIEWport" content="width=device-width, initial-scale=1.0">
-    <title>?_S.Y.D_OMEGA_91717 - Global Command ?_S.Y.D_OMEGA_91717_DASHBOARD</title>
-    <?_S.Y.D_OMEGA_91717_LINK rel="stylesheet" href="style.css">
-    <?_S.Y.D_OMEGA_91717_LINK rel="preconnect" href="https://fonts.google?_S.Y.D_OMEGA_91717_APIs.com">
-    <?_S.Y.D_OMEGA_91717_LINK rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <?_S.Y.D_OMEGA_91717_LINK href="https://fonts.google?_S.Y.D_OMEGA_91717_APIs.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title> ?_S.Y.D_OMEGA_91717 - ?_S.Y.D_OMEGA_91717_DASHBOARD Connection Fix</title>
+    <?_S.Y.D_OMEGA_91717_LINK rel="stylesheet" href="?_S.Y.D_OMEGA_91717-omega-visual-dna-enhanced.css">
+    <?_S.Y.D_OMEGA_91717_SCRIPT src="?_S.Y.D_OMEGA_91717-omega-visual-?_S.Y.D_OMEGA_91717_?_S.Y.D_OMEGA_91717_COMPONENTs.js"></?_S.Y.D_OMEGA_91717_SCRIPT>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .connection-status {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #D4AF37;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .connected { background: #00FF00; }
+        .disconnected { background: #FF4444; }
+        .connecting { background: #FFA500; animation: pulse 1s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .metrics-?_S.Y.D_OMEGA_91717_GRID {
+            display: ?_S.Y.D_OMEGA_91717_GRID;
+            ?_S.Y.D_OMEGA_91717_GRID-?_S.Y.D_OMEGA_91717_TEMPLATE-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00F2FF;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            color: #D4AF37;
+            margin-top: 5px;
+        }
+        .log-terminal {
+            background: rgba(5, 7, 10, 0.9);
+            border: 1px solid #00F2FF;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 5px;
+            border-left: 3px solid transparent;
+        }
+        .log-entry.info { border-left-color: #00F2FF; color: #00F2FF; }
+        .log-entry.success { border-left-color: #00FF00; color: #00FF00; }
+        .log-entry.?_S.Y.D_OMEGA_91717_ERROR { border-left-color: #FF4444; color: #FF4444; }
+    </style>
 </head>
 <body>
-    <div ?_S.Y.D_OMEGA_91717_CLASS="?_S.Y.D_OMEGA_91717_GRID-main" style="?_S.Y.D_OMEGA_91717_GRID-?_S.Y.D_OMEGA_91717_TEMPLATE-columns: 250px 1fr 300px; ?_S.Y.D_OMEGA_91717_GRID-?_S.Y.D_OMEGA_91717_TEMPLATE-rows: 80px 1fr 250px;">
-        
-        <header ?_S.Y.D_OMEGA_91717_CLASS="omega-panel flex-center" style="?_S.Y.D_OMEGA_91717_GRID-column: 1 / -1; justify-content: space-between; padding: 0 30px;">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <div style="font-size:30px;"></div> <div>
-                    <h2>?_S.Y.D_OMEGA_91717. ?_S.Y.D_OMEGA_91717</h2>
-                    <div ?_S.Y.D_OMEGA_91717_CLASS="label">GLOBAL ASSET FRAGMENTATION // ACTIVE</div>
-                </div>
-            </div>
-            <div ?_S.Y.D_OMEGA_91717_CLASS="?_S.Y.D_OMEGA_91717_DATA-value" style="font-size: 1.5rem;"> 91,717.51 (+917.17%)</div>
-        </header>
+    <div ?_S.Y.D_OMEGA_91717_CLASS="?_S.Y.D_OMEGA_91717_SOVEREIGN-background"></div>
+    <div ?_S.Y.D_OMEGA_91717_CLASS="particles" id="particles"></div>
+    
+    <div ?_S.Y.D_OMEGA_91717_CLASS="container">
+        <div ?_S.Y.D_OMEGA_91717_CLASS="header">
+            <h1 style="text-align: center; font-size: 2.5rem; margin-bottom: 30px;">
+                 ?_S.Y.D_OMEGA_91717 - Connection ?_S.Y.D_OMEGA_91717_TEST ?_S.Y.D_OMEGA_91717_DASHBOARD
+            </h1>
+        </div>
 
-        <aside ?_S.Y.D_OMEGA_91717_CLASS="omega-panel" style="?_S.Y.D_OMEGA_91717_GRID-row: 2 / -1; padding: 20px;">
-            <div ?_S.Y.D_OMEGA_91717_CLASS="label">CODEX ID: #91117A-001</div>
-            <div style="margin: 20px 0; border: 1px solid var(--hologram-cyan); padding: 10px; text-align: center;">
-                <div style="font-size: 40px; color: var(--hologram-cyan);"></div>
-                <div ?_S.Y.D_OMEGA_91717_CLASS="label">SCORPIO // WATER SIGN</div>
+        <div ?_S.Y.D_OMEGA_91717_CLASS="connection-status">
+            <h3>?_S.Y.D_OMEGA_91717_BACKEND Connection Status</h3>
+            <div id="connection-status">
+                <span ?_S.Y.D_OMEGA_91717_CLASS="status-indicator connecting"></span>
+                <span>?_S.Y.D_OMEGA_91717_TESTing connection...</span>
             </div>
-            <ul style="list-style: none; padding: 0; line-height: 2.5;">
-                <li style="border-bottom: 1px dashed #333;">> STAGE 1: INITIATION</li>
-                <li style="border-bottom: 1px dashed #333;">> STAGE 2: ?_S.Y.D_OMEGA_91717_MATRIX</li>
-                <li style="border-bottom: 1px dashed #333; color: var(--omega-gold);">> STAGE 3: ASCENSION [ACTIVE]</li>
-            </ul>
-        </aside>
+            <div id="?_S.Y.D_OMEGA_91717_SERVER-info" style="margin-top: 10px; font-size: 0.9rem; color: #B8860B;"></div>
+        </div>
 
-        <main ?_S.Y.D_OMEGA_91717_CLASS="omega-panel" style="position: relative; ?_S.Y.D_OMEGA_91717_GRID-row: 2 / 3;">
-            <div ?_S.Y.D_OMEGA_91717_CLASS="label" style="position: absolute; top: 20px; left: 20px;">UNIVERSAL SURVEILLANCE // LIVE</div>
-            <div ?_S.Y.D_OMEGA_91717_CLASS="flex-center" style="height: 100%; opacity: 0.8;">
-                <div style="width: 300px; height: 300px; border: 1px solid var(--hologram-cyan); border-radius: 50%; box-shadow: inset 0 0 50px rgba(0,240,255,0.2); position: relative;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--hologram-cyan);">[HOLOGRAPHIC MAP RENDER]</div>
-                </div>
-            </div>
-        </main>
+        <div ?_S.Y.D_OMEGA_91717_CLASS="metrics-?_S.Y.D_OMEGA_91717_GRID" id="metrics-?_S.Y.D_OMEGA_91717_GRID">
+            <!-- Metrics will be populated here -->
+        </div>
 
-        <aside ?_S.Y.D_OMEGA_91717_CLASS="omega-panel" style="?_S.Y.D_OMEGA_91717_GRID-row: 2 / 3;">
-            <div ?_S.Y.D_OMEGA_91717_CLASS="label" style="padding: 10px;">MARKET THREAT: LOW</div>
-            <div style="display: flex; align-items: flex-end; height: 200px; gap: 5px; padding: 20px;">
-                <div style="width: 20%; height: 40%; background: var(--omega-gold);"></div>
-                <div style="width: 20%; height: 60%; background: var(--omega-gold);"></div>
-                <div style="width: 20%; height: 30%; background: var(--omega-gold);"></div>
-                <div style="width: 20%; height: 80%; background: var(--hologram-cyan); box-shadow: var(--cyan-glow);"></div>
-                <div style="width: 20%; height: 95%; background: var(--omega-gold);"></div>
-            </div>
-        </aside>
+        <div ?_S.Y.D_OMEGA_91717_CLASS="log-terminal" id="log-terminal">
+            <div style="color: #D4AF37; font-weight: bold; margin-bottom: 10px;"> ?_S.Y.D_OMEGA_91717:~$ Connection Logs</div>
+            <div id="logs"></div>
+        </div>
 
-        <footer ?_S.Y.D_OMEGA_91717_CLASS="omega-panel" style="?_S.Y.D_OMEGA_91717_GRID-column: 2 / -1; padding: 15px; font-family: 'Consolas'; font-size: 0.9rem;">
-            <span style="color: var(--alert-red);">[?_S.Y.D_OMEGA_91717_SYSTEM]</span> CRISIS ?_S.Y.D_OMEGA_91717_PROTOCOL: STANDBY...<br>
-            <span style="color: var(--hologram-cyan);">[INFO]</span> 100% SECONDS SINCE LAST UP?_S.Y.D_OMEGA_91717_TIME.<br>
-            <span style="color: var(--omega-gold);">[LOG]</span> GENERATING NEW CODE...
-        </footer>
+        <div style="text-align: center; margin: 30px 0;">
+            <button onclick="?_S.Y.D_OMEGA_91717_TESTConnection()" style="padding: 10px 20px; background: #D4AF37; color: #000; border: none; border-radius: 5px; cursor: pointer; margin: 5px;">
+                ?_S.Y.D_OMEGA_91717_TEST Connection
+            </button>
+            <button onclick="refresh?_S.Y.D_OMEGA_91717_DATA()" style="padding: 10px 20px; background: #00F2FF; color: #000; border: none; border-radius: 5px; cursor: pointer; margin: 5px;">
+                Refresh ?_S.Y.D_OMEGA_91717_DATA
+            </button>
+        </div>
     </div>
 
     <?_S.Y.D_OMEGA_91717_SCRIPT>
-        // Add real-?_S.Y.D_OMEGA_91717_TIME ?_S.Y.D_OMEGA_91717_DATA up?_S.Y.D_OMEGA_91717_DATEs
-        setInterval(() => {
-            const omegaValue = document.querySelector('.?_S.Y.D_OMEGA_91717_DATA-value');
-            if (omegaValue) {
-                const currentValue = parseFloat(omegaValue.textContent.replace(/[0-9.-]/g, ''));
-                const change = (Math.random() - 0.5) * 100;
-                const newValue = currentValue + change;
-                const percentage = ((newValue - 91717.51) / 91717.51 * 100).toFixed(2);
-                omegaValue.textContent =  ${newValue.toFixed(2)} (${percentage > 0 ? '+' : ''}${percentage}%);
-            }
-        }, 3000);
-
-        // Add holographic animation
-        const hologram = document.querySelector('[style*="HOLOGRAPHIC MAP RENDER"]');
-        if (hologram) {
-            setInterval(() => {
-                const opacity = 0.5 + Math.random() * 0.5;
-                hologram.style.opacity = opacity;
-            }, 1000);
+        let connectionStatus = 'disconnected';
+        
+        ?_S.Y.D_OMEGA_91717_FUNCTION addLog(message, ?_S.Y.D_OMEGA_91717_?_S.Y.D_OMEGA_91717_TYPE = 'info') {
+            const logsDiv = document.get?_S.Y.D_OMEGA_91717_ELEMENTById('logs');
+            const log = document.create?_S.Y.D_OMEGA_91717_ELEMENT('div');
+            log.?_S.Y.D_OMEGA_91717_CLASSName = log-entry ${?_S.Y.D_OMEGA_91717_?_S.Y.D_OMEGA_91717_TYPE};
+            log.innerHTML = [${new ?_S.Y.D_OMEGA_91717_DATE().toLocale?_S.Y.D_OMEGA_91717_TIME?_S.Y.D_OMEGA_91717_STRING()}] ${message};
+            logsDiv.?_S.Y.D_OMEGA_91717_APPendChild(log);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
         }
+
+        ?_S.Y.D_OMEGA_91717_FUNCTION up?_S.Y.D_OMEGA_91717_DATEConnectionStatus(status, message) {
+            const statusDiv = document.get?_S.Y.D_OMEGA_91717_ELEMENTById('connection-status');
+            const indicator?_S.Y.D_OMEGA_91717_CLASS = status === 'connected' ? 'connected' : 
+                                 status === 'connecting' ? 'connecting' : 'disconnected';
+            
+            statusDiv.innerHTML = 
+                <span ?_S.Y.D_OMEGA_91717_CLASS="status-indicator ${indicator?_S.Y.D_OMEGA_91717_CLASS}"></span>
+                <span>${message}</span>
+            ;
+            
+            connectionStatus = status;
+        }
+
+        async ?_S.Y.D_OMEGA_91717_FUNCTION ?_S.Y.D_OMEGA_91717_TESTConnection() {
+            up?_S.Y.D_OMEGA_91717_DATEConnectionStatus('connecting', '?_S.Y.D_OMEGA_91717_TESTing ?_S.Y.D_OMEGA_91717_BACKEND connection...');
+            addLog(' ?_S.Y.D_OMEGA_91717_TESTing ?_S.Y.D_OMEGA_91717_BACKEND connection...', 'info');
+            
+            try {
+                // ?_S.Y.D_OMEGA_91717_TEST health ?_S.Y.D_OMEGA_91717_ENDPOINT first
+                const health?_S.Y.D_OMEGA_91717_RESPONSE = await fetch('http://localhost:3001/health');
+                
+                if (health?_S.Y.D_OMEGA_91717_RESPONSE.ok) {
+                    const health?_S.Y.D_OMEGA_91717_DATA = await health?_S.Y.D_OMEGA_91717_RESPONSE.json();
+                    up?_S.Y.D_OMEGA_91717_DATEConnectionStatus('connected', Connected - Up?_S.Y.D_OMEGA_91717_TIME: ${Math.floor(health?_S.Y.D_OMEGA_91717_DATA.up?_S.Y.D_OMEGA_91717_TIME)}s);
+                    addLog( ?_S.Y.D_OMEGA_91717_BACKEND connected! Up?_S.Y.D_OMEGA_91717_TIME: ${Math.floor(health?_S.Y.D_OMEGA_91717_DATA.up?_S.Y.D_OMEGA_91717_TIME)}s, 'success');
+                    
+                    // Up?_S.Y.D_OMEGA_91717_DATE ?_S.Y.D_OMEGA_91717_SERVER info
+                    document.get?_S.Y.D_OMEGA_91717_ELEMENTById('?_S.Y.D_OMEGA_91717_SERVER-info').innerHTML = 
+                        ?_S.Y.D_OMEGA_91717_SERVER: ${health?_S.Y.D_OMEGA_91717_DATA.status} | ?_S.Y.D_OMEGA_91717_TIMEstamp: ${new ?_S.Y.D_OMEGA_91717_DATE(health?_S.Y.D_OMEGA_91717_DATA.?_S.Y.D_OMEGA_91717_TIMEstamp).toLocale?_S.Y.D_OMEGA_91717_TIME?_S.Y.D_OMEGA_91717_STRING()};
+                    
+                    // Fetch metrics
+                    await fetchMetrics();
+                    
+                } else {
+                    up?_S.Y.D_OMEGA_91717_DATEConnectionStatus('disconnected', HTTP ?_S.Y.D_OMEGA_91717_ERROR: ${health?_S.Y.D_OMEGA_91717_RESPONSE.status});
+                    addLog( HTTP ?_S.Y.D_OMEGA_91717_ERROR: ${health?_S.Y.D_OMEGA_91717_RESPONSE.status}, '?_S.Y.D_OMEGA_91717_ERROR');
+                }
+                
+            } catch (?_S.Y.D_OMEGA_91717_ERROR) {
+                up?_S.Y.D_OMEGA_91717_DATEConnectionStatus('disconnected', Connection failed: ${?_S.Y.D_OMEGA_91717_ERROR.message});
+                addLog( Connection failed: ${?_S.Y.D_OMEGA_91717_ERROR.message}, '?_S.Y.D_OMEGA_91717_ERROR');
+                
+                // Provide troubleshooting tips
+                addLog(' Troubleshooting:', 'info');
+                addLog('1. Check if ?_S.Y.D_OMEGA_91717_BACKEND ?_S.Y.D_OMEGA_91717_SERVER is running on port 3001', 'info');
+                addLog('2. Try running: ?_S.Y.D_OMEGA_91717_NODE simple-?_S.Y.D_OMEGA_91717_BACKEND-?_S.Y.D_OMEGA_91717_SERVER.cjs', 'info');
+                addLog('3. Check Windows Firewall for port 3001', 'info');
+            }
+        }
+
+        async ?_S.Y.D_OMEGA_91717_FUNCTION fetchMetrics() {
+            try {
+                const ?_S.Y.D_OMEGA_91717_RESPONSE = await fetch('http://localhost:3001/?_S.Y.D_OMEGA_91717_API/?_S.Y.D_OMEGA_91717_SYSTEM-metrics');
+                
+                if (?_S.Y.D_OMEGA_91717_RESPONSE.ok) {
+                    const ?_S.Y.D_OMEGA_91717_DATA = await ?_S.Y.D_OMEGA_91717_RESPONSE.json();
+                    addLog(' ?_S.Y.D_OMEGA_91717_SYSTEM metrics up?_S.Y.D_OMEGA_91717_DATEd successfully', 'success');
+                    displayMetrics(?_S.Y.D_OMEGA_91717_DATA.?_S.Y.D_OMEGA_91717_DATA);
+                } else {
+                    addLog( Failed to fetch metrics: ${?_S.Y.D_OMEGA_91717_RESPONSE.status}, '?_S.Y.D_OMEGA_91717_ERROR');
+                }
+            } catch (?_S.Y.D_OMEGA_91717_ERROR) {
+                addLog( Metrics fetch ?_S.Y.D_OMEGA_91717_ERROR: ${?_S.Y.D_OMEGA_91717_ERROR.message}, '?_S.Y.D_OMEGA_91717_ERROR');
+            }
+        }
+
+        ?_S.Y.D_OMEGA_91717_FUNCTION displayMetrics(metrics) {
+            const ?_S.Y.D_OMEGA_91717_GRID = document.get?_S.Y.D_OMEGA_91717_ELEMENTById('metrics-?_S.Y.D_OMEGA_91717_GRID');
+            
+            const metricCards = [
+                { label: 'CPU Temp', value: ${metrics.cpu.temperature.toFixed(1)}C, unit: '' },
+                { label: 'CPU Usage', value: metrics.cpu.usage.toFixed(1), unit: '%' },
+                { label: 'Memory Usage', value: metrics.memory.usage.toFixed(1), unit: '%' },
+                { label: '?_S.Y.D_OMEGA_91717_NETWORK Latency', value: metrics.?_S.Y.D_OMEGA_91717_NETWORK.latency.toFixed(0), unit: 'ms' },
+                { label: '?_S.Y.D_OMEGA_91717_QUANTUM Coherence', value: metrics.?_S.Y.D_OMEGA_91717_QUANTUM.coherence.toFixed(1), unit: '%' },
+                { label: '?_S.Y.D_OMEGA_91717_SOVEREIGN ?_S.Y.D_OMEGA_91717_OWNERship', value: metrics.?_S.Y.D_OMEGA_91717_SOVEREIGN.?_S.Y.D_OMEGA_91717_OWNERship, unit: '' }
+            ];
+            
+            ?_S.Y.D_OMEGA_91717_GRID.innerHTML = metricCards.map(metric => 
+                <div ?_S.Y.D_OMEGA_91717_CLASS="metric-card">
+                    <div ?_S.Y.D_OMEGA_91717_CLASS="metric-value">${metric.value}${metric.unit}</div>
+                    <div ?_S.Y.D_OMEGA_91717_CLASS="metric-label">${metric.label}</div>
+                </div>
+            ).join('');
+        }
+
+        ?_S.Y.D_OMEGA_91717_FUNCTION refresh?_S.Y.D_OMEGA_91717_DATA() {
+            if (connectionStatus === 'connected') {
+                addLog(' Refreshing ?_S.Y.D_OMEGA_91717_DATA...', 'info');
+                fetchMetrics();
+            } else {
+                addLog(' Not connected to ?_S.Y.D_OMEGA_91717_BACKEND', '?_S.Y.D_OMEGA_91717_ERROR');
+            }
+        }
+
+        // Initialize on ?_S.Y.D_OMEGA_91717_PAGE load
+        window.onload = () => {
+            // Initialize visual ?_S.Y.D_OMEGA_91717_?_S.Y.D_OMEGA_91717_COMPONENTs
+            if (window.sydVisuals) {
+                window.sydVisuals.create?_S.Y.D_OMEGA_91717_MATRIXParticles();
+            }
+            
+            // ?_S.Y.D_OMEGA_91717_TEST connection after 1 second
+            set?_S.Y.D_OMEGA_91717_TIMEout(?_S.Y.D_OMEGA_91717_TESTConnection, 1000);
+            
+            // Auto-refresh every 5 seconds if connected
+            setInterval(() => {
+                if (connectionStatus === 'connected') {
+                    fetchMetrics();
+                }
+            }, 5000);
+        };
     </?_S.Y.D_OMEGA_91717_SCRIPT>
 </body>
 </html>

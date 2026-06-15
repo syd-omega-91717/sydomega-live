@@ -14,6 +14,7 @@
     --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000;
     --ink:#e9e6dc; --muted:#8c8a82;
     --line:rgba(201,168,76,0.18);
+    --acc:#C9A84C;
     --display:'Cinzel Decorative', serif;
     --body:'Rajdhani', sans-serif;
     --mono:'Courier Prime', monospace;
@@ -99,12 +100,17 @@
   .seal .s-date{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px}
   .certs .empty{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px}
 
-  .agent{border:1px solid var(--line);margin-top:24px;padding:24px;text-align:left}
+  .agent{border:1px solid var(--line);border-left:2px solid var(--acc);margin-top:24px;padding:24px;text-align:left}
+  .ag-head{display:flex;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .sigil{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid var(--acc);color:var(--acc);font-family:var(--mono);font-size:11px;letter-spacing:1px;border-radius:50%;margin-right:12px}
+  .ag-head .lead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--acc)}
+  .ag-head .dom{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-left:10px}
+  .chain b#d-agent{color:var(--acc)}
   .agent .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
   .chatlog{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto;margin-bottom:14px}
   .cmsg{font-size:15px;line-height:1.55;padding:10px 14px;border:1px solid var(--line);max-width:92%}
   .cmsg.me{align-self:flex-end;color:var(--ink);border-color:var(--cyan)}
-  .cmsg.ag{align-self:flex-start;color:var(--gold);border-color:var(--gold);background:linear-gradient(180deg,rgba(201,168,76,0.06),transparent)}
+  .cmsg.ag{align-self:flex-start;color:var(--acc);border-color:var(--acc);background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent)}
   .chatrow{display:flex;gap:10px}
   .chatrow input{flex:1}
   .chatrow .btn{width:auto;white-space:nowrap}
@@ -205,7 +211,7 @@
     </div>
 
     <div class="agent">
-      <div class="kicker">COUNSEL OF YOUR AGENT · <span id="ag-name" style="color:var(--gold)"></span></div>
+      <div class="ag-head"><span class="sigil" id="ag-sigil">Ω</span><span class="lead">COUNSEL OF YOUR AGENT · <span id="ag-name"></span></span><span class="dom" id="ag-dom"></span></div>
       <div class="chatlog" id="ag-log"></div>
       <div class="chatrow">
         <input type="text" id="ag-input" placeholder="Ask your agent… (try: what should I focus on?)" maxlength="300" />
@@ -261,6 +267,9 @@
   }
   function find(n){ return SIGNS.find(s=>s[0]===n); }
   const MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
+  const ELEM_ACCENT={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
+  const AGENT_SIGIL={Sentinel:'SE',Merchant:'ME',Scout:'SC',Warden:'WA',Sovereign:'SO',Auditor:'AU',Proxy:'PR',Oracle:'OR',Beacon:'BE',Analyst:'AN',Tutor:'TU',Historian:'HI'};
+  const AGENT_DOMAIN={Sentinel:'SECURITY',Analyst:'FINANCE',Historian:'ARCHIVE',Tutor:'EDUCATION',Merchant:'COMMERCE',Proxy:'EXECUTION',Oracle:'PREDICTION',Scout:'DISCOVERY',Warden:'FAMILY',Auditor:'VALIDATION',Beacon:'ONBOARDING',Sovereign:'MASTER'};
 
   const vAuth=document.getElementById('view-auth');
   const vGate=document.getElementById('view-gate');
@@ -341,6 +350,9 @@
     document.getElementById('d-affinity').textContent = (ELEMENTS[prof.element]||{}).affinity || '';
     document.getElementById('who').textContent = currentUser ? currentUser.email : '';
     document.getElementById('ag-name').textContent = prof.agent || '';
+    document.documentElement.style.setProperty('--acc', ELEM_ACCENT[prof.element] || '#C9A84C');
+    document.getElementById('ag-sigil').textContent = AGENT_SIGIL[prof.agent] || 'Ω';
+    document.getElementById('ag-dom').textContent = AGENT_DOMAIN[prof.agent] ? '· '+AGENT_DOMAIN[prof.agent] : '';
     const aglog=document.getElementById('ag-log');
     if(aglog && !aglog.children.length){
       const w=document.createElement('div'); w.className='cmsg ag';

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ω SYD OMEGA 91717 — Member Access</title>
-<meta name="description" content="Create your SYD OMEGA account. Your cosmology and matrix position, saved to your sovereign profile." />
+<meta name="description" content="Create your SYD OMEGA account. Your cosmology and evolving matrix position, saved to your sovereign profile." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -36,20 +36,20 @@
   .home{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan)}
   .home:hover,.home:focus{color:var(--gold);outline:none}
 
-  .panel{text-align:center;padding:72px 0 60px}
+  .panel{text-align:center;padding:64px 0 60px}
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:6px;color:var(--cyan);margin-bottom:16px}
   h1{font-family:var(--display);font-weight:700;letter-spacing:2px;font-size:clamp(28px,5.5vw,46px);color:var(--gold)}
   .panel p.sub{font-weight:300;color:var(--muted);max-width:52ch;margin:18px auto 0;font-size:16px}
 
   .form{margin:38px auto 0;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:left}
   label{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--muted)}
-  input{font-family:var(--mono);font-size:16px;color:var(--ink);background:var(--void-2);border:1px solid var(--line);padding:14px 16px;width:100%;color-scheme:dark}
-  input:focus{outline:none;border-color:var(--cyan)}
+  input,select{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--void-2);border:1px solid var(--line);padding:13px 15px;width:100%;color-scheme:dark}
+  input:focus,select:focus{outline:none;border-color:var(--cyan)}
   .btn{font-family:var(--mono);letter-spacing:3px;font-size:13px;color:var(--void);background:var(--gold);padding:15px 26px;border:1px solid var(--gold);cursor:pointer;transition:all .25s ease;width:100%}
   .btn:hover,.btn:focus{background:transparent;color:var(--gold);outline:none}
   .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
   .btn:disabled{opacity:.5;cursor:default}
-  .ghost{font-family:var(--mono);letter-spacing:3px;font-size:12px;color:var(--gold);background:transparent;border:1px solid var(--gold);padding:13px 24px;cursor:pointer;width:100%}
+  .ghost{font-family:var(--mono);letter-spacing:3px;font-size:12px;color:var(--gold);background:transparent;border:1px solid var(--gold);padding:13px 24px;cursor:pointer}
   .ghost:hover,.ghost:focus{background:var(--gold);color:var(--void);outline:none}
   .row2{display:flex;gap:12px}
   .row2 .btn{width:auto;flex:1}
@@ -72,21 +72,28 @@
   .coords{display:flex;flex-wrap:wrap;gap:24px;align-items:baseline}
   .coord{font-family:var(--mono)}
   .coord .lbl{font-size:10px;letter-spacing:2px;color:var(--muted);display:block}
-  .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:30px}
+  .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:28px}
   .mrow{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:18px;line-height:1.9}
   .mrow b{color:var(--gold);font-weight:400}
   .ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;font-family:var(--mono);font-size:10px;letter-spacing:1px}
   .rung{border:1px solid var(--line);padding:6px 9px;color:var(--muted)}
   .rung.on{border-color:var(--gold);color:var(--gold)}
 
-  .whoami{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:26px}
-  .whoami b{color:var(--cyan);font-weight:400}
-  .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:22px;text-align:center;line-height:1.8}
-  .actions{display:flex;justify-content:center;margin-top:26px}
-  .actions .ghost{width:auto}
+  .evt{border:1px solid var(--line);margin-top:24px;padding:24px;text-align:left}
+  .evt .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
+  .erow{display:flex;flex-direction:column;gap:12px}
 
-  .hidden{display:none}
-  @media(prefers-reduced-motion:reduce){ }
+  .ledger{margin-top:22px;text-align:left}
+  .ledger .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+  .ev{font-family:var(--mono);font-size:12px;color:var(--muted);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:12px}
+  .ev:last-child{border-bottom:none}
+  .ev .ax{color:var(--gold);min-width:104px}
+  .ev .nt{color:var(--ink);flex:1}
+
+  .whoami{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:26px;text-align:center}
+  .whoami b{color:var(--cyan);font-weight:400}
+  .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:18px;text-align:center;line-height:1.8}
+  .actions{display:flex;justify-content:center;margin-top:24px}
 </style>
 </head>
 <body>
@@ -95,11 +102,11 @@
 
 <main class="wrap">
 
-  <!-- ============ VIEW: AUTH ============ -->
+  <!-- ===== AUTH ===== -->
   <section class="panel" id="view-auth" style="display:none">
     <div class="eyebrow">MEMBER ACCESS</div>
     <h1>Join the Order</h1>
-    <p class="sub">Create your account to claim a permanent place. Your sign, element, Olympian, planet, agent, and matrix position are saved to your sovereign profile — waiting for you each time you return.</p>
+    <p class="sub">Create your account to claim a permanent place. Your cosmology and your evolving matrix position are saved to your sovereign profile — waiting for you each time you return.</p>
     <div class="form">
       <label for="au-email">EMAIL</label>
       <input type="email" id="au-email" placeholder="you@example.com" autocomplete="email" />
@@ -113,7 +120,7 @@
     </div>
   </section>
 
-  <!-- ============ VIEW: GATE (set cosmology) ============ -->
+  <!-- ===== GATE ===== -->
   <section class="panel" id="view-gate" style="display:none">
     <div class="eyebrow">THE THRESHOLD</div>
     <h1>Set Your Cosmology</h1>
@@ -126,7 +133,7 @@
     </div>
   </section>
 
-  <!-- ============ VIEW: DASHBOARD ============ -->
+  <!-- ===== DASHBOARD ===== -->
   <section class="panel" id="view-dash" style="display:none">
     <div class="crown">
       <div class="glyph" id="d-glyph"></div>
@@ -145,17 +152,36 @@
     <div class="matrix">
       <div class="kicker">YOUR MATRIX POSITION</div>
       <div class="coords">
-        <div class="coord"><span class="lbl">KNOWLEDGE (A)</span><span class="num">1</span></div>
-        <div class="coord"><span class="lbl">MASTERY (B)</span><span class="num">1</span></div>
-        <div class="coord"><span class="lbl">CONTRIBUTION (C)</span><span class="num">1</span></div>
-        <div class="coord"><span class="lbl">AUTHORITY √(A²+B²+C²)</span><span class="num">1.73</span></div>
+        <div class="coord"><span class="lbl">KNOWLEDGE (A)</span><span class="num" id="d-a">1.00</span></div>
+        <div class="coord"><span class="lbl">MASTERY (B)</span><span class="num" id="d-b">1.00</span></div>
+        <div class="coord"><span class="lbl">CONTRIBUTION (C)</span><span class="num" id="d-c">1.00</span></div>
+        <div class="coord"><span class="lbl">AUTHORITY √(A²+B²+C²)</span><span class="num" id="d-auth">1.73</span></div>
       </div>
-      <div class="mrow">TIER: <b>1 — Initiate</b> &nbsp;·&nbsp; MATERIAL: <b>Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX THRESHOLD: <b>15.58</b> &nbsp;·&nbsp; MILESTONES: <b>(3,3,3) · (6,6,6) · (9,9,9)</b></div>
+      <div class="mrow">TIER: <b id="d-tier">1</b> &nbsp;·&nbsp; MATERIAL: <b id="d-material">Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX √243 ≈ <b>15.58</b> &nbsp;·&nbsp; NEXT MILESTONE: <b id="d-next">(3,3,3)</b></div>
       <div class="ladder" id="d-ladder"></div>
     </div>
 
+    <div class="evt">
+      <div class="kicker">RECORD AN EVOLUTION EVENT</div>
+      <div class="erow">
+        <select id="ev-axis">
+          <option value="a">Knowledge (A) — what you learned</option>
+          <option value="b">Mastery (B) — what you demonstrated</option>
+          <option value="c">Contribution (C) — what you gave back</option>
+        </select>
+        <input type="text" id="ev-note" placeholder="Describe the action, briefly…" maxlength="280" />
+        <button class="btn" id="ev-go">RECORD EVENT&nbsp;&nbsp;+0.25</button>
+        <div class="msg" id="ev-msg"></div>
+      </div>
+    </div>
+
+    <div class="ledger">
+      <div class="kicker">RECENT EVOLUTION</div>
+      <div id="d-events"></div>
+    </div>
+
     <div class="whoami">SIGNED IN AS <b id="who"></b></div>
-    <div class="note">Your profile is saved. Progression, content, and achievements activate in sequenced phases.</div>
+    <div class="note">Your profile evolves and is saved with every event. Tier advances when your lowest axis crosses each whole node, toward the apex at (9,9,9).</div>
     <div class="actions"><button class="ghost" id="btn-logout">LOG OUT</button></div>
   </section>
 
@@ -173,7 +199,6 @@
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
   const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-  /* ---- locked cosmology engine (identical to enter.html) ---- */
   const ELEMENTS = {
     Fire:{affinity:'+Mastery (Axis B)'},
     Water:{affinity:'+Contribution (Axis C)'},
@@ -202,14 +227,15 @@
     return 'Capricorn';
   }
   function find(n){ return SIGNS.find(s=>s[0]===n); }
+  const MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
 
-  /* ---- views ---- */
   const vAuth=document.getElementById('view-auth');
   const vGate=document.getElementById('view-gate');
   const vDash=document.getElementById('view-dash');
   function show(v){ [vAuth,vGate,vDash].forEach(x=>{ x.style.display='none'; }); v.style.display='block'; }
 
   let currentUser=null;
+  let currentProfile=null;
 
   async function route(){
     const { data:{ session } } = await supabase.auth.getSession();
@@ -220,7 +246,7 @@
       const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
       prof=data;
     }catch(e){ prof=null; }
-    if(prof && prof.sign){ renderDash(prof); show(vDash); }
+    if(prof && prof.sign){ renderDash(prof); show(vDash); loadEvents(); }
     else { document.getElementById('gate-err').textContent=''; show(vGate); }
   }
 
@@ -234,7 +260,7 @@
     msg.className='msg'; msg.textContent='Creating your account…';
     const { data, error } = await supabase.auth.signUp({ email, password:pw });
     if(error){ msg.className='msg bad'; msg.textContent=error.message; return; }
-    if(data.session){ msg.textContent=''; /* onAuthStateChange routes */ }
+    if(data.session){ msg.textContent=''; }
     else { msg.className='msg ok'; msg.textContent='Account created. Confirm via email if prompted, then log in.'; }
   }
   async function logIn(){
@@ -264,10 +290,12 @@
     );
     btn.disabled=false;
     if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+'). Try again.'; console.log('save error',error); return; }
-    renderDash(prof); show(vDash);
+    const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+    renderDash(data||prof); show(vDash); loadEvents();
   }
 
   function renderDash(prof){
+    currentProfile=prof;
     const s=find(prof.sign);
     document.getElementById('d-glyph').textContent = s? s[1] : 'Ω';
     document.getElementById('d-sign').textContent = (prof.sign||'').toUpperCase();
@@ -279,17 +307,62 @@
     document.getElementById('d-agent').textContent = prof.agent||'';
     document.getElementById('d-affinity').textContent = (ELEMENTS[prof.element]||{}).affinity || '';
     document.getElementById('who').textContent = currentUser ? currentUser.email : '';
-    const mats=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
+
+    const a=Number(prof.axis_a ?? 1), b=Number(prof.axis_b ?? 1), c=Number(prof.axis_c ?? 1);
+    const auth=Math.sqrt(a*a+b*b+c*c);
+    const tier=Math.max(1, Math.min(9, Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
+    document.getElementById('d-a').textContent=a.toFixed(2);
+    document.getElementById('d-b').textContent=b.toFixed(2);
+    document.getElementById('d-c').textContent=c.toFixed(2);
+    document.getElementById('d-auth').textContent=auth.toFixed(2);
+    document.getElementById('d-tier').textContent=String(tier);
+    document.getElementById('d-material').textContent=MATS[tier-1];
+    const mn=Math.min(a,b,c);
+    document.getElementById('d-next').textContent = mn<3?'(3,3,3)':mn<6?'(6,6,6)':mn<9?'(9,9,9)':'APEX REACHED';
     const lad=document.getElementById('d-ladder'); lad.innerHTML='';
-    mats.forEach((mt,i)=>{ const x=document.createElement('span'); x.className='rung'+(i===0?' on':''); x.textContent=(i+1)+'·'+mt; lad.appendChild(x); });
+    MATS.forEach((mt,i)=>{ const x=document.createElement('span'); x.className='rung'+((i+1)<=tier?' on':''); x.textContent=(i+1)+'·'+mt; lad.appendChild(x); });
+  }
+
+  async function logEvent(){
+    const axis=document.getElementById('ev-axis').value;
+    const note=document.getElementById('ev-note').value.trim();
+    const msg=document.getElementById('ev-msg'); const btn=document.getElementById('ev-go');
+    if(!note){ msg.className='msg bad'; msg.textContent='Describe the action so the event is real.'; return; }
+    btn.disabled=true; msg.className='msg'; msg.textContent='Recording…';
+    const { data, error } = await supabase.rpc('log_evolution', { p_axis:axis, p_note:note });
+    btn.disabled=false;
+    if(error){ msg.className='msg bad'; msg.textContent='Could not record ('+(error.code||error.message||'')+').'; console.log('rpc error',error); return; }
+    msg.className='msg ok'; msg.textContent='Recorded. Your matrix advanced.';
+    document.getElementById('ev-note').value='';
+    if(data){ renderDash(data); }
+    loadEvents();
+  }
+
+  async function loadEvents(){
+    if(!currentUser) return;
+    const box=document.getElementById('d-events');
+    try{
+      const { data } = await supabase.from('evolution_events').select('axis,note,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(8);
+      box.innerHTML='';
+      const names={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'};
+      if(!data || !data.length){ box.innerHTML='<div class="ev"><span class="nt" style="color:var(--muted)">No events yet — record your first above.</span></div>'; return; }
+      data.forEach(ev=>{
+        const row=document.createElement('div'); row.className='ev';
+        const ax=document.createElement('span'); ax.className='ax'; ax.textContent=names[ev.axis]||ev.axis;
+        const nt=document.createElement('span'); nt.className='nt'; nt.textContent=ev.note||'';
+        row.appendChild(ax); row.appendChild(nt); box.appendChild(row);
+      });
+    }catch(e){ box.innerHTML=''; }
   }
 
   document.getElementById('btn-signup').addEventListener('click',signUp);
   document.getElementById('btn-login').addEventListener('click',logIn);
   document.getElementById('btn-logout').addEventListener('click',logOut);
   document.getElementById('gate-go').addEventListener('click',reveal);
+  document.getElementById('ev-go').addEventListener('click',logEvent);
   document.getElementById('au-pw').addEventListener('keydown',e=>{ if(e.key==='Enter') logIn(); });
   document.getElementById('dob').addEventListener('keydown',e=>{ if(e.key==='Enter') reveal(); });
+  document.getElementById('ev-note').addEventListener('keydown',e=>{ if(e.key==='Enter') logEvent(); });
 
   route();
 </script>

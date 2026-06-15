@@ -86,6 +86,10 @@
   .join-msg.ok{color:var(--cyan)} .join-msg.bad{color:var(--crimson)}
   .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:24px;text-align:center;line-height:1.8}
   .actions{display:flex;justify-content:center;margin-top:24px}
+  .share{border:1px solid var(--line);margin-top:24px;padding:26px;text-align:center}
+  .share-k{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
+  .sharerow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .share-msg{font-family:var(--mono);font-size:12px;letter-spacing:1px;margin-top:14px;min-height:16px;color:var(--cyan)}
   .ghost{font-family:var(--mono);letter-spacing:3px;font-size:12px;color:var(--gold);background:transparent;border:1px solid var(--gold);padding:15px 26px;cursor:pointer}
   .ghost:hover,.ghost:focus{background:var(--gold);color:var(--void);outline:none}
   footer{border-top:1px solid var(--line);padding:30px 0;text-align:center}
@@ -143,6 +147,15 @@
         <button class="btn" id="join-btn">JOIN THE ORDER</button>
       </div>
       <div class="join-msg" id="join-msg"></div>
+    </div>
+    <div class="share">
+      <div class="share-k">CARRY YOUR SIGN BEYOND THE GATE</div>
+      <div class="sharerow">
+        <button class="ghost" id="share-card">DOWNLOAD CARD</button>
+        <button class="ghost" id="share-copy">COPY SHARE LINK</button>
+      </div>
+      <div class="share-msg" id="share-msg"></div>
+      <canvas id="share-canvas" width="1080" height="1080" style="display:none"></canvas>
     </div>
     <div class="note">An identity preview for entertainment. Live membership, progression, and content activate in sequenced phases.</div>
     <div class="actions"><button class="ghost" id="again">ENTER ANOTHER DATE</button></div>
@@ -247,10 +260,55 @@
   }
   function restart(){ result.classList.remove('show'); gate.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
 
+  function hexA(hex,a){ var h=hex.replace('#',''); var r=parseInt(h.substring(0,2),16),g=parseInt(h.substring(2,4),16),b=parseInt(h.substring(4,6),16); return 'rgba('+r+','+g+','+b+','+a+')'; }
+  function wrapText(ctx,text,cx,y,maxW,lh){
+    var words=text.split(' '), line='', lines=[];
+    for(var i=0;i<words.length;i++){ var t=line?line+' '+words[i]:words[i]; if(ctx.measureText(t).width>maxW && line){ lines.push(line); line=words[i]; } else { line=t; } }
+    if(line) lines.push(line);
+    var sy=y-(lines.length-1)*lh/2;
+    for(var j=0;j<lines.length;j++){ ctx.fillText(lines[j], cx, sy+j*lh); }
+  }
+  function makeCard(){
+    if(!current) return;
+    var s=find(current.sign); if(!s) return;
+    var acc=ELEM_ACCENT[current.element]||'#C9A84C';
+    var msg=document.getElementById('share-msg'); msg.textContent='Rendering…';
+    function draw(){
+      var cv=document.getElementById('share-canvas'), x=cv.getContext('2d'), W=1080, H=1080;
+      x.fillStyle='#0A0A0F'; x.fillRect(0,0,W,H);
+      var g=x.createRadialGradient(W/2,360,40,W/2,360,640);
+      g.addColorStop(0,hexA(acc,0.22)); g.addColorStop(1,'rgba(10,10,15,0)');
+      x.fillStyle=g; x.fillRect(0,0,W,H);
+      x.strokeStyle=hexA('#C9A84C',0.5); x.lineWidth=2; x.strokeRect(40,40,W-80,H-80);
+      x.textAlign='center';
+      x.fillStyle='#C9A84C'; x.font='700 30px "Courier Prime", monospace'; x.fillText('\u03A9   91717', W/2, 130);
+      x.fillStyle=acc; x.font='700 210px "Cinzel Decorative", Georgia, serif'; x.fillText(s[1], W/2, 410);
+      x.fillStyle='#e9e6dc'; x.font='700 86px "Cinzel Decorative", Georgia, serif'; x.fillText(current.sign.toUpperCase(), W/2, 520);
+      x.fillStyle='#8c8a82'; x.font='28px "Courier Prime", monospace'; x.fillText(s[2], W/2, 566);
+      x.fillStyle=acc; x.font='300 38px "Rajdhani", Arial, sans-serif'; wrapText(x, '\u201C'+s[7]+'\u201D', W/2, 680, 880, 50);
+      x.fillStyle='#C9A84C'; x.font='26px "Courier Prime", monospace'; x.fillText(current.element+'   \u00B7   '+current.olympian+'   \u00B7   '+current.planet+'   \u00B7   '+current.agent, W/2, 880);
+      x.fillStyle='#8c8a82'; x.font='24px "Courier Prime", monospace'; x.fillText('ENTER YOURS   \u00B7   SYDOMEGA.COM', W/2, 1000);
+      var a=document.createElement('a'); a.href=cv.toDataURL('image/png'); a.download='syd-omega-'+current.sign.toLowerCase()+'.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      msg.textContent='Card downloaded. Share it anywhere.';
+    }
+    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(draw); } else { draw(); }
+  }
+  function fallbackCopy(text,msg){ var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); msg.textContent='Share text copied.'; }catch(e){ msg.textContent='Copy unavailable — visit sydomega.com'; } document.body.removeChild(ta); }
+  function copyShare(){
+    var msg=document.getElementById('share-msg');
+    if(!current){ return; }
+    var text='I am '+current.sign+' of the Order \u2014 '+current.element+' \u00B7 '+current.agent+'. Reveal your cosmology at https://sydomega.com';
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ msg.textContent='Share text copied.'; }, function(){ fallbackCopy(text,msg); }); }
+    else { fallbackCopy(text,msg); }
+  }
+
   document.getElementById('go').addEventListener('click',reveal);
   document.getElementById('dob').addEventListener('keydown',function(e){ if(e.key==='Enter') reveal(); });
   document.getElementById('join-btn').addEventListener('click',join);
   document.getElementById('again').addEventListener('click',restart);
+  document.getElementById('share-card').addEventListener('click',makeCard);
+  document.getElementById('share-copy').addEventListener('click',copyShare);
 </script>
 </body>
 </html>

@@ -99,6 +99,16 @@
   .seal .s-date{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px}
   .certs .empty{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px}
 
+  .agent{border:1px solid var(--line);margin-top:24px;padding:24px;text-align:left}
+  .agent .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
+  .chatlog{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto;margin-bottom:14px}
+  .cmsg{font-size:15px;line-height:1.55;padding:10px 14px;border:1px solid var(--line);max-width:92%}
+  .cmsg.me{align-self:flex-end;color:var(--ink);border-color:var(--cyan)}
+  .cmsg.ag{align-self:flex-start;color:var(--gold);border-color:var(--gold);background:linear-gradient(180deg,rgba(201,168,76,0.06),transparent)}
+  .chatrow{display:flex;gap:10px}
+  .chatrow input{flex:1}
+  .chatrow .btn{width:auto;white-space:nowrap}
+
   .whoami{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:26px;text-align:center}
   .whoami b{color:var(--cyan);font-weight:400}
   .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:18px;text-align:center;line-height:1.8}
@@ -192,6 +202,15 @@
     <div class="ledger">
       <div class="kicker">RECENT EVOLUTION</div>
       <div id="d-events"></div>
+    </div>
+
+    <div class="agent">
+      <div class="kicker">COUNSEL OF YOUR AGENT · <span id="ag-name" style="color:var(--gold)"></span></div>
+      <div class="chatlog" id="ag-log"></div>
+      <div class="chatrow">
+        <input type="text" id="ag-input" placeholder="Ask your agent… (try: what should I focus on?)" maxlength="300" />
+        <button class="btn" id="ag-send">SEND</button>
+      </div>
     </div>
 
     <div class="whoami">SIGNED IN AS <b id="who"></b></div>
@@ -321,6 +340,13 @@
     document.getElementById('d-agent').textContent = prof.agent||'';
     document.getElementById('d-affinity').textContent = (ELEMENTS[prof.element]||{}).affinity || '';
     document.getElementById('who').textContent = currentUser ? currentUser.email : '';
+    document.getElementById('ag-name').textContent = prof.agent || '';
+    const aglog=document.getElementById('ag-log');
+    if(aglog && !aglog.children.length){
+      const w=document.createElement('div'); w.className='cmsg ag';
+      w.textContent='I am '+(prof.agent||'your agent')+', bound to your '+(prof.sign||'')+' path. Ask me what to focus on, where you stand, or how to reach your next milestone.';
+      aglog.appendChild(w);
+    }
 
     const a=Number(prof.axis_a ?? 1), b=Number(prof.axis_b ?? 1), c=Number(prof.axis_c ?? 1);
     const auth=Math.sqrt(a*a+b*b+c*c);
@@ -391,6 +417,57 @@
     }catch(e){ box.innerHTML=''; return 0; }
   }
 
+  function agentReply(text){
+    const p=currentProfile||{};
+    const a=Number(p.axis_a ?? 1), b=Number(p.axis_b ?? 1), c=Number(p.axis_c ?? 1);
+    const auth=Math.sqrt(a*a+b*b+c*c);
+    const tier=Math.max(1,Math.min(9,Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
+    const material=MATS[tier-1];
+    const axes=[['Knowledge',a],['Mastery',b],['Contribution',c]].sort((x,y)=>x[1]-y[1]);
+    const low=axes[0];
+    const mn=Math.min(a,b,c);
+    const nextNode=Math.min(9,Math.floor(low[1])+1);
+    const eventsToNext=Math.max(1,Math.ceil((nextNode-low[1])/0.25));
+    const milestone = mn<3?3:mn<6?6:mn<9?9:null;
+    const agent=p.agent||'your agent', sign=p.sign||'your sign', element=p.element||'your element';
+    const character=(find(p.sign)||[])[7]||'';
+    const adv={Knowledge:'record what you have studied, read, or learned',Mastery:'record skills you have demonstrated or tasks you have completed',Contribution:'record what you have taught, created, or given to others'};
+    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+    const t=(text||'').toLowerCase();
+    const has=(...w)=>w.some(k=>t.includes(k));
+
+    if(has('hello','hi ','hey','greet')||t==='hi') return 'I am '+agent+', bound to your '+sign+' path. '+character+' Ask me what to focus on, or where you stand.';
+    if(has('who are you','what are you','your name','which agent')) return 'I am '+agent+', the guide assigned to '+sign+' under the element of '+element+'. I walk with you from the genesis node to the apex.';
+    if(has('help','what can','commands','options')) return 'Ask me: "what should I focus on", "where do I stand", "how do I reach the next milestone", or about Knowledge, Mastery, or Contribution.';
+    if(has('knowledge')) return 'Knowledge (Axis A) stands at '+a.toFixed(2)+'. To raise it, '+adv.Knowledge+'. Each event adds 0.25 toward the next node.';
+    if(has('mastery')) return 'Mastery (Axis B) stands at '+b.toFixed(2)+'. To raise it, '+adv.Mastery+'. Discipline compounds — return often.';
+    if(has('contribution')) return 'Contribution (Axis C) stands at '+c.toFixed(2)+'. To raise it, '+adv.Contribution+'. What you give the Order returns to you.';
+    if(has('milestone','certificate','seal','ascend','rank up','next node')){
+      if(milestone===null) return 'You have reached the apex (9,9,9) — Omega Master. There is no higher node. Now you guide others.';
+      return 'Your next milestone is ('+milestone+','+milestone+','+milestone+'). Your lowest axis is '+low[0]+' at '+low[1].toFixed(2)+' — it must reach '+milestone+'. '+cap(adv[low[0]])+'.';
+    }
+    if(has('focus','should i','what do i do','what now','start','do next','advance','progress','improve','grow')){
+      return 'Focus on your weakest axis: '+low[0]+', at '+low[1].toFixed(2)+'. '+cap(adv[low[0]])+'. About '+eventsToNext+' event'+(eventsToNext===1?'':'s')+' lifts you to the next node.';
+    }
+    if(has('tier','rank','level','material','where','stand','position','authority','status')){
+      return 'You stand at Tier '+tier+', material '+material+', authority '+auth.toFixed(2)+' of the apex 15.58. Axes: Knowledge '+a.toFixed(2)+', Mastery '+b.toFixed(2)+', Contribution '+c.toFixed(2)+'.';
+    }
+    return character+' Balance is the law of the matrix — your weakest axis is '+low[0]+' at '+low[1].toFixed(2)+'. Tend to it, and authority follows. Ask me "what should I focus on" for the path.';
+  }
+  function appendMsg(who, text){
+    const log=document.getElementById('ag-log');
+    const d=document.createElement('div'); d.className='cmsg '+(who==='me'?'me':'ag'); d.textContent=text;
+    log.appendChild(d); log.scrollTop=log.scrollHeight;
+  }
+  function chat(){
+    const input=document.getElementById('ag-input'); const text=input.value.trim();
+    if(!text) return;
+    appendMsg('me', text); input.value='';
+    const reply=agentReply(text);
+    setTimeout(()=>appendMsg('ag', reply), 180);
+  }
+
   document.getElementById('btn-signup').addEventListener('click',signUp);
   document.getElementById('btn-login').addEventListener('click',logIn);
   document.getElementById('btn-logout').addEventListener('click',logOut);
@@ -399,6 +476,8 @@
   document.getElementById('au-pw').addEventListener('keydown',e=>{ if(e.key==='Enter') logIn(); });
   document.getElementById('dob').addEventListener('keydown',e=>{ if(e.key==='Enter') reveal(); });
   document.getElementById('ev-note').addEventListener('keydown',e=>{ if(e.key==='Enter') logEvent(); });
+  document.getElementById('ag-send').addEventListener('click',chat);
+  document.getElementById('ag-input').addEventListener('keydown',e=>{ if(e.key==='Enter') chat(); });
 
   route();
 </script>

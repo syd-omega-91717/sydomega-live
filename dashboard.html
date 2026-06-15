@@ -137,6 +137,7 @@
     <div class="brand">Ω SYD OMEGA<small>9 1 7 1 7</small></div>
     <nav class="nav">
       <a class="on" href="#">DASHBOARD <span></span></a>
+      <a href="/profile.html">PROFILE</a>
       <a href="#matrix">9×9×9 MATRIX</a>
       <a href="#agent">AI COMMAND</a>
       <a href="#certs">CERTIFICATES</a>
@@ -319,7 +320,7 @@
     var mn=Math.min(a,b,c);
     document.getElementById('u-email').textContent=user.email;
     document.getElementById('u-tier').textContent=tier;
-    document.getElementById('welcome').textContent='WELCOME BACK, '+(prof.sign?prof.sign.toUpperCase():'SOVEREIGN');
+    document.getElementById('welcome').textContent='WELCOME BACK, '+((prof.display_name&&prof.display_name.trim())?prof.display_name.toUpperCase():(prof.sign?prof.sign.toUpperCase():'SOVEREIGN'));
     document.getElementById('quote').textContent=s?('“'+s[7]+'”'):'';
     document.getElementById('t-auth').textContent=auth.toFixed(2);
     document.getElementById('t-tier').textContent=tier;

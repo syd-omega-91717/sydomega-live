@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717 — Consultancy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
+    --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f;
+    --ink:#e9e6dc; --muted:#85837b; --acc:#C9A84C;
+    --line:rgba(201,168,76,0.16);
+    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 28% 16%,rgba(201,168,76,.07),transparent 40%),radial-gradient(circle at 82% 84%,rgba(0,229,255,.05),transparent 42%)}
+  a{color:inherit;text-decoration:none}
+  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
+  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
+  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
+  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
+  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
+  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
+  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
+  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
+  .nav .lk{color:var(--muted);cursor:default}
+  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
+  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+
+  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}
+  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+
+  .intro{font-weight:300;color:var(--muted);max-width:62ch;margin:22px 0;font-size:16px}
+  .intro b{color:var(--acc);font-weight:400}
+  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:24px;margin-top:16px}
+  .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
+  label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:8px}
+  select,textarea{width:100%;font-family:var(--body);font-size:16px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:13px 15px;color-scheme:dark}
+  select{font-family:var(--mono);font-size:14px}
+  textarea{min-height:120px;resize:vertical;margin-top:6px}
+  select:focus,textarea:focus{outline:none;border-color:var(--cyan)}
+  .btn{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:13px 22px;border:1px solid var(--gold);cursor:pointer;margin-top:16px}
+  .btn:hover{background:transparent;color:var(--gold)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .msg{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:12px}
+  .gate-note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:14px;line-height:1.7}
+  .gate-note b{color:var(--crimson)}
+
+  .req{font-family:var(--mono);font-size:12px;padding:13px 0;border-bottom:1px dashed var(--line)}
+  .req:last-child{border-bottom:none}
+  .req .top{display:flex;justify-content:space-between;gap:12px;color:var(--gold)}
+  .req .st{color:var(--green)}
+  .req .bd{color:var(--ink);margin-top:6px;line-height:1.5;white-space:pre-wrap}
+  .req .dt{color:var(--muted);font-size:10px;margin-top:5px}
+  .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
+  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
+  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
+  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
+  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
+  #app{display:none}
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+</style>
+</head>
+<body>
+<div id="gate" class="gate-card" style="display:none">
+  <div class="g">Ω</div>
+  <h2 id="gate-h">The Consultancy</h2>
+  <p id="gate-p">Sign in to request counsel from the Order.</p>
+  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+</div>
+
+<div class="shell" id="app">
+  <aside class="side">
+    <div class="brand">Ω SYD OMEGA<small>9 1 7 1 7</small></div>
+    <nav class="nav">
+      <a href="/dashboard.html">DASHBOARD</a>
+      <a href="/profile.html">PROFILE</a>
+      <a href="/academy.html">ACADEMY</a>
+      <a href="/gaming.html">GAMING ARENA</a>
+      <a href="/contributions.html">CONTRIBUTIONS</a>
+      <a class="on" href="#">CONSULTANCY</a>
+      <a href="/hall.html">HALL OF THE ORDER</a>
+      <a href="/">PUBLIC SITE</a>
+      <div class="sec">PHASE II — ACTIVATING</div>
+      <div class="lk">MEDIA HUB <span class="ph">SOON</span></div>
+      <div class="lk">TREASURY <span class="ph">SOON</span></div>
+      <div class="lk">NFT VAULT <span class="ph">SOON</span></div>
+    </nav>
+    <div class="out" id="logout">LOG OUT →</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="t">THE CONSULTANCY<small>COUNSEL OF THE ORDER</small></div>
+    </div>
+    <p class="intro">Request counsel across the Order's domains. Your request is <b>received and recorded</b>; the Order reviews each one. Live booking and payment activate in a later, legally-cleared phase — for now this is a true intake, not a transaction.</p>
+
+    <div class="card">
+      <div class="h">REQUEST A CONSULTATION</div>
+      <label for="c-domain">DOMAIN</label>
+      <select id="c-domain">
+        <option value="Medical">Medical</option>
+        <option value="Legal">Legal</option>
+        <option value="Engineering">Engineering</option>
+        <option value="Business">Business</option>
+        <option value="Economy">Economy</option>
+        <option value="Publishing">Publishing</option>
+      </select>
+      <label for="c-msg" style="margin-top:16px">YOUR REQUEST</label>
+      <textarea id="c-msg" maxlength="1200" placeholder="Describe what you seek counsel on…"></textarea>
+      <button class="btn" id="c-go">SUBMIT REQUEST</button>
+      <div class="msg" id="c-msg-out"></div>
+      <div class="gate-note">Booking, scheduling, and payment are <b>PHASE II — gated on legal review</b>. No fees are charged and no expert is assigned at this stage.</div>
+    </div>
+
+    <div class="card">
+      <div class="h">YOUR REQUESTS</div>
+      <div id="c-list"></div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  let user=null;
+
+  async function loadList(){
+    var box=document.getElementById('c-list');
+    try{
+      var r=await supabase.from('consult_requests').select('domain,message,status,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(30);
+      box.innerHTML='';
+      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No requests yet — submit your first above.</div>'; return; }
+      r.data.forEach(function(q){
+        var d=document.createElement('div'); d.className='req';
+        var dt=q.created_at?new Date(q.created_at).toLocaleDateString():'';
+        d.innerHTML='<div class="top"><span>'+q.domain+'</span><span class="st">'+(q.status||'received').toUpperCase()+'</span></div><div class="bd"></div><div class="dt">'+dt+'</div>';
+        d.querySelector('.bd').textContent=q.message||'';
+        box.appendChild(d);
+      });
+    }catch(e){ box.innerHTML=''; }
+  }
+  async function submit(){
+    var domain=document.getElementById('c-domain').value;
+    var message=document.getElementById('c-msg').value.trim();
+    var out=document.getElementById('c-msg-out'), btn=document.getElementById('c-go');
+    if(message.length<10){ out.style.color='var(--crimson)'; out.textContent='Describe your request — at least 10 characters.'; return; }
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting…';
+    var r=await supabase.from('consult_requests').insert({user_id:user.id,domain:domain,message:message});
+    btn.disabled=false;
+    if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not submit ('+(r.error.code||r.error.message||'')+').'; return; }
+    out.style.color='var(--cyan)'; out.textContent='Request received. The Order will review it.';
+    document.getElementById('c-msg').value='';
+    loadList();
+  }
+
+  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+
+  async function boot(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('The Consultancy','Sign in to request counsel from the Order.'); return; }
+    user=sess.user;
+    var pr=await supabase.from('profiles').select('sign').eq('id',user.id).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to request counsel.'); return; }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+    loadList();
+  }
+
+  document.getElementById('c-go').addEventListener('click',submit);
+  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  boot();
+</script>
+<script src="/bg.js"></script>
+</body>
+</html>

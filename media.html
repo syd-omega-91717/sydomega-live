@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717 — Media Hub · The Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
+    --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f;
+    --ink:#e9e6dc; --muted:#85837b; --acc:#C9A84C;
+    --line:rgba(201,168,76,0.16);
+    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 24% 14%,rgba(201,168,76,.07),transparent 40%),radial-gradient(circle at 84% 86%,rgba(0,229,255,.05),transparent 42%)}
+  a{color:inherit;text-decoration:none}
+  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
+  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
+  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
+  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
+  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
+  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
+  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
+  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
+  .nav .lk{color:var(--muted);cursor:default}
+  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
+  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+
+  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}
+  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+  .intro{font-weight:300;color:var(--muted);max-width:66ch;margin:22px 0 8px;font-size:16px}
+  .intro b{color:var(--acc);font-weight:400}
+
+  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:34px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  .cx{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);margin-bottom:10px;transition:border-color .25s}
+  .cx:hover{border-color:rgba(201,168,76,.4)}
+  .cxh{width:100%;text-align:left;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;color:var(--ink)}
+  .cxh .ttl{font-family:var(--display);font-weight:700;color:var(--gold);font-size:16px;letter-spacing:1px}
+  .cxh .sub{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:5px}
+  .cxh .ar{font-family:var(--mono);color:var(--cyan);font-size:18px;transition:transform .25s;flex-shrink:0}
+  .cx.open .ar{transform:rotate(180deg)}
+  .cxb{max-height:0;overflow:hidden;transition:max-height .4s ease}
+  .cx.open .cxb{max-height:1400px}
+  .cxb .inner{padding:0 20px 22px;font-weight:300;color:var(--ink);line-height:1.85;font-size:15px}
+  .cxb .inner b{color:var(--acc);font-weight:400}
+  .cxb .inner .mono{font-family:var(--mono);color:var(--cyan);font-size:13px}
+
+  table.codex{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-top:4px}
+  table.codex th{text-align:left;color:var(--cyan);letter-spacing:1px;padding:8px 10px;border-bottom:1px solid var(--line);font-weight:400}
+  table.codex td{padding:8px 10px;border-bottom:1px dashed rgba(201,168,76,.1);color:var(--ink)}
+  table.codex td.s{color:var(--gold)}
+  .wrap{overflow-x:auto}
+
+  .cycle{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:6px}
+  .film{border:1px solid var(--line);background:var(--panel);padding:16px;position:relative;overflow:hidden}
+  .film .no{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px}
+  .film .fn{font-family:var(--display);font-weight:700;color:var(--gold);font-size:15px;margin-top:6px;letter-spacing:1px}
+  .film .fs{font-family:var(--mono);font-size:10px;color:var(--ink);margin-top:4px;letter-spacing:1px}
+  .film .tag{margin-top:12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:3px 6px;display:inline-block}
+  .prodnote{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px;line-height:1.8;margin:6px 0 4px}
+  .prodnote b{color:var(--crimson)}
+
+  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
+  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
+  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
+  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
+  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
+  #app{display:none}
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+</style>
+</head>
+<body>
+<div id="gate" class="gate-card" style="display:none">
+  <div class="g">Ω</div>
+  <h2>Media Hub</h2>
+  <p>Sign in to enter the Codex of the Order.</p>
+  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+</div>
+
+<div class="shell" id="app">
+  <aside class="side">
+    <div class="brand">Ω SYD OMEGA<small>9 1 7 1 7</small></div>
+    <nav class="nav">
+      <a href="/dashboard.html">DASHBOARD</a>
+      <a href="/profile.html">PROFILE</a>
+      <a href="/academy.html">ACADEMY</a>
+      <a href="/gaming.html">GAMING ARENA</a>
+      <a href="/contributions.html">CONTRIBUTIONS</a>
+      <a href="/consultancy.html">CONSULTANCY</a>
+      <a class="on" href="#">MEDIA HUB</a>
+      <a href="/hall.html">HALL OF THE ORDER</a>
+      <a href="/">PUBLIC SITE</a>
+      <div class="sec">PHASE II — ACTIVATING</div>
+      <div class="lk">TREASURY <span class="ph">SOON</span></div>
+      <div class="lk">NFT VAULT <span class="ph">SOON</span></div>
+    </nav>
+    <div class="out" id="logout">LOG OUT →</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="t">MEDIA HUB<small>THE CODEX OF THE ORDER</small></div>
+    </div>
+    <p class="intro">The complete canon of SYD OMEGA 91717, in full. Every law of the system — the frequency, the matrix, the elements, the twelve, the materials — is written here. The <b>cinematic universe</b> built atop this canon is in production; below the Codex you will find its map.</p>
+
+    <div class="sechead">THE CODEX — CANON OF THE ORDER</div>
+    <div id="codex"></div>
+
+    <div class="sechead">THE CINEMATIC UNIVERSE — IN PRODUCTION</div>
+    <p class="prodnote">A twelve-film cycle is being built atop the canon — one film bound to each sign and its god, each spawning its own series. <b>No film is yet released.</b> This is the map of what is being created; titles unlock here as they are realized.</p>
+    <div class="cycle" id="cycle"></div>
+  </main>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+  const CODEX = [
+    { t:'THE FREQUENCY', s:'9.17 HZ · THE SIGNATURE', html:'SYD OMEGA 91717 resonates at <b>9.17 Hz</b> — the frequency of the Order. The number <span class="mono">91717</span> is its signature; <span class="mono">9.9.9</span> its apex coordinate, the highest point a sovereign may reach across all three axes. The <b>&#937;</b> is the sole mark: the end that contains every beginning. Three words carry the whole: <b>the code, the frequency, the legacy</b>.' },
+    { t:'THE 729 MATRIX', s:'9 &times; 9 &times; 9 · THE SPINE', html:'Every member occupies a coordinate in a 9&times;9&times;9 lattice — <b>729 nodes</b>. Three axes define you: <b>Knowledge (A)</b>, what you learn; <b>Mastery (B)</b>, what you prove; <b>Contribution (C)</b>, what you give. Your authority is the magnitude of your position: <span class="mono">&#8730;(A&#178;+B&#178;+C&#178;)</span>. At genesis <span class="mono">(1,1,1)</span> it is <b>1.73</b>; at the apex <span class="mono">(9,9,9)</span> it is <b>15.58</b>. Your tier is the lowest of your three axes — the Order rewards the balanced, not the lopsided. Each verified act moves you <b>+0.25</b> along one axis. Nothing is given.' },
+    { t:'THE FIVE ELEMENTS', s:'FIRE · WATER · WIND · METAL · SAND', html:'Five elements govern the signs. <b>Fire</b> (Aries, Leo, Sagittarius) amplifies Mastery. <b>Water</b> (Cancer, Scorpio, Pisces) amplifies Contribution. <b>Wind</b> (Gemini, Libra, Aquarius) amplifies Knowledge. <b>Metal</b> (Taurus, Capricorn) tempers both Mastery and Contribution. <b>Sand</b> — Virgo alone — is the universal amplifier, lifting all three. It is the rarest signature in the Order.' },
+    { t:'THE TWELVE', s:'SIGN · ELEMENT · GOD · PLANET · AGENT', table:true },
+    { t:'THE NINE MATERIALS', s:'SAND TO OMEGA MASTER', html:'Tier by tier the sovereign is forged: <span class="mono">1 Sand &middot; 2 Glass &middot; 3 Iron &middot; 4 Steel &middot; 5 Titanium &middot; 6 Carbon &middot; 7 Gold &middot; 8 Platinum &middot; 9 Omega Master</span>. Your material is set by your <b>lowest</b> axis — proof that ascent is balanced, or it is nothing.' },
+    { t:'THE CERTIFICATES OF ASCENT', s:'THREE THRESHOLDS · SERVER-ISSUED', html:'Three certificates mark the great thresholds, issued by the Order itself and impossible to counterfeit. <b>First Ascension</b> at node <span class="mono">(3,3,3)</span> — Iron. <b>Ascendant</b> at node <span class="mono">(6,6,6)</span> — Carbon. <b>Omega Master</b> at the apex <span class="mono">(9,9,9)</span>. Each is earned only when all three axes reach the mark together.' },
+    { t:'THE TWELVE SOVEREIGN PILLARS', s:'LENSES OVER THE 729', html:'Twelve lenses lie over the matrix, each a way of seeing your ascent: <b>Grades, Levels, Phases, Certificates, Trophies, Medals, Signs, Gods, Planets, Agents, Tokens,</b> and the five <b>Elements</b>. They do not divide the 729 — they illuminate it.' },
+    { t:'THE CREED', s:'EARNED · NOT GIVEN', html:'Authority here is not bought, inherited, or declared — it is <b>computed</b> from what you have truly done. Every member begins at genesis. The apex is open to all and given to none. <b>The code. The frequency. The legacy.</b>' }
+  ];
+
+  const TWELVE = [
+    ['Aries','Fire','Athena','Mars','Sentinel','Security'],
+    ['Taurus','Metal','Aphrodite','Venus','Merchant','Commerce'],
+    ['Gemini','Wind','Apollo','Mercury','Scout','Discovery'],
+    ['Cancer','Water','Hermes','Moon','Warden','Family'],
+    ['Leo','Fire','Zeus','Sun','Sovereign','Master'],
+    ['Virgo','Sand','Demeter','Vesta','Auditor','Validation'],
+    ['Libra','Wind','Hephaestus','Juno','Proxy','Execution'],
+    ['Scorpio','Water','Ares','Pluto','Oracle','Prediction'],
+    ['Sagittarius','Fire','Artemis','Jupiter','Beacon','Onboarding'],
+    ['Capricorn','Metal','Hestia','Saturn','Analyst','Finance'],
+    ['Aquarius','Wind','Hera','Uranus','Tutor','Education'],
+    ['Pisces','Water','Poseidon','Neptune','Historian','Archive']
+  ];
+
+  function tableHtml(){
+    var h='<div class="wrap"><table class="codex"><thead><tr><th>Sign</th><th>Element</th><th>God</th><th>Planet</th><th>Agent</th><th>Domain</th></tr></thead><tbody>';
+    TWELVE.forEach(function(r){ h+='<tr><td class="s">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td>'+r[5]+'</td></tr>'; });
+    return h+'</tbody></table></div>';
+  }
+
+  function renderCodex(){
+    var box=document.getElementById('codex');
+    CODEX.forEach(function(e){
+      var body = e.table ? tableHtml() : e.html;
+      var d=document.createElement('div'); d.className='cx';
+      d.innerHTML='<button class="cxh"><span><span class="ttl">'+e.t+'</span><span class="sub">'+e.s+'</span></span><span class="ar">&#9662;</span></button><div class="cxb"><div class="inner">'+body+'</div></div>';
+      d.querySelector('.cxh').addEventListener('click',function(){ d.classList.toggle('open'); });
+      box.appendChild(d);
+    });
+  }
+  function renderCycle(){
+    var box=document.getElementById('cycle');
+    TWELVE.forEach(function(r,i){
+      var n=(i+1<10?'0':'')+(i+1);
+      var d=document.createElement('div'); d.className='film';
+      d.innerHTML='<div class="no">FILM '+n+'</div><div class="fn">'+r[2]+'</div><div class="fs">'+r[0].toUpperCase()+' &middot; '+r[1].toUpperCase()+'</div><div class="tag">IN PRODUCTION</div>';
+      box.appendChild(d);
+    });
+  }
+
+  async function boot(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; return; }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+    renderCodex(); renderCycle();
+  }
+  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  boot();
+</script>
+<script src="/bg.js"></script>
+</body>
+</html>

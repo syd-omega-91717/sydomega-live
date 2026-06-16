@@ -15,12 +15,14 @@
     ['consultancy','CONSULTANCY','/consultancy.html'],
     ['media','MEDIA HUB','/media.html'],
     ['publishing','PUBLISHING','/publishing.html'],
+    ['marketing','MARKETING','/marketing.html'],
     ['treasury','TREASURY','/treasury.html'],
+    ['sigil','SIGIL VAULT','/sigil.html'],
     ['hall','HALL OF THE ORDER','/hall.html'],
     ['charter','CHARTER','/charter.html'],
     ['public','PUBLIC SITE','/']
   ];
-  var LOCKED = ['NFT VAULT'];
+  var LOCKED = ['MARKETPLACE'];
 
   var h = '<div class="brand">\u03A9 SYD OMEGA<small>9 1 7 1 7</small></div><nav class="nav">';
   for (var i = 0; i < LIVE.length; i++) {

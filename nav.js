@@ -17,6 +17,7 @@
     ['contracts','COMMISSIONS','/contracts.html'],
     ['media','MEDIA HUB','/media.html'],
     ['cinema','CINEMA · SAGA','/cinema.html'],
+    ['news','NEWS · WIRE','/news.html'],
     ['publishing','PUBLISHING','/publishing.html'],
     ['marketing','MARKETING','/marketing.html'],
     ['treasury','TREASURY','/treasury.html'],

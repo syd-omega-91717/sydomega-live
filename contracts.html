@@ -114,6 +114,7 @@
         <div class="c"><div class="k">ORDER COMMISSION</div><div class="v cy" id="c-rate">9.17%</div></div>
         <div class="c"><div class="k">SYD OMEGA RECEIVES</div><div class="v gold" id="c-com">0</div></div>
       </div>
+      <label style="display:flex;align-items:flex-start;gap:10px;margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--ink);cursor:pointer;line-height:1.5"><input type="checkbox" id="k-agree" style="width:18px;height:18px;accent-color:#C9A84C;margin-top:1px;flex-shrink:0"/> Both parties accept the <b style="color:var(--gold)">Confidentiality &amp; Commission Agreement</b> — strict confidentiality for legal and security, with the recorded commission payable to the Order's account.</label>
       <button class="btn" id="k-go">SEAL CONTRACT</button>
       <div class="msg" id="k-msg"></div>
       <div class="gate-note">This records the instrument and the Order's commission. <b>Legal execution, signatures, and settlement are PHASE II — gated on counsel.</b> No funds move and no binding legal effect is created at this stage.</div>
@@ -171,10 +172,11 @@
     if(cp.length<2){ out.style.color='var(--crimson)'; out.textContent='Name the counterparty.'; return; }
     if(scope.length<3){ out.style.color='var(--crimson)'; out.textContent='Describe the scope.'; return; }
     if(val<=0){ out.style.color='var(--crimson)'; out.textContent='Enter a deal value.'; return; }
+    if(!document.getElementById('k-agree').checked){ out.style.color='var(--crimson)'; out.textContent='Both parties must accept the Confidentiality & Commission Agreement.'; return; }
     var com=val*rate/100;
     var ref='\u03A9-91717-'+Date.now().toString(36).toUpperCase();
     btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Sealing…';
-    var r=await supabase.from('commission_contracts').insert({user_id:user.id,reference:ref,counterparty:cp,scope:scope,deal_value:val,commission_rate:rate,commission_value:com,terms:terms});
+    var r=await supabase.from('commission_contracts').insert({user_id:user.id,reference:ref,counterparty:cp,scope:scope,deal_value:val,commission_rate:rate,commission_value:com,terms:terms,confidentiality_accepted:true});
     btn.disabled=false;
     if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not seal ('+(r.error.code||r.error.message||'')+').'; return; }
     out.style.color='var(--cyan)'; out.textContent='Contract sealed — '+ref+'.';

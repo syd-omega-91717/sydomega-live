@@ -8,13 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  :root{
-    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
-    --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f;
-    --ink:#e9e6dc; --muted:#85837b; --acc:#C9A84C;
-    --line:rgba(201,168,76,0.16);
-    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
-  }
+  :root{ --void:#07070b; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
   body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 26% 14%,rgba(201,168,76,.07),transparent 42%),radial-gradient(circle at 82% 86%,rgba(0,229,255,.05),transparent 42%)}
@@ -37,8 +31,9 @@
   .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
   .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
   .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:22px 0 8px;font-size:16px}
-  .intro b{color:var(--acc);font-weight:400}
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .intro b{color:var(--gold);font-weight:400}
+  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:26px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .sechead.owner{color:var(--solar);border-color:rgba(226,200,109,.4)}
 
   .wrap{overflow-x:auto}
   table.rate{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
@@ -47,7 +42,7 @@
   table.rate td{padding:9px 12px;border-bottom:1px dashed rgba(201,168,76,.1);color:var(--ink);text-align:right}
   table.rate td.z{text-align:left;color:var(--gold);letter-spacing:1px}
 
-  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:24px;margin-top:8px}
+  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:24px}
   .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
   label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:8px}
   select,input,textarea{width:100%;font-family:var(--body);font-size:16px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:13px 15px;color-scheme:dark}
@@ -71,10 +66,25 @@
   .camp{font-family:var(--mono);font-size:12px;padding:13px 0;border-bottom:1px dashed var(--line)}
   .camp:last-child{border-bottom:none}
   .camp .top{display:flex;justify-content:space-between;gap:12px;color:var(--gold)}
-  .camp .st{color:var(--green)}
+  .badge{font-size:9px;letter-spacing:1px;padding:2px 8px;border:1px solid}
+  .badge.submitted{color:var(--cyan);border-color:rgba(0,229,255,.5)}
+  .badge.approved{color:var(--solar);border-color:rgba(226,200,109,.5)}
+  .badge.rejected{color:var(--crimson);border-color:rgba(139,0,0,.6)}
+  .badge.live{color:var(--green);border-color:rgba(63,178,127,.5)}
   .camp .bd{color:var(--ink);margin-top:6px;line-height:1.5}
   .camp .dt{color:var(--muted);font-size:10px;margin-top:5px}
   .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+  .owner-box{border:1px solid rgba(226,200,109,.4);background:linear-gradient(180deg,rgba(226,200,109,.05),transparent);padding:22px;display:none}
+  .qitem{border-bottom:1px dashed rgba(201,168,76,.14);padding:14px 0}
+  .qitem:last-child{border-bottom:none}
+  .qitem .qt{font-family:var(--mono);font-size:12px;color:var(--gold);display:flex;justify-content:space-between;gap:10px}
+  .qitem .qm{font-weight:300;color:var(--ink);font-size:14px;margin-top:6px;line-height:1.5}
+  .qitem .qmeta{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:5px;letter-spacing:1px}
+  .qitem .qa{display:flex;gap:8px;margin-top:10px}
+  .qitem .qa button{font-family:var(--mono);font-size:10px;letter-spacing:1px;padding:7px 14px;cursor:pointer;border:1px solid}
+  .qitem .qa .ap{color:var(--void);background:var(--green);border-color:var(--green)}
+  .qitem .qa .rj{color:var(--crimson);background:transparent;border-color:rgba(139,0,0,.6)}
 
   .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
   .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
@@ -95,22 +105,16 @@
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="marketing"></aside>
-
   <main class="main">
     <div class="topbar">
       <div class="t">MARKETING<small>PUBLICITY &amp; PLACEMENT</small></div>
     </div>
-    <p class="intro">Reserve placement across the Order's surfaces — by the <b>hour, day, week, month, or year</b>. Rates are quoted in Ω against the live card below. Reservations are recorded and reviewed; <b>settlement and live display</b> activate under the legal-cleared phase.</p>
+    <p class="intro">Reserve placement across the Order's surfaces — by the <b>hour, day, week, month, or year</b>. Every submission is <b>reviewed and approved before it can publish</b>. Rates are quoted in Ω; settlement and live display activate under the legal-cleared phase.</p>
 
     <div class="sechead">THE RATE CARD · Ω PER PLACEMENT</div>
-    <div class="wrap">
-      <table class="rate">
-        <thead><tr><th>Zone</th><th>Hour</th><th>Day</th><th>Week</th><th>Month</th><th>Year</th></tr></thead>
-        <tbody id="rate-body"></tbody>
-      </table>
-    </div>
+    <div class="wrap"><table class="rate"><thead><tr><th>Zone</th><th>Hour</th><th>Day</th><th>Week</th><th>Month</th><th>Year</th></tr></thead><tbody id="rate-body"></tbody></table></div>
 
-    <div class="sechead">RESERVE A PLACEMENT</div>
+    <div class="sechead">SUBMIT A PLACEMENT</div>
     <div class="card">
       <div class="two">
         <div><label for="m-zone">ZONE</label><select id="m-zone"></select></div>
@@ -119,10 +123,13 @@
       <div class="fld"><label for="m-title">CAMPAIGN TITLE</label><input id="m-title" maxlength="120" placeholder="Name your campaign" /></div>
       <div class="fld"><label for="m-msg">MESSAGE / CREATIVE BRIEF</label><textarea id="m-msg" maxlength="1000" placeholder="What should this placement say or show?"></textarea></div>
       <div class="quote"><span class="ql">QUOTED RATE</span><span class="qv" id="m-price">0 <span>Ω</span></span></div>
-      <button class="btn" id="m-go">RESERVE PLACEMENT</button>
+      <button class="btn" id="m-go">SUBMIT FOR APPROVAL</button>
       <div class="msg" id="m-msg-out"></div>
-      <div class="gate-note">Payment, scheduling, and live rendering of placements are <b>PHASE II — gated on legal review</b>. No charge is made; this records your reservation for the Order to review.</div>
+      <div class="gate-note">Submissions enter review and publish only on approval. Payment and live rendering are <b>PHASE II — gated on legal review</b>. No charge is made.</div>
     </div>
+
+    <div class="sechead owner" id="owner-head" style="display:none">APPROVAL QUEUE · OWNER</div>
+    <div class="owner-box" id="owner-box"><div id="queue"></div></div>
 
     <div class="sechead">YOUR CAMPAIGNS</div>
     <div class="card"><div id="m-list"></div></div>
@@ -132,20 +139,16 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  let user=null;
+  let user=null, isOwner=false;
 
   const DURATIONS=[['Hour',917],['Day',9170],['Week',45850],['Month',91700],['Year',917170]];
   const ZONES=[['Landing Feature',3],['Hall Banner',2],['Dashboard Spotlight',1.5],['Codex Sponsor',1]];
   function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
+  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   function buildRateCard(){
     var b=document.getElementById('rate-body');
-    ZONES.forEach(function(z){
-      var tr=document.createElement('tr');
-      var cells='<td class="z">'+z[0]+'</td>';
-      DURATIONS.forEach(function(d){ cells+='<td>'+fmt(d[1]*z[1])+' Ω</td>'; });
-      tr.innerHTML=cells; b.appendChild(tr);
-    });
+    ZONES.forEach(function(z){ var tr=document.createElement('tr'); var cells='<td class="z">'+z[0]+'</td>'; DURATIONS.forEach(function(d){ cells+='<td>'+fmt(d[1]*z[1])+' Ω</td>'; }); tr.innerHTML=cells; b.appendChild(tr); });
     var zs=document.getElementById('m-zone'); ZONES.forEach(function(z,i){ var o=document.createElement('option'); o.value=i; o.textContent=z[0]; zs.appendChild(o); });
     var ds=document.getElementById('m-dur'); DURATIONS.forEach(function(d,i){ var o=document.createElement('option'); o.value=i; o.textContent=d[0]; ds.appendChild(o); });
   }
@@ -159,18 +162,40 @@
     try{
       var r=await supabase.from('media_reservations').select('zone,duration,title,message,price_omega,status,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(30);
       box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No campaigns yet — reserve your first placement above.</div>'; return; }
+      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No campaigns yet — submit your first above.</div>'; return; }
       r.data.forEach(function(q){
         var dt=q.created_at?new Date(q.created_at).toLocaleDateString():'';
+        var stt=(q.status||'submitted').toLowerCase();
         var d=document.createElement('div'); d.className='camp';
-        d.innerHTML='<div class="top"><span>'+(q.title||'Untitled')+'</span><span class="st">'+(q.status||'reserved').toUpperCase()+'</span></div><div class="bd"></div><div class="dt">'+q.zone+' · '+q.duration+' · '+fmt(q.price_omega||0)+' Ω · '+dt+'</div>';
+        d.innerHTML='<div class="top"><span>'+esc(q.title||'Untitled')+'</span><span class="badge '+stt+'">'+stt.toUpperCase()+'</span></div><div class="bd"></div><div class="dt">'+esc(q.zone)+' · '+esc(q.duration)+' · '+fmt(q.price_omega||0)+' Ω · '+dt+'</div>';
         d.querySelector('.bd').textContent=q.message||'';
         box.appendChild(d);
       });
     }catch(e){ box.innerHTML='<div class="empty">Campaigns unavailable right now.</div>'; }
   }
 
-  async function reserve(){
+  async function loadQueue(){
+    if(!isOwner) return;
+    var box=document.getElementById('queue');
+    var r=await supabase.from('media_reservations').select('id,user_id,zone,duration,title,message,price_omega,status,created_at').eq('status','submitted').order('created_at',{ascending:true}).limit(60);
+    box.innerHTML='';
+    if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No submissions awaiting approval.</div>'; return; }
+    r.data.forEach(function(q){
+      var dt=q.created_at?new Date(q.created_at).toLocaleString():'';
+      var d=document.createElement('div'); d.className='qitem';
+      d.innerHTML='<div class="qt"><span>'+esc(q.title||'Untitled')+'</span><span>'+fmt(q.price_omega||0)+' Ω</span></div><div class="qm"></div><div class="qmeta">'+esc(q.zone)+' · '+esc(q.duration)+' · MEMBER '+String(q.user_id).slice(0,8)+' · '+dt+'</div><div class="qa"><button class="ap">APPROVE</button><button class="rj">REJECT</button></div>';
+      d.querySelector('.qm').textContent=q.message||'';
+      d.querySelector('.ap').addEventListener('click',function(){ decide(q.id,'approved'); });
+      d.querySelector('.rj').addEventListener('click',function(){ decide(q.id,'rejected'); });
+      box.appendChild(d);
+    });
+  }
+  async function decide(id,status){
+    var r=await supabase.from('media_reservations').update({status:status}).eq('id',id);
+    if(!r.error){ loadQueue(); loadList(); }
+  }
+
+  async function submit(){
     var z=ZONES[+document.getElementById('m-zone').value][0];
     var d=DURATIONS[+document.getElementById('m-dur').value][0];
     var title=document.getElementById('m-title').value.trim();
@@ -179,28 +204,30 @@
     var out=document.getElementById('m-msg-out'), btn=document.getElementById('m-go');
     if(title.length<2){ out.style.color='var(--crimson)'; out.textContent='Give your campaign a title.'; return; }
     if(message.length<10){ out.style.color='var(--crimson)'; out.textContent='Add a brief — at least 10 characters.'; return; }
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Reserving…';
-    var r=await supabase.from('media_reservations').insert({user_id:user.id,zone:z,duration:d,title:title,message:message,price_omega:p});
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting…';
+    var r=await supabase.from('media_reservations').insert({user_id:user.id,zone:z,duration:d,title:title,message:message,price_omega:p,status:'submitted'});
     btn.disabled=false;
-    if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not reserve ('+(r.error.code||r.error.message||'')+').'; return; }
-    out.style.color='var(--cyan)'; out.textContent='Placement reserved. The Order will review it.';
+    if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not submit ('+(r.error.code||r.error.message||'')+').'; return; }
+    out.style.color='var(--cyan)'; out.textContent='Submitted for approval. The Order will review it.';
     document.getElementById('m-title').value=''; document.getElementById('m-msg').value='';
-    loadList();
+    loadList(); loadQueue();
   }
 
   async function boot(){
     var sess=(await supabase.auth.getSession()).data.session;
     if(!sess){ showGate('Marketing','Sign in to reserve placement across the Order.'); return; }
     user=sess.user;
-    var pr=await supabase.from('profiles').select('sign').eq('id',user.id).maybeSingle();
+    var pr=await supabase.from('profiles').select('sign,is_owner').eq('id',user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to reserve placement.'); return; }
+    isOwner=!!(pr.data && pr.data.is_owner);
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';
     buildRateCard(); refreshQuote(); loadList();
+    if(isOwner){ document.getElementById('owner-head').style.display='block'; document.getElementById('owner-box').style.display='block'; loadQueue(); }
   }
   document.getElementById('m-zone').addEventListener('change',refreshQuote);
   document.getElementById('m-dur').addEventListener('change',refreshQuote);
-  document.getElementById('m-go').addEventListener('click',reserve);
+  document.getElementById('m-go').addEventListener('click',submit);
   document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>

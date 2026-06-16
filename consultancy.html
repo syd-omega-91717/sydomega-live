@@ -100,6 +100,8 @@
       </select>
       <label for="c-msg" style="margin-top:16px">YOUR REQUEST</label>
       <textarea id="c-msg" maxlength="1200" placeholder="Describe what you seek counsel on…"></textarea>
+      <div style="margin-top:16px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.04);padding:14px 16px;font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7">CONFIDENTIALITY &amp; COMMISSION — Both parties engage under strict confidentiality for legal and security. A <b style="color:var(--gold)">system commission of 9.17%</b> applies to any consultancy fee, payable to the Order's account. Booking and payment activate under the legal-cleared phase.</div>
+      <label style="display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--ink);cursor:pointer;line-height:1.5"><input type="checkbox" id="c-agree" style="width:18px;height:18px;accent-color:#C9A84C;margin-top:1px;flex-shrink:0"/> I accept the Confidentiality &amp; Commission Agreement for this engagement.</label>
       <button class="btn" id="c-go">SUBMIT REQUEST</button>
       <div class="msg" id="c-msg-out"></div>
       <div class="gate-note">Booking, scheduling, and payment are <b>PHASE II — gated on legal review</b>. No fees are charged and no expert is assigned at this stage.</div>
@@ -137,8 +139,9 @@
     var message=document.getElementById('c-msg').value.trim();
     var out=document.getElementById('c-msg-out'), btn=document.getElementById('c-go');
     if(message.length<10){ out.style.color='var(--crimson)'; out.textContent='Describe your request — at least 10 characters.'; return; }
+    if(!document.getElementById('c-agree').checked){ out.style.color='var(--crimson)'; out.textContent='Accept the Confidentiality & Commission Agreement to proceed.'; return; }
     btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting…';
-    var r=await supabase.from('consult_requests').insert({user_id:user.id,domain:domain,message:message});
+    var r=await supabase.from('consult_requests').insert({user_id:user.id,domain:domain,message:message,commission_rate:9.17,confidentiality_accepted:true});
     btn.disabled=false;
     if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not submit ('+(r.error.code||r.error.message||'')+').'; return; }
     out.style.color='var(--cyan)'; out.textContent='Request received. The Order will review it.';

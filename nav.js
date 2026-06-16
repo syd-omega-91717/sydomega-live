@@ -14,6 +14,7 @@
     ['gaming','GAMING ARENA','/gaming.html'],
     ['contributions','CONTRIBUTIONS','/contributions.html'],
     ['consultancy','CONSULTANCY','/consultancy.html'],
+    ['contracts','COMMISSIONS','/contracts.html'],
     ['media','MEDIA HUB','/media.html'],
     ['cinema','CINEMA · SAGA','/cinema.html'],
     ['publishing','PUBLISHING','/publishing.html'],

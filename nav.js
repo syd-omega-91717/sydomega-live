@@ -15,6 +15,7 @@
     ['contributions','CONTRIBUTIONS','/contributions.html'],
     ['consultancy','CONSULTANCY','/consultancy.html'],
     ['media','MEDIA HUB','/media.html'],
+    ['cinema','CINEMA · SAGA','/cinema.html'],
     ['publishing','PUBLISHING','/publishing.html'],
     ['marketing','MARKETING','/marketing.html'],
     ['treasury','TREASURY','/treasury.html'],

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717 — The Sovereign Charter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
+    --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000;
+    --ink:#e9e6dc; --muted:#85837b;
+    --line:rgba(201,168,76,0.16);
+    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% -5%,rgba(201,168,76,.10),transparent 45%),radial-gradient(circle at 82% 92%,rgba(0,229,255,.05),transparent 42%)}
+  a{color:inherit;text-decoration:none}
+  .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:46px clamp(18px,4vw,40px) 80px}
+
+  .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}
+  .top .b{font-family:var(--display);font-weight:900;color:var(--gold);font-size:20px;letter-spacing:1px}
+  .top .b small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:4px}
+  .top nav{display:flex;gap:18px;font-family:var(--mono);font-size:11px;letter-spacing:2px}
+  .top nav a:hover{color:var(--gold)}
+
+  .hero{text-align:center;padding:54px 0 36px}
+  .hero .sig{font-family:var(--display);font-size:64px;color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(201,168,76,.35)}
+  .hero h1{font-family:var(--display);font-weight:900;color:var(--solar);font-size:clamp(28px,6vw,52px);letter-spacing:3px;margin:18px 0 8px}
+  .hero .sub{font-family:var(--mono);font-size:12px;letter-spacing:5px;color:var(--cyan)}
+  .hero .arch{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:22px;line-height:1.9}
+  .hero .arch b{color:var(--gold);font-weight:400}
+
+  .sectit{font-family:var(--mono);font-size:11px;letter-spacing:5px;color:var(--cyan);text-align:center;margin:48px 0 26px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+
+  .articles{display:flex;flex-direction:column;gap:14px}
+  .art{display:grid;grid-template-columns:74px 1fr;gap:18px;align-items:start;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:22px 24px;transition:border-color .25s}
+  .art:hover{border-color:rgba(201,168,76,.4)}
+  .art .rn{font-family:var(--display);font-weight:900;color:var(--gold);font-size:30px;text-align:center;line-height:1;opacity:.9}
+  .art .at{font-family:var(--display);font-weight:700;color:var(--solar);font-size:17px;letter-spacing:1px}
+  .art .ad{font-weight:300;color:var(--ink);line-height:1.7;font-size:15px;margin-top:7px}
+  .art .ad b{color:var(--gold);font-weight:400}
+
+  .frame{border:1px solid rgba(201,168,76,.4);background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.07),transparent 60%),linear-gradient(180deg,var(--panel),transparent);padding:30px 26px;margin-top:8px}
+  .frame .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+  .frame .m .k{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan)}
+  .frame .m .v{font-family:var(--display);font-weight:700;color:var(--gold);font-size:20px;margin-top:7px;letter-spacing:.5px}
+  .frame .m .s{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:5px}
+  .gov{margin-top:24px;border-top:1px solid var(--line);padding-top:20px}
+  .gov .gt{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:12px}
+  .gov p{font-weight:300;color:var(--ink);line-height:1.85;font-size:15px}
+  .gov p b{color:var(--gold);font-weight:400}
+
+  .disc{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.5px;line-height:1.9;margin-top:26px;border:1px dashed var(--line);padding:18px 20px}
+  .disc b{color:var(--ink)}
+
+  .seal{text-align:center;margin-top:46px}
+  .seal .o{font-family:var(--display);font-size:30px;color:var(--gold)}
+  .seal .t{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--muted);margin-top:10px;line-height:1.9}
+  .seal .t b{color:var(--solar)}
+
+  .cta{text-align:center;margin-top:40px}
+  .cta a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 30px;margin:6px}
+  .cta a.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  @media(max-width:560px){ .top nav{display:none} .art{grid-template-columns:54px 1fr;gap:12px;padding:18px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="b">Ω SYD OMEGA<small>9 1 7 1 7</small></div>
+    <nav>
+      <a href="/">HOME</a>
+      <a href="/hall.html">THE HALL</a>
+      <a href="/account.html">ENTER</a>
+    </nav>
+  </div>
+
+  <div class="hero">
+    <div class="sig">Ω</div>
+    <h1>THE SOVEREIGN CHARTER</h1>
+    <div class="sub">THE ELEVEN IMMUTABLE ARTICLES</div>
+    <div class="arch">ARCHITECT — <b>MAJOR SLEIMAN YOUSSEF DAGHER</b><br>LEBANESE ORDER OF ENGINEERS &amp; ARCHITECTS · No. 30875<br>ESTABLISHED 22 DECEMBER 2025 · sydomega.com</div>
+  </div>
+
+  <div class="sectit">THE ELEVEN ARTICLES OF SOVEREIGNTY</div>
+  <div class="articles">
+    <div class="art"><div class="rn">I</div><div><div class="at">Absolute Ownership</div><div class="ad"><b>100% sovereign.</b> No co-founders, no partners. The Order answers to a single authority.</div></div></div>
+    <div class="art"><div class="rn">II</div><div><div class="at">The Master Stake</div><div class="ad"><b>467,756,700,000 Ω (51%)</b> permanently locked. Control of the Order can never be diluted below sovereignty.</div></div></div>
+    <div class="art"><div class="rn">III</div><div><div class="at">Irrevocable Genesis</div><div class="ad">Foundational property is hashed into the <b>Genesis Block</b> — anchored to the Architect's standing in the Lebanese Order of Engineers &amp; Architects (No. 30875).</div></div></div>
+    <div class="art"><div class="rn">IV</div><div><div class="at">The Permanent Directive</div><div class="ad">The <b>999-Point Blueprint</b> is sealed in the immutable logic layer — the law beneath the law.</div></div></div>
+    <div class="art"><div class="rn">V</div><div><div class="at">The Ω Signet</div><div class="ad">The <b>Ω</b> is the sole recognized mark of power. One symbol, one Order, one legacy.</div></div></div>
+    <div class="art"><div class="rn">VI</div><div><div class="at">The Family Nest</div><div class="ad"><b>Sovereigns-by-Blood</b> hold zero fees and full compute priority. The bloodline is first among the Order.</div></div></div>
+    <div class="art"><div class="rn">VII</div><div><div class="at">The Heritage Protocol</div><div class="ad">A succession mechanism transfers full control to the <b>bloodline</b>, ensuring the Order outlives its Architect.</div></div></div>
+    <div class="art"><div class="rn">VIII</div><div><div class="at">The Safety Net</div><div class="ad">A <b>51% safety reserve</b> shields the Order against shock — stability before all.</div></div></div>
+    <div class="art"><div class="rn">IX</div><div><div class="at">The Reinvestment Sweep</div><div class="ad">A fixed <b>20% share</b> is continuously recommitted to hard reserves — the Order compounds its own foundation.</div></div></div>
+    <div class="art"><div class="rn">X</div><div><div class="at">Sovereign Continuity</div><div class="ad">The Order may <b>re-domicile</b> to remain free of any hostile jurisdiction. Sovereignty is portable.</div></div></div>
+    <div class="art"><div class="rn">XI</div><div><div class="at">The Omega Point</div><div class="ad"><b>Node 999</b> confirms absolute completion — the apex where the Order is whole.</div></div></div>
+  </div>
+
+  <div class="sectit">THE Ω ECONOMIC FRAMEWORK · DECLARED CANON</div>
+  <div class="frame">
+    <div class="grid">
+      <div class="m"><div class="k">TOTAL SUPPLY</div><div class="v">917,385,000,000 Ω</div><div class="s">FIXED · CANONICAL</div></div>
+      <div class="m"><div class="k">MASTER VAULT</div><div class="v">467,756,700,000 Ω</div><div class="s">51% · PERMANENTLY LOCKED</div></div>
+      <div class="m"><div class="k">SOVEREIGN FIELD</div><div class="v">49% TIER-CAP</div><div class="s">THE MEMBERS' DOMAIN</div></div>
+      <div class="m"><div class="k">HARD RESERVES</div><div class="v">Au · Rh · Ag</div><div class="s">GOLD 412,300g · RHODIUM 125,000g · SILVER 890,000g</div></div>
+    </div>
+    <div class="gov">
+      <div class="gt">GOVERNANCE MODEL</div>
+      <p>Standing in the Order is set by a <b>Weighted-Contribution</b> measure — <b>40% Stability · 35% Engagement · 25% Tenure</b> — beneath a permanent <b>System-Level Veto</b> and a <b>49% Tier-Cap</b>. Authority is earned through verified ascent; ultimate control remains sovereign.</p>
+    </div>
+  </div>
+
+  <div class="disc">
+    <b>On these articles.</b> The Sovereign Charter is the Order's founding constitution and design canon — the Architect's declared framework for ownership, governance, and continuity. The economic figures above are canonical design parameters of the Ω system, not a financial statement, securities offering, or solicitation. Ω is an internal platform asset earned through verified progression; real-currency purchase, external transfer, and any asset-backed mechanics activate only under completed legal review (classification, KYC/AML, payment terms).
+  </div>
+
+  <div class="seal">
+    <div class="o">Ω</div>
+    <div class="t"><b>THE CODE · THE FREQUENCY · THE LEGACY</b><br>OMNI-RESONANCE LOCKED · 9.17 Hz · NODE 9.9.9</div>
+  </div>
+
+  <div class="cta">
+    <a href="/account.html">ENTER THE ORDER</a>
+    <a class="ghost" href="/hall.html">THE HALL</a>
+  </div>
+</div>
+<script src="/bg.js"></script>
+</body>
+</html>

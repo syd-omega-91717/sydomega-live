@@ -11,6 +11,7 @@
     ['ascension','ASCENSION','/ascension.html'],
     ['agents','AI AGENTS','/agents.html'],
     ['honors','HONORS','/honors.html'],
+    ['horoscope','HOROSCOPE','/horoscope.html'],
     ['academy','ACADEMY','/academy.html'],
     ['gaming','GAMING ARENA','/gaming.html'],
     ['contributions','CONTRIBUTIONS','/contributions.html'],

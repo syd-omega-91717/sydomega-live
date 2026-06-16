@@ -75,3 +75,19 @@
 
 /* load the generative ambient score across pages */
 (function(){ if(!document.querySelector('script[data-omega-audio]')){ var s=document.createElement('script'); s.src='/audio.js'; s.setAttribute('data-omega-audio','1'); document.body.appendChild(s); } })();
+
+/* terms gate: a signed-in member with cosmology must accept T&C before using the app */
+(function(){
+  var p=(location.pathname.split('/').pop()||'').replace('.html','');
+  var EX={ '':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'hall':1 };
+  if(EX[p]) return;
+  import('https://esm.sh/@supabase/supabase-js@2').then(function(m){
+    var sb=m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+    sb.auth.getSession().then(function(res){
+      var s=res.data.session; if(!s) return;
+      sb.from('profiles').select('sign,terms_accepted').eq('id',s.user.id).maybeSingle().then(function(pr){
+        if(pr.data && pr.data.sign && !pr.data.terms_accepted){ location.replace('/terms.html'); }
+      });
+    });
+  }).catch(function(){});
+})();

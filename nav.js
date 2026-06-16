@@ -19,6 +19,7 @@
     ['marketing','MARKETING','/marketing.html'],
     ['treasury','TREASURY','/treasury.html'],
     ['sigil','SIGIL VAULT','/sigil.html'],
+    ['family','FAMILY · HERITAGE','/family.html'],
     ['hall','HALL OF THE ORDER','/hall.html'],
     ['charter','CHARTER','/charter.html'],
     ['public','PUBLIC SITE','/']

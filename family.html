@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717 — Family & Heritage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
+    --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f;
+    --ink:#e9e6dc; --muted:#85837b;
+    --line:rgba(201,168,76,0.16);
+    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 4%,rgba(201,168,76,.09),transparent 46%),radial-gradient(circle at 84% 90%,rgba(0,229,255,.05),transparent 42%)}
+  a{color:inherit;text-decoration:none}
+  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
+  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
+  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
+  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
+  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
+  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
+  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
+  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
+  .nav .lk{color:var(--muted);cursor:default}
+  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
+  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+
+  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
+  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
+  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+  .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:20px 0 6px;font-size:16px}
+  .intro b{color:var(--gold);font-weight:400}
+  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  .tree{border:1px solid rgba(201,168,76,.28);background:radial-gradient(circle at 50% 42%,rgba(201,168,76,.06),transparent 60%),linear-gradient(180deg,var(--panel),transparent);padding:10px;margin-top:8px}
+  .tree svg{width:100%;height:auto;display:block}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  @media(max-width:780px){ .grid2{grid-template-columns:1fr} }
+  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:22px}
+  .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
+  label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:7px}
+  input,select{width:100%;font-family:var(--body);font-size:16px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:12px 14px;color-scheme:dark}
+  select{font-family:var(--mono);font-size:14px}
+  input:focus,select:focus{outline:none;border-color:var(--cyan)}
+  .fld{margin-top:12px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btn{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:12px 20px;border:1px solid var(--gold);cursor:pointer;margin-top:14px}
+  .btn:hover{background:transparent;color:var(--gold)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .msg{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:10px}
+
+  .mem{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px dashed rgba(201,168,76,.12);font-family:var(--mono);font-size:12px}
+  .mem:last-child{border-bottom:none}
+  .mem .nm{color:var(--gold);letter-spacing:1px}
+  .mem .rl{color:var(--muted);font-size:10px;letter-spacing:1px}
+  .mem .heir{color:var(--solar);font-size:9px;border:1px solid rgba(226,200,109,.5);padding:2px 6px;margin-left:6px}
+  .mem .acts{display:flex;gap:8px}
+  .mem .acts button{font-family:var(--mono);font-size:9px;letter-spacing:1px;background:var(--panel-2);border:1px solid var(--line);color:var(--cyan);padding:5px 9px;cursor:pointer}
+  .mem .acts button:hover{border-color:var(--gold);color:var(--gold)}
+  .mem .acts button.del{color:var(--crimson)}
+  .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+  .protocol{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:22px;margin-top:16px}
+  .protocol .h{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--cyan);margin-bottom:12px}
+  .protocol p{font-weight:300;color:var(--ink);line-height:1.85;font-size:15px;max-width:74ch}
+  .protocol p b{color:var(--gold);font-weight:400}
+
+  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
+  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
+  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
+  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
+  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
+  #app{display:none}
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+</style>
+</head>
+<body>
+<div id="gate" class="gate-card" style="display:none">
+  <div class="g">Ω</div>
+  <h2 id="gate-h">Family &amp; Heritage</h2>
+  <p id="gate-p">Sign in to raise your bloodline.</p>
+  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+</div>
+
+<div class="shell" id="app">
+  <aside class="side" id="omega-side" data-page="family"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">FAMILY &amp; HERITAGE<small>THE BLOODLINE &amp; THE SUCCESSION</small></div>
+    </div>
+    <p class="intro">You are the <b>root</b>. Raise your bloodline around you, and name the <b>heir</b> through whom the Heritage Protocol carries your sovereignty. Sovereigns-by-Blood hold zero fees and full priority within the Order.</p>
+
+    <div class="sechead">THE TREE</div>
+    <div class="tree"><div id="tree"></div></div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="h">ADD TO THE BLOODLINE</div>
+        <div class="fld"><label for="f-name">NAME</label><input id="f-name" maxlength="60" placeholder="Their name" /></div>
+        <div class="two">
+          <div class="fld"><label for="f-rel">RELATION</label><select id="f-rel"><option>Heir</option><option>Child</option><option>Spouse</option><option>Parent</option><option>Sibling</option><option>Kin</option></select></div>
+          <div class="fld"><label for="f-sign">SIGN</label><select id="f-sign"></select></div>
+        </div>
+        <button class="btn" id="f-go">ADD MEMBER</button>
+        <div class="msg" id="f-msg"></div>
+      </div>
+      <div class="card">
+        <div class="h">THE BLOODLINE</div>
+        <div id="f-list"></div>
+      </div>
+    </div>
+
+    <div class="protocol">
+      <div class="h">THE HERITAGE PROTOCOL · ARTICLE VII</div>
+      <p>The Order is built to outlive its Architect. A <b>succession mechanism</b> stands ready: should sovereign presence lapse, full control passes to the named <b>heir</b> of the bloodline — no fees, no contest, no dilution. Name your heir below by designating them in the bloodline; the crown marks them on the tree. <b>This is the continuity of the Order.</b></p>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  let user=null, root={name:'YOU',sign:''}, nodes=[];
+
+  const SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  const ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
+  const ECOL={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
+  function colFor(sign){ return ECOL[ELEM[sign]]||'#C9A84C'; }
+  function initial(s){ return (s&&s.trim())?s.trim()[0].toUpperCase():'\u03A9'; }
+
+  function node(cx,cy,r,initialCh,ring,label,sub,isRoot,isHeir){
+    var gc='#C9A84C', solar='#E2C86D';
+    var s='';
+    if(isHeir){ s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r+6)+'" fill="none" stroke="'+solar+'" stroke-width="1.4" opacity="0.8"/>'; }
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#0a0a11" stroke="'+ring+'" stroke-width="'+(isRoot?2.4:1.6)+'"/>';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-6)+'" fill="#0c0c14" stroke="'+gc+'" stroke-width="0.7" opacity="0.6"/>';
+    s+='<text x="'+cx+'" y="'+(cy+ (isRoot?9:7))+'" text-anchor="middle" font-family="Cinzel Decorative, serif" font-weight="700" font-size="'+(isRoot?26:18)+'" fill="'+solar+'">'+initialCh+'</text>';
+    if(isHeir){ s+='<text x="'+cx+'" y="'+(cy-r-6)+'" text-anchor="middle" font-size="13" fill="'+solar+'">\u2728</text>'; }
+    s+='<text x="'+cx+'" y="'+(cy+r+16)+'" text-anchor="middle" font-family="Cinzel Decorative, serif" font-weight="700" font-size="11" fill="'+gc+'">'+label+'</text>';
+    if(sub){ s+='<text x="'+cx+'" y="'+(cy+r+29)+'" text-anchor="middle" font-family="Courier Prime, monospace" font-size="8" letter-spacing="1" fill="#85837b">'+sub+'</text>'; }
+    return s;
+  }
+
+  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function drawTree(){
+    var W=600, H=440, ccx=300, ccy=232, R=150;
+    var rootSvg = node(ccx,ccy,42,initial(root.sign),colFor(root.sign),esc((root.name||'YOU').toUpperCase()),(root.sign?root.sign.toUpperCase()+' \u00B7 ROOT':'ROOT'),true,false);
+    var lines='', nodesSvg='';
+    var n=nodes.length;
+    nodes.forEach(function(m,i){
+      var ang=(-90 + i*(360/Math.max(1,n)))*Math.PI/180;
+      var x=ccx+Math.cos(ang)*R, y=ccy+Math.sin(ang)*R;
+      lines+='<line x1="'+ccx+'" y1="'+ccy+'" x2="'+x.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="'+(m.is_heir?'#E2C86D':'#C9A84C')+'" stroke-width="'+(m.is_heir?'1.4':'0.8')+'" opacity="'+(m.is_heir?'0.8':'0.4')+'"/>';
+      nodesSvg+=node(x,y,28,initial(m.sign||m.name),colFor(m.sign),esc((m.name||'').toUpperCase()),esc(m.relation||''),false,!!m.is_heir);
+    });
+    var svg='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'
+      +'<g stroke-linecap="round">'+lines+'</g>'+nodesSvg+rootSvg+'</svg>';
+    if(n===0){ svg='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+rootSvg
+      +'<text x="300" y="350" text-anchor="middle" font-family="Courier Prime, monospace" font-size="12" letter-spacing="2" fill="#85837b">ADD YOUR BLOODLINE TO RAISE THE TREE</text></svg>'; }
+    document.getElementById('tree').innerHTML=svg;
+  }
+
+  function renderList(){
+    var box=document.getElementById('f-list'); box.innerHTML='';
+    if(!nodes.length){ box.innerHTML='<div class="empty">No bloodline yet — add your first member.</div>'; return; }
+    nodes.forEach(function(m){
+      var d=document.createElement('div'); d.className='mem';
+      d.innerHTML='<div><span class="nm"></span> <span class="rl">'+esc(m.relation||'')+(m.sign?(' \u00B7 '+esc(m.sign)):'')+'</span>'+(m.is_heir?'<span class="heir">HEIR</span>':'')+'</div><div class="acts">'+(m.is_heir?'':'<button data-heir="'+m.id+'">NAME HEIR</button>')+'<button class="del" data-del="'+m.id+'">REMOVE</button></div>';
+      d.querySelector('.nm').textContent=m.name||'';
+      box.appendChild(d);
+    });
+    box.querySelectorAll('button[data-heir]').forEach(function(b){ b.addEventListener('click',function(){ nameHeir(b.getAttribute('data-heir')); }); });
+    box.querySelectorAll('button[data-del]').forEach(function(b){ b.addEventListener('click',function(){ removeNode(b.getAttribute('data-del')); }); });
+  }
+
+  async function load(){
+    var r=await supabase.from('family_nodes').select('id,name,relation,sign,is_heir').eq('user_id',user.id).order('created_at',{ascending:true});
+    nodes=r.data||[]; drawTree(); renderList();
+  }
+  async function add(){
+    var name=document.getElementById('f-name').value.trim();
+    var rel=document.getElementById('f-rel').value;
+    var sign=document.getElementById('f-sign').value;
+    var out=document.getElementById('f-msg'), btn=document.getElementById('f-go');
+    if(name.length<1){ out.style.color='var(--crimson)'; out.textContent='Enter a name.'; return; }
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Adding…';
+    var r=await supabase.from('family_nodes').insert({user_id:user.id,name:name,relation:rel,sign:(sign||null)});
+    btn.disabled=false;
+    if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not add ('+(r.error.code||r.error.message||'')+').'; return; }
+    out.style.color='var(--cyan)'; out.textContent=name+' joined the bloodline.';
+    document.getElementById('f-name').value='';
+    load();
+  }
+  async function nameHeir(id){
+    await supabase.from('family_nodes').update({is_heir:false}).eq('user_id',user.id);
+    await supabase.from('family_nodes').update({is_heir:true}).eq('id',id).eq('user_id',user.id);
+    load();
+  }
+  async function removeNode(id){
+    await supabase.from('family_nodes').delete().eq('id',id).eq('user_id',user.id);
+    load();
+  }
+
+  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+
+  async function boot(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('Family & Heritage','Sign in to raise your bloodline.'); return; }
+    user=sess.user;
+    var pr=await supabase.from('profiles').select('sign,display_name').eq('id',user.id).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to root your tree.'); return; }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+    root={name:(pr.data.display_name||'YOU'),sign:pr.data.sign};
+    var ss=document.getElementById('f-sign'); ss.innerHTML='<option value="">Unknown</option>'; SIGNS.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; ss.appendChild(o); });
+    load();
+  }
+  document.getElementById('f-go').addEventListener('click',add);
+  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@
     ['dashboard','DASHBOARD','/dashboard.html'],
     ['profile','PROFILE','/profile.html'],
     ['ascension','ASCENSION','/ascension.html'],
+    ['matrix','THE LATTICE','/matrix.html'],
     ['agents','AI AGENTS','/agents.html'],
     ['honors','HONORS','/honors.html'],
     ['horoscope','HOROSCOPE','/horoscope.html'],

@@ -77,27 +77,7 @@
 </div>
 
 <div class="shell" id="app">
-  <aside class="side">
-    <div class="brand">Ω SYD OMEGA<small>9 1 7 1 7</small></div>
-    <nav class="nav">
-      <a href="/dashboard.html">DASHBOARD</a>
-      <a href="/profile.html">PROFILE</a>
-      <a href="/ascension.html">ASCENSION</a>
-      <a href="/academy.html">ACADEMY</a>
-      <a href="/gaming.html">GAMING ARENA</a>
-      <a class="on" href="#">CONTRIBUTIONS</a>
-      <a href="/consultancy.html">CONSULTANCY</a>
-      <a href="/media.html">MEDIA HUB</a>
-      <a href="/publishing.html">PUBLISHING</a>
-      <a href="/treasury.html">TREASURY</a>
-      <a href="/hall.html">HALL OF THE ORDER</a>
-      <a href="/charter.html">CHARTER</a>
-      <a href="/">PUBLIC SITE</a>
-      <div class="sec">PHASE II — ACTIVATING</div>
-      <div class="lk">NFT VAULT <span class="ph">SOON</span></div>
-    </nav>
-    <div class="out" id="logout">LOG OUT →</div>
-  </aside>
+  <aside class="side" id="omega-side" data-page="contributions"></aside>
 
   <main class="main">
     <div class="topbar">
@@ -203,6 +183,7 @@
   document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
+<script src="/nav.js"></script>
 <script src="/bg.js"></script>
 </body>
 </html>

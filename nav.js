@@ -28,6 +28,7 @@
     ['family','FAMILY · HERITAGE','/family.html'],
     ['hall','HALL OF THE ORDER','/hall.html'],
     ['charter','CHARTER','/charter.html'],
+    ['approvals','APPROVALS','/approvals.html'],
     ['public','PUBLIC SITE','/']
   ];
   var LOCKED = ['MARKETPLACE'];

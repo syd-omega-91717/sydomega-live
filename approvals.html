@@ -69,6 +69,9 @@
 
     <div class="sechead">ADMITTED</div>
     <div class="card"><div id="approved-list"></div></div>
+
+    <div class="sechead">PUBLICATIONS AWAITING APPROVAL</div>
+    <div class="card"><div id="pub-list"></div></div>
   </main>
 </div>
 
@@ -104,6 +107,21 @@
     });
   }
 
+  async function approvePub(id){ await supabase.from('publications').update({status:'approved'}).eq('id',id); loadPubs(); }
+  async function loadPubs(){
+    var box=document.getElementById('pub-list');
+    var r=await supabase.from('publications').select('id,user_id,kind,title,created_at').eq('status','private').order('created_at',{ascending:true}).limit(200);
+    box.innerHTML='';
+    if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No works awaiting approval.</div>'; return; }
+    r.data.forEach(function(w){
+      var when=w.created_at?new Date(w.created_at).toLocaleString():'';
+      var d=document.createElement('div'); d.className='req';
+      d.innerHTML='<div class="info"><b></b><br>'+esc(w.kind||'')+' · member '+String(w.user_id).slice(0,8)+' · '+when+'</div><div class="act"><button class="ap">APPROVE</button></div>';
+      d.querySelector('b').textContent=w.title||'Untitled';
+      d.querySelector('.ap').addEventListener('click',function(){ approvePub(w.id); });
+      box.appendChild(d);
+    });
+  }
   async function boot(){
     var sess=(await supabase.auth.getSession()).data.session;
     if(!sess){ showGate('Approvals','Sign in as the owner.'); return; }
@@ -111,7 +129,7 @@
     if(!me.data || !me.data.is_owner){ showGate('Owner Only','This chamber is reserved for the Architect.'); return; }
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';
-    load();
+    load(); loadPubs();
   }
   document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();

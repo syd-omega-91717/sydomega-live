@@ -122,6 +122,7 @@
       </div>
       <div class="fld"><label for="m-title">CAMPAIGN TITLE</label><input id="m-title" maxlength="120" placeholder="Name your campaign" /></div>
       <div class="fld"><label for="m-msg">MESSAGE / CREATIVE BRIEF</label><textarea id="m-msg" maxlength="1000" placeholder="What should this placement say or show?"></textarea></div>
+      <div class="fld"><label for="m-file">ATTACH CREATIVE / FILE / DEMO (optional · max 5 GB)</label><input type="file" id="m-file" style="padding:10px" /></div>
       <div class="quote"><span class="ql">QUOTED RATE</span><span class="qv" id="m-price">0 <span>Ω</span></span></div>
       <button class="btn" id="m-go">SUBMIT FOR APPROVAL</button>
       <div class="msg" id="m-msg-out"></div>
@@ -205,11 +206,18 @@
     if(title.length<2){ out.style.color='var(--crimson)'; out.textContent='Give your campaign a title.'; return; }
     if(message.length<10){ out.style.color='var(--crimson)'; out.textContent='Add a brief — at least 10 characters.'; return; }
     btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting…';
-    var r=await supabase.from('media_reservations').insert({user_id:user.id,zone:z,duration:d,title:title,message:message,price_omega:p,status:'submitted'});
+    var filePath=null, fEl=document.getElementById('m-file');
+    if(fEl && fEl.files && fEl.files[0]){
+      out.textContent='Uploading file… (large files take time)';
+      var up=await window.OmegaStorage.upload('uploads', fEl.files[0]);
+      if(up.error){ btn.disabled=false; out.style.color='var(--crimson)'; out.textContent='Upload failed: '+up.error; return; }
+      filePath=up.path;
+    }
+    var r=await supabase.from('media_reservations').insert({user_id:user.id,zone:z,duration:d,title:title,message:message,price_omega:p,status:'submitted',file_path:filePath});
     btn.disabled=false;
     if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not submit ('+(r.error.code||r.error.message||'')+').'; return; }
     out.style.color='var(--cyan)'; out.textContent='Submitted for approval. The Order will review it.';
-    document.getElementById('m-title').value=''; document.getElementById('m-msg').value='';
+    document.getElementById('m-title').value=''; document.getElementById('m-msg').value=''; if(fEl) fEl.value='';
     loadList(); loadQueue();
   }
 
@@ -231,6 +239,7 @@
   document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
+<script src="/upload.js"></script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script>
 </body>

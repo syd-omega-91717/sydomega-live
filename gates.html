@@ -79,7 +79,7 @@
   <aside class="side" id="omega-side" data-page="gates"></aside>
   <main class="main">
     <div class="topbar"><div class="t">THE NINE GATES<small>THE GREAT THRESHOLDS OF THE ASCENT</small></div></div>
-    <p class="intro">Nine gates stand between sand and the Omega. Each opens when your <b>tier</b> — the floor of your lowest axis in the 729 — reaches it. They are not earned with a key but with balance: raise your weakest axis, and the next gate yields.</p>
+    <p class="intro">Nine gates stand between sand and the Omega. Each opens when your <b>tier</b> — the floor of your lowest axis in the 729 — reaches it. They are not earned with a key but with balance: raise your weakest axis, and the next gate yields. Each gate carries its name across the great traditions — the Egyptian <b>Ennead</b> and the Hindu <b>Navagraha</b>, both nine-fold — beside its material and rank.</p>
     <div class="mstat" id="mstat"></div>
     <div class="gates" id="gates"></div>
   </main>
@@ -93,15 +93,15 @@
   const MAT=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
   const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX'];
   const GATES=[
-    {n:'The Gate of Sand',  e:'AWAKENING',     lore:'The first threshold. To pass is simply to begin — to be counted among the Order and take your first node in the lattice.'},
-    {n:'The Gate of Glass', e:'CLARITY',       lore:'Sand fused by heat. Here the seeker first sees the shape of the 729 and learns that every act moves a coordinate.'},
-    {n:'The Gate of Iron',  e:'DISCIPLINE',    lore:'The first hard metal. It opens only to those who return — proof that will outlasts curiosity.'},
-    {n:'The Gate of Steel', e:'TEMPERING',     lore:'Iron folded against fire. Knowledge, Mastery, and Contribution must rise together to cross.'},
-    {n:'The Gate of Titanium',e:'ENDURANCE',   lore:'Light and unbreaking. The midpoint of the ascent, where most falter and the few press on.'},
-    {n:'The Gate of Carbon',e:'TRANSFORMATION',lore:'Pressure becomes diamond. Beyond this gate the sovereign is remade, not merely advanced.'},
-    {n:'The Gate of Gold',  e:'SOVEREIGNTY',   lore:'The metal of the Order itself. To pass is to be named Sovereign and to bear the gold of command.'},
-    {n:'The Gate of Platinum',e:'DOMINION',    lore:'Rarer than gold, the penultimate seal. Legends stand here, one threshold from the apex.'},
-    {n:'The Omega Gate',    e:'ASCENSION',     lore:'The final gate, at node (9,9,9), authority 15.58. It opens for the Omega alone — the completion the whole platform points toward.'}
+    {n:'The Gate of Sand',  e:'AWAKENING',     eg:'Atum',    hi:'Surya',      lore:'The first threshold. To pass is simply to begin — to be counted among the Order and take your first node in the lattice.'},
+    {n:'The Gate of Glass', e:'CLARITY',       eg:'Shu',     hi:'Chandra',    lore:'Sand fused by heat. Here the seeker first sees the shape of the 729 and learns that every act moves a coordinate.'},
+    {n:'The Gate of Iron',  e:'DISCIPLINE',    eg:'Tefnut',  hi:'Mangala',    lore:'The first hard metal. It opens only to those who return — proof that will outlasts curiosity.'},
+    {n:'The Gate of Steel', e:'TEMPERING',     eg:'Geb',     hi:'Budha',      lore:'Iron folded against fire. Knowledge, Mastery, and Contribution must rise together to cross.'},
+    {n:'The Gate of Titanium',e:'ENDURANCE',   eg:'Nut',     hi:'Brihaspati', lore:'Light and unbreaking. The midpoint of the ascent, where most falter and the few press on.'},
+    {n:'The Gate of Carbon',e:'TRANSFORMATION',eg:'Osiris',  hi:'Shukra',     lore:'Pressure becomes diamond. Beyond this gate the sovereign is remade, not merely advanced.'},
+    {n:'The Gate of Gold',  e:'SOVEREIGNTY',   eg:'Isis',    hi:'Shani',      lore:'The metal of the Order itself. To pass is to be named Sovereign and to bear the gold of command.'},
+    {n:'The Gate of Platinum',e:'DOMINION',    eg:'Set',     hi:'Rahu',       lore:'Rarer than gold, the penultimate seal. Legends stand here, one threshold from the apex.'},
+    {n:'The Omega Gate',    e:'ASCENSION',     eg:'Nephthys',hi:'Ketu',       lore:'The final gate, at node (9,9,9), authority 15.58. It opens for the Omega alone — the completion the whole platform points toward.'}
   ];
 
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate-screen').style.display='block'; document.getElementById('app').style.display='none'; }
@@ -126,6 +126,7 @@
           '<div class="gess">'+g.e+'</div>'+
           '<div class="glore">'+g.lore+'</div>'+
           '<div class="meta"><span>OPENS AT TIER <b>'+gateTier+'</b> \u00B7 node ('+gateTier+','+gateTier+','+gateTier+')</span><span>RANK <b>'+RANKS[i]+'</b></span><span>MATERIAL <b>'+MAT[i]+'</b></span></div>'+
+          '<div class="meta"><span>ENNEAD <b>'+g.eg+'</b> (Egyptian)</span><span>NAVAGRAHA <b>'+g.hi+'</b> (Hindu)</span></div>'+
         '</div>'+
         '<div class="state">'+state+'</div>';
       box.appendChild(el);

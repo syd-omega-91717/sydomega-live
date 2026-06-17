@@ -138,6 +138,18 @@
     </div>
 
     <div class="card">
+      <div class="h">RECOVERY &amp; IDENTITY</div>
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-bottom:14px">Kept alongside your email to recover access and verify your identity.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:7px">COUNTRY</label><select id="p-country" style="width:100%;font-family:var(--mono);font-size:14px;color:var(--ink);background:#11111c;border:1px solid var(--line);padding:11px 13px;color-scheme:dark"></select></div>
+        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:7px">PHONE (WITH COUNTRY CODE)</label><input id="p-phone" type="tel" maxlength="30" placeholder="+961 …" style="width:100%;font-family:var(--body);font-size:15px;color:var(--ink);background:#11111c;border:1px solid var(--line);padding:11px 13px;color-scheme:dark" /></div>
+      </div>
+      <button class="btn" id="p-ri-save" style="margin-top:14px">SAVE RECOVERY DETAILS</button>
+      <div id="p-ri-msg" style="font-family:var(--mono);font-size:11px;letter-spacing:1px;min-height:14px;margin-top:10px;color:var(--cyan)"></div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);margin-top:10px;line-height:1.7">Email recovery is active now. Phone (SMS) recovery activates once the Order connects an SMS provider.</div>
+    </div>
+
+    <div class="card">
       <div class="h">CERTIFICATES OF ASCENT</div>
       <div class="seals" id="d-certs"></div>
     </div>
@@ -231,6 +243,22 @@
 
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
 
+  var COUNTRIES=["Lebanon","United States","United Kingdom","Canada","Australia","United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Bahrain","Oman","Jordan","Egypt","Syria","Iraq","Palestine","Turkey","France","Germany","Italy","Spain","Netherlands","Belgium","Switzerland","Sweden","Norway","Denmark","Finland","Ireland","Portugal","Greece","Austria","Poland","Russia","Ukraine","Romania","India","Pakistan","Bangladesh","China","Japan","South Korea","Indonesia","Malaysia","Singapore","Philippines","Thailand","Vietnam","Brazil","Argentina","Mexico","Chile","Colombia","Peru","South Africa","Nigeria","Kenya","Ghana","Morocco","Tunisia","Algeria","Libya","Other"];
+  function populateCountries(sel){
+    var s=document.getElementById('p-country'); s.innerHTML='';
+    var blank=document.createElement('option'); blank.value=''; blank.textContent='Select country'; s.appendChild(blank);
+    COUNTRIES.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; if(sel&&sel===c) o.selected=true; s.appendChild(o); });
+  }
+  async function saveRI(){
+    var country=document.getElementById('p-country').value;
+    var phone=document.getElementById('p-phone').value.trim();
+    var msg=document.getElementById('p-ri-msg'), btn=document.getElementById('p-ri-save');
+    btn.disabled=true; msg.style.color='var(--cyan)'; msg.textContent='Saving…';
+    var r=await supabase.from('profiles').update({country:country||null,phone:phone||null}).eq('id',user.id);
+    btn.disabled=false;
+    if(r.error){ msg.style.color='var(--crimson)'; msg.textContent='Could not save ('+(r.error.code||r.error.message||'')+').'; return; }
+    msg.style.color='#3fb27f'; msg.textContent='Recovery details saved.';
+  }
   async function boot(){
     var sess=(await supabase.auth.getSession()).data.session;
     if(!sess){ showGate('Access Your Profile','Sign in to view your sovereign profile.'); return; }
@@ -242,6 +270,8 @@
     document.getElementById('app').style.display='flex';
     render(); loadCerts(); loadEvents();
     if(prof.avatar_url){ var im=document.getElementById('p-avatar'); im.src=prof.avatar_url; im.style.display='block'; }
+    populateCountries(prof.country||'');
+    if(prof.phone) document.getElementById('p-phone').value=prof.phone;
   }
 
   async function uploadAvatar(){
@@ -262,6 +292,7 @@
   document.getElementById('p-name').addEventListener('keydown',function(e){ if(e.key==='Enter') saveName(); });
   document.getElementById('p-av-btn').addEventListener('click',function(){ document.getElementById('p-av-file').click(); });
   document.getElementById('p-av-file').addEventListener('change',uploadAvatar);
+  document.getElementById('p-ri-save').addEventListener('click',saveRI);
   document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>

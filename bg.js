@@ -1,3 +1,4 @@
+(function(){ try{ var c=localStorage.getItem("omega_bg"); if(c){ document.documentElement.style.setProperty("--void", c); document.body && (document.body.style.background=c); } }catch(e){} })();
 /* Ω SYD OMEGA 91717 — living cinematic backdrop.
    Depth-layered light motes + golden frequency-grid + soft bloom.
    Subtle by design; sits behind all content; honors reduced-motion. */

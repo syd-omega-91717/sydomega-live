@@ -150,11 +150,23 @@
     return {auth:auth,tier:tier,rank:RANKS[tier-1],low:axes[0][0],nt:nt,mn:mn};
   }
 
+  var AX={Sentinel:'b',Merchant:'c',Scout:'a',Warden:'c',Sovereign:'b',Auditor:'b',Proxy:'b',Oracle:'a',Beacon:'c',Analyst:'c',Tutor:'a',Historian:'a'};
+  var AXNAME={a:'Knowledge',b:'Mastery',c:'Contribution'};
+  function agentLevel(ag){
+    var ax=AX[ag.name]||'b';
+    var v=ax==='a'?ctx.a:ax==='b'?ctx.b:ctx.c;
+    var level=Math.max(1,Math.min(9,Math.floor(v)));
+    var frac=level>=9?1:(v-Math.floor(v));
+    var cap=level>=9?'Omega \u2014 total domain mastery':level>=7?'Sovereign-grade counsel':level>=5?'Augmented foresight':level>=3?'Marks your thresholds':'Reads your standing';
+    return {axis:ax,axisName:AXNAME[ax],level:level,rank:RANKS[level-1],frac:frac,cap:cap,val:v};
+  }
+
   function reply(ag,raw){
     var m=raw.toLowerCase(), s=standing();
     function dom(t){ return t; }
     if(/^(hi|hello|hey|greet|salaam|salam)/.test(m)) return 'I am '+ag.name+', '+ag.domain.toLowerCase()+' of the Order. '+ag.line+' You stand at Tier '+s.tier+' — '+s.rank+'. What do you require?';
     if(/who are you|what are you|your name|introduce/.test(m)) return 'I am '+ag.name+', bound to '+ag.sign+'. '+ag.line;
+    if(/your level|your rank|your power|how strong|agent level|do you upgrade|you upgrade|upgrade/.test(m)){ var l=agentLevel(ag); return 'I stand at Level '+l.level+' of 9 — '+l.rank+' — bound to your '+l.axisName+' vector ('+l.val.toFixed(2)+'). '+(l.level>=9?'I am at my apex; no further ascent remains.':'Raise your '+l.axisName+' and I ascend with you toward Level '+(l.level+1)+'.'); }
     if(/help|what can|capab|do for me/.test(m)) return 'Through the lens of '+ag.domain.toLowerCase()+', I can read your standing, mark your next threshold, and point you to where ascent is fastest. Ask me about your rank, your next milestone, or the Treasury.';
     if(/rank|tier|standing|where am|level|status/.test(m)) return 'You hold Tier '+s.tier+' — '+s.rank+' — with authority '+s.auth.toFixed(2)+' of 15.58. '+(ag.domain==='VALIDATION'?'Every point of it is verified.':ag.domain==='PREDICTION'?'The apex is '+(15.588-s.auth).toFixed(2)+' beyond you.':ag.line);
     if(/ascend|progress|advance|grow|raise|matrix|axis|next|milestone|threshold/.test(m)) return 'Your lowest vector is '+s.low+'. Raise it toward '+s.nt+' to claim node ('+s.nt+','+s.nt+','+s.nt+'). '+(s.low==='Knowledge'?'The Academy lifts Knowledge.':s.low==='Mastery'?'The Gaming Arena proves Mastery.':'Contributions and Publishing lift Contribution.')+' — '+ag.name;
@@ -173,10 +185,11 @@
   }
   function selectAgent(i){
     current=i; var ag=AGENTS[i], col=ECOL[ELEM[ag.sign]]||'#C9A84C';
+    var lv=agentLevel(ag);
     document.querySelectorAll('.ag').forEach(function(el,idx){ el.classList.toggle('sel',idx===i); });
-    document.getElementById('chead').innerHTML=seal('h',ag.name[0],col)+'<div><div class="cn">'+ag.name+'</div><div class="cd">'+ag.domain+' · '+ag.sign.toUpperCase()+' · '+(ELEM[ag.sign]||'').toUpperCase()+'</div></div>';
+    document.getElementById('chead').innerHTML=seal('h',ag.name[0],col)+'<div><div class="cn">'+ag.name+' \u00B7 LVL '+lv.level+'/9</div><div class="cd">'+ag.domain+' · '+ag.sign.toUpperCase()+' · '+(ELEM[ag.sign]||'').toUpperCase()+' \u00B7 '+lv.rank.toUpperCase()+'</div></div>';
     document.getElementById('log').innerHTML='';
-    addBub(ag.name,ag.line+' You stand at Tier '+standing().tier+' — '+standing().rank+'. Speak, sovereign.','a');
+    addBub(ag.name,ag.line+' I serve at Level '+lv.level+' of 9 \u2014 '+lv.rank+', '+lv.cap.toLowerCase()+'. Raise your '+lv.axisName+' and I rise with you. Speak, sovereign.','a');
   }
 
   function send(){
@@ -192,8 +205,13 @@
     var r=document.getElementById('roster'); r.innerHTML='';
     AGENTS.forEach(function(ag,i){
       var col=ECOL[ELEM[ag.sign]]||'#C9A84C', mine=(ag.sign===mySign);
+      var lv=agentLevel(ag);
       var d=document.createElement('div'); d.className='ag'+(mine?' mine':'');
-      d.innerHTML=seal(i,ag.name[0],col)+'<div class="an">'+ag.name+'</div><div class="ad">'+ag.domain+'</div>'+(mine?'<div class="you">YOUR AGENT</div>':'');
+      d.innerHTML=seal(i,ag.name[0],col)+'<div class="an">'+ag.name+'</div><div class="ad">'+ag.domain+'</div>'
+        +'<div style="font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--solar);margin-top:7px">LVL '+lv.level+'/9 \u00B7 '+lv.rank.toUpperCase()+'</div>'
+        +'<div style="height:4px;background:#1a1a22;margin-top:5px;border:1px solid rgba(201,168,76,.12)"><i style="display:block;height:100%;width:'+(lv.frac*100).toFixed(0)+'%;background:'+col+'"></i></div>'
+        +'<div style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:6px;line-height:1.5">'+lv.axisName.toUpperCase()+'-BOUND \u00B7 '+lv.cap+'</div>'
+        +(mine?'<div class="you">YOUR AGENT</div>':'');
       d.addEventListener('click',function(){ selectAgent(i); var cc=document.querySelector('.console'); if(cc) window.scrollTo({top:cc.offsetTop-20,behavior:'smooth'}); });
       r.appendChild(d);
     });

@@ -111,6 +111,7 @@
 
     <div class="card">
       <div class="h">YOUR ARCHIVE</div>
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-bottom:14px">Every work is <b style="color:var(--gold)">private to your archive and portfolio</b> — visible only to you. It is <b style="color:var(--gold)">not public</b>. The Order may approve a work for the future public showcase; until then nothing you commit is shown to anyone else.</div>
       <div id="p-list"></div>
     </div>
   </main>
@@ -126,13 +127,16 @@
   async function loadList(){
     var box=document.getElementById('p-list');
     try{
-      var r=await supabase.from('publications').select('kind,title,body,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(40);
+      var r=await supabase.from('publications').select('kind,title,body,created_at,status').eq('user_id',user.id).order('created_at',{ascending:false}).limit(40);
       box.innerHTML='';
       if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">Your archive is empty — commit your first work above.</div>'; return; }
       r.data.forEach(function(w){
         var dt=w.created_at?new Date(w.created_at).toLocaleDateString():'';
+        var st=(w.status||'private').toLowerCase();
+        var stc=st==='approved'?'#3fb27f':'#00E5FF';
+        var stl=st==='approved'?'APPROVED':'PRIVATE';
         var d=document.createElement('div'); d.className='work';
-        d.innerHTML='<button class="wh"><span><span class="wt"></span><span class="wm">'+(w.kind||'')+' &middot; '+dt+'</span></span><span class="ar">&#9662;</span></button><div class="wb"><div class="inner"></div></div>';
+        d.innerHTML='<button class="wh"><span><span class="wt"></span><span class="wm">'+(w.kind||'')+' &middot; '+dt+' &middot; <b style="color:'+stc+'">'+stl+'</b></span></span><span class="ar">&#9662;</span></button><div class="wb"><div class="inner"></div></div>';
         d.querySelector('.wt').textContent=w.title||'Untitled';
         d.querySelector('.inner').textContent=w.body||'';
         d.querySelector('.wh').addEventListener('click',function(){ d.classList.toggle('open'); });

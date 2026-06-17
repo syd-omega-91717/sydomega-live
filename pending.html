@@ -45,9 +45,31 @@
     <div class="msg" id="msg"></div>
   </div>
 </div>
+
+<!-- EmailJS SDK (free email-from-browser; safe to leave even if unused) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+  /* ====================================================================
+     EMAIL NOTICE — paste your 3 values from emailjs.com here (see steps).
+     Leave them as-is and nothing breaks; you simply get no email yet.
+     ==================================================================== */
+  const EMAILJS_PUBLIC_KEY  = "PASTE_PUBLIC_KEY";
+  const EMAILJS_SERVICE_ID  = "PASTE_SERVICE_ID";
+  const EMAILJS_TEMPLATE_ID = "PASTE_TEMPLATE_ID";
+
+  function notifyOwner(email, when, sign){
+    try{
+      if(!window.emailjs) return;
+      if(!EMAILJS_PUBLIC_KEY || EMAILJS_PUBLIC_KEY.indexOf('PASTE')!==-1) return;
+      window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+      window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        user_email: email, requested_at: when, sign: sign
+      }).catch(function(){});
+    }catch(e){}
+  }
 
   async function check(){
     var sess=(await supabase.auth.getSession()).data.session;
@@ -55,12 +77,16 @@
     var user=sess.user;
     var prof=(await supabase.from('profiles').select('access_approved,access_requested_at,display_name,sign').eq('id',user.id).maybeSingle()).data;
     if(prof && prof.access_approved===true){ window.location.replace('/dashboard.html'); return; }
-    // record / refresh the request
+
+    var isNew=(!prof || !prof.access_requested_at);
+    var when=(prof&&prof.access_requested_at)?prof.access_requested_at:new Date().toISOString();
     var patch={id:user.id, email:user.email};
-    if(!prof || !prof.access_requested_at){ patch.access_requested_at=new Date().toISOString(); }
+    if(isNew){ patch.access_requested_at=when; }
     await supabase.from('profiles').upsert(patch);
-    var when=(prof&&prof.access_requested_at)?new Date(prof.access_requested_at).toLocaleString():new Date().toLocaleString();
-    document.getElementById('who').innerHTML='ACCOUNT — <b>'+user.email+'</b><br>REQUESTED — <b>'+when+'</b><br>STATUS — <b style="color:var(--crimson)">PENDING APPROVAL</b>';
+
+    if(isNew){ notifyOwner(user.email, new Date(when).toLocaleString(), (prof&&prof.sign)||'—'); }
+
+    document.getElementById('who').innerHTML='ACCOUNT — <b>'+user.email+'</b><br>REQUESTED — <b>'+new Date(when).toLocaleString()+'</b><br>STATUS — <b style="color:var(--crimson)">PENDING APPROVAL</b>';
   }
   document.getElementById('recheck').addEventListener('click',async function(){
     var msg=document.getElementById('msg'); msg.style.color='var(--cyan)'; msg.textContent='Checking…';

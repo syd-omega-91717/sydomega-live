@@ -7,6 +7,7 @@
 
   var LIVE = [
     ['dashboard','DASHBOARD','/dashboard.html'],
+    ['search','SEARCH','/search.html'],
     ['profile','PROFILE','/profile.html'],
     ['ascension','ASCENSION','/ascension.html'],
     ['matrix','THE LATTICE','/matrix.html'],

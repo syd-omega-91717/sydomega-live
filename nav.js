@@ -27,6 +27,7 @@
     ['sigil','SIGIL VAULT','/sigil.html'],
     ['family','FAMILY · HERITAGE','/family.html'],
     ['hall','HALL OF THE ORDER','/hall.html'],
+    ['settings','SETTINGS','/settings.html'],
     ['charter','CHARTER','/charter.html'],
     ['approvals','APPROVALS','/approvals.html'],
     ['public','PUBLIC SITE','/']

@@ -1,4 +1,4 @@
-/* Ω SYD OMEGA 91717 — per-page living emblem.
+/* SYD OMEGA 91717 - per-page living emblem.
    Each page renders its own cinematic, rotative, pointer-reactive sign into the header.
    Auto-loaded by bg.js on every app page. Honors reduced-motion. */
 (function(){
@@ -13,10 +13,12 @@
   var MAP={
     dashboard:['orb',3,'#E2C86D','\u03A9','COMMAND'],
     beacon:['rays',12,'#00E5FF','\u2726','THE BEACON'],
+    notifications:['ring',6,'#00E5FF','\u25C9','THE WIRE \u00B7 ALERTS'],
     search:['orbit',2,'#00E5FF','\u25C9','THE LENS'],
     profile:['ring',1,'#C9A84C','\u25C8','THE SELF'],
     passport:['poly',5,'#E2C86D','\u273A','THE SEAL'],
     ascension:['arc',9,'#C9A84C','\u25B2','THE ASCENT'],
+    intelligence:['ring',3,'#E2C86D','\u25CF','THE ANALYTICS'],
     gates:['ring',12,'#00E5FF','\u2302','THE TWELVE PORTALS'],
     kings:['ring',28,'#E2C86D','\u265B','THE 28 CROWNS'],
     matrix:['poly',3,'#00E5FF','\u25C7','THE 729'],
@@ -74,18 +76,17 @@
   wrap.addEventListener('mouseleave',function(){ hover=0; });
   window.addEventListener('mousemove',function(e){ var r=cv.getBoundingClientRect(); mx=(e.clientX-(r.left+r.width/2))/40; my=(e.clientY-(r.top+r.height/2))/40; });
 
-  function hex(c,a){ // c like #RRGGBB
+  function hex(c,a){
     var n=parseInt(c.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
   }
-  function glyph(spin){
-    x.save(); x.translate(cx,cy); x.rotate(spin*0.0);
+  function glyph(){
+    x.save(); x.translate(cx,cy);
     x.fillStyle=COL; x.font='700 '+(size*0.28)+'px "Cinzel Decorative", serif'; x.textAlign='center'; x.textBaseline='middle';
     x.shadowColor=hex(COL,0.7); x.shadowBlur=10+hover*8; x.fillText(GLY,0,1); x.shadowBlur=0; x.restore();
   }
   function draw(){
     x.clearRect(0,0,size,size);
     var sp=t*(1+hover*1.6);
-    // pointer tilt
     var tiltX=Math.max(-6,Math.min(6,mx)), tiltY=Math.max(-6,Math.min(6,my));
     x.save(); x.translate(tiltX*0.3,tiltY*0.3);
 
@@ -96,24 +97,24 @@
       x.shadowBlur=0;
     } else if(motif==='poly'){
       for(var k=0;k<2;k++){ var rot=sp*(k?-1:1), rr=R*(k?0.6:1); x.beginPath();
-        for(var i=0;i<N;i++){ var a=-Math.PI/2+rot+i*2*Math.PI/N; var px=cx+Math.cos(a)*rr, py=cy+Math.sin(a)*rr; if(i===0)x.moveTo(px,py);else x.lineTo(px,py); }
+        for(var i2=0;i2<N;i2++){ var a2=-Math.PI/2+rot+i2*2*Math.PI/N; var px2=cx+Math.cos(a2)*rr, py2=cy+Math.sin(a2)*rr; if(i2===0)x.moveTo(px2,py2);else x.lineTo(px2,py2); }
         x.closePath(); x.strokeStyle=hex(COL,0.5-k*0.2); x.lineWidth=1.2; x.stroke(); }
     } else if(motif==='orbit'){
-      for(var k=0;k<N;k++){ var rot=sp*(k%2?-1:1)+k*0.6; x.save(); x.translate(cx,cy); x.rotate(rot);
-        x.beginPath(); x.ellipse(0,0,R*(1-k*0.12),R*0.4,0,0,7); x.strokeStyle=hex(COL,0.4-k*0.06); x.lineWidth=1; x.stroke();
-        var px=Math.cos(rot*2)*R*(1-k*0.12); x.beginPath(); x.arc(px,0,1.8,0,7); x.fillStyle=hex(COL,0.9); x.fill(); x.restore(); }
+      for(var k3=0;k3<N;k3++){ var rot3=sp*(k3%2?-1:1)+k3*0.6; x.save(); x.translate(cx,cy); x.rotate(rot3);
+        x.beginPath(); x.ellipse(0,0,R*(1-k3*0.12),R*0.4,0,0,7); x.strokeStyle=hex(COL,0.4-k3*0.06); x.lineWidth=1; x.stroke();
+        var px3=Math.cos(rot3*2)*R*(1-k3*0.12); x.beginPath(); x.arc(px3,0,1.8,0,7); x.fillStyle=hex(COL,0.9); x.fill(); x.restore(); }
     } else if(motif==='rays'){
-      for(var i=0;i<N;i++){ var a=sp*0.6+i*2*Math.PI/N; var len=R*(0.6+0.4*Math.sin(sp*2+i));
-        x.beginPath(); x.moveTo(cx+Math.cos(a)*6,cy+Math.sin(a)*6); x.lineTo(cx+Math.cos(a)*len,cy+Math.sin(a)*len);
+      for(var i4=0;i4<N;i4++){ var a4=sp*0.6+i4*2*Math.PI/N; var len=R*(0.6+0.4*Math.sin(sp*2+i4));
+        x.beginPath(); x.moveTo(cx+Math.cos(a4)*6,cy+Math.sin(a4)*6); x.lineTo(cx+Math.cos(a4)*len,cy+Math.sin(a4)*len);
         x.strokeStyle=hex(COL,0.45); x.lineWidth=1.4; x.stroke(); }
     } else if(motif==='arc'){
-      for(var i=0;i<N;i++){ var rr=R*(0.4+0.6*i/N); var st=sp*(1+i*0.1)+i; x.beginPath(); x.arc(cx,cy,rr,st,st+1.8); x.strokeStyle=hex(COL,0.5-i*0.03); x.lineWidth=1.4; x.stroke(); }
-    } else { // orb
-      for(var k=0;k<3;k++){ x.save(); x.translate(cx,cy); x.rotate(sp*(k%2?-0.6:0.6)); x.beginPath(); x.ellipse(0,0,R*(0.6+k*0.2),R*0.3,0,0,7); x.strokeStyle=hex(COL,0.3-k*0.06); x.lineWidth=1; x.stroke(); x.restore(); }
-      for(var i=0;i<8;i++){ var a=sp+i*Math.PI/4; x.beginPath(); x.arc(cx+Math.cos(a)*R*0.9,cy+Math.sin(a)*R*0.34,1.4,0,7); x.fillStyle=hex(COL,0.7); x.fill(); }
+      for(var i5=0;i5<N;i5++){ var rr5=R*(0.4+0.6*i5/N); var st=sp*(1+i5*0.1)+i5; x.beginPath(); x.arc(cx,cy,rr5,st,st+1.8); x.strokeStyle=hex(COL,0.5-i5*0.03); x.lineWidth=1.4; x.stroke(); }
+    } else {
+      for(var k6=0;k6<3;k6++){ x.save(); x.translate(cx,cy); x.rotate(sp*(k6%2?-0.6:0.6)); x.beginPath(); x.ellipse(0,0,R*(0.6+k6*0.2),R*0.3,0,0,7); x.strokeStyle=hex(COL,0.3-k6*0.06); x.lineWidth=1; x.stroke(); x.restore(); }
+      for(var i6=0;i6<8;i6++){ var a6=sp+i6*Math.PI/4; x.beginPath(); x.arc(cx+Math.cos(a6)*R*0.9,cy+Math.sin(a6)*R*0.34,1.4,0,7); x.fillStyle=hex(COL,0.7); x.fill(); }
     }
     x.restore();
-    glyph(sp);
+    glyph();
   }
   function loop(){ t+=0.012; draw(); requestAnimationFrame(loop); }
   if(reduce){ draw(); } else loop();

@@ -103,6 +103,9 @@
   attach();
 })();
 
+/* load the per-page living emblem */
+(function(){ if(!document.querySelector('script[data-omega-emblem]')){ var s=document.createElement('script'); s.src='/emblem.js'; s.setAttribute('data-omega-emblem','1'); (document.body||document.documentElement).appendChild(s); } })();
+
 /* load the generative ambient score across pages */
 (function(){ if(!document.querySelector('script[data-omega-audio]')){ var s=document.createElement('script'); s.src='/audio.js'; s.setAttribute('data-omega-audio','1'); document.body.appendChild(s); } })();
 

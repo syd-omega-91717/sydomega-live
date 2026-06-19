@@ -1,5 +1,3 @@
-[Binary file - 7,423 bytes]
-
 /* Ω SYD OMEGA 91717 — per-page living emblem.
    Each page renders its own cinematic, rotative, pointer-reactive sign into the header.
    Auto-loaded by bg.js on every app page. Honors reduced-motion. */

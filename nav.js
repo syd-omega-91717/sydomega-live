@@ -7,6 +7,7 @@
 
   var LIVE = [
     ['dashboard','DASHBOARD','/dashboard.html'],
+    ['beacon','THE BEACON · START','/beacon.html'],
     ['search','SEARCH','/search.html'],
     ['profile','PROFILE','/profile.html'],
     ['passport','SOVEREIGN PASSPORT','/passport.html'],
@@ -14,6 +15,7 @@
     ['gates','THE TWELVE GATES','/gates.html'],
     ['kings','THE 28 KINGS','/kings.html'],
     ['matrix','THE LATTICE','/matrix.html'],
+    ['triads','THE TWELVE TRIADS','/triads.html'],
     ['agents','AI AGENTS','/agents.html'],
     ['chatbot','CONCIERGE','/chatbot.html'],
     ['honors','HONORS','/honors.html'],

@@ -30,6 +30,8 @@
     ['publishing','PUBLISHING','/publishing.html'],
     ['marketing','MARKETING','/marketing.html'],
     ['treasury','TREASURY','/treasury.html'],
+    ['wallet','SOVEREIGN WALLET','/wallet.html'],
+    ['membership','MEMBERSHIP','/membership.html'],
     ['sigil','SIGIL VAULT','/sigil.html'],
     ['family','FAMILY · HERITAGE','/family.html'],
     ['hall','HALL OF THE ORDER','/hall.html'],

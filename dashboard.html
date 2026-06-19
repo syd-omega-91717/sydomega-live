@@ -3,26 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Command Center</title>
+<title>Ω SYD OMEGA 91717 — Command</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  :root{
-    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
-    --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000;
-    --ink:#e9e6dc; --muted:#85837b; --acc:#C9A84C;
-    --line:rgba(201,168,76,0.16);
-    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
-  }
+  :root{ --void:#07070b; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 28% 16%,rgba(201,168,76,.07),transparent 40%),radial-gradient(circle at 82% 84%,rgba(0,229,255,.05),transparent 42%)}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% -10%,rgba(201,168,76,.10),transparent 55%),radial-gradient(circle at 85% 100%,rgba(0,229,255,.06),transparent 50%)}
   a{color:inherit;text-decoration:none}
   .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-
   .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center;margin-bottom:4px}
+  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
   .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
   .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
   .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
@@ -33,391 +26,295 @@
   .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
   .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
 
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .user{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;letter-spacing:1px}
-  .user .em{color:var(--ink)}
-  .user .lvl{border:1px solid var(--gold);color:var(--gold);padding:8px 12px;text-align:center;line-height:1.3}
-  .user .lvl b{display:block;font-family:var(--display);font-size:15px}
-  .user .lvl span{font-size:8px;letter-spacing:2px;color:var(--muted)}
+  .main{flex:1;min-width:0;padding:0 0 60px}
 
-  .welcome{margin:24px 0 8px;font-family:var(--display);font-weight:700;color:var(--ink);font-size:clamp(18px,3vw,24px);letter-spacing:1px}
-  .quote{font-family:var(--mono);font-size:12px;color:var(--acc);letter-spacing:1px;margin-bottom:22px}
+  /* ===== HERO ===== */
+  .hero{position:relative;height:340px;border-bottom:1px solid var(--line);overflow:hidden}
+  #orb{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hero-grad{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(7,7,11,.5) 75%,var(--void));pointer-events:none}
+  .hero-id{position:absolute;left:clamp(16px,3vw,40px);bottom:26px;z-index:2}
+  .hero-id .eye{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan)}
+  .hero-id .nm{font-family:var(--display);font-weight:900;color:var(--gold);font-size:clamp(26px,5vw,46px);letter-spacing:1px;line-height:1.05;margin-top:6px;text-shadow:0 0 30px rgba(201,168,76,.3)}
+  .hero-id .sub{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:8px}
+  .hero-id .sub b{color:var(--solar)}
 
-  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-  .tile{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px 18px}
-  .tile .l{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan)}
-  .tile .n{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(22px,3.4vw,32px);margin-top:8px;line-height:1}
-  .tile .s{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:1px}
+  .wrap{padding:24px clamp(16px,3vw,40px) 0}
+  .row{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+  @media(max-width:880px){ .row{grid-template-columns:1fr} }
+  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:20px}
+  .card h3{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);font-weight:400;margin-bottom:16px}
 
-  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:18px}
-  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:22px}
-  .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-  .card .h .badge{color:var(--gold);border:1px solid var(--line);padding:3px 8px;font-size:9px}
+  /* standing */
+  .standing{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+  .gauge{position:relative;width:128px;height:128px;flex-shrink:0}
+  .gauge canvas{width:128px;height:128px}
+  .gauge .gc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .gauge .gv{font-family:var(--display);font-weight:700;color:var(--gold);font-size:26px;line-height:1}
+  .gauge .gl{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+  .bars{flex:1;min-width:200px;display:flex;flex-direction:column;gap:12px}
+  .bar .bl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:1px;margin-bottom:5px}
+  .bar .bl .n{color:var(--ink)} .bar .bl .v{color:var(--solar)}
+  .bar .tr{height:8px;background:#15151f;overflow:hidden;border:1px solid var(--line)}
+  .bar .fl{height:100%;width:0;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+  .bar.a .fl{background:linear-gradient(90deg,#0a7,#00E5FF)} .bar.b .fl{background:linear-gradient(90deg,#7a5,#C9A84C)} .bar.c .fl{background:linear-gradient(90deg,#833,#E2C86D)}
+  .standfoot{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted)}
+  .standfoot b{color:var(--gold)}
 
-  .radar-wrap{display:flex;justify-content:center;margin:8px 0}
-  #d-radar{width:260px;height:260px;max-width:86%}
-  .rdr-guide{fill:none;stroke:var(--line);stroke-width:1}
-  .rdr-spoke{stroke:var(--line);stroke-width:1}
-  .rdr-label{fill:var(--muted);font-family:var(--mono);font-size:11px}
-  .rdr-now{fill:var(--acc);fill-opacity:.16;stroke:var(--acc);stroke-width:1.6}
-  .rdr-dot{fill:var(--acc)}
-  .axes{display:flex;justify-content:space-around;margin-top:8px;font-family:var(--mono);text-align:center}
-  .axes .ax .v{font-family:var(--display);font-weight:700;font-size:22px}
-  .axes .ax.k .v{color:var(--cyan)} .axes .ax.m .v{color:var(--gold)} .axes .ax.c .v{color:#b18cff}
-  .axes .ax .l{font-size:9px;letter-spacing:1px;color:var(--muted);margin-top:4px}
-  .mrow{font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:16px;line-height:1.9;text-align:center}
-  .mrow b{color:var(--gold);font-weight:400}
-  .ladder{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px;justify-content:center;font-family:var(--mono);font-size:9px}
-  .rung{border:1px solid var(--line);padding:5px 8px;color:var(--muted)}
-  .rung.on{border-color:var(--gold);color:var(--gold)}
+  /* radar + side */
+  .sidecol{display:flex;flex-direction:column;gap:16px}
+  .radar-wrap{display:flex;align-items:center;justify-content:center;padding:6px}
+  #radar{width:200px;height:170px}
+  .nextgate{display:flex;align-items:center;gap:14px}
+  .nextgate .ar{width:40px;height:54px;border:2px solid var(--cyan);border-radius:26px 26px 4px 4px;display:flex;align-items:center;justify-content:center;font-family:var(--display);color:var(--cyan);font-size:15px;flex-shrink:0}
+  .nextgate .nx{font-family:var(--display);color:var(--gold);font-size:16px}
+  .nextgate .nxs{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);margin-top:3px}
 
-  .chatlog{display:flex;flex-direction:column;gap:9px;max-height:240px;overflow-y:auto;margin-bottom:12px}
-  .cmsg{font-size:14px;line-height:1.5;padding:9px 13px;border:1px solid var(--line);max-width:92%}
-  .cmsg.me{align-self:flex-end;color:var(--ink);border-color:var(--cyan)}
-  .cmsg.ag{align-self:flex-start;color:var(--acc);border-color:var(--acc);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
-  .row{display:flex;gap:10px}
-  .row input,.erow input,.erow select{flex:1;font-family:var(--mono);font-size:14px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:11px 13px;color-scheme:dark}
-  input:focus,select:focus{outline:none;border-color:var(--cyan)}
-  .btn{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:12px 18px;border:1px solid var(--gold);cursor:pointer;white-space:nowrap}
-  .btn:hover{background:transparent;color:var(--gold)}
-  .erow{display:flex;flex-direction:column;gap:10px}
-  .msg{font-family:var(--mono);font-size:11px;letter-spacing:1px;min-height:15px;margin-top:8px;color:var(--cyan)}
-
-  .ev{font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 0;border-bottom:1px dashed var(--line);display:flex;gap:12px}
-  .ev:last-child{border-bottom:none}
-  .ev .ax{color:var(--gold);min-width:100px} .ev .nt{color:var(--ink);flex:1}
-
-  .seals{display:flex;flex-wrap:wrap;gap:10px}
-  .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,.08),transparent);padding:13px 15px;min-width:170px;flex:1}
-  .seal .sm{font-family:var(--display);color:var(--gold);font-size:18px}
-  .seal .st{font-family:var(--mono);font-size:11px;color:var(--ink);margin-top:6px;line-height:1.4}
-  .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
-
-  .pillars{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:4px}
-  .pil{border:1px solid var(--line);background:var(--panel);padding:14px 8px;text-align:center}
-  .pil.mine{border-color:var(--acc);background:linear-gradient(180deg,rgba(201,168,76,.07),transparent)}
-  .pil .pn{font-family:var(--display);font-weight:700;color:var(--gold);font-size:18px}
-  .pil .pl{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:5px}
-  .pil .pm{font-family:var(--mono);font-size:9px;color:var(--acc);margin-top:4px;min-height:11px}
-
-  .mods{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px}
-  .mod{border:1px dashed var(--line);background:var(--panel);padding:18px 14px;text-align:center;position:relative}
-  .mod .mt{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted)}
-  .mod .mp{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--crimson);margin-top:8px}
-
-  section.block{margin-top:18px}
-  .block .bh{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
+  /* module chambers */
+  .chambers{padding:8px clamp(16px,3vw,40px) 0}
+  .chgroup{margin-top:26px}
+  .chgroup .gh{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--gold);padding-bottom:9px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline}
+  .chgroup .gh small{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:11px;margin-top:14px}
+  .tile{position:relative;display:block;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:15px 16px;overflow:hidden;transition:transform .16s,border-color .16s}
+  .tile::after{content:"";position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(201,168,76,.10),transparent);transform:skewX(-18deg);transition:left .5s}
+  .tile:hover{transform:translateY(-3px);border-color:var(--gold)}
+  .tile:hover::after{left:120%}
+  .tile .ic{font-family:var(--display);font-weight:700;color:var(--gold);font-size:16px}
+  .tile .tl{font-family:var(--display);font-weight:700;color:var(--gold);font-size:15px;margin-top:7px;letter-spacing:.3px}
+  .tile .td{font-weight:300;color:var(--muted);font-size:12px;line-height:1.45;margin-top:6px}
+  .tile.owner{border-left:2px solid var(--solar)}
 
   .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
   .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;letter-spacing:1px;margin:10px 0}
-  .gate-card p{font-family:var(--body);font-weight:300;color:var(--muted);margin-bottom:22px}
+  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
+  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
   .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-
   #app{display:none}
-  @media(max-width:980px){ .grid2{grid-template-columns:1fr} .tiles{grid-template-columns:repeat(2,1fr)} .pillars{grid-template-columns:repeat(4,1fr)} .mods{grid-template-columns:repeat(2,1fr)} }
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} .pillars{grid-template-columns:repeat(3,1fr)} }
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} .hero{height:260px} }
+  @media(prefers-reduced-motion:reduce){ .bar .fl{transition:none} .tile,.tile::after{transition:none} }
 </style>
 </head>
 <body>
-
-<!-- access gate (shown when not logged in / no cosmology) -->
 <div id="gate" class="gate-card" style="display:none">
   <div class="g">Ω</div>
-  <h2 id="gate-h">Access the Command Center</h2>
-  <p id="gate-p">Sign in and set your cosmology to enter your sovereign dashboard.</p>
+  <h2 id="gate-h">Command</h2>
+  <p id="gate-p">Sign in to enter your command.</p>
   <a href="/account.html">GO TO MEMBER ACCESS →</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="dashboard"></aside>
-
   <main class="main">
-    <div class="topbar">
-      <div class="t">SYD OMEGA 91717<small>THE SOVEREIGN OPERATING SYSTEM</small></div>
-      <div class="user">
-        <span class="em" id="u-email"></span>
-        <span class="lvl"><b id="u-tier">1</b><span>TIER</span></span>
+    <div class="hero">
+      <canvas id="orb"></canvas>
+      <div class="hero-grad"></div>
+      <div class="hero-id">
+        <div class="eye">SOVEREIGN COMMAND · Ω 91717</div>
+        <div class="nm" id="h-name">—</div>
+        <div class="sub" id="h-sub">—</div>
       </div>
     </div>
 
-    <div class="welcome" id="welcome">WELCOME BACK</div>
-    <div class="quote" id="quote"></div>
-
-    <div class="tiles">
-      <div class="tile"><div class="l">AUTHORITY √(A²+B²+C²)</div><div class="n" id="t-auth">1.73</div><div class="s">APEX 15.58</div></div>
-      <div class="tile"><div class="l">TIER</div><div class="n" id="t-tier">1</div><div class="s" id="t-mat">SAND</div></div>
-      <div class="tile"><div class="l">CERTIFICATES</div><div class="n" id="t-certs">0</div><div class="s">OF ASCENT</div></div>
-      <div class="tile"><div class="l">EVOLUTION EVENTS</div><div class="n" id="t-events">0</div><div class="s">RECORDED</div></div>
-    </div>
-
-    <div class="grid2" id="matrix">
-      <div class="card">
-        <div class="h">YOUR EVOLUTION · 9×9×9 MATRIX <span class="badge" id="b-next">NEXT (3,3,3)</span></div>
-        <div class="radar-wrap">
-          <svg id="d-radar" viewBox="0 0 240 240" role="img" aria-label="Your matrix across Knowledge, Mastery, Contribution">
-            <g id="rdr-guides"></g><polygon id="rdr-now" class="rdr-now" points=""></polygon><g id="rdr-dots"></g>
-          </svg>
+    <div class="wrap">
+      <div class="row">
+        <div class="card">
+          <h3>YOUR STANDING IN THE 729</h3>
+          <div class="standing">
+            <div class="gauge"><canvas id="authgauge" width="256" height="256"></canvas>
+              <div class="gc"><div class="gv" id="auth-v">—</div><div class="gl">AUTHORITY / 15.58</div></div>
+            </div>
+            <div class="bars">
+              <div class="bar a"><div class="bl"><span class="n">KNOWLEDGE · A</span><span class="v" id="va">—</span></div><div class="tr"><div class="fl" id="fa"></div></div></div>
+              <div class="bar b"><div class="bl"><span class="n">MASTERY · B</span><span class="v" id="vb">—</span></div><div class="tr"><div class="fl" id="fb"></div></div></div>
+              <div class="bar c"><div class="bl"><span class="n">CONTRIBUTION · C</span><span class="v" id="vc">—</span></div><div class="tr"><div class="fl" id="fc"></div></div></div>
+            </div>
+          </div>
+          <div class="standfoot" id="standfoot"></div>
         </div>
-        <div class="axes">
-          <div class="ax k"><div class="v" id="ax-a">1.00</div><div class="l">KNOWLEDGE · A</div></div>
-          <div class="ax m"><div class="v" id="ax-b">1.00</div><div class="l">MASTERY · B</div></div>
-          <div class="ax c"><div class="v" id="ax-c">1.00</div><div class="l">CONTRIBUTION · C</div></div>
-        </div>
-        <div class="mrow">SIGN <b id="m-sign"></b> · MATERIAL <b id="m-mat">Sand</b> · AFFINITY <b id="m-aff"></b></div>
-        <div class="ladder" id="d-ladder"></div>
-      </div>
 
-      <div class="card" id="agent">
-        <div class="h">AI COMMAND CENTER · <span style="color:var(--acc)" id="ag-name"></span> <span class="badge" id="ag-dom"></span></div>
-        <div class="chatlog" id="ag-log"></div>
-        <div class="row">
-          <input type="text" id="ag-input" placeholder="Ask your agent… (e.g. what should I focus on?)" maxlength="300" />
-          <button class="btn" id="ag-send">SEND</button>
+        <div class="sidecol">
+          <div class="card"><h3>THE LIVING TRIAD</h3><div class="radar-wrap"><canvas id="radar" width="400" height="340"></canvas></div></div>
+          <div class="card"><h3>YOUR NEXT THRESHOLD</h3>
+            <div class="nextgate"><div class="ar" id="ng-r">—</div><div><div class="nx" id="ng-n">—</div><div class="nxs" id="ng-s">—</div></div></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="h">RECORD AN EVOLUTION EVENT</div>
-        <div class="erow">
-          <select id="ev-axis">
-            <option value="a">Knowledge (A) — what you learned</option>
-            <option value="b">Mastery (B) — what you demonstrated</option>
-            <option value="c">Contribution (C) — what you gave back</option>
-          </select>
-          <input type="text" id="ev-note" placeholder="Describe the action, briefly…" maxlength="280" />
-          <button class="btn" id="ev-go" style="width:100%">RECORD EVENT  +0.25</button>
-          <div class="msg" id="ev-msg"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="h">RECENT EVOLUTION</div>
-        <div id="d-events"></div>
-      </div>
-    </div>
-
-    <section class="block" id="certs">
-      <div class="card">
-        <div class="h">CERTIFICATES OF ASCENT</div>
-        <div class="seals" id="d-certs"></div>
-      </div>
-    </section>
-
-    <section class="block">
-      <div class="bh">THE 12 SOVEREIGN PILLARS</div>
-      <div class="pillars" id="pillars"></div>
-    </section>
-
-    <section class="block">
-      <div class="bh">MODULES</div>
-      <div class="mods">
-        <a class="mod" href="/media.html"><div class="mt">MEDIA HUB</div><div class="mp" style="color:var(--gold)">ENTER →</div></a>
-        <a class="mod" href="/gaming.html" style="border-style:solid;border-color:var(--gold)"><div class="mt" style="color:var(--gold)">GAMING ARENA</div><div class="mp" style="color:var(--cyan)">● LIVE — ENTER →</div></a>
-        <a class="mod" href="/treasury.html"><div class="mt">TREASURY</div><div class="mp" style="color:var(--gold)">ENTER →</div></a>
-        <div class="mod"><div class="mt">NFT VAULT</div><div class="mp">PHASE II — ACTIVATING</div></div>
-        <a class="mod" href="/academy.html" style="border-style:solid;border-color:var(--gold)"><div class="mt" style="color:var(--gold)">ACADEMY</div><div class="mp" style="color:var(--cyan)">● LIVE — ENTER →</div></a>
-        <a class="mod" href="/consultancy.html"><div class="mt">CONSULTANCY</div><div class="mp" style="color:var(--gold)">ENTER →</div></a>
-        <div class="mod"><div class="mt">MARKETPLACE</div><div class="mp">PHASE III</div></div>
-        <div class="mod"><div class="mt">INVESTMENTS</div><div class="mp">PHASE III</div></div>
-      </div>
-    </section>
+    <div class="chambers" id="chambers"></div>
   </main>
 </div>
 
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-  const SIGNS=[
-    ['Aries','\u2648\uFE0E','Mar 21 – Apr 19','Fire','Athena','Mars','Sentinel','You move first and ask later — the spark that begins the work.'],
-    ['Taurus','\u2649\uFE0E','Apr 20 – May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
-    ['Gemini','\u264A\uFE0E','May 21 – Jun 20','Wind','Apollo','Mercury','Scout','You carry signal between worlds and miss nothing.'],
-    ['Cancer','\u264B\uFE0E','Jun 21 – Jul 22','Water','Hermes','Moon','Warden','You guard what matters and read the unspoken current.'],
-    ['Leo','\u264C\uFE0E','Jul 23 – Aug 22','Fire','Zeus','Sun','Sovereign','You were made to lead, and the room knows it.'],
-    ['Virgo','\u264D\uFE0E','Aug 23 – Sep 22','Sand','Demeter','Vesta','Auditor','You refine until it is true — the patient foundation of all of it.'],
-    ['Libra','\u264E\uFE0E','Sep 23 – Oct 22','Wind','Hephaestus','Juno','Proxy','You hold the balance and broker what others cannot.'],
-    ['Scorpio','\u264F\uFE0E','Oct 23 – Nov 21','Water','Ares','Pluto','Oracle','You see to the bottom and transform what you touch.'],
-    ['Sagittarius','\u2650\uFE0E','Nov 22 – Dec 21','Fire','Artemis','Jupiter','Beacon','You aim past the horizon and call others to follow.'],
-    ['Capricorn','\u2651\uFE0E','Dec 22 – Jan 19','Metal','Hestia','Saturn','Analyst','You endure, you compound, and you arrive.'],
-    ['Aquarius','\u2652\uFE0E','Jan 20 – Feb 18','Wind','Hera','Uranus','Tutor','You think in systems no one has drawn yet.'],
-    ['Pisces','\u2653\uFE0E','Feb 19 – Mar 20','Water','Poseidon','Neptune','Historian','You hold the deep memory and feel the whole tide at once.']
+  const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
+  const GLY={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
+  const AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
+  const FACT={Aries:'The Aegis Order',Taurus:'The Gilded Hand',Gemini:'The Lumen Choir',Cancer:'The Tidewardens',Leo:'The Solar Crown',Virgo:'The Grain Covenant',Libra:'The Forge Guild',Scorpio:'The Crimson Veil',Sagittarius:'The Wild Hunt',Capricorn:'The Hearth Bastion',Aquarius:'The Aether Senate',Pisces:'The Deep Concord'};
+  const GROUPS=[
+    ['ASCEND','the climb through the 729',[
+      ['The Lattice','/matrix.html','Your 729 nodes in rotating 3D.'],
+      ['The Twelve Gates','/gates.html','Twelve thresholds of the ascent.'],
+      ['Ascension','/ascension.html','The 12 phases, the 9 tiers.'],
+      ['Honors','/honors.html','Certificates, trophies, medals.'],
+      ['The Academy','/academy.html','12 disciplines raise Knowledge.'],
+      ['The Games','/gaming.html','12 games raise Mastery.'],
+      ['Contributions','/contributions.html','Acts raise Contribution.'],
+      ['The 28 Kings','/kings.html','Regents crowned by authority.']
+    ]],
+    ['COSMOS','your character and the heavens',[
+      ['Horoscope','/horoscope.html','Daily reading and divine ascent.'],
+      ['Pantheons','/pantheons.html','Your name across four traditions.'],
+      ['AI Agents','/agents.html','The twelve, bound to your sign.'],
+      ['Concierge','/chatbot.html','The Order\u2019s guide.'],
+      ['The 12 Factions','/factions.html','Your sovereign house.'],
+      ['Sigil Vault','/sigil.html','The medallions you have earned.']
+    ]],
+    ['CREATE & TRADE','works, counsel, and the economy',[
+      ['Publishing','/publishing.html','Commit works to your archive.'],
+      ['Marketing','/marketing.html','Reserve placement for review.'],
+      ['Consultancy','/consultancy.html','Request counsel, confidentially.'],
+      ['Commissions','/contracts.html','Draft contracts with the cut.'],
+      ['Treasury','/treasury.html','The internal \u03A9 economy.'],
+      ['Cinema','/cinema.html','The nine-film Myth Verse.'],
+      ['Media Codex','/media.html','The Codex and the cycle.']
+    ]],
+    ['THE ORDER','community, heritage, and control',[
+      ['News & Wire','/news.html','Dispatches and the member wire.'],
+      ['Social','/social.html','Follow and share the Order.'],
+      ['Family','/family.html','Your bloodline and heritage.'],
+      ['Hall','/hall.html','The standing of the Order.'],
+      ['Search','/search.html','Find any chamber.'],
+      ['Settings','/settings.html','Background, score, preferences.'],
+      ['Charter','/charter.html','The eleven Articles.'],
+      ['Approvals','/approvals.html','Admit members. Approve works.',true]
+    ]]
   ];
-  function find(n){ for(var i=0;i<SIGNS.length;i++){ if(SIGNS[i][0]===n) return SIGNS[i]; } return null; }
-  const MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
-  const ELEM_ACCENT={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
-  const ELEM_AFF={Fire:'+Mastery (B)',Water:'+Contribution (C)',Wind:'+Knowledge (A)',Metal:'+Mastery & +Contribution',Sand:'+0.15 all axes'};
-  const AGENT_DOMAIN={Sentinel:'SECURITY',Analyst:'FINANCE',Historian:'ARCHIVE',Tutor:'EDUCATION',Merchant:'COMMERCE',Proxy:'EXECUTION',Oracle:'PREDICTION',Scout:'DISCOVERY',Warden:'FAMILY',Auditor:'VALIDATION',Beacon:'ONBOARDING',Sovereign:'MASTER'};
-
-  const SVGNS='http://www.w3.org/2000/svg';
-  const RDR_R=92, CXX=120, CYY=120, ANG=[-90,30,150];
-  function rdrPt(i,v){ var r=(Math.max(1,Math.min(9,v))/9)*RDR_R; var a=ANG[i]*Math.PI/180; return [CXX+r*Math.cos(a),CYY+r*Math.sin(a)]; }
-  let guidesDrawn=false;
-  function drawGuides(){
-    var g=document.getElementById('rdr-guides'); g.innerHTML='';
-    [3,6,9].forEach(function(m){ var p=document.createElementNS(SVGNS,'polygon'); p.setAttribute('points',[rdrPt(0,m),rdrPt(1,m),rdrPt(2,m)].map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1);}).join(' ')); p.setAttribute('class','rdr-guide'); g.appendChild(p); });
-    for(var i=0;i<3;i++){ var pp=rdrPt(i,9); var ln=document.createElementNS(SVGNS,'line'); ln.setAttribute('x1',CXX);ln.setAttribute('y1',CYY);ln.setAttribute('x2',pp[0].toFixed(1));ln.setAttribute('y2',pp[1].toFixed(1));ln.setAttribute('class','rdr-spoke'); g.appendChild(ln); }
-    var L=['A','B','C']; for(var j=0;j<3;j++){ var q=rdrPt(j,10.3); var tx=document.createElementNS(SVGNS,'text'); tx.setAttribute('x',q[0].toFixed(1)); tx.setAttribute('y',(q[1]+(j===0?-2:4)).toFixed(1)); tx.setAttribute('class','rdr-label'); tx.setAttribute('text-anchor','middle'); tx.textContent=L[j]; g.appendChild(tx); }
-    guidesDrawn=true;
-  }
-  function drawMatrix(a,b,c){
-    if(!guidesDrawn) drawGuides();
-    var now=document.getElementById('rdr-now');
-    var pa=rdrPt(0,a),pb=rdrPt(1,b),pc=rdrPt(2,c);
-    now.setAttribute('points',[pa,pb,pc].map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' '));
-    var dots=document.getElementById('rdr-dots'); dots.innerHTML='';
-    [pa,pb,pc].forEach(function(p){ var d=document.createElementNS(SVGNS,'circle'); d.setAttribute('cx',p[0].toFixed(1));d.setAttribute('cy',p[1].toFixed(1));d.setAttribute('r','2.8');d.setAttribute('class','rdr-dot'); dots.appendChild(d); });
-  }
-
-  let user=null, prof=null;
-
-  function pillars(){
-    var p=prof||{};
-    var items=[
-      ['12','GRADES',''],['12','LEVELS',''],['12','PHASES',''],
-      ['12','CERTIFICATES',''],['12','TROPHIES',''],['12','MEDALS',''],
-      ['12','SIGNS',p.sign||''],['12','GODS',p.olympian||''],['12','PLANETS',p.planet||''],
-      ['12','AGENTS',p.agent||''],['12','TOKENS',''],['5','ELEMENTS',p.element||'']
-    ];
-    var box=document.getElementById('pillars'); box.innerHTML='';
-    items.forEach(function(it){
-      var d=document.createElement('div'); d.className='pil'+(it[2]?' mine':'');
-      d.innerHTML='<div class="pn">'+it[0]+'</div><div class="pl">'+it[1]+'</div><div class="pm">'+(it[2]||'')+'</div>';
-      box.appendChild(d);
-    });
-  }
-
-  function render(){
-    var s=find(prof.sign);
-    var acc=ELEM_ACCENT[prof.element]||'#C9A84C';
-    document.documentElement.style.setProperty('--acc',acc);
-    var a=Number(prof.axis_a!=null?prof.axis_a:1), b=Number(prof.axis_b!=null?prof.axis_b:1), c=Number(prof.axis_c!=null?prof.axis_c:1);
-    var auth=Math.sqrt(a*a+b*b+c*c);
-    var tier=Math.max(1,Math.min(9,Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
-    var mn=Math.min(a,b,c);
-    document.getElementById('u-email').textContent=user.email;
-    document.getElementById('u-tier').textContent=tier;
-    document.getElementById('welcome').textContent='WELCOME BACK, '+((prof.display_name&&prof.display_name.trim())?prof.display_name.toUpperCase():(prof.sign?prof.sign.toUpperCase():'SOVEREIGN'));
-    document.getElementById('quote').textContent=s?('“'+s[7]+'”'):'';
-    document.getElementById('t-auth').textContent=auth.toFixed(2);
-    document.getElementById('t-tier').textContent=tier;
-    document.getElementById('t-mat').textContent=(MATS[tier-1]||'').toUpperCase();
-    document.getElementById('ax-a').textContent=a.toFixed(2);
-    document.getElementById('ax-b').textContent=b.toFixed(2);
-    document.getElementById('ax-c').textContent=c.toFixed(2);
-    document.getElementById('m-sign').textContent=prof.sign||'';
-    document.getElementById('m-mat').textContent=MATS[tier-1]||'';
-    document.getElementById('m-aff').textContent=ELEM_AFF[prof.element]||'';
-    document.getElementById('b-next').textContent = mn<3?'NEXT (3,3,3)':mn<6?'NEXT (6,6,6)':mn<9?'NEXT (9,9,9)':'APEX REACHED';
-    document.getElementById('ag-name').textContent=prof.agent||'';
-    document.getElementById('ag-dom').textContent=AGENT_DOMAIN[prof.agent]||'';
-    var lad=document.getElementById('d-ladder'); lad.innerHTML='';
-    MATS.forEach(function(mt,i){ var x=document.createElement('span'); x.className='rung'+((i+1)<=tier?' on':''); x.textContent=(i+1)+'·'+mt; lad.appendChild(x); });
-    drawMatrix(a,b,c);
-    pillars();
-    var al=document.getElementById('ag-log');
-    if(!al.children.length){ var w=document.createElement('div'); w.className='cmsg ag'; w.textContent='I am '+(prof.agent||'your agent')+', bound to your '+(prof.sign||'')+' path. Ask me what to focus on, or where you stand.'; al.appendChild(w); }
-  }
-
-  async function loadCounts(){
-    try{
-      var ev=await supabase.from('evolution_events').select('id',{count:'exact',head:true}).eq('user_id',user.id);
-      document.getElementById('t-events').textContent = ev.count!=null?ev.count:0;
-    }catch(e){}
-    try{
-      var ce=await supabase.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',user.id);
-      document.getElementById('t-certs').textContent = ce.count!=null?ce.count:0;
-    }catch(e){}
-  }
-  async function loadEvents(){
-    var box=document.getElementById('d-events');
-    try{
-      var r=await supabase.from('evolution_events').select('axis,note,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(7);
-      box.innerHTML=''; var names={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'};
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No events yet — record your first.</div>'; return; }
-      r.data.forEach(function(e){ var row=document.createElement('div'); row.className='ev'; var ax=document.createElement('span'); ax.className='ax'; ax.textContent=names[e.axis]||e.axis; var nt=document.createElement('span'); nt.className='nt'; nt.textContent=e.note||''; row.appendChild(ax); row.appendChild(nt); box.appendChild(row); });
-    }catch(e){ box.innerHTML=''; }
-  }
-  async function loadCerts(){
-    var box=document.getElementById('d-certs');
-    try{
-      var r=await supabase.from('certificates').select('milestone,title,issued_at').eq('user_id',user.id).order('milestone',{ascending:true});
-      box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No certificates yet — reach node (3,3,3) to earn your first seal.</div>'; return 0; }
-      r.data.forEach(function(c){ var d=document.createElement('div'); d.className='seal'; d.innerHTML='<div class="sm">Ω · '+c.milestone+'</div><div class="st">'+c.title+'</div>'; box.appendChild(d); });
-      return r.data.length;
-    }catch(e){ box.innerHTML=''; return 0; }
-  }
-
-  function agentReply(text){
-    var p=prof||{};
-    var a=Number(p.axis_a!=null?p.axis_a:1),b=Number(p.axis_b!=null?p.axis_b:1),c=Number(p.axis_c!=null?p.axis_c:1);
-    var auth=Math.sqrt(a*a+b*b+c*c);
-    var tier=Math.max(1,Math.min(9,Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
-    var axes=[['Knowledge',a],['Mastery',b],['Contribution',c]].sort(function(x,y){return x[1]-y[1];});
-    var low=axes[0], mn=Math.min(a,b,c);
-    var nextNode=Math.min(9,Math.floor(low[1])+1), evN=Math.max(1,Math.ceil((nextNode-low[1])/0.25));
-    var ms=mn<3?3:mn<6?6:mn<9?9:null;
-    var agent=p.agent||'your agent', sign=p.sign||'your sign', element=p.element||'your element';
-    var ch=(find(p.sign)||[])[7]||'';
-    var adv={Knowledge:'record what you have studied, read, or learned',Mastery:'record skills you have demonstrated or tasks you have completed',Contribution:'record what you have taught, created, or given to others'};
-    var cap=function(s){return s.charAt(0).toUpperCase()+s.slice(1);};
-    var t=(text||'').toLowerCase(), has=function(){ for(var i=0;i<arguments.length;i++){ if(t.indexOf(arguments[i])>-1) return true; } return false; };
-    if(has('hello','hi ','hey')||t==='hi') return 'I am '+agent+', bound to your '+sign+' path. '+ch+' Ask me what to focus on, or where you stand.';
-    if(has('who are you','your name','which agent','what are you')) return 'I am '+agent+', guide of '+sign+' under '+element+'. I walk with you from the genesis node to the apex.';
-    if(has('help','what can','commands')) return 'Ask: "what should I focus on", "where do I stand", "how do I reach the next milestone", or about Knowledge, Mastery, or Contribution.';
-    if(has('knowledge')) return 'Knowledge (A) is '+a.toFixed(2)+'. To raise it, '+adv.Knowledge+'. Each event adds 0.25.';
-    if(has('mastery')) return 'Mastery (B) is '+b.toFixed(2)+'. To raise it, '+adv.Mastery+'. Discipline compounds.';
-    if(has('contribution')) return 'Contribution (C) is '+c.toFixed(2)+'. To raise it, '+adv.Contribution+'.';
-    if(has('milestone','certificate','seal','ascend','rank up')){ if(ms===null) return 'You have reached the apex (9,9,9) — Omega Master.'; return 'Next milestone ('+ms+','+ms+','+ms+'). Your lowest axis is '+low[0]+' at '+low[1].toFixed(2)+' — it must reach '+ms+'. '+cap(adv[low[0]])+'.'; }
-    if(has('focus','should i','what now','do next','advance','progress','improve')) return 'Focus on '+low[0]+', your weakest axis at '+low[1].toFixed(2)+'. '+cap(adv[low[0]])+'. About '+evN+' event'+(evN===1?'':'s')+' lifts you to the next node.';
-    if(has('tier','rank','where','stand','material','authority','status')) return 'Tier '+tier+', material '+(MATS[tier-1]||'')+', authority '+auth.toFixed(2)+' of 15.58. Axes: K '+a.toFixed(2)+', M '+b.toFixed(2)+', C '+c.toFixed(2)+'.';
-    return ch+' Balance is the law of the matrix — your weakest axis is '+low[0]+' at '+low[1].toFixed(2)+'. Ask "what should I focus on" for the path.';
-  }
-  function appendMsg(who,text){ var log=document.getElementById('ag-log'); var d=document.createElement('div'); d.className='cmsg '+(who==='me'?'me':'ag'); d.textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight; }
-  function chat(){ var inp=document.getElementById('ag-input'); var text=inp.value.trim(); if(!text) return; appendMsg('me',text); inp.value=''; var r=agentReply(text); setTimeout(function(){ appendMsg('ag',r); },180); }
-
-  async function logEvent(){
-    var axis=document.getElementById('ev-axis').value, note=document.getElementById('ev-note').value.trim();
-    var msg=document.getElementById('ev-msg'), btn=document.getElementById('ev-go');
-    if(!note){ msg.style.color='var(--crimson)'; msg.textContent='Describe the action so the event is real.'; return; }
-    btn.disabled=true; msg.style.color='var(--cyan)'; msg.textContent='Recording…';
-    var before=document.getElementById('d-certs').querySelectorAll('.seal').length;
-    var r=await supabase.rpc('log_evolution',{p_axis:axis,p_note:note});
-    btn.disabled=false;
-    if(r.error){ msg.style.color='var(--crimson)'; msg.textContent='Could not record ('+(r.error.code||r.error.message||'')+').'; return; }
-    document.getElementById('ev-note').value='';
-    if(r.data){ prof=r.data; render(); }
-    loadEvents(); loadCounts();
-    var after=await loadCerts();
-    msg.style.color='var(--cyan)';
-    msg.textContent = after>before ? 'A new Certificate of Ascent has been issued — well earned.' : 'Recorded. Your matrix advanced.';
-  }
 
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
 
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Access the Command Center','Sign in to enter your sovereign dashboard.'); return; }
-    user=sess.user;
-    var pr=await supabase.from('profiles').select('*').eq('id',user.id).maybeSingle();
-    prof=pr.data;
-    if(!prof || !prof.sign){ showGate('Set Your Cosmology','Set your cosmology to activate your dashboard.'); return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
-    render(); loadEvents(); loadCerts(); loadCounts();
+  // ===== animated authority gauge =====
+  function drawGauge(pct){
+    var cv=document.getElementById('authgauge'); if(!cv) return; var x=cv.getContext('2d'); var w=256,cx=128,cy=128,r=104;
+    var target=Math.max(0,Math.min(1,pct)); var cur=0;
+    function step(){
+      cur += (target-cur)*0.06; if(Math.abs(target-cur)<0.002) cur=target;
+      x.clearRect(0,0,w,w);
+      x.lineWidth=14; x.lineCap='round';
+      x.beginPath(); x.arc(cx,cy,r,-Math.PI/2,1.5*Math.PI); x.strokeStyle='#15151f'; x.stroke();
+      var g=x.createLinearGradient(0,0,w,w); g.addColorStop(0,'#00E5FF'); g.addColorStop(1,'#C9A84C');
+      x.beginPath(); x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+cur*2*Math.PI); x.strokeStyle=g; x.shadowColor='rgba(201,168,76,.5)'; x.shadowBlur=14; x.stroke(); x.shadowBlur=0;
+      if(cur!==target && !reduce) requestAnimationFrame(step);
+    }
+    step();
   }
 
-  document.getElementById('ev-go').addEventListener('click',logEvent);
-  document.getElementById('ev-note').addEventListener('keydown',function(e){ if(e.key==='Enter') logEvent(); });
-  document.getElementById('ag-send').addEventListener('click',chat);
-  document.getElementById('ag-input').addEventListener('keydown',function(e){ if(e.key==='Enter') chat(); });
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  // ===== breathing radar =====
+  function radar(a,b,c){
+    var cv=document.getElementById('radar'); if(!cv) return; var x=cv.getContext('2d'); var W=400,H=340,cx=200,cy=180,R=120;
+    var ax=[a/9,b/9,c/9]; var t=0;
+    function frame(){
+      t+=0.02; x.clearRect(0,0,W,H);
+      var br=reduce?0:Math.sin(t)*4;
+      // rings
+      for(var k=1;k<=3;k++){ x.beginPath();
+        for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; var rr=R*k/3; var px=cx+Math.cos(ang)*rr, py=cy+Math.sin(ang)*rr; if(i===0)x.moveTo(px,py);else x.lineTo(px,py);} x.closePath(); x.strokeStyle='rgba(201,168,76,.10)'; x.stroke(); }
+      // axes + labels
+      var labels=['KNOWLEDGE','MASTERY','CONTRIB.']; var cols=['#00E5FF','#C9A84C','#E2C86D'];
+      for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; x.beginPath(); x.moveTo(cx,cy); x.lineTo(cx+Math.cos(ang)*R,cy+Math.sin(ang)*R); x.strokeStyle='rgba(201,168,76,.18)'; x.stroke();
+        x.fillStyle='#85837b'; x.font='9px Courier Prime'; x.textAlign='center'; x.fillText(labels[i],cx+Math.cos(ang)*(R+18),cy+Math.sin(ang)*(R+18)+3); }
+      // triad
+      x.beginPath();
+      for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; var rr=(R*ax[i])+br; var px=cx+Math.cos(ang)*rr, py=cy+Math.sin(ang)*rr; if(i===0)x.moveTo(px,py);else x.lineTo(px,py); }
+      x.closePath(); var g=x.createLinearGradient(cx-R,cy-R,cx+R,cy+R); g.addColorStop(0,'rgba(0,229,255,.35)'); g.addColorStop(1,'rgba(201,168,76,.35)');
+      x.fillStyle=g; x.fill(); x.strokeStyle='#C9A84C'; x.lineWidth=1.5; x.stroke();
+      for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; var rr=(R*ax[i])+br; x.beginPath(); x.arc(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr,3,0,7); x.fillStyle=cols[i]; x.fill(); }
+      if(!reduce) requestAnimationFrame(frame);
+    }
+    frame();
+  }
 
+  // ===== living command orb =====
+  function orb(){
+    var cv=document.getElementById('orb'); if(!cv) return; var x=cv.getContext('2d');
+    function size(){ cv.width=cv.clientWidth*devicePixelRatio; cv.height=cv.clientHeight*devicePixelRatio; x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+    size(); window.addEventListener('resize',size);
+    var stars=[]; for(var i=0;i<70;i++) stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.3+.2,p:Math.random()*6});
+    var nodes=[]; for(var i=0;i<26;i++) nodes.push({a:Math.random()*6.28,rad:60+Math.random()*150,sp:.002+Math.random()*.006,z:Math.random(),s:Math.random()*1.8+.6});
+    var t=0;
+    function frame(){
+      t+=0.01; var W=cv.clientWidth,H=cv.clientHeight,cx=W*0.5,cy=H*0.42;
+      x.clearRect(0,0,W,H);
+      for(var s of stars){ var tw=.4+.6*Math.abs(Math.sin(t+s.p)); x.globalAlpha=tw*.6; x.fillStyle='#cbb873'; x.beginPath(); x.arc(s.x*W,s.y*H,s.r,0,7); x.fill(); }
+      x.globalAlpha=1;
+      // concentric rings
+      for(var k=0;k<3;k++){ var rr=70+k*44; x.beginPath(); x.ellipse(cx,cy,rr,rr*.36,t*(k%2?-.3:.3),0,7); x.strokeStyle='rgba(201,168,76,'+(.16-k*.03)+')'; x.lineWidth=1; x.stroke(); }
+      // orbiting matrix nodes
+      for(var n of nodes){ n.a+=n.sp; var rr=n.rad; var px=cx+Math.cos(n.a)*rr, py=cy+Math.sin(n.a)*rr*.36; var d=.5+.5*Math.sin(n.a);
+        x.globalAlpha=.3+d*.7; x.fillStyle=n.z>.5?'#00E5FF':'#C9A84C'; x.beginPath(); x.arc(px,py,n.s*(.6+d*.7),0,7); x.fill(); }
+      x.globalAlpha=1;
+      // core glow + Omega
+      var grd=x.createRadialGradient(cx,cy,2,cx,cy,60); grd.addColorStop(0,'rgba(226,200,109,.5)'); grd.addColorStop(1,'rgba(226,200,109,0)');
+      x.fillStyle=grd; x.beginPath(); x.arc(cx,cy,60,0,7); x.fill();
+      x.fillStyle='#E2C86D'; x.font='900 '+(40+Math.sin(t*2)*2)+'px "Cinzel Decorative", serif'; x.textAlign='center'; x.textBaseline='middle';
+      x.shadowColor='rgba(201,168,76,.7)'; x.shadowBlur=24; x.fillText('\u03A9',cx,cy); x.shadowBlur=0;
+      if(!reduce) requestAnimationFrame(frame); 
+    }
+    if(reduce){ frame(); } else frame();
+  }
+
+  function tile(t){
+    var owner=t[3]===true;
+    return '<a class="tile'+(owner?' owner':'')+'" href="'+t[1]+'"><div class="ic">\u03A9</div><div class="tl">'+t[0]+'</div><div class="td">'+t[2]+'</div></a>';
+  }
+  function buildChambers(isOwner){
+    var box=document.getElementById('chambers'); var html='';
+    GROUPS.forEach(function(g){
+      var tiles=g[2].filter(function(t){ return t[3]!==true || isOwner; });
+      html+='<div class="chgroup"><div class="gh">'+g[0]+' <small>'+g[1]+'</small></div><div class="tiles">'+tiles.map(tile).join('')+'</div></div>';
+    });
+    box.innerHTML=html;
+  }
+
+  async function boot(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('Command','Sign in to enter your command.'); return; }
+    var pr=await supabase.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to enter your command.'); return; }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+
+    var d=pr.data, sign=d.sign;
+    var a=Number(d.axis_a||1), b=Number(d.axis_b||1), c=Number(d.axis_c||1);
+    var auth=Math.sqrt(a*a+b*b+c*c), tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c)))), rank=RANKS[tier-1];
+    var name=d.display_name || (sign+' Sovereign');
+
+    document.getElementById('h-name').textContent=name;
+    document.getElementById('h-sub').innerHTML=(GLY[sign]||'')+' <b>'+sign+'</b> \u00B7 RANK <b>'+rank+'</b> \u00B7 '+FACT[sign]+' \u00B7 AGENT <b>'+AGENT[sign]+'</b>';
+
+    // gauge + bars
+    drawGauge(auth/15.588457);
+    document.getElementById('auth-v').textContent=auth.toFixed(2);
+    document.getElementById('va').textContent=a.toFixed(2); document.getElementById('vb').textContent=b.toFixed(2); document.getElementById('vc').textContent=c.toFixed(2);
+    setTimeout(function(){ document.getElementById('fa').style.width=(a/9*100)+'%'; document.getElementById('fb').style.width=(b/9*100)+'%'; document.getElementById('fc').style.width=(c/9*100)+'%'; },120);
+    document.getElementById('standfoot').innerHTML='NODE <b>('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+')</b> \u00B7 TIER <b>'+tier+'</b> / 9 \u00B7 MATERIAL <b>'+['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'][tier-1]+'</b>';
+
+    radar(a,b,c);
+
+    // next gate
+    var GEN=Math.sqrt(3),APEX=Math.sqrt(243); var ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+    var GN=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Diamond','Adamant','Aether','Omega'];
+    var open=0; for(var g=0;g<12;g++){ if(auth>=GEN+(g/11)*(APEX-GEN)) open++; }
+    if(open>=12){ document.getElementById('ng-r').textContent='\u03A9'; document.getElementById('ng-n').textContent='The Omega Gate'; document.getElementById('ng-s').textContent='All twelve gates stand open.'; }
+    else { var th=GEN+(open/11)*(APEX-GEN); document.getElementById('ng-r').textContent=ROMAN[open]; document.getElementById('ng-n').textContent='The Gate of '+GN[open]; document.getElementById('ng-s').textContent='Opens at authority '+th.toFixed(2)+' \u00B7 you are at '+auth.toFixed(2); }
+
+    buildChambers(!!d.is_owner);
+    orb();
+  }
+  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

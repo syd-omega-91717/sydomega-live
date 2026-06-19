@@ -10,7 +10,7 @@
     ['search','SEARCH','/search.html'],
     ['profile','PROFILE','/profile.html'],
     ['ascension','ASCENSION','/ascension.html'],
-    ['gates','THE NINE GATES','/gates.html'],
+    ['gates','THE TWELVE GATES','/gates.html'],
     ['kings','THE 28 KINGS','/kings.html'],
     ['matrix','THE LATTICE','/matrix.html'],
     ['agents','AI AGENTS','/agents.html'],

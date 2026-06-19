@@ -13,6 +13,7 @@
     ['profile','PROFILE','/profile.html'],
     ['passport','SOVEREIGN PASSPORT','/passport.html'],
     ['ascension','ASCENSION','/ascension.html'],
+    ['intelligence','INTELLIGENCE & ANALYTICS','/intelligence.html'],
     ['gates','THE TWELVE GATES','/gates.html'],
     ['kings','THE 28 KINGS','/kings.html'],
     ['matrix','THE LATTICE','/matrix.html'],

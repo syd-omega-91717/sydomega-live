@@ -26,6 +26,7 @@
     honors:['ring',8,'#E2C86D','\u272A','THE HONORS'],
     horoscope:['ring',12,'#C9A84C','\u2609','THE WHEEL'],
     pantheons:['orbit',4,'#E2C86D','\u2736','FOUR TRADITIONS'],
+    elements:['orbit',5,'#E86A3A','\u2738','THE FIVE ELEMENTS'],
     academy:['poly',4,'#00E5FF','\u2726','THE DISCIPLINES'],
     gaming:['poly',6,'#E86A3A','\u2316','THE ARENA'],
     contributions:['ring',3,'#3fb27f','\u2742','THE THIRD AXIS'],

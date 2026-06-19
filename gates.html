@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — The Nine Gates</title>
+<title>Ω SYD OMEGA 91717 — The Twelve Gates</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -30,33 +30,33 @@
   .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
   .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
   .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:18px 0 4px;font-size:15px}
+  .intro{font-weight:300;color:var(--muted);max-width:70ch;margin:18px 0 4px;font-size:15px}
   .intro b{color:var(--gold);font-weight:400}
   .mstat{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);margin:12px 0 4px}
   .mstat b{color:var(--solar)}
 
-  .gates{margin-top:22px;display:flex;flex-direction:column;gap:14px;position:relative}
-  .gate{position:relative;border:1px solid var(--line);background:linear-gradient(110deg,var(--panel),transparent);padding:20px 22px;display:flex;align-items:center;gap:22px;overflow:hidden;transition:border-color .2s}
-  .gate .arch{width:62px;height:84px;flex-shrink:0;border:2px solid var(--line);border-radius:40px 40px 6px 6px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:22px;color:var(--muted);position:relative;background:#0b0b12}
+  .gates{margin-top:22px;display:flex;flex-direction:column;gap:13px}
+  .gate{position:relative;border:1px solid var(--line);background:linear-gradient(110deg,var(--panel),transparent);padding:18px 20px;display:flex;align-items:center;gap:20px;overflow:hidden;transition:border-color .2s}
+  .gate .arch{width:58px;height:80px;flex-shrink:0;border:2px solid var(--line);border-radius:38px 38px 6px 6px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:20px;color:var(--muted);background:#0b0b12}
   .gate .body{flex:1;min-width:0}
-  .gate .gname{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.5px;color:var(--muted)}
+  .gate .gname{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.5px;color:var(--muted)}
   .gate .gess{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-  .gate .glore{font-weight:300;font-size:13.5px;color:#b9b6ac;margin-top:9px;line-height:1.55}
-  .gate .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted)}
+  .gate .glore{font-weight:300;font-size:13px;color:#b9b6ac;margin-top:8px;line-height:1.5}
+  .gate .meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;font-family:var(--mono);font-size:9.5px;letter-spacing:1px;color:var(--muted)}
   .gate .meta b{color:var(--solar)}
   .gate .state{position:absolute;top:14px;right:18px;font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:4px 9px;border:1px solid var(--line);color:var(--muted)}
-
   .gate.open{border-color:rgba(201,168,76,.5)}
   .gate.open .arch{border-color:var(--gold);color:var(--gold);box-shadow:0 0 18px rgba(201,168,76,.25) inset,0 0 12px rgba(201,168,76,.15)}
   .gate.open .gname{color:var(--gold)}
   .gate.open .state{color:var(--gold);border-color:var(--gold)}
   .gate.current{border-color:var(--cyan);box-shadow:0 0 22px rgba(0,229,255,.12)}
-  .gate.current .arch{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 22px rgba(0,229,255,.3) inset;animation:pulse 2.4s ease-in-out infinite}
+  .gate.current .arch{border-color:var(--cyan);color:var(--cyan);animation:pulse 2.4s ease-in-out infinite}
   .gate.current .gname{color:var(--cyan)}
   .gate.current .state{color:var(--cyan);border-color:var(--cyan)}
   .gate.omega.open .arch{border-color:var(--solar);color:var(--solar);box-shadow:0 0 30px rgba(226,200,109,.4) inset,0 0 20px rgba(226,200,109,.3)}
   @keyframes pulse{0%,100%{box-shadow:0 0 14px rgba(0,229,255,.2) inset}50%{box-shadow:0 0 30px rgba(0,229,255,.5) inset}}
-  .gate.sealed{opacity:.62}
+  .gate.sealed{opacity:.6}
+  @media(prefers-reduced-motion:reduce){ .gate.current .arch{animation:none} }
 
   .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
   .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
@@ -64,13 +64,13 @@
   .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
   .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
   #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} .gate{gap:14px;padding:16px} .gate .arch{width:48px;height:66px} }
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} .gate{gap:14px;padding:15px} .gate .arch{width:46px;height:64px} }
 </style>
 </head>
 <body>
 <div id="gate-screen" class="gate-card" style="display:none">
   <div class="g">Ω</div>
-  <h2 id="gate-h">The Nine Gates</h2>
+  <h2 id="gate-h">The Twelve Gates</h2>
   <p id="gate-p">Sign in to stand before the Gates.</p>
   <a href="/account.html">GO TO MEMBER ACCESS →</a>
 </div>
@@ -78,8 +78,8 @@
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="gates"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">THE NINE GATES<small>THE GREAT THRESHOLDS OF THE ASCENT</small></div></div>
-    <p class="intro">Nine gates stand between sand and the Omega. Each opens when your <b>tier</b> — the floor of your lowest axis in the 729 — reaches it. They are not earned with a key but with balance: raise your weakest axis, and the next gate yields. Each gate carries its name across the great traditions — the Egyptian <b>Ennead</b> and the Hindu <b>Navagraha</b>, both nine-fold — beside its material and rank.</p>
+    <div class="topbar"><div class="t">THE TWELVE GATES<small>TWELVE PHASES · TWELVE THRESHOLDS · 9×9×9</small></div></div>
+    <p class="intro">Twelve gates rise along the 729 — one for each Phase of the ascent. Each opens when your <b>authority</b> (√ of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 15.58. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b> — three authentic twelve-fold orders, beside the Order's own.</p>
     <div class="mstat" id="mstat"></div>
     <div class="gates" id="gates"></div>
   </main>
@@ -89,53 +89,49 @@
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
-  const MAT=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
-  const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX'];
+  const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+  // name, essence, material, egyptian, roman(Dii Consentes), hindu(Aditya), lore
   const GATES=[
-    {n:'The Gate of Sand',  e:'AWAKENING',     eg:'Atum',    hi:'Surya',      lore:'The first threshold. To pass is simply to begin — to be counted among the Order and take your first node in the lattice.'},
-    {n:'The Gate of Glass', e:'CLARITY',       eg:'Shu',     hi:'Chandra',    lore:'Sand fused by heat. Here the seeker first sees the shape of the 729 and learns that every act moves a coordinate.'},
-    {n:'The Gate of Iron',  e:'DISCIPLINE',    eg:'Tefnut',  hi:'Mangala',    lore:'The first hard metal. It opens only to those who return — proof that will outlasts curiosity.'},
-    {n:'The Gate of Steel', e:'TEMPERING',     eg:'Geb',     hi:'Budha',      lore:'Iron folded against fire. Knowledge, Mastery, and Contribution must rise together to cross.'},
-    {n:'The Gate of Titanium',e:'ENDURANCE',   eg:'Nut',     hi:'Brihaspati', lore:'Light and unbreaking. The midpoint of the ascent, where most falter and the few press on.'},
-    {n:'The Gate of Carbon',e:'TRANSFORMATION',eg:'Osiris',  hi:'Shukra',     lore:'Pressure becomes diamond. Beyond this gate the sovereign is remade, not merely advanced.'},
-    {n:'The Gate of Gold',  e:'SOVEREIGNTY',   eg:'Isis',    hi:'Shani',      lore:'The metal of the Order itself. To pass is to be named Sovereign and to bear the gold of command.'},
-    {n:'The Gate of Platinum',e:'DOMINION',    eg:'Set',     hi:'Rahu',       lore:'Rarer than gold, the penultimate seal. Legends stand here, one threshold from the apex.'},
-    {n:'The Omega Gate',    e:'ASCENSION',     eg:'Nephthys',hi:'Ketu',       lore:'The final gate, at node (9,9,9), authority 15.58. It opens for the Omega alone — the completion the whole platform points toward.'}
+    ['The Gate of Sand','AWAKENING','Sand','Atum','Vesta','Mitra','To pass is to begin — to be counted and take your first node in the lattice.'],
+    ['The Gate of Glass','CLARITY','Glass','Khepri','Ceres','Varuna','Sand fused by heat; here you first see the shape of the 729.'],
+    ['The Gate of Iron','DISCIPLINE','Iron','Shu','Mercury','Aryaman','The first hard metal — it opens only to those who return.'],
+    ['The Gate of Steel','TEMPERING','Steel','Geb','Vulcan','Bhaga','Iron folded against fire; the three axes must rise together.'],
+    ['The Gate of Titanium','ENDURANCE','Titanium','Nut','Diana','Dhata','Light and unbreaking; the place where most falter.'],
+    ['The Gate of Carbon','TRANSFORMATION','Carbon','Osiris','Apollo','Indra','Pressure becomes diamond; the sovereign is remade.'],
+    ['The Gate of Gold','SOVEREIGNTY','Gold','Anubis','Venus','Vivasvan','The metal of the Order; to pass is to be named Sovereign.'],
+    ['The Gate of Platinum','DOMINION','Platinum','Thoth','Mars','Pushan','Rarer than gold; Legends stand here.'],
+    ['The Gate of Diamond','VISION','Diamond','Horus','Minerva','Tvashta','Unbreakable clarity; the far sight of the highest tiers.'],
+    ['The Gate of Adamant','MASTERY','Adamant','Isis','Neptune','Savitar','The metal of myth; near-complete command of the 729.'],
+    ['The Gate of Aether','TRANSCENDENCE','Aether','Sekhmet','Juno','Amsha','No longer matter but principle; the threshold of the apex.'],
+    ['The Omega Gate','ASCENSION','Omega','Ra','Jupiter','Vishnu','The final gate at node (9,9,9), authority 15.58 — the Omega alone may pass.']
   ];
+  const GEN=Math.sqrt(3), APEX=Math.sqrt(243);
+  function threshold(g){ return GEN + (g/11)*(APEX-GEN); } // g=0..11
 
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate-screen').style.display='block'; document.getElementById('app').style.display='none'; }
 
   function render(a,b,c){
-    var tier=Math.max(0,Math.min(9,Math.floor(Math.min(a,b,c))));
     var auth=Math.sqrt(a*a+b*b+c*c);
-    var open=tier; // gates 1..tier are open
-    document.getElementById('mstat').innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') \u00B7 AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 GATES OPEN <b>'+open+'</b> / 9'+(tier<9?' \u00B7 NEXT: raise your lowest axis to '+(tier+1):' \u00B7 THE OMEGA GATE STANDS OPEN');
+    var open=0; for(var g=0;g<12;g++){ if(auth>=threshold(g)) open++; }
+    document.getElementById('mstat').innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') \u00B7 AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 GATES OPEN <b>'+open+'</b> / 12'+(open<12?' \u00B7 next gate at authority '+threshold(open).toFixed(2):' \u00B7 THE OMEGA GATE STANDS OPEN');
     var box=document.getElementById('gates'); box.innerHTML='';
-    GATES.forEach(function(g,i){
-      var gateTier=i+1;
-      var isOpen=tier>=gateTier;
-      var isCurrent=(tier+1)===gateTier; // the very next gate
-      var cls='gate'+(i===8?' omega':'')+(isOpen?' open':' sealed')+(isCurrent?' current':'');
-      var state=isOpen?'OPEN':(isCurrent?'NEXT':'SEALED');
-      var el=document.createElement('div'); el.className=cls;
-      el.innerHTML=
-        '<div class="arch">'+ROMAN[i]+'</div>'+
-        '<div class="body">'+
-          '<div class="gname">'+g.n+'</div>'+
-          '<div class="gess">'+g.e+'</div>'+
-          '<div class="glore">'+g.lore+'</div>'+
-          '<div class="meta"><span>OPENS AT TIER <b>'+gateTier+'</b> \u00B7 node ('+gateTier+','+gateTier+','+gateTier+')</span><span>RANK <b>'+RANKS[i]+'</b></span><span>MATERIAL <b>'+MAT[i]+'</b></span></div>'+
-          '<div class="meta"><span>ENNEAD <b>'+g.eg+'</b> (Egyptian)</span><span>NAVAGRAHA <b>'+g.hi+'</b> (Hindu)</span></div>'+
-        '</div>'+
-        '<div class="state">'+state+'</div>';
+    GATES.forEach(function(gt,i){
+      var isOpen=auth>=threshold(i);
+      var isCurrent=(!isOpen) && (i===open);
+      var el=document.createElement('div'); el.className='gate'+(i===11?' omega':'')+(isOpen?' open':' sealed')+(isCurrent?' current':'');
+      el.innerHTML='<div class="arch">'+ROMAN[i]+'</div><div class="body">'+
+        '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+'</div>'+
+        '<div class="glore">'+gt[6]+'</div>'+
+        '<div class="meta"><span>OPENS AT AUTHORITY <b>'+threshold(i).toFixed(2)+'</b></span><span>MATERIAL <b>'+gt[2]+'</b></span></div>'+
+        '<div class="meta"><span>DUAT <b>'+gt[3]+'</b> (Egy.)</span><span>CONSENTES <b>'+gt[4]+'</b> (Rom.)</span><span>ADITYA <b>'+gt[5]+'</b> (Hin.)</span></div>'+
+        '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
       box.appendChild(el);
     });
   }
 
   async function boot(){
     var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('The Nine Gates','Sign in to stand before the Gates.'); return; }
+    if(!sess){ showGate('The Twelve Gates','Sign in to stand before the Gates.'); return; }
     var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to stand before the Gates.'); return; }
     document.getElementById('gate-screen').style.display='none';

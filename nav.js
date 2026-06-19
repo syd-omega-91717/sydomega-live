@@ -37,6 +37,7 @@
     ['sigil','SIGIL VAULT','/sigil.html'],
     ['family','FAMILY · HERITAGE','/family.html'],
     ['hall','HALL OF THE ORDER','/hall.html'],
+    ['sovereigns','HALL OF SOVEREIGNS','/sovereigns.html'],
     ['factions','THE 12 FACTIONS','/factions.html'],
     ['settings','SETTINGS','/settings.html'],
     ['charter','CHARTER','/charter.html'],

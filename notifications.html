@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ω SYD OMEGA 91717 — Notifications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --void:#07070b; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(0,229,255,.06),transparent 50%)}
+  a{color:inherit;text-decoration:none}
+  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
+  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
+  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
+  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
+  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
+  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
+  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
+  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
+  .nav .lk{color:var(--muted);cursor:default}
+  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+
+  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px;max-width:860px}
+  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+  .seen{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:8px 12px;cursor:pointer}
+  .seen:hover{border-color:var(--cyan)}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px}
+  .ff{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);border:1px solid var(--line);padding:7px 12px;cursor:pointer}
+  .ff:hover{color:var(--gold);border-color:var(--gold)} .ff.on{color:var(--void);background:var(--gold);border-color:var(--gold)}
+
+  .feed{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .ni{display:flex;gap:14px;border:1px solid var(--line);background:linear-gradient(90deg,var(--panel),transparent);padding:14px 16px;border-left:3px solid var(--nc);transition:transform .12s}
+  .ni:hover{transform:translateX(3px)}
+  .ni.new{box-shadow:0 0 16px rgba(0,229,255,.1)}
+  .ni .ic{width:34px;height:34px;flex-shrink:0;border:1px solid var(--nc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:14px;color:var(--nc)}
+  .ni .bd{flex:1;min-width:0}
+  .ni .lab{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--nc)}
+  .ni .ti{font-family:var(--display);font-weight:700;color:var(--gold);font-size:15px;margin-top:3px}
+  .ni .de{font-weight:300;color:var(--muted);font-size:12.5px;margin-top:3px;line-height:1.45}
+  .ni .wh{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;flex-shrink:0;text-align:right;white-space:nowrap}
+  .ni .newdot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);margin-left:6px;vertical-align:middle;box-shadow:0 0 6px var(--cyan)}
+  .empty{font-family:var(--mono);font-size:12px;color:var(--muted);padding:20px 0}
+
+  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
+  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
+  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
+  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
+  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
+  #app{display:none}
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+</style>
+</head>
+<body>
+<div id="gate" class="gate-card" style="display:none">
+  <div class="g">Ω</div>
+  <h2 id="gate-h">Notifications</h2>
+  <p id="gate-p">Sign in to see your notifications.</p>
+  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+</div>
+
+<div class="shell" id="app">
+  <aside class="side" id="omega-side" data-page="notifications"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">NOTIFICATIONS<small>THE WIRE &amp; YOUR MILESTONES</small></div>
+      <div class="seen" id="seen">MARK ALL SEEN</div>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="feed" id="feed"></div>
+  </main>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  const SEEN_KEY='omega_notif_seen';
+  let all=[], filter='all', lastSeen=0;
+
+  const TYPES={
+    dispatch:{c:'#00E5FF',g:'\u25C9',l:'DISPATCH'},
+    academy:{c:'#00E5FF',g:'\u2726',l:'KNOWLEDGE'},
+    gaming:{c:'#E2C86D',g:'\u2316',l:'MASTERY'},
+    contribution:{c:'#3fb27f',g:'\u2742',l:'CONTRIBUTION'},
+    certificate:{c:'#E2C86D',g:'\u272A',l:'CERTIFICATE'}
+  };
+  function esc(s){ return (s||'').replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];}); }
+  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+  function rel(ts){ var d=Date.now()-ts; var s=Math.floor(d/1000); if(s<60)return s+'s ago'; var m=Math.floor(s/60); if(m<60)return m+'m ago'; var h=Math.floor(m/60); if(h<24)return h+'h ago'; var dy=Math.floor(h/24); if(dy<30)return dy+'d ago'; return new Date(ts).toLocaleDateString(); }
+
+  function render(){
+    var feed=document.getElementById('feed');
+    var items=all.filter(function(n){ return filter==='all'||n.type===filter || (filter==='milestones' && n.type!=='dispatch'); });
+    if(!items.length){ feed.innerHTML='<div class="empty">Nothing yet. As the Order broadcasts and you clear nodes, your notifications gather here.</div>'; return; }
+    feed.innerHTML=items.map(function(n){
+      var ty=TYPES[n.type]||TYPES.dispatch; var isNew=n.time>lastSeen;
+      return '<div class="ni'+(isNew?' new':'')+'" style="--nc:'+ty.c+'"><div class="ic">'+ty.g+'</div><div class="bd"><div class="lab">'+ty.l+(isNew?'<span class="newdot"></span>':'')+'</div><div class="ti">'+esc(n.title)+'</div>'+(n.detail?'<div class="de">'+esc(n.detail)+'</div>':'')+'</div><div class="wh">'+rel(n.time)+'</div></div>';
+    }).join('');
+  }
+  function buildFilters(){
+    var f=document.getElementById('filters');
+    var opts=[['all','ALL'],['dispatch','DISPATCHES'],['milestones','MY MILESTONES']];
+    f.innerHTML=opts.map(function(o){ return '<div class="ff'+(filter===o[0]?' on':'')+'" data-f="'+o[0]+'">'+o[1]+'</div>'; }).join('');
+    f.querySelectorAll('.ff').forEach(function(el){ el.onclick=function(){ filter=el.getAttribute('data-f'); buildFilters(); render(); }; });
+  }
+
+  async function boot(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('Notifications','Sign in to see your notifications.'); return; }
+    var uid=sess.user.id;
+    var pr=await supabase.from('profiles').select('sign').eq('id',uid).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to see notifications.'); return; }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+
+    try{ lastSeen=parseInt(localStorage.getItem(SEEN_KEY)||'0',10)||0; }catch(e){ lastSeen=0; }
+
+    // Order dispatches
+    try{ var ds=await supabase.from('dispatches').select('*').order('created_at',{ascending:false}).limit(20);
+      (ds.data||[]).forEach(function(d){ all.push({type:'dispatch',title:d.title||'Dispatch from the Order',detail:d.body||d.message||'',time:new Date(d.created_at||Date.now()).getTime()}); }); }catch(e){}
+    // milestones: task_completions
+    try{ var tc=await supabase.from('task_completions').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(40);
+      (tc.data||[]).forEach(function(r){ var k=r.kind; if(!TYPES[k]) k='academy';
+        var verb=({academy:'Cleared a lesson',gaming:'Won a node',contribution:'Logged a contribution'})[r.kind]||'Advanced';
+        all.push({type:(TYPES[r.kind]?r.kind:'academy'),title:verb,detail:(r.title||r.task||'')+'  ·  +0.25 to your axis',time:new Date(r.created_at||Date.now()).getTime()}); }); }catch(e){}
+    // certificates
+    try{ var cc=await supabase.from('certificates').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(20);
+      (cc.data||[]).forEach(function(c){ all.push({type:'certificate',title:'Certificate of Ascent issued',detail:(c.title||(c.tier?('Tier '+c.tier):''))||'A new certificate joins your honors.',time:new Date(c.created_at||Date.now()).getTime()}); }); }catch(e){}
+
+    all.sort(function(a,b){ return b.time-a.time; });
+    buildFilters(); render();
+
+    document.getElementById('seen').onclick=function(){ var now=Date.now(); try{ localStorage.setItem(SEEN_KEY,String(now)); }catch(e){} lastSeen=now; render(); };
+  }
+  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script>
+</body>
+</html>

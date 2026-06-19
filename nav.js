@@ -9,6 +9,7 @@
     ['dashboard','DASHBOARD','/dashboard.html'],
     ['beacon','THE BEACON · START','/beacon.html'],
     ['search','SEARCH','/search.html'],
+    ['notifications','NOTIFICATIONS','/notifications.html'],
     ['profile','PROFILE','/profile.html'],
     ['passport','SOVEREIGN PASSPORT','/passport.html'],
     ['ascension','ASCENSION','/ascension.html'],

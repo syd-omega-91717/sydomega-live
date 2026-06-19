@@ -21,6 +21,7 @@
     ['honors','HONORS','/honors.html'],
     ['horoscope','HOROSCOPE','/horoscope.html'],
     ['pantheons','PANTHEONS','/pantheons.html'],
+    ['elements','THE FIVE ELEMENTS','/elements.html'],
     ['academy','ACADEMY','/academy.html'],
     ['gaming','GAMING ARENA','/gaming.html'],
     ['contributions','CONTRIBUTIONS','/contributions.html'],

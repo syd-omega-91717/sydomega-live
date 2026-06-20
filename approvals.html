@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Approvals</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Approvals</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -15,31 +15,27 @@
   a{color:inherit;text-decoration:none}
   .shell{position:relative;z-index:1;display:flex;min-height:100vh}
   .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
-
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
+  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px}
+  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
   .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
   .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:20px 0 6px;font-size:15px}
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:26px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .intro{font-weight:300;color:var(--muted);max-width:72ch;margin:20px 0 6px;font-size:15px;line-height:1.7}
+  .trial-rule{margin:12px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--crimson);border:1px solid rgba(139,0,0,.35);padding:10px 14px;display:inline-block}
+  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
   .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px}
-  .req{border-bottom:1px dashed rgba(201,168,76,.14);padding:14px 0;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+  .req{border-bottom:1px dashed rgba(201,168,76,.12);padding:16px 0;display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
   .req:last-child{border-bottom:none}
-  .req .info{font-family:var(--mono);font-size:12px;color:var(--ink);line-height:1.7}
-  .req .info b{color:var(--gold)} .req .info .e{color:var(--solar)}
-  .req .act button{font-family:var(--mono);font-size:10px;letter-spacing:1px;padding:8px 16px;cursor:pointer;border:1px solid}
-  .req .act .ap{color:var(--void);background:var(--green);border-color:var(--green)}
-  .req .act .rv{color:var(--crimson);background:transparent;border-color:rgba(139,0,0,.6)}
+  .req .info{font-family:var(--mono);font-size:12px;color:var(--ink);line-height:1.9}
+  .req .info b{color:var(--solar)} .req .info .e{color:var(--gold)}
+  .req .info .trial-tag{display:inline-block;margin-left:8px;font-size:9px;letter-spacing:2px;padding:2px 6px;border:1px solid rgba(139,0,0,.6);color:var(--crimson)}
+  .req .info .timer-live{color:#E2C86D;letter-spacing:2px}
+  .req .info .expired-tag{display:inline-block;margin-left:8px;font-size:9px;letter-spacing:2px;padding:2px 6px;border:1px solid rgba(139,0,0,.4);color:rgba(139,0,0,0.8)}
+  .req .act{display:flex;flex-direction:column;gap:7px;align-items:flex-end;flex-shrink:0}
+  .req .act button{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:8px 14px;cursor:pointer;border:1px solid;white-space:nowrap}
+  .btn-trial{color:#E2C86D;background:rgba(139,0,0,0.35);border-color:rgba(139,0,0,0.7)!important}
+  .btn-trial:hover{background:rgba(139,0,0,0.55)}
+  .btn-perm{color:var(--void);background:var(--green);border-color:var(--green)!important}
+  .btn-rv{color:var(--crimson);background:transparent;border-color:rgba(139,0,0,.6)!important}
   .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
   .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
   .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
@@ -47,27 +43,30 @@
   .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
   .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
   #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} }
 </style>
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">&#937;</div>
   <h2 id="gate-h">Approvals</h2>
   <p id="gate-p">Owner access only.</p>
-  <a href="/dashboard.html">← RETURN TO DASHBOARD</a>
+  <a href="/dashboard.html">RETURN TO DASHBOARD</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="approvals"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">APPROVALS<small>SOVEREIGN ADMISSION · OWNER</small></div></div>
-    <p class="intro">No one becomes active in the Order without your approval. Admit or revoke each sovereign here.</p>
+    <div class="topbar">
+      <div class="t">APPROVALS<small>SOVEREIGN ADMISSION CONTROL</small></div>
+    </div>
+    <p class="intro">No one enters the Order without your authorisation. All granted sessions are timed: exactly 9.1717 minutes. When the session ends, access revokes and all progress resets automatically.</p>
+    <div class="trial-rule">SESSION DURATION: 9.1717 MINUTES &nbsp;&bull;&nbsp; FULL PROGRESS RESET ON EXPIRY &nbsp;&bull;&nbsp; OWNER IS EXEMPT</div>
 
     <div class="sechead">AWAITING APPROVAL</div>
     <div class="card"><div id="pending-list"></div></div>
 
-    <div class="sechead">ADMITTED</div>
+    <div class="sechead">ACTIVE &amp; PAST SESSIONS</div>
     <div class="card"><div id="approved-list"></div></div>
 
     <div class="sechead">PUBLICATIONS AWAITING APPROVAL</div>
@@ -77,61 +76,120 @@
 
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
+  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
 
-  async function setApproved(id,val){ await supabase.from('profiles').update({access_approved:val}).eq('id',id); load(); }
+  function fmtCountdown(expiresAt){
+    var rem=new Date(expiresAt).getTime()-Date.now();
+    if(rem<=0) return null;
+    var m=Math.floor(rem/60000), sc=Math.floor((rem%60000)/1000);
+    return (m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;
+  }
+
+  /* Grant timed trial access (9.1717 min = 550.302 s) */
+  async function grantTrial(id){
+    await sb.rpc('grant_trial_access',{p_uid:id});
+    load();
+  }
+  /* Grant permanent access (owner override only) */
+  async function grantPermanent(id){
+    await sb.rpc('grant_permanent_access',{p_uid:id});
+    load();
+  }
+  /* Revoke immediately */
+  async function revokeAccess(id){
+    await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',id);
+    load();
+  }
+
+  /* Live timer ticks for admitted list */
+  var tickTimers=[];
+  function clearTicks(){ tickTimers.forEach(function(t){ clearInterval(t); }); tickTimers=[]; }
 
   async function load(){
-    var pend=await supabase.from('profiles').select('id,email,display_name,sign,access_requested_at').eq('access_approved',false).order('access_requested_at',{ascending:true}).limit(200);
+    clearTicks();
+
+    /* --- PENDING --- */
+    var pend=await sb.from('profiles').select('id,email,display_name,sign,access_requested_at').eq('access_approved',false).order('access_requested_at',{ascending:true}).limit(200);
     var pl=document.getElementById('pending-list'); pl.innerHTML='';
-    if(!pend.data || !pend.data.length){ pl.innerHTML='<div class="empty">No one is awaiting approval.</div>'; }
+    if(!pend.data||!pend.data.length){ pl.innerHTML='<div class="empty">No one is awaiting approval.</div>'; }
     else pend.data.forEach(function(p){
-      var when=p.access_requested_at?new Date(p.access_requested_at).toLocaleString():'—';
+      var when=p.access_requested_at?new Date(p.access_requested_at).toLocaleString():'--';
       var d=document.createElement('div'); d.className='req';
-      d.innerHTML='<div class="info"><span class="e">'+esc(p.email||'(no email)')+'</span><br>'+esc(p.display_name||'unnamed')+' · '+esc((p.sign||'no sign'))+' · requested '+when+'</div><div class="act"><button class="ap">APPROVE</button></div>';
-      d.querySelector('.ap').addEventListener('click',function(){ setApproved(p.id,true); });
+      d.innerHTML='<div class="info"><span class="e">'+esc(p.email||'(no email)')+'</span><br>'+
+        '<b>'+esc(p.display_name||'unnamed')+'</b> &nbsp;&bull;&nbsp; '+esc(p.sign||'no sign')+' &nbsp;&bull;&nbsp; requested '+esc(when)+'</div>'+
+        '<div class="act">'+
+        '<button class="btn-trial">GRANT 9.17 MIN TRIAL</button>'+
+        '</div>';
+      d.querySelector('.btn-trial').addEventListener('click',function(){ grantTrial(p.id); });
       pl.appendChild(d);
     });
 
-    var appr=await supabase.from('profiles').select('id,email,display_name,sign').eq('access_approved',true).order('email',{ascending:true}).limit(400);
+    /* --- ADMITTED (active + expired trials) --- */
+    var appr=await sb.from('profiles').select('id,email,display_name,sign,is_trial,trial_expires_at,is_owner').eq('access_approved',true).order('email',{ascending:true}).limit(400);
     var al=document.getElementById('approved-list'); al.innerHTML='';
-    if(!appr.data || !appr.data.length){ al.innerHTML='<div class="empty">No admitted members yet.</div>'; }
+    if(!appr.data||!appr.data.length){ al.innerHTML='<div class="empty">No active sessions.</div>'; }
     else appr.data.forEach(function(p){
+      var trialTag='';
+      var timerId='tt-'+p.id.replace(/-/g,'');
+      if(p.is_owner){
+        trialTag='<span class="trial-tag" style="color:var(--gold);border-color:rgba(201,168,76,.6)">PERMANENT</span>';
+      } else if(p.is_trial && p.trial_expires_at){
+        var cd=fmtCountdown(p.trial_expires_at);
+        if(cd){
+          trialTag='<span class="trial-tag">TRIAL <span id="'+timerId+'" class="timer-live">'+cd+'</span></span>';
+        } else {
+          trialTag='<span class="expired-tag">EXPIRED</span>';
+        }
+      }
       var d=document.createElement('div'); d.className='req';
-      d.innerHTML='<div class="info"><span class="e">'+esc(p.email||'(no email)')+'</span> · '+esc(p.display_name||'unnamed')+' · '+esc((p.sign||'—'))+'</div><div class="act"><button class="rv">REVOKE</button></div>';
-      d.querySelector('.rv').addEventListener('click',function(){ setApproved(p.id,false); });
+      d.innerHTML='<div class="info"><span class="e">'+esc(p.email||'(no email)')+'</span>'+trialTag+'<br>'+
+        '<b>'+esc(p.display_name||'unnamed')+'</b> &nbsp;&bull;&nbsp; '+esc(p.sign||'--')+'</div>'+
+        '<div class="act"><button class="btn-rv">REVOKE</button></div>';
+      d.querySelector('.btn-rv').addEventListener('click',function(){ revokeAccess(p.id); });
       al.appendChild(d);
+
+      /* Start live tick for active trials */
+      if(p.is_trial && p.trial_expires_at && fmtCountdown(p.trial_expires_at)){
+        var tid=setInterval(function(){
+          var el=document.getElementById(timerId);
+          if(!el){ clearInterval(tid); return; }
+          var cd2=fmtCountdown(p.trial_expires_at);
+          if(!cd2){ el.parentElement.outerHTML='<span class="expired-tag">EXPIRED</span>'; clearInterval(tid); load(); }
+          else el.textContent=cd2;
+        },1000);
+        tickTimers.push(tid);
+      }
     });
   }
 
-  async function approvePub(id){ await supabase.from('publications').update({status:'approved'}).eq('id',id); loadPubs(); }
   async function loadPubs(){
     var box=document.getElementById('pub-list');
-    var r=await supabase.from('publications').select('id,user_id,kind,title,created_at').eq('status','private').order('created_at',{ascending:true}).limit(200);
+    var r=await sb.from('publications').select('id,user_id,kind,title,created_at').eq('status','private').order('created_at',{ascending:true}).limit(200);
     box.innerHTML='';
     if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No works awaiting approval.</div>'; return; }
     r.data.forEach(function(w){
       var when=w.created_at?new Date(w.created_at).toLocaleString():'';
       var d=document.createElement('div'); d.className='req';
-      d.innerHTML='<div class="info"><b></b><br>'+esc(w.kind||'')+' · member '+String(w.user_id).slice(0,8)+' · '+when+'</div><div class="act"><button class="ap">APPROVE</button></div>';
+      d.innerHTML='<div class="info"><b></b><br>'+esc(w.kind||'')+'&nbsp;&bull;&nbsp; member '+String(w.user_id).slice(0,8)+'&nbsp;&bull;&nbsp; '+esc(when)+'</div><div class="act"><button class="btn-perm">APPROVE</button></div>';
       d.querySelector('b').textContent=w.title||'Untitled';
-      d.querySelector('.ap').addEventListener('click',function(){ approvePub(w.id); });
+      d.querySelector('.btn-perm').addEventListener('click',function(){ sb.from('publications').update({status:'approved'}).eq('id',w.id).then(loadPubs); });
       box.appendChild(d);
     });
   }
+
   async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Approvals','Sign in as the owner.'); return; }
-    var me=await supabase.from('profiles').select('is_owner').eq('id',sess.user.id).maybeSingle();
-    if(!me.data || !me.data.is_owner){ showGate('Owner Only','This chamber is reserved for the Architect.'); return; }
+    var sess=(await sb.auth.getSession()).data.session;
+    if(!sess){ showGate('Approvals','Sign in as the owner to access this chamber.'); return; }
+    var me=await sb.from('profiles').select('is_owner').eq('id',sess.user.id).maybeSingle();
+    if(!me.data||!me.data.is_owner){ showGate('Owner Only','This chamber is reserved for the Architect.'); return; }
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';
     load(); loadPubs();
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout') && document.getElementById('logout').addEventListener('click',async function(){ await sb.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

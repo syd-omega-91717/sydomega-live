@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Trophy &amp; Medal Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--void:#07070b;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 20%,rgba(201,168,76,.09),transparent 50%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px}
+.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px}
+.topbar .t{font-family:var(--D);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+/* GAUGE */
+.gauge-wrap{position:relative;width:220px;height:220px;margin:0 auto 10px}
+#gauge-cv{display:block;width:100%;height:100%}
+.gauge-info{text-align:center;font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:32px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:24px}
+.s-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:14px;text-align:center}
+.s-card .sl{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.s-card .sv{font-family:var(--D);font-size:22px;font-weight:700}
+
+/* TROPHY GRID */
+.trophy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.trophy-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:18px;text-align:center;position:relative;overflow:hidden;cursor:default;transition:border-color .2s}
+.trophy-card:hover{border-color:rgba(201,168,76,.4)}
+.trophy-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px}
+.trophy-card .tc-canvas{display:block;width:80px;height:80px;margin:0 auto 10px}
+.trophy-card .tc-name{font-family:var(--D);font-size:12px;font-weight:700;margin-bottom:4px}
+.trophy-card .tc-tier{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block;margin-bottom:8px}
+.trophy-card .tc-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.5}
+.trophy-card .tc-earned{font-family:var(--M);font-size:8px;color:var(--green);margin-top:8px}
+.locked{opacity:.35;pointer-events:none}
+
+/* SPECIAL ARTIFACTS */
+.artifact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.artifact-card{border:2px solid;padding:20px;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--panel),transparent)}
+.artifact-card .art-glyph{font-size:36px;margin-bottom:12px;display:block}
+.artifact-card .art-name{font-family:var(--D);font-size:16px;font-weight:900;margin-bottom:5px}
+.artifact-card .art-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;margin-bottom:10px}
+.artifact-card .art-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.7}
+.artifact-card .art-badge{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 8px;border:1px solid;display:inline-block;margin-top:10px}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="trophies"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">TROPHY &amp; MEDAL VAULT<small>SOVEREIGN HONOURS &middot; EARNED FOREVER &middot; NEVER REVOKED</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:24px">Every trophy, medal, badge, and diploma in this Vault was earned through verified sovereign action. They are hash-sealed to the immutable archive and cannot be deleted, transferred, or counterfeited. What you earn here is eternal.</p>
+
+    <div class="gauge-wrap"><canvas id="gauge-cv" width="440" height="440"></canvas></div>
+    <div class="gauge-info">GAMING PROGRESS &middot; 9 STAGES &middot; 9.9.9 MANIFESTO LEVELS</div>
+
+    <div class="stats-row" id="stats-row"></div>
+
+    <div class="sechead">SOVEREIGN TROPHIES &mdash; 12 CHAMBERS</div>
+    <div class="trophy-grid" id="trophy-grid"></div>
+
+    <div class="sechead">SOVEREIGN MEDALS &mdash; 12 HONOURS</div>
+    <div class="trophy-grid" id="medal-grid"></div>
+
+    <div class="sechead">SPECIAL ARTIFACTS &mdash; FAMILY VAULT</div>
+    <div class="artifact-grid" id="artifact-grid"></div>
+  </main>
+</div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const TROPHIES=[
+  {name:'GENESIS SEAL',tier:'OMEGA',col:'#C9A84C',desc:'Awarded at the genesis node (1,1,1). The first proof you entered the Order.',glyph:'\u03A9'},
+  {name:'GATE GUARDIAN',tier:'GOLD',col:'#C9A84C',desc:'Cross five gate thresholds in the authority formula progression.',glyph:'\u2302'},
+  {name:'AXIS MASTER A',tier:'GOLD',col:'#00E5FF',desc:'Knowledge axis A reaches level 9. All disciplines of the Academy completed.',glyph:'A'},
+  {name:'AXIS MASTER B',tier:'GOLD',col:'#E86A3A',desc:'Mastery axis B reaches level 9. All gaming arenas conquered.',glyph:'B'},
+  {name:'AXIS MASTER C',tier:'GOLD',col:'#3fb27f',desc:'Contribution axis C reaches level 9. All contribution tasks completed.',glyph:'C'},
+  {name:'TRIPLE CROWN',tier:'OMEGA',col:'#C9A84C',desc:'All three axes simultaneously at 9. The rarest progression trophy.',glyph:'\u272A'},
+  {name:'THE CHRONICLER',tier:'SILVER',col:'#C7CDD6',desc:'Heritage Archive filled with records across all five eras.',glyph:'\u2736'},
+  {name:'COSMIC NAVIGATOR',tier:'GOLD',col:'#9B6BF0',desc:'All 12 gates passed. All 12 sign cosmologies studied.',glyph:'\u2609'},
+  {name:'SOVEREIGN BUILDER',tier:'GOLD',col:'#E2C86D',desc:'Published 9 works, consulted in 3 domains, reached Contribution tier 7.',glyph:'\u270D'},
+  {name:'THE BLOODLINE',tier:'OMEGA',col:'#8B0000',desc:'Bloodline Vault completed with full succession protocol sealed.',glyph:'\u22D4'},
+  {name:'RESEARCH PIONEER',tier:'SILVER',col:'#9B6BF0',desc:'9 research hypotheses submitted and validated by the Oracle agent.',glyph:'\u26A1'},
+  {name:'APEX SOVEREIGN',tier:'OMEGA',col:'#C9A84C',desc:'Authority score reaches the apex threshold of 15.58. The final trophy.',glyph:'\u265B'},
+];
+
+const MEDALS=[
+  {name:'ACADEMY GOLD',tier:'GOLD',col:'#00E5FF',desc:'Completed all 12 Academy disciplines with 90%+ exam scores.'},
+  {name:'ARENA CHAMPION',tier:'GOLD',col:'#E86A3A',desc:'Reached Stage 9 in the Gaming Arena. Undefeated in the sovereign bracket.'},
+  {name:'HERALD MEDAL',tier:'SILVER',col:'#C7CDD6',desc:'Broadcast 91 verified sovereign messages across social platforms.'},
+  {name:'ECONOMIST MEDAL',tier:'GOLD',col:'#C9A84C',desc:'Portfolio allocation active across all 5 investment sectors.'},
+  {name:'KINSHIP MEDAL',tier:'SILVER',col:'#3fb27f',desc:'Family constellation sealed with 9+ bloodline nodes.'},
+  {name:'PROPHECY MEDAL',tier:'BRONZE',col:'#D9B86A',desc:'3 Oracle predictions validated against real matrix events.'},
+  {name:'PILGRIM MEDAL',tier:'SILVER',col:'#9B6BF0',desc:'6 sovereign journeys logged to the Travel & Heritage module.'},
+  {name:'COMPLIANCE SEAL',tier:'GOLD',col:'#E2C86D',desc:'Platform constitution verified and all compliance modules active.'},
+  {name:'DISCOVERY MEDAL',tier:'GOLD',col:'#9B6BF0',desc:'First validated research discovery logged to the immutable archive.'},
+  {name:'EVENT COMMANDER',tier:'SILVER',col:'#00E5FF',desc:'Registered and attended 5 sovereign events.'},
+  {name:'WELLNESS CROWN',tier:'SILVER',col:'#3fb27f',desc:'9 consecutive days of wellness logging across all Ninth Element domains.'},
+  {name:'OMEGA MASTER',tier:'OMEGA',col:'#C9A84C',desc:'The ultimate medal. Issued only at the (9,9,9) apex matrix coordinate.'},
+];
+
+const ARTIFACTS=[
+  {glyph:'\u22D4',name:'DAGHERE FAMILY NEST BADGE',sub:'BIO-LOCKED LINEAGE ARTIFACT',col:'#C9A84C',desc:'The sovereign emblem of the Daghere bloodline. Issued to the Architect and to each heir node who is registered in the Bloodline Vault. This badge carries the full family matrix signature.',badge:'FAMILY LINEAGE SEALED'},
+  {glyph:'\u03A9',name:'100% SOVEREIGN DIPLOMA',sub:'APEX ACHIEVEMENT CERTIFICATE',col:'#E2C86D',desc:'Issued when all 18 modules are active, all 12 gates passed, and the authority score reaches 15.58. This diploma is the highest credential the Order issues. Only one can exist per sovereign.',badge:'ISSUED AT APEX (9,9,9)'},
+  {glyph:'\u265A',name:'MASTER MEDAL OF THE ORDER',sub:'SOVEREIGN COMBAT HONOUR',col:'#C7CDD6',desc:'The military-style master medal of the &#937; Order. Awarded after all 12 gaming arena stages are conquered and the Mastery axis reaches the apex. Carries the Omega frequency seal.',badge:'MASTERY AXIS COMPLETE'},
+  {glyph:'\u2726',name:'CRYSTAL-OMEGA NODE NFT',sub:'9-9-9 IMMUTABLE RECORD',col:'#9B6BF0',desc:'The Crystal-Omega Node is the rarest artifact: a Soulbound NFT issued only at the (9,9,9) matrix coordinate. It cannot be transferred, sold, or burned. It proves apex sovereignty permanently.',badge:'SOULBOUND &middot; NON-TRANSFERABLE'},
+];
+
+function drawGauge(stage){
+  const cv=document.getElementById('gauge-cv');
+  const S=220, CX=S, CY=S, ctx=cv.getContext('2d');
+  let t=0;
+  function frame(){
+    t+=0.006;
+    ctx.clearRect(0,0,S*2,S*2);
+    /* Background */
+    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,CX);
+    bg.addColorStop(0,'rgba(13,13,21,1)'); bg.addColorStop(1,'rgba(7,7,11,1)');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,S*2,S*2);
+    /* Ticks + arc segments */
+    const n=9, R=CX*0.78, gap=0.08;
+    for(let i=0;i<n;i++){
+      const startA=-Math.PI*1.2+(i*(Math.PI*2.4/n))+gap/2;
+      const endA=startA+Math.PI*2.4/n-gap;
+      const active=i<stage;
+      const cols=['#E86A3A','#D9B86A','#A9C2D8','#C7CDD6','#9B6BF0','#C9A84C','#E2C86D','#00E5FF','#C9A84C'];
+      const c=cols[i]||'#C9A84C';
+      ctx.beginPath(); ctx.arc(CX,CY,R,startA,endA);
+      ctx.strokeStyle=active?c:c+'33'; ctx.lineWidth=12;
+      ctx.shadowColor=active?c:'transparent'; ctx.shadowBlur=active?14:0;
+      ctx.stroke(); ctx.shadowBlur=0;
+      /* Stage number */
+      const ma=(startA+endA)/2;
+      const tx=CX+Math.cos(ma)*(R+22), ty=CY+Math.sin(ma)*(R+22);
+      ctx.fillStyle=active?c:'rgba(133,131,123,0.4)';
+      ctx.font='700 11px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(i+1,tx,ty);
+    }
+    /* Inner rings */
+    for(let k=0;k<2;k++){
+      ctx.save(); ctx.translate(CX,CY); ctx.rotate(t*(k%2?-1:1)*0.4);
+      ctx.beginPath(); ctx.ellipse(0,0,R*0.52,R*0.2,0,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(201,168,76,${0.1-k*0.04})`; ctx.lineWidth=0.8; ctx.stroke();
+      ctx.restore();
+    }
+    /* Stage label */
+    ctx.fillStyle='rgba(201,168,76,'+(0.8+0.18*Math.sin(t*2))+')';
+    ctx.font='900 28px "Cinzel Decorative",serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(201,168,76,.5)'; ctx.shadowBlur=18;
+    ctx.fillText('\u03A9',CX,CY-10); ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(133,131,123,0.8)';
+    ctx.font='700 10px "Courier Prime",monospace';
+    ctx.fillText('STAGE '+stage+' / 9',CX,CY+20);
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function buildTrophies(data, containerId, items){
+  const g=document.getElementById(containerId); g.innerHTML='';
+  const count=data||0;
+  items.forEach((item,i)=>{
+    const earned=i<count;
+    const c=document.createElement('div');
+    c.className='trophy-card'+(earned?'':' locked');
+    c.style.borderTopColor=item.col;
+    /* Mini canvas */
+    const cv=document.createElement('canvas'); cv.className='tc-canvas'; cv.width=160; cv.height=160;
+    const ctx=cv.getContext('2d');
+    /* Draw icon */
+    const gc=ctx.createRadialGradient(80,80,0,80,80,70);
+    gc.addColorStop(0,item.col+'55'); gc.addColorStop(1,'transparent');
+    ctx.fillStyle=gc; ctx.fillRect(0,0,160,160);
+    ctx.beginPath(); ctx.arc(80,80,55,0,Math.PI*2);
+    ctx.strokeStyle=item.col+(earned?'aa':'44'); ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle=earned?item.col:'rgba(133,131,123,0.5)';
+    ctx.font='700 36px "Cinzel Decorative",serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor=earned?item.col:'transparent'; ctx.shadowBlur=earned?18:0;
+    ctx.fillText(item.glyph||'\u2736',80,84); ctx.shadowBlur=0;
+    const tc=item.tier;
+    const tcol=tc==='OMEGA'?'color:var(--gold);border-color:rgba(201,168,76,.6)':tc==='GOLD'?'color:#E2C86D;border-color:rgba(226,200,109,.4)':tc==='SILVER'?'color:#C7CDD6;border-color:rgba(199,205,214,.4)':'color:#D9B86A;border-color:rgba(217,184,106,.3)';
+    c.innerHTML=`<div class="tc-name" style="color:${item.col}">${item.name}</div><span class="tc-tier" style="${tcol}">${tc}</span><div class="tc-desc">${item.desc}</div>${earned?'<div class="tc-earned">EARNED &amp; SEALED &#x2713;</div>':''}`;
+    c.insertBefore(cv, c.firstChild);
+    g.appendChild(c);
+  });
+}
+
+function buildArtifacts(){
+  const g=document.getElementById('artifact-grid'); g.innerHTML='';
+  ARTIFACTS.forEach(a=>{
+    const c=document.createElement('div'); c.className='artifact-card';
+    c.style.borderColor=a.col+'55';
+    c.style.boxShadow=`0 0 30px ${a.col}1a`;
+    c.innerHTML=`<div class="art-glyph" style="color:${a.col}">${a.glyph}</div><div class="art-name" style="color:${a.col}">${a.name}</div><div class="art-sub" style="color:${a.col}99">${a.sub}</div><div class="art-desc">${a.desc}</div><span class="art-badge" style="color:${a.col};border-color:${a.col}44">${a.badge}</span>`;
+    g.appendChild(c);
+  });
+}
+
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+  const a=pr.data?.axis_a||1, b=pr.data?.axis_b||1, c=pr.data?.axis_c||1;
+  const stage=Math.max(1,Math.floor(Math.min(a,b,c)));
+  const tCount=Math.floor((a+b+c)/3);
+  const mCount=Math.floor((a+b)/2);
+  /* Stats */
+  const sr=document.getElementById('stats-row'); sr.innerHTML='';
+  [{l:'GAMING STAGE',v:stage+' / 9',col:'#E86A3A'},{l:'TROPHIES',v:tCount,col:'#C9A84C'},{l:'MEDALS',v:mCount,col:'#C7CDD6'},{l:'AUTHORITY',v:(Math.sqrt(a*a+b*b+c*c)).toFixed(2),col:'#00E5FF'},{l:'CERTIFICATES',v:Math.floor(tCount/3),col:'#E2C86D'}].forEach(s=>{
+    const d=document.createElement('div'); d.className='s-card';
+    d.innerHTML=`<div class="sl">${s.l}</div><div class="sv" style="color:${s.col}">${s.v}</div>`;
+    sr.appendChild(d);
+  });
+  drawGauge(stage);
+  buildTrophies(tCount, 'trophy-grid', TROPHIES);
+  buildTrophies(mCount, 'medal-grid', MEDALS);
+  buildArtifacts();
+}
+boot();
+</script>
+<script src="/nav.js"></script><script src="/bg.js"></script>
+</body>
+</html>

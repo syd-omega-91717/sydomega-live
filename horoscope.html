@@ -1,211 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Daily Horoscope</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Horoscope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-  :root{
-    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
-    --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000;
-    --ink:#e9e6dc; --muted:#85837b;
-    --line:rgba(201,168,76,0.16);
-    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.09),transparent 46%),radial-gradient(circle at 84% 90%,rgba(0,229,255,.05),transparent 42%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
-
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:28px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-
-  .reading{border:1px solid rgba(201,168,76,.35);background:radial-gradient(circle at 30% 0%,rgba(201,168,76,.08),transparent 60%),linear-gradient(180deg,var(--panel),transparent);padding:30px 28px;margin-top:18px}
-  .reading .sgn{font-family:var(--display);font-weight:900;color:var(--solar);font-size:clamp(26px,5vw,40px);letter-spacing:1px}
-  .reading .sgn .gl{font-size:.8em;margin-right:.2em}
-  .reading .date{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);margin-top:4px}
-  .reading .body{font-weight:300;color:var(--ink);line-height:1.95;font-size:17px;margin:20px 0;max-width:64ch}
-  .reading .lucky{display:flex;gap:24px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px}
-  .reading .lucky div{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted)}
-  .reading .lucky b{display:block;color:var(--gold);font-size:16px;margin-top:4px;font-family:var(--display)}
-  .reading .focus{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--void);background:var(--gold);padding:4px 12px;margin-top:6px}
-
-  .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:8px}
-  @media(max-width:820px){ .grid2{grid-template-columns:1fr} }
-  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:24px}
-  .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
-  .card .char{font-weight:300;color:var(--ink);line-height:1.8;font-size:16px}
-  .traits{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .traits span{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--solar);border:1px solid rgba(201,168,76,.4);padding:5px 11px}
-  .cosmo{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:2.1;margin-top:6px}
-  .cosmo b{color:var(--gold)}
-  .interests{font-weight:300;color:var(--ink);line-height:1.7;font-size:15px;margin-top:12px}
-  .interests b{color:var(--gold);font-weight:400}
-
-  .twelve{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-  .tw{border:1px solid var(--line);background:var(--panel);padding:14px 16px}
-  .tw.mine{border-color:var(--gold);background:linear-gradient(180deg,rgba(201,168,76,.08),transparent)}
-  .tw .twh{display:flex;align-items:center;gap:8px}
-  .tw .twh .g{font-size:18px;color:var(--gold)}
-  .tw .twh .n{font-family:var(--display);font-weight:700;color:var(--gold);font-size:14px;letter-spacing:1px}
-  .tw .twr{font-weight:300;color:var(--muted);font-size:13px;line-height:1.55;margin-top:8px}
-
-  .note{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:18px;line-height:1.7}
-
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+:root{--void:#07070b;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px;max-width:1320px}
+.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.tabs{display:flex;gap:0;border:1px solid var(--line);margin-bottom:28px;width:fit-content}
+.tab{font-family:var(--mono);font-size:10px;letter-spacing:3px;padding:10px 20px;cursor:pointer;border-right:1px solid var(--line);color:var(--muted);transition:all .14s}
+.tab:last-child{border-right:none}
+.tab.on{color:var(--gold);background:rgba(201,168,76,.08)}
+.tab:hover:not(.on){color:var(--ink);background:rgba(201,168,76,.04)}
+.two-col{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
+.featured-card{border:1px solid rgba(201,168,76,.5);background:linear-gradient(180deg,var(--panel),transparent);position:relative;overflow:hidden}
+.featured-card .top{display:flex;align-items:center;gap:20px;padding:24px 24px 0}
+.featured-card .glyph{font-size:56px;line-height:1;opacity:.9}
+.featured-card .sign-info .sign-name{font-family:var(--display);font-size:28px;font-weight:700;color:var(--gold)}
+.featured-card .sign-info .date-range{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.featured-card .sign-info .element-pill{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:3px 10px;border:1px solid;margin-top:8px}
+.featured-card .reading-wrap{padding:24px}
+.period-label{font-family:var(--mono);font-size:9px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+.reading-text{font-size:15px;font-weight:300;line-height:1.85;color:var(--ink)}
+.planet-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.planet-pill{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);padding:4px 10px;border:1px solid var(--line)}
+.planet-pill b{color:var(--solar)}
+.score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.score-item{text-align:center}
+.score-item .label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.score-bar{height:4px;background:rgba(201,168,76,.12);border-radius:0;overflow:hidden}
+.score-fill{height:100%;transition:width .6s;background:var(--gold)}
+.score-val{font-family:var(--mono);font-size:11px;color:var(--solar);margin-top:4px}
+/* Wheel */
+.wheel-panel{border:1px solid var(--line);background:var(--panel);padding:18px}
+.wheel-panel h3{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:14px}
+.sign-wheel{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.wheel-sign{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border:1px solid var(--line);cursor:pointer;transition:all .14s;text-align:center}
+.wheel-sign:hover,.wheel-sign.active{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.wheel-sign.mine{border-color:rgba(0,229,255,.5);box-shadow:inset 0 0 8px rgba(0,229,255,.1)}
+.wheel-sign .ws-glyph{font-size:20px}
+.wheel-sign .ws-name{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted)}
+/* Planets */
+.planet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.planet-item{border:1px solid var(--line);padding:10px 12px}
+.planet-item .pname{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--gold)}
+.planet-item .psign{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px}
+.weekly-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:8px}
+.day-card{border:1px solid var(--line);padding:10px 8px;text-align:center}
+.day-card .day{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted)}
+.day-card .score{font-family:var(--display);font-size:18px;color:var(--gold);margin:6px 0}
+.day-card .desc{font-size:11px;color:var(--muted);line-height:1.4}
+.day-card.today{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.05)}
+.loading{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:2px;padding:24px 0}
+@media(max-width:960px){.two-col{grid-template-columns:1fr}.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
-  <h2 id="gate-h">Daily Horoscope</h2>
-  <p id="gate-p">Sign in to read the stars.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="horoscope"></aside>
+<main class="main">
+<div class="topbar">
+  <div class="t">HOROSCOPE<small>CELESTIAL INTELLIGENCE &middot; DAILY &middot; WEEKLY &middot; MONTHLY</small></div>
 </div>
 
-<div class="shell" id="app">
-  <aside class="side" id="omega-side" data-page="horoscope"></aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="t">DAILY HOROSCOPE<small>THE STARS &amp; THE LATTICE</small></div>
+<div class="tabs">
+  <div class="tab on" data-tab="daily">DAILY</div>
+  <div class="tab" data-tab="weekly">WEEKLY</div>
+  <div class="tab" data-tab="monthly">MONTHLY</div>
+</div>
+
+<div class="two-col">
+  <div>
+    <div id="featured-wrap"></div>
+    <div id="weekly-section" style="display:none;margin-top:24px">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:14px">7-DAY CELESTIAL FORECAST</div>
+      <div class="weekly-grid" id="weekly-grid"></div>
     </div>
-
-    <div class="reading" id="reading"></div>
-
-    <div class="sechead">YOUR CHARACTER</div>
-    <div class="grid2">
-      <div class="card">
-        <div class="h">WHO YOU ARE</div>
-        <div class="char" id="char"></div>
-        <div class="traits" id="traits"></div>
-        <div class="interests" id="interests"></div>
-      </div>
-      <div class="card">
-        <div class="h">YOUR COSMOLOGY</div>
-        <div class="cosmo" id="cosmo"></div>
+    <div id="monthly-section" style="display:none;margin-top:24px">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:14px">MONTHLY TRAJECTORY</div>
+      <div id="monthly-text" style="font-size:14px;font-weight:300;line-height:1.85;color:var(--muted)"></div>
+    </div>
+  </div>
+  <div>
+    <div class="wheel-panel">
+      <h3>ALL TWELVE SIGNS</h3>
+      <div class="sign-wheel" id="sign-wheel"></div>
+      <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:14px">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px">TODAY'S PLANETS</div>
+        <div class="planet-grid" id="planet-grid"></div>
       </div>
     </div>
-
-    <div class="sechead">THE TWELVE TODAY</div>
-    <div class="twelve" id="twelve"></div>
-    <div class="note">Readings are generated from your sign and today's date — stable through the day, renewed each dawn. For reflection and entertainment within the Order; not advice.</div>
-  </main>
+  </div>
+</div>
+</main>
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  const SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
-  const GLYPH={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
-  const GOD={Aries:'Athena',Taurus:'Aphrodite',Gemini:'Apollo',Cancer:'Hermes',Leo:'Zeus',Virgo:'Demeter',Libra:'Hephaestus',Scorpio:'Ares',Sagittarius:'Artemis',Capricorn:'Hestia',Aquarius:'Hera',Pisces:'Poseidon'};
-  const PLANET={Aries:'Mars',Taurus:'Venus',Gemini:'Mercury',Cancer:'Moon',Leo:'Sun',Virgo:'Vesta',Libra:'Juno',Scorpio:'Pluto',Sagittarius:'Jupiter',Capricorn:'Saturn',Aquarius:'Uranus',Pisces:'Neptune'};
-  const AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
-  const ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
-  const PERSON={
-    Aries:{tr:['Bold','Strategic','Pioneering','Vigilant'],ch:'A vanguard mind. You move first and guard what you build — the Order\u2019s Sentinel by nature, decisive where others hesitate.',in:'strategy, leadership, security, competition'},
-    Taurus:{tr:['Steadfast','Refined','Patient','Enduring'],ch:'You build lasting worth and beauty. Patience is your power; what you raise does not fall — the Merchant who tends true value.',in:'craft, commerce, art, the long game'},
-    Gemini:{tr:['Quick','Curious','Eloquent','Adaptive'],ch:'A scout of ideas. You map the unknown and carry word between worlds, never still for long — discovery is your element.',in:'discovery, language, networks, knowledge'},
-    Cancer:{tr:['Protective','Intuitive','Devoted','Deep'],ch:'Keeper of the nest. You guard kin and memory, and feel the current before it turns — the Warden of the bloodline.',in:'family, heritage, intuition, care'},
-    Leo:{tr:['Radiant','Commanding','Generous','Proud'],ch:'Born to the master view. You lead from the center and your light draws others to the cause — the Sovereign\u2019s own sign.',in:'leadership, performance, legacy, command'},
-    Virgo:{tr:['Precise','Discerning','Devoted','Whole'],ch:'The universal amplifier. You perfect and validate; nothing escapes your eye, and your touch lifts all three axes — Sand, rarest of the Order.',in:'mastery of craft, analysis, service, order'},
-    Libra:{tr:['Balanced','Just','Constructive','Fair'],ch:'The maker of balance. You forge and execute with fairness, weighing every side before the hammer falls — Hephaestus\u2019 hand.',in:'design, justice, partnership, execution'},
-    Scorpio:{tr:['Intense','Perceptive','Transformative','Resolute'],ch:'The Oracle. You see beneath the surface and foresee the turn; what is hidden is plain to you — depth is your domain.',in:'depth, prediction, transformation, power'},
-    Sagittarius:{tr:['Visionary','Free','Illuminating','Bold'],ch:'The Beacon. You aim far and light the path for those who follow, never bound by the near horizon.',in:'exploration, philosophy, teaching, freedom'},
-    Capricorn:{tr:['Disciplined','Enduring','Strategic','Sovereign'],ch:'The Analyst. You tend the hearth of value and build to last; time is your ally, not your enemy.',in:'finance, structure, endurance, mastery'},
-    Aquarius:{tr:['Inventive','Principled','Visionary','Free'],ch:'The Tutor. You carry knowledge to the many and reshape the rules others accept without question.',in:'education, innovation, community, reform'},
-    Pisces:{tr:['Deep','Imaginative','Empathic','Boundless'],ch:'The Historian. You hold the tides of memory and dream, moving where others cannot see — the deep is yours.',in:'archive, art, intuition, the unseen'}
-  };
+const SIGNS = [
+  {name:'Aries',glyph:'\u2648',dates:'MAR 21 &mdash; APR 19',el:'Fire',col:'#E86A3A',god:'Ares / Athena',planet:'Mars'},
+  {name:'Taurus',glyph:'\u2649',dates:'APR 20 &mdash; MAY 20',el:'Metal',col:'#C7CDD6',god:'Aphrodite',planet:'Venus'},
+  {name:'Gemini',glyph:'\u264A',dates:'MAY 21 &mdash; JUN 20',el:'Wind',col:'#A9C2D8',god:'Apollo',planet:'Mercury'},
+  {name:'Cancer',glyph:'\u264B',dates:'JUN 21 &mdash; JUL 22',el:'Water',col:'#34C6E6',god:'Hermes',planet:'Moon'},
+  {name:'Leo',glyph:'\u264C',dates:'JUL 23 &mdash; AUG 22',el:'Fire',col:'#E86A3A',god:'Zeus',planet:'Sun'},
+  {name:'Virgo',glyph:'\u264D',dates:'AUG 23 &mdash; SEP 22',el:'Sand',col:'#D9B86A',god:'Demeter / Athena',planet:'Mercury'},
+  {name:'Libra',glyph:'\u264E',dates:'SEP 23 &mdash; OCT 22',el:'Wind',col:'#A9C2D8',god:'Hephaestus',planet:'Venus'},
+  {name:'Scorpio',glyph:'\u264F',dates:'OCT 23 &mdash; NOV 21',el:'Water',col:'#34C6E6',god:'Ares',planet:'Pluto'},
+  {name:'Sagittarius',glyph:'\u2650',dates:'NOV 22 &mdash; DEC 21',el:'Fire',col:'#E86A3A',god:'Artemis',planet:'Jupiter'},
+  {name:'Capricorn',glyph:'\u2651',dates:'DEC 22 &mdash; JAN 19',el:'Metal',col:'#C7CDD6',god:'Hestia',planet:'Saturn'},
+  {name:'Aquarius',glyph:'\u2652',dates:'JAN 20 &mdash; FEB 18',el:'Wind',col:'#A9C2D8',god:'Hera',planet:'Uranus'},
+  {name:'Pisces',glyph:'\u2653',dates:'FEB 19 &mdash; MAR 20',el:'Water',col:'#34C6E6',god:'Poseidon',planet:'Neptune'}
+];
 
-  var OPEN=['The frequency favors you today','The lattice shifts in your favor','A node aligns toward your ascent','The stars sharpen your edge','Resonance gathers around you','The Order\u2019s current runs with you','A bright thread opens before you','The 9.17 hums in your direction'];
-  var FORTUNE=['Fortune leans toward the patient.','A door you thought sealed will open.','What you began returns to you multiplied.','Guard your focus; today it is your treasure.','A small act compounds into great authority.','The bold node is yours to claim.','Speak less, and your weight will be felt more.','An old effort bears its fruit at last.'];
-  var GUIDE={Fire:'Let your fire move first, but temper it with aim.',Water:'Flow around the obstacle; do not break upon it.',Wind:'Carry your idea far \u2014 the wind is at your back.',Metal:'Hold your form; pressure only tempers you.',Sand:'You amplify all you touch \u2014 choose with care where to press.'};
-  var FOCI=[['Knowledge','the Academy rewards your mind today'],['Mastery','the Arena will prove your hand today'],['Contribution','give, and the lattice gives back today']];
+const DAILY_READINGS = {
+  'Aries':['The sovereign path opens. Your fire cuts through doubt &mdash; act with precision today, for Mars amplifies every decision you make. A moment of courage now rewrites the trajectory of the week.','Authority radiates from your actions. Those who witness your momentum today will remember it. Do not hesitate where others calculate.'],
+  'Taurus':['Patience is not passivity &mdash; it is the sovereign accumulation of strength. Venus rewards those who build with intention. Solidify what you have before reaching for what you want.','Your endurance becomes your most powerful currency today. A structure you have been building quietly is ready to hold real weight.'],
+  'Gemini':['Information is your weapon and your gift. Mercury clears the channels &mdash; speak clearly, listen deeper. A connection you have overlooked holds the answer you have been constructing.','Your mind moves faster than others can follow. Translate the velocity into clarity. One precise message today reaches farther than a thousand unclear ones.'],
+  'Cancer':['The Moon draws your intuition to the surface. Trust what you feel before you trust what you see. A home, a memory, a person &mdash; something close to you requires care and presence.','Depth is your strength. Dive into what others avoid feeling. Your emotional intelligence is a form of intelligence that most minds cannot access.'],
+  'Leo':['The Sun does not ask permission to shine. Lead by presence today. Your confidence is a source for others, not a burden on them. Let them orbit your certainty.','A recognition arrives or a contribution becomes visible. Accept it without diminishing it. Sovereigns receive honours with dignity, not false modesty.'],
+  'Virgo':['Every detail you attended to begins to compound into visible excellence. The precision you have practiced becomes undeniable today. Sand refines all other forces &mdash; including yourself.','Demeter moves through your hands. What you create or correct today carries long-term weight. Your service to something greater than yourself returns to you multiplied.'],
+  'Libra':['The balance you seek is not between opposites &mdash; it is the alignment of your judgment with your action. Hephaestus forges with both fire and craft. Build something that lasts.','A decision you have been weighing becomes clear. The scales tip not by force but by clarity. Choose with your full self, not with the part that fears.'],
+  'Scorpio':['Pluto moves below the surface and so do you. Your perception of what is actually happening around you is sharper than others realise. Trust the intelligence that runs beneath the visible.','Transformation does not ask if you are ready. Something old releases today &mdash; let it. The space it leaves is not emptiness; it is where the next phase builds.'],
+  'Sagittarius':['Jupiter expands whatever you direct your attention toward. Your optimism is not naive &mdash; it is a form of vision. Aim for the thing that seems too large and hit something extraordinary.','A philosophical truth you have been living becomes transmissible. You can now articulate what has been driving you. That clarity makes you a force rather than just a force of nature.'],
+  'Capricorn':['Saturn rewards those who climb without complaint. Your discipline today is not a sacrifice &mdash; it is the architecture of a future that others will study. Build the next tier.','A long-standing effort reaches a milestone. Do not overlook it in pursuit of the next objective. Acknowledge the ground you have gained &mdash; it strengthens your footing for the ascent ahead.'],
+  'Aquarius':['Uranus breaks what does not serve the future. Your unconventional thinking is not a deviation &mdash; it is the direction. Systems and people around you need what you see.','Collective intelligence benefits from your solitary clarity. A contribution to something larger than yourself today returns as connection. You are more influential than you calculate.'],
+  'Pisces':['Neptune dissolves the false borders. Your compassion today is not weakness &mdash; it is the most sophisticated form of navigation available to you. Feel the current and swim with it.','A dream or vision that seemed unreal contains instructions. Write it, trace it, follow it. Poseidon moves the deeps &mdash; and your depths are where the real power resides.']
+};
 
-  function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
-  function dayOfYear(d){ var s=new Date(d.getFullYear(),0,0); return Math.floor((d-s)/86400000); }
-  function pick(rng,arr){ return arr[Math.floor(rng()*arr.length)]; }
+const PLANETS_TODAY = [
+  {name:'SUN',sign:'Cancer',influence:'Vitality, purpose'},
+  {name:'MOON',sign:'Scorpio',influence:'Depth, intuition'},
+  {name:'MERCURY',sign:'Leo',influence:'Communication, will'},
+  {name:'VENUS',sign:'Virgo',influence:'Precision, beauty'},
+  {name:'MARS',sign:'Gemini',influence:'Swift action'},
+  {name:'JUPITER',sign:'Aries',influence:'Bold expansion'},
+  {name:'SATURN',sign:'Pisces',influence:'Karmic structure'},
+  {name:'URANUS',sign:'Taurus',influence:'Material change'}
+];
 
-  function readingFor(sign,date){
-    var si=SIGNS.indexOf(sign);
-    var seed=(date.getFullYear()*1000 + dayOfYear(date))*13 + si*7+1;
-    var rng=mulberry32(seed);
-    var open=pick(rng,OPEN), fort=pick(rng,FORTUNE);
-    var focus=FOCI[Math.floor(rng()*3)];
-    var guide=GUIDE[ELEM[sign]]||'';
-    var node=(1+Math.floor(rng()*9))+'.'+(1+Math.floor(rng()*9))+'.'+(1+Math.floor(rng()*9));
-    var luckyNums=[9,17,91,7,1,7,17,9]; var lucky=luckyNums[Math.floor(rng()*luckyNums.length)];
-    var hour=Math.floor(rng()*24); var hourStr=(hour<10?'0':'')+hour+':17';
-    var body=open+'. '+GOD[sign]+' and '+PLANET[sign]+' lend their influence \u2014 '+focus[1]+'. '+fort+' '+guide;
-    return {body:body,focus:focus[0],node:node,lucky:lucky,hour:hourStr};
-  }
-  function shortReading(sign,date){
-    var si=SIGNS.indexOf(sign), seed=(date.getFullYear()*1000+dayOfYear(date))*13 + si*7+1;
-    var rng=mulberry32(seed);
-    return pick(rng,OPEN)+'. '+pick(rng,FORTUNE);
-  }
+var currentSign = 'Virgo';
+var mySign = '';
+var activeTab = 'daily';
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+function getReading(signName, tab){
+  var readings = DAILY_READINGS[signName] || ['The celestial forces align in favour of deliberate action. Trust your training and your intuition in equal measure. The matrix records every evolution &mdash; including this one.'];
+  var today = new Date().getDay();
+  if(tab==='daily') return readings[today % readings.length];
+  if(tab==='monthly') return 'This month, '+signName+' enters a phase of consolidation and strategic expansion. The planetary alignments favour those who combine disciplined effort with intuitive leaps. Mid-month brings a decisive shift in the balance between internal development and external action. The final days carry harvest energy &mdash; what you have built in silence becomes visible. Align with your matrix coordinates and advance.';
+  return '';
+}
 
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Daily Horoscope','Sign in to read the stars.'); return; }
-    var user=sess.user;
-    var pr=await supabase.from('profiles').select('sign').eq('id',user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to read your stars.'); return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
+function buildWeekly(sign){
+  var days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var todayIdx=new Date().getDay();
+  var grid=document.getElementById('weekly-grid'); grid.innerHTML='';
+  var tones=['Initiate','Expand','Reflect','Act','Harvest','Connect','Consolidate'];
+  var scores=[72,85,61,90,78,83,69];
+  days.forEach(function(d,i){
+    var isToday=i===todayIdx;
+    var div=document.createElement('div');div.className='day-card'+(isToday?' today':'');
+    div.innerHTML='<div class="day">'+d+'</div><div class="score">'+scores[i]+'</div><div class="desc">'+tones[i]+'</div>';
+    grid.appendChild(div);
+  });
+}
 
-    var sign=pr.data.sign, today=new Date();
-    var r=readingFor(sign,today);
-    document.getElementById('reading').innerHTML=
-      '<div class="sgn"><span class="gl">'+GLYPH[sign]+'</span>'+sign.toUpperCase()+'</div>'
-      +'<div class="date">'+today.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase()+'</div>'
-      +'<div class="focus">FAVOURED AXIS \u2014 '+r.focus.toUpperCase()+'</div>'
-      +'<div class="body">'+r.body+'</div>'
-      +'<div class="lucky"><div>LUCKY NODE<b>'+r.node+'</b></div><div>LUCKY NUMBER<b>'+r.lucky+'</b></div><div>POWER HOUR<b>'+r.hour+'</b></div><div>RULING GOD<b>'+GOD[sign]+'</b></div></div>';
+function renderFeatured(signName, tab){
+  var s = SIGNS.find(function(x){return x.name===signName;});
+  if(!s) return;
+  var reading = getReading(signName, tab);
+  var isUser = signName===mySign;
+  var wrap = document.getElementById('featured-wrap');
+  var scores = {Love:Math.floor(55+Math.random()*40),Career:Math.floor(55+Math.random()*40),Health:Math.floor(55+Math.random()*40)};
+  var hash = signName.split('').reduce(function(a,c){return a+c.charCodeAt(0);},0);
+  scores = {Love:55+(hash*7)%40, Career:55+(hash*11)%40, Health:55+(hash*13)%40};
+  var today = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
-    var p=PERSON[sign];
-    document.getElementById('char').textContent=p.ch;
-    var tr=document.getElementById('traits'); tr.innerHTML=''; p.tr.forEach(function(t){ var s=document.createElement('span'); s.textContent=t; tr.appendChild(s); });
-    document.getElementById('interests').innerHTML='<b>Interests</b> \u2014 '+p.in;
-    document.getElementById('cosmo').innerHTML='SIGN \u2014 <b>'+sign+'</b><br>ELEMENT \u2014 <b>'+ELEM[sign]+'</b><br>OLYMPIAN \u2014 <b>'+GOD[sign]+'</b><br>PLANET \u2014 <b>'+PLANET[sign]+'</b><br>AGENT \u2014 <b>'+AGENT[sign]+'</b>';
+  wrap.innerHTML='<div class="featured-card"'+( isUser?' style="box-shadow:0 0 28px rgba(201,168,76,.18)"':'')+'>'+
+    '<div class="top">'+
+      '<div class="glyph" style="color:'+s.col+'">'+s.glyph+'</div>'+
+      '<div class="sign-info">'+
+        '<div class="sign-name">'+s.name+'</div>'+
+        '<div class="date-range">'+s.dates+'</div>'+
+        '<div class="element-pill" style="color:'+s.col+';border-color:'+s.col+'55">'+s.el.toUpperCase()+' &middot; '+s.god.toUpperCase()+' &middot; '+s.planet.toUpperCase()+'</div>'+
+        (isUser?'<div style="display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--void);background:var(--cyan);padding:2px 8px;margin-left:8px">YOUR SIGN</div>':'')+
+      '</div>'+
+    '</div>'+
+    '<div class="reading-wrap">'+
+      '<div class="period-label">'+(tab==='daily'?'DAILY READING &middot; '+today.toUpperCase():tab==='weekly'?'WEEKLY FORECAST':'MONTHLY TRAJECTORY')+'</div>'+
+      '<div class="reading-text">'+reading+'</div>'+
+      '<div class="planet-row">'+
+        '<div class="planet-pill"><b>RULER</b> '+s.planet.toUpperCase()+'</div>'+
+        '<div class="planet-pill"><b>ELEMENT</b> '+s.el.toUpperCase()+'</div>'+
+        '<div class="planet-pill"><b>GOD</b> '+s.god.toUpperCase()+'</div>'+
+      '</div>'+
+      '<div class="score-row">'+
+        Object.entries(scores).map(function(kv){
+          return '<div class="score-item"><div class="label">'+kv[0].toUpperCase()+'</div><div class="score-bar"><div class="score-fill" style="width:'+kv[1]+'%;background:'+(kv[0]==='Love'?s.col:kv[0]==='Career'?'var(--cyan)':'var(--green)')+'"></div></div><div class="score-val">'+kv[1]+'%</div></div>';
+        }).join('')+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
 
-    var tw=document.getElementById('twelve'); tw.innerHTML='';
-    SIGNS.forEach(function(s){
-      var d=document.createElement('div'); d.className='tw'+(s===sign?' mine':'');
-      d.innerHTML='<div class="twh"><span class="g">'+GLYPH[s]+'</span><span class="n">'+s.toUpperCase()+'</span></div><div class="twr">'+shortReading(s,today)+'</div>';
-      tw.appendChild(d);
+function buildWheel(){
+  var wheel=document.getElementById('sign-wheel'); wheel.innerHTML='';
+  SIGNS.forEach(function(s){
+    var div=document.createElement('div');
+    div.className='wheel-sign'+(s.name===mySign?' mine':'')+(s.name===currentSign?' active':'');
+    div.innerHTML='<div class="ws-glyph" style="color:'+s.col+'">'+s.glyph+'</div><div class="ws-name">'+s.name.toUpperCase()+'</div>';
+    div.addEventListener('click',function(){
+      currentSign=s.name;
+      renderFeatured(currentSign, activeTab);
+      document.querySelectorAll('.wheel-sign').forEach(function(el){el.classList.remove('active');});
+      div.classList.add('active');
+      if(activeTab==='weekly') buildWeekly(currentSign);
     });
+    wheel.appendChild(div);
+  });
+}
+
+function buildPlanets(){
+  var grid=document.getElementById('planet-grid');grid.innerHTML='';
+  PLANETS_TODAY.forEach(function(p){
+    var div=document.createElement('div');div.className='planet-item';
+    div.innerHTML='<div class="pname">'+p.name+'</div><div class="psign" style="font-size:9px">in '+p.sign.toUpperCase()+'</div><div class="psign">'+p.influence+'</div>';
+    grid.appendChild(div);
+  });
+}
+
+document.querySelectorAll('.tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    activeTab=tab.getAttribute('data-tab');
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+    tab.classList.add('on');
+    document.getElementById('weekly-section').style.display=(activeTab==='weekly'?'block':'none');
+    document.getElementById('monthly-section').style.display=(activeTab==='monthly'?'block':'none');
+    document.getElementById('featured-wrap').style.display=(activeTab==='daily'||activeTab==='monthly'?'block':'none');
+    if(activeTab==='weekly'){
+      renderFeatured(currentSign,'weekly');
+      buildWeekly(currentSign);
+      document.getElementById('featured-wrap').style.display='block';
+    } else if(activeTab==='monthly'){
+      renderFeatured(currentSign,'monthly');
+      document.getElementById('monthly-text').textContent=getReading(currentSign,'monthly');
+    } else {
+      renderFeatured(currentSign,'daily');
+    }
+  });
+});
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(sess){
+    var pr=(await sb.from('profiles').select('sign').eq('id',sess.user.id).maybeSingle()).data;
+    if(pr&&pr.sign){ mySign=pr.sign; currentSign=pr.sign; }
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+  buildWheel();
+  buildPlanets();
+  renderFeatured(currentSign,'daily');
+}
+boot();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script>
+<script src="/nav.js"></script><script src="/bg.js"></script>
 </body>
 </html>

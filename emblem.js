@@ -19,6 +19,7 @@
     passport:['poly',5,'#E2C86D','\u273A','THE SEAL'],
     ascension:['arc',9,'#C9A84C','\u25B2','THE ASCENT'],
     intelligence:['ring',3,'#E2C86D','\u25CF','THE ANALYTICS'],
+    portfolio:['orbit',6,'#00E5FF','\u263C','THE PORTFOLIO'],
     gates:['ring',12,'#00E5FF','\u2302','THE TWELVE PORTALS'],
     kings:['ring',28,'#E2C86D','\u265B','THE 28 CROWNS'],
     matrix:['poly',3,'#00E5FF','\u25C7','THE 729'],

@@ -91,6 +91,8 @@
       ['hall','HALL OF THE ORDER','/hall.html'],
       ['sovereigns','HALL OF SOVEREIGNS','/sovereigns.html'],
       ['factions','THE 12 FACTIONS','/factions.html'],
+      ['city','&#937; CITY','/city.html'],
+      ['city','&#937; CITY &amp; INFRASTRUCTURE','/city.html'],
     ]},
     { label: 'SYSTEM', items: [
       ['charter','CHARTER','/charter.html'],

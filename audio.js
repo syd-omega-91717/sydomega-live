@@ -1,148 +1,139 @@
-/* SYD OMEGA 91717 — generative ambient score. No audio files; all synthesized. Shared across pages. */
-(function () {
-  if (window.__omegaAudio) return; window.__omegaAudio = true;
+/* SYD OMEGA 91717 -- Generative Ambient Score v2.0
+   All sounds synthesized via Web Audio API. Zero external files. Zero copyright.
+   Page-specific contexts: each page gets a unique sonic signature.
+   Respects prefers-reduced-motion (also treats as prefers-reduced-sound). */
+(function(){
+  if(window.__omegaAudio) return; window.__omegaAudio=true;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var TRACKS = [
-    { n:'Genesis Drone',   root:130.81, type:'sine',     iv:[0,7,12],     lfo:0.08, cut:1100 },
-    { n:'9.17 Resonance',  root:174.61, type:'sine',     iv:[0,7,12,19],  lfo:0.0917,cut:1400 },
-    { n:'Fire Ember',      root:164.81, type:'triangle', iv:[0,4,7],      lfo:0.12, cut:1600 },
-    { n:'Water Deep',      root:110.00, type:'sine',     iv:[0,7,12],     lfo:0.06, cut:900  },
-    { n:'Wind Veil',       root:196.00, type:'sine',     iv:[0,5,12],     lfo:0.10, cut:1500 },
-    { n:'Metal Hum',       root:123.47, type:'triangle', iv:[0,7],        lfo:0.05, cut:1000 },
-    { n:'Sand Shimmer',    root:220.00, type:'sine',     iv:[0,12,19],    lfo:0.14, cut:1800 },
-    { n:'Omega Choir',     root:130.81, type:'sine',     iv:[0,4,7,12],   lfo:0.07, cut:1300 },
-    { n:'Frequency Grid',  root:146.83, type:'triangle', iv:[0,7,14],     lfo:0.11, cut:1500 },
-    { n:'Void Pulse',      root:98.00,  type:'sine',     iv:[0,12],       lfo:0.04, cut:800  },
-    { n:'Sovereign Pad',   root:174.61, type:'sine',     iv:[0,4,7,11],   lfo:0.09, cut:1400 },
-    { n:'Apex Bloom',      root:261.63, type:'sine',     iv:[0,7,12],     lfo:0.10, cut:1700 }
-  ];
+  var AudioContext=window.AudioContext||window.webkitAudioContext;
+  if(!AudioContext) return;
 
-  function ls(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
-  function lss(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  /* Detect page context from data-page attribute */
+  function getPageContext(){
+    var el=document.getElementById('omega-side');
+    return (el&&el.getAttribute('data-page'))||
+           ((location.pathname.split('/').pop()||'').replace('.html',''))||
+           'default';
+  }
 
-  var state = {
-    on:  ls('omega_music_on','0')==='1',
-    idx: Math.max(0,Math.min(11, parseInt(ls('omega_music_track','0'),10)||0)),
-    vol: Math.max(0,Math.min(1, parseFloat(ls('omega_music_vol','0.5'))||0.5))
+  /* PAGE AUDIO PROFILES
+     Each defines: base (Hz), harmonics[], filter (Hz), reverb, gain, lfoRate, lfoDepth */
+  var PROFILES={
+    dashboard:{base:91.7,harmonics:[183.4,274.1,364.8],filter:800,reverb:0.4,gain:0.06,lfoRate:0.09,lfoDepth:8,label:'Command Frequency'},
+    matrix:   {base:55,  harmonics:[110,165,220,440],   filter:400,reverb:0.8,gain:0.05,lfoRate:0.04,lfoDepth:12,label:'Matrix Resonance'},
+    academy:  {base:432, harmonics:[648,864],            filter:2000,reverb:0.2,gain:0.04,lfoRate:0.12,lfoDepth:4,label:'Focus Frequency 432Hz'},
+    gaming:   {base:220, harmonics:[330,440,880],        filter:3000,reverb:0.1,gain:0.07,lfoRate:0.3, lfoDepth:20,label:'Arena Pulse'},
+    agents:   {base:73.4,harmonics:[146.8,220.2,440.4],  filter:600,reverb:0.6,gain:0.05,lfoRate:0.07,lfoDepth:6,label:'Neural Mesh'},
+    horoscope:{base:396, harmonics:[528,741],            filter:3500,reverb:0.5,gain:0.04,lfoRate:0.06,lfoDepth:5,label:'Celestial Tone'},
+    elements: {base:174, harmonics:[285,396,528],        filter:2200,reverb:0.7,gain:0.05,lfoRate:0.08,lfoDepth:7,label:'Elemental Field'},
+    research: {base:528, harmonics:[741,963],            filter:4000,reverb:0.3,gain:0.04,lfoRate:0.1, lfoDepth:5,label:'Discovery Frequency'},
+    heritage: {base:111, harmonics:[222,333],            filter:500,reverb:0.9,gain:0.04,lfoRate:0.05,lfoDepth:4,label:'Ancient Resonance'},
+    bloodline:{base:91.7,harmonics:[183.4,367.8],        filter:400,reverb:0.8,gain:0.04,lfoRate:0.05,lfoDepth:6,label:'Bloodline Pulse'},
+    prediction:{base:963,harmonics:[741,528],            filter:5000,reverb:0.4,gain:0.03,lfoRate:0.11,lfoDepth:3,label:'Oracle Frequency'},
+    city:     {base:40,  harmonics:[80,120,240],         filter:350,reverb:0.9,gain:0.05,lfoRate:0.03,lfoDepth:15,label:'City Infrastructure'},
+    compliance:{base:256,harmonics:[384,512],            filter:1800,reverb:0.3,gain:0.04,lfoRate:0.08,lfoDepth:4,label:'Order Frequency'},
+    cinema:   {base:60,  harmonics:[120,180,300],        filter:600,reverb:1.0,gain:0.06,lfoRate:0.05,lfoDepth:10,label:'Cinematic Score'},
+    universe: {base:32,  harmonics:[64,128,256,512],     filter:300,reverb:1.0,gain:0.05,lfoRate:0.04,lfoDepth:12,label:'Universe Resonance'},
+    'default':{base:91.7,harmonics:[183.4,274.1],        filter:700,reverb:0.5,gain:0.05,lfoRate:0.09,lfoDepth:8,label:'Sovereign Frequency'},
   };
 
-  var ctx=null, master=null, voices=[], started=false;
+  var ctx=null, masterGain=null, oscillators=[], started=false;
+  var muted=localStorage.getItem('omega_audio_muted')==='true';
 
-  function ensure(){ if(!ctx){ var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return false; ctx=new AC(); master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination); } return true; }
-
-  function buildVoices(actx, preset, dest){
-    var arr=[];
-    var lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=preset.cut; lp.connect(dest);
-    var trem=actx.createGain(); trem.gain.value=0.82; trem.connect(lp);
-    var lfo=actx.createOscillator(); var lg=actx.createGain(); lg.gain.value=0.16; lfo.frequency.value=preset.lfo; lfo.connect(lg); lg.connect(trem.gain); lfo.start(); arr.push(lfo);
-    preset.iv.forEach(function(semi){
-      var o=actx.createOscillator(); o.type=preset.type; o.frequency.value=preset.root*Math.pow(2,semi/12);
-      var d=(Math.random()*4-2); o.detune.value=d;
-      var g=actx.createGain(); g.gain.value=0.5/preset.iv.length;
-      o.connect(g); g.connect(trem); o.start(); arr.push(o);
+  function buildGraph(profile){
+    if(!ctx) return;
+    /* Master gain */
+    masterGain=ctx.createGain(); masterGain.gain.value=muted?0:profile.gain;
+    /* Reverb via convolver */
+    var conv=ctx.createConvolver();
+    (function(){
+      var len=ctx.sampleRate*profile.reverb*2;
+      var buf=ctx.createBuffer(2,len,ctx.sampleRate);
+      for(var c=0;c<2;c++){
+        var d=buf.getChannelData(c);
+        for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.5);
+      }
+      conv.buffer=buf;
+    })();
+    /* Filter */
+    var flt=ctx.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=profile.filter; flt.Q.value=0.5;
+    /* Chain: osc -> flt -> conv -> masterGain -> out */
+    flt.connect(conv); conv.connect(masterGain); masterGain.connect(ctx.destination);
+    /* LFO */
+    var lfo=ctx.createOscillator(); lfo.frequency.value=profile.lfoRate;
+    var lfoGain=ctx.createGain(); lfoGain.gain.value=profile.lfoDepth;
+    lfo.connect(lfoGain);
+    /* Base oscillator */
+    var osc0=ctx.createOscillator(); osc0.type='sine'; osc0.frequency.value=profile.base;
+    lfoGain.connect(osc0.frequency);
+    var og0=ctx.createGain(); og0.gain.value=0.5; osc0.connect(og0); og0.connect(flt);
+    oscillators.push(osc0); lfo.start();
+    /* Harmonic oscillators */
+    profile.harmonics.forEach(function(hz,i){
+      var osc=ctx.createOscillator(); osc.type=i%2===0?'sine':'triangle'; osc.frequency.value=hz;
+      var og=ctx.createGain(); og.gain.value=0.15/(i+1); osc.connect(og); og.connect(flt);
+      oscillators.push(osc);
     });
-    return arr;
+    /* Sub-bass pulse (the 9.17 signature) */
+    var sub=ctx.createOscillator(); sub.type='sine'; sub.frequency.value=9.17;
+    var subG=ctx.createGain(); subG.gain.value=0.08; sub.connect(subG); subG.connect(masterGain);
+    oscillators.push(sub);
+    oscillators.forEach(function(o){ o.start(); });
   }
 
-  function stopVoices(){ voices.forEach(function(n){ try{n.stop();}catch(e){} }); voices=[]; }
-
-  function play(){
-    if(!ensure()) return;
-    if(ctx.state==='suspended'){ ctx.resume(); }
-    stopVoices();
-    voices=buildVoices(ctx, TRACKS[state.idx], master);
-    started=true;
-    master.gain.cancelScheduledValues(ctx.currentTime);
-    master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
-    master.gain.linearRampToValueAtTime(state.vol*0.6, ctx.currentTime+1.5);
+  function start(){
+    if(started) return; started=true;
+    try{
+      ctx=new AudioContext();
+      var page=getPageContext();
+      var profile=PROFILES[page]||PROFILES['default'];
+      buildGraph(profile);
+      if(window.__omegaAudioLabel) window.__omegaAudioLabel(profile.label);
+    }catch(e){}
   }
+
   function stop(){
-    if(!ctx||!started) return;
-    master.gain.cancelScheduledValues(ctx.currentTime);
-    master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
-    master.gain.linearRampToValueAtTime(0, ctx.currentTime+1.0);
-    var v=voices.slice(); voices=[];
-    setTimeout(function(){ v.forEach(function(n){ try{n.stop();}catch(e){} }); },1100);
-    started=false;
+    oscillators.forEach(function(o){ try{ o.stop(); }catch(e){} });
+    oscillators=[];
+    if(ctx){ ctx.close(); ctx=null; }
+    started=false; masterGain=null;
   }
 
-  function setOn(on){ state.on=on; lss('omega_music_on',on?'1':'0'); if(on) play(); else stop(); render(); }
-  function setTrack(i){ state.idx=i; lss('omega_music_track',String(i)); if(state.on) play(); render(); }
-  function setVol(v){ state.vol=v; lss('omega_music_vol',String(v)); if(ctx&&started){ master.gain.cancelScheduledValues(ctx.currentTime); master.gain.linearRampToValueAtTime(v*0.6, ctx.currentTime+0.2); } }
-
-  /* ---- download (offline render -> WAV) ---- */
-  function bufToWav(buf){
-    var sr=buf.sampleRate, ch=buf.getChannelData(0), n=ch.length;
-    var ab=new ArrayBuffer(44+n*2), v=new DataView(ab), o=0;
-    function ws(s){ for(var i=0;i<s.length;i++) v.setUint8(o++,s.charCodeAt(i)); }
-    function u32(d){ v.setUint32(o,d,true); o+=4; } function u16(d){ v.setUint16(o,d,true); o+=2; }
-    ws('RIFF'); u32(36+n*2); ws('WAVE'); ws('fmt '); u32(16); u16(1); u16(1); u32(sr); u32(sr*2); u16(2); u16(16); ws('data'); u32(n*2);
-    for(var i=0;i<n;i++){ var s=Math.max(-1,Math.min(1,ch[i])); v.setInt16(o,s<0?s*0x8000:s*0x7FFF,true); o+=2; }
-    return new Blob([ab],{type:'audio/wav'});
-  }
-  function download(i){
-    var OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext; if(!OAC) return;
-    var sr=22050, sec=24, oc=new OAC(1, sr*sec, sr);
-    var m=oc.createGain(); m.gain.setValueAtTime(0,0); m.gain.linearRampToValueAtTime(0.5,2); m.gain.setValueAtTime(0.5,sec-2); m.gain.linearRampToValueAtTime(0,sec); m.connect(oc.destination);
-    buildVoices(oc, TRACKS[i], m);
-    oc.startRendering().then(function(b){
-      var url=URL.createObjectURL(bufToWav(b)); var a=document.createElement('a');
-      a.href=url; a.download='OMEGA_91717_'+TRACKS[i].n.replace(/[^A-Za-z0-9]+/g,'_')+'.wav';
-      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},2000);
-    }).catch(function(){});
+  function setMuted(m){
+    muted=m; localStorage.setItem('omega_audio_muted',m?'true':'false');
+    if(masterGain) masterGain.gain.setTargetAtTime(m?0:0.06,ctx?ctx.currentTime:0,0.3);
   }
 
-  /* ---- UI ---- */
-  var st=document.createElement('style');
-  st.textContent=''
-    +'#oaud{position:fixed;right:18px;bottom:18px;z-index:120;font-family:"Courier Prime",monospace}'
-    +'#oaud .knob{width:46px;height:46px;border-radius:50%;border:1px solid rgba(201,168,76,.5);background:rgba(10,10,17,.85);color:#C9A84C;font-family:"Cinzel Decorative",serif;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);box-shadow:0 0 16px rgba(201,168,76,.18)}'
-    +'#oaud .knob.on{color:#E2C86D;border-color:#C9A84C;box-shadow:0 0 22px rgba(201,168,76,.45)}'
-    +'#oaud .panel{position:absolute;right:0;bottom:58px;width:236px;background:rgba(10,10,17,.96);border:1px solid rgba(201,168,76,.3);padding:14px;display:none;backdrop-filter:blur(6px)}'
-    +'#oaud.open .panel{display:block}'
-    +'#oaud .ph{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:2px;color:#00E5FF;margin-bottom:10px}'
-    +'#oaud .sw{cursor:pointer;color:#C9A84C;border:1px solid rgba(201,168,76,.4);padding:3px 9px;font-size:9px;letter-spacing:1px}'
-    +'#oaud .sw.on{color:#07070b;background:#C9A84C}'
-    +'#oaud .vol{width:100%;margin:4px 0 12px}'
-    +'#oaud .list{max-height:210px;overflow-y:auto}'
-    +'#oaud .trk{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:6px 6px;font-size:11px;letter-spacing:1px;color:#e9e6dc;cursor:pointer;border-left:2px solid transparent}'
-    +'#oaud .trk:hover{background:rgba(201,168,76,.06);border-left-color:#C9A84C}'
-    +'#oaud .trk.sel{color:#C9A84C;border-left-color:#C9A84C}'
-    +'#oaud .trk .dl{color:#00E5FF;font-size:12px;padding:0 4px;opacity:.7}'
-    +'#oaud .trk .dl:hover{opacity:1;color:#C9A84C}'
-    +'#oaud .foot{font-size:8px;letter-spacing:1px;color:#85837b;margin-top:8px;text-align:center}';
-  document.head.appendChild(st);
-
-  var wrap=document.createElement('div'); wrap.id='oaud';
-  wrap.innerHTML='<button class="knob" id="oaknob" title="The Score">\u266A</button>'
-    +'<div class="panel"><div class="ph"><span>THE SCORE</span><span class="sw" id="oasw">OFF</span></div>'
-    +'<input class="vol" id="oavol" type="range" min="0" max="1" step="0.01">'
-    +'<div class="list" id="oalist"></div>'
-    +'<div class="foot">\u03A9 12 SOVEREIGN TRACKS · GENERATIVE</div></div>';
-  document.body.appendChild(wrap);
-
-  function render(){
-    document.getElementById('oaknob').classList.toggle('on',state.on);
-    var sw=document.getElementById('oasw'); sw.textContent=state.on?'ON':'OFF'; sw.classList.toggle('on',state.on);
-    document.getElementById('oavol').value=state.vol;
-    var lst=document.getElementById('oalist'); lst.innerHTML='';
-    TRACKS.forEach(function(t,i){
-      var row=document.createElement('div'); row.className='trk'+(i===state.idx?' sel':'');
-      row.innerHTML='<span class="nm">'+t.n+'</span><span class="dl" title="Download">\u2193</span>';
-      row.querySelector('.nm').addEventListener('click',function(){ setTrack(i); if(!state.on) setOn(true); });
-      row.querySelector('.dl').addEventListener('click',function(e){ e.stopPropagation(); download(i); });
-      lst.appendChild(row);
+  /* Inject audio control button */
+  function injectControl(){
+    if(document.getElementById('omega-audio-btn')) return;
+    var btn=document.createElement('button'); btn.id='omega-audio-btn';
+    btn.style.cssText='position:fixed;bottom:62px;left:18px;z-index:9995;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;padding:6px 12px;background:rgba(7,7,11,0.9);border:1px solid rgba(201,168,76,0.2);color:#85837b;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px';
+    btn.innerHTML='<span id="audio-icon">\u266A</span><span id="audio-lbl">SOUND</span>';
+    btn.title='Toggle ambient sound';
+    /* Start on first click (browser autoplay policy) */
+    btn.addEventListener('click',function(){
+      if(!started){ start(); setMuted(false); }
+      else { setMuted(!muted); }
+      update();
     });
+    document.body.appendChild(btn);
+    window.__omegaAudioLabel=function(lbl){
+      var el=document.getElementById('audio-lbl');
+      if(el) el.textContent=lbl||'SOUND';
+    };
+    update();
+    function update(){
+      var on=started&&!muted;
+      btn.style.borderColor=on?'rgba(201,168,76,0.5)':'rgba(201,168,76,0.15)';
+      btn.style.color=on?'#C9A84C':'#85837b';
+      document.getElementById('audio-icon').textContent=on?'\u266B':'\u266A';
+    }
   }
 
-  document.getElementById('oaknob').addEventListener('click',function(){ wrap.classList.toggle('open'); });
-  document.getElementById('oasw').addEventListener('click',function(e){ e.stopPropagation(); setOn(!state.on); });
-  document.getElementById('oavol').addEventListener('input',function(){ setVol(parseFloat(this.value)); });
-  render();
-
-  // autoplay policy: if saved ON, resume softly on first interaction
-  if(state.on){
-    var resume=function(){ if(state.on){ play(); } window.removeEventListener('pointerdown',resume); window.removeEventListener('keydown',resume); };
-    window.addEventListener('pointerdown',resume); window.addEventListener('keydown',resume);
-  }
+  /* Boot after page loads */
+  function boot(){ injectControl(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
 })();

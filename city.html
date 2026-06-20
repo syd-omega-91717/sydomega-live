@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; &#937; City &amp; Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--void:#07070b;--panel:#0d0d15;--panel-2:#11111c;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 30%,rgba(201,168,76,.07),transparent 55%),radial-gradient(circle at 90% 80%,rgba(0,229,255,.04),transparent 40%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px}
+.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px}
+.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,28px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.sechead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+/* City canvas */
+.city-canvas-wrap{border:1px solid var(--line);background:var(--panel);position:relative;overflow:hidden;height:300px;margin-bottom:24px}
+#city-canvas{width:100%;height:100%;display:block}
+.city-overlay{position:absolute;bottom:16px;left:16px;right:16px;display:flex;gap:12px;flex-wrap:wrap}
+.city-stat{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);border:1px solid var(--line);padding:5px 10px;background:rgba(7,7,11,.7)}
+.city-stat b{color:var(--gold)}
+
+/* District grid */
+.district-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.district-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:18px;position:relative;overflow:hidden}
+.district-card::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px}
+.district-card .d-zone{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.district-card .d-name{font-family:var(--display);font-size:15px;color:var(--solar);font-weight:700;margin-bottom:6px}
+.district-card .d-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.district-card .d-module{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan)}
+.district-card .d-nodes{font-family:var(--mono);font-size:9px;color:var(--gold);margin-top:4px}
+.district-card .d-status{font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:2px 6px;border:1px solid;display:inline-block;margin-top:8px}
+.s-concept{color:var(--muted);border-color:rgba(133,131,123,.3)}
+.s-blueprint{color:var(--solar);border-color:rgba(226,200,109,.4)}
+.s-active{color:var(--green);border-color:rgba(63,178,127,.4)}
+
+/* Infrastructure table */
+.infra-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+.infra-table th{font-size:8px;letter-spacing:3px;color:var(--muted);padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+.infra-table td{padding:10px 12px;border-bottom:1px dashed rgba(201,168,76,.07);color:var(--muted)}
+.infra-table td:first-child{color:var(--solar)}
+.infra-table td:last-child{color:var(--green)}
+
+/* Citizen register */
+.citizen-note{border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);padding:18px 20px;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8}
+.citizen-note b{color:var(--gold)}
+
+/* City map canvas */
+#city-map{display:block;width:100%;border:1px solid var(--line);background:var(--panel)}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="city"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">&#937; CITY &amp; INFRASTRUCTURE<small>SOVEREIGN SMART CITY &middot; MODULE 18 &middot; THE LIVING MATRIX</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">&#937; City is the physical manifestation of the sovereign matrix &mdash; a frequency-governed smart city where every building is a node, every district a module, and every citizen a sovereign. The 9.1717 Hz resonance powers the infrastructure. The 729 matrix governs the allocation of resources, governance, and growth. This is not a concept. This is the destination of the Order.</p>
+
+    <!-- LIVE CITY CANVAS -->
+    <div class="city-canvas-wrap">
+      <canvas id="city-canvas"></canvas>
+      <div class="city-overlay">
+        <div class="city-stat">TOTAL DISTRICTS: <b>9</b></div>
+        <div class="city-stat">MATRIX NODES: <b>729</b></div>
+        <div class="city-stat">FREQUENCY: <b>9.17 Hz</b></div>
+        <div class="city-stat">PHASE: <b>BLUEPRINT</b></div>
+        <div class="city-stat">CITIZEN TIER MIN: <b>SOVEREIGN (6)</b></div>
+      </div>
+    </div>
+
+    <div class="sechead">THE 9 SOVEREIGN DISTRICTS</div>
+    <div class="district-grid" id="district-grid"></div>
+
+    <div class="sechead">CITY INFRASTRUCTURE SYSTEMS</div>
+    <table class="infra-table">
+      <thead><tr><th>SYSTEM</th><th>TECHNOLOGY</th><th>MATRIX LINK</th><th>STATUS</th></tr></thead>
+      <tbody>
+        <tr><td>ENERGY GRID</td><td>Frequency resonance + renewable core</td><td>Fire + Space elements</td><td>BLUEPRINT</td></tr>
+        <tr><td>TRANSPORT</td><td>Autonomous pods mapped to gate levels</td><td>Wind element pathways</td><td>CONCEPT</td></tr>
+        <tr><td>GOVERNANCE</td><td>DAO-hybrid + sovereign council of 12</td><td>Authority formula voting</td><td>BLUEPRINT</td></tr>
+        <tr><td>COMMUNICATION</td><td>Sovereign mesh network, 9.17 Hz carrier</td><td>Wind + Space elements</td><td>CONCEPT</td></tr>
+        <tr><td>WATER SYSTEMS</td><td>Closed-loop purification, water element</td><td>Water element alignment</td><td>CONCEPT</td></tr>
+        <tr><td>HEALTH GRID</td><td>Biometric-linked wellness infrastructure</td><td>Ninth element (Life, Health)</td><td>CONCEPT</td></tr>
+        <tr><td>EDUCATION</td><td>Matrix-based academy embedded in city</td><td>Knowledge axis A</td><td>BLUEPRINT</td></tr>
+        <tr><td>ECONOMY</td><td>Omega token economy, marketplace</td><td>Mastery axis B</td><td>BLUEPRINT</td></tr>
+        <tr><td>CULTURE</td><td>Cinematic venue, heritage museum, NFT gallery</td><td>Contribution axis C</td><td>CONCEPT</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sechead">CITIZEN SOVEREIGN REGISTER</div>
+    <div class="citizen-note">
+      <b>CITIZENSHIP REQUIREMENTS:</b> Only members who have reached <b>Tier 6 &mdash; SOVEREIGN (Carbon)</b> or above are eligible for &#937; City citizenship. Citizenship grants: physical district access, governance voting rights, resource allocation priorities, and the <b>City Genesis NFT</b>.<br><br>
+      <b>CITY MATRIX LOGIC:</b> Every resident's matrix coordinates determine their district, their resource allocation, and their governance weight. A resident at (9,9,9) holds <b>FULL CITY AUTHORITY</b>. No external government overrides the frequency.<br><br>
+      <b>CURRENT PHASE:</b> Blueprint &mdash; City architecture defined, district systems mapped, infrastructure design complete. Physical realisation begins when Order membership reaches the <b>9,999 sovereign threshold</b>.
+    </div>
+
+    <div class="sechead">CITY GOVERNANCE COUNCIL</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center"><div style="font-family:var(--display);font-size:13px;color:var(--gold);margin-bottom:5px">THE ARCHITECT</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted)">Sovereign authority &middot; Owner</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center"><div style="font-family:var(--display);font-size:13px;color:var(--solar);margin-bottom:5px">12 GATE LORDS</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted)">One per sign faction</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center"><div style="font-family:var(--display);font-size:13px;color:var(--solar);margin-bottom:5px">DISTRICT COUNCILS</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted)">9 per sovereign district</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center"><div style="font-family:var(--display);font-size:13px;color:var(--cyan);margin-bottom:5px">AI SENTINEL</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted)">Security + audit layer</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center"><div style="font-family:var(--display);font-size:13px;color:var(--solar);margin-bottom:5px">CITIZEN ASSEMBLY</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted)">All Tier 6+ residents vote</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center"><div style="font-family:var(--display);font-size:13px;color:var(--gold);margin-bottom:5px">ORACLE AI</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted)">Prediction + allocation</div></div>
+    </div>
+  </main>
+</div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+var DISTRICTS=[
+  {zone:'DISTRICT 1',name:'THE GENESIS QUARTER',desc:'The origin point. The Omega core monument stands here. Every sovereign who reaches the (9,9,9) apex node receives a permanent residence deed in this district.',module:'M01 PLATFORM CORE',nodes:'81 APEX NODES',col:'#C9A84C',status:'blueprint'},
+  {zone:'DISTRICT 2',name:'THE INTELLIGENCE HUB',desc:'Home of the 12 AI agents, the data infrastructure, and the neural mesh that runs the city&apos;s cognitive layer. Built on wind and space elements.',module:'M05 AI COGNITION',nodes:'72 NODES',col:'#00E5FF',status:'concept'},
+  {zone:'DISTRICT 3',name:'THE ACADEMY CAMPUS',desc:'A sovereign university where all 12 disciplines are physically taught. The matrix engine is embedded in the walls. Learn here. Rise faster.',module:'M09 EDUCATION',nodes:'81 NODES',col:'#34C6E6',status:'blueprint'},
+  {zone:'DISTRICT 4',name:'THE MEDIA CITADEL',desc:'The cinematic and cultural heart. Nine theatres for the nine saga films. A heritage museum. An NFT gallery. The myth-verse rendered in stone.',module:'M08 MEDIA CENTER',nodes:'72 NODES',col:'#8B0000',status:'concept'},
+  {zone:'DISTRICT 5',name:'THE TRADING FLOOR',desc:'All commerce, marketplace, and economic activity concentrated in one sovereign district. The Merchant agent governs. No external exchange allowed.',module:'M12 INVESTMENT',nodes:'81 NODES',col:'#E2C86D',status:'blueprint'},
+  {zone:'DISTRICT 6',name:'THE HERITAGE ARCHIVE',desc:'A physical archive district where lineages are recorded in stone and code. Your family tree has a node in this district. Heritage is infrastructure.',module:'M11 FAMILY',nodes:'64 NODES',col:'#C9A84C',status:'concept'},
+  {zone:'DISTRICT 7',name:'THE WELLNESS DISTRICT',desc:'Every health and wellness facility aligned to the Ninth Element. Mind, heart, soul, body &mdash; each has a dedicated centre powered by the frequency.',module:'M13 HEALTH',nodes:'72 NODES',col:'#3fb27f',status:'concept'},
+  {zone:'DISTRICT 8',name:'THE GAME ARENA',desc:'The physical gaming universe. Nine arenas for nine game modes. Tournaments happen in real space. Matrix Mastery axis events are held here.',module:'M03 GAMING',nodes:'81 NODES',col:'#E86A3A',status:'concept'},
+  {zone:'DISTRICT 9',name:'THE VOID OBSERVATORY',desc:'The 9th district. Dedicated to the Space and Void elements. An observatory facing the cosmos. The nexus of the city&apos;s 9.17 Hz resonance.',module:'M18 CITY INFRA',nodes:'9 APEX NODES',col:'#9B6BF0',status:'concept'},
+];
+
+function renderDistricts(){
+  var grid=document.getElementById('district-grid');
+  grid.innerHTML='';
+  DISTRICTS.forEach(function(d){
+    var card=document.createElement('div');
+    card.className='district-card';
+    card.style.setProperty('--col',d.col);
+    card.querySelector && null;
+    card.innerHTML=
+      '<div class="d-zone">'+d.zone+'</div>'+
+      '<div class="d-name">'+d.name+'</div>'+
+      '<div class="d-desc">'+d.desc+'</div>'+
+      '<div class="d-module">'+d.module+'</div>'+
+      '<div class="d-nodes">'+d.nodes+'</div>'+
+      '<span class="d-status s-'+d.status+'">'+(d.status==='blueprint'?'BLUEPRINT':d.status==='active'?'ACTIVE':'CONCEPT')+'</span>';
+    card.style.borderLeftColor=d.col;
+    grid.appendChild(card);
+  });
+}
+
+/* City canvas animation */
+function drawCity(){
+  var cv=document.getElementById('city-canvas');
+  var W=cv.offsetWidth||600, H=cv.offsetHeight||300;
+  cv.width=W*2; cv.height=H*2;
+  var ctx=cv.getContext('2d');
+  ctx.scale(2,2);
+  var t=0;
+  var buildings=[];
+  for(var i=0;i<60;i++){
+    buildings.push({
+      x:Math.random()*W,h:20+Math.random()*120,
+      w:6+Math.random()*22,
+      col:Math.random()>0.7?'#C9A84C':Math.random()>0.5?'#00E5FF':'rgba(201,168,76,0.3)',
+      speed:0.0005+Math.random()*0.001
+    });
+  }
+  function frame(){
+    t+=0.005;
+    ctx.clearRect(0,0,W,H);
+    /* Sky gradient */
+    var sky=ctx.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0,'rgba(7,7,11,1)');
+    sky.addColorStop(1,'rgba(13,10,20,1)');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+    /* Stars */
+    for(var s=0;s<80;s++){
+      var sx=(Math.sin(s*7.3)*0.5+0.5)*W;
+      var sy=(Math.cos(s*5.7)*0.5+0.5)*H*0.5;
+      var br=0.2+0.6*Math.abs(Math.sin(t*2+s));
+      ctx.beginPath(); ctx.arc(sx,sy,0.8,0,Math.PI*2);
+      ctx.fillStyle='rgba(201,168,76,'+br.toFixed(2)+')'; ctx.fill();
+    }
+    /* Frequency ring */
+    ctx.save(); ctx.translate(W/2,H*0.4);
+    for(var r=0;r<3;r++){
+      ctx.save(); ctx.rotate(t*(r%2?-1:1)*0.3);
+      ctx.beginPath();
+      ctx.ellipse(0,0,W*(0.25+r*0.06),H*(0.1+r*0.03),0,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,'+(0.12-r*0.03)+')'; ctx.lineWidth=1; ctx.stroke();
+      ctx.restore();
+    }
+    /* Central omega node */
+    var pulse=0.85+0.15*Math.sin(t*2);
+    ctx.fillStyle='rgba(201,168,76,'+pulse+')';
+    ctx.font='700 28px "Cinzel Decorative",serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(201,168,76,0.8)'; ctx.shadowBlur=20;
+    ctx.fillText('\u03A9',0,0);
+    ctx.shadowBlur=0; ctx.restore();
+    /* Buildings */
+    buildings.sort(function(a,b){return a.h-b.h;});
+    buildings.forEach(function(b,i){
+      var bx=b.x, by=H, bh=b.h*(0.8+0.2*Math.sin(t*b.speed*100+i));
+      ctx.fillStyle=b.col.includes('rgba')?b.col:b.col+'33';
+      ctx.fillRect(bx-b.w/2,by-bh,b.w,bh);
+      /* Windows */
+      ctx.fillStyle=b.col.includes('rgba')?'rgba(201,168,76,0.6)':b.col+'bb';
+      for(var wy=by-bh+4;wy<by-4;wy+=10){
+        for(var wx=bx-b.w/2+2;wx<bx+b.w/2-2;wx+=5){
+          if(Math.random()>0.5) ctx.fillRect(wx,wy,2,3);
+        }
+      }
+      /* Roof glow */
+      var rg=ctx.createRadialGradient(bx,by-bh,0,bx,by-bh,20);
+      rg.addColorStop(0,b.col.includes('rgba')?'rgba(201,168,76,0.15)':b.col+'26');
+      rg.addColorStop(1,'transparent');
+      ctx.fillStyle=rg; ctx.fillRect(bx-20,by-bh-20,40,40);
+    });
+    /* Grid ground */
+    ctx.strokeStyle='rgba(201,168,76,0.06)'; ctx.lineWidth=0.5;
+    for(var gx=0;gx<W;gx+=36){ctx.beginPath();ctx.moveTo(gx,H*0.7);ctx.lineTo(gx+(H-H*0.7)*0.3,H);ctx.stroke();}
+    for(var gy=H*0.7;gy<H;gy+=18){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  renderDistricts();
+  drawCity();
+}
+boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script>
+</body>
+</html>

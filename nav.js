@@ -70,6 +70,7 @@
       ['kings','THE 28 KINGS','/kings.html'],
       ['matrix','THE LATTICE','/matrix.html'],
       ['triads','THE TWELVE TRIADS','/triads.html'],
+      ['character','CHARACTER SYSTEM','/character.html'],
       ['agents','AI AGENTS','/agents.html'],
       ['chatbot','CONCIERGE','/chatbot.html'],
       ['honors','HONORS','/honors.html'],

@@ -34,6 +34,7 @@
     horoscope:       ['ring',  12, '#C9A84C', '\u2609',  'THE WHEEL'],
     pantheons:       ['orbit', 4,  '#E2C86D', '\u232C',  'CROSS-PANTHEON'],
     factions:        ['poly',  6,  '#8B0000', '\u25C6',  'THE 12 FACTIONS'],
+    city:            ['orb',   9,  '#C9A84C', '\u03A9',  'OMEGA CITY'],
     elements:        ['rays',  5,  '#D9B86A', '\u2605',  'THE ELEMENTS'],
     academy:         ['arc',   9,  '#00E5FF', '\u2756',  'KNOWLEDGE ENGINE'],
     gaming:          ['poly',  8,  '#00E5FF', '\u2694',  'MASTERY ENGINE'],

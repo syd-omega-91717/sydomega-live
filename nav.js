@@ -44,6 +44,8 @@
       ['portfolio','INVESTMENT \u00B7 PORTFOLIO','/portfolio.html'],
       ['income','INCOME \u00B7 ALLOCATION','/income.html'],
       ['automation','AUTOMATION ENGINE','/automation.html'],
+      ['research','RESEARCH \u00B7 DISCOVERY','/research.html'],
+      ['exam','EXAM HALL','/exam.html'],
     ]},
     { label: 'COSMOS', items: [
       ['gates','THE TWELVE GATES','/gates.html'],
@@ -87,6 +89,7 @@
     ]},
     { label: 'THE ORDER', items: [
       ['family','FAMILY \u00B7 LINEAGE','/family.html'],
+      ['bloodline','BLOODLINE VAULT','/bloodline.html'],
       ['heritage','HERITAGE ARCHIVE','/heritage.html'],
       ['hall','HALL OF THE ORDER','/hall.html'],
       ['sovereigns','HALL OF SOVEREIGNS','/sovereigns.html'],
@@ -95,6 +98,8 @@
       ['city','&#937; CITY &amp; INFRASTRUCTURE','/city.html'],
     ]},
     { label: 'SYSTEM', items: [
+      ['grid','THE GRID \u00B7 INFRASTRUCTURE','/grid.html'],
+      ['compliance','GOVERNANCE \u00B7 COMPLIANCE','/compliance.html'],
       ['charter','CHARTER','/charter.html'],
       ['approvals','APPROVALS','/approvals.html'],
       ['public','PUBLIC SITE','/'],

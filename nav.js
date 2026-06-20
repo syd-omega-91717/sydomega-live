@@ -45,6 +45,7 @@
       ['income','INCOME \u00B7 ALLOCATION','/income.html'],
       ['automation','AUTOMATION ENGINE','/automation.html'],
       ['research','RESEARCH \u00B7 DISCOVERY','/research.html'],
+      ['prediction','GLOBAL PREDICTION','/prediction.html'],
       ['exam','EXAM HALL','/exam.html'],
     ]},
     { label: 'COSMOS', items: [
@@ -55,6 +56,7 @@
       ['agents','AI AGENTS','/agents.html'],
       ['chatbot','CONCIERGE','/chatbot.html'],
       ['honors','HONORS','/honors.html'],
+      ['trophies','TROPHY \u00B7 MEDAL VAULT','/trophies.html'],
     ]},
     { label: 'CELESTIAL', items: [
       ['horoscope','HOROSCOPE','/horoscope.html'],
@@ -71,6 +73,7 @@
       ['contracts','COMMISSIONS','/contracts.html'],
       ['media','MEDIA HUB','/media.html'],
       ['cinema','CINEMA \u00B7 SAGA','/cinema.html'],
+      ['universe','CREATIVE UNIVERSE','/universe.html'],
       ['news','NEWS \u00B7 WIRE','/news.html'],
       ['social','SOCIAL HUB','/social.html'],
       ['publishing','PUBLISHING','/publishing.html'],

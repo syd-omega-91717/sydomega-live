@@ -73,6 +73,9 @@
       ['social','SOCIAL HUB','/social.html'],
       ['publishing','PUBLISHING','/publishing.html'],
       ['marketing','MARKETING','/marketing.html'],
+      ['health','HEALTH \u00B7 WELLNESS','/health.html'],
+      ['events','EVENTS \u00B7 CONFERENCES','/events.html'],
+      ['travel','TRAVEL \u00B7 EXPERIENCES','/travel.html'],
     ]},
     { label: 'ECONOMY', items: [
       ['treasury','TREASURY','/treasury.html'],

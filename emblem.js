@@ -22,6 +22,8 @@
     ascension:       ['arc',   9,  '#C9A84C', '\u25B2',  'THE ASCENT'],
     intelligence:    ['ring',  3,  '#E2C86D', '\u25CF',  'ANALYTICS'],
     portfolio:       ['orbit', 6,  '#00E5FF', '\u263C',  'PORTFOLIO'],
+    income:          ['arc',   6,  '#C9A84C', '\u03A9',  'INCOME & ALLOCATION'],
+    portal:          ['orb',   3,  '#C9A84C', '\u03A9',  'SOVEREIGN PORTAL'],
     gates:           ['ring',  12, '#00E5FF', '\u2302',  'THE TWELVE GATES'],
     kings:           ['ring',  28, '#E2C86D', '\u265B',  'THE 28 KINGS'],
     matrix:          ['poly',  3,  '#00E5FF', '\u25C7',  'THE 729'],

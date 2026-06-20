@@ -171,11 +171,11 @@
     if(!sess){ showGate('Investment & Portfolio','Sign in to manage your holdings.'); return; }
     var uid=sess.user.id;
     var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c,membership_tier,nodes_earned,certificates_earned').eq('id',uid).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to see your portfolio.'); return; }
+    /* Note: proceed even without sign; sign-specific elements default gracefully */
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';
 
-    var sign=pr.data.sign, tier=Math.min(8,Math.max(0,pr.data.membership_tier||0));
+    var sign=pr.data.sign||'Virgo', tier=Math.min(8,Math.max(0,pr.data.membership_tier||0));
     var a=Number(pr.data.axis_a||1), b=Number(pr.data.axis_b||1), c=Number(pr.data.axis_c||1), auth=Math.sqrt(a*a+b*b+c*c);
     var nodes=Number(pr.data.nodes_earned||0), certs=Number(pr.data.certificates_earned||0);
     var omega=nodes*91.7+certs*917+auth*91.717;

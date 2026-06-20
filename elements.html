@@ -1,177 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — The Five Elements</title>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&#937; SYD OMEGA 91717 &mdash; The Nine Elements</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  :root{ --void:#07070b; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.08),transparent 50%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
-
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:74ch;margin:16px 0 4px;font-size:15px}
-  .intro b{color:var(--gold);font-weight:400}
-
-  .featured{margin:20px 0 8px;border:1px solid var(--ec);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);display:grid;grid-template-columns:280px 1fr;gap:0;overflow:hidden}
-  @media(max-width:680px){ .featured{grid-template-columns:1fr} }
-  .featured canvas{width:100%;height:220px;display:block;background:#08080d}
-  .featured .fb{padding:22px}
-  .featured .yt{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan)}
-  .featured .fn{font-family:var(--display);font-weight:900;font-size:34px;color:var(--ec);margin-top:6px;text-shadow:0 0 24px var(--ecsoft)}
-  .featured .fd{font-weight:300;color:#c4c1b6;font-size:14.5px;margin-top:10px;line-height:1.6}
-  .featured .fm{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);margin-top:12px}
-  .featured .fm b{color:var(--solar)}
-
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:26px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-  .els{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-  .el{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);overflow:hidden;transition:transform .15s,border-color .15s;border-top:3px solid var(--ec)}
-  .el:hover{transform:translateY(-3px);border-color:var(--ec)}
-  .el.mine{border-color:var(--cyan);box-shadow:0 0 18px rgba(0,229,255,.12)}
-  .el canvas{width:100%;height:120px;display:block;background:#08080d}
-  .el .eb{padding:14px}
-  .el .en{font-family:var(--display);font-weight:700;font-size:18px;color:var(--ec)}
-  .el .es{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);margin-top:6px;line-height:1.6}
-  .el .ed{font-weight:300;color:#b1aea4;font-size:12px;margin-top:9px;line-height:1.5}
-  .el .tag{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--void);background:var(--cyan);padding:2px 7px;display:inline-block;margin-top:8px}
-
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+:root{--void:#07070b;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px;max-width:1400px}
+.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:32px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.legend-strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px}
+.leg{font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:4px 10px;border:1px solid;border-radius:0}
+.sechead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:32px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.elements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-bottom:40px}
+.el-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:0;overflow:hidden;position:relative;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.el-card:hover{transform:translateY(-3px)}
+.el-card.mine{box-shadow:inset 0 0 0 1px rgba(0,229,255,.5)}
+.el-card.locked{opacity:.45;pointer-events:none}
+.el-canvas-wrap{width:100%;height:160px;position:relative}
+.el-canvas-wrap canvas{width:100%;height:100%;display:block}
+.el-body{padding:18px 20px 20px}
+.el-tier{font-family:var(--mono);font-size:8px;letter-spacing:3px;margin-bottom:8px}
+.el-name{font-family:var(--display);font-size:22px;font-weight:700;margin-bottom:4px}
+.el-sub{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+.el-desc{font-size:13px;font-weight:300;color:var(--ink);line-height:1.75;margin-bottom:14px}
+.el-signs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.el-sign{font-family:var(--mono);font-size:9px;letter-spacing:1px;padding:3px 8px;border:1px solid}
+.el-unlock{font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid;display:inline-block;margin-top:6px}
+.el-facets{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:10px}
+.el-facet{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);padding:5px 8px;border:1px solid rgba(201,168,76,.1);background:rgba(201,168,76,.02)}
+.mine-badge{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:3px 8px;color:var(--void);background:var(--cyan);z-index:2}
+.apex-ring{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.apex-tag{font-family:var(--mono);font-size:8px;letter-spacing:1px;padding:5px 6px;text-align:center;border:1px solid rgba(201,168,76,.3);color:var(--gold)}
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}.elements-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
-  <h2 id="gate-h">The Five Elements</h2>
-  <p id="gate-p">Sign in to enter the Elements.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="elements"></aside>
+<main class="main">
+<div class="topbar">
+  <div class="t">THE NINE ELEMENTS<small>ELEMENTAL SOVEREIGNTY &middot; EVOLUTION LAYERS</small></div>
+</div>
+<p style="font-weight:300;color:var(--muted);max-width:72ch;margin-bottom:20px;font-size:15px;line-height:1.7">Five elements govern the physical world through your birth sign. Four transcendent elements unlock as your authority ascends through the matrix. All nine are alive in you &mdash; only the higher ones require awakening.</p>
+
+<div class="legend-strip" id="legend-strip">
+  <div class="leg" style="color:#E86A3A;border-color:rgba(232,106,58,.4)">FIRE &middot; PHYSICAL</div>
+  <div class="leg" style="color:#34C6E6;border-color:rgba(52,198,230,.4)">WATER &middot; PHYSICAL</div>
+  <div class="leg" style="color:#A9C2D8;border-color:rgba(169,194,216,.4)">WIND &middot; PHYSICAL</div>
+  <div class="leg" style="color:#C7CDD6;border-color:rgba(199,205,214,.4)">METAL &middot; PHYSICAL</div>
+  <div class="leg" style="color:#D9B86A;border-color:rgba(217,184,106,.4)">SAND &middot; PHYSICAL</div>
+  <div class="leg" style="color:#E8E8FF;border-color:rgba(232,232,255,.4)">SOUL &middot; TRANSCENDENT</div>
+  <div class="leg" style="color:#9B6BF0;border-color:rgba(155,107,240,.4)">SPACE &middot; TRANSCENDENT</div>
+  <div class="leg" style="color:#7B00FF;border-color:rgba(123,0,255,.4)">VOID &middot; TRANSCENDENT</div>
+  <div class="leg" style="color:#C9A84C;border-color:rgba(201,168,76,.5)">THE ALL &middot; APEX</div>
 </div>
 
-<div class="shell" id="app">
-  <aside class="side" id="omega-side" data-page="elements"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">THE FIVE ELEMENTS<small>FIRE · WATER · WIND · METAL · SAND</small></div></div>
-    <p class="intro">Five elements temper the twelve. <b>Fire, Water, and Wind</b> each claim three signs; <b>Metal</b> claims two; <b>Sand</b> claims one alone — Virgo — and stands as the <b>universal amplifier</b>, the ground from which the others rise. Your element colours your ascent and leans your triad. Yours burns below.</p>
+<div class="sechead">THE FIVE PHYSICAL ELEMENTS &middot; BIRTH-ASSIGNED</div>
+<div class="elements-grid" id="physical-grid"></div>
 
-    <div class="featured" id="featured"></div>
+<div class="sechead">THE FOUR TRANSCENDENT ELEMENTS &middot; AUTHORITY-UNLOCKED</div>
+<div class="elements-grid" id="transcendent-grid"></div>
 
-    <div class="sechead">THE FIVE</div>
-    <div class="els" id="els"></div>
-  </main>
+<div id="omega-trial-bar-placeholder"></div>
+</main>
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const GLY={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  // name, color, soft, type, signs[], olympians[], lean, lore
-  const EL=[
-    ['Fire','#E86A3A','rgba(232,106,58,.25)','fire',['Aries','Leo','Sagittarius'],['Athena','Zeus','Artemis'],'Mastery','The will that acts. Fire leans toward Mastery \u2014 the trial met head-on, the bold demonstration of what one can do.'],
-    ['Water','#34C6E6','rgba(52,198,230,.25)','water',['Cancer','Scorpio','Pisces'],['Hermes','Ares','Poseidon'],'Contribution','The depth that flows. Water leans toward Contribution \u2014 what is given, carried to others, and remembered.'],
-    ['Wind','#A9C2D8','rgba(169,194,216,.25)','wind',['Gemini','Libra','Aquarius'],['Apollo','Hephaestus','Hera'],'Knowledge','The mind that moves. Wind leans toward Knowledge \u2014 the word, the idea, the swift signal that travels.'],
-    ['Metal','#C7CDD6','rgba(199,205,214,.25)','metal',['Taurus','Capricorn'],['Aphrodite','Hestia'],'Endurance','The structure that endures. Metal tempers and stores \u2014 the discipline that holds value across time.'],
-    ['Sand','#D9B86A','rgba(217,184,106,.30)','sand',['Virgo'],['Demeter'],'Amplifier','The foundation and the amplifier. Sand is the one and the all \u2014 the ground the others rise from, and the verifier of the ledger.']
-  ];
+const SIGN_EL = {
+  'Aries':'fire','Leo':'fire','Sagittarius':'fire',
+  'Cancer':'water','Scorpio':'water','Pisces':'water',
+  'Gemini':'wind','Libra':'wind','Aquarius':'wind',
+  'Taurus':'metal','Capricorn':'metal',
+  'Virgo':'sand'
+};
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+const ELEMENTS = [
+  {
+    id:'fire', tier:'PHYSICAL', name:'FIRE', sub:'THE FORCE OF ACTION',
+    col:'#E86A3A', signs:['Aries','Leo','Sagittarius'], unlock:null,
+    desc:'Fire is the primal surge &mdash; the will to act, to lead, to war and to create. It burns through resistance and forges destiny in the crucible of motion.',
+    facets:['Leadership','Passion','Courage','Destruction','Rebirth','Ambition'],
+    motif:'fire'
+  },
+  {
+    id:'water', tier:'PHYSICAL', name:'WATER', sub:'THE FORCE OF DEPTH',
+    col:'#34C6E6', signs:['Cancer','Scorpio','Pisces'], unlock:null,
+    desc:'Water is the ancient intelligence &mdash; emotion, memory, intuition, and the hidden currents that shape all living things from beneath.',
+    facets:['Intuition','Memory','Empathy','Mystery','Healing','Transformation'],
+    motif:'water'
+  },
+  {
+    id:'wind', tier:'PHYSICAL', name:'WIND', sub:'THE FORCE OF THOUGHT',
+    col:'#A9C2D8', signs:['Gemini','Libra','Aquarius'], unlock:null,
+    desc:'Wind is the invisible architect &mdash; communication, intellect, freedom, and the connective breath that carries meaning between minds.',
+    facets:['Intellect','Communication','Freedom','Curiosity','Balance','Innovation'],
+    motif:'wind'
+  },
+  {
+    id:'metal', tier:'PHYSICAL', name:'METAL', sub:'THE FORCE OF ENDURANCE',
+    col:'#C7CDD6', signs:['Taurus','Capricorn'], unlock:null,
+    desc:'Metal is the sovereign foundation &mdash; discipline, structure, patience, wealth, and the unbreakable will to outlast every force that opposes it.',
+    facets:['Discipline','Wealth','Structure','Patience','Loyalty','Permanence'],
+    motif:'metal'
+  },
+  {
+    id:'sand', tier:'PHYSICAL &middot; UNIVERSAL AMPLIFIER', name:'SAND', sub:'THE FORCE OF REFINEMENT',
+    col:'#D9B86A', signs:['Virgo'], unlock:null,
+    desc:'Sand is the sovereign amplifier &mdash; precision, mastery of detail, service, and the sacred ability to refine any force into perfection. Virgo alone carries this element. It multiplies all others.',
+    facets:['Precision','Mastery','Service','Analysis','Refinement','Amplification'],
+    motif:'sand'
+  },
+  {
+    id:'soul', tier:'TRANSCENDENT &middot; SIXTH ELEMENT', name:'SOUL', sub:'THE FORCE OF ESSENCE',
+    col:'#E8E8FF', signs:[], unlock:5.20,
+    desc:'Soul is the luminous self beyond body and sign. It is the essence that persists through lives, carries the memory of all past forms, and connects the mortal to the infinite. Unlocked when authority surpasses the threshold of 5.20.',
+    facets:['Essence','Memory across lives','Inner light','Spiritual will','Sacred purpose','Beyond-body awareness'],
+    motif:'soul'
+  },
+  {
+    id:'space', tier:'TRANSCENDENT &middot; SEVENTH ELEMENT', name:'SPACE', sub:'THE FORCE OF EXPANSION',
+    col:'#9B6BF0', signs:[], unlock:9.17,
+    desc:'Space is the infinite container &mdash; the silent expanse that holds all stars, all worlds, all possibilities. At resonance frequency 9.17, the sovereign begins to operate beyond terrestrial limits. The cosmos becomes a field of action.',
+    facets:['Infinity','Stars','Potential','Silence','Cosmic law','Multidimensional awareness'],
+    motif:'space'
+  },
+  {
+    id:'void', tier:'TRANSCENDENT &middot; EIGHTH ELEMENT', name:'VOID', sub:'THE FORCE OF THE PRIMORDIAL',
+    col:'#7B00FF', signs:[], unlock:12.72,
+    desc:'Void is not emptiness &mdash; it is the absolute state before creation. The source from which all elements emerge. To hold the Void is to hold creation itself as a tool. Only sovereigns near apex authority can bear this element without dissolution.',
+    facets:['Primordial source','Pre-creation state','Absolute silence','Infinite potential','Black genesis','Dissolution and rebirth'],
+    motif:'void'
+  },
+  {
+    id:'all', tier:'APEX &middot; NINTH ELEMENT', name:'THE ALL', sub:'&#937; THE COMPLETE FORCE',
+    col:'#C9A84C', signs:[], unlock:15.58,
+    desc:'The All is the convergence of all eight elements into a single sovereign field. It encompasses every dimension of existence: the physical, the transcendent, and the experiential. Only one who has reached the Apex threshold of 15.58 may claim it.',
+    facets:['Religion','Character','Mind','Heart','Birth','Death','Life','Family','Friends','Work'],
+    motif:'all'
+  }
+];
 
-  var anim=[];
-  function mk(cv,type,color){ var ctx=cv.getContext('2d'); var dpr=Math.min(devicePixelRatio||1,2); cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx.scale(dpr,dpr); var o={ctx:ctx,W:cv.clientWidth,H:cv.clientHeight,type:type,color:color,p:[]}; seed(o); anim.push(o); return o; }
-  function rgba(c,a){ var n=parseInt(c.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
-  function seed(o){ var i; if(o.type==='fire'){ for(i=0;i<46;i++) o.p.push({x:Math.random()*o.W,y:o.H+Math.random()*o.H,vy:0.5+Math.random()*1.3,r:1+Math.random()*2.6,l:Math.random()}); }
-    else if(o.type==='sand'){ for(i=0;i<60;i++) o.p.push({x:Math.random()*o.W,y:Math.random()*o.H,vy:0.3+Math.random()*0.8,vx:(Math.random()-0.5)*0.3,r:0.6+Math.random()*1.4}); }
-    else if(o.type==='wind'){ for(i=0;i<14;i++) o.p.push({a:Math.random()*6.28,rad:14+Math.random()*40,sp:0.004+Math.random()*0.01,len:0.5+Math.random()*1.4,y:Math.random()*o.H}); } }
+function drawElementCanvas(canvas, motif, col, authority, unlockAt) {
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var locked = unlockAt && authority < unlockAt;
+  var t = 0;
 
-  function render(o,t){
-    var x=o.ctx,W=o.W,H=o.H; x.clearRect(0,0,W,H);
-    if(o.type==='fire'){
-      var g=x.createLinearGradient(0,H,0,0); g.addColorStop(0,rgba(o.color,0.16)); g.addColorStop(1,'rgba(0,0,0,0)'); x.fillStyle=g; x.fillRect(0,0,W,H);
-      for(var i=0;i<o.p.length;i++){ var p=o.p[i]; if(!reduce){ p.y-=p.vy; p.x+=Math.sin((p.y+t*40)*0.05)*0.4; if(p.y<-4){ p.y=H+4; p.x=Math.random()*W; } }
-        var fade=p.y/H; x.beginPath(); x.fillStyle=rgba(o.color,0.5*fade+0.1); x.shadowColor=o.color; x.shadowBlur=8; x.arc(p.x,p.y,p.r*(fade+0.3),0,7); x.fill(); }
-      x.shadowBlur=0;
-    } else if(o.type==='water'){
-      for(var w=0;w<3;w++){ x.beginPath(); var yo=H*0.4+w*H*0.18, amp=6+w*3, ph=t*1.2+w; 
-        for(var xx=0;xx<=W;xx+=4){ var yy=yo+Math.sin(xx*0.04+ph)*amp; if(xx===0)x.moveTo(xx,yy);else x.lineTo(xx,yy); }
-        x.lineTo(W,H); x.lineTo(0,H); x.closePath(); x.fillStyle=rgba(o.color,0.10-w*0.02); x.fill();
-        x.beginPath(); for(var xx2=0;xx2<=W;xx2+=4){ var yy2=yo+Math.sin(xx2*0.04+ph)*amp; if(xx2===0)x.moveTo(xx2,yy2);else x.lineTo(xx2,yy2); } x.strokeStyle=rgba(o.color,0.4-w*0.1); x.lineWidth=1.2; x.stroke(); }
-    } else if(o.type==='wind'){
-      var cx=W/2,cy=H/2; for(var i=0;i<o.p.length;i++){ var p=o.p[i]; if(!reduce)p.a+=p.sp;
-        x.beginPath(); for(var s=0;s<18;s++){ var aa=p.a+s*0.12*p.len; var rr=p.rad+s*2.4; var px=cx+Math.cos(aa)*rr, py=cy+Math.sin(aa)*rr*0.5; if(s===0)x.moveTo(px,py);else x.lineTo(px,py); }
-        x.strokeStyle=rgba(o.color,0.28); x.lineWidth=1.1; x.stroke(); }
-    } else if(o.type==='metal'){
-      var cx=W/2,cy=H/2,R=Math.min(W,H)*0.3; x.save(); x.translate(cx,cy); x.rotate(reduce?0:t*0.5);
-      for(var k=0;k<2;k++){ x.beginPath(); var rr=R*(k?0.6:1); for(var i=0;i<6;i++){ var a=i*Math.PI/3; var px=Math.cos(a)*rr, py=Math.sin(a)*rr; if(i===0)x.moveTo(px,py);else x.lineTo(px,py);} x.closePath(); x.strokeStyle=rgba(o.color,0.5-k*0.2); x.lineWidth=1.4; x.stroke(); }
-      x.restore();
-      var sweep=(t*0.4)%1; var gx=x.createLinearGradient(0,0,W,0); gx.addColorStop(Math.max(0,sweep-0.1),'rgba(255,255,255,0)'); gx.addColorStop(sweep,rgba(o.color,0.18)); gx.addColorStop(Math.min(1,sweep+0.1),'rgba(255,255,255,0)'); x.fillStyle=gx; x.fillRect(0,0,W,H);
-    } else if(o.type==='sand'){
-      for(var i=0;i<o.p.length;i++){ var p=o.p[i]; if(!reduce){ p.y+=p.vy; p.x+=p.vx; if(p.y>H+2){ p.y=-2; p.x=Math.random()*W; } if(p.x<0)p.x=W; if(p.x>W)p.x=0; }
-        x.beginPath(); x.fillStyle=rgba(o.color,0.5); x.shadowColor=o.color; x.shadowBlur=4; x.arc(p.x,p.y,p.r,0,7); x.fill(); }
-      x.shadowBlur=0;
+  function hex(c,a){
+    if(c.startsWith('#')){
+      var n=parseInt(c.slice(1),16);
+      return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+    }
+    return c;
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    if(locked){
+      ctx.fillStyle='rgba(7,7,11,0.85)';ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='rgba(201,168,76,0.25)';ctx.font='12px "Courier Prime",monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('AUTHORITY '+(unlockAt)+' REQUIRED',W/2,H/2);
+      return;
+    }
+    var cx=W/2,cy=H/2;
+    if(motif==='fire'){
+      for(var i=0;i<18;i++){
+        var x=cx+(Math.random()-0.5)*W*0.8,y=H;
+        var h2=60+Math.random()*80,w2=8+Math.random()*12;
+        var g=ctx.createLinearGradient(x,y,x,y-h2);
+        g.addColorStop(0,hex(col,0.7));g.addColorStop(0.6,hex(col,0.3));g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;ctx.beginPath();
+        ctx.ellipse(x+Math.sin(t+i)*4,y-h2/2,w2/2,h2/2,0,0,Math.PI*2);ctx.fill();
+      }
+    } else if(motif==='water'){
+      for(var w=0;w<3;w++){
+        ctx.beginPath();
+        for(var x2=0;x2<=W;x2+=4){
+          var y2=cy+(w-1)*22+Math.sin(x2*0.025+t+w*1.2)*18;
+          x2===0?ctx.moveTo(x2,y2):ctx.lineTo(x2,y2);
+        }
+        ctx.strokeStyle=hex(col,0.35-w*0.08);ctx.lineWidth=2+w;ctx.stroke();
+      }
+      for(var b=0;b<6;b++){
+        var bx=(t*15+b*55)%W,by=H-20-b*18;
+        ctx.beginPath();ctx.arc(bx,by,2+b,0,Math.PI*2);
+        ctx.strokeStyle=hex(col,0.4);ctx.lineWidth=1;ctx.stroke();
+      }
+    } else if(motif==='wind'){
+      for(var s=0;s<5;s++){
+        ctx.beginPath();
+        for(var x3=0;x3<=W;x3+=3){
+          var y3=20+s*28+Math.sin(x3*0.018+t*(0.8+s*0.15)+s)*14;
+          x3===0?ctx.moveTo(x3,y3):ctx.lineTo(x3,y3);
+        }
+        ctx.strokeStyle=hex(col,0.2+s*0.06);ctx.lineWidth=1;ctx.stroke();
+      }
+    } else if(motif==='metal'){
+      for(var r=0;r<5;r++){
+        var ang=t*0.3+r*(Math.PI*2/5);
+        var rx=cx+Math.cos(ang)*50,ry=cy+Math.sin(ang)*30;
+        ctx.beginPath();ctx.arc(rx,ry,4,0,Math.PI*2);
+        ctx.fillStyle=hex(col,0.6+0.3*Math.sin(t+r));ctx.fill();
+      }
+      ctx.beginPath();ctx.rect(cx-60,cy-30,120,60);
+      ctx.strokeStyle=hex(col,0.15);ctx.lineWidth=1;ctx.stroke();
+    } else if(motif==='sand'){
+      for(var d=0;d<40;d++){
+        var dx=((t*8+d*37)%W),dy=cy-20+Math.sin(t*0.5+d)*30;
+        ctx.beginPath();ctx.arc(dx,dy,1.2+Math.sin(t+d),0,Math.PI*2);
+        ctx.fillStyle=hex(col,0.4+0.3*Math.random());ctx.fill();
+      }
+    } else if(motif==='soul'){
+      var g=ctx.createRadialGradient(cx,cy,0,cx,cy,80+Math.sin(t*0.8)*15);
+      g.addColorStop(0,hex(col,0.5));g.addColorStop(0.4,hex(col,0.15));g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(cx,cy,90,60,0,0,Math.PI*2);ctx.fill();
+      for(var sp=0;sp<12;sp++){
+        var sa=t*0.4+sp*(Math.PI*2/12);
+        ctx.beginPath();ctx.arc(cx+Math.cos(sa)*55,cy+Math.sin(sa)*35,2,0,Math.PI*2);
+        ctx.fillStyle=hex(col,0.7);ctx.fill();
+      }
+    } else if(motif==='space'){
+      for(var st=0;st<30;st++){
+        var sx=((st*73+t*2)%W),sy=((st*47+t*1.3)%H);
+        var ss=0.5+Math.sin(t*2+st)*0.8;
+        ctx.beginPath();ctx.arc(sx,sy,ss,0,Math.PI*2);
+        ctx.fillStyle=hex(col,0.7);ctx.fill();
+      }
+      var g2=ctx.createRadialGradient(cx,cy,0,cx,cy,70);
+      g2.addColorStop(0,hex(col,0.3));g2.addColorStop(1,'transparent');
+      ctx.fillStyle=g2;ctx.beginPath();ctx.ellipse(cx,cy,70,70,0,0,Math.PI*2);ctx.fill();
+    } else if(motif==='void'){
+      ctx.fillStyle='rgba(13,0,20,0.6)';ctx.fillRect(0,0,W,H);
+      var gv=ctx.createRadialGradient(cx+Math.cos(t*0.3)*20,cy+Math.sin(t*0.4)*15,0,cx,cy,90);
+      gv.addColorStop(0,'rgba(123,0,255,0.5)');gv.addColorStop(0.5,'rgba(60,0,120,0.2)');gv.addColorStop(1,'transparent');
+      ctx.fillStyle=gv;ctx.fillRect(0,0,W,H);
+    } else {
+      // THE ALL &mdash; all colors rotating
+      var cols=['#E86A3A','#34C6E6','#A9C2D8','#C7CDD6','#D9B86A','#E8E8FF','#9B6BF0','#7B00FF','#C9A84C'];
+      for(var ci=0;ci<cols.length;ci++){
+        var ca=t*0.5+ci*(Math.PI*2/cols.length);
+        var cr=50+Math.sin(t+ci*0.7)*15;
+        var gci=ctx.createRadialGradient(cx+Math.cos(ca)*cr,cy+Math.sin(ca)*cr,0,cx,cy,80);
+        gci.addColorStop(0,hex(cols[ci],0.35));gci.addColorStop(1,'transparent');
+        ctx.fillStyle=gci;ctx.fillRect(0,0,W,H);
+      }
+      ctx.fillStyle='rgba(201,168,76,0.7)';ctx.font='bold 22px "Cinzel Decorative"';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('\u03A9',cx,cy);
+    }
+    t+=0.018;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  var mySign='', myAuth=1.73;
+  if(sess){
+    var pr=(await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle()).data;
+    if(pr){
+      mySign=pr.sign||'';
+      var a=parseFloat(pr.axis_a||1),b=parseFloat(pr.axis_b||1),c=parseFloat(pr.axis_c||1);
+      myAuth=Math.sqrt(a*a+b*b+c*c);
     }
   }
-  function loop(){ var t=performance.now()/1000; for(var i=0;i<anim.length;i++) render(anim[i],t); if(!reduce) requestAnimationFrame(loop); }
 
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('The Five Elements','Sign in to enter the Elements.'); return; }
-    var pr=await supabase.from('profiles').select('sign,element').eq('id',sess.user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to enter the Elements.'); return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
+  function buildGrid(containerId, els){
+    var grid=document.getElementById(containerId);
+    grid.innerHTML='';
+    els.forEach(function(el){
+      var isMine = SIGN_EL[mySign]===el.id || (el.id==='all' && myAuth>=15.58) || (el.id==='void' && myAuth>=12.72) || (el.id==='space' && myAuth>=9.17) || (el.id==='soul' && myAuth>=5.20);
+      var isLocked = el.unlock && myAuth < el.unlock;
+      var card=document.createElement('div');
+      card.className='el-card'+(isMine?' mine':'')+(isLocked?' locked':'');
+      card.style.borderColor=isLocked?'rgba(201,168,76,0.08)':(isMine?'rgba(0,229,255,0.4)':'var(--line)');
 
-    var myEl=pr.data.element;
-    var me=EL.find(function(e){return e[0]===myEl;}) || EL[0];
+      if(isMine && !isLocked) card.innerHTML='<div class="mine-badge">YOURS</div>';
 
-    // featured
-    var f=document.getElementById('featured'); f.style.setProperty('--ec',me[1]); f.style.setProperty('--ecsoft',me[2]);
-    f.innerHTML='<canvas id="fcanvas"></canvas><div class="fb"><div class="yt">YOUR ELEMENT</div><div class="fn">'+me[0]+'</div><div class="fd">'+me[7]+'</div>'+
-      '<div class="fm">SIGNS <b>'+me[4].map(function(s){return (GLY[s]||'')+' '+s;}).join('  ')+'</b><br>LEANS TOWARD <b>'+me[6]+'</b> \u00B7 OLYMPIANS <b>'+me[5].join(', ')+'</b></div></div>';
-    var fc=document.getElementById('fcanvas'); fc.style.width='100%'; fc.style.height='220px'; mk(fc,me[3],me[1]);
+      var wrap=document.createElement('div');wrap.className='el-canvas-wrap';
+      var cv=document.createElement('canvas');cv.width=640;cv.height=320;
+      wrap.appendChild(cv);card.appendChild(wrap);
 
-    // grid
-    var box=document.getElementById('els'); box.innerHTML='';
-    EL.forEach(function(e){
-      var mine=e[0]===myEl;
-      var card=document.createElement('div'); card.className='el'+(mine?' mine':''); card.style.setProperty('--ec',e[1]);
-      var cv=document.createElement('canvas');
-      card.appendChild(cv);
-      card.insertAdjacentHTML('beforeend','<div class="eb"><div class="en">'+e[0]+'</div><div class="es">'+e[4].map(function(s){return GLY[s]||'';}).join(' ')+' \u00B7 '+e[4].length+' SIGN'+(e[4].length>1?'S':'')+' \u00B7 '+e[6].toUpperCase()+'</div><div class="ed">'+e[7]+'</div>'+(mine?'<div class="tag">YOUR ELEMENT</div>':'')+'</div>');
-      box.appendChild(card);
-      cv.style.width='100%'; cv.style.height='120px'; mk(cv,e[3],e[1]);
+      var body=document.createElement('div');body.className='el-body';
+      body.innerHTML='<div class="el-tier" style="color:'+el.col+'">'+el.tier+'</div>'+
+        '<div class="el-name" style="color:'+el.col+'">'+el.name+'</div>'+
+        '<div class="el-sub">'+el.sub+'</div>'+
+        '<div class="el-desc">'+el.desc+'</div>';
+
+      if(el.signs.length){
+        var sigHtml='<div class="el-signs">';
+        el.signs.forEach(function(s){ sigHtml+='<div class="el-sign" style="color:'+el.col+';border-color:'+el.col+'44">'+s+'</div>'; });
+        sigHtml+='</div>';
+        body.innerHTML+=sigHtml;
+      }
+      if(el.unlock){
+        var met=myAuth>=el.unlock;
+        body.innerHTML+='<div class="el-unlock" style="color:'+(met?el.col:'var(--muted)')+';border-color:'+(met?el.col+'66':'rgba(201,168,76,.15)')+'">'+
+          (met?'UNLOCKED &mdash; AUTHORITY '+myAuth.toFixed(2):'UNLOCK AT AUTHORITY '+el.unlock)+
+          '</div>';
+      }
+
+      if(el.id==='all'){
+        body.innerHTML+='<div class="apex-ring">';
+        el.facets.forEach(function(f){ body.innerHTML+='<div class="apex-tag">'+f+'</div>'; });
+        body.innerHTML+='</div>';
+      } else {
+        var facetHtml='<div class="el-facets">';
+        el.facets.forEach(function(f){ facetHtml+='<div class="el-facet">'+f+'</div>'; });
+        facetHtml+='</div>';
+        body.innerHTML+=facetHtml;
+      }
+
+      card.appendChild(body);
+      grid.appendChild(card);
+      drawElementCanvas(cv, el.motif, el.col, myAuth, el.unlock);
     });
-
-    loop();
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+
+  buildGrid('physical-grid', ELEMENTS.slice(0,5));
+  buildGrid('transcendent-grid', ELEMENTS.slice(5));
+}
+boot();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script>
+<script src="/nav.js"></script><script src="/bg.js"></script>
 </body>
 </html>

@@ -53,6 +53,7 @@
     { label: 'IDENTITY', items: [
       ['profile','PROFILE','/profile.html'],
       ['passport','SOVEREIGN PASSPORT','/passport.html'],
+      ['kyc','IDENTITY VERIFICATION','/kyc.html'],
       ['settings','SETTINGS','/settings.html'],
     ]},
     { label: 'ASCEND', items: [

@@ -52,6 +52,8 @@
     sovereigns:      ['arc',   9,  '#E2C86D', '\u265A',  'HALL OF SOVEREIGNS'],
     family:          ['orbit', 3,  '#C9A84C', '\u2665',  'LINEAGE'],
     settings:        ['ring',  4,  '#8B0000', '\u2699',  'SYSTEM SETTINGS'],
+    automation:      ['rays',  9,  '#00E5FF', '\u21D2',  'AUTOMATION ENGINE'],
+    heritage:        ['arc',   5,  '#C9A84C', '\u22D4',  'HERITAGE ARCHIVE'],
     sigil:           ['poly',  6,  '#C9A84C', '\u25C6',  'YOUR SIGIL']
   };
 

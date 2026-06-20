@@ -3,19 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Awaiting Approval</title>
+<title>&#937; SYD OMEGA 91717 &mdash; Awaiting Approval</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  :root{ --void:#07070b; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
+  :root{ --void:#07070b; --panel:#0d0d15; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
   body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.10),transparent 46%)}
   .wrap{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-  .panel{width:100%;max-width:460px;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:40px 32px;text-align:center}
-  .g{font-family:var(--display);font-size:56px;color:var(--gold);text-shadow:0 0 30px rgba(201,168,76,.4)}
-  h1{font-family:var(--display);font-weight:700;color:var(--gold);font-size:24px;letter-spacing:1px;margin:12px 0 4px}
+  .panel{width:100%;max-width:480px;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:40px 32px;text-align:center}
+
+  /* Default (pending) state */
+  .g{font-family:var(--display);font-size:56px;color:var(--gold);text-shadow:0 0 30px rgba(201,168,76,.4);transition:color .4s}
+  h1{font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:1px;margin:12px 0 4px;color:var(--gold)}
   .sub{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:22px}
   p.lead{font-weight:300;color:var(--ink);font-size:15px;line-height:1.75;margin-bottom:10px}
   p.lead b{color:var(--gold);font-weight:400}
@@ -27,35 +29,63 @@
   .ghost{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--cyan);background:transparent;border:1px solid var(--line);padding:13px 20px;cursor:pointer}
   .ghost:hover{border-color:var(--gold);color:var(--gold)}
   .msg{font-family:var(--mono);font-size:11px;letter-spacing:1px;min-height:14px;margin-top:14px;color:var(--cyan)}
+
+  /* TRIAL EXPIRED state overlay */
+  #expired-block{display:none}
+  .exp-icon{font-family:var(--display);font-size:52px;color:var(--crimson);text-shadow:0 0 28px rgba(139,0,0,.6)}
+  .exp-title{font-family:var(--display);font-weight:700;font-size:22px;color:var(--crimson);letter-spacing:2px;margin:12px 0 6px}
+  .exp-sub{font-family:var(--mono);font-size:9px;letter-spacing:4px;color:rgba(139,0,0,.7);margin-bottom:22px}
+  .exp-box{border:1px solid rgba(139,0,0,.4);background:rgba(139,0,0,.08);padding:18px 20px;margin:18px 0;text-align:left}
+  .exp-box .row-item{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);padding:6px 0;border-bottom:1px dashed rgba(201,168,76,.1);display:flex;align-items:center;gap:10px}
+  .exp-box .row-item:last-child{border-bottom:none}
+  .exp-box .row-item .icon{color:var(--crimson);width:14px}
+  .exp-note{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;margin:12px 0}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="panel">
-    <div class="g">Ω</div>
-    <h1>AWAITING APPROVAL</h1>
-    <div class="sub">SYD OMEGA 91717 · SOVEREIGN ADMISSION</div>
-    <p class="lead">Your request to enter the Order has been recorded. <b>Access is granted only by the Architect.</b> You will be admitted once your request is approved.</p>
-    <div class="who" id="who"></div>
-    <p class="lead" style="color:var(--muted);font-size:13px">No part of the platform is active until you are approved. You may close this page and return later.</p>
-    <div class="row">
-      <button class="btn" id="recheck">CHECK STATUS</button>
-      <button class="ghost" id="out">SIGN OUT</button>
+
+    <!-- === DEFAULT: AWAITING APPROVAL === -->
+    <div id="pending-block">
+      <div class="g">&#937;</div>
+      <h1>AWAITING APPROVAL</h1>
+      <div class="sub">SYD OMEGA 91717 &middot; SOVEREIGN ADMISSION</div>
+      <p class="lead">Your request to enter the Order has been recorded. <b>Access is granted only by the Architect.</b> You will be admitted once your request is approved.</p>
+      <div class="who" id="who"></div>
+      <p class="lead" style="color:var(--muted);font-size:13px">No part of the platform is active until you are approved. You may close this page and return later.</p>
+      <div class="row">
+        <button class="btn" id="recheck">CHECK STATUS</button>
+        <button class="ghost" id="out">SIGN OUT</button>
+      </div>
+      <div class="msg" id="msg"></div>
     </div>
-    <div class="msg" id="msg"></div>
+
+    <!-- === TRIAL EXPIRED STATE === -->
+    <div id="expired-block">
+      <div class="exp-icon">&#937;</div>
+      <div class="exp-title">TRIAL SESSION ENDED</div>
+      <div class="exp-sub">SYD OMEGA 91717 &middot; 9.1717 MINUTE LIMIT REACHED</div>
+      <div class="exp-box">
+        <div class="row-item"><span class="icon">&#x2715;</span><span>TRIAL DURATION ELAPSED &mdash; 9.1717 MINUTES</span></div>
+        <div class="row-item"><span class="icon">&#x21BA;</span><span>MATRIX COORDINATES RESET TO GENESIS STATE</span></div>
+        <div class="row-item"><span class="icon">&#x21BA;</span><span>ALL SESSION PROGRESS CLEARED</span></div>
+        <div class="row-item"><span class="icon">&#x25A1;</span><span>ACCESS REVOKED &mdash; PENDING NEW AUTHORISATION</span></div>
+      </div>
+      <p class="exp-note">This was a timed trial session. Your progress within the session has been reset. To receive access again, contact the Architect for re-authorisation.</p>
+      <div class="row">
+        <button class="ghost" id="exp-out">SIGN OUT</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- EmailJS SDK (free email-from-browser; safe to leave even if unused) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  /* ====================================================================
-     EMAIL NOTICE — paste your 3 values from emailjs.com here (see steps).
-     Leave them as-is and nothing breaks; you simply get no email yet.
-     ==================================================================== */
   const EMAILJS_PUBLIC_KEY  = "PASTE_PUBLIC_KEY";
   const EMAILJS_SERVICE_ID  = "PASTE_SERVICE_ID";
   const EMAILJS_TEMPLATE_ID = "PASTE_TEMPLATE_ID";
@@ -63,41 +93,52 @@
   function notifyOwner(email, when, sign){
     try{
       if(!window.emailjs) return;
-      if(!EMAILJS_PUBLIC_KEY || EMAILJS_PUBLIC_KEY.indexOf('PASTE')!==-1) return;
+      if(EMAILJS_PUBLIC_KEY.indexOf('PASTE')!==-1) return;
       window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-      window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        user_email: email, requested_at: when, sign: sign
-      }).catch(function(){});
+      window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { user_email:email, requested_at:when, sign:sign }).catch(function(){});
     }catch(e){}
   }
 
-  async function check(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ window.location.href='/account.html'; return; }
-    var user=sess.user;
-    var prof=(await supabase.from('profiles').select('access_approved,access_requested_at,display_name,sign').eq('id',user.id).maybeSingle()).data;
-    if(prof && prof.access_approved===true){ window.location.replace('/dashboard.html'); return; }
+  /* ---- Check if this is a trial-expired redirect ---- */
+  var params=new URLSearchParams(location.search);
+  if(params.get('t')==='expired'){
+    document.getElementById('pending-block').style.display='none';
+    document.getElementById('expired-block').style.display='block';
+    document.getElementById('exp-out') && document.getElementById('exp-out').addEventListener('click',async function(){
+      await sb.auth.signOut(); window.location.href='/account.html';
+    });
+    /* bg.js still loads for aurora; done here */
+  } else {
 
-    var isNew=(!prof || !prof.access_requested_at);
-    var when=(prof&&prof.access_requested_at)?prof.access_requested_at:new Date().toISOString();
-    var patch={id:user.id, email:user.email};
-    if(isNew){ patch.access_requested_at=when; }
-    await supabase.from('profiles').upsert(patch);
+    /* ---- Standard pending flow ---- */
+    async function check(){
+      var sess=(await sb.auth.getSession()).data.session;
+      if(!sess){ window.location.href='/account.html'; return; }
+      var user=sess.user;
+      var prof=(await sb.from('profiles').select('access_approved,access_requested_at,display_name,sign').eq('id',user.id).maybeSingle()).data;
+      if(prof && prof.access_approved===true){ window.location.replace('/dashboard.html'); return; }
 
-    if(isNew){ notifyOwner(user.email, new Date(when).toLocaleString(), (prof&&prof.sign)||'—'); }
+      var isNew=(!prof||!prof.access_requested_at);
+      var when=(prof&&prof.access_requested_at)?prof.access_requested_at:new Date().toISOString();
+      var patch={id:user.id, email:user.email};
+      if(isNew){ patch.access_requested_at=when; }
+      await sb.from('profiles').upsert(patch);
+      if(isNew){ notifyOwner(user.email, new Date(when).toLocaleString(), (prof&&prof.sign)||'--'); }
 
-    document.getElementById('who').innerHTML='ACCOUNT — <b>'+user.email+'</b><br>REQUESTED — <b>'+new Date(when).toLocaleString()+'</b><br>STATUS — <b style="color:var(--crimson)">PENDING APPROVAL</b>';
+      document.getElementById('who').innerHTML='ACCOUNT &mdash; <b>'+user.email+'</b><br>REQUESTED &mdash; <b>'+new Date(when).toLocaleString()+'</b><br>STATUS &mdash; <b style="color:var(--crimson)">PENDING APPROVAL</b>';
+    }
+
+    document.getElementById('recheck').addEventListener('click',async function(){
+      var msg=document.getElementById('msg'); msg.style.color='var(--cyan)'; msg.textContent='Checking...';
+      var sess=(await sb.auth.getSession()).data.session;
+      if(!sess){ window.location.href='/account.html'; return; }
+      var prof=(await sb.from('profiles').select('access_approved').eq('id',sess.user.id).maybeSingle()).data;
+      if(prof&&prof.access_approved===true){ window.location.replace('/dashboard.html'); }
+      else { msg.style.color='var(--muted)'; msg.textContent='Still pending. The Architect has not yet approved your access.'; }
+    });
+    document.getElementById('out').addEventListener('click',async function(){ await sb.auth.signOut(); window.location.href='/account.html'; });
+    check();
   }
-  document.getElementById('recheck').addEventListener('click',async function(){
-    var msg=document.getElementById('msg'); msg.style.color='var(--cyan)'; msg.textContent='Checking…';
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ window.location.href='/account.html'; return; }
-    var prof=(await supabase.from('profiles').select('access_approved').eq('id',sess.user.id).maybeSingle()).data;
-    if(prof && prof.access_approved===true){ window.location.replace('/dashboard.html'); }
-    else { msg.style.color='var(--muted)'; msg.textContent='Still pending. The Architect has not yet approved your access.'; }
-  });
-  document.getElementById('out').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  check();
 </script>
 <script src="/bg.js"></script>
 </body>

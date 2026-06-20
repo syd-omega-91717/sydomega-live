@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Automation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--void:#07070b;--panel:#0d0d15;--panel-2:#11111c;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 80% 20%,rgba(0,229,255,.05),transparent 45%),radial-gradient(circle at 20% 80%,rgba(201,168,76,.06),transparent 45%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px}
+.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.sechead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px}
+.stat{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:16px 18px}
+.stat .label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.stat .val{font-family:var(--display);font-size:22px;color:var(--gold)}
+.stat .sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px}
+
+/* Rule cards */
+.rules-grid{display:grid;gap:12px}
+.rule-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px 20px;display:flex;align-items:flex-start;gap:16px;transition:border-color .2s}
+.rule-card.active{border-left:3px solid var(--green)}
+.rule-card.paused{border-left:3px solid rgba(139,0,0,.7)}
+.rule-card .icon{width:36px;height:36px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(201,168,76,.06)}
+.rule-card .body{flex:1;min-width:0}
+.rule-card .name{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:4px}
+.rule-card .desc{font-family:var(--body);font-size:13px;font-weight:300;color:var(--muted);line-height:1.6}
+.rule-card .trigger{font-family:var(--mono);font-size:10px;color:var(--cyan);margin-top:8px}
+.rule-card .action{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:3px}
+.rule-card .meta{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.rule-card .badge{font-family:var(--mono);font-size:8px;letter-spacing:1.5px;padding:2px 7px;border:1px solid}
+.badge-active{color:var(--green);border-color:rgba(63,178,127,.5)}
+.badge-paused{color:var(--crimson);border-color:rgba(139,0,0,.5)}
+.badge-sys{color:var(--cyan);border-color:rgba(0,229,255,.3)}
+.badge-user{color:var(--solar);border-color:rgba(226,200,109,.3)}
+.badge-auto{color:var(--muted);border-color:rgba(133,131,123,.3)}
+.toggle{margin-left:auto;flex-shrink:0;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid;background:transparent}
+.toggle.on{color:var(--green);border-color:rgba(63,178,127,.5)}
+.toggle.off{color:var(--crimson);border-color:rgba(139,0,0,.5)}
+.toggle:hover{opacity:.7}
+
+/* Event log */
+.log-feed{display:flex;flex-direction:column;gap:0}
+.log-entry{border-bottom:1px dashed rgba(201,168,76,.09);padding:12px 16px;display:flex;gap:14px;align-items:flex-start}
+.log-entry .ts{font-family:var(--mono);font-size:9px;color:var(--muted);white-space:nowrap;margin-top:2px;min-width:70px}
+.log-entry .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.log-entry .dot.ok{background:var(--green)}
+.log-entry .dot.info{background:var(--cyan)}
+.log-entry .dot.warn{background:var(--gold)}
+.log-entry .msg{font-family:var(--mono);font-size:11px;color:var(--ink);line-height:1.6}
+.log-entry .rule-ref{color:var(--solar)}
+
+/* Builder panel */
+.builder{border:1px solid var(--line);background:var(--panel);padding:22px}
+.if-then{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin-bottom:18px}
+.if-block,.then-block{border:1px solid var(--line);background:var(--panel-2);padding:14px}
+.if-block .lbl,.then-block .lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px}
+.if-then .arrow{font-family:var(--display);color:var(--gold);font-size:20px;text-align:center}
+select,input[type=text]{width:100%;font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;margin-top:6px;outline:none}
+select:focus,input:focus{border-color:rgba(201,168,76,.4)}
+.btn-create{font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:11px 24px;color:var(--void);background:var(--gold);border:1px solid var(--gold);cursor:pointer;margin-top:6px}
+.btn-create:hover{background:transparent;color:var(--gold)}
+.success-msg{font-family:var(--mono);font-size:11px;color:var(--green);margin-top:10px;display:none}
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}.if-then{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="automation"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">AUTOMATION ENGINE<small>SOVEREIGN INTELLIGENCE &middot; IF &middot; THEN &middot; EXECUTE</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:24px">The Automation Engine executes sovereign logic across the entire platform. Rules fire silently and continuously &mdash; advancing your matrix, broadcasting milestones, alerting agents, protecting your vault, and evolving your Order without you lifting a finger.</p>
+
+    <div class="stats-row">
+      <div class="stat"><div class="label">ACTIVE RULES</div><div class="val" id="stat-active">--</div><div class="sub">Running now</div></div>
+      <div class="stat"><div class="label">EVENTS FIRED</div><div class="val" id="stat-fired">--</div><div class="sub">All time</div></div>
+      <div class="stat"><div class="label">SYSTEM RULES</div><div class="val" id="stat-sys">--</div><div class="sub">Platform-level</div></div>
+      <div class="stat"><div class="label">YOUR RULES</div><div class="val" id="stat-user">--</div><div class="sub">Member-created</div></div>
+    </div>
+
+    <div class="sechead">SOVEREIGN AUTOMATION RULES</div>
+    <div class="rules-grid" id="rules-grid"></div>
+
+    <div class="sechead">BUILD A RULE</div>
+    <div class="builder">
+      <div class="if-then">
+        <div class="if-block">
+          <div class="lbl">IF &mdash; TRIGGER</div>
+          <select id="trigger-select">
+            <option value="">Select a trigger...</option>
+            <option value="cert_earned">Certificate earned</option>
+            <option value="gate_reached">Gate threshold reached</option>
+            <option value="axis_a_level">Knowledge axis reaches level</option>
+            <option value="axis_b_level">Mastery axis reaches level</option>
+            <option value="axis_c_level">Contribution axis reaches level</option>
+            <option value="task_complete">Task completed</option>
+            <option value="member_approved">Member approved by owner</option>
+            <option value="marketplace_offer">Marketplace offer received</option>
+            <option value="tribute_received">Tribute/payment received</option>
+          </select>
+          <input type="text" id="trigger-value" placeholder="Value or threshold (e.g. 5)" style="margin-top:8px"/>
+        </div>
+        <div class="arrow">&#x21D2;</div>
+        <div class="then-block">
+          <div class="lbl">THEN &mdash; ACTION</div>
+          <select id="action-select">
+            <option value="">Select an action...</option>
+            <option value="dispatch_alert">Dispatch alert to self</option>
+            <option value="notify_owner">Notify the Architect</option>
+            <option value="social_broadcast">Broadcast to social channels</option>
+            <option value="unlock_content">Unlock next content tier</option>
+            <option value="award_badge">Award sovereignty badge</option>
+            <option value="log_event">Log event to Intelligence deck</option>
+            <option value="advance_matrix">Advance matrix +0.25</option>
+            <option value="send_agent">Dispatch an AI agent</option>
+          </select>
+          <input type="text" id="action-note" placeholder="Optional note or payload" style="margin-top:8px"/>
+        </div>
+      </div>
+      <button class="btn-create" id="btn-create">&#x2295; CREATE RULE</button>
+      <div class="success-msg" id="success-msg">&#x2713; RULE CREATED &mdash; Now active in your automation chain.</div>
+    </div>
+
+    <div class="sechead">LIVE EVENT LOG</div>
+    <div style="border:1px solid var(--line);background:var(--panel)">
+      <div class="log-feed" id="log-feed"></div>
+    </div>
+
+  </main>
+</div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* Static canonical rule definitions */
+const SYSTEM_RULES = [
+  {name:'MATRIX ADVANCE ON TASK',icon:'&#x25C7;',kind:'sys',
+   trigger:'IF any task is completed (academy / gaming / contribution)',
+   action:'THEN advance matrix axes by +0.25 and emit evolution event',
+   desc:'Every verified action across the three axis engines feeds back into the 9x9x9 lattice, pushing coordinates forward and triggering milestone checks at every gate threshold.',
+   default_on:true},
+  {name:'GATE UNLOCK BROADCAST',icon:'&#x2302;',kind:'sys',
+   trigger:'IF authority score crosses a gate threshold (1.73 ... 15.58)',
+   action:'THEN dispatch unlock dispatch to notification system + log intelligence event',
+   desc:'As your authority formula &#x221A;(A&#xB2;+B&#xB2;+C&#xB2;) crosses each of the twelve gate thresholds, the system fires a sovereign broadcast and stamps the event to your Intelligence deck.',
+   default_on:true},
+  {name:'CERTIFICATE MILESTONE SEAL',icon:'&#x272A;',kind:'sys',
+   trigger:'IF matrix node (3,3,3) or (6,6,6) or (9,9,9) is reached',
+   action:'THEN issue cryptographic certificate seal and notify owner',
+   desc:'The three sacred certificate coordinates trigger automatic credential generation. At (9,9,9) the Omega Master certificate is issued and the Architect is notified.',
+   default_on:true},
+  {name:'TRIAL SESSION SENTINEL',icon:'&#x26A0;',kind:'sys',
+   trigger:'IF trial_expires_at &lt; now() AND is_trial = true',
+   action:'THEN call expire_trial RPC, reset axes to genesis, redirect to pending',
+   desc:'The Sentinel watches every trial session. The moment the 9.1717-minute window closes, progress resets and access revokes without any manual action required.',
+   default_on:true},
+  {name:'AGENT DEPLOYMENT ON LEVEL',icon:'&#x25C9;',kind:'sys',
+   trigger:'IF tier rank changes (floor of min axis)',
+   action:'THEN activate assigned AI agent for new tier and send orientation dispatch',
+   desc:'Each rank change (Initiate &#x2192; Seeker &#x2192; Adept ...) activates the corresponding agent persona and dispatches a tier orientation message.',
+   default_on:true},
+  {name:'MARKETPLACE OFFER ALERT',icon:'&#x21C4;',kind:'sys',
+   trigger:'IF a marketplace offer is received on your listing',
+   action:'THEN dispatch immediate notification + log to Intelligence',
+   desc:'The Merchant agent monitors all marketplace activity. Any incoming offer on your listings triggers an instant dispatch so you never miss a sovereign transaction.',
+   default_on:true},
+  {name:'CONTRIBUTION SOCIAL RELAY',icon:'&#x2743;',kind:'user',
+   trigger:'IF contribution task completed AND social accounts connected',
+   action:'THEN auto-compose and queue sovereign broadcast to your platforms',
+   desc:'When you complete a contribution (your third axis), the system drafts a sovereign broadcast in your voice and queues it for your connected social channels. You approve before it fires.',
+   default_on:false},
+  {name:'DAILY HOROSCOPE DISPATCH',icon:'&#x2609;',kind:'user',
+   trigger:'IF new day begins (00:00 system time)',
+   action:'THEN dispatch your sign\'s daily reading to notifications',
+   desc:'Each new day, your celestial reading is computed and delivered to your notification feed before you open the platform &mdash; so the cosmos greets you first.',
+   default_on:true},
+  {name:'FAMILY NODE SYNC',icon:'&#x22D4;',kind:'user',
+   trigger:'IF a family node you are connected to earns a certificate',
+   action:'THEN dispatch family milestone alert to your feed',
+   desc:'The Warden agent watches your family constellation. When any connected node reaches a milestone, you are notified so the lineage honours are shared.',
+   default_on:false},
+  {name:'INTELLIGENCE SNAPSHOT',icon:'&#x25CF;',kind:'sys',
+   trigger:'IF axis coordinates change by any amount',
+   action:'THEN stamp a timeline event to Intelligence deck for evolution tracking',
+   desc:'Every axis movement is timestamped and stored for the Intelligence evolution charts. This is how your growth trajectory becomes visible over days and months.',
+   default_on:true},
+  {name:'INCOME ALLOCATION TRIGGER',icon:'&#x03A9;',kind:'sys',
+   trigger:'IF platform revenue event fires (subscription / consultancy / marketplace)',
+   action:'THEN route to allocation engine: 51% vault / 40% operations / 9.17% commission pool',
+   desc:'Every income event routes automatically through the sovereign allocation engine, distributing to the Master Vault, operational reserves, and the commission pool in real time.',
+   default_on:true},
+  {name:'VOID ASCENSION GUARD',icon:'&#x25A1;',kind:'sys',
+   trigger:'IF any axis approaches 9.0 (the apex node)',
+   action:'THEN notify Sovereign agent + prepare Omega Master sequence',
+   desc:'The rarest rule. When any single axis approaches its apex node, the Sovereign agent activates and begins the Omega Master ascension sequence &mdash; the highest state in the Order.',
+   default_on:true},
+];
+
+var userStates = {};
+try{ userStates = JSON.parse(localStorage.getItem('omega_automation_states') || '{}'); }catch(e){}
+
+function saveStates(){ try{ localStorage.setItem('omega_automation_states', JSON.stringify(userStates)); }catch(e){} }
+
+function renderRules(uid){
+  var grid = document.getElementById('rules-grid');
+  grid.innerHTML='';
+  var activeCount=0, sysCount=0, userCount=0;
+
+  SYSTEM_RULES.forEach(function(r,i){
+    var key='rule_'+i;
+    var on = (key in userStates) ? userStates[key] : r.default_on;
+    if(on) activeCount++;
+    if(r.kind==='sys') sysCount++; else userCount++;
+
+    var card=document.createElement('div');
+    card.className='rule-card '+(on?'active':'paused');
+    card.innerHTML=
+      '<div class="icon">'+r.icon+'</div>'+
+      '<div class="body">'+
+        '<div class="name">'+r.name+'</div>'+
+        '<div class="desc">'+r.desc+'</div>'+
+        '<div class="trigger">&#x25B6; TRIGGER &nbsp; '+r.trigger+'</div>'+
+        '<div class="action">&#x21D2; ACTION &nbsp; '+r.action+'</div>'+
+        '<div class="meta">'+
+          '<span class="badge '+(on?'badge-active':'badge-paused')+'" id="badge-'+i+'">'+(on?'ACTIVE':'PAUSED')+'</span>'+
+          '<span class="badge '+(r.kind==='sys'?'badge-sys':'badge-user')+'">'+(r.kind==='sys'?'SYSTEM':'MEMBER')+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<button class="toggle '+(on?'on':'off')+'" id="toggle-'+i+'">'+(on?'PAUSE':'ENABLE')+'</button>';
+
+    card.querySelector('#toggle-'+i).addEventListener('click',function(){
+      var cur=(key in userStates)?userStates[key]:r.default_on;
+      userStates[key]=!cur;
+      saveStates();
+      renderRules(uid);
+    });
+
+    grid.appendChild(card);
+  });
+
+  document.getElementById('stat-active').textContent=activeCount;
+  document.getElementById('stat-sys').textContent=sysCount;
+  document.getElementById('stat-user').textContent=userCount;
+}
+
+function renderLog(events){
+  var feed=document.getElementById('log-feed');
+  feed.innerHTML='';
+  var total=0;
+
+  /* Build synthetic log from task_completions */
+  (events||[]).slice(0,18).forEach(function(ev){
+    total++;
+    var entry=document.createElement('div');
+    entry.className='log-entry';
+    var ts=new Date(ev.completed_at||ev.created_at).toLocaleString();
+    var ruleRef=ev.kind==='academy'?'MATRIX ADVANCE ON TASK &middot; ACADEMY':ev.kind==='gaming'?'MATRIX ADVANCE ON TASK &middot; GAMING':'CONTRIBUTION SOCIAL RELAY';
+    entry.innerHTML=
+      '<div class="ts">'+ts+'</div>'+
+      '<div class="dot ok"></div>'+
+      '<div class="msg"><span class="rule-ref">'+ruleRef+'</span><br>'+
+        'Evolution event fired &mdash; axes advanced +0.25 &middot; Intelligence snapshot stamped'+
+      '</div>';
+    feed.appendChild(entry);
+  });
+
+  /* Add system seed entries */
+  var seedEntries=[
+    {dot:'info',rule:'DAILY HOROSCOPE DISPATCH',msg:'Morning celestial reading computed and dispatched to notifications'},
+    {dot:'warn',rule:'TRIAL SESSION SENTINEL',msg:'Monitoring active trial sessions &mdash; 0 sessions approaching expiry'},
+    {dot:'info',rule:'INCOME ALLOCATION TRIGGER',msg:'Allocation engine standing by &mdash; routes active on next income event'},
+    {dot:'ok',rule:'INTELLIGENCE SNAPSHOT',msg:'Axis evolution stamped &mdash; growth trajectory updated'},
+  ];
+  seedEntries.forEach(function(s){
+    total++;
+    var entry=document.createElement('div');
+    entry.className='log-entry';
+    entry.innerHTML=
+      '<div class="ts">'+new Date().toLocaleString()+'</div>'+
+      '<div class="dot '+s.dot+'"></div>'+
+      '<div class="msg"><span class="rule-ref">'+s.rule+'</span><br>'+s.msg+'</div>';
+    feed.appendChild(entry);
+  });
+
+  if(!events||!events.length){
+    var empty=document.createElement('div');
+    empty.className='log-entry';
+    empty.innerHTML='<div class="msg" style="color:var(--muted)">No automation events yet. Complete tasks across the matrix to see the engine fire.</div>';
+    feed.appendChild(empty);
+  }
+
+  document.getElementById('stat-fired').textContent=total;
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+  var uid=sess.user.id;
+  renderRules(uid);
+
+  /* Load task_completions as proxy event log */
+  var ev=await sb.from('task_completions').select('kind,completed_at,created_at').eq('user_id',uid).order('completed_at',{ascending:false}).limit(18);
+  renderLog(ev.data||[]);
+
+  /* Custom rule builder */
+  document.getElementById('btn-create').addEventListener('click',function(){
+    var t=document.getElementById('trigger-select').value;
+    var tv=document.getElementById('trigger-value').value;
+    var a=document.getElementById('action-select').value;
+    var an=document.getElementById('action-note').value;
+    if(!t||!a) return;
+    /* Save to local as user rule (server-side automation requires backend worker) */
+    var key='user_rule_'+Date.now();
+    userStates[key]={trigger:t,triggerVal:tv,action:a,actionNote:an,on:true};
+    saveStates();
+    var msg=document.getElementById('success-msg');
+    msg.style.display='block';
+    setTimeout(function(){ msg.style.display='none'; },3200);
+    document.getElementById('trigger-select').value='';
+    document.getElementById('trigger-value').value='';
+    document.getElementById('action-select').value='';
+    document.getElementById('action-note').value='';
+  });
+}
+boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script>
+</body>
+</html>

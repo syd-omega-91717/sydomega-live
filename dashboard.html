@@ -480,7 +480,7 @@ async function boot(){
   document.getElementById('k-balance').textContent='\u03A9 '+(xp).toLocaleString();
   document.getElementById('k-assets').textContent='$'+(xp*0.917).toLocaleString();
   document.getElementById('k-pos').textContent='('+a.toFixed(1)+','+b.toFixed(1)+','+c.toFixed(1)+')';
-  document.getElementById('wb-greet').textContent='WELCOME BACK, '+name.toUpperCase()+' \uD83D\uDC51';
+  document.getElementById('wb-greet').textContent='WELCOME BACK, '+name.toUpperCase();
 
   /* Matrix viz */
   requestAnimationFrame(()=>drawMatrixHex(a,b,c));

@@ -32,7 +32,7 @@
     {key:'command', icon:'\u2316', label:'COMMAND',     href:'/dashboard.html',   col:'#C9A84C', sub:[
       ['dashboard','DASHBOARD','/dashboard.html'],['beacon','THE BEACON','/beacon.html'],
       ['search','SEARCH','/search.html'],['notifications','ALERTS','/notifications.html']]},
-    {key:'identity',icon:'\u25C8', label:'IDENTITY',    href:'/profile.html',     col:'#00E5FF', sub:[
+    {key:'identity',icon:'\u25C8', label:'IDENTITY',    href:'/identity.html',   col:'#00E5FF', sub:[
       ['profile','PROFILE','/profile.html'],['passport','PASSPORT','/passport.html'],
       ['kyc','KYC VERIFICATION','/kyc.html'],['character','CHARACTER','/character.html'],
       ['settings','SETTINGS','/settings.html']]},
@@ -40,14 +40,14 @@
       ['ascension','ASCENSION MAP','/ascension.html'],['matrix','THE 729 MATRIX','/matrix.html'],
       ['academy','ACADEMY','/academy.html'],['gaming','GAMING ARENA','/gaming.html'],
       ['trophies','TROPHY VAULT','/trophies.html'],['exam','EXAM HALL','/exam.html']]},
-    {key:'cosmos',  icon:'\u2609', label:'COSMOS',      href:'/horoscope.html',   col:'#9B6BF0', sub:[
+    {key:'cosmos',  icon:'\u2609', label:'COSMOS',      href:'/cosmos.html',     col:'#9B6BF0', sub:[
       ['horoscope','HOROSCOPE','/horoscope.html'],['agents','AI AGENTS','/agents.html'],
       ['elements','THE 9 ELEMENTS','/elements.html'],['pantheons','PANTHEONS','/pantheons.html'],
       ['gates','THE 12 GATES','/gates.html']]},
     {key:'universe',icon:'\u25BA', label:'UNIVERSE',    href:'/cinema.html',      col:'#8B0000', sub:[
       ['cinema','CINEMA & SAGA','/cinema.html'],['universe','CREATIVE UNIVERSE','/universe.html'],
       ['gaming','GAMING','/gaming.html']]},
-    {key:'vault',   icon:'\u03A9', label:'VAULT',       href:'/treasury.html',    col:'#C9A84C', sub:[
+    {key:'vault',   icon:'\u03A9', label:'VAULT',       href:'/vault.html',      col:'#C9A84C', sub:[
       ['treasury','SOVEREIGN RESERVE','/treasury.html'],['wallet','WALLET','/wallet.html'],
       ['blockchain','BLOCKCHAIN & NFT','/blockchain.html'],['payments','PAYMENTS','/payments.html'],
       ['membership','MEMBERSHIP','/membership.html'],['marketplace','MARKETPLACE','/marketplace.html']]},
@@ -103,6 +103,9 @@
       '.mob-nav-ul li a:not(.m-on) .mi{color:#454340}',
       '@media(max-width:760px){.omega-mob-nav{display:block}body{padding-bottom:64px}aside.omega-side{display:none!important}}',
       '@media(min-width:761px){.omega-mob-nav{display:none}}',
+      /* Prevent layout flash before nav.js runs */
+      '#omega-side{width:72px!important;flex-shrink:0;height:100vh;position:sticky;top:0;overflow:visible;z-index:200;background:#08080F;border-right:1px solid rgba(201,168,76,0.12)}',
+      '.side{width:72px!important}',,
       /* TOP STATUS BAR */
       '#omega-top-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-scan 3.5s linear infinite}',
       '@keyframes top-scan{0%{background-position:200% 0}100%{background-position:-200% 0}}',

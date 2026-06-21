@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Family & Heritage</title>
+<title>?? SYD OMEGA 91717  --  Family & Heritage</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -85,10 +85,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">&#x22D4;</div>
   <h2 id="gate-h">Family &amp; Heritage</h2>
   <p id="gate-p">Sign in to raise your bloodline.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">ENTER MEMBER ACCESS --></a>
 </div>
 
 <div class="shell" id="app">
@@ -120,8 +120,8 @@
     </div>
 
     <div class="protocol">
-      <div class="h">THE HERITAGE PROTOCOL · ARTICLE VII</div>
-      <p>The Order is built to outlive its Architect. A <b>succession mechanism</b> stands ready: should sovereign presence lapse, full control passes to the named <b>heir</b> of the bloodline — no fees, no contest, no dilution. Name your heir below by designating them in the bloodline; the crown marks them on the tree. <b>This is the continuity of the Order.</b></p>
+      <div class="h">THE HERITAGE PROTOCOL  .  ARTICLE VII</div>
+      <p>The Order is built to outlive its Architect. A <b>succession mechanism</b> stands ready: should sovereign presence lapse, full control passes to the named <b>heir</b> of the bloodline  --  no fees, no contest, no dilution. Name your heir below by designating them in the bloodline; the crown marks them on the tree. <b>This is the continuity of the Order.</b></p>
     </div>
   </main>
 </div>
@@ -172,7 +172,7 @@
 
   function renderList(){
     var box=document.getElementById('f-list'); box.innerHTML='';
-    if(!nodes.length){ box.innerHTML='<div class="empty">No bloodline yet — add your first member.</div>'; return; }
+    if(!nodes.length){ box.innerHTML='<div class="empty">No bloodline yet  --  add your first member.</div>'; return; }
     nodes.forEach(function(m){
       var d=document.createElement('div'); d.className='mem';
       d.innerHTML='<div><span class="nm"></span> <span class="rl">'+esc(m.relation||'')+(m.sign?(' \u00B7 '+esc(m.sign)):'')+'</span>'+(m.is_heir?'<span class="heir">HEIR</span>':'')+'</div><div class="acts">'+(m.is_heir?'':'<button data-heir="'+m.id+'">NAME HEIR</button>')+'<button class="del" data-del="'+m.id+'">REMOVE</button></div>';
@@ -193,7 +193,7 @@
     var sign=document.getElementById('f-sign').value;
     var out=document.getElementById('f-msg'), btn=document.getElementById('f-go');
     if(name.length<1){ out.style.color='var(--crimson)'; out.textContent='Enter a name.'; return; }
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Adding…';
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Adding???';
     var r=await supabase.from('family_nodes').insert({user_id:user.id,name:name,relation:rel,sign:(sign||null)});
     btn.disabled=false;
     if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not add ('+(r.error.code||r.error.message||'')+').'; return; }

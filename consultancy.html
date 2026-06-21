@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Consultancy</title>
+<title>?? SYD OMEGA 91717  --  Consultancy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -72,10 +72,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">&#x25C8;</div>
   <h2 id="gate-h">The Consultancy</h2>
   <p id="gate-p">Sign in to request counsel from the Order.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">ENTER MEMBER ACCESS --></a>
 </div>
 
 <div class="shell" id="app">
@@ -85,7 +85,7 @@
     <div class="topbar">
       <div class="t">THE CONSULTANCY<small>COUNSEL OF THE ORDER</small></div>
     </div>
-    <p class="intro">Request counsel across the Order's domains. Your request is <b>received and recorded</b>; the Order reviews each one. Live booking and payment activate in a later, legally-cleared phase — for now this is a true intake, not a transaction.</p>
+    <p class="intro">Request counsel across the Order's domains. Your request is <b>received and recorded</b>; the Order reviews each one. Live booking and payment activate in a later, legally-cleared phase  --  for now this is a true intake, not a transaction.</p>
 
     <div class="card">
       <div class="h">REQUEST A CONSULTATION</div>
@@ -99,13 +99,13 @@
         <option value="Publishing">Publishing</option>
       </select>
       <label for="c-msg" style="margin-top:16px">YOUR REQUEST</label>
-      <textarea id="c-msg" maxlength="1200" placeholder="Describe what you seek counsel on…"></textarea>
-      <div class="fld" style="margin-top:14px"><label for="c-file">ATTACH FILE / CONTEXT / DEMO (optional · max 5 GB)</label><input type="file" id="c-file" style="padding:10px" /></div>
-      <div style="margin-top:16px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.04);padding:14px 16px;font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7">CONFIDENTIALITY &amp; COMMISSION — Both parties engage under strict confidentiality for legal and security. A <b style="color:var(--gold)">system commission of 9.17%</b> applies to any consultancy fee, payable to the Order's account. Booking and payment activate under the legal-cleared phase.</div>
+      <textarea id="c-msg" maxlength="1200" placeholder="Describe what you seek counsel on???"></textarea>
+      <div class="fld" style="margin-top:14px"><label for="c-file">ATTACH FILE / CONTEXT / DEMO (optional  .  max 5 GB)</label><input type="file" id="c-file" style="padding:10px" /></div>
+      <div style="margin-top:16px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.04);padding:14px 16px;font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7">CONFIDENTIALITY &amp; COMMISSION  --  Both parties engage under strict confidentiality for legal and security. A <b style="color:var(--gold)">system commission of 9.17%</b> applies to any consultancy fee, payable to the Order's account. Booking and payment activate under the legal-cleared phase.</div>
       <label style="display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--ink);cursor:pointer;line-height:1.5"><input type="checkbox" id="c-agree" style="width:18px;height:18px;accent-color:#C9A84C;margin-top:1px;flex-shrink:0"/> I accept the Confidentiality &amp; Commission Agreement for this engagement.</label>
       <button class="btn" id="c-go">SUBMIT REQUEST</button>
       <div class="msg" id="c-msg-out"></div>
-      <div class="gate-note">Booking, scheduling, and payment are <b>PHASE II — gated on legal review</b>. No fees are charged and no expert is assigned at this stage.</div>
+      <div class="gate-note">Booking, scheduling, and payment are <b>PHASE II  --  gated on legal review</b>. No fees are charged and no expert is assigned at this stage.</div>
     </div>
 
     <div class="card">
@@ -125,7 +125,7 @@
     try{
       var r=await supabase.from('consult_requests').select('domain,message,status,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(30);
       box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No requests yet — submit your first above.</div>'; return; }
+      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No requests yet  --  submit your first above.</div>'; return; }
       r.data.forEach(function(q){
         var d=document.createElement('div'); d.className='req';
         var dt=q.created_at?new Date(q.created_at).toLocaleDateString():'';
@@ -139,12 +139,12 @@
     var domain=document.getElementById('c-domain').value;
     var message=document.getElementById('c-msg').value.trim();
     var out=document.getElementById('c-msg-out'), btn=document.getElementById('c-go');
-    if(message.length<10){ out.style.color='var(--crimson)'; out.textContent='Describe your request — at least 10 characters.'; return; }
+    if(message.length<10){ out.style.color='var(--crimson)'; out.textContent='Describe your request  --  at least 10 characters.'; return; }
     if(!document.getElementById('c-agree').checked){ out.style.color='var(--crimson)'; out.textContent='Accept the Confidentiality & Commission Agreement to proceed.'; return; }
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting…';
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting???';
     var filePath=null, fEl=document.getElementById('c-file');
     if(fEl && fEl.files && fEl.files[0]){
-      out.textContent='Uploading file… (large files take time)';
+      out.textContent='Uploading file??? (large files take time)';
       var up=await window.OmegaStorage.upload('uploads', fEl.files[0]);
       if(up.error){ btn.disabled=false; out.style.color='var(--crimson)'; out.textContent='Upload failed: '+up.error; return; }
       filePath=up.path;

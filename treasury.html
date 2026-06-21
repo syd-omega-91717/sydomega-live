@@ -1,211 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Treasury</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- Sovereign Reserve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-  :root{
-    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
-    --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f;
-    --ink:#e9e6dc; --muted:#85837b; --acc:#C9A84C;
-    --line:rgba(201,168,76,0.16);
-    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 26% 14%,rgba(201,168,76,.08),transparent 42%),radial-gradient(circle at 82% 86%,rgba(0,229,255,.05),transparent 42%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+:root{--void:#0A0A0F;--panel:#0d0d18;--p2:#111120;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.13);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(201,168,76,.06),transparent 60%),radial-gradient(ellipse 40% 30% at 0% 100%,rgba(139,0,0,.04),transparent 50%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.main{flex:1;min-width:0;padding:0 0 80px}
+.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:22px 0 4px;font-size:16px}
-  .intro b{color:var(--acc);font-weight:400}
+/* HERO BAND */
+.hero-band{display:grid;grid-template-columns:1fr auto 1fr;gap:0;border-bottom:1px solid var(--line);min-height:320px;align-items:stretch}
+@media(max-width:900px){.hero-band{grid-template-columns:1fr}}
 
-  .vault{position:relative;border:1px solid rgba(201,168,76,.45);background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.10),transparent 60%),linear-gradient(180deg,var(--panel),transparent);padding:34px 26px;margin-top:18px;text-align:center;overflow:hidden}
-  .vault .lbl{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan)}
-  .vault .bal{font-family:var(--display);font-weight:900;color:var(--solar);font-size:clamp(34px,7vw,58px);letter-spacing:1px;margin:8px 0 2px;text-shadow:0 0 30px rgba(226,200,109,.3)}
-  .vault .bal .om{color:var(--gold);font-size:.6em;vertical-align:.05em}
-  .vault .sub{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted)}
-  .vault .rank{display:inline-flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:18px}
-  .vault .rank div{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted)}
-  .vault .rank b{display:block;color:var(--gold);font-size:14px;letter-spacing:2px;margin-top:3px}
+/* SOVEREIGN DIVIDEND (left) */
+.div-panel{border-right:1px solid var(--line);padding:24px clamp(14px,2.5vw,32px);display:flex;flex-direction:column;justify-content:space-between}
+.dp-status{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.dp-title{font-family:var(--D);font-size:clamp(18px,3vw,26px);color:var(--green);font-weight:700;margin-bottom:8px;animation:div-pulse 2s ease-in-out infinite}
+@keyframes div-pulse{0%,100%{text-shadow:0 0 10px rgba(63,178,127,0.3)}50%{text-shadow:0 0 24px rgba(63,178,127,0.7)}}
+.dp-freq{font-family:var(--M);font-size:10px;color:rgba(63,178,127,0.7);margin-bottom:16px}
+.resonance-block{border:1px solid rgba(201,168,76,0.2);background:rgba(201,168,76,0.04);padding:14px 16px;margin-bottom:14px}
+.rb-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.rb-val{font-family:var(--D);font-size:28px;color:var(--gold);font-weight:700;text-shadow:0 0 20px rgba(201,168,76,0.4)}
+#wave-cv{display:block;width:100%;margin-top:8px}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}
-  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:22px}
-  .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
-  .row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed rgba(201,168,76,.12);font-family:var(--mono);font-size:13px}
-  .row:last-child{border-bottom:none}
-  .row .k{color:var(--muted);letter-spacing:1px}
-  .row .v{color:var(--ink)}
-  .row .v.g{color:var(--gold)}
-  .row .v.c{color:var(--cyan)}
-  .bartrack{height:10px;background:var(--panel-2);border:1px solid var(--line);margin-top:14px;overflow:hidden}
-  .barfill{height:100%;background:linear-gradient(90deg,var(--crimson),var(--gold));width:0%}
-  .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;line-height:1.8;margin-top:14px}
-  .note b{color:var(--acc)}
+/* VAULT CUBE (center) */
+.vault-panel{padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+#vault-cv{display:block}
+.vp-mode{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);text-align:center;margin-top:8px}
+.vp-id{font-family:var(--M);font-size:9px;color:rgba(201,168,76,0.5);text-align:center;margin-top:4px}
 
-  .protocol{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:24px;margin-top:16px}
-  .protocol .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
-  .protocol p{font-weight:300;color:var(--ink);line-height:1.85;font-size:15px;max-width:70ch}
-  .protocol p b{color:var(--acc);font-weight:400}
-  .protocol .mono{font-family:var(--mono);color:var(--cyan);font-size:13px}
+/* RESERVE PANEL (right) */
+.res-panel{border-left:1px solid var(--line);padding:24px clamp(14px,2.5vw,32px);display:flex;flex-direction:column;justify-content:space-between}
+.rp-header{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.rp-title{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--solar);font-weight:700;margin-bottom:4px}
+.rp-aum{font-family:var(--D);font-size:clamp(22px,4vw,38px);color:var(--gold);font-weight:900;text-shadow:0 0 24px rgba(201,168,76,0.4);margin-bottom:4px}
+.rp-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.rp-split-item{border:1px solid var(--line);background:rgba(7,7,11,0.4);padding:10px;text-align:center}
+.rsi-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.rsi-val{font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700}
+.locked-badge{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:5px 12px;background:rgba(139,0,0,0.2);border:1px solid rgba(139,0,0,0.6);color:var(--crim);display:inline-flex;align-items:center;gap:6px}
+.lb-dot{width:6px;height:6px;border-radius:50%;background:var(--crim);animation:blink 1.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
 
-  .gated{border:1px solid rgba(139,0,0,.5);background:linear-gradient(180deg,rgba(139,0,0,.08),transparent);padding:24px;margin-top:16px}
-  .gated .h{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--crimson);margin-bottom:12px}
-  .gated .h .tag{font-size:8px;border:1px solid rgba(139,0,0,.6);padding:2px 6px;margin-left:8px}
-  .gated p{font-weight:300;color:var(--muted);line-height:1.8;font-size:14px;max-width:70ch}
-  .gated p b{color:var(--ink);font-weight:400}
-  .gated .acq{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--muted);background:var(--panel-2);padding:13px 22px;border:1px solid var(--line);margin-top:16px;display:inline-block;cursor:not-allowed}
+/* ASSET COLUMNS */
+.asset-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);margin:0 clamp(14px,3vw,36px)}
+.asset-col{padding:18px 20px}
+.asset-col:first-child{border-right:1px solid var(--line)}
+.ac-header{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:14px;padding-bottom:6px;border-bottom:1px dashed rgba(201,168,76,0.1)}
+.asset-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,0.06)}
+.asset-row:last-child{border-bottom:none}
+.ar-icon{width:36px;height:36px;border:1px solid rgba(201,168,76,0.25);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:rgba(201,168,76,0.05)}
+.ar-meta{flex:1;min-width:0}
+.ar-name{font-family:var(--D);font-size:11px;color:var(--solar);font-weight:700;margin-bottom:2px}
+.ar-sub{font-family:var(--M);font-size:8px;color:var(--muted)}
+.ar-val{font-family:var(--D);font-size:13px;color:var(--gold);font-weight:700;text-align:right;flex-shrink:0}
+.ar-change{font-family:var(--M);font-size:8px;text-align:right}
 
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+/* NODE GOVERNANCE */
+.node-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:var(--line);margin:0 clamp(14px,3vw,36px)}
+.node-cell{background:var(--void);padding:14px;display:flex;align-items:center;gap:10px}
+.nc-indicator{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nc-body .ncb-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
+.nc-body .ncb-val{font-family:var(--D);font-size:13px;font-weight:700}
+
+/* INVESTMENT SPLINTERING */
+.splinter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;padding:0 clamp(14px,3vw,36px)}
+.splinter-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:16px;position:relative;overflow:hidden}
+.splinter-card::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px}
+.sc-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.sc-pct{font-family:var(--D);font-size:24px;font-weight:700;margin-bottom:4px}
+.sc-flow{font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:10px}
+.sc-bar-wrap{height:3px;background:rgba(201,168,76,0.1);border-radius:2px;overflow:hidden}
+.sc-bar-fill{height:100%;border-radius:2px;transition:width 1.5s ease}
+#invest-cv{display:block;width:100%;margin-top:10px}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}.asset-grid{grid-template-columns:1fr}.hero-band{grid-template-columns:1fr}.div-panel,.res-panel{border:none;border-bottom:1px solid var(--line)}}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
-  <h2 id="gate-h">The Treasury</h2>
-  <p id="gate-p">Sign in to view your Ω vault.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
-</div>
-
-<div class="shell" id="app">
+<div class="shell">
   <aside class="side" id="omega-side" data-page="treasury"></aside>
-
   <main class="main">
-    <div class="topbar">
-      <div class="t">THE TREASURY<small>THE INTERNAL Ω ECONOMY</small></div>
-    </div>
-    <p class="intro">Ω COIN is the Order's internal asset. Your holdings are <b>computed from your verified ascent</b> — genesis, evolution events, and certificates — never granted arbitrarily. This is a closed, members-only ledger; it builds the project's asset base ahead of any public transfer.</p>
 
-    <div class="vault">
-      <div class="lbl">YOUR Ω VAULT</div>
-      <div class="bal"><span id="v-bal">0</span> <span class="om">Ω</span></div>
-      <div class="sub" id="v-sub">COMPUTED FROM VERIFIED PROGRESSION</div>
-      <div class="rank">
-        <div>RANK<b id="v-rank">—</b></div>
-        <div>MATERIAL<b id="v-mat">—</b></div>
-        <div>ELEMENT AFFINITY<b id="v-elem">—</b></div>
-        <div>STAKE<b id="v-stake">—</b></div>
+    <!-- HERO: 3-column sovereign reserve -->
+    <div class="hero-band">
+      <!-- SOVEREIGN DIVIDEND -->
+      <div class="div-panel">
+        <div>
+          <div class="dp-status">SOVEREIGN DIVIDEND</div>
+          <div class="dp-title">DISTRIBUTING</div>
+          <div class="dp-freq">(9.17Hz)</div>
+          <div class="resonance-block">
+            <div class="rb-label">NETWORK RESONANCE</div>
+            <div class="rb-val">9.17Hz</div>
+            <canvas id="wave-cv" height="40"></canvas>
+          </div>
+        </div>
+        <div>
+          <div class="dp-status" style="margin-bottom:6px">STATUS: DISTRIBUTING (9.17Hs)</div>
+          <div class="dp-status">LAST DIVIDEND: <span style="color:var(--solar)">CYCLE 1</span></div>
+          <div class="dp-status">PROJECTION: <span style="color:var(--solar)">CYCLE 2</span></div>
+        </div>
+      </div>
+
+      <!-- VAULT CUBE -->
+      <div class="vault-panel">
+        <canvas id="vault-cv" width="280" height="280" style="width:140px;height:140px"></canvas>
+        <div class="vp-mode">NODE_GOVERNANCE_ACTIVE</div>
+        <div class="vp-id">ADMIN_01 &nbsp; . &nbsp; 91717-VAULT</div>
+      </div>
+
+      <!-- ABSOLUTE RESERVE -->
+      <div class="res-panel">
+        <div>
+          <div class="rp-header">ABSOLUTE RESERVE</div>
+          <div class="rp-aum" id="aum-val">&#937; 0</div>
+          <div class="rp-split">
+            <div class="rp-split-item"><div class="rsi-label">MATRIX CREDITS</div><div class="rsi-val" id="res-credits">--</div></div>
+            <div class="rp-split-item"><div class="rsi-label">DIGITAL ASSETS</div><div class="rsi-val" id="res-digital">--</div></div>
+          </div>
+          <div class="locked-badge"><div class="lb-dot"></div>51% OWNER RESERVE : LOCKED</div>
+        </div>
+        <div style="margin-top:14px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">2K-IDENTITY: VERIFIED</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted)">PQC SHIELD: ACTIVE</div>
+        </div>
       </div>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <div class="h">HOLDINGS — HOW THEY ARE EARNED</div>
-        <div class="row"><span class="k">GENESIS GRANT</span><span class="v g">+91,717 Ω</span></div>
-        <div class="row"><span class="k">EVOLUTION EVENTS &times; 9,171</span><span class="v" id="h-events">0 Ω</span></div>
-        <div class="row"><span class="k">CERTIFICATES &times; 91,700</span><span class="v" id="h-certs">0 Ω</span></div>
-        <div class="row"><span class="k">TOTAL Ω</span><span class="v g" id="h-total">0 Ω</span></div>
-        <div class="note">Every figure here is derived from your real record in the Order. Earn more by advancing your axes in the Academy, Arena, and Contributions.</div>
+    <!-- PHYSICAL + DIGITAL ASSETS -->
+    <div class="sechead">ASSET MANIFEST -- SOVEREIGN LEDGER</div>
+    <div class="asset-grid">
+      <div class="asset-col">
+        <div class="ac-header">PHYSICAL_ASSETS &nbsp;&middot;&nbsp; TOKENIZED RNAA</div>
+        <div id="physical-assets"></div>
       </div>
-
-      <div class="card">
-        <div class="h">THE TREASURY — ORDER-WIDE</div>
-        <div class="row"><span class="k">TOTAL SUPPLY</span><span class="v g">917,385,000,000 Ω</span></div>
-        <div class="row"><span class="k">OWNER MASTER STAKE</span><span class="v">51%</span></div>
-        <div class="row"><span class="k">BURN PROTOCOL</span><span class="v c">1% PER TRANSFER</span></div>
-        <div class="row"><span class="k">CIRCULATING (EST.)</span><span class="v" id="t-circ">—</span></div>
-        <div class="bartrack"><div class="barfill" id="t-bar"></div></div>
-        <div class="note" id="t-pct">— of supply held by members</div>
+      <div class="asset-col">
+        <div class="ac-header">DIGITAL_ASSETS &nbsp;&middot;&nbsp; LIVE VOLATILITY</div>
+        <div id="digital-assets"></div>
       </div>
     </div>
 
-    <div class="protocol">
-      <div class="h">THE BURN PROTOCOL</div>
-      <p>The Order's economy is deflationary by law. On every internal transfer, <b>1%</b> of the moved Ω is burned — permanently removed from circulation. As activity rises, supply tightens, and the value held by sovereigns who have truly ascended is concentrated, never diluted. <span class="mono">supply &darr; as transfers &uarr;</span>. The 51% master stake anchors the system; the remaining 49% is the members' field of ascent.</p>
-    </div>
+    <!-- NODE GOVERNANCE -->
+    <div class="sechead">NODE GOVERNANCE -- LIVE STATUS</div>
+    <div class="node-grid" id="node-grid"></div>
 
-    <div class="gated">
-      <div class="h">ACQUIRE Ω <span class="tag">PHASE II — GATED</span></div>
-      <p><b>Purchasing Ω with currency, and any transfer of Ω outside the platform, are intentionally not live.</b> Ω COIN is an internal platform asset that reflects verified progression — it is not a public cryptocurrency, not a security, and not redeemable for cash. The fiat on-ramp and external bridge activate only after legal review (token classification, KYC/AML, payment terms). Until then, Ω is earned, never bought.</p>
-      <span class="acq">ACQUIRE WITH CURRENCY — AWAITING LEGAL CLEARANCE</span>
-    </div>
+    <!-- INVESTMENT SPLINTERING ENGINE (41%) -->
+    <div class="sechead">41% INVESTMENT SPLINTERING ENGINE</div>
+    <div class="splinter-grid" id="splinter-grid"></div>
+
   </main>
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  let user=null;
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
-  const MATERIALS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
-  const ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
-  const GENESIS=91717, PER_EVENT=9171, PER_CERT=91700, SUPPLY=917385000000;
-  function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
+/* PHYSICAL ASSETS */
+const PHYSICAL=[
+  {icon:'&#x25C8;',name:'SWISS VAULT GOLD BARS',sub:'Channel M0M1Y17-007.031',val:'&#937; 1,800',change:'+0.91%',col:'#C9A84C'},
+  {icon:'&#x2302;',name:'SINGAPORE HIGH-RISE',sub:'9.1 Ths AUM',val:'&#937; 1,200',change:'+0.17%',col:'#E2C86D'},
+  {icon:'&#x25CF;',name:'SWISS VAULT DOOR',sub:'9.1 Ths',val:'&#937; 900',change:'+0.09%',col:'#C7CDD6'},
+  {icon:'&#x2736;',name:'SINGAPORE VAULT',sub:'9.1 Ths',val:'&#937; 750',change:'+0.12%',col:'#C9A84C'},
+];
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+const DIGITAL=[
+  {icon:'&#x20BF;',name:'OMEGA TOKEN',sub:'OMGOMG',val:'&#937; 9.17',change:'+12.77%',col:'#C9A84C'},
+  {icon:'&#x25B2;',name:'SOVEREIGN DIGITAL CURRENCIES',sub:'S01',val:'&#937; 3.13',change:'-0.36%',col:'#E2C86D'},
+  {icon:'&#x25C9;',name:'MATRIX NODE CREDITS',sub:'MNC',val:'&#937; 91.7',change:'+9.17%',col:'#00E5FF'},
+  {icon:'&#x2609;',name:'AETHER TOKEN',sub:'AETHER',val:'&#937; 24.55',change:'+3.17%',col:'#9B6BF0'},
+];
 
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('The Treasury','Sign in to view your Ω vault.'); return; }
-    user=sess.user;
-    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to open your vault.'); return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
+const NODES=[
+  {label:'MASTER NODE',val:'ACTIVE',col:'#3fb27f'},{label:'RELAY NODE 1',val:'ONLINE',col:'#3fb27f'},
+  {label:'RELAY NODE 2',val:'ONLINE',col:'#3fb27f'},{label:'RELAY NODE 3',val:'ONLINE',col:'#3fb27f'},
+  {label:'SHARD NODE A',val:'SYNC',col:'#C9A84C'},{label:'SHARD NODE B',val:'SYNC',col:'#C9A84C'},
+  {label:'QUANTUM NODE',val:'ACTIVE',col:'#9B6BF0'},{label:'GOVERNANCE NODE',val:'LOCKED',col:'#8B0000'},
+];
 
-    var a=Number(pr.data.axis_a||1), b=Number(pr.data.axis_b||1), c=Number(pr.data.axis_c||1);
-    var tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
-    var elem=ELEM[pr.data.sign]||'—';
+const INVESTMENTS=[
+  {label:'AEROSPACE / DePIN',pct:42,flow:'+34% Flow',col:'#00E5FF'},
+  {label:'AI DRUG DISCOVERY',pct:38,flow:'+26% Flow',col:'#3fb27f'},
+  {label:'LIFE SCIENCES',pct:42,flow:'+36% Flow',col:'#E2C86D'},
+  {label:'SPACE INFRASTRUCTURE',pct:35,flow:'+1.7% Flow',col:'#9B6BF0'},
+  {label:'Q-CHIP HARDWARE',pct:55,flow:'+10% Flow',col:'#C9A84C'},
+];
 
-    // real counts
-    var ev=await supabase.from('evolution_events').select('id',{count:'exact',head:true}).eq('user_id',user.id);
-    var ce=await supabase.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',user.id);
-    var nEv=ev.count||0, nCe=ce.count||0;
-    var bal=GENESIS + nEv*PER_EVENT + nCe*PER_CERT;
-
-    document.getElementById('v-bal').textContent=fmt(bal);
-    document.getElementById('v-rank').textContent=RANKS[tier-1];
-    document.getElementById('v-mat').textContent=MATERIALS[tier-1];
-    document.getElementById('v-elem').textContent=elem;
-    document.getElementById('v-stake').textContent=(bal/SUPPLY*100).toFixed(5)+'%';
-    document.getElementById('h-events').textContent='+'+fmt(nEv*PER_EVENT)+' Ω';
-    document.getElementById('h-certs').textContent='+'+fmt(nCe*PER_CERT)+' Ω';
-    document.getElementById('h-total').textContent=fmt(bal)+' Ω';
-
-    // order-wide circulating estimate from real aggregate
-    try{
-      var st=await supabase.rpc('order_stats');
-      var s=st.data||{};
-      var m=Number(s.members||0), te=Number(s.events||0), tc=Number(s.certificates||0);
-      var circ=m*GENESIS + te*PER_EVENT + tc*PER_CERT;
-      document.getElementById('t-circ').textContent=fmt(circ)+' Ω';
-      var pct=Math.min(49,(circ/SUPPLY*100));
-      document.getElementById('t-bar').style.width=Math.max(1,pct/49*100)+'%';
-      document.getElementById('t-pct').textContent=(circ/SUPPLY*100).toFixed(4)+'% of supply held by members · cap 49%';
-    }catch(e){
-      document.getElementById('t-circ').textContent='—';
-    }
+function buildAssets(){
+  function row(a){
+    const d=document.createElement('div'); d.className='asset-row';
+    d.innerHTML=`<div class="ar-icon" style="color:${a.col}">${a.icon}</div><div class="ar-meta"><div class="ar-name">${a.name}</div><div class="ar-sub">${a.sub}</div></div><div style="text-align:right"><div class="ar-val">${a.val}</div><div class="ar-change" style="color:${a.change.startsWith('+')?' var(--green)':'var(--crim)'}">${a.change}</div></div>`;
+    return d;
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+  const pa=document.getElementById('physical-assets');
+  PHYSICAL.forEach(a=>pa.appendChild(row(a)));
+  const da=document.getElementById('digital-assets');
+  DIGITAL.forEach(a=>da.appendChild(row(a)));
+}
+
+function buildNodes(){
+  const g=document.getElementById('node-grid'); g.innerHTML='';
+  NODES.forEach(n=>{
+    const c=document.createElement('div'); c.className='node-cell';
+    c.innerHTML=`<div class="nc-indicator" style="background:${n.col};box-shadow:0 0 8px ${n.col}"></div><div class="nc-body"><div class="ncb-label">${n.label}</div><div class="ncb-val" style="color:${n.col}">${n.val}</div></div>`;
+    g.appendChild(c);
+  });
+}
+
+function buildSplinter(){
+  const g=document.getElementById('splinter-grid'); g.innerHTML='';
+  INVESTMENTS.forEach(inv=>{
+    const c=document.createElement('div'); c.className='splinter-card';
+    c.style.setProperty('--col',inv.col);
+    c.style.cssText+=`border-left:3px solid ${inv.col}88`;
+    c.innerHTML=`<div class="sc-label">${inv.label}</div><div class="sc-pct" style="color:${inv.col}">${inv.pct}%</div><div class="sc-flow">${inv.flow}</div><div class="sc-bar-wrap"><div class="sc-bar-fill" style="width:0%;background:linear-gradient(90deg,${inv.col},transparent)"></div></div>`;
+    g.appendChild(c);
+    setTimeout(()=>c.querySelector('.sc-bar-fill').style.width=inv.pct+'%',300);
+  });
+}
+
+/* RESONANCE WAVEFORM */
+function drawWave(){
+  const cv=document.getElementById('wave-cv');
+  const W=cv.offsetWidth||200, H=40; cv.width=W*2; cv.height=H*2;
+  const ctx=cv.getContext('2d'); ctx.scale(2,2);
+  let t=0;
+  function ecgY(x,W,t){
+    const cycle=x/W*3+t*.7, pos=cycle%1;
+    if(pos<.1) return -Math.sin(pos/.1*Math.PI)*10;
+    if(pos<.12) return Math.sin((pos-.1)/.02*Math.PI*2)*25;
+    if(pos<.16) return -Math.sin((pos-.12)/.04*Math.PI)*12;
+    if(pos<.2) return Math.sin((pos-.16)/.04*Math.PI)*5;
+    return Math.sin(cycle*6.28*2)*1.5;
+  }
+  function frame(){
+    t+=.015; ctx.clearRect(0,0,W,H);
+    ctx.beginPath();
+    for(let x=0;x<W;x+=1.5){const y=H/2+ecgY(x,W,t);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.strokeStyle='rgba(63,178,127,0.7)'; ctx.lineWidth=1.5;
+    ctx.shadowColor='rgba(63,178,127,0.5)'; ctx.shadowBlur=6; ctx.stroke(); ctx.shadowBlur=0;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* 3D ROTATING VAULT CUBE */
+function drawVaultCube(){
+  const cv=document.getElementById('vault-cv');
+  const S=140, ctx=cv.getContext('2d');
+  let t=0;
+  const cx=140,cy=140;
+
+  function project(x,y,z,rx,ry){
+    const cosX=Math.cos(rx),sinX=Math.sin(rx),cosY=Math.cos(ry),sinY=Math.sin(ry);
+    let tx=x*cosY+z*sinY, tz=-x*sinY+z*cosY;
+    let ty=y*cosX-tz*sinX, tz2=y*sinX+tz*cosX;
+    const scale=S/(S+tz2*.8);
+    return {x:cx+tx*scale,y:cy+ty*scale,scale};
+  }
+
+  function drawEdge(p1,p2,alpha,col){
+    ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y);
+    ctx.strokeStyle=col||`rgba(201,168,76,${alpha})`; ctx.lineWidth=1.5*Math.min(p1.scale,p2.scale);
+    ctx.shadowColor=col||'rgba(201,168,76,0.6)'; ctx.shadowBlur=alpha*8;
+    ctx.stroke(); ctx.shadowBlur=0;
+  }
+
+  const sz=50;
+  const verts=[
+    [-sz,-sz,-sz],[sz,-sz,-sz],[sz,sz,-sz],[-sz,sz,-sz],
+    [-sz,-sz,sz],[sz,-sz,sz],[sz,sz,sz],[-sz,sz,sz]
+  ];
+  const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+
+  function frame(){
+    t+=.008; ctx.clearRect(0,0,cx*2,cy*2);
+    const rx=t*.4, ry=t*.6;
+    const pts=verts.map(v=>project(v[0],v[1],v[2],rx,ry));
+    /* Face fills */
+    const faces=[[0,1,2,3],[4,5,6,7],[0,1,5,4],[2,3,7,6],[1,2,6,5],[0,3,7,4]];
+    faces.forEach(f=>{
+      ctx.beginPath(); ctx.moveTo(pts[f[0]].x,pts[f[0]].y);
+      for(let i=1;i<4;i++) ctx.lineTo(pts[f[i]].x,pts[f[i]].y);
+      ctx.closePath();
+      const avgZ=(verts[f[0]][2]+verts[f[1]][2]+verts[f[2]][2]+verts[f[3]][2])/4;
+      const alpha=.06+.04*Math.sin(t+avgZ*.01);
+      ctx.fillStyle=`rgba(201,168,76,${alpha})`; ctx.fill();
+    });
+    /* Edges */
+    edges.forEach(e=>drawEdge(pts[e[0]],pts[e[1]],.6));
+    /* Corner dots */
+    pts.forEach(p=>{
+      ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2);
+      ctx.fillStyle='rgba(201,168,76,0.8)'; ctx.shadowColor='rgba(201,168,76,0.7)'; ctx.shadowBlur=8; ctx.fill(); ctx.shadowBlur=0;
+    });
+    /* Center ?? */
+    ctx.fillStyle='rgba(201,168,76,'+(0.7+0.25*Math.sin(t*1.5))+')';
+    ctx.font='700 28px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(201,168,76,0.8)'; ctx.shadowBlur=20; ctx.fillText('\u03A9',cx,cy); ctx.shadowBlur=0;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+  const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
+  const nodes=Math.round(a*b*c*9);
+  const xp=Math.round(nodes*917.17);
+  document.getElementById('aum-val').innerHTML='&#937; '+xp.toLocaleString();
+  document.getElementById('res-credits').textContent='&#937; '+Math.round(nodes*91.7).toLocaleString();
+  document.getElementById('res-digital').textContent='&#937; '+Math.round(nodes*9.17).toLocaleString();
+  buildAssets(); buildNodes(); buildSplinter();
+  requestAnimationFrame(()=>{drawWave();drawVaultCube();});
+}
+boot();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script>
+<script src="/nav.js"></script><script src="/bg.js"></script>
 </body>
 </html>

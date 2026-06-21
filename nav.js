@@ -120,7 +120,6 @@
       ['city','OMEGA CITY','/city.html'],
     ]},
     { label: 'SYSTEM', items: [
-      ['grid','THE GRID','/grid.html'],
       ['compliance','GOVERNANCE','/compliance.html'],
       ['research','RESEARCH','/research.html'],
       ['charter','CHARTER','/charter.html'],

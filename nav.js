@@ -1,184 +1,218 @@
-/* SYD OMEGA 91717 - sovereign sidebar + mobile bottom nav.
-   Injects its own CSS into every app page. HOME + BACK side by side at top. */
-(function () {
-  var el = document.getElementById('omega-side');
-  if (!el) return;
-  var page = el.getAttribute('data-page') ||
-    ((location.pathname.split('/').pop() || '').replace('.html', '')) || 'dashboard';
+/* SYD OMEGA 91717 -- Sovereign Icon Navigation v4.0
+   Visual icon dock. 8 sections. Rotating Omega.
+   Self-injects all CSS. No external deps. */
+(function(){
+  var el=document.getElementById('omega-side');
+  if(!el) return;
+  var data_page=el.getAttribute('data-page')||
+    ((location.pathname.split('/').pop()||'').replace('.html',''))||'dashboard';
 
-  /* --- Inject nav CSS (self-contained, no page dependency) --- */
-  if (!document.getElementById('omega-nav-css')) {
-    var st = document.createElement('style'); st.id = 'omega-nav-css';
-    st.textContent = [
-      ':root{--void:#07070b;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16)}',
-      '.brand{font-family:"Cinzel Decorative",serif;font-weight:900;color:#C9A84C;font-size:18px;letter-spacing:1px;text-align:center;padding:4px 0;line-height:1.2}',
-      '.brand small{display:block;font-family:"Courier Prime",monospace;font-size:8px;color:#85837b;letter-spacing:4px;margin-top:5px}',
-      /* HOME + BACK row */
-      '.nav-hb{display:flex;gap:6px;margin:14px 0 4px}',
-      '.nav-home,.nav-back{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:9px 6px;cursor:pointer;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:#C9A84C;transition:all .14s;user-select:none;text-decoration:none}',
-      '.nav-home:hover{background:rgba(201,168,76,.14);border-color:#C9A84C}',
-      '.nav-back{color:#00E5FF;border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.04)}',
-      '.nav-back:hover{background:rgba(0,229,255,.14);border-color:#00E5FF}',
-      '.nav{margin-top:4px;display:flex;flex-direction:column;gap:1px}',
-      '.nav a{display:flex;align-items:center;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1.5px;color:#e9e6dc;padding:9px 12px;border-left:2px solid transparent;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .12s}',
-      '.nav a:hover{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.05)}',
-      '.nav a.on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.07)}',
-      '.nav .sec{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:3px;color:#85837b;margin:13px 0 3px 12px;padding-bottom:4px;border-bottom:1px solid rgba(201,168,76,.1)}',
-      '.nav-out{margin-top:14px;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;color:#00E5FF;padding:10px 12px;cursor:pointer;border-top:1px solid rgba(201,168,76,.14);display:flex;align-items:center;gap:6px}',
-      '.nav-out:hover{color:#C9A84C}',
-      /* Mobile bottom nav */
-      '.omega-mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9990;background:rgba(7,7,11,.97);border-top:1px solid rgba(201,168,76,.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}',
-      '.omega-mobile-nav ul{display:flex;list-style:none;margin:0;padding:0}',
-      '.omega-mobile-nav ul li{flex:1}',
-      '.omega-mobile-nav ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 12px;text-decoration:none;gap:3px;transition:color .15s}',
-      '.omega-mobile-nav ul li a .mn-icon{font-size:18px;line-height:1}',
-      '.omega-mobile-nav ul li a .mn-label{font-family:"Courier Prime",monospace;font-size:7px;letter-spacing:1.5px;color:#85837b}',
-      '.omega-mobile-nav ul li a.on .mn-icon{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,.5)}',
-      '.omega-mobile-nav ul li a.on .mn-label{color:#C9A84C}',
-      '.omega-mobile-nav ul li a:not(.on) .mn-icon{color:#55534e}',
-      '@media(max-width:760px){.omega-mobile-nav{display:block}body{padding-bottom:70px}.side{display:none!important}}',
-      '@media(min-width:761px){.omega-mobile-nav{display:none}}'
-    ].join('');
-    (document.head || document.documentElement).appendChild(st);
-  }
+  /* PAGE -> SECTION mapping */
+  var PAGE_SECTION={
+    dashboard:'command',beacon:'command',notifications:'command',search:'command',
+    profile:'identity',passport:'identity',kyc:'identity',settings:'identity',
+    character:'identity',sigil:'identity',
+    ascension:'ascend',matrix:'ascend',academy:'ascend',gaming:'ascend',
+    honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
+    agents:'cosmos',horoscope:'cosmos',pantheons:'cosmos',elements:'cosmos',
+    gates:'cosmos',triads:'cosmos',kings:'cosmos',
+    cinema:'universe',universe:'universe',media:'universe',
+    treasury:'vault',wallet:'vault',blockchain:'vault',payments:'vault',
+    membership:'vault',marketplace:'vault',
+    family:'order',bloodline:'order',heritage:'order',hall:'order',
+    sovereigns:'order',factions:'order',city:'order',
+    consultancy:'services',contracts:'services',publishing:'services',
+    marketing:'services',health:'services',events:'services',travel:'services',
+    research:'intel',prediction:'intel',intelligence:'intel',
+    automation:'intel',social:'intel',news:'intel',
+    compliance:'intel',charter:'intel',approvals:'intel',
+  };
 
-  /* --- Sectioned nav --- */
-  var SECTIONS = [
-    { label: 'COMMAND', items: [
-      ['dashboard','DASHBOARD','/dashboard.html'],
-      ['beacon','THE BEACON','/beacon.html'],
-      ['search','SEARCH','/search.html'],
-      ['notifications','NOTIFICATIONS','/notifications.html'],
-    ]},
-    { label: 'IDENTITY', items: [
-      ['profile','PROFILE','/profile.html'],
-      ['passport','SOVEREIGN PASSPORT','/passport.html'],
-      ['kyc','IDENTITY VERIFICATION','/kyc.html'],
-      ['settings','SETTINGS','/settings.html'],
-    ]},
-    { label: 'ASCEND', items: [
-      ['ascension','ASCENSION','/ascension.html'],
-      ['intelligence','INTELLIGENCE','/intelligence.html'],
-      ['portfolio','PORTFOLIO','/portfolio.html'],
-      ['income','INCOME & ALLOCATION','/income.html'],
-      ['automation','AUTOMATION ENGINE','/automation.html'],
-      ['research','RESEARCH & DISCOVERY','/research.html'],
-      ['prediction','GLOBAL PREDICTION','/prediction.html'],
-      ['exam','EXAM HALL','/exam.html'],
-    ]},
-    { label: 'COSMOS', items: [
-      ['gates','THE TWELVE GATES','/gates.html'],
-      ['kings','THE 28 KINGS','/kings.html'],
-      ['matrix','THE LATTICE','/matrix.html'],
-      ['triads','THE TWELVE TRIADS','/triads.html'],
-      ['character','CHARACTER SYSTEM','/character.html'],
-      ['agents','AI AGENTS','/agents.html'],
-      ['chatbot','CONCIERGE','/chatbot.html'],
-      ['honors','HONORS','/honors.html'],
-      ['trophies','TROPHY VAULT','/trophies.html'],
-    ]},
-    { label: 'CELESTIAL', items: [
-      ['horoscope','HOROSCOPE','/horoscope.html'],
-      ['pantheons','PANTHEONS','/pantheons.html'],
-      ['elements','THE NINE ELEMENTS','/elements.html'],
-    ]},
-    { label: 'LEARN & PROVE', items: [
-      ['academy','ACADEMY','/academy.html'],
-      ['gaming','GAMING ARENA','/gaming.html'],
-      ['contributions','CONTRIBUTIONS','/contributions.html'],
-    ]},
-    { label: 'SERVICES', items: [
-      ['consultancy','CONSULTANCY','/consultancy.html'],
-      ['contracts','COMMISSIONS','/contracts.html'],
-      ['media','MEDIA HUB','/media.html'],
-      ['cinema','CINEMA & SAGA','/cinema.html'],
-      ['universe','CREATIVE UNIVERSE','/universe.html'],
-      ['news','NEWS & WIRE','/news.html'],
-      ['social','SOCIAL HUB','/social.html'],
-      ['publishing','PUBLISHING','/publishing.html'],
-      ['marketing','MARKETING','/marketing.html'],
-      ['health','HEALTH & WELLNESS','/health.html'],
-      ['events','EVENTS','/events.html'],
-      ['travel','TRAVEL','/travel.html'],
-    ]},
-    { label: 'ECONOMY', items: [
-      ['treasury','TREASURY','/treasury.html'],
-      ['blockchain','BLOCKCHAIN & NFT','/blockchain.html'],
-      ['wallet','SOVEREIGN WALLET','/wallet.html'],
-      ['payments','PAYMENTS','/payments.html'],
-      ['membership','MEMBERSHIP','/membership.html'],
-      ['marketplace','MARKETPLACE','/marketplace.html'],
-      ['sigil','SIGIL VAULT','/sigil.html'],
-    ]},
-    { label: 'THE ORDER', items: [
-      ['family','FAMILY & LINEAGE','/family.html'],
-      ['bloodline','BLOODLINE VAULT','/bloodline.html'],
-      ['heritage','HERITAGE ARCHIVE','/heritage.html'],
-      ['hall','HALL OF THE ORDER','/hall.html'],
-      ['sovereigns','HALL OF SOVEREIGNS','/sovereigns.html'],
-      ['factions','THE 12 FACTIONS','/factions.html'],
-      ['city','OMEGA CITY','/city.html'],
-    ]},
-    { label: 'SYSTEM', items: [
-      ['compliance','GOVERNANCE','/compliance.html'],
-      ['research','RESEARCH','/research.html'],
-      ['charter','CHARTER','/charter.html'],
-      ['approvals','APPROVALS','/approvals.html'],
-    ]},
+  var SECTIONS=[
+    {key:'command', icon:'\u2316', label:'COMMAND',     href:'/dashboard.html',   col:'#C9A84C', sub:[
+      ['dashboard','DASHBOARD','/dashboard.html'],['beacon','THE BEACON','/beacon.html'],
+      ['search','SEARCH','/search.html'],['notifications','ALERTS','/notifications.html']]},
+    {key:'identity',icon:'\u25C8', label:'IDENTITY',    href:'/profile.html',     col:'#00E5FF', sub:[
+      ['profile','PROFILE','/profile.html'],['passport','PASSPORT','/passport.html'],
+      ['kyc','KYC VERIFICATION','/kyc.html'],['character','CHARACTER','/character.html'],
+      ['settings','SETTINGS','/settings.html']]},
+    {key:'ascend',  icon:'\u25B2', label:'ASCEND',      href:'/ascension.html',   col:'#E86A3A', sub:[
+      ['ascension','ASCENSION MAP','/ascension.html'],['matrix','THE 729 MATRIX','/matrix.html'],
+      ['academy','ACADEMY','/academy.html'],['gaming','GAMING ARENA','/gaming.html'],
+      ['trophies','TROPHY VAULT','/trophies.html'],['exam','EXAM HALL','/exam.html']]},
+    {key:'cosmos',  icon:'\u2609', label:'COSMOS',      href:'/horoscope.html',   col:'#9B6BF0', sub:[
+      ['horoscope','HOROSCOPE','/horoscope.html'],['agents','AI AGENTS','/agents.html'],
+      ['elements','THE 9 ELEMENTS','/elements.html'],['pantheons','PANTHEONS','/pantheons.html'],
+      ['gates','THE 12 GATES','/gates.html']]},
+    {key:'universe',icon:'\u25BA', label:'UNIVERSE',    href:'/cinema.html',      col:'#8B0000', sub:[
+      ['cinema','CINEMA & SAGA','/cinema.html'],['universe','CREATIVE UNIVERSE','/universe.html'],
+      ['gaming','GAMING','/gaming.html']]},
+    {key:'vault',   icon:'\u03A9', label:'VAULT',       href:'/treasury.html',    col:'#C9A84C', sub:[
+      ['treasury','SOVEREIGN RESERVE','/treasury.html'],['wallet','WALLET','/wallet.html'],
+      ['blockchain','BLOCKCHAIN & NFT','/blockchain.html'],['payments','PAYMENTS','/payments.html'],
+      ['membership','MEMBERSHIP','/membership.html'],['marketplace','MARKETPLACE','/marketplace.html']]},
+    {key:'order',   icon:'\u22D4', label:'THE ORDER',   href:'/family.html',      col:'#D9B86A', sub:[
+      ['family','FAMILY LINEAGE','/family.html'],['bloodline','BLOODLINE VAULT','/bloodline.html'],
+      ['heritage','HERITAGE ARCHIVE','/heritage.html'],['sovereigns','HALL OF SOVEREIGNS','/sovereigns.html'],
+      ['city','OMEGA CITY','/city.html']]},
+    {key:'services',icon:'\u2726', label:'SERVICES',    href:'/consultancy.html', col:'#3fb27f', sub:[
+      ['consultancy','CONSULTANCY','/consultancy.html'],['research','RESEARCH','/research.html'],
+      ['prediction','ORACLE PREDICTION','/prediction.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
+      ['portfolio','PORTFOLIO','/portfolio.html'],['income','INCOME','/income.html'],
+      ['automation','AUTOMATION','/automation.html'],['publishing','PUBLISHING','/publishing.html'],
+      ['compliance','GOVERNANCE','/compliance.html'],['approvals','APPROVALS','/approvals.html']]},
   ];
 
-  /* Build sidebar HTML */
-  var h = '<div class="brand">\u03A9 SYD OMEGA<small>9 1 7 1 7</small></div>';
-  h += '<div class="nav-hb">';
-  h += '<a class="nav-home" href="/dashboard.html">\u2302 HOME</a>';
-  h += '<div class="nav-back" id="omega-back">\u2190 BACK</div>';
-  h += '</div>';
-  h += '<nav class="nav">';
-
-  var seenKeys = {};
-  for (var s = 0; s < SECTIONS.length; s++) {
-    var sec = SECTIONS[s];
-    h += '<div class="sec">' + sec.label + '</div>';
-    for (var i = 0; i < sec.items.length; i++) {
-      var it = sec.items[i];
-      if (seenKeys[it[0]]) continue; /* no duplicates */
-      seenKeys[it[0]] = 1;
-      var on = (it[0] === page);
-      h += '<a' + (on ? ' class="on"' : '') + ' href="' + (on ? '#' : it[2]) + '">' + it[1] + '</a>';
-    }
+  /* --- INJECT CSS --- */
+  if(!document.getElementById('omega-nav-css')){
+    var st=document.createElement('style'); st.id='omega-nav-css';
+    st.textContent=[
+      /* SIDEBAR */
+      '.omega-side{width:72px;flex-shrink:0;border-right:1px solid rgba(201,168,76,0.12);background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 16px;position:sticky;top:0;height:100vh;overflow:visible;z-index:200}',
+      /* HOME + BACK */
+      '.on-hb{display:flex;flex-direction:column;gap:5px;width:100%;align-items:center;padding:0 8px;margin-bottom:8px;border-bottom:1px solid rgba(201,168,76,0.1);padding-bottom:10px}',
+      '.on-btn{width:48px;height:28px;display:flex;align-items:center;justify-content:center;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:1.5px;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:rgba(201,168,76,0.03);transition:all .15s;white-space:nowrap;text-decoration:none}',
+      '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.07)}',
+      /* OMEGA BRAND */
+      '.on-brand{width:48px;height:48px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:10px;cursor:pointer;position:relative;flex-shrink:0}',
+      '.on-brand canvas{display:block}',
+      /* SECTION ICONS */
+      '.on-sections{display:flex;flex-direction:column;gap:3px;align-items:center;width:100%;flex:1}',
+      '.on-icon{width:48px;height:48px;border-radius:12px;border:1px solid transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;position:relative;font-size:18px;flex-shrink:0;text-decoration:none}',
+      '.on-icon:hover,.on-icon.on-active{background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.3)}',
+      '.on-icon.on-active{box-shadow:0 0 12px rgba(201,168,76,0.2)}',
+      /* TOOLTIP fly-out */
+      '.on-tooltip{position:absolute;left:56px;top:50%;transform:translateY(-50%);background:#0d0d18;border:1px solid rgba(201,168,76,0.3);padding:0;min-width:160px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9990;box-shadow:4px 4px 20px rgba(0,0,0,0.6)}',
+      '.on-icon:hover .on-tooltip{opacity:1;pointer-events:all}',
+      '.tt-header{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:3px;padding:8px 12px 6px;border-bottom:1px solid rgba(201,168,76,0.15)}',
+      '.tt-item{display:flex;align-items:center;padding:6px 12px;font-family:"Courier Prime",monospace;font-size:10px;color:#85837b;text-decoration:none;transition:color .1s,background .1s}',
+      '.tt-item:hover{color:#C9A84C;background:rgba(201,168,76,0.05)}',
+      '.tt-item.tt-on{color:#C9A84C}',
+      '.tt-dot{width:4px;height:4px;border-radius:50%;margin-right:7px;flex-shrink:0}',
+      /* LOGOUT */
+      '.on-logout{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;color:#85837b;padding:6px 10px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
+      '.on-logout:hover{color:#C9A84C}',
+      /* MOBILE */
+      '.omega-mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9990;background:rgba(8,8,15,0.97);border-top:1px solid rgba(201,168,76,0.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}',
+      '.mob-nav-ul{display:flex;list-style:none;margin:0;padding:0}',
+      '.mob-nav-ul li{flex:1}',
+      '.mob-nav-ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 4px 11px;text-decoration:none;gap:3px;transition:all .15s}',
+      '.mob-nav-ul li a .mi{font-size:19px;line-height:1;transition:transform .15s}',
+      '.mob-nav-ul li a .ml{font-family:"Courier Prime",monospace;font-size:7px;letter-spacing:1px;color:#85837b}',
+      '.mob-nav-ul li a.m-on .mi,.mob-nav-ul li a:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,0.6);transform:translateY(-2px) scale(1.1)}',
+      '.mob-nav-ul li a:not(.m-on) .mi{color:#454340}',
+      '@media(max-width:760px){.omega-mob-nav{display:block}body{padding-bottom:64px}aside.omega-side{display:none!important}}',
+      '@media(min-width:761px){.omega-mob-nav{display:none}}',
+      /* TOP STATUS BAR */
+      '#omega-top-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-scan 3.5s linear infinite}',
+      '@keyframes top-scan{0%{background-position:200% 0}100%{background-position:-200% 0}}',
+    ].join('');
+    (document.head||document.documentElement).appendChild(st);
   }
-  h += '</nav>';
-  h += '<div class="nav-out" id="logout">LOG OUT \u2192</div>';
-  el.innerHTML = h;
 
-  /* Back button */
-  var back = document.getElementById('omega-back');
-  if (back) back.addEventListener('click', function () {
-    if (window.history.length > 1) window.history.back();
-    else window.location.href = '/dashboard.html';
+  var activeSection=PAGE_SECTION[data_page]||'command';
+
+  /* --- BUILD SIDEBAR HTML --- */
+  var html='';
+
+  /* HOME + BACK */
+  html+='<div class="on-hb">';
+  html+='<a class="on-btn" href="/dashboard.html">\u2302 HOME</a>';
+  html+='<div class="on-btn" id="on-back-btn">\u2190 BACK</div>';
+  html+='</div>';
+
+  /* Brand Omega canvas */
+  html+='<div class="on-brand" onclick="location.href=\'/dashboard.html\'"><canvas id="on-brand-cv" width="96" height="96" style="width:48px;height:48px"></canvas></div>';
+
+  /* Section icons */
+  html+='<div class="on-sections">';
+  SECTIONS.forEach(function(sec){
+    var isActive=(sec.key===activeSection);
+    /* tooltip items */
+    var tipItems=sec.sub.map(function(s){
+      var subOn=s[0]===data_page;
+      return '<a class="tt-item'+(subOn?' tt-on':'')+'" href="'+s[2]+'"><div class="tt-dot" style="background:'+(subOn?sec.col:'rgba(133,131,123,0.5)')+'"></div>'+s[1]+'</a>';
+    }).join('');
+    html+='<a class="on-icon'+(isActive?' on-active':'')+'" style="color:'+(isActive?sec.col:'rgba(133,131,123,0.55)');
+    if(isActive) html+=';border-color:'+sec.col+'44';
+    html+='" href="'+sec.href+'">';
+    html+=sec.icon;
+    /* Tooltip */
+    html+='<div class="on-tooltip">';
+    html+='<div class="tt-header" style="color:'+sec.col+'">'+sec.label+'</div>';
+    html+=tipItems;
+    html+='</div>';
+    html+='</a>';
+  });
+  html+='</div>';
+
+  /* Logout */
+  html+='<div class="on-logout" id="on-logout">LOG OUT</div>';
+
+  el.className='omega-side';
+  el.innerHTML=html;
+
+  /* BACK button */
+  var back=document.getElementById('on-back-btn');
+  if(back) back.addEventListener('click',function(){
+    window.history.length>1?window.history.back():location.href='/dashboard.html';
   });
 
-  /* --- Mobile bottom navigation bar --- */
-  if (!document.getElementById('omega-mobile-nav')) {
-    var MOB_ITEMS = [
-      { key: 'dashboard', icon: '\u03A9', label: 'HOME', href: '/dashboard.html' },
-      { key: 'search',    icon: '\u25C9', label: 'SEARCH', href: '/search.html' },
-      { key: 'notifications', icon: '\u25CF', label: 'ALERTS', href: '/notifications.html' },
-      { key: 'profile',   icon: '\u25C8', label: 'PROFILE', href: '/profile.html' },
-      { key: 'beacon',    icon: '\u2726', label: 'BEACON', href: '/beacon.html' },
+  /* LOGOUT */
+  var logout=document.getElementById('on-logout');
+  if(logout) logout.addEventListener('click',function(){
+    var imp=document.createElement('script'); imp.type='module';
+    imp.textContent='import{createClient}from"https://esm.sh/@supabase/supabase-js@2";createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q").auth.signOut().then(()=>location.href="/account.html")';
+    document.body.appendChild(imp);
+  });
+
+  /* Rotating Omega canvas */
+  (function(){
+    var cv=document.getElementById('on-brand-cv'); if(!cv) return;
+    var ctx=cv.getContext('2d'),t=0;
+    function f(){
+      t+=.02; ctx.clearRect(0,0,96,96);
+      /* rings */
+      ctx.save(); ctx.translate(48,48); ctx.rotate(t*.5);
+      ctx.beginPath(); ctx.arc(0,0,40,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,0.2)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.save(); ctx.rotate(t*-.8);
+      ctx.beginPath(); ctx.ellipse(0,0,38,14,0,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,0.15)'; ctx.lineWidth=.8; ctx.stroke();
+      ctx.restore(); ctx.restore();
+      /* Omega */
+      ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*1.5))+')';
+      ctx.shadowColor='rgba(201,168,76,0.7)'; ctx.shadowBlur=12+4*Math.sin(t);
+      ctx.font='700 24px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('\u03A9',48,49); ctx.shadowBlur=0;
+      requestAnimationFrame(f);
+    }
+    f();
+  })();
+
+  /* MOBILE BOTTOM NAV */
+  if(!document.getElementById('omega-mob-nav')){
+    var MOB=[
+      {icon:'\u2302',label:'HOME',href:'/dashboard.html',key:'command'},
+      {icon:'\u25B2',label:'ASCEND',href:'/ascension.html',key:'ascend'},
+      {icon:'\u03A9',label:'OMEGA',href:'/dashboard.html',key:'omega'},
+      {icon:'\u2609',label:'COSMOS',href:'/horoscope.html',key:'cosmos'},
+      {icon:'\u03A9',label:'VAULT',href:'/treasury.html',key:'vault'},
     ];
-    var mob = document.createElement('nav'); mob.id = 'omega-mobile-nav';
-    mob.className = 'omega-mobile-nav';
-    var ul = document.createElement('ul');
-    MOB_ITEMS.forEach(function (m) {
-      var li = document.createElement('li');
-      var a = document.createElement('a');
-      a.href = m.href;
-      if (m.key === page) a.className = 'on';
-      a.innerHTML = '<span class="mn-icon">' + m.icon + '</span><span class="mn-label">' + m.label + '</span>';
+    var mob=document.createElement('nav'); mob.id='omega-mob-nav'; mob.className='omega-mob-nav';
+    var ul=document.createElement('ul'); ul.className='mob-nav-ul';
+    MOB.forEach(function(m){
+      var li=document.createElement('li');
+      var a=document.createElement('a'); a.href=m.href;
+      if(m.key===activeSection||m.key===data_page) a.className='m-on';
+      a.innerHTML='<span class="mi">'+m.icon+'</span><span class="ml">'+m.label+'</span>';
       li.appendChild(a); ul.appendChild(li);
     });
-    mob.appendChild(ul);
-    document.body.appendChild(mob);
+    mob.appendChild(ul); document.body.appendChild(mob);
+  }
+
+  /* TOP SCAN BAR */
+  if(!document.getElementById('omega-top-bar')){
+    var bar=document.createElement('div'); bar.id='omega-top-bar'; document.body.appendChild(bar);
   }
 })();

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- Sovereign Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:72px;flex-shrink:0}
+.main{flex:1;min-width:0;padding-bottom:80px}
+.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:24px clamp(14px,3vw,32px) 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.pad{padding:0 clamp(14px,3vw,32px)}
+
+/* TABS */
+.tab-nav{display:flex;border-bottom:1px solid var(--line);background:rgba(8,8,15,0.95);position:sticky;top:0;z-index:50;overflow-x:auto;scrollbar-width:none}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 20px;cursor:pointer;border-right:1px solid var(--line);border-bottom:2px solid transparent;transition:all .18s}
+.tab-btn:hover{background:rgba(201,168,76,0.04)}
+.tab-btn.active{border-bottom-color:var(--gold);background:rgba(201,168,76,0.05)}
+.tab-btn .tbi{font-size:16px;transition:transform .2s}
+.tab-btn:hover .tbi,.tab-btn.active .tbi{transform:scale(1.2)}
+.tab-btn.active .tbi{color:var(--gold);text-shadow:0 0 10px rgba(201,168,76,0.5)}
+.tab-btn .tbl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);white-space:nowrap}
+.tab-btn.active .tbl{color:var(--gold)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* PROFILE CARD */
+.profile-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:22px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin:0 clamp(14px,3vw,32px)}
+.pc-avatar{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.05));display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:26px;color:var(--gold);flex-shrink:0;animation:avatar-glow 3s ease-in-out infinite}
+@keyframes avatar-glow{0%,100%{box-shadow:0 0 10px rgba(201,168,76,0.2)}50%{box-shadow:0 0 24px rgba(201,168,76,0.5)}}
+.pc-meta{flex:1;min-width:200px}
+.pcm-name{font-family:var(--D);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.pcm-role{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:12px}
+.pcm-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.pcm-stat{border:1px solid var(--line);padding:10px;background:rgba(7,7,11,.4)}
+.pcm-stat .sl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.pcm-stat .sv{font-family:var(--D);font-size:16px;font-weight:700}
+
+/* AXIS BARS */
+.axis-panel{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;margin:14px clamp(14px,3vw,32px) 0}
+.axis-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.axis-row:last-child{margin-bottom:0}
+.ar-label{font-family:var(--D);font-size:12px;font-weight:700;min-width:24px}
+.ar-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);min-width:100px}
+.ar-bar-wrap{flex:1;height:5px;background:rgba(201,168,76,.08);border-radius:3px;overflow:hidden}
+.ar-bar-fill{height:100%;border-radius:3px;transition:width 1.4s ease}
+.ar-val{font-family:var(--D);font-size:14px;font-weight:700;min-width:30px;text-align:right}
+
+/* EDIT FORM */
+.edit-form{margin:14px clamp(14px,3vw,32px) 0;border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px}
+.ef-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+.ef-field label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
+.ef-field input,.ef-field select{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none;transition:border-color .15s}
+.ef-field input:focus,.ef-field select:focus{border-color:rgba(201,168,76,.4)}
+.btn-save{font-family:var(--M);font-size:10px;letter-spacing:2px;padding:10px 22px;color:var(--void);background:var(--gold);border:none;cursor:pointer;transition:background .15s}
+.btn-save:hover{background:var(--solar)}
+.save-msg{font-family:var(--M);font-size:10px;color:var(--green);margin-top:10px;display:none}
+
+/* PASSPORT */
+.passport-card{margin:0 clamp(14px,3vw,32px);border:2px solid rgba(201,168,76,.4);background:linear-gradient(160deg,rgba(201,168,76,.04),transparent);padding:24px;position:relative;overflow:hidden;max-width:600px}
+.passport-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--solar),var(--gold))}
+.pp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.pp-title{font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700}
+.pp-id{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
+.pp-omega{font-size:48px;color:rgba(201,168,76,0.3);font-family:var(--D)}
+.pp-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pp-field{padding:10px;border:1px dashed rgba(201,168,76,.2)}
+.ppf-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.ppf-val{font-family:var(--M);font-size:11px;color:var(--solar)}
+.pp-barcode{border-top:1px dashed rgba(201,168,76,.2);margin-top:16px;padding-top:12px;display:flex;gap:2px;height:24px}
+.pp-barcode .bar{background:rgba(201,168,76,0.5);border-radius:1px;transition:height .3s}
+
+/* KYC STEPS */
+.kyc-steps{display:flex;flex-direction:column;gap:0;margin:0 clamp(14px,3vw,32px)}
+.kyc-step{display:flex;gap:16px;padding:16px 0;border-bottom:1px dashed rgba(201,168,76,.07)}
+.kyc-step:last-child{border-bottom:none}
+.ks-circle{width:36px;height:36px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:12px;font-weight:700;flex-shrink:0;transition:all .3s}
+.ks-body{flex:1}.ks-body .ksb-title{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:4px}
+.ks-body .ksb-desc{font-size:11px;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:8px}
+.ks-action{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:6px 14px;border:1px solid;cursor:pointer;transition:all .15s}
+.ks-action:hover{opacity:.8}
+
+/* SETTINGS */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin:0 clamp(14px,3vw,32px)}
+.sg-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:18px}
+.sgc-title{font-family:var(--D);font-size:13px;color:var(--solar);font-weight:700;margin-bottom:5px}
+.sgc-desc{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:12px;line-height:1.5}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px dashed rgba(201,168,76,.07)}
+.toggle-row:last-child{border-bottom:none}
+.tr-label{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted)}
+.toggle{width:32px;height:16px;border-radius:8px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);position:relative;cursor:pointer;transition:background .2s}
+.toggle.on{background:rgba(63,178,127,.3);border-color:rgba(63,178,127,.5)}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--muted);transition:all .2s}
+.toggle.on::after{left:18px;background:var(--green)}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}.pp-fields{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="identity"></aside>
+  <main class="main">
+    <div class="tab-nav">
+      <div class="tab-btn active" data-tab="profile"><div class="tbi" style="color:#C9A84C">&#x25C8;</div><div class="tbl">PROFILE</div></div>
+      <div class="tab-btn" data-tab="passport"><div class="tbi" style="color:#E2C86D">&#x2394;</div><div class="tbl">PASSPORT</div></div>
+      <div class="tab-btn" data-tab="kyc"><div class="tbi" style="color:#00E5FF">&#x25A3;</div><div class="tbl">KYC</div></div>
+      <div class="tab-btn" data-tab="character"><div class="tbi" style="color:#9B6BF0">&#x2726;</div><div class="tbl">CHARACTER</div></div>
+      <div class="tab-btn" data-tab="settings"><div class="tbi" style="color:#3fb27f">&#x2699;</div><div class="tbl">SETTINGS</div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="tab-panel active" id="tab-profile">
+      <div class="sechead">SOVEREIGN PROFILE</div>
+      <div class="profile-card">
+        <div class="pc-avatar" id="av-init">S</div>
+        <div class="pc-meta">
+          <div class="pcm-name" id="pcm-name">SOVEREIGN</div>
+          <div class="pcm-role" id="pcm-role">LOADING...</div>
+          <div class="pcm-stats">
+            <div class="pcm-stat"><div class="sl">AUTHORITY</div><div class="sv" id="ps-auth" style="color:var(--gold)">--</div></div>
+            <div class="pcm-stat"><div class="sl">MATRIX POS</div><div class="sv" id="ps-pos" style="color:var(--cyan)">--</div></div>
+            <div class="pcm-stat"><div class="sl">SIGN</div><div class="sv" id="ps-sign" style="color:var(--solar)">--</div></div>
+            <div class="pcm-stat"><div class="sl">ELEMENT</div><div class="sv" id="ps-el" style="color:var(--green)">--</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sechead">MATRIX AXES</div>
+      <div class="axis-panel">
+        <div class="axis-row"><span class="ar-label" style="color:var(--cyan)">A</span><span class="ar-name">KNOWLEDGE</span><div class="ar-bar-wrap"><div class="ar-bar-fill" id="bar-a" style="background:linear-gradient(90deg,var(--cyan),rgba(0,229,255,.15))"></div></div><span class="ar-val" id="val-a" style="color:var(--cyan)">--</span></div>
+        <div class="axis-row"><span class="ar-label" style="color:#E86A3A">B</span><span class="ar-name">MASTERY</span><div class="ar-bar-wrap"><div class="ar-bar-fill" id="bar-b" style="background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.15))"></div></div><span class="ar-val" id="val-b" style="color:#E86A3A">--</span></div>
+        <div class="axis-row"><span class="ar-label" style="color:var(--green)">C</span><span class="ar-name">CONTRIBUTION</span><div class="ar-bar-wrap"><div class="ar-bar-fill" id="bar-c" style="background:linear-gradient(90deg,var(--green),rgba(63,178,127,.15))"></div></div><span class="ar-val" id="val-c" style="color:var(--green)">--</span></div>
+      </div>
+      <div class="sechead">EDIT PROFILE</div>
+      <div class="edit-form">
+        <div class="ef-grid">
+          <div class="ef-field"><label>DISPLAY NAME</label><input type="text" id="ef-name" placeholder="Your sovereign name..."/></div>
+          <div class="ef-field"><label>ZODIAC SIGN</label>
+            <select id="ef-sign"><option value="">-- SELECT SIGN --</option>
+              <option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option>
+              <option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option>
+              <option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
+            </select>
+          </div>
+          <div class="ef-field"><label>NATIONALITY</label><input type="text" id="ef-nation" placeholder="e.g. Lebanese"/></div>
+          <div class="ef-field"><label>PROFESSION</label><input type="text" id="ef-prof" placeholder="e.g. Architect"/></div>
+        </div>
+        <button class="btn-save" id="btn-profile-save">SAVE PROFILE</button>
+        <div class="save-msg" id="profile-save-msg">Profile updated and sealed.</div>
+      </div>
+    </div>
+
+    <!-- PASSPORT -->
+    <div class="tab-panel" id="tab-passport">
+      <div class="sechead">SOVEREIGN DIGITAL PASSPORT</div>
+      <div class="passport-card">
+        <div class="pp-header">
+          <div><div class="pp-title">SOVEREIGN PASSPORT</div><div class="pp-id" id="pp-id">SYD-OMEGA-91717 . ID: --</div></div>
+          <div class="pp-omega">&#937;</div>
+        </div>
+        <div class="pp-fields">
+          <div class="pp-field"><div class="ppf-label">SOVEREIGN NAME</div><div class="ppf-val" id="ppf-name">--</div></div>
+          <div class="pp-field"><div class="ppf-label">SOVEREIGN SIGN</div><div class="ppf-val" id="ppf-sign">--</div></div>
+          <div class="pp-field"><div class="ppf-label">MATRIX POSITION</div><div class="ppf-val" id="ppf-pos">--</div></div>
+          <div class="pp-field"><div class="ppf-label">AUTHORITY SCORE</div><div class="ppf-val" id="ppf-auth">--</div></div>
+          <div class="pp-field"><div class="ppf-label">ACCESS TIER</div><div class="ppf-val" id="ppf-tier">SOVEREIGN</div></div>
+          <div class="pp-field"><div class="ppf-label">FREQUENCY LOCK</div><div class="ppf-val">9.1717Hz</div></div>
+          <div class="pp-field"><div class="ppf-label">PQC SHIELD</div><div class="ppf-val" style="color:var(--green)">ACTIVE (FIPS 208)</div></div>
+          <div class="pp-field"><div class="ppf-label">GENESIS DATE</div><div class="ppf-val" id="ppf-date">--</div></div>
+        </div>
+        <div class="pp-barcode" id="pp-barcode"></div>
+      </div>
+    </div>
+
+    <!-- KYC -->
+    <div class="tab-panel" id="tab-kyc">
+      <div class="sechead">IDENTITY VERIFICATION -- KYC PROTOCOL</div>
+      <div class="pad" style="margin-bottom:14px">
+        <div style="border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.03);padding:12px 16px;font-family:var(--M);font-size:9px;color:var(--cyan);letter-spacing:1px;line-height:1.7">
+          READY TO ACTIVATE -- Live KYC requires licensed AML/KYC provider. All intake flows active.
+        </div>
+      </div>
+      <div class="kyc-steps" id="kyc-steps"></div>
+    </div>
+
+    <!-- CHARACTER -->
+    <div class="tab-panel" id="tab-character">
+      <div class="sechead">SOVEREIGN CHARACTER SYSTEM</div>
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;padding:0 clamp(14px,3vw,32px);margin-bottom:20px">
+        <canvas id="char-cv" width="160" height="160" style="width:80px;height:80px;border:1px solid var(--line);flex-shrink:0"></canvas>
+        <div style="flex:1;min-width:200px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px" id="char-type">ARCHETYPE</div>
+          <div style="font-family:var(--D);font-size:20px;color:var(--gold);font-weight:700;margin-bottom:5px" id="char-name">THE ARCHITECT</div>
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px" id="char-role">LOADING...</div>
+          <div style="font-size:13px;font-weight:300;color:var(--muted);line-height:1.8" id="char-desc">Your character is assigned at genesis by your zodiac sign and evolves with your matrix progress. Every action refines your archetype.</div>
+        </div>
+      </div>
+      <div class="sechead">EVOLUTION PATH</div>
+      <div style="display:flex;gap:0;overflow-x:auto;padding:0 clamp(14px,3vw,32px) 8px;scrollbar-width:none" id="evo-strip"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="sechead">PLATFORM SETTINGS</div>
+      <div class="settings-grid" id="settings-grid"></div>
+      <div style="margin:20px clamp(14px,3vw,32px)">
+        <button class="btn-save" id="btn-settings-save">SAVE SETTINGS</button>
+        <div class="save-msg" id="settings-save-msg">Settings saved to sovereign profile.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active');
+  });
+});
+if(location.hash){document.querySelector('[data-tab="'+location.hash.replace('#','')+'"]')?.click();}
+/* Toggle widget */
+function makeToggle(on){
+  const el=document.createElement('div');el.className='toggle'+(on?' on':'');
+  el.addEventListener('click',()=>{el.classList.toggle('on');});
+  return el;
+}
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const EL_MAP={Aries:'FIRE',Taurus:'METAL',Gemini:'WIND',Cancer:'WATER',Leo:'FIRE',Virgo:'SAND',Libra:'WIND',Scorpio:'WATER',Sagittarius:'FIRE',Capricorn:'METAL',Aquarius:'WIND',Pisces:'WATER'};
+const CH_MAP={
+  Aries:{name:'THE FIRE INITIATOR',role:'WARRIOR . PIONEER',col:'#E86A3A',desc:'Commands through action. First fire in the matrix.'},
+  Taurus:{name:'THE METAL SOVEREIGN',role:'BUILDER . PROTECTOR',col:'#C7CDD6',desc:'Metal endurance shapes empires across time.'},
+  Gemini:{name:'THE WIND MESSENGER',role:'COMMUNICATOR . THINKER',col:'#A9C2D8',desc:'Wind carries knowledge across all dimensions.'},
+  Cancer:{name:'THE WATER KEEPER',role:'PROTECTOR . NURTURER',col:'#34C6E6',desc:'Water flows where others cannot reach.'},
+  Leo:{name:'THE FIRE SOVEREIGN',role:'LEADER . CREATOR',col:'#E86A3A',desc:'Fire at its apex. Lead through sovereign authority.'},
+  Virgo:{name:'THE SAND ARCHITECT',role:'ANALYST . AMPLIFIER',col:'#D9B86A',desc:'Sand amplifies all other elements. The universal power.'},
+  Libra:{name:'THE WIND JUSTICIAR',role:'BALANCER . DIPLOMAT',col:'#A9C2D8',desc:'Wind as justice. Balance through sovereign wisdom.'},
+  Scorpio:{name:'THE WATER EXECUTOR',role:'TRANSFORMER . AVENGER',col:'#8B0000',desc:'Water in its most powerful, hidden form.'},
+  Sagittarius:{name:'THE FIRE EXPLORER',role:'SEEKER . PHILOSOPHER',col:'#C9A84C',desc:'Fire that expands beyond all known borders.'},
+  Capricorn:{name:'THE METAL MASTER',role:'ACHIEVER . STRATEGIST',col:'#E2C86D',desc:'Metal discipline builds empires across decades.'},
+  Aquarius:{name:'THE WIND VISIONARY',role:'INNOVATOR . REBEL',col:'#9B6BF0',desc:'Wind as civilizational revolution and innovation.'},
+  Pisces:{name:'THE WATER ORACLE',role:'DREAMER . TRANSCENDENT',col:'#3fb27f',desc:'Water as transcendence into the 9th element.'},
+};
+const MATS=['SAND','GLASS','IRON','STEEL','TITANIUM','CARBON','GOLD','PLATINUM','OMEGA'];
+const MAT_COLS=['#D9B86A','#A9C2D8','#C7CDD6','#8B8F9C','#607D8B','#455A64','#C9A84C','#E8D5B7','#C9A84C'];
+const KYC_STEPS=[
+  {n:1,title:'EMAIL VERIFICATION',desc:'Email confirmed at registration.','done':true},
+  {n:2,title:'PROFILE COMPLETION',desc:'Display name, zodiac sign, nationality, and profession required.','done':false,action:'COMPLETE ABOVE',href:'#profile'},
+  {n:3,title:'IDENTITY DOCUMENT',desc:'Passport or government ID -- valid, unexpired.','done':false,action:'UPLOAD DOCUMENT'},
+  {n:4,title:'LIVENESS CHECK',desc:'60-second selfie video for AI verification.','done':false,action:'START LIVENESS'},
+  {n:5,title:'ADDRESS VERIFICATION',desc:'Utility bill or bank statement dated within 90 days.','done':false,action:'UPLOAD PROOF'},
+  {n:6,title:'KYC REVIEW',desc:'Compliance engine review -- 1 to 3 business days.','done':false},
+  {n:7,title:'SOVEREIGN UNLOCKED',desc:'Full economic features, tokens, and credentials active.','done':false},
+];
+const SETTINGS_DATA=[
+  {title:'DISPLAY',items:[['Dark Mode','on'],['Compact Layout','off'],['Animations','on'],['Cursor Trail','on']]},
+  {title:'PRIVACY',items:[['Show in Leaderboard','on'],['Public Authority Score','on'],['Anonymous Mode','off']]},
+  {title:'NOTIFICATIONS',items:[['Matrix Milestone Alerts','on'],['Agent Messages','on'],['Daily Oracle','on'],['Economic Events','off']]},
+  {title:'AUDIO',items:[['Ambient Frequency','on'],['Click Sounds','off'],['Oracle Voice','off']]},
+];
+
+function drawCharCanvas(sign){
+  const cv=document.getElementById('char-cv');if(!cv)return;
+  const ch=CH_MAP[sign]||CH_MAP.Virgo;
+  const ctx=cv.getContext('2d'),CX=160,CY=160;let t=0;
+  const GLYPHS={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
+  function frame(){
+    t+=.02;ctx.clearRect(0,0,320,320);
+    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,CX*.85);
+    bg.addColorStop(0,ch.col+'22');bg.addColorStop(1,'transparent');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,320,320);
+    ctx.save();ctx.translate(CX,CY);
+    ctx.save();ctx.rotate(t*.3);
+    ctx.beginPath();ctx.arc(0,0,CX*.75,0,Math.PI*2);ctx.strokeStyle=ch.col+'44';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.restore();
+    ctx.save();ctx.rotate(-t*.2);
+    ctx.beginPath();ctx.ellipse(0,0,CX*.7,CX*.26,0,0,Math.PI*2);ctx.strokeStyle=ch.col+'33';ctx.lineWidth=1;ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle=ch.col;ctx.shadowColor=ch.col;ctx.shadowBlur=18+5*Math.sin(t*1.5);
+    ctx.font='700 60px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(GLYPHS[sign]||'\u03A9',0,2);ctx.shadowBlur=0;
+    ctx.restore();requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function buildKYC(kyc){
+  const g=document.getElementById('kyc-steps');g.innerHTML='';
+  const done=kyc==='verified'?7:kyc==='submitted'?5:2;
+  KYC_STEPS.forEach((s,i)=>{
+    const isDone=i<done,isActive=i===done;
+    const col=isDone?'var(--green)':isActive?'var(--gold)':'rgba(133,131,123,0.3)';
+    const d=document.createElement('div');d.className='kyc-step';
+    d.innerHTML=`<div class="ks-circle" style="border-color:${col};color:${col}${isActive?';box-shadow:0 0 14px rgba(201,168,76,0.3)':''}">${isDone?'&#x2713;':s.n}</div><div class="ks-body"><div class="ksb-title" style="color:${isDone?'var(--green)':isActive?'var(--solar)':'rgba(233,230,220,0.4)'}">${s.title}</div><div class="ksb-desc">${s.desc}</div>${isActive&&s.action?'<button class="ks-action" style="color:var(--gold);border-color:rgba(201,168,76,.4)">'+(s.action)+'</button>':''}</div>`;
+    g.appendChild(d);
+  });
+}
+
+function buildEvoStrip(tier){
+  const g=document.getElementById('evo-strip');g.innerHTML='';
+  MATS.forEach((m,i)=>{
+    const done=i<tier,active=i===tier-1;
+    const c=document.createElement('div');
+    c.style.cssText=`display:flex;flex-direction:column;align-items:center;gap:5px;min-width:70px;padding:0 4px;flex-shrink:0`;
+    c.innerHTML=`<div style="width:32px;height:32px;border-radius:50%;border:2px solid ${done||active?MAT_COLS[i]:MAT_COLS[i]+'33'};display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:10px;color:${done||active?MAT_COLS[i]:'rgba(133,131,123,0.3)'}${active?';box-shadow:0 0 12px '+MAT_COLS[i]+'55':''}">${i+1}</div><div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:${active?MAT_COLS[i]:'var(--muted)'};text-align:center">${m}</div>`;
+    if(i<MATS.length-1) c.innerHTML+='<div style="position:absolute;right:-12px;top:15px;font-family:var(--M);font-size:10px;color:rgba(201,168,76,0.2)">--</div>';
+    g.appendChild(c);
+  });
+}
+
+function buildSettings(){
+  const g=document.getElementById('settings-grid');g.innerHTML='';
+  SETTINGS_DATA.forEach(sec=>{
+    const c=document.createElement('div');c.className='sg-card';
+    c.innerHTML=`<div class="sgc-title">${sec.title}</div>`;
+    sec.items.forEach(item=>{
+      const row=document.createElement('div');row.className='toggle-row';
+      const toggle=makeToggle(item[1]==='on');
+      const label=document.createElement('span');label.className='tr-label';label.textContent=item[0];
+      row.appendChild(label);row.appendChild(toggle);
+      c.appendChild(row);
+    });
+    g.appendChild(c);
+  });
+}
+
+function buildBarcode(){
+  const bc=document.getElementById('pp-barcode');if(!bc)return;
+  bc.innerHTML='';
+  for(let i=0;i<80;i++){
+    const b=document.createElement('div');b.className='bar';
+    const h=Math.random()>.5?(8+Math.random()*16):(3+Math.random()*8);
+    b.style.cssText=`flex:${Math.random()>.7?2:1};height:${h}px;align-self:flex-end`;
+    bc.appendChild(b);
+  }
+}
+
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const uid=sess.user.id;
+  const pr=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();
+  const d=pr.data||{};
+  const a=parseFloat(d.axis_a)||1,b=parseFloat(d.axis_b)||1,c=parseFloat(d.axis_c)||1;
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const sign=d.sign||'Virgo';
+  const tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
+  const el=EL_MAP[sign]||'SAND';
+  const ch=CH_MAP[sign]||CH_MAP.Virgo;
+
+  /* Profile tab */
+  const name=d.display_name||'SOVEREIGN';
+  document.getElementById('av-init').textContent=name[0]?.toUpperCase()||'S';
+  document.getElementById('pcm-name').textContent=name.toUpperCase();
+  document.getElementById('pcm-role').textContent=(d.is_owner?'ARCHITECT . OWNER . ':'')+sign.toUpperCase()+' . '+el+' . LEVEL '+a.toFixed(1);
+  document.getElementById('ps-auth').textContent=auth.toFixed(2);
+  document.getElementById('ps-pos').textContent='('+a.toFixed(1)+','+b.toFixed(1)+','+c.toFixed(1)+')';
+  document.getElementById('ps-sign').textContent=sign.toUpperCase();
+  document.getElementById('ps-el').textContent=el;
+  setTimeout(()=>{
+    document.getElementById('bar-a').style.width=(a/9*100)+'%';
+    document.getElementById('bar-b').style.width=(b/9*100)+'%';
+    document.getElementById('bar-c').style.width=(c/9*100)+'%';
+  },300);
+  document.getElementById('val-a').textContent=a.toFixed(1);
+  document.getElementById('val-b').textContent=b.toFixed(1);
+  document.getElementById('val-c').textContent=c.toFixed(1);
+  document.getElementById('ef-name').value=d.display_name||'';
+  document.getElementById('ef-sign').value=d.sign||'';
+
+  /* Passport tab */
+  document.getElementById('pp-id').textContent='SYD-OMEGA-91717 . ID: '+uid.substring(0,8).toUpperCase();
+  document.getElementById('ppf-name').textContent=name.toUpperCase();
+  document.getElementById('ppf-sign').textContent=sign.toUpperCase()+' . '+el;
+  document.getElementById('ppf-pos').textContent='('+a.toFixed(1)+','+b.toFixed(1)+','+c.toFixed(1)+')';
+  document.getElementById('ppf-auth').textContent=auth.toFixed(2);
+  document.getElementById('ppf-date').textContent=new Date(d.created_at||Date.now()).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+  buildBarcode();
+
+  /* KYC tab */
+  buildKYC(d.kyc_status||'not_started');
+
+  /* Character tab */
+  document.getElementById('char-type').textContent=sign.toUpperCase()+' . '+el+' ARCHETYPE';
+  document.getElementById('char-name').textContent=ch.name;
+  document.getElementById('char-role').textContent=ch.role;
+  document.getElementById('char-desc').textContent=ch.desc;
+  document.querySelectorAll('.sv, .pcm-name').forEach(el2=>{});
+  requestAnimationFrame(()=>drawCharCanvas(sign));
+  buildEvoStrip(tier);
+  buildSettings();
+
+  /* Save profile */
+  document.getElementById('btn-profile-save')?.addEventListener('click',async()=>{
+    const n=document.getElementById('ef-name').value.trim();
+    const sg=document.getElementById('ef-sign').value;
+    const nat=document.getElementById('ef-nation').value.trim();
+    const prof=document.getElementById('ef-prof').value.trim();
+    if(!n) return;
+    await sb.from('profiles').update({display_name:n,sign:sg||sign,updated_at:new Date().toISOString()}).eq('id',uid);
+    const m=document.getElementById('profile-save-msg');m.style.display='block';setTimeout(()=>m.style.display='none',3000);
+    document.getElementById('pcm-name').textContent=n.toUpperCase();
+  });
+
+  document.getElementById('btn-settings-save')?.addEventListener('click',()=>{
+    const m=document.getElementById('settings-save-msg');m.style.display='block';setTimeout(()=>m.style.display='none',3000);
+  });
+}
+boot();
+</script>
+<script src="/nav.js"></script><script src="/bg.js"></script>
+</body>
+</html>

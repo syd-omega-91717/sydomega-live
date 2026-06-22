@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — The Beacon</title>
+<title>?? SYD OMEGA 91717  --  The Beacon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -71,24 +71,24 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">??</div>
   <h2 id="gate-h">The Beacon</h2>
   <p id="gate-p">Sign in and the Beacon will guide you.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="beacon"></aside>
   <main class="main">
     <div class="hello">
-      <div class="eye">THE BEACON · YOUR GUIDE INTO THE ORDER</div>
+      <div class="eye">THE BEACON  .  YOUR GUIDE INTO THE ORDER</div>
       <div class="h" id="h-hello">Welcome.</div>
-      <div class="s" id="h-sub">—</div>
+      <div class="s" id="h-sub"> -- </div>
     </div>
 
     <div class="prog">
       <div class="ring"><canvas id="ring" width="144" height="144"></canvas><div class="rc" id="ring-t">0/6</div></div>
-      <div class="pt" id="prog-text">—</div>
+      <div class="pt" id="prog-text"> -- </div>
     </div>
 
     <div class="sechead">YOUR FIRST STEPS</div>
@@ -138,7 +138,7 @@
 
     var d=pr.data, sign=d.sign, name=d.display_name||'Sovereign';
     document.getElementById('h-hello').innerHTML='Welcome, '+name+'.';
-    document.getElementById('h-sub').innerHTML='You are '+(GLY[sign]||'')+' <b>'+sign+'</b>, of the <b>'+(d.element||'')+'</b> element. The Order is large, but the path is simple: <b>raise three axes</b> — Knowledge, Mastery, Contribution — and the gates, ranks, and honours open as you climb. Here is where to begin.';
+    document.getElementById('h-sub').innerHTML='You are '+(GLY[sign]||'')+' <b>'+sign+'</b>, of the <b>'+(d.element||'')+'</b> element. The Order is large, but the path is simple: <b>raise three axes</b>  --  Knowledge, Mastery, Contribution  --  and the gates, ranks, and honours open as you climb. Here is where to begin.';
 
     // real progress
     var kinds={academy:false,gaming:false,contribution:false};
@@ -146,7 +146,7 @@
     var hasPassport=!!(d.kyc_status && d.kyc_status!=='none');
 
     var steps=[
-      ['Stand at your Command','See your living dashboard — your triad, authority, and next gate.','/dashboard.html',true],
+      ['Stand at your Command','See your living dashboard  --  your triad, authority, and next gate.','/dashboard.html',true],
       ['Clear your first Academy lesson','Answer the matrix and raise your Knowledge (axis A).','/academy.html',kinds.academy],
       ['Win your first Game node','Master a challenge and raise your Mastery (axis B).','/gaming.html',kinds.gaming],
       ['Log your first Contribution','Record an act of service and raise your Contribution (axis C).','/contributions.html',kinds.contribution],

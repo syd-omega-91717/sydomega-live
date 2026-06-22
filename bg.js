@@ -1,32 +1,3 @@
-
-/* LIFETIME ACCESS GUARD: owner never gets trial or expiry */
-(function(){
-  async function enforceLifetimeAccess(){
-    try{
-      var mod=await import('https://esm.sh/@supabase/supabase-js@2');
-      var sb=mod.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-      var sess=(await sb.auth.getSession()).data.session;
-      if(!sess) return;
-      var pr=await sb.from('profiles').select('is_owner,access_approved,is_trial,trial_expires_at,axis_a').eq('id',sess.user.id).maybeSingle();
-      if(!pr.data) return;
-      if(pr.data.is_owner){
-        /* Owner: enforce lifetime access on every page load */
-        var needsUpdate=!pr.data.access_approved||pr.data.is_trial||pr.data.trial_expires_at||pr.data.axis_a<9;
-        if(needsUpdate){
-          await sb.from('profiles').update({
-            access_approved:true, is_trial:false, trial_expires_at:null,
-            axis_a:9.000, axis_b:9.000, axis_c:9.000, material_tier:'OMEGA MASTER', membership_tier:9
-          }).eq('id',sess.user.id);
-        }
-        window.__omegaIsOwner=true;
-        document.body.classList.add('omega-owner');
-      }
-    }catch(e){}
-  }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',enforceLifetimeAccess);}
-  else{enforceLifetimeAccess();}
-})();
-
 /* bg.js     SYD OMEGA 91717     aurora backdrop + access guard + trial engine + UI injections */
 (function(){try{var c=localStorage.getItem("omega_bg");if(c){document.documentElement.style.setProperty("--void",c);document.body&&(document.body.style.background=c);}}catch(e){} })();
 (function(){
@@ -149,3 +120,57 @@
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){injectTopbar();injectMobileNav();});}
   else{injectTopbar();injectMobileNav();}
 })();
+
+
+/* ========= OWNER NOTIFICATION BADGE (non-blocking) ========= */
+(function(){
+  var s=document.createElement('style');
+  s.textContent=[
+    '.omega-pending-badge{position:absolute;top:-3px;right:-3px;background:#8B0000;color:#fff;',
+    'font-family:monospace;font-size:7px;font-weight:700;min-width:14px;height:14px;',
+    'border-radius:0;display:flex;align-items:center;justify-content:center;padding:0 2px;',
+    'animation:badge-pulse 1.5s ease-in-out infinite;z-index:999}',
+    '.omega-alert{position:fixed;top:50px;right:18px;z-index:9998;background:rgba(13,13,24,.97);',
+    'border:1px solid rgba(139,0,0,.5);border-left:3px solid #8B0000;padding:14px 18px;',
+    'cursor:pointer;transition:all .2s;min-width:240px}',
+    '@keyframes badge-pulse{0%,100%{box-shadow:0 0 4px rgba(139,0,0,.6)}50%{box-shadow:0 0 14px rgba(139,0,0,.9)}}'
+  ].join('');
+  (document.head||document.documentElement).appendChild(s);
+})();
+
+/* ========= LIFETIME ACCESS ENFORCEMENT + NOTIFICATION ========= */
+setTimeout(function(){
+  (async function(){
+    try{
+      var mod=await import('https://esm.sh/@supabase/supabase-js@2');
+      var createClient=mod.createClient||mod.default&&mod.default.createClient;
+      if(!createClient) return;
+      var sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+      var sess=(await sb.auth.getSession()).data.session;
+      if(!sess) return;
+      var uid=sess.user.id;
+      var pr=(await sb.from('profiles').select('is_owner,access_approved,is_trial,trial_expires_at,axis_a').eq('id',uid).maybeSingle()).data;
+      if(!pr||!pr.is_owner) return;
+      window.__omegaIsOwner=true;
+      document.body.classList.add('omega-owner');
+      /* Enforce lifetime access */
+      if(!pr.access_approved||pr.is_trial||pr.trial_expires_at||parseFloat(pr.axis_a)<9){
+        await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,axis_a:9.000,axis_b:9.000,axis_c:9.000,material_tier:'OMEGA MASTER',membership_tier:9}).eq('id',uid);
+      }
+      /* Check pending members and notify */
+      var res=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false);
+      var pendingCount=res.count||0;
+      if(pendingCount>0){
+        var el=document.createElement('a');
+        el.href='/approvals.html';
+        el.className='omega-alert';
+        var d1=document.createElement('div');d1.style.cssText='font-family:Courier Prime,monospace;font-size:8px;letter-spacing:3px;color:#8B0000;margin-bottom:5px';d1.textContent='NEW ACCESS REQUEST'+(pendingCount>1?'S':'');
+        var d2=document.createElement('div');d2.style.cssText='font-family:Cinzel Decorative,serif;font-size:20px;color:#C9A84C;font-weight:700;margin-bottom:4px';d2.textContent=pendingCount+' MEMBER'+(pendingCount>1?'S':'')+' WAITING';
+        var d3=document.createElement('div');d3.style.cssText='font-family:Courier Prime,monospace;font-size:8px;color:#85837b;letter-spacing:1px';d3.textContent='Tap to open Access Control Center';
+        el.appendChild(d1);el.appendChild(d2);el.appendChild(d3);
+        document.body.appendChild(el);
+        setTimeout(function(){try{document.body.removeChild(el);}catch(e){}},10000);
+      }
+    }catch(e){}
+  })();
+},1500);

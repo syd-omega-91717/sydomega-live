@@ -1,3 +1,31 @@
+
+/* OWNER ABSOLUTE LOCK: if is_owner, axes must always be 9.000 */
+(function(){
+  var _sb=null;
+  async function enforceOwnerApex(){
+    if(!window.__omegaOwnerChecked){
+      window.__omegaOwnerChecked=true;
+      try{
+        var {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
+        _sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+        var sess=(await _sb.auth.getSession()).data.session;
+        if(!sess) return;
+        var pr=await _sb.from('profiles').select('is_owner,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+        if(pr.data && pr.data.is_owner){
+          /* Owner always at absolute apex */
+          if(pr.data.axis_a!==9.000||pr.data.axis_b!==9.000||pr.data.axis_c!==9.000){
+            await _sb.from('profiles').update({axis_a:9.000,axis_b:9.000,axis_c:9.000}).eq('id',sess.user.id);
+          }
+          window.__omegaIsOwner=true;
+          /* Add owner class to body */
+          document.body.classList.add('omega-owner');
+        }
+      }catch(e){}
+    }
+  }
+  document.addEventListener('DOMContentLoaded',enforceOwnerApex);
+})();
+
 /* bg.js     SYD OMEGA 91717     aurora backdrop + access guard + trial engine + UI injections */
 (function(){try{var c=localStorage.getItem("omega_bg");if(c){document.documentElement.style.setProperty("--void",c);document.body&&(document.body.style.background=c);}}catch(e){} })();
 (function(){

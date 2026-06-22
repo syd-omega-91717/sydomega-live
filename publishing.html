@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Publishing</title>
+<title>?? SYD OMEGA 91717  --  Publishing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -76,10 +76,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">??</div>
   <h2 id="gate-h">Publishing</h2>
   <p id="gate-p">Sign in to commit your works to the Order's archive.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
 </div>
 
 <div class="shell" id="app">
@@ -89,7 +89,7 @@
     <div class="topbar">
       <div class="t">PUBLISHING<small>THE CREATOR'S HALL</small></div>
     </div>
-    <p class="intro">Commit your works to the Order's archive — manuscripts, treatises, reports. Your <b>first publication advances your Contribution axis</b>; the archive then holds your canon. Public showcase and the creator marketplace are gated for a later phase; the act of authorship is live now.</p>
+    <p class="intro">Commit your works to the Order's archive  --  manuscripts, treatises, reports. Your <b>first publication advances your Contribution axis</b>; the archive then holds your canon. Public showcase and the creator marketplace are gated for a later phase; the act of authorship is live now.</p>
 
     <div class="card">
       <div class="h">COMMIT A WORK</div>
@@ -102,16 +102,16 @@
         <option value="Codex Entry">Codex Entry</option>
       </select>
       <div class="fld"><label for="p-title">TITLE</label><input id="p-title" maxlength="160" placeholder="Name your work" /></div>
-      <div class="fld"><label for="p-body">THE WORK</label><textarea id="p-body" maxlength="20000" placeholder="Write or paste your work…"></textarea></div>
-      <div class="fld"><label for="p-file">ATTACH MANUSCRIPT / DEMO / FILE (optional · max 5 GB)</label><input type="file" id="p-file" style="padding:10px" /></div>
+      <div class="fld"><label for="p-body">THE WORK</label><textarea id="p-body" maxlength="20000" placeholder="Write or paste your work???"></textarea></div>
+      <div class="fld"><label for="p-file">ATTACH MANUSCRIPT / DEMO / FILE (optional  .  max 5 GB)</label><input type="file" id="p-file" style="padding:10px" /></div>
       <button class="btn" id="p-go">COMMIT TO ARCHIVE</button>
       <div class="msg" id="p-msg"></div>
-      <div class="gate-note">Public showcase, licensing, and the creator marketplace are <b>PHASE II — gated on legal review</b>. Your work remains private to your archive until those activate.</div>
+      <div class="gate-note">Public showcase, licensing, and the creator marketplace are <b>PHASE II  --  gated on legal review</b>. Your work remains private to your archive until those activate.</div>
     </div>
 
     <div class="card">
       <div class="h">YOUR ARCHIVE</div>
-      <div style="font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-bottom:14px">Every work is <b style="color:var(--gold)">private to your archive and portfolio</b> — visible only to you. It is <b style="color:var(--gold)">not public</b>. The Order may approve a work for the future public showcase; until then nothing you commit is shown to anyone else.</div>
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-bottom:14px">Every work is <b style="color:var(--gold)">private to your archive and portfolio</b>  --  visible only to you. It is <b style="color:var(--gold)">not public</b>. The Order may approve a work for the future public showcase; until then nothing you commit is shown to anyone else.</div>
       <div id="p-list"></div>
     </div>
   </main>
@@ -129,7 +129,7 @@
     try{
       var r=await supabase.from('publications').select('kind,title,body,created_at,status').eq('user_id',user.id).order('created_at',{ascending:false}).limit(40);
       box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">Your archive is empty — commit your first work above.</div>'; return; }
+      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">Your archive is empty  --  commit your first work above.</div>'; return; }
       r.data.forEach(function(w){
         var dt=w.created_at?new Date(w.created_at).toLocaleDateString():'';
         var st=(w.status||'private').toLowerCase();
@@ -151,11 +151,11 @@
     var body=document.getElementById('p-body').value.trim();
     var out=document.getElementById('p-msg'), btn=document.getElementById('p-go');
     if(title.length<2){ out.style.color='var(--crimson)'; out.textContent='Give your work a title.'; return; }
-    if(body.length<40){ out.style.color='var(--crimson)'; out.textContent='The work is too short — at least 40 characters.'; return; }
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Committing…';
+    if(body.length<40){ out.style.color='var(--crimson)'; out.textContent='The work is too short  --  at least 40 characters.'; return; }
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Committing???';
     var filePath=null, fEl=document.getElementById('p-file');
     if(fEl && fEl.files && fEl.files[0]){
-      out.textContent='Uploading file… (large files take time)';
+      out.textContent='Uploading file??? (large files take time)';
       var up=await window.OmegaStorage.upload('uploads', fEl.files[0]);
       if(up.error){ btn.disabled=false; out.style.color='var(--crimson)'; out.textContent='Upload failed: '+up.error; return; }
       filePath=up.path;

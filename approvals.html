@@ -308,7 +308,21 @@ async function boot(){
   document.getElementById('owner-gate').style.display='none';
   document.getElementById('main-shell').style.display='flex';
   /* Load all members */
-  const {data:members}=await sb.from('profiles').select('id,email,display_name,sign,access_approved,is_trial,trial_expires_at,is_owner,created_at').order('created_at',{ascending:false});
+  /* Use SECURITY DEFINER RPC so owner can read all members */
+  let members = [];
+  try {
+    const {data: rpcData, error: rpcErr} = await sb.rpc('get_all_members');
+    if(rpcErr || !rpcData){
+      /* Fallback: direct query (works if RLS allows it) */
+      const {data: fallback} = await sb.from('profiles').select('*').order('created_at',{ascending:false});
+      members = fallback || [];
+    } else {
+      members = rpcData;
+    }
+  } catch(e){
+    const {data: fallback} = await sb.from('profiles').select('*').order('created_at',{ascending:false});
+    members = fallback || [];
+  }
   allMembers=members||[];
   buildPeriods();
   buildStats(allMembers);

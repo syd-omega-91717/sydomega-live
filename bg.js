@@ -1,3 +1,65 @@
+/* ===== MOBILE GLOBAL FIXES -- ALL PAGES ===== */
+(function(){
+  var s=document.createElement('style');
+  s.textContent=[
+    /* Touch targets -- all buttons at least 44px */
+    '@media(max-width:760px){',
+    '.tab-btn{padding:14px 10px;min-height:48px}',
+    '.btn-primary,.btn-add,.btn-book,.btn-save{width:100%;padding:14px;font-size:13px;text-align:center}',
+    /* Mobile sidebar hidden, main takes full width */
+    'aside.omega-side,aside.side{display:none!important}',
+    '.main{padding-left:0!important;padding-right:0!important}',
+    '.shell{flex-direction:column}',
+    /* Content grids stack on mobile */
+    '.content-grid{grid-template-columns:1fr!important}',
+    '.col-side{display:none}',
+    /* Metrics band 2-col on mobile */
+    '.metrics-band{grid-template-columns:1fr 1fr}',
+    '.metrics-band .mb-item:nth-child(2n){border-right:none}',
+    /* Card grids minimum 1 column */
+    '.domains-grid,.franchise-grid,.trophy-grid,.ach-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}',
+    '.nft-gallery{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}',
+    /* Topbar font size */
+    '.topbar .t{font-size:15px}',
+    /* Agent mesh canvas height */
+    '#mesh-cv{height:180px}',
+    /* Search bar full width */
+    '.search-bar{padding:10px 14px}',
+    '.sb-input{font-size:13px;padding:10px 36px 10px 12px}',
+    /* Profile hero compact */
+    '.ph-inner{flex-direction:column;padding:80px 14px 20px}',
+    '.profile-hero{min-height:auto}',
+    /* Matrix strip stack */
+    '.matrix-strip{flex-direction:column}',
+    '.ms-axis{border-right:none;border-bottom:1px solid rgba(201,168,76,.12)}',
+    /* Constellation canvas height */
+    '#constellation-cv,#con-cv{height:220px}',
+    /* family roles single column */
+    '.family-roles,.status-grid{grid-template-columns:1fr}',
+    /* Tab nav scroll */
+    '.tab-nav{overflow-x:auto;scrollbar-width:none}',
+    '.tab-nav::-webkit-scrollbar{display:none}',
+    '.tab-btn{min-width:80px;flex-shrink:0}',
+    /* Gate canvas */
+    '#gate-cv{height:80px}',
+    /* Console grid single col */
+    '.console-grid{grid-template-columns:1fr}',
+    /* Period row wrap */
+    '.period-row{gap:4px}',
+    '.pr-opt{padding:7px 9px;font-size:9px}',
+    /* Member row stack */
+    '.mbr-row{flex-direction:column;align-items:flex-start}',
+    '.mbr-actions{width:100%;justify-content:flex-start}',
+    '}',
+    /* Ensure touch feedback */
+    'a,button{-webkit-tap-highlight-color:rgba(201,168,76,.15)}',
+    /* Swipe hint for drawer */
+    '#omega-drawer{border-top:3px solid #C9A84C}',
+    '#omega-drawer .drawer-header{position:sticky;top:0;background:rgba(8,8,15,.98);z-index:1}',
+  ].join('');
+  (document.head||document.documentElement).appendChild(s);
+})();
+
 /* bg.js     SYD OMEGA 91717     aurora backdrop + access guard + trial engine + UI injections */
 (function(){try{var c=localStorage.getItem("omega_bg");if(c){document.documentElement.style.setProperty("--void",c);document.body&&(document.body.style.background=c);}}catch(e){} })();
 (function(){

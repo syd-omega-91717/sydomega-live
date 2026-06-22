@@ -4,7 +4,6 @@ UPDATE profiles SET
   is_owner        = TRUE,
   access_approved = TRUE,
   is_trial        = FALSE,
-  access_revoked  = FALSE,
   trial_expires_at = NULL,
   axis_a          = 9.000,
   axis_b          = 9.000,

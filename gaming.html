@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — The Games</title>
+<title>?? SYD OMEGA 91717  --  The Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -84,17 +84,17 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">??</div>
   <h2 id="gate-h">The Games</h2>
   <p id="gate-p">Sign in to enter the games.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="gaming"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">THE GAMES<small>12 GAMES · 12 STAGES · 9×9×9 GATED</small></div></div>
-    <p class="intro">Twelve games, each with twelve stages — <b>144 nodes of mastery</b>. No stage is given. Clear the <b>Sequence Lock</b> exactly to take a node; each cleared node raises your <b>Mastery</b> and so your level, grade, and trophies. A game opens only when your matrix is ready and the one before it is broken.</p>
+    <div class="topbar"><div class="t">THE GAMES<small>12 GAMES  .  12 STAGES  .  9x9x9 GATED</small></div></div>
+    <p class="intro">Twelve games, each with twelve stages  --  <b>144 nodes of mastery</b>. No stage is given. Clear the <b>Sequence Lock</b> exactly to take a node; each cleared node raises your <b>Mastery</b> and so your level, grade, and trophies. A game opens only when your matrix is ready and the one before it is broken.</p>
     <div class="mstat" id="mstat"></div>
 
     <div class="sechead">THE TWELVE GAMES</div>
@@ -141,7 +141,7 @@
     GAMES.forEach(function(gm,g){
       var unlocked=gameUnlocked(g), n=clearsIn(g);
       var d=document.createElement('div'); d.className='game'+(unlocked?'':' locked')+(g===selGame?' sel':'');
-      var lock=unlocked?'':'<div class="lock">LOCKED · need Mastery \u2265 '+g+' and 6 stages cleared in Game '+ROMAN[g-1]+'</div>';
+      var lock=unlocked?'':'<div class="lock">LOCKED  .  need Mastery \u2265 '+g+' and 6 stages cleared in Game '+ROMAN[g-1]+'</div>';
       d.innerHTML='<div class="gi">GAME '+ROMAN[g]+' \u00B7 '+gm[0].toUpperCase()+'</div><div class="gn">'+gm[1]+'\u2019s Gauntlet</div><div class="gs">'+n+' / 12 CLEARED</div><div class="bar"><i style="width:'+(n/12*100)+'%"></i></div>'+lock;
       if(unlocked) d.addEventListener('click',function(){ openGame(g); });
       box.appendChild(d);
@@ -196,7 +196,7 @@
   async function watch(){
     busy=true; input=[]; document.getElementById('m-action').disabled=true;
     target=reverse?seq.slice().reverse():seq.slice();
-    setStat('WATCH…'); await sleep(500);
+    setStat('WATCH???'); await sleep(500);
     for(var i=0;i<seq.length;i++){ await flash(seq[i]); await sleep(Math.max(90,interval*0.35)); }
     busy=false; setStat(reverse?'YOUR TURN \u2014 REPEAT IN REVERSE':'YOUR TURN \u2014 REPEAT THE SEQUENCE');
   }
@@ -217,7 +217,7 @@
   }
 
   async function cleared_(){
-    busy=true; setStat('NODE CLEARED \u2014 awarding Mastery…');
+    busy=true; setStat('NODE CLEARED \u2014 awarding Mastery???');
     var already=isCleared(curG,curS);
     cleared[key(curG,curS)]=true;
     try{ await supabase.rpc('complete_task',{p_kind:'gaming',p_task:key(curG,curS),p_axis:'b',p_title:'Game '+(curG+1)+' Stage '+(curS+1)}); }catch(e){}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Sovereign Passport</title>
+<title>?? SYD OMEGA 91717  --  Sovereign Passport</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -71,10 +71,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">??</div>
   <h2 id="gate-h">Sovereign Passport</h2>
   <p id="gate-p">Sign in to view your Passport.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
 </div>
 
 <div class="shell" id="app">
@@ -87,24 +87,24 @@
       <div class="pp-body">
         <div class="pp-photo" id="pp-photo">\u03A9</div>
         <div class="pp-fields">
-          <div class="pp-name" id="pp-name">—</div>
+          <div class="pp-name" id="pp-name"> -- </div>
           <div class="pp-row">
-            <div class="pp-f"><div class="k">SIGN</div><div class="v" id="pp-sign">—</div></div>
-            <div class="pp-f"><div class="k">RANK</div><div class="v g" id="pp-rank">—</div></div>
-            <div class="pp-f"><div class="k">FACTION</div><div class="v" id="pp-fact">—</div></div>
-            <div class="pp-f"><div class="k">AGENT</div><div class="v" id="pp-agent">—</div></div>
-            <div class="pp-f"><div class="k">NODE</div><div class="v g" id="pp-node">—</div></div>
-            <div class="pp-f"><div class="k">AUTHORITY</div><div class="v g" id="pp-auth">—</div></div>
+            <div class="pp-f"><div class="k">SIGN</div><div class="v" id="pp-sign"> -- </div></div>
+            <div class="pp-f"><div class="k">RANK</div><div class="v g" id="pp-rank"> -- </div></div>
+            <div class="pp-f"><div class="k">FACTION</div><div class="v" id="pp-fact"> -- </div></div>
+            <div class="pp-f"><div class="k">AGENT</div><div class="v" id="pp-agent"> -- </div></div>
+            <div class="pp-f"><div class="k">NODE</div><div class="v g" id="pp-node"> -- </div></div>
+            <div class="pp-f"><div class="k">AUTHORITY</div><div class="v g" id="pp-auth"> -- </div></div>
           </div>
         </div>
       </div>
-      <div class="pp-id"><small>SOVEREIGNTY ID</small> &nbsp;<span id="pp-id">—</span></div>
+      <div class="pp-id"><small>SOVEREIGNTY ID</small> &nbsp;<span id="pp-id"> -- </span></div>
       <div class="pp-status"><span class="dot none" id="pp-dot"></span><span id="pp-stat">VERIFICATION: NOT SUBMITTED</span></div>
     </div>
 
-    <div class="notice">Your Passport is generated from your <b>real standing</b> and is yours immediately. Identity <b>verification (KYC) is built and ready to activate</b>: when you submit a document below it is <b>stored securely and marked pending</b> — <b>no "verified" status is ever granted automatically</b>. Verification becomes real only when the Order connects a licensed verification provider and completes its legal arrangements.</div>
+    <div class="notice">Your Passport is generated from your <b>real standing</b> and is yours immediately. Identity <b>verification (KYC) is built and ready to activate</b>: when you submit a document below it is <b>stored securely and marked pending</b>  --  <b>no "verified" status is ever granted automatically</b>. Verification becomes real only when the Order connects a licensed verification provider and completes its legal arrangements.</div>
 
-    <div class="sechead">SUBMIT IDENTITY DOCUMENT · READY TO ACTIVATE</div>
+    <div class="sechead">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
     <div class="kyc">
       <label>GOVERNMENT ID OR PASSPORT (image or PDF)</label>
       <input id="kyc-file" type="file" accept="image/*,application/pdf" />
@@ -130,7 +130,7 @@
   function setStatus(s){
     var dot=document.getElementById('pp-dot'), txt=document.getElementById('pp-stat');
     dot.className='dot '+(s==='submitted'?'submitted':(s==='verified'?'verified':'none'));
-    txt.textContent='VERIFICATION: '+(s==='submitted'?'SUBMITTED · PENDING':(s==='verified'?'VERIFIED':'NOT SUBMITTED'));
+    txt.textContent='VERIFICATION: '+(s==='submitted'?'SUBMITTED  .  PENDING':(s==='verified'?'VERIFIED':'NOT SUBMITTED'));
   }
 
   async function boot(){
@@ -169,7 +169,7 @@
     catch(e){ msg.style.color='var(--crimson)'; msg.textContent='Upload failed: '+(e.message||e); return; }
     var u=await supabase.from('profiles').update({kyc_status:'submitted',kyc_doc_path:path,kyc_submitted_at:new Date().toISOString()}).eq('id',uid);
     if(u.error){ msg.style.color='var(--crimson)'; msg.textContent='Saved the file, but couldn\u2019t record status: '+u.error.message+' (run kyc.sql).'; return; }
-    msg.style.color='var(--green)'; msg.textContent='Document submitted. Status is now pending — it is not verified automatically.';
+    msg.style.color='var(--green)'; msg.textContent='Document submitted. Status is now pending  --  it is not verified automatically.';
     setStatus('submitted');
     fileEl.value='';
   }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — The Academy</title>
+<title>?? SYD OMEGA 91717  --  The Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -85,17 +85,17 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">??</div>
   <h2 id="gate-h">The Academy</h2>
   <p id="gate-p">Sign in to enter the Academy.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="academy"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">THE ACADEMY<small>12 DISCIPLINES · 12 LESSONS · 9×9×9 GATED</small></div></div>
-    <p class="intro">Twelve disciplines, each with twelve lessons — <b>144 nodes of knowledge</b>. Each lesson is a trial of the matrix itself: read the 729 and answer without error. Every cleared node raises your <b>Knowledge</b>, and so your whole ascent. A discipline opens only when your matrix is ready.</p>
+    <div class="topbar"><div class="t">THE ACADEMY<small>12 DISCIPLINES  .  12 LESSONS  .  9x9x9 GATED</small></div></div>
+    <p class="intro">Twelve disciplines, each with twelve lessons  --  <b>144 nodes of knowledge</b>. Each lesson is a trial of the matrix itself: read the 729 and answer without error. Every cleared node raises your <b>Knowledge</b>, and so your whole ascent. A discipline opens only when your matrix is ready.</p>
     <div class="mstat" id="mstat"></div>
 
     <div class="sechead">THE TWELVE DISCIPLINES</div>
@@ -142,7 +142,7 @@
     return shuffle(set.map(function(s){ return {label:s, correct:(s===String(correct))}; }));
   }
 
-  function genTier(){ var n=node(); var c=Math.min(n[0],n[1],n[2]); return {text:'Tier of node '+ns(n)+' — the floor of its lowest axis?', options:opts(c,function(){return 1+rnd(9);})}; }
+  function genTier(){ var n=node(); var c=Math.min(n[0],n[1],n[2]); return {text:'Tier of node '+ns(n)+'  --  the floor of its lowest axis?', options:opts(c,function(){return 1+rnd(9);})}; }
   function genAuth(){ var n=node(); var c=auth(n).toFixed(2); return {text:'Authority of node '+ns(n)+' = \u221a(A\u00b2+B\u00b2+C\u00b2), to 2 decimals?', options:opts(c,function(){return (auth(n)+(rnd(7)-3)*0.37).toFixed(2);})}; }
   function genBelow(){ var n=node(); var c=(n[0]-1)*(n[1]-1)*(n[2]-1); return {text:'How many nodes lie strictly below '+ns(n)+' (all three coordinates smaller)?', options:opts(c,function(){return Math.max(0,c+(rnd(9)-4)*((rnd(3)+1)));})}; }
   function genHighest(k){ var arr=[]; for(var i=0;i<k;i++) arr.push(node()); var best=0; for(var i=1;i<k;i++) if(auth(arr[i])>auth(arr[best])) best=i;
@@ -165,7 +165,7 @@
     DISC.forEach(function(gm,d){
       var unlocked=discUnlocked(d), n=clearsIn(d);
       var el=document.createElement('div'); el.className='game'+(unlocked?'':' locked')+(d===selD?' sel':'');
-      var lock=unlocked?'':'<div class="lock">LOCKED · need Knowledge \u2265 '+d+' and 6 lessons cleared in '+ROMAN[d-1]+'</div>';
+      var lock=unlocked?'':'<div class="lock">LOCKED  .  need Knowledge \u2265 '+d+' and 6 lessons cleared in '+ROMAN[d-1]+'</div>';
       el.innerHTML='<div class="gi">DISCIPLINE '+ROMAN[d]+' \u00B7 '+gm[0].toUpperCase()+'</div><div class="gn">'+gm[1]+'\u2019s Codex</div><div class="gs">'+n+' / 12 CLEARED</div><div class="bar"><i style="width:'+(n/12*100)+'%"></i></div>'+lock;
       if(unlocked) el.addEventListener('click',function(){ openDisc(d); });
       box.appendChild(el);
@@ -229,7 +229,7 @@
     }
   }
   async function clearLesson(){
-    document.getElementById('m-stat').textContent='LESSON CLEARED \u2014 awarding Knowledge…';
+    document.getElementById('m-stat').textContent='LESSON CLEARED \u2014 awarding Knowledge???';
     document.getElementById('m-opts').innerHTML='';
     var already=isCleared(curD,curL);
     cleared[key(curD,curL)]=true;

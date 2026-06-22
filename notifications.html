@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Notifications</title>
+<title>?? SYD OMEGA 91717  --  Notifications</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -60,10 +60,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">??</div>
   <h2 id="gate-h">Notifications</h2>
   <p id="gate-p">Sign in to see your notifications.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
 </div>
 
 <div class="shell" id="app">
@@ -129,7 +129,7 @@
     try{ var tc=await supabase.from('task_completions').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(40);
       (tc.data||[]).forEach(function(r){ var k=r.kind; if(!TYPES[k]) k='academy';
         var verb=({academy:'Cleared a lesson',gaming:'Won a node',contribution:'Logged a contribution'})[r.kind]||'Advanced';
-        all.push({type:(TYPES[r.kind]?r.kind:'academy'),title:verb,detail:(r.title||r.task||'')+'  ·  +0.25 to your axis',time:new Date(r.created_at||Date.now()).getTime()}); }); }catch(e){}
+        all.push({type:(TYPES[r.kind]?r.kind:'academy'),title:verb,detail:(r.title||r.task||'')+'   .   +0.25 to your axis',time:new Date(r.created_at||Date.now()).getTime()}); }); }catch(e){}
     // certificates
     try{ var cc=await supabase.from('certificates').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(20);
       (cc.data||[]).forEach(function(c){ all.push({type:'certificate',title:'Certificate of Ascent issued',detail:(c.title||(c.tier?('Tier '+c.tier):''))||'A new certificate joins your honors.',time:new Date(c.created_at||Date.now()).getTime()}); }); }catch(e){}

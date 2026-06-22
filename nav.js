@@ -20,7 +20,7 @@
     membership:'vault',marketplace:'vault',income:'vault',portfolio:'vault',
     family:'order',bloodline:'order',heritage:'order',hall:'order',
     sovereigns:'order',factions:'order',city:'order',
-    consultancy:'services',contracts:'services',publishing:'services',
+    services:'services',consultancy:'services',contracts:'services',publishing:'services',
     marketing:'services',health:'services',events:'services',travel:'services',
     news:'services',social:'services',
     research:'intel',prediction:'intel',intelligence:'intel',
@@ -62,8 +62,8 @@
           ['heritage','HERITAGE','/heritage.html'],['hall','HALL','/hall.html'],
           ['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],
           ['city','OMEGA CITY','/city.html']]},
-    {key:'services',icon:'\u2726', label:'SERVICES', href:'/consultancy.html',col:'#3fb27f',
-     sub:[['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
+    {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
+     sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
           ['publishing','PUBLISHING','/publishing.html'],['marketing','MARKETING','/marketing.html'],
           ['news','NEWS WIRE','/news.html'],['social','SOCIAL HUB','/social.html'],
           ['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
@@ -71,8 +71,7 @@
     {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intelligence.html',col:'#9B6BF0',
      sub:[['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICT','/prediction.html'],
           ['intelligence','INTELLIGENCE','/intelligence.html'],['automation','AUTOMATION','/automation.html'],
-          ['compliance','GOVERNANCE','/compliance.html'],['approvals','APPROVALS','/approvals.html'],
-          ['grid','THE GRID','/grid.html'],['charter','CHARTER','/charter.html']]},
+          ['compliance','GOVERNANCE','/compliance.html'],['grid','THE GRID','/grid.html'],['charter','CHARTER','/charter.html']]},
   ];
 
   /* INJECT CSS */

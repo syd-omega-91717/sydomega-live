@@ -1,29 +1,30 @@
 
-/* OWNER ABSOLUTE LOCK: if is_owner, axes must always be 9.000 */
+/* LIFETIME ACCESS GUARD: owner never gets trial or expiry */
 (function(){
-  var _sb=null;
-  async function enforceOwnerApex(){
-    if(!window.__omegaOwnerChecked){
-      window.__omegaOwnerChecked=true;
-      try{
-        var {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
-        _sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-        var sess=(await _sb.auth.getSession()).data.session;
-        if(!sess) return;
-        var pr=await _sb.from('profiles').select('is_owner,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
-        if(pr.data && pr.data.is_owner){
-          /* Owner always at absolute apex */
-          if(pr.data.axis_a!==9.000||pr.data.axis_b!==9.000||pr.data.axis_c!==9.000){
-            await _sb.from('profiles').update({axis_a:9.000,axis_b:9.000,axis_c:9.000}).eq('id',sess.user.id);
-          }
-          window.__omegaIsOwner=true;
-          /* Add owner class to body */
-          document.body.classList.add('omega-owner');
+  async function enforceLifetimeAccess(){
+    try{
+      var mod=await import('https://esm.sh/@supabase/supabase-js@2');
+      var sb=mod.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+      var sess=(await sb.auth.getSession()).data.session;
+      if(!sess) return;
+      var pr=await sb.from('profiles').select('is_owner,access_approved,is_trial,trial_expires_at,axis_a').eq('id',sess.user.id).maybeSingle();
+      if(!pr.data) return;
+      if(pr.data.is_owner){
+        /* Owner: enforce lifetime access on every page load */
+        var needsUpdate=!pr.data.access_approved||pr.data.is_trial||pr.data.trial_expires_at||pr.data.axis_a<9;
+        if(needsUpdate){
+          await sb.from('profiles').update({
+            access_approved:true, is_trial:false, trial_expires_at:null,
+            axis_a:9.000, axis_b:9.000, axis_c:9.000, material_tier:'OMEGA MASTER', membership_tier:9
+          }).eq('id',sess.user.id);
         }
-      }catch(e){}
-    }
+        window.__omegaIsOwner=true;
+        document.body.classList.add('omega-owner');
+      }
+    }catch(e){}
   }
-  document.addEventListener('DOMContentLoaded',enforceOwnerApex);
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',enforceLifetimeAccess);}
+  else{enforceLifetimeAccess();}
 })();
 
 /* bg.js     SYD OMEGA 91717     aurora backdrop + access guard + trial engine + UI injections */

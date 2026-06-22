@@ -1,303 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Profile</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- Sovereign Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-  :root{
-    --void:#07070b; --panel:#0d0d15; --panel-2:#11111c;
-    --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000;
-    --ink:#e9e6dc; --muted:#85837b; --acc:#C9A84C;
-    --line:rgba(201,168,76,0.16);
-    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 28% 16%,rgba(201,168,76,.07),transparent 40%),radial-gradient(circle at 82% 84%,rgba(0,229,255,.05),transparent 42%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(201,168,76,.06),transparent 55%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0}
+.main{flex:1;min-width:0;padding-bottom:100px}
+.pad{padding:0 clamp(14px,3vw,36px)}
+.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .user{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px}
-  .user .lvl{border:1px solid var(--gold);color:var(--gold);padding:8px 12px;text-align:center;line-height:1.3}
-  .user .lvl b{display:block;font-family:var(--display);font-size:15px} .user .lvl span{font-size:8px;letter-spacing:2px;color:var(--muted)}
+/* PROFILE HERO */
+.profile-hero{display:flex;align-items:flex-start;gap:24px;padding:24px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);flex-wrap:wrap;background:linear-gradient(90deg,rgba(201,168,76,.03),transparent)}
+.ph-avatar{position:relative;flex-shrink:0}
+.ph-avatar canvas{display:block;border:2px solid var(--gold);border-radius:50%}
+.ph-avatar .avatar-tier{position:absolute;bottom:-4px;right:-4px;font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid;border-radius:0;background:var(--void)}
+.ph-meta{flex:1;min-width:220px}
+.phm-role{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.phm-name{font-family:var(--D);font-size:clamp(20px,3.5vw,32px);font-weight:900;color:var(--gold);margin-bottom:4px;animation:name-breathe 5s ease-in-out infinite}
+@keyframes name-breathe{0%,100%{text-shadow:0 0 8px rgba(201,168,76,0.2)}50%{text-shadow:0 0 24px rgba(201,168,76,0.6)}}
+.phm-sign{font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:14px}
+.phm-kpis{display:flex;gap:0;flex-wrap:wrap}
+.phm-kpi{padding:10px 18px;border:1px solid var(--line);background:rgba(7,7,11,.4);text-align:center;min-width:100px}
+.phm-kpi:first-child{border-left:2px solid var(--gold)}
+.phm-kpi .kl{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.phm-kpi .kv{font-family:var(--D);font-size:18px;font-weight:700}
 
-  .phead{display:flex;gap:26px;align-items:center;margin:26px 0;flex-wrap:wrap}
-  .pglyph{font-family:var(--display);font-size:clamp(70px,12vw,110px);color:var(--acc);line-height:1;text-shadow:0 0 40px rgba(255,255,255,.08)}
-  .pmeta{flex:1;min-width:240px}
-  .psign{font-family:var(--display);font-weight:700;font-size:clamp(26px,4vw,40px);color:var(--ink);letter-spacing:2px}
-  .nrow{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-  .pname-in{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:11px 14px;min-width:220px;color-scheme:dark}
-  .pname-in:focus{outline:none;border-color:var(--cyan)}
-  .btn{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:11px 18px;border:1px solid var(--gold);cursor:pointer}
-  .btn:hover{background:transparent;color:var(--gold)}
-  .pmsg{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:8px}
-  .psub{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:10px;line-height:1.8}
-  .psub b{color:var(--acc);font-weight:400}
+/* MATRIX DISPLAY -- 3 DECIMAL PRECISION */
+.matrix-display{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:0 clamp(14px,3vw,36px)}
+.md-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:18px;position:relative;overflow:hidden}
+.md-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px}
+.mdc-axis{font-family:var(--D);font-size:11px;letter-spacing:2px;margin-bottom:3px}
+.mdc-name{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
+.mdc-val{font-family:var(--D);font-size:32px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.mdc-of{font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:10px}
+.mdc-bar-wrap{height:4px;background:rgba(201,168,76,.08);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.mdc-bar-fill{height:100%;border-radius:2px;transition:width 2s cubic-bezier(.25,.46,.45,.94)}
+.mdc-increment{font-family:var(--M);font-size:8px;color:var(--muted);letter-spacing:1px}
 
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
-  .cell{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px}
-  .cell .l{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan)}
-  .cell .v{font-family:var(--display);font-weight:700;color:var(--gold);font-size:22px;margin-top:8px}
-  .cell .v.acc{color:var(--acc)}
-  .cell .s{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px}
+/* COORDINATE DISPLAY */
+.coord-hero{border:1px solid rgba(201,168,76,.3);background:linear-gradient(160deg,rgba(201,168,76,.05),transparent);padding:20px;margin:0 clamp(14px,3vw,36px);text-align:center}
+.ch-label{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--muted);margin-bottom:6px}
+.ch-coord{font-family:var(--D);font-size:clamp(20px,4vw,36px);color:var(--gold);font-weight:700;letter-spacing:3px;animation:coord-pulse 4s ease-in-out infinite}
+@keyframes coord-pulse{0%,100%{text-shadow:0 0 12px rgba(201,168,76,0.3)}50%{text-shadow:0 0 28px rgba(201,168,76,0.7)}}
+.ch-auth{font-family:var(--M);font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:3px}
+.ch-material{font-family:var(--D);font-size:16px;font-weight:700;margin-top:5px}
+.ch-progress{font-family:var(--M);font-size:9px;color:var(--muted);margin-top:6px}
 
-  .character{font-family:var(--body);font-weight:300;color:var(--acc);font-size:18px;margin:22px 0;text-align:center;letter-spacing:.3px}
+/* TASK ENGINE */
+.task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.task-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:16px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s}
+.task-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-2px)}
+.task-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.task-card.completing::before{transform:scaleX(1)}
+.tc-axis{font-family:var(--M);font-size:8px;letter-spacing:3px;margin-bottom:4px}
+.tc-name{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:5px}
+.tc-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.tc-reward{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:4px 10px;border:1px solid;display:inline-block}
+.task-feedback{font-family:var(--M);font-size:9px;color:var(--green);margin-top:8px;display:none;letter-spacing:2px}
 
-  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:22px;margin-top:18px}
-  .card .h{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
-  .seals{display:flex;flex-wrap:wrap;gap:10px}
-  .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,.08),transparent);padding:13px 15px;min-width:180px;flex:1}
-  .seal .sm{font-family:var(--display);color:var(--gold);font-size:18px}
-  .seal .st{font-family:var(--mono);font-size:11px;color:var(--ink);margin-top:6px;line-height:1.4}
-  .seal .sd{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:6px}
-  .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
-  .log{max-height:360px;overflow-y:auto}
-  .ev{font-family:var(--mono);font-size:12px;color:var(--muted);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:12px;align-items:baseline}
-  .ev:last-child{border-bottom:none}
-  .ev .ax{color:var(--gold);min-width:96px} .ev .nt{color:var(--ink);flex:1} .ev .dt{color:var(--muted);font-size:10px;white-space:nowrap}
+/* ARCHITECT CONSOLE -- HIDDEN FROM NON-OWNERS */
+.architect-console{border:2px solid rgba(139,0,0,.4);background:linear-gradient(160deg,rgba(139,0,0,.06),transparent);padding:24px;margin:28px clamp(14px,3vw,36px) 0;position:relative;overflow:hidden;display:none}
+.architect-console::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--crim),rgba(139,0,0,.3),var(--crim));animation:arch-scan 3s ease-in-out infinite}
+@keyframes arch-scan{0%,100%{opacity:.5}50%{opacity:1}}
+.ac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.ac-title{font-family:var(--D);font-size:18px;color:var(--crim);font-weight:700;letter-spacing:2px}
+.ac-badge{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:4px 12px;border:1px solid rgba(139,0,0,.5);color:var(--crim);background:rgba(139,0,0,.1);display:flex;align-items:center;gap:6px}
+.ac-dot{width:6px;height:6px;border-radius:50%;background:var(--crim);animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.console-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:18px}
+.console-btn{border:1px solid rgba(139,0,0,.3);background:transparent;padding:14px;cursor:pointer;text-align:left;transition:all .18s;position:relative}
+.console-btn:hover{border-color:rgba(139,0,0,.6);background:rgba(139,0,0,.08)}
+.cb-icon{font-size:20px;color:var(--crim);margin-bottom:8px;display:block}
+.cb-title{font-family:var(--D);font-size:12px;color:var(--crim);font-weight:700;margin-bottom:4px}
+.cb-desc{font-size:11px;color:var(--muted);font-weight:300;line-height:1.5}
+.owner-matrix{border:1px solid rgba(139,0,0,.2);padding:14px;background:rgba(7,7,11,.6)}
+.om-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.om-val{font-family:var(--D);font-size:22px;font-weight:700;color:var(--crim)}
+.om-sub{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:2px}
 
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:980px){ .grid{grid-template-columns:repeat(2,1fr)} }
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+/* EDIT FORM */
+.ef-panel{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:22px}
+.ef-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:14px}
+.ef-field label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:4px}
+.ef-field input,.ef-field select{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:rgba(7,7,11,.8);border:1px solid var(--line);padding:9px 11px;outline:none;transition:border-color .15s}
+.ef-field input:focus,.ef-field select:focus{border-color:rgba(201,168,76,.4)}
+.btn-primary{font-family:var(--M);font-size:10px;letter-spacing:2px;padding:11px 26px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;transition:box-shadow .2s}
+.btn-primary:hover{box-shadow:0 0 22px rgba(201,168,76,.4)}
+.save-msg{font-family:var(--M);font-size:10px;color:var(--green);margin-top:10px;display:none;letter-spacing:2px}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}.profile-hero{flex-direction:column}}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
-  <h2 id="gate-h">Access Your Profile</h2>
-  <p id="gate-p">Sign in to view your sovereign profile.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
-</div>
-
-<div class="shell" id="app">
+<div class="shell">
   <aside class="side" id="omega-side" data-page="profile"></aside>
-
   <main class="main">
-    <div class="topbar">
-      <div class="t">MEMBER PROFILE<small>SYD OMEGA 91717</small></div>
-      <div class="user"><span class="lvl"><b id="u-tier">1</b><span>TIER</span></span></div>
-    </div>
 
-    <div class="phead">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
-        <div class="pglyph" id="p-glyph">Ω</div>
-        <img id="p-avatar" alt="" style="display:none;width:88px;height:88px;border-radius:50%;object-fit:cover;border:1px solid var(--line)" />
-        <input type="file" id="p-av-file" accept="image/*" style="display:none" />
-        <button class="btn" id="p-av-btn" style="font-size:10px;padding:7px 14px">UPLOAD PHOTO</button>
-        <div id="p-av-msg" style="font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);min-height:10px"></div>
+    <!-- PROFILE HERO -->
+    <div class="profile-hero">
+      <div class="ph-avatar">
+        <canvas id="av-cv" width="200" height="200" style="width:100px;height:100px"></canvas>
+        <div class="avatar-tier" id="av-tier" style="color:var(--gold);border-color:rgba(201,168,76,.4)">SAND</div>
       </div>
-      <div class="pmeta">
-        <div class="psign" id="p-sign"></div>
-        <div class="nrow">
-          <input class="pname-in" id="p-name" placeholder="Set a display name" maxlength="40" />
-          <button class="btn" id="p-save">SAVE NAME</button>
+      <div class="ph-meta">
+        <div class="phm-role" id="ph-role">SOVEREIGN MEMBER</div>
+        <div class="phm-name" id="ph-name">LOADING...</div>
+        <div class="phm-sign" id="ph-sign">-- . -- . --</div>
+        <div class="phm-kpis">
+          <div class="phm-kpi"><div class="kl">AUTHORITY</div><div class="kv" id="kv-auth" style="color:var(--gold)">0.002</div></div>
+          <div class="phm-kpi"><div class="kl">COORDINATE</div><div class="kv" id="kv-pos" style="color:var(--cyan);font-size:13px">(0.001,0.001,0.001)</div></div>
+          <div class="phm-kpi"><div class="kl">MATERIAL</div><div class="kv" id="kv-mat" style="color:var(--solar)">SAND</div></div>
+          <div class="phm-kpi"><div class="kl">TASK COUNT</div><div class="kv" id="kv-tasks" style="color:var(--green)">0</div></div>
         </div>
-        <div class="pmsg" id="p-msg"></div>
-        <div class="psub" id="p-sub"></div>
       </div>
     </div>
 
-    <p class="character" id="p-char"></p>
-
-    <div class="grid">
-      <div class="cell"><div class="l">ELEMENT</div><div class="v acc" id="c-element"></div><div class="s" id="c-aff"></div></div>
-      <div class="cell"><div class="l">OLYMPIAN</div><div class="v" id="c-olympian"></div><div class="s">patron deity</div></div>
-      <div class="cell"><div class="l">PLANET</div><div class="v" id="c-planet"></div><div class="s">ruling body</div></div>
-      <div class="cell"><div class="l">AGENT</div><div class="v acc" id="c-agent"></div><div class="s" id="c-dom"></div></div>
-    </div>
-
-    <div class="grid" style="margin-top:14px">
-      <div class="cell"><div class="l">KNOWLEDGE · A</div><div class="v" id="x-a">1.00</div></div>
-      <div class="cell"><div class="l">MASTERY · B</div><div class="v" id="x-b">1.00</div></div>
-      <div class="cell"><div class="l">CONTRIBUTION · C</div><div class="v" id="x-c">1.00</div></div>
-      <div class="cell"><div class="l">AUTHORITY · TIER · MATERIAL</div><div class="v" id="x-auth">1.73</div><div class="s" id="x-tm">Tier 1 · Sand</div></div>
-    </div>
-
-    <div class="card">
-      <div class="h">RECOVERY &amp; IDENTITY</div>
-      <div style="font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-bottom:14px">Kept alongside your email to recover access and verify your identity.</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:7px">COUNTRY</label><select id="p-country" style="width:100%;font-family:var(--mono);font-size:14px;color:var(--ink);background:#11111c;border:1px solid var(--line);padding:11px 13px;color-scheme:dark"></select></div>
-        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:7px">PHONE (WITH COUNTRY CODE)</label><input id="p-phone" type="tel" maxlength="30" placeholder="+961 …" style="width:100%;font-family:var(--body);font-size:15px;color:var(--ink);background:#11111c;border:1px solid var(--line);padding:11px 13px;color-scheme:dark" /></div>
+    <!-- COORDINATE DISPLAY -->
+    <div class="sechead">MATRIX COORDINATE</div>
+    <div class="pad">
+      <div class="coord-hero">
+        <div class="ch-label">9 x 9 x 9 SOVEREIGN MATRIX -- CURRENT POSITION</div>
+        <div class="ch-coord" id="ch-coord">(0.001, 0.001, 0.001)</div>
+        <div class="ch-auth" id="ch-auth">AUTHORITY: 0.002 -- GENESIS THRESHOLD</div>
+        <div class="ch-material" id="ch-mat" style="color:var(--solar)">SAND -- GENESIS STAGE</div>
+        <div class="ch-progress" id="ch-progress">0 tasks completed -- +0.001 per task per axis</div>
       </div>
-      <button class="btn" id="p-ri-save" style="margin-top:14px">SAVE RECOVERY DETAILS</button>
-      <div id="p-ri-msg" style="font-family:var(--mono);font-size:11px;letter-spacing:1px;min-height:14px;margin-top:10px;color:var(--cyan)"></div>
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);margin-top:10px;line-height:1.7">Email recovery is active now. Phone (SMS) recovery activates once the Order connects an SMS provider.</div>
     </div>
 
-    <div class="card">
-      <div class="h">CERTIFICATES OF ASCENT</div>
-      <div class="seals" id="d-certs"></div>
+    <!-- AXIS CARDS -- 3 DECIMAL PRECISION -->
+    <div class="sechead">MATRIX AXES -- 3-DECIMAL PRECISION (0.001 TO 9.000)</div>
+    <div class="pad"><div class="matrix-display" id="matrix-display"></div></div>
+
+    <!-- TASK ENGINE -->
+    <div class="sechead">EVOLUTION ENGINE -- ADVANCE YOUR MATRIX (+0.001 PER TASK)</div>
+    <div class="pad"><div class="task-grid" id="task-grid"></div></div>
+
+    <!-- ARCHITECT CONSOLE (OWNER ONLY -- INVISIBLE TO ALL OTHERS) -->
+    <div class="architect-console" id="architect-console">
+      <div class="ac-header">
+        <div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(139,0,0,.6);margin-bottom:3px">ABSOLUTE OWNER ACCESS -- SLEIMAN YOUSSEF DAGHER</div>
+          <div class="ac-title">ARCHITECT CONSOLE</div>
+        </div>
+        <div class="ac-badge"><div class="ac-dot"></div>CLASSIFIED SYSTEM ACCESS</div>
+      </div>
+      <!-- Owner absolute metrics -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px">
+        <div class="owner-matrix"><div class="om-label">AXIS A</div><div class="om-val">9.000</div><div class="om-sub">KNOWLEDGE -- APEX</div></div>
+        <div class="owner-matrix"><div class="om-label">AXIS B</div><div class="om-val">9.000</div><div class="om-sub">MASTERY -- APEX</div></div>
+        <div class="owner-matrix"><div class="om-label">AXIS C</div><div class="om-val">9.000</div><div class="om-sub">CONTRIBUTION -- APEX</div></div>
+        <div class="owner-matrix"><div class="om-label">AUTHORITY</div><div class="om-val">15.588</div><div class="om-sub">ABSOLUTE MAXIMUM</div></div>
+        <div class="owner-matrix"><div class="om-label">MATERIAL</div><div class="om-val" style="font-size:16px">OMEGA</div><div class="om-sub">MASTER TIER</div></div>
+        <div class="owner-matrix"><div class="om-label">ACCESS</div><div class="om-val" style="font-size:16px">ALL-TIME</div><div class="om-sub">NO EXPIRY EVER</div></div>
+      </div>
+      <!-- Console action buttons -->
+      <div class="console-grid" id="console-grid"></div>
+      <!-- Live member count -->
+      <div style="border:1px solid rgba(139,0,0,.2);padding:14px;background:rgba(7,7,11,.6)">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">LIVE PLATFORM METRICS</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap" id="live-metrics"></div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="h">FULL EVOLUTION LOG</div>
-      <div class="log" id="d-events"></div>
+    <!-- EDIT PROFILE -->
+    <div class="sechead">EDIT PROFILE</div>
+    <div class="pad">
+      <div class="ef-panel">
+        <div class="ef-grid">
+          <div class="ef-field"><label>SOVEREIGN NAME</label><input type="text" id="ef-name" placeholder="Your sovereign name..."/></div>
+          <div class="ef-field"><label>ZODIAC SIGN</label>
+            <select id="ef-sign">
+              <option value="">-- SELECT --</option>
+              <option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option>
+              <option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option>
+              <option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
+            </select>
+          </div>
+          <div class="ef-field"><label>NATIONALITY</label><input type="text" id="ef-nat" placeholder="e.g. Lebanese"/></div>
+          <div class="ef-field"><label>PROFESSION</label><input type="text" id="ef-prof" placeholder="e.g. Architect"/></div>
+        </div>
+        <button class="btn-primary" id="btn-save">SEAL PROFILE UPDATE</button>
+        <div class="save-msg" id="save-msg">&#x2713; Profile sealed to the sovereign archive.</div>
+      </div>
     </div>
+
   </main>
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  const SIGNS=[
-    ['Aries','\u2648\uFE0E','Mar 21 – Apr 19','Fire','Athena','Mars','Sentinel','You move first and ask later — the spark that begins the work.'],
-    ['Taurus','\u2649\uFE0E','Apr 20 – May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
-    ['Gemini','\u264A\uFE0E','May 21 – Jun 20','Wind','Apollo','Mercury','Scout','You carry signal between worlds and miss nothing.'],
-    ['Cancer','\u264B\uFE0E','Jun 21 – Jul 22','Water','Hermes','Moon','Warden','You guard what matters and read the unspoken current.'],
-    ['Leo','\u264C\uFE0E','Jul 23 – Aug 22','Fire','Zeus','Sun','Sovereign','You were made to lead, and the room knows it.'],
-    ['Virgo','\u264D\uFE0E','Aug 23 – Sep 22','Sand','Demeter','Vesta','Auditor','You refine until it is true — the patient foundation of all of it.'],
-    ['Libra','\u264E\uFE0E','Sep 23 – Oct 22','Wind','Hephaestus','Juno','Proxy','You hold the balance and broker what others cannot.'],
-    ['Scorpio','\u264F\uFE0E','Oct 23 – Nov 21','Water','Ares','Pluto','Oracle','You see to the bottom and transform what you touch.'],
-    ['Sagittarius','\u2650\uFE0E','Nov 22 – Dec 21','Fire','Artemis','Jupiter','Beacon','You aim past the horizon and call others to follow.'],
-    ['Capricorn','\u2651\uFE0E','Dec 22 – Jan 19','Metal','Hestia','Saturn','Analyst','You endure, you compound, and you arrive.'],
-    ['Aquarius','\u2652\uFE0E','Jan 20 – Feb 18','Wind','Hera','Uranus','Tutor','You think in systems no one has drawn yet.'],
-    ['Pisces','\u2653\uFE0E','Feb 19 – Mar 20','Water','Poseidon','Neptune','Historian','You hold the deep memory and feel the whole tide at once.']
+const MATS=[
+  {min:0,max:0.999,name:'SAND',col:'#D9B86A',sub:'GENESIS STAGE'},
+  {min:1,max:1.999,name:'GLASS',col:'#A9C2D8',sub:'CLARITY STAGE'},
+  {min:2,max:2.999,name:'IRON',col:'#C7CDD6',sub:'STRENGTH STAGE'},
+  {min:3,max:3.999,name:'STEEL',col:'#8B8F9C',sub:'DISCIPLINE STAGE'},
+  {min:4,max:4.999,name:'TITANIUM',col:'#607D8B',sub:'MASTERY STAGE'},
+  {min:5,max:5.999,name:'CARBON',col:'#455A64',sub:'PRECISION STAGE'},
+  {min:6,max:6.999,name:'GOLD',col:'#C9A84C',sub:'SOVEREIGN STAGE'},
+  {min:7,max:7.999,name:'PLATINUM',col:'#E8D5B7',sub:'LEGACY STAGE'},
+  {min:8,max:8.999,name:'DIAMOND',col:'#9B6BF0',sub:'APEX APPROACH'},
+  {min:9,max:9,name:'OMEGA MASTER',col:'#C9A84C',sub:'ABSOLUTE APEX'},
+];
+function getMaterial(val){return MATS.find(m=>val>=m.min&&val<=m.max)||MATS[0];}
+
+const TASKS=[
+  {id:'academy',axis:'a',name:'ACADEMY MODULE',desc:'Complete a knowledge module in the Academy. Advances Knowledge axis by +0.001.',col:'#00E5FF'},
+  {id:'research',axis:'a',name:'RESEARCH ENTRY',desc:'Submit a research hypothesis to the Oracle lab. Expands knowledge dimension.',col:'#9B6BF0'},
+  {id:'horoscope',axis:'a',name:'DAILY ORACLE',desc:'Read your daily celestial alignment. The Oracle records your engagement.',col:'#D9B86A'},
+  {id:'gaming',axis:'b',name:'ARENA STAGE',desc:'Complete a gaming arena stage. Mastery axis advances by +0.001.',col:'#E86A3A'},
+  {id:'exam',axis:'b',name:'EXAM COMPLETION',desc:'Pass a sovereign exam. Demonstrates mastery to the Order.',col:'#C9A84C'},
+  {id:'practice',axis:'b',name:'SKILL PRACTICE',desc:'Dedicated skill practice session. 30 minutes minimum.',col:'#E2C86D'},
+  {id:'contribution',axis:'c',name:'CONTRIBUTION EVENT',desc:'Create or publish a contribution. Economic or creative value to the Order.',col:'#3fb27f'},
+  {id:'social',axis:'c',name:'SOCIAL BROADCAST',desc:'Broadcast to the sovereign social network. Grows the Order.',col:'#34C6E6'},
+  {id:'consultancy',axis:'c',name:'CONSULTANCY SESSION',desc:'Complete a consultancy booking. Economic contribution to the Order.',col:'#A9C2D8'},
+];
+
+/* Draw animated avatar canvas */
+function drawAvatar(name, col, isOwner){
+  const cv=document.getElementById('av-cv');
+  const ctx=cv.getContext('2d'),CX=100,CY=100;let t=0;
+  const init=(name||'S')[0].toUpperCase();
+  function frame(){
+    t+=.015;ctx.clearRect(0,0,200,200);
+    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,90);
+    bg.addColorStop(0,col+'44');bg.addColorStop(1,'rgba(7,7,11,0.95)');
+    ctx.fillStyle=bg;ctx.beginPath();ctx.arc(CX,CY,96,0,Math.PI*2);ctx.fill();
+    ctx.save();ctx.translate(CX,CY);
+    ctx.save();ctx.rotate(t*(isOwner?.8:.4));
+    ctx.beginPath();ctx.arc(0,0,82,0,Math.PI*2);
+    ctx.strokeStyle=col+'44';ctx.lineWidth=1;ctx.stroke();
+    if(isOwner){
+      ctx.save();ctx.rotate(-t*1.5);
+      ctx.beginPath();ctx.ellipse(0,0,78,28,0,0,Math.PI*2);
+      ctx.strokeStyle=col+'33';ctx.lineWidth=.8;ctx.stroke();ctx.restore();
+    }
+    ctx.restore();
+    ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=isOwner?28+8*Math.sin(t*2):14;
+    ctx.font='700 '+(isOwner?'34':'28')+'px "Cinzel Decorative",serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(isOwner?'\u03A9':init,0,2);ctx.shadowBlur=0;ctx.restore();
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function buildAxes(a,b,c,isOwner){
+  const g=document.getElementById('matrix-display');g.innerHTML='';
+  const axes=[
+    {axis:'A',name:'KNOWLEDGE',val:a,col:'#00E5FF'},
+    {axis:'B',name:'MASTERY',val:b,col:'#E86A3A'},
+    {axis:'C',name:'CONTRIBUTION',val:c,col:'#3fb27f'},
   ];
-  function find(n){ for(var i=0;i<SIGNS.length;i++){ if(SIGNS[i][0]===n) return SIGNS[i]; } return null; }
-  const MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
-  const ELEM_ACCENT={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
-  const ELEM_AFF={Fire:'+Mastery (B)',Water:'+Contribution (C)',Wind:'+Knowledge (A)',Metal:'+Mastery & +Contribution',Sand:'+0.15 all axes'};
-  const AGENT_DOMAIN={Sentinel:'SECURITY',Analyst:'FINANCE',Historian:'ARCHIVE',Tutor:'EDUCATION',Merchant:'COMMERCE',Proxy:'EXECUTION',Oracle:'PREDICTION',Scout:'DISCOVERY',Warden:'FAMILY',Auditor:'VALIDATION',Beacon:'ONBOARDING',Sovereign:'MASTER'};
+  axes.forEach(ax=>{
+    const mat=getMaterial(ax.val);
+    const pct=(ax.val/9)*100;
+    const tasksNeeded=Math.round((9-ax.val)/0.001);
+    const c=document.createElement('div');c.className='md-card';
+    c.style.borderTopColor=ax.col+'55';
+    c.innerHTML=`<div class="mdc-axis" style="color:${ax.col}">AXIS ${ax.axis} -- ${ax.name}</div><div class="mdc-name">SOVEREIGN MATRIX DIMENSION</div><div class="mdc-val" style="color:${ax.col}">${ax.val.toFixed(3)}</div><div class="mdc-of">/ 9.000 MAX${isOwner?' -- ABSOLUTE APEX':''}</div><div class="mdc-bar-wrap"><div class="mdc-bar-fill" style="width:0%;background:linear-gradient(90deg,${ax.col},${ax.col}44)"></div></div><div class="mdc-increment">${isOwner?'LOCKED AT APEX -- ALL-TIME ACCESS':tasksNeeded.toLocaleString()+' tasks to apex -- +0.001 each'}</div>`;
+    g.appendChild(c);
+    setTimeout(()=>c.querySelector('.mdc-bar-fill').style.width=pct+'%',200);
+  });
+}
 
-  let user=null, prof=null;
+function buildTasks(uid, isOwner){
+  const g=document.getElementById('task-grid');g.innerHTML='';
+  if(isOwner){
+    g.innerHTML='<div style="grid-column:1/-1;border:1px solid rgba(139,0,0,.3);padding:20px;background:rgba(139,0,0,.05);font-family:var(--M);font-size:10px;color:var(--crim);letter-spacing:2px">ARCHITECT IS AT ABSOLUTE APEX (9.000, 9.000, 9.000). Tasks are for sovereign members only. Your position is permanent and cannot change.</div>';
+    return;
+  }
+  TASKS.forEach(task=>{
+    const card=document.createElement('div');card.className='task-card';
+    card.style.setProperty('--col',task.col);
+    const axisLabel=task.axis==='a'?'KNOWLEDGE A':task.axis==='b'?'MASTERY B':'CONTRIBUTION C';
+    card.innerHTML=`<div class="tc-axis" style="color:${task.col}">${axisLabel} +0.001</div><div class="tc-name">${task.name}</div><div class="tc-desc">${task.desc}</div><span class="tc-reward" style="color:${task.col};border-color:${task.col}44">+0.001 MATRIX ADVANCE</span><div class="task-feedback" id="tf-${task.id}">&#x2713; AXIS ${task.axis.toUpperCase()} ADVANCED TO --</div>`;
+    card.style.cssText+=`border-top:2px solid ${task.col}55`;
+    card.addEventListener('click',async()=>{
+      card.classList.add('completing');
+      card.style.borderTopColor=task.col;
+      /* Call complete_task RPC */
+      try{
+        const {data,error}=await sb.rpc('complete_task',{p_uid:uid,p_axis:task.axis,p_kind:task.id});
+        const fb=document.getElementById('tf-'+task.id);
+        if(fb){
+          fb.style.display='block';
+          if(data&&data.new_value) fb.textContent='&#x2713; AXIS '+task.axis.toUpperCase()+' ADVANCED TO '+parseFloat(data.new_value).toFixed(3);
+          setTimeout(()=>{fb.style.display='none';},3000);
+        }
+        /* Refresh after 1s */
+        setTimeout(()=>boot(),1200);
+      }catch(e){ card.classList.remove('completing'); }
+    });
+    g.appendChild(card);
+  });
+}
 
-  function render(){
-    var s=find(prof.sign);
-    var acc=ELEM_ACCENT[prof.element]||'#C9A84C';
-    document.documentElement.style.setProperty('--acc',acc);
-    var a=Number(prof.axis_a!=null?prof.axis_a:1),b=Number(prof.axis_b!=null?prof.axis_b:1),c=Number(prof.axis_c!=null?prof.axis_c:1);
-    var auth=Math.sqrt(a*a+b*b+c*c);
-    var tier=Math.max(1,Math.min(9,Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
-    document.getElementById('p-glyph').textContent=s?s[1]:'\u03A9';
-    document.getElementById('p-sign').textContent=(prof.sign||'').toUpperCase();
-    document.getElementById('p-name').value=prof.display_name||'';
-    document.getElementById('u-tier').textContent=tier;
-    var joined = prof.created_at ? new Date(prof.created_at).toLocaleDateString() : '—';
-    document.getElementById('p-sub').innerHTML='SIGNED IN AS <b>'+user.email+'</b><br>JOINED <b>'+joined+'</b> · ORDER MEMBER';
-    document.getElementById('p-char').textContent=s?('“'+s[7]+'”'):'';
-    document.getElementById('c-element').textContent=prof.element||'';
-    document.getElementById('c-aff').textContent=ELEM_AFF[prof.element]||'';
-    document.getElementById('c-olympian').textContent=prof.olympian||'';
-    document.getElementById('c-planet').textContent=prof.planet||'';
-    document.getElementById('c-agent').textContent=prof.agent||'';
-    document.getElementById('c-dom').textContent=AGENT_DOMAIN[prof.agent]||'';
-    document.getElementById('x-a').textContent=a.toFixed(2);
-    document.getElementById('x-b').textContent=b.toFixed(2);
-    document.getElementById('x-c').textContent=c.toFixed(2);
-    document.getElementById('x-auth').textContent=auth.toFixed(2);
-    document.getElementById('x-tm').textContent='Tier '+tier+' · '+(MATS[tier-1]||'');
-  }
-  async function loadCerts(){
-    var box=document.getElementById('d-certs');
-    try{
-      var r=await supabase.from('certificates').select('milestone,title,issued_at').eq('user_id',user.id).order('milestone',{ascending:true});
-      box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No certificates yet — reach node (3,3,3) to earn your first seal.</div>'; return; }
-      r.data.forEach(function(c){ var d=document.createElement('div'); d.className='seal'; var dt=c.issued_at?new Date(c.issued_at).toLocaleDateString():''; d.innerHTML='<div class="sm">Ω · '+c.milestone+'</div><div class="st">'+c.title+'</div><div class="sd">ISSUED '+dt+'</div>'; box.appendChild(d); });
-    }catch(e){ box.innerHTML=''; }
-  }
-  async function loadEvents(){
-    var box=document.getElementById('d-events');
-    try{
-      var r=await supabase.from('evolution_events').select('axis,note,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(60);
-      box.innerHTML=''; var names={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'};
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No events recorded yet.</div>'; return; }
-      r.data.forEach(function(e){ var row=document.createElement('div'); row.className='ev'; var dt=e.created_at?new Date(e.created_at).toLocaleDateString():''; var ax=document.createElement('span'); ax.className='ax'; ax.textContent=names[e.axis]||e.axis; var nt=document.createElement('span'); nt.className='nt'; nt.textContent=e.note||''; var d=document.createElement('span'); d.className='dt'; d.textContent=dt; row.appendChild(ax); row.appendChild(nt); row.appendChild(d); box.appendChild(row); });
-    }catch(e){ box.innerHTML=''; }
-  }
-  async function saveName(){
-    var v=document.getElementById('p-name').value.trim();
-    var msg=document.getElementById('p-msg'), btn=document.getElementById('p-save');
-    btn.disabled=true; msg.style.color='var(--cyan)'; msg.textContent='Saving…';
-    var r=await supabase.from('profiles').update({display_name:v}).eq('id',user.id);
-    btn.disabled=false;
-    if(r.error){ msg.style.color='var(--crimson)'; msg.textContent='Could not save ('+(r.error.code||r.error.message||'')+').'; return; }
-    prof.display_name=v; msg.style.color='var(--cyan)'; msg.textContent='Name saved.';
+function buildConsole(uid){
+  const g=document.getElementById('console-grid');
+  const CONSOLE_BTNS=[
+    {icon:'&#x25CF;',title:'ACCESS CONTROL',desc:'Grant or revoke member access. Set trial periods.',href:'/approvals.html'},
+    {icon:'&#x2609;',title:'ALL MEMBERS',desc:'View complete member registry with full identity data.',href:'/approvals.html'},
+    {icon:'&#x25C8;',title:'COMPLIANCE CENTER',desc:'System governance, charter, and legal compliance.',href:'/compliance.html'},
+    {icon:'&#x2736;',title:'INTELLIGENCE LAYER',desc:'Full platform analytics and AI agent logs.',href:'/intelligence.html'},
+    {icon:'&#x22D4;',title:'BLOODLINE VAULT',desc:'Sovereign succession and inheritance protocols.',href:'/bloodline.html'},
+    {icon:'&#x2302;',title:'SYSTEM GRID',desc:'Platform infrastructure and microservices status.',href:'/grid.html'},
+  ];
+  g.innerHTML='';
+  CONSOLE_BTNS.forEach(btn=>{
+    const c=document.createElement('button');c.className='console-btn';
+    c.innerHTML=`<span class="cb-icon">${btn.icon}</span><div class="cb-title">${btn.title}</div><div class="cb-desc">${btn.desc}</div>`;
+    c.addEventListener('click',()=>window.location.href=btn.href);
+    g.appendChild(c);
+  });
+
+  /* Live metrics */
+  sb.from('profiles').select('*',{count:'exact',head:true}).then(({count:total})=>{
+    sb.from('profiles').select('*',{count:'exact',head:true}).eq('access_approved',true).then(({count:active})=>{
+      sb.from('profiles').select('*',{count:'exact',head:true}).eq('is_trial',true).then(({count:trial})=>{
+        sb.from('task_completions').select('*',{count:'exact',head:true}).then(({count:tasks})=>{
+          const lm=document.getElementById('live-metrics');
+          [{l:'TOTAL MEMBERS',v:total||0,col:'var(--gold)'},
+           {l:'ACTIVE',v:active||0,col:'var(--green)'},
+           {l:'TRIAL',v:trial||0,col:'var(--solar)'},
+           {l:'TASK COMPLETIONS',v:tasks||0,col:'var(--cyan)'}].forEach(m=>{
+            const d=document.createElement('div');
+            d.innerHTML=`<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">${m.l}</div><div style="font-family:var(--D);font-size:18px;color:${m.col};font-weight:700">${m.v}</div>`;
+            lm.appendChild(d);
+          });
+        });
+      });
+    });
+  });
+}
+
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const uid=sess.user.id;
+  const {data:d}=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();
+  if(!d){window.location.href='/account.html';return;}
+
+  const isOwner=d.is_owner||false;
+  /* Owner always gets 9.000, members get their real values */
+  const a=isOwner?9.000:parseFloat(d.axis_a||0.001);
+  const b=isOwner?9.000:parseFloat(d.axis_b||0.001);
+  const c=isOwner?9.000:parseFloat(d.axis_c||0.001);
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const mat=isOwner?{name:'OMEGA MASTER',col:'#C9A84C',sub:'ABSOLUTE APEX'}:getMaterial(Math.min(a,b,c));
+  const name=d.display_name||(isOwner?'SLEIMAN YOUSSEF DAGHER':'SOVEREIGN');
+  const sign=d.sign||'--';
+  const el=d.element||'--';
+
+  /* Hero */
+  document.getElementById('ph-role').textContent=isOwner?'ARCHITECT . FOUNDER . SLEIMAN YOUSSEF DAGHER':'SOVEREIGN MEMBER';
+  document.getElementById('ph-name').textContent=name.toUpperCase();
+  document.getElementById('ph-sign').textContent=sign.toUpperCase()+' . '+el.toUpperCase()+' ELEMENT';
+  document.getElementById('kv-auth').textContent=auth.toFixed(3);
+  document.getElementById('kv-pos').textContent='('+a.toFixed(3)+','+b.toFixed(3)+','+c.toFixed(3)+')';
+  document.getElementById('kv-mat').textContent=mat.name;
+  document.getElementById('kv-mat').style.color=mat.col;
+  document.getElementById('av-tier').textContent=mat.name;
+  document.getElementById('av-tier').style.color=mat.col;
+  document.getElementById('av-tier').style.borderColor=mat.col+'55';
+
+  /* Task count */
+  const {count:tc}=await sb.from('task_completions').select('*',{count:'exact',head:true}).eq('user_id',uid);
+  document.getElementById('kv-tasks').textContent=tc||0;
+
+  /* Coordinate display */
+  document.getElementById('ch-coord').textContent='('+a.toFixed(3)+', '+b.toFixed(3)+', '+c.toFixed(3)+')';
+  document.getElementById('ch-auth').textContent='AUTHORITY: '+auth.toFixed(3)+(isOwner?' -- ABSOLUTE MAXIMUM':' -- '+mat.sub);
+  document.getElementById('ch-mat').textContent=mat.name+' -- '+mat.sub;
+  document.getElementById('ch-mat').style.color=mat.col;
+  const tasksToApex=isOwner?0:Math.round((27-a-b-c)/0.001);
+  document.getElementById('ch-progress').textContent=isOwner?'ALL-TIME ACCESS -- OMEGA MASTER -- ABSOLUTE SOVEREIGN':((tc||0)+' tasks completed -- '+tasksToApex.toLocaleString()+' to apex');
+
+  /* Avatar */
+  drawAvatar(name,mat.col,isOwner);
+
+  /* Axes */
+  buildAxes(a,b,c,isOwner);
+
+  /* Tasks */
+  buildTasks(uid,isOwner);
+
+  /* ARCHITECT CONSOLE (OWNER ONLY) */
+  if(isOwner){
+    const console_el=document.getElementById('architect-console');
+    console_el.style.display='block';
+    buildConsole(uid);
   }
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+  /* Pre-fill edit form */
+  document.getElementById('ef-name').value=d.display_name||'';
+  document.getElementById('ef-sign').value=d.sign||'';
 
-  var COUNTRIES=["Lebanon","United States","United Kingdom","Canada","Australia","United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Bahrain","Oman","Jordan","Egypt","Syria","Iraq","Palestine","Turkey","France","Germany","Italy","Spain","Netherlands","Belgium","Switzerland","Sweden","Norway","Denmark","Finland","Ireland","Portugal","Greece","Austria","Poland","Russia","Ukraine","Romania","India","Pakistan","Bangladesh","China","Japan","South Korea","Indonesia","Malaysia","Singapore","Philippines","Thailand","Vietnam","Brazil","Argentina","Mexico","Chile","Colombia","Peru","South Africa","Nigeria","Kenya","Ghana","Morocco","Tunisia","Algeria","Libya","Other"];
-  function populateCountries(sel){
-    var s=document.getElementById('p-country'); s.innerHTML='';
-    var blank=document.createElement('option'); blank.value=''; blank.textContent='Select country'; s.appendChild(blank);
-    COUNTRIES.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; if(sel&&sel===c) o.selected=true; s.appendChild(o); });
-  }
-  async function saveRI(){
-    var country=document.getElementById('p-country').value;
-    var phone=document.getElementById('p-phone').value.trim();
-    var msg=document.getElementById('p-ri-msg'), btn=document.getElementById('p-ri-save');
-    btn.disabled=true; msg.style.color='var(--cyan)'; msg.textContent='Saving…';
-    var r=await supabase.from('profiles').update({country:country||null,phone:phone||null}).eq('id',user.id);
-    btn.disabled=false;
-    if(r.error){ msg.style.color='var(--crimson)'; msg.textContent='Could not save ('+(r.error.code||r.error.message||'')+').'; return; }
-    msg.style.color='#3fb27f'; msg.textContent='Recovery details saved.';
-  }
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Access Your Profile','Sign in to view your sovereign profile.'); return; }
-    user=sess.user;
-    var pr=await supabase.from('profiles').select('*').eq('id',user.id).maybeSingle();
-    prof=pr.data;
-    if(!prof || !prof.sign){ showGate('Set Your Cosmology','Set your cosmology first to build your profile.'); return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
-    render(); loadCerts(); loadEvents();
-    if(prof.avatar_url){ var im=document.getElementById('p-avatar'); im.src=prof.avatar_url; im.style.display='block'; }
-    populateCountries(prof.country||'');
-    if(prof.phone) document.getElementById('p-phone').value=prof.phone;
-  }
-
-  async function uploadAvatar(){
-    var fEl=document.getElementById('p-av-file'), msg=document.getElementById('p-av-msg');
-    if(!fEl.files || !fEl.files[0]) return;
-    msg.style.color='var(--cyan)'; msg.textContent='Uploading…';
-    var up=await window.OmegaStorage.upload('avatars', fEl.files[0]);
-    if(up.error){ msg.style.color='var(--crimson)'; msg.textContent=up.error; return; }
-    var url=await window.OmegaStorage.publicUrl('avatars', up.path);
-    var bust=url+'?t='+Date.now();
-    var r=await supabase.from('profiles').update({avatar_url:url}).eq('id',user.id);
-    if(r.error){ msg.style.color='var(--crimson)'; msg.textContent='Saved file, could not link it.'; return; }
-    var im=document.getElementById('p-avatar'); im.src=bust; im.style.display='block';
-    msg.style.color='#3fb27f'; msg.textContent='Photo updated.';
-  }
-
-  document.getElementById('p-save').addEventListener('click',saveName);
-  document.getElementById('p-name').addEventListener('keydown',function(e){ if(e.key==='Enter') saveName(); });
-  document.getElementById('p-av-btn').addEventListener('click',function(){ document.getElementById('p-av-file').click(); });
-  document.getElementById('p-av-file').addEventListener('change',uploadAvatar);
-  document.getElementById('p-ri-save').addEventListener('click',saveRI);
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+  /* Save handler */
+  document.getElementById('btn-save').onclick=async()=>{
+    const n=document.getElementById('ef-name').value.trim();
+    const sg=document.getElementById('ef-sign').value;
+    if(!n) return;
+    await sb.from('profiles').update({display_name:n,sign:sg||null,updated_at:new Date().toISOString()}).eq('id',uid);
+    const msg=document.getElementById('save-msg');msg.style.display='block';
+    setTimeout(()=>msg.style.display='none',3000);
+  };
+}
+boot();
 </script>
-<script src="/upload.js"></script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script>
+<script src="/nav.js"></script><script src="/bg.js"></script>
 </body>
 </html>

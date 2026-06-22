@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Terms & Conditions</title>
+<title>?? SYD OMEGA 91717  --  Terms & Conditions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -37,16 +37,16 @@
 <body>
 <div class="wrap">
   <div class="head">
-    <div class="g">Ω</div>
+    <div class="g">??</div>
     <h1>TERMS &amp; CONDITIONS</h1>
-    <div class="sub">SYD OMEGA 91717 · YOU MUST ACCEPT TO ENTER</div>
+    <div class="sub">SYD OMEGA 91717  .  YOU MUST ACCEPT TO ENTER</div>
   </div>
   <p class="lead">To enter the platform and be an active sovereign of the Order, you must read and accept the following in full. These terms sit beneath the Sovereign Charter.</p>
 
   <div class="art"><div class="n">1</div><div><div class="at">Sovereign Acceptance</div><div class="ad">By entering, you accept these Terms and the <b>Sovereign Charter</b> in their entirety. Continued use is continued acceptance.</div></div></div>
   <div class="art"><div class="n">2</div><div><div class="at">One Sovereign, One Account</div><div class="ad"><b>One account per person.</b> Your identity may be verified (ID, passport, or licence) before economic features are granted. Multi-accounting is forbidden.</div></div></div>
   <div class="art"><div class="n">3</div><div><div class="at">Earned Standing</div><div class="ad">Authority is <b>computed from your verified actions</b>. No rank, certificate, or sigil within the lattice may be bought.</div></div></div>
-  <div class="art"><div class="n">4</div><div><div class="at">The Ω Asset</div><div class="ad">Ω is an <b>internal platform asset</b> — not a currency, security, or investment, and not redeemable for cash. Fiat purchase and external transfer are gated pending legal clearance.</div></div></div>
+  <div class="art"><div class="n">4</div><div><div class="at">The ?? Asset</div><div class="ad">?? is an <b>internal platform asset</b>  --  not a currency, security, or investment, and not redeemable for cash. Fiat purchase and external transfer are gated pending legal clearance.</div></div></div>
   <div class="art"><div class="n">5</div><div><div class="at">Confidentiality &amp; Commission</div><div class="ad">Consultancy and contract engagements are bound by <b>confidentiality</b>. A per-engagement agreement and the <b>system commission</b> apply to each.</div></div></div>
   <div class="art"><div class="n">6</div><div><div class="at">Conduct</div><div class="ad">No fraud, abuse, harassment, token-farming, or unlawful use. The Order may suspend or remove offenders without notice.</div></div></div>
   <div class="art"><div class="n">7</div><div><div class="at">Content</div><div class="ad">You retain your works and grant the Order licence to display them within the platform. Horoscope and astrology content is <b>for reflection and entertainment</b>, not advice.</div></div></div>
@@ -80,10 +80,10 @@
     var msg=document.getElementById('t-msg'), btn=this;
     var sess=(await supabase.auth.getSession()).data.session;
     if(!sess){ window.location.href='/account.html'; return; }
-    btn.disabled=true; msg.textContent='Recording your acceptance…';
+    btn.disabled=true; msg.textContent='Recording your acceptance???';
     var r=await supabase.from('profiles').update({terms_accepted:true,terms_accepted_at:new Date().toISOString()}).eq('id',sess.user.id);
     if(r.error){ btn.disabled=false; msg.style.color='var(--crimson)'; msg.textContent='Could not record ('+(r.error.code||r.error.message||'')+').'; return; }
-    msg.style.color='var(--green)'; msg.textContent='Accepted. Entering the Order…';
+    msg.style.color='var(--green)'; msg.textContent='Accepted. Entering the Order???';
     setTimeout(function(){ window.location.href='/dashboard.html'; },900);
   });
   document.getElementById('decline').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });

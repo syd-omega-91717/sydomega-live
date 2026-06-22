@@ -149,8 +149,8 @@ a{color:inherit;text-decoration:none}
     <div class="architect-console" id="architect-console">
       <div class="ac-header">
         <div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(139,0,0,.6);margin-bottom:3px">ABSOLUTE OWNER ACCESS -- SLEIMAN YOUSSEF DAGHER</div>
-          <div class="ac-title">ARCHITECT CONSOLE</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(139,0,0,.6);margin-bottom:3px">MAJOR SLEIMAN YOUSSEF DAGHER -- ARCHITECT & SOVEREIGN FOUNDER</div>
+          <div class="ac-title">ARCHITECT CONSOLE</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(139,0,0,.5);margin-top:2px">PLATFORM IDENTITY: &#937;-91717-SYD-001 . LEVEL 9.9.9 . ALL-TIME ACCESS</div>
         </div>
         <div class="ac-badge"><div class="ac-dot"></div>CLASSIFIED SYSTEM ACCESS</div>
       </div>
@@ -359,12 +359,12 @@ async function boot(){
   const c=isOwner?9.000:parseFloat(d.axis_c||0.001);
   const auth=Math.sqrt(a*a+b*b+c*c);
   const mat=isOwner?{name:'OMEGA MASTER',col:'#C9A84C',sub:'ABSOLUTE APEX'}:getMaterial(Math.min(a,b,c));
-  const name=d.display_name||(isOwner?'SLEIMAN YOUSSEF DAGHER':'SOVEREIGN');
+  const name=d.display_name||(isOwner?'SLEIMAN YOUSSEF DAGHER -- ARCHITECT & FOUNDER':'SOVEREIGN');
   const sign=d.sign||'--';
   const el=d.element||'--';
 
   /* Hero */
-  document.getElementById('ph-role').textContent=isOwner?'ARCHITECT . FOUNDER . SLEIMAN YOUSSEF DAGHER':'SOVEREIGN MEMBER';
+  document.getElementById('ph-role').textContent=isOwner?'ARCHITECT . FOUNDER . SLEIMAN YOUSSEF DAGHER -- ARCHITECT & FOUNDER':'SOVEREIGN MEMBER';
   document.getElementById('ph-name').textContent=name.toUpperCase();
   document.getElementById('ph-sign').textContent=sign.toUpperCase()+' . '+el.toUpperCase()+' ELEMENT';
   document.getElementById('kv-auth').textContent=auth.toFixed(3);

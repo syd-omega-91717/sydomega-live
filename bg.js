@@ -275,7 +275,7 @@ setTimeout(function(){
           ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,10,15,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:Courier Prime,monospace;text-align:center';
           ov.innerHTML='<div style="font-family:Cinzel Decorative,serif;font-size:clamp(40px,8vw,72px);color:#C9A84C;animation:val-breathe 2s ease-in-out infinite">&#937;</div>'
             +'<div style="font-family:Cinzel Decorative,serif;font-size:clamp(14px,3vw,22px);color:#8B0000;letter-spacing:3px">SESSION EXPIRED</div>'
-            +'<div style="font-size:10px;letter-spacing:3px;color:#85837b;max-width:320px;line-height:1.8">YOUR 9.1717-MINUTE TRIAL HAS ENDED.<br/>CONTACT THE ARCHITECT TO REQUEST CONTINUED ACCESS.</div>'
+            +'<div style="font-size:10px;letter-spacing:3px;color:#85837b;max-width:320px;line-height:1.8">YOUR 9.1717-MINUTE SESSION HAS ENDED.<br/>CONTACT THE ARCHITECT TO REQUEST CONTINUED ACCESS.</div>'
             +'<a href="/account.html" style="font-family:Courier Prime,monospace;font-size:10px;letter-spacing:3px;padding:12px 28px;border:1px solid rgba(201,168,76,.4);color:#C9A84C;text-decoration:none;margin-top:10px">RETURN TO LOGIN</a>';
           document.body.appendChild(ov);
         },msLeft);

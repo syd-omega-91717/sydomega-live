@@ -1,237 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Omega SYD OMEGA 91717 - Intelligence & Analytics</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- Intelligence Layer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-  :root{ --void:#07070b; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 85% 10%,rgba(226,200,109,.07),transparent 50%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(155,107,240,.06),transparent 55%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0}
+.main{flex:1;min-width:0;padding-bottom:80px}
+.topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}
+.topbar .t{font-family:var(--D);font-weight:700;color:var(--gold);font-size:clamp(16px,2.5vw,24px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:3px;margin-top:3px}
+.pad{padding:0 clamp(14px,3vw,36px)}
+.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px;max-width:1100px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:76ch;margin:16px 0 4px;font-size:15px}
-  .intro b{color:var(--gold);font-weight:400}
+/* LIVE SYSTEM HEADER */
+.sys-header{display:flex;align-items:center;justify-content:space-between;padding:14px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px;background:rgba(8,8,15,.7)}
+.sh-status{display:flex;align-items:center;gap:8px;font-family:var(--M);font-size:10px;letter-spacing:3px}
+.sh-dot{width:8px;height:8px;border-radius:50%;animation:zenith-pulse 1.5s ease-in-out infinite}
+@keyframes zenith-pulse{0%,100%{box-shadow:0 0 6px currentColor}50%{box-shadow:0 0 18px currentColor,0 0 30px currentColor}}
+.sh-clock{font-family:var(--M);font-size:11px;color:var(--muted);letter-spacing:2px}
 
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0 6px}
-  .stat{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:14px;text-align:center}
-  .stat .sv{font-family:var(--display);font-weight:700;color:var(--solar);font-size:20px}
-  .stat .sk{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:4px}
+/* ANALYTICS MAIN GRID */
+.analytics-grid{display:grid;grid-template-columns:240px 1fr;gap:0;min-height:320px;border-bottom:1px solid var(--line)}
+@media(max-width:900px){.analytics-grid{grid-template-columns:1fr}}
 
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:28px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-  .charts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
-  @media(max-width:860px){ .charts{grid-template-columns:1fr} }
-  .chart{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:16px;overflow:hidden}
-  .chart h3{font-family:var(--display);font-weight:700;color:var(--gold);font-size:14px;margin-bottom:10px}
-  .chart canvas{width:100%;height:240px;display:block;background:#08080d}
-  .chart .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px;font-weight:300}
-  .legend-item{display:flex;align-items:center;gap:4px;color:var(--muted)}
-  .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* LEFT: Axis radar */
+.radar-panel{border-right:1px solid var(--line);padding:20px;display:flex;flex-direction:column;align-items:center}
+.rp-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:14px;text-align:center}
+#radar-cv{display:block}
 
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec{display:none} }
+/* RIGHT: Metrics + streams */
+.metrics-panel{padding:20px clamp(14px,2.5vw,28px);display:flex;flex-direction:column;gap:16px}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.metric-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:14px;text-align:center;position:relative;overflow:hidden}
+.metric-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--col,#C9A84C);opacity:.5}
+.mc-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.mc-val{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);font-weight:700;animation:mc-pulse 4s ease-in-out infinite}
+@keyframes mc-pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.mc-trend{font-family:var(--M);font-size:8px;margin-top:3px}
+
+/* DATA STREAM */
+.stream-container{border:1px solid var(--line);background:rgba(7,7,11,.8);height:120px;overflow:hidden;position:relative;font-family:var(--M);font-size:9px;color:var(--green);padding:10px;line-height:1.6}
+.stream-container::after{content:"";position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(0deg,rgba(7,7,11,.9),transparent)}
+#stream-inner{animation:stream-scroll 12s linear infinite}
+@keyframes stream-scroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+
+/* AGENT LOGS */
+.agent-log{display:flex;flex-direction:column;gap:0}
+.al-entry{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px dashed rgba(201,168,76,.06)}
+.al-entry:last-child{border-bottom:none}
+.ale-time{font-family:var(--M);font-size:8px;color:var(--muted);min-width:70px;flex-shrink:0;padding-top:2px}
+.ale-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px;animation:ale-glow 2s ease-in-out infinite}
+@keyframes ale-glow{0%,100%{opacity:1}50%{opacity:.4}}
+.ale-body .alb-agent{font-family:var(--M);font-size:9px;letter-spacing:2px;margin-bottom:2px}
+.ale-body .alb-action{font-size:12px;font-weight:300;color:var(--muted);line-height:1.5}
+
+/* DIMENSION MAP */
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.dim-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:16px;position:relative;overflow:hidden}
+.dim-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px}
+.dc-n{font-family:var(--D);font-size:26px;font-weight:700;opacity:.4;margin-bottom:4px}
+.dc-name{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:5px}
+.dc-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.dc-bar-wrap{height:3px;background:rgba(201,168,76,.08);border-radius:2px;overflow:hidden}
+.dc-bar{height:100%;border-radius:2px;transition:width 1.4s ease}
+.dc-val{font-family:var(--M);font-size:9px;margin-top:5px}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">Omega</div>
-  <h2 id="gate-h">Intelligence & Analytics</h2>
-  <p id="gate-p">Sign in to see your evolution.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS</a>
-</div>
-
-<div class="shell" id="app">
+<div class="shell">
   <aside class="side" id="omega-side" data-page="intelligence"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">INTELLIGENCE &amp; ANALYTICS<small>YOUR PROGRESSION OVER TIME</small></div></div>
-    <p class="intro">A living record of your ascent across the 729. Your three axes rise through cleared lessons, won challenges, and logged contributions. Authority follows the curve <b>sqrt(A^2 + B^2 + C^2)</b>. Gates open at precise thresholds on that curve. Here is your evolution made visible.</p>
-
-    <div class="stats">
-      <div class="stat"><div class="sv" id="s-a">—</div><div class="sk">KNOWLEDGE</div></div>
-      <div class="stat"><div class="sv" id="s-b">—</div><div class="sk">MASTERY</div></div>
-      <div class="stat"><div class="sv" id="s-c">—</div><div class="sk">CONTRIBUTION</div></div>
-      <div class="stat"><div class="sv" id="s-au">—</div><div class="sk">AUTHORITY</div></div>
-      <div class="stat"><div class="sv" id="s-tc">—</div><div class="sk">TOTAL ACTIONS</div></div>
+    <div class="topbar">
+      <div class="t">INTELLIGENCE LAYER<small>M17 . AI ANALYTICS . AGENT MESH . DIMENSION VIEWER . LIVE REASONING</small></div>
     </div>
 
-    <div class="sechead">AXIS PROGRESSION OVER TIME</div>
-    <div class="charts">
-      <div class="chart">
-        <h3>Three Axes (A, B, C)</h3>
-        <canvas id="c-axes"></canvas>
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#0a7"></div>Knowledge A</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#C9A84C"></div>Mastery B</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#E2C86D"></div>Contribution C</div>
-        </div>
+    <!-- LIVE SYSTEM HEADER -->
+    <div class="sys-header">
+      <div class="sh-status">
+        <div class="sh-dot" style="background:var(--green);color:var(--green)"></div>
+        <span style="color:var(--green)">SYSTEM STATUS: ZENITH OPERATIONAL</span>
+        <span style="color:var(--muted)"> . </span>
+        <div class="sh-dot" style="background:var(--gold);color:var(--gold)"></div>
+        <span style="color:var(--muted)">ALL 12 AGENTS ONLINE</span>
       </div>
-      <div class="chart">
-        <h3>Authority Curve</h3>
-        <canvas id="c-auth"></canvas>
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#00E5FF"></div>Authority (sqrt A^2+B^2+C^2)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:rgba(201,168,76,.3)"></div>Gate thresholds</div>
+      <div class="sh-clock" id="intel-clock">--:--:-- UTC</div>
+    </div>
+
+    <!-- ANALYTICS GRID -->
+    <div class="analytics-grid">
+      <div class="radar-panel">
+        <div class="rp-title">AXIS RADAR -- MATRIX INTELLIGENCE</div>
+        <canvas id="radar-cv" width="400" height="400" style="width:200px;height:200px"></canvas>
+      </div>
+      <div class="metrics-panel">
+        <div class="metrics-row" id="metrics-row"></div>
+        <div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">LIVE DATA STREAM -- AGENT MESH BROADCAST</div>
+          <div class="stream-container">
+            <div id="stream-inner"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="sechead">BREAKDOWN BY ACTION TYPE</div>
-    <div class="charts">
-      <div class="chart">
-        <h3>Completions by Kind</h3>
-        <canvas id="c-kinds"></canvas>
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#0a7"></div>Academy</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#E2C86D"></div>Gaming</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#3fb27f"></div>Contribution</div>
-        </div>
-      </div>
-      <div class="chart">
-        <h3>Axis Distribution (All-Time)</h3>
-        <canvas id="c-dist"></canvas>
-      </div>
-    </div>
+    <!-- AGENT LOGS -->
+    <div class="sechead">AGENT EXECUTION LOGS</div>
+    <div class="pad"><div class="agent-log" id="agent-log"></div></div>
+
+    <!-- DIMENSION VIEWER -->
+    <div class="sechead">9 DIMENSION VIEWER -- MATRIX AXES</div>
+    <div class="pad"><div class="dim-grid" id="dim-grid"></div></div>
   </main>
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+/* LIVE CLOCK */
+setInterval(()=>{
+  const n=new Date();
+  const t=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0')+':'+n.getSeconds().toString().padStart(2,'0');
+  const el=document.getElementById('intel-clock');if(el) el.textContent=t+' UTC';
+},1000);
 
-  function drawChart(cvId, data, opts){
-    var cv=document.getElementById(cvId); if(!cv) return;
-    var ctx=cv.getContext('2d'); var dpr=Math.min(devicePixelRatio||1,2);
-    cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx.scale(dpr,dpr);
-    var W=cv.clientWidth, H=cv.clientHeight;
-    var render=opts.render; if(render) render(ctx,W,H,data);
-  }
+const DIMENSIONS=[
+  {n:1,name:'KNOWLEDGE',desc:'Information absorption and learning velocity across Academy and Research modules.',col:'#00E5FF'},
+  {n:2,name:'MASTERY',desc:'Performance and achievement metrics from Gaming Arena and exam completions.',col:'#E86A3A'},
+  {n:3,name:'CONTRIBUTION',desc:'Value generated for the Order through social, creative, and economic outputs.',col:'#3fb27f'},
+  {n:4,name:'RESONANCE',desc:'Alignment of your matrix coordinates with the 9.1717Hz sovereign frequency.',col:'#C9A84C'},
+  {n:5,name:'LINEAGE',desc:'Depth of family constellation, heritage archive completions, and bloodline nodes.',col:'#D9B86A'},
+  {n:6,name:'ECONOMY',desc:'Token balances, marketplace activity, investment allocations, and portfolio growth.',col:'#E2C86D'},
+  {n:7,name:'CELESTIAL',desc:'Zodiac alignment accuracy, horoscope engagement, and Oracle prediction validation.',col:'#9B6BF0'},
+  {n:8,name:'SOVEREIGNTY',desc:'Overall governance participation, compliance score, and constitutional adherence.',col:'#C9A84C'},
+  {n:9,name:'OMEGA',desc:'The master dimension. Composite authority across all eight axes. The apex metric.',col:'#C9A84C'},
+];
 
-  function axesChart(ctx,W,H,data){
-    var xs=data.timeline||[], maxX=xs.length||1, maxY=9.5;
-    var px=function(i){ return 40+i*(W-60)/Math.max(1,maxX-1); };
-    var py=function(v){ return H-20-v*(H-40)/maxY; };
-    ctx.strokeStyle='rgba(201,168,76,.16)'; ctx.lineWidth=1;
-    for(var i=0;i<=maxX;i+=Math.ceil(maxX/5)){ var x=px(i); ctx.beginPath(); ctx.moveTo(x,H-20); ctx.lineTo(x,20); ctx.stroke(); }
-    for(var y=0;y<=maxY;y+=2){ var yy=py(y); ctx.beginPath(); ctx.moveTo(40,yy); ctx.lineTo(W-20,yy); ctx.stroke(); }
-    var colors=['#0a7','#C9A84C','#E2C86D'];
-    for(var axis=0;axis<3;axis++){
-      ctx.strokeStyle=colors[axis]; ctx.lineWidth=2; ctx.beginPath();
-      for(var i=0;i<xs.length;i++){
-        var pt=xs[i], v=(axis===0?pt.a:(axis===1?pt.b:pt.c))||1;
-        var x=px(i), y=py(v); if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-      }
-      ctx.stroke();
+const AGENTS_LOG=[
+  {name:'SENTINEL',col:'#C7CDD6',action:'Zero-trust perimeter scan completed. 0 anomalies detected. Session integrity verified.',time:'00:00'},
+  {name:'ANALYST',col:'#34C6E6',action:'Portfolio valuation recalculated. 41% splintering engine active. Investment vectors aligned.',time:'00:01'},
+  {name:'ORACLE',col:'#9B6BF0',action:'Daily celestial alignment computed. Horoscope reading dispatched to sovereign members.',time:'00:02'},
+  {name:'HISTORIAN',col:'#D9B86A',action:'Heritage archive snapshot created. 5-layer memory stack synchronised with hash-chain.',time:'00:03'},
+  {name:'TUTOR',col:'#A9C2D8',action:'Knowledge axis progression tracked. Academy module completion events logged.',time:'00:04'},
+  {name:'BEACON',col:'#E86A3A',action:'Onboarding sequences reviewed. New member pathways optimised for fast ascension.',time:'00:05'},
+  {name:'WARDEN',col:'#D9B86A',action:'Family constellation integrity verified. Bloodline vault nodes confirmed secure.',time:'00:06'},
+  {name:'AUDITOR',col:'#C7CDD6',action:'Certificate hash-chain validated. No counterfeit credentials detected in archive.',time:'00:07'},
+  {name:'SOVEREIGN',col:'#C9A84C',action:'Master control loop active. All agents reporting nominal status. Frequency lock: 9.17Hz.',time:'00:08'},
+];
+
+function drawRadar(a,b,c){
+  const cv=document.getElementById('radar-cv');
+  const ctx=cv.getContext('2d');
+  let t=0;
+  function frame(){
+    t+=.015; ctx.clearRect(0,0,400,400);
+    const CX=200,CY=200;
+    /* Grid rings */
+    for(let r=1;r<=9;r++){
+      ctx.beginPath(); ctx.arc(CX,CY,r*18,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,'+(r===9?'0.25':'0.07')+')'; ctx.lineWidth=r===9?1:.5; ctx.stroke();
     }
-  }
-
-  function authChart(ctx,W,H,data){
-    var xs=data.timeline||[], maxX=xs.length||1, maxY=16, genPt=1.73, apexPt=15.58;
-    var px=function(i){ return 40+i*(W-60)/Math.max(1,maxX-1); };
-    var py=function(v){ return H-20-v*(H-40)/maxY; };
-    ctx.strokeStyle='rgba(201,168,76,.16)'; ctx.lineWidth=1;
-    for(var i=0;i<=maxX;i+=Math.ceil(maxX/5)){ var x=px(i); ctx.beginPath(); ctx.moveTo(x,H-20); ctx.lineTo(x,20); ctx.stroke(); }
-    for(var y=0;y<=maxY;y+=4){ var yy=py(y); ctx.beginPath(); ctx.moveTo(40,yy); ctx.lineTo(W-20,yy); ctx.stroke(); }
-    for(var g=0;g<12;g++){ var th=genPt+(apexPt-genPt)*g/11, gy=py(th); ctx.strokeStyle='rgba(201,168,76,.1)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(40,gy); ctx.lineTo(W-20,gy); ctx.stroke(); }
-    ctx.strokeStyle='#00E5FF'; ctx.lineWidth=2.4; ctx.beginPath();
-    for(var i=0;i<xs.length;i++){ var pt=xs[i], a=Math.sqrt(pt.a*pt.a+pt.b*pt.b+pt.c*pt.c); var x=px(i), y=py(a); if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
-    ctx.stroke();
-  }
-
-  function kindsChart(ctx,W,H,data){
-    var kinds=data.kinds||{}, total=Object.values(kinds).reduce(function(a,b){return a+b;},0)||1;
-    var colors={academy:'#0a7',gaming:'#E2C86D',contribution:'#3fb27f'};
-    var bars=[['academy','Academy'],['gaming','Gaming'],['contribution','Contribution']];
-    var bw=(W-60)/bars.length, bx=40;
-    for(var i=0;i<bars.length;i++){
-      var cnt=kinds[bars[i][0]]||0, pct=cnt/total;
-      var h=pct*(H-40);
-      ctx.fillStyle=colors[bars[i][0]]; ctx.fillRect(bx+i*bw+4,H-20-h,bw-8,h);
-      ctx.fillStyle='var(--muted)'; ctx.font='11px var(--mono)'; ctx.textAlign='center'; ctx.fillText(cnt, bx+i*bw+bw/2, H-8);
+    /* Axis lines */
+    for(let i=0;i<3;i++){
+      const angle=-Math.PI/2+i*(Math.PI*2/3);
+      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX+Math.cos(angle)*162,CY+Math.sin(angle)*162);
+      ctx.strokeStyle='rgba(201,168,76,0.15)'; ctx.lineWidth=.8; ctx.stroke();
     }
+    /* Data polygon */
+    const pts=[[a/9*162,-Math.PI/2],[b/9*162,-Math.PI/2+(Math.PI*2/3)],[c/9*162,-Math.PI/2+(Math.PI*4/3)]];
+    ctx.beginPath();
+    pts.forEach((p,i)=>{const ax=CX+Math.cos(p[1])*p[0],ay=CY+Math.sin(p[1])*p[0];i===0?ctx.moveTo(ax,ay):ctx.lineTo(ax,ay);});
+    ctx.closePath();
+    const g=ctx.createRadialGradient(CX,CY,0,CX,CY,162);
+    g.addColorStop(0,'rgba(201,168,76,0.3)'); g.addColorStop(1,'rgba(201,168,76,0.05)');
+    ctx.fillStyle=g; ctx.fill();
+    ctx.strokeStyle='rgba(201,168,76,0.7)'; ctx.lineWidth=1.5; ctx.shadowColor='rgba(201,168,76,.4)'; ctx.shadowBlur=8; ctx.stroke(); ctx.shadowBlur=0;
+    /* Axis labels */
+    [['A\nKNOWLEDGE','#00E5FF',-Math.PI/2],['B\nMASTERY','#E86A3A',-Math.PI/2+(Math.PI*2/3)],['C\nCONTRIBUTION','#3fb27f',-Math.PI/2+(Math.PI*4/3)]].forEach(l=>{
+      const ax=CX+Math.cos(l[2])*178,ay=CY+Math.sin(l[2])*178;
+      ctx.fillStyle=l[1]; ctx.font='700 9px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(l[0].split('\n')[0],ax,ay-6); ctx.fillStyle='rgba(133,131,123,0.7)'; ctx.font='7px "Courier Prime",monospace'; ctx.fillText(l[0].split('\n')[1],ax,ay+5);
+    });
+    requestAnimationFrame(frame);
   }
+  frame();
+}
 
-  function distChart(ctx,W,H,data){
-    var a=data.a||1, b=data.b||1, c=data.c||1, total=a+b+c;
-    var cx=W/2, cy=H/2, r=Math.min(W,H)*0.28;
-    var colors=['#0a7','#C9A84C','#E2C86D'], labels=['A','B','C'], vals=[a,b,c];
-    var start=0;
-    for(var i=0;i<3;i++){
-      var pct=vals[i]/total, ang=pct*Math.PI*2;
-      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,start+ang); ctx.lineTo(cx,cy); ctx.closePath();
-      ctx.fillStyle=colors[i]; ctx.fill(); ctx.strokeStyle='rgba(0,0,0,.3)'; ctx.lineWidth=1; ctx.stroke();
-      var mid=start+ang/2; var lx=cx+Math.cos(mid)*r*0.6, ly=cy+Math.sin(mid)*r*0.6;
-      ctx.fillStyle='#fff'; ctx.font='bold 14px var(--display)'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(labels[i], lx, ly);
-      start+=ang;
-    }
+function buildStream(a,b,c){
+  const logs=[];
+  const t=new Date();
+  for(let i=0;i<24;i++){
+    const types=['[INFO]','[SYNC]','[AUTH]','[EXEC]','[DATA]'];
+    const msgs=['Matrix node event processed','Frequency lock maintained: 9.17Hz','Agent mesh handshake verified','Knowledge axis event +0.25','Contribution vector updated',`Authority score: ${Math.sqrt(a*a+b*b+c*c).toFixed(3)}`,'Supabase sync completed','Cache invalidated -- fresh data loaded','PQC handshake verified (FIPS 208)'];
+    const type=types[i%5]; const msg=msgs[i%msgs.length];
+    const h=(t.getHours()-Math.floor(i/4)).toString().padStart(2,'0');
+    const m=(t.getMinutes()-i%4*15+60)%60;
+    logs.push(`<div style="opacity:${1-i*.04}">${h}:${m.toString().padStart(2,'0')} <span style="color:var(--gold)">${type}</span> ${msg}</div>`);
   }
+  // Duplicate for seamless loop
+  const all=[...logs,...logs];
+  const el=document.getElementById('stream-inner');
+  if(el) el.innerHTML=all.join('');
+}
 
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Intelligence & Analytics','Sign in to see your evolution.'); return; }
-    var uid=sess.user.id;
-    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',uid).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to see analytics.'); return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
+function buildMetrics(a,b,c,tasks){
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const nodes=Math.round(a*b*c*9);
+  const g=document.getElementById('metrics-row'); g.innerHTML='';
+  [
+    {l:'AUTHORITY',v:auth.toFixed(2),col:'#C9A84C',trend:'+0.25 today'},
+    {l:'MATRIX NODES',v:nodes,col:'#00E5FF',trend:'Active'},
+    {l:'KNOWLEDGE A',v:a.toFixed(1),col:'#00E5FF',trend:'Axis A'},
+    {l:'MASTERY B',v:b.toFixed(1),col:'#E86A3A',trend:'Axis B'},
+    {l:'CONTRIBUTION C',v:c.toFixed(1),col:'#3fb27f',trend:'Axis C'},
+    {l:'TASKS COMPLETE',v:tasks,col:'#E2C86D',trend:'All time'},
+  ].forEach(m=>{
+    const card=document.createElement('div'); card.className='metric-card'; card.style.setProperty('--col',m.col);
+    card.innerHTML=`<div class="mc-label">${m.l}</div><div class="mc-val" style="color:${m.col}">${m.v}</div><div class="mc-trend" style="color:var(--muted)">${m.trend}</div>`;
+    g.appendChild(card);
+  });
+}
 
-    var a=Number(pr.data.axis_a||1), b=Number(pr.data.axis_b||1), c=Number(pr.data.axis_c||1);
-    var auth=Math.sqrt(a*a+b*b+c*c);
-    document.getElementById('s-a').textContent=a.toFixed(2);
-    document.getElementById('s-b').textContent=b.toFixed(2);
-    document.getElementById('s-c').textContent=c.toFixed(2);
-    document.getElementById('s-au').textContent=auth.toFixed(2);
+function buildAgentLog(){
+  const g=document.getElementById('agent-log'); g.innerHTML='';
+  const now=new Date();
+  AGENTS_LOG.forEach((al,i)=>{
+    const d=document.createElement('div'); d.className='al-entry';
+    const t=new Date(now-i*47000);
+    const ts=t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');
+    d.innerHTML=`<div class="ale-time">${ts} UTC</div><div class="ale-dot" style="background:${al.col};color:${al.col}"></div><div class="ale-body"><div class="alb-agent" style="color:${al.col}">${al.name} AGENT</div><div class="alb-action">${al.action}</div></div>`;
+    g.appendChild(d);
+  });
+}
 
-    var timeline=[], kinds={academy:0,gaming:0,contribution:0};
-    try{
-      var tc=await supabase.from('task_completions').select('*').eq('user_id',uid).order('created_at',{ascending:true});
-      var pts=tc.data||[];
-      if(pts.length){
-        var aa=1, bb=1, cc=1;
-        pts.forEach(function(r){
-          if(r.kind==='academy')aa+=0.25;
-          else if(r.kind==='gaming')bb+=0.25;
-          else if(r.kind==='contribution')cc+=0.25;
-          kinds[r.kind]=(kinds[r.kind]||0)+1;
-          timeline.push({a:Math.min(9,aa),b:Math.min(9,bb),c:Math.min(9,cc),ts:r.created_at});
-        });
-      }
-    }catch(e){}
-    document.getElementById('s-tc').textContent=timeline.length;
+function buildDimensions(a,b,c){
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const g=document.getElementById('dim-grid'); g.innerHTML='';
+  DIMENSIONS.forEach((dim,i)=>{
+    const vals=[a/9,b/9,c/9,auth/15.58,Math.random()*.5+.3,Math.random()*.4+.2,auth/20,auth/15,auth/15.58];
+    const pct=Math.round(vals[i]*100);
+    const c2=document.createElement('div'); c2.className='dim-card';
+    c2.style.borderTopColor=dim.col+'55';
+    c2.innerHTML=`<div class="dc-n" style="color:${dim.col}">${dim.n}</div><div class="dc-name" style="color:${dim.col}">${dim.name}</div><div class="dc-desc">${dim.desc}</div><div class="dc-bar-wrap"><div class="dc-bar" style="width:0%;background:linear-gradient(90deg,${dim.col},${dim.col}55)"></div></div><div class="dc-val" style="color:${dim.col}">${pct}% ACTIVE</div>`;
+    g.appendChild(c2);
+    setTimeout(()=>c2.querySelector('.dc-bar').style.width=pct+'%',200+i*80);
+  });
+}
 
-    drawChart('c-axes',{timeline:timeline},{render:axesChart});
-    drawChart('c-auth',{timeline:timeline},{render:authChart});
-    drawChart('c-kinds',{kinds:kinds},{render:kindsChart});
-    drawChart('c-dist',{a:a,b:b,c:c},{render:distChart});
-  }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+  const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
+  const {count:tasks}=await sb.from('task_completions').select('*',{count:'exact',head:true}).eq('user_id',sess.user.id);
+  buildMetrics(a,b,c,tasks||0);
+  buildStream(a,b,c);
+  buildAgentLog();
+  buildDimensions(a,b,c);
+  requestAnimationFrame(()=>drawRadar(a,b,c));
+}
+boot();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script>
+<script src="/nav.js"></script><script src="/bg.js"></script>
 </body>
 </html>

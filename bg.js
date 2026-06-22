@@ -236,3 +236,68 @@ setTimeout(function(){
     }catch(e){}
   })();
 },1500);
+
+/* ===== TRIAL AUTO-LOGOUT -- 9.1717 MINUTES ENFORCEMENT ===== */
+(function(){
+  async function checkTrialExpiry(){
+    try{
+      var mod=await import('https://esm.sh/@supabase/supabase-js@2');
+      var createClient=mod.createClient||(mod.default&&mod.default.createClient);
+      if(!createClient) return;
+      var sb=createClient(
+        "https://ydqhzvvoyufiiqvzcjns.supabase.co",
+        "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"
+      );
+      var sess=(await sb.auth.getSession()).data.session;
+      if(!sess) return;
+      var pr=(await sb.from('profiles')
+        .select('is_owner,is_trial,trial_expires_at,access_approved')
+        .eq('id',sess.user.id)
+        .maybeSingle()).data;
+      if(!pr) return;
+      if(pr.is_owner) return; /* Owner never expires */
+      /* Check if trial is active */
+      if(pr.is_trial && pr.trial_expires_at){
+        var exp=new Date(pr.trial_expires_at);
+        var now=Date.now();
+        var msLeft=exp-now;
+        if(msLeft<=0){
+          /* Trial already expired -- log out immediately */
+          await sb.auth.signOut();
+          window.location.href='/pending.html?status=expired';
+          return;
+        }
+        /* Set precise auto-logout timer */
+        window.__trialLogoutTimer=setTimeout(async function(){
+          await sb.auth.signOut();
+          /* Show expiry overlay */
+          var ov=document.createElement('div');
+          ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,10,15,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:Courier Prime,monospace;text-align:center';
+          ov.innerHTML='<div style="font-family:Cinzel Decorative,serif;font-size:clamp(40px,8vw,72px);color:#C9A84C;animation:val-breathe 2s ease-in-out infinite">&#937;</div>'
+            +'<div style="font-family:Cinzel Decorative,serif;font-size:clamp(14px,3vw,22px);color:#8B0000;letter-spacing:3px">SESSION EXPIRED</div>'
+            +'<div style="font-size:10px;letter-spacing:3px;color:#85837b;max-width:320px;line-height:1.8">YOUR 9.1717-MINUTE TRIAL HAS ENDED.<br/>CONTACT THE ARCHITECT TO REQUEST CONTINUED ACCESS.</div>'
+            +'<a href="/account.html" style="font-family:Courier Prime,monospace;font-size:10px;letter-spacing:3px;padding:12px 28px;border:1px solid rgba(201,168,76,.4);color:#C9A84C;text-decoration:none;margin-top:10px">RETURN TO LOGIN</a>';
+          document.body.appendChild(ov);
+        },msLeft);
+        /* Show a trial countdown badge (subtle) */
+        var minsLeft=Math.ceil(msLeft/60000);
+        if(minsLeft<=2&&!document.getElementById('trial-warn')){
+          var warn=document.createElement('div');
+          warn.id='trial-warn';
+          warn.style.cssText='position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:9997;background:rgba(139,0,0,.9);padding:8px 18px;font-family:Courier Prime,monospace;font-size:9px;letter-spacing:2px;color:#fff;animation:badge-pulse 1.5s ease-in-out infinite;white-space:nowrap';
+          warn.textContent='TRIAL ENDING IN '+minsLeft+' MIN';
+          document.body.appendChild(warn);
+        }
+      } else if(!pr.access_approved && !pr.is_trial){
+        /* Not approved and not on trial -- send to pending */
+        var path=window.location.pathname;
+        var pub=['/index.html','/account.html','/enter.html','/reset.html','/terms.html','/charter.html','/pending.html','/'];
+        if(!pub.some(function(p){return path.endsWith(p)||path===p;})){
+          window.location.href='/pending.html';
+        }
+      }
+    }catch(e){}
+  }
+  /* Run after page load, with delay so canvas renders first */
+  setTimeout(checkTrialExpiry,2000);
+})();

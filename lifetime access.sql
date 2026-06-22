@@ -10,8 +10,13 @@ UPDATE profiles SET
   axis_c          = 9.000,
   material_tier   = 'OMEGA MASTER',
   membership_tier = 9,
-  display_name    = 'Major Sleiman Youssef Dagher'
-WHERE id = (SELECT id FROM auth.users ORDER BY created_at ASC LIMIT 1);
+  display_name    = 'Major Sleiman Youssef Dagher',
+  sign            = 'Virgo',
+  element         = 'Sand'
+WHERE id IN (
+  SELECT id FROM auth.users
+  WHERE email IN ('s.y.dagher@gmail.com', 'slmndghr@gmail.com')
+);
 
 CREATE OR REPLACE FUNCTION protect_owner_lifetime()
 RETURNS TRIGGER AS $$

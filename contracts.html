@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ω SYD OMEGA 91717 — Commission Contracts</title>
+<title>?? SYD OMEGA 91717  --  Commission Contracts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -86,19 +86,19 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">Ω</div>
+  <div class="g">??</div>
   <h2 id="gate-h">Commission Contracts</h2>
   <p id="gate-p">Sign in to draft a contract.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS →</a>
+  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="contracts"></aside>
   <main class="main">
     <div class="topbar">
-      <div class="t">COMMISSION CONTRACTS<small>MEMBER ↔ TRADE · THE ORDER'S CUT PRESERVED</small></div>
+      <div class="t">COMMISSION CONTRACTS<small>MEMBER ??? TRADE  .  THE ORDER'S CUT PRESERVED</small></div>
     </div>
-    <p class="intro">Draft an agreement between yourself and an outside party. The Order records the instrument, assigns a sovereign reference, and computes <b>SYD OMEGA's preserved commission</b> on the deal. A recorded instrument — not a substitute for counsel.</p>
+    <p class="intro">Draft an agreement between yourself and an outside party. The Order records the instrument, assigns a sovereign reference, and computes <b>SYD OMEGA's preserved commission</b> on the deal. A recorded instrument  --  not a substitute for counsel.</p>
 
     <div class="sechead">DRAFT A CONTRACT</div>
     <div class="card">
@@ -108,16 +108,16 @@
         <div><label for="k-val">DEAL VALUE</label><input id="k-val" type="number" min="0" step="0.01" placeholder="0" /></div>
         <div><label for="k-rate">ORDER COMMISSION (%)</label><input id="k-rate" type="number" min="0" max="100" step="0.01" value="9.17" /></div>
       </div>
-      <div class="fld"><label for="k-terms">TERMS</label><textarea id="k-terms" maxlength="4000" placeholder="The terms binding both parties…"></textarea></div>
+      <div class="fld"><label for="k-terms">TERMS</label><textarea id="k-terms" maxlength="4000" placeholder="The terms binding both parties???"></textarea></div>
       <div class="calc">
         <div class="c"><div class="k">DEAL VALUE</div><div class="v" id="c-val">0</div></div>
         <div class="c"><div class="k">ORDER COMMISSION</div><div class="v cy" id="c-rate">9.17%</div></div>
         <div class="c"><div class="k">SYD OMEGA RECEIVES</div><div class="v gold" id="c-com">0</div></div>
       </div>
-      <label style="display:flex;align-items:flex-start;gap:10px;margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--ink);cursor:pointer;line-height:1.5"><input type="checkbox" id="k-agree" style="width:18px;height:18px;accent-color:#C9A84C;margin-top:1px;flex-shrink:0"/> Both parties accept the <b style="color:var(--gold)">Confidentiality &amp; Commission Agreement</b> — strict confidentiality for legal and security, with the recorded commission payable to the Order's account.</label>
+      <label style="display:flex;align-items:flex-start;gap:10px;margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--ink);cursor:pointer;line-height:1.5"><input type="checkbox" id="k-agree" style="width:18px;height:18px;accent-color:#C9A84C;margin-top:1px;flex-shrink:0"/> Both parties accept the <b style="color:var(--gold)">Confidentiality &amp; Commission Agreement</b>  --  strict confidentiality for legal and security, with the recorded commission payable to the Order's account.</label>
       <button class="btn" id="k-go">SEAL CONTRACT</button>
       <div class="msg" id="k-msg"></div>
-      <div class="gate-note">This records the instrument and the Order's commission. <b>Legal execution, signatures, and settlement are PHASE II — gated on counsel.</b> No funds move and no binding legal effect is created at this stage.</div>
+      <div class="gate-note">This records the instrument and the Order's commission. <b>Legal execution, signatures, and settlement are PHASE II  --  gated on counsel.</b> No funds move and no binding legal effect is created at this stage.</div>
     </div>
 
     <div class="sechead">YOUR CONTRACTS</div>
@@ -147,12 +147,12 @@
     try{
       var r=await supabase.from('commission_contracts').select('reference,counterparty,scope,deal_value,commission_rate,commission_value,terms,status,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(40);
       box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No contracts yet — draft your first above.</div>'; return; }
+      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No contracts yet  --  draft your first above.</div>'; return; }
       r.data.forEach(function(k){
         var dt=k.created_at?new Date(k.created_at).toLocaleDateString():'';
         var d=document.createElement('div'); d.className='ctr';
-        d.innerHTML='<button class="ch"><span><span class="ref">'+esc(k.reference)+'</span><span class="cp"></span><span class="rt">'+fmt(k.commission_rate)+'% · Ω cut '+fmt(k.commission_value)+'</span></span><span class="ar">&#9662;</span></button>'
-          +'<div class="cb"><div class="inner">SCOPE — <span class="scp"></span><br>DEAL VALUE — <b>'+fmt(k.deal_value)+'</b> · COMMISSION — <b>'+fmt(k.commission_value)+'</b> ('+fmt(k.commission_rate)+'%)<br>STATUS — <b>'+(k.status||'drafted').toUpperCase()+'</b> · '+dt+'<div class="terms"></div></div></div>';
+        d.innerHTML='<button class="ch"><span><span class="ref">'+esc(k.reference)+'</span><span class="cp"></span><span class="rt">'+fmt(k.commission_rate)+'%  .  ?? cut '+fmt(k.commission_value)+'</span></span><span class="ar">&#9662;</span></button>'
+          +'<div class="cb"><div class="inner">SCOPE  --  <span class="scp"></span><br>DEAL VALUE  --  <b>'+fmt(k.deal_value)+'</b>  .  COMMISSION  --  <b>'+fmt(k.commission_value)+'</b> ('+fmt(k.commission_rate)+'%)<br>STATUS  --  <b>'+(k.status||'drafted').toUpperCase()+'</b>  .  '+dt+'<div class="terms"></div></div></div>';
         d.querySelector('.cp').textContent=k.counterparty||'';
         d.querySelector('.scp').textContent=k.scope||'';
         d.querySelector('.terms').textContent=k.terms||'';
@@ -175,11 +175,11 @@
     if(!document.getElementById('k-agree').checked){ out.style.color='var(--crimson)'; out.textContent='Both parties must accept the Confidentiality & Commission Agreement.'; return; }
     var com=val*rate/100;
     var ref='\u03A9-91717-'+Date.now().toString(36).toUpperCase();
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Sealing…';
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Sealing???';
     var r=await supabase.from('commission_contracts').insert({user_id:user.id,reference:ref,counterparty:cp,scope:scope,deal_value:val,commission_rate:rate,commission_value:com,terms:terms,confidentiality_accepted:true});
     btn.disabled=false;
     if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not seal ('+(r.error.code||r.error.message||'')+').'; return; }
-    out.style.color='var(--cyan)'; out.textContent='Contract sealed — '+ref+'.';
+    out.style.color='var(--cyan)'; out.textContent='Contract sealed  --  '+ref+'.';
     document.getElementById('k-cp').value=''; document.getElementById('k-scope').value=''; document.getElementById('k-val').value=''; document.getElementById('k-terms').value=''; refresh();
     loadList();
   }

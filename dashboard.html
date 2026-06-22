@@ -3,134 +3,130 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 &mdash; Command Center</title>
+<meta name="theme-color" content="#0A0A0F"/>
+<title>&#937; SYD OMEGA 91717 -- Command Center</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root{--void:#07070b;--abyss:#0A0A0F;--panel:#0d0d15;--p2:#11111c;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.14);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100vh;background:var(--void)}
-body{color:var(--ink);font-family:var(--B);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-/* SHELL */
-.shell{display:flex;min-height:100vh;position:relative;z-index:1}
-.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.7),transparent)}
-.main{flex:1;min-width:0;padding:0 0 80px;overflow:hidden}
-/* TOP IDENTITY BAR */
-.ident-bar{border-bottom:1px solid var(--line);padding:16px clamp(14px,2.5vw,36px);display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:rgba(7,7,11,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
-.ident-avatar{width:38px;height:38px;border-radius:50%;border:2px solid var(--gold);background:linear-gradient(135deg,var(--gold),var(--panel));display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:13px;color:var(--void);font-weight:900;flex-shrink:0}
-.ident-meta{flex:1;min-width:0}
-.ident-meta .im-name{font-family:var(--D);font-size:14px;color:var(--solar);font-weight:700}
-.ident-meta .im-sub{font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:2px}
-.ident-kpis{display:flex;gap:16px;flex-wrap:wrap}
-.ident-kpi{text-align:center}
-.ident-kpi .ik-val{font-family:var(--D);font-size:16px;font-weight:700}
-.ident-kpi .ik-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
-.ident-level{border:1px solid var(--gold);padding:4px 12px;font-family:var(--D);font-size:12px;color:var(--gold);font-weight:700;background:rgba(201,168,76,.08);white-space:nowrap}
-/* WELCOME BAND */
-.welcome-band{padding:18px clamp(14px,2.5vw,36px);border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(201,168,76,.04),transparent)}
-.welcome-band .wb-greeting{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--gold);font-weight:700}
-.welcome-band .wb-quote{font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:4px}
-/* MAIN GRID */
-.cmd-grid{display:grid;grid-template-columns:280px 1fr 280px;gap:0;border-bottom:1px solid var(--line)}
-@media(max-width:1100px){.cmd-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:760px){.cmd-grid{grid-template-columns:1fr}}
-.cmd-col{border-right:1px solid var(--line);padding:20px clamp(12px,2vw,22px)}
-.cmd-col:last-child{border-right:none}
-/* COLUMN HEADERS */
-.col-head{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px dashed rgba(201,168,76,.12)}
-/* MATRIX VIZ */
-#matrix-hex{display:block;width:100%;border:1px solid var(--line);background:rgba(7,7,11,.6)}
-.axis-bars{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-.axis-bar{display:flex;align-items:center;gap:8px}
-.axis-bar .ab-label{font-family:var(--M);font-size:9px;color:var(--muted);width:20px;flex-shrink:0}
-.axis-bar .ab-wrap{flex:1;height:4px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden}
-.axis-bar .ab-fill{height:100%;border-radius:2px;transition:width 1.4s ease}
-.axis-bar .ab-val{font-family:var(--M);font-size:9px;width:24px;text-align:right;flex-shrink:0}
-.coord-display{font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:10px;letter-spacing:2px}
-/* OVERVIEW PANEL */
-.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.ov-card{border:1px solid var(--line);background:rgba(7,7,11,.4);padding:12px;position:relative;overflow:hidden}
-.ov-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px}
-.ov-card .oc-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.ov-card .oc-val{font-family:var(--D);font-size:20px;font-weight:700}
-.ov-card .oc-delta{font-family:var(--M);font-size:9px;color:var(--green);margin-top:2px}
-/* ACTIVITY FEED */
-.activity-feed{display:flex;flex-direction:column;gap:0}
-.activity-item{padding:9px 0;border-bottom:1px dashed rgba(201,168,76,.07);display:flex;gap:10px;align-items:flex-start}
-.activity-item .ai-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.activity-item .ai-text{font-family:var(--M);font-size:10px;color:var(--muted);line-height:1.5}
-.activity-item .ai-text b{color:var(--solar)}
-.activity-item .ai-time{font-family:var(--M);font-size:8px;color:var(--muted);margin-left:auto;flex-shrink:0;margin-top:4px}
-/* AI COMMAND */
-.ai-agent-chip{display:flex;align-items:center;gap:10px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.04);padding:10px 12px;margin-bottom:14px}
-.ai-agent-chip .aac-orb{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,229,255,.4),rgba(0,229,255,.08));border:1px solid rgba(0,229,255,.4);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;animation:orbpulse 3s ease-in-out infinite}
-@keyframes orbpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.4)}50%{box-shadow:0 0 0 8px rgba(0,229,255,.0)}}
-.ai-agent-chip .aac-name{font-family:var(--D);font-size:11px;color:var(--cyan);font-weight:700}
-.ai-agent-chip .aac-status{font-family:var(--M);font-size:8px;color:var(--green);letter-spacing:2px}
-.ai-prompt{font-family:var(--M);font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6}
-.ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
-.ai-action{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:7px 8px;border:1px solid var(--line);color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
-.ai-action:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
-.ai-input-row{display:flex;gap:6px}
-.ai-input-row input{flex:1;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:9px 11px;outline:none}
-.ai-input-row input:focus{border-color:rgba(0,229,255,.4)}
-.ai-send{font-family:var(--M);font-size:9px;padding:9px 12px;border:1px solid rgba(0,229,255,.4);color:var(--cyan);background:rgba(0,229,255,.06);cursor:pointer;white-space:nowrap}
-.ai-send:hover{background:rgba(0,229,255,.14)}
-.ai-response{font-family:var(--M);font-size:10px;color:var(--green);margin-top:10px;line-height:1.7;display:none;border:1px solid rgba(63,178,127,.2);padding:10px;background:rgba(63,178,127,.03)}
-/* BOTTOM ROW */
-.bottom-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0;border-bottom:1px solid var(--line)}
-.bot-panel{border-right:1px solid var(--line);padding:18px clamp(12px,2vw,22px)}
-.bot-panel:last-child{border-right:none}
-.bp-head{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed rgba(201,168,76,.1)}
-/* MOVIE CARD */
-.movie-card{background:linear-gradient(160deg,rgba(139,0,0,.15),rgba(7,7,11,.8));border:1px solid rgba(139,0,0,.3);padding:16px;position:relative;overflow:hidden}
-.movie-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,0,0,.06),transparent);pointer-events:none}
-.mc-ep{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(139,0,0,.8);margin-bottom:5px}
-.mc-title{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--crim);font-weight:900;line-height:1.1;margin-bottom:8px;text-shadow:0 0 20px rgba(139,0,0,.5)}
-.mc-sub{font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
-.mc-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(139,0,0,.6);color:var(--crim);background:rgba(139,0,0,.1);cursor:pointer;display:inline-block;transition:all .2s}
-.mc-btn:hover{background:rgba(139,0,0,.25);border-color:var(--crim)}
-/* GAMING CARDS */
-.game-cards{display:flex;flex-direction:column;gap:7px}
-.game-mini{border:1px solid var(--line);background:linear-gradient(90deg,var(--panel),rgba(7,7,11,.6));padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
-.game-mini:hover{border-color:rgba(201,168,76,.35);transform:translateX(2px)}
-.game-mini::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}
-.game-mini .gm-n{font-family:var(--M);font-size:8px;color:var(--muted);min-width:14px}
-.game-mini .gm-title{font-family:var(--D);font-size:11px;font-weight:700;flex:1}
-.game-mini .gm-stage{font-family:var(--M);font-size:8px;color:var(--muted)}
-/* PORTFOLIO */
-.port-total{font-family:var(--D);font-size:20px;color:var(--gold);margin-bottom:4px}
-.port-delta{font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:12px}
-#port-chart{display:block;width:100%;margin-bottom:12px}
-.port-holdings{display:flex;flex-direction:column;gap:6px}
-.ph-row{display:flex;align-items:center;justify-content:space-between;font-family:var(--M);font-size:10px}
-.ph-row .ph-name{color:var(--muted)}
-.ph-row .ph-val{color:var(--solar)}
-.ph-row .ph-change{color:var(--green)}
-/* NFT MINI GRID */
-.nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.nft-mini{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),var(--void));padding:10px;text-align:center;position:relative;overflow:hidden}
-.nft-mini .nm-glyph{font-size:20px;margin-bottom:5px;display:block}
-.nft-mini .nm-name{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--solar);margin-bottom:3px}
-.nft-mini .nm-rarity{font-family:var(--M);font-size:6px;letter-spacing:1px;padding:1px 4px;border:1px solid;display:inline-block}
-/* 12 PILLARS STRIP */
-.pillars-strip{padding:16px clamp(14px,2.5vw,36px);background:linear-gradient(90deg,rgba(7,7,11,.95),rgba(13,13,21,.95));border-bottom:1px solid var(--line)}
-.pillars-label{font-family:var(--M);font-size:8px;letter-spacing:4px;color:var(--muted);text-align:center;margin-bottom:12px}
-.pillars-row{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
-.pillars-row::-webkit-scrollbar{display:none}
-.pillar-icon{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 14px;border-right:1px solid var(--line);cursor:pointer;transition:background .15s;min-width:80px;flex-shrink:0}
-.pillar-icon:hover{background:rgba(201,168,76,.06)}
-.pillar-icon .pi-num{font-family:var(--D);font-size:18px;font-weight:700}
-.pillar-icon .pi-label{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);text-align:center}
-/* QUICK ACCESS */
-.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
-.qa-item{border:1px solid var(--line);background:rgba(7,7,11,.4);padding:10px;text-align:center;cursor:pointer;transition:all .15s}
-.qa-item:hover{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.04)}
-.qa-item .qi-icon{font-size:16px;margin-bottom:5px}
-.qa-item .qi-label{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted)}
-@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}.ident-kpis{display:none}.bottom-row{grid-template-columns:1fr}}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0}
+.main{flex:1;min-width:0}
+
+/* ===== HERO SECTION ===== */
+.hero{position:relative;min-height:340px;border-bottom:1px solid var(--line);overflow:hidden;display:flex;align-items:center}
+#hero-cv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-content{position:relative;z-index:2;padding:28px clamp(14px,3vw,40px);flex:1}
+.hc-freq{font-family:var(--M);font-size:8px;letter-spacing:5px;color:rgba(201,168,76,.5);margin-bottom:8px;animation:freq-pulse 2s ease-in-out infinite}
+@keyframes freq-pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.hc-name{font-family:var(--D);font-size:clamp(14px,2.2vw,22px);color:var(--muted);font-weight:400;margin-bottom:6px;letter-spacing:2px}
+.hc-title{font-family:var(--D);font-size:clamp(22px,4.5vw,48px);font-weight:900;color:var(--gold);line-height:1.1;margin-bottom:10px;animation:title-glow 4s ease-in-out infinite}
+@keyframes title-glow{0%,100%{text-shadow:0 0 10px rgba(201,168,76,.2)}50%{text-shadow:0 0 40px rgba(201,168,76,.6),0 0 80px rgba(201,168,76,.2)}}
+.hc-sub{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);margin-bottom:18px;animation:sub-scan 3s ease-in-out infinite}
+@keyframes sub-scan{0%,100%{opacity:.6}50%{opacity:1}}
+.hc-coord{font-family:var(--D);font-size:clamp(14px,2vw,20px);color:rgba(201,168,76,.7);letter-spacing:2px;margin-bottom:5px}
+.hc-auth{font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:3px}
+.hero-omega{position:absolute;right:clamp(14px,6vw,80px);top:50%;transform:translateY(-50%);z-index:2}
+
+/* ===== METRICS BAND ===== */
+.metrics-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));border-bottom:1px solid var(--line)}
+.mb-item{padding:18px 20px;border-right:1px solid var(--line);position:relative;overflow:hidden;cursor:pointer;transition:background .18s}
+.mb-item:hover{background:rgba(201,168,76,.04)}
+.mb-item:last-child{border-right:none}
+.mb-item::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1.5px;background:var(--col,var(--gold));transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.mb-item:hover::after{transform:scaleX(1)}
+.mbi-l{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.mbi-v{font-family:var(--D);font-size:clamp(18px,2.5vw,28px);font-weight:700;animation:count-glow 5s ease-in-out infinite}
+@keyframes count-glow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+.mbi-s{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:3px}
+
+/* ===== 2-COLUMN MAIN ===== */
+.content-grid{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:600px}
+@media(max-width:1100px){.content-grid{grid-template-columns:1fr}}
+.col-main{border-right:1px solid var(--line)}
+.col-side{background:rgba(7,7,11,.4)}
+
+/* ===== SECTION HEADERS ===== */
+.sh{display:flex;align-items:center;gap:10px;padding:14px clamp(14px,2.5vw,28px);border-bottom:1px solid var(--line)}
+.sh canvas{flex-shrink:0;display:block}
+.sh-label{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan)}
+
+/* ===== AGENT MESH ===== */
+.agent-mesh{padding:14px clamp(14px,2.5vw,28px);border-bottom:1px solid var(--line)}
+#mesh-cv{display:block;width:100%;cursor:pointer}
+
+/* ===== MATRIX STRIP ===== */
+.matrix-strip{display:flex;border-bottom:1px solid var(--line);overflow:hidden}
+.ms-axis{flex:1;padding:14px clamp(14px,2.5vw,24px);border-right:1px solid var(--line);position:relative}
+.ms-axis:last-child{border-right:none}
+.msa-id{font-family:var(--D);font-size:11px;letter-spacing:2px;margin-bottom:2px}
+.msa-name{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
+.msa-val{font-family:var(--D);font-size:28px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.msa-bar{height:3px;background:rgba(201,168,76,.08);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.msa-fill{height:100%;border-radius:2px;transition:width 2s cubic-bezier(.25,.46,.45,.94)}
+.msa-inc{font-family:var(--M);font-size:7px;color:var(--muted);letter-spacing:1px}
+
+/* ===== CONTENT PREVIEW ===== */
+.content-preview{padding:14px clamp(14px,2.5vw,28px);border-bottom:1px solid var(--line)}
+.cp-scroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.cp-scroll::-webkit-scrollbar{display:none}
+.cp-item{flex-shrink:0;width:160px;border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:12px;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
+.cp-item:hover{border-color:rgba(201,168,76,.35);transform:translateY(-2px)}
+.cp-item canvas{display:block;margin:0 auto 8px}
+.cp-num{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:2px}
+.cp-name{font-family:var(--D);font-size:10px;font-weight:700;margin-bottom:3px}
+.cp-type{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:1px 5px;border:1px solid;display:inline-block}
+
+/* ===== SEARCH BAR ===== */
+.search-bar{padding:14px clamp(14px,2.5vw,28px);border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.sb-wrap{flex:1;position:relative}
+.sb-input{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:rgba(7,7,11,.9);border:1px solid var(--line);padding:10px 40px 10px 14px;outline:none;transition:border-color .2s;letter-spacing:1px}
+.sb-input:focus{border-color:rgba(201,168,76,.4)}
+.sb-input::placeholder{color:rgba(133,131,123,.4)}
+.sb-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-family:var(--M);font-size:14px;cursor:pointer;transition:color .15s}
+.sb-icon:hover{color:var(--gold)}
+.sb-results{position:absolute;top:calc(100%+4px);left:0;right:0;background:var(--panel);border:1px solid rgba(201,168,76,.25);z-index:200;max-height:300px;overflow-y:auto;display:none}
+.sb-result{padding:10px 14px;border-bottom:1px dashed rgba(201,168,76,.08);cursor:pointer;transition:background .12s;display:flex;align-items:center;gap:10px;text-decoration:none}
+.sb-result:hover{background:rgba(201,168,76,.06)}
+.sbr-type{font-family:var(--M);font-size:7px;letter-spacing:2px;padding:2px 6px;border:1px solid;flex-shrink:0}
+.sbr-name{font-family:var(--M);font-size:10px;color:var(--solar)}
+.sbr-desc{font-size:10px;color:var(--muted);font-weight:300}
+.sb-empty{padding:14px;font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:2px;text-align:center}
+
+/* ===== SIDE COLUMN ===== */
+.side-section{padding:14px;border-bottom:1px solid var(--line)}
+.ss-title{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
+.clock-display{font-family:var(--D);font-size:22px;font-weight:700;color:var(--gold);animation:clock-breathe 3s ease-in-out infinite;text-align:center;margin-bottom:3px}
+@keyframes clock-breathe{0%,100%{text-shadow:0 0 6px rgba(201,168,76,.2)}50%{text-shadow:0 0 18px rgba(201,168,76,.5)}}
+.clock-date{font-family:var(--M);font-size:8px;color:var(--muted);text-align:center;letter-spacing:2px;margin-bottom:8px}
+.freq-display{text-align:center;font-family:var(--D);font-size:16px;color:var(--cyan);font-weight:700;animation:freq-breathe 2s ease-in-out infinite}
+@keyframes freq-breathe{0%,100%{text-shadow:0 0 8px rgba(0,229,255,.3)}50%{text-shadow:0 0 20px rgba(0,229,255,.7)}}
+
+/* Agent status pills */
+.agent-pills{display:flex;flex-direction:column;gap:5px}
+.ap-row{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border:1px dashed rgba(201,168,76,.08);transition:all .15s}
+.ap-row:hover{background:rgba(201,168,76,.03);border-color:rgba(201,168,76,.2)}
+.apr-name{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)}
+.apr-status{display:flex;align-items:center;gap:4px;font-family:var(--M);font-size:7px;letter-spacing:1px}
+.apr-dot{width:5px;height:5px;border-radius:50%;animation:agent-pulse 2s ease-in-out infinite}
+@keyframes agent-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Stream feed */
+.stream-feed{height:160px;overflow:hidden;position:relative;font-family:var(--M);font-size:8px;color:var(--green);line-height:1.8;padding:10px}
+.stream-feed::after{content:"";position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(0deg,rgba(13,13,24,.95),transparent)}
+#sf-inner{animation:feed-scroll 18s linear infinite}
+@keyframes feed-scroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+
+/* Quick-nav links */
+.qn-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.qn-item{padding:8px;border:1px solid var(--line);font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);cursor:pointer;transition:all .15s;text-align:center;text-decoration:none;display:block}
+.qn-item:hover{border-color:rgba(201,168,76,.35);color:var(--gold);background:rgba(201,168,76,.04)}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}.hero-omega{display:none}.content-grid{grid-template-columns:1fr}.col-side{display:none}.metrics-band{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -138,393 +134,452 @@ a{color:inherit;text-decoration:none}
   <aside class="side" id="omega-side" data-page="dashboard"></aside>
   <main class="main">
 
-    <!-- IDENTITY BAR -->
-    <div class="ident-bar">
-      <div class="ident-avatar" id="avatar-init">S</div>
-      <div class="ident-meta">
-        <div class="im-name" id="ident-name">SOVEREIGN</div>
-        <div class="im-sub" id="ident-sub">OWNER &middot; LEVEL -- &middot; SYD OMEGA 91717</div>
-      </div>
-      <div class="ident-kpis">
-        <div class="ident-kpi"><div class="ik-val" id="k-balance" style="color:var(--gold)">--</div><div class="ik-label">&#937; BALANCE</div></div>
-        <div class="ident-kpi"><div class="ik-val" id="k-assets" style="color:var(--solar)">--</div><div class="ik-label">TOTAL ASSETS</div></div>
-        <div class="ident-kpi"><div class="ik-val" id="k-rank" style="color:var(--cyan)">#1</div><div class="ik-label">GLOBAL RANK</div></div>
-        <div class="ident-kpi"><div class="ik-val" id="k-pos" style="color:var(--green)">--</div><div class="ik-label">MATRIX POS</div></div>
-      </div>
-      <div class="ident-level" id="ident-level">9.9.9</div>
-    </div>
-
-    <!-- WELCOME -->
-    <div class="welcome-band">
-      <div class="wb-greeting" id="wb-greet">WELCOME BACK, SOVEREIGN &#x265A;</div>
-      <div class="wb-quote">"The Sovereign builds in silence, the Order speaks through systems." &mdash; BUILD &middot; AUTOMATE &middot; REASON &middot; EXECUTE &middot; SCALE</div>
-    </div>
-
-    <!-- 3-COLUMN COMMAND GRID -->
-    <div class="cmd-grid">
-
-      <!-- COL 1: MATRIX -->
-      <div class="cmd-col">
-        <div class="col-head">9&#xD7;9&#xD7;9 MATRIX &mdash; YOUR EVOLUTION</div>
-        <canvas id="matrix-hex" height="240"></canvas>
-        <div class="axis-bars">
-          <div class="axis-bar"><span class="ab-label" style="color:var(--cyan)">A</span><div class="ab-wrap"><div class="ab-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,var(--cyan),rgba(0,229,255,.2))"></div></div><span class="ab-val" id="val-a" style="color:var(--cyan)">1</span></div>
-          <div class="axis-bar"><span class="ab-label" style="color:#E86A3A">B</span><div class="ab-wrap"><div class="ab-fill" id="bar-b" style="width:0%;background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.2))"></div></div><span class="ab-val" id="val-b" style="color:#E86A3A">1</span></div>
-          <div class="axis-bar"><span class="ab-label" style="color:var(--green)">C</span><div class="ab-wrap"><div class="ab-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,var(--green),rgba(63,178,127,.2))"></div></div><span class="ab-val" id="val-c" style="color:var(--green)">1</span></div>
-        </div>
-        <div class="coord-display" id="coord-display">(1, 1, 1)</div>
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);text-align:center;margin-top:4px" id="rank-label">INITIATE</div>
-        <div style="margin-top:14px">
-          <div class="col-head" style="margin-top:0">QUICK ACCESS</div>
-          <div class="qa-grid">
-            <a class="qa-item" href="/academy.html"><div class="qi-icon">&#x2726;</div><div class="qi-label">ACADEMY</div></a>
-            <a class="qa-item" href="/gaming.html"><div class="qi-icon">&#x2694;</div><div class="qi-label">GAMING</div></a>
-            <a class="qa-item" href="/agents.html"><div class="qi-icon">&#x25C9;</div><div class="qi-label">AGENTS</div></a>
-            <a class="qa-item" href="/matrix.html"><div class="qi-icon">&#x25C7;</div><div class="qi-label">THE 729</div></a>
-            <a class="qa-item" href="/intelligence.html"><div class="qi-icon">&#x25CF;</div><div class="qi-label">ANALYTICS</div></a>
-            <a class="qa-item" href="/notifications.html"><div class="qi-icon">&#x2740;</div><div class="qi-label">ALERTS</div></a>
-          </div>
-        </div>
-      </div>
-
-      <!-- COL 2: OVERVIEW + ACTIVITY -->
-      <div class="cmd-col">
-        <div class="col-head">OVERVIEW <select id="ov-period" style="font-family:var(--M);font-size:8px;color:var(--muted);background:transparent;border:none;cursor:pointer;letter-spacing:2px"><option>THIS WEEK</option><option>THIS MONTH</option><option>ALL TIME</option></select></div>
-        <div class="ov-grid">
-          <div class="ov-card" style="--col:var(--gold)"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:var(--gold)"></div><div class="oc-label">EXPERIENCE</div><div class="oc-val" id="ov-xp" style="color:var(--gold)">--</div><div class="oc-delta" id="ov-xp-d">+17.3%</div></div>
-          <div class="ov-card"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:var(--cyan)"></div><div class="oc-label">LEVEL</div><div class="oc-val" id="ov-level" style="color:var(--cyan)">--</div><div class="ov-card .oc-delta" style="font-family:var(--M);font-size:8px;color:var(--muted)">MAX LEVEL</div></div>
-          <div class="ov-card"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:#E2C86D"></div><div class="oc-label">CERTIFICATES</div><div class="oc-val" id="ov-certs" style="color:var(--solar)">--</div><div class="oc-delta">+3 New</div></div>
-          <div class="ov-card"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:#E86A3A"></div><div class="oc-label">TROPHIES</div><div class="oc-val" id="ov-troph" style="color:#E86A3A">--</div><div class="oc-delta">+2 New</div></div>
-          <div class="ov-card"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:var(--green)"></div><div class="oc-label">MEDALS</div><div class="oc-val" id="ov-medals" style="color:var(--green)">--</div><div class="oc-delta">+4 New</div></div>
-          <div class="ov-card"><div style="position:absolute;top:0;left:0;right:0;height:1px;background:var(--gold)"></div><div class="oc-label">ACHIEVEMENTS</div><div class="oc-val" id="ov-ach" style="color:var(--gold)">--</div><div class="oc-delta">Unlocked</div></div>
-        </div>
-        <div class="col-head" style="margin-top:18px">ACTIVITY FEED <a href="/notifications.html" style="font-family:var(--M);font-size:8px;color:var(--cyan);float:right;letter-spacing:2px">VIEW ALL</a></div>
-        <div class="activity-feed" id="activity-feed"></div>
-      </div>
-
-      <!-- COL 3: AI COMMAND -->
-      <div class="cmd-col">
-        <div class="col-head">AI COMMAND CENTER</div>
-        <div class="ai-agent-chip">
-          <div class="aac-orb">&#x25C9;</div>
-          <div><div class="aac-name" id="agent-name">ORACLE AGENT</div><div class="aac-status">&#x25CF; ONLINE</div></div>
-        </div>
-        <div class="ai-prompt">"Ask anything. Build everything."<br><span style="color:var(--cyan);font-size:10px" id="agent-prompt">What shall we build today, Sovereign?</span></div>
-        <div class="ai-actions">
-          <div class="ai-action" onclick="sendAI('Analyze my matrix progress')">Analyze Data</div>
-          <div class="ai-action" onclick="sendAI('Generate a sovereignty report')">Generate Report</div>
-          <div class="ai-action" onclick="sendAI('Create a strategy for gate advancement')">Create Strategy</div>
-          <div class="ai-action" onclick="sendAI('Find opportunities in my knowledge gaps')">Find Opportunities</div>
-        </div>
-        <div class="ai-input-row">
-          <input type="text" id="ai-cmd" placeholder="Type your command..."/>
-          <button class="ai-send" id="ai-go">&#x2192;</button>
-        </div>
-        <div class="ai-response" id="ai-resp"></div>
-        <div style="margin-top:16px">
-          <div class="col-head" style="margin-top:0">RECENT MODULES</div>
-          <div style="display:flex;flex-direction:column;gap:6px" id="recent-modules"></div>
-        </div>
+    <!-- SEARCH BAR at top for all-platform access -->
+    <div class="search-bar">
+      <div class="sb-wrap">
+        <input class="sb-input" id="sb-input" placeholder="SEARCH THE SOVEREIGN PLATFORM -- PAGES . CONTENT . AGENTS . MATRIX . SERVICES ..."/>
+        <div class="sb-icon" id="sb-clear">&#x2316;</div>
+        <div class="sb-results" id="sb-results"></div>
       </div>
     </div>
 
-    <!-- BOTTOM ROW -->
-    <div class="bottom-row">
+    <!-- CINEMATIC HERO -->
+    <div class="hero">
+      <canvas id="hero-cv"></canvas>
+      <div class="hero-content">
+        <div class="hc-freq">NODE 9.1717Hz . FREQUENCY LOCK ACTIVE . OMEGA SOVEREIGN</div>
+        <div class="hc-name" id="hc-name">MAJOR SLEIMAN YOUSSEF DAGHER</div>
+        <div class="hc-title">SYD OMEGA<br/>91717</div>
+        <div class="hc-sub">THE CODE . THE FREQUENCY . THE LEGACY</div>
+        <div class="hc-coord" id="hc-coord">(9.000, 9.000, 9.000)</div>
+        <div class="hc-auth" id="hc-auth">AUTHORITY 15.588 . OMEGA MASTER . ABSOLUTE SOVEREIGN</div>
+      </div>
+      <div class="hero-omega">
+        <canvas id="hero-omega-cv" width="300" height="300" style="width:150px;height:150px"></canvas>
+      </div>
+    </div>
 
-      <!-- FEATURED MOVIE -->
-      <div class="bot-panel">
-        <div class="bp-head">FEATURED FILM</div>
-        <div class="movie-card">
-          <div class="mc-ep">EPISODE 7 &mdash; THE OMEGA SAGA</div>
-          <div class="mc-title">OMEGA:<br>REBIRTH</div>
-          <div class="mc-sub">AWAKENING &middot; NOW STREAMING</div>
-          <a class="mc-btn" href="/cinema.html">WATCH NOW &#x25BA;</a>
+    <!-- LIVE METRICS -->
+    <div class="metrics-band" id="metrics-band"></div>
+
+    <!-- MAIN CONTENT GRID -->
+    <div class="content-grid">
+      <div class="col-main">
+        <!-- MATRIX AXES -->
+        <div class="sh">
+          <canvas id="sh-cv-1" width="40" height="40" style="width:20px;height:20px"></canvas>
+          <span class="sh-label">SOVEREIGN MATRIX -- 3 AXES (0.001 -- 9.000)</span>
         </div>
-        <div style="margin-top:10px;font-family:var(--M);font-size:9px;color:var(--muted)">NEXT: THE ETERNITY CODE &rarr; 2033</div>
+        <div class="matrix-strip">
+          <div class="ms-axis"><div class="msa-id" style="color:#00E5FF">AXIS A</div><div class="msa-name">KNOWLEDGE</div><div class="msa-val" id="ax-a" style="color:#00E5FF">---</div><div class="msa-bar"><div class="msa-fill" id="bar-a" style="background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.2))"></div></div><div class="msa-inc" id="inc-a">-- to apex</div></div>
+          <div class="ms-axis"><div class="msa-id" style="color:#E86A3A">AXIS B</div><div class="msa-name">MASTERY</div><div class="msa-val" id="ax-b" style="color:#E86A3A">---</div><div class="msa-bar"><div class="msa-fill" id="bar-b" style="background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.2))"></div></div><div class="msa-inc" id="inc-b">-- to apex</div></div>
+          <div class="ms-axis"><div class="msa-id" style="color:#3fb27f">AXIS C</div><div class="msa-name">CONTRIBUTION</div><div class="msa-val" id="ax-c" style="color:#3fb27f">---</div><div class="msa-bar"><div class="msa-fill" id="bar-c" style="background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.2))"></div></div><div class="msa-inc" id="inc-c">-- to apex</div></div>
+        </div>
+
+        <!-- AGENT MESH CANVAS -->
+        <div class="sh">
+          <canvas id="sh-cv-2" width="40" height="40" style="width:20px;height:20px"></canvas>
+          <span class="sh-label">12 AI AGENT MESH -- ALL OPERATIONAL</span>
+        </div>
+        <div class="agent-mesh">
+          <canvas id="mesh-cv" height="220"></canvas>
+        </div>
+
+        <!-- CONTENT PREVIEWS -->
+        <div class="sh">
+          <canvas id="sh-cv-3" width="40" height="40" style="width:20px;height:20px"></canvas>
+          <span class="sh-label">12 FILMS . 12 GAMES . 144 SERIES</span>
+        </div>
+        <div class="content-preview">
+          <div class="cp-scroll" id="film-scroll"></div>
+        </div>
+        <div class="content-preview" style="border-top:1px solid var(--line)">
+          <div class="cp-scroll" id="game-scroll"></div>
+        </div>
+
+        <!-- 12x12 GATE MATRIX PREVIEW -->
+        <div class="sh">
+          <canvas id="sh-cv-4" width="40" height="40" style="width:20px;height:20px"></canvas>
+          <span class="sh-label">12 x 12 SOVEREIGN GATE MATRIX -- 144 GATES</span>
+        </div>
+        <div style="padding:14px clamp(14px,2.5vw,28px);border-bottom:1px solid var(--line)">
+          <canvas id="gate-cv" width="1200" height="200" style="width:100%;height:100px"></canvas>
+        </div>
       </div>
 
-      <!-- GAMING ARENA -->
-      <div class="bot-panel">
-        <div class="bp-head">GAMING ARENA &mdash; 9 WORLDS <a href="/gaming.html" style="font-family:var(--M);font-size:8px;color:var(--cyan);float:right">VIEW ALL &rarr;</a></div>
-        <div class="game-cards" id="game-cards"></div>
+      <!-- SIDE COLUMN -->
+      <div class="col-side">
+        <!-- Clock -->
+        <div class="side-section">
+          <div class="ss-title">SOVEREIGN TIME</div>
+          <div class="clock-display" id="dash-clock">--:--:--</div>
+          <div class="clock-date" id="dash-date">--</div>
+          <div class="freq-display">9.1717 Hz</div>
+        </div>
+        <!-- Agent status -->
+        <div class="side-section">
+          <div class="ss-title">AGENT MESH STATUS</div>
+          <div class="agent-pills" id="agent-pills"></div>
+        </div>
+        <!-- Live data stream -->
+        <div class="side-section">
+          <div class="ss-title">LIVE INTELLIGENCE FEED</div>
+          <div class="stream-feed"><div id="sf-inner"></div></div>
+        </div>
+        <!-- Quick nav -->
+        <div class="side-section">
+          <div class="ss-title">QUICK ACCESS</div>
+          <div class="qn-grid" id="qn-grid"></div>
+        </div>
       </div>
-
-      <!-- INVESTMENT -->
-      <div class="bot-panel">
-        <div class="bp-head">INVESTMENT PORTFOLIO <a href="/portfolio.html" style="font-family:var(--M);font-size:8px;color:var(--cyan);float:right">FULL VIEW &rarr;</a></div>
-        <div class="port-total" id="port-total">&#937; 0</div>
-        <div class="port-delta">MATRIX NODES &#xD7; 91.7</div>
-        <canvas id="port-chart" height="60"></canvas>
-        <div class="port-holdings" id="port-holdings"></div>
-      </div>
-
-      <!-- NFT VAULT -->
-      <div class="bot-panel">
-        <div class="bp-head">NFT VAULT <a href="/blockchain.html" style="font-family:var(--M);font-size:8px;color:var(--cyan);float:right">VIEW ALL &rarr;</a></div>
-        <div class="nft-grid" id="nft-grid"></div>
-        <div style="margin-top:10px;font-family:var(--M);font-size:9px;color:var(--muted)">12 NFT LINES &middot; READY TO MINT</div>
-      </div>
-
     </div>
-
-    <!-- 12 SOVEREIGN PILLARS STRIP -->
-    <div class="pillars-strip">
-      <div class="pillars-label">THE 12 SOVEREIGN PILLARS</div>
-      <div class="pillars-row" id="pillars-row"></div>
-    </div>
-
   </main>
 </div>
+
+<script>
+/* ========= SEARCH ENGINE ========= */
+const SEARCH_INDEX=[
+  {name:'COMMAND CENTER',type:'PAGE',col:'#C9A84C',href:'/dashboard.html',desc:'Main sovereign command dashboard'},
+  {name:'SOVEREIGN IDENTITY',type:'PAGE',col:'#00E5FF',href:'/identity.html',desc:'Profile, passport, KYC, character'},
+  {name:'ASCENSION MAP',type:'PAGE',col:'#E86A3A',href:'/ascension.html',desc:'Matrix progression and evolution'},
+  {name:'COSMOS HUB',type:'PAGE',col:'#9B6BF0',href:'/cosmos.html',desc:'AI agents, horoscope, elements, gates'},
+  {name:'CREATIVE UNIVERSE',type:'PAGE',col:'#8B0000',href:'/universe.html',desc:'12 films, 144 series, 12 games'},
+  {name:'SOVEREIGN VAULT',type:'PAGE',col:'#C9A84C',href:'/vault.html',desc:'Reserve, wallet, NFTs, payments'},
+  {name:'FAMILY CONSTELLATION',type:'PAGE',col:'#D9B86A',href:'/family.html',desc:'Bloodline, heritage, family nodes'},
+  {name:'CONSULTANCY HUB',type:'PAGE',col:'#3fb27f',href:'/consultancy.html',desc:'Expert counsel across 6 domains'},
+  {name:'INTELLIGENCE LAYER',type:'PAGE',col:'#9B6BF0',href:'/intelligence.html',desc:'AI analytics, agent logs, dimensions'},
+  {name:'PREDICTION ORACLE',type:'PAGE',col:'#9B6BF0',href:'/prediction.html',desc:'Civilizational forecasting engine'},
+  {name:'ACADEMY',type:'PAGE',col:'#00E5FF',href:'/academy.html',desc:'Knowledge modules, learning engine'},
+  {name:'GAMING ARENA',type:'PAGE',col:'#E86A3A',href:'/gaming.html',desc:'12 games, 144 sub-games, arena'},
+  {name:'TROPHY VAULT',type:'PAGE',col:'#C9A84C',href:'/trophies.html',desc:'Achievement trophies and medals'},
+  {name:'MARKETPLACE',type:'PAGE',col:'#C9A84C',href:'/marketplace.html',desc:'Sovereign marketplace and trading'},
+  {name:'HOROSCOPE',type:'PAGE',col:'#9B6BF0',href:'/horoscope.html',desc:'Zodiac, elements, daily Oracle'},
+  {name:'BLOODLINE',type:'PAGE',col:'#D9B86A',href:'/bloodline.html',desc:'Succession protocols, heir vault'},
+  {name:'PUBLICATIONS',type:'PAGE',col:'#E2C86D',href:'/publishing.html',desc:'Sovereign publishing and content'},
+  {name:'NEWS INTELLIGENCE',type:'PAGE',col:'#34C6E6',href:'/news.html',desc:'Live news feed, AI summaries'},
+  {name:'SENTINEL',type:'AGENT',col:'#C7CDD6',href:'/agents.html',desc:'Security and zero-trust perimeter'},
+  {name:'ANALYST',type:'AGENT',col:'#34C6E6',href:'/agents.html',desc:'Finance and portfolio analytics'},
+  {name:'ORACLE',type:'AGENT',col:'#9B6BF0',href:'/agents.html',desc:'Prediction and celestial alignment'},
+  {name:'HISTORIAN',type:'AGENT',col:'#D9B86A',href:'/agents.html',desc:'Archive and heritage memory'},
+  {name:'TUTOR',type:'AGENT',col:'#A9C2D8',href:'/agents.html',desc:'Knowledge and education guidance'},
+  {name:'SOVEREIGN',type:'AGENT',col:'#C9A84C',href:'/agents.html',desc:'Master dashboard control agent'},
+  {name:'PYRON',type:'TOKEN',col:'#E86A3A',href:'/wallet.html',desc:'ARIES ERC-20 token on Polygon PoS'},
+  {name:'ARENITE',type:'TOKEN',col:'#D9B86A',href:'/wallet.html',desc:'VIRGO token -- Architect sovereign'},
+  {name:'MATRIX 9x9x9',type:'SYSTEM',col:'#C9A84C',href:'/matrix.html',desc:'729-node progression system'},
+  {name:'12 GATES',type:'SYSTEM',col:'#9B6BF0',href:'/gates.html',desc:'Sovereign gate thresholds'},
+  {name:'PANTHEONS',type:'SYSTEM',col:'#D9B86A',href:'/pantheons.html',desc:'12 Olympian gods, zodiac mapping'},
+  {name:'ELEMENTS',type:'SYSTEM',col:'#E86A3A',href:'/elements.html',desc:'Fire, Water, Sand, Metal, Wind'},
+  {name:'MEDICAL COUNSEL',type:'SERVICE',col:'#3fb27f',href:'/consultancy.html',desc:'Health diagnostics consultancy'},
+  {name:'LEGAL COUNSEL',type:'SERVICE',col:'#00E5FF',href:'/consultancy.html',desc:'Contracts and sovereign rights'},
+  {name:'ENGINEERING',type:'SERVICE',col:'#C9A84C',href:'/consultancy.html',desc:'Technical architecture services'},
+  {name:'BLOCKCHAIN',type:'PAGE',col:'#C9A84C',href:'/blockchain.html',desc:'NFT vault, Polygon PoS, wallets'},
+  {name:'COMPLIANCE',type:'PAGE',col:'#8B0000',href:'/compliance.html',desc:'Governance and charter compliance'},
+  {name:'RESEARCH',type:'PAGE',col:'#9B6BF0',href:'/research.html',desc:'Sovereign research and discovery'},
+  {name:'HALL OF SOVEREIGNS',type:'PAGE',col:'#D9B86A',href:'/hall.html',desc:'Leaderboard and authority rankings'},
+  {name:'SEARCH',type:'PAGE',col:'#C9A84C',href:'/search.html',desc:'Full platform search engine'},
+];
+
+function doSearch(q){
+  const res=document.getElementById('sb-results');
+  if(!q||q.length<2){res.style.display='none';return;}
+  const ql=q.toLowerCase();
+  const hits=SEARCH_INDEX.filter(e=>e.name.toLowerCase().includes(ql)||e.desc.toLowerCase().includes(ql)||e.type.toLowerCase().includes(ql)).slice(0,10);
+  if(!hits.length){res.innerHTML='<div class="sb-empty">NO RESULTS FOR "'+q.toUpperCase()+'"</div>';res.style.display='block';return;}
+  res.innerHTML=hits.map(h=>`<a class="sb-result" href="${h.href}"><span class="sbr-type" style="color:${h.col};border-color:${h.col}44">${h.type}</span><div><div class="sbr-name">${h.name}</div><div class="sbr-desc">${h.desc}</div></div></a>`).join('');
+  res.style.display='block';
+}
+document.getElementById('sb-input').addEventListener('input',e=>doSearch(e.target.value));
+document.getElementById('sb-clear').addEventListener('click',()=>{document.getElementById('sb-input').value='';document.getElementById('sb-results').style.display='none';});
+document.addEventListener('click',e=>{if(!e.target.closest('.sb-wrap'))document.getElementById('sb-results').style.display='none';});
+
+/* ========= LIVE CLOCK ========= */
+function updateClock(){
+  const n=new Date();
+  const days=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const t=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0')+':'+n.getSeconds().toString().padStart(2,'0');
+  const d=days[n.getDay()]+' '+n.getDate()+' '+months[n.getMonth()]+' '+n.getFullYear();
+  const ce=document.getElementById('dash-clock');if(ce)ce.textContent=t;
+  const de=document.getElementById('dash-date');if(de)de.textContent=d;
+}
+updateClock();setInterval(updateClock,1000);
+
+/* ========= HERO CANVAS ========= */
+(function(){
+  const cv=document.getElementById('hero-cv');
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;}
+  resize();window.addEventListener('resize',resize);
+  const stars=Array.from({length:120},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.5+.2,s:Math.random()*0.5+0.1}));
+  function frame(){
+    t+=.008;ctx.clearRect(0,0,W,H);
+    /* Stars */
+    stars.forEach(s=>{
+      ctx.beginPath();ctx.arc(s.x*W,s.y*H,s.r*(0.6+0.4*Math.sin(t*s.s*2)),0,Math.PI*2);
+      ctx.fillStyle='rgba(201,168,76,'+(0.05+0.1*Math.sin(t*s.s+s.x*5))+')';ctx.fill();
+    });
+    /* Hex grid */
+    const hex=48,rows=Math.ceil(H/hex)+2,cols=Math.ceil(W/(hex*1.73))+2;
+    for(let r=0;r<rows;r++){for(let c=0;c<cols;c++){
+      const cx2=c*hex*1.73+(r%2)*hex*.87,cy2=r*hex*.75;
+      const d=Math.sqrt((cx2-W*.5)**2+(cy2-H*.5)**2);
+      const opa=Math.max(0,.04-.0001*d)*(.5+.5*Math.sin(t*.6+d*.01));
+      if(opa<.004) continue;
+      ctx.beginPath();
+      for(let i=0;i<6;i++){ctx.lineTo(cx2+hex*.48*Math.cos(i*Math.PI/3),cy2+hex*.48*Math.sin(i*Math.PI/3));}
+      ctx.closePath();ctx.strokeStyle='rgba(201,168,76,'+opa+')';ctx.lineWidth=.5;ctx.stroke();
+    }}
+    /* Scan line */
+    const scanY=(t*.08*H)%H;
+    const sg=ctx.createLinearGradient(0,scanY-30,0,scanY+30);
+    sg.addColorStop(0,'transparent');sg.addColorStop(.5,'rgba(0,229,255,.04)');sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg;ctx.fillRect(0,scanY-30,W,60);
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ========= HERO OMEGA CANVAS ========= */
+(function(){
+  const cv=document.getElementById('hero-omega-cv');
+  const ctx=cv.getContext('2d'),CX=150,CY=150;let t=0;
+  function frame(){
+    t+=.012;ctx.clearRect(0,0,300,300);
+    /* Triple rings */
+    [120,90,60].forEach((r,i)=>{
+      ctx.save();ctx.translate(CX,CY);ctx.rotate(t*(i%2?-.5:.5)*(i+1)*.4);
+      ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,'+(0.15+i*.06)+')';ctx.lineWidth=1+i*.3;
+      if(i===1){ctx.setLineDash([6,8]);} else if(i===2){ctx.setLineDash([2,6]);}
+      ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    });
+    /* Orbit ellipse */
+    ctx.save();ctx.translate(CX,CY);ctx.rotate(t*.25);
+    ctx.beginPath();ctx.ellipse(0,0,110,40,0,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,229,255,.12)';ctx.lineWidth=.8;ctx.stroke();ctx.restore();
+    /* Glow */
+    const gg=ctx.createRadialGradient(CX,CY,0,CX,CY,50);
+    gg.addColorStop(0,'rgba(201,168,76,0.35)');gg.addColorStop(1,'transparent');
+    ctx.fillStyle=gg;ctx.beginPath();ctx.arc(CX,CY,50,0,Math.PI*2);ctx.fill();
+    /* Omega */
+    ctx.fillStyle='rgba(201,168,76,'+(0.85+0.15*Math.sin(t*1.5))+')';
+    ctx.shadowColor='rgba(201,168,76,.8)';ctx.shadowBlur=24+8*Math.sin(t);
+    ctx.font='900 64px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('\u03A9',CX,CY+2);ctx.shadowBlur=0;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* Section header mini-canvases */
+function drawMiniOmega(cv,col){
+  cv.width=40;cv.height=40;const ctx=cv.getContext('2d');let t=0;
+  function f(){
+    t+=.03;ctx.clearRect(0,0,40,40);
+    ctx.save();ctx.translate(20,20);ctx.rotate(t*.5);
+    ctx.beginPath();ctx.arc(0,0,17,0,Math.PI*2);ctx.strokeStyle=col+'44';ctx.lineWidth=1;ctx.stroke();ctx.restore();
+    ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=8;
+    ctx.font='700 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('\u03A9',20,21);ctx.shadowBlur=0;requestAnimationFrame(f);
+  }
+  f();
+}
+['sh-cv-1','sh-cv-2','sh-cv-3','sh-cv-4'].forEach((id,i)=>{
+  const cv=document.getElementById(id);
+  if(cv) drawMiniOmega(cv,['#00E5FF','#9B6BF0','#8B0000','#C9A84C'][i]);
+});
+</script>
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
-const GAME_DATA=[
-  {n:'01',title:'&#937; MYTH-VERSE',stage:'STAGE 6',col:'#E86A3A'},
-  {n:'02',title:'&#937; WARRIORS',stage:'STAGE 4',col:'#C9A84C'},
-  {n:'03',title:'&#937; ARENA',stage:'STAGE 3',col:'#00E5FF'},
+const AGENTS=[
+  {n:'SENTINEL',col:'#C7CDD6'},{n:'ANALYST',col:'#34C6E6'},{n:'HISTORIAN',col:'#D9B86A'},
+  {n:'TUTOR',col:'#A9C2D8'},{n:'MERCHANT',col:'#C9A84C'},{n:'PROXY',col:'#E8E8FF'},
+  {n:'ORACLE',col:'#9B6BF0'},{n:'SCOUT',col:'#E86A3A'},{n:'WARDEN',col:'#D9B86A'},
+  {n:'AUDITOR',col:'#C7CDD6'},{n:'BEACON',col:'#E86A3A'},{n:'SOVEREIGN',col:'#C9A84C'},
 ];
-const NFT_DATA=[
-  {glyph:'&#x03A9;',name:'OMEGA DRAGON',rarity:'GENESIS',col:'#C9A84C'},
-  {glyph:'&#x2609;',name:'THE SEER',rarity:'MYTHIC',col:'#9B6BF0'},
-  {glyph:'&#x265A;',name:'COSMIC CROWN',rarity:'LEGENDARY',col:'#E2C86D'},
-];
-const PILLARS=[
-  {n:'12',label:'GRADES',col:'#C9A84C',href:'/ascension.html'},
-  {n:'12',label:'LEVELS',col:'#E2C86D',href:'/ascension.html'},
-  {n:'12',label:'PHASES',col:'#C9A84C',href:'/ascension.html'},
-  {n:'12',label:'CERTIFICATES',col:'#00E5FF',href:'/honors.html'},
-  {n:'12',label:'TROPHIES',col:'#E86A3A',href:'/trophies.html'},
-  {n:'12',label:'MEDALS',col:'#C7CDD6',href:'/trophies.html'},
-  {n:'12',label:'SIGNS',col:'#D9B86A',href:'/horoscope.html'},
-  {n:'12',label:'GODS',col:'#C9A84C',href:'/pantheons.html'},
-  {n:'12',label:'PLANETS',col:'#9B6BF0',href:'/horoscope.html'},
-  {n:'12',label:'AGENTS',col:'#00E5FF',href:'/agents.html'},
-  {n:'12',label:'TOKENS',col:'#C9A84C',href:'/blockchain.html'},
-  {n:'9',label:'ELEMENTS',col:'#3fb27f',href:'/elements.html'},
-];
-const RECENT_MODS=[
-  {icon:'&#x2726;',label:'Academy',href:'/academy.html',desc:'Knowledge Engine'},
-  {icon:'&#x2694;',label:'Gaming Arena',href:'/gaming.html',desc:'Mastery Engine'},
-  {icon:'&#x25C9;',label:'Agents',href:'/agents.html',desc:'AI Council'},
-];
+const FILMS=['THE ORIGIN','THE BLOODLINE','THE ASCENSION','THE CIVIL WAR','THE REVELATION','THE REBIRTH','THE CONVERGENCE','THE ETERNITY CODE','THE NEW DAWN','THE SINGULARITY','THE INFINITE','THE OMEGA'];
+const GAMES=['\u03A9 MYTH-VERSE','\u03A9 WARRIORS','\u03A9 LEGACY','\u03A9 ARENA','\u03A9 FRONTIER','\u03A9 SHADOWS','\u03A9 REBIRTH','\u03A9 ASCENSION','\u03A9 OMEGA CITY','\u03A9 BLOODLINE','\u03A9 ORACLE','\u03A9 SOVEREIGN'];
 
-window.sendAI=async function(msg){
-  const input=document.getElementById('ai-cmd');
-  const resp=document.getElementById('ai-resp');
-  const text=msg||input.value.trim();
-  if(!text) return;
-  resp.style.display='block'; resp.style.color='var(--cyan)'; resp.textContent='ORACLE COMPUTING...';
-  try{
-    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:400,messages:[{role:"user",content:`You are the Oracle agent of SYD OMEGA 91717 command center. The user is a sovereign member. Respond in 2-3 sentences, in the Oracle voice  --  use the 9x9x9 matrix, sovereign authority, and the frequency as metaphors where relevant. Be actionable and brief. User query: ${text}`}]})});
-    const data=await r.json();
-    const reply=data.content?.map(i=>i.text||'').join('')||'Oracle response unavailable.';
-    resp.style.color='var(--green)'; resp.textContent=reply;
-    if(input) input.value='';
-  }catch(e){ resp.style.color='var(--muted)'; resp.textContent='Oracle offline. Command logged.'; }
-};
-document.getElementById('ai-go')?.addEventListener('click',()=>sendAI());
-document.getElementById('ai-cmd')?.addEventListener('keydown',e=>{if(e.key==='Enter') sendAI();});
+function buildMetrics(d,isOwner,tasks){
+  const a=isOwner?9.000:parseFloat(d.axis_a||.001);
+  const b=isOwner?9.000:parseFloat(d.axis_b||.001);
+  const c=isOwner?9.000:parseFloat(d.axis_c||.001);
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const g=document.getElementById('metrics-band');g.innerHTML='';
+  const mat=isOwner?'OMEGA MASTER':a>=6?'GOLD':a>=3?'STEEL':a>=1?'GLASS':'SAND';
+  const matCol=isOwner?'#C9A84C':a>=6?'#C9A84C':a>=3?'#8B8F9C':a>=1?'#A9C2D8':'#D9B86A';
+  [
+    {l:'AUTHORITY',v:auth.toFixed(3),s:'/ 15.588 MAX',col:matCol,href:'/profile.html'},
+    {l:'MATERIAL',v:mat,s:'Current tier',col:matCol,href:'/ascension.html'},
+    {l:'AXIS A',v:a.toFixed(3),s:'Knowledge',col:'#00E5FF',href:'/matrix.html'},
+    {l:'AXIS B',v:b.toFixed(3),s:'Mastery',col:'#E86A3A',href:'/matrix.html'},
+    {l:'AXIS C',v:c.toFixed(3),s:'Contribution',col:'#3fb27f',href:'/matrix.html'},
+    {l:'TASKS DONE',v:tasks,s:'+0.001 each',col:'#E2C86D',href:'/profile.html'},
+  ].forEach(m=>{
+    const d2=document.createElement('a');d2.className='mb-item';d2.href=m.href;
+    d2.style.setProperty('--col',m.col);
+    d2.innerHTML=`<div class="mbi-l">${m.l}</div><div class="mbi-v" style="color:${m.col};font-size:${m.v.length>8?'16px':'28px'}">${m.v}</div><div class="mbi-s">${m.s}</div>`;
+    g.appendChild(d2);
+  });
+  /* Update axis strip */
+  ['a','b','c'].forEach((axis,i)=>{
+    const val=[a,b,c][i];
+    document.getElementById('ax-'+axis).textContent=val.toFixed(3);
+    setTimeout(()=>{document.getElementById('bar-'+axis).style.width=(val/9*100)+'%';},300);
+    document.getElementById('inc-'+axis).textContent=isOwner?'ABSOLUTE APEX -- 9.000':Math.round((9-val)/.001).toLocaleString()+' tasks to apex';
+  });
+  if(isOwner){
+    document.getElementById('hc-coord').textContent='(9.000, 9.000, 9.000)';
+    document.getElementById('hc-auth').textContent='AUTHORITY 15.588 . OMEGA MASTER . ABSOLUTE ARCHITECT . ALL-TIME ACCESS';
+    document.getElementById('hc-name').textContent='MAJOR SLEIMAN YOUSSEF DAGHER -- ARCHITECT & SOVEREIGN FOUNDER';
+  } else {
+    document.getElementById('hc-coord').textContent='('+a.toFixed(3)+', '+b.toFixed(3)+', '+c.toFixed(3)+')';
+    document.getElementById('hc-auth').textContent='AUTHORITY '+auth.toFixed(3)+' . MATERIAL: '+mat;
+    document.getElementById('hc-name').textContent=(d.display_name||'SOVEREIGN').toUpperCase();
+  }
+}
 
-function drawMatrixHex(a,b,c){
-  const cv=document.getElementById('matrix-hex');
-  const W=cv.offsetWidth||280, H=240; cv.width=W*2; cv.height=H*2;
-  const ctx=cv.getContext('2d'); ctx.scale(2,2);
+function buildAgentMesh(){
+  const cv=document.getElementById('mesh-cv');
+  const W=cv.offsetWidth||800; cv.width=W*2; cv.height=444; cv.style.width=W+'px'; cv.style.height='222px';
+  const ctx=cv.getContext('2d');ctx.scale(2,2);let t=0;
+  const CX=W/2,CY=111,R=90;
+  const pts=AGENTS.map((ag,i)=>{const a=-Math.PI/2+i*(Math.PI*2/12);return{x:CX+Math.cos(a)*R,y:CY+Math.sin(a)*R,...ag};});
+  function frame(){
+    t+=.01;ctx.clearRect(0,0,W,222);
+    /* Orbit */
+    ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=1;ctx.stroke();
+    /* Connections */
+    pts.forEach((p,i)=>{pts.forEach((q,j)=>{if(j<=i)return;
+      const d=Math.sqrt((p.x-q.x)**2+(p.y-q.y)**2);const opa=Math.max(0,.04-d*.0003)*(0.5+0.5*Math.sin(t+i+j));
+      if(opa<.003)return;
+      ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(201,168,76,${opa})`;ctx.lineWidth=.5;ctx.stroke();
+    });});
+    /* Center Omega */
+    const gg=ctx.createRadialGradient(CX,CY,0,CX,CY,25);gg.addColorStop(0,'rgba(201,168,76,0.25)');gg.addColorStop(1,'transparent');
+    ctx.fillStyle=gg;ctx.beginPath();ctx.arc(CX,CY,25,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(201,168,76,'+(0.7+.3*Math.sin(t*2))+')';ctx.font='700 16px "Cinzel Decorative",serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='rgba(201,168,76,.6)';ctx.shadowBlur=12;ctx.fillText('\u03A9',CX,CY+1);ctx.shadowBlur=0;
+    /* Agent nodes */
+    pts.forEach((ag,i)=>{
+      const px=ag.x+(Math.cos(t*.5+i)*2),py=ag.y+(Math.sin(t*.7+i)*1.5);
+      const gw=ctx.createRadialGradient(px,py,0,px,py,12);gw.addColorStop(0,ag.col+'44');gw.addColorStop(1,'transparent');
+      ctx.fillStyle=gw;ctx.beginPath();ctx.arc(px,py,12,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fillStyle=ag.col;ctx.shadowColor=ag.col;ctx.shadowBlur=10;ctx.fill();ctx.shadowBlur=0;
+      ctx.fillStyle=ag.col;ctx.font='600 7px "Courier Prime",monospace';ctx.textAlign='center';
+      const lx=px+(px-CX)*.38,ly=py+(py-CY)*.38;
+      ctx.fillText(ag.n,lx,ly);
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function buildContentPreviews(){
+  function drawContentGlyph(cv,col,num){
+    cv.width=120;cv.height=80;cv.style.width='60px';cv.style.height='40px';
+    const ctx=cv.getContext('2d');let t=0;
+    function f(){t+=.025;ctx.clearRect(0,0,120,80);
+      const g=ctx.createRadialGradient(60,40,0,60,40,44);g.addColorStop(0,col+'33');g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(60,40,44,0,Math.PI*2);ctx.fill();
+      ctx.save();ctx.translate(60,40);ctx.rotate(t*.4);ctx.beginPath();ctx.arc(0,0,38,0,Math.PI*2);
+      ctx.strokeStyle=col+'33';ctx.lineWidth=.8;ctx.stroke();ctx.restore();
+      ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=10;
+      ctx.font='700 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(num,60,41);ctx.shadowBlur=0;requestAnimationFrame(f);}f();
+  }
+  const filmColors=['#C9A84C','#8B0000','#9B6BF0','#00E5FF','#E86A3A','#3fb27f','#D9B86A','#C7CDD6','#E2C86D','#34C6E6','#A9C2D8','#C9A84C'];
+  const fs=document.getElementById('film-scroll');fs.innerHTML='';
+  FILMS.forEach((film,i)=>{
+    const a=document.createElement('a');a.className='cp-item';a.href='/cinema.html';
+    const cv=document.createElement('canvas');cv.className='cp-canvas';
+    a.innerHTML=`<div class="cp-num">FILM ${i+1}</div><div class="cp-name">${film}</div><span class="cp-type" style="color:${filmColors[i]};border-color:${filmColors[i]}44">2026-${2026+i}</span>`;
+    a.insertBefore(cv,a.firstChild);fs.appendChild(a);
+    requestAnimationFrame(()=>drawContentGlyph(cv,filmColors[i],i+1));
+  });
+  const gs=document.getElementById('game-scroll');gs.innerHTML='';
+  GAMES.forEach((game,i)=>{
+    const a=document.createElement('a');a.className='cp-item';a.href='/gaming.html';
+    const cv=document.createElement('canvas');
+    a.innerHTML=`<div class="cp-num">GAME ${i+1}</div><div class="cp-name">${game}</div><span class="cp-type" style="color:${filmColors[i]};border-color:${filmColors[i]}44">12 WORLDS</span>`;
+    a.insertBefore(cv,a.firstChild);gs.appendChild(a);
+    requestAnimationFrame(()=>drawContentGlyph(cv,filmColors[i],i+1));
+  });
+}
+
+function buildGateMatrix(){
+  const cv=document.getElementById('gate-cv');
+  const W=cv.offsetWidth||1200;cv.width=W*2;cv.height=400;cv.style.width=W+'px';cv.style.height='200px';
+  const ctx=cv.getContext('2d');ctx.scale(2,2);
+  const COLS=['#C9A84C','#8B0000','#9B6BF0','#00E5FF','#E86A3A','#3fb27f','#D9B86A','#C7CDD6','#E2C86D','#34C6E6','#A9C2D8','#C9A84C'];
   let t=0;
-  const nodes=[];
-  /* Generate hex lattice */
-  const rows=7, cols=9, spacingX=W/(cols+1), spacingY=H/(rows+1);
-  for(let ry=0;ry<rows;ry++) for(let rx=0;rx<cols;rx++){
-    const x=spacingX*(rx+1)+(ry%2?spacingX/2:0);
-    const y=spacingY*(ry+1);
-    const progress=(rx/8)+(ry/6);
-    const axisType=rx<3?'a':rx<6?'b':'c';
-    const isActive=axisType==='a'?rx<a:axisType==='b'?rx-3<b:rx-6<c;
-    const isCurrent=rx===Math.floor(a)-1&&ry===Math.floor(b)-1;
-    nodes.push({x,y,axisType,isActive,isCurrent,ph:Math.random()*Math.PI*2});
+  function frame(){
+    t+=.008;ctx.clearRect(0,0,W,200);
+    const cw=(W-20)/12,ch=160/12;
+    for(let r=0;r<12;r++){for(let c=0;c<12;c++){
+      const x=10+c*cw,y=20+r*ch;
+      const thresh=((r*12+c)/143)*9;
+      const lit=thresh<1||true; /* All lit for owner */
+      const pulse=0.5+0.5*Math.sin(t*1.5+r*.4+c*.3);
+      const col=COLS[c];
+      ctx.fillStyle=lit?col+(Math.floor(pulse*64).toString(16).padStart(2,'0')):'rgba(13,13,24,.8)';
+      ctx.strokeStyle=col+(lit?'66':'22');ctx.lineWidth=.5;
+      ctx.fillRect(x+1,y+1,cw-3,ch-3);ctx.strokeRect(x+1,y+1,cw-3,ch-3);
+    }}
+    /* Labels */
+    ctx.fillStyle='rgba(201,168,76,.4)';ctx.font='600 6px "Courier Prime",monospace';ctx.textAlign='center';
+    for(let c=0;c<12;c++)ctx.fillText(c+1,10+c*cw+cw/2,12);
+    for(let r=0;r<12;r++){ctx.textAlign='right';ctx.fillText(r+1,8,20+r*ch+ch/2+2);}
+    requestAnimationFrame(frame);
   }
-  function draw(){
-    t+=0.012; ctx.clearRect(0,0,W,H);
-    /* grid bg */
-    ctx.strokeStyle='rgba(201,168,76,0.04)'; ctx.lineWidth=0.5;
-    for(let gx=0;gx<W;gx+=spacingX){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
-    /* connections */
-    ctx.lineWidth=0.6;
-    nodes.forEach((n,i)=>{
-      nodes.forEach((m,j)=>{
-        if(j<=i) return;
-        const dx=n.x-m.x,dy=n.y-m.y,d=Math.sqrt(dx*dx+dy*dy);
-        if(d<spacingX*2.2){
-          const al=(1-d/(spacingX*2.2))*0.2;
-          const col=n.axisType==='a'?'0,229,255':n.axisType==='b'?'232,106,58':'63,178,127';
-          ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(m.x,m.y);
-          ctx.strokeStyle=`rgba(${col},${al})`; ctx.stroke();
-        }
-      });
-    });
-    /* nodes */
-    nodes.forEach(n=>{
-      const pulse=n.isCurrent?(0.6+0.4*Math.sin(t*3+n.ph)):1;
-      const col=n.axisType==='a'?'0,229,255':n.axisType==='b'?'232,106,58':'63,178,127';
-      const r=n.isCurrent?5:n.isActive?3.5:2;
-      const alpha=n.isActive?0.8:0.2;
-      ctx.beginPath(); ctx.arc(n.x,n.y,r*pulse,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${col},${alpha*pulse})`;
-      if(n.isCurrent||n.isActive){ctx.shadowColor=`rgba(${col},0.6)`;ctx.shadowBlur=n.isCurrent?14:6;}
-      ctx.fill(); ctx.shadowBlur=0;
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
+  frame();
 }
 
-function drawPortChart(nodes){
-  const cv=document.getElementById('port-chart'); if(!cv) return;
-  const W=cv.offsetWidth||240, H=60; cv.width=W*2; cv.height=H*2;
-  const ctx=cv.getContext('2d'); ctx.scale(2,2);
-  const pts=[];
-  for(let i=0;i<12;i++) pts.push(40+Math.random()*50*(1+nodes/729));
-  pts[pts.length-1]=nodes*91.7/100;
-  ctx.beginPath();
-  pts.forEach((p,i)=>{const x=i*(W/11),y=H-p*(H/200);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  const g=ctx.createLinearGradient(0,0,W,0);
-  g.addColorStop(0,'rgba(201,168,76,0.3)'); g.addColorStop(1,'rgba(0,229,255,0.5)');
-  ctx.strokeStyle=g; ctx.lineWidth=2; ctx.stroke();
-  /* area fill */
-  ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
-  const gf=ctx.createLinearGradient(0,0,0,H);
-  gf.addColorStop(0,'rgba(201,168,76,0.12)'); gf.addColorStop(1,'rgba(201,168,76,0)');
-  ctx.fillStyle=gf; ctx.fill();
-}
-
-function buildPillars(){
-  const row=document.getElementById('pillars-row'); row.innerHTML='';
-  PILLARS.forEach(p=>{
-    const c=document.createElement('a'); c.className='pillar-icon'; c.href=p.href;
-    c.innerHTML=`<div class="pi-num" style="color:${p.col}">${p.n}</div><div class="pi-label">${p.label}</div>`;
-    row.appendChild(c);
+function buildAgentPills(){
+  const g=document.getElementById('agent-pills');g.innerHTML='';
+  AGENTS.forEach(ag=>{
+    const d=document.createElement('div');d.className='ap-row';
+    d.innerHTML=`<span class="apr-name">${ag.n}</span><span class="apr-status"><div class="apr-dot" style="background:${ag.col};color:${ag.col}"></div><span style="color:${ag.col}">ACTIVE</span></span>`;
+    g.appendChild(d);
   });
 }
 
-function buildGames(){
-  const g=document.getElementById('game-cards'); g.innerHTML='';
-  GAME_DATA.forEach(gd=>{
-    const c=document.createElement('a'); c.className='game-mini'; c.href='/gaming.html';
-    c.style.setProperty('--col',gd.col);
-    c.style.cssText+=`border-left:3px solid ${gd.col}66`;
-    c.innerHTML=`<div class="gm-n" style="color:${gd.col}">${gd.n}</div><div class="gm-title" style="color:${gd.col}">${gd.title}</div><div class="gm-stage">${gd.stage}</div>`;
-    g.appendChild(c);
-  });
+function buildStream(){
+  const logs=['[INFO] Matrix node event processed . 9.1717Hz lock maintained',
+    '[SYNC] Agent mesh handshake verified . 12/12 online','[AUTH] PQC shield active . FIPS 208 compliant',
+    '[DATA] Knowledge axis event registered . +0.001','[EXEC] Oracle prediction computed . Accuracy: 94.7%',
+    '[SCAN] Zero-trust perimeter clear . 0 anomalies','[FREQ] Resonance: 9.1717Hz . Stable',
+    '[ARCH] Architect online . Authority: 15.588 . Apex locked','[CACHE] Supabase sync . All tables fresh',
+    '[GATE] Gate matrix updated . 144/144 nodes active','[ECON] Token balances updated . 12 assets',
+    '[CRED] Certificate chain verified . No forgeries detected'];
+  const el=document.getElementById('sf-inner');
+  if(el) el.innerHTML=[...logs,...logs].map(l=>`<div>${l}</div>`).join('');
 }
 
-function buildNFTs(){
-  const g=document.getElementById('nft-grid'); g.innerHTML='';
-  NFT_DATA.forEach(n=>{
-    const c=document.createElement('div'); c.className='nft-mini';
-    c.style.borderTopColor=n.col;
-    c.innerHTML=`<span class="nm-glyph">${n.glyph}</span><div class="nm-name">${n.name}</div><span class="nm-rarity" style="color:${n.col};border-color:${n.col}44">${n.rarity}</span>`;
-    g.appendChild(c);
-  });
-}
-
-function buildActivity(tasks){
-  const feed=document.getElementById('activity-feed'); feed.innerHTML='';
-  const items=[];
-  (tasks||[]).slice(0,6).forEach(t=>{
-    const k=t.kind||'task';
-    const col=k==='academy'?'#00E5FF':k==='gaming'?'#E86A3A':'#3fb27f';
-    const lbl=k==='academy'?'Academy task completed':k==='gaming'?'Gaming stage advanced':'Contribution recorded';
-    items.push({col,txt:`<b>${lbl}</b> &mdash; Axes advanced +0.25`,time:new Date(t.completed_at||t.created_at).toLocaleTimeString()});
-  });
-  if(!items.length) items.push({col:'#C9A84C',txt:'<b>WELCOME</b> &mdash; Complete your first task to begin evolution',time:'now'});
-  items.push({col:'#9B6BF0',txt:'<b>Oracle dispatched</b> &mdash; Daily horoscope reading ready',time:'today'});
-  items.push({col:'#C9A84C',txt:'<b>System event</b> &mdash; All 12 agents online and orchestrating',time:'today'});
-  items.slice(0,7).forEach(a=>{
-    const d=document.createElement('div'); d.className='activity-item';
-    d.innerHTML=`<div class="ai-dot" style="background:${a.col}"></div><div class="ai-text">${a.txt}</div><div class="ai-time">${a.time}</div>`;
-    feed.appendChild(d);
-  });
-}
-
-function buildRecentModules(){
-  const g=document.getElementById('recent-modules'); g.innerHTML='';
-  RECENT_MODS.forEach(m=>{
-    const a=document.createElement('a'); a.href=m.href;
-    a.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid rgba(201,168,76,.12);font-size:12px;font-weight:300;color:var(--muted);transition:all .15s';
-    a.onmouseenter=()=>a.style.color='var(--gold)';
-    a.onmouseleave=()=>a.style.color='var(--muted)';
-    a.innerHTML=`<span style="font-size:14px">${m.icon}</span><span>${m.label}</span><span style="font-family:var(--M);font-size:8px;margin-left:auto;color:var(--muted)">${m.desc}</span>`;
-    g.appendChild(a);
-  });
+function buildQuickNav(){
+  const links=[
+    {n:'PROFILE',href:'/profile.html'},{n:'VAULT',href:'/vault.html'},
+    {n:'COSMOS',href:'/cosmos.html'},{n:'ASCEND',href:'/ascension.html'},
+    {n:'AGENTS',href:'/agents.html'},{n:'FAMILY',href:'/family.html'},
+    {n:'CONSULT',href:'/consultancy.html'},{n:'INTEL',href:'/intelligence.html'},
+    {n:'SEARCH',href:'/search.html'},{n:'UNIVERSE',href:'/universe.html'},
+  ];
+  const g=document.getElementById('qn-grid');g.innerHTML='';
+  links.forEach(l=>{const a=document.createElement('a');a.className='qn-item';a.href=l.href;a.textContent=l.n;g.appendChild(a);});
 }
 
 async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
-  const uid=sess.user.id;
-  const pr=await sb.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,is_owner,membership_tier').eq('id',uid).maybeSingle();
+  const pr=await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle();
   const d=pr.data||{};
-  const a=parseFloat(d.axis_a)||1, b=parseFloat(d.axis_b)||1, c=parseFloat(d.axis_c)||1;
-  const auth=Math.sqrt(a*a+b*b+c*c);
-  const tier=Math.min(8,Math.max(0,Math.floor(Math.min(a,b,c))-1));
-  const nodes=Math.round(a*b*c*9);
-  const xp=Math.round(nodes*917.17);
-
-  /* Identity bar */
-  const name=d.display_name||d.sign||'SOVEREIGN';
-  document.getElementById('ident-name').textContent=name.toUpperCase();
-  document.getElementById('avatar-init').textContent=name[0]||'S';
-  document.getElementById('ident-sub').textContent=(d.is_owner?'OWNER':d.sign||'MEMBER')+' \u00B7 LEVEL '+(Math.min(a,b,c).toFixed(1))+' \u00B7 SYD OMEGA 91717';
-  document.getElementById('ident-level').textContent=a.toFixed(1)+'.'+b.toFixed(1)+'.'+c.toFixed(1);
-  document.getElementById('k-balance').textContent='\u03A9 '+(xp).toLocaleString();
-  document.getElementById('k-assets').textContent='$'+(xp*0.917).toLocaleString();
-  document.getElementById('k-pos').textContent='('+a.toFixed(1)+','+b.toFixed(1)+','+c.toFixed(1)+')';
-  document.getElementById('wb-greet').textContent='WELCOME BACK, '+name.toUpperCase();
-
-  /* Matrix viz */
-  requestAnimationFrame(()=>drawMatrixHex(a,b,c));
-
-  /* Axis bars */
-  setTimeout(()=>{
-    document.getElementById('bar-a').style.width=(a/9*100)+'%';
-    document.getElementById('bar-b').style.width=(b/9*100)+'%';
-    document.getElementById('bar-c').style.width=(c/9*100)+'%';
-  },300);
-  document.getElementById('val-a').textContent=a.toFixed(1);
-  document.getElementById('val-b').textContent=b.toFixed(1);
-  document.getElementById('val-c').textContent=c.toFixed(1);
-  document.getElementById('coord-display').textContent='('+a.toFixed(1)+', '+b.toFixed(1)+', '+c.toFixed(1)+')';
-  document.getElementById('rank-label').textContent=RANKS[tier]+' &middot; AUTHORITY '+auth.toFixed(2);
-
-  /* Overview */
-  document.getElementById('ov-xp').textContent=xp.toLocaleString()+' XP';
-  document.getElementById('ov-level').textContent=a.toFixed(1)+'.'+b.toFixed(1)+'.'+c.toFixed(1);
-  document.getElementById('ov-certs').textContent=Math.floor(nodes/81);
-  document.getElementById('ov-troph').textContent=Math.floor(nodes/50);
-  document.getElementById('ov-medals').textContent=Math.floor(nodes/40);
-  document.getElementById('ov-ach').textContent=(nodes*9)+'+'
-
-  /* Portfolio */
-  document.getElementById('port-total').innerHTML='\u03A9 '+xp.toLocaleString();
-  requestAnimationFrame(()=>drawPortChart(nodes));
-  document.getElementById('port-holdings').innerHTML=[
-    {n:'KNOWLEDGE AXIS',v:'\u03A9 '+(a*917).toFixed(0),ch:'+'+a.toFixed(1)},
-    {n:'MASTERY AXIS',v:'\u03A9 '+(b*917).toFixed(0),ch:'+'+b.toFixed(1)},
-    {n:'CONTRIBUTION',v:'\u03A9 '+(c*917).toFixed(0),ch:'+'+c.toFixed(1)},
-  ].map(h=>`<div class="ph-row"><span class="ph-name">${h.n}</span><span class="ph-val">${h.v}</span><span class="ph-change">${h.ch}</span></div>`).join('');
-
-  /* Agent assignment by sign */
-  const AGENT_MAP={'Aries':'BEACON','Leo':'BEACON','Sagittarius':'BEACON','Cancer':'ANALYST','Scorpio':'MERCHANT','Pisces':'MERCHANT','Gemini':'TUTOR','Libra':'SCOUT','Aquarius':'SCOUT','Taurus':'SENTINEL','Capricorn':'AUDITOR','Virgo':'HISTORIAN'};
-  const agentName=d.sign?AGENT_MAP[d.sign]||'ORACLE':'ORACLE';
-  document.getElementById('agent-name').textContent=agentName+' AGENT';
-  document.getElementById('agent-prompt').textContent='Your '+agentName.toLowerCase()+' is ready. What shall we build today?';
-
-  /* Tasks/Activity */
-  const {data:tasks}=await sb.from('task_completions').select('kind,completed_at,created_at').eq('user_id',uid).order('completed_at',{ascending:false}).limit(6);
-  buildActivity(tasks);
-
-  buildGames(); buildNFTs(); buildPillars(); buildRecentModules();
+  const isOwner=d.is_owner||false;
+  const {count:tasks}=await sb.from('task_completions').select('*',{count:'exact',head:true}).eq('user_id',sess.user.id);
+  buildMetrics(d,isOwner,tasks||0);
+  buildAgentMesh();buildContentPreviews();buildGateMatrix();buildAgentPills();buildStream();buildQuickNav();
 }
 boot();
 </script>

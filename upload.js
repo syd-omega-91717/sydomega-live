@@ -1,4 +1,4 @@
-/* SYD OMEGA 91717 — shared file uploader. Exposes window.OmegaStorage. */
+/* SYD OMEGA 91717  --  shared file uploader. Exposes window.OmegaStorage. */
 (function(){
   if(window.OmegaStorage) return;
   var URL="https://ydqhzvvoyufiiqvzcjns.supabase.co";

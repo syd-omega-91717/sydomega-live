@@ -186,25 +186,126 @@
     f();
   })();
 
-  /* Mobile nav */
+  /* ===== MOBILE NAV -- ALL 9 SECTIONS ===== */
   if(!document.getElementById('omega-mob')){
-    var MOB=[
+    /* CSS for mobile nav + drawer */
+    var mcs=document.createElement('style');mcs.id='omega-mob-css';
+    mcs.textContent=[
+      '#omega-mob{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9990;background:rgba(8,8,15,.97);border-top:1px solid rgba(201,168,76,.15);backdrop-filter:blur(16px)}',
+      '#omega-mob-bar{display:flex;list-style:none;margin:0;padding:0}',
+      '.mob-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 12px;cursor:pointer;text-decoration:none;gap:3px;border:none;background:transparent}',
+      '.mob-item .mi{font-size:20px;line-height:1;color:#353330;transition:all .15s}',
+      '.mob-item .ml{font-family:"Courier Prime",monospace;font-size:6px;letter-spacing:1.5px;color:#55534e;transition:all .15s}',
+      '.mob-item.m-on .mi,.mob-item:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,.6);transform:translateY(-2px)}',
+      '.mob-item.m-on .ml,.mob-item:hover .ml{color:#C9A84C}',
+      '.mob-item.mob-menu-btn .mi{color:#85837b}',
+      '.mob-item.mob-menu-btn.menu-open .mi{color:#C9A84C}',
+      /* DRAWER */
+      '#omega-drawer{position:fixed;bottom:-100%;left:0;right:0;z-index:9989;background:rgba(8,8,15,.99);border-top:1px solid rgba(201,168,76,.25);backdrop-filter:blur(20px);transition:bottom .3s cubic-bezier(.25,.46,.45,.94);max-height:75vh;overflow-y:auto;padding-bottom:80px}',
+      '#omega-drawer.drawer-open{bottom:66px}',
+      '.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(201,168,76,.1)}',
+      '.dh-title{font-family:"Cinzel Decorative",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}',
+      '.dh-close{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;color:#85837b;cursor:pointer;padding:6px 12px;border:1px solid rgba(201,168,76,.2)}',
+      '.drawer-sections{display:grid;grid-template-columns:1fr 1fr;gap:0}',
+      '.ds-section{border-right:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);padding:14px 16px}',
+      '.ds-section:nth-child(2n){border-right:none}',
+      '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;text-decoration:none}',
+      '.dss-icon{font-size:18px;color:#55534e}',
+      '.dss-label{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;color:#85837b}',
+      '.dss-head:hover .dss-icon,.dss-head.ds-on .dss-icon{color:#C9A84C;text-shadow:0 0 8px rgba(201,168,76,.5)}',
+      '.dss-head:hover .dss-label,.dss-head.ds-on .dss-label{color:#C9A84C}',
+      '.ds-links{display:flex;flex-direction:column;gap:2px;padding-left:4px}',
+      '.ds-link{font-family:"Courier Prime",monospace;font-size:10px;color:#55534e;text-decoration:none;padding:5px 4px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
+      '.ds-link:hover,.ds-link.dl-on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.04);padding-left:8px}',
+      '@media(min-width:761px){#omega-mob{display:none!important}#omega-drawer{display:none!important}}',
+      '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}}',
+    ].join('');
+    (document.head||document.documentElement).appendChild(mcs);
+
+    /* BOTTOM BAR - 5 items + menu */
+    var MOB5=[
       {icon:'\u2302',label:'HOME',href:'/dashboard.html',key:'command'},
       {icon:'\u25B2',label:'ASCEND',href:'/ascension.html',key:'ascend'},
-      {icon:'\u03A9',label:'OMEGA',href:'/vault.html',key:'vault'},
+      {icon:'\u03A9',label:'VAULT',href:'/vault.html',key:'vault'},
       {icon:'\u2609',label:'COSMOS',href:'/cosmos.html',key:'cosmos'},
-      {icon:'\u22D4',label:'ORDER',href:'/family.html',key:'order'},
+      {icon:'\u2726',label:'MORE',key:'menu',isMenu:true},
     ];
+
     var mob=document.createElement('nav');mob.id='omega-mob';
-    var ul=document.createElement('ul');
-    MOB.forEach(function(m){
-      var li=document.createElement('li');
-      var a=document.createElement('a');a.href=m.href;
-      if(m.key===activeSection)a.className='m-on';
+    var ul=document.createElement('ul');ul.id='omega-mob-bar';
+    MOB5.forEach(function(m){
+      var li=document.createElement('li');li.style.flex='1';
+      var a=document.createElement('a');
+      a.className='mob-item'+(m.isMenu?' mob-menu-btn':m.key===activeSection?' m-on':'');
+      if(!m.isMenu){a.href=m.href;}else{a.href='#';}
       a.innerHTML='<span class="mi">'+m.icon+'</span><span class="ml">'+m.label+'</span>';
+      if(m.isMenu){
+        a.addEventListener('click',function(e){e.preventDefault();toggleDrawer();});
+      }
       li.appendChild(a);ul.appendChild(li);
     });
     mob.appendChild(ul);document.body.appendChild(mob);
+
+    /* DRAWER -- ALL 9 SECTIONS */
+    var DRAWER_SECTIONS=[
+      {icon:'\u2316',label:'COMMAND',col:'#C9A84C',href:'/dashboard.html',key:'command',
+       links:[['DASHBOARD','/dashboard.html'],['BEACON','/beacon.html'],['SEARCH','/search.html'],['ALERTS','/notifications.html'],['AI CONCIERGE','/chatbot.html']]},
+      {icon:'\u25C8',label:'IDENTITY',col:'#00E5FF',href:'/identity.html',key:'identity',
+       links:[['IDENTITY HUB','/identity.html'],['PROFILE','/profile.html'],['PASSPORT','/passport.html'],['KYC','/kyc.html'],['SETTINGS','/settings.html']]},
+      {icon:'\u25B2',label:'ASCEND',col:'#E86A3A',href:'/ascension.html',key:'ascend',
+       links:[['ASCENSION','/ascension.html'],['MATRIX 729','/matrix.html'],['ACADEMY','/academy.html'],['GAMING','/gaming.html'],['TROPHIES','/trophies.html']]},
+      {icon:'\u2609',label:'COSMOS',col:'#9B6BF0',href:'/cosmos.html',key:'cosmos',
+       links:[['COSMOS HUB','/cosmos.html'],['HOROSCOPE','/horoscope.html'],['AI AGENTS','/agents.html'],['ELEMENTS','/elements.html'],['PANTHEONS','/pantheons.html']]},
+      {icon:'\u25BA',label:'UNIVERSE',col:'#8B0000',href:'/cinema.html',key:'universe',
+       links:[['CINEMA','/cinema.html'],['UNIVERSE','/universe.html'],['MEDIA HUB','/media.html']]},
+      {icon:'\u03A9',label:'VAULT',col:'#C9A84C',href:'/vault.html',key:'vault',
+       links:[['SOVEREIGN VAULT','/vault.html'],['WALLET','/wallet.html'],['BLOCKCHAIN','/blockchain.html'],['MARKETPLACE','/marketplace.html'],['PORTFOLIO','/portfolio.html']]},
+      {icon:'\u22D4',label:'ORDER',col:'#D9B86A',href:'/family.html',key:'order',
+       links:[['FAMILY','/family.html'],['BLOODLINE','/bloodline.html'],['HERITAGE','/heritage.html'],['HALL','/hall.html'],['OMEGA CITY','/city.html']]},
+      {icon:'\u2726',label:'SERVICES',col:'#3fb27f',href:'/services.html',key:'services',
+       links:[['ALL SERVICES','/services.html'],['CONSULTANCY','/consultancy.html'],['PUBLISHING','/publishing.html'],['NEWS','/news.html'],['SOCIAL HUB','/social.html']]},
+      {icon:'\u25CF',label:'INTEL',col:'#9B6BF0',href:'/intelligence.html',key:'intel',
+       links:[['INTELLIGENCE','/intelligence.html'],['RESEARCH','/research.html'],['PREDICTION','/prediction.html'],['AUTOMATION','/automation.html'],['COMPLIANCE','/compliance.html']]},
+    ];
+
+    var drawer=document.createElement('div');drawer.id='omega-drawer';
+    var dh=document.createElement('div');dh.className='drawer-header';
+    dh.innerHTML='<div class="dh-title">&#937; SYD OMEGA 91717</div><div class="dh-close" id="drawer-close">CLOSE &#x2715;</div>';
+    drawer.appendChild(dh);
+    var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
+    DRAWER_SECTIONS.forEach(function(sec){
+      var ds=document.createElement('div');ds.className='ds-section';
+      var head=document.createElement('a');head.className='dss-head'+(sec.key===activeSection?' ds-on':'');head.href=sec.href;
+      head.innerHTML='<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
+      ds.appendChild(head);
+      var links=document.createElement('div');links.className='ds-links';
+      sec.links.forEach(function(lk){
+        var a=document.createElement('a');a.className='ds-link';a.href=lk[1];a.textContent=lk[0];
+        links.appendChild(a);
+      });
+      ds.appendChild(links);dsgrid.appendChild(ds);
+    });
+    drawer.appendChild(dsgrid);document.body.appendChild(drawer);
+
+    document.getElementById('drawer-close').addEventListener('click',function(){closeDrawer();});
+    drawer.addEventListener('click',function(e){if(e.target===drawer) closeDrawer();});
+
+    function toggleDrawer(){
+      var d=document.getElementById('omega-drawer');
+      var btn=document.querySelector('.mob-menu-btn');
+      if(d.classList.contains('drawer-open')){closeDrawer();}
+      else{d.classList.add('drawer-open');if(btn)btn.classList.add('menu-open');}
+    }
+    function closeDrawer(){
+      var d=document.getElementById('omega-drawer');
+      var btn=document.querySelector('.mob-menu-btn');
+      d.classList.remove('drawer-open');if(btn)btn.classList.remove('menu-open');
+    }
+    window.__closeOmegaDrawer=closeDrawer;
+    /* Close drawer on navigation */
+    document.querySelectorAll('.ds-link,.dss-head').forEach(function(a){
+      a.addEventListener('click',function(){setTimeout(closeDrawer,100);});
+    });
   }
 
   /* Top scan bar */

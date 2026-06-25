@@ -3,202 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evolution Matrix | Ω SYD OMEGA 91717</title>
+    <title>Ω SYD OMEGA 91717 — Evolution Framework</title>
     <style>
         :root {
-            --bg-color: #050505;
-            --accent-color: #d4af37;
-            --text-color: #ffffff;
-            --muted-color: #888888;
-            --border-color: #222222;
+            --primary: #9900ff;
+            --accent: #00ffcc;
+            --bg: #050508;
+            --surface: #0d0d15;
+            --text: #f0f0f5;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
+            background-color: var(--bg);
+            color: var(--text);
             font-family: 'Courier New', Courier, monospace;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
+            overflow: hidden;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
         }
         header {
-            width: 100%;
-            max-width: 1200px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        h1 {
-            color: var(--accent-color);
-            font-size: 1.8rem;
-            margin: 0;
-        }
-        nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            margin-left: 20px;
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-        }
-        .matrix-container {
-            width: 100%;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .profile-input-block {
-            border: 1px solid var(--border-color);
             padding: 20px;
-            background: #000000;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-        }
-        .input-group label {
-            font-size: 0.8rem;
-            color: var(--accent-color);
-            margin-bottom: 5px;
-        }
-        .input-group input, .input-group select {
-            background: #111;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 10px;
-            font-family: inherit;
-        }
-        .stage-timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .stage-row {
+            border-bottom: 1px solid var(--primary);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            background: #0a0a0a;
+            background: rgba(13, 13, 21, 0.8);
+            z-index: 10;
         }
-        .stage-row.active {
-            border-color: var(--accent-color);
-            background: #111105;
-        }
-        .badge-preview {
-            width: 30px;
-            height: 30px;
-            border: 1px dashed var(--accent-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .nav-bar { display: flex; gap: 15px; }
+        .btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            cursor: pointer;
+            text-transform: uppercase;
             font-size: 0.8rem;
+            transition: all 0.3s ease;
         }
-        footer {
-            margin-top: auto;
-            width: 100%;
-            max-width: 1200px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 20px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--muted-color);
+        .btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .omni-search-bar {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(153, 0, 255, 0.3);
+            color: var(--text);
+            padding: 8px;
+            width: 250px;
         }
+        .grid-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 40px;
+            perspective: 1200px;
+            overflow-y: auto;
+        }
+        .matrix-node {
+            background: var(--surface);
+            border: 1px solid rgba(153, 0, 255, 0.4);
+            padding: 25px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease, border-color 0.5s ease;
+        }
+        .matrix-node:hover {
+            transform: translateZ(20px) rotateX(5deg) rotateY(-5deg);
+            border-color: var(--accent);
+        }
+        .node-id {
+            position: absolute;
+            top: 10px; right: 10px;
+            font-size: 0.75rem;
+            color: var(--accent);
+        }
+        h3 { color: var(--primary); margin-bottom: 15px; }
     </style>
 </head>
 <body>
-
     <header>
-        <h1>Ω SYD OMEGA 91717 Matrix</h1>
-        <nav>
-            <a href="index.html">Core</a>
-            <a href="evolution.html">Evolution Matrix</a>
-            <a href="ledger.html">Token Ledger</a>
-        </nav>
+        <div style="font-weight: bold; color: var(--primary); letter-spacing: 2px;">Ω EVOLUTION FRAMEWORK</div>
+        <input type="text" class="omni-search-bar" placeholder="Omni-Search nodes..." id="omniSearch">
+        <div class="nav-bar">
+            <button class="btn" onclick="globalCommand('BACK')">Back</button>
+            <button class="btn" onclick="globalCommand('NEXT')">Next</button>
+        </div>
     </header>
 
-    <main class="matrix-container">
-        <section class="profile-input-block">
-            <div class="input-group">
-                <label>Date of Birth</label>
-                <input type="date" value="1995-01-01">
-            </div>
-            <div class="input-group">
-                <label>Horoscope Trajectory</label>
-                <select>
-                    <option>Aries Nexus</option>
-                    <option>Taurus Nexus</option>
-                    <option>Gemini Nexus</option>
-                    <option>Cancer Nexus</option>
-                    <option>Leo Nexus</option>
-                    <option>Virgo Nexus</option>
-                    <option>Libra Nexus</option>
-                    <option>Scorpio Nexus</option>
-                    <option>Sagittarius Nexus</option>
-                    <option>Capricorn Nexus</option>
-                    <option>Aquarius Nexus</option>
-                    <option>Pisces Nexus</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>System Integration Progression</label>
-                <input type="number" value="100" placeholder="Usage metric score...">
-            </div>
-        </section>
+    <div class="grid-container">
+        <div class="matrix-node">
+            <div class="node-id">Node v1.1.0</div>
+            <h3>Stability Paradigm</h3>
+            <p style="font-size: 0.85rem; line-height: 1.5;">Initial deployment architecture focused on runtime integrity, dynamic regulatory calculation matrices, and multi-tenant environment stability paths.</p>
+        </div>
+        <div class="matrix-node">
+            <div class="node-id">Node v1.2.0</div>
+            <h3>Omni-Fulfillment Mesh</h3>
+            <p style="font-size: 0.85rem; line-height: 1.5;">Real-time logic distribution network routing query sets and mapping programmatic civilization operations cleanly across multi-layer data matrices.</p>
+        </div>
+        <div class="matrix-node">
+            <div class="node-id">Node v1.3.0</div>
+            <h3>Resonance Realization</h3>
+            <p style="font-size: 0.85rem; line-height: 1.5;">High-order data validation and performance matching modules maintaining structural alignment across client interfaces at exactly 9.17 Hz.</p>
+        </div>
+    </div>
 
-        <section class="stage-timeline">
-            <h3>Progressive Tier Classification &amp; Appreciation Log</h3>
-            <div class="stage-row active">
-                <div><strong>Stage 1: Alpha Origin</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Verified Alignment</span></div>
-                <div class="badge-preview">Ω 1</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 2: Vanguard</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Awaiting Integration</span></div>
-                <div class="badge-preview">Ω 2</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 3: Ascendant</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
-                <div class="badge-preview">Ω 3</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 4: Cosmic Pivot</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
-                <div class="badge-preview">Ω 4</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 5: Quantum Catalyst</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
-                <div class="badge-preview">Ω 5</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 6: Sovereign Architect</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
-                <div class="badge-preview">Ω 6</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 7: Infinite Tier</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
-                <div class="badge-preview">Ω 7</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 8: Absolute Nexus</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
-                <div class="badge-preview">Ω 8</div>
-            </div>
-            <div class="stage-row">
-                <div><strong>Stage 9: Ω Omega Continuum</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Ultimate Horizon</span></div>
-                <div class="badge-preview">Ω 9</div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        Absolute Sovereignty Protocol © 2026 Ω SYD OMEGA 91717. All Rights Reserved.
-    </footer>
-
+    <script>
+        function globalCommand(action) {
+            if (action === 'BACK') window.location.href = 'index.html';
+            if (action === 'NEXT') window.location.href = 'ledger.html';
+        }
+        document.getElementById('omniSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                alert(`Searching target evolution nodes for: "${this.value}"`);
+            }
+        });
+    </script>
 </body>
 </html>

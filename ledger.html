@@ -3,147 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Token Ledger | Ω SYD OMEGA 91717</title>
+    <title>Ω SYD OMEGA 91717 — Asset Ledger</title>
     <style>
         :root {
-            --bg-color: #050505;
-            --accent-color: #d4af37;
-            --text-color: #ffffff;
-            --muted-color: #888888;
-            --border-color: #222222;
+            --primary: #00ffcc;
+            --bg: #050508;
+            --surface: #0d0d15;
+            --text: #f0f0f5;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
+            background-color: var(--bg);
+            color: var(--text);
             font-family: 'Courier New', Courier, monospace;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
+            overflow: hidden;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
         }
         header {
-            width: 100%;
-            max-width: 1200px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
-            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 1px solid var(--primary);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(13, 13, 21, 0.8);
+            z-index: 10;
         }
-        h1 {
-            color: var(--accent-color);
-            font-size: 1.8rem;
-            margin: 0;
-        }
-        nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            margin-left: 20px;
-            border: 1px solid var(--border-color);
+        .nav-bar { display: flex; gap: 15px; }
+        .btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
             padding: 8px 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        .btn:hover { background: var(--primary); color: var(--bg); }
+        .omni-search-bar {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            color: var(--text);
+            padding: 8px;
+            width: 250px;
         }
         .ledger-container {
-            width: 100%;
-            max-width: 1200px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
         }
-        .ledger-box {
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            background: #000000;
-        }
-        .allocation-table {
+        .ledger-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background: var(--surface);
+            border: 1px solid rgba(0, 255, 204, 0.2);
         }
-        .allocation-table th, .allocation-table td {
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            text-align: left;
-        }
-        .allocation-table th {
-            color: var(--accent-color);
-            background: #0a0a0a;
-        }
-        .highlight-bar {
-            background-color: #111;
-            border-left: 4px solid var(--accent-color);
+        .ledger-table th, .ledger-table td {
             padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 255, 204, 0.1);
         }
-        footer {
-            margin-top: auto;
-            width: 100%;
-            max-width: 1200px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 20px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--muted-color);
+        .ledger-table th {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .ledger-table tr:hover {
+            background: rgba(0, 255, 204, 0.05);
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            background: rgba(0, 255, 204, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
         }
     </style>
 </head>
 <body>
-
     <header>
-        <h1>Ω SYD OMEGA 91717 Financial Infrastructure</h1>
-        <nav>
-            <a href="index.html">Core</a>
-            <a href="evolution.html">Evolution Matrix</a>
-            <a href="ledger.html">Token Ledger</a>
-        </nav>
+        <div style="font-weight: bold; color: var(--primary); letter-spacing: 2px;">Ω SYSTEM ASSET LEDGER</div>
+        <input type="text" class="omni-search-bar" placeholder="Omni-Search ledger entries..." id="omniSearch">
+        <div class="nav-bar">
+            <button class="btn" onclick="globalCommand('BACK')">Back</button>
+            <button class="btn" onclick="globalCommand('NEXT')">Next</button>
+        </div>
     </header>
 
-    <main class="ledger-container">
-        <section class="ledger-box">
-            <h3>Asset Vector Split</h3>
-            <div class="highlight-bar">
-                System Macro-Protection Protocol: Active. Founder allocation is anchored explicitly at 51% to guarantee complete asset immunization against liquidity instability.
-            </div>
-            <table class="allocation-table">
-                <thead>
-                    <tr>
-                        <th>Allocation Group</th>
-                        <th>Equity Percentage</th>
-                        <th>Operational Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Founder Control Node</td>
-                        <td style="color: var(--accent-color); font-weight: bold;">51%</td>
-                        <td>Locked / Permanent</td>
-                    </tr>
-                    <tr>
-                        <td>Public Trading &amp; Utility Pool</td>
-                        <td>49%</td>
-                        <td>Active Circulation</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+    <div class="ledger-container">
+        <table class="ledger-table">
+            <thead>
+                <tr>
+                    <th>Asset ID</th>
+                    <th>Structural Node Category</th>
+                    <th>Allocation Weight</th>
+                    <th>Sovereign Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ω-CORE-001</td>
+                    <td>Core Portal Interface Layer</td>
+                    <td>51% Absolute Master Stake</td>
+                    <td><span class="status-pill">VERIFIED SECURE</span></td>
+                </tr>
+                <tr>
+                    <td>Ω-EVOL-002</td>
+                    <td>Dynamic Regulatory Logic Node</td>
+                    <td>Contribution Class Alpha</td>
+                    <td><span class="status-pill">RESONANCE SYSTEM LOCK</span></td>
+                </tr>
+                <tr>
+                    <td>Ω-NETW-003</td>
+                    <td>Omni-Fulfillment Mesh Pipeline</td>
+                    <td>Execution Vector Global</td>
+                    <td><span class="status-pill">ACTIVE OPERATION</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-        <section class="ledger-box">
-            <h3>Ecosystem Transaction Validation</h3>
-            <p style="font-size: 0.85rem; color: var(--muted-color);">Real-time monitoring of decentralized asset streams within the native economic platform:</p>
-            <div style="font-size: 0.8rem; line-height: 1.8; color: #00ff00;">
-                [GEN_BLOCK_091717] Transaction verified: 100% platform equity verified.<br>
-                [GEN_BLOCK_091718] Stability matrix check completed: Zero loss metrics reported.<br>
-                [GEN_BLOCK_091719] Automatic regulatory compliance synchronization success.
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        Absolute Sovereignty Protocol © 2026 Ω SYD OMEGA 91717. All Rights Reserved.
-    </footer>
-
+    <script>
+        function globalCommand(action) {
+            if (action === 'BACK') window.location.href = 'evolution.html';
+            if (action === 'NEXT') window.location.href = 'index.html';
+        }
+        document.getElementById('omniSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                alert(`Querying ledger allocation registries for: "${this.value}"`);
+            }
+        });
+    </script>
 </body>
 </html>

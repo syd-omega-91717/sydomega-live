@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolution Matrix | Ω SYD OMEGA 91717</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --accent-color: #d4af37;
+            --text-color: #ffffff;
+            --muted-color: #888888;
+            --border-color: #222222;
+        }
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            max-width: 1200px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin-left: 20px;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+        }
+        .matrix-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .profile-input-block {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            background: #000000;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        .input-group input, .input-group select {
+            background: #111;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 10px;
+            font-family: inherit;
+        }
+        .stage-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .stage-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            background: #0a0a0a;
+        }
+        .stage-row.active {
+            border-color: var(--accent-color);
+            background: #111105;
+        }
+        .badge-preview {
+            width: 30px;
+            height: 30px;
+            border: 1px dashed var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        footer {
+            margin-top: auto;
+            width: 100%;
+            max-width: 1200px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--muted-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Ω SYD OMEGA 91717 Matrix</h1>
+        <nav>
+            <a href="index.html">Core</a>
+            <a href="evolution.html">Evolution Matrix</a>
+            <a href="ledger.html">Token Ledger</a>
+        </nav>
+    </header>
+
+    <main class="matrix-container">
+        <section class="profile-input-block">
+            <div class="input-group">
+                <label>Date of Birth</label>
+                <input type="date" value="1995-01-01">
+            </div>
+            <div class="input-group">
+                <label>Horoscope Trajectory</label>
+                <select>
+                    <option>Aries Nexus</option>
+                    <option>Taurus Nexus</option>
+                    <option>Gemini Nexus</option>
+                    <option>Cancer Nexus</option>
+                    <option>Leo Nexus</option>
+                    <option>Virgo Nexus</option>
+                    <option>Libra Nexus</option>
+                    <option>Scorpio Nexus</option>
+                    <option>Sagittarius Nexus</option>
+                    <option>Capricorn Nexus</option>
+                    <option>Aquarius Nexus</option>
+                    <option>Pisces Nexus</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>System Integration Progression</label>
+                <input type="number" value="100" placeholder="Usage metric score...">
+            </div>
+        </section>
+
+        <section class="stage-timeline">
+            <h3>Progressive Tier Classification &amp; Appreciation Log</h3>
+            <div class="stage-row active">
+                <div><strong>Stage 1: Alpha Origin</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Verified Alignment</span></div>
+                <div class="badge-preview">Ω 1</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 2: Vanguard</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Awaiting Integration</span></div>
+                <div class="badge-preview">Ω 2</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 3: Ascendant</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
+                <div class="badge-preview">Ω 3</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 4: Cosmic Pivot</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
+                <div class="badge-preview">Ω 4</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 5: Quantum Catalyst</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
+                <div class="badge-preview">Ω 5</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 6: Sovereign Architect</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
+                <div class="badge-preview">Ω 6</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 7: Infinite Tier</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
+                <div class="badge-preview">Ω 7</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 8: Absolute Nexus</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Locked</span></div>
+                <div class="badge-preview">Ω 8</div>
+            </div>
+            <div class="stage-row">
+                <div><strong>Stage 9: Ω Omega Continuum</strong> <span style="color: var(--muted-color); font-size:0.8rem;">- Ultimate Horizon</span></div>
+                <div class="badge-preview">Ω 9</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Absolute Sovereignty Protocol © 2026 Ω SYD OMEGA 91717. All Rights Reserved.
+    </footer>
+
+</body>
+</html>

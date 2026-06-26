@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>?? SYD OMEGA 91717  --  Marketing</title>
+<title>&#937; SYD OMEGA 91717  --  Marketing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -97,10 +97,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">??</div>
+  <div class="g">&#937;</div>
   <h2 id="gate-h">Marketing</h2>
   <p id="gate-p">Sign in to reserve placement across the Order.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
+  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
 </div>
 
 <div class="shell" id="app">
@@ -109,9 +109,9 @@
     <div class="topbar">
       <div class="t">MARKETING<small>PUBLICITY &amp; PLACEMENT</small></div>
     </div>
-    <p class="intro">Reserve placement across the Order's surfaces  --  by the <b>hour, day, week, month, or year</b>. Every submission is <b>reviewed and approved before it can publish</b>. Rates are quoted in ??; settlement and live display activate under the legal-cleared phase.</p>
+    <p class="intro">Reserve placement across the Order's surfaces  --  by the <b>hour, day, week, month, or year</b>. Every submission is <b>reviewed and approved before it can publish</b>. Rates are quoted in &#937;; settlement and live display activate under the legal-cleared phase.</p>
 
-    <div class="sechead">THE RATE CARD  .  ?? PER PLACEMENT</div>
+    <div class="sechead">THE RATE CARD  .  &#937; PER PLACEMENT</div>
     <div class="wrap"><table class="rate"><thead><tr><th>Zone</th><th>Hour</th><th>Day</th><th>Week</th><th>Month</th><th>Year</th></tr></thead><tbody id="rate-body"></tbody></table></div>
 
     <div class="sechead">SUBMIT A PLACEMENT</div>
@@ -123,7 +123,7 @@
       <div class="fld"><label for="m-title">CAMPAIGN TITLE</label><input id="m-title" maxlength="120" placeholder="Name your campaign" /></div>
       <div class="fld"><label for="m-msg">MESSAGE / CREATIVE BRIEF</label><textarea id="m-msg" maxlength="1000" placeholder="What should this placement say or show?"></textarea></div>
       <div class="fld"><label for="m-file">ATTACH CREATIVE / FILE / DEMO (optional  .  max 5 GB)</label><input type="file" id="m-file" style="padding:10px" /></div>
-      <div class="quote"><span class="ql">QUOTED RATE</span><span class="qv" id="m-price">0 <span>??</span></span></div>
+      <div class="quote"><span class="ql">QUOTED RATE</span><span class="qv" id="m-price">0 <span>&#937;</span></span></div>
       <button class="btn" id="m-go">SUBMIT FOR APPROVAL</button>
       <div class="msg" id="m-msg-out"></div>
       <div class="gate-note">Submissions enter review and publish only on approval. Payment and live rendering are <b>PHASE II  --  gated on legal review</b>. No charge is made.</div>
@@ -149,12 +149,12 @@
 
   function buildRateCard(){
     var b=document.getElementById('rate-body');
-    ZONES.forEach(function(z){ var tr=document.createElement('tr'); var cells='<td class="z">'+z[0]+'</td>'; DURATIONS.forEach(function(d){ cells+='<td>'+fmt(d[1]*z[1])+' ??</td>'; }); tr.innerHTML=cells; b.appendChild(tr); });
+    ZONES.forEach(function(z){ var tr=document.createElement('tr'); var cells='<td class="z">'+z[0]+'</td>'; DURATIONS.forEach(function(d){ cells+='<td>'+fmt(d[1]*z[1])+' &#937;</td>'; }); tr.innerHTML=cells; b.appendChild(tr); });
     var zs=document.getElementById('m-zone'); ZONES.forEach(function(z,i){ var o=document.createElement('option'); o.value=i; o.textContent=z[0]; zs.appendChild(o); });
     var ds=document.getElementById('m-dur'); DURATIONS.forEach(function(d,i){ var o=document.createElement('option'); o.value=i; o.textContent=d[0]; ds.appendChild(o); });
   }
   function price(){ var z=ZONES[+document.getElementById('m-zone').value], d=DURATIONS[+document.getElementById('m-dur').value]; return Math.round(d[1]*z[1]); }
-  function refreshQuote(){ document.getElementById('m-price').innerHTML=fmt(price())+' <span>??</span>'; }
+  function refreshQuote(){ document.getElementById('m-price').innerHTML=fmt(price())+' <span>&#937;</span>'; }
 
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
 
@@ -168,7 +168,7 @@
         var dt=q.created_at?new Date(q.created_at).toLocaleDateString():'';
         var stt=(q.status||'submitted').toLowerCase();
         var d=document.createElement('div'); d.className='camp';
-        d.innerHTML='<div class="top"><span>'+esc(q.title||'Untitled')+'</span><span class="badge '+stt+'">'+stt.toUpperCase()+'</span></div><div class="bd"></div><div class="dt">'+esc(q.zone)+'  .  '+esc(q.duration)+'  .  '+fmt(q.price_omega||0)+' ??  .  '+dt+'</div>';
+        d.innerHTML='<div class="top"><span>'+esc(q.title||'Untitled')+'</span><span class="badge '+stt+'">'+stt.toUpperCase()+'</span></div><div class="bd"></div><div class="dt">'+esc(q.zone)+'  .  '+esc(q.duration)+'  .  '+fmt(q.price_omega||0)+' &#937;  .  '+dt+'</div>';
         d.querySelector('.bd').textContent=q.message||'';
         box.appendChild(d);
       });
@@ -184,7 +184,7 @@
     r.data.forEach(function(q){
       var dt=q.created_at?new Date(q.created_at).toLocaleString():'';
       var d=document.createElement('div'); d.className='qitem';
-      d.innerHTML='<div class="qt"><span>'+esc(q.title||'Untitled')+'</span><span>'+fmt(q.price_omega||0)+' ??</span></div><div class="qm"></div><div class="qmeta">'+esc(q.zone)+'  .  '+esc(q.duration)+'  .  MEMBER '+String(q.user_id).slice(0,8)+'  .  '+dt+'</div><div class="qa"><button class="ap">APPROVE</button><button class="rj">REJECT</button></div>';
+      d.innerHTML='<div class="qt"><span>'+esc(q.title||'Untitled')+'</span><span>'+fmt(q.price_omega||0)+' &#937;</span></div><div class="qm"></div><div class="qmeta">'+esc(q.zone)+'  .  '+esc(q.duration)+'  .  MEMBER '+String(q.user_id).slice(0,8)+'  .  '+dt+'</div><div class="qa"><button class="ap">APPROVE</button><button class="rj">REJECT</button></div>';
       d.querySelector('.qm').textContent=q.message||'';
       d.querySelector('.ap').addEventListener('click',function(){ decide(q.id,'approved'); });
       d.querySelector('.rj').addEventListener('click',function(){ decide(q.id,'rejected'); });
@@ -205,10 +205,10 @@
     var out=document.getElementById('m-msg-out'), btn=document.getElementById('m-go');
     if(title.length<2){ out.style.color='var(--crimson)'; out.textContent='Give your campaign a title.'; return; }
     if(message.length<10){ out.style.color='var(--crimson)'; out.textContent='Add a brief  --  at least 10 characters.'; return; }
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting???';
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Submitting...';
     var filePath=null, fEl=document.getElementById('m-file');
     if(fEl && fEl.files && fEl.files[0]){
-      out.textContent='Uploading file??? (large files take time)';
+      out.textContent='Uploading file... (large files take time)';
       var up=await window.OmegaStorage.upload('uploads', fEl.files[0]);
       if(up.error){ btn.disabled=false; out.style.color='var(--crimson)'; out.textContent='Upload failed: '+up.error; return; }
       filePath=up.path;

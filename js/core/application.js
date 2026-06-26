@@ -1,13 +1,29 @@
-window.Omega = window.Omega || {};
+/**
+ * ==========================================================
+ * Ω SYD OMEGA 91717
+ * File: js/core/application.js
+ * Version: RC3.1.009
+ * ==========================================================
+ */
 
-Omega.Application = {
+(function (window) {
 
-    async start(moduleName) {
+    'use strict';
 
-        await Omega.Kernel.initialize(moduleName);
+    window.Omega = window.Omega || {};
 
-        Omega.Logger.success(moduleName + " loaded");
+    class Application {
+
+        async start(moduleName) {
+
+            await Omega.Kernel.boot(moduleName);
+
+            Omega.Logger.success("Application Ready");
+
+        }
 
     }
 
-};
+    Omega.Application = new Application();
+
+})(window);

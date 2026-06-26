@@ -89,6 +89,9 @@
 /* Audio loader */
 (function(){if(!document.querySelector('script[data-omega-audio]')){var s=document.createElement('script');s.src='/audio.js';s.setAttribute('data-omega-audio','1');if(document.body)document.body.appendChild(s);}})();
 
+/* Cinematic FX engine loader */
+(function(){if(!document.querySelector('script[data-omega-fx]')){var s=document.createElement('script');s.src='/omega-fx.js';s.setAttribute('data-omega-fx','1');(document.body||document.documentElement).appendChild(s);}})();
+
 /* ACCESS GUARD + TRIAL ENGINE */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');

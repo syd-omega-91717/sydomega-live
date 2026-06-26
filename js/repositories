@@ -1,9 +1,1 @@
-/js/repositories/
 
-user.repository.js
-academy.repository.js
-profile.repository.js
-notification.repository.js
-publication.repository.js
-consultancy.repository.js
-search.repository.js

@@ -1,35 +1,19 @@
 import { Router } from "express";
 
+import * as Controller from "../controllers/auth.controller";
+
 const router = Router();
 
-router.post("/login", async (_, res) => {
+router.post("/register", Controller.register);
 
-    res.json({
+router.post("/login", Controller.login);
 
-        success: true
+router.post("/refresh", Controller.refresh);
 
-    });
+router.post("/reset-password", Controller.reset);
 
-});
+router.post("/logout", Controller.logout);
 
-router.post("/logout", async (_, res) => {
-
-    res.json({
-
-        success: true
-
-    });
-
-});
-
-router.get("/me", async (_, res) => {
-
-    res.json({
-
-        authenticated: true
-
-    });
-
-});
+router.get("/me", Controller.me);
 
 export default router;

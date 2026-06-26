@@ -1,35 +1,87 @@
 /**
- * ============================================================
- * Ω Logger
- * ============================================================
+ * ==========================================================
+ * Ω SYD OMEGA 91717
+ * File: js/core/logger.js
+ * Version: RC3.1.002
+ * ==========================================================
  */
 
-window.Omega = window.Omega || {};
+(function (window) {
+    'use strict';
 
-Omega.Logger = {
+    window.Omega = window.Omega || {};
 
-    info(message, data = null) {
+    class Logger {
 
-        console.info("[Ω INFO]", message, data);
+        constructor() {
+            this.enabled = true;
+            this.history = [];
+        }
 
-    },
+        write(level, message, data = null) {
 
-    warn(message, data = null) {
+            if (!this.enabled) return;
 
-        console.warn("[Ω WARNING]", message, data);
+            const log = {
+                timestamp: new Date().toISOString(),
+                level,
+                message,
+                data
+            };
 
-    },
+            this.history.push(log);
 
-    error(message, data = null) {
+            switch (level) {
 
-        console.error("[Ω ERROR]", message, data);
+                case "INFO":
+                    console.info("[Ω]", message, data);
+                    break;
 
-    },
+                case "SUCCESS":
+                    console.log("%c[Ω SUCCESS]", "color:green", message, data);
+                    break;
 
-    success(message, data = null) {
+                case "WARNING":
+                    console.warn("[Ω WARNING]", message, data);
+                    break;
 
-        console.log("[Ω SUCCESS]", message, data);
+                case "ERROR":
+                    console.error("[Ω ERROR]", message, data);
+                    break;
+
+                default:
+                    console.log("[Ω]", message, data);
+
+            }
+
+        }
+
+        info(message, data = null) {
+            this.write("INFO", message, data);
+        }
+
+        success(message, data = null) {
+            this.write("SUCCESS", message, data);
+        }
+
+        warning(message, data = null) {
+            this.write("WARNING", message, data);
+        }
+
+        error(message, data = null) {
+            this.write("ERROR", message, data);
+        }
+
+        getHistory() {
+            return [...this.history];
+        }
+
+        clear() {
+            this.history = [];
+        }
 
     }
 
-};
+    Omega.Logger = new Logger();
+
+})(window);

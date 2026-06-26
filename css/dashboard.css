@@ -1,0 +1,75 @@
+.omega-dashboard{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    min-height:100vh;
+    background:#0f172a;
+    color:#ffffff;
+}
+
+.omega-sidebar{
+    background:#111827;
+    border-right:1px solid #1f2937;
+    padding:20px;
+}
+
+.omega-sidebar-item{
+    display:block;
+    padding:14px;
+    margin-bottom:8px;
+    border-radius:8px;
+    color:#ffffff;
+    text-decoration:none;
+    transition:.25s;
+}
+
+.omega-sidebar-item:hover{
+    background:#1d4ed8;
+}
+
+.omega-main{
+    padding:30px;
+}
+
+.omega-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.omega-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.omega-card{
+    background:#1e293b;
+    border-radius:14px;
+    padding:25px;
+}
+
+.omega-card h3{
+    margin-bottom:10px;
+}
+
+.omega-value{
+    font-size:34px;
+    font-weight:bold;
+}
+
+@media(max-width:900px){
+
+.omega-dashboard{
+
+grid-template-columns:1fr;
+
+}
+
+.omega-sidebar{
+
+display:none;
+
+}
+
+}

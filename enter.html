@@ -171,7 +171,7 @@ function clock(){
 }
 clock(); setInterval(clock,1000);
 
-/* COUNTDOWN to next Genesis event (Sept 17, 2026 - the ?? Day) */
+/* COUNTDOWN to next Genesis event (Sept 17, 2026 - the &#937; Day) */
 function countdown(){
   var target=new Date('2026-09-17T09:17:17Z').getTime();
   function tick(){
@@ -229,7 +229,7 @@ countdown();
   frame();
 })();
 
-/* OMEGA CANVAS: 3D-style gold ?? with depth rings */
+/* OMEGA CANVAS: 3D-style gold &#937; with depth rings */
 (function(){
   var cv=document.getElementById('omega-canvas');
   var ctx=cv.getContext('2d');
@@ -249,7 +249,7 @@ countdown();
     var sg=ctx.createRadialGradient(CX,CY+30,0,CX,CY,120);
     sg.addColorStop(0,'rgba(201,168,76,0.2)'); sg.addColorStop(.6,'rgba(201,168,76,0.04)'); sg.addColorStop(1,'transparent');
     ctx.fillStyle=sg; ctx.fillRect(0,0,W*2,H*2);
-    /* Main ?? */
+    /* Main &#937; */
     var pulse=.85+.15*Math.sin(t*1.8);
     ctx.fillStyle='rgba(201,168,76,'+pulse+')';
     ctx.shadowColor='rgba(201,168,76,0.8)'; ctx.shadowBlur=40+20*Math.sin(t*1.2);

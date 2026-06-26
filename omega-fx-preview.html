@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&#937; SYD OMEGA 91717  --  Cinematic Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#020206; --void2:#0A0A0F; --gold:#C9A84C; --gold-soft:#E2C86D;
+    --cyan:#00E5FF; --crim:#8B0000; --soul:#9B6BF0;
+    --ink:#E9E6DC; --muted:#85837b;
+    --glass:rgba(13,13,24,.55); --line:rgba(201,168,76,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--void);color:var(--ink);font-family:"Rajdhani",sans-serif}
+  body{min-height:100vh;overflow-x:hidden}
+  .mono{font-family:"Courier Prime",monospace}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  header.hero{position:relative;min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 22px 60px}
+  .eyebrow{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-bottom:26px}
+  .omega-mark{font-family:"Cinzel Decorative",serif;font-weight:900;font-size:clamp(64px,15vw,150px);line-height:.9;color:var(--gold);text-shadow:0 0 50px rgba(201,168,76,.35);letter-spacing:2px}
+  h1.title{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:clamp(22px,4.6vw,42px);letter-spacing:6px;margin:14px 0 0;color:var(--ink)}
+  .sub{max-width:560px;margin:22px auto 0;font-size:clamp(14px,2vw,17px);font-weight:300;line-height:1.85;color:rgba(233,230,220,.72)}
+  .scroll-cue{margin-top:54px;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:4px;color:var(--muted)}
+  .scroll-cue span{display:block;margin-top:8px;color:var(--gold);animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+  section.pad{padding:64px 0}
+  .sechead{font-family:"Cinzel Decorative",serif;font-size:clamp(16px,3vw,24px);letter-spacing:4px;color:var(--gold);margin:0 0 6px}
+  .secsub{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin:0 0 30px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  .card{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:24px 22px;border-radius:2px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent)}
+  .card .k{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+  .card .v{font-family:"Cinzel Decorative",serif;font-size:30px;color:var(--gold);margin:12px 0 8px;font-weight:700}
+  .card .d{font-size:14px;font-weight:300;line-height:1.7;color:rgba(233,230,220,.62)}
+  .card .glyph{position:absolute;right:14px;top:12px;font-family:"Cinzel Decorative",serif;font-size:26px;color:rgba(201,168,76,.18)}
+
+  .kpi{background:var(--glass);border:1px solid var(--line);padding:18px;text-align:center;backdrop-filter:blur(8px)}
+  .kpi .n{font-family:"Cinzel Decorative",serif;font-size:26px;color:var(--cyan)}
+  .kpi .l{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:6px;text-transform:uppercase}
+
+  .panel{background:linear-gradient(160deg,rgba(13,13,24,.6),rgba(10,10,15,.4));border:1px solid var(--line);padding:34px 30px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .panel p{font-weight:300;line-height:1.9;color:rgba(233,230,220,.78);font-size:15px}
+  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .tag{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid var(--line);color:var(--gold-soft);text-transform:uppercase}
+
+  footer{padding:60px 22px 80px;text-align:center;border-top:1px solid rgba(201,168,76,.1);margin-top:40px}
+  footer .mono{font-size:9px;letter-spacing:3px;color:var(--muted)}
+  .omega-foot{font-family:"Cinzel Decorative",serif;color:var(--gold);font-size:22px;margin-bottom:12px}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="eyebrow">SOVEREIGN VISUAL SYSTEM &middot; LIVE</div>
+    <div class="omega-mark">&#937;</div>
+    <h1 class="title">THE LIVING MATRIX</h1>
+    <p class="sub">The backdrop is no longer a picture. It is an orrery in motion &mdash; rings that rotate at their own speeds and tilts, twelve sign-nodes that orbit, lean toward your cursor, and fire energy between one another. Move your pointer. Watch it answer.</p>
+    <div class="scroll-cue">SCROLL TO SEE THE INTERFACE RESPOND<span>&darr;</span></div>
+  </header>
+
+  <main class="wrap">
+    <section class="pad">
+      <h2 class="sechead">THE CINEMATIC LAYER</h2>
+      <p class="secsub">five orchestrated systems, one canvas</p>
+      <div class="grid">
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 01</div><div class="v">ORRERY</div><div class="d">Concentric rings rotate at independent speeds and tilts, precessing for a true multi-dimensional read.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 02</div><div class="v">NODES</div><div class="d">Twelve sign-nodes ride the rings, flaring as they pass beneath your cursor.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 03</div><div class="v">ARCS</div><div class="d">When nodes draw close they trade light &mdash; energy arcs travel between them, alive and self-interacting.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 04</div><div class="v">STARFIELD</div><div class="d">Three parallax depth layers drift and twinkle, shifting against your motion.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 05</div><div class="v">NEBULA</div><div class="d">Gold, cyan, and crimson light fields breathe across the void on slow orbital paths.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">Core</div><div class="v">SIGIL</div><div class="d">The central Omega pulses and parallax-shifts, the still point the whole system turns around.</div></div>
+      </div>
+    </section>
+
+    <section class="pad">
+      <h2 class="sechead">THE INTERFACE IS ALIVE</h2>
+      <p class="secsub">these panels rose as you scrolled &middot; tilt the cards</p>
+      <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+        <div class="kpi"><div class="n">104,976</div><div class="l">Matrix Nodes</div></div>
+        <div class="kpi"><div class="n">15.588</div><div class="l">Apex Authority</div></div>
+        <div class="kpi"><div class="n">12</div><div class="l">Olympian Tracks</div></div>
+        <div class="kpi"><div class="n">9</div><div class="l">Elements</div></div>
+        <div class="kpi"><div class="n">9.000</div><div class="l">Sovereign Axis</div></div>
+        <div class="kpi"><div class="n">&#937;</div><div class="l">Sovereign Mark</div></div>
+      </div>
+    </section>
+
+    <section class="pad">
+      <h2 class="sechead">ONE ENGINE, EVERY SURFACE</h2>
+      <p class="secsub">web &middot; mobile &middot; platform</p>
+      <div class="panel">
+        <p>The engine loads once, globally, through the shared backdrop script &mdash; so every page inherits the same living atmosphere without per-page work. It scales its particle count to the viewport, reads device tilt on mobile for parallax, pauses when the tab is hidden to spare the battery, and falls back to a calm static frame for anyone who prefers reduced motion. Nothing here breaks the canon: void black, Omega gold, electric cyan, deep crimson, drawn in pure ASCII with the Omega as its proper sigil.</p>
+        <div class="tagrow">
+          <span class="tag">Rotative</span>
+          <span class="tag">Multi-dimensional</span>
+          <span class="tag">Cursor-reactive</span>
+          <span class="tag">Self-interacting</span>
+          <span class="tag">Reduced-motion safe</span>
+          <span class="tag">Battery-aware</span>
+          <span class="tag">Canon-locked</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="omega-foot">&#937;</div>
+    <div class="mono">SYD OMEGA 91717 &middot; CINEMATIC ENGINE &middot; OMEGA-FX</div>
+  </footer>
+
+  <script>
+/* ============================================================
+   omega-fx.js     SYD OMEGA 91717
+   Cinematic visual engine -- a living, multi-dimensional,
+   self-interacting backdrop + UI motion layer.
+
+   Layers (back to front):
+     1. Nebula      drifting gold / cyan / crimson light fields
+     2. Starfield   three parallax depth layers, cursor-reactive
+     3. Orrery      concentric rotating rings (the signature),
+                    12 sign-nodes that orbit, lean to the cursor,
+                    and fire energy arcs between one another
+     4. Omega core  glowing central sigil that breathes
+     5. UI motion   scroll-reveal + 3D card tilt + heading sheen
+
+   Pure ASCII. Omega rendered as \u03A9 (canvas) / &#937; (DOM).
+   Respects prefers-reduced-motion and pauses when tab is hidden.
+   Loaded once, globally, via bg.js.
+   ============================================================ */
+(function(){
+  if(window.__omegaFx)return; window.__omegaFx=1;
+
+  /* ---- canon palette ---- */
+  var GOLD='201,168,76', CYAN='0,229,255', CRIM='139,0,0', SOUL='155,107,240';
+  var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+
+  /* ---- retire the legacy flat aurora so we do not double-paint ---- */
+  function retireLegacy(){ var o=document.getElementById('omega-bg'); if(o){o.remove();} }
+  retireLegacy(); setTimeout(retireLegacy,400); setTimeout(retireLegacy,1200);
+
+  /* ============================================================
+     CANVAS
+     ============================================================ */
+  var cv=document.createElement('canvas');
+  cv.id='omega-fx';
+  cv.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block';
+  var ctx=cv.getContext('2d');
+  var W=0,H=0,CX=0,CY=0,t=0,raf=null,hidden=false;
+
+  /* pointer (lerped for smooth parallax) */
+  var mx=0.5,my=0.42,tmx=0.5,tmy=0.42;
+
+  var stars=[], nodes=[], arcs=[], RINGS=[];
+
+  function resize(){
+    W=window.innerWidth; H=window.innerHeight;
+    CX=W*0.5; CY=H*(W<760?0.34:0.42);
+    cv.width=Math.floor(W*DPR); cv.height=Math.floor(H*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+
+  /* ---- starfield: 3 depth layers ---- */
+  function buildStars(){
+    var area=W*H, n=Math.max(60,Math.min(150,Math.floor(area/14000)));
+    stars=[];
+    for(var i=0;i<n;i++){
+      var layer=i%3;                       /* 0 far .. 2 near */
+      var depth=0.3+layer*0.34;
+      stars.push({
+        x:Math.random()*W, y:Math.random()*H,
+        z:depth,
+        r:(0.4+Math.random()*1.3)*depth,
+        ph:Math.random()*6.283,
+        sp:0.4+Math.random()*1.1,
+        gold:Math.random()<0.7,
+        dx:(Math.random()-0.5)*0.05*depth,
+        dy:(Math.random()-0.5)*0.05*depth
+      });
+    }
+  }
+
+  /* ---- orrery: rings + 12 orbiting sign-nodes ---- */
+  function buildOrrery(){
+    var base=Math.min(W,H)*(W<760?0.30:0.27);
+    RINGS=[
+      {r:base*0.55, flat:0.34, tilt:0.0,  spin: 0.060, col:GOLD,  w:1.1, a:0.16},
+      {r:base*0.82, flat:0.30, tilt:1.1,  spin:-0.044, col:CYAN,  w:1.0, a:0.13},
+      {r:base*1.12, flat:0.40, tilt:2.3,  spin: 0.032, col:GOLD,  w:0.9, a:0.10},
+      {r:base*1.45, flat:0.26, tilt:0.6,  spin:-0.022, col:SOUL,  w:0.8, a:0.08}
+    ];
+    nodes=[];
+    var perRing=3;                          /* 4 rings x 3 = 12 signs */
+    for(var ri=0;ri<RINGS.length;ri++){
+      for(var k=0;k<perRing;k++){
+        nodes.push({
+          ring:ri,
+          ang:(k/perRing)*Math.PI*2 + ri*0.5,
+          spd:RINGS[ri].spin*(0.9+Math.random()*0.3),
+          col:(k%2?CYAN:GOLD),
+          pr:1.6+Math.random()*1.4,
+          flare:0,
+          x:0,y:0,scale:1
+        });
+      }
+    }
+    arcs=[];
+  }
+
+  function buildAll(){ buildStars(); buildOrrery(); }
+
+  /* ============================================================
+     DRAW
+     ============================================================ */
+  function nebula(){
+    var blobs=[
+      {cx:CX+Math.cos(t*0.21)*W*0.22, cy:CY+Math.sin(t*0.17)*H*0.16, r:Math.max(W,H)*0.55, c:GOLD, a:0.075},
+      {cx:CX+Math.cos(-t*0.16+2.1)*W*0.26, cy:CY+Math.sin(-t*0.19+1.3)*H*0.20, r:Math.max(W,H)*0.50, c:CYAN, a:0.050},
+      {cx:W*0.82+Math.cos(t*0.13)*W*0.06, cy:H*0.82, r:Math.max(W,H)*0.34, c:CRIM, a:0.050}
+    ];
+    for(var i=0;i<blobs.length;i++){
+      var b=blobs[i], g=ctx.createRadialGradient(b.cx,b.cy,8,b.cx,b.cy,b.r);
+      g.addColorStop(0,'rgba('+b.c+','+b.a+')');
+      g.addColorStop(0.5,'rgba('+b.c+','+(b.a*0.28).toFixed(3)+')');
+      g.addColorStop(1,'rgba(2,2,6,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    }
+  }
+
+  function starfield(){
+    var px=(mx-0.5), py=(my-0.42);
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i];
+      if(!REDUCE){ s.x+=s.dx; s.y+=s.dy;
+        if(s.x<-8)s.x=W+8; if(s.x>W+8)s.x=-8; if(s.y<-8)s.y=H+8; if(s.y>H+8)s.y=-8; }
+      var ox=px*40*s.z, oy=py*40*s.z;       /* parallax by depth */
+      var tw=REDUCE?0.85:(0.5+0.5*Math.sin(t*1.8*s.sp+s.ph));
+      var a=(0.18+0.5*s.z)*tw;
+      ctx.beginPath();
+      ctx.fillStyle='rgba('+(s.gold?GOLD:CYAN)+','+a.toFixed(3)+')';
+      ctx.shadowColor='rgba('+(s.gold?GOLD:CYAN)+',0.5)';
+      ctx.shadowBlur=6*s.z;
+      ctx.arc(s.x-ox,s.y-oy,s.r,0,6.283); ctx.fill();
+    }
+    ctx.shadowBlur=0;
+  }
+
+  /* project a point on ring ri at angle a -> screen coords */
+  function project(ri,a,gx,gy,gs){
+    var R=RINGS[ri], rot=t*R.spin + R.tilt;
+    var ex=Math.cos(a)*R.r*gs, ey=Math.sin(a)*R.r*R.flat*gs;
+    /* rotate the ellipse by rot (gives the precessing, 3D wobble) */
+    var x=ex*Math.cos(rot)-ey*Math.sin(rot);
+    var y=ex*Math.sin(rot)+ey*Math.cos(rot);
+    return {x:CX+gx+x, y:CY+gy+y, depth:(ey/(R.r*R.flat*gs)+1)/2};
+  }
+
+  function orrery(){
+    var breathe=REDUCE?1:(1+Math.sin(t*0.9)*0.02);
+    var gx=(mx-0.5)*60, gy=(my-0.42)*60;     /* cursor parallax of whole sigil */
+    var i,j;
+
+    /* rings */
+    for(i=0;i<RINGS.length;i++){
+      var R=RINGS[i], rot=t*R.spin+R.tilt, steps=80;
+      ctx.beginPath();
+      for(j=0;j<=steps;j++){
+        var a=(j/steps)*6.283;
+        var ex=Math.cos(a)*R.r*breathe, ey=Math.sin(a)*R.r*R.flat*breathe;
+        var x=CX+gx+ex*Math.cos(rot)-ey*Math.sin(rot);
+        var y=CY+gy+ex*Math.sin(rot)+ey*Math.cos(rot);
+        if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle='rgba('+R.col+','+R.a+')';
+      ctx.lineWidth=R.w; ctx.stroke();
+    }
+
+    /* nodes ride the rings */
+    for(i=0;i<nodes.length;i++){
+      var nd=nodes[i];
+      if(!REDUCE)nd.ang+=nd.spd*0.016;
+      var p=project(nd.ring,nd.ang,gx,gy,breathe);
+      nd.x=p.x; nd.y=p.y; nd.scale=0.5+p.depth;     /* nearer = bigger */
+      if(nd.flare>0)nd.flare-=0.02;
+      /* lean toward cursor: nodes near the pointer flare */
+      var dxm=nd.x-mx*W, dym=nd.y-my*H, dm=Math.sqrt(dxm*dxm+dym*dym);
+      if(!REDUCE&&dm<90)nd.flare=Math.min(1,nd.flare+0.06);
+      var rr=nd.pr*nd.scale*(1+nd.flare*1.4);
+      ctx.beginPath();
+      ctx.fillStyle='rgba('+nd.col+','+(0.5+0.4*p.depth).toFixed(3)+')';
+      ctx.shadowColor='rgba('+nd.col+','+(0.6+nd.flare*0.4).toFixed(3)+')';
+      ctx.shadowBlur=(8+nd.flare*16)*nd.scale;
+      ctx.arc(nd.x,nd.y,rr,0,6.283); ctx.fill();
+    }
+    ctx.shadowBlur=0;
+
+    /* energy arcs -- nodes interacting with each other */
+    if(!REDUCE){
+      if(t-lastArc>1.1 && arcs.length<5){ spawnArc(); lastArc=t; }
+      for(i=arcs.length-1;i>=0;i--){
+        var ar=arcs[i]; ar.life+=0.02;
+        if(ar.life>=1){ arcs.splice(i,1); continue; }
+        var A=nodes[ar.a], B=nodes[ar.b];
+        var midx=(A.x+B.x)/2+ar.bow*(A.y-B.y)*0.4;
+        var midy=(A.y+B.y)/2-ar.bow*(A.x-B.x)*0.4;
+        var fade=Math.sin(ar.life*Math.PI);           /* ease in/out */
+        ctx.beginPath();
+        ctx.moveTo(A.x,A.y);
+        ctx.quadraticCurveTo(midx,midy,B.x,B.y);
+        ctx.strokeStyle='rgba('+ar.col+','+(0.28*fade).toFixed(3)+')';
+        ctx.lineWidth=1.1; ctx.shadowColor='rgba('+ar.col+','+(0.5*fade).toFixed(3)+')';
+        ctx.shadowBlur=8; ctx.stroke();
+        /* travelling spark along the arc */
+        var tt=ar.life, sx=(1-tt)*(1-tt)*A.x+2*(1-tt)*tt*midx+tt*tt*B.x;
+        var sy=(1-tt)*(1-tt)*A.y+2*(1-tt)*tt*midy+tt*tt*B.y;
+        ctx.beginPath(); ctx.fillStyle='rgba('+ar.col+','+fade.toFixed(3)+')';
+        ctx.arc(sx,sy,1.8*fade+0.6,0,6.283); ctx.fill();
+      }
+      ctx.shadowBlur=0;
+    }
+
+    /* central Omega core */
+    var halo=REDUCE?0.6:(0.55+0.25*Math.sin(t*1.4));
+    var hg=ctx.createRadialGradient(CX+gx,CY+gy,2,CX+gx,CY+gy,46*breathe);
+    hg.addColorStop(0,'rgba('+GOLD+','+(0.22*halo).toFixed(3)+')');
+    hg.addColorStop(1,'rgba('+GOLD+',0)');
+    ctx.fillStyle=hg; ctx.beginPath(); ctx.arc(CX+gx,CY+gy,46*breathe,0,6.283); ctx.fill();
+    ctx.save();
+    ctx.font='700 '+Math.round(30*breathe)+'px "Cinzel Decorative", Georgia, serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba('+GOLD+',0.9)'; ctx.shadowBlur=18*halo;
+    ctx.fillStyle='rgba('+GOLD+','+(0.7+0.3*halo).toFixed(3)+')';
+    ctx.fillText('\u03A9',CX+gx,CY+gy+1);
+    ctx.restore(); ctx.shadowBlur=0;
+  }
+
+  var lastArc=0;
+  function spawnArc(){
+    /* pick two distinct nodes that are reasonably close on screen */
+    var best=null,bd=1e9,i,j;
+    for(i=0;i<nodes.length;i++)for(j=i+1;j<nodes.length;j++){
+      var dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y, d=dx*dx+dy*dy;
+      if(d<bd && Math.random()<0.5){ bd=d; best=[i,j]; }
+    }
+    if(!best)return;
+    nodes[best[0]].flare=1; nodes[best[1]].flare=1;
+    arcs.push({a:best[0],b:best[1],life:0,bow:(Math.random()<0.5?1:-1),
+               col:(Math.random()<0.5?GOLD:CYAN)});
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    /* smooth the pointer */
+    mx+=(tmx-mx)*0.05; my+=(tmy-my)*0.05;
+    nebula(); starfield(); orrery();
+  }
+
+  function loop(){ if(!hidden){ t+=0.016; frame(); } raf=requestAnimationFrame(loop); }
+
+  function attach(){
+    if(!document.body){ requestAnimationFrame(attach); return; }
+    document.body.appendChild(cv);
+    resize(); buildAll();
+    if(REDUCE){ frame(); } else { if(raf)cancelAnimationFrame(raf); loop(); }
+  }
+
+  window.addEventListener('resize',function(){ resize(); buildAll(); if(REDUCE)frame(); });
+  window.addEventListener('pointermove',function(e){ tmx=e.clientX/W; tmy=e.clientY/H; },{passive:true});
+  window.addEventListener('deviceorientation',function(e){           /* mobile parallax via tilt */
+    if(e.gamma!=null){ tmx=0.5+Math.max(-1,Math.min(1,e.gamma/45))*0.5; tmy=0.42+Math.max(-1,Math.min(1,(e.beta-45)/45))*0.3; }
+  },{passive:true});
+  document.addEventListener('visibilitychange',function(){ hidden=document.hidden; });
+  attach();
+
+  /* ============================================================
+     UI MOTION LAYER  (scroll-reveal + 3D tilt + heading sheen)
+     ============================================================ */
+  function injectCSS(){
+    if(document.getElementById('omega-fx-css'))return;
+    var s=document.createElement('style'); s.id='omega-fx-css';
+    s.textContent=[
+      '.ofx-rise{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}',
+      '.ofx-rise.ofx-in{opacity:1;transform:none}',
+      '.ofx-tilt{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease;transform-style:preserve-3d;will-change:transform}',
+      '.ofx-tilt:hover{box-shadow:0 18px 50px -20px rgba(0,0,0,.7),0 0 24px -8px rgba(201,168,76,.35)}',
+      '@supports ((-webkit-background-clip:text) or (background-clip:text)){',
+      '.ofx-sheen{background-image:linear-gradient(100deg,currentColor 38%,rgba(255,247,214,.95) 50%,currentColor 62%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:240% 100%;background-position:140% 0;animation:ofx-sweep 7s ease-in-out infinite}',
+      '@keyframes ofx-sweep{0%,72%{background-position:140% 0}100%{background-position:-40% 0}}',
+      '}',
+      '@media(prefers-reduced-motion:reduce){.ofx-rise{opacity:1;transform:none;transition:none}.ofx-sheen{animation:none}}'
+    ].join('');
+    (document.head||document.documentElement).appendChild(s);
+  }
+
+  function enhance(){
+    injectCSS();
+    if(REDUCE)return;
+
+    /* --- scroll reveal --- */
+    if('IntersectionObserver' in window){
+      var sel='.card,.gate-card,.w-card,.kpi,.stat,.tab-panel,.tier-card,[class*="-card"],section.pad';
+      var els=[].slice.call(document.querySelectorAll(sel));
+      var io=new IntersectionObserver(function(ents){
+        ents.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('ofx-in'); io.unobserve(en.target); } });
+      },{threshold:0.08,rootMargin:'0px 0px -8% 0px'});
+      els.forEach(function(el){
+        if(el.offsetParent===null)return;
+        var r=el.getBoundingClientRect();
+        if(r.top<window.innerHeight && r.bottom>0){ return; }   /* already visible: leave it */
+        el.classList.add('ofx-rise'); io.observe(el);
+      });
+      /* fail-safe: nothing stays hidden even if the observer misfires */
+      setTimeout(function(){
+        [].slice.call(document.querySelectorAll('.ofx-rise:not(.ofx-in)')).forEach(function(el){ el.classList.add('ofx-in'); });
+      },4500);
+    }
+
+    /* --- 3D tilt on card-like elements --- */
+    var tsel='.card,.gate-card,.w-card,.kpi,.tier-card,[class*="-card"]';
+    [].slice.call(document.querySelectorAll(tsel)).forEach(function(el){
+      var r=el.getBoundingClientRect();
+      if(r.width>560||r.height>560||r.width<60)return;           /* skip layout-scale blocks */
+      if(el.querySelector('canvas'))return;                       /* never tilt live canvases */
+      if(getComputedStyle(el).position==='fixed')return;
+      el.classList.add('ofx-tilt');
+      el.addEventListener('pointermove',function(e){
+        var b=el.getBoundingClientRect();
+        var dx=(e.clientX-b.left)/b.width-0.5, dy=(e.clientY-b.top)/b.height-0.5;
+        el.style.transform='perspective(800px) rotateX('+(-dy*6).toFixed(2)+'deg) rotateY('+(dx*6).toFixed(2)+'deg) translateZ(6px)';
+      });
+      el.addEventListener('pointerleave',function(){ el.style.transform=''; });
+    });
+
+    /* --- gold sheen sweep on section headings (text-only) --- */
+    [].slice.call(document.querySelectorAll('.sechead')).forEach(function(el){
+      if(el.children.length===0 && (el.textContent||'').trim().length<48){ el.classList.add('ofx-sheen'); }
+    });
+  }
+
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',enhance); }
+  else { enhance(); }
+})();
+
+</script>
+</body>
+</html>

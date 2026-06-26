@@ -1,31 +1,58 @@
-window.Omega = window.Omega || {};
+/**
+ * ==========================================================
+ * Ω SYD OMEGA 91717
+ * File: js/core/events.js
+ * Version: RC3.1.003
+ * ==========================================================
+ */
 
-Omega.Events = {
+(function (window) {
 
-    events: {},
+    'use strict';
 
-    on(event, callback) {
+    window.Omega = window.Omega || {};
 
-        if (!this.events[event]) {
+    class EventBus {
 
-            this.events[event] = [];
+        constructor() {
+            this.events = {};
+        }
+
+        on(event, callback) {
+
+            if (!this.events[event]) {
+
+                this.events[event] = [];
+
+            }
+
+            this.events[event].push(callback);
 
         }
 
-        this.events[event].push(callback);
+        off(event, callback) {
 
-    },
+            if (!this.events[event]) return;
 
-    emit(event, payload = null) {
+            this.events[event] =
+                this.events[event].filter(fn => fn !== callback);
 
-        if (!this.events[event]) return;
+        }
 
-        this.events[event].forEach(callback => {
+        emit(event, payload = {}) {
 
-            callback(payload);
+            if (!this.events[event]) return;
 
-        });
+            this.events[event].forEach(callback => {
+
+                callback(payload);
+
+            });
+
+        }
 
     }
 
-};
+    Omega.Events = new EventBus();
+
+})(window);

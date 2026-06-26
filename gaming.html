@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>?? SYD OMEGA 91717  --  The Games</title>
+<title>&#937; SYD OMEGA 91717  --  The Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -84,10 +84,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">??</div>
+  <div class="g">&#937;</div>
   <h2 id="gate-h">The Games</h2>
   <p id="gate-p">Sign in to enter the games.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
+  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
 </div>
 
 <div class="shell" id="app">
@@ -196,7 +196,7 @@
   async function watch(){
     busy=true; input=[]; document.getElementById('m-action').disabled=true;
     target=reverse?seq.slice().reverse():seq.slice();
-    setStat('WATCH???'); await sleep(500);
+    setStat('WATCH...'); await sleep(500);
     for(var i=0;i<seq.length;i++){ await flash(seq[i]); await sleep(Math.max(90,interval*0.35)); }
     busy=false; setStat(reverse?'YOUR TURN \u2014 REPEAT IN REVERSE':'YOUR TURN \u2014 REPEAT THE SEQUENCE');
   }
@@ -217,7 +217,7 @@
   }
 
   async function cleared_(){
-    busy=true; setStat('NODE CLEARED \u2014 awarding Mastery???');
+    busy=true; setStat('NODE CLEARED \u2014 awarding Mastery...');
     var already=isCleared(curG,curS);
     cleared[key(curG,curS)]=true;
     try{ await supabase.rpc('complete_task',{p_kind:'gaming',p_task:key(curG,curS),p_axis:'b',p_title:'Game '+(curG+1)+' Stage '+(curS+1)}); }catch(e){}

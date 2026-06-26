@@ -6,7 +6,9 @@ import hmac
 class SydOmegaEngine:
     def __init__(self):
         # Permanent System Parameters
-        self.system_id = "Ω SYD OMEGA 91717"
+        from config.settings import settings
+
+self.system_id = settings.SYSTEM_NAME
         self.founder_equity = 1.00  # 100% absolute ownership
         self.currency_control = 0.51  # 51% guaranteed safety margin
         self.is_offline_mode = True  # Edge isolation

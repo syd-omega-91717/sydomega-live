@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>?? SYD OMEGA 91717  --  Password Recovery</title>
+<title>&#937; SYD OMEGA 91717  --  Password Recovery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -35,7 +35,7 @@
 <body>
 <div class="wrap">
   <div class="panel">
-    <div class="g">??</div>
+    <div class="g">&#937;</div>
     <h1 id="title">PASSWORD RECOVERY</h1>
     <div class="sub">SYD OMEGA 91717</div>
 
@@ -45,7 +45,7 @@
       <input type="email" id="r-email" placeholder="you@example.com" autocomplete="email" />
       <button class="btn" id="r-send">SEND RECOVERY LINK</button>
       <div class="msg" id="r-msg"></div>
-      <a class="back" href="/account.html">??? BACK TO MEMBER ACCESS</a>
+      <a class="back" href="/account.html">&larr; BACK TO MEMBER ACCESS</a>
     </div>
 
     <div id="view-reset" class="hidden">
@@ -56,7 +56,7 @@
       <input type="password" id="r-pw2" placeholder="repeat it" autocomplete="new-password" />
       <button class="btn" id="r-update">UPDATE PASSWORD</button>
       <div class="msg" id="r-msg2"></div>
-      <a class="back" href="/account.html">??? BACK TO MEMBER ACCESS</a>
+      <a class="back" href="/account.html">&larr; BACK TO MEMBER ACCESS</a>
     </div>
   </div>
 </div>
@@ -82,7 +82,7 @@
     var email=document.getElementById('r-email').value.trim();
     var msg=document.getElementById('r-msg'), btn=document.getElementById('r-send');
     if(!email || email.indexOf('@')<1){ msg.className='msg bad'; msg.textContent='Enter a valid email.'; return; }
-    btn.disabled=true; msg.className='msg info'; msg.textContent='Sending???';
+    btn.disabled=true; msg.className='msg info'; msg.textContent='Sending...';
     var redirectTo = window.location.origin + '/reset.html';
     var r = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
     btn.disabled=false;
@@ -95,11 +95,11 @@
     var msg=document.getElementById('r-msg2'), btn=document.getElementById('r-update');
     if(pw.length<6){ msg.className='msg bad'; msg.textContent='Password must be at least 6 characters.'; return; }
     if(pw!==pw2){ msg.className='msg bad'; msg.textContent='Passwords do not match.'; return; }
-    btn.disabled=true; msg.className='msg info'; msg.textContent='Updating???';
+    btn.disabled=true; msg.className='msg info'; msg.textContent='Updating...';
     var r = await supabase.auth.updateUser({ password: pw });
     btn.disabled=false;
     if(r.error){ msg.className='msg bad'; msg.textContent=r.error.message||'Could not update. Request a fresh link.'; return; }
-    msg.className='msg ok'; msg.textContent='Password updated. Entering the Order???';
+    msg.className='msg ok'; msg.textContent='Password updated. Entering the Order...';
     setTimeout(function(){ window.location.href='/dashboard.html'; }, 1400);
   }
 

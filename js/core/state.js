@@ -1,21 +1,71 @@
-window.Omega = window.Omega || {};
+/**
+ * ==========================================================
+ * Ω SYD OMEGA 91717
+ * File: js/core/state.js
+ * Version: RC3.1.004
+ * ==========================================================
+ */
 
-Omega.State = {
+(function (window) {
 
-    currentUser: null,
+    'use strict';
 
-    profile: null,
+    window.Omega = window.Omega || {};
 
-    academy: {},
+    class StateManager {
 
-    notifications: [],
+        constructor() {
 
-    wallet: {},
+            this.state = {
 
-    search: {},
+                user: null,
 
-    theme: "omega-dark",
+                profile: null,
 
-    language: "en"
+                notifications: [],
 
-};
+                wallet: null,
+
+                academy: {},
+
+                dashboard: {},
+
+                theme: "omega-dark",
+
+                language: "en"
+
+            };
+
+        }
+
+        get(key) {
+
+            return this.state[key];
+
+        }
+
+        set(key, value) {
+
+            this.state[key] = value;
+
+            Omega.Events.emit("state.changed", {
+
+                key,
+
+                value
+
+            });
+
+        }
+
+        all() {
+
+            return this.state;
+
+        }
+
+    }
+
+    Omega.State = new StateManager();
+
+})(window);

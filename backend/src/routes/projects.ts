@@ -1,29 +1,29 @@
 import { Router } from "express";
 
+import * as ProjectController from "../controllers/project.controller";
+
+import { authenticate } from "../middleware/auth";
+
 const router = Router();
 
-router.get("/", async (_, res) => {
+router.get(
 
-    res.json({
+    "/",
 
-        success: true,
+    authenticate,
 
-        data: []
+    ProjectController.list
 
-    });
+);
 
-});
+router.post(
 
-router.post("/", async (req, res) => {
+    "/",
 
-    res.json({
+    authenticate,
 
-        success: true,
+    ProjectController.create
 
-        payload: req.body
-
-    });
-
-});
+);
 
 export default router;

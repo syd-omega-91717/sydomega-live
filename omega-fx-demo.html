@@ -1,55 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>OMEGA-FX - Live Preview</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&#937; SYD OMEGA 91717  --  Cinematic Engine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Rajdhani:wght@500;600;700&family=Courier+Prime&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
 <style>
-  *{margin:0;box-sizing:border-box}
-  body{font-family:"Rajdhani",sans-serif;color:#e8e6df;line-height:1.6}
-  .wrap{max-width:860px;margin:0 auto;padding:70px 22px 120px}
-  .eyebrow{font-family:"Courier Prime",monospace;letter-spacing:.4em;font-size:12px;color:#00E5FF;text-transform:uppercase}
-  h1{font-family:"Cinzel Decorative",serif;font-size:clamp(34px,7vw,60px);margin:12px 0 8px;line-height:1.04}
-  h2{font-family:"Cinzel Decorative",serif;font-size:22px;color:#C9A84C;margin:60px 0 18px}
-  p.sub{color:#8a8778;max-width:60ch;font-size:17px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:24px}
-  .card{padding:22px}
-  .card h3{font-family:"Cinzel Decorative",serif;font-size:16px;color:#e8e6df;margin-bottom:8px}
-  .card p{color:#8a8778;font-size:14px}
-  .mono{font-family:"Courier Prime",monospace;color:#00E5FF}
-  footer{margin-top:90px;font-family:"Courier Prime",monospace;font-size:11px;color:#8a8778;letter-spacing:.06em}
+  :root{
+    --void:#020206; --void2:#0A0A0F; --gold:#C9A84C; --gold-soft:#E2C86D;
+    --cyan:#00E5FF; --crim:#8B0000; --soul:#9B6BF0;
+    --ink:#E9E6DC; --muted:#85837b;
+    --glass:rgba(13,13,24,.55); --line:rgba(201,168,76,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--void);color:var(--ink);font-family:"Rajdhani",sans-serif}
+  body{min-height:100vh;overflow-x:hidden}
+  .mono{font-family:"Courier Prime",monospace}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  header.hero{position:relative;min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 22px 60px}
+  .eyebrow{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-bottom:26px}
+  .omega-mark{font-family:"Cinzel Decorative",serif;font-weight:900;font-size:clamp(64px,15vw,150px);line-height:.9;color:var(--gold);text-shadow:0 0 50px rgba(201,168,76,.35);letter-spacing:2px}
+  h1.title{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:clamp(22px,4.6vw,42px);letter-spacing:6px;margin:14px 0 0;color:var(--ink)}
+  .sub{max-width:560px;margin:22px auto 0;font-size:clamp(14px,2vw,17px);font-weight:300;line-height:1.85;color:rgba(233,230,220,.72)}
+  .scroll-cue{margin-top:54px;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:4px;color:var(--muted)}
+  .scroll-cue span{display:block;margin-top:8px;color:var(--gold);animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+  section.pad{padding:64px 0}
+  .sechead{font-family:"Cinzel Decorative",serif;font-size:clamp(16px,3vw,24px);letter-spacing:4px;color:var(--gold);margin:0 0 6px}
+  .secsub{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin:0 0 30px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  .card{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:24px 22px;border-radius:2px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent)}
+  .card .k{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+  .card .v{font-family:"Cinzel Decorative",serif;font-size:30px;color:var(--gold);margin:12px 0 8px;font-weight:700}
+  .card .d{font-size:14px;font-weight:300;line-height:1.7;color:rgba(233,230,220,.62)}
+  .card .glyph{position:absolute;right:14px;top:12px;font-family:"Cinzel Decorative",serif;font-size:26px;color:rgba(201,168,76,.18)}
+
+  .kpi{background:var(--glass);border:1px solid var(--line);padding:18px;text-align:center;backdrop-filter:blur(8px)}
+  .kpi .n{font-family:"Cinzel Decorative",serif;font-size:26px;color:var(--cyan)}
+  .kpi .l{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:6px;text-transform:uppercase}
+
+  .panel{background:linear-gradient(160deg,rgba(13,13,24,.6),rgba(10,10,15,.4));border:1px solid var(--line);padding:34px 30px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .panel p{font-weight:300;line-height:1.9;color:rgba(233,230,220,.78);font-size:15px}
+  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .tag{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid var(--line);color:var(--gold-soft);text-transform:uppercase}
+
+  footer{padding:60px 22px 80px;text-align:center;border-top:1px solid rgba(201,168,76,.1);margin-top:40px}
+  footer .mono{font-size:9px;letter-spacing:3px;color:var(--muted)}
+  .omega-foot{font-family:"Cinzel Decorative",serif;color:var(--gold);font-size:22px;margin-bottom:12px}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <p class="eyebrow">OMEGA-91717 // DARK SOVEREIGN FUTURISM</p>
-    <h1>The Pages, Alive</h1>
-    <p class="sub">This page ships with no animation of its own. Everything moving
-    behind and around it - the aurora, the starfield, the rotating Omega sigil,
-    the scroll reveals, the glass panels - comes from one script. Drop that script
-    into any page and it wakes up the same way.</p>
+  <header class="hero">
+    <div class="eyebrow">SOVEREIGN VISUAL SYSTEM &middot; LIVE</div>
+    <div class="omega-mark">&#937;</div>
+    <h1 class="title">THE LIVING MATRIX</h1>
+    <p class="sub">The backdrop is no longer a picture. It is an orrery in motion &mdash; rings that rotate at their own speeds and tilts, twelve sign-nodes that orbit, lean toward your cursor, and fire energy between one another. Move your pointer. Watch it answer.</p>
+    <div class="scroll-cue">SCROLL TO SEE THE INTERFACE RESPOND<span>&darr;</span></div>
+  </header>
 
-    <h2>Twelve Agents</h2>
-    <div class="grid">
-      <div class="card"><h3>Sentinel</h3><p>Security and access control across the mesh.</p></div>
-      <div class="card"><h3>Oracle</h3><p>Prediction and milestone forecasting.</p></div>
-      <div class="card"><h3>Sovereign</h3><p>The master track. <span class="mono">ARENITE</span>.</p></div>
-      <div class="card"><h3>Historian</h3><p>Archive, lineage, and heritage memory.</p></div>
-    </div>
+  <main class="wrap">
+    <section class="pad">
+      <h2 class="sechead">THE CINEMATIC LAYER</h2>
+      <p class="secsub">five orchestrated systems, one canvas</p>
+      <div class="grid">
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 01</div><div class="v">ORRERY</div><div class="d">Concentric rings rotate at independent speeds and tilts, precessing for a true multi-dimensional read.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 02</div><div class="v">NODES</div><div class="d">Twelve sign-nodes ride the rings, flaring as they pass beneath your cursor.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 03</div><div class="v">ARCS</div><div class="d">When nodes draw close they trade light &mdash; energy arcs travel between them, alive and self-interacting.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 04</div><div class="v">STARFIELD</div><div class="d">Three parallax depth layers drift and twinkle, shifting against your motion.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">System 05</div><div class="v">NEBULA</div><div class="d">Gold, cyan, and crimson light fields breathe across the void on slow orbital paths.</div></div>
+        <div class="card"><span class="glyph">&#937;</span><div class="k">Core</div><div class="v">SIGIL</div><div class="d">The central Omega pulses and parallax-shifts, the still point the whole system turns around.</div></div>
+      </div>
+    </section>
 
-    <h2>The Matrix Spine</h2>
-    <div class="grid">
-      <div class="card"><h3>Inner Cube</h3><p class="mono">9 x 9 x 9 = 729</p></div>
-      <div class="card"><h3>Bands</h3><p class="mono">Grade x Level = 144</p></div>
-      <div class="card"><h3>Apex</h3><p class="mono">authority 15.588</p></div>
-    </div>
+    <section class="pad">
+      <h2 class="sechead">THE INTERFACE IS ALIVE</h2>
+      <p class="secsub">these panels rose as you scrolled &middot; tilt the cards</p>
+      <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+        <div class="kpi"><div class="n">104,976</div><div class="l">Matrix Nodes</div></div>
+        <div class="kpi"><div class="n">15.588</div><div class="l">Apex Authority</div></div>
+        <div class="kpi"><div class="n">12</div><div class="l">Olympian Tracks</div></div>
+        <div class="kpi"><div class="n">9</div><div class="l">Elements</div></div>
+        <div class="kpi"><div class="n">9.000</div><div class="l">Sovereign Axis</div></div>
+        <div class="kpi"><div class="n">&#937;</div><div class="l">Sovereign Mark</div></div>
+      </div>
+    </section>
 
-    <footer>SAND // ATHENA // SOVEREIGN // ARENITE - one script, every page.</footer>
-  </div>
+    <section class="pad">
+      <h2 class="sechead">ONE ENGINE, EVERY SURFACE</h2>
+      <p class="secsub">web &middot; mobile &middot; platform</p>
+      <div class="panel">
+        <p>The engine loads once, globally, through the shared backdrop script &mdash; so every page inherits the same living atmosphere without per-page work. It scales its particle count to the viewport, reads device tilt on mobile for parallax, pauses when the tab is hidden to spare the battery, and falls back to a calm static frame for anyone who prefers reduced motion. Nothing here breaks the canon: void black, Omega gold, electric cyan, deep crimson, drawn in pure ASCII with the Omega as its proper sigil.</p>
+        <div class="tagrow">
+          <span class="tag">Rotative</span>
+          <span class="tag">Multi-dimensional</span>
+          <span class="tag">Cursor-reactive</span>
+          <span class="tag">Self-interacting</span>
+          <span class="tag">Reduced-motion safe</span>
+          <span class="tag">Battery-aware</span>
+          <span class="tag">Canon-locked</span>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  <script src="omega-fx.js" defer></script>
+  <footer>
+    <div class="omega-foot">&#937;</div>
+    <div class="mono">SYD OMEGA 91717 &middot; CINEMATIC ENGINE &middot; OMEGA-FX</div>
+  </footer>
+
+  <script src="omega-fx.js"></script>
 </body>
 </html>

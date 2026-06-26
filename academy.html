@@ -123,7 +123,7 @@
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
   let user=null, axisA=1, cleared={}, selD=-1;
 
-  const DISC=[['Aries','Athena'],['Taurus','Aphrodite'],['Gemini','Apollo'],['Cancer','Hermes'],['Leo','Zeus'],['Virgo','Demeter'],['Libra','Hephaestus'],['Scorpio','Ares'],['Sagittarius','Artemis'],['Capricorn','Hestia'],['Aquarius','Hera'],['Pisces','Poseidon']];
+  const DISC=[['Aries','Ares'],['Taurus','Aphrodite'],['Gemini','Hermes'],['Cancer','Artemis'],['Leo','Apollo'],['Virgo','Athena'],['Libra','Hera'],['Scorpio','Demeter'],['Sagittarius','Zeus'],['Capricorn','Hestia'],['Aquarius','Hephaestus'],['Pisces','Poseidon']];
   const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
   function key(d,l){ return 'd'+d+'l'+l; }
   function isCleared(d,l){ return !!cleared[key(d,l)]; }

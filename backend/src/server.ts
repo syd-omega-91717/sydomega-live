@@ -12,6 +12,8 @@ import aiRouter from "./routes/ai";
 import storageRouter from "./routes/storage";
 import searchRouter from "./routes/search";
 import webhookRouter from "./routes/webhooks";
+import rolesRouter from "./routes/roles";
+import permissionsRouter from "./routes/permissions";
 
 import { requestId } from "./middleware/requestId";
 import { logger } from "./middleware/logger";
@@ -52,6 +54,9 @@ app.use("/api/ai", aiRouter);
 app.use("/api/storage", storageRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/webhooks", webhookRouter);
+app.use("/api/roles", rolesRouter);
+
+app.use("/api/permissions", permissionsRouter);
 
 app.use(notFound);
 

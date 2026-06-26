@@ -1,5 +1,9 @@
 BEGIN;
 
+-- =========================================================
+-- AI WORKSPACES
+-- =========================================================
+
 CREATE TABLE IF NOT EXISTS public.ai_workspaces (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -16,6 +20,10 @@ CREATE TABLE IF NOT EXISTS public.ai_workspaces (
 
 );
 
+-- =========================================================
+-- AI WORKSPACE MEMBERS
+-- =========================================================
+
 CREATE TABLE IF NOT EXISTS public.ai_workspace_members (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -26,9 +34,15 @@ CREATE TABLE IF NOT EXISTS public.ai_workspace_members (
 
     role TEXT DEFAULT 'member',
 
+    created_at TIMESTAMPTZ DEFAULT now(),
+
     UNIQUE(workspace_id,profile_id)
 
 );
+
+-- =========================================================
+-- AI WORKSPACE DOCUMENTS
+-- =========================================================
 
 CREATE TABLE IF NOT EXISTS public.ai_workspace_documents (
 
@@ -38,8 +52,16 @@ CREATE TABLE IF NOT EXISTS public.ai_workspace_documents (
 
     document_id UUID REFERENCES public.ai_documents(id) ON DELETE CASCADE,
 
-    PRIMARY KEY(workspace_id,document_id)
+    created_at TIMESTAMPTZ DEFAULT now(),
+
+    UNIQUE(workspace_id,document_id)
 
 );
+
+CREATE INDEX IF NOT EXISTS idx_ai_workspace_documents_workspace
+ON public.ai_workspace_documents(workspace_id);
+
+CREATE INDEX IF NOT EXISTS idx_ai_workspace_documents_document
+ON public.ai_workspace_documents(document_id);
 
 COMMIT;

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>?? SYD OMEGA 91717  --  News Intelligence</title>
+<title>&#937; SYD OMEGA 91717  --  News Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -79,10 +79,10 @@
 </head>
 <body>
 <div id="gate" class="gate-card" style="display:none">
-  <div class="g">??</div>
+  <div class="g">&#937;</div>
   <h2 id="gate-h">News Intelligence</h2>
   <p id="gate-p">Sign in to read the dispatches.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS ???</a>
+  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
 </div>
 
 <div class="shell" id="app">
@@ -99,7 +99,7 @@
     <div class="sechead">THE WIRE  --  MEMBER INTEL</div>
     <div class="card">
       <div class="postrow">
-        <textarea id="w-body" maxlength="600" placeholder="Send a dispatch to the Order???"></textarea>
+        <textarea id="w-body" maxlength="600" placeholder="Send a dispatch to the Order..."></textarea>
         <button class="btn" id="w-go">SEND</button>
       </div>
       <div class="msg" id="w-msg"></div>
@@ -118,8 +118,8 @@
     {tag:'SYSTEM',date:'2026',ti:'THE ASCENSION ENGINE IS LIVE',bd:'Twelve phases, each a 729-node matrix  --  8,748 sovereign states. Your authority is computed from Knowledge, Mastery, and Contribution. Nothing is given.'},
     {tag:'VAULT',date:'2026',ti:'THE SIGIL VAULT OPENS',bd:'Every earned crest  --  genesis, sign, element, rank, and the three Ascent thresholds  --  now mints as a sovereign medallion on your record.'},
     {tag:'MESH',date:'2026',ti:'THE TWELVE AGENTS STAND READY',bd:'Sentinel through Sovereign  --  each agent bound to its sign and domain, reading your live standing and answering in its own voice.'},
-    {tag:'TREASURY',date:'2026',ti:'THE ?? LEDGER HOLDS',bd:'?? is earned, never bought. The master vault locks 51%; the burn protocol removes 1% on every transfer. The sovereign field is the members\u2019 49%.'},
-    {tag:'PHASE II',date:'2026',ti:'THE ECONOMIC LAYER AWAITS COUNSEL',bd:'The public Marketplace, fiat acquisition of ??, and asset minting remain sealed until legal review clears classification, KYC/AML, and payment terms. The Order moves only when it is safe.'}
+    {tag:'TREASURY',date:'2026',ti:'THE &#937; LEDGER HOLDS',bd:'&#937; is earned, never bought. The master vault locks 51%; the burn protocol removes 1% on every transfer. The sovereign field is the members\u2019 49%.'},
+    {tag:'PHASE II',date:'2026',ti:'THE ECONOMIC LAYER AWAITS COUNSEL',bd:'The public Marketplace, fiat acquisition of &#937;, and asset minting remain sealed until legal review clears classification, KYC/AML, and payment terms. The Order moves only when it is safe.'}
   ];
   function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -154,7 +154,7 @@
     var body=document.getElementById('w-body').value.trim();
     var out=document.getElementById('w-msg'), btn=document.getElementById('w-go');
     if(body.length<3){ out.style.color='var(--crimson)'; out.textContent='Write your dispatch.'; return; }
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Sending???';
+    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Sending...';
     var r=await supabase.from('dispatches').insert({user_id:user.id,sign:mySign,body:body});
     btn.disabled=false;
     if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not send ('+(r.error.code||r.error.message||'')+').'; return; }

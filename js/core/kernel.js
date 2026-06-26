@@ -1,17 +1,37 @@
-window.Omega = window.Omega || {};
+/**
+ * ==========================================================
+ * Ω SYD OMEGA 91717
+ * File: js/core/kernel.js
+ * Version: RC3.1.008
+ * ==========================================================
+ */
 
-Omega.Kernel = {
+(function (window) {
 
-    async initialize(moduleName) {
+    'use strict';
 
-        Omega.Logger.info("Booting Ω Kernel");
+    window.Omega = window.Omega || {};
 
-        Omega.Logger.info("Loading Module", moduleName);
+    class Kernel {
 
-        Omega.Events.emit("kernel.initialized");
+        async boot(moduleName) {
 
-        return true;
+            Omega.Logger.info("Booting Platform");
+
+            Omega.State.set("module", moduleName);
+
+            Omega.Events.emit("kernel.boot", {
+
+                module: moduleName
+
+            });
+
+            Omega.Logger.success(moduleName + " initialized");
+
+        }
 
     }
 
-};
+    Omega.Kernel = new Kernel();
+
+})(window);

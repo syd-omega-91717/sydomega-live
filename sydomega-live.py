@@ -68,7 +68,13 @@ self.system_id = settings.SYSTEM_NAME
         stories, and highlights to boost presence across all registered accounts.
         """
         payload_str = json.dumps(operational_payload)
-        signature = hmac.new(b"OMEGA_KEY", payload_str.encode(), hashlib.sha256).hexdigest()
+        signature = import os
+
+SECRET = os.getenv("OMEGA_SECRET_KEY")
+or
+from config.settings import settings
+
+SECRET = settings.SECRET_KEY
         
         campaign = {
             "campaign_id": f"CAMPAIGN_{int(time.time())}",

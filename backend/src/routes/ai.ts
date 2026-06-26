@@ -1,21 +1,39 @@
-import { Router } from "express";
+import {Router} from "express";
 
-const router = Router();
+import {authenticate} from "../middleware/auth";
 
-router.post("/chat", async (req, res) => {
+import * as AI from "../controllers/ai.controller";
 
-    res.json({
+const router=Router();
 
-        success: true,
+router.get(
 
-        provider: req.body.provider,
+    "/conversations",
 
-        model: req.body.model,
+    authenticate,
 
-        message: "AI Gateway Ready"
+    AI.conversations
 
-    });
+);
 
-});
+router.post(
+
+    "/conversations",
+
+    authenticate,
+
+    AI.conversation
+
+);
+
+router.post(
+
+    "/messages",
+
+    authenticate,
+
+    AI.message
+
+);
 
 export default router;

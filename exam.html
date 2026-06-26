@@ -190,7 +190,7 @@ function endExam(){
   clearInterval(timerInterval);
   const total=session.questions.length;
   const pct=Math.round((session.score/total)*100);
-  const passed=pct>=72; // 72% to pass (9.17 x 8 ??? 72%)
+  const passed=pct>=72; // 72% to pass (9.17 x 8 ~= 72%)
   document.getElementById('es-fill').style.width='100%';
   document.getElementById('q-num').style.display='none';
   document.getElementById('q-text').style.display='none';

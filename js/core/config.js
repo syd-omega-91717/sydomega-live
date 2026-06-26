@@ -1,88 +1,123 @@
 /**
- * ============================================================
+ * ==========================================================
  * Ω SYD OMEGA 91717
- * Core Configuration
- * ============================================================
+ * Platform Core Configuration
+ * ==========================================================
+ * File: js/core/config.js
+ * Version: RC3.1.001
+ * Status: Production
+ * Author: Ω Development Team
+ * ==========================================================
  */
 
-window.Omega = window.Omega || {};
+(function (window) {
+    'use strict';
 
-Omega.Config = Object.freeze({
+    window.Omega = window.Omega || {};
 
-    APP_NAME: "Ω SYD OMEGA 91717",
+    const Config = {
 
-    VERSION: "RC3.1",
+        SYSTEM: {
+            NAME: "Ω SYD OMEGA 91717",
+            SHORT_NAME: "SYD OMEGA",
+            VERSION: "RC3.1.001",
+            BUILD: "2026.1",
+            ENVIRONMENT: "production",
+            DOMAIN: "https://www.sydomega.com",
+            COPYRIGHT: "© 2026 Ω SYD OMEGA"
+        },
 
-    BUILD: "2026.06",
+        API: {
+            BASE_URL: "/api",
+            TIMEOUT: 30000
+        },
 
-    ENVIRONMENT: "production",
+        SUPABASE: {
+            URL: window.SUPABASE_URL || "",
+            ANON_KEY: window.SUPABASE_ANON_KEY || ""
+        },
 
-    API: {
+        STORAGE: {
+            AVATARS: "avatars",
+            DOCUMENTS: "documents",
+            PUBLICATIONS: "publications",
+            MEDIA: "media"
+        },
 
-        BASE_URL: "/api",
+        FEATURES: {
 
-        TIMEOUT: 30000
+            AUTH: true,
 
-    },
+            DASHBOARD: true,
 
-    SUPABASE: {
+            PROFILE: true,
 
-        URL: window.SUPABASE_URL || "",
+            SEARCH: true,
 
-        ANON_KEY: window.SUPABASE_ANON_KEY || ""
+            AI: true,
 
-    },
+            ACADEMY: true,
 
-    STORAGE: {
+            CONSULTANCY: true,
 
-        AVATARS: "avatars",
+            PUBLISHING: true,
 
-        DOCUMENTS: "documents",
+            NOTIFICATIONS: true,
 
-        PUBLICATIONS: "publications",
+            WALLET: true,
 
-        MEDIA: "media"
+            MARKETPLACE: true,
 
-    },
+            HERITAGE: true,
 
-    FEATURES: {
+            ANALYTICS: true
 
-        AUTH: true,
+        },
 
-        DASHBOARD: true,
+        UI: {
 
-        PROFILE: true,
+            DEFAULT_THEME: "omega-dark",
 
-        ACADEMY: true,
+            DEFAULT_LANGUAGE: "en",
 
-        AI: true,
+            ITEMS_PER_PAGE: 20,
 
-        SEARCH: true,
+            MAX_UPLOAD_MB: 25,
 
-        PUBLISHING: true,
+            DATE_FORMAT: "YYYY-MM-DD"
 
-        CONSULTANCY: true,
+        },
 
-        NOTIFICATIONS: true,
+        SECURITY: {
 
-        TREASURY: true,
+            SESSION_TIMEOUT: 60,
 
-        WALLET: true
+            PASSWORD_MIN_LENGTH: 8,
 
-    },
+            ENABLE_AUDIT_LOG: true
 
-    PAGINATION: {
+        },
 
-        DEFAULT_PAGE_SIZE: 20,
+        SOCIAL: {
 
-        MAX_PAGE_SIZE: 100
+            WEBSITE: "https://www.sydomega.com",
 
-    },
+            REDDIT: "https://reddit.com/u/SYDOmega_91717",
 
-    THEME: {
+            INSTAGRAM: "https://instagram.com/sydomega_91717",
 
-        DEFAULT: "omega-dark"
+            TIKTOK: "https://www.tiktok.com/@sydomega_",
 
-    }
+            TELEGRAM: "https://t.me/SYDOmega",
 
-});
+            LINKEDIN: "https://www.linkedin.com/in/syd-omega-a472293b0"
+
+        }
+
+    };
+
+    Object.freeze(Config);
+
+    Omega.Config = Config;
+
+})(window);

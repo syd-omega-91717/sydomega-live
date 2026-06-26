@@ -124,7 +124,7 @@
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
   let user=null, axisB=1, cleared={}, selGame=-1;
 
-  const GAMES=[['Aries','Athena'],['Taurus','Aphrodite'],['Gemini','Apollo'],['Cancer','Hermes'],['Leo','Zeus'],['Virgo','Demeter'],['Libra','Hephaestus'],['Scorpio','Ares'],['Sagittarius','Artemis'],['Capricorn','Hestia'],['Aquarius','Hera'],['Pisces','Poseidon']];
+  const GAMES=[['Aries','Ares'],['Taurus','Aphrodite'],['Gemini','Hermes'],['Cancer','Artemis'],['Leo','Apollo'],['Virgo','Athena'],['Libra','Hera'],['Scorpio','Demeter'],['Sagittarius','Zeus'],['Capricorn','Hestia'],['Aquarius','Hephaestus'],['Pisces','Poseidon']];
   const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
   function key(g,s){ return 'g'+g+'s'+s; }
   function isCleared(g,s){ return !!cleared[key(g,s)]; }

@@ -1,29 +1,49 @@
 import { Router } from "express";
 
+import { authenticate } from "../middleware/auth";
+
+import * as TaskController from "../controllers/task.controller";
+
 const router = Router();
 
-router.get("/", async (_, res) => {
+router.get(
 
-    res.json({
+    "/",
 
-        success: true,
+    authenticate,
 
-        data: []
+    TaskController.list
 
-    });
+);
 
-});
+router.post(
 
-router.post("/", async (req, res) => {
+    "/",
 
-    res.json({
+    authenticate,
 
-        success: true,
+    TaskController.create
 
-        payload: req.body
+);
 
-    });
+router.put(
 
-});
+    "/:id",
+
+    authenticate,
+
+    TaskController.update
+
+);
+
+router.delete(
+
+    "/:id",
+
+    authenticate,
+
+    TaskController.remove
+
+);
 
 export default router;

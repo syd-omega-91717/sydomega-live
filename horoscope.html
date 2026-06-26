@@ -18,7 +18,7 @@ a{color:inherit;text-decoration:none}
 .main{flex:1;min-width:0;padding:0 0 100px}
 .sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:30px clamp(16px,3vw,40px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
-/* HERO ??? CELESTIAL WHEEL */
+/* HERO -- CELESTIAL WHEEL */
 .hero-band{padding:clamp(24px,4vw,48px) clamp(16px,3vw,40px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .hero-text .ht-sign{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--muted);margin-bottom:5px}
 .hero-text .ht-title{font-family:var(--D);font-size:clamp(22px,4vw,38px);font-weight:900;color:var(--gold);margin-bottom:5px}
@@ -47,7 +47,7 @@ a{color:inherit;text-decoration:none}
 .sign-tab:last-child{border-right:none}
 .sign-tab.on{color:var(--gold);background:rgba(201,168,76,.07)}
 
-/* SIGN MANDALA GRID ??? The genesis design */
+/* SIGN MANDALA GRID -- The genesis design */
 .mandala-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:0 clamp(16px,3vw,40px)}
 .mandala-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),rgba(7,7,11,.6));padding:16px;text-align:center;cursor:pointer;transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
 .mandala-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-3px)}
@@ -206,11 +206,11 @@ function drawMandala(canvas, sign, size, animated){
       ctx.strokeStyle=col+(d%3===0?'88':'33'); ctx.stroke();
     }
 
-    /* INNER SACRED GEOMETRY ??? unique per motif */
+    /* INNER SACRED GEOMETRY -- unique per motif */
     ctx.strokeStyle=col+'88'; ctx.lineWidth=1.2;
 
     if(motif==='arc'){
-      /* Aries: dynamic horns ??? two arcs rising from base, angular */
+      /* Aries: dynamic horns -- two arcs rising from base, angular */
       for(let i=0;i<2;i++){
         ctx.save(); ctx.rotate(t*0.3*(i?-1:1));
         ctx.beginPath(); ctx.arc(i?R*0.18:-R*0.18,-R*0.1,R*0.38,-Math.PI*0.7,-Math.PI*0.05);
@@ -219,7 +219,7 @@ function drawMandala(canvas, sign, size, animated){
       ctx.beginPath(); ctx.moveTo(-R*0.1,R*0.1); ctx.lineTo(R*0.1,R*0.1);
       ctx.strokeStyle=col+'55'; ctx.stroke();
     } else if(motif==='circle'){
-      /* Taurus: overlapping circles ??? bull head as vesica */
+      /* Taurus: overlapping circles -- bull head as vesica */
       const offset=R*0.22;
       ctx.save(); ctx.rotate(t*0.2);
       ctx.beginPath(); ctx.arc(-offset,R*0.05,R*0.42,0,Math.PI*2);
@@ -352,7 +352,7 @@ function drawMandala(canvas, sign, size, animated){
       }
       ctx.restore();
     } else {
-      /* Pisces: vesica piscis ??? two interlocking circles */
+      /* Pisces: vesica piscis -- two interlocking circles */
       ctx.save(); ctx.rotate(t*0.15);
       const offset2=R*0.28;
       ctx.beginPath(); ctx.arc(-offset2,0,R*0.5,0,Math.PI*2);

@@ -1,18 +1,46 @@
-import {Router} from "express";
+// ============================================================================
+// FILE: /backend/src/routes/notifications.js
+// REPLACE THE ENTIRE FILE
+// ============================================================================
 
-import {session} from "../middleware/session";
+import { Router } from "express";
 
-import * as Controller from "../controllers/notification.controller";
+import { session } from "../middleware/session.js";
+import { accessControl } from "../middleware/accessControl.js";
 
-const router=Router();
+import * as Controller from "../controllers/notification.controller.js";
+
+const router = Router();
+
+router.use(
+
+    session,
+
+    accessControl
+
+);
 
 router.get(
 
     "/",
 
-    session,
-
     Controller.unread
+
+);
+
+router.get(
+
+    "/all",
+
+    Controller.all
+
+);
+
+router.post(
+
+    "/read-all",
+
+    Controller.readAll
 
 );
 
@@ -20,9 +48,15 @@ router.post(
 
     "/:id/read",
 
-    session,
-
     Controller.read
+
+);
+
+router.delete(
+
+    "/:id",
+
+    Controller.remove
 
 );
 

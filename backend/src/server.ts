@@ -5,7 +5,10 @@
 
 import dotenv from "dotenv";
 import http from "http";
+
 import app from "./app.js";
+
+import { startAccessScheduler } from "./scheduler/access.scheduler.js";
 
 dotenv.config();
 
@@ -13,49 +16,50 @@ const PORT = Number(process.env.PORT || 3000);
 
 const server = http.createServer(app);
 
+startAccessScheduler();
+
 server.listen(PORT, () => {
 
-    console.log("====================================");
+    console.log("");
+    console.log("==================================================");
     console.log("Ω SYD OMEGA 91717");
-    console.log("Backend Running");
-    console.log("Port:", PORT);
-    console.log("Environment:", process.env.NODE_ENV || "development");
-    console.log("====================================");
+    console.log("Backend Started Successfully");
+    console.log("Environment :", process.env.NODE_ENV || "development");
+    console.log("Port        :", PORT);
+    console.log("PID         :", process.pid);
+    console.log("==================================================");
+    console.log("");
 
 });
 
-process.on("SIGTERM", () => {
+async function shutdown(signal) {
 
-    console.log("SIGTERM received.");
+    console.log(`${signal} received.`);
 
     server.close(() => {
+
+        console.log("HTTP Server Closed.");
 
         process.exit(0);
 
     });
 
-});
+}
 
-process.on("SIGINT", () => {
+process.on("SIGINT", () => shutdown("SIGINT"));
 
-    console.log("SIGINT received.");
+process.on("SIGTERM", () => shutdown("SIGTERM"));
 
-    server.close(() => {
+process.on("unhandledRejection", error => {
 
-        process.exit(0);
-
-    });
-
-});
-
-process.on("unhandledRejection", err => {
-
-    console.error(err);
+    console.error("Unhandled Promise Rejection");
+    console.error(error);
 
 });
 
-process.on("uncaughtException", err => {
+process.on("uncaughtException", error => {
 
-    console.error(err);
+    console.error("Uncaught Exception");
+    console.error(error);
 
 });

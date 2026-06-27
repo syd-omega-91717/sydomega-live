@@ -1,17 +1,34 @@
-import supabase from "../config/supabase.js";
+// ============================================================================
+// FILE: /backend/database/database.js
+// REPLACE THE ENTIRE FILE
+// ============================================================================
 
-class Database{
+import supabase from "./supabase.js";
 
-    table(name){
+class Database {
 
-        return supabase.from(name);
-
+    from(table) {
+        return supabase.from(table);
     }
 
-    storage(bucket){
+    table(table) {
+        return this.from(table);
+    }
 
+    rpc(fn, params = {}) {
+        return supabase.rpc(fn, params);
+    }
+
+    storage(bucket) {
         return supabase.storage.from(bucket);
+    }
 
+    auth() {
+        return supabase.auth;
+    }
+
+    raw() {
+        return supabase;
     }
 
 }

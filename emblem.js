@@ -52,15 +52,17 @@
     news:            ['ring',  6,  '#00E5FF', '\u25CF',  'INTELLIGENCE FEED'],
     social:          ['ring',  7,  '#C9A84C', '\u2743',  'SOCIAL HUB'],
     marketing:       ['orbit', 3,  '#E2C86D', '\u25C8',  'SIGNAL CORPS'],
-    health:          ['ring',  9,  '#3fb27f', '\\u2665',  'HEALTH & WELLNESS'],
-    events:          ['orbit', 6,  '#00E5FF', '\\u2741',  'EVENTS'],
-    travel:          ['arc',   7,  '#9B6BF0', '\\u2708',  'TRAVEL'],
+    health:          ['ring',  9,  '#3fb27f', '\u2665',  'HEALTH & WELLNESS'],
+    events:          ['orbit', 6,  '#00E5FF', '\u2741',  'EVENTS'],
+    travel:          ['arc',   7,  '#9B6BF0', '\u2708',  'TRAVEL'],
     sovereigns:      ['arc',   9,  '#E2C86D', '\u265A',  'HALL OF SOVEREIGNS'],
     family:          ['orbit', 3,  '#C9A84C', '\u2665',  'LINEAGE'],
     settings:        ['ring',  4,  '#8B0000', '\u2699',  'SYSTEM SETTINGS'],
     automation:      ['rays',  9,  '#00E5FF', '\u21D2',  'AUTOMATION ENGINE'],
     heritage:        ['arc',   5,  '#C9A84C', '\u22D4',  'HERITAGE ARCHIVE'],
-    sigil:           ['poly',  6,  '#C9A84C', '\u25C6',  'YOUR SIGIL']
+    sigil:           ['poly',  6,  '#C9A84C', '\u25C6',  'YOUR SIGIL'],
+    evolution:       ['arc',   9,  '#00E5FF', '\u21D2',  'EVOLUTION FRAMEWORK'],
+    interface_omni:  ['orb',   1,  '#C9A84C', '\u03A9',  'CONTROL DECK']
   };
 
   var cfg = MAP[key] || ['ring', 6, '#C9A84C', '\u03A9', key.toUpperCase()];

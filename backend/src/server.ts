@@ -16,6 +16,8 @@ import rolesRouter from "./routes/roles";
 import permissionsRouter from "./routes/permissions";
 import approvalsRouter from "./routes/approvals";
 
+import notificationsRouter from "./routes/notifications";
+
 import { requestId } from "./middleware/requestId";
 import { logger } from "./middleware/logger";
 import { errorHandler } from "./middleware/errorHandler";
@@ -56,6 +58,8 @@ app.use("/api/storage", storageRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/webhooks", webhookRouter);
 app.use("/api/roles", rolesRouter);
+
+app.use("/api/notifications",notificationsRouter);
 
 app.use("/api/approvals", approvalsRouter);
 app.use("/api/permissions", permissionsRouter);

@@ -13,6 +13,9 @@ create policy "owner updates media" on public.media_reservations for update to a
   using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.is_owner))
   with check (true);
 grant update on public.media_reservations to authenticated;
+approval_expires_at = now() + interval '9 minutes 17 seconds'
+access_state = 'active'
+account_enabled = true
 
 -- ANOINT THE OWNER: replace the email with the address you signed up with, then run this line.
--- update public.profiles set is_owner = true where id = (select id from auth.users where email = 'YOUR_EMAIL_HERE');
+-- update public.profiles set is_owner = true where id = (select id from auth.users where email = 's.y.dagher@gmail.com');

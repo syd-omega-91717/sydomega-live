@@ -1,26 +1,65 @@
-import {Router} from "express";
+// ============================================================================
+// FILE: /backend/src/routes/founderDashboard.js
+// NEW / REPLACE ENTIRE FILE
+// ============================================================================
 
-import {session} from "../middleware/session";
+import { Router } from "express";
 
-import {accessControl} from "../middleware/accessControl";
+import { session } from "../middleware/session.js";
+import { accessControl } from "../middleware/accessControl.js";
+import { authorize } from "../middleware/rbac.js";
 
-import {authorize} from "../middleware/rbac";
+import * as Controller from "../controllers/founderDashboard.controller.js";
 
-import * as Controller from "../controllers/founderDashboard.controller";
+const router = Router();
 
-const router=Router();
+router.use(
+
+    session,
+
+    accessControl,
+
+    authorize("founder", "read")
+
+);
 
 router.get(
 
-"/",
+    "/",
 
-session,
+    Controller.overview
 
-accessControl,
+);
 
-authorize("founder","read"),
+router.get(
 
-Controller.overview
+    "/statistics",
+
+    Controller.statistics
+
+);
+
+router.get(
+
+    "/timeline",
+
+    Controller.timeline
+
+);
+
+router.get(
+
+    "/metrics",
+
+    Controller.metrics
+
+);
+
+router.get(
+
+    "/activity",
+
+    Controller.activity
 
 );
 

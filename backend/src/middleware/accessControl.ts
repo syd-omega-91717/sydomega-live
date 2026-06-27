@@ -1,25 +1,27 @@
-import { Response, NextFunction } from "express";
-import * as Access from "../services/access.service";
+// ============================================================================
+// FILE: /backend/src/middleware/accessControl.js
+// NEW FILE
+// ============================================================================
 
-export async function accessControl(
-    req: any,
-    res: Response,
-    next: NextFunction
-) {
+import * as Access from "../services/access.service.js";
 
-    try {
+export async function accessControl(req,res,next){
+
+    try{
 
         await Access.validate(req.user.id);
 
         next();
 
-    } catch (e: any) {
+    }
+
+    catch(error){
 
         return res.status(403).json({
 
-            success: false,
+            success:false,
 
-            message: e.message
+            message:error.message
 
         });
 

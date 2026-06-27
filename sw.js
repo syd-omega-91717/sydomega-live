@@ -1,11 +1,14 @@
 /* SYD OMEGA 91717 -- Service Worker
-   Sovereign offline caching -- v1.0 */
-const CACHE='omega-v1';
+   Sovereign offline caching -- v2.0
+   v2: cache bumped so the cinematic engine, unified void, and
+   light-mode removal reach returning users (old cache-first v1
+   would otherwise serve stale bg.js indefinitely). */
+const CACHE='omega-v2';
 const STATIC=[
   '/','index.html','dashboard.html','profile.html','cosmos.html',
   'vault.html','identity.html','ascension.html','family.html',
   'consultancy.html','intelligence.html','approvals.html',
-  'nav.js','bg.js','theme.js','audio.js','emblem.js',
+  'nav.js','bg.js','omega-fx.js','theme.js','audio.js','emblem.js','i18n.js','upload.js',
   'manifest.json','icon-192.png','icon-512.png',
   'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap'
 ];

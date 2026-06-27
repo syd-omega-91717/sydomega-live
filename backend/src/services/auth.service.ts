@@ -1,95 +1,69 @@
-import { supabase } from "../database/supabase";
+// ============================================================================
+// FILE: /backend/src/services/auth.service.js
+// NEW FILE
+// ============================================================================
 
-export async function register(email: string, password: string) {
+import jwt from "jsonwebtoken";
+import { supabase } from "../database/supabase.js";
+import * as Approval from "./approval.service.js";
 
-    const { data, error } = await supabase.auth.admin.createUser({
+export async function login(email, password) {
 
-        email,
+    const { data: profile } = await supabase
 
-        password,
+        .from("profiles")
 
-        email_confirm: true
+        .select("*")
 
-    });
+        .eq("email", email)
 
-    if (error) throw error;
+        .single();
 
-    return data.user;
+    if (!profile)
 
-}
+        throw new Error("Invalid credentials.");
 
-export async function login(email: string, password: string) {
+    // TODO:
+    // Replace with bcrypt password verification
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const token = jwt.sign(
 
-        email,
+        {
 
-        password
+            sub: profile.id,
 
-    });
+            email: profile.email
 
-    if (error) throw error;
+        },
 
-    return data;
+        process.env.JWT_SECRET,
 
-}
+        {
 
-export async function refresh(refreshToken: string) {
+            expiresIn: "24h"
 
-    const { data, error } = await supabase.auth.refreshSession({
+        }
 
-        refresh_token: refreshToken
+    );
 
-    });
+    return {
 
-    if (error) throw error;
+        token,
 
-    return data;
+        profile
 
-}
-
-export async function logout(jwt: string) {
-
-    const client = supabase.auth;
-
-    client.setSession({
-
-        access_token: jwt,
-
-        refresh_token: ""
-
-    });
-
-    await client.signOut();
+    };
 
 }
 
-export async function profile(jwt: string) {
+export async function requestAccess(profileId) {
 
-    await supabase.auth.setSession({
-
-        access_token: jwt,
-
-        refresh_token: ""
-
-    });
-
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error) throw error;
-
-    return data.user;
+    return Approval.createApprovalRequest(profileId);
 
 }
 
-export async function resetPassword(email: string) {
+export async function logout() {
 
-    const { data, error } =
-
-        await supabase.auth.resetPasswordForEmail(email);
-
-    if (error) throw error;
-
-    return data;
+    return true;
 
 }

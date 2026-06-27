@@ -1,49 +1,37 @@
-import { supabase } from "../database/supabase";
+import {supabase} from "../database/supabase";
+import * as Notify from "./notification.service";
 
-export async function pending() {
+export async function pending(){
 
-    const { data, error } = await supabase
+    const {data,error}=await supabase
 
         .from("approval_requests")
 
-        .select(`
-            *,
-            profiles(*)
-        `)
+        .select("*,profiles(*)")
 
-        .eq("current_status", "pending")
+        .eq("current_status","pending")
 
-        .order("created_at", {
+        .order("created_at",{ascending:false});
 
-            ascending: false
-
-        });
-
-    if (error) throw error;
+    if(error) throw error;
 
     return data;
 
 }
 
-export async function approve(
+export async function approve(requestId:string,founder:string){
 
-    requestId: string,
-
-    founderId: string
-
-) {
-
-    const { data: request } = await supabase
+    const {data:request}=await supabase
 
         .from("approval_requests")
 
         .select("*")
 
-        .eq("id", requestId)
+        .eq("id",requestId)
 
         .single();
 
-    if (!request) throw new Error("Request not found");
+    if(!request) throw new Error("Request not found");
 
     await supabase
 
@@ -51,19 +39,19 @@ export async function approve(
 
         .update({
 
-            approval_status: "approved",
+            approval_status:"approved",
 
-            account_enabled: true,
+            account_enabled:true,
 
-            approved_at: new Date(),
+            verification_status:"verified",
 
-            approved_by: founderId,
+            approved_by:founder,
 
-            verification_status: "verified"
+            approved_at:new Date()
 
         })
 
-        .eq("id", request.profile_id);
+        .eq("id",request.profile_id);
 
     await supabase
 
@@ -71,41 +59,47 @@ export async function approve(
 
         .update({
 
-            current_status: "approved",
+            current_status:"approved",
 
-            reviewed_by: founderId,
+            reviewed_by:founder,
 
-            reviewed_at: new Date()
+            reviewed_at:new Date()
 
         })
 
-        .eq("id", requestId);
+        .eq("id",requestId);
 
-    return true;
+    await Notify.createNotification({
+
+        approval_request_id:requestId,
+
+        recipient:request.profile_id,
+
+        sender:founder,
+
+        title:"Account Approved",
+
+        body:"Your account has been approved.",
+
+        action_url:"/dashboard"
+
+    });
 
 }
 
-export async function reject(
+export async function reject(requestId:string,founder:string,reason:string){
 
-    requestId: string,
-
-    founderId: string,
-
-    reason: string
-
-) {
-
-    const { data: request } = await supabase
+    const {data:request}=await supabase
 
         .from("approval_requests")
 
         .select("*")
 
-        .eq("id", requestId)
+        .eq("id",requestId)
 
         .single();
 
-    if (!request) throw new Error("Request not found");
+    if(!request) throw new Error("Request not found");
 
     await supabase
 
@@ -113,15 +107,15 @@ export async function reject(
 
         .update({
 
-            approval_status: "rejected",
+            approval_status:"rejected",
 
-            rejection_reason: reason,
+            account_enabled:false,
 
-            account_enabled: false
+            rejection_reason:reason
 
         })
 
-        .eq("id", request.profile_id);
+        .eq("id",request.profile_id);
 
     await supabase
 
@@ -129,18 +123,32 @@ export async function reject(
 
         .update({
 
-            current_status: "rejected",
+            current_status:"rejected",
 
-            rejection_reason: reason,
+            rejection_reason:reason,
 
-            reviewed_by: founderId,
+            reviewed_by:founder,
 
-            reviewed_at: new Date()
+            reviewed_at:new Date()
 
         })
 
-        .eq("id", requestId);
+        .eq("id",requestId);
 
-    return true;
+    await Notify.createNotification({
+
+        approval_request_id:requestId,
+
+        recipient:request.profile_id,
+
+        sender:founder,
+
+        title:"Account Rejected",
+
+        body:reason,
+
+        action_url:"/login"
+
+    });
 
 }

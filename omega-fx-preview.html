@@ -1,167 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717  --  Cinematic Engine</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- The Sovereign Armillary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-  :root{
-    --void:#0A0A0F; --void2:#0A0A0F; --gold:#C9A84C; --gold-soft:#E2C86D;
-    --cyan:#00E5FF; --crim:#8B0000; --soul:#9B6BF0;
-    --ink:#E9E6DC; --muted:#85837b;
-    --glass:rgba(13,13,24,.55); --line:rgba(201,168,76,.18);
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--void);color:var(--ink);font-family:"Rajdhani",sans-serif}
-  body{min-height:100vh;overflow-x:hidden}
-  .mono{font-family:"Courier Prime",monospace}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
-
-  header.hero{position:relative;min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 22px 60px}
-  .eyebrow{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-bottom:26px}
-  .omega-mark{font-family:"Cinzel Decorative",serif;font-weight:900;font-size:clamp(64px,15vw,150px);line-height:.9;color:var(--gold);text-shadow:0 0 50px rgba(201,168,76,.35);letter-spacing:2px}
-  h1.title{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:clamp(22px,4.6vw,42px);letter-spacing:6px;margin:14px 0 0;color:var(--ink)}
-  .sub{max-width:560px;margin:22px auto 0;font-size:clamp(14px,2vw,17px);font-weight:300;line-height:1.85;color:rgba(233,230,220,.72)}
-  .scroll-cue{margin-top:54px;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:4px;color:var(--muted)}
-  .scroll-cue span{display:block;margin-top:8px;color:var(--gold);animation:bob 2.4s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-
-  section.pad{padding:64px 0}
-  .sechead{font-family:"Cinzel Decorative",serif;font-size:clamp(16px,3vw,24px);letter-spacing:4px;color:var(--gold);margin:0 0 6px}
-  .secsub{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin:0 0 30px}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
-  .card{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:24px 22px;border-radius:2px;position:relative;overflow:hidden}
-  .card::before{content:"";position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent)}
-  .card .k{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
-  .card .v{font-family:"Cinzel Decorative",serif;font-size:30px;color:var(--gold);margin:12px 0 8px;font-weight:700}
-  .card .d{font-size:14px;font-weight:300;line-height:1.7;color:rgba(233,230,220,.62)}
-  .card .glyph{position:absolute;right:14px;top:12px;font-family:"Cinzel Decorative",serif;font-size:26px;color:rgba(201,168,76,.18)}
-
-  .kpi{background:var(--glass);border:1px solid var(--line);padding:18px;text-align:center;backdrop-filter:blur(8px)}
-  .kpi .n{font-family:"Cinzel Decorative",serif;font-size:26px;color:var(--cyan)}
-  .kpi .l{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:6px;text-transform:uppercase}
-
-  .panel{background:linear-gradient(160deg,rgba(13,13,24,.6),rgba(10,10,15,.4));border:1px solid var(--line);padding:34px 30px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-  .panel p{font-weight:300;line-height:1.9;color:rgba(233,230,220,.78);font-size:15px}
-  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-  .tag{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid var(--line);color:var(--gold-soft);text-transform:uppercase}
-
-  footer{padding:60px 22px 80px;text-align:center;border-top:1px solid rgba(201,168,76,.1);margin-top:40px}
-  footer .mono{font-size:9px;letter-spacing:3px;color:var(--muted)}
-  .omega-foot{font-family:"Cinzel Decorative",serif;color:var(--gold);font-size:22px;margin-bottom:12px}
+  :root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--ink:#E9E6DC;--muted:#85837b;--line:rgba(201,168,76,.16)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--void);color:var(--ink);font-family:"Rajdhani",sans-serif;min-height:100vh;overflow-x:hidden}
+  .hero{min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:70px 22px 30px}
+  .eyebrow{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-bottom:22px}
+  .omega{font-family:"Cinzel Decorative",serif;font-weight:900;font-size:clamp(56px,13vw,128px);color:var(--gold);text-shadow:0 0 50px rgba(201,168,76,.35)}
+  h1{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:clamp(20px,4.4vw,38px);letter-spacing:6px;margin:12px 0 0}
+  .sub{max-width:580px;margin:20px auto 0;font-weight:300;line-height:1.85;color:rgba(233,230,220,.72);font-size:clamp(14px,2vw,16px)}
+  .switch{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:18px 14px;background:rgba(8,8,15,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .lb{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 13px;border:1px solid var(--line);background:transparent;cursor:pointer;transition:all .15s}
+  .lb:hover{color:var(--gold);border-color:rgba(201,168,76,.5)}
+  .lb.on{color:var(--void);background:var(--gold);border-color:var(--gold);font-weight:700}
+  .lb.tog{color:var(--cyan);border-color:rgba(0,229,255,.3)}
+  .lb.tog.on{background:var(--cyan);color:var(--void)}
+  .legend{text-align:center;padding:30px 22px 70px;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;color:var(--muted);line-height:2.2}
+  .legend b{color:var(--solar);font-family:"Cinzel Decorative",serif;letter-spacing:3px}
+  .spacer{height:34vh}
 </style>
 </head>
 <body>
   <header class="hero">
-    <div class="eyebrow">SOVEREIGN VISUAL SYSTEM &middot; LIVE</div>
-    <div class="omega-mark">&#937;</div>
-    <h1 class="title">THE LIVING MATRIX</h1>
-    <p class="sub">The backdrop is no longer a picture. It is an orrery in motion &mdash; rings that rotate at their own speeds and tilts, the twelve signs in their true wheel order -- each in its own colour, Virgo in sand-gold -- orbiting, leaning toward your cursor, and trading energy between signs of a shared element. Move your pointer. Watch it answer.</p>
-    <div class="scroll-cue">SCROLL TO SEE THE INTERFACE RESPOND<span>&darr;</span></div>
+    <div class="eyebrow">THE SOVEREIGN ARMILLARY &middot; LIVE</div>
+    <div class="omega">&#937;</div>
+    <h1>ONE INSTRUMENT, EVERY SYSTEM</h1>
+    <p class="sub">An inner ring of the nine elements turns inside an outer ring of twelve. Choose a lens and the outer ring becomes that system &mdash; signs, gods, gates, grades, trophies, medals, certificates, planets, franchises, or the twenty-eight kings. Toggle the economy to stream token-motes, or broadcast to syndicate. On the live platform, each page ignites its own lens automatically.</p>
   </header>
 
-  <main class="wrap">
-    <section class="pad">
-      <h2 class="sechead">THE CINEMATIC LAYER</h2>
-      <p class="secsub">five orchestrated systems, one canvas</p>
-      <div class="grid">
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 01</div><div class="v">ORRERY</div><div class="d">Concentric rings rotate at independent speeds and tilts, precessing for a true multi-dimensional read.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 02</div><div class="v">NODES</div><div class="d">Twelve sign-nodes ride the rings, flaring as they pass beneath your cursor.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 03</div><div class="v">ARCS</div><div class="d">When nodes draw close they trade light &mdash; energy arcs travel between them, alive and self-interacting.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 04</div><div class="v">STARFIELD</div><div class="d">Three parallax depth layers drift and twinkle, shifting against your motion.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 05</div><div class="v">NEBULA</div><div class="d">Gold, cyan, and crimson light fields breathe across the void on slow orbital paths.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">Core</div><div class="v">SIGIL</div><div class="d">The central Omega pulses and parallax-shifts, the still point the whole system turns around.</div></div>
-      </div>
-    </section>
+  <nav class="switch" id="sw">
+    <button class="lb on" data-k="signs">Signs</button>
+    <button class="lb" data-k="gods">Gods</button>
+    <button class="lb" data-k="gates">Gates</button>
+    <button class="lb" data-k="grades">Grades</button>
+    <button class="lb" data-k="trophies">Trophies</button>
+    <button class="lb" data-k="medals">Medals</button>
+    <button class="lb" data-k="certificates">Certificates</button>
+    <button class="lb" data-k="planets">Planets</button>
+    <button class="lb" data-k="movies">Franchises</button>
+    <button class="lb" data-k="kings">28 Kings</button>
+    <button class="lb" data-k="elements">9 Elements</button>
+    <button class="lb tog" id="econ">+ Economy</button>
+    <button class="lb tog" id="bcast">+ Broadcast</button>
+  </nav>
 
-    <section class="pad">
-      <h2 class="sechead">THE INTERFACE IS ALIVE</h2>
-      <p class="secsub">these panels rose as you scrolled &middot; tilt the cards</p>
-      <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
-        <div class="kpi"><div class="n">104,976</div><div class="l">Matrix Nodes</div></div>
-        <div class="kpi"><div class="n">15.588</div><div class="l">Apex Authority</div></div>
-        <div class="kpi"><div class="n">12</div><div class="l">Olympian Tracks</div></div>
-        <div class="kpi"><div class="n">9</div><div class="l">Elements</div></div>
-        <div class="kpi"><div class="n">9.000</div><div class="l">Sovereign Axis</div></div>
-        <div class="kpi"><div class="n">&#937;</div><div class="l">Sovereign Mark</div></div>
-      </div>
-    </section>
-
-    <section class="pad">
-      <h2 class="sechead">ONE ENGINE, EVERY SURFACE</h2>
-      <p class="secsub">web &middot; mobile &middot; platform</p>
-      <div class="panel">
-        <p>The engine loads once, globally, through the shared backdrop script &mdash; so every page inherits the same living atmosphere without per-page work. It scales its particle count to the viewport, reads device tilt on mobile for parallax, pauses when the tab is hidden to spare the battery, and falls back to a calm static frame for anyone who prefers reduced motion. Nothing here breaks the canon: void black, Omega gold, electric cyan, deep crimson, drawn in pure ASCII with the Omega as its proper sigil.</p>
-        <div class="tagrow">
-          <span class="tag">Rotative</span>
-          <span class="tag">Multi-dimensional</span>
-          <span class="tag">Cursor-reactive</span>
-          <span class="tag">Self-interacting</span>
-          <span class="tag">Reduced-motion safe</span>
-          <span class="tag">Battery-aware</span>
-          <span class="tag">Canon-locked</span>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="omega-foot">&#937;</div>
-    <div class="mono">SYD OMEGA 91717 &middot; CINEMATIC ENGINE &middot; OMEGA-FX</div>
-  </footer>
+  <div class="legend">
+    <b>BLOCKCHAIN &middot; CRYPTO &middot; NFT</b><br/>
+    stream the rings as token-motes when the economy is live<br/><br/>
+    <b>ADVERTISEMENT</b><br/>
+    fires outward syndication pulses when broadcast is on<br/><br/>
+    <b>VIRGO &middot; SAND &middot; ATHENA</b><br/>
+    the gold amplifier, brighter than the rest, on signs and gods
+  </div>
+  <div class="spacer"></div>
 
   <script>
+    var econ=false, bcast=false, cur='signs';
+    function apply(){ if(window.__omegaSetLens) window.__omegaSetLens(cur,{econ:econ,broadcast:bcast}); }
+    document.querySelectorAll('.lb[data-k]').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.lb[data-k]').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on'); cur=b.getAttribute('data-k'); apply();
+      });
+    });
+    document.getElementById('econ').addEventListener('click',function(){econ=!econ;this.classList.toggle('on',econ);apply();});
+    document.getElementById('bcast').addEventListener('click',function(){bcast=!bcast;this.classList.toggle('on',bcast);apply();});
+  </script>
+  <script>
 /* ============================================================
-   omega-fx.js   v2     SYD OMEGA 91717
-   THE ZODIAC ORRERY -- a living, multi-dimensional, rotative,
-   self-interacting visual engine for app / web / platform / mobile.
+   omega-fx.js   v3     SYD OMEGA 91717
+   THE SOVEREIGN ARMILLARY -- one living, multi-dimensional,
+   rotative instrument that renders the whole cosmology and
+   ignites the system the current page is about.
 
    CANON (absolute, do not alter):
-     - 12 signs, canonical order Aries..Pisces, each its exact
-       site colour. Virgo -> Athena -> Sand -> the gold amplifier.
-     - Palette: void #020206, Omega gold #C9A84C, cyan #00E5FF,
+     - 9 elements (ninefold spine): Fire Water Wind Metal Sand
+       Soul Space Void TheAll. Sand = the gold amplifier (Virgo).
+     - 12-fold lenses, canonical order, exact site colours:
+       SIGNS, GODS (Virgo->Athena), GATES, GRADES, TROPHIES,
+       MEDALS, CERTIFICATES, PLANETS, MOVIES; KINGS = 28.
+     - Economy (blockchain / crypto / nft) = token-motes that
+       stream the rings. Advertisement = broadcast pulses.
+     - Palette: void #0A0A0F, gold #C9A84C, cyan #00E5FF,
        crimson #8B0000. Pure ASCII. Omega as \u03A9 (canvas).
-     - Authority apex (9,9,9) = 15.588.  Matrix = 104,976 nodes.
+     - Authority apex (9,9,9) = 15.588. Matrix = 104,976 nodes.
 
-   Systems: nebula, parallax starfield, armillary structural rings,
-   the zodiac ring of 12 sign-nodes (depth-sorted), zodiac-wheel
-   links, element-kin energy arcs, central Omega core with an
-   authority heartbeat, a cinematic ignition sequence on load,
-   and scroll-driven revolving.
-
-   Loaded once, globally, via bg.js. Respects prefers-reduced-motion
-   and pauses when the tab is hidden.
+   Loaded once, globally, via bg.js. Reduced-motion safe;
+   pauses when the tab is hidden.
    ============================================================ */
 (function(){
-  if(window.__omegaFx)return; window.__omegaFx=2;
+  if(window.__omegaFx)return; window.__omegaFx=3;
 
-  /* ---- canon palette ---- */
   var GOLD='201,168,76', CYAN='0,229,255', CRIM='139,0,0', SOUL='155,107,240';
   var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var DPR=Math.min(window.devicePixelRatio||1,2);
-
-  /* ---- THE TWELVE (exact canon: name, glyph, element, colour) ---- */
   function rgb(h){h=h.replace('#','');return parseInt(h.substr(0,2),16)+','+parseInt(h.substr(2,2),16)+','+parseInt(h.substr(4,2),16);}
-  var SIGNS=[
-    {n:'ARIES',      g:'\u2648', el:'FIRE',  col:rgb('#E86A3A')},
-    {n:'TAURUS',     g:'\u2649', el:'METAL', col:rgb('#C7CDD6')},
-    {n:'GEMINI',     g:'\u264A', el:'WIND',  col:rgb('#A9C2D8')},
-    {n:'CANCER',     g:'\u264B', el:'WATER', col:rgb('#34C6E6')},
-    {n:'LEO',        g:'\u264C', el:'FIRE',  col:rgb('#E86A3A')},
-    {n:'VIRGO',      g:'\u264D', el:'SAND',  col:rgb('#D9B86A'), amp:true}, /* the amplifier */
-    {n:'LIBRA',      g:'\u264E', el:'WIND',  col:rgb('#A9C2D8')},
-    {n:'SCORPIO',    g:'\u264F', el:'WATER', col:rgb('#8B0000')},
-    {n:'SAGITTARIUS',g:'\u2650', el:'FIRE',  col:rgb('#C9A84C')},
-    {n:'CAPRICORN',  g:'\u2651', el:'METAL', col:rgb('#E2C86D')},
-    {n:'AQUARIUS',   g:'\u2652', el:'WIND',  col:rgb('#9B6BF0')},
-    {n:'PISCES',     g:'\u2653', el:'WATER', col:rgb('#3fb27f')}
+
+  /* ---- THE NINE ELEMENTS (inner spine; Sand = amplifier) ---- */
+  var ELEMENTS=[
+    {t:'\u2632',c:rgb('#E86A3A')}, /* Fire  */
+    {t:'\u2630',c:rgb('#34C6E6')}, /* Water */
+    {t:'\u2631',c:rgb('#A9C2D8')}, /* Wind  */
+    {t:'\u2633',c:rgb('#C7CDD6')}, /* Metal */
+    {t:'\u2605',c:rgb('#D9B86A'),amp:true}, /* Sand -- amplifier */
+    {t:'\u2734',c:rgb('#E8E8FF')}, /* Soul  */
+    {t:'\u2736',c:rgb('#9B6BF0')}, /* Space */
+    {t:'\u2737',c:rgb('#7B00FF')}, /* Void  */
+    {t:'\u03A9',c:rgb('#C9A84C')}  /* The All -- apex */
   ];
 
-  /* ---- retire the legacy flat aurora so we do not double-paint ---- */
+  /* ---- THE TWELVE SIGNS (canon order, glyph, element colour) ---- */
+  var SIGN_COL=['#E86A3A','#C7CDD6','#A9C2D8','#34C6E6','#E86A3A','#D9B86A','#A9C2D8','#8B0000','#C9A84C','#E2C86D','#9B6BF0','#3fb27f'];
+  var SIGN_GLY=['\u2648','\u2649','\u264A','\u264B','\u264C','\u264D','\u264E','\u264F','\u2650','\u2651','\u2652','\u2653'];
+  var GODS=['ARES','APHRODITE','HERMES','ARTEMIS','APOLLO','ATHENA','HERA','DEMETER','ZEUS','HESTIA','HEPHAESTUS','POSEIDON'];
+  var PLANETS=['\u2609','\u263D','\u263F','\u2640','\u2642','\u2643','\u2644','\u2645','\u2646','\u2647','\u260A','\u26B7'];
+  var ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+
+  function lensSigns(){var a=[];for(var i=0;i<12;i++)a.push({t:SIGN_GLY[i],c:rgb(SIGN_COL[i]),amp:i===5});return a;}
+  function lensGods(){var a=[];for(var i=0;i<12;i++)a.push({t:GODS[i],c:rgb(SIGN_COL[i]),amp:i===5});return a;}      /* gods carry their sign colour */
+  function lensGates(){var a=[];for(var i=0;i<12;i++)a.push({t:ROMAN[i],c:rgb(i<6?'#C9A84C':'#00E5FF')});return a;}
+  function lensGrades(){var a=[];for(var i=0;i<12;i++){var f=i/11;a.push({t:String(i+1),c:Math.round(139+f*62)+','+Math.round(f*168)+','+Math.round(f*76)});}return a;} /* crimson -> gold ramp */
+  function lensTrophies(){var a=[];for(var i=0;i<12;i++)a.push({t:'\u2605',c:GOLD});return a;}
+  function lensMedals(){var cc=['#C7CDD6','#E2C86D','#C9A84C'];var a=[];for(var i=0;i<12;i++)a.push({t:'\u25C9',c:rgb(cc[i%3])});return a;}
+  function lensCerts(){var a=[];for(var i=0;i<12;i++)a.push({t:'\u272A',c:CYAN});return a;}
+  function lensPlanets(){var a=[];for(var i=0;i<12;i++)a.push({t:PLANETS[i],c:rgb(SIGN_COL[i])});return a;}
+  function lensMovies(){var a=[];for(var i=0;i<12;i++)a.push({t:'\u25B6',c:rgb(i%2?'#8B0000':'#C9A84C')});return a;}
+  function lensKings(){var a=[];for(var i=0;i<28;i++)a.push({t:'\u265A',c:rgb(i%4===0?'#C9A84C':(i%4===1?'#E2C86D':'#8B0000'))});return a;}
+  function lensElements(){return ELEMENTS.slice();}
+
+  var LENSES={
+    signs:{nodes:lensSigns,label:'THE WHEEL OF TWELVE'},
+    gods:{nodes:lensGods,label:'THE TWELVE OLYMPIANS'},
+    gates:{nodes:lensGates,label:'THE TWELVE GATES'},
+    grades:{nodes:lensGrades,label:'THE TWELVE GRADES'},
+    trophies:{nodes:lensTrophies,label:'THE TWELVE TROPHIES'},
+    medals:{nodes:lensMedals,label:'THE TWELVE MEDALS'},
+    certificates:{nodes:lensCerts,label:'THE TWELVE CERTIFICATES'},
+    planets:{nodes:lensPlanets,label:'THE TWELVE PLANETS'},
+    movies:{nodes:lensMovies,label:'THE TWELVE FRANCHISES'},
+    kings:{nodes:lensKings,label:'THE TWENTY-EIGHT KINGS'},
+    elements:{nodes:lensElements,label:'THE NINE ELEMENTS'}
+  };
+
+  /* page -> lens (everything else falls back to signs) */
+  var PAGE_LENS={
+    horoscope:'signs',cosmos:'signs',sigil:'signs',account:'signs',triads:'signs',
+    pantheons:'gods',agents:'gods',factions:'gods',
+    gates:'gates',
+    academy:'grades',ascension:'grades',grid:'grades',matrix:'grades',membership:'grades',evolution:'grades',
+    trophies:'trophies',honors:'trophies',
+    contributions:'medals',beacon:'medals',
+    passport:'certificates',identity:'certificates',kyc:'certificates',
+    prediction:'planets',intelligence:'planets',
+    media:'movies',cinema:'movies',universe:'movies',
+    kings:'kings',sovereigns:'kings',
+    elements:'elements',city:'elements'
+  };
+  var ECON={treasury:1,wallet:1,blockchain:1,marketplace:1,portfolio:1,income:1,ledger:1,payments:1,vault:1,contracts:1};
+  var BROADCAST={marketing:1,social:1,news:1};
+
+  function pageKey(){
+    var side=document.getElementById('omega-side');
+    var k=(side&&side.getAttribute('data-page'))||(location.pathname.split('/').pop()||'').replace('.html','')||'dashboard';
+    return k;
+  }
+  var PKEY=pageKey();
+  var LENSKEY=PAGE_LENS[PKEY]||'signs';
+  var LENS=LENSES[LENSKEY];
+  var ECON_ON=!!ECON[PKEY];
+  var BROADCAST_ON=!!BROADCAST[PKEY];
+
+  /* ---- retire the legacy flat aurora ---- */
   function retireLegacy(){var o=document.getElementById('omega-bg');if(o)o.remove();}
   retireLegacy(); setTimeout(retireLegacy,400); setTimeout(retireLegacy,1200);
 
@@ -172,9 +188,8 @@
   var ctx=cv.getContext('2d');
   var W=0,H=0,CX=0,CY=0,t=0,raf=null,hidden=false,small=false;
   var mx=0.5,my=0.42,tmx=0.5,tmy=0.42;
-  var ig=REDUCE?1:0;                 /* ignition 0..1 */
-  var spin=0, scrollSpin=0, recede=1; /* scroll-driven revolve + recede */
-  var stars=[], nodes=[], RINGS=[], arcs=[], pulses=[], lastArc=0, lastHeart=0;
+  var ig=REDUCE?1:0, scrollSpin=0, recede=1;
+  var stars=[], outer=[], inner=[], RINGS=[], arcs=[], pulses=[], motes=[], beams=[], lastArc=0, lastHeart=0, lastBeam=0;
 
   function resize(){
     W=window.innerWidth; H=window.innerHeight; small=W<760;
@@ -187,46 +202,57 @@
     var n=Math.max(50,Math.min(small?90:150,Math.floor((W*H)/14000)));
     stars=[];
     for(var i=0;i<n;i++){
-      var layer=i%3, depth=0.3+layer*0.34;
-      /* a few stars carry element colours; most are gold/cyan */
-      var tint = Math.random()<0.16 ? SIGNS[(Math.random()*SIGNS.length)|0].col : (Math.random()<0.7?GOLD:CYAN);
+      var depth=0.3+(i%3)*0.34;
+      var tint=Math.random()<0.16?rgb(SIGN_COL[(Math.random()*12)|0]):(Math.random()<0.7?GOLD:CYAN);
       stars.push({x:Math.random()*W,y:Math.random()*H,z:depth,r:(0.4+Math.random()*1.3)*depth,
                   ph:Math.random()*6.283,sp:0.4+Math.random()*1.1,c:tint,
                   dx:(Math.random()-0.5)*0.05*depth,dy:(Math.random()-0.5)*0.05*depth});
     }
   }
 
-  function buildOrrery(){
-    var base=Math.min(W,H)*(small?0.34:0.30);
-    /* ring 0 = the ZODIAC ring (carries the 12 signs); 1..2 = structural armillary */
-    RINGS=[
-      {r:base*0.95, flat:0.34, tilt:0.18, spin: 0.050, col:GOLD, w:1.1, a:0.16, zodiac:true},
-      {r:base*0.58, flat:0.30, tilt:1.30, spin:-0.040, col:CYAN, w:0.9, a:0.11},
-      {r:base*1.30, flat:0.42, tilt:2.30, spin: 0.026, col:SOUL, w:0.8, a:0.08}
-    ];
-    nodes=[];
-    for(var i=0;i<12;i++){
-      nodes.push({i:i, ang:(i/12)*6.283 - Math.PI/2,  /* Aries at the crown, true wheel order */
-                  spd:RINGS[0].spin, sign:SIGNS[i], x:0,y:0,depth:0.5,scale:1,flare:0,lit:0});
+  function mkNodes(data,ringIdx){
+    var a=[],N=data.length;
+    for(var i=0;i<N;i++){
+      a.push({i:i,ang:(i/N)*6.283-Math.PI/2,spd:RINGS[ringIdx].spin,
+              tok:data[i].t,col:data[i].c,amp:!!data[i].amp,
+              x:0,y:0,depth:0.5,scale:1,flare:0,lit:0});
     }
-    arcs=[]; pulses=[];
+    return a;
   }
 
-  function buildAll(){ buildStars(); buildOrrery(); }
+  function buildOrrery(){
+    var base=Math.min(W,H)*(small?0.34:0.30);
+    RINGS=[
+      {r:base*1.00,flat:0.34,tilt:0.18,spin: 0.045,col:GOLD,w:1.1,a:0.16}, /* 0 main twelvefold */
+      {r:base*0.56,flat:0.32,tilt:1.10,spin:-0.055,col:CYAN,w:0.9,a:0.13}, /* 1 inner ninefold  */
+      {r:base*1.34,flat:0.42,tilt:2.30,spin: 0.024,col:SOUL,w:0.8,a:0.07}  /* 2 structural cage */
+    ];
+    outer=mkNodes(LENS.nodes(),0);
+    inner=(LENSKEY==='elements')?[]:mkNodes(ELEMENTS,1);  /* avoid duplicate when the lens IS elements */
+    arcs=[];pulses=[];beams=[];
+    /* token-motes: economy in motion (blockchain / crypto / nft) */
+    motes=[];
+    var mn=ECON_ON?18:9;
+    for(var i=0;i<mn;i++)motes.push({ring:Math.random()<0.5?0:1,ang:Math.random()*6.283,
+      spd:(0.18+Math.random()*0.28)*(Math.random()<0.5?1:-1),
+      col:Math.random()<0.5?GOLD:CYAN,sz:0.7+Math.random()*0.8});
+  }
+
+  function buildAll(){buildStars();buildOrrery();}
 
   /* ============================================================ DRAW */
   function nebula(){
     var blobs=[
-      {x:CX+Math.cos(t*0.21)*W*0.22, y:CY+Math.sin(t*0.17)*H*0.16, r:Math.max(W,H)*0.55, c:GOLD, a:0.075},
-      {x:CX+Math.cos(-t*0.16+2.1)*W*0.26, y:CY+Math.sin(-t*0.19+1.3)*H*0.20, r:Math.max(W,H)*0.50, c:CYAN, a:0.050},
-      {x:W*0.82+Math.cos(t*0.13)*W*0.06, y:H*0.82, r:Math.max(W,H)*0.34, c:CRIM, a:0.050}
+      {x:CX+Math.cos(t*0.21)*W*0.22,y:CY+Math.sin(t*0.17)*H*0.16,r:Math.max(W,H)*0.55,c:GOLD,a:0.075},
+      {x:CX+Math.cos(-t*0.16+2.1)*W*0.26,y:CY+Math.sin(-t*0.19+1.3)*H*0.20,r:Math.max(W,H)*0.50,c:CYAN,a:0.050},
+      {x:W*0.82+Math.cos(t*0.13)*W*0.06,y:H*0.82,r:Math.max(W,H)*0.34,c:CRIM,a:0.050}
     ];
     for(var i=0;i<blobs.length;i++){
       var b=blobs[i],g=ctx.createRadialGradient(b.x,b.y,8,b.x,b.y,b.r);
       g.addColorStop(0,'rgba('+b.c+','+(b.a*ig).toFixed(3)+')');
       g.addColorStop(0.5,'rgba('+b.c+','+(b.a*0.28*ig).toFixed(3)+')');
       g.addColorStop(1,'rgba(2,2,6,0)');
-      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+      ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
     }
   }
 
@@ -240,43 +266,40 @@
       var tw=REDUCE?0.85:(0.5+0.5*Math.sin(t*1.8*s.sp+s.ph));
       ctx.beginPath();
       ctx.fillStyle='rgba('+s.c+','+((0.18+0.5*s.z)*tw*ig).toFixed(3)+')';
-      ctx.shadowColor='rgba('+s.c+',0.5)'; ctx.shadowBlur=6*s.z;
-      ctx.arc(s.x-ox,s.y-oy,s.r,0,6.283); ctx.fill();
+      ctx.shadowColor='rgba('+s.c+',0.5)';ctx.shadowBlur=6*s.z;
+      ctx.arc(s.x-ox,s.y-oy,s.r,0,6.283);ctx.fill();
     }
     ctx.shadowBlur=0;
   }
 
-  /* global revolve offset (cursor parallax + scroll revolve) */
-  function gOff(){ return {x:(mx-0.5)*60, y:(my-0.42)*60}; }
+  function gOff(){return {x:(mx-0.5)*60,y:(my-0.42)*60};}
+
+  function ringRot(R){return t*R.spin+R.tilt+scrollSpin*(R===RINGS[0]?1:0.5);}
 
   function drawRing(R,breathe,o){
-    var rot=t*R.spin+R.tilt+(R.zodiac?scrollSpin:scrollSpin*0.5), steps=84, j;
+    var rot=ringRot(R),steps=84,j;
     ctx.beginPath();
     for(j=0;j<=steps;j++){
       var a=(j/steps)*6.283;
-      var ex=Math.cos(a)*R.r*breathe, ey=Math.sin(a)*R.r*R.flat*breathe;
+      var ex=Math.cos(a)*R.r*breathe,ey=Math.sin(a)*R.r*R.flat*breathe;
       var x=CX+o.x+ex*Math.cos(rot)-ey*Math.sin(rot);
       var y=CY+o.y+ex*Math.sin(rot)+ey*Math.cos(rot);
       if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
-    ctx.strokeStyle='rgba('+R.col+','+(R.a*ig).toFixed(3)+')';
-    ctx.lineWidth=R.w; ctx.stroke();
+    ctx.strokeStyle='rgba('+R.col+','+(R.a*ig).toFixed(3)+')';ctx.lineWidth=R.w;ctx.stroke();
   }
 
-  function placeNodes(R,breathe,o){
-    var rot=t*R.spin+R.tilt+scrollSpin;
-    for(var i=0;i<nodes.length;i++){
-      var nd=nodes[i];
+  function placeNodes(set,R,breathe,o){
+    var rot=ringRot(R),N=set.length;
+    for(var i=0;i<N;i++){
+      var nd=set[i];
       if(!REDUCE)nd.ang+=nd.spd*0.016;
-      var ex=Math.cos(nd.ang)*R.r*breathe, ey=Math.sin(nd.ang)*R.r*R.flat*breathe;
+      var ex=Math.cos(nd.ang)*R.r*breathe,ey=Math.sin(nd.ang)*R.r*R.flat*breathe;
       nd.x=CX+o.x+ex*Math.cos(rot)-ey*Math.sin(rot);
       nd.y=CY+o.y+ex*Math.sin(rot)+ey*Math.cos(rot);
-      nd.depth=(Math.sin(nd.ang)*Math.cos(0)+1)/2;          /* front/back along ring */
-      var rawDepth=(ey/(R.r*R.flat*breathe));
-      nd.depth=(rawDepth+1)/2;
-      nd.scale=0.45+nd.depth;                                /* near = larger */
-      /* ignition: each sign lights in wheel order across first 70% of the sequence */
-      var lit=REDUCE?1:Math.max(0,Math.min(1,(ig-(i/12)*0.62)/0.18));
+      nd.depth=((ey/(R.r*R.flat*breathe))+1)/2;
+      nd.scale=0.45+nd.depth;
+      var lit=REDUCE?1:Math.max(0,Math.min(1,(ig-(i/N)*0.6)/0.18));
       nd.lit=lit;
       if(nd.flare>0)nd.flare-=0.02;
       var dxm=nd.x-mx*W,dym=nd.y-my*H;
@@ -284,124 +307,156 @@
     }
   }
 
-  function drawZodiacLinks(){
-    /* faint wheel: connect consecutive signs in order (Aries..Pisces..Aries) */
-    var sorted=nodes.slice();
+  function drawLinks(set){
     ctx.lineWidth=0.7;
-    for(var i=0;i<nodes.length;i++){
-      var a=nodes[i], b=nodes[(i+1)%nodes.length];
-      var dep=Math.min(a.depth,b.depth), lit=Math.min(a.lit,b.lit);
-      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
-      ctx.strokeStyle='rgba('+GOLD+','+(0.05*dep*lit).toFixed(3)+')';
-      ctx.stroke();
+    for(var i=0;i<set.length;i++){
+      var a=set[i],b=set[(i+1)%set.length];
+      var dep=Math.min(a.depth,b.depth),lit=Math.min(a.lit,b.lit);
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle='rgba('+GOLD+','+(0.045*dep*lit).toFixed(3)+')';ctx.stroke();
     }
   }
 
-  function drawNodes(){
-    /* depth sort: far first so near signs occlude -- real dimensionality */
-    var order=nodes.slice().sort(function(a,b){return a.depth-b.depth;});
+  function drawNodes(set,showTok){
+    var order=set.slice().sort(function(a,b){return a.depth-b.depth;});
     for(var k=0;k<order.length;k++){
-      var nd=order[k]; if(nd.lit<=0)continue;
-      var col=nd.sign.col, amp=nd.sign.amp?1.5:1;
+      var nd=order[k];if(nd.lit<=0)continue;
+      var amp=nd.amp?1.5:1;
       var rr=(2.0*amp)*nd.scale*(1+nd.flare*1.3)*nd.lit;
-      var a=(0.35+0.45*nd.depth)*nd.lit;
       ctx.beginPath();
-      ctx.fillStyle='rgba('+col+','+a.toFixed(3)+')';
-      ctx.shadowColor='rgba('+col+','+(0.55+nd.flare*0.4).toFixed(3)+')';
-      ctx.shadowBlur=(8+nd.flare*16+(nd.sign.amp?6:0))*nd.scale;
-      ctx.arc(nd.x,nd.y,rr,0,6.283); ctx.fill();
-      /* sign glyph on near-side, ignited nodes only -- avoids clutter */
-      if(nd.depth>0.58 && nd.lit>0.9 && !small){
+      ctx.fillStyle='rgba('+nd.col+','+((0.35+0.45*nd.depth)*nd.lit).toFixed(3)+')';
+      ctx.shadowColor='rgba('+nd.col+','+(0.55+nd.flare*0.4).toFixed(3)+')';
+      ctx.shadowBlur=(8+nd.flare*16+(nd.amp?6:0))*nd.scale;
+      ctx.arc(nd.x,nd.y,rr,0,6.283);ctx.fill();
+      if(showTok&&nd.depth>0.6&&nd.lit>0.9&&!small){
         ctx.shadowBlur=0;
-        ctx.font='600 '+Math.round(11*nd.scale)+'px "Courier Prime", monospace';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillStyle='rgba('+col+','+(0.5*nd.depth).toFixed(3)+')';
-        ctx.fillText(nd.sign.g, nd.x, nd.y-rr-7);
+        var fs=Math.round((nd.tok.length>3?8:12)*nd.scale);
+        ctx.font='600 '+fs+'px "Courier Prime", monospace';
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillStyle='rgba('+nd.col+','+(0.55*nd.depth).toFixed(3)+')';
+        ctx.fillText(nd.tok,nd.x,nd.y-rr-8);
       }
     }
     ctx.shadowBlur=0;
   }
 
   function elementArc(){
-    /* prefer connecting two ignited signs of the SAME element (elements interacting) */
-    var lit=nodes.filter(function(n){return n.lit>0.9;});
+    var lit=outer.filter(function(n){return n.lit>0.9;});
     if(lit.length<2)return;
-    var a=lit[(Math.random()*lit.length)|0];
-    var kin=lit.filter(function(n){return n!==a && n.sign.el===a.sign.el;});
-    var b=(kin.length&&Math.random()<0.7)?kin[(Math.random()*kin.length)|0]:lit[(Math.random()*lit.length)|0];
-    if(a===b)return;
-    a.flare=1; b.flare=1;
-    arcs.push({a:a,b:b,life:0,bow:(Math.random()<0.5?1:-1),col:a.sign.col});
+    var a=lit[(Math.random()*lit.length)|0],b=lit[(Math.random()*lit.length)|0];
+    if(a===b)return;a.flare=1;b.flare=1;
+    arcs.push({a:a,b:b,life:0,bow:(Math.random()<0.5?1:-1),col:a.col});
   }
-
   function drawArcs(){
     for(var i=arcs.length-1;i>=0;i--){
-      var ar=arcs[i]; ar.life+=0.02;
-      if(ar.life>=1){arcs.splice(i,1);continue;}
+      var ar=arcs[i];ar.life+=0.02;if(ar.life>=1){arcs.splice(i,1);continue;}
       var A=ar.a,B=ar.b;
-      var mxp=(A.x+B.x)/2+ar.bow*(A.y-B.y)*0.32, myp=(A.y+B.y)/2-ar.bow*(A.x-B.x)*0.32;
+      var mxp=(A.x+B.x)/2+ar.bow*(A.y-B.y)*0.32,myp=(A.y+B.y)/2-ar.bow*(A.x-B.x)*0.32;
       var fade=Math.sin(ar.life*Math.PI);
-      ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.quadraticCurveTo(mxp,myp,B.x,B.y);
+      ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.quadraticCurveTo(mxp,myp,B.x,B.y);
       ctx.strokeStyle='rgba('+ar.col+','+(0.30*fade).toFixed(3)+')';
-      ctx.lineWidth=1.1; ctx.shadowColor='rgba('+ar.col+','+(0.5*fade).toFixed(3)+')'; ctx.shadowBlur=8; ctx.stroke();
-      var tt=ar.life, sx=(1-tt)*(1-tt)*A.x+2*(1-tt)*tt*mxp+tt*tt*B.x, sy=(1-tt)*(1-tt)*A.y+2*(1-tt)*tt*myp+tt*tt*B.y;
-      ctx.beginPath(); ctx.fillStyle='rgba('+ar.col+','+fade.toFixed(3)+')'; ctx.arc(sx,sy,1.8*fade+0.6,0,6.283); ctx.fill();
+      ctx.lineWidth=1.1;ctx.shadowColor='rgba('+ar.col+','+(0.5*fade).toFixed(3)+')';ctx.shadowBlur=8;ctx.stroke();
+      var tt=ar.life,sx=(1-tt)*(1-tt)*A.x+2*(1-tt)*tt*mxp+tt*tt*B.x,sy=(1-tt)*(1-tt)*A.y+2*(1-tt)*tt*myp+tt*tt*B.y;
+      ctx.beginPath();ctx.fillStyle='rgba('+ar.col+','+fade.toFixed(3)+')';ctx.arc(sx,sy,1.8*fade+0.6,0,6.283);ctx.fill();
     }
     ctx.shadowBlur=0;
   }
 
+  /* token-motes: the economy (blockchain / crypto / nft) streaming the rings */
+  function drawMotes(breathe,o){
+    for(var i=0;i<motes.length;i++){
+      var m=motes[i],R=RINGS[m.ring];if(!R)continue;
+      if(!REDUCE)m.ang+=m.spd*0.016;
+      var rot=ringRot(R);
+      var ex=Math.cos(m.ang)*R.r*breathe,ey=Math.sin(m.ang)*R.r*R.flat*breathe;
+      var x=CX+o.x+ex*Math.cos(rot)-ey*Math.sin(rot);
+      var y=CY+o.y+ex*Math.sin(rot)+ey*Math.cos(rot);
+      var dep=((ey/(R.r*R.flat*breathe))+1)/2;
+      ctx.beginPath();
+      ctx.fillStyle='rgba('+m.col+','+((0.3+0.4*dep)*ig).toFixed(3)+')';
+      ctx.shadowColor='rgba('+m.col+',0.6)';ctx.shadowBlur=5;
+      ctx.arc(x,y,m.sz*(0.6+dep),0,6.283);ctx.fill();
+    }
+    ctx.shadowBlur=0;
+  }
+
+  /* broadcast pulses: advertisement / syndication */
+  function broadcast(o){
+    if(!BROADCAST_ON||REDUCE)return;
+    if(t-lastBeam>2.2&&beams.length<3){beams.push({life:0,a:Math.random()*6.283});lastBeam=t;}
+    for(var i=beams.length-1;i>=0;i--){
+      var bm=beams[i];bm.life+=0.018;if(bm.life>=1){beams.splice(i,1);continue;}
+      var fade=Math.sin(bm.life*Math.PI),len=Math.max(W,H)*0.6*bm.life;
+      var x2=CX+o.x+Math.cos(bm.a)*len,y2=CY+o.y+Math.sin(bm.a)*len*0.6;
+      var g=ctx.createLinearGradient(CX+o.x,CY+o.y,x2,y2);
+      g.addColorStop(0,'rgba('+CYAN+','+(0.25*fade).toFixed(3)+')');
+      g.addColorStop(1,'rgba('+CYAN+',0)');
+      ctx.strokeStyle=g;ctx.lineWidth=1.4;
+      ctx.beginPath();ctx.moveTo(CX+o.x,CY+o.y);ctx.lineTo(x2,y2);ctx.stroke();
+    }
+  }
+
   function heartbeat(o){
-    /* slow authority pulse from the apex -- the system's heartbeat */
-    if(!REDUCE && t-lastHeart>5.5 && ig>0.96){ pulses.push({life:0}); lastHeart=t; }
+    if(!REDUCE&&t-lastHeart>5.5&&ig>0.96){pulses.push({life:0});lastHeart=t;}
     for(var i=pulses.length-1;i>=0;i--){
-      var p=pulses[i]; p.life+=0.012; if(p.life>=1){pulses.splice(i,1);continue;}
-      var R=Math.min(W,H)*0.5*p.life, fade=(1-p.life)*0.18;
-      ctx.beginPath(); ctx.arc(CX+o.x,CY+o.y,R,0,6.283);
-      ctx.strokeStyle='rgba('+GOLD+','+fade.toFixed(3)+')'; ctx.lineWidth=1; ctx.stroke();
+      var p=pulses[i];p.life+=0.012;if(p.life>=1){pulses.splice(i,1);continue;}
+      var R=Math.min(W,H)*0.5*p.life,fade=(1-p.life)*0.18;
+      ctx.beginPath();ctx.arc(CX+o.x,CY+o.y,R,0,6.283);
+      ctx.strokeStyle='rgba('+GOLD+','+fade.toFixed(3)+')';ctx.lineWidth=1;ctx.stroke();
     }
   }
 
   function core(o,breathe){
     var halo=REDUCE?0.6:(0.55+0.25*Math.sin(t*1.4));
-    var flare=ig<1?Math.max(0,1-Math.abs(ig-0.92)/0.08):0;  /* Omega flares as ignition completes */
+    var flare=ig<1?Math.max(0,1-Math.abs(ig-0.92)/0.08):0;
     var hr=46*breathe*(1+flare*0.6);
     var hg=ctx.createRadialGradient(CX+o.x,CY+o.y,2,CX+o.x,CY+o.y,hr);
     hg.addColorStop(0,'rgba('+GOLD+','+((0.22*halo+flare*0.4)*ig).toFixed(3)+')');
     hg.addColorStop(1,'rgba('+GOLD+',0)');
-    ctx.fillStyle=hg; ctx.beginPath(); ctx.arc(CX+o.x,CY+o.y,hr,0,6.283); ctx.fill();
+    ctx.fillStyle=hg;ctx.beginPath();ctx.arc(CX+o.x,CY+o.y,hr,0,6.283);ctx.fill();
     ctx.save();
     ctx.font='700 '+Math.round(30*breathe)+'px "Cinzel Decorative", Georgia, serif';
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.shadowColor='rgba('+GOLD+',0.9)'; ctx.shadowBlur=(18+flare*22)*halo;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor='rgba('+GOLD+',0.9)';ctx.shadowBlur=(18+flare*22)*halo;
     ctx.fillStyle='rgba('+GOLD+','+((0.7+0.3*halo)*ig).toFixed(3)+')';
     ctx.fillText('\u03A9',CX+o.x,CY+o.y+1);
-    ctx.restore(); ctx.shadowBlur=0;
+    ctx.restore();ctx.shadowBlur=0;
+    /* lens label -- name the active system */
+    if(ig>0.9){
+      ctx.font='600 10px "Courier Prime", monospace';
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba('+GOLD+','+(0.30*ig).toFixed(3)+')';
+      ctx.fillText(LENS.label,CX+o.x,CY+o.y+hr+18);
+    }
   }
 
   function frame(){
     ctx.clearRect(0,0,W,H);
-    if(!REDUCE && ig<1){ ig=Math.min(1,ig+0.0075); }     /* ignition timeline */
-    mx+=(tmx-mx)*0.05; my+=(tmy-my)*0.05;
-    /* ease scroll-driven revolve toward target */
+    if(!REDUCE&&ig<1)ig=Math.min(1,ig+0.0075);
+    mx+=(tmx-mx)*0.05;my+=(tmy-my)*0.05;
     scrollSpin+=((window.__ofxScrollSpin||0)-scrollSpin)*0.06;
     recede+=(((window.__ofxRecede)||1)-recede)*0.06;
     var breathe=(REDUCE?1:(1+Math.sin(t*0.9)*0.02))*recede;
     var o=gOff();
-    nebula(); starfield();
-    drawRing(RINGS[1],breathe,o); drawRing(RINGS[2],breathe,o);  /* structural behind */
-    drawRing(RINGS[0],breathe,o);                                 /* zodiac ring */
-    placeNodes(RINGS[0],breathe,o);
-    drawZodiacLinks();
-    if(!REDUCE){ if(t-lastArc>1.2 && arcs.length<5 && ig>0.85){ elementArc(); lastArc=t; } drawArcs(); }
-    drawNodes();
+    nebula();starfield();
+    drawRing(RINGS[2],breathe,o);
+    drawRing(RINGS[1],breathe,o);
+    drawRing(RINGS[0],breathe,o);
+    if(inner.length){placeNodes(inner,RINGS[1],breathe,o);}
+    placeNodes(outer,RINGS[0],breathe,o);
+    drawLinks(outer);
+    if(!REDUCE){if(t-lastArc>1.2&&arcs.length<5&&ig>0.85){elementArc();lastArc=t;}drawArcs();}
+    drawMotes(breathe,o);
+    if(inner.length)drawNodes(inner,false);
+    drawNodes(outer,true);
+    broadcast(o);
     heartbeat(o);
     core(o,breathe);
   }
 
-  function loop(){ if(!hidden){ t+=0.016; frame(); } raf=requestAnimationFrame(loop); }
+  function loop(){if(!hidden){t+=0.016;frame();}raf=requestAnimationFrame(loop);}
   function attach(){
     if(!document.body){requestAnimationFrame(attach);return;}
-    document.body.appendChild(cv); resize(); buildAll();
+    document.body.appendChild(cv);resize();buildAll();
     if(REDUCE){frame();}else{if(raf)cancelAnimationFrame(raf);loop();}
   }
 
@@ -412,16 +467,22 @@
   },{passive:true});
   window.addEventListener('scroll',function(){
     var y=window.pageYOffset||document.documentElement.scrollTop||0;
-    window.__ofxScrollSpin=y*0.0009;                  /* revolve as you descend */
-    window.__ofxRecede=1-Math.min(0.12,y/4200);       /* gently recede for depth */
+    window.__ofxScrollSpin=y*0.0009;window.__ofxRecede=1-Math.min(0.12,y/4200);
   },{passive:true});
   document.addEventListener('visibilitychange',function(){hidden=document.hidden;});
+
+  /* public hook: switch the active lens live (used by the showcase) */
+  window.__omegaSetLens=function(k,opts){
+    if(!LENSES[k])return;opts=opts||{};
+    LENSKEY=k;LENS=LENSES[k];ECON_ON=!!opts.econ;BROADCAST_ON=!!opts.broadcast;
+    buildOrrery();if(!REDUCE)ig=0.5;   /* partial re-ignition on switch */
+  };
   attach();
 
   /* ============================================================ UI MOTION LAYER */
   function injectCSS(){
     if(document.getElementById('omega-fx-css'))return;
-    var s=document.createElement('style'); s.id='omega-fx-css';
+    var s=document.createElement('style');s.id='omega-fx-css';
     s.textContent=[
       '.ofx-rise{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}',
       '.ofx-rise.ofx-in{opacity:1;transform:none}',
@@ -435,19 +496,15 @@
     ].join('');
     (document.head||document.documentElement).appendChild(s);
   }
-
   function enhance(){
-    injectCSS(); if(REDUCE)return;
+    injectCSS();if(REDUCE)return;
     if('IntersectionObserver' in window){
       var sel='.card,.gate-card,.w-card,.kpi,.stat,.tab-panel,.tier-card,[class*="-card"],section.pad';
-      var io=new IntersectionObserver(function(ents){
-        ents.forEach(function(en){if(en.isIntersecting){en.target.classList.add('ofx-in');io.unobserve(en.target);}});
-      },{threshold:0.08,rootMargin:'0px 0px -8% 0px'});
+      var io=new IntersectionObserver(function(ents){ents.forEach(function(en){if(en.isIntersecting){en.target.classList.add('ofx-in');io.unobserve(en.target);}});},{threshold:0.08,rootMargin:'0px 0px -8% 0px'});
       [].slice.call(document.querySelectorAll(sel)).forEach(function(el){
-        if(el.offsetParent===null)return;
-        var r=el.getBoundingClientRect();
-        if(r.top<window.innerHeight && r.bottom>0)return;
-        el.classList.add('ofx-rise'); io.observe(el);
+        if(el.offsetParent===null)return;var r=el.getBoundingClientRect();
+        if(r.top<window.innerHeight&&r.bottom>0)return;
+        el.classList.add('ofx-rise');io.observe(el);
       });
       setTimeout(function(){[].slice.call(document.querySelectorAll('.ofx-rise:not(.ofx-in)')).forEach(function(el){el.classList.add('ofx-in');});},4500);
     }
@@ -460,13 +517,13 @@
       el.classList.add('ofx-tilt');
       el.addEventListener('pointermove',function(e){
         var b=el.getBoundingClientRect();
-        var dx=(e.clientX-b.left)/b.width-0.5, dy=(e.clientY-b.top)/b.height-0.5;
+        var dx=(e.clientX-b.left)/b.width-0.5,dy=(e.clientY-b.top)/b.height-0.5;
         el.style.transform='perspective(800px) rotateX('+(-dy*6).toFixed(2)+'deg) rotateY('+(dx*6).toFixed(2)+'deg) translateZ(6px)';
       });
       el.addEventListener('pointerleave',function(){el.style.transform='';});
     });
     [].slice.call(document.querySelectorAll('.sechead')).forEach(function(el){
-      if(el.children.length===0 && (el.textContent||'').trim().length<48) el.classList.add('ofx-sheen');
+      if(el.children.length===0&&(el.textContent||'').trim().length<48)el.classList.add('ofx-sheen');
     });
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',enhance);}

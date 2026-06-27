@@ -1,4 +1,9 @@
-import { supabase } from "../database/supabase";
+// ============================================================================
+// FILE: /backend/src/services/founderDashboard.service.js
+// REPLACE THE ENTIRE FILE
+// ============================================================================
+
+import { supabase } from "../database/supabase.js";
 
 export async function statistics() {
 
@@ -12,67 +17,125 @@ export async function statistics() {
 
         active,
 
-        expired,
-
         organizations,
+
+        academy,
 
         publications,
 
-        marketplace
+        listings,
+
+        notifications
 
     ] = await Promise.all([
 
-        supabase.from("profiles").select("*",{count:"exact",head:true}).eq("approval_status","pending"),
+        supabase
 
-        supabase.from("profiles").select("*",{count:"exact",head:true}).eq("approval_status","approved"),
+            .from("profiles")
 
-        supabase.from("profiles").select("*",{count:"exact",head:true}).eq("approval_status","rejected"),
+            .select("*",{head:true,count:"exact"})
 
-        supabase.from("profiles").select("*",{count:"exact",head:true}).eq("access_state","active"),
+            .eq("approval_status","pending"),
 
-        supabase.from("profiles").select("*",{count:"exact",head:true}).eq("access_state","expired"),
+        supabase
 
-        supabase.from("organizations").select("*",{count:"exact",head:true}),
+            .from("profiles")
 
-        supabase.from("publications").select("*",{count:"exact",head:true}),
+            .select("*",{head:true,count:"exact"})
 
-        supabase.from("marketplace_listings").select("*",{count:"exact",head:true})
+            .eq("approval_status","approved"),
+
+        supabase
+
+            .from("profiles")
+
+            .select("*",{head:true,count:"exact"})
+
+            .eq("approval_status","rejected"),
+
+        supabase
+
+            .from("profiles")
+
+            .select("*",{head:true,count:"exact"})
+
+            .eq("access_state","active"),
+
+        supabase
+
+            .from("organizations")
+
+            .select("*",{head:true,count:"exact"}),
+
+        supabase
+
+            .from("academy_courses")
+
+            .select("*",{head:true,count:"exact"}),
+
+        supabase
+
+            .from("publications")
+
+            .select("*",{head:true,count:"exact"}),
+
+        supabase
+
+            .from("marketplace_listings")
+
+            .select("*",{head:true,count:"exact"}),
+
+        supabase
+
+            .from("approval_notifications")
+
+            .select("*",{head:true,count:"exact"})
 
     ]);
 
     return {
 
-        pendingUsers:pending.count||0,
+        users:{
 
-        approvedUsers:approved.count||0,
+            pending:pending.count||0,
 
-        rejectedUsers:rejected.count||0,
+            approved:approved.count||0,
 
-        activeUsers:active.count||0,
+            rejected:rejected.count||0,
 
-        expiredUsers:expired.count||0,
+            active:active.count||0
+
+        },
 
         organizations:organizations.count||0,
 
+        academy:academy.count||0,
+
         publications:publications.count||0,
 
-        marketplaceListings:marketplace.count||0
+        marketplace:listings.count||0,
+
+        notifications:notifications.count||0
 
     };
 
 }
 
-export async function timeline(){
+export async function timeline(limit=100){
 
     const {data,error}=await supabase
 
-    .from("founder_dashboard_events")
+        .from("founder_dashboard_events")
 
-    .select("*")
+        .select("*")
 
-    .order("created_at",{ascending:false})
+        .order("created_at",{
 
-    .limit(200);
+            ascending:false
+
+        })
+
+        .limit(limit);
 
     if(error) throw error;
 

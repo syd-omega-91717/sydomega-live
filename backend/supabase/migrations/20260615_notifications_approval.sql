@@ -1,31 +1,36 @@
-create table if not exists approval_notifications (
+create extension if not exists pgcrypto;
+
+create table if not exists approval_requests (
 
     id uuid primary key default gen_random_uuid(),
 
-    approval_request_id uuid references approval_requests(id) on delete cascade,
+    profile_id uuid not null references profiles(id) on delete cascade,
 
-    recipient uuid references profiles(id) on delete cascade,
+    request_type text not null default 'platform_access',
 
-    sender uuid references profiles(id),
+    requested_role text default 'user',
 
-    title text not null,
+    requested_plan text default 'free',
 
-    body text,
+    current_status text not null default 'pending',
 
-    notification_type text default 'approval',
+    notes text,
 
-    status text default 'unread',
+    reviewed_by uuid references profiles(id),
 
-    action_url text,
+    reviewed_at timestamptz,
 
-    created_at timestamptz default now(),
+    rejection_reason text,
 
-    read_at timestamptz
+    created_at timestamptz not null default now()
 
 );
 
-create index if not exists idx_approval_notifications_recipient
-on approval_notifications(recipient);
+create index if not exists idx_approval_profile
+on approval_requests(profile_id);
 
-create index if not exists idx_approval_notifications_status
-on approval_notifications(status);
+create index if not exists idx_approval_status
+on approval_requests(current_status);
+
+create index if not exists idx_approval_created
+on approval_requests(created_at desc);

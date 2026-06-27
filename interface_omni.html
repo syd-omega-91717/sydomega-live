@@ -1,39 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Ω SYD OMEGA 91717 Control Deck</title>
-    <style>
-        body { background-color: #050505; color: #00ffcc; font-family: 'Courier New', monospace; padding: 40px; }
-        .panel { border: 2px solid #00ffcc; padding: 25px; border-radius: 4px; box-shadow: 0 0 15px rgba(0,255,204,0.2); }
-        h1 { color: #ffffff; text-shadow: 0 0 10px #00ffcc; }
-        .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
-        .status-box { border: 1px solid #444; padding: 15px; background: #0a0a0a; }
-        .symbol-brand { font-size: 24px; color: #ffffff; }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- Control Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--soul:#9B6BF0;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
+  .shell{display:flex;min-height:100vh}
+  .side{width:0}
+  .main{flex:1;min-width:0}
+  .topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}
+  .topbar .t{font-family:var(--D);font-weight:700;color:var(--gold);font-size:clamp(16px,2.5vw,24px);letter-spacing:2px}
+  .topbar .t small{display:block;font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:3px;margin-top:3px}
+  .sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px clamp(14px,3vw,36px) 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .pad{padding:0 clamp(14px,3vw,36px) 60px}
+  .state{display:flex;align-items:center;gap:14px;margin:4px clamp(14px,3vw,36px) 0;font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--muted)}
+  .state .dot{width:8px;height:8px;background:var(--green);border-radius:0;box-shadow:0 0 10px var(--green);animation:pulse 2.4s ease-in-out infinite}
+  .state b{color:var(--solar);letter-spacing:3px}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+  .card{background:linear-gradient(160deg,rgba(13,13,24,.6),rgba(10,10,15,.4));border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:24px 22px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent)}
+  .card .glyph{position:absolute;right:14px;top:12px;font-family:var(--D);font-size:24px;color:rgba(201,168,76,.16)}
+  .card h3{font-family:var(--D);font-size:15px;letter-spacing:2px;color:var(--gold);margin-bottom:16px;font-weight:700}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px dashed rgba(201,168,76,.1)}
+  .row:last-child{border-bottom:none}
+  .row .k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+  .row .v{font-family:var(--D);font-size:16px;color:var(--cyan)}
+  .row .v.gold{color:var(--solar)}
+</style>
 </head>
 <body>
-    <div class="panel">
-        <h1>Ω SYD OMEGA 91717</h1>
-        <p>System State: <strong>Self-Evolving [LIMITLESS]</strong></p>
-        
-        <div class="status-grid">
-            <div class="status-box">
-                <h3>Ownership Control</h3>
-                <p>System Core: 100% Retained</p>
-                <p>Ω Tokens: 51% Secured</p>
-            </div>
-            <div class="status-box">
-                <h3>Global Syndication</h3>
-                <p>Networks Sync: Active</p>
-                <p>Target Index: Unlimited Forward</p>
-            </div>
-            <div class="status-box">
-                <h3>Ecosystem Matrix</h3>
-                <p>User Stages: 1-9 Matrix Online</p>
-                <p>Regulation Mode: Auto-Update</p>
-            </div>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="interface_omni"></aside>
+  <main class="main">
+    <div class="topbar"><div class="t">CONTROL DECK<small>SYSTEM STATE . SOVEREIGN OVERSIGHT</small></div></div>
+    <div class="state"><span class="dot"></span>SYSTEM STATE: <b>SELF-EVOLVING</b></div>
+    <div class="sechead">LIVE SYSTEM TELEMETRY</div>
+    <div class="pad">
+      <div class="grid">
+        <div class="card">
+          <span class="glyph">&#937;</span>
+          <h3>OWNERSHIP CONTROL</h3>
+          <div class="row"><span class="k">System Core</span><span class="v gold">100%</span></div>
+          <div class="row"><span class="k">&#937; Token Reserve</span><span class="v">51%</span></div>
+          <div class="row"><span class="k">Governance Lock</span><span class="v">SOVEREIGN</span></div>
         </div>
+        <div class="card">
+          <span class="glyph">&#937;</span>
+          <h3>GLOBAL SYNDICATION</h3>
+          <div class="row"><span class="k">Networks Sync</span><span class="v">ACTIVE</span></div>
+          <div class="row"><span class="k">Channels</span><span class="v">INSTAGRAM . X</span></div>
+          <div class="row"><span class="k">Reach Index</span><span class="v gold">EXPANDING</span></div>
+        </div>
+        <div class="card">
+          <span class="glyph">&#937;</span>
+          <h3>ECOSYSTEM MATRIX</h3>
+          <div class="row"><span class="k">Matrix Nodes</span><span class="v gold">104,976</span></div>
+          <div class="row"><span class="k">User Stages</span><span class="v">1 - 9 ONLINE</span></div>
+          <div class="row"><span class="k">Apex Authority</span><span class="v">15.588</span></div>
+        </div>
+        <div class="card">
+          <span class="glyph">&#937;</span>
+          <h3>THE TWELVE AGENTS</h3>
+          <div class="row"><span class="k">Mesh Status</span><span class="v">ONLINE</span></div>
+          <div class="row"><span class="k">Active Minds</span><span class="v gold">12 / 12</span></div>
+          <div class="row"><span class="k">Sovereign Agent</span><span class="v">BOUND</span></div>
+        </div>
+        <div class="card">
+          <span class="glyph">&#937;</span>
+          <h3>ELEMENTAL ENGINE</h3>
+          <div class="row"><span class="k">Elements</span><span class="v gold">9 ALIVE</span></div>
+          <div class="row"><span class="k">Amplifier</span><span class="v">SAND . VIRGO</span></div>
+          <div class="row"><span class="k">Pantheon</span><span class="v">ATHENA</span></div>
+        </div>
+        <div class="card">
+          <span class="glyph">&#937;</span>
+          <h3>INTEGRITY</h3>
+          <div class="row"><span class="k">Canon Lock</span><span class="v">SEALED</span></div>
+          <div class="row"><span class="k">Visual Engine</span><span class="v gold">CINEMATIC</span></div>
+          <div class="row"><span class="k">Mode</span><span class="v">VOID ONLY</span></div>
+        </div>
+      </div>
     </div>
+  </main>
+</div>
+<script src="/nav.js"></script><script src="/bg.js"></script>
 </body>
 </html>

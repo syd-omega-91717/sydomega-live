@@ -14,6 +14,7 @@ import searchRouter from "./routes/search";
 import webhookRouter from "./routes/webhooks";
 import rolesRouter from "./routes/roles";
 import permissionsRouter from "./routes/permissions";
+import approvalsRouter from "./routes/approvals";
 
 import { requestId } from "./middleware/requestId";
 import { logger } from "./middleware/logger";
@@ -56,6 +57,7 @@ app.use("/api/search", searchRouter);
 app.use("/api/webhooks", webhookRouter);
 app.use("/api/roles", rolesRouter);
 
+app.use("/api/approvals", approvalsRouter);
 app.use("/api/permissions", permissionsRouter);
 
 app.use(notFound);

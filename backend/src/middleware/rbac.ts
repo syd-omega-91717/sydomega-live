@@ -1,56 +1,160 @@
-import { Request, Response, NextFunction } from "express";
+// ============================================================================
+// FILE: /backend/src/middleware/rbac.js
+// REPLACE THE ENTIRE FILE
+// ============================================================================
 
-import { hasPermission } from "../auth/rbac";
+import { supabase } from "../database/supabase.js";
 
-export function authorize(
+const FOUNDER_EMAILS = [
+    "s.y.dagher@gmail.com",
+    "slmndghr@gmail.com"
+];
 
-    resource: string,
+const FOUNDER_PHONES = [
+    "+9613062576",
+    "+96170599588"
+];
 
-    action: string
+async function loadProfile(profileId) {
 
-) {
+    const { data, error } = await supabase
 
-    return async (
+        .from("profiles")
 
-        req: any,
+        .select(`
+            id,
+            email,
+            mobile,
+            role,
+            account_enabled,
+            approval_status,
+            verification_status
+        `)
 
-        res: Response,
+        .eq("id", profileId)
 
-        next: NextFunction
+        .single();
 
-    ) => {
+    if (error) throw error;
 
-        const userId = req.user?.id;
+    return data;
 
-        if (!userId)
+}
 
-            return res.status(401).json({
+function isFounder(profile) {
 
-                success: false
+    return (
+
+        FOUNDER_EMAILS.includes(profile.email) ||
+
+        FOUNDER_PHONES.includes(profile.mobile)
+
+    );
+
+}
+
+export function authorize(resource, action) {
+
+    return async (req, res, next) => {
+
+        try {
+
+            const profile = await loadProfile(req.user.id);
+
+            if (!profile.account_enabled)
+
+                return res.status(403).json({
+
+                    success: false,
+
+                    message: "Account disabled."
+
+                });
+
+            if (
+
+                profile.approval_status !== "approved" ||
+
+                profile.verification_status !== "verified"
+
+            )
+
+                return res.status(403).json({
+
+                    success: false,
+
+                    message: "Verification required."
+
+                });
+
+            if (isFounder(profile)) {
+
+                req.permissions = ["*"];
+
+                req.profile = profile;
+
+                return next();
+
+            }
+
+            const { data } = await supabase
+
+                .from("role_permissions")
+
+                .select(`
+                    permissions(
+                        resource,
+                        action
+                    )
+                `)
+
+                .eq("role_id", profile.role);
+
+            const allowed = (data || []).some(item => {
+
+                const permission = item.permissions;
+
+                if (!permission) return false;
+
+                return (
+
+                    permission.resource === resource &&
+
+                    permission.action === action
+
+                );
 
             });
 
-        const allowed = await hasPermission(
+            if (!allowed)
 
-            userId,
+                return res.status(403).json({
 
-            resource,
+                    success: false,
 
-            action
+                    message: "Permission denied."
 
-        );
+                });
 
-        if (!allowed)
+            req.profile = profile;
 
-            return res.status(403).json({
+            next();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            return res.status(500).json({
 
                 success: false,
 
-                message: "Permission denied"
+                message: error.message
 
             });
 
-        next();
+        }
 
     };
 

@@ -5,6 +5,7 @@ import compression from "compression";
 import morgan from "morgan";
 import dotenv from "dotenv";
 
+import accessRouter from "./routes/access";
 import authRoutes from "./routes/auth.js";
 import profileRoutes from "./routes/profile.js";
 import dashboardRoutes from "./routes/dashboard.js";
@@ -47,6 +48,7 @@ app.use("/api/consultancy",consultancyRoutes);
 app.use("/api/publishing",publishingRoutes);
 app.use("/api/search",searchRoutes);
 app.use("/api/ai",aiRoutes);
+app.use("/api/access", accessRouter);
 
 const PORT=process.env.PORT||3000;
 

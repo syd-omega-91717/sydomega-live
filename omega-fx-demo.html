@@ -1,119 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717  --  Cinematic Engine</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- The Sovereign Armillary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-  :root{
-    --void:#0A0A0F; --void2:#0A0A0F; --gold:#C9A84C; --gold-soft:#E2C86D;
-    --cyan:#00E5FF; --crim:#8B0000; --soul:#9B6BF0;
-    --ink:#E9E6DC; --muted:#85837b;
-    --glass:rgba(13,13,24,.55); --line:rgba(201,168,76,.18);
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--void);color:var(--ink);font-family:"Rajdhani",sans-serif}
-  body{min-height:100vh;overflow-x:hidden}
-  .mono{font-family:"Courier Prime",monospace}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
-
-  header.hero{position:relative;min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 22px 60px}
-  .eyebrow{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-bottom:26px}
-  .omega-mark{font-family:"Cinzel Decorative",serif;font-weight:900;font-size:clamp(64px,15vw,150px);line-height:.9;color:var(--gold);text-shadow:0 0 50px rgba(201,168,76,.35);letter-spacing:2px}
-  h1.title{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:clamp(22px,4.6vw,42px);letter-spacing:6px;margin:14px 0 0;color:var(--ink)}
-  .sub{max-width:560px;margin:22px auto 0;font-size:clamp(14px,2vw,17px);font-weight:300;line-height:1.85;color:rgba(233,230,220,.72)}
-  .scroll-cue{margin-top:54px;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:4px;color:var(--muted)}
-  .scroll-cue span{display:block;margin-top:8px;color:var(--gold);animation:bob 2.4s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-
-  section.pad{padding:64px 0}
-  .sechead{font-family:"Cinzel Decorative",serif;font-size:clamp(16px,3vw,24px);letter-spacing:4px;color:var(--gold);margin:0 0 6px}
-  .secsub{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin:0 0 30px}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
-  .card{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:24px 22px;border-radius:2px;position:relative;overflow:hidden}
-  .card::before{content:"";position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent)}
-  .card .k{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
-  .card .v{font-family:"Cinzel Decorative",serif;font-size:30px;color:var(--gold);margin:12px 0 8px;font-weight:700}
-  .card .d{font-size:14px;font-weight:300;line-height:1.7;color:rgba(233,230,220,.62)}
-  .card .glyph{position:absolute;right:14px;top:12px;font-family:"Cinzel Decorative",serif;font-size:26px;color:rgba(201,168,76,.18)}
-
-  .kpi{background:var(--glass);border:1px solid var(--line);padding:18px;text-align:center;backdrop-filter:blur(8px)}
-  .kpi .n{font-family:"Cinzel Decorative",serif;font-size:26px;color:var(--cyan)}
-  .kpi .l{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:6px;text-transform:uppercase}
-
-  .panel{background:linear-gradient(160deg,rgba(13,13,24,.6),rgba(10,10,15,.4));border:1px solid var(--line);padding:34px 30px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-  .panel p{font-weight:300;line-height:1.9;color:rgba(233,230,220,.78);font-size:15px}
-  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-  .tag{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid var(--line);color:var(--gold-soft);text-transform:uppercase}
-
-  footer{padding:60px 22px 80px;text-align:center;border-top:1px solid rgba(201,168,76,.1);margin-top:40px}
-  footer .mono{font-size:9px;letter-spacing:3px;color:var(--muted)}
-  .omega-foot{font-family:"Cinzel Decorative",serif;color:var(--gold);font-size:22px;margin-bottom:12px}
+  :root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--ink:#E9E6DC;--muted:#85837b;--line:rgba(201,168,76,.16)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--void);color:var(--ink);font-family:"Rajdhani",sans-serif;min-height:100vh;overflow-x:hidden}
+  .hero{min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:70px 22px 30px}
+  .eyebrow{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-bottom:22px}
+  .omega{font-family:"Cinzel Decorative",serif;font-weight:900;font-size:clamp(56px,13vw,128px);color:var(--gold);text-shadow:0 0 50px rgba(201,168,76,.35)}
+  h1{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:clamp(20px,4.4vw,38px);letter-spacing:6px;margin:12px 0 0}
+  .sub{max-width:580px;margin:20px auto 0;font-weight:300;line-height:1.85;color:rgba(233,230,220,.72);font-size:clamp(14px,2vw,16px)}
+  .switch{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:18px 14px;background:rgba(8,8,15,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .lb{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 13px;border:1px solid var(--line);background:transparent;cursor:pointer;transition:all .15s}
+  .lb:hover{color:var(--gold);border-color:rgba(201,168,76,.5)}
+  .lb.on{color:var(--void);background:var(--gold);border-color:var(--gold);font-weight:700}
+  .lb.tog{color:var(--cyan);border-color:rgba(0,229,255,.3)}
+  .lb.tog.on{background:var(--cyan);color:var(--void)}
+  .legend{text-align:center;padding:30px 22px 70px;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;color:var(--muted);line-height:2.2}
+  .legend b{color:var(--solar);font-family:"Cinzel Decorative",serif;letter-spacing:3px}
+  .spacer{height:34vh}
 </style>
 </head>
 <body>
   <header class="hero">
-    <div class="eyebrow">SOVEREIGN VISUAL SYSTEM &middot; LIVE</div>
-    <div class="omega-mark">&#937;</div>
-    <h1 class="title">THE LIVING MATRIX</h1>
-    <p class="sub">The backdrop is no longer a picture. It is an orrery in motion &mdash; rings that rotate at their own speeds and tilts, the twelve signs in their true wheel order -- each in its own colour, Virgo in sand-gold -- orbiting, leaning toward your cursor, and trading energy between signs of a shared element. Move your pointer. Watch it answer.</p>
-    <div class="scroll-cue">SCROLL TO SEE THE INTERFACE RESPOND<span>&darr;</span></div>
+    <div class="eyebrow">THE SOVEREIGN ARMILLARY &middot; LIVE</div>
+    <div class="omega">&#937;</div>
+    <h1>ONE INSTRUMENT, EVERY SYSTEM</h1>
+    <p class="sub">An inner ring of the nine elements turns inside an outer ring of twelve. Choose a lens and the outer ring becomes that system &mdash; signs, gods, gates, grades, trophies, medals, certificates, planets, franchises, or the twenty-eight kings. Toggle the economy to stream token-motes, or broadcast to syndicate. On the live platform, each page ignites its own lens automatically.</p>
   </header>
 
-  <main class="wrap">
-    <section class="pad">
-      <h2 class="sechead">THE CINEMATIC LAYER</h2>
-      <p class="secsub">five orchestrated systems, one canvas</p>
-      <div class="grid">
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 01</div><div class="v">ORRERY</div><div class="d">Concentric rings rotate at independent speeds and tilts, precessing for a true multi-dimensional read.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 02</div><div class="v">NODES</div><div class="d">Twelve sign-nodes ride the rings, flaring as they pass beneath your cursor.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 03</div><div class="v">ARCS</div><div class="d">When nodes draw close they trade light &mdash; energy arcs travel between them, alive and self-interacting.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 04</div><div class="v">STARFIELD</div><div class="d">Three parallax depth layers drift and twinkle, shifting against your motion.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">System 05</div><div class="v">NEBULA</div><div class="d">Gold, cyan, and crimson light fields breathe across the void on slow orbital paths.</div></div>
-        <div class="card"><span class="glyph">&#937;</span><div class="k">Core</div><div class="v">SIGIL</div><div class="d">The central Omega pulses and parallax-shifts, the still point the whole system turns around.</div></div>
-      </div>
-    </section>
+  <nav class="switch" id="sw">
+    <button class="lb on" data-k="signs">Signs</button>
+    <button class="lb" data-k="gods">Gods</button>
+    <button class="lb" data-k="gates">Gates</button>
+    <button class="lb" data-k="grades">Grades</button>
+    <button class="lb" data-k="trophies">Trophies</button>
+    <button class="lb" data-k="medals">Medals</button>
+    <button class="lb" data-k="certificates">Certificates</button>
+    <button class="lb" data-k="planets">Planets</button>
+    <button class="lb" data-k="movies">Franchises</button>
+    <button class="lb" data-k="kings">28 Kings</button>
+    <button class="lb" data-k="elements">9 Elements</button>
+    <button class="lb tog" id="econ">+ Economy</button>
+    <button class="lb tog" id="bcast">+ Broadcast</button>
+  </nav>
 
-    <section class="pad">
-      <h2 class="sechead">THE INTERFACE IS ALIVE</h2>
-      <p class="secsub">these panels rose as you scrolled &middot; tilt the cards</p>
-      <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
-        <div class="kpi"><div class="n">104,976</div><div class="l">Matrix Nodes</div></div>
-        <div class="kpi"><div class="n">15.588</div><div class="l">Apex Authority</div></div>
-        <div class="kpi"><div class="n">12</div><div class="l">Olympian Tracks</div></div>
-        <div class="kpi"><div class="n">9</div><div class="l">Elements</div></div>
-        <div class="kpi"><div class="n">9.000</div><div class="l">Sovereign Axis</div></div>
-        <div class="kpi"><div class="n">&#937;</div><div class="l">Sovereign Mark</div></div>
-      </div>
-    </section>
+  <div class="legend">
+    <b>BLOCKCHAIN &middot; CRYPTO &middot; NFT</b><br/>
+    stream the rings as token-motes when the economy is live<br/><br/>
+    <b>ADVERTISEMENT</b><br/>
+    fires outward syndication pulses when broadcast is on<br/><br/>
+    <b>VIRGO &middot; SAND &middot; ATHENA</b><br/>
+    the gold amplifier, brighter than the rest, on signs and gods
+  </div>
+  <div class="spacer"></div>
 
-    <section class="pad">
-      <h2 class="sechead">ONE ENGINE, EVERY SURFACE</h2>
-      <p class="secsub">web &middot; mobile &middot; platform</p>
-      <div class="panel">
-        <p>The engine loads once, globally, through the shared backdrop script &mdash; so every page inherits the same living atmosphere without per-page work. It scales its particle count to the viewport, reads device tilt on mobile for parallax, pauses when the tab is hidden to spare the battery, and falls back to a calm static frame for anyone who prefers reduced motion. Nothing here breaks the canon: void black, Omega gold, electric cyan, deep crimson, drawn in pure ASCII with the Omega as its proper sigil.</p>
-        <div class="tagrow">
-          <span class="tag">Rotative</span>
-          <span class="tag">Multi-dimensional</span>
-          <span class="tag">Cursor-reactive</span>
-          <span class="tag">Self-interacting</span>
-          <span class="tag">Reduced-motion safe</span>
-          <span class="tag">Battery-aware</span>
-          <span class="tag">Canon-locked</span>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="omega-foot">&#937;</div>
-    <div class="mono">SYD OMEGA 91717 &middot; CINEMATIC ENGINE &middot; OMEGA-FX</div>
-  </footer>
-
+  <script>
+    var econ=false, bcast=false, cur='signs';
+    function apply(){ if(window.__omegaSetLens) window.__omegaSetLens(cur,{econ:econ,broadcast:bcast}); }
+    document.querySelectorAll('.lb[data-k]').forEach(function(b){
+      b.addEventListener('click',function(){
+        document.querySelectorAll('.lb[data-k]').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on'); cur=b.getAttribute('data-k'); apply();
+      });
+    });
+    document.getElementById('econ').addEventListener('click',function(){econ=!econ;this.classList.toggle('on',econ);apply();});
+    document.getElementById('bcast').addEventListener('click',function(){bcast=!bcast;this.classList.toggle('on',bcast);apply();});
+  </script>
   <script src="omega-fx.js"></script>
 </body>
 </html>

@@ -1,43 +1,58 @@
-import { Request, Response, NextFunction } from "express";
+// ============================================================================
+// FILE: /backend/src/middleware/session.js
+// REPLACE THE ENTIRE FILE
+// ============================================================================
 
-import { supabase } from "../database/supabase";
+import jwt from "jsonwebtoken";
 
-export async function session(
+export async function session(req, res, next) {
 
-    req: any,
+    try {
 
-    res: Response,
+        const header = req.headers.authorization;
 
-    next: NextFunction
+        if (!header)
 
-) {
+            return res.status(401).json({
 
-    const token =
+                success: false,
 
-        req.headers.authorization?.replace("Bearer ", "");
+                message: "Missing authorization header."
 
-    if (!token)
+            });
+
+        const token = header.replace("Bearer ", "");
+
+        const payload = jwt.verify(
+
+            token,
+
+            process.env.JWT_SECRET
+
+        );
+
+        req.user = {
+
+            id: payload.sub,
+
+            email: payload.email
+
+        };
+
+        next();
+
+    }
+
+    catch (error) {
 
         return res.status(401).json({
 
-            success: false
+            success: false,
+
+            message: "Invalid session."
 
         });
 
-    const { data, error } =
-
-        await supabase.auth.getUser(token);
-
-    if (error)
-
-        return res.status(401).json({
-
-            success: false
-
-        });
-
-    req.user = data.user;
-
-    next();
+    }
 
 }

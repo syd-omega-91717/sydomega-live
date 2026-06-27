@@ -131,15 +131,9 @@
   }
 })();
 
-/* LUMINOUS TOGGLE */
-(function(){
-  if(document.getElementById('omega-lux-toggle'))return;
-  var stored=localStorage.getItem('omega_lux_mode')||'void';
-  function applyMode(m){if(m==='lux'){document.documentElement.style.setProperty('--void','#F5F5F7');document.documentElement.style.setProperty('--panel','#EFEFEF');document.documentElement.style.setProperty('--ink','#111114');document.documentElement.style.setProperty('--muted','#555558');document.body.style.background='#F5F5F7';btn.textContent='[O] VOID MODE';btn.style.color='#07070b';btn.style.borderColor='rgba(7,7,11,.2)';}else{document.documentElement.style.removeProperty('--void');document.documentElement.style.removeProperty('--panel');document.documentElement.style.removeProperty('--ink');document.documentElement.style.removeProperty('--muted');document.body.style.background='';btn.textContent='[*] LUX MODE';btn.style.color='rgba(201,168,76,0.5)';btn.style.borderColor='rgba(201,168,76,0.14)';}}
-  var btn=document.createElement('button');btn.id='omega-lux-toggle';btn.style.cssText='position:fixed;bottom:68px;right:18px;z-index:9997;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:6px 12px;background:transparent;border:1px solid;cursor:pointer;transition:all .2s';
-  btn.addEventListener('click',function(){var cur=localStorage.getItem('omega_lux_mode')||'void';var next=cur==='void'?'lux':'void';localStorage.setItem('omega_lux_mode',next);applyMode(next);});
-  document.body.appendChild(btn);applyMode(stored);
-})();
+/* LIGHT MODE REMOVED -- canon is absolute: void only, no light mode.
+   Any previously stored light preference is purged so the void is enforced. */
+(function(){try{localStorage.removeItem('omega_lux_mode');var b=document.getElementById('omega-lux-toggle');if(b)b.remove();}catch(e){}})();
 
 /* TOPBAR HOME+BACK + MOBILE BOTTOM NAV */
 (function(){

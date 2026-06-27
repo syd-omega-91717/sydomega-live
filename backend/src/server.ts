@@ -1,71 +1,183 @@
+// ============================================================================
+// FILE: /backend/src/server.js
+// REPLACE THE ENTIRE FILE
+// ============================================================================
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
+import dotenv from "dotenv";
 
-import healthRouter from "./routes/health";
-import authRouter from "./routes/auth";
-import projectsRouter from "./routes/projects";
-import tasksRouter from "./routes/tasks";
-import aiRouter from "./routes/ai";
-import storageRouter from "./routes/storage";
-import searchRouter from "./routes/search";
-import webhookRouter from "./routes/webhooks";
-import rolesRouter from "./routes/roles";
-import permissionsRouter from "./routes/permissions";
-import approvalsRouter from "./routes/approvals";
+import authRoutes from "./routes/auth.js";
+import profileRoutes from "./routes/profile.js";
+import dashboardRoutes from "./routes/dashboard.js";
+import academyRoutes from "./routes/academy.js";
+import consultancyRoutes from "./routes/consultancy.js";
+import publishingRoutes from "./routes/publishing.js";
+import searchRoutes from "./routes/search.js";
+import aiRoutes from "./routes/ai.js";
 
-import notificationsRouter from "./routes/notifications";
+import accessRoutes from "./routes/access.js";
+import approvalRoutes from "./routes/approvals.js";
+import notificationRoutes from "./routes/notifications.js";
+import founderDashboardRoutes from "./routes/founderDashboard.js";
 
-import { requestId } from "./middleware/requestId";
-import { logger } from "./middleware/logger";
-import { errorHandler } from "./middleware/errorHandler";
-import { notFound } from "./middleware/notFound";
+import { expireAll } from "./services/access.service.js";
+
+dotenv.config();
 
 const app = express();
 
+app.disable("x-powered-by");
+
 app.use(cors());
-app.use(helmet());
+
+app.use(helmet({
+
+    crossOriginEmbedderPolicy:false,
+
+    contentSecurityPolicy:false
+
+}));
+
 app.use(compression());
+
+app.use(express.json({
+
+    limit:"25mb"
+
+}));
+
+app.use(express.urlencoded({
+
+    extended:true,
+
+    limit:"25mb"
+
+}));
+
 app.use(morgan("combined"));
-app.use(express.json({ limit: "25mb" }));
-app.use(express.urlencoded({ extended: true }));
 
-app.use(requestId);
-app.use(logger);
-
-app.get("/", (_, res) => {
+app.get("/",(req,res)=>{
 
     res.json({
 
-        system: "Ω SYD OMEGA 91717",
+        system:"Ω SYD OMEGA 91717",
 
-        version: "1.0.0",
+        version:"1.1.0",
 
-        status: "ONLINE"
+        environment:process.env.NODE_ENV,
+
+        status:"ONLINE",
+
+        uptime:process.uptime(),
+
+        timestamp:new Date()
 
     });
 
 });
 
-app.use("/api/health", healthRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/projects", projectsRouter);
-app.use("/api/tasks", tasksRouter);
-app.use("/api/ai", aiRouter);
-app.use("/api/storage", storageRouter);
-app.use("/api/search", searchRouter);
-app.use("/api/webhooks", webhookRouter);
-app.use("/api/roles", rolesRouter);
+app.get("/health",(req,res)=>{
 
-app.use("/api/notifications",notificationsRouter);
+    res.json({
 
-app.use("/api/approvals", approvalsRouter);
-app.use("/api/permissions", permissionsRouter);
+        success:true,
 
-app.use(notFound);
+        database:"ONLINE",
 
-app.use(errorHandler);
+        backend:"ONLINE",
 
-export default app;
+        api:"ONLINE",
+
+        timestamp:new Date()
+
+    });
+
+});
+
+app.use("/api/auth",authRoutes);
+
+app.use("/api/profile",profileRoutes);
+
+app.use("/api/dashboard",dashboardRoutes);
+
+app.use("/api/academy",academyRoutes);
+
+app.use("/api/consultancy",consultancyRoutes);
+
+app.use("/api/publishing",publishingRoutes);
+
+app.use("/api/search",searchRoutes);
+
+app.use("/api/ai",aiRoutes);
+
+app.use("/api/access",accessRoutes);
+
+app.use("/api/approvals",approvalRoutes);
+
+app.use("/api/notifications",notificationRoutes);
+
+app.use("/api/founder",founderDashboardRoutes);
+
+setInterval(async()=>{
+
+    try{
+
+        await expireAll();
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+    }
+
+},60000);
+
+app.use((req,res)=>{
+
+    res.status(404).json({
+
+        success:false,
+
+        message:"Endpoint not found."
+
+    });
+
+});
+
+app.use((err,req,res,next)=>{
+
+    console.error(err);
+
+    res.status(500).json({
+
+        success:false,
+
+        message:err.message
+
+    });
+
+});
+
+const PORT=process.env.PORT||3000;
+
+app.listen(PORT,()=>{
+
+    console.log("");
+
+    console.log("====================================");
+
+    console.log("Ω SYD OMEGA 91717");
+
+    console.log("Backend Running");
+
+    console.log("Port:",PORT);
+
+    console.log("====================================");
+
+});

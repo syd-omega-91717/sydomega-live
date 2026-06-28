@@ -1,13 +1,24 @@
+// ============================================================================
+// FILE: /backend/src/middleware/notFound.ts
+// NEW FILE
+// ============================================================================
+
 import { Request, Response } from "express";
 
-export function notFound(
-    req: Request,
+export default function notFound(
+
+    _req: Request,
+
     res: Response
-) {
-    return res.status(404).json({
+
+): void {
+
+    res.status(404).json({
+
         success: false,
-        error: {
-            message: "Endpoint not found"
-        }
+
+        message: "Endpoint not found."
+
     });
+
 }

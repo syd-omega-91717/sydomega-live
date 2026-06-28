@@ -224,7 +224,7 @@
       Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(el){ if(el.textContent===String(q.options.filter(function(x){return x.correct;})[0].label)) el.classList.add('good'); });
       document.getElementById('m-stat').textContent='WRONG READING \u2014 the lesson resets.';
       document.getElementById('m-row').innerHTML='<button class="mbtn" id="m-retry">RETRY</button><button class="mbtn ghost" id="m-close2">LEAVE</button>';
-      document.getElementById('m-retry').addEventListener('click',function(){ got=0; document.getElementById('m-row').innerHTML='<button class="mbtn ghost" id="m-close">LEAVE</button>'; document.getElementById('m-close').addEventListener('click',closeModal); nextQ(); });
+      document.getElementById('m-retry').addEventListener('click',function(){ got=0; document.getElementById('m-row').innerHTML='<button class="mbtn ghost" id="m-close">LEAVE</button>'; document.getElementById('m-close')?.addEventListener('click',closeModal); nextQ(); });
       document.getElementById('m-close2').addEventListener('click',closeModal);
     }
   }
@@ -240,7 +240,7 @@
     document.getElementById('m-cont').addEventListener('click',closeModal);
     renderDisc(); openDisc(curD); updateMStat();
   }
-  function closeModal(){ document.getElementById('modal').classList.remove('open'); document.getElementById('m-row').innerHTML='<button class="mbtn ghost" id="m-close">LEAVE</button>'; document.getElementById('m-close').addEventListener('click',closeModal); }
+  function closeModal(){ document.getElementById('modal').classList.remove('open'); document.getElementById('m-row').innerHTML='<button class="mbtn ghost" id="m-close">LEAVE</button>'; document.getElementById('m-close')?.addEventListener('click',closeModal); }
 
   function updateMStat(){ var total=0; for(var d=0;d<12;d++) total+=clearsIn(d); document.getElementById('mstat').innerHTML='KNOWLEDGE (A) <b>'+axisA.toFixed(2)+'</b> / 9 \u00B7 NODES CLEARED <b>'+total+'</b> / 144'; }
 
@@ -256,8 +256,8 @@
     document.getElementById('app').style.display='flex';
     renderDisc(); updateMStat();
   }
-  document.getElementById('m-close').addEventListener('click',closeModal);
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('m-close')?.addEventListener('click',closeModal);
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

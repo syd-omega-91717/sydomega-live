@@ -321,8 +321,8 @@ async function boot(){
   const nodes=Math.round(a*b*c*9);
   const xp=Math.round(nodes*917.17);
   document.getElementById('aum-val').innerHTML='&#937; '+xp.toLocaleString();
-  document.getElementById('res-credits').textContent='&#937; '+Math.round(nodes*91.7).toLocaleString();
-  document.getElementById('res-digital').textContent='&#937; '+Math.round(nodes*9.17).toLocaleString();
+  document.getElementById('res-credits').textContent='\u03A9 '+Math.round(nodes*91.7).toLocaleString();
+  document.getElementById('res-digital').textContent='\u03A9 '+Math.round(nodes*9.17).toLocaleString();
   buildAssets(); buildNodes(); buildSplinter();
   requestAnimationFrame(()=>{drawWave();drawVaultCube();});
 }

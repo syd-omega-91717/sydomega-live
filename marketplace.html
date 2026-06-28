@@ -163,7 +163,7 @@
     load();
   }
   document.getElementById('post').addEventListener('click',publish);
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

@@ -1,29 +1,37 @@
+// ============================================================================
+// FILE: /backend/src/config/env.ts
+// REPLACE THE ENTIRE FILE
+// ============================================================================
+
 import dotenv from "dotenv";
+import { z } from "zod";
 
 dotenv.config();
 
-export const env = {
+const schema = z.object({
 
-    NODE_ENV: process.env.NODE_ENV || "development",
+    NODE_ENV: z.enum([
 
-    PORT: Number(process.env.PORT || 3000),
+        "development",
 
-    SUPABASE_URL: process.env.SUPABASE_URL || "",
+        "production",
 
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+        "test"
 
-    JWT_SECRET: process.env.JWT_SECRET || "",
+    ]).default("development"),
 
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
+    PORT: z.coerce.number().default(3000),
 
-    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || "",
+    SUPABASE_URL: z.string().url(),
 
-    GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
+    SUPABASE_SERVICE_ROLE_KEY: z.string(),
 
-    DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY || "",
+    JWT_SECRET: z.string(),
 
-    OLLAMA_URL: process.env.OLLAMA_URL || "http://localhost:11434"
+    FRONTEND_URL: z.string().url()
 
-};
+});
+
+const env = schema.parse(process.env);
 
 export default env;

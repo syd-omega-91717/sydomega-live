@@ -173,7 +173,7 @@
     try{ var tc=await supabase.from('task_completions').select('task').eq('user_id',uid).eq('kind','contribution'); if(tc.data) tc.data.forEach(function(x){ done.add(x.task); }); }catch(e){}
     renderDoms(); renderActs();
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

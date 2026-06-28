@@ -138,7 +138,7 @@
     document.getElementById('app').style.display='flex';
     render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

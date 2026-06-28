@@ -381,7 +381,7 @@
   function renderDash(prof){
     currentProfile=prof;
     const s=find(prof.sign);
-    document.getElementById('d-glyph').textContent = s? s[1] : '&#937;';
+    document.getElementById('d-glyph').textContent = s? s[1] : '\u03A9';
     document.getElementById('d-sign').textContent = (prof.sign||'').toUpperCase();
     document.getElementById('d-range').textContent = s? s[2] : '';
     document.getElementById('d-character').textContent = s? '"'+s[7]+'"' : '';
@@ -393,7 +393,7 @@
     document.getElementById('who').textContent = currentUser ? currentUser.email : '';
     document.getElementById('ag-name').textContent = prof.agent || '';
     document.documentElement.style.setProperty('--acc', ELEM_ACCENT[prof.element] || '#C9A84C');
-    document.getElementById('ag-sigil').textContent = AGENT_SIGIL[prof.agent] || '&#937;';
+    document.getElementById('ag-sigil').textContent = AGENT_SIGIL[prof.agent] || '\u03A9';
     document.getElementById('ag-dom').textContent = AGENT_DOMAIN[prof.agent] ? ' .  '+AGENT_DOMAIN[prof.agent] : '';
     const aglog=document.getElementById('ag-log');
     if(aglog && !aglog.children.length){
@@ -463,7 +463,7 @@
       if(!data || !data.length){ box.innerHTML='<div class="empty">No certificates yet  --  reach node (3,3,3) to earn your first seal.</div>'; return 0; }
       data.forEach(c=>{
         const card=document.createElement('div'); card.className='seal';
-        const mk=document.createElement('div'); mk.className='s-mark'; mk.textContent='&#937;  .  '+c.milestone;
+        const mk=document.createElement('div'); mk.className='s-mark'; mk.textContent='\u03A9  .  '+c.milestone;
         const ti=document.createElement('div'); ti.className='s-title'; ti.textContent=c.title;
         const dt=document.createElement('div'); dt.className='s-date'; dt.textContent='ISSUED '+(c.issued_at? new Date(c.issued_at).toLocaleDateString() : '');
         card.appendChild(mk); card.appendChild(ti); card.appendChild(dt); box.appendChild(card);

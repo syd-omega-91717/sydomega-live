@@ -139,7 +139,7 @@
   }
   document.getElementById('apply-custom').addEventListener('click',function(){ save(document.getElementById('cpick').value); });
   document.getElementById('reset').addEventListener('click',reset);
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

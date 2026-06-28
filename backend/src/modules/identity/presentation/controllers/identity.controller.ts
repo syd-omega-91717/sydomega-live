@@ -1,21 +1,20 @@
 // ============================================================================
 // FILE: /backend/src/modules/identity/presentation/controllers/identity.controller.ts
-// NEW FILE
+// REPLACE THE ENTIRE FILE
 // ============================================================================
 
 import {
 
     Request,
-
     Response,
-
     NextFunction
 
 } from "express";
 
 import container from "../../../../platform/container/container.js";
-
 import TOKENS from "../../../../platform/container/tokens.js";
+
+import { LoginValidator } from "../validators/login.validator.js";
 
 import {
 
@@ -28,14 +27,18 @@ export class IdentityController {
     public async login(
 
         req: Request,
-
         res: Response,
-
         next: NextFunction
 
     ) {
 
         try {
+
+            const dto = LoginValidator.parse(
+
+                req.body
+
+            );
 
             const service =
 
@@ -49,17 +52,19 @@ export class IdentityController {
 
                 await service.login(
 
-                    req.body.email,
+                    dto.email,
 
-                    req.body.password
+                    dto.password
 
                 );
 
-            return res.json({
+            return res.status(200).json({
 
                 success: true,
 
-                data: result
+                data: result,
+
+                timestamp: new Date().toISOString()
 
             });
 
@@ -74,5 +79,4 @@ export class IdentityController {
     }
 
 }
-
 export default new IdentityController();

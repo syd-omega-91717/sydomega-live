@@ -1,23 +1,42 @@
 // ============================================================================
 // FILE: /backend/src/repositories/approval.repository.js
-// NEW FILE
+// REPLACE THE ENTIRE FILE
 // ============================================================================
 
-import BaseRepository from "./base.repository.js";
+import database from "../database/database.js";
 
-class ApprovalRepository extends BaseRepository {
+class ApprovalRepository {
 
-    constructor() {
+    table() {
 
-        super("approval_requests");
+        return database.table("approval_requests");
+
+    }
+
+    async findById(id) {
+
+        const { data, error } = await this.table()
+
+            .select("*")
+
+            .eq("id", id)
+
+            .single();
+
+        if (error) throw error;
+
+        return data;
 
     }
 
     async pending() {
 
-        const { data, error } = await this.query()
+        const { data, error } = await this.table()
 
-            .select("*,profiles(*)")
+            .select(`
+                *,
+                profiles(*)
+            `)
 
             .eq("current_status", "pending")
 
@@ -33,19 +52,115 @@ class ApprovalRepository extends BaseRepository {
 
     }
 
-    async byProfile(profileId) {
+    async approved() {
 
-        const { data, error } = await this.query()
+        const { data, error } = await this.table()
 
-            .select("*")
+            .select(`
+                *,
+                profiles(*)
+            `)
 
-            .eq("profile_id", profileId)
+            .eq("current_status", "approved")
 
-            .order("created_at", {
+            .order("reviewed_at", {
 
                 ascending: false
 
             });
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async rejected() {
+
+        const { data, error } = await this.table()
+
+            .select(`
+                *,
+                profiles(*)
+            `)
+
+            .eq("current_status", "rejected")
+
+            .order("reviewed_at", {
+
+                ascending: false
+
+            });
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async approve(requestId, founderId) {
+
+        const { data, error } = await this.table()
+
+            .update({
+
+                current_status: "approved",
+
+                reviewed_by: founderId,
+
+                reviewed_at: new Date()
+
+            })
+
+            .eq("id", requestId)
+
+            .select()
+
+            .single();
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async reject(requestId, founderId, reason) {
+
+        const { data, error } = await this.table()
+
+            .update({
+
+                current_status: "rejected",
+
+                reviewed_by: founderId,
+
+                reviewed_at: new Date(),
+
+                rejection_reason: reason
+
+            })
+
+            .eq("id", requestId)
+
+            .select()
+
+            .single();
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async createRequest(payload) {
+
+        const { data, error } = await this.table()
+
+            .insert(payload)
+
+            .select()
+
+            .single();
 
         if (error) throw error;
 

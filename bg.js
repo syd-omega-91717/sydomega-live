@@ -834,3 +834,82 @@ setTimeout(function(){
   document.addEventListener('visibilitychange',function(){hidden=document.hidden;});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
+
+/* ===== OMEGA UX LAYER -- toasts + genesis intro + page transitions ===== */
+(function(){
+  if(window.__omegaUX)return; window.__omegaUX=1;
+  var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var st=document.createElement('style');
+  st.textContent=[
+    '#omega-toasts{position:fixed;right:18px;bottom:80px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none}',
+    '.omega-toast{font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#0A0A0F;background:linear-gradient(90deg,#C9A84C,#E2C86D);padding:12px 18px;box-shadow:0 12px 34px -10px rgba(201,168,76,.55);transform:translateX(130%);transition:transform .5s cubic-bezier(.2,.8,.2,1);max-width:320px;border-left:3px solid #fff7d6}',
+    '.omega-toast.in{transform:none}',
+    '.omega-toast.cyan{background:linear-gradient(90deg,#00E5FF,#7fe9ff)}',
+    '.omega-toast.crim{background:linear-gradient(90deg,#8B0000,#c0392b);color:#fff;border-left-color:#ffb3b3}',
+    '#omega-veil{position:fixed;inset:0;z-index:99998;background:#0A0A0F;pointer-events:none;opacity:0;transition:opacity .4s ease}',
+    '#omega-veil.show{opacity:1}',
+    '#omega-genesis{position:fixed;inset:0;z-index:100000;background:radial-gradient(circle at 50% 45%,#0c0c16,#05050a 70%);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;transition:opacity .8s ease}',
+    '#omega-genesis .gx{font-family:"Cinzel Decorative",Georgia,serif;font-size:128px;color:#C9A84C;text-shadow:0 0 70px rgba(201,168,76,.65);opacity:0;animation:gx-ig 2.3s cubic-bezier(.2,.8,.2,1) forwards}',
+    '#omega-genesis .gr{position:absolute;border:1px solid rgba(201,168,76,.25);border-radius:50%;width:260px;height:260px;opacity:0;animation:gr-ex 2.6s ease forwards}',
+    '#omega-genesis .gr2{width:380px;height:380px;animation-delay:.2s}',
+    '#omega-genesis .gt{font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:6px;color:#85837b;margin-top:30px;opacity:0;animation:gt-fd 1s ease 1.3s forwards}',
+    '@keyframes gx-ig{0%{opacity:0;transform:scale(.55) rotate(-10deg)}55%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}',
+    '@keyframes gr-ex{0%{opacity:0;transform:scale(.3)}40%{opacity:.6}100%{opacity:0;transform:scale(1.25)}}',
+    '@keyframes gt-fd{to{opacity:1}}'
+  ].join('');
+  (document.head||document.documentElement).appendChild(st);
+
+  /* ---- TOAST API ---- */
+  var wrap;
+  function ensure(){if(!wrap){wrap=document.createElement('div');wrap.id='omega-toasts';(document.body||document.documentElement).appendChild(wrap);}return wrap;}
+  window.omegaToast=function(msg,type){
+    ensure();var t=document.createElement('div');
+    t.className='omega-toast'+(type==='cyan'?' cyan':(type==='error'?' crim':''));
+    t.textContent=msg;wrap.appendChild(t);
+    requestAnimationFrame(function(){t.classList.add('in');});
+    setTimeout(function(){t.classList.remove('in');setTimeout(function(){t.remove();},520);},3200);
+  };
+  /* neutral click-acknowledgement on key action buttons (no page edits needed) */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('button,.btn,[role="button"]');if(!b)return;
+    var tx=(b.textContent||'').replace(/\s+/g,' ').trim().toUpperCase().replace(/[^A-Z0-9 ]/g,'');
+    if(/\b(SAVE|SEAL|CLAIM|REGISTER|SUBMIT|CONFIRM|MINT|ACTIVATE|DISPATCH|BOOK|SEND|UPLOAD|GENERATE)\b/.test(tx)){
+      var label=tx.length>30?tx.slice(0,30):tx;
+      setTimeout(function(){window.omegaToast(label);},100);
+    }
+  },true);
+
+  /* ---- PAGE TRANSITIONS ---- */
+  var veil=document.createElement('div');veil.id='omega-veil';
+  (function add(){if(document.body){document.body.appendChild(veil);}else requestAnimationFrame(add);})();
+  if(!REDUCE){
+    /* arrive: fade up from void */
+    requestAnimationFrame(function(){veil.classList.add('show');setTimeout(function(){veil.classList.remove('show');},40);});
+    document.addEventListener('click',function(e){
+      if(e.metaKey||e.ctrlKey||e.shiftKey||e.button)return;
+      var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;
+      if(a.hasAttribute('onclick')||a.target==='_blank'||a.hasAttribute('download'))return;
+      var href=a.getAttribute('href')||'';
+      if(href.indexOf('http')===0||href.charAt(0)==='#'||href.indexOf('mailto')===0||href.indexOf('tel:')===0)return;
+      if(!/\.html(\?|$)/.test(href))return;
+      e.preventDefault();veil.classList.add('show');
+      setTimeout(function(){window.location.href=href;},340);
+    },true);
+    window.addEventListener('pageshow',function(){veil.classList.remove('show');});
+  }
+
+  /* ---- GENESIS INTRO (once per browser) ---- */
+  try{
+    if(!REDUCE && !localStorage.getItem('omega_genesis_seen')){
+      (function showG(){
+        if(!document.body){requestAnimationFrame(showG);return;}
+        var g=document.createElement('div');g.id='omega-genesis';
+        g.innerHTML='<div class="gr"></div><div class="gr gr2"></div><div class="gx">\u03A9</div><div class="gt">THE CODE . THE FREQUENCY . THE LEGACY</div>';
+        document.body.appendChild(g);
+        var done=function(){g.style.opacity='0';setTimeout(function(){if(g.parentNode)g.remove();},820);};
+        g.addEventListener('click',done);setTimeout(done,3100);
+        try{localStorage.setItem('omega_genesis_seen','1');}catch(e){}
+      })();
+    }
+  }catch(e){}
+})();

@@ -163,7 +163,7 @@
       lw.innerHTML='<table class="ledger"><thead><tr><th>SOURCE</th><th>NODE</th><th>WHEN</th><th style="text-align:right">CREDIT</th></tr></thead><tbody>'+rows+'</tbody></table>';
     }
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

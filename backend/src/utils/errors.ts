@@ -1,0 +1,72 @@
+// ============================================================================
+// FILE: /backend/src/utils/errors.ts
+// NEW FILE
+// ============================================================================
+
+export class AppError extends Error {
+
+    public readonly status: number;
+
+    public readonly code: string;
+
+    constructor(
+
+        message: string,
+
+        status = 500,
+
+        code = "APP_ERROR"
+
+    ) {
+
+        super(message);
+
+        this.status = status;
+
+        this.code = code;
+
+        Error.captureStackTrace(this, this.constructor);
+
+    }
+
+}
+
+export class ValidationError extends AppError {
+
+    constructor(message = "Validation Failed") {
+
+        super(message, 400, "VALIDATION_ERROR");
+
+    }
+
+}
+
+export class UnauthorizedError extends AppError {
+
+    constructor(message = "Unauthorized") {
+
+        super(message, 401, "UNAUTHORIZED");
+
+    }
+
+}
+
+export class ForbiddenError extends AppError {
+
+    constructor(message = "Forbidden") {
+
+        super(message, 403, "FORBIDDEN");
+
+    }
+
+}
+
+export class NotFoundError extends AppError {
+
+    constructor(message = "Not Found") {
+
+        super(message, 404, "NOT_FOUND");
+
+    }
+
+}

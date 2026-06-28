@@ -219,6 +219,16 @@
       '.ds-link:hover,.ds-link.dl-on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.04);padding-left:8px}',
       '@media(min-width:761px){#omega-mob{display:none!important}#omega-drawer{display:none!important}}',
       '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}}',
+      /* ===== MOBILE HARDENING -- no sideways scroll, tables + media fit ===== */
+      '@media(max-width:760px){',
+        'html,body{overflow-x:hidden;max-width:100vw}',
+        '.main,.shell,.pad{max-width:100vw}',
+        'table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}',
+        'img,video,iframe{max-width:100%;height:auto}',
+        'canvas,svg{max-width:100%}',
+        'pre,code{max-width:100%;overflow-x:auto}',
+        '.topbar .t small{display:block;font-size:8px;line-height:1.5;margin-top:3px;white-space:normal}',
+      '}',
     ].join('');
     (document.head||document.documentElement).appendChild(mcs);
 

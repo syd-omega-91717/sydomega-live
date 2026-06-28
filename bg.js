@@ -238,11 +238,11 @@
   }
 
   function buildOrrery(){
-    var base=Math.min(W,H)*(small?0.34:0.30);
+    var base=Math.min(W,H)*(small?0.40:0.36);
     RINGS=[
-      {r:base*1.00,flat:0.34,tilt:0.18,spin: 0.045,col:GOLD,w:1.1,a:0.16}, /* 0 main twelvefold */
-      {r:base*0.56,flat:0.32,tilt:1.10,spin:-0.055,col:CYAN,w:0.9,a:0.13}, /* 1 inner ninefold  */
-      {r:base*1.34,flat:0.42,tilt:2.30,spin: 0.024,col:SOUL,w:0.8,a:0.07}  /* 2 structural cage */
+      {r:base*1.06,flat:0.34,tilt:0.18,spin: 0.045,col:GOLD,w:1.7,a:0.32}, /* 0 main twelvefold */
+      {r:base*0.58,flat:0.32,tilt:1.10,spin:-0.055,col:CYAN,w:1.4,a:0.28}, /* 1 inner ninefold  */
+      {r:base*1.40,flat:0.42,tilt:2.30,spin: 0.024,col:SOUL,w:1.2,a:0.16}  /* 2 structural cage */
     ];
     outer=mkNodes(LENS.nodes(),0);
     inner=(LENSKEY==='elements')?[]:mkNodes(ELEMENTS,1);  /* avoid duplicate when the lens IS elements */
@@ -260,9 +260,9 @@
   /* ============================================================ DRAW */
   function nebula(){
     var blobs=[
-      {x:CX+Math.cos(t*0.21)*W*0.22,y:CY+Math.sin(t*0.17)*H*0.16,r:Math.max(W,H)*0.55,c:GOLD,a:0.075},
-      {x:CX+Math.cos(-t*0.16+2.1)*W*0.26,y:CY+Math.sin(-t*0.19+1.3)*H*0.20,r:Math.max(W,H)*0.50,c:CYAN,a:0.050},
-      {x:W*0.82+Math.cos(t*0.13)*W*0.06,y:H*0.82,r:Math.max(W,H)*0.34,c:CRIM,a:0.050}
+      {x:CX+Math.cos(t*0.21)*W*0.22,y:CY+Math.sin(t*0.17)*H*0.16,r:Math.max(W,H)*0.58,c:GOLD,a:0.135},
+      {x:CX+Math.cos(-t*0.16+2.1)*W*0.26,y:CY+Math.sin(-t*0.19+1.3)*H*0.20,r:Math.max(W,H)*0.52,c:CYAN,a:0.090},
+      {x:W*0.82+Math.cos(t*0.13)*W*0.06,y:H*0.82,r:Math.max(W,H)*0.36,c:CRIM,a:0.090}
     ];
     for(var i=0;i<blobs.length;i++){
       var b=blobs[i],g=ctx.createRadialGradient(b.x,b.y,8,b.x,b.y,b.r);
@@ -341,7 +341,7 @@
       var amp=nd.amp?1.5:1;
       var rr=(2.0*amp)*nd.scale*(1+nd.flare*1.3)*nd.lit;
       ctx.beginPath();
-      ctx.fillStyle='rgba('+nd.col+','+((0.35+0.45*nd.depth)*nd.lit).toFixed(3)+')';
+      ctx.fillStyle='rgba('+nd.col+','+((0.48+0.5*nd.depth)*nd.lit).toFixed(3)+')';
       ctx.shadowColor='rgba('+nd.col+','+(0.55+nd.flare*0.4).toFixed(3)+')';
       ctx.shadowBlur=(8+nd.flare*16+(nd.amp?6:0))*nd.scale;
       ctx.arc(nd.x,nd.y,rr,0,6.283);ctx.fill();
@@ -424,7 +424,7 @@
   }
 
   function core(o,breathe){
-    var halo=REDUCE?0.6:(0.55+0.25*Math.sin(t*1.4));
+    var halo=REDUCE?0.75:(0.7+0.3*Math.sin(t*1.4));
     var flare=ig<1?Math.max(0,1-Math.abs(ig-0.92)/0.08):0;
     var hr=46*breathe*(1+flare*0.6);
     var hg=ctx.createRadialGradient(CX+o.x,CY+o.y,2,CX+o.x,CY+o.y,hr);

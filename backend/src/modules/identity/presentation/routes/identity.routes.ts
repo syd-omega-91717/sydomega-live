@@ -1,6 +1,6 @@
 // ============================================================================
 // FILE: /backend/src/modules/identity/presentation/routes/identity.routes.ts
-// NEW FILE
+// REPLACE THE ENTIRE FILE
 // ============================================================================
 
 import { Router } from "express";
@@ -13,7 +13,7 @@ router.post(
 
     "/login",
 
-    controller.login
+    controller.login.bind(controller)
 
 );
 

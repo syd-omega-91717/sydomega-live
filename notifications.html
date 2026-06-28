@@ -139,7 +139,7 @@
 
     document.getElementById('seen').onclick=function(){ var now=Date.now(); try{ localStorage.setItem(SEEN_KEY,String(now)); }catch(e){} lastSeen=now; render(); };
   }
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

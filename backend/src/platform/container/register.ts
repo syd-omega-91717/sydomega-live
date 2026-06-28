@@ -1,9 +1,11 @@
 // ============================================================================
 // FILE: /backend/src/platform/container/register.ts
-// NEW FILE
+// REPLACE THE ENTIRE FILE
 // ============================================================================
 
 import container from "./container.js";
+
+import TOKENS from "./tokens.js";
 
 import logger from "../observability/logger.js";
 import metrics from "../observability/metrics.js";
@@ -11,10 +13,9 @@ import tracing from "../observability/tracing.js";
 import health from "../observability/health.js";
 
 import jwtService from "../../security/authentication/jwt.service.js";
-import sessionService from "../../security/authentication/session.service.js";
-import refreshTokenService from "../../security/authentication/refreshToken.service.js";
-
 import passwordService from "../../security/cryptography/password.service.js";
+import refreshTokenService from "../../security/authentication/refreshToken.service.js";
+import sessionService from "../../security/authentication/session.service.js";
 import encryptionService from "../../security/cryptography/encryption.service.js";
 import hashingService from "../../security/cryptography/hashing.service.js";
 
@@ -22,7 +23,7 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "Logger",
+        TOKENS.Logger,
 
         () => logger
 
@@ -30,7 +31,7 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "Metrics",
+        TOKENS.Metrics,
 
         () => metrics
 
@@ -38,7 +39,7 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "Tracing",
+        TOKENS.Tracing,
 
         () => tracing
 
@@ -46,7 +47,7 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "Health",
+        TOKENS.Health,
 
         () => health
 
@@ -54,7 +55,7 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "JwtService",
+        TOKENS.JwtService,
 
         () => jwtService
 
@@ -62,23 +63,7 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "SessionService",
-
-        () => sessionService
-
-    );
-
-    container.singleton(
-
-        "RefreshTokenService",
-
-        () => refreshTokenService
-
-    );
-
-    container.singleton(
-
-        "PasswordService",
+        TOKENS.PasswordService,
 
         () => passwordService
 
@@ -86,7 +71,23 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "EncryptionService",
+        TOKENS.RefreshTokenService,
+
+        () => refreshTokenService
+
+    );
+
+    container.singleton(
+
+        TOKENS.SessionService,
+
+        () => sessionService
+
+    );
+
+    container.singleton(
+
+        TOKENS.EncryptionService,
 
         () => encryptionService
 
@@ -94,7 +95,7 @@ export function registerContainer(): void {
 
     container.singleton(
 
-        "HashingService",
+        TOKENS.HashingService,
 
         () => hashingService
 

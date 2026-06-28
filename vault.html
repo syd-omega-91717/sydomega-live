@@ -396,8 +396,8 @@ async function boot(){
   const nodes=Math.round(a*b*c*9),xp=Math.round(nodes*917.17);
   const tier=parseInt(pr.data?.membership_tier)||1;
   document.getElementById('aum-val').innerHTML='&#937; '+xp.toLocaleString();
-  document.getElementById('res-phys').textContent='&#937; '+Math.round(xp*.6).toLocaleString();
-  document.getElementById('res-dig').textContent='&#937; '+Math.round(xp*.4).toLocaleString();
+  document.getElementById('res-phys').textContent='\u03A9 '+Math.round(xp*.6).toLocaleString();
+  document.getElementById('res-dig').textContent='\u03A9 '+Math.round(xp*.4).toLocaleString();
   buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();buildTiers(tier);buildTxLog();
   requestAnimationFrame(()=>{drawVaultCube();drawWave();});
 }

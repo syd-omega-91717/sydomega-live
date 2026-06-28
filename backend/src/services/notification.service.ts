@@ -1,18 +1,17 @@
 // ============================================================================
-// FILE: /backend/src/services/notification.service.js
+// FILE: /backend/src/services/notification.service.ts
 // REPLACE THE ENTIRE FILE
 // ============================================================================
 
-import { supabase } from "../database/supabase.js";
+import NotificationRepository from "../repositories/notification.repository.js";
 import * as Events from "./event.service.js";
+import logger from "../config/logger.js";
 
 export async function createNotification(payload) {
 
-    const { data, error } = await supabase
+    try {
 
-        .from("approval_notifications")
-
-        .insert({
+        const notification = await NotificationRepository.create({
 
             title: payload.title,
 
@@ -24,170 +23,260 @@ export async function createNotification(payload) {
 
             approval_request_id: payload.approval_request_id,
 
-            notification_type: payload.notification_type || "system",
+            notification_type:
+
+                payload.notification_type || "system",
 
             status: "unread",
 
-            action_url: payload.action_url || null
+            action_url:
 
-        })
+                payload.action_url || null
 
-        .select()
+        });
 
-        .single();
+        await Events.publish(
 
-    if (error) throw error;
+            payload.sender,
 
-    await Events.publish(
+            payload.recipient,
 
-        payload.sender,
+            "notification",
 
-        payload.recipient,
+            "created",
 
-        "notification",
+            notification
 
-        "created",
+        );
 
-        data
+        logger.audit("Notification Created", {
 
-    );
+            notificationId: notification.id,
 
-    return data;
+            sender: payload.sender,
+
+            recipient: payload.recipient
+
+        });
+
+        return notification;
+
+    }
+
+    catch (error) {
+
+        logger.error("Notification Creation Failed", {
+
+            error: error.message
+
+        });
+
+        throw error;
+
+    }
 
 }
 
 export async function unread(profileId) {
 
-    const { data, error } = await supabase
+    try {
 
-        .from("approval_notifications")
+        return await NotificationRepository.unread(profileId);
 
-        .select("*")
+    }
 
-        .eq("recipient", profileId)
+    catch (error) {
 
-        .eq("status", "unread")
+        logger.error("Unread Notification Query Failed", {
 
-        .order("created_at", {
+            profileId,
 
-            ascending: false
+            error: error.message
 
         });
 
-    if (error) throw error;
+        throw error;
 
-    return data;
+    }
 
 }
 
 export async function all(profileId) {
 
-    const { data, error } = await supabase
+    try {
 
-        .from("approval_notifications")
+        return await NotificationRepository.findMany(
 
-        .select("*")
+            "recipient",
 
-        .eq("recipient", profileId)
+            profileId
 
-        .order("created_at", {
+        );
 
-            ascending: false
+    }
+
+    catch (error) {
+
+        logger.error("Notification List Failed", {
+
+            profileId,
+
+            error: error.message
 
         });
 
-    if (error) throw error;
+        throw error;
 
-    return data;
+    }
 
 }
 
 export async function read(notificationId) {
 
-    const { data, error } = await supabase
+    try {
 
-        .from("approval_notifications")
+        return await NotificationRepository.update(
 
-        .update({
+            notificationId,
 
-            status: "read",
+            {
 
-            read_at: new Date()
+                status: "read",
 
-        })
+                read_at: new Date()
 
-        .eq("id", notificationId)
+            }
 
-        .select()
+        );
 
-        .single();
+    }
 
-    if (error) throw error;
+    catch (error) {
 
-    return data;
+        logger.error("Read Notification Failed", {
+
+            notificationId,
+
+            error: error.message
+
+        });
+
+        throw error;
+
+    }
 
 }
 
 export async function markAllRead(profileId) {
 
-    const { error } = await supabase
+    try {
 
-        .from("approval_notifications")
+        const notifications =
 
-        .update({
+            await NotificationRepository.unread(profileId);
 
-            status: "read",
+        for (const item of notifications) {
 
-            read_at: new Date()
+            await NotificationRepository.update(
 
-        })
+                item.id,
 
-        .eq("recipient", profileId)
+                {
 
-        .eq("status", "unread");
+                    status: "read",
 
-    if (error) throw error;
+                    read_at: new Date()
 
-    return true;
+                }
+
+            );
+
+        }
+
+        logger.audit("Notifications Marked Read", {
+
+            profileId,
+
+            count: notifications.length
+
+        });
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        logger.error("Mark All Read Failed", {
+
+            profileId,
+
+            error: error.message
+
+        });
+
+        throw error;
+
+    }
 
 }
 
 export async function remove(notificationId) {
 
-    const { error } = await supabase
+    try {
 
-        .from("approval_notifications")
+        await NotificationRepository.remove(notificationId);
 
-        .delete()
+        logger.audit("Notification Deleted", {
 
-        .eq("id", notificationId);
+            notificationId
 
-    if (error) throw error;
+        });
 
-    return true;
+        return true;
+
+    }
+
+    catch (error) {
+
+        logger.error("Notification Delete Failed", {
+
+            notificationId,
+
+            error: error.message
+
+        });
+
+        throw error;
+
+    }
 
 }
 
 export async function count(profileId) {
 
-    const { count, error } = await supabase
+    try {
 
-        .from("approval_notifications")
+        const notifications =
 
-        .select("*", {
+            await NotificationRepository.unread(profileId);
 
-            head: true,
+        return notifications.length;
 
-            count: "exact"
+    }
 
-        })
+    catch (error) {
 
-        .eq("recipient", profileId)
+        logger.error("Notification Count Failed", {
 
-        .eq("status", "unread");
+            profileId,
 
-    if (error) throw error;
+            error: error.message
 
-    return count || 0;
+        });
+
+        throw error;
+
+    }
 
 }

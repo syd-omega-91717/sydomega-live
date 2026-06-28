@@ -236,7 +236,7 @@
   document.getElementById('m-zone').addEventListener('change',refreshQuote);
   document.getElementById('m-dur').addEventListener('change',refreshQuote);
   document.getElementById('m-go').addEventListener('click',submit);
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/upload.js"></script>

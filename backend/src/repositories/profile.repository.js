@@ -1,41 +1,125 @@
 // ============================================================================
 // FILE: /backend/src/repositories/profile.repository.js
-// NEW FILE
+// REPLACE THE ENTIRE FILE
 // ============================================================================
 
-import BaseRepository from "./base.repository.js";
+import database from "../database/database.js";
 
-class ProfileRepository extends BaseRepository {
+class ProfileRepository {
 
-    constructor() {
+    table() {
 
-        super("profiles");
-
-    }
-
-    async byEmail(email) {
-
-        return this.findOne("email", email.toLowerCase());
+        return database.table("profiles");
 
     }
 
-    async verified() {
+    async findById(id) {
 
-        return this.query()
+        const { data, error } = await this.table()
 
             .select("*")
 
-            .eq("verification_status", "verified");
+            .eq("id", id)
+
+            .single();
+
+        if (error) throw error;
+
+        return data;
 
     }
 
-    async approved() {
+    async approve(profileId, founderId, expiresAt) {
 
-        return this.query()
+        const { data, error } = await this.table()
 
-            .select("*")
+            .update({
 
-            .eq("approval_status", "approved");
+                approval_status: "approved",
+
+                verification_status: "verified",
+
+                account_enabled: true,
+
+                access_state: "active",
+
+                approved_by: founderId,
+
+                approved_at: new Date(),
+
+                approval_expires_at: expiresAt,
+
+                failed_login_count: 0,
+
+                last_login_at: new Date()
+
+            })
+
+            .eq("id", profileId)
+
+            .select()
+
+            .single();
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async reject(profileId, reason) {
+
+        const { data, error } = await this.table()
+
+            .update({
+
+                approval_status: "rejected",
+
+                account_enabled: false,
+
+                access_state: "rejected",
+
+                rejection_reason: reason,
+
+                approval_expires_at: null
+
+            })
+
+            .eq("id", profileId)
+
+            .select()
+
+            .single();
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async renew(profileId, expiresAt) {
+
+        const { data, error } = await this.table()
+
+            .update({
+
+                account_enabled: true,
+
+                access_state: "active",
+
+                approval_expires_at: expiresAt
+
+            })
+
+            .eq("id", profileId)
+
+            .select()
+
+            .single();
+
+        if (error) throw error;
+
+        return data;
 
     }
 

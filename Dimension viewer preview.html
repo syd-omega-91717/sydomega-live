@@ -1,0 +1,89 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/><title>9-Dimension Viewer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Rajdhani:wght@300;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
+<style>:root{--void:#0A0A0F;--gold:#C9A84C;--line:rgba(201,168,76,.16)}*{margin:0;box-sizing:border-box}
+body{background:var(--void);color:#E9E6DC;font-family:"Rajdhani",sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px}
+h1{font-family:"Cinzel Decorative",serif;letter-spacing:5px;font-size:22px;color:var(--gold);margin-bottom:6px;text-align:center}
+.sub{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:3px;color:#85837b;margin-bottom:30px;text-align:center}
+.panel{border:1px solid var(--line);padding:26px;background:linear-gradient(160deg,rgba(13,13,24,.5),rgba(10,10,15,.3))}
+canvas{display:block;width:320px;height:320px}</style></head><body>
+<h1>9 DIMENSION VIEWER</h1><div class="sub">MATRIX AXES &middot; AUTHORITY = sqrt(A2+B2+C2) &middot; APEX 15.588</div>
+<div class="panel"><canvas id="radar-cv" width="400" height="400"></canvas></div>
+<script>
+const DIMENSIONS=[
+  {n:1,name:'KNOWLEDGE',desc:'Information absorption and learning velocity across Academy and Research modules.',col:'#00E5FF'},
+  {n:2,name:'MASTERY',desc:'Performance and achievement metrics from Gaming Arena and exam completions.',col:'#E86A3A'},
+  {n:3,name:'CONTRIBUTION',desc:'Value generated for the Order through social, creative, and economic outputs.',col:'#3fb27f'},
+  {n:4,name:'RESONANCE',desc:'Alignment of your matrix coordinates with the 9.1717Hz sovereign frequency.',col:'#C9A84C'},
+  {n:5,name:'LINEAGE',desc:'Depth of family constellation, heritage archive completions, and bloodline nodes.',col:'#D9B86A'},
+  {n:6,name:'ECONOMY',desc:'Token balances, marketplace activity, investment allocations, and portfolio growth.',col:'#E2C86D'},
+  {n:7,name:'CELESTIAL',desc:'Zodiac alignment accuracy, horoscope engagement, and Oracle prediction validation.',col:'#9B6BF0'},
+  {n:8,name:'SOVEREIGNTY',desc:'Overall governance participation, compliance score, and constitutional adherence.',col:'#C9A84C'},
+  {n:9,name:'OMEGA',desc:'The master dimension. Composite authority across all eight axes. The apex metric.',col:'#C9A84C'},
+];
+function drawRadar(a,b,c){
+  const cv=document.getElementById('radar-cv'); if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const CX=200,CY=200,RMAX=150,N=9;
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  /* nine matrix dimensions derived from the three live axes */
+  const vals=[a,b,c,(a+b+c)/3,(b+c)/2,(a+c)/2,(a+b)/2,(a+b+c)/3,auth/15.588*9];
+  const cols=DIMENSIONS.map(d=>d.col);
+  const TAG=['KNW','MST','CTR','RES','LIN','ECO','CEL','SOV','\u03A9'];
+  let t=0;
+  function frame(){
+    t+=0.016; ctx.clearRect(0,0,400,400);
+    const spin=t*0.14, sweep=(t*0.85)%(Math.PI*2), pulse=0.85+0.15*Math.sin(t*1.7);
+    /* concentric grid rings; apex ring brighter */
+    for(let r=1;r<=9;r++){
+      ctx.beginPath(); ctx.arc(CX,CY,r/9*RMAX,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,'+(r===9?0.30:0.06)+')'; ctx.lineWidth=r===9?1.2:0.5; ctx.stroke();
+    }
+    /* rotating outer tick ring */
+    ctx.save(); ctx.translate(CX,CY); ctx.rotate(spin);
+    for(let i=0;i<48;i++){const a2=i/48*Math.PI*2,r1=RMAX+5,r2=RMAX+(i%4===0?13:8);
+      ctx.beginPath(); ctx.moveTo(Math.cos(a2)*r1,Math.sin(a2)*r1); ctx.lineTo(Math.cos(a2)*r2,Math.sin(a2)*r2);
+      ctx.strokeStyle='rgba(201,168,76,0.13)'; ctx.lineWidth=0.7; ctx.stroke();}
+    ctx.restore();
+    /* nine spokes */
+    for(let i=0;i<N;i++){const ang=-Math.PI/2+i*(Math.PI*2/N);
+      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX+Math.cos(ang)*RMAX,CY+Math.sin(ang)*RMAX);
+      ctx.strokeStyle='rgba(201,168,76,0.11)'; ctx.lineWidth=0.6; ctx.stroke();}
+    /* sonar sweep wedge */
+    ctx.save(); ctx.translate(CX,CY);
+    for(let k=0;k<20;k++){const aa=sweep-k*0.045,al=0.16*(1-k/20);
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,RMAX,aa,aa+0.05); ctx.closePath();
+      ctx.fillStyle='rgba(0,229,255,'+al.toFixed(3)+')'; ctx.fill();}
+    ctx.restore();
+    /* data hull across nine dimensions */
+    const v=[];
+    for(let i=0;i<N;i++){const ang=-Math.PI/2+i*(Math.PI*2/N);
+      const rr=Math.max(0,Math.min(9,vals[i]))/9*RMAX*pulse;
+      v.push([CX+Math.cos(ang)*rr,CY+Math.sin(ang)*rr]);}
+    ctx.beginPath(); v.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+    const g=ctx.createRadialGradient(CX,CY,0,CX,CY,RMAX);
+    g.addColorStop(0,'rgba(201,168,76,0.34)'); g.addColorStop(1,'rgba(0,229,255,0.05)');
+    ctx.fillStyle=g; ctx.fill();
+    ctx.strokeStyle='rgba(201,168,76,0.78)'; ctx.lineWidth=1.5;
+    ctx.shadowColor='rgba(201,168,76,0.5)'; ctx.shadowBlur=10; ctx.stroke(); ctx.shadowBlur=0;
+    /* vertex nodes, apex Omega larger */
+    for(let i=0;i<N;i++){const om=(i===8);
+      ctx.beginPath(); ctx.fillStyle=cols[i]; ctx.shadowColor=cols[i]; ctx.shadowBlur=om?15:7;
+      ctx.arc(v[i][0],v[i][1],om?3.6:2.2,0,Math.PI*2); ctx.fill();}
+    ctx.shadowBlur=0;
+    /* upright dimension tags */
+    for(let i=0;i<N;i++){const ang=-Math.PI/2+i*(Math.PI*2/N);
+      const lx=CX+Math.cos(ang)*(RMAX+24),ly=CY+Math.sin(ang)*(RMAX+24);
+      ctx.fillStyle=cols[i]; ctx.font='700 11px "Courier Prime",monospace';
+      ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(TAG[i],lx,ly);}
+    /* centre Omega core */
+    ctx.font='700 22px "Cinzel Decorative",Georgia,serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(201,168,76,0.85)'; ctx.shadowBlur=14;
+    ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*1.4)).toFixed(2)+')';
+    ctx.fillText('\u03A9',CX,CY); ctx.shadowBlur=0;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+drawRadar(8.4,7.3,9);
+</script></body></html>

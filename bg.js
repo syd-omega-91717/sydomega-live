@@ -754,3 +754,83 @@ setTimeout(function(){
   /* Run after page load, with delay so canvas renders first */
   setTimeout(checkTrialExpiry,2000);
 })();
+
+/* ===== OMEGA ICON EMBLEMS -- every static icon glyph becomes a living,
+   rotating, cinematic emblem. No emojis left static. Global; one shared
+   animation loop; reduced-motion safe; pauses when the tab is hidden. ===== */
+(function(){
+  if(window.__omegaIcons)return; window.__omegaIcons=1;
+  var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  /* icon ranges: technical, misc-symbols, dingbats, geometric, zodiac,
+     chess (kings/queens), Omega, Bitcoin.  Arrows are excluded (nav). */
+  function isIcon(cp){
+    return (cp>=0x2300&&cp<=0x23FF)||(cp>=0x2600&&cp<=0x26FF)||(cp>=0x2700&&cp<=0x27BF)||
+           (cp>=0x25A0&&cp<=0x25FF)||(cp>=0x2648&&cp<=0x2653)||(cp>=0x265A&&cp<=0x265F)||
+           cp===0x03A9||cp===0x20BF;
+  }
+  var items=[], hidden=false;
+  function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h);}
+  function rgbOf(c){var m=c&&c.match(/(\d+),\s*(\d+),\s*(\d+)/);return m?m[1]+','+m[2]+','+m[3]:'201,168,76';}
+
+  function collect(){
+    var all=document.querySelectorAll('span,div,i,b,em,h1,h2,h3,h4,small,strong');
+    for(var i=0;i<all.length && items.length<70;i++){
+      var el=all[i];
+      if(el.children.length||el.__omegaIcon)continue;
+      var txt=(el.textContent||'').trim();
+      if(txt.length<1||txt.length>2)continue;
+      var cp=txt.codePointAt(0);
+      if(!isIcon(cp))continue;
+      if(el.closest&&el.closest('#omega-emblem-wrap'))continue;
+      var cs=getComputedStyle(el);
+      var fs=parseFloat(cs.fontSize)||18;
+      if(fs>64)continue;                                   /* skip giant display marks */
+      var sz=Math.round(Math.min(46,Math.max(20,fs*1.7)));
+      var cvs=document.createElement('canvas');
+      cvs.width=cvs.height=Math.floor(sz*DPR);
+      cvs.style.cssText='width:'+sz+'px;height:'+sz+'px;display:inline-block;vertical-align:middle';
+      var ctx=cvs.getContext('2d');ctx.setTransform(DPR,0,0,DPR,0,0);
+      el.setAttribute('aria-label',txt);
+      el.textContent='';el.appendChild(cvs);el.__omegaIcon=1;
+      items.push({ctx:ctx,sz:sz,glyph:txt,col:rgbOf(cs.color),motif:hash(txt)%4,
+                  ph:Math.random()*6.283,fs:Math.min(fs,sz*0.62),isOmega:cp===0x03A9});
+    }
+  }
+
+  function drawOne(it,t){
+    var ctx=it.ctx,S=it.sz,c=it.col,R=S/2-2,ti=REDUCE?0:t;
+    ctx.clearRect(0,0,S,S);
+    ctx.save();ctx.translate(S/2,S/2);
+    if(it.motif===0){            /* orbiting dots */
+      for(var k=0;k<3;k++){var a=ti*0.9+k*2.094;ctx.beginPath();
+        ctx.fillStyle='rgba('+c+','+(0.45+0.3*Math.sin(ti+k)).toFixed(2)+')';
+        ctx.arc(Math.cos(a)*R*0.82,Math.sin(a)*R*0.82,1.4,0,6.283);ctx.fill();}
+    }else if(it.motif===1){      /* sweeping ring */
+      ctx.beginPath();ctx.arc(0,0,R*0.86,ti%6.283,(ti%6.283)+4.2);
+      ctx.strokeStyle='rgba('+c+',0.5)';ctx.lineWidth=1.1;ctx.stroke();
+    }else if(it.motif===2){      /* pulsing rays */
+      for(var k=0;k<6;k++){var a=ti*0.7+k*1.047,l=R*(0.7+0.22*Math.sin(ti*1.3+k));
+        ctx.beginPath();ctx.moveTo(Math.cos(a)*R*0.42,Math.sin(a)*R*0.42);
+        ctx.lineTo(Math.cos(a)*l,Math.sin(a)*l);
+        ctx.strokeStyle='rgba('+c+','+(0.2+0.25*Math.abs(Math.sin(ti+k))).toFixed(2)+')';
+        ctx.lineWidth=0.8;ctx.stroke();}
+    }else{                       /* rotating triangle */
+      ctx.beginPath();for(var k=0;k<=3;k++){var a=ti*0.5+k*2.094-1.57;
+        var x=Math.cos(a)*R*0.85,y=Math.sin(a)*R*0.85;k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle='rgba('+c+',0.45)';ctx.lineWidth=1;ctx.stroke();
+    }
+    var pulse=REDUCE?0.9:(0.78+0.18*Math.sin(ti*1.6+it.ph));
+    ctx.font='600 '+Math.round(it.fs)+'px '+(it.isOmega?'"Cinzel Decorative",Georgia,serif':'"Segoe UI Symbol","Noto Sans Symbols2","Arial Unicode MS",sans-serif');
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor='rgba('+c+',0.8)';ctx.shadowBlur=6;
+    ctx.fillStyle='rgba('+c+','+pulse.toFixed(2)+')';
+    ctx.fillText(it.glyph,0,1);
+    ctx.restore();ctx.shadowBlur=0;
+  }
+
+  function loop(t){if(!hidden){var ti=t*0.001;for(var i=0;i<items.length;i++)drawOne(items[i],ti);}requestAnimationFrame(loop);}
+  function start(){collect();if(!items.length)return;if(REDUCE){for(var i=0;i<items.length;i++)drawOne(items[i],0);return;}requestAnimationFrame(loop);}
+  document.addEventListener('visibilitychange',function(){hidden=document.hidden;});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();

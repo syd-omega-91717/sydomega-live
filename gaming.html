@@ -256,8 +256,8 @@
     buildGrid(); renderGames(); updateMStat();
   }
   document.getElementById('m-action').addEventListener('click',actionClick);
-  document.getElementById('m-close').addEventListener('click',function(){ document.getElementById('modal').classList.remove('open'); });
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('m-close')?.addEventListener('click',function(){ document.getElementById('modal').classList.remove('open'); });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

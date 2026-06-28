@@ -145,7 +145,7 @@
   }
   document.getElementById('q').addEventListener('input',search);
   document.getElementById('q').addEventListener('keydown',function(e){ if(e.key==='Enter'){ var first=document.querySelector('.res'); if(first) window.location.href=first.getAttribute('href'); } });
-  document.getElementById('logout').addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();
 </script>
 <script src="/nav.js"></script>

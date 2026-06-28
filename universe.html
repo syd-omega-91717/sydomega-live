@@ -53,6 +53,15 @@ a{color:inherit;text-decoration:none}
 .sg-film{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)}
 
 @media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}}
+
+/* --- THREE-TIER CINEMATIC CANON --- */
+.canon-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.canon-tier{border:1px solid var(--line);background:linear-gradient(160deg,rgba(13,13,24,.55),rgba(10,10,15,.3));padding:18px 14px;text-align:center;text-decoration:none;display:block;transition:border-color .2s,transform .2s}
+.canon-tier:hover{border-color:rgba(201,168,76,.5);transform:translateY(-2px)}
+.canon-tier .ct-n{font-family:"Cinzel Decorative",Georgia,serif;font-size:32px;color:var(--gold);line-height:1;text-shadow:0 0 18px rgba(201,168,76,.3)}
+.canon-tier .ct-l{font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:2px;color:var(--cyan);margin-top:8px}
+.canon-tier .ct-d{font-size:11px;color:#9a978d;margin-top:7px;line-height:1.55}
+@media(max-width:760px){.canon-tiers{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -60,7 +69,7 @@ a{color:inherit;text-decoration:none}
   <aside class="side" id="omega-side" data-page="universe"></aside>
   <main class="main">
     <div class="topbar">
-      <div class="t">CREATIVE UNIVERSE<small>7 FRANCHISES . 12 FILMS . 144 SERIES . 12 GAMES . 144 SUB-GAMES</small></div>
+      <div class="t">CREATIVE UNIVERSE<small>7 FRANCHISES . 9 SAGA FILMS . 12 FILMS . 144 SERIES . 12 GAMES</small></div>
     </div>
 
     <div class="tab-nav">
@@ -69,6 +78,12 @@ a{color:inherit;text-decoration:none}
       <div class="tab-btn" data-tab="games">12 GAMES</div>
       <div class="tab-btn" data-tab="chronos">CHRONOS</div>
       <div class="tab-btn" data-tab="lebanon">LEBANON SAGA</div>
+    </div>
+
+    <div class="canon-tiers">
+      <div class="canon-tier"><div class="ct-n">7</div><div class="ct-l">SOVEREIGN FRANCHISES</div><div class="ct-d">The distinct IP universes -- the sovereign brands of the saga.</div></div>
+      <a class="canon-tier" href="cinema.html"><div class="ct-n">9</div><div class="ct-l">SAGA FILMS</div><div class="ct-d">The Nine Chapters -- the narrative spine, 2026 to 2034.</div></a>
+      <div class="canon-tier"><div class="ct-n">144</div><div class="ct-l">SERIES + 144 GAMES</div><div class="ct-d">12 films x 12 series; 12 games x 12 sub-games -- the content matrix.</div></div>
     </div>
 
     <div class="tab-panel active" id="tab-franchises">

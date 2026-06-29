@@ -1,16 +1,22 @@
 // ============================================================================
-// FILE: /backend/src/modules/organization/domain/enums/organization-status.enum.ts
+// FILE: /backend/src/modules/organization/domain/enums/organization-type.enum.ts
 // NEW FILE
 // ============================================================================
 
-export enum OrganizationStatus {
+export enum OrganizationType {
 
-    ACTIVE = "active",
+    PERSONAL = "personal",
 
-    SUSPENDED = "suspended",
+    COMPANY = "company",
 
-    ARCHIVED = "archived",
+    ENTERPRISE = "enterprise",
 
-    DELETED = "deleted"
+    UNIVERSITY = "university",
+
+    GOVERNMENT = "government",
+
+    NON_PROFIT = "non_profit",
+
+    ACADEMY = "academy"
 
 }

@@ -15,6 +15,18 @@ export interface OrganizationRepository {
 
     ): Promise<Organization | null>;
 
+    findBySlug(
+
+        slug: string
+
+    ): Promise<Organization | null>;
+
+    exists(
+
+        id: string
+
+    ): Promise<boolean>;
+
     create(
 
         organization: Organization
@@ -26,5 +38,11 @@ export interface OrganizationRepository {
         organization: Organization
 
     ): Promise<Organization>;
+
+    delete(
+
+        id: string
+
+    ): Promise<void>;
 
 }

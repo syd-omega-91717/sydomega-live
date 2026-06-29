@@ -1,4 +1,7 @@
-// domain/enums/membership-role.enum.ts
+// ============================================================================
+// FILE: /backend/src/modules/organization/domain/enums/membership-role.enum.ts
+// NEW FILE
+// ============================================================================
 
 export enum MembershipRole {
 

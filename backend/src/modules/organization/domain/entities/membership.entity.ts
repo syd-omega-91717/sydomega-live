@@ -3,6 +3,8 @@
 // NEW FILE
 // ============================================================================
 
+import { MembershipRole } from "../enums/membership-role.enum.js";
+
 export class Membership {
 
     constructor(
@@ -13,10 +15,24 @@ export class Membership {
 
         public readonly profileId: string,
 
-        public role: string,
+        public role: MembershipRole,
 
-        public joinedAt: Date
+        public joinedAt: Date,
+
+        public updatedAt: Date
 
     ) {}
+
+    changeRole(
+
+        role: MembershipRole
+
+    ) {
+
+        this.role = role;
+
+        this.updatedAt = new Date();
+
+    }
 
 }

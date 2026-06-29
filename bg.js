@@ -913,3 +913,67 @@ setTimeout(function(){
     }
   }catch(e){}
 })();
+
+/* ===== OMEGA LOADING -- top progress bar + skeleton shimmer ===== */
+(function(){
+  if(window.__omegaLoad)return; window.__omegaLoad=1;
+  var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var st=document.createElement('style');
+  st.textContent=[
+    '#omega-prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:100001;background:linear-gradient(90deg,#8B0000,#C9A84C,#00E5FF);box-shadow:0 0 12px rgba(201,168,76,.7);opacity:0;transition:width .3s ease,opacity .4s ease}',
+    '#omega-prog.run{opacity:1}',
+    '.omega-skel{position:relative;overflow:hidden;background:rgba(201,168,76,.05)}',
+    '.omega-skel::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(201,168,76,.12),transparent);animation:omega-shimmer 1.4s infinite}',
+    '@keyframes omega-shimmer{100%{transform:translateX(100%)}}',
+    '@media(prefers-reduced-motion:reduce){.omega-skel::after{animation:none}}'
+  ].join('');
+  (document.head||document.documentElement).appendChild(st);
+
+  var bar;
+  function ensure(){if(!bar){bar=document.createElement('div');bar.id='omega-prog';(document.body||document.documentElement).appendChild(bar);}return bar;}
+  var prog=0,timer=null;
+  function start(){
+    if(REDUCE)return; ensure();prog=8;bar.classList.add('run');bar.style.width='8%';
+    clearInterval(timer);
+    timer=setInterval(function(){prog+=Math.max(0.5,(90-prog)*0.08);if(prog>90)prog=90;bar.style.width=prog+'%';},120);
+  }
+  function done(){
+    if(!bar)return; clearInterval(timer);prog=100;bar.style.width='100%';
+    setTimeout(function(){bar.classList.remove('run');setTimeout(function(){bar.style.width='0';},400);},250);
+  }
+  window.omegaLoad={start:start,done:done};
+
+  /* run on initial load */
+  if(!REDUCE){
+    start();
+    if(document.readyState==='complete')done();
+    else window.addEventListener('load',function(){setTimeout(done,200);});
+    /* run on internal navigation (pairs with the page-transition veil) */
+    document.addEventListener('click',function(e){
+      if(e.metaKey||e.ctrlKey||e.shiftKey||e.button)return;
+      var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;
+      if(a.hasAttribute('onclick')||a.target==='_blank'||a.hasAttribute('download'))return;
+      var href=a.getAttribute('href')||'';
+      if(/\.html(\?|$)/.test(href)&&href.indexOf('http')!==0&&href.charAt(0)!=='#')start();
+    },true);
+    window.addEventListener('pageshow',done);
+  }
+
+  /* auto-shimmer: brief skeleton on data containers until they fill (or 4s cap) */
+  if(!REDUCE){
+    var sel='#asset-tbody,#agent-log,#franchise-grid,[data-loading],.kpi-val';
+    function applySkel(){
+      [].slice.call(document.querySelectorAll(sel)).forEach(function(el){
+        if(el.__skel||el.children.length||(el.textContent||'').trim())return;
+        el.classList.add('omega-skel');el.__skel=1;
+        if(el.offsetHeight<8)el.style.minHeight='40px';
+        var obs=new MutationObserver(function(){
+          if(el.children.length||(el.textContent||'').trim()){el.classList.remove('omega-skel');el.style.minHeight='';obs.disconnect();}
+        });
+        obs.observe(el,{childList:true,characterData:true,subtree:true});
+        setTimeout(function(){el.classList.remove('omega-skel');el.style.minHeight='';try{obs.disconnect();}catch(e){}},4000);
+      });
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applySkel);else applySkel();
+  }
+})();

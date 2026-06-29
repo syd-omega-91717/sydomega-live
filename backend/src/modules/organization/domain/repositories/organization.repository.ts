@@ -3,9 +3,8 @@
 // NEW FILE
 // ============================================================================
 
-import { Organization }
-
-from "../entities/organization.entity.js";
+import { OrganizationAggregate }
+from "../aggregates/organization.aggregate.js";
 
 export interface OrganizationRepository {
 
@@ -13,31 +12,19 @@ export interface OrganizationRepository {
 
         id: string
 
-    ): Promise<Organization | null>;
+    ): Promise<OrganizationAggregate | null>;
 
     findBySlug(
 
         slug: string
 
-    ): Promise<Organization | null>;
+    ): Promise<OrganizationAggregate | null>;
 
-    exists(
+    save(
 
-        id: string
+        aggregate: OrganizationAggregate
 
-    ): Promise<boolean>;
-
-    create(
-
-        organization: Organization
-
-    ): Promise<Organization>;
-
-    update(
-
-        organization: Organization
-
-    ): Promise<Organization>;
+    ): Promise<void>;
 
     delete(
 

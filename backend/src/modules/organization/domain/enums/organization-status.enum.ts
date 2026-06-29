@@ -1,5 +1,3 @@
-// domain/enums/organization-status.enum.ts
-
 export enum OrganizationStatus {
 
     ACTIVE = "active",

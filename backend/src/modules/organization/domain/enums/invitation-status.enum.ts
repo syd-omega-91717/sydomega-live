@@ -1,4 +1,7 @@
-// domain/enums/invitation-status.enum.ts
+// ============================================================================
+// FILE: /backend/src/modules/organization/domain/enums/invitation-status.enum.ts
+// NEW FILE
+// ============================================================================
 
 export enum InvitationStatus {
 

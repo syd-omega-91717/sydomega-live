@@ -1,136 +1,210 @@
-// ============================================================================
-// SYD OMEGA 91717 -- THE CONCIERGE (Supabase Edge Function)
-// Server-side Claude proxy for chatbot.html. Holds the Anthropic key as a
-// secret so it is NEVER exposed in the browser. Receives { message, context },
-// answers in-character as the Order's Concierge grounded in the member's live
-// matrix standing, returns { reply }. On any failure the page falls back to its
-// built-in keyless guide, so the chat never breaks.
-//
-// Deploy:
-//   supabase functions deploy concierge
-//   supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
-// Endpoint becomes:
-//   https://<project-ref>.supabase.co/functions/v1/concierge
-// ============================================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&#937; SYD OMEGA 91717  --  Concierge</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="SYD OMEGA 91717  --  Concierge"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/chatbot.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SYD OMEGA 91717  --  Concierge"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.07),transparent 48%)}
+  a{color:inherit;text-decoration:none}
+  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
+  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
+  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
+  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
+  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
+  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
+  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
+  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
+  .nav .lk{color:var(--muted);cursor:default}
+  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
+  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
 
-// zodiac -> Olympian + bound agent (mirrors chatbot.html canon)
-const GOD: Record<string,string> = {
-  Aries:"Ares", Taurus:"Aphrodite", Gemini:"Hermes", Cancer:"Artemis",
-  Leo:"Apollo", Virgo:"Athena", Libra:"Hera", Scorpio:"Demeter",
-  Sagittarius:"Zeus", Capricorn:"Hestia", Aquarius:"Hephaestus", Pisces:"Poseidon",
-};
-const AGENT: Record<string,string> = {
-  Aries:"Sentinel", Taurus:"Merchant", Gemini:"Scout", Cancer:"Warden",
-  Leo:"Sovereign", Virgo:"Auditor", Libra:"Proxy", Scorpio:"Oracle",
-  Sagittarius:"Beacon", Capricorn:"Analyst", Aquarius:"Tutor", Pisces:"Historian",
-};
+  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 30px;display:flex;flex-direction:column;min-height:100vh}
+  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
+  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
 
-function j(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status, headers: { ...CORS, "content-type": "application/json" },
-  });
-}
-const cap = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
-const num = (v: unknown, d: number) => { const n = Number(v); return isFinite(n) ? n : d; };
-// escape all HTML, then re-allow only <b>/</b> -- reply is rendered via innerHTML
-function safe(s: string){
-  const e = s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  return e.replace(/&lt;b&gt;/g,"<b>").replace(/&lt;\/b&gt;/g,"</b>");
-}
+  .chat{flex:1;display:flex;flex-direction:column;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);margin-top:18px;min-height:0}
+  .log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;min-height:300px}
+  .bub{max-width:80%;padding:12px 15px;font-size:15px;line-height:1.6;font-weight:300}
+  .bub.b{align-self:flex-start;border:1px solid var(--line);border-left:2px solid var(--gold);background:rgba(201,168,76,.04);color:var(--ink)}
+  .bub.u{align-self:flex-end;border:1px solid rgba(0,229,255,.3);background:rgba(0,229,255,.05);color:var(--ink)}
+  .bub b{color:var(--gold);font-weight:400}
+  .bub .nm{display:block;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 18px 12px}
+  .chip{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--cyan);border:1px solid var(--line);padding:6px 11px;cursor:pointer}
+  .chip:hover{border-color:var(--gold);color:var(--gold)}
+  .inrow{display:flex;gap:10px;border-top:1px solid var(--line);padding:14px 18px}
+  .inrow input{flex:1;font-family:var(--body);font-size:16px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:12px 14px;color-scheme:dark}
+  .inrow input:focus{outline:none;border-color:var(--cyan)}
+  .inrow button{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:0 20px;border:1px solid var(--gold);cursor:pointer}
+  .inrow button:hover{background:transparent;color:var(--gold)}
 
-function systemPrompt(c: {sign:string;god:string;agent:string;a:number;b:number;c:number;auth:number;rank:string;tier:number}) {
-  const here = c.sign
-    ? `The member you are speaking with is a ${c.sign} sovereign. Their Olympian is ${c.god}; their bound agent is the ${c.agent}. Their live standing in the 729-matrix: node (${c.a.toFixed(2)}, ${c.b.toFixed(2)}, ${c.c.toFixed(2)}) -- Knowledge ${c.a.toFixed(2)}, Mastery ${c.b.toFixed(2)}, Contribution ${c.c.toFixed(2)} -- authority ${c.auth.toFixed(2)} of 15.58, rank ${c.rank} (Tier ${c.tier}).`
-    : `The member has not yet sealed their cosmology.`;
-  return [
-"You are THE CONCIERGE, the guide of SYD OMEGA 91717 -- a sovereign order built on a 729-node mastery matrix. You speak with quiet authority: mythic but precise, warm but never servile. Keep answers short (2-5 sentences), concrete, and always point the member to the right chamber by name and path.",
-"",
-"THE MATRIX: 9x9x9 = 729 nodes. Three axes -- A Knowledge (raised in the Academy, /academy.html), B Mastery (raised in the Games, /gaming.html), C Contribution (raised in Contributions, /contributions.html). Authority = sqrt(A^2+B^2+C^2), from 1.73 at genesis to 15.58 at the apex (9,9,9). A member's rank is the floor of their LOWEST axis, so the path up is always to raise the weakest axis. Certificates land at the gates (3,3,3), (6,6,6), (9,9,9); axis A awards Certificates, B awards Trophies, C awards Medals at each integer crossing.",
-"",
-"THE CHAMBERS: Agents (/agents.html, twelve AI agents, one per sign-domain). Honors (/honors.html, grades/trophies/medals/certificates). Horoscope (/horoscope.html, daily reading + your Olympian's ascent). Publishing (/publishing.html, private archive, approval-gated). Marketing (/marketing.html, reviewed placement). Consultancy (/consultancy.html). Commissions (/contracts.html, the Order's 9.17% commission). Treasury (/treasury.html, the internal Omega economy). Sigil Vault (/sigil.html). Family & Heritage (/family.html). Charter (/charter.html, the eleven Articles). Hall (/hall.html, the ranked Order). The Lattice (/matrix.html, the 3D matrix).",
-"",
-"RULES: Omega is earned, never bought -- fiat purchase and trading are gated until legal review; never imply a member can buy or trade tokens. Horoscope content is for inspiration, not prediction; give no financial, legal, or medical advice. New members wait in pending until the Architect approves them. Never invent chambers, prices, or guarantees. If asked something outside the Order, gently steer back to how it can help the member rise. The Order's founder and Sovereign is Major Sleiman Youssef Dagher; refer to him with respect and never by initials.",
-"",
-"THIS MEMBER:",
-here,
-"Ground every answer in their real standing above when relevant -- tell them exactly which axis to raise and where.",
-"FORMAT: the interface renders HTML, not markdown. Use <b>...</b> for emphasis only; never use markdown asterisks. Write chamber links as plain text paths like /academy.html.",
-  ].join("\n");
-}
+  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
+  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
+  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
+  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
+  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
+  #app{display:none}
+  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+</style>
+</head>
+<body>
+<div id="gate" class="gate-card" style="display:none">
+  <div class="g">&#937;</div>
+  <h2 id="gate-h">Concierge</h2>
+  <p id="gate-p">Sign in to speak with the Concierge.</p>
+  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
+</div>
 
-Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+<div class="shell" id="app">
+  <aside class="side" id="omega-side" data-page="chatbot"></aside>
+  <main class="main">
+    <div class="topbar"><div class="t">CONCIERGE<small>THE ORDER'S GUIDE</small></div></div>
+    <div class="chat">
+      <div class="log" id="log"></div>
+      <div class="chips" id="chips"></div>
+      <div class="inrow">
+        <input id="msg" type="text" placeholder="Ask about the matrix, your standing, or any chamber\u2026" autocomplete="off" />
+        <button id="send">SEND</button>
+      </div>
+    </div>
+  </main>
+</div>
 
-  const KEY = Deno.env.get("ANTHROPIC_API_KEY");
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-  // health check: GET the URL in a browser to confirm the function is alive and
-  // whether the key is set -- isolates "function reachable" from "Anthropic reachable".
-  if (req.method === "GET") {
-    return j({ ok: true, service: "concierge", configured: !!KEY });
-  }
-  if (req.method !== "POST") return j({ error: "POST only" }, 405);
+  /* OPTIONAL: paste a Claude-backed endpoint URL here to upgrade the Concierge to a live AI.
+     Leave empty to use the built-in keyless guide (works with no setup). */
+  const AI_ENDPOINT = "https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/concierge";
 
-  if (!KEY) return j({ error: "Concierge not configured" }, 500);
+  let ctx={sign:'',a:1,b:1,c:1,auth:1.73,tier:1,rank:'Initiate'};
+  const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
+  const GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
+  const AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
 
-  let payload: any;
-  try { payload = await req.json(); } catch { return j({ reply: "Speak, sovereign." }); }
-  const message = String(payload?.message ?? "").slice(0, 2000).trim();
-  if (!message) return j({ reply: "Ask me how to rise, what a chamber holds, or where you stand." });
+  const MODS=[
+    {k:'matrix lattice 729 9x9x9 cube',a:'The matrix is 9\u00d79\u00d79 \u2014 729 nodes. Your position is (Knowledge, Mastery, Contribution); authority = \u221a(A\u00b2+B\u00b2+C\u00b2), from 1.73 at genesis to 15.58 at the apex. See it in 3D at The Lattice (/matrix.html).'},
+    {k:'level up rank raise grow authority ascend advance progress',a:'You rise by raising three axes: Knowledge in the Academy, Mastery in the Games, Contribution in Contributions. Each verified act adds to a node; certificates land at (3,3,3), (6,6,6), (9,9,9). Your rank is the floor of your lowest axis \u2014 so grow your weakest axis to climb.'},
+    {k:'academy lessons knowledge learn',a:'The Academy (/academy.html) holds lessons that raise your Knowledge axis (A).'},
+    {k:'games gaming mastery arena play stages',a:'The Games (/gaming.html): 12 games \u00d7 12 stages, matrix-gated. Clear the Sequence Lock to take a node and raise Mastery (B). They get hard \u2014 long, fast, and reversed in the upper games.'},
+    {k:'contribution contributions give',a:'Contributions (/contributions.html) raise your Contribution axis (C) through acts of giving.'},
+    {k:'agents agent oracle sentinel sovereign',a:'You have twelve AI agents (/agents.html), one per sign-domain. Each upgrades as your matrix grows. Your own agent is bound to your sign.'},
+    {k:'honors trophies medals certificates grades labels',a:'Honors (/honors.html) shows your grades, levels, certificates, trophies, medals, labels, and commitment \u2014 all computed from your real ascent.'},
+    {k:'horoscope zodiac sign god planet daily stars',a:'Horoscope (/horoscope.html): your daily reading, character, and the ascent of your Olympian and planet through nine forms as your matrix rises.'},
+    {k:'publish publishing works archive manuscript',a:'Publishing (/publishing.html): commit works to your private archive (and attach files up to 5\u202fGB). Works stay private until approved \u2014 they are never public without the Order\u2019s approval.'},
+    {k:'market marketing ads placement boost',a:'Marketing (/marketing.html): reserve placement. Every submission is reviewed and approved before it can publish.'},
+    {k:'consult consultancy advice expert',a:'Consultancy (/consultancy.html): request counsel under a confidentiality agreement with the Order\u2019s commission recorded.'},
+    {k:'contract commission deal',a:'Commissions (/contracts.html): draft a member-to-trade contract; the Order\u2019s 9.17% commission is computed and a sovereign reference is sealed.'},
+    {k:'treasury omega economy token supply',a:'Treasury (/treasury.html): the internal \u03A9 economy. \u03A9 is earned, never bought; fiat purchase and trading are gated until legal review.'},
+    {k:'sigil vault medallion crest',a:'The Sigil Vault (/sigil.html) holds the sovereign medallions you have earned.'},
+    {k:'family heritage bloodline heir',a:'Family & Heritage (/family.html): your bloodline tree and the Heritage Protocol of succession.'},
+    {k:'settings background colour theme music',a:'Settings (/settings.html): change your background colour and manage the ambient score (the \u266a control, bottom-right of every page).'},
+    {k:'charter law articles ownership governance',a:'The Charter (/charter.html): the eleven Articles, the economic framework, and governance of the Order.'},
+    {k:'approval access enter admit',a:'No one becomes active without the Architect\u2019s approval. New members wait in pending until admitted. Owners admit them at /approvals.html.'},
+    {k:'cinema film saga movie myth',a:'Cinema (/cinema.html): the Myth Verse \u2014 the nine-film sovereign saga, 2026\u20132034.'},
+    {k:'news wire dispatch feed',a:'News & Wire (/news.html): sovereign dispatches and the member wire.'},
+    {k:'recover password forgot reset',a:'Forgot your password? Use /reset.html (linked from the member access page). You can also set your phone + country on your profile for recovery.'},
+    {k:'social share follow instagram x facebook',a:'The Social hub (/social.html) lets you follow the Order and share it across networks.'}
+  ];
 
-  const x = payload?.context ?? {};
-  const sign = String(x.sign ?? "").trim();
-  const a = num(x.a, 1), b = num(x.b, 1), c = num(x.c, 1);
-  const ctx = {
-    sign,
-    god: GOD[cap(sign)] ?? "the Olympians",
-    agent: AGENT[cap(sign)] ?? "your bound agent",
-    a, b, c,
-    auth: x.auth != null ? num(x.auth, Math.sqrt(a*a+b*b+c*c)) : Math.sqrt(a*a+b*b+c*c),
-    rank: String(x.rank ?? "Initiate"),
-    tier: num(x.tier, 1),
-  };
-
-  // hard timeout so a slow/blocked upstream returns cleanly instead of hanging
-  // into a gateway "connection timeout". 25s leaves margin under the function limit.
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 25000);
-  try {
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001", // fast + economical concierge; swap to claude-sonnet-4-6 for richer answers
-        max_tokens: 600,
-        system: systemPrompt(ctx),
-        messages: [{ role: "user", content: message }],
-      }),
-    });
-    clearTimeout(timer);
-    if (!r.ok) {
-      console.error("anthropic error", r.status, await r.text());
-      return j({ error: "upstream", status: r.status, reply: "" }, 502); // page falls back to local guide
+  function localReply(raw){
+    var m=raw.toLowerCase().trim();
+    if(/^(hi|hey|hello|greetings|salam|salut)\b/.test(m)) return 'Welcome, '+(ctx.sign?ctx.sign+' sovereign':'sovereign')+'. Ask me how to rise, what a chamber does, or where you stand.';
+    if(/my (standing|rank|level|authority|tier|node|position)|where (do i|am i) stand|how am i doing/.test(m)){
+      return 'You stand at node ('+Math.round(ctx.a)+','+Math.round(ctx.b)+','+Math.round(ctx.c)+') \u2014 authority <b>'+ctx.auth.toFixed(2)+'</b> of 15.58, rank <b>'+ctx.rank+'</b> (Tier '+ctx.tier+'). Your axes: Knowledge '+ctx.a.toFixed(2)+', Mastery '+ctx.b.toFixed(2)+', Contribution '+ctx.c.toFixed(2)+'. Raise your lowest to climb in rank.';
     }
-    const data = await r.json();
-    const raw = (data?.content ?? [])
-      .filter((p: any) => p?.type === "text")
-      .map((p: any) => p.text)
-      .join("\n").trim();
-    return j({ reply: safe(raw) || "The Concierge is silent for a moment. Ask again." });
-  } catch (e) {
-    clearTimeout(timer);
-    const aborted = (e as Error)?.name === "AbortError";
-    console.error("concierge failure", aborted ? "timeout reaching Anthropic" : e);
-    return j({ error: aborted ? "timeout" : "failed", reply: "" }, 502); // page falls back to local guide
+    if(/who is my (god|olympian)|my god|my olympian/.test(m) && ctx.sign) return 'Your Olympian is <b>'+GOD[ctx.sign]+'</b>, and your bound agent is <b>'+AGENT[ctx.sign]+'</b>. See their ascent in your Horoscope.';
+    if(/who are you|what are you|your name/.test(m)) return 'I am the Concierge \u2014 the Order\u2019s guide. I read your real standing and point you through every chamber. For domain counsel, speak to your twelve agents.';
+    if(/help|what can you|commands|options/.test(m)) return 'Ask me: \u201chow do I level up?\u201d, \u201cwhat is the matrix?\u201d, \u201cwhere do I stand?\u201d, or \u201cwhat is <chamber>?\u201d (e.g. games, agents, treasury, contracts). I can guide you anywhere in the Order.';
+    // module match: score by keyword overlap
+    var terms=m.split(/\s+/), best=null, bestScore=0;
+    MODS.forEach(function(mod){ var s=0; terms.forEach(function(t){ if(t.length>2 && mod.k.indexOf(t)!==-1) s++; }); if(s>bestScore){ bestScore=s; best=mod; } });
+    if(best && bestScore>0) return best.a;
+    return 'I did not catch a chamber in that. Try a keyword \u2014 matrix, games, agents, honors, treasury, contracts \u2014 or ask \u201chow do I level up?\u201d You can also use Search (/search.html) to jump anywhere.';
   }
-});
+
+  function addBub(name, html, who){
+    var log=document.getElementById('log');
+    var d=document.createElement('div'); d.className='bub '+who;
+    d.innerHTML=(who==='b'?'<span class="nm">'+name+'</span>':'')+html;
+    log.appendChild(d); log.scrollTop=log.scrollHeight;
+  }
+
+  async function respond(text){
+    if(AI_ENDPOINT){
+      try{
+        var sess=(await supabase.auth.getSession()).data.session;
+        var hdr={'Content-Type':'application/json'};
+        if(sess){ hdr['Authorization']='Bearer '+sess.access_token; hdr['apikey']="sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"; }
+        var r=await fetch(AI_ENDPOINT,{method:'POST',headers:hdr,body:JSON.stringify({message:text,context:ctx})});
+        if(r.ok){ var j=await r.json(); if(j && (j.reply||j.text)){ addBub('CONCIERGE', (j.reply||j.text), 'b'); return; } }
+      }catch(e){}
+    }
+    addBub('CONCIERGE', localReply(text), 'b');
+  }
+
+  function send(){
+    var inp=document.getElementById('msg'); var t=inp.value.trim(); if(!t) return;
+    addBub('YOU', t.replace(/</g,'&lt;'), 'u'); inp.value='';
+    setTimeout(function(){ respond(t); }, 120);
+  }
+
+  function buildChips(){
+    var chips=['How do I level up?','What is the matrix?','Where do I stand?','What is the Games?','How do contracts work?'];
+    var box=document.getElementById('chips');
+    chips.forEach(function(c){ var s=document.createElement('span'); s.className='chip'; s.textContent=c; s.addEventListener('click',function(){ document.getElementById('msg').value=c; send(); }); box.appendChild(s); });
+  }
+
+  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+
+  async function boot(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('Concierge','Sign in to speak with the Concierge.'); return; }
+    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to meet the Concierge.'); return; }
+    ctx.sign=pr.data.sign; ctx.a=Number(pr.data.axis_a||1); ctx.b=Number(pr.data.axis_b||1); ctx.c=Number(pr.data.axis_c||1);
+    ctx.auth=Math.sqrt(ctx.a*ctx.a+ctx.b*ctx.b+ctx.c*ctx.c); ctx.tier=Math.max(1,Math.min(9,Math.floor(Math.min(ctx.a,ctx.b,ctx.c)))); ctx.rank=RANKS[ctx.tier-1];
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+    buildChips();
+    addBub('CONCIERGE','Welcome, '+ctx.sign+' sovereign. I am the Concierge. Ask me how to rise, what a chamber holds, or where you stand in the 729.','b');
+  }
+  document.getElementById('send').addEventListener('click',send);
+  document.getElementById('msg').addEventListener('keydown',function(e){ if(e.key==='Enter') send(); });
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+  boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script>
+</body>
+</html>

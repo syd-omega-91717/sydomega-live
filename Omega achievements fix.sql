@@ -42,23 +42,54 @@ CREATE POLICY medals_select_own ON public.medals FOR SELECT
   USING (auth.uid() = user_id OR public.is_platform_owner());
 CREATE UNIQUE INDEX IF NOT EXISTS medals_user_num_uniq ON public.medals(user_id, medal_num);
 
--- 2) missing columns the pages read ------------------------------------------
-ALTER TABLE public.certificates ADD COLUMN IF NOT EXISTS cert_num int;
-ALTER TABLE public.profiles     ADD COLUMN IF NOT EXISTS nodes_earned int DEFAULT 0;
+-- 2) guarantee every column the engine + pages touch (any pre-existing shape)-
+ALTER TABLE public.certificates ADD COLUMN IF NOT EXISTS user_id   uuid;
+ALTER TABLE public.certificates ADD COLUMN IF NOT EXISTS title     text;
+ALTER TABLE public.certificates ADD COLUMN IF NOT EXISTS milestone text;
+ALTER TABLE public.certificates ADD COLUMN IF NOT EXISTS cert_num  int;
+ALTER TABLE public.certificates ADD COLUMN IF NOT EXISTS issued_at timestamptz DEFAULT now();
+ALTER TABLE public.trophies     ADD COLUMN IF NOT EXISTS user_id    uuid;
+ALTER TABLE public.trophies     ADD COLUMN IF NOT EXISTS trophy_num int;
+ALTER TABLE public.trophies     ADD COLUMN IF NOT EXISTS earned_at  timestamptz DEFAULT now();
+ALTER TABLE public.trophies     ADD COLUMN IF NOT EXISTS issued_at  timestamptz DEFAULT now();
+ALTER TABLE public.profiles     ADD COLUMN IF NOT EXISTS nodes_earned        int     DEFAULT 0;
+ALTER TABLE public.profiles     ADD COLUMN IF NOT EXISTS nodes_cleared       int     DEFAULT 0;
+ALTER TABLE public.profiles     ADD COLUMN IF NOT EXISTS certificates_earned int     DEFAULT 0;
+ALTER TABLE public.profiles     ADD COLUMN IF NOT EXISTS trophies_earned     int     DEFAULT 0;
+ALTER TABLE public.profiles     ADD COLUMN IF NOT EXISTS medals_earned       int     DEFAULT 0;
+ALTER TABLE public.profiles     ADD COLUMN IF NOT EXISTS authority           numeric DEFAULT 0;
+
+-- now the uniqueness guards (columns above are guaranteed to exist)
 CREATE UNIQUE INDEX IF NOT EXISTS certificates_user_num_uniq
   ON public.certificates(user_id, cert_num) WHERE cert_num IS NOT NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS trophies_user_num_uniq
   ON public.trophies(user_id, trophy_num) WHERE trophy_num IS NOT NULL;
 
--- 3) migrate any medals previously stored on trophies.medal_num --------------
-INSERT INTO public.medals (user_id, medal_num, earned_at)
-  SELECT user_id, medal_num, COALESCE(earned_at, now())
-  FROM public.trophies WHERE medal_num IS NOT NULL
-  ON CONFLICT (user_id, medal_num) DO NOTHING;
-DELETE FROM public.trophies WHERE medal_num IS NOT NULL AND trophy_num IS NULL;
--- backfill cert_num from any milestone text that ends in a number
-UPDATE public.certificates SET cert_num = NULLIF(regexp_replace(COALESCE(milestone,''),'\D','','g'),'')::int
-  WHERE cert_num IS NULL AND milestone ~ '\d';
+-- 3) migrate any medals previously stored on trophies.medal_num -------------
+-- Only runs if that column actually exists (older engines stored medals there;
+-- many schemas never had it). Guarded so it cannot error on either shape.
+DO $migrate$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_schema='public' AND table_name='trophies' AND column_name='medal_num') THEN
+    INSERT INTO public.medals (user_id, medal_num, earned_at)
+      SELECT user_id, medal_num, COALESCE(earned_at, now())
+      FROM public.trophies WHERE medal_num IS NOT NULL
+      ON CONFLICT (user_id, medal_num) DO NOTHING;
+    DELETE FROM public.trophies WHERE medal_num IS NOT NULL AND trophy_num IS NULL;
+  END IF;
+END $migrate$;
+
+-- backfill cert_num from milestone text, only if a milestone column exists
+DO $certbf$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_schema='public' AND table_name='certificates' AND column_name='milestone') THEN
+    UPDATE public.certificates
+      SET cert_num = NULLIF(regexp_replace(COALESCE(milestone,''),'\D','','g'),'')::int
+      WHERE cert_num IS NULL AND milestone ~ '\d';
+  END IF;
+END $certbf$;
 
 -- 4) the award model: how many of a track's 12 milestones an axis has lit ----
 CREATE OR REPLACE FUNCTION public.milestones_for_axis(v numeric)

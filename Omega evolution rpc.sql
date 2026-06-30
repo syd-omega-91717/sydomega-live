@@ -33,6 +33,28 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS certificates_earned int  DE
 CREATE UNIQUE INDEX IF NOT EXISTS task_completions_user_task_uniq
   ON public.task_completions(user_id, task);
 
+-- --- drop prior versions of these functions ---------------------------------
+-- An earlier build may have created these with a different return type, and
+-- CREATE OR REPLACE cannot change a return type. Drop every old overload first.
+-- is_platform_owner() is intentionally NOT dropped: RLS policies may depend on
+-- it and its boolean return type is unchanged, so CREATE OR REPLACE handles it.
+DO $drop$
+DECLARE r record;
+BEGIN
+  FOR r IN
+    SELECT 'DROP FUNCTION IF EXISTS public.' || quote_ident(p.proname)
+           || '(' || pg_get_function_identity_arguments(p.oid) || ');' AS cmd
+    FROM pg_proc p
+    JOIN pg_namespace n ON n.oid = p.pronamespace
+    WHERE n.nspname = 'public'
+      AND p.proname IN ('complete_task','log_evolution','get_all_members',
+                        'approve_member','reject_member','revoke_member','order_stats')
+  LOOP
+    EXECUTE r.cmd;
+  END LOOP;
+END
+$drop$;
+
 -- ----------------------------------------------------------------------------
 -- helper: am I the platform owner?
 -- ----------------------------------------------------------------------------

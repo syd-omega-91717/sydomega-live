@@ -12,7 +12,10 @@
 -- ============================================================================
 BEGIN;
 
--- 1) the missing medals table (mirrors trophies) -----------------------------
+-- 1) the medals table (mirrors trophies) ------------------------------------
+-- NOTE: a medals table may already exist from an earlier step with a different
+-- shape, so CREATE IF NOT EXISTS alone is not enough -- we also guarantee every
+-- column the engine/pages need, whether the table is new or pre-existing.
 CREATE TABLE IF NOT EXISTS public.medals (
   id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id    uuid REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -20,6 +23,19 @@ CREATE TABLE IF NOT EXISTS public.medals (
   earned_at  timestamptz DEFAULT now(),
   issued_at  timestamptz DEFAULT now()
 );
+ALTER TABLE public.medals ADD COLUMN IF NOT EXISTS user_id   uuid;
+ALTER TABLE public.medals ADD COLUMN IF NOT EXISTS medal_num int;
+ALTER TABLE public.medals ADD COLUMN IF NOT EXISTS earned_at timestamptz DEFAULT now();
+ALTER TABLE public.medals ADD COLUMN IF NOT EXISTS issued_at timestamptz DEFAULT now();
+-- if an id column pre-exists without a default, give it one so inserts succeed
+DO $idfix$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_schema='public' AND table_name='medals' AND column_name='id') THEN
+    BEGIN ALTER TABLE public.medals ALTER COLUMN id SET DEFAULT gen_random_uuid();
+    EXCEPTION WHEN others THEN NULL; END;
+  END IF;
+END $idfix$;
 ALTER TABLE public.medals ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS medals_select_own ON public.medals;
 CREATE POLICY medals_select_own ON public.medals FOR SELECT

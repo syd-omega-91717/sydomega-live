@@ -66,9 +66,16 @@ here,
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
-  if (req.method !== "POST") return j({ error: "POST only" }, 405);
 
   const KEY = Deno.env.get("ANTHROPIC_API_KEY");
+
+  // health check: GET the URL in a browser to confirm the function is alive and
+  // whether the key is set -- isolates "function reachable" from "Anthropic reachable".
+  if (req.method === "GET") {
+    return j({ ok: true, service: "concierge", configured: !!KEY });
+  }
+  if (req.method !== "POST") return j({ error: "POST only" }, 405);
+
   if (!KEY) return j({ error: "Concierge not configured" }, 500);
 
   let payload: any;
@@ -89,9 +96,14 @@ Deno.serve(async (req: Request) => {
     tier: num(x.tier, 1),
   };
 
+  // hard timeout so a slow/blocked upstream returns cleanly instead of hanging
+  // into a gateway "connection timeout". 25s leaves margin under the function limit.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 25000);
   try {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "content-type": "application/json",
         "x-api-key": KEY,
@@ -104,9 +116,10 @@ Deno.serve(async (req: Request) => {
         messages: [{ role: "user", content: message }],
       }),
     });
+    clearTimeout(timer);
     if (!r.ok) {
       console.error("anthropic error", r.status, await r.text());
-      return j({ error: "upstream", reply: "" }, 502); // page falls back to local guide
+      return j({ error: "upstream", status: r.status, reply: "" }, 502); // page falls back to local guide
     }
     const data = await r.json();
     const raw = (data?.content ?? [])
@@ -115,7 +128,9 @@ Deno.serve(async (req: Request) => {
       .join("\n").trim();
     return j({ reply: safe(raw) || "The Concierge is silent for a moment. Ask again." });
   } catch (e) {
-    console.error("concierge failure", e);
-    return j({ error: "failed", reply: "" }, 500); // page falls back to local guide
+    clearTimeout(timer);
+    const aborted = (e as Error)?.name === "AbortError";
+    console.error("concierge failure", aborted ? "timeout reaching Anthropic" : e);
+    return j({ error: aborted ? "timeout" : "failed", reply: "" }, 502); // page falls back to local guide
   }
 });

@@ -86,8 +86,8 @@ BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.columns
              WHERE table_schema='public' AND table_name='certificates' AND column_name='milestone') THEN
     UPDATE public.certificates
-      SET cert_num = NULLIF(regexp_replace(COALESCE(milestone,''),'\D','','g'),'')::int
-      WHERE cert_num IS NULL AND milestone ~ '\d';
+      SET cert_num = NULLIF(regexp_replace(COALESCE(milestone::text,''),'\D','','g'),'')::int
+      WHERE cert_num IS NULL AND milestone::text ~ '\d';
   END IF;
 END $certbf$;
 
@@ -144,7 +144,7 @@ BEGIN
     FOR k IN (old_m+1)..new_m LOOP
       IF ax='a' THEN
         INSERT INTO public.certificates (user_id,title,milestone,cert_num)
-          SELECT uid, COALESCE(p_title,'Sovereign Certificate '||k), 'Knowledge Milestone '||k, k
+          SELECT uid, COALESCE(p_title,'Sovereign Certificate '||k), k, k
           WHERE NOT EXISTS (SELECT 1 FROM public.certificates WHERE user_id=uid AND cert_num=k);
         unlocked := unlocked || jsonb_build_object('type','certificate','n',k);
       ELSIF ax='b' THEN

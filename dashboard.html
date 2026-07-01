@@ -180,7 +180,7 @@ a{color:inherit;text-decoration:none}
 
     <!-- OWNER PENDING ALERT -->
     <a class="owner-alert" id="owner-alert" href="/profile.html#access">
-      <div class="oa-label">ACCESS REQUESTS PENDING</div>
+      <div class="oa-label" data-i18n="dash.requests_pending">ACCESS REQUESTS PENDING</div>
       <div class="oa-count" id="oa-count">0</div>
       <div class="oa-action">TAP TO OPEN ACCESS CONTROL IN PROFILE --></div>
     </a>
@@ -210,9 +210,9 @@ a{color:inherit;text-decoration:none}
           <span class="sh-label">MATRIX AXES -- 0.001 TO 9.000 PRECISION</span>
         </div>
         <div class="axis-strip">
-          <div class="as-axis"><div class="asa-id" style="color:#00E5FF">A</div><div class="asa-name">KNOWLEDGE</div><div class="asa-val" id="ax-a" style="color:#00E5FF">9.000</div><div class="asa-bar"><div class="asa-fill" id="bar-a" style="background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.2));width:0%"></div></div><div class="asa-sub" id="sub-a">APEX LOCKED</div></div>
-          <div class="as-axis"><div class="asa-id" style="color:#E86A3A">B</div><div class="asa-name">MASTERY</div><div class="asa-val" id="ax-b" style="color:#E86A3A">9.000</div><div class="asa-bar"><div class="asa-fill" id="bar-b" style="background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.2));width:0%"></div></div><div class="asa-sub" id="sub-b">APEX LOCKED</div></div>
-          <div class="as-axis"><div class="asa-id" style="color:#3fb27f">C</div><div class="asa-name">CONTRIBUTION</div><div class="asa-val" id="ax-c" style="color:#3fb27f">9.000</div><div class="asa-bar"><div class="asa-fill" id="bar-c" style="background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.2));width:0%"></div></div><div class="asa-sub" id="sub-c">APEX LOCKED</div></div>
+          <div class="as-axis"><div class="asa-id" style="color:#00E5FF">A</div><div class="asa-name" data-i18n="matrix.knowledge">KNOWLEDGE</div><div class="asa-val" id="ax-a" style="color:#00E5FF">9.000</div><div class="asa-bar"><div class="asa-fill" id="bar-a" style="background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.2));width:0%"></div></div><div class="asa-sub" id="sub-a">APEX LOCKED</div></div>
+          <div class="as-axis"><div class="asa-id" style="color:#E86A3A">B</div><div class="asa-name" data-i18n="matrix.mastery">MASTERY</div><div class="asa-val" id="ax-b" style="color:#E86A3A">9.000</div><div class="asa-bar"><div class="asa-fill" id="bar-b" style="background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.2));width:0%"></div></div><div class="asa-sub" id="sub-b">APEX LOCKED</div></div>
+          <div class="as-axis"><div class="asa-id" style="color:#3fb27f">C</div><div class="asa-name" data-i18n="matrix.contribution">CONTRIBUTION</div><div class="asa-val" id="ax-c" style="color:#3fb27f">9.000</div><div class="asa-bar"><div class="asa-fill" id="bar-c" style="background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.2));width:0%"></div></div><div class="asa-sub" id="sub-c">APEX LOCKED</div></div>
         </div>
 
         <!-- AGENT MESH -->
@@ -242,24 +242,24 @@ a{color:inherit;text-decoration:none}
       <!-- SIDE -->
       <div class="col-side">
         <div class="side-section">
-          <div class="ss-title">SOVEREIGN TIME</div>
+          <div class="ss-title" data-i18n="dash.sovereign_time">SOVEREIGN TIME</div>
           <div class="clock-val" id="dash-clock">--:--:--</div>
           <div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center;letter-spacing:2px;margin-top:3px" id="dash-date">--</div>
           <div class="freq-val" style="margin-top:8px">9.1717 Hz</div>
         </div>
         <div class="side-section">
-          <div class="ss-title">AGENT MESH STATUS</div>
+          <div class="ss-title" data-i18n="dash.agent_mesh">AGENT MESH STATUS</div>
           <div id="agent-pills"></div>
         </div>
         <div class="side-section" style="overflow:hidden;height:140px">
-          <div class="ss-title">LIVE INTEL FEED</div>
+          <div class="ss-title" data-i18n="dash.intel_feed">LIVE INTEL FEED</div>
           <div style="overflow:hidden;height:110px;position:relative">
             <div class="feed-inner" id="feed-inner"></div>
             <div style="position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(0deg,rgba(7,7,11,.95),transparent)"></div>
           </div>
         </div>
         <div class="side-section">
-          <div class="ss-title">QUICK ACCESS</div>
+          <div class="ss-title" data-i18n="dash.quick_access">QUICK ACCESS</div>
           <div class="quick-grid" id="quick-grid"></div>
         </div>
       </div>
@@ -304,7 +304,7 @@ sbi.addEventListener('input',e=>{
   const q=e.target.value.toLowerCase();
   if(q.length<2){sbr.style.display='none';return;}
   const hits=SEARCH.filter(x=>x.n.toLowerCase().includes(q)||x.d.toLowerCase().includes(q)||x.t.toLowerCase().includes(q)).slice(0,10);
-  if(!hits.length){sbr.innerHTML='<div style="padding:12px 14px;font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:2px">NO RESULTS</div>';sbr.style.display='block';return;}
+  if(!hits.length){sbr.innerHTML='<div style="padding:12px 14px;font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:2px" data-i18n="ui.no_results">NO RESULTS</div>';sbr.style.display='block';return;}
   sbr.innerHTML=hits.map(h=>`<a class="sr-item" href="${h.h}"><span class="sri-type" style="color:${h.c};border-color:${h.c}44">${h.t}</span><div><div class="sri-name">${h.n}</div><div class="sri-desc">${h.d}</div></div></a>`).join('');
   sbr.style.display='block';
 });

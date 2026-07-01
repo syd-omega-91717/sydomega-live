@@ -9,8 +9,10 @@ BEGIN;
 
 -- ---- owner check helper (SECURITY DEFINER avoids RLS recursion) ----
 CREATE OR REPLACE FUNCTION public.is_platform_owner()
-RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
-  SELECT COALESCE((SELECT is_owner FROM public.profiles WHERE id = auth.uid()), false);
+RETURNS boolean LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=public AS $$
+BEGIN
+  RETURN COALESCE((SELECT is_owner FROM public.profiles WHERE id = auth.uid()), false);
+END;
 $$;
 
 -- ============================================================
@@ -41,6 +43,7 @@ ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS terms_accepted      boolean DEFAULT false,
   ADD COLUMN IF NOT EXISTS terms_accepted_at   timestamptz,
   ADD COLUMN IF NOT EXISTS trial_expires_at    timestamptz,
+  ADD COLUMN IF NOT EXISTS created_at          timestamptz DEFAULT now(),
   ADD COLUMN IF NOT EXISTS updated_at          timestamptz DEFAULT now();
 -- material_tier: add as plain column ONLY if it does not already exist
 -- (skipped automatically if a GENERATED column of this name is present)
@@ -133,6 +136,10 @@ DECLARE tabs text[] := ARRAY['certificates','trophies','evolution_events','task_
   'marketplace_listings','media_reservations','publications'];
 BEGIN
   FOREACH t IN ARRAY tabs LOOP
+    -- guarantee the ownership column exists first: a table may already exist in
+    -- a divergent shape (e.g. a marketplace_listings without user_id), in which
+    -- case the CREATE TABLE above was skipped and the policy below would fail.
+    EXECUTE format('ALTER TABLE public.%I ADD COLUMN IF NOT EXISTS user_id uuid;', t);
     EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY;', t);
     EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', t||'_own', t);
     EXECUTE format($f$CREATE POLICY %I ON public.%I

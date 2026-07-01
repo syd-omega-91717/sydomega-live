@@ -75,27 +75,27 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
   <!-- Animated Omega logo -->
   <canvas id="gate-omega" width="160" height="160" style="width:80px;height:80px"></canvas>
 
-  <div class="gate-title" id="gate-title" style="color:var(--gold)">ACCESS REQUEST SUBMITTED</div>
-  <div class="gate-sub">YOUR IDENTITY HAS BEEN REGISTERED<br/>THE ARCHITECT WILL REVIEW AND GRANT ACCESS</div>
+  <div class="gate-title" id="gate-title" style="color:var(--gold)" data-i18n="pending.submitted">ACCESS REQUEST SUBMITTED</div>
+  <div class="gate-sub"><span data-i18n="pending.registered">YOUR IDENTITY HAS BEEN REGISTERED</span><br/><span data-i18n="pending.review">THE ARCHITECT WILL REVIEW AND GRANT ACCESS</span></div>
 
   <!-- Expired badge (shown when trial ended) -->
   <div class="expired-badge" id="expired-badge">
-    <div class="eb-title">TRIAL SESSION ENDED</div>
+    <div class="eb-title" data-i18n="pending.trial_ended">TRIAL SESSION ENDED</div>
     <div class="eb-sub">Your 9.1717-minute trial has expired.<br/>Request renewed access from the Architect.<br/>Create a new session or contact the Order.</div>
   </div>
 
   <!-- Status box -->
   <div class="status-box">
-    <div class="sb-label">ACCESS STATUS</div>
-    <div class="sb-status" id="sb-status" style="color:var(--solar)">PENDING ARCHITECT REVIEW</div>
+    <div class="sb-label" data-i18n="pending.status_label">ACCESS STATUS</div>
+    <div class="sb-status" id="sb-status" style="color:var(--solar)" data-i18n="pending.pending_review">PENDING ARCHITECT REVIEW</div>
     <div class="sb-detail" id="sb-detail">The Architect reviews and approves all members personally.<br/>Access is granted for a sovereign trial period of 9.1717 minutes.</div>
   </div>
 
   <div class="freq">9.1717 Hz -- FREQUENCY LOCK ACTIVE</div>
 
   <div class="btns">
-    <button class="btn-check" id="btn-check">CHECK ACCESS STATUS</button>
-    <a class="btn-logout" id="btn-logout" href="#">SIGN OUT AND RETURN</a>
+    <button class="btn-check" id="btn-check" data-i18n="pending.check">CHECK ACCESS STATUS</button>
+    <a class="btn-logout" id="btn-logout" href="#" data-i18n="pending.signout">SIGN OUT AND RETURN</a>
   </div>
 
   <div class="auto-check">

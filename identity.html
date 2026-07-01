@@ -161,9 +161,8 @@ a{color:inherit;text-decoration:none}
       <div class="edit-form">
         <div class="ef-grid">
           <div class="ef-field"><label>DISPLAY NAME</label><input type="text" id="ef-name" placeholder="Your sovereign name..."/></div>
-          <div class="ef-field"><label>DATE OF BIRTH</label><input type="date" id="ef-dob"/></div>
-          <div class="ef-field"><label>ZODIAC SIGN <span style="color:var(--muted);font-size:8px;letter-spacing:1px">(SET FROM BIRTH DATE)</span></label>
-            <select id="ef-sign"><option value="">-- FROM BIRTH DATE --</option>
+          <div class="ef-field"><label>ZODIAC SIGN</label>
+            <select id="ef-sign"><option value="">-- SELECT SIGN --</option>
               <option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option>
               <option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option>
               <option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
@@ -258,23 +257,6 @@ function makeToggle(on){
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-
-const SIGN_STARTS=[[1,20,'Aquarius'],[2,19,'Pisces'],[3,21,'Aries'],[4,20,'Taurus'],[5,21,'Gemini'],[6,21,'Cancer'],[7,23,'Leo'],[8,23,'Virgo'],[9,23,'Libra'],[10,23,'Scorpio'],[11,22,'Sagittarius'],[12,22,'Capricorn']];
-function zodiacFromDate(str){
-  if(!str) return '';
-  const dt=new Date(str+'T00:00:00'); if(isNaN(dt)) return '';
-  const m=dt.getMonth()+1, d=dt.getDate();
-  let sign='Capricorn'; // Dec 22 - Jan 19 wrap
-  for(const t of SIGN_STARTS){ if(m>t[0] || (m===t[0] && d>=t[1])) sign=t[2]; }
-  return sign;
-}
-function wireDob(){
-  const dob=document.getElementById('ef-dob'); if(!dob||dob.__wired) return; dob.__wired=1;
-  dob.addEventListener('change',function(){
-    const s=zodiacFromDate(this.value);
-    if(s){ const sel=document.getElementById('ef-sign'); if(sel) sel.value=s; }
-  });
-}
 
 const EL_MAP={Aries:'FIRE',Taurus:'METAL',Gemini:'WIND',Cancer:'WATER',Leo:'FIRE',Virgo:'SAND',Libra:'WIND',Scorpio:'WATER',Sagittarius:'FIRE',Capricorn:'METAL',Aquarius:'WIND',Pisces:'WATER'};
 const CH_MAP={
@@ -417,8 +399,8 @@ async function boot(){
   document.getElementById('val-c').textContent=c.toFixed(1);
   document.getElementById('ef-name').value=d.display_name||'';
   document.getElementById('ef-sign').value=d.sign||'';
-  if(document.getElementById('ef-dob')) document.getElementById('ef-dob').value=d.birth_date||'';
-  wireDob();
+  var _n=document.getElementById('ef-nation'); if(_n) _n.value=d.nationality||'';
+  var _p=document.getElementById('ef-prof');   if(_p) _p.value=d.profession||'';
 
   /* Passport tab */
   document.getElementById('pp-id').textContent='SYD-OMEGA-91717 . ID: '+uid.substring(0,8).toUpperCase();
@@ -445,13 +427,11 @@ async function boot(){
   /* Save profile */
   document.getElementById('btn-profile-save')?.addEventListener('click',async()=>{
     const n=document.getElementById('ef-name').value.trim();
-    const dob=document.getElementById('ef-dob')?document.getElementById('ef-dob').value:'';
-    const computed=zodiacFromDate(dob);
-    const sg=computed||document.getElementById('ef-sign').value;
+    const sg=document.getElementById('ef-sign').value;
     const nat=document.getElementById('ef-nation').value.trim();
     const prof=document.getElementById('ef-prof').value.trim();
     if(!n) return;
-    await sb.from('profiles').update({display_name:n,sign:sg||sign,birth_date:dob||null,updated_at:new Date().toISOString()}).eq('id',uid);
+    await sb.from('profiles').update({display_name:n,sign:sg||sign,nationality:nat,profession:prof,updated_at:new Date().toISOString()}).eq('id',uid);
     const m=document.getElementById('profile-save-msg');m.style.display='block';setTimeout(()=>m.style.display='none',3000);
     document.getElementById('pcm-name').textContent=n.toUpperCase();
   });

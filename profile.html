@@ -607,17 +607,22 @@ function startCountdown(uid,expiresAt,el){
 }
 
 async function grantAccess(uid,minutes,sbRef){
-  if(minutes<0){
-    await sbRef.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null}).eq('id',uid);
-  } else {
-    const exp=new Date(Date.now()+minutes*60000).toISOString();
-    await sbRef.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp}).eq('id',uid);
+  // Owner-gated RPCs are the source of truth. The trial is a fixed 9.1717 min
+  // (approve_member); negative minutes means permanent (grant_permanent_access).
+  try{
+    if(minutes<0){ const{error}=await sbRef.rpc('grant_permanent_access',{p_uid:uid}); if(error) throw error; }
+    else { const{error}=await sbRef.rpc('approve_member',{p_uid:uid}); if(error) throw error; }
+  }catch(e){
+    // fallback: direct write, still the canonical 9.1717 minutes
+    if(minutes<0){ await sbRef.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null}).eq('id',uid); }
+    else { const exp=new Date(Date.now()+9.1717*60000).toISOString(); await sbRef.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp}).eq('id',uid); }
   }
   loadMembers();
 }
 
 async function revokeAccess(uid,sbRef){
-  await sbRef.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
+  try{ const{error}=await sbRef.rpc('revoke_member',{p_uid:uid}); if(error) throw error; }
+  catch(e){ await sbRef.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid); }
   loadMembers();
 }
 

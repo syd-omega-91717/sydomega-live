@@ -88,6 +88,8 @@
 
 /* Audio loader */
 (function(){if(!document.querySelector('script[data-omega-audio]')){var s=document.createElement('script');s.src='/audio.js';s.setAttribute('data-omega-audio','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== MULTI-LANGUAGE -- activate the i18n engine on every page (EN / AR-RTL / FR / ES) ===== */
+(function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}})();
 
 /* ===== CINEMATIC FX ENGINE -- INLINED DIRECTLY INTO bg.js =====
    No external /omega-fx.js file required. Updating bg.js is enough. */
@@ -551,7 +553,7 @@
 /* ACCESS GUARD + TRIAL ENGINE */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'hall':1,'pending':1,'approvals':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
   if(EX[pg])return;
   import('https://esm.sh/@supabase/supabase-js@2').then(function(m){
     var sb=m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
@@ -976,4 +978,41 @@ setTimeout(function(){
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applySkel);else applySkel();
   }
+})();
+
+/* ===== PASSWORD REVEAL -- every password field across the platform gains a
+   living emblem toggle to show or hide its value. One global implementation;
+   pure SVG/ASCII emblem (no emoji); gold-to-cyan on activation; catches fields
+   that appear later (e.g. the auth panel). ===== */
+(function(){
+  if(window.__omegaPwReveal)return; window.__omegaPwReveal=1;
+  var OPEN='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>';
+  var OFF ='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/><line x1="3.5" y1="3.5" x2="20.5" y2="20.5"/></svg>';
+  function enhance(inp){
+    if(inp.__omegaReveal||inp.getAttribute('type')!=='password')return; inp.__omegaReveal=1;
+    var wrap=document.createElement('span'); wrap.style.cssText='position:relative;display:block';
+    inp.parentNode.insertBefore(wrap,inp); wrap.appendChild(inp);
+    try{inp.style.paddingRight='46px';}catch(e){}
+    var btn=document.createElement('button');
+    btn.type='button'; btn.tabIndex=-1; btn.setAttribute('aria-label','Show or hide password');
+    btn.style.cssText='position:absolute;top:50%;right:12px;transform:translateY(-50%);background:none;border:0;padding:4px;margin:0;cursor:pointer;color:#C9A84C;opacity:.68;transition:opacity .2s ease,color .2s ease,transform .18s ease;display:flex;align-items:center;line-height:0';
+    btn.innerHTML=OFF;
+    btn.onmouseenter=function(){btn.style.opacity='1';};
+    btn.onmouseleave=function(){btn.style.opacity=(inp.getAttribute('type')==='text')?'1':'.68';};
+    btn.onclick=function(e){
+      e.preventDefault();
+      var reveal=inp.getAttribute('type')==='password';
+      inp.setAttribute('type',reveal?'text':'password');
+      btn.innerHTML=reveal?OPEN:OFF;
+      btn.style.color=reveal?'#00E5FF':'#C9A84C';
+      btn.style.opacity=reveal?'1':'.68';
+      btn.style.transform='translateY(-50%) scale(1.18)';
+      setTimeout(function(){btn.style.transform='translateY(-50%) scale(1)';},170);
+      try{inp.focus();}catch(_){}
+    };
+    wrap.appendChild(btn);
+  }
+  function scan(){var l=document.querySelectorAll('input[type=password]');for(var i=0;i<l.length;i++)enhance(l[i]);}
+  function boot(){scan();try{new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

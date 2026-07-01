@@ -224,11 +224,11 @@ a{color:inherit;text-decoration:none}
 
     <!-- LIVE STATS (inspired by Image 1-B: Level, Points, Achievements) -->
     <div class="stat-grid" id="stat-grid">
-      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">AUTHORITY</div><div class="sgi-val" style="color:var(--gold)">15.588</div><div class="sgi-sub">Absolute maximum</div></div>
+      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label" data-i18n="matrix.authority">AUTHORITY</div><div class="sgi-val" style="color:var(--gold)">15.588</div><div class="sgi-sub">Absolute maximum</div></div>
       <div class="sg-item" style="--c:var(--cyan)"><div class="sgi-label">MATRIX COORD</div><div class="sgi-val" style="color:var(--cyan);font-size:14px">(9.000,9.000,9.000)</div><div class="sgi-sub">Apex locked</div></div>
       <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">MATERIAL TIER</div><div class="sgi-val" style="color:var(--gold)">OMEGA</div><div class="sgi-sub">MASTER</div></div>
-      <div class="sg-item" style="--c:var(--green)"><div class="sgi-label">GRADE</div><div class="sgi-val" style="color:var(--green)">12/12</div><div class="sgi-sub">Maximum</div></div>
-      <div class="sg-item" style="--c:var(--solar)"><div class="sgi-label">ACHIEVEMENTS</div><div class="sgi-val" style="color:var(--solar)">36/36</div><div class="sgi-sub">All complete</div></div>
+      <div class="sg-item" style="--c:var(--green)"><div class="sgi-label" data-i18n="prof.grade">GRADE</div><div class="sgi-val" style="color:var(--green)">12/12</div><div class="sgi-sub">Maximum</div></div>
+      <div class="sg-item" style="--c:var(--solar)"><div class="sgi-label" data-i18n="prof.achievements">ACHIEVEMENTS</div><div class="sgi-val" style="color:var(--solar)">36/36</div><div class="sgi-sub">All complete</div></div>
       <div class="sg-item" style="--c:var(--purple)"><div class="sgi-label">MEMBERSHIP</div><div class="sgi-val" style="color:var(--purple)">NEXUS</div><div class="sgi-sub">Tier 9 / Omega</div></div>
     </div>
 
@@ -236,7 +236,7 @@ a{color:inherit;text-decoration:none}
     <div class="tab-nav">
       <div class="tab-btn active" data-tab="overview">OVERVIEW</div>
       <div class="tab-btn" data-tab="identity">IDENTITY</div>
-      <div class="tab-btn" data-tab="credentials">CREDENTIALS</div>
+      <div class="tab-btn" data-tab="credentials" data-i18n="prof.credentials">CREDENTIALS</div>
       <div class="tab-btn" data-tab="matrix">MATRIX</div>
       <div class="tab-btn" data-tab="social">SOCIAL</div>
       <div class="tab-btn access-tab" id="access-tab-btn" data-tab="access">
@@ -252,7 +252,7 @@ a{color:inherit;text-decoration:none}
         <div class="axis-panel">
           <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
           <div class="axis-row"><span class="ar-id" style="color:#E86A3A">B</span><span class="ar-name">MASTERY</span><div class="ar-wrap"><div class="ar-fill" id="bar-b" style="width:0%;background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.3))"></div></div><span class="ar-val" style="color:#E86A3A">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
-          <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
+          <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name" data-i18n="matrix.contribution">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
         </div>
       </div>
       <div class="sechead">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
@@ -262,7 +262,7 @@ a{color:inherit;text-decoration:none}
         <div class="ac-header">
           <div>
             <div style="font-family:var(--M);font-size:7px;letter-spacing:4px;color:rgba(139,0,0,.6);margin-bottom:3px">CLASSIFIED ACCESS -- MAJOR SLEIMAN YOUSSEF DAGHER -- &#937;-91717-SYD-001</div>
-            <div class="ac-title">ARCHITECT CONSOLE</div>
+            <div class="ac-title" data-i18n="prof.console">ARCHITECT CONSOLE</div>
           </div>
           <div class="ac-badge"><div class="ac-dot"></div>ABSOLUTE OWNER ACCESS</div>
         </div>
@@ -274,17 +274,17 @@ a{color:inherit;text-decoration:none}
     <div class="tab-panel" id="tab-identity">
       <div class="sechead">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label">FULL NAME</div><div class="idf-val">MAJOR SLEIMAN YOUSSEF DAGHER</div></div>
-        <div class="id-field"><div class="idf-label">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof.full_name">FULL NAME</div><div class="idf-val">MAJOR SLEIMAN YOUSSEF DAGHER</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof.father">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
         <div class="id-field"><div class="idf-label">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
-        <div class="id-field"><div class="idf-label">DATE OF BIRTH</div><div class="idf-val">19 APRIL 1982</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof.dob">DATE OF BIRTH</div><div class="idf-val">19 APRIL 1982</div></div>
         <div class="id-field"><div class="idf-label">PLACE OF BIRTH</div><div class="idf-val">TRIPOLI, LEBANON</div></div>
         <div class="id-field"><div class="idf-label">NATIONALITY</div><div class="idf-val">LEBANESE</div></div>
-        <div class="id-field"><div class="idf-label">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof.blood_type">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
         <div class="id-field"><div class="idf-label">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
         <div class="id-field"><div class="idf-label">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
         <div class="id-field"><div class="idf-label">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)">VIRGO &#x264D; -- SAND ELEMENT</div></div>
-        <div class="id-field"><div class="idf-label">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)">SOVEREIGN AGENT</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof.agent_assigned">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)">SOVEREIGN AGENT</div></div>
         <div class="id-field"><div class="idf-label">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)">ARENITE (ERC-20, POLYGON)</div></div>
       </div>
     </div>
@@ -308,9 +308,9 @@ a{color:inherit;text-decoration:none}
             <div class="ccf"><div class="ccf-label">MEMBER NAME</div><div class="ccf-val">SLEIMAN YOUSSEF DAGHER</div></div>
             <div class="ccf"><div class="ccf-label">SPECIALTY</div><div class="ccf-val">ARCHITECTURE -- &#x645;&#x639;&#x645;&#x627;&#x631;</div></div>
             <div class="ccf"><div class="ccf-label">REGISTRATION DATE</div><div class="ccf-val">10 APRIL 2007</div></div>
-            <div class="ccf"><div class="ccf-label">ORDER STATUS</div><div class="ccf-val" style="color:var(--green)">ACTIVE MEMBER</div></div>
+            <div class="ccf"><div class="ccf-label">ORDER STATUS</div><div class="ccf-val" style="color:var(--green)" data-i18n="prof.active_member">ACTIVE MEMBER</div></div>
             <div class="ccf"><div class="ccf-label">PLATFORM ORDER</div><div class="ccf-val">&#937;-91717-SYD-001 . LEVEL 9.9.9</div></div>
-            <div class="ccf"><div class="ccf-label">ACCESS LEVEL</div><div class="ccf-val" style="color:var(--gold)">ALL-TIME . NO EXPIRY</div></div>
+            <div class="ccf"><div class="ccf-label" data-i18n="prof.access_level">ACCESS LEVEL</div><div class="ccf-val" style="color:var(--gold)">ALL-TIME . NO EXPIRY</div></div>
           </div>
           <div class="cc-chip"><div class="cc-chip-lines"><div></div><div></div><div></div><div></div></div></div>
         </div>
@@ -342,7 +342,7 @@ a{color:inherit;text-decoration:none}
         <div style="border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
           <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">PLATFORM HANDLE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">@SYDOMEGA_AI</div></div>
           <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">RANK</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">9.9.9 -- ABSOLUTE</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">FREQUENCY</div><div style="font-family:var(--D);font-size:18px;color:var(--cyan);font-weight:700">9.1717 Hz</div></div>
+          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof.frequency">FREQUENCY</div><div style="font-family:var(--D);font-size:18px;color:var(--cyan);font-weight:700">9.1717 Hz</div></div>
           <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">NODE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">NODE 9.9.9</div></div>
         </div>
       </div>
@@ -383,10 +383,10 @@ a{color:inherit;text-decoration:none}
 
       <!-- FILTER TABS -->
       <div class="ac-filter">
-        <div class="acf-btn acf-on" data-filter="pending">PENDING</div>
-        <div class="acf-btn" data-filter="trial">TRIAL ACTIVE</div>
-        <div class="acf-btn" data-filter="approved">APPROVED</div>
-        <div class="acf-btn" data-filter="all">ALL MEMBERS</div>
+        <div class="acf-btn acf-on" data-filter="pending" data-i18n="status.pending">PENDING</div>
+        <div class="acf-btn" data-filter="trial" data-i18n="status.trial_active">TRIAL ACTIVE</div>
+        <div class="acf-btn" data-filter="approved" data-i18n="status.approved">APPROVED</div>
+        <div class="acf-btn" data-filter="all" data-i18n="prof.all_members">ALL MEMBERS</div>
       </div>
 
       <!-- MEMBER LIST -->
@@ -529,7 +529,7 @@ function buildTiers(){
 
 function buildPhases(){
   const g=document.getElementById('phases-display');
-  g.innerHTML=PHASES.map((p,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(201,168,76,.6);background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:10px;color:var(--gold);flex-shrink:0">&#x2713;</div><div style="font-family:var(--D);font-size:12px;color:var(--solar);font-weight:700;flex:1">${p.n}. ${p.name}</div><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--green)">COMPLETE</span></div>`).join('');
+  g.innerHTML=PHASES.map((p,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(201,168,76,.6);background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:10px;color:var(--gold);flex-shrink:0">&#x2713;</div><div style="font-family:var(--D);font-size:12px;color:var(--solar);font-weight:700;flex:1">${p.n}. ${p.name}</div><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--green)" data-i18n="status.complete">COMPLETE</span></div>`).join('');
 }
 
 function buildCerts(){
@@ -674,7 +674,7 @@ function buildMemberList(members){
       '<div class="mbr-actions">'+
         (isPending||isTrial?'<button class="mbr-btn btn-gtrial" data-uid="'+m.id+'">GRANT 9.1717 MIN</button>':'')+
         (!isApproved?'<button class="mbr-btn btn-gperm" data-uid="'+m.id+'">GRANT PERM</button>':'')+
-        (isTrial?'<button class="mbr-btn btn-extend" data-uid="'+m.id+'">EXTEND</button>':'')+
+        (isTrial?'<button class="mbr-btn btn-extend" data-uid="'+m.id+'" data-i18n="prof.extend">EXTEND</button>':'')+
         ((isApproved||isTrial)?'<button class="mbr-btn btn-revoke" data-uid="'+m.id+'">REVOKE</button>':'')+
       '</div>';
 

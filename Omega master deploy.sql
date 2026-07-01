@@ -1,15 +1,9 @@
 -- ############################################################################
 -- #  SYD OMEGA 91717  --  MASTER DEPLOYMENT  (single-file, run once)          #
 -- #  Major Sleiman Youssef Dagher -- Sovereign Founder                        #
--- #                                                                           #
--- #  Paste this whole file into Supabase -> SQL Editor -> Run. It builds the  #
--- #  entire backend in dependency order: schema, the 9x9x9 evolution engine,  #
--- #  cosmology + birth-date horoscope, the 12/12/12 achievement model, the    #
--- #  Hall of Fame, the founder access control with the 9.1717-minute trial,   #
--- #  member self-edit, and the founder correction (Aries / owner / apex).     #
--- #                                                                           #
--- #  Every section is idempotent and defensive -- safe to re-run at any time. #
--- #  Validated end-to-end against a clean PostgreSQL 16 database.             #
+-- #  Paste into Supabase -> SQL Editor -> Run. Builds the entire backend in   #
+-- #  dependency order. Idempotent + defensive; safe to re-run. Validated      #
+-- #  end-to-end against clean AND divergent PostgreSQL 16 schemas.            #
 -- ############################################################################
 
 
@@ -154,6 +148,10 @@ DECLARE tabs text[] := ARRAY['certificates','trophies','evolution_events','task_
   'marketplace_listings','media_reservations','publications'];
 BEGIN
   FOREACH t IN ARRAY tabs LOOP
+    -- guarantee the ownership column exists first: a table may already exist in
+    -- a divergent shape (e.g. a marketplace_listings without user_id), in which
+    -- case the CREATE TABLE above was skipped and the policy below would fail.
+    EXECUTE format('ALTER TABLE public.%I ADD COLUMN IF NOT EXISTS user_id uuid;', t);
     EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY;', t);
     EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', t||'_own', t);
     EXECUTE format($f$CREATE POLICY %I ON public.%I
@@ -191,7 +189,6 @@ COMMIT;
 --   material_tier='OMEGA MASTER', membership_tier='SOVEREIGN'
 -- WHERE id = (SELECT id FROM auth.users WHERE email='s.y.dagher@gmail.com');
 -- ============================================================
-
 
 -- ============================================================================
 -- ==  SECTION 2 / 9  :  OMEGA_EVOLUTION_RPC.sql
@@ -483,7 +480,6 @@ COMMIT;
 -- jump on reload. They are aligned at 0.25 right now.
 -- ============================================================================
 
-
 -- ============================================================================
 -- ==  SECTION 3 / 9  :  OMEGA_COSMOLOGY.sql
 -- ============================================================================
@@ -554,7 +550,6 @@ UPDATE public.profiles SET sign = sign
   WHERE sign IS NOT NULL AND btrim(sign) <> '';
 
 COMMIT;
-
 
 -- ============================================================================
 -- ==  SECTION 4 / 9  :  OMEGA_HOROSCOPE.sql
@@ -636,7 +631,6 @@ CREATE TRIGGER trg_derive_cosmology
 GRANT EXECUTE ON FUNCTION public.zodiac_from_date(date) TO authenticated, anon;
 
 COMMIT;
-
 
 -- ============================================================================
 -- ==  SECTION 5 / 9  :  OMEGA_ACHIEVEMENTS_FIX.sql
@@ -849,7 +843,6 @@ GRANT EXECUTE ON FUNCTION public.milestones_for_axis(numeric) TO authenticated, 
 
 COMMIT;
 
-
 -- ============================================================================
 -- ==  SECTION 6 / 9  :  OMEGA_LEADERBOARD.sql
 -- ============================================================================
@@ -932,7 +925,6 @@ GRANT EXECUTE ON FUNCTION public.public_leaderboard(int) TO authenticated, anon;
 GRANT EXECUTE ON FUNCTION public.order_stats()           TO authenticated, anon;
 
 COMMIT;
-
 
 -- ============================================================================
 -- ==  SECTION 7 / 9  :  OMEGA_ACCESS_CONTROL.sql
@@ -1133,7 +1125,6 @@ CREATE TRIGGER trg_enforce_access_defaults
 
 COMMIT;
 
-
 -- ============================================================================
 -- ==  SECTION 8 / 9  :  OMEGA_PROFILE_FIELDS.sql
 -- ============================================================================
@@ -1163,7 +1154,6 @@ BEGIN
 END $g$;
 
 COMMIT;
-
 
 -- ============================================================================
 -- ==  SECTION 9 / 9  :  OMEGA_FOUNDER_FIX.sql

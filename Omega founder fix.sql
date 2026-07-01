@@ -22,6 +22,24 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS access_approved boolean DEF
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_trial        boolean DEFAULT false;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_rejected     boolean DEFAULT false;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS trial_expires_at timestamptz;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS axis_a          numeric DEFAULT 1;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS axis_b          numeric DEFAULT 1;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS axis_c          numeric DEFAULT 1;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS authority           numeric DEFAULT 0;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS certificates_earned int DEFAULT 0;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS trophies_earned     int DEFAULT 0;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS medals_earned       int DEFAULT 0;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS nodes_earned        int DEFAULT 0;
+
+-- ensure the founder's profile row EXISTS first (a bare row if missing). The
+-- BEFORE INSERT trigger forces access fields false on any new row; the UPDATE
+-- below then correctly sets ownership. Without this, a missing profile row
+-- means the ownership UPDATE silently touches nothing and the console stays
+-- hidden -- the exact "I can't find the access control" symptom.
+INSERT INTO public.profiles(id)
+  SELECT id FROM auth.users
+  WHERE lower(email) IN ('s.y.dagher@gmail.com','slmndghr@gmail.com')
+  ON CONFLICT (id) DO NOTHING;
 
 -- the correction: Aries + owner + permanent access, matched by the founder's
 -- login email (covers both known addresses). Explicit element/god/agent so it
@@ -37,11 +55,44 @@ UPDATE public.profiles SET
   access_approved = true,
   is_trial        = false,
   is_rejected     = false,
-  trial_expires_at = NULL
+  trial_expires_at = NULL,
+  axis_a          = 9,
+  axis_b          = 9,
+  axis_c          = 9,
+  authority       = 15.588,
+  certificates_earned = 12,
+  trophies_earned     = 12,
+  medals_earned       = 12,
+  nodes_earned        = 96
 WHERE id IN (
   SELECT id FROM auth.users
   WHERE lower(email) IN ('s.y.dagher@gmail.com','slmndghr@gmail.com')
 );
+
+-- light every achievement slot for the Sovereign (12 certificates / 12 trophies
+-- / 12 medals), guarded so it is skipped if a table is not present yet.
+DO $apex$
+DECLARE fid uuid;
+BEGIN
+  SELECT id INTO fid FROM auth.users
+    WHERE lower(email) IN ('s.y.dagher@gmail.com','slmndghr@gmail.com') LIMIT 1;
+  IF fid IS NULL THEN RETURN; END IF;
+  IF to_regclass('public.certificates') IS NOT NULL THEN
+    INSERT INTO public.certificates(user_id, cert_num)
+      SELECT fid, g FROM generate_series(1,12) g
+      WHERE NOT EXISTS (SELECT 1 FROM public.certificates c WHERE c.user_id=fid AND c.cert_num=g);
+  END IF;
+  IF to_regclass('public.trophies') IS NOT NULL THEN
+    INSERT INTO public.trophies(user_id, trophy_num)
+      SELECT fid, g FROM generate_series(1,12) g
+      WHERE NOT EXISTS (SELECT 1 FROM public.trophies t WHERE t.user_id=fid AND t.trophy_num=g);
+  END IF;
+  IF to_regclass('public.medals') IS NOT NULL THEN
+    INSERT INTO public.medals(user_id, medal_num)
+      SELECT fid, g FROM generate_series(1,12) g
+      WHERE NOT EXISTS (SELECT 1 FROM public.medals m WHERE m.user_id=fid AND m.medal_num=g);
+  END IF;
+END $apex$;
 
 COMMIT;
 

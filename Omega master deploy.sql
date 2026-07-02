@@ -8,7 +8,7 @@
 
 
 -- ============================================================================
--- ==  SECTION 1 / 9  :  OMEGA_BACKEND_SYNC.sql
+-- ==  SECTION 1 / 10  :  OMEGA_BACKEND_SYNC.sql
 -- ============================================================================
 -- ============================================================
 --  SYD OMEGA 91717  --  BACKEND SYNC
@@ -191,7 +191,7 @@ COMMIT;
 -- ============================================================
 
 -- ============================================================================
--- ==  SECTION 2 / 9  :  OMEGA_EVOLUTION_RPC.sql
+-- ==  SECTION 2 / 10  :  OMEGA_EVOLUTION_RPC.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- LIVE EVOLUTION ENGINE
@@ -481,7 +481,7 @@ COMMIT;
 -- ============================================================================
 
 -- ============================================================================
--- ==  SECTION 3 / 9  :  OMEGA_COSMOLOGY.sql
+-- ==  SECTION 3 / 10  :  OMEGA_COSMOLOGY.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- COSMOLOGY ENGINE
@@ -552,7 +552,7 @@ UPDATE public.profiles SET sign = sign
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 4 / 9  :  OMEGA_HOROSCOPE.sql
+-- ==  SECTION 4 / 10  :  OMEGA_HOROSCOPE.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- HOROSCOPE / BIRTH-DATE SIGN
@@ -633,7 +633,7 @@ GRANT EXECUTE ON FUNCTION public.zodiac_from_date(date) TO authenticated, anon;
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 5 / 9  :  OMEGA_ACHIEVEMENTS_FIX.sql
+-- ==  SECTION 5 / 10  :  OMEGA_ACHIEVEMENTS_FIX.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- ACHIEVEMENT ALIGNMENT
@@ -844,7 +844,7 @@ GRANT EXECUTE ON FUNCTION public.milestones_for_axis(numeric) TO authenticated, 
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 6 / 9  :  OMEGA_LEADERBOARD.sql
+-- ==  SECTION 6 / 10  :  OMEGA_LEADERBOARD.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- HALL OF FAME
@@ -927,7 +927,7 @@ GRANT EXECUTE ON FUNCTION public.order_stats()           TO authenticated, anon;
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 7 / 9  :  OMEGA_ACCESS_CONTROL.sql
+-- ==  SECTION 7 / 10  :  OMEGA_ACCESS_CONTROL.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- ACCESS CONTROL + 9.1717-MINUTE SOVEREIGN TRIAL
@@ -1126,7 +1126,7 @@ CREATE TRIGGER trg_enforce_access_defaults
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 8 / 9  :  OMEGA_PROFILE_FIELDS.sql
+-- ==  SECTION 8 / 10  :  OMEGA_PROFILE_FIELDS.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- SELF-EDIT PROFILE FIELDS
@@ -1156,7 +1156,7 @@ END $g$;
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 9 / 9  :  OMEGA_FOUNDER_FIX.sql
+-- ==  SECTION 9 / 10  :  OMEGA_FOUNDER_FIX.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- FOUNDER CORRECTION
@@ -1263,3 +1263,49 @@ SELECT u.email, p.sign, p.element, p.god, p.agent, p.birth_date,
        p.is_owner, p.access_approved
 FROM public.profiles p JOIN auth.users u ON u.id = p.id
 WHERE lower(u.email) IN ('s.y.dagher@gmail.com','slmndghr@gmail.com');
+
+-- ============================================================================
+-- ==  SECTION 10 / 10  :  OMEGA_RLS_FIX.sql
+-- ============================================================================
+-- ============================================================================
+-- SYD OMEGA 91717 -- RLS RECURSION FIX (error 42P17 on profile save)
+-- The profiles policies call is_platform_owner(), which read from profiles,
+-- which re-triggered the profiles policy -> infinite recursion (42P17). This
+-- moves the owner check to a tiny RLS-free lookup table so the loop is broken,
+-- while the founder keeps full owner-sees-all access. Safe + re-runnable.
+-- ============================================================================
+BEGIN;
+
+-- 1) RLS-free lookup of who the owner is (contains only owner user-ids) -------
+CREATE TABLE IF NOT EXISTS public.platform_owners (user_id uuid PRIMARY KEY);
+INSERT INTO public.platform_owners(user_id)
+  SELECT id FROM public.profiles WHERE COALESCE(is_owner,false)=true
+  ON CONFLICT DO NOTHING;
+ALTER TABLE public.platform_owners ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS platform_owners_read ON public.platform_owners;
+CREATE POLICY platform_owners_read ON public.platform_owners FOR SELECT USING (true);
+
+-- 2) keep it in sync whenever a profile's is_owner flag changes ---------------
+CREATE OR REPLACE FUNCTION public.sync_platform_owner()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+BEGIN
+  IF COALESCE(NEW.is_owner,false) THEN
+    INSERT INTO public.platform_owners(user_id) VALUES (NEW.id) ON CONFLICT DO NOTHING;
+  ELSE
+    DELETE FROM public.platform_owners WHERE user_id = NEW.id;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+DROP TRIGGER IF EXISTS trg_sync_platform_owner ON public.profiles;
+CREATE TRIGGER trg_sync_platform_owner
+  AFTER INSERT OR UPDATE OF is_owner ON public.profiles
+  FOR EACH ROW EXECUTE FUNCTION public.sync_platform_owner();
+
+-- 3) owner check now reads the RLS-free table -- never profiles -> no recursion
+CREATE OR REPLACE FUNCTION public.is_platform_owner()
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+  SELECT EXISTS (SELECT 1 FROM public.platform_owners WHERE user_id = auth.uid());
+$$;
+
+COMMIT;

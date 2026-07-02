@@ -91,6 +91,26 @@
 /* ===== MULTI-LANGUAGE -- activate the i18n engine on every page (EN / AR-RTL / FR / ES) ===== */
 (function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}})();
 
+/* ===== GLOBAL MOBILE GUARD -- keeps every page within the phone viewport
+   (no sideways scroll from wide panels/tables/media). Scoped to <=760px so the
+   desktop layout is untouched; pairs with nav.js's mobile bottom-nav. ===== */
+(function(){
+  if(document.getElementById('omega-mobile-guard'))return;
+  var css='@media(max-width:760px){'
+    +'html,body{overflow-x:hidden;max-width:100%}'
+    +'.shell{flex-direction:column}'
+    +'.main{width:100%;min-width:0}'
+    +'img,svg,canvas,video,iframe{max-width:100%;height:auto}'
+    +'table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}'
+    +'pre,code{white-space:pre-wrap;word-break:break-word}'
+    +'.topbar{flex-wrap:wrap;gap:8px}'
+    +'.omni,input,select,textarea{max-width:100%}'
+    +'}';
+  function inject(){var st=document.createElement('style');st.id='omega-mobile-guard';st.textContent=css;(document.head||document.documentElement).appendChild(st);}
+  if(document.head)inject(); else document.addEventListener('DOMContentLoaded',inject);
+})();
+
+
 /* ===== CINEMATIC FX ENGINE -- INLINED DIRECTLY INTO bg.js =====
    No external /omega-fx.js file required. Updating bg.js is enough. */
 /* ============================================================

@@ -14,6 +14,21 @@
   };
 
   var T={
+    /* ---- ACADEMY + GAMING batch ---- */
+    'ui.leave':{EN:'LEAVE',AR:'\u0645\u063A\u0627\u062F\u0631\u0629',FR:'QUITTER',ES:'SALIR'},
+    'ui.retry':{EN:'RETRY',AR:'\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629',FR:'R\u00C9ESSAYER',ES:'REINTENTAR'},
+    'ui.watch':{EN:'WATCH',AR:'\u0645\u0634\u0627\u0647\u062F\u0629',FR:'REGARDER',ES:'VER'},
+    'ui.continue_btn':{EN:'CONTINUE',AR:'\u0645\u062A\u0627\u0628\u0639\u0629',FR:'CONTINUER',ES:'CONTINUAR'},
+    'academy.eyebrow':{EN:'THE ACADEMY',AR:'\u0627\u0644\u0623\u0643\u0627\u062F\u064A\u0645\u064A\u0629',FR:'L\u2019ACAD\u00C9MIE',ES:'LA ACADEMIA'},
+    'academy.twelve':{EN:'THE TWELVE DISCIPLINES',AR:'\u0627\u0644\u062A\u062E\u0635\u0635\u0627\u062A \u0627\u0644\u0627\u062B\u0646\u0627 \u0639\u0634\u0631',FR:'LES DOUZE DISCIPLINES',ES:'LAS DOCE DISCIPLINAS'},
+    'academy.lesson':{EN:'LESSON',AR:'\u062F\u0631\u0633',FR:'LE\u00C7ON',ES:'LECCI\u00D3N'},
+    'academy.signin':{EN:'Sign in to enter the Academy.',AR:'\u0633\u062C\u0651\u0644 \u0627\u0644\u062F\u062E\u0648\u0644 \u0644\u062F\u062E\u0648\u0644 \u0627\u0644\u0623\u0643\u0627\u062F\u064A\u0645\u064A\u0629.',FR:'Connectez-vous pour entrer dans l\u2019Acad\u00E9mie.',ES:'Inicie sesi\u00F3n para entrar en la Academia.'},
+    'gaming.eyebrow':{EN:'THE GAMES',AR:'\u0627\u0644\u0623\u0644\u0639\u0627\u0628',FR:'LES JEUX',ES:'LOS JUEGOS'},
+    'gaming.twelve':{EN:'THE TWELVE GAMES',AR:'\u0627\u0644\u0623\u0644\u0639\u0627\u0628 \u0627\u0644\u0627\u062B\u0646\u0627 \u0639\u0634\u0631',FR:'LES DOUZE JEUX',ES:'LOS DOCE JUEGOS'},
+    'gaming.stage':{EN:'STAGE',AR:'\u0645\u0631\u062D\u0644\u0629',FR:'NIVEAU',ES:'ETAPA'},
+    'gaming.signin':{EN:'Sign in to enter the games.',AR:'\u0633\u062C\u0651\u0644 \u0627\u0644\u062F\u062E\u0648\u0644 \u0644\u062F\u062E\u0648\u0644 \u0627\u0644\u0623\u0644\u0639\u0627\u0628.',FR:'Connectez-vous pour acc\u00E9der aux jeux.',ES:'Inicie sesi\u00F3n para entrar en los juegos.'},
+    'matrix.knowledge_t':{EN:'Knowledge',AR:'\u0627\u0644\u0645\u0639\u0631\u0641\u0629',FR:'Connaissance',ES:'Conocimiento'},
+    'matrix.mastery_t':{EN:'Mastery',AR:'\u0627\u0644\u0625\u062A\u0642\u0627\u0646',FR:'Ma\u00EEtrise',ES:'Maestr\u00EDa'},
     /* ---- DASHBOARD + PROFILE batch ---- */
     'matrix.knowledge':{EN:'KNOWLEDGE',AR:'\u0627\u0644\u0645\u0639\u0631\u0641\u0629',FR:'CONNAISSANCE',ES:'CONOCIMIENTO'},
     'matrix.mastery':{EN:'MASTERY',AR:'\u0627\u0644\u0625\u062A\u0642\u0627\u0646',FR:'MA\u00CETRISE',ES:'MAESTR\u00CDA'},

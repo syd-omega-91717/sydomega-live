@@ -1,3 +1,7 @@
+// ============================================================================
+// FILE: /supabase/functions/checkout/index.ts
+// NEW FILE
+// ============================================================================
 // SYD OMEGA 91717 -- Stripe Checkout (DORMANT until the founder enables payments)
 // Double-gated: refuses unless payments_enabled=true AND STRIPE_SECRET_KEY is set.
 // Env (Supabase secrets): STRIPE_SECRET_KEY, STRIPE_PRICE_MAP (JSON tier->price_id),

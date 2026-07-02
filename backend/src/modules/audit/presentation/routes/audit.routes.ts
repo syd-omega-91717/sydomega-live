@@ -3,8 +3,8 @@
 // NEW FILE
 // ============================================================================
 
-GET     /audit/logs
-
-GET     /audit/export
+GET     /audit
 
 GET     /audit/{id}
+
+POST    /audit/export

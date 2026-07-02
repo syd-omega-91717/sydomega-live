@@ -107,18 +107,18 @@
 <div id="gate" class="gate-card" style="display:none">
   <div class="g">&#937;</div>
   <h2 id="gate-h">The Academy</h2>
-  <p id="gate-p">Sign in to enter the Academy.</p>
+  <p id="gate-p" data-i18n="academy.signin">Sign in to enter the Academy.</p>
   <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="academy"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">THE ACADEMY<small>12 DISCIPLINES  .  12 LESSONS  .  9x9x9 GATED</small></div></div>
-    <p class="intro">Twelve disciplines, each with twelve lessons  --  <b>144 nodes of knowledge</b>. Each lesson is a trial of the matrix itself: read the 729 and answer without error. Every cleared node raises your <b>Knowledge</b>, and so your whole ascent. A discipline opens only when your matrix is ready.</p>
+    <div class="topbar"><div class="t"><span data-i18n="academy.eyebrow">THE ACADEMY</span><small>12 DISCIPLINES  .  12 LESSONS  .  9x9x9 GATED</small></div></div>
+    <p class="intro">Twelve disciplines, each with twelve lessons  --  <b>144 nodes of knowledge</b>. Each lesson is a trial of the matrix itself: read the 729 and answer without error. Every cleared node raises your <b data-i18n="matrix.knowledge_t">Knowledge</b>, and so your whole ascent. A discipline opens only when your matrix is ready.</p>
     <div class="mstat" id="mstat"></div>
 
-    <div class="sechead">THE TWELVE DISCIPLINES</div>
+    <div class="sechead" data-i18n="academy.twelve">THE TWELVE DISCIPLINES</div>
     <div class="games" id="games"></div>
 
     <div class="stages" id="stages">
@@ -130,12 +130,12 @@
 </div>
 
 <div class="modal" id="modal"><div class="sheet">
-  <div class="mt" id="m-title">LESSON</div>
+  <div class="mt" id="m-title" data-i18n="academy.lesson">LESSON</div>
   <div class="mx" id="m-diff"></div>
   <div class="q" id="m-q"></div>
   <div class="opts" id="m-opts"></div>
   <div class="stat" id="m-stat"></div>
-  <div class="mrow" id="m-row"><button class="mbtn ghost" id="m-close">LEAVE</button></div>
+  <div class="mrow" id="m-row"><button class="mbtn ghost" id="m-close" data-i18n="ui.leave">LEAVE</button></div>
 </div></div>
 
 <script type="module">
@@ -243,7 +243,7 @@
       btn.classList.add('bad');
       Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(el){ if(el.textContent===String(q.options.filter(function(x){return x.correct;})[0].label)) el.classList.add('good'); });
       document.getElementById('m-stat').textContent='WRONG READING \u2014 the lesson resets.';
-      document.getElementById('m-row').innerHTML='<button class="mbtn" id="m-retry">RETRY</button><button class="mbtn ghost" id="m-close2">LEAVE</button>';
+      document.getElementById('m-row').innerHTML='<button class="mbtn" id="m-retry" data-i18n="ui.retry">RETRY</button><button class="mbtn ghost" id="m-close2">LEAVE</button>';
       document.getElementById('m-retry').addEventListener('click',function(){ got=0; document.getElementById('m-row').innerHTML='<button class="mbtn ghost" id="m-close">LEAVE</button>'; document.getElementById('m-close')?.addEventListener('click',closeModal); nextQ(); });
       document.getElementById('m-close2').addEventListener('click',closeModal);
     }
@@ -256,7 +256,7 @@
     try{ await supabase.rpc('complete_task',{p_kind:'academy',p_task:key(curD,curL),p_axis:'a',p_title:'Discipline '+(curD+1)+' Lesson '+(curL+1)}); }catch(e){}
     if(!already) axisA=Math.min(9, axisA+0.25);
     document.getElementById('m-stat').textContent=already?'NODE ALREADY YOURS \u2014 sharp as ever.':'NODE CLEARED \u2014 +0.25 KNOWLEDGE.';
-    document.getElementById('m-row').innerHTML='<button class="mbtn" id="m-cont">CONTINUE</button>';
+    document.getElementById('m-row').innerHTML='<button class="mbtn" id="m-cont" data-i18n="ui.continue_btn">CONTINUE</button>';
     document.getElementById('m-cont').addEventListener('click',closeModal);
     renderDisc(); openDisc(curD); updateMStat();
   }

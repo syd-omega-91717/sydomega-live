@@ -8,7 +8,7 @@
    NOTE: bump CACHE (v4 -> v5 -> ...) on any future deploy to force a clean
    cache reset for returning users.
    ============================================================================ */
-const CACHE = 'omega-v4';
+const CACHE = 'omega-v6';
 const STATIC = ['/', '/index.html', '/bg.js', '/nav.js', '/manifest.json'];
 
 self.addEventListener('install', e => {

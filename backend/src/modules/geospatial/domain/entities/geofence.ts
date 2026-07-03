@@ -1,4 +1,5 @@
-// ========backend/src/modules/geospatial/domain/entities/geofence.ts
+// ============================================================================
+// FILE: /backend/src/modules/geospatial/domain/entities/geofence.ts
 // NEW FILE
 // ============================================================================
 

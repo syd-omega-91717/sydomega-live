@@ -3,33 +3,65 @@
 // /frontend/services/apiClient.ts
 // ============================================================================
 
-import axios
-from "axios";
+import axios, {
+    AxiosError,
+    AxiosInstance,
+    AxiosRequestConfig,
+    AxiosResponse
+} from "axios";
 
-export const apiClient=axios.create({
-
-    baseURL:process.env.NEXT_PUBLIC_GATEWAY_URL,
-
-    timeout:30000
-
+const apiClient: AxiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_GATEWAY_URL,
+    timeout: 30000,
+    headers: {
+        "Content-Type": "application/json"
+    }
 });
 
 apiClient.interceptors.request.use(
+    (config: AxiosRequestConfig): AxiosRequestConfig => {
 
-config=>{
+        if (typeof window !== "undefined") {
 
-    const token=
+            const token = localStorage.getItem("access_token");
 
-        localStorage.getItem("access_token");
+            if (token) {
 
-    if(token){
+                config.headers = {
+                    ...config.headers,
+                    Authorization: `Bearer ${token}`
+                };
 
-        config.headers.Authorization=
+            }
 
-            `Bearer ${token}`;
+        }
+
+        return config;
+
+    },
+    (error: AxiosError) => Promise.reject(error)
+);
+
+apiClient.interceptors.response.use(
+
+    (response: AxiosResponse) => response,
+
+    async (error: AxiosError) => {
+
+        if (error.response?.status === 401) {
+
+            // Future:
+            // Refresh JWT
+            // Retry request
+
+        }
+
+        return Promise.reject(error);
 
     }
 
-    return config;
+);
 
-});
+export default apiClient;
+
+export { apiClient };

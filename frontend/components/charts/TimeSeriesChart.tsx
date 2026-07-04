@@ -5,11 +5,9 @@
 
 'use client';
 
-import EnterpriseLineChart
+import EnterpriseLineChart from "./LineChart";
 
-from "./LineChart";
-
-interface Props {
+interface TimeSeriesChartProps {
 
     title?: string;
 
@@ -21,15 +19,19 @@ interface Props {
 
     }[];
 
+    color?: string;
+
 }
 
 export default function TimeSeriesChart({
 
     title,
 
-    data
+    data,
 
-}: Props) {
+    color = "#2563eb"
+
+}: TimeSeriesChartProps) {
 
     return (
 
@@ -42,6 +44,8 @@ export default function TimeSeriesChart({
             xKey="timestamp"
 
             yKey="value"
+
+            color={color}
 
         />
 

@@ -5,47 +5,40 @@
 
 'use client';
 
-interface Props{
+import { ButtonHTMLAttributes } from "react";
 
-    label:string;
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement>{
 
-    onClick:()=>void;
-
-    disabled?:boolean;
+    loading?:boolean;
 
 }
 
-export default function Button({
+export default function EnterpriseButton({
 
-    label,
+    loading,
 
-    onClick,
+    children,
 
-    disabled
+    ...props
 
 }:Props){
 
     return(
 
         <button
+            {...props}
+            disabled={loading || props.disabled}
+            className="omega-button">
 
-            disabled={disabled}
+            {
 
-            onClick={onClick}
+                loading
 
-            style={{
+                ? "Loading..."
 
-                padding:"12px 20px",
+                : children
 
-                borderRadius:8,
-
-                cursor:"pointer"
-
-            }}
-
-        >
-
-            {label}
+            }
 
         </button>
 

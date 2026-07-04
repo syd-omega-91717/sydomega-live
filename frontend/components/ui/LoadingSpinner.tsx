@@ -3,30 +3,19 @@
 // /frontend/components/ui/LoadingSpinner.tsx
 // ============================================================================
 
-interface Props {
+'use client';
 
-    message?: string;
+export default function LoadingSpinner(){
 
-}
-
-export default function LoadingSpinner({
-
-    message = "Loading..."
-
-}: Props) {
-
-    return (
+    return(
 
         <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: 240
-            }}
+
+            className="omega-spinner"
+
         >
 
-            <span>{message}</span>
+            Loading...
 
         </div>
 

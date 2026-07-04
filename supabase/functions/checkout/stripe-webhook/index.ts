@@ -1,7 +1,3 @@
-// ============================================================================
-// FILE: /supabase/functions/stripe-webhook/index.ts
-// NEW FILE
-// ============================================================================
 // SYD OMEGA 91717 -- Stripe Webhook: records subscription results onto the member.
 // Env: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 import Stripe from "https://esm.sh/stripe@14?target=deno";

@@ -7,11 +7,11 @@ interface Props{
 
     columns:string[];
 
-    rows:any[][];
+    rows:any[];
 
 }
 
-export default function Table({
+export default function EnterpriseTable({
 
     columns,
 
@@ -31,7 +31,9 @@ export default function Table({
 
                         columns.map(
 
-                            c=><th key={c}>{c}</th>
+                            c=>
+
+                            <th key={c}>{c}</th>
 
                         )
 
@@ -47,25 +49,23 @@ export default function Table({
 
                     rows.map(
 
-                        (row,index)=>(
+                        (row,index)=>
 
-                            <tr key={index}>
+                        <tr key={index}>
 
-                                {
+                            {
 
-                                    row.map(
+                                Object.values(row).map(
 
-                                        (cell,i)=>
+                                    (v:any,i)=>
 
-                                        <td key={i}>{cell}</td>
+                                    <td key={i}>{v}</td>
 
-                                    )
+                                )
 
-                                }
+                            }
 
-                            </tr>
-
-                        )
+                        </tr>
 
                     )
 

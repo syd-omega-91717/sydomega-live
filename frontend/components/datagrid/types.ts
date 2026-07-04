@@ -10,50 +10,82 @@ export type DataGridAlignment =
     | "center"
     | "right";
 
-export interface DataGridColumn<T> {
+export type SortDirection =
+    | "asc"
+    | "desc";
 
-    id: string;
+export interface DataGridColumn<T>{
 
-    title: string;
+    id:string;
 
-    width?: number | string;
+    title:string;
 
-    sortable?: boolean;
+    width?:number|string;
 
-    searchable?: boolean;
+    sortable?:boolean;
 
-    align?: DataGridAlignment;
+    searchable?:boolean;
 
-    render: (row: T) => ReactNode;
+    resizable?:boolean;
 
-}
+    hidden?:boolean;
 
-export interface PaginationState {
+    align?:DataGridAlignment;
 
-    page: number;
-
-    pageSize: number;
-
-    totalItems: number;
-
-    totalPages: number;
+    render:(row:T)=>ReactNode;
 
 }
 
-export interface DataGridProps<T> {
+export interface PaginationState{
 
-    rows: T[];
+    page:number;
 
-    loading?: boolean;
+    pageSize:number;
 
-    columns: DataGridColumn<T>[];
+    totalItems:number;
 
-    pagination?: PaginationState;
+    totalPages:number;
 
-    selectable?: boolean;
+}
 
-    emptyMessage?: string;
+export interface SortState{
 
-    onRefresh?: () => void;
+    field:string;
+
+    direction:SortDirection;
+
+}
+
+export interface FilterState{
+
+    field:string;
+
+    value:string;
+
+}
+
+export interface DataGridProps<T>{
+
+    rows:T[];
+
+    columns:DataGridColumn<T>[];
+
+    loading?:boolean;
+
+    selectable?:boolean;
+
+    pagination?:PaginationState;
+
+    sort?:SortState;
+
+    filters?:FilterState[];
+
+    emptyMessage?:string;
+
+    onRefresh?:()=>void;
+
+    onSort?:(field:string)=>void;
+
+    onSelect?:(rows:T[])=>void;
 
 }

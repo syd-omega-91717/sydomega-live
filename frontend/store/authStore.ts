@@ -5,42 +5,58 @@
 
 import { create } from "zustand";
 
+import { UserProfile } from "@/types/auth";
+
 interface AuthState{
 
-    accessToken?:string;
+    authenticated:boolean;
 
-    refreshToken?:string;
+    accessToken:string|null;
 
-    setTokens:(a:string,r:string)=>void;
+    profile?:UserProfile;
 
-    clear:()=>void;
+    login:any;
+
+    logout:any;
 
 }
 
-export const useAuthStore=create<AuthState>(
+export const useAuthStore = create<AuthState>(
 
 (set)=>({
 
-    accessToken:undefined,
+    authenticated:false,
 
-    refreshToken:undefined,
+    accessToken:null,
 
-    setTokens:(a,r)=>set({
+    profile:undefined,
 
-        accessToken:a,
+    login:(token:string,user:UserProfile)=>{
 
-        refreshToken:r
+        set({
 
-    }),
+            authenticated:true,
 
-    clear:()=>set({
+            accessToken:token,
 
-        accessToken:undefined,
+            profile:user
 
-        refreshToken:undefined
+        });
 
-    })
+    },
 
-})
+    logout:()=>{
 
-);
+        set({
+
+            authenticated:false,
+
+            accessToken:null,
+
+            profile:undefined
+
+        });
+
+    }
+
+}));

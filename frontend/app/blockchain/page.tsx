@@ -5,10 +5,20 @@
 
 'use client';
 
-import WalletDashboard from "@/features/blockchain/components/WalletDashboard";
+import WalletTable from "@/features/blockchain/components/WalletTable";
 
-export default function BlockchainPage() {
+export default function BlockchainPage(){
 
-    return <WalletDashboard />;
+    return(
+
+        <main>
+
+            <h1>Blockchain Platform</h1>
+
+            <WalletTable/>
+
+        </main>
+
+    );
 
 }

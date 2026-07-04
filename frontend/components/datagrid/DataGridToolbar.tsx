@@ -5,8 +5,7 @@
 
 'use client';
 
-import Button
-from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 
 interface Props{
 
@@ -23,22 +22,13 @@ export default function DataGridToolbar({
     return(
 
         <div
-
             style={{
-
                 display:"flex",
-
                 justifyContent:"space-between",
-
                 alignItems:"center",
-
                 padding:16,
-
-                borderBottom:
-                    "1px solid #ececec"
-
+                borderBottom:"1px solid #ececec"
             }}
-
         >
 
             <strong>
@@ -48,15 +38,8 @@ export default function DataGridToolbar({
             </strong>
 
             <Button
-
                 label="Refresh"
-
-                onClick={
-
-                    ()=>onRefresh?.()
-
-                }
-
+                onClick={()=>onRefresh?.()}
             />
 
         </div>

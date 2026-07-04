@@ -5,24 +5,55 @@
 
 'use client';
 
-import { createContext } from "react";
+import {
 
-const RealtimeContext = createContext<any>(null);
+    createContext,
 
-export function RealtimeProvider({children}:{children:any}){
+    useContext,
 
-    const connect = ()=>{};
+    useEffect,
 
-    const disconnect = ()=>{};
+    ReactNode
 
-    return (
+} from "react";
 
-        <RealtimeContext.Provider value={{connect,disconnect}}>
+import socketClient from "@/services/realtime/socketClient";
+
+interface Props{
+
+    children:ReactNode;
+
+}
+
+const RealtimeContext =
+createContext(socketClient);
+
+export default function RealtimeProvider({
+
+    children
+
+}:Props){
+
+    useEffect(()=>{
+
+        socketClient.connect();
+
+    },[]);
+
+    return(
+
+        <RealtimeContext.Provider value={socketClient}>
 
             {children}
 
         </RealtimeContext.Provider>
 
     );
+
+}
+
+export function useRealtime(){
+
+    return useContext(RealtimeContext);
 
 }

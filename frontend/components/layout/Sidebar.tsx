@@ -1,44 +1,54 @@
 // ============================================================================
 // FILE:
 // /frontend/components/layout/Sidebar.tsx
+// UPDATED
 // ============================================================================
 
 'use client';
 
-import Link from "next/link";
+import NavItem
+
+from "./NavItem";
+
+import {
+
+    navigation
+
+}
+
+from "@/config/navigation";
 
 export default function Sidebar(){
 
-    return (
+    return(
 
-        <aside style={{
-            width:260,
-            height:"100vh",
-            borderRight:"1px solid #ddd",
-            padding:20
-        }}>
+        <aside
+            className="omega-sidebar"
+        >
 
-            <h2>Ω SYD</h2>
+            <h2>
 
-            <nav style={{display:"flex", flexDirection:"column", gap:10}}>
+                Ω SYD
 
-                <Link href="/dashboard">Dashboard</Link>
+            </h2>
 
-                <Link href="/ai">AI Assistant</Link>
+            {
 
-                <Link href="/digital-twin">Digital Twin</Link>
+                navigation.map(
 
-                <Link href="/gis">GIS</Link>
+                    item=>
 
-                <Link href="/iot">IoT</Link>
+                    <NavItem
 
-                <Link href="/blockchain">Blockchain</Link>
+                        key={item.id}
 
-                <Link href="/analytics">Analytics</Link>
+                        item={item}
 
-                <Link href="/settings">Settings</Link>
+                    />
 
-            </nav>
+                )
+
+            }
 
         </aside>
 

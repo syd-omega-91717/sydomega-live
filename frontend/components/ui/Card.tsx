@@ -3,17 +3,15 @@
 // /frontend/components/ui/Card.tsx
 // ============================================================================
 
-import { ReactNode } from "react";
-
 interface Props{
 
     title:string;
 
-    children:ReactNode;
+    children:any;
 
 }
 
-export default function Card({
+export default function EnterpriseCard({
 
     title,
 
@@ -23,29 +21,19 @@ export default function Card({
 
     return(
 
-        <section
+        <section className="omega-card">
 
-            style={{
+            <header>
 
-                border:"1px solid #ddd",
+                <h3>{title}</h3>
 
-                borderRadius:12,
+            </header>
 
-                padding:24,
+            <div>
 
-                marginBottom:20
+                {children}
 
-            }}
-
-        >
-
-            <h2>
-
-                {title}
-
-            </h2>
-
-            {children}
+            </div>
 
         </section>
 

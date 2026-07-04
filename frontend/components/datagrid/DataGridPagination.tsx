@@ -3,11 +3,9 @@
 // /frontend/components/datagrid/DataGridPagination.tsx
 // ============================================================================
 
-import {
+'use client';
 
-    PaginationState
-
-} from "./types";
+import { PaginationState } from "./types";
 
 interface Props{
 
@@ -24,29 +22,18 @@ export default function DataGridPagination({
     return(
 
         <footer
-
             style={{
-
-                padding:16,
-
                 display:"flex",
-
-                justifyContent:"space-between"
-
+                justifyContent:"space-between",
+                padding:16,
+                borderTop:"1px solid #ececec"
             }}
-
         >
 
             <span>
 
-                Page
-
-                {" "}
-
-                {pagination.page}
-
+                Page {pagination.page}
                 {" / "}
-
                 {pagination.totalPages}
 
             </span>
@@ -54,7 +41,6 @@ export default function DataGridPagination({
             <span>
 
                 {pagination.totalItems}
-
                 {" "}records
 
             </span>

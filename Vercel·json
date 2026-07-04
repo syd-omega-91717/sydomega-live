@@ -1,0 +1,41 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.js",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.html",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=utf-8" }
+      ]
+    }
+  ],
+  "redirects": [
+    { "source": "/(.*)\\.ts", "destination": "/index.html", "permanent": false },
+    { "source": "/(.*)\\.tsx", "destination": "/index.html", "permanent": false },
+    { "source": "/(.*)\\.py", "destination": "/index.html", "permanent": false },
+    { "source": "/(.*)\\.sol", "destination": "/index.html", "permanent": false },
+    { "source": "/(.*)\\.sql", "destination": "/index.html", "permanent": false },
+    { "source": "/(.*)\\.env", "destination": "/index.html", "permanent": false },
+    { "source": "/backend/(.*)", "destination": "/index.html", "permanent": false },
+    { "source": "/services/(.*)", "destination": "/index.html", "permanent": false },
+    { "source": "/apps/(.*)", "destination": "/index.html", "permanent": false },
+    { "source": "/config/(.*)", "destination": "/index.html", "permanent": false },
+    { "source": "/database/(.*)", "destination": "/index.html", "permanent": false }
+  ]
+}

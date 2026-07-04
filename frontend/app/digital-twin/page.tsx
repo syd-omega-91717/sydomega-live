@@ -5,10 +5,20 @@
 
 'use client';
 
-import TwinWorkspace from "@/features/digitalTwin/components/TwinWorkspace";
+import TwinViewer from "@/features/digitalTwin/components/TwinViewer";
 
-export default function DigitalTwinPage() {
+export default function TwinPage(){
 
-    return <TwinWorkspace />;
+    return(
+
+        <main>
+
+            <h1>Digital Twin</h1>
+
+            <TwinViewer/>
+
+        </main>
+
+    );
 
 }

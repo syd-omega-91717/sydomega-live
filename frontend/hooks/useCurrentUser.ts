@@ -3,30 +3,18 @@
 // /frontend/hooks/useCurrentUser.ts
 // ============================================================================
 
-import { useQuery } from "@tanstack/react-query";
+import {
 
-import { apiClient } from "@/services/apiClient";
+    useAuthStore
+
+} from "@/store/authStore";
 
 export function useCurrentUser(){
 
-    return useQuery({
+    return useAuthStore(
 
-        queryKey:["current-user"],
+        s=>s.profile
 
-        queryFn:async()=>{
-
-            const response=
-
-                await apiClient.get(
-
-                    "/identity/me"
-
-                );
-
-            return response.data;
-
-        }
-
-    });
+    );
 
 }

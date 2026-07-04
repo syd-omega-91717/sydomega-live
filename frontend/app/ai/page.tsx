@@ -5,13 +5,35 @@
 
 'use client';
 
-import AIWorkspace from "@/features/ai/components/AIWorkspace";
+import EnterpriseCard from "@/components/ui/Card";
 
 export default function AIPage(){
 
-    return (
+    return(
 
-        <AIWorkspace/>
+        <main>
+
+            <h1>Artificial Intelligence</h1>
+
+            <EnterpriseCard title="AI Assistant">
+
+                Enterprise AI Control Center
+
+            </EnterpriseCard>
+
+            <EnterpriseCard title="AI Agents">
+
+                Active Agents: 12
+
+            </EnterpriseCard>
+
+            <EnterpriseCard title="Inference">
+
+                GPU Cluster Connected
+
+            </EnterpriseCard>
+
+        </main>
 
     );
 

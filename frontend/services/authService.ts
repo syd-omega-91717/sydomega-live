@@ -5,52 +5,68 @@
 
 import { apiClient } from "./apiClient";
 
-export class AuthService{
+import {
 
-    async login(
+    LoginRequest,
 
-        email:string,
+    LoginResponse,
 
-        password:string
+    RefreshResponse
 
-    ){
+} from "@/types/auth";
 
-        return apiClient.post(
+export default class AuthService{
 
-            "/identity/login",
+    static async login(
 
-            {
+        request:LoginRequest
 
-                email,
+    ):Promise<LoginResponse>{
 
-                password
+        const response = await apiClient.post(
 
-            }
+            "/auth/login",
+
+            request
+
+        );
+
+        return response.data;
+
+    }
+
+    static async logout(){
+
+        await apiClient.post(
+
+            "/auth/logout"
 
         );
 
     }
 
-    async logout(){
+    static async refresh(){
 
-        return apiClient.post(
+        const response = await apiClient.post<RefreshResponse>(
 
-            "/identity/logout"
+            "/auth/refresh"
 
         );
+
+        return response.data;
 
     }
 
-    async refresh(){
+    static async profile(){
 
-        return apiClient.post(
+        const response = await apiClient.get(
 
-            "/identity/refresh"
+            "/auth/profile"
 
         );
+
+        return response.data;
 
     }
 
 }
-
-export default new AuthService();

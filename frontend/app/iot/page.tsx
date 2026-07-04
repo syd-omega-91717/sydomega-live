@@ -5,10 +5,20 @@
 
 'use client';
 
-import FleetDashboard from "@/features/iot/components/FleetDashboard";
+import DeviceTable from "@/features/iot/components/DeviceTable";
 
-export default function IoTPage() {
+export default function IoTPage(){
 
-    return <FleetDashboard />;
+    return(
+
+        <main>
+
+            <h1>IoT Operations</h1>
+
+            <DeviceTable/>
+
+        </main>
+
+    );
 
 }

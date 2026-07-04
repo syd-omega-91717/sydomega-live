@@ -1,31 +1,49 @@
 // ============================================================================
 // FILE:
 // /frontend/app/dashboard/page.tsx
+// UPDATED
 // ============================================================================
 
-'use client';
+import DashboardGrid
+from "@/components/dashboard/DashboardGrid";
+
+import SystemHealthWidget
+from "@/components/dashboard/SystemHealthWidget";
+
+import StatisticsWidget
+from "@/components/dashboard/StatisticsWidget";
+
+import AlertWidget
+from "@/components/dashboard/AlertWidget";
+
+import RecentActivityWidget
+from "@/components/dashboard/RecentActivityWidget";
 
 export default function DashboardPage(){
 
-    return (
+    return(
 
-        <div>
+        <main>
 
-            <h1>Ω SYD OMEGA 91717 — Command Dashboard</h1>
+            <h1>
 
-            <section>
+                Ω Enterprise Dashboard
 
-                <p>System Status: OPERATIONAL</p>
+            </h1>
 
-                <p>AI Core: ACTIVE</p>
+            <DashboardGrid>
 
-                <p>Infrastructure: CONNECTED</p>
+                <SystemHealthWidget/>
 
-                <p>Security Layer: ZERO TRUST ENABLED</p>
+                <StatisticsWidget/>
 
-            </section>
+                <AlertWidget/>
 
-        </div>
+                <RecentActivityWidget/>
+
+            </DashboardGrid>
+
+        </main>
 
     );
 

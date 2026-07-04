@@ -13,24 +13,18 @@ import DataGridToolbar from "./DataGridToolbar";
 import DataGridPagination from "./DataGridPagination";
 
 export default function DataGrid<T>(
-    props: DataGridProps<T>
+    props:DataGridProps<T>
 ){
 
     return(
 
         <section
             style={{
-
                 width:"100%",
-
-                border:"1px solid #dcdcdc",
-
+                background:"#fff",
+                border:"1px solid #d9d9d9",
                 borderRadius:12,
-
-                overflow:"hidden",
-
-                background:"#ffffff"
-
+                overflow:"hidden"
             }}
         >
 
@@ -40,16 +34,14 @@ export default function DataGrid<T>(
 
             <table
                 style={{
-
                     width:"100%",
-
                     borderCollapse:"collapse"
-
                 }}
             >
 
                 <DataGridHeader
                     columns={props.columns}
+                    onSort={props.onSort}
                 />
 
                 <DataGridBody

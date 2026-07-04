@@ -9,6 +9,16 @@ import GISMap from "@/features/gis/components/GISMap";
 
 export default function GISPage(){
 
-    return <GISMap/>;
+    return(
+
+        <main>
+
+            <h1>Geospatial Intelligence</h1>
+
+            <GISMap/>
+
+        </main>
+
+    );
 
 }

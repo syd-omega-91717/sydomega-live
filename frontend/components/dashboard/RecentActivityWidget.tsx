@@ -5,69 +5,30 @@
 
 'use client';
 
-import Widget from "./Widget";
+import DashboardWidget
+from "./DashboardWidget";
 
-export interface Activity {
+export default function RecentActivityWidget(){
 
-    id: string;
+    return(
 
-    title: string;
-
-    timestamp: string;
-
-}
-
-interface Props {
-
-    activities: Activity[];
-
-}
-
-export default function RecentActivityWidget({
-
-    activities
-
-}: Props) {
-
-    return (
-
-        <Widget
-
+        <DashboardWidget
             title="Recent Activity"
-
         >
 
             <ul>
 
-                {
+                <li>Administrator Login</li>
 
-                    activities.map(activity => (
+                <li>Workflow Executed</li>
 
-                        <li key={activity.id}>
+                <li>Digital Twin Updated</li>
 
-                            <strong>
-
-                                {activity.title}
-
-                            </strong>
-
-                            <br />
-
-                            <small>
-
-                                {activity.timestamp}
-
-                            </small>
-
-                        </li>
-
-                    ))
-
-                }
+                <li>AI Analysis Completed</li>
 
             </ul>
 
-        </Widget>
+        </DashboardWidget>
 
     );
 

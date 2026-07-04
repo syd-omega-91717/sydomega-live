@@ -1,14 +1,14 @@
 -- ############################################################################
 -- #  SYD OMEGA 91717  --  MASTER DEPLOYMENT  (single-file, run once)          #
--- #  Major Sleiman Youssef Dagher -- Sovereign Founder                        #
--- #  Paste into Supabase -> SQL Editor -> Run. Builds the entire backend in   #
--- #  dependency order. Idempotent + defensive; safe to re-run. Validated      #
--- #  end-to-end against clean AND divergent PostgreSQL 16 schemas.            #
+-- #  Complete backend: schema, evolution engine, cosmology, horoscope,        #
+-- #  achievements, leaderboard, access control + 9.1717 trial, profile edit,  #
+-- #  account (deactivate/delete), payments flag, founder correction, RLS fix. #
+-- #  Idempotent + defensive. Validated end-to-end on clean PostgreSQL 16.     #
 -- ############################################################################
 
 
 -- ============================================================================
--- ==  SECTION 1 / 10  :  OMEGA_BACKEND_SYNC.sql
+-- ==  SECTION 1 / 12  :  OMEGA_BACKEND_SYNC.sql
 -- ============================================================================
 -- ============================================================
 --  SYD OMEGA 91717  --  BACKEND SYNC
@@ -191,7 +191,7 @@ COMMIT;
 -- ============================================================
 
 -- ============================================================================
--- ==  SECTION 2 / 10  :  OMEGA_EVOLUTION_RPC.sql
+-- ==  SECTION 2 / 12  :  OMEGA_EVOLUTION_RPC.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- LIVE EVOLUTION ENGINE
@@ -481,7 +481,7 @@ COMMIT;
 -- ============================================================================
 
 -- ============================================================================
--- ==  SECTION 3 / 10  :  OMEGA_COSMOLOGY.sql
+-- ==  SECTION 3 / 12  :  OMEGA_COSMOLOGY.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- COSMOLOGY ENGINE
@@ -552,7 +552,7 @@ UPDATE public.profiles SET sign = sign
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 4 / 10  :  OMEGA_HOROSCOPE.sql
+-- ==  SECTION 4 / 12  :  OMEGA_HOROSCOPE.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- HOROSCOPE / BIRTH-DATE SIGN
@@ -633,7 +633,7 @@ GRANT EXECUTE ON FUNCTION public.zodiac_from_date(date) TO authenticated, anon;
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 5 / 10  :  OMEGA_ACHIEVEMENTS_FIX.sql
+-- ==  SECTION 5 / 12  :  OMEGA_ACHIEVEMENTS_FIX.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- ACHIEVEMENT ALIGNMENT
@@ -844,7 +844,7 @@ GRANT EXECUTE ON FUNCTION public.milestones_for_axis(numeric) TO authenticated, 
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 6 / 10  :  OMEGA_LEADERBOARD.sql
+-- ==  SECTION 6 / 12  :  OMEGA_LEADERBOARD.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- HALL OF FAME
@@ -927,7 +927,7 @@ GRANT EXECUTE ON FUNCTION public.order_stats()           TO authenticated, anon;
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 7 / 10  :  OMEGA_ACCESS_CONTROL.sql
+-- ==  SECTION 7 / 12  :  OMEGA_ACCESS_CONTROL.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- ACCESS CONTROL + 9.1717-MINUTE SOVEREIGN TRIAL
@@ -1126,7 +1126,7 @@ CREATE TRIGGER trg_enforce_access_defaults
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 8 / 10  :  OMEGA_PROFILE_FIELDS.sql
+-- ==  SECTION 8 / 12  :  OMEGA_PROFILE_FIELDS.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- SELF-EDIT PROFILE FIELDS
@@ -1156,7 +1156,169 @@ END $g$;
 COMMIT;
 
 -- ============================================================================
--- ==  SECTION 9 / 10  :  OMEGA_FOUNDER_FIX.sql
+-- ==  SECTION 9 / 12  :  OMEGA_ACCOUNT.sql
+-- ============================================================================
+-- ============================================================================
+-- SYD OMEGA 91717 -- ACCOUNT CONTROL (deactivate / reactivate / delete)
+-- User-friendly + compliance (GDPR-CCPA right-to-delete).
+-- A member may deactivate (reversible) or permanently delete ONLY their own
+-- account. The Sovereign founder can never be deactivated or deleted. Safe.
+-- ============================================================================
+BEGIN;
+
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS deactivated_at   timestamptz;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS pending_deletion timestamptz;
+
+-- DEACTIVATE -- reversible; the access guard will treat them as not-approved --
+CREATE OR REPLACE FUNCTION public.deactivate_account()
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+BEGIN
+  IF auth.uid() IS NULL THEN RETURN jsonb_build_object('ok',false,'error','not_authenticated'); END IF;
+  IF COALESCE((SELECT is_owner FROM public.profiles WHERE id=auth.uid()),false) THEN
+    RETURN jsonb_build_object('ok',false,'error','sovereign_protected');
+  END IF;
+  UPDATE public.profiles
+     SET deactivated_at = now(), access_approved = false, is_trial = false, trial_expires_at = NULL
+   WHERE id = auth.uid();
+  RETURN jsonb_build_object('ok',true,'deactivated',true);
+END;
+$$;
+
+-- REACTIVATE -- lifts a self-deactivation (owner re-approval still governs trial)
+CREATE OR REPLACE FUNCTION public.reactivate_account()
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+BEGIN
+  IF auth.uid() IS NULL THEN RETURN jsonb_build_object('ok',false,'error','not_authenticated'); END IF;
+  UPDATE public.profiles SET deactivated_at = NULL WHERE id = auth.uid();
+  RETURN jsonb_build_object('ok',true,'reactivated',true);
+END;
+$$;
+
+-- DELETE -- permanent erasure of the caller's own data (right-to-delete) -----
+CREATE OR REPLACE FUNCTION public.delete_account()
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE uid uuid := auth.uid();
+BEGIN
+  IF uid IS NULL THEN RETURN jsonb_build_object('ok',false,'error','not_authenticated'); END IF;
+  IF COALESCE((SELECT is_owner FROM public.profiles WHERE id=uid),false) THEN
+    RETURN jsonb_build_object('ok',false,'error','sovereign_protected');
+  END IF;
+  -- wipe the member's data across the platform
+  DELETE FROM public.task_completions WHERE user_id = uid;
+  DELETE FROM public.evolution_events WHERE user_id = uid;
+  DELETE FROM public.trophies         WHERE user_id = uid;
+  DELETE FROM public.medals           WHERE user_id = uid;
+  DELETE FROM public.certificates     WHERE user_id = uid;
+  DELETE FROM public.platform_owners  WHERE user_id = uid;
+  DELETE FROM public.profiles         WHERE id = uid;
+  -- attempt to remove the auth identity too (needs elevated rights; if the
+  -- function owner lacks them, the data is already wiped and we flag for purge)
+  BEGIN
+    DELETE FROM auth.users WHERE id = uid;
+    RETURN jsonb_build_object('ok',true,'deleted',true,'auth_removed',true);
+  EXCEPTION WHEN others THEN
+    RETURN jsonb_build_object('ok',true,'deleted',true,'auth_removed',false,'note','data wiped; auth row purge pending');
+  END;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.deactivate_account() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.reactivate_account() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.delete_account()     TO authenticated;
+
+COMMIT;
+
+-- ============================================================================
+-- ==  SECTION 10 / 12  :  OMEGA_PAYMENTS.sql
+-- ============================================================================
+-- ============================================================================
+-- SYD OMEGA 91717 -- PAYMENTS SCAFFOLD (DORMANT until legal clears)
+-- Subscriptions for the 9 material tiers ($9.17 - $917.17 / month). Everything
+-- here is INERT until BOTH conditions are met by the founder:
+--   (1) platform_settings.payments_enabled = true  (flip via set_platform_flag)
+--   (2) the Stripe secret keys are set on the Edge Functions
+-- No charge can occur until the Sovereign turns it on. Safe + re-runnable.
+-- ============================================================================
+BEGIN;
+
+-- platform-wide feature flags (founder-controlled) ---------------------------
+CREATE TABLE IF NOT EXISTS public.platform_settings (
+  key        text PRIMARY KEY,
+  bool_value boolean DEFAULT false,
+  text_value text,
+  updated_at timestamptz DEFAULT now()
+);
+INSERT INTO public.platform_settings(key, bool_value)
+  VALUES ('payments_enabled', false)
+  ON CONFLICT (key) DO NOTHING;   -- default OFF; never force-enable on re-run
+ALTER TABLE public.platform_settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS platform_settings_read ON public.platform_settings;
+CREATE POLICY platform_settings_read ON public.platform_settings FOR SELECT USING (true);
+
+-- subscription columns on the member profile ---------------------------------
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS stripe_customer_id     text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS subscription_tier      text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS subscription_status    text DEFAULT 'none';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS subscription_period_end timestamptz;
+
+-- read a flag (public; returns false when unset) ------------------------------
+CREATE OR REPLACE FUNCTION public.get_platform_flag(p_key text)
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+  SELECT COALESCE((SELECT bool_value FROM public.platform_settings WHERE key=p_key), false);
+$$;
+
+-- flip a flag (FOUNDER ONLY -- this is how payments get switched on) ----------
+CREATE OR REPLACE FUNCTION public.set_platform_flag(p_key text, p_val boolean)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+BEGIN
+  IF NOT public.is_platform_owner() THEN RETURN jsonb_build_object('ok',false,'error','forbidden'); END IF;
+  INSERT INTO public.platform_settings(key,bool_value,updated_at)
+    VALUES (p_key,p_val,now())
+    ON CONFLICT (key) DO UPDATE SET bool_value=excluded.bool_value, updated_at=now();
+  RETURN jsonb_build_object('ok',true,'key',p_key,'value',p_val);
+END;
+$$;
+
+-- a member reads their own subscription --------------------------------------
+CREATE OR REPLACE FUNCTION public.my_subscription()
+RETURNS jsonb LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+  SELECT jsonb_build_object(
+    'tier',   COALESCE(subscription_tier,'none'),
+    'status', COALESCE(subscription_status,'none'),
+    'period_end', subscription_period_end,
+    'payments_enabled', public.get_platform_flag('payments_enabled')
+  ) FROM public.profiles WHERE id = auth.uid();
+$$;
+
+-- the Stripe webhook (service role) records a subscription result ------------
+-- callable only by the service role or the owner; never by a normal member.
+CREATE OR REPLACE FUNCTION public.apply_subscription(
+  p_uid uuid, p_tier text, p_status text, p_period_end timestamptz, p_customer text)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+BEGIN
+  IF auth.role() <> 'service_role' AND NOT public.is_platform_owner() THEN
+    RETURN jsonb_build_object('ok',false,'error','forbidden');
+  END IF;
+  UPDATE public.profiles SET
+    subscription_tier = p_tier,
+    subscription_status = p_status,
+    subscription_period_end = p_period_end,
+    stripe_customer_id = COALESCE(p_customer, stripe_customer_id),
+    membership_tier = CASE WHEN p_status IN ('active','trialing') THEN upper(p_tier) ELSE membership_tier END
+  WHERE id = p_uid;
+  RETURN jsonb_build_object('ok',true,'uid',p_uid,'tier',p_tier,'status',p_status);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_platform_flag(text)                             TO authenticated, anon;
+GRANT EXECUTE ON FUNCTION public.set_platform_flag(text, boolean)                    TO authenticated;
+GRANT EXECUTE ON FUNCTION public.my_subscription()                                   TO authenticated;
+GRANT EXECUTE ON FUNCTION public.apply_subscription(uuid,text,text,timestamptz,text) TO authenticated, service_role;
+
+COMMIT;
+
+-- ============================================================================
+-- ==  SECTION 11 / 12  :  OMEGA_FOUNDER_FIX.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- FOUNDER CORRECTION
@@ -1265,7 +1427,7 @@ FROM public.profiles p JOIN auth.users u ON u.id = p.id
 WHERE lower(u.email) IN ('s.y.dagher@gmail.com','slmndghr@gmail.com');
 
 -- ============================================================================
--- ==  SECTION 10 / 10  :  OMEGA_RLS_FIX.sql
+-- ==  SECTION 12 / 12  :  OMEGA_RLS_FIX.sql
 -- ============================================================================
 -- ============================================================================
 -- SYD OMEGA 91717 -- RLS RECURSION FIX (error 42P17 on profile save)

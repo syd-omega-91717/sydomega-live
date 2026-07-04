@@ -1,24 +1,25 @@
 // ============================================================================
 // FILE:
 // /frontend/components/layout/Topbar.tsx
+// UPDATED
 // ============================================================================
+
+import UserProfileMenu
+from "./UserProfileMenu";
 
 export default function Topbar(){
 
-    return (
+    return(
 
-        <header style={{
-            height:60,
-            borderBottom:"1px solid #ddd",
-            display:"flex",
-            alignItems:"center",
-            justifyContent:"space-between",
-            padding:"0 20px"
-        }}>
+        <header className="omega-topbar">
 
-            <div>Ω SYD OMEGA 91717</div>
+            <div>
 
-            <div>Status: LIVE</div>
+                Ω SYD OMEGA 91717
+
+            </div>
+
+            <UserProfileMenu/>
 
         </header>
 

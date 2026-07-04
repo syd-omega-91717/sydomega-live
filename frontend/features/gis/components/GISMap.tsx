@@ -5,24 +5,19 @@
 
 'use client';
 
-import Card from "@/components/ui/Card";
-
 export default function GISMap(){
 
     return(
 
-        <Card title="Enterprise GIS">
+        <div
+            style={{
+                height:600,
+                border:"1px solid #DDD"
+            }}>
 
-            <div
-                id="map"
-                style={{
-                    width:"100%",
-                    height:700,
-                    background:"#ececec"
-                }}
-            />
+            GIS MAP RENDERER
 
-        </Card>
+        </div>
 
     );
 

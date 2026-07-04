@@ -3,107 +3,57 @@
 // /frontend/config/navigation.ts
 // ============================================================================
 
-import {
-    Cpu,
-    Globe,
-    Wallet,
-    BrainCircuit,
-    LayoutDashboard,
-    Settings,
-    Shield,
-    Database
-} from "lucide-react";
+import { NavigationItem } from "@/types/navigation";
 
-export interface NavigationItem {
+export const navigation:NavigationItem[]=[
 
-    label: string;
-
-    href: string;
-
-    icon: any;
-
+{
+    id:"dashboard",
+    title:"Dashboard",
+    icon:"dashboard",
+    path:"/dashboard"
+},
+{
+    id:"ai",
+    title:"Artificial Intelligence",
+    icon:"psychology",
+    path:"/ai"
+},
+{
+    id:"digitalTwin",
+    title:"Digital Twin",
+    icon:"hub",
+    path:"/digital-twin"
+},
+{
+    id:"gis",
+    title:"GIS",
+    icon:"map",
+    path:"/gis"
+},
+{
+    id:"iot",
+    title:"IoT",
+    icon:"memory",
+    path:"/iot"
+},
+{
+    id:"blockchain",
+    title:"Blockchain",
+    icon:"token",
+    path:"/blockchain"
+},
+{
+    id:"analytics",
+    title:"Analytics",
+    icon:"analytics",
+    path:"/analytics"
+},
+{
+    id:"settings",
+    title:"Settings",
+    icon:"settings",
+    path:"/settings"
 }
-
-export const Navigation: NavigationItem[] = [
-
-    {
-
-        label: "Dashboard",
-
-        href: "/dashboard",
-
-        icon: LayoutDashboard
-
-    },
-
-    {
-
-        label: "Artificial Intelligence",
-
-        href: "/ai",
-
-        icon: BrainCircuit
-
-    },
-
-    {
-
-        label: "Digital Twin",
-
-        href: "/digital-twin",
-
-        icon: Cpu
-
-    },
-
-    {
-
-        label: "GIS",
-
-        href: "/gis",
-
-        icon: Globe
-
-    },
-
-    {
-
-        label: "Blockchain",
-
-        href: "/blockchain",
-
-        icon: Wallet
-
-    },
-
-    {
-
-        label: "Storage",
-
-        href: "/storage",
-
-        icon: Database
-
-    },
-
-    {
-
-        label: "Security",
-
-        href: "/security",
-
-        icon: Shield
-
-    },
-
-    {
-
-        label: "Settings",
-
-        href: "/settings",
-
-        icon: Settings
-
-    }
 
 ];

@@ -5,51 +5,34 @@
 
 'use client';
 
-import Widget from "./Widget";
+import DashboardWidget
+from "./DashboardWidget";
 
-interface Props {
+export default function SystemHealthWidget(){
 
-    cpu: number;
+    return(
 
-    memory: number;
-
-    storage: number;
-
-    uptime: string;
-
-}
-
-export default function SystemHealthWidget({
-
-    cpu,
-
-    memory,
-
-    storage,
-
-    uptime
-
-}: Props) {
-
-    return (
-
-        <Widget
-
+        <DashboardWidget
             title="System Health"
-
-            subtitle="Infrastructure"
-
         >
 
-            <p>CPU: {cpu}%</p>
+            <ul>
 
-            <p>Memory: {memory}%</p>
+                <li>API Gateway : Healthy</li>
 
-            <p>Storage: {storage}%</p>
+                <li>AI Cluster : Healthy</li>
 
-            <p>Uptime: {uptime}</p>
+                <li>PostgreSQL : Healthy</li>
 
-        </Widget>
+                <li>Kafka : Healthy</li>
+
+                <li>Redis : Healthy</li>
+
+                <li>Kubernetes : Healthy</li>
+
+            </ul>
+
+        </DashboardWidget>
 
     );
 

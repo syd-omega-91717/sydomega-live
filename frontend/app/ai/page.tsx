@@ -1,11 +1,28 @@
 // ============================================================================
 // FILE:
 // /frontend/app/ai/page.tsx
+// UPDATED
 // ============================================================================
 
 'use client';
 
-import EnterpriseCard from "@/components/ui/Card";
+import ConversationList
+from "@/features/ai/components/ConversationList";
+
+import ChatWindow
+from "@/features/ai/components/ChatWindow";
+
+import PromptEditor
+from "@/features/ai/components/PromptEditor";
+
+import AgentPanel
+from "@/features/ai/components/AgentPanel";
+
+import KnowledgePanel
+from "@/features/ai/components/KnowledgePanel";
+
+import ModelSelector
+from "@/features/ai/components/ModelSelector";
 
 export default function AIPage(){
 
@@ -13,25 +30,23 @@ export default function AIPage(){
 
         <main>
 
-            <h1>Artificial Intelligence</h1>
+            <h1>
 
-            <EnterpriseCard title="AI Assistant">
+                Enterprise AI Workspace
 
-                Enterprise AI Control Center
+            </h1>
 
-            </EnterpriseCard>
+            <ModelSelector/>
 
-            <EnterpriseCard title="AI Agents">
+            <ConversationList/>
 
-                Active Agents: 12
+            <ChatWindow/>
 
-            </EnterpriseCard>
+            <PromptEditor/>
 
-            <EnterpriseCard title="Inference">
+            <KnowledgePanel/>
 
-                GPU Cluster Connected
-
-            </EnterpriseCard>
+            <AgentPanel/>
 
         </main>
 

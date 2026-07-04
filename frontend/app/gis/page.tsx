@@ -6,55 +6,77 @@
 
 'use client';
 
+import {MapStateProvider}
+from "@/features/gis/components/MapStateProvider";
+
 import MapContainer
 from "@/features/gis/components/MapContainer";
 
 import LayerManager
 from "@/features/gis/components/LayerManager";
 
-import MapToolbar
-from "@/features/gis/components/MapToolbar";
+import DrawingTools
+from "@/features/gis/components/DrawingTools";
 
-import SearchPanel
-from "@/features/gis/components/SearchPanel";
+import MeasurementTools
+from "@/features/gis/components/MeasurementTools";
 
-import CoordinateDisplay
-from "@/features/gis/components/CoordinateDisplay";
+import GeofenceEditor
+from "@/features/gis/components/GeofenceEditor";
 
-import FeatureInspector
-from "@/features/gis/components/FeatureInspector";
+import RoutePlanner
+from "@/features/gis/components/RoutePlanner";
 
-import MapLegend
-from "@/features/gis/components/MapLegend";
+import HeatmapLayer
+from "@/features/gis/components/HeatmapLayer";
+
+import ReplayTimeline
+from "@/features/gis/components/ReplayTimeline";
+
+import SpatialAnalysisPanel
+from "@/features/gis/components/SpatialAnalysisPanel";
+
+import ImportExportPanel
+from "@/features/gis/components/ImportExportPanel";
 
 export default function GISPage(){
 
-    return(
+return(
 
-        <main>
+<MapStateProvider>
 
-            <h1>
+<main>
 
-                Enterprise GIS Platform
+<h1>
 
-            </h1>
+Enterprise GIS Workspace
 
-            <MapToolbar/>
+</h1>
 
-            <SearchPanel/>
+<LayerManager/>
 
-            <LayerManager/>
+<DrawingTools/>
 
-            <MapContainer/>
+<MeasurementTools/>
 
-            <CoordinateDisplay/>
+<GeofenceEditor/>
 
-            <FeatureInspector/>
+<RoutePlanner/>
 
-            <MapLegend/>
+<HeatmapLayer/>
 
-        </main>
+<MapContainer/>
 
-    );
+<ReplayTimeline/>
+
+<SpatialAnalysisPanel/>
+
+<ImportExportPanel/>
+
+</main>
+
+</MapStateProvider>
+
+);
 
 }

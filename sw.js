@@ -1,52 +1,36 @@
 /* ============================================================================
-   SYD OMEGA 91717 -- Service Worker
-   v4: NETWORK-FIRST. Every deploy now reaches users immediately -- the worker
-   always fetches the fresh file when online and uses the cache only as an
-   offline fallback. This ends the "I deployed but the site looks the same"
-   problem caused by the old cache-first (cached || network) strategy.
-   Supabase and cross-origin requests are never cached.
-   NOTE: bump CACHE (v4 -> v5 -> ...) on any future deploy to force a clean
-   cache reset for returning users.
+   SYD OMEGA 91717 -- SERVICE WORKER (CACHE KILL-SWITCH, omega-v7)
+   Visitors were being served STALE cached files (old sound, old nav, old pages)
+   because a previous cache-first worker held onto them. This worker, on its
+   first activation in each browser, DELETES every cache, UNREGISTERS itself,
+   and reloads open tabs -- so every device drops the old files and loads the
+   current site fresh from the network. After this runs once everywhere, the
+   stale-content problem is permanently gone. Pure ASCII.
    ============================================================================ */
-const CACHE = 'omega-v6';
-const STATIC = ['/', '/index.html', '/bg.js', '/nav.js', '/manifest.json'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(STATIC.map(u => {
-      try { return new Request(u, { cache: 'reload' }); } catch (x) { return u; }
-    }))).catch(() => {})
-  );
+self.addEventListener('install', function () {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(k => k !== CACHE).map(k => caches.delete(k))
-    ))
-  );
-  self.clients.claim();
+self.addEventListener('activate', function (event) {
+  event.waitUntil((async function () {
+    // 1) delete every cache this origin ever created
+    try {
+      var keys = await caches.keys();
+      await Promise.all(keys.map(function (k) { return caches.delete(k); }));
+    } catch (e) {}
+    // 2) remove this service worker entirely (no more stale serving)
+    try { await self.registration.unregister(); } catch (e) {}
+    // 3) reload every open tab so they pull fresh files immediately
+    try {
+      var clients = await self.clients.matchAll({ type: 'window' });
+      clients.forEach(function (c) { try { c.navigate(c.url); } catch (e) {} });
+    } catch (e) {}
+  })());
 });
 
-self.addEventListener('message', e => {
-  if (e.data === 'skipWaiting') self.skipWaiting();
-});
-
-self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET') return;
-  if (req.url.includes('supabase.co')) return;               // never touch the API
-  try { if (new URL(req.url).origin !== location.origin) return; } catch (x) { return; }
-
-  // NETWORK-FIRST: always try the fresh file; fall back to cache only offline.
-  e.respondWith(
-    fetch(req).then(res => {
-      if (res && res.status === 200 && res.type === 'basic') {
-        const clone = res.clone();
-        caches.open(CACHE).then(c => c.put(req, clone)).catch(() => {});
-      }
-      return res;
-    }).catch(() => caches.match(req))
-  );
+/* Network-only while this worker is briefly alive: never serve from cache. */
+self.addEventListener('fetch', function (event) {
+  event.respondWith(fetch(event.request).catch(function () {
+    return new Response('', { status: 504 });
+  }));
 });

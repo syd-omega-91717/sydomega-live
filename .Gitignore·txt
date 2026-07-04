@@ -1,0 +1,40 @@
+# ---- SYD OMEGA 91717 -- keep sydomega-live STATIC-ONLY ----
+# The Vercel project serves the repo root as a static site. Never commit the
+# monorepo/backend here again -- it exposes source publicly and breaks builds.
+backend/
+packages/
+services/
+apps/
+shared/
+infra/
+prisma/
+docker/
+nginx/
+k8s/
+database/
+config/
+node_modules/
+.turbo/
+dist/
+build/
+# server/build files
+*.ts
+*.tsx
+*.py
+*.sol
+turbo.json
+pnpm-workspace.yaml
+package.json
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+tsconfig*.json
+docker-compose*.yml
+Dockerfile
+# secrets -- must NEVER be in a public static repo
+.env
+.env.*
+*.key
+*.pem
+# private documents
+*.docx

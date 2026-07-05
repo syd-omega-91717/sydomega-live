@@ -6,9 +6,10 @@
 
 'use client';
 
-import PresencePanel from "./PresencePanel";
-import AnnotationPanel from "./AnnotationPanel";
-import VersionHistory from "./VersionHistory";
+import CollaborationDashboard from "./CollaborationDashboard";
+import AIPredictionPanel from "./AIPredictionPanel";
+import AnomalyPanel from "./AnomalyPanel";
+import MaintenancePlanner from "./MaintenancePlanner";
 
 export default function DigitalTwinWorkspace(){
 
@@ -16,13 +17,15 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* Existing Digital Twin Workspace */}
+            {/* Previous DT-001 → DT-015 workspace */}
 
-            <PresencePanel/>
+            <CollaborationDashboard/>
 
-            <AnnotationPanel/>
+            <AIPredictionPanel/>
 
-            <VersionHistory/>
+            <AnomalyPanel/>
+
+            <MaintenancePlanner/>
 
         </main>
 

@@ -98,6 +98,8 @@
 (function(){if(!document.querySelector('script[data-omega-content]')){var s=document.createElement('script');s.src='/omega-content.js';s.setAttribute('data-omega-content','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== UNIFIED CONTROL DOCK -- language + sound + home, consolidated ===== */
 (function(){if(!document.querySelector('script[data-omega-controls]')){var s=document.createElement('script');s.src='/omega-controls.js';s.setAttribute('data-omega-controls','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== USER APPEARANCE -- member background/text/font ===== */
+(function(){if(!document.querySelector('script[data-omega-appearance]')){var s=document.createElement('script');s.src='/omega-appearance.js';s.setAttribute('data-omega-appearance','1');if(document.body)document.body.appendChild(s);}})();
 
 /* ===== GLOBAL MOBILE GUARD -- keeps every page within the phone viewport
    (no sideways scroll from wide panels/tables/media). Scoped to <=760px so the

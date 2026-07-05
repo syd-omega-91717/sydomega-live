@@ -1,3 +1,4 @@
+(function(){try{var m=document.createElement('meta');m.name='robots';m.content='noindex,nofollow,noarchive';(document.head||document.documentElement).appendChild(m);}catch(e){}})();
 /* ===== MOBILE GLOBAL FIXES -- ALL PAGES ===== */
 (function(){
   var s=document.createElement('style');

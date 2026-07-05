@@ -6,23 +6,29 @@
 
 import * as THREE from "three";
 
-import {OrbitController}
-
-from "./OrbitController";
+import {OrbitController} from "./OrbitController";
+import {AnimationMixerManager} from "./AnimationMixerManager";
+import {Clock} from "./Clock";
 
 export class AnimationLoop{
 
     private frame=0;
 
+    private readonly clock=
+
+    new Clock();
+
     constructor(
 
-        private scene:THREE.Scene,
+        private readonly scene:THREE.Scene,
 
-        private camera:THREE.Camera,
+        private readonly camera:THREE.Camera,
 
-        private renderer:THREE.WebGLRenderer,
+        private readonly renderer:THREE.WebGLRenderer,
 
-        private controls:OrbitController
+        private readonly controls:OrbitController,
+
+        private readonly mixers:AnimationMixerManager
 
     ){}
 
@@ -30,15 +36,13 @@ export class AnimationLoop{
 
         const render=()=>{
 
-            this.frame=
+            this.frame=requestAnimationFrame(render);
 
-            requestAnimationFrame(
-
-                render
-
-            );
+            const delta=this.clock.delta();
 
             this.controls.update();
+
+            this.mixers.update(delta);
 
             this.renderer.render(
 
@@ -56,11 +60,7 @@ export class AnimationLoop{
 
     stop(){
 
-        cancelAnimationFrame(
-
-            this.frame
-
-        );
+        cancelAnimationFrame(this.frame);
 
     }
 

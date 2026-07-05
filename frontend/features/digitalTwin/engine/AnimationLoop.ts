@@ -1,13 +1,18 @@
 // ============================================================================
 // FILE:
 // /frontend/features/digitalTwin/engine/AnimationLoop.ts
+// UPDATED
 // ============================================================================
 
 import * as THREE from "three";
 
+import {OrbitController}
+
+from "./OrbitController";
+
 export class AnimationLoop{
 
-    private id=0;
+    private frame=0;
 
     constructor(
 
@@ -15,21 +20,25 @@ export class AnimationLoop{
 
         private camera:THREE.Camera,
 
-        private renderer:THREE.WebGLRenderer
+        private renderer:THREE.WebGLRenderer,
+
+        private controls:OrbitController
 
     ){}
 
     start=()=>{
 
-        const animate=()=>{
+        const render=()=>{
 
-            this.id=
+            this.frame=
 
             requestAnimationFrame(
 
-                animate
+                render
 
             );
+
+            this.controls.update();
 
             this.renderer.render(
 
@@ -41,7 +50,7 @@ export class AnimationLoop{
 
         };
 
-        animate();
+        render();
 
     }
 
@@ -49,7 +58,7 @@ export class AnimationLoop{
 
         cancelAnimationFrame(
 
-            this.id
+            this.frame
 
         );
 

@@ -6,6 +6,8 @@
 
 'use client';
 
+import SceneBreadcrumb from "./SceneBreadcrumb";
+import AssetSearchPanel from "./AssetSearchPanel";
 import CameraToolbar from "./CameraToolbar";
 import ConnectionStatus from "./ConnectionStatus";
 import AssetHierarchy from "./AssetHierarchy";
@@ -22,9 +24,17 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
+            <SceneBreadcrumb/>
+
+            <AssetSearchPanel/>
+
             <CameraToolbar/>
 
-            <ConnectionStatus connected={true}/>
+            <ConnectionStatus
+
+                connected={true}
+
+            />
 
             <AssetHierarchy/>
 

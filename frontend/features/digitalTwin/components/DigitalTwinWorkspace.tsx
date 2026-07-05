@@ -8,7 +8,10 @@
 
 import SceneBreadcrumb from "./SceneBreadcrumb";
 import AssetSearchPanel from "./AssetSearchPanel";
+import AssetFilterPanel from "./AssetFilterPanel";
 import CameraToolbar from "./CameraToolbar";
+import UndoRedoToolbar from "./UndoRedoToolbar";
+import ExportToolbar from "./ExportToolbar";
 import SimulationControlPanel from "./SimulationControlPanel";
 import SimulationTimeline from "./SimulationTimeline";
 import SnapshotToolbar from "./SnapshotToolbar";
@@ -36,7 +39,13 @@ export default function DigitalTwinWorkspace(){
 
             <AssetSearchPanel/>
 
+            <AssetFilterPanel/>
+
             <CameraToolbar/>
+
+            <UndoRedoToolbar/>
+
+            <ExportToolbar/>
 
             <SimulationControlPanel/>
 

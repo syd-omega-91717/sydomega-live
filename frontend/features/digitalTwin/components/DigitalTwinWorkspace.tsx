@@ -9,10 +9,11 @@
 import CameraToolbar from "./CameraToolbar";
 import TwinViewport from "./TwinViewport";
 import AssetHierarchy from "./AssetHierarchy";
-import AssetProperties from "./AssetProperties";
 import TelemetryOverlay from "./TelemetryOverlay";
 import PerformanceOverlay from "./PerformanceOverlay";
 import SceneStatistics from "./SceneStatistics";
+import AssetProperties from "./AssetProperties";
+import ConnectionStatus from "./ConnectionStatus";
 
 export default function DigitalTwinWorkspace(){
 
@@ -21,6 +22,12 @@ export default function DigitalTwinWorkspace(){
         <main>
 
             <CameraToolbar/>
+
+            <ConnectionStatus
+
+                connected={true}
+
+            />
 
             <AssetHierarchy/>
 

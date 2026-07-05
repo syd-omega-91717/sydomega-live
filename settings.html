@@ -122,6 +122,16 @@
       </div>
     </div>
 
+    <div class="sechead">PRIVACY</div>
+    <div class="card">
+      <p class="lead">Your profile is <b>private</b> by default -- only you and the Order can see it. You may make it public so other members can view your sovereign profile.</p>
+      <div class="langrow">
+        <button class="btn" id="pv-private">MAKE PRIVATE</button>
+        <button class="btn" id="pv-public">MAKE PUBLIC</button>
+      </div>
+      <div class="hint" id="pv-status">Checking your current visibility...</div>
+    </div>
+
     <div class="sechead">APPEARANCE</div>
     <div class="card">
       <p class="lead">Personalize your view. Choose your background, text colour, and font. Saved on this device.</p>
@@ -246,6 +256,22 @@
     if(ap) ap.addEventListener('click',function(){ A.set(bg?bg.value:'', tx?tx.value:'', ft?ft.value:''); });
     var rs=document.getElementById('ap-reset');
     if(rs) rs.addEventListener('click',function(){ A.reset(); location.reload(); });
+  })();
+
+  // ---- profile privacy (private by default, opt-in public) ----
+  (function(){
+    var stat=document.getElementById('pv-status');
+    async function refresh(){
+      try{ var r=await supabase.auth.getUser(); if(!r.data||!r.data.user){stat.textContent='Sign in to manage privacy.';return;}
+        var q=await supabase.from('profiles').select('is_public').eq('id',r.data.user.id).maybeSingle();
+        var pub=q.data&&q.data.is_public; stat.textContent='Your profile is currently '+(pub?'PUBLIC -- visible to other members.':'PRIVATE -- visible only to you and the Order.');
+      }catch(e){ stat.textContent=''; }
+    }
+    async function setV(v){ try{ var r=await supabase.rpc('set_profile_visibility',{p_public:v}); if(r.data&&r.data.ok){ refresh(); } }catch(e){} }
+    var pr=document.getElementById('pv-private'), pu=document.getElementById('pv-public');
+    if(pr) pr.addEventListener('click',function(){setV(false);});
+    if(pu) pu.addEventListener('click',function(){setV(true);});
+    refresh();
   })();
 </script>
 </body>

@@ -100,6 +100,10 @@
 (function(){if(!document.querySelector('script[data-omega-controls]')){var s=document.createElement('script');s.src='/omega-controls.js';s.setAttribute('data-omega-controls','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */
 (function(){if(!document.querySelector('script[data-omega-appearance]')){var s=document.createElement('script');s.src='/omega-appearance.js';s.setAttribute('data-omega-appearance','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== FEEDBACK WIDGET -- members leave comments + ratings ===== */
+(function(){if(!document.querySelector('script[data-omega-feedback]')){var s=document.createElement('script');s.src='/omega-feedback.js';s.setAttribute('data-omega-feedback','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== APP LAUNCHER -- all pages one tap (mobile + desktop) ===== */
+(function(){if(!document.querySelector('script[data-omega-menu]')){var s=document.createElement('script');s.src='/omega-menu.js';s.setAttribute('data-omega-menu','1');if(document.body)document.body.appendChild(s);}})();
 
 /* ===== GLOBAL MOBILE GUARD -- keeps every page within the phone viewport
    (no sideways scroll from wide panels/tables/media). Scoped to <=760px so the

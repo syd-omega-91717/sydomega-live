@@ -1,0 +1,5 @@
+# SYD OMEGA 91717 -- private platform. Only the entry page is discoverable;
+# no content, profile, or member page may be crawled or indexed.
+User-agent: *
+Disallow: /
+Allow: /$

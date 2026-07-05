@@ -106,18 +106,18 @@
 <div id="gate" class="gate-card" style="display:none">
   <div class="g">&#937;</div>
   <h2 id="gate-h">The Games</h2>
-  <p id="gate-p" data-i18n="gaming.signin">Sign in to enter the games.</p>
+  <p id="gate-p">Sign in to enter the games.</p>
   <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
 </div>
 
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="gaming"></aside>
   <main class="main">
-    <div class="topbar"><div class="t"><span data-i18n="gaming.eyebrow">THE GAMES</span><small>12 GAMES  .  12 STAGES  .  9x9x9 GATED</small></div></div>
-    <p class="intro">Twelve games, each with twelve stages  --  <b>144 nodes of mastery</b>. No stage is given. Clear the <b>Sequence Lock</b> exactly to take a node; each cleared node raises your <b data-i18n="matrix.mastery_t">Mastery</b> and so your level, grade, and trophies. A game opens only when your matrix is ready and the one before it is broken.</p>
+    <div class="topbar"><div class="t">THE GAMES<small>12 GAMES  .  12 STAGES  .  9x9x9 GATED</small></div></div>
+    <p class="intro">Twelve games, each with twelve stages  --  <b>144 nodes of mastery</b>. No stage is given. Clear the <b>Sequence Lock</b> exactly to take a node; each cleared node raises your <b>Mastery</b> and so your level, grade, and trophies. A game opens only when your matrix is ready and the one before it is broken.</p>
     <div class="mstat" id="mstat"></div>
 
-    <div class="sechead" data-i18n="gaming.twelve">THE TWELVE GAMES</div>
+    <div class="sechead">THE TWELVE GAMES</div>
     <div class="games" id="games"></div>
 
     <div class="stages" id="stages">
@@ -129,13 +129,13 @@
 </div>
 
 <div class="modal" id="modal"><div class="sheet">
-  <div class="mt" id="m-title" data-i18n="gaming.stage">STAGE</div>
+  <div class="mt" id="m-title">STAGE</div>
   <div class="mx" id="m-diff"></div>
   <div class="stat" id="m-stat"></div>
   <div class="grid3" id="m-grid"></div>
   <div class="mrow">
-    <button class="mbtn" id="m-action" data-i18n="ui.watch">WATCH</button>
-    <button class="mbtn ghost" id="m-close" data-i18n="ui.leave">LEAVE</button>
+    <button class="mbtn" id="m-action">WATCH</button>
+    <button class="mbtn ghost" id="m-close">LEAVE</button>
   </div>
 </div></div>
 
@@ -238,11 +238,15 @@
 
   async function cleared_(){
     busy=true; setStat('NODE CLEARED \u2014 awarding Mastery...');
-    var already=isCleared(curG,curS);
     cleared[key(curG,curS)]=true;
     try{ await supabase.rpc('complete_task',{p_kind:'gaming',p_task:key(curG,curS),p_axis:'b',p_title:'Game '+(curG+1)+' Stage '+(curS+1)}); }catch(e){}
-    if(!already){ axisB=Math.min(9, axisB+0.25); }
-    setStat(already?'NODE ALREADY YOURS \u2014 well struck.':'NODE CLEARED \u2014 +0.25 MASTERY.');
+    try{
+      var tcR=await supabase.from('task_completions').select('task').eq('user_id',user.id).eq('kind','gaming');
+      cleared={}; if(tcR.data) tcR.data.forEach(function(r){ cleared[r.task]=true; });
+      var prR=await supabase.from('profiles').select('axis_b').eq('id',user.id).maybeSingle();
+      if(prR.data && prR.data.axis_b!=null) axisB=Number(prR.data.axis_b);
+    }catch(e){}
+    setStat('NODE CLEARED \u2014 Mastery updated.');
     document.getElementById('m-action').textContent='CONTINUE';
     document.getElementById('m-action').disabled=false;
     busy=false;

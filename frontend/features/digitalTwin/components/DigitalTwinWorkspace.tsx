@@ -7,13 +7,14 @@
 'use client';
 
 import CameraToolbar from "./CameraToolbar";
-import TwinViewport from "./TwinViewport";
+import ConnectionStatus from "./ConnectionStatus";
 import AssetHierarchy from "./AssetHierarchy";
+import TwinViewport from "./TwinViewport";
 import TelemetryOverlay from "./TelemetryOverlay";
-import PerformanceOverlay from "./PerformanceOverlay";
+import AssetHealthPanel from "./AssetHealthPanel";
+import PerformanceMetrics from "./PerformanceMetrics";
 import SceneStatistics from "./SceneStatistics";
 import AssetProperties from "./AssetProperties";
-import ConnectionStatus from "./ConnectionStatus";
 
 export default function DigitalTwinWorkspace(){
 
@@ -23,11 +24,7 @@ export default function DigitalTwinWorkspace(){
 
             <CameraToolbar/>
 
-            <ConnectionStatus
-
-                connected={true}
-
-            />
+            <ConnectionStatus connected={true}/>
 
             <AssetHierarchy/>
 
@@ -35,7 +32,9 @@ export default function DigitalTwinWorkspace(){
 
             <TelemetryOverlay/>
 
-            <PerformanceOverlay/>
+            <AssetHealthPanel/>
+
+            <PerformanceMetrics/>
 
             <SceneStatistics/>
 

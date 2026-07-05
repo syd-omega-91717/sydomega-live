@@ -6,28 +6,9 @@
 
 'use client';
 
-import SceneBreadcrumb from "./SceneBreadcrumb";
-import AssetSearchPanel from "./AssetSearchPanel";
-import AssetFilterPanel from "./AssetFilterPanel";
-import CameraToolbar from "./CameraToolbar";
-import UndoRedoToolbar from "./UndoRedoToolbar";
-import ExportToolbar from "./ExportToolbar";
-import SimulationControlPanel from "./SimulationControlPanel";
-import SimulationTimeline from "./SimulationTimeline";
-import SnapshotToolbar from "./SnapshotToolbar";
-import PlaybackToolbar from "./PlaybackToolbar";
-import ConnectionStatus from "./ConnectionStatus";
-import AssetHierarchy from "./AssetHierarchy";
-import TwinViewport from "./TwinViewport";
-import TelemetryOverlay from "./TelemetryOverlay";
-import AlarmPanel from "./AlarmPanel";
-import TimelineChart from "./TimelineChart";
-import SnapshotHistory from "./SnapshotHistory";
-import MeasurementPanel from "./MeasurementPanel";
-import AssetHealthPanel from "./AssetHealthPanel";
-import PerformanceMetrics from "./PerformanceMetrics";
-import SceneStatistics from "./SceneStatistics";
-import AssetProperties from "./AssetProperties";
+import LayerPanel from "./LayerPanel";
+import ValidationPanel from "./ValidationPanel";
+import AssetInspector from "./AssetInspector";
 
 export default function DigitalTwinWorkspace(){
 
@@ -35,49 +16,13 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            <SceneBreadcrumb/>
+            {/* Existing workspace components */}
 
-            <AssetSearchPanel/>
+            <LayerPanel/>
 
-            <AssetFilterPanel/>
+            <ValidationPanel/>
 
-            <CameraToolbar/>
-
-            <UndoRedoToolbar/>
-
-            <ExportToolbar/>
-
-            <SimulationControlPanel/>
-
-            <SimulationTimeline/>
-
-            <SnapshotToolbar/>
-
-            <PlaybackToolbar/>
-
-            <ConnectionStatus connected={true}/>
-
-            <AssetHierarchy/>
-
-            <TwinViewport/>
-
-            <TelemetryOverlay/>
-
-            <AlarmPanel/>
-
-            <TimelineChart/>
-
-            <SnapshotHistory/>
-
-            <MeasurementPanel/>
-
-            <AssetHealthPanel/>
-
-            <PerformanceMetrics/>
-
-            <SceneStatistics/>
-
-            <AssetProperties/>
+            <AssetInspector/>
 
         </main>
 

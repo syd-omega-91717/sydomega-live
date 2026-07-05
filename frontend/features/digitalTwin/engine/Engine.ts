@@ -1,43 +1,72 @@
 // ============================================================================
 // FILE:
 // /frontend/features/digitalTwin/engine/Engine.ts
+// UPDATED
 // ============================================================================
 
 import * as THREE from "three";
-import { SceneManager } from "./SceneManager";
-import { CameraManager } from "./CameraManager";
-import { Renderer } from "./Renderer";
-import { AnimationLoop } from "./AnimationLoop";
+
+import {Renderer} from "./Renderer";
+import {CameraManager} from "./CameraManager";
+import {SceneManager} from "./SceneManager";
+import {AnimationLoop} from "./AnimationLoop";
+import {OrbitController} from "./OrbitController";
 
 export class Engine{
 
-    readonly scene:THREE.Scene;
+    readonly scene=
+
+    new THREE.Scene();
 
     readonly renderer:Renderer;
 
     readonly camera:CameraManager;
 
-    readonly animation:AnimationLoop;
-
     readonly sceneManager:SceneManager;
 
-    constructor(container:HTMLDivElement){
+    readonly controls:OrbitController;
 
-        this.scene=new THREE.Scene();
+    readonly animation:AnimationLoop;
 
-        this.renderer=new Renderer(container);
+    constructor(
 
-        this.camera=new CameraManager(container);
+        container:HTMLDivElement
 
-        this.sceneManager=new SceneManager(this.scene);
+    ){
 
-        this.animation=new AnimationLoop(
+        this.renderer=
+
+        new Renderer(container);
+
+        this.camera=
+
+        new CameraManager(container);
+
+        this.sceneManager=
+
+        new SceneManager(this.scene);
+
+        this.controls=
+
+        new OrbitController(
+
+            this.camera.camera,
+
+            this.renderer.renderer.domElement
+
+        );
+
+        this.animation=
+
+        new AnimationLoop(
 
             this.scene,
 
             this.camera.camera,
 
-            this.renderer.renderer
+            this.renderer.renderer,
+
+            this.controls
 
         );
 
@@ -49,23 +78,11 @@ export class Engine{
 
     }
 
-    stop(){
+    dispose(){
 
         this.animation.stop();
 
-    }
-
-    resize(){
-
-        this.camera.resize();
-
-        this.renderer.resize();
-
-    }
-
-    dispose(){
-
-        this.stop();
+        this.controls.dispose();
 
         this.renderer.dispose();
 

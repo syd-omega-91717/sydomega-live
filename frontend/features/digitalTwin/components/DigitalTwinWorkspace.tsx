@@ -6,9 +6,9 @@
 
 'use client';
 
-import LayerPanel from "./LayerPanel";
-import ValidationPanel from "./ValidationPanel";
-import AssetInspector from "./AssetInspector";
+import PresencePanel from "./PresencePanel";
+import AnnotationPanel from "./AnnotationPanel";
+import VersionHistory from "./VersionHistory";
 
 export default function DigitalTwinWorkspace(){
 
@@ -16,13 +16,13 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* Existing workspace components */}
+            {/* Existing Digital Twin Workspace */}
 
-            <LayerPanel/>
+            <PresencePanel/>
 
-            <ValidationPanel/>
+            <AnnotationPanel/>
 
-            <AssetInspector/>
+            <VersionHistory/>
 
         </main>
 

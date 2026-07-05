@@ -1,25 +1,36 @@
 // ============================================================================
 // FILE:
 // /frontend/features/digitalTwin/components/TwinViewport.tsx
+// UPDATED
 // ============================================================================
 
 'use client';
 
+import {useDigitalTwin}
+
+from "../hooks/useDigitalTwin";
+
 export default function TwinViewport(){
+
+    const ref=
+
+    useDigitalTwin();
 
     return(
 
-        <section
+        <div
+
+            ref={ref}
+
             style={{
+
                 width:"100%",
-                height:"700px",
-                border:"1px solid #DDD"
+
+                height:"800px"
+
             }}
-        >
 
-            3D Twin Viewport (Three.js Integration)
-
-        </section>
+        />
 
     );
 

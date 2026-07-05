@@ -1,15 +1,18 @@
 // ============================================================================
 // FILE:
 // /frontend/features/digitalTwin/components/DigitalTwinWorkspace.tsx
+// UPDATED
 // ============================================================================
 
 'use client';
 
 import CameraToolbar from "./CameraToolbar";
 import TwinViewport from "./TwinViewport";
-import TelemetryOverlay from "./TelemetryOverlay";
 import AssetHierarchy from "./AssetHierarchy";
 import AssetProperties from "./AssetProperties";
+import TelemetryOverlay from "./TelemetryOverlay";
+import PerformanceOverlay from "./PerformanceOverlay";
+import SceneStatistics from "./SceneStatistics";
 
 export default function DigitalTwinWorkspace(){
 
@@ -24,6 +27,10 @@ export default function DigitalTwinWorkspace(){
             <TwinViewport/>
 
             <TelemetryOverlay/>
+
+            <PerformanceOverlay/>
+
+            <SceneStatistics/>
 
             <AssetProperties/>
 

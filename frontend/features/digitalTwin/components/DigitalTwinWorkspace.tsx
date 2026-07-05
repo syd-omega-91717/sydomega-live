@@ -9,6 +9,8 @@
 import SceneBreadcrumb from "./SceneBreadcrumb";
 import AssetSearchPanel from "./AssetSearchPanel";
 import CameraToolbar from "./CameraToolbar";
+import SimulationControlPanel from "./SimulationControlPanel";
+import SimulationTimeline from "./SimulationTimeline";
 import SnapshotToolbar from "./SnapshotToolbar";
 import PlaybackToolbar from "./PlaybackToolbar";
 import ConnectionStatus from "./ConnectionStatus";
@@ -35,6 +37,10 @@ export default function DigitalTwinWorkspace(){
             <AssetSearchPanel/>
 
             <CameraToolbar/>
+
+            <SimulationControlPanel/>
+
+            <SimulationTimeline/>
 
             <SnapshotToolbar/>
 

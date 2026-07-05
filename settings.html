@@ -122,6 +122,27 @@
       </div>
     </div>
 
+    <div class="sechead">APPEARANCE</div>
+    <div class="card">
+      <p class="lead">Personalize your view. Choose your background, text colour, and font. Saved on this device.</p>
+      <div class="langrow">
+        <label style="display:flex;align-items:center;gap:8px">Background <input type="color" id="ap-bg" value="#0A0A0F"></label>
+        <label style="display:flex;align-items:center;gap:8px">Text <input type="color" id="ap-text" value="#C9A84C"></label>
+        <label style="display:flex;align-items:center;gap:8px">Font
+          <select id="ap-font" style="background:rgba(10,10,15,.6);color:inherit;border:1px solid rgba(201,168,76,.3);padding:6px 10px;border-radius:8px">
+            <option value="">Default</option>
+            <option value="modern">Modern</option>
+            <option value="mono">Mono</option>
+            <option value="classic">Classic</option>
+          </select>
+        </label>
+      </div>
+      <div class="langrow" style="margin-top:10px">
+        <button class="btn" id="ap-apply">APPLY</button>
+        <button class="ghost" id="ap-reset">RESET TO DEFAULT</button>
+      </div>
+    </div>
+
     <div class="sechead">ACCOUNT</div>
     <div class="card">
       <p class="lead">Manage your sovereign account.</p>
@@ -214,6 +235,18 @@
     try{ var r=await supabase.rpc('delete_account'); if(r.data&&r.data.ok){ try{await supabase.auth.signOut();}catch(e){} alert('Your account and data have been deleted.'); location.href='/index.html'; } else { accMsg((r.data&&r.data.error)||'Could not delete.'); } }
     catch(e){ accMsg('Could not delete.'); }
   });
+
+  // ---- appearance (background / text colour / font) ----
+  (function(){
+    var A=window.OmegaAppearance; if(!A) return;
+    var cur=A.get();
+    var bg=document.getElementById('ap-bg'), tx=document.getElementById('ap-text'), ft=document.getElementById('ap-font');
+    if(cur.bg&&bg) bg.value=cur.bg; if(cur.text&&tx) tx.value=cur.text; if(cur.font&&ft) ft.value=cur.font;
+    var ap=document.getElementById('ap-apply');
+    if(ap) ap.addEventListener('click',function(){ A.set(bg?bg.value:'', tx?tx.value:'', ft?ft.value:''); });
+    var rs=document.getElementById('ap-reset');
+    if(rs) rs.addEventListener('click',function(){ A.reset(); location.reload(); });
+  })();
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 // /frontend/features/digitalTwin/gis/GeoFence.ts
 // ============================================================================
 
-export interface GeoFence{
+export interface Fence{
 
     id:string;
 
@@ -17,11 +17,11 @@ export interface GeoFence{
 
 }
 
-export class GeoFenceManager{
+export class GeoFence{
 
     contains(
 
-        fence:GeoFence,
+        fence:Fence,
 
         x:number,
 
@@ -31,11 +31,11 @@ export class GeoFenceManager{
 
         return(
 
-            x>=fence.minX &&
+            x>=fence.minX&&
 
-            x<=fence.maxX &&
+            x<=fence.maxX&&
 
-            y>=fence.minY &&
+            y>=fence.minY&&
 
             y<=fence.maxY
 

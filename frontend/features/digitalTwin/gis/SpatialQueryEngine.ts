@@ -5,31 +5,19 @@
 
 export class SpatialQueryEngine{
 
-    withinRadius(
+    query<T>(
 
-        objects:any[],
+        dataset:T[],
 
-        x:number,
-
-        y:number,
-
-        radius:number
+        predicate:(item:T)=>boolean
 
     ){
 
-        return objects.filter(object=>{
+        return dataset.filter(
 
-            const dx=object.x-x;
+            predicate
 
-            const dy=object.y-y;
-
-            return Math.sqrt(
-
-                dx*dx+dy*dy
-
-            )<=radius;
-
-        });
+        );
 
     }
 

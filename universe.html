@@ -4,6 +4,26 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Creative Universe</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="SYD OMEGA 91717 -- Creative Universe"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/universe.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SYD OMEGA 91717 -- Creative Universe"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -174,7 +194,7 @@ function buildSeriesGrid(){
   const g=document.getElementById('series-grid');g.innerHTML='';
   FILMS.forEach((film,fi)=>{
     for(let si=1;si<=12;si++){
-      const c=document.createElement('div');c.className='sg-card';
+      const c=document.createElement('div');c.className='sg-card';c.setAttribute('data-require','grade>='+(fi+1));
       const col=['#C9A84C','#8B0000','#9B6BF0','#00E5FF','#E86A3A','#3fb27f','#D9B86A','#C7CDD6','#E2C86D','#34C6E6','#A9C2D8','#C9A84C'][fi];
       c.style.borderLeftColor=col+'55';c.style.borderLeft='3px solid '+col+'55';
       c.innerHTML=`<div class="sg-num" style="color:${col}">${fi+1}.${si}</div><div class="sg-title">${film}: EPISODE ${si}</div><div class="sg-film" style="color:${col}aa">FROM ${film}</div>`;
@@ -187,7 +207,7 @@ function buildGamesGrid(){
   const g=document.getElementById('games-grid');g.innerHTML='';
   GAMES.forEach((game,gi)=>{
     for(let si=1;si<=12;si++){
-      const c=document.createElement('div');c.className='sg-card';
+      const c=document.createElement('div');c.className='sg-card';c.setAttribute('data-require','grade>='+(gi+1));
       const col=['#E86A3A','#C9A84C','#3fb27f','#00E5FF','#9B6BF0','#8B0000','#D9B86A','#C7CDD6','#E2C86D','#C9A84C','#9B6BF0','#C9A84C'][gi];
       c.style.borderLeft='3px solid '+col+'44';
       c.innerHTML=`<div class="sg-num" style="color:${col}">${gi+1}.${si}</div><div class="sg-title">${game.replace('&#x03A9;','&#937;')}: WORLD ${si}</div><div class="sg-film" style="color:${col}88">SUB-GAME ${si} OF 12</div>`;

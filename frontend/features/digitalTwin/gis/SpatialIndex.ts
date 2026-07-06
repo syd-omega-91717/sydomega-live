@@ -3,7 +3,7 @@
 // /frontend/features/digitalTwin/gis/SpatialIndex.ts
 // ============================================================================
 
-export interface SpatialNode{
+export interface SpatialPoint{
 
     id:string;
 
@@ -15,23 +15,23 @@ export interface SpatialNode{
 
 export class SpatialIndex{
 
-    private readonly nodes=
+    private readonly points=
 
-    new Map<string,SpatialNode>();
+    new Map<string,SpatialPoint>();
 
-    insert(node:SpatialNode){
+    insert(point:SpatialPoint){
 
-        this.nodes.set(node.id,node);
+        this.points.set(point.id,point);
 
     }
 
     remove(id:string){
 
-        this.nodes.delete(id);
+        this.points.delete(id);
 
     }
 
-    nearest(
+    nearby(
 
         x:number,
 
@@ -41,13 +41,13 @@ export class SpatialIndex{
 
     ){
 
-        return [...this.nodes.values()]
+        return [...this.points.values()]
 
-        .filter(node=>{
+        .filter(point=>{
 
-            const dx=node.x-x;
+            const dx=point.x-x;
 
-            const dy=node.y-y;
+            const dy=point.y-y;
 
             return Math.sqrt(
 

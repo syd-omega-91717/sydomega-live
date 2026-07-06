@@ -6,10 +6,7 @@
 
 'use client';
 
-import CollaborationDashboard from "./CollaborationDashboard";
-import AIPredictionPanel from "./AIPredictionPanel";
-import AnomalyPanel from "./AnomalyPanel";
-import MaintenancePlanner from "./MaintenancePlanner";
+import GISMapPanel from "./GISMapPanel";
 
 export default function DigitalTwinWorkspace(){
 
@@ -17,15 +14,9 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* Previous DT-001 → DT-015 workspace */}
+            {/* DT-001 ... DT-016 */}
 
-            <CollaborationDashboard/>
-
-            <AIPredictionPanel/>
-
-            <AnomalyPanel/>
-
-            <MaintenancePlanner/>
+            <GISMapPanel/>
 
         </main>
 

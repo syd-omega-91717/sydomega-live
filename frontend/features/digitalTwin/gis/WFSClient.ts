@@ -7,23 +7,17 @@ export class WFSClient{
 
     constructor(
 
-        private endpoint:string
+        private readonly endpoint:string
 
     ){}
 
-    features(
+    featureType(
 
-        layer:string
+        type:string
 
     ){
 
-        return`${this.endpoint}`+
-
-        `?service=WFS`+
-
-        `&request=GetFeature`+
-
-        `&typeName=${layer}`;
+        return`${this.endpoint}?service=WFS&typeName=${type}`;
 
     }
 

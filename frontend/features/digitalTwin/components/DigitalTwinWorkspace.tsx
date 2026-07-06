@@ -6,7 +6,7 @@
 
 'use client';
 
-import GISMapPanel from "./GISMapPanel";
+import GISPanel from "./GISPanel";
 
 export default function DigitalTwinWorkspace(){
 
@@ -14,9 +14,9 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* DT-001 ... DT-016 */}
+            {/* DT-001 → DT-016 */}
 
-            <GISMapPanel/>
+            <GISPanel/>
 
         </main>
 

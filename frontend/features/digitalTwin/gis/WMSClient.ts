@@ -7,27 +7,17 @@ export class WMSClient{
 
     constructor(
 
-        private endpoint:string
+        private readonly endpoint:string
 
     ){}
 
     tile(
 
-        layer:string,
-
-        bbox:string
+        layer:string
 
     ){
 
-        return`${this.endpoint}`+
-
-        `?service=WMS`+
-
-        `&request=GetMap`+
-
-        `&layers=${layer}`+
-
-        `&bbox=${bbox}`;
+        return`${this.endpoint}?service=WMS&layer=${layer}`;
 
     }
 

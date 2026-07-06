@@ -199,6 +199,7 @@ function renderFilms(){
   FILMS.forEach(function(f){
     var card=document.createElement('div');
     card.className='film-card';
+    card.setAttribute('data-require','grade>='+f.n);
 
     /* Canvas poster */
     var poster=document.createElement('div');

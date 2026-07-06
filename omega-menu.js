@@ -15,7 +15,8 @@
       ['\u2680', 'Grades', '/grades.html'],
       ['\u2681', 'Levels', '/levels.html'],
       ['\u269B', 'Phases', '/phases.html'],
-      ['\u2605', 'Honors', '/honors.html']
+      ['\u2605', 'Honors', '/honors.html'],
+      ['\u2666', 'Achievements', '/achievements.html']
     ]],
     ['CORE', [
       ['\u2302', 'Dashboard', '/dashboard.html'],

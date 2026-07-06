@@ -3,39 +3,45 @@
 // /frontend/features/digitalTwin/gis/CoordinateTransformer.ts
 // ============================================================================
 
+export interface Coordinate{
+
+    latitude:number;
+
+    longitude:number;
+
+}
+
 export class CoordinateTransformer{
 
-    wgs84ToWebMercator(
+    toXY(
 
-        longitude:number,
-
-        latitude:number
+        coordinate:Coordinate
 
     ){
 
-        const x=
+        return{
 
-        longitude*20037508.34/180;
+            x:coordinate.longitude,
 
-        let y=
+            y:coordinate.latitude
 
-        Math.log(
+        };
 
-            Math.tan(
+    }
 
-                (90+latitude)*Math.PI/360
+    toLatLng(
 
-            )
+        x:number,
 
-        )/(Math.PI/180);
+        y:number
 
-        y=y*20037508.34/180;
+    ){
 
         return{
 
-            x,
+            latitude:y,
 
-            y
+            longitude:x
 
         };
 

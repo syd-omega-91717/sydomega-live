@@ -19,7 +19,7 @@ export class IndoorNavigation{
 
         start:Waypoint,
 
-        destination:Waypoint
+        end:Waypoint
 
     ){
 
@@ -27,7 +27,7 @@ export class IndoorNavigation{
 
             start,
 
-            destination
+            end
 
         ];
 

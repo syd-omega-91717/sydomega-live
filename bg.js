@@ -107,6 +107,8 @@
 (function(){if(!document.querySelector('script[data-omega-menu]')){var s=document.createElement('script');s.src='/omega-menu.js';s.setAttribute('data-omega-menu','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== MATRIX CONTENT GATE -- lock content by matrix position (5.1) ===== */
 (function(){if(!document.querySelector('script[data-omega-gate]')){var s=document.createElement('script');s.src='/omega-gate.js';s.setAttribute('data-omega-gate','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== DE-EMOJI -- force all emoji-capable symbols to monochrome emblems ===== */
+(function(){if(!document.querySelector('script[data-omega-deemoji]')){var s=document.createElement('script');s.src='/omega-deemoji.js';s.setAttribute('data-omega-deemoji','1');if(document.body)document.body.appendChild(s);}})();
 
 /* ===== GLOBAL MOBILE GUARD -- keeps every page within the phone viewport
    (no sideways scroll from wide panels/tables/media). Scoped to <=760px so the

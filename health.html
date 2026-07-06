@@ -78,6 +78,7 @@ a{color:inherit;text-decoration:none}
 .matrix-note b{color:var(--gold)}
 
 @media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}}
+  .w-card .icon svg{width:26px;height:26px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -95,12 +96,12 @@ a{color:inherit;text-decoration:none}
 
     <div class="sechead">WELLNESS COMMAND &mdash; LIVE STATUS</div>
     <div class="wellness-grid">
-      <div class="w-card"><div class="icon">&#9775;</div><div class="label">MIND STATE</div><div class="score" id="ws-mind">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-mind" style="width:0%"></div></div><div class="caption">Mental clarity level</div></div>
-      <div class="w-card"><div class="icon">&#10084;</div><div class="label">HEART VITALITY</div><div class="score" id="ws-heart">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-heart" style="width:0%"></div></div><div class="caption">Emotional & physical heart</div></div>
-      <div class="w-card"><div class="icon">&#9728;</div><div class="label">ENERGY LEVEL</div><div class="score" id="ws-energy">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-energy" style="width:0%"></div></div><div class="caption">Daily vitality</div></div>
-      <div class="w-card"><div class="icon">&#128306;</div><div class="label">SOUL ALIGNMENT</div><div class="score" id="ws-soul">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-soul" style="width:0%;background:linear-gradient(90deg,#E8E8FF,#9B6BF0)"></div></div><div class="caption">Sixth element resonance</div></div>
-      <div class="w-card"><div class="icon">&#9876;</div><div class="label">PHYSICAL BODY</div><div class="score" id="ws-body">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-body" style="width:0%"></div></div><div class="caption">Strength & movement</div></div>
-      <div class="w-card"><div class="icon">&#9681;</div><div class="label">SOVEREIGN SCORE</div><div class="score" id="ws-total" style="color:var(--gold)">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-total" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div><div class="caption">Overall wellness rating</div></div>
+      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2"/></svg></div><div class="label">MIND STATE</div><div class="score" id="ws-mind">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-mind" style="width:0%"></div></div><div class="caption">Mental clarity level</div></div>
+      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></div><div class="label">HEART VITALITY</div><div class="score" id="ws-heart">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-heart" style="width:0%"></div></div><div class="caption">Emotional & physical heart</div></div>
+      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div><div class="label">ENERGY LEVEL</div><div class="score" id="ws-energy">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-energy" style="width:0%"></div></div><div class="caption">Daily vitality</div></div>
+      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.5 2 7L12 17l-6.5 4 2-7L2 9.5 7 9z"/></svg></div><div class="label">SOUL ALIGNMENT</div><div class="score" id="ws-soul">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-soul" style="width:0%;background:linear-gradient(90deg,#E8E8FF,#9B6BF0)"></div></div><div class="caption">Sixth element resonance</div></div>
+      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M12 15l-4 6M12 15l4 6M6 11h12"/></svg></div><div class="label">PHYSICAL BODY</div><div class="score" id="ws-body">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-body" style="width:0%"></div></div><div class="caption">Strength & movement</div></div>
+      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 14l2-5 3 4 3-4 2 5z"/></svg></div><div class="label">SOVEREIGN SCORE</div><div class="score" id="ws-total" style="color:var(--gold)">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-total" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div><div class="caption">Overall wellness rating</div></div>
     </div>
 
     <div class="sechead">THE NINTH ELEMENT &mdash; 10 LIFE DOMAINS</div>

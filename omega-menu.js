@@ -10,6 +10,13 @@
   window.__omegaMenu = 1;
 
   var GROUPS = [
+    ['PROGRESSION', [
+      ['\u25B2', 'Ascend', '/ascension.html'],
+      ['\u2680', 'Grades', '/grades.html'],
+      ['\u2681', 'Levels', '/levels.html'],
+      ['\u269B', 'Phases', '/phases.html'],
+      ['\u2605', 'Honors', '/honors.html']
+    ]],
     ['CORE', [
       ['\u2302', 'Dashboard', '/dashboard.html'],
       ['\u25C6', 'Identity', '/identity.html'],

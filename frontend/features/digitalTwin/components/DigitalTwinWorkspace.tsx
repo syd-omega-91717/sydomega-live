@@ -7,6 +7,7 @@
 'use client';
 
 import GISPanel from "./GISPanel";
+import IoTDashboard from "./IoTDashboard";
 
 export default function DigitalTwinWorkspace(){
 
@@ -14,9 +15,11 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* DT-001 → DT-016 */}
+            {/* DT-001 → DT-017 */}
 
             <GISPanel/>
+
+            <IoTDashboard/>
 
         </main>
 

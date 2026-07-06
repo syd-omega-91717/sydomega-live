@@ -109,6 +109,8 @@
 (function(){if(!document.querySelector('script[data-omega-gate]')){var s=document.createElement('script');s.src='/omega-gate.js';s.setAttribute('data-omega-gate','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== DE-EMOJI -- force all emoji-capable symbols to monochrome emblems ===== */
 (function(){if(!document.querySelector('script[data-omega-deemoji]')){var s=document.createElement('script');s.src='/omega-deemoji.js';s.setAttribute('data-omega-deemoji','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== SHARE LAYER -- broadcast sovereign status to social (section 7) ===== */
+(function(){if(!document.querySelector('script[data-omega-share]')){var s=document.createElement('script');s.src='/omega-share.js';s.setAttribute('data-omega-share','1');if(document.body)document.body.appendChild(s);}})();
 
 /* ===== GLOBAL MOBILE GUARD -- keeps every page within the phone viewport
    (no sideways scroll from wide panels/tables/media). Scoped to <=760px so the

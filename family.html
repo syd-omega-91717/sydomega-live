@@ -4,6 +4,26 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Dagher Family</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="SYD OMEGA 91717 -- Dagher Family"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/family.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SYD OMEGA 91717 -- Dagher Family"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -301,9 +321,19 @@ function drawConstellation(mems){
   const CX=W/2,CY=H/2;
   const center={x:CX,y:CY,name:'SLEIMAN',role:'ARCHITECT',col:'#C9A84C',isRoot:true};
   const COLS={Wife:'#9B6BF0',Son:'#00E5FF',Daughter:'#3fb27f',Mother:'#D9B86A',Father:'#D9B86A',Brother:'#C7CDD6',Sister:'#A9C2D8'};
-  const nodes=[center,...mems.map((m,i)=>{const a=-Math.PI/2+i*(Math.PI*2/Math.max(mems.length,1));const r=Math.min(W,H)*.3;return{x:CX+Math.cos(a)*r,y:CY+Math.sin(a)*r,name:m.name?.split(' ')[0]||'NODE',role:m.relation||'FAMILY',col:COLS[m.relation]||'#C9A84C',isHeir:m.is_heir};})]
+  /* GENEALOGY TIERS: ancestors above, peers beside, descendants below */
+  const TIER={Grandfather:-2,Grandmother:-2,Father:-1,Mother:-1,Wife:0,Husband:0,Brother:0,Sister:0,Son:1,Daughter:1,Grandson:2,Granddaughter:2};
+  const ROWY={'-2':CY-96,'-1':CY-58,'0':CY,'1':CY+62,'2':CY+118};
+  const tiers={}; mems.forEach(m=>{const tk=(TIER[m.relation]!=null?TIER[m.relation]:1);(tiers[tk]=tiers[tk]||[]).push(m);});
+  const nodes=[center];
+  Object.keys(tiers).forEach(tk=>{const arr=tiers[tk];const ty=(ROWY[tk]!=null?ROWY[tk]:CY+62);
+    if(tk==='0'){ arr.forEach((m,i)=>{const side=i%2?1:-1;const rank=Math.floor(i/2)+1;nodes.push({x:CX+side*rank*(W*0.17),y:CY,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||'#C9A84C',isHeir:m.is_heir});}); }
+    else { const n=arr.length; arr.forEach((m,i)=>{const x=(n===1?CX:(W*0.14+(W*0.72)*(i/(n-1))));nodes.push({x:x,y:ty,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||'#C9A84C',isHeir:m.is_heir});}); }
+  });
   function frame(){
     t+=.01;ctx.clearRect(0,0,W,H);
+    ctx.font='9px "Courier Prime",monospace';ctx.textAlign='left';ctx.fillStyle='rgba(201,168,76,0.22)';
+    ctx.fillText('ANCESTORS',10,CY-80);ctx.fillText('LINEAGE',10,CY+4);ctx.fillText('DESCENDANTS',10,CY+110);
     /* Stars */
     for(let i=0;i<30;i++){const sx=(i*61+t*3)%W,sy=(i*43+t*2)%H;ctx.beginPath();ctx.arc(sx,sy,.8,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+(0.04+0.08*Math.sin(t+i))+')';ctx.fill();}
     /* Lines */

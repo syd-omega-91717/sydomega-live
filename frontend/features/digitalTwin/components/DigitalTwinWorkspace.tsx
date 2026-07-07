@@ -8,14 +8,11 @@
 
 import GISPanel from "./GISPanel";
 import IoTDashboard from "./IoTDashboard";
-import IndustrialAutomationDashboard
-from "./IndustrialAutomationDashboard";
-import PhysicsSimulationDashboard
-from "./PhysicsSimulationDashboard";
-import AIAutonomousDashboard
-from "./AIAutonomousDashboard";
-import SecurityDashboard
-from "./SecurityDashboard";
+import IndustrialAutomationDashboard from "./IndustrialAutomationDashboard";
+import PhysicsSimulationDashboard from "./PhysicsSimulationDashboard";
+import AIAutonomousDashboard from "./AIAutonomousDashboard";
+import SecurityDashboard from "./SecurityDashboard";
+import AnalyticsDashboard from "./AnalyticsDashboard";
 
 export default function DigitalTwinWorkspace(){
 
@@ -23,7 +20,7 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* DT-001 → DT-021 */}
+            {/* DT-001 → DT-022 */}
 
             <GISPanel/>
 
@@ -36,6 +33,8 @@ export default function DigitalTwinWorkspace(){
             <AIAutonomousDashboard/>
 
             <SecurityDashboard/>
+
+            <AnalyticsDashboard/>
 
         </main>
 

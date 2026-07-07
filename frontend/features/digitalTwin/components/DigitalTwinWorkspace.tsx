@@ -14,6 +14,8 @@ import PhysicsSimulationDashboard
 from "./PhysicsSimulationDashboard";
 import AIAutonomousDashboard
 from "./AIAutonomousDashboard";
+import SecurityDashboard
+from "./SecurityDashboard";
 
 export default function DigitalTwinWorkspace(){
 
@@ -21,7 +23,7 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* DT-001 → DT-020 */}
+            {/* DT-001 → DT-021 */}
 
             <GISPanel/>
 
@@ -32,6 +34,8 @@ export default function DigitalTwinWorkspace(){
             <PhysicsSimulationDashboard/>
 
             <AIAutonomousDashboard/>
+
+            <SecurityDashboard/>
 
         </main>
 

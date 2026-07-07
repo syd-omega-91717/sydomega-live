@@ -6,16 +6,8 @@
 
 'use client';
 
-import GISPanel from "./GISPanel";
-import IoTDashboard from "./IoTDashboard";
-import IndustrialAutomationDashboard from "./IndustrialAutomationDashboard";
-import PhysicsSimulationDashboard from "./PhysicsSimulationDashboard";
-import AIAutonomousDashboard from "./AIAutonomousDashboard";
-import SecurityDashboard from "./SecurityDashboard";
-import AnalyticsDashboard from "./AnalyticsDashboard";
-import CommandCenterDashboard from "./CommandCenterDashboard";
-import InfrastructureDashboard from "./InfrastructureDashboard";
-import CyberDefenseDashboard from "./CyberDefenseDashboard";
+import PlatformDashboard
+from "./PlatformDashboard";
 
 export default function DigitalTwinWorkspace(){
 
@@ -23,27 +15,9 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* DT-001 → DT-025 */}
+            {/* DT-001 → DT-026 */}
 
-            <GISPanel/>
-
-            <IoTDashboard/>
-
-            <IndustrialAutomationDashboard/>
-
-            <PhysicsSimulationDashboard/>
-
-            <AIAutonomousDashboard/>
-
-            <SecurityDashboard/>
-
-            <AnalyticsDashboard/>
-
-            <CommandCenterDashboard/>
-
-            <InfrastructureDashboard/>
-
-            <CyberDefenseDashboard/>
+            <PlatformDashboard/>
 
         </main>
 

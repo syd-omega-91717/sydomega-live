@@ -14,6 +14,7 @@ import AIAutonomousDashboard from "./AIAutonomousDashboard";
 import SecurityDashboard from "./SecurityDashboard";
 import AnalyticsDashboard from "./AnalyticsDashboard";
 import CommandCenterDashboard from "./CommandCenterDashboard";
+import InfrastructureDashboard from "./InfrastructureDashboard";
 
 export default function DigitalTwinWorkspace(){
 
@@ -21,7 +22,7 @@ export default function DigitalTwinWorkspace(){
 
         <main>
 
-            {/* DT-001 → DT-023 */}
+            {/* DT-001 → DT-024 */}
 
             <GISPanel/>
 
@@ -38,6 +39,8 @@ export default function DigitalTwinWorkspace(){
             <AnalyticsDashboard/>
 
             <CommandCenterDashboard/>
+
+            <InfrastructureDashboard/>
 
         </main>
 

@@ -4,16 +4,15 @@
 // ============================================================================
 
 export * from "./AcademicAnalyticsEngine";
-export * from "./AdaptiveLearningEngine";
-export * from "./Assessment";
+export * from "./AcademyManagementEngine";
 export * from "./AssessmentEngine";
-export * from "./Certificate";
 export * from "./CertificationEngine";
 export * from "./Course";
-export * from "./DigitalCredentialEngine";
-export * from "./KnowledgeDiscoveryEngine";
+export * from "./CurriculumBuilderEngine";
+export * from "./DigitalLibraryEngine";
+export * from "./EducationResearchOperationsOrchestrator";
+export * from "./KnowledgeRepositoryEngine";
 export * from "./LearningManagementEngine";
-export * from "./Lesson";
-export * from "./ResearchPublication";
-export * from "./ResearchRepository";
-export * from "./SovereignAcademyOrchestrator";
+export * from "./ResearchManagementEngine";
+export * from "./ResearchProject";
+export * from "./Student";

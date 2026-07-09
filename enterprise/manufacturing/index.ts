@@ -3,17 +3,16 @@
 // /enterprise/manufacturing/index.ts
 // ============================================================================
 
+export * from "./DigitalFactory";
 export * from "./DigitalFactoryTwinEngine";
-export * from "./IndustrialAIEngine";
-export * from "./IndustrialDevice";
+export * from "./IndustrialAsset";
 export * from "./IndustrialIoTEngine";
-export * from "./IndustrialOrchestrator";
 export * from "./ManufacturingExecutionEngine";
-export * from "./OPCUAGateway";
-export * from "./PLCController";
+export * from "./ManufacturingOperationsOrchestrator";
+export * from "./PLCOrchestrationEngine";
 export * from "./PredictiveMaintenanceEngine";
 export * from "./ProductionOrder";
-export * from "./ProductionPlanningEngine";
+export * from "./ProductionSchedulingEngine";
 export * from "./QualityManagementEngine";
-export * from "./SCADAEngine";
+export * from "./SCADAIntegrationEngine";
 export * from "./SupplyChainSynchronizationEngine";

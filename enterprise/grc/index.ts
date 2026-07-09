@@ -3,16 +3,16 @@
 // /enterprise/grc/index.ts
 // ============================================================================
 
-export * from "./AuditEngine";
-export * from "./AuditRecord";
 export * from "./ComplianceEngine";
-export * from "./ComplianceFramework";
-export * from "./EvidenceRepository";
-export * from "./ExceptionTrackingEngine";
-export * from "./GovernanceDashboardEngine";
-export * from "./GRCOrchestrator";
-export * from "./InternalControl";
+export * from "./ContractLifecycleEngine";
+export * from "./EnterpriseRiskManagementEngine";
+export * from "./EthicsManagementEngine";
+export * from "./GovernanceEngine";
+export * from "./GRCOperationsOrchestrator";
+export * from "./InternalAuditEngine";
+export * from "./LegalCase";
+export * from "./LegalCaseManagementEngine";
 export * from "./Policy";
-export * from "./RegulatoryReportingEngine";
-export * from "./RiskEngine";
-export * from "./RiskRecord";
+export * from "./PolicyManagementEngine";
+export * from "./RecordsManagementEngine";
+export * from "./Risk";

@@ -9,12 +9,10 @@ export interface ElectronicHealthRecord{
 
     patientId:string;
 
-    encounterId:string;
+    allergies:string[];
 
-    diagnosis:string[];
+    diagnoses:string[];
 
     medications:string[];
-
-    allergies:string[];
 
 }

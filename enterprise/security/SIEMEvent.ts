@@ -1,5 +1,5 @@
 // ============================================================================
-// ENTERPRISE CORE EC-007
+// ENTERPRISE CORE EC-052
 // FILE:
 // /enterprise/security/SIEMEvent.ts
 // ============================================================================
@@ -10,12 +10,10 @@ export interface SIEMEvent{
 
     source:string;
 
-    severity:string;
+    severity:"LOW"|"MEDIUM"|"HIGH"|"CRITICAL";
 
-    category:string;
+    timestamp:string;
 
-    message:string;
-
-    timestamp:number;
+    status:string;
 
 }

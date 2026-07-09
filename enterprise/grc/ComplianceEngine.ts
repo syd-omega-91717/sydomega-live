@@ -7,13 +7,13 @@ export class ComplianceEngine{
 
     evaluate(
 
-        framework:string
+        regulationId:string
 
     ){
 
         return{
 
-            framework,
+            regulationId,
 
             compliant:true
 

@@ -3,17 +3,19 @@
 // /enterprise/manufacturing/DigitalFactoryTwinEngine.ts
 // ============================================================================
 
+import { DigitalFactory } from "./DigitalFactory";
+
 export class DigitalFactoryTwinEngine{
 
     synchronize(
 
-        factoryId:string
+        factory:DigitalFactory
 
     ){
 
         return{
 
-            factoryId,
+            factory,
 
             synchronized:true
 

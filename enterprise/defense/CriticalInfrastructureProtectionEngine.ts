@@ -3,21 +3,19 @@
 // /enterprise/defense/CriticalInfrastructureProtectionEngine.ts
 // ============================================================================
 
-import { CriticalInfrastructureAsset } from "./CriticalInfrastructureAsset";
-
 export class CriticalInfrastructureProtectionEngine{
 
-    monitor(
+    secure(
 
-        asset:CriticalInfrastructureAsset
+        infrastructureId:string
 
     ){
 
         return{
 
-            asset,
+            infrastructureId,
 
-            protected:true
+            secured:true
 
         };
 

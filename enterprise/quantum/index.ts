@@ -3,16 +3,17 @@
 // /enterprise/quantum/index.ts
 // ============================================================================
 
-export * from "./HybridCryptographyEngine";
-export * from "./LatticeSignatureEngine";
-export * from "./PostQuantumCryptographyEngine";
-export * from "./PostQuantumKey";
-export * from "./PostQuantumKeyManager";
+export * from "./DigitalResearchLaboratory";
+export * from "./DistributedComputingEngine";
+export * from "./HPCCluster";
+export * from "./HPCClusterEngine";
+export * from "./MathematicalAnalyticsEngine";
+export * from "./OptimizationEngine";
 export * from "./QuantumCircuit";
+export * from "./QuantumCircuitEngine";
 export * from "./QuantumJob";
-export * from "./QuantumOptimizationEngine";
-export * from "./QuantumOrchestrator";
-export * from "./QuantumRandomEngine";
-export * from "./QuantumRuntime";
-export * from "./QuantumSecurityEngine";
-export * from "./QuantumSimulatorEngine";
+export * from "./QuantumJobEngine";
+export * from "./QuantumScientificOrchestrator";
+export * from "./ScientificWorkflowEngine";
+export * from "./SimulationEngine";
+export * from "./SimulationModel";

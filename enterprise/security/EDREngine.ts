@@ -5,17 +5,17 @@
 
 export class EDREngine{
 
-    inspect(
+    isolateEndpoint(
 
-        endpoint:string
+        endpointId:string
 
     ){
 
         return{
 
-            endpoint,
+            endpointId,
 
-            compromised:false
+            isolated:true
 
         };
 

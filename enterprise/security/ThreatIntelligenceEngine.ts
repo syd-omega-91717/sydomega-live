@@ -7,7 +7,7 @@ import { ThreatIndicator } from "./ThreatIndicator";
 
 export class ThreatIntelligenceEngine{
 
-    analyze(
+    ingest(
 
         indicator:ThreatIndicator
 
@@ -17,9 +17,7 @@ export class ThreatIntelligenceEngine{
 
             indicator,
 
-            malicious:
-
-            indicator.confidence>0.80
+            indexed:true
 
         };
 

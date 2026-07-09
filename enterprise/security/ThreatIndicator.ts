@@ -13,6 +13,6 @@ export interface ThreatIndicator{
 
     confidence:number;
 
-    source:string;
+    active:boolean;
 
 }

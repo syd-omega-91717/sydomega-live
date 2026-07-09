@@ -3,13 +3,11 @@
 // /enterprise/defense/BorderSecurityEngine.ts
 // ============================================================================
 
-import { BorderCheckpoint } from "./BorderCheckpoint";
-
 export class BorderSecurityEngine{
 
-    inspect(
+    monitor(
 
-        checkpoint:BorderCheckpoint
+        checkpoint:string
 
     ){
 
@@ -17,7 +15,7 @@ export class BorderSecurityEngine{
 
             checkpoint,
 
-            inspectionCompleted:true
+            monitored:true
 
         };
 

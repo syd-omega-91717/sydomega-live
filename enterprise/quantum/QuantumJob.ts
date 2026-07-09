@@ -1,5 +1,5 @@
 // ============================================================================
-// ENTERPRISE CORE EC-014
+// ENTERPRISE CORE EC-029
 // FILE:
 // /enterprise/quantum/QuantumJob.ts
 // ============================================================================
@@ -8,12 +8,12 @@ export interface QuantumJob{
 
     id:string;
 
-    algorithm:string;
+    provider:string;
 
     backend:string;
 
-    status:string;
+    algorithm:string;
 
-    createdAt:number;
+    status:string;
 
 }

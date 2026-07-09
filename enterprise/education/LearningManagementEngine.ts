@@ -3,29 +3,25 @@
 // /enterprise/education/LearningManagementEngine.ts
 // ============================================================================
 
-import { Course } from "./Course";
-
 export class LearningManagementEngine{
 
-    private readonly courses=
+    enroll(
 
-    new Map<string,Course>();
+        studentId:string,
 
-    publish(
-
-        course:Course
+        courseId:string
 
     ){
 
-        course.published=true;
+        return{
 
-        this.courses.set(course.id,course);
+            studentId,
 
-    }
+            courseId,
 
-    list(){
+            enrolled:true
 
-        return [...this.courses.values()];
+        };
 
     }
 

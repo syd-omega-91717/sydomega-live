@@ -3,21 +3,21 @@
 // /enterprise/defense/ThreatIntelligenceEngine.ts
 // ============================================================================
 
+import { Threat } from "./Threat";
+
 export class ThreatIntelligenceEngine{
 
-    evaluate(
+    analyze(
 
-        threatId:string
+        threat:Threat
 
     ){
 
         return{
 
-            threatId,
+            threat,
 
-            score:0,
-
-            classified:true
+            analyzed:true
 
         };
 

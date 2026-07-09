@@ -1,5 +1,5 @@
 // ============================================================================
-// ENTERPRISE CORE EC-017
+// ENTERPRISE CORE EC-043
 // FILE:
 // /enterprise/grc/Policy.ts
 // ============================================================================
@@ -8,14 +8,12 @@ export interface Policy{
 
     id:string;
 
-    name:string;
+    title:string;
 
     version:string;
 
     owner:string;
 
     status:string;
-
-    effectiveDate:number;
 
 }

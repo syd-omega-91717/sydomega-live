@@ -5,7 +5,7 @@
 
 export class PredictiveMaintenanceEngine{
 
-    analyze(
+    forecast(
 
         assetId:string
 

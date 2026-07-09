@@ -1,37 +1,106 @@
-# ============================================================================
-# FILE:
-# /.github/workflows/enterprise-ci.yml
-# NEW FILE
-# ============================================================================
+============================================================================
+FILE:
+enterprise-ci.yml
+
+LOCATION:
+sydomega-live-main/.github/workflows/enterprise-ci.yml
+
+ACTION:
+REPLACE THE ENTIRE FILE
+============================================================================
 
 name: Enterprise CI
 
 on:
   push:
+    branches:
+      - main
+      - master
+      - develop
+      - "release/**"
+
   pull_request:
+    branches:
+      - "**"
+
+  workflow_dispatch:
+
+concurrency:
+  group: enterprise-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
 
   validate:
 
+    name: Validate Repository
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        node-version: [20]
+
     steps:
 
-      - Checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - Install Dependencies
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
 
-      - Static Analysis
+      - name: Detect package.json
+        id: detect
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "manager=npm" >> $GITHUB_OUTPUT
+          elif [ -f pnpm-lock.yaml ]; then
+            echo "manager=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "manager=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "manager=none" >> $GITHUB_OUTPUT
+          fi
 
-      - Unit Tests
+      - name: Install Dependencies
+        if: steps.detect.outputs.manager == 'npm'
+        run: npm ci
 
-      - Integration Tests
+      - name: Lint
+        if: steps.detect.outputs.manager == 'npm'
+        run: npm run lint --if-present
 
-      - Security Scan
+      - name: Type Check
+        if: steps.detect.outputs.manager == 'npm'
+        run: npm run typecheck --if-present
 
-      - Build Containers
+      - name: Run Tests
+        if: steps.detect.outputs.manager == 'npm'
+        run: npm test --if-present
 
-      - SBOM Generation
+      - name: Build
+        if: steps.detect.outputs.manager == 'npm'
+        run: npm run build --if-present
 
-      - Artifact Signing
-
-      - Publish Registry
+      - name: Upload Build Artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: enterprise-build
+          path: |
+            dist
+            build
+            .next
+          if-no-files-found: ignore

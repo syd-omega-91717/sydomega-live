@@ -3,21 +3,23 @@
 // /enterprise/education/CertificationEngine.ts
 // ============================================================================
 
-import { Certificate } from "./Certificate";
-
 export class CertificationEngine{
 
     issue(
 
-        certificate:Certificate
+        studentId:string,
+
+        certificateId:string
 
     ){
 
         return{
 
-            issued:true,
+            studentId,
 
-            certificate
+            certificateId,
+
+            issued:true
 
         };
 

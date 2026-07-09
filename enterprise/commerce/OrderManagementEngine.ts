@@ -3,19 +3,23 @@
 // /enterprise/commerce/OrderManagementEngine.ts
 // ============================================================================
 
-import { Order } from "./Order";
+import { SalesOrder } from "./SalesOrder";
 
 export class OrderManagementEngine{
 
     process(
 
-        order:Order
+        order:SalesOrder
 
     ){
 
-        order.status="PROCESSING";
+        return{
 
-        return order;
+            order,
+
+            processed:true
+
+        };
 
     }
 

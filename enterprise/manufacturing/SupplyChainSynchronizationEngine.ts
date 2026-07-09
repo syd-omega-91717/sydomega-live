@@ -7,13 +7,13 @@ export class SupplyChainSynchronizationEngine{
 
     synchronize(
 
-        supplier:string
+        supplierId:string
 
     ){
 
         return{
 
-            supplier,
+            supplierId,
 
             synchronized:true
 

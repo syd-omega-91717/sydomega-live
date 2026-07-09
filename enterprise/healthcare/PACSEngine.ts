@@ -3,21 +3,19 @@
 // /enterprise/healthcare/PACSEngine.ts
 // ============================================================================
 
-import { DICOMStudy } from "./DICOMStudy";
-
 export class PACSEngine{
 
     archive(
 
-        study:DICOMStudy
+        studyId:string
 
     ){
 
         return{
 
-            archived:true,
+            studyId,
 
-            study
+            archived:true
 
         };
 

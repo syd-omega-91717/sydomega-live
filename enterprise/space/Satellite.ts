@@ -1,5 +1,5 @@
 // ============================================================================
-// ENTERPRISE CORE EC-015
+// ENTERPRISE CORE EC-030
 // FILE:
 // /enterprise/space/Satellite.ts
 // ============================================================================
@@ -10,12 +10,10 @@ export interface Satellite{
 
     name:string;
 
-    constellation:string;
+    noradId:number;
 
     orbit:string;
 
     status:string;
-
-    lastContact:number;
 
 }

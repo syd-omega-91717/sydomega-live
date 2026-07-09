@@ -15,9 +15,9 @@ export class SIEMEngine{
 
         return{
 
-            accepted:true,
+            event,
 
-            event
+            correlated:true
 
         };
 

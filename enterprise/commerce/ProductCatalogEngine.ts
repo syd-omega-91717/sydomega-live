@@ -7,29 +7,19 @@ import { Product } from "./Product";
 
 export class ProductCatalogEngine{
 
-    private readonly catalog=
-
-    new Map<string,Product>();
-
-    add(
+    register(
 
         product:Product
 
     ){
 
-        this.catalog.set(
+        return{
 
-            product.id,
+            product,
 
-            product
+            indexed:true
 
-        );
-
-    }
-
-    list(){
-
-        return [...this.catalog.values()];
+        };
 
     }
 

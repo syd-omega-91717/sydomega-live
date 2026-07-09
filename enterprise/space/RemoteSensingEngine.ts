@@ -5,17 +5,17 @@
 
 export class RemoteSensingEngine{
 
-    analyze(
+    acquire(
 
-        target:string
+        region:string
 
     ){
 
         return{
 
-            target,
+            region,
 
-            processed:true
+            imageryAvailable:true
 
         };
 

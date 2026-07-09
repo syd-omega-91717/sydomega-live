@@ -1,40 +1,127 @@
-# ---- SYD OMEGA 91717 -- keep sydomega-live STATIC-ONLY ----
-# The Vercel project serves the repo root as a static site. Never commit the
-# monorepo/backend here again -- it exposes source publicly and breaks builds.
-backend/
-packages/
-services/
-apps/
-shared/
-infra/
-prisma/
-docker/
-nginx/
-k8s/
-database/
-config/
+============================================================================
+FILE:
+.gitignore
+
+LOCATION:
+sydomega-live-main/.gitignore
+
+ACTION:
+REPLACE THE ENTIRE FILE
+============================================================================
+
+# ============================================================================
+# Ω SYD OMEGA 91717
+# Production .gitignore
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Dependencies
+# ----------------------------------------------------------------------------
+
 node_modules/
+.pnpm-store/
+.npm/
+.yarn/
 .turbo/
+
+# ----------------------------------------------------------------------------
+# Build
+# ----------------------------------------------------------------------------
+
 dist/
 build/
-# server/build files
-*.ts
-*.tsx
-*.py
-*.sol
-turbo.json
-pnpm-workspace.yaml
-package.json
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-tsconfig*.json
-docker-compose*.yml
-Dockerfile
-# secrets -- must NEVER be in a public static repo
+coverage/
+.next/
+out/
+.cache/
+storybook-static/
+
+# ----------------------------------------------------------------------------
+# Logs
+# ----------------------------------------------------------------------------
+
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ----------------------------------------------------------------------------
+# Environment
+# ----------------------------------------------------------------------------
+
 .env
 .env.*
-*.key
-*.pem
-# private documents
-*.docx
+!.env.example
+
+# ----------------------------------------------------------------------------
+# IDE
+# ----------------------------------------------------------------------------
+
+.vscode/
+.idea/
+*.iml
+
+# ----------------------------------------------------------------------------
+# OS
+# ----------------------------------------------------------------------------
+
+.DS_Store
+Thumbs.db
+
+# ----------------------------------------------------------------------------
+# Temporary
+# ----------------------------------------------------------------------------
+
+tmp/
+temp/
+*.tmp
+
+# ----------------------------------------------------------------------------
+# Testing
+# ----------------------------------------------------------------------------
+
+playwright-report/
+test-results/
+
+# ----------------------------------------------------------------------------
+# Runtime
+# ----------------------------------------------------------------------------
+
+*.pid
+*.seed
+
+# ----------------------------------------------------------------------------
+# Keep Source Code
+# ----------------------------------------------------------------------------
+
+!backend/**
+!frontend/**
+!apps/**
+!packages/**
+!services/**
+!shared/**
+!prisma/**
+!infra/**
+!config/**
+!database/**
+!docker/**
+!k8s/**
+
+# ----------------------------------------------------------------------------
+# Keep Config
+# ----------------------------------------------------------------------------
+
+!package.json
+!package-lock.json
+!pnpm-lock.yaml
+!yarn.lock
+!turbo.json
+!pnpm-workspace.yaml
+!tsconfig.json
+!tsconfig.base.json
+!vite.config.*
+!next.config.*
+!eslint.config.*
+!prettier.config.*

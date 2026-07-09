@@ -3,35 +3,21 @@
 // /enterprise/automation/RPAEngine.ts
 // ============================================================================
 
-import { Robot } from "./Robot";
+import { RobotProcess } from "./RobotProcess";
 
 export class RPAEngine{
 
-    deploy(
-
-        robot:Robot
-
-    ){
-
-        robot.status="DEPLOYED";
-
-        return robot;
-
-    }
-
     execute(
 
-        robotId:string
+        process:RobotProcess
 
     ){
 
         return{
 
-            robotId,
+            process,
 
-            executed:true,
-
-            timestamp:Date.now()
+            completed:true
 
         };
 

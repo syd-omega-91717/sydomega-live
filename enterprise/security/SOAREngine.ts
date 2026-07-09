@@ -7,17 +7,15 @@ export class SOAREngine{
 
     executePlaybook(
 
-        playbook:string
+        playbookId:string
 
     ){
 
         return{
 
-            playbook,
+            playbookId,
 
-            executed:true,
-
-            timestamp:Date.now()
+            completed:true
 
         };
 

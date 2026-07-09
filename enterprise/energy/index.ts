@@ -3,16 +3,16 @@
 // /enterprise/energy/index.ts
 // ============================================================================
 
-export * from "./CarbonAccountingEngine";
-export * from "./CarbonRecord";
-export * from "./DemandForecastEngine";
-export * from "./EnergyAsset";
-export * from "./EnergyTradingEngine";
-export * from "./ESGManagementEngine";
-export * from "./GridOptimizationEngine";
+export * from "./CarbonManagementEngine";
+export * from "./ClimateIntelligenceEngine";
+export * from "./EnergyUtilitiesOperationsOrchestrator";
+export * from "./EnvironmentalMonitoringEngine";
+export * from "./EnvironmentalSensor";
+export * from "./OilGasOperationsEngine";
+export * from "./PowerGenerationEngine";
+export * from "./PowerPlant";
 export * from "./RenewableEnergyEngine";
-export * from "./RenewablePlant";
-export * from "./SmartEnergyEngine";
-export * from "./SustainabilityAnalyticsEngine";
-export * from "./SustainabilityOrchestrator";
-export * from "./UtilityManagementEngine";
+export * from "./SmartGridEngine";
+export * from "./UtilityAsset";
+export * from "./UtilityAssetManagementEngine";
+export * from "./WaterNetworkEngine";

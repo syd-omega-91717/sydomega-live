@@ -3,52 +3,52 @@
 // /enterprise/space/SpaceOperationsOrchestrator.ts
 // ============================================================================
 
+import { DeepSpaceMissionControlEngine } from "./DeepSpaceMissionControlEngine";
 import { EarthObservationEngine } from "./EarthObservationEngine";
-import { GEOINTEngine } from "./GEOINTEngine";
-import { GlobalInfrastructureMonitoringEngine } from "./GlobalInfrastructureMonitoringEngine";
-import { GNSSEngine } from "./GNSSEngine";
-import { OrbitalAssetManager } from "./OrbitalAssetManager";
+import { GroundStationEngine } from "./GroundStationEngine";
+import { MissionPlanningEngine } from "./MissionPlanningEngine";
+import { OrbitalMechanicsEngine } from "./OrbitalMechanicsEngine";
 import { RemoteSensingEngine } from "./RemoteSensingEngine";
-import { SatelliteTelemetryEngine } from "./SatelliteTelemetryEngine";
-import { SIGINTEngine } from "./SIGINTEngine";
-import { SpaceCommunicationEngine } from "./SpaceCommunicationEngine";
+import { SatelliteFleetEngine } from "./SatelliteFleetEngine";
+import { SpaceSituationalAwarenessEngine } from "./SpaceSituationalAwarenessEngine";
+import { TelemetryEngine } from "./TelemetryEngine";
 
 export class SpaceOperationsOrchestrator{
 
+    readonly fleet=
+
+    new SatelliteFleetEngine();
+
+    readonly missions=
+
+    new MissionPlanningEngine();
+
+    readonly orbital=
+
+    new OrbitalMechanicsEngine();
+
+    readonly ground=
+
+    new GroundStationEngine();
+
     readonly telemetry=
 
-    new SatelliteTelemetryEngine();
+    new TelemetryEngine();
 
-    readonly assets=
-
-    new OrbitalAssetManager();
-
-    readonly gnss=
-
-    new GNSSEngine();
-
-    readonly earthObservation=
-
-    new EarthObservationEngine();
-
-    readonly remoteSensing=
+    readonly sensing=
 
     new RemoteSensingEngine();
 
-    readonly geoint=
+    readonly observation=
 
-    new GEOINTEngine();
+    new EarthObservationEngine();
 
-    readonly sigint=
+    readonly awareness=
 
-    new SIGINTEngine();
+    new SpaceSituationalAwarenessEngine();
 
-    readonly communications=
+    readonly deepSpace=
 
-    new SpaceCommunicationEngine();
-
-    readonly monitoring=
-
-    new GlobalInfrastructureMonitoringEngine();
+    new DeepSpaceMissionControlEngine();
 
 }

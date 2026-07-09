@@ -3,19 +3,16 @@
 // /enterprise/blockchain/index.ts
 // ============================================================================
 
-export * from "./BlockchainEventEngine";
-export * from "./BlockchainWallet";
-export * from "./CredentialEngine";
-export * from "./CrossChainBridge";
-export * from "./CryptographicVault";
-export * from "./DecentralizedIdentity";
-export * from "./DIDRegistry";
-export * from "./NFTAsset";
-export * from "./NFTRegistry";
-export * from "./SmartContractDefinition";
-export * from "./SmartContractRegistry";
-export * from "./SovereignIdentityRuntime";
+export * from "./BlockchainNetwork";
+export * from "./BlockchainOperationsOrchestrator";
+export * from "./CrossChainBridgeEngine";
+export * from "./CustodyWalletEngine";
+export * from "./DAOGovernanceEngine";
+export * from "./DigitalAsset";
+export * from "./DigitalAssetRegistryEngine";
+export * from "./MultiChainEngine";
+export * from "./NFTInfrastructureEngine";
+export * from "./OnChainAnalyticsEngine";
+export * from "./SmartContract";
+export * from "./SmartContractLifecycleEngine";
 export * from "./TokenizationEngine";
-export * from "./TokenizedAsset";
-export * from "./VerifiableCredential";
-export * from "./WalletManager";

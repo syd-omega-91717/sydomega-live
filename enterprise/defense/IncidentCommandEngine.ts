@@ -3,19 +3,21 @@
 // /enterprise/defense/IncidentCommandEngine.ts
 // ============================================================================
 
+import { Incident } from "./Incident";
+
 export class IncidentCommandEngine{
 
-    deploy(
+    coordinate(
 
-        incidentId:string
+        incident:Incident
 
     ){
 
         return{
 
-            incidentId,
+            incident,
 
-            deployed:true
+            coordinated:true
 
         };
 

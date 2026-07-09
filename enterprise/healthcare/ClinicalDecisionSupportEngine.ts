@@ -5,7 +5,7 @@
 
 export class ClinicalDecisionSupportEngine{
 
-    evaluate(
+    recommend(
 
         patientId:string
 
@@ -15,7 +15,7 @@ export class ClinicalDecisionSupportEngine{
 
             patientId,
 
-            recommendations:[]
+            recommendationsGenerated:true
 
         };
 

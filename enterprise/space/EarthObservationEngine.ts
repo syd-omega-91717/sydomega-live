@@ -5,17 +5,17 @@
 
 export class EarthObservationEngine{
 
-    capture(
+    observe(
 
-        region:string
+        area:string
 
     ){
 
         return{
 
-            region,
+            area,
 
-            imageReady:true
+            observationCompleted:true
 
         };
 

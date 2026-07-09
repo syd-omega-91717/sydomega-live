@@ -1,5 +1,5 @@
 // ============================================================================
-// ENTERPRISE CORE EC-019
+// ENTERPRISE CORE EC-031
 // FILE:
 // /enterprise/healthcare/Patient.ts
 // ============================================================================
@@ -8,14 +8,12 @@ export interface Patient{
 
     id:string;
 
-    mrn:string;
+    medicalRecordNumber:string;
 
-    firstName:string;
+    fullName:string;
 
-    lastName:string;
+    dateOfBirth:string;
 
-    birthDate:string;
-
-    gender:string;
+    bloodType:string;
 
 }

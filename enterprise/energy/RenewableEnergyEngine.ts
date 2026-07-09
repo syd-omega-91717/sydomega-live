@@ -5,17 +5,17 @@
 
 export class RenewableEnergyEngine{
 
-    dispatch(
+    optimize(
 
-        plantId:string
+        renewableSiteId:string
 
     ){
 
         return{
 
-            plantId,
+            renewableSiteId,
 
-            dispatched:true
+            optimized:true
 
         };
 

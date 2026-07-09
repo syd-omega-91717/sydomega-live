@@ -5,15 +5,17 @@
 
 export class AcademicAnalyticsEngine{
 
-    summarize(){
+    analyze(
+
+        institutionId:string
+
+    ){
 
         return{
 
-            learners:0,
+            institutionId,
 
-            completions:0,
-
-            certifications:0
+            analyticsGenerated:true
 
         };
 

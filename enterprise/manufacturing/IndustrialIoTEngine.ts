@@ -3,33 +3,23 @@
 // /enterprise/manufacturing/IndustrialIoTEngine.ts
 // ============================================================================
 
-import { IndustrialDevice } from "./IndustrialDevice";
+import { IndustrialAsset } from "./IndustrialAsset";
 
 export class IndustrialIoTEngine{
 
-    private readonly devices=
+    connect(
 
-    new Map<string,IndustrialDevice>();
-
-    register(
-
-        device:IndustrialDevice
+        asset:IndustrialAsset
 
     ){
 
-        this.devices.set(
+        return{
 
-            device.id,
+            asset,
 
-            device
+            connected:true
 
-        );
-
-    }
-
-    devicesList(){
-
-        return [...this.devices.values()];
+        };
 
     }
 

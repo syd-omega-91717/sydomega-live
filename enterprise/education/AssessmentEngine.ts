@@ -3,25 +3,19 @@
 // /enterprise/education/AssessmentEngine.ts
 // ============================================================================
 
-import { Assessment } from "./Assessment";
-
 export class AssessmentEngine{
 
     evaluate(
 
-        assessment:Assessment,
-
-        score:number
+        assessmentId:string
 
     ){
 
         return{
 
-            assessmentId:assessment.id,
+            assessmentId,
 
-            score,
-
-            passed:score>=assessment.passingScore
+            evaluated:true
 
         };
 

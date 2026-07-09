@@ -3,16 +3,16 @@
 // /enterprise/intelligence/index.ts
 // ============================================================================
 
-export * from "./AnomalyDetectionEngine";
-export * from "./Dashboard";
-export * from "./DashboardEngine";
-export * from "./DataWarehouseConnector";
-export * from "./DecisionEngine";
-export * from "./EnterpriseIntelligenceRuntime";
-export * from "./ExecutiveReportingEngine";
-export * from "./ForecastEngine";
-export * from "./KPI";
-export * from "./KPIEngine";
-export * from "./OLAPEngine";
-export * from "./ScorecardEngine";
-export * from "./StrategicPlanningEngine";
+export * from "./AIAgent";
+export * from "./AIGovernanceEngine";
+export * from "./AutonomousEnterpriseIntelligenceOrchestrator";
+export * from "./AutonomousTaskPlanningEngine";
+export * from "./CognitiveReasoningEngine";
+export * from "./ContinuousLearningEngine";
+export * from "./Goal";
+export * from "./GoalDecompositionEngine";
+export * from "./HumanAICollaborationEngine";
+export * from "./KnowledgeGraphEngine";
+export * from "./KnowledgeNode";
+export * from "./MultiAgentCoordinationEngine";
+export * from "./MultiModelAIOrchestrationEngine";

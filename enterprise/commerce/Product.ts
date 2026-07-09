@@ -1,5 +1,5 @@
 // ============================================================================
-// ENTERPRISE CORE EC-026
+// ENTERPRISE CORE EC-039
 // FILE:
 // /enterprise/commerce/Product.ts
 // ============================================================================
@@ -15,8 +15,6 @@ export interface Product{
     category:string;
 
     price:number;
-
-    currency:string;
 
     active:boolean;
 

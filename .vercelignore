@@ -1,65 +1,42 @@
+============================================================================
+FILE:
+.vercelignore
+
+LOCATION:
+sydomega-live-main/.vercelignore
+
+ACTION:
+REPLACE THE ENTIRE FILE
+============================================================================
+
 # ============================================================================
-# SYD OMEGA 91717 -- .vercelignore
-# Keeps the monorepo + all source files IN your Git repo (nothing is deleted)
-# but EXCLUDES them from what Vercel uploads and serves. Result: none of these
-# files exist on sydomega.com, so they cannot be downloaded, streamed, or read.
-# Your static site (*.html, *.js, *.css, manifest.json, images) deploys normally.
-# Rename this file to  .vercelignore  in your repo root.
+# Ω SYD OMEGA 91717
+# Production Vercel Ignore
 # ============================================================================
 
-# ---- the monorepo application + service code (kept in repo, never served) ----
-apps/
+backend/
+packages/
 services/
 shared/
 infra/
-prisma/
-scripts/
-docker/
-nginx/
-k8s/
-backend/
-packages/
 database/
-config/
-sql/
+docker/
+k8s/
+prisma/
 
-# ---- all server / build / contract / config source (not part of a static site) ----
-*.ts
-*.tsx
-*.mts
-*.cts
-*.py
-*.sol
-*.rs
-*.go
-tsconfig*.json
-turbo.json
-pnpm-workspace.yaml
-pnpm-lock.yaml
-package-lock.json
-yarn.lock
-docker-compose*.yml
-Dockerfile
-.dockerignore
+coverage/
+node_modules/
+dist/
+build/
 
-# ---- secrets (must never be uploaded) ----
+.github/
+.vscode/
+.idea/
+
+*.md
+*.doc
+*.docx
+*.pdf
+
 .env
 .env.*
-*.key
-*.pem
-
-# ---- private documents ----
-*.docx
-*.xlsx
-*.pptx
-
-# ---- the exact hijack file + any stray typescript at the root ----
-download.ts
-omega.ts
-core_engine.py
-sydomega-live.py
-blockchain_ledger.sol
-
-# NOTE: this does NOT touch node_modules handling or your static files.
-# If you ever build the monorepo, do it in a SEPARATE Vercel project/repo;
-# this ignore keeps the current static site clean and un-hijackable.

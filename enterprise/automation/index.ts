@@ -3,16 +3,16 @@
 // /enterprise/automation/index.ts
 // ============================================================================
 
-export * from "./AutomationJob";
-export * from "./AutomationMonitoringEngine";
-export * from "./AutomationRuntime";
-export * from "./AutomationScheduler";
-export * from "./AutomationTask";
-export * from "./DigitalWorkerEngine";
-export * from "./DocumentProcessingEngine";
-export * from "./OCREngine";
-export * from "./Robot";
-export * from "./RobotOrchestrator";
+export * from "./AIDecisionAutomationEngine";
+export * from "./BPMNWorkflowEngine";
+export * from "./BusinessRule";
+export * from "./BusinessRulesEngine";
+export * from "./EventAutomationEngine";
+export * from "./HyperautomationOperationsOrchestrator";
+export * from "./IntelligentDocumentProcessingEngine";
+export * from "./LowCodeAutomationEngine";
+export * from "./ProcessMiningEngine";
+export * from "./ProcessPerformanceAnalyticsEngine";
+export * from "./RobotProcess";
 export * from "./RPAEngine";
-export * from "./UnattendedExecutionEngine";
-export * from "./WorkflowBotEngine";
+export * from "./Workflow";

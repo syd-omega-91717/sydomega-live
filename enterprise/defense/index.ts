@@ -3,17 +3,16 @@
 // /enterprise/defense/index.ts
 // ============================================================================
 
-export * from "./BorderCheckpoint";
+export * from "./Asset";
 export * from "./BorderSecurityEngine";
-export * from "./CriticalInfrastructureAsset";
+export * from "./CommandControlEngine";
 export * from "./CriticalInfrastructureProtectionEngine";
-export * from "./EmergencyOperationsCenterEngine";
-export * from "./GeospatialIntelligenceEngine";
-export * from "./HomelandSecurityEngine";
+export * from "./CyberDefenseEngine";
+export * from "./DefenseSecurityOperationsOrchestrator";
+export * from "./EmergencyCommunicationsEngine";
+export * from "./Incident";
 export * from "./IncidentCommandEngine";
-export * from "./IntelligenceFusionCenterEngine";
-export * from "./NationalCommandCenter";
-export * from "./NationalCommandEngine";
-export * from "./NationalSecurityOrchestrator";
-export * from "./SecurityIncident";
+export * from "./IntelligenceFusionEngine";
+export * from "./StrategicIntelligenceAnalyticsEngine";
+export * from "./Threat";
 export * from "./ThreatIntelligenceEngine";

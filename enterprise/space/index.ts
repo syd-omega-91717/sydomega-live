@@ -3,16 +3,16 @@
 // /enterprise/space/index.ts
 // ============================================================================
 
+export * from "./DeepSpaceMissionControlEngine";
 export * from "./EarthObservationEngine";
-export * from "./GEOINTEngine";
-export * from "./GlobalInfrastructureMonitoringEngine";
-export * from "./GNSSEngine";
-export * from "./OrbitalAsset";
-export * from "./OrbitalAssetManager";
+export * from "./GroundStation";
+export * from "./GroundStationEngine";
+export * from "./Mission";
+export * from "./MissionPlanningEngine";
+export * from "./OrbitalMechanicsEngine";
 export * from "./RemoteSensingEngine";
 export * from "./Satellite";
-export * from "./SatelliteTelemetryEngine";
-export * from "./SIGINTEngine";
-export * from "./SpaceCommunicationEngine";
+export * from "./SatelliteFleetEngine";
 export * from "./SpaceOperationsOrchestrator";
-export * from "./TelemetryPacket";
+export * from "./SpaceSituationalAwarenessEngine";
+export * from "./TelemetryEngine";

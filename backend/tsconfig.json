@@ -4,17 +4,55 @@
 // ============================================================================
 
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
 
     "lib": [
       "ES2022"
     ],
 
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
     "rootDir": "./src",
     "outDir": "./dist",
+
+    "baseUrl": ".",
+
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@config/*": [
+        "src/config/*"
+      ],
+      "@controllers/*": [
+        "src/controllers/*"
+      ],
+      "@routes/*": [
+        "src/routes/*"
+      ],
+      "@middleware/*": [
+        "src/middleware/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@repositories/*": [
+        "src/repositories/*"
+      ],
+      "@models/*": [
+        "src/models/*"
+      ],
+      "@database/*": [
+        "src/database/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ]
+    },
 
     "strict": true,
 
@@ -25,9 +63,8 @@
     "strictPropertyInitialization": true,
 
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
 
     "allowJs": false,
 
@@ -35,7 +72,11 @@
 
     "isolatedModules": true,
 
+    "verbatimModuleSyntax": true,
+
     "esModuleInterop": true,
+
+    "allowSyntheticDefaultImports": true,
 
     "forceConsistentCasingInFileNames": true,
 
@@ -43,7 +84,13 @@
 
     "declaration": true,
 
+    "declarationMap": true,
+
     "sourceMap": true,
+
+    "incremental": true,
+
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
 
     "types": [
       "node"
@@ -56,6 +103,10 @@
 
   "exclude": [
     "node_modules",
+    "dist",
+    "coverage"
+  ]
+}
     "dist"
   ]
 }

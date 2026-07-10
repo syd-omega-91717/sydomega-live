@@ -1,32 +1,96 @@
 {
-  "name": "sydomega-backend",
+  "name": "@sydomega/backend",
   "version": "2.0.0",
+  "description": "Ω SYD OMEGA 91717 Enterprise Backend",
   "private": true,
   "type": "module",
-  "description": "Ω SYD OMEGA 91717 Enterprise Backend",
-  "main": "server.js",
-  "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js",
-    "build": "echo \"Backend build completed\"",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "node --test"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.49.8",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "express-rate-limit": "^7.5.0",
-    "jsonwebtoken": "^9.0.2"
-  },
-  "devDependencies": {
-    "eslint": "^9.20.1",
-    "nodemon": "^3.1.9",
-    "typescript": "^5.7.3"
-  },
+
+  "main": "dist/server.js",
+
   "engines": {
-    "node": ">=20"
+    "node": ">=20.11.0",
+    "npm": ">=10"
+  },
+
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
+
+    "format": "prettier --write .",
+
+    "typecheck": "tsc --noEmit",
+
+    "test": "vitest",
+
+    "test:watch": "vitest --watch"
+  },
+
+  "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "@supabase/supabase-js": "^2.50.2",
+
+    "bcrypt": "^5.1.1",
+
+    "compression": "^1.8.0",
+
+    "cookie-parser": "^1.4.7",
+
+    "cors": "^2.8.5",
+
+    "dotenv": "^16.5.0",
+
+    "express": "^4.21.2",
+
+    "express-rate-limit": "^8.0.1",
+
+    "helmet": "^8.1.0",
+
+    "jsonwebtoken": "^9.0.2",
+
+    "morgan": "^1.10.0",
+
+    "redis": "^5.1.1",
+
+    "zod": "^3.25.76"
+  },
+
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+
+    "@types/cookie-parser": "^1.4.8",
+
+    "@types/cors": "^2.8.19",
+
+    "@types/express": "^5.0.3",
+
+    "@types/jsonwebtoken": "^9.0.10",
+
+    "@types/morgan": "^1.9.10",
+
+    "@types/node": "^24.0.15",
+
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+
+    "@typescript-eslint/parser": "^8.37.0",
+
+    "eslint": "^9.31.0",
+
+    "eslint-config-prettier": "^10.1.8",
+
+    "prettier": "^3.6.2",
+
+    "rimraf": "^6.0.1",
+
+    "tsx": "^4.20.3",
+
+    "typescript": "^5.8.3",
+
+    "vitest": "^3.2.4"
   }
 }

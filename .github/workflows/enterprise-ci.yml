@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: /.github/workflows/enterprise-ci.yml
+# FILE: .github/workflows/enterprise-ci.yml
 # Ω SYD OMEGA 91717
 # Enterprise Continuous Integration
 # ============================================================================
@@ -15,7 +15,9 @@ on:
 
   pull_request:
     branches:
-      - "**"
+      - main
+      - master
+      - develop
 
   workflow_dispatch:
 
@@ -23,7 +25,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: enterprise-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -36,7 +38,11 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [20.x]
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
 
@@ -49,33 +55,88 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
-      - name: Install Dependencies
+      - name: Detect Root Package
+        id: root
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
+          if [ -f package.json ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
           else
-            echo "No root package.json found."
+            echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Lint
+      - name: Install Root Dependencies
+        if: steps.root.outputs.exists == 'true'
+        run: npm ci
+
+      - name: Root Lint
+        if: steps.root.outputs.exists == 'true'
         run: npm run lint --if-present
 
-      - name: Type Check
+      - name: Root Typecheck
+        if: steps.root.outputs.exists == 'true'
         run: npm run typecheck --if-present
 
-      - name: Run Tests
+      - name: Root Tests
+        if: steps.root.outputs.exists == 'true'
         run: npm test --if-present
 
-      - name: Build
+      - name: Root Build
+        if: steps.root.outputs.exists == 'true'
         run: npm run build --if-present
 
-      - name: Upload Build
+      - name: Backend Dependencies
+        if: hashFiles('backend/package.json') != ''
+        working-directory: backend
+        run: npm ci
+
+      - name: Backend Lint
+        if: hashFiles('backend/package.json') != ''
+        working-directory: backend
+        run: npm run lint --if-present
+
+      - name: Backend Typecheck
+        if: hashFiles('backend/package.json') != ''
+        working-directory: backend
+        run: npm run typecheck --if-present
+
+      - name: Backend Tests
+        if: hashFiles('backend/package.json') != ''
+        working-directory: backend
+        run: npm test --if-present
+
+      - name: Backend Build
+        if: hashFiles('backend/package.json') != ''
+        working-directory: backend
+        run: npm run build --if-present
+
+      - name: Frontend Dependencies
+        if: hashFiles('frontend/package.json') != ''
+        working-directory: frontend
+        run: npm ci
+
+      - name: Frontend Lint
+        if: hashFiles('frontend/package.json') != ''
+        working-directory: frontend
+        run: npm run lint --if-present
+
+      - name: Frontend Typecheck
+        if: hashFiles('frontend/package.json') != ''
+        working-directory: frontend
+        run: npm run typecheck --if-present
+
+      - name: Frontend Build
+        if: hashFiles('frontend/package.json') != ''
+        working-directory: frontend
+        run: npm run build --if-present
+
+      - name: Upload Build Artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: sydomega-build
+          if-no-files-found: ignore
           path: |
+            backend/dist
+            frontend/dist
             dist
             build
-            .next
-          if-no-files-found: ignore

@@ -99,6 +99,8 @@
 (function(){if(!document.querySelector('script[data-omega-emblems]')){var s=document.createElement('script');s.src='/omega-emblems.js';s.setAttribute('data-omega-emblems','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== CONTENT MOTION -- count-up numbers, staggered reveals, tile glow (legible) ===== */
 (function(){if(!document.querySelector('script[data-omega-content]')){var s=document.createElement('script');s.src='/omega-content.js';s.setAttribute('data-omega-content','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== 9D ENGINE -- parallax, holographic glow, cinematic transitions, reactive audio ===== */
+(function(){if(!document.querySelector('script[data-omega-9d]')){var s=document.createElement('script');s.src='/omega-9d.js';s.setAttribute('data-omega-9d','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */
 (function(){if(!document.querySelector('script[data-omega-appearance]')){var s=document.createElement('script');s.src='/omega-appearance.js';s.setAttribute('data-omega-appearance','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== FEEDBACK WIDGET -- members leave comments + ratings ===== */

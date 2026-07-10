@@ -1,16 +1,38 @@
-import express from "express";
+// ============================================================================
+// FILE: backend/routes/profile.js
+// Ω SYD OMEGA 91717
+// User Profile Routes
+// ============================================================================
 
-const router=express.Router();
+import { Router } from "express";
 
-router.get("/",async(req,res)=>{
+import authenticate from "../middleware/auth.js";
 
-res.json({
+const router = Router();
 
-status:"success",
+router.get("/", authenticate, (req, res) => {
 
-module:"profile"
+    res.json({
+
+        success: true,
+
+        profile: req.user
+
+    });
 
 });
+
+router.put("/", authenticate, (req, res) => {
+
+    res.json({
+
+        success: true,
+
+        message: "Profile updated.",
+
+        data: req.body
+
+    });
 
 });
 

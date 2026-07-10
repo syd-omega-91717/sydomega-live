@@ -1,3 +1,9 @@
+// ============================================================================
+// FILE: backend/middleware/auth.js
+// Ω SYD OMEGA 91717
+// Enterprise JWT Authentication
+// ============================================================================
+
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 
@@ -11,27 +17,29 @@ export default function authenticate(req, res, next) {
 
             success: false,
 
-            message: "Missing Authorization Header"
+            message: "Authentication required."
 
         });
 
     }
 
-    const token = header.replace("Bearer ", "");
-
     try {
+
+        const token = header.replace("Bearer ", "");
 
         req.user = jwt.verify(token, env.JWT_SECRET);
 
         next();
 
-    } catch {
+    }
+
+    catch {
 
         return res.status(401).json({
 
             success: false,
 
-            message: "Invalid Token"
+            message: "Invalid token."
 
         });
 

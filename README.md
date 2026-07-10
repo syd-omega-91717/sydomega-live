@@ -1,124 +1,155 @@
-============================================================================
+# Ω SYD OMEGA 91717 Enterprise Platform
 
-FILE:
-README.md
+Enterprise-grade platform built with Next.js, Express, TypeScript, and modern web technologies.
 
-LOCATION:
-sydomega-live-main/README.md
-
-ACTION:
-REPLACE THE ENTIRE FILE
-============================================================================
-
-# Ω SYD OMEGA 91717
-
-Enterprise AI • Digital Civilization • Sovereign Platform
-
----
-
-## Overview
-
-Ω SYD OMEGA 91717 is a modular enterprise ecosystem combining:
-
-- Artificial Intelligence
-- Enterprise Management
-- Digital Twin
-- Blockchain
-- Knowledge Systems
-- Government Services
-- Smart Infrastructure
-- Automation
-- Analytics
-- Security
-
----
-
-## Core Technologies
-
-- React
-- TypeScript
-- Node.js
-- Express
-- Prisma
-- PostgreSQL
-- TailwindCSS
-- Framer Motion
-- Vite
-
----
-
-## Architecture
+## Project Structure
 
 ```
-Frontend
-    │
-API Gateway
-    │
-Enterprise Services
-    │
-AI Core
-    │
-Data Platform
+sydomega-live/
+├── backend/              # Express.js backend service
+│   ├── src/
+│   ├── dist/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── ...
+├── frontend/             # Next.js frontend application
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── ...
+├── package.json          # Root workspace configuration
+├── package-lock.json
+└── ...
 ```
 
----
+## Technology Stack
 
-## Enterprise Modules
+### Backend
+- **Runtime**: Node.js 20+
+- **Framework**: Express.js
+- **Language**: TypeScript 5
+- **Database**: PostgreSQL (via Prisma)
+- **Auth**: JWT + NextAuth
+- **Cache**: Redis
+- **Validation**: Zod
 
-- Identity
-- AI
-- Enterprise
-- Security
-- Finance
-- Government
-- Healthcare
-- Blockchain
-- IoT
-- Digital Twin
-- Hyperautomation
-- Strategy
-- Analytics
-- Media
+### Frontend
+- **Framework**: Next.js 16
+- **React**: 19
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4
+- **State**: Zustand
+- **Data Fetching**: TanStack Query
+- **Forms**: React Hook Form
+- **UI**: Framer Motion
 
----
+## Getting Started
 
-## Development
+### Prerequisites
+- Node.js 20.11.0 or higher
+- npm 10 or higher
 
-Install
+### Installation
 
 ```bash
-npm install
+# Install dependencies for all workspaces
+npm ci
+
+# Or install for specific workspace
+npm ci -w backend
+npm ci -w frontend
 ```
 
-Run
+### Development
 
 ```bash
+# Run all development servers
 npm run dev
+
+# Run specific workspace
+npm run dev:backend
+npm run dev:frontend
 ```
 
-Build
+### Building
 
 ```bash
+# Build all workspaces
 npm run build
+
+# Build specific workspace
+npm run build:backend
+npm run build:frontend
 ```
 
-Test
+### Testing
 
 ```bash
-npm test
+# Run tests
+npm run test
+
+# Watch mode
+npm run test:watch
 ```
 
----
+### Linting & Formatting
 
-## Repository Standards
+```bash
+# Lint all workspaces
+npm run lint
 
-- Modular
-- Type Safe
-- Enterprise Ready
-- CI/CD Ready
-- Secure by Design
-- Production Ready
+# Fix linting issues
+npm run lint:fix
 
----
+# Format code
+npm run format
 
-© Ω SYD OMEGA 91717
+# Type check
+npm run typecheck
+```
+
+## Scripts
+
+### Root Level
+
+- `npm run clean` - Clean build artifacts
+- `npm run dev` - Start all development servers
+- `npm run dev:backend` - Start backend dev server
+- `npm run dev:frontend` - Start frontend dev server
+- `npm run build` - Build all workspaces
+- `npm run build:backend` - Build backend
+- `npm run build:frontend` - Build frontend
+- `npm run start` - Start production backend server
+- `npm run lint` - Lint all workspaces
+- `npm run lint:fix` - Fix linting issues
+- `npm run format` - Format code with Prettier
+- `npm run typecheck` - Type check all workspaces
+- `npm run test` - Run all tests
+- `npm run test:watch` - Run tests in watch mode
+
+## Environment Variables
+
+Create `.env.local` files in backend and frontend directories with required environment variables.
+
+### Backend (.env)
+```
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://...
+REDIS_URL=redis://...
+JWT_SECRET=your-secret-key
+```
+
+### Frontend (.env.local)
+```
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+## CI/CD
+
+The repository uses GitHub Actions for continuous integration. All tests must pass and linting must succeed before deployment.
+
+## License
+
+Private - SYD OMEGA 91717

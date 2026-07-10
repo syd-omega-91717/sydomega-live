@@ -2,13 +2,11 @@
 node_modules/
 .pnp
 .pnp.js
-npm-shrinkwrap.json
 
 # Production
 build/
 dist/
 .next/
-out/
 
 # Misc
 .DS_Store
@@ -18,35 +16,17 @@ out/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
 # Local env files
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 
 # IDE
 .idea/
 .vscode/
-*.code-workspace
 *.swp
 *.swo
-*~
-
-# OS
-Thumbs.db
-.DS_Store
 
 # Build artifacts
 *.tsbuildinfo
-.eslintcache
-.turbo/
-
-# Coverage
-coverage/
-.nyc_output/
-
-# Prisma
-prisma/migrations/

@@ -1,16 +1,59 @@
-import express from "express";
+// ============================================================================
+// FILE: backend/routes/auth.js
+// Ω SYD OMEGA 91717
+// Authentication Routes
+// ============================================================================
 
-const router=express.Router();
+import { Router } from "express";
+import authenticate from "../middleware/auth.js";
 
-router.get("/health",(req,res)=>{
+const router = Router();
 
-res.json({
+router.post("/login", (req, res) => {
 
-service:"Authentication",
+    res.json({
 
-status:"ONLINE"
+        success: true,
+
+        message: "Login endpoint ready."
+
+    });
 
 });
+
+router.post("/register", (req, res) => {
+
+    res.json({
+
+        success: true,
+
+        message: "Register endpoint ready."
+
+    });
+
+});
+
+router.get("/profile", authenticate, (req, res) => {
+
+    res.json({
+
+        success: true,
+
+        user: req.user
+
+    });
+
+});
+
+router.post("/logout", authenticate, (req, res) => {
+
+    res.json({
+
+        success: true,
+
+        message: "Logged out."
+
+    });
 
 });
 

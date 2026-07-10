@@ -1,53 +1,39 @@
-// ============================================================================
-// FILE: sydomega-live-main/backend/backend.ts
-// Ω SYD OMEGA 91717
-// Enterprise Backend Architecture Definition
-// ============================================================================
+============================================================================
+FILE:
+backend.ts
 
-export const BackendArchitecture = {
-  name: "SYD OMEGA Backend",
-  version: "2.0.0",
-  runtime: "Node.js",
-  framework: "Express",
-  language: "TypeScript",
+LOCATION:
+sydomega-live-main/backend/backend.ts
 
-  structure: {
-    entry: "server.ts",
+CODE:
+============================================================================
 
-    configuration: [
-      "config/env.ts",
-      "config/database.ts",
-      "config/supabase.ts"
-    ],
-
-    middleware: [
-      "middleware/auth.ts",
-      "middleware/logger.ts",
-      "middleware/rateLimiter.ts",
-      "middleware/errorHandler.ts",
-      "middleware/roles.ts"
-    ],
-
-    routes: [
-      "routes/auth.ts",
-      "routes/profile.ts",
-      "routes/search.ts",
-      "routes/chatbot.ts",
-      "routes/academy.ts"
-    ],
-
-    controllers: "controllers/",
-
-    services: "services/",
-
-    repositories: "repositories/",
-
-    database: "database/",
-
-    models: "models/",
-
-    utils: "utils/"
-  }
-} as const;
-
-export default BackendArchitecture;
+  backend/
+├── server.js
+├── package.json
+├── config/
+│   ├── database.js
+│   ├── env.js
+│   └── supabase.js
+├── middleware/
+│   ├── auth.js
+│   ├── logger.js
+│   ├── rateLimiter.js
+│   ├── roles.js
+│   └── errorHandler.js
+├── routes/
+│   ├── auth.js
+│   ├── profile.js
+│   ├── academy.js
+│   ├── chatbot.js
+│   ├── search.js
+│   ├── enterprise.js
+│   ├── ai.js
+│   └── system.js
+├── controllers/
+├── services/
+├── repositories/
+├── models/
+├── database/
+├── utils/
+└── enterprise/

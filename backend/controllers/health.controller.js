@@ -1,16 +1,28 @@
-export function health(req,res){
+// ============================================================================
+// FILE: backend/controllers/health.controller.js
+// Ω SYD OMEGA 91717
+// Health Controller
+// ============================================================================
 
-    res.json({
+import database from "../database/database.js";
 
-        success:true,
+export async function health(req, res) {
 
-        platform:"Ω SYD OMEGA 91717",
+    const databaseStatus = await database.health();
 
-        backend:"ONLINE",
+    res.status(databaseStatus.success ? 200 : 500).json({
 
-        timestamp:new Date().toISOString(),
+        application: "Ω SYD OMEGA 91717",
 
-        version:"1.0.0"
+        version: "2.0.0",
+
+        status: databaseStatus.success ? "ONLINE" : "OFFLINE",
+
+        uptime: process.uptime(),
+
+        database: databaseStatus,
+
+        serverTime: new Date().toISOString()
 
     });
 

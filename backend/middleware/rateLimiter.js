@@ -1,41 +1,29 @@
-const requests = new Map();
+// ============================================================================
+// FILE: backend/middleware/rateLimiter.js
+// Ω SYD OMEGA 91717
+// Enterprise Rate Limiter
+// ============================================================================
 
-export default function rateLimiter(req, res, next) {
+import rateLimit from "express-rate-limit";
 
-    const ip = req.ip;
+const limiter = rateLimit({
 
-    const now = Date.now();
+    windowMs: 15 * 60 * 1000,
 
-    const limit = 60;
+    max: 300,
 
-    const windowMs = 60000;
+    standardHeaders: true,
 
-    if (!requests.has(ip)) {
+    legacyHeaders: false,
 
-        requests.set(ip, []);
+    message: {
 
-    }
+        success: false,
 
-    const history = requests.get(ip).filter(
-        t => now - t < windowMs
-    );
-
-    history.push(now);
-
-    requests.set(ip, history);
-
-    if (history.length > limit) {
-
-        return res.status(429).json({
-
-            success: false,
-
-            message: "Too Many Requests"
-
-        });
+        message: "Too many requests."
 
     }
 
-    next();
+});
 
-}
+export default limiter;

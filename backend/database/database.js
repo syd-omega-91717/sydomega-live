@@ -1,36 +1,70 @@
+============================================================================
+FILE:
+database.js
+
+LOCATION:
+sydomega-live-main/backend/database/database.js
+
+CODE:
+============================================================================
+
+    // ============================================================================
+// FILE: backend/database/database.js
+// Ω SYD OMEGA 91717
+// Enterprise Database Manager
 // ============================================================================
-// FILE: /backend/database/database.js
-// REPLACE THE ENTIRE FILE
-// ============================================================================
 
-import supabase from "./supabase.js";
+import supabase from "../config/supabase.js";
 
-class Database {
+class DatabaseManager {
 
-    from(table) {
-        return supabase.from(table);
-    }
+    async health() {
 
-    table(table) {
-        return this.from(table);
-    }
+        const started = Date.now();
 
-    rpc(fn, params = {}) {
-        return supabase.rpc(fn, params);
-    }
+        try {
 
-    storage(bucket) {
-        return supabase.storage.from(bucket);
-    }
+            const { error } = await supabase
+                .from("system_health")
+                .select("*")
+                .limit(1);
 
-    auth() {
-        return supabase.auth;
-    }
+            return {
 
-    raw() {
-        return supabase;
+                success: !error,
+
+                latency: Date.now() - started,
+
+                provider: "Supabase",
+
+                timestamp: new Date().toISOString(),
+
+                error: error?.message ?? null
+
+            };
+
+        }
+
+        catch (err) {
+
+            return {
+
+                success: false,
+
+                latency: Date.now() - started,
+
+                provider: "Supabase",
+
+                timestamp: new Date().toISOString(),
+
+                error: err.message
+
+            };
+
+        }
+
     }
 
 }
 
-export default new Database();
+export default new DatabaseManager();

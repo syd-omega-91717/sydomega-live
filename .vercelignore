@@ -1,42 +1,37 @@
-============================================================================
-FILE:
-.vercelignore
-
-LOCATION:
-sydomega-live-main/.vercelignore
-
-ACTION:
-REPLACE THE ENTIRE FILE
-============================================================================
-
-# ============================================================================
-# Ω SYD OMEGA 91717
-# Production Vercel Ignore
-# ============================================================================
-
 backend/
-packages/
+frontend/
+enterprise/
 services/
+packages/
 shared/
 infra/
+infrastructure/
 database/
+contracts/
+prisma/
 docker/
 k8s/
-prisma/
-
-coverage/
+scripts/
 node_modules/
+coverage/
 dist/
 build/
-
+.turbo/
 .github/
 .vscode/
 .idea/
-
+package.json
+package-lock.json
+pnpm-lock.yaml
+turbo.json
+*.ts
+*.tsx
+*.py
+*.sol
+*.sql
 *.md
 *.doc
 *.docx
 *.pdf
-
 .env
 .env.*

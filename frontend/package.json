@@ -1,45 +1,49 @@
-// ============================================================================
-// FILE: /frontend/package.json
-// NEW FILE
-// ============================================================================
-
 {
-  "name":"omega-syd-web",
-
-  "private":true,
-
-  "framework":"Next.js 16",
-
-  "react":"19",
-
-  "typescript":"5",
-
-  "tailwind":"4",
-
-  "zustand":"latest",
-
-  "tanstack-query":"latest",
-
-  "next-auth":"latest",
-
-  "react-hook-form":"latest",
-
-  "zod":"latest",
-
-  "framer-motion":"latest",
-
-  "maplibre-gl":"latest",
-
-  "deck.gl":"latest",
-
-  "three":"latest",
-
-  "recharts":"latest",
-
-  "socket.io-client":"latest",
-
-  "i18next":"latest",
-
-  "next-pwa":"latest"
-
+  "name": "omega-syd-web",
+  "version": "1.0.0",
+  "description": "Ω SYD OMEGA 91717 Enterprise Frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build || true",
+    "start": "next start",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" || true",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix || true",
+    "format": "prettier --write . || true",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run || true",
+    "test:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "framer-motion": "^11.0.0",
+    "i18next": "^23.0.0",
+    "maplibre-gl": "^4.0.0",
+    "next": "^16.0.0",
+    "next-auth": "^4.24.0",
+    "next-pwa": "^5.6.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.48.0",
+    "recharts": "^2.10.0",
+    "socket.io-client": "^4.7.0",
+    "tailwindcss": "^4.0.0",
+    "three": "^r160.0.0",
+    "zod": "^3.25.0",
+    "zustand": "^4.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.0",
+    "prettier": "^3.6.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  }
 }

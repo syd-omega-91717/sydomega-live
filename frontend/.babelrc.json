@@ -1,0 +1,8 @@
+{
+  "presets": [
+    {
+      "name": "@babel/preset-typescript",
+      "plugins": []
+    }
+  ]
+}

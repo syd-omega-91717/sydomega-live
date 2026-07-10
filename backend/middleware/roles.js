@@ -1,16 +1,34 @@
-export default function allow(...roles) {
+// ============================================================================
+// FILE: backend/middleware/roles.js
+// Ω SYD OMEGA 91717
+// Enterprise Role Authorization
+// ============================================================================
+
+export default function roles(...allowedRoles) {
 
     return (req, res, next) => {
 
         if (!req.user) {
 
-            return res.sendStatus(401);
+            return res.status(401).json({
+
+                success: false,
+
+                message: "Unauthorized."
+
+            });
 
         }
 
-        if (!roles.includes(req.user.role)) {
+        if (!allowedRoles.includes(req.user.role)) {
 
-            return res.sendStatus(403);
+            return res.status(403).json({
+
+                success: false,
+
+                message: "Forbidden."
+
+            });
 
         }
 

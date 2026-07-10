@@ -1,13 +1,8 @@
-============================================================================
-FILE:
-enterprise-ci.yml
-
-LOCATION:
-sydomega-live-main/.github/workflows/enterprise-ci.yml
-
-ACTION:
-REPLACE THE ENTIRE FILE
-============================================================================
+# ============================================================================
+# FILE: /.github/workflows/enterprise-ci.yml
+# Ω SYD OMEGA 91717
+# Enterprise Continuous Integration
+# ============================================================================
 
 name: Enterprise CI
 
@@ -17,7 +12,6 @@ on:
       - main
       - master
       - develop
-      - "release/**"
 
   pull_request:
     branches:
@@ -25,13 +19,12 @@ on:
 
   workflow_dispatch:
 
-concurrency:
-  group: enterprise-ci-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
-  security-events: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
 
@@ -41,11 +34,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    timeout-minutes: 30
-
     strategy:
-      fail-fast: false
-
       matrix:
         node-version: [20]
 
@@ -54,51 +43,37 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
-      - name: Detect package.json
-        id: detect
-        shell: bash
+      - name: Install Dependencies
         run: |
           if [ -f package-lock.json ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-          elif [ -f pnpm-lock.yaml ]; then
-            echo "manager=pnpm" >> $GITHUB_OUTPUT
-          elif [ -f yarn.lock ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
+            npm ci
           else
-            echo "manager=none" >> $GITHUB_OUTPUT
+            echo "No root package.json found."
           fi
 
-      - name: Install Dependencies
-        if: steps.detect.outputs.manager == 'npm'
-        run: npm ci
-
       - name: Lint
-        if: steps.detect.outputs.manager == 'npm'
         run: npm run lint --if-present
 
       - name: Type Check
-        if: steps.detect.outputs.manager == 'npm'
         run: npm run typecheck --if-present
 
       - name: Run Tests
-        if: steps.detect.outputs.manager == 'npm'
         run: npm test --if-present
 
       - name: Build
-        if: steps.detect.outputs.manager == 'npm'
         run: npm run build --if-present
 
-      - name: Upload Build Artifacts
+      - name: Upload Build
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: enterprise-build
+          name: sydomega-build
           path: |
             dist
             build

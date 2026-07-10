@@ -1,78 +1,42 @@
-// ============================================================================
-// FILE: /backend/package.json
-// REPLACE THE ENTIRE FILE
-// ============================================================================
+============================================================================
+FILE:
+package.json
+
+LOCATION:
+sydomega-live-main/backend/package.json
+
+CODE:
+============================================================================
 
 {
-  "name": "omega-syd-backend",
-
-  "version": "3.0.0",
-
+  "name": "sydomega-backend",
+  "version": "2.0.0",
   "private": true,
-
   "type": "module",
-
+  "description": "Ω SYD OMEGA 91717 Enterprise Backend",
+  "main": "server.js",
   "scripts": {
-
-    "dev": "tsx watch src/server.ts",
-
-    "build": "tsc",
-
-    "start": "node dist/server.js",
-
-    "clean": "rimraf dist",
-
-    "lint": "eslint src --ext .ts",
-
-    "typecheck": "tsc --noEmit"
-
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "build": "echo \"Backend build completed\"",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test"
   },
-
   "dependencies": {
-
-    "@supabase/supabase-js": "^2",
-
-    "compression": "^1",
-
-    "cors": "^2",
-
-    "dotenv": "^16",
-
-    "express": "^5",
-
-    "helmet": "^8",
-
-    "jsonwebtoken": "^9",
-
-    "morgan": "^1",
-
-    "uuid": "^11",
-
-    "zod": "^4"
-
+    "@supabase/supabase-js": "^2.49.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "jsonwebtoken": "^9.0.2"
   },
-
   "devDependencies": {
-
-    "@types/compression": "^1",
-
-    "@types/cors": "^2",
-
-    "@types/express": "^5",
-
-    "@types/jsonwebtoken": "^9",
-
-    "@types/morgan": "^1",
-
-    "@types/node": "^24",
-
-    "eslint": "^9",
-
-    "rimraf": "^6",
-
-    "tsx": "^4",
-
-    "typescript": "^5"
+    "eslint": "^9.20.1",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20"
   }
-
 }

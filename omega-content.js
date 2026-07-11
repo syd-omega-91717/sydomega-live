@@ -24,7 +24,6 @@
     '.t,.brand,.sechead,.hero .nm,.topbar .t,h1{animation:omTitleGlow 5s ease-in-out infinite}',
     '@keyframes omEmblemSpin{to{transform:rotate(360deg)}}',
     '.sechead{position:relative}',
-    '.sechead::before{content:"";display:inline-block;width:9px;height:9px;margin-right:9px;vertical-align:middle;border:1px solid var(--gold,#C9A84C);border-radius:50%;border-top-color:transparent;animation:omEmblemSpin 6s linear infinite;opacity:.7}',
     '@media(prefers-reduced-motion:reduce){.t,.brand,.sechead,h1{animation:none}.sechead::before{animation:none}}'
   ].join('');
   var st = document.createElement('style');
@@ -116,4 +115,30 @@
   }
   if (document.body) boot();
   else document.addEventListener('DOMContentLoaded', boot);
+
+  /* ---- graphic-designed animated SIGN before every section header (global) ---- */
+  (function(){
+    var SIGIL = '<svg class="omega-section-sign" viewBox="0 0 24 24" width="16" height="16" style="vertical-align:middle;margin-right:9px;opacity:.8">'
+      + '<g fill="none" stroke="#C9A84C" stroke-width="1.2">'
+      + '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/>'
+      + '<circle cx="12" cy="12" r="2.2" fill="#E2C86D" stroke="none"/></g></svg>';
+    function sign(){
+      var heads = document.querySelectorAll('.sechead, .topbar .t, h2, h3');
+      for (var i=0;i<heads.length;i++){
+        var h = heads[i];
+        if (h.__signed || !h.textContent.trim()) continue;
+        if (h.querySelector('.omega-section-sign')) { h.__signed=1; continue; }
+        h.__signed = 1;
+        h.insertAdjacentHTML('afterbegin', SIGIL);
+      }
+    }
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var spin = document.createElement('style');
+    spin.textContent = '@keyframes omegaSignSpin{to{transform:rotate(360deg)}}'
+      + (reduce? '' : '.omega-section-sign{animation:omegaSignSpin 16s linear infinite;transform-origin:12px 12px}');
+    (document.head||document.documentElement).appendChild(spin);
+    if (document.body) sign(); else document.addEventListener('DOMContentLoaded', sign);
+    try{ new MutationObserver(sign).observe(document.body||document.documentElement,{childList:true,subtree:true}); }catch(e){}
+  })();
+
 })();

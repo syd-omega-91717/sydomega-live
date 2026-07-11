@@ -82,7 +82,7 @@
     size();
     addEventListener('resize', size);
 
-    var N = Math.max(28, Math.min(96, Math.floor(innerWidth * innerHeight / 15000)));
+    var N = Math.max(46, Math.min(150, Math.floor(innerWidth * innerHeight / 10000)));
     var P = [];
     for (var i = 0; i < N; i++) {
       P.push({
@@ -106,18 +106,18 @@
 
         ctx.save();
         ctx.translate(cx, cy);
-        for (var k = 0; k < 4; k++) {
+        for (var k = 0; k < 6; k++) {
           var rot = t * (0.00018 + k * 0.00007) * (k % 2 ? 1 : -1);
           ctx.save();
           ctx.rotate(rot);
           ctx.beginPath();
           ctx.ellipse(0, 0, base * (0.5 + k * 0.17), base * (0.18 + k * 0.15), k * 0.5, 0, 6.2832);
-          ctx.strokeStyle = 'rgba(' + (k % 2 ? pal.accent : pal.ring) + ',' + (0.05 + 0.02 * Math.sin(t * 0.001 + k)).toFixed(3) + ')';
+          ctx.strokeStyle = 'rgba(' + (k % 2 ? pal.accent : pal.ring) + ',' + (0.075 + 0.03 * Math.sin(t * 0.001 + k)).toFixed(3) + ')';
           ctx.lineWidth = 1 * DPR;
           ctx.stroke();
           ctx.restore();
         }
-        var pulse = 0.06 + 0.035 * (0.5 + 0.5 * Math.sin(t * 0.0016));
+        var pulse = 0.085 + 0.05 * (0.5 + 0.5 * Math.sin(t * 0.0016));
         var g = ctx.createRadialGradient(0, 0, 0, 0, 0, base * 0.55);
         g.addColorStop(0, 'rgba(' + pal.core + ',' + pulse.toFixed(3) + ')');
         g.addColorStop(0.5, 'rgba(' + pal.accent + ',' + (pulse * 0.4).toFixed(3) + ')');

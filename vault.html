@@ -221,15 +221,15 @@ const ASSETS=[
 ];
 
 const TOKENS=[
-  {sym:'&#x25CF;',name:'PYRON',token:'ARIES TOKEN',col:'#E86A3A',bal:'917.17'},
+  {sym:'&#x25CF;',name:'PYRON',token:'ARIES TOKEN',col:'#E86A3A',bal:'0'},
   {sym:'&#x25C8;',name:'AURUM',token:'TAURUS TOKEN',col:'#C7CDD6',bal:'0'},
   {sym:'&#x2609;',name:'ZEPHYR',token:'GEMINI TOKEN',col:'#A9C2D8',bal:'0'},
   {sym:'&#x2302;',name:'NEREID',token:'CANCER TOKEN',col:'#34C6E6',bal:'0'},
   {sym:'&#x2736;',name:'SOLARII',token:'LEO TOKEN',col:'#E86A3A',bal:'0'},
-  {sym:'&#x03A9;',name:'ARENITE',token:'VIRGO TOKEN',col:'#D9B86A',bal:'9171.7'},
+  {sym:'&#x03A9;',name:'ARENITE',token:'VIRGO TOKEN',col:'#D9B86A',bal:'0'},
   {sym:'&#x25B6;',name:'FORGEON',token:'LIBRA TOKEN',col:'#A9C2D8',bal:'0'},
   {sym:'&#x25B2;',name:'STYX',token:'SCORPIO TOKEN',col:'#8B0000',bal:'0'},
-  {sym:'&#x2726;',name:'EMBER',token:'SAGITTARIUS TOKEN',col:'#C9A84C',bal:'91.17'},
+  {sym:'&#x2726;',name:'EMBER',token:'SAGITTARIUS TOKEN',col:'#C9A84C',bal:'0'},
   {sym:'&#x22D4;',name:'FERRUM',token:'CAPRICORN TOKEN',col:'#E2C86D',bal:'0'},
   {sym:'&#x2316;',name:'AETHER',token:'AQUARIUS TOKEN',col:'#9B6BF0',bal:'0'},
   {sym:'&#x21C4;',name:'ABYSS',token:'PISCES TOKEN',col:'#3fb27f',bal:'0'},
@@ -405,5 +405,34 @@ boot();
 </script>
 <script src="/nav.js"></script><script src="/bg.js"></script>
 <style>@keyframes div-glow{0%,100%{text-shadow:0 0 10px rgba(63,178,127,0.3)}50%{text-shadow:0 0 24px rgba(63,178,127,0.7)}}</style>
+
+
+<script type="module">
+  // LIVE TOKEN BALANCES -- fill the member's real holdings into the rendered wallet
+  (async function(){
+    try{
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+      const ses = await sb.auth.getSession(); if(!(ses.data&&ses.data.session)) return;
+      const r = await sb.rpc('my_token_balances'); if(!r.data) return;
+      const map = {}; r.data.forEach(t=>{ map[t.code]=Number(t.balance)||0; });
+      function paint(){
+        document.querySelectorAll('#wallet-grid .wl-card').forEach(function(card){
+          const nameEl = card.querySelector('.wlc-name'); if(!nameEl) return;
+          const code = nameEl.textContent.trim();
+          if(!(code in map)) return;
+          const bal = map[code];
+          const balEl = card.querySelector('.wlc-bal'), usdEl = card.querySelector('.wlc-usd');
+          if(balEl){ balEl.innerHTML = '&#937; ' + bal.toLocaleString(); balEl.style.color = bal>0 ? 'var(--gold)' : 'var(--muted)'; }
+          if(usdEl){ usdEl.textContent = bal>0 ? 'ACTIVE' : 'PENDING ACTIVATION'; }
+        });
+      }
+      paint();
+      // repaint if the wallet re-renders later
+      const grid = document.getElementById('wallet-grid');
+      if(grid){ new MutationObserver(()=>paint()).observe(grid,{childList:true}); }
+    }catch(e){}
+  })();
+</script>
 </body>
 </html>

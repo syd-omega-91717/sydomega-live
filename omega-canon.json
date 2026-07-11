@@ -14,11 +14,15 @@
   "note": "Each of the 12 tracks is a full 9x9x9 cube on 3 axes. 12 x 729 = 8,748."
  },
  "elements": [
-  "Fire",
-  "Water",
-  "Wind",
-  "Metal",
-  "Sand"
+  "FIRE",
+  "WATER",
+  "WIND",
+  "METAL",
+  "SAND",
+  "SOUL",
+  "SPACE",
+  "VOID",
+  "THE NINTH"
  ],
  "tracks": [
   {
@@ -213,5 +217,24 @@
    "level": 12,
    "phase": 12
   }
- ]
+ ],
+ "element_system": {
+  "count": 9,
+  "physical": [
+   "FIRE",
+   "WATER",
+   "WIND",
+   "METAL",
+   "SAND"
+  ],
+  "metaphysical": [
+   "SOUL",
+   "SPACE",
+   "VOID"
+  ],
+  "transcendent": [
+   "THE NINTH"
+  ],
+  "note": "Tracks carry a PHYSICAL element (sign-derived). SOUL/SPACE/VOID are class-assigned; THE NINTH activates at Stage 9."
+ }
 }

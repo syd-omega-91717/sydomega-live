@@ -23,6 +23,7 @@
     SOUL:      [268, 34, 7],
     SPACE:     [230, 40, 7.5],
     VOID:      [0, 40, 6],
+    NINTH:     [46, 55, 8],     // THE NINTH -- transcendent radiant gold
     SOVEREIGN: [248, 20, 6.5]   // warm charcoal-indigo (default -- softer than #000)
   };
   var SIGN_ELEMENT = {
@@ -37,7 +38,8 @@
   function apply(element) {
     // respect a member's own Appearance background override
     try { if (localStorage.getItem('omega_bg')) return; } catch (e) {}
-    var base = EL[(element || 'SOVEREIGN').toUpperCase()] || EL.SOVEREIGN;
+    var key = (element || 'SOVEREIGN').toUpperCase().replace('THE ','').replace(/\s+/g,'');
+    var base = EL[key] || EL.SOVEREIGN;
     var h = base[0], s = base[1], l = base[2];
     // per-page variation: shift hue +-12 deg and lightness slightly, seeded by path
     var seed = hash(location.pathname || '/');

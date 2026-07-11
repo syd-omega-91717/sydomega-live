@@ -78,9 +78,16 @@
   const PHASE=['The Awakening','The Calling','The Foundation','The First Gate','The Trials','The Ascent','The Convergence','The Sovereign Trial','The Celestial Alignment','The Dominion','The Legacy','The Omega'];
   function band(auth){ var g=Math.max(1,Math.min(12,Math.ceil(auth/APEX*12))); var lo=(g-1)/12*APEX,hi=g/12*APEX,w=Math.max(0,Math.min(1,(auth-lo)/(hi-lo))); var lv=Math.max(1,Math.min(12,Math.ceil(w*12))); return {g:g,lv:lv}; }
   function tier(n){ return n<=3?1:(n<=6?2:(n<=9?3:4)); }
+  function canonName(kind,i){ var C=window.OmegaCanon; if(!C||!C.track) return ''; 
+    var t=C.track(i); if(!t) return '';
+    return kind==='certs'?t.certificate : kind==='trophies'?t.trophy : kind==='medals'?t.medal : ''; }
   function fill(id,earnedSet){ var box=document.getElementById(id); box.innerHTML='';
     for(var i=1;i<=12;i++){ var on=earnedSet.has(i); var d=document.createElement('div');
-      d.className='slot t'+tier(i)+(on?' earned':''); d.innerHTML='<div class="n">'+i+'</div>'+(on?'':'<div>&#8226;</div>'); box.appendChild(d); } }
+      var nm=canonName(id,i);
+      d.className='slot t'+tier(i)+(on?' earned':''); d.title=nm||('#'+i);
+      d.innerHTML='<div class="n">'+i+'</div>'+(nm?'<div style="font-size:8px;line-height:1.1;margin-top:3px;opacity:.85">'+nm.replace(/^(Medal|Trophy|Certificate) of /,'')+'</div>':(on?'':'<div>&#8226;</div>')); box.appendChild(d); } }
+  // relabel once the canon loads
+  document.addEventListener('omega-canon-ready',function(){ if(window.__lastFill) window.__lastFill(); });
   function boot(){ supabase.auth.getSession().then(function(r){
     var s=r.data.session; if(!s){ document.getElementById('gate').style.display='block'; return; }
     var uid=s.user.id;
@@ -100,7 +107,7 @@
       var tset=new Set((res[1].data||[]).map(function(x){return x.trophy_num;}).filter(Boolean));
       var mset=new Set((res[2].data||[]).map(function(x){return x.medal_num;}).filter(Boolean));
       var cCount=(res[3].data||[]).length; var cset=new Set(); for(var i=1;i<=Math.min(12,cCount);i++) cset.add(i);
-      fill('certs',cset); fill('trophies',tset); fill('medals',mset);
+      window.__lastFill=function(){ fill('certs',cset); fill('trophies',tset); fill('medals',mset); }; window.__lastFill();
       document.getElementById('c-count').textContent=cset.size;
       document.getElementById('t-count').textContent=tset.size;
       document.getElementById('m-count').textContent=mset.size;

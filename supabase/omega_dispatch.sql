@@ -15,6 +15,12 @@ CREATE TABLE IF NOT EXISTS public.dispatches (
   is_published boolean NOT NULL DEFAULT true,
   created_at   timestamptz NOT NULL DEFAULT now()
 );
+-- self-heal: if an older dispatches table exists, add any missing columns
+ALTER TABLE public.dispatches ADD COLUMN IF NOT EXISTS title text;
+ALTER TABLE public.dispatches ADD COLUMN IF NOT EXISTS body text;
+ALTER TABLE public.dispatches ADD COLUMN IF NOT EXISTS category text DEFAULT 'DISPATCH';
+ALTER TABLE public.dispatches ADD COLUMN IF NOT EXISTS is_published boolean NOT NULL DEFAULT true;
+ALTER TABLE public.dispatches ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 ALTER TABLE public.dispatches ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS dispatch_read ON public.dispatches;
@@ -55,6 +61,15 @@ GRANT SELECT ON public.dispatches TO authenticated;
 GRANT EXECUTE ON FUNCTION public.post_dispatch(text,text,text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.published_dispatches(int) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.set_dispatch_published(uuid,boolean) TO authenticated;
+
+-- if a legacy dispatches table has a NOT-NULL user_id, relax it (broadcasts are Order-wide, not per-user)
+DO $seed$
+BEGIN
+  BEGIN
+    ALTER TABLE public.dispatches ALTER COLUMN user_id DROP NOT NULL;
+  EXCEPTION WHEN undefined_column THEN NULL;  -- no user_id column: fine
+  END;
+END $seed$;
 
 -- seed one welcome dispatch so the feed is never empty
 INSERT INTO public.dispatches(title,body,category)

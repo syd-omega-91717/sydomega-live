@@ -1399,6 +1399,14 @@ BEGIN
   SELECT id INTO fid FROM auth.users
     WHERE lower(email) IN ('s.y.dagher@gmail.com','slmndghr@gmail.com') LIMIT 1;
   IF fid IS NULL THEN RETURN; END IF;
+  -- self-heal: legacy tables (from another tool) may have NOT-NULL name columns
+  -- our seed only fills the _num columns, so relax those legacy constraints first
+  BEGIN ALTER TABLE public.certificates ALTER COLUMN cert_name  DROP NOT NULL; EXCEPTION WHEN undefined_column THEN NULL; WHEN undefined_table THEN NULL; END;
+  BEGIN ALTER TABLE public.trophies     ALTER COLUMN trophy_name DROP NOT NULL; EXCEPTION WHEN undefined_column THEN NULL; WHEN undefined_table THEN NULL; END;
+  BEGIN ALTER TABLE public.medals       ALTER COLUMN medal_name  DROP NOT NULL; EXCEPTION WHEN undefined_column THEN NULL; WHEN undefined_table THEN NULL; END;
+  BEGIN ALTER TABLE public.certificates ALTER COLUMN name        DROP NOT NULL; EXCEPTION WHEN undefined_column THEN NULL; WHEN undefined_table THEN NULL; END;
+  BEGIN ALTER TABLE public.trophies     ALTER COLUMN name        DROP NOT NULL; EXCEPTION WHEN undefined_column THEN NULL; WHEN undefined_table THEN NULL; END;
+  BEGIN ALTER TABLE public.medals       ALTER COLUMN name        DROP NOT NULL; EXCEPTION WHEN undefined_column THEN NULL; WHEN undefined_table THEN NULL; END;
   IF to_regclass('public.certificates') IS NOT NULL THEN
     INSERT INTO public.certificates(user_id, cert_num)
       SELECT fid, g FROM generate_series(1,12) g

@@ -110,6 +110,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 @media(max-width:1100px){.cmd-stats{grid-template-columns:repeat(3,1fr)}.cmd-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.cmd-grid{grid-template-columns:1fr}.cmd-stats{grid-template-columns:repeat(2,1fr)}}
 </style>
+
+<style id="omega-cat-css">
+  .ocat-wrap{max-width:1200px;margin:22px auto 8px;padding:0 18px}
+  .ocat-title{font-family:'Cinzel Decorative',serif;color:var(--gold,#C9A84C);letter-spacing:3px;font-size:15px;text-align:center;margin:0 0 16px;opacity:.9}
+  .ocat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .ocat{border:1px solid rgba(201,168,76,.2);border-radius:14px;background:rgba(255,255,255,.02);padding:16px 12px;cursor:pointer;transition:all .25s;text-align:center;position:relative;overflow:hidden}
+  .ocat:hover,.ocat.open{border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.06);transform:translateY(-2px)}
+  .ocat .em{width:30px;height:30px;margin:0 auto 8px;display:block}
+  .ocat .em svg{width:30px;height:30px;stroke:var(--gold,#C9A84C);fill:none;stroke-width:1.4}
+  .ocat:hover .em svg,.ocat.open .em svg{animation:ocat-spin 9s linear infinite}
+  @keyframes ocat-spin{to{transform:rotate(360deg)}}
+  .ocat .nm{font-family:'Rajdhani',sans-serif;font-weight:600;color:#e9e6dc;letter-spacing:1px;font-size:13px}
+  .ocat .ct{font-family:'Courier Prime',monospace;color:#8a8676;font-size:10px;letter-spacing:1px;margin-top:2px}
+  .ocat-sub{max-width:1200px;margin:0 auto;padding:0 18px;overflow:hidden;max-height:0;transition:max-height .35s ease}
+  .ocat-sub.open{max-height:600px}
+  .ocat-sub-inner{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:12px 0 6px}
+  .ocat-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid rgba(201,168,76,.16);border-radius:10px;color:#d8d5cb;text-decoration:none;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.5px;transition:all .2s;background:rgba(0,0,0,.2)}
+  .ocat-link:hover{border-color:rgba(0,229,255,.5);color:#00E5FF;transform:translateX(3px)}
+  .ocat-link .dot{width:6px;height:6px;border-radius:50%;background:var(--gold,#C9A84C);flex:0 0 auto}
+  @media(prefers-reduced-motion:reduce){.ocat:hover .em svg,.ocat.open .em svg{animation:none}}
+</style>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -130,6 +151,56 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <span class="nav-status">&#9632; LIVE</span>
   </div>
 </nav>
+<section class="ocat-wrap" aria-label="Command Categories">
+  <div class="ocat-title">COMMAND INDEX</div>
+  <div class="ocat-grid" id="ocat-grid"></div>
+</section>
+<div class="ocat-sub" id="ocat-sub"><div class="ocat-sub-inner" id="ocat-sub-inner"></div></div>
+<script>
+(function(){
+  var EM={
+    command:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
+    progression:'<svg viewBox="0 0 24 24"><path d="M4 20h16M7 20V10M12 20V5M17 20v-8"/></svg>',
+    assets:'<svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 8v8M8 10v4M16 10v4"/></svg>',
+    experience:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg>',
+    order:'<svg viewBox="0 0 24 24"><path d="M5 20h14M7 20l-2-9 4 3 3-6 3 6 4-3-2 9"/></svg>',
+    services:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>',
+    account:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>'
+  };
+  var CATS=[
+    ['command','COMMAND',[['Dashboard','dashboard'],['Matrix','matrix'],['Cosmos','cosmos'],['Horoscope','horoscope']]],
+    ['progression','PROGRESSION',[['Grades','grades'],['Levels','levels'],['Phases','phases'],['Ascension','ascension'],['Honors','honors'],['Achievements','achievements']]],
+    ['assets','ASSETS',[['Vault','vault'],['Treasury','treasury'],['Wallet','wallet'],['Ledger','ledger'],['Blockchain','blockchain'],['Portfolio','portfolio']]],
+    ['experience','EXPERIENCE',[['Academy','academy'],['Games','gaming'],['Cinema','cinema'],['Universe','universe'],['Media','media']]],
+    ['order','THE ORDER',[['Family','family'],['Kings','kings'],['Hall','hall'],['City','city'],['Agents','agents']]],
+    ['services','SERVICES',[['Consultancy','consultancy'],['Marketplace','marketplace'],['Publishing','publishing'],['Marketing','marketing'],['News','news'],['Intelligence','intelligence']]],
+    ['account','ACCOUNT',[['Profile','profile'],['Settings','settings'],['Subscriptions','subscriptions']]]
+  ];
+  function render(){
+    var g=document.getElementById('ocat-grid'); if(!g) return; g.innerHTML='';
+    CATS.forEach(function(c,i){
+      var d=document.createElement('div'); d.className='ocat'; d.setAttribute('data-i',i);
+      d.innerHTML='<span class="em">'+(EM[c[0]]||'')+'</span><div class="nm">'+c[1]+'</div><div class="ct">'+c[2].length+' AREAS</div>';
+      d.addEventListener('click',function(){ toggle(i,d); });
+      g.appendChild(d);
+    });
+  }
+  var openIdx=-1;
+  function toggle(i,card){
+    var sub=document.getElementById('ocat-sub'), inner=document.getElementById('ocat-sub-inner');
+    document.querySelectorAll('.ocat').forEach(function(x){x.classList.remove('open');});
+    if(openIdx===i){ openIdx=-1; sub.classList.remove('open'); return; }
+    openIdx=i; card.classList.add('open');
+    inner.innerHTML = CATS[i][2].map(function(p){
+      return '<a class="ocat-link" href="/'+p[1]+'.html"><span class="dot"></span>'+p[0]+'</a>';
+    }).join('');
+    sub.classList.add('open');
+  }
+  if(document.getElementById('ocat-grid')) render();
+  else document.addEventListener('DOMContentLoaded',render);
+})();
+</script>
+
 
 <div class="page">
   <!-- HERO SEAL -->

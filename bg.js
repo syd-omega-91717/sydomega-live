@@ -105,6 +105,8 @@
 (function(){if(!document.querySelector('script[data-omega-components]')){var s=document.createElement('script');s.src='/omega-components.js';s.setAttribute('data-omega-components','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== LIVING OMEGA SIGIL -- rotative emblem treatment for the Omega mark ===== */
 (function(){if(!document.querySelector('script[data-omega-sigil]')){var s=document.createElement('script');s.src='/omega-sigil.js';s.setAttribute('data-omega-sigil','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */
+(function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */
 (function(){if(!document.querySelector('script[data-omega-appearance]')){var s=document.createElement('script');s.src='/omega-appearance.js';s.setAttribute('data-omega-appearance','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== FEEDBACK WIDGET -- members leave comments + ratings ===== */

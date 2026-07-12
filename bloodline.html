@@ -121,8 +121,9 @@ const SUCCESSION=[
   {rank:'VAULT',heir:'MASTER TRUST (non-heir remainder)',share:'Platform operational',act:'Automated',status:'AUTO-MANAGED'},
 ];
 
-function loadNodes(){
-  const stored=JSON.parse(localStorage.getItem('omega_bloodline_nodes')||'[]');
+async function loadNodes(){
+  const { data, error } = await sb.from('bloodline_nodes').select('*').order('created_at',{ascending:true});
+  const stored=(data||[]).map(n=>({name:n.name,rel:n.rel,birth:n.birth,notes:n.notes,ts:n.created_at}));
   const g=document.getElementById('node-grid'); g.innerHTML='';
   if(!stored.length){
     g.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted);padding:14px">No nodes sealed yet. Register your bloodline above.</div>';
@@ -179,13 +180,13 @@ function drawTree(nodes){
   }
 }
 
-document.getElementById('btn-add').addEventListener('click',()=>{
+document.getElementById('btn-add').addEventListener('click',async()=>{
   const name=document.getElementById('n-name').value.trim();
   if(!name) return;
-  const node={name,rel:document.getElementById('n-rel').value,birth:document.getElementById('n-birth').value,notes:document.getElementById('n-notes').value.trim(),ts:new Date().toISOString()};
-  const stored=JSON.parse(localStorage.getItem('omega_bloodline_nodes')||'[]');
-  stored.push(node); localStorage.setItem('omega_bloodline_nodes',JSON.stringify(stored));
-  loadNodes();
+  const node={name,rel:document.getElementById('n-rel').value,birth:document.getElementById('n-birth').value||null,notes:document.getElementById('n-notes').value.trim()};
+  const { error } = await sb.from('bloodline_nodes').insert(node);
+  if(error){ alert('Could not save node: '+error.message); return; }
+  await loadNodes();
   document.getElementById('n-name').value=''; document.getElementById('n-notes').value='';
   const s=document.getElementById('fn-saved'); s.style.display='block';
   setTimeout(()=>s.style.display='none',3000);

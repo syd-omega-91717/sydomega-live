@@ -134,8 +134,17 @@ var PLATFORMS=[
 ];
 
 var connections={};
-try{connections=JSON.parse(localStorage.getItem('omega_social_connections')||'{}');}catch(e){}
-function saveConnections(){try{localStorage.setItem('omega_social_connections',JSON.stringify(connections));}catch(e){}}
+async function loadConnections(){
+  const { data } = await sb.from('social_connections').select('platform,handle');
+  connections = {};
+  (data||[]).forEach(function(c){ connections[c.platform] = {username:c.handle, connected_at:null}; });
+}
+async function saveConnection(pid, username){
+  await sb.from('social_connections').upsert({platform:pid, handle:username});
+}
+async function removeConnection(pid){
+  await sb.from('social_connections').delete().eq('platform',pid);
+}
 
 var selectedNets=new Set();
 
@@ -177,12 +186,12 @@ function renderPlatforms(){
     /* Connect click */
     var connectBtn=card.querySelector('.btn-connect');
     if(connectBtn){
-      connectBtn.addEventListener('click',function(){
+      connectBtn.addEventListener('click',async function(){
         /* Simulate OAuth connect (real flow requires server-side credentials) */
         var username=prompt('Enter your '+p.name+' username to link (simulation):\nIn production this opens the '+p.name+' OAuth window.');
         if(username){
           connections[p.id]={username:username.replace('@',''),connected_at:new Date().toISOString()};
-          saveConnections();
+          await saveConnection(p.id, connections[p.id].username);
           renderPlatforms();
         }
       });
@@ -190,9 +199,9 @@ function renderPlatforms(){
     /* Disconnect click */
     var discBtn=card.querySelector('.btn-disc');
     if(discBtn){
-      discBtn.addEventListener('click',function(){
+      discBtn.addEventListener('click',async function(){
         delete connections[p.id];
-        saveConnections();
+        await removeConnection(p.id);
         renderPlatforms();
       });
     }
@@ -220,7 +229,7 @@ var FEED_SEED=[
   {net:'telegram',col:'#26A5E4',icon:'&#x27A4;',header:'TELEGRAM &middot; 1 week ago',text:'Daily horoscope broadcast delivered to channel subscribers. 9.1717 Hz resonance active.'},
 ];
 
-function renderFeed(tab){
+async function renderFeed(tab){
   var feed=document.getElementById('feed-content');
   feed.innerHTML='';
   var entries=tab==='all'?FEED_SEED:tab==='broadcasts'?[FEED_SEED[0],FEED_SEED[1]]:[FEED_SEED[2]];
@@ -229,8 +238,12 @@ function renderFeed(tab){
     feed.innerHTML='<div class="feed-note">No activity yet for this filter.</div>';
     return;
   }
-  var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_broadcasts')||'[]');}catch(e){}
+  const { data } = await sb.from('social_broadcasts').select('networks,body,created_at').order('created_at',{ascending:false}).limit(30);
+  var stored=(data||[]).map(function(b){
+    return {net:'broadcast',col:'#C9A84C',icon:'&#x2733;',
+      header:'BROADCAST &middot; '+new Date(b.created_at).toLocaleString()+' &middot; TO: '+(b.networks||[]).join(', ').toUpperCase(),
+      text:b.body};
+  });
   var all=[...stored,...entries];
   all.forEach(function(e){
     var post=document.createElement('div');
@@ -246,17 +259,11 @@ function renderFeed(tab){
   });
 }
 
-document.getElementById('btn-broadcast').addEventListener('click',function(){
+document.getElementById('btn-broadcast').addEventListener('click',async function(){
   var text=document.getElementById('broadcast-text').value.trim();
   if(!text||!selectedNets.size) return;
-  var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_broadcasts')||'[]');}catch(e){}
-  stored.unshift({
-    net:'broadcast',col:'#C9A84C',icon:'&#x2733;',
-    header:'BROADCAST &middot; '+new Date().toLocaleString()+' &middot; TO: '+[...selectedNets].join(', ').toUpperCase(),
-    text:text
-  });
-  try{localStorage.setItem('omega_broadcasts',JSON.stringify(stored.slice(0,30)));}catch(e){}
+  var { error } = await sb.from('social_broadcasts').insert({networks:[...selectedNets], body:text});
+  if(error){ alert('Could not send broadcast: '+error.message); return; }
   document.getElementById('broadcast-text').value='';
   var sm=document.getElementById('sent-msg'); sm.style.display='block';
   setTimeout(function(){sm.style.display='none';},3500);
@@ -274,6 +281,7 @@ document.querySelectorAll('.feed-tab').forEach(function(tab){
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
+  await loadConnections();
   renderPlatforms();
   renderFeed('all');
 }

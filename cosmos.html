@@ -397,7 +397,8 @@ function buildHoroscope(memberSign){
   SIGNS.forEach(s=>{
     const c=document.createElement('div');c.className='smg-item'+(s.n===memberSign?' active':'');
     c.dataset.sign=s.n;
-    c.innerHTML=`<span class="smg-glyph" style="color:${s.col}">${s.g}</span><div class="smg-name">${s.n}</div>`;
+    const properCase=s.n.charAt(0)+s.n.slice(1).toLowerCase();
+    c.innerHTML=`<span class="smg-glyph" data-omega-emblem="${properCase}" style="display:inline-block;width:34px;height:34px"></span><div class="smg-name">${s.n}</div>`;
     c.addEventListener('click',()=>selectSign(s.n));
     g.appendChild(c);
   });
@@ -405,9 +406,9 @@ function buildHoroscope(memberSign){
   /* Oracle reading */
   const or=document.getElementById('oracle-reading');
   const s=SIGNS.find(x=>x.n===memberSign)||SIGNS[5];
-  fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:300,messages:[{role:"user",content:`Oracle agent of SYD OMEGA 91717. Write 2-sentence daily reading for ${memberSign}. Reference the 9.1717Hz frequency and the sovereign matrix. Serious ancient voice.`}]})})
+  fetch("https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/oracle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Write a 2-sentence daily reading for ${memberSign}. Reference the 9.1717Hz frequency and the sovereign matrix.`,max_tokens:150})})
     .then(r=>r.json()).then(d=>{
-      const text=d.content?.map(i=>i.text||'').join('')||s.desc+'. The frequency is aligned. Advance your matrix today.';
+      const text=(d && d.reply) || s.desc+'. The frequency is aligned. Advance your matrix today.';
       or.innerHTML='<span style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold)">&#x2609; ORACLE</span><br>'+text;
     }).catch(()=>{or.textContent=s.desc+' The 9.1717Hz frequency resonates with your sign today. Advance the axis that calls to you strongest.';});
 }

@@ -182,34 +182,34 @@ td.gold{color:var(--gold);font-family:'Courier Prime',monospace}
   <div class="hero-band">
     <div class="hero-eyebrow">M16 // INVESTMENT ENGINE</div>
     <h1 class="hero-title">Portfolio Command</h1>
-    <p class="hero-sub">Sovereign asset allocation, token reserves, and investment intelligence for Major Sleiman Youssef Dagher -- Level 9.9.9</p>
+    <p class="hero-sub">The platform's stated asset allocation model -- token reserves, precious metals, and investment intelligence. Reference model; personal portfolio tracking is dormant until the token economy is live (see /payments.html).</p>
   </div>
 
   <!-- STAT ROW -->
   <div class="stat-row">
     <div class="stat-card">
       <div class="stat-label">Total Portfolio Value</div>
-      <div class="stat-value" id="total-val">&#8734;</div>
-      <div class="stat-sub">Across all asset classes</div>
-      <div class="stat-delta up">&#9650; Sovereign lock active</div>
+      <div class="stat-value" id="total-val">N/A</div>
+      <div class="stat-sub">Personal tracking dormant</div>
+      <div class="stat-delta up">&#9650; Token economy not yet live</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">&#937; Token Supply</div>
       <div class="stat-value">917.4B</div>
-      <div class="stat-sub">Total Omega tokens issued</div>
-      <div class="stat-delta up">&#9650; 51% Master Vault locked</div>
+      <div class="stat-sub">Total Omega tokens (reference)</div>
+      <div class="stat-delta up">&#9650; 51% Master Vault reserved</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Physical Reserves</div>
       <div class="stat-value">3-Tier</div>
       <div class="stat-sub">Gold / Rhodium / Silver</div>
-      <div class="stat-delta up">&#9650; Auto-sweep active</div>
+      <div class="stat-delta up">&#9650; Reserve model (dormant)</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Matrix Coordinate</div>
-      <div class="stat-value">(9,9,9)</div>
+      <div class="stat-value" id="port-coord">(--, --, --)</div>
       <div class="stat-sub">Axis A / B / C</div>
-      <div class="stat-delta up">&#9650; Apex -- Authority 15.588</div>
+      <div class="stat-delta up" id="port-auth">Loading authority...</div>
     </div>
   </div>
 
@@ -660,6 +660,20 @@ const w=el.style.width;el.style.width='0';
 setTimeout(()=>{el.style.width=w},300);
 });
 });
+</script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+(async function(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+  const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
+  const d=pr.data||{};
+  const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  document.getElementById('port-coord').textContent = '('+a.toFixed(2)+', '+b.toFixed(2)+', '+c.toFixed(2)+')';
+  document.getElementById('port-auth').textContent = (d.is_owner ? '\u25B2 Apex -- Authority 15.588' : ('\u25B2 Authority '+auth.toFixed(2)+' / 15.588'));
+})();
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

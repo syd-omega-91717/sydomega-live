@@ -138,15 +138,29 @@
     GATES.forEach(function(gt,i){
       var isOpen=auth>=threshold(i);
       var isCurrent=(!isOpen) && (i===open);
+      var GATE_COLS=['#D9B86A','#A9C2D8','#8B8F9C','#6B7280','#607D8B','#455A64','#C9A84C','#E8D5B7','#9B6BF0','#00E5FF','#8B0000','#C9A84C'];
       var el=document.createElement('div'); el.className='gate'+(i===11?' omega':'')+(isOpen?' open':' sealed')+(isCurrent?' current':'');
-      el.innerHTML='<div class="arch">'+ROMAN[i]+'</div><div class="body">'+
+      el.innerHTML='<span class="gate-ring-emblem" style="display:inline-block;width:52px;height:52px"></span><div class="body">'+
         '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+'</div>'+
         '<div class="glore">'+gt[6]+'</div>'+
         '<div class="meta"><span>OPENS AT AUTHORITY <b>'+threshold(i).toFixed(2)+'</b></span><span>MATERIAL <b>'+gt[2]+'</b></span></div>'+
         '<div class="meta"><span>DUAT <b>'+gt[3]+'</b> (Egy.)</span><span>CONSENTES <b>'+gt[4]+'</b> (Rom.)</span><span>ADITYA <b>'+gt[5]+'</b> (Hin.)</span></div>'+
         '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
       box.appendChild(el);
+      var ringEl=el.querySelector('.gate-ring-emblem');
+      fillRing(ringEl, ROMAN[i], GATE_COLS[i], !isOpen);
     });
+  }
+
+  function fillRing(el, glyph, col, locked){
+    if(!el) return;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
+    var tries=0;
+    var t=setInterval(function(){
+      tries++;
+      if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
+      else if(tries>20){ clearInterval(t); }
+    },150);
   }
 
   async function boot(){

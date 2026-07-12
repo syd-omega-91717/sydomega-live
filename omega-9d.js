@@ -17,7 +17,7 @@
   /* ---- (4) holographic glow + transition styles ---- */
   var css = [
     '@keyframes om9holo{0%{background-position:0% 50%}100%{background-position:300% 50%}}',
-    '.om9-holo{background:linear-gradient(100deg,#C9A84C 0%,#E2C86D 20%,#00E5FF 40%,#E2C86D 60%,#C9A84C 80%,#E2C86D 100%);background-size:300% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:om9holo 8s linear infinite}',
+    '.om9-holo{background:linear-gradient(100deg,#C9A84C 0%,#E2C86D 20%,#00E5FF 40%,#E2C86D 60%,#C9A84C 80%,#E2C86D 100%);background-size:300% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:om9holo 18s linear infinite}',
     '#om9-veil{position:fixed;inset:0;z-index:9997;background:radial-gradient(ellipse at 50% 40%,#0d0d16,#020206 70%);opacity:0;pointer-events:none;transition:opacity .5s ease}',
     '#om9-veil.on{opacity:1;pointer-events:all}',
     '#omega-atmosphere{will-change:transform}'
@@ -31,16 +31,16 @@
     var atmo = document.getElementById('omega-atmosphere');
     var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
     function loop() {
-      cx += (tx - cx) * 0.06; cy += (ty - cy) * 0.06;
+      cx += (tx - cx) * 0.035; cy += (ty - cy) * 0.035;
       if (atmo) atmo.style.transform = 'translate(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px) scale(1.06)';
       raf = requestAnimationFrame(loop);
     }
     addEventListener('mousemove', function (e) {
-      tx = (e.clientX / innerWidth - 0.5) * 26;
-      ty = (e.clientY / innerHeight - 0.5) * 26;
+      tx = (e.clientX / innerWidth - 0.5) * 12;
+      ty = (e.clientY / innerHeight - 0.5) * 12;
     }, { passive: true });
     addEventListener('scroll', function () {
-      ty = -(scrollY % 400) / 400 * 14;
+      ty = -(scrollY % 400) / 400 * 7;
     }, { passive: true });
     loop();
   }
@@ -76,7 +76,7 @@
     var AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     var ctx = null;
-    function on() { try { return localStorage.getItem('omega_sound') !== 'off'; } catch (e) { return true; } }
+    function on() { try { return localStorage.getItem('omega_sound') === 'on'; } catch (e) { return false; } }
     function tone(freq, dur, vol) {
       if (!on()) return;
       try {

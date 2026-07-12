@@ -71,15 +71,15 @@ const CHECKOUT=SB_URL+'/functions/v1/checkout';
 const sb=createClient(SB_URL,SB_KEY);
 
 const TIERS=[
-  {mat:'SAND',        name:'Initiate',      price:'9.17',   color:'#c2b280', perks:['Matrix access, axes 0.001 to 9.000','Personal cosmology and agent','Academy tier one']},
-  {mat:'GLASS',       name:'Seeker',        price:'19.17',  color:'#9fd3d8', perks:['Everything in Sand','Full academy path','Gaming arena entry']},
-  {mat:'IRON',        name:'Adept',         price:'37.17',  color:'#9aa0a6', perks:['Everything in Glass','Contribution ledger','Certificates of ascent']},
-  {mat:'STEEL',       name:'Warden',        price:'71.17',  color:'#b8c0c8', perks:['Everything in Iron','Family lineage system','Priority agent counsel']},
-  {mat:'TITANIUM',    name:'Vanguard',      price:'137.17', color:'#c8cdd2', perks:['Everything in Steel','Media universe early access','Advanced analytics']},
-  {mat:'CARBON',      name:'Architect',     price:'237.17', color:'#6f7378', perks:['Everything in Titanium','Consultancy marketplace','Heritage archives']},
-  {mat:'GOLD',        name:'Sovereign',     price:'437.17', color:'#C9A84C', perks:['Everything in Carbon','Treasury and vault access','Featured on the Hall of Fame']},
-  {mat:'PLATINUM',    name:'Luminary',      price:'637.17', color:'#dfe4e6', perks:['Everything in Gold','All twelve agents unbound','Private counsel channel']},
-  {mat:'OMEGA MASTER',name:'Ascendant',     price:'917.17', color:'#E2C86D', perks:['Everything in Platinum','Apex-tier standing','The full sovereign ecosystem']},
+  {mat:'SAND',        name:'Initiate',      price:'9.17',   color:'#c2b280', perks:['Matrix, identity & cosmology view','Your bound agent revealed','Academy -- Discipline I']},
+  {mat:'GLASS',       name:'Seeker',        price:'19.17',  color:'#9fd3d8', perks:['Full Academy -- all 12 disciplines','Gaming Arena -- Game I entry']},
+  {mat:'IRON',        name:'Adept',         price:'37.17',  color:'#9aa0a6', perks:['Full Gaming Arena -- all 12 games','Contribution ledger','Real Exam Hall certificates']},
+  {mat:'STEEL',       name:'Warden',        price:'71.17',  color:'#b8c0c8', perks:['Family, heritage & bloodline vault','Priority Oracle & Concierge responses']},
+  {mat:'TITANIUM',    name:'Vanguard',      price:'137.17', color:'#c8cdd2', perks:['Media universe early access','Research Labs submission','Create Events']},
+  {mat:'CARBON',      name:'Architect',     price:'237.17', color:'#6f7378', perks:['Book Consultancy across 9 domains','Publishing Hub','Social Hub broadcast']},
+  {mat:'GOLD',        name:'Sovereign',     price:'437.17', color:'#C9A84C', perks:['Sell on the Marketplace','Travel journey log','Automation rule builder']},
+  {mat:'PLATINUM',    name:'Luminary',      price:'637.17', color:'#dfe4e6', perks:['Treasury & Portfolio insight views','Seal Commission Contracts']},
+  {mat:'OMEGA MASTER',name:'Ascendant',     price:'917.17', color:'#E2C86D', perks:['Every feature, fully unlocked','The complete sovereign ecosystem']},
 ];
 
 let PAY_ON=false, CURRENT='none';

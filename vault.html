@@ -239,7 +239,7 @@ const NFTS=[
   {sym:'&#x25CF;',name:'OMEGA DRAGON',line:'GENESIS SIGIL',col:'#C9A84C',rarity:'GENESIS 1/1',locked:false},
   {sym:'&#x2609;',name:'THE SEER',line:'ORACLE CROWN',col:'#9B6BF0',rarity:'MYTHIC',locked:false},
   {sym:'&#x265A;',name:'COSMIC CROWN',line:'KING MARK',col:'#E2C86D',rarity:'LEGENDARY',locked:false},
-  {sym:'&#x22D4;',name:'DAGHERE LINEAGE SEAL',line:'BLOODLINE NFT',col:'#D9B86A',rarity:'SOULBOUND',locked:false},
+  {sym:'&#x22D4;',name:'DAGHER LINEAGE SEAL',line:'BLOODLINE NFT',col:'#D9B86A',rarity:'SOULBOUND',locked:false},
   {sym:'&#x2736;',name:'GATE SEAL I',line:'12 GATE SEALS',col:'#C9A84C',rarity:'RARE',locked:false},
   {sym:'&#x2302;',name:'SOVEREIGN PASSPORT',line:'IDENTITY LINE',col:'#00E5FF',rarity:'VERIFIED',locked:false},
   {sym:'&#x25C9;',name:'ORACLE NODE MARK',line:'PREDICTION LINE',col:'#9B6BF0',rarity:'RARE',locked:true},
@@ -351,8 +351,19 @@ function buildWallet(a,b,c){
     cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'&#937; 0'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
     g.appendChild(cd);
     const emblemEl=cd.querySelector('[data-omega-emblem]');
-    if(emblemEl && window.OmegaEmblem) emblemEl.innerHTML=window.OmegaEmblem.svg(tk.sign);
+    fillSvg(emblemEl, tk.sign);
   });
+}
+
+function fillSvg(el, sign){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.svg(sign); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.svg(sign); clearInterval(t); }
+    else if(tries>20){ clearInterval(t); }
+  },150);
 }
 
 function buildNFTs(){
@@ -360,9 +371,21 @@ function buildNFTs(){
   NFTS.forEach(n=>{
     const c=document.createElement('div');c.className='nft-card';
     c.style.cssText+=`border-top:2px solid ${n.col}66`;
-    c.innerHTML=`<span class="nft-symbol" style="color:${n.col}">${n.sym}</span><div class="nft-name" style="color:${n.col}">${n.name}</div><div class="nft-line">${n.line}</div><span class="nft-rarity" style="color:${n.col};border-color:${n.col}44">${n.rarity}</span>${n.locked?'<div class="nft-locked">LOCKED -- MINT PENDING</div>':''}`;
+    c.innerHTML=`<span class="nft-symbol" style="display:inline-block;width:48px;height:48px"></span><div class="nft-name" style="color:${n.col}">${n.name}</div><div class="nft-line">${n.line}</div><span class="nft-rarity" style="color:${n.col};border-color:${n.col}44">${n.rarity}</span>${n.locked?'<div class="nft-locked">LOCKED -- MINT PENDING</div>':''}`;
     g.appendChild(c);
+    fillRing(c.querySelector('.nft-symbol'), n.sym, n.col, n.locked);
   });
+}
+
+function fillRing(el, glyph, col, locked){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
+    else if(tries>20){ clearInterval(t); }
+  },150);
 }
 
 function buildTiers(currentTier){
@@ -370,8 +393,9 @@ function buildTiers(currentTier){
   TIERS.forEach((tier,i)=>{
     const active=i+1===currentTier;
     const c=document.createElement('div');c.className='tier-card'+(active?' active-tier':'');
-    c.innerHTML=`<div class="tc-num" style="color:${active?tier.col:'rgba(133,131,123,0.3)'}">${tier.n}</div><div class="tc-name" style="color:${active?tier.col:'var(--muted)'}">${tier.name}</div><div class="tc-price" style="color:${active?'var(--solar)':'var(--muted)'}">${tier.price}</div><div style="font-size:11px;color:var(--muted);font-weight:300;margin-bottom:8px">${tier.features}</div><span class="tc-badge" style="color:${active?tier.col:'var(--muted)'};border-color:${active?tier.col+'44':'rgba(133,131,123,.2)'}">${active?'CURRENT':'AVAILABLE'}</span>`;
+    c.innerHTML=`<span class="tc-ring" style="display:inline-block;width:44px;height:44px"></span><div class="tc-name" style="color:${active?tier.col:'var(--muted)'}">${tier.name}</div><div class="tc-price" style="color:${active?'var(--solar)':'var(--muted)'}">${tier.price}</div><div style="font-size:11px;color:var(--muted);font-weight:300;margin-bottom:8px">${tier.features}</div><span class="tc-badge" style="color:${active?tier.col:'var(--muted)'};border-color:${active?tier.col+'44':'rgba(133,131,123,.2)'}">${active?'CURRENT':'AVAILABLE'}</span>`;
     g.appendChild(c);
+    fillRing(c.querySelector('.tc-ring'), tier.n, tier.col, !active && i+1>currentTier);
   });
 }
 

@@ -199,6 +199,16 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
       </div>
     </div>
 
+    <!-- REVIEW QUEUES: CONTRACTS & MEDIA RESERVATIONS -->
+    <div class="card" style="margin-top:clamp(14px,3vw,28px);padding:18px">
+      <div class="hl-title" style="font-size:14px;margin-bottom:10px">COMMISSION CONTRACTS -- REVIEW QUEUE</div>
+      <div id="contracts-queue" style="font-family:var(--M);font-size:10px;color:var(--muted)">Loading...</div>
+    </div>
+    <div class="card" style="margin-top:14px;padding:18px">
+      <div class="hl-title" style="font-size:14px;margin-bottom:10px">MEDIA RESERVATIONS -- REVIEW QUEUE</div>
+      <div id="reservations-queue" style="font-family:var(--M);font-size:10px;color:var(--muted)">Loading...</div>
+    </div>
+
     <!-- MEMBER LIST -->
     <div class="member-list" id="member-list">
       <div class="empty-state">LOADING MEMBERS...</div>
@@ -225,6 +235,49 @@ function toast(msg,col){
   t.textContent=msg;t.style.color=col||'var(--green)';t.style.borderColor=(col||'rgba(63,178,127,.5)');
   t.style.display='block';setTimeout(()=>t.style.display='none',3000);
 }
+
+/* ---- CONTRACTS & RESERVATIONS REVIEW QUEUES ---- */
+function queueRow(kind, item, statusOptions){
+  var badge='<span class="mc-pill" style="color:var(--gold);border-color:rgba(201,168,76,.4)">'+item.status.toUpperCase()+'</span>';
+  var btns=statusOptions.map(function(s){
+    return '<button class="action-btn" data-kind="'+kind+'" data-id="'+item.id+'" data-status="'+s+'" style="flex:none;padding:6px 10px;font-size:9px">'+s.toUpperCase()+'</button>';
+  }).join('');
+  var label = kind==='contract' ? (item.reference||item.id) : (item.title||item.id);
+  var sub = kind==='contract' ? ('Counterparty: '+(item.counterparty||'--')+' . Value: '+(item.deal_value||'--')) : ('Zone: '+(item.zone||'--')+' . '+(item.duration||'--'));
+  return '<div style="border-bottom:1px solid var(--line);padding:10px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">'+
+    '<div><div style="font-family:var(--M);font-size:11px;color:var(--gold)">'+label+' '+badge+'</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:3px">'+sub+'</div></div>'+
+    '<div style="display:flex;gap:6px">'+btns+'</div></div>';
+}
+
+async function loadContracts(){
+  var box=document.getElementById('contracts-queue');
+  try{
+    var r=await sb.rpc('review_contracts');
+    if(r.error) throw r.error;
+    var rows=(r.data||[]);
+    box.innerHTML = rows.length ? rows.map(function(c){ return queueRow('contract',c,['reviewing','sealed','rejected']); }).join('') : 'No contracts submitted yet.';
+  }catch(e){ box.innerHTML='Could not load contracts.'; }
+}
+async function loadReservations(){
+  var box=document.getElementById('reservations-queue');
+  try{
+    var r=await sb.rpc('review_reservations');
+    if(r.error) throw r.error;
+    var rows=(r.data||[]);
+    box.innerHTML = rows.length ? rows.map(function(m){ return queueRow('reservation',m,['reviewing','approved','live','rejected']); }).join('') : 'No reservations submitted yet.';
+  }catch(e){ box.innerHTML='Could not load reservations.'; }
+}
+document.addEventListener('click',async function(e){
+  var btn=e.target.closest('[data-kind][data-id][data-status]');
+  if(!btn) return;
+  var kind=btn.dataset.kind, id=btn.dataset.id, status=btn.dataset.status;
+  var fn = kind==='contract' ? 'set_contract_status' : 'set_reservation_status';
+  var arg = kind==='contract' ? {p_id:id,p_status:status} : {p_id:id,p_status:status};
+  var r=await sb.rpc(fn,arg);
+  if(r.error || !(r.data&&r.data.ok)){ toast('Update failed.','var(--crim)'); return; }
+  toast((kind==='contract'?'Contract':'Reservation')+' set to '+status.toUpperCase()+'.');
+  kind==='contract' ? loadContracts() : loadReservations();
+});
 
 /* ---- BROADCAST A DISPATCH ---- */
 document.getElementById('disp-send').addEventListener('click',async()=>{
@@ -296,6 +349,15 @@ async function extend(uid){
   toast('SESSION EXTENDED . NEW 9.1717 MIN WINDOW');
 }
 
+/* ---- GRANT PERMANENT (lifts the trial, access never expires) ---- */
+async function grantPermanent(uid){
+  if(!confirm('Grant permanent access? This lifts the 9.1717-minute trial -- access will never expire.')) return;
+  const r=await sb.rpc('grant_permanent_access',{p_uid:uid});
+  if(r.error || !(r.data&&r.data.ok)){ toast('Could not grant permanent access.','var(--crim)'); return; }
+  toast('PERMANENT ACCESS GRANTED');
+  load();
+}
+
 /* ---- BUILD MEMBER CARD ---- */
 function buildCard(m){
   const now=Date.now();
@@ -333,7 +395,7 @@ function buildCard(m){
     </div>
     <div class="mc-actions">
       ${isPending||isExpired?`<button class="action-btn btn-approve" data-uid="${m.id}">&#x2713; APPROVE 9.1717 MIN</button><button class="action-btn btn-reject" data-uid="${m.id}">&#x2715; REJECT</button>`:''}
-      ${isActive?`<button class="action-btn btn-extend" data-uid="${m.id}">+ EXTEND 9.1717 MIN</button><button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; END SESSION NOW</button>`:''}
+      ${isActive?`<button class="action-btn btn-extend" data-uid="${m.id}">+ EXTEND 9.1717 MIN</button><button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; END SESSION NOW</button><button class="action-btn btn-extend" data-uid="${m.id}" data-permanent="1">&#x2726; GRANT PERMANENT</button>`:''}
       ${isApproved?`<button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; REVOKE ACCESS</button>`:''}
       ${isRejected&&!isExpired?`<button class="action-btn btn-approve" data-uid="${m.id}">&#x2713; APPROVE 9.1717 MIN</button>`:''}
     </div>`;
@@ -342,7 +404,12 @@ function buildCard(m){
   card.querySelector('.btn-approve')?.addEventListener('click',e=>approve(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
   card.querySelector('.btn-reject')?.addEventListener('click',e=>reject(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
   card.querySelector('.btn-revoke')?.addEventListener('click',e=>revoke(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
-  card.querySelector('.btn-extend')?.addEventListener('click',e=>extend(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
+  card.querySelectorAll('.btn-extend').forEach(function(b){
+    b.addEventListener('click',function(e){
+      var uid=e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid;
+      if(b.dataset.permanent) grantPermanent(uid); else extend(uid);
+    });
+  });
 
   /* Start countdown for active */
   if(isActive){
@@ -423,6 +490,8 @@ async function boot(){
   document.getElementById('gate').style.display='none';
   document.getElementById('main').style.display='block';
   load();
+  loadContracts();
+  loadReservations();
   /* Auto-refresh every 20 seconds */
   setInterval(load,20000);
 }

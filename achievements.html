@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Omega SYD OMEGA 91717 - The Achievements</title>
+<meta name="theme-color" content="#C9A84C"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --void:#0A0A0F; --panel:#0d0d15; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh}
+  .wrap{max-width:1100px;margin:0 auto;padding:26px 18px 90px}
+  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(20px,3vw,30px);letter-spacing:2px}
+  .topbar small{display:block;font-family:var(--mono);color:var(--muted);letter-spacing:3px;font-size:11px;margin-top:6px}
+  .hero{margin:22px 0;border:1px solid var(--line);border-radius:16px;padding:22px;background:linear-gradient(180deg,rgba(201,168,76,.05),transparent)}
+  .hero .cur{font-family:var(--display);font-size:52px;color:var(--gold);line-height:1}
+  .hero .nm{font-family:var(--display);color:var(--solar);font-size:20px;margin-top:4px}
+  .hero .auth{font-family:var(--mono);color:var(--cyan);letter-spacing:2px;font-size:13px;margin-top:10px}
+  .bar{height:8px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden;margin-top:14px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--solar))}
+  .bar-lbl{font-family:var(--mono);color:var(--muted);font-size:11px;letter-spacing:1px;margin-top:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:22px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--panel);transition:all .25s}
+  .card.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 0 28px -8px rgba(226,200,109,.5)}
+  .card.locked{opacity:.5}
+  .card .rn{font-family:var(--display);color:var(--gold);font-size:26px}
+  .card .gn{font-family:var(--body);font-weight:600;color:var(--ink);margin:4px 0}
+  .card .th{font-family:var(--mono);color:var(--muted);font-size:11px;letter-spacing:1px}
+  .card .tag{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:3px 8px;border-radius:10px}
+  .tag.now{background:rgba(201,168,76,.16);color:var(--solar)} .tag.done{background:rgba(63,178,127,.14);color:#7ad1a0} .tag.lock{background:rgba(255,255,255,.04);color:var(--muted)}
+  .gate{max-width:460px;margin:80px auto;text-align:center;border:1px solid var(--line);border-radius:16px;padding:40px}
+  .gate .g{font-family:var(--display);font-size:52px;color:var(--gold)} .gate h2{font-family:var(--display);color:var(--gold)}
+  .gate a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:13px 24px;text-decoration:none;margin-top:12px}
+
+  .rowsec{margin-top:26px}
+  .rowsec h3{font-family:var(--display);color:var(--cyan);font-size:15px;letter-spacing:2px;margin:0 0 4px}
+  .rowsec .sub{font-family:var(--mono);color:var(--muted);font-size:11px;letter-spacing:1px;margin:0 0 12px}
+  .slots{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
+  @media(max-width:760px){.slots{grid-template-columns:repeat(6,1fr)}}
+  .slot{aspect-ratio:1;border-radius:10px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--panel);position:relative}
+  .slot .n{font-family:var(--display);font-size:18px}
+  .slot.earned{color:#0a0a0f}
+  .slot.t1.earned{background:linear-gradient(180deg,#c98a4c,#a86a33);border-color:#c98a4c}
+  .slot.t2.earned{background:linear-gradient(180deg,#d8dce4,#aab1bd);border-color:#d8dce4}
+  .slot.t3.earned{background:linear-gradient(180deg,#E2C86D,#C9A84C);border-color:#E2C86D}
+  .slot.t4.earned{background:linear-gradient(180deg,#00E5FF,#3a9fd0);border-color:#00E5FF;box-shadow:0 0 18px -4px rgba(0,229,255,.6)}
+  .summary{margin-top:24px;text-align:center;font-family:var(--mono);color:var(--solar);letter-spacing:2px;font-size:14px}
+  .stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .stat3{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:var(--panel)}
+  .stat3 .v{font-family:var(--display);color:var(--gold);font-size:28px}
+  .stat3 .l{font-family:var(--mono);color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:4px}
+</style>
+</head>
+<body>
+  <div id="gate" class="gate" style="display:none"><div class="g">&#937;</div><h2>The Achievements</h2><p style="color:var(--muted)">Sign in to see everything you have earned.</p><a href="/account.html">GO TO MEMBER ACCESS &rarr;</a></div>
+  <div id="app" class="wrap" style="display:none">
+    <div class="topbar"><div class="t">THE ACHIEVEMENTS</div><small>YOUR SOVEREIGN RECORD &middot; GRADE &middot; LEVEL &middot; PHASE &middot; HONORS</small></div>
+    <div class="hero">
+      <div class="stats3">
+        <div class="stat3"><div class="v" id="h-grade">--</div><div class="l">GRADE</div></div>
+        <div class="stat3"><div class="v" id="h-level">--</div><div class="l">LEVEL</div></div>
+        <div class="stat3"><div class="v" id="h-phase">--</div><div class="l">PHASE</div></div>
+      </div>
+      <div class="auth" id="h-auth" style="text-align:center;margin-top:14px">AUTHORITY --</div>
+    </div>
+
+    <div class="rowsec"><h3>CERTIFICATES</h3><div class="sub">PROOF OF KNOWLEDGE (AXIS A) &middot; <span id="c-count">0</span> / 12</div><div class="slots" id="certs"></div></div>
+    <div class="rowsec"><h3>TROPHIES</h3><div class="sub">MASTERY MILESTONES (AXIS B) &middot; <span id="t-count">0</span> / 12</div><div class="slots" id="trophies"></div></div>
+    <div class="rowsec"><h3>MEDALS</h3><div class="sub">CONTRIBUTION MILESTONES (AXIS C) &middot; <span id="m-count">0</span> / 12</div><div class="slots" id="medals"></div></div>
+
+    <div class="summary" id="summary">TOTAL HONORS -- / 36</div>
+  </div>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  const APEX=15.588;
+  const PHASE=['The Awakening','The Calling','The Foundation','The First Gate','The Trials','The Ascent','The Convergence','The Sovereign Trial','The Celestial Alignment','The Dominion','The Legacy','The Omega'];
+  function band(auth){ var g=Math.max(1,Math.min(12,Math.ceil(auth/APEX*12))); var lo=(g-1)/12*APEX,hi=g/12*APEX,w=Math.max(0,Math.min(1,(auth-lo)/(hi-lo))); var lv=Math.max(1,Math.min(12,Math.ceil(w*12))); return {g:g,lv:lv}; }
+  function tier(n){ return n<=3?1:(n<=6?2:(n<=9?3:4)); }
+  function canonName(kind,i){ var C=window.OmegaCanon; if(!C||!C.track) return ''; 
+    var t=C.track(i); if(!t) return '';
+    return kind==='certs'?t.certificate : kind==='trophies'?t.trophy : kind==='medals'?t.medal : ''; }
+  function fill(id,earnedSet){ var box=document.getElementById(id); box.innerHTML='';
+    for(var i=1;i<=12;i++){ var on=earnedSet.has(i); var d=document.createElement('div');
+      var nm=canonName(id,i);
+      d.className='slot t'+tier(i)+(on?' earned':''); d.title=nm||('#'+i);
+      d.innerHTML='<div class="n">'+i+'</div>'+(nm?'<div style="font-size:8px;line-height:1.1;margin-top:3px;opacity:.85">'+nm.replace(/^(Medal|Trophy|Certificate) of /,'')+'</div>':(on?'':'<div>&#8226;</div>')); box.appendChild(d); } }
+  // relabel once the canon loads
+  document.addEventListener('omega-canon-ready',function(){ if(window.__lastFill) window.__lastFill(); });
+  function boot(){ supabase.auth.getSession().then(function(r){
+    var s=r.data.session; if(!s){ document.getElementById('gate').style.display='block'; return; }
+    var uid=s.user.id;
+    Promise.all([
+      supabase.from('profiles').select('axis_a,axis_b,axis_c').eq('id',uid).maybeSingle(),
+      supabase.from('trophies').select('trophy_num').eq('user_id',uid),
+      supabase.from('medals').select('medal_num').eq('user_id',uid),
+      supabase.from('certificates').select('id').eq('user_id',uid)
+    ]).then(function(res){
+      var p=res[0].data||{}; var a=Number(p.axis_a||1),b=Number(p.axis_b||1),c=Number(p.axis_c||1);
+      var auth=Math.sqrt(a*a+b*b+c*c); var bd=band(auth);
+      document.getElementById('gate').style.display='none'; document.getElementById('app').style.display='block';
+      document.getElementById('h-grade').textContent=bd.g;
+      document.getElementById('h-level').textContent=bd.lv;
+      document.getElementById('h-phase').textContent=bd.g;
+      document.getElementById('h-auth').textContent='AUTHORITY '+auth.toFixed(3)+' / '+APEX+'  \u00B7  '+PHASE[bd.g-1];
+      var tset=new Set((res[1].data||[]).map(function(x){return x.trophy_num;}).filter(Boolean));
+      var mset=new Set((res[2].data||[]).map(function(x){return x.medal_num;}).filter(Boolean));
+      var cCount=(res[3].data||[]).length; var cset=new Set(); for(var i=1;i<=Math.min(12,cCount);i++) cset.add(i);
+      window.__lastFill=function(){ fill('certs',cset); fill('trophies',tset); fill('medals',mset); }; window.__lastFill();
+      document.getElementById('c-count').textContent=cset.size;
+      document.getElementById('t-count').textContent=tset.size;
+      document.getElementById('m-count').textContent=mset.size;
+      var total=cset.size+tset.size+mset.size;
+      document.getElementById('summary').textContent='TOTAL HONORS '+total+' / 36';
+    });
+  }); }
+  boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

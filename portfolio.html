@@ -174,23 +174,9 @@ td.gold{color:var(--gold);font-family:'Courier Prime',monospace}
 
 <canvas id="bg-canvas"></canvas>
 
-<nav>
-  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
-  <ul class="nav-links">
-    <li><a href="dashboard.html">Command</a></li>
-    <li><a href="matrix.html">Matrix</a></li>
-    <li><a href="portfolio.html" class="active">Portfolio</a></li>
-    <li><a href="treasury.html">Treasury</a></li>
-    <li><a href="honors.html">Honors</a></li>
-    <li><a href="media.html">Media</a></li>
-    <li><a href="agents.html">Agents</a></li>
-  </ul>
-  <div class="nav-right">
-    <span class="nav-status">&#9632; LIVE</span>
-    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
-  </div>
-</nav>
-
+<div class="shell" style="display:flex;min-height:100vh">
+  <aside class="side" id="omega-side" data-page="portfolio" style="width:80px;flex-shrink:0"></aside>
+  <div style="flex:1;min-width:0">
 <div class="page">
   <!-- HERO -->
   <div class="hero-band">
@@ -677,5 +663,7 @@ setTimeout(()=>{el.style.width=w},300);
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</div>
+</div>
 </body>
 </html>

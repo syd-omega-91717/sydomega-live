@@ -221,18 +221,18 @@ const ASSETS=[
 ];
 
 const TOKENS=[
-  {sym:'&#x25CF;',name:'PYRON',token:'ARIES TOKEN',col:'#E86A3A',bal:'0'},
-  {sym:'&#x25C8;',name:'AURUM',token:'TAURUS TOKEN',col:'#C7CDD6',bal:'0'},
-  {sym:'&#x2609;',name:'ZEPHYR',token:'GEMINI TOKEN',col:'#A9C2D8',bal:'0'},
-  {sym:'&#x2302;',name:'NEREID',token:'CANCER TOKEN',col:'#34C6E6',bal:'0'},
-  {sym:'&#x2736;',name:'SOLARII',token:'LEO TOKEN',col:'#E86A3A',bal:'0'},
-  {sym:'&#x03A9;',name:'ARENITE',token:'VIRGO TOKEN',col:'#D9B86A',bal:'0'},
-  {sym:'&#x25B6;',name:'FORGEON',token:'LIBRA TOKEN',col:'#A9C2D8',bal:'0'},
-  {sym:'&#x25B2;',name:'STYX',token:'SCORPIO TOKEN',col:'#8B0000',bal:'0'},
-  {sym:'&#x2726;',name:'EMBER',token:'SAGITTARIUS TOKEN',col:'#C9A84C',bal:'0'},
-  {sym:'&#x22D4;',name:'FERRUM',token:'CAPRICORN TOKEN',col:'#E2C86D',bal:'0'},
-  {sym:'&#x2316;',name:'AETHER',token:'AQUARIUS TOKEN',col:'#9B6BF0',bal:'0'},
-  {sym:'&#x21C4;',name:'ABYSS',token:'PISCES TOKEN',col:'#3fb27f',bal:'0'},
+  {sym:'&#x25CF;',name:'PYRON',token:'ARIES TOKEN',sign:'Aries',col:'#E86A3A',bal:'0'},
+  {sym:'&#x25C8;',name:'AURUM',token:'TAURUS TOKEN',sign:'Taurus',col:'#C7CDD6',bal:'0'},
+  {sym:'&#x2609;',name:'ZEPHYR',token:'GEMINI TOKEN',sign:'Gemini',col:'#A9C2D8',bal:'0'},
+  {sym:'&#x2302;',name:'NEREID',token:'CANCER TOKEN',sign:'Cancer',col:'#34C6E6',bal:'0'},
+  {sym:'&#x2736;',name:'SOLARI',token:'LEO TOKEN',sign:'Leo',col:'#E86A3A',bal:'0'},
+  {sym:'&#x03A9;',name:'ARENITE',token:'VIRGO TOKEN',sign:'Virgo',col:'#D9B86A',bal:'0'},
+  {sym:'&#x25B6;',name:'FORGEON',token:'LIBRA TOKEN',sign:'Libra',col:'#A9C2D8',bal:'0'},
+  {sym:'&#x25B2;',name:'STYX',token:'SCORPIO TOKEN',sign:'Scorpio',col:'#8B0000',bal:'0'},
+  {sym:'&#x2726;',name:'EMBER',token:'SAGITTARIUS TOKEN',sign:'Sagittarius',col:'#C9A84C',bal:'0'},
+  {sym:'&#x22D4;',name:'FERRUM',token:'CAPRICORN TOKEN',sign:'Capricorn',col:'#E2C86D',bal:'0'},
+  {sym:'&#x2316;',name:'AETHER',token:'AQUARIUS TOKEN',sign:'Aquarius',col:'#9B6BF0',bal:'0'},
+  {sym:'&#x21C4;',name:'ABYSS',token:'PISCES TOKEN',sign:'Pisces',col:'#3fb27f',bal:'0'},
 ];
 
 const NFTS=[
@@ -348,8 +348,10 @@ function buildWallet(a,b,c){
     const bal=parseFloat(tk.bal)||0;
     const cd=document.createElement('div');cd.className='wl-card';
     cd.style.cssText+=`border-top-color:${tk.col}`;
-    cd.innerHTML=`<span class="wlc-sym" style="color:${tk.col}">${tk.sym}</span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'&#937; 0'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
+    cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'&#937; 0'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
     g.appendChild(cd);
+    const emblemEl=cd.querySelector('[data-omega-emblem]');
+    if(emblemEl && window.OmegaEmblem) emblemEl.innerHTML=window.OmegaEmblem.svg(tk.sign);
   });
 }
 

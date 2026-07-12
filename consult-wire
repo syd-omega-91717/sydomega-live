@@ -1,9 +1,0 @@
-<!-- Add near your booking form. Requires supabase client already on the page. -->
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  window.omegaSubmitConsult = async function(domain, subject, message){
-    const r = await sb.rpc('submit_consult_request',{p_domain:domain,p_subject:subject,p_message:message});
-    return r.data && r.data.ok;   // true = saved; show confirmation
-  };
-</script>

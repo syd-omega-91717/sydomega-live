@@ -23,5 +23,8 @@
     { "source": "/:path*.sol", "destination": "/dashboard.html", "permanent": false },
     { "source": "/:path*.sql", "destination": "/dashboard.html", "permanent": false },
     { "source": "/:path*.docx", "destination": "/dashboard.html", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/enter.html" }
   ]
 }

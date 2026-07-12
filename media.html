@@ -168,23 +168,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <body>
 <canvas id="bg-canvas"></canvas>
 
-<nav>
-  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
-  <ul class="nav-links">
-    <li><a href="dashboard.html">Command</a></li>
-    <li><a href="matrix.html">Matrix</a></li>
-    <li><a href="portfolio.html">Portfolio</a></li>
-    <li><a href="treasury.html">Treasury</a></li>
-    <li><a href="honors.html">Honors</a></li>
-    <li><a href="media.html" class="active">Media</a></li>
-    <li><a href="agents.html">Agents</a></li>
-  </ul>
-  <div class="nav-right">
-    <span class="nav-status">&#9632; LIVE</span>
-    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
-  </div>
-</nav>
-
+<div class="shell" style="display:flex;min-height:100vh">
+  <aside class="side" id="omega-side" data-page="media" style="width:80px;flex-shrink:0"></aside>
+  <div style="flex:1;min-width:0">
 <div class="page">
   <div class="hero-band">
     <div class="hero-eyebrow">M6 // CINEMATIC UNIVERSE</div>
@@ -565,5 +551,7 @@ if(cat==='all'||cats.includes(cat)){card.style.display='';}else{card.style.displ
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</div>
+</div>
 </body>
 </html>

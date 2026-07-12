@@ -238,5 +238,149 @@
       "THE NINTH"
     ],
     "note": "Tracks carry a PHYSICAL element (sign-derived). SOUL/SPACE/VOID are class-assigned; THE NINTH activates at Stage 9."
+  },
+  "tiers": [
+    {
+      "n": 1,
+      "mat": "SAND",
+      "name": "Initiate",
+      "price": 9.17,
+      "color": "#c2b280",
+      "unlocks": [
+        "dashboard",
+        "matrix",
+        "identity",
+        "cosmology_view",
+        "agents_view",
+        "academy_disc1"
+      ],
+      "desc": "Your standing in the Order becomes real. Full matrix visibility, your own cosmology and bound agent, and the first Academy discipline."
+    },
+    {
+      "n": 2,
+      "mat": "GLASS",
+      "name": "Seeker",
+      "price": 19.17,
+      "color": "#9fd3d8",
+      "unlocks": [
+        "academy_full",
+        "gaming_entry"
+      ],
+      "desc": "The full Academy path opens -- all twelve disciplines. The Gaming Arena admits you to your first game."
+    },
+    {
+      "n": 3,
+      "mat": "IRON",
+      "name": "Adept",
+      "price": 37.17,
+      "color": "#9aa0a6",
+      "unlocks": [
+        "gaming_full",
+        "contribution_log",
+        "exam_certificates"
+      ],
+      "desc": "Every game in the Arena. Your contribution ledger begins recording. The Exam Hall issues real, held certificates."
+    },
+    {
+      "n": 4,
+      "mat": "STEEL",
+      "name": "Warden",
+      "price": 71.17,
+      "color": "#b8c0c8",
+      "unlocks": [
+        "family_heritage",
+        "priority_oracle"
+      ],
+      "desc": "Family lineage, heritage archive, and bloodline vault unlock. The Oracle and Concierge respond with priority depth."
+    },
+    {
+      "n": 5,
+      "mat": "TITANIUM",
+      "name": "Vanguard",
+      "price": 137.17,
+      "color": "#c8cdd2",
+      "unlocks": [
+        "media_early_access",
+        "research_lab",
+        "events_create"
+      ],
+      "desc": "Early access to the media universe as it's built. Submit real hypotheses to the Research Labs. Create events, not just attend them."
+    },
+    {
+      "n": 6,
+      "mat": "CARBON",
+      "name": "Architect",
+      "price": 237.17,
+      "color": "#6f7378",
+      "unlocks": [
+        "consultancy_book",
+        "publishing",
+        "social_broadcast"
+      ],
+      "desc": "Book real consultancy sessions across all nine domains. Publish your own works. Broadcast across the Social Hub."
+    },
+    {
+      "n": 7,
+      "mat": "GOLD",
+      "name": "Sovereign",
+      "price": 437.17,
+      "color": "#C9A84C",
+      "unlocks": [
+        "marketplace_sell",
+        "travel_log",
+        "automation_rules"
+      ],
+      "desc": "List and sell on the Marketplace, not just browse. Log your journeys. Build your own automation rules."
+    },
+    {
+      "n": 8,
+      "mat": "PLATINUM",
+      "name": "Luminary",
+      "price": 637.17,
+      "color": "#dfe4e6",
+      "unlocks": [
+        "treasury_insight",
+        "contracts_seal"
+      ],
+      "desc": "Deep treasury and portfolio insight views. Seal commission contracts under sovereign terms."
+    },
+    {
+      "n": 9,
+      "mat": "OMEGA MASTER",
+      "name": "Ascendant",
+      "price": 917.17,
+      "color": "#E2C86D",
+      "unlocks": [
+        "all"
+      ],
+      "desc": "Every feature across the platform, fully unlocked. The complete sovereign ecosystem."
+    }
+  ],
+  "tier_features": {
+    "dashboard": "Command Center",
+    "matrix": "729-Node Matrix (full)",
+    "identity": "Sovereign Passport & Identity",
+    "cosmology_view": "Cosmology, Elements, Gates, Pantheons (view)",
+    "agents_view": "12 Agents directory",
+    "academy_disc1": "Academy -- Discipline I",
+    "academy_full": "Academy -- all 12 disciplines",
+    "gaming_entry": "Gaming Arena -- Game I",
+    "gaming_full": "Gaming Arena -- all 12 games",
+    "contribution_log": "Contribution Ledger",
+    "exam_certificates": "Exam Hall certificates",
+    "family_heritage": "Family, Heritage & Bloodline vault",
+    "priority_oracle": "Priority Oracle & Concierge responses",
+    "media_early_access": "Media Universe early access",
+    "research_lab": "Research Labs submission",
+    "events_create": "Create Events",
+    "consultancy_book": "Book Consultancy sessions",
+    "publishing": "Publishing Hub",
+    "social_broadcast": "Social broadcast",
+    "marketplace_sell": "Marketplace -- sell listings",
+    "travel_log": "Travel journey log",
+    "automation_rules": "Automation rule builder",
+    "treasury_insight": "Treasury & Portfolio insight views",
+    "contracts_seal": "Seal Commission Contracts",
+    "all": "Every feature, fully unlocked"
   }
 }

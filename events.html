@@ -110,7 +110,11 @@ var EVENTS=[
 ];
 
 var joined=new Set();
-try{joined=new Set(JSON.parse(localStorage.getItem('omega_joined_events')||'[]'));}catch(e){}
+
+async function loadJoined(){
+  const { data } = await sb.from('event_rsvps').select('event_ref');
+  joined = new Set((data||[]).map(function(r){return r.event_ref;}));
+}
 
 function renderEvents(){
   var grid=document.getElementById('events-grid');
@@ -118,7 +122,8 @@ function renderEvents(){
   EVENTS.forEach(function(ev,i){
     var card=document.createElement('div');
     card.className='event-card';
-    var isJ=joined.has(i);
+    var key=ev.title;
+    var isJ=joined.has(key);
     card.innerHTML=
       '<div class="date-block"><div class="month">'+ev.month+'</div><div class="day">'+ev.day+'</div><div class="year">'+ev.year+'</div></div>'+
       '<div class="body">'+
@@ -132,18 +137,34 @@ function renderEvents(){
           '<button class="btn-join'+(isJ?' joined':'')+'" data-idx="'+i+'">'+(isJ?'&#x2713; REGISTERED':'REGISTER')+'</button>'+
         '</div>'+
       '</div>';
-    card.querySelector('.btn-join').addEventListener('click',function(btn){
-      if(joined.has(i)){joined.delete(i);}else{joined.add(i);}
-      try{localStorage.setItem('omega_joined_events',JSON.stringify([...joined]));}catch(e){}
+    card.querySelector('.btn-join').addEventListener('click',async function(){
+      if(joined.has(key)){
+        joined.delete(key);
+        await sb.from('event_rsvps').delete().eq('event_ref',key);
+      } else {
+        joined.add(key);
+        await sb.from('event_rsvps').insert({event_ref:key});
+      }
       renderEvents();
     });
     grid.appendChild(card);
   });
 }
 
-document.getElementById('btn-ev').addEventListener('click',function(){
+document.getElementById('btn-ev').addEventListener('click',async function(){
   var t=document.getElementById('ev-title').value.trim();
   if(!t) return;
+  var payload={
+    title:t,
+    event_date: document.getElementById('ev-date') ? document.getElementById('ev-date').value : null,
+    format: document.getElementById('ev-format') ? document.getElementById('ev-format').value : null,
+    event_type: document.getElementById('ev-type') ? document.getElementById('ev-type').value : null,
+    description: document.getElementById('ev-desc') ? document.getElementById('ev-desc').value.trim() : null
+  };
+  var { error } = await sb.from('member_events').insert(payload);
+  if(error){ alert('Could not save event: '+error.message); return; }
+  document.getElementById('ev-title').value='';
+  if(document.getElementById('ev-desc')) document.getElementById('ev-desc').value='';
   var s=document.getElementById('ev-saved'); s.style.display='block';
   setTimeout(function(){s.style.display='none';},3000);
 });
@@ -151,6 +172,7 @@ document.getElementById('btn-ev').addEventListener('click',function(){
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
+  await loadJoined();
   renderEvents();
 }
 boot();

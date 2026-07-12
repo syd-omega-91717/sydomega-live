@@ -20,8 +20,8 @@
     // gentle interactive glow for content tiles/tokens/nodes
     '[data-oc-glow],.token,.node,.tile,.mod,.nftcard,.tcard{transition:box-shadow .3s ease,transform .3s ease}',
     '[data-oc-glow]:hover,.token:hover,.node:hover,.tile:hover,.nftcard:hover,.tcard:hover{box-shadow:0 0 0 1px rgba(201,168,76,.35),0 0 26px -6px rgba(226,200,109,.5)}',
-    '@keyframes omTitleGlow{0%,100%{text-shadow:0 0 8px rgba(201,168,76,.12)}50%{text-shadow:0 0 20px rgba(226,200,109,.42)}}',
-    '.t,.brand,.sechead,.hero .nm,.topbar .t,h1{animation:omTitleGlow 5s ease-in-out infinite}',
+    '@keyframes omTitleGlow{0%,100%{text-shadow:0 0 6px rgba(201,168,76,.08)}50%{text-shadow:0 0 14px rgba(226,200,109,.28)}}',
+    '.t,.brand,.sechead,.hero .nm,.topbar .t,h1{animation:omTitleGlow 10s ease-in-out infinite}',
     '@keyframes omEmblemSpin{to{transform:rotate(360deg)}}',
     '.sechead{position:relative}',
     '@media(prefers-reduced-motion:reduce){.t,.brand,.sechead,h1{animation:none}.sechead::before{animation:none}}'

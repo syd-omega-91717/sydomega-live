@@ -52,11 +52,18 @@
     '.mbr-row{flex-direction:column;align-items:flex-start}',
     '.mbr-actions{width:100%;justify-content:flex-start}',
     '}',
-    /* Ensure touch feedback */
-    'a,button{-webkit-tap-highlight-color:rgba(201,168,76,.15)}',
-    /* Swipe hint for drawer */
-    '#omega-drawer{border-top:3px solid #C9A84C}',
-    '#omega-drawer .drawer-header{position:sticky;top:0;background:rgba(8,8,15,.98);z-index:1}',
+    /* ===== SHARED HEADER COMPONENTS -- centralizes .topbar (54 pages) and .hero-band ===== */
+    /* (6 pages), previously each page carried its own separate copy of this CSS.       */
+    '.topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}',
+    '.hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}',
+    /* ===== ACCESSIBILITY -- ALL PAGES (WCAG 2.3.3 + 2.4.7) ===== */
+    /* Visible keyboard focus everywhere, not reliant on each page defining its own */
+    ':focus-visible{outline:2px solid #00E5FF!important;outline-offset:2px!important}',
+    'a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid #00E5FF!important;outline-offset:2px!important;border-radius:2px}',
+    /* Respect prefers-reduced-motion sitewide -- stop/shorten CSS animations & transitions */
+    '@media(prefers-reduced-motion:reduce){',
+    '*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}',
+    '}',
   ].join('');
   (document.head||document.documentElement).appendChild(s);
 })();

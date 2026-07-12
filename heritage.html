@@ -183,11 +183,14 @@ var ARCHIVES=[
 ];
 
 /* Build timeline from local storage (heritage records) */
-function buildTimeline(){
+async function buildTimeline(){
   var tl=document.getElementById('timeline');
   tl.innerHTML='';
   var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_heritage_records')||'[]');}catch(e){}
+  try{
+    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').order('created_at',{ascending:true});
+    stored = (r.data||[]).map(function(x){return {title:x.title,body:x.body,era:x.era,category:x.category,ts:x.created_at};});
+  }catch(e){}
 
   var byEra={};
   ERAS.forEach(function(e){byEra[e.key]=[];});
@@ -239,17 +242,15 @@ function buildArchives(){
   });
 }
 
-document.getElementById('btn-save').addEventListener('click',function(){
+document.getElementById('btn-save').addEventListener('click',async function(){
   var title=document.getElementById('h-title').value.trim();
   var body=document.getElementById('h-body').value.trim();
   var era=document.getElementById('era-select').value;
   var cat=document.getElementById('h-category').value;
   if(!title||!body) return;
-  var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_heritage_records')||'[]');}catch(e){}
-  stored.push({title:title,body:body,era:era,category:cat,ts:new Date().toISOString()});
-  try{localStorage.setItem('omega_heritage_records',JSON.stringify(stored));}catch(e){}
-  buildTimeline();
+  var { error } = await sb.from('heritage_records').insert({title:title,body:body,era:era,category:cat});
+  if(error){ alert('Could not save record: '+error.message); return; }
+  await buildTimeline();
   document.getElementById('h-title').value='';
   document.getElementById('h-body').value='';
   var n=document.getElementById('notice-saved'); n.style.display='block';

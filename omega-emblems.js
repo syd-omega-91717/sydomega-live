@@ -71,6 +71,24 @@
       + '</svg></span>';
   }
 
+  // generalized ring for non-zodiac numbered/titled sequences (ascension
+  // stages, phases, gates) -- same rotating-ring visual language as svg(),
+  // but takes an arbitrary glyph/number and colour instead of a sign.
+  // opts: { locked:boolean } dims the ring and fades the glyph for locked items.
+  function ring(glyph, color, opts) {
+    opts = opts || {};
+    var c = color || '#C9A84C';
+    var dim = opts.locked ? '.28' : '1';
+    var fontSize = String(glyph).length > 2 ? 26 : 40;
+    return '<span class="oe-wrap" style="--oe:' + c + ';opacity:' + dim + '">'
+      + '<svg viewBox="0 0 120 120" class="oe-svg" style="filter:drop-shadow(0 0 6px ' + c + '55)">'
+      + '<g class="oe-spin"><circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 7" opacity="0.55"/></g>'
+      + '<g class="oe-spinr"><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.3"/>' + ticks(44) + '</g>'
+      + '<circle class="oe-pulse" cx="60" cy="60" r="34" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>'
+      + '<text class="oe-glyph" x="60" y="61" text-anchor="middle" dominant-baseline="central" font-size="' + fontSize + '" fill="currentColor" style="filter:drop-shadow(0 0 5px ' + c + ')">' + glyph + '</text>'
+      + '</svg></span>';
+  }
+
   function fill(el, sign) {
     if (el.__oe) return;
     el.__oe = 1;
@@ -120,5 +138,5 @@
   else document.addEventListener('DOMContentLoaded', boot);
 
   // expose for pages that want to build a full 12-emblem gallery
-  window.OmegaEmblem = { svg: svg, signs: Object.keys(SIGN) };
+  window.OmegaEmblem = { svg: svg, ring: ring, signs: Object.keys(SIGN) };
 })();

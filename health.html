@@ -158,10 +158,10 @@ function renderNinth(scores){
   });
 }
 
-function loadHistory(){
+async function loadHistory(){
   var feed=document.getElementById('history-feed');
-  var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_health_log')||'[]');}catch(e){}
+  var { data } = await sb.from('health_logs').select('mind,heart,energy,body,soul,total,notes,created_at').order('created_at',{ascending:false}).limit(60);
+  var stored=(data||[]).map(function(x){return {mind:x.mind,heart:x.heart,energy:x.energy,body:x.body,soul:x.soul,total:x.total,notes:x.notes,ts:x.created_at};});
   feed.innerHTML='';
   if(!stored.length){
     feed.innerHTML='<div class="h-entry"><div class="info">No entries yet. Log your first state above.</div></div>';
@@ -192,7 +192,7 @@ function loadHistory(){
   }
 }
 
-document.getElementById('btn-log').addEventListener('click',function(){
+document.getElementById('btn-log').addEventListener('click',async function(){
   var mind=+document.getElementById('l-mind').value;
   var heart=+document.getElementById('l-heart').value;
   var energy=+document.getElementById('l-energy').value;
@@ -200,12 +200,9 @@ document.getElementById('btn-log').addEventListener('click',function(){
   var soul=+document.getElementById('l-soul').value;
   var notes=document.getElementById('l-notes').value.trim();
   var total=(mind+heart+energy+body+soul)/5;
-  var entry={mind,heart,energy,body,soul,notes,total,ts:new Date().toISOString()};
-  var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_health_log')||'[]');}catch(e){}
-  stored.unshift(entry);
-  try{localStorage.setItem('omega_health_log',JSON.stringify(stored.slice(0,60)));}catch(e){}
-  loadHistory();
+  var { error } = await sb.from('health_logs').insert({mind,heart,energy,body,soul,total,notes});
+  if(error){ alert('Could not save log: '+error.message); return; }
+  await loadHistory();
   var s=document.getElementById('log-saved'); s.style.display='block';
   setTimeout(function(){s.style.display='none';},3000);
 });

@@ -13,6 +13,14 @@ CREATE TABLE IF NOT EXISTS public.platform_settings (
 );
 INSERT INTO public.platform_settings(key,bool_value) VALUES ('tokens_enabled',false)
   ON CONFLICT (key) DO NOTHING;
+-- was missing RLS entirely -- this table gates tokens/payments sitewide, so an
+-- unrestricted table is a real risk (readable/writable beyond intent by default).
+ALTER TABLE public.platform_settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS ps_read ON public.platform_settings;
+CREATE POLICY ps_read ON public.platform_settings FOR SELECT USING (true);
+DROP POLICY IF EXISTS ps_write ON public.platform_settings;
+CREATE POLICY ps_write ON public.platform_settings FOR ALL USING (public.is_platform_owner()) WITH CHECK (public.is_platform_owner());
+GRANT SELECT ON public.platform_settings TO authenticated, anon;
 
 -- the 12 sovereign tokens (code -> sign) -------------------------------------
 CREATE TABLE IF NOT EXISTS public.token_catalog (

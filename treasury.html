@@ -126,23 +126,9 @@ td.cyan-t{color:var(--cyan);font-family:'Courier Prime',monospace}
 <body>
 <canvas id="bg-canvas"></canvas>
 
-<nav>
-  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
-  <ul class="nav-links">
-    <li><a href="dashboard.html">Command</a></li>
-    <li><a href="matrix.html">Matrix</a></li>
-    <li><a href="portfolio.html">Portfolio</a></li>
-    <li><a href="treasury.html" class="active">Treasury</a></li>
-    <li><a href="honors.html">Honors</a></li>
-    <li><a href="media.html">Media</a></li>
-    <li><a href="agents.html">Agents</a></li>
-  </ul>
-  <div class="nav-right">
-    <span class="nav-status">&#9632; LIVE</span>
-    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
-  </div>
-</nav>
-
+<div class="shell" style="display:flex;min-height:100vh">
+  <aside class="side" id="omega-side" data-page="treasury" style="width:80px;flex-shrink:0"></aside>
+  <div style="flex:1;min-width:0">
 <div class="page">
   <div class="hero-band">
     <div class="hero-eyebrow">M7 // SOVEREIGN VAULT</div>
@@ -438,5 +424,7 @@ document.querySelectorAll('.res-fill').forEach(el=>{const w=el.style.width;el.st
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</div>
+</div>
 </body>
 </html>

@@ -230,9 +230,21 @@ const SYSTEM_RULES = [
 ];
 
 var userStates = {};
-try{ userStates = JSON.parse(localStorage.getItem('omega_automation_states') || '{}'); }catch(e){}
-
-function saveStates(){ try{ localStorage.setItem('omega_automation_states', JSON.stringify(userStates)); }catch(e){} }
+var stateRowIds = {};
+async function loadStates(){
+  const { data } = await sb.from('automation_rules').select('id,trigger_key,is_on');
+  userStates = {}; stateRowIds = {};
+  (data||[]).forEach(function(r){ userStates[r.trigger_key] = r.is_on; stateRowIds[r.trigger_key] = r.id; });
+}
+async function setState(key, on){
+  userStates[key] = on;
+  if(stateRowIds[key]){
+    await sb.from('automation_rules').update({is_on:on}).eq('id',stateRowIds[key]);
+  } else {
+    const { data } = await sb.from('automation_rules').insert({trigger_key:key, action_key:key, is_on:on}).select('id').maybeSingle();
+    if(data) stateRowIds[key] = data.id;
+  }
+}
 
 function renderRules(uid){
   var grid = document.getElementById('rules-grid');
@@ -261,10 +273,9 @@ function renderRules(uid){
       '</div>'+
       '<button class="toggle '+(on?'on':'off')+'" id="toggle-'+i+'">'+(on?'PAUSE':'ENABLE')+'</button>';
 
-    card.querySelector('#toggle-'+i).addEventListener('click',function(){
+    card.querySelector('#toggle-'+i).addEventListener('click',async function(){
       var cur=(key in userStates)?userStates[key]:r.default_on;
-      userStates[key]=!cur;
-      saveStates();
+      await setState(key, !cur);
       renderRules(uid);
     });
 
@@ -329,6 +340,7 @@ async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){ window.location.href='/account.html'; return; }
   var uid=sess.user.id;
+  await loadStates();
   renderRules(uid);
 
   /* Load task_completions as proxy event log */
@@ -336,16 +348,17 @@ async function boot(){
   renderLog(ev.data||[]);
 
   /* Custom rule builder */
-  document.getElementById('btn-create').addEventListener('click',function(){
+  document.getElementById('btn-create').addEventListener('click',async function(){
     var t=document.getElementById('trigger-select').value;
     var tv=document.getElementById('trigger-value').value;
     var a=document.getElementById('action-select').value;
     var an=document.getElementById('action-note').value;
     if(!t||!a) return;
-    /* Save to local as user rule (server-side automation requires backend worker) */
-    var key='user_rule_'+Date.now();
-    userStates[key]={trigger:t,triggerVal:tv,action:a,actionNote:an,on:true};
-    saveStates();
+    /* Persists the rule definition for real. Actual triggered execution of
+       custom rules requires a separate backend worker/cron -- out of scope
+       here, but the definition itself is now really saved, not lost. */
+    const { error } = await sb.from('automation_rules').insert({trigger_key:t, trigger_value:tv, action_key:a, action_note:an, is_on:true});
+    if(error){ alert('Could not save rule: '+error.message); return; }
     var msg=document.getElementById('success-msg');
     msg.style.display='block';
     setTimeout(function(){ msg.style.display='none'; },3200);

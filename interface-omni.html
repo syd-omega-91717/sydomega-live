@@ -106,6 +106,16 @@
         </div>
         <div class="card">
           <span class="glyph">&#937;</span>
+          <h3>PLATFORM ECONOMY (LIVE CONTROL)</h3>
+          <div class="row"><span class="k">Subscriptions</span><span class="v" id="flag-payments">Loading...</span></div>
+          <div class="row"><span class="k">Token Economy</span><span class="v" id="flag-tokens">Loading...</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn" id="btn-toggle-payments" style="cursor:pointer;font-size:9px">TOGGLE SUBSCRIPTIONS</button>
+            <button class="btn" id="btn-toggle-tokens" style="cursor:pointer;font-size:9px">TOGGLE TOKENS</button>
+          </div>
+        </div>
+        <div class="card">
+          <span class="glyph">&#937;</span>
           <h3>INTEGRITY</h3>
           <div class="row"><span class="k">Canon Lock</span><span class="v">SEALED</span></div>
           <div class="row"><span class="k">Visual Engine</span><span class="v gold">CINEMATIC</span></div>
@@ -133,6 +143,29 @@ async function boot(){
   }
   document.getElementById('gate').style.display='none';
   document.getElementById('main').style.display='block';
+  loadFlags();
+  document.getElementById('btn-toggle-payments').addEventListener('click',()=>toggleFlag('payments_enabled','flag-payments'));
+  document.getElementById('btn-toggle-tokens').addEventListener('click',()=>toggleFlag('tokens_enabled','flag-tokens'));
+}
+
+async function loadFlags(){
+  const [p,t]=await Promise.all([
+    sb.rpc('get_platform_flag',{p_key:'payments_enabled'}),
+    sb.rpc('get_platform_flag',{p_key:'tokens_enabled'})
+  ]);
+  paintFlag('flag-payments', !!p.data);
+  paintFlag('flag-tokens', !!t.data);
+}
+function paintFlag(id,on){
+  const el=document.getElementById(id);
+  el.textContent = on ? 'ENABLED' : 'DORMANT';
+  el.className = 'v' + (on ? ' gold' : '');
+}
+async function toggleFlag(key,elId){
+  const cur = document.getElementById(elId).textContent === 'ENABLED';
+  const r = await sb.rpc('set_platform_flag',{p_key:key,p_val:!cur});
+  if(!r.data || !r.data.ok){ alert('Could not change setting: '+((r.data&&r.data.error)||r.error?.message||'unknown')); return; }
+  paintFlag(elId, !cur);
 }
 boot();
 </script>

@@ -115,3 +115,53 @@ CREATE POLICY travel_own ON public.travel_journeys FOR ALL TO authenticated
 GRANT SELECT, INSERT, DELETE ON public.travel_journeys TO authenticated;
 
 COMMIT;
+
+-- ============================================================================
+-- ADDENDUM -- three more pages found using the same localStorage-only pattern
+-- (automation.html, character.html, health.html), found in a later sweep.
+-- ============================================================================
+BEGIN;
+
+-- automation.html -- user-defined rule configurations (storage only; actual
+-- triggered execution of these rules would need a separate backend worker/cron,
+-- which is genuinely out of scope here -- this fixes persistence, not execution)
+CREATE TABLE IF NOT EXISTS public.automation_rules (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL DEFAULT auth.uid() REFERENCES auth.users(id) ON DELETE CASCADE,
+  trigger_key text NOT NULL, trigger_value text, action_key text NOT NULL, action_note text,
+  is_on boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE public.automation_rules ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS automation_own ON public.automation_rules;
+CREATE POLICY automation_own ON public.automation_rules FOR ALL TO authenticated
+  USING (auth.uid()=user_id) WITH CHECK (auth.uid()=user_id);
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.automation_rules TO authenticated;
+
+-- character.html -- personal character record (one per member, upsert)
+CREATE TABLE IF NOT EXISTS public.character_records (
+  user_id uuid PRIMARY KEY DEFAULT auth.uid() REFERENCES auth.users(id) ON DELETE CASCADE,
+  name text, dominant_trait text, inheritance_mode text, legacy_statement text,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE public.character_records ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS character_own ON public.character_records;
+CREATE POLICY character_own ON public.character_records FOR ALL TO authenticated
+  USING (auth.uid()=user_id) WITH CHECK (auth.uid()=user_id);
+GRANT SELECT, INSERT, UPDATE ON public.character_records TO authenticated;
+
+-- health.html -- wellbeing log entries
+CREATE TABLE IF NOT EXISTS public.health_logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL DEFAULT auth.uid() REFERENCES auth.users(id) ON DELETE CASCADE,
+  mind numeric, heart numeric, energy numeric, body numeric, soul numeric,
+  total numeric, notes text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE public.health_logs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS health_own ON public.health_logs;
+CREATE POLICY health_own ON public.health_logs FOR ALL TO authenticated
+  USING (auth.uid()=user_id) WITH CHECK (auth.uid()=user_id);
+GRANT SELECT, INSERT ON public.health_logs TO authenticated;
+
+COMMIT;

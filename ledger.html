@@ -26,93 +26,107 @@
 
     <style>
         :root {
-            --primary: #00ffcc;
-            --bg: #050508;
-            --surface: #0d0d15;
-            --text: #f0f0f5;
+            --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c;
+            --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000;
+            --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,.16);
+            --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background-color: var(--void);
+            color: var(--ink);
+            font-family: var(--body);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
-        header {
-            padding: 20px;
-            border-bottom: 1px solid var(--primary);
+        a{color:inherit;text-decoration:none}
+        .shell{display:flex;min-height:100vh}
+        .side{width:80px;flex-shrink:0}
+        .main{flex:1;min-width:0;display:flex;flex-direction:column}
+        .topbar {
+            padding: 20px clamp(14px,3vw,36px);
+            border-bottom: 1px solid var(--line);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(13, 13, 21, 0.8);
-            z-index: 10;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: rgba(8,8,15,.9);
         }
+        .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(16px,2.5vw,22px);letter-spacing:2px}
         .nav-bar { display: flex; gap: 15px; }
         .btn {
             background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
+            border: 1px solid var(--gold);
+            color: var(--gold);
             padding: 8px 16px;
             cursor: pointer;
             text-transform: uppercase;
             font-size: 0.8rem;
+            font-family: var(--mono);
             transition: all 0.3s ease;
         }
-        .btn:hover { background: var(--primary); color: var(--bg); }
+        .btn:hover { background: var(--gold); color: var(--void); }
         .omni-search-bar {
             background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(0, 255, 204, 0.3);
-            color: var(--text);
+            border: 1px solid rgba(201,168,76,.3);
+            color: var(--ink);
+            font-family: var(--mono);
             padding: 8px;
             width: 250px;
         }
         .ledger-container {
             flex: 1;
-            padding: 40px;
+            padding: 40px clamp(14px,3vw,36px);
             overflow-y: auto;
         }
         .ledger-table {
             width: 100%;
             border-collapse: collapse;
-            background: var(--surface);
-            border: 1px solid rgba(0, 255, 204, 0.2);
+            background: var(--panel);
+            border: 1px solid var(--line);
         }
         .ledger-table th, .ledger-table td {
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+            border-bottom: 1px solid var(--line);
         }
         .ledger-table th {
-            background: rgba(0, 255, 204, 0.1);
-            color: var(--primary);
-            font-size: 0.9rem;
+            background: rgba(201,168,76,.08);
+            color: var(--gold);
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
+        .ledger-table td{font-size:.95rem}
         .ledger-table tr:hover {
-            background: rgba(0, 255, 204, 0.05);
+            background: rgba(201,168,76,.04);
         }
         .status-pill {
             display: inline-block;
             padding: 4px 8px;
-            font-size: 0.75rem;
-            background: rgba(0, 255, 204, 0.2);
-            color: var(--primary);
-            border: 1px solid var(--primary);
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            background: rgba(201,168,76,.12);
+            color: var(--gold);
+            border: 1px solid var(--gold);
         }
     </style>
 </head>
 <body>
-    <header>
-        <div style="font-weight: bold; color: var(--primary); letter-spacing: 2px;">&#937; SYSTEM ASSET LEDGER</div>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="ledger"></aside>
+  <main class="main">
+    <div class="topbar">
+        <div class="t">&#937; SYSTEM ASSET LEDGER</div>
         <input type="text" class="omni-search-bar" placeholder="Omni-Search ledger entries..." id="omniSearch">
         <div class="nav-bar">
             <button class="btn" onclick="globalCommand('BACK')">Back</button>
             <button class="btn" onclick="globalCommand('NEXT')">Next</button>
         </div>
-    </header>
+    </div>
 
     <div class="ledger-container">
         <table class="ledger-table">
@@ -146,6 +160,8 @@
             </tbody>
         </table>
     </div>
+  </main>
+</div>
 
     <script>
         function globalCommand(action) {
@@ -158,7 +174,7 @@
             }
         });
     </script>
-<script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
 <script src="/nav.js"></script>
+<script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
 </body>
 </html>

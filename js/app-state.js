@@ -1,7 +1,0 @@
-currentUser
-xp
-level
-academyProgress
-achievements
-rank
-notifications

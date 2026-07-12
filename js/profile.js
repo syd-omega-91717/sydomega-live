@@ -1,2 +1,0 @@
-profile.html
-dashboard.html

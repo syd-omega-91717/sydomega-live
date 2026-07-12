@@ -1,2 +1,0 @@
-chatbot.html
-agents.html

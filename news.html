@@ -143,8 +143,21 @@
   ];
   function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  function renderOfficial(){
+  async function renderOfficial(){
     var box=document.getElementById('official'); box.innerHTML='';
+    try{
+      var r=await supabase.rpc('published_dispatches',{p_limit:30});
+      if(r.data && r.data.length){
+        r.data.forEach(function(n){
+          var dt=n.created_at?new Date(n.created_at).toLocaleDateString():'';
+          var el=document.createElement('div'); el.className='disp';
+          el.innerHTML='<div class="dh"><span class="tag">'+esc((n.category||'DISPATCH'))+'</span><span class="dt">'+dt+'</span></div><div class="ti">'+esc(n.title)+'</div><div class="bd"></div>';
+          el.querySelector('.bd').textContent=n.body||'';
+          box.appendChild(el);
+        });
+        return;
+      }
+    }catch(e){ /* fall through to the static seed below */ }
     OFFICIAL.forEach(function(d){
       var el=document.createElement('div'); el.className='disp';
       el.innerHTML='<div class="dh"><span class="tag">'+d.tag+'</span><span class="dt">'+d.date+'</span></div><div class="ti">'+d.ti+'</div><div class="bd">'+d.bd+'</div>';

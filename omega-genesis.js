@@ -41,9 +41,9 @@
   var STATE = { pal: PAL.SOVEREIGN, glyph: '\u03A9' };
 
   var css = [
-    '@keyframes omgBreath{0%,100%{box-shadow:0 0 0 1px rgba(201,168,76,.05),0 0 22px -8px rgba(201,168,76,.10)}50%{box-shadow:0 0 0 1px rgba(201,168,76,.14),0 0 34px -6px rgba(226,200,109,.22)}}',
+    '@keyframes omgBreath{0%,100%{box-shadow:0 0 0 1px rgba(201,168,76,.04),0 0 16px -8px rgba(201,168,76,.07)}50%{box-shadow:0 0 0 1px rgba(201,168,76,.09),0 0 24px -6px rgba(226,200,109,.14)}}',
     '.card,.panel,.tier,.node,.sb,.metric,.box,.glass,.tile,.mod,.qa,.krow,.stat{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease,border-color .3s ease}',
-    '.card,.tier,.node,.tile,.mod{animation:omgBreath 7s ease-in-out infinite}',
+    '.card,.tier,.node,.tile,.mod{animation:omgBreath 11s ease-in-out infinite}',
     '.card:hover,.tier:hover,.node:hover,.tile:hover,.mod:hover,.qa:hover{transform:translateY(-3px) scale(1.006)}',
     '#omega-atmosphere{position:fixed;inset:0;z-index:0;pointer-events:none}',
     '.shell,.main,main,header,nav,footer,.side,.topbar,.head{position:relative;z-index:1}'
@@ -52,6 +52,20 @@
   style.id = 'omega-genesis-css';
   style.textContent = css;
   (document.head || document.documentElement).appendChild(style);
+
+  /* Desynchronize the breathing glow across many simultaneous cards -- without
+     this, every .card/.tier/.node/.tile/.mod on a content-dense page (e.g. a
+     144-card grid) pulses in perfect unison, which reads as a flash/strobe
+     rather than a calm ambient effect. A small random delay per element fixes
+     that cheaply, re-applied whenever new cards get added to the page. */
+  function destagger() {
+    if (REDUCED) return;
+    document.querySelectorAll('.card,.tier,.node,.tile,.mod').forEach(function (el) {
+      if (el.__omgStaggered) return;
+      el.__omgStaggered = 1;
+      el.style.animationDelay = (Math.random() * 11).toFixed(2) + 's';
+    });
+  }
 
   function reveal() {
     var v = document.createElement('div');
@@ -179,7 +193,11 @@
   function boot() {
     reveal();
     detect();
-    if (!REDUCED) atmosphere();
+    if (!REDUCED) {
+      atmosphere();
+      destagger();
+      try { new MutationObserver(destagger).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+    }
   }
   if (document.body) boot();
   else document.addEventListener('DOMContentLoaded', boot);

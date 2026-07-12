@@ -182,7 +182,7 @@ a{color:inherit;text-decoration:none}
       <div class="passport-card">
         <div class="pp-header">
           <div><div class="pp-title">SOVEREIGN PASSPORT</div><div class="pp-id" id="pp-id">SYD-OMEGA-91717 . ID: --</div></div>
-          <div class="pp-omega">&#937;</div>
+          <span class="pp-omega" data-omega-sigil style="display:inline-block;width:60px;height:60px"></span>
         </div>
         <div class="pp-fields">
           <div class="pp-field"><div class="ppf-label">SOVEREIGN NAME</div><div class="ppf-val" id="ppf-name">--</div></div>
@@ -323,9 +323,21 @@ function buildKYC(kyc){
     const isDone=i<done,isActive=i===done;
     const col=isDone?'var(--green)':isActive?'var(--gold)':'rgba(133,131,123,0.3)';
     const d=document.createElement('div');d.className='kyc-step';
-    d.innerHTML=`<div class="ks-circle" style="border-color:${col};color:${col}${isActive?';box-shadow:0 0 14px rgba(201,168,76,0.3)':''}">${isDone?'&#x2713;':s.n}</div><div class="ks-body"><div class="ksb-title" style="color:${isDone?'var(--green)':isActive?'var(--solar)':'rgba(233,230,220,0.4)'}">${s.title}</div><div class="ksb-desc">${s.desc}</div>${isActive&&s.action?'<button class="ks-action" style="color:var(--gold);border-color:rgba(201,168,76,.4)">'+(s.action)+'</button>':''}</div>`;
+    d.innerHTML=`<span class="ks-ring" style="display:inline-block;width:48px;height:48px"></span><div class="ks-body"><div class="ksb-title" style="color:${isDone?'var(--green)':isActive?'var(--solar)':'rgba(233,230,220,0.4)'}">${s.title}</div><div class="ksb-desc">${s.desc}</div>${isActive&&s.action?'<button class="ks-action" style="color:var(--gold);border-color:rgba(201,168,76,.4)">'+(s.action)+'</button>':''}</div>`;
     g.appendChild(d);
+    fillRing(d.querySelector('.ks-ring'), isDone?'&#x2713;':s.n, isDone?'#3fb27f':isActive?'#C9A84C':'#85837b', !isDone && !isActive);
   });
+}
+
+function fillRing(el, glyph, col, locked){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
+    else if(tries>20){ clearInterval(t); }
+  },150);
 }
 
 function buildEvoStrip(tier){
@@ -334,9 +346,10 @@ function buildEvoStrip(tier){
     const done=i<tier,active=i===tier-1;
     const c=document.createElement('div');
     c.style.cssText=`display:flex;flex-direction:column;align-items:center;gap:5px;min-width:70px;padding:0 4px;flex-shrink:0`;
-    c.innerHTML=`<div style="width:32px;height:32px;border-radius:50%;border:2px solid ${done||active?MAT_COLS[i]:MAT_COLS[i]+'33'};display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:10px;color:${done||active?MAT_COLS[i]:'rgba(133,131,123,0.3)'}${active?';box-shadow:0 0 12px '+MAT_COLS[i]+'55':''}">${i+1}</div><div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:${active?MAT_COLS[i]:'var(--muted)'};text-align:center">${m}</div>`;
+    c.innerHTML=`<span class="evo-ring" style="display:inline-block;width:36px;height:36px"></span><div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:${active?MAT_COLS[i]:'var(--muted)'};text-align:center">${m}</div>`;
     if(i<MATS.length-1) c.innerHTML+='<div style="position:absolute;right:-12px;top:15px;font-family:var(--M);font-size:10px;color:rgba(201,168,76,0.2)">--</div>';
     g.appendChild(c);
+    fillRing(c.querySelector('.evo-ring'), i+1, done||active?MAT_COLS[i]:'#85837b', !done && !active);
   });
 }
 

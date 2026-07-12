@@ -348,6 +348,7 @@ function buildSettings(){
     sec.items.forEach(item=>{
       const row=document.createElement('div');row.className='toggle-row';
       const toggle=makeToggle(item[1]==='on');
+      toggle.dataset.key=item[0];
       const label=document.createElement('span');label.className='tr-label';label.textContent=item[0];
       row.appendChild(label);row.appendChild(toggle);
       c.appendChild(row);
@@ -422,6 +423,11 @@ async function boot(){
   document.querySelectorAll('.sv, .pcm-name').forEach(el2=>{});
   requestAnimationFrame(()=>drawCharCanvas(sign));
   buildEvoStrip(tier);
+  const priv=SETTINGS_DATA.find(s=>s.title==='PRIVACY');
+  if(priv){
+    const on = d.is_public===true ? 'on':'off';
+    priv.items.forEach(item=>{ if(item[0]==='Show in Leaderboard'||item[0]==='Public Authority Score') item[1]=on; });
+  }
   buildSettings();
 
   /* Save profile */
@@ -436,8 +442,18 @@ async function boot(){
     document.getElementById('pcm-name').textContent=n.toUpperCase();
   });
 
-  document.getElementById('btn-settings-save')?.addEventListener('click',()=>{
-    const m=document.getElementById('settings-save-msg');m.style.display='block';setTimeout(()=>m.style.display='none',3000);
+  document.getElementById('btn-settings-save')?.addEventListener('click',async()=>{
+    const m=document.getElementById('settings-save-msg');
+    const leaderboardToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Show in Leaderboard');
+    const authorityToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Public Authority Score');
+    const wantsPublic = (leaderboardToggle&&leaderboardToggle.classList.contains('on')) || (authorityToggle&&authorityToggle.classList.contains('on'));
+    const r=await sb.rpc('set_profile_visibility',{p_public:wantsPublic});
+    if(r.data&&r.data.ok){
+      m.textContent='Privacy setting saved to your profile. (Display, Notifications, and Audio preferences are not yet backed by persistent storage -- they reset each visit for now.)';
+    } else {
+      m.textContent='Could not save privacy setting: '+((r.data&&r.data.error)||r.error?.message||'unknown error');
+    }
+    m.style.display='block';setTimeout(()=>m.style.display='none',5000);
   });
 }
 boot();

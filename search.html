@@ -126,13 +126,38 @@
     {l:'Approvals',p:'/approvals.html',d:'Owner only \u2014 admit members and approve publications.',k:'approvals owner admit access approve queue',owner:true}
   ];
 
+  function recentKey(){ return 'omega_recent_searches'; }
+  function getRecent(){ try{ return JSON.parse(localStorage.getItem(recentKey())||'[]'); }catch(e){ return []; } }
+  function pushRecent(item){
+    try{
+      var r=getRecent().filter(function(x){ return x.p!==item.p; });
+      r.unshift({l:item.l,p:item.p});
+      localStorage.setItem(recentKey(), JSON.stringify(r.slice(0,5)));
+    }catch(e){}
+  }
+
   function render(list){
     var box=document.getElementById('results'); box.innerHTML='';
     if(!list.length){ box.innerHTML='<div class="empty">No chamber matches that. Try \u201cmatrix\u201d, \u201cgames\u201d, \u201cagents\u201d\u2026</div>'; document.getElementById('count').textContent='0 RESULTS'; return; }
     document.getElementById('count').textContent=list.length+' '+(list.length===1?'CHAMBER':'CHAMBERS');
     list.forEach(function(it,idx){
       var a=document.createElement('a'); a.className='res'+(it.owner?' owner':'')+(idx===0?' hot':''); a.href=it.p;
+      a.addEventListener('click',function(){ pushRecent(it); });
       a.innerHTML='<div class="rh"><div class="ic">\u03A9</div><div class="rl">'+it.l+'</div></div><div class="rd">'+it.d+'</div><div class="go">OPEN \u2192</div>';
+      box.appendChild(a);
+    });
+  }
+  function renderRecent(){
+    var box=document.getElementById('results'); box.innerHTML='';
+    var recent=getRecent();
+    if(!recent.length){ render(visible()); return; }
+    document.getElementById('count').textContent='RECENT';
+    recent.forEach(function(it){
+      var full=INDEX.find(function(x){ return x.p===it.p; });
+      if(!full || (full.owner && !isOwner)) return;
+      var a=document.createElement('a'); a.className='res'; a.href=full.p;
+      a.addEventListener('click',function(){ pushRecent(full); });
+      a.innerHTML='<div class="rh"><div class="ic">\u21BB</div><div class="rl">'+full.l+'</div></div><div class="rd">'+full.d+'</div><div class="go">OPEN \u2192</div>';
       box.appendChild(a);
     });
   }
@@ -140,7 +165,7 @@
   function search(){
     var q=document.getElementById('q').value.trim().toLowerCase();
     var pool=visible();
-    if(!q){ render(pool); return; }
+    if(!q){ renderRecent(); return; }
     var terms=q.split(/\s+/);
     var scored=pool.map(function(it){
       var hay=(it.l+' '+it.d+' '+it.k).toLowerCase();
@@ -149,6 +174,8 @@
     }).filter(function(x){ return x.score>0; }).sort(function(a,b){ return b.score-a.score; });
     render(scored.map(function(x){ return x.it; }));
   }
+  var searchTimer=null;
+  function debouncedSearch(){ clearTimeout(searchTimer); searchTimer=setTimeout(search,150); }
 
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
 
@@ -160,10 +187,10 @@
     isOwner=!!(pr.data && pr.data.is_owner);
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';
-    render(visible());
+    renderRecent();
     document.getElementById('q').focus();
   }
-  document.getElementById('q').addEventListener('input',search);
+  document.getElementById('q').addEventListener('input',debouncedSearch);
   document.getElementById('q').addEventListener('keydown',function(e){ if(e.key==='Enter'){ var first=document.querySelector('.res'); if(first) window.location.href=first.getAttribute('href'); } });
   document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
   boot();

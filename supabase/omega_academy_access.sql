@@ -13,6 +13,14 @@ CREATE TABLE IF NOT EXISTS public.platform_settings (
 );
 INSERT INTO public.platform_settings(key,bool_value) VALUES ('tokens_enabled',false)
   ON CONFLICT (key) DO NOTHING;
+-- shared table with omega_tokens.sql -- RLS added defensively here too in case
+-- this file ever runs without that one (was missing RLS entirely either way).
+ALTER TABLE public.platform_settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS ps_read ON public.platform_settings;
+CREATE POLICY ps_read ON public.platform_settings FOR SELECT USING (true);
+DROP POLICY IF EXISTS ps_write ON public.platform_settings;
+CREATE POLICY ps_write ON public.platform_settings FOR ALL USING (public.is_platform_owner()) WITH CHECK (public.is_platform_owner());
+GRANT SELECT ON public.platform_settings TO authenticated, anon;
 
 CREATE TABLE IF NOT EXISTS public.academy_access (
   user_id     uuid PRIMARY KEY DEFAULT auth.uid(),

@@ -134,23 +134,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
-
-<nav>
-  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
-  <ul class="nav-links">
-    <li><a href="dashboard.html" class="active">Command</a></li>
-    <li><a href="matrix.html">Matrix</a></li>
-    <li><a href="portfolio.html">Portfolio</a></li>
-    <li><a href="treasury.html">Treasury</a></li>
-    <li><a href="honors.html">Honors</a></li>
-    <li><a href="media.html">Media</a></li>
-    <li><a href="agents.html">Agents</a></li>
-  </ul>
-  <div class="nav-right">
-    <span class="nav-coord">COORD (9,9,9)</span>
-    <span class="nav-status">&#9632; LIVE</span>
-  </div>
-</nav>
+<div class="shell" style="display:flex;min-height:100vh">
+  <aside class="side" id="omega-side" data-page="command" style="width:80px;flex-shrink:0"></aside>
+  <div style="flex:1;min-width:0">
 <section class="ocat-wrap" aria-label="Command Categories">
   <div class="ocat-title">COMMAND INDEX</div>
   <div class="ocat-grid" id="ocat-grid"></div>
@@ -210,42 +196,35 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="hero-omega">&#937;</div>
     </div>
     <div class="hero-eyebrow">SYD OMEGA 91717 // COMMAND CENTER</div>
-    <h1 class="hero-title">Sovereign Command</h1>
-    <p class="hero-sub">
-      PLATFORM IDENTITY: OMEGA-91717-SYD-001<br>
-      OWNER: MAJOR SLEIMAN YOUSSEF DAGHER<br>
-      LEVEL: 9.9.9 // AUTHORITY: 15.588 // ALL-TIME ACCESS
+    <h1 class="hero-title" id="hero-title">Sovereign Command</h1>
+    <p class="hero-sub" id="hero-sub">
+      Loading your standing...
     </p>
-    <div class="hero-badges">
-      <span class="hero-badge">ARIES // FIRE</span>
-      <span class="hero-badge">OLYMPIAN: ARES</span>
-      <span class="hero-badge">AGENT: SENTINEL</span>
-      <span class="hero-badge">TOKEN: ARENITE</span>
-      <span class="hero-badge">ENG. ORDER 30875</span>
-    </div>
+    <div class="hero-badges" id="hero-badges"></div>
+    <div style="margin-top:.5rem;font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);letter-spacing:.1em" id="hero-coord">COORD (--, --, --)</div>
   </div>
 
   <!-- COMMAND STATS -->
   <div class="cmd-stats">
     <a href="matrix.html" class="cstat">
       <div class="cstat-label">Matrix Nodes</div>
-      <div class="cstat-val">729</div>
-      <div class="cstat-sub">9x9x9 complete</div>
+      <div class="cstat-val" id="stat-nodes">--</div>
+      <div class="cstat-sub" id="stat-nodes-sub">Loading...</div>
     </a>
     <a href="treasury.html" class="cstat">
       <div class="cstat-label">&#937; Supply</div>
       <div class="cstat-val">917B</div>
-      <div class="cstat-sub">51% vault locked</div>
+      <div class="cstat-sub">51% vault locked (dormant)</div>
     </a>
     <a href="portfolio.html" class="cstat">
       <div class="cstat-label">Gold Reserve</div>
       <div class="cstat-val">412kg</div>
-      <div class="cstat-sub">Auto-sweep active</div>
+      <div class="cstat-sub">Reserve reference (dormant)</div>
     </a>
     <a href="honors.html" class="cstat">
       <div class="cstat-label">Honors</div>
-      <div class="cstat-val">48+</div>
-      <div class="cstat-sub">Trophies / medals</div>
+      <div class="cstat-val" id="stat-honors">--</div>
+      <div class="cstat-sub">Your trophies / medals</div>
     </a>
     <a href="media.html" class="cstat">
       <div class="cstat-label">Media Titles</div>
@@ -287,19 +266,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <!-- System Feed -->
     <div class="panel">
       <div class="panel-header">
-        <span class="panel-title">System Feed</span>
+        <span class="panel-title">Your Evolution Feed</span>
         <span class="panel-badge">LIVE</span>
       </div>
       <div class="panel-body">
-        <div class="sys-feed">
-          <div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">Auto-sweep executed -- Gold / Silver / Rhodium acquired</div><div class="feed-time">09:00</div></div>
-          <div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">Master Vault lock verified -- 51% &#937; sealed and confirmed</div><div class="feed-time">08:45</div></div>
-          <div class="feed-item"><div class="feed-dot pend"></div><div class="feed-text">Polygon L2 activation gated -- legal clearance pending</div><div class="feed-time">07:30</div></div>
-          <div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">ARENITE founder token genesis confirmed and logged</div><div class="feed-time">06:15</div></div>
-          <div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">Media codex updated -- F-01 Myth of the Stones phase 1 active</div><div class="feed-time">05:00</div></div>
-          <div class="feed-item"><div class="feed-dot warn"></div><div class="feed-text">KYC provider selection pending -- token economy gated</div><div class="feed-time">04:00</div></div>
-          <div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">Matrix coordinate (9,9,9) confirmed -- authority 15.588</div><div class="feed-time">00:00</div></div>
-          <div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">Engineers Order No.30875 hash verified on genesis block</div><div class="feed-time">GENESIS</div></div>
+        <div class="sys-feed" id="sys-feed">
+          <div class="feed-item"><div class="feed-text">Loading your evolution log...</div></div>
         </div>
       </div>
     </div>
@@ -333,24 +305,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <!-- ASCENSION STAGES -->
   <div class="ascension">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-      <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">9 Stages of Ascension</span>
-      <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)">STAGE 9 // APEX REACHED</span>
+      <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">9 Levels of Ascension</span>
+      <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)" id="asc-status">Loading...</span>
     </div>
-    <div class="asc-track">
-      <div class="asc-node done"><div class="asc-node-num">I</div><div class="asc-node-label">Initiate</div></div>
-      <div class="asc-node done"><div class="asc-node-num">II</div><div class="asc-node-label">Learner</div></div>
-      <div class="asc-node done"><div class="asc-node-num">III</div><div class="asc-node-label">Seeker</div></div>
-      <div class="asc-node done"><div class="asc-node-num">IV</div><div class="asc-node-label">Builder</div></div>
-      <div class="asc-node done"><div class="asc-node-num">V</div><div class="asc-node-label">Master</div></div>
-      <div class="asc-node done"><div class="asc-node-num">VI</div><div class="asc-node-label">Architect</div></div>
-      <div class="asc-node done"><div class="asc-node-num">VII</div><div class="asc-node-label">Sovereign</div></div>
-      <div class="asc-node done"><div class="asc-node-num">VIII</div><div class="asc-node-label">Eternal</div></div>
-      <div class="asc-node current"><div class="asc-node-num">IX</div><div class="asc-node-label">Omega</div></div>
+    <div class="asc-track" id="asc-track">
+      <div class="asc-node"><div class="asc-node-num">I</div><div class="asc-node-label">Initiate</div></div>
+      <div class="asc-node"><div class="asc-node-num">II</div><div class="asc-node-label">Acolyte</div></div>
+      <div class="asc-node"><div class="asc-node-num">III</div><div class="asc-node-label">Adept</div></div>
+      <div class="asc-node"><div class="asc-node-num">IV</div><div class="asc-node-label">Disciple</div></div>
+      <div class="asc-node"><div class="asc-node-num">V</div><div class="asc-node-label">Sage</div></div>
+      <div class="asc-node"><div class="asc-node-num">VI</div><div class="asc-node-label">Exemplar</div></div>
+      <div class="asc-node"><div class="asc-node-num">VII</div><div class="asc-node-label">Paragon</div></div>
+      <div class="asc-node"><div class="asc-node-num">VIII</div><div class="asc-node-label">Archon</div></div>
+      <div class="asc-node"><div class="asc-node-num">IX</div><div class="asc-node-label">Omega Master</div></div>
     </div>
   </div>
 </div>
 
 <div class="omega-sig">&#937;</div>
+
+  </div>
+</div>
 
 <script>
 (function(){
@@ -384,6 +359,86 @@ ctx.restore();
 angle+=.005;requestAnimationFrame(draw);
 }draw();
 })();
+</script>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const BOUND = {
+  Aries:{agent:'Sentinel',token:'PYRON',god:'Ares',element:'Fire'},
+  Taurus:{agent:'Merchant',token:'AURUM',god:'Aphrodite',element:'Metal'},
+  Gemini:{agent:'Scout',token:'ZEPHYR',god:'Hermes',element:'Wind'},
+  Cancer:{agent:'Warden',token:'NEREID',god:'Artemis',element:'Water'},
+  Leo:{agent:'Sovereign',token:'SOLARI',god:'Apollo',element:'Fire'},
+  Virgo:{agent:'Auditor',token:'ARENITE',god:'Athena',element:'Sand'},
+  Libra:{agent:'Proxy',token:'FORGEON',god:'Hera',element:'Wind'},
+  Scorpio:{agent:'Oracle',token:'STYX',god:'Demeter',element:'Water'},
+  Sagittarius:{agent:'Beacon',token:'EMBER',god:'Zeus',element:'Fire'},
+  Capricorn:{agent:'Analyst',token:'FERRUM',god:'Hestia',element:'Metal'},
+  Aquarius:{agent:'Tutor',token:'AETHER',god:'Hephaestus',element:'Wind'},
+  Pisces:{agent:'Historian',token:'ABYSS',god:'Poseidon',element:'Water'},
+};
+const LEVEL_NAMES=['Initiate','Acolyte','Adept','Disciple','Sage','Exemplar','Paragon','Archon','Omega Master'];
+function fmt(n){ return Number(n||0).toFixed(3); }
+
+async function loadDashboard(){
+  const sess=(await supabase.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+  const pr=await supabase.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,is_owner,certificates_earned,trophies_earned,medals_earned').eq('id',sess.user.id).maybeSingle();
+  const d=pr.data||{};
+  const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const name=d.display_name || (d.is_owner?'Major Sleiman Youssef Dagher':'Sovereign');
+  const bound = d.sign && BOUND[d.sign];
+
+  document.getElementById('hero-title').textContent = d.is_owner ? 'Sovereign Command' : ('Welcome, '+name);
+  document.getElementById('hero-sub').innerHTML = d.is_owner
+    ? 'PLATFORM IDENTITY: OMEGA-91717-SYD-001<br>OWNER: MAJOR SLEIMAN YOUSSEF DAGHER<br>LEVEL: 9.9.9 // AUTHORITY: 15.588 // ALL-TIME ACCESS'
+    : ('YOUR STANDING<br>AUTHORITY: '+fmt(auth)+' / 15.588');
+  document.getElementById('hero-coord').textContent = 'COORD ('+fmt(a)+', '+fmt(b)+', '+fmt(c)+')';
+
+  const badges=document.getElementById('hero-badges');
+  if(bound){
+    badges.innerHTML =
+      '<span class="hero-badge">'+d.sign.toUpperCase()+' // '+bound.element.toUpperCase()+'</span>'+
+      '<span class="hero-badge">OLYMPIAN: '+bound.god.toUpperCase()+'</span>'+
+      '<span class="hero-badge">AGENT: '+bound.agent.toUpperCase()+'</span>'+
+      '<span class="hero-badge">TOKEN: '+bound.token+'</span>'+
+      (d.is_owner?'<span class="hero-badge">ENG. ORDER 30875</span>':'');
+  } else {
+    badges.innerHTML = '<span class="hero-badge">SET YOUR COSMOLOGY TO UNLOCK YOUR BADGES</span>';
+  }
+
+  // matrix node stat -- real completion out of 729 (single-track aggregate spine)
+  const node = Math.round((a-1)*81 + (b-1)*9 + (c-1) + 1);
+  document.getElementById('stat-nodes').textContent = Math.max(1,node);
+  document.getElementById('stat-nodes-sub').textContent = auth>=15.588-0.001 ? '9x9x9 complete' : (Math.max(1,node)+' of 729');
+  document.getElementById('stat-honors').textContent = ((d.certificates_earned||0)+(d.trophies_earned||0)+(d.medals_earned||0))+'+';
+
+  // ascension track -- real level derived from authority (1..9)
+  const lvl = Math.max(1, Math.min(9, Math.ceil(auth/15.588*9)));
+  document.getElementById('asc-status').textContent = 'LEVEL '+lvl+' // '+LEVEL_NAMES[lvl-1].toUpperCase();
+  document.querySelectorAll('#asc-track .asc-node').forEach(function(el,i){
+    el.classList.remove('done','current');
+    if(i+1 < lvl) el.classList.add('done');
+    else if(i+1 === lvl) el.classList.add('current');
+  });
+
+  // real evolution feed
+  const ev = await supabase.from('evolution_events').select('axis,note,created_at')
+    .eq('user_id', sess.user.id).order('created_at',{ascending:false}).limit(8);
+  const feed = document.getElementById('sys-feed');
+  if(ev.data && ev.data.length){
+    feed.innerHTML = ev.data.map(function(e){
+      var when = e.created_at ? new Date(e.created_at).toLocaleDateString() : '';
+      return '<div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">'+(e.note||'Evolution event')+'</div><div class="feed-time">'+when+'</div></div>';
+    }).join('');
+  } else {
+    feed.innerHTML = '<div class="feed-item"><div class="feed-text">No evolution events recorded yet -- your actions across the platform will appear here.</div></div>';
+  }
+}
+loadDashboard();
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

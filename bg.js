@@ -167,8 +167,8 @@
        stream the rings. Advertisement = broadcast pulses.
      - Palette: void #0A0A0F, gold #C9A84C, cyan #00E5FF,
        crimson #8B0000. Pure ASCII. Omega as \u03A9 (canvas).
-     - Authority apex (9,9,9) = 15.588. Matrix = 8,748 nodes
-       (12 tracks x 9x9x9, per omega-canon.json).
+     - Authority apex (9,9,9) = 15.588. Matrix = 104,976 nodes
+       (12 tracks x 12 phases x 9x9x9, per omega-canon.json).
 
    Loaded once, globally, via bg.js. Reduced-motion safe;
    pauses when the tab is hidden.

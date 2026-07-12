@@ -11,8 +11,8 @@ UPDATE profiles SET
   material_tier   = 'OMEGA MASTER',
   membership_tier = 9,
   display_name    = 'Major Sleiman Youssef Dagher',
-  sign            = 'Virgo',
-  element         = 'Sand'
+  sign            = 'Aries',
+  element         = 'Fire'
 WHERE id IN (
   SELECT id FROM auth.users
   WHERE email IN ('s.y.dagher@gmail.com', 'slmndghr@gmail.com')

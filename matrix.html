@@ -110,22 +110,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
-<nav>
-  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
-  <ul class="nav-links">
-    <li><a href="dashboard.html">Command</a></li>
-    <li><a href="matrix.html" class="active">Matrix</a></li>
-    <li><a href="portfolio.html">Portfolio</a></li>
-    <li><a href="treasury.html">Treasury</a></li>
-    <li><a href="honors.html">Honors</a></li>
-    <li><a href="media.html">Media</a></li>
-    <li><a href="agents.html">Agents</a></li>
-  </ul>
-  <div class="nav-right">
-    <span class="nav-status">&#9632; APEX</span>
-    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
-  </div>
-</nav>
+<div class="shell" style="display:flex;min-height:100vh">
+  <aside class="side" id="omega-side" data-page="matrix" style="width:80px;flex-shrink:0"></aside>
+  <div style="flex:1;min-width:0">
 
 <div class="page">
   <div class="hero-band">
@@ -138,23 +125,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="axis-stats">
     <div class="astat">
       <div class="astat-label">Axis A // Knowledge</div>
-      <div class="astat-val">9.000</div>
-      <div class="astat-sub">Apex -- 729 nodes completed</div>
+      <div class="astat-val" id="stat-a">--</div>
+      <div class="astat-sub" id="stat-a-sub">Loading your standing...</div>
     </div>
     <div class="astat">
       <div class="astat-label">Axis B // Mastery</div>
-      <div class="astat-val">9.000</div>
-      <div class="astat-sub">Apex -- All milestones sealed</div>
+      <div class="astat-val" id="stat-b">--</div>
+      <div class="astat-sub" id="stat-b-sub">Loading your standing...</div>
     </div>
     <div class="astat">
       <div class="astat-label">Axis C // Contribution</div>
-      <div class="astat-val">9.000</div>
-      <div class="astat-sub">Apex -- Sovereignty confirmed</div>
+      <div class="astat-val" id="stat-c">--</div>
+      <div class="astat-sub" id="stat-c-sub">Loading your standing...</div>
     </div>
     <div class="astat" style="border-color:rgba(0,229,255,0.3)">
       <div class="astat-label" style="color:var(--cyan)">Authority Score</div>
-      <div class="astat-val" style="color:var(--cyan)">15.588</div>
-      <div class="astat-sub">sqrt(81+81+81) = 15.588</div>
+      <div class="astat-val" style="color:var(--cyan)" id="stat-auth">--</div>
+      <div class="astat-sub" id="stat-auth-sub">Computing...</div>
     </div>
   </div>
 
@@ -170,17 +157,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="coord-display">
         <div class="coord-item">
           <div class="coord-axis">Axis A</div>
-          <div class="coord-val">9.000</div>
+          <div class="coord-val" id="coord-a">--</div>
           <div class="coord-sub">Knowledge</div>
         </div>
         <div class="coord-item">
           <div class="coord-axis">Axis B</div>
-          <div class="coord-val">9.000</div>
+          <div class="coord-val" id="coord-b">--</div>
           <div class="coord-sub">Mastery</div>
         </div>
         <div class="coord-item">
           <div class="coord-axis">Axis C</div>
-          <div class="coord-val">9.000</div>
+          <div class="coord-val" id="coord-c">--</div>
           <div class="coord-sub">Contribution</div>
         </div>
       </div>
@@ -190,31 +177,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="right-panels">
       <!-- Axis Detail -->
       <div class="panel">
-        <div class="panel-header"><span class="panel-title">Axis Progression</span><span class="panel-badge">ALL APEX</span></div>
+        <div class="panel-header"><span class="panel-title">Axis Progression</span><span class="panel-badge" id="badge-status">LOADING</span></div>
         <div class="panel-body">
           <div class="axis-tracks">
             <div class="axis-track-item">
               <div class="axis-track-hd">
                 <div class="axis-track-label"><span class="axis-letter">A</span><span class="axis-name">Knowledge</span></div>
-                <span class="axis-score">9.000 / 9.000</span>
+                <span class="axis-score" id="track-a-score">-- / 9.000</span>
               </div>
-              <div class="axis-bar-bg"><div class="axis-bar" style="width:100%;background:var(--gold)"></div></div>
+              <div class="axis-bar-bg"><div class="axis-bar" id="track-a-bar" style="width:0%;background:var(--gold)"></div></div>
               <div class="axis-desc">Consumption, learning, and content completion. Every watch, read, and course certificate increments Axis A.</div>
             </div>
             <div class="axis-track-item">
               <div class="axis-track-hd">
                 <div class="axis-track-label"><span class="axis-letter">B</span><span class="axis-name">Mastery</span></div>
-                <span class="axis-score">9.000 / 9.000</span>
+                <span class="axis-score" id="track-b-score">-- / 9.000</span>
               </div>
-              <div class="axis-bar-bg"><div class="axis-bar" style="width:100%;background:var(--crimson2)"></div></div>
+              <div class="axis-bar-bg"><div class="axis-bar" id="track-b-bar" style="width:0%;background:var(--crimson2)"></div></div>
               <div class="axis-desc">Performance and achievement metrics. Game stages, trophy milestones, and validated demonstrations of skill.</div>
             </div>
             <div class="axis-track-item">
               <div class="axis-track-hd">
                 <div class="axis-track-label"><span class="axis-letter">C</span><span class="axis-name">Contribution</span></div>
-                <span class="axis-score">9.000 / 9.000</span>
+                <span class="axis-score" id="track-c-score">-- / 9.000</span>
               </div>
-              <div class="axis-bar-bg"><div class="axis-bar" style="width:100%;background:var(--cyan)"></div></div>
+              <div class="axis-bar-bg"><div class="axis-bar" id="track-c-bar" style="width:0%;background:var(--cyan)"></div></div>
               <div class="axis-desc">Social, creative, and economic output. Consultancy, publishing, referrals, and token economy participation.</div>
             </div>
           </div>
@@ -225,13 +212,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="panel">
         <div class="panel-header"><span class="panel-title">Evolution Events</span><span class="panel-badge">LIVE</span></div>
         <div class="panel-body">
-          <div class="ev-list">
-            <div class="ev-item"><span class="ev-icon">A</span><span class="ev-text">Media content viewed -- F-01 Myth of the Stones</span><span class="ev-weight">+0.001</span></div>
-            <div class="ev-item"><span class="ev-icon">B</span><span class="ev-text">Matrix coordinate verified -- apex confirmed</span><span class="ev-weight">LOCKED</span></div>
-            <div class="ev-item"><span class="ev-icon">C</span><span class="ev-text">Sovereignty declared -- genesis block hash</span><span class="ev-weight">+0.001</span></div>
-            <div class="ev-item"><span class="ev-icon">A</span><span class="ev-text">Certificate issued -- Master Architect</span><span class="ev-weight">+0.001</span></div>
-            <div class="ev-item"><span class="ev-icon">B</span><span class="ev-text">Trophy earned -- Omega Sovereign</span><span class="ev-weight">+0.001</span></div>
-            <div class="ev-item"><span class="ev-icon">C</span><span class="ev-text">Platform deployed -- sydomega.com live</span><span class="ev-weight">+0.001</span></div>
+          <div class="ev-list" id="ev-list">
+            <div class="ev-item"><span class="ev-text">Loading your evolution log...</span></div>
           </div>
         </div>
       </div>
@@ -242,14 +224,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="panel-body">
           <div style="font-family:'Courier Prime',monospace;font-size:.72rem;color:var(--muted);line-height:2;letter-spacing:.06em">
             <div style="color:var(--gold);font-size:.8rem;margin-bottom:.5rem">AUTH = sqrt(A^2 + B^2 + C^2)</div>
-            <div>A = 9.000 // Knowledge</div>
-            <div>B = 9.000 // Mastery</div>
-            <div>C = 9.000 // Contribution</div>
-            <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">A^2 = 81.000</div>
-            <div>B^2 = 81.000</div>
-            <div>C^2 = 81.000</div>
-            <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">SUM = 243.000</div>
-            <div style="color:var(--cyan);font-size:.85rem;margin-top:.3rem">AUTH = <span style="color:var(--gold)">15.588</span></div>
+            <div>A = <span id="f-a">--</span> // Knowledge</div>
+            <div>B = <span id="f-b">--</span> // Mastery</div>
+            <div>C = <span id="f-c">--</span> // Contribution</div>
+            <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">A^2 = <span id="f-a2">--</span></div>
+            <div>B^2 = <span id="f-b2">--</span></div>
+            <div>C^2 = <span id="f-c2">--</span></div>
+            <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">SUM = <span id="f-sum">--</span></div>
+            <div style="color:var(--cyan);font-size:.85rem;margin-top:.3rem">AUTH = <span style="color:var(--gold)" id="f-auth">--</span></div>
             <div style="color:var(--muted);font-size:.62rem;margin-top:.5rem">Threshold: 15.588 confirms APEX status. Owner permanently at absolute (9.000, 9.000, 9.000).</div>
           </div>
         </div>
@@ -261,7 +243,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="node-grid-section">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
       <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">Axis A -- 9x9 Node Map (Plane 9)</span>
-      <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)">81 / 81 COMPLETED</span>
+      <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)" id="node-count">-- / 81 COMPLETED</span>
     </div>
     <div class="node-grid" id="node-grid"></div>
   </div>
@@ -285,6 +267,85 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 </div>
 
 <div class="omega-sig">&#937;</div>
+
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+function fmt(n){ return Number(n||0).toFixed(3); }
+
+async function loadRealMatrix(){
+  const sess=(await supabase.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+
+  const pr = await supabase.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
+  const a = pr.data ? Number(pr.data.axis_a||0) : 0;
+  const b = pr.data ? Number(pr.data.axis_b||0) : 0;
+  const c = pr.data ? Number(pr.data.axis_c||0) : 0;
+  const auth = Math.sqrt(a*a+b*b+c*c);
+  const apex = auth >= 15.588 - 0.001;
+
+  // top stat cards
+  document.getElementById('stat-a').textContent=fmt(a);
+  document.getElementById('stat-b').textContent=fmt(b);
+  document.getElementById('stat-c').textContent=fmt(c);
+  document.getElementById('stat-auth').textContent=fmt(auth);
+  document.getElementById('stat-a-sub').textContent=(a>=9?'Apex -- ':'')+'Knowledge axis, out of 9.000';
+  document.getElementById('stat-b-sub').textContent=(b>=9?'Apex -- ':'')+'Mastery axis, out of 9.000';
+  document.getElementById('stat-c-sub').textContent=(c>=9?'Apex -- ':'')+'Contribution axis, out of 9.000';
+  document.getElementById('stat-auth-sub').textContent='sqrt('+fmt(a*a)+'+'+fmt(b*b)+'+'+fmt(c*c)+') = '+fmt(auth);
+
+  // 3D projection coordinate readout
+  document.getElementById('coord-a').textContent=fmt(a);
+  document.getElementById('coord-b').textContent=fmt(b);
+  document.getElementById('coord-c').textContent=fmt(c);
+
+  // axis track detail
+  document.getElementById('track-a-score').textContent=fmt(a)+' / 9.000';
+  document.getElementById('track-b-score').textContent=fmt(b)+' / 9.000';
+  document.getElementById('track-c-score').textContent=fmt(c)+' / 9.000';
+  document.getElementById('track-a-bar').style.width=Math.min(100,a/9*100)+'%';
+  document.getElementById('track-b-bar').style.width=Math.min(100,b/9*100)+'%';
+  document.getElementById('track-c-bar').style.width=Math.min(100,c/9*100)+'%';
+
+  // authority formula panel
+  document.getElementById('f-a').textContent=fmt(a);
+  document.getElementById('f-b').textContent=fmt(b);
+  document.getElementById('f-c').textContent=fmt(c);
+  document.getElementById('f-a2').textContent=fmt(a*a);
+  document.getElementById('f-b2').textContent=fmt(b*b);
+  document.getElementById('f-c2').textContent=fmt(c*c);
+  document.getElementById('f-sum').textContent=fmt(a*a+b*b+c*c);
+  document.getElementById('f-auth').textContent=fmt(auth);
+
+  // status badge
+  document.getElementById('badge-status').textContent = apex ? 'ALL APEX' : 'IN PROGRESS';
+
+  // node grid -- lit proportionally to real Axis A progress (a/9 of the 81 cells)
+  const litCount = Math.round((a/9)*81);
+  document.getElementById('node-count').textContent = litCount+' / 81 COMPLETED';
+  document.querySelectorAll('#node-grid .node-cell').forEach(function(cell,i){
+    cell.classList.toggle('lit', i < litCount);
+  });
+
+  // real evolution log
+  const ev = await supabase.from('evolution_events').select('axis,note,created_at')
+    .eq('user_id', sess.user.id).order('created_at',{ascending:false}).limit(8);
+  const list = document.getElementById('ev-list');
+  if(ev.data && ev.data.length){
+    list.innerHTML = ev.data.map(function(e){
+      var when = e.created_at ? new Date(e.created_at).toLocaleDateString() : '';
+      return '<div class="ev-item"><span class="ev-icon">'+(e.axis||'?')+'</span><span class="ev-text">'+(e.note||'Evolution event')+'</span><span class="ev-weight">'+when+'</span></div>';
+    }).join('');
+  } else {
+    list.innerHTML = '<div class="ev-item"><span class="ev-text">No evolution events recorded yet -- your actions across the platform will appear here.</span></div>';
+  }
+}
+loadRealMatrix();
+</script>
 
 <script>
 // BG
@@ -353,7 +414,7 @@ const grid=document.getElementById('node-grid');
 if(!grid)return;
 for(let i=0;i<81;i++){
 const cell=document.createElement('div');
-cell.className='node-cell'+(i===80?' apex':' lit');
+cell.className='node-cell'+(i===80?' apex':'');
 cell.textContent=i===80?'9.9':String(Math.floor(i/9)+1)+'.'+(i%9+1);
 grid.appendChild(cell);
 }

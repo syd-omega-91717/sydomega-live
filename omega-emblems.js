@@ -41,10 +41,10 @@
     '@keyframes oeSpinR{to{transform:rotate(-360deg)}}',
     '@keyframes oePulse{0%,100%{opacity:.35}50%{opacity:.8}}',
     '@keyframes oeGlyph{0%,100%{opacity:.85}50%{opacity:1}}',
-    '.oe-spin{transform-origin:60px 60px;animation:oeSpin 26s linear infinite}',
-    '.oe-spinr{transform-origin:60px 60px;animation:oeSpinR 34s linear infinite}',
-    '.oe-pulse{animation:oePulse 5s ease-in-out infinite}',
-    '.oe-glyph{animation:oeGlyph 5s ease-in-out infinite}',
+    '.oe-spin{transform-origin:60px 60px;animation:oeSpin 34s linear infinite}',
+    '.oe-spinr{transform-origin:60px 60px;animation:oeSpinR 42s linear infinite}',
+    '.oe-pulse{animation:oePulse 8s ease-in-out infinite}',
+    '.oe-glyph{animation:oeGlyph 8s ease-in-out infinite}',
     '@media(prefers-reduced-motion:reduce){.oe-spin,.oe-spinr,.oe-pulse,.oe-glyph{animation:none}}'
   ].join('');
   (document.head || document.documentElement).appendChild(st);

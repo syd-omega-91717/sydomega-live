@@ -1,0 +1,10 @@
+{
+  "name": "sydomega-live",
+  "version": "2.0.0",
+  "description": "Ω SYD OMEGA 91717 -- static site (no build step; see vercel.json)",
+  "private": true,
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10"
+  }
+}

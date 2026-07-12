@@ -1,0 +1,88 @@
+{
+ "houses": [
+  {
+   "n": 1,
+   "sign": "Aries",
+   "house": "First",
+   "domain": "Concept Launch, Identity Initialization",
+   "element": "Fire"
+  },
+  {
+   "n": 2,
+   "sign": "Taurus",
+   "house": "Second",
+   "domain": "Currency Ledger, Capital & Trading",
+   "element": "Metal"
+  },
+  {
+   "n": 3,
+   "sign": "Gemini",
+   "house": "Third",
+   "domain": "Networking, Communication Processing",
+   "element": "Wind"
+  },
+  {
+   "n": 4,
+   "sign": "Cancer",
+   "house": "Fourth",
+   "domain": "Family Core Trust, Lineage Protection",
+   "element": "Water"
+  },
+  {
+   "n": 5,
+   "sign": "Leo",
+   "house": "Fifth",
+   "domain": "Cinematic Creation, Brand Design",
+   "element": "Fire"
+  },
+  {
+   "n": 6,
+   "sign": "Virgo",
+   "house": "Sixth",
+   "domain": "Evolution Engine, Quality Control",
+   "element": "Sand"
+  },
+  {
+   "n": 7,
+   "sign": "Libra",
+   "house": "Seventh",
+   "domain": "Diplomacy, External Protocols",
+   "element": "Wind"
+  },
+  {
+   "n": 8,
+   "sign": "Scorpio",
+   "house": "Eighth",
+   "domain": "Transmutation, Inheritance Gates",
+   "element": "Water"
+  },
+  {
+   "n": 9,
+   "sign": "Sagittarius",
+   "house": "Ninth",
+   "domain": "Vision Scaling, Academy Interface",
+   "element": "Fire"
+  },
+  {
+   "n": 10,
+   "sign": "Capricorn",
+   "house": "Tenth",
+   "domain": "Sovereignty Ledger, Management Node",
+   "element": "Metal"
+  },
+  {
+   "n": 11,
+   "sign": "Aquarius",
+   "house": "Eleventh",
+   "domain": "Infrastructure Expansion, Networks",
+   "element": "Wind"
+  },
+  {
+   "n": 12,
+   "sign": "Pisces",
+   "house": "Twelfth",
+   "domain": "Security Ring, Deep System Isolation",
+   "element": "Water"
+  }
+ ]
+}

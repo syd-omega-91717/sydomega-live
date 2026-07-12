@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Honors | &#937; SYD OMEGA 91717</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--void:#0A0A0F;--void2:#020206;
+--gold:#C9A84C;--solar:#E2C86D;
+--cyan:#00E5FF;--crimson:#8B0000;--crimson2:#C0392B;
+--glass:rgba(201,168,76,0.06);--glass2:rgba(0,229,255,0.04);
+--border:rgba(201,168,76,0.18);--border2:rgba(0,229,255,0.12);
+--text:#E8E0D0;--muted:#8A8070;
+--green:#00C896;--bronze:#CD7F32;--silver:#C0C0C0;
+}
+html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(2,2,6,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-status{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
+.nav-back{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:.3rem .8rem;transition:all .2s}
+.nav-back:hover{color:var(--gold);border-color:var(--gold)}
+
+.page{position:relative;z-index:1;padding-top:64px;min-height:100vh}
+
+.hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}
+.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
+.hero-sub{font-size:.95rem;color:var(--muted);letter-spacing:.05em;max-width:600px}
+
+/* HONOR STATS */
+.honor-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;max-width:1400px;margin:0 auto 2.5rem;padding:0 2rem}
+.hstat{border:1px solid var(--border);padding:1.25rem;text-align:center;position:relative;overflow:hidden;transition:border-color .3s}
+.hstat:hover{border-color:var(--gold)}
+.hstat-icon{font-size:1.8rem;margin-bottom:.5rem;display:block}
+.hstat-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem}
+.hstat-val{font-family:'Cinzel Decorative',serif;font-size:1.5rem;color:var(--gold)}
+.hstat-tier{font-size:.7rem;margin-top:.2rem}
+
+/* FILTER TABS */
+.filter-row{max-width:1400px;margin:0 auto 2rem;padding:0 2rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.filter-btn{font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{color:var(--gold);border-color:var(--gold);background:rgba(201,168,76,0.06)}
+
+/* TROPHY GRID */
+.honors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
+
+.honor-card{border:1px solid var(--border);background:var(--glass);position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:default}
+.honor-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.honor-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.honor-card.tier-omega::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.honor-card.tier-gold::before{background:linear-gradient(90deg,transparent,var(--solar),transparent)}
+.honor-card.tier-silver::before{background:linear-gradient(90deg,transparent,var(--silver),transparent)}
+.honor-card.tier-bronze::before{background:linear-gradient(90deg,transparent,var(--bronze),transparent)}
+.honor-card.tier-cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.honor-card.locked{opacity:.45;filter:grayscale(.6)}
+
+.honor-visual{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.honor-glyph{font-family:'Cinzel Decorative',serif;font-size:3rem;position:relative;z-index:1;transition:transform .35s}
+.honor-card:hover .honor-glyph{transform:scale(1.12)}
+.honor-ring{position:absolute;width:80px;height:80px;border-radius:50%;border:1px solid;opacity:.3;transition:opacity .35s}
+.honor-card:hover .honor-ring{opacity:.6}
+.honor-ring2{position:absolute;width:110px;height:110px;border-radius:50%;border:1px solid;opacity:.15;animation:ring-pulse 3s ease-in-out infinite}
+
+@keyframes ring-pulse{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(1.05);opacity:.25}}
+
+.honor-meta{padding:1rem 1.25rem 1.25rem}
+.honor-type{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
+.honor-name{font-family:'Cinzel Decorative',serif;font-size:.85rem;line-height:1.3;margin-bottom:.4rem}
+.honor-desc{font-size:.75rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem}
+.honor-footer{display:flex;align-items:center;justify-content:space-between}
+.honor-tier-badge{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid}
+.honor-date{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted)}
+
+/* TIER COLORS */
+.tier-omega .honor-name{color:var(--gold)}
+.tier-omega .honor-ring{border-color:var(--gold)}
+.tier-omega .honor-ring2{border-color:var(--gold)}
+.tier-omega .honor-tier-badge{color:var(--gold);border-color:var(--gold)}
+.tier-omega .honor-visual{background:radial-gradient(ellipse at center,rgba(201,168,76,0.08),transparent 70%)}
+.tier-omega .honor-glyph{color:var(--gold)}
+
+.tier-gold .honor-name{color:var(--solar)}
+.tier-gold .honor-ring{border-color:var(--solar)}
+.tier-gold .honor-ring2{border-color:var(--solar)}
+.tier-gold .honor-tier-badge{color:var(--solar);border-color:var(--solar)}
+.tier-gold .honor-visual{background:radial-gradient(ellipse at center,rgba(226,200,109,0.07),transparent 70%)}
+.tier-gold .honor-glyph{color:var(--solar)}
+
+.tier-silver .honor-name{color:var(--silver)}
+.tier-silver .honor-ring{border-color:var(--silver)}
+.tier-silver .honor-ring2{border-color:var(--silver)}
+.tier-silver .honor-tier-badge{color:var(--silver);border-color:var(--silver)}
+.tier-silver .honor-visual{background:radial-gradient(ellipse at center,rgba(192,192,192,0.07),transparent 70%)}
+.tier-silver .honor-glyph{color:var(--silver)}
+
+.tier-bronze .honor-name{color:var(--bronze)}
+.tier-bronze .honor-ring{border-color:var(--bronze)}
+.tier-bronze .honor-ring2{border-color:var(--bronze)}
+.tier-bronze .honor-tier-badge{color:var(--bronze);border-color:var(--bronze)}
+.tier-bronze .honor-visual{background:radial-gradient(ellipse at center,rgba(205,127,50,0.07),transparent 70%)}
+.tier-bronze .honor-glyph{color:var(--bronze)}
+
+.tier-cyan .honor-name{color:var(--cyan)}
+.tier-cyan .honor-ring{border-color:var(--cyan)}
+.tier-cyan .honor-ring2{border-color:var(--cyan)}
+.tier-cyan .honor-tier-badge{color:var(--cyan);border-color:var(--cyan)}
+.tier-cyan .honor-visual{background:radial-gradient(ellipse at center,rgba(0,229,255,0.06),transparent 70%)}
+.tier-cyan .honor-glyph{color:var(--cyan)}
+
+.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:'Cinzel Decorative',serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--void2)}
+::-webkit-scrollbar-thumb{background:var(--border)}
+
+@media(max-width:1100px){.honors-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.honor-stats{grid-template-columns:repeat(3,1fr)}.honors-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.honors-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Command</a></li>
+    <li><a href="matrix.html">Matrix</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="treasury.html">Treasury</a></li>
+    <li><a href="honors.html" class="active">Honors</a></li>
+    <li><a href="media.html">Media</a></li>
+    <li><a href="agents.html">Agents</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-status">&#9632; LIVE</span>
+    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero-band">
+    <div class="hero-eyebrow">M4 // ACHIEVEMENT SYSTEM</div>
+    <h1 class="hero-title">Hall of Honors</h1>
+    <p class="hero-sub">Trophies, medals, certificates, and grade insignia earned through evolution across the 9x9x9 Matrix -- the sovereign record of ascension.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="honor-stats">
+    <div class="hstat">
+      <span class="hstat-icon" style="color:var(--gold)">&#8960;</span>
+      <div class="hstat-label">Trophies</div>
+      <div class="hstat-val">12</div>
+      <div class="hstat-tier" style="color:var(--gold)">12 / 12 Unlocked</div>
+    </div>
+    <div class="hstat">
+      <span class="hstat-icon" style="color:var(--solar)">&#9670;</span>
+      <div class="hstat-label">Medals</div>
+      <div class="hstat-val">12</div>
+      <div class="hstat-tier" style="color:var(--solar)">Contribution Track</div>
+    </div>
+    <div class="hstat">
+      <span class="hstat-icon" style="color:var(--cyan)">&#9635;</span>
+      <div class="hstat-label">Certificates</div>
+      <div class="hstat-val">12</div>
+      <div class="hstat-tier" style="color:var(--cyan)">Knowledge Track</div>
+    </div>
+    <div class="hstat">
+      <span class="hstat-icon" style="color:var(--crimson2)">&#9650;</span>
+      <div class="hstat-label">Level Badge</div>
+      <div class="hstat-val">9.9.9</div>
+      <div class="hstat-tier" style="color:var(--crimson2)">Apex Tier</div>
+    </div>
+    <div class="hstat">
+      <span class="hstat-icon" style="color:var(--muted)">&#9632;</span>
+      <div class="hstat-label">Grade Cards</div>
+      <div class="hstat-val">12</div>
+      <div class="hstat-tier" style="color:var(--muted)">All Grades Sealed</div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterHonors('all',this)">All</button>
+    <button class="filter-btn" onclick="filterHonors('trophy',this)">Trophies</button>
+    <button class="filter-btn" onclick="filterHonors('medal',this)">Medals</button>
+    <button class="filter-btn" onclick="filterHonors('cert',this)">Certificates</button>
+    <button class="filter-btn" onclick="filterHonors('badge',this)">Level Badges</button>
+    <button class="filter-btn" onclick="filterHonors('grade',this)">Grade Cards</button>
+  </div>
+
+  <!-- HONORS GRID -->
+  <div class="honors-grid" id="honors-grid">
+
+    <!-- TROPHY: OMEGA SOVEREIGN -->
+    <div class="honor-card tier-omega" data-cat="trophy">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#937;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Trophy</div>
+        <div class="honor-name">Omega Sovereign</div>
+        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 15.588. Absolute completion of the 729-node progression path.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">OMEGA</span>
+          <span class="honor-date">2026-07-11</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROPHY: SENTINEL PRIME -->
+    <div class="honor-card tier-omega" data-cat="trophy">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9650;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Trophy</div>
+        <div class="honor-name">Sentinel Prime</div>
+        <div class="honor-desc">Mastery axis B reaches 9.000. Full platform security and sovereignty governance maintained without breach.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">OMEGA</span>
+          <span class="honor-date">2026-06-30</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROPHY: ARCHITECT'S SEAL -->
+    <div class="honor-card tier-gold" data-cat="trophy">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9670;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Trophy</div>
+        <div class="honor-name">Architect's Seal</div>
+        <div class="honor-desc">Lebanese Order of Engineers No.30875. Architecture credential hashed into the Genesis Block of the sovereign ledger.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">GOLD</span>
+          <span class="honor-date">2026-06-15</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROPHY: FIRE ASCENDANT -->
+    <div class="honor-card tier-gold" data-cat="trophy">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9651;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Trophy</div>
+        <div class="honor-name">Fire Ascendant</div>
+        <div class="honor-desc">Element: Fire. Sign: Aries. Olympian: Ares. All cosmological assignments aligned and locked at onboarding. Token: ARENITE.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">GOLD</span>
+          <span class="honor-date">2026-05-20</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDAL: GENESIS CONTRIBUTOR -->
+    <div class="honor-card tier-omega" data-cat="medal">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9711;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Medal</div>
+        <div class="honor-name">Genesis Contributor</div>
+        <div class="honor-desc">Contribution axis C at 9.000. Sole founder and architect of the SYD OMEGA 91717 ecosystem from inception to deployment.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">OMEGA</span>
+          <span class="honor-date">2026-07-01</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDAL: SOVEREIGN FOUNDER -->
+    <div class="honor-card tier-gold" data-cat="medal">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9824;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Medal</div>
+        <div class="honor-name">Sovereign Founder</div>
+        <div class="honor-desc">100% absolute ownership. No co-founders, no partners. Immutable governance logic sealed. Identity: Omega-91717-SYD-001.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">GOLD</span>
+          <span class="honor-date">2026-04-19</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDAL: ORACLE OF ARES -->
+    <div class="honor-card tier-gold" data-cat="medal">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9651;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Medal</div>
+        <div class="honor-name">Oracle of Ares</div>
+        <div class="honor-desc">Olympian alignment: Ares, God of War and Strategy. Agent: Sentinel. All celestial attributes confirmed and locked in platform canon.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">GOLD</span>
+          <span class="honor-date">2026-05-01</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDAL: VAULT MASTER -->
+    <div class="honor-card tier-silver" data-cat="medal">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9632;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Medal</div>
+        <div class="honor-name">Vault Master</div>
+        <div class="honor-desc">51% Master Vault locked. 467,756,700,000 &#937; tokens secured in sovereign treasury. Flash-crash protection active.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">SILVER</span>
+          <span class="honor-date">2026-06-01</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE: KNOWLEDGE APEX -->
+    <div class="honor-card tier-cyan" data-cat="cert">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9635;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Certificate</div>
+        <div class="honor-name">Knowledge Apex</div>
+        <div class="honor-desc">Axis A Knowledge at 9.000. Full completion of all 729 matrix nodes on the knowledge dimension. Verified and sealed.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">OMEGA</span>
+          <span class="honor-date">2026-07-11</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE: ARCHITECTURE MASTER -->
+    <div class="honor-card tier-cyan" data-cat="cert">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9633;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Certificate</div>
+        <div class="honor-name">Master Architect</div>
+        <div class="honor-desc">Lebanese Order of Engineers certificate. Architecture registration 2007. Professional credential embedded in sovereign identity chain.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">GOLD</span>
+          <span class="honor-date">2007 // 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE: PLATFORM BUILDER -->
+    <div class="honor-card tier-silver" data-cat="cert">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9636;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Certificate</div>
+        <div class="honor-name">Platform Builder</div>
+        <div class="honor-desc">sydomega.com deployed to production. Static HTML/JS + Supabase + Vercel stack. Phase 0 locked and operational.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">SILVER</span>
+          <span class="honor-date">2026-06-20</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL BADGE: 9.9.9 APEX -->
+    <div class="honor-card tier-omega" data-cat="badge">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph" style="font-size:1.4rem;font-family:'Courier Prime',monospace">9.9.9</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Level Badge</div>
+        <div class="honor-name">Omega Prime Level 9.9.9</div>
+        <div class="honor-desc">Matrix coordinate absolute: (9.000, 9.000, 9.000). ALL-TIME access. No expiry. Authority score: 15.588. is_owner=true.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">OMEGA</span>
+          <span class="honor-date">PERMANENT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRADE CARD: GRADE 12 -->
+    <div class="honor-card tier-omega" data-cat="grade">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph" style="font-size:2rem;font-family:'Courier Prime',monospace">XII</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Grade Card</div>
+        <div class="honor-name">Grade 12 -- Final Ascension</div>
+        <div class="honor-desc">Highest grade in the 12-grade progression system. Coarse band completed across all 729 matrix nodes. Sovereign status confirmed.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">OMEGA</span>
+          <span class="honor-date">2026-07-11</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROPHY: GENESIS BLOCK -->
+    <div class="honor-card tier-gold" data-cat="trophy">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph">&#9674;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Trophy</div>
+        <div class="honor-name">Genesis Block</div>
+        <div class="honor-desc">Irrevocable property documents hashed into the genesis block. Lebanese Engineers Order No.30875 immutably sealed.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge">GOLD</span>
+          <span class="honor-date">2026-04-19</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROPHY: 9D ARCHITECT (locked) -->
+    <div class="honor-card tier-silver locked" data-cat="trophy">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph" style="opacity:.5">&#9670;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Trophy</div>
+        <div class="honor-name">9D Architect</div>
+        <div class="honor-desc">Awarded upon completion of all 9 visual rendering passes across the full 8,748-node nested matrix. Phase 4 milestone.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge" style="color:var(--muted);border-color:var(--muted)">LOCKED</span>
+          <span class="honor-date">Phase 4</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDAL: TOKEN LAUNCHER (locked) -->
+    <div class="honor-card tier-silver locked" data-cat="medal">
+      <div class="honor-visual">
+        <div class="honor-ring2"></div>
+        <div class="honor-ring"></div>
+        <div class="honor-glyph" style="opacity:.5">&#9651;</div>
+      </div>
+      <div class="honor-meta">
+        <div class="honor-type">Medal</div>
+        <div class="honor-name">Token Launcher</div>
+        <div class="honor-desc">Awarded upon activation of the 12-token economy on Polygon L2. Requires legal clearance. Contribution milestone: Phase 3.</div>
+        <div class="honor-footer">
+          <span class="honor-tier-badge" style="color:var(--muted);border-color:var(--muted)">LOCKED</span>
+          <span class="honor-date">Phase 3</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="omega-sig">&#937;</div>
+
+<script>
+// Background particles
+(function(){
+const c=document.getElementById('bg-canvas');
+const ctx=c.getContext('2d');
+let W,H,pts=[];
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<50;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,r:Math.random()*1.2+.3});
+function draw(){
+ctx.clearRect(0,0,W,H);
+ctx.fillStyle='rgba(201,168,76,0.025)';
+for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}
+requestAnimationFrame(draw);
+}draw();
+})();
+
+function filterHonors(cat,btn){
+document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('.honor-card').forEach(card=>{
+if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.display='none';}
+});
+}
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>&#937; SYD OMEGA 91717 -- Asset Ledger</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="&#937; SYD OMEGA 91717 -- Asset Ledger"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/ledger.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="&#937; SYD OMEGA 91717 -- Asset Ledger"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
+
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --bg: #050508;
+            --surface: #0d0d15;
+            --text: #f0f0f5;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            padding: 20px;
+            border-bottom: 1px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(13, 13, 21, 0.8);
+            z-index: 10;
+        }
+        .nav-bar { display: flex; gap: 15px; }
+        .btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        .btn:hover { background: var(--primary); color: var(--bg); }
+        .omni-search-bar {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            color: var(--text);
+            padding: 8px;
+            width: 250px;
+        }
+        .ledger-container {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        .ledger-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+        }
+        .ledger-table th, .ledger-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+        }
+        .ledger-table th {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .ledger-table tr:hover {
+            background: rgba(0, 255, 204, 0.05);
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            background: rgba(0, 255, 204, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="font-weight: bold; color: var(--primary); letter-spacing: 2px;">&#937; SYSTEM ASSET LEDGER</div>
+        <input type="text" class="omni-search-bar" placeholder="Omni-Search ledger entries..." id="omniSearch">
+        <div class="nav-bar">
+            <button class="btn" onclick="globalCommand('BACK')">Back</button>
+            <button class="btn" onclick="globalCommand('NEXT')">Next</button>
+        </div>
+    </header>
+
+    <div class="ledger-container">
+        <table class="ledger-table">
+            <thead>
+                <tr>
+                    <th>Asset ID</th>
+                    <th>Structural Node Category</th>
+                    <th>Allocation Weight</th>
+                    <th>Sovereign Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>&#937;-CORE-001</td>
+                    <td>Core Portal Interface Layer</td>
+                    <td>51% Absolute Master Stake</td>
+                    <td><span class="status-pill">VERIFIED SECURE</span></td>
+                </tr>
+                <tr>
+                    <td>&#937;-EVOL-002</td>
+                    <td>Dynamic Regulatory Logic Node</td>
+                    <td>Contribution Class Alpha</td>
+                    <td><span class="status-pill">RESONANCE SYSTEM LOCK</span></td>
+                </tr>
+                <tr>
+                    <td>&#937;-NETW-003</td>
+                    <td>Omni-Fulfillment Mesh Pipeline</td>
+                    <td>Execution Vector Global</td>
+                    <td><span class="status-pill">ACTIVE OPERATION</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function globalCommand(action) {
+            if (action === 'BACK') window.location.href = '/dashboard.html';
+            if (action === 'NEXT') window.location.href = '/dashboard.html';
+        }
+        document.getElementById('omniSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                alert(`Querying ledger allocation registries for: "${this.value}"`);
+            }
+        });
+    </script>
+<script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
+<script src="/nav.js"></script>
+</body>
+</html>

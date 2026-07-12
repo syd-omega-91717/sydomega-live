@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Media | &#937; SYD OMEGA 91717</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--void:#0A0A0F;--void2:#020206;
+--gold:#C9A84C;--solar:#E2C86D;
+--cyan:#00E5FF;--crimson:#8B0000;--crimson2:#C0392B;
+--glass:rgba(201,168,76,0.06);--glass2:rgba(0,229,255,0.04);
+--border:rgba(201,168,76,0.18);--border2:rgba(0,229,255,0.12);
+--text:#E8E0D0;--muted:#8A8070;
+--green:#00C896;
+}
+html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(2,2,6,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-status{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
+.nav-back{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:.3rem .8rem;transition:all .2s}
+.nav-back:hover{color:var(--gold);border-color:var(--gold)}
+
+.page{position:relative;z-index:1;padding-top:64px;min-height:100vh}
+
+/* HERO */
+.hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}
+.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
+.hero-sub{font-size:.95rem;color:var(--muted);letter-spacing:.05em;max-width:600px}
+
+/* UNIVERSE STATS */
+.universe-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;max-width:1400px;margin:0 auto 2.5rem;padding:0 2rem}
+.ustat{border:1px solid var(--border);padding:1rem 1.25rem;text-align:center;position:relative;overflow:hidden;transition:border-color .3s}
+.ustat:hover{border-color:var(--gold)}
+.ustat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.ustat-val{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:var(--gold);line-height:1}
+.ustat-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.35rem}
+
+/* FILTER ROW */
+.filter-row{max-width:1400px;margin:0 auto 2rem;padding:0 2rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.filter-btn{font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{color:var(--gold);border-color:var(--gold);background:rgba(201,168,76,0.06)}
+.filter-divider{width:1px;height:20px;background:var(--border);margin:0 .5rem}
+
+/* SECTION HEADER */
+.section-hd{max-width:1400px;margin:0 auto;padding:0 2rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.section-title{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.1em}
+.section-count{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em}
+
+/* FRANCHISE GRID */
+.franchise-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
+
+.franchise-card{border:1px solid var(--border);background:var(--glass);position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:default}
+.franchise-card:hover{border-color:var(--gold);transform:translateY(-6px)}
+.franchise-card.locked{opacity:.4;pointer-events:none}
+
+/* CARD POSTER */
+.card-poster{position:relative;width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.poster-bg{position:absolute;inset:0}
+.poster-gradient{position:absolute;inset:0;z-index:1}
+.poster-number{position:absolute;top:1rem;left:1rem;z-index:3;font-family:'Courier Prime',monospace;font-size:.65rem;color:rgba(201,168,76,.6);letter-spacing:.15em}
+.poster-phase{position:absolute;top:1rem;right:1rem;z-index:3;font-family:'Courier Prime',monospace;font-size:.6rem;border:1px solid;padding:.2rem .4rem;letter-spacing:.08em}
+.poster-glyph{font-family:'Cinzel Decorative',serif;font-size:3.5rem;position:relative;z-index:2;transition:transform .35s,text-shadow .35s}
+.franchise-card:hover .poster-glyph{transform:scale(1.1);text-shadow:0 0 40px currentColor}
+.poster-ring{position:absolute;width:100px;height:100px;border-radius:50%;border:1px solid;opacity:.2;z-index:1;animation:spin-slow 20s linear infinite}
+.poster-ring2{position:absolute;width:150px;height:150px;border-radius:50%;border:1px solid;opacity:.08;z-index:1;animation:spin-slow 35s linear infinite reverse}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.poster-bottom-bar{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:.75rem 1rem;background:linear-gradient(to top,rgba(2,2,6,.95),transparent)}
+
+/* CARD META */
+.card-meta{padding:1rem 1.25rem 1.25rem}
+.card-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
+.card-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);line-height:1.3;margin-bottom:.4rem}
+.card-desc{font-size:.75rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem}
+.card-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+.card-tag{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);border:1px solid rgba(201,168,76,0.15);padding:.15rem .4rem;letter-spacing:.06em}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.card-status{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid}
+.card-status.building{color:var(--gold);border-color:var(--gold)}
+.card-status.roadmap{color:var(--muted);border-color:var(--muted)}
+.card-status.active{color:var(--green);border-color:var(--green)}
+.card-spin{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted)}
+
+/* ELEMENT COLORS */
+.el-fire .poster-glyph{color:var(--crimson2)}
+.el-fire .poster-bg{background:radial-gradient(ellipse at center,rgba(192,57,43,0.15),rgba(2,2,6,0) 70%)}
+.el-fire .poster-gradient{background:linear-gradient(to bottom,transparent 40%,rgba(192,57,43,.2))}
+.el-fire .poster-ring{border-color:var(--crimson2)}
+.el-fire .poster-phase{color:var(--crimson2);border-color:rgba(192,57,43,.4)}
+
+.el-water .poster-glyph{color:#3498DB}
+.el-water .poster-bg{background:radial-gradient(ellipse at center,rgba(52,152,219,0.12),rgba(2,2,6,0) 70%)}
+.el-water .poster-gradient{background:linear-gradient(to bottom,transparent 40%,rgba(52,152,219,.18))}
+.el-water .poster-ring{border-color:#3498DB}
+.el-water .poster-phase{color:#3498DB;border-color:rgba(52,152,219,.4)}
+
+.el-sky .poster-glyph{color:var(--cyan)}
+.el-sky .poster-bg{background:radial-gradient(ellipse at center,rgba(0,229,255,0.1),rgba(2,2,6,0) 70%)}
+.el-sky .poster-gradient{background:linear-gradient(to bottom,transparent 40%,rgba(0,229,255,.12))}
+.el-sky .poster-ring{border-color:var(--cyan)}
+.el-sky .poster-phase{color:var(--cyan);border-color:rgba(0,229,255,.4)}
+
+.el-earth .poster-glyph{color:#27AE60}
+.el-earth .poster-bg{background:radial-gradient(ellipse at center,rgba(39,174,96,0.12),rgba(2,2,6,0) 70%)}
+.el-earth .poster-gradient{background:linear-gradient(to bottom,transparent 40%,rgba(39,174,96,.15))}
+.el-earth .poster-ring{border-color:#27AE60}
+.el-earth .poster-phase{color:#27AE60;border-color:rgba(39,174,96,.4)}
+
+.el-wind .poster-glyph{color:#9B59B6}
+.el-wind .poster-bg{background:radial-gradient(ellipse at center,rgba(155,89,182,0.12),rgba(2,2,6,0) 70%)}
+.el-wind .poster-gradient{background:linear-gradient(to bottom,transparent 40%,rgba(155,89,182,.15))}
+.el-wind .poster-ring{border-color:#9B59B6}
+.el-wind .poster-phase{color:#9B59B6;border-color:rgba(155,89,182,.4)}
+
+.el-metal .poster-glyph{color:#BDC3C7}
+.el-metal .poster-bg{background:radial-gradient(ellipse at center,rgba(189,195,199,0.1),rgba(2,2,6,0) 70%)}
+.el-metal .poster-gradient{background:linear-gradient(to bottom,transparent 40%,rgba(189,195,199,.12))}
+.el-metal .poster-ring{border-color:#BDC3C7}
+.el-metal .poster-phase{color:#BDC3C7;border-color:rgba(189,195,199,.3)}
+
+.el-gold .poster-glyph{color:var(--gold)}
+.el-gold .poster-bg{background:radial-gradient(ellipse at center,rgba(201,168,76,0.12),rgba(2,2,6,0) 70%)}
+.el-gold .poster-gradient{background:linear-gradient(to bottom,transparent 40%,rgba(201,168,76,.15))}
+.el-gold .poster-ring{border-color:var(--gold)}
+.el-gold .poster-phase{color:var(--gold);border-color:rgba(201,168,76,.4)}
+
+/* GAME GRID -- denser */
+.game-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
+.game-card{border:1px solid var(--border);background:var(--glass);padding:1rem;transition:all .3s;position:relative;overflow:hidden}
+.game-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.game-card.locked{opacity:.35}
+.game-icon{font-family:'Cinzel Decorative',serif;font-size:2rem;margin-bottom:.5rem;display:block}
+.game-num{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
+.game-title{font-size:.78rem;color:var(--text);line-height:1.3;margin-bottom:.5rem}
+.game-el{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.15rem .4rem;border:1px solid;display:inline-block}
+
+/* RENDER PASSES */
+.render-section{max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
+.render-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.render-pass{border:1px solid var(--border);padding:1.25rem;position:relative;overflow:hidden}
+.render-pass::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.render-num{font-family:'Courier Prime',monospace;font-size:2rem;color:rgba(201,168,76,0.08);position:absolute;top:.5rem;right:.75rem;font-weight:700;line-height:1}
+.render-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--cyan);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
+.render-name{font-family:'Cinzel Decorative',serif;font-size:.8rem;color:var(--gold);margin-bottom:.3rem}
+.render-desc{font-size:.72rem;color:var(--muted);line-height:1.5}
+
+.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:'Cinzel Decorative',serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--void2)}
+::-webkit-scrollbar-thumb{background:var(--border)}
+
+@media(max-width:1200px){.franchise-grid{grid-template-columns:repeat(3,1fr)}.game-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.franchise-grid{grid-template-columns:repeat(2,1fr)}.universe-stats{grid-template-columns:repeat(3,1fr)}.game-grid{grid-template-columns:repeat(3,1fr)}.render-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.franchise-grid{grid-template-columns:1fr}.game-grid{grid-template-columns:repeat(2,1fr)}.universe-stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Command</a></li>
+    <li><a href="matrix.html">Matrix</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="treasury.html">Treasury</a></li>
+    <li><a href="honors.html">Honors</a></li>
+    <li><a href="media.html" class="active">Media</a></li>
+    <li><a href="agents.html">Agents</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-status">&#9632; LIVE</span>
+    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero-band">
+    <div class="hero-eyebrow">M6 // CINEMATIC UNIVERSE</div>
+    <h1 class="hero-title">The Living Codex</h1>
+    <p class="hero-sub">12 franchise films, each spawning 12 series and 12 games -- 144 series, 144 sub-games, across 9 visual rendering dimensions. All content gated by matrix progression.</p>
+  </div>
+
+  <!-- UNIVERSE STATS -->
+  <div class="universe-stats">
+    <div class="ustat"><div class="ustat-val">12</div><div class="ustat-label">Franchise Films</div></div>
+    <div class="ustat"><div class="ustat-val">144</div><div class="ustat-label">Total Series</div></div>
+    <div class="ustat"><div class="ustat-val">12</div><div class="ustat-label">Core Games</div></div>
+    <div class="ustat"><div class="ustat-val">144</div><div class="ustat-label">Sub-Games</div></div>
+    <div class="ustat"><div class="ustat-val">9D</div><div class="ustat-label">Render Passes</div></div>
+    <div class="ustat"><div class="ustat-val">729</div><div class="ustat-label">Gate Nodes</div></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterMedia('all',this)">All</button>
+    <button class="filter-btn" onclick="filterMedia('film',this)">Films</button>
+    <button class="filter-btn" onclick="filterMedia('series',this)">Series</button>
+    <div class="filter-divider"></div>
+    <button class="filter-btn" onclick="filterMedia('fire',this)">Fire</button>
+    <button class="filter-btn" onclick="filterMedia('water',this)">Water</button>
+    <button class="filter-btn" onclick="filterMedia('sky',this)">Sky</button>
+    <button class="filter-btn" onclick="filterMedia('earth',this)">Earth</button>
+    <button class="filter-btn" onclick="filterMedia('wind',this)">Wind</button>
+    <button class="filter-btn" onclick="filterMedia('metal',this)">Metal</button>
+  </div>
+
+  <!-- FRANCHISE FILMS -->
+  <div class="section-hd">
+    <span class="section-title">Franchise Films</span>
+    <span class="section-count">12 FILMS // 12 SERIES EACH // 144 TOTAL</span>
+  </div>
+
+  <div class="franchise-grid" id="media-grid">
+
+    <!-- F01: MYTH OF THE STONES -->
+    <div class="franchise-card el-fire" data-cat="film fire">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-01</div>
+        <div class="poster-phase">PHASE 1</div>
+        <div class="poster-glyph">&#9651;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(201,168,76,.5);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 01 <span style="color:var(--crimson2)">// FIRE</span></div>
+        <div class="card-title">Myth of the Stones</div>
+        <div class="card-desc">The origin arc. Seven primordial stones scattered across the ancient world. Heroes emerge from the cave systems to reclaim what was lost.</div>
+        <div class="card-tags"><span class="card-tag">ORIGIN ARC</span><span class="card-tag">CAVE SYSTEM</span><span class="card-tag">ARES</span><span class="card-tag">FIRE</span></div>
+        <div class="card-footer"><span class="card-status building">BUILDING</span><span class="card-spin">Aries // Sentinel</span></div>
+      </div>
+    </div>
+
+    <!-- F02: COSMIC VAULT -->
+    <div class="franchise-card el-sky" data-cat="film sky">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-02</div>
+        <div class="poster-phase">PHASE 1</div>
+        <div class="poster-glyph">&#9670;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(0,229,255,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 02 <span style="color:var(--cyan)">// SKY</span></div>
+        <div class="card-title">Cosmic Vault</div>
+        <div class="card-desc">The celestial arc. Twelve constellations open as gateways. Zeus coordinates the divine order against forces of entropy and dissolution.</div>
+        <div class="card-tags"><span class="card-tag">CELESTIAL</span><span class="card-tag">ZEUS</span><span class="card-tag">CONSTELLATIONS</span><span class="card-tag">SKY</span></div>
+        <div class="card-footer"><span class="card-status building">BUILDING</span><span class="card-spin">Gemini // Beacon</span></div>
+      </div>
+    </div>
+
+    <!-- F03: THE DEEP SOVEREIGN -->
+    <div class="franchise-card el-water" data-cat="film water">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-03</div>
+        <div class="poster-phase">PHASE 2</div>
+        <div class="poster-glyph">&#9651;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(52,152,219,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 03 <span style="color:#3498DB">// WATER</span></div>
+        <div class="card-title">The Deep Sovereign</div>
+        <div class="card-desc">Poseidon's hidden dominion beneath the civilized world. Trident fragments surface across history. A lineage of guardians protects the deep.</div>
+        <div class="card-tags"><span class="card-tag">POSEIDON</span><span class="card-tag">TRIDENT</span><span class="card-tag">LINEAGE</span><span class="card-tag">WATER</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Scorpio // Warden</span></div>
+      </div>
+    </div>
+
+    <!-- F04: HERALD OF WIND -->
+    <div class="franchise-card el-wind" data-cat="film wind">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-04</div>
+        <div class="poster-phase">PHASE 2</div>
+        <div class="poster-glyph">&#9674;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(155,89,182,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 04 <span style="color:#9B59B6">// WIND</span></div>
+        <div class="card-title">Herald of Wind</div>
+        <div class="card-desc">Hermes walks between worlds -- mortal and divine, light and dark. The messenger's code is also the protocol. Information is sovereign power.</div>
+        <div class="card-tags"><span class="card-tag">HERMES</span><span class="card-tag">PROTOCOL</span><span class="card-tag">DUALITY</span><span class="card-tag">WIND</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Virgo // Proxy</span></div>
+      </div>
+    </div>
+
+    <!-- F05: HARVEST OF EARTH -->
+    <div class="franchise-card el-earth" data-cat="film earth">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-05</div>
+        <div class="poster-phase">PHASE 2</div>
+        <div class="poster-glyph">&#9632;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(39,174,96,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 05 <span style="color:#27AE60">// EARTH</span></div>
+        <div class="card-title">Harvest of Earth</div>
+        <div class="card-desc">Demeter's cycle broken -- harvest fails across dimensions. A keeper of seeds must traverse the underworld to restore the seasonal covenant.</div>
+        <div class="card-tags"><span class="card-tag">DEMETER</span><span class="card-tag">CYCLE</span><span class="card-tag">UNDERWORLD</span><span class="card-tag">EARTH</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Taurus // Historian</span></div>
+      </div>
+    </div>
+
+    <!-- F06: CHAIN OF HEPHAESTUS -->
+    <div class="franchise-card el-metal" data-cat="film metal">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-06</div>
+        <div class="poster-phase">PHASE 3</div>
+        <div class="poster-glyph">&#9636;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(189,195,199,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 06 <span style="color:#BDC3C7">// METAL</span></div>
+        <div class="card-title">Chain of Hephaestus</div>
+        <div class="card-desc">The forge master's final creation -- a chain that binds not flesh but time. Five smiths across centuries must unite to break or complete it.</div>
+        <div class="card-tags"><span class="card-tag">HEPHAESTUS</span><span class="card-tag">FORGE</span><span class="card-tag">TIME</span><span class="card-tag">METAL</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Capricorn // Auditor</span></div>
+      </div>
+    </div>
+
+    <!-- F07: THE SOLAR CODEX -->
+    <div class="franchise-card el-fire" data-cat="film fire">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-07</div>
+        <div class="poster-phase">PHASE 3</div>
+        <div class="poster-glyph">&#9711;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(192,57,43,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 07 <span style="color:var(--crimson2)">// FIRE</span></div>
+        <div class="card-title">The Solar Codex</div>
+        <div class="card-desc">Apollo's prophecy scrolls emerge from sealed vaults. Nine oracles must decode the solar language before the next eclipse erases it.</div>
+        <div class="card-tags"><span class="card-tag">APOLLO</span><span class="card-tag">PROPHECY</span><span class="card-tag">ORACLE</span><span class="card-tag">FIRE</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Leo // Scout</span></div>
+      </div>
+    </div>
+
+    <!-- F08: HUNT OF ARTEMIS -->
+    <div class="franchise-card el-water" data-cat="film water">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-08</div>
+        <div class="poster-phase">PHASE 3</div>
+        <div class="poster-glyph">&#9650;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(52,152,219,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 08 <span style="color:#3498DB">// WATER</span></div>
+        <div class="card-title">Hunt of Artemis</div>
+        <div class="card-desc">The divine huntress tracks a quarry that moves between dimensions. Moonlit forests, frozen seas, and the boundary between the hunt and the hunted.</div>
+        <div class="card-tags"><span class="card-tag">ARTEMIS</span><span class="card-tag">HUNT</span><span class="card-tag">MOON</span><span class="card-tag">WATER</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Cancer // Oracle</span></div>
+      </div>
+    </div>
+
+    <!-- F09: ATHENA'S GRID -->
+    <div class="franchise-card el-sky" data-cat="film sky">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-09</div>
+        <div class="poster-phase">PHASE 3</div>
+        <div class="poster-glyph">&#9633;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(0,229,255,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 09 <span style="color:var(--cyan)">// SKY</span></div>
+        <div class="card-title">Athena's Grid</div>
+        <div class="card-desc">The city-state as intelligence architecture. Athena's hidden network spans civilizations. Strategy, wisdom, and the mathematics of warfare.</div>
+        <div class="card-tags"><span class="card-tag">ATHENA</span><span class="card-tag">WISDOM</span><span class="card-tag">GRID</span><span class="card-tag">SKY</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Libra // Analyst</span></div>
+      </div>
+    </div>
+
+    <!-- F10: DIONYSUS PROTOCOL -->
+    <div class="franchise-card el-wind" data-cat="film wind">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-10</div>
+        <div class="poster-phase">PHASE 4</div>
+        <div class="poster-glyph">&#9824;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(155,89,182,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 10 <span style="color:#9B59B6">// WIND</span></div>
+        <div class="card-title">Dionysus Protocol</div>
+        <div class="card-desc">Reality bends at the edge of ecstasy. The god of transformation tests the boundaries of identity. Who you are when all masks dissolve.</div>
+        <div class="card-tags"><span class="card-tag">DIONYSUS</span><span class="card-tag">TRANSFORM</span><span class="card-tag">IDENTITY</span><span class="card-tag">WIND</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Pisces // Tutor</span></div>
+      </div>
+    </div>
+
+    <!-- F11: HADES LEDGER -->
+    <div class="franchise-card el-gold" data-cat="film earth">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-11</div>
+        <div class="poster-phase">PHASE 4</div>
+        <div class="poster-glyph">&#9670;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(201,168,76,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 11 <span style="color:var(--gold)">// EARTH</span></div>
+        <div class="card-title">Hades Ledger</div>
+        <div class="card-desc">The underworld runs on a ledger of debts. Hades, the silent accountant, balances life against legacy. A soul must audit its own record.</div>
+        <div class="card-tags"><span class="card-tag">HADES</span><span class="card-tag">LEDGER</span><span class="card-tag">DEBT</span><span class="card-tag">EARTH</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">Aquarius // Merchant</span></div>
+      </div>
+    </div>
+
+    <!-- F12: THE OMEGA POINT -->
+    <div class="franchise-card el-gold" data-cat="film sky">
+      <div class="card-poster">
+        <div class="poster-bg"></div>
+        <div class="poster-gradient"></div>
+        <div class="poster-ring"></div>
+        <div class="poster-ring2"></div>
+        <div class="poster-number">F-12</div>
+        <div class="poster-phase">PHASE 4</div>
+        <div class="poster-glyph">&#937;</div>
+        <div class="poster-bottom-bar">
+          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(201,168,76,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+        </div>
+      </div>
+      <div class="card-meta">
+        <div class="card-label">Film 12 <span style="color:var(--gold)">// ALL ELEMENTS</span></div>
+        <div class="card-title">The Omega Point</div>
+        <div class="card-desc">The convergence. All 12 franchise threads unite. Node 999. The 729-node matrix reaches apex. Sovereignty eternal. Legacy sealed.</div>
+        <div class="card-tags"><span class="card-tag">CONVERGENCE</span><span class="card-tag">NODE-999</span><span class="card-tag">APEX</span><span class="card-tag">OMEGA</span></div>
+        <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">All Signs // Sovereign</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GAMES GRID -->
+  <div class="section-hd">
+    <span class="section-title">Gaming Universe</span>
+    <span class="section-count">12 GAMES // 12 SUB-GAMES EACH // 144 TOTAL</span>
+  </div>
+
+  <div class="game-grid">
+    <div class="game-card"><span class="game-icon" style="color:var(--crimson2)">&#9651;</span><div class="game-num">G-01</div><div class="game-title">Stones of Fire</div><span class="game-el" style="color:var(--crimson2);border-color:rgba(192,57,43,.3)">FIRE</span></div>
+    <div class="game-card"><span class="game-icon" style="color:var(--cyan)">&#9670;</span><div class="game-num">G-02</div><div class="game-title">Vault of Stars</div><span class="game-el" style="color:var(--cyan);border-color:rgba(0,229,255,.3)">SKY</span></div>
+    <div class="game-card"><span class="game-icon" style="color:#3498DB">&#9711;</span><div class="game-num">G-03</div><div class="game-title">Deep Domain</div><span class="game-el" style="color:#3498DB;border-color:rgba(52,152,219,.3)">WATER</span></div>
+    <div class="game-card"><span class="game-icon" style="color:#9B59B6">&#9674;</span><div class="game-num">G-04</div><div class="game-title">Wind Cipher</div><span class="game-el" style="color:#9B59B6;border-color:rgba(155,89,182,.3)">WIND</span></div>
+    <div class="game-card"><span class="game-icon" style="color:#27AE60">&#9632;</span><div class="game-num">G-05</div><div class="game-title">Harvest Run</div><span class="game-el" style="color:#27AE60;border-color:rgba(39,174,96,.3)">EARTH</span></div>
+    <div class="game-card"><span class="game-icon" style="color:#BDC3C7">&#9636;</span><div class="game-num">G-06</div><div class="game-title">Forge Chain</div><span class="game-el" style="color:#BDC3C7;border-color:rgba(189,195,199,.2)">METAL</span></div>
+    <div class="game-card locked"><span class="game-icon" style="color:var(--crimson2)">&#9711;</span><div class="game-num">G-07</div><div class="game-title">Solar Code</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card locked"><span class="game-icon" style="color:#3498DB">&#9650;</span><div class="game-num">G-08</div><div class="game-title">Moon Hunt</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card locked"><span class="game-icon" style="color:var(--cyan)">&#9633;</span><div class="game-num">G-09</div><div class="game-title">Grid War</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card locked"><span class="game-icon" style="color:#9B59B6">&#9824;</span><div class="game-num">G-10</div><div class="game-title">Mask Protocol</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card locked"><span class="game-icon" style="color:var(--gold)">&#9670;</span><div class="game-num">G-11</div><div class="game-title">Ledger Dark</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card locked"><span class="game-icon" style="color:var(--gold)">&#937;</span><div class="game-num">G-12</div><div class="game-title">Omega Point</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+  </div>
+
+  <!-- 9D RENDER PASSES -->
+  <div class="render-section">
+    <div class="section-hd" style="padding:0 0 1rem">
+      <span class="section-title">9D Visual Rendering Engine</span>
+      <span class="section-count">9 PASSES // SEQUENTIAL APPLICATION</span>
+    </div>
+    <div class="render-grid">
+      <div class="render-pass"><div class="render-num">1</div><div class="render-label">Pass 01</div><div class="render-name">Base Layer</div><div class="render-desc">Scene geometry, lighting rig, and shadow casting. The physical world established.</div></div>
+      <div class="render-pass"><div class="render-num">2</div><div class="render-label">Pass 02</div><div class="render-name">Particle Field</div><div class="render-desc">Floating particle systems layered above geometry. Element-specific dust, embers, droplets.</div></div>
+      <div class="render-pass"><div class="render-num">3</div><div class="render-label">Pass 03</div><div class="render-name">Atmospheric</div><div class="render-desc">Volumetric fog, god-rays, haze. Environmental depth and mood established.</div></div>
+      <div class="render-pass"><div class="render-num">4</div><div class="render-label">Pass 04</div><div class="render-name">Glow + Bloom</div><div class="render-desc">HDR bloom on all emissive surfaces. Omega glyphs and divine objects receive halos.</div></div>
+      <div class="render-pass"><div class="render-num">5</div><div class="render-label">Pass 05</div><div class="render-name">Depth of Field</div><div class="render-desc">Cinematic bokeh. Focus pulls driven by narrative beats and emotional cues.</div></div>
+      <div class="render-pass"><div class="render-num">6</div><div class="render-label">Pass 06</div><div class="render-name">Motion Vectors</div><div class="render-desc">Temporal anti-aliasing via motion vector accumulation. Frame-accurate motion blur.</div></div>
+      <div class="render-pass"><div class="render-num">7</div><div class="render-label">Pass 07</div><div class="render-name">Color Grade</div><div class="render-desc">LUT-driven color science per element track. Fire: warm crimson. Water: cool indigo. Sky: cyan shift.</div></div>
+      <div class="render-pass"><div class="render-num">8</div><div class="render-label">Pass 08</div><div class="render-name">Overlay Glyphs</div><div class="render-desc">Matrix coordinate overlays, Omega seals, zodiac watermarks composited at 5-15% opacity.</div></div>
+      <div class="render-pass"><div class="render-num">9</div><div class="render-label">Pass 09</div><div class="render-name">Sovereign Seal</div><div class="render-desc">Final frame signature -- invisible watermark encoding ownership, frame hash, and matrix node of origin.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="omega-sig">&#937;</div>
+
+<script>
+(function(){
+const c=document.getElementById('bg-canvas');const ctx=c.getContext('2d');let W,H,pts=[];
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.1,vy:(Math.random()-.5)*.1,r:Math.random()*1.2+.3});
+function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(201,168,76,0.022)';for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}requestAnimationFrame(draw);}draw();
+})();
+
+function filterMedia(cat,btn){
+document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('.franchise-card').forEach(card=>{
+const cats=(card.dataset.cat||'').split(' ');
+if(cat==='all'||cats.includes(cat)){card.style.display='';}else{card.style.display='none';}
+});
+}
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{
+ "count": 9,
+ "structure": {
+  "physical": "elements 1-5 map to the 12 signs (sign -> element)",
+  "metaphysical": "elements 6-8 are class-based (assigned, not sign-derived)",
+  "transcendent": "element 9 activates for every sovereign member at Stage 9",
+  "nested": "each of the 9 elements is a 9x9x9x9x9 domain (5 nested nine-fold layers)"
+ },
+ "elements": [
+  {
+   "n": 1,
+   "name": "FIRE",
+   "tier": "PHYSICAL",
+   "domain": "The initiating element. Drives the Mastery axis; governs gaming, conquest, leadership.",
+   "members": [
+    "Aries",
+    "Leo",
+    "Sagittarius"
+   ]
+  },
+  {
+   "n": 2,
+   "name": "WATER",
+   "tier": "PHYSICAL",
+   "domain": "The deep element. Governs family, bloodline, and the subconscious layers of the matrix.",
+   "members": [
+    "Cancer",
+    "Scorpio",
+    "Pisces"
+   ]
+  },
+  {
+   "n": 3,
+   "name": "WIND",
+   "tier": "PHYSICAL",
+   "domain": "The communication element. Carries knowledge across all dimensions of the Order.",
+   "members": [
+    "Gemini",
+    "Libra",
+    "Aquarius"
+   ]
+  },
+  {
+   "n": 4,
+   "name": "METAL",
+   "tier": "PHYSICAL",
+   "domain": "The endurance element. Governs physical reserves, long-game economics, structural legacy.",
+   "members": [
+    "Taurus",
+    "Capricorn"
+   ]
+  },
+  {
+   "n": 5,
+   "name": "SAND",
+   "tier": "PHYSICAL",
+   "domain": "The universal amplifier -- strengthens every element around it.",
+   "members": [
+    "Virgo"
+   ]
+  },
+  {
+   "n": 6,
+   "name": "SOUL",
+   "tier": "METAPHYSICAL",
+   "domain": "The identity element. Governs the deep self, the character system, and the genealogy tree.",
+   "members": [
+    "Soul-class"
+   ]
+  },
+  {
+   "n": 7,
+   "name": "SPACE",
+   "tier": "METAPHYSICAL",
+   "domain": "The expansion element. Governs prediction, the Oracle, and inter-dimensional matrix reach.",
+   "members": [
+    "Space-class"
+   ]
+  },
+  {
+   "n": 8,
+   "name": "VOID",
+   "tier": "METAPHYSICAL",
+   "domain": "The destruction element. Removes blockages and opens the highest gates by eliminating resistance.",
+   "members": [
+    "Void-class"
+   ]
+  },
+  {
+   "n": 9,
+   "name": "THE NINTH",
+   "tier": "TRANSCENDENT",
+   "domain": "Religion, character, mind, heart, birth, death, life, family, work, friends. The ultimate element, active for all at Stage 9.",
+   "members": [
+    "All sovereign members"
+   ]
+  }
+ ],
+ "sign_element": {
+  "Aries": "FIRE",
+  "Leo": "FIRE",
+  "Sagittarius": "FIRE",
+  "Cancer": "WATER",
+  "Scorpio": "WATER",
+  "Pisces": "WATER",
+  "Gemini": "WIND",
+  "Libra": "WIND",
+  "Aquarius": "WIND",
+  "Taurus": "METAL",
+  "Capricorn": "METAL",
+  "Virgo": "SAND"
+ }
+}

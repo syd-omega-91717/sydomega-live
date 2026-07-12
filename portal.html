@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&#937; SYD OMEGA 91717  --  The Portal</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="SYD OMEGA 91717  --  The Portal"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/portal.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SYD OMEGA 91717  --  The Portal"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
+
+<meta name="description" content="SYD OMEGA 91717  --  the living portal. The Code, the Frequency, the Legacy." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#0A0A0F; --gold:#C9A84C; --cyan:#00E5FF; --crimson:#8B0000;
+    --ink:#e9e6dc; --muted:#8c8a82;
+    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased}
+  #scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+  .overlay{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;pointer-events:none}
+  .mark{font-family:var(--display);font-weight:900;color:var(--gold);font-size:20px;letter-spacing:2px;position:fixed;top:22px;left:0;right:0;text-align:center;z-index:2}
+  .mark span{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:4px;margin-left:8px}
+  .spacer{height:clamp(220px,38vh,360px)}
+  h1{font-family:var(--display);font-weight:700;letter-spacing:3px;font-size:clamp(30px,7vw,66px);color:var(--gold);text-shadow:0 0 40px rgba(201,168,76,.35);margin-top:8px}
+  .tag{font-family:var(--mono);font-size:clamp(11px,2.4vw,14px);letter-spacing:6px;color:var(--ink);margin-top:18px;opacity:.9}
+  .freq{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-top:14px;opacity:.8}
+  .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:38px;pointer-events:auto}
+  .cta a{font-family:var(--mono);letter-spacing:3px;font-size:12px;padding:15px 26px;border:1px solid var(--gold);color:var(--gold);background:rgba(10,10,15,0.35);backdrop-filter:blur(4px);transition:all .25s ease}
+  .cta a.solid{background:var(--gold);color:var(--void)}
+  .cta a:hover,.cta a:focus{background:var(--gold);color:var(--void);outline:none;box-shadow:0 0 26px rgba(201,168,76,.4)}
+  .foot{position:fixed;bottom:18px;left:0;right:0;text-align:center;z-index:2;font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted)}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div class="mark">&#937;<span>91717</span></div>
+<div class="overlay">
+  <div class="spacer"></div>
+  <h1>SYD OMEGA 91717</h1>
+  <div class="tag">THE CODE  .  THE FREQUENCY  .  THE LEGACY</div>
+  <div class="freq">9.17Hz  .  NODE 9.9.9</div>
+  <div class="cta">
+    <a class="solid" href="/enter.html">ENTER THE ORDER &#937; HOME</a>
+    <a href="/account.html">MEMBER ACCESS</a>
+  </div>
+</div>
+<div class="foot">SOVEREIGN ENGINEERING PROTOCOL  .  100% OWNED BY SLEIMAN YOUSEF DAGHER</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('scene'), ctx=cv.getContext('2d');
+  var W=0,H=0,DPR=Math.min(window.devicePixelRatio||1,2);
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var particles=[], t=0, raf=null;
+
+  function resize(){
+    W=window.innerWidth; H=window.innerHeight;
+    cv.width=Math.floor(W*DPR); cv.height=Math.floor(H*DPR);
+    cv.style.width=W+'px'; cv.style.height=H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  function init(){
+    var n=Math.max(36, Math.min(96, Math.floor((W*H)/16000)));
+    particles=[];
+    for(var i=0;i<n;i++){
+      particles.push({ x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18, r:Math.random()*1.6+0.6, gold:Math.random()<0.72 });
+    }
+  }
+  function tri(cx,cy,R,rot,color){
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot);
+    ctx.strokeStyle=color; ctx.beginPath();
+    for(var k=0;k<3;k++){ var a=-Math.PI/2+k*2*Math.PI/3; var x=Math.cos(a)*R, y=Math.sin(a)*R; if(k===0)ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+    ctx.closePath(); ctx.stroke(); ctx.restore();
+  }
+  function sigil(cx,cy){
+    var R=Math.min(W,H)*0.15;
+    ctx.lineWidth=1;
+    ctx.shadowColor='rgba(201,168,76,0.6)'; ctx.shadowBlur=16;
+    ctx.strokeStyle='rgba(201,168,76,0.35)';
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx,cy,R*0.66,0,Math.PI*2); ctx.strokeStyle='rgba(201,168,76,0.16)'; ctx.stroke();
+    tri(cx,cy,R*0.92,t,'rgba(232,106,58,0.85)');
+    tri(cx,cy,R*0.92,-t*0.7+Math.PI,'rgba(0,229,255,0.5)');
+    ctx.shadowColor='rgba(201,168,76,0.95)'; ctx.shadowBlur=26;
+    ctx.fillStyle='#C9A84C'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='700 '+Math.round(R*0.62)+'px "Cinzel Decorative", serif';
+    ctx.fillText('\u03A9', cx, cy+R*0.03);
+    ctx.shadowBlur=0;
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var cx=W/2, cy=H*0.40;
+    var g=ctx.createRadialGradient(cx,cy,20,cx,cy,Math.max(W,H)*0.62);
+    g.addColorStop(0,'rgba(201,168,76,0.07)'); g.addColorStop(0.5,'rgba(0,229,255,0.025)'); g.addColorStop(1,'rgba(10,10,15,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    var i,j;
+    if(!reduce){ for(i=0;i<particles.length;i++){ var p=particles[i]; p.x+=p.vx; p.y+=p.vy; if(p.x<0)p.x+=W; if(p.x>W)p.x-=W; if(p.y<0)p.y+=H; if(p.y>H)p.y-=H; } }
+    ctx.lineWidth=0.6;
+    for(i=0;i<particles.length;i++){ for(j=i+1;j<particles.length;j++){ var a=particles[i],b=particles[j]; var dx=a.x-b.x,dy=a.y-b.y; var d2=dx*dx+dy*dy; if(d2<14000){ var al=(1-d2/14000)*0.22; ctx.strokeStyle='rgba(201,168,76,'+al.toFixed(3)+')'; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } } }
+    for(i=0;i<particles.length;i++){ var q=particles[i]; ctx.beginPath(); ctx.fillStyle=q.gold?'rgba(201,168,76,0.9)':'rgba(0,229,255,0.8)'; ctx.shadowColor=q.gold?'rgba(201,168,76,0.8)':'rgba(0,229,255,0.7)'; ctx.shadowBlur=8; ctx.arc(q.x,q.y,q.r,0,Math.PI*2); ctx.fill(); }
+    ctx.shadowBlur=0;
+    sigil(cx,cy);
+  }
+  function loop(){ t+=0.004; draw(); raf=requestAnimationFrame(loop); }
+
+  function start(){ resize(); init(); if(reduce){ draw(); } else { if(raf) cancelAnimationFrame(raf); loop(); } }
+  window.addEventListener('resize', function(){ resize(); init(); if(reduce) draw(); });
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(start); } else { start(); }
+})();
+</script>
+<script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
+<script src="/nav.js"></script>
+</body>
+</html>

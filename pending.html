@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="manifest" href="/manifest.json"/>
+<title>&#937; SYD OMEGA 91717 -- Access Pending</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="SYD OMEGA 91717 -- Access Pending"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/pending.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SYD OMEGA 91717 -- Access Pending"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#85837b;--D:'Cinzel Decorative',serif;--M:'Courier Prime',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
+#bg-cv{position:fixed;inset:0;z-index:0}
+.gate{position:relative;z-index:1;text-align:center;padding:32px 24px;max-width:480px;width:100%}
+/* Omega logo */
+#gate-omega{display:block;margin:0 auto 20px}
+.gate-title{font-family:var(--D);font-size:clamp(16px,4vw,26px);font-weight:700;letter-spacing:2px;margin-bottom:8px}
+.gate-sub{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--muted);margin-bottom:28px;line-height:1.9}
+/* Status box */
+.status-box{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:20px 22px;margin-bottom:22px;position:relative;overflow:hidden}
+.status-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 3s ease-in-out infinite}
+@keyframes scan{0%,100%{opacity:.2}50%{opacity:1}}
+.sb-label{font-size:8px;letter-spacing:4px;color:var(--muted);margin-bottom:6px}
+.sb-status{font-family:var(--D);font-size:16px;margin-bottom:4px;animation:status-breathe 3s ease-in-out infinite}
+@keyframes status-breathe{0%,100%{opacity:.7}50%{opacity:1}}
+.sb-detail{font-size:9px;color:var(--muted);letter-spacing:1px;line-height:1.8}
+/* Frequency */
+.freq{font-family:var(--D);font-size:13px;color:var(--cyan);letter-spacing:3px;margin-bottom:24px;animation:freq-breathe 2s ease-in-out infinite}
+@keyframes freq-breathe{0%,100%{opacity:.5}50%{opacity:1;text-shadow:0 0 14px rgba(0,229,255,.6)}}
+/* Buttons */
+.btns{display:flex;flex-direction:column;gap:10px;align-items:center}
+.btn-check{font-family:var(--M);font-size:10px;letter-spacing:3px;padding:13px 36px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;transition:box-shadow .2s;width:100%;max-width:280px;animation:btn-shimmer 3s ease-in-out infinite}
+@keyframes btn-shimmer{0%,100%{box-shadow:0 0 0 rgba(201,168,76,0)}50%{box-shadow:0 0 18px rgba(201,168,76,.35)}}
+.btn-check:hover{box-shadow:0 0 24px rgba(201,168,76,.5)}
+.btn-logout{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:10px 28px;color:var(--muted);border:1px solid rgba(201,168,76,.15);background:transparent;cursor:pointer;transition:all .2s;width:100%;max-width:280px;text-decoration:none;display:block;text-align:center}
+.btn-logout:hover{border-color:rgba(201,168,76,.35);color:var(--gold)}
+/* Expired state */
+.expired-badge{background:rgba(139,0,0,.15);border:1px solid rgba(139,0,0,.4);padding:12px 18px;margin-bottom:18px;display:none}
+.eb-title{font-family:var(--D);font-size:14px;color:var(--crim);margin-bottom:4px}
+.eb-sub{font-size:9px;color:var(--muted);letter-spacing:1px;line-height:1.7}
+/* Auto-check indicator */
+.auto-check{font-size:8px;letter-spacing:2px;color:rgba(133,131,123,.4);margin-top:18px}
+.ac-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--muted);animation:dot-blink 1.5s ease-in-out infinite}
+@keyframes dot-blink{0%,100%{opacity:.2}50%{opacity:1}}
+</style>
+</head>
+<body>
+<canvas id="bg-cv"></canvas>
+<div class="gate">
+  <!-- Animated Omega logo -->
+  <canvas id="gate-omega" width="160" height="160" style="width:80px;height:80px"></canvas>
+
+  <div class="gate-title" id="gate-title" style="color:var(--gold)" data-i18n="pending.submitted">ACCESS REQUEST SUBMITTED</div>
+  <div class="gate-sub"><span data-i18n="pending.registered">YOUR IDENTITY HAS BEEN REGISTERED</span><br/><span data-i18n="pending.review">THE ARCHITECT WILL REVIEW AND GRANT ACCESS</span></div>
+
+  <!-- Expired badge (shown when trial ended) -->
+  <div class="expired-badge" id="expired-badge">
+    <div class="eb-title" data-i18n="pending.trial_ended">TRIAL SESSION ENDED</div>
+    <div class="eb-sub">Your 9.1717-minute trial has expired.<br/>Request renewed access from the Architect.<br/>Create a new session or contact the Order.</div>
+  </div>
+
+  <!-- Status box -->
+  <div class="status-box">
+    <div class="sb-label" data-i18n="pending.status_label">ACCESS STATUS</div>
+    <div class="sb-status" id="sb-status" style="color:var(--solar)" data-i18n="pending.pending_review">PENDING ARCHITECT REVIEW</div>
+    <div class="sb-detail" id="sb-detail">The Architect reviews and approves all members personally.<br/>Access is granted for a sovereign trial period of 9.1717 minutes.</div>
+  </div>
+
+  <div class="freq">9.1717 Hz -- FREQUENCY LOCK ACTIVE</div>
+
+  <div class="btns">
+    <button class="btn-check" id="btn-check" data-i18n="pending.check">CHECK ACCESS STATUS</button>
+    <a class="btn-logout" id="btn-logout" href="#" data-i18n="pending.signout">SIGN OUT AND RETURN</a>
+  </div>
+
+  <div class="auto-check">
+    AUTO-CHECKING <span class="ac-dot"></span><span class="ac-dot" style="animation-delay:.3s"></span><span class="ac-dot" style="animation-delay:.6s"></span> EVERY 15 SECONDS
+  </div>
+</div>
+
+<!-- Star canvas -->
+<script>
+(function(){
+  var cv=document.getElementById('bg-cv');
+  var ctx=cv.getContext('2d');var t=0;
+  var stars=Array.from({length:120},function(){return{x:Math.random(),y:Math.random(),r:Math.random()*1.4+.2,s:Math.random()*.4+.05};});
+  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  function f(){
+    t+=.005;ctx.clearRect(0,0,cv.width,cv.height);
+    stars.forEach(function(s){
+      var opa=0.04+0.14*Math.sin(t*s.s*3+s.x*6);
+      ctx.beginPath();ctx.arc(s.x*cv.width,s.y*cv.height,s.r*(0.6+0.4*Math.sin(t*s.s*2)),0,Math.PI*2);
+      ctx.fillStyle='rgba(201,168,76,'+opa+')';ctx.fill();
+    });
+    requestAnimationFrame(f);}f();
+})();
+
+/* Omega canvas */
+(function(){
+  var cv=document.getElementById('gate-omega');
+  var ctx=cv.getContext('2d'),CX=80,CY=80;var t=0;
+  function f(){
+    t+=.02;ctx.clearRect(0,0,160,160);
+    [[65,.4,1.5,'rgba(201,168,76,0.6)'],[48,-.6,1,'rgba(0,229,255,0.35)'],[32,.9,.8,'rgba(201,168,76,0.5)']].forEach(function(r){
+      ctx.save();ctx.translate(CX,CY);ctx.rotate(t*r[1]);
+      ctx.beginPath();ctx.ellipse(0,0,r[0],r[0]*Math.abs(Math.cos(t*.15)),0,0,Math.PI*2);
+      ctx.strokeStyle=r[3];ctx.lineWidth=r[2];ctx.stroke();ctx.restore();
+    });
+    ctx.fillStyle='rgba(201,168,76,'+(0.82+.18*Math.sin(t*1.5))+')';
+    ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=18+6*Math.sin(t);
+    ctx.font='700 38px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('\u03A9',CX,CY+2);ctx.shadowBlur=0;
+    requestAnimationFrame(f);}f();
+})();
+
+/* Check if ?status=expired */
+if(location.search.includes('expired')){
+  document.getElementById('expired-badge').style.display='block';
+  document.getElementById('gate-title').textContent='TRIAL SESSION EXPIRED';
+  document.getElementById('gate-title').style.color='#8B0000';
+  document.getElementById('sb-status').textContent='9.1717-MINUTE TRIAL ENDED';
+  document.getElementById('sb-status').style.color='#8B0000';
+  document.getElementById('sb-detail').textContent='Your trial access has concluded. The Architect must grant a new session to re-enter the Order.';
+}
+</script>
+
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+async function checkStatus(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const {data:pr}=await sb.from('profiles').select('is_owner,access_approved,is_trial,trial_expires_at').eq('id',sess.user.id).maybeSingle();
+  if(!pr) return;
+  /* Owner always gets through */
+  if(pr.is_owner||pr.access_approved){window.location.href='/dashboard.html';return;}
+  /* Active trial */
+  if(pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>Date.now()){
+    window.location.href='/dashboard.html';return;
+  }
+  document.getElementById('sb-status').textContent='STILL PENDING -- ARCHITECT WILL REVIEW SHORTLY';
+}
+
+/* Auto-check every 15 seconds */
+checkStatus();
+setInterval(checkStatus,15000);
+
+document.getElementById('btn-check').addEventListener('click',checkStatus);
+document.getElementById('btn-logout').addEventListener('click',async(e)=>{
+  e.preventDefault();
+  await sb.auth.signOut();
+  window.location.href='/account.html';
+});
+</script>
+<script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

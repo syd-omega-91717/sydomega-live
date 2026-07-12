@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Portfolio | &#937; SYD OMEGA 91717</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--void:#0A0A0F;
+--void2:#020206;
+--gold:#C9A84C;
+--solar:#E2C86D;
+--cyan:#00E5FF;
+--crimson:#8B0000;
+--crimson2:#C0392B;
+--glass:rgba(201,168,76,0.06);
+--glass2:rgba(0,229,255,0.05);
+--border:rgba(201,168,76,0.18);
+--border2:rgba(0,229,255,0.12);
+--text:#E8E0D0;
+--muted:#8A8070;
+--green:#00C896;
+--red:#FF4060;
+}
+html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+
+/* CANVAS BACKGROUND */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(2,2,6,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-status{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
+.nav-back{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:.3rem .8rem;transition:all .2s}
+.nav-back:hover{color:var(--gold);border-color:var(--gold)}
+
+/* PAGE WRAPPER */
+.page{position:relative;z-index:1;padding-top:64px;min-height:100vh}
+
+/* HERO BAND */
+.hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}
+.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
+.hero-sub{font-size:.95rem;color:var(--muted);letter-spacing:.05em;max-width:600px}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:1400px;margin:0 auto 2rem;padding:0 2rem}
+.stat-card{background:var(--glass);border:1px solid var(--border);padding:1.25rem 1.5rem;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.stat-label{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.4rem}
+.stat-value{font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--gold);line-height:1}
+.stat-sub{font-size:.75rem;color:var(--muted);margin-top:.3rem}
+.stat-delta{font-size:.75rem;margin-top:.3rem}
+.stat-delta.up{color:var(--green)}
+.stat-delta.down{color:var(--red)}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;max-width:1400px;margin:0 auto;padding:0 2rem 2rem}
+
+/* PANELS */
+.panel{background:var(--glass);border:1px solid var(--border);position:relative;overflow:hidden}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+.panel-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em}
+.panel-badge{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);letter-spacing:.1em;border:1px solid var(--border2);padding:.2rem .6rem}
+.panel-body{padding:1.25rem 1.5rem}
+
+/* ALLOCATION CHART */
+.alloc-chart{display:flex;flex-direction:column;gap:.75rem}
+.alloc-item{display:flex;flex-direction:column;gap:.3rem}
+.alloc-meta{display:flex;justify-content:space-between;align-items:center}
+.alloc-name{font-size:.8rem;color:var(--text);letter-spacing:.05em}
+.alloc-pct{font-family:'Courier Prime',monospace;font-size:.75rem;color:var(--gold)}
+.alloc-bar-track{height:4px;background:rgba(201,168,76,0.1);position:relative}
+.alloc-bar-fill{height:100%;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+
+/* HOLDINGS TABLE */
+.holdings-table{width:100%;border-collapse:collapse}
+.holdings-table th{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)}
+.holdings-table td{font-size:.8rem;padding:.65rem .75rem;border-bottom:1px solid rgba(201,168,76,0.06)}
+.holdings-table tr:last-child td{border-bottom:none}
+.holdings-table tr:hover td{background:rgba(201,168,76,0.04)}
+.asset-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:rgba(201,168,76,0.1);border:1px solid var(--border);font-size:.65rem;font-family:'Courier Prime',monospace;color:var(--gold);margin-right:.5rem;flex-shrink:0}
+.asset-cell{display:flex;align-items:center}
+.asset-name{color:var(--text)}
+.asset-ticker{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted)}
+td.green{color:var(--green)}
+td.red{color:var(--red)}
+td.gold{color:var(--gold);font-family:'Courier Prime',monospace}
+
+/* PHYSICAL RESERVES */
+.reserves-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.reserve-card{border:1px solid var(--border);padding:1rem;position:relative;overflow:hidden;cursor:default}
+.reserve-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px}
+.reserve-card.gold-res::after{background:var(--gold)}
+.reserve-card.silver-res::after{background:#C0C0C0}
+.reserve-card.rhodium-res::after{background:#A0B4C8}
+.reserve-card.crypto-res::after{background:var(--cyan)}
+.reserve-symbol{font-family:'Cinzel Decorative',serif;font-size:1.4rem;margin-bottom:.4rem}
+.reserve-card.gold-res .reserve-symbol{color:var(--gold)}
+.reserve-card.silver-res .reserve-symbol{color:#C0C0C0}
+.reserve-card.rhodium-res .reserve-symbol{color:#A0B4C8}
+.reserve-card.crypto-res .reserve-symbol{color:var(--cyan)}
+.reserve-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem}
+.reserve-amount{font-size:.9rem;color:var(--text)}
+.reserve-val{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--muted);margin-top:.2rem}
+
+/* PERFORMANCE CHART */
+.perf-chart{position:relative;height:140px;margin-bottom:1rem}
+.perf-canvas{width:100%;height:100%}
+
+/* TOKEN ECONOMY */
+.token-list{display:flex;flex-direction:column;gap:.5rem}
+.token-row{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border:1px solid rgba(201,168,76,0.08);transition:border-color .2s}
+.token-row:hover{border-color:var(--border)}
+.token-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.token-name{font-family:'Courier Prime',monospace;font-size:.75rem;color:var(--gold);flex:1}
+.token-bal{font-size:.8rem;color:var(--text);margin-right:.5rem}
+.token-status{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.15rem .4rem;border:1px solid}
+.token-status.active{color:var(--green);border-color:var(--green)}
+.token-status.dormant{color:var(--muted);border-color:var(--muted)}
+
+/* SECOND ROW */
+.second-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
+
+/* TRANSACTION LOG */
+.tx-list{display:flex;flex-direction:column;gap:.4rem}
+.tx-item{display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;border-left:2px solid transparent;transition:all .2s}
+.tx-item.in{border-left-color:var(--green)}
+.tx-item.out{border-left-color:var(--red)}
+.tx-item.pend{border-left-color:var(--gold)}
+.tx-type{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);width:60px;flex-shrink:0}
+.tx-desc{font-size:.78rem;color:var(--text);flex:1}
+.tx-amount{font-family:'Courier Prime',monospace;font-size:.75rem}
+.tx-amount.in{color:var(--green)}
+.tx-amount.out{color:var(--red)}
+.tx-date{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted)}
+
+/* XP + MATRIX */
+.matrix-display{display:flex;flex-direction:column;gap:.75rem}
+.axis-row{display:flex;flex-direction:column;gap:.3rem}
+.axis-header{display:flex;justify-content:space-between}
+.axis-label{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.1em}
+.axis-val{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--gold)}
+.axis-track{height:6px;background:rgba(201,168,76,0.08);position:relative;overflow:hidden}
+.axis-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+.matrix-coord{text-align:center;padding:1rem;border:1px solid var(--border);margin-top:.5rem}
+.matrix-coord-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.4rem}
+.matrix-coord-val{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold)}
+
+/* OMEGA SIGNATURE */
+.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:'Cinzel Decorative',serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--void2)}
+::-webkit-scrollbar-thumb{background:var(--border)}
+
+@media(max-width:900px){
+.stat-row{grid-template-columns:1fr 1fr}
+.main-grid{grid-template-columns:1fr}
+.second-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Command</a></li>
+    <li><a href="matrix.html">Matrix</a></li>
+    <li><a href="portfolio.html" class="active">Portfolio</a></li>
+    <li><a href="treasury.html">Treasury</a></li>
+    <li><a href="honors.html">Honors</a></li>
+    <li><a href="media.html">Media</a></li>
+    <li><a href="agents.html">Agents</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-status">&#9632; LIVE</span>
+    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- HERO -->
+  <div class="hero-band">
+    <div class="hero-eyebrow">M16 // INVESTMENT ENGINE</div>
+    <h1 class="hero-title">Portfolio Command</h1>
+    <p class="hero-sub">Sovereign asset allocation, token reserves, and investment intelligence for Major Sleiman Youssef Dagher -- Level 9.9.9</p>
+  </div>
+
+  <!-- STAT ROW -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Portfolio Value</div>
+      <div class="stat-value" id="total-val">&#8734;</div>
+      <div class="stat-sub">Across all asset classes</div>
+      <div class="stat-delta up">&#9650; Sovereign lock active</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">&#937; Token Supply</div>
+      <div class="stat-value">917.4B</div>
+      <div class="stat-sub">Total Omega tokens issued</div>
+      <div class="stat-delta up">&#9650; 51% Master Vault locked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Physical Reserves</div>
+      <div class="stat-value">3-Tier</div>
+      <div class="stat-sub">Gold / Rhodium / Silver</div>
+      <div class="stat-delta up">&#9650; Auto-sweep active</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Matrix Coordinate</div>
+      <div class="stat-value">(9,9,9)</div>
+      <div class="stat-sub">Axis A / B / C</div>
+      <div class="stat-delta up">&#9650; Apex -- Authority 15.588</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+    <!-- LEFT: Holdings + Chart -->
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
+      <!-- Performance -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Portfolio Performance</span>
+          <span class="panel-badge">LIVE CURVE</span>
+        </div>
+        <div class="panel-body">
+          <div class="perf-chart">
+            <canvas id="perf-canvas" class="perf-canvas"></canvas>
+          </div>
+          <div style="display:flex;gap:2rem;margin-top:.5rem">
+            <div><div class="stat-label">All-Time High</div><div style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:.9rem">9.9.9 APEX</div></div>
+            <div><div class="stat-label">Current Phase</div><div style="font-family:'Courier Prime',monospace;color:var(--cyan);font-size:.9rem">PHASE 0</div></div>
+            <div><div class="stat-label">Evolution Events</div><div style="font-family:'Courier Prime',monospace;color:var(--green);font-size:.9rem" id="ev-count">0</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Holdings Table -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Asset Holdings</span>
+          <span class="panel-badge">18 CLASSES</span>
+        </div>
+        <div class="panel-body" style="padding:0">
+          <table class="holdings-table">
+            <thead>
+              <tr>
+                <th>Asset</th>
+                <th>Class</th>
+                <th>Allocation</th>
+                <th>Status</th>
+                <th>Authority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon">&#937;</div><div><div class="asset-name">Omega Token</div><div class="asset-ticker">OMEGA</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Digital</td>
+                <td class="gold">51.00%</td>
+                <td><span class="token-status active">LOCKED</span></td>
+                <td class="green">Sovereign</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:var(--gold)">Au</div><div><div class="asset-name">Gold Reserve</div><div class="asset-ticker">XAU</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Physical</td>
+                <td class="gold">412,300g</td>
+                <td><span class="token-status active">ACTIVE</span></td>
+                <td class="green">Auto-sweep</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#A0B4C8">Rh</div><div><div class="asset-name">Rhodium Reserve</div><div class="asset-ticker">XRH</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Physical</td>
+                <td class="gold">125,000g</td>
+                <td><span class="token-status active">ACTIVE</span></td>
+                <td class="green">Flash-crash guard</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#C0C0C0">Ag</div><div><div class="asset-name">Silver Reserve</div><div class="asset-ticker">XAG</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Physical</td>
+                <td class="gold">890,000g</td>
+                <td><span class="token-status active">ACTIVE</span></td>
+                <td class="green">Auto-sweep</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:var(--cyan)">PG</div><div><div class="asset-name">Polygon (L2)</div><div class="asset-ticker">MATIC</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Blockchain</td>
+                <td class="gold">Dormant</td>
+                <td><span class="token-status dormant">PENDING LEGAL</span></td>
+                <td style="color:var(--muted)">Gated</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#9B59B6">IP</div><div><div class="asset-name">IP Catalog</div><div class="asset-ticker">12 FILMS</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Intellectual</td>
+                <td class="gold">144 titles</td>
+                <td><span class="token-status active">BUILDING</span></td>
+                <td class="green">100% owned</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#E67E22">GM</div><div><div class="asset-name">Gaming Assets</div><div class="asset-ticker">12 GAMES</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Digital</td>
+                <td class="gold">144 titles</td>
+                <td><span class="token-status dormant">ROADMAP</span></td>
+                <td style="color:var(--muted)">Sovereign</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Allocation -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Allocation Breakdown</span>
+          <span class="panel-badge">7 CLASSES</span>
+        </div>
+        <div class="panel-body">
+          <div class="alloc-chart">
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">&#937; Digital Tokens</span><span class="alloc-pct">51%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:51%;background:var(--gold)"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Physical Precious Metals</span><span class="alloc-pct">22%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:22%;background:#C0C0C0"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Intellectual Property</span><span class="alloc-pct">12%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:12%;background:var(--cyan)"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Gaming Ecosystem</span><span class="alloc-pct">8%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:8%;background:#E67E22"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Platform Infrastructure</span><span class="alloc-pct">5%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:5%;background:#9B59B6"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Consultancy Revenue</span><span class="alloc-pct">2%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:2%;background:var(--green)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
+      <!-- Physical Reserves -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Physical Reserves</span>
+          <span class="panel-badge">VAULT ACTIVE</span>
+        </div>
+        <div class="panel-body">
+          <div class="reserves-grid">
+            <div class="reserve-card gold-res">
+              <div class="reserve-symbol">Au</div>
+              <div class="reserve-label">Gold</div>
+              <div class="reserve-amount">412,300g</div>
+              <div class="reserve-val">XAU | Auto-sweep</div>
+            </div>
+            <div class="reserve-card silver-res">
+              <div class="reserve-symbol">Ag</div>
+              <div class="reserve-label">Silver</div>
+              <div class="reserve-amount">890,000g</div>
+              <div class="reserve-val">XAG | Auto-sweep</div>
+            </div>
+            <div class="reserve-card rhodium-res">
+              <div class="reserve-symbol">Rh</div>
+              <div class="reserve-label">Rhodium</div>
+              <div class="reserve-amount">125,000g</div>
+              <div class="reserve-val">XRH | Flash guard</div>
+            </div>
+            <div class="reserve-card crypto-res">
+              <div class="reserve-symbol">&#937;</div>
+              <div class="reserve-label">Omega</div>
+              <div class="reserve-amount">467.8B</div>
+              <div class="reserve-val">51% | Vault lock</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding:.75rem;border:1px solid rgba(0,229,255,0.1);font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);line-height:1.6">
+            20% REINVESTMENT SWEEP // AUTO-BUYS GOLD, SILVER, RHODIUM HOURLY<br>
+            51% SAFETY NET // FLASH-CRASH PROTECTION ACTIVE<br>
+            POLYGON L2 CHAIN // DORMANT PENDING LEGAL CLEARANCE
+          </div>
+        </div>
+      </div>
+
+      <!-- Token Economy -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">12-Token Economy</span>
+          <span class="panel-badge">POLYGON L2</span>
+        </div>
+        <div class="panel-body">
+          <div class="token-list">
+            <div class="token-row">
+              <div class="token-dot" style="background:var(--crimson2)"></div>
+              <span class="token-name">ARENITE</span>
+              <span class="token-bal">Fire / Ares</span>
+              <span class="token-status active">FOUNDER</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#3498DB"></div>
+              <span class="token-name">POSEIDITE</span>
+              <span class="token-bal">Water / Poseidon</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#F39C12"></div>
+              <span class="token-name">SOLITE</span>
+              <span class="token-bal">Fire / Apollo</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#2ECC71"></div>
+              <span class="token-name">DEMITE</span>
+              <span class="token-bal">Earth / Demeter</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#9B59B6"></div>
+              <span class="token-name">HERMITE</span>
+              <span class="token-bal">Wind / Hermes</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:var(--cyan)"></div>
+              <span class="token-name">ZEUITE</span>
+              <span class="token-bal">Sky / Zeus</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);text-align:center;padding:.5rem 0;letter-spacing:.1em">+ 6 MORE TOKENS // LEGAL CLEARANCE REQUIRED</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Position -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Matrix Position</span>
+          <span class="panel-badge">9D ENGINE</span>
+        </div>
+        <div class="panel-body">
+          <div class="matrix-display">
+            <div class="axis-row">
+              <div class="axis-header"><span class="axis-label">A // KNOWLEDGE</span><span class="axis-val">9.000</span></div>
+              <div class="axis-track"><div class="axis-fill" style="width:100%"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-header"><span class="axis-label">B // MASTERY</span><span class="axis-val">9.000</span></div>
+              <div class="axis-track"><div class="axis-fill" style="width:100%"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-header"><span class="axis-label">C // CONTRIBUTION</span><span class="axis-val">9.000</span></div>
+              <div class="axis-track"><div class="axis-fill" style="width:100%"></div></div>
+            </div>
+            <div class="matrix-coord">
+              <div class="matrix-coord-label">Coordinate / Authority Score</div>
+              <div class="matrix-coord-val">(9,9,9) / 15.588</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECOND ROW -->
+  <div class="second-row">
+    <!-- Transaction Log -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Transaction Log</span>
+        <span class="panel-badge">LEDGER</span>
+      </div>
+      <div class="panel-body">
+        <div class="tx-list">
+          <div class="tx-item in">
+            <div class="tx-type">SWEEP</div>
+            <div class="tx-desc">Auto-sweep -- Gold acquisition XAU</div>
+            <div class="tx-amount in">+412.3kg</div>
+            <div class="tx-date">2026-07-11</div>
+          </div>
+          <div class="tx-item in">
+            <div class="tx-type">LOCK</div>
+            <div class="tx-desc">Master Vault lock -- 51% &#937; tokens</div>
+            <div class="tx-amount in">+467.8B &#937;</div>
+            <div class="tx-date">2026-07-10</div>
+          </div>
+          <div class="tx-item pend">
+            <div class="tx-type">PEND</div>
+            <div class="tx-desc">Polygon L2 -- Awaiting legal clearance</div>
+            <div class="tx-amount" style="color:var(--gold)">GATED</div>
+            <div class="tx-date">2026-07-09</div>
+          </div>
+          <div class="tx-item in">
+            <div class="tx-type">MINT</div>
+            <div class="tx-desc">ARENITE token genesis -- Founder tier</div>
+            <div class="tx-amount in">+GENESIS</div>
+            <div class="tx-date">2026-07-08</div>
+          </div>
+          <div class="tx-item out">
+            <div class="tx-type">ALLOC</div>
+            <div class="tx-desc">Rhodium acquisition -- Flash guard</div>
+            <div class="tx-amount out">125kg Rh</div>
+            <div class="tx-date">2026-07-07</div>
+          </div>
+          <div class="tx-item in">
+            <div class="tx-type">REG</div>
+            <div class="tx-desc">Lebanese Engineers Order No.30875</div>
+            <div class="tx-amount in">HASHED</div>
+            <div class="tx-date">2026-07-01</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investment Reports -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Investment Reports</span>
+        <span class="panel-badge">M16</span>
+      </div>
+      <div class="panel-body">
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Q2 2026 Portfolio Review</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">Physical + Digital | 14pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem">DOWNLOAD</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Token Architecture Brief</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">12-token economy spec | 8pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem">DOWNLOAD</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Legal Compliance Checklist</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">KYC/AML | Securities | 22pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--gold);border:1px solid var(--border);padding:.2rem .5rem">PENDING</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Rhodium Flash-Guard Protocol</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">Risk management | 6pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem">DOWNLOAD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Allocation Engine -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Allocation Engine</span>
+        <span class="panel-badge">AUTO</span>
+      </div>
+      <div class="panel-body">
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div style="padding:.75rem;border:1px solid rgba(0,200,150,0.15);background:rgba(0,200,150,0.04)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--green);letter-spacing:.1em;margin-bottom:.3rem">ACTIVE PROTOCOL</div>
+            <div style="font-size:.8rem;color:var(--text)">20% Reinvestment Sweep</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Hourly auto-buy: Gold, Silver, Rhodium</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid rgba(0,229,255,0.15);background:rgba(0,229,255,0.03)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:.3rem">SAFETY NET</div>
+            <div style="font-size:.8rem;color:var(--text)">51% Master Vault Lock</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Flash-crash protection via Rhodium reserves</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid rgba(139,0,0,0.3);background:rgba(139,0,0,0.04)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--crimson2);letter-spacing:.1em;margin-bottom:.3rem">GOVERNANCE</div>
+            <div style="font-size:.8rem;color:var(--text)">Jurisdiction Hopping</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">5-nation re-domicile if hostile environment detected</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">HERITAGE</div>
+            <div style="font-size:.8rem;color:var(--text)">Dead-Man's Switch</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Full control transfers to bloodline on trigger</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="omega-sig">&#937;</div>
+
+<script>
+// Particle background
+(function(){
+const c=document.getElementById('bg-canvas');
+const ctx=c.getContext('2d');
+let W,H,pts=[];
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<60;i++)pts.push({x:Math.random()*1600,y:Math.random()*900,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:Math.random()*1.2+.3,a:Math.random()});
+function draw(){
+ctx.clearRect(0,0,W,H);
+ctx.fillStyle='rgba(201,168,76,0.03)';
+for(const p of pts){
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+ctx.beginPath();ctx.arc(p.x/1600*W,p.y/900*H,p.r,0,Math.PI*2);ctx.fill();
+}
+requestAnimationFrame(draw);
+}draw();
+})();
+
+// Performance chart
+(function(){
+const canvas=document.getElementById('perf-canvas');
+if(!canvas)return;
+const ctx=canvas.getContext('2d');
+canvas.width=canvas.offsetWidth*2;canvas.height=canvas.offsetHeight*2;
+ctx.scale(2,2);
+const W=canvas.offsetWidth,H=canvas.offsetHeight;
+const pts=[2.1,2.8,3.2,2.9,4.1,4.8,5.2,5.9,6.4,7.1,7.8,8.2,8.7,9.0,9.0,9.0];
+const minV=1,maxV=10;
+function toY(v){return H-((v-minV)/(maxV-minV))*(H-20)-10}
+function toX(i){return(i/(pts.length-1))*W}
+// Area fill
+ctx.beginPath();ctx.moveTo(toX(0),H);
+for(let i=0;i<pts.length;i++)ctx.lineTo(toX(i),toY(pts[i]));
+ctx.lineTo(toX(pts.length-1),H);ctx.closePath();
+const grad=ctx.createLinearGradient(0,0,0,H);
+grad.addColorStop(0,'rgba(201,168,76,0.25)');grad.addColorStop(1,'rgba(201,168,76,0)');
+ctx.fillStyle=grad;ctx.fill();
+// Line
+ctx.beginPath();ctx.moveTo(toX(0),toY(pts[0]));
+for(let i=1;i<pts.length;i++)ctx.lineTo(toX(i),toY(pts[i]));
+ctx.strokeStyle='#C9A84C';ctx.lineWidth=1.5;ctx.stroke();
+// Apex marker
+const last=pts.length-1;
+ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),4,0,Math.PI*2);
+ctx.fillStyle='#C9A84C';ctx.fill();
+ctx.fillStyle='rgba(201,168,76,0.3)';ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),8,0,Math.PI*2);ctx.fill();
+})();
+
+// Event counter
+let count=0;
+const ev=document.getElementById('ev-count');
+const timer=setInterval(()=>{
+count+=Math.floor(Math.random()*3)+1;
+if(ev)ev.textContent=count.toLocaleString();
+if(count>9999)clearInterval(timer);
+},1200);
+
+// Animate bars
+window.addEventListener('load',()=>{
+document.querySelectorAll('.alloc-bar-fill,.axis-fill').forEach(el=>{
+const w=el.style.width;el.style.width='0';
+setTimeout(()=>{el.style.width=w},300);
+});
+});
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

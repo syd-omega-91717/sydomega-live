@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Social Hub</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="SYD OMEGA 91717 &mdash; Social Hub"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/social.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SYD OMEGA 91717 &mdash; Social Hub"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--void:#0A0A0F;--panel:#0d0d15;--panel-2:#11111c;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 60% 20%,rgba(0,229,255,.04),transparent 48%),radial-gradient(circle at 30% 70%,rgba(201,168,76,.05),transparent 42%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
+.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px}
+.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px}
+.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.sechead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+/* Platform account cards */
+.platforms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.plat-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:20px;transition:border-color .2s;position:relative}
+.plat-card.connected{border-color:rgba(63,178,127,.5)}
+.plat-card .plat-icon{font-size:22px;margin-bottom:12px}
+.plat-card .plat-name{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:4px}
+.plat-card .plat-desc{font-family:var(--body);font-size:12px;font-weight:300;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.plat-card .plat-status{font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:3px 8px;border:1px solid;display:inline-block;margin-bottom:12px}
+.status-conn{color:var(--green);border-color:rgba(63,178,127,.5)}
+.status-ready{color:var(--cyan);border-color:rgba(0,229,255,.3)}
+.plat-card .plat-user{font-family:var(--mono);font-size:10px;color:var(--solar);margin-bottom:10px;min-height:14px}
+.plat-card .btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn-connect{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:8px 14px;border:1px solid;cursor:pointer;background:transparent}
+.btn-open{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:8px 14px;border:1px solid;cursor:pointer;background:transparent}
+.btn-disc{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:8px 12px;border:1px solid rgba(139,0,0,.5);color:var(--crimson);cursor:pointer;background:transparent}
+.ra-badge{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:7px;letter-spacing:1px;padding:2px 6px;color:var(--void);background:var(--cyan)}
+
+/* Broadcast composer */
+.composer{border:1px solid var(--line);background:var(--panel);padding:22px}
+.composer textarea{width:100%;font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:12px;resize:vertical;min-height:90px;outline:none;margin-bottom:14px}
+.composer textarea:focus{border-color:rgba(201,168,76,.4)}
+.net-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.net-toggle{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:6px 12px;border:1px solid var(--line);color:var(--muted);cursor:pointer;background:transparent;transition:all .15s}
+.net-toggle.sel{color:var(--void);background:var(--gold);border-color:var(--gold)}
+.btn-broadcast{font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:11px 24px;color:var(--void);background:var(--gold);border:none;cursor:pointer}
+.btn-broadcast:hover{background:var(--solar)}
+.sent-msg{font-family:var(--mono);font-size:11px;color:var(--green);margin-top:10px;display:none}
+
+/* Feed area */
+.feed-tabs{display:flex;gap:0;border:1px solid var(--line);width:fit-content;margin-bottom:18px}
+.feed-tab{font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:9px 18px;cursor:pointer;border-right:1px solid var(--line);color:var(--muted)}
+.feed-tab:last-child{border-right:none}
+.feed-tab.on{color:var(--gold);background:rgba(201,168,76,.08)}
+.feed-post{border-bottom:1px dashed rgba(201,168,76,.09);padding:16px 0;display:flex;gap:14px}
+.feed-post .net-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.feed-post .content{flex:1}
+.feed-post .content .header{font-family:var(--mono);font-size:10px;color:var(--solar);margin-bottom:5px}
+.feed-post .content .text{font-size:13px;font-weight:300;color:var(--ink);line-height:1.6}
+.feed-post .content .actions{display:flex;gap:12px;margin-top:8px}
+.feed-post .content .actions a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);cursor:pointer}
+.feed-post .content .actions a:hover{color:var(--gold)}
+.feed-note{font-family:var(--mono);font-size:11px;color:var(--muted);padding:16px 0}
+
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="social"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">SOCIAL HUB<small>CONNECT &middot; BROADCAST &middot; PRESENCE</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:24px">Connect your social accounts once and reach all your platforms from inside the Order. Sign in with each account, compose your broadcast, and transmit sovereign content across your entire digital presence in one action.</p>
+
+    <div class="sechead">CONNECT YOUR ACCOUNTS</div>
+    <div class="platforms-grid" id="platforms-grid"></div>
+
+    <div class="sechead">SOVEREIGN BROADCAST</div>
+    <div class="composer">
+      <p style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">COMPOSE &mdash; SELECT CHANNELS &mdash; TRANSMIT</p>
+      <textarea id="broadcast-text" placeholder="Write your sovereign broadcast... Share your milestone, horoscope, achievement, or message across all connected platforms."></textarea>
+      <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">SELECT CHANNELS:</p>
+      <div class="net-toggles" id="net-toggles"></div>
+      <button class="btn-broadcast" id="btn-broadcast">TRANSMIT BROADCAST</button>
+      <div class="sent-msg" id="sent-msg">&#x2713; BROADCAST QUEUED &mdash; Routes to selected platforms when provider connections are activated.</div>
+    </div>
+
+    <div class="sechead">SOCIAL ACTIVITY FEED</div>
+    <div class="feed-tabs">
+      <div class="feed-tab on" data-tab="all">ALL PLATFORMS</div>
+      <div class="feed-tab" data-tab="broadcasts">MY BROADCASTS</div>
+      <div class="feed-tab" data-tab="horoscope">HOROSCOPE SHARES</div>
+    </div>
+    <div id="feed-content"></div>
+
+  </main>
+</div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+var PLATFORMS=[
+  {id:'instagram',name:'Instagram',icon:'&#x25BA;',col:'#E1306C',desc:'Stories, posts, reels. Connect once to share sovereign content directly from the platform.',authUrl:'https://www.instagram.com/oauth/authorize',scope:'basic,public_content'},
+  {id:'x',name:'X / Twitter',icon:'&#x2715;',col:'#ffffff',desc:'Real-time broadcast to your X feed. Connect to post milestones, readings, and declarations.',authUrl:'https://twitter.com/i/oauth2/authorize',scope:'tweet.write'},
+  {id:'facebook',name:'Facebook',icon:'f',col:'#1877F2',desc:'Pages, groups, and personal feed. Share achievement posts and horoscope content directly.',authUrl:'https://www.facebook.com/v18.0/dialog/oauth',scope:'publish_actions'},
+  {id:'youtube',name:'YouTube',icon:'&#x25BA;',col:'#FF0000',desc:'Broadcast announcements to your community. Connect to post updates and media launches.',authUrl:'https://accounts.google.com/o/oauth2/auth',scope:'youtube.upload'},
+  {id:'tiktok',name:'TikTok',icon:'&#x266A;',col:'#69C9D0',desc:'Share short sovereign content clips and achievements directly to your TikTok audience.',authUrl:'https://www.tiktok.com/auth/authorize',scope:'video.upload'},
+  {id:'telegram',name:'Telegram',icon:'&#x27A4;',col:'#26A5E4',desc:'Post to your Telegram channels and groups. The fastest sovereign broadcast channel.',authUrl:'https://telegram.org/auth',scope:'channel.post'},
+  {id:'discord',name:'Discord',icon:'&#x25CF;',col:'#5865F2',desc:'Announce to your Discord server. Connect to broadcast milestones and rank upgrades.',authUrl:'https://discord.com/api/oauth2/authorize',scope:'webhook.incoming'},
+];
+
+var connections={};
+try{connections=JSON.parse(localStorage.getItem('omega_social_connections')||'{}');}catch(e){}
+function saveConnections(){try{localStorage.setItem('omega_social_connections',JSON.stringify(connections));}catch(e){}}
+
+var selectedNets=new Set();
+
+function renderPlatforms(){
+  var grid=document.getElementById('platforms-grid');
+  var togglesEl=document.getElementById('net-toggles');
+  grid.innerHTML=''; togglesEl.innerHTML='';
+
+  PLATFORMS.forEach(function(p){
+    var conn=connections[p.id];
+    var card=document.createElement('div');
+    card.className='plat-card'+(conn?' connected':'');
+    card.style.borderTopColor=p.col;
+
+    var statusHtml=conn
+      ?'<div class="plat-status status-conn">&#x2713; CONNECTED</div>'
+      :'<div class="plat-status status-ready">READY TO ACTIVATE</div>';
+
+    var userHtml=conn
+      ?'<div class="plat-user">@'+esc(conn.username||'your_account')+'</div>'
+      :'<div class="plat-user">&nbsp;</div>';
+
+    var btnHtml=conn
+      ?'<div class="btn-row">'+
+          '<button class="btn-open" style="color:'+p.col+';border-color:'+p.col+'30" onclick="window.open(\'https://'+p.id+'.com\',\'_blank\')">OPEN '+p.name.toUpperCase()+'</button>'+
+          '<button class="btn-disc" data-pid="'+p.id+'">DISCONNECT</button>'+
+        '</div>'
+      :'<div class="btn-row">'+
+          '<button class="btn-connect" style="color:'+p.col+';border-color:'+p.col+'40" data-pid="'+p.id+'">CONNECT '+p.name.toUpperCase()+'</button>'+
+        '</div>';
+
+    card.innerHTML=
+      '<div class="plat-icon" style="color:'+p.col+'">'+p.icon+'</div>'+
+      '<div class="plat-name" style="color:'+p.col+'">'+p.name+'</div>'+
+      '<div class="plat-desc">'+p.desc+'</div>'+
+      statusHtml+userHtml+btnHtml+
+      (!conn?'<div class="ra-badge">READY TO ACTIVATE</div>':'');
+
+    /* Connect click */
+    var connectBtn=card.querySelector('.btn-connect');
+    if(connectBtn){
+      connectBtn.addEventListener('click',function(){
+        /* Simulate OAuth connect (real flow requires server-side credentials) */
+        var username=prompt('Enter your '+p.name+' username to link (simulation):\nIn production this opens the '+p.name+' OAuth window.');
+        if(username){
+          connections[p.id]={username:username.replace('@',''),connected_at:new Date().toISOString()};
+          saveConnections();
+          renderPlatforms();
+        }
+      });
+    }
+    /* Disconnect click */
+    var discBtn=card.querySelector('.btn-disc');
+    if(discBtn){
+      discBtn.addEventListener('click',function(){
+        delete connections[p.id];
+        saveConnections();
+        renderPlatforms();
+      });
+    }
+    grid.appendChild(card);
+
+    /* Network toggles for composer */
+    var tog=document.createElement('div');
+    tog.className='net-toggle'+(selectedNets.has(p.id)?' sel':'');
+    tog.style.borderColor=p.col+'40';
+    tog.innerHTML='<span style="color:'+p.col+'">'+p.icon+'</span> '+p.name.split('/')[0].trim().toUpperCase();
+    tog.addEventListener('click',function(){
+      if(selectedNets.has(p.id)){ selectedNets.delete(p.id); tog.classList.remove('sel'); }
+      else{ selectedNets.add(p.id); tog.classList.add('sel'); }
+    });
+    togglesEl.appendChild(tog);
+  });
+}
+
+function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* Sample feed entries */
+var FEED_SEED=[
+  {net:'instagram',col:'#E1306C',icon:'&#x25BA;',header:'INSTAGRAM &middot; Shared yesterday',text:'My sovereign sigil and element alignment &mdash; Virgo / Sand / Athena &middot; ascending through Gate VI.'},
+  {net:'x',col:'#ffffff',icon:'&#x2715;',header:'X / TWITTER &middot; 3 days ago',text:'Matrix node (6,4,3) reached. Knowledge axis at 6. The Order recognises the threshold. #SydOmega91717'},
+  {net:'telegram',col:'#26A5E4',icon:'&#x27A4;',header:'TELEGRAM &middot; 1 week ago',text:'Daily horoscope broadcast delivered to channel subscribers. 9.1717 Hz resonance active.'},
+];
+
+function renderFeed(tab){
+  var feed=document.getElementById('feed-content');
+  feed.innerHTML='';
+  var entries=tab==='all'?FEED_SEED:tab==='broadcasts'?[FEED_SEED[0],FEED_SEED[1]]:[FEED_SEED[2]];
+
+  if(!entries.length){
+    feed.innerHTML='<div class="feed-note">No activity yet for this filter.</div>';
+    return;
+  }
+  var stored=[];
+  try{stored=JSON.parse(localStorage.getItem('omega_broadcasts')||'[]');}catch(e){}
+  var all=[...stored,...entries];
+  all.forEach(function(e){
+    var post=document.createElement('div');
+    post.className='feed-post';
+    post.innerHTML=
+      '<div class="net-dot" style="background:'+e.col+'"></div>'+
+      '<div class="content">'+
+        '<div class="header">'+e.icon+' '+e.header+'</div>'+
+        '<div class="text">'+esc(e.text)+'</div>'+
+        '<div class="actions"><a>VIEW</a><a>SHARE</a><a>ARCHIVE</a></div>'+
+      '</div>';
+    feed.appendChild(post);
+  });
+}
+
+document.getElementById('btn-broadcast').addEventListener('click',function(){
+  var text=document.getElementById('broadcast-text').value.trim();
+  if(!text||!selectedNets.size) return;
+  var stored=[];
+  try{stored=JSON.parse(localStorage.getItem('omega_broadcasts')||'[]');}catch(e){}
+  stored.unshift({
+    net:'broadcast',col:'#C9A84C',icon:'&#x2733;',
+    header:'BROADCAST &middot; '+new Date().toLocaleString()+' &middot; TO: '+[...selectedNets].join(', ').toUpperCase(),
+    text:text
+  });
+  try{localStorage.setItem('omega_broadcasts',JSON.stringify(stored.slice(0,30)));}catch(e){}
+  document.getElementById('broadcast-text').value='';
+  var sm=document.getElementById('sent-msg'); sm.style.display='block';
+  setTimeout(function(){sm.style.display='none';},3500);
+  renderFeed('all');
+});
+
+document.querySelectorAll('.feed-tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('.feed-tab').forEach(function(t){t.classList.remove('on');});
+    tab.classList.add('on');
+    renderFeed(tab.getAttribute('data-tab'));
+  });
+});
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  renderPlatforms();
+  renderFeed('all');
+}
+boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

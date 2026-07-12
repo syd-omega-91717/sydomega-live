@@ -147,10 +147,10 @@ function renderExps(){
   });
 }
 
-function loadJourneys(){
+async function loadJourneys(){
   var feed=document.getElementById('journey-feed');
-  var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_journeys')||'[]');}catch(e){}
+  var { data } = await sb.from('travel_journeys').select('destination,purpose,notes,created_at').order('created_at',{ascending:false}).limit(50);
+  var stored=(data||[]).map(function(j){return {dest:j.destination,purpose:j.purpose,notes:j.notes,ts:j.created_at};});
   if(!stored.length) return;
   feed.innerHTML='';
   stored.forEach(function(j){
@@ -162,16 +162,14 @@ function loadJourneys(){
   });
 }
 
-document.getElementById('btn-travel').addEventListener('click',function(){
+document.getElementById('btn-travel').addEventListener('click',async function(){
   var dest=document.getElementById('tr-dest').value.trim();
   var purpose=document.getElementById('tr-purpose').value;
   var notes=document.getElementById('tr-notes').value.trim();
   if(!dest) return;
-  var stored=[];
-  try{stored=JSON.parse(localStorage.getItem('omega_journeys')||'[]');}catch(e){}
-  stored.unshift({dest,purpose,notes,ts:new Date().toISOString()});
-  try{localStorage.setItem('omega_journeys',JSON.stringify(stored.slice(0,50)));}catch(e){}
-  loadJourneys();
+  var { error } = await sb.from('travel_journeys').insert({destination:dest,purpose:purpose,notes:notes});
+  if(error){ alert('Could not save journey: '+error.message); return; }
+  await loadJourneys();
   document.getElementById('tr-dest').value='';
   document.getElementById('tr-notes').value='';
   var s=document.getElementById('tr-saved'); s.style.display='block';

@@ -16,42 +16,88 @@
       ['\u2681', 'Levels', '/levels.html'],
       ['\u269B', 'Phases', '/phases.html'],
       ['\u2605', 'Honors', '/honors.html'],
-      ['\u2666', 'Achievements', '/achievements.html']
+      ['\u2666', 'Achievements', '/achievements.html'],
+      ['\u2637', 'Gates', '/gates.html'],
+      ['\u2609', 'Elements', '/elements.html'],
+      ['\u25B3', 'Exam Hall', '/exam.html']
     ]],
     ['CORE', [
       ['\u2302', 'Dashboard', '/dashboard.html'],
       ['\u25C6', 'Identity', '/identity.html'],
-      ['\u25B2', 'Ascend', '/ascension.html'],
-      ['\u2609', 'Cosmos', '/cosmos.html']
+      ['\u2609', 'Cosmos', '/cosmos.html'],
+      ['\u25CE', 'Matrix', '/matrix.html'],
+      ['\u264D', 'Horoscope', '/horoscope.html'],
+      ['\u2721', 'Pantheons', '/pantheons.html'],
+      ['\u2694', 'Factions', '/factions.html'],
+      ['\u2604', 'Triads', '/triads.html'],
+      ['\u25C7', 'Character', '/character.html'],
+      ['\u2691', 'Beacon', '/beacon.html'],
+      ['\u2600', 'Agents', '/agents.html']
     ]],
     ['EXPERIENCE', [
       ['\u2726', 'Academy', '/academy.html'],
       ['\u25B6', 'Games', '/gaming.html'],
       ['\u2638', 'Universe', '/universe.html'],
-      ['\u25C9', 'Cinema', '/cinema.html']
+      ['\u25C9', 'Cinema', '/cinema.html'],
+      ['\u25A3', 'Media', '/media.html'],
+      ['\u2b21', 'Sigil Vault', '/sigil.html']
     ]],
     ['ASSETS', [
       ['\u03A9', 'Vault', '/vault.html'],
       ['\u25C8', 'Treasury', '/treasury.html'],
       ['\u2263', 'Ledger', '/ledger.html'],
-      ['\u25D0', 'Portal', '/portal.html']
+      ['\u25D0', 'Wallet', '/wallet.html'],
+      ['\u25C7', 'Portfolio', '/portfolio.html'],
+      ['\u2318', 'Blockchain', '/blockchain.html'],
+      ['\u25C8', 'Income', '/income.html'],
+      ['\u2740', 'Payments', '/payments.html'],
+      ['\u25B3', 'Subscriptions', '/subscriptions.html'],
+      ['\u2696', 'Membership', '/membership.html']
     ]],
     ['THE ORDER', [
       ['\u2318', 'Family', '/family.html'],
       ['\u265A', 'Kings', '/kings.html'],
       ['\u2691', 'Hall', '/hall.html'],
       ['\u2605', 'Trophies', '/trophies.html'],
-      ['\u25A6', 'City', '/city.html']
+      ['\u25A6', 'City', '/city.html'],
+      ['\u2693', 'Bloodline', '/bloodline.html'],
+      ['\u26EA', 'Heritage', '/heritage.html'],
+      ['\u265B', 'Sovereigns', '/sovereigns.html'],
+      ['\u2696', 'Charter', '/charter.html'],
+      ['\u2696', 'Compliance', '/compliance.html']
     ]],
     ['SERVICES', [
       ['\u2723', 'Services', '/services.html'],
       ['\u25C9', 'Intelligence', '/intelligence.html'],
       ['\u2756', 'Chatbot', '/chatbot.html'],
-      ['\u25B3', 'Subscriptions', '/subscriptions.html']
+      ['\u2696', 'Consultancy', '/consultancy.html'],
+      ['\u25C8', 'Marketplace', '/marketplace.html'],
+      ['\u2711', 'Publishing', '/publishing.html'],
+      ['\u2732', 'Marketing', '/marketing.html'],
+      ['\u2696', 'Contracts', '/contracts.html'],
+      ['\u2727', 'Research', '/research.html'],
+      ['\u2699', 'Automation', '/automation.html'],
+      ['\u2609', 'Prediction', '/prediction.html'],
+      ['\u2b21', 'Grid', '/grid.html']
+    ]],
+    ['COMMUNITY', [
+      ['\u2695', 'News', '/news.html'],
+      ['\u25C8', 'Social Hub', '/social.html'],
+      ['\u2696', 'Events', '/events.html'],
+      ['\u2622', 'Notifications', '/notifications.html'],
+      ['\u2b21', 'Contributions', '/contributions.html'],
+      ['\u25CE', 'Evolution', '/evolution.html'],
+      ['\u2727', 'Search', '/search.html']
+    ]],
+    ['LIFESTYLE', [
+      ['\u2695', 'Health', '/health.html'],
+      ['\u2708', 'Travel', '/travel.html']
     ]],
     ['ACCOUNT', [
       ['\u25CF', 'Profile', '/profile.html'],
-      ['\u2699', 'Settings', '/settings.html']
+      ['\u2699', 'Settings', '/settings.html'],
+      ['\u25C6', 'Passport', '/passport.html'],
+      ['\u2713', 'KYC', '/kyc.html']
     ]]
   ];
 

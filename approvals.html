@@ -182,6 +182,23 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <button class="filter-btn" data-filter="all">ALL MEMBERS</button>
     </div>
 
+    <!-- BROADCAST A DISPATCH -->
+    <div class="card" style="margin-top:clamp(14px,3vw,28px);padding:18px">
+      <div class="hl-title" style="font-size:14px;margin-bottom:10px">BROADCAST A DISPATCH</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Reaches every member's Notifications and the Official panel on /news.html.</div>
+      <input id="disp-title" placeholder="Title" maxlength="200" style="width:100%;margin-bottom:8px;padding:9px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.3);color:inherit;border-radius:6px"/>
+      <textarea id="disp-body" placeholder="Body" maxlength="8000" rows="3" style="width:100%;margin-bottom:8px;padding:9px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.3);color:inherit;border-radius:6px;font-family:inherit;resize:vertical"></textarea>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <select id="disp-category" style="padding:9px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.3);color:inherit;border-radius:6px">
+          <option value="DISPATCH">DISPATCH</option>
+          <option value="INTELLIGENCE">INTELLIGENCE</option>
+          <option value="ANNOUNCEMENT">ANNOUNCEMENT</option>
+          <option value="UPDATE">UPDATE</option>
+        </select>
+        <button class="filter-btn" id="disp-send" style="cursor:pointer">BROADCAST &#x2192;</button>
+      </div>
+    </div>
+
     <!-- MEMBER LIST -->
     <div class="member-list" id="member-list">
       <div class="empty-state">LOADING MEMBERS...</div>
@@ -208,6 +225,19 @@ function toast(msg,col){
   t.textContent=msg;t.style.color=col||'var(--green)';t.style.borderColor=(col||'rgba(63,178,127,.5)');
   t.style.display='block';setTimeout(()=>t.style.display='none',3000);
 }
+
+/* ---- BROADCAST A DISPATCH ---- */
+document.getElementById('disp-send').addEventListener('click',async()=>{
+  const title=document.getElementById('disp-title').value.trim();
+  const body=document.getElementById('disp-body').value.trim();
+  const category=document.getElementById('disp-category').value;
+  if(!title){ toast('Title required.','var(--crim)'); return; }
+  const r=await sb.rpc('post_dispatch',{p_title:title,p_body:body,p_category:category});
+  if(r.error || !(r.data&&r.data.ok)){ toast('Broadcast failed: '+((r.data&&r.data.error)||r.error?.message||'unknown'),'var(--crim)'); return; }
+  document.getElementById('disp-title').value='';
+  document.getElementById('disp-body').value='';
+  toast('Dispatch broadcast to the Order.');
+});
 
 /* ---- COUNTDOWN ---- */
 function startTimer(uid,exp,el){
@@ -291,114 +321,4 @@ function buildCard(m){
     <div class="mc-top">
       <div class="mc-avatar" style="border-color:${col};color:${col}">${init}</div>
       <div class="mc-info">
-        <div class="mci-name" style="color:${col}">${m.display_name||'(no name set)'}</div>
-        <div class="mci-email">${m.email||m.id?.slice(0,20)||'--'}</div>
-        <div class="mci-joined">${joined}</div>
-      </div>
-      <div class="mc-status-wrap">
-        <span class="mc-pill" style="color:${col};border-color:${col}44">${statusLabel}</span>
-        ${isActive?`<div class="mc-timer" id="tmr-${m.id}" style="color:${col}">--:--</div><div class="mc-timer-label">REMAINING</div>`:''}
-        ${isPending?`<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:4px;letter-spacing:1px">Awaiting your decision</div>`:''}
-      </div>
-    </div>
-    <div class="mc-actions">
-      ${isPending||isExpired?`<button class="action-btn btn-approve" data-uid="${m.id}">&#x2713; APPROVE 9.1717 MIN</button><button class="action-btn btn-reject" data-uid="${m.id}">&#x2715; REJECT</button>`:''}
-      ${isActive?`<button class="action-btn btn-extend" data-uid="${m.id}">+ EXTEND 9.1717 MIN</button><button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; END SESSION NOW</button>`:''}
-      ${isApproved?`<button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; REVOKE ACCESS</button>`:''}
-      ${isRejected&&!isExpired?`<button class="action-btn btn-approve" data-uid="${m.id}">&#x2713; APPROVE 9.1717 MIN</button>`:''}
-    </div>`;
-
-  /* Button events */
-  card.querySelector('.btn-approve')?.addEventListener('click',e=>approve(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
-  card.querySelector('.btn-reject')?.addEventListener('click',e=>reject(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
-  card.querySelector('.btn-revoke')?.addEventListener('click',e=>revoke(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
-  card.querySelector('.btn-extend')?.addEventListener('click',e=>extend(e.target.dataset.uid||e.target.closest('[data-uid]').dataset.uid));
-
-  /* Start countdown for active */
-  if(isActive){
-    setTimeout(()=>{
-      const te=document.getElementById('tmr-'+m.id);
-      if(te) startTimer(m.id,m.trial_expires_at,te);
-    },50);
-  }
-  return card;
-}
-
-/* ---- LOAD MEMBERS ---- */
-async function load(){
-  Object.values(timers).forEach(clearInterval);timers={};
-  let members=[];
-  try{
-    const{data}=await sb.rpc('get_all_members');
-    members=data||[];
-  }catch(e){
-    const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:false});
-    members=data||[];
-  }
-  allMembers=members.filter(m=>!m.is_owner);
-  const now=Date.now();
-  const pending=allMembers.filter(m=>!m.access_approved&&!m.is_rejected);
-  const active=allMembers.filter(m=>m.access_approved&&m.is_trial&&m.trial_expires_at&&new Date(m.trial_expires_at)>now);
-  const approved=allMembers.filter(m=>m.access_approved&&!m.is_trial);
-  const rejected=allMembers.filter(m=>m.is_rejected||(m.is_trial&&m.trial_expires_at&&new Date(m.trial_expires_at)<=now&&!m.access_approved));
-
-  /* Stats */
-  document.getElementById('stat-pending').textContent=pending.length;
-  document.getElementById('stat-active').textContent=active.length;
-  document.getElementById('stat-approved').textContent=approved.length;
-  document.getElementById('stat-rejected').textContent=rejected.length+allMembers.filter(m=>m.is_rejected).length;
-  document.getElementById('stat-total').textContent=allMembers.length;
-
-  /* Badges */
-  const bp=document.getElementById('badge-pending');
-  const ba=document.getElementById('badge-active');
-  if(bp){bp.textContent=pending.length;bp.style.display=pending.length?'flex':'none';}
-  if(ba){ba.textContent=active.length;ba.style.display=active.length?'flex':'none';}
-
-  /* List */
-  const list=document.getElementById('member-list');list.innerHTML='';
-  const cards=allMembers.map(buildCard).filter(Boolean);
-  if(!cards.length){
-    list.innerHTML='<div class="empty-state">NO MEMBERS IN THIS CATEGORY<br/><span style="color:rgba(133,131,123,.4);font-size:9px">New registrations appear here automatically</span></div>';
-  } else {
-    cards.forEach(c=>list.appendChild(c));
-  }
-}
-
-/* ---- FILTER BUTTONS ---- */
-document.querySelectorAll('.filter-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
-    btn.classList.add('on');
-    activeFilter=btn.dataset.filter;
-    load();
-  });
-});
-
-/* ---- BOOT ---- */
-async function boot(){
-  const sess=(await sb.auth.getSession()).data.session;
-  if(!sess){window.location.href='/account.html';return;}
-  ownerUid=sess.user.id;
-  const pr=(await sb.from('profiles').select('is_owner').eq('id',ownerUid).maybeSingle()).data;
-  if(!pr?.is_owner){
-    document.getElementById('gate').innerHTML=`
-      <div class="gate-omega" style="color:var(--crim)">&#937;</div>
-      <div class="gate-title" style="color:var(--crim)">ACCESS DENIED</div>
-      <div class="gate-sub">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
-      <a href="/dashboard.html" style="font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2)">RETURN TO DASHBOARD</a>`;
-    return;
-  }
-  /* Verified -- show main */
-  document.getElementById('gate').style.display='none';
-  document.getElementById('main').style.display='block';
-  load();
-  /* Auto-refresh every 20 seconds */
-  setInterval(load,20000);
-}
-boot();
-</script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-</body>
-</html>
+        <div

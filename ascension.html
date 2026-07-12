@@ -167,6 +167,17 @@ const PHASES=[
   {n:12,title:'THE OMEGA MASTER',desc:'Coordinate (9,9,9) reached. All 729 nodes activated. The frequency is complete.',col:'#C9A84C',phase:'PHASE IV',progress:0},
 ];
 
+function fillRing(el, glyph, col, locked){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
+    else if(tries>20){ clearInterval(t); }
+  },150);
+}
+
 function buildLadder(userLevel){
   const ladder=document.getElementById('level-ladder');
   ladder.innerHTML='';
@@ -176,7 +187,7 @@ function buildLadder(userLevel){
     const barH=Math.floor(20+Math.random()*60);
     row.innerHTML=`
       <div class="lr-connector"></div>
-      <div class="lr-badge" style="border-color:${done||current?L.col:L.col+'33'};color:${done||current?L.col:'rgba(133,131,123,0.3)'}${current?';box-shadow:0 0 14px '+L.col+'55':''}">${done?'&#x2713;':L.n}</div>
+      <span class="lr-badge-emblem" style="display:inline-block;width:56px;height:56px"></span>
       <div class="lr-body">
         <div class="lrb-num">STAGE ${L.n} &nbsp; ${L.mat}</div>
         <div class="lrb-name" style="color:${done||current?L.col:'rgba(133,131,123,0.5)'}">${L.name}</div>
@@ -187,6 +198,8 @@ function buildLadder(userLevel){
         <div class="lrm-axis">XP ${L.xp}</div>
       </div>`;
     ladder.appendChild(row);
+    const ringEl=row.querySelector('.lr-badge-emblem');
+    fillRing(ringEl, done?'&#x2713;':L.n, L.col, locked);
   });
   document.getElementById('current-level-label').textContent='LEVEL '+userLevel+' -- '+LEVELS[userLevel-1].name;
 }
@@ -206,8 +219,10 @@ function buildPhases(userAuth){
     }).join('');
     const statusLabel=done?'COMPLETE':i===0?'ACTIVE':'LOCKED';
     const statusCol=done?'color:var(--green);border-color:rgba(63,178,127,.5)':i===0?'color:var(--solar);border-color:rgba(226,200,109,.4)':'color:var(--muted);border-color:rgba(133,131,123,.3)';
-    c.innerHTML=`<div class="pc-phase">${p.phase} &nbsp; PHASE ${p.n} OF 12</div><div class="pc-title" style="color:${done?p.col:'rgba(233,230,220,0.6)'}">${p.title}</div><div class="pc-desc">${p.desc}</div><div class="pc-nodes">${nodeHtml}</div><div class="pc-progress-bar"><div class="pc-fill" style="width:0%;background:linear-gradient(90deg,${p.col},transparent)"></div></div><span class="pc-status" style="${statusCol}">${statusLabel}</span>`;
+    c.innerHTML=`<span class="pc-ring-emblem" style="display:inline-block;width:44px;height:44px;float:right;margin-left:10px"></span><div class="pc-phase">${p.phase} &nbsp; PHASE ${p.n} OF 12</div><div class="pc-title" style="color:${done?p.col:'rgba(233,230,220,0.6)'}">${p.title}</div><div class="pc-desc">${p.desc}</div><div class="pc-nodes">${nodeHtml}</div><div class="pc-progress-bar"><div class="pc-fill" style="width:0%;background:linear-gradient(90deg,${p.col},transparent)"></div></div><span class="pc-status" style="${statusCol}">${statusLabel}</span>`;
     g.appendChild(c);
+    const ringEl=c.querySelector('.pc-ring-emblem');
+    fillRing(ringEl, p.n, p.col, !done && i!==0);
     setTimeout(()=>c.querySelector('.pc-fill').style.width=progress+'%',200+i*80);
   });
 }

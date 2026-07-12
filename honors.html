@@ -133,23 +133,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 <canvas id="bg-canvas"></canvas>
 
-<nav>
-  <a href="/dashboard.html" class="nav-brand">&#937; SYDOMEGA</a>
-  <ul class="nav-links">
-    <li><a href="dashboard.html">Command</a></li>
-    <li><a href="matrix.html">Matrix</a></li>
-    <li><a href="portfolio.html">Portfolio</a></li>
-    <li><a href="treasury.html">Treasury</a></li>
-    <li><a href="honors.html" class="active">Honors</a></li>
-    <li><a href="media.html">Media</a></li>
-    <li><a href="agents.html">Agents</a></li>
-  </ul>
-  <div class="nav-right">
-    <span class="nav-status">&#9632; LIVE</span>
-    <a href="dashboard.html" class="nav-back">&#8592; Back</a>
-  </div>
-</nav>
-
+<div class="shell" style="display:flex;min-height:100vh">
+  <aside class="side" id="omega-side" data-page="honors" style="width:80px;flex-shrink:0"></aside>
+  <div style="flex:1;min-width:0">
 <div class="page">
   <div class="hero-band">
     <div class="hero-eyebrow">M4 // ACHIEVEMENT SYSTEM</div>
@@ -162,32 +148,32 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="hstat">
       <span class="hstat-icon" style="color:var(--gold)">&#8960;</span>
       <div class="hstat-label">Trophies</div>
-      <div class="hstat-val">12</div>
-      <div class="hstat-tier" style="color:var(--gold)">12 / 12 Unlocked</div>
+      <div class="hstat-val" id="stat-trophies">--</div>
+      <div class="hstat-tier" style="color:var(--gold)" id="stat-trophies-sub">Loading...</div>
     </div>
     <div class="hstat">
       <span class="hstat-icon" style="color:var(--solar)">&#9670;</span>
       <div class="hstat-label">Medals</div>
-      <div class="hstat-val">12</div>
+      <div class="hstat-val" id="stat-medals">--</div>
       <div class="hstat-tier" style="color:var(--solar)">Contribution Track</div>
     </div>
     <div class="hstat">
       <span class="hstat-icon" style="color:var(--cyan)">&#9635;</span>
       <div class="hstat-label">Certificates</div>
-      <div class="hstat-val">12</div>
+      <div class="hstat-val" id="stat-certs">--</div>
       <div class="hstat-tier" style="color:var(--cyan)">Knowledge Track</div>
     </div>
     <div class="hstat">
       <span class="hstat-icon" style="color:var(--crimson2)">&#9650;</span>
       <div class="hstat-label">Level Badge</div>
-      <div class="hstat-val">9.9.9</div>
-      <div class="hstat-tier" style="color:var(--crimson2)">Apex Tier</div>
+      <div class="hstat-val" id="stat-level">--</div>
+      <div class="hstat-tier" style="color:var(--crimson2)" id="stat-level-sub">Loading...</div>
     </div>
     <div class="hstat">
       <span class="hstat-icon" style="color:var(--muted)">&#9632;</span>
       <div class="hstat-label">Grade Cards</div>
-      <div class="hstat-val">12</div>
-      <div class="hstat-tier" style="color:var(--muted)">All Grades Sealed</div>
+      <div class="hstat-val" id="stat-grade">--</div>
+      <div class="hstat-tier" style="color:var(--muted)" id="stat-grade-sub">Loading...</div>
     </div>
   </div>
 
@@ -521,8 +507,40 @@ document.querySelectorAll('.honor-card').forEach(card=>{
 if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.display='none';}
 });
 }
+
+(async function loadRealHonors(){
+  try{
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+    const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+    const sess = (await sb.auth.getSession()).data.session;
+    if(!sess) return;
+    const pr = await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
+    const d = pr.data || {};
+    const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+    const auth = Math.sqrt(a*a+b*b+c*c);
+    const grade = Math.max(1, Math.min(12, Math.ceil(auth/15.588*12)));
+
+    const [certs, trophies, medals] = await Promise.all([
+      sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
+      sb.from('trophies').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
+      sb.from('medals').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
+    ]);
+    const certCount = certs.count || 0, trophyCount = trophies.count || 0, medalCount = medals.count || 0;
+
+    document.getElementById('stat-certs').textContent = certCount;
+    document.getElementById('stat-trophies').textContent = trophyCount;
+    document.getElementById('stat-trophies-sub').textContent = trophyCount+' / 12 Unlocked';
+    document.getElementById('stat-medals').textContent = medalCount;
+    document.getElementById('stat-level').textContent = d.is_owner ? '9.9.9' : auth.toFixed(2);
+    document.getElementById('stat-level-sub').textContent = d.is_owner ? 'Apex Tier' : ('Authority / 15.588');
+    document.getElementById('stat-grade').textContent = d.is_owner ? '12' : grade;
+    document.getElementById('stat-grade-sub').textContent = d.is_owner ? 'All Grades Sealed' : ('Grade '+grade+' of 12');
+  }catch(e){ /* leave placeholders if this fails -- never block the page */ }
+})();
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</div>
+</div>
 </body>
 </html>

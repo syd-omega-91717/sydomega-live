@@ -112,8 +112,10 @@
 (function(){if(!document.querySelector('script[data-omega-9d]')){var s=document.createElement('script');s.src='/omega-9d.js';s.setAttribute('data-omega-9d','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== COMPONENT SYSTEM -- G12 button/card states + responsive matrix ===== */
 (function(){if(!document.querySelector('script[data-omega-components]')){var s=document.createElement('script');s.src='/omega-components.js';s.setAttribute('data-omega-components','1');if(document.body)document.body.appendChild(s);}})();
-/* ===== LIVING OMEGA SIGIL -- rotative emblem treatment for the Omega mark ===== */
-(function(){if(!document.querySelector('script[data-omega-sigil]')){var s=document.createElement('script');s.src='/omega-sigil.js';s.setAttribute('data-omega-sigil','1');if(document.body)document.body.appendChild(s);}})();
+/* ===== LIVING OMEGA SIGIL -- disabled: omega-sigil.js is not valid JS (it's an
+   orphaned HTML page mislabeled with a .js extension), loading it threw a syntax
+   error on every single page. Removed here; delete the file itself from the repo
+   once you've decided whether it should become a real page or be discarded. ===== */
 /* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */
 (function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */

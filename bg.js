@@ -53,8 +53,10 @@
     '.mbr-actions{width:100%;justify-content:flex-start}',
     '}',
     /* ===== SHARED HEADER COMPONENTS -- centralizes .topbar (54 pages) and .hero-band ===== */
-    /* (6 pages), previously each page carried its own separate copy of this CSS.       */
-    '.topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}',
+    /* (6 pages), previously each page carried its own separate (and drifting) copy.    */
+    '.topbar{border-bottom:1px solid rgba(201,168,76,.16);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}',
+    '.topbar .t{font-family:"Cinzel Decorative",serif;font-weight:700;color:#C9A84C;font-size:clamp(18px,3vw,26px);letter-spacing:2px}',
+    '.topbar .t small{display:block;font-family:"Courier Prime",monospace;font-size:10px;color:#85837b;letter-spacing:3px;margin-top:4px}',
     '.hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}',
     /* ===== ACCESSIBILITY -- ALL PAGES (WCAG 2.3.3 + 2.4.7) ===== */
     /* Visible keyboard focus everywhere, not reliant on each page defining its own */

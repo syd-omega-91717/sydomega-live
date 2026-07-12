@@ -222,31 +222,28 @@ document.getElementById('btn-submit').addEventListener('click',async()=>{
   if(!title||!body) return;
   const res=document.getElementById('he-result');
   res.style.display='block'; res.style.color='var(--solar)';
-  res.textContent='ORACLE AGENT PROCESSING HYPOTHESIS...';
-  try{
-    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:`You are the Oracle AI agent of SYD OMEGA 91717, a sovereign intelligence platform. Validate this research hypothesis in 3 sentences. State: 1) Confidence level (0-100%), 2) Alignment with the platform's matrix of knowledge, and 3) Recommended next research step. Domain: ${domain}. Hypothesis: "${title}" - ${body}`}]})});
-    const data=await r.json();
-    const text=data.content?.map(i=>i.text||'').join('')||'Validation unavailable.';
-    res.style.color='var(--green)';
-    res.innerHTML='<b>ORACLE VALIDATION:</b><br>'+text.replace(/\n/g,'<br>');
-    // Save to localStorage
-    const stored=JSON.parse(localStorage.getItem('omega_hypotheses')||'[]');
-    stored.unshift({domain,title,body,ts:new Date().toISOString()});
-    localStorage.setItem('omega_hypotheses',JSON.stringify(stored.slice(0,20)));
-    const kpi=document.getElementById('kpi-hyp');
-    if(kpi) kpi.textContent=stored.length;
-  }catch(e){
-    res.style.color='var(--muted)';
-    res.textContent='Oracle agent offline. Hypothesis saved locally. Resubmit when connection is restored.';
+  res.textContent='SUBMITTING HYPOTHESIS...';
+  const { error, count } = await sb.from('research_hypotheses').insert({domain,title,body});
+  if(error){
+    res.style.color='var(--crim)';
+    res.textContent='Could not submit: '+error.message;
+    return;
   }
+  res.style.color='var(--green)';
+  res.innerHTML='<b>SUBMITTED.</b><br>Your hypothesis has been recorded in the research archive under '+domain+'. Automated Oracle review is not live yet -- this is a real, saved submission.';
+  const { count: total } = await sb.from('research_hypotheses').select('id',{count:'exact',head:true});
+  const kpi=document.getElementById('kpi-hyp');
+  if(kpi) kpi.textContent=total||0;
+  document.getElementById('h-title').value='';
+  document.getElementById('h-body').value='';
 });
 
 async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
   renderLabs(); renderDiscoveries(); renderTwins();
-  const stored=JSON.parse(localStorage.getItem('omega_hypotheses')||'[]');
-  const k=document.getElementById('kpi-hyp'); if(k) k.textContent=stored.length||'0';
+  const { count } = await sb.from('research_hypotheses').select('id',{count:'exact',head:true});
+  const k=document.getElementById('kpi-hyp'); if(k) k.textContent=count||'0';
 }
 boot();
 </script>

@@ -146,7 +146,8 @@ const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishab
 
 var FILMS=[
   {n:1,title:'THE ORIGIN',sub:'THE CODE AWAKENS',year:2026,el:'Fire',elCol:'#E86A3A',phase:'PHASE I',status:'IN PRODUCTION',
-   desc:'The Solar Nexus reactivates after twelve thousand years of silence. A young outsider discovers the hidden code beneath it &mdash; the 9.1717 frequency, first heard. The Zodiac Guardians are real. The Celestial Knights are chosen. The Shadow Zodiac makes its first move. The Order stirs.'},
+   desc:'The Solar Nexus reactivates after twelve thousand years of silence. A young outsider discovers the hidden code beneath it &mdash; the 9.1717 frequency, first heard. The Zodiac Guardians are real. The Celestial Knights are chosen. The Shadow Zodiac makes its first move. The Order stirs.',
+   cast:'Kael Marren (Aries) &mdash; Mars foundry apprentice, protagonist &middot; Adaeze Okonkwo-Reyes (Libra) &mdash; Earth\u2019s Balance Court mediator &middot; Regent Vahn Ossara &mdash; Shadow Zodiac commander, Aries\u2019 dark mirror'},
   {n:2,title:'THE BLOODLINE',sub:'WAR FOR POWER',year:2027,el:'Water',elCol:'#34C6E6',phase:'PHASE I',status:'PRE-PRODUCTION',
    desc:'The truth about heritage and the royal war is revealed. Ancient houses clash over the right to wield the frequency. Alliances form and fracture across 12 factions.'},
   {n:3,title:'THE ASCENSION',sub:'PATH OF THE CHOSEN',year:2028,el:'Wind',elCol:'#A9C2D8',phase:'PHASE I',status:'PRE-PRODUCTION',
@@ -173,7 +174,7 @@ var FILMS=[
 
 var SERIES=[
   {n:1,title:'&#937; BLOODLINES',desc:'The legacy of the first families and the war for power. Follows the 12 bloodlines across three generations as the frequency emerges.',status:'SERIES IN DEVELOPMENT'},
-  {n:2,title:'&#937; GUARDIANS',desc:'The Celestial Knights train, bond, and grow across the twelve worlds of the Solar Accord &mdash; elite protectors defending humanity and ancient secrets. The Warden agents of the Order, their missions and moral weight.',status:'IN DEVELOPMENT'},
+  {n:2,title:'&#937; GUARDIANS',desc:'The Celestial Knights train, bond, and grow across the twelve worlds of the Solar Accord &mdash; elite protectors defending humanity and ancient secrets. The Warden agents of the Order, their missions and moral weight. All twelve Knights, one per Faction -- see the full roster on /factions.html.',status:'IN DEVELOPMENT'},
   {n:3,title:'&#937; ACADEMY',desc:'Training the next generation of leaders and warriors. A sovereign school where the matrix is the curriculum and failure means exile.',status:'IN DEVELOPMENT'},
   {n:4,title:'&#937; MINDS',desc:'The battle of intelligence, AI, and human consciousness. 12 AI agents gain awareness and must choose: serve the Order or break free.',status:'CONCEPT'},
   {n:5,title:'&#937; UNDERWORLD',desc:'Hidden organisations controlling the shadows. The criminal empires that run parallel to the Order &mdash; and the agent who infiltrates them.',status:'CONCEPT'},
@@ -226,7 +227,7 @@ function renderFilms(){
       '<div class="film-sub">'+f.sub+'</div>'+
       '<div class="film-year">'+f.year+' &mdash; '+f.phase+'</div>'+
       '<span class="film-status '+st+'">'+f.status+'</span>'+
-      '<div class="film-desc">'+f.desc+'</div>';
+      '<div class="film-desc">'+f.desc+(f.cast?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,.15);font-size:11px;color:var(--solar)">'+f.cast+'</div>':'')+'</div>';
     poster.appendChild(info);
 
     var elBar=document.createElement('div');

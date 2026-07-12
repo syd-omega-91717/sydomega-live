@@ -15,7 +15,7 @@
 
   function curLang() { try { return localStorage.getItem('omega_lang') || 'en'; } catch (e) { return 'en'; } }
   function setLang(c) { try { localStorage.setItem('omega_lang', c); } catch (e) {} location.reload(); }
-  function soundOn() { try { return localStorage.getItem('omega_sound') !== 'off'; } catch (e) { return true; } }
+  function soundOn() { try { return localStorage.getItem('omega_sound') === 'on'; } catch (e) { return false; } }
   function setSound(on) {
     try { localStorage.setItem('omega_sound', on ? 'on' : 'off'); } catch (e) {}
     var med = document.querySelectorAll('audio,video');

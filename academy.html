@@ -141,14 +141,14 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  let user=null, axisA=1, cleared={}, selD=-1;
+  let user=null, axisA=1, cleared={}, selD=-1, tierHasAcademyFull=true;
 
   const DISC=[['Aries','Ares'],['Taurus','Aphrodite'],['Gemini','Hermes'],['Cancer','Artemis'],['Leo','Apollo'],['Virgo','Athena'],['Libra','Hera'],['Scorpio','Demeter'],['Sagittarius','Zeus'],['Capricorn','Hestia'],['Aquarius','Hephaestus'],['Pisces','Poseidon']];
   const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
   function key(d,l){ return 'd'+d+'l'+l; }
   function isCleared(d,l){ return !!cleared[key(d,l)]; }
   function clearsIn(d){ var n=0; for(var l=0;l<12;l++) if(isCleared(d,l)) n++; return n; }
-  function discUnlocked(d){ if(d===0) return true; return clearsIn(d-1)>=6 && axisA>=d; }
+  function discUnlocked(d){ if(d===0) return true; if(!tierHasAcademyFull) return false; return clearsIn(d-1)>=6 && axisA>=d; }
   function lessonUnlocked(d,l){ if(!discUnlocked(d)) return false; return l===0 || isCleared(d,l-1); }
 
   function rnd(n){ return Math.floor(Math.random()*n); }
@@ -185,7 +185,7 @@
     DISC.forEach(function(gm,d){
       var unlocked=discUnlocked(d), n=clearsIn(d);
       var el=document.createElement('div'); el.className='game'+(unlocked?'':' locked')+(d===selD?' sel':'');
-      var lock=unlocked?'':'<div class="lock">LOCKED  .  need Knowledge \u2265 '+d+' and 6 lessons cleared in '+ROMAN[d-1]+'</div>';
+      var lock=unlocked?'':(!tierHasAcademyFull?'<div class="lock">SEEKER TIER REQUIRED &middot; <a href="/subscriptions.html" style="color:var(--gold)">upgrade to unlock all 12 disciplines</a></div>':'<div class="lock">LOCKED  .  need Knowledge \u2265 '+d+' and 6 lessons cleared in '+ROMAN[d-1]+'</div>');
       el.innerHTML='<div class="gi">DISCIPLINE '+ROMAN[d]+' \u00B7 '+gm[0].toUpperCase()+'</div><div class="gn">'+gm[1]+'\u2019s Codex</div><div class="gs">'+n+' / 12 CLEARED</div><div class="bar"><i style="width:'+(n/12*100)+'%"></i></div>'+lock;
       if(unlocked) el.addEventListener('click',function(){ openDisc(d); });
       box.appendChild(el);
@@ -272,9 +272,19 @@
     var sess=(await supabase.auth.getSession()).data.session;
     if(!sess){ showGate('The Academy','Sign in to enter the Academy.'); return; }
     user=sess.user;
-    var pr=await supabase.from('profiles').select('sign,axis_a').eq('id',user.id).maybeSingle();
+    var pr=await supabase.from('profiles').select('sign,axis_a,membership_tier').eq('id',user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to enter the Academy.'); return; }
     axisA=Number(pr.data.axis_a||1);
+    var memberTier=Number(pr.data.membership_tier)||1;
+    tierHasAcademyFull = await new Promise(function(resolve){
+      if(window.OmegaCanon && window.OmegaCanon.ready){ resolve(window.OmegaCanon.tierUnlocks(memberTier,'academy_full')); return; }
+      var tries=0;
+      var t=setInterval(function(){
+        tries++;
+        if(window.OmegaCanon && window.OmegaCanon.ready){ clearInterval(t); resolve(window.OmegaCanon.tierUnlocks(memberTier,'academy_full')); }
+        else if(tries>20){ clearInterval(t); resolve(true); } // fail-open if canon never loads, so a real member is never wrongly locked out by a network hiccup
+      },150);
+    });
     try{ var tc=await supabase.from('task_completions').select('task').eq('user_id',user.id).eq('kind','academy'); if(tc.data) tc.data.forEach(function(r){ cleared[r.task]=true; }); }catch(e){}
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';

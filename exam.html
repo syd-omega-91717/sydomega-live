@@ -219,10 +219,27 @@ function endExam(){
   document.getElementById('exam-result').style.display='block';
   document.getElementById('er-score').textContent=`${session.score}/${total}`;
   document.getElementById('er-score').style.color=passed?'var(--green)':'var(--crim)';
-  document.getElementById('er-label').textContent=passed?'EXAMINATION PASSED &mdash; CERTIFICATE EARNED':'EXAMINATION FAILED &mdash; REVIEW AND RETRY';
-  document.getElementById('er-note').innerHTML=passed
-    ?`${pct}% score. Your Knowledge Axis advances. ${session.exam.cert} certificate queued for issuance. Matrix coordinates updated.`
-    :`${pct}% score. Minimum 72% required. Study the relevant Academy discipline and return when prepared.`;
+  document.getElementById('er-label').textContent='SUBMITTING RESULT...';
+  document.getElementById('er-note').textContent='';
+
+  sb.rpc('submit_exam_result',{
+    p_exam_id: session.exam.id,
+    p_score: session.score,
+    p_total: total,
+    p_cert_name: session.exam.cert
+  }).then(function(r){
+    var ok = r.data && r.data.ok;
+    document.getElementById('er-label').textContent = passed
+      ? 'EXAMINATION PASSED \u2014 CERTIFICATE EARNED'
+      : 'EXAMINATION FAILED \u2014 REVIEW AND RETRY';
+    if(!ok){
+      document.getElementById('er-note').textContent = 'Result could not be saved (' + ((r.data&&r.data.error)||r.error?.message||'unknown error') + '). Your score above is accurate for this session, but was not recorded.';
+      return;
+    }
+    document.getElementById('er-note').innerHTML = passed
+      ? `${pct}% score. Your Knowledge Axis has advanced. ${session.exam.cert} certificate ${r.data.cert_awarded ? 'issued' : 'already held -- retake recorded'}.`
+      : `${pct}% score. Minimum 72% required. Study the relevant Academy discipline and return when prepared.`;
+  });
 }
 
 function startTimer(s){

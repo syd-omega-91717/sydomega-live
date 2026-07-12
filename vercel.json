@@ -25,6 +25,6 @@
     { "source": "/:path*.docx", "destination": "/dashboard.html", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/enter.html" }
+    { "source": "/", "destination": "/enter" }
   ]
 }

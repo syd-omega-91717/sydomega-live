@@ -273,14 +273,14 @@ function drawGenTree(sign){
   for(let s=0;s<50;s++){ctx.beginPath();ctx.arc(Math.random()*W,Math.random()*H*0.6,0.7,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+(0.1+Math.random()*0.2)+')';ctx.fill();}
 }
 
-document.getElementById('btn-char-save')?.addEventListener('click',function(){
+document.getElementById('btn-char-save')?.addEventListener('click',async function(){
   const n=document.getElementById('char-name-in').value.trim();
   const dt=document.getElementById('dom-trait').value;
   const im=document.getElementById('inherit-mode').value;
   const ls=document.getElementById('legacy-stmt').value.trim();
   if(!n) return;
-  const rec={name:n,dominantTrait:dt,inheritanceMode:im,legacyStatement:ls,ts:new Date().toISOString()};
-  try{localStorage.setItem('omega_character_record',JSON.stringify(rec));}catch(e){}
+  const { error } = await sb.from('character_records').upsert({name:n,dominant_trait:dt,inheritance_mode:im,legacy_statement:ls,updated_at:new Date().toISOString()});
+  if(error){ alert('Could not save: '+error.message); return; }
   const m=document.getElementById('char-saved-msg'); m.style.display='block';
   setTimeout(()=>m.style.display='none',3000);
 });
@@ -294,6 +294,13 @@ async function boot(){
   const a=parseFloat(d.axis_a)||1, b=parseFloat(d.axis_b)||1, c=parseFloat(d.axis_c)||1;
   const tier=Math.max(1,Math.floor(Math.min(a,b,c)));
   const ch=sign&&CHAR_MAP[sign]?CHAR_MAP[sign]:null;
+  const rec=(await sb.from('character_records').select('name,dominant_trait,inheritance_mode,legacy_statement').eq('user_id',sess.user.id).maybeSingle()).data;
+  if(rec){
+    if(document.getElementById('char-name-in')) document.getElementById('char-name-in').value=rec.name||'';
+    if(document.getElementById('dom-trait')) document.getElementById('dom-trait').value=rec.dominant_trait||'';
+    if(document.getElementById('inherit-mode')) document.getElementById('inherit-mode').value=rec.inheritance_mode||'';
+    if(document.getElementById('legacy-stmt')) document.getElementById('legacy-stmt').value=rec.legacy_statement||'';
+  }
   if(ch){
     document.getElementById('cm-sign').textContent=sign.toUpperCase()+' . '+ch.archetype;
     document.getElementById('cm-name').textContent=d.display_name||ch.name;

@@ -77,6 +77,11 @@ a{color:inherit;text-decoration:none}
 </style>
 </head>
 <body>
+<div id="gate" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;font-family:'Cinzel Decorative',serif">
+  <div style="font-size:56px;color:#C9A84C">&#937;</div>
+  <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:3px;color:#85837b">VERIFYING ARCHITECT IDENTITY&hellip;</div>
+</div>
+<div id="app-shell" style="display:none">
 <div class="shell">
 <aside class="side" id="omega-side" data-page="income"></aside>
 <main class="main">
@@ -129,6 +134,7 @@ a{color:inherit;text-decoration:none}
 <div class="three-col" id="invest-grid"></div>
 
 </main>
+</div>
 </div>
 
 <script type="module">
@@ -223,10 +229,26 @@ async function loadKPIs(){
   document.getElementById('kpi-publish').textContent='READY TO ACTIVATE';
 }
 
-buildAllocBars();
-buildInvestGrid();
-setTimeout(buildRevenueChart,100);
-loadKPIs();
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+  const pr=(await sb.from('profiles').select('is_owner').eq('id',sess.user.id).maybeSingle()).data;
+  if(!pr?.is_owner){
+    document.getElementById('gate').innerHTML=`
+      <div style="font-size:56px;color:#8B0000">&#937;</div>
+      <div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:#8B0000;font-weight:700">ACCESS DENIED</div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;color:#85837b;line-height:1.7">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
+      <a href="/dashboard.html" style="font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:3px;color:#85837b;margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>`;
+    return;
+  }
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app-shell').style.display='block';
+  buildAllocBars();
+  buildInvestGrid();
+  setTimeout(buildRevenueChart,100);
+  loadKPIs();
+}
+boot();
 </script>
 <script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
 </body>

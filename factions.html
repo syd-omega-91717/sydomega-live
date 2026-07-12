@@ -105,18 +105,18 @@
   var EC={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
   // sign, glyph, faction, element, olympian, creed
   const F=[
-    ['Aries','\u2648','The Aegis Order','Fire','Ares','We think before we strike, and strike but once.','Kael Marren'],
-    ['Taurus','\u2649','The Gilded Hand','Metal','Aphrodite','What is built with beauty endures; what is traded with honour multiplies.','Isolde Vey'],
-    ['Gemini','\u264A','The Lumen Choir','Wind','Hermes','Let the word travel faster than the sword.','Rune & Ash Corvin'],
-    ['Cancer','\u264B','The Tidewardens','Water','Artemis','We carry our own across every threshold.','Sable Thorne'],
-    ['Leo','\u264C','The Solar Crown','Fire','Apollo','To rule is to be answerable to all you light.','Corin Blaze'],
-    ['Virgo','\u264D','The Grain Covenant','Sand','Athena','Nothing rises that was not first verified in the dark.','Meret Solane'],
-    ['Libra','\u264E','The Forge Guild','Wind','Hera','Balance is not found; it is hammered.','Adaeze Okonkwo-Reyes'],
-    ['Scorpio','\u264F','The Crimson Veil','Water','Demeter','We read the ending before it is written.','Vesper Noct'],
-    ['Sagittarius','\u2650','The Wild Hunt','Fire','Zeus','Every newcomer is quarry worth crowning.','Thane Rourke'],
-    ['Capricorn','\u2651','The Hearth Bastion','Metal','Hestia','Order is the slow fire that never goes out.','Priya Vashtar'],
-    ['Aquarius','\u2652','The Aether Senate','Wind','Hephaestus','We govern minds, and so we need no chains.','Zephyr Nakai'],
-    ['Pisces','\u2653','The Deep Concord','Water','Poseidon','All rivers remember the sea.','Marin Calder']
+    ['Aries','\u2648','The Aegis Order','Fire','Ares','We think before we strike, and strike but once.','Kael Marren','Mars foundry apprentice, 22. Not chosen -- found. Protagonist of THE ORIGIN.'],
+    ['Taurus','\u2649','The Gilded Hand','Metal','Aphrodite','What is built with beauty endures; what is traded with honour multiplies.','Isolde Vey','Runs Venus\u2019s largest atmospheric-engineering guild. Trusts contracts more than destiny.'],
+    ['Gemini','\u264A','The Lumen Choir','Wind','Hermes','Let the word travel faster than the sword.','Rune & Ash Corvin','Twin Mercury reconnaissance pilots -- one Knight role, shared between two people.'],
+    ['Cancer','\u264B','The Tidewardens','Water','Artemis','We carry our own across every threshold.','Sable Thorne','Selene-trained combat medic. The Knight the others actually trust with their lives.'],
+    ['Leo','\u264C','The Solar Crown','Fire','Apollo','To rule is to be answerable to all you light.','Corin Blaze','Solar Sanctum diplomat. Legitimizes the other Knights\u2019 authority while privately doubting their own.'],
+    ['Virgo','\u264D','The Grain Covenant','Sand','Athena','Nothing rises that was not first verified in the dark.','Meret Solane','Ceres Grand Archive researcher -- first to decode the reactivated frequency\u2019s data-bursts.'],
+    ['Libra','\u264E','The Forge Guild','Wind','Hera','Balance is not found; it is hammered.','Adaeze Okonkwo-Reyes','Earth\u2019s youngest-ever Balance Court mediator. The Order\u2019s real counterweight to Kael.'],
+    ['Scorpio','\u264F','The Crimson Veil','Water','Demeter','We read the ending before it is written.','Vesper Noct','Pluto\u2019s Obsidian Watch intelligence officer -- suspected the Shadow Zodiac before the Accord admitted it.'],
+    ['Sagittarius','\u2650','The Wild Hunt','Fire','Zeus','Every newcomer is quarry worth crowning.','Thane Rourke','Jupiter Tempest Fleet explorer-captain. First to confront a Shadow Zodiac vessel.'],
+    ['Capricorn','\u2651','The Hearth Bastion','Metal','Hestia','Order is the slow fire that never goes out.','Priya Vashtar','Saturn Ring Guard logistics commander. Keeps the other eleven Knights\u2019 ambitions from collapsing.'],
+    ['Aquarius','\u2652','The Aether Senate','Wind','Hephaestus','We govern minds, and so we need no chains.','Zephyr Nakai','Uranus Aurora Corps innovator -- built the shielding tech the Shadow Zodiac later weaponized.'],
+    ['Pisces','\u2653','The Deep Concord','Water','Poseidon','All rivers remember the sea.','Marin Calder','Neptune Tide Fleet cultural officer. Keeper of the Accord\u2019s collective memory.']
   ];
 
   function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
@@ -127,14 +127,14 @@
       document.getElementById('mine').innerHTML='<div class="mine"><div class="h">YOUR FACTION</div><div class="fn">'+me[2]+'</div>'+
         '<div class="meta">'+me[1]+' <b>'+me[0]+'</b> \u00B7 ELEMENT <b>'+me[3]+'</b> \u00B7 OLYMPIAN <b>'+me[4]+'</b></div>'+
         '<div class="creed">\u201C'+me[5]+'\u201D</div>'+
-        (me[6]?'<div class="creed" style="opacity:.7;font-size:.85em;margin-top:6px">Celestial Knight of this Order: <b>'+me[6]+'</b> &mdash; Zodiac Wars</div>':'')+'</div>';
+        (me[6]?'<div class="creed" style="opacity:.7;font-size:.85em;margin-top:6px">Celestial Knight of this Order: <b>'+me[6]+'</b> &mdash; Zodiac Wars<br><span style="opacity:.85">'+(me[7]||'')+'</span></div>':'')+'</div>';
     }
     var grid=document.getElementById('grid'); grid.innerHTML='';
     F.forEach(function(f){
       var c=EC[f[3]]||'#C9A84C';
       var el=document.createElement('div'); el.className='fc'+(f[0]===mySign?' mine-card':''); el.style.setProperty('--ec',c);
       el.innerHTML='<div class="fn">'+f[2]+'</div><div class="sg">'+f[1]+' '+f[0].toUpperCase()+' \u00B7 '+f[4]+'</div><div class="el">'+f[3].toUpperCase()+'</div><div class="cr">\u201C'+f[5]+'\u201D</div>'+
-        (f[6]?'<div class="cr" style="opacity:.65;font-size:.8em">Knight: '+f[6]+'</div>':'');
+        (f[6]?'<div class="cr" style="opacity:.65;font-size:.8em;margin-top:6px"><b>Knight: '+f[6]+'</b><br>'+(f[7]||'')+'</div>':'');
       grid.appendChild(el);
     });
   }

@@ -144,12 +144,13 @@
     if(mySign){
       var me=P.find(function(x){return x[0]===mySign;});
       if(me){
-        document.getElementById('mine').innerHTML='<div class="mine"><div class="h">YOUR FOURFOLD NAME \u2014 '+me[1]+' '+mySign.toUpperCase()+' \u00B7 '+me[2].toUpperCase()+'</div><div class="row">'+
+        document.getElementById('mine').innerHTML='<div class="mine"><div style="display:flex;align-items:center;gap:16px"><span data-omega-emblem="'+mySign+'" style="display:inline-block;width:80px;height:80px;flex-shrink:0"></span><div><div class="h">YOUR FOURFOLD NAME \u2014 '+me[1]+' '+mySign.toUpperCase()+' \u00B7 '+me[2].toUpperCase()+'</div><div class="row">'+
           '<span>'+me[3]+'<small>GREEK  .  SPINE</small></span>'+
           '<span>'+me[4]+'<small>ROMAN</small></span>'+
           '<span>'+me[5]+'<small>EGYPTIAN</small></span>'+
           '<span>'+me[6]+'<small>HINDU</small></span>'+
-          '</div></div>';
+          '</div></div></div></div>';
+        if(window.OmegaEmblem){ var el=document.querySelector('[data-omega-emblem="'+mySign+'"]'); if(el) el.innerHTML=window.OmegaEmblem.svg(mySign); }
       }
     }
   }

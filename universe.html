@@ -153,7 +153,7 @@ const FRANCHISES=[
   {uni:'III',title:'WRATH OF THE GODS',col:'#E86A3A',desc:'12 Olympians. One frequency. One Order. The gods compete for the 9.1717Hz source.',items:['OLYMPIAN SOVEREIGNTY','GODS OF THE MATRIX','PANTHEON WARS','GOD ICONS']},
   {uni:'IV',title:'BABYLON SINGULARITY',col:'#9B6BF0',desc:'The Ziggurat of Babylon pulses with data-lattices. ZAHRA holds the artifact that speaks the Frequency.',items:['THE BABYLON SINGULARITY','91717 UNDERGROUND PROTOCOLS','BABYLON CODE BREAKER']},
   {uni:'V',title:"SOLOMON'S SOVEREIGNTY",col:'#D9B86A',desc:"Solomon's wisdom encoded into the matrix. 28 Kings of the Lunar Mansions. Resonance: 9.1717Hz.",items:["SOLOMON'S VAULT","LEDGER WARS","SOLOMON'S ARENA"]},
-  {uni:'VI',title:'ZODIAC FLUX',col:'#00E5FF',desc:'12 houses. 12 archetypes. 12 destinies. The winner becomes the Omega Sovereign.',items:['ARIES IGNITION','THE TWELVE HOUSES','ZODIAC ARENA','ZODIAC FLUX SIGNS']},
+  {uni:'VI',title:'ZODIAC FLUX',col:'#00E5FF',desc:'The Solar Accord binds twelve worlds under a fragile twelve-thousand-year peace. When the Solar Nexus reactivates, the Celestial Knights are chosen and the Shadow Zodiac makes its move. Twelve houses. Twelve Knights. One fracturing Order.',items:['THE ORIGIN (Film 1, in production)','CELESTIAL KNIGHTS (companion series)','THE TWELVE FACTIONS','THE SHADOW ZODIAC']},
   {uni:'VII',title:'AI SOVEREIGN',col:'#3fb27f',desc:'12 AI agents gain consciousness. SOVEREIGN agent must decide. The first AI civilizational drama.',items:['THE AGENT AWAKENING','AGENT WARS','AGENT COMMANDER','AGENT GENESIS NFT']},
 ];
 
@@ -179,11 +179,12 @@ function drawFranchiseGlyph(cv,col){
 
 function buildFranchises(){
   const g=document.getElementById('franchise-grid');g.innerHTML='';
+  const LINKS={'THE ORIGIN (Film 1, in production)':'cinema.html','THE TWELVE FACTIONS':'factions.html'};
   FRANCHISES.forEach(fr=>{
     const cv=document.createElement('canvas');cv.className='fc-canvas';
     const c=document.createElement('div');c.className='fc';
     c.style.borderTopColor=fr.col+'55';
-    c.innerHTML=`<div class="fc-num">FRANCHISE ${fr.uni}</div><div class="fc-title" style="color:${fr.col}">${fr.title}</div><div class="fc-desc">${fr.desc}</div><div class="fc-items">${fr.items.map(i=>`<div class="fi"><b>${i}</b><span class="fi-type" style="color:${fr.col};border-color:${fr.col}44">ITEM</span></div>`).join('')}</div>`;
+    c.innerHTML=`<div class="fc-num">FRANCHISE ${fr.uni}</div><div class="fc-title" style="color:${fr.col}">${fr.title}</div><div class="fc-desc">${fr.desc}</div><div class="fc-items">${fr.items.map(i=>LINKS[i]?`<a class="fi" href="${LINKS[i]}" style="cursor:pointer"><b>${i}</b><span class="fi-type" style="color:${fr.col};border-color:${fr.col}44">OPEN &rarr;</span></a>`:`<div class="fi"><b>${i}</b><span class="fi-type" style="color:${fr.col};border-color:${fr.col}44">ITEM</span></div>`).join('')}</div>`;
     c.insertBefore(cv,c.firstChild);
     g.appendChild(c);
     requestAnimationFrame(()=>drawFranchiseGlyph(cv,fr.col));

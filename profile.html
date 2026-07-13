@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#C9A84C"/>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 -- Major Sleiman Youssef Dagher</title>
+<title>&#937; SYD OMEGA 91717 -- My Profile</title>
 <meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -19,14 +19,14 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717 -- Major Sleiman Youssef Dagher"/>
+<meta property="og:title" content="SYD OMEGA 91717 -- Sovereign Member Profile"/>
 <meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/profile.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717 -- Major Sleiman Youssef Dagher"/>
+<meta name="twitter:title" content="SYD OMEGA 91717 -- Sovereign Member Profile"/>
 <meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
@@ -274,7 +274,8 @@ a{color:inherit;text-decoration:none}
     <div class="tab-panel" id="tab-identity">
       <div class="sechead">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label">FULL NAME</div><div class="idf-val">MAJOR SLEIMAN YOUSSEF DAGHER</div></div>
+        <div class="id-field"><div class="idf-label">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
+        <div id="owner-only-identity" style="display:none">
         <div class="id-field"><div class="idf-label">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
         <div class="id-field"><div class="idf-label">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
         <div class="id-field"><div class="idf-label">DATE OF BIRTH</div><div class="idf-val">19 APRIL 1982</div></div>
@@ -283,14 +284,16 @@ a{color:inherit;text-decoration:none}
         <div class="id-field"><div class="idf-label">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
         <div class="id-field"><div class="idf-label">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
         <div class="id-field"><div class="idf-label">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
-        <div class="id-field"><div class="idf-label">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)">ARIES &#x2648; -- FIRE ELEMENT</div></div>
-        <div class="id-field"><div class="idf-label">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)">SENTINEL AGENT</div></div>
-        <div class="id-field"><div class="idf-label">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)">ARENITE (ERC-20, POLYGON)</div></div>
+        </div>
+        <div class="id-field"><div class="idf-label">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
+        <div class="id-field"><div class="idf-label">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
+        <div class="id-field"><div class="idf-label">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)" id="idf-token">--</div></div>
       </div>
     </div>
 
     <!-- TAB: CREDENTIALS -->
     <div class="tab-panel" id="tab-credentials">
+      <div id="owner-only-credentials" style="display:none">
       <div class="sechead">OFFICIAL ENGINEERING CREDENTIALS</div>
       <div class="pad">
         <div class="credential-card">
@@ -315,8 +318,12 @@ a{color:inherit;text-decoration:none}
           <div class="cc-chip"><div class="cc-chip-lines"><div></div><div></div><div></div><div></div></div></div>
         </div>
       </div>
+      </div>
+      <div id="member-credentials-note" style="display:none;padding:40px 20px;text-align:center;font-family:var(--M);font-size:11px;color:var(--muted)">
+        Professional credential cards are set individually. This section is available to the Architect only for the platform's own registration.
+      </div>
       <!-- 12 Certs - all issued -->
-      <div class="sechead">12 SOVEREIGN CERTIFICATES -- ALL ISSUED AT OMEGA GRADE</div>
+      <div class="sechead">YOUR SOVEREIGN CERTIFICATES</div>
       <div class="pad" id="cert-display"></div>
     </div>
 
@@ -481,11 +488,12 @@ const ACHIEV=[
 ];
 
 const MATS=[
-  {n:1,name:'SAND',col:'#D9B86A',thresh:'0.001'},{n:2,name:'GLASS',col:'#A9C2D8',thresh:'1.000'},
-  {n:3,name:'IRON',col:'#C7CDD6',thresh:'2.000'},{n:4,name:'STEEL',col:'#8B8F9C',thresh:'3.000'},
-  {n:5,name:'TITANIUM',col:'#607D8B',thresh:'4.000'},{n:6,name:'CARBON',col:'#455A64',thresh:'5.000'},
-  {n:7,name:'GOLD',col:'#C9A84C',thresh:'6.000'},{n:8,name:'PLATINUM',col:'#E8D5B7',thresh:'7.000'},
-  {n:9,name:'OMEGA MASTER',col:'#FFD700',thresh:'9.000'},
+  {n:1,name:'SAND',col:'#D9B86A',thresh:'1.73'},{n:2,name:'GLASS',col:'#A9C2D8',thresh:'2.99'},
+  {n:3,name:'IRON',col:'#C7CDD6',thresh:'4.25'},{n:4,name:'STEEL',col:'#8B8F9C',thresh:'5.51'},
+  {n:5,name:'TITANIUM',col:'#607D8B',thresh:'6.77'},{n:6,name:'CARBON',col:'#455A64',thresh:'8.03'},
+  {n:7,name:'GOLD',col:'#C9A84C',thresh:'9.29'},{n:8,name:'PLATINUM',col:'#E8D5B7',thresh:'10.55'},
+  {n:9,name:'DIAMOND',col:'#9B6BF0',thresh:'11.81'},{n:10,name:'ADAMANT',col:'#00E5FF',thresh:'13.07'},
+  {n:11,name:'AETHER',col:'#E2C86D',thresh:'14.33'},{n:12,name:'OMEGA MASTER',col:'#FFD700',thresh:'15.59'},
 ];
 
 const PHASES=[
@@ -509,33 +517,65 @@ function drawAchBadge(cv,sym,col){
     ctx.fillText(sym,40,41);ctx.shadowBlur=0;requestAnimationFrame(f);}f();
 }
 
-function buildAchievements(){
+async function buildAchievements(uid){
   const g=document.getElementById('ach-grid');g.innerHTML='';
-  ACHIEV.forEach(a=>{
-    const card=document.createElement('div');card.className='ach-badge';
-    card.style.cssText=`border-color:${a.col}55;border-top:2px solid ${a.col}88`;
+  let trophyCount=0,medalCount=0,certCount=0;
+  try{
+    const [t,m,c]=await Promise.all([
+      sb.from('trophies').select('id',{count:'exact',head:true}).eq('user_id',uid),
+      sb.from('medals').select('id',{count:'exact',head:true}).eq('user_id',uid),
+      sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',uid),
+    ]);
+    trophyCount=t.count||0; medalCount=m.count||0; certCount=c.count||0;
+  }catch(e){}
+  ACHIEV.forEach((a,i)=>{
+    const isMedal=a.type==='MEDAL', isCert=a.type==='CERT', isTrophy=!isMedal&&!isCert;
+    const idx=isTrophy?a.n:isMedal?a.n-12:a.n-24;
+    const earned=isTrophy?(idx<=trophyCount):isMedal?(idx<=medalCount):(idx<=certCount);
+    const card=document.createElement('div');card.className='ach-badge'+(earned?'':' locked');
+    card.style.cssText=`border-color:${a.col}55;border-top:2px solid ${earned?a.col+'88':a.col+'22'};${earned?'':'opacity:.4'}`;
     const cv=document.createElement('canvas');cv.className='ab-canvas';
-    card.innerHTML=`<div class="ab-name" style="color:${a.col}">${a.name}</div><span class="ab-tier" style="color:${a.col};border-color:${a.col}44">${a.type||'TROPHY'}</span>`;
+    card.innerHTML=`<div class="ab-name" style="color:${earned?a.col:'var(--muted)'}">${a.name}</div><span class="ab-tier" style="color:${earned?a.col:'var(--muted)'};border-color:${earned?a.col+'44':'rgba(133,131,123,.2)'}">${earned?(a.type||'TROPHY'):'LOCKED'}</span>`;
     card.insertBefore(cv,card.firstChild);
     g.appendChild(card);
-    requestAnimationFrame(()=>drawAchBadge(cv,a.sym,a.col));
+    if(earned) requestAnimationFrame(()=>drawAchBadge(cv,a.sym,a.col));
   });
 }
 
-function buildTiers(){
+function buildTiers(realAuth){
   const g=document.getElementById('tiers-display');
-  g.innerHTML=MATS.map(m=>`<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:32px;height:32px;border-radius:50%;border:2px solid ${m.col};display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:12px;font-weight:700;color:${m.col};box-shadow:0 0 12px ${m.col}55;flex-shrink:0">${m.n}</div><div style="flex:1"><div style="font-family:var(--D);font-size:13px;color:${m.col};font-weight:700;margin-bottom:2px">${m.name}</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">THRESHOLD: ${m.thresh}</div></div><span style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 8px;border:1px solid ${m.col}55;color:${m.col}">SEALED &#x2713;</span></div>`).join('');
+  g.innerHTML=MATS.map(m=>{
+    const sealed=realAuth>=parseFloat(m.thresh);
+    return `<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:32px;height:32px;border-radius:50%;border:2px solid ${sealed?m.col:m.col+'33'};display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:12px;font-weight:700;color:${sealed?m.col:'rgba(133,131,123,.4)'};${sealed?'box-shadow:0 0 12px '+m.col+'55;':''}flex-shrink:0">${m.n}</div><div style="flex:1"><div style="font-family:var(--D);font-size:13px;color:${sealed?m.col:'rgba(133,131,123,.5)'};font-weight:700;margin-bottom:2px">${m.name}</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">THRESHOLD: ${m.thresh}</div></div><span style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 8px;border:1px solid ${sealed?m.col+'55':'rgba(133,131,123,.25)'};color:${sealed?m.col:'var(--muted)'}">${sealed?'SEALED &#x2713;':'LOCKED'}</span></div>`;
+  }).join('');
 }
 
-function buildPhases(){
+function buildPhases(realAuth){
   const g=document.getElementById('phases-display');
-  g.innerHTML=PHASES.map((p,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(201,168,76,.6);background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:10px;color:var(--gold);flex-shrink:0">&#x2713;</div><div style="font-family:var(--D);font-size:12px;color:var(--solar);font-weight:700;flex:1">${p.n}. ${p.name}</div><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--green)">COMPLETE</span></div>`).join('');
+  const APEX=15.588;
+  g.innerHTML=PHASES.map((p,i)=>{
+    const done=realAuth>=((i+1)/12)*APEX;
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:28px;height:28px;border-radius:50%;border:2px solid ${done?'rgba(201,168,76,.6)':'rgba(133,131,123,.3)'};background:${done?'rgba(201,168,76,.12)':'transparent'};display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:10px;color:${done?'var(--gold)':'var(--muted)'};flex-shrink:0">${done?'&#x2713;':(i+1)}</div><div style="font-family:var(--D);font-size:12px;color:${done?'var(--solar)':'rgba(233,230,220,0.4)'};font-weight:700;flex:1">${p.n}. ${p.name}</div><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:${done?'var(--green)':'var(--muted)'}">${done?'COMPLETE':'PENDING'}</span></div>`;
+  }).join('');
 }
 
-function buildCerts(){
+async function buildCerts(uid){
   const CERTS=['GENESIS CERTIFICATE','KNOWLEDGE FOUNDATION','MASTERY LEVEL I','MASTERY LEVEL II','ECONOMIC ANALYST','CELESTIAL NAVIGATOR','SOVEREIGN ARCHITECT','HERITAGE SCHOLAR','ORACLE PROPHET','ORDER CONSULTANT','PLATFORM MASTER','OMEGA SOVEREIGN'];
   const g=document.getElementById('cert-display');
-  g.innerHTML='<div style="display:flex;flex-direction:column;gap:0">'+CERTS.map((c,i)=>`<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="font-family:var(--D);font-size:18px;color:rgba(201,168,76,.4);min-width:28px">${i+1}</div><div style="flex:1"><div style="font-family:var(--D);font-size:12px;color:var(--solar);font-weight:700">${c}</div></div><span style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 8px;border:1px solid rgba(201,168,76,.4);color:var(--gold)">OMEGA GRADE</span><span style="font-family:var(--M);font-size:8px;color:var(--green);letter-spacing:1px">ISSUED &#x2713;</span></div>`).join('')+'</div>';
+  let earnedTitles=[];
+  try{
+    const r=await sb.from('certificates').select('title').eq('user_id',uid);
+    earnedTitles=(r.data||[]).map(x=>x.title);
+  }catch(e){}
+  g.innerHTML='<div style="display:flex;flex-direction:column;gap:0">'+CERTS.map((c,i)=>{
+    const earned=earnedTitles.some(t=>t&&t.toUpperCase().indexOf(c.split(' ')[0])!==-1) || earnedTitles.includes(c);
+    return `<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="font-family:var(--D);font-size:18px;color:rgba(201,168,76,.4);min-width:28px">${i+1}</div><div style="flex:1"><div style="font-family:var(--D);font-size:12px;color:${earned?'var(--solar)':'rgba(233,230,220,0.4)'};font-weight:700">${c}</div></div>`+
+      (earned
+        ? `<span style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 8px;border:1px solid rgba(201,168,76,.4);color:var(--gold)">EARNED</span><span style="font-family:var(--M);font-size:8px;color:var(--green);letter-spacing:1px">ISSUED &#x2713;</span>`
+        : `<span style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">NOT YET EARNED</span>`)
+      +`</div>`;
+  }).join('')+'</div>'+
+  (earnedTitles.length ? '' : '<div style="padding:16px 0;text-align:center;font-family:var(--M);font-size:10px;color:var(--muted)">Certificates are earned through the Academy and Exam Hall.</div>');
 }
 
 function buildConsole(){
@@ -567,11 +607,37 @@ async function boot(){
     document.getElementById('bar-b').style.width='100%';
     document.getElementById('bar-c').style.width='100%';
   },400);
-  const pr=await sb.from('profiles').select('is_owner,display_name').eq('id',sess.user.id).maybeSingle();
+  const pr=await sb.from('profiles').select('is_owner,display_name,sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
   const isOwner=pr.data?.is_owner||false;
+  const d=pr.data||{};
+  const a=Number(d.axis_a||1), b=Number(d.axis_b||1), c=Number(d.axis_c||1);
+  const realAuth=Math.sqrt(a*a+b*b+c*c);
+
+  const BOUND={
+    Aries:{agent:'Sentinel',token:'PYRON',element:'Fire'},Taurus:{agent:'Merchant',token:'AURUM',element:'Metal'},
+    Gemini:{agent:'Scout',token:'ZEPHYR',element:'Wind'},Cancer:{agent:'Warden',token:'NEREID',element:'Water'},
+    Leo:{agent:'Sovereign',token:'SOLARI',element:'Fire'},Virgo:{agent:'Auditor',token:'ARENITE',element:'Sand'},
+    Libra:{agent:'Proxy',token:'FORGEON',element:'Wind'},Scorpio:{agent:'Oracle',token:'STYX',element:'Water'},
+    Sagittarius:{agent:'Beacon',token:'EMBER',element:'Fire'},Capricorn:{agent:'Analyst',token:'FERRUM',element:'Metal'},
+    Aquarius:{agent:'Tutor',token:'AETHER',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
+  };
+  document.getElementById('idf-fullname').textContent=(d.display_name||'SOVEREIGN MEMBER').toUpperCase();
+  const bound=d.sign&&BOUND[d.sign];
+  if(bound){
+    document.getElementById('idf-sign').textContent=d.sign.toUpperCase()+' -- '+bound.element.toUpperCase()+' ELEMENT';
+    document.getElementById('idf-agent').textContent=bound.agent.toUpperCase()+' AGENT';
+    document.getElementById('idf-token').textContent=bound.token;
+  } else {
+    document.getElementById('idf-sign').textContent='SET YOUR COSMOLOGY';
+    document.getElementById('idf-agent').textContent='--';
+    document.getElementById('idf-token').textContent='--';
+  }
+
   if(isOwner){
     document.getElementById('arch-console').style.display='block';
     buildConsole();
+    document.getElementById('owner-only-identity').style.display='';
+    document.getElementById('owner-only-credentials').style.display='';
     /* SHOW ACCESS CONTROL TAB */
     const atb=document.getElementById('access-tab-btn');
     if(atb) atb.style.display='flex';
@@ -579,8 +645,10 @@ async function boot(){
     loadMembers();
     /* Auto-reload pending count every 30s */
     setInterval(loadMembers, 30000);
+  } else {
+    document.getElementById('member-credentials-note').style.display='block';
   }
-  buildAchievements();buildTiers();buildPhases();buildCerts();
+  buildAchievements(sess.user.id);buildTiers(realAuth);buildPhases(realAuth);buildCerts(sess.user.id);
 }
 boot();
 </script>

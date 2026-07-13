@@ -262,6 +262,15 @@ document.getElementById('btn-book').addEventListener('click', async () => {
   if(message.length < 20){ alert('Please describe your request in at least 20 characters.'); return; }
   const sess = (await sb.auth.getSession()).data.session;
   if(!sess) return;
+  const pr = await sb.from('profiles').select('membership_tier').eq('id',sess.user.id).maybeSingle();
+  const memberTier = Number(pr.data?.membership_tier)||1;
+  const canBook = await new Promise(resolve=>{
+    function check(){ resolve(window.OmegaCanon.tierUnlocks(memberTier,'consultancy_book')); }
+    if(window.OmegaCanon && window.OmegaCanon.ready){ check(); return; }
+    let tries=0;
+    const t=setInterval(()=>{ tries++; if(window.OmegaCanon && window.OmegaCanon.ready){ clearInterval(t); check(); } else if(tries>20){ clearInterval(t); resolve(true); } },150);
+  });
+  if(!canBook){ alert('Architect tier or higher is required to book consultancy sessions. Upgrade at /subscriptions.html'); return; }
   const {error} = await sb.from('consult_requests').insert({
     user_id: sess.user.id, domain, message, urgency,
     commission_rate: 9.17, confidentiality_accepted: true, status: 'pending'

@@ -195,3 +195,42 @@ CREATE TRIGGER award_points_on_exam AFTER INSERT ON public.exam_results
   FOR EACH ROW EXECUTE FUNCTION public.trg_award_exam_points();
 
 COMMIT;
+
+-- ============================================================================
+-- ADDENDUM -- tie point earning directly to the real 12x12x9x9x9 nested matrix
+-- (matrix_progress, from omega_nested_matrix.sql), not just the flat
+-- task/exam events. Advancing any of the 12 real tracks awards real points,
+-- so the points system genuinely reflects 12x12x9x9x9 engagement, not a
+-- disconnected side mechanic.
+-- ============================================================================
+BEGIN;
+
+CREATE OR REPLACE FUNCTION public.trg_award_matrix_points()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE moved boolean; BEGIN
+  moved := (NEW.a > OLD.a) OR (NEW.b > OLD.b) OR (NEW.c > OLD.c);
+  IF moved THEN
+    PERFORM public.award_points(NEW.user_id, 2, 'matrix_advance',
+      'Track '||NEW.track||' phase '||NEW.phase||' advanced to ('||NEW.a||','||NEW.b||','||NEW.c||')');
+  END IF;
+  RETURN NEW;
+END; $$;
+DROP TRIGGER IF EXISTS award_points_on_matrix_advance ON public.matrix_progress;
+CREATE TRIGGER award_points_on_matrix_advance AFTER UPDATE ON public.matrix_progress
+  FOR EACH ROW EXECUTE FUNCTION public.trg_award_matrix_points();
+
+-- summary view: real points balance alongside real matrix completion, so
+-- asset-facing pages (vault, treasury, wallet, blockchain) can show both
+-- together as one coherent "your standing" picture.
+CREATE OR REPLACE FUNCTION public.my_sovereign_summary()
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE uid uuid := auth.uid(); pts int; matrix_total numeric; BEGIN
+  IF uid IS NULL THEN RETURN jsonb_build_object('ok',false); END IF;
+  SELECT COALESCE(SUM(delta),0) INTO pts FROM public.sovereign_points_ledger WHERE user_id=uid;
+  SELECT COALESCE(SUM(public.matrix_node(a,b,c)),0) INTO matrix_total FROM public.matrix_progress WHERE user_id=uid;
+  RETURN jsonb_build_object('ok',true,'points',pts,'matrix_nodes_reached',matrix_total,'matrix_nodes_total',104976,
+    'matrix_pct', round(matrix_total/104976.0*100,3));
+END; $$;
+GRANT EXECUTE ON FUNCTION public.my_sovereign_summary() TO authenticated;
+
+COMMIT;

@@ -226,10 +226,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="cstat-val" id="stat-honors">--</div>
       <div class="cstat-sub">Your trophies / medals</div>
     </a>
-    <a href="media.html" class="cstat">
-      <div class="cstat-label">Media Titles</div>
-      <div class="cstat-val">288</div>
-      <div class="cstat-sub">Films + series + games</div>
+    <a href="#" class="cstat" id="stat-ts-link">
+      <div class="cstat-label">Time Sovereign</div>
+      <div class="cstat-val" id="stat-ts">--</div>
+      <div class="cstat-sub" id="stat-ts-sub">Loading...</div>
     </a>
     <a href="agents.html" class="cstat">
       <div class="cstat-label">Active Agents</div>
@@ -415,6 +415,20 @@ async function loadDashboard(){
   document.getElementById('stat-nodes').textContent = Math.max(1,node);
   document.getElementById('stat-nodes-sub').textContent = auth>=15.588-0.001 ? '9x9x9 complete' : (Math.max(1,node)+' of 729');
   document.getElementById('stat-honors').textContent = ((d.certificates_earned||0)+(d.trophies_earned||0)+(d.medals_earned||0))+'+';
+
+  // Time Sovereign -- real cumulative presence, milestone at 9h17m17s (33437s)
+  try{
+    const ts = await supabase.rpc('my_time_sovereign');
+    const tsd = ts.data;
+    if(tsd && tsd.ok){
+      const hrs=Math.floor(tsd.seconds/3600), mins=Math.floor((tsd.seconds%3600)/60);
+      document.getElementById('stat-ts').textContent = hrs+'h '+mins+'m';
+      document.getElementById('stat-ts-sub').textContent = tsd.awarded
+        ? 'Time Sovereign certificate earned'
+        : tsd.pct+'% to 9h17m17s';
+      document.getElementById('stat-ts-link').href = tsd.awarded ? '/honors.html' : '/dashboard.html';
+    }
+  }catch(e){ document.getElementById('stat-ts-sub').textContent='Unavailable'; }
 
   // ascension track -- real level derived from authority (1..9)
   const lvl = Math.max(1, Math.min(9, Math.ceil(auth/15.588*9)));

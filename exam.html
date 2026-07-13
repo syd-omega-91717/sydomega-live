@@ -219,6 +219,9 @@ function startExam(ex){
 function renderQuestion(){
   const q=session.questions[session.current];
   const total=session.questions.length;
+  document.getElementById('q-num').style.display='';
+  document.getElementById('q-text').style.display='';
+  document.getElementById('q-options').style.display='';
   document.getElementById('q-num').textContent=`QUESTION ${session.current+1} OF ${total}`;
   document.getElementById('q-text').textContent=q.q;
   document.getElementById('es-fill').style.width=((session.current/total)*100)+'%';
@@ -287,8 +290,10 @@ function endExam(){
 }
 
 function startTimer(s){
+  clearInterval(timerInterval);
   let rem=s;
   const el=document.getElementById('es-timer');
+  el.style.color='';
   timerInterval=setInterval(()=>{
     rem--;
     const m=Math.floor(rem/60),sc=rem%60;

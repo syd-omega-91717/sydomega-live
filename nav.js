@@ -57,7 +57,6 @@
      sub:[['vault','SOVEREIGN VAULT','/vault.html'],['treasury','RESERVE','/treasury.html'],
           ['wallet','WALLET','/wallet.html'],['blockchain','BLOCKCHAIN','/blockchain.html'],
           ['payments','PAYMENTS','/payments.html'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
-          ['membership','MEMBERSHIP','/membership.html'],
           ['marketplace','MARKETPLACE','/marketplace.html'],['portfolio','PORTFOLIO','/portfolio.html'],
           ['income','INCOME','/income.html'],['evolution','EVOLUTION','/evolution.html'],
           ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/sigil.html']]},

@@ -50,6 +50,7 @@
     if (canon) {
       api.tracks = canon.tracks || []; api.structure = canon.structure; api.elementSystem = canon.element_system;
       api.tiers = canon.tiers || []; api.tierFeatures = canon.tier_features || {};
+      api.loreLattice = canon.lore_lattice || null;
     }
     if (els) { api.elements = els.elements || []; api.signElement = els.sign_element || {}; }
     api.ready = true;

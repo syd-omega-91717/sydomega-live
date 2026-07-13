@@ -10,7 +10,7 @@
   window.__omegaMenu = 1;
 
   var GROUPS = [
-    ['PROGRESSION', [
+    ['PROGRESSION', '#E86A3A', [
       ['\u25B2', 'Ascend', '/ascension.html'],
       ['\u2680', 'Grades', '/grades.html'],
       ['\u2681', 'Levels', '/levels.html'],
@@ -21,7 +21,7 @@
       ['\u2609', 'Elements', '/elements.html'],
       ['\u25B3', 'Exam Hall', '/exam.html']
     ]],
-    ['CORE', [
+    ['CORE', '#00E5FF', [
       ['\u2302', 'Dashboard', '/dashboard.html'],
       ['\u25C6', 'Identity', '/identity.html'],
       ['\u2609', 'Cosmos', '/cosmos.html'],
@@ -34,7 +34,7 @@
       ['\u2691', 'Beacon', '/beacon.html'],
       ['\u2600', 'Agents', '/agents.html']
     ]],
-    ['EXPERIENCE', [
+    ['EXPERIENCE', '#9B6BF0', [
       ['\u2726', 'Academy', '/academy.html'],
       ['\u25B6', 'Games', '/gaming.html'],
       ['\u2638', 'Universe', '/universe.html'],
@@ -42,7 +42,7 @@
       ['\u25A3', 'Media', '/media.html'],
       ['\u2b21', 'Sigil Vault', '/sigil.html']
     ]],
-    ['ASSETS', [
+    ['ASSETS', '#C9A84C', [
       ['\u03A9', 'Vault', '/vault.html'],
       ['\u25C8', 'Treasury', '/treasury.html'],
       ['\u2263', 'Ledger', '/ledger.html'],
@@ -54,7 +54,7 @@
       ['\u25B3', 'Subscriptions', '/subscriptions.html'],
       ['\u2696', 'Membership', '/membership.html']
     ]],
-    ['THE ORDER', [
+    ['THE ORDER', '#8B0000', [
       ['\u2318', 'Family', '/family.html'],
       ['\u265A', 'Kings', '/kings.html'],
       ['\u2691', 'Hall', '/hall.html'],
@@ -66,7 +66,7 @@
       ['\u2696', 'Charter', '/charter.html'],
       ['\u2696', 'Compliance', '/compliance.html']
     ]],
-    ['SERVICES', [
+    ['SERVICES', '#3fb27f', [
       ['\u2723', 'Services', '/services.html'],
       ['\u25C9', 'Intelligence', '/intelligence.html'],
       ['\u2756', 'Chatbot', '/chatbot.html'],
@@ -80,7 +80,7 @@
       ['\u2609', 'Prediction', '/prediction.html'],
       ['\u2b21', 'Grid', '/grid.html']
     ]],
-    ['COMMUNITY', [
+    ['COMMUNITY', '#34C6E6', [
       ['\u2695', 'News', '/news.html'],
       ['\u25C8', 'Social Hub', '/social.html'],
       ['\u2696', 'Events', '/events.html'],
@@ -89,11 +89,11 @@
       ['\u25CE', 'Evolution', '/evolution.html'],
       ['\u2727', 'Search', '/search.html']
     ]],
-    ['LIFESTYLE', [
+    ['LIFESTYLE', '#E2C86D', [
       ['\u2695', 'Health', '/health.html'],
       ['\u2708', 'Travel', '/travel.html']
     ]],
-    ['ACCOUNT', [
+    ['ACCOUNT', '#A9C2D8', [
       ['\u25CF', 'Profile', '/profile.html'],
       ['\u2699', 'Settings', '/settings.html'],
       ['\u25C6', 'Passport', '/passport.html'],
@@ -115,11 +115,32 @@
     '.om-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}',
     '.om-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:1px solid rgba(201,168,76,.22);background:rgba(255,255,255,.02);border-radius:12px;color:#d8d5cb;text-decoration:none;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1px;transition:all .2s}',
     '.om-card:hover{border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.08);color:#E2C86D;transform:translateY(-2px)}',
-    '.om-ic{font-size:22px;color:#C9A84C;line-height:1}',
+    '.om-ic{width:40px;height:40px;display:inline-block}',
+    '.om-card:hover .om-ic{filter:brightness(1.3)}',
     '@media(max-width:760px){#om-ov{padding-top:58px}.om-cards{grid-template-columns:repeat(3,1fr)}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'om-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
+
+  function fillIcons(root) {
+    var els = root.querySelectorAll('.om-ic');
+    function fill() {
+      if (!window.OmegaEmblem) return false;
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        if (el.__filled) continue;
+        el.innerHTML = window.OmegaEmblem.ring(el.getAttribute('data-glyph'), el.getAttribute('data-col'), {});
+        el.__filled = 1;
+      }
+      return true;
+    }
+    if (fill()) return;
+    var tries = 0;
+    var t = setInterval(function () {
+      tries++;
+      if (fill() || tries > 20) clearInterval(t);
+    }, 150);
+  }
 
   function build() {
     var btn = document.createElement('button'); btn.id = 'om-open'; btn.type = 'button'; btn.setAttribute('aria-label', 'All pages');
@@ -130,13 +151,14 @@
     var html = '<button id="om-close" aria-label="Close">\u00D7</button><div id="om-inner"><div id="om-title">SYD OMEGA 91717</div>';
     GROUPS.forEach(function (g) {
       html += '<div class="om-grp"><h4>' + g[0] + '</h4><div class="om-cards">';
-      g[1].forEach(function (p) {
-        html += '<a class="om-card" href="' + p[2] + '"><span class="om-ic">' + p[0] + '</span><span>' + p[1] + '</span></a>';
+      g[2].forEach(function (p) {
+        html += '<a class="om-card" href="' + p[2] + '"><span class="om-ic" data-glyph="' + p[0] + '" data-col="' + g[1] + '"></span><span>' + p[1] + '</span></a>';
       });
       html += '</div></div>';
     });
     html += '</div>';
     ov.innerHTML = html;
+    fillIcons(ov);
     document.body.appendChild(ov);
 
     btn.onclick = function () { ov.classList.add('open'); };

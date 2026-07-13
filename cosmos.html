@@ -419,19 +419,19 @@ function buildElements(){
     const c=document.createElement('div');c.className='el-card';
     c.style.setProperty('--col',e.col);
     c.style.cssText+=`border-left:3px solid ${e.col}77`;
-    c.innerHTML=`<span class="el-ring" style="display:inline-block;width:44px;height:44px"></span><div class="el-name" style="color:${e.col}">${e.name}</div><div class="el-type" style="color:${e.col}88">${e.type}</div><div class="el-desc">${e.desc}</div><div class="el-signs"><span style="font-family:var(--M);font-size:7px;color:var(--muted)">${e.signs}</span></div>`;
+    c.innerHTML=`<canvas class="el-canvas" width="200" height="90" style="width:100%;height:90px;display:block;margin-bottom:8px"></canvas><div class="el-name" style="color:${e.col}">${e.name}</div><div class="el-type" style="color:${e.col}88">${e.type}</div><div class="el-desc">${e.desc}</div><div class="el-signs"><span style="font-family:var(--M);font-size:7px;color:var(--muted)">${e.signs}</span></div>`;
     g.appendChild(c);
-    fillRing(c.querySelector('.el-ring'), e.n, e.col);
+    mountMotif(c.querySelector('.el-canvas'), e.motif||e.name.toLowerCase(), e.col);
   });
 }
 
-function fillRing(el, glyph, col){
-  if(!el) return;
-  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); return; }
+function mountMotif(canvas, motif, col){
+  if(!canvas) return;
+  if(window.OmegaElementMotif){ window.OmegaElementMotif.mount(canvas, motif, col, {}); return; }
   let tries=0;
   const t=setInterval(()=>{
     tries++;
-    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); clearInterval(t); }
+    if(window.OmegaElementMotif){ window.OmegaElementMotif.mount(canvas, motif, col, {}); clearInterval(t); }
     else if(tries>20) clearInterval(t);
   },150);
 }

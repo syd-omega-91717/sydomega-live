@@ -91,7 +91,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* ASCENSION PATH */
 .ascension{max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
-.asc-track{display:grid;grid-template-columns:repeat(9,1fr);gap:.5rem;margin-top:.75rem}
+.asc-track{display:grid;grid-template-columns:repeat(12,1fr);gap:.4rem;margin-top:.75rem}
 .asc-node{border:1px solid var(--border);padding:.75rem .5rem;text-align:center;position:relative;overflow:hidden;transition:all .3s}
 .asc-node.done{border-color:var(--gold);background:rgba(201,168,76,0.06)}
 .asc-node.current{border-color:var(--cyan);background:rgba(0,229,255,0.04);box-shadow:0 0 12px rgba(0,229,255,0.08)}
@@ -241,24 +241,51 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <!-- CMD GRID -->
   <div class="cmd-grid">
     <!-- Module Map -->
-    <div class="panel">
+    <div class="panel" style="grid-column:span 2">
       <div class="panel-header">
         <span class="panel-title">Platform Modules</span>
-        <span class="panel-badge">18 ACTIVE</span>
+        <span class="panel-badge" id="module-count">-- ACTIVE</span>
       </div>
       <div class="panel-body">
-        <div class="module-links">
-          <a href="dashboard.html" class="mod-link"><span class="mod-num">M01</span><span class="mod-name">Platform Core</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="#" class="mod-link"><span class="mod-num">M02</span><span class="mod-name">Consultancy Hub</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="#" class="mod-link"><span class="mod-num">M03</span><span class="mod-name">Gaming Layer</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="honors.html" class="mod-link"><span class="mod-num">M04</span><span class="mod-name">Achievement System</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="#" class="mod-link"><span class="mod-num">M05</span><span class="mod-name">Family System</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="media.html" class="mod-link"><span class="mod-num">M06</span><span class="mod-name">Media Universe</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="treasury.html" class="mod-link"><span class="mod-num">M07</span><span class="mod-name">Sovereign Vault</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="#" class="mod-link"><span class="mod-num">M08</span><span class="mod-name">Communication</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="#" class="mod-link"><span class="mod-num">M09</span><span class="mod-name">Horoscope Engine</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="#" class="mod-link"><span class="mod-num">M10</span><span class="mod-name">News Intelligence</span><span class="mod-arrow">&#8594;</span></a>
-          <a href="#" class="mod-link"><span class="mod-num">M11-18</span><span class="mod-name">Heritage / Progress / AI...</span><span class="mod-arrow">&#8594;</span></a>
+        <div class="module-links" style="display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem">
+          <div>
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.4rem 0 .3rem">PROGRESSION</div>
+            <a href="ascension.html" class="mod-link"><span class="mod-num">M01</span><span class="mod-name">Ascension (12 Levels)</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="matrix.html" class="mod-link"><span class="mod-num">M02</span><span class="mod-name">The Matrix</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="honors.html" class="mod-link"><span class="mod-num">M03</span><span class="mod-name">Honors &amp; Achievements</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="gates.html" class="mod-link"><span class="mod-num">M04</span><span class="mod-name">The 12 Gates</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="exam.html" class="mod-link"><span class="mod-num">M05</span><span class="mod-name">Exam Hall</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">EXPERIENCE</div>
+            <a href="academy.html" class="mod-link"><span class="mod-num">M06</span><span class="mod-name">Academy</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="gaming.html" class="mod-link"><span class="mod-num">M07</span><span class="mod-name">Gaming Arena</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="universe.html" class="mod-link"><span class="mod-num">M08</span><span class="mod-name">Media Universe</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="sigil.html" class="mod-link"><span class="mod-num">M09</span><span class="mod-name">Sigil Vault</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">ASSETS</div>
+            <a href="vault.html" class="mod-link"><span class="mod-num">M10</span><span class="mod-name">Sovereign Vault</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="subscriptions.html" class="mod-link"><span class="mod-num">M11</span><span class="mod-name">Subscriptions</span><span class="mod-arrow">&#8594;</span></a>
+          </div>
+          <div>
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.4rem 0 .3rem">THE ORDER</div>
+            <a href="family.html" class="mod-link"><span class="mod-num">M12</span><span class="mod-name">Family &amp; Heritage</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="hall.html" class="mod-link"><span class="mod-num">M13</span><span class="mod-name">Hall of the Order</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="charter.html" class="mod-link"><span class="mod-num">M14</span><span class="mod-name">Sovereign Charter</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">SERVICES</div>
+            <a href="consultancy.html" class="mod-link"><span class="mod-num">M15</span><span class="mod-name">Consultancy Hub</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="marketplace.html" class="mod-link"><span class="mod-num">M16</span><span class="mod-name">Marketplace</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="chatbot.html" class="mod-link"><span class="mod-num">M17</span><span class="mod-name">Concierge Chat</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">COMMUNITY</div>
+            <a href="news.html" class="mod-link"><span class="mod-num">M18</span><span class="mod-name">News Intelligence</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="social.html" class="mod-link"><span class="mod-num">M19</span><span class="mod-name">Social Hub</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="events.html" class="mod-link"><span class="mod-num">M20</span><span class="mod-name">Events</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="margin-top:1rem">
+              <button id="open-full-grid" style="width:100%;padding:.6rem;background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;cursor:pointer">VIEW ALL &#8594;</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -305,7 +332,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <!-- ASCENSION STAGES -->
   <div class="ascension">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-      <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">9 Levels of Ascension</span>
+      <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">12 Levels of Ascension</span>
       <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)" id="asc-status">Loading...</span>
     </div>
     <div class="asc-track" id="asc-track">
@@ -317,7 +344,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="asc-node"><div class="asc-node-num">VI</div><div class="asc-node-label">Exemplar</div></div>
       <div class="asc-node"><div class="asc-node-num">VII</div><div class="asc-node-label">Paragon</div></div>
       <div class="asc-node"><div class="asc-node-num">VIII</div><div class="asc-node-label">Archon</div></div>
-      <div class="asc-node"><div class="asc-node-num">IX</div><div class="asc-node-label">Omega Master</div></div>
+      <div class="asc-node"><div class="asc-node-num">IX</div><div class="asc-node-label">Radiant</div></div>
+      <div class="asc-node"><div class="asc-node-num">X</div><div class="asc-node-label">Unyielding</div></div>
+      <div class="asc-node"><div class="asc-node-num">XI</div><div class="asc-node-label">Transcendent</div></div>
+      <div class="asc-node"><div class="asc-node-num">XII</div><div class="asc-node-label">Omega Master</div></div>
     </div>
   </div>
 </div>
@@ -379,7 +409,8 @@ const BOUND = {
   Aquarius:{agent:'Tutor',token:'AETHER',god:'Hephaestus',element:'Wind'},
   Pisces:{agent:'Historian',token:'ABYSS',god:'Poseidon',element:'Water'},
 };
-const LEVEL_NAMES=['Initiate','Acolyte','Adept','Disciple','Sage','Exemplar','Paragon','Archon','Omega Master'];
+const LEVEL_NAMES=['Initiate','Acolyte','Adept','Disciple','Sage','Exemplar','Paragon','Archon','Radiant','Unyielding','Transcendent','Omega Master'];
+const LEVEL_THRESH=[1.73,2.99,4.25,5.51,6.77,8.03,9.29,10.55,11.81,13.07,14.33,15.59];
 function fmt(n){ return Number(n||0).toFixed(3); }
 
 async function loadDashboard(){
@@ -431,7 +462,7 @@ async function loadDashboard(){
   }catch(e){ document.getElementById('stat-ts-sub').textContent='Unavailable'; }
 
   // ascension track -- real level derived from authority (1..9)
-  const lvl = Math.max(1, Math.min(9, Math.ceil(auth/15.588*9)));
+  const lvl = LEVEL_THRESH.filter(x=>auth>=x).length||1;
   document.getElementById('asc-status').textContent = 'LEVEL '+lvl+' // '+LEVEL_NAMES[lvl-1].toUpperCase();
   document.querySelectorAll('#asc-track .asc-node').forEach(function(el,i){
     el.classList.remove('done','current');
@@ -453,6 +484,11 @@ async function loadDashboard(){
   }
 }
 loadDashboard();
+document.getElementById('module-count').textContent='78 ACTIVE';
+document.getElementById('open-full-grid').addEventListener('click',function(){
+  var openBtn=document.getElementById('om-open');
+  if(openBtn) openBtn.click();
+});
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

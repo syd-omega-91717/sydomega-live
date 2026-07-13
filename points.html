@@ -50,6 +50,7 @@ button.act{padding:9px 16px;background:transparent;border:1px solid var(--gold);
       <div class="notice"><b>WHAT THIS IS:</b> A learning tool. Sovereign Points are earned through real platform activity and spendable on real internal perks -- but they carry no real-world monetary value, are not a cryptocurrency, are not on any blockchain, and cannot be redeemed for money. The trading feature below is a practice simulator so you learn how earning, wallets, and peer-to-peer trading actually work, safely.</div>
 
       <div class="bal-card">
+        <span id="bal-ring" data-glyph="&#937;" data-col="#C9A84C" style="display:inline-block;width:64px;height:64px;margin-bottom:8px"></span>
         <div class="bal-num" id="bal-num">--</div>
         <div class="bal-label">YOUR SOVEREIGN POINTS BALANCE</div>
         <button class="btn-daily" id="btn-daily">CLAIM DAILY BONUS (+10)</button>
@@ -96,6 +97,7 @@ const REASON_LABEL={academy_lesson:'Academy lesson cleared',exam_pass:'Exam pass
 async function loadBalance(){
   const r=await sb.rpc('my_points_balance');
   document.getElementById('bal-num').textContent=(r.data&&r.data.balance!=null)?r.data.balance:'0';
+  fillRings(document);
 }
 
 async function loadLedger(){
@@ -154,15 +156,31 @@ async function loadPerks(){
     sb.from('member_perks').select('perk_id').eq('user_id',uid)
   ]);
   const owned=new Set((ownedR.data||[]).map(x=>x.perk_id));
+  const PERK_COL={theme_crimson:'#8B0000',priority_oracle:'#00E5FF',profile_flourish:'#9B6BF0',title_badge:'#C9A84C'};
+  const PERK_GLYPH={theme_crimson:'&#9670;',priority_oracle:'&#9737;',profile_flourish:'&#10022;',title_badge:'&#9819;'};
   box.innerHTML=(perksR.data||[]).map(p=>{
     const has=owned.has(p.id);
-    return `<div class="perk-card ${has?'owned':''}"><div style="font-family:'Cinzel Decorative',serif;color:var(--gold);font-size:13px">${p.name}</div><div style="font-size:11px;color:var(--muted);margin:6px 0">${p.description}</div><div style="color:var(--solar);font-family:'Courier Prime',monospace;font-size:12px;margin-bottom:8px">${p.cost} PTS</div>${has?'<span style="color:var(--green);font-family:var(--M,monospace);font-size:10px">OWNED</span>':'<button class="act" data-perk="'+p.id+'">PURCHASE</button>'}</div>`;
+    const col=PERK_COL[p.id]||'#C9A84C';
+    return `<div class="perk-card ${has?'owned':''}"><span class="perk-ring" data-glyph="${PERK_GLYPH[p.id]||'&#9670;'}" data-col="${col}" style="display:inline-block;width:44px;height:44px;margin-bottom:6px"></span><div style="font-family:'Cinzel Decorative',serif;color:var(--gold);font-size:13px">${p.name}</div><div style="font-size:11px;color:var(--muted);margin:6px 0">${p.description}</div><div style="color:var(--solar);font-family:'Courier Prime',monospace;font-size:12px;margin-bottom:8px">${p.cost} PTS</div>${has?'<span style="color:var(--green);font-family:var(--M,monospace);font-size:10px">OWNED</span>':'<button class="act" data-perk="'+p.id+'">PURCHASE</button>'}</div>`;
   }).join('');
+  fillRings(box);
   box.querySelectorAll('[data-perk]').forEach(b=>b.addEventListener('click',async()=>{
     const r=await sb.rpc('purchase_perk',{p_perk_id:b.dataset.perk});
     if(r.data&&r.data.ok){ await Promise.all([loadPerks(),loadBalance(),loadLedger()]); }
     else alert('Could not purchase: '+((r.data&&r.data.error)||'unknown error'));
   }));
+}
+
+function fillRings(root){
+  const els=(root||document).querySelectorAll('[data-glyph]');
+  function fill(){
+    if(!window.OmegaEmblem) return false;
+    els.forEach(el=>{ if(!el.__filled){ el.innerHTML=window.OmegaEmblem.ring(el.dataset.glyph,el.dataset.col,{}); el.__filled=1; } });
+    return true;
+  }
+  if(fill()) return;
+  let tries=0;
+  const t=setInterval(()=>{ tries++; if(fill()||tries>20) clearInterval(t); },150);
 }
 
 async function boot(){

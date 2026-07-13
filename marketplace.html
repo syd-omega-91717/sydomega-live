@@ -159,6 +159,15 @@
     var kind=document.getElementById('f-kind').value;
     var desc=document.getElementById('f-desc').value.trim();
     if(!title){ msg.style.color='var(--crimson)'; msg.textContent='Give your listing a title.'; return; }
+    var pr=await supabase.from('profiles').select('membership_tier').eq('id',uid).maybeSingle();
+    var memberTier=Number(pr.data?.membership_tier)||1;
+    var canSell=await new Promise(function(resolve){
+      function check(){ resolve(window.OmegaCanon.tierUnlocks(memberTier,'marketplace_sell')); }
+      if(window.OmegaCanon && window.OmegaCanon.ready){ check(); return; }
+      var tries=0;
+      var t=setInterval(function(){ tries++; if(window.OmegaCanon && window.OmegaCanon.ready){ clearInterval(t); check(); } else if(tries>20){ clearInterval(t); resolve(true); } },150);
+    });
+    if(!canSell){ msg.style.color='var(--crimson)'; msg.innerHTML='Sovereign tier or higher is required to sell. <a href="/subscriptions.html" style="color:var(--gold)">Upgrade here.</a>'; return; }
     msg.style.color='var(--muted)'; msg.textContent='Publishing\u2026';
     var file_path=null;
     var fileEl=document.getElementById('f-file');

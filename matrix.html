@@ -264,6 +264,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       OWNER: Permanently locked at absolute (9.000, 9.000, 9.000). ALL-TIME access. No expiry.<br>
       MILESTONE TRIGGERS: Emitted at every integer coordinate (1,0,0), (0,1,0)... and all cross-axis milestones.
     </div>
+
+    <div style="margin-top:2rem;font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">Your 12 Tracks -- Real Standing Per Sign</div>
+    <div style="font-family:'Courier Prime',monospace;font-size:.62rem;color:var(--muted);margin:.4rem 0 1rem">Aggregated to Phase 1 of 12 for this view. Each track carries its own full 9x9x9 across all 12 phases.</div>
+    <div id="track-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem">
+      <div style="grid-column:1/-1;font-family:'Courier Prime',monospace;font-size:11px;color:var(--muted)">Loading your 12 tracks...</div>
+    </div>
   </div>
 </div>
 
@@ -343,6 +349,26 @@ async function loadRealMatrix(){
     }).join('');
   } else {
     list.innerHTML = '<div class="ev-item"><span class="ev-text">No evolution events recorded yet -- your actions across the platform will appear here.</span></div>';
+  }
+
+  // real per-track data (12 tracks, phase 1 shown here as the aggregate entry point)
+  const tg = document.getElementById('track-grid');
+  try{
+    const mm = await supabase.rpc('my_matrix');
+    const rows = (mm.data||[]).filter(r=>r.phase===1);
+    if(rows.length){
+      tg.innerHTML = rows.map(function(r){
+        return '<div style="border:1px solid var(--border);padding:.6rem;text-align:center">'+
+          '<span data-omega-emblem="'+r.sign+'" style="display:inline-block;width:38px;height:38px"></span>'+
+          '<div style="font-family:\'Courier Prime\',monospace;font-size:9px;color:var(--gold);margin-top:4px">'+r.sign.toUpperCase()+'</div>'+
+          '<div style="font-family:\'Courier Prime\',monospace;font-size:8px;color:var(--muted)">('+r.a+','+r.b+','+r.c+') &middot; '+r.pct+'%</div>'+
+          '</div>';
+      }).join('');
+    } else {
+      tg.innerHTML = '<div style="grid-column:1/-1;font-family:\'Courier Prime\',monospace;font-size:11px;color:var(--muted)">Track data unavailable.</div>';
+    }
+  }catch(e){
+    tg.innerHTML = '<div style="grid-column:1/-1;font-family:\'Courier Prime\',monospace;font-size:11px;color:var(--muted)">Track data unavailable.</div>';
   }
 }
 loadRealMatrix();

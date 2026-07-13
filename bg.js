@@ -631,9 +631,16 @@
           if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(){location.replace('/pending.html?t=expired');});return;}
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
+        startTimeSovereignPing(sb);
       });
     });
   }).catch(function(){});
+  function startTimeSovereignPing(sb){
+    if(window.__omegaTSping)return; window.__omegaTSping=1;
+    function ping(){ if(document.visibilityState==='visible'){ try{ sb.rpc('ping_session'); }catch(e){} } }
+    ping();
+    setInterval(ping,60000);
+  }
   function injectTrialBanner(expiresAt,uid,sb){
     if(document.getElementById('omega-trial-bar'))return;
     var bar=document.createElement('div');bar.id='omega-trial-bar';

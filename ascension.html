@@ -142,14 +142,17 @@ const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable
 
 const LEVELS=[
   {n:1,name:'INITIATE',col:'#D9B86A',mat:'SAND',xp:'1-100',auth:'1.73'},
-  {n:2,name:'ACOLYTE',col:'#A9C2D8',mat:'GLASS',xp:'100-250',auth:'2.50'},
-  {n:3,name:'ADEPT',col:'#C7CDD6',mat:'IRON',xp:'250-500',auth:'3.80'},
-  {n:4,name:'DISCIPLE',col:'#8B8F9C',mat:'STEEL',xp:'500-900',auth:'5.20'},
-  {n:5,name:'SAGE',col:'#607D8B',mat:'TITANIUM',xp:'900-1.5K',auth:'6.90'},
-  {n:6,name:'EXEMPLAR',col:'#455A64',mat:'CARBON',xp:'1.5K-2.5K',auth:'8.60'},
-  {n:7,name:'PARAGON',col:'#C9A84C',mat:'GOLD',xp:'2.5K-5K',auth:'10.40'},
-  {n:8,name:'ARCHON',col:'#E8D5B7',mat:'PLATINUM',xp:'5K-9K',auth:'12.70'},
-  {n:9,name:'OMEGA MASTER',col:'#C9A84C',mat:'OMEGA',xp:'9K+',auth:'15.58'},
+  {n:2,name:'ACOLYTE',col:'#A9C2D8',mat:'GLASS',xp:'100-220',auth:'2.99'},
+  {n:3,name:'ADEPT',col:'#C7CDD6',mat:'IRON',xp:'220-380',auth:'4.25'},
+  {n:4,name:'DISCIPLE',col:'#8B8F9C',mat:'STEEL',xp:'380-580',auth:'5.51'},
+  {n:5,name:'SAGE',col:'#607D8B',mat:'TITANIUM',xp:'580-820',auth:'6.77'},
+  {n:6,name:'EXEMPLAR',col:'#455A64',mat:'CARBON',xp:'820-1.1K',auth:'8.03'},
+  {n:7,name:'PARAGON',col:'#C9A84C',mat:'GOLD',xp:'1.1K-1.5K',auth:'9.29'},
+  {n:8,name:'ARCHON',col:'#E8D5B7',mat:'PLATINUM',xp:'1.5K-1.9K',auth:'10.55'},
+  {n:9,name:'RADIANT',col:'#9B6BF0',mat:'DIAMOND',xp:'1.9K-2.4K',auth:'11.81'},
+  {n:10,name:'UNYIELDING',col:'#00E5FF',mat:'ADAMANT',xp:'2.4K-3K',auth:'13.07'},
+  {n:11,name:'TRANSCENDENT',col:'#E2C86D',mat:'AETHER',xp:'3K-3.7K',auth:'14.33'},
+  {n:12,name:'OMEGA MASTER',col:'#C9A84C',mat:'OMEGA',xp:'3.7K+',auth:'15.59'},
 ];
 
 const PHASES=[
@@ -261,7 +264,7 @@ async function boot(){
   const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
   const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
   const auth=Math.sqrt(a*a+b*b+c*c);
-  const tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
+  const tier=LEVELS.filter(L=>auth>=parseFloat(L.auth)).length||1;
   document.getElementById('auth-score').textContent=auth.toFixed(2);
   document.getElementById('matrix-pos').textContent='('+a.toFixed(1)+','+b.toFixed(1)+','+c.toFixed(1)+')';
   document.getElementById('axis-a').textContent=a.toFixed(1);

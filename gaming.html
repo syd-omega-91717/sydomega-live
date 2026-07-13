@@ -142,14 +142,14 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  let user=null, axisB=1, cleared={}, selGame=-1;
+  let user=null, axisB=1, cleared={}, selGame=-1, tierHasEntry=true, tierHasFull=true;
 
   const GAMES=[['Aries','Ares'],['Taurus','Aphrodite'],['Gemini','Hermes'],['Cancer','Artemis'],['Leo','Apollo'],['Virgo','Athena'],['Libra','Hera'],['Scorpio','Demeter'],['Sagittarius','Zeus'],['Capricorn','Hestia'],['Aquarius','Hephaestus'],['Pisces','Poseidon']];
   const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
   function key(g,s){ return 'g'+g+'s'+s; }
   function isCleared(g,s){ return !!cleared[key(g,s)]; }
   function clearsIn(g){ var n=0; for(var s=0;s<12;s++) if(isCleared(g,s)) n++; return n; }
-  function gameUnlocked(g){ if(g===0) return true; return clearsIn(g-1)>=6 && axisB>=g; }
+  function gameUnlocked(g){ if(g===0) return tierHasEntry; if(!tierHasFull) return false; return clearsIn(g-1)>=6 && axisB>=g; }
   function subUnlocked(g,s){ if(!gameUnlocked(g)) return false; return s===0 || isCleared(g,s-1); }
 
   function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
@@ -161,7 +161,7 @@
     GAMES.forEach(function(gm,g){
       var unlocked=gameUnlocked(g), n=clearsIn(g);
       var d=document.createElement('div'); d.className='game'+(unlocked?'':' locked')+(g===selGame?' sel':'');
-      var lock=unlocked?'':'<div class="lock">LOCKED  .  need Mastery \u2265 '+g+' and 6 stages cleared in Game '+ROMAN[g-1]+'</div>';
+      var lock=unlocked?'':(g===0&&!tierHasEntry?'<div class="lock">SEEKER TIER REQUIRED &middot; <a href="/subscriptions.html" style="color:var(--gold)">upgrade to enter the Gaming Arena</a></div>':(!tierHasFull?'<div class="lock">ADEPT TIER REQUIRED &middot; <a href="/subscriptions.html" style="color:var(--gold)">upgrade to unlock all 12 games</a></div>':'<div class="lock">LOCKED  .  need Mastery \u2265 '+g+' and 6 stages cleared in Game '+ROMAN[g-1]+'</div>'));
       d.innerHTML='<div class="gi">GAME '+ROMAN[g]+' \u00B7 '+gm[0].toUpperCase()+'</div><div class="gn">'+gm[1]+'\u2019s Gauntlet</div><div class="gs">'+n+' / 12 CLEARED</div><div class="bar"><i style="width:'+(n/12*100)+'%"></i></div>'+lock;
       if(unlocked) d.addEventListener('click',function(){ openGame(g); });
       box.appendChild(d);
@@ -268,9 +268,24 @@
     var sess=(await supabase.auth.getSession()).data.session;
     if(!sess){ showGate('The Games','Sign in to enter the games.'); return; }
     user=sess.user;
-    var pr=await supabase.from('profiles').select('sign,axis_b').eq('id',user.id).maybeSingle();
+    var pr=await supabase.from('profiles').select('sign,axis_b,membership_tier').eq('id',user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to enter the games.'); return; }
     axisB=Number(pr.data.axis_b||1);
+    var memberTier=Number(pr.data.membership_tier)||1;
+    await new Promise(function(resolve){
+      function resolveTiers(){
+        tierHasEntry=window.OmegaCanon.tierUnlocks(memberTier,'gaming_entry');
+        tierHasFull=window.OmegaCanon.tierUnlocks(memberTier,'gaming_full');
+        resolve();
+      }
+      if(window.OmegaCanon && window.OmegaCanon.ready){ resolveTiers(); return; }
+      var tries=0;
+      var t=setInterval(function(){
+        tries++;
+        if(window.OmegaCanon && window.OmegaCanon.ready){ clearInterval(t); resolveTiers(); }
+        else if(tries>20){ clearInterval(t); resolve(); } // fail-open: never wrongly lock a real member out on a network hiccup
+      },150);
+    });
     try{
       var tc=await supabase.from('task_completions').select('task').eq('user_id',user.id).eq('kind','gaming');
       if(tc.data) tc.data.forEach(function(r){ cleared[r.task]=true; });

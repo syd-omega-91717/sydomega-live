@@ -44,7 +44,7 @@
           ['grades','GRADES','/grades.html'],['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
           ['academy','ACADEMY','/academy.html'],['gaming','GAMING ARENA','/gaming.html'],
           ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
-          ['exam','EXAM HALL','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html']]},
+          ['exam','EXAM HALL','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
      sub:[['cosmos','COSMOS HUB','/cosmos.html'],['horoscope','HOROSCOPE','/horoscope.html'],
           ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],

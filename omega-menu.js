@@ -19,7 +19,8 @@
       ['\u2666', 'Achievements', '/achievements.html'],
       ['\u2637', 'Gates', '/gates.html'],
       ['\u2609', 'Elements', '/elements.html'],
-      ['\u25B3', 'Exam Hall', '/exam.html']
+      ['\u25B3', 'Exam Hall', '/exam.html'],
+      ['\u2726', 'Sovereign Points', '/points.html']
     ]],
     ['CORE', '#00E5FF', [
       ['\u2302', 'Dashboard', '/dashboard.html'],
@@ -51,8 +52,7 @@
       ['\u2318', 'Blockchain', '/blockchain.html'],
       ['\u25C8', 'Income', '/income.html'],
       ['\u2740', 'Payments', '/payments.html'],
-      ['\u25B3', 'Subscriptions', '/subscriptions.html'],
-      ['\u2696', 'Membership', '/membership.html']
+      ['\u25B3', 'Subscriptions', '/subscriptions.html']
     ]],
     ['THE ORDER', '#8B0000', [
       ['\u2318', 'Family', '/family.html'],

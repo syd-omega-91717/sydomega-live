@@ -134,6 +134,10 @@ td.cyan-t{color:var(--cyan);font-family:'Courier Prime',monospace}
     <div class="hero-eyebrow">M7 // SOVEREIGN VAULT</div>
     <h1 class="hero-title">Master Treasury</h1>
     <p class="hero-sub">The sovereign reserve engine -- physical metals, digital tokens, and the 11 immutable articles of absolute ownership. Nothing enters or exits without authorization from Level 9.9.9.</p>
+    <a href="/points.html" style="display:inline-block;margin-top:1rem;padding:.5rem 1rem;border:1px solid rgba(0,229,255,.3);text-decoration:none">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:2px;color:var(--cyan)">YOUR SOVEREIGN POINTS: </span>
+      <span style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--cyan)" id="points-mini">--</span>
+    </a>
   </div>
 
   <!-- MARQUEE -->
@@ -421,6 +425,19 @@ function animate(){prog+=.02;if(prog>1)prog=1;drawDonut(prog);if(prog<1)requestA
 animate();
 // Animate reserve bars
 document.querySelectorAll('.res-fill').forEach(el=>{const w=el.style.width;el.style.width='0';setTimeout(()=>{el.style.width=w;},400);});
+})();
+</script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+(async function(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess) return;
+  try{
+    const r=await sb.rpc('my_points_balance');
+    const el=document.getElementById('points-mini');
+    if(el) el.textContent=(r.data&&r.data.balance!=null?r.data.balance:0)+' PTS';
+  }catch(e){}
 })();
 </script>
 <script src="/nav.js"></script>

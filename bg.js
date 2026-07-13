@@ -116,6 +116,9 @@
    orphaned HTML page mislabeled with a .js extension), loading it threw a syntax
    error on every single page. Removed here; delete the file itself from the repo
    once you've decided whether it should become a real page or be discarded. ===== */
+
+/* ===== ELEMENT MOTIFS -- shared thematic animations for the 9 elements ===== */
+(function(){if(!document.querySelector('script[data-omega-element-motif]')){var s=document.createElement('script');s.src='/omega-element-motif.js';s.setAttribute('data-omega-element-motif','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */
 (function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */

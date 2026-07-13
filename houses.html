@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- The Houses Lattice</title>
+<meta name="theme-color" content="#C9A84C"/>
+<style>
+:root{--void:#0A0A0F;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:'Rajdhani',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+.side{width:80px;flex-shrink:0}
+.shell{display:flex;min-height:100vh}
+.main{flex:1;min-width:0}
+.topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}
+.topbar .t{font-family:'Cinzel Decorative',serif;font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
+.topbar .t small{display:block;font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.pad{padding:clamp(14px,3vw,36px)}
+.notice{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:14px 18px;font-family:'Courier Prime',monospace;font-size:11px;color:var(--muted);line-height:1.8;margin-bottom:28px}
+.notice b{color:var(--gold)}
+.sechead{font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--gold);letter-spacing:2px;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{border:1px solid var(--line);background:var(--panel);padding:16px}
+.card .ring{display:inline-block;width:48px;height:48px;margin-bottom:8px}
+.card .hn{font-family:'Courier Prime',monospace;font-size:9px;color:var(--muted);letter-spacing:2px}
+.card .ht{font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--gold);margin:4px 0}
+.card .hd{font-size:12px;font-weight:300;color:var(--ink);line-height:1.6;margin-top:6px}
+.alch-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.alch-card{border:1px solid var(--line);background:var(--panel);padding:16px;text-align:center}
+.alch-card .ph{font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--solar)}
+.alch-card .m{font-family:'Courier Prime',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin:4px 0}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="houses"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">THE HOUSES LATTICE<small>12 x 12 x 9 x 9 x 9 -- SYMBOLIC LORE, SEPARATE FROM THE PROGRESSION MATRIX</small></div>
+    </div>
+    <div class="pad">
+      <div class="notice"><b>NOTE:</b> This is a separate symbolic framework from the real 729-node progression matrix (see /matrix.html), which is what actually gates your access and advancement. The Houses Lattice below is lore -- a second, independent lens on the twelve signs, not a live system.</div>
+
+      <div class="sechead">THE TWELVE HOUSES</div>
+      <div class="grid" id="houses-grid"></div>
+
+      <div class="sechead">THE NINE GOVERNANCE COLUMNS</div>
+      <div class="grid" id="gov-grid"></div>
+
+      <div class="sechead">THE FOUR ALCHEMICAL PHASES</div>
+      <div class="alch-row" id="alch-grid"></div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+function fillRing(el, glyph, col){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); return; }
+  let tries=0;
+  const t=setInterval(()=>{
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); clearInterval(t); }
+    else if(tries>20) clearInterval(t);
+  },150);
+}
+
+function waitForCanon(){
+  return new Promise(resolve=>{
+    if(window.OmegaCanon && window.OmegaCanon.ready){ resolve(window.OmegaCanon); return; }
+    document.addEventListener('omega-canon-ready', ()=>resolve(window.OmegaCanon), {once:true});
+    setTimeout(()=>resolve(window.OmegaCanon||null), 4000);
+  });
+}
+
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+
+  const canon = await waitForCanon();
+  const lore = canon && canon.loreLattice;
+  if(!lore){ document.getElementById('houses-grid').innerHTML='<div style="color:var(--muted);font-family:\'Courier Prime\',monospace;font-size:11px">Could not load lattice data.</div>'; return; }
+
+  const hCols=['#E86A3A','#C7CDD6','#A9C2D8','#34C6E6','#E86A3A','#D9B86A','#A9C2D8','#8B0000','#C9A84C','#E2C86D','#9B6BF0','#3fb27f'];
+  const hg=document.getElementById('houses-grid');
+  lore.houses.forEach((h,i)=>{
+    const c=document.createElement('div'); c.className='card';
+    c.innerHTML=`<span class="ring"></span><div class="hn">${h.house.toUpperCase()} &middot; ${h.sign.toUpperCase()}</div><div class="ht">${h.domain}</div><div class="hd">${h.desc}</div>`;
+    hg.appendChild(c);
+    fillRing(c.querySelector('.ring'), h.n, hCols[i]);
+  });
+
+  const gCols=['#C9A84C','#00E5FF','#3fb27f','#9B6BF0','#E2C86D','#34C6E6','#E86A3A','#8B0000','#C7CDD6'];
+  const gg=document.getElementById('gov-grid');
+  lore.governance_columns.forEach((g,i)=>{
+    const c=document.createElement('div'); c.className='card';
+    c.innerHTML=`<span class="ring"></span><div class="hn">COLUMN ${g.n}</div><div class="ht">${g.name}</div><div class="hd">${g.desc}</div>`;
+    gg.appendChild(c);
+    fillRing(c.querySelector('.ring'), g.n, gCols[i]);
+  });
+
+  const ag=document.getElementById('alch-grid');
+  lore.alchemy.forEach(a=>{
+    const c=document.createElement('div'); c.className='alch-card';
+    c.innerHTML=`<div class="ph">${a.phase}</div><div class="m">${a.meaning.toUpperCase()}</div><div class="hd">${a.desc}</div>`;
+    ag.appendChild(c);
+  });
+}
+boot();
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

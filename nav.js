@@ -48,7 +48,7 @@
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
      sub:[['cosmos','COSMOS HUB','/cosmos.html'],['horoscope','HOROSCOPE','/horoscope.html'],
           ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],
-          ['pantheons','PANTHEONS','/pantheons.html'],['gates','12 GATES','/gates.html'],
+          ['pantheons','PANTHEONS','/pantheons.html'],['gates','12 GATES','/gates.html'],['houses','HOUSES LATTICE','/houses.html'],
           ['triads','12 TRIADS','/triads.html'],['kings','28 KINGS','/kings.html']]},
     {key:'universe',icon:'\u25BA', label:'UNIVERSE', href:'/cinema.html',   col:'#8B0000',
      sub:[['cinema','CINEMA & SAGA','/cinema.html'],['universe','CREATIVE UNIVERSE','/universe.html'],

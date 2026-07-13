@@ -273,8 +273,8 @@ const CH_MAP={
   Aquarius:{name:'THE WIND VISIONARY',role:'INNOVATOR . REBEL',col:'#9B6BF0',desc:'Wind as civilizational revolution and innovation.'},
   Pisces:{name:'THE WATER ORACLE',role:'DREAMER . TRANSCENDENT',col:'#3fb27f',desc:'Water as transcendence into the 9th element.'},
 };
-const MATS=['SAND','GLASS','IRON','STEEL','TITANIUM','CARBON','GOLD','PLATINUM','OMEGA'];
-const MAT_COLS=['#D9B86A','#A9C2D8','#C7CDD6','#8B8F9C','#607D8B','#455A64','#C9A84C','#E8D5B7','#C9A84C'];
+const MATS=['SAND','GLASS','IRON','STEEL','TITANIUM','CARBON','GOLD','PLATINUM','DIAMOND','ADAMANT','AETHER','OMEGA'];
+const MAT_COLS=['#D9B86A','#A9C2D8','#C7CDD6','#8B8F9C','#607D8B','#455A64','#C9A84C','#E8D5B7','#9B6BF0','#00E5FF','#E2C86D','#C9A84C'];
 const KYC_STEPS=[
   {n:1,title:'EMAIL VERIFICATION',desc:'Email confirmed at registration.','done':true},
   {n:2,title:'PROFILE COMPLETION',desc:'Display name, zodiac sign, nationality, and profession required.','done':false,action:'COMPLETE ABOVE',href:'#profile'},
@@ -390,7 +390,8 @@ async function boot(){
   const a=parseFloat(d.axis_a)||1,b=parseFloat(d.axis_b)||1,c=parseFloat(d.axis_c)||1;
   const auth=Math.sqrt(a*a+b*b+c*c);
   const sign=d.sign||'Virgo';
-  const tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
+  const LEVEL_THRESH=[1.73,2.99,4.25,5.51,6.77,8.03,9.29,10.55,11.81,13.07,14.33,15.59];
+  const tier=LEVEL_THRESH.filter(x=>auth>=x).length||1;
   const el=EL_MAP[sign]||'SAND';
   const ch=CH_MAP[sign]||CH_MAP.Virgo;
 

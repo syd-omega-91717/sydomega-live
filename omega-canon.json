@@ -382,5 +382,164 @@
     "treasury_insight": "Treasury & Portfolio insight views",
     "contracts_seal": "Seal Commission Contracts",
     "all": "Every feature, fully unlocked"
+  },
+  "lore_lattice": {
+    "note": "SEPARATE symbolic/lore framework, distinct from `structure` (the real 12-track x 12-phase x 9x9x9 progression matrix that actually gates content). This is creative lore only -- no crypto, no autonomous execution, no live enforcement.",
+    "label": "12 x 12 x 9 x 9 x 9 -- The Houses Lattice (lore)",
+    "houses": [
+      {
+        "n": 1,
+        "sign": "Aries",
+        "house": "First House",
+        "domain": "Identity",
+        "desc": "Where a sovereign's story begins -- pure concept, personal initialization."
+      },
+      {
+        "n": 2,
+        "sign": "Taurus",
+        "house": "Second House",
+        "domain": "Value",
+        "desc": "What is built with beauty endures; the house of worth and craft."
+      },
+      {
+        "n": 3,
+        "sign": "Gemini",
+        "house": "Third House",
+        "domain": "Communication",
+        "desc": "The house of message, network, and swift exchange."
+      },
+      {
+        "n": 4,
+        "sign": "Cancer",
+        "house": "Fourth House",
+        "domain": "Lineage",
+        "desc": "The family anchor -- heritage, protection, continuity."
+      },
+      {
+        "n": 5,
+        "sign": "Leo",
+        "house": "Fifth House",
+        "domain": "Creation",
+        "desc": "Cinematic and creative expression; the house of brand and light."
+      },
+      {
+        "n": 6,
+        "sign": "Virgo",
+        "house": "Sixth House",
+        "domain": "Refinement",
+        "desc": "Quality, precision, and the discipline of getting it right."
+      },
+      {
+        "n": 7,
+        "sign": "Libra",
+        "house": "Seventh House",
+        "domain": "Diplomacy",
+        "desc": "External relations, balance, and the interfaces between systems."
+      },
+      {
+        "n": 8,
+        "sign": "Scorpio",
+        "house": "Eighth House",
+        "domain": "Legacy",
+        "desc": "Transformation and what is passed on -- inheritance, depth."
+      },
+      {
+        "n": 9,
+        "sign": "Sagittarius",
+        "house": "Ninth House",
+        "domain": "Vision",
+        "desc": "Expansion, strategy, and the long view."
+      },
+      {
+        "n": 10,
+        "sign": "Capricorn",
+        "house": "Tenth House",
+        "domain": "Stewardship",
+        "desc": "Structure, discipline, and long-term stewardship of what's built."
+      },
+      {
+        "n": 11,
+        "sign": "Aquarius",
+        "house": "Eleventh House",
+        "domain": "Infrastructure",
+        "desc": "Systems thinking, networks, and collective architecture."
+      },
+      {
+        "n": 12,
+        "sign": "Pisces",
+        "house": "Twelfth House",
+        "domain": "Integrity",
+        "desc": "Quiet resolve, security of spirit, and the closing of the circle."
+      }
+    ],
+    "governance_columns": [
+      {
+        "n": 1,
+        "name": "Empowerment",
+        "desc": "Establishing a steady, sovereign foundation."
+      },
+      {
+        "n": 2,
+        "name": "Knowledge",
+        "desc": "Depth across many disciplines and structures."
+      },
+      {
+        "n": 3,
+        "name": "Connection",
+        "desc": "Reaching across environments and people well."
+      },
+      {
+        "n": 4,
+        "name": "Governance",
+        "desc": "Clean, deliberate stewardship of resources."
+      },
+      {
+        "n": 5,
+        "name": "Information",
+        "desc": "Careful, ongoing tracking of what matters."
+      },
+      {
+        "n": 6,
+        "name": "Diplomacy",
+        "desc": "Working smoothly with the wider world."
+      },
+      {
+        "n": 7,
+        "name": "Capability",
+        "desc": "The readiness to adapt without losing footing."
+      },
+      {
+        "n": 8,
+        "name": "Testing",
+        "desc": "Honest self-audit against real purpose."
+      },
+      {
+        "n": 9,
+        "name": "Alignment",
+        "desc": "Bringing every part into coherence with the whole."
+      }
+    ],
+    "alchemy": [
+      {
+        "phase": "Nigredo",
+        "meaning": "The Dark Night",
+        "desc": "Letting go of what no longer serves -- clearing the ground."
+      },
+      {
+        "phase": "Albedo",
+        "meaning": "The Purification",
+        "desc": "Clarity emerging from the clearing."
+      },
+      {
+        "phase": "Citrinitas",
+        "meaning": "The Illumination",
+        "desc": "Insight arriving; the pieces make sense together."
+      },
+      {
+        "phase": "Rubedo",
+        "meaning": "The Masterwork",
+        "desc": "Integration complete -- the thing stands finished."
+      }
+    ]
   }
 }

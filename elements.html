@@ -186,15 +186,7 @@ function drawElementCanvas(canvas, motif, col, authority, unlockAt) {
     return c;
   }
 
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    if(locked){
-      ctx.fillStyle='rgba(7,7,11,0.85)';ctx.fillRect(0,0,W,H);
-      ctx.fillStyle='rgba(201,168,76,0.25)';ctx.font='12px "Courier Prime",monospace';ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText('AUTHORITY '+(unlockAt)+' REQUIRED',W/2,H/2);
-      return;
-    }
-    var cx=W/2,cy=H/2;
+  function drawMotif(cx,cy){
     if(motif==='fire'){
       for(var i=0;i<18;i++){
         var x=cx+(Math.random()-0.5)*W*0.8,y=H;
@@ -267,7 +259,6 @@ function drawElementCanvas(canvas, motif, col, authority, unlockAt) {
       gv.addColorStop(0,'rgba(123,0,255,0.5)');gv.addColorStop(0.5,'rgba(60,0,120,0.2)');gv.addColorStop(1,'transparent');
       ctx.fillStyle=gv;ctx.fillRect(0,0,W,H);
     } else {
-      // THE ALL &mdash; all colors rotating
       var cols=['#E86A3A','#34C6E6','#A9C2D8','#C7CDD6','#D9B86A','#E8E8FF','#9B6BF0','#7B00FF','#C9A84C'];
       for(var ci=0;ci<cols.length;ci++){
         var ca=t*0.5+ci*(Math.PI*2/cols.length);
@@ -278,6 +269,32 @@ function drawElementCanvas(canvas, motif, col, authority, unlockAt) {
       }
       ctx.fillStyle='rgba(201,168,76,0.7)';ctx.font='bold 22px "Cinzel Decorative"';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('\u03A9',cx,cy);
     }
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    var cx=W/2,cy=H/2;
+    if(locked){
+      ctx.save();
+      ctx.globalAlpha=0.22+Math.sin(t*0.6)*0.05;
+      drawMotif(cx,cy);
+      ctx.restore();
+      ctx.fillStyle='rgba(7,7,11,0.55)';ctx.fillRect(0,0,W,H);
+      ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(cx,cy-6,16,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='rgba(201,168,76,0.5)';
+      ctx.fillRect(cx-7,cy-6,14,12);
+      ctx.fillStyle='rgba(7,7,11,0.9)';
+      ctx.beginPath();ctx.arc(cx,cy,3,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(201,168,76,0.75)';ctx.font='11px "Courier Prime",monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('AUTHORITY '+(unlockAt)+' REQUIRED',W/2,H/2+34);
+      ctx.fillStyle='rgba(201,168,76,0.4)';ctx.font='9px "Courier Prime",monospace';
+      ctx.fillText('YOUR AUTHORITY: '+authority.toFixed(2),W/2,H/2+50);
+      t+=0.018;
+      requestAnimationFrame(frame);
+      return;
+    }
+    drawMotif(cx,cy);
     t+=0.018;
     requestAnimationFrame(frame);
   }

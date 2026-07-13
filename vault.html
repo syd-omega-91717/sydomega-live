@@ -165,6 +165,7 @@ a{color:inherit;text-decoration:none}
       <div style="padding:0 clamp(14px,3vw,32px);margin-bottom:20px">
         <div style="border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
           <div><div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">TOTAL WALLET BALANCE</div><div style="font-family:var(--D);font-size:28px;color:var(--gold);font-weight:700" id="wallet-total">&#937; --</div></div>
+          <a href="/points.html" style="text-align:right;text-decoration:none"><div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);margin-bottom:5px">SOVEREIGN POINTS</div><div style="font-family:var(--D);font-size:20px;color:var(--cyan);font-weight:700" id="points-mini">-- PTS</div></a>
           <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">CUSTODIAL . SOVEREIGN MANAGED</div>
         </div>
       </div>
@@ -425,6 +426,10 @@ async function boot(){
   const nodes=Math.round(a*b*c*9),xp=Math.round(nodes*917.17);
   const tier=parseInt(pr.data?.membership_tier)||1;
   document.getElementById('aum-val').innerHTML='&#937; '+xp.toLocaleString();
+  try{
+    const pts=await sb.rpc('my_points_balance');
+    document.getElementById('points-mini').textContent=(pts.data&&pts.data.balance!=null?pts.data.balance:0)+' PTS';
+  }catch(e){ document.getElementById('points-mini').textContent='-- PTS'; }
   document.getElementById('res-phys').textContent='\u03A9 '+Math.round(xp*.6).toLocaleString();
   document.getElementById('res-dig').textContent='\u03A9 '+Math.round(xp*.4).toLocaleString();
   buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();buildTiers(tier);buildTxLog();

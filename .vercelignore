@@ -1,37 +1,35 @@
-backend/
-frontend/
-enterprise/
-services/
-packages/
-shared/
-infra/
-infrastructure/
-database/
-contracts/
-prisma/
-docker/
-k8s/
-scripts/
-node_modules/
-coverage/
-dist/
-build/
-.turbo/
-.github/
-.vscode/
-.idea/
-package.json
-package-lock.json
-pnpm-lock.yaml
-turbo.json
+# SYD OMEGA 91717 -- backend exclusion for the public static deployment.
+# The site is a static HTML/JS/CSS site (outputDirectory: "." in vercel.json).
+# Everything below must never reach the public deployment. This is the
+# primary defense; the extension-based redirects in vercel.json (.sql, .ts,
+# .py, .sol, .docx -> dashboard.html) are a secondary safety net only, in
+# case any of these are ever accidentally left in the deploy.
+
+# All Supabase backend -- SQL migrations, RLS policies, and Edge Function
+# source. Deployed separately via the Supabase CLI/dashboard, never via Vercel.
+supabase/
+
+# Any stray backend-shaped source, wherever it ends up
 *.ts
 *.tsx
 *.py
 *.sol
 *.sql
+
+# Docs, notes, and local-only files that shouldn't ship publicly
 *.md
 *.doc
 *.docx
 *.pdf
 .env
 .env.*
+*.log
+
+# Standard tooling noise, if ever present
+node_modules/
+.git/
+.github/
+.vscode/
+.idea/
+package.json
+package-lock.json

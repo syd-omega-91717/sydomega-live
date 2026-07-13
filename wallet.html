@@ -100,7 +100,7 @@
 <div class="shell" id="app">
   <aside class="side" id="omega-side" data-page="wallet"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN WALLET<small>YOUR EARNED &#937; CREDIT</small></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN WALLET<small>YOUR EARNED &#937; CREDIT</small></div><a href="/points.html" style="text-decoration:none;text-align:right"><div style="font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:2px;color:var(--cyan)">SOVEREIGN POINTS</div><div style="font-family:var(--D,'Cinzel Decorative',serif);font-size:16px;color:var(--cyan)" id="points-mini">--</div></a></div>
 
     <div class="notice">This Wallet is <b>fully built and ready to activate</b>. The &#937; shown below is <b>internal sovereign credit earned from your real recorded activity</b>  --  it is <b>not currency, carries no monetary value, and is not redeemable or transferable</b>. Purchase, withdrawal, transfer, and the market will switch on only when the Order completes its legal arrangements and a payment/chain provider is connected. Nothing here is charged, and no balance shown is money.</div>
 
@@ -148,6 +148,11 @@
     var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',uid).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to open your Wallet.'); return; }
     document.getElementById('gate').style.display='none';
+    try{
+      var pts=await supabase.rpc('my_points_balance');
+      var pel=document.getElementById('points-mini');
+      if(pel) pel.textContent=(pts.data&&pts.data.balance!=null?pts.data.balance:0)+' PTS';
+    }catch(e){}
     document.getElementById('app').style.display='flex';
 
     var a=Number(pr.data.axis_a||1),b=Number(pr.data.axis_b||1),c=Number(pr.data.axis_c||1);

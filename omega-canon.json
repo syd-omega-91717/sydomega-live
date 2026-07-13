@@ -346,6 +346,39 @@
     },
     {
       "n": 9,
+      "mat": "DIAMOND",
+      "name": "Radiant",
+      "price": 717.17,
+      "color": "#9B6BF0",
+      "unlocks": [
+        "nft_priority_mint"
+      ],
+      "desc": "Priority access to NFT minting as the Sigil Vault opens."
+    },
+    {
+      "n": 10,
+      "mat": "ADAMANT",
+      "name": "Unyielding",
+      "price": 797.17,
+      "color": "#00E5FF",
+      "unlocks": [
+        "governance_proposals"
+      ],
+      "desc": "The right to raise proposals within the Order's governance layer."
+    },
+    {
+      "n": 11,
+      "mat": "AETHER",
+      "name": "Transcendent",
+      "price": 857.17,
+      "color": "#E2C86D",
+      "unlocks": [
+        "architect_channel"
+      ],
+      "desc": "A direct channel to the Architect -- the last threshold before the apex."
+    },
+    {
+      "n": 12,
       "mat": "OMEGA MASTER",
       "name": "Ascendant",
       "price": 917.17,
@@ -381,7 +414,10 @@
     "automation_rules": "Automation rule builder",
     "treasury_insight": "Treasury & Portfolio insight views",
     "contracts_seal": "Seal Commission Contracts",
-    "all": "Every feature, fully unlocked"
+    "all": "Every feature, fully unlocked",
+    "nft_priority_mint": "Priority NFT minting access",
+    "governance_proposals": "Governance proposal rights",
+    "architect_channel": "Direct Architect channel access"
   },
   "lore_lattice": {
     "note": "SEPARATE symbolic/lore framework, distinct from `structure` (the real 12-track x 12-phase x 9x9x9 progression matrix that actually gates content). This is creative lore only -- no crypto, no autonomous execution, no live enforcement.",

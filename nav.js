@@ -41,7 +41,6 @@
     {key:'ascend',  icon:'\u25B2', label:'ASCEND',   href:'/ascension.html',col:'#E86A3A',
      sub:[['ascension','ASCENSION MAP','/ascension.html'],['matrix','THE 729','/matrix.html'],
           ['achievements','MY RECORD','/achievements.html'],
-          ['grades','GRADES','/grades.html'],['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
           ['academy','ACADEMY','/academy.html'],['gaming','GAMING ARENA','/gaming.html'],
           ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
           ['exam','EXAM HALL','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html']]},

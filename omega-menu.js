@@ -24,7 +24,7 @@
       ['\u25C6', 'Identity', '/identity.html'],
       ['\u2609', 'Cosmos', '/cosmos.html'],
       ['\u25CE', 'Matrix', '/matrix.html'],
-      ['\u264D', 'Horoscope', '/horoscope.html'],
+      ['\u264D', 'Horoscope', '/cosmos.html#horoscope'],
       ['\u2721', 'Pantheons', '/pantheons.html'],
       ['\u2694', 'Factions', '/factions.html'],
       ['\u2604', 'Triads', '/triads.html'],

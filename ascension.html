@@ -187,24 +187,44 @@ function buildLadder(userLevel){
   LEVELS.forEach((L,i)=>{
     const done=i<userLevel-1, current=i===userLevel-1, locked=i>userLevel-1;
     const row=document.createElement('div'); row.className='level-row'+(current?' current':'');
-    const barH=Math.floor(20+Math.random()*60);
+    row.style.cursor='pointer';
     row.innerHTML=`
       <div class="lr-connector"></div>
       <span class="lr-badge-emblem" style="display:inline-block;width:56px;height:56px"></span>
       <div class="lr-body">
         <div class="lrb-num">STAGE ${L.n} &nbsp; ${L.mat}</div>
         <div class="lrb-name" style="color:${done||current?L.col:'rgba(133,131,123,0.5)'}">${L.name}</div>
-        <div class="lr-mini-chart">${[20,45,30,60,40,55,35,70,barH].map(h=>`<div class="lr-mini-bar" style="height:${h*(done||current?1:0.3)}%;background:${done?L.col:current?L.col+'aa':L.col+'22'}"></div>`).join('')}</div>
       </div>
       <div class="lr-meta">
         <div class="lrm-xp">${L.auth}</div>
-        <div class="lrm-axis">XP ${L.xp}</div>
+        <div class="lrm-axis">${done?'ACHIEVED':current?'CURRENT':'LOCKED'}</div>
       </div>`;
     ladder.appendChild(row);
     const ringEl=row.querySelector('.lr-badge-emblem');
     fillRing(ringEl, done?'&#x2713;':L.n, L.col, locked);
+    row.addEventListener('click',()=>openLevelPanel(L,i,done,current,locked));
   });
   document.getElementById('current-level-label').textContent='LEVEL '+userLevel+' -- '+LEVELS[userLevel-1].name;
+}
+
+function openLevelPanel(L,i,done,current,locked){
+  window.OmegaEmblemPanel.open({
+    glyph: done?'&#x2713;':L.n, color: L.col,
+    title: L.name,
+    subtitle: 'STAGE '+L.n+' -- '+L.mat,
+    badge: done?'ACHIEVED':current?'CURRENT LEVEL':'LOCKED',
+    sections: [
+      { label: 'THRESHOLD', stats: [
+        {k:'Authority Required', v: L.auth},
+        {k:'XP Range', v: L.xp},
+      ]},
+      { label: 'STATUS', body: done
+          ? 'You have cleared this level.'
+          : current
+            ? 'This is your current standing. Advance your matrix to progress toward the next level.'
+            : 'Locked. Reach authority '+L.auth+' to unlock.' },
+    ]
+  });
 }
 
 function buildPhases(userAuth){

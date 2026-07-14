@@ -140,15 +140,35 @@
       var isCurrent=(!isOpen) && (i===open);
       var GATE_COLS=['#D9B86A','#A9C2D8','#8B8F9C','#6B7280','#607D8B','#455A64','#C9A84C','#E8D5B7','#9B6BF0','#00E5FF','#8B0000','#C9A84C'];
       var el=document.createElement('div'); el.className='gate'+(i===11?' omega':'')+(isOpen?' open':' sealed')+(isCurrent?' current':'');
+      el.style.cursor='pointer';
       el.innerHTML='<span class="gate-ring-emblem" style="display:inline-block;width:52px;height:52px"></span><div class="body">'+
-        '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+'</div>'+
-        '<div class="glore">'+gt[6]+'</div>'+
-        '<div class="meta"><span>OPENS AT AUTHORITY <b>'+threshold(i).toFixed(2)+'</b></span><span>MATERIAL <b>'+gt[2]+'</b></span></div>'+
-        '<div class="meta"><span>DUAT <b>'+gt[3]+'</b> (Egy.)</span><span>CONSENTES <b>'+gt[4]+'</b> (Rom.)</span><span>ADITYA <b>'+gt[5]+'</b> (Hin.)</span></div>'+
+        '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+' \u00B7 OPENS AT AUTHORITY '+threshold(i).toFixed(2)+'</div>'+
         '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
       box.appendChild(el);
       var ringEl=el.querySelector('.gate-ring-emblem');
       fillRing(ringEl, ROMAN[i], GATE_COLS[i], !isOpen);
+      el.addEventListener('click',function(idx,unlocked){ return function(){ openGatePanel(GATES[idx],idx,unlocked,GATE_COLS[idx]); }; }(i,isOpen));
+    });
+  }
+
+  function openGatePanel(gt,i,isOpen,col){
+    window.OmegaEmblemPanel.open({
+      glyph: ROMAN[i], color: col,
+      title: gt[0],
+      subtitle: gt[1]+' . PHASE '+(i+1),
+      badge: isOpen?'OPEN':'SEALED',
+      sections: [
+        { label: 'LORE', body: gt[6] },
+        { label: 'THRESHOLD & MATERIAL', stats: [
+          {k:'Opens At Authority', v: threshold(i).toFixed(2)},
+          {k:'Material', v: gt[2]},
+        ]},
+        { label: 'CROSS-PANTHEON NAMES', stats: [
+          {k:'Egyptian (Duat)', v: gt[3]},
+          {k:'Roman (Consentes)', v: gt[4]},
+          {k:'Hindu (Aditya)', v: gt[5]},
+        ]},
+      ]
     });
   }
 

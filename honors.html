@@ -509,6 +509,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
 }
 
 (async function loadRealHonors(){
+  let trophyCount=0, medalCount=0, certCount=0;
   try{
     const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
     const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
@@ -525,7 +526,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
       sb.from('trophies').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
       sb.from('medals').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
     ]);
-    const certCount = certs.count || 0, trophyCount = trophies.count || 0, medalCount = medals.count || 0;
+    certCount = certs.count || 0; trophyCount = trophies.count || 0; medalCount = medals.count || 0;
 
     document.getElementById('stat-certs').textContent = certCount;
     document.getElementById('stat-trophies').textContent = trophyCount;
@@ -536,6 +537,38 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     document.getElementById('stat-grade').textContent = d.is_owner ? '12' : grade;
     document.getElementById('stat-grade-sub').textContent = d.is_owner ? 'All Grades Sealed' : ('Grade '+grade+' of 12');
   }catch(e){ /* leave placeholders if this fails -- never block the page */ }
+
+  try{
+    const counters = { trophy: 0, medal: 0, certificate: 0 };
+    const totalByType = { trophy: trophyCount, medal: medalCount, certificate: certCount };
+    document.querySelectorAll('.honor-card').forEach(card=>{
+      const cat = card.dataset.cat;
+      counters[cat] = (counters[cat]||0) + 1;
+      const earned = counters[cat] <= (totalByType[cat]||0);
+      card.classList.toggle('locked', !earned);
+
+      card.style.cursor='pointer';
+      card.addEventListener('click',()=>{
+        const glyph = card.querySelector('.honor-glyph')?.textContent || '\u2726';
+        const type = card.querySelector('.honor-type')?.textContent || '';
+        const name = card.querySelector('.honor-name')?.textContent || '';
+        const desc = card.querySelector('.honor-desc')?.textContent || '';
+        const tier = card.querySelector('.honor-tier-badge')?.textContent || '';
+        const date = card.querySelector('.honor-date')?.textContent || '';
+        const col = getComputedStyle(card).borderTopColor;
+        window.OmegaEmblemPanel.open({
+          glyph: glyph, color: col,
+          title: name,
+          subtitle: type.toUpperCase()+' . '+tier,
+          badge: earned ? 'EARNED' : 'NOT YET EARNED',
+          sections: [
+            { label: 'DESCRIPTION', body: desc },
+            { label: 'STATUS', stats: earned ? [{k:'Earned', v:date}] : [{k:'Status', v:'Locked'}] },
+          ]
+        });
+      });
+    });
+  }catch(e){ /* never block the page on the click-wiring pass */ }
 })();
 </script>
 <script src="/nav.js"></script>

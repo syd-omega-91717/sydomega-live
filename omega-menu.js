@@ -12,9 +12,6 @@
   var GROUPS = [
     ['PROGRESSION', '#E86A3A', [
       ['\u25B2', 'Ascend', '/ascension.html'],
-      ['\u2680', 'Grades', '/grades.html'],
-      ['\u2681', 'Levels', '/levels.html'],
-      ['\u269B', 'Phases', '/phases.html'],
       ['\u2605', 'Honors', '/honors.html'],
       ['\u2666', 'Achievements', '/achievements.html'],
       ['\u2637', 'Gates', '/gates.html'],

@@ -35,8 +35,8 @@
     ['EXPERIENCE', '#9B6BF0', [
       ['\u2726', 'Academy', '/academy.html'],
       ['\u25B6', 'Games', '/gaming.html'],
-      ['\u2638', 'Universe', '/universe.html'],
-      ['\u25C9', 'Cinema', '/cinema.html'],
+      ['\u2638', 'Universe', '/media.html'],
+      ['\u25C9', 'Cinema', '/media.html'],
       ['\u25A3', 'Media', '/media.html'],
       ['\u2b21', 'Sigil Vault', '/vault.html#nft']
     ]],

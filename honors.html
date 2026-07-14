@@ -857,10 +857,19 @@ document.querySelectorAll('.mtab-btn').forEach(btn=>{
     document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
     btn.classList.add('active');btn.style.borderBottomColor='var(--gold)';btn.style.color='var(--gold)';
     document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
-    if(btn.dataset.mtab==='ascension' && !window.__ascBuilt){ window.__ascBuilt=true; if(window.bootAscension) window.bootAscension(); }
-    if(btn.dataset.mtab==='record' && !window.__achBuilt){ window.__achBuilt=true; if(window.bootAchievements) window.bootAchievements(); }
+    if(btn.dataset.mtab==='ascension' && !window.__ascBuilt){ window.__ascBuilt=true; callWhenReady('bootAscension'); }
+    if(btn.dataset.mtab==='record' && !window.__achBuilt){ window.__achBuilt=true; callWhenReady('bootAchievements'); }
   });
 });
+function callWhenReady(fnName){
+  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
+    else if(tries>30){ clearInterval(t); } // deferred module genuinely failed to load; give up quietly rather than hang forever
+  },100);
+}
 (function(){
   var wanted=sessionStorage.getItem('omega_mtab');
   if(!wanted && location.hash){ wanted=location.hash.replace('#',''); }

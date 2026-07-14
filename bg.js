@@ -119,6 +119,9 @@
 
 /* ===== ELEMENT MOTIFS -- shared thematic animations for the 9 elements ===== */
 (function(){if(!document.querySelector('script[data-omega-element-motif]')){var s=document.createElement('script');s.src='/omega-element-motif.js';s.setAttribute('data-omega-element-motif','1');if(document.body)document.body.appendChild(s);}})();
+
+/* ===== EMBLEM PANEL -- the emblem-as-function pattern, loaded once, used everywhere ===== */
+(function(){if(!document.querySelector('script[data-omega-emblem-panel]')){var s=document.createElement('script');s.src='/omega-emblem-panel.js';s.setAttribute('data-omega-emblem-panel','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */
 (function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */
@@ -654,6 +657,25 @@
     var note=document.createElement('span');note.style.cssText='color:rgba(233,230,220,0.45);font-size:9px;letter-spacing:2px';note.textContent='SESSION ENDS \u00B7 ALL PROGRESS RESETS';
     bar.appendChild(icon);bar.appendChild(label);bar.appendChild(timer);bar.appendChild(note);
     document.body.appendChild(bar);
+    // push #omega-mob (the real mobile nav) up by this banner's actual
+    // rendered height so the banner doesn't cover it, and reserve the combined height at the bottom
+    // of the page so content isn't hidden underneath either.
+    requestAnimationFrame(function(){
+      var h=bar.offsetHeight;
+      var mobNav=document.getElementById('omega-mob');
+      if(mobNav){ mobNav.style.bottom=h+'px'; }
+      var existingPad=parseInt(getComputedStyle(document.body).paddingBottom)||0;
+      document.body.style.paddingBottom=(existingPad+h)+'px';
+      function adjustFeedbackBtn(){
+        var fbBtn=document.getElementById('ofb-btn');
+        if(fbBtn){ fbBtn.style.bottom='calc('+getComputedStyle(fbBtn).bottom+' + '+h+'px)'; return true; }
+        return false;
+      }
+      if(!adjustFeedbackBtn()){
+        var tries=0;
+        var t=setInterval(function(){ tries++; if(adjustFeedbackBtn()||tries>20) clearInterval(t); },150);
+      }
+    });
     var expired=false;
     function tick(){if(expired)return;var rem=expiresAt-Date.now();if(rem<=0){expired=true;timer.textContent='00:00';label.textContent='TRIAL EXPIRED';note.textContent='SESSION ENDED \u00B7 RESETTING PROGRESS...';sb.rpc('expire_trial',{p_uid:uid}).then(function(){setTimeout(function(){location.replace('/pending.html?t=expired');},2200);});return;}var m=Math.floor(rem/60000),sc=Math.floor((rem%60000)/1000);timer.textContent=(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;if(rem<60000)bar.style.boxShadow='0 -2px 24px rgba(139,0,0,0.6)';setTimeout(tick,500);}
     tick();
@@ -672,7 +694,7 @@
   /* CSS injection */
   if(!document.getElementById('omega-ui-css')){
     var s=document.createElement('style');s.id='omega-ui-css';
-    s.textContent='.tnav-btn{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;color:var(--muted,#85837b);padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:transparent;cursor:pointer;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.tnav-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,.5)}.tnav-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}#omega-mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:9990;display:none;align-items:stretch;height:58px;background:rgba(7,7,11,.97);border-top:1px solid rgba(201,168,76,.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}#omega-mob-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:#85837b;border-top:2px solid transparent;font-family:"Courier Prime",monospace;font-size:7px;letter-spacing:1.5px;transition:all .15s}#omega-mob-nav a.mbn-on{color:#C9A84C;border-top-color:#C9A84C;background:rgba(201,168,76,.05)}#omega-mob-nav .mbn-ic{font-size:15px;line-height:1;display:block}@media(max-width:767px){#omega-mob-nav{display:flex}body{padding-bottom:70px!important}}';
+    s.textContent='.tnav-btn{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;color:var(--muted,#85837b);padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:transparent;cursor:pointer;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.tnav-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,.5)}.tnav-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}';
     (document.head||document.documentElement).appendChild(s);
   }
   /* Topbar back/home */
@@ -686,27 +708,14 @@
     tn.appendChild(ha);tn.appendChild(bb);
     tb.insertBefore(tn,tb.firstChild);
   }
-  /* Mobile bottom nav */
-  function injectMobileNav(){
-    if(document.getElementById('omega-mob-nav'))return;
-    var LINKS=[
-      ['\u2302','HOME','/dashboard.html','dashboard'],
-      ['\u25C7','MATRIX','/matrix.html','matrix'],
-      ['\u25B6','MEDIA','/cinema.html','cinema'],
-      ['\u25C8','WALLET','/wallet.html','wallet'],
-      ['\u25CF','PROFILE','/profile.html','profile']
-    ];
-    var bar=document.createElement('nav');bar.id='omega-mob-nav';
-    LINKS.forEach(function(l){
-      var a=document.createElement('a');a.href=l[2];
-      if(pg===l[3])a.className='mbn-on';
-      a.innerHTML='<span class="mbn-ic">'+l[0]+'</span><span>'+l[1]+'</span>';
-      bar.appendChild(a);
-    });
-    document.body.appendChild(bar);
-  }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){injectTopbar();injectMobileNav();});}
-  else{injectTopbar();injectMobileNav();}
+  /* Mobile bottom nav is handled by nav.js (#omega-mob) -- an older, separate
+     implementation used to also run here (#omega-mob-nav), and since both
+     activated on nearly the same breakpoint (760px vs 767px) at the same
+     bottom:0 position with the same z-index, they rendered stacked on top of
+     each other on virtually every phone. Removed; nav.js's is the actively
+     maintained, fuller version. */
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){injectTopbar();});}
+  else{injectTopbar();}
 })();
 
 

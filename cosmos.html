@@ -212,9 +212,18 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active');
-    if(btn.dataset.tab==='horoscope' && !window.__horoBuilt){ window.__horoBuilt=true; if(window.bootHoroscopeFull) window.bootHoroscopeFull(); }
+    if(btn.dataset.tab==='horoscope' && !window.__horoBuilt){ window.__horoBuilt=true; callWhenReady('bootHoroscopeFull'); }
   });
 });
+function callWhenReady(fnName){
+  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
+    else if(tries>30){ clearInterval(t); }
+  },100);
+}
 
 /* URL hash tab */
 if(location.hash){

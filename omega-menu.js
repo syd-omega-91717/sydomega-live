@@ -38,13 +38,13 @@
       ['\u2638', 'Universe', '/universe.html'],
       ['\u25C9', 'Cinema', '/cinema.html'],
       ['\u25A3', 'Media', '/media.html'],
-      ['\u2b21', 'Sigil Vault', '/sigil.html']
+      ['\u2b21', 'Sigil Vault', '/vault.html#nft']
     ]],
     ['ASSETS', '#C9A84C', [
       ['\u03A9', 'Vault', '/vault.html'],
-      ['\u25C8', 'Treasury', '/treasury.html'],
+      ['\u25C8', 'Treasury', '/vault.html#reserve'],
       ['\u2263', 'Ledger', '/ledger.html'],
-      ['\u25D0', 'Wallet', '/wallet.html'],
+      ['\u25D0', 'Wallet', '/vault.html#wallet'],
       ['\u25C7', 'Portfolio', '/portfolio.html'],
       ['\u2318', 'Blockchain', '/blockchain.html'],
       ['\u25C8', 'Income', '/income.html'],

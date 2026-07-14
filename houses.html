@@ -86,19 +86,27 @@ async function boot(){
   const hCols=['#E86A3A','#C7CDD6','#A9C2D8','#34C6E6','#E86A3A','#D9B86A','#A9C2D8','#8B0000','#C9A84C','#E2C86D','#9B6BF0','#3fb27f'];
   const hg=document.getElementById('houses-grid');
   lore.houses.forEach((h,i)=>{
-    const c=document.createElement('div'); c.className='card';
-    c.innerHTML=`<span class="ring"></span><div class="hn">${h.house.toUpperCase()} &middot; ${h.sign.toUpperCase()}</div><div class="ht">${h.domain}</div><div class="hd">${h.desc}</div>`;
+    const c=document.createElement('div'); c.className='card'; c.style.cursor='pointer';
+    c.innerHTML=`<span class="ring"></span><div class="hn">${h.house.toUpperCase()} &middot; ${h.sign.toUpperCase()}</div><div class="ht">${h.domain}</div>`;
     hg.appendChild(c);
     fillRing(c.querySelector('.ring'), h.n, hCols[i]);
+    c.addEventListener('click',()=>window.OmegaEmblemPanel.open({
+      glyph:h.sign, color:hCols[i], title:h.house, subtitle:h.sign.toUpperCase()+' . '+h.domain.toUpperCase(),
+      sections:[{label:'MEANING',body:h.desc}]
+    }));
   });
 
   const gCols=['#C9A84C','#00E5FF','#3fb27f','#9B6BF0','#E2C86D','#34C6E6','#E86A3A','#8B0000','#C7CDD6'];
   const gg=document.getElementById('gov-grid');
   lore.governance_columns.forEach((g,i)=>{
-    const c=document.createElement('div'); c.className='card';
-    c.innerHTML=`<span class="ring"></span><div class="hn">COLUMN ${g.n}</div><div class="ht">${g.name}</div><div class="hd">${g.desc}</div>`;
+    const c=document.createElement('div'); c.className='card'; c.style.cursor='pointer';
+    c.innerHTML=`<span class="ring"></span><div class="hn">COLUMN ${g.n}</div><div class="ht">${g.name}</div>`;
     gg.appendChild(c);
     fillRing(c.querySelector('.ring'), g.n, gCols[i]);
+    c.addEventListener('click',()=>window.OmegaEmblemPanel.open({
+      glyph:g.n, color:gCols[i], title:g.name, subtitle:'GOVERNANCE COLUMN '+g.n,
+      sections:[{label:'MEANING',body:g.desc}]
+    }));
   });
 
   const ag=document.getElementById('alch-grid');

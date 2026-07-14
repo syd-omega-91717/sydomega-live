@@ -973,6 +973,7 @@ document.querySelectorAll('.mtab-btn').forEach(btn=>{
 });
 (function(){
   var wanted=sessionStorage.getItem('omega_mtab');
+  if(!wanted && location.hash){ wanted=location.hash.replace('#',''); }
   if(wanted){
     sessionStorage.removeItem('omega_mtab');
     var btn=document.querySelector('.mtab-btn[data-mtab="'+wanted+'"]');

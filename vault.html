@@ -350,12 +350,28 @@ function buildWallet(a,b,c){
   const g=document.getElementById('wallet-grid');g.innerHTML='';
   TOKENS.forEach(tk=>{
     const bal=parseFloat(tk.bal)||0;
-    const cd=document.createElement('div');cd.className='wl-card';
+    const cd=document.createElement('div');cd.className='wl-card';cd.style.cursor='pointer';
     cd.style.cssText+=`border-top-color:${tk.col}`;
     cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'&#937; 0'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
     g.appendChild(cd);
     const emblemEl=cd.querySelector('[data-omega-emblem]');
     fillSvg(emblemEl, tk.sign);
+    cd.addEventListener('click',()=>openTokenPanel(tk,bal));
+  });
+}
+
+function openTokenPanel(tk,bal){
+  window.OmegaEmblemPanel.open({
+    glyph: tk.sign, color: tk.col,
+    title: tk.name,
+    subtitle: tk.token,
+    badge: bal>0 ? 'ACTIVE' : 'PENDING ACTIVATION',
+    sections: [
+      { label: 'BALANCE', stats: [{k:'Current', v: '\u03A9 '+bal.toLocaleString()}] },
+      { label: 'STATUS', body: bal>0
+          ? 'This track token is active in your wallet.'
+          : 'Token economy activation is pending licensed legal review (securities, money-transmission, KYC/AML). No real monetary value is attached yet.' },
+    ]
   });
 }
 
@@ -373,11 +389,27 @@ function fillSvg(el, sign){
 function buildNFTs(){
   const g=document.getElementById('nft-gallery');g.innerHTML='';
   NFTS.forEach(n=>{
-    const c=document.createElement('div');c.className='nft-card';
+    const c=document.createElement('div');c.className='nft-card';c.style.cursor='pointer';
     c.style.cssText+=`border-top:2px solid ${n.col}66`;
     c.innerHTML=`<span class="nft-symbol" style="display:inline-block;width:48px;height:48px"></span><div class="nft-name" style="color:${n.col}">${n.name}</div><div class="nft-line">${n.line}</div><span class="nft-rarity" style="color:${n.col};border-color:${n.col}44">${n.rarity}</span>${n.locked?'<div class="nft-locked">LOCKED -- MINT PENDING</div>':''}`;
     g.appendChild(c);
     fillRing(c.querySelector('.nft-symbol'), n.sym, n.col, n.locked);
+    c.addEventListener('click',()=>openNFTPanel(n));
+  });
+}
+
+function openNFTPanel(n){
+  window.OmegaEmblemPanel.open({
+    glyph: n.sym, color: n.col,
+    title: n.name,
+    subtitle: n.line,
+    badge: n.locked ? 'MINT PENDING' : n.rarity,
+    sections: [
+      { label: 'STATUS', body: n.locked
+          ? 'Minting is not yet active. Token economy activation is pending licensed legal review.'
+          : 'This sigil is part of your sovereign collection.' },
+      { label: 'GO FURTHER', actions: [{ label: 'Open Full Sigil Vault', href: '/sigil.html' }] },
+    ]
   });
 }
 
@@ -396,10 +428,25 @@ function buildTiers(currentTier){
   const g=document.getElementById('tier-grid');g.innerHTML='';
   TIERS.forEach((tier,i)=>{
     const active=i+1===currentTier;
-    const c=document.createElement('div');c.className='tier-card'+(active?' active-tier':'');
-    c.innerHTML=`<span class="tc-ring" style="display:inline-block;width:44px;height:44px"></span><div class="tc-name" style="color:${active?tier.col:'var(--muted)'}">${tier.name}</div><div class="tc-price" style="color:${active?'var(--solar)':'var(--muted)'}">${tier.price}</div><div style="font-size:11px;color:var(--muted);font-weight:300;margin-bottom:8px">${tier.features}</div><span class="tc-badge" style="color:${active?tier.col:'var(--muted)'};border-color:${active?tier.col+'44':'rgba(133,131,123,.2)'}">${active?'CURRENT':'AVAILABLE'}</span>`;
+    const c=document.createElement('div');c.className='tier-card'+(active?' active-tier':'');c.style.cursor='pointer';
+    c.innerHTML=`<span class="tc-ring" style="display:inline-block;width:44px;height:44px"></span><div class="tc-name" style="color:${active?tier.col:'var(--muted)'}">${tier.name}</div><div class="tc-price" style="color:${active?'var(--solar)':'var(--muted)'}">${tier.price}</div><span class="tc-badge" style="color:${active?tier.col:'var(--muted)'};border-color:${active?tier.col+'44':'rgba(133,131,123,.2)'}">${active?'CURRENT':'AVAILABLE'}</span>`;
     g.appendChild(c);
     fillRing(c.querySelector('.tc-ring'), tier.n, tier.col, !active && i+1>currentTier);
+    c.addEventListener('click',()=>openTierPanel(tier,i,active,currentTier));
+  });
+}
+
+function openTierPanel(tier,i,active,currentTier){
+  const higher=i+1>currentTier;
+  window.OmegaEmblemPanel.open({
+    glyph: tier.n, color: tier.col,
+    title: tier.name,
+    subtitle: tier.price,
+    badge: active?'YOUR CURRENT TIER':null,
+    sections: [
+      { label: 'UNLOCKS', body: tier.features },
+      { label: 'GO FURTHER', actions: higher ? [{ label: 'View Subscription Options', href: '/subscriptions.html' }] : [] },
+    ]
   });
 }
 

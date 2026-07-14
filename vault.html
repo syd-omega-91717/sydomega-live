@@ -111,6 +111,9 @@ a{color:inherit;text-decoration:none}
       <div class="tab-btn" data-tab="nft"><div class="tbi" style="color:#9B6BF0">&#x2736;</div><div class="tbl">NFT VAULT</div></div>
       <div class="tab-btn" data-tab="payments"><div class="tbi" style="color:#00E5FF">&#x25C8;</div><div class="tbl">PAYMENTS</div></div>
       <div class="tab-btn" data-tab="membership"><div class="tbi" style="color:#3fb27f">&#x25B2;</div><div class="tbl">MEMBERSHIP</div></div>
+      <div class="tab-btn" data-tab="earning"><div class="tbi" style="color:#E2C86D">&#x25C6;</div><div class="tbl">EARNING LEDGER</div></div>
+      <div class="tab-btn" data-tab="articles"><div class="tbi" style="color:#C9A84C">&#x2696;</div><div class="tbl">ARTICLES</div></div>
+      <div class="tab-btn" data-tab="audit"><div class="tbi" style="color:#8B0000">&#x2637;</div><div class="tbl">AUDIT LOG</div></div>
     </div>
 
     <!-- TAB: SOVEREIGN RESERVE -->
@@ -176,6 +179,10 @@ a{color:inherit;text-decoration:none}
     <div class="tab-panel" id="tab-nft">
       <div class="sechead">NFT VAULT -- 12 SOVEREIGN LINES</div>
       <div class="nft-gallery" id="nft-gallery"></div>
+      <div class="pad" style="margin-top:20px;border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.03);padding:16px">
+        <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">PUBLIC MINTING &amp; MARKETPLACE -- PHASE II</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.7;margin:0">Minting these sigils as on-chain assets and trading them on public marketplaces (OpenSea, Rarible, and others) is <b style="color:var(--ink)">gated on legal review</b>. Inside the Order they are yours now -- earned, displayed, and permanent on your record. The external bridge activates only after token/asset classification and compliance are cleared.</p>
+      </div>
     </div>
 
     <!-- TAB: PAYMENTS -->
@@ -191,8 +198,58 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: MEMBERSHIP -->
     <div class="tab-panel" id="tab-membership">
-      <div class="sechead">SOVEREIGN MEMBERSHIP -- 9 TIERS</div>
+      <div class="sechead">SOVEREIGN MEMBERSHIP -- 12 TIERS</div>
       <div class="tier-grid" id="tier-grid"></div>
+    </div>
+
+    <!-- EARNING LEDGER (merged from wallet.html) -->
+    <div class="tab-panel" id="tab-earning">
+      <div class="sechead">HOW &#937; CREDIT IS EARNED</div>
+      <div class="pad" style="font-family:'Courier Prime',monospace;font-size:12px;color:var(--ink);line-height:1.9" id="earn-formula">Loading...</div>
+
+      <div class="sechead">ECONOMIC FUNCTIONS -- READY TO ACTIVATE</div>
+      <div class="pad" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Acquire &#937;</div><div style="font-size:11px;color:var(--muted)">Add credit via your connected payment provider. Activates with the economic layer.</div></div>
+        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Withdraw</div><div style="font-size:11px;color:var(--muted)">Move value out once a settlement provider is connected and cleared.</div></div>
+        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Transfer</div><div style="font-size:11px;color:var(--muted)">Send &#937; to another sovereign. Enabled with the ledger activation.</div></div>
+        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Marketplace</div><div style="font-size:11px;color:var(--muted)">Spend &#937; on works and listings. Opens with the marketplace layer.</div></div>
+      </div>
+
+      <div class="sechead">EARNING LEDGER -- YOUR REAL ACTIVITY</div>
+      <div class="pad" id="earn-ledgerwrap">Loading...</div>
+    </div>
+
+    <!-- ARTICLES (merged from treasury.html) -->
+    <div class="tab-panel" id="tab-articles">
+      <div class="sechead">THE 11 IMMUTABLE ARTICLES OF SOVEREIGNTY</div>
+      <div class="pad" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE I</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">100% Absolute Ownership</div><div style="font-size:11px;color:var(--muted)">No co-founders, no partners. Sole authority: Major Sleiman Youssef Dagher.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE II</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">51% Master Stake</div><div style="font-size:11px;color:var(--muted)">467,756,700,000 &#937; permanently locked. Non-transferable without explicit override.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE III</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Irrevocable Property Docs</div><div style="font-size:11px;color:var(--muted)">Hashed into Genesis Block. Engineers Order No.30875 immutably embedded.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE IV</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">999-Point Blueprint</div><div style="font-size:11px;color:var(--muted)">Permanent Directive in Immutable Logic Layer. Windsurf protocol active.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE V</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">&#937; Signet Power</div><div style="font-size:11px;color:var(--muted)">The only recognized icon of sovereign authority. All outputs carry the Omega seal.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Family Nest Protocol</div><div style="font-size:11px;color:var(--muted)">Sovereigns-by-Blood: zero fees, 100% compute priority, full access.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VII</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Heritage Protocol</div><div style="font-size:11px;color:var(--muted)">Dead-Man's Switch transfers full platform control to bloodline on trigger.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VIII</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">51% Safety Net</div><div style="font-size:11px;color:var(--muted)">Flash-crash protection via Rhodium reserves. Auto-triggered on market breach.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE IX</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">20% Reinvestment Sweep</div><div style="font-size:11px;color:var(--muted)">Auto-buys Gold, Silver, Rhodium hourly. Compound sovereign reserve growth.</div></div>
+        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE X</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Jurisdiction Hopping</div><div style="font-size:11px;color:var(--muted)">Automatic re-domicile if hostile. 5-nation protocol. Legal continuity guaranteed.</div></div>
+        <div style="padding:14px;border:1px solid var(--line);grid-column:span 2"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE XI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">The Omega Point</div><div style="font-size:11px;color:var(--muted)">Node 999 confirms absolute completion of the 729-node matrix. Sovereignty eternal. Matrix coordinate (9.000, 9.000, 9.000) -- authority score 15.588 -- is the final and irrevocable state of the founder's sovereign record.</div></div>
+      </div>
+    </div>
+
+    <!-- AUDIT LOG (merged from treasury.html) -->
+    <div class="tab-panel" id="tab-audit">
+      <div class="sechead">TREASURY AUDIT LOG</div>
+      <div class="pad" style="font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);margin-bottom:14px">The entries below are an illustration of what this log will show once the treasury/token economy is live -- not a real history. No sweep or lock operations have actually occurred yet.</div>
+      <div class="pad" style="display:flex;flex-direction:column;gap:0">
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-11 09:00</span><span>Auto-sweep executed -- Gold / Silver / Rhodium acquisition</span><span style="color:var(--muted)">SWEEP-PROTOCOL</span><span style="color:var(--green)">CONFIRMED</span></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-11 00:00</span><span>Master Vault lock verified -- 51% &#937; sealed</span><span style="color:var(--muted)">VAULT-LOCK-001</span><span style="color:var(--green)">SEALED</span></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-10 18:30</span><span>Polygon L2 activation gated -- legal clearance pending</span><span style="color:var(--muted)">CHAIN-GATE</span><span style="color:var(--solar)">GATED</span></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-09 12:00</span><span>PYRON founder token genesis confirmed</span><span style="color:var(--muted)">TOKEN-GEN-001</span><span style="color:var(--green)">CONFIRMED</span></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-08 09:15</span><span>Sovereign identity hash verified on ledger</span><span style="color:var(--muted)">GENESIS-HASH</span><span style="color:var(--green)">IMMUTABLE</span></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-07 14:00</span><span>Heritage Dead-Man's Switch protocol activated</span><span style="color:var(--muted)">HERITAGE-PROTO</span><span style="color:var(--green)">ACTIVE</span></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-01 00:00</span><span>11 Immutable Articles sealed -- Sovereignty declared</span><span style="color:var(--muted)">SOVEREIGNTY</span><span style="color:var(--green)">ETERNAL</span></div>
+      </div>
     </div>
   </main>
 </div>
@@ -480,7 +537,38 @@ async function boot(){
   document.getElementById('res-phys').textContent='\u03A9 '+Math.round(xp*.6).toLocaleString();
   document.getElementById('res-dig').textContent='\u03A9 '+Math.round(xp*.4).toLocaleString();
   buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();buildTiers(tier);buildTxLog();
+  buildEarningLedger(sess.user.id,a,b,c);
   requestAnimationFrame(()=>{drawVaultCube();drawWave();});
+}
+
+// merged from wallet.html -- real, non-monetary earning ledger
+async function buildEarningLedger(uid,a,b,c){
+  const PER_NODE=91.7, PER_CERT=917, PER_AUTH=91.717;
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:0});
+  const labelKind=k=>({academy:'Academy lesson',gaming:'Game node',contribution:'Contribution',lesson:'Lesson'})[k]||k;
+
+  let tasks=[], certs=0;
+  try{ const t=await sb.from('task_completions').select('kind,task,created_at').eq('user_id',uid).order('created_at',{ascending:false}); if(t.data) tasks=t.data; }catch(e){}
+  try{ const cc=await sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',uid); certs=cc.count||0; }catch(e){}
+
+  const nodes=tasks.length;
+  const earned=nodes*PER_NODE + certs*PER_CERT + auth*PER_AUTH;
+
+  document.getElementById('earn-formula').innerHTML=
+    '&#937; = (nodes &times; <b>'+PER_NODE+'</b>) + (certificates &times; <b>'+PER_CERT+'</b>) + (authority &times; <b>'+PER_AUTH+'</b>)<br>'+
+    '&nbsp;&nbsp; = ('+nodes+' &times; '+PER_NODE+') + ('+certs+' &times; '+PER_CERT+') + ('+auth.toFixed(2)+' &times; '+PER_AUTH+')<br>'+
+    '&nbsp;&nbsp; = <b>'+fmt(earned)+' &#937;</b> &middot; a tally of real action, not money.';
+
+  const lw=document.getElementById('earn-ledgerwrap');
+  if(!tasks.length){ lw.innerHTML='<div style="font-size:12px;color:var(--muted)">No earning activity yet. Clear nodes in the Academy and the Games to earn &#937; credit.</div>'; }
+  else{
+    const rows=tasks.slice(0,40).map(r=>{
+      const when=r.created_at?new Date(r.created_at).toLocaleDateString():'';
+      return '<tr><td>'+labelKind(r.kind)+'</td><td style="color:var(--muted);font-family:var(--M);font-size:11px">'+(r.task||'')+'</td><td style="color:var(--muted)">'+when+'</td><td style="text-align:right;color:var(--green)">+'+PER_NODE+' &#937;</td></tr>';
+    }).join('');
+    lw.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="border-bottom:1px solid var(--line);text-align:left"><th style="padding:8px 0">SOURCE</th><th>NODE</th><th>WHEN</th><th style="text-align:right">CREDIT</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
 }
 boot();
 </script>

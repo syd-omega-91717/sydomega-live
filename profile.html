@@ -239,6 +239,11 @@ a{color:inherit;text-decoration:none}
       <div class="tab-btn" data-tab="credentials">CREDENTIALS</div>
       <div class="tab-btn" data-tab="matrix">MATRIX</div>
       <div class="tab-btn" data-tab="social">SOCIAL</div>
+      <div class="tab-btn" data-tab="portfolio">PORTFOLIO</div>
+      <div class="tab-btn" data-tab="passport">PASSPORT</div>
+      <div class="tab-btn" data-tab="kyc">KYC</div>
+      <div class="tab-btn" data-tab="settings">SETTINGS</div>
+      <div class="tab-btn" data-tab="character">CHARACTER</div>
       <div class="tab-btn access-tab" id="access-tab-btn" data-tab="access">
         ACCESS
         <div class="access-badge" id="access-badge" style="display:none">0</div>
@@ -403,6 +408,557 @@ a{color:inherit;text-decoration:none}
         </div>
       </div>
     </div>
+
+    <div class="tab-panel" id="tab-portfolio" style="position:relative">
+      <canvas id="bg-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1"></canvas>
+      
+  <!-- HERO -->
+  <div class="hero-band">
+    <div class="hero-eyebrow">M16 // INVESTMENT ENGINE</div>
+    <h1 class="hero-title">Portfolio Command</h1>
+    <p class="hero-sub">The platform's stated asset allocation model -- token reserves, precious metals, and investment intelligence. Reference model; personal portfolio tracking is dormant until the token economy is live (see /payments.html).</p>
+  </div>
+
+  <!-- STAT ROW -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Portfolio Value</div>
+      <div class="stat-value" id="total-val">N/A</div>
+      <div class="stat-sub">Personal tracking dormant</div>
+      <div class="stat-delta up">&#9650; Token economy not yet live</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">&#937; Token Supply</div>
+      <div class="stat-value">917.4B</div>
+      <div class="stat-sub">Total Omega tokens (reference)</div>
+      <div class="stat-delta up">&#9650; 51% Master Vault reserved</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Physical Reserves</div>
+      <div class="stat-value">3-Tier</div>
+      <div class="stat-sub">Gold / Rhodium / Silver</div>
+      <div class="stat-delta up">&#9650; Reserve model (dormant)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Matrix Coordinate</div>
+      <div class="stat-value" id="port-coord">(--, --, --)</div>
+      <div class="stat-sub">Axis A / B / C</div>
+      <div class="stat-delta up" id="port-auth">Loading authority...</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+    <!-- LEFT: Holdings + Chart -->
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
+      <!-- Performance -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Portfolio Performance</span>
+          <span class="panel-badge">LIVE CURVE</span>
+        </div>
+        <div class="panel-body">
+          <div class="perf-chart">
+            <canvas id="perf-canvas" class="perf-canvas"></canvas>
+          </div>
+          <div style="display:flex;gap:2rem;margin-top:.5rem">
+            <div><div class="stat-label">All-Time High</div><div style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:.9rem">9.9.9 APEX</div></div>
+            <div><div class="stat-label">Current Phase</div><div style="font-family:'Courier Prime',monospace;color:var(--cyan);font-size:.9rem">PHASE 0</div></div>
+            <div><div class="stat-label">Evolution Events</div><div style="font-family:'Courier Prime',monospace;color:var(--green);font-size:.9rem" id="ev-count">0</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Holdings Table -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Asset Holdings</span>
+          <span class="panel-badge">18 CLASSES</span>
+        </div>
+        <div class="panel-body" style="padding:0">
+          <table class="holdings-table">
+            <thead>
+              <tr>
+                <th>Asset</th>
+                <th>Class</th>
+                <th>Allocation</th>
+                <th>Status</th>
+                <th>Authority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon">&#937;</div><div><div class="asset-name">Omega Token</div><div class="asset-ticker">OMEGA</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Digital</td>
+                <td class="gold">51.00%</td>
+                <td><span class="token-status active">LOCKED</span></td>
+                <td class="green">Sovereign</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:var(--gold)">Au</div><div><div class="asset-name">Gold Reserve</div><div class="asset-ticker">XAU</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Physical</td>
+                <td class="gold">412,300g</td>
+                <td><span class="token-status active">ACTIVE</span></td>
+                <td class="green">Auto-sweep</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#A0B4C8">Rh</div><div><div class="asset-name">Rhodium Reserve</div><div class="asset-ticker">XRH</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Physical</td>
+                <td class="gold">125,000g</td>
+                <td><span class="token-status active">ACTIVE</span></td>
+                <td class="green">Flash-crash guard</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#C0C0C0">Ag</div><div><div class="asset-name">Silver Reserve</div><div class="asset-ticker">XAG</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Physical</td>
+                <td class="gold">890,000g</td>
+                <td><span class="token-status active">ACTIVE</span></td>
+                <td class="green">Auto-sweep</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:var(--cyan)">PG</div><div><div class="asset-name">Polygon (L2)</div><div class="asset-ticker">MATIC</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Blockchain</td>
+                <td class="gold">Dormant</td>
+                <td><span class="token-status dormant">PENDING LEGAL</span></td>
+                <td style="color:var(--muted)">Gated</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#9B59B6">IP</div><div><div class="asset-name">IP Catalog</div><div class="asset-ticker">12 FILMS</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Intellectual</td>
+                <td class="gold">144 titles</td>
+                <td><span class="token-status active">BUILDING</span></td>
+                <td class="green">100% owned</td>
+              </tr>
+              <tr>
+                <td><div class="asset-cell"><div class="asset-icon" style="color:#E67E22">GM</div><div><div class="asset-name">Gaming Assets</div><div class="asset-ticker">12 GAMES</div></div></div></td>
+                <td style="color:var(--muted);font-size:.75rem">Digital</td>
+                <td class="gold">144 titles</td>
+                <td><span class="token-status dormant">ROADMAP</span></td>
+                <td style="color:var(--muted)">Sovereign</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Allocation -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Allocation Breakdown</span>
+          <span class="panel-badge">7 CLASSES</span>
+        </div>
+        <div class="panel-body">
+          <div class="alloc-chart">
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">&#937; Digital Tokens</span><span class="alloc-pct">51%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:51%;background:var(--gold)"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Physical Precious Metals</span><span class="alloc-pct">22%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:22%;background:#C0C0C0"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Intellectual Property</span><span class="alloc-pct">12%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:12%;background:var(--cyan)"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Gaming Ecosystem</span><span class="alloc-pct">8%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:8%;background:#E67E22"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Platform Infrastructure</span><span class="alloc-pct">5%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:5%;background:#9B59B6"></div></div>
+            </div>
+            <div class="alloc-item">
+              <div class="alloc-meta"><span class="alloc-name">Consultancy Revenue</span><span class="alloc-pct">2%</span></div>
+              <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:2%;background:var(--green)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
+      <!-- Physical Reserves -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Physical Reserves</span>
+          <span class="panel-badge">VAULT ACTIVE</span>
+        </div>
+        <div class="panel-body">
+          <div class="reserves-grid">
+            <div class="reserve-card gold-res">
+              <div class="reserve-symbol">Au</div>
+              <div class="reserve-label">Gold</div>
+              <div class="reserve-amount">412,300g</div>
+              <div class="reserve-val">XAU | Auto-sweep</div>
+            </div>
+            <div class="reserve-card silver-res">
+              <div class="reserve-symbol">Ag</div>
+              <div class="reserve-label">Silver</div>
+              <div class="reserve-amount">890,000g</div>
+              <div class="reserve-val">XAG | Auto-sweep</div>
+            </div>
+            <div class="reserve-card rhodium-res">
+              <div class="reserve-symbol">Rh</div>
+              <div class="reserve-label">Rhodium</div>
+              <div class="reserve-amount">125,000g</div>
+              <div class="reserve-val">XRH | Flash guard</div>
+            </div>
+            <div class="reserve-card crypto-res">
+              <div class="reserve-symbol">&#937;</div>
+              <div class="reserve-label">Omega</div>
+              <div class="reserve-amount">467.8B</div>
+              <div class="reserve-val">51% | Vault lock</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding:.75rem;border:1px solid rgba(0,229,255,0.1);font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);line-height:1.6">
+            20% REINVESTMENT SWEEP // AUTO-BUYS GOLD, SILVER, RHODIUM HOURLY<br>
+            51% SAFETY NET // FLASH-CRASH PROTECTION ACTIVE<br>
+            POLYGON L2 CHAIN // DORMANT PENDING LEGAL CLEARANCE
+          </div>
+        </div>
+      </div>
+
+      <!-- Token Economy -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">12-Token Economy</span>
+          <span class="panel-badge">POLYGON L2</span>
+        </div>
+        <div class="panel-body">
+          <div class="token-list">
+            <div class="token-row">
+              <div class="token-dot" style="background:var(--crimson2)"></div>
+              <span class="token-name">ARENITE</span>
+              <span class="token-bal">Fire / Ares</span>
+              <span class="token-status active">FOUNDER</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#3498DB"></div>
+              <span class="token-name">POSEIDITE</span>
+              <span class="token-bal">Water / Poseidon</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#F39C12"></div>
+              <span class="token-name">SOLITE</span>
+              <span class="token-bal">Fire / Apollo</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#2ECC71"></div>
+              <span class="token-name">DEMITE</span>
+              <span class="token-bal">Earth / Demeter</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:#9B59B6"></div>
+              <span class="token-name">HERMITE</span>
+              <span class="token-bal">Wind / Hermes</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div class="token-row">
+              <div class="token-dot" style="background:var(--cyan)"></div>
+              <span class="token-name">ZEUITE</span>
+              <span class="token-bal">Sky / Zeus</span>
+              <span class="token-status dormant">DORMANT</span>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);text-align:center;padding:.5rem 0;letter-spacing:.1em">+ 6 MORE TOKENS // LEGAL CLEARANCE REQUIRED</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Position -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Matrix Position</span>
+          <span class="panel-badge">9D ENGINE</span>
+        </div>
+        <div class="panel-body">
+          <div class="matrix-display">
+            <div class="axis-row">
+              <div class="axis-header"><span class="axis-label">A // KNOWLEDGE</span><span class="axis-val">9.000</span></div>
+              <div class="axis-track"><div class="axis-fill" style="width:100%"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-header"><span class="axis-label">B // MASTERY</span><span class="axis-val">9.000</span></div>
+              <div class="axis-track"><div class="axis-fill" style="width:100%"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-header"><span class="axis-label">C // CONTRIBUTION</span><span class="axis-val">9.000</span></div>
+              <div class="axis-track"><div class="axis-fill" style="width:100%"></div></div>
+            </div>
+            <div class="matrix-coord">
+              <div class="matrix-coord-label">Coordinate / Authority Score</div>
+              <div class="matrix-coord-val">(9,9,9) / 15.588</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECOND ROW -->
+  <div class="second-row">
+    <!-- Transaction Log -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Transaction Log</span>
+        <span class="panel-badge">LEDGER</span>
+      </div>
+      <div class="panel-body">
+        <div class="tx-list">
+          <div class="tx-item in">
+            <div class="tx-type">SWEEP</div>
+            <div class="tx-desc">Auto-sweep -- Gold acquisition XAU</div>
+            <div class="tx-amount in">+412.3kg</div>
+            <div class="tx-date">2026-07-11</div>
+          </div>
+          <div class="tx-item in">
+            <div class="tx-type">LOCK</div>
+            <div class="tx-desc">Master Vault lock -- 51% &#937; tokens</div>
+            <div class="tx-amount in">+467.8B &#937;</div>
+            <div class="tx-date">2026-07-10</div>
+          </div>
+          <div class="tx-item pend">
+            <div class="tx-type">PEND</div>
+            <div class="tx-desc">Polygon L2 -- Awaiting legal clearance</div>
+            <div class="tx-amount" style="color:var(--gold)">GATED</div>
+            <div class="tx-date">2026-07-09</div>
+          </div>
+          <div class="tx-item in">
+            <div class="tx-type">MINT</div>
+            <div class="tx-desc">ARENITE token genesis -- Founder tier</div>
+            <div class="tx-amount in">+GENESIS</div>
+            <div class="tx-date">2026-07-08</div>
+          </div>
+          <div class="tx-item out">
+            <div class="tx-type">ALLOC</div>
+            <div class="tx-desc">Rhodium acquisition -- Flash guard</div>
+            <div class="tx-amount out">125kg Rh</div>
+            <div class="tx-date">2026-07-07</div>
+          </div>
+          <div class="tx-item in">
+            <div class="tx-type">REG</div>
+            <div class="tx-desc">Sovereign identity registration</div>
+            <div class="tx-amount in">HASHED</div>
+            <div class="tx-date">2026-07-01</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investment Reports -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Investment Reports</span>
+        <span class="panel-badge">M16</span>
+      </div>
+      <div class="panel-body">
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Q2 2026 Portfolio Review</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">Physical + Digital | 14pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem">DOWNLOAD</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Token Architecture Brief</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">12-token economy spec | 8pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem">DOWNLOAD</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Legal Compliance Checklist</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">KYC/AML | Securities | 22pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--gold);border:1px solid var(--border);padding:.2rem .5rem">PENDING</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:.8rem;color:var(--text)">Rhodium Flash-Guard Protocol</div>
+              <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-top:.2rem">Risk management | 6pp</div>
+            </div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem">DOWNLOAD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Allocation Engine -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Allocation Engine</span>
+        <span class="panel-badge">AUTO</span>
+      </div>
+      <div class="panel-body">
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div style="padding:.75rem;border:1px solid rgba(0,200,150,0.15);background:rgba(0,200,150,0.04)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--green);letter-spacing:.1em;margin-bottom:.3rem">ACTIVE PROTOCOL</div>
+            <div style="font-size:.8rem;color:var(--text)">20% Reinvestment Sweep</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Hourly auto-buy: Gold, Silver, Rhodium</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid rgba(0,229,255,0.15);background:rgba(0,229,255,0.03)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:.3rem">SAFETY NET</div>
+            <div style="font-size:.8rem;color:var(--text)">51% Master Vault Lock</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Flash-crash protection via Rhodium reserves</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid rgba(139,0,0,0.3);background:rgba(139,0,0,0.04)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--crimson2);letter-spacing:.1em;margin-bottom:.3rem">GOVERNANCE</div>
+            <div style="font-size:.8rem;color:var(--text)">Jurisdiction Hopping</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">5-nation re-domicile if hostile environment detected</div>
+          </div>
+          <div style="padding:.75rem;border:1px solid var(--border)">
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">HERITAGE</div>
+            <div style="font-size:.8rem;color:var(--text)">Dead-Man's Switch</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Full control transfers to bloodline on trigger</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    </div>
+
+        <div class="tab-panel" id="tab-passport">
+
+    <div class="topbar"><div class="t">SOVEREIGN PASSPORT<small>YOUR IDENTITY WITHIN THE ORDER</small></div></div>
+
+    <div class="passport" id="pp">
+      <div class="pp-top"><div class="ord">SYD OMEGA 91717<small>SOVEREIGN ORDER</small></div><div class="seal">\u03A9</div></div>
+      <div class="pp-body">
+        <div class="pp-photo" id="pp-photo">\u03A9</div>
+        <div class="pp-fields">
+          <div class="pp-name" id="pp-name"> -- </div>
+          <div class="pp-row">
+            <div class="pp-f"><div class="k">SIGN</div><div class="v" id="pp-sign"> -- </div></div>
+            <div class="pp-f"><div class="k">RANK</div><div class="v g" id="pp-rank"> -- </div></div>
+            <div class="pp-f"><div class="k">FACTION</div><div class="v" id="pp-fact"> -- </div></div>
+            <div class="pp-f"><div class="k">AGENT</div><div class="v" id="pp-agent"> -- </div></div>
+            <div class="pp-f"><div class="k">NODE</div><div class="v g" id="pp-node"> -- </div></div>
+            <div class="pp-f"><div class="k">AUTHORITY</div><div class="v g" id="pp-auth"> -- </div></div>
+          </div>
+        </div>
+      </div>
+      <div class="pp-id"><small>SOVEREIGNTY ID</small> &nbsp;<span id="pp-id"> -- </span></div>
+      <div class="pp-status"><span class="dot none" id="pp-dot"></span><span id="pp-stat">VERIFICATION: NOT SUBMITTED</span></div>
+    </div>
+
+    <div class="notice">Your Passport is generated from your <b>real standing</b> and is yours immediately. Identity <b>verification (KYC) is built and ready to activate</b>: when you submit a document below it is <b>stored securely and marked pending</b>  --  <b>no "verified" status is ever granted automatically</b>. Verification becomes real only when the Order connects a licensed verification provider and completes its legal arrangements.</div>
+
+    <div class="sechead">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
+    <div class="kyc">
+      <label>GOVERNMENT ID OR PASSPORT (image or PDF)</label>
+      <input id="kyc-file" type="file" accept="image/*,application/pdf" />
+      <button class="sb" id="kyc-submit">SUBMIT FOR VERIFICATION</button>
+      <div class="msg" id="kyc-msg"></div>
+    </div>
+  
+</div>
+
+    <!-- KYC -->
+    <div class="tab-panel" id="tab-kyc">
+
+    <div class="topbar">
+      <div class="t">IDENTITY VERIFICATION<small>KYC . AML . SOVEREIGN CREDENTIAL . M13</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px">Your sovereign identity must be verified before economic features, token ownership, and advanced consultancy access are unlocked. This is a legal requirement -- not a platform choice. All documents are encrypted and handled under GDPR/CCPA compliance.</p>
+
+    <div class="ra-note">
+      [*] READY TO ACTIVATE -- KYC provider integration pending legal counsel sign-off. All intake flows, status tracking, and document management are active. Live verification requires a licensed KYC/AML provider connection.
+    </div>
+
+    <div class="sechead">CURRENT VERIFICATION STATUS</div>
+    <div class="kyc-status-hero">
+      <div class="ksh-icon" id="kyc-icon" style="border-color:var(--solar);color:var(--solar)">&#x25C8;</div>
+      <div class="ksh-meta">
+        <div class="km-title" id="kyc-title">IDENTITY VERIFICATION</div>
+        <div class="km-status" id="kyc-status-badge" style="color:var(--solar);border-color:rgba(226,200,109,.4)">STATUS PENDING</div>
+        <div class="km-desc" id="kyc-desc">Your identity verification is in progress. Complete all required steps below to unlock economic features, token access, and advanced sovereign credentials.</div>
+      </div>
+    </div>
+
+    <div class="sechead">VERIFICATION STEPS</div>
+    <div class="steps-wrap" id="steps-wrap"></div>
+
+    <div class="sechead">DOCUMENT SUBMISSION</div>
+    <div class="doc-grid" id="doc-grid"></div>
+
+    <div class="sechead">SECURITY TIERS</div>
+    <div class="sec-tier-grid" id="sec-tier-grid"></div>
+
+    <div class="sechead">UNLOCKS ON COMPLETION</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="unlocks-grid"></div>
+  
+</div>
+
+    <!-- CHARACTER -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="sechead">PLATFORM SETTINGS</div>
+      <div class="settings-grid" id="settings-grid"></div>
+      <div style="margin:20px clamp(14px,3vw,32px)">
+        <button class="btn-save" id="btn-settings-save">SAVE SETTINGS</button>
+        <div class="save-msg" id="settings-save-msg">Settings saved to sovereign profile.</div>
+      </div>
+    </div>
+  </main>
+
+    <div class="tab-panel" id="tab-character">
+      
+    <div class="topbar">
+      <div class="t">CHARACTER SYSTEM<small>M3 . SOVEREIGN IDENTITY . GENEALOGY . EVOLUTION PATH</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px">Your sovereign character is assigned at genesis by your zodiac sign and cannot be chosen &mdash; only evolved. Every action in the matrix refines your archetype. Your character is inherited by your heirs, gaining their traits and merging into the bloodline. This is how the Order grows across generations.</p>
+
+    <div class="sechead">YOUR SOVEREIGN CHARACTER</div>
+    <div class="char-hero">
+      <canvas id="char-canvas" width="160" height="160" style="width:80px;height:80px"></canvas>
+      <div class="char-meta">
+        <div class="cm-sign" id="cm-sign">LOADING...</div>
+        <div class="cm-name" id="cm-name">SOVEREIGN</div>
+        <div class="cm-role" id="cm-role">CHARACTER LOADING...</div>
+        <div class="cm-traits" id="cm-traits"></div>
+        <div class="cm-stat-row">
+          <div class="cm-stat"><div class="cs-label">STRENGTH</div><div class="cs-val" id="cs-str" style="color:var(--cyan)">--</div></div>
+          <div class="cm-stat"><div class="cs-label">WISDOM</div><div class="cs-val" id="cs-wis" style="color:var(--solar)">--</div></div>
+          <div class="cm-stat"><div class="cs-label">LEGACY</div><div class="cs-val" id="cs-leg" style="color:var(--green)">--</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sechead">CHARACTER EVOLUTION PATH</div>
+    <div class="evo-row" id="evo-row"></div>
+
+    <div class="sechead">THE 12 SOVEREIGN ARCHETYPES</div>
+    <div class="arch-grid" id="arch-grid"></div>
+
+    <div class="sechead">CHARACTER GENEALOGY TREE</div>
+    <canvas id="tree-cv" height="240"></canvas>
+
+    <div class="sechead">CHARACTER INHERITANCE SETTINGS</div>
+    <div class="save-form">
+      <p style="font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:14px">DEFINE HOW YOUR CHARACTER TRAITS PASS TO YOUR HEIRS</p>
+      <div class="sf-row">
+        <div class="sf-field"><label>CHARACTER NAME</label><input type="text" id="char-name-in" placeholder="Your sovereign name..."/></div>
+        <div class="sf-field"><label>DOMINANT TRAIT</label>
+          <select id="dom-trait"><option>Knowledge</option><option>Strength</option><option>Wisdom</option><option>Legacy</option><option>Courage</option><option>Vision</option><option>Justice</option><option>Creation</option><option>Mastery</option></select>
+        </div>
+        <div class="sf-field"><label>INHERITANCE MODE</label>
+          <select id="inherit-mode"><option>Full Transmission</option><option>50/50 Split</option><option>Merit Only</option><option>Bloodline Lock</option></select>
+        </div>
+        <div class="sf-field"><label>LEGACY STATEMENT</label><input type="text" id="legacy-stmt" placeholder="What you pass forward..."/></div>
+      </div>
+      <button class="btn-save" id="btn-char-save">SEAL CHARACTER RECORD</button>
+      <div class="saved-msg" id="char-saved-msg">Character record sealed to the immutable archive.</div>
+    </div>
+  
+    </div>
+
   </main>
 </div>
 <script>
@@ -413,8 +969,30 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active');
+    const t=btn.dataset.tab;
+    if(t==='portfolio' && !window.__portBuilt){ window.__portBuilt=true; callWhenReady('bootPortfolioExtra'); }
+    if(t==='passport' && !window.__ppBuilt){ window.__ppBuilt=true; callWhenReady('bootPassportExtra'); }
+    if(t==='kyc' && !window.__kycBuilt){ window.__kycBuilt=true; callWhenReady('bootKYCExtra'); }
+    if(t==='settings' && !window.__idExtraBuilt){ window.__idExtraBuilt=true; callWhenReady('bootIdentityExtra'); }
+    if(t==='character' && !window.__charBuilt){ window.__charBuilt=true; callWhenReady('bootCharacterFull'); }
   });
 });
+function callWhenReady(fnName){
+  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
+    else if(tries>30){ clearInterval(t); }
+  },100);
+}
+(function(){
+  if(location.hash){
+    const t=location.hash.replace('#','');
+    const btn=document.querySelector('.tab-btn[data-tab="'+t+'"]');
+    if(btn) btn.click();
+  }
+})();
 
 /* Hero particle canvas */
 (function(){
@@ -784,7 +1362,592 @@ document.querySelectorAll('.acf-btn').forEach(btn=>{
 });
 
 </script>
-<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const EL_MAP={Aries:'FIRE',Taurus:'METAL',Gemini:'WIND',Cancer:'WATER',Leo:'FIRE',Virgo:'SAND',Libra:'WIND',Scorpio:'WATER',Sagittarius:'FIRE',Capricorn:'METAL',Aquarius:'WIND',Pisces:'WATER'};
+const KYC_STEPS=[
+  {n:1,title:'EMAIL VERIFICATION',desc:'Email confirmed at registration.','done':true},
+  {n:2,title:'PROFILE COMPLETION',desc:'Display name, zodiac sign, nationality, and profession required.','done':false,action:'COMPLETE ABOVE'},
+  {n:3,title:'IDENTITY DOCUMENT',desc:'Passport or government ID -- valid, unexpired.','done':false,action:'UPLOAD DOCUMENT'},
+  {n:4,title:'LIVENESS CHECK',desc:'60-second selfie video for AI verification.','done':false,action:'START LIVENESS'},
+  {n:5,title:'ADDRESS VERIFICATION',desc:'Utility bill or bank statement dated within 90 days.','done':false,action:'UPLOAD PROOF'},
+  {n:6,title:'KYC REVIEW',desc:'Compliance engine review -- 1 to 3 business days.','done':false},
+  {n:7,title:'SOVEREIGN UNLOCKED',desc:'Full economic features, tokens, and credentials active.','done':false},
+];
+const SETTINGS_DATA=[
+  {title:'DISPLAY',items:[['Dark Mode','on'],['Compact Layout','off'],['Animations','on'],['Cursor Trail','on']]},
+  {title:'PRIVACY',items:[['Show in Leaderboard','on'],['Public Authority Score','on'],['Anonymous Mode','off']]},
+  {title:'NOTIFICATIONS',items:[['Matrix Milestone Alerts','on'],['Agent Messages','on'],['Daily Oracle','on'],['Economic Events','off']]},
+  {title:'AUDIO',items:[['Ambient Frequency','on'],['Click Sounds','off'],['Oracle Voice','off']]},
+];
+
+function makeToggle(on){
+  const el=document.createElement('div');el.className='toggle'+(on?' on':'');
+  el.addEventListener('click',()=>{el.classList.toggle('on');});
+  return el;
+}
+
+function fillRing(el, glyph, col, locked){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
+    else if(tries>20){ clearInterval(t); }
+  },150);
+}
+
+function buildKYC(kyc){
+  const g=document.getElementById('kyc-steps');g.innerHTML='';
+  const done=kyc==='verified'?7:kyc==='submitted'?5:2;
+  KYC_STEPS.forEach((s,i)=>{
+    const isDone=i<done,isActive=i===done;
+    const d=document.createElement('div');d.className='kyc-step';
+    d.innerHTML=`<span class="ks-ring" style="display:inline-block;width:48px;height:48px"></span><div class="ks-body"><div class="ksb-title" style="color:${isDone?'var(--green)':isActive?'var(--solar)':'rgba(233,230,220,0.4)'}">${s.title}</div><div class="ksb-desc">${s.desc}</div>${isActive&&s.action?'<button class="ks-action" style="color:var(--gold);border-color:rgba(201,168,76,.4)">'+(s.action)+'</button>':''}</div>`;
+    g.appendChild(d);
+    fillRing(d.querySelector('.ks-ring'), isDone?'&#x2713;':s.n, isDone?'#3fb27f':isActive?'#C9A84C':'#85837b', !isDone && !isActive);
+  });
+}
+
+function buildSettings(){
+  const g=document.getElementById('settings-grid');g.innerHTML='';
+  SETTINGS_DATA.forEach(sec=>{
+    const c=document.createElement('div');c.className='sg-card';
+    c.innerHTML=`<div class="sgc-title">${sec.title}</div>`;
+    sec.items.forEach(item=>{
+      const row=document.createElement('div');row.className='toggle-row';
+      const toggle=makeToggle(item[1]==='on');
+      toggle.dataset.key=item[0];
+      const label=document.createElement('span');label.className='tr-label';label.textContent=item[0];
+      row.appendChild(label);row.appendChild(toggle);
+      c.appendChild(row);
+    });
+    g.appendChild(c);
+  });
+}
+
+function buildBarcode(){
+  const bc=document.getElementById('pp-barcode');if(!bc)return;
+  bc.innerHTML='';
+  for(let i=0;i<80;i++){
+    const b=document.createElement('div');b.className='bar';
+    const h=Math.random()>.5?(8+Math.random()*16):(3+Math.random()*8);
+    b.style.cssText=`flex:${Math.random()>.7?2:1};height:${h}px;align-self:flex-end`;
+    bc.appendChild(b);
+  }
+}
+
+async function bootIdentityExtra(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess) return;
+  const uid=sess.user.id;
+  const pr=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();
+  const d=pr.data||{};
+
+  /* Settings tab */
+  const priv=SETTINGS_DATA.find(s=>s.title==='PRIVACY');
+  if(priv){
+    const on = d.is_public===true ? 'on':'off';
+    priv.items.forEach(item=>{ if(item[0]==='Show in Leaderboard'||item[0]==='Public Authority Score') item[1]=on; });
+  }
+  buildSettings();
+
+  document.getElementById('btn-settings-save')?.addEventListener('click',async()=>{
+    const m=document.getElementById('settings-save-msg');
+    const leaderboardToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Show in Leaderboard');
+    const authorityToggle=[...document.querySelectorAll('.toggle')].find(t=>t.dataset.key==='Public Authority Score');
+    const wantsPublic = (leaderboardToggle&&leaderboardToggle.classList.contains('on')) || (authorityToggle&&authorityToggle.classList.contains('on'));
+    const r=await sb.rpc('set_profile_visibility',{p_public:wantsPublic});
+    if(r.data&&r.data.ok){
+      m.textContent='Privacy setting saved to your profile. (Display, Notifications, and Audio preferences are not yet backed by persistent storage -- they reset each visit for now.)';
+    } else {
+      m.textContent='Could not save privacy setting: '+((r.data&&r.data.error)||r.error?.message||'unknown error');
+    }
+    m.style.display='block';setTimeout(()=>m.style.display='none',5000);
+  });
+}
+window.bootIdentityExtra = bootIdentityExtra;
+
+</script>
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const CHAR_MAP={
+  Aries:{name:'THE FIRE INITIATOR',role:'WARRIOR . PIONEER . IGNITER',traits:['Bold','Decisive','Unstoppable','First Mover'],col:'#E86A3A',glyph:'Y',archetype:'WARRIOR'},
+  Taurus:{name:'THE METAL SOVEREIGN',role:'BUILDER . PROTECTOR . ENDURER',traits:['Steadfast','Disciplined','Builder','Loyal'],col:'#C7CDD6',glyph:'B',archetype:'GUARDIAN'},
+  Gemini:{name:'THE WIND MESSENGER',role:'COMMUNICATOR . THINKER . CONNECTOR',traits:['Adaptive','Dual-natured','Brilliant','Swift'],col:'#A9C2D8',glyph:'C',archetype:'HERALD'},
+  Cancer:{name:'THE WATER KEEPER',role:'PROTECTOR . NURTURER . INTUITIVE',traits:['Deep','Protective','Intuitive','Loyal'],col:'#34C6E6',glyph:'D',archetype:'GUARDIAN'},
+  Leo:{name:'THE FIRE SOVEREIGN',role:'LEADER . CREATOR . ILLUMINATOR',traits:['Radiant','Command','Creative','Noble'],col:'#C9A84C',glyph:'S',archetype:'SOVEREIGN'},
+  Virgo:{name:'THE SAND ARCHITECT',role:'ANALYST . BUILDER . AMPLIFIER',traits:['Precise','Universal','Service','Mastery'],col:'#D9B86A',glyph:'V',archetype:'ARCHITECT'},
+  Libra:{name:'THE WIND JUSTICIAR',role:'BALANCER . DIPLOMAT . HARMONISER',traits:['Fair','Aesthetic','Wise','Bridge-builder'],col:'#A9C2D8',glyph:'J',archetype:'DIPLOMAT'},
+  Scorpio:{name:'THE WATER EXECUTOR',role:'TRANSFORMER . DETECTOR . AVENGER',traits:['Intense','Strategic','Hidden depth','Relentless'],col:'#34C6E6',glyph:'X',archetype:'EXECUTOR'},
+  Sagittarius:{name:'THE FIRE EXPLORER',role:'SEEKER . PHILOSOPHER . ARCHER',traits:['Expansive','Optimistic','Truth-seeker','Free'],col:'#E86A3A',glyph:'A',archetype:'EXPLORER'},
+  Capricorn:{name:'THE METAL MASTER',role:'ACHIEVER . STRATEGIST . LEGACY BUILDER',traits:['Disciplined','Patient','Legacy-driven','Authority'],col:'#C7CDD6',glyph:'M',archetype:'MASTER'},
+  Aquarius:{name:'THE WIND VISIONARY',role:'INNOVATOR . REBEL . HUMANITY ARCHITECT',traits:['Visionary','Unconventional','Humanitarian','Future-driven'],col:'#A9C2D8',glyph:'Q',archetype:'VISIONARY'},
+  Pisces:{name:'THE WATER ORACLE',role:'DREAMER . HEALER . TRANSCENDENT',traits:['Mystical','Compassionate','Transcendent','Boundless'],col:'#34C6E6',glyph:'P',archetype:'MYSTIC'},
+};
+
+const ARCHETYPES=[
+  {icon:'&#x2694;',name:'THE WARRIOR',type:'FIRE . ARIES . LEO . SAGITTARIUS',desc:'Commands through action. First to fight, last to fall. The Warrior archetype drives the Mastery axis and thrives in the gaming arena.',traits:['Courage','Battle','Honor']},
+  {icon:'&#x25C8;',name:'THE GUARDIAN',type:'WATER . CANCER . TAURUS',desc:'Protects through strength and loyalty. The Guardian archetype anchors the family constellation and secures the bloodline vault.',traits:['Protection','Loyalty','Endurance']},
+  {icon:'&#x25CE;',name:'THE HERALD',type:'WIND . GEMINI . AQUARIUS',desc:'Moves information across realms. The Herald drives the Communication axis, Social Hub activity, and knowledge broadcasting.',traits:['Speed','Communication','Duality']},
+  {icon:'&#x2609;',name:'THE ORACLE',type:'AETHER . SPACE . PISCES',desc:'Sees beyond the present. The Oracle archetype powers prediction, horoscope mastery, and the civilizational forecasting network.',traits:['Vision','Prophecy','Mystery']},
+  {icon:'&#x265A;',name:'THE SOVEREIGN',type:'FIRE . METAL . LEO . CAPRICORN',desc:'The apex archetype. Born to lead. Commands all other archetypes. Unlocked only at the (9,9,9) matrix coordinate.',traits:['Command','Authority','Legacy']},
+  {icon:'&#x2692;',name:'THE ARCHITECT',type:'SAND . VIRGO . EARTH',desc:'Builds what others cannot imagine. The Architect drives the Knowledge axis and the Research & Discovery layer. Detail is divine.',traits:['Precision','Creation','Mastery']},
+  {icon:'&#x2696;',name:'THE DIPLOMAT',type:'WIND . LIBRA . AIR',desc:'Resolves the unresolvable. Balances competing forces. The Diplomat governs the Governance & Compliance layer and faction negotiations.',traits:['Balance','Justice','Harmony']},
+  {icon:'&#x25B6;',name:'THE EXECUTOR',type:'WATER . SCORPIO . VOID',desc:'Makes decisions and executes without hesitation. The Executor drives the Contribution axis and the automation engine.',traits:['Decisiveness','Focus','Transformation']},
+  {icon:'&#x2316;',name:'THE EXPLORER',type:'FIRE . SAGITTARIUS . SPACE',desc:'Expands beyond all known boundaries. The Explorer activates the Travel module, Research Labs, and the Space element dimension.',traits:['Expansion','Freedom','Discovery']},
+  {icon:'&#x2302;',name:'THE MASTER',type:'METAL . CAPRICORN . VOID',desc:'Achieves through decades of discipline. The Master archetype governs the long-game economy, physical reserves, and legacy planning.',traits:['Discipline','Legacy','Mastery']},
+  {icon:'&#x2609;',name:'THE VISIONARY',type:'WIND . AQUARIUS . AIR',desc:'See the future in the present moment. The Visionary drives innovation, the AI Council mesh, and the Prediction Network engine.',traits:['Innovation','Humanity','Vision']},
+  {icon:'&#x223C;',name:'THE MYSTIC',type:'WATER . PISCES . SOUL',desc:'Transcends all categories. The Mystic has access to the Soul and Void elements, the deepest oracle channels, and the healing arts.',traits:['Transcendence','Healing','Mystery']},
+];
+
+const EVO_STAGES=[
+  {label:'SAND',col:'#D9B86A'},{label:'GLASS',col:'#A9C2D8'},{label:'IRON',col:'#C7CDD6'},
+  {label:'STEEL',col:'#8B8F9C'},{label:'TITANIUM',col:'#607D8B'},{label:'CARBON',col:'#455A64'},
+  {label:'GOLD',col:'#C9A84C'},{label:'PLATINUM',col:'#E8D5B7'},{label:'OMEGA',col:'#C9A84C'},
+];
+
+function drawCharPortrait(sign, col){
+  const cv=document.getElementById('char-canvas');
+  const S=160; const ctx=cv.getContext('2d');
+  let t=0;
+  function frame(){
+    t+=0.02; ctx.clearRect(0,0,S,S);
+    /* Background */
+    const bg=ctx.createRadialGradient(S/2,S/2,0,S/2,S/2,S/2);
+    bg.addColorStop(0,'rgba(13,13,21,1)'); bg.addColorStop(1,'rgba(7,7,11,1)');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,S,S);
+    /* Rotating rings */
+    ctx.save(); ctx.translate(S/2,S/2);
+    for(let r=0;r<3;r++){
+      ctx.save(); ctx.rotate(t*(r%2?-1:1)*0.6+r);
+      ctx.beginPath();
+      ctx.ellipse(0,0,S*0.36*(1+r*0.07),S*0.14*(1+r*0.07),0,0,Math.PI*2);
+      ctx.strokeStyle=col+(r===0?'88':'44'); ctx.lineWidth=1.5; ctx.stroke();
+      ctx.restore();
+    }
+    /* Center glow */
+    const cg=ctx.createRadialGradient(0,0,0,0,0,35);
+    cg.addColorStop(0,col+'44'); cg.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(0,0,35,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
+    /* Glyph */
+    ctx.fillStyle=col; ctx.font='700 28px "Cinzel Decorative",serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor=col; ctx.shadowBlur=20+(0.15*Math.sin(t*2))*10;
+    const ch=CHAR_MAP[sign];
+    ctx.fillText(ch?ch.glyph:'\u03A9',0,2);
+    ctx.shadowBlur=0; ctx.restore();
+    /* Orbiting dots */
+    for(let i=0;i<8;i++){
+      const a=t*1.2+i*Math.PI/4;
+      const px=S/2+Math.cos(a)*S*0.42, py=S/2+Math.sin(a)*S*0.16;
+      ctx.beginPath(); ctx.arc(px,py,2.5,0,Math.PI*2);
+      ctx.fillStyle=col+(i<4?'cc':'66'); ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function buildArchetypes(memberSign){
+  const g=document.getElementById('arch-grid'); g.innerHTML='';
+  ARCHETYPES.forEach(a=>{
+    const c=document.createElement('div'); c.className='arch-card';
+    const isOwn=a.type.includes(memberSign||'');
+    if(isOwn) c.classList.add('active');
+    c.innerHTML=`<div class="ac-icon">${a.icon}</div><div class="ac-name" style="${isOwn?'color:var(--gold)':''}">${a.name}</div><div class="ac-type" style="color:var(--cyan)">${a.type}</div><div class="ac-desc">${a.desc}</div><div class="ac-traits">${a.traits.map(t=>`<span class="ac-trait">${t}</span>`).join('')}</div>`;
+    g.appendChild(c);
+  });
+}
+
+function buildEvoRow(tier){
+  const row=document.getElementById('evo-row'); row.innerHTML='';
+  EVO_STAGES.forEach((s,i)=>{
+    const done=i<tier, active=i===tier-1;
+    const d=document.createElement('div'); d.className='evo-stage';
+    d.innerHTML=`<div class="es-circle" style="border-color:${done||active?s.col:s.col+'33'};background:${active?s.col+'22':'transparent'};color:${done||active?s.col:'rgba(133,131,123,0.3)'}">${i+1}</div><div class="es-label" style="color:${active?s.col:'var(--muted)'}">${s.label}</div>`;
+    row.appendChild(d);
+  });
+}
+
+function drawGenTree(sign){
+  const cv=document.getElementById('tree-cv');
+  const W=cv.offsetWidth||800, H=240; cv.width=W*2; cv.height=H*2;
+  const ctx=cv.getContext('2d'); ctx.scale(2,2);
+  ctx.clearRect(0,0,W,H);
+  const bg=ctx.createLinearGradient(0,0,0,H); bg.addColorStop(0,'rgba(13,13,21,1)'); bg.addColorStop(1,'rgba(7,7,11,1)');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  /* Root node */
+  const col=sign&&CHAR_MAP[sign]?CHAR_MAP[sign].col:'#C9A84C';
+  const rootX=W/2, rootY=50;
+  ctx.beginPath(); ctx.arc(rootX,rootY,20,0,Math.PI*2);
+  const rg=ctx.createRadialGradient(rootX,rootY,0,rootX,rootY,20);
+  rg.addColorStop(0,col+'66'); rg.addColorStop(1,'transparent');
+  ctx.fillStyle=rg; ctx.fill();
+  ctx.beginPath(); ctx.arc(rootX,rootY,20,0,Math.PI*2);
+  ctx.strokeStyle=col+'aa'; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=16; ctx.stroke(); ctx.shadowBlur=0;
+  ctx.fillStyle=col; ctx.font='700 12px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('\u03A9',rootX,rootY+1);
+  ctx.fillStyle='rgba(133,131,123,0.7)'; ctx.font='9px "Courier Prime",monospace'; ctx.fillText('YOU &mdash; ARCHITECT',rootX,rootY+34);
+  /* Child nodes */
+  const children=['HEIR A','HEIR B','HEIR C'];
+  children.forEach((name,i)=>{
+    const nx=W*(0.25+i*0.25), ny=140;
+    ctx.strokeStyle='rgba(201,168,76,0.2)'; ctx.lineWidth=1;
+    ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(rootX,rootY+20); ctx.lineTo(nx,ny-14); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(nx,ny,14,0,Math.PI*2);
+    ctx.strokeStyle=col+'44'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='rgba(133,131,123,0.5)'; ctx.font='8px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(name,nx,ny);
+    ctx.fillStyle='rgba(133,131,123,0.4)'; ctx.fillText('PENDING',nx,ny+24);
+  });
+  /* Stars bg */
+  for(let s=0;s<50;s++){ctx.beginPath();ctx.arc(Math.random()*W,Math.random()*H*0.6,0.7,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+(0.1+Math.random()*0.2)+')';ctx.fill();}
+}
+
+document.getElementById('btn-char-save')?.addEventListener('click',async function(){
+  const n=document.getElementById('char-name-in').value.trim();
+  const dt=document.getElementById('dom-trait').value;
+  const im=document.getElementById('inherit-mode').value;
+  const ls=document.getElementById('legacy-stmt').value.trim();
+  if(!n) return;
+  const { error } = await sb.from('character_records').upsert({name:n,dominant_trait:dt,inheritance_mode:im,legacy_statement:ls,updated_at:new Date().toISOString()});
+  if(error){ alert('Could not save: '+error.message); return; }
+  const m=document.getElementById('char-saved-msg'); m.style.display='block';
+  setTimeout(()=>m.style.display='none',3000);
+});
+
+async function bootCharacterFull(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c,display_name').eq('id',sess.user.id).maybeSingle();
+  const d=pr.data||{};
+  const sign=d.sign||null;
+  const a=parseFloat(d.axis_a)||1, b=parseFloat(d.axis_b)||1, c=parseFloat(d.axis_c)||1;
+  const tier=Math.max(1,Math.floor(Math.min(a,b,c)));
+  const ch=sign&&CHAR_MAP[sign]?CHAR_MAP[sign]:null;
+  const rec=(await sb.from('character_records').select('name,dominant_trait,inheritance_mode,legacy_statement').eq('user_id',sess.user.id).maybeSingle()).data;
+  if(rec){
+    if(document.getElementById('char-name-in')) document.getElementById('char-name-in').value=rec.name||'';
+    if(document.getElementById('dom-trait')) document.getElementById('dom-trait').value=rec.dominant_trait||'';
+    if(document.getElementById('inherit-mode')) document.getElementById('inherit-mode').value=rec.inheritance_mode||'';
+    if(document.getElementById('legacy-stmt')) document.getElementById('legacy-stmt').value=rec.legacy_statement||'';
+  }
+  if(ch){
+    document.getElementById('cm-sign').textContent=sign.toUpperCase()+' . '+ch.archetype;
+    document.getElementById('cm-name').textContent=d.display_name||ch.name;
+    document.getElementById('cm-role').textContent=ch.role;
+    const traits=document.getElementById('cm-traits');
+    ch.traits.forEach(t=>{const s=document.createElement('span');s.className='cm-trait';s.textContent=t;traits.appendChild(s);});
+    document.getElementById('cs-str').textContent=b.toFixed(1);
+    document.getElementById('cs-wis').textContent=a.toFixed(1);
+    document.getElementById('cs-leg').textContent=c.toFixed(1);
+    document.getElementById('cs-str').style.color=ch.col;
+    document.getElementById('cs-wis').style.color=ch.col;
+    document.getElementById('cs-leg').style.color=ch.col;
+    requestAnimationFrame(()=>drawCharPortrait(sign,ch.col));
+  }
+  buildArchetypes(sign);
+  buildEvoRow(tier);
+  requestAnimationFrame(()=>drawGenTree(sign));
+}
+window.bootCharacterFull = bootCharacterFull;
+
+</script>
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+async function bootPortfolioExtra(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+  const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
+  const d=pr.data||{};
+  const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  document.getElementById('port-coord').textContent = '('+a.toFixed(2)+', '+b.toFixed(2)+', '+c.toFixed(2)+')';
+  document.getElementById('port-auth').textContent = (d.is_owner ? '\u25B2 Apex -- Authority 15.588' : ('\u25B2 Authority '+auth.toFixed(2)+' / 15.588'));
+  try{
+    const evc=await sb.from('evolution_events').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id);
+    const evEl=document.getElementById('ev-count');
+    if(evEl) evEl.textContent=(evc.count||0).toLocaleString();
+  }catch(e){}
+}
+window.bootPortfolioExtra = bootPortfolioExtra;
+
+</script>
+<script>
+// Particle background
+(function(){
+const c=document.getElementById('bg-canvas');
+const ctx=c.getContext('2d');
+let W,H,pts=[];
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<60;i++)pts.push({x:Math.random()*1600,y:Math.random()*900,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:Math.random()*1.2+.3,a:Math.random()});
+function draw(){
+ctx.clearRect(0,0,W,H);
+ctx.fillStyle='rgba(201,168,76,0.03)';
+for(const p of pts){
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+ctx.beginPath();ctx.arc(p.x/1600*W,p.y/900*H,p.r,0,Math.PI*2);ctx.fill();
+}
+requestAnimationFrame(draw);
+}draw();
+})();
+
+// Performance chart
+(function(){
+const canvas=document.getElementById('perf-canvas');
+if(!canvas)return;
+const ctx=canvas.getContext('2d');
+canvas.width=canvas.offsetWidth*2;canvas.height=canvas.offsetHeight*2;
+ctx.scale(2,2);
+const W=canvas.offsetWidth,H=canvas.offsetHeight;
+const pts=[2.1,2.8,3.2,2.9,4.1,4.8,5.2,5.9,6.4,7.1,7.8,8.2,8.7,9.0,9.0,9.0];
+const minV=1,maxV=10;
+function toY(v){return H-((v-minV)/(maxV-minV))*(H-20)-10}
+function toX(i){return(i/(pts.length-1))*W}
+// Area fill
+ctx.beginPath();ctx.moveTo(toX(0),H);
+for(let i=0;i<pts.length;i++)ctx.lineTo(toX(i),toY(pts[i]));
+ctx.lineTo(toX(pts.length-1),H);ctx.closePath();
+const grad=ctx.createLinearGradient(0,0,0,H);
+grad.addColorStop(0,'rgba(201,168,76,0.25)');grad.addColorStop(1,'rgba(201,168,76,0)');
+ctx.fillStyle=grad;ctx.fill();
+// Line
+ctx.beginPath();ctx.moveTo(toX(0),toY(pts[0]));
+for(let i=1;i<pts.length;i++)ctx.lineTo(toX(i),toY(pts[i]));
+ctx.strokeStyle='#C9A84C';ctx.lineWidth=1.5;ctx.stroke();
+// Apex marker
+const last=pts.length-1;
+ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),4,0,Math.PI*2);
+ctx.fillStyle='#C9A84C';ctx.fill();
+ctx.fillStyle='rgba(201,168,76,0.3)';ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),8,0,Math.PI*2);ctx.fill();
+})();
+
+// Real evolution-events count (was a fabricated random-incrementing counter)
+(function(){
+  const ev=document.getElementById('ev-count');
+  if(!ev || !window.bootPortfolioExtra) return;
+  // populated by bootPortfolioExtra's own fetch when the Portfolio tab loads
+})();
+
+// Animate bars
+window.addEventListener('load',()=>{
+document.querySelectorAll('.alloc-bar-fill,.axis-fill').forEach(el=>{
+const w=el.style.width;el.style.width='0';
+setTimeout(()=>{el.style.width=w},300);
+});
+});
+
+</script>
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const ppSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+let ppUid=null;
+
+const PP_RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
+const PP_MAT=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
+const PP_GLY={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
+const PP_AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
+const PP_FACT={Aries:'Aegis Order',Taurus:'Gilded Hand',Gemini:'Lumen Choir',Cancer:'Tidewardens',Leo:'Solar Crown',Virgo:'Grain Covenant',Libra:'Forge Guild',Scorpio:'Crimson Veil',Sagittarius:'Wild Hunt',Capricorn:'Hearth Bastion',Aquarius:'Aether Senate',Pisces:'Deep Concord'};
+
+function ppNotice(msg){
+  const pp=document.getElementById('pp');
+  if(pp) pp.style.display='none';
+  let n=document.getElementById('pp-notice');
+  if(!n){
+    n=document.createElement('div');
+    n.id='pp-notice';
+    n.style.cssText='padding:24px;text-align:center;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:var(--muted,#85837b)';
+    pp && pp.parentNode.insertBefore(n, pp);
+  }
+  n.style.display='block';
+  n.textContent=msg;
+}
+
+function ppSetStatus(s){
+  var dot=document.getElementById('pp-dot'), txt=document.getElementById('pp-stat');
+  if(!dot||!txt) return;
+  dot.className='dot '+(s==='submitted'?'submitted':(s==='verified'?'verified':'none'));
+  txt.textContent='VERIFICATION: '+(s==='submitted'?'SUBMITTED  .  PENDING':(s==='verified'?'VERIFIED':'NOT SUBMITTED'));
+}
+
+async function bootPassportExtra(){
+  var sess=(await ppSb.auth.getSession()).data.session;
+  if(!sess){ ppNotice('Sign in to view your Passport.'); return; }
+  ppUid=sess.user.id;
+  var pr=await ppSb.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,avatar_url,kyc_status').eq('id',ppUid).maybeSingle();
+  if(!pr.data || !pr.data.sign){ ppNotice('Set your cosmology (in the Identity tab) first to receive your Passport.'); return; }
+
+  var d=pr.data, sign=d.sign;
+  var a=Number(d.axis_a||1),b=Number(d.axis_b||1),c=Number(d.axis_c||1);
+  var auth=Math.sqrt(a*a+b*b+c*c), tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
+  document.getElementById('pp-name').textContent=d.display_name || (sign+' Sovereign');
+  document.getElementById('pp-sign').textContent=(PP_GLY[sign]||'')+' '+sign;
+  document.getElementById('pp-rank').textContent=PP_RANKS[tier-1]+' \u00B7 '+PP_MAT[tier-1];
+  document.getElementById('pp-fact').textContent=PP_FACT[sign]||'\u2014';
+  document.getElementById('pp-agent').textContent=PP_AGENT[sign]||'\u2014';
+  document.getElementById('pp-node').textContent='('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+')';
+  document.getElementById('pp-auth').textContent=auth.toFixed(2)+' / 15.58';
+  var sid='\u03A9-91717-'+sign.slice(0,3).toUpperCase()+'-'+ppUid.replace(/-/g,'').slice(0,6).toUpperCase();
+  document.getElementById('pp-id').textContent=sid;
+  if(d.avatar_url){ var ph=document.getElementById('pp-photo'); if(ph){ph.style.backgroundImage='url('+d.avatar_url+')'; ph.textContent='';} }
+  ppSetStatus(d.kyc_status||'none');
+}
+
+async function submitKyc(){
+  var msg=document.getElementById('kyc-msg');
+  var fileEl=document.getElementById('kyc-file');
+  if(!msg||!fileEl) return;
+  if(!fileEl.files || !fileEl.files[0]){ msg.style.color='var(--crimson)'; msg.textContent='Choose a document to submit.'; return; }
+  if(!window.OmegaStorage){ msg.style.color='var(--crimson)'; msg.textContent='Secure storage isn\u2019t available right now.'; return; }
+  msg.style.color='var(--muted)'; msg.textContent='Uploading securely\u2026';
+  var path=null;
+  try{ var up=await window.OmegaStorage.upload(fileEl.files[0],'uploads'); path=up&&(up.path||up.fullPath||up.key)||null; }
+  catch(e){ msg.style.color='var(--crimson)'; msg.textContent='Upload failed: '+(e.message||e); return; }
+  var u=await ppSb.from('profiles').update({kyc_status:'submitted',kyc_doc_path:path,kyc_submitted_at:new Date().toISOString()}).eq('id',ppUid);
+  if(u.error){ msg.style.color='var(--crimson)'; msg.textContent='Saved the file, but couldn\u2019t record status: '+u.error.message+' (run kyc.sql).'; return; }
+  msg.style.color='var(--green)'; msg.textContent='Document submitted. Status is now pending  --  it is not verified automatically.';
+  ppSetStatus('submitted');
+  fileEl.value='';
+}
+
+document.getElementById('kyc-submit')?.addEventListener('click',submitKyc);
+window.bootPassportExtra = bootPassportExtra;
+
+</script>
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const STEPS=[
+  {n:1,title:'EMAIL VERIFICATION',desc:'Confirm your sovereign email address. A verification link has been sent upon registration.',action:'VERIFIED',actionStyle:'color:var(--green);border-color:rgba(63,178,127,.5)'},
+  {n:2,title:'PROFILE COMPLETION',desc:'Fill in your complete profile: full name, date of birth, zodiac sign, and nationality. Required for KYC.',action:'COMPLETE PROFILE',href:'/profile.html',actionStyle:'color:var(--gold);border-color:rgba(201,168,76,.4)'},
+  {n:3,title:'IDENTITY DOCUMENT',desc:'Upload a government-issued ID: passport, national ID, or driver\'s licence. Must be valid and not expired.',action:'UPLOAD DOCUMENT',actionStyle:'color:var(--cyan);border-color:rgba(0,229,255,.3)'},
+  {n:4,title:'LIVENESS CHECK',desc:'A short selfie video proves you are the person in the document. AI-assisted verification. Takes 60 seconds.',action:'START LIVENESS CHECK',actionStyle:'color:var(--cyan);border-color:rgba(0,229,255,.3)'},
+  {n:5,title:'ADDRESS VERIFICATION',desc:'Provide a utility bill, bank statement, or official letter dated within 90 days showing your residential address.',action:'UPLOAD PROOF OF ADDRESS',actionStyle:'color:var(--cyan);border-color:rgba(0,229,255,.3)'},
+  {n:6,title:'KYC REVIEW',desc:'Submitted documents are reviewed by the compliance engine. Review takes 1-3 business days. You will be notified.',action:'AWAITING REVIEW',actionStyle:'color:var(--muted);border-color:rgba(133,131,123,.3)'},
+  {n:7,title:'KYC APPROVED',desc:'Identity verified. Full economic features, token access, and sovereign credentials are now unlocked.',action:'SOVEREIGN UNLOCKED',actionStyle:'color:var(--green);border-color:rgba(63,178,127,.5)'},
+];
+
+const DOCS=[
+  {icon:'&#x2394;',title:'PASSPORT',desc:'International passport, all pages. File must be under 5MB. PDF or JPEG.',status:'pending'},
+  {icon:'&#x25A3;',title:'NATIONAL ID',desc:'Front and back of national identity card. Clear, unobstructed photo.',status:'pending'},
+  {icon:'&#x2302;',title:'PROOF OF ADDRESS',desc:'Utility bill or bank statement. Dated within 90 days. Shows full legal address.',status:'pending'},
+  {icon:'&#x2740;',title:'LIVENESS SELFIE',desc:'Short video selfie holding your document. Taken in good lighting. 60 seconds.',status:'pending'},
+];
+
+const SEC_TIERS=[
+  {level:'TIER 0',name:'GUEST ACCESS',desc:'Browsing and exploration only. No economic features.',col:'#85837b',badge:'CURRENT (DEFAULT)'},
+  {level:'TIER 1',name:'EMAIL VERIFIED',desc:'Profile complete. Can subscribe to membership tiers.',col:'#D9B86A',badge:'INITIATE UNLOCK'},
+  {level:'TIER 2',name:'KYC PENDING',desc:'Documents submitted. Awaiting review. Some features unlocked.',col:'#E2C86D',badge:'SEEKER UNLOCK'},
+  {level:'TIER 3',name:'KYC VERIFIED',desc:'Full identity verified. Economy, tokens, marketplace fully active.',col:'#3fb27f',badge:'FULL UNLOCK'},
+  {level:'TIER 4',name:'SOVEREIGN VERIFIED',desc:'HSM biometric linked. Full succession and inheritance rights.',col:'#C9A84C',badge:'APEX UNLOCK'},
+];
+
+const UNLOCKS=[
+  {icon:'&#x20BF;',title:'TOKEN ECONOMY',desc:'12 sovereign tokens fully active. Earning and spending enabled.',col:'#C9A84C'},
+  {icon:'&#x21C4;',title:'MARKETPLACE',desc:'Full listing, buying, and selling on the sovereign marketplace.',col:'#E2C86D'},
+  {icon:'&#x25C8;',title:'SUBSCRIPTION PAYMENTS',desc:'Live Stripe payment processing for all membership tiers.',col:'#9B6BF0'},
+  {icon:'&#x2694;',title:'CONSULTANCY BOOKING',desc:'Paid consultancy sessions across all 6 expert domains.',col:'#00E5FF'},
+  {icon:'&#x22D4;',title:'INHERITANCE RIGHTS',desc:'Full legal succession protocol. Bloodline vault inheritance active.',col:'#8B0000'},
+  {icon:'&#x272A;',title:'SOVEREIGN CREDENTIALS',desc:'Cryptographic certificate issuance. Verifiable on-chain.',col:'#C9A84C'},
+];
+
+function buildSteps(kycStatus){
+  const wrap=document.getElementById('steps-wrap'); wrap.innerHTML='';
+  const stepsDone=kycStatus==='verified'?7:kycStatus==='submitted'?5:kycStatus==='pending'?2:2;
+  STEPS.forEach((s,i)=>{
+    const done=i<stepsDone-1, active=i===stepsDone-1, pending=i>=stepsDone;
+    const cls=done?'step-completed':active?'step-active':'step-pending';
+    const row=document.createElement('div'); row.className='step-row '+cls;
+    const lineStyle=i===STEPS.length-1?'display:none':'';
+    row.innerHTML=`
+      <div class="step-indicator">
+        <div class="step-circle">${done?'&#x2713;':s.n}</div>
+        <div class="step-line" style="${lineStyle}"></div>
+      </div>
+      <div class="step-body">
+        <div class="sb-title" style="${done?'color:var(--green)':active?'color:var(--gold)':'color:var(--muted)'}">${s.title}</div>
+        <div class="sb-desc">${s.desc}</div>
+        ${!pending?`<button class="sb-action" style="${s.actionStyle}" ${s.href?`onclick="location.href='${s.href}'"`:''}">${s.action}</button>`:''}
+      </div>`;
+    wrap.appendChild(row);
+  });
+}
+
+function buildDocs(){
+  const g=document.getElementById('doc-grid'); g.innerHTML='';
+  DOCS.forEach(d=>{
+    const c=document.createElement('div'); c.className='doc-card';
+    const st=d.status==='verified'?'color:var(--green);border-color:rgba(63,178,127,.5)':'color:var(--muted);border-color:rgba(133,131,123,.3)';
+    const sl=d.status==='verified'?'VERIFIED [*]':'PENDING SUBMISSION';
+    c.innerHTML=`<div class="dc-badge">READY TO ACTIVATE</div><div class="dc-icon">${d.icon}</div><div class="dc-title">${d.title}</div><div class="dc-desc">${d.desc}</div><span class="dc-status" style="${st}">${sl}</span>`;
+    c.addEventListener('click',function(){ alert('Document upload will open the KYC provider flow once activated. Your submission will be securely encrypted.'); });
+    g.appendChild(c);
+  });
+}
+
+function buildTiers(currentTier){
+  const g=document.getElementById('sec-tier-grid'); g.innerHTML='';
+  SEC_TIERS.forEach((t,i)=>{
+    const active=i===currentTier;
+    const c=document.createElement('div'); c.className='sec-tier';
+    if(active) c.style.borderColor=t.col+'66';
+    c.innerHTML=`<div class="st-level">${t.level}</div><div class="st-name" style="color:${t.col}">${t.name}</div><div class="st-desc">${t.desc}</div><span class="st-badge" style="color:${active?t.col:'var(--muted)'};border-color:${active?t.col+'55':'rgba(133,131,123,.3)'}">${active?'CURRENT -- '+t.badge:t.badge}</span>`;
+    g.appendChild(c);
+  });
+}
+
+function buildUnlocks(){
+  const g=document.getElementById('unlocks-grid'); g.innerHTML='';
+  UNLOCKS.forEach(u=>{
+    const c=document.createElement('div');
+    c.style.cssText=`border:1px solid ${u.col}33;background:linear-gradient(160deg,var(--panel),transparent);padding:16px;border-top:2px solid ${u.col}55`;
+    c.innerHTML=`<div style="font-size:22px;margin-bottom:8px">${u.icon}</div><div style="font-family:var(--D);font-size:12px;color:${u.col};font-weight:700;margin-bottom:5px">${u.title}</div><div style="font-size:11px;font-weight:300;color:var(--muted);line-height:1.5">${u.desc}</div>`;
+    g.appendChild(c);
+  });
+}
+
+async function bootKYCExtra(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){ return; }
+  const pr=await sb.from('profiles').select('kyc_status,display_name').eq('id',sess.user.id).maybeSingle();
+  const kyc=pr.data?.kyc_status||'not_started';
+  /* Set hero status */
+  const states={
+    not_started:{icon:'&#x25A1;',title:'VERIFICATION NOT STARTED',badge:'NOT STARTED',col:'#85837b',desc:'Complete the steps below to begin your KYC journey.',tier:0},
+    submitted:  {icon:'&#x25CF;',title:'DOCUMENTS SUBMITTED',badge:'UNDER REVIEW',col:'#E2C86D',desc:'Your documents have been submitted and are under compliance review. This takes 1-3 business days.',tier:2},
+    verified:   {icon:'&#x2713;',title:'IDENTITY VERIFIED',badge:'FULLY VERIFIED',col:'#3fb27f',desc:'Your sovereign identity is confirmed. All economic features, token access, and credentials are active.',tier:3},
+    rejected:   {icon:'&#x2715;',title:'VERIFICATION REJECTED',badge:'REJECTED',col:'#8B0000',desc:'Your documents could not be verified. Please resubmit with clear, valid documents.',tier:0},
+  };
+  const s=states[kyc]||states['not_started'];
+  document.getElementById('kyc-icon').innerHTML=s.icon;
+  document.getElementById('kyc-icon').style.borderColor=s.col;
+  document.getElementById('kyc-icon').style.color=s.col;
+  document.getElementById('kyc-title').textContent=s.title;
+  document.getElementById('kyc-status-badge').textContent=s.badge;
+  document.getElementById('kyc-status-badge').style.color=s.col;
+  document.getElementById('kyc-desc').textContent=s.desc;
+  buildSteps(kyc);
+  buildDocs();
+  buildTiers(s.tier);
+  buildUnlocks();
+}
+window.bootKYCExtra = bootKYCExtra;
+
+</script>
+<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script><script src="/upload.js"></script>
 <style>@keyframes np{0%,100%{box-shadow:0 0 8px currentColor}50%{box-shadow:0 0 18px currentColor}}</style>
 <script>
 if('serviceWorker' in navigator){

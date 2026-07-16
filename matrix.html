@@ -121,6 +121,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A^2 + B^2 + C^2). Apex = 15.588.</p>
   </div>
 
+  <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
+    <div class="mtab-btn active" data-mtab="matrix" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">THE MATRIX</div>
+    <div class="mtab-btn" data-mtab="triads" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">THE TRIADS</div>
+    <div class="mtab-btn" data-mtab="grid" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">THE GRID</div>
+    <div class="mtab-btn" data-mtab="charter" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">THE CHARTER</div>
+  </div>
+
+  <div class="mtab-panel" id="mtab-matrix">
+
   <!-- AXIS STATS -->
   <div class="axis-stats">
     <div class="astat">
@@ -273,9 +282,127 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   </div>
 </div>
 
+  <div class="mtab-panel" id="mtab-triads" style="display:none">
+    
+    <div class="topbar"><div class="t">THE TWELVE TRIADS<small>TWELVE LIVING MATRICES  .  12 x 9x9x9 = 8,748</small></div></div>
+    <p class="intro">A <b>triad</b> is the living shape of three axes  --  <b>Knowledge</b>, <b>Mastery</b>, <b>Contribution</b>  --  each rising to depth 9. Three axes at depth nine <b>is</b> one 9x9x9 matrix: <b>729 nodes</b>. The Order holds <b>twelve</b> triads, one for each sign and house  --  and twelve matrices of 729 make the full field of <b>8,748</b>. Your own triad lives below; the twelve turn beside it.</p>
+
+    <div class="counts">
+      <div class="count"><div class="v">3</div><div class="k">AXES PER TRIAD</div></div>
+      <div class="count"><div class="v">729</div><div class="k">NODES  .  9x9x9</div></div>
+      <div class="count"><div class="v">12</div><div class="k">LIVING TRIADS</div></div>
+      <div class="count"><div class="v">8,748</div><div class="k">THE FULL FIELD</div></div>
+    </div>
+
+    <div class="hero">
+      <canvas id="myradar" width="600" height="500"></canvas>
+      <div class="info">
+        <div class="h">YOUR LIVING TRIAD</div>
+        <div class="nm" id="my-name"> -- </div>
+        <div class="sub" id="my-sub"> -- </div>
+        <div class="axs">
+          <div class="axrow a"><div class="bl"><span>KNOWLEDGE  .  A</span><span class="v" id="m-a"> -- </span></div><div class="tr"><div class="fl" id="m-fa"></div></div></div>
+          <div class="axrow b"><div class="bl"><span>MASTERY  .  B</span><span class="v" id="m-b"> -- </span></div><div class="tr"><div class="fl" id="m-fb"></div></div></div>
+          <div class="axrow c"><div class="bl"><span>CONTRIBUTION  .  C</span><span class="v" id="m-c"> -- </span></div><div class="tr"><div class="fl" id="m-fc"></div></div></div>
+        </div>
+        <div class="links"><a href="#tab-matrix-3d" onclick="document.querySelector('.mtab-btn[data-mtab=&quot;matrix&quot;]')?.click();return false;">SEE YOUR 729 IN 3D &rarr;</a><a href="/honors.html#ascension">YOUR ASCENT &rarr;</a></div>
+      </div>
+    </div>
+
+    <div class="sechead">THE TWELVE</div>
+    <p class="seclead">Each sign is a triad with its own temper  --  the natural lean of its element across the three axes. Yours is alive with your real standing; the other eleven turn as the archetypes of the cosmos, the full shape each track reaches at the apex.</p>
+    <div class="twelve" id="twelve"></div>
+  
+  </div>
+
+  <div class="mtab-panel" id="mtab-grid" style="display:none">
+    
+    <div class="topbar">
+      <div class="t">THE GRID<small>PILLAR 10 &middot; SOVEREIGN INFRASTRUCTURE &middot; PLANETARY COMPUTE</small></div>
+    </div>
+
+    <div class="status-banner">
+      <div class="dot"></div>
+      <div class="txt">ALL SYSTEMS OPERATIONAL &mdash; 9.1717Hz CARRIER ACTIVE &mdash; 21 MICROSERVICES ONLINE</div>
+    </div>
+
+    <div class="canvas-grid"><canvas id="grid-canvas"></canvas></div>
+
+    <div class="sechead">21 MICROSERVICES &mdash; LIVE STATUS</div>
+    <div class="service-grid" id="service-grid"></div>
+
+    <div class="sechead">ARCHITECTURE LAYERS &mdash; 5-LAYER STACK</div>
+    <div class="layer-cards" id="layer-cards"></div>
+
+    <div class="sechead">MULTI-REGION DEPLOYMENT</div>
+    <div class="region-grid" id="region-grid"></div>
+
+    <div class="sechead">AI MEMORY ARCHITECTURE &mdash; 5-LAYER SYSTEM</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="memory-grid"></div>
+  
+  </div>
+
+  <div class="mtab-panel" id="mtab-charter" style="display:none">
+    
+<div class="wrap">
+  <div class="hero">
+    <div class="sig">&#937;</div>
+    <h1>THE SOVEREIGN CHARTER</h1>
+    <div class="sub">THE ELEVEN IMMUTABLE ARTICLES</div>
+    <div class="arch">ARCHITECT  --  <b>MAJOR SLEIMAN YOUSSEF DAGHER</b><br>LEBANESE ORDER OF ENGINEERS &amp; ARCHITECTS  .  No. 30875<br>ESTABLISHED 22 DECEMBER 2025  .  sydomega.com</div>
+  </div>
+
+  <div class="sectit">THE ELEVEN ARTICLES OF SOVEREIGNTY</div>
+  <div class="articles">
+    <div class="art"><div class="rn">I</div><div><div class="at">Absolute Ownership</div><div class="ad"><b>100% sovereign.</b> No co-founders, no partners. The Order answers to a single authority.</div></div></div>
+    <div class="art"><div class="rn">II</div><div><div class="at">The Master Stake</div><div class="ad"><b>467,756,700,000 &#937; (51%)</b> permanently locked. Control of the Order can never be diluted below sovereignty.</div></div></div>
+    <div class="art"><div class="rn">III</div><div><div class="at">Irrevocable Genesis</div><div class="ad">Foundational property is hashed into the <b>Genesis Block</b>  --  anchored to the Architect's standing in the Lebanese Order of Engineers &amp; Architects (No. 30875).</div></div></div>
+    <div class="art"><div class="rn">IV</div><div><div class="at">The Permanent Directive</div><div class="ad">The <b>999-Point Blueprint</b> is sealed in the immutable logic layer  --  the law beneath the law.</div></div></div>
+    <div class="art"><div class="rn">V</div><div><div class="at">The &#937; Signet</div><div class="ad">The <b>&#937;</b> is the sole recognized mark of power. One symbol, one Order, one legacy.</div></div></div>
+    <div class="art"><div class="rn">VI</div><div><div class="at">The Family Nest</div><div class="ad"><b>Sovereigns-by-Blood</b> hold zero fees and full compute priority. The bloodline is first among the Order.</div></div></div>
+    <div class="art"><div class="rn">VII</div><div><div class="at">The Heritage Protocol</div><div class="ad">A succession mechanism transfers full control to the <b>bloodline</b>, ensuring the Order outlives its Architect.</div></div></div>
+    <div class="art"><div class="rn">VIII</div><div><div class="at">The Safety Net</div><div class="ad">A <b>51% safety reserve</b> shields the Order against shock  --  stability before all.</div></div></div>
+    <div class="art"><div class="rn">IX</div><div><div class="at">The Reinvestment Sweep</div><div class="ad">A fixed <b>20% share</b> is continuously recommitted to hard reserves  --  the Order compounds its own foundation.</div></div></div>
+    <div class="art"><div class="rn">X</div><div><div class="at">Sovereign Continuity</div><div class="ad">The Order may <b>re-domicile</b> to remain free of any hostile jurisdiction. Sovereignty is portable.</div></div></div>
+    <div class="art"><div class="rn">XI</div><div><div class="at">The Omega Point</div><div class="ad"><b>Node 999</b> confirms absolute completion  --  the apex where the Order is whole.</div></div></div>
+  </div>
+
+  <div class="sectit">THE &#937; ECONOMIC FRAMEWORK  .  DECLARED CANON</div>
+  <div class="frame">
+    <div class="grid">
+      <div class="m"><div class="k">TOTAL SUPPLY</div><div class="v">917,385,000,000 &#937;</div><div class="s">FIXED  .  CANONICAL</div></div>
+      <div class="m"><div class="k">MASTER VAULT</div><div class="v">467,756,700,000 &#937;</div><div class="s">51%  .  PERMANENTLY LOCKED</div></div>
+      <div class="m"><div class="k">SOVEREIGN FIELD</div><div class="v">49% TIER-CAP</div><div class="s">THE MEMBERS' DOMAIN</div></div>
+      <div class="m"><div class="k">HARD RESERVES</div><div class="v">Au  .  Rh  .  Ag</div><div class="s">GOLD 412,300g  .  RHODIUM 125,000g  .  SILVER 890,000g</div></div>
+    </div>
+    <div class="gov">
+      <div class="gt">GOVERNANCE MODEL</div>
+      <p>Standing in the Order is set by a <b>Weighted-Contribution</b> measure  --  <b>40% Stability  .  35% Engagement  .  25% Tenure</b>  --  beneath a permanent <b>System-Level Veto</b> and a <b>49% Tier-Cap</b>. Authority is earned through verified ascent; ultimate control remains sovereign.</p>
+    </div>
+  </div>
+
+  <div class="disc">
+    <b>On these articles.</b> The Sovereign Charter is the Order's founding constitution and design canon  --  the Architect's declared framework for ownership, governance, and continuity. The economic figures above are canonical design parameters of the &#937; system, not a financial statement, securities offering, or solicitation. &#937; is an internal platform asset earned through verified progression; real-currency purchase, external transfer, and any asset-backed mechanics activate only under completed legal review (classification, KYC/AML, payment terms).
+  </div>
+
+  <div class="seal">
+    <div class="o">&#937;</div>
+    <div class="t"><b>THE CODE  .  THE FREQUENCY  .  THE LEGACY</b><br>OMNI-RESONANCE LOCKED  .  9.17 Hz  .  NODE 9.9.9</div>
+  </div>
+
+  <div class="cta">
+    <a href="/account.html">ENTER THE ORDER</a>
+    <a class="ghost" href="/hall.html">THE HALL</a>
+  </div>
+</div>
+
+  </div>
+
+
 <div class="omega-sig">&#937;</div>
 
   </div>
+</div>
 </div>
 
 <script type="module">
@@ -451,6 +578,265 @@ grid.appendChild(cell);
 window.addEventListener('load',()=>{
 document.querySelectorAll('.axis-bar').forEach(el=>{const w=el.style.width;el.style.width='0';setTimeout(()=>{el.style.width=w;},400);});
 });
+</script>
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const SERVICES=[
+  {name:'GATEWAY',type:'API Gateway',uptime:99.99,col:'#C9A84C'},
+  {name:'AUTH',type:'Identity & Security',uptime:100,col:'#3fb27f'},
+  {name:'USER',type:'Profile & Session',uptime:99.97,col:'#00E5FF'},
+  {name:'AI ORCHESTRATOR',type:'Agent Mesh Runtime',uptime:99.91,col:'#9B6BF0'},
+  {name:'GAMING',type:'Mastery Engine',uptime:99.88,col:'#E86A3A'},
+  {name:'MEDIA',type:'Streaming Layer',uptime:99.94,col:'#8B0000'},
+  {name:'HERITAGE',type:'Lineage & Archive',uptime:99.99,col:'#E2C86D'},
+  {name:'PAYMENT',type:'Economy & Treasury',uptime:100,col:'#C9A84C'},
+  {name:'NFT',type:'Blockchain Bridge',uptime:99.82,col:'#9B6BF0'},
+  {name:'SEARCH',type:'Intelligence Retrieval',uptime:99.96,col:'#00E5FF'},
+  {name:'NOTIFICATION',type:'Dispatch Engine',uptime:99.93,col:'#3fb27f'},
+  {name:'COMMUNICATION',type:'Social & Messaging',uptime:99.88,col:'#00E5FF'},
+  {name:'COMMUNITY',type:'Faction & Feed',uptime:99.85,col:'#E2C86D'},
+  {name:'HOROSCOPE',type:'Celestial Engine',uptime:100,col:'#C9A84C'},
+  {name:'ACADEMY',type:'Knowledge Axis A',uptime:99.97,col:'#34C6E6'},
+  {name:'CONSULTANCY',type:'Expert Booking',uptime:99.89,col:'#C9A84C'},
+  {name:'TREASURY',type:'Vault & Allocation',uptime:100,col:'#C9A84C'},
+  {name:'RESEARCH',type:'Discovery Engine',uptime:99.74,col:'#9B6BF0'},
+  {name:'COMPLIANCE',type:'Legal Shield',uptime:99.99,col:'#E2C86D'},
+  {name:'INFRASTRUCTURE',type:'Grid Orchestration',uptime:100,col:'#00E5FF'},
+  {name:'SOVEREIGN',type:'Master Controller',uptime:100,col:'#C9A84C'},
+];
+
+const LAYERS=[
+  {n:'5',title:'FRONTEND LAYER',desc:'React + Next.js, Tailwind CSS, Framer Motion. Web + Mobile (React Native / Expo). Single design system feeding all surfaces.',tech:'React / Next.js &middot; Tailwind &middot; Three.js &middot; Framer Motion'},
+  {n:'4',title:'GATEWAY & API FABRIC',desc:'GraphQL + REST + WebSocket + gRPC. API Gateway with rate limiting, load balancing, and JWT validation at the edge.',tech:'GraphQL &middot; REST &middot; WebSocket &middot; gRPC &middot; Kong / Nginx'},
+  {n:'3',title:'MICROSERVICES LAYER',desc:'21 domain-isolated services. Each owns its data, exposes contracts, and emits events to the sovereign event bus. Zero shared databases.',tech:'Node.js &middot; Express &middot; Docker &middot; Kubernetes &middot; RabbitMQ'},
+  {n:'2',title:'DATA & MEMORY LAYER',desc:'PostgreSQL (relational) + Redis (session cache) + pgvector (semantic AI memory) + Neo4j (knowledge graph) + S3 (immutable archive).',tech:'PostgreSQL &middot; Redis &middot; pgvector &middot; Neo4j &middot; ClickHouse'},
+  {n:'1',title:'INFRASTRUCTURE LAYER',desc:'Kubernetes mesh across 9 global regions. Terraform-provisioned. Cloudflare edge. Render (compute) + Vercel (frontend). Geo-redundant daily snapshots.',tech:'K8s &middot; Terraform &middot; AWS / GCP &middot; Cloudflare &middot; Render &middot; Vercel'},
+];
+
+const REGIONS=[
+  {name:'MIDDLE EAST',status:'PRIMARY',lat:'2ms'},
+  {name:'EUROPE WEST',status:'ACTIVE',lat:'18ms'},
+  {name:'AMERICAS EAST',status:'ACTIVE',lat:'89ms'},
+  {name:'ASIA PACIFIC',status:'ACTIVE',lat:'112ms'},
+  {name:'AFRICA NORTH',status:'STANDBY',lat:'34ms'},
+  {name:'AMERICAS WEST',status:'ACTIVE',lat:'104ms'},
+];
+
+const MEMORY_LAYERS=[
+  {name:'SESSION MEMORY',tech:'Redis',desc:'Live conversation state, sub-ms recall, 24-hour TTL',col:'#00E5FF'},
+  {name:'CONVERSATION',tech:'PostgreSQL',desc:'Full dialogue history, structured retrieval, permanent',col:'#C9A84C'},
+  {name:'SEMANTIC LAYER',tech:'pgvector',desc:'Vector embeddings, meaning-based recall, 768-dim',col:'#9B6BF0'},
+  {name:'KNOWLEDGE GRAPH',tech:'Neo4j',desc:'Entity relationships, causal chains, civilizational links',col:'#E2C86D'},
+  {name:'IMMUTABLE ARCHIVE',tech:'S3 + Hash-Chain',desc:'Permanent tamper-proof record, hash-verified, eternal',col:'#E86A3A'},
+];
+
+function renderServices(){
+  const g=document.getElementById('service-grid'); g.innerHTML='';
+  SERVICES.forEach(s=>{
+    const c=document.createElement('div'); c.className='svc-card';
+    c.innerHTML=`<div class="s-name">${s.name}</div><div class="s-type">${s.type}</div><div class="s-status"><div class="s-dot" style="background:var(--green);box-shadow:0 0 6px var(--green)"></div><span style="color:var(--green)">${s.uptime}% UPTIME</span></div><div class="s-bar"><div class="s-fill" style="width:0%;background:linear-gradient(90deg,${s.col},transparent)"></div></div>`;
+    g.appendChild(c);
+    setTimeout(()=>c.querySelector('.s-fill').style.width=s.uptime+'%',300);
+  });
+}
+
+function renderLayers(){
+  const c=document.getElementById('layer-cards'); c.innerHTML='';
+  LAYERS.forEach(l=>{
+    const d=document.createElement('div'); d.className='layer-card';
+    d.innerHTML=`<div class="l-num">${l.n}</div><div class="l-body"><div class="l-title">${l.title}</div><div class="l-desc">${l.desc}</div><div class="l-tech">TECH: ${l.tech}</div></div>`;
+    c.appendChild(d);
+  });
+}
+
+function renderRegions(){
+  const g=document.getElementById('region-grid'); g.innerHTML='';
+  REGIONS.forEach(r=>{
+    const c=document.createElement('div'); c.className='region-card';
+    const sc=r.status==='PRIMARY'?'color:var(--gold);border-color:rgba(201,168,76,.5)':r.status==='ACTIVE'?'color:var(--green);border-color:rgba(63,178,127,.4)':'color:var(--muted);border-color:rgba(133,131,123,.3)';
+    c.innerHTML=`<div class="r-name">${r.name}</div><div class="r-status" style="${sc}">${r.status}</div><div class="r-latency">${r.lat}</div><div class="r-label">LATENCY</div>`;
+    g.appendChild(c);
+  });
+}
+
+function renderMemory(){
+  const g=document.getElementById('memory-grid'); g.innerHTML='';
+  MEMORY_LAYERS.forEach((m,i)=>{
+    const c=document.createElement('div');
+    c.style.cssText=`border:1px solid ${m.col}33;background:var(--panel);padding:16px;border-top:2px solid ${m.col}`;
+    c.innerHTML=`<div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">LAYER ${i+1}</div><div style="font-family:var(--D);font-size:13px;color:${m.col};font-weight:700;margin-bottom:3px">${m.name}</div><div style="font-family:var(--M);font-size:9px;color:var(--cyan);margin-bottom:8px">${m.tech}</div><div style="font-size:11px;font-weight:300;color:var(--muted);line-height:1.5">${m.desc}</div>`;
+    g.appendChild(c);
+  });
+}
+
+/* Animated grid canvas */
+function drawGrid(){
+  const cv=document.getElementById('grid-canvas');
+  const W=cv.offsetWidth||800, H=cv.offsetHeight||220;
+  cv.width=W*2; cv.height=H*2;
+  const ctx=cv.getContext('2d'); ctx.scale(2,2);
+  let t=0;
+  const nodes=[];
+  for(let i=0;i<30;i++) nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*0.4,vy:(Math.random()-.5)*0.4,r:2+Math.random()*3});
+  function frame(){
+    t+=0.008; ctx.clearRect(0,0,W,H);
+    /* Grid lines */
+    ctx.strokeStyle='rgba(0,229,255,0.04)'; ctx.lineWidth=.5;
+    for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    /* Move nodes */
+    nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;});
+    /* Connections */
+    nodes.forEach((a,i)=>{nodes.forEach((b,j)=>{if(j<=i)return;const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<140){const al=(1-d/140)*0.3;ctx.strokeStyle=`rgba(0,229,255,${al})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}});});
+    /* Nodes */
+    nodes.forEach(n=>{ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba(0,229,255,0.7)';ctx.shadowColor='rgba(0,229,255,.5)';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;});
+    /* Frequency ring */
+    ctx.save(); ctx.translate(W/2,H/2);
+    for(let r=0;r<3;r++){ctx.save();ctx.rotate(t*(r%2?-1:1)*.4);ctx.beginPath();ctx.ellipse(0,0,80+r*20,30+r*8,0,0,Math.PI*2);ctx.strokeStyle=`rgba(201,168,76,${0.1-r*0.03})`;ctx.stroke();ctx.restore();}
+    ctx.fillStyle='rgba(201,168,76,0.8)';ctx.font='700 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(201,168,76,.6)';ctx.shadowBlur=12;ctx.fillText('\u03A9',0,0);ctx.shadowBlur=0;ctx.restore();
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+async function bootGrid(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  renderServices(); renderLayers(); renderRegions(); renderMemory(); drawGrid();
+}
+window.bootGrid = bootGrid;
+
+</script>
+<script type="module">
+
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  const ECOL={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
+  // sign, glyph, element, olympian, archetype temper [A,B,C] (1-9)  --  the nature of the track
+  const SIGNS=[
+    ['Aries','\u2648','Fire','Ares',[6,9,6]],
+    ['Taurus','\u2649','Metal','Aphrodite',[7,6,8]],
+    ['Gemini','\u264A','Wind','Hermes',[9,6,6]],
+    ['Cancer','\u264B','Water','Artemis',[6,6,9]],
+    ['Leo','\u264C','Fire','Apollo',[6,9,7]],
+    ['Virgo','\u264D','Sand','Athena',[8,7,7]],
+    ['Libra','\u264E','Wind','Hera',[8,7,6]],
+    ['Scorpio','\u264F','Water','Demeter',[7,8,8]],
+    ['Sagittarius','\u2650','Fire','Zeus',[7,9,6]],
+    ['Capricorn','\u2651','Metal','Hestia',[7,7,7]],
+    ['Aquarius','\u2652','Wind','Hephaestus',[9,6,7]],
+    ['Pisces','\u2653','Water','Poseidon',[6,6,9]]
+  ];
+
+  function showGate(h,p){
+    const heroEl=document.querySelector('.hero');
+    if(heroEl) heroEl.style.display='none';
+    let n=document.getElementById('tri-notice');
+    if(!n){ n=document.createElement('div'); n.id='tri-notice'; n.style.cssText='padding:24px;text-align:center;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted,#85837b)'; if(heroEl) heroEl.parentNode.insertBefore(n,heroEl); }
+    n.style.display='block'; n.textContent=p;
+  }
+
+  // shared triad renderer
+  var anim=[]; // {ctx,W,H,ax,color,phase,labels}
+  function drawTriad(o,t){
+    var x=o.ctx,W=o.W,H=o.H,cx=W/2,cy=H/2+(o.labels?6:0),R=Math.min(W,H)*0.34;
+    x.clearRect(0,0,W,H);
+    var br=reduce?0:Math.sin(t+o.phase)*0.03;
+    for(var k=1;k<=3;k++){ x.beginPath(); for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; var rr=R*k/3; var px=cx+Math.cos(ang)*rr,py=cy+Math.sin(ang)*rr; if(i===0)x.moveTo(px,py);else x.lineTo(px,py);} x.closePath(); x.strokeStyle='rgba(201,168,76,.10)'; x.stroke(); }
+    for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; x.beginPath(); x.moveTo(cx,cy); x.lineTo(cx+Math.cos(ang)*R,cy+Math.sin(ang)*R); x.strokeStyle='rgba(201,168,76,.16)'; x.stroke(); }
+    if(o.labels){ var L=['K','M','C']; x.fillStyle='#85837b'; x.font='9px Courier Prime'; x.textAlign='center';
+      for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; x.fillText(L[i],cx+Math.cos(ang)*(R+14),cy+Math.sin(ang)*(R+14)+3); } }
+    x.beginPath();
+    for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; var v=Math.max(0.05,Math.min(1,(o.ax[i]/9)+br)); var rr=R*v; var px=cx+Math.cos(ang)*rr,py=cy+Math.sin(ang)*rr; if(i===0)x.moveTo(px,py);else x.lineTo(px,py); }
+    x.closePath();
+    var g=x.createLinearGradient(cx-R,cy-R,cx+R,cy+R); g.addColorStop(0,o.color+'66'); g.addColorStop(1,'rgba(201,168,76,.30)');
+    x.fillStyle=g; x.fill(); x.strokeStyle=o.color; x.lineWidth=1.4; x.stroke();
+    for(var i=0;i<3;i++){ var ang=-Math.PI/2+i*2*Math.PI/3; var v=Math.max(0.05,Math.min(1,(o.ax[i]/9)+br)); x.beginPath(); x.arc(cx+Math.cos(ang)*R*v,cy+Math.sin(ang)*R*v,2.5,0,7); x.fillStyle=o.color; x.fill(); }
+  }
+  function loop(){ var t=performance.now()/1000; anim.forEach(function(o){ drawTriad(o,t); }); if(!reduce) requestAnimationFrame(loop); }
+
+  function setupCanvas(cv,ax,color,labels){
+    var ctx=cv.getContext('2d'); var dpr=Math.min(devicePixelRatio||1,2);
+    cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx.scale(dpr,dpr);
+    var o={ctx:ctx,W:cv.clientWidth,H:cv.clientHeight,ax:ax,color:color,phase:Math.random()*6.28,labels:labels};
+    anim.push(o); return o;
+  }
+
+  async function bootTriads(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('The Twelve Triads','Sign in to see the Triads.'); return; }
+    var pr=await supabase.from('profiles').select('display_name,sign,element,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to see the Triads.'); return; }
+    const n=document.getElementById('tri-notice'); if(n) n.style.display='none';
+    const heroEl=document.querySelector('.hero'); if(heroEl) heroEl.style.display='flex';
+
+    var d=pr.data, sign=d.sign;
+    var a=Number(d.axis_a||1),b=Number(d.axis_b||1),c=Number(d.axis_c||1);
+    var auth=Math.sqrt(a*a+b*b+c*c);
+    var meSign=SIGNS.find(function(s){return s[0]===sign;})||SIGNS[0];
+    document.getElementById('my-name').textContent=d.display_name||(sign+' Sovereign');
+    document.getElementById('my-sub').innerHTML=meSign[1]+' '+sign+' \u00B7 '+(d.element||meSign[2])+' \u00B7 '+meSign[3]+' \u00B7 AUTHORITY '+auth.toFixed(2)+' / 15.58';
+    document.getElementById('m-a').textContent=a.toFixed(2); document.getElementById('m-b').textContent=b.toFixed(2); document.getElementById('m-c').textContent=c.toFixed(2);
+    setTimeout(function(){ document.getElementById('m-fa').style.width=(a/9*100)+'%'; document.getElementById('m-fb').style.width=(b/9*100)+'%'; document.getElementById('m-fc').style.width=(c/9*100)+'%'; },120);
+
+    // hero radar (real axes)
+    var hero=document.getElementById('myradar'); hero.style.width='100%';
+    setupCanvas(hero,[a,b,c],ECOL[d.element||meSign[2]]||'#00E5FF',true);
+
+    // twelve minis
+    var box=document.getElementById('twelve'); box.innerHTML='';
+    SIGNS.forEach(function(s){
+      var mine=s[0]===sign;
+      var card=document.createElement('div'); card.className='tri'+(mine?' mine':'');
+      var cv=document.createElement('canvas');
+      card.appendChild(cv);
+      card.insertAdjacentHTML('beforeend','<div class="nm">'+s[1]+' '+s[0]+'</div><div class="mt">'+s[2].toUpperCase()+' \u00B7 '+s[3]+'</div>'+(mine?'<div class="tag">YOUR TRIAD</div>':''));
+      box.appendChild(card);
+      // size canvas after in-DOM
+      cv.style.width='100%'; cv.style.height='120px';
+      var ax = mine ? [a,b,c] : s[4];
+      setupCanvas(cv,ax,ECOL[s[2]]||'#C9A84C',false);
+    });
+
+    loop();
+  }
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+window.bootTriads = bootTriads;
+
+</script>
+<script>
+document.querySelectorAll('.mtab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='#85837b';});
+    document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
+    btn.classList.add('active');btn.style.borderBottomColor='#C9A84C';btn.style.color='#C9A84C';
+    document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
+    if(btn.dataset.mtab==='triads' && !window.__triBuilt){ window.__triBuilt=true; callWhenReady('bootTriads'); }
+    if(btn.dataset.mtab==='grid' && !window.__gridBuilt){ window.__gridBuilt=true; callWhenReady('bootGrid'); }
+  });
+});
+function callWhenReady(fnName){
+  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
+    else if(tries>30){ clearInterval(t); }
+  },100);
+}
+(function(){
+  if(location.hash){
+    const t=location.hash.replace('#','');
+    const btn=document.querySelector('.mtab-btn[data-mtab="'+t+'"]');
+    if(btn) btn.click();
+  }
+})();
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

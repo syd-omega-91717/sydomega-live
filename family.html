@@ -142,6 +142,13 @@ a{color:inherit;text-decoration:none}
       <div class="ft-status"><div class="fts-dot"></div>FAMILY SAFE MODE: ACTIVE</div>
     </div>
 
+    <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
+      <div class="mtab-btn active" data-mtab="family" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">FAMILY VAULT</div>
+      <div class="mtab-btn" data-mtab="bloodline" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">BLOODLINE</div>
+      <div class="mtab-btn" data-mtab="heritage" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">HERITAGE ARCHIVE</div>
+    </div>
+
+    <div class="mtab-panel" id="mtab-family">
     <div id="owner-only-family" style="display:none">
     <!-- CONSTELLATION CANVAS -->
     <div class="constellation-wrap">
@@ -270,6 +277,106 @@ a{color:inherit;text-decoration:none}
         <button class="btn-add" id="btn-add">SEAL NODE TO CONSTELLATION &#x2192;</button>
         <div class="add-msg" id="add-msg">&#x2713; Node sealed to your family registry.</div>
       </div>
+    </div>
+    </div>
+
+    <div class="mtab-panel" id="mtab-bloodline" style="display:none">
+      
+    <div class="topbar">
+      <div class="t">BLOODLINE VAULT<small>SOVEREIGNS BY BLOOD &middot; ETERNAL SUCCESSION &middot; LINEAGE INHERITANCE</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">The Bloodline Vault is the eternal succession engine of the Order. Every sovereign node &mdash; living or passed &mdash; is recorded here. Assets, matrix coordinates, and sovereign rights pass through the bloodline according to the succession protocol. The Vault cannot be altered by any force except the Architect and legitimate heirs with multi-sig confirmation. What is built here lasts beyond a single life.</p>
+
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px">
+      <div style="border:1px solid rgba(139,0,0,.4);background:rgba(139,0,0,.05);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">VAULT STATUS</div><div style="font-family:var(--D);font-size:18px;color:var(--crim)">SEALED</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">BLOODLINE NODES</div><div style="font-family:var(--D);font-size:18px;color:var(--gold)" id="node-count">--</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">SUCCESSION LOCK</div><div style="font-family:var(--D);font-size:18px;color:var(--green)">3-of-5 MULTISIG</div></div>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:14px 18px;font-family:var(--M)"><div style="font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">ARCHITECT</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">S.Y.D.</div></div>
+    </div>
+
+    <div class="sechead">BLOODLINE CONSTELLATION</div>
+    <canvas id="tree-canvas" height="300"></canvas>
+
+    <div class="sechead">SOVEREIGN BLOODLINE NODES</div>
+    <div class="node-grid" id="node-grid"></div>
+
+    <div class="sechead">SUCCESSION PROTOCOL</div>
+    <table class="succ-table">
+      <thead><tr><th>RANK</th><th>HEIR</th><th>SHARE</th><th>ACTIVATION</th><th>STATUS</th></tr></thead>
+      <tbody id="succ-body"></tbody>
+    </table>
+
+    <div class="sechead">REGISTER A BLOODLINE NODE</div>
+    <div class="form-node">
+      <div class="fn-row">
+        <div class="fn-field"><label>FULL NAME</label><input type="text" id="n-name" placeholder="Name of sovereign..."/></div>
+        <div class="fn-field"><label>RELATION</label>
+          <select id="n-rel"><option>SELF</option><option>PARENT</option><option>CHILD</option><option>SIBLING</option><option>PARTNER</option><option>GRANDPARENT</option><option>GRANDCHILD</option></select>
+        </div>
+        <div class="fn-field"><label>BIRTH DATE</label><input type="date" id="n-birth"/></div>
+        <div class="fn-field"><label>SOVEREIGN NOTES</label><input type="text" id="n-notes" placeholder="Role in the lineage..."/></div>
+      </div>
+      <button class="btn-add" id="btn-add-blood">SEAL INTO THE VAULT &#8594;</button>
+      <div class="fn-saved" id="fn-saved">&#x2713; NODE SEALED &mdash; Bloodline record immutably written to the Vault.</div>
+    </div>
+  
+    </div>
+
+    <div class="mtab-panel" id="mtab-heritage" style="display:none">
+      
+    <div class="topbar">
+      <div class="t">HERITAGE ARCHIVE<small>LINEAGE &middot; CULTURE &middot; MEMORY &middot; CONTINUITY</small></div>
+    </div>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:24px">The Heritage Archive is the living memory of your sovereign lineage. Where you came from determines the weight of where you are going. Every root recorded here is woven into your matrix identity and passed forward through the Order.</p>
+
+    <div class="sechead">YOUR LINEAGE TIMELINE</div>
+    <div class="timeline" id="timeline">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="sechead">CULTURAL ROOTS</div>
+    <div class="roots-grid" id="roots-grid"></div>
+
+    <div class="sechead">HERITAGE ARCHIVE VAULTS</div>
+    <div class="archive-grid" id="archive-grid"></div>
+
+    <div class="sechead">ADD A HERITAGE RECORD</div>
+    <div class="form-section">
+      <div class="form-row">
+        <label>ERA &mdash; TIME PERIOD</label>
+        <select id="era-select">
+          <option value="ancient">Ancient Roots (Pre-1900)</option>
+          <option value="origins">Origins (1900 &ndash; 1950)</option>
+          <option value="lineage">Lineage (1950 &ndash; 1990)</option>
+          <option value="present" selected>Present Chapter (1990 &ndash; Now)</option>
+          <option value="legacy">Legacy (Future Intent)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>RECORD TITLE</label>
+        <input type="text" id="h-title" placeholder="E.g. Our family settled in the northern region..."/>
+      </div>
+      <div class="form-row">
+        <label>NARRATIVE</label>
+        <textarea id="h-body" placeholder="Write the memory, story, or record you wish to preserve in the sovereign archive..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>CULTURAL CATEGORY</label>
+        <select id="h-category">
+          <option value="lineage">Lineage &amp; Blood</option>
+          <option value="culture">Culture &amp; Tradition</option>
+          <option value="faith">Faith &amp; Belief</option>
+          <option value="achievement">Achievement &amp; Legacy</option>
+          <option value="land">Land &amp; Place</option>
+          <option value="language">Language &amp; Tongue</option>
+          <option value="wisdom">Wisdom &amp; Teaching</option>
+        </select>
+      </div>
+      <button class="btn-save" id="btn-save">PRESERVE THIS RECORD</button>
+      <div class="notice-saved" id="notice-saved">&#x2713; RECORD PRESERVED &mdash; Woven into your sovereign heritage archive.</div>
+    </div>
+
+  
     </div>
   </main>
 </div>
@@ -409,6 +516,250 @@ function fillRing(el, glyph, col, locked){
   },150);
 }
 boot();
+</script>
+
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const SUCCESSION=[
+  {rank:'1st',heir:'ARCHITECT &mdash; S.Y.D.',share:'51% Master Stake',act:'Permanent',status:'ACTIVE'},
+  {rank:'2nd',heir:'DESIGNATED PRIMARY HEIR',share:'25.5% derived',act:'On succession',status:'PENDING ASSIGNMENT'},
+  {rank:'3rd',heir:'SECONDARY HEIRS (up to 3)',share:'8.5% each (derived)',act:'On 2nd succession',status:'PENDING ASSIGNMENT'},
+  {rank:'VAULT',heir:'MASTER TRUST (non-heir remainder)',share:'Platform operational',act:'Automated',status:'AUTO-MANAGED'},
+];
+
+async function loadNodes(){
+  const { data, error } = await sb.from('bloodline_nodes').select('*').order('created_at',{ascending:true});
+  const stored=(data||[]).map(n=>({name:n.name,rel:n.rel,birth:n.birth,notes:n.notes,ts:n.created_at}));
+  const g=document.getElementById('node-grid'); g.innerHTML='';
+  if(!stored.length){
+    g.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted);padding:14px">No nodes sealed yet. Register your bloodline above.</div>';
+  } else {
+    stored.forEach(n=>{
+      const c=document.createElement('div'); c.className='node-card';
+      c.innerHTML=`<div class="nc-rel">${n.rel}</div><div class="nc-name">${n.name}</div><div class="nc-dates">${n.birth?new Date(n.birth).getFullYear():''}</div><div class="nc-notes">${n.notes||''}</div><span class="nc-badge">SEALED &#x2713;</span>`;
+      g.appendChild(c);
+    });
+  }
+  document.getElementById('node-count').textContent=stored.length||'0';
+  drawTree(stored);
+}
+
+function drawTree(nodes){
+  const cv=document.getElementById('tree-canvas');
+  const W=cv.offsetWidth||800; cv.width=W*2; cv.height=600;
+  const ctx=cv.getContext('2d'); ctx.scale(2,1);
+  const H=300;
+  ctx.clearRect(0,0,W,H);
+  const bg=ctx.createLinearGradient(0,0,0,H); bg.addColorStop(0,'rgba(13,13,21,1)'); bg.addColorStop(1,'rgba(7,7,11,1)');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  /* Root node (Architect) */
+  const rootX=W/2, rootY=50;
+  ctx.beginPath(); ctx.arc(rootX,rootY,18,0,Math.PI*2);
+  ctx.fillStyle='rgba(201,168,76,0.9)'; ctx.shadowColor='rgba(201,168,76,.6)'; ctx.shadowBlur=20; ctx.fill(); ctx.shadowBlur=0;
+  ctx.fillStyle='rgba(7,7,11,1)'; ctx.font='700 10px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('\u03A9',rootX,rootY+1);
+  ctx.fillStyle='rgba(201,168,76,0.8)'; ctx.font='9px "Courier Prime",monospace'; ctx.textAlign='center';
+  ctx.fillText('S.Y.D. \u2022 ARCHITECT',rootX,rootY+30);
+  /* Member nodes */
+  if(nodes.length){
+    const spacing=Math.min(160,(W-80)/nodes.length);
+    const startX=W/2-(nodes.length-1)*spacing/2;
+    nodes.forEach((n,i)=>{
+      const nx=startX+i*spacing, ny=160;
+      ctx.strokeStyle='rgba(201,168,76,0.2)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(rootX,rootY+18); ctx.lineTo(nx,ny-14); ctx.stroke();
+      ctx.beginPath(); ctx.arc(nx,ny,12,0,Math.PI*2);
+      ctx.fillStyle='rgba(139,0,0,0.6)'; ctx.fill();
+      ctx.fillStyle='rgba(233,230,220,0.8)'; ctx.font='8px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(n.name.split(' ')[0].slice(0,6).toUpperCase(),nx,ny);
+      ctx.fillText(n.rel,nx,ny+22);
+    });
+  } else {
+    ctx.fillStyle='rgba(133,131,123,0.4)'; ctx.font='10px "Courier Prime",monospace'; ctx.textAlign='center';
+    ctx.fillText('SEAL NODES BELOW TO BUILD THE CONSTELLATION',W/2,H/2);
+  }
+  /* Stars */
+  for(let s=0;s<60;s++){
+    const sx=Math.random()*W, sy=Math.random()*H;
+    ctx.beginPath(); ctx.arc(sx,sy,0.7,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,168,76,'+(0.1+Math.random()*0.3)+')'; ctx.fill();
+  }
+}
+
+document.getElementById('btn-add-blood').addEventListener('click',async()=>{
+  const name=document.getElementById('n-name').value.trim();
+  if(!name) return;
+  const node={name,rel:document.getElementById('n-rel').value,birth:document.getElementById('n-birth').value||null,notes:document.getElementById('n-notes').value.trim()};
+  const { error } = await sb.from('bloodline_nodes').insert(node);
+  if(error){ alert('Could not save node: '+error.message); return; }
+  await loadNodes();
+  document.getElementById('n-name').value=''; document.getElementById('n-notes').value='';
+  const s=document.getElementById('fn-saved'); s.style.display='block';
+  setTimeout(()=>s.style.display='none',3000);
+});
+
+const sb2=document.getElementById('succ-body'); SUCCESSION.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${s.rank}</td><td>${s.heir}</td><td>${s.share}</td><td>${s.act}</td><td style="color:${s.status==='ACTIVE'?'var(--green)':'var(--muted)'}">${s.status}</td>`;sb2.appendChild(tr);});
+
+async function bootBloodline(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  loadNodes();
+}
+window.bootBloodline = bootBloodline;
+
+</script>
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+var ERAS=[
+  {key:'ancient',label:'ANCIENT ROOTS',glyph:'&#x2736;',color:'#D9B86A'},
+  {key:'origins',label:'THE ORIGINS',glyph:'&#x22D4;',color:'#C9A84C'},
+  {key:'lineage',label:'THE LINEAGE',glyph:'&#x2665;',color:'#E2C86D'},
+  {key:'present',label:'THE PRESENT CHAPTER',glyph:'&#x25C8;',color:'#00E5FF'},
+  {key:'legacy',label:'THE LEGACY',glyph:'&#x03A9;',color:'#C9A84C'},
+];
+
+var ROOTS=[
+  {glyph:'&#x269B;',name:'ORIGIN LAND',desc:'Birthplace & ancestral territory'},
+  {glyph:'&#x263D;',name:'MOTHER TONGUE',desc:'Languages of the lineage'},
+  {glyph:'&#x2626;',name:'FAITH TRADITION',desc:'Spiritual & religious heritage'},
+  {glyph:'&#x2694;',name:'WARRIOR LINEAGE',desc:'Strength passed through blood'},
+  {glyph:'&#x2318;',name:'CULTURAL ARTS',desc:'Music, craft, and expression'},
+  {glyph:'&#x2726;',name:'WISDOM SCHOOL',desc:'Knowledge traditions inherited'},
+  {glyph:'&#x267F;',name:'MIGRATION PATH',desc:'The journey that shaped the line'},
+  {glyph:'&#x25C6;',name:'SOVEREIGN MARK',desc:'The identity that defines the clan'},
+  {glyph:'&#x262F;',name:'PHILOSOPHY CORE',desc:'The beliefs that guide all decisions'},
+];
+
+var ARCHIVES=[
+  {icon:'&#x2394;',title:'BIRTH RECORDS',meta:'Certificates &middot; Documents &middot; Medical',status:'active'},
+  {icon:'&#x25A3;',title:'FAMILY PORTRAITS',meta:'Images &middot; Memories &middot; Occasions',status:'active'},
+  {icon:'&#x2609;',title:'LAND & PROPERTY',meta:'Deeds &middot; Maps &middot; Boundaries',status:'locked'},
+  {icon:'&#x270D;',title:'LETTERS & WRITINGS',meta:'Correspondence &middot; Notes &middot; Diaries',status:'active'},
+  {icon:'&#x2694;',title:'MILITARY RECORDS',meta:'Service &middot; Honour &middot; Sacrifice',status:'locked'},
+  {icon:'&#x269B;',title:'CULTURAL ARTIFACTS',meta:'Objects &middot; Relics &middot; Heirlooms',status:'active'},
+  {icon:'&#x25B2;',title:'FINANCIAL HISTORY',meta:'Assets &middot; Businesses &middot; Inheritance',status:'locked'},
+  {icon:'&#x2394;',title:'WISDOM TEXTS',meta:'Books &middot; Teachings &middot; Oral tradition',status:'active'},
+];
+
+/* Build timeline from local storage (heritage records) */
+async function buildTimeline(){
+  var tl=document.getElementById('timeline');
+  tl.innerHTML='';
+  var stored=[];
+  try{
+    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').order('created_at',{ascending:true});
+    stored = (r.data||[]).map(function(x){return {title:x.title,body:x.body,era:x.era,category:x.category,ts:x.created_at};});
+  }catch(e){}
+
+  var byEra={};
+  ERAS.forEach(function(e){byEra[e.key]=[];});
+  stored.forEach(function(r){if(byEra[r.era]) byEra[r.era].push(r);});
+
+  ERAS.forEach(function(era){
+    var records=byEra[era.key];
+    var node=document.createElement('div');
+    node.className='tl-node'+(records.length?'':' ');
+    if(era.key==='present') node.className+=' active-node';
+    node.innerHTML=
+      '<div class="tl-card">'+
+      '<div class="tl-era" style="color:'+era.color+'">'+era.glyph+' &nbsp;'+era.label+'</div>'+
+      '<div class="tl-title">'+(records.length?records[records.length-1].title:'No records yet for this era')+'</div>'+
+      '<div class="tl-body">'+(records.length?esc(records[records.length-1].body):'Add your first record for this period below.')+'</div>'+
+      '<div class="tl-tags">'+records.map(function(r,i){return '<span class="tl-tag'+(i===records.length-1?' gold':'')+'">'+esc(r.category)+'</span>';}).join('')+'</div>'+
+      '</div>';
+    tl.appendChild(node);
+  });
+}
+
+function buildRoots(){
+  var grid=document.getElementById('roots-grid');
+  grid.innerHTML='';
+  ROOTS.forEach(function(r){
+    var cell=document.createElement('div');
+    cell.className='root-cell';
+    cell.innerHTML=
+      '<div class="glyph">'+r.glyph+'</div>'+
+      '<div class="name">'+r.name+'</div>'+
+      '<div class="desc">'+r.desc+'</div>'+
+      '<div class="active-mark">CORE ROOT</div>';
+    grid.appendChild(cell);
+  });
+}
+
+function buildArchives(){
+  var grid=document.getElementById('archive-grid');
+  grid.innerHTML='';
+  ARCHIVES.forEach(function(a){
+    var card=document.createElement('div');
+    card.className='arch-card';
+    card.innerHTML=
+      '<div class="arch-icon">'+a.icon+'</div>'+
+      '<div class="arch-title">'+a.title+'</div>'+
+      '<div class="arch-meta">'+a.meta+'</div>'+
+      '<div class="arch-status status-'+a.status+'">'+(a.status==='active'?'ACTIVE VAULT':'LOCKED &middot; PENDING')+'</div>';
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById('btn-save').addEventListener('click',async function(){
+  var title=document.getElementById('h-title').value.trim();
+  var body=document.getElementById('h-body').value.trim();
+  var era=document.getElementById('era-select').value;
+  var cat=document.getElementById('h-category').value;
+  if(!title||!body) return;
+  var { error } = await sb.from('heritage_records').insert({title:title,body:body,era:era,category:cat});
+  if(error){ alert('Could not save record: '+error.message); return; }
+  await buildTimeline();
+  document.getElementById('h-title').value='';
+  document.getElementById('h-body').value='';
+  var n=document.getElementById('notice-saved'); n.style.display='block';
+  setTimeout(function(){n.style.display='none';},3000);
+});
+
+async function bootHeritage(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  buildTimeline();
+  buildRoots();
+  buildArchives();
+}
+window.bootHeritage = bootHeritage;
+
+</script>
+<script>
+document.querySelectorAll('.mtab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='#85837b';});
+    document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
+    btn.classList.add('active');btn.style.borderBottomColor='#C9A84C';btn.style.color='#C9A84C';
+    document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
+    if(btn.dataset.mtab==='bloodline' && !window.__bloodBuilt){ window.__bloodBuilt=true; callWhenReady('bootBloodline'); }
+    if(btn.dataset.mtab==='heritage' && !window.__heritBuilt){ window.__heritBuilt=true; callWhenReady('bootHeritage'); }
+  });
+});
+function callWhenReady(fnName){
+  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
+    else if(tries>30){ clearInterval(t); }
+  },100);
+}
+(function(){
+  if(location.hash){
+    const t=location.hash.replace('#','');
+    const btn=document.querySelector('.mtab-btn[data-mtab="'+t+'"]');
+    if(btn) btn.click();
+  }
+})();
 </script>
 <script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
 </body>

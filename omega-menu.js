@@ -21,14 +21,14 @@
     ]],
     ['CORE', '#00E5FF', [
       ['\u2302', 'Dashboard', '/dashboard.html'],
-      ['\u25C6', 'Identity', '/identity.html'],
+      ['\u25C6', 'Identity', '/profile.html'],
       ['\u2609', 'Cosmos', '/cosmos.html'],
       ['\u25CE', 'Matrix', '/matrix.html'],
       ['\u264D', 'Horoscope', '/cosmos.html#horoscope'],
       ['\u2721', 'Pantheons', '/pantheons.html'],
       ['\u2694', 'Factions', '/factions.html'],
-      ['\u2604', 'Triads', '/triads.html'],
-      ['\u25C7', 'Character', '/character.html'],
+      ['\u2604', 'Triads', '/matrix.html#triads'],
+      ['\u25C7', 'Character', '/profile.html#character'],
       ['\u2691', 'Beacon', '/beacon.html'],
       ['\u2600', 'Agents', '/agents.html']
     ]],
@@ -45,7 +45,7 @@
       ['\u25C8', 'Treasury', '/vault.html#reserve'],
       ['\u2263', 'Ledger', '/ledger.html'],
       ['\u25D0', 'Wallet', '/vault.html#wallet'],
-      ['\u25C7', 'Portfolio', '/portfolio.html'],
+      ['\u25C7', 'Portfolio', '/profile.html#portfolio'],
       ['\u2318', 'Blockchain', '/blockchain.html'],
       ['\u25C8', 'Income', '/income.html'],
       ['\u2740', 'Payments', '/payments.html'],
@@ -57,10 +57,10 @@
       ['\u2691', 'Hall', '/hall.html'],
       ['\u2605', 'Trophies', '/trophies.html'],
       ['\u25A6', 'City', '/city.html'],
-      ['\u2693', 'Bloodline', '/bloodline.html'],
-      ['\u26EA', 'Heritage', '/heritage.html'],
+      ['\u2693', 'Bloodline', '/family.html#bloodline'],
+      ['\u26EA', 'Heritage', '/family.html#heritage'],
       ['\u265B', 'Sovereigns', '/sovereigns.html'],
-      ['\u2696', 'Charter', '/charter.html'],
+      ['\u2696', 'Charter', '/matrix.html#charter'],
       ['\u2696', 'Compliance', '/compliance.html']
     ]],
     ['SERVICES', '#3fb27f', [
@@ -75,7 +75,7 @@
       ['\u2727', 'Research', '/research.html'],
       ['\u2699', 'Automation', '/automation.html'],
       ['\u2609', 'Prediction', '/prediction.html'],
-      ['\u2b21', 'Grid', '/grid.html']
+      ['\u2b21', 'Grid', '/matrix.html#grid']
     ]],
     ['COMMUNITY', '#34C6E6', [
       ['\u2695', 'News', '/news.html'],

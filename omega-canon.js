@@ -14,6 +14,14 @@
     ready: false, tracks: [], elements: [], tiers: [], tierFeatures: {}, _cbs: [],
     onReady: function (cb) { if (this.ready) cb(this); else this._cbs.push(cb); },
     track: function (n) { return this.tracks[(n - 1)] || null; },
+    trackBySign: function (sign) {
+      if (!sign) return null;
+      var s = String(sign).toLowerCase();
+      for (var i = 0; i < this.tracks.length; i++) {
+        if (String(this.tracks[i].sign || '').toLowerCase() === s) return this.tracks[i];
+      }
+      return null;
+    },
     medal: function (n) { var t = this.track(n); return t ? t.medal : null; },
     trophy: function (n) { var t = this.track(n); return t ? t.trophy : null; },
     certificate: function (n) { var t = this.track(n); return t ? t.certificate : null; },

@@ -1,8 +1,548 @@
-// SYD OMEGA 91717 -- neutralized stub.
-// This file previously caused browsers to download it (treated as an MPEG-TS
-// video stream) instead of opening the site. It is intentionally inert now.
-// The real protection is .vercelignore (this file is not deployed) + vercel.json
-// (any .ts request is redirected to the site). If this ever loads in a browser,
-// it simply bounces to the homepage and downloads nothing.
-if (typeof window !== "undefined") { window.location.replace("/dashboard.html"); }
-export {};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Command | &#937; SYD OMEGA 91717</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--void:#0A0A0F;--void2:#020206;
+--gold:#C9A84C;--solar:#E2C86D;
+--cyan:#00E5FF;--crimson:#8B0000;--crimson2:#C0392B;
+--glass:rgba(201,168,76,0.06);--glass2:rgba(0,229,255,0.04);
+--border:rgba(201,168,76,0.18);--border2:rgba(0,229,255,0.12);
+--text:#E8E0D0;--muted:#8A8070;--green:#00C896;
+}
+html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(2,2,6,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-status{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
+.nav-coord{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.06em}
+
+.page{position:relative;z-index:1;padding-top:64px;min-height:100vh}
+
+/* HERO SEAL */
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem 3rem;text-align:center;position:relative}
+.hero-omega-wrap{position:relative;width:160px;height:160px;margin:0 auto 2rem}
+#seal-canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+.hero-omega{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cinzel Decorative',serif;font-size:5rem;color:var(--gold);line-height:1;animation:seal-pulse 5s ease-in-out infinite;text-shadow:0 0 30px rgba(201,168,76,0.5)}
+@keyframes seal-pulse{0%,100%{text-shadow:0 0 20px rgba(201,168,76,.4),0 0 60px rgba(201,168,76,.1)}50%{text-shadow:0 0 40px rgba(201,168,76,.7),0 0 100px rgba(201,168,76,.2)}}
+.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:var(--gold);line-height:1.2;margin-bottom:.5rem}
+.hero-sub{font-family:'Courier Prime',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.1em;max-width:480px;margin:0 auto 2rem;line-height:1.7}
+.hero-badges{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.hero-badge{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--gold);border:1px solid var(--border);padding:.35rem .9rem;letter-spacing:.1em}
+
+/* COMMAND STATS */
+.cmd-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;max-width:1400px;margin:0 auto 2rem;padding:0 2rem}
+.cstat{border:1px solid var(--border);background:linear-gradient(160deg,rgba(201,168,76,.08),rgba(10,10,15,.4));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:1rem 1.25rem;position:relative;overflow:hidden;text-decoration:none;display:block;transition:all .3s;border-radius:2px;box-shadow:0 8px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.03)}
+.cstat:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.35),0 0 24px rgba(201,168,76,.12),inset 0 1px 0 rgba(255,255,255,.05)}
+.cstat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
+.cstat:hover::before{opacity:1}
+.cstat-label{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem}
+.cstat-val{font-family:'Cinzel Decorative',serif;font-size:1.5rem;color:var(--gold);line-height:1;text-shadow:0 0 12px rgba(201,168,76,.25)}
+.cstat-sub{font-size:.72rem;color:var(--muted);margin-top:.25rem}
+
+/* QUICK ACCESS -- icon-forward card row, real status only */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1400px;margin:0 auto 2rem;padding:0 2rem}
+.quick-card{border:1px solid var(--border);background:linear-gradient(165deg,rgba(201,168,76,.07),rgba(10,10,15,.5));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:3px;padding:1.1rem 1rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.5rem;transition:all .3s;box-shadow:0 8px 20px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.03);position:relative;overflow:hidden}
+.quick-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.1),transparent 70%);opacity:0;transition:opacity .3s}
+.quick-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 16px 34px rgba(0,0,0,.4),0 0 28px rgba(201,168,76,.15)}
+.quick-card:hover::after{opacity:1}
+.quick-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:1px solid var(--qc-col,var(--gold));color:var(--qc-col,var(--gold));background:radial-gradient(circle,rgba(201,168,76,.12),transparent 70%);box-shadow:0 0 16px var(--qc-glow,rgba(201,168,76,.2))}
+.quick-name{font-family:'Cinzel Decorative',serif;font-size:.82rem;color:var(--text)}
+.quick-status{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--muted)}
+
+/* MAIN GRID */
+.cmd-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;max-width:1400px;margin:0 auto;padding:0 2rem 2rem}
+.panel{background:linear-gradient(165deg,rgba(201,168,76,.05),rgba(10,10,15,.55));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);position:relative;overflow:hidden;border-radius:2px;box-shadow:0 10px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.03);transition:border-color .3s,box-shadow .3s}
+.panel:hover{border-color:rgba(201,168,76,.35);box-shadow:0 14px 36px rgba(0,0,0,.4),0 0 20px rgba(201,168,76,.06),inset 0 1px 0 rgba(255,255,255,.04)}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+.panel-title{font-family:'Cinzel Decorative',serif;font-size:.82rem;color:var(--gold);letter-spacing:.1em;text-shadow:0 0 10px rgba(201,168,76,.2)}
+.panel-badge{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem;letter-spacing:.08em}
+.panel-body{padding:1.25rem 1.5rem}
+
+/* MODULE LINKS */
+.module-links{display:flex;flex-direction:column;gap:.4rem}
+.mod-link{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border:1px solid rgba(201,168,76,0.08);border-radius:2px;text-decoration:none;transition:all .25s;position:relative}
+.mod-link:hover{background:linear-gradient(90deg,rgba(201,168,76,.06),transparent);box-shadow:inset 2px 0 0 var(--gold)}
+.mod-link:hover{border-color:var(--border);background:rgba(201,168,76,0.04)}
+.mod-num{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);width:36px;flex-shrink:0}
+.mod-name{font-size:.8rem;color:var(--text);flex:1}
+.mod-arrow{font-size:.7rem;color:var(--muted);transition:color .2s}
+.mod-link:hover .mod-arrow{color:var(--gold)}
+
+/* SYSTEM FEED */
+.sys-feed{display:flex;flex-direction:column;gap:.4rem}
+.feed-item{display:flex;gap:.75rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid rgba(201,168,76,0.06)}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:6px;height:6px;border-radius:50%;margin-top:.35rem;flex-shrink:0}
+.feed-dot.ok{background:var(--green)}
+.feed-dot.warn{background:var(--solar)}
+.feed-dot.pend{background:var(--muted)}
+.feed-text{font-size:.76rem;color:var(--muted);line-height:1.45;flex:1}
+.feed-time{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);flex-shrink:0;margin-top:.05rem}
+
+/* AGENT QUICK */
+.agent-quick{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.aq-item{border:1px solid rgba(201,168,76,0.1);padding:.65rem .75rem;display:flex;align-items:center;gap:.5rem;transition:border-color .2s;cursor:default}
+.aq-item:hover{border-color:var(--border)}
+.aq-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.aq-name{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--text)}
+.aq-role{font-size:.65rem;color:var(--muted)}
+
+/* ASCENSION PATH */
+.ascension{max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
+.asc-track{display:grid;grid-template-columns:repeat(12,1fr);gap:.4rem;margin-top:.75rem}
+.asc-node{border:1px solid var(--border);padding:.75rem .5rem;text-align:center;position:relative;overflow:hidden;transition:all .3s}
+.asc-node.done{border-color:var(--gold);background:rgba(201,168,76,0.06)}
+.asc-node.current{border-color:var(--cyan);background:rgba(0,229,255,0.04);box-shadow:0 0 12px rgba(0,229,255,0.08)}
+.asc-node-num{font-family:'Cinzel Decorative',serif;font-size:1.2rem;line-height:1}
+.asc-node.done .asc-node-num{color:var(--gold)}
+.asc-node.current .asc-node-num{color:var(--cyan)}
+.asc-node:not(.done):not(.current) .asc-node-num{color:var(--muted)}
+.asc-node-label{font-family:'Courier Prime',monospace;font-size:.52rem;color:var(--muted);letter-spacing:.06em;margin-top:.3rem;text-transform:uppercase}
+
+/* OMEGA SIG */
+.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:'Cinzel Decorative',serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--void2)}
+::-webkit-scrollbar-thumb{background:var(--border)}
+@media(max-width:1100px){.cmd-stats{grid-template-columns:repeat(3,1fr)}.cmd-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.cmd-grid{grid-template-columns:1fr}.cmd-stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<style id="omega-cat-css">
+  .ocat-wrap{max-width:1200px;margin:22px auto 8px;padding:0 18px}
+  .ocat-title{font-family:'Cinzel Decorative',serif;color:var(--gold,#C9A84C);letter-spacing:3px;font-size:15px;text-align:center;margin:0 0 16px;opacity:.9}
+  .ocat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .ocat{border:1px solid rgba(201,168,76,.2);border-radius:14px;background:rgba(255,255,255,.02);padding:16px 12px;cursor:pointer;transition:all .25s;text-align:center;position:relative;overflow:hidden}
+  .ocat:hover,.ocat.open{border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.06);transform:translateY(-2px)}
+  .ocat .em{width:30px;height:30px;margin:0 auto 8px;display:block}
+  .ocat .em svg{width:30px;height:30px;stroke:var(--gold,#C9A84C);fill:none;stroke-width:1.4}
+  .ocat:hover .em svg,.ocat.open .em svg{animation:ocat-spin 9s linear infinite}
+  @keyframes ocat-spin{to{transform:rotate(360deg)}}
+  .ocat .nm{font-family:'Rajdhani',sans-serif;font-weight:600;color:#e9e6dc;letter-spacing:1px;font-size:13px}
+  .ocat .ct{font-family:'Courier Prime',monospace;color:#8a8676;font-size:10px;letter-spacing:1px;margin-top:2px}
+  .ocat-sub{max-width:1200px;margin:0 auto;padding:0 18px;overflow:hidden;max-height:0;transition:max-height .35s ease}
+  .ocat-sub.open{max-height:600px}
+  .ocat-sub-inner{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:12px 0 6px}
+  .ocat-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid rgba(201,168,76,.16);border-radius:10px;color:#d8d5cb;text-decoration:none;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.5px;transition:all .2s;background:rgba(0,0,0,.2)}
+  .ocat-link:hover{border-color:rgba(0,229,255,.5);color:#00E5FF;transform:translateX(3px)}
+  .ocat-link .dot{width:6px;height:6px;border-radius:50%;background:var(--gold,#C9A84C);flex:0 0 auto}
+  @media(prefers-reduced-motion:reduce){.ocat:hover .em svg,.ocat.open .em svg{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="shell" style="display:flex;min-height:100vh">
+  <aside class="side" id="omega-side" data-page="command" style="width:80px;flex-shrink:0"></aside>
+  <div style="flex:1;min-width:0">
+<section class="ocat-wrap" aria-label="Command Categories">
+  <div class="ocat-title">COMMAND INDEX</div>
+  <div class="ocat-grid" id="ocat-grid"></div>
+</section>
+<div class="ocat-sub" id="ocat-sub"><div class="ocat-sub-inner" id="ocat-sub-inner"></div></div>
+<script>
+(function(){
+  var EM={
+    command:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
+    progression:'<svg viewBox="0 0 24 24"><path d="M4 20h16M7 20V10M12 20V5M17 20v-8"/></svg>',
+    assets:'<svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 8v8M8 10v4M16 10v4"/></svg>',
+    experience:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg>',
+    order:'<svg viewBox="0 0 24 24"><path d="M5 20h14M7 20l-2-9 4 3 3-6 3 6 4-3-2 9"/></svg>',
+    services:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>',
+    account:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>'
+  };
+  var CATS=[
+    ['command','COMMAND',[['Dashboard','dashboard'],['Matrix','matrix'],['Cosmos','cosmos'],['Horoscope','horoscope']]],
+    ['progression','PROGRESSION',[['Grades','grades'],['Levels','levels'],['Phases','phases'],['Ascension','ascension'],['Honors','honors'],['Achievements','achievements']]],
+    ['assets','ASSETS',[['Vault','vault'],['Treasury','treasury'],['Wallet','wallet'],['Ledger','ledger'],['Blockchain','blockchain'],['Portfolio','portfolio']]],
+    ['experience','EXPERIENCE',[['Academy','academy'],['Games','gaming'],['Cinema','cinema'],['Universe','universe'],['Media','media']]],
+    ['order','THE ORDER',[['Family','family'],['Kings','kings'],['Hall','hall'],['City','city'],['Agents','agents']]],
+    ['services','SERVICES',[['Consultancy','consultancy'],['Marketplace','marketplace'],['Publishing','publishing'],['Marketing','marketing'],['News','news'],['Intelligence','intelligence']]],
+    ['account','ACCOUNT',[['Profile','profile'],['Settings','settings'],['Subscriptions','subscriptions']]]
+  ];
+  function render(){
+    var g=document.getElementById('ocat-grid'); if(!g) return; g.innerHTML='';
+    CATS.forEach(function(c,i){
+      var d=document.createElement('div'); d.className='ocat'; d.setAttribute('data-i',i);
+      d.innerHTML='<span class="em">'+(EM[c[0]]||'')+'</span><div class="nm">'+c[1]+'</div><div class="ct">'+c[2].length+' AREAS</div>';
+      d.addEventListener('click',function(){ toggle(i,d); });
+      g.appendChild(d);
+    });
+  }
+  var openIdx=-1;
+  function toggle(i,card){
+    var sub=document.getElementById('ocat-sub'), inner=document.getElementById('ocat-sub-inner');
+    document.querySelectorAll('.ocat').forEach(function(x){x.classList.remove('open');});
+    if(openIdx===i){ openIdx=-1; sub.classList.remove('open'); return; }
+    openIdx=i; card.classList.add('open');
+    inner.innerHTML = CATS[i][2].map(function(p){
+      return '<a class="ocat-link" href="/'+p[1]+'.html"><span class="dot"></span>'+p[0]+'</a>';
+    }).join('');
+    sub.classList.add('open');
+  }
+  if(document.getElementById('ocat-grid')) render();
+  else document.addEventListener('DOMContentLoaded',render);
+})();
+</script>
+
+
+<div class="page">
+  <!-- HERO SEAL -->
+  <div class="hero">
+    <div class="hero-omega-wrap">
+      <canvas id="seal-canvas" width="160" height="160"></canvas>
+      <div class="hero-omega">&#937;</div>
+    </div>
+    <div class="hero-eyebrow">SYD OMEGA 91717 // COMMAND CENTER</div>
+    <h1 class="hero-title" id="hero-title">Sovereign Command</h1>
+    <p class="hero-sub" id="hero-sub">
+      Loading your standing...
+    </p>
+    <div class="hero-badges" id="hero-badges"></div>
+    <div style="margin-top:.5rem;font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);letter-spacing:.1em" id="hero-coord">COORD (--, --, --)</div>
+  </div>
+
+  <!-- COMMAND STATS -->
+  <div class="cmd-stats">
+    <a href="matrix.html" class="cstat">
+      <div class="cstat-label">Matrix Nodes</div>
+      <div class="cstat-val" id="stat-nodes">--</div>
+      <div class="cstat-sub" id="stat-nodes-sub">Loading...</div>
+    </a>
+    <a href="vault.html#reserve" class="cstat">
+      <div class="cstat-label">&#937; Supply</div>
+      <div class="cstat-val">917B</div>
+      <div class="cstat-sub">51% vault locked (dormant)</div>
+    </a>
+    <a href="profile.html#portfolio" class="cstat">
+      <div class="cstat-label">Gold Reserve</div>
+      <div class="cstat-val">412kg</div>
+      <div class="cstat-sub">Reserve reference (dormant)</div>
+    </a>
+    <a href="honors.html" class="cstat">
+      <div class="cstat-label">Honors</div>
+      <div class="cstat-val" id="stat-honors">--</div>
+      <div class="cstat-sub">Your trophies / medals</div>
+    </a>
+    <a href="#" class="cstat" id="stat-ts-link">
+      <div class="cstat-label">Time Sovereign</div>
+      <div class="cstat-val" id="stat-ts">--</div>
+      <div class="cstat-sub" id="stat-ts-sub">Loading...</div>
+    </a>
+    <a href="agents.html" class="cstat">
+      <div class="cstat-label">Active Agents</div>
+      <div class="cstat-val">12</div>
+      <div class="cstat-sub">Neural network live</div>
+    </a>
+  </div>
+
+  <!-- QUICK ACCESS -- real per-viewer status, no fabricated figures -->
+  <div class="quick-grid" id="quick-grid">
+    <a href="honors.html#ascension" class="quick-card" style="--qc-col:#E86A3A;--qc-glow:rgba(232,106,58,.3)">
+      <div class="quick-icon">&#9650;</div>
+      <div class="quick-name">Ascension</div>
+      <div class="quick-status" id="qc-ascension">Loading...</div>
+    </a>
+    <a href="matrix.html" class="quick-card" style="--qc-col:#00E5FF;--qc-glow:rgba(0,229,255,.3)">
+      <div class="quick-icon">&#9670;</div>
+      <div class="quick-name">The Matrix</div>
+      <div class="quick-status" id="qc-matrix">Loading...</div>
+    </a>
+    <a href="cosmos.html" class="quick-card" style="--qc-col:#9B6BF0;--qc-glow:rgba(155,107,240,.3)">
+      <div class="quick-icon">&#9791;</div>
+      <div class="quick-name">Cosmos Hub</div>
+      <div class="quick-status">Agents &middot; Horoscope &middot; Gates</div>
+    </a>
+    <a href="profile.html" class="quick-card" style="--qc-col:#C9A84C;--qc-glow:rgba(201,168,76,.3)">
+      <div class="quick-icon">&#9678;</div>
+      <div class="quick-name">Profile</div>
+      <div class="quick-status" id="qc-profile">Loading...</div>
+    </a>
+    <a href="vault.html" class="quick-card" style="--qc-col:#3fb27f;--qc-glow:rgba(63,178,127,.3)">
+      <div class="quick-icon">&#937;</div>
+      <div class="quick-name">Vault</div>
+      <div class="quick-status">Reserve &middot; Wallet &middot; NFT</div>
+    </a>
+    <a href="family.html" class="quick-card" style="--qc-col:#D9B86A;--qc-glow:rgba(217,184,106,.3)">
+      <div class="quick-icon">&#8962;</div>
+      <div class="quick-name">Family</div>
+      <div class="quick-status">Bloodline &middot; Heritage</div>
+    </a>
+  </div>
+
+  <!-- CMD GRID -->
+  <div class="cmd-grid">
+    <!-- Module Map -->
+    <div class="panel" style="grid-column:span 2">
+      <div class="panel-header">
+        <span class="panel-title">Platform Modules</span>
+        <span class="panel-badge" id="module-count">-- ACTIVE</span>
+      </div>
+      <div class="panel-body">
+        <div class="module-links" style="display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem">
+          <div>
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.4rem 0 .3rem">PROGRESSION</div>
+            <a href="honors.html#ascension" class="mod-link"><span class="mod-num">M01</span><span class="mod-name">Ascension (12 Levels)</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="matrix.html" class="mod-link"><span class="mod-num">M02</span><span class="mod-name">The Matrix</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="honors.html" class="mod-link"><span class="mod-num">M03</span><span class="mod-name">Honors &amp; Achievements</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="elements.html#gates" class="mod-link"><span class="mod-num">M04</span><span class="mod-name">The 12 Gates</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="exam.html" class="mod-link"><span class="mod-num">M05</span><span class="mod-name">Exam Hall</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">EXPERIENCE</div>
+            <a href="academy.html" class="mod-link"><span class="mod-num">M06</span><span class="mod-name">Academy</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="gaming.html" class="mod-link"><span class="mod-num">M07</span><span class="mod-name">Gaming Arena</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="universe.html" class="mod-link"><span class="mod-num">M08</span><span class="mod-name">Media Universe</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="sigil.html" class="mod-link"><span class="mod-num">M09</span><span class="mod-name">Sigil Vault</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">ASSETS</div>
+            <a href="vault.html" class="mod-link"><span class="mod-num">M10</span><span class="mod-name">Sovereign Vault</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="subscriptions.html" class="mod-link"><span class="mod-num">M11</span><span class="mod-name">Subscriptions</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="points.html" class="mod-link"><span class="mod-num">M12</span><span class="mod-name">Sovereign Points</span><span class="mod-arrow">&#8594;</span></a>
+          </div>
+          <div>
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.4rem 0 .3rem">THE ORDER</div>
+            <a href="family.html" class="mod-link"><span class="mod-num">M12</span><span class="mod-name">Family &amp; Heritage</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="hall.html" class="mod-link"><span class="mod-num">M13</span><span class="mod-name">Hall of the Order</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="charter.html" class="mod-link"><span class="mod-num">M14</span><span class="mod-name">Sovereign Charter</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">SERVICES</div>
+            <a href="consultancy.html" class="mod-link"><span class="mod-num">M15</span><span class="mod-name">Consultancy Hub</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="marketplace.html" class="mod-link"><span class="mod-num">M16</span><span class="mod-name">Marketplace</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="chatbot.html" class="mod-link"><span class="mod-num">M17</span><span class="mod-name">Concierge Chat</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">COMMUNITY</div>
+            <a href="news.html" class="mod-link"><span class="mod-num">M18</span><span class="mod-name">News Intelligence</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="social.html" class="mod-link"><span class="mod-num">M19</span><span class="mod-name">Social Hub</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="events.html" class="mod-link"><span class="mod-num">M20</span><span class="mod-name">Events</span><span class="mod-arrow">&#8594;</span></a>
+
+            <div style="margin-top:1rem">
+              <button id="open-full-grid" style="width:100%;padding:.6rem;background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;cursor:pointer">VIEW ALL &#8594;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Feed -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Your Evolution Feed</span>
+        <span class="panel-badge">LIVE</span>
+      </div>
+      <div class="panel-body">
+        <div class="sys-feed" id="sys-feed">
+          <div class="feed-item"><div class="feed-text">Loading your evolution log...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agents Quick -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Agent Network</span>
+        <span class="panel-badge">12 ONLINE</span>
+      </div>
+      <div class="panel-body">
+        <div class="agent-quick">
+          <div class="aq-item"><div class="aq-dot" style="background:var(--crimson2)"></div><div><div class="aq-name">SENTINEL</div><div class="aq-role">Security</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:var(--gold)"></div><div><div class="aq-name">ANALYST</div><div class="aq-role">Finance</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:#8B6914"></div><div><div class="aq-name">HISTORIAN</div><div class="aq-role">Archive</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:var(--cyan)"></div><div><div class="aq-name">TUTOR</div><div class="aq-role">Education</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:#27AE60"></div><div><div class="aq-name">MERCHANT</div><div class="aq-role">Commerce</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:#9B59B6)"></div><div><div class="aq-name">PROXY</div><div class="aq-role">Execution</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:#F39C12"></div><div><div class="aq-name">ORACLE</div><div class="aq-role">Prediction</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:#3498DB"></div><div><div class="aq-name">SCOUT</div><div class="aq-role">Discovery</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:#7F8C8D"></div><div><div class="aq-name">WARDEN</div><div class="aq-role">Family</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:#E74C3C"></div><div><div class="aq-name">AUDITOR</div><div class="aq-role">Validation</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:var(--solar)"></div><div><div class="aq-name">BEACON</div><div class="aq-role">Onboarding</div></div></div>
+          <div class="aq-item"><div class="aq-dot" style="background:var(--gold)"></div><div><div class="aq-name">SOVEREIGN</div><div class="aq-role">Master</div></div></div>
+        </div>
+        <div style="margin-top:1rem;text-align:center"><a href="agents.html" style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--cyan);letter-spacing:.1em;text-decoration:none;border:1px solid var(--border2);padding:.35rem 1rem;display:inline-block;transition:all .2s">VIEW ALL AGENTS &#8594;</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASCENSION STAGES -->
+  <div class="ascension">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">12 Levels of Ascension</span>
+      <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)" id="asc-status">Loading...</span>
+    </div>
+    <div class="asc-track" id="asc-track">
+      <div class="asc-node"><div class="asc-node-num">I</div><div class="asc-node-label">Initiate</div></div>
+      <div class="asc-node"><div class="asc-node-num">II</div><div class="asc-node-label">Acolyte</div></div>
+      <div class="asc-node"><div class="asc-node-num">III</div><div class="asc-node-label">Adept</div></div>
+      <div class="asc-node"><div class="asc-node-num">IV</div><div class="asc-node-label">Disciple</div></div>
+      <div class="asc-node"><div class="asc-node-num">V</div><div class="asc-node-label">Sage</div></div>
+      <div class="asc-node"><div class="asc-node-num">VI</div><div class="asc-node-label">Exemplar</div></div>
+      <div class="asc-node"><div class="asc-node-num">VII</div><div class="asc-node-label">Paragon</div></div>
+      <div class="asc-node"><div class="asc-node-num">VIII</div><div class="asc-node-label">Archon</div></div>
+      <div class="asc-node"><div class="asc-node-num">IX</div><div class="asc-node-label">Radiant</div></div>
+      <div class="asc-node"><div class="asc-node-num">X</div><div class="asc-node-label">Unyielding</div></div>
+      <div class="asc-node"><div class="asc-node-num">XI</div><div class="asc-node-label">Transcendent</div></div>
+      <div class="asc-node"><div class="asc-node-num">XII</div><div class="asc-node-label">Omega Master</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="omega-sig">&#937;</div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+const c=document.getElementById('bg-canvas');const ctx=c.getContext('2d');let W,H,pts=[];
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<70;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,r:Math.random()*1.4+.3});
+function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(201,168,76,0.025)';for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}requestAnimationFrame(draw);}draw();
+})();
+
+// Rotating seal rings
+(function(){
+const c=document.getElementById('seal-canvas');
+const ctx=c.getContext('2d');
+let angle=0;
+function draw(){
+ctx.clearRect(0,0,160,160);
+const cx=80,cy=80;
+// Outer ring
+ctx.save();ctx.translate(cx,cy);ctx.rotate(angle);
+ctx.beginPath();ctx.arc(0,0,72,0,Math.PI*2);
+ctx.strokeStyle='rgba(201,168,76,0.25)';ctx.lineWidth=1;ctx.stroke();
+// Dashes
+for(let i=0;i<36;i++){const a=i*(Math.PI*2/36);ctx.beginPath();ctx.moveTo(Math.cos(a)*68,Math.sin(a)*68);ctx.lineTo(Math.cos(a)*72,Math.sin(a)*72);ctx.strokeStyle='rgba(201,168,76,0.4)';ctx.stroke();}
+ctx.restore();
+// Inner ring
+ctx.save();ctx.translate(cx,cy);ctx.rotate(-angle*1.5);
+ctx.beginPath();ctx.arc(0,0,55,0,Math.PI*2);
+ctx.strokeStyle='rgba(0,229,255,0.12)';ctx.lineWidth=1;ctx.stroke();
+ctx.restore();
+angle+=.005;requestAnimationFrame(draw);
+}draw();
+})();
+</script>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+const BOUND = {
+  Aries:{agent:'Sentinel',token:'PYRON',god:'Ares',element:'Fire'},
+  Taurus:{agent:'Merchant',token:'AURUM',god:'Aphrodite',element:'Metal'},
+  Gemini:{agent:'Scout',token:'ZEPHYR',god:'Hermes',element:'Wind'},
+  Cancer:{agent:'Warden',token:'NEREID',god:'Artemis',element:'Water'},
+  Leo:{agent:'Sovereign',token:'SOLARI',god:'Apollo',element:'Fire'},
+  Virgo:{agent:'Auditor',token:'ARENITE',god:'Athena',element:'Sand'},
+  Libra:{agent:'Proxy',token:'FORGEON',god:'Hera',element:'Wind'},
+  Scorpio:{agent:'Oracle',token:'STYX',god:'Demeter',element:'Water'},
+  Sagittarius:{agent:'Beacon',token:'EMBER',god:'Zeus',element:'Fire'},
+  Capricorn:{agent:'Analyst',token:'FERRUM',god:'Hestia',element:'Metal'},
+  Aquarius:{agent:'Tutor',token:'AETHER',god:'Hephaestus',element:'Wind'},
+  Pisces:{agent:'Historian',token:'ABYSS',god:'Poseidon',element:'Water'},
+};
+const LEVEL_NAMES=['Initiate','Acolyte','Adept','Disciple','Sage','Exemplar','Paragon','Archon','Radiant','Unyielding','Transcendent','Omega Master'];
+const LEVEL_THRESH=[1.73,2.99,4.25,5.51,6.77,8.03,9.29,10.55,11.81,13.07,14.33,15.59];
+function fmt(n){ return Number(n||0).toFixed(3); }
+
+async function loadDashboard(){
+  const sess=(await supabase.auth.getSession()).data.session;
+  if(!sess){ window.location.href='/account.html'; return; }
+  const pr=await supabase.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,is_owner,certificates_earned,trophies_earned,medals_earned').eq('id',sess.user.id).maybeSingle();
+  const d=pr.data||{};
+  const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  const name=d.display_name || (d.is_owner?'Major Sleiman Youssef Dagher':'Sovereign');
+  const bound = d.sign && BOUND[d.sign];
+
+  document.getElementById('hero-title').textContent = d.is_owner ? 'Sovereign Command' : ('Welcome, '+name);
+  document.getElementById('hero-sub').innerHTML = d.is_owner
+    ? 'PLATFORM IDENTITY: OMEGA-91717-SYD-001<br>OWNER: MAJOR SLEIMAN YOUSSEF DAGHER<br>LEVEL: 9.9.9 // AUTHORITY: 15.588 // ALL-TIME ACCESS'
+    : ('YOUR STANDING<br>AUTHORITY: '+fmt(auth)+' / 15.588');
+  document.getElementById('hero-coord').textContent = 'COORD ('+fmt(a)+', '+fmt(b)+', '+fmt(c)+')';
+
+  const badges=document.getElementById('hero-badges');
+  if(bound){
+    badges.innerHTML =
+      '<span class="hero-badge">'+d.sign.toUpperCase()+' // '+bound.element.toUpperCase()+'</span>'+
+      '<span class="hero-badge">OLYMPIAN: '+bound.god.toUpperCase()+'</span>'+
+      '<span class="hero-badge">AGENT: '+bound.agent.toUpperCase()+'</span>'+
+      '<span class="hero-badge">TOKEN: '+bound.token+'</span>'+
+      (d.is_owner?'<span class="hero-badge">ENG. ORDER 30875</span>':'');
+  } else {
+    badges.innerHTML = '<span class="hero-badge">SET YOUR COSMOLOGY TO UNLOCK YOUR BADGES</span>';
+  }
+
+  // matrix node stat -- real completion out of 729 (single-track aggregate spine)
+  const node = Math.round((a-1)*81 + (b-1)*9 + (c-1) + 1);
+  document.getElementById('stat-nodes').textContent = Math.max(1,node);
+  document.getElementById('stat-nodes-sub').textContent = auth>=15.588-0.001 ? '9x9x9 complete' : (Math.max(1,node)+' of 729');
+  document.getElementById('stat-honors').textContent = ((d.certificates_earned||0)+(d.trophies_earned||0)+(d.medals_earned||0))+'+';
+
+  // Quick Access real status lines
+  const qcAsc=document.getElementById('qc-ascension'); if(qcAsc) qcAsc.textContent = 'Authority '+fmt(auth)+' / 15.588';
+  const qcMat=document.getElementById('qc-matrix'); if(qcMat) qcMat.textContent = 'Node '+Math.max(1,node)+' of 729';
+  const qcPro=document.getElementById('qc-profile'); if(qcPro) qcPro.textContent = d.display_name ? ('Signed in as '+d.display_name) : 'Complete your identity';
+
+  // Time Sovereign -- real cumulative presence, milestone at 9h17m17s (33437s)
+  try{
+    const ts = await supabase.rpc('my_time_sovereign');
+    const tsd = ts.data;
+    if(tsd && tsd.ok){
+      const hrs=Math.floor(tsd.seconds/3600), mins=Math.floor((tsd.seconds%3600)/60);
+      document.getElementById('stat-ts').textContent = hrs+'h '+mins+'m';
+      document.getElementById('stat-ts-sub').textContent = tsd.awarded
+        ? 'Time Sovereign certificate earned'
+        : tsd.pct+'% to 9h17m17s';
+      document.getElementById('stat-ts-link').href = tsd.awarded ? '/honors.html' : '/dashboard.html';
+    }
+  }catch(e){ document.getElementById('stat-ts-sub').textContent='Unavailable'; }
+
+  // ascension track -- real level derived from authority (1..9)
+  const lvl = LEVEL_THRESH.filter(x=>auth>=x).length||1;
+  document.getElementById('asc-status').textContent = 'LEVEL '+lvl+' // '+LEVEL_NAMES[lvl-1].toUpperCase();
+  document.querySelectorAll('#asc-track .asc-node').forEach(function(el,i){
+    el.classList.remove('done','current');
+    if(i+1 < lvl) el.classList.add('done');
+    else if(i+1 === lvl) el.classList.add('current');
+  });
+
+  // real evolution feed
+  const ev = await supabase.from('evolution_events').select('axis,note,created_at')
+    .eq('user_id', sess.user.id).order('created_at',{ascending:false}).limit(8);
+  const feed = document.getElementById('sys-feed');
+  if(ev.data && ev.data.length){
+    feed.innerHTML = ev.data.map(function(e){
+      var when = e.created_at ? new Date(e.created_at).toLocaleDateString() : '';
+      return '<div class="feed-item"><div class="feed-dot ok"></div><div class="feed-text">'+(e.note||'Evolution event')+'</div><div class="feed-time">'+when+'</div></div>';
+    }).join('');
+  } else {
+    feed.innerHTML = '<div class="feed-item"><div class="feed-text">No evolution events recorded yet -- your actions across the platform will appear here.</div></div>';
+  }
+}
+loadDashboard();
+document.getElementById('module-count').textContent='78 ACTIVE';
+document.getElementById('open-full-grid').addEventListener('click',function(){
+  var openBtn=document.getElementById('om-open');
+  if(openBtn) openBtn.click();
+});
+</script>
+<script src="/nav.js"></script>
+<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+</body>
+</html>

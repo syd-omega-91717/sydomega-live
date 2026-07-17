@@ -851,6 +851,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
 })();
 </script>
 
+<script>
 document.querySelectorAll('.mtab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='var(--muted)';});

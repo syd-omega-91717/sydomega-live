@@ -27,7 +27,7 @@
     '#osh-row{display:flex;gap:10px;margin-top:16px}',
     '#osh-copy{flex:1;height:38px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:#E2C86D;border-radius:19px;font-family:inherit;font-size:11px;letter-spacing:2px;cursor:pointer}',
     '#osh-close{height:38px;padding:0 18px;border:1px solid rgba(201,168,76,.2);background:none;color:#c8c5ba;border-radius:19px;font-family:inherit;font-size:11px;letter-spacing:2px;cursor:pointer}',
-    '@media(max-width:760px){#osh-btn{bottom:126px}}'
+    '@media(max-width:760px){#osh-btn{bottom:224px}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'osh-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);

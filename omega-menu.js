@@ -14,7 +14,7 @@
       ['\u25B2', 'Ascend', '/honors.html#ascension'],
       ['\u2605', 'Honors', '/honors.html'],
       ['\u2666', 'Achievements', '/honors.html#record'],
-      ['\u2637', 'Gates', '/gates.html'],
+      ['\u2637', 'Gates', '/elements.html#gates'],
       ['\u2609', 'Elements', '/elements.html'],
       ['\u25B3', 'Exam Hall', '/exam.html'],
       ['\u2726', 'Sovereign Points', '/points.html']
@@ -53,7 +53,7 @@
     ]],
     ['THE ORDER', '#8B0000', [
       ['\u2318', 'Family', '/family.html'],
-      ['\u265A', 'Kings', '/kings.html'],
+      ['\u265A', 'Kings', '/elements.html#kings'],
       ['\u2691', 'Hall', '/hall.html'],
       ['\u2605', 'Trophies', '/trophies.html'],
       ['\u25A6', 'City', '/city.html'],

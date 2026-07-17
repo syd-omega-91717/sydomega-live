@@ -1,865 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Honors | &#937; SYD OMEGA 91717</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 -- Cosmos</title>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="theme-color" content="#C9A84C"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SYD OMEGA 91717"/>
+<meta property="og:title" content="SYD OMEGA 91717 -- Cosmos"/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="https://www.sydomega.com/cosmos.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SYD OMEGA 91717 -- Cosmos"/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
+<meta name="twitter:site" content="@SYDOMEGA_AI"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
---void:#0A0A0F;--void2:#020206;
---gold:#C9A84C;--solar:#E2C86D;
---cyan:#00E5FF;--crimson:#8B0000;--crimson2:#C0392B;
---glass:rgba(201,168,76,0.06);--glass2:rgba(0,229,255,0.04);
---border:rgba(201,168,76,0.18);--border2:rgba(0,229,255,0.12);
---text:#E8E0D0;--muted:#8A8070;
---green:#00C896;--bronze:#CD7F32;--silver:#C0C0C0;
-}
-html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
-#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(155,107,240,.06),transparent 60%)}
+a{color:inherit;text-decoration:none}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:72px;flex-shrink:0}
+.main{flex:1;min-width:0;padding-bottom:80px}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(2,2,6,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
-.nav-links{display:flex;gap:1.5rem;list-style:none}
-.nav-links a{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;transition:color .2s}
-.nav-links a:hover,.nav-links a.active{color:var(--gold)}
-.nav-right{display:flex;align-items:center;gap:1rem}
-.nav-status{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
-.nav-back{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:.3rem .8rem;transition:all .2s}
-.nav-back:hover{color:var(--gold);border-color:var(--gold)}
+/* TAB SYSTEM */
+.tab-nav{display:flex;gap:0;border-bottom:1px solid var(--line);background:rgba(8,8,15,0.95);position:sticky;top:0;z-index:50;overflow-x:auto;scrollbar-width:none}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 18px;cursor:pointer;border-right:1px solid var(--line);transition:all .18s;border-bottom:2px solid transparent;position:relative}
+.tab-btn:hover{background:rgba(201,168,76,0.04)}
+.tab-btn.active{border-bottom-color:var(--gold);background:rgba(201,168,76,0.05)}
+.tab-btn .tb-icon{font-size:18px;transition:transform .25s}
+.tab-btn:hover .tb-icon,.tab-btn.active .tb-icon{transform:scale(1.15) rotate(5deg)}
+.tab-btn .tb-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);white-space:nowrap}
+.tab-btn.active .tb-label{color:var(--gold)}
+.tab-btn.active .tb-icon{color:var(--gold);text-shadow:0 0 10px rgba(201,168,76,0.5)}
+/* TAB PANELS */
+.tab-panel{display:none;padding:22px clamp(14px,3vw,32px)}
+.tab-panel.active{display:block}
+.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin-top:24px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 
-.page{position:relative;z-index:1;padding-top:64px;min-height:100vh}
+/* ---- AGENTS (Tab 1) ---- */
+.agent-wheel-wrap{position:relative;width:100%;max-width:520px;margin:0 auto 28px;aspect-ratio:1}
+#agent-wheel{display:block;width:100%;height:100%}
+.wheel-hint{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:20px}
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.ag-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:13px;cursor:pointer;transition:border-color .18s}
+.ag-card:hover,.ag-card.sel{border-color:rgba(201,168,76,.4);background:rgba(13,13,24,.9)}
+.ag-card .ac-n{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
+.ag-card .ac-nm{font-family:var(--D);font-size:12px;font-weight:700;margin-bottom:3px}
+.ag-card .ac-rl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:5px}
+.ag-card .ac-st{display:flex;align-items:center;gap:5px;font-family:var(--M);font-size:8px}
+.ac-dot{width:5px;height:5px;border-radius:50%}
+#agent-detail{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;margin-bottom:20px;display:none}
+.ad-name{font-family:var(--D);font-size:18px;font-weight:700;margin-bottom:5px}
+.ad-role{font-family:var(--M);font-size:9px;letter-spacing:2px;margin-bottom:10px}
+.ad-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.8}
 
-.hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}
-.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
-.hero-title{font-family:'Cinzel Decorative',serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
-.hero-sub{font-size:.95rem;color:var(--muted);letter-spacing:.05em;max-width:600px}
+/* ---- HOROSCOPE (Tab 2) ---- */
+.sign-hero{display:flex;gap:20px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;margin-bottom:20px}
+.sh-canvas{flex-shrink:0}
+.sh-meta .shm-glyph{font-family:var(--D);font-size:36px;color:var(--gold);margin-bottom:5px}
+.sh-meta .shm-name{font-family:var(--D);font-size:22px;color:var(--gold);font-weight:700;margin-bottom:3px}
+.sh-meta .shm-dates{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.sh-meta .shm-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;max-width:50ch}
+.sign-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px}
+.smg-item{border:1px solid var(--line);padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s}
+.smg-item:hover,.smg-item.active{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
+.smg-item .smg-glyph{font-size:18px;display:block;margin-bottom:3px}
+.smg-item .smg-name{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted)}
 
-/* HONOR STATS */
-.honor-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;max-width:1400px;margin:0 auto 2.5rem;padding:0 2rem}
-.hstat{border:1px solid var(--border);padding:1.25rem;text-align:center;position:relative;overflow:hidden;transition:border-color .3s}
-.hstat:hover{border-color:var(--gold)}
-.hstat-icon{font-size:1.8rem;margin-bottom:.5rem;display:block}
-.hstat-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem}
-.hstat-val{font-family:'Cinzel Decorative',serif;font-size:1.5rem;color:var(--gold)}
-.hstat-tier{font-size:.7rem;margin-top:.2rem}
+/* ---- ELEMENTS (Tab 3) ---- */
+.element-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.el-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:18px;position:relative;overflow:hidden}
+.el-card::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px}
+.el-num{font-family:var(--D);font-size:36px;font-weight:700;margin-bottom:5px;opacity:.7}
+.el-name{font-family:var(--D);font-size:16px;font-weight:700;margin-bottom:5px}
+.el-type{font-family:var(--M);font-size:8px;letter-spacing:3px;margin-bottom:8px}
+.el-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.6}
+.el-signs{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.el-sign-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:1px 5px;border:1px solid rgba(201,168,76,.2);color:var(--muted)}
 
-/* FILTER TABS */
-.filter-row{max-width:1400px;margin:0 auto 2rem;padding:0 2rem;display:flex;gap:.5rem;flex-wrap:wrap}
-.filter-btn{font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
-.filter-btn:hover,.filter-btn.active{color:var(--gold);border-color:var(--gold);background:rgba(201,168,76,0.06)}
+/* ---- GATES (Tab 4) ---- */
+.gates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.gate-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:16px;position:relative;cursor:default;transition:all .2s}
+.gate-card:hover{border-color:rgba(201,168,76,.35);transform:translateY(-2px)}
+.gate-card.unlocked{border-color:rgba(63,178,127,.3)}
+.gate-card.locked{opacity:.5}
+.gc-n{font-family:var(--D);font-size:28px;font-weight:700;margin-bottom:4px}
+.gc-name{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:5px}
+.gc-auth{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:7px}
+.gc-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.5}
+.gc-status{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block;margin-top:8px}
 
-/* TROPHY GRID */
-.honors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
-
-.honor-card{border:1px solid var(--border);background:var(--glass);position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:default}
-.honor-card:hover{border-color:var(--gold);transform:translateY(-4px)}
-.honor-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.honor-card.tier-omega::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.honor-card.tier-gold::before{background:linear-gradient(90deg,transparent,var(--solar),transparent)}
-.honor-card.tier-silver::before{background:linear-gradient(90deg,transparent,var(--silver),transparent)}
-.honor-card.tier-bronze::before{background:linear-gradient(90deg,transparent,var(--bronze),transparent)}
-.honor-card.tier-cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
-.honor-card.locked{opacity:.45;filter:grayscale(.6)}
-
-.honor-visual{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.honor-glyph{font-family:'Cinzel Decorative',serif;font-size:3rem;position:relative;z-index:1;transition:transform .35s}
-.honor-card:hover .honor-glyph{transform:scale(1.12)}
-.honor-ring{position:absolute;width:80px;height:80px;border-radius:50%;border:1px solid;opacity:.3;transition:opacity .35s}
-.honor-card:hover .honor-ring{opacity:.6}
-.honor-ring2{position:absolute;width:110px;height:110px;border-radius:50%;border:1px solid;opacity:.15;animation:ring-pulse 3s ease-in-out infinite}
-
-@keyframes ring-pulse{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(1.05);opacity:.25}}
-
-.honor-meta{padding:1rem 1.25rem 1.25rem}
-.honor-type{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
-.honor-name{font-family:'Cinzel Decorative',serif;font-size:.85rem;line-height:1.3;margin-bottom:.4rem}
-.honor-desc{font-size:.75rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem}
-.honor-footer{display:flex;align-items:center;justify-content:space-between}
-.honor-tier-badge{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid}
-.honor-date{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted)}
-
-/* TIER COLORS */
-.tier-omega .honor-name{color:var(--gold)}
-.tier-omega .honor-ring{border-color:var(--gold)}
-.tier-omega .honor-ring2{border-color:var(--gold)}
-.tier-omega .honor-tier-badge{color:var(--gold);border-color:var(--gold)}
-.tier-omega .honor-visual{background:radial-gradient(ellipse at center,rgba(201,168,76,0.08),transparent 70%)}
-.tier-omega .honor-glyph{color:var(--gold)}
-
-.tier-gold .honor-name{color:var(--solar)}
-.tier-gold .honor-ring{border-color:var(--solar)}
-.tier-gold .honor-ring2{border-color:var(--solar)}
-.tier-gold .honor-tier-badge{color:var(--solar);border-color:var(--solar)}
-.tier-gold .honor-visual{background:radial-gradient(ellipse at center,rgba(226,200,109,0.07),transparent 70%)}
-.tier-gold .honor-glyph{color:var(--solar)}
-
-.tier-silver .honor-name{color:var(--silver)}
-.tier-silver .honor-ring{border-color:var(--silver)}
-.tier-silver .honor-ring2{border-color:var(--silver)}
-.tier-silver .honor-tier-badge{color:var(--silver);border-color:var(--silver)}
-.tier-silver .honor-visual{background:radial-gradient(ellipse at center,rgba(192,192,192,0.07),transparent 70%)}
-.tier-silver .honor-glyph{color:var(--silver)}
-
-.tier-bronze .honor-name{color:var(--bronze)}
-.tier-bronze .honor-ring{border-color:var(--bronze)}
-.tier-bronze .honor-ring2{border-color:var(--bronze)}
-.tier-bronze .honor-tier-badge{color:var(--bronze);border-color:var(--bronze)}
-.tier-bronze .honor-visual{background:radial-gradient(ellipse at center,rgba(205,127,50,0.07),transparent 70%)}
-.tier-bronze .honor-glyph{color:var(--bronze)}
-
-.tier-cyan .honor-name{color:var(--cyan)}
-.tier-cyan .honor-ring{border-color:var(--cyan)}
-.tier-cyan .honor-ring2{border-color:var(--cyan)}
-.tier-cyan .honor-tier-badge{color:var(--cyan);border-color:var(--cyan)}
-.tier-cyan .honor-visual{background:radial-gradient(ellipse at center,rgba(0,229,255,0.06),transparent 70%)}
-.tier-cyan .honor-glyph{color:var(--cyan)}
-
-.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:'Cinzel Decorative',serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
-
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--void2)}
-::-webkit-scrollbar-thumb{background:var(--border)}
-
-@media(max-width:1100px){.honors-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:800px){.honor-stats{grid-template-columns:repeat(3,1fr)}.honors-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:500px){.honors-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}.agent-wheel-wrap{max-width:280px}}
 </style>
 </head>
 <body>
-
-<canvas id="bg-canvas"></canvas>
-
-<div class="shell" style="display:flex;min-height:100vh">
-  <aside class="side" id="omega-side" data-page="honors" style="width:80px;flex-shrink:0"></aside>
-  <div style="flex:1;min-width:0">
-<div class="page">
-  <div class="hero-band">
-    <div class="hero-eyebrow">M4 // ACHIEVEMENT SYSTEM</div>
-    <h1 class="hero-title">Hall of Honors</h1>
-    <p class="hero-sub">Trophies, medals, certificates, and grade insignia earned through evolution across the 9x9x9 Matrix -- the sovereign record of ascension.</p>
-  </div>
-
-  <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--border);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
-    <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">HONORS CATALOG</div>
-    <div class="mtab-btn" data-mtab="ascension" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">ASCENSION</div>
-    <div class="mtab-btn" data-mtab="record" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">MY RECORD</div>
-  </div>
-
-  <div class="mtab-panel" id="mtab-catalog">
-
-  <!-- STATS -->
-  <div class="honor-stats">
-    <div class="hstat">
-      <span class="hstat-icon" style="color:var(--gold)">&#8960;</span>
-      <div class="hstat-label">Trophies</div>
-      <div class="hstat-val" id="stat-trophies">--</div>
-      <div class="hstat-tier" style="color:var(--gold)" id="stat-trophies-sub">Loading...</div>
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="cosmos"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">COSMOS HUB<small>AI AGENTS . HOROSCOPE . 9 ELEMENTS . 12 GATES . PANTHEONS</small></div>
     </div>
-    <div class="hstat">
-      <span class="hstat-icon" style="color:var(--solar)">&#9670;</span>
-      <div class="hstat-label">Medals</div>
-      <div class="hstat-val" id="stat-medals">--</div>
-      <div class="hstat-tier" style="color:var(--solar)">Contribution Track</div>
+    <!-- TAB NAVIGATION -->
+    <div class="tab-nav" id="tab-nav">
+      <div class="tab-btn active" data-tab="agents"><div class="tb-icon" style="color:#00E5FF">&#x25C9;</div><div class="tb-label">AI AGENTS</div></div>
+      <div class="tab-btn" data-tab="horoscope"><div class="tb-icon" style="color:#9B6BF0">&#x2609;</div><div class="tb-label">HOROSCOPE</div></div>
+      <div class="tab-btn" data-tab="elements"><div class="tb-icon" style="color:#D9B86A">&#x25CF;</div><div class="tb-label">9 ELEMENTS</div></div>
+      <div class="tab-btn" data-tab="gates"><div class="tb-icon" style="color:#C9A84C">&#x2302;</div><div class="tb-label">12 GATES</div></div>
+      <div class="tab-btn" data-tab="pantheons"><div class="tb-icon" style="color:#E86A3A">&#x2736;</div><div class="tb-label">PANTHEONS</div></div>
     </div>
-    <div class="hstat">
-      <span class="hstat-icon" style="color:var(--cyan)">&#9635;</span>
-      <div class="hstat-label">Certificates</div>
-      <div class="hstat-val" id="stat-certs">--</div>
-      <div class="hstat-tier" style="color:var(--cyan)">Knowledge Track</div>
-    </div>
-    <div class="hstat">
-      <span class="hstat-icon" style="color:var(--crimson2)">&#9650;</span>
-      <div class="hstat-label">Level Badge</div>
-      <div class="hstat-val" id="stat-level">--</div>
-      <div class="hstat-tier" style="color:var(--crimson2)" id="stat-level-sub">Loading...</div>
-    </div>
-    <div class="hstat">
-      <span class="hstat-icon" style="color:var(--muted)">&#9632;</span>
-      <div class="hstat-label">Grade Cards</div>
-      <div class="hstat-val" id="stat-grade">--</div>
-      <div class="hstat-tier" style="color:var(--muted)" id="stat-grade-sub">Loading...</div>
-    </div>
-  </div>
 
-  <!-- FILTERS -->
-  <div class="filter-row">
-    <button class="filter-btn active" onclick="filterHonors('all',this)">All</button>
-    <button class="filter-btn" onclick="filterHonors('trophy',this)">Trophies</button>
-    <button class="filter-btn" onclick="filterHonors('medal',this)">Medals</button>
-    <button class="filter-btn" onclick="filterHonors('cert',this)">Certificates</button>
-    <button class="filter-btn" onclick="filterHonors('badge',this)">Level Badges</button>
-    <button class="filter-btn" onclick="filterHonors('grade',this)">Grade Cards</button>
-  </div>
+    <!-- TAB: AGENTS -->
+    <div class="tab-panel active" id="tab-agents">
+      <div class="sechead">AI COUNCIL CHAMBER -- 12 EXECUTOR AGENTS</div>
+      <div class="agent-wheel-wrap"><canvas id="agent-wheel" width="520" height="520" style="width:100%;height:100%;max-width:520px"></canvas></div>
+      <div class="wheel-hint">SELECT AN AGENT ABOVE OR BELOW</div>
+      <div class="agents-grid" id="agents-grid"></div>
+    </div>
 
-  <!-- HONORS GRID -->
-  <div class="honors-grid" id="honors-grid">
+    <!-- TAB: HOROSCOPE -->
+    <div class="tab-panel" id="tab-horoscope">
 
-    <!-- TROPHY: OMEGA SOVEREIGN -->
-    <div class="honor-card tier-omega" data-cat="trophy">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#937;</div>
+
+    <!-- HERO: rotating personal celestial wheel -->
+    <div class="hero-band">
+      <div class="hero-text">
+        <div class="ht-sign" id="ht-sign">YOUR SIGN</div>
+        <div class="ht-title" id="ht-title">THE CELESTIAL ORACLE</div>
+        <div class="ht-sub" id="ht-sub">DAILY READING &middot; 9.1717Hz CELESTIAL ALIGNMENT</div>
+        <div class="ht-desc" id="ht-desc">The cosmos has been tracking your matrix coordinates since before you drew your first breath. Every planetary position at your moment of birth locked a code into your sovereign cosmology. That code is evolving with you, right now.</div>
       </div>
-      <div class="honor-meta">
-        <div class="honor-type">Trophy</div>
-        <div class="honor-name">Omega Sovereign</div>
-        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 15.588. Absolute completion of the 729-node progression path.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">OMEGA</span>
-          <span class="honor-date">2026-07-11</span>
-        </div>
+      <div class="hero-canvas-wrap">
+        <canvas id="hero-wheel" width="320" height="320" style="width:160px;height:160px"></canvas>
       </div>
     </div>
 
-    <!-- TROPHY: SENTINEL PRIME -->
-    <div class="honor-card tier-omega" data-cat="trophy">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9650;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Trophy</div>
-        <div class="honor-name">Sentinel Prime</div>
-        <div class="honor-desc">Mastery axis B reaches 9.000. Full platform security and sovereignty governance maintained without breach.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">OMEGA</span>
-          <span class="honor-date">2026-06-30</span>
-        </div>
+    <!-- DAILY ORACLE -->
+    <div class="sechead" style="margin-top:28px">DAILY ORACLE &mdash; <span id="today-date"></span></div>
+    <div class="reading-grid">
+      <div class="reading-panel"><div class="rp-label">ENERGY</div><div class="rp-value" id="r-energy" style="color:var(--solar)">--</div><div class="rp-sub">Today&apos;s dominant frequency</div></div>
+      <div class="reading-panel"><div class="rp-label">FOCUS AXIS</div><div class="rp-value" id="r-axis" style="color:var(--cyan)">--</div><div class="rp-sub">Primary matrix advancement</div></div>
+      <div class="reading-panel"><div class="rp-label">PLANET RULER</div><div class="rp-value" id="r-planet" style="color:var(--gold)">--</div><div class="rp-sub">Governing celestial body</div></div>
+      <div class="reading-panel"><div class="rp-label">GATE ALIGNMENT</div><div class="rp-value" id="r-gate" style="color:var(--green)">--</div><div class="rp-sub">Open sovereignty channel</div></div>
+    </div>
+
+    <div style="margin:16px clamp(16px,3vw,40px)">
+      <div class="oracle-band">
+        <div class="ob-label">&#x2609; ORACLE DAILY READING</div>
+        <div class="ob-text" id="ob-text"><span class="ob-loading">ORACLE COMPUTING YOUR CELESTIAL ALIGNMENT...</span></div>
       </div>
     </div>
 
-    <!-- TROPHY: ARCHITECT'S SEAL -->
-    <div class="honor-card tier-gold" data-cat="trophy">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9670;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Trophy</div>
-        <div class="honor-name">Architect's Seal</div>
-        <div class="honor-desc">Sovereign identity credential hashed into the Genesis Block of the platform's immutable ledger.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">GOLD</span>
-          <span class="honor-date">2026-06-15</span>
-        </div>
-      </div>
-    </div>
+    <!-- 12 SIGNS GENESIS MANDALA GRID -->
+    <div class="sechead">THE 12 SOVEREIGN SIGNS &mdash; GENESIS MANDALA</div>
+    <div class="mandala-grid" id="mandala-grid"></div>
 
-    <!-- TROPHY: FIRE ASCENDANT -->
-    <div class="honor-card tier-gold" data-cat="trophy">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9651;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Trophy</div>
-        <div class="honor-name">Fire Ascendant</div>
-        <div class="honor-desc">Element: Fire. Sign: Aries. Olympian: Ares. All cosmological assignments aligned and locked at onboarding. Token: ARENITE.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">GOLD</span>
-          <span class="honor-date">2026-05-20</span>
-        </div>
-      </div>
-    </div>
+    <!-- PLANETARY STRIP -->
+    <div class="sechead" style="margin-top:32px">PLANETARY POSITIONS &mdash; LIVE MODEL</div>
+    <div class="planet-strip" id="planet-strip"></div>
 
-    <!-- MEDAL: GENESIS CONTRIBUTOR -->
-    <div class="honor-card tier-omega" data-cat="medal">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9711;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Medal</div>
-        <div class="honor-name">Genesis Contributor</div>
-        <div class="honor-desc">Contribution axis C at 9.000. Sole founder and architect of the SYD OMEGA 91717 ecosystem from inception to deployment.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">OMEGA</span>
-          <span class="honor-date">2026-07-01</span>
-        </div>
-      </div>
-    </div>
+    <!-- COMPATIBILITY -->
+    <div class="sechead" style="margin-top:32px">SIGN COMPATIBILITY</div>
+    <div class="compat-grid" id="compat-grid"></div>
 
-    <!-- MEDAL: SOVEREIGN FOUNDER -->
-    <div class="honor-card tier-gold" data-cat="medal">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9824;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Medal</div>
-        <div class="honor-name">Sovereign Founder</div>
-        <div class="honor-desc">100% absolute ownership. No co-founders, no partners. Immutable governance logic sealed. Identity: Omega-91717-SYD-001.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">GOLD</span>
-          <span class="honor-date">2026-04-19</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- MEDAL: ORACLE OF ARES -->
-    <div class="honor-card tier-gold" data-cat="medal">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9651;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Medal</div>
-        <div class="honor-name">Oracle of Ares</div>
-        <div class="honor-desc">Olympian alignment: Ares, God of War and Strategy. Agent: Sentinel. All celestial attributes confirmed and locked in platform canon.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">GOLD</span>
-          <span class="honor-date">2026-05-01</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- MEDAL: VAULT MASTER -->
-    <div class="honor-card tier-silver" data-cat="medal">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9632;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Medal</div>
-        <div class="honor-name">Vault Master</div>
-        <div class="honor-desc">51% Master Vault locked. 467,756,700,000 &#937; tokens secured in sovereign treasury. Flash-crash protection active.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">SILVER</span>
-          <span class="honor-date">2026-06-01</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- CERTIFICATE: KNOWLEDGE APEX -->
-    <div class="honor-card tier-cyan" data-cat="cert">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9635;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Certificate</div>
-        <div class="honor-name">Knowledge Apex</div>
-        <div class="honor-desc">Axis A Knowledge at 9.000. Full completion of all 729 matrix nodes on the knowledge dimension. Verified and sealed.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">OMEGA</span>
-          <span class="honor-date">2026-07-11</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- CERTIFICATE: ARCHITECTURE MASTER -->
-    <div class="honor-card tier-cyan" data-cat="cert">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9633;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Certificate</div>
-        <div class="honor-name">Master Architect</div>
-        <div class="honor-desc">Lebanese Order of Engineers certificate. Architecture registration 2007. Professional credential embedded in sovereign identity chain.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">GOLD</span>
-          <span class="honor-date">2007 // 2026</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- CERTIFICATE: PLATFORM BUILDER -->
-    <div class="honor-card tier-silver" data-cat="cert">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9636;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Certificate</div>
-        <div class="honor-name">Platform Builder</div>
-        <div class="honor-desc">sydomega.com deployed to production. Static HTML/JS + Supabase + Vercel stack. Phase 0 locked and operational.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">SILVER</span>
-          <span class="honor-date">2026-06-20</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- LEVEL BADGE: 9.9.9 APEX -->
-    <div class="honor-card tier-omega" data-cat="badge">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph" style="font-size:1.4rem;font-family:'Courier Prime',monospace">9.9.9</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Level Badge</div>
-        <div class="honor-name">Omega Prime Level 9.9.9</div>
-        <div class="honor-desc">Matrix coordinate absolute: (9.000, 9.000, 9.000). ALL-TIME access. No expiry. Authority score: 15.588. is_owner=true.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">OMEGA</span>
-          <span class="honor-date">PERMANENT</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- GRADE CARD: GRADE 12 -->
-    <div class="honor-card tier-omega" data-cat="grade">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph" style="font-size:2rem;font-family:'Courier Prime',monospace">XII</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Grade Card</div>
-        <div class="honor-name">Grade 12 -- Final Ascension</div>
-        <div class="honor-desc">Highest grade in the 12-grade progression system. Coarse band completed across all 729 matrix nodes. Sovereign status confirmed.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">OMEGA</span>
-          <span class="honor-date">2026-07-11</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- TROPHY: GENESIS BLOCK -->
-    <div class="honor-card tier-gold" data-cat="trophy">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph">&#9674;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Trophy</div>
-        <div class="honor-name">Genesis Block</div>
-        <div class="honor-desc">Irrevocable property documents hashed into the genesis block. Platform ownership immutably sealed.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge">GOLD</span>
-          <span class="honor-date">2026-04-19</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- TROPHY: 9D ARCHITECT (locked) -->
-    <div class="honor-card tier-silver locked" data-cat="trophy">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph" style="opacity:.5">&#9670;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Trophy</div>
-        <div class="honor-name">9D Architect</div>
-        <div class="honor-desc">Awarded upon completion of all 9 visual rendering passes across the full 8,748-node nested matrix. Phase 4 milestone.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge" style="color:var(--muted);border-color:var(--muted)">LOCKED</span>
-          <span class="honor-date">Phase 4</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- MEDAL: TOKEN LAUNCHER (locked) -->
-    <div class="honor-card tier-silver locked" data-cat="medal">
-      <div class="honor-visual">
-        <div class="honor-ring2"></div>
-        <div class="honor-ring"></div>
-        <div class="honor-glyph" style="opacity:.5">&#9651;</div>
-      </div>
-      <div class="honor-meta">
-        <div class="honor-type">Medal</div>
-        <div class="honor-name">Token Launcher</div>
-        <div class="honor-desc">Awarded upon activation of the 12-token economy on Polygon L2. Requires legal clearance. Contribution milestone: Phase 3.</div>
-        <div class="honor-footer">
-          <span class="honor-tier-badge" style="color:var(--muted);border-color:var(--muted)">LOCKED</span>
-          <span class="honor-date">Phase 3</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  
 </div>
 
-<div class="omega-sig">&#937;</div>
-
-  </div>
-
-  <div class="mtab-panel" id="mtab-ascension" style="display:none">
-    
-
-    <!-- PROTOCOL MAP (left column) -->
-    <div class="proto-panel">
-      <div class="proto-header">
-        <div class="ph-sys">SYSTEM STATUS: ZENITH OPERATIONAL</div>
-        <div class="ph-title">ASCENSION PROTOCOL MAP</div>
-        <div class="ph-status" id="current-level-label">LEVEL 1 -- INITIATE</div>
-      </div>
-      <div class="level-ladder" id="level-ladder"></div>
+    <!-- TAB: ELEMENTS -->
+    <div class="tab-panel" id="tab-elements">
+      <div class="sechead">THE 9 SOVEREIGN ELEMENTS</div>
+      <div class="element-grid" id="element-grid"></div>
     </div>
 
-    <!-- CONTENT (right column) -->
-    <div class="content-panel">
-      <div class="topbar-inner">
-        <div class="ti-title">THE ASCENT<small>9x9x9 MATRIX . 729 NODES . 12 PHASES</small></div>
-        <canvas id="auth-gauge" width="200" height="200" style="width:100px;height:100px"></canvas>
-      </div>
-
-      <div class="sechead" style="margin-top:20px">AUTHORITY METRICS</div>
-      <div class="authority-section">
-        <div class="auth-stats">
-          <div class="auth-stat"><div class="as-label">AUTHORITY SCORE</div><div class="as-val" id="auth-score" style="color:var(--gold)">--</div><div class="as-formula">sqrt(A+B+C)</div></div>
-          <div class="auth-stat"><div class="as-label">MATRIX POSITION</div><div class="as-val" id="matrix-pos" style="color:var(--cyan)">--</div><div class="as-formula">COORDINATES</div></div>
-          <div class="auth-stat"><div class="as-label">KNOWLEDGE A</div><div class="as-val" id="axis-a" style="color:var(--cyan)">--</div><div class="as-formula">AXIS A</div></div>
-          <div class="auth-stat"><div class="as-label">MASTERY B</div><div class="as-val" id="axis-b" style="color:#E86A3A">--</div><div class="as-formula">AXIS B</div></div>
-          <div class="auth-stat"><div class="as-label">CONTRIBUTION C</div><div class="as-val" id="axis-c" style="color:var(--green)">--</div><div class="as-formula">AXIS C</div></div>
-          <div class="auth-stat"><div class="as-label">APEX THRESHOLD</div><div class="as-val" style="color:var(--muted)">15.58</div><div class="as-formula">MAX AUTHORITY</div></div>
-        </div>
-      </div>
-
-      <div class="sechead">12 ASCENSION PHASES</div>
-      <div class="phase-grid" id="phase-grid"></div>
+    <!-- TAB: GATES -->
+    <div class="tab-panel" id="tab-gates">
+      <div class="sechead">THE 12 GATES OF AUTHORITY</div>
+      <div class="gates-grid" id="gates-grid"></div>
     </div>
 
-  
-  </div>
-
-  <div class="mtab-panel" id="mtab-record" style="display:none">
-    
-    <div class="topbar"><div class="t">THE ACHIEVEMENTS</div><small>YOUR SOVEREIGN RECORD &middot; GRADE &middot; LEVEL &middot; PHASE &middot; HONORS</small></div>
-    <div class="hero">
-      <div class="stats3">
-        <div class="stat3"><div class="v" id="h-grade">--</div><div class="l">GRADE</div></div>
-        <div class="stat3"><div class="v" id="h-level">--</div><div class="l">LEVEL</div></div>
-        <div class="stat3"><div class="v" id="h-phase">--</div><div class="l">PHASE</div></div>
-      </div>
-      <div class="auth" id="h-auth" style="text-align:center;margin-top:14px">AUTHORITY --</div>
+    <!-- TAB: PANTHEONS -->
+    <div class="tab-panel" id="tab-pantheons">
+      <div class="sechead">THE 12 OLYMPIAN GODS</div>
+      <div class="agents-grid" id="pantheons-grid"></div>
     </div>
-
-    <div class="rowsec"><h3>CERTIFICATES</h3><div class="sub">PROOF OF KNOWLEDGE (AXIS A) &middot; <span id="c-count">0</span> / 12</div><div class="slots" id="certs"></div></div>
-    <div class="rowsec"><h3>TROPHIES</h3><div class="sub">MASTERY MILESTONES (AXIS B) &middot; <span id="t-count">0</span> / 12</div><div class="slots" id="trophies"></div></div>
-    <div class="rowsec"><h3>MEDALS</h3><div class="sub">CONTRIBUTION MILESTONES (AXIS C) &middot; <span id="m-count">0</span> / 12</div><div class="slots" id="medals"></div></div>
-
-    <div class="summary" id="summary">TOTAL HONORS -- / 36</div>
-  
-  </div>
+  </main>
+</div>
 
 <script type="module">
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
-const LEVELS=[
-  {n:1,name:'INITIATE',col:'#D9B86A',mat:'SAND',xp:'1-100',auth:'1.73'},
-  {n:2,name:'ACOLYTE',col:'#A9C2D8',mat:'GLASS',xp:'100-220',auth:'2.99'},
-  {n:3,name:'ADEPT',col:'#C7CDD6',mat:'IRON',xp:'220-380',auth:'4.25'},
-  {n:4,name:'DISCIPLE',col:'#8B8F9C',mat:'STEEL',xp:'380-580',auth:'5.51'},
-  {n:5,name:'SAGE',col:'#607D8B',mat:'TITANIUM',xp:'580-820',auth:'6.77'},
-  {n:6,name:'EXEMPLAR',col:'#455A64',mat:'CARBON',xp:'820-1.1K',auth:'8.03'},
-  {n:7,name:'PARAGON',col:'#C9A84C',mat:'GOLD',xp:'1.1K-1.5K',auth:'9.29'},
-  {n:8,name:'ARCHON',col:'#E8D5B7',mat:'PLATINUM',xp:'1.5K-1.9K',auth:'10.55'},
-  {n:9,name:'RADIANT',col:'#9B6BF0',mat:'DIAMOND',xp:'1.9K-2.4K',auth:'11.81'},
-  {n:10,name:'UNYIELDING',col:'#00E5FF',mat:'ADAMANT',xp:'2.4K-3K',auth:'13.07'},
-  {n:11,name:'TRANSCENDENT',col:'#E2C86D',mat:'AETHER',xp:'3K-3.7K',auth:'14.33'},
-  {n:12,name:'OMEGA MASTER',col:'#C9A84C',mat:'OMEGA',xp:'3.7K+',auth:'15.59'},
-];
-
-const PHASES=[
-  {n:1,title:'THE GENESIS',desc:'First contact with the 9.1717Hz frequency. The matrix awakens. First three nodes activated.',col:'#D9B86A',phase:'PHASE I',progress:0},
-  {n:2,title:'THE CALLING',desc:'The sign is revealed. The element is assigned. The agent speaks for the first time.',col:'#A9C2D8',phase:'PHASE I',progress:0},
-  {n:3,title:'THE FOUNDATION',desc:'Knowledge axis A advances past node 3. First Academy discipline completed.',col:'#C7CDD6',phase:'PHASE I',progress:0},
-  {n:4,title:'THE FIRST GATE',desc:'Authority formula reaches Gate I threshold. The first of twelve gates opens.',col:'#C9A84C',phase:'PHASE II',progress:0},
-  {n:5,title:'THE MASTERY ARC',desc:'Mastery axis B activates. First gaming arena stage conquered.',col:'#E86A3A',phase:'PHASE II',progress:0},
-  {n:6,title:'THE CONTRIBUTION',desc:'Contribution axis C engages. First social and economic output recorded.',col:'#3fb27f',phase:'PHASE II',progress:0},
-  {n:7,title:'THE SOVEREIGN TRIAL',desc:'All three axes active. Authority formula tested at Gate VII. The Order recognises.',col:'#E2C86D',phase:'PHASE III',progress:0},
-  {n:8,title:'THE CELESTIAL ALIGNMENT',desc:'Cosmology fully mapped. Planet, deity, element, agent all operating in synchrony.',col:'#9B6BF0',phase:'PHASE III',progress:0},
-  {n:9,title:'THE ECONOMIC ENGINE',desc:'Token economy active. Marketplace transacting. Income allocation flowing.',col:'#C9A84C',phase:'PHASE III',progress:0},
-  {n:10,title:'THE LEGACY',desc:'Heritage vault sealed. Bloodline protocol active. Succession documented.',col:'#8B0000',phase:'PHASE IV',progress:0},
-  {n:11,title:'THE COVENANT',desc:'All 12 gates cleared. All 12 series unlocked. Omega status imminent.',col:'#E2C86D',phase:'PHASE IV',progress:0},
-  {n:12,title:'THE OMEGA MASTER',desc:'Coordinate (9,9,9) reached. All 729 nodes activated. The frequency is complete.',col:'#C9A84C',phase:'PHASE IV',progress:0},
-];
-
-function fillRing(el, glyph, col, locked){
-  if(!el) return;
-  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
-  var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
-    else if(tries>20){ clearInterval(t); }
-  },150);
-}
-
-function buildLadder(userLevel){
-  const ladder=document.getElementById('level-ladder');
-  ladder.innerHTML='';
-  LEVELS.forEach((L,i)=>{
-    const done=i<userLevel-1, current=i===userLevel-1, locked=i>userLevel-1;
-    const row=document.createElement('div'); row.className='level-row'+(current?' current':'');
-    row.style.cursor='pointer';
-    row.innerHTML=`
-      <div class="lr-connector"></div>
-      <span class="lr-badge-emblem" style="display:inline-block;width:56px;height:56px"></span>
-      <div class="lr-body">
-        <div class="lrb-num">STAGE ${L.n} &nbsp; ${L.mat}</div>
-        <div class="lrb-name" style="color:${done||current?L.col:'rgba(133,131,123,0.5)'}">${L.name}</div>
-      </div>
-      <div class="lr-meta">
-        <div class="lrm-xp">${L.auth}</div>
-        <div class="lrm-axis">${done?'ACHIEVED':current?'CURRENT':'LOCKED'}</div>
-      </div>`;
-    ladder.appendChild(row);
-    const ringEl=row.querySelector('.lr-badge-emblem');
-    fillRing(ringEl, done?'&#x2713;':L.n, L.col, locked);
-    row.addEventListener('click',()=>openLevelPanel(L,i,done,current,locked));
-  });
-  document.getElementById('current-level-label').textContent='LEVEL '+userLevel+' -- '+LEVELS[userLevel-1].name;
-}
-
-function openLevelPanel(L,i,done,current,locked){
-  window.OmegaEmblemPanel.open({
-    glyph: done?'&#x2713;':L.n, color: L.col,
-    title: L.name,
-    subtitle: 'STAGE '+L.n+' -- '+L.mat,
-    badge: done?'ACHIEVED':current?'CURRENT LEVEL':'LOCKED',
-    sections: [
-      { label: 'THRESHOLD', stats: [
-        {k:'Authority Required', v: L.auth},
-        {k:'XP Range', v: L.xp},
-      ]},
-      { label: 'STATUS', body: done
-          ? 'You have cleared this level.'
-          : current
-            ? 'This is your current standing. Advance your matrix to progress toward the next level.'
-            : 'Locked. Reach authority '+L.auth+' to unlock.' },
-    ]
-  });
-}
-
-function buildPhases(userAuth){
-  const g=document.getElementById('phase-grid'); g.innerHTML='';
-  PHASES.forEach((p,i)=>{
-    const authThreshold=1.73+i*(15.58-1.73)/11;
-    const done=userAuth>=authThreshold;
-    const progress=done?100:Math.max(0,Math.round((userAuth-authThreshold+2)/2*100));
-    const c=document.createElement('div'); c.className='phase-card';
-    c.style.borderTopColor=done?p.col:p.col+'44';
-    /* 9-node mini grid */
-    const nodeHtml=Array.from({length:9},(_,j)=>{
-      const nodeActive=j<Math.ceil(progress/12);
-      return `<div class="pc-node" style="background:${nodeActive?p.col:p.col+'22'};border:1px solid ${p.col}44;${nodeActive?'box-shadow:0 0 4px '+p.col+';':''}"></div>`;
-    }).join('');
-    const statusLabel=done?'COMPLETE':i===0?'ACTIVE':'LOCKED';
-    const statusCol=done?'color:var(--green);border-color:rgba(63,178,127,.5)':i===0?'color:var(--solar);border-color:rgba(226,200,109,.4)':'color:var(--muted);border-color:rgba(133,131,123,.3)';
-    c.innerHTML=`<span class="pc-ring-emblem" style="display:inline-block;width:44px;height:44px;float:right;margin-left:10px"></span><div class="pc-phase">${p.phase} &nbsp; PHASE ${p.n} OF 12</div><div class="pc-title" style="color:${done?p.col:'rgba(233,230,220,0.6)'}">${p.title}</div><div class="pc-desc">${p.desc}</div><div class="pc-nodes">${nodeHtml}</div><div class="pc-progress-bar"><div class="pc-fill" style="width:0%;background:linear-gradient(90deg,${p.col},transparent)"></div></div><span class="pc-status" style="${statusCol}">${statusLabel}</span>`;
-    g.appendChild(c);
-    const ringEl=c.querySelector('.pc-ring-emblem');
-    fillRing(ringEl, p.n, p.col, !done && i!==0);
-    setTimeout(()=>c.querySelector('.pc-fill').style.width=progress+'%',200+i*80);
-  });
-}
-
-function drawGauge(auth,maxAuth){
-  const cv=document.getElementById('auth-gauge');
-  const S=100, ctx=cv.getContext('2d');
-  const CX=200,CY=200,R=170;
-  let t=0;
-  const pct=Math.min(auth/maxAuth,1);
-  function frame(){
-    t+=.012; ctx.clearRect(0,0,400,400);
-    /* Track */
-    ctx.beginPath(); ctx.arc(CX,CY,R,-Math.PI*.85,Math.PI*.85);
-    ctx.strokeStyle='rgba(201,168,76,0.1)'; ctx.lineWidth=14; ctx.lineCap='round'; ctx.stroke();
-    /* Fill */
-    if(pct>0){
-      ctx.beginPath(); ctx.arc(CX,CY,R,-Math.PI*.85,-Math.PI*.85+Math.PI*1.7*pct);
-      const g=ctx.createLinearGradient(-R,0,R,0);
-      g.addColorStop(0,'rgba(201,168,76,0.4)'); g.addColorStop(1,'#C9A84C');
-      ctx.strokeStyle=g; ctx.lineWidth=14; ctx.shadowColor='rgba(201,168,76,0.5)'; ctx.shadowBlur=12; ctx.stroke(); ctx.shadowBlur=0;
-    }
-    /* Center */
-    ctx.fillStyle='rgba(201,168,76,'+(0.8+.15*Math.sin(t*1.5))+')';
-    ctx.font='700 32px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.shadowColor='rgba(201,168,76,.6)'; ctx.shadowBlur=18; ctx.fillText(auth.toFixed(2),CX,CY-8); ctx.shadowBlur=0;
-    ctx.fillStyle='rgba(133,131,123,0.7)'; ctx.font='700 14px "Courier Prime",monospace'; ctx.fillText('AUTHORITY',CX,CY+20);
-    requestAnimationFrame(frame);
-  }
-  frame();
-}
-
-async function bootAscension(){
-  const sess=(await sb.auth.getSession()).data.session;
-  if(!sess){window.location.href='/account.html';return;}
-  const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
-  const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
-  const auth=Math.sqrt(a*a+b*b+c*c);
-  const tier=LEVELS.filter(L=>auth>=parseFloat(L.auth)).length||1;
-  document.getElementById('auth-score').textContent=auth.toFixed(2);
-  document.getElementById('matrix-pos').textContent='('+a.toFixed(1)+','+b.toFixed(1)+','+c.toFixed(1)+')';
-  document.getElementById('axis-a').textContent=a.toFixed(1);
-  document.getElementById('axis-b').textContent=b.toFixed(1);
-  document.getElementById('axis-c').textContent=c.toFixed(1);
-  buildLadder(tier);
-  buildPhases(auth);
-  requestAnimationFrame(()=>drawGauge(auth,15.58));
-}
-window.bootAscension = bootAscension;
-
-</script>
-<script type="module">
-
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  const APEX=15.588;
-  const PHASE=['The Awakening','The Calling','The Foundation','The First Gate','The Trials','The Ascent','The Convergence','The Sovereign Trial','The Celestial Alignment','The Dominion','The Legacy','The Omega'];
-  function band(auth){ var g=Math.max(1,Math.min(12,Math.ceil(auth/APEX*12))); var lo=(g-1)/12*APEX,hi=g/12*APEX,w=Math.max(0,Math.min(1,(auth-lo)/(hi-lo))); var lv=Math.max(1,Math.min(12,Math.ceil(w*12))); return {g:g,lv:lv}; }
-  function tier(n){ return n<=3?1:(n<=6?2:(n<=9?3:4)); }
-  function canonName(kind,i){ var C=window.OmegaCanon; if(!C||!C.track) return ''; 
-    var t=C.track(i); if(!t) return '';
-    return kind==='certs'?t.certificate : kind==='trophies'?t.trophy : kind==='medals'?t.medal : ''; }
-  function fill(id,earnedSet){ var box=document.getElementById(id); box.innerHTML='';
-    for(var i=1;i<=12;i++){ var on=earnedSet.has(i); var d=document.createElement('div');
-      var nm=canonName(id,i);
-      d.className='slot t'+tier(i)+(on?' earned':''); d.title=nm||('#'+i);
-      d.innerHTML='<div class="n">'+i+'</div>'+(nm?'<div style="font-size:8px;line-height:1.1;margin-top:3px;opacity:.85">'+nm.replace(/^(Medal|Trophy|Certificate) of /,'')+'</div>':(on?'':'<div>&#8226;</div>')); box.appendChild(d); } }
-  // relabel once the canon loads
-  document.addEventListener('omega-canon-ready',function(){ if(window.__lastFill) window.__lastFill(); });
-  function bootAchievements(){ supabase.auth.getSession().then(function(r){
-    var s=r.data.session; if(!s){ document.getElementById('gate').style.display='block'; return; }
-    var uid=s.user.id;
-    Promise.all([
-      supabase.from('profiles').select('axis_a,axis_b,axis_c').eq('id',uid).maybeSingle(),
-      supabase.from('trophies').select('trophy_num').eq('user_id',uid),
-      supabase.from('medals').select('medal_num').eq('user_id',uid),
-      supabase.from('certificates').select('id').eq('user_id',uid)
-    ]).then(function(res){
-      var p=res[0].data||{}; var a=Number(p.axis_a||1),b=Number(p.axis_b||1),c=Number(p.axis_c||1);
-      var auth=Math.sqrt(a*a+b*b+c*c); var bd=band(auth);
-      document.getElementById('gate').style.display='none'; document.getElementById('app').style.display='block';
-      document.getElementById('h-grade').textContent=bd.g;
-      document.getElementById('h-level').textContent=bd.lv;
-      document.getElementById('h-phase').textContent=bd.g;
-      document.getElementById('h-auth').textContent='AUTHORITY '+auth.toFixed(3)+' / '+APEX+'  \u00B7  '+PHASE[bd.g-1];
-      var tset=new Set((res[1].data||[]).map(function(x){return x.trophy_num;}).filter(Boolean));
-      var mset=new Set((res[2].data||[]).map(function(x){return x.medal_num;}).filter(Boolean));
-      var cCount=(res[3].data||[]).length; var cset=new Set(); for(var i=1;i<=Math.min(12,cCount);i++) cset.add(i);
-      window.__lastFill=function(){ fill('certs',cset); fill('trophies',tset); fill('medals',mset); }; window.__lastFill();
-      document.getElementById('c-count').textContent=cset.size;
-      document.getElementById('t-count').textContent=tset.size;
-      document.getElementById('m-count').textContent=mset.size;
-      var total=cset.size+tset.size+mset.size;
-      document.getElementById('summary').textContent='TOTAL HONORS '+total+' / 36';
-    });
-  }); }
-window.bootAchievements = bootAchievements;
-
-</script>
-<script>
-// Background particles
-(function(){
-const c=document.getElementById('bg-canvas');
-const ctx=c.getContext('2d');
-let W,H,pts=[];
-function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
-resize();window.addEventListener('resize',resize);
-for(let i=0;i<50;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,r:Math.random()*1.2+.3});
-function draw(){
-ctx.clearRect(0,0,W,H);
-ctx.fillStyle='rgba(201,168,76,0.025)';
-for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}
-requestAnimationFrame(draw);
-}draw();
-})();
-
-function filterHonors(cat,btn){
-document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-document.querySelectorAll('.honor-card').forEach(card=>{
-if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.display='none';}
-});
-}
-
-(async function loadRealHonors(){
-  let trophyCount=0, medalCount=0, certCount=0;
-  try{
-    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-    const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-    const sess = (await sb.auth.getSession()).data.session;
-    if(!sess) return;
-    const pr = await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
-    const d = pr.data || {};
-    const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
-    const auth = Math.sqrt(a*a+b*b+c*c);
-    const grade = Math.max(1, Math.min(12, Math.ceil(auth/15.588*12)));
-
-    const [certs, trophies, medals] = await Promise.all([
-      sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
-      sb.from('trophies').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
-      sb.from('medals').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
-    ]);
-    certCount = certs.count || 0; trophyCount = trophies.count || 0; medalCount = medals.count || 0;
-
-    document.getElementById('stat-certs').textContent = certCount;
-    document.getElementById('stat-trophies').textContent = trophyCount;
-    document.getElementById('stat-trophies-sub').textContent = trophyCount+' / 12 Unlocked';
-    document.getElementById('stat-medals').textContent = medalCount;
-    document.getElementById('stat-level').textContent = d.is_owner ? '9.9.9' : auth.toFixed(2);
-    document.getElementById('stat-level-sub').textContent = d.is_owner ? 'Apex Tier' : ('Authority / 15.588');
-    document.getElementById('stat-grade').textContent = d.is_owner ? '12' : grade;
-    document.getElementById('stat-grade-sub').textContent = d.is_owner ? 'All Grades Sealed' : ('Grade '+grade+' of 12');
-  }catch(e){ /* leave placeholders if this fails -- never block the page */ }
-
-  try{
-    const counters = { trophy: 0, medal: 0, certificate: 0 };
-    const totalByType = { trophy: trophyCount, medal: medalCount, certificate: certCount };
-    document.querySelectorAll('.honor-card').forEach(card=>{
-      const cat = card.dataset.cat;
-      counters[cat] = (counters[cat]||0) + 1;
-      const earned = counters[cat] <= (totalByType[cat]||0);
-      card.classList.toggle('locked', !earned);
-
-      card.style.cursor='pointer';
-      card.addEventListener('click',()=>{
-        const glyph = card.querySelector('.honor-glyph')?.textContent || '\u2726';
-        const type = card.querySelector('.honor-type')?.textContent || '';
-        const name = card.querySelector('.honor-name')?.textContent || '';
-        const desc = card.querySelector('.honor-desc')?.textContent || '';
-        const tier = card.querySelector('.honor-tier-badge')?.textContent || '';
-        const date = card.querySelector('.honor-date')?.textContent || '';
-        const col = getComputedStyle(card).borderTopColor;
-        window.OmegaEmblemPanel.open({
-          glyph: glyph, color: col,
-          title: name,
-          subtitle: type.toUpperCase()+' . '+tier,
-          badge: earned ? 'EARNED' : 'NOT YET EARNED',
-          sections: [
-            { label: 'DESCRIPTION', body: desc },
-            { label: 'STATUS', stats: earned ? [{k:'Earned', v:date}] : [{k:'Status', v:'Locked'}] },
-          ]
-        });
-      });
-    });
-  }catch(e){ /* never block the page on the click-wiring pass */ }
-})();
-</script>
-
-<script>
-document.querySelectorAll('.mtab-btn').forEach(btn=>{
+/* TAB SWITCHING */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='var(--muted)';});
-    document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
-    btn.classList.add('active');btn.style.borderBottomColor='var(--gold)';btn.style.color='var(--gold)';
-    document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
-    if(btn.dataset.mtab==='ascension' && !window.__ascBuilt){ window.__ascBuilt=true; callWhenReady('bootAscension'); }
-    if(btn.dataset.mtab==='record' && !window.__achBuilt){ window.__achBuilt=true; callWhenReady('bootAchievements'); }
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active');
+    if(btn.dataset.tab==='horoscope' && !window.__horoBuilt){ window.__horoBuilt=true; callWhenReady('bootHoroscopeFull'); }
   });
 });
 function callWhenReady(fnName){
@@ -868,22 +221,782 @@ function callWhenReady(fnName){
   var t=setInterval(function(){
     tries++;
     if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
-    else if(tries>30){ clearInterval(t); } // deferred module genuinely failed to load; give up quietly rather than hang forever
+    else if(tries>30){ clearInterval(t); }
   },100);
 }
-(function(){
-  var wanted=sessionStorage.getItem('omega_mtab');
-  if(!wanted && location.hash){ wanted=location.hash.replace('#',''); }
-  if(wanted){
-    sessionStorage.removeItem('omega_mtab');
-    var btn=document.querySelector('.mtab-btn[data-mtab="'+wanted+'"]');
-    if(btn) btn.click();
+
+/* URL hash tab */
+if(location.hash){
+  const tab=location.hash.replace('#','');
+  document.querySelector('[data-tab="'+tab+'"]')?.click();
+}
+
+const AGENTS=[
+  {n:1,name:'SOVEREIGN',role:'MASTER CONTROLLER',el:'Aether',col:'#C9A84C',glyph:'\u03A9',desc:'The apex executor. Manages all agents, carries the constitutional veto, and speaks directly for the Architect.'},
+  {n:2,name:'SENTINEL',role:'SECURITY GUARDIAN',el:'Metal',col:'#C7CDD6',glyph:'\u25CF',desc:'Monitors every session and API call. Runs zero-trust checks and auto-locks compromised accounts in 9.17 seconds.'},
+  {n:3,name:'ANALYST',role:'FINANCIAL ARCHITECT',el:'Water',col:'#34C6E6',glyph:'\u25C8',desc:'Processes all economic data, portfolio valuations, and runs the 41% auto-split investment engine.'},
+  {n:4,name:'HISTORIAN',role:'MEMORY KEEPER',el:'Sand',col:'#D9B86A',glyph:'\u2736',desc:'Manages the 5-layer memory stack, heritage vault, and ensures every record is hash-verified and tamper-proof.'},
+  {n:5,name:'TUTOR',role:'KNOWLEDGE ENGINE',el:'Wind',col:'#A9C2D8',glyph:'\u2726',desc:'Orchestrates the academy, exam hall, and knowledge axis progression through personalised learning paths.'},
+  {n:6,name:'MERCHANT',role:'COMMERCE MASTER',el:'Water',col:'#34C6E6',glyph:'\u21C4',desc:'Runs the marketplace, manages listings, processes settlement flows, and enforces the 9.17% commission protocol.'},
+  {n:7,name:'PROXY',role:'EXECUTION DELEGATE',el:'Aether',col:'#E8E8FF',glyph:'\u25B6',desc:'Handles task delegation and authority routing. Coordinates execution across multiple services simultaneously.'},
+  {n:8,name:'ORACLE',role:'PREDICTION ENGINE',el:'Space',col:'#9B6BF0',glyph:'\u2609',desc:'Generates daily celestial readings, operates the prediction network, and models civilizational trajectories.'},
+  {n:9,name:'SCOUT',role:'DISCOVERY AGENT',el:'Wind',col:'#A9C2D8',glyph:'\u25C9',desc:'Monitors news feeds, trend signals, and research discoveries. Ranks information by relevance to the sovereign matrix.'},
+  {n:10,name:'WARDEN',role:'FAMILY PROTECTOR',el:'Earth',col:'#D9B86A',glyph:'\u22D4',desc:'Guards the family constellation, monitors bloodline vault, and dispatches alerts at milestone matrix nodes.'},
+  {n:11,name:'AUDITOR',role:'INTEGRITY VALIDATOR',el:'Metal',col:'#C7CDD6',glyph:'\u2699',desc:'Validates every credential, certificate, and progression claim with hash-chain verification protocols.'},
+  {n:12,name:'BEACON',role:'ONBOARDING GUIDE',el:'Fire',col:'#E86A3A',glyph:'\u2726',desc:'Guides every new sovereign through the Order and activates their assigned agent at the first gate threshold.'},
+];
+
+const SIGNS=[
+  {n:'ARIES',g:'\u2648',dates:'MAR 21-APR 19',el:'FIRE',col:'#E86A3A',deity:'ARES',desc:'The sovereign initiator. First fire in the matrix.'},
+  {n:'TAURUS',g:'\u2649',dates:'APR 20-MAY 20',el:'METAL',col:'#C7CDD6',deity:'APHRODITE',desc:'The sovereign builder. Metal endurance shapes empires.'},
+  {n:'GEMINI',g:'\u264A',dates:'MAY 21-JUN 20',el:'WIND',col:'#A9C2D8',deity:'HERMES',desc:'The sovereign messenger. Wind carries knowledge.'},
+  {n:'CANCER',g:'\u264B',dates:'JUN 21-JUL 22',el:'WATER',col:'#34C6E6',deity:'ARTEMIS',desc:'The sovereign keeper. Water flows where others cannot.'},
+  {n:'LEO',g:'\u264C',dates:'JUL 23-AUG 22',el:'FIRE',col:'#E86A3A',deity:'APOLLO',desc:'The sovereign commander. Fire at its apex.'},
+  {n:'VIRGO',g:'\u264D',dates:'AUG 23-SEP 22',el:'SAND',col:'#D9B86A',deity:'ATHENA',desc:'The sovereign architect. Sand is the universal amplifier.'},
+  {n:'LIBRA',g:'\u264E',dates:'SEP 23-OCT 22',el:'WIND',col:'#A9C2D8',deity:'HERA',desc:'The sovereign diplomat. Wind as justice and balance.'},
+  {n:'SCORPIO',g:'\u264F',dates:'OCT 23-NOV 21',el:'WATER',col:'#8B0000',deity:'DEMETER',desc:'The sovereign executor. Water in its most powerful form.'},
+  {n:'SAGITTARIUS',g:'\u2650',dates:'NOV 22-DEC 21',el:'FIRE',col:'#C9A84C',deity:'ZEUS',desc:'The sovereign explorer. Fire that expands beyond borders.'},
+  {n:'CAPRICORN',g:'\u2651',dates:'DEC 22-JAN 19',el:'METAL',col:'#E2C86D',deity:'HESTIA',desc:'The sovereign master. Metal discipline across time.'},
+  {n:'AQUARIUS',g:'\u2652',dates:'JAN 20-FEB 18',el:'WIND',col:'#9B6BF0',deity:'HEPHAESTUS',desc:'The sovereign visionary. Wind as civilizational revolution.'},
+  {n:'PISCES',g:'\u2653',dates:'FEB 19-MAR 20',el:'WATER',col:'#3fb27f',deity:'POSEIDON',desc:'The sovereign mystic. Water as transcendence.'},
+];
+
+const ELEMENTS=[
+  {n:1,name:'FIRE',type:'PHYSICAL',col:'#E86A3A',signs:'Aries, Leo, Sagittarius',desc:'The initiating element. Fire drives the Mastery axis and governs all gaming, conquest, and leadership activities.'},
+  {n:2,name:'WATER',type:'PHYSICAL',col:'#34C6E6',signs:'Cancer, Scorpio, Pisces',desc:'The deep element. Water governs the family, bloodline, and the subconscious layers of the matrix.'},
+  {n:3,name:'WIND',type:'PHYSICAL',col:'#A9C2D8',signs:'Gemini, Libra, Aquarius',desc:'The communication element. Wind carries knowledge across all dimensions of the Order.'},
+  {n:4,name:'METAL',type:'PHYSICAL',col:'#C7CDD6',signs:'Taurus, Capricorn',desc:'The endurance element. Metal governs physical reserves, long-game economics, and structural legacy.'},
+  {n:5,name:'SAND',type:'PHYSICAL',col:'#D9B86A',signs:'Virgo only',desc:'The universal amplifier element -- it strengthens every element around it. (Virgo is the sign of the Sand element.)'},
+  {n:6,name:'SOUL',type:'METAPHYSICAL',col:'#9B6BF0',signs:'Soul-class members',desc:'The identity element. Soul governs the deep self, the character system, and the genealogy tree.'},
+  {n:7,name:'SPACE',type:'METAPHYSICAL',col:'#00E5FF',signs:'Space-class members',desc:'The expansion element. Space governs prediction, the Oracle agent, and inter-dimensional matrix reach.'},
+  {n:8,name:'VOID',type:'METAPHYSICAL',col:'#554455',signs:'Void-class members',desc:'The destruction element. Void removes blockages and opens the highest gates by eliminating resistance.'},
+  {n:9,name:'THE NINTH',type:'TRANSCENDENT',col:'#C9A84C',signs:'All sovereign members',desc:'Religion, character, mind, heart, birth, death, life, family, work, and friends. The ultimate element. Active for all at Stage 9.'},
+];
+
+const GATES=[
+  {n:1,name:'THE GATE OF SAND',auth:1.73,col:'#D9B86A',desc:'Genesis threshold. First contact with the matrix. Unlocked at the moment of registration.'},
+  {n:2,name:'THE GATE OF GLASS',auth:2.50,col:'#A9C2D8',desc:'The transparency gate. First true self-knowledge. Knowledge axis A must reach level 2.'},
+  {n:3,name:'THE GATE OF IRON',auth:3.80,col:'#C7CDD6',desc:'The resilience gate. Tests the first of many sovereign challenges. Axis combination above 3.8.'},
+  {n:4,name:'THE GATE OF STEEL',auth:5.20,col:'#8B8F9C',desc:'The commitment gate. Mastery axis B must engage fully. The Order tests true intent.'},
+  {n:5,name:'THE GATE OF TITANIUM',auth:6.90,col:'#607D8B',desc:'The strength gate. All three axes operating simultaneously at sustained elevation.'},
+  {n:6,name:'THE GATE OF CARBON',auth:8.60,col:'#455A64',desc:'The precision gate. Contribution axis C must prove sovereign value generation.'},
+  {n:7,name:'THE GATE OF GOLD',auth:10.40,col:'#C9A84C',desc:'The sovereign gate. Authority passes 10. The Order officially recognises your sovereignty.'},
+  {n:8,name:'THE GATE OF PLATINUM',auth:12.70,col:'#E8D5B7',desc:'The legacy gate. Heritage vault sealed. Succession documented. Lineage protected.'},
+  {n:9,name:'THE GATE OF DIAMOND',auth:13.90,col:'#9B6BF0',desc:'The apex approach gate. The Crystal-Omega Node becomes visible. The 9.9.9 coordinate nears.'},
+  {n:10,name:'THE GATE OF CRYSTAL',auth:14.40,col:'#00E5FF',desc:'The penultimate gate. All 12 sovereign roles fulfilled. The Omega identity is confirmed.'},
+  {n:11,name:'THE GATE OF REBIRTH',auth:15.00,col:'#3fb27f',desc:'The transformation gate. The sovereign dies to all previous identities and is reborn at the Omega coordinate.'},
+  {n:12,name:'THE OMEGA GATE',auth:15.58,col:'#C9A84C',desc:'The final gate. Coordinate (9,9,9) achieved. All 729 nodes activated. OMEGA MASTER status confirmed. Eternal.'},
+];
+
+const PANTHEONS=[
+  {name:'ATHENA',sign:'Virgo',col:'#D9B86A',domain:'Wisdom, Strategy, Craft',desc:'Athena is the divine intellect. Her sovereign charge: think before acting, but act decisively. Strategy is the supreme weapon.'},
+  {name:'APHRODITE',sign:'Taurus',col:'#C7CDD6',domain:'Beauty, Value, Abundance',desc:'Aphrodite governs the economy of value. Her charge: accumulate, beautify, and build permanent worth.'},
+  {name:'APOLLO',sign:'Leo',col:'#E86A3A',domain:'Knowledge, Arts, Prophecy',desc:'Apollo illuminates all knowledge simultaneously. His charge: master communication and light up the darkness.'},
+  {name:'HERMES',sign:'Gemini',col:'#A9C2D8',domain:'Messages, Family, Travel',desc:'Hermes carries sacred messages across all boundaries. His charge: protect the lineage and carry the code forward.'},
+  {name:'ZEUS',sign:'Sagittarius',col:'#C9A84C',domain:'Authority, Command, Justice',desc:'Zeus commands from the apex. His charge: lead through sovereign authority, not force. The crown is earned.'},
+  {name:'DEMETER',sign:'Scorpio',col:'#8B0000',domain:'Earth, Harvest, Service',desc:'Demeter amplifies all other elements. Her charge: refine, serve, and multiply the sovereignty of others.'},
+  {name:'HEPHAESTUS',sign:'Aquarius',col:'#9B6BF0',domain:'Craft, Fire, Balance',desc:'Hephaestus forges balance from contradictions. His charge: build systems that are both beautiful and just.'},
+  {name:'ARES',sign:'Aries',col:'#E86A3A',domain:'War, Intensity, Transformation',desc:'Ares transforms through intensity. His charge: destroy what blocks the matrix and rebuild stronger.'},
+  {name:'ARTEMIS',sign:'Cancer',col:'#34C6E6',domain:'Hunt, Moon, Freedom',desc:'Artemis hunts truth in the unknown. Her charge: expand endlessly, seek what others dare not find.'},
+  {name:'HESTIA',sign:'Capricorn',col:'#E2C86D',domain:'Hearth, Legacy, Time',desc:'Hestia keeps the eternal flame. Her charge: build legacy across decades through patient, consistent discipline.'},
+  {name:'HERA',sign:'Libra',col:'#A9C2D8',domain:'Sovereignty, Revolution, Future',desc:'Hera commands the future of governance. Her charge: build civilizational systems that outlast individuals.'},
+  {name:'POSEIDON',sign:'Pisces',col:'#3fb27f',domain:'Deep Waters, Mystic, Transcendence',desc:'Poseidon rules the deep unconscious. His charge: access dimensions no other sign can map.'},
+];
+
+let hoveredAgent=-1, selectedAgent=null;
+
+/* AGENT WHEEL */
+function buildAgentWheel(memberSign){
+  const cv=document.getElementById('agent-wheel');
+  /* Defensive sizing: use wrapper width, fallback to 400 */
+  const wrap=cv.parentElement;
+  const size=Math.max(280,Math.min(wrap?wrap.getBoundingClientRect().width||400:400,520));
+  cv.width=size*2; cv.height=size*2; cv.style.width=size+'px'; cv.style.height=size+'px';
+  const ctx=cv.getContext('2d');
+  const cx=size,cy=size,R=size*.38,t_={v:0};
+  function draw(){
+    t_.v+=.006; const t=t_.v;
+    ctx.clearRect(0,0,size*2,size*2);
+    ctx.save(); ctx.scale(2,2);
+    /* Orbit ring */
+    ctx.beginPath(); ctx.arc(cx/2,cy/2,R,0,Math.PI*2); ctx.strokeStyle='rgba(201,168,76,0.1)'; ctx.lineWidth=1; ctx.stroke();
+    AGENTS.forEach((ag,i)=>{
+      const a=-Math.PI/2+i*(Math.PI*2/12);
+      const ax=cx/2+Math.cos(a)*R,ay=cy/2+Math.sin(a)*R;
+      const hov=hoveredAgent===i,sel=selectedAgent&&selectedAgent.n===ag.n;
+      ctx.beginPath();ctx.moveTo(cx/2,cy/2);ctx.lineTo(ax,ay);
+      ctx.strokeStyle=sel?ag.col+'aa':hov?ag.col+'55':'rgba(201,168,76,0.06)';ctx.lineWidth=sel?1.5:0.8;ctx.stroke();
+      const r=sel||hov?16:12;
+      const gg=ctx.createRadialGradient(ax,ay,0,ax,ay,r);
+      gg.addColorStop(0,ag.col+'55');gg.addColorStop(1,'transparent');
+      ctx.beginPath();ctx.arc(ax,ay,r,0,Math.PI*2);ctx.fillStyle=gg;ctx.fill();
+      ctx.beginPath();ctx.arc(ax,ay,r,0,Math.PI*2);
+      ctx.strokeStyle=sel?ag.col:hov?ag.col+'bb':ag.col+'44';ctx.lineWidth=sel?2:1;
+      if(sel){ctx.shadowColor=ag.col;ctx.shadowBlur=16;}ctx.stroke();ctx.shadowBlur=0;
+      ctx.fillStyle=sel?ag.col:hov?ag.col:'rgba(133,131,123,0.6)';
+      ctx.font='700 '+(sel?10:8)+'px "Courier Prime",monospace';
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ag.glyph,ax,ay+1);
+      if(hov||sel){
+        ctx.fillStyle=sel?ag.col:'rgba(201,168,76,0.7)';
+        ctx.font='700 7px "Courier Prime",monospace';ctx.fillText(ag.name,ax,ay+(r+10));
+      }
+    });
+    /* Center */
+    const cg=ctx.createRadialGradient(cx/2,cy/2,0,cx/2,cy/2,45);
+    cg.addColorStop(0,'rgba(201,168,76,0.2)');cg.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(cx/2,cy/2,45,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
+    ctx.fillStyle='rgba(201,168,76,'+(0.8+0.18*Math.sin(t*1.5))+')';
+    ctx.font='700 36px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(201,168,76,.6)';ctx.shadowBlur=18;ctx.fillText('\u03A9',cx/2,cy/2+2);ctx.shadowBlur=0;
+    ctx.restore();
+    requestAnimationFrame(draw);
   }
-})();
+  draw();
+  cv.addEventListener('mousemove',e=>{
+    const rect=cv.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width*(size/2),my=(e.clientY-rect.top)/rect.height*(size/2);
+    hoveredAgent=-1;
+    AGENTS.forEach((ag,i)=>{
+      const a=-Math.PI/2+i*(Math.PI*2/12),ax=cx/2+Math.cos(a)*(size*.38),ay=cy/2+Math.sin(a)*(size*.38);
+      if(Math.hypot(mx-ax,my-ay)<20) hoveredAgent=i;
+    });
+    cv.style.cursor=hoveredAgent>=0?'pointer':'default';
+  });
+  cv.addEventListener('click',()=>{ if(hoveredAgent>=0) selectAgent(AGENTS[hoveredAgent]); });
+  cv.addEventListener('mouseleave',()=>{hoveredAgent=-1;});
+}
+
+function selectAgent(ag){
+  selectedAgent=ag;
+  document.querySelectorAll('.ag-card').forEach((c,i)=>c.classList.toggle('sel',AGENTS[i].n===ag.n));
+  const isBound = window.__myAgent && window.__myAgent.toUpperCase()===ag.name;
+  window.OmegaEmblemPanel.open({
+    glyph: ag.glyph,
+    color: ag.col,
+    title: ag.name,
+    subtitle: ag.role+' . '+ag.el.toUpperCase()+' ELEMENT',
+    badge: isBound ? 'YOUR BOUND AGENT' : null,
+    sections: [
+      { label: 'ROLE', body: ag.desc },
+      { label: 'ATTRIBUTES', stats: [
+        {k:'Agent No.', v: String(ag.n).padStart(2,'0')},
+        {k:'Element', v: ag.el},
+        {k:'Status', v:'Active'},
+        {k:'Assigned Sign', v: (window.__agentSignMap && window.__agentSignMap[ag.name]) || '--'},
+      ]},
+      { label: 'GO FURTHER', actions: [
+        { label: 'Open Agents Directory', href: '/agents.html' },
+        { label: 'Talk to the Concierge', href: '/chatbot.html' },
+      ]},
+    ]
+  });
+}
+
+function buildAgentsGrid(){
+  const g=document.getElementById('agents-grid');g.innerHTML='';
+  AGENTS.forEach((ag,i)=>{
+    const c=document.createElement('div');c.className='ag-card';
+    c.innerHTML=`<div class="ac-n">AGENT ${String(ag.n).padStart(2,'0')}</div><div class="ac-nm" style="color:${ag.col}">${ag.name}</div><div class="ac-rl">${ag.role}</div><div class="ac-st"><div class="ac-dot" style="background:var(--green)"></div><span style="color:var(--green);font-family:var(--M);font-size:8px">ACTIVE</span></div>`;
+    c.addEventListener('click',()=>selectAgent(ag));
+    g.appendChild(c);
+  });
+}
+
+/* HOROSCOPE */
+function drawSignCanvas(cv,sign,size){
+  const s=SIGNS.find(x=>x.n===sign)||SIGNS[0];
+  cv.width=size*2;cv.height=size*2;cv.style.width=size+'px';cv.style.height=size+'px';
+  const ctx=cv.getContext('2d'),CX=size,CY=size;let t=0;
+  function frame(){
+    t+=.018;ctx.clearRect(0,0,size*2,size*2);
+    ctx.save();ctx.translate(CX,CY);
+    const bg=ctx.createRadialGradient(0,0,0,0,0,size*.8);bg.addColorStop(0,s.col+'22');bg.addColorStop(1,'transparent');
+    ctx.fillStyle=bg;ctx.beginPath();ctx.arc(0,0,size*.8,0,Math.PI*2);ctx.fill();
+    /* Rings */
+    ctx.save();ctx.rotate(t*.3);
+    ctx.beginPath();ctx.arc(0,0,size*.65,0,Math.PI*2);ctx.strokeStyle=s.col+'44';ctx.lineWidth=1;ctx.stroke();
+    ctx.restore();
+    ctx.save();ctx.rotate(-t*.2);
+    ctx.beginPath();ctx.ellipse(0,0,size*.6,size*.22,0,0,Math.PI*2);ctx.strokeStyle=s.col+'33';ctx.lineWidth=.8;ctx.stroke();
+    ctx.restore();
+    /* Glyph */
+    ctx.fillStyle=s.col;ctx.shadowColor=s.col;ctx.shadowBlur=14+4*Math.sin(t*1.5);
+    ctx.font='700 '+Math.round(size*.55)+'px "Cinzel Decorative",serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.g,0,2);ctx.shadowBlur=0;
+    /* Orbiting dots */
+    for(let i=0;i<6;i++){
+      const a=t*.9+i*Math.PI/3,r=size*.72;
+      ctx.beginPath();ctx.arc(Math.cos(a)*r,Math.sin(a)*r,2.5,0,Math.PI*2);
+      ctx.fillStyle=s.col+(i%2?'cc':'55');ctx.fill();
+    }
+    ctx.restore();requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function buildElements(){
+  const g=document.getElementById('element-grid');g.innerHTML='';
+  ELEMENTS.forEach(e=>{
+    const c=document.createElement('div');c.className='el-card';
+    c.style.setProperty('--col',e.col);
+    c.style.cssText+=`border-left:3px solid ${e.col}77`;
+    c.innerHTML=`<canvas class="el-canvas" width="200" height="90" style="width:100%;height:90px;display:block;margin-bottom:8px"></canvas><div class="el-name" style="color:${e.col}">${e.name}</div><div class="el-type" style="color:${e.col}88">${e.type}</div><div class="el-desc">${e.desc}</div><div class="el-signs"><span style="font-family:var(--M);font-size:7px;color:var(--muted)">${e.signs}</span></div>`;
+    g.appendChild(c);
+    mountMotif(c.querySelector('.el-canvas'), e.motif||e.name.toLowerCase(), e.col);
+  });
+}
+
+function mountMotif(canvas, motif, col){
+  if(!canvas) return;
+  if(window.OmegaElementMotif){ window.OmegaElementMotif.mount(canvas, motif, col, {}); return; }
+  let tries=0;
+  const t=setInterval(()=>{
+    tries++;
+    if(window.OmegaElementMotif){ window.OmegaElementMotif.mount(canvas, motif, col, {}); clearInterval(t); }
+    else if(tries>20) clearInterval(t);
+  },150);
+}
+
+function fillRing(el, glyph, col){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); return; }
+  let tries=0;
+  const t=setInterval(()=>{
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); clearInterval(t); }
+    else if(tries>20) clearInterval(t);
+  },150);
+}
+
+function buildGates(auth){
+  const g=document.getElementById('gates-grid');g.innerHTML='';
+  GATES.forEach(gate=>{
+    const unlocked=auth>=gate.auth;
+    const c=document.createElement('div');c.className='gate-card'+(unlocked?' unlocked':' locked');
+    c.style.cursor='pointer';
+    c.innerHTML=`<span class="gc-ring" style="display:inline-block;width:40px;height:40px;margin-bottom:6px"></span><div class="gc-name" style="color:${unlocked?gate.col:'rgba(233,230,220,0.3)'}">${gate.name}</div><span class="gc-status" style="${unlocked?'color:var(--green);border-color:rgba(63,178,127,.5)':'color:var(--muted);border-color:rgba(133,131,123,.3)'}">${unlocked?'OPEN':'LOCKED'}</span>`;
+    c.addEventListener('click',()=>openGatePanel(gate,unlocked));
+    g.appendChild(c);
+    fillRing(c.querySelector('.gc-ring'), gate.n, unlocked?gate.col:'#85837b');
+  });
+}
+
+function openGatePanel(gate,unlocked){
+  window.OmegaEmblemPanel.open({
+    glyph: gate.n, color: gate.col,
+    title: gate.name,
+    subtitle: 'AUTHORITY THRESHOLD: '+gate.auth,
+    badge: unlocked?'OPEN':'LOCKED',
+    sections: [
+      { label: 'DESCRIPTION', body: gate.desc },
+      { label: 'GO FURTHER', actions: [{ label: 'Open Full Gates Page', href: '/elements.html#gates' }] },
+    ]
+  });
+}
+
+function buildPantheons(){
+  const g=document.getElementById('pantheons-grid');g.innerHTML='';
+  PANTHEONS.forEach(p=>{
+    const c=document.createElement('div');c.className='ag-card';c.style.cursor='pointer';
+    c.innerHTML=`<span class="pc-ring" data-sign="${p.sign}" style="display:inline-block;width:40px;height:40px;margin-bottom:6px"></span><div class="ac-nm" style="color:${p.col}">${p.name}</div><div class="ac-rl">${p.sign.toUpperCase()} . ${p.domain}</div>`;
+    c.addEventListener('click',()=>openPantheonPanel(p));
+    g.appendChild(c);
+    fillSignEmblem(c.querySelector('.pc-ring'), p.sign);
+  });
+}
+
+function openPantheonPanel(p){
+  window.OmegaEmblemPanel.open({
+    glyph: p.sign, color: p.col,
+    title: p.name,
+    subtitle: p.sign.toUpperCase()+' . '+p.domain.toUpperCase(),
+    badge: window.__memberSign===p.sign.toUpperCase() ? 'YOUR PANTHEON' : null,
+    sections: [
+      { label: 'THE CHARGE', body: p.desc },
+      { label: 'GO FURTHER', actions: [{ label: 'Open Full Pantheons Page', href: '/pantheons.html' }] },
+    ]
+  });
+}
+
+function fillSignEmblem(el, sign){
+  if(!el) return;
+  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.svg(sign); return; }
+  let tries=0;
+  const t=setInterval(()=>{
+    tries++;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.svg(sign); clearInterval(t); }
+    else if(tries>20) clearInterval(t);
+  },150);
+}
+
+async function boot(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+  const sign=pr.data?.sign||'Virgo';
+  const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
+  const auth=Math.sqrt(a*a+b*b+c*c);
+  window.__memberSign=sign.toUpperCase();
+  window.__agentSignMap={SENTINEL:'Aries',MERCHANT:'Taurus',SCOUT:'Gemini',WARDEN:'Cancer',SOVEREIGN:'Leo',AUDITOR:'Virgo',PROXY:'Libra',ORACLE:'Scorpio',BEACON:'Sagittarius',ANALYST:'Capricorn',TUTOR:'Aquarius',HISTORIAN:'Pisces'};
+  const SIGN_TO_AGENT={Aries:'SENTINEL',Taurus:'MERCHANT',Gemini:'SCOUT',Cancer:'WARDEN',Leo:'SOVEREIGN',Virgo:'AUDITOR',Libra:'PROXY',Scorpio:'ORACLE',Sagittarius:'BEACON',Capricorn:'ANALYST',Aquarius:'TUTOR',Pisces:'HISTORIAN'};
+  window.__myAgent=SIGN_TO_AGENT[sign]||null;
+  requestAnimationFrame(()=>buildAgentWheel(sign));
+  window.addEventListener('resize',()=>{ if(!window.__wheelResizeTimer){window.__wheelResizeTimer=setTimeout(()=>{buildAgentWheel(sign);window.__wheelResizeTimer=null;},200);} });
+  const renders=[
+    ['agents grid', ()=>buildAgentsGrid()],
+    ['elements', ()=>buildElements()],
+    ['gates', ()=>buildGates(auth)],
+    ['pantheons', ()=>buildPantheons()],
+  ];
+  renders.forEach(([name,fn])=>{
+    try{ fn(); }catch(e){ console.error('cosmos.html: '+name+' failed to render:', e); }
+  });
+}
+boot();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-</div>
-</div>
+<script type="module">
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+/* =====================================================================
+   CANONICAL SIGN DATA
+   ===================================================================== */
+const SIGNS=[
+  {name:'ARIES',dates:'MAR 21 - APR 19',el:'FIRE',elCol:'#E86A3A',deity:'ARES',planet:'Mars',glyph:'\u2648',col:'#E86A3A',compat:['Leo','Sagittarius','Gemini'],
+   motif:'arc',desc:'The sovereign initiator. First fire in the matrix. Ares channels raw force -- attack knowledge, conquer mastery, ignite contribution.'},
+  {name:'TAURUS',dates:'APR 20 - MAY 20',el:'METAL',elCol:'#C7CDD6',deity:'APHRODITE',planet:'Venus',glyph:'\u2649',col:'#C7CDD6',compat:['Virgo','Capricorn','Cancer'],
+   motif:'circle',desc:'The sovereign builder. Metal endurance shapes empires. Aphrodite&apos;s charge: accumulate beauty, value, and permanent legacy through disciplined contribution.'},
+  {name:'GEMINI',dates:'MAY 21 - JUN 20',el:'WIND',elCol:'#A9C2D8',deity:'HERMES',planet:'Mercury',glyph:'\u264A',col:'#A9C2D8',compat:['Libra','Aquarius','Aries'],
+   motif:'twin',desc:'The sovereign messenger. Wind carries knowledge across all dimensions. Hermes&apos; mandate: carry signal across both axes through communication and curiosity.'},
+  {name:'CANCER',dates:'JUN 21 - JUL 22',el:'WATER',elCol:'#34C6E6',deity:'ARTEMIS',planet:'Moon',glyph:'\u264B',col:'#34C6E6',compat:['Scorpio','Pisces','Taurus'],
+   motif:'spiral',desc:'The sovereign keeper. Water flows where others cannot reach. Artemis guards: protect the lineage, nurture the family matrix, carry the ancestral code forward.'},
+  {name:'LEO',dates:'JUL 23 - AUG 22',el:'FIRE',elCol:'#E86A3A',deity:'APOLLO',planet:'Sun',glyph:'\u264C',col:'#E86A3A',compat:['Aries','Sagittarius','Gemini'],
+   motif:'radiant',desc:'The sovereign commander. Fire at its apex, the sovereign sun. Apollo&apos;s decree: lead from radiance, command through presence, advance all axes through sheer solar will.'},
+  {name:'VIRGO',dates:'AUG 23 - SEP 22',el:'SAND',elCol:'#D9B86A',deity:'ATHENA',planet:'Mercury',glyph:'\u264D',col:'#D9B86A',compat:['Taurus','Capricorn','Cancer'],
+   motif:'hexagon',desc:'The sovereign architect. Sand is the universal amplifier. Athena&apos;s gift: design every system to its essence, serve the whole, and amplify all other elements around you.'},
+  {name:'LIBRA',dates:'SEP 23 - OCT 22',el:'WIND',elCol:'#A9C2D8',deity:'HERA',planet:'Venus',glyph:'\u264E',col:'#A9C2D8',compat:['Gemini','Aquarius','Leo'],
+   motif:'scales',desc:'The sovereign diplomat. Wind as justice. Hera holds the balance of union and delivers it through air. Libra resolves contradictions and advances the contribution axis through harmony.'},
+  {name:'SCORPIO',dates:'OCT 23 - NOV 21',el:'WATER',elCol:'#34C6E6',deity:'DEMETER',planet:'Pluto',glyph:'\u264F',col:'#8B0000',compat:['Cancer','Pisces','Virgo'],
+   motif:'fibonacci',desc:'The sovereign executor. Water in its most powerful, hidden form. Demeter&apos;s mandate: pass through every ending, transform through the dark, and rise reborn from the depths others fear.'},
+  {name:'SAGITTARIUS',dates:'NOV 22 - DEC 21',el:'FIRE',elCol:'#E86A3A',deity:'ZEUS',planet:'Jupiter',glyph:'\u2650',col:'#C9A84C',compat:['Aries','Leo','Aquarius'],
+   motif:'arrow',desc:'The sovereign explorer. Fire that expands beyond all borders. Zeus expands authority beyond every border. Sagittarius advances the knowledge axis to horizons no other sign can reach.'},
+  {name:'CAPRICORN',dates:'DEC 22 - JAN 19',el:'METAL',elCol:'#C7CDD6',deity:'HESTIA',planet:'Saturn',glyph:'\u2651',col:'#E2C86D',compat:['Taurus','Virgo','Scorpio'],
+   motif:'mountain',desc:'The sovereign master. Metal discipline over time. Hestia keeps the eternal flame alive through patience. Capricorn builds empires across decades, reaching the apex through relentless contribution.'},
+  {name:'AQUARIUS',dates:'JAN 20 - FEB 18',el:'WIND',elCol:'#A9C2D8',deity:'HEPHAESTUS',planet:'Uranus',glyph:'\u2652',col:'#9B6BF0',compat:['Gemini','Libra','Sagittarius'],
+   motif:'wave',desc:'The sovereign visionary. Wind as revolution. Hephaestus&apos; craft: forge the future of governance. Aquarius sees the matrix as a civilizational tool and advances all axes through humanitarian innovation.'},
+  {name:'PISCES',dates:'FEB 19 - MAR 20',el:'WATER',elCol:'#34C6E6',deity:'POSEIDON',planet:'Neptune',glyph:'\u2653',col:'#3fb27f',compat:['Cancer','Scorpio','Capricorn'],
+   motif:'vesica',desc:'The sovereign mystic. Water as transcendence. Poseidon rules the deep unconscious ocean. Pisces accesses dimensions of knowledge no other sign can map, bridging the 9th element to the matrix apex.'},
+];
+
+const PLANETS=[
+  {name:'SUN',pos:'Leo 4&#x00B0;',col:'#E2C86D'},
+  {name:'MOON',pos:'Cancer 17&#x00B0;',col:'#A9C2D8'},
+  {name:'MERCURY',pos:'Gemini 22&#x00B0;',col:'#C9A84C'},
+  {name:'VENUS',pos:'Taurus 8&#x00B0;',col:'#3fb27f'},
+  {name:'MARS',pos:'Aries 29&#x00B0;',col:'#E86A3A'},
+  {name:'JUPITER',pos:'Sagittarius 11&#x00B0;',col:'#C9A84C'},
+  {name:'SATURN',pos:'Capricorn 3&#x00B0;',col:'#C7CDD6'},
+  {name:'URANUS',pos:'Aquarius 14&#x00B0;',col:'#9B6BF0'},
+  {name:'NEPTUNE',pos:'Pisces 26&#x00B0;',col:'#34C6E6'},
+  {name:'PLUTO',pos:'Scorpio 9&#x00B0;',col:'#8B0000'},
+  {name:'9.17 Hz',pos:'Resonance Lock',col:'#C9A84C'},
+  {name:'NODE',pos:'Virgo 1&#x00B0;',col:'#D9B86A'},
+];
+
+/* =====================================================================
+   GENESIS CANVAS MANDALA DRAWING ENGINE
+   Each zodiac sign gets a unique sacred geometry pattern
+   ===================================================================== */
+function drawMandala(canvas, sign, size, animated){
+  const s=sign, col=s.col, motif=s.motif;
+  canvas.width=size*2; canvas.height=size*2;
+  canvas.style.width=size+'px'; canvas.style.height=size+'px';
+  const ctx=canvas.getContext('2d');
+  const CX=size, CY=size, R=size*0.82;
+  let t=0;
+
+  function frame(){
+    ctx.clearRect(0,0,size*2,size*2);
+
+    /* BASE GLOW */
+    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,R);
+    bg.addColorStop(0,col+'18'); bg.addColorStop(0.6,col+'06'); bg.addColorStop(1,'transparent');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,size*2,size*2);
+
+    /* OUTER DEGREE RING */
+    ctx.save(); ctx.translate(CX,CY);
+    ctx.strokeStyle=col+'40'; ctx.lineWidth=0.8;
+    ctx.beginPath(); ctx.arc(0,0,R,0,Math.PI*2); ctx.stroke();
+    /* degree ticks */
+    for(let d=0;d<12;d++){
+      const a=t*0.15+d*(Math.PI*2/12);
+      const in1=R*0.9, out=R;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a)*in1,Math.sin(a)*in1); ctx.lineTo(Math.cos(a)*out,Math.sin(a)*out);
+      ctx.strokeStyle=col+(d%3===0?'88':'33'); ctx.stroke();
+    }
+
+    /* INNER SACRED GEOMETRY -- unique per motif */
+    ctx.strokeStyle=col+'88'; ctx.lineWidth=1.2;
+
+    if(motif==='arc'){
+      /* Aries: dynamic horns -- two arcs rising from base, angular */
+      for(let i=0;i<2;i++){
+        ctx.save(); ctx.rotate(t*0.3*(i?-1:1));
+        ctx.beginPath(); ctx.arc(i?R*0.18:-R*0.18,-R*0.1,R*0.38,-Math.PI*0.7,-Math.PI*0.05);
+        ctx.stroke(); ctx.restore();
+      }
+      ctx.beginPath(); ctx.moveTo(-R*0.1,R*0.1); ctx.lineTo(R*0.1,R*0.1);
+      ctx.strokeStyle=col+'55'; ctx.stroke();
+    } else if(motif==='circle'){
+      /* Taurus: overlapping circles -- bull head as vesica */
+      const offset=R*0.22;
+      ctx.save(); ctx.rotate(t*0.2);
+      ctx.beginPath(); ctx.arc(-offset,R*0.05,R*0.42,0,Math.PI*2);
+      ctx.strokeStyle=col+'66'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(offset,R*0.05,R*0.42,0,Math.PI*2);
+      ctx.stroke();
+      /* horns */
+      ctx.beginPath(); ctx.arc(-R*0.3,-R*0.4,R*0.22,Math.PI*0.2,Math.PI*1.3);
+      ctx.strokeStyle=col+'88'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(R*0.3,-R*0.4,R*0.22,Math.PI*(-0.3),Math.PI*0.8);
+      ctx.stroke(); ctx.restore();
+    } else if(motif==='twin'){
+      /* Gemini: dual columns / twin pillars sacred geometry */
+      ctx.save(); ctx.rotate(t*0.2);
+      const cx1=-R*0.24, cx2=R*0.24;
+      [-1,1].forEach(function(s,idx){
+        const cx=s*R*0.24;
+        ctx.beginPath(); ctx.arc(cx,-R*0.05,R*0.35,0,Math.PI*2);
+        ctx.strokeStyle=col+'55'; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx,-R*0.45); ctx.lineTo(cx,R*0.45);
+        ctx.strokeStyle=col+'88'; ctx.stroke();
+      });
+      ctx.beginPath(); ctx.moveTo(-R*0.24,0); ctx.lineTo(R*0.24,0);
+      ctx.strokeStyle=col+'44'; ctx.stroke(); ctx.restore();
+    } else if(motif==='spiral'){
+      /* Cancer: golden spiral / double spiral */
+      ctx.save(); ctx.rotate(t*0.25);
+      for(let k=0;k<2;k++){
+        ctx.save(); ctx.rotate(k*Math.PI);
+        ctx.beginPath();
+        for(let i=0;i<120;i++){
+          const angle=i*0.15;
+          const r=angle*R*0.052;
+          const x=Math.cos(angle)*r, y=Math.sin(angle)*r;
+          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.strokeStyle=col+'77'; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
+      }
+      ctx.restore();
+    } else if(motif==='radiant'){
+      /* Leo: sun / 12 radiating rays with inner circle */
+      ctx.save(); ctx.rotate(t*0.35);
+      const innerR=R*0.28;
+      ctx.beginPath(); ctx.arc(0,0,innerR,0,Math.PI*2);
+      ctx.strokeStyle=col+'88'; ctx.lineWidth=1.5; ctx.stroke();
+      for(let i=0;i<12;i++){
+        const a=i*Math.PI/6;
+        const len=R*(0.35+0.25*Math.sin(t*2+i));
+        ctx.beginPath(); ctx.moveTo(Math.cos(a)*innerR,Math.sin(a)*innerR);
+        ctx.lineTo(Math.cos(a)*len,Math.sin(a)*len);
+        ctx.strokeStyle=col+(i%3===0?'88':'44'); ctx.lineWidth=i%3===0?1.5:0.8; ctx.stroke();
+      }
+      ctx.restore();
+    } else if(motif==='hexagon'){
+      /* Virgo: sacred hexagon with inner triangle */
+      ctx.save(); ctx.rotate(t*0.18);
+      for(let ring=0;ring<3;ring++){
+        ctx.beginPath();
+        const rr=R*(0.3+ring*0.2);
+        for(let i=0;i<=6;i++){
+          const a=-Math.PI/2+i*Math.PI/3;
+          i===0?ctx.moveTo(Math.cos(a)*rr,Math.sin(a)*rr):ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);
+        }
+        ctx.strokeStyle=col+(ring===0?'88':ring===1?'55':'33'); ctx.lineWidth=1; ctx.stroke();
+      }
+      /* Star of David overlay */
+      ctx.save(); ctx.rotate(Math.PI/6);
+      ctx.beginPath();
+      for(let i=0;i<=3;i++){const a=i*Math.PI*2/3-Math.PI/2;ctx.lineTo(Math.cos(a)*R*0.55,Math.sin(a)*R*0.55);}
+      ctx.strokeStyle=col+'44'; ctx.stroke(); ctx.restore();
+      ctx.restore();
+    } else if(motif==='scales'){
+      /* Libra: balanced scales as equal triangles */
+      ctx.save(); ctx.rotate(t*0.15+Math.sin(t)*0.1);
+      ctx.beginPath(); ctx.moveTo(-R*0.55,R*0.15); ctx.lineTo(R*0.55,R*0.15);
+      ctx.strokeStyle=col+'88'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,-R*0.5); ctx.lineTo(0,R*0.15);
+      ctx.stroke();
+      [-1,1].forEach(function(side){
+        ctx.beginPath(); ctx.arc(side*R*0.5,R*0.35,R*0.22,0,Math.PI*2);
+        ctx.strokeStyle=col+'55'; ctx.lineWidth=1; ctx.stroke();
+      });
+      ctx.restore();
+    } else if(motif==='fibonacci'){
+      /* Scorpio: fibonacci / golden ratio spiral with sting */
+      ctx.save(); ctx.rotate(t*0.2);
+      let pr=3;
+      for(let i=0;i<8;i++){
+        ctx.beginPath(); ctx.arc(0,0,pr,0,Math.PI*2);
+        ctx.strokeStyle=col+(8-i<3?'88':'33'); ctx.lineWidth=0.8; ctx.stroke();
+        pr*=1.618;
+        if(pr>R) break;
+      }
+      /* Sting */
+      ctx.beginPath(); ctx.moveTo(0,-R*0.5); ctx.quadraticCurveTo(R*0.3,-R*0.2,R*0.5,R*0.1);
+      ctx.strokeStyle=col+'88'; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+    } else if(motif==='arrow'){
+      /* Sagittarius: arrow through sacred circle */
+      ctx.save(); ctx.rotate(t*0.2);
+      ctx.beginPath(); ctx.arc(0,0,R*0.45,0,Math.PI*2);
+      ctx.strokeStyle=col+'55'; ctx.lineWidth=1; ctx.stroke();
+      const angle=-Math.PI/4;
+      const ax=Math.cos(angle)*R*0.72, ay=Math.sin(angle)*R*0.72;
+      ctx.beginPath(); ctx.moveTo(-ax,-ay); ctx.lineTo(ax,ay);
+      ctx.strokeStyle=col+'99'; ctx.lineWidth=1.8; ctx.stroke();
+      /* Arrowhead */
+      ctx.beginPath(); ctx.moveTo(ax,ay);
+      ctx.lineTo(ax-0.3*(ax-ax*0.8)+0.2*(ay-ay*0.8),ay-0.2*(ax-ax*0.8)-0.3*(ay-ay*0.8));
+      ctx.strokeStyle=col; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+    } else if(motif==='mountain'){
+      /* Capricorn: ascending triangles / mountain geometry */
+      ctx.save(); ctx.rotate(t*0.15);
+      for(let i=0;i<3;i++){
+        const h=R*(0.3+i*0.18), w=R*(0.5-i*0.1);
+        ctx.beginPath(); ctx.moveTo(-w,R*0.35-i*R*0.12); ctx.lineTo(0,-h); ctx.lineTo(w,R*0.35-i*R*0.12); ctx.closePath();
+        ctx.strokeStyle=col+(i===0?'88':i===1?'55':'33'); ctx.lineWidth=1; ctx.stroke();
+      }
+      ctx.restore();
+    } else if(motif==='wave'){
+      /* Aquarius: standing wave / frequency visualization */
+      ctx.save(); ctx.rotate(t*0.1);
+      for(let wave=0;wave<2;wave++){
+        ctx.beginPath();
+        for(let x=-R;x<=R;x+=2){
+          const y=(wave?1:-1)*(R*0.25)*Math.sin((x/(R*0.5))*Math.PI*2+t*2+wave*Math.PI);
+          const yOff=(wave?R*0.18:-R*0.18);
+          x===-R?ctx.moveTo(x,y+yOff):ctx.lineTo(x,y+yOff);
+        }
+        ctx.strokeStyle=col+'77'; ctx.lineWidth=1.5; ctx.stroke();
+      }
+      ctx.restore();
+    } else {
+      /* Pisces: vesica piscis -- two interlocking circles */
+      ctx.save(); ctx.rotate(t*0.15);
+      const offset2=R*0.28;
+      ctx.beginPath(); ctx.arc(-offset2,0,R*0.5,0,Math.PI*2);
+      ctx.strokeStyle=col+'66'; ctx.lineWidth=1.2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(offset2,0,R*0.5,0,Math.PI*2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /* CENTRAL GLYPH (classical, not emoji) */
+    const gl=s.glyph;
+    ctx.fillStyle=col; ctx.shadowColor=col; ctx.shadowBlur=12+4*Math.sin(t*1.5);
+    ctx.font='700 '+(size*0.3)+'px "Cinzel Decorative",serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(gl,CX,CY+2);
+    ctx.shadowBlur=0;
+
+    /* ORBITING NODES */
+    for(let i=0;i<6;i++){
+      const a=t*0.7+i*Math.PI/3;
+      const r=R*0.92;
+      ctx.beginPath(); ctx.arc(CX+Math.cos(a)*r,CY+Math.sin(a)*r,1.8,0,Math.PI*2);
+      ctx.fillStyle=col+(i%2===0?'cc':'55'); ctx.fill();
+    }
+
+    ctx.restore();
+    if(animated) requestAnimationFrame(frame);
+    t+=0.016;
+  }
+  frame();
+}
+
+function drawHeroWheel(sign){
+  const cv=document.getElementById('hero-wheel');
+  const S=160, ctx=cv.getContext('2d');
+  const CX=320, CY=320, R=280;
+  let t=0;
+  const si=SIGNS.findIndex(s=>s.name===sign)||0;
+  function frame(){
+    t+=0.008;
+    ctx.clearRect(0,0,640,640);
+    /* Outer ring with all 12 signs */
+    SIGNS.forEach(function(s,i){
+      const a=-Math.PI/2+t*0.1+i*(Math.PI*2/12);
+      const ax=CX+Math.cos(a)*R, ay=CY+Math.sin(a)*R;
+      const isActive=i===si;
+      ctx.beginPath(); ctx.arc(ax,ay,isActive?22:14,0,Math.PI*2);
+      const g=ctx.createRadialGradient(ax,ay,0,ax,ay,isActive?22:14);
+      g.addColorStop(0,s.col+'66'); g.addColorStop(1,'transparent');
+      ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(ax,ay,isActive?22:14,0,Math.PI*2);
+      ctx.strokeStyle=isActive?s.col:s.col+'44';
+      ctx.lineWidth=isActive?2:0.8;
+      if(isActive){ctx.shadowColor=s.col;ctx.shadowBlur=16;}
+      ctx.stroke(); ctx.shadowBlur=0;
+      ctx.fillStyle=isActive?s.col:'rgba(133,131,123,0.6)';
+      ctx.font=(isActive?'700 ':'')+Math.round(isActive?13:10)+'px "Cinzel Decorative",serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(s.glyph,ax,ay+1);
+      /* connecting line */
+      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(ax,ay);
+      ctx.strokeStyle=isActive?s.col+'55':'rgba(201,168,76,0.06)'; ctx.lineWidth=0.5; ctx.stroke();
+    });
+    /* Center */
+    const cg=ctx.createRadialGradient(CX,CY,0,CX,CY,90);
+    cg.addColorStop(0,'rgba(201,168,76,0.2)'); cg.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(CX,CY,90,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
+    ctx.strokeStyle='rgba(201,168,76,0.3)'; ctx.lineWidth=1; ctx.stroke();
+    const activeSign=SIGNS[si];
+    ctx.fillStyle=activeSign.col; ctx.shadowColor=activeSign.col; ctx.shadowBlur=20+4*Math.sin(t*2);
+    ctx.font='700 52px "Cinzel Decorative",serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(activeSign.glyph,CX,CY+3);
+    ctx.shadowBlur=0;
+    /* Frequency ring */
+    ctx.save(); ctx.translate(CX,CY); ctx.rotate(t*0.4);
+    ctx.beginPath(); ctx.ellipse(0,0,R*0.65,R*0.22,0,0,Math.PI*2);
+    ctx.strokeStyle='rgba(201,168,76,0.08)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.restore();
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function drawPlanetNode(cv, planet){
+  cv.width=80; cv.height=80; cv.style.width='40px'; cv.style.height='40px';
+  const ctx=cv.getContext('2d');
+  let t=0;
+  function frame(){
+    t+=0.02; ctx.clearRect(0,0,80,80);
+    const g=ctx.createRadialGradient(40,40,0,40,40,32);
+    g.addColorStop(0,planet.col+'44'); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(40,40,32,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=planet.col+'66'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(40,40,30,0,Math.PI*2); ctx.stroke();
+    ctx.save(); ctx.translate(40,40); ctx.rotate(t*0.5);
+    ctx.beginPath(); ctx.arc(0,0,20,-Math.PI*0.7,Math.PI*0.7);
+    ctx.strokeStyle=planet.col+'88'; ctx.lineWidth=1.2; ctx.stroke(); ctx.restore();
+    ctx.fillStyle=planet.col; ctx.shadowColor=planet.col; ctx.shadowBlur=8+3*Math.sin(t*1.5);
+    ctx.font='700 10px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(planet.name.slice(0,3),40,40); ctx.shadowBlur=0;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+/* =====================================================================
+   DAILY ORACLE CONTENT (deterministic from day + sign)
+   ===================================================================== */
+const ENERGIES=['SOVEREIGNTY','INSIGHT','CREATION','AUTHORITY','EXPANSION','MASTERY','ALIGNMENT','TRUTH','TRANSFORMATION','FLOW','ASCENSION','RESONANCE'];
+const AXES=['Knowledge A','Mastery B','Contribution C','All Three Axes'];
+const GATES=['GATE I','GATE III','GATE V','GATE VII','GATE IX','GATE XI'];
+const PLANETS_RULING=['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Pluto','Jupiter','Saturn','Uranus','Neptune'];
+
+function getDailyOracle(sign){
+  const d=new Date(); const seed=(d.getDate()+d.getMonth()*31+(SIGNS.findIndex(s=>s.name===sign)||0));
+  const energy=ENERGIES[seed%12];
+  const axis=AXES[seed%4];
+  const gate=GATES[seed%6];
+  const ruler=PLANETS_RULING[SIGNS.findIndex(s=>s.name===sign)||0];
+  document.getElementById('r-energy').textContent=energy;
+  document.getElementById('r-axis').textContent=axis;
+  document.getElementById('r-planet').textContent=ruler;
+  document.getElementById('r-gate').textContent=gate;
+  return {energy,axis,gate,ruler};
+}
+
+async function getOracleReading(sign, energy, axis){
+  const ob=document.getElementById('ob-text');
+  try{
+    const r=await fetch("https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/oracle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Write a 3-sentence daily horoscope reading for ${sign}. Today's energy is ${energy}, the primary matrix axis is ${axis}. Reference the 9.1717Hz sovereign frequency, the sovereign matrix, and the 12-fold celestial system.`,max_tokens:220})});
+    const data=await r.json();
+    const text=(data && data.reply) || null;
+    if(text) ob.textContent=text;
+    else ob.textContent='The celestial alignment speaks: '+energy+' is your sovereign directive today. Advance your '+axis+' through conscious sovereign action. The '+sign+' path opens '+gate+' when the frequency resonates at full amplitude.';
+  }catch(e){
+    ob.textContent='The celestial alignment speaks: '+energy+' is your sovereign directive today. Advance your '+axis+' through conscious sovereign action. The frequency at 9.1717Hz amplifies your '+sign+' signature across all three matrix dimensions.';
+  }
+}
+
+function buildMandalaGrid(memberSign){
+  const g=document.getElementById('mandala-grid'); g.innerHTML='';
+  SIGNS.forEach(function(s){
+    const card=document.createElement('div'); card.className='mandala-card';
+    if(s.name===memberSign) card.classList.add('active-sign');
+    const cv=document.createElement('canvas'); cv.className='mc-canvas';
+    card.innerHTML='<div class="mc-name" style="color:'+s.col+'">'+s.name+'</div><div class="mc-dates">'+s.dates+'</div><span class="mc-el" style="color:'+s.elCol+';border-color:'+s.elCol+'44">'+s.el+'</span><div class="mc-deity">'+s.deity+'</div>';
+    card.insertBefore(cv, card.firstChild);
+    g.appendChild(card);
+    requestAnimationFrame(function(){ drawMandala(cv,s,90,true); });
+    card.addEventListener('click',function(){ selectSign(s.name); });
+  });
+}
+
+function buildPlanetStrip(){
+  const strip=document.getElementById('planet-strip'); strip.innerHTML='';
+  PLANETS.forEach(function(p){
+    const node=document.createElement('div'); node.className='planet-node';
+    const cv=document.createElement('canvas'); cv.className='pn-canvas';
+    node.innerHTML='<div class="pn-name">'+p.name+'</div><div class="pn-pos">'+p.pos+'</div>';
+    node.insertBefore(cv,node.firstChild);
+    strip.appendChild(node);
+    requestAnimationFrame(function(){ drawPlanetNode(cv,p); });
+  });
+}
+
+function buildCompat(sign){
+  const g=document.getElementById('compat-grid'); g.innerHTML='';
+  const s=SIGNS.find(x=>x.name===sign)||SIGNS[0];
+  SIGNS.filter(x=>x.name!==sign).slice(0,6).forEach(function(cs){
+    const isCompat=s.compat.includes(cs.name);
+    const c=document.createElement('div'); c.className='compat-row';
+    const cv=document.createElement('canvas'); cv.className='cr-icon';
+    c.innerHTML='<div class="cr-body"><div class="crb-name" style="color:'+cs.col+'">'+cs.name+'</div><div class="crb-level" style="color:'+(isCompat?'var(--green)':'var(--muted)')+'">'+(isCompat?'HIGH RESONANCE':'LOW RESONANCE')+'</div></div>';
+    c.insertBefore(cv,c.firstChild);
+    g.appendChild(c);
+    requestAnimationFrame(function(){ drawMandala(cv,cs,32,false); });
+  });
+}
+
+function selectSign(signName){
+  document.querySelectorAll('.mandala-card').forEach(function(c,i){
+    c.classList.toggle('active-sign',SIGNS[i].name===signName);
+  });
+  const s=SIGNS.find(x=>x.name===signName)||SIGNS[0];
+  document.getElementById('ht-sign').innerHTML=signName+' &middot; '+s.el+' &middot; '+s.deity;
+  document.getElementById('ht-title').textContent=s.name+' CELESTIAL CODE';
+  document.getElementById('ht-desc').textContent=s.desc;
+  buildCompat(signName);
+}
+
+async function bootHoroscopeFull(){
+  const sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  const pr=await sb.from('profiles').select('sign').eq('id',sess.user.id).maybeSingle();
+  const sign=(pr.data?.sign)||'Aries';
+  /* Set date */
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+  /* Hero */
+  const s=SIGNS.find(x=>x.name===sign)||SIGNS[0];
+  document.getElementById('ht-sign').innerHTML=sign+' &middot; '+s.el+' &middot; '+s.deity;
+  document.getElementById('ht-title').textContent=sign.toUpperCase()+' CELESTIAL CODE';
+  document.getElementById('ht-sub').innerHTML='DAILY READING &middot; 9.1717Hz CELESTIAL ALIGNMENT &middot; '+s.glyph;
+  document.getElementById('ht-desc').textContent=s.desc;
+  /* Wheel */
+  requestAnimationFrame(function(){ drawHeroWheel(sign); });
+  /* Daily oracle */
+  const {energy,axis}=getDailyOracle(sign);
+  getOracleReading(sign,energy,axis);
+  /* Build grids */
+  buildMandalaGrid(sign);
+  buildPlanetStrip();
+  buildCompat(sign);
+}
+window.bootHoroscopeFull = bootHoroscopeFull;
+
+</script>
+<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
 </body>
 </html>

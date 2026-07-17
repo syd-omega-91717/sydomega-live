@@ -397,7 +397,6 @@ boot();
     if(!sess){ showGate('The Twelve Gates','Sign in to stand before the Gates.'); return; }
     var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to stand before the Gates.'); return; }
-    document.getElementById('gate-screen').style.display='none';
     const n=document.getElementById('gt-notice'); if(n) n.style.display='none';
     const g=document.getElementById('gates'); if(g) g.style.display='';
     render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));

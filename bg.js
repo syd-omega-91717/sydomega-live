@@ -122,6 +122,9 @@
 
 /* ===== EMBLEM PANEL -- the emblem-as-function pattern, loaded once, used everywhere ===== */
 (function(){if(!document.querySelector('script[data-omega-emblem-panel]')){var s=document.createElement('script');s.src='/omega-emblem-panel.js';s.setAttribute('data-omega-emblem-panel','1');if(document.body)document.body.appendChild(s);}})();
+
+/* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
+(function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */
 (function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */

@@ -125,6 +125,9 @@
 
 /* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
 (function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
+
+/* ===== SIGN CODEX -- real cross-reference: sign -> element/god/gate/token/agent/house ===== */
+(function(){if(!document.querySelector('script[data-omega-sign-codex]')){var s=document.createElement('script');s.src='/omega-sign-codex.js';s.setAttribute('data-omega-sign-codex','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */
 (function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */

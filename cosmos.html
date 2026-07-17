@@ -186,6 +186,7 @@ a{color:inherit;text-decoration:none}
         <div class="ht-title" id="ht-title">THE CELESTIAL ORACLE</div>
         <div class="ht-sub" id="ht-sub">DAILY READING &middot; 9.1717Hz CELESTIAL ALIGNMENT</div>
         <div class="ht-desc" id="ht-desc">The cosmos has been tracking your matrix coordinates since before you drew your first breath. Every planetary position at your moment of birth locked a code into your sovereign cosmology. That code is evolving with you, right now.</div>
+        <div style="margin-top:10px"><a href="#" id="ht-codex-link" onclick="if(window.openSignCodex)openSignCodex(window.__viewingSign||window.__memberSign);return false;" style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:2px;color:#00E5FF;text-decoration:none">VIEW FULL CONNECTED IDENTITY &rarr;</a></div>
       </div>
       <div class="hero-canvas-wrap">
         <canvas id="hero-wheel" width="320" height="320" style="width:160px;height:160px"></canvas>
@@ -966,7 +967,7 @@ function buildMandalaGrid(memberSign){
   const g=document.getElementById('mandala-grid'); g.innerHTML='';
   SIGNS.forEach(function(s){
     const card=document.createElement('div'); card.className='mandala-card';
-    if(s.name===memberSign) card.classList.add('active-sign');
+    if(s.name.toLowerCase()===memberSign.toLowerCase()) card.classList.add('active-sign');
     const cv=document.createElement('canvas'); cv.className='mc-canvas';
     card.innerHTML='<div class="mc-name" style="color:'+s.col+'">'+s.name+'</div><div class="mc-dates">'+s.dates+'</div><span class="mc-el" style="color:'+s.elCol+';border-color:'+s.elCol+'44">'+s.el+'</span><div class="mc-deity">'+s.deity+'</div>';
     card.insertBefore(cv, card.firstChild);
@@ -990,8 +991,8 @@ function buildPlanetStrip(){
 
 function buildCompat(sign){
   const g=document.getElementById('compat-grid'); g.innerHTML='';
-  const s=SIGNS.find(x=>x.name===sign)||SIGNS[0];
-  SIGNS.filter(x=>x.name!==sign).slice(0,6).forEach(function(cs){
+  const s=SIGNS.find(x=>x.name.toLowerCase()===sign.toLowerCase())||SIGNS[0];
+  SIGNS.filter(x=>x.name.toLowerCase()!==sign.toLowerCase()).slice(0,6).forEach(function(cs){
     const isCompat=s.compat.includes(cs.name);
     const c=document.createElement('div'); c.className='compat-row';
     const cv=document.createElement('canvas'); cv.className='cr-icon';
@@ -1003,10 +1004,11 @@ function buildCompat(sign){
 }
 
 function selectSign(signName){
+  window.__viewingSign = signName;
   document.querySelectorAll('.mandala-card').forEach(function(c,i){
     c.classList.toggle('active-sign',SIGNS[i].name===signName);
   });
-  const s=SIGNS.find(x=>x.name===signName)||SIGNS[0];
+  const s=SIGNS.find(x=>x.name.toLowerCase()===signName.toLowerCase())||SIGNS[0];
   document.getElementById('ht-sign').innerHTML=signName+' &middot; '+s.el+' &middot; '+s.deity;
   document.getElementById('ht-title').textContent=s.name+' CELESTIAL CODE';
   document.getElementById('ht-desc').textContent=s.desc;
@@ -1021,7 +1023,7 @@ async function bootHoroscopeFull(){
   /* Set date */
   document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
   /* Hero */
-  const s=SIGNS.find(x=>x.name===sign)||SIGNS[0];
+  const s=SIGNS.find(x=>x.name.toLowerCase()===sign.toLowerCase())||SIGNS[0];
   document.getElementById('ht-sign').innerHTML=sign+' &middot; '+s.el+' &middot; '+s.deity;
   document.getElementById('ht-title').textContent=sign.toUpperCase()+' CELESTIAL CODE';
   document.getElementById('ht-sub').innerHTML='DAILY READING &middot; 9.1717Hz CELESTIAL ALIGNMENT &middot; '+s.glyph;

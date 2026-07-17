@@ -70,6 +70,14 @@ a{color:inherit;text-decoration:none}
 <div class="topbar">
   <div class="t">THE NINE ELEMENTS<small>ELEMENTAL SOVEREIGNTY &middot; EVOLUTION LAYERS</small></div>
 </div>
+
+<div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto">
+  <div class="mtab-btn active" data-mtab="elements" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">9 ELEMENTS</div>
+  <div class="mtab-btn" data-mtab="gates" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">12 GATES</div>
+  <div class="mtab-btn" data-mtab="kings" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">28 KINGS</div>
+</div>
+
+<div class="mtab-panel" id="mtab-elements">
 <p style="font-weight:300;color:var(--muted);max-width:72ch;margin-bottom:20px;font-size:15px;line-height:1.7">Five elements govern the physical world through your birth sign. Four transcendent elements unlock as your authority ascends through the matrix. All nine are alive in you &mdash; only the higher ones require awakening.</p>
 
 <div class="legend-strip" id="legend-strip">
@@ -91,7 +99,25 @@ a{color:inherit;text-decoration:none}
 <div class="elements-grid" id="transcendent-grid"></div>
 
 <div id="omega-trial-bar-placeholder"></div>
-</main>
+</div>
+
+<div class="mtab-panel" id="mtab-gates" style="display:none">
+  
+    <div class="topbar"><div class="t">THE TWELVE GATES<small>TWELVE PHASES  .  TWELVE THRESHOLDS  .  9x9x9</small></div></div>
+    <p class="intro">Twelve gates rise along the 729  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 15.58. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
+    <div class="mstat" id="mstat"></div>
+    <div class="gates" id="gates"></div>
+  
+</div>
+
+<div class="mtab-panel" id="mtab-kings" style="display:none">
+  
+    <div class="topbar"><div class="t">THE 28 KINGS<small>REGENTS OF THE TWENTY-EIGHT MANSIONS</small></div></div>
+    <p class="intro">Twenty-eight Kings preside over the twenty-eight Mansions  --  the lunar stations recognised from Arabia to the Vedas. Each is an archetype of mastery. They are <b>crowned in sequence as your authority rises</b>, from the first King at genesis to the Omega King at the apex.</p>
+    <div class="mstat" id="k-mstat"></div>
+    <div class="kings" id="kings"></div>
+  
+</div>
 </div>
 
 <script type="module">
@@ -254,6 +280,183 @@ async function boot(){
   buildGrid('transcendent-grid', ELEMENTS.slice(5));
 }
 boot();
+</script>
+<script type="module">
+
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+  const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+  // name, essence, material, egyptian, roman(Dii Consentes), hindu(Aditya), lore
+  const GATES=[
+    ['The Gate of Sand','AWAKENING','Sand','Atum','Vesta','Mitra','To pass is to begin  --  to be counted and take your first node in the lattice.'],
+    ['The Gate of Glass','CLARITY','Glass','Khepri','Ceres','Varuna','Sand fused by heat; here you first see the shape of the 729.'],
+    ['The Gate of Iron','DISCIPLINE','Iron','Shu','Mercury','Aryaman','The first hard metal  --  it opens only to those who return.'],
+    ['The Gate of Steel','TEMPERING','Steel','Geb','Vulcan','Bhaga','Iron folded against fire; the three axes must rise together.'],
+    ['The Gate of Titanium','ENDURANCE','Titanium','Nut','Diana','Dhata','Light and unbreaking; the place where most falter.'],
+    ['The Gate of Carbon','TRANSFORMATION','Carbon','Osiris','Apollo','Indra','Pressure becomes diamond; the sovereign is remade.'],
+    ['The Gate of Gold','SOVEREIGNTY','Gold','Anubis','Venus','Vivasvan','The metal of the Order; to pass is to be named Sovereign.'],
+    ['The Gate of Platinum','DOMINION','Platinum','Thoth','Mars','Pushan','Rarer than gold; Legends stand here.'],
+    ['The Gate of Diamond','VISION','Diamond','Horus','Minerva','Tvashta','Unbreakable clarity; the far sight of the highest tiers.'],
+    ['The Gate of Adamant','MASTERY','Adamant','Isis','Neptune','Savitar','The metal of myth; near-complete command of the 729.'],
+    ['The Gate of Aether','TRANSCENDENCE','Aether','Sekhmet','Juno','Amsha','No longer matter but principle; the threshold of the apex.'],
+    ['The Omega Gate','ASCENSION','Omega','Ra','Jupiter','Vishnu','The final gate at node (9,9,9), authority 15.58  --  the Omega alone may pass.']
+  ];
+  const GEN=Math.sqrt(3), APEX=Math.sqrt(243);
+  function threshold(g){ return GEN + (g/11)*(APEX-GEN); } // g=0..11
+
+  function showGate(h,p){
+    let n=document.getElementById('gt-notice');
+    if(!n){ n=document.createElement('div'); n.id='gt-notice'; n.style.cssText='padding:24px;text-align:center;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted,#85837b)'; document.getElementById('gates')?.parentNode.insertBefore(n, document.getElementById('gates')); }
+    n.style.display='block'; n.textContent=p;
+    const g=document.getElementById('gates'); if(g) g.style.display='none';
+  }
+
+  function render(a,b,c){
+    var auth=Math.sqrt(a*a+b*b+c*c);
+    var open=0; for(var g=0;g<12;g++){ if(auth>=threshold(g)) open++; }
+    document.getElementById('mstat').innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') \u00B7 AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 GATES OPEN <b>'+open+'</b> / 12'+(open<12?' \u00B7 next gate at authority '+threshold(open).toFixed(2):' \u00B7 THE OMEGA GATE STANDS OPEN');
+    var box=document.getElementById('gates'); box.innerHTML='';
+    GATES.forEach(function(gt,i){
+      var isOpen=auth>=threshold(i);
+      var isCurrent=(!isOpen) && (i===open);
+      var GATE_COLS=['#D9B86A','#A9C2D8','#8B8F9C','#6B7280','#607D8B','#455A64','#C9A84C','#E8D5B7','#9B6BF0','#00E5FF','#8B0000','#C9A84C'];
+      var el=document.createElement('div'); el.className='gate'+(i===11?' omega':'')+(isOpen?' open':' sealed')+(isCurrent?' current':'');
+      el.style.cursor='pointer';
+      el.innerHTML='<span class="gate-ring-emblem" style="display:inline-block;width:52px;height:52px"></span><div class="body">'+
+        '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+' \u00B7 OPENS AT AUTHORITY '+threshold(i).toFixed(2)+'</div>'+
+        '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
+      box.appendChild(el);
+      var ringEl=el.querySelector('.gate-ring-emblem');
+      fillRing(ringEl, ROMAN[i], GATE_COLS[i], !isOpen);
+      el.addEventListener('click',function(idx,unlocked){ return function(){ openGatePanel(GATES[idx],idx,unlocked,GATE_COLS[idx]); }; }(i,isOpen));
+    });
+  }
+
+  function openGatePanel(gt,i,isOpen,col){
+    window.OmegaEmblemPanel.open({
+      glyph: ROMAN[i], color: col,
+      title: gt[0],
+      subtitle: gt[1]+' . PHASE '+(i+1),
+      badge: isOpen?'OPEN':'SEALED',
+      sections: [
+        { label: 'LORE', body: gt[6] },
+        { label: 'THRESHOLD & MATERIAL', stats: [
+          {k:'Opens At Authority', v: threshold(i).toFixed(2)},
+          {k:'Material', v: gt[2]},
+        ]},
+        { label: 'CROSS-PANTHEON NAMES', stats: [
+          {k:'Egyptian (Duat)', v: gt[3]},
+          {k:'Roman (Consentes)', v: gt[4]},
+          {k:'Hindu (Aditya)', v: gt[5]},
+        ]},
+      ]
+    });
+  }
+
+  function fillRing(el, glyph, col, locked){
+    if(!el) return;
+    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
+    var tries=0;
+    var t=setInterval(function(){
+      tries++;
+      if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
+      else if(tries>20){ clearInterval(t); }
+    },150);
+  }
+
+  async function bootGates(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('The Twelve Gates','Sign in to stand before the Gates.'); return; }
+    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to stand before the Gates.'); return; }
+    document.getElementById('gate-screen').style.display='none';
+    const n=document.getElementById('gt-notice'); if(n) n.style.display='none';
+    const g=document.getElementById('gates'); if(g) g.style.display='';
+    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
+  }
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+window.bootGates = bootGates;
+
+</script>
+<script type="module">
+
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+
+  const KINGS=[
+    ['The Architect','Structure'],['The Oracle','Foresight'],['The Warden','Protection'],['The Alchemist','Transformation'],
+    ['The Cartographer','Discovery'],['The Arbiter','Justice'],['The Scribe','Record'],['The Forgemaster','Craft'],
+    ['The Strategist','War'],['The Healer','Restoration'],['The Navigator','Direction'],['The Sentinel','Vigilance'],
+    ['The Merchant','Exchange'],['The Astronomer','Cosmos'],['The Herald','The Word'],['The Mason','Foundation'],
+    ['The Sovereign','Command'],['The Cipher','Secrets'],['The Gardener','Growth'],['The Judge','Verdict'],
+    ['The Pilgrim','Journey'],['The Smith','Tempering'],['The Seer','Vision'],['The Keeper','Memory'],
+    ['The Vanguard','Advance'],['The Chancellor','Governance'],['The Ascendant','Elevation'],['The Omega King','Completion']
+  ];
+  const GEN=1.7320508, APEX=15.588457;
+  function threshold(k){ return GEN + (k/27)*(APEX-GEN); } // k=0..27
+
+  function showGate(h,p){
+    let n=document.getElementById('k-notice');
+    if(!n){ n=document.createElement('div'); n.id='k-notice'; n.style.cssText='padding:24px;text-align:center;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted,#85837b)'; document.getElementById('kings')?.parentNode.insertBefore(n, document.getElementById('kings')); }
+    n.style.display='block'; n.textContent=p;
+    const g=document.getElementById('kings'); if(g) g.style.display='none';
+  }
+
+  function render(a,b,c){
+    var auth=Math.sqrt(a*a+b*b+c*c);
+    var crowned=0; for(var k=0;k<28;k++){ if(auth>=threshold(k)) crowned++; }
+    document.getElementById('k-mstat').innerHTML='AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 KINGS CROWNED <b>'+crowned+'</b> / 28'+(crowned<28?' \u00B7 next King at authority '+threshold(crowned).toFixed(2):' \u00B7 ALL KINGS CROWNED');
+    var box=document.getElementById('kings'); box.innerHTML='';
+    KINGS.forEach(function(kg,i){
+      var isCrowned=auth>=threshold(i);
+      var isNext=(!isCrowned) && (i===crowned);
+      var el=document.createElement('div'); el.className='king'+(isCrowned?' crowned':' locked')+(isNext?' next':'');
+      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div>';
+      box.appendChild(el);
+    });
+  }
+
+  async function bootKings(){
+    var sess=(await supabase.auth.getSession()).data.session;
+    if(!sess){ showGate('The 28 Kings','Sign in to claim your Kings.'); return; }
+    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to claim your Kings.'); return; }
+    const n=document.getElementById('k-notice'); if(n) n.style.display='none';
+    const g=document.getElementById('kings'); if(g) g.style.display='';
+    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
+  }
+  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
+window.bootKings = bootKings;
+
+</script>
+<script>
+document.querySelectorAll('.mtab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='var(--muted)';});
+    document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
+    btn.classList.add('active');btn.style.borderBottomColor='var(--gold)';btn.style.color='var(--gold)';
+    document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
+    if(btn.dataset.mtab==='gates' && !window.__gatesBuilt){ window.__gatesBuilt=true; callWhenReady('bootGates'); }
+    if(btn.dataset.mtab==='kings' && !window.__kingsBuilt){ window.__kingsBuilt=true; callWhenReady('bootKings'); }
+  });
+});
+function callWhenReady(fnName){
+  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
+    else if(tries>30){ clearInterval(t); }
+  },100);
+}
+(function(){
+  if(location.hash){
+    const t=location.hash.replace('#','');
+    const btn=document.querySelector('.mtab-btn[data-mtab="'+t+'"]');
+    if(btn) btn.click();
+  }
+})();
 </script>
 <script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
 </body>

@@ -84,8 +84,10 @@
   }
 
   function boot() {
-    import('https://esm.sh/@supabase/supabase-js@2').then(function (m) {
-      sb = m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');
+    (window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2')
+      .then(function(m){return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');}))
+      .then(function (_client) {
+      sb = _client;
       sb.auth.getSession().then(function (r) {
         if (!(r && r.data && r.data.session)) return; // only for signed-in members
         var btn = document.createElement('button'); btn.id = 'ofb-btn'; btn.type = 'button'; btn.textContent = 'FEEDBACK';

@@ -1,4 +1,35 @@
 (function(){try{var m=document.createElement('meta');m.name='robots';m.content='noindex,nofollow,noarchive';(document.head||document.documentElement).appendChild(m);}catch(e){}})();
+
+/* ===== PWA: make every page installable on mobile =====
+   manifest.json + icons existed but only 2 of 80 pages linked them, so the
+   "Add to Home Screen" prompt never appeared anywhere else. Injecting the
+   tags here covers every page that loads bg.js, with no per-file edits.
+   NOTE: sw.js is deliberately a cache KILL-SWITCH (it unregisters itself),
+   so this gives an installable home-screen app -- not offline caching. */
+(function(){
+  try{
+    var head = document.head || document.documentElement;
+    function add(tag, attrs){
+      for (var sel in attrs){ break; }
+      var el = document.createElement(tag);
+      for (var k in attrs){ el.setAttribute(k, attrs[k]); }
+      head.appendChild(el);
+    }
+    if(!document.querySelector('link[rel="manifest"]'))
+      add('link', {rel:'manifest', href:'/manifest.json'});
+    if(!document.querySelector('meta[name="theme-color"]'))
+      add('meta', {name:'theme-color', content:'#C9A84C'});
+    if(!document.querySelector('link[rel="apple-touch-icon"]'))
+      add('link', {rel:'apple-touch-icon', href:'/icon-192.png'});
+    if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){
+      add('meta', {name:'apple-mobile-web-app-capable', content:'yes'});
+      add('meta', {name:'apple-mobile-web-app-status-bar-style', content:'black-translucent'});
+      add('meta', {name:'apple-mobile-web-app-title', content:'OMEGA'});
+    }
+    if(!document.querySelector('link[rel="icon"]'))
+      add('link', {rel:'icon', type:'image/png', href:'/icon-192.png'});
+  }catch(e){}
+})();
 /* ===== MOBILE GLOBAL FIXES -- ALL PAGES ===== */
 (function(){
   var s=document.createElement('style');
@@ -1101,42 +1132,4 @@ setTimeout(function(){
   function scan(){var l=document.querySelectorAll('input[type=password]');for(var i=0;i<l.length;i++)enhance(l[i]);}
   function boot(){scan();try{new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})();
-
-/* ============================================================================
-   PWA HEAD TAGS -- installable "Add to Home Screen" on iOS + Android.
-   manifest.json was only linked from 2 of 80 pages, and its icons did not
-   exist, so installation could never succeed. bg.js loads on every page, so
-   wiring it here covers the whole site without editing 80 files.
-   Note: sw.js is intentionally a cache KILL-SWITCH (it clears caches and
-   unregisters itself to end a stale-content problem). It is deliberately NOT
-   registered here -- reintroducing caching is an owner decision.
-   ============================================================================ */
-(function () {
-  try {
-    var head = document.head || document.documentElement;
-    function add(tag, attrs) {
-      for (var k in attrs) {
-        var sel = tag + '[' + k + '="' + attrs[k] + '"]';
-        if (k !== 'content' && document.querySelector(sel)) return;
-      }
-      var el = document.createElement(tag);
-      for (var a in attrs) el.setAttribute(a, attrs[a]);
-      head.appendChild(el);
-    }
-    if (!document.querySelector('link[rel="manifest"]'))
-      add('link', { rel: 'manifest', href: '/manifest.json' });
-    if (!document.querySelector('link[rel="apple-touch-icon"]'))
-      add('link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' });
-    if (!document.querySelector('link[rel="icon"]'))
-      add('link', { rel: 'icon', type: 'image/png', href: '/icon-192.png' });
-    if (!document.querySelector('meta[name="theme-color"]'))
-      add('meta', { name: 'theme-color', content: '#C9A84C' });
-    if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]'))
-      add('meta', { name: 'apple-mobile-web-app-capable', content: 'yes' });
-    if (!document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]'))
-      add('meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' });
-    if (!document.querySelector('meta[name="apple-mobile-web-app-title"]'))
-      add('meta', { name: 'apple-mobile-web-app-title', content: 'OMEGA' });
-  } catch (e) {}
 })();

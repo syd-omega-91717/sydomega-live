@@ -274,7 +274,7 @@
     user=sess.user;
     var pr=await supabase.from('profiles').select('sign,axis_a,membership_tier').eq('id',user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to enter the Academy.'); return; }
-    axisA=Number(pr.data.axis_a||1);
+    axisA=Number(pr.data.axis_a||0.001);
     var memberTier=Number(pr.data.membership_tier)||1;
     tierHasAcademyFull = await new Promise(function(resolve){
       if(window.OmegaCanon && window.OmegaCanon.ready){ resolve(window.OmegaCanon.tierUnlocks(memberTier,'academy_full')); return; }

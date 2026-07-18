@@ -20,11 +20,10 @@
 BEGIN;
 
 -- ---- owner check helper (SECURITY DEFINER avoids RLS recursion) ----
+CREATE TABLE IF NOT EXISTS public.platform_owners (user_id uuid PRIMARY KEY);
 CREATE OR REPLACE FUNCTION public.is_platform_owner()
-RETURNS boolean LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=public AS $$
-BEGIN
-  RETURN COALESCE((SELECT is_owner FROM public.profiles WHERE id = auth.uid()), false);
-END;
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+  SELECT EXISTS (SELECT 1 FROM public.platform_owners WHERE user_id = auth.uid());
 $$;
 
 -- ============================================================
@@ -262,10 +261,8 @@ $drop$;
 -- version as authoritative -- Section 12 is the source of truth.
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.is_platform_owner()
-RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER STABLE AS $$
-BEGIN
-  RETURN COALESCE((SELECT is_owner FROM public.profiles WHERE id = auth.uid()), false);
-END;
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+  SELECT EXISTS (SELECT 1 FROM public.platform_owners WHERE user_id = auth.uid());
 $$;
 
 -- ----------------------------------------------------------------------------
@@ -274,93 +271,83 @@ $$;
 --   applied=false means the node was already yours (no double-count).
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.complete_task(
-  p_kind  text,
-  p_task  text,
-  p_axis  text DEFAULT 'a',
-  p_title text DEFAULT NULL,
-  p_weight numeric DEFAULT 0.25
-) RETURNS jsonb
-LANGUAGE plpgsql SECURITY DEFINER AS $$
+  p_kind text, p_task text, p_axis text DEFAULT 'a',
+  p_title text DEFAULT NULL, p_weight numeric DEFAULT 0.25
+) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
 DECLARE
-  uid      uuid := auth.uid();
-  ax       text := lower(coalesce(p_axis,'a'));
-  w        numeric := coalesce(p_weight, 0.25);
-  a        numeric; b numeric; c numeric;
-  old_v    numeric; new_v numeric;
-  crossed  boolean := false;
+  uid uuid := auth.uid();
+  ax text := lower(coalesce(p_axis,'a'));
+  w numeric := coalesce(p_weight,0.25);
+  a numeric; b numeric; c numeric;
+  old_v numeric; new_v numeric;
+  old_m int; new_m int; k int;
   unlocked jsonb := '[]'::jsonb;
-  auth_v   numeric;
+  auth_v numeric;
 BEGIN
-  IF uid IS NULL THEN
-    RETURN jsonb_build_object('applied', false, 'error', 'not authenticated');
-  END IF;
+  IF uid IS NULL THEN RETURN jsonb_build_object('applied',false,'error','not authenticated'); END IF;
   IF ax NOT IN ('a','b','c') THEN ax := 'a'; END IF;
 
-  -- ensure a profile row exists (baseline axes = 1, matching the pages)
-  INSERT INTO public.profiles (id) VALUES (uid)
-    ON CONFLICT (id) DO NOTHING;
-  UPDATE public.profiles
-     SET axis_a = COALESCE(axis_a,1), axis_b = COALESCE(axis_b,1), axis_c = COALESCE(axis_c,1)
-   WHERE id = uid;
+  INSERT INTO public.profiles (id) VALUES (uid) ON CONFLICT (id) DO NOTHING;
+  UPDATE public.profiles SET axis_a=COALESCE(axis_a,1), axis_b=COALESCE(axis_b,1), axis_c=COALESCE(axis_c,1) WHERE id=uid;
 
-  -- already banked? -> report current state, change nothing
-  IF EXISTS (SELECT 1 FROM public.task_completions WHERE user_id = uid AND task = p_task) THEN
-    SELECT axis_a, axis_b, axis_c INTO a,b,c FROM public.profiles WHERE id = uid;
-    auth_v := round(sqrt(a*a + b*b + c*c)::numeric, 3);
-    RETURN jsonb_build_object('applied', false, 'axis', ax,
-      'value', CASE ax WHEN 'a' THEN a WHEN 'b' THEN b ELSE c END,
-      'a', a, 'b', b, 'c', c, 'authority', auth_v, 'unlocked', unlocked);
+  IF EXISTS (SELECT 1 FROM public.task_completions WHERE user_id=uid AND task=p_task) THEN
+    SELECT axis_a,axis_b,axis_c INTO a,b,c FROM public.profiles WHERE id=uid;
+    auth_v := round(sqrt(a*a+b*b+c*c)::numeric,3);
+    RETURN jsonb_build_object('applied',false,'axis',ax,
+      'value',CASE ax WHEN 'a' THEN a WHEN 'b' THEN b ELSE c END,
+      'a',a,'b',b,'c',c,'authority',auth_v,'unlocked',unlocked);
   END IF;
 
-  -- bank the node
-  INSERT INTO public.task_completions (user_id, task, kind) VALUES (uid, p_task, p_kind);
+  INSERT INTO public.task_completions (user_id,task,kind) VALUES (uid,p_task,p_kind);
 
-  -- read current axis, advance (cap 9)
-  SELECT axis_a, axis_b, axis_c INTO a,b,c FROM public.profiles WHERE id = uid;
+  SELECT axis_a,axis_b,axis_c INTO a,b,c FROM public.profiles WHERE id=uid;
   old_v := CASE ax WHEN 'a' THEN a WHEN 'b' THEN b ELSE c END;
   new_v := LEAST(9, old_v + w);
-  crossed := floor(new_v) > floor(old_v);
+  IF ax='a' THEN a:=new_v; ELSIF ax='b' THEN b:=new_v; ELSE c:=new_v; END IF;
+  auth_v := round(sqrt(a*a+b*b+c*c)::numeric,3);
 
-  IF ax = 'a' THEN a := new_v; ELSIF ax = 'b' THEN b := new_v; ELSE c := new_v; END IF;
-  auth_v := round(sqrt(a*a + b*b + c*c)::numeric, 3);
+  INSERT INTO public.evolution_events (user_id,axis,note)
+    VALUES (uid,ax,COALESCE(p_title,p_kind||' / '||p_task));
 
-  -- log the evolution event
-  INSERT INTO public.evolution_events (user_id, axis, note)
-    VALUES (uid, ax, COALESCE(p_title, p_kind || ' / ' || p_task));
-
-  -- milestone: integer crossing awards a credential on that axis
-  IF crossed THEN
-    IF ax = 'a' THEN
-      INSERT INTO public.certificates (user_id, title, milestone)
-        VALUES (uid, COALESCE(p_title,'Knowledge Node'), 'Knowledge ' || floor(new_v)::text);
-      unlocked := unlocked || jsonb_build_object('type','certificate','at',floor(new_v));
-    ELSIF ax = 'b' THEN
-      INSERT INTO public.trophies (user_id, trophy_num) VALUES (uid, floor(new_v)::int);
-      unlocked := unlocked || jsonb_build_object('type','trophy','at',floor(new_v));
-    ELSE
-      INSERT INTO public.trophies (user_id, medal_num) VALUES (uid, floor(new_v)::int);
-      unlocked := unlocked || jsonb_build_object('type','medal','at',floor(new_v));
-    END IF;
+  -- light any newly reached milestones on this track (curated 1..12)
+  old_m := public.milestones_for_axis(old_v);
+  new_m := public.milestones_for_axis(new_v);
+  IF new_m > old_m THEN
+    FOR k IN (old_m+1)..new_m LOOP
+      IF ax='a' THEN
+        INSERT INTO public.certificates (user_id,title,milestone,cert_num)
+          SELECT uid, COALESCE(p_title,'Sovereign Certificate '||k), k, k
+          WHERE NOT EXISTS (SELECT 1 FROM public.certificates WHERE user_id=uid AND cert_num=k);
+        unlocked := unlocked || jsonb_build_object('type','certificate','n',k);
+      ELSIF ax='b' THEN
+        INSERT INTO public.trophies (user_id,trophy_num)
+          SELECT uid,k WHERE NOT EXISTS (SELECT 1 FROM public.trophies WHERE user_id=uid AND trophy_num=k);
+        unlocked := unlocked || jsonb_build_object('type','trophy','n',k);
+      ELSE
+        INSERT INTO public.medals (user_id,medal_num)
+          SELECT uid,k WHERE NOT EXISTS (SELECT 1 FROM public.medals WHERE user_id=uid AND medal_num=k);
+        unlocked := unlocked || jsonb_build_object('type','medal','n',k);
+      END IF;
+    END LOOP;
   END IF;
 
-  -- composite Gate: all three axes reached the same integer threshold
-  IF crossed AND floor(a) = floor(b) AND floor(b) = floor(c)
-     AND floor(new_v) IN (3,6,9) THEN
+  -- composite gate at (3,3,3)/(6,6,6)/(9,9,9)
+  IF floor(a)=floor(b) AND floor(b)=floor(c) AND floor(new_v) IN (3,6,9)
+     AND floor(new_v) > floor(old_v) THEN
     unlocked := unlocked || jsonb_build_object('type','gate','at',floor(new_v));
   END IF;
 
-  -- persist axes + derived state
   UPDATE public.profiles SET
-      axis_a = a, axis_b = b, axis_c = c,
-      authority = auth_v,
-      nodes_cleared = COALESCE(nodes_cleared,0) + 1,
-      certificates_earned = (SELECT count(*) FROM public.certificates WHERE user_id = uid),
-      trophies_earned     = (SELECT count(*) FROM public.trophies WHERE user_id = uid AND trophy_num IS NOT NULL),
-      medals_earned       = (SELECT count(*) FROM public.trophies WHERE user_id = uid AND medal_num IS NOT NULL)
-   WHERE id = uid;
+    axis_a=a, axis_b=b, axis_c=c, authority=auth_v,
+    nodes_earned        = (SELECT count(*) FROM public.task_completions WHERE user_id=uid),
+    nodes_cleared       = (SELECT count(*) FROM public.task_completions WHERE user_id=uid),
+    certificates_earned = (SELECT count(*) FROM public.certificates WHERE user_id=uid),
+    trophies_earned     = (SELECT count(*) FROM public.trophies WHERE user_id=uid AND trophy_num IS NOT NULL),
+    medals_earned       = (SELECT count(*) FROM public.medals WHERE user_id=uid)
+  WHERE id=uid;
 
-  RETURN jsonb_build_object('applied', true, 'axis', ax, 'value', new_v,
-    'a', a, 'b', b, 'c', c, 'authority', auth_v, 'unlocked', unlocked);
+  RETURN jsonb_build_object('applied',true,'axis',ax,'value',new_v,
+    'a',a,'b',b,'c',c,'authority',auth_v,'unlocked',unlocked);
 END;
 $$;
 
@@ -386,29 +373,28 @@ CREATE OR REPLACE FUNCTION public.get_all_members()
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
 DECLARE result jsonb;
 BEGIN
-  IF NOT public.is_platform_owner() THEN
-    RETURN '[]'::jsonb;
-  END IF;
-  SELECT COALESCE(jsonb_agg(row), '[]'::jsonb) INTO result FROM (
-    SELECT jsonb_build_object(
-      'id', p.id,
-      'email', u.email,
-      'sign', p.sign,
-      'element', p.element,
-      'axis_a', COALESCE(p.axis_a,1),
-      'axis_b', COALESCE(p.axis_b,1),
-      'axis_c', COALESCE(p.axis_c,1),
-      'authority', round(sqrt(power(COALESCE(p.axis_a,1),2)+power(COALESCE(p.axis_b,1),2)+power(COALESCE(p.axis_c,1),2))::numeric,3),
-      'is_owner', COALESCE(p.is_owner,false),
-      'access_approved', COALESCE(p.access_approved,false),
-      'membership_tier', p.membership_tier,
-      'material_tier', p.material_tier,
-      'certificates_earned', COALESCE(p.certificates_earned,0),
-      'created_at', p.created_at
-    ) AS row
+  IF NOT public.is_platform_owner() THEN RETURN '[]'::jsonb; END IF;
+  SELECT COALESCE(jsonb_agg(row ORDER BY ord),'[]'::jsonb) INTO result FROM (
+    SELECT
+      -- pending first, then trials, then the rest; newest within each
+      CASE WHEN COALESCE(p.access_approved,false)=false AND COALESCE(p.is_rejected,false)=false THEN 0
+           WHEN COALESCE(p.is_trial,false) THEN 1 ELSE 2 END AS ord,
+      jsonb_build_object(
+        'id', p.id, 'email', u.email, 'display_name', p.display_name,
+        'sign', p.sign, 'element', p.element,
+        'axis_a', COALESCE(p.axis_a,1), 'axis_b', COALESCE(p.axis_b,1), 'axis_c', COALESCE(p.axis_c,1),
+        'authority', round(sqrt(power(COALESCE(p.axis_a,1),2)+power(COALESCE(p.axis_b,1),2)+power(COALESCE(p.axis_c,1),2))::numeric,3),
+        'is_owner', COALESCE(p.is_owner,false),
+        'access_approved', COALESCE(p.access_approved,false),
+        'is_trial', COALESCE(p.is_trial,false),
+        'is_rejected', COALESCE(p.is_rejected,false),
+        'trial_expires_at', p.trial_expires_at,
+        'membership_tier', p.membership_tier, 'material_tier', p.material_tier,
+        'certificates_earned', COALESCE(p.certificates_earned,0),
+        'created_at', p.created_at
+      ) AS row
     FROM public.profiles p
     LEFT JOIN auth.users u ON u.id = p.id
-    ORDER BY p.created_at NULLS LAST
   ) q;
   RETURN result;
 END;
@@ -419,10 +405,14 @@ $$;
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.approve_member(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
+DECLARE exp timestamptz;
 BEGIN
   IF NOT public.is_platform_owner() THEN RETURN jsonb_build_object('ok',false,'error','forbidden'); END IF;
-  UPDATE public.profiles SET access_approved = true WHERE id = p_uid;
-  RETURN jsonb_build_object('ok', true, 'uid', p_uid, 'access_approved', true);
+  exp := now() + public.trial_length();
+  UPDATE public.profiles
+     SET access_approved=true, is_trial=true, is_rejected=false, trial_expires_at=exp
+   WHERE id=p_uid;
+  RETURN jsonb_build_object('ok',true,'uid',p_uid,'is_trial',true,'trial_expires_at',exp,'minutes',9.1717);
 END;
 $$;
 
@@ -430,8 +420,10 @@ CREATE OR REPLACE FUNCTION public.reject_member(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
   IF NOT public.is_platform_owner() THEN RETURN jsonb_build_object('ok',false,'error','forbidden'); END IF;
-  UPDATE public.profiles SET access_approved = false WHERE id = p_uid;
-  RETURN jsonb_build_object('ok', true, 'uid', p_uid, 'access_approved', false);
+  UPDATE public.profiles
+     SET access_approved=false, is_trial=false, is_rejected=true, trial_expires_at=NULL
+   WHERE id=p_uid AND COALESCE(is_owner,false)=false;
+  RETURN jsonb_build_object('ok',true,'uid',p_uid,'rejected',true);
 END;
 $$;
 
@@ -439,8 +431,10 @@ CREATE OR REPLACE FUNCTION public.revoke_member(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
   IF NOT public.is_platform_owner() THEN RETURN jsonb_build_object('ok',false,'error','forbidden'); END IF;
-  UPDATE public.profiles SET access_approved = false WHERE id = p_uid AND COALESCE(is_owner,false) = false;
-  RETURN jsonb_build_object('ok', true, 'uid', p_uid, 'revoked', true);
+  UPDATE public.profiles
+     SET access_approved=false, is_trial=false, trial_expires_at=NULL
+   WHERE id=p_uid AND COALESCE(is_owner,false)=false;
+  RETURN jsonb_build_object('ok',true,'uid',p_uid,'revoked',true);
 END;
 $$;
 
@@ -459,7 +453,12 @@ BEGIN
     'medals',       (SELECT count(*) FROM public.trophies WHERE medal_num IS NOT NULL),
     'nodes',        (SELECT count(*) FROM public.task_completions),
     'events',       (SELECT count(*) FROM public.evolution_events),
-    'avg_authority',(SELECT COALESCE(round(avg(sqrt(power(COALESCE(axis_a,1),2)+power(COALESCE(axis_b,1),2)+power(COALESCE(axis_c,1),2)))::numeric,3),0) FROM public.profiles)
+    'avg_authority',(SELECT COALESCE(round(avg(sqrt(power(COALESCE(axis_a,1),2)+power(COALESCE(axis_b,1),2)+power(COALESCE(axis_c,1),2)))::numeric,3),0) FROM public.profiles),
+    'elements',     COALESCE((SELECT jsonb_object_agg(el, cnt) FROM (
+                       SELECT initcap(element) AS el, count(*) AS cnt
+                       FROM public.profiles WHERE element IS NOT NULL AND btrim(element) <> ''
+                       GROUP BY initcap(element)
+                     ) e), '{}'::jsonb)
   ) INTO r;
   RETURN r;
 END;
@@ -516,33 +515,33 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS agent   text;
 -- ----------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.derive_cosmology()
 RETURNS trigger LANGUAGE plpgsql AS $$
-DECLARE s text := initcap(btrim(coalesce(NEW.sign,'')));
+DECLARE s text;
 BEGIN
-  IF s = '' THEN RETURN NEW; END IF;       -- no sign yet -> leave as-is
-  NEW.sign := s;                            -- normalize to Title case (Virgo, Leo...)
+  IF NEW.birth_date IS NOT NULL AND NOT COALESCE(NEW.is_owner,false) THEN
+    NEW.sign := public.zodiac_from_date(NEW.birth_date);   -- birth date is authoritative
+  END IF;
+  s := initcap(btrim(coalesce(NEW.sign,'')));
+  IF s = '' THEN RETURN NEW; END IF;
+  NEW.sign := s;
 
   NEW.element := CASE s
     WHEN 'Aries' THEN 'FIRE'  WHEN 'Leo' THEN 'FIRE'   WHEN 'Sagittarius' THEN 'FIRE'
     WHEN 'Taurus' THEN 'METAL' WHEN 'Capricorn' THEN 'METAL'
     WHEN 'Gemini' THEN 'WIND'  WHEN 'Libra' THEN 'WIND' WHEN 'Aquarius' THEN 'WIND'
     WHEN 'Cancer' THEN 'WATER' WHEN 'Scorpio' THEN 'WATER' WHEN 'Pisces' THEN 'WATER'
-    WHEN 'Virgo' THEN 'SAND'
-    ELSE NEW.element END;
-
+    WHEN 'Virgo' THEN 'SAND' ELSE NEW.element END;
   NEW.god := CASE s
-    WHEN 'Aries' THEN 'Ares'       WHEN 'Taurus' THEN 'Aphrodite' WHEN 'Gemini' THEN 'Hermes'
-    WHEN 'Cancer' THEN 'Artemis'   WHEN 'Leo' THEN 'Apollo'       WHEN 'Virgo' THEN 'Athena'
-    WHEN 'Libra' THEN 'Hera'       WHEN 'Scorpio' THEN 'Demeter'  WHEN 'Sagittarius' THEN 'Zeus'
+    WHEN 'Aries' THEN 'Ares' WHEN 'Taurus' THEN 'Aphrodite' WHEN 'Gemini' THEN 'Hermes'
+    WHEN 'Cancer' THEN 'Artemis' WHEN 'Leo' THEN 'Apollo' WHEN 'Virgo' THEN 'Athena'
+    WHEN 'Libra' THEN 'Hera' WHEN 'Scorpio' THEN 'Demeter' WHEN 'Sagittarius' THEN 'Zeus'
     WHEN 'Capricorn' THEN 'Hestia' WHEN 'Aquarius' THEN 'Hephaestus' WHEN 'Pisces' THEN 'Poseidon'
     ELSE NEW.god END;
-
   NEW.agent := CASE s
-    WHEN 'Aries' THEN 'Sentinel'  WHEN 'Taurus' THEN 'Merchant' WHEN 'Gemini' THEN 'Scout'
-    WHEN 'Cancer' THEN 'Warden'   WHEN 'Leo' THEN 'Sovereign'   WHEN 'Virgo' THEN 'Auditor'
-    WHEN 'Libra' THEN 'Proxy'     WHEN 'Scorpio' THEN 'Oracle'  WHEN 'Sagittarius' THEN 'Beacon'
+    WHEN 'Aries' THEN 'Sentinel' WHEN 'Taurus' THEN 'Merchant' WHEN 'Gemini' THEN 'Scout'
+    WHEN 'Cancer' THEN 'Warden' WHEN 'Leo' THEN 'Sovereign' WHEN 'Virgo' THEN 'Auditor'
+    WHEN 'Libra' THEN 'Proxy' WHEN 'Scorpio' THEN 'Oracle' WHEN 'Sagittarius' THEN 'Beacon'
     WHEN 'Capricorn' THEN 'Analyst' WHEN 'Aquarius' THEN 'Tutor' WHEN 'Pisces' THEN 'Historian'
     ELSE NEW.agent END;
-
   RETURN NEW;
 END;
 $$;
@@ -834,14 +833,17 @@ BEGIN
     'approved',     (SELECT count(*) FROM public.profiles WHERE COALESCE(access_approved,false)),
     'certificates', (SELECT count(*) FROM public.certificates),
     'trophies',     (SELECT count(*) FROM public.trophies WHERE trophy_num IS NOT NULL),
-    'medals',       (SELECT count(*) FROM public.medals),
+    'medals',       (SELECT count(*) FROM public.trophies WHERE medal_num IS NOT NULL),
     'nodes',        (SELECT count(*) FROM public.task_completions),
     'events',       (SELECT count(*) FROM public.evolution_events),
     'avg_authority',(SELECT COALESCE(round(avg(sqrt(power(COALESCE(axis_a,1),2)+power(COALESCE(axis_b,1),2)+power(COALESCE(axis_c,1),2)))::numeric,3),0) FROM public.profiles),
-    'elements',     COALESCE((SELECT jsonb_object_agg(el,cnt) FROM (
-                       SELECT initcap(element) el, count(*) cnt FROM public.profiles
-                       WHERE element IS NOT NULL AND btrim(element)<>'' GROUP BY initcap(element)) e),'{}'::jsonb)
-  ) INTO r; RETURN r;
+    'elements',     COALESCE((SELECT jsonb_object_agg(el, cnt) FROM (
+                       SELECT initcap(element) AS el, count(*) AS cnt
+                       FROM public.profiles WHERE element IS NOT NULL AND btrim(element) <> ''
+                       GROUP BY initcap(element)
+                     ) e), '{}'::jsonb)
+  ) INTO r;
+  RETURN r;
 END;
 $$;
 
@@ -1465,7 +1467,7 @@ CREATE POLICY platform_owners_read ON public.platform_owners FOR SELECT USING (t
 
 -- 2) keep it in sync whenever a profile's is_owner flag changes ---------------
 CREATE OR REPLACE FUNCTION public.sync_platform_owner()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 BEGIN
   IF COALESCE(NEW.is_owner,false) THEN
     INSERT INTO public.platform_owners(user_id) VALUES (NEW.id) ON CONFLICT DO NOTHING;

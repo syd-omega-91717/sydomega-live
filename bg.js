@@ -1,5 +1,80 @@
 (function(){try{var m=document.createElement('meta');m.name='robots';m.content='noindex,nofollow,noarchive';(document.head||document.documentElement).appendChild(m);}catch(e){}})();
 
+/* ===== CLIENT ERROR MONITORING =============================================
+   Runtime failures on the live site were invisible: a member hit a broken
+   page, nothing was recorded, and the only way it surfaced was a screenshot.
+   Static analysis cannot find these -- a syntactically perfect script still
+   throws when an element is missing or data arrives in an unexpected shape.
+
+   Reports to public.report_client_error (own database, not a third party).
+   Safety rules, because a logger that misbehaves is worse than none:
+     - never reports an error raised by this block itself (recursion guard)
+     - de-duplicates by signature, so one error in a loop logs once
+     - hard cap of 5 unique errors per page load
+     - fails silently if the RPC or network is unavailable
+     - sends no form data, tokens, or page text -- message/source/line only
+   ========================================================================= */
+(function () {
+  'use strict';
+  if (window.__omegaErrHooked) return;
+  window.__omegaErrHooked = true;
+
+  var MAX_PER_LOAD = 5;
+  var seen = {}, sent = 0, busy = false;
+
+  function signature(msg, src, line) { return (msg || '') + '|' + (src || '') + '|' + (line || ''); }
+
+  function report(kind, msg, src, line, col, stack) {
+    try {
+      if (busy || sent >= MAX_PER_LOAD) return;
+      msg = String(msg || '').slice(0, 500);
+      if (!msg) return;
+      /* ignore noise we cannot act on and errors from this reporter */
+      if (msg.indexOf('__omegaErr') !== -1) return;
+      if (msg === 'Script error.' && !src) return;   // opaque cross-origin
+      var sig = signature(msg, src, line);
+      if (seen[sig]) return;
+      seen[sig] = 1; sent++;
+      busy = true;
+
+      import('https://esm.sh/@supabase/supabase-js@2').then(function (mod) {
+        var createClient = mod.createClient || (mod.default && mod.default.createClient);
+        if (!createClient) { busy = false; return; }
+        var sb = createClient(
+          "https://ydqhzvvoyufiiqvzcjns.supabase.co",
+          "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+        return sb.rpc('report_client_error', {
+          p_page: String(location.pathname || '').slice(0, 300),
+          p_message: msg,
+          p_source: String(src || '').slice(0, 300),
+          p_line: line || null,
+          p_col: col || null,
+          p_stack: String(stack || '').slice(0, 2000),
+          p_kind: kind,
+          p_ua: String(navigator.userAgent || '').slice(0, 300)
+        });
+      }).then(function () { busy = false; })
+        .catch(function () { busy = false; });   /* never surface a logging failure */
+    } catch (e) { busy = false; }
+  }
+
+  window.addEventListener('error', function (ev) {
+    try {
+      report('error', ev && ev.message, ev && ev.filename, ev && ev.lineno, ev && ev.colno,
+             ev && ev.error && ev.error.stack);
+    } catch (e) {}
+  });
+
+  window.addEventListener('unhandledrejection', function (ev) {
+    try {
+      var r = ev && ev.reason;
+      report('unhandledrejection',
+             (r && (r.message || r.error_description)) || String(r),
+             '', null, null, r && r.stack);
+    } catch (e) {}
+  });
+})();
+
 /* ===== PWA: make every page installable on mobile =====
    manifest.json + icons existed but only 2 of 80 pages linked them, so the
    "Add to Home Screen" prompt never appeared anywhere else. Injecting the

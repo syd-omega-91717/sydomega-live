@@ -51,10 +51,21 @@
   .phase-nav{display:flex;gap:10px;margin:0 clamp(14px,3vw,36px) 40px}
   .pn{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);padding:9px 18px;border:1px solid var(--line);background:transparent;cursor:pointer;text-decoration:none;transition:all .15s}
   .pn:hover{color:var(--gold);border-color:rgba(201,168,76,.45)}
+.gate-card{max-width:440px;margin:14vh auto 0;border:1px solid rgba(201,168,76,.18);background:rgba(201,168,76,.04);padding:40px 30px;text-align:center}
+.gate-card .g{font-family:'Cinzel Decorative',serif;font-size:56px;color:#C9A84C}
+.gate-card h2{font-family:'Cinzel Decorative',serif;color:#C9A84C;font-weight:700;margin:10px 0}
+.gate-card p{font-weight:300;color:#85837b;margin-bottom:22px}
+.gate-card a{display:inline-block;font-family:'Courier Prime',monospace;letter-spacing:2px;font-size:12px;color:#0A0A0F;background:#C9A84C;padding:14px 26px;text-decoration:none}
 </style>
 </head>
 <body>
-<div class="shell">
+<div id="gate" class="gate-card" style="display:none">
+  <div class="g">&#937;</div>
+  <h2>Evolution</h2>
+  <p>Sign in to view your evolution.</p>
+  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
+</div>
+<div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="evolution"></aside>
   <main class="main">
     <div class="topbar">
@@ -103,6 +114,22 @@
         n.style.display=hit?'':'none';
       });
     });
+  })();
+</script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const __sbg = createClient(
+    "https://ydqhzvvoyufiiqvzcjns.supabase.co",
+    "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"
+  );
+  (async function(){
+    /* Access gate -- no content is shown before a verified, approved session */
+    const sess=(await __sbg.auth.getSession()).data.session;
+    if(!sess){ document.getElementById('gate').style.display='block'; return; }
+    const prof=(await __sbg.from('profiles').select('access_approved,is_owner,is_trial').eq('id',sess.user.id).maybeSingle()).data;
+    if(!prof){ document.getElementById('gate').style.display='block'; return; }
+    if(!prof.is_owner && prof.access_approved===false && !prof.is_trial){ location.replace('/pending.html'); return; }
+    document.getElementById('app').style.display='flex';
   })();
 </script>
 <script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

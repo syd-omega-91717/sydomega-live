@@ -57,6 +57,20 @@
     var canon = res[0], els = res[1];
     if (canon) {
       api.tracks = canon.tracks || []; api.structure = canon.structure; api.elementSystem = canon.element_system;
+      api.nineFold = canon.nine_fold || null;
+      /* Guard: both lattices must satisfy their formulas exactly.
+         twelve-fold = 12 x 12 x 9 x 9 x 9 = 104,976
+         nine-fold   = 9 x 9 x 9 x 9 x 9   =  59,049
+         If either drifts, log immediately rather than shipping a wrong
+         node count into the UI. */
+      (function () {
+        var T = api.structure && Number(api.structure.total_nodes);
+        var N = api.nineFold && Number(api.nineFold.total_nodes);
+        if (T && T !== 12 * 12 * 9 * 9 * 9)
+          console.error('OmegaCanon: twelve-fold total_nodes is ' + T + ', expected ' + (12 * 12 * 9 * 9 * 9));
+        if (N && N !== Math.pow(9, 5))
+          console.error('OmegaCanon: nine-fold total_nodes is ' + N + ', expected ' + Math.pow(9, 5));
+      })();
       api.economy = canon.economy || null;
       /* Guard: the master vault must be exactly 51% of total supply. The Charter
          once published a supply that yielded 50.988%. If these ever drift apart
@@ -74,6 +88,20 @@
       api.loreLattice = canon.lore_lattice || null;
     }
     if (els) { api.elements = els.elements || []; api.signElement = els.sign_element || {}; }
+    /* Fill any element marked data-canon-nodes="nine" | "twelve" with the
+       canonical node count, so a displayed figure can never drift from canon. */
+    try {
+      var map = {
+        nine:   api.nineFold   && api.nineFold.total_nodes,
+        twelve: api.structure  && api.structure.total_nodes
+      };
+      var els = document.querySelectorAll('[data-canon-nodes]');
+      for (var i = 0; i < els.length; i++) {
+        var v = map[els[i].getAttribute('data-canon-nodes')];
+        if (v) els[i].textContent = Number(v).toLocaleString('en-US');
+      }
+    } catch (e) {}
+
     api.ready = true;
     api._cbs.forEach(function (cb) { try { cb(api); } catch (e) {} });
     document.dispatchEvent(new CustomEvent('omega-canon-ready', { detail: api }));

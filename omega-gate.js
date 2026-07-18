@@ -79,8 +79,7 @@
     // default lock everything gated until we confirm the member qualifies
     var pre = { a: 0, b: 0, c: 0, auth: 0, grade: 0, level: 0, phase: 0 };
     applyAll(pre, false);
-    import('https://esm.sh/@supabase/supabase-js@2').then(function (m) {
-      var sb = m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');
+    (window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2').then(function(m){return m.createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q');})).then(function (sb) {
       sb.auth.getSession().then(function (r) {
         var s = r && r.data && r.data.session; if (!s) return;
         sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id', s.user.id).maybeSingle().then(function (res) {

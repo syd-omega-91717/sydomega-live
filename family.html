@@ -259,7 +259,14 @@ a{color:inherit;text-decoration:none}
       </div>
     </div>
 
-    <!-- FAMILY ROLES (Image 6: Wife-Chairperson, Children-Heirs) -->
+    <!-- FAMILY ROLES -- OWNER ONLY.
+         PRIVACY: this block is the founder's private family constitution. It
+         contained his full name, Lebanese Order of Engineers registration
+         (#30875), and his date of birth and birthplace, all in static HTML
+         with no gate -- so every approved member could read them. Date of
+         birth in particular is identity-verification data. Hidden by default;
+         revealed in boot() only when is_owner is true. -->
+    <div id="owner-only-family-roles" style="display:none">
     <div class="sechead">FAMILY ROLES -- SOVEREIGN CONSTITUTION</div>
     <div class="family-roles">
       <!-- FOUNDER -->
@@ -297,6 +304,7 @@ a{color:inherit;text-decoration:none}
     </div>
 
     </div>
+    </div><!-- /owner-only-family-roles -->
     <!-- FAMILY CONSTELLATION NODES -->
     <div class="sechead" id="nodes-sechead">FAMILY NODES -- YOUR REGISTRY</div>
     <div class="pad">
@@ -549,6 +557,8 @@ async function boot(){
   const isOwner=pr.data?.is_owner||false;
   const name=pr.data?.display_name;
 
+  const ofr=document.getElementById('owner-only-family-roles');
+  if(ofr && isOwner) ofr.style.display='';
   if(isOwner){
     document.getElementById('ft-title').textContent='WELCOME, DAGHER FAMILY';
     document.getElementById('owner-only-family').style.display='block';

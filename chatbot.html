@@ -192,7 +192,7 @@
     if(!sess){ showGate('Concierge','Sign in to speak with the Concierge.'); return; }
     var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to meet the Concierge.'); return; }
-    ctx.sign=pr.data.sign; ctx.a=Number(pr.data.axis_a||1); ctx.b=Number(pr.data.axis_b||1); ctx.c=Number(pr.data.axis_c||1);
+    ctx.sign=pr.data.sign; ctx.a=Number(pr.data.axis_a||0.001); ctx.b=Number(pr.data.axis_b||0.001); ctx.c=Number(pr.data.axis_c||0.001);
     ctx.auth=Math.sqrt(ctx.a*ctx.a+ctx.b*ctx.b+ctx.c*ctx.c); ctx.tier=Math.max(1,Math.min(9,Math.floor(Math.min(ctx.a,ctx.b,ctx.c)))); ctx.rank=RANKS[ctx.tier-1];
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';

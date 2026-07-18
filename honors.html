@@ -804,7 +804,7 @@ window.bootAscension = bootAscension;
       supabase.from('medals').select('medal_num').eq('user_id',uid),
       supabase.from('certificates').select('id').eq('user_id',uid)
     ]).then(function(res){
-      var p=res[0].data||{}; var a=Number(p.axis_a||1),b=Number(p.axis_b||1),c=Number(p.axis_c||1);
+      var p=res[0].data||{}; var a=Number(p.axis_a||0.001),b=Number(p.axis_b||0.001),c=Number(p.axis_c||0.001);
       var auth=Math.sqrt(a*a+b*b+c*c); var bd=band(auth);
       document.getElementById('h-grade').textContent=bd.g;
       document.getElementById('h-level').textContent=bd.lv;
@@ -858,7 +858,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     if(!sess) return;
     const pr = await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
     const d = pr.data || {};
-    const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+    const a=Number(d.axis_a||0.001), b=Number(d.axis_b||0.001), c=Number(d.axis_c||0.001);
     const auth = Math.sqrt(a*a+b*b+c*c);
     const grade = Math.max(1, Math.min(12, Math.ceil(auth/15.588*12)));
 

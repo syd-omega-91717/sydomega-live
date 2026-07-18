@@ -1409,7 +1409,7 @@ async function boot(){
   const pr=await sb.from('profiles').select('is_owner,display_name,sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
   const isOwner=pr.data?.is_owner||false;
   const d=pr.data||{};
-  const a=Number(d.axis_a||1), b=Number(d.axis_b||1), c=Number(d.axis_c||1);
+  const a=Number(d.axis_a||0.001), b=Number(d.axis_b||0.001), c=Number(d.axis_c||0.001);
   const realAuth=Math.sqrt(a*a+b*b+c*c);
   const APEX_AUTH=15.588;
 
@@ -1419,11 +1419,19 @@ async function boot(){
   document.getElementById('sg-coord').textContent='('+a.toFixed(3)+','+b.toFixed(3)+','+c.toFixed(3)+')';
   document.getElementById('sg-coord-sub').textContent=realAuth>=APEX_AUTH-0.001?'Apex locked':'In progress';
   const myTier=MATS.filter(m=>realAuth>=parseFloat(m.thresh));
-  const curTier=myTier.length?myTier[myTier.length-1]:MATS[0];
-  document.getElementById('sg-tier').textContent=curTier.name;
-  document.getElementById('sg-tier-sub').textContent=myTier.length+' of 12 sealed';
+  /* A member below the first threshold (1.73) has sealed NOTHING. Showing
+     MATS[0] here claimed "SAND" while the line beneath said "0 of 12 sealed" --
+     two contradictory statements about the same member. New members legitimately
+     start at 0.001, so this state is normal and should read as a real start,
+     not as a tier they haven't earned. */
+  const sealedAny=myTier.length>0;
+  const curTier=sealedAny?myTier[myTier.length-1]:null;
+  document.getElementById('sg-tier').textContent=sealedAny?curTier.name:'UNSEALED';
+  document.getElementById('sg-tier-sub').textContent=sealedAny
+    ? (myTier.length+' of 12 sealed')
+    : ('First gate at '+MATS[0].thresh+' authority');
   document.getElementById('sg-grade').textContent=myTier.length+'/12';
-  document.getElementById('sg-grade-sub').textContent=myTier.length>=12?'Maximum':'In progress';
+  document.getElementById('sg-grade-sub').textContent=myTier.length>=12?'Maximum':(sealedAny?'In progress':'Begin your ascent');
 
   /* Real axis bars -- was hardcoded to 100% for every viewer */
   const axisHead=[...document.querySelectorAll('#tab-overview .sechead')].find(h=>h.textContent.includes('MATRIX AXES'));
@@ -1915,7 +1923,7 @@ async function bootPortfolioExtra(){
   if(!sess){ window.location.href='/account.html'; return; }
   const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
   const d=pr.data||{};
-  const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+  const a=Number(d.axis_a||0.001), b=Number(d.axis_b||0.001), c=Number(d.axis_c||0.001);
   const auth=Math.sqrt(a*a+b*b+c*c);
   document.getElementById('port-coord').textContent = '('+a.toFixed(2)+', '+b.toFixed(2)+', '+c.toFixed(2)+')';
   document.getElementById('port-auth').textContent = (d.is_owner ? '\u25B2 Apex -- Authority 15.588' : ('\u25B2 Authority '+auth.toFixed(2)+' / 15.588'));
@@ -2051,7 +2059,7 @@ async function bootPassportExtra(){
   if(!pr.data || !pr.data.sign){ ppNotice('Set your cosmology (in the Identity tab) first to receive your Passport.'); return; }
 
   var d=pr.data, sign=d.sign;
-  var a=Number(d.axis_a||1),b=Number(d.axis_b||1),c=Number(d.axis_c||1);
+  var a=Number(d.axis_a||0.001),b=Number(d.axis_b||0.001),c=Number(d.axis_c||0.001);
   var auth=Math.sqrt(a*a+b*b+c*c), tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
   document.getElementById('pp-name').textContent=d.display_name || (sign+' Sovereign');
   document.getElementById('pp-sign').textContent=(PP_GLY[sign]||'')+' '+sign;

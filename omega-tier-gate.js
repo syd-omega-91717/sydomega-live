@@ -95,11 +95,20 @@
         if (!grantedBy[u[j]]) grantedBy[u[j]] = tiers[i];
       }
     }
-    // rank of the member's own tier
-    var myRank = 0;
-    for (var k = 0; k < tiers.length; k++) {
-      if (String(tiers[k].name || '').toUpperCase() === String(memberTier || '').toUpperCase()) {
-        myRank = Number(tiers[k].n) || 0; break;
+    // Rank of the member's own tier.
+    // membership_tier stores an INTEGER rank (1-12) -- confirmed by
+    // OmegaCanon.tierUnlocks(memberTierNum) and gaming.html's
+    // Number(pr.data.membership_tier). Matching it against tier NAMES never
+    // succeeded, so every member resolved to rank 0 and would have been shown
+    // as entitled to nothing. Accept a number first, fall back to a name for
+    // any deployment that stores text.
+    var myRank = Number(memberTier);
+    if (!isFinite(myRank) || myRank <= 0) {
+      myRank = 0;
+      for (var k = 0; k < tiers.length; k++) {
+        if (String(tiers[k].name || '').toUpperCase() === String(memberTier || '').toUpperCase()) {
+          myRank = Number(tiers[k].n) || 0; break;
+        }
       }
     }
     var labels = canon.tier_features || {};

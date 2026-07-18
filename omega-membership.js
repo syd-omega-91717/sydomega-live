@@ -72,9 +72,24 @@
     }
   }
 
+  function tierName(v) {
+    /* membership_tier is an INTEGER rank (1-12). Displaying it raw would show
+       "3" instead of "ADEPT". Resolve through canon when available; fall back
+       to whatever was given if canon has not loaded or the value is a name. */
+    if (v === null || v === undefined || v === '') return null;
+    var n = Number(v);
+    var C = window.OmegaCanon;
+    if (isFinite(n) && n > 0 && C && C.tiers && C.tiers.length) {
+      for (var i = 0; i < C.tiers.length; i++) {
+        if (Number(C.tiers[i].n) === n) return C.tiers[i].name;
+      }
+    }
+    return isFinite(n) && n > 0 ? ('TIER ' + n) : String(v);
+  }
+
   function render(el, s) {
     var isTrial = s.is_trial === true;
-    var tier = (s.membership_tier || s.tier || 'none');
+    var tier = tierName(s.membership_tier) || s.tier || 'none';
     var hasPaid = s.status && String(s.status).toLowerCase() !== 'none';
     var st = statusStyle(s.status, isTrial);
 

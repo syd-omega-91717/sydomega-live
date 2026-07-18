@@ -15,6 +15,16 @@
     ],
     "note": "Each of the 12 tracks carries its own full 12-phase progression; each phase is a full 9x9x9 cube on 3 axes. 12 tracks x 12 phases x 729 = 104,976."
   },
+  "economy": {
+    "total_supply": 917170000000,
+    "total_supply_display": "917,170,000,000",
+    "master_vault_pct": 51,
+    "master_vault": 467756700000,
+    "master_vault_display": "467,756,700,000",
+    "sovereign_field_pct": 49,
+    "reinvestment_sweep_pct": 20,
+    "note": "Single source of truth for the economic constants. total_supply x 0.51 must equal master_vault exactly. The Charter previously published 917,385,000,000 which yields 50.988%, not the stated 51%. The correct supply is 917,170,000,000 -- it satisfies the 51% lock exactly and encodes the platform identity 91717. Economy is DORMANT: no token is issued, transferable, or purchasable pending licensed legal counsel."
+  },
   "elements": [
     "FIRE",
     "WATER",

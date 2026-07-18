@@ -256,6 +256,9 @@
 /* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
 (function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
 
+/* ===== SUBSCRIPTION TIER GATE -- companion to omega-gate.js (matrix gate) ===== */
+(function(){if(!document.querySelector('script[data-omega-tier-gate]')){var s=document.createElement('script');s.src='/omega-tier-gate.js';s.setAttribute('data-omega-tier-gate','1');if(document.body)document.body.appendChild(s);}})();
+
 /* ===== SIGN CODEX -- real cross-reference: sign -> element/god/gate/token/agent/house ===== */
 (function(){if(!document.querySelector('script[data-omega-sign-codex]')){var s=document.createElement('script');s.src='/omega-sign-codex.js';s.setAttribute('data-omega-sign-codex','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */

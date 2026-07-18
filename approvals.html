@@ -124,9 +124,6 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
   .mc-actions{flex-direction:column}
   .action-btn+.action-btn{border-left:none;border-top:1px solid var(--line)}
 }
-
-/* panel container (was unstyled -- no border or background) */
-.card{border:1px solid var(--line);background:var(--panel);border-radius:2px}
 </style>
 </head>
 <body>
@@ -183,6 +180,22 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <button class="filter-btn" data-filter="approved">APPROVED</button>
       <button class="filter-btn" data-filter="rejected">REJECTED</button>
       <button class="filter-btn" data-filter="all">ALL MEMBERS</button>
+    </div>
+
+    <!-- ACCESS DECISION AUDIT TRAIL (Book 147, Article XIII)
+         Every approve / reject / revoke is recorded by a database trigger that
+         no code path can bypass. This panel makes that record visible, which is
+         what Article VII means by "auditable". -->
+    <div class="card" style="margin-top:clamp(14px,3vw,28px);padding:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <div class="hl-title" style="font-size:14px;margin:0">ACCESS DECISION AUDIT TRAIL</div>
+        <button id="audit-refresh" style="font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;padding:7px 14px;background:transparent;border:1px solid rgba(201,168,76,.4);color:var(--gold);border-radius:6px;cursor:pointer">REFRESH</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">
+        Immutable record of every access decision -- who decided, when, and the exact state change.
+        Written by a database trigger, so RPC calls, direct updates and manual SQL edits are all captured.
+      </div>
+      <div id="audit-list" style="font-size:12px">Loading...</div>
     </div>
 
     <!-- BROADCAST A DISPATCH -->
@@ -498,7 +511,68 @@ async function boot(){
   /* Auto-refresh every 20 seconds */
   setInterval(load,20000);
 }
+/* ---- ACCESS DECISION AUDIT TRAIL ---------------------------------------- */
+/* approvals.html has no esc() of its own -- define one here rather than
+   assume a global that does not exist. */
+function auditEsc(x){
+  return String(x==null?'':x).replace(/[&<>"]/g,function(c){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];
+  });
+}
+const AUDIT_LABEL={
+  trial_granted:    ['TRIAL GRANTED','var(--green)'],
+  permanent_granted:['PERMANENT ACCESS','var(--gold)'],
+  rejected:         ['REJECTED','var(--crim)'],
+  revoked:          ['REVOKED','var(--crim)'],
+  trial_expired:    ['TRIAL EXPIRED','var(--muted)'],
+  access_changed:   ['ACCESS CHANGED','var(--muted)']
+};
+function auditWhen(ts){
+  try{
+    const d=new Date(ts), diff=(Date.now()-d.getTime())/1000;
+    if(diff<60) return 'just now';
+    if(diff<3600) return Math.floor(diff/60)+'m ago';
+    if(diff<86400) return Math.floor(diff/3600)+'h ago';
+    return d.toLocaleDateString()+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  }catch(e){ return ''; }
+}
+async function loadAuditTrail(){
+  const box=document.getElementById('audit-list');
+  if(!box) return;
+  box.textContent='Loading...';
+  try{
+    const r=await sb.rpc('access_audit_log',{p_limit:40});
+    if(r.error) throw r.error;
+    const payload=r.data||{};
+    if(payload.ok===false){ box.textContent='Owner access required.'; return; }
+    const rows=payload.rows||[];
+    if(!rows.length){
+      box.innerHTML='<div style="color:var(--muted)">No access decisions recorded yet. '
+        +'Decisions made from now on will appear here.</div>';
+      return;
+    }
+    box.innerHTML=rows.map(function(x){
+      const meta=AUDIT_LABEL[x.action]||[String(x.action||'').toUpperCase(),'var(--muted)'];
+      const prevT=x.prev&&x.prev.is_trial?' (trial)':'';
+      return '<div style="display:flex;gap:12px;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.08);flex-wrap:wrap">'
+        + '<span style="font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:1.5px;color:'+meta[1]+';min-width:132px">'+meta[0]+'</span>'
+        + '<span style="flex:1;min-width:140px">'+auditEsc(x.subject||'')+'</span>'
+        + '<span style="color:var(--muted);font-size:11px">by '+auditEsc(x.actor||'system')+prevT+'</span>'
+        + '<span style="color:var(--muted);font-family:\'Courier Prime\',monospace;font-size:10px">'+auditWhen(x.created_at)+'</span>'
+        + '</div>';
+    }).join('');
+  }catch(e){
+    /* The migration may not have been run yet -- say so plainly rather than
+       showing a broken panel. */
+    box.innerHTML='<div style="color:var(--muted)">Audit trail unavailable. '
+      +'Run <code style="color:var(--gold)">supabase/omega_access_audit.sql</code> in the Supabase SQL editor to enable it.</div>';
+    console.log('audit',e);
+  }
+}
+document.getElementById('audit-refresh')?.addEventListener('click',loadAuditTrail);
+
 boot();
+loadAuditTrail();
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

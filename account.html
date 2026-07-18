@@ -395,8 +395,13 @@
     const s=find(signOf(m,d));
     const prof={ sign:s[0], element:s[3], olympian:s[4], planet:s[5], agent:s[6], dob:val };
     const btn=document.getElementById('gate-go'); btn.disabled=true;
+    /* Real profiles columns are `god` and `birth_date` -- NOT `olympian`/`dob`.
+       There is no `planet` column at all; planet is canon-derived from the sign
+       (SIGNS[5]) and rendered directly, so it does not need storing.
+       Sending the old names made PostgREST reject the whole upsert, which
+       blocked every new member from completing onboarding. */
     const { error } = await supabase.from('profiles').upsert(
-      { id:currentUser.id, email:currentUser.email, sign:prof.sign, element:prof.element, olympian:prof.olympian, planet:prof.planet, agent:prof.agent, dob:prof.dob },
+      { id:currentUser.id, email:currentUser.email, sign:prof.sign, element:prof.element, god:prof.olympian, agent:prof.agent, birth_date:prof.dob },
       { onConflict:'id' }
     );
     btn.disabled=false;
@@ -413,8 +418,9 @@
     document.getElementById('d-range').textContent = s? s[2] : '';
     document.getElementById('d-character').textContent = s? '"'+s[7]+'"' : '';
     document.getElementById('d-element').textContent = prof.element||'';
-    document.getElementById('d-olympian').textContent = prof.olympian||'';
-    document.getElementById('d-planet').textContent = prof.planet||'';
+    /* `god` is the real column; `planet` has no column and is canon-derived. */
+    document.getElementById('d-olympian').textContent = prof.god || (s? s[4] : '');
+    document.getElementById('d-planet').textContent = s? s[5] : '';
     document.getElementById('d-agent').textContent = prof.agent||'';
     document.getElementById('d-affinity').textContent = (ELEMENTS[prof.element]||{}).affinity || '';
     document.getElementById('who').textContent = currentUser ? currentUser.email : '';

@@ -21,7 +21,7 @@
     ]],
     ['CORE', '#00E5FF', [
       ['\u2302', 'Dashboard', '/dashboard.html'],
-      ['\u25C6', 'Identity', '/profile.html'],
+      ['\u25C6', 'Identity', '/profile.html#identity'],
       ['\u2609', 'Cosmos', '/cosmos.html'],
       ['\u25CE', 'Matrix', '/matrix.html'],
       ['\u264D', 'Horoscope', '/cosmos.html#horoscope'],
@@ -35,8 +35,8 @@
     ['EXPERIENCE', '#9B6BF0', [
       ['\u2726', 'Academy', '/academy.html'],
       ['\u25B6', 'Games', '/gaming.html'],
-      ['\u2638', 'Universe', '/media.html'],
-      ['\u25C9', 'Cinema', '/media.html'],
+      ['\u2638', 'Universe', '/media.html#universe'],
+      ['\u25C9', 'Cinema', '/media.html#saga'],
       ['\u25A3', 'Media', '/media.html'],
       ['\u2b21', 'Sigil Vault', '/vault.html#nft']
     ]],
@@ -93,8 +93,8 @@
     ['ACCOUNT', '#A9C2D8', [
       ['\u25CF', 'Profile', '/profile.html'],
       ['\u2699', 'Settings', '/settings.html'],
-      ['\u25C6', 'Passport', '/passport.html'],
-      ['\u2713', 'KYC', '/kyc.html']
+      ['\u25C6', 'Passport', '/profile.html#passport'],
+      ['\u2713', 'KYC', '/profile.html#kyc']
     ]]
   ];
 

@@ -950,12 +950,24 @@ function getDailyOracle(sign){
   return {energy,axis,gate,ruler};
 }
 
-async function getOracleReading(sign, energy, axis){
+async function getOracleReading(sign, energy, axis, gate){
   const ob=document.getElementById('ob-text');
   try{
-    const r=await fetch("https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/oracle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Write a 3-sentence daily horoscope reading for ${sign}. Today's energy is ${energy}, the primary matrix axis is ${axis}. Reference the 9.1717Hz sovereign frequency, the sovereign matrix, and the 12-fold celestial system.`,max_tokens:220})});
+    /* Uses the 'concierge' edge function -- the only AI function that exists.
+       (This previously called /functions/v1/oracle, which was never deployed,
+       so every request 404'd and the reading silently fell back.) */
+    const sess=(await sb.auth.getSession()).data.session;
+    const hdr={"Content-Type":"application/json"};
+    if(sess){ hdr['Authorization']='Bearer '+sess.access_token; hdr['apikey']="sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"; }
+    const r=await fetch("https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/concierge",{
+      method:"POST",headers:hdr,
+      body:JSON.stringify({
+        message:`Write a 3-sentence daily horoscope reading for ${sign}. Today's energy is ${energy}, the primary matrix axis is ${axis}. Reference the 9.1717Hz sovereign frequency, the sovereign matrix, and the 12-fold celestial system. This is symbolic lore, not a factual prediction.`,
+        context:{sign:sign}
+      })
+    });
     const data=await r.json();
-    const text=(data && data.reply) || null;
+    const text=(data && (data.reply||data.text)) || null;
     if(text) ob.textContent=text;
     else ob.textContent='The celestial alignment speaks: '+energy+' is your sovereign directive today. Advance your '+axis+' through conscious sovereign action. The '+sign+' path opens '+gate+' when the frequency resonates at full amplitude.';
   }catch(e){
@@ -1031,8 +1043,8 @@ async function bootHoroscopeFull(){
   /* Wheel */
   requestAnimationFrame(function(){ drawHeroWheel(sign); });
   /* Daily oracle */
-  const {energy,axis}=getDailyOracle(sign);
-  getOracleReading(sign,energy,axis);
+  const {energy,axis,gate}=getDailyOracle(sign);
+  getOracleReading(sign,energy,axis,gate);
   /* Build grids */
   buildMandalaGrid(sign);
   buildPlanetStrip();

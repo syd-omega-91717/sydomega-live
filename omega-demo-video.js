@@ -60,7 +60,8 @@
   var sbPromise = null;
   function getClient() {
     if (!sbPromise) {
-      sbPromise = import("https://esm.sh/@supabase/supabase-js@2").then(function (m) {
+      sbPromise = window.OmegaSB ? window.OmegaSB.get()
+        : import("https://esm.sh/@supabase/supabase-js@2").then(function (m) {
         return m.createClient(SUPABASE_URL, SUPABASE_KEY);
       });
     }

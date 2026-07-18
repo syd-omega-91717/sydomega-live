@@ -603,6 +603,13 @@ a{color:inherit;text-decoration:none}
           </div>
         </div>
 
+
+        <!-- MEMBERSHIP & SUBSCRIPTION REPORT (owner only).
+             Real counts from membership_report(). Revenue is recognised only
+             from subscriptions that are genuinely active -- no projections. -->
+        <div class="sechead" style="margin-top:26px">MEMBERSHIP &amp; SUBSCRIPTION REPORT</div>
+        <div id="msr-body" style="font-size:12px;color:var(--muted)">Loading report...</div>
+
         <a href="/approvals.html" style="display:block;text-align:center;font-family:var(--M);font-size:11px;letter-spacing:3px;padding:16px;background:linear-gradient(90deg,var(--gold),var(--solar));color:var(--void);text-decoration:none;border-radius:2px;font-weight:700">OPEN THE OWNER CONSOLE &rarr;</a>
 
         <div style="font-size:11px;color:var(--muted);line-height:1.9;margin-top:14px">
@@ -1519,6 +1526,7 @@ async function boot(){
     if(atb) atb.style.display='flex';
     window.__ownerSB=sb;
     loadMembers();
+    loadMembershipReport();
     /* Auto-reload pending count every 30s */
     setInterval(loadMembers, 30000);
   } else {
@@ -1582,6 +1590,93 @@ function startCountdown(uid,expiresAt,el){
 
 
 
+
+/* ---- MEMBERSHIP & SUBSCRIPTION REPORT (owner only) ----------------------
+   Prices come from omega-canon.json so this never carries a second copy of
+   the price list. Revenue shown is ONLY what is genuinely recognised -- there
+   is no payments table in the schema, so nothing is projected or annualised. */
+async function loadMembershipReport(){
+  const box=document.getElementById('msr-body');
+  if(!box || !window.__ownerSB) return;
+  const sb=window.__ownerSB;
+  try{
+    let prices=null;
+    const C=window.OmegaCanon;
+    if(C && C.tiers && C.tiers.length){
+      prices={};
+      C.tiers.forEach(t=>{ prices[String(t.n)] = Number(t.price)||0; });
+    }
+    const r=await sb.rpc('membership_report', prices?{p_prices:prices}:{});
+    if(r.error) throw r.error;
+    const d=r.data||{};
+    if(d.ok===false){ box.textContent='Owner access required.'; return; }
+    const T=d.totals||{};
+    const money=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const nameOf=n=>{ const t=C&&C.tiers?C.tiers.find(x=>Number(x.n)===Number(n)):null; return t?t.name:('Tier '+n); };
+    const when=v=>{ if(!v) return '--'; const dt=new Date(v); return isNaN(dt)?'--':dt.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}); };
+
+    const cell=(label,val,col)=>'<div style="border:1px solid var(--line);background:rgba(10,10,15,.35);border-radius:2px;padding:12px;text-align:center">'
+      +'<div style="font-family:var(--D);font-size:22px;color:'+col+'">'+val+'</div>'
+      +'<div style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);margin-top:4px">'+label+'</div></div>';
+
+    let html='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:16px">'
+      + cell('TOTAL MEMBERS', T.members||0, 'var(--ink)')
+      + cell('AWAITING', T.pending||0, 'var(--crim)')
+      + cell('APPROVED', T.approved||0, 'var(--green)')
+      + cell('ON TRIAL', T.on_trial||0, 'var(--solar)')
+      + cell('PAID ACTIVE', T.paid_active||0, 'var(--gold)')
+      + cell('REJECTED', T.rejected||0, 'var(--muted)')
+      + '</div>';
+
+    /* Revenue -- stated honestly */
+    html += '<div style="border:1px solid var(--line);background:rgba(201,168,76,.04);border-radius:2px;padding:14px;margin-bottom:16px">'
+      + '<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">RECOGNISED MONTHLY</div>'
+      + '<div style="font-family:var(--D);font-size:22px;color:'+((d.recognised_monthly>0)?'var(--green)':'var(--muted)')+';margin:4px 0">'
+      + money(d.recognised_monthly)+'</div>'
+      + '<div style="font-size:11px;line-height:1.8;color:var(--muted)">'
+      + (d.payments_enabled===true
+          ? 'From members whose subscription is currently active. Not a forecast.'
+          : 'The economy is <b style="color:var(--solar)">not active</b> -- no tier can be purchased and nothing is charged, so recognised revenue is zero by definition. No projection is shown because there is no payments history to base one on.')
+      + '</div></div>';
+
+    /* Distribution by tier */
+    const bt=d.by_tier||[];
+    if(bt.length){
+      html+='<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">DISTRIBUTION BY TIER</div>';
+      const max=Math.max.apply(null,bt.map(x=>x.members||0))||1;
+      html+=bt.map(x=>'<div style="display:flex;align-items:center;gap:10px;padding:5px 0">'
+        +'<span style="min-width:110px;font-size:11.5px;color:var(--ink)">'+nameOf(x.tier)+'</span>'
+        +'<span style="flex:1;height:6px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden">'
+        +'<i style="display:block;height:100%;width:'+Math.round((x.members/max)*100)+'%;background:var(--gold)"></i></span>'
+        +'<span style="font-family:var(--M);font-size:10px;color:var(--muted);min-width:88px;text-align:right">'
+        + (x.members||0)+' member'+((x.members||0)===1?'':'s')+(x.paid?' / '+x.paid+' paid':'')+'</span></div>').join('');
+    }
+
+    /* Trials expiring */
+    const tr=d.trials||[];
+    html+='<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin:18px 0 8px">TRIALS RUNNING'
+        + (T.trials_expiring? ' -- '+T.trials_expiring+' EXPIRING WITHIN 24H':'')+'</div>';
+    html += tr.length
+      ? tr.map(x=>'<div style="display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.07)">'
+          +'<span style="font-size:11.5px;color:var(--ink)">'+String(x.member||'').replace(/[<>]/g,'')+'</span>'
+          +'<span style="font-family:var(--M);font-size:10px;color:var(--solar)">'+when(x.expires_at)+'</span></div>').join('')
+      : '<div style="color:var(--muted)">No trials running.</div>';
+
+    /* Renewals */
+    const rn=d.renewals_30d||[];
+    html+='<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin:18px 0 8px">RENEWALS -- NEXT 30 DAYS</div>';
+    html += rn.length
+      ? rn.map(x=>'<div style="display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.07)">'
+          +'<span style="font-size:11.5px;color:var(--ink)">'+String(x.member||'').replace(/[<>]/g,'')+'</span>'
+          +'<span style="font-family:var(--M);font-size:10px;color:var(--muted)">'+nameOf(x.tier)+' &middot; '+when(x.period_end)+'</span></div>').join('')
+      : '<div style="color:var(--muted)">No renewals scheduled in the next 30 days.</div>';
+
+    box.innerHTML=html;
+  }catch(e){
+    box.innerHTML='Report unavailable. Run <code style="color:var(--gold)">supabase/omega_membership_report.sql</code> in the Supabase SQL editor to enable it.';
+    console.log('membership report',e);
+  }
+}
 
 async function loadMembers(){
   /* Summary only. All member management lives in approvals.html (the Owner

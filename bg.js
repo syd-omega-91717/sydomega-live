@@ -1,3 +1,32 @@
+/* ===== SHARED SUPABASE CLIENT (must be defined before anything loads) ======
+   Ten shared scripts each called createClient(), producing nine GoTrueClient
+   instances on one page load, all competing for the same auth-token storage
+   key. Supabase warns this "may produce undefined behavior when used
+   concurrently" -- a token refresh from one client can invalidate another's
+   in-flight request, intermittently and very hard to trace.
+
+   Defined inline here rather than loaded as a file because bg.js injects the
+   omega-* scripts dynamically; a separate file would race them. Callers keep
+   their own createClient() fallback, so if this ever fails they behave exactly
+   as before.
+   ========================================================================= */
+(function () {
+  if (window.OmegaSB) return;
+  var URL = "https://ydqhzvvoyufiiqvzcjns.supabase.co";
+  var KEY = "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
+  var _p = null;
+  function get() {
+    if (_p) return _p;
+    _p = import('https://esm.sh/@supabase/supabase-js@2').then(function (mod) {
+      var cc = mod.createClient || (mod.default && mod.default.createClient);
+      if (!cc) throw new Error('supabase createClient unavailable');
+      return cc(URL, KEY);
+    }).catch(function (e) { _p = null; throw e; });
+    return _p;
+  }
+  window.OmegaSB = { get: get, url: URL, key: KEY };
+})();
+
 (function(){try{var m=document.createElement('meta');m.name='robots';m.content='noindex,nofollow,noarchive';(document.head||document.documentElement).appendChild(m);}catch(e){}})();
 
 /* ===== CLIENT ERROR MONITORING =============================================
@@ -37,12 +66,7 @@
       seen[sig] = 1; sent++;
       busy = true;
 
-      import('https://esm.sh/@supabase/supabase-js@2').then(function (mod) {
-        var createClient = mod.createClient || (mod.default && mod.default.createClient);
-        if (!createClient) { busy = false; return; }
-        var sb = createClient(
-          "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-          "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+      window.OmegaSB.get().then(function (sb) {
         return sb.rpc('report_client_error', {
           p_page: String(location.pathname || '').slice(0, 300),
           p_message: msg,

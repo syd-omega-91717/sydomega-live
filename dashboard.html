@@ -465,7 +465,7 @@ async function loadDashboard(){
   if(!sess){ window.location.href='/account.html'; return; }
   const pr=await supabase.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,is_owner,certificates_earned,trophies_earned,medals_earned').eq('id',sess.user.id).maybeSingle();
   const d=pr.data||{};
-  const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
+  const a=Number(d.axis_a||0.001), b=Number(d.axis_b||0.001), c=Number(d.axis_c||0.001);
   const auth=Math.sqrt(a*a+b*b+c*c);
   const name=d.display_name || (d.is_owner?'Major Sleiman Youssef Dagher':'Sovereign');
   const bound = d.sign && BOUND[d.sign];

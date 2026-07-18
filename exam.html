@@ -354,7 +354,7 @@ async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
   const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
-  const a=Number(pr.data?.axis_a||1), b=Number(pr.data?.axis_b||1), c=Number(pr.data?.axis_c||1);
+  const a=Number(pr.data?.axis_a||0.001), b=Number(pr.data?.axis_b||0.001), c=Number(pr.data?.axis_c||0.001);
   const auth=Math.sqrt(a*a+b*b+c*c);
   renderExamList(auth);
 }

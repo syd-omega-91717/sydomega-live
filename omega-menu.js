@@ -95,7 +95,15 @@
       ['\u2699', 'Settings', '/settings.html'],
       ['\u25C6', 'Passport', '/profile.html#passport'],
       ['\u2713', 'KYC', '/profile.html#kyc']
-    ]]
+    ]],
+    /* Owner-only. Hidden for everyone else via CSS (body.omega-owner is set by
+       bg.js after it confirms is_owner). Approvals had no menu entry at all --
+       the owner could only reach it from the pending-members alert, which only
+       appears when someone is already waiting. */
+    ['OWNER', '#C0392B', [
+      ['\u2713', 'Approvals', '/approvals.html'],
+      ['\u2318', 'Control Deck', '/interface-omni.html']
+    ], true]
   ];
 
   var css = [
@@ -108,6 +116,9 @@
     '#om-inner{max-width:920px;margin:0 auto}',
     '#om-title{text-align:center;font-family:"Cinzel Decorative",serif;color:#C9A84C;letter-spacing:3px;font-size:18px;margin:0 0 24px}',
     '.om-grp{margin:0 0 22px}',
+    /* owner-only group: hidden unless bg.js confirms is_owner (body.omega-owner) */
+    '.om-grp-owner{display:none}',
+    'body.omega-owner .om-grp-owner{display:block}',
     '.om-grp h4{font-family:"Courier Prime",monospace;color:#00E5FF;font-size:11px;letter-spacing:3px;margin:0 0 10px;opacity:.85}',
     '.om-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}',
     '.om-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:1px solid rgba(201,168,76,.22);background:rgba(255,255,255,.02);border-radius:12px;color:#d8d5cb;text-decoration:none;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1px;transition:all .2s}',
@@ -147,7 +158,8 @@
     var ov = document.createElement('div'); ov.id = 'om-ov';
     var html = '<button id="om-close" aria-label="Close">\u00D7</button><div id="om-inner"><div id="om-title">SYD OMEGA 91717</div>';
     GROUPS.forEach(function (g) {
-      html += '<div class="om-grp"><h4>' + g[0] + '</h4><div class="om-cards">';
+      var ownerCls = g[3] ? ' om-grp-owner' : '';
+      html += '<div class="om-grp' + ownerCls + '"><h4>' + g[0] + '</h4><div class="om-cards">';
       g[2].forEach(function (p) {
         html += '<a class="om-card" href="' + p[2] + '"><span class="om-ic" data-glyph="' + p[0] + '" data-col="' + g[1] + '"></span><span>' + p[1] + '</span></a>';
       });

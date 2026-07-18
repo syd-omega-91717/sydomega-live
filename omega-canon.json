@@ -13,7 +13,32 @@
       "Mastery (B)",
       "Contribution (C)"
     ],
-    "note": "Each of the 12 tracks carries its own full 12-phase progression; each phase is a full 9x9x9 cube on 3 axes. 12 tracks x 12 phases x 729 = 104,976."
+    "note": "Each of the 12 tracks carries its own full 12-phase progression; each phase is a full 9x9x9 cube on 3 axes. 12 tracks x 12 phases x 729 = 104,976.",
+    "formula": "12 x 12 x 9 x 9 x 9",
+    "applies_to": [
+      "tracks",
+      "phases",
+      "gates",
+      "tiers",
+      "agents",
+      "olympians",
+      "any twelve-fold system"
+    ]
+  },
+  "nine_fold": {
+    "lattice": "9 x 9 x 9 x 9 x 9",
+    "dimensions": 5,
+    "depth": 9,
+    "nodes_per_dimension_pair": 81,
+    "total_nodes": 59049,
+    "total_nodes_display": "59,049",
+    "applies_to": [
+      "elements",
+      "stages",
+      "material_depth",
+      "any nine-fold system"
+    ],
+    "note": "Confirmed canon: every NINE-based system in the platform expands to a five-dimensional 9^5 lattice of 59,049 nodes, exactly as every TWELVE-based system expands to 12 x 12 x 9 x 9 x 9 = 104,976. The two lattices are parallel and independent: a twelve-fold system is never re-expressed as nine-fold, nor the reverse."
   },
   "economy": {
     "total_supply": 917170000000,
@@ -23,7 +48,9 @@
     "master_vault_display": "467,756,700,000",
     "sovereign_field_pct": 49,
     "reinvestment_sweep_pct": 20,
-    "note": "Single source of truth for the economic constants. total_supply x 0.51 must equal master_vault exactly. The Charter previously published 917,385,000,000 which yields 50.988%, not the stated 51%. The correct supply is 917,170,000,000 -- it satisfies the 51% lock exactly and encodes the platform identity 91717. Economy is DORMANT: no token is issued, transferable, or purchasable pending licensed legal counsel."
+    "note": "Single source of truth for the economic constants. total_supply x 0.51 must equal master_vault exactly. The Charter previously published 917,385,000,000 which yields 50.988%, not the stated 51%. The correct supply is 917,170,000,000 -- it satisfies the 51% lock exactly and encodes the platform identity 91717. Economy is DORMANT: no token is issued, transferable, or purchasable pending licensed legal counsel.",
+    "tier_enforcement": false,
+    "tier_enforcement_note": "OFF until payments activate. Paid tiers cannot be purchased while the checkout function is disabled, so enforcing paywalls now would lock every member out with no route forward. While false, [data-tier] content stays usable and shows a small 'TIER FEATURE' marker. Set true on the day the economy goes live to convert every marker on the platform into a real lock at once."
   },
   "elements": [
     "FIRE",

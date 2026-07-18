@@ -189,14 +189,17 @@ BEGIN
     'approved',     (SELECT count(*) FROM public.profiles WHERE COALESCE(access_approved,false)),
     'certificates', (SELECT count(*) FROM public.certificates),
     'trophies',     (SELECT count(*) FROM public.trophies WHERE trophy_num IS NOT NULL),
-    'medals',       (SELECT count(*) FROM public.medals),
+    'medals',       (SELECT count(*) FROM public.trophies WHERE medal_num IS NOT NULL),
     'nodes',        (SELECT count(*) FROM public.task_completions),
     'events',       (SELECT count(*) FROM public.evolution_events),
     'avg_authority',(SELECT COALESCE(round(avg(sqrt(power(COALESCE(axis_a,1),2)+power(COALESCE(axis_b,1),2)+power(COALESCE(axis_c,1),2)))::numeric,3),0) FROM public.profiles),
-    'elements',     COALESCE((SELECT jsonb_object_agg(el,cnt) FROM (
-                       SELECT initcap(element) el, count(*) cnt FROM public.profiles
-                       WHERE element IS NOT NULL AND btrim(element)<>'' GROUP BY initcap(element)) e),'{}'::jsonb)
-  ) INTO r; RETURN r;
+    'elements',     COALESCE((SELECT jsonb_object_agg(el, cnt) FROM (
+                       SELECT initcap(element) AS el, count(*) AS cnt
+                       FROM public.profiles WHERE element IS NOT NULL AND btrim(element) <> ''
+                       GROUP BY initcap(element)
+                     ) e), '{}'::jsonb)
+  ) INTO r;
+  RETURN r;
 END;
 $$;
 

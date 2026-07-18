@@ -575,48 +575,42 @@ a{color:inherit;text-decoration:none}
 
     <!-- ACCESS CONTROL TAB  --  OWNER ONLY  --  INVISIBLE TO MEMBERS -->
     <div class="tab-panel" id="tab-access">
-
-      <!-- PRIVACY SEAL -->
+      <!-- CONSOLIDATED. Member approval used to be implemented TWICE -- a full
+           queue here and another in approvals.html -- each with its own list,
+           filters, timers and grant/revoke handlers. Two implementations of the
+           same privileged action drift apart and are the wrong place for a
+           security decision. approvals.html is now the single Owner Console;
+           this tab is a live summary and a way in. -->
       <div style="margin:16px clamp(14px,3vw,36px) 0;padding:10px 14px;border:1px solid rgba(139,0,0,.3);background:rgba(139,0,0,.05);font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(139,0,0,.8);display:flex;align-items:center;gap:8px">
-        <div style="width:6px;height:6px;border-radius:50%;background:var(--crim);animation:blink 1.2s ease-in-out infinite;flex-shrink:0"></div>
-        CLASSIFIED -- THIS SECTION IS VISIBLE ONLY TO THE ARCHITECT. NO MEMBER CAN SEE THIS. NO MEMBER CAN SEE OTHER MEMBERS. ABSOLUTE PRIVACY ENFORCED.
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--crim);flex-shrink:0"></div>
+        CLASSIFIED -- VISIBLE ONLY TO THE ARCHITECT. NO MEMBER CAN SEE THIS SECTION.
       </div>
-      <!-- PENDING ALERT -->
-      <div class="ac-alert" id="ac-alert">
-        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-          <div style="text-align:center">
-            <div class="aca-count" id="aca-count">0</div>
-            <div class="aca-label">MEMBERS WAITING</div>
+
+      <div class="sechead">ACCESS CONTROL</div>
+      <div style="margin:0 clamp(14px,3vw,36px) 24px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px">
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:14px;text-align:center">
+            <div style="font-family:var(--D);font-size:26px;color:var(--crim)" id="acs-pending">--</div>
+            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">AWAITING APPROVAL</div>
           </div>
-          <div style="flex:1">
-            <div class="aca-sub">ACCESS REQUEST QUEUE -- ARCHITECT REVIEW REQUIRED</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:1px">
-              Select a trial duration below, then tap GRANT TRIAL or GRANT PERMANENT next to each member.
-            </div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:14px;text-align:center">
+            <div style="font-family:var(--D);font-size:26px;color:var(--green)" id="acs-approved">--</div>
+            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">APPROVED MEMBERS</div>
+          </div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:14px;text-align:center">
+            <div style="font-family:var(--D);font-size:26px;color:var(--solar)" id="acs-trial">--</div>
+            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">ON TRIAL</div>
           </div>
         </div>
-      </div>
 
-      <!-- SOVEREIGN TRIAL -- FIXED AT 9.1717 MINUTES -->
-      <div style="margin:0 clamp(14px,3vw,36px) 16px;border:1px solid rgba(201,168,76,.35);background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(7,7,11,.9));padding:16px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--solar),var(--gold));animation:arch-scan 3s ease-in-out infinite"></div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:4px;color:var(--muted);margin-bottom:5px">SOVEREIGN TRIAL DURATION -- ABSOLUTE AND FIXED</div>
-        <div style="font-family:var(--D);font-size:clamp(24px,5vw,40px);font-weight:700;color:var(--gold);animation:val-breathe 4s ease-in-out infinite">9.1717 MINUTES</div>
-        <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:5px;letter-spacing:2px">After 9.1717 minutes the member is automatically logged out. Only you can grant access. Only you can extend or make permanent.</div>
-      </div>
+        <a href="/approvals.html" style="display:block;text-align:center;font-family:var(--M);font-size:11px;letter-spacing:3px;padding:16px;background:linear-gradient(90deg,var(--gold),var(--solar));color:var(--void);text-decoration:none;border-radius:2px;font-weight:700">OPEN THE OWNER CONSOLE &rarr;</a>
 
-      <!-- FILTER TABS -->
-      <div class="ac-filter">
-        <div class="acf-btn acf-on" data-filter="pending">PENDING</div>
-        <div class="acf-btn" data-filter="trial">TRIAL ACTIVE</div>
-        <div class="acf-btn" data-filter="approved">APPROVED</div>
-        <div class="acf-btn" data-filter="all">ALL MEMBERS</div>
-      </div>
-
-      <!-- MEMBER LIST -->
-      <div class="mbr-list" id="mbr-list">
-        <div style="padding:28px clamp(14px,3vw,36px);font-family:var(--M);font-size:11px;color:var(--muted);letter-spacing:2px">
-          LOADING MEMBER DATA...
+        <div style="font-size:11px;color:var(--muted);line-height:1.9;margin-top:14px">
+          The Owner Console is where every access decision is made and recorded:
+          approve, grant a trial, grant permanent access, reject or revoke; the
+          immutable <b style="color:var(--gold)">access audit trail</b>; and the
+          <b style="color:var(--gold)">runtime error monitor</b>. Keeping it in
+          one place means one implementation, one audit record, one place to look.
         </div>
       </div>
     </div>
@@ -1588,113 +1582,27 @@ function startCountdown(uid,expiresAt,el){
   tick();window.__timers[uid]=setInterval(tick,1000);
 }
 
-async function grantAccess(uid,minutes,sbRef){
-  if(minutes<0){
-    await sbRef.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null}).eq('id',uid);
-  } else {
-    const exp=new Date(Date.now()+minutes*60000).toISOString();
-    await sbRef.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp}).eq('id',uid);
-  }
-  loadMembers();
-}
 
-async function revokeAccess(uid,sbRef){
-  await sbRef.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
-  loadMembers();
-}
 
-function buildMemberList(members){
-  const filter=window.__activeFilter;
-  let rows=members;
-  if(filter==='pending') rows=members.filter(m=>!m.is_owner&&!m.access_approved);
-  else if(filter==='trial') rows=members.filter(m=>m.is_trial&&m.trial_expires_at&&new Date(m.trial_expires_at)>Date.now());
-  else if(filter==='approved') rows=members.filter(m=>m.access_approved&&!m.is_trial&&!m.is_owner);
-
-  const g=document.getElementById('mbr-list');
-  if(!g) return;
-
-  /* Update pending alert */
-  const pendingCount=members.filter(m=>!m.is_owner&&!m.access_approved).length;
-  const alertEl=document.getElementById('ac-alert');
-  const countEl=document.getElementById('aca-count');
-  const badge=document.getElementById('access-badge');
-  if(alertEl) alertEl.style.display=pendingCount>0?'block':'none';
-  if(countEl) countEl.textContent=pendingCount;
-  if(badge){badge.textContent=pendingCount;badge.style.display=pendingCount>0?'flex':'none';}
-
-  /* Skip owner in list */
-  const display=rows.filter(m=>!m.is_owner);
-  if(!display.length){
-    g.innerHTML='<div style="padding:24px clamp(14px,3vw,36px);font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:2px">NO MEMBERS IN THIS CATEGORY</div>';
-    return;
-  }
-  g.innerHTML='';
-  display.forEach(m=>{
-    const isPending=!m.access_approved;
-    const isTrial=m.is_trial&&m.trial_expires_at&&new Date(m.trial_expires_at)>Date.now();
-    const isApproved=m.access_approved&&!m.is_trial;
-    const col=isApproved?'var(--green)':isTrial?'var(--gold)':isPending?'var(--crim)':'var(--muted)';
-    const statusLabel=isApproved?'APPROVED':isTrial?'TRIAL ACTIVE':isPending?'PENDING':'EXPIRED';
-    const init=(m.display_name||m.email||'M')[0].toUpperCase();
-
-    const row=document.createElement('div');row.className='mbr-row';
-    row.innerHTML=
-      '<div class="mbr-init" style="border-color:'+col+'44;color:'+col+'">'+init+'</div>'+
-      '<div class="mbr-meta">'+
-        '<div class="mbr-email">'+(m.display_name||'(no name)')+'</div>'+
-        '<div class="mbr-detail">'+(m.email||m.id||'').slice(0,32)+' . Joined: '+(m.created_at?new Date(m.created_at).toLocaleDateString():' -- ')+'</div>'+
-      '</div>'+
-      '<div class="mbr-status">'+
-        '<span class="mbr-pill" style="color:'+col+';border-color:'+col+'44">'+statusLabel+'</span>'+
-        (isTrial?'<span class="mbr-timer" id="tmr-'+m.id+'">--:--</span>':'')+
-      '</div>'+
-      '<div class="mbr-actions">'+
-        (isPending||isTrial?'<button class="mbr-btn btn-gtrial" data-uid="'+m.id+'">GRANT 9.1717 MIN</button>':'')+
-        (!isApproved?'<button class="mbr-btn btn-gperm" data-uid="'+m.id+'">GRANT PERM</button>':'')+
-        (isTrial?'<button class="mbr-btn btn-extend" data-uid="'+m.id+'">EXTEND</button>':'')+
-        ((isApproved||isTrial)?'<button class="mbr-btn btn-revoke" data-uid="'+m.id+'">REVOKE</button>':'')+
-      '</div>';
-
-    g.appendChild(row);
-
-    if(isTrial){const tel=row.querySelector('#tmr-'+m.id);if(tel) startCountdown(m.id,m.trial_expires_at,tel);}
-  });
-}
 
 async function loadMembers(){
+  /* Summary only. All member management lives in approvals.html (the Owner
+     Console) so there is exactly one implementation of a privileged action. */
   if(!window.__ownerSB) return;
   const sb=window.__ownerSB;
-  let members=[];
   try{
+    let members=[];
     const {data:rpc}=await sb.rpc('get_all_members');
     members=rpc||[];
-  }catch(e){
-    const {data:fb}=await sb.from('profiles').select('*').order('created_at',{ascending:false});
-    members=fb||[];
-  }
-  window.__allMembers=members;
-  buildMemberList(members);
-  /* Attach button handlers after render */
-  document.querySelectorAll('.btn-gtrial,.btn-extend').forEach(btn=>{
-    btn.addEventListener('click',e=>grantAccess(e.target.dataset.uid,window.__selectedMinutes,sb));
-  });
-  document.querySelectorAll('.btn-gperm').forEach(btn=>{
-    btn.addEventListener('click',e=>grantAccess(e.target.dataset.uid,-1,sb));
-  });
-  document.querySelectorAll('.btn-revoke').forEach(btn=>{
-    btn.addEventListener('click',e=>{if(confirm('Revoke access?')) revokeAccess(e.target.dataset.uid,sb);});
-  });
+    const pending  = members.filter(m=>m.access_approved===false && !m.is_rejected && !m.is_owner).length;
+    const approved = members.filter(m=>m.access_approved===true).length;
+    const trial    = members.filter(m=>m.is_trial===true).length;
+    const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
+    set('acs-pending',pending); set('acs-approved',approved); set('acs-trial',trial);
+  }catch(e){ console.log('access summary',e); }
 }
 
-/* Filter buttons */
-document.querySelectorAll('.acf-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.acf-btn').forEach(b=>b.classList.remove('acf-on'));
-    btn.classList.add('acf-on');
-    window.__activeFilter=btn.dataset.filter;
-    buildMemberList(window.__allMembers);
-  });
-});
+/* member-list filter handlers removed with the list itself (see Owner Console) */
 
 </script>
 <script type="module">

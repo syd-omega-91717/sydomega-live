@@ -235,6 +235,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .s-desc,.g-desc{font-size:.7rem;color:var(--muted);line-height:1.6;margin-bottom:.5rem}
 .g-genre{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--cyan);letter-spacing:.04em;margin-bottom:.4rem}
 .s-status,.g-status{display:inline-block;font-family:'Courier Prime',monospace;font-size:.5rem;letter-spacing:.06em;color:var(--solar);border:1px solid rgba(226,200,109,.4);padding:.15rem .5rem;border-radius:2px}
+
+/* grid containers for the JS-populated card lists (previously had no CSS at
+   all, so every card stacked in a single column instead of forming a grid) */
+.films-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
+.arc-entry{display:flex;gap:.9rem;align-items:flex-start;padding:.8rem 1rem;border-left:2px solid var(--border);background:rgba(201,168,76,.03);border-radius:2px;margin-bottom:.6rem}
 </style>
 </head>
 <body>

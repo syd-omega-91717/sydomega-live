@@ -4,7 +4,7 @@
   var URL="https://ydqhzvvoyufiiqvzcjns.supabase.co";
   var KEY="sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
   var MAX=5*1024*1024*1024; // 5 GB client cap
-  var ready=import('https://esm.sh/@supabase/supabase-js@2').then(function(m){ return m.createClient(URL,KEY); });
+  var ready=window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2').then(function(m){ return m.createClient(URL,KEY); });
   window.OmegaStorage={
     MAX:MAX,
     ready:ready,

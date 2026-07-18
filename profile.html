@@ -1540,7 +1540,15 @@ async function buildMembershipCard(){
     const r=await sb.rpc('my_subscription');
     const sub=r.data||{};
     const active = sub.status==='active' || sub.status==='trialing' || sub.is_trial===true;
-    const tier = sub.membership_tier || sub.tier || 'NONE';
+    /* membership_tier is an INTEGER rank (1-12); resolve it to the canonical
+       name so the bar reads ADEPT rather than "3". */
+    let tier = sub.membership_tier;
+    const rankNum = Number(tier);
+    if(isFinite(rankNum) && rankNum>0 && window.OmegaCanon && window.OmegaCanon.tiers){
+      const t = window.OmegaCanon.tiers.find(x=>Number(x.n)===rankNum);
+      if(t) tier = t.name;
+    }
+    if(!tier) tier = sub.tier || 'NONE';
     if(sgMember) sgMember.textContent = active ? String(tier).toUpperCase() : 'NONE';
     if(sgMemberSub) sgMemberSub.textContent = active
       ? String(sub.status||'active').toUpperCase()

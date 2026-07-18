@@ -212,9 +212,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .region-card .r-latency{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold)}
 .region-card .r-label{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em}
 @media(max-width:700px){#mtab-triads .hero{flex-direction:column}.layer-card{flex-direction:column}}
-
-/* axis-bar group wrapper (was unstyled) */
-.axs{display:flex;flex-direction:column;gap:.55rem;margin:.6rem 0}
 </style>
 </head>
 <body>
@@ -525,9 +522,9 @@ async function loadRealMatrix(){
   if(!sess){ window.location.href='/account.html'; return; }
 
   const pr = await supabase.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
-  const a = pr.data ? Number(pr.data.axis_a||0) : 0;
-  const b = pr.data ? Number(pr.data.axis_b||0) : 0;
-  const c = pr.data ? Number(pr.data.axis_c||0) : 0;
+  const a = pr.data ? Number(pr.data.axis_a||0.001) : 0;
+  const b = pr.data ? Number(pr.data.axis_b||0.001) : 0;
+  const c = pr.data ? Number(pr.data.axis_c||0.001) : 0;
   const auth = Math.sqrt(a*a+b*b+c*c);
   const apex = auth >= 15.588 - 0.001;
 
@@ -886,7 +883,7 @@ window.bootGrid = bootGrid;
     const heroEl=document.querySelector('.hero'); if(heroEl) heroEl.style.display='flex';
 
     var d=pr.data, sign=d.sign;
-    var a=Number(d.axis_a||1),b=Number(d.axis_b||1),c=Number(d.axis_c||1);
+    var a=Number(d.axis_a||0.001),b=Number(d.axis_b||0.001),c=Number(d.axis_c||0.001);
     var auth=Math.sqrt(a*a+b*b+c*c);
     var meSign=SIGNS.find(function(s){return s[0]===sign;})||SIGNS[0];
     document.getElementById('my-name').textContent=d.display_name||(sign+' Sovereign');

@@ -462,7 +462,7 @@ a{color:inherit;text-decoration:none}
     <!-- TAB: OVERVIEW -->
     <div class="tab-panel active" id="tab-overview">
       <div class="sechead">MEMBERSHIP</div>
-      <div class="pad" id="membership-card" style="border:1px solid rgba(201,168,76,.2);padding:16px;margin-bottom:20px">Loading your membership status...</div>
+      <div class="pad" style="margin-bottom:20px"><div data-membership-card></div></div>
 
       <div class="sechead">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
       <div class="pad">
@@ -617,7 +617,7 @@ a{color:inherit;text-decoration:none}
 
     <div class="tab-panel" id="tab-portfolio" style="position:relative">
       <canvas id="bg-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1"></canvas>
-      <div id="membership-card-portfolio" style="position:relative;border:1px solid rgba(201,168,76,.2);padding:14px;margin:16px;font-size:12px;color:var(--muted)">Loading membership status...</div>
+      <div style="margin:16px"><div data-membership-card></div></div>
       
   <!-- HERO -->
   <div class="hero-band">
@@ -1529,33 +1529,23 @@ async function boot(){
 }
 
 async function buildMembershipCard(){
-  const card=document.getElementById('membership-card');
-  if(!card) return;
-  let sub={tier:'none',status:'none',period_end:null,payments_enabled:false};
-  try{ const r=await sb.rpc('my_subscription'); if(r.data) sub=r.data; }catch(e){}
-  const tier=(sub.tier||'none');
-  const status=(sub.status||'none');
-  const active = status==='active' || status==='trialing';
-  const sgMember=document.getElementById('sg-member'); const sgMemberSub=document.getElementById('sg-member-sub');
-  if(!active){
-    card.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted)">NO ACTIVE MEMBERSHIP</div><div style="margin-top:6px;font-size:13px">You haven&#39;t chosen a tier yet. <a href="/subscriptions.html" style="color:var(--gold)">Choose your tier &rarr;</a></div>';
-    if(sgMember) sgMember.textContent='NONE';
-    if(sgMemberSub) sgMemberSub.textContent='No active tier';
-    return;
-  }
-  if(sgMember) sgMember.textContent=tier.toUpperCase();
-  if(sgMemberSub) sgMemberSub.textContent=status.toUpperCase();
-  const end=sub.period_end ? new Date(sub.period_end) : null;
-  const endStr = end ? end.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '--';
-  const daysLeft = end ? Math.max(0, Math.ceil((end - new Date())/86400000)) : null;
-  card.innerHTML=
-    '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">'+
-    '<div><div style="font-family:var(--D);font-size:16px;color:var(--gold)">'+tier.toUpperCase()+'</div>'+
-    '<div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-top:4px">'+status.toUpperCase()+'</div></div>'+
-    '<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">'+(status==='trialing'?'TRIAL ENDS':'RENEWS')+'</div>'+
-    '<div style="font-size:13px;color:var(--ink)">'+endStr+(daysLeft!==null?' ('+daysLeft+' days)':'')+'</div></div>'+
-    '</div>'+
-    '<div style="margin-top:10px"><a href="/subscriptions.html" style="color:var(--cyan);font-size:12px">Manage or change your tier &rarr;</a></div>';
+  /* The visible card is rendered by omega-membership.js (one shared component
+     mounted via [data-membership-card] here, in settings and on the dashboard).
+     This function now only feeds the top stat bar, so there is a single
+     implementation of how membership is presented. */
+  const sgMember=document.getElementById('sg-member');
+  const sgMemberSub=document.getElementById('sg-member-sub');
+  if(!sgMember && !sgMemberSub) return;
+  try{
+    const r=await sb.rpc('my_subscription');
+    const sub=r.data||{};
+    const active = sub.status==='active' || sub.status==='trialing' || sub.is_trial===true;
+    const tier = sub.membership_tier || sub.tier || 'NONE';
+    if(sgMember) sgMember.textContent = active ? String(tier).toUpperCase() : 'NONE';
+    if(sgMemberSub) sgMemberSub.textContent = active
+      ? String(sub.status||'active').toUpperCase()
+      : 'No active tier';
+  }catch(e){ console.log('membership stat',e); }
 }
 boot();
 </script>

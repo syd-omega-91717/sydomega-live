@@ -99,6 +99,13 @@ a{color:inherit;text-decoration:none}
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
+/* Oracle runs through the server-side edge function (same one the Concierge
+   uses) -- the API key lives there, never in this page. */
+const ORACLE_ENDPOINT="https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/concierge";
+/* Filled with the member's REAL standing in boot() so the Oracle answers in
+   their actual context rather than generic placeholders. */
+let ORACLE_CTX={sign:'',a:1,b:1,c:1,auth:1.73,tier:1,rank:'Initiate'};
+
 const PREDICTIONS=[
   {cat:'PLATFORM GROWTH',title:'&#937; MEMBERSHIP REACHES 9,999 SOVEREIGNS',conf:91,col:'#C9A84C',desc:'Based on matrix growth rate, viral coefficient of the sovereign referral system, and cross-cultural adoption patterns. The Order achieves the &#937; City activation threshold.',meta:'HORIZON: 24-36 MONTHS &middot; MODEL: GROWTH VELOCITY'},
   {cat:'ECONOMY',title:'OMEGA TOKEN MARKET REALISATION',conf:87,col:'#9B6BF0',desc:'Following legal sign-off on utility token framework and MiCA compliance, the Omega token achieves first real-market recognition. The Token Value Ladder (9 grades) begins activation.',meta:'HORIZON: 18-24 MONTHS &middot; MODEL: REGULATORY TIMELINE'},
@@ -145,20 +152,50 @@ document.getElementById('btn-predict').addEventListener('click',async()=>{
   res.style.display='block'; res.style.color='#9B6BF0';
   res.textContent='ORACLE COMPUTING PROBABILITY SPACE...';
   try{
-    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:`You are the Oracle AI agent of SYD OMEGA 91717 - a sovereign intelligence platform. Answer this civilizational prediction query in the Oracle's voice: speak in probability percentages, timelines, and sovereign certainty. Reference the matrix (729 nodes), the 9.1717Hz frequency, or the 12 pillars where relevant. Keep it to 3-4 sentences. Query: ${q}`}]})});
-    const data=await r.json();
-    const text=data.content?.map(i=>i.text||'').join('')||'Oracle unavailable.';
+    /* Route through the Supabase edge function -- it holds the API key
+       server-side. Calling api.anthropic.com straight from the browser can
+       never work here: there is no key, and embedding one would make it
+       public in the page source. */
+    const sess=(await sb.auth.getSession()).data.session;
+    const hdr={'Content-Type':'application/json'};
+    if(sess){ hdr['Authorization']='Bearer '+sess.access_token; hdr['apikey']="sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"; }
+    const prompt=`Answer this civilizational prediction query in the Oracle's voice: speak in probability percentages, timelines, and sovereign certainty. Reference the matrix (729 nodes), the 9.1717Hz frequency, or the 12 pillars where relevant. Keep it to 3-4 sentences. Make clear this is a symbolic forecast, not a factual prediction. Query: ${q}`;
+    const r=await fetch(ORACLE_ENDPOINT,{method:'POST',headers:hdr,body:JSON.stringify({message:prompt,context:ORACLE_CTX})});
+    if(!r.ok) throw new Error('oracle_http_'+r.status);
+    const j=await r.json();
+    const text=(j && (j.reply||j.text))||'';
+    if(!text) throw new Error('oracle_empty');
     res.style.color='var(--green)';
-    res.innerHTML='<b style="color:#9B6BF0">ORACLE RESPONSE:</b><br>'+text;
+    res.innerHTML='<b style="color:#9B6BF0">ORACLE RESPONSE:</b><br>'+text.replace(/</g,'&lt;');
   }catch(e){
     res.style.color='var(--muted)';
-    res.textContent='Oracle agent offline. Your query has been logged for processing when the connection restores.';
+    res.textContent='Oracle agent is unavailable right now. Nothing was saved -- please try again in a moment.';
+    console.log('oracle',e);
   }
 });
 
 async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
+  /* Load the member's real standing so the Oracle speaks to their actual
+     position, not a hardcoded default. */
+  try{
+    const pr=(await sb.from('profiles')
+      .select('sign,axis_a,axis_b,axis_c,membership_tier')
+      .eq('id',sess.user.id).maybeSingle()).data;
+    if(pr){
+      const a=Number(pr.axis_a||1), b=Number(pr.axis_b||1), c=Number(pr.axis_c||1);
+      const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
+      const rankIdx=Math.max(0,Math.min(RANKS.length-1,Math.floor(Math.min(a,b,c))-1));
+      ORACLE_CTX={
+        sign: pr.sign||'',
+        a:a, b:b, c:c,
+        auth: Math.sqrt(a*a+b*b+c*c),
+        tier: Number(pr.membership_tier||1),
+        rank: RANKS[rankIdx]
+      };
+    }
+  }catch(e){ console.log('oracle ctx',e); }
   renderPredictions(); renderTimeline();
 }
 boot();

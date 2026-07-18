@@ -16,9 +16,22 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS email text;
 -- avoid search_path-hijack on a SECURITY DEFINER function). If this project
 -- already ran omega_master_deploy.sql, this CREATE OR REPLACE is a no-op --
 -- same name, same body.
+-- Recursion-safe owner check.
+-- profiles RLS policies call is_platform_owner(); if this function read
+-- public.profiles it would re-trigger those policies -> "infinite recursion
+-- detected in policy for relation profiles" -> every page breaks.
+-- platform_owners is a tiny RLS-free lookup table that breaks that loop.
+CREATE TABLE IF NOT EXISTS public.platform_owners (user_id uuid PRIMARY KEY);
+INSERT INTO public.platform_owners(user_id)
+  SELECT id FROM public.profiles WHERE COALESCE(is_owner,false)=true
+  ON CONFLICT DO NOTHING;
+ALTER TABLE public.platform_owners ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS platform_owners_read ON public.platform_owners;
+CREATE POLICY platform_owners_read ON public.platform_owners FOR SELECT USING (true);
+
 CREATE OR REPLACE FUNCTION public.is_platform_owner()
-RETURNS boolean LANGUAGE sql SECURITY DEFINER STABLE SET search_path=public AS $$
-  SELECT COALESCE((SELECT is_owner FROM public.profiles WHERE id = auth.uid()), false);
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+  SELECT EXISTS (SELECT 1 FROM public.platform_owners WHERE user_id = auth.uid());
 $$;
 GRANT EXECUTE ON FUNCTION public.is_platform_owner() TO authenticated;
 

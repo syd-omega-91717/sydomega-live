@@ -295,7 +295,7 @@
     user=sess.user;
     var pr=await supabase.from('profiles').select('sign,axis_b,membership_tier').eq('id',user.id).maybeSingle();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to enter the games.'); return; }
-    axisB=Number(pr.data.axis_b||1);
+    axisB=Number(pr.data.axis_b||0.001);
     var memberTier=Number(pr.data.membership_tier)||1;
     await new Promise(function(resolve){
       function resolveTiers(){

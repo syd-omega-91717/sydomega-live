@@ -45,25 +45,37 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* COMMAND STATS */
 .cmd-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;max-width:1400px;margin:0 auto 2rem;padding:0 2rem}
-.cstat{border:1px solid var(--border);background:var(--glass);padding:1rem 1.25rem;position:relative;overflow:hidden;text-decoration:none;display:block;transition:all .3s}
-.cstat:hover{border-color:var(--gold);transform:translateY(-3px)}
+.cstat{border:1px solid var(--border);background:linear-gradient(160deg,rgba(201,168,76,.08),rgba(10,10,15,.4));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:1rem 1.25rem;position:relative;overflow:hidden;text-decoration:none;display:block;transition:all .3s;border-radius:2px;box-shadow:0 8px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.03)}
+.cstat:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.35),0 0 24px rgba(201,168,76,.12),inset 0 1px 0 rgba(255,255,255,.05)}
 .cstat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
 .cstat:hover::before{opacity:1}
 .cstat-label{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem}
-.cstat-val{font-family:'Cinzel Decorative',serif;font-size:1.5rem;color:var(--gold);line-height:1}
+.cstat-val{font-family:'Cinzel Decorative',serif;font-size:1.5rem;color:var(--gold);line-height:1;text-shadow:0 0 12px rgba(201,168,76,.25)}
 .cstat-sub{font-size:.72rem;color:var(--muted);margin-top:.25rem}
+
+/* QUICK ACCESS -- icon-forward card row, real status only */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1400px;margin:0 auto 2rem;padding:0 2rem}
+.quick-card{border:1px solid var(--border);background:linear-gradient(165deg,rgba(201,168,76,.07),rgba(10,10,15,.5));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:3px;padding:1.1rem 1rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.5rem;transition:all .3s;box-shadow:0 8px 20px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.03);position:relative;overflow:hidden}
+.quick-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.1),transparent 70%);opacity:0;transition:opacity .3s}
+.quick-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 16px 34px rgba(0,0,0,.4),0 0 28px rgba(201,168,76,.15)}
+.quick-card:hover::after{opacity:1}
+.quick-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:1px solid var(--qc-col,var(--gold));color:var(--qc-col,var(--gold));background:radial-gradient(circle,rgba(201,168,76,.12),transparent 70%);box-shadow:0 0 16px var(--qc-glow,rgba(201,168,76,.2))}
+.quick-name{font-family:'Cinzel Decorative',serif;font-size:.82rem;color:var(--text)}
+.quick-status{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--muted)}
 
 /* MAIN GRID */
 .cmd-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;max-width:1400px;margin:0 auto;padding:0 2rem 2rem}
-.panel{background:var(--glass);border:1px solid var(--border);position:relative;overflow:hidden}
+.panel{background:linear-gradient(165deg,rgba(201,168,76,.05),rgba(10,10,15,.55));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);position:relative;overflow:hidden;border-radius:2px;box-shadow:0 10px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.03);transition:border-color .3s,box-shadow .3s}
+.panel:hover{border-color:rgba(201,168,76,.35);box-shadow:0 14px 36px rgba(0,0,0,.4),0 0 20px rgba(201,168,76,.06),inset 0 1px 0 rgba(255,255,255,.04)}
 .panel-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
-.panel-title{font-family:'Cinzel Decorative',serif;font-size:.82rem;color:var(--gold);letter-spacing:.1em}
+.panel-title{font-family:'Cinzel Decorative',serif;font-size:.82rem;color:var(--gold);letter-spacing:.1em;text-shadow:0 0 10px rgba(201,168,76,.2)}
 .panel-badge{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--cyan);border:1px solid var(--border2);padding:.2rem .5rem;letter-spacing:.08em}
 .panel-body{padding:1.25rem 1.5rem}
 
 /* MODULE LINKS */
 .module-links{display:flex;flex-direction:column;gap:.4rem}
-.mod-link{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border:1px solid rgba(201,168,76,0.08);text-decoration:none;transition:all .2s}
+.mod-link{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border:1px solid rgba(201,168,76,0.08);border-radius:2px;text-decoration:none;transition:all .25s;position:relative}
+.mod-link:hover{background:linear-gradient(90deg,rgba(201,168,76,.06),transparent);box-shadow:inset 2px 0 0 var(--gold)}
 .mod-link:hover{border-color:var(--border);background:rgba(201,168,76,0.04)}
 .mod-num{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);width:36px;flex-shrink:0}
 .mod-name{font-size:.8rem;color:var(--text);flex:1}
@@ -211,7 +223,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="cstat-val" id="stat-nodes">--</div>
       <div class="cstat-sub" id="stat-nodes-sub">Loading...</div>
     </a>
-    <a href="treasury.html" class="cstat">
+    <a href="vault.html#reserve" class="cstat">
       <div class="cstat-label">&#937; Supply</div>
       <div class="cstat-val">917B</div>
       <div class="cstat-sub">51% vault locked (dormant)</div>
@@ -235,6 +247,40 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="cstat-label">Active Agents</div>
       <div class="cstat-val">12</div>
       <div class="cstat-sub">Neural network live</div>
+    </a>
+  </div>
+
+  <!-- QUICK ACCESS -- real per-viewer status, no fabricated figures -->
+  <div class="quick-grid" id="quick-grid">
+    <a href="honors.html#ascension" class="quick-card" style="--qc-col:#E86A3A;--qc-glow:rgba(232,106,58,.3)">
+      <div class="quick-icon">&#9650;</div>
+      <div class="quick-name">Ascension</div>
+      <div class="quick-status" id="qc-ascension">Loading...</div>
+    </a>
+    <a href="matrix.html" class="quick-card" style="--qc-col:#00E5FF;--qc-glow:rgba(0,229,255,.3)">
+      <div class="quick-icon">&#9670;</div>
+      <div class="quick-name">The Matrix</div>
+      <div class="quick-status" id="qc-matrix">Loading...</div>
+    </a>
+    <a href="cosmos.html" class="quick-card" style="--qc-col:#9B6BF0;--qc-glow:rgba(155,107,240,.3)">
+      <div class="quick-icon">&#9791;</div>
+      <div class="quick-name">Cosmos Hub</div>
+      <div class="quick-status">Agents &middot; Horoscope &middot; Gates</div>
+    </a>
+    <a href="profile.html" class="quick-card" style="--qc-col:#C9A84C;--qc-glow:rgba(201,168,76,.3)">
+      <div class="quick-icon">&#9678;</div>
+      <div class="quick-name">Profile</div>
+      <div class="quick-status" id="qc-profile">Loading...</div>
+    </a>
+    <a href="vault.html" class="quick-card" style="--qc-col:#3fb27f;--qc-glow:rgba(63,178,127,.3)">
+      <div class="quick-icon">&#937;</div>
+      <div class="quick-name">Vault</div>
+      <div class="quick-status">Reserve &middot; Wallet &middot; NFT</div>
+    </a>
+    <a href="family.html" class="quick-card" style="--qc-col:#D9B86A;--qc-glow:rgba(217,184,106,.3)">
+      <div class="quick-icon">&#8962;</div>
+      <div class="quick-name">Family</div>
+      <div class="quick-status">Bloodline &middot; Heritage</div>
     </a>
   </div>
 
@@ -447,6 +493,11 @@ async function loadDashboard(){
   document.getElementById('stat-nodes').textContent = Math.max(1,node);
   document.getElementById('stat-nodes-sub').textContent = auth>=15.588-0.001 ? '9x9x9 complete' : (Math.max(1,node)+' of 729');
   document.getElementById('stat-honors').textContent = ((d.certificates_earned||0)+(d.trophies_earned||0)+(d.medals_earned||0))+'+';
+
+  // Quick Access real status lines
+  const qcAsc=document.getElementById('qc-ascension'); if(qcAsc) qcAsc.textContent = 'Authority '+fmt(auth)+' / 15.588';
+  const qcMat=document.getElementById('qc-matrix'); if(qcMat) qcMat.textContent = 'Node '+Math.max(1,node)+' of 729';
+  const qcPro=document.getElementById('qc-profile'); if(qcPro) qcPro.textContent = d.display_name ? ('Signed in as '+d.display_name) : 'Complete your identity';
 
   // Time Sovereign -- real cumulative presence, milestone at 9h17m17s (33437s)
   try{

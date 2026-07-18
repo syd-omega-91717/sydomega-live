@@ -184,7 +184,7 @@ async function boot(){
       .select('sign,axis_a,axis_b,axis_c,membership_tier')
       .eq('id',sess.user.id).maybeSingle()).data;
     if(pr){
-      const a=Number(pr.axis_a||1), b=Number(pr.axis_b||1), c=Number(pr.axis_c||1);
+      const a=Number(pr.axis_a||0.001), b=Number(pr.axis_b||0.001), c=Number(pr.axis_c||0.001);
       const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
       const rankIdx=Math.max(0,Math.min(RANKS.length-1,Math.floor(Math.min(a,b,c))-1));
       ORACLE_CTX={

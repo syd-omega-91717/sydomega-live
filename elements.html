@@ -246,7 +246,7 @@ async function boot(){
     var pr=(await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle()).data;
     if(pr){
       mySign=pr.sign||'';
-      var a=parseFloat(pr.axis_a||1),b=parseFloat(pr.axis_b||1),c=parseFloat(pr.axis_c||1);
+      var a=parseFloat(pr.axis_a||0.001),b=parseFloat(pr.axis_b||0.001),c=parseFloat(pr.axis_c||0.001);
       myAuth=Math.sqrt(a*a+b*b+c*c);
     }
   }
@@ -399,7 +399,7 @@ boot();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to stand before the Gates.'); return; }
     const n=document.getElementById('gt-notice'); if(n) n.style.display='none';
     const g=document.getElementById('gates'); if(g) g.style.display='';
-    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
+    render(Number(pr.data.axis_a||0.001),Number(pr.data.axis_b||0.001),Number(pr.data.axis_c||0.001));
   }
   document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
 window.bootGates = bootGates;
@@ -450,7 +450,7 @@ window.bootGates = bootGates;
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to claim your Kings.'); return; }
     const n=document.getElementById('k-notice'); if(n) n.style.display='none';
     const g=document.getElementById('kings'); if(g) g.style.display='';
-    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
+    render(Number(pr.data.axis_a||0.001),Number(pr.data.axis_b||0.001),Number(pr.data.axis_c||0.001));
   }
   document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
 window.bootKings = bootKings;

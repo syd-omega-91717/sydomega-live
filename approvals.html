@@ -182,6 +182,20 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <button class="filter-btn" data-filter="all">ALL MEMBERS</button>
     </div>
 
+    <!-- RUNTIME ERROR MONITOR
+         Captured by the global handler in bg.js and written to your own
+         database. Nothing here goes to a third party. -->
+    <div class="card" style="margin-top:clamp(14px,3vw,28px);padding:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <div class="hl-title" style="font-size:14px;margin:0">RUNTIME ERROR MONITOR</div>
+        <button id="err-refresh" style="font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;padding:7px 14px;background:transparent;border:1px solid rgba(201,168,76,.4);color:var(--gold);border-radius:6px;cursor:pointer">REFRESH</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">
+        JavaScript errors members actually hit, grouped by page. Deduplicated and rate-limited at the source.
+      </div>
+      <div id="err-list" style="font-size:12px">Loading...</div>
+    </div>
+
     <!-- ACCESS DECISION AUDIT TRAIL (Book 147, Article XIII)
          Every approve / reject / revoke is recorded by a database trigger that
          no code path can bypass. This panel makes that record visible, which is
@@ -511,6 +525,41 @@ async function boot(){
   /* Auto-refresh every 20 seconds */
   setInterval(load,20000);
 }
+/* ---- RUNTIME ERROR MONITOR ---------------------------------------------- */
+async function loadErrorMonitor(){
+  const box=document.getElementById('err-list');
+  if(!box) return;
+  box.textContent='Loading...';
+  try{
+    const r=await sb.rpc('error_summary',{p_hours:168});
+    if(r.error) throw r.error;
+    const payload=r.data||{};
+    if(payload.ok===false){ box.textContent='Owner access required.'; return; }
+    const rows=payload.rows||[];
+    if(!rows.length){
+      box.innerHTML='<div style="color:var(--green)">No runtime errors reported in the last 7 days.</div>';
+      return;
+    }
+    box.innerHTML=rows.map(function(x){
+      const col=x.kind==='unhandledrejection'?'var(--solar)':'var(--crim)';
+      return '<div style="padding:9px 0;border-bottom:1px solid rgba(201,168,76,.08)">'
+        + '<div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap">'
+        +   '<span style="font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:1.5px;color:'+col+';min-width:56px">x'+x.hits+'</span>'
+        +   '<span style="font-family:\'Courier Prime\',monospace;font-size:10px;color:var(--cyan)">'+auditEsc(x.page||'')+'</span>'
+        +   '<span style="color:var(--muted);font-size:10px">'+(x.affected_members||0)+' member(s)</span>'
+        +   '<span style="color:var(--muted);font-size:10px;margin-left:auto">'+auditWhen(x.last_seen)+'</span>'
+        + '</div>'
+        + '<div style="margin-top:4px;color:var(--ink);font-size:11.5px;word-break:break-word">'+auditEsc(x.message||'')+'</div>'
+        + '</div>';
+    }).join('');
+  }catch(e){
+    box.innerHTML='<div style="color:var(--muted)">Error monitor unavailable. '
+      +'Run <code style="color:var(--gold)">supabase/omega_error_monitor.sql</code> in the Supabase SQL editor to enable it.</div>';
+    console.log('errmon',e);
+  }
+}
+document.getElementById('err-refresh')?.addEventListener('click',loadErrorMonitor);
+
 /* ---- ACCESS DECISION AUDIT TRAIL ---------------------------------------- */
 /* approvals.html has no esc() of its own -- define one here rather than
    assume a global that does not exist. */
@@ -573,6 +622,7 @@ document.getElementById('audit-refresh')?.addEventListener('click',loadAuditTrai
 
 boot();
 loadAuditTrail();
+loadErrorMonitor();
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

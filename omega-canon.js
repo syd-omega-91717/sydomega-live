@@ -57,6 +57,19 @@
     var canon = res[0], els = res[1];
     if (canon) {
       api.tracks = canon.tracks || []; api.structure = canon.structure; api.elementSystem = canon.element_system;
+      api.economy = canon.economy || null;
+      /* Guard: the master vault must be exactly 51% of total supply. The Charter
+         once published a supply that yielded 50.988%. If these ever drift apart
+         again this logs immediately instead of shipping a wrong constitutional
+         figure to members. */
+      if (api.economy) {
+        var _s = Number(api.economy.total_supply), _v = Number(api.economy.master_vault),
+            _p = Number(api.economy.master_vault_pct);
+        if (_s && _v && Math.round(_s * _p / 100) !== _v) {
+          console.error('OmegaCanon: economy mismatch -- ' + _p + '% of ' + _s + ' is ' +
+                        Math.round(_s * _p / 100) + ', but master_vault is ' + _v);
+        }
+      }
       api.tiers = canon.tiers || []; api.tierFeatures = canon.tier_features || {};
       api.loreLattice = canon.lore_lattice || null;
     }

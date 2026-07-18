@@ -235,13 +235,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .s-desc,.g-desc{font-size:.7rem;color:var(--muted);line-height:1.6;margin-bottom:.5rem}
 .g-genre{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--cyan);letter-spacing:.04em;margin-bottom:.4rem}
 .s-status,.g-status{display:inline-block;font-family:'Courier Prime',monospace;font-size:.5rem;letter-spacing:.06em;color:var(--solar);border:1px solid rgba(226,200,109,.4);padding:.15rem .5rem;border-radius:2px}
-
-/* grid containers for the JS-populated card lists (previously had no CSS at
-   all, so every card stacked in a single column instead of forming a grid) */
-.films-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
-.series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
-.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
-.arc-entry{display:flex;gap:.9rem;align-items:flex-start;padding:.8rem 1rem;border-left:2px solid var(--border);background:rgba(201,168,76,.03);border-radius:2px;margin-bottom:.6rem}
 </style>
 </head>
 <body>
@@ -671,8 +664,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="mtab-panel" id="mtab-saga" style="display:none">
     
     <div class="topbar">
-      <div class="t">CINEMATIC UNIVERSE<small>&#937; SAGA &middot; 12 FILMS &middot; 12 SERIES &middot; 12 GAMES &middot; 2026 &rarr; 2037</small></div>
+      <div class="t">CINEMATIC UNIVERSE <span data-canon="fiction"></span><small>&#937; SAGA &middot; 12 FILMS &middot; 12 SERIES &middot; 12 GAMES &middot; 2026 &rarr; 2037</small></div>
     </div>
+
+    <!-- Creative + IP disclaimer. Required by the SYDCM franchise framework
+         (Section 5, Religious + Cultural Risk Management) on all productions.
+         Also protects the "status" labels below from being read as claims that
+         principal photography has begun. -->
+    <div class="pad" style="margin:16px 0 0">
+      <div style="border-left:2px solid rgba(232,106,58,.5);background:rgba(232,106,58,.05);padding:14px 16px;max-width:78ch;border-radius:2px">
+        <div style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:2px;color:#E86A3A;margin-bottom:8px">CREATIVE WORK &middot; INTELLECTUAL PROPERTY NOTICE</div>
+        <p style="font-weight:300;color:var(--muted);font-size:13px;line-height:1.75;margin:0">
+          This work is fictional and inspired by mythology, symbolism, astronomy, and speculative fantasy.
+          It does not promote or endorse religious beliefs, occult practices, or astrological doctrine.
+          All characters, organisations, cosmologies, and artifacts are original to the
+          S.Y.D Cinematic Multiverse and are not affiliated with, endorsed by, or derived from any
+          existing film studio or franchise. Development stages shown below describe the
+          <b style="color:var(--solar)">creative development pipeline</b> and do not represent
+          released titles, distribution agreements, or commenced principal photography.
+        </p>
+      </div>
+    </div>
+
     <div class="pad" style="margin:20px 0">
       <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75">Twelve films. Twelve series. Twelve games. One saga. The &#937; Cinematic Universe chronicles the rise of the sovereign order across nine eras &mdash; from the discovery of the frequency to the birth of a new civilisation. Each chapter is bound to a phase of the matrix, an element of the canon, and a gate of the Order.</p>
       <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap">

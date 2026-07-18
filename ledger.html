@@ -179,11 +179,35 @@
             if (action === 'BACK') window.location.href = '/evolution.html';
             if (action === 'NEXT') window.location.href = '/dashboard.html';
         }
-        document.getElementById('omniSearch').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                alert(`Querying ledger allocation registries for: "${this.value}"`);
+        /* Real filtering over the ledger rows actually present on this page.
+           (Previously this only showed an alert and filtered nothing.) */
+        (function(){
+            var input = document.getElementById('omniSearch');
+            var table = document.querySelector('.ledger-table');
+            if (!input || !table) return;
+            var tbody = table.querySelector('tbody');
+            if (!tbody) return;
+
+            var empty = document.createElement('div');
+            empty.style.cssText = 'display:none;padding:18px 4px;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;color:#85837b';
+            empty.textContent = 'NO LEDGER ENTRIES MATCH THAT QUERY.';
+            table.parentNode.insertBefore(empty, table.nextSibling);
+
+            function applyFilter(){
+                var q = (input.value || '').trim().toLowerCase();
+                var rows = tbody.querySelectorAll('tr');
+                var shown = 0;
+                for (var i = 0; i < rows.length; i++) {
+                    var match = !q || (rows[i].textContent || '').toLowerCase().indexOf(q) !== -1;
+                    rows[i].style.display = match ? '' : 'none';
+                    if (match) shown++;
+                }
+                empty.style.display = shown === 0 ? 'block' : 'none';
             }
-        });
+
+            input.addEventListener('input', applyFilter);
+            input.addEventListener('keypress', function(e){ if (e.key === 'Enter') applyFilter(); });
+        })();
     </script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';

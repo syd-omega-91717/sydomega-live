@@ -80,7 +80,11 @@
     } else if (motif === 'space') {
       for (var st = 0; st < 30; st++) {
         var sx = ((st * 73 + t * 2) % W), sy = ((st * 47 + t * 1.3) % H);
-        var ss = 0.5 + Math.sin(t * 2 + st) * 0.8;
+        /* Math.sin spans -1..1, so 0.5 + sin*0.8 spans -0.3..1.3 -- the star
+           radius went negative whenever sin < -0.625, throwing
+           IndexSizeError: The radius provided (-0.105442) is negative.
+           Clamped to a visible minimum; the twinkle is unchanged. */
+        var ss = Math.max(0.15, 0.5 + Math.sin(t * 2 + st) * 0.8);
         ctx.beginPath(); ctx.arc(sx, sy, ss, 0, Math.PI * 2);
         ctx.fillStyle = hex(col, 0.7); ctx.fill();
       }

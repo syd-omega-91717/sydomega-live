@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Research &amp; Discovery</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 &mdash; Research &amp; Discovery"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/research.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 &mdash; Research &amp; Discovery"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -98,7 +98,7 @@ a{color:inherit;text-decoration:none}
   <aside class="side" id="omega-side" data-page="research"></aside>
   <main class="main">
     <div class="topbar">
-      <div class="t">RESEARCH &amp; DISCOVERY<small>PILLAR 12 &middot; SCIENTIFIC ENGINE &middot; CIVILIZATIONAL BREAKTHROUGHS</small></div>
+      <div class="t" data-tier="research_lab">RESEARCH &amp; DISCOVERY<small>PILLAR 12 &middot; SCIENTIFIC ENGINE &middot; CIVILIZATIONAL BREAKTHROUGHS</small></div>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">The Research &amp; Discovery pillar accelerates civilizational breakthroughs through AI-assisted hypothesis validation, innovation acceleration, quantum optimisation, and planet-scale digital twins. Every discovery feeds back into the matrix as a knowledge event, advancing the sovereign Order&apos;s collective axis A.</p>
 
@@ -106,7 +106,7 @@ a{color:inherit;text-decoration:none}
       <div class="kpi"><div class="lbl">ACTIVE LABS</div><div class="val" id="kpi-labs">9</div><div class="sub">Research domains</div></div>
       <div class="kpi"><div class="lbl">HYPOTHESES</div><div class="val" id="kpi-hyp">--</div><div class="sub">Member-submitted</div></div>
       <div class="kpi"><div class="lbl">BREAKTHROUGHS</div><div class="val">17</div><div class="sub">Platform-wide</div></div>
-      <div class="kpi"><div class="lbl">TWIN NODES</div><div class="val">729</div><div class="sub">Digital twin grid</div></div>
+      <div class="kpi"><div class="lbl">TWIN NODES</div><div class="val" data-canon-nodes="twelve">104,976</div><div class="sub">Digital twin grid</div></div>
       <div class="kpi"><div class="lbl">QUANTUM OPS</div><div class="val">&#8734;</div><div class="sub">Theoretical operations</div></div>
     </div>
 
@@ -224,7 +224,9 @@ document.getElementById('btn-submit').addEventListener('click',async()=>{
   res.style.display='block'; res.style.color='var(--solar)';
   res.textContent='SUBMITTING HYPOTHESIS...';
   const { error, count } = await sb.from('research_hypotheses').insert({domain,title,body});
-  if(error){
+  
+  /* progression: this action now advances the matrix (was inert) */
+  window.OmegaProgress&&OmegaProgress.record({kind:'research',task:'research:'+Date.now(),axis:'a',title:'Hypothesis Filed'});if(error){
     res.style.color='var(--crim)';
     res.textContent='Could not submit: '+error.message;
     return;

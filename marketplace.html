@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717  --  Marketplace</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717  --  Marketplace"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/marketplace.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717  --  Marketplace"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -175,7 +175,9 @@
       try{ var up=await window.OmegaStorage.upload(fileEl.files[0],'uploads'); file_path=up&&(up.path||up.fullPath||up.key)||null; }catch(e){ }
     }
     var ins=await supabase.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
-    if(ins.error){ msg.style.color='var(--crimson)'; msg.textContent='Could not publish: '+ins.error.message; return; }
+    
+  /* progression: this action now advances the matrix (was inert) */
+  window.OmegaProgress&&OmegaProgress.record({kind:'marketplace',task:'marketplace:'+Date.now(),axis:'b',title:'Asset Listed'});if(ins.error){ msg.style.color='var(--crimson)'; msg.textContent='Could not publish: '+ins.error.message; return; }
     msg.style.color='var(--green)'; msg.textContent='Listing published.';
     document.getElementById('f-title').value=''; document.getElementById('f-price').value=''; document.getElementById('f-desc').value=''; fileEl.value='';
     load();

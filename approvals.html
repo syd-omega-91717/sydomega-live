@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#0A0A0F"/>
 <title>&#937; SYD OMEGA 91717 -- Access Control</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -15,14 +15,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 -- Access Control"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/approvals.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Access Control"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -525,6 +525,47 @@ async function boot(){
   /* Auto-refresh every 20 seconds */
   setInterval(load,20000);
 }
+/* ---- SUBMISSION QUEUE ACTIONS ------------------------------------------
+   queueRow() rendered status buttons with data-kind / data-id / data-status,
+   but nothing ever listened for the click. The owner could SEE contracts and
+   reservations and had no way to act on them: set_contract_status and
+   set_reservation_status existed in the database and were never called from
+   anywhere. Members submitted, the row sat at 'pending' forever.
+
+   One delegated listener closes the loop for every queue, including any added
+   later -- the RPC name is derived from data-kind. */
+const QUEUE_RPC = {
+  contract:    'set_contract_status',
+  reservation: 'set_reservation_status',
+  consult:     'set_consult_status'
+};
+
+document.addEventListener('click', async function (ev) {
+  const btn = ev.target && ev.target.closest ? ev.target.closest('button.action-btn[data-kind][data-id][data-status]') : null;
+  if (!btn) return;
+  const kind = btn.getAttribute('data-kind');
+  const id = btn.getAttribute('data-id');
+  const status = btn.getAttribute('data-status');
+  const fn = QUEUE_RPC[kind];
+  if (!fn) return;
+
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = '...';
+  try {
+    const r = await sb.rpc(fn, { p_id: id, p_status: status });
+    if (r.error) throw r.error;
+    const d = r.data || {};
+    if (d.ok === false) { alert('Could not update: ' + (d.error || 'refused')); btn.textContent = original; btn.disabled = false; return; }
+    /* refresh whichever queue this row belongs to */
+    if (kind === 'contract' && typeof loadContracts === 'function') loadContracts();
+    else if (kind === 'reservation' && typeof loadReservations === 'function') loadReservations();
+  } catch (e) {
+    alert('Could not update: ' + (e.message || 'unavailable'));
+    btn.textContent = original; btn.disabled = false;
+    console.log('queue action', e);
+  }
+});
+
 /* ---- RUNTIME ERROR MONITOR ---------------------------------------------- */
 async function loadErrorMonitor(){
   const box=document.getElementById('err-list');

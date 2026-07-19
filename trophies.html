@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Trophy Vault</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 -- Trophy Vault"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/trophies.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Trophy Vault"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -190,7 +190,8 @@ async function boot(){
     const card=document.createElement('div');card.className='trophy-card'+(earned?' earned':'');
     if(earned) card.style.cssText+=`border-top-color:${td.col}77`;
     const cv=document.createElement('canvas');cv.className='tc-canvas';
-    card.innerHTML=`<div class="tc-num">TROPHY ${td.n} OF 12</div><div class="tc-name" style="color:${earned?td.col:'var(--muted)'}">${td.name}</div><div class="tc-element" style="color:${earned?td.col:'rgba(133,131,123,.4)'}">ELEMENT: ${td.el}</div><span class="tc-tier" style="color:${earned?td.col:'var(--muted)'};border-color:${earned?td.col+'44':'rgba(133,131,123,.2)'}">OMEGA</span>${eDate?`<div class="tc-date">EARNED: ${new Date(eDate).toLocaleDateString()}</div>`:isOwner?'<div class="tc-date">EARNED: OMEGA MASTER</div>':'<div class="tc-locked">LOCKED -- PROGRESS REQUIRED</div>'}`;
+    card.innerHTML=`<div class="tc-num">TROPHY ${td.n} OF 12</div><div class="tc-name" style="color:${earned?td.col:'var(--muted)'}">${td.name}</div><div class="tc-element" style="color:${earned?td.col:'rgba(133,131,123,.4)'}">ELEMENT: ${td.el}</div><span class="tc-tier" style="color:${earned?td.col:'var(--muted)'};
+    card.insertAdjacentHTML('beforeend','<div data-canon-lattice="twelve"></div>');border-color:${earned?td.col+'44':'rgba(133,131,123,.2)'}">OMEGA</span>${eDate?`<div class="tc-date">EARNED: ${new Date(eDate).toLocaleDateString()}</div>`:isOwner?'<div class="tc-date">EARNED: OMEGA MASTER</div>':'<div class="tc-locked">LOCKED -- PROGRESS REQUIRED</div>'}`;
     card.insertBefore(cv,card.firstChild);
     tg.appendChild(card);
     requestAnimationFrame(()=>drawTrophyIcon(cv,td.col,earned));

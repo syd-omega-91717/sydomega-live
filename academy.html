@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717  --  The Academy</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717  --  The Academy"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/academy.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717  --  The Academy"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -114,8 +114,8 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="academy"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">THE ACADEMY<small>12 DISCIPLINES  .  12 LESSONS  .  9x9x9 GATED</small></div></div>
-    <p class="intro">Twelve disciplines, each with twelve lessons  --  <b>144 nodes of knowledge</b>. Each lesson is a trial of the matrix itself: read the 729 and answer without error. Every cleared node raises your <b>Knowledge</b>, and so your whole ascent. A discipline opens only when your matrix is ready.</p>
+    <div class="topbar"><div class="t">THE ACADEMY<small>12 DISCIPLINES  .  12 LESSONS  .  12x12x9x9x9 GATED</small></div></div>
+    <p class="intro">Twelve disciplines, each with twelve lessons  --  <b>144 nodes of knowledge</b>. Each lesson is a trial of the matrix itself: read the matrix and answer without error. Every cleared node raises your <b>Knowledge</b>, and so your whole ascent. A discipline opens only when your matrix is ready.</p>
     <div class="mstat" id="mstat"></div>
 
     <div class="sechead">THE TWELVE DISCIPLINES</div>
@@ -186,7 +186,7 @@
       var unlocked=discUnlocked(d), n=clearsIn(d);
       var el=document.createElement('div'); el.className='game'+(unlocked?'':' locked')+(d===selD?' sel':'');
       var lock=unlocked?'':(!tierHasAcademyFull?'<div class="lock">SEEKER TIER REQUIRED &middot; <a href="/subscriptions.html" style="color:var(--gold)">upgrade to unlock all 12 disciplines</a></div>':'<div class="lock">LOCKED  .  need Knowledge \u2265 '+d+' and 6 lessons cleared in '+ROMAN[d-1]+'</div>');
-      el.innerHTML='<div class="gi">DISCIPLINE '+ROMAN[d]+' \u00B7 '+gm[0].toUpperCase()+'</div><div class="gn">'+gm[1]+'\u2019s Codex</div><div class="gs">'+n+' / 12 CLEARED</div><div class="bar"><i style="width:'+(n/12*100)+'%"></i></div>'+lock;
+      el.innerHTML='<div class="gi">DISCIPLINE '+ROMAN[d]+' \u00B7 '+gm[0].toUpperCase()+'</div><div class="gn">'+gm[1]+'\u2019s Codex</div><div class="gs">'+n+' / 12 CLEARED</div><div class="bar"><i style="width:'+(n/12*100)+'%"></i></div><div data-canon-lattice=\"twelve\"></div>'+lock;
       if(unlocked) el.addEventListener('click',function(){ openDisc(d); });
       box.appendChild(el);
     });

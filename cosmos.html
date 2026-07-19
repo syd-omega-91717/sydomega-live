@@ -991,7 +991,7 @@ function buildMandalaGrid(memberSign){
     const card=document.createElement('div'); card.className='mandala-card';
     if(s.name.toLowerCase()===memberSign.toLowerCase()) card.classList.add('active-sign');
     const cv=document.createElement('canvas'); cv.className='mc-canvas';
-    card.innerHTML='<div class="mc-name" style="color:'+s.col+'">'+s.name+'</div><div class="mc-dates">'+s.dates+'</div><span class="mc-el" style="color:'+s.elCol+';border-color:'+s.elCol+'44">'+s.el+'</span><div class="mc-deity">'+s.deity+'</div>';
+    card.innerHTML='<div class="mc-name" style="color:'+s.col+'">'+s.name+'</div><div class="mc-dates">'+s.dates+'</div><span class="mc-el" style="color:'+s.elCol+';border-color:'+s.elCol+'44">'+s.el+'</span><div class="mc-deity">'+s.deity+'</div><div data-canon-lattice=\"twelve\"></div>';
     card.insertBefore(cv, card.firstChild);
     g.appendChild(card);
     requestAnimationFrame(function(){ drawMandala(cv,s,90,true); });

@@ -360,6 +360,38 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
   </div>
 
+  <!-- LATTICE STANDING -- the member's absolute position in the 104,976-node
+       lattice. Before the lattice engine the platform could only express one
+       9x9x9 cube (729 positions, 0.69% of canon); track and phase existed in
+       canon and in this interface but not in the engine. -->
+  <div class="node-grid-section" style="padding-bottom:1rem">
+    <div class="axis-map-head">
+      <span class="axis-map-title">Lattice Standing</span>
+      <span class="axis-map-count" id="lat-node">-- / 104,976</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:.7rem">
+      <div class="o-card" style="border:1px solid var(--line);text-align:center">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold)" id="lat-track">--</div>
+        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">TRACK / 12</div>
+      </div>
+      <div class="o-card" style="border:1px solid var(--line);text-align:center">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--cyan)" id="lat-phase">--</div>
+        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">PHASE / 12</div>
+      </div>
+      <div class="o-card" style="border:1px solid var(--line);text-align:center">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--green)" id="lat-phases">--</div>
+        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">PHASES SEALED</div>
+      </div>
+      <div class="o-card" style="border:1px solid var(--line);text-align:center">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--solar)" id="lat-pct">--</div>
+        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">OF THE LATTICE</div>
+      </div>
+    </div>
+    <div style="height:5px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin-top:12px">
+      <i id="lat-bar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width .8s ease"></i>
+    </div>
+  </div>
+
   <!-- NODE MAPS -- one per axis, each a FULL 9x9x9 cube (729 nodes).
        Previously only Axis A was shown, and only as a single 9x9 plane (81
        cells), so two thirds of the member's progression had no representation
@@ -988,5 +1020,28 @@ function callWhenReady(fnName){
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const _sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  (async function(){
+    try{
+      const s=(await _sb.auth.getSession()).data.session; if(!s) return;
+      const r=await _sb.rpc('my_lattice'); if(r.error) throw r.error;
+      const d=r.data||{}; if(!d.node) return;
+      const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
+      set('lat-track', d.track); set('lat-phase', d.phase);
+      set('lat-phases', d.phases_done);
+      set('lat-pct', Number(d.percent||0).toFixed(2)+'%');
+      set('lat-node', Number(d.node).toLocaleString()+' / 104,976');
+      const bar=document.getElementById('lat-bar');
+      if(bar) bar.style.width=Math.max(0.4, Number(d.percent||0))+'%';
+    }catch(e){
+      const el=document.getElementById('lat-node');
+      if(el) el.textContent='run omega_lattice_engine.sql';
+      console.log('lattice',e);
+    }
+  })();
+</script>
+
 </body>
 </html>

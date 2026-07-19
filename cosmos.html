@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Cosmos</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 -- Cosmos"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/cosmos.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Cosmos"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -328,7 +328,7 @@ const GATES=[
   {n:9,name:'THE GATE OF DIAMOND',auth:13.90,col:'#9B6BF0',desc:'The apex approach gate. The Crystal-Omega Node becomes visible. The 9.9.9 coordinate nears.'},
   {n:10,name:'THE GATE OF CRYSTAL',auth:14.40,col:'#00E5FF',desc:'The penultimate gate. All 12 sovereign roles fulfilled. The Omega identity is confirmed.'},
   {n:11,name:'THE GATE OF REBIRTH',auth:15.00,col:'#3fb27f',desc:'The transformation gate. The sovereign dies to all previous identities and is reborn at the Omega coordinate.'},
-  {n:12,name:'THE OMEGA GATE',auth:15.58,col:'#C9A84C',desc:'The final gate. Coordinate (9,9,9) achieved. All 729 nodes activated. OMEGA MASTER status confirmed. Eternal.'},
+  {n:12,name:'THE OMEGA GATE',auth:15.58,col:'#C9A84C',desc:'The final gate. Coordinate (9,9,9) achieved. All 104,976 nodes activated. OMEGA MASTER status confirmed. Eternal.'},
 ];
 
 const PANTHEONS=[
@@ -862,7 +862,14 @@ function drawHeroWheel(sign){
   const S=160, ctx=cv.getContext('2d');
   const CX=320, CY=320, R=280;
   let t=0;
-  const si=SIGNS.findIndex(s=>s.name===sign)||0;
+  /* Two bugs lived on this line:
+     1. case-sensitive compare -- SIGNS[].name is 'ARIES' but the database
+        stores 'Aries', so findIndex never matched and returned -1;
+     2. `findIndex(...)||0` cannot catch that, because -1 is TRUTHY, so si
+        stayed -1 and SIGNS[-1] is undefined -> "Cannot read properties of
+        undefined (reading 'col')", the error members actually hit. */
+  let si=SIGNS.findIndex(s=>String(s.name).toLowerCase()===String(sign||'').toLowerCase());
+  if(si<0) si=0;
   function frame(){
     t+=0.008;
     ctx.clearRect(0,0,640,640);
@@ -938,11 +945,14 @@ const GATES=['GATE I','GATE III','GATE V','GATE VII','GATE IX','GATE XI'];
 const PLANETS_RULING=['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Pluto','Jupiter','Saturn','Uranus','Neptune'];
 
 function getDailyOracle(sign){
-  const d=new Date(); const seed=(d.getDate()+d.getMonth()*31+(SIGNS.findIndex(s=>s.name===sign)||0));
+  /* Same defect as the mandala: case-sensitive match against a title-case
+     DB value returns -1, and `||0` cannot catch it because -1 is truthy. */
+  const signIdx=(function(){var i=SIGNS.findIndex(s=>String(s.name).toLowerCase()===String(sign||'').toLowerCase());return i<0?0:i;})();
+  const d=new Date(); const seed=(d.getDate()+d.getMonth()*31+signIdx);
   const energy=ENERGIES[seed%12];
   const axis=AXES[seed%4];
   const gate=GATES[seed%6];
-  const ruler=PLANETS_RULING[SIGNS.findIndex(s=>s.name===sign)||0];
+  const ruler=PLANETS_RULING[signIdx];   /* was PLANETS_RULING[-1] -> undefined */
   document.getElementById('r-energy').textContent=energy;
   document.getElementById('r-axis').textContent=axis;
   document.getElementById('r-planet').textContent=ruler;

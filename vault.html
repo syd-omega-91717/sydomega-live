@@ -491,20 +491,8 @@ function fillRing(el, glyph, col, locked){
 
 
 
-function buildTxLog(){
-  const g=document.getElementById('tx-log');g.innerHTML='';
-  const items=[
-    {dot:'var(--green)',desc:'Platform access -- trial period',type:'ACCESS',amount:'&#937; 0',date:'TODAY',col:'var(--green)'},
-    {dot:'var(--cyan)',desc:'Academy module -- Knowledge A advancement',type:'REWARD',amount:'+&#937; 91.7',date:'TODAY',col:'var(--cyan)'},
-    {dot:'var(--gold)',desc:'Monthly subscription renewal',type:'SUBSCRIPTION',amount:'READY TO ACTIVATE',date:'PENDING',col:'var(--muted)'},
-    {dot:'var(--muted)',desc:'Stripe payment gateway',type:'PENDING',amount:'$0.00',date:'--',col:'var(--muted)'},
-  ];
-  items.forEach(it=>{
-    const d=document.createElement('div');d.className='txi-item tx-item';
-    d.innerHTML=`<div class="txi-dot" style="background:${it.dot}"></div><div class="txi-body"><div class="txi-desc">${it.desc}</div><span class="txi-type">${it.type}</span></div><div class="txi-amount" style="color:${it.col}">${it.amount}</div><div class="txi-date">${it.date}</div>`;
-    g.appendChild(d);
-  });
-}
+/* buildTxLog removed with the payments panel -- transaction history lives on
+   subscriptions.html (the single membership & payments page). */
 
 async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
@@ -520,7 +508,12 @@ async function boot(){
   }catch(e){ document.getElementById('points-mini').textContent='-- PTS'; }
   document.getElementById('res-phys').textContent='\u03A9 '+Math.round(xp*.6).toLocaleString();
   document.getElementById('res-dig').textContent='\u03A9 '+Math.round(xp*.4).toLocaleString();
-  buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();buildTxLog();
+  buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();
+  /* buildTxLog() removed: its #tx-log element lived in the payments panel that
+     was consolidated into subscriptions.html. The call survived the panel and
+     threw on a null element -- killing the boot chain two lines before
+     requestAnimationFrame(drawVaultCube), which is why the reserve emblem and
+     the rotating cube stopped appearing. */
   buildEarningLedger(sess.user.id,a,b,c);
   requestAnimationFrame(()=>{drawVaultCube();drawWave();});
 }

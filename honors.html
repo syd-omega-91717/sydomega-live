@@ -203,7 +203,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="hero-band">
     <div class="hero-eyebrow">M4 // ACHIEVEMENT SYSTEM</div>
     <h1 class="hero-title">Hall of Honors</h1>
-    <p class="hero-sub">Trophies, medals, certificates, and grade insignia earned through evolution across the 9x9x9 Matrix -- the sovereign record of ascension.</p>
+    <p class="hero-sub">Trophies, medals, certificates, and grade insignia earned through evolution across the 12x12x9x9x9 Matrix -- the sovereign record of ascension.</p>
   </div>
 
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--border);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
@@ -271,7 +271,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-meta">
         <div class="honor-type">Trophy</div>
         <div class="honor-name">Omega Sovereign</div>
-        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 15.588. Absolute completion of the 729-node progression path.</div>
+        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 15.588. Absolute completion of the 104,976-node progression path.</div>
         <div class="honor-footer">
           <span class="honor-tier-badge">OMEGA</span>
           <span class="honor-date">2026-07-11</span>
@@ -415,7 +415,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-meta">
         <div class="honor-type">Certificate</div>
         <div class="honor-name">Knowledge Apex</div>
-        <div class="honor-desc">Axis A Knowledge at 9.000. Full completion of all 729 matrix nodes on the knowledge dimension. Verified and sealed.</div>
+        <div class="honor-desc">Axis A Knowledge at 9.000. Full completion of all 104,976 matrix nodes on the knowledge dimension. Verified and sealed.</div>
         <div class="honor-footer">
           <span class="honor-tier-badge">OMEGA</span>
           <span class="honor-date">2026-07-11</span>
@@ -487,7 +487,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-meta">
         <div class="honor-type">Grade Card</div>
         <div class="honor-name">Grade 12 -- Final Ascension</div>
-        <div class="honor-desc">Highest grade in the 12-grade progression system. Coarse band completed across all 729 matrix nodes. Sovereign status confirmed.</div>
+        <div class="honor-desc">Highest grade in the 12-grade progression system. Coarse band completed across all 104,976 matrix nodes. Sovereign status confirmed.</div>
         <div class="honor-footer">
           <span class="honor-tier-badge">OMEGA</span>
           <span class="honor-date">2026-07-11</span>
@@ -572,7 +572,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <!-- CONTENT (right column) -->
     <div class="content-panel">
       <div class="topbar-inner">
-        <div class="ti-title">THE ASCENT<small>9x9x9 MATRIX . 729 NODES . 12 PHASES</small></div>
+        <div class="ti-title">THE ASCENT<small>12x12x9x9x9 MATRIX . 104,976 NODES . 12 PHASES</small></div>
         <canvas id="auth-gauge" width="200" height="200" style="width:100px;height:100px"></canvas>
       </div>
 
@@ -647,7 +647,7 @@ const PHASES=[
   {n:9,title:'THE ECONOMIC ENGINE',desc:'Token economy active. Marketplace transacting. Income allocation flowing.',col:'#C9A84C',phase:'PHASE III',progress:0},
   {n:10,title:'THE LEGACY',desc:'Heritage vault sealed. Bloodline protocol active. Succession documented.',col:'#8B0000',phase:'PHASE IV',progress:0},
   {n:11,title:'THE COVENANT',desc:'All 12 gates cleared. All 12 series unlocked. Omega status imminent.',col:'#E2C86D',phase:'PHASE IV',progress:0},
-  {n:12,title:'THE OMEGA MASTER',desc:'Coordinate (9,9,9) reached. All 729 nodes activated. The frequency is complete.',col:'#C9A84C',phase:'PHASE IV',progress:0},
+  {n:12,title:'THE OMEGA MASTER',desc:'Coordinate (9,9,9) reached. All 104,976 nodes activated. The frequency is complete.',col:'#C9A84C',phase:'PHASE IV',progress:0},
 ];
 
 function fillRing(el, glyph, col, locked){
@@ -670,7 +670,8 @@ function buildLadder(userLevel){
     row.style.cursor='pointer';
     row.innerHTML=`
       <div class="lr-connector"></div>
-      <span class="lr-badge-emblem" style="display:inline-block;width:56px;height:56px"></span>
+      <span class="lr-badge-emblem" style="display:inline-block;
+    row.insertAdjacentHTML('beforeend','<div data-canon-lattice="twelve"></div>');width:56px;height:56px"></span>
       <div class="lr-body">
         <div class="lrb-num">STAGE ${L.n} &nbsp; ${L.mat}</div>
         <div class="lrb-name" style="color:${done||current?L.col:'rgba(133,131,123,0.5)'}">${L.name}</div>

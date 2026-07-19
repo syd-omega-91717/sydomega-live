@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717 &mdash; The Nine Elements</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -12,14 +12,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 &mdash; The Nine Elements"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/elements.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 &mdash; The Nine Elements"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -131,7 +131,7 @@ a{color:inherit;text-decoration:none}
 <div class="mtab-panel" id="mtab-gates" style="display:none">
   
     <div class="topbar"><div class="t">THE TWELVE GATES <span data-canon="mechanic"></span><small>TWELVE PHASES  .  TWELVE THRESHOLDS  .  9x9x9</small></div></div>
-    <p class="intro">Twelve gates rise along the 729  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 15.58. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
+    <p class="intro">Twelve gates rise along the 104,976  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 15.58. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
     <div class="mstat" id="mstat"></div>
     <div class="gates" id="gates"></div>
   
@@ -352,7 +352,7 @@ boot();
       el.style.cursor='pointer';
       el.innerHTML='<span class="gate-ring-emblem" style="display:inline-block;width:52px;height:52px"></span><div class="body">'+
         '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+' \u00B7 OPENS AT AUTHORITY '+threshold(i).toFixed(2)+'</div>'+
-        '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
+        '<div data-canon-lattice=\"twelve\"></div></div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
       box.appendChild(el);
       var ringEl=el.querySelector('.gate-ring-emblem');
       fillRing(ringEl, ROMAN[i], GATE_COLS[i], !isOpen);
@@ -438,7 +438,7 @@ window.bootGates = bootGates;
       var isCrowned=auth>=threshold(i);
       var isNext=(!isCrowned) && (i===crowned);
       var el=document.createElement('div'); el.className='king'+(isCrowned?' crowned':' locked')+(isNext?' next':'');
-      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div>';
+      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div><div data-canon-lattice=\"twelve\"></div>';
       box.appendChild(el);
     });
   }

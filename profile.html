@@ -1871,6 +1871,7 @@ function buildArchetypes(memberSign){
     const isOwn=a.type.includes(memberSign||'');
     if(isOwn) c.classList.add('active');
     c.innerHTML=`<div class="ac-icon">${a.icon}</div><div class="ac-name" style="${isOwn?'color:var(--gold)':''}">${a.name}</div><div class="ac-type" style="color:var(--cyan)">${a.type}</div><div class="ac-desc">${a.desc}</div><div class="ac-traits">${a.traits.map(t=>`<span class="ac-trait">${t}</span>`).join('')}</div>`;
+    c.insertAdjacentHTML('beforeend','<div data-canon-lattice="twelve"></div>');
     g.appendChild(c);
   });
 }

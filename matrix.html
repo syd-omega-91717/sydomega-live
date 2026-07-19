@@ -90,7 +90,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* NODE GRID -- MINI */
 .node-grid-section{max-width:1400px;margin:0 auto;padding:0 2rem 2rem}
-.node-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin-top:.75rem}
+.node-grid{display:grid;grid-template-columns:repeat(27,1fr);gap:1px;margin-top:.6rem}
+.axis-map{margin-bottom:1.6rem}
+.axis-map-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.axis-map-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em}
+.axis-map-count{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)}
+.axis-map-note{font-size:.78rem;color:var(--muted);line-height:1.8;margin-top:.5rem;max-width:80ch}
+@media(max-width:760px){.node-grid{grid-template-columns:repeat(27,1fr);gap:.5px}}
 .node-cell{aspect-ratio:1;border:1px solid rgba(201,168,76,0.08);display:flex;align-items:center;justify-content:center;font-family:'Courier Prime',monospace;font-size:.42rem;color:var(--muted);transition:all .2s;cursor:default}
 .node-cell.lit{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);color:var(--gold)}
 .node-cell.apex{background:rgba(201,168,76,0.25);border-color:var(--gold);color:var(--gold);font-size:.55rem;animation:apex-blink 2s ease-in-out infinite}
@@ -223,7 +229,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <div class="page">
   <div class="hero-band">
     <div class="hero-eyebrow">CORE ENGINE // 9x9x9</div>
-    <h1 class="hero-title">The 729-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
+    <h1 class="hero-title">The <span data-canon-nodes="twelve">104,976</span>-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
     <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A^2 + B^2 + C^2). Apex = 15.588.</p>
   </div>
 
@@ -266,7 +272,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="matrix-canvas-panel">
       <div class="matrix-canvas-header">
         <span class="matrix-canvas-title">3D Matrix Projection</span>
-        <span class="matrix-badge">9x9x9 // 729 NODES</span>
+        <span class="matrix-badge">12&times;12&times;9&times;9&times;9 // <span data-canon-nodes="twelve">104,976</span> NODES</span>
       </div>
       <canvas id="matrix-canvas" height="420"></canvas>
       <div class="coord-display">
@@ -354,13 +360,40 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
   </div>
 
-  <!-- NODE GRID -->
+  <!-- NODE MAPS -- one per axis, each a FULL 9x9x9 cube (729 nodes).
+       Previously only Axis A was shown, and only as a single 9x9 plane (81
+       cells), so two thirds of the member's progression had no representation
+       and the third was showing one slice of nine. -->
   <div class="node-grid-section">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-      <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">Axis A -- 9x9 Node Map (Plane 9)</span>
-      <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)" id="node-count">-- / 81 COMPLETED</span>
+    <div class="axis-map" data-axis="a">
+      <div class="axis-map-head">
+        <span class="axis-map-title">Axis A &middot; Knowledge &mdash; 9&times;9&times;9 Node Map</span>
+        <span class="axis-map-count" id="node-count-a">-- / 729 COMPLETED</span>
+      </div>
+      <div class="node-grid" id="node-grid-a"></div>
     </div>
-    <div class="node-grid" id="node-grid"></div>
+
+    <div class="axis-map" data-axis="b">
+      <div class="axis-map-head">
+        <span class="axis-map-title">Axis B &middot; Mastery &mdash; 9&times;9&times;9 Node Map</span>
+        <span class="axis-map-count" id="node-count-b">-- / 729 COMPLETED</span>
+      </div>
+      <div class="node-grid" id="node-grid-b"></div>
+    </div>
+
+    <div class="axis-map" data-axis="c">
+      <div class="axis-map-head">
+        <span class="axis-map-title">Axis C &middot; Contribution &mdash; 9&times;9&times;9 Node Map</span>
+        <span class="axis-map-count" id="node-count-c">-- / 729 COMPLETED</span>
+      </div>
+      <div class="node-grid" id="node-grid-c"></div>
+    </div>
+
+    <div class="axis-map-note">
+      Three axes at depth nine = one 9&times;9&times;9 cube of <b>729</b> nodes each.
+      Across 12 tracks and 12 phases the full lattice is
+      <b><span data-canon-nodes="twelve">104,976</span></b> nodes.
+    </div>
   </div>
 
   <!-- NESTED MATRIX -->
@@ -454,11 +487,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="hero">
     <div class="sig">&#937;</div>
     <h1>THE SOVEREIGN CHARTER</h1>
-    <div class="sub">THE ELEVEN IMMUTABLE ARTICLES</div>
+    <div class="sub">THE TWELVE IMMUTABLE ARTICLES</div>
     <div class="arch">ARCHITECT  --  <b>MAJOR SLEIMAN YOUSSEF DAGHER</b><br>LEBANESE ORDER OF ENGINEERS &amp; ARCHITECTS  .  No. 30875<br>ESTABLISHED 22 DECEMBER 2025  .  sydomega.com</div>
   </div>
 
-  <div class="sectit">THE ELEVEN ARTICLES OF SOVEREIGNTY</div>
+  <div class="sectit">THE TWELVE ARTICLES OF SOVEREIGNTY</div>
   <div class="articles">
     <div class="art"><div class="rn">I</div><div><div class="at">Absolute Ownership</div><div class="ad"><b>100% sovereign.</b> No co-founders, no partners. The Order answers to a single authority.</div></div></div>
     <div class="art"><div class="rn">II</div><div><div class="at">The Master Stake</div><div class="ad"><b>467,756,700,000 &#937; (51%)</b> permanently locked. Control of the Order can never be diluted below sovereignty.</div></div></div>
@@ -471,6 +504,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="art"><div class="rn">IX</div><div><div class="at">The Reinvestment Sweep</div><div class="ad">A fixed <b>20% share</b> is continuously recommitted to hard reserves  --  the Order compounds its own foundation.</div></div></div>
     <div class="art"><div class="rn">X</div><div><div class="at">Sovereign Continuity</div><div class="ad">The Order may <b>re-domicile</b> to remain free of any hostile jurisdiction. Sovereignty is portable.</div></div></div>
     <div class="art"><div class="rn">XI</div><div><div class="at">The Omega Point</div><div class="ad"><b>Node 999</b> confirms absolute completion  --  the apex where the Order is whole.</div></div></div>
+      <div class="art"><div class="rn">XII</div><div><div class="at">The Immutable Lattice</div><div class="ad">The progression lattice is fixed at <b>12 &times; 12 &times; 9 &times; 9 &times; 9 = <span data-canon-nodes="twelve">104,976</span></b> nodes, and every nine-fold system at <b>9 &times; 9 &times; 9 &times; 9 &times; 9 = <span data-canon-nodes="nine">59,049</span></b>. A position earned within it can never be revoked, diluted, or recalculated against a member.</div></div></div>
   </div>
 
   <div class="sectit">THE &#937; ECONOMIC FRAMEWORK  .  DECLARED CANON</div>
@@ -563,12 +597,15 @@ async function loadRealMatrix(){
 
   // status badge
   document.getElementById('badge-status').textContent = apex ? 'ALL APEX' : 'IN PROGRESS';
-
-  // node grid -- lit proportionally to real Axis A progress (a/9 of the 81 cells)
-  const litCount = Math.round((a/9)*81);
-  document.getElementById('node-count').textContent = litCount+' / 81 COMPLETED';
-  document.querySelectorAll('#node-grid .node-cell').forEach(function(cell,i){
-    cell.classList.toggle('lit', i < litCount);
+  /* Light each axis cube from its own real coordinate: (value/9) of 729. */
+  [['a',a],['b',b],['c',c]].forEach(function(pair){
+    const ax=pair[0], val=Number(pair[1])||0;
+    const lit=Math.round((Math.min(val,9)/9)*729);
+    const cnt=document.getElementById('node-count-'+ax);
+    if(cnt) cnt.textContent = lit+' / 729 COMPLETED';
+    document.querySelectorAll('#node-grid-'+ax+' .node-cell').forEach(function(cell,i){
+      cell.classList.toggle('lit', i < lit);
+    });
   });
 
   // real evolution log
@@ -670,14 +707,19 @@ requestAnimationFrame(draw);
 
 // Node grid
 (function(){
-const grid=document.getElementById('node-grid');
-if(!grid)return;
-for(let i=0;i<81;i++){
-const cell=document.createElement('div');
-cell.className='node-cell'+(i===80?' apex':'');
-cell.textContent=i===80?'9.9':String(Math.floor(i/9)+1)+'.'+(i%9+1);
-grid.appendChild(cell);
-}
+/* Build all three axis cubes: 9x9x9 = 729 nodes each.
+   The apex cell (index 728) marks the completion of that axis. */
+['a','b','c'].forEach(function(ax){
+  const grid=document.getElementById('node-grid-'+ax);
+  if(!grid) return;
+  const frag=document.createDocumentFragment();
+  for(let i=0;i<729;i++){
+    const cell=document.createElement('div');
+    cell.className='node-cell'+(i===728?' apex':'');
+    frag.appendChild(cell);
+  }
+  grid.appendChild(frag);
+});
 })();
 
 // Animate bars

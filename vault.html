@@ -110,8 +110,6 @@ a{color:inherit;text-decoration:none}
       <div class="tab-btn active" data-tab="reserve"><div class="tbi" style="color:#C9A84C">&#x03A9;</div><div class="tbl">RESERVE</div></div>
       <div class="tab-btn" data-tab="wallet"><div class="tbi" style="color:#E2C86D">&#x25C7;</div><div class="tbl">WALLET</div></div>
       <div class="tab-btn" data-tab="nft"><div class="tbi" style="color:#9B6BF0">&#x2736;</div><div class="tbl">NFT VAULT</div></div>
-      <div class="tab-btn" data-tab="payments"><div class="tbi" style="color:#00E5FF">&#x25C8;</div><div class="tbl">PAYMENTS</div></div>
-      <div class="tab-btn" data-tab="membership"><div class="tbi" style="color:#3fb27f">&#x25B2;</div><div class="tbl">MEMBERSHIP</div></div>
       <div class="tab-btn" data-tab="earning"><div class="tbi" style="color:#E2C86D">&#x25C6;</div><div class="tbl">EARNING LEDGER</div></div>
       <div class="tab-btn" data-tab="articles"><div class="tbi" style="color:#C9A84C">&#x2696;</div><div class="tbl">ARTICLES</div></div>
       <div class="tab-btn" data-tab="audit"><div class="tbi" style="color:#8B0000">&#x2637;</div><div class="tbl">AUDIT LOG</div></div>
@@ -188,19 +186,40 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: PAYMENTS -->
     <div class="tab-panel" id="tab-payments">
-      <div class="sechead">TRANSACTION LOG</div>
-      <div style="padding:0 clamp(14px,3vw,32px);margin-bottom:16px">
-        <div style="border:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.03);padding:12px 16px;font-family:var(--M);font-size:9px;color:var(--cyan);letter-spacing:1px">
-          STRIPE READY TO ACTIVATE -- All payment infrastructure wired. Live processing requires legal clearance.
+      <!-- CONSOLIDATED: membership tiers, payment methods and transaction
+           history now live on ONE page. subscriptions.html already carries all
+           three (payments.html and membership.html are redirect stubs to it),
+           and this tab held a second hardcoded copy of the 12-tier list --
+           two price lists that could drift apart. -->
+      <div class="sechead">PAYMENTS &amp; TRANSACTIONS</div>
+      <div style="padding:0 clamp(14px,3vw,32px)">
+        <div style="border:1px solid var(--line);background:rgba(201,168,76,.04);border-radius:2px;padding:18px">
+          <div style="font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:14px">
+            Membership tiers, payment methods, upcoming payments and full transaction
+            history are together on one page.
+          </div>
+          <a href="/subscriptions.html#payments" style="display:inline-block;font-family:var(--M);font-size:10px;letter-spacing:2px;padding:12px 20px;background:linear-gradient(90deg,var(--gold),var(--solar));color:var(--void);text-decoration:none;border-radius:2px;font-weight:700">OPEN MEMBERSHIP &amp; PAYMENTS &rarr;</a>
         </div>
       </div>
-      <div class="tx-log" id="tx-log"></div>
     </div>
 
     <!-- TAB: MEMBERSHIP -->
     <div class="tab-panel" id="tab-membership">
-      <div class="sechead">SOVEREIGN MEMBERSHIP -- 12 TIERS</div>
-      <div class="tier-grid" id="tier-grid"></div>
+      <!-- CONSOLIDATED: membership tiers, payment methods and transaction
+           history now live on ONE page. subscriptions.html already carries all
+           three (payments.html and membership.html are redirect stubs to it),
+           and this tab held a second hardcoded copy of the 12-tier list --
+           two price lists that could drift apart. -->
+      <div class="sechead">SOVEREIGN MEMBERSHIP</div>
+      <div style="padding:0 clamp(14px,3vw,32px)">
+        <div style="border:1px solid var(--line);background:rgba(201,168,76,.04);border-radius:2px;padding:18px">
+          <div style="font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:14px">
+            Membership tiers, payment methods, upcoming payments and full transaction
+            history are together on one page.
+          </div>
+          <a href="/subscriptions.html" style="display:inline-block;font-family:var(--M);font-size:10px;letter-spacing:2px;padding:12px 20px;background:linear-gradient(90deg,var(--gold),var(--solar));color:var(--void);text-decoration:none;border-radius:2px;font-weight:700">OPEN MEMBERSHIP &amp; PAYMENTS &rarr;</a>
+        </div>
+      </div>
     </div>
 
     <!-- EARNING LEDGER (merged from wallet.html) -->
@@ -234,7 +253,7 @@ a{color:inherit;text-decoration:none}
         <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VIII</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">51% Safety Net</div><div style="font-size:11px;color:var(--muted)">Flash-crash protection via Rhodium reserves. Auto-triggered on market breach.</div></div>
         <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE IX</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">20% Reinvestment Sweep</div><div style="font-size:11px;color:var(--muted)">Auto-buys Gold, Silver, Rhodium hourly. Compound sovereign reserve growth.</div></div>
         <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE X</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Jurisdiction Hopping</div><div style="font-size:11px;color:var(--muted)">Automatic re-domicile if hostile. 5-nation protocol. Legal continuity guaranteed.</div></div>
-        <div style="padding:14px;border:1px solid var(--line);grid-column:span 2"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE XI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">The Omega Point</div><div style="font-size:11px;color:var(--muted)">Node 999 confirms absolute completion of the 729-node matrix. Sovereignty eternal. Matrix coordinate (9.000, 9.000, 9.000) -- authority score 15.588 -- is the final and irrevocable state of the founder's sovereign record.</div></div>
+        <div style="padding:14px;border:1px solid var(--line);grid-column:span 2"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE XI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">The Omega Point</div><div style="font-size:11px;color:var(--muted)">Node 999 confirms absolute completion of the 104,976-node matrix. Sovereignty eternal. Matrix coordinate (9.000, 9.000, 9.000) -- authority score 15.588 -- is the final and irrevocable state of the founder's sovereign record.</div></div>
       </div>
     </div>
 
@@ -309,20 +328,8 @@ const NFTS=[
   {sym:'&#x25CF;',name:'RELIQUARY OMEGA',line:'RELIQUARIES',col:'#C9A84C',rarity:'LEGENDARY -- LOCKED',locked:true},
 ];
 
-const TIERS=[
-  {n:1,name:'INITIATE',price:'$9.17/mo',col:'#c2b280',features:'Matrix, identity, cosmology view, Academy Discipline I'},
-  {n:2,name:'SEEKER',price:'$19.17/mo',col:'#9fd3d8',features:'Full Academy (12 disciplines), Gaming Arena entry'},
-  {n:3,name:'ADEPT',price:'$37.17/mo',col:'#9aa0a6',features:'Full Gaming Arena, contribution ledger, exam certificates'},
-  {n:4,name:'WARDEN',price:'$71.17/mo',col:'#b8c0c8',features:'Family, heritage & bloodline vault, priority Oracle'},
-  {n:5,name:'VANGUARD',price:'$137.17/mo',col:'#c8cdd2',features:'Media early access, Research Labs, create Events'},
-  {n:6,name:'ARCHITECT',price:'$237.17/mo',col:'#6f7378',features:'Book Consultancy, Publishing Hub, Social broadcast'},
-  {n:7,name:'SOVEREIGN',price:'$437.17/mo',col:'#C9A84C',features:'Sell on Marketplace, Travel log, Automation rules'},
-  {n:8,name:'LUMINARY',price:'$637.17/mo',col:'#dfe4e6',features:'Treasury & portfolio insight, seal Contracts'},
-  {n:9,name:'RADIANT',price:'$717.17/mo',col:'#9B6BF0',features:'Priority NFT minting access'},
-  {n:10,name:'UNYIELDING',price:'$797.17/mo',col:'#00E5FF',features:'Governance proposal rights'},
-  {n:11,name:'TRANSCENDENT',price:'$857.17/mo',col:'#E2C86D',features:'Direct Architect channel access'},
-  {n:12,name:'ASCENDANT',price:'$917.17/mo',col:'#E2C86D',features:'Every feature, fully unlocked'},
-];
+/* duplicate 12-tier price list removed -- subscriptions.html is the single
+   source for membership tiers and pricing (canon: omega-canon.json). */
 
 const SPLINTER=[
   {label:'AEROSPACE / DePIN',pct:42,col:'#00E5FF'},
@@ -482,31 +489,7 @@ function fillRing(el, glyph, col, locked){
   },150);
 }
 
-function buildTiers(currentTier){
-  const g=document.getElementById('tier-grid');g.innerHTML='';
-  TIERS.forEach((tier,i)=>{
-    const active=i+1===currentTier;
-    const c=document.createElement('div');c.className='tier-card'+(active?' active-tier':'');c.style.cursor='pointer';
-    c.innerHTML=`<span class="tc-ring" style="display:inline-block;width:44px;height:44px"></span><div class="tc-name" style="color:${active?tier.col:'var(--muted)'}">${tier.name}</div><div class="tc-price" style="color:${active?'var(--solar)':'var(--muted)'}">${tier.price}</div><span class="tc-badge" style="color:${active?tier.col:'var(--muted)'};border-color:${active?tier.col+'44':'rgba(133,131,123,.2)'}">${active?'CURRENT':'AVAILABLE'}</span>`;
-    g.appendChild(c);
-    fillRing(c.querySelector('.tc-ring'), tier.n, tier.col, !active && i+1>currentTier);
-    c.addEventListener('click',()=>openTierPanel(tier,i,active,currentTier));
-  });
-}
 
-function openTierPanel(tier,i,active,currentTier){
-  const higher=i+1>currentTier;
-  window.OmegaEmblemPanel.open({
-    glyph: tier.n, color: tier.col,
-    title: tier.name,
-    subtitle: tier.price,
-    badge: active?'YOUR CURRENT TIER':null,
-    sections: [
-      { label: 'UNLOCKS', body: tier.features },
-      { label: 'GO FURTHER', actions: higher ? [{ label: 'View Subscription Options', href: '/subscriptions.html' }] : [] },
-    ]
-  });
-}
 
 function buildTxLog(){
   const g=document.getElementById('tx-log');g.innerHTML='';
@@ -537,7 +520,7 @@ async function boot(){
   }catch(e){ document.getElementById('points-mini').textContent='-- PTS'; }
   document.getElementById('res-phys').textContent='\u03A9 '+Math.round(xp*.6).toLocaleString();
   document.getElementById('res-dig').textContent='\u03A9 '+Math.round(xp*.4).toLocaleString();
-  buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();buildTiers(tier);buildTxLog();
+  buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();buildTxLog();
   buildEarningLedger(sess.user.id,a,b,c);
   requestAnimationFrame(()=>{drawVaultCube();drawWave();});
 }

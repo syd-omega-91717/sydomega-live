@@ -105,6 +105,23 @@
         nine:   api.nineFold   && api.nineFold.total_nodes,
         twelve: api.structure  && api.structure.total_nodes
       };
+      /* data-canon-lattice="twelve|nine" -> the FULL formula + node count that
+         EVERY individual member of that system carries (fractal rule, see
+         structure.per_member_rule). Used on each gate, agent, sign, token,
+         NFT line, article, phase and outer layer. */
+      try {
+        var lat = document.querySelectorAll('[data-canon-lattice]');
+        for (var L = 0; L < lat.length; L++) {
+          var kind = lat[L].getAttribute('data-canon-lattice');
+          var nodes = kind === 'nine' ? (api.nineFold && api.nineFold.total_nodes)
+                                      : (api.structure && api.structure.total_nodes);
+          var formula = kind === 'nine' ? '9\u00d79\u00d79\u00d79\u00d79'
+                                        : '12\u00d712\u00d79\u00d79\u00d79';
+          if (nodes) lat[L].textContent = formula + ' \u00b7 ' +
+                       Number(nodes).toLocaleString('en-US') + ' NODES';
+        }
+      } catch (e) {}
+
       var els = document.querySelectorAll('[data-canon-nodes]');
       for (var i = 0; i < els.length; i++) {
         var v = map[els[i].getAttribute('data-canon-nodes')];

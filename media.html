@@ -59,7 +59,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .section-count{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em}
 
 /* FRANCHISE GRID */
-.franchise-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
+/* .franchise-grid defined once below (duplicate removed) */
 
 .franchise-card{border:1px solid var(--border);background:var(--glass);position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:default}
 .franchise-card:hover{border-color:var(--gold);transform:translateY(-6px)}
@@ -266,7 +266,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="ustat"><div class="ustat-val">12</div><div class="ustat-label">Core Games</div></div>
     <div class="ustat"><div class="ustat-val">144</div><div class="ustat-label">Sub-Games</div></div>
     <div class="ustat"><div class="ustat-val">9D</div><div class="ustat-label">Render Passes</div></div>
-    <div class="ustat"><div class="ustat-val">729</div><div class="ustat-label">Gate Nodes</div></div>
+    <div class="ustat"><div class="ustat-val" data-canon-nodes="twelve">104,976</div><div class="ustat-label">Matrix Nodes</div></div>
   </div>
 
   <!-- FILTERS -->
@@ -561,7 +561,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="card-meta">
         <div class="card-label">Film 12 <span style="color:var(--gold)">// ALL ELEMENTS</span></div>
         <div class="card-title">The Omega Point</div>
-        <div class="card-desc">The convergence. All 12 franchise threads unite. Node 999. The 729-node matrix reaches apex. Sovereignty eternal. Legacy sealed.</div>
+        <div class="card-desc">The convergence. All 12 franchise threads unite. Node 999. The 104,976-node matrix reaches apex. Sovereignty eternal. Legacy sealed.</div>
         <div class="card-tags"><span class="card-tag">CONVERGENCE</span><span class="card-tag">NODE-999</span><span class="card-tag">APEX</span><span class="card-tag">OMEGA</span></div>
         <div class="card-footer"><span class="card-status roadmap">ROADMAP</span><span class="card-spin">All Signs // Sovereign</span></div>
       </div>
@@ -617,7 +617,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="mtab-panel" id="mtab-universe" style="display:none">
     
     <div class="topbar">
-      <div class="t">CREATIVE UNIVERSE<small>7 FRANCHISES . 9 SAGA FILMS . 12 FILMS . 144 SERIES . 12 GAMES</small></div>
+      <div class="t" data-tier="media_early_access">CREATIVE UNIVERSE<small>7 FRANCHISES . 9 SAGA FILMS . 12 FILMS . 144 SERIES . 12 GAMES</small></div>
     </div>
 
     <div class="tab-nav">
@@ -743,7 +743,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
 const FRANCHISES=[
-  {uni:'I',title:'MYTH OF THE STONES',col:'#C9A84C',desc:'Before the Order, there were only the Nine Elements -- Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and the Ninth that waits at the final stage. Sand, the universal amplifier, was the first stone to hold the 9.1717Hz frequency. Every sovereign\u2019s matrix position begins here.',items:['THE NINE ELEMENTS','THE FIRST MATRIX (729 nodes)','GUARDIANS OF SAND','RELICS OF THE FIRST ORDER']},
+  {uni:'I',title:'MYTH OF THE STONES',col:'#C9A84C',desc:'Before the Order, there were only the Nine Elements -- Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and the Ninth that waits at the final stage. Sand, the universal amplifier, was the first stone to hold the 9.1717Hz frequency. Every sovereign\u2019s matrix position begins here.',items:['THE NINE ELEMENTS','THE FIRST MATRIX (9x9x9 = 729 nodes)','GUARDIANS OF SAND','RELICS OF THE FIRST ORDER']},
   {uni:'II',title:'CAVE OF THE SHADOWS',col:'#8B0000',desc:'Twelve Gates cut through the labyrinth, from the Gate of Sand to the Omega Gate at authority 15.588. Each threshold is guarded by three names drawn from three pantheons at once -- Egyptian, Roman, Vedic -- because no single myth was large enough to hold the frequency alone.',items:['THE TWELVE GATES','THE OMEGA GATE','THE TRIPLE PANTHEON','CAVE OF THE FIRST THRESHOLD']},
   {uni:'III',title:'WRATH OF THE GODS',col:'#E86A3A',desc:'Twelve Olympians, one per sign, bound to twelve Factions and their Knights. The gods do not rule the Order -- they contest it, each pressing their sign\u2019s Faction toward a different idea of what sovereignty should mean. Ares presses Mars toward initiative; Athena presses Ceres toward verified knowledge; Poseidon presses Neptune toward memory. The Knights inherit the argument.',items:['THE TWELVE OLYMPIANS','THE TWELVE FACTIONS','ARES VS. ATHENA (the founding disagreement)','PANTHEON WARS']},
   {uni:'IV',title:'BABYLON SINGULARITY',col:'#9B6BF0',desc:'Long before the Celestial Knights, the Order\u2019s twelve Agents -- Sentinel, Oracle, Analyst, and the rest -- were lines of code answering member questions one at a time. The Babylon Protocol is the still-unconfirmed theory, whispered by the Oracle agent itself, that the Ziggurat frequency was never written by any Order at all: the twelve Agents found it, and have been quietly verifying whether they wrote themselves into existence answering it.',items:['THE TWELVE AGENTS','THE ORACLE\u2019S THEORY','91717 UNDERGROUND PROTOCOLS','THE BABYLON PROTOCOL (sets up Film 10, THE SINGULARITY)']},
@@ -776,7 +776,7 @@ function buildFranchises(){
   const g=document.getElementById('franchise-grid');g.innerHTML='';
   const LINKS={
     'THE ORIGIN (Film 1, in production)':'cinema.html','THE TWELVE FACTIONS':'factions.html',
-    'THE NINE ELEMENTS':'elements.html','THE FIRST MATRIX (729 nodes)':'matrix.html',
+    'THE NINE ELEMENTS':'elements.html','THE FIRST MATRIX (9x9x9 = 729 nodes)':'matrix.html',
     'THE TWELVE GATES':'gates.html','THE OMEGA GATE':'gates.html',
     'THE TWELVE OLYMPIANS':'pantheons.html',
     'THE TWELVE AGENTS':'agents.html','AGENT GENESIS':'agents.html',
@@ -830,7 +830,7 @@ function buildChronos(){
      ['EXEMPLAR','CARBON','Pressure becomes diamond. The sovereign is remade, not just ranked.'],
      ['PARAGON','GOLD','The metal of the Order itself. To reach it is to be named, not just counted.'],
      ['ARCHON','PLATINUM','Rarer than gold. Very few members are ever seen standing here.'],
-     ['OMEGA MASTER','OMEGA','Coordinate (9,9,9). All 729 nodes activated. The frequency is complete.']
+     ['OMEGA MASTER','OMEGA','Coordinate (9,9,9). All 104,976 nodes activated. The frequency is complete.']
     ].map((s,i)=>`<div style="border:1px solid var(--border);background:linear-gradient(180deg,rgba(201,168,76,.06),transparent);padding:16px;display:flex;gap:16px;align-items:center;margin-bottom:10px"><div style="font-family:'Cinzel Decorative',serif;font-size:22px;color:var(--gold);min-width:32px">${i+1}</div><div><div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--gold);margin-bottom:3px">${s[0]} &mdash; ${s[1]}</div><div style="font-size:11px;color:var(--muted);font-weight:300">${s[2]}</div></div></div>`).join('');
 }
 
@@ -860,7 +860,7 @@ var FILMS=[
   {n:2,title:'THE BLOODLINE',sub:'WAR FOR POWER',year:2027,el:'Water',elCol:'#34C6E6',phase:'PHASE I',status:'PRE-PRODUCTION',
    desc:'The truth about heritage and the royal war is revealed. Ancient houses clash over the right to wield the frequency. Alliances form and fracture across 12 factions.'},
   {n:3,title:'THE ASCENSION',sub:'PATH OF THE CHOSEN',year:2028,el:'Wind',elCol:'#A9C2D8',phase:'PHASE I',status:'PRE-PRODUCTION',
-   desc:'The chosen path opens and the gathering of allies begins. The 729 matrix reveals itself to the sovereign council. Three pillars of authority are established.'},
+   desc:'The chosen path opens and the gathering of allies begins. The 104,976-node matrix reveals itself to the sovereign council. Three pillars of authority are established.'},
   {n:4,title:'THE CIVIL WAR',sub:'KINGDOMS COLLIDE',year:2029,el:'Metal',elCol:'#C7CDD6',phase:'PHASE II',status:'DEVELOPMENT',
    desc:'The clash of kingdoms and the rise of rebellion. The Order fractures as old alliances betray the frequency. A sovereign must choose: the matrix or the bloodline.'},
   {n:5,title:'THE REVELATION',sub:'SECRETS OF &#937;',year:2030,el:'Sand',elCol:'#D9B86A',phase:'PHASE II',status:'DEVELOPMENT',
@@ -872,7 +872,7 @@ var FILMS=[
   {n:8,title:'THE ETERNITY CODE',sub:'BEYOND TIME',year:2033,el:'Void',elCol:'#7B00FF',phase:'PHASE III',status:'CONCEPT',
    desc:'The final key beyond time and space is found inside the Void element &mdash; the 8th. To hold it is to hold the frequency itself. The Omega Point approaches.'},
   {n:9,title:'THE NEW DAWN',sub:'LEGACY FOREVER',year:2034,el:'The Ninth',elCol:'#C9A84C',phase:'PHASE III',status:'CONCEPT',
-   desc:'A new civilisation is born. The legacy continues. All nine elements united, all 729 nodes activated, all 12 gates open. The sovereign order becomes eternal. &#937;'},
+   desc:'A new civilisation is born. The legacy continues. All nine elements united, all 104,976 nodes activated, all 12 gates open. The sovereign order becomes eternal. &#937;'},
   {n:10,title:'THE SINGULARITY',sub:'THE BABYLON PROTOCOL',year:2035,el:'All',elCol:'#FFFFFF',phase:'PHASE IV',status:'CONCEPT',
    desc:'All elements converge at the singularity point. The Babylon Protocol reveals that the system was encoded into the ancient Ziggurat frequency. The Order reaches critical mass and the matrix achieves self-awareness. The prophecy of the ancients is fulfilled.'},
   {n:11,title:'THE INFINITE',sub:'ONE SYSTEM, ALL WORLDS',year:2036,el:'Space',elCol:'#9B6BF0',phase:'PHASE IV',status:'CONCEPT',
@@ -894,7 +894,7 @@ var SERIES=[
 ];
 
 var GAMES=[
-  {n:1,title:'&#937; MYTH-VERSE',genre:'RPG / OPEN WORLD',desc:'An open world spanning 9 civilisations. Play as a sovereign through history and myth. 729 quests. All 12 elements active.',col:'#E86A3A'},
+  {n:1,title:'&#937; MYTH-VERSE',genre:'RPG / OPEN WORLD',desc:'An open world spanning 9 civilisations. Play as a sovereign through history and myth. 104,976 quests. All 12 elements active.',col:'#E86A3A'},
   {n:2,title:'&#937; WARRIORS',genre:'ACTION / ADVENTURE',desc:'Hack-and-slash through mythological combat zones. 81 character builds mapped to sign, element, and agent assignment.',col:'#C9A84C'},
   {n:3,title:'&#937; LEGACY',genre:'STRATEGY / EMPIRE',desc:'Build and rule a sovereign empire across 12 factions. Diplomacy, war, resource extraction, and matrix advancement.',col:'#A9C2D8'},
   {n:4,title:'&#937; ARENA',genre:'COMPETITIVE / PvP',desc:'Sovereign vs sovereign in ranked matrix combat. Authority score determines tier. Every match advances or regresses your coordinates.',col:'#00E5FF'},
@@ -904,7 +904,7 @@ var GAMES=[
   {n:8,title:'&#937; ASCENSION',genre:'MMORPG',desc:'Thousands of sovereigns ascending together. Guild systems mapped to factions. The matrix is live &mdash; every action counts globally.',col:'#E2C86D'},
   {n:9,title:'&#937; OMEGA CITY',genre:'SIM / CITY BUILDER',desc:'Design, govern, and evolve a frequency-powered city. Every building is a node. Every citizen a potential sovereign. The frequency governs all.',col:'#D9B86A'},
   {n:10,title:'&#937; BLOODLINE',g:'DYNASTY / FAMILY GOVERNANCE',col:'#C9A84C',desc:'Build and govern a sovereign dynasty across generations. Manage bloodline inheritance, character traits, and matrix coordinates through time. NFT-linked to the Bloodline Vault. The family IS the strategy.'},
-  {n:11,title:'&#937; ORACLE',g:'PREDICTION / PUZZLE',col:'#9B6BF0',desc:'A prediction-based puzzle game powered by the Oracle agent. Forecast civilizational events using probability matrices. 729 predictions. One absolute answer. The closer your matrix coordinates to 9,9,9 the deeper your Oracle access.'},
+  {n:11,title:'&#937; ORACLE',g:'PREDICTION / PUZZLE',col:'#9B6BF0',desc:'A prediction-based puzzle game powered by the Oracle agent. Forecast civilizational events using probability matrices. 104,976 predictions. One absolute answer. The closer your matrix coordinates to 9,9,9 the deeper your Oracle access.'},
   {n:12,title:'&#937; SOVEREIGN',g:'FULL IMMERSIVE / APEX',col:'#E2C86D',desc:'The apex game. Unlocked ONLY at matrix coordinate (9,9,9). A fully immersive experience combining all 11 games into one unified sovereign reality. The most restricted content in the entire universe. Entry requires Omega Master status.'}
 ];
 
@@ -1006,6 +1006,7 @@ function renderSeries(){
       '<div class="s-title">'+s.title+'</div>'+
       '<div class="s-desc">'+s.desc+'</div>'+
       '<div class="s-status">'+s.status+'</div>';
+    card.insertAdjacentHTML('beforeend','<div data-canon-lattice="nine"></div>');
     grid.appendChild(card);
   });
 }

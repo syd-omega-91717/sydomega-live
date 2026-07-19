@@ -23,7 +23,26 @@
       "agents",
       "olympians",
       "any twelve-fold system"
-    ]
+    ],
+    "twelve_fold_systems": [
+      "signs",
+      "olympians",
+      "gates",
+      "tokens",
+      "agents",
+      "houses",
+      "medals",
+      "trophies",
+      "certificates",
+      "grades",
+      "phases",
+      "tiers"
+    ],
+    "twelve_fold_count": 12,
+    "axes_role": "The three axes are the MEASUREMENT DEPTH inside the lattice, not a twelve-fold system. They are the three 9s in 12 x 12 x 9 x 9 x 9. Every twelve-fold system in the platform (listed in twelve_fold_systems) is governed by this same lattice, so the rule 'every main 12 follows 12x12x9x9x9' is satisfied by all twelve of them. Raising the axes from 3 to 12 would make the lattice 12 x 12 x 9^12 = 40,669,853,253,264 -- 387,420,489 times larger than the confirmed 104,976 -- so the two statements cannot both hold. The confirmed figure is authoritative.",
+    "authority_formula": "sqrt(a^2 + b^2 + c^2)",
+    "authority_apex": 15.588,
+    "authority_apex_note": "sqrt(9^2 x 3). Fixed by the three axes; changes only if the axis count changes."
   },
   "nine_fold": {
     "lattice": "9 x 9 x 9 x 9 x 9",

@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Social Hub</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 &mdash; Social Hub"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/social.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 &mdash; Social Hub"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -92,7 +92,7 @@ a{color:inherit;text-decoration:none}
   <aside class="side" id="omega-side" data-page="social"></aside>
   <main class="main">
     <div class="topbar">
-      <div class="t">SOCIAL HUB<small>CONNECT &middot; BROADCAST &middot; PRESENCE</small></div>
+      <div class="t" data-tier="social_broadcast">SOCIAL HUB<small>CONNECT &middot; BROADCAST &middot; PRESENCE</small></div>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:24px">Connect your social accounts once and reach all your platforms from inside the Order. Sign in with each account, compose your broadcast, and transmit sovereign content across your entire digital presence in one action.</p>
 
@@ -263,7 +263,9 @@ document.getElementById('btn-broadcast').addEventListener('click',async function
   var text=document.getElementById('broadcast-text').value.trim();
   if(!text||!selectedNets.size) return;
   var { error } = await sb.from('social_broadcasts').insert({networks:[...selectedNets], body:text});
-  if(error){ alert('Could not send broadcast: '+error.message); return; }
+  
+  /* progression: this action now advances the matrix (was inert) */
+  window.OmegaProgress&&OmegaProgress.record({kind:'social',task:'social:'+Date.now(),axis:'c',title:'Signal Broadcast'});if(error){ alert('Could not send broadcast: '+error.message); return; }
   document.getElementById('broadcast-text').value='';
   var sm=document.getElementById('sent-msg'); sm.style.display='block';
   setTimeout(function(){sm.style.display='none';},3500);

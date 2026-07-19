@@ -1,0 +1,135 @@
+/* ============================================================================
+   SYD OMEGA 91717 -- PROGRESSION BRIDGE
+
+   WHY THIS EXISTS
+   Audited across the platform: of the thirteen member-facing systems that write
+   real data, only FIVE advanced the matrix -- academy, gaming, exam,
+   contributions, publishing. The other eight (consultancy, marketplace, events,
+   research, social, travel, health, automation) let a member act, saved the
+   row, and moved nothing. Book a consultation, list an asset, create an event,
+   log a journey: the Order recorded it and the member's standing stayed
+   exactly where it was.
+
+   That is what "the systems do not operate with each other" means in practice.
+   The matrix is the spine; a system that never touches it is a limb with no
+   nerve.
+
+   WHAT THIS DOES
+   One shared call, so every system advances progression the same way instead
+   of each page re-implementing it:
+
+     OmegaProgress.record({kind:'events', task:'event:'+id,
+                           axis:'c', title:'Hosted a Gathering'});
+
+   AXIS SEMANTICS (canon: Knowledge A / Mastery B / Contribution C)
+     a  Knowledge      -- you learned or discovered something
+     b  Mastery        -- you demonstrated skill or discipline
+     c  Contribution   -- you gave something back to the Order
+
+   DEDUPLICATION
+   complete_task is keyed on (user, task), so passing a stable task id means an
+   action counts once no matter how many times the page is re-submitted. Callers
+   should include the row id in the task string.
+
+   WEIGHT
+   Defaults to 0.12 -- roughly half the 0.25 used by academy/gaming, because
+   these are lighter single actions rather than completing a discipline or
+   clearing a game stage. Progression stays meaningful; it does not become
+   confetti.
+
+   FEEDBACK
+   Shows a brief, honest confirmation of what actually moved. If the RPC fails
+   the member is never shown a false advance.
+   ============================================================================ */
+(function () {
+  'use strict';
+  if (window.OmegaProgress) return;
+
+  var AXIS_NAME = { a: 'KNOWLEDGE', b: 'MASTERY', c: 'CONTRIBUTION' };
+  var AXIS_COL  = { a: '#00E5FF',   b: '#C9A84C', c: '#3fb27f' };
+
+  function styles() {
+    if (document.getElementById('omp-css')) return;
+    var s = document.createElement('style');
+    s.id = 'omp-css';
+    s.textContent = [
+      '.omp-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);',
+      'z-index:10000;display:flex;align-items:center;gap:10px;padding:12px 18px;',
+      'border:1px solid rgba(201,168,76,.35);background:rgba(10,10,15,.94);',
+      'backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:3px;',
+      'font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:1.2px;color:#e9e6dc;',
+      'box-shadow:0 12px 32px rgba(0,0,0,.5);opacity:0;transition:opacity .28s,transform .28s;max-width:92vw}',
+      '.omp-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}',
+      '.omp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}',
+      '.omp-axis{font-weight:700}',
+      '@media(max-width:760px){.omp-toast{bottom:78px;font-size:10px;padding:10px 14px}}'
+    ].join('');
+    (document.head || document.documentElement).appendChild(s);
+  }
+
+  function toast(axis, title, delta) {
+    try {
+      styles();
+      var el = document.createElement('div');
+      el.className = 'omp-toast';
+      var col = AXIS_COL[axis] || '#C9A84C';
+      el.innerHTML = '<span class="omp-dot" style="background:' + col + '"></span>'
+        + '<span><span class="omp-axis" style="color:' + col + '">'
+        + (AXIS_NAME[axis] || 'MATRIX') + ' +' + Number(delta).toFixed(2) + '</span>'
+        + (title ? ' &middot; ' + String(title).replace(/[<>]/g, '') : '') + '</span>';
+      document.body.appendChild(el);
+      requestAnimationFrame(function () { el.classList.add('on'); });
+      setTimeout(function () {
+        el.classList.remove('on');
+        setTimeout(function () { el.remove(); }, 350);
+      }, 3200);
+    } catch (e) {}
+  }
+
+  function client() {
+    if (window.OmegaSB) return window.OmegaSB.get();
+    return import('https://esm.sh/@supabase/supabase-js@2').then(function (m) {
+      return m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co",
+                            "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+    });
+  }
+
+  /* Returns a promise resolving to {applied:boolean, ...}. Never rejects, and
+     never blocks the caller's own save -- progression is a consequence of the
+     action, not a precondition for it. */
+  function record(opts) {
+    opts = opts || {};
+    var axis = String(opts.axis || 'a').toLowerCase();
+    if (['a', 'b', 'c'].indexOf(axis) === -1) axis = 'a';
+    var weight = typeof opts.weight === 'number' ? opts.weight : 0.12;
+    var silent = opts.silent === true;
+
+    if (!opts.kind || !opts.task) {
+      return Promise.resolve({ applied: false, error: 'kind and task required' });
+    }
+
+    return client().then(function (sb) {
+      return sb.auth.getSession().then(function (r) {
+        if (!r || !r.data || !r.data.session) return { applied: false, error: 'signed out' };
+        return sb.rpc('complete_task', {
+          p_kind:  String(opts.kind),
+          p_task:  String(opts.task),
+          p_axis:  axis,
+          p_title: opts.title || null,
+          p_weight: weight
+        }).then(function (res) {
+          if (res.error) throw res.error;
+          var d = res.data || {};
+          /* only celebrate a real advance -- a repeat action applies nothing */
+          if (d.applied && !silent) toast(axis, opts.title, weight);
+          return d;
+        });
+      });
+    }).catch(function (e) {
+      console.log('progress', e);
+      return { applied: false, error: 'unavailable' };
+    });
+  }
+
+  window.OmegaProgress = { record: record, AXIS_NAME: AXIS_NAME };
+})();

@@ -256,6 +256,11 @@
 /* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
 (function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
 
+/* ===== PER-MEMBER LATTICE MARKER STYLE ===== */
+(function(){try{var s=document.createElement('style');s.id='ocl-css';s.textContent=
+'[data-canon-lattice]{display:inline-block;font-family:\'Courier Prime\',monospace;font-size:7.5px;letter-spacing:1.2px;color:rgba(201,168,76,.72);border:1px solid rgba(201,168,76,.22);border-radius:2px;padding:1px 6px;margin-top:5px;white-space:nowrap}';
+(document.head||document.documentElement).appendChild(s);}catch(e){}})();
+
 /* ===== PROGRESSION BRIDGE -- every system advances the matrix the same way ===== */
 (function(){if(!document.querySelector('script[data-omega-progress]')){var s=document.createElement('script');s.src='/omega-progress.js';s.setAttribute('data-omega-progress','1');if(document.body)document.body.appendChild(s);}})();
 

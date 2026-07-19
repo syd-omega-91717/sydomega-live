@@ -70,6 +70,16 @@
           console.error('OmegaCanon: twelve-fold total_nodes is ' + T + ', expected ' + (12 * 12 * 9 * 9 * 9));
         if (N && N !== Math.pow(9, 5))
           console.error('OmegaCanon: nine-fold total_nodes is ' + N + ', expected ' + Math.pow(9, 5));
+        /* the apex must stay consistent with the axis count: sqrt(depth^2 * axes) */
+        var ax = api.structure && Number(api.structure.axes);
+        var dp = api.structure && Number(api.structure.axis_depth);
+        var apex = api.structure && Number(api.structure.authority_apex);
+        if (ax && dp && apex) {
+          var expect = Math.sqrt(dp * dp * ax);
+          if (Math.abs(expect - apex) > 0.001)
+            console.error('OmegaCanon: authority_apex is ' + apex + ' but ' + ax +
+                          ' axes at depth ' + dp + ' give ' + expect.toFixed(3));
+        }
       })();
       api.economy = canon.economy || null;
       /* Guard: the master vault must be exactly 51% of total supply. The Charter

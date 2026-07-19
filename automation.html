@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Automation</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 &mdash; Automation"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/automation.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 &mdash; Automation"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -99,7 +99,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
   <aside class="side" id="omega-side" data-page="automation"></aside>
   <main class="main">
     <div class="topbar">
-      <div class="t">AUTOMATION ENGINE<small>SOVEREIGN INTELLIGENCE &middot; IF &middot; THEN &middot; EXECUTE</small></div>
+      <div class="t" data-tier="automation_rules">AUTOMATION ENGINE<small>SOVEREIGN INTELLIGENCE &middot; IF &middot; THEN &middot; EXECUTE</small></div>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:24px">The Automation Engine executes sovereign logic across the entire platform. Rules fire silently and continuously &mdash; advancing your matrix, broadcasting milestones, alerting agents, protecting your vault, and evolving your Order without you lifting a finger.</p>
 
@@ -242,7 +242,9 @@ async function setState(key, on){
     await sb.from('automation_rules').update({is_on:on}).eq('id',stateRowIds[key]);
   } else {
     const { data } = await sb.from('automation_rules').insert({trigger_key:key, action_key:key, is_on:on}).select('id').maybeSingle();
-    if(data) stateRowIds[key] = data.id;
+    
+  /* progression: this action now advances the matrix (was inert) */
+  window.OmegaProgress&&OmegaProgress.record({kind:'automation',task:'automation:'+Date.now(),axis:'b',title:'Protocol Authored'});if(data) stateRowIds[key] = data.id;
   }
 }
 

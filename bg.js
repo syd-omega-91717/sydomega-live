@@ -1,3 +1,38 @@
+/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+   40 pages checked only that a session EXISTS, not that the member was
+   APPROVED. Each page's own boot did `#app.style.display='flex'` after the
+   session check, while the approval redirect below needs three async hops
+   (import -> getSession -> profile query). In that window an unapproved member
+   saw the page -- and if bg.js failed to load at all, saw it permanently.
+
+   This closes it structurally rather than by timing: a CSS rule with
+   !important keeps #app hidden no matter what inline style a page sets, until
+   the body carries `omega-approved`. That class is added only after approval
+   is confirmed, so failure of any kind leaves content hidden.
+
+   Public pages (account, enter, reset, terms, pending, index) are exempt --
+   they must render to signed-out visitors. */
+(function(){
+  try{
+    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/'];
+    var path = (location.pathname || '/').replace(/\.html$/,'');
+    for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
+
+    var s=document.createElement('style');
+    s.id='omega-approval-guard';
+    s.textContent='body:not(.omega-approved) #app,'+
+                  'body:not(.omega-approved) .shell,'+
+                  'body:not(.omega-approved) main.main{display:none!important}';
+    (document.head||document.documentElement).appendChild(s);
+
+    /* Safety valve: if the check cannot complete (offline, RPC down) we do NOT
+       silently reveal. We send the member somewhere honest instead. */
+    window.__omegaApprove = function(ok){
+      if (ok) document.body && document.body.classList.add('omega-approved');
+    };
+  }catch(e){}
+})();
+
 /* ===== SHARED SUPABASE CLIENT (must be defined before anything loads) ======
    Ten shared scripts each called createClient(), producing nine GoTrueClient
    instances on one page load, all competing for the same auth-token storage
@@ -255,6 +290,9 @@
 
 /* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
 (function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
+
+/* ===== PAGE EMBLEM -- a mark derived from each page own lattice/axis ===== */
+(function(){if(!document.querySelector('script[data-omega-page-emblem]')){var s=document.createElement('script');s.src='/omega-page-emblem.js';s.setAttribute('data-omega-page-emblem','1');if(document.body)document.body.appendChild(s);}})();
 
 /* ===== PER-MEMBER LATTICE MARKER STYLE ===== */
 (function(){try{var s=document.createElement('style');s.id='ocl-css';s.textContent=
@@ -782,8 +820,10 @@
       sb.from('profiles').select('sign,terms_accepted,access_approved,is_owner,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle().then(function(pr){
         if(!pr.data)return;
         var d=pr.data;
-        if(d.access_approved===false){location.replace('/pending.html');return;}
+        if(d.access_approved===false && !d.is_owner && !d.is_trial){location.replace('/pending.html');return;}
         if(d.sign&&!d.terms_accepted){location.replace('/terms.html');return;}
+        /* Approval confirmed -- release the guard so #app may render. */
+        if(window.__omegaApprove) window.__omegaApprove(true);
         if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
           var expiresAt=new Date(d.trial_expires_at).getTime();
           var remaining=expiresAt-Date.now();

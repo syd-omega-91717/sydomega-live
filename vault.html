@@ -268,7 +268,7 @@ a{color:inherit;text-decoration:none}
         <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-09 12:00</span><span>PYRON founder token genesis confirmed</span><span style="color:var(--muted)">TOKEN-GEN-001</span><span style="color:var(--green)">CONFIRMED</span></div>
         <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-08 09:15</span><span>Sovereign identity hash verified on ledger</span><span style="color:var(--muted)">GENESIS-HASH</span><span style="color:var(--green)">IMMUTABLE</span></div>
         <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-07 14:00</span><span>Heritage Dead-Man's Switch protocol activated</span><span style="color:var(--muted)">HERITAGE-PROTO</span><span style="color:var(--green)">ACTIVE</span></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-01 00:00</span><span>11 Immutable Articles sealed -- Sovereignty declared</span><span style="color:var(--muted)">SOVEREIGNTY</span><span style="color:var(--green)">ETERNAL</span></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-01 00:00</span><span>12 Immutable Articles sealed -- Sovereignty declared</span><span style="color:var(--muted)">SOVEREIGNTY</span><span style="color:var(--green)">ETERNAL</span></div>
       </div>
     </div>
   </main>
@@ -417,7 +417,7 @@ function buildWallet(a,b,c){
     const bal=parseFloat(tk.bal)||0;
     const cd=document.createElement('div');cd.className='wl-card';cd.style.cursor='pointer';
     cd.style.cssText+=`border-top-color:${tk.col}`;
-    cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'&#937; 0'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
+    cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div data-canon-lattice="twelve"></div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'&#937; 0'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
     g.appendChild(cd);
     const emblemEl=cd.querySelector('[data-omega-emblem]');
     fillSvg(emblemEl, tk.sign);
@@ -456,7 +456,7 @@ function buildNFTs(){
   NFTS.forEach(n=>{
     const c=document.createElement('div');c.className='nft-card';c.style.cursor='pointer';
     c.style.cssText+=`border-top:2px solid ${n.col}66`;
-    c.innerHTML=`<span class="nft-symbol" style="display:inline-block;width:48px;height:48px"></span><div class="nft-name" style="color:${n.col}">${n.name}</div><div class="nft-line">${n.line}</div><span class="nft-rarity" style="color:${n.col};border-color:${n.col}44">${n.rarity}</span>${n.locked?'<div class="nft-locked">LOCKED -- MINT PENDING</div>':''}`;
+    c.innerHTML=`<span class="nft-symbol" style="display:inline-block;width:48px;height:48px"></span><div class="nft-name" style="color:${n.col}">${n.name}</div><div class="nft-line">${n.line}</div><div data-canon-lattice="twelve"></div><span class="nft-rarity" style="color:${n.col};border-color:${n.col}44">${n.rarity}</span>${n.locked?'<div class="nft-locked">LOCKED -- MINT PENDING</div>':''}`;
     g.appendChild(c);
     fillRing(c.querySelector('.nft-symbol'), n.sym, n.col, n.locked);
     c.addEventListener('click',()=>openNFTPanel(n));

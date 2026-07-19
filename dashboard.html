@@ -217,45 +217,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   </div>
 
   <!-- COMMAND STATS -->
-  <div class="cmd-stats">
-    <a href="matrix.html" class="cstat">
-      <div class="cstat-label">Matrix Nodes</div>
-      <div class="cstat-val" id="stat-nodes">--</div>
-      <div class="cstat-sub" id="stat-nodes-sub">Loading...</div>
-    </a>
-    <a href="vault.html#reserve" class="cstat">
-      <div class="cstat-label">&#937; Supply</div>
-      <div class="cstat-val">917B</div>
-      <div class="cstat-sub">51% vault locked (dormant)</div>
-    </a>
-    <a href="profile.html#portfolio" class="cstat">
-      <div class="cstat-label">Gold Reserve</div>
-      <div class="cstat-val">412kg</div>
-      <div class="cstat-sub">Reserve reference (dormant)</div>
-    </a>
-    <a href="honors.html" class="cstat">
-      <div class="cstat-label">Honors</div>
-      <div class="cstat-val" id="stat-honors">--</div>
-      <div class="cstat-sub">Your trophies / medals</div>
-    </a>
-    <a href="#" class="cstat" id="stat-ts-link">
-      <div class="cstat-label">Time Sovereign</div>
-      <div class="cstat-val" id="stat-ts">--</div>
-      <div class="cstat-sub" id="stat-ts-sub">Loading...</div>
-    </a>
-    <a href="agents.html" class="cstat">
-      <div class="cstat-label">Active Agents</div>
-      <div class="cstat-val">12</div>
-      <div class="cstat-sub">Neural network live</div>
-    </a>
-  </div>
-
-  <!-- QUICK ACCESS -- real per-viewer status, no fabricated figures -->
-  <!-- Membership: shown immediately after sign-in so a member always knows
-       what they hold, when it started and when it ends. -->
-  <div style="max-width:1400px;margin:0 auto 2rem;padding:0 2rem"><div data-membership-card></div></div>
-
-  <div class="quick-grid" id="quick-grid">
+    <!-- ORDER: actions first, then standing. A returning member wants to GO
+       somewhere before reading statistics, so Quick Access now precedes the
+       stat bar rather than sitting three sections down. -->
+<div class="quick-grid" id="quick-grid">
     <a href="honors.html#ascension" class="quick-card" style="--qc-col:#E86A3A;--qc-glow:rgba(232,106,58,.3)">
       <div class="quick-icon">&#9650;</div>
       <div class="quick-name">Ascension</div>
@@ -288,13 +253,57 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </a>
   </div>
 
+<div class="cmd-stats">
+    <a href="matrix.html" class="cstat">
+      <div class="cstat-label">Matrix Nodes</div>
+      <div class="cstat-val" id="stat-nodes">--</div>
+      <div class="cstat-sub" id="stat-nodes-sub">Loading...</div>
+    </a>
+    <a href="vault.html#reserve" class="cstat">
+      <div class="cstat-label">&#937; Supply</div>
+      <div class="cstat-val">917B</div>
+      <div class="cstat-sub">51% vault locked (dormant)</div>
+    </a>
+    <a href="profile.html#portfolio" class="cstat">
+      <div class="cstat-label">Gold Reserve</div>
+      <div class="cstat-val">412kg</div>
+      <div class="cstat-sub">Reserve reference (dormant)</div>
+    </a>
+    <a href="honors.html" class="cstat">
+      <div class="cstat-label">Honors</div>
+      <div class="cstat-val" id="stat-honors">--</div>
+      <div class="cstat-sub">Your trophies / medals</div>
+    </a>
+    <a href="#" class="cstat" id="stat-ts-link">
+      <div class="cstat-label">Time Sovereign</div>
+      <div class="cstat-val" id="stat-ts">--</div>
+      <div class="cstat-sub" id="stat-ts-sub">Loading...</div>
+    </a>
+    <a href="agents.html" class="cstat">
+      <div class="cstat-label">Active Agents</div>
+      <div class="cstat-val">12</div>
+      <div class="cstat-sub">Neural network live</div>
+    </a>
+  </div>
+
+  <!-- Membership: shown right after standing, so a member sees what they hold
+       and when it renews in the same glance as their progression. -->
+  <div style="max-width:1400px;margin:0 auto 2rem;padding:0 2rem"><div data-membership-card></div></div>
+
+  <!-- QUICK ACCESS -- real per-viewer status, no fabricated figures -->
+  <!-- Membership: shown immediately after sign-in so a member always knows
+       what they hold, when it started and when it ends. -->
+  
+
+
+
   <!-- CMD GRID -->
   <div class="cmd-grid">
     <!-- Module Map -->
-    <div class="panel" style="grid-column:span 2">
+    <div class="panel">
       <div class="panel-header">
         <span class="panel-title">Platform Modules</span>
-        <span class="panel-badge" id="module-count">-- ACTIVE</span>
+        <a href="#" onclick="var b=document.getElementById('om-open');if(b)b.click();return false;" class="panel-badge" id="module-count" style="text-decoration:none;cursor:pointer" title="Open the full module index">-- MODULES</a>
       </div>
       <div class="panel-body">
         <div class="module-links" style="display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem">
@@ -342,7 +351,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- System Feed -->
-    <div class="panel">
+    <div class="panel" style="grid-column:span 2">
       <div class="panel-header">
         <span class="panel-title">Your Evolution Feed</span>
         <span class="panel-badge">LIVE</span>
@@ -495,7 +504,7 @@ async function loadDashboard(){
   // matrix node stat -- real completion out of 729 (single-track aggregate spine)
   const node = Math.round((a-1)*81 + (b-1)*9 + (c-1) + 1);
   document.getElementById('stat-nodes').textContent = Math.max(1,node);
-  document.getElementById('stat-nodes-sub').textContent = auth>=15.588-0.001 ? '9x9x9 complete' : (Math.max(1,node)+' of 729');
+  document.getElementById('stat-nodes-sub').textContent = auth>=15.588-0.001 ? '104,976 complete' : (Math.max(1,node)+' of 729');
   document.getElementById('stat-honors').textContent = ((d.certificates_earned||0)+(d.trophies_earned||0)+(d.medals_earned||0))+'+';
 
   // Quick Access real status lines
@@ -540,7 +549,16 @@ async function loadDashboard(){
   }
 }
 loadDashboard();
-document.getElementById('module-count').textContent='78 ACTIVE';
+/* was hardcoded '78 ACTIVE' -- neither the 55 real pages nor the 70 menu
+   entries. Derive it from the live menu so it can never drift again. */
+(function(){
+  var el=document.getElementById('module-count'); if(!el) return;
+  function set(){
+    var n=document.querySelectorAll('#omega-menu-overlay .om-card').length;
+    el.textContent=(n||70)+' MODULES';
+  }
+  set(); setTimeout(set,1200);
+})();
 document.getElementById('open-full-grid').addEventListener('click',function(){
   var openBtn=document.getElementById('om-open');
   if(openBtn) openBtn.click();

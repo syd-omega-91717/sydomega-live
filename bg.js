@@ -256,6 +256,9 @@
 /* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
 (function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
 
+/* ===== GEOMETRIC SYSTEM -- one spacing scale + canonical grid widths ===== */
+(function(){if(!document.querySelector('script[data-omega-geometry]')){var s=document.createElement('script');s.src='/omega-geometry.js';s.setAttribute('data-omega-geometry','1');if(document.body)document.body.appendChild(s);}})();
+
 /* ===== MEMBERSHIP CARD -- one component, mounted via [data-membership-card] ===== */
 (function(){if(!document.querySelector('script[data-omega-membership]')){var s=document.createElement('script');s.src='/omega-membership.js';s.setAttribute('data-omega-membership','1');if(document.body)document.body.appendChild(s);}})();
 

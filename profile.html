@@ -1261,7 +1261,11 @@ function callWhenReady(fnName){
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 const ACHIEV=[
   {n:1,name:'GENESIS',col:'#D9B86A',sym:'\u03A9'},{n:2,name:'KNOWLEDGE',col:'#00E5FF',sym:'\u25CF'},
@@ -1705,7 +1709,7 @@ async function loadMembers(){
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 
 const EL_MAP={Aries:'FIRE',Taurus:'METAL',Gemini:'WIND',Cancer:'WATER',Leo:'FIRE',Virgo:'SAND',Libra:'WIND',Scorpio:'WATER',Sagittarius:'FIRE',Capricorn:'METAL',Aquarius:'WIND',Pisces:'WATER'};
 const SETTINGS_DATA=[
@@ -1784,7 +1788,7 @@ window.bootIdentityExtra = bootIdentityExtra;
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 
 const CHAR_MAP={
   Aries:{name:'THE FIRE INITIATOR',role:'WARRIOR . PIONEER . IGNITER',traits:['Bold','Decisive','Unstoppable','First Mover'],col:'#E86A3A',glyph:'Y',archetype:'WARRIOR'},
@@ -1971,7 +1975,7 @@ window.bootCharacterFull = bootCharacterFull;
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 async function bootPortfolioExtra(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){ window.location.href='/account.html'; return; }
@@ -2075,7 +2079,7 @@ setTimeout(()=>{el.style.width=w},300);
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const ppSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const ppSb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 let ppUid=null;
 
 const PP_RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
@@ -2152,7 +2156,7 @@ window.bootPassportExtra = bootPassportExtra;
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 
 const STEPS=[
   {n:1,title:'EMAIL VERIFICATION',desc:'Confirm your sovereign email address. A verification link has been sent upon registration.',action:'VERIFIED',actionStyle:'color:var(--green);border-color:rgba(63,178,127,.5)'},

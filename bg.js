@@ -813,8 +813,11 @@
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
   var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1};
   if(EX[pg])return;
-  import('https://esm.sh/@supabase/supabase-js@2').then(function(m){
-    var sb=m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  /* shared singleton -- each extra createClient registers another GoTrueClient
+     competing for the same auth-token storage key */
+  (window.OmegaSB?window.OmegaSB.get():import('https://esm.sh/@supabase/supabase-js@2').then(function(m){
+    return m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  })).then(function(sb){
     sb.auth.getSession().then(function(res){
       var s=res.data.session;if(!s)return;
       sb.from('profiles').select('sign,terms_accepted,access_approved,is_owner,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle().then(function(pr){
@@ -932,10 +935,12 @@
 setTimeout(function(){
   (async function(){
     try{
-      var mod=await import('https://esm.sh/@supabase/supabase-js@2');
-      var createClient=mod.createClient||mod.default&&mod.default.createClient;
-      if(!createClient) return;
-      var sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+      var sb=await (window.OmegaSB?window.OmegaSB.get():(async function(){
+        var mod=await import('https://esm.sh/@supabase/supabase-js@2');
+        var cc=mod.createClient||mod.default&&mod.default.createClient;
+        return cc?cc("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"):null;
+      })());
+      if(!sb) return;
       var sess=(await sb.auth.getSession()).data.session;
       if(!sess) return;
       var uid=sess.user.id;
@@ -969,13 +974,12 @@ setTimeout(function(){
 (function(){
   async function checkTrialExpiry(){
     try{
-      var mod=await import('https://esm.sh/@supabase/supabase-js@2');
-      var createClient=mod.createClient||(mod.default&&mod.default.createClient);
-      if(!createClient) return;
-      var sb=createClient(
-        "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-        "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"
-      );
+      var sb=await (window.OmegaSB?window.OmegaSB.get():(async function(){
+        var mod=await import('https://esm.sh/@supabase/supabase-js@2');
+        var cc=mod.createClient||(mod.default&&mod.default.createClient);
+        return cc?cc("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"):null;
+      })());
+      if(!sb) return;
       var sess=(await sb.auth.getSession()).data.session;
       if(!sess) return;
       var pr=(await sb.from('profiles')

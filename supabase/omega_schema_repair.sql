@@ -32,6 +32,13 @@
 GRANT SELECT, INSERT ON public.medals TO authenticated;
 REVOKE ALL ON public.medals FROM anon;
 
+-- profiles carries no explicit grant anywhere in the migration set. It works
+-- today on Supabase default privileges, but `medals` proved those defaults are
+-- not universal -- and profiles is the one table that, if it ever loses access,
+-- takes down sign-in, onboarding, the access gate and the whole matrix with it.
+-- Stated explicitly rather than assumed. RLS still restricts rows to the owner.
+GRANT SELECT, INSERT, UPDATE ON public.profiles TO authenticated;
+
 -- ------------------------------------------------ COLUMNS THE APP QUERIES ---
 ALTER TABLE public.automation_rules
   ADD COLUMN IF NOT EXISTS is_on boolean,

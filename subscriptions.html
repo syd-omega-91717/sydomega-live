@@ -125,6 +125,7 @@ a{color:inherit;text-decoration:none}
     <div class="topbar">
       <div class="t">MEMBERSHIP &amp; PAYMENTS<small>TIERS &middot; METHODS &middot; TRANSACTION HISTORY</small></div>
     </div>
+    <div data-page-emblem="subscriptions" style="margin:14px auto 18px"></div>
 
     <!-- MERGED: payments.html folded in here. Membership, subscription and
          payment were three routes onto the same subject; payments.html is now
@@ -182,7 +183,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SB_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
 const SB_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
 const CHECKOUT=SB_URL+'/functions/v1/checkout';
-const sb=createClient(SB_URL,SB_KEY);
+const sb=window.__omegaSb || (window.__omegaSb = createClient(SB_URL,SB_KEY));
 
 const TIERS=[
   {mat:'SAND',        name:'Initiate',      price:'9.17',   color:'#c2b280', perks:['Matrix, identity & cosmology view','Your bound agent revealed','Academy -- Discipline I']},
@@ -265,10 +266,11 @@ boot();
 </script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const __sbg = createClient(
-    "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-    "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"
-  );
+  const __sbg = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
   (async function(){
     /* Access gate -- no content is shown before a verified, approved session */
     const sess=(await __sbg.auth.getSession()).data.session;
@@ -283,7 +285,7 @@ boot();
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 
 const METHODS=[
   {icon:'&#x25C8;',name:'STRIPE &mdash; CARD',desc:'Credit / debit card payments for subscriptions and consultancy bookings. All major cards accepted.',col:'#9B6BF0',status:'ready'},

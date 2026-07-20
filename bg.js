@@ -51,11 +51,18 @@
   var KEY = "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
   var _p = null;
   function get() {
+    /* A page module may already have built a client (window.__omegaSb). Which
+       runs first depends on where bg.js sits relative to the module, so BOTH
+       directions must converge on the same slot -- otherwise the page builds
+       one, this builds another, and two GoTrueClients share the storage key. */
+    if (window.__omegaSb) return Promise.resolve(window.__omegaSb);
     if (_p) return _p;
     _p = import('https://esm.sh/@supabase/supabase-js@2').then(function (mod) {
       var cc = mod.createClient || (mod.default && mod.default.createClient);
       if (!cc) throw new Error('supabase createClient unavailable');
-      return cc(URL, KEY);
+      /* publish it so any page module loading later reuses this one */
+      window.__omegaSb = window.__omegaSb || cc(URL, KEY);
+      return window.__omegaSb;
     }).catch(function (e) { _p = null; throw e; });
     return _p;
   }

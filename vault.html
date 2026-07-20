@@ -287,7 +287,11 @@ if(location.hash){const t=location.hash.replace('#','');document.querySelector('
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 const ASSETS=[
   {name:'SWISS VAULT GOLD BARS',cat:'PHYSICAL',val:'&#937; 1,800',ch:'+0.91%',up:true,col:'#C9A84C'},
@@ -558,7 +562,7 @@ boot();
   (async function(){
     try{
       const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-      const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+      const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
       const ses = await sb.auth.getSession(); if(!(ses.data&&ses.data.session)) return;
       const r = await sb.rpc('my_token_balances'); if(!r.data) return;
       const map = {}; r.data.forEach(t=>{ map[t.code]=Number(t.balance)||0; });

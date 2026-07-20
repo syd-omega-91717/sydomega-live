@@ -618,7 +618,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 const LEVELS=[
   {n:1,name:'INITIATE',col:'#D9B86A',mat:'SAND',xp:'1-100',auth:'1.73'},
@@ -781,7 +785,7 @@ window.bootAscension = bootAscension;
 <script type="module">
 
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  const supabase = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
   const APEX=15.588;
   const PHASE=['The Awakening','The Calling','The Foundation','The First Gate','The Trials','The Ascent','The Convergence','The Sovereign Trial','The Celestial Alignment','The Dominion','The Legacy','The Omega'];
   function band(auth){ var g=Math.max(1,Math.min(12,Math.ceil(auth/APEX*12))); var lo=(g-1)/12*APEX,hi=g/12*APEX,w=Math.max(0,Math.min(1,(auth-lo)/(hi-lo))); var lv=Math.max(1,Math.min(12,Math.ceil(w*12))); return {g:g,lv:lv}; }
@@ -854,7 +858,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
   let trophyCount=0, medalCount=0, certCount=0;
   try{
     const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-    const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+    const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
     const sess = (await sb.auth.getSession()).data.session;
     if(!sess) return;
     const pr = await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();

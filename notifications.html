@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717  --  Notifications</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717  --  Notifications"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/notifications.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717  --  Notifications"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -93,6 +93,7 @@
       <div class="t">NOTIFICATIONS<small>THE WIRE &amp; YOUR MILESTONES</small></div>
       <div class="seen" id="seen">MARK ALL SEEN</div>
     </div>
+    <div data-page-emblem="notifications" style="margin:14px auto 18px"></div>
     <div class="filters" id="filters"></div>
     <div class="feed" id="feed"></div>
   </main>
@@ -151,7 +152,7 @@
         var verb=({academy:'Cleared a lesson',gaming:'Won a node',contribution:'Logged a contribution'})[r.kind]||'Advanced';
         all.push({type:(TYPES[r.kind]?r.kind:'academy'),title:verb,detail:(r.title||r.task||'')+'   .   +0.25 to your axis',time:new Date(r.created_at||Date.now()).getTime()}); }); }catch(e){}
     // certificates
-    try{ var cc=await supabase.from('certificates').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(20);
+    try{ var cc=await supabase.from('certificates').select('*').eq('user_id',uid).order('issued_at',{ascending:false}).limit(20);
       (cc.data||[]).forEach(function(c){ all.push({type:'certificate',title:'Certificate of Ascent issued',detail:(c.title||(c.tier?('Tier '+c.tier):''))||'A new certificate joins your honors.',time:new Date(c.created_at||Date.now()).getTime()}); }); }catch(e){}
 
     all.sort(function(a,b){ return b.time-a.time; });

@@ -740,7 +740,11 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 <script type="module">
 
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 const FRANCHISES=[
   {uni:'I',title:'MYTH OF THE STONES',col:'#C9A84C',desc:'Before the Order, there were only the Nine Elements -- Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and the Ninth that waits at the final stage. Sand, the universal amplifier, was the first stone to hold the 9.1717Hz frequency. Every sovereign\u2019s matrix position begins here.',items:['THE NINE ELEMENTS','THE FIRST MATRIX (9x9x9 = 729 nodes)','GUARDIANS OF SAND','RELICS OF THE FIRST ORDER']},
@@ -851,7 +855,7 @@ bootUniverse();
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 
 var FILMS=[
   {n:1,title:'THE ORIGIN',sub:'THE CODE AWAKENS',year:2026,el:'Fire',elCol:'#E86A3A',phase:'PHASE I',status:'IN PRODUCTION',

@@ -43,7 +43,7 @@
           ['achievements','MY RECORD','/honors.html#record'],
           ['academy','ACADEMY','/academy.html'],['gaming','GAMING ARENA','/gaming.html'],
           ['trophies','TROPHY VAULT','/trophies.html'],['honors','HONORS','/honors.html'],
-          ['exam','EXAM HALL','/exam.html'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html']]},
+          ['exam','EXAM HALL','/gaming.html#exam'],['contributions','CONTRIBUTIONS','/contributions.html'],['points','SOVEREIGN POINTS','/points.html']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#9B6BF0',
      sub:[['cosmos','COSMOS HUB','/cosmos.html'],['horoscope','HOROSCOPE','/cosmos.html#horoscope'],
           ['agents','AI AGENTS','/agents.html'],['elements','9 ELEMENTS','/elements.html'],
@@ -55,7 +55,7 @@
     {key:'vault',   icon:'\u03A9', label:'VAULT',    href:'/vault.html',    col:'#C9A84C',
      sub:[['vault','SOVEREIGN VAULT','/vault.html'],['treasury','RESERVE','/vault.html#reserve'],
           ['wallet','WALLET','/vault.html#wallet'],['blockchain','BLOCKCHAIN','/blockchain.html'],
-          ['payments','PAYMENTS','/payments.html'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
+          ['payments','PAYMENTS','/subscriptions.html#payments'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
           ['marketplace','MARKETPLACE','/marketplace.html'],['portfolio','PORTFOLIO','/profile.html#portfolio'],
           ['income','INCOME','/income.html'],['evolution','EVOLUTION','/evolution.html'],
           ['ledger','LEDGER','/ledger.html'],['sigil','SIGIL VAULT','/vault.html#nft']]},
@@ -166,6 +166,17 @@
 
   /* Logout */
   document.getElementById('on-logout')?.addEventListener('click',function(){
+    /* Reuse the shared client so signOut acts on the SAME GoTrueClient that
+       holds the session. A fresh client here signs out a different instance
+       under the same storage key -- the exact concurrent-use case Supabase
+       warns about. Falls back to a one-off module if the singleton is absent. */
+    if(window.OmegaSB){
+      window.OmegaSB.get().then(function(sb){
+        return sb.auth.signOut();
+      }).then(function(){ location.href='/account.html'; })
+        .catch(function(){ location.href='/account.html'; });
+      return;
+    }
     var sc=document.createElement('script');sc.type='module';
     sc.textContent='import{createClient}from"https://esm.sh/@supabase/supabase-js@2";createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q").auth.signOut().then(()=>location.href="/account.html")';
     document.body.appendChild(sc);
@@ -265,7 +276,7 @@
       {icon:'\u25C8',label:'IDENTITY',col:'#00E5FF',href:'/profile.html',key:'identity',
        links:[['IDENTITY HUB','/profile.html'],['PROFILE','/profile.html'],['PASSPORT','/profile.html#passport'],['KYC','/profile.html#kyc'],['SETTINGS','/profile.html#settings']]},
       {icon:'\u25B2',label:'ASCEND',col:'#E86A3A',href:'/honors.html#ascension',key:'ascend',
-       links:[['ASCENSION','/honors.html#ascension'],['MATRIX 729','/matrix.html'],['MY RECORD','/honors.html#record'],['ACADEMY','/academy.html'],['GAMING','/gaming.html'],['TROPHIES','/trophies.html']]},
+       links:[['ASCENSION','/honors.html#ascension'],['MATRIX 104,976','/matrix.html'],['MY RECORD','/honors.html#record'],['ACADEMY','/academy.html'],['GAMING','/gaming.html'],['TROPHIES','/trophies.html']]},
       {icon:'\u2609',label:'COSMOS',col:'#9B6BF0',href:'/cosmos.html',key:'cosmos',
        links:[['COSMOS HUB','/cosmos.html'],['HOROSCOPE','/cosmos.html#horoscope'],['AI AGENTS','/agents.html'],['ELEMENTS','/elements.html'],['PANTHEONS','/pantheons.html']]},
       {icon:'\u25BA',label:'UNIVERSE',col:'#8B0000',href:'/media.html',key:'universe',

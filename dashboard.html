@@ -453,10 +453,11 @@ angle+=.005;requestAnimationFrame(draw);
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-/* Register this page's client as the shared singleton so every shared
-   script reuses it -- one GoTrueClient per load, not two. */
-try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(supabase);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
+const supabase = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 const BOUND = {
   Aries:{agent:'Sentinel',token:'PYRON',god:'Ares',element:'Fire'},

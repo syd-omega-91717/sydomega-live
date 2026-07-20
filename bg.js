@@ -156,6 +156,7 @@
     if(!document.querySelector('link[rel="apple-touch-icon"]'))
       add('link', {rel:'apple-touch-icon', href:'/icon-192.png'});
     if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){
+      add('meta', {name:'mobile-web-app-capable', content:'yes'});
       add('meta', {name:'apple-mobile-web-app-capable', content:'yes'});
       add('meta', {name:'apple-mobile-web-app-status-bar-style', content:'black-translucent'});
       add('meta', {name:'apple-mobile-web-app-title', content:'OMEGA'});

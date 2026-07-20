@@ -313,7 +313,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
             <a href="matrix.html" class="mod-link"><span class="mod-num">M02</span><span class="mod-name">The Matrix</span><span class="mod-arrow">&#8594;</span></a>
             <a href="honors.html" class="mod-link"><span class="mod-num">M03</span><span class="mod-name">Honors &amp; Achievements</span><span class="mod-arrow">&#8594;</span></a>
             <a href="elements.html#gates" class="mod-link"><span class="mod-num">M04</span><span class="mod-name">The 12 Gates</span><span class="mod-arrow">&#8594;</span></a>
-            <a href="exam.html" class="mod-link"><span class="mod-num">M05</span><span class="mod-name">Exam Hall</span><span class="mod-arrow">&#8594;</span></a>
+            <a href="/gaming.html#exam" class="mod-link"><span class="mod-num">M05</span><span class="mod-name">Exam Hall</span><span class="mod-arrow">&#8594;</span></a>
 
             <div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;margin:.9rem 0 .3rem">EXPERIENCE</div>
             <a href="academy.html" class="mod-link"><span class="mod-num">M06</span><span class="mod-name">Academy</span><span class="mod-arrow">&#8594;</span></a>
@@ -454,6 +454,9 @@ angle+=.005;requestAnimationFrame(draw);
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+/* Register this page's client as the shared singleton so every shared
+   script reuses it -- one GoTrueClient per load, not two. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(supabase);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 const BOUND = {
   Aries:{agent:'Sentinel',token:'PYRON',god:'Ares',element:'Fire'},

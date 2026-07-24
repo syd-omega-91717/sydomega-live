@@ -121,8 +121,24 @@
     if(masterGain) masterGain.gain.setTargetAtTime(m?0:0.06,ctx?ctx.currentTime:0,0.3);
   }
 
-  /* Inject audio control button */
+  /* External control hook for omega-controls.js's unified dock, so the SOUND
+     toggle in one place actually starts/mutes this engine rather than a
+     second, disconnected button drawn on top of it. */
+  window.__omegaAudioToggle = function(){
+    if(!started){ start(); setMuted(false); } else { setMuted(!muted); }
+    update();
+    return !muted;
+  };
+  window.__omegaAudioIsOn = function(){ return started && !muted; };
+
+  /* Inject audio control button -- DISABLED. audio.js drew its own SOUND
+     badge at top:42px;right:16px, stacked directly over omega-controls.js's
+     dock (the overlap visible in the reported screenshot) and using a
+     different storage key than the rest of the platform. The engine below is
+     untouched; only this second button is suppressed. */
   function injectControl(){
+    return;
+    // eslint-disable-next-line no-unreachable
     if(document.getElementById('omega-audio-btn')) return;
     var btn=document.createElement('button'); btn.id='omega-audio-btn';
     btn.style.cssText='position:fixed;top:42px;right:16px;z-index:9995;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;padding:5px 10px;background:rgba(7,7,11,0.92);border:1px solid rgba(201,168,76,0.18);color:#85837b;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;border-radius:0';

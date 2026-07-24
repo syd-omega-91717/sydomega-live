@@ -505,10 +505,29 @@ async function loadDashboard(){
     badges.innerHTML = '<span class="hero-badge">SET YOUR COSMOLOGY TO UNLOCK YOUR BADGES</span>';
   }
 
-  // matrix node stat -- real completion out of 729 (single-track aggregate spine)
-  const node = Math.round((a-1)*81 + (b-1)*9 + (c-1) + 1);
-  document.getElementById('stat-nodes').textContent = Math.max(1,node);
-  document.getElementById('stat-nodes-sub').textContent = auth>=15.588-0.001 ? '104,976 complete' : (Math.max(1,node)+' of 729');
+  // Lattice position from the new engine (104,976-node) + sovereign summary
+  // Fetch my_lattice + my_sovereign_summary in parallel; both are real data
+  sb.rpc('my_lattice').then(r=>{
+    const lat=r.data||{};
+    const nd=Number(lat.node||0), pct=Number(lat.percent||0);
+    const el=document.getElementById('stat-nodes'); if(el) el.textContent=nd.toLocaleString();
+    const sub=document.getElementById('stat-nodes-sub');
+    if(sub) sub.textContent = lat.node>=104976 ? '104,976 complete'
+                                                : nd.toLocaleString()+' of 104,976';
+  }).catch(()=>{
+    /* fallback to the axes-based estimate if the lattice engine isn't deployed yet */
+    const node=Math.round((a-1)*81+(b-1)*9+(c-1)+1);
+    const el=document.getElementById('stat-nodes'); if(el) el.textContent=Math.max(1,node);
+    const sub=document.getElementById('stat-nodes-sub'); if(sub) sub.textContent=Math.max(1,node)+' of 729 (upgrade SQL)';
+  });
+  sb.rpc('my_sovereign_summary').then(r=>{
+    const sm=r.data||{};
+    const pts=Number(sm.points||0);
+    const pctEl=document.getElementById('stat-lattice-pct');
+    if(pctEl) pctEl.textContent=Number(sm.matrix_pct||0).toFixed(2)+'%';
+    const ptEl=document.getElementById('stat-pts');
+    if(ptEl) ptEl.textContent=pts.toLocaleString()+' PTS';
+  }).catch(()=>{});
   document.getElementById('stat-honors').textContent = ((d.certificates_earned||0)+(d.trophies_earned||0)+(d.medals_earned||0))+'+';
 
   // Quick Access real status lines

@@ -239,7 +239,12 @@
   /* Boot */
   function boot(){
     injectRTLStyle();
-    injectSwitcher();
+    /* injectSwitcher() disabled: it drew a SECOND language box stacked above
+       omega-controls.js's unified dock (SOUND badge + LANG box overlapping in
+       the top-right corner). Translation itself is untouched -- applyLang()
+       still runs, data-i18n strings still resolve. Language switching now
+       lives in one place: omega-controls.js's dock, which reads/writes the
+       same 'omega_lang' key this file uses. */
     applyLang(getLang());
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);

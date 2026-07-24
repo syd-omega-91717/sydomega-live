@@ -80,11 +80,15 @@
   if(!document.getElementById('omega-nav-css')){
     var s=document.createElement('style'); s.id='omega-nav-css';
     s.textContent=[
-      /* Immediate layout fix before JS runs */
-      '#omega-side{width:80px!important;flex-shrink:0!important;height:100vh!important;position:sticky!important;top:0!important;overflow:visible!important;z-index:200!important;background:#08080F!important;border-right:1px solid rgba(201,168,76,0.12)!important}',
+      /* Immediate layout fix before JS runs. overflow was 'visible' -- with a
+         fixed height:100vh, items past the viewport had nowhere to go: not
+         clipped, not scrollable, just unreachable. Sidebar items below the
+         fold could never be scrolled to. Changed to overflow-y:auto so the
+         dock scrolls independently of the page. */
+      '#omega-side{width:80px!important;flex-shrink:0!important;height:100vh!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:visible!important;z-index:200!important;background:#08080F!important;border-right:1px solid rgba(201,168,76,0.12)!important}',
       '.side{width:80px!important}',
       /* Icon dock */
-      '.omega-side{width:80px;flex-shrink:0;background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow:visible;z-index:200;border-right:1px solid rgba(201,168,76,0.12)}',
+      '.omega-side{width:80px;flex-shrink:0;background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.35) transparent;z-index:200;border-right:1px solid rgba(201,168,76,0.12)}','.omega-side::-webkit-scrollbar{width:4px}','.omega-side::-webkit-scrollbar-thumb{background:rgba(201,168,76,.35);border-radius:2px}',
       '.on-hb{display:flex;gap:4px;margin-bottom:8px;padding:0 6px 10px;border-bottom:1px solid rgba(201,168,76,0.1);width:100%;justify-content:center}',
       '.on-btn{font-family:"Courier Prime",monospace;font-size:8px;letter-spacing:1px;width:34px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:transparent;transition:all .14s;text-decoration:none}',
       '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5)}',

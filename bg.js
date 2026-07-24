@@ -269,9 +269,11 @@
 
 (function(){if(!document.querySelector('script[data-omega-emblem]')){var s=document.createElement('script');s.src='/emblem.js';s.setAttribute('data-omega-emblem','1');(document.body||document.documentElement).appendChild(s);}})();
 
-/* Audio loader */
+/* Audio engine (Web Audio oscillators). Its own visible button is disabled --
+   omega-controls.js's unified dock is the one on-screen SOUND control. */
 (function(){if(!document.querySelector('script[data-omega-audio]')){var s=document.createElement('script');s.src='/audio.js';s.setAttribute('data-omega-audio','1');if(document.body)document.body.appendChild(s);}})();
-/* ===== MULTI-LANGUAGE -- activate the i18n engine on every page (EN / AR-RTL / FR / ES) ===== */
+/* ===== MULTI-LANGUAGE -- translation engine on every page (EN / AR-RTL / FR / ES).
+   Its own visible language box is disabled -- same reason as above. ===== */
 (function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== GENESIS VISUAL ENGINE -- make every page alive (armillary, particles, cinematic depth) ===== */
 (function(){if(!document.querySelector('script[data-omega-genesis]')){var s=document.createElement('script');s.src='/omega-genesis.js';s.setAttribute('data-omega-genesis','1');if(document.body)document.body.appendChild(s);}})();
@@ -298,6 +300,9 @@
 
 /* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
 (function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
+
+/* ===== CHROME COORDINATION -- one layout for feedback/share/language ===== */
+(function(){if(!document.querySelector('script[data-omega-chrome]')){var s=document.createElement('script');s.src='/omega-chrome.js';s.setAttribute('data-omega-chrome','1');if(document.body)document.body.appendChild(s);}})();
 
 /* ===== PAGE EMBLEM -- a mark derived from each page own lattice/axis ===== */
 (function(){if(!document.querySelector('script[data-omega-page-emblem]')){var s=document.createElement('script');s.src='/omega-page-emblem.js';s.setAttribute('data-omega-page-emblem','1');if(document.body)document.body.appendChild(s);}})();
@@ -1169,6 +1174,14 @@ setTimeout(function(){
   /* ---- PAGE TRANSITIONS ---- */
   var veil=document.createElement('div');veil.id='omega-veil';
   (function add(){if(document.body){document.body.appendChild(veil);}else requestAnimationFrame(add);})();
+
+/* ===== UNIFIED CONTROL DOCK -- the single on-screen SOUND + LANGUAGE + HOME
+   control. Previously three separate scripts (audio.js, i18n.js, and this
+   one) each drew their own floating control in the top-right corner,
+   stacking on top of each other -- the overlap in the reported screenshot.
+   Now only this dock is visible; the other two still run their real engines
+   underneath it (audio playback, string translation). ===== */
+(function(){if(!document.querySelector('script[data-omega-controls]')){var s=document.createElement('script');s.src='/omega-controls.js';s.setAttribute('data-omega-controls','1');if(document.body)document.body.appendChild(s);}})();
   if(!REDUCE){
     /* arrive: fade up from void */
     requestAnimationFrame(function(){veil.classList.add('show');setTimeout(function(){veil.classList.remove('show');},40);});

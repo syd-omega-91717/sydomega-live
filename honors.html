@@ -271,7 +271,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-meta">
         <div class="honor-type">Trophy</div>
         <div class="honor-name">Omega Sovereign</div>
-        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 15.588. Absolute completion of the 104,976-node progression path.</div>
+        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 27.8367. Absolute completion of the 104,976-node progression path.</div>
         <div class="honor-footer">
           <span class="honor-tier-badge">OMEGA</span>
           <span class="honor-date">2026-07-11</span>
@@ -469,7 +469,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-meta">
         <div class="honor-type">Level Badge</div>
         <div class="honor-name">Omega Prime Level 9.9.9</div>
-        <div class="honor-desc">Matrix coordinate absolute: (9.000, 9.000, 9.000). ALL-TIME access. No expiry. Authority score: 15.588. is_owner=true.</div>
+        <div class="honor-desc">Matrix coordinate absolute: (9.000, 9.000, 9.000). ALL-TIME access. No expiry. Authority score: 27.8367. is_owner=true.</div>
         <div class="honor-footer">
           <span class="honor-tier-badge">OMEGA</span>
           <span class="honor-date">PERMANENT</span>
@@ -576,7 +576,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <canvas id="auth-gauge" width="200" height="200" style="width:100px;height:100px"></canvas>
       </div>
 
-      <div class="sechead" style="margin-top:20px">AUTHORITY METRICS</div>
+      <div class="sechead" style="margin-top:20px">AUTHORITY METRICS</div><div data-canon-lattice="twelve"></div>
       <div class="authority-section">
         <div class="auth-stats">
           <div class="auth-stat"><div class="as-label">AUTHORITY SCORE</div><div class="as-val" id="auth-score" style="color:var(--gold)">--</div><div class="as-formula">sqrt(A+B+C)</div></div>
@@ -768,7 +768,7 @@ async function bootAscension(){
   if(!sess){window.location.href='/account.html';return;}
   const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
   const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
-  const auth=Math.sqrt(a*a+b*b+c*c);
+  const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
   const tier=LEVELS.filter(L=>auth>=parseFloat(L.auth)).length||1;
   document.getElementById('auth-score').textContent=auth.toFixed(2);
   document.getElementById('matrix-pos').textContent='('+a.toFixed(1)+','+b.toFixed(1)+','+c.toFixed(1)+')';
@@ -786,7 +786,7 @@ window.bootAscension = bootAscension;
 
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
-  const APEX=15.588;
+  const APEX=27.8367;
   const PHASE=['The Awakening','The Calling','The Foundation','The First Gate','The Trials','The Ascent','The Convergence','The Sovereign Trial','The Celestial Alignment','The Dominion','The Legacy','The Omega'];
   function band(auth){ var g=Math.max(1,Math.min(12,Math.ceil(auth/APEX*12))); var lo=(g-1)/12*APEX,hi=g/12*APEX,w=Math.max(0,Math.min(1,(auth-lo)/(hi-lo))); var lv=Math.max(1,Math.min(12,Math.ceil(w*12))); return {g:g,lv:lv}; }
   function tier(n){ return n<=3?1:(n<=6?2:(n<=9?3:4)); }
@@ -810,7 +810,7 @@ window.bootAscension = bootAscension;
       supabase.from('certificates').select('id').eq('user_id',uid)
     ]).then(function(res){
       var p=res[0].data||{}; var a=Number(p.axis_a||0.001),b=Number(p.axis_b||0.001),c=Number(p.axis_c||0.001);
-      var auth=Math.sqrt(a*a+b*b+c*c); var bd=band(auth);
+      var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285; var bd=band(auth);
       document.getElementById('h-grade').textContent=bd.g;
       document.getElementById('h-level').textContent=bd.lv;
       document.getElementById('h-phase').textContent=bd.g;
@@ -864,8 +864,8 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     const pr = await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
     const d = pr.data || {};
     const a=Number(d.axis_a||0.001), b=Number(d.axis_b||0.001), c=Number(d.axis_c||0.001);
-    const auth = Math.sqrt(a*a+b*b+c*c);
-    const grade = Math.max(1, Math.min(12, Math.ceil(auth/15.588*12)));
+    const auth = Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+    const grade = Math.max(1, Math.min(12, Math.ceil(auth/27.8367*12)));
 
     const [certs, trophies, medals] = await Promise.all([
       sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),
@@ -879,7 +879,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     document.getElementById('stat-trophies-sub').textContent = trophyCount+' / 12 Unlocked';
     document.getElementById('stat-medals').textContent = medalCount;
     document.getElementById('stat-level').textContent = d.is_owner ? '9.9.9' : auth.toFixed(2);
-    document.getElementById('stat-level-sub').textContent = d.is_owner ? 'Apex Tier' : ('Authority / 15.588');
+    document.getElementById('stat-level-sub').textContent = d.is_owner ? 'Apex Tier' : ('Authority / 27.8367');
     document.getElementById('stat-grade').textContent = d.is_owner ? '12' : grade;
     document.getElementById('stat-grade-sub').textContent = d.is_owner ? 'All Grades Sealed' : ('Grade '+grade+' of 12');
   }catch(e){ /* leave placeholders if this fails -- never block the page */ }

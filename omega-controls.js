@@ -15,8 +15,16 @@
 
   function curLang() { try { return localStorage.getItem('omega_lang') || 'en'; } catch (e) { return 'en'; } }
   function setLang(c) { try { localStorage.setItem('omega_lang', c); } catch (e) {} location.reload(); }
-  function soundOn() { try { return localStorage.getItem('omega_sound') === 'on'; } catch (e) { return false; } }
+  /* The platform's ambient sound is audio.js's Web Audio oscillator engine,
+     not <audio>/<video> tags -- muting media elements here never touched it.
+     __omegaAudioIsOn / __omegaAudioToggle (audio.js) are the real controls;
+     falls back to the media-mute behaviour if that engine hasn't loaded yet. */
+  function soundOn() {
+    if (window.__omegaAudioIsOn) return window.__omegaAudioIsOn();
+    try { return localStorage.getItem('omega_sound') === 'on'; } catch (e) { return false; }
+  }
   function setSound(on) {
+    if (window.__omegaAudioToggle) { window.__omegaAudioToggle(); return soundOn(); }
     try { localStorage.setItem('omega_sound', on ? 'on' : 'off'); } catch (e) {}
     var med = document.querySelectorAll('audio,video');
     for (var i = 0; i < med.length; i++) { try { med[i].muted = !on; if (!on) med[i].pause(); } catch (e) {} }
@@ -84,8 +92,14 @@
     document.body.appendChild(dock);
     document.addEventListener('click', function () { lm.classList.remove('open'); });
 
-    // apply saved sound state to any media on load
-    if (!soundOn()) setSound(false);
+    // Sync saved sound state on load. This must SET the exact state, not
+    // toggle it -- audio.js starts silent by default (browser autoplay
+    // policy requires a user gesture), so there is nothing to force off here.
+    // Only the media-tag fallback path needs an explicit call.
+    if (!window.__omegaAudioToggle && !soundOn()) {
+      var med = document.querySelectorAll('audio,video');
+      for (var mi = 0; mi < med.length; mi++) { try { med[mi].muted = true; med[mi].pause(); } catch (e) {} }
+    }
   }
 
   if (document.body) build();

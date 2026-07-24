@@ -103,7 +103,11 @@
     try {
       var map = {
         nine:   api.nineFold   && api.nineFold.total_nodes,
-        twelve: api.structure  && api.structure.total_nodes
+        twelve: api.structure  && api.structure.total_nodes,
+        /* non-standard lattices (B requirements) */
+        '28': 28*28*9*9*9,
+        '21': 21*21*9*9*9,
+        '18': 18*18*9*9*9
       };
       /* data-canon-lattice="twelve|nine" -> the FULL formula + node count that
          EVERY individual member of that system carries (fractal rule, see

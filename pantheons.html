@@ -4,111 +4,95 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 -- The Twelve Olympians</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:'Cinzel Decorative',serif;--R:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;align-items:center;padding:10px 0}
 .main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
-.topbar .t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
-.topbar .t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-/* MINE STRIP */
-.mine-strip{padding:20px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:20px;background:linear-gradient(90deg,rgba(139,0,0,.1),rgba(10,10,15,.8))}
-.mine-emblem{width:64px;height:64px;flex-shrink:0}
-.mine-info{flex:1}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
+.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.mine-strip{display:flex;align-items:center;gap:20px;padding:22px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(139,0,0,.1),rgba(10,10,15,.8))}
+.mine-emb{width:64px;height:64px;flex-shrink:0}
 .mine-name{font-family:var(--D);font-size:18px;color:var(--gold);letter-spacing:.06em}
-.mine-sub{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.mine-sign{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .mine-lore{font-size:13px;color:var(--ink);opacity:.75;margin-top:6px;max-width:60ch;line-height:1.7}
-/* PANTHEON TABLE */
-.sec{padding:clamp(14px,3vw,36px)}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
-#ptbl{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.god-card{border:1px solid var(--line);background:rgba(10,10,15,.45);padding:16px 18px;border-radius:2px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;cursor:default}
-.god-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
-.god-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.45)}.god-card:hover::after{opacity:1}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding:16px clamp(14px,3vw,36px) 10px;border-bottom:1px solid var(--line);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.god-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:0 clamp(14px,3vw,36px) 24px}
+.god-card{border:1px solid var(--line);background:rgba(10,10,15,.45);padding:18px;border-radius:2px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.god-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.45)}
 .god-card.mine{border-color:rgba(201,168,76,.55);background:rgba(201,168,76,.06)}
-.god-card.mine .god-name{color:var(--solar)}
 .god-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
 .god-name{font-family:var(--D);font-size:13px;color:var(--gold);letter-spacing:.05em;margin-bottom:2px}
 .god-sign{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:8px}
 .god-domain{font-size:12px;color:var(--ink);opacity:.7;line-height:1.6;margin-bottom:8px}
-.god-el{display:inline-block;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 10px;border:1px solid;border-radius:2px}
+.el-pill{display:inline-block;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 10px;border:1px solid;border-radius:2px}
 .el-fire{color:#e25b3a;border-color:rgba(226,91,58,.4);background:rgba(226,91,58,.06)}
 .el-water{color:#3b8bd8;border-color:rgba(59,139,216,.4);background:rgba(59,139,216,.06)}
 .el-wind{color:#7bcfed;border-color:rgba(123,207,237,.4);background:rgba(123,207,237,.06)}
 .el-metal{color:#b0b5c3;border-color:rgba(176,181,195,.4);background:rgba(176,181,195,.06)}
-.el-sand{color:#c9a84c;border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.06)}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:8px}
+.el-sand{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.06)}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:8px}
 .lf span{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)}
-.lf b{color:var(--gold)}
 </style>
 </head>
 <body>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="pantheons"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">THE TWELVE OLYMPIANS<small>SOVEREIGN PANTHEON &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES EACH</small></div></div>
+    <div class="topbar"><div class="t">THE TWELVE OLYMPIANS<small>SOVEREIGN PANTHEON &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES EACH <span data-canon-lattice="twelve"></span></small></div></div>
     <div class="mine-strip">
-      <div class="mine-emblem"><span data-omega-emblem="Aries" style="display:inline-block;width:64px;height:64px" id="mine-emblem-el"></span></div>
-      <div class="mine-info">
+      <div class="mine-emb"><span id="mine-emb" data-omega-emblem="Aries" style="display:inline-block;width:64px;height:64px"></span></div>
+      <div>
         <div class="mine-name" id="mine">YOUR OLYMPIAN</div>
-        <div class="mine-sub" id="mine-sign">LOADING...</div>
-        <div class="mine-lore" id="mine-lore">Your sovereign archetype is sealed at genesis by your zodiac sign and governs your progression through the 12-fold celestial lattice.</div>
+        <div class="mine-sign" id="mine-sign">LOADING...</div>
+        <div class="mine-lore">Your sovereign archetype is sealed at genesis by your zodiac sign and governs your progression through the 12-fold celestial lattice.</div>
       </div>
     </div>
-    <div class="sec">
-      <div class="sechead"><span>THE TWELVE OLYMPIANS <span data-canon-lattice="twelve"></span></span></div>
-      <div id="ptbl"></div>
-    </div>
+    <div class="sechead"><span>THE TWELVE OLYMPIANS <span data-canon-lattice="twelve"></span></span></div>
+    <div class="god-grid" id="ptbl"><div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">LOADING PANTHEON...</div></div>
     <div data-page-emblem="pantheons" style="margin:14px auto 0"></div>
-    <div class="lf"><span>&#937; SYD OMEGA 91717 &middot; SOVEREIGN PANTHEON</span><span>12 OLYMPIANS &middot; EACH <b>12&times;12&times;9&times;9&times;9 = 104,976</b> NODES</span></div>
+    <div class="lf"><span>&#937; SYD OMEGA 91717 &middot; SOVEREIGN PANTHEON</span><span>12 OLYMPIANS &middot; EACH 12&times;12&times;9&times;9&times;9 = 104,976 NODES</span></div>
   </main>
 </div>
 <script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+import{createClient}from"https://esm.sh/@supabase/supabase-js@2";
+var sb=window.__omegaSb||(window.__omegaSb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
+var ROMAN=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+var ELC={fire:"el-fire",water:"el-water",wind:"el-wind",metal:"el-metal",sand:"el-sand"};
 (async function(){
-  var EL_CLASS={fire:'el-fire',water:'el-water',wind:'el-wind',metal:'el-metal',sand:'el-sand'};
-  var ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
   try{
     var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('access_approved,is_owner,sign,element,god').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    document.getElementById('app').style.display='flex';
-    var mine=document.getElementById('mine'),minesign=document.getElementById('mine-sign');
-    if(mine) mine.textContent=(pr.god||'THE ORDER').toUpperCase();
-    if(minesign) minesign.textContent=(pr.sign||'SIGN UNSET').toUpperCase()+' \u00B7 '+(pr.element||'ELEMENT UNSET').toUpperCase();
-    var mel=document.getElementById('mine-emblem-el');
-    if(mel&&pr.sign) mel.setAttribute('data-omega-emblem',pr.sign.charAt(0).toUpperCase()+pr.sign.slice(1));
-    var OmegaCanon=window.OmegaCanon;
-    if(!OmegaCanon&&window.OmegaSB){
-      await new Promise(function(r){document.addEventListener('omega-canon-ready',r,{once:true});setTimeout(r,3000);});
-      OmegaCanon=window.OmegaCanon;
-    }
-    var tracks=(OmegaCanon&&OmegaCanon.tracks)||[];
-    var tb=document.getElementById('ptbl');
-    if(!tb)return;
-    if(!tracks.length){tb.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING PANTHEON FROM CANON...</div>';return;}
+    if(!s){location.replace("/account.html");return;}
+    var pr=(await sb.from("profiles").select("access_approved,is_owner,sign,element,god").eq("id",s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace("/pending.html");return;}
+    document.getElementById("app").style.display="flex";
+    var mn=document.getElementById("mine"),ms=document.getElementById("mine-sign"),me=document.getElementById("mine-emb");
+    if(mn)mn.textContent=(pr.god||"THE ORDER").toUpperCase();
+    if(ms)ms.textContent=(pr.sign||"SIGN UNSET").toUpperCase()+" \u00B7 "+(pr.element||"").toUpperCase();
+    if(me&&pr.sign)me.setAttribute("data-omega-emblem",pr.sign.charAt(0).toUpperCase()+pr.sign.slice(1));
+    await new Promise(function(r){if(window.OmegaCanon)r();else document.addEventListener("omega-canon-ready",r,{once:true});setTimeout(r,3500);});
+    var tracks=(window.OmegaCanon&&window.OmegaCanon.tracks)||[];
+    var tb=document.getElementById("ptbl");if(!tb)return;
+    if(!tracks.length){tb.innerHTML="<div style='font-family:var(--M);font-size:10px;color:var(--muted)'>CANON LOADING...</div>";return;}
     tb.innerHTML=tracks.map(function(t,i){
-      var isMine=pr.god&&t.god&&t.god.toLowerCase()===pr.god.toLowerCase();
-      var elc=EL_CLASS[t.element]||'el-sand';
-      return '<div class="god-card'+(isMine?' mine':'')+'">'
-        +'<div class="god-num">OLYMPIAN '+ROMAN[i]+(isMine?' \u2714 YOURS':'')+'</div>'
-        +'<div class="god-name">'+(t.god||'').toUpperCase()+'</div>'
-        +'<div class="god-sign">'+(t.sign||'').toUpperCase()+' \u00B7 '+(t.token||'')+'</div>'
-        +'<div class="god-domain">Domain of '+(t.gate||'')+'</div>'
-        +'<div class="god-el '+elc+'">'+(t.element||'').toUpperCase()+'</div>'
-        +'<div style="margin-top:8px"><span data-canon-lattice="twelve"></span></div>'
-        +'</div>';
-    }).join('');
-  }catch(e){document.getElementById('app').style.display='flex';console.log(e);}
+      var mine=pr.god&&t.god&&t.god.toLowerCase()===pr.god.toLowerCase();
+      var elc=ELC[t.element]||"el-sand";
+      return "<div class='god-card"+(mine?" mine":"")+"'>"
+        +"<div class='god-num'>OLYMPIAN "+ROMAN[i]+(mine?" \u2713 YOURS":"")+"</div>"
+        +"<div class='god-name'>"+(t.god||"").toUpperCase()+"</div>"
+        +"<div class='god-sign'>"+(t.sign||"").toUpperCase()+" \u00B7 "+(t.token||"")+"</div>"
+        +"<div class='god-domain'>Domain of "+(t.gate||"")+"</div>"
+        +"<div class='el-pill "+elc+"'>"+(t.element||"").toUpperCase()+"</div>"
+        +"<div style='margin-top:8px'><span data-canon-lattice='twelve'></span></div>"
+        +"</div>";
+    }).join("");
+  }catch(e){document.getElementById("app").style.display="flex";console.log(e);}
 })();
 </script>
 </body>

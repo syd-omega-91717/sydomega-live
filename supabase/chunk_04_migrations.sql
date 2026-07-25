@@ -681,6 +681,7 @@ $$;
 /* --- 3. EXPIRE TRIAL (called by client when countdown hits zero) ---
    Revokes access, clears trial flags, resets all three matrix axes to genesis
    values (1.0), and wipes the member's task_completions so progress is clean. */
+DROP FUNCTION IF EXISTS public.expire_trial(uuid) CASCADE;
 CREATE OR REPLACE FUNCTION expire_trial(p_uid UUID)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
@@ -698,6 +699,7 @@ END;
 $$;
 
 /* --- 4. GRANT PERMANENT ACCESS (owner override, no timer) --- */
+DROP FUNCTION IF EXISTS public.grant_permanent_access(uuid) CASCADE;
 CREATE OR REPLACE FUNCTION grant_permanent_access(p_uid UUID)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN

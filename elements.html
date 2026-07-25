@@ -139,7 +139,7 @@ a{color:inherit;text-decoration:none}
 
 <div class="mtab-panel" id="mtab-kings" style="display:none">
   
-    <div class="topbar"><div class="t">THE 28 KINGS <span data-canon="mechanic"></span><small>REGENTS OF THE TWENTY-EIGHT MANSIONS</small></div></div>
+    <div class="topbar"><div class="t">THE 28 KINGS <span data-canon="mechanic"></span><small>REGENTS OF THE TWENTY-EIGHT MANSIONS</small> <span data-canon-lattice="28"></span></div></div>
     <p class="intro">Twenty-eight Kings preside over the twenty-eight Mansions  --  the lunar stations recognised from Arabia to the Vedas. Each is an archetype of mastery. They are <b>crowned in sequence as your authority rises</b>, from the first King at genesis to the Omega King at the apex.</p>
     <div class="mstat" id="k-mstat"></div>
     <div class="kings" id="kings"></div>
@@ -247,7 +247,7 @@ async function boot(){
     if(pr){
       mySign=pr.sign||'';
       var a=parseFloat(pr.axis_a||1),b=parseFloat(pr.axis_b||1),c=parseFloat(pr.axis_c||1);
-      myAuth=Math.sqrt(a*a+b*b+c*c);
+      myAuth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     }
   }
 
@@ -340,7 +340,7 @@ boot();
   }
 
   function render(a,b,c){
-    var auth=Math.sqrt(a*a+b*b+c*c);
+    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     var open=0; for(var g=0;g<12;g++){ if(auth>=threshold(g)) open++; }
     document.getElementById('mstat').innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') \u00B7 AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 GATES OPEN <b>'+open+'</b> / 12'+(open<12?' \u00B7 next gate at authority '+threshold(open).toFixed(2):' \u00B7 THE OMEGA GATE STANDS OPEN');
     var box=document.getElementById('gates'); box.innerHTML='';
@@ -419,7 +419,7 @@ window.bootGates = bootGates;
     ['The Pilgrim','Journey'],['The Smith','Tempering'],['The Seer','Vision'],['The Keeper','Memory'],
     ['The Vanguard','Advance'],['The Chancellor','Governance'],['The Ascendant','Elevation'],['The Omega King','Completion']
   ];
-  const GEN=1.7320508, APEX=15.588457;
+  const GEN=1.7320508, APEX=27.8367457;
   function threshold(k){ return GEN + (k/27)*(APEX-GEN); } // k=0..27
 
   function showGate(h,p){
@@ -430,7 +430,7 @@ window.bootGates = bootGates;
   }
 
   function render(a,b,c){
-    var auth=Math.sqrt(a*a+b*b+c*c);
+    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     var crowned=0; for(var k=0;k<28;k++){ if(auth>=threshold(k)) crowned++; }
     document.getElementById('k-mstat').innerHTML='AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 KINGS CROWNED <b>'+crowned+'</b> / 28'+(crowned<28?' \u00B7 next King at authority '+threshold(crowned).toFixed(2):' \u00B7 ALL KINGS CROWNED');
     var box=document.getElementById('kings'); box.innerHTML='';
@@ -438,7 +438,7 @@ window.bootGates = bootGates;
       var isCrowned=auth>=threshold(i);
       var isNext=(!isCrowned) && (i===crowned);
       var el=document.createElement('div'); el.className='king'+(isCrowned?' crowned':' locked')+(isNext?' next':'');
-      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div><div data-canon-lattice=\'28\'></div>';
+      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div><div data-canon-lattice=\'28\'></div><div data-canon-lattice=\"28\"></div>';
       box.appendChild(el);
     });
   }

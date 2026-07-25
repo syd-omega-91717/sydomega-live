@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Control Deck</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 -- Control Deck"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/interface_omni.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Control Deck"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -53,10 +53,6 @@
   .row .k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
   .row .v{font-family:var(--D);font-size:16px;color:var(--cyan)}
   .row .v.gold{color:var(--solar)}
-
-/* buttons had inline font-size only -- no border, background or padding */
-.btn{font-family:'Courier Prime',monospace;letter-spacing:2px;padding:8px 14px;color:#C9A84C;background:transparent;border:1px solid rgba(201,168,76,.35);border-radius:2px;transition:all .2s}
-.btn:hover{background:rgba(201,168,76,.1);border-color:#C9A84C}
 </style>
 </head>
 <body>
@@ -68,9 +64,10 @@
 <div class="shell">
   <aside class="side" id="omega-side" data-page="interface_omni"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">CONTROL DECK<small>SYSTEM STATE . SOVEREIGN OVERSIGHT</small></div></div>
+    <div class="topbar"><div class="t">CONTROL DECK<small>SYSTEM STATE . SOVEREIGN OVERSIGHT &middot; 18×18×9×9×9 = 236,196 <span data-canon-lattice="18"></span></small> <span data-canon-lattice="twelve"></span></div></div>
+    <div data-page-emblem="interface-omni" style="margin:14px auto 18px"></div>
     <div class="state"><span class="dot"></span>SYSTEM STATE: <b>SELF-EVOLVING</b></div>
-    <div class="sechead">LIVE SYSTEM TELEMETRY</div>
+    <div class="sechead">LIVE SYSTEM TELEMETRY <span data-canon-lattice="18"></span></div>
     <div class="pad">
       <div class="grid">
         <div class="card">
@@ -92,7 +89,7 @@
           <h3>ECOSYSTEM MATRIX</h3>
           <div class="row"><span class="k">Matrix Nodes</span><span class="v gold">104,976</span></div>
           <div class="row"><span class="k">User Stages</span><span class="v">1 - 9 ONLINE</span></div>
-          <div class="row"><span class="k">Apex Authority</span><span class="v">15.588</span></div>
+          <div class="row"><span class="k">Apex Authority</span><span class="v">27.8367</span></div>
         </div>
         <div class="card">
           <span class="glyph">&#937;</span>
@@ -127,12 +124,20 @@
         </div>
       </div>
     </div>
-  </main>
+  
+    <div style="display:flex;justify-content:center;padding:14px 0 6px;border-top:1px solid rgba(201,168,76,.12)">
+      <canvas id="pgcv_interface_omni" width="72" height="72" style="width:36px;height:36px;opacity:.55"></canvas>
+    </div>
+    <script>(function(){{var cv=document.getElementById('pgcv_interface_omni');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;function f(){{ctx.clearRect(0,0,72,72);for(var i=0;i<6;i++){{ctx.beginPath();ctx.arc(36,36,12+i*4+3*Math.sin(t*.03+i),t*.007,t*.007+Math.PI*(.45+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.8;ctx.stroke();}}ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.6+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=8;ctx.fillText('\u03A9',36,36);ctx.shadowBlur=0;t++;requestAnimationFrame(f);}}f();}})();</script></main>
 </div>
 </div>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 async function boot(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}

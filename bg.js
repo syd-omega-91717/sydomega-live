@@ -287,10 +287,8 @@
 (function(){if(!document.querySelector('script[data-omega-9d]')){var s=document.createElement('script');s.src='/omega-9d.js';s.setAttribute('data-omega-9d','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== COMPONENT SYSTEM -- G12 button/card states + responsive matrix ===== */
 (function(){if(!document.querySelector('script[data-omega-components]')){var s=document.createElement('script');s.src='/omega-components.js';s.setAttribute('data-omega-components','1');if(document.body)document.body.appendChild(s);}})();
-/* ===== LIVING OMEGA SIGIL -- disabled: omega-sigil.js is not valid JS (it's an
-   orphaned HTML page mislabeled with a .js extension), loading it threw a syntax
-   error on every single page. Removed here; delete the file itself from the repo
-   once you've decided whether it should become a real page or be discarded. ===== */
+   /* omega-sigil.js was an orphaned HTML page mislabeled with a .js extension.
+   Removed from loader; delete the file from the repo. ===== */
 
 /* ===== ELEMENT MOTIFS -- shared thematic animations for the 9 elements ===== */
 (function(){if(!document.querySelector('script[data-omega-element-motif]')){var s=document.createElement('script');s.src='/omega-element-motif.js';s.setAttribute('data-omega-element-motif','1');if(document.body)document.body.appendChild(s);}})();
@@ -379,7 +377,7 @@
        stream the rings. Advertisement = broadcast pulses.
      - Palette: void #0A0A0F, gold #C9A84C, cyan #00E5FF,
        crimson #8B0000. Pure ASCII. Omega as \u03A9 (canvas).
-     - Authority apex (9,9,9) = 15.588. Matrix = 104,976 nodes
+     - Authority apex (9,9,9) = 27.8367. Matrix = 104,976 nodes
        (12 tracks x 12 phases x 9x9x9, per omega-canon.json).
 
    Loaded once, globally, via bg.js. Reduced-motion safe;

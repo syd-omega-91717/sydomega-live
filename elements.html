@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717 &mdash; The Nine Elements</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -12,14 +12,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 &mdash; The Nine Elements"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/elements.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 &mdash; The Nine Elements"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -95,7 +95,7 @@ a{color:inherit;text-decoration:none}
 <aside class="side" id="omega-side" data-page="elements"></aside>
 <main class="main">
 <div class="topbar">
-  <div class="t">THE NINE ELEMENTS<small>ELEMENTAL SOVEREIGNTY &middot; EVOLUTION LAYERS &middot; 9&times;9&times;9&times;9&times;9 = <span data-canon-nodes="nine">59,049</span> NODES</small></div>
+  <div class="t">THE NINE ELEMENTS<small>ELEMENTAL SOVEREIGNTY &middot; EVOLUTION LAYERS <span data-canon-lattice="twelve"></span></small></div>
 </div>
 
 <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:1.5rem;overflow-x:auto">
@@ -119,10 +119,10 @@ a{color:inherit;text-decoration:none}
   <div class="leg" style="color:#C9A84C;border-color:rgba(201,168,76,.5)">THE ALL &middot; APEX</div>
 </div>
 
-<div class="sechead">THE FIVE PHYSICAL ELEMENTS &middot; BIRTH-ASSIGNED</div>
+<div class="sechead">THE FIVE PHYSICAL ELEMENTS &middot; BIRTH-ASSIGNED <span data-canon-lattice="twelve"></span></div>
 <div class="elements-grid" id="physical-grid"></div>
 
-<div class="sechead">THE FOUR TRANSCENDENT ELEMENTS &middot; AUTHORITY-UNLOCKED</div>
+<div class="sechead">THE FOUR TRANSCENDENT ELEMENTS &middot; AUTHORITY-UNLOCKED <span data-canon-lattice="twelve"></span></div>
 <div class="elements-grid" id="transcendent-grid"></div>
 
 <div id="omega-trial-bar-placeholder"></div>
@@ -131,7 +131,7 @@ a{color:inherit;text-decoration:none}
 <div class="mtab-panel" id="mtab-gates" style="display:none">
   
     <div class="topbar"><div class="t">THE TWELVE GATES <span data-canon="mechanic"></span><small>TWELVE PHASES  .  TWELVE THRESHOLDS  .  9x9x9</small></div></div>
-    <p class="intro">Twelve gates rise along the 104,976  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 15.58. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
+    <p class="intro">Twelve gates rise along the 729  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 15.58. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
     <div class="mstat" id="mstat"></div>
     <div class="gates" id="gates"></div>
   
@@ -246,7 +246,7 @@ async function boot(){
     var pr=(await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle()).data;
     if(pr){
       mySign=pr.sign||'';
-      var a=parseFloat(pr.axis_a||0.001),b=parseFloat(pr.axis_b||0.001),c=parseFloat(pr.axis_c||0.001);
+      var a=parseFloat(pr.axis_a||1),b=parseFloat(pr.axis_b||1),c=parseFloat(pr.axis_c||1);
       myAuth=Math.sqrt(a*a+b*b+c*c);
     }
   }
@@ -352,7 +352,7 @@ boot();
       el.style.cursor='pointer';
       el.innerHTML='<span class="gate-ring-emblem" style="display:inline-block;width:52px;height:52px"></span><div class="body">'+
         '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+' \u00B7 OPENS AT AUTHORITY '+threshold(i).toFixed(2)+'</div>'+
-        '<div data-canon-lattice=\"twelve\"></div></div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
+        '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
       box.appendChild(el);
       var ringEl=el.querySelector('.gate-ring-emblem');
       fillRing(ringEl, ROMAN[i], GATE_COLS[i], !isOpen);
@@ -399,7 +399,7 @@ boot();
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to stand before the Gates.'); return; }
     const n=document.getElementById('gt-notice'); if(n) n.style.display='none';
     const g=document.getElementById('gates'); if(g) g.style.display='';
-    render(Number(pr.data.axis_a||0.001),Number(pr.data.axis_b||0.001),Number(pr.data.axis_c||0.001));
+    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
   }
   document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
 window.bootGates = bootGates;
@@ -438,7 +438,7 @@ window.bootGates = bootGates;
       var isCrowned=auth>=threshold(i);
       var isNext=(!isCrowned) && (i===crowned);
       var el=document.createElement('div'); el.className='king'+(isCrowned?' crowned':' locked')+(isNext?' next':'');
-      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div><div data-canon-lattice=\"twelve\"></div>';
+      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div><div data-canon-lattice=\'28\'></div>';
       box.appendChild(el);
     });
   }
@@ -450,7 +450,7 @@ window.bootGates = bootGates;
     if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to claim your Kings.'); return; }
     const n=document.getElementById('k-notice'); if(n) n.style.display='none';
     const g=document.getElementById('kings'); if(g) g.style.display='';
-    render(Number(pr.data.axis_a||0.001),Number(pr.data.axis_b||0.001),Number(pr.data.axis_c||0.001));
+    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
   }
   document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
 window.bootKings = bootKings;
@@ -487,3 +487,5 @@ function callWhenReady(fnName){
 <script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
 </body>
 </html>
+    <div style="display:flex;justify-content:center;padding:18px 0 8px;border-top:1px solid rgba(201,168,76,.15)"><canvas id="pg-cv-el" width="80" height="80" style="width:40px;height:40px;opacity:.6"></canvas></div>
+    <script>(function(){var cv=document.getElementById('pg-cv-el');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;function f(){ctx.clearRect(0,0,80,80);ctx.save();ctx.translate(40,40);ctx.rotate(t*.008);for(var i=0;i<6;i++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(26+4*Math.sin(t*.04+i),0);ctx.strokeStyle='rgba(201,168,76,'+(0.25+0.25*Math.sin(t*.05+i))+')';ctx.lineWidth=1;ctx.stroke();}ctx.restore();ctx.font='bold 18px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';ctx.fillText('Ω',40,40);t++;requestAnimationFrame(f);}f();})();</script>

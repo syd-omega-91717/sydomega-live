@@ -11,7 +11,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- My Profile</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -20,14 +20,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 -- Sovereign Member Profile"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/profile.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Sovereign Member Profile"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -546,6 +546,28 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: MATRIX -->
     <div class="tab-panel" id="tab-matrix">
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:1.4rem">
+  <canvas id="mat-cv" width="120" height="120" style="width:60px;height:60px;flex-shrink:0"></canvas>
+  <div style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:9px;letter-spacing:2px;color:var(--muted,#8a8676)">
+    AUTH = sqrt(A³+B³+C³)×φ/e &middot; APEX 27.8367<br>
+    12×12×9×9×9 = 104,976 &middot; 3×104,976 = 314,928
+  </div>
+</div>
+<script>
+(function(){var cv=document.getElementById('mat-cv');if(!cv||!cv.getContext)return;
+var ctx=cv.getContext('2d'),t=0;
+function frame(){ctx.clearRect(0,0,120,120);
+  for(var i=0;i<8;i++){
+    ctx.beginPath();ctx.arc(60,60,16+i*5+3*Math.sin(t*.03+i),t*.009*((i%2)?1:-1),t*.009*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));
+    ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();
+  }
+  ctx.font='bold 20px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';
+  ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
+  t++;requestAnimationFrame(frame);}frame();
+})();
+</script>
     <div style="margin:0 clamp(14px,3vw,36px)">
       <div class="sechead" style="margin-bottom:1rem">LATTICE POSITION <span data-canon-lattice="twelve"></span></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.4rem">
@@ -1164,13 +1186,30 @@ a{color:inherit;text-decoration:none}
   </main>
 
     <div class="tab-panel" id="tab-character">
+<div style="display:flex;align-items:center;gap:16px;padding:0 0 16px;border-bottom:1px solid rgba(201,168,76,.15)">
+  <canvas id="phb-cv-character" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
+  <div>
+    <div style="font-family:var(--D),serif;font-size:9px;letter-spacing:2px;color:var(--muted)">SOVEREIGN CHARACTER &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></div>
+    <div style="font-family:var(--D),serif;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:3px">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX 27.8367</div>
+  </div>
+</div>
+<script>
+(function(){var cv=document.getElementById('phb-cv-character');if(!cv||!cv.getContext)return;
+var ctx=cv.getContext('2d'),t=0;
+function f(){ctx.clearRect(0,0,80,80);
+for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,12+i*3+2*Math.sin(t*.03+i),t*.009*((i%2)?1:-1),t*.009*((i%2)?1:-1)+Math.PI*(.5+.2*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}
+ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;
+t++;requestAnimationFrame(f);}f();})();
+</script>
+
       
     <div class="topbar">
       <div class="t">CHARACTER SYSTEM<small>M3 . SOVEREIGN IDENTITY . GENEALOGY . EVOLUTION PATH</small></div>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px">Your sovereign character is assigned at genesis by your zodiac sign and cannot be chosen &mdash; only evolved. Every action in the matrix refines your archetype. Your character is inherited by your heirs, gaining their traits and merging into the bloodline. This is how the Order grows across generations.</p>
 
-    <div class="sechead">YOUR SOVEREIGN CHARACTER</div>
+    <div class="sechead">YOUR SOVEREIGN CHARACTER <span data-canon-lattice="twelve"></span></div>
     <div class="char-hero">
       <canvas id="char-canvas" width="160" height="160" style="width:80px;height:80px"></canvas>
       <div class="char-meta">
@@ -1353,113 +1392,6 @@ function drawAchBadge(cv,sym,col){
 async function buildAchievements(uid){
   const g=document.getElementById('ach-grid');g.innerHTML='';
   let trophyCount=0,medalCount=0,certCount=0;
-  try{
-    const [t,m,c]=await Promise.all([
-      sb.from('trophies').select('id',{count:'exact',head:true}).eq('user_id',uid),
-      sb.from('medals').select('id',{count:'exact',head:true}).eq('user_id',uid),
-      sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',uid),
-    ]);
-    trophyCount=t.count||0; medalCount=m.count||0; certCount=c.count||0;
-  }catch(e){}
-  const achHead=[...document.querySelectorAll('#tab-overview .sechead')].find(h=>h.textContent.includes('ACHIEVEMENTS'));
-  const totalEarned=trophyCount+medalCount+certCount;
-  if(achHead) achHead.textContent='SOVEREIGN ACHIEVEMENTS -- '+totalEarned+' OF 36 EARNED';
-  const sgAch=document.getElementById('sg-ach'); if(sgAch) sgAch.textContent=totalEarned+'/36';
-  const sgAchSub=document.getElementById('sg-ach-sub'); if(sgAchSub) sgAchSub.textContent=totalEarned>=36?'All complete':(totalEarned+' earned so far');
-  ACHIEV.forEach((a,i)=>{
-    const isMedal=a.type==='MEDAL', isCert=a.type==='CERT', isTrophy=!isMedal&&!isCert;
-    const idx=isTrophy?a.n:isMedal?a.n-12:a.n-24;
-    const earned=isTrophy?(idx<=trophyCount):isMedal?(idx<=medalCount):(idx<=certCount);
-    const card=document.createElement('div');card.className='ach-badge'+(earned?'':' locked');
-    card.style.cssText=`border-color:${a.col}55;border-top:2px solid ${earned?a.col+'88':a.col+'22'};${earned?'':'opacity:.4'}`;
-    const cv=document.createElement('canvas');cv.className='ab-canvas';
-    card.innerHTML=`<div class="ab-name" style="color:${earned?a.col:'var(--muted)'}">${a.name}</div><span class="ab-tier" style="color:${earned?a.col:'var(--muted)'};border-color:${earned?a.col+'44':'rgba(133,131,123,.2)'}">${earned?(a.type||'TROPHY'):'LOCKED'}</span>`;
-    card.insertBefore(cv,card.firstChild);
-    g.appendChild(card);
-    if(earned) requestAnimationFrame(()=>drawAchBadge(cv,a.sym,a.col));
-  });
-}
-
-function buildTiers(realAuth){
-  const g=document.getElementById('tiers-display');
-  let sealedCount=0;
-  g.innerHTML=MATS.map(m=>{
-    const sealed=realAuth>=parseFloat(m.thresh);
-    if(sealed) sealedCount++;
-    return `<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:32px;height:32px;border-radius:50%;border:2px solid ${sealed?m.col:m.col+'33'};display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:12px;font-weight:700;color:${sealed?m.col:'rgba(133,131,123,.4)'};${sealed?'box-shadow:0 0 12px '+m.col+'55;':''}flex-shrink:0">${m.n}</div><div style="flex:1"><div style="font-family:var(--D);font-size:13px;color:${sealed?m.col:'rgba(133,131,123,.5)'};font-weight:700;margin-bottom:2px">${m.name}</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">THRESHOLD: ${m.thresh}</div></div><span style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 8px;border:1px solid ${sealed?m.col+'55':'rgba(133,131,123,.25)'};color:${sealed?m.col:'var(--muted)'}">${sealed?'SEALED &#x2713;':'LOCKED'}</span></div>`;
-  }).join('');
-  const tiersHead=[...document.querySelectorAll('#tab-overview .sechead')].find(h=>h.textContent.includes('MATERIAL TIER'));
-  if(tiersHead) tiersHead.textContent='THE 9 MATERIAL TIERS -- '+sealedCount+' OF 9 SEALED';
-}
-
-function buildPhases(realAuth){
-  const g=document.getElementById('phases-display');
-  const APEX=27.8367;
-  let doneCount=0;
-  g.innerHTML=PHASES.map((p,i)=>{
-    const done=realAuth>=((i+1)/12)*APEX;
-    if(done) doneCount++;
-    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="width:28px;height:28px;border-radius:50%;border:2px solid ${done?'rgba(201,168,76,.6)':'rgba(133,131,123,.3)'};background:${done?'rgba(201,168,76,.12)':'transparent'};display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:10px;color:${done?'var(--gold)':'var(--muted)'};flex-shrink:0">${done?'&#x2713;':(i+1)}</div><div style="font-family:var(--D);font-size:12px;color:${done?'var(--solar)':'rgba(233,230,220,0.4)'};font-weight:700;flex:1">${p.n}. ${p.name}</div><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:${done?'var(--green)':'var(--muted)'}">${done?'COMPLETE':'PENDING'}</span></div>`;
-  }).join('');
-  const phasesHead=[...document.querySelectorAll('#tab-overview .sechead')].find(h=>h.textContent.includes('12 PHASES'));
-  if(phasesHead) phasesHead.textContent='12 PHASES -- '+doneCount+' OF 12 COMPLETE';
-}
-
-async function buildCerts(uid){
-  const CERTS=['GENESIS CERTIFICATE','KNOWLEDGE FOUNDATION','MASTERY LEVEL I','MASTERY LEVEL II','ECONOMIC ANALYST','CELESTIAL NAVIGATOR','SOVEREIGN ARCHITECT','HERITAGE SCHOLAR','ORACLE PROPHET','ORDER CONSULTANT','PLATFORM MASTER','OMEGA SOVEREIGN'];
-  const g=document.getElementById('cert-display');
-  let earnedTitles=[];
-  try{
-    const r=await sb.from('certificates').select('title').eq('user_id',uid);
-    earnedTitles=(r.data||[]).map(x=>x.title);
-  }catch(e){}
-  g.innerHTML='<div style="display:flex;flex-direction:column;gap:0">'+CERTS.map((c,i)=>{
-    const earned=earnedTitles.some(t=>t&&t.toUpperCase().indexOf(c.split(' ')[0])!==-1) || earnedTitles.includes(c);
-    return `<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(201,168,76,.06)"><div style="font-family:var(--D);font-size:18px;color:rgba(201,168,76,.4);min-width:28px">${i+1}</div><div style="flex:1"><div style="font-family:var(--D);font-size:12px;color:${earned?'var(--solar)':'rgba(233,230,220,0.4)'};font-weight:700">${c}</div></div>`+
-      (earned
-        ? `<span style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 8px;border:1px solid rgba(201,168,76,.4);color:var(--gold)">EARNED</span><span style="font-family:var(--M);font-size:8px;color:var(--green);letter-spacing:1px">ISSUED &#x2713;</span>`
-        : `<span style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">NOT YET EARNED</span>`)
-      +`</div>`;
-  }).join('')+'</div>'+
-  (earnedTitles.length ? '' : '<div style="padding:16px 0;text-align:center;font-family:var(--M);font-size:10px;color:var(--muted)">Certificates are earned through the Academy and Exam Hall.</div>');
-}
-
-function buildConsole(){
-  const g=document.getElementById('console-grid');
-  const btns=[
-    {g:'\u25CF',t:'ACCESS CONTROL',d:'Grant or revoke member access. Live trial timers.',href:'/approvals.html'},
-    {g:'\u2609',t:'ALL MEMBERS',d:'Full member registry with identity and axis data.',href:'/approvals.html'},
-    {g:'\u2732',t:'SOVEREIGN OVERSIGHT',d:'System state, control deck, live platform status.',href:'/interface-omni.html'},
-    {g:'\u25C8',t:'COMPLIANCE',d:'Platform governance, charter, and legal records.',href:'/compliance.html'},
-    {g:'\u2736',t:'INTELLIGENCE',d:'Full analytics, AI agent logs, dimension viewer.',href:'/intelligence.html'},
-    {g:'\u22D4',t:'BLOODLINE VAULT',d:'Succession, inheritance, and heir protocols.',href:'/bloodline.html'},
-    {g:'\u2316',t:'SYSTEM GRID',d:'Platform infrastructure and microservices.',href:'/grid.html'},
-  ];
-  g.innerHTML='';
-  btns.forEach(b=>{
-    const el=document.createElement('button');el.className='console-btn';
-    el.innerHTML=`<span class="cb-glyph">${b.g}</span><div class="cb-title">${b.t}</div><div class="cb-desc">${b.d}</div>`;
-    el.addEventListener('click',()=>window.location.href=b.href);
-    g.appendChild(el);
-  });
-}
-
-async function boot(){
-  const sess=(await sb.auth.getSession()).data.session;
-  if(!sess){window.location.href='/account.html';return;}
-  const pr=await sb.from('profiles').select('is_owner,display_name,sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
-  const isOwner=pr.data?.is_owner||false;
-  const d=pr.data||{};
-  const a=Number(d.axis_a||1), b=Number(d.axis_b||1), c=Number(d.axis_c||1);
-    try{
-      var cn=document.getElementById('char-name');if(cn&&d.full_name)cn.textContent=d.full_name.toUpperCase();
-      var ca=document.getElementById('char-archetype');if(ca)ca.textContent=(d.archetype||d.sign||'').toUpperCase()+' · '+(d.element||'').toUpperCase()+' ELEMENT';
-      var ce=document.getElementById('char-emblem');if(ce&&d.sign)ce.setAttribute('data-omega-emblem',d.sign.charAt(0).toUpperCase()+d.sign.slice(1).toLowerCase());
-      var cse=document.getElementById('char-sign-el');if(cse)cse.textContent=(d.sign||'--').toUpperCase()+' / '+(d.element||'--').toUpperCase();
-      var cga=document.getElementById('char-god-agent');if(cga)cga.textContent=(d.god||'--').toUpperCase()+' / '+(d.agent||'--').toUpperCase();
-      var cto=document.getElementById('char-token');if(cto)cto.textContent=d.token||'ASSIGNED AT ASCENSION';
-      var cgt=document.getElementById('char-gate');if(cgt)cgt.textContent=(d.gate||'--').toUpperCase();
-    }catch(charErr){}
     try{
       var PHI=1.6180339887,EU=2.7182818285;
       var auth_val=Math.round(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c||0.001,3))*PHI/EU*1000)/1000;

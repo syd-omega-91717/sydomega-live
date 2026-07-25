@@ -1,197 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 -- Sovereign Points</title>
-<meta name="theme-color" content="#C9A84C"/>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:'Rajdhani',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;align-items:center;padding:10px 0}
 .main{flex:1;min-width:0}
-.topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}
-.topbar .t{font-family:'Cinzel Decorative',serif;font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-.topbar .t small{display:block;font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-.pad{padding:clamp(14px,3vw,36px)}
-.notice{border:1px solid rgba(0,229,255,.3);background:rgba(0,229,255,.04);padding:14px 18px;font-family:'Courier Prime',monospace;font-size:11px;color:var(--ink);line-height:1.8;margin-bottom:24px}
-.notice b{color:var(--cyan)}
-.bal-card{border:1px solid rgba(201,168,76,.3);background:linear-gradient(135deg,rgba(201,168,76,.08),transparent);padding:28px;text-align:center;margin-bottom:24px}
-.bal-num{font-family:'Cinzel Decorative',serif;font-size:44px;color:var(--gold)}
-.bal-label{font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:6px}
-.btn-daily{margin-top:14px;padding:10px 24px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;cursor:pointer}
-.btn-daily:disabled{opacity:.35;cursor:not-allowed}
-.sechead{font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--gold);letter-spacing:2px;margin:32px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:700px){.grid2{grid-template-columns:1fr}}
-.card{border:1px solid var(--line);background:var(--panel);padding:16px}
-.edu-item{border-left:2px solid var(--cyan);padding:10px 14px;margin-bottom:10px;background:rgba(0,229,255,.03)}
-.edu-item b{color:var(--cyan);font-family:'Cinzel Decorative',serif;font-size:12px}
-.edu-item p{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6}
-.ledger-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.08);font-size:12px}
-.ledger-row .amt.pos{color:var(--green)}
-.ledger-row .amt.neg{color:var(--crimson)}
-input,select,textarea{width:100%;padding:9px;background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--ink);font-family:'Rajdhani',sans-serif;font-size:13px;margin-bottom:8px}
-button.act{padding:9px 16px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;cursor:pointer}
-.trade-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.08);font-size:12px;gap:10px}
-.perk-card{border:1px solid var(--line);padding:14px;text-align:center}
-.perk-card.owned{border-color:var(--green)}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
+.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
+.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+
+/* HERO */
+.hero-grid{display:grid;grid-template-columns:1fr 180px 1fr;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.8),rgba(63,178,127,.05))}
+.hero-stat{padding:24px clamp(14px,3vw,36px);border-right:1px solid var(--line)}
+.hero-stat:last-child{border-right:none;border-left:1px solid var(--line);text-align:right}
+.stat-num{font-family:var(--D);font-size:clamp(18px,3vw,28px);color:var(--gold);line-height:1}
+.stat-lbl{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--muted);margin-top:5px}
+.hero-center{display:flex;align-items:center;justify-content:center;padding:16px}
+
+/* CLAIM DAILY */
+.claim-band{padding:20px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.claim-btn{font-family:var(--M);font-size:10px;letter-spacing:2px;padding:12px 28px;border:1px solid var(--gold);color:var(--gold);background:rgba(201,168,76,.08);cursor:pointer;border-radius:2px;transition:.2s}
+.claim-btn:hover{background:rgba(201,168,76,.18);box-shadow:0 0 18px rgba(201,168,76,.25)}
+.claim-btn:disabled{opacity:.35;cursor:default}
+.claim-msg{font-family:var(--M);font-size:11px;letter-spacing:1.5px}
+
+/* PERKS */
+.sec{padding:clamp(14px,3vw,36px)}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.perks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.perk-card{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:18px;border-radius:2px;position:relative;overflow:hidden;transition:border-color .2s,transform .18s}
+.perk-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-3px)}
+.perk-card.affordable{border-color:rgba(63,178,127,.3)}
+.perk-name{font-family:var(--D);font-size:12px;color:var(--gold);margin-bottom:5px}
+.perk-desc{font-size:12px;color:var(--ink);opacity:.7;margin-bottom:10px;line-height:1.5}
+.perk-cost{font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--solar)}
+.perk-buy{margin-top:10px;width:100%;font-family:var(--M);font-size:9px;letter-spacing:1.5px;padding:8px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;border-radius:2px;transition:.2s}
+.perk-buy:hover{background:rgba(201,168,76,.1)}
+
+/* LEDGER */
+.pt-row{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.06)}
+.pt-row:hover{background:rgba(201,168,76,.03)}
+.pt-sign{font-family:var(--M);font-size:10px;font-weight:700;width:32px;text-align:center;flex-shrink:0}
+.pt-sign.plus{color:var(--green)}.pt-sign.minus{color:var(--crim)}
+.pt-reason{flex:1;font-size:12px}
+.pt-delta{font-family:var(--M);font-size:11px;text-align:right}
+.pt-delta.plus{color:var(--green)}.pt-delta.minus{color:var(--crim)}
+.pt-date{font-family:var(--M);font-size:8px;color:var(--muted);width:80px;text-align:right}
+
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:8px}
+.lf span{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:760px){.hero-grid{grid-template-columns:1fr}.hero-stat{border-right:none;border-bottom:1px solid var(--line)}.hero-center{display:none}.hero-stat:last-child{text-align:left;border-left:none}}
 </style>
 </head>
 <body>
-<div class="shell">
+<div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="points"></aside>
   <main class="main">
-    <div class="topbar">
-      <div class="t">SOVEREIGN POINTS<small>EDUCATIONAL CRYPTO-LITERACY SIMULATOR</small></div>
+    <div class="topbar"><div class="t">SOVEREIGN POINTS<small>9x9x9x9x9 PROGRESSION ENGINE &middot; 59,049 NODES &middot; AXIS-LINKED REWARDS</small></div></div>
+
+    <div class="hero-grid">
+      <div class="hero-stat">
+        <div class="stat-num" id="pts-total">--</div>
+        <div class="stat-lbl">SOVEREIGN POINTS</div>
+        <div style="margin-top:12px">
+          <div class="stat-num" style="font-size:14px;color:var(--cyan)" id="pts-pct">--%</div>
+          <div class="stat-lbl">OF 9x9x9x9x9 LATTICE</div>
+        </div>
+      </div>
+      <div class="hero-center"><canvas id="pts-cv" width="240" height="240" style="width:120px;height:120px;display:block"></canvas></div>
+      <div class="hero-stat">
+        <div class="stat-num" style="color:var(--green)" id="pts-nodes">--</div>
+        <div class="stat-lbl">MATRIX NODES REACHED</div>
+        <div style="margin-top:12px">
+          <div class="stat-num" style="font-size:14px;color:var(--solar)" id="pts-next">--</div>
+          <div class="stat-lbl">NEXT CLAIM AVAILABLE</div>
+        </div>
+      </div>
     </div>
-    <div class="pad">
-      <div class="notice"><b>WHAT THIS IS:</b> A learning tool. Sovereign Points are earned through real platform activity and spendable on real internal perks -- but they carry no real-world monetary value, are not a cryptocurrency, are not on any blockchain, and cannot be redeemed for money. The trading feature below is a practice simulator so you learn how earning, wallets, and peer-to-peer trading actually work, safely.</div>
 
-      <div class="bal-card">
-        <span id="bal-ring" data-glyph="&#937;" data-col="#C9A84C" style="display:inline-block;width:64px;height:64px;margin-bottom:8px"></span>
-        <div class="bal-num" id="bal-num">--</div>
-        <div class="bal-label">YOUR SOVEREIGN POINTS BALANCE</div>
-        <button class="btn-daily" id="btn-daily">CLAIM DAILY BONUS (+10)</button>
-      </div>
-
-      <div class="sechead">LEARN THE REAL CONCEPTS</div>
-      <div class="grid2">
-        <div class="edu-item"><b>EARNING</b><p>In real crypto, tokens are "mined" or "earned" through proof of work, staking, or contribution. Here, you earn points through real proof of work too -- completing Academy lessons, clearing Gaming stages, and passing Exam Hall certifications.</p></div>
-        <div class="edu-item"><b>WALLETS &amp; BALANCE</b><p>A real wallet doesn't "hold" coins -- it holds keys that prove your claim to a balance recorded on a public ledger. Your balance card above works the same way: it's a live sum of every real ledger entry tied to your account.</p></div>
-        <div class="edu-item"><b>PEER-TO-PEER TRADING</b><p>Real crypto trades are proposals that must be accepted before anything moves -- exactly like the trade simulator below. Nothing transfers until both sides confirm, and every trade is recorded permanently.</p></div>
-        <div class="edu-item"><b>SPENDING &amp; UTILITY</b><p>A token's "utility" is what it can actually be redeemed for within its own system. Your points' utility is real internal perks -- themes, priority processing, profile flourishes -- not external money, which is exactly the distinction that keeps a token from being treated as a security.</p></div>
-      </div>
-
-      <div class="sechead">YOUR REAL EARNING LOG</div>
-      <div class="card" id="ledger-list">Loading...</div>
-
-      <div class="sechead">PRACTICE TRADE SIMULATOR</div>
-      <div class="card">
-        <p style="font-size:11px;color:var(--muted);margin-bottom:12px">Propose a simulated trade to another member by their display name. Nothing moves until they accept.</p>
-        <input type="text" id="trade-name" placeholder="Recipient's display name"/>
-        <input type="number" id="trade-amount" placeholder="Amount to send" min="1"/>
-        <textarea id="trade-msg" placeholder="Message (optional)" rows="2"></textarea>
-        <button class="act" id="btn-propose">PROPOSE TRADE</button>
-        <div id="trade-msg-out" style="margin-top:10px;font-size:11px"></div>
-      </div>
-      <div class="card" style="margin-top:12px">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--gold);margin-bottom:10px">PENDING TRADES INVOLVING YOU</div>
-        <div id="trades-list">Loading...</div>
-      </div>
-
-      <div class="sechead">INTERNAL PERK SHOP</div>
-      <div class="grid2" id="perks-grid">Loading...</div>
+    <div class="claim-band">
+      <button class="claim-btn" id="btn-claim">&#9651; CLAIM DAILY POINTS</button>
+      <div class="claim-msg" id="claim-msg" style="color:var(--muted)">LOADING...</div>
     </div>
+
+    <div class="sec">
+      <div class="sechead"><span>SOVEREIGN PERKS <span data-canon-lattice="nine"></span></span></div>
+      <div class="perks-grid" id="perks-grid"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING PERKS...</div></div>
+    </div>
+
+    <div class="sec" style="padding-top:0">
+      <div class="sechead"><span>POINTS LEDGER</span><span id="ledger-count" style="font-size:8px;color:var(--muted)"></span></div>
+      <div id="pts-ledger"><div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">LOADING LEDGER...</div></div>
+    </div>
+
+    <div data-page-emblem="points" style="margin:16px auto 0"></div>
+    <div class="lf"><span>&#937; SOVEREIGN POINTS &middot; 9x9x9x9x9 = 59,049</span><span>AUTH = sqrt(A&#179;+B&#179;+C&#179;)&#215;&#981;/e &middot; APEX 27.8367</span></div>
   </main>
 </div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-let uid=null;
-
-const REASON_LABEL={academy_lesson:'Academy lesson cleared',exam_pass:'Exam passed',daily_login:'Daily presence bonus',trade_sent:'Sent in trade',trade_received:'Received in trade',perk_purchase:'Perk purchased'};
-
-async function loadBalance(){
-  const r=await sb.rpc('my_points_balance');
-  document.getElementById('bal-num').textContent=(r.data&&r.data.balance!=null)?r.data.balance:'0';
-  fillRings(document);
-}
-
-async function loadLedger(){
-  const box=document.getElementById('ledger-list');
-  const r=await sb.from('sovereign_points_ledger').select('delta,reason,note,created_at').eq('user_id',uid).order('created_at',{ascending:false}).limit(20);
-  const rows=r.data||[];
-  if(!rows.length){ box.innerHTML='<div style="font-size:12px;color:var(--muted)">No activity yet. Complete an Academy lesson, clear a Gaming stage, or pass an Exam to start earning.</div>'; return; }
-  box.innerHTML=rows.map(x=>{
-    const pos=x.delta>0;
-    return `<div class="ledger-row"><span>${REASON_LABEL[x.reason]||x.reason} ${x.note?'&mdash; '+x.note:''}</span><span class="amt ${pos?'pos':'neg'}">${pos?'+':''}${x.delta}</span></div>`;
-  }).join('');
-}
-
-document.getElementById('btn-daily').addEventListener('click',async()=>{
-  const btn=document.getElementById('btn-daily');
-  btn.disabled=true;
-  const r=await sb.rpc('claim_daily_points');
-  if(r.data&&r.data.ok){ await loadBalance(); await loadLedger(); btn.textContent='CLAIMED FOR TODAY'; }
-  else { btn.textContent=(r.data&&r.data.error==='already_claimed_today')?'ALREADY CLAIMED TODAY':'UNAVAILABLE'; }
-});
-
-document.getElementById('btn-propose').addEventListener('click',async()=>{
-  const out=document.getElementById('trade-msg-out');
-  const name=document.getElementById('trade-name').value.trim();
-  const amt=parseInt(document.getElementById('trade-amount').value);
-  const msg=document.getElementById('trade-msg').value.trim();
-  if(!name||!amt||amt<1){ out.style.color='var(--crimson)'; out.textContent='Enter a recipient and a positive amount.'; return; }
-  const target=await sb.from('profiles').select('id').ilike('display_name',name).maybeSingle();
-  if(!target.data){ out.style.color='var(--crimson)'; out.textContent='No member found with that display name.'; return; }
-  const r=await sb.rpc('propose_sim_trade',{p_to:target.data.id,p_amount:amt,p_message:msg});
-  if(r.data&&r.data.ok){ out.style.color='var(--green)'; out.textContent='Trade proposed. It will move only if they accept.'; document.getElementById('trade-name').value=''; document.getElementById('trade-amount').value=''; document.getElementById('trade-msg').value=''; }
-  else { out.style.color='var(--crimson)'; out.textContent='Could not propose trade: '+((r.data&&r.data.error)||'unknown error'); }
-});
-
-async function loadTrades(){
-  const box=document.getElementById('trades-list');
-  const r=await sb.from('sim_trades').select('id,from_user,to_user,amount,message,status').eq('status','pending').or('from_user.eq.'+uid+',to_user.eq.'+uid);
-  const rows=r.data||[];
-  if(!rows.length){ box.innerHTML='<div style="font-size:12px;color:var(--muted)">No pending trades.</div>'; return; }
-  box.innerHTML='';
-  rows.forEach(t=>{
-    const incoming=t.to_user===uid;
-    const row=document.createElement('div'); row.className='trade-row';
-    row.innerHTML=`<span>${incoming?'Incoming':'Sent'}: ${t.amount} pts ${t.message?'&mdash; '+t.message:''}</span>`+
-      (incoming?'<span><button class="act" data-accept="'+t.id+'" style="margin-right:6px">ACCEPT</button><button class="act" data-decline="'+t.id+'" style="border-color:var(--crimson);color:var(--crimson)">DECLINE</button></span>':'<span style="color:var(--muted);font-family:var(--M,monospace);font-size:9px">AWAITING RESPONSE</span>');
-    box.appendChild(row);
-  });
-  box.querySelectorAll('[data-accept]').forEach(b=>b.addEventListener('click',async()=>{ await sb.rpc('resolve_sim_trade',{p_trade_id:b.dataset.accept,p_accept:true}); await Promise.all([loadTrades(),loadBalance(),loadLedger()]); }));
-  box.querySelectorAll('[data-decline]').forEach(b=>b.addEventListener('click',async()=>{ await sb.rpc('resolve_sim_trade',{p_trade_id:b.dataset.decline,p_accept:false}); await loadTrades(); }));
-}
-
-async function loadPerks(){
-  const box=document.getElementById('perks-grid');
-  const [perksR,ownedR]=await Promise.all([
-    sb.from('point_perks').select('*'),
-    sb.from('member_perks').select('perk_id').eq('user_id',uid)
-  ]);
-  const owned=new Set((ownedR.data||[]).map(x=>x.perk_id));
-  const PERK_COL={theme_crimson:'#8B0000',priority_oracle:'#00E5FF',profile_flourish:'#9B6BF0',title_badge:'#C9A84C'};
-  const PERK_GLYPH={theme_crimson:'&#9670;',priority_oracle:'&#9737;',profile_flourish:'&#10022;',title_badge:'&#9819;'};
-  box.innerHTML=(perksR.data||[]).map(p=>{
-    const has=owned.has(p.id);
-    const col=PERK_COL[p.id]||'#C9A84C';
-    return `<div class="perk-card ${has?'owned':''}"><span class="perk-ring" data-glyph="${PERK_GLYPH[p.id]||'&#9670;'}" data-col="${col}" style="display:inline-block;width:44px;height:44px;margin-bottom:6px"></span><div style="font-family:'Cinzel Decorative',serif;color:var(--gold);font-size:13px">${p.name}</div><div style="font-size:11px;color:var(--muted);margin:6px 0">${p.description}</div><div style="color:var(--solar);font-family:'Courier Prime',monospace;font-size:12px;margin-bottom:8px">${p.cost} PTS</div>${has?'<span style="color:var(--green);font-family:var(--M,monospace);font-size:10px">OWNED</span>':'<button class="act" data-perk="'+p.id+'">PURCHASE</button>'}</div>`;
-  }).join('');
-  fillRings(box);
-  box.querySelectorAll('[data-perk]').forEach(b=>b.addEventListener('click',async()=>{
-    const r=await sb.rpc('purchase_perk',{p_perk_id:b.dataset.perk});
-    if(r.data&&r.data.ok){ await Promise.all([loadPerks(),loadBalance(),loadLedger()]); }
-    else alert('Could not purchase: '+((r.data&&r.data.error)||'unknown error'));
-  }));
-}
-
-function fillRings(root){
-  const els=(root||document).querySelectorAll('[data-glyph]');
-  function fill(){
-    if(!window.OmegaEmblem) return false;
-    els.forEach(el=>{ if(!el.__filled){ el.innerHTML=window.OmegaEmblem.ring(el.dataset.glyph,el.dataset.col,{}); el.__filled=1; } });
-    return true;
+<script>
+(function(){
+  var cv=document.getElementById("pts-cv"); if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext("2d"),CX=120,CY=120,t=0,pct=0;
+  window.__setPtsMeter=function(v){pct=Math.min(1,Math.max(0,v));};
+  function frame(){
+    ctx.clearRect(0,0,240,240);
+    ctx.beginPath();ctx.arc(CX,CY,90,0,Math.PI*2);ctx.strokeStyle="rgba(201,168,76,.1)";ctx.lineWidth=8;ctx.stroke();
+    if(pct>0){ctx.beginPath();ctx.arc(CX,CY,90,-Math.PI/2,-Math.PI/2+pct*Math.PI*2);ctx.strokeStyle="#C9A84C";ctx.lineWidth=8;ctx.shadowColor="#C9A84C";ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;}
+    for(var i=0;i<9;i++){
+      var a=i/9*Math.PI*2+t*.8,r=90+12+4*Math.sin(t*1.4+i),x=CX+Math.cos(a)*r,y=CY+Math.sin(a)*r;
+      ctx.beginPath();ctx.arc(x,y,3+Math.abs(Math.sin(t*1.4+i))*2,0,Math.PI*2);
+      ctx.fillStyle="rgba(201,168,76,"+(0.4+0.5*Math.abs(Math.sin(t*1.4+i)))+")";ctx.fill();
+    }
+    ctx.font="bold 38px 'Cinzel Decorative',serif";ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.fillStyle="#C9A84C";ctx.shadowColor="#C9A84C";ctx.shadowBlur=12;ctx.fillText("Ω",CX,CY);ctx.shadowBlur=0;
+    t+=0.018;requestAnimationFrame(frame);
   }
-  if(fill()) return;
-  let tries=0;
-  const t=setInterval(()=>{ tries++; if(fill()||tries>20) clearInterval(t); },150);
-}
-
-async function boot(){
-  const sess=(await sb.auth.getSession()).data.session;
-  if(!sess){ window.location.href='/account.html'; return; }
-  uid=sess.user.id;
-  await Promise.all([loadBalance(),loadLedger(),loadTrades(),loadPerks()]);
-}
-boot();
+  frame();
+})();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+
+<script type="module">
+import{createClient}from"https://esm.sh/@supabase/supabase-js@2";
+var sb=window.__omegaSb||(window.__omegaSb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
+
+function fmt(n){return Number(n||0).toLocaleString();}
+function fmtDate(d){try{return new Date(d).toLocaleDateString("en-GB",{day:"2-digit",month:"short"});}catch(e){return "";}}
+
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace("/account.html");return;}
+    var pr=(await sb.from("profiles").select("access_approved,is_owner,axis_a,axis_b,axis_c").eq("id",s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace("/pending.html");return;}
+    document.getElementById("app").style.display="flex";
+
+    /* ---- sovereign summary ---- */
+    var sm=(await sb.rpc("my_sovereign_summary")).data||{};
+    var pts=Number(sm.points||0),pct=Number(sm.matrix_pct||0),nodes=Number(sm.matrix_nodes_reached||0);
+    document.getElementById("pts-total").textContent=fmt(pts)+" PTS";
+    document.getElementById("pts-pct").textContent=pct.toFixed(2)+"%";
+    document.getElementById("pts-nodes").textContent=fmt(nodes);
+    if(window.__setPtsMeter) window.__setPtsMeter(pct/100);
+
+    /* ---- points balance ---- */
+    var bal=(await sb.rpc("my_points_balance")).data||{};
+    var nextClaim=bal.next_claim_at?new Date(bal.next_claim_at):null;
+    var canClaim=!nextClaim||nextClaim<=new Date();
+    var btn=document.getElementById("btn-claim"),msg=document.getElementById("claim-msg");
+    msg.textContent=canClaim?"DAILY REWARD AVAILABLE":"NEXT CLAIM: "+fmtDate(nextClaim);
+    msg.style.color=canClaim?"var(--green)":"var(--muted)";
+    btn.disabled=!canClaim;
+
+    btn.addEventListener("click",async function(){
+      btn.disabled=true; btn.textContent="CLAIMING...";
+      var r=await sb.rpc("claim_daily_points");
+      if(r.error||!r.data||!r.data.ok){
+        msg.textContent=r.data&&r.data.error||"Not yet available"; msg.style.color="var(--muted)";
+        btn.textContent="陑 CLAIM DAILY POINTS"; return;
+      }
+      msg.textContent="+"+fmt(r.data.points_awarded)+" POINTS CLAIMED"; msg.style.color="var(--green)";
+      document.getElementById("pts-total").textContent=fmt(pts+Number(r.data.points_awarded||0))+" PTS";
+      btn.textContent="✓ CLAIMED"; loadLedger();
+    });
+
+    /* ---- perks ---- */
+    var perks=(await sb.from("point_perks").select("*").order("cost")).data||[];
+    var pg=document.getElementById("perks-grid");
+    if(!perks.length){pg.innerHTML="<div style='font-family:var(--M);font-size:10px;color:var(--muted)'>NO PERKS AVAILABLE YET</div>";}
+    else pg.innerHTML=perks.map(function(p){
+      var can=pts>=Number(p.cost||0);
+      return "<div class='perk-card"+(can?" affordable":"")+"'>"
+        +"<div class='perk-name'>"+String(p.name||"").toUpperCase()+"</div>"
+        +"<div class='perk-desc'>"+String(p.description||"")+"</div>"
+        +"<div class='perk-cost'>&#937; "+fmt(p.cost)+" POINTS</div>"
+        +"<button class='perk-buy' data-id='"+p.id+"' "+(can?"":"disabled")+">"+(can?"PURCHASE":"INSUFFICIENT POINTS")+"</button>"
+        +"</div>";
+    }).join("");
+    pg.addEventListener("click",async function(e){
+      var btn2=e.target.closest(".perk-buy[data-id]"); if(!btn2||btn2.disabled)return;
+      btn2.disabled=true; btn2.textContent="PROCESSING...";
+      var r=await sb.rpc("purchase_perk",{p_perk_id:btn2.dataset.id});
+      btn2.textContent=r.data&&r.data.ok?"PURCHASED ✓":"FAILED"; 
+    });
+
+    /* ---- ledger ---- */
+    async function loadLedger(){
+      var rows=(await sb.from("sovereign_points_ledger").select("*").eq("user_id",s.user.id).order("created_at",{ascending:false}).limit(30)).data||[];
+      document.getElementById("ledger-count").textContent=rows.length+" ENTRIES";
+      document.getElementById("pts-ledger").innerHTML=rows.length
+        ?rows.map(function(r){
+          var plus=Number(r.delta||0)>=0;
+          return "<div class='pt-row'>"
+            +"<div class='pt-sign "+(plus?"plus":"minus")+">"+( plus?"▲":"▼")+"</div>"
+            +"<div class='pt-reason'>"+String(r.reason||r.note||"SOVEREIGN ACT")+"</div>"
+            +"<div class='pt-delta "+(plus?"plus":"minus")+"'>"+(plus?"+":"")+fmt(r.delta)+"</div>"
+            +"<div class='pt-date'>"+fmtDate(r.created_at)+"</div>"
+            +"</div>";
+        }).join("")
+        :"<div style='font-family:var(--M);font-size:10px;color:var(--muted);padding:14px'>NO ACTIVITY YET</div>";
+    }
+    loadLedger();
+  }catch(e){document.getElementById("app").style.display="flex";console.log(e);}
+})();
+</script>
 </body>
 </html>

@@ -29,3 +29,26 @@ $drop_all$;
 SELECT proname FROM pg_proc p
 JOIN pg_namespace n ON n.oid=p.pronamespace
 WHERE n.nspname='public';
+
+-- ================================================================
+-- PREREQUISITE FUNCTIONS (created immediately after DROP ALL so
+-- any migration that calls them can rely on them existing)
+-- ================================================================
+
+DROP FUNCTION IF EXISTS public.milestones_for_axis(numeric) CASCADE;
+CREATE OR REPLACE FUNCTION public.milestones_for_axis(v numeric)
+RETURNS int LANGUAGE sql IMMUTABLE AS $$
+  SELECT GREATEST(0, LEAST(12, floor((COALESCE(v,1) - 1) / 8.0 * 12)::int));
+$$;
+GRANT EXECUTE ON FUNCTION public.milestones_for_axis(numeric) TO authenticated, anon;
+
+DROP FUNCTION IF EXISTS public.get_platform_flag(text) CASCADE;
+CREATE OR REPLACE FUNCTION public.get_platform_flag(p_key text)
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+  SELECT COALESCE((SELECT bool_value FROM public.platform_settings WHERE key=p_key), false);
+$$;
+GRANT EXECUTE ON FUNCTION public.get_platform_flag(text) TO authenticated, anon;
+
+-- ================================================================
+-- MIGRATIONS FOLLOW IN NUMBERED CHUNKS
+-- ================================================================

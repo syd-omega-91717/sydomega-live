@@ -311,6 +311,22 @@ ALTER TABLE public.commission_contracts
 ALTER TABLE public.consult_requests
   ADD COLUMN IF NOT EXISTS created_at timestamptz;
 
+-- ===== dispatches.sql =====
+-- SYD OMEGA 91717 — The Wire (shared member dispatch feed; idempotent)
+create table if not exists public.dispatches (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  sign text,
+  body text not null,
+  created_at timestamptz default now()
+);
+alter table public.dispatches enable row level security;
+drop policy if exists "wire read" on public.dispatches;
+create policy "wire read" on public.dispatches for select to authenticated using (true);
+drop policy if exists "wire insert" on public.dispatches;
+create policy "wire insert" on public.dispatches for insert to authenticated with check (auth.uid() = user_id);
+grant select, insert on public.dispatches to authenticated;
+-- ===== end dispatches.sql =====
 ALTER TABLE public.dispatches
   ADD COLUMN IF NOT EXISTS body text,
   ADD COLUMN IF NOT EXISTS created_at timestamptz,
@@ -467,9 +483,11 @@ CREATE TABLE IF NOT EXISTS public.advertisements (
   created_at      timestamptz DEFAULT now()
 );
 ALTER TABLE public.advertisements ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "owner_manage_ads" ON public.advertisements;
 CREATE POLICY "owner_manage_ads" ON public.advertisements
   FOR ALL USING (public.is_platform_owner())
   WITH CHECK (public.is_platform_owner());
+DROP POLICY IF EXISTS "read_approved_ads" ON public.advertisements;
 CREATE POLICY "read_approved_ads" ON public.advertisements
   FOR SELECT USING (status = 'approved' OR submitted_by = auth.uid());
 GRANT SELECT, INSERT ON public.advertisements TO authenticated;
@@ -691,13 +709,13 @@ COMMIT;
 
 
 -- ===== conversations.sql =====
-CREATE TABLE conversations (
+CREATE TABLE IF NOT EXISTS conversations (
  id UUID PRIMARY KEY,
  user_id UUID,
  created_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
  id UUID PRIMARY KEY,
  conversation_id UUID,
  role TEXT,
@@ -707,22 +725,6 @@ CREATE TABLE messages (
 -- ===== end conversations.sql =====
 
 
--- ===== dispatches.sql =====
--- SYD OMEGA 91717 — The Wire (shared member dispatch feed; idempotent)
-create table if not exists public.dispatches (
-  id bigint generated always as identity primary key,
-  user_id uuid not null references auth.users(id) on delete cascade,
-  sign text,
-  body text not null,
-  created_at timestamptz default now()
-);
-alter table public.dispatches enable row level security;
-drop policy if exists "wire read" on public.dispatches;
-create policy "wire read" on public.dispatches for select to authenticated using (true);
-drop policy if exists "wire insert" on public.dispatches;
-create policy "wire insert" on public.dispatches for insert to authenticated with check (auth.uid() = user_id);
-grant select, insert on public.dispatches to authenticated;
--- ===== end dispatches.sql =====
 
 
 -- ===== family_nodes.sql =====

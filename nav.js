@@ -63,7 +63,7 @@
      sub:[['family','FAMILY','/family.html'],['bloodline','BLOODLINE','/family.html#bloodline'],
           ['heritage','HERITAGE','/family.html#heritage'],['hall','HALL','/hall.html'],
           ['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],
-          ['city','OMEGA CITY','/city.html'],['beacon','BEACON','/beacon.html'],['chatbot','CONCIERGE AI','/chatbot.html'],['approvals','APPROVALS','/approvals.html']]},
+          ['city','OMEGA CITY','/city.html'],['beacon','BEACON','/beacon.html'],['chatbot','CONCIERGE AI','/chatbot.html'],['approvals','APPROVALS','/approvals.html'],['interface-omni','OMNI INTERFACE','/interface-omni.html']]},
     {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
      sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
           ['publishing','PUBLISHING','/publishing.html'],['marketing','MARKETING','/marketing.html'],

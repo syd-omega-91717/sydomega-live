@@ -64,7 +64,14 @@
       23.1972,
       25.517,
       27.8367
-    ]
+    ],
+    "axis_depth_formula": "12x12x9x9x9",
+    "axis_nodes_per_axis": 104976,
+    "axis_depth_note": "Each axis (A/B/C) spans 12 tracks x 12 phases x 9x9x9 = 104,976 nodes. The axis value (0.001-9) is the depth within the current 9x9x9 cube at the member's track/phase position.",
+    "twelve_formula": "12x12x9x9x9=104976",
+    "nine_formula": "9x9x9x9x9=59049",
+    "apex_12x12": "12x12=144 outer lattice x 729 inner = 104,976",
+    "total_axes_nodes": 314928
   },
   "nine_fold": {
     "lattice": "9 x 9 x 9 x 9 x 9",

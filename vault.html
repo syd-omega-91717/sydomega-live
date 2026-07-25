@@ -253,7 +253,7 @@ a{color:inherit;text-decoration:none}
         <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VIII</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">51% Safety Net</div><div style="font-size:11px;color:var(--muted)">Flash-crash protection via Rhodium reserves. Auto-triggered on market breach.</div></div>
         <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE IX</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">20% Reinvestment Sweep</div><div style="font-size:11px;color:var(--muted)">Auto-buys Gold, Silver, Rhodium hourly. Compound sovereign reserve growth.</div></div>
         <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE X</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Jurisdiction Hopping</div><div style="font-size:11px;color:var(--muted)">Automatic re-domicile if hostile. 5-nation protocol. Legal continuity guaranteed.</div></div>
-        <div style="padding:14px;border:1px solid var(--line);grid-column:span 2"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE XI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">The Omega Point</div><div style="font-size:11px;color:var(--muted)">Node 999 confirms absolute completion of the 104,976-node matrix. Sovereignty eternal. Matrix coordinate (9.000, 9.000, 9.000) -- authority score 15.588 -- is the final and irrevocable state of the founder's sovereign record.</div></div>
+        <div style="padding:14px;border:1px solid var(--line);grid-column:span 2"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE XI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">The Omega Point</div><div style="font-size:11px;color:var(--muted)">Node 999 confirms absolute completion of the 104,976-node matrix. Sovereignty eternal. Matrix coordinate (9.000, 9.000, 9.000) -- authority score 27.8367 -- is the final and irrevocable state of the founder's sovereign record.</div></div>
       </div>
     </div>
 
@@ -296,7 +296,7 @@ try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window
 const ASSETS=[
   {name:'SWISS VAULT GOLD BARS',cat:'PHYSICAL',val:'PENDING',ch:'--',up:true,col:'#C9A84C'},
   {name:'SINGAPORE HIGH-RISE',cat:'PHYSICAL',val:'PENDING',ch:'--',up:true,col:'#E2C86D'},
-  {name:'SWISS VAULT DOOR',cat:'PHYSICAL',val:'&#937; 900',ch:'+0.09%',up:true,col:'#C7CDD6'},
+  {name:'SWISS VAULT DOOR',cat:'PHYSICAL',val:'--',ch:'+0.09%',up:true,col:'#C7CDD6'},
   {name:'OMEGA TOKEN',cat:'DIGITAL',val:'&#937; 9.17',ch:'+12.77%',up:true,col:'#C9A84C'},
   {name:'AETHER TOKEN',cat:'DIGITAL',val:'&#937; 24.55',ch:'+3.17%',up:true,col:'#9B6BF0'},
   {name:'MATRIX NODE CREDITS',cat:'DIGITAL',val:'&#937; 91.7',ch:'+9.17%',up:true,col:'#00E5FF'},
@@ -421,7 +421,7 @@ function buildWallet(a,b,c){
     const bal=parseFloat(tk.bal)||0;
     const cd=document.createElement('div');cd.className='wl-card';cd.style.cursor='pointer';
     cd.style.cssText+=`border-top-color:${tk.col}`;
-    cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div data-canon-lattice="twelve"></div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'&#937; 0'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
+    cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div data-canon-lattice="twelve"></div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'--'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
     g.appendChild(cd);
     const emblemEl=cd.querySelector('[data-omega-emblem]');
     fillSvg(emblemEl, tk.sign);
@@ -525,7 +525,7 @@ async function boot(){
 // merged from wallet.html -- real, non-monetary earning ledger
 async function buildEarningLedger(uid,a,b,c){
   const PER_NODE=91.7, PER_CERT=917, PER_AUTH=91.717;
-  const auth=Math.sqrt(a*a+b*b+c*c);
+  const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
   const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:0});
   const labelKind=k=>({academy:'Academy lesson',gaming:'Game node',contribution:'Contribution',lesson:'Lesson'})[k]||k;
 

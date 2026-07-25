@@ -240,7 +240,30 @@ a{color:inherit;text-decoration:none}
             <div style="font-family:var(--D);font-size:1.4rem;color:var(--cyan)" id="earn-auth">--</div>
           </div>
         </div>
-        <!-- EARNING FORMULA -->
+        <div style="display:flex;justify-content:center;padding:16px 0">
+  <canvas id="earn-cv" width="100" height="100" style="width:50px;height:50px;display:block"></canvas>
+</div>
+<script>
+(function(){var cv=document.getElementById('earn-cv');if(!cv||!cv.getContext)return;
+var ctx=cv.getContext('2d'),t=0;
+function frame(){ctx.clearRect(0,0,100,100);
+  ctx.beginPath();ctx.arc(50,50,35+4*Math.sin(t*.04),0,Math.PI*2);
+  ctx.strokeStyle='rgba(226,200,109,.15)';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();ctx.arc(50,50,28+3*Math.sin(t*.05+1),0,Math.PI*2);
+  ctx.strokeStyle='rgba(201,168,76,.2)';ctx.lineWidth=1;ctx.stroke();
+  for(var i=0;i<6;i++){
+    var a=i/6*Math.PI*2+t*.01,r=35+4*Math.sin(t*.04);
+    ctx.beginPath();ctx.moveTo(50,50);
+    ctx.lineTo(50+Math.cos(a)*r,50+Math.sin(a)*r);
+    ctx.strokeStyle='rgba(201,168,76,'+(0.12+0.08*Math.sin(t*.03+i))+')';ctx.lineWidth=.7;ctx.stroke();
+  }
+  ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(226,200,109,'+(0.6+0.3*Math.sin(t*.04))+')';
+  ctx.shadowColor='#E2C86D';ctx.shadowBlur=8;ctx.fillText('Ω',50,50);ctx.shadowBlur=0;
+  t++;requestAnimationFrame(frame);}frame();
+})();
+</script>
+    <!-- EARNING FORMULA -->
         <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
           <span>HOW &#937; CREDIT IS EARNED <span data-canon-lattice="twelve"></span></span>
         </div>

@@ -63,7 +63,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="approvals"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">OWNER CONSOLE<small>INVISIBLE ARCHITECT &middot; SOVEREIGN CONTROL &middot; AUDIT LOG</small></div></div>
+    <div class="topbar"><div class="t">OWNER CONSOLE<small>INVISIBLE ARCHITECT &middot; SOVEREIGN CONTROL &middot; AUDIT LOG <span data-canon-lattice="twelve"></span></small></div></div>
     <div class="stats-bar" id="stats-bar">
       <div class="sc"><div class="sn" id="stat-pending">--</div><div class="sl">PENDING</div></div>
       <div class="sc"><div class="sn" id="stat-active">--</div><div class="sl">TRIAL</div></div>
@@ -111,7 +111,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       <div id="err-list"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING...</div></div>
     </div>
     <div data-page-emblem="approvals" style="margin:20px auto 0"></div>
-  </main>
+  
+    <div style="display:flex;justify-content:center;padding:14px 0 6px;border-top:1px solid rgba(201,168,76,.12)">
+      <canvas id="pgcv_approvals" width="72" height="72" style="width:36px;height:36px;opacity:.55"></canvas>
+    </div>
+    <script>(function(){{var cv=document.getElementById('pgcv_approvals');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;function f(){{ctx.clearRect(0,0,72,72);for(var i=0;i<6;i++){{ctx.beginPath();ctx.arc(36,36,12+i*4+3*Math.sin(t*.03+i),t*.007,t*.007+Math.PI*(.45+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.8;ctx.stroke();}}ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.6+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=8;ctx.fillText('\u03A9',36,36);ctx.shadowBlur=0;t++;requestAnimationFrame(f);}}f();}})();</script></main>
 </div>
 <script>
 document.querySelectorAll('.ctab').forEach(function(b){b.addEventListener('click',function(){

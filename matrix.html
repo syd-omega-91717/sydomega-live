@@ -224,7 +224,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="hero-band">
     <div class="hero-eyebrow">CORE ENGINE // 9x9x9</div>
     <h1 class="hero-title">The 729-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
-    <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A^2 + B^2 + C^2). Apex = 15.588.</p>
+    <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A³+B³+C³)×φ/e. Apex = 27.8367.
+φ=1.6180339887  e=2.7182818285  i²=−1</p>
   </div>
 
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
@@ -338,7 +339,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="panel-header"><span class="panel-title">Authority Computation</span><span class="panel-badge">FORMULA</span></div>
         <div class="panel-body">
           <div style="font-family:'Courier Prime',monospace;font-size:.72rem;color:var(--muted);line-height:2;letter-spacing:.06em">
-            <div style="color:var(--gold);font-size:.8rem;margin-bottom:.5rem">AUTH = sqrt(A^2 + B^2 + C^2)</div>
+            <div style="color:var(--gold);font-size:.8rem;margin-bottom:.5rem">AUTH = sqrt(A³+B³+C³)×φ/e</div>
             <div>A = <span id="f-a">--</span> // Knowledge</div>
             <div>B = <span id="f-b">--</span> // Mastery</div>
             <div>C = <span id="f-c">--</span> // Contribution</div>
@@ -347,7 +348,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
             <div>C^2 = <span id="f-c2">--</span></div>
             <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">SUM = <span id="f-sum">--</span></div>
             <div style="color:var(--cyan);font-size:.85rem;margin-top:.3rem">AUTH = <span style="color:var(--gold)" id="f-auth">--</span></div>
-            <div style="color:var(--muted);font-size:.62rem;margin-top:.5rem">Threshold: 15.588 confirms APEX status. Owner permanently at absolute (9.000, 9.000, 9.000).</div>
+            <div style="color:var(--muted);font-size:.62rem;margin-top:.5rem">Threshold: 27.8367 confirms APEX status. Owner permanently at absolute (9.000, 9.000, 9.000).</div>
           </div>
         </div>
       </div>
@@ -415,7 +416,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       </div>
     </div>
 
-    <div class="sechead">THE TWELVE</div>
+    <div class="sechead">THE TWELVE <span data-canon-lattice="twelve"></span></div>
     <p class="seclead">Each sign is a triad with its own temper  --  the natural lean of its element across the three axes. Yours is alive with your real standing; the other eleven turn as the archetypes of the cosmos, the full shape each track reaches at the apex.</p>
     <div class="twelve" id="twelve"></div>
   
@@ -434,16 +435,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
     <div class="canvas-grid"><canvas id="grid-canvas"></canvas></div>
 
-    <div class="sechead">21 MICROSERVICES &mdash; LIVE STATUS</div>
+    <div class="sechead">21 MICROSERVICES &mdash; LIVE STATUS <span data-canon-lattice="twelve"></span></div>
     <div class="service-grid" id="service-grid"></div>
 
-    <div class="sechead">ARCHITECTURE LAYERS &mdash; 5-LAYER STACK</div>
+    <div class="sechead">ARCHITECTURE LAYERS &mdash; 5-LAYER STACK <span data-canon-lattice="twelve"></span></div>
     <div class="layer-cards" id="layer-cards"></div>
 
-    <div class="sechead">MULTI-REGION DEPLOYMENT</div>
+    <div class="sechead">MULTI-REGION DEPLOYMENT <span data-canon-lattice="twelve"></span></div>
     <div class="region-grid" id="region-grid"></div>
 
-    <div class="sechead">AI MEMORY ARCHITECTURE &mdash; 5-LAYER SYSTEM</div>
+    <div class="sechead">AI MEMORY ARCHITECTURE &mdash; 5-LAYER SYSTEM <span data-canon-lattice="twelve"></span></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="memory-grid"></div>
   
   </div>
@@ -525,8 +526,8 @@ async function loadRealMatrix(){
   const a = pr.data ? Number(pr.data.axis_a||0) : 0;
   const b = pr.data ? Number(pr.data.axis_b||0) : 0;
   const c = pr.data ? Number(pr.data.axis_c||0) : 0;
-  const auth = Math.sqrt(a*a+b*b+c*c);
-  const apex = auth >= 15.588 - 0.001;
+  const auth = Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+  const apex = auth >= 27.8367 - 0.001;
 
   // top stat cards
   document.getElementById('stat-a').textContent=fmt(a);
@@ -884,7 +885,7 @@ window.bootGrid = bootGrid;
 
     var d=pr.data, sign=d.sign;
     var a=Number(d.axis_a||1),b=Number(d.axis_b||1),c=Number(d.axis_c||1);
-    var auth=Math.sqrt(a*a+b*b+c*c);
+    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     var meSign=SIGNS.find(function(s){return s[0]===sign;})||SIGNS[0];
     document.getElementById('my-name').textContent=d.display_name||(sign+' Sovereign');
     document.getElementById('my-sub').innerHTML=meSign[1]+' '+sign+' \u00B7 '+(d.element||meSign[2])+' \u00B7 '+meSign[3]+' \u00B7 AUTHORITY '+auth.toFixed(2)+' / 15.58';

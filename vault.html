@@ -224,7 +224,73 @@ a{color:inherit;text-decoration:none}
 
     <!-- EARNING LEDGER (merged from wallet.html) -->
     <div class="tab-panel" id="tab-earning">
-      <div class="sechead">HOW &#937; CREDIT IS EARNED</div>
+      <div style="padding:clamp(14px,3vw,36px)">
+        <!-- HERO ROW -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.4rem">
+          <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(201,168,76,.04)">
+            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">TOTAL &#937; CREDIT</div>
+            <div style="font-family:var(--D);font-size:1.4rem;color:var(--gold)" id="earn-total">--</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(63,178,127,.04)">
+            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">TASKS COMPLETED</div>
+            <div style="font-family:var(--D);font-size:1.4rem;color:var(--green)" id="earn-tasks">--</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(0,229,255,.04)">
+            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">AXIS AUTHORITY</div>
+            <div style="font-family:var(--D);font-size:1.4rem;color:var(--cyan)" id="earn-auth">--</div>
+          </div>
+        </div>
+        <!-- EARNING FORMULA -->
+        <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <span>HOW &#937; CREDIT IS EARNED <span data-canon-lattice="twelve"></span></span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.4rem" id="earn-formula">
+          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan);opacity:.6"></div>
+            <div style="font-family:var(--D);font-size:11px;color:var(--cyan);margin-bottom:5px">ACADEMY</div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Complete lessons<br>+0.25 Axis A per lesson</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);opacity:.6"></div>
+            <div style="font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:5px">GAMING</div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Clear stages<br>+0.25 Axis B per stage</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);opacity:.6"></div>
+            <div style="font-family:var(--D);font-size:11px;color:var(--green);margin-bottom:5px">CONTRIBUTIONS</div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Contribute acts<br>+0.12 Axis C per act</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--solar);opacity:.6"></div>
+            <div style="font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:5px">CONSULTATION</div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Book consultations<br>+0.12 Axis A per session</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--crim);opacity:.6"></div>
+            <div style="font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:5px">MARKETPLACE</div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">List assets<br>+0.12 Axis B per listing</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--muted);opacity:.6"></div>
+            <div style="font-family:var(--D);font-size:11px;color:var(--muted);margin-bottom:5px">ALL 13 SYSTEMS</div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Every verified act<br>advances the matrix</div>
+          </div>
+        </div>
+        <!-- TRANSACTION LOG -->
+        <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <span>RECENT EVOLUTION EVENTS</span>
+          <span id="earn-count" style="font-size:8px;color:var(--muted)"></span>
+        </div>
+        <div id="earn-ledger">
+          <div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING EVENTS...</div>
+        </div>
+        <!-- ECONOMIC NOTE -->
+        <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;margin-top:1.4rem;background:rgba(201,168,76,.03)">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">ECONOMIC ACTIVATION</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.8">Token economy and on-chain asset bridging activate after legal review (securities classification, KYC/AML, money-transmission compliance). Internal credit accrues now and converts at the moment of activation.</div>
+        </div>
+      </div>
+    </div>
       <div class="pad" style="font-family:'Courier Prime',monospace;font-size:12px;color:var(--ink);line-height:1.9" id="earn-formula">Loading...</div>
 
       <div class="sechead">ECONOMIC FUNCTIONS -- READY TO ACTIVATE</div>
@@ -272,7 +338,6 @@ a{color:inherit;text-decoration:none}
       </div>
     </div>
   </main>
-</div>
 <script>
 /* Tab switching */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
@@ -523,33 +588,36 @@ async function boot(){
 }
 
 // merged from wallet.html -- real, non-monetary earning ledger
-async function buildEarningLedger(uid,a,b,c){
-  const PER_NODE=91.7, PER_CERT=917, PER_AUTH=91.717;
-  const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
-  const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:0});
-  const labelKind=k=>({academy:'Academy lesson',gaming:'Game node',contribution:'Contribution',lesson:'Lesson'})[k]||k;
-
-  let tasks=[], certs=0;
-  try{ const t=await sb.from('task_completions').select('kind,task,created_at').eq('user_id',uid).order('created_at',{ascending:false}); if(t.data) tasks=t.data; }catch(e){}
-  try{ const cc=await sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',uid); certs=cc.count||0; }catch(e){}
-
-  const nodes=tasks.length;
-  const earned=nodes*PER_NODE + certs*PER_CERT + auth*PER_AUTH;
-
-  document.getElementById('earn-formula').innerHTML=
-    '&#937; = (nodes &times; <b>'+PER_NODE+'</b>) + (certificates &times; <b>'+PER_CERT+'</b>) + (authority &times; <b>'+PER_AUTH+'</b>)<br>'+
-    '&nbsp;&nbsp; = ('+nodes+' &times; '+PER_NODE+') + ('+certs+' &times; '+PER_CERT+') + ('+auth.toFixed(2)+' &times; '+PER_AUTH+')<br>'+
-    '&nbsp;&nbsp; = <b>'+fmt(earned)+' &#937;</b> &middot; a tally of real action, not money.';
-
-  const lw=document.getElementById('earn-ledgerwrap');
-  if(!tasks.length){ lw.innerHTML='<div style="font-size:12px;color:var(--muted)">No earning activity yet. Clear nodes in the Academy and the Games to earn &#937; credit.</div>'; }
-  else{
-    const rows=tasks.slice(0,40).map(r=>{
-      const when=r.created_at?new Date(r.created_at).toLocaleDateString():'';
-      return '<tr><td>'+labelKind(r.kind)+'</td><td style="color:var(--muted);font-family:var(--M);font-size:11px">'+(r.task||'')+'</td><td style="color:var(--muted)">'+when+'</td><td style="text-align:right;color:var(--green)">+'+PER_NODE+' &#937;</td></tr>';
+async function buildEarningLedger(uid, a, b, c_v) {
+  /* populate the redesigned earning tab */
+  var PHI=1.6180339887, EU=2.7182818285;
+  var auth=Math.round(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c_v,3))*PHI/EU*1000)/1000;
+  var el=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  el('earn-auth',auth.toFixed(4)+' AUTH');
+  /* count tasks */
+  sb.from('task_completions').select('id,kind,completed_at').eq('user_id',uid)
+    .order('completed_at',{ascending:false}).limit(50).then(function(r){
+    var rows=r.data||[];
+    el('earn-tasks',rows.length+' COMPLETED');
+    el('earn-count',rows.length+' ENTRIES');
+    /* estimate credit from axis values */
+    var credit=Math.round((a+b+c_v)*917.17);
+    el('earn-total','Ω '+credit.toLocaleString());
+    /* render event rows */
+    var ledger=document.getElementById('earn-ledger');
+    if(!ledger)return;
+    if(!rows.length){ledger.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted)">NO EVENTS YET</div>';return;}
+    var AXIS_COL={a:'var(--cyan)',b:'var(--gold)',c:'var(--green)'};
+    ledger.innerHTML=rows.map(function(r2){
+      var col=AXIS_COL[r2.kind&&r2.kind[0]]||'var(--muted)';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(201,168,76,.06)">'
+        +'<div style="width:20px;height:20px;border-radius:50%;border:1px solid '+col+';display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:8px;color:'+col+';flex-shrink:0">'+(r2.kind||'?')[0].toUpperCase()+'</div>'
+        +'<div style="flex:1;font-size:12px">'+String(r2.kind||'').replace(/_/g,' ').toUpperCase()+'</div>'
+        +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+new Date(r2.completed_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+'</div>'
+        +'<div style="font-family:var(--M);font-size:9px;color:var(--green)">+0.12</div>'
+        +'</div>';
     }).join('');
-    lw.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="border-bottom:1px solid var(--line);text-align:left"><th style="padding:8px 0">SOURCE</th><th>NODE</th><th>WHEN</th><th style="text-align:right">CREDIT</th></tr></thead><tbody>'+rows+'</tbody></table>';
-  }
+  }).catch(function(){});
 }
 boot();
 </script>

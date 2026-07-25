@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 -- Advertising</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.main{flex:1;min-width:0}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
+.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+/* HERO */
+.hero-band{padding:28px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(139,0,0,.08),rgba(10,10,15,.9),rgba(201,168,76,.05));display:flex;align-items:center;gap:24px}
+.hero-hl{font-family:var(--D);font-size:clamp(18px,3vw,28px);color:var(--gold);margin-bottom:8px}
+.hero-sub{font-size:14px;color:var(--ink);opacity:.75;max-width:56ch;line-height:1.8}
+/* HIDE BUTTON */
+.hide-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:rgba(201,168,76,.03)}
+.toggle-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:8px 18px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:transparent;cursor:pointer;border-radius:2px;transition:.2s}
+.toggle-btn:hover{background:rgba(201,168,76,.1)}.toggle-btn.hidden-on{border-color:rgba(63,178,127,.4);color:var(--green)}
+/* ADS DISPLAY */
+.sec{padding:clamp(14px,3vw,36px)}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:24px}
+.ad-card{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;overflow:hidden;transition:border-color .2s,transform .18s;position:relative}
+.ad-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-2px)}
+.ad-badge{position:absolute;top:8px;right:8px;font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 6px;background:rgba(10,10,15,.85);border:1px solid var(--line);color:var(--muted);border-radius:2px}
+.ad-img{width:100%;height:120px;background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.9));display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
+.ad-body{padding:14px}
+.ad-cat{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:5px}
+.ad-title{font-family:var(--D);font-size:12px;color:var(--gold);margin-bottom:5px}
+.ad-desc{font-size:12px;color:var(--ink);opacity:.7;line-height:1.5;margin-bottom:10px}
+.ad-period{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+/* SUBMIT FORM */
+.form-wrap{max-width:700px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.fi label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:5px}
+.fi input,.fi select,.fi textarea{width:100%;background:rgba(201,168,76,.06);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:1px;padding:10px 12px;border-radius:2px;outline:none;transition:border .2s}
+.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:rgba(201,168,76,.4)}
+.fi textarea{min-height:80px;resize:vertical}
+.fi.full{grid-column:1/-1}
+.rate-band{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.rate-card{border:1px solid var(--line);padding:16px;border-radius:2px;cursor:pointer;transition:border-color .2s;text-align:center}
+.rate-card:hover,.rate-card.sel{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.05)}
+.rate-name{font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:4px}
+.rate-price{font-family:var(--M);font-size:14px;letter-spacing:1px;color:var(--solar);margin-bottom:3px}
+.rate-period{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.submit-btn{font-family:var(--M);font-size:10px;letter-spacing:2px;padding:12px 28px;border:1px solid var(--gold);color:var(--gold);background:rgba(201,168,76,.08);cursor:pointer;border-radius:2px;transition:.2s}
+.submit-btn:hover{background:rgba(201,168,76,.18);box-shadow:0 0 18px rgba(201,168,76,.2)}
+.note{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted);line-height:1.8;padding:14px;border:1px solid var(--line);border-radius:2px;background:rgba(201,168,76,.03);margin-top:14px}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:8px}
+.lf span{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="advertising"></aside>
+  <main class="main">
+    <div class="topbar"><div class="t">SOVEREIGN ADVERTISING<small>SPONSOR THE ORDER &middot; VERIFIED PLACEMENT &middot; PREMIUM REACH</small></div></div>
+    <div class="hero-band">
+      <div>
+        <div class="hero-hl">REACH THE SOVEREIGN NETWORK</div>
+        <div class="hero-sub">Advertise to a curated audience of verified sovereign members. Placements are reviewed and approved before going live. Verified subscribers have the option to hide all advertisements from their view.</div>
+      </div>
+    </div>
+    <!-- SUBSCRIBER TOGGLE -->
+    <div class="hide-bar">
+      <div style="font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--muted)" id="ad-pref-label">ADVERTISEMENT DISPLAY: <span id="ad-pref-status" style="color:var(--gold)">VISIBLE</span></div>
+      <button class="toggle-btn" id="ad-toggle-btn">HIDE ALL ADVERTISEMENTS</button>
+    </div>
+    <!-- LIVE ADS -->
+    <div class="sec">
+      <div class="sechead"><span>ACTIVE PLACEMENTS</span><span id="ad-count" style="font-size:8px;color:var(--muted)"></span></div>
+      <div class="ads-grid" id="ads-grid"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING ADVERTISEMENTS...</div></div>
+    </div>
+    <!-- SUBMIT FORM -->
+    <div class="sec" style="padding-top:0">
+      <div class="sechead">SUBMIT AN ADVERTISEMENT</div>
+      <div class="form-wrap">
+        <div class="rate-band">
+          <div class="rate-card sel" data-rate="weekly" onclick="selectRate(this,'weekly')">
+            <div class="rate-name">WEEKLY</div>
+            <div class="rate-price">$197</div>
+            <div class="rate-period">7-DAY PLACEMENT</div>
+          </div>
+          <div class="rate-card" data-rate="monthly" onclick="selectRate(this,'monthly')">
+            <div class="rate-name">MONTHLY</div>
+            <div class="rate-price">$597</div>
+            <div class="rate-period">30-DAY PLACEMENT</div>
+          </div>
+          <div class="rate-card" data-rate="sovereign" onclick="selectRate(this,'sovereign')">
+            <div class="rate-name">SOVEREIGN</div>
+            <div class="rate-price">$1,917</div>
+            <div class="rate-period">90-DAY FEATURED</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="fi"><label>ADVERTISER / COMPANY</label><input type="text" id="ad-company" placeholder="Your company name" autocomplete="off"></div>
+          <div class="fi"><label>CONTACT EMAIL</label><input type="email" id="ad-email" placeholder="contact@company.com"></div>
+          <div class="fi"><label>ADVERTISEMENT TITLE</label><input type="text" id="ad-title" placeholder="Your ad headline"></div>
+          <div class="fi"><label>CATEGORY</label><select id="ad-category"><option value="">SELECT CATEGORY</option><option>TECHNOLOGY</option><option>FINANCE & INVESTMENT</option><option>CONSULTING</option><option>REAL ESTATE</option><option>LEGAL SERVICES</option><option>LUXURY & LIFESTYLE</option><option>EDUCATION</option><option>HEALTH & WELLNESS</option><option>OTHER</option></select></div>
+          <div class="fi full"><label>ADVERTISEMENT DESCRIPTION</label><textarea id="ad-desc" placeholder="Describe your offering (max 280 characters)..."></textarea></div>
+          <div class="fi"><label>DESTINATION URL</label><input type="url" id="ad-url" placeholder="https://"></div>
+          <div class="fi"><label>IMAGE URL (OPTIONAL)</label><input type="url" id="ad-image" placeholder="https://your-image.jpg"></div>
+        </div>
+        <button class="submit-btn" id="ad-submit">&#9654; SUBMIT FOR REVIEW</button>
+        <div id="ad-submit-msg" style="font-family:var(--M);font-size:10px;color:var(--muted);margin-top:12px"></div>
+        <div class="note">All advertisements are reviewed by the Sovereign before going live. Payments are processed after approval. Verified subscribers may hide all advertisements from their interface. The Sovereign reserves the right to refuse any placement without disclosure.</div>
+      </div>
+    </div>
+    <div data-page-emblem="advertising" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; SOVEREIGN ADVERTISING &middot; VERIFIED REACH</span><span>SUBSCRIBERS CAN HIDE ADS &middot; ALL PLACEMENTS REVIEWED</span></div>
+  </main>
+</div>
+<script>
+var selectedRate='weekly';
+function selectRate(el,rate){
+  document.querySelectorAll('.rate-card').forEach(function(c){c.classList.remove('sel');});
+  el.classList.add('sel'); selectedRate=rate;
+}
+/* Load/hide preference from localStorage */
+function loadAdPref(){
+  var hidden=localStorage.getItem('omega_ads_hidden')==='1';
+  var btn=document.getElementById('ad-toggle-btn');
+  var status=document.getElementById('ad-pref-status');
+  if(btn){btn.textContent=hidden?'SHOW ALL ADVERTISEMENTS':'HIDE ALL ADVERTISEMENTS';btn.classList.toggle('hidden-on',hidden);}
+  if(status){status.textContent=hidden?'HIDDEN':'VISIBLE';status.style.color=hidden?'var(--muted)':'var(--gold)';}
+  return hidden;
+}
+document.getElementById('ad-toggle-btn').addEventListener('click',function(){
+  var hidden=localStorage.getItem('omega_ads_hidden')==='1';
+  localStorage.setItem('omega_ads_hidden',hidden?'0':'1');
+  loadAdPref();
+  /* hide/show ads on this page */
+  var grid=document.getElementById('ads-grid');
+  if(grid)grid.style.display=hidden?'grid':'none';
+});
+</script>
+<script type="module">
+import{createClient}from"https://esm.sh/@supabase/supabase-js@2";
+var sb=window.__omegaSb||(window.__omegaSb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace("/account.html");return;}
+    var pr=(await sb.from("profiles").select("access_approved,is_owner,subscription_tier").eq("id",s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace("/pending.html");return;}
+    document.getElementById("app").style.display="flex";
+    /* subscriber hide pref */
+    var hidden=loadAdPref();
+    var grid=document.getElementById("ads-grid");
+    if(grid&&hidden)grid.style.display="none";
+    /* load live ads */
+    var r=await sb.from("advertisements").select("*").eq("status","approved").order("created_at",{ascending:false}).limit(20);
+    var ads=(r.data||[]);
+    var cnt=document.getElementById("ad-count");if(cnt)cnt.textContent=ads.length+" ACTIVE";
+    if(!hidden&&grid){
+      grid.innerHTML=!ads.length
+        ?"<div style='font-family:var(--M);font-size:10px;color:var(--muted)'>NO ACTIVE PLACEMENTS YET</div>"
+        :ads.map(function(a){
+          return "<div class='ad-card'>"
+            +"<span class='ad-badge'>SPONSORED</span>"
+            +"<div class='ad-img'><span style='font-family:var(--D);font-size:11px;color:var(--muted)'>\u03A9 PLACEMENT</span></div>"
+            +"<div class='ad-body'>"
+            +"<div class='ad-cat'>"+(a.category||'GENERAL')+"</div>"
+            +"<div class='ad-title'>"+String(a.title||'').toUpperCase()+"</div>"
+            +"<div class='ad-desc'>"+String(a.description||'')+"</div>"
+            +(a.url?"<a href='"+a.url+"' target='_blank' rel='noopener' style='font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)'>VISIT \u2192</a>":"")
+            +"<div class='ad-period' style='margin-top:8px'>TIER: "+(a.rate_tier||'weekly').toUpperCase()+"</div>"
+            +"</div></div>";
+        }).join("");}
+    /* submit handler */
+    var btn=document.getElementById("ad-submit");
+    if(btn)btn.addEventListener("click",async function(){
+      var company=document.getElementById("ad-company").value.trim();
+      var email=document.getElementById("ad-email").value.trim();
+      var title=document.getElementById("ad-title").value.trim();
+      var cat=document.getElementById("ad-category").value;
+      var desc=document.getElementById("ad-desc").value.trim();
+      var url=document.getElementById("ad-url").value.trim();
+      var msg=document.getElementById("ad-submit-msg");
+      if(!company||!email||!title||!desc){msg.textContent="PLEASE FILL ALL REQUIRED FIELDS.";msg.style.color="var(--crim)";return;}
+      btn.disabled=true;btn.textContent="SUBMITTING...";
+      var r2=await sb.from("advertisements").insert({
+        company:company,contact_email:email,title:title,
+        category:cat,description:desc,url:url||null,
+        rate_tier:selectedRate,status:"pending",
+        submitted_by:s.user.id
+      });
+      if(r2.error){msg.textContent="SUBMISSION FAILED: "+(r2.error.message||'');msg.style.color="var(--crim)";btn.disabled=false;btn.textContent="\u25B6 SUBMIT FOR REVIEW";return;}
+      msg.textContent="\u2713 SUBMITTED. AWAITING SOVEREIGN REVIEW.";msg.style.color="var(--green)";
+      btn.textContent="\u2713 SUBMITTED";
+    });
+  }catch(e){document.getElementById("app").style.display="flex";console.log(e);}
+})();
+</script>
+</body>
+</html>

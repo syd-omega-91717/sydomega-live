@@ -947,7 +947,7 @@ a{color:inherit;text-decoration:none}
             </div>
             <div class="matrix-coord">
               <div class="matrix-coord-label">Coordinate / Authority Score</div>
-              <div class="matrix-coord-val">(9,9,9) / 15.588</div>
+              <div class="matrix-coord-val">(9,9,9) / 27.8367</div>
             </div>
           </div>
         </div>
@@ -1394,7 +1394,7 @@ function buildTiers(realAuth){
 
 function buildPhases(realAuth){
   const g=document.getElementById('phases-display');
-  const APEX=15.588;
+  const APEX=27.8367;
   let doneCount=0;
   g.innerHTML=PHASES.map((p,i)=>{
     const done=realAuth>=((i+1)/12)*APEX;
@@ -1477,8 +1477,8 @@ async function boot(){
         if(bar)bar.style.width=Math.max(0.4,Number(lat.percent||0))+'%';
       }).catch(function(){});
     }catch(matErr){}
-  const realAuth=Math.sqrt(a*a+b*b+c*c);
-  const APEX_AUTH=15.588;
+  const realAuth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+  const APEX_AUTH=27.8367;
 
   /* Real top stats bar -- was hardcoded to fake absolute-apex values for every viewer */
   document.getElementById('sg-auth').textContent=realAuth.toFixed(3);
@@ -1983,9 +1983,9 @@ async function bootPortfolioExtra(){
   const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
   const d=pr.data||{};
   const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
-  const auth=Math.sqrt(a*a+b*b+c*c);
+  const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
   document.getElementById('port-coord').textContent = '('+a.toFixed(2)+', '+b.toFixed(2)+', '+c.toFixed(2)+')';
-  document.getElementById('port-auth').textContent = (d.is_owner ? '\u25B2 Apex -- Authority 15.588' : ('\u25B2 Authority '+auth.toFixed(2)+' / 15.588'));
+  document.getElementById('port-auth').textContent = (d.is_owner ? '\u25B2 Apex -- Authority 27.8367' : ('\u25B2 Authority '+auth.toFixed(2)+' / 27.8367'));
   try{
     const evc=await sb.from('evolution_events').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id);
     const evEl=document.getElementById('ev-count');
@@ -2119,7 +2119,7 @@ async function bootPassportExtra(){
 
   var d=pr.data, sign=d.sign;
   var a=Number(d.axis_a||1),b=Number(d.axis_b||1),c=Number(d.axis_c||1);
-  var auth=Math.sqrt(a*a+b*b+c*c), tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
+  var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285, tier=Math.max(1,Math.min(9,Math.floor(Math.min(a,b,c))));
   document.getElementById('pp-name').textContent=d.display_name || (sign+' Sovereign');
   document.getElementById('pp-sign').textContent=(PP_GLY[sign]||'')+' '+sign;
   document.getElementById('pp-rank').textContent=PP_RANKS[tier-1]+' \u00B7 '+PP_MAT[tier-1];

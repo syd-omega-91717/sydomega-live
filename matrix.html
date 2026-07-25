@@ -90,13 +90,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* NODE GRID -- MINI */
 .node-grid-section{max-width:1400px;margin:0 auto;padding:0 2rem 2rem}
-.node-grid{display:grid;grid-template-columns:repeat(27,1fr);gap:1px;margin-top:.6rem}
-.axis-map{margin-bottom:1.6rem}
-.axis-map-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.axis-map-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em}
-.axis-map-count{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)}
-.axis-map-note{font-size:.78rem;color:var(--muted);line-height:1.8;margin-top:.5rem;max-width:80ch}
-@media(max-width:760px){.node-grid{grid-template-columns:repeat(27,1fr);gap:.5px}}
+.node-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin-top:.75rem}
 .node-cell{aspect-ratio:1;border:1px solid rgba(201,168,76,0.08);display:flex;align-items:center;justify-content:center;font-family:'Courier Prime',monospace;font-size:.42rem;color:var(--muted);transition:all .2s;cursor:default}
 .node-cell.lit{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);color:var(--gold)}
 .node-cell.apex{background:rgba(201,168,76,0.25);border-color:var(--gold);color:var(--gold);font-size:.55rem;animation:apex-blink 2s ease-in-out infinite}
@@ -229,8 +223,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <div class="page">
   <div class="hero-band">
     <div class="hero-eyebrow">CORE ENGINE // 9x9x9</div>
-    <h1 class="hero-title">The <span data-canon-nodes="twelve">104,976</span>-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
-    <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A^2 + B^2 + C^2). Apex = 27.8367.</p>
+    <h1 class="hero-title">The 729-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
+    <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A^2 + B^2 + C^2). Apex = 15.588.</p>
   </div>
 
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
@@ -272,7 +266,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="matrix-canvas-panel">
       <div class="matrix-canvas-header">
         <span class="matrix-canvas-title">3D Matrix Projection</span>
-        <span class="matrix-badge">12&times;12&times;9&times;9&times;9 // <span data-canon-nodes="twelve">104,976</span> NODES</span>
+        <span class="matrix-badge">9x9x9 // 729 NODES</span>
       </div>
       <canvas id="matrix-canvas" height="420"></canvas>
       <div class="coord-display">
@@ -353,79 +347,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
             <div>C^2 = <span id="f-c2">--</span></div>
             <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">SUM = <span id="f-sum">--</span></div>
             <div style="color:var(--cyan);font-size:.85rem;margin-top:.3rem">AUTH = <span style="color:var(--gold)" id="f-auth">--</span></div>
-            <div style="color:var(--muted);font-size:.62rem;margin-top:.5rem">Threshold: 27.8367 confirms APEX status. Owner permanently at absolute (9.000, 9.000, 9.000).</div>
+            <div style="color:var(--muted);font-size:.62rem;margin-top:.5rem">Threshold: 15.588 confirms APEX status. Owner permanently at absolute (9.000, 9.000, 9.000).</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- LATTICE STANDING -- the member's absolute position in the 104,976-node
-       lattice. Before the lattice engine the platform could only express one
-       9x9x9 cube (729 positions, 0.69% of canon); track and phase existed in
-       canon and in this interface but not in the engine. -->
-  <div class="node-grid-section" style="padding-bottom:1rem">
-    <div class="axis-map-head">
-      <span class="axis-map-title">Lattice Standing</span>
-      <span class="axis-map-count" id="lat-node">-- / 104,976</span>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:.7rem">
-      <div class="o-card" style="border:1px solid var(--line);text-align:center">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold)" id="lat-track">--</div>
-        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">TRACK / 12</div>
-      </div>
-      <div class="o-card" style="border:1px solid var(--line);text-align:center">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--cyan)" id="lat-phase">--</div>
-        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">PHASE / 12</div>
-      </div>
-      <div class="o-card" style="border:1px solid var(--line);text-align:center">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--green)" id="lat-phases">--</div>
-        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">PHASES SEALED</div>
-      </div>
-      <div class="o-card" style="border:1px solid var(--line);text-align:center">
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--solar)" id="lat-pct">--</div>
-        <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:var(--muted)">OF THE LATTICE</div>
-      </div>
-    </div>
-    <div style="height:5px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin-top:12px">
-      <i id="lat-bar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width .8s ease"></i>
-    </div>
-  </div>
-
-  <!-- NODE MAPS -- one per axis, each a FULL 9x9x9 cube (729 nodes).
-       Previously only Axis A was shown, and only as a single 9x9 plane (81
-       cells), so two thirds of the member's progression had no representation
-       and the third was showing one slice of nine. -->
+  <!-- NODE GRID -->
   <div class="node-grid-section">
-    <div class="axis-map" data-axis="a">
-      <div class="axis-map-head">
-        <span class="axis-map-title">Axis A &middot; Knowledge &mdash; 9&times;9&times;9 Node Map</span>
-        <span class="axis-map-count" id="node-count-a">-- / 729 COMPLETED</span>
-      </div>
-      <div class="node-grid" id="node-grid-a"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <span style="font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">Axis A -- 9x9 Node Map (Plane 9)</span>
+      <span style="font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--green)" id="node-count">-- / 81 COMPLETED</span>
     </div>
-
-    <div class="axis-map" data-axis="b">
-      <div class="axis-map-head">
-        <span class="axis-map-title">Axis B &middot; Mastery &mdash; 9&times;9&times;9 Node Map</span>
-        <span class="axis-map-count" id="node-count-b">-- / 729 COMPLETED</span>
-      </div>
-      <div class="node-grid" id="node-grid-b"></div>
-    </div>
-
-    <div class="axis-map" data-axis="c">
-      <div class="axis-map-head">
-        <span class="axis-map-title">Axis C &middot; Contribution &mdash; 9&times;9&times;9 Node Map</span>
-        <span class="axis-map-count" id="node-count-c">-- / 729 COMPLETED</span>
-      </div>
-      <div class="node-grid" id="node-grid-c"></div>
-    </div>
-
-    <div class="axis-map-note">
-      Three axes at depth nine = one 9&times;9&times;9 cube of <b>729</b> nodes each.
-      Across 12 tracks and 12 phases the full lattice is
-      <b><span data-canon-nodes="twelve">104,976</span></b> nodes.
-    </div>
+    <div class="node-grid" id="node-grid"></div>
   </div>
 
   <!-- NESTED MATRIX -->
@@ -455,7 +390,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
   <div class="mtab-panel" id="mtab-triads" style="display:none">
     
-    <div class="topbar"><div class="t">THE TWELVE TRIADS<small>TWELVE LIVING MATRICES  .  12 x 9x9x9 = 8,748</small></div></div>
+    <div class="topbar"><div class="t">THE TWELVE TRIADS<small>TWELVE LIVING MATRICES  .  12 x 9x9x9 = 8,748 <span data-canon-lattice="twelve"></span></small></div></div>
     <p class="intro">A <b>triad</b> is the living shape of three axes  --  <b>Knowledge</b>, <b>Mastery</b>, <b>Contribution</b>  --  each rising to depth 9. Three axes at depth nine <b>is</b> one 9x9x9 matrix: <b>729 nodes</b>. The Order holds <b>twelve</b> triads, one for each sign and house  --  and twelve matrices of 729 make the full field of <b>8,748</b>. Your own triad lives below; the twelve turn beside it.</p>
 
     <div class="counts">
@@ -480,7 +415,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       </div>
     </div>
 
-    <div class="sechead">THE TWELVE</div><div data-canon-lattice="twelve"></div>
+    <div class="sechead">THE TWELVE</div>
     <p class="seclead">Each sign is a triad with its own temper  --  the natural lean of its element across the three axes. Yours is alive with your real standing; the other eleven turn as the archetypes of the cosmos, the full shape each track reaches at the apex.</p>
     <div class="twelve" id="twelve"></div>
   
@@ -519,30 +454,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="hero">
     <div class="sig">&#937;</div>
     <h1>THE SOVEREIGN CHARTER</h1>
-    <div class="sub">THE TWELVE IMMUTABLE ARTICLES</div>
+    <div class="sub">THE ELEVEN IMMUTABLE ARTICLES</div>
     <div class="arch">ARCHITECT  --  <b>MAJOR SLEIMAN YOUSSEF DAGHER</b><br>LEBANESE ORDER OF ENGINEERS &amp; ARCHITECTS  .  No. 30875<br>ESTABLISHED 22 DECEMBER 2025  .  sydomega.com</div>
   </div>
 
-  <div class="sectit">THE TWELVE ARTICLES OF SOVEREIGNTY</div>
+  <div class="sectit">THE ELEVEN ARTICLES OF SOVEREIGNTY</div>
   <div class="articles">
-    <div class="art"><div class="rn">I</div><div><div class="at">Absolute Ownership</div><div class="ad"><b>100% sovereign.</b> No co-founders, no partners. The Order answers to a single authority.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">II</div><div><div class="at">The Master Stake</div><div class="ad"><b>467,756,700,000 &#937; (51%)</b> permanently locked. Control of the Order can never be diluted below sovereignty.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">III</div><div><div class="at">Irrevocable Genesis</div><div class="ad">Foundational property is hashed into the <b>Genesis Block</b>  --  anchored to the Architect's standing in the Lebanese Order of Engineers &amp; Architects (No. 30875).<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">IV</div><div><div class="at">The Permanent Directive</div><div class="ad">The <b>999-Point Blueprint</b> is sealed in the immutable logic layer  --  the law beneath the law.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">V</div><div><div class="at">The &#937; Signet</div><div class="ad">The <b>&#937;</b> is the sole recognized mark of power. One symbol, one Order, one legacy.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">VI</div><div><div class="at">The Family Nest</div><div class="ad"><b>Sovereigns-by-Blood</b> hold zero fees and full compute priority. The bloodline is first among the Order.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">VII</div><div><div class="at">The Heritage Protocol</div><div class="ad">A succession mechanism transfers full control to the <b>bloodline</b>, ensuring the Order outlives its Architect.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">VIII</div><div><div class="at">The Safety Net</div><div class="ad">A <b>51% safety reserve</b> shields the Order against shock  --  stability before all.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">IX</div><div><div class="at">The Reinvestment Sweep</div><div class="ad">A fixed <b>20% share</b> is continuously recommitted to hard reserves  --  the Order compounds its own foundation.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">X</div><div><div class="at">Sovereign Continuity</div><div class="ad">The Order may <b>re-domicile</b> to remain free of any hostile jurisdiction. Sovereignty is portable.<div data-canon-lattice="twelve"></div></div></div></div>
-    <div class="art"><div class="rn">XI</div><div><div class="at">The Omega Point</div><div class="ad"><b>Node 999</b> confirms absolute completion  --  the apex where the Order is whole.<div data-canon-lattice="twelve"></div></div></div></div>
-      <div class="art"><div class="rn">XII</div><div><div class="at">The Immutable Lattice</div><div class="ad">The progression lattice is fixed at <b>12 &times; 12 &times; 9 &times; 9 &times; 9 = <span data-canon-nodes="twelve">104,976</span></b> nodes, and every nine-fold system at <b>9 &times; 9 &times; 9 &times; 9 &times; 9 = <span data-canon-nodes="nine">59,049</span></b>. A position earned within it can never be revoked, diluted, or recalculated against a member.<div data-canon-lattice="twelve"></div></div></div></div>
+    <div class="art"><div class="rn">I</div><div><div class="at">Absolute Ownership</div><div class="ad"><b>100% sovereign.</b> No co-founders, no partners. The Order answers to a single authority.</div></div></div>
+    <div class="art"><div class="rn">II</div><div><div class="at">The Master Stake</div><div class="ad"><b>467,756,700,000 &#937; (51%)</b> permanently locked. Control of the Order can never be diluted below sovereignty.</div></div></div>
+    <div class="art"><div class="rn">III</div><div><div class="at">Irrevocable Genesis</div><div class="ad">Foundational property is hashed into the <b>Genesis Block</b>  --  anchored to the Architect's standing in the Lebanese Order of Engineers &amp; Architects (No. 30875).</div></div></div>
+    <div class="art"><div class="rn">IV</div><div><div class="at">The Permanent Directive</div><div class="ad">The <b>999-Point Blueprint</b> is sealed in the immutable logic layer  --  the law beneath the law.</div></div></div>
+    <div class="art"><div class="rn">V</div><div><div class="at">The &#937; Signet</div><div class="ad">The <b>&#937;</b> is the sole recognized mark of power. One symbol, one Order, one legacy.</div></div></div>
+    <div class="art"><div class="rn">VI</div><div><div class="at">The Family Nest</div><div class="ad"><b>Sovereigns-by-Blood</b> hold zero fees and full compute priority. The bloodline is first among the Order.</div></div></div>
+    <div class="art"><div class="rn">VII</div><div><div class="at">The Heritage Protocol</div><div class="ad">A succession mechanism transfers full control to the <b>bloodline</b>, ensuring the Order outlives its Architect.</div></div></div>
+    <div class="art"><div class="rn">VIII</div><div><div class="at">The Safety Net</div><div class="ad">A <b>51% safety reserve</b> shields the Order against shock  --  stability before all.</div></div></div>
+    <div class="art"><div class="rn">IX</div><div><div class="at">The Reinvestment Sweep</div><div class="ad">A fixed <b>20% share</b> is continuously recommitted to hard reserves  --  the Order compounds its own foundation.</div></div></div>
+    <div class="art"><div class="rn">X</div><div><div class="at">Sovereign Continuity</div><div class="ad">The Order may <b>re-domicile</b> to remain free of any hostile jurisdiction. Sovereignty is portable.</div></div></div>
+    <div class="art"><div class="rn">XI</div><div><div class="at">The Omega Point</div><div class="ad"><b>Node 999</b> confirms absolute completion  --  the apex where the Order is whole.</div></div></div>
   </div>
 
   <div class="sectit">THE &#937; ECONOMIC FRAMEWORK  .  DECLARED CANON</div>
   <div class="frame">
     <div class="grid">
-      <div class="m"><div class="k">TOTAL SUPPLY</div><div class="v">917,170,000,000 &#937;</div><div class="s">FIXED  .  CANONICAL</div></div>
+      <div class="m"><div class="k">TOTAL SUPPLY</div><div class="v">917,385,000,000 &#937;</div><div class="s">FIXED  .  CANONICAL</div></div>
       <div class="m"><div class="k">MASTER VAULT</div><div class="v">467,756,700,000 &#937;</div><div class="s">51%  .  PERMANENTLY LOCKED</div></div>
       <div class="m"><div class="k">SOVEREIGN FIELD</div><div class="v">49% TIER-CAP</div><div class="s">THE MEMBERS' DOMAIN</div></div>
       <div class="m"><div class="k">HARD RESERVES</div><div class="v">Au  .  Rh  .  Ag</div><div class="s">GOLD 412,300g  .  RHODIUM 125,000g  .  SILVER 890,000g</div></div>
@@ -579,11 +513,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const supabase = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
-/* Share this single client with every shared script (bg.js, emblems,
-   gate, membership, progress ...) so the page has exactly one
-   GoTrueClient rather than one per module. */
-try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
+const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
 function fmt(n){ return Number(n||0).toFixed(3); }
 
@@ -592,11 +522,11 @@ async function loadRealMatrix(){
   if(!sess){ window.location.href='/account.html'; return; }
 
   const pr = await supabase.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
-  const a = pr.data ? Number(pr.data.axis_a||0.001) : 0;
-  const b = pr.data ? Number(pr.data.axis_b||0.001) : 0;
-  const c = pr.data ? Number(pr.data.axis_c||0.001) : 0;
-  const auth = Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
-  const apex = auth >= 27.8367 - 0.001;
+  const a = pr.data ? Number(pr.data.axis_a||0) : 0;
+  const b = pr.data ? Number(pr.data.axis_b||0) : 0;
+  const c = pr.data ? Number(pr.data.axis_c||0) : 0;
+  const auth = Math.sqrt(a*a+b*b+c*c);
+  const apex = auth >= 15.588 - 0.001;
 
   // top stat cards
   document.getElementById('stat-a').textContent=fmt(a);
@@ -633,15 +563,12 @@ async function loadRealMatrix(){
 
   // status badge
   document.getElementById('badge-status').textContent = apex ? 'ALL APEX' : 'IN PROGRESS';
-  /* Light each axis cube from its own real coordinate: (value/9) of 729. */
-  [['a',a],['b',b],['c',c]].forEach(function(pair){
-    const ax=pair[0], val=Number(pair[1])||0;
-    const lit=Math.round((Math.min(val,9)/9)*729);
-    const cnt=document.getElementById('node-count-'+ax);
-    if(cnt) cnt.textContent = lit+' / 729 COMPLETED';
-    document.querySelectorAll('#node-grid-'+ax+' .node-cell').forEach(function(cell,i){
-      cell.classList.toggle('lit', i < lit);
-    });
+
+  // node grid -- lit proportionally to real Axis A progress (a/9 of the 81 cells)
+  const litCount = Math.round((a/9)*81);
+  document.getElementById('node-count').textContent = litCount+' / 81 COMPLETED';
+  document.querySelectorAll('#node-grid .node-cell').forEach(function(cell,i){
+    cell.classList.toggle('lit', i < litCount);
   });
 
   // real evolution log
@@ -743,19 +670,14 @@ requestAnimationFrame(draw);
 
 // Node grid
 (function(){
-/* Build all three axis cubes: 9x9x9 = 729 nodes each.
-   The apex cell (index 728) marks the completion of that axis. */
-['a','b','c'].forEach(function(ax){
-  const grid=document.getElementById('node-grid-'+ax);
-  if(!grid) return;
-  const frag=document.createDocumentFragment();
-  for(let i=0;i<729;i++){
-    const cell=document.createElement('div');
-    cell.className='node-cell'+(i===728?' apex':'');
-    frag.appendChild(cell);
-  }
-  grid.appendChild(frag);
-});
+const grid=document.getElementById('node-grid');
+if(!grid)return;
+for(let i=0;i<81;i++){
+const cell=document.createElement('div');
+cell.className='node-cell'+(i===80?' apex':'');
+cell.textContent=i===80?'9.9':String(Math.floor(i/9)+1)+'.'+(i%9+1);
+grid.appendChild(cell);
+}
 })();
 
 // Animate bars
@@ -766,7 +688,7 @@ document.querySelectorAll('.axis-bar').forEach(el=>{const w=el.style.width;el.st
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
 const SERVICES=[
   {name:'GATEWAY',type:'API Gateway',uptime:99.99,col:'#C9A84C'},
@@ -898,7 +820,7 @@ window.bootGrid = bootGrid;
 <script type="module">
 
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
   const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
   const ECOL={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
@@ -961,8 +883,8 @@ window.bootGrid = bootGrid;
     const heroEl=document.querySelector('.hero'); if(heroEl) heroEl.style.display='flex';
 
     var d=pr.data, sign=d.sign;
-    var a=Number(d.axis_a||0.001),b=Number(d.axis_b||0.001),c=Number(d.axis_c||0.001);
-    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+    var a=Number(d.axis_a||1),b=Number(d.axis_b||1),c=Number(d.axis_c||1);
+    var auth=Math.sqrt(a*a+b*b+c*c);
     var meSign=SIGNS.find(function(s){return s[0]===sign;})||SIGNS[0];
     document.getElementById('my-name').textContent=d.display_name||(sign+' Sovereign');
     document.getElementById('my-sub').innerHTML=meSign[1]+' '+sign+' \u00B7 '+(d.element||meSign[2])+' \u00B7 '+meSign[3]+' \u00B7 AUTHORITY '+auth.toFixed(2)+' / 15.58';
@@ -1024,28 +946,5 @@ function callWhenReady(fnName){
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const _sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
-  (async function(){
-    try{
-      const s=(await _sb.auth.getSession()).data.session; if(!s) return;
-      const r=await _sb.rpc('my_lattice'); if(r.error) throw r.error;
-      const d=r.data||{}; if(!d.node) return;
-      const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
-      set('lat-track', d.track); set('lat-phase', d.phase);
-      set('lat-phases', d.phases_done);
-      set('lat-pct', Number(d.percent||0).toFixed(2)+'%');
-      set('lat-node', Number(d.node).toLocaleString()+' / 104,976');
-      const bar=document.getElementById('lat-bar');
-      if(bar) bar.style.width=Math.max(0.4, Number(d.percent||0))+'%';
-    }catch(e){
-      const el=document.getElementById('lat-node');
-      if(el) el.textContent='run omega_lattice_engine.sql';
-      console.log('lattice',e);
-    }
-  })();
-</script>
-
 </body>
 </html>

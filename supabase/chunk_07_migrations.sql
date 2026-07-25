@@ -58,6 +58,7 @@ END;
 $$;
 
 -- GRANT PERMANENT -- lift the trial, access never expires --------------------
+DROP FUNCTION IF EXISTS public.grant_permanent_access(uuid) CASCADE;
 CREATE OR REPLACE FUNCTION public.grant_permanent_access(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
@@ -96,6 +97,7 @@ $$;
 -- EXPIRE TRIAL -- called by the guard when 9.1717 min elapse -----------------
 -- a member may expire only their OWN trial; the owner may expire anyone.
 -- Trial progress is reset (a trial persists nothing). The owner is never reset.
+DROP FUNCTION IF EXISTS public.expire_trial(uuid) CASCADE;
 CREATE OR REPLACE FUNCTION public.expire_trial(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN

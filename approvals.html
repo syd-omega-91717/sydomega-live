@@ -408,7 +408,7 @@ async function boot(){
       <a href="/dashboard.html" style="font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2)">RETURN TO DASHBOARD</a>`;
     return;
   }
-  /* Verified -- show main */
+  document.getElementById('app').style.display='flex'; document.getElementById('gate').style.display='none'; /* Verified -- show main */
   document.getElementById('gate').style.display='none';
   document.getElementById('main').style.display='block';
   load();

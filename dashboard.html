@@ -483,14 +483,14 @@ async function loadDashboard(){
   const pr=await supabase.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,is_owner,certificates_earned,trophies_earned,medals_earned').eq('id',sess.user.id).maybeSingle();
   const d=pr.data||{};
   const a=Number(d.axis_a||0.001), b=Number(d.axis_b||0.001), c=Number(d.axis_c||0.001);
-  const auth=Math.sqrt(a*a+b*b+c*c);
+  const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
   const name=d.display_name || (d.is_owner?'Major Sleiman Youssef Dagher':'Sovereign');
   const bound = d.sign && BOUND[d.sign];
 
   document.getElementById('hero-title').textContent = d.is_owner ? 'Sovereign Command' : ('Welcome, '+name);
   document.getElementById('hero-sub').innerHTML = d.is_owner
-    ? 'PLATFORM IDENTITY: OMEGA-91717-SYD-001<br>OWNER: MAJOR SLEIMAN YOUSSEF DAGHER<br>LEVEL: 9.9.9 // AUTHORITY: 15.588 // ALL-TIME ACCESS'
-    : ('YOUR STANDING<br>AUTHORITY: '+fmt(auth)+' / 15.588');
+    ? 'PLATFORM IDENTITY: OMEGA-91717-SYD-001<br>OWNER: MAJOR SLEIMAN YOUSSEF DAGHER<br>LEVEL: 9.9.9 // AUTHORITY: 27.8367 // ALL-TIME ACCESS'
+    : ('YOUR STANDING<br>AUTHORITY: '+fmt(auth)+' / 27.8367');
   document.getElementById('hero-coord').textContent = 'COORD ('+fmt(a)+', '+fmt(b)+', '+fmt(c)+')';
 
   const badges=document.getElementById('hero-badges');
@@ -531,7 +531,7 @@ async function loadDashboard(){
   document.getElementById('stat-honors').textContent = ((d.certificates_earned||0)+(d.trophies_earned||0)+(d.medals_earned||0))+'+';
 
   // Quick Access real status lines
-  const qcAsc=document.getElementById('qc-ascension'); if(qcAsc) qcAsc.textContent = 'Authority '+fmt(auth)+' / 15.588';
+  const qcAsc=document.getElementById('qc-ascension'); if(qcAsc) qcAsc.textContent = 'Authority '+fmt(auth)+' / 27.8367';
   const qcMat=document.getElementById('qc-matrix'); if(qcMat) qcMat.textContent = 'Node '+Math.max(1,node)+' of 729';
   const qcPro=document.getElementById('qc-profile'); if(qcPro) qcPro.textContent = d.display_name ? ('Signed in as '+d.display_name) : 'Complete your identity';
 

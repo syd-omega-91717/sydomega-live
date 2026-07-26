@@ -150,7 +150,67 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <aside class="side" id="omega-side" data-page="command" style="width:80px;flex-shrink:0"></aside>
   <div style="flex:1;min-width:0">
 <section class="ocat-wrap" aria-label="Command Categories">
-  <div class="ocat-title">COMMAND INDEX</div>
+  <div class="ocat-title">COMMAND INDEX
+
+<!-- TRIAL ACCESS TIMELINE (visible only during active trial) -->
+<div id="trial-timeline-bar" style="display:none;padding:12px clamp(14px,3vw,36px);border-bottom:1px solid rgba(201,168,76,.15);background:linear-gradient(90deg,rgba(201,168,76,.06),rgba(10,10,15,.8));flex-wrap:wrap;gap:12px;align-items:center">
+  <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2.5px;color:#8a8676">TRIAL SESSION</div>
+  <div style="flex:1;min-width:160px">
+    <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:1.5px;color:#8a8676;margin-bottom:3px">STARTED</div>
+    <div id="trial-started" style="font-family:'Courier Prime',monospace;font-size:10px;color:#e9e6dc">--</div>
+  </div>
+  <div style="flex:1;min-width:160px">
+    <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:1.5px;color:#8a8676;margin-bottom:3px">EXPIRES</div>
+    <div id="trial-expires" style="font-family:'Courier Prime',monospace;font-size:10px;color:#e9e6dc">--</div>
+  </div>
+  <div style="text-align:right;min-width:120px">
+    <div style="font-family:'Cinzel Decorative',serif;font-size:18px;color:#C9A84C" id="trial-countdown">--:--</div>
+    <div style="font-family:'Courier Prime',monospace;font-size:7px;letter-spacing:2px;color:#8a8676;margin-top:2px">REMAINING</div>
+  </div>
+</div>
+<!-- DEDICATION DISPLAY (always visible to all members) -->
+<div id="dedication-bar" style="display:none;padding:10px clamp(14px,3vw,36px);border-bottom:1px solid rgba(201,168,76,.1);background:rgba(10,10,15,.5);display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+  <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;color:#8a8676">&#937; SOVEREIGN DEDICATION</div>
+  <div style="font-family:'Cinzel Decorative',serif;font-size:13px;color:#C9A84C;letter-spacing:.05em">9 HOURS &middot; 17 MINUTES &middot; 17 SECONDS</div>
+  <div style="font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:1.5px;color:#8a8676">THE ARCHITECT&rsquo;S COMMITMENT TO THE ORDER</div>
+</div>
+<script>
+(function(){
+  var TRIAL_SECS=550.302;
+  var SEP=9*3600+17*60+17; /* 9h 17m 17s dedication */
+  /* show dedication bar */
+  var db=document.getElementById('dedication-bar');
+  if(db)db.style.display='flex';
+  /* trial countdown */
+  function startCountdown(expISO,startISO){
+    var bar=document.getElementById('trial-timeline-bar');
+    var started=document.getElementById('trial-started');
+    var expires=document.getElementById('trial-expires');
+    var cd=document.getElementById('trial-countdown');
+    if(!bar||!cd)return;
+    bar.style.display='flex';
+    var fmt=function(d){return new Date(d).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'}).toUpperCase();};
+    if(started&&startISO)started.textContent=fmt(startISO);
+    if(expires&&expISO)expires.textContent=fmt(expISO);
+    var tick=function(){
+      var rem=Math.max(0,new Date(expISO)-Date.now());
+      var m=Math.floor(rem/60000);
+      var s=Math.floor((rem%60000)/1000);
+      if(cd)cd.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      if(rem<=0){
+        if(bar)bar.style.backgroundColor='rgba(139,0,0,.1)';
+        if(cd){cd.textContent='EXPIRED';cd.style.color='var(--crim,#8B0000)';}
+        setTimeout(function(){window.location.replace('/pending.html');},3000);
+        return;
+      }
+      setTimeout(tick,1000);
+    };
+    tick();
+  }
+  window.__startTrialCountdown=startCountdown;
+})();
+</script>
+</div>
   <div class="ocat-grid" id="ocat-grid"></div>
 </section>
 <div class="ocat-sub" id="ocat-sub"><div class="ocat-sub-inner" id="ocat-sub-inner"></div></div>

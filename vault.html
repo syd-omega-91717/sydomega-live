@@ -503,7 +503,7 @@ function buildSplinter(){
 
 function buildWallet(a,b,c){
   const total=Math.round((a+b+c)*917.17);
-  document.getElementById('wallet-total').innerHTML='&#937; '+total.toLocaleString();
+  var _el=document.getElementById('wallet-total');if(_el)document.getElementById('wallet-total').innerHTML='&#937; '+total.toLocaleString();
   const g=document.getElementById('wallet-grid');g.innerHTML='';
   TOKENS.forEach(tk=>{
     const bal=parseFloat(tk.bal)||0;
@@ -593,7 +593,7 @@ async function boot(){
   const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
   const nodes=Math.round(a*b*c*9),xp=Math.round(nodes*917.17);
   const tier=parseInt(pr.data?.membership_tier)||1;
-  document.getElementById('aum-val').innerHTML='&#937; '+xp.toLocaleString();
+  var _el=document.getElementById('aum-val');if(_el)document.getElementById('aum-val').innerHTML='&#937; '+xp.toLocaleString();
   try{
     const pts=await sb.rpc('my_points_balance');
     document.getElementById('points-mini').textContent=(pts.data&&pts.data.balance!=null?pts.data.balance:0)+' PTS';

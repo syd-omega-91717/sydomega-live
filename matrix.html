@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -344,9 +344,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
             <div>A = <span id="f-a">--</span> // Knowledge</div>
             <div>B = <span id="f-b">--</span> // Mastery</div>
             <div>C = <span id="f-c">--</span> // Contribution</div>
-            <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">A^2 = <span id="f-a2">--</span></div>
-            <div>B^2 = <span id="f-b2">--</span></div>
-            <div>C^2 = <span id="f-c2">--</span></div>
+            <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">A^3 = <span id="f-a2">--</span></div>
+            <div>B^3 = <span id="f-b2">--</span></div>
+            <div>C^3 = <span id="f-c2">--</span></div>
             <div style="border-top:1px solid var(--border);margin:.5rem 0;padding-top:.5rem">SUM = <span id="f-sum">--</span></div>
             <div style="color:var(--cyan);font-size:.85rem;margin-top:.3rem">AUTH = <span style="color:var(--gold)" id="f-auth">--</span></div>
             <div style="color:var(--muted);font-size:.62rem;margin-top:.5rem">Threshold: 27.8367 confirms APEX status. Owner permanently at absolute (9.000, 9.000, 9.000).</div>
@@ -889,7 +889,7 @@ window.bootGrid = bootGrid;
     var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     var meSign=SIGNS.find(function(s){return s[0]===sign;})||SIGNS[0];
     document.getElementById('my-name').textContent=d.display_name||(sign+' Sovereign');
-    document.getElementById('my-sub').innerHTML=meSign[1]+' '+sign+' \u00B7 '+(d.element||meSign[2])+' \u00B7 '+meSign[3]+' \u00B7 AUTHORITY '+auth.toFixed(2)+' / 15.58';
+    document.getElementById('my-sub').innerHTML=meSign[1]+' '+sign+' \u00B7 '+(d.element||meSign[2])+' \u00B7 '+meSign[3]+' \u00B7 AUTHORITY '+auth.toFixed(2)+' / 27.8367';
     document.getElementById('m-a').textContent=a.toFixed(2); document.getElementById('m-b').textContent=b.toFixed(2); document.getElementById('m-c').textContent=c.toFixed(2);
     setTimeout(function(){ document.getElementById('m-fa').style.width=(a/9*100)+'%'; document.getElementById('m-fb').style.width=(b/9*100)+'%'; document.getElementById('m-fc').style.width=(c/9*100)+'%'; },120);
 

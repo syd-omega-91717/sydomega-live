@@ -401,15 +401,15 @@ async function boot(){
   ownerUid=sess.user.id;
   const pr=(await sb.from('profiles').select('is_owner').eq('id',ownerUid).maybeSingle()).data;
   if(!pr?.is_owner){
-    document.getElementById('gate').innerHTML=`
+    var _gx=document.getElementById('gate');if(_gx)_gx.innerHTML=`
       <div class="gate-omega" style="color:var(--crim)">&#937;</div>
       <div class="gate-title" style="color:var(--crim)">ACCESS DENIED</div>
       <div class="gate-sub">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
       <a href="/dashboard.html" style="font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2)">RETURN TO DASHBOARD</a>`;
     return;
   }
-  document.getElementById('app').style.display='flex'; document.getElementById('gate').style.display='none'; /* Verified -- show main */
-  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='flex'; var _g=document.getElementById('gate');if(_g)_g.style.display='none'; /* Verified -- show main */
+  var _g=document.getElementById('gate');if(_g)_g.style.display='none';
   document.getElementById('main').style.display='block';
   load();
   loadContracts();
@@ -556,6 +556,13 @@ document.getElementById('audit-refresh')?.addEventListener('click',loadAuditTrai
 boot();
 loadAuditTrail();
 loadErrorMonitor();
+
+/* Expose to global scope for tab onclick handlers */
+window.loadMembers=typeof loadMembers!=='undefined'?loadMembers:function(){};
+window.loadContracts=typeof loadContracts!=='undefined'?loadContracts:function(){};
+window.loadReservations=typeof loadReservations!=='undefined'?loadReservations:function(){};
+window.loadAudit=typeof loadAudit!=='undefined'?loadAudit:function(){};
+window.loadErrors=typeof loadErrors!=='undefined'?loadErrors:function(){};
 </script>
 <div id="gate" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.95);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:16px"></div>
 <div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:1000;font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;padding:10px 18px;border-radius:2px;background:rgba(10,10,15,.9);border:1px solid rgba(201,168,76,.3);color:#C9A84C;opacity:0;transition:opacity .3s;pointer-events:none"></div>

@@ -263,7 +263,7 @@
 
 <footer style="border-top:1px solid var(--line);padding:30px 0;text-align:center">
   <div class="wrap"><div style="font-family:var(--display);color:var(--gold);font-size:16px;letter-spacing:2px">&#937; 91717</div>
-  <p style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:8px">SOVEREIGN ENGINEERING PROTOCOL  .  100% OWNED BY SLEIMAN YOUSEF DAGHER</p></div>
+  <p style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:8px">SOVEREIGN ENGINEERING PROTOCOL  .  &#937; SYD OMEGA 91717 &middot; SOVEREIGN PLATFORM</p></div>
 </footer>
 
 <script type="module">
@@ -436,7 +436,7 @@
     }
 
     const a=Number(prof.axis_a ?? 1), b=Number(prof.axis_b ?? 1), c=Number(prof.axis_c ?? 1);
-    const auth=Math.sqrt(a*a+b*b+c*c);
+    const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     const tier=Math.max(1, Math.min(9, Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
     document.getElementById('d-a').textContent=a.toFixed(2);
     document.getElementById('d-b').textContent=b.toFixed(2);
@@ -508,7 +508,7 @@
   function agentReply(text){
     const p=currentProfile||{};
     const a=Number(p.axis_a ?? 1), b=Number(p.axis_b ?? 1), c=Number(p.axis_c ?? 1);
-    const auth=Math.sqrt(a*a+b*b+c*c);
+    const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     const tier=Math.max(1,Math.min(9,Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
     const material=MATS[tier-1];
     const axes=[['Knowledge',a],['Mastery',b],['Contribution',c]].sort((x,y)=>x[1]-y[1]);

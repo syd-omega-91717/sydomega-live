@@ -812,5 +812,134 @@
       "title": "THE OMEGA POINT",
       "text": "Node 999 confirms absolute completion. The Omega Point is the terminal state — total system sovereignty achieved."
     }
-  ]
+  ],
+  "lattice_systems": {
+    "kings": {
+      "outer": 28,
+      "cube": [
+        9,
+        9,
+        9
+      ],
+      "total": 571536,
+      "label": "28×28×9³",
+      "formula": "28×28×9×9×9"
+    },
+    "microservices": {
+      "outer": 21,
+      "cube": [
+        9,
+        9,
+        9
+      ],
+      "total": 321489,
+      "label": "21×21×9³",
+      "formula": "21×21×9×9×9"
+    },
+    "modules": {
+      "outer": 18,
+      "cube": [
+        9,
+        9,
+        9
+      ],
+      "total": 236196,
+      "label": "18×18×9³",
+      "formula": "18×18×9×9×9"
+    },
+    "canonical": {
+      "outer": 12,
+      "cube": [
+        9,
+        9,
+        9
+      ],
+      "total": 104976,
+      "label": "12×12×9³",
+      "formula": "12×12×9×9×9"
+    },
+    "ninefold": {
+      "outer": 9,
+      "cube": [
+        9,
+        9,
+        9
+      ],
+      "total": 59049,
+      "label": "9×9×9³",
+      "formula": "9×9×9×9×9"
+    },
+    "plane": {
+      "outer": 9,
+      "cube": [
+        9,
+        9
+      ],
+      "total": 729,
+      "label": "9³",
+      "formula": "9×9×9"
+    }
+  },
+  "authority": {
+    "formula": "sqrt(A³+B³+C³)×φ/e",
+    "formula_text": "square root of (A cubed plus B cubed plus C cubed) times phi over e",
+    "phi": 1.6180339887,
+    "euler": 2.7182818285,
+    "apex": 27.8367,
+    "apex_derivation": "sqrt(729+729+729)×1.6180339887/2.7182818285=27.8367",
+    "genesis": 0.001,
+    "step": 0.001,
+    "axis_apex": 9.0,
+    "axis_cube_apex": 729.0,
+    "sum_cubes_apex": 2187.0,
+    "gates": [
+      2.3197,
+      4.6394,
+      6.9592,
+      9.2789,
+      11.5986,
+      13.9183,
+      16.2381,
+      18.5578,
+      20.8775,
+      23.1972,
+      25.517,
+      27.8367
+    ],
+    "gate_names": [
+      "INITIATE",
+      "ACOLYTE",
+      "SCHOLAR",
+      "KEEPER",
+      "GUARDIAN",
+      "ARCHITECT",
+      "SOVEREIGN",
+      "VANGUARD",
+      "HERALD",
+      "ORACLE",
+      "PRIME",
+      "APEX"
+    ],
+    "old_formula_WRONG": "sqrt(A²+B²+C²)×φ/e = 9.2789 at apex (DEPRECATED)"
+  },
+  "axes": {
+    "A": {
+      "name": "KNOWLEDGE",
+      "type": "supervised_learning",
+      "apex": 9.0,
+      "cube_apex": 729.0
+    },
+    "B": {
+      "name": "MASTERY",
+      "type": "reinforcement_learning",
+      "apex": 9.0,
+      "cube_apex": 729.0
+    },
+    "C": {
+      "name": "CONTRIBUTION",
+      "type": "federated_learning",
+      "apex": 9.0,
+      "cube_apex": 729.0
+    }
+  }
 }

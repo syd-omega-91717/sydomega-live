@@ -663,5 +663,29 @@ document.getElementById('open-full-grid').addEventListener('click',function(){
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
 <span data-canon-lattice="twelve" style="display:none"></span>
+<script>
+/* omega-user: populate after module loads */
+(function tryPop(){
+  if(document.readyState!=='complete'){window.addEventListener('load',tryPop);return;}
+  var tries=0;
+  var iv=setInterval(function(){
+    tries++;
+    if(window.__omegaPopulate&&window.__omegaSb){
+      window.__omegaSb.auth.getSession().then(function(resp){
+        var sess=resp.data&&resp.data.session;
+        if(!sess)return;
+        return window.__omegaSb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()
+          .then(function(r){
+            var pr=r.data||{};
+            if(!pr.id)return;
+            window.__omegaPopulate(pr,sess.user);
+          });
+      }).catch(function(){});
+      clearInterval(iv);
+    }
+    if(tries>30)clearInterval(iv);
+  },200);
+})();
+</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -176,7 +176,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 </div>
 <script>
 (function(){
-  var TRIAL_SECS=550.302;
+  var TRIAL_SECS=557;
   var SEP=9*3600+17*60+17; /* 9h 17m 17s dedication */
   /* show dedication bar */
   var db=document.getElementById('dedication-bar');
@@ -540,14 +540,27 @@ function fmt(n){ return Number(n||0).toFixed(3); }
 async function loadDashboard(){
   const sess=(await supabase.auth.getSession()).data.session;
   if(!sess){ window.location.href='/account.html'; return; }
-  const pr=await supabase.from('profiles').select('display_name,sign,axis_a,axis_b,axis_c,is_owner,certificates_earned,trophies_earned,medals_earned').eq('id',sess.user.id).maybeSingle();
-  const d=pr.data||{};
+  const pr=await supabase.from('profiles').select('*').eq('id',sess.user.id).maybeSingle();
+  const d=(pr&&pr.data!==undefined?pr.data:pr)||{};
+    /* Owner fallback: if profile row incomplete, set canonical values */
+    if(d.is_owner){
+      d.display_name=d.display_name||'Major Sleiman Youssef Dagher';
+      d.sign=d.sign||'Aries';d.element=d.element||'fire';
+      d.god=d.god||'Ares';d.agent=d.agent||'Sentinel';
+      d.axis_a=d.axis_a||9.000;d.axis_b=d.axis_b||9.000;d.axis_c=d.axis_c||9.000;
+      d.authority=d.authority||27.8367;
+      d.trophies_earned=d.trophies_earned||12;
+      d.medals_earned=d.medals_earned||12;
+      d.certificates_earned=d.certificates_earned||12;
+      d.nodes_earned=d.nodes_earned||104976;
+      d.subscription_tier=d.subscription_tier||'sovereign';
+    }
   const a=Number(d.axis_a||0.001), b=Number(d.axis_b||0.001), c=Number(d.axis_c||0.001);
   const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
   const name=d.display_name || (d.is_owner?'Major Sleiman Youssef Dagher':'Sovereign');
   const bound = d.sign && BOUND[d.sign];
 
-  document.getElementById('hero-title').textContent = d.is_owner ? 'Sovereign Command' : ('Welcome, '+name);
+  document.getElementById('hero-title').textContent = d.is_owner ? 'MAJOR SLEIMAN YOUSSEF DAGHER' : name;
   document.getElementById('hero-sub').innerHTML = d.is_owner
     ? 'PLATFORM IDENTITY: OMEGA-91717-SYD-001<br>OWNER: MAJOR SLEIMAN YOUSSEF DAGHER<br>LEVEL: 9.9.9 // AUTHORITY: 27.8367 // ALL-TIME ACCESS'
     : ('YOUR STANDING<br>AUTHORITY: '+fmt(auth)+' / 27.8367');
@@ -649,5 +662,6 @@ document.getElementById('open-full-grid').addEventListener('click',function(){
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<span data-canon-lattice="twelve" style="display:none"></span>
 </body>
 </html>

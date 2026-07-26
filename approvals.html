@@ -1,141 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 -- Owner Console</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 &mdash; Owner Console</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+:root{
+  --void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;
+  --cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;
+  --ink:#e9e6dc;--line:rgba(201,168,76,.15);
+  --D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+
+/* GATE */
+#gate{
+  display:none;position:fixed;inset:0;
+  background:rgba(2,2,6,.97);z-index:9999;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;
+}
+.gate-omega{font-family:var(--D);font-size:64px;line-height:1}
+.gate-title{font-family:var(--D);font-size:20px;letter-spacing:.08em}
+.gate-sub{font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;line-height:1.8}
+
+/* SHELL */
 .shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{
+  background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);
+  padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:50;flex-wrap:wrap;
+}
+.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1;line-height:1.2}
+.t small{display:block;font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+
+/* OWNER IDENTITY STRIP */
+.owner-strip{
+  display:flex;align-items:center;gap:16px;
+  padding:14px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(201,168,76,.07),rgba(10,10,15,.8),rgba(139,0,0,.05));
+}
+.owner-badge{
+  font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--gold);
+  border:1px solid rgba(201,168,76,.4);padding:5px 12px;border-radius:2px;
+  background:rgba(201,168,76,.06);white-space:nowrap;flex-shrink:0;
+}
+.owner-apex{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);line-height:1.9}
+.owner-apex strong{color:var(--gold)}
+.owner-apex span{color:var(--cyan)}
+.owner-right{margin-left:auto;text-align:right}
+.owner-auth{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1}
+.owner-auth-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+
+/* STATS BAR */
 .stats-bar{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--line)}
-.sc{padding:16px clamp(10px,2vw,20px);border-right:1px solid var(--line);text-align:center}
-.sc:last-child{border-right:none}
-.sn{font-family:var(--D);font-size:clamp(14px,2.5vw,22px);color:var(--gold)}
-.sl{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.ctab-row{display:flex;border-bottom:1px solid var(--line);overflow-x:auto;background:rgba(10,10,15,.4)}
-.ctab{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap;transition:.2s}
-.ctab.on{border-bottom-color:var(--gold);color:var(--gold)}
-.ctab-panel{display:none;padding:clamp(14px,3vw,36px)}
-.ctab-panel.on{display:block}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.mem-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid rgba(201,168,76,.07);border-radius:2px;background:rgba(10,10,15,.4);margin-bottom:7px;transition:background .18s;flex-wrap:wrap}
-.mem-row:hover{background:rgba(201,168,76,.03)}
-.mc-name{font-family:var(--D);font-size:12px;color:var(--gold);min-width:100px}
-.mc-email{font-family:var(--M);font-size:9px;color:var(--muted);flex:1}
-.mc-pill{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:2px 8px;border:1px solid;border-radius:2px}
-.mc-pill.pending{color:var(--solar);border-color:rgba(226,200,109,.4)}
-.mc-pill.approved{color:var(--green);border-color:rgba(63,178,127,.4)}
-.mc-pill.rejected{color:var(--crim);border-color:rgba(139,0,0,.4)}
-.action-btn{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:transparent;cursor:pointer;border-radius:2px;transition:.2s;white-space:nowrap}
-.action-btn:hover{background:rgba(201,168,76,.12)}.action-btn:disabled{opacity:.35;cursor:default}
-.queue-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid rgba(201,168,76,.07);border-radius:2px;background:rgba(10,10,15,.4);margin-bottom:8px;flex-wrap:wrap}
-.queue-id{font-family:var(--M);font-size:9px;color:var(--solar);width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis}
-.queue-lbl{flex:1;font-size:13px}
-.queue-status{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:2px 8px;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px}
-.audit-row{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px}
-.audit-row:hover{background:rgba(201,168,76,.03)}
+.stat-cell{padding:14px clamp(10px,2vw,20px);border-right:1px solid var(--line);text-align:center}
+.stat-cell:last-child{border-right:none}
+.stat-n{font-family:var(--D);font-size:clamp(16px,2.5vw,24px);line-height:1}
+.stat-l{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+
+/* HERO CANVAS */
+.hero-band{
+  display:grid;grid-template-columns:1fr 100px 1fr;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(139,0,0,.06),rgba(10,10,15,.85),rgba(201,168,76,.03));
+}
+.hb-left{padding:16px clamp(14px,2.5vw,28px);border-right:1px solid var(--line)}
+.hb-right{padding:16px clamp(14px,2.5vw,28px);border-left:1px solid var(--line);text-align:right}
+.hb-center{display:flex;align-items:center;justify-content:center}
+.hb-stat{font-family:var(--D);font-size:clamp(13px,2vw,18px);color:var(--gold);line-height:1}
+.hb-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
+
+/* TABS */
+.tab-bar{display:flex;border-bottom:1px solid var(--line);overflow-x:auto;background:rgba(10,10,15,.4);flex-shrink:0}
+.tab-btn{
+  font-family:var(--M);font-size:9px;letter-spacing:2px;
+  padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;
+  color:var(--muted);white-space:nowrap;transition:.2s;background:none;border-top:none;border-left:none;border-right:none;
+}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold)}
+.tab-panel{display:none;padding:clamp(14px,3vw,36px);flex:1}
+.tab-panel.on{display:block}
+
+/* SECTION HEAD */
+.sechead{
+  font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);
+  padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+
+/* MEMBER CARDS */
+#member-list{display:flex;flex-direction:column;gap:10px}
+.member-card{
+  border:1px solid var(--line);background:rgba(10,10,15,.5);
+  border-radius:2px;overflow:hidden;transition:border-color .2s;
+}
+.member-card:hover{border-color:rgba(201,168,76,.3)}
+.mc-top{display:flex;align-items:flex-start;gap:14px;padding:14px 16px}
+.mc-avatar{
+  width:40px;height:40px;border-radius:50%;border:1.5px solid;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--D);font-size:14px;flex-shrink:0;
+}
+.mc-info{flex:1;min-width:0}
+.mci-name{font-family:var(--D);font-size:12px;letter-spacing:.04em;margin-bottom:2px}
+.mci-email{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.mc-pill{
+  font-family:var(--M);font-size:8px;letter-spacing:2px;
+  padding:3px 10px;border:1px solid;border-radius:2px;white-space:nowrap;
+}
+.mc-timer{font-family:var(--M);font-size:11px;font-weight:700;margin-top:6px}
+.mc-timer-label{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+/* TIMELINE */
+.mc-timeline{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 14px;
+  padding:10px 16px;background:rgba(2,2,6,.4);border-top:1px solid rgba(201,168,76,.07);
+}
+.tl-row{display:flex;flex-direction:column;gap:2px}
+.tl-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.tl-val{font-family:var(--M);font-size:9px;letter-spacing:.5px}
+
+/* ACTION BUTTONS */
+.mc-actions{
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:10px 16px;border-top:1px solid rgba(201,168,76,.07);
+  background:rgba(10,10,15,.3);
+}
+.action-btn{
+  font-family:var(--M);font-size:8px;letter-spacing:1.5px;
+  padding:6px 12px;border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);background:transparent;cursor:pointer;
+  border-radius:2px;transition:.2s;white-space:nowrap;
+}
+.action-btn:hover{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.5)}
+.action-btn:disabled{opacity:.35;cursor:default}
+.btn-approve{border-color:rgba(63,178,127,.5)!important;color:var(--green)!important}
+.btn-approve:hover{background:rgba(63,178,127,.1)!important}
+.btn-permanent{border-color:rgba(201,168,76,.6)!important;color:var(--gold)!important;font-weight:700}
+.btn-renew{border-color:rgba(0,229,255,.4)!important;color:var(--cyan)!important}
+.btn-renew:hover{background:rgba(0,229,255,.08)!important}
+.btn-reject,.btn-revoke{border-color:rgba(139,0,0,.5)!important;color:var(--crim)!important}
+.btn-reject:hover,.btn-revoke:hover{background:rgba(139,0,0,.1)!important}
+.btn-extend{border-color:rgba(0,229,255,.3)!important;color:var(--cyan)!important}
+
+/* QUEUE ROWS */
+.queue-row{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border:1px solid rgba(201,168,76,.07);border-radius:2px;
+  background:rgba(10,10,15,.4);margin-bottom:8px;flex-wrap:wrap;
+}
+.q-id{font-family:var(--M);font-size:9px;color:var(--solar);width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis}
+.q-lbl{flex:1;font-size:13px}
+.q-status{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:2px 8px;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px}
+
+/* AUDIT */
+.audit-row{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.06)}
+.audit-row:hover{background:rgba(201,168,76,.02)}
 .audit-time{font-family:var(--M);font-size:8px;color:var(--muted);width:90px;flex-shrink:0}
-.audit-evt{flex:1;color:var(--cyan)}
-.audit-uid{font-family:var(--M);font-size:8px;color:var(--muted);width:70px;overflow:hidden;text-overflow:ellipsis}
-.err-row{padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.06)}
-.err-row:hover{background:rgba(139,0,0,.03)}
-.err-msg{color:var(--crim);font-family:var(--M);font-size:9px}
-.err-ctx{color:var(--muted);font-size:10px;margin-top:2px}
+.audit-evt{flex:1;font-size:12px;color:var(--cyan)}
+.audit-uid{font-family:var(--M);font-size:8px;color:var(--muted);max-width:80px;overflow:hidden;text-overflow:ellipsis}
+
+/* DISPATCH FORM */
 .disp-form{display:flex;flex-direction:column;gap:12px;max-width:640px}
-.disp-form input,.disp-form textarea,.disp-form select{background:rgba(201,168,76,.06);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:1px;padding:10px 14px;border-radius:2px;outline:none;transition:border .2s;width:100%}
+.disp-form input,.disp-form textarea,.disp-form select{
+  background:rgba(201,168,76,.06);border:1px solid var(--line);
+  color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:1px;
+  padding:10px 14px;border-radius:2px;outline:none;transition:border .2s;width:100%;
+}
 .disp-form input:focus,.disp-form textarea:focus,.disp-form select:focus{border-color:rgba(201,168,76,.4)}
 .disp-form textarea{min-height:100px;resize:vertical}
-.send-btn{font-family:var(--M);font-size:10px;letter-spacing:2px;padding:11px 24px;border:1px solid var(--gold);color:var(--gold);background:rgba(201,168,76,.08);cursor:pointer;border-radius:2px;transition:.2s;align-self:flex-start}
+.send-btn{
+  font-family:var(--M);font-size:10px;letter-spacing:2px;
+  padding:11px 24px;border:1px solid var(--gold);color:var(--gold);
+  background:rgba(201,168,76,.08);cursor:pointer;border-radius:2px;transition:.2s;align-self:flex-start;
+}
 .send-btn:hover{background:rgba(201,168,76,.18)}
-@media(max-width:760px){.stats-bar{grid-template-columns:repeat(3,1fr)}}
+
+/* ERRORS */
+.err-row{padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.06)}
+.err-row:hover{background:rgba(139,0,0,.04)}
+.err-msg{color:var(--crim);font-family:var(--M);font-size:9px;letter-spacing:.5px}
+.err-ctx{color:var(--muted);font-size:10px;margin-top:2px}
+
+/* EMPTY */
+.empty-state{font-family:var(--M);font-size:10px;color:var(--muted);padding:24px;text-align:center;letter-spacing:1.5px}
+
+/* BADGE ALERTS */
+.alert-badge{
+  font-family:var(--M);font-size:9px;letter-spacing:1.5px;
+  padding:6px 14px;border-radius:2px;border:1px solid;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.alert-badge.pending{color:var(--solar);border-color:rgba(226,200,109,.4);background:rgba(226,200,109,.06)}
+.alert-badge.active{color:var(--green);border-color:rgba(63,178,127,.4);background:rgba(63,178,127,.06)}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:9000;
+  font-family:var(--M);font-size:10px;letter-spacing:2px;
+  padding:10px 18px;border-radius:2px;background:rgba(10,10,15,.92);
+  border:1px solid rgba(201,168,76,.3);color:var(--gold);
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+
+/* FOOTER */
+.lf{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);
+  flex-wrap:wrap;margin-top:auto;
+}
+.lf span{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
+
+@media(max-width:760px){
+  .stats-bar{grid-template-columns:repeat(3,1fr)}
+  .mc-top{flex-direction:column}
+  .hero-band{display:none}
+  .mc-timeline{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
+<!-- GATE (access denied for non-owners) -->
+<div id="gate" style="display:none">
+  <div class="gate-omega" style="color:var(--crim)">&#937;</div>
+  <div class="gate-title" style="color:var(--crim)">ACCESS DENIED</div>
+  <div class="gate-sub">
+    THIS CONSOLE IS RESTRICTED TO THE INVISIBLE ARCHITECT<br>
+    MAJOR SLEIMAN YOUSSEF DAGHER &mdash; EXCLUSIVELY<br><br>
+    <a href="/dashboard.html" style="font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--muted);padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MAIN APP -->
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="approvals"></aside>
   <main class="main" id="main">
-    <div class="topbar"><div class="t">OWNER CONSOLE<small>INVISIBLE ARCHITECT &middot; SOVEREIGN CONTROL &middot; AUDIT LOG <span data-canon-lattice="twelve"></span></small></div></div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="t">
+        INVISIBLE ARCHITECT CONSOLE
+        <small>SOVEREIGN ACCESS CONTROL &middot; OWNER-ONLY &middot; ALL-TIME ACCESS &middot; <span data-canon-lattice="twelve"></span></small>
+      </div>
+      <canvas id="topbar-cv" width="60" height="60" style="width:30px;height:30px;flex-shrink:0;opacity:.7"></canvas>
+    </div>
+
+    <!-- OWNER IDENTITY STRIP -->
+    <div class="owner-strip">
+      <div class="owner-badge">&#937; MAJOR SLEIMAN YOUSSEF DAGHER</div>
+      <div class="owner-apex">
+        <strong>ARIES</strong> &middot; FIRE &middot; ARES &middot; SENTINEL &middot; ARENITE<br>
+        <span>A&#179;=B&#179;=C&#179;=729</span> &middot; sqrt(2187)&times;&phi;/e &middot; AUTH=27.8367 &middot; APEX<br>
+        LIFETIME ACCESS &middot; ALL-TIME &middot; IRREVOCABLE &middot; &#937; 9.9.9
+      </div>
+      <div class="owner-right">
+        <div class="owner-auth">27.8367</div>
+        <div class="owner-auth-lbl">AUTHORITY APEX</div>
+      </div>
+    </div>
+
+    <!-- STATS BAR -->
     <div class="stats-bar" id="stats-bar">
-      <div class="sc"><div class="sn" id="stat-pending">--</div><div class="sl">PENDING</div></div>
-      <div class="sc"><div class="sn" id="stat-active">--</div><div class="sl">TRIAL</div></div>
-      <div class="sc"><div class="sn" id="stat-approved">--</div><div class="sl">APPROVED</div></div>
-      <div class="sc"><div class="sn" id="stat-rejected">--</div><div class="sl">REJECTED</div></div>
-      <div class="sc"><div class="sn" id="stat-total">--</div><div class="sl">TOTAL</div></div>
+      <div class="stat-cell"><div class="stat-n" id="stat-pending" style="color:var(--crim)">--</div><div class="stat-l">PENDING</div></div>
+      <div class="stat-cell"><div class="stat-n" id="stat-active" style="color:var(--green)">--</div><div class="stat-l">TRIAL ACTIVE</div></div>
+      <div class="stat-cell"><div class="stat-n" id="stat-approved" style="color:var(--cyan)">--</div><div class="stat-l">PERMANENT</div></div>
+      <div class="stat-cell"><div class="stat-n" id="stat-rejected" style="color:var(--muted)">--</div><div class="stat-l">REJECTED</div></div>
+      <div class="stat-cell"><div class="stat-n" id="stat-total" style="color:var(--gold)">--</div><div class="stat-l">TOTAL MEMBERS</div></div>
     </div>
-    <div class="ctab-row">
-      <div class="ctab on" data-ctab="members">MEMBERS</div>
-      <div class="ctab" data-ctab="contracts">CONTRACTS</div>
-      <div class="ctab" data-ctab="reservations">RESERVATIONS</div>
-      <div class="ctab" data-ctab="dispatch">DISPATCH</div>
-      <div class="ctab" data-ctab="audit">AUDIT LOG</div>
-      <div class="ctab" data-ctab="errors">ERRORS</div>
+
+    <!-- HERO CANVAS BAND -->
+    <div class="hero-band">
+      <div class="hb-left">
+        <div class="hb-stat" id="hb-access">-- MEMBERS</div>
+        <div class="hb-lbl">IN THE ORDER</div>
+      </div>
+      <div class="hb-center">
+        <canvas id="hero-cv" width="120" height="120" style="width:60px;height:60px;display:block"></canvas>
+      </div>
+      <div class="hb-right">
+        <div class="hb-stat" id="hb-pending" style="color:var(--crim)">--</div>
+        <div class="hb-lbl">AWAITING DECISION</div>
+      </div>
     </div>
-    <div class="ctab-panel on" id="ctab-members">
-      <div class="sechead"><span>ALL MEMBERS</span><button class="action-btn" onclick="loadMembers()">&#8635; REFRESH</button></div>
-      <div id="badge-pending" style="display:none;font-family:var(--M);font-size:10px;color:var(--solar);margin-bottom:14px">&#9651; PENDING APPROVALS</div>
-      <div id="badge-active" style="display:none;font-family:var(--M);font-size:10px;color:var(--cyan);margin-bottom:14px">&#9679; TRIAL MEMBERS ACTIVE</div>
-      <div id="member-list"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING...</div></div>
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-btn on" data-tab="members">MEMBERS</button>
+      <button class="tab-btn" data-tab="contracts">CONTRACTS</button>
+      <button class="tab-btn" data-tab="reservations">RESERVATIONS</button>
+      <button class="tab-btn" data-tab="dispatch">DISPATCH</button>
+      <button class="tab-btn" data-tab="audit">AUDIT LOG</button>
+      <button class="tab-btn" data-tab="errors">ERRORS</button>
     </div>
-    <div class="ctab-panel" id="ctab-contracts">
-      <div class="sechead"><span>CONTRACT QUEUE</span><button class="action-btn" onclick="loadContracts()">&#8635; REFRESH</button></div>
-      <div id="contracts-queue"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">Loading...</div></div>
+
+    <!-- TAB: MEMBERS -->
+    <div class="tab-panel on" id="tab-members">
+      <div class="sechead">
+        <span>ACCESS CONTROL &mdash; ALL MEMBERS</span>
+        <button class="action-btn" onclick="load()">&#8635; REFRESH</button>
+      </div>
+      <div id="badge-pending" class="alert-badge pending" style="display:none">
+        &#9651; MEMBERS AWAITING APPROVAL
+      </div>
+      <div id="badge-active" class="alert-badge active" style="display:none">
+        &#9679; TRIAL SESSIONS ACTIVE
+      </div>
+      <div id="member-list"><div class="empty-state">LOADING MEMBERS...</div></div>
     </div>
-    <div class="ctab-panel" id="ctab-reservations">
-      <div class="sechead"><span>RESERVATION QUEUE</span><button class="action-btn" onclick="loadReservations()">&#8635; REFRESH</button></div>
-      <div id="reservations-queue"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">Loading...</div></div>
+
+    <!-- TAB: CONTRACTS -->
+    <div class="tab-panel" id="tab-contracts">
+      <div class="sechead">
+        <span>CONTRACT QUEUE</span>
+        <button class="action-btn" onclick="loadContracts()">&#8635; REFRESH</button>
+      </div>
+      <div id="contracts-queue"><div class="empty-state">LOADING...</div></div>
     </div>
-    <div class="ctab-panel" id="ctab-dispatch">
-      <div class="sechead">POST DISPATCH</div>
+
+    <!-- TAB: RESERVATIONS -->
+    <div class="tab-panel" id="tab-reservations">
+      <div class="sechead">
+        <span>RESERVATION QUEUE</span>
+        <button class="action-btn" onclick="loadReservations()">&#8635; REFRESH</button>
+      </div>
+      <div id="reservations-queue"><div class="empty-state">LOADING...</div></div>
+    </div>
+
+    <!-- TAB: DISPATCH -->
+    <div class="tab-panel" id="tab-dispatch">
+      <div class="sechead">POST SOVEREIGN DISPATCH</div>
       <div class="disp-form">
         <input type="text" id="disp-title" placeholder="DISPATCH TITLE" autocomplete="off">
-        <select id="disp-category"><option value="">SELECT CATEGORY</option><option>SOVEREIGN DECREE</option><option>SYSTEM UPDATE</option><option>MARKET SIGNAL</option><option>HERITAGE NOTE</option></select>
-        <textarea id="disp-body" placeholder="DISPATCH BODY..."></textarea>
+        <select id="disp-category">
+          <option value="">SELECT CATEGORY</option>
+          <option>SOVEREIGN DECREE</option>
+          <option>SYSTEM UPDATE</option>
+          <option>MARKET SIGNAL</option>
+          <option>HERITAGE NOTE</option>
+          <option>ORDER ANNOUNCEMENT</option>
+        </select>
+        <textarea id="disp-body" placeholder="SOVEREIGN DISPATCH CONTENT..."></textarea>
         <button class="send-btn" id="disp-send">&#9654; TRANSMIT DISPATCH</button>
       </div>
     </div>
-    <div class="ctab-panel" id="ctab-audit">
-      <div class="sechead"><span>ACCESS AUDIT LOG</span><button class="action-btn" id="audit-refresh" onclick="loadAudit()">&#8635; REFRESH</button></div>
-      <div id="audit-list"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING...</div></div>
+
+    <!-- TAB: AUDIT LOG -->
+    <div class="tab-panel" id="tab-audit">
+      <div class="sechead">
+        <span>ACCESS AUDIT LOG</span>
+        <button class="action-btn" id="audit-refresh" onclick="loadAudit()">&#8635; REFRESH</button>
+      </div>
+      <div id="audit-list"><div class="empty-state">LOADING AUDIT LOG...</div></div>
     </div>
-    <div class="ctab-panel" id="ctab-errors">
-      <div class="sechead"><span>CLIENT ERROR MONITOR</span><button class="action-btn" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button></div>
-      <div id="err-list"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING...</div></div>
+
+    <!-- TAB: ERRORS -->
+    <div class="tab-panel" id="tab-errors">
+      <div class="sechead">
+        <span>CLIENT ERROR MONITOR</span>
+        <button class="action-btn" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button>
+      </div>
+      <div id="err-list"><div class="empty-state">LOADING ERRORS...</div></div>
     </div>
+
     <div data-page-emblem="approvals" style="margin:20px auto 0"></div>
-  
-    <div style="display:flex;justify-content:center;padding:14px 0 6px;border-top:1px solid rgba(201,168,76,.12)">
-      <canvas id="pgcv_approvals" width="72" height="72" style="width:36px;height:36px;opacity:.55"></canvas>
+    <div class="lf">
+      <span>&#937; SYD OMEGA 91717 &middot; INVISIBLE ARCHITECT CONSOLE</span>
+      <span>MAJOR SLEIMAN YOUSSEF DAGHER &middot; ALL-TIME ACCESS &middot; APEX 27.8367</span>
     </div>
-    <script>(function(){{var cv=document.getElementById('pgcv_approvals');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;function f(){{ctx.clearRect(0,0,72,72);for(var i=0;i<6;i++){{ctx.beginPath();ctx.arc(36,36,12+i*4+3*Math.sin(t*.03+i),t*.007,t*.007+Math.PI*(.45+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.8;ctx.stroke();}}ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.6+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=8;ctx.fillText('\u03A9',36,36);ctx.shadowBlur=0;t++;requestAnimationFrame(f);}}f();}})();</script></main>
+  </main>
 </div>
+
+<!-- CANVAS ANIMATIONS -->
 <script>
-document.querySelectorAll('.ctab').forEach(function(b){b.addEventListener('click',function(){
-  document.querySelectorAll('.ctab').forEach(function(x){x.classList.remove('on');});
-  document.querySelectorAll('.ctab-panel').forEach(function(x){x.classList.remove('on');});
-  b.classList.add('on');var p=document.getElementById('ctab-'+b.dataset.ctab);if(p)p.classList.add('on');
-});});
-document.addEventListener('click',function(ev){
-  var btn=ev.target&&ev.target.closest?ev.target.closest('button.action-btn[data-kind][data-id][data-status]'):null;
-  if(!btn)return;
-  var kind=btn.getAttribute('data-kind'),id=btn.getAttribute('data-id'),status=btn.getAttribute('data-status');
-  var FN={contract:'set_contract_status',reservation:'set_reservation_status',consult:'set_consult_status'};
-  var fn=FN[kind];if(!fn)return;
-  btn.disabled=true;var orig=btn.textContent;btn.textContent='...';
-  var sbp=window.OmegaSB?window.OmegaSB.get():Promise.resolve(window.__omegaSb);
-  sbp.then(function(sb){return sb.rpc(fn,{p_id:id,p_status:status}).then(function(r){
-    if(r.error)throw r.error;
-    if(kind==='contract'&&typeof loadContracts==='function')loadContracts();
-    else if(kind==='reservation'&&typeof loadReservations==='function')loadReservations();
-  });}).catch(function(e){alert('Could not update: '+(e.message||'unavailable'));btn.textContent=orig;btn.disabled=false;});
+(function(){
+  /* Topbar mini ring */
+  var cv=document.getElementById('topbar-cv');
+  if(cv&&cv.getContext){
+    var ctx=cv.getContext('2d'),t=0;
+    (function f(){ctx.clearRect(0,0,60,60);for(var i=0;i<5;i++){ctx.beginPath();ctx.arc(30,30,8+i*4+2*Math.sin(t*.04+i),t*.012*((i%2)?1:-1),t*.012*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.03+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.12*(5-i)/5)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 10px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.fillText('Ω',30,30);t++;requestAnimationFrame(f);})();
+  }
+  /* Hero ring */
+  var hv=document.getElementById('hero-cv');
+  if(hv&&hv.getContext){
+    var hctx=hv.getContext('2d'),ht=0;
+    (function g(){hctx.clearRect(0,0,120,120);for(var i=0;i<8;i++){hctx.beginPath();hctx.arc(60,60,16+i*5+3*Math.sin(ht*.03+i),ht*.008*((i%2)?1:-1),ht*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(ht*.02+i)));hctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(8-i)/8)+')';hctx.lineWidth=.8;hctx.stroke();}hctx.font='bold 20px "Cinzel Decorative",serif';hctx.textAlign='center';hctx.textBaseline='middle';hctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(ht*.04))+')';hctx.shadowColor='#C9A84C';hctx.shadowBlur=10;hctx.fillText('Ω',60,60);hctx.shadowBlur=0;ht++;requestAnimationFrame(g);})();
+  }
+})();
+/* Tab switching */
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');});
+    document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+    btn.classList.add('on');
+    var panel=document.getElementById('tab-'+btn.dataset.tab);
+    if(panel)panel.classList.add('on');
+  });
 });
 </script>
 <script type="module">
@@ -593,8 +864,13 @@ window.loadContracts=typeof loadContracts!=='undefined'?loadContracts:function()
 window.loadReservations=typeof loadReservations!=='undefined'?loadReservations:function(){};
 window.loadAudit=typeof loadAudit!=='undefined'?loadAudit:function(){};
 window.loadErrors=typeof loadErrors!=='undefined'?loadErrors:function(){};
+
+/* ---- EXPOSE TO WINDOW ---- */
+window.load=load;
+window.loadContracts=typeof loadContracts!=='undefined'?loadContracts:function(){};
+window.loadReservations=typeof loadReservations!=='undefined'?loadReservations:function(){};
+window.loadAudit=typeof loadAudit!=='undefined'?loadAudit:function(){};
+window.loadErrors=typeof loadErrors!=='undefined'?loadErrors:function(){};
 </script>
-<div id="gate" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.95);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:16px"></div>
-<div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:1000;font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;padding:10px 18px;border-radius:2px;background:rgba(10,10,15,.9);border:1px solid rgba(201,168,76,.3);color:#C9A84C;opacity:0;transition:opacity .3s;pointer-events:none"></div>
 </body>
 </html>

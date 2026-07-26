@@ -274,7 +274,9 @@
 (function(){if(!document.querySelector('script[data-omega-audio]')){var s=document.createElement('script');s.src='/audio.js';s.setAttribute('data-omega-audio','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== MULTI-LANGUAGE -- translation engine on every page (EN / AR-RTL / FR / ES).
    Its own visible language box is disabled -- same reason as above. ===== */
-(function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}
+if(!document.querySelector('script[data-omega-user]')){var su=document.createElement('script');su.src='/omega-user.js';su.setAttribute('data-omega-user','1');su.defer=true;if(document.body)document.body.appendChild(su);}
+if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createElement('script');sc2.src='/omega-controls.js';sc2.setAttribute('data-omega-ctrl','1');sc2.defer=true;if(document.body)document.body.appendChild(sc2);}})();
 /* ===== GENESIS VISUAL ENGINE -- make every page alive (armillary, particles, cinematic depth) ===== */
 (function(){if(!document.querySelector('script[data-omega-genesis]')){var s=document.createElement('script');s.src='/omega-genesis.js';s.setAttribute('data-omega-genesis','1');if(document.body)document.body.appendChild(s);}})();
 /* ===== HERO BAND DATA WIRE -- populates ohb-l/ohb-r stat boxes ===== */

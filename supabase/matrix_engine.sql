@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS public.task_completions(
   metadata      jsonb
 );
 ALTER TABLE public.task_completions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "members see own tasks" ON public.task_completions;
+DROP POLICY IF EXISTS "members insert own tasks" ON public.task_completions;
+DROP POLICY IF EXISTS "owner sees all tasks" ON public.task_completions;
 CREATE POLICY "members see own tasks"   ON public.task_completions FOR SELECT USING (user_id=auth.uid());
 CREATE POLICY "members insert own tasks" ON public.task_completions FOR INSERT WITH CHECK (user_id=auth.uid());
 CREATE POLICY "owner sees all tasks"    ON public.task_completions FOR SELECT USING (public.is_platform_owner());

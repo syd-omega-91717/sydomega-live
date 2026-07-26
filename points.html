@@ -105,7 +105,14 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- LATTICE MAP (9x9 inner cube preview) -->
     <div class="sec">
       <div class="sechead">LATTICE PLANE &middot; 9&#215;9 INNER CUBE (AXIS A KNOWLEDGE)</div>
-      <div class="lattice-wrap"><div id="lattice-grid"></div></div>
+      <div class="lattice-wrap"><div style="margin-bottom:16px">
+  <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">INNER CUBE &middot; 9&times;9&times;9 = 729 NODES (THE PLANE)</div>
+  <div id="lattice-plane" data-lattice="plane" data-nodes="0" style="overflow-x:auto"></div>
+</div>
+<div style="margin-top:16px">
+  <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">CANONICAL TRACK GRID &middot; 12&times;12&times;9&times;9&times;9 = 104,976 NODES</div>
+  <div id="lattice-canonical" data-lattice="canonical" data-nodes="0"></div>
+</div></div>
     </div>
 
     <!-- TASK LOG -->
@@ -216,22 +223,9 @@ function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-di
     /* radar */
     if(window.__setRadar)window.__setRadar(a,b,c);
     /* lattice grid: 9x9 inner cube nodes */
-    var grid=document.getElementById('lattice-grid');
-    if(grid){
-      var nodesEarned=Number(pr.nodes_earned||0);
-      var html='';
-      for(var row=0;row<9;row++){
-        html+='<div class="lattice-row">';
-        for(var col=0;col<9;col++){
-          var idx=row*9+col;
-          var pct=nodesEarned/81;
-          var cls=idx<Math.floor(pct*81)?'ln earned':idx===Math.floor(pct*81)?'ln active':'ln';
-          html+='<div class="'+cls+'" title="Node '+(idx+1)+'/81"></div>';
-        }
-        html+='</div>';
-      }
-      grid.innerHTML=html;
-    }
+    /* Lattice rendered by omega-lattice.js via data-lattice attribute */
+    if(window.renderLattice9x9)window.renderLattice9x9(document.getElementById('lattice-plane'),nodes,{total:729});
+    if(window.renderTrackGrid)window.renderTrackGrid(document.getElementById('lattice-canonical'),'canonical',nodes);
     /* task log */
     var log=document.getElementById('task-log');
     try{
@@ -257,6 +251,29 @@ function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-di
       if(log)log.innerHTML='<div class="task-row"><div class="task-type" style="background:rgba(201,168,76,.12);color:var(--gold)">KNOWLEDGE</div><div class="task-name">GENESIS ENTRY &middot; MATRIX INITIALIZED</div><div class="task-pts">+'+a.toFixed(3)+'</div><div class="task-date">--</div></div>';
     }
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();</script>
+<script>
+/* omega-user: populate after module loads */
+(function tryPop(){
+  if(document.readyState!=='complete'){window.addEventListener('load',tryPop);return;}
+  var tries=0;
+  var iv=setInterval(function(){
+    tries++;
+    if(window.__omegaPopulate&&window.__omegaSb){
+      window.__omegaSb.auth.getSession().then(function(resp){
+        var sess=resp.data&&resp.data.session;
+        if(!sess)return;
+        return window.__omegaSb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()
+          .then(function(r){
+            var pr=r.data||{};
+            if(!pr.id)return;
+            window.__omegaPopulate(pr,sess.user);
+          });
+      }).catch(function(){});
+      clearInterval(iv);
+    }
+    if(tries>30)clearInterval(iv);
+  },200);
 })();
 </script>
 </body>

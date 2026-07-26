@@ -1553,7 +1553,8 @@ async function buildMembershipCard(){
     '</div>'+
     '<div style="margin-top:10px"><a href="/subscriptions.html" style="color:var(--cyan);font-size:12px">Manage or change your tier &rarr;</a></div>';
 }
-boot();
+/* boot() removed -- module self-initialises via IIFE below */;
+(async()=>{try{const s=(await sb.auth.getSession()).data.session;if(!s)return;const pr=(await sb.from('profiles').select('subscription_tier,subscription_period_end,is_owner').eq('id',s.user.id).maybeSingle()).data||{};const ti=document.getElementById('sub-tier');if(ti)ti.textContent=(pr.subscription_tier||'free').toUpperCase();const en=document.getElementById('sub-end');if(en&&pr.subscription_period_end)en.textContent=new Date(pr.subscription_period_end).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){console.log('sub module:',e);}})();
 </script>
 <script>
 

@@ -13,12 +13,12 @@
 (function(){
 
 var SYSTEMS={
-  kings:        {outer:28,total:28*28*9*9*9, label:'28\u00d728\u00d79\u00d79\u00d79 = 571,536'},
-  microservices:{outer:21,total:21*21*9*9*9, label:'21\u00d721\u00d79\u00d79\u00d79 = 321,489'},
-  modules:      {outer:18,total:18*18*9*9*9, label:'18\u00d718\u00d79\u00d79\u00d79 = 236,196'},
-  canonical:    {outer:12,total:12*12*9*9*9, label:'12\u00d712\u00d79\u00d79\u00d79 = 104,976'},
-  ninefold:     {outer:9, total:9*9*9*9*9,   label:'9\u00d79\u00d79\u00d79\u00d79 = 59,049'},
-  plane:        {outer:9, total:9*9*9,        label:'9\u00d79\u00d79 = 729'},
+  kings:        {outer:28,total:571536 /*28*28*9*9*9*/, label:'28\u00d728\u00d79\u00d79\u00d79 = 571,536'},
+  microservices:{outer:21,total:321489 /*21*21*9*9*9*/, label:'21\u00d721\u00d79\u00d79\u00d79 = 321,489'},
+  modules:      {outer:18,total:236196 /*18*18*9*9*9*/, label:'18\u00d718\u00d79\u00d79\u00d79 = 236,196'},
+  canonical:    {outer:12,total:104976 /*12*12*9*9*9*/, label:'12\u00d712\u00d79\u00d79\u00d79 = 104,976'},
+  ninefold:     {outer:9, total:59049 /*9*9*9*9*9*/,   label:'9\u00d79\u00d79\u00d79\u00d79 = 59,049'},
+  plane:        {outer:9, total:729 /*9*9*9*/,        label:'9\u00d79\u00d79 = 729'},
 };
 
 /* ── Render a 9×9 inner lattice plane ──────────────────────────────── */

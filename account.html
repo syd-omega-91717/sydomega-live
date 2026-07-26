@@ -208,7 +208,7 @@
         <div class="coord"><span class="lbl">KNOWLEDGE (A)</span><span class="num" id="d-a">1.00</span></div>
         <div class="coord"><span class="lbl">MASTERY (B)</span><span class="num" id="d-b">1.00</span></div>
         <div class="coord"><span class="lbl">CONTRIBUTION (C)</span><span class="num" id="d-c">1.00</span></div>
-        <div class="coord"><span class="lbl">AUTHORITY &radic;(A&sup2;+B&sup2;+C&sup2;)</span><span class="num" id="d-auth">1.73</span></div>
+        <div class="coord"><span class="lbl">AUTHORITY &radic;(A&#179;+B&#179;+C&#179;)</span><span class="num" id="d-auth">1.73</span></div>
       </div>
       <div class="radar-wrap">
         <svg id="d-radar" viewBox="0 0 240 240" role="img" aria-label="Your matrix shape across Knowledge, Mastery, and Contribution">
@@ -217,7 +217,7 @@
           <g id="rdr-dots"></g>
         </svg>
       </div>
-      <div class="mrow">TIER: <b id="d-tier">1</b> &nbsp; . &nbsp; MATERIAL: <b id="d-material">Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX &radic;243 &asymp; <b>15.58</b> &nbsp; . &nbsp; NEXT MILESTONE: <b id="d-next">(3,3,3)</b></div>
+      <div class="mrow">TIER: <b id="d-tier">1</b> &nbsp; . &nbsp; MATERIAL: <b id="d-material">Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX &radic;2187 &asymp; <b>27.8367</b> &nbsp; . &nbsp; NEXT MILESTONE: <b id="d-next">(3,3,3)</b></div>
       <div class="ladder" id="d-ladder"></div>
     </div>
 
@@ -539,7 +539,7 @@
       return 'Focus on your weakest axis: '+low[0]+', at '+low[1].toFixed(2)+'. '+cap(adv[low[0]])+'. About '+eventsToNext+' event'+(eventsToNext===1?'':'s')+' lifts you to the next node.';
     }
     if(has('tier','rank','level','material','where','stand','position','authority','status')){
-      return 'You stand at Tier '+tier+', material '+material+', authority '+auth.toFixed(2)+' of the apex 15.58. Axes: Knowledge '+a.toFixed(2)+', Mastery '+b.toFixed(2)+', Contribution '+c.toFixed(2)+'.';
+      return 'You stand at Tier '+tier+', material '+material+', authority '+auth.toFixed(2)+' of the apex 27.8367. Axes: Knowledge '+a.toFixed(2)+', Mastery '+b.toFixed(2)+', Contribution '+c.toFixed(2)+'.';
     }
     return character+' Balance is the law of the matrix  --  your weakest axis is '+low[0]+' at '+low[1].toFixed(2)+'. Tend to it, and authority follows. Ask me "what should I focus on" for the path.';
   }

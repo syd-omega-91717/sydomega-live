@@ -78,7 +78,9 @@
     "axis_c_cube": "C^3=729.000 at apex (C=9)",
     "apex_raw": "sqrt(729+729+729)=sqrt(2187)=46.7654",
     "apex_scaled": "sqrt(2187)*phi/e=27.8367",
-    "apex_derivation": "A^3+B^3+C^3=2187 at apex; sqrt(2187)*1.6180339887/2.7182818285=27.836687"
+    "apex_derivation": "A^3+B^3+C^3=2187 at apex; sqrt(2187)*1.6180339887/2.7182818285=27.836687",
+    "member_genesis": "All new members start at axis_a=axis_b=axis_c=0.001. Progress by +0.001 per verified task. Apex=9.000.",
+    "owner_apex": "Owner (Sleiman Youssef Dagher) is permanently locked at axes (9.000,9.000,9.000), authority=27.8367, all 12 achievements complete."
   },
   "nine_fold": {
     "lattice": "9 x 9 x 9 x 9 x 9",
@@ -112,24 +114,104 @@
     "tier_enforcement_note": "OFF until payments activate. Paid tiers cannot be purchased while the checkout function is disabled, so enforcing paywalls now would lock every member out with no route forward. While false, [data-tier] content stays usable and shows a small 'TIER FEATURE' marker. Set true on the day the economy goes live to convert every marker on the platform into a real lock at once."
   },
   "elements": [
-    "FIRE",
-    "WATER",
-    "WIND",
-    "METAL",
-    "SAND",
-    "SOUL",
-    "SPACE",
-    "VOID",
-    "THE NINTH"
+    {
+      "n": 1,
+      "name": "FIRE",
+      "type": "physical",
+      "hex": "#e25b3a",
+      "signs": [
+        "Aries",
+        "Leo",
+        "Sagittarius"
+      ],
+      "note": "Ignition, will, sovereign force"
+    },
+    {
+      "n": 2,
+      "name": "WATER",
+      "type": "physical",
+      "hex": "#3b8bd8",
+      "signs": [
+        "Cancer",
+        "Scorpio",
+        "Pisces"
+      ],
+      "note": "Depth, memory, bloodline"
+    },
+    {
+      "n": 3,
+      "name": "WIND",
+      "type": "physical",
+      "hex": "#7bcfed",
+      "signs": [
+        "Gemini",
+        "Libra",
+        "Aquarius"
+      ],
+      "note": "Communication, intelligence, motion"
+    },
+    {
+      "n": 4,
+      "name": "METAL",
+      "type": "physical",
+      "hex": "#b0b5c3",
+      "signs": [
+        "Taurus",
+        "Capricorn"
+      ],
+      "note": "Structure, permanence, architecture"
+    },
+    {
+      "n": 5,
+      "name": "SAND",
+      "type": "physical",
+      "hex": "#C9A84C",
+      "signs": [
+        "Virgo"
+      ],
+      "note": "Foundation, precision, record"
+    },
+    {
+      "n": 6,
+      "name": "SOUL",
+      "type": "metaphysical",
+      "hex": "#9b59b6",
+      "signs": [],
+      "note": "Consciousness layer — class-assigned at Tier 6"
+    },
+    {
+      "n": 7,
+      "name": "SPACE",
+      "type": "metaphysical",
+      "hex": "#00E5FF",
+      "signs": [],
+      "note": "Expansion layer — class-assigned at Tier 7"
+    },
+    {
+      "n": 8,
+      "name": "VOID",
+      "type": "metaphysical",
+      "hex": "#020206",
+      "signs": [],
+      "note": "Transcendence layer — class-assigned at Tier 8"
+    },
+    {
+      "n": 9,
+      "name": "THE NINTH",
+      "type": "transcendent",
+      "hex": "#ffffff",
+      "signs": [],
+      "note": "Activates at Stage 9 for all sovereign members. Beyond classification."
+    }
   ],
   "tracks": [
     {
       "n": 1,
       "sign": "Aries",
       "god": "Ares",
-      "element": "Fire",
+      "element": "fire",
       "gate": "Gate of Ignition",
-      "token": "PYRON",
+      "token": "ARENITE",
       "agent": "Sentinel",
       "house": "First House",
       "medal": "Medal of Valor",
@@ -209,7 +291,7 @@
       "god": "Athena",
       "element": "Sand",
       "gate": "Gate of Precision",
-      "token": "ARENITE",
+      "token": "SANDITE",
       "agent": "Auditor",
       "house": "Sixth House",
       "medal": "Medal of Precision",
@@ -673,5 +755,62 @@
         "desc": "Integration complete -- the thing stands finished."
       }
     ]
-  }
+  },
+  "sovereign_articles": [
+    {
+      "n": 1,
+      "title": "ABSOLUTE OWNERSHIP",
+      "text": "100% Absolute Ownership — no co-founders, no partners, no dilution. The Order belongs wholly to Major Sleiman Youssef Dagher."
+    },
+    {
+      "n": 2,
+      "title": "MASTER STAKE",
+      "text": "51% Master Stake — 467,756,700,000 Ω permanently locked in the Sovereign Vault. Irrevocable."
+    },
+    {
+      "n": 3,
+      "title": "IRREVOCABLE PROPERTY",
+      "text": "Irrevocable Property Documents — hashed into the Genesis Block. Lebanese Order of Engineers No. 30875."
+    },
+    {
+      "n": 4,
+      "title": "SOVEREIGN DIRECTIVE",
+      "text": "999-Point Blueprint sealed in the Immutable Logic Layer. The architect's will governs all system evolution."
+    },
+    {
+      "n": 5,
+      "title": "THE Ω SIGNET",
+      "text": "The Omega Signet is the only recognized icon of sovereign power. All platforms, all marks, all authority flow through Ω."
+    },
+    {
+      "n": 6,
+      "title": "FAMILY NEST PROTOCOL",
+      "text": "Sovereigns-by-Blood receive zero fees, 100% compute priority, and permanent access to the Order's full stack."
+    },
+    {
+      "n": 7,
+      "title": "HERITAGE PROTOCOL",
+      "text": "The Dead-Man's Switch transfers full control to the bloodline. The Order persists across generations, sealed."
+    },
+    {
+      "n": 8,
+      "title": "STABILITY NET",
+      "text": "51% Safety Net — flash-crash protection via physical reserve holdings. Gold, Rhodium, Silver."
+    },
+    {
+      "n": 9,
+      "title": "REINVESTMENT SWEEP",
+      "text": "20% Reinvestment Sweep — automatic acquisition of sovereign-grade physical assets."
+    },
+    {
+      "n": 10,
+      "title": "JURISDICTION SOVEREIGNTY",
+      "text": "Automatic re-domicile protocol activates under hostile jurisdiction. The Order is beyond any single state."
+    },
+    {
+      "n": 11,
+      "title": "THE OMEGA POINT",
+      "text": "Node 999 confirms absolute completion. The Omega Point is the terminal state — total system sovereignty achieved."
+    }
+  ]
 }

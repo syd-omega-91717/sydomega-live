@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <link rel="manifest" href="/manifest.json"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -546,6 +546,34 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: MATRIX -->
     <div class="tab-panel" id="tab-matrix">
+<div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
+  <canvas id="cv-matx" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
+  <div>
+    <div style="font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--gold);margin-bottom:3px" id="hd-title-matx">&#937; SOVEREIGN ENGINE</div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
+  </div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="font-family:var(--D);font-size:18px;color:var(--gold)" id="hd-auth-matx">27.8367</div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
+  </div>
+</div>
+<script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+  <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+    <div style="font-family:var(--D);font-size:20px;color:var(--gold)" id="mat-a-disp">--</div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
+    <div style="height:3px;background:rgba(201,168,76,.08);margin-top:8px;border-radius:1px"><div id="mat-a-pb" style="height:100%;background:var(--gold);width:0%;transition:width 1s"></div></div>
+  </div>
+  <div style="border:1px solid rgba(0,229,255,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+    <div style="font-family:var(--D);font-size:20px;color:var(--cyan)" id="mat-b-disp">--</div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS B &middot; B&#179;=<span id="mat-b3">--</span></div>
+    <div style="height:3px;background:rgba(0,229,255,.06);margin-top:8px;border-radius:1px"><div id="mat-b-pb" style="height:100%;background:var(--cyan);width:0%;transition:width 1s"></div></div>
+  </div>
+  <div style="border:1px solid rgba(63,178,127,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+    <div style="font-family:var(--D);font-size:20px;color:var(--green)" id="mat-c-disp">--</div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS C &middot; C&#179;=<span id="mat-c3">--</span></div>
+    <div style="height:3px;background:rgba(63,178,127,.06);margin-top:8px;border-radius:1px"><div id="mat-c-pb" style="height:100%;background:var(--green);width:0%;transition:width 1s"></div></div>
+  </div>
+</div>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:1.4rem">
   <canvas id="mat-cv" width="120" height="120" style="width:60px;height:60px;flex-shrink:0"></canvas>
@@ -1555,7 +1583,7 @@ async function buildMembershipCard(){
     '<div style="margin-top:10px"><a href="/subscriptions.html" style="color:var(--cyan);font-size:12px">Manage or change your tier &rarr;</a></div>';
 }
 /* boot() removed -- module self-initialises via IIFE below */;
-(async()=>{try{const s=(await sb.auth.getSession()).data.session;if(!s)return;const pr=(await sb.from('profiles').select('subscription_tier,subscription_period_end,is_owner').eq('id',s.user.id).maybeSingle()).data||{};const ti=document.getElementById('sub-tier');if(ti)ti.textContent=(pr.subscription_tier||'free').toUpperCase();const en=document.getElementById('sub-end');if(en&&pr.subscription_period_end)en.textContent=new Date(pr.subscription_period_end).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){console.log('sub module:',e);}})();
+(async()=>{try{const s=(await sb.auth.getSession()).data.session;if(!s)return;const pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};const ti=document.getElementById('sub-tier');if(ti)ti.textContent=(pr.subscription_tier||'free').toUpperCase();const en=document.getElementById('sub-end');if(en&&pr.subscription_period_end)en.textContent=new Date(pr.subscription_period_end).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){console.log('sub module:',e);}})();
 </script>
 <script>
 

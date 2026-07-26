@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -271,7 +271,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-meta">
         <div class="honor-type">Trophy</div>
         <div class="honor-name">Omega Sovereign</div>
-        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 27.8367. Absolute completion of the 729-node progression path.</div>
+        <div class="honor-desc">Awarded at matrix apex 9.9.9. Authority score 27.8367. Absolute completion of the 104,976-node progression path.</div>
         <div class="honor-footer">
           <span class="honor-tier-badge">OMEGA</span>
           <span class="honor-date">2026-07-11</span>
@@ -579,12 +579,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="sechead" style="margin-top:20px">AUTHORITY METRICS <span data-canon-lattice="twelve"></span></div>
       <div class="authority-section">
         <div class="auth-stats">
-          <div class="auth-stat"><div class="as-label">AUTHORITY SCORE</div><div class="as-val" id="auth-score" style="color:var(--gold)">--</div><div class="as-formula">sqrt(A+B+C)</div></div>
+          <div class="auth-stat"><div class="as-label">AUTHORITY SCORE</div><div class="as-val" id="auth-score" style="color:var(--gold)">--</div><div class="as-formula">sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div></div>
           <div class="auth-stat"><div class="as-label">MATRIX POSITION</div><div class="as-val" id="matrix-pos" style="color:var(--cyan)">--</div><div class="as-formula">COORDINATES</div></div>
           <div class="auth-stat"><div class="as-label">KNOWLEDGE A</div><div class="as-val" id="axis-a" style="color:var(--cyan)">--</div><div class="as-formula">AXIS A</div></div>
           <div class="auth-stat"><div class="as-label">MASTERY B</div><div class="as-val" id="axis-b" style="color:#E86A3A">--</div><div class="as-formula">AXIS B</div></div>
           <div class="auth-stat"><div class="as-label">CONTRIBUTION C</div><div class="as-val" id="axis-c" style="color:var(--green)">--</div><div class="as-formula">AXIS C</div></div>
-          <div class="auth-stat"><div class="as-label">APEX THRESHOLD</div><div class="as-val" style="color:var(--muted)">15.58</div><div class="as-formula">MAX AUTHORITY</div></div>
+          <div class="auth-stat"><div class="as-label">APEX THRESHOLD</div><div class="as-val" style="color:var(--muted)">27.8367</div><div class="as-formula">MAX AUTHORITY</div></div>
         </div>
       </div>
 
@@ -632,7 +632,7 @@ const LEVELS=[
   {n:9,name:'RADIANT',col:'#9B6BF0',mat:'DIAMOND',xp:'1.9K-2.4K',auth:'11.81'},
   {n:10,name:'UNYIELDING',col:'#00E5FF',mat:'ADAMANT',xp:'2.4K-3K',auth:'13.07'},
   {n:11,name:'TRANSCENDENT',col:'#E2C86D',mat:'AETHER',xp:'3K-3.7K',auth:'14.33'},
-  {n:12,name:'OMEGA MASTER',col:'#C9A84C',mat:'OMEGA',xp:'3.7K+',auth:'15.59'},
+  {n:12,name:'OMEGA MASTER',col:'#C9A84C',mat:'OMEGA',xp:'3.7K+',auth:'27.8367'},
 ];
 
 const PHASES=[
@@ -647,7 +647,7 @@ const PHASES=[
   {n:9,title:'THE ECONOMIC ENGINE',desc:'Token economy active. Marketplace transacting. Income allocation flowing.',col:'#C9A84C',phase:'PHASE III',progress:0},
   {n:10,title:'THE LEGACY',desc:'Heritage vault sealed. Bloodline protocol active. Succession documented.',col:'#8B0000',phase:'PHASE IV',progress:0},
   {n:11,title:'THE COVENANT',desc:'All 12 gates cleared. All 12 series unlocked. Omega status imminent.',col:'#E2C86D',phase:'PHASE IV',progress:0},
-  {n:12,title:'THE OMEGA MASTER',desc:'Coordinate (9,9,9) reached. All 729 nodes activated. The frequency is complete.',col:'#C9A84C',phase:'PHASE IV',progress:0},
+  {n:12,title:'THE OMEGA MASTER',desc:'Coordinate (9,9,9) reached. All 104,976 nodes activated. The frequency is complete.',col:'#C9A84C',phase:'PHASE IV',progress:0},
 ];
 
 function fillRing(el, glyph, col, locked){
@@ -710,7 +710,7 @@ function openLevelPanel(L,i,done,current,locked){
 function buildPhases(userAuth){
   const g=document.getElementById('phase-grid'); g.innerHTML='';
   PHASES.forEach((p,i)=>{
-    const authThreshold=1.73+i*(15.58-1.73)/11;
+    const authThreshold=1.73+i*(27.8367-1.73)/11;
     const done=userAuth>=authThreshold;
     const progress=done?100:Math.max(0,Math.round((userAuth-authThreshold+2)/2*100));
     const c=document.createElement('div'); c.className='phase-card';
@@ -772,7 +772,7 @@ async function bootAscension(){
   document.getElementById('axis-c').textContent=c.toFixed(1);
   buildLadder(tier);
   buildPhases(auth);
-  requestAnimationFrame(()=>drawGauge(auth,15.58));
+  requestAnimationFrame(()=>drawGauge(auth,27.8367));
 }
 window.bootAscension = bootAscension;
 

@@ -264,6 +264,25 @@ async function revoke(uid){
   }
   toast('SESSION REVOKED','var(--crim)');load();
 }
+/* ---- PERMANENT ACCESS ---- */
+/* duplicate removed */
+
+/* ---- RENEW TRIAL ACCESS ---- */
+async function renewAccess(uid){
+  if(!confirm('Renew trial access for this member (9.1717 minutes)?')) return;
+  try{
+    const r=await sb.rpc('approve_member',{p_uid:uid});
+    if(r.error) throw r.error;
+  }catch(e){
+    const exp=new Date(Date.now()+9.1717*60000).toISOString();
+    await sb.from('profiles').update({
+      access_approved:true,is_trial:true,
+      trial_expires_at:exp,is_rejected:false
+    }).eq('id',uid);
+  }
+  toast('↻ ACCESS RENEWED FOR 9.1717 MINUTES','var(--green)');load();
+}
+
 
 /* ---- EXTEND (another 9.1717 min) ---- */
 async function extend(uid){
@@ -301,7 +320,15 @@ function buildCard(m){
   const joined=m.created_at?'JOINED: '+new Date(m.created_at).toLocaleDateString('en-US',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase():'--';
 
   const card=document.createElement('div');card.className='member-card';
-  card.innerHTML=`
+  
+const timelineHtml=`<div class="mc-timeline">
+  <div class="tl-item"><span class="tl-lbl">REQUESTED</span><span class="tl-val">${m.access_requested_at?new Date(m.access_requested_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase():'--'}</span></div>
+  <div class="tl-item"><span class="tl-lbl">STATUS</span><span class="tl-val" style="color:${col}">${statusLabel}</span></div>
+  ${m.trial_expires_at?`<div class="tl-item"><span class="tl-lbl">TRIAL EXPIRES</span><span class="tl-val">${new Date(m.trial_expires_at).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).toUpperCase()}</span></div>`:''}
+  ${isApproved&&!m.is_trial?`<div class="tl-item"><span class="tl-lbl">ACCESS TYPE</span><span class="tl-val" style="color:var(--gold)">∞ PERMANENT</span></div>`:''}
+  <div class="tl-item"><span class="tl-lbl">AXIS AUTH</span><span class="tl-val">${m.axis_a?Number(m.axis_a).toFixed(3):'--.---'}</span></div>
+${timelineHtml}</div>`;
+card.innerHTML=`
     <div class="mc-top">
       <div class="mc-avatar" style="border-color:${col};color:${col}">${init}</div>
       <div class="mc-info">
@@ -316,9 +343,12 @@ function buildCard(m){
       </div>
     </div>
     <div class="mc-actions">
-      ${isPending||isExpired?`<button class="action-btn btn-approve" data-uid="${m.id}">&#x2713; APPROVE 9.1717 MIN</button><button class="action-btn btn-reject" data-uid="${m.id}">&#x2715; REJECT</button>`:''}
+      ${isPending||isExpired?`
+  <button class="action-btn btn-approve" data-uid="${m.id}" title="Grant 9.1717-minute trial access">&#x2713; GRANT TRIAL</button>
+  <button class="action-btn btn-permanent" data-uid="${m.id}" title="Grant permanent lifetime access">&#x221e; PERMANENT</button>
+  <button class="action-btn btn-reject" data-uid="${m.id}" title="Reject access request">&#x2715; REJECT</button>`:''}
       ${isActive?`<button class="action-btn btn-extend" data-uid="${m.id}">+ EXTEND 9.1717 MIN</button><button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; END SESSION NOW</button><button class="action-btn btn-extend" data-uid="${m.id}" data-permanent="1">&#x2726; GRANT PERMANENT</button>`:''}
-      ${isApproved?`<button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; REVOKE ACCESS</button>`:''}
+      ${isApproved?`<button class="action-btn btn-permanent" data-uid="${m.id}" title="Grant lifetime access">∞ PERMANENT</button><button class="action-btn btn-renew" data-uid="${m.id}" title="Renew trial access">&#x21bb; RENEW</button><button class="action-btn btn-revoke" data-uid="${m.id}">&#x2715; REVOKE ACCESS</button>`:''}
       ${isRejected&&!isExpired?`<button class="action-btn btn-approve" data-uid="${m.id}">&#x2713; APPROVE 9.1717 MIN</button>`:''}
     </div>`;
 

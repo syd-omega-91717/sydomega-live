@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; OWNER CONSOLE &mdash; ACCESS CONTROL</title>
@@ -239,6 +239,18 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- TAB: AUDIT LOG -->
     <div class="tab-panel" id="tab-audit">
       <div class="sechead">ACCESS AUDIT LOG<button class="q-btn" style="font-size:8px" id="audit-refresh" onclick="loadAudit()">&#8635; REFRESH</button></div>
+<div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
+  <canvas id="cv-audit" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
+  <div>
+    <div style="font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--cyan);margin-bottom:3px" id="hd-title-audit">&#937; SOVEREIGN ENGINE</div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
+  </div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="font-family:var(--D);font-size:18px;color:var(--cyan)" id="hd-auth-audit">27.8367</div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
+  </div>
+</div>
+<script>(function(){var cv=document.getElementById('cv-audit');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
       <div id="audit-list"><div class="empty">LOADING AUDIT LOG...</div></div>
     </div>
 
@@ -296,7 +308,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
 
-var TRIAL_SECS=557; /* 9 minutes 17 seconds */
+var TRIAL_SECS=33437; /* 9h 17m 17s */ /* 9 minutes 17 seconds */
 var allMembers=[];
 var timers={};
 var ownerUid=null;
@@ -381,12 +393,12 @@ function buildCard(m){
   /* action buttons */
   var btns='';
   if(isPending||isExpired){
-    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; GRANT TRIAL<br><small style="font-size:7px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9 MIN 17 SEC</small></button>';
+    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; GRANT TRIAL<br><small style="font-size:7px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9H 17M 17S</small></button>';
     btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
     btns+='<button class="ac reject" data-uid="'+m.id+'" onclick="reject(this.dataset.uid)">&#10005; REJECT</button>';
   }
   if(isActive){
-    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; EXTEND +9:17</button>';
+    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; EXTEND +9:17:17</button>';
     btns+='<button class="ac permanent" data-uid=""+m.id+"" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
     btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; REVOKE</button>';
   }
@@ -475,11 +487,11 @@ async function load(){
 
 /* ── ACTIONS ── */
 async function approve(uid){
-  var exp=new Date(Date.now()+TRIAL_SECS*1000).toISOString();
+  var exp=new Date(Date.now()+33437*1000).toISOString();
   try{await sb.rpc('approve_member',{p_uid:uid});}catch(e){
     await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
   }
-  toast('✓ TRIAL GRANTED — 9 MINUTES 17 SECONDS','var(--green)');
+  toast('✓ TRIAL GRANTED — 9 HOURS 17 MINUTES 17 SECONDS','var(--green)');
   load();
 }
 async function grantPermanent(uid){
@@ -491,7 +503,7 @@ async function grantPermanent(uid){
   load();
 }
 async function extend(uid){
-  var exp=new Date(Date.now()+TRIAL_SECS*1000).toISOString();
+  var exp=new Date(Date.now()+33437*1000).toISOString();
   try{await sb.rpc('approve_member',{p_uid:uid});}catch(e){
     await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
   }

@@ -265,7 +265,9 @@
 })();
 
 /* Emblem loader */
-(function(){ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createElement('script'); s.src='/theme.js'; s.setAttribute('data-omega-theme','1'); (document.body||document.documentElement).appendChild(s); } })();
+(function(){ /* Sovereign protection — loads first */
+if(!document.querySelector('script[data-omega-protect]')){var sp=document.createElement('script');sp.src='/omega-protect.js';sp.setAttribute('data-omega-protect','1');if(document.head)document.head.appendChild(sp);}
+if(!document.querySelector('script[data-omega-theme]')){ var s=document.createElement('script'); s.src='/theme.js'; s.setAttribute('data-omega-theme','1'); (document.body||document.documentElement).appendChild(s); } })();
 
 (function(){if(!document.querySelector('script[data-omega-emblem]')){var s=document.createElement('script');s.src='/emblem.js';s.setAttribute('data-omega-emblem','1');(document.body||document.documentElement).appendChild(s);}})();
 
@@ -277,6 +279,9 @@
 (function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}
 if(!document.querySelector('script[data-omega-user]')){var su=document.createElement('script');su.src='/omega-user.js';su.setAttribute('data-omega-user','1');su.defer=true;if(document.body)document.body.appendChild(su);}
 if(!document.querySelector('script[data-omega-chrono]')){var sc=document.createElement('script');sc.src='/omega-chrono.js';sc.setAttribute('data-omega-chrono','1');sc.defer=true;if(document.body)document.body.appendChild(sc);}
+if(!document.querySelector('script[data-omega-matrix]')){var sm=document.createElement('script');sm.src='/omega-matrix.js';sm.setAttribute('data-omega-matrix','1');sm.defer=true;if(document.body)document.body.appendChild(sm);}
+if(!document.querySelector('script[data-omega-lattice-3d]')){var sl3=document.createElement('script');sl3.src='/omega-lattice-3d.js';sl3.setAttribute('data-omega-lattice-3d','1');sl3.defer=true;if(document.body)document.body.appendChild(sl3);}
+if(!document.querySelector('script[data-omega-lattice]')){var sl=document.createElement('script');sl.src='/omega-lattice.js';sl.setAttribute('data-omega-lattice','1');sl.defer=true;if(document.body)document.body.appendChild(sl);}
 if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createElement('script');sc2.src='/omega-controls.js';sc2.setAttribute('data-omega-ctrl','1');sc2.defer=true;if(document.body)document.body.appendChild(sc2);}})();
 /* ===== GENESIS VISUAL ENGINE -- make every page alive (armillary, particles, cinematic depth) ===== */
 (function(){if(!document.querySelector('script[data-omega-genesis]')){var s=document.createElement('script');s.src='/omega-genesis.js';s.setAttribute('data-omega-genesis','1');if(document.body)document.body.appendChild(s);}})();

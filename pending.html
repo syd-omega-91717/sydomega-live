@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#C9A84C"/>
 <link rel="manifest" href="/manifest.json"/>
 <title>&#937; SYD OMEGA 91717 -- Access Pending</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -16,14 +16,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 -- Access Pending"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/pending.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Access Pending"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -81,14 +81,14 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
   <!-- Expired badge (shown when trial ended) -->
   <div class="expired-badge" id="expired-badge">
     <div class="eb-title" data-i18n="pending.trial_ended">TRIAL SESSION ENDED</div>
-    <div class="eb-sub">Your 9.1717-minute trial has expired.<br/>Request renewed access from the Architect.<br/>Create a new session or contact the Order.</div>
+    <div class="eb-sub">Your 9h-17m-17s trial has expired.<br/>Request renewed access from the Architect.<br/>Create a new session or contact the Order.</div>
   </div>
 
   <!-- Status box -->
   <div class="status-box">
     <div class="sb-label" data-i18n="pending.status_label">ACCESS STATUS</div>
     <div class="sb-status" id="sb-status" style="color:var(--solar)" data-i18n="pending.pending_review">PENDING ARCHITECT REVIEW</div>
-    <div class="sb-detail" id="sb-detail">The Architect reviews and approves all members personally.<br/>Access is granted for a sovereign trial period of 9.1717 minutes.</div>
+    <div class="sb-detail" id="sb-detail">The Architect reviews and approves all members personally.<br/>Access is granted for a sovereign trial period of 9 hours 17 minutes 17 seconds.</div>
   </div>
 
   <div class="freq">9.1717 Hz -- FREQUENCY LOCK ACTIVE</div>
@@ -144,7 +144,7 @@ if(location.search.includes('expired')){
   document.getElementById('expired-badge').style.display='block';
   document.getElementById('gate-title').textContent='TRIAL SESSION EXPIRED';
   document.getElementById('gate-title').style.color='#8B0000';
-  document.getElementById('sb-status').textContent='9.1717-MINUTE TRIAL ENDED';
+  document.getElementById('sb-status').textContent='9H-17M-17S TRIAL ENDED';
   document.getElementById('sb-status').style.color='#8B0000';
   document.getElementById('sb-detail').textContent='Your trial access has concluded. The Architect must grant a new session to re-enter the Order.';
 }
@@ -152,7 +152,11 @@ if(location.search.includes('expired')){
 
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
+/* Share this single client with every shared script (bg.js, emblems,
+   gate, membership, progress ...) so the page has exactly one
+   GoTrueClient rather than one per module. */
+try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 async function checkStatus(){
   const sess=(await sb.auth.getSession()).data.session;
@@ -180,5 +184,7 @@ document.getElementById('btn-logout').addEventListener('click',async(e)=>{
 });
 </script>
 <script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
+<span data-canon-lattice="twelve" style="display:none"></span>
+<script>(function tryP(){if(document.readyState!=='complete'){window.addEventListener('load',tryP);return;}var tr=0,iv=setInterval(function(){tr++;if(window.__omegaPopulate&&window.__omegaSb){window.__omegaSb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return window.__omegaSb.from('profiles').select('*').eq('id',s.user.id).maybeSingle().then(function(q){window.__omegaPopulate(q.data||{},s.user);});}).catch(function(){});clearInterval(iv);}if(tr>30)clearInterval(iv);},200);})();</script>
 </body>
 </html>

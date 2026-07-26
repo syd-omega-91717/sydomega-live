@@ -216,6 +216,14 @@ window.__omegaPopulate = function(pr, user){
 
   /* ── STORE GLOBALLY ── */
   window.__omegaProfile = d;
+  /* Update lattice grids with current node count */
+  var _nodes=isOwner?104976:Number(d.nodes_earned||0);
+  document.querySelectorAll('[data-lattice]').forEach(function(el){
+    el.setAttribute('data-nodes',_nodes);
+    var _sys=el.getAttribute('data-lattice')||'canonical';
+    if(window.renderLattice9x9&&(_sys==='plane'||_sys==='9x9')){window.renderLattice9x9(el,_nodes,{total:729});}
+    else if(window.renderTrackGrid){window.renderTrackGrid(el,_sys,_nodes);}
+  });
   window.__omegaUser    = user;
   window.__omegaAuth    = auth;
   window.__omegaIsOwner = isOwner;

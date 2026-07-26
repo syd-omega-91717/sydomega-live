@@ -90,7 +90,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="chart-wrap"><div class="chart-head">CUBE DISTRIBUTION</div><div class="chart-body">
           <div id="cube-bars"></div>
         </div></div>
-        <div class="chart-wrap"><div class="chart-head">LATTICE PLANE &middot; 9&#215;9 INNER CUBE</div><div class="chart-body"><div id="lattice-mini" style="display:grid;grid-template-columns:repeat(9,1fr);gap:2px"></div></div></div>
+        <div class="chart-wrap"><div class="chart-head">LATTICE PLANE &middot; 9&#215;9 INNER CUBE</div><div class="chart-body"><div id="lattice-mini" data-lattice="plane" data-nodes="0"></div></div></div>
       </div>
     </div>
 
@@ -234,8 +234,8 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
       .map(function(x){return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px"><span>'+x.n+'</span><span style="color:'+x.c+'">'+x.v.toFixed(3)+'</span></div><div style="height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+(x.v/x.m*100).toFixed(1)+'%;background:'+x.c+';border-radius:3px;transition:width 1.4s"></div></div></div>';})
       .join('');
     /* lattice mini */
-    var lm=document.getElementById('lattice-mini');
-    if(lm){var earned=Number(pr.nodes_earned||0);var html='';for(var n=0;n<81;n++){var cls=n<earned?'background:rgba(201,168,76,.3);border:1px solid rgba(201,168,76,.5)':'background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.06)';html+='<div style="'+cls+';aspect-ratio:1;border-radius:1px" title="Node '+(n+1)+'"></div>';}lm.innerHTML=html;}
+    /* lattice-mini rendered by omega-lattice.js */
+    if(window.renderLattice9x9){var lm=document.getElementById('lattice-mini');window.renderLattice9x9(lm,earned,{total:729});}
     /* live metrics */
     var lm2=document.getElementById('live-metrics');
     var metrics=[

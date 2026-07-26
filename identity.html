@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 &mdash; DIGITAL IDENTITY</title>
+<title data-i18n-title>&#937; SYD OMEGA 91717 &mdash; DIGITAL IDENTITY</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <script src="/bg.js" defer></script>
 <style>
@@ -74,7 +74,26 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex';
+    document.getElementById('app').style.display='flex'
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),cc=Number(pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(cc,3))*PHI/EU;
+    function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+    var name=(pr.display_name||s.user.email||'SOVEREIGN MEMBER').toUpperCase();
+    sid('user-name',name);
+    sid('user-auth',auth.toFixed(4));
+    sid('id-name',name);
+    sid('id-email',s.user.email||'--');
+    sid('id-uid',s.user.id.slice(0,24)+'...');
+    sid('id-sign',(pr.sign||'--').toUpperCase()+'  /  '+(pr.element||'--').toUpperCase());
+    sid('id-god',(pr.god||'--').toUpperCase()+'  /  '+(pr.agent||'--').toUpperCase());
+    sid('id-tier',(pr.subscription_tier||'FREE').toUpperCase());
+    sid('id-kyc',(pr.kyc_status||'PENDING').toUpperCase());
+    var isSovereign=pr.is_owner;
+    var isPermanent=pr.access_approved&&!pr.is_trial;
+    var isTrial=pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>new Date();
+    sid('id-status',isSovereign?'\u221e LIFETIME SOVEREIGN':isPermanent?'\u221e PERMANENT':isTrial?'TRIAL ACTIVE':'PENDING');
+;
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
     var auth=(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU).toFixed(4);

@@ -71,7 +71,14 @@
     "twelve_formula": "12x12x9x9x9=104976",
     "nine_formula": "9x9x9x9x9=59049",
     "apex_12x12": "12x12=144 outer lattice x 729 inner = 104,976",
-    "total_axes_nodes": 314928
+    "total_axes_nodes": 314928,
+    "axis_plane": "9x9x9=729 (inner node plane per axis per track/phase)",
+    "axis_a_cube": "A^3=729.000 at apex (A=9)",
+    "axis_b_cube": "B^3=729.000 at apex (B=9)",
+    "axis_c_cube": "C^3=729.000 at apex (C=9)",
+    "apex_raw": "sqrt(729+729+729)=sqrt(2187)=46.7654",
+    "apex_scaled": "sqrt(2187)*phi/e=27.8367",
+    "apex_derivation": "A^3+B^3+C^3=2187 at apex; sqrt(2187)*1.6180339887/2.7182818285=27.836687"
   },
   "nine_fold": {
     "lattice": "9 x 9 x 9 x 9 x 9",

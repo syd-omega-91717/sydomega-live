@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 -- Cosmos</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -13,14 +13,14 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 -- Cosmos"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/cosmos.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="SYD OMEGA 91717 -- Cosmos"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
@@ -328,7 +328,7 @@ const GATES=[
   {n:9,name:'THE GATE OF DIAMOND',auth:13.90,col:'#9B6BF0',desc:'The apex approach gate. The Crystal-Omega Node becomes visible. The 9.9.9 coordinate nears.'},
   {n:10,name:'THE GATE OF CRYSTAL',auth:14.40,col:'#00E5FF',desc:'The penultimate gate. All 12 sovereign roles fulfilled. The Omega identity is confirmed.'},
   {n:11,name:'THE GATE OF REBIRTH',auth:15.00,col:'#3fb27f',desc:'The transformation gate. The sovereign dies to all previous identities and is reborn at the Omega coordinate.'},
-  {n:12,name:'THE OMEGA GATE',auth:15.58,col:'#C9A84C',desc:'The final gate. Coordinate (9,9,9) achieved. All 729 nodes activated. OMEGA MASTER status confirmed. Eternal.'},
+  {n:12,name:'THE OMEGA GATE',auth:15.58,col:'#C9A84C',desc:'The final gate. Coordinate (9,9,9) achieved. All 104,976-nodes activated. OMEGA MASTER status confirmed. Eternal.'},
 ];
 
 const PANTHEONS=[
@@ -410,7 +410,7 @@ function buildAgentWheel(memberSign){
 
 function selectAgent(ag){
   selectedAgent=ag;
-  document.querySelectorAll('.ag-card').forEach((c,i)=>c.classList.toggle('sel',AGENTS[i].n===ag.n));
+  document.querySelectorAll('.ag-card').forEach((c,i)=>c.classList.toggle('sel',(AGENTS[i]&&AGENTS[i].n||'')===ag.n));
   const isBound = window.__myAgent && window.__myAgent.toUpperCase()===ag.name;
   window.OmegaEmblemPanel.open({
     glyph: ag.glyph,
@@ -894,7 +894,7 @@ function drawHeroWheel(sign){
     ctx.beginPath(); ctx.arc(CX,CY,90,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
     ctx.strokeStyle='rgba(201,168,76,0.3)'; ctx.lineWidth=1; ctx.stroke();
     const activeSign=SIGNS[si];
-    ctx.fillStyle=activeSign.col; ctx.shadowColor=activeSign.col; ctx.shadowBlur=20+4*Math.sin(t*2);
+    ctx.fillStyle=(activeSign&&activeSign.col||'#C9A84C'); ctx.shadowColor=(activeSign&&activeSign.col||'#C9A84C'); ctx.shadowBlur=20+4*Math.sin(t*2);
     ctx.font='700 52px "Cinzel Decorative",serif';
     ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(activeSign.glyph,CX,CY+3);
     ctx.shadowBlur=0;

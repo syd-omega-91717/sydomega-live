@@ -9,7 +9,7 @@
   'use strict';
   if (window.__omegaShare) return;
   window.__omegaShare = 1;
-  var APEX = 15.588, SITE = 'https://sydomega.com';
+  var APEX = 27.8367, SITE = 'https://sydomega.com';
 
   var css = [
     '#osh-btn{position:fixed;right:12px;bottom:16px;z-index:9000;height:38px;padding:0 14px;display:flex;align-items:center;gap:7px;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,15,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9A84C;font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;border-radius:19px;cursor:pointer;transition:all .2s}',
@@ -43,7 +43,7 @@
     tt: '<svg viewBox="0 0 24 24"><path d="M15 4v9a4 4 0 1 1-4-4M15 7a5 5 0 0 0 4 2"/></svg>'
   };
 
-  var STATE = { text: 'I am ascending through the 729 Matrix of SYD OMEGA 91717. The Code. The Frequency. The Legacy.' };
+  var STATE = { text: 'I am ascending through the 104,976-Node Matrix of SYD OMEGA 91717. The Code. The Frequency. The Legacy.' };
 
   function enc(x) { return encodeURIComponent(x); }
   function targets() {
@@ -97,9 +97,9 @@
         var s = r && r.data && r.data.session; if (!s) return;
         sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id', s.user.id).maybeSingle().then(function (res) {
           var d = res && res.data; if (!d) return;
-          var auth = Math.sqrt(Math.pow(d.axis_a || 1, 2) + Math.pow(d.axis_b || 1, 2) + Math.pow(d.axis_c || 1, 2));
+          var auth = Math.sqrt(Math.pow(d.axis_a||0.001,3)+Math.pow(d.axis_b||0.001,3)+Math.pow(d.axis_c||0.001,3));
           var g = Math.max(1, Math.min(12, Math.ceil(auth / APEX * 12)));
-          STATE.text = 'I have reached Grade ' + g + ' as a ' + (d.sign || 'Sovereign') + ' in the 729 Matrix of SYD OMEGA 91717. The Code. The Frequency. The Legacy.';
+          STATE.text = 'I have reached Grade ' + g + ' as a ' + (d.sign || 'Sovereign') + ' in the 104,976-Node Matrix of SYD OMEGA 91717. The Code. The Frequency. The Legacy.';
         }).catch(function () {});
       }).catch(function () {});
     }).catch(function () {});

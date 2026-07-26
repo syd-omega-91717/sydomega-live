@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -178,7 +178,7 @@
   const AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
 
   const MODS=[
-    {k:'matrix lattice 729 9x9x9 cube',a:'The matrix is 9\u00d79\u00d79 \u2014 729 nodes. Your position is (Knowledge, Mastery, Contribution); authority = \u221a(A\u00b2+B\u00b2+C\u00b2), from 1.73 at genesis to 15.58 at the apex. See it in 3D at The Lattice (/matrix.html).'},
+    {k:'matrix lattice 729 9x9x9 cube',a:'The matrix is 9\u00d79\u00d79 \u2014 729 nodes. Your position is (Knowledge, Mastery, Contribution); authority = \u221a(A\u00b3+B\u00b3+C\u00b3), from 1.73 at genesis to 27.8367 at the apex. See it in 3D at The Lattice (/matrix.html).'},
     {k:'level up rank raise grow authority ascend advance progress',a:'You rise by raising three axes: Knowledge in the Academy, Mastery in the Games, Contribution in Contributions. Each verified act adds to a node; certificates land at (3,3,3), (6,6,6), (9,9,9). Your rank is the floor of your lowest axis \u2014 so grow your weakest axis to climb.'},
     {k:'academy lessons knowledge learn',a:'The Academy (/academy.html) holds lessons that raise your Knowledge axis (A).'},
     {k:'games gaming mastery arena play stages',a:'The Games (/gaming.html): 12 games \u00d7 12 stages, matrix-gated. Clear the Sequence Lock to take a node and raise Mastery (B). They get hard \u2014 long, fast, and reversed in the upper games.'},
@@ -206,7 +206,7 @@
     var m=raw.toLowerCase().trim();
     if(/^(hi|hey|hello|greetings|salam|salut)\b/.test(m)) return 'Welcome, '+(ctx.sign?ctx.sign+' sovereign':'sovereign')+'. Ask me how to rise, what a chamber does, or where you stand.';
     if(/my (standing|rank|level|authority|tier|node|position)|where (do i|am i) stand|how am i doing/.test(m)){
-      return 'You stand at node ('+Math.round(ctx.a)+','+Math.round(ctx.b)+','+Math.round(ctx.c)+') \u2014 authority <b>'+ctx.auth.toFixed(2)+'</b> of 15.58, rank <b>'+ctx.rank+'</b> (Tier '+ctx.tier+'). Your axes: Knowledge '+ctx.a.toFixed(2)+', Mastery '+ctx.b.toFixed(2)+', Contribution '+ctx.c.toFixed(2)+'. Raise your lowest to climb in rank.';
+      return 'You stand at node ('+Math.round(ctx.a)+','+Math.round(ctx.b)+','+Math.round(ctx.c)+') \u2014 authority <b>'+ctx.auth.toFixed(2)+'</b> of 27.8367, rank <b>'+ctx.rank+'</b> (Tier '+ctx.tier+'). Your axes: Knowledge '+ctx.a.toFixed(2)+', Mastery '+ctx.b.toFixed(2)+', Contribution '+ctx.c.toFixed(2)+'. Raise your lowest to climb in rank.';
     }
     if(/who is my (god|olympian)|my god|my olympian/.test(m) && ctx.sign) return 'Your Olympian is <b>'+GOD[ctx.sign]+'</b>, and your bound agent is <b>'+AGENT[ctx.sign]+'</b>. See their ascent in your Horoscope.';
     if(/who are you|what are you|your name/.test(m)) return 'I am the Concierge \u2014 the Order\u2019s guide. I read your real standing and point you through every chamber. For domain counsel, speak to your twelve agents.';

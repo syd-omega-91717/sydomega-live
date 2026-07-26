@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 &mdash; Social Hub</title>
+<title data-i18n-title>&#937; SYD OMEGA 91717 &mdash; Social Hub</title>
 <meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix (12×12×9×9×9), 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -152,17 +152,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
 
 var PLATFORMS=[
-  {id:'instagram',name:'Instagram',icon:'&#x25BA;',col:'#E1306C',desc:'Stories, posts, reels. Connect once to share sovereign content directly from the platform.',authUrl:'https://www.instagram.com/oauth/authorize',scope:'basic,public_content'},
-  {id:'x',name:'X / Twitter',icon:'&#x2715;',col:'#ffffff',desc:'Real-time broadcast to your X feed. Connect to post milestones, readings, and declarations.',authUrl:'https://twitter.com/i/oauth2/authorize',scope:'tweet.write'},
-  {id:'x',name:'X / X',icon:'&#x2715;',col:'#ffffff',desc:'Real-time broadcast to your X feed. Connect to post milestones, readings, and declarations.',authUrl:'https://x.com/i/oauth2/authorize',scope:'tweet.write'},
-  {id:'facebook',name:'Facebook',icon:'f',col:'#1877F2',desc:'Pages, groups, and personal feed. Share achievement posts and horoscope content directly.',authUrl:'https://www.facebook.com/v18.0/dialog/oauth',scope:'publish_actions'},
-  {id:'youtube',name:'YouTube',icon:'&#x25BA;',col:'#FF0000',desc:'Broadcast announcements to your community. Connect to post updates and media launches.',authUrl:'https://accounts.google.com/o/oauth2/auth',scope:'youtube.upload'},
-  {id:'tiktok',name:'TikTok',icon:'&#x266A;',col:'#69C9D0',desc:'Share short sovereign content clips and achievements directly to your TikTok audience.',authUrl:'https://www.tiktok.com/auth/authorize',scope:'video.upload'},
-  {id:'telegram',name:'Telegram',icon:'&#x27A4;',col:'#26A5E4',desc:'Post to your Telegram channels and groups. The fastest sovereign broadcast channel.',authUrl:'https://telegram.org/auth',scope:'channel.post'},
-  {id:'discord',name:'Discord',icon:'&#x25CF;',col:'#5865F2',desc:'Announce to your Discord server. Connect to broadcast milestones and rank upgrades.',authUrl:'https://discord.com/api/oauth2/authorize',scope:'webhook.incoming'},
-  {key:'linkedin',name:'LinkedIn',icon:'&#x2731;',col:'#0077B5',desc:'Professional authority. Connect your sovereign profile to LinkedIn.',url:'https://linkedin.com/company/sydomega'},
-  {key:'reddit',name:'Reddit',icon:'&#x25C6;',col:'#FF4500',desc:'Community discourse. The sovereign signal in public forums.',url:'https://reddit.com/r/sydomega'},
-  {key:'snapchat',name:'Snapchat',icon:'&#x2605;',col:'#FFFC00',desc:'Instant reach. Sovereign stories on Snapchat.',url:'https://snapchat.com/add/sydomega'},];
+  {id:'instagram',name:'Instagram',col:'#E1306C',url:'https://www.instagram.com/sydomega91717/',desc:'Stories, posts, reels. Sovereign visual content.'},
+  {id:'twitter',name:'X / Twitter',col:'#1DA1F2',url:'https://twitter.com/sydomega',desc:'Real-time broadcast. Declarations and milestones.'},
+  {id:'facebook',name:'Facebook',col:'#1877F2',url:'https://www.facebook.com/sydomega',desc:'Page posts and community updates.'},
+  {id:'youtube',name:'YouTube',col:'#FF0000',url:'https://www.youtube.com/@sydomega',desc:'Video uploads. Cinematic sovereign content.'},
+  {id:'tiktok',name:'TikTok',col:'#69C9D0',url:'https://www.tiktok.com/@sydomega',desc:'Short-form reels and sovereign declarations.'},
+  {id:'linkedin',name:'LinkedIn',col:'#0A66C2',url:'https://www.linkedin.com/company/sydomega',desc:'Professional network. Consultancy and heritage.'},
+  {id:'telegram',name:'Telegram',col:'#26A5E4',url:'https://t.me/sydomega',desc:'Secure broadcasts. Sovereign signal channel.'},
+  {id:'discord',name:'Discord',col:'#5865F2',url:'https://discord.gg/sydomega',desc:'Community server. Order members hub.'},
+  {id:'snapchat',name:'Snapchat',col:'#FFFC00',url:'https://www.snapchat.com/add/sydomega',desc:'Stories and AR. Sovereign visual layer.'},
+  {id:'reddit',name:'Reddit',col:'#FF4500',url:'https://www.reddit.com/r/sydomega',desc:'Community discussions and Order announcements.'},
+];
 
 var connections={};
 async function loadConnections(){

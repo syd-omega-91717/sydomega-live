@@ -1,14 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta http-equiv="refresh" content="0; url=/profile.html#passport"/>
-<link rel="canonical" href="https://sydomega.com/profile.html"/>
-<title>&#937; SYD OMEGA 91717 -- Redirecting to Profile</title>
-<style>body{background:#0A0A0F;color:#C9A84C;font-family:'Courier Prime',monospace;display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:12px;letter-spacing:2px}</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN PASSPORT</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.main{flex:1;min-width:0}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
+.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.hero-band{display:grid;grid-template-columns:1fr 80px 1fr;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(139,0,0,.06),rgba(10,10,15,.88),rgba(201,168,76,.03))}
+.hb{padding:16px clamp(14px,2.5vw,28px)}
+.hb.mid{display:flex;align-items:center;justify-content:center;padding:0}
+.hb.right{border-left:1px solid var(--line);text-align:right}
+.hb.left{border-right:1px solid var(--line)}
+.hb-n{font-family:var(--D);font-size:clamp(14px,2.5vw,20px);color:var(--gold);line-height:1}
+.hb-l{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
+.sec{padding:clamp(14px,3vw,36px)}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.card{border:1px solid var(--line);padding:20px;border-radius:2px;background:rgba(10,10,15,.5);margin-bottom:14px}
+.row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap;gap:8px}
+.row:last-child{border-bottom:none}
+.row-k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)}
+.row-v{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink)}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
+</style>
 </head>
 <body>
-<div>THIS PAGE HAS MERGED INTO <a href="/profile.html#passport" style="color:#00E5FF">YOUR PROFILE</a> -- REDIRECTING...</div>
-<script>window.location.replace('/profile.html#passport');</script>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="passport"></aside>
+  <main class="main">
+    <div class="topbar"><div class="t">SOVEREIGN PASSPORT<small>M13 &middot; DIGITAL PASSPORT &middot; IDENTITY DOCUMENT &middot; PRIVATE &middot; YOUR ACCOUNT ONLY &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="hero-band">
+      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l">MEMBER NAME</div></div>
+      <div class="hb mid"><canvas id="hb-cv-passport" width="80" height="80" style="width:40px;height:40px;display:block"></canvas></div>
+      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l">AUTHORITY SCORE</div></div>
+    </div>
+    <div class="sec">
+      <div class="sechead">YOUR SOVEREIGN PASSPORT &middot; PRIVATE TO YOUR ACCOUNT</div>
+      <div class="card" style="border:2px solid rgba(201,168,76,.35);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.9))">
+      <div style="font-family:var(--D);font-size:11px;letter-spacing:.05em;color:var(--gold);margin-bottom:14px">&#937; SYD OMEGA 91717 &middot; SOVEREIGN PASSPORT</div>
+      <div class="row"><span class="row-k">FULL NAME</span><span class="row-v" id="pp-name">--</span></div>
+      <div class="row"><span class="row-k">MEMBER SINCE</span><span class="row-v" id="pp-since">--</span></div>
+      <div class="row"><span class="row-k">COSMOLOGY</span><span class="row-v" id="pp-cosmo">--</span></div>
+      <div class="row"><span class="row-k">AUTHORITY</span><span class="row-v" id="pp-auth" style="color:var(--gold)">--</span></div>
+      <div class="row"><span class="row-k">MATRIX NODES</span><span class="row-v" id="pp-nodes">--</span></div>
+      <div class="row"><span class="row-k">ACHIEVEMENTS</span><span class="row-v" id="pp-ach">--</span></div>
+    </div>
+    </div>
+    <div data-page-emblem="passport" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; SOVEREIGN PASSPORT &middot; PRIVATE ACCOUNT DATA</span><span>VISIBLE ONLY TO YOU</span></div>
+  </main>
+</div>
+<script>
+(function(){var cv=document.getElementById('hb-cv-passport');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v||'--');}
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
+    document.getElementById('app').style.display='flex';
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
+    var auth=(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU).toFixed(4);
+    sid('user-name',(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase());
+    sid('user-auth',pr.is_owner?'27.8367':auth);
+    var since=pr.created_at?new Date(pr.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase():'--';
+    sid('pp-name',(pr.display_name||'SOVEREIGN MEMBER').toUpperCase());
+    sid('pp-since',since);
+    sid('pp-cosmo',[(pr.sign||'--'),(pr.element||'--'),(pr.god||'--'),(pr.agent||'--')].join(' / ').toUpperCase());
+    sid('pp-auth',pr.is_owner?'27.8367 APEX':auth);
+    sid('pp-nodes',Number(pr.nodes_earned||0).toLocaleString());
+    sid('pp-ach','TROPHIES: '+(pr.trophies_earned||0)+' / MEDALS: '+(pr.medals_earned||0)+' / CERTS: '+(pr.certificates_earned||0));
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
+</script>
 </body>
 </html>

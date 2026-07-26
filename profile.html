@@ -419,7 +419,7 @@ a{color:inherit;text-decoration:none}
         </div>
         <div class="ph-meta">
           <div class="phm-id">PLATFORM IDENTITY: &#937;-91717-SYD-001 . OMEGA PRIME . LEVEL 9.9.9</div>
-          <div class="phm-name" id="ph-name">MAJOR SLEIMAN YOUSSEF DAGHER</div>
+          <div class="phm-name" id="ph-name">LOADING...</div>
           <div class="phm-title">ARCHITECT & SOVEREIGN FOUNDER . ORDRE DES INGENIEURS ET ARCHITECTES - BEYROUTH</div>
           <div class="phm-badges">
             <span class="phm-badge" style="color:var(--gold);border-color:rgba(201,168,76,.4)"><div class="pb-dot" style="background:var(--gold)"></div>OMEGA MASTER</span>
@@ -478,7 +478,7 @@ a{color:inherit;text-decoration:none}
       <div class="arch-console" id="arch-console">
         <div class="ac-header">
           <div>
-            <div style="font-family:var(--M);font-size:7px;letter-spacing:4px;color:rgba(139,0,0,.6);margin-bottom:3px">CLASSIFIED ACCESS -- MAJOR SLEIMAN YOUSSEF DAGHER -- &#937;-91717-SYD-001</div>
+            <div style="font-family:var(--M);font-size:7px;letter-spacing:4px;color:rgba(139,0,0,.6);margin-bottom:3px">CLASSIFIED ACCESS -- LOADING... -- &#937;-91717-SYD-001</div>
             <div class="ac-title">ARCHITECT CONSOLE</div>
           </div>
           <div class="ac-badge"><div class="ac-dot"></div>ABSOLUTE OWNER ACCESS</div>
@@ -1494,6 +1494,7 @@ async function buildAchievements(uid){
     Aquarius:{agent:'Tutor',token:'AETHER',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
   };
   document.getElementById('idf-fullname').textContent=(d.display_name||'SOVEREIGN MEMBER').toUpperCase();
+    var phn=document.getElementById('ph-name');if(phn)phn.textContent=(d.display_name||d.full_name||d.email||'SOVEREIGN').toUpperCase();
   const bound=d.sign&&BOUND[d.sign];
   if(bound){
     document.getElementById('idf-sign').textContent=d.sign.toUpperCase()+' -- '+bound.element.toUpperCase()+' ELEMENT';

@@ -1,300 +1,899 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717  --  The Academy</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717  --  The Academy"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/academy.html"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717  --  The Academy"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 &mdash; Sovereign Academy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
 <style>
-  :root{ --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(0,229,255,.06),transparent 48%),radial-gradient(circle at 84% 90%,rgba(201,168,76,.05),transparent 42%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
-
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:18px 0 4px;font-size:15px}
-  .intro b{color:var(--gold);font-weight:400}
-  .mstat{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);margin:10px 0 4px}
-  .mstat b{color:var(--solar)}
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:22px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-
-  .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-  .game{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:16px;cursor:pointer;transition:transform .15s,border-color .15s}
-  .game:hover{transform:translateY(-2px);border-color:var(--gold)}
-  .game.locked{opacity:.5;cursor:not-allowed}
-  .game.sel{border-color:var(--gold);box-shadow:0 0 14px rgba(201,168,76,.2)}
-  .game .gi{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted)}
-  .game .gn{font-family:var(--display);font-weight:700;color:var(--gold);font-size:16px;margin-top:4px}
-  .game .gs{font-family:var(--mono);font-size:10px;color:var(--solar);letter-spacing:1px;margin-top:6px}
-  .game .bar{height:5px;background:#1a1a22;margin-top:9px;overflow:hidden}
-  .game .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold))}
-  .game .lock{font-family:var(--mono);font-size:9px;color:var(--crimson);letter-spacing:1px;margin-top:7px;line-height:1.5}
-
-  .stages{margin-top:18px;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.03);padding:18px;display:none}
-  .stages.open{display:block}
-  .stages .sh{font-family:var(--display);font-weight:700;color:var(--solar);font-size:18px;margin-bottom:4px}
-  .stages .shx{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:14px}
-  .nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:10px}
-  .node{aspect-ratio:1;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:18px;color:var(--muted);cursor:not-allowed;background:#0c0c14}
-  .node.avail{color:var(--gold);border-color:var(--gold);cursor:pointer}
-  .node.avail:hover{background:rgba(201,168,76,.1)}
-  .node.cleared{color:var(--void);background:linear-gradient(180deg,var(--cyan),#0aa);border-color:var(--cyan);cursor:pointer}
-
-  .modal{position:fixed;inset:0;z-index:60;background:rgba(4,4,8,.9);display:none;align-items:center;justify-content:center;padding:20px}
-  .modal.open{display:flex}
-  .sheet{max-width:460px;width:100%;border:1px solid rgba(201,168,76,.4);background:linear-gradient(180deg,var(--panel),var(--void));padding:26px}
-  .sheet .mt{font-family:var(--display);font-weight:700;color:var(--gold);font-size:20px;letter-spacing:1px;text-align:center}
-  .sheet .mx{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-top:4px;text-align:center}
-  .sheet .q{font-family:var(--body);font-weight:500;color:var(--ink);font-size:18px;line-height:1.5;margin:18px 0 16px;text-align:center;min-height:54px}
-  .opts{display:grid;gap:10px}
-  .opt{font-family:var(--mono);font-size:15px;letter-spacing:1px;color:var(--ink);background:#0c0c14;border:1px solid var(--line);padding:13px;cursor:pointer;text-align:center}
-  .opt:hover{border-color:var(--gold);background:rgba(201,168,76,.08)}
-  .opt.good{border-color:var(--green);background:rgba(63,178,127,.15)}
-  .opt.bad{border-color:var(--crimson);background:rgba(139,0,0,.2)}
-  .stat{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--solar);margin:16px 0 6px;min-height:18px;text-align:center}
-  .mrow{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-  .mbtn{font-family:var(--mono);letter-spacing:2px;font-size:12px;padding:11px 20px;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--void)}
-  .mbtn.ghost{background:transparent;color:var(--cyan);border-color:var(--line)}
-
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(10,10,15,.4);overflow-x:auto}
+.tab-btn{font-family:var(--M);font-size:8.5px;letter-spacing:2px;padding:.6rem 1.1rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;flex-shrink:0}
+.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold)}
+.tab-panel{display:none;padding:clamp(14px,3vw,36px)}.tab-panel.on{display:block}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:16px}
+.exam-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:18px;border-radius:2px;transition:.18s;cursor:pointer;position:relative;overflow:hidden}
+.exam-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--ec)}
+.exam-card:hover{border-color:rgba(201,168,76,.35);transform:translateY(-2px)}
+.ec-level{font-family:var(--M);font-size:7px;letter-spacing:2.5px;color:var(--ec);margin-bottom:5px}
+.ec-name{font-family:var(--D);font-size:12px;margin-bottom:6px}
+.ec-desc{font-size:11px;opacity:.65;line-height:1.6;margin-bottom:8px}
+.ec-meta{display:flex;gap:8px;flex-wrap:wrap}
+.ec-tag{font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:2px 8px;border:1px solid;border-radius:2px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;border-top:2px solid var(--kc)}
+.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc)}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.exam-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">&#937;</div>
-  <h2 id="gate-h">The Academy</h2>
-  <p id="gate-p">Sign in to enter the Academy.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
-</div>
-
 <div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="academy"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">THE ACADEMY<small>12 DISCIPLINES  .  12 LESSONS  .  12x12x9x9x9 GATED</small></div></div>
-    <p class="intro">Twelve disciplines, each with twelve lessons  --  <b>144 nodes of knowledge</b>. Each lesson is a trial of the matrix itself: read the matrix and answer without error. Every cleared node raises your <b>Knowledge</b>, and so your whole ascent. A discipline opens only when your matrix is ready.</p>
-    <div class="mstat" id="mstat"></div>
-
-    <div class="sechead">THE TWELVE DISCIPLINES</div>
-    <div class="games" id="games"></div>
-
-    <div class="stages" id="stages">
-      <div class="sh" id="st-name"></div>
-      <div class="shx" id="st-sub"></div>
-      <div class="nodes" id="st-nodes"></div>
-    </div>
-  </main>
+<aside class="side" id="omega-side" data-page="academy"></aside>
+<main class="main">
+<div class="topbar"><div class="t">SOVEREIGN ACADEMY &middot; EXAMS<small>M12 &middot; WORLDWIDE CERTIFICATIONS &middot; 9 LEVELS &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+<div class="tab-bar">
+  <button class="tab-btn on" data-tab="overview">OVERVIEW</button>
+  <button class="tab-btn" data-tab="stem">STEM &amp; SCIENCE</button>
+  <button class="tab-btn" data-tab="professional">PROFESSIONAL</button>
+  <button class="tab-btn" data-tab="language">LANGUAGE &amp; ARTS</button>
+  <button class="tab-btn" data-tab="sovereign_cert">SOVEREIGN CERTS</button>
+  <button class="tab-btn" data-tab="security">SECURITY &amp; LAW</button>
+  <button class="tab-btn" data-tab="technology">TECHNOLOGY &amp; AI</button>
+  <button class="tab-btn" data-tab="healthcare">HEALTHCARE &amp; MEDICINE</button>
+  <button class="tab-btn" data-tab="business">BUSINESS &amp; FINANCE</button>
+  <button class="tab-btn" data-tab="my_exams">MY EXAMS</button>
 </div>
-
-<div class="modal" id="modal"><div class="sheet">
-  <div class="mt" id="m-title">LESSON</div>
-  <div class="mx" id="m-diff"></div>
-  <div class="q" id="m-q"></div>
-  <div class="opts" id="m-opts"></div>
-  <div class="stat" id="m-stat"></div>
-  <div class="mrow" id="m-row"><button class="mbtn ghost" id="m-close">LEAVE</button></div>
+<div class="tab-panel on" id="tab-overview">
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ex-passed">--</div><div class="kpi-l">EXAMS PASSED</div></div>
+    <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ex-certs">--</div><div class="kpi-l">CERTIFICATES</div></div>
+    <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ex-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+    <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">9</div><div class="kpi-l">EXAM LEVELS</div></div>
+    <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">108+</div><div class="kpi-l">TOTAL EXAMS</div></div>
+    <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n">12</div><div class="kpi-l">CERTIFICATES</div></div>
+  </div>
+  <div class="sechead">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
+  <div data-lattice="canonical" data-nodes="0" style="cursor:pointer;max-width:500px" title="Click for 3D view"></div>
+</div><div class="tab-panel" id="tab-stem">
+  <div class="sechead">STEM & SCIENCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#00E5FF" data-task="Mathematics Olympiad" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">MATHEMATICS OLYMPIAD</div>
+  <div class="ec-desc">IMO-standard problems — all branches: algebra, geometry, combinatorics, number theory</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Physics Grand Exam" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">PHYSICS GRAND EXAM</div>
+  <div class="ec-desc">AP/IB/A-Level physics + university-level mechanics, electrodynamics, quantum</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Chemistry Mastery" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">CHEMISTRY MASTERY</div>
+  <div class="ec-desc">From periodic table to organic synthesis — international standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Biology & Life Sciences" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">BIOLOGY & LIFE SCIENCES</div>
+  <div class="ec-desc">Cell biology through ecology — MCAT and IB HL standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Statistics & Probability" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
+  <div class="ec-name">STATISTICS & PROBABILITY</div>
+  <div class="ec-desc">Descriptive, inferential, Bayesian — data science foundation</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Computer Science Theory" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">COMPUTER SCIENCE THEORY</div>
+  <div class="ec-desc">Algorithms, complexity, automata, computability — CS foundations</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Environmental Science" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 5 &middot; AXIS A</div>
+  <div class="ec-name">ENVIRONMENTAL SCIENCE</div>
+  <div class="ec-desc">Climate, ecosystems, energy — IPCC and scientific consensus</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Astronomy & Astrophysics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">ASTRONOMY & ASTROPHYSICS</div>
+  <div class="ec-desc">Solar system to cosmology — Hubble constant, dark matter, black holes</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Neuroscience Basics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
+  <div class="ec-name">NEUROSCIENCE BASICS</div>
+  <div class="ec-desc">Brain structure, neural networks, cognitive science</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Engineering Fundamentals" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">ENGINEERING FUNDAMENTALS</div>
+  <div class="ec-desc">Statics, dynamics, thermodynamics, materials science</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Data Science & ML" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">DATA SCIENCE & ML</div>
+  <div class="ec-desc">Python, statistics, machine learning algorithms, model evaluation</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#00E5FF" data-task="Research Methods" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
+  <div class="ec-name">RESEARCH METHODS</div>
+  <div class="ec-desc">Hypothesis, experiment design, peer review, publication standards</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
 </div></div>
-
+</div>
+<div class="tab-panel" id="tab-professional">
+  <div class="sechead">PROFESSIONAL &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="CFA Level I–III" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
+  <div class="ec-name">CFA LEVEL I–III</div>
+  <div class="ec-desc">Chartered Financial Analyst — global gold standard in investment</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="PMP Certification" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
+  <div class="ec-name">PMP CERTIFICATION</div>
+  <div class="ec-desc">Project Management Professional — PMI standard worldwide</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="CISSP" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
+  <div class="ec-name">CISSP</div>
+  <div class="ec-desc">Certified Information Systems Security Professional</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="MBA Core Curriculum" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
+  <div class="ec-name">MBA CORE CURRICULUM</div>
+  <div class="ec-desc">Strategy, finance, operations, marketing, leadership</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Lean Six Sigma" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
+  <div class="ec-name">LEAN SIX SIGMA</div>
+  <div class="ec-desc">Process improvement — Yellow through Black Belt</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Chartered Accountant" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
+  <div class="ec-name">CHARTERED ACCOUNTANT</div>
+  <div class="ec-desc">ACCA/CPA equivalence — international accounting standards</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Architectural License" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
+  <div class="ec-name">ARCHITECTURAL LICENSE</div>
+  <div class="ec-desc">ARE exam — architectural registration worldwide</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Engineering PE Exam" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
+  <div class="ec-name">ENGINEERING PE EXAM</div>
+  <div class="ec-desc">Professional Engineer — all disciplines</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Legal Bar Equivalence" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
+  <div class="ec-name">LEGAL BAR EQUIVALENCE</div>
+  <div class="ec-desc">Core legal principles — contract, tort, constitutional, international</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Medical Licensing" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
+  <div class="ec-name">MEDICAL LICENSING</div>
+  <div class="ec-desc">USMLE/PLAB equivalent — clinical knowledge and reasoning</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Supply Chain Management" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
+  <div class="ec-name">SUPPLY CHAIN MANAGEMENT</div>
+  <div class="ec-desc">CSCMP/APICS — logistics, procurement, global supply chains</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Human Resources" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 5 &middot; AXIS B</div>
+  <div class="ec-name">HUMAN RESOURCES</div>
+  <div class="ec-desc">SHRM/CIPD — talent management, labor law, organizational behavior</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div></div>
+</div>
+<div class="tab-panel" id="tab-language">
+  <div class="sechead">LANGUAGE & ARTS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Arabic — Sovereign Language" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">ARABIC — SOVEREIGN LANGUAGE</div>
+  <div class="ec-desc">Classical Arabic, Modern Standard, dialectal — full linguistic mastery</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="English Proficiency" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">ENGLISH PROFICIENCY</div>
+  <div class="ec-desc">IELTS/TOEFL/C2 — reading, writing, listening, speaking</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="French DALF C2" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">FRENCH DALF C2</div>
+  <div class="ec-desc">Diplôme Approfondi de Langue Française — highest level</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Spanish DELE C2" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">SPANISH DELE C2</div>
+  <div class="ec-desc">Diploma de Español como Lengua Extranjera — master level</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Mandarin HSK 7–9" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">MANDARIN HSK 7–9</div>
+  <div class="ec-desc">Chinese Proficiency Test — advanced level</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Latin & Ancient Greek" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">LATIN & ANCIENT GREEK</div>
+  <div class="ec-desc">Classical languages — philosophical and historical texts</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Linguistics & Phonology" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">LINGUISTICS & PHONOLOGY</div>
+  <div class="ec-desc">Language structure, historical linguistics, morphology</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Philosophy of Language" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">PHILOSOPHY OF LANGUAGE</div>
+  <div class="ec-desc">Wittgenstein, Frege, Chomsky — meaning and reference</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Art History" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
+  <div class="ec-name">ART HISTORY</div>
+  <div class="ec-desc">All movements — Paleolithic to contemporary digital art</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Music Theory Grade 8" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">MUSIC THEORY GRADE 8</div>
+  <div class="ec-desc">ABRSM — notation, harmony, counterpoint, analysis</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Creative Writing" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 5 &middot; AXIS A</div>
+  <div class="ec-name">CREATIVE WRITING</div>
+  <div class="ec-desc">Narrative structure, style, genre — workshop standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Rhetoric & Argumentation" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">RHETORIC & ARGUMENTATION</div>
+  <div class="ec-desc">Classical and modern persuasion — Aristotle to debate theory</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div></div>
+</div>
+<div class="tab-panel" id="tab-sovereign_cert">
+  <div class="sechead">SOVEREIGN CERTIFICATIONS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="Omega Initiate Certificate" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 1 &middot; AXIS A+B+C</div>
+  <div class="ec-name">OMEGA INITIATE CERTIFICATE</div>
+  <div class="ec-desc">Entry level — matrix navigation and authority formula</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Sovereign Architect Badge" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 3 &middot; AXIS A+B+C</div>
+  <div class="ec-name">SOVEREIGN ARCHITECT BADGE</div>
+  <div class="ec-desc">System design — understanding the 12-fold architecture</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Matrix Master Certificate" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 5 &middot; AXIS A+B+C</div>
+  <div class="ec-name">MATRIX MASTER CERTIFICATE</div>
+  <div class="ec-desc">Full 9-stage progression theory and practice</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Authority Apex Achievement" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A+B+C</div>
+  <div class="ec-name">AUTHORITY APEX ACHIEVEMENT</div>
+  <div class="ec-desc">Demonstrate AUTH=27.8367 understanding across all axes</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Heritage Guardian Certificate" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 4 &middot; AXIS A</div>
+  <div class="ec-name">HERITAGE GUARDIAN CERTIFICATE</div>
+  <div class="ec-desc">Knowledge of all civilizations in the Heritage Archive</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Elemental Mastery Badge" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 4 &middot; AXIS A</div>
+  <div class="ec-name">ELEMENTAL MASTERY BADGE</div>
+  <div class="ec-desc">All 9 elements — properties, interactions, sovereign mapping</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Covenant Scholar" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 5 &middot; AXIS A+C</div>
+  <div class="ec-name">COVENANT SCHOLAR</div>
+  <div class="ec-desc">Memorize and apply all 11 Sovereign Articles</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Digital Sovereign Identity" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 3 &middot; AXIS B</div>
+  <div class="ec-name">DIGITAL SOVEREIGN IDENTITY</div>
+  <div class="ec-desc">KYC, credentials, identity verification mastery</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Token Economics Certificate" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
+  <div class="ec-name">TOKEN ECONOMICS CERTIFICATE</div>
+  <div class="ec-desc">12-token system theory — utility, distribution, governance</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Olympian Path Complete" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 4 &middot; AXIS A</div>
+  <div class="ec-name">OLYMPIAN PATH COMPLETE</div>
+  <div class="ec-desc">All 12 Olympians — mythology, attributes, sovereign mapping</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Lattice Engineer" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A+B</div>
+  <div class="ec-name">LATTICE ENGINEER</div>
+  <div class="ec-desc">All matrix systems — 28×28 to 9×9×9 — architecture mastery</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#C9A84C" data-task="Sovereign Apex Laureate" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A+B+C</div>
+  <div class="ec-name">SOVEREIGN APEX LAUREATE</div>
+  <div class="ec-desc">Complete all 12 sovereign certifications — terminal honor</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div></div>
+</div>
+<div class="tab-panel" id="tab-security">
+  <div class="sechead">SECURITY & LAW &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#8B0000" data-task="CISSP — Full Domain" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
+  <div class="ec-name">CISSP — FULL DOMAIN</div>
+  <div class="ec-desc">All 8 security domains — cybersecurity gold standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Ethical Hacking CEH" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
+  <div class="ec-name">ETHICAL HACKING CEH</div>
+  <div class="ec-desc">Certified Ethical Hacker — penetration testing methodology</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="GDPR Practitioner" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
+  <div class="ec-name">GDPR PRACTITIONER</div>
+  <div class="ec-desc">EU data protection regulation — DPO qualification</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="International Law" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">INTERNATIONAL LAW</div>
+  <div class="ec-desc">UN conventions, treaties, jurisdiction, human rights law</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Contract Law Mastery" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">CONTRACT LAW MASTERY</div>
+  <div class="ec-desc">Offer, acceptance, consideration — common and civil law</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Intellectual Property" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
+  <div class="ec-name">INTELLECTUAL PROPERTY</div>
+  <div class="ec-desc">Patents, trademarks, copyright, trade secrets — international</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Cybersecurity Framework" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
+  <div class="ec-name">CYBERSECURITY FRAMEWORK</div>
+  <div class="ec-desc">NIST, ISO 27001, SOC 2 — enterprise security standards</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Financial Crime & AML" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
+  <div class="ec-name">FINANCIAL CRIME & AML</div>
+  <div class="ec-desc">Anti-money laundering, KYC — FATF standards</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Privacy Law" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">PRIVACY LAW</div>
+  <div class="ec-desc">CCPA, GDPR, PIPL — global data privacy frameworks</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Constitutional Law" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">CONSTITUTIONAL LAW</div>
+  <div class="ec-desc">Fundamental rights, separation of powers — comparative law</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Criminal Law" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">CRIMINAL LAW</div>
+  <div class="ec-desc">Actus reus, mens rea, defenses — common and civil law systems</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#8B0000" data-task="Compliance & Governance" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
+  <div class="ec-name">COMPLIANCE & GOVERNANCE</div>
+  <div class="ec-desc">SOX, PCAOB, regulatory frameworks — organizational compliance</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div></div>
+</div>
+<div class="tab-panel" id="tab-technology">
+  <div class="sechead">TECHNOLOGY & AI &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#9B6BF0" data-task="Python Advanced Exam" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">PYTHON ADVANCED EXAM</div>
+  <div class="ec-desc">OOP, async, metaclasses, CPython internals — expert level</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Algorithm Design" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">ALGORITHM DESIGN</div>
+  <div class="ec-desc">Dijkstra, dynamic programming, graph theory — FAANG standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Machine Learning Exam" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">MACHINE LEARNING EXAM</div>
+  <div class="ec-desc">Supervised, unsupervised, RL — theory and implementation</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Deep Learning Certification" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">DEEP LEARNING CERTIFICATION</div>
+  <div class="ec-desc">Neural networks, transformers, diffusion — state of the art</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Database Architecture" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">DATABASE ARCHITECTURE</div>
+  <div class="ec-desc">PostgreSQL, indexing, query optimization, sharding</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="System Design" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">SYSTEM DESIGN</div>
+  <div class="ec-desc">Distributed systems, CAP theorem, microservices, CDN</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Cloud Architecture" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">CLOUD ARCHITECTURE</div>
+  <div class="ec-desc">AWS/GCP/Azure — solutions architect professional level</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Blockchain & Web3" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">BLOCKCHAIN & WEB3</div>
+  <div class="ec-desc">Consensus mechanisms, smart contracts, tokenomics</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="DevOps & SRE" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">DEVOPS & SRE</div>
+  <div class="ec-desc">CI/CD, Kubernetes, monitoring, SLO/SLA/SLI</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="AI Ethics & Governance" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">AI ETHICS & GOVERNANCE</div>
+  <div class="ec-desc">Bias, fairness, explainability, regulation — policy level</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Quantum Computing" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">QUANTUM COMPUTING</div>
+  <div class="ec-desc">Qubits, gates, algorithms — theoretical foundation</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#9B6BF0" data-task="Cryptography Advanced" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">CRYPTOGRAPHY ADVANCED</div>
+  <div class="ec-desc">RSA, ECC, ZKP, homomorphic encryption — mathematical depth</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div></div>
+</div>
+<div class="tab-panel" id="tab-healthcare">
+  <div class="sechead">HEALTHCARE & MEDICINE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Anatomy & Physiology" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">ANATOMY & PHYSIOLOGY</div>
+  <div class="ec-desc">All body systems — medical school first year standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Pharmacology" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">PHARMACOLOGY</div>
+  <div class="ec-desc">Drug mechanisms, interactions, dosing — clinical standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Clinical Reasoning" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
+  <div class="ec-name">CLINICAL REASONING</div>
+  <div class="ec-desc">Case-based diagnosis — USMLE Step 2 equivalent</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Public Health & Epidemiology" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">PUBLIC HEALTH & EPIDEMIOLOGY</div>
+  <div class="ec-desc">Disease surveillance, outbreak response, health policy</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Mental Health Foundations" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">MENTAL HEALTH FOUNDATIONS</div>
+  <div class="ec-desc">DSM-5, psychopathology, therapeutic approaches</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Nutrition Science" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 5 &middot; AXIS A</div>
+  <div class="ec-name">NUTRITION SCIENCE</div>
+  <div class="ec-desc">Macronutrients, micronutrients, metabolism, therapeutic diets</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Emergency Medicine" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
+  <div class="ec-name">EMERGENCY MEDICINE</div>
+  <div class="ec-desc">ATLS/ACLS principles — triage and emergency management</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Medical Research Methods" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">MEDICAL RESEARCH METHODS</div>
+  <div class="ec-desc">RCT design, meta-analysis, evidence-based medicine</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Biomedical Ethics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">BIOMEDICAL ETHICS</div>
+  <div class="ec-desc">Autonomy, beneficence, justice — clinical and research ethics</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Health Informatics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
+  <div class="ec-name">HEALTH INFORMATICS</div>
+  <div class="ec-desc">EHR, medical data standards, HL7/FHIR</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Genetics & Genomics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
+  <div class="ec-name">GENETICS & GENOMICS</div>
+  <div class="ec-desc">Mendelian genetics through CRISPR — clinical genomics</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#3fb27f" data-task="Global Health" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
+  <div class="ec-name">GLOBAL HEALTH</div>
+  <div class="ec-desc">WHO frameworks, tropical diseases, health systems worldwide</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div></div>
+</div>
+<div class="tab-panel" id="tab-business">
+  <div class="sechead">BUSINESS & FINANCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="exam-grid"><div class="exam-card" style="--ec:#E2C86D" data-task="Financial Modeling" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS C</div>
+  <div class="ec-name">FINANCIAL MODELING</div>
+  <div class="ec-desc">DCF, LBO, M&A — investment banking analyst standard</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Macroeconomics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">MACROECONOMICS</div>
+  <div class="ec-desc">GDP, monetary policy, trade — IMF/World Bank frameworks</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Microeconomics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
+  <div class="ec-name">MICROECONOMICS</div>
+  <div class="ec-desc">Supply, demand, game theory, market structures</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Corporate Strategy" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS C</div>
+  <div class="ec-name">CORPORATE STRATEGY</div>
+  <div class="ec-desc">Porter, Blue Ocean, disruption theory — competitive strategy</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Venture Capital & Startups" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS C</div>
+  <div class="ec-name">VENTURE CAPITAL & STARTUPS</div>
+  <div class="ec-desc">Term sheets, cap tables, VC math, startup evaluation</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Real Estate Finance" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
+  <div class="ec-name">REAL ESTATE FINANCE</div>
+  <div class="ec-desc">Cap rates, DCF, development proforma — all asset classes</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="International Trade" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
+  <div class="ec-name">INTERNATIONAL TRADE</div>
+  <div class="ec-desc">WTO rules, trade finance, letters of credit, tariffs</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Accounting & IFRS" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
+  <div class="ec-name">ACCOUNTING & IFRS</div>
+  <div class="ec-desc">Financial statements, standards — IFRS and US GAAP</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Marketing & Brand" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 5 &middot; AXIS C</div>
+  <div class="ec-name">MARKETING & BRAND</div>
+  <div class="ec-desc">Consumer behavior, digital marketing, brand equity</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Operations Management" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
+  <div class="ec-name">OPERATIONS MANAGEMENT</div>
+  <div class="ec-desc">Supply chain, inventory, quality control — lean principles</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Entrepreneurship" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
+  <div class="ec-name">ENTREPRENEURSHIP</div>
+  <div class="ec-desc">Business model canvas, validation, scaling, fundraising</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div><div class="exam-card" style="--ec:#E2C86D" data-task="Sovereign Economics" data-task-type="knowledge">
+  <div class="ec-level">LEVEL 8 &middot; AXIS C</div>
+  <div class="ec-name">SOVEREIGN ECONOMICS</div>
+  <div class="ec-desc">Token economics, digital assets, decentralized finance</div>
+  <div class="ec-meta">
+    <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+  </div>
+</div></div>
+</div>
+<div class="tab-panel" id="tab-my_exams">
+  <div class="sechead">MY EXAM HISTORY</div>
+  <div id="exam-log"><div style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EXAM HISTORY...</div></div>
+</div>
+<div data-page-emblem="academy" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; SOVEREIGN ACADEMY &middot; 108+ WORLDWIDE EXAMS</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+</main></div>
+<script>document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('on');});document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('on');});b.classList.add('on');var p=document.getElementById('tab-'+b.dataset.tab);if(p)p.classList.add('on');});});</script>
+<script>(function tryP(){if(document.readyState!=='complete'){window.addEventListener('load',tryP);return;}var tr=0,iv=setInterval(function(){tr++;if(window.__omegaPopulate&&window.__omegaSb){window.__omegaSb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return window.__omegaSb.from('profiles').select('*').eq('id',s.user.id).maybeSingle().then(function(q){window.__omegaPopulate(q.data||{},s.user);});}).catch(function(){});clearInterval(iv);}if(tr>30)clearInterval(iv);},200);})();</script>
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
-  let user=null, axisA=1, cleared={}, selD=-1, tierHasAcademyFull=true;
-
-  const DISC=[['Aries','Ares'],['Taurus','Aphrodite'],['Gemini','Hermes'],['Cancer','Artemis'],['Leo','Apollo'],['Virgo','Athena'],['Libra','Hera'],['Scorpio','Demeter'],['Sagittarius','Zeus'],['Capricorn','Hestia'],['Aquarius','Hephaestus'],['Pisces','Poseidon']];
-  const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-  function key(d,l){ return 'd'+d+'l'+l; }
-  function isCleared(d,l){ return !!cleared[key(d,l)]; }
-  function clearsIn(d){ var n=0; for(var l=0;l<12;l++) if(isCleared(d,l)) n++; return n; }
-  function discUnlocked(d){ if(d===0) return true; if(!tierHasAcademyFull) return false; return clearsIn(d-1)>=6 && axisA>=d; }
-  function lessonUnlocked(d,l){ if(!discUnlocked(d)) return false; return l===0 || isCleared(d,l-1); }
-
-  function rnd(n){ return Math.floor(Math.random()*n); }
-  function node(){ return [1+rnd(9),1+rnd(9),1+rnd(9)]; }
-  function auth(n){ return Math.sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]); }
-  function ns(n){ return '('+n[0]+','+n[1]+','+n[2]+')'; }
-  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=rnd(i+1); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
-  function opts(correct, distractors){
-    var set=[String(correct)]; var guard=0;
-    while(set.length<4 && guard<50){ var d=distractors(); var s=String(d); if(set.indexOf(s)===-1) set.push(s); guard++; }
-    return shuffle(set.map(function(s){ return {label:s, correct:(s===String(correct))}; }));
-  }
-
-  function genTier(){ var n=node(); var c=Math.min(n[0],n[1],n[2]); return {text:'Tier of node '+ns(n)+'  --  the floor of its lowest axis?', options:opts(c,function(){return 1+rnd(9);})}; }
-  function genAuth(){ var n=node(); var c=auth(n).toFixed(2); return {text:'Authority of node '+ns(n)+' = \u221a(A\u00b2+B\u00b2+C\u00b2), to 2 decimals?', options:opts(c,function(){return (auth(n)+(rnd(7)-3)*0.37).toFixed(2);})}; }
-  function genBelow(){ var n=node(); var c=(n[0]-1)*(n[1]-1)*(n[2]-1); return {text:'How many nodes lie strictly below '+ns(n)+' (all three coordinates smaller)?', options:opts(c,function(){return Math.max(0,c+(rnd(9)-4)*((rnd(3)+1)));})}; }
-  function genHighest(k){ var arr=[]; for(var i=0;i<k;i++) arr.push(node()); var best=0; for(var i=1;i<k;i++) if(auth(arr[i])>auth(arr[best])) best=i;
-    var o=arr.map(function(n,i){ return {label:ns(n), correct:i===best}; }); return {text:'Which node is the most ascended (highest authority)?', options:shuffle(o)}; }
-
-  function question(d){
-    var pool;
-    if(d<12) pool=[genTier, function(){return genHighest(2);}];
-    else if(d<24) pool=[genTier, genAuth, function(){return genHighest(3);}];
-    else if(d<36) pool=[genAuth, genBelow, function(){return genHighest(4);}];
-    else pool=[genAuth, genBelow, function(){return genHighest(4);}, genTier];
-    return pool[rnd(pool.length)]();
-  }
-
-  function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
-
-  function renderDisc(){
-    var box=document.getElementById('games'); box.innerHTML='';
-    DISC.forEach(function(gm,d){
-      var unlocked=discUnlocked(d), n=clearsIn(d);
-      var el=document.createElement('div'); el.className='game'+(unlocked?'':' locked')+(d===selD?' sel':'');
-      var lock=unlocked?'':(!tierHasAcademyFull?'<div class="lock">SEEKER TIER REQUIRED &middot; <a href="/subscriptions.html" style="color:var(--gold)">upgrade to unlock all 12 disciplines</a></div>':'<div class="lock">LOCKED  .  need Knowledge \u2265 '+d+' and 6 lessons cleared in '+ROMAN[d-1]+'</div>');
-      el.innerHTML='<div class="gi">DISCIPLINE '+ROMAN[d]+' \u00B7 '+gm[0].toUpperCase()+'</div><div class="gn">'+gm[1]+'\u2019s Codex</div><div class="gs">'+n+' / 12 CLEARED</div><div class="bar"><i style="width:'+(n/12*100)+'%"></i></div><div data-canon-lattice=\"twelve\"></div>'+lock;
-      if(unlocked) el.addEventListener('click',function(){ openDisc(d); });
-      box.appendChild(el);
-    });
-  }
-  function openDisc(d){
-    selD=d; renderDisc();
-    var st=document.getElementById('stages'); st.classList.add('open');
-    document.getElementById('st-name').textContent=DISC[d][1]+'\u2019s Codex \u2014 Discipline '+ROMAN[d];
-    document.getElementById('st-sub').textContent='Answer each lesson without error. One wrong reading fails it.';
-    var nb=document.getElementById('st-nodes'); nb.innerHTML='';
-    for(var l=0;l<12;l++){ (function(l){
-      var cl=isCleared(d,l), avail=lessonUnlocked(d,l);
-      var n=document.createElement('div'); n.className='node'+(cl?' cleared':(avail&&!cl?' avail':''));
-      n.textContent=ROMAN[l];
-      if(avail) n.addEventListener('click',function(){ launch(d,l); });
-      nb.appendChild(n);
-    })(l); }
-    st.scrollIntoView({behavior:'smooth',block:'nearest'});
-  }
-
-  // ===== lesson challenge =====
-  let curD=-1,curL=-1,need=1,got=0,locked=false;
-  function launch(d,l){
-    curD=d; curL=l; var diff=d*12+l;
-    need=Math.min(9, 1+Math.floor(diff/4));
-    got=0; locked=false;
-    document.getElementById('m-title').textContent='DISCIPLINE '+ROMAN[d]+' \u00B7 LESSON '+ROMAN[l];
-    document.getElementById('m-diff').textContent='ANSWER '+need+' IN A ROW \u00B7 NO ERRORS'+(isCleared(d,l)?' \u00B7 REPLAY':' \u00B7 NEW NODE');
-    document.getElementById('modal').classList.add('open');
-    nextQ();
-  }
-  function nextQ(){
-    locked=false;
-    var q=question(curD*12+curL);
-    document.getElementById('m-stat').textContent='';
-    document.getElementById('m-q').textContent=q.text;
-    document.getElementById('m-q').setAttribute('data-q',(got+1)+'/'+need);
-    var ob=document.getElementById('m-opts'); ob.innerHTML='';
-    document.getElementById('m-stat').textContent='Question '+(got+1)+' of '+need;
-    q.options.forEach(function(o){
-      var b=document.createElement('button'); b.className='opt'; b.textContent=o.label;
-      b.addEventListener('click',function(){ choose(b,o,q); });
-      ob.appendChild(b);
-    });
-  }
-  async function choose(btn,o,q){
-    if(locked) return; locked=true;
-    if(o.correct){
-      btn.classList.add('good');
-      got++;
-      if(got>=need){ await clearLesson(); return; }
-      await sleep(420); nextQ();
-    } else {
-      btn.classList.add('bad');
-      Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(el){ if(el.textContent===String(q.options.filter(function(x){return x.correct;})[0].label)) el.classList.add('good'); });
-      document.getElementById('m-stat').textContent='WRONG READING \u2014 the lesson resets.';
-      document.getElementById('m-row').innerHTML='<button class="mbtn" id="m-retry">RETRY</button><button class="mbtn ghost" id="m-close2">LEAVE</button>';
-      document.getElementById('m-retry').addEventListener('click',function(){ got=0; document.getElementById('m-row').innerHTML='<button class="mbtn ghost" id="m-close">LEAVE</button>'; document.getElementById('m-close')?.addEventListener('click',closeModal); nextQ(); });
-      document.getElementById('m-close2').addEventListener('click',closeModal);
-    }
-  }
-  async function clearLesson(){
-    document.getElementById('m-stat').textContent='LESSON CLEARED \u2014 awarding Knowledge...';
-    document.getElementById('m-opts').innerHTML='';
-    cleared[key(curD,curL)]=true;
-    try{ await supabase.rpc('complete_task',{p_kind:'academy',p_task:key(curD,curL),p_axis:'a',p_title:'Discipline '+(curD+1)+' Lesson '+(curL+1)}); }catch(e){}
-    try{
-      var tcR=await supabase.from('task_completions').select('task').eq('user_id',user.id).eq('kind','academy');
-      cleared={}; if(tcR.data) tcR.data.forEach(function(r){ cleared[r.task]=true; });
-      var prR=await supabase.from('profiles').select('axis_a').eq('id',user.id).maybeSingle();
-      if(prR.data && prR.data.axis_a!=null) axisA=Number(prR.data.axis_a);
-    }catch(e){}
-    document.getElementById('m-stat').textContent='NODE CLEARED \u2014 Knowledge updated.';
-    document.getElementById('m-row').innerHTML='<button class="mbtn" id="m-cont">CONTINUE</button>';
-    document.getElementById('m-cont').addEventListener('click',closeModal);
-    renderDisc(); openDisc(curD); updateMStat();
-  }
-  function closeModal(){ document.getElementById('modal').classList.remove('open'); document.getElementById('m-row').innerHTML='<button class="mbtn ghost" id="m-close">LEAVE</button>'; document.getElementById('m-close')?.addEventListener('click',closeModal); }
-
-  function updateMStat(){ var total=0; for(var d=0;d<12;d++) total+=clearsIn(d); document.getElementById('mstat').innerHTML='KNOWLEDGE (A) <b>'+axisA.toFixed(2)+'</b> / 9 \u00B7 NODES CLEARED <b>'+total+'</b> / 144'; }
-
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('The Academy','Sign in to enter the Academy.'); return; }
-    user=sess.user;
-    var pr=await supabase.from('profiles').select('sign,axis_a,membership_tier').eq('id',user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to enter the Academy.'); return; }
-    axisA=Number(pr.data.axis_a||0.001);
-    var memberTier=Number(pr.data.membership_tier)||1;
-    tierHasAcademyFull = await new Promise(function(resolve){
-      if(window.OmegaCanon && window.OmegaCanon.ready){ resolve(window.OmegaCanon.tierUnlocks(memberTier,'academy_full')); return; }
-      var tries=0;
-      var t=setInterval(function(){
-        tries++;
-        if(window.OmegaCanon && window.OmegaCanon.ready){ clearInterval(t); resolve(window.OmegaCanon.tierUnlocks(memberTier,'academy_full')); }
-        else if(tries>20){ clearInterval(t); resolve(true); } // fail-open if canon never loads, so a real member is never wrongly locked out by a network hiccup
-      },150);
-    });
-    try{ var tc=await supabase.from('task_completions').select('task').eq('user_id',user.id).eq('kind','academy'); if(tc.data) tc.data.forEach(function(r){ cleared[r.task]=true; }); }catch(e){}
-    document.getElementById('gate').style.display='none';
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
-    renderDisc(); updateMStat();
-  }
-  document.getElementById('m-close')?.addEventListener('click',closeModal);
-  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    sid('ex-auth',auth.toFixed(4)); sid('ex-certs',Number(pr.certificates_earned||0));
+    try{var tc=await sb.from('task_completions').select('id',{count:'exact'}).eq('user_id',s.user.id).eq('task_type','knowledge');sid('ex-passed',tc.count||0);}catch(e){sid('ex-passed','0');}
+    /* wire exam cards */
+    document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=async function(){if(window.omegaCompleteTask){var r=await window.omegaCompleteTask(card.getAttribute('data-task'),'knowledge');if(r.ok){card.style.borderTopColor='var(--green)';var lbl=card.querySelector('.ec-meta');if(lbl)lbl.innerHTML+='<span style="font-family:var(--M);font-size:8px;color:var(--green);margin-top:4px">&#10003; RECORDED</span>';}}};});
+    /* exam log */
+    try{var gl=await sb.from('task_completions').select('*').eq('user_id',s.user.id).eq('task_type','knowledge').order('completed_at',{ascending:false}).limit(30);var log=gl.data||[];var ge=document.getElementById('exam-log');if(ge)ge.innerHTML=log.length?log.map(function(g){return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:11px"><span style="font-family:var(--M);font-size:8px;color:var(--muted);width:100px">'+new Date(g.completed_at).toLocaleDateString('en-GB').toUpperCase()+'</span><span>'+String(g.task_name||'').toUpperCase()+'</span><span style="font-family:var(--M);font-size:8px;color:var(--gold);margin-left:auto">+'+Number(g.points_earned||0.003).toFixed(3)+'</span></div>';}).join(''):'<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px">NO EXAMS COMPLETED YET. CLICK ANY EXAM CARD TO RECORD YOUR FIRST COMPLETION.</div>';}catch(e){}
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-</body>
-</html>
+</body></html>

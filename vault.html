@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -224,6 +224,18 @@ a{color:inherit;text-decoration:none}
 
     <!-- EARNING LEDGER (merged from wallet.html) -->
     <div class="tab-panel" id="tab-earning">
+<div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
+  <canvas id="cv-earn" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
+  <div>
+    <div style="font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--solar);margin-bottom:3px" id="hd-title-earn">&#937; SOVEREIGN ENGINE</div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
+  </div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="font-family:var(--D);font-size:18px;color:var(--solar)" id="hd-auth-earn">27.8367</div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
+  </div>
+</div>
+<script>(function(){var cv=document.getElementById('cv-earn');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
       <div style="padding:clamp(14px,3vw,36px)">
         <!-- HERO ROW -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.4rem">
@@ -330,350 +342,38 @@ function frame(){ctx.clearRect(0,0,100,100);
 
     <!-- ARTICLES (merged from treasury.html) -->
     <div class="tab-panel" id="tab-articles">
-      <div class="sechead">THE 11 IMMUTABLE ARTICLES OF SOVEREIGNTY</div>
-      <div class="pad" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE I</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">100% Absolute Ownership</div><div style="font-size:11px;color:var(--muted)">No co-founders, no partners. Sole authority: Major Sleiman Youssef Dagher.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE II</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">51% Master Stake</div><div style="font-size:11px;color:var(--muted)">467,756,700,000 &#937; permanently locked. Non-transferable without explicit override.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE III</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Irrevocable Property Docs</div><div style="font-size:11px;color:var(--muted)">Hashed into Genesis Block. Engineers Order No.30875 immutably embedded.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE IV</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">999-Point Blueprint</div><div style="font-size:11px;color:var(--muted)">Permanent Directive in Immutable Logic Layer. Windsurf protocol active.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE V</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">&#937; Signet Power</div><div style="font-size:11px;color:var(--muted)">The only recognized icon of sovereign authority. All outputs carry the Omega seal.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Family Nest Protocol</div><div style="font-size:11px;color:var(--muted)">Sovereigns-by-Blood: zero fees, 100% compute priority, full access.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VII</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Heritage Protocol</div><div style="font-size:11px;color:var(--muted)">Dead-Man's Switch transfers full platform control to bloodline on trigger.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE VIII</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">51% Safety Net</div><div style="font-size:11px;color:var(--muted)">Flash-crash protection via Rhodium reserves. Auto-triggered on market breach.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE IX</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">20% Reinvestment Sweep</div><div style="font-size:11px;color:var(--muted)">Auto-buys Gold, Silver, Rhodium hourly. Compound sovereign reserve growth.</div></div>
-        <div style="padding:14px;border:1px solid var(--line)"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE X</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">Jurisdiction Hopping</div><div style="font-size:11px;color:var(--muted)">Automatic re-domicile if hostile. 5-nation protocol. Legal continuity guaranteed.</div></div>
-        <div style="padding:14px;border:1px solid var(--line);grid-column:span 2"><div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:6px">ARTICLE XI</div><div style="font-size:12px;color:var(--ink);margin-bottom:4px">The Omega Point</div><div style="font-size:11px;color:var(--muted)">Node 999 confirms absolute completion of the 104,976-node matrix. Sovereignty eternal. Matrix coordinate (9.000, 9.000, 9.000) -- authority score 27.8367 -- is the final and irrevocable state of the founder's sovereign record.</div></div>
-      </div>
+  <div class="sechead" style="color:var(--gold);border-color:rgba(201,168,76,.3)">
+    &#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY
+    <span style="font-family:var(--M);font-size:8px;color:var(--muted)">SEALED &middot; IRREVOCABLE &middot; GENESIS BLOCK</span>
+  </div>
+  <div style="border:1px solid rgba(201,168,76,.25);padding:12px 16px;background:rgba(201,168,76,.04);margin-bottom:16px;border-radius:2px">
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:3px">SOVEREIGN FOUNDER</div>
+    <div style="font-family:var(--D);font-size:12px;color:var(--ink)">MAJOR SLEIMAN YOUSSEF DAGHER &middot; ORDER OF ENGINEERS NO. 30875</div>
+    <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:3px">ARIES &middot; FIRE &middot; ARES &middot; SENTINEL &middot; ARENITE &middot; AUTH=27.8367</div>
+  </div>
+  <div id="articles-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:18px"></div>
+  <div style="text-align:center;padding:18px;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.03);border-radius:2px">
+    <div style="font-family:var(--D);font-size:28px;color:var(--gold);margin-bottom:8px">&#937;</div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);line-height:2">SEALED IN THE IMMUTABLE LOGIC LAYER &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e=27.8367</div>
+  </div>
+  <script>(function(){var ARTS=[{n:"I",title:"ABSOLUTE OWNERSHIP",col:"#C9A84C",text:"100% absolute ownership — no co-founders, no partners. The Order belongs wholly to Major Sleiman Youssef Dagher."},{n:"II",title:"MASTER STAKE",col:"#E2C86D",text:"51% Master Stake — 467,756,700,000 Ω permanently locked in the Sovereign Vault. Irrevocable."},{n:"III",title:"IRREVOCABLE PROPERTY",col:"#C9A84C",text:"Irrevocable Property Documents hashed into the Genesis Block. Lebanese Order of Engineers No. 30875."},{n:"IV",title:"SOVEREIGN DIRECTIVE",col:"#E2C86D",text:"The 999-Point Blueprint sealed in the Immutable Logic Layer. The Architect’s will governs all system evolution."},{n:"V",title:"THE Ω SIGNET",col:"#C9A84C",text:"The Omega Signet is the only recognized icon of sovereign power. All authority flows through Ω."},{n:"VI",title:"FAMILY NEST PROTOCOL",col:"#3fb27f",text:"Sovereigns-by-Blood receive zero fees, 100% compute priority, and permanent lifetime access."},{n:"VII",title:"HERITAGE PROTOCOL",col:"#00E5FF",text:"The Dead-Man’s Switch transfers full control to the bloodline. The Order persists across generations."},{n:"VIII",title:"STABILITY NET",col:"#E2C86D",text:"51% Safety Net — flash-crash protection via physical sovereign-grade reserve: Gold, Rhodium, Silver."},{n:"IX",title:"REINVESTMENT SWEEP",col:"#C9A84C",text:"20% Reinvestment Sweep — automatic acquisition of sovereign-grade physical assets on every cycle."},{n:"X",title:"JURISDICTION SOVEREIGNTY",col:"#3fb27f",text:"Automatic re-domicile activates under hostile jurisdiction. The Order is beyond any single state."},{n:"XI",title:"THE OMEGA POINT",col:"#C9A84C",text:"Node 999 confirms absolute completion. The Omega Point — total system sovereignty achieved and sealed."}];var g=document.getElementById("articles-grid");if(g)g.innerHTML=ARTS.map(function(a){return'<div style="border:1px solid rgba(201,168,76,.15);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;border-top:2px solid '+a.col+'"><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">ARTICLE '+a.n+'</div><div style="font-family:var(--D);font-size:11px;color:'+a.col+';margin-bottom:7px">'+a.title+'</div><div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.7">'+a.text+'</div></div>';}).join("");})();</script>
+</div><div class="tab-panel" id="tab-audit">
+  <div class="sechead" style="color:var(--cyan);border-color:rgba(0,229,255,.2)">
+    TREASURY &amp; ACCESS AUDIT LOG
+    <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:4px 12px;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:2px">&#8635; REFRESH</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="border:1px solid rgba(0,229,255,.15);padding:12px;border-radius:2px;background:rgba(0,229,255,.03);text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)" id="audit-count">--</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">EVENTS</div></div>
+    <div style="border:1px solid rgba(63,178,127,.15);padding:12px;border-radius:2px;background:rgba(63,178,127,.03);text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)" id="audit-last">--</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">LAST EVENT</div></div>
+    <div style="border:1px solid rgba(201,168,76,.15);padding:12px;border-radius:2px;background:rgba(201,168,76,.03);text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">LIVE</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">STATUS</div></div>
+  </div>
+  <div style="border:1px solid rgba(0,229,255,.1);border-radius:2px">
+    <div style="display:grid;grid-template-columns:110px 1fr 90px 70px;padding:8px 12px;background:rgba(0,229,255,.06);border-bottom:1px solid rgba(0,229,255,.1)">
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)">TIMESTAMP</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)">EVENT</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)">TYPE</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)">STATUS</div>
     </div>
-
-    <!-- AUDIT LOG (merged from treasury.html) -->
-    <div class="tab-panel" id="tab-audit">
-      <div class="sechead">TREASURY AUDIT LOG</div>
-      <div class="pad" style="font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);margin-bottom:14px">The entries below are an illustration of what this log will show once the treasury/token economy is live -- not a real history. No sweep or lock operations have actually occurred yet.</div>
-      <div class="pad" style="display:flex;flex-direction:column;gap:0">
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-11 09:00</span><span>Auto-sweep executed -- Gold / Silver / Rhodium acquisition</span><span style="color:var(--muted)">SWEEP-PROTOCOL</span><span style="color:var(--green)">CONFIRMED</span></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-11 00:00</span><span>Master Vault lock verified -- 51% &#937; sealed</span><span style="color:var(--muted)">VAULT-LOCK-001</span><span style="color:var(--green)">SEALED</span></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-10 18:30</span><span>Polygon L2 activation gated -- legal clearance pending</span><span style="color:var(--muted)">CHAIN-GATE</span><span style="color:var(--solar)">GATED</span></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-09 12:00</span><span>PYRON founder token genesis confirmed</span><span style="color:var(--muted)">TOKEN-GEN-001</span><span style="color:var(--green)">CONFIRMED</span></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-08 09:15</span><span>Sovereign identity hash verified on ledger</span><span style="color:var(--muted)">GENESIS-HASH</span><span style="color:var(--green)">IMMUTABLE</span></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(201,168,76,.1);font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-07 14:00</span><span>Heritage Dead-Man's Switch protocol activated</span><span style="color:var(--muted)">HERITAGE-PROTO</span><span style="color:var(--green)">ACTIVE</span></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;padding:10px 0;font-size:11px"><span style="color:var(--muted);font-family:var(--M)">2026-07-01 00:00</span><span>12 Immutable Articles sealed -- Sovereignty declared</span><span style="color:var(--muted)">SOVEREIGNTY</span><span style="color:var(--green)">ETERNAL</span></div>
-      </div>
-    </div>
-  </main>
-<script>
-/* Tab switching */
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active');
-  });
-});
-if(location.hash){const t=location.hash.replace('#','');document.querySelector('[data-tab="'+t+'"]')?.click();}
-</script>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
-/* Share this single client with every shared script (bg.js, emblems,
-   gate, membership, progress ...) so the page has exactly one
-   GoTrueClient rather than one per module. */
-try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
-
-const ASSETS=[
-  {name:'SWISS VAULT GOLD BARS',cat:'PHYSICAL',val:'PENDING',ch:'--',up:true,col:'#C9A84C'},
-  {name:'SINGAPORE HIGH-RISE',cat:'PHYSICAL',val:'PENDING',ch:'--',up:true,col:'#E2C86D'},
-  {name:'SWISS VAULT DOOR',cat:'PHYSICAL',val:'--',ch:'+0.09%',up:true,col:'#C7CDD6'},
-  {name:'OMEGA TOKEN',cat:'DIGITAL',val:'&#937; 9.17',ch:'+12.77%',up:true,col:'#C9A84C'},
-  {name:'AETHER TOKEN',cat:'DIGITAL',val:'&#937; 24.55',ch:'+3.17%',up:true,col:'#9B6BF0'},
-  {name:'MATRIX NODE CREDITS',cat:'DIGITAL',val:'&#937; 91.7',ch:'+9.17%',up:true,col:'#00E5FF'},
-];
-
-const TOKENS=[
-  {sym:'&#x25CF;',name:'PYRON',token:'ARIES TOKEN',sign:'Aries',col:'#E86A3A',bal:'0'},
-  {sym:'&#x25C8;',name:'AURUM',token:'TAURUS TOKEN',sign:'Taurus',col:'#C7CDD6',bal:'0'},
-  {sym:'&#x2609;',name:'ZEPHYR',token:'GEMINI TOKEN',sign:'Gemini',col:'#A9C2D8',bal:'0'},
-  {sym:'&#x2302;',name:'NEREID',token:'CANCER TOKEN',sign:'Cancer',col:'#34C6E6',bal:'0'},
-  {sym:'&#x2736;',name:'SOLARI',token:'LEO TOKEN',sign:'Leo',col:'#E86A3A',bal:'0'},
-  {sym:'&#x03A9;',name:'ARENITE',token:'VIRGO TOKEN',sign:'Virgo',col:'#D9B86A',bal:'0'},
-  {sym:'&#x25B6;',name:'FORGEON',token:'LIBRA TOKEN',sign:'Libra',col:'#A9C2D8',bal:'0'},
-  {sym:'&#x25B2;',name:'STYX',token:'SCORPIO TOKEN',sign:'Scorpio',col:'#8B0000',bal:'0'},
-  {sym:'&#x2726;',name:'EMBER',token:'SAGITTARIUS TOKEN',sign:'Sagittarius',col:'#C9A84C',bal:'0'},
-  {sym:'&#x22D4;',name:'FERRUM',token:'CAPRICORN TOKEN',sign:'Capricorn',col:'#E2C86D',bal:'0'},
-  {sym:'&#x2316;',name:'AETHER',token:'AQUARIUS TOKEN',sign:'Aquarius',col:'#9B6BF0',bal:'0'},
-  {sym:'&#x21C4;',name:'ABYSS',token:'PISCES TOKEN',sign:'Pisces',col:'#3fb27f',bal:'0'},
-];
-
-const NFTS=[
-  {sym:'&#x25CF;',name:'OMEGA DRAGON',line:'GENESIS SIGIL',col:'#C9A84C',rarity:'GENESIS 1/1',locked:false},
-  {sym:'&#x2609;',name:'THE SEER',line:'ORACLE CROWN',col:'#9B6BF0',rarity:'MYTHIC',locked:false},
-  {sym:'&#x265A;',name:'COSMIC CROWN',line:'KING MARK',col:'#E2C86D',rarity:'LEGENDARY',locked:false},
-  {sym:'&#x22D4;',name:'DAGHER LINEAGE SEAL',line:'BLOODLINE NFT',col:'#D9B86A',rarity:'SOULBOUND',locked:false},
-  {sym:'&#x2736;',name:'GATE SEAL I',line:'12 GATE SEALS',col:'#C9A84C',rarity:'RARE',locked:false},
-  {sym:'&#x2302;',name:'SOVEREIGN PASSPORT',line:'IDENTITY LINE',col:'#00E5FF',rarity:'VERIFIED',locked:false},
-  {sym:'&#x25C9;',name:'ORACLE NODE MARK',line:'PREDICTION LINE',col:'#9B6BF0',rarity:'RARE',locked:true},
-  {sym:'&#x03A9;',name:'OMEGA MASTER SEAL',line:'APEX COLLECTION',col:'#C9A84C',rarity:'1 OF 1 -- APEX LOCKED',locked:true},
-  {sym:'&#x2692;',name:'HEPHAESTUS FORGE',line:'PANTHEON LINE',col:'#E86A3A',rarity:'EPIC',locked:true},
-  {sym:'&#x25B2;',name:'FIRE TRIAD TOKEN',line:'TRIAD GLYPHS',col:'#E86A3A',rarity:'RARE',locked:true},
-  {sym:'&#x2609;',name:'CELESTIAL MANDATE',line:'COSMIC CERTIFICATE',col:'#A9C2D8',rarity:'EPIC',locked:true},
-  {sym:'&#x25CF;',name:'RELIQUARY OMEGA',line:'RELIQUARIES',col:'#C9A84C',rarity:'LEGENDARY -- LOCKED',locked:true},
-];
-
-/* duplicate 12-tier price list removed -- subscriptions.html is the single
-   source for membership tiers and pricing (canon: omega-canon.json). */
-
-const SPLINTER=[
-  {label:'AEROSPACE / DePIN',pct:42,col:'#00E5FF'},
-  {label:'AI DRUG DISCOVERY',pct:38,col:'#3fb27f'},
-  {label:'LIFE SCIENCES',pct:42,col:'#E2C86D'},
-  {label:'SPACE INFRASTRUCTURE',pct:35,col:'#9B6BF0'},
-  {label:'Q-CHIP HARDWARE',pct:55,col:'#C9A84C'},
-];
-
-function drawVaultCube(){
-  const cv=document.getElementById('vault-cv');
-  if(!cv) return;
-  const ctx=cv.getContext('2d'),CX=120,CY=120,sz=46; let t=0;
-  const verts=[[-sz,-sz,-sz],[sz,-sz,-sz],[sz,sz,-sz],[-sz,sz,-sz],[-sz,-sz,sz],[sz,-sz,sz],[sz,sz,sz],[-sz,sz,sz]];
-  const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-  function proj(x,y,z,rx,ry){
-    const cX=Math.cos(rx),sX=Math.sin(rx),cY=Math.cos(ry),sY=Math.sin(ry);
-    let tx=x*cY+z*sY,tz=-x*sY+z*cY;
-    let ty=y*cX-tz*sX,tz2=y*sX+tz*cX;
-    const sc=120/(120+tz2*.8); return{x:CX+tx*sc,y:CY+ty*sc};
-  }
-  function frame(){
-    t+=.01; ctx.clearRect(0,0,240,240);
-    const rx=t*.4,ry=t*.6,pts=verts.map(v=>proj(v[0],v[1],v[2],rx,ry));
-    edges.forEach(e=>{
-      ctx.beginPath();ctx.moveTo(pts[e[0]].x,pts[e[0]].y);ctx.lineTo(pts[e[1]].x,pts[e[1]].y);
-      ctx.strokeStyle='rgba(201,168,76,0.6)';ctx.lineWidth=1.5;ctx.shadowColor='rgba(201,168,76,.4)';ctx.shadowBlur=6;ctx.stroke();ctx.shadowBlur=0;
-    });
-    pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,0.8)';ctx.fill();});
-    ctx.fillStyle='rgba(201,168,76,'+(0.75+.2*Math.sin(t*1.5))+')';
-    ctx.font='700 26px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=18;ctx.fillText('\u03A9',CX,CY);ctx.shadowBlur=0;
-    requestAnimationFrame(frame);
-  }
-  frame();
-}
-
-function drawWave(){
-  const cv=document.getElementById('wv-cv');
-  if(!cv) return;
-  const W=cv.offsetWidth||200,H=36;cv.width=W*2;cv.height=H*2;cv.style.width=W+'px';cv.style.height=H+'px';
-  const ctx=cv.getContext('2d');ctx.scale(2,2);let t=0;
-  function ecgY(x,W,t){
-    const p=(x/W*3+t*.7)%1;
-    if(p<.1) return -Math.sin(p/.1*Math.PI)*10;
-    if(p<.12) return Math.sin((p-.1)/.02*Math.PI*2)*22;
-    if(p<.16) return -Math.sin((p-.12)/.04*Math.PI)*10;
-    return Math.sin((x/W*3+t*.7)*6.28*2.5)*1.5;
-  }
-  function frame(){
-    t+=.016;ctx.clearRect(0,0,W,H);
-    ctx.beginPath();
-    for(let x=0;x<=W;x+=2){const y=H/2+ecgY(x,W,t);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
-    ctx.strokeStyle='rgba(63,178,127,0.7)';ctx.lineWidth=1.5;ctx.shadowColor='rgba(63,178,127,.4)';ctx.shadowBlur=5;ctx.stroke();ctx.shadowBlur=0;
-    requestAnimationFrame(frame);
-  }
-  frame();
-}
-
-function buildAssets(){
-  const tb=document.getElementById('asset-tbody');tb.innerHTML='';
-  ASSETS.forEach(a=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><div class="at-name">${a.name}</div></td><td><span class="at-badge" style="color:${a.col};border-color:${a.col}44">${a.cat}</span></td><td style="color:var(--gold);font-family:var(--D)">${a.val}</td><td class="at-change ${a.up?'up':'dn'}">${a.ch}</td><td style="color:var(--green);font-family:var(--M);font-size:8px">ACTIVE</td>`;
-    tb.appendChild(tr);
-  });
-}
-
-function buildSplinter(){
-  const g=document.getElementById('splinter-grid');g.innerHTML='';
-  SPLINTER.forEach(s=>{
-    const c=document.createElement('div');
-    c.style.cssText=`border:1px solid ${s.col}33;border-left:3px solid ${s.col}77;background:linear-gradient(160deg,var(--panel),transparent);padding:14px;`;
-    c.innerHTML=`<div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">${s.label}</div><div style="font-family:var(--D);font-size:22px;color:${s.col};font-weight:700">${s.pct}%</div><div style="height:2px;background:rgba(201,168,76,.08);margin-top:8px;border-radius:1px;overflow:hidden"><div style="height:100%;width:0%;background:linear-gradient(90deg,${s.col},transparent);border-radius:1px;transition:width 1.2s ease" data-w="${s.pct}"></div></div>`;
-    g.appendChild(c);
-    setTimeout(()=>c.querySelector('[data-w]').style.width=s.pct+'%',200);
-  });
-}
-
-function buildWallet(a,b,c){
-  const total=Math.round((a+b+c)*917.17);
-  var _el=document.getElementById('wallet-total');if(_el)document.getElementById('wallet-total').innerHTML='&#937; '+total.toLocaleString();
-  const g=document.getElementById('wallet-grid');g.innerHTML='';
-  TOKENS.forEach(tk=>{
-    const bal=parseFloat(tk.bal)||0;
-    const cd=document.createElement('div');cd.className='wl-card';cd.style.cursor='pointer';
-    cd.style.cssText+=`border-top-color:${tk.col}`;
-    cd.innerHTML=`<span class="wlc-sym" data-omega-emblem="${tk.sign}" style="display:inline-block;width:52px;height:52px"></span><div class="wlc-name" style="color:${tk.col}">${tk.name}</div><div class="wlc-token">${tk.token}</div><div data-canon-lattice="twelve"></div><div class="wlc-bal" style="color:${bal>0?'var(--gold)':'var(--muted)'}">${bal>0?'&#937; '+bal.toLocaleString():'--'}</div><div class="wlc-usd">${bal>0?'ACTIVE':'PENDING ACTIVATION'}</div>`;
-    g.appendChild(cd);
-    const emblemEl=cd.querySelector('[data-omega-emblem]');
-    fillSvg(emblemEl, tk.sign);
-    cd.addEventListener('click',()=>openTokenPanel(tk,bal));
-  });
-}
-
-function openTokenPanel(tk,bal){
-  window.OmegaEmblemPanel.open({
-    glyph: tk.sign, color: tk.col,
-    title: tk.name,
-    subtitle: tk.token,
-    badge: bal>0 ? 'ACTIVE' : 'PENDING ACTIVATION',
-    sections: [
-      { label: 'BALANCE', stats: [{k:'Current', v: '\u03A9 '+bal.toLocaleString()}] },
-      { label: 'STATUS', body: bal>0
-          ? 'This track token is active in your wallet.'
-          : 'Token economy activation is pending licensed legal review (securities, money-transmission, KYC/AML). No real monetary value is attached yet.' },
-    ]
-  });
-}
-
-function fillSvg(el, sign){
-  if(!el) return;
-  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.svg(sign); return; }
-  var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.svg(sign); clearInterval(t); }
-    else if(tries>20){ clearInterval(t); }
-  },150);
-}
-
-function buildNFTs(){
-  const g=document.getElementById('nft-gallery');g.innerHTML='';
-  NFTS.forEach(n=>{
-    const c=document.createElement('div');c.className='nft-card';c.style.cursor='pointer';
-    c.style.cssText+=`border-top:2px solid ${n.col}66`;
-    c.innerHTML=`<span class="nft-symbol" style="display:inline-block;width:48px;height:48px"></span><div class="nft-name" style="color:${n.col}">${n.name}</div><div class="nft-line">${n.line}</div><div data-canon-lattice="twelve"></div><span class="nft-rarity" style="color:${n.col};border-color:${n.col}44">${n.rarity}</span>${n.locked?'<div class="nft-locked">LOCKED -- MINT PENDING</div>':''}`;
-    g.appendChild(c);
-    fillRing(c.querySelector('.nft-symbol'), n.sym, n.col, n.locked);
-    c.addEventListener('click',()=>openNFTPanel(n));
-  });
-}
-
-function openNFTPanel(n){
-  window.OmegaEmblemPanel.open({
-    glyph: n.sym, color: n.col,
-    title: n.name,
-    subtitle: n.line,
-    badge: n.locked ? 'MINT PENDING' : n.rarity,
-    sections: [
-      { label: 'STATUS', body: n.locked
-          ? 'Minting is not yet active. Token economy activation is pending licensed legal review.'
-          : 'This sigil is part of your sovereign collection.' },
-      { label: 'GO FURTHER', actions: [{ label: 'Open Full Sigil Vault', href: '/sigil.html' }] },
-    ]
-  });
-}
-
-function fillRing(el, glyph, col, locked){
-  if(!el) return;
-  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
-  var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
-    else if(tries>20){ clearInterval(t); }
-  },150);
-}
-
-
-
-/* buildTxLog removed with the payments panel -- transaction history lives on
-   subscriptions.html (the single membership & payments page). */
-
-async function boot(){
-  const sess=(await sb.auth.getSession()).data.session;
-  if(!sess){window.location.href='/account.html';return;}
-  const pr=await sb.from('profiles').select('axis_a,axis_b,axis_c,membership_tier').eq('id',sess.user.id).maybeSingle();
-  const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
-  const nodes=Math.round(a*b*c*9),xp=Math.round(nodes*917.17);
-  const tier=parseInt(pr.data?.membership_tier)||1;
-  var _el=document.getElementById('aum-val');if(_el)document.getElementById('aum-val').innerHTML='&#937; '+xp.toLocaleString();
-  try{
-    const pts=await sb.rpc('my_points_balance');
-    document.getElementById('points-mini').textContent=(pts.data&&pts.data.balance!=null?pts.data.balance:0)+' PTS';
-  }catch(e){ document.getElementById('points-mini').textContent='-- PTS'; }
-  document.getElementById('res-phys').textContent='\u03A9 '+Math.round(xp*.6).toLocaleString();
-  document.getElementById('res-dig').textContent='\u03A9 '+Math.round(xp*.4).toLocaleString();
-  buildAssets();buildSplinter();buildWallet(a,b,c);buildNFTs();
-  /* buildTxLog() removed: its #tx-log element lived in the payments panel that
-     was consolidated into subscriptions.html. The call survived the panel and
-     threw on a null element -- killing the boot chain two lines before
-     requestAnimationFrame(drawVaultCube), which is why the reserve emblem and
-     the rotating cube stopped appearing. */
-  buildEarningLedger(sess.user.id,a,b,c);
-  requestAnimationFrame(()=>{drawVaultCube();drawWave();});
-}
-
-// merged from wallet.html -- real, non-monetary earning ledger
-async function buildEarningLedger(uid, a, b, c_v) {
-  /* populate the redesigned earning tab */
-  var PHI=1.6180339887, EU=2.7182818285;
-  var auth=Math.round(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c_v,3))*PHI/EU*1000)/1000;
-  var el=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
-  el('earn-auth',auth.toFixed(4)+' AUTH');
-  /* count tasks */
-  sb.from('task_completions').select('id,kind,completed_at').eq('user_id',uid)
-    .order('completed_at',{ascending:false}).limit(50).then(function(r){
-    var rows=r.data||[];
-    el('earn-tasks',rows.length+' COMPLETED');
-    el('earn-count',rows.length+' ENTRIES');
-    /* estimate credit from axis values */
-    var credit=Math.round((a+b+c_v)*917.17);
-    el('earn-total','Ω '+credit.toLocaleString());
-    /* render event rows */
-    var ledger=document.getElementById('earn-ledger');
-    if(!ledger)return;
-    if(!rows.length){ledger.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted)">NO EVENTS YET</div>';return;}
-    var AXIS_COL={a:'var(--cyan)',b:'var(--gold)',c:'var(--green)'};
-    ledger.innerHTML=rows.map(function(r2){
-      var col=AXIS_COL[r2.kind&&r2.kind[0]]||'var(--muted)';
-      return '<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(201,168,76,.06)">'
-        +'<div style="width:20px;height:20px;border-radius:50%;border:1px solid '+col+';display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:8px;color:'+col+';flex-shrink:0">'+(r2.kind||'?')[0].toUpperCase()+'</div>'
-        +'<div style="flex:1;font-size:12px">'+String(r2.kind||'').replace(/_/g,' ').toUpperCase()+'</div>'
-        +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+new Date(r2.completed_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+'</div>'
-        +'<div style="font-family:var(--M);font-size:9px;color:var(--green)">+0.12</div>'
-        +'</div>';
-    }).join('');
-  }).catch(function(){});
-}
-boot();
-</script>
-<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-<style>@keyframes div-glow{0%,100%{text-shadow:0 0 10px rgba(63,178,127,0.3)}50%{text-shadow:0 0 24px rgba(63,178,127,0.7)}}</style>
-
-
-<script type="module">
-  // LIVE TOKEN BALANCES -- fill the member's real holdings into the rendered wallet
-  (async function(){
-    try{
-      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-      const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
-      const ses = await sb.auth.getSession(); if(!(ses.data&&ses.data.session)) return;
-      const r = await sb.rpc('my_token_balances'); if(!r.data) return;
-      const map = {}; r.data.forEach(t=>{ map[t.code]=Number(t.balance)||0; });
-      function paint(){
-        document.querySelectorAll('#wallet-grid .wl-card').forEach(function(card){
-          const nameEl = card.querySelector('.wlc-name'); if(!nameEl) return;
-          const code = nameEl.textContent.trim();
-          if(!(code in map)) return;
-          const bal = map[code];
-          const balEl = card.querySelector('.wlc-bal'), usdEl = card.querySelector('.wlc-usd');
-          if(balEl){ balEl.innerHTML = '&#937; ' + bal.toLocaleString(); balEl.style.color = bal>0 ? 'var(--gold)' : 'var(--muted)'; }
-          if(usdEl){ usdEl.textContent = bal>0 ? 'ACTIVE' : 'PENDING ACTIVATION'; }
-        });
-      }
-      paint();
-      // repaint if the wallet re-renders later
-      const grid = document.getElementById('wallet-grid');
-      if(grid){ new MutationObserver(()=>paint()).observe(grid,{childList:true}); }
-    }catch(e){}
-  })();
-</script>
-</body>
-</html>
+    <div id="audit-log-list"><div style="padding:18px;font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-align:center">LOADING AUDIT LOG...</div></div>
+  </div>
+</div>

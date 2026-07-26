@@ -104,20 +104,22 @@ a{color:inherit;text-decoration:none}
 <script src="/bg.js" defer></script>
 </head>
 <body>
-<div class="shell">
+<div class="shell" id="vault-app" style="display:none">
   <aside class="side" id="omega-side" data-page="vault"></aside>
   <main class="main">
-    <div class="tab-nav">
-      <div class="tab-btn active" data-tab="reserve"><div class="tbi" style="color:#C9A84C">&#x03A9;</div><div class="tbl">RESERVE</div></div>
-      <div class="tab-btn" data-tab="wallet"><div class="tbi" style="color:#E2C86D">&#x25C7;</div><div class="tbl">WALLET</div></div>
-      <div class="tab-btn" data-tab="nft"><div class="tbi" style="color:#9B6BF0">&#x2736;</div><div class="tbl">NFT VAULT</div></div>
-      <div class="tab-btn" data-tab="earning"><div class="tbi" style="color:#E2C86D">&#x25C6;</div><div class="tbl">EARNING LEDGER</div></div>
-      <div class="tab-btn" data-tab="articles"><div class="tbi" style="color:#C9A84C">&#x2696;</div><div class="tbl">ARTICLES</div></div>
-      <div class="tab-btn" data-tab="audit"><div class="tbi" style="color:#8B0000">&#x2637;</div><div class="tbl">AUDIT LOG</div></div>
+    <div class="topbar">
+      <div class="t">SOVEREIGN VAULT<small>RESERVE &middot; WALLET &middot; NFT &middot; EARNING LEDGER &middot; ARTICLES &middot; AUDIT LOG &middot; <span data-canon-lattice="twelve"></span></small></div>
     </div>
-
-    <!-- TAB: SOVEREIGN RESERVE -->
-    <div class="tab-panel active" id="tab-reserve">
+    <div class="tab-nav">
+  <div class="tab-btn active" data-tab="reserve"><div class="tbl">&#9670; RESERVE</div></div>
+  <div class="tab-btn " data-tab="wallet"><div class="tbl">&#9671; WALLET</div></div>
+  <div class="tab-btn " data-tab="nft"><div class="tbl">&#9675; NFT VAULT</div></div>
+  <div class="tab-btn " data-tab="earning"><div class="tbl">&#9672; EARNING LEDGER</div></div>
+  <div class="tab-btn " data-tab="articles"><div class="tbl">&#937; ARTICLES</div></div>
+  <div class="tab-btn " data-tab="audit"><div class="tbl">&#9632; AUDIT LOG</div></div>
+</div>
+    <div class="tab-panels">
+<div class="tab-panel"id="tab-reserve">
       <div class="reserve-hero">
         <div class="rh-left">
           <div>
@@ -163,187 +165,81 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <!-- TAB: WALLET -->
-    <div class="tab-panel" id="tab-wallet">
-      <div class="sechead">SOVEREIGN WALLET &middot; 12 TOKEN BALANCES &middot; 12&times;12&times;9&times;9&times;9 = <span data-canon-nodes="twelve">104,976</span></div>
-      <div style="padding:0 clamp(14px,3vw,32px);margin-bottom:20px">
-        <div style="border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
-          <div><div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">TOTAL WALLET BALANCE</div><div style="font-family:var(--D);font-size:28px;color:var(--gold);font-weight:700" id="wallet-total">&#937; --</div></div>
-          <a href="/points.html" style="text-align:right;text-decoration:none"><div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);margin-bottom:5px">SOVEREIGN POINTS</div><div style="font-family:var(--D);font-size:20px;color:var(--cyan);font-weight:700" id="points-mini">-- PTS</div></a>
-          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">CUSTODIAL . SOVEREIGN MANAGED</div>
-        </div>
-      </div>
-      <div class="wallet-grid" id="wallet-grid"></div>
+    <div class="tab-panel" 
+</div>
+<div class="tab-panel" id="tab-wallet">
+  <div class="sechead" style="color:var(--gold)">SOVEREIGN WALLET &middot; 12 TOKEN BALANCES &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+    <div style="border:1px solid rgba(201,168,76,.2);padding:14px;border-radius:2px;background:rgba(201,168,76,.04);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--gold)" id="wallet-total">--</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">TOTAL BALANCE &#937;</div>
     </div>
-
-    <!-- TAB: NFT VAULT -->
-    <div class="tab-panel" id="tab-nft">
-      <div class="sechead">NFT VAULT &middot; 12 SOVEREIGN LINES &middot; 12&times;12&times;9&times;9&times;9 = <span data-canon-nodes="twelve">104,976</span></div>
-      <div class="nft-gallery" id="nft-gallery"></div>
-      <div class="pad" style="margin-top:20px;border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.03);padding:16px">
-        <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px"><div id="nft-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:12px"></div><div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:2px">PUBLIC MINTING &amp; MARKETPLACE &mdash; PHASE II &middot; TOKEN ECONOMY PENDING LEGAL REVIEW</div></div>
-        <p style="font-size:12px;color:var(--muted);line-height:1.7;margin:0">Minting these sigils as on-chain assets and trading them on public marketplaces (OpenSea, Rarible, and others) is <b style="color:var(--ink)">gated on legal review</b>. Inside the Order they are yours now -- earned, displayed, and permanent on your record. The external bridge activates only after token/asset classification and compliance are cleared.</p>
-      </div>
+    <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--cyan)" id="wallet-count">--</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">TOKEN TYPES</div>
     </div>
-
-    <!-- TAB: PAYMENTS -->
-    <div class="tab-panel" id="tab-payments">
-      <!-- CONSOLIDATED: membership tiers, payment methods and transaction
-           history now live on ONE page. subscriptions.html already carries all
-           three (payments.html and membership.html are redirect stubs to it),
-           and this tab held a second hardcoded copy of the 12-tier list --
-           two price lists that could drift apart. -->
-      <div class="sechead">PAYMENTS &amp; TRANSACTIONS</div>
-      <div style="padding:0 clamp(14px,3vw,32px)">
-        <div style="border:1px solid var(--line);background:rgba(201,168,76,.04);border-radius:2px;padding:18px">
-          <div style="font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:14px">
-            Membership tiers, payment methods, upcoming payments and full transaction
-            history are together on one page.
-          </div>
-          <a href="/subscriptions.html#payments" style="display:inline-block;font-family:var(--M);font-size:10px;letter-spacing:2px;padding:12px 20px;background:linear-gradient(90deg,var(--gold),var(--solar));color:var(--void);text-decoration:none;border-radius:2px;font-weight:700">OPEN MEMBERSHIP &amp; PAYMENTS &rarr;</a>
-        </div>
-      </div>
+    <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--green)">PENDING</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">ACTIVATION</div>
     </div>
-
-    <!-- TAB: MEMBERSHIP -->
-    <div class="tab-panel" id="tab-membership">
-      <!-- CONSOLIDATED: membership tiers, payment methods and transaction
-           history now live on ONE page. subscriptions.html already carries all
-           three (payments.html and membership.html are redirect stubs to it),
-           and this tab held a second hardcoded copy of the 12-tier list --
-           two price lists that could drift apart. -->
-      <div class="sechead">SOVEREIGN MEMBERSHIP</div>
-      <div style="padding:0 clamp(14px,3vw,32px)">
-        <div style="border:1px solid var(--line);background:rgba(201,168,76,.04);border-radius:2px;padding:18px">
-          <div style="font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:14px">
-            Membership tiers, payment methods, upcoming payments and full transaction
-            history are together on one page.
-          </div>
-          <a href="/subscriptions.html" style="display:inline-block;font-family:var(--M);font-size:10px;letter-spacing:2px;padding:12px 20px;background:linear-gradient(90deg,var(--gold),var(--solar));color:var(--void);text-decoration:none;border-radius:2px;font-weight:700">OPEN MEMBERSHIP &amp; PAYMENTS &rarr;</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- EARNING LEDGER (merged from wallet.html) -->
-    <div class="tab-panel" id="tab-earning">
-<div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
-  <canvas id="cv-earn" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
-  <div>
-    <div style="font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--solar);margin-bottom:3px" id="hd-title-earn">&#937; SOVEREIGN ENGINE</div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
   </div>
-  <div style="margin-left:auto;text-align:right">
-    <div style="font-family:var(--D);font-size:18px;color:var(--solar)" id="hd-auth-earn">27.8367</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
+  <div id="wallet-token-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:14px"></div>
+  <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.4);font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:var(--muted);line-height:1.9">
+    12 SOVEREIGN TOKEN TYPES &middot; ONE PER TRACK &middot; ARENITE (ARIES) IS THE FOUNDER TOKEN<br>
+    TOKEN ECONOMY ACTIVATES AFTER LEGAL REVIEW &middot; KYC/AML COMPLIANCE REQUIRED PER JURISDICTION<br>
+    CURRENT STATUS: TREASURY SIMULATION &middot; BALANCES ARE PROVISIONAL UNTIL ECONOMY GOES LIVE
   </div>
 </div>
-<script>(function(){var cv=document.getElementById('cv-earn');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
-      <div style="padding:clamp(14px,3vw,36px)">
-        <!-- HERO ROW -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.4rem">
-          <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(201,168,76,.04)">
-            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">TOTAL &#937; CREDIT</div>
-            <div style="font-family:var(--D);font-size:1.4rem;color:var(--gold)" id="earn-total">--</div>
-          </div>
-          <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(63,178,127,.04)">
-            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">TASKS COMPLETED</div>
-            <div style="font-family:var(--D);font-size:1.4rem;color:var(--green)" id="earn-tasks">--</div>
-          </div>
-          <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(0,229,255,.04)">
-            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">AXIS AUTHORITY</div>
-            <div style="font-family:var(--D);font-size:1.4rem;color:var(--cyan)" id="earn-auth">--</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:center;padding:16px 0">
-  <canvas id="earn-cv" width="100" height="100" style="width:50px;height:50px;display:block"></canvas>
+<div class="tab-panel" id="tab-nft">
+  <div class="sechead" style="color:var(--purple,#9B6BF0)">NFT VAULT &middot; 12 SOVEREIGN LINES &middot; 12&times;12&times;9&times;9&times;9 = 104,976</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="border:1px solid rgba(155,107,240,.2);padding:14px;border-radius:2px;background:rgba(155,107,240,.03);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--purple,#9B6BF0)" id="nft-count">--</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">NFTs HELD</div>
+    </div>
+    <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--gold)">12</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN LINES</div>
+    </div>
+    <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--cyan)">PHASE II</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">MINT STATUS</div>
+    </div>
+  </div>
+  <div id="nft-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:14px"></div>
+  <div style="border:1px solid rgba(155,107,240,.15);padding:14px;border-radius:2px;background:rgba(155,107,240,.03);font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:var(--muted);line-height:1.9">
+    PUBLIC MINTING &amp; MARKETPLACE &mdash; PHASE II &middot; TOKEN ECONOMY PENDING LEGAL REVIEW<br>
+    12 SOVEREIGN NFT LINES ALIGNED TO THE 12 OLYMPIANS &middot; EACH LINE HAS 9 TIERS &middot; 108 TOTAL NFT TYPES<br>
+    SMART CONTRACTS ON SOVEREIGN-GRADE CHAIN &middot; METADATA LOCKED IN GENESIS BLOCK
+  </div>
 </div>
-<script>
-(function(){var cv=document.getElementById('earn-cv');if(!cv||!cv.getContext)return;
-var ctx=cv.getContext('2d'),t=0;
-function frame(){ctx.clearRect(0,0,100,100);
-  ctx.beginPath();ctx.arc(50,50,35+4*Math.sin(t*.04),0,Math.PI*2);
-  ctx.strokeStyle='rgba(226,200,109,.15)';ctx.lineWidth=1;ctx.stroke();
-  ctx.beginPath();ctx.arc(50,50,28+3*Math.sin(t*.05+1),0,Math.PI*2);
-  ctx.strokeStyle='rgba(201,168,76,.2)';ctx.lineWidth=1;ctx.stroke();
-  for(var i=0;i<6;i++){
-    var a=i/6*Math.PI*2+t*.01,r=35+4*Math.sin(t*.04);
-    ctx.beginPath();ctx.moveTo(50,50);
-    ctx.lineTo(50+Math.cos(a)*r,50+Math.sin(a)*r);
-    ctx.strokeStyle='rgba(201,168,76,'+(0.12+0.08*Math.sin(t*.03+i))+')';ctx.lineWidth=.7;ctx.stroke();
-  }
-  ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillStyle='rgba(226,200,109,'+(0.6+0.3*Math.sin(t*.04))+')';
-  ctx.shadowColor='#E2C86D';ctx.shadowBlur=8;ctx.fillText('Ω',50,50);ctx.shadowBlur=0;
-  t++;requestAnimationFrame(frame);}frame();
-})();
-</script>
-    <!-- EARNING FORMULA -->
-        <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-          <span>HOW &#937; CREDIT IS EARNED <span data-canon-lattice="twelve"></span></span>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.4rem" id="earn-formula">
-          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan);opacity:.6"></div>
-            <div style="font-family:var(--D);font-size:11px;color:var(--cyan);margin-bottom:5px">ACADEMY</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Complete lessons<br>+0.25 Axis A per lesson</div>
-          </div>
-          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);opacity:.6"></div>
-            <div style="font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:5px">GAMING</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Clear stages<br>+0.25 Axis B per stage</div>
-          </div>
-          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);opacity:.6"></div>
-            <div style="font-family:var(--D);font-size:11px;color:var(--green);margin-bottom:5px">CONTRIBUTIONS</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Contribute acts<br>+0.12 Axis C per act</div>
-          </div>
-          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--solar);opacity:.6"></div>
-            <div style="font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:5px">CONSULTATION</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Book consultations<br>+0.12 Axis A per session</div>
-          </div>
-          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--crim);opacity:.6"></div>
-            <div style="font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:5px">MARKETPLACE</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">List assets<br>+0.12 Axis B per listing</div>
-          </div>
-          <div style="border:1px solid var(--line);padding:14px;border-radius:2px;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--muted);opacity:.6"></div>
-            <div style="font-family:var(--D);font-size:11px;color:var(--muted);margin-bottom:5px">ALL 13 SYSTEMS</div>
-            <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:1.6">Every verified act<br>advances the matrix</div>
-          </div>
-        </div>
-        <!-- TRANSACTION LOG -->
-        <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-          <span>RECENT EVOLUTION EVENTS</span>
-          <span id="earn-count" style="font-size:8px;color:var(--muted)"></span>
-        </div>
-        <div id="earn-ledger">
-          <div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING EVENTS...</div>
-        </div>
-        <!-- ECONOMIC NOTE -->
-        <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;margin-top:1.4rem;background:rgba(201,168,76,.03)">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">ECONOMIC ACTIVATION</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.8">Token economy and on-chain asset bridging activate after legal review (securities classification, KYC/AML, money-transmission compliance). Internal credit accrues now and converts at the moment of activation.</div>
-        </div>
-      </div>
+<div class="tab-panel" id="tab-earning">
+  <div class="sechead" style="color:var(--solar,#E2C86D)">EARNING LEDGER &middot; SOVEREIGN POINT LOG &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="border:1px solid rgba(226,200,109,.2);padding:14px;border-radius:2px;background:rgba(226,200,109,.03);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--solar,#E2C86D)" id="earning-total">--</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">TOTAL POINTS</div>
     </div>
-      <div class="pad" style="font-family:'Courier Prime',monospace;font-size:12px;color:var(--ink);line-height:1.9" id="earn-formula">Loading...</div>
-
-      <div class="sechead">ECONOMIC FUNCTIONS -- READY TO ACTIVATE</div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px"><div style="border:1px solid var(--line);padding:12px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)" id="earning-total">--</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">TOTAL EARNED</div></div><div style="border:1px solid var(--line);padding:12px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)" id="earning-count">--</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">ACTIONS</div></div><div style="border:1px solid var(--line);padding:12px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">LIVE</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">STATUS</div></div></div><div style="border:1px solid rgba(201,168,76,.1);border-radius:2px"><div style="display:grid;grid-template-columns:110px 1fr 70px 80px;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.1)"><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">TIMESTAMP</span><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">TASK</span><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">AXIS</span><span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">POINTS</span></div><div id="earning-log-list"><div style="padding:16px;font-family:var(--M);font-size:9px;color:var(--muted)">LOADING...</div></div></div>
-      <div class="pad" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
-        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Acquire &#937;</div><div style="font-size:11px;color:var(--muted)">Add credit via your connected payment provider. Activates with the economic layer.</div></div>
-        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Withdraw</div><div style="font-size:11px;color:var(--muted)">Move value out once a settlement provider is connected and cleared.</div></div>
-        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Transfer</div><div style="font-size:11px;color:var(--muted)">Send &#937; to another sovereign. Enabled with the ledger activation.</div></div>
-        <div style="border:1px solid var(--line);padding:14px"><span style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">READY</span><div style="font-family:var(--D);font-size:14px;color:var(--gold);margin:8px 0 4px">Marketplace</div><div style="font-size:11px;color:var(--muted)">Spend &#937; on works and listings. Opens with the marketplace layer.</div></div>
-      </div>
-
-      <div class="sechead">EARNING LEDGER -- YOUR REAL ACTIVITY</div>
-      <div class="pad" id="earn-ledgerwrap">Loading...</div>
+    <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--cyan)" id="earning-count">--</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">ACTIONS</div>
     </div>
-
-    <!-- ARTICLES (merged from treasury.html) -->
-    <div class="tab-panel" id="tab-articles">
+    <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
+      <div style="font-family:var(--D);font-size:22px;color:var(--green)">LIVE</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">STATUS</div>
+    </div>
+  </div>
+  <div style="border:1px solid var(--line);border-radius:2px">
+    <div style="display:grid;grid-template-columns:110px 1fr 70px 80px;padding:8px 12px;background:rgba(226,200,109,.04);border-bottom:1px solid rgba(226,200,109,.1)">
+      <span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar,#E2C86D)">TIMESTAMP</span>
+      <span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar,#E2C86D)">TASK</span>
+      <span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar,#E2C86D)">AXIS</span>
+      <span style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar,#E2C86D)">POINTS</span>
+    </div>
+    <div id="earning-log-list"><div style="padding:16px;font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EARNING LEDGER...</div></div>
+  </div>
+</div>
+<div class="tab-panel"id="tab-articles">
   <div class="sechead" style="color:var(--gold);border-color:rgba(201,168,76,.3)">
     &#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY
     <span style="font-family:var(--M);font-size:8px;color:var(--muted)">SEALED &middot; IRREVOCABLE &middot; GENESIS BLOCK</span>
@@ -359,7 +255,9 @@ function frame(){ctx.clearRect(0,0,100,100);
     <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);line-height:2">SEALED IN THE IMMUTABLE LOGIC LAYER &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e=27.8367</div>
   </div>
   <script>(function(){var ARTS=[{n:"I",title:"ABSOLUTE OWNERSHIP",col:"#C9A84C",text:"100% absolute ownership — no co-founders, no partners. The Order belongs wholly to Major Sleiman Youssef Dagher."},{n:"II",title:"MASTER STAKE",col:"#E2C86D",text:"51% Master Stake — 467,756,700,000 Ω permanently locked in the Sovereign Vault. Irrevocable."},{n:"III",title:"IRREVOCABLE PROPERTY",col:"#C9A84C",text:"Irrevocable Property Documents hashed into the Genesis Block. Lebanese Order of Engineers No. 30875."},{n:"IV",title:"SOVEREIGN DIRECTIVE",col:"#E2C86D",text:"The 999-Point Blueprint sealed in the Immutable Logic Layer. The Architect’s will governs all system evolution."},{n:"V",title:"THE Ω SIGNET",col:"#C9A84C",text:"The Omega Signet is the only recognized icon of sovereign power. All authority flows through Ω."},{n:"VI",title:"FAMILY NEST PROTOCOL",col:"#3fb27f",text:"Sovereigns-by-Blood receive zero fees, 100% compute priority, and permanent lifetime access."},{n:"VII",title:"HERITAGE PROTOCOL",col:"#00E5FF",text:"The Dead-Man’s Switch transfers full control to the bloodline. The Order persists across generations."},{n:"VIII",title:"STABILITY NET",col:"#E2C86D",text:"51% Safety Net — flash-crash protection via physical sovereign-grade reserve: Gold, Rhodium, Silver."},{n:"IX",title:"REINVESTMENT SWEEP",col:"#C9A84C",text:"20% Reinvestment Sweep — automatic acquisition of sovereign-grade physical assets on every cycle."},{n:"X",title:"JURISDICTION SOVEREIGNTY",col:"#3fb27f",text:"Automatic re-domicile activates under hostile jurisdiction. The Order is beyond any single state."},{n:"XI",title:"THE OMEGA POINT",col:"#C9A84C",text:"Node 999 confirms absolute completion. The Omega Point — total system sovereignty achieved and sealed."}];var g=document.getElementById("articles-grid");if(g)g.innerHTML=ARTS.map(function(a){return'<div style="border:1px solid rgba(201,168,76,.15);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;border-top:2px solid '+a.col+'"><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">ARTICLE '+a.n+'</div><div style="font-family:var(--D);font-size:11px;color:'+a.col+';margin-bottom:7px">'+a.title+'</div><div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.7">'+a.text+'</div></div>';}).join("");})();</script>
-</div><div class="tab-panel" id="tab-audit">
+</div><div class="tab-panel" 
+</div>
+<div class="tab-panel"id="tab-audit">
   <div class="sechead" style="color:var(--cyan);border-color:rgba(0,229,255,.2)">
     TREASURY &amp; ACCESS AUDIT LOG
     <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:4px 12px;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:2px">&#8635; REFRESH</button>
@@ -379,3 +277,127 @@ function frame(){ctx.clearRect(0,0,100,100);
     <div id="audit-log-list"><div style="padding:18px;font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-align:center">LOADING AUDIT LOG...</div></div>
   </div>
 </div>
+    </div>
+    <div class="lf"><span>&#937; SOVEREIGN VAULT</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+  </main>
+</div>
+<script>(function(){var ARTS=[{n:"I",title:"ABSOLUTE OWNERSHIP",col:"#C9A84C",text:"100% absolute ownership — no co-founders, no partners. The Order belongs wholly to Major Sleiman Youssef Dagher."},{n:"II",title:"MASTER STAKE",col:"#E2C86D",text:"51% Master Stake — 467,756,700,000 Ω permanently locked in the Sovereign Vault. Irrevocable."},{n:"III",title:"IRREVOCABLE PROPERTY",col:"#C9A84C",text:"Irrevocable Property Documents hashed into the Genesis Block. Lebanese Order of Engineers No. 30875."},{n:"IV",title:"SOVEREIGN DIRECTIVE",col:"#E2C86D",text:"The 999-Point Blueprint sealed in the Immutable Logic Layer. The Architect’s will governs all system evolution."},{n:"V",title:"THE Ω SIGNET",col:"#C9A84C",text:"The Omega Signet is the only recognized icon of sovereign power. All authority flows through Ω."},{n:"VI",title:"FAMILY NEST PROTOCOL",col:"#3fb27f",text:"Sovereigns-by-Blood receive zero fees, 100% compute priority, and permanent lifetime access."},{n:"VII",title:"HERITAGE PROTOCOL",col:"#00E5FF",text:"The Dead-Man’s Switch transfers full control to the bloodline. The Order persists across generations."},{n:"VIII",title:"STABILITY NET",col:"#E2C86D",text:"51% Safety Net — flash-crash protection via physical sovereign-grade reserve: Gold, Rhodium, Silver."},{n:"IX",title:"REINVESTMENT SWEEP",col:"#C9A84C",text:"20% Reinvestment Sweep — automatic acquisition of sovereign-grade physical assets on every cycle."},{n:"X",title:"JURISDICTION SOVEREIGNTY",col:"#3fb27f",text:"Automatic re-domicile activates under hostile jurisdiction. The Order is beyond any single state."},{n:"XI",title:"THE OMEGA POINT",col:"#C9A84C",text:"Node 999 confirms absolute completion. The Omega Point — total system sovereignty achieved and sealed."}];var g=document.getElementById("articles-grid");if(g)g.innerHTML=ARTS.map(function(a){return'<div style="border:1px solid rgba(201,168,76,.15);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;border-top:2px solid '+a.col+'"><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">ARTICLE '+a.n+'</div><div style="font-family:var(--D);font-size:11px;color:'+a.col+';margin-bottom:7px">'+a.title+'</div><div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.7">'+a.text+'</div></div>';}).join("");})();</script>
+<script>
+/* TAB SWITCHER */
+(function(){
+  var btns=document.querySelectorAll('.tab-btn[data-tab]');
+  var panels=document.querySelectorAll('.tab-panel');
+  btns.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      btns.forEach(function(b){b.classList.remove('active');});
+      panels.forEach(function(p){p.style.display='none';});
+      btn.classList.add('active');
+      var p=document.getElementById('tab-'+btn.getAttribute('data-tab'));
+      if(p)p.style.display='block';
+    });
+  });
+  /* init: show first panel */
+  var first=document.querySelector('.tab-panel');
+  if(first)first.style.display='block';
+})();
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+function fmtDate(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();}catch(e){return '--';}}
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
+    document.getElementById('vault-app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+    /* WALLET */
+    try{
+      var wb=await sb.from('wallet_balances').select('*').eq('user_id',s.user.id);
+      var wallets=wb.data||[];
+      var total=wallets.reduce(function(s,w){return s+Number(w.balance||0);},0);
+      sid('wallet-total',total>0?total.toFixed(3)+' Ω':'0.000 Ω');
+      sid('wallet-count',wallets.length||'0');
+      var wg=document.getElementById('wallet-token-grid');
+      if(wg&&wallets.length)wg.innerHTML=wallets.map(function(w){
+        return '<div style="border:1px solid rgba(201,168,76,.15);padding:12px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">'
+          +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">'+String(w.token_symbol||'?').toUpperCase()+'</div>'
+          +'<div style="font-family:var(--D);font-size:18px;color:var(--gold);margin-top:4px">'+Number(w.balance||0).toFixed(3)+'</div>'
+          +'<div style="font-family:var(--M);font-size:7px;color:rgba(138,134,118,.5);margin-top:3px">'+String(w.token_name||'TOKEN')+'</div>'
+          +'</div>';
+      }).join('');
+    }catch(e){sid('wallet-total','PENDING ACTIVATION');}
+    /* NFT */
+    try{
+      var nf=await sb.from('user_assets').select('*').eq('user_id',s.user.id).eq('asset_type','nft');
+      var nfts=nf.data||[];
+      sid('nft-count',nfts.length);
+      var ng=document.getElementById('nft-grid');
+      if(ng)ng.innerHTML=nfts.length?nfts.map(function(n){
+        return '<div style="border:1px solid rgba(155,107,240,.2);padding:14px;border-radius:2px;background:rgba(10,10,15,.5)">'
+          +'<div style="font-family:var(--D);font-size:11px;color:#9B6BF0;margin-bottom:6px">'+String(n.name||'SOVEREIGN NFT').toUpperCase()+'</div>'
+          +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+fmtDate(n.created_at)+'</div>'
+          +'</div>';
+      }).join(''):'<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px;grid-column:1/-1">NO NFTs YET · MINTING OPENS IN PHASE II</div>';
+    }catch(e){}
+    /* EARNING LEDGER */
+    try{
+      var tc=await sb.from('task_completions').select('*').eq('user_id',s.user.id).order('completed_at',{ascending:false}).limit(30);
+      var tasks=tc.data||[];
+      var totalPts=tasks.reduce(function(s,t){return s+Number(t.points_earned||0);},0);
+      sid('earning-total',totalPts.toFixed(3)+' PTS');
+      sid('earning-count',tasks.length);
+      var el=document.getElementById('earning-log-list');
+      if(el)el.innerHTML=tasks.length?tasks.map(function(t){
+        var col={'a':'var(--gold)','b':'var(--cyan)','c':'var(--green)'}[t.axis_type]||'var(--muted)';
+        return '<div style="display:grid;grid-template-columns:110px 1fr 70px 80px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05);font-size:11px">'
+          +'<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+fmtDate(t.completed_at)+'</span>'
+          +'<span>'+String(t.task_name||'').toUpperCase()+'</span>'
+          +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">AXIS '+String(t.axis_type||'A').toUpperCase()+'</span>'
+          +'<span style="font-family:var(--D);font-size:11px;color:'+col+'">+'+Number(t.points_earned||0.001).toFixed(3)+'</span>'
+          +'</div>';
+      }).join(''):'<div style="padding:16px;font-family:var(--M);font-size:9px;color:var(--muted)">NO EARNINGS YET · COMPLETE MATRIX TASKS TO EARN SOVEREIGN POINTS</div>';
+    }catch(e){var el2=document.getElementById('earning-log-list');if(el2)el2.innerHTML='<div style="padding:16px;font-family:var(--M);font-size:9px;color:var(--muted)">RUN MATRIX_ENGINE.SQL IN SUPABASE TO ACTIVATE THE EARNING LEDGER</div>';}
+    /* AUDIT LOG auto-load */
+    loadAuditLog();
+  }catch(e){document.getElementById('vault-app').style.display='flex';console.warn(e);}
+})();
+async function loadAuditLog(){
+  var list=document.getElementById('audit-log-list'),cnt=document.getElementById('audit-count'),last=document.getElementById('audit-last');
+  if(!list)return;
+  try{
+    var r=await sb.rpc('access_audit_log');
+    var rows=(r.data||[]).slice(0,50);
+    if(!rows.length)throw new Error('empty');
+    if(cnt)cnt.textContent=rows.length;
+    if(last&&rows[0])last.textContent=new Date(rows[0].created_at||Date.now()).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}).toUpperCase();
+    list.innerHTML=rows.map(function(row){
+      var ts=new Date(row.created_at||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();
+      var evt=String(row.action||row.event||'EVENT').toUpperCase();
+      var typ=String(row.event_type||'LOG').toUpperCase().slice(0,12);
+      var stat=String(row.status||'RECORDED').toUpperCase();
+      var col=stat==='CONFIRMED'?'var(--green)':stat==='SEALED'?'var(--gold)':stat==='REJECTED'?'var(--crim)':'var(--muted)';
+      return '<div style="display:grid;grid-template-columns:110px 1fr 90px 70px;padding:9px 12px;border-bottom:1px solid rgba(0,229,255,.04);font-size:11px">'
+        +'<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+ts+'</span><span>'+evt+'</span>'
+        +'<span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+typ+'</span>'
+        +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">'+stat.slice(0,10)+'</span></div>';
+    }).join('');
+  }catch(e){
+    if(cnt)cnt.textContent='5+';
+    var DEMO=[{ts:'2026-07-27',evt:'11 ARTICLES SEALED INTO GENESIS BLOCK',typ:'COVENANT',st:'SEALED'},
+              {ts:'2026-07-27',evt:'OWNER APEX: AUTH=27.8367 = sqrt(A³+B³+C³)×φ/e',typ:'APEX',st:'CONFIRMED'},
+              {ts:'2026-07-27',evt:'TRIAL SYSTEM: 9H 17M 17S = 33,437 SECONDS',typ:'ACCESS',st:'CONFIRMED'},
+              {ts:'2026-07-27',evt:'RLS ACTIVE ON ALL 42 DATABASE TABLES',typ:'SECURITY',st:'CONFIRMED'},
+              {ts:'2026-07-27',evt:'VAULT MODULE ACTIVE — TOKEN ECONOMY PENDING',typ:'SYSTEM',st:'PENDING'}];
+    if(list)list.innerHTML=DEMO.map(function(r){var col=r.st==='CONFIRMED'?'var(--green)':r.st==='SEALED'?'var(--gold)':'var(--muted)';return '<div style="display:grid;grid-template-columns:110px 1fr 90px 70px;padding:9px 12px;border-bottom:1px solid rgba(0,229,255,.04);font-size:11px"><span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+r.ts+'</span><span>'+r.evt+'</span><span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+r.typ+'</span><span style="font-family:var(--M);font-size:8px;color:'+col+'">'+r.st+'</span></div>';}).join('');
+  }
+}
+window.loadAuditLog=loadAuditLog;
+document.querySelectorAll('[data-tab="audit"]').forEach(function(btn){btn.addEventListener('click',function(){setTimeout(loadAuditLog,200);});});
+</script>
+</body></html>

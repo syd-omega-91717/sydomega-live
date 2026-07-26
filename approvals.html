@@ -308,7 +308,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- TAB: MEMBERS -->
     <div class="tab-panel on" id="tab-members">
       <div class="sechead">
-        <span>ACCESS CONTROL &mdash; ALL MEMBERS</span>
+        ACCESS CONTROL &mdash; ALL MEMBERS</span><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="action-btn filter-btn on" data-filter="all" onclick="setFilter(this,'all')">ALL</button><button class="action-btn filter-btn" data-filter="pending" onclick="setFilter(this,'pending')" style="color:var(--crim);border-color:rgba(139,0,0,.4)">PENDING</button><button class="action-btn filter-btn" data-filter="active" onclick="setFilter(this,'active')" style="color:var(--green);border-color:rgba(63,178,127,.4)">TRIAL</button><button class="action-btn filter-btn" data-filter="approved" onclick="setFilter(this,'approved')" style="color:var(--gold)">PERMANENT</button><button class="action-btn filter-btn" data-filter="rejected" onclick="setFilter(this,'rejected')" style="color:var(--muted)">REJECTED</button></div><span
         <button class="action-btn" onclick="load()">&#8635; REFRESH</button>
       </div>
       <div id="badge-pending" class="alert-badge pending" style="display:none">
@@ -398,6 +398,12 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     (function g(){hctx.clearRect(0,0,120,120);for(var i=0;i<8;i++){hctx.beginPath();hctx.arc(60,60,16+i*5+3*Math.sin(ht*.03+i),ht*.008*((i%2)?1:-1),ht*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(ht*.02+i)));hctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(8-i)/8)+')';hctx.lineWidth=.8;hctx.stroke();}hctx.font='bold 20px "Cinzel Decorative",serif';hctx.textAlign='center';hctx.textBaseline='middle';hctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(ht*.04))+')';hctx.shadowColor='#C9A84C';hctx.shadowBlur=10;hctx.fillText('Ω',60,60);hctx.shadowBlur=0;ht++;requestAnimationFrame(g);})();
   }
 })();
+/* Filter buttons */
+window.setFilter=function(btn,filter){
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  if(window.load){window.__activeFilter=filter;load();}
+};
 /* Tab switching */
 document.querySelectorAll('.tab-btn').forEach(function(btn){
   btn.addEventListener('click',function(){
@@ -418,7 +424,7 @@ const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvv
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 let allMembers=[];
-let activeFilter='pending';
+let activeFilter='all';Object.defineProperty(window,'__activeFilter',{get:function(){return activeFilter;},set:function(v){activeFilter=v;}});
 let timers={};
 let ownerUid=null;
 
@@ -580,10 +586,13 @@ function buildCard(m){
   const isRejected=m.is_rejected||(!m.access_approved&&!isPending&&!isActive);
 
   /* Filter logic */
-  if(activeFilter==='pending'&&!isPending) return null;
-  if(activeFilter==='active'&&!isActive) return null;
-  if(activeFilter==='approved'&&!isApproved) return null;
-  if(activeFilter==='rejected'&&!isRejected&&!isExpired) return null;
+  if(activeFilter!=='all'&&activeFilter==='pending'&&!isPending) return null;
+if(activeFilter!=='all'&&activeFilter==='active'&&!isActive) return null;
+if(activeFilter!=='all'&&activeFilter==='approved'&&!isApproved) return null;
+if(activeFilter!=='all'&&activeFilter==='rejected'&&!isRejected&&!isExpired) return null;
+  
+  
+  
 
   const col=isActive?'var(--green)':isPending?'var(--crim)':isApproved?'var(--gold)':'var(--muted)';
   const statusLabel=isActive?'ACTIVE SESSION':isPending?'PENDING':isApproved?'APPROVED':isExpired?'EXPIRED':'REJECTED';

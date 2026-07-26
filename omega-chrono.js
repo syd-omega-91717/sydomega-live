@@ -133,6 +133,17 @@ window.__omegaStartChrono = function(expiresISO, startsISO){
 };
 
 /* ── AUTO-CHECK on every page ─────────────────────────────────────────────── */
+
+/* Also trigger when user data is populated */
+document.addEventListener('omega:populated',function(e){
+  var pr=e.detail&&e.detail.profile;
+  if(!pr||pr.is_owner||!pr.is_trial||!pr.trial_expires_at) return;
+  if(new Date(pr.trial_expires_at)<=new Date()) return;
+  var starts=pr.access_requested_at||
+    new Date(new Date(pr.trial_expires_at).getTime()-TRIAL_TOTAL*1000).toISOString();
+  window.__omegaStartChrono(pr.trial_expires_at,starts);
+});
+
 (function autoCheck(){
   var tries=0;
   var iv=setInterval(function(){

@@ -70,11 +70,11 @@ window.__omegaPopulate = function(pr, user){
   var c3   = isOwner ? 729.000 : Math.pow(c,3);
 
   var name  = isOwner ? OWNER.display_name : (d.display_name||'').toUpperCase()||(user&&user.email||'SOVEREIGN MEMBER').toUpperCase();
-  var sign  = (d.sign    || '--').toUpperCase();
-  var elem  = (d.element || '--').toUpperCase();
-  var god   = (d.god     || '--').toUpperCase();
-  var agent = (d.agent   || '--').toUpperCase();
-  var token = (d.token   || '--').toUpperCase();
+  var sign  = (d.sign    || 'AWAITING ASSIGNMENT').toUpperCase();
+  var elem  = (d.element || 'AWAITING ASSIGNMENT').toUpperCase();
+  var god   = (d.god     || 'AWAITING ASSIGNMENT').toUpperCase();
+  var agent = (d.agent   || 'AWAITING ASSIGNMENT').toUpperCase();
+  var token = (d.token   || 'AWAITING ASSIGNMENT').toUpperCase();
   var tier  = isOwner ? 'SOVEREIGN' : (d.subscription_tier||'free').toUpperCase();
   var nodes = Number(d.nodes_earned||0);
   var troph = Number(d.trophies_earned||0);
@@ -150,7 +150,7 @@ window.__omegaPopulate = function(pr, user){
   seAll(['mem-tier'], tier);
 
   /* ── NODES ── */
-  seAll(['ph-nodes','user-nodes','pf-nodes','stat-nodes'], nodes.toLocaleString());
+  seAll(['ph-nodes','user-nodes','pf-nodes','stat-nodes'], nodes===0?'0 (GENESIS)':nodes.toLocaleString());
 
   /* ── ACHIEVEMENTS ── */
   seAll(['ph-trophies','user-trophies','pf-trophies','ach-trophies'], troph);

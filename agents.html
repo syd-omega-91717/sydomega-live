@@ -369,7 +369,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const BOUND = {
   Aries:{name:'Sentinel',glyph:'\u25B2',role:'SECURITY // ARES // FIRE',token:'PYRON',god:'Ares',element:'Fire',
@@ -392,7 +392,7 @@ const BOUND = {
     desc:'Global broadcast and growth. BEACON carries your dispatches and achievements to the wider Order.'},
   Capricorn:{name:'Analyst',glyph:'\u25C6',role:'FINANCE // HESTIA // METAL',token:'FERRUM',god:'Hestia',element:'Metal',
     desc:'Financial intelligence. ANALYST tracks your portfolio, treasury standing, and economic trajectory.'},
-  Aquarius:{name:'Tutor',glyph:'\u25C7',role:'EDUCATION // HEPHAESTUS // WIND',token:'AETHER',god:'Hephaestus',element:'Wind',
+  Aquarius:{name:'Tutor',glyph:'\u25C7',role:'EDUCATION // HEPHAESTUS // WIND',token:'PRIME',god:'Hephaestus',element:'Wind',
     desc:'Education and ascension guidance. TUTOR raises your Knowledge axis through the Academy.'},
   Pisces:{name:'Historian',glyph:'\u25C8',role:'MEMORY // POSEIDON // WATER',token:'ABYSS',god:'Poseidon',element:'Water',
     desc:'Archivist and knowledge keeper. HISTORIAN maintains your evolution log and the record of everything you\u2019ve done.'},
@@ -509,10 +509,7 @@ document.querySelector('.panel-badge').textContent=name;
 </script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const __sbg = createClient(
-    "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-    "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"
-  );
+  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
   (async function(){
     /* Access gate -- no content is shown before a verified, approved session */
     const sess=(await __sbg.auth.getSession()).data.session;

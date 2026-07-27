@@ -154,7 +154,7 @@ a{color:inherit;text-decoration:none}
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const LABS = [
   {n:'LAB 01',title:'AI COGNITION RESEARCH',domain:'MACHINE INTELLIGENCE',desc:'Exploring the boundaries of sovereign AI: long-term memory, self-correction, multi-agent coordination, and the architecture of truly autonomous digital minds.',col:'#00E5FF',status:'active',progress:78},
@@ -162,14 +162,14 @@ const LABS = [
   {n:'LAB 03',title:'BIO-SENTINEL RESEARCH',domain:'BIOLOGY & HEALTH',desc:'Real-time biological pattern analysis across the sovereign community. Health signals aggregated at the Ninth Element layer, identifying civilizational wellness trends.',col:'#3fb27f',status:'active',progress:61},
   {n:'LAB 04',title:'ENERGY SYSTEMS',domain:'ENERGY & INFRASTRUCTURE',desc:'The 9.1717Hz resonance as a carrier frequency for distributed energy systems. Research into frequency-coupled energy transfer and sovereign grid independence.',col:'#E86A3A',status:'dev',progress:22},
   {n:'LAB 05',title:'COSMOLOGICAL MAPPING',domain:'SPACE & COSMOLOGY',desc:'Mapping the 12 Olympian positions across real astronomical coordinates. Each of the 12 gates corresponds to a verified celestial alignment visible from Earth.',col:'#9B6BF0',status:'dev',progress:45},
-  {n:'LAB 06',title:'GOVERNANCE THEORY',domain:'SOCIAL & GOVERNANCE',desc:'Research into authority-weighted governance: how the authority formula sqrt(A^2+B^2+C^2) creates a natural aristocracy of contribution rather than birth or wealth.',col:'#C9A84C',status:'active',progress:89},
+  {n:'LAB 06',title:'GOVERNANCE THEORY',domain:'SOCIAL & GOVERNANCE',desc:'Research into authority-weighted governance: how the authority formula sqrt(A^3+B^3+C^3) creates a natural aristocracy of contribution rather than birth or wealth.',col:'#C9A84C',status:'active',progress:89},
   {n:'LAB 07',title:'HERITAGE ARCHAEOLOGY',domain:'CIVILIZATIONAL HISTORY',desc:'Cross-referencing the 28 Kings of the Lunar Mansions with verified historical records. Each King corresponds to a documented sovereign lineage or civilizational event.',col:'#E2C86D',status:'dev',progress:37},
   {n:'LAB 08',title:'ECONOMIC MODELLING',domain:'MARKET THEORY',desc:'Modelling the 12-token economy against real market dynamics. The 41% Auto-Split allocation across Space, AI, Medical, Energy, and Transport sectors is validated here.',col:'#C9A84C',status:'active',progress:66},
   {n:'LAB 09',title:'SYMBOLIC SYSTEMS',domain:'MYTHOLOGY & SYMBOLS',desc:'The scientific basis of symbolic resonance: why the Omega symbol, 9.17Hz, and the 12x12x9x9x9 structure appear independently across unconnected civilizations throughout history.',col:'#D9B86A',status:'dev',progress:51},
 ];
 
 const DISCOVERIES = [
-  {icon:'&#x26A1;',title:'AUTHORITY FORMULA VALIDATED',desc:'The sqrt(A^2+B^2+C^2) formula produces a naturally distributed bell curve across the member base &mdash; confirming the mathematical fairness of the progression engine.',meta:'LAB 06 &middot; GOVERNANCE THEORY &middot; +91 XP KNOWLEDGE AXIS'},
+  {icon:'&#x26A1;',title:'AUTHORITY FORMULA VALIDATED',desc:'The sqrt(A^3+B^3+C^3) formula produces a naturally distributed bell curve across the member base &mdash; confirming the mathematical fairness of the progression engine.',meta:'LAB 06 &middot; GOVERNANCE THEORY &middot; +91 XP KNOWLEDGE AXIS'},
   {icon:'&#x2609;',title:'LUNAR MANSION 14 &mdash; ALNAIR ALIGNMENT',desc:'King 14 of the 28 Lunar Mansions confirmed to align with a visible star cluster at azimuth 167 degrees during the winter solstice. Heritage connection verified.',meta:'LAB 07 &middot; HERITAGE ARCHAEOLOGY &middot; +172 XP'},
   {icon:'&#x25C9;',title:'AGENT MEMORY OPTIMISATION',desc:'Sovereign agent memory compression reduced latency by 91.7% when using hash-chain verified semantic recall over raw vector search.',meta:'LAB 01 &middot; AI COGNITION &middot; +91 XP'},
   {icon:'&#x9775;',title:'NINTH ELEMENT CORRELATION',desc:'The 10 domains of the Ninth Element show statistically significant positive correlation with matrix progression rates in members who log all 10 weekly.',meta:'LAB 03 &middot; BIO-SENTINEL &middot; +50 XP'},

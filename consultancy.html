@@ -164,7 +164,7 @@ a{color:inherit;text-decoration:none}
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const DOMAINS = [
   {id:'Medical',   sym:'&#x271A;', col:'#3fb27f', desc:'Health diagnostics, medical intelligence, biological vault protocols, and CQA-certified forward modelling for sovereign wellness.', experts:3},

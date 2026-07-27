@@ -1,7 +1,7 @@
 -- ============================================================================
 -- SYD OMEGA 91717 -- TRIAL ACCESS FIX
--- Trial period: 9 HOURS 17 MINUTES 17 SECONDS = 33,437 seconds
--- The sovereign dedication number. Exact. Non-negotiable.
+-- Trial period: 9 MINUTES 17 SECONDS = 557 seconds
+-- DEDICATION period: 9 HOURS 17 MINUTES 17 SECONDS = 33,437 seconds (separate engine). Exact. Non-negotiable.
 -- Run AFTER all migration chunks in Supabase SQL editor.
 -- ============================================================================
 
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION public.approve_member(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE
   _starts  timestamptz := now();
-  _expires timestamptz := now() + INTERVAL '33437 seconds'; -- 9h 17m 17s
+  _expires timestamptz := now() + INTERVAL '557 seconds'; /* 9 minutes 17 seconds: the sovereign trial */
 BEGIN
   IF NOT public.is_platform_owner() THEN
     RETURN jsonb_build_object('ok',false,'error','forbidden');
@@ -28,9 +28,9 @@ BEGIN
     'uid',            p_uid,
     'trial_starts',   _starts,
     'trial_expires',  _expires,
-    'duration_seconds', 33437,
-    'duration_display', '9 HOURS 17 MINUTES 17 SECONDS',
-    'duration_hhmmss',  '09:17:17'
+    'duration_seconds', 557,
+    'duration_display', '9 MINUTES 17 SECONDS',
+    'duration_hhmmss',  '09:17'
   );
 END;
 $$;
@@ -56,18 +56,18 @@ BEGIN
     WHERE id = p_uid;
     RETURN jsonb_build_object('ok',true,'status','expired',
       'expired_at', r.trial_expires_at,
-      'duration_display', '9 HOURS 17 MINUTES 17 SECONDS COMPLETE');
+      'duration_display', '9 MINUTES 17 SECONDS COMPLETE');
   END IF;
   IF r.is_trial AND r.trial_expires_at > now() THEN
     RETURN jsonb_build_object(
       'ok',               true,
       'status',           'trial',
       'expires_at',       r.trial_expires_at,
-      'started_at',       r.trial_expires_at - INTERVAL '33437 seconds',
+      'started_at',       r.trial_expires_at - INTERVAL '557 seconds', /* 9 min 17 sec trial */
       'seconds_remaining', EXTRACT(EPOCH FROM (r.trial_expires_at - now()))::int,
-      'seconds_total',    33437,
-      'duration_display', '9 HOURS 17 MINUTES 17 SECONDS',
-      'duration_hhmmss',  '09:17:17'
+      'seconds_total',    557,
+      'duration_display', '9 MINUTES 17 SECONDS',
+      'duration_hhmmss',  '09:17'
     );
   END IF;
   IF r.access_approved AND NOT r.is_trial THEN
@@ -118,7 +118,7 @@ SELECT
     WHEN is_owner THEN 'LIFETIME SOVEREIGN'
     WHEN access_approved AND NOT is_trial THEN 'PERMANENT'
     WHEN is_trial AND trial_expires_at > now()
-      THEN EXTRACT(EPOCH FROM (trial_expires_at - now()))::int || 's remaining of 33437s (9h17m17s)'
+      THEN EXTRACT(EPOCH FROM (trial_expires_at - now()))::int || 's remaining of 557s (9 min 17 sec)'
     WHEN is_trial AND trial_expires_at <= now() THEN 'EXPIRED'
     ELSE 'PENDING'
   END AS trial_status

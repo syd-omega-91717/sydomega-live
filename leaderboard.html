@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="SYD OMEGA 91717 — LEADERBOARD · Sovereign Platform">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<title>&#937; SYD OMEGA 91717 &mdash; Sovereign Leaderboard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}
+.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}
+.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pad{padding:clamp(14px,3vw,36px)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(120px,15vw,160px),1fr));gap:10px;margin-bottom:16px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
+.kpi-n{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--kc,var(--gold));line-height:1}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+/* PODIUM */
+.podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:12px;margin-bottom:20px;align-items:end}
+.pod{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;text-align:center;position:relative;transition:.18s}
+.pod-rank{font-family:var(--D);font-size:clamp(28px,5vw,48px);color:rgba(201,168,76,.12);position:absolute;top:6px;right:10px;line-height:1}
+.pod-gold{border-color:rgba(226,200,109,.4);background:rgba(226,200,109,.04);border-top:3px solid var(--solar)}
+.pod-silver{border-color:rgba(192,192,192,.25);background:rgba(192,192,192,.02);border-top:2px solid rgba(192,192,192,.4)}
+.pod-bronze{border-color:rgba(205,127,50,.25);background:rgba(205,127,50,.02);border-top:2px solid rgba(205,127,50,.4)}
+.pod-name{font-family:var(--D);font-size:10px;color:var(--ink);margin:8px 0 4px}
+.pod-auth{font-family:var(--D);font-size:clamp(16px,3vw,24px);color:var(--gold);line-height:1}
+.pod-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pod-el{font-family:var(--M);font-size:8px;letter-spacing:1.5px;margin-top:6px}
+/* LEADERBOARD TABLE */
+.lb-table{border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.lb-head{display:grid;grid-template-columns:50px 1fr 90px 90px 90px 80px;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.12)}
+.lb-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
+.lb-row{display:grid;grid-template-columns:50px 1fr 90px 90px 90px 80px;padding:11px 12px;border-bottom:1px solid rgba(201,168,76,.04);align-items:center;transition:.15s}
+.lb-row:hover{background:rgba(201,168,76,.025)}
+.lb-row.me{background:rgba(201,168,76,.04);border-left:2px solid var(--gold)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-family:var(--D);font-size:14px;text-align:center}
+.lb-name{font-family:var(--R);font-size:12px}
+.lb-sign{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
+.lb-auth{font-family:var(--D);font-size:13px;color:var(--gold)}
+.lb-axis{font-family:var(--M);font-size:8px;text-align:center}
+.badge-new{font-family:var(--M);font-size:6px;letter-spacing:1px;padding:2px 5px;border:1px solid rgba(63,178,127,.4);border-radius:2px;color:var(--green);margin-left:6px}
+.my-rank-banner{border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);padding:12px 16px;border-radius:2px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){
+  .podium{grid-template-columns:1fr 1fr;}.pod:first-child{grid-column:1/-1}
+  .lb-head,.lb-row{grid-template-columns:36px 1fr 70px 60px}
+  .lb-hcell:nth-child(n+5),.lb-row>*:nth-child(n+5){display:none}
+}
+</style>
+</head>
+<body><a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold,#C9A84C);color:#000;padding:8px 14px;font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="leaderboard" aria-label="Side navigation"></aside>
+  <main class="main" role="main">
+    <div class="topbar">
+      <div class="t">SOVEREIGN LEADERBOARD<small>DAILY SNAPSHOT &middot; GOOGLE PAGERANK AUTHORITY MODEL &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</small></div>
+      <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted)">UPDATED: <span id="lb-date">--</span></div>
+    </div>
+    <div class="pad">
+      <div class="kpi-row">
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="lb-total">--</div><div class="kpi-l">RANKED MEMBERS</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="my-rank">--</div><div class="kpi-l">MY GLOBAL RANK</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="my-auth">--</div><div class="kpi-l">MY AUTHORITY</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">DAILY</div><div class="kpi-l">SNAPSHOT FREQUENCY</div></div>
+      </div>
+      <!-- MY RANK BANNER -->
+      <div class="my-rank-banner" id="my-rank-banner" style="display:none">
+        <div style="font-family:var(--D);font-size:28px;color:var(--gold);line-height:1">#<span id="banner-rank">--</span></div>
+        <div>
+          <div style="font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px" id="banner-name">--</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH <span id="banner-auth" style="color:var(--gold)">--</span> &middot; <span id="banner-element">--</span> &middot; AXIS A:<span id="banner-a">--</span> B:<span id="banner-b">--</span> C:<span id="banner-c">--</span></div>
+        </div>
+      </div>
+      <!-- TOP 3 PODIUM -->
+      <div class="sechead">TOP 3 SOVEREIGN MEMBERS &middot; RANKED BY AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
+      <div class="podium" id="podium">
+        <div class="pod pod-silver"><div class="pod-rank">2</div><div class="pod-auth" id="p2-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p2-name">--</div><div class="pod-el" id="p2-el">--</div></div>
+        <div class="pod pod-gold"><div class="pod-rank">1</div><div class="pod-auth" id="p1-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p1-name">--</div><div class="pod-el" id="p1-el">--</div></div>
+        <div class="pod pod-bronze"><div class="pod-rank">3</div><div class="pod-auth" id="p3-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p3-name">--</div><div class="pod-el" id="p3-el">--</div></div>
+      </div>
+      <!-- FULL TABLE -->
+      <div class="sechead">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED &middot; DAILY SNAPSHOT</div>
+      <div class="lb-table" role="table" aria-label="Leaderboard">
+        <div class="lb-head" role="row">
+          <div class="lb-hcell" role="columnheader">RANK</div>
+          <div class="lb-hcell" role="columnheader">MEMBER</div>
+          <div class="lb-hcell" role="columnheader">AUTHORITY</div>
+          <div class="lb-hcell" role="columnheader">AXIS A</div>
+          <div class="lb-hcell" role="columnheader">AXIS B</div>
+          <div class="lb-hcell" role="columnheader">ELEMENT</div>
+        </div>
+        <div id="lb-rows" role="rowgroup"><div class="lb-row" style="grid-template-columns:1fr;padding:20px;text-align:center"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING LEADERBOARD&hellip;</span></div></div>
+      </div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:12px;padding:10px 14px;border:1px solid var(--line);border-radius:2px;line-height:1.8">
+        LEADERBOARD METHODOLOGY &middot; Ranking uses AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e computed daily at midnight.<br>
+        Inspired by Google PageRank: authority flows from demonstrated knowledge, mastery, and contribution — not follower count.<br>
+        Daily snapshots prevent gaming. No real-time rank manipulation. Rank recalculates every 24 hours.
+      </div>
+    </div>
+    <div data-page-emblem="leaderboard" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; SOVEREIGN LEADERBOARD &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+  </main>
+</div>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+var supabase=sb;
+
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+var EL_ICONS={fire:'&#9670;',water:'&#9675;',wind:'&#9671;',metal:'&#9632;',sand:'&#9674;',soul:'&#9670;',space:'&#9651;',void:'&#9661;',ninth:'&#9670;'};
+
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+    var PHI=1.6180339887,EU=2.7182818285;
+    var myA=Number(pr.is_owner?9:pr.axis_a||0.001);
+    var myB=Number(pr.is_owner?9:pr.axis_b||0.001);
+    var myC=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var myAuth=pr.is_owner?27.8367:Math.sqrt(Math.pow(myA,3)+Math.pow(myB,3)+Math.pow(myC,3))*PHI/EU;
+    sid('my-auth',myAuth.toFixed(4));
+    /* Try live leaderboard snapshot */
+    try{
+      var lb=await sb.from('leaderboard_snapshots').select('*').eq('snapshot_date',new Date().toISOString().slice(0,10)).order('rank_global',{ascending:true}).limit(50);
+      var rows=lb.data||[];
+      if(!rows.length) throw new Error('no snapshot today');
+      sid('lb-total',rows.length);
+      sid('lb-date',new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase());
+      /* Find my rank */
+      var me=rows.find(function(r){return r.user_id===s.user.id;});
+      if(me){sid('my-rank',me.rank_global||'--');renderBanner(me,pr);}
+      renderPodium(rows.slice(0,3));
+      renderTable(rows,s.user.id);
+    }catch(e){
+      /* Fall back to live profiles query if no snapshot yet */
+      var pf=await sb.from('profiles').select('id,display_name,axis_a,axis_b,axis_c,element,subscription_tier').eq('access_approved',true).order('axis_a',{ascending:false}).limit(50);
+      var profiles=(pf.data||[]).filter(function(p){return p.axis_a>0.001||p.axis_b>0.001;});
+      profiles.sort(function(a,b){
+        var va=Math.sqrt(Math.pow(a.axis_a||0,3)+Math.pow(a.axis_b||0,3)+Math.pow(a.axis_c||0,3))*PHI/EU;
+        var vb=Math.sqrt(Math.pow(b.axis_a||0,3)+Math.pow(b.axis_b||0,3)+Math.pow(b.axis_c||0,3))*PHI/EU;
+        return vb-va;
+      });
+      if(pr.is_owner) profiles.unshift({id:s.user.id,display_name:'MAJOR SLEIMAN YOUSSEF DAGHER',axis_a:9,axis_b:9,axis_c:9,element:'fire'});
+      sid('lb-total',profiles.length);
+      sid('lb-date','LIVE FEED');
+      var meR=profiles.findIndex(function(p){return p.user_id===s.user.id||p.id===s.user.id;});
+      if(meR>=0) sid('my-rank',meR+1);
+      renderPodiumProfiles(profiles.slice(0,3));
+      renderTableProfiles(profiles,s.user.id);
+    }
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
+
+function fmtAuth(a,b,c,isOwner){if(isOwner)return'27.8367';var PHI=1.6180339887,EU=2.7182818285;return Math.sqrt(Math.pow(Number(a)||0,3)+Math.pow(Number(b)||0,3)+Math.pow(Number(c)||0,3))*PHI/EU;}
+
+function renderBanner(row,pr){
+  var b=document.getElementById('my-rank-banner');
+  if(b){b.style.display='flex';}
+  sid('banner-rank',row.rank_global||'--');
+  sid('banner-name',(pr.display_name||'SOVEREIGN MEMBER').toUpperCase());
+  sid('banner-auth',Number(row.authority||0).toFixed(4));
+  sid('banner-element',(pr.element||'FIRE').toUpperCase());
+  sid('banner-a',Number(row.axis_a||0).toFixed(3));
+  sid('banner-b',Number(row.axis_b||0).toFixed(3));
+  sid('banner-c',Number(row.axis_c||0).toFixed(3));
+}
+function renderPodium(rows){
+  var PHI=1.6180339887,EU=2.7182818285;
+  var order=[rows[1],rows[0],rows[2]]; // silver, gold, bronze
+  var ids=['p2','p1','p3'];
+  order.forEach(function(r,i){if(!r)return;var id=ids[i];sid(id+'-auth',Number(r.authority||0).toFixed(4));sid(id+'-name',(r.display_name||'MEMBER').toUpperCase().slice(0,20));sid(id+'-el',(r.element||'').toUpperCase());});
+}
+function renderPodiumProfiles(rows){
+  var PHI=1.6180339887,EU=2.7182818285;
+  function auth(r){return(Math.sqrt(Math.pow(Number(r.axis_a)||0,3)+Math.pow(Number(r.axis_b)||0,3)+Math.pow(Number(r.axis_c)||0,3))*PHI/EU).toFixed(4);}
+  var order=[rows[1],rows[0],rows[2]];var ids=['p2','p1','p3'];
+  order.forEach(function(r,i){if(!r)return;var id=ids[i];sid(id+'-auth',auth(r));sid(id+'-name',(r.display_name||'MEMBER').toUpperCase().slice(0,20));sid(id+'-el',(r.element||'').toUpperCase());});
+}
+function renderTable(rows,myUid){
+  var PHI=1.6180339887,EU=2.7182818285;
+  var el=document.getElementById('lb-rows');
+  if(!el)return;
+  el.innerHTML=rows.map(function(r,i){
+    var isMe=(r.user_id===myUid);
+    var medal=i===0?'&#9812;':i===1?'&#9813;':i===2?'&#9814;':'';
+    return '<div class="lb-row'+(isMe?' me':'')+'" role="row" aria-label="Rank '+(r.rank_global||i+1)+'">'
+      +'<div class="lb-rank" style="color:'+(i<3?'var(--gold)':'var(--muted)')+'">'+medal+(r.rank_global||i+1)+'</div>'
+      +'<div><div class="lb-name">'+(isMe?'<span style="color:var(--gold)">&#9670; YOU &mdash; </span>':'')+(r.display_name||'MEMBER').toUpperCase().slice(0,25)+'</div><div class="lb-sign">'+(r.element||'').toUpperCase()+'</div></div>'
+      +'<div class="lb-auth">'+Number(r.authority||0).toFixed(4)+'</div>'
+      +'<div class="lb-axis" style="color:var(--gold)">'+Number(r.axis_a||0).toFixed(3)+'</div>'
+      +'<div class="lb-axis" style="color:var(--purple)">'+Number(r.axis_b||0).toFixed(3)+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center">'+(r.element||'?').toUpperCase().slice(0,5)+'</div>'
+      +'</div>';
+  }).join('');
+}
+function renderTableProfiles(rows,myUid){
+  var PHI=1.6180339887,EU=2.7182818285;
+  var el=document.getElementById('lb-rows');
+  if(!el)return;
+  el.innerHTML=rows.map(function(r,i){
+    var auth=Math.sqrt(Math.pow(Number(r.axis_a)||0,3)+Math.pow(Number(r.axis_b)||0,3)+Math.pow(Number(r.axis_c)||0,3))*PHI/EU;
+    var isMe=(r.id===myUid||r.user_id===myUid);
+    var medal=i===0?'&#9812;':i===1?'&#9813;':i===2?'&#9814;':'';
+    return '<div class="lb-row'+(isMe?' me':'')+'" role="row">'
+      +'<div class="lb-rank" style="color:'+(i<3?'var(--gold)':'var(--muted)')+'">'+medal+(i+1)+'</div>'
+      +'<div><div class="lb-name">'+(isMe?'<span style="color:var(--gold)">&#9670; YOU &mdash; </span>':'')+(r.display_name||'MEMBER').toUpperCase().slice(0,25)+'</div><div class="lb-sign">'+(r.element||'?').toUpperCase()+'</div></div>'
+      +'<div class="lb-auth">'+auth.toFixed(4)+'</div>'
+      +'<div class="lb-axis" style="color:var(--gold)">'+Number(r.axis_a||0).toFixed(3)+'</div>'
+      +'<div class="lb-axis" style="color:var(--purple)">'+Number(r.axis_b||0).toFixed(3)+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center">'+(r.element||'?').toUpperCase().slice(0,5)+'</div>'
+      +'</div>';
+  }).join('');
+}
+</script>
+</body>
+</html>

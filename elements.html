@@ -131,7 +131,7 @@ a{color:inherit;text-decoration:none}
 <div class="mtab-panel" id="mtab-gates" style="display:none">
   
     <div class="topbar"><div class="t">THE TWELVE GATES <span data-canon="mechanic"></span><small>TWELVE PHASES  .  TWELVE THRESHOLDS  .  9x9x9 &middot; 28×28×9×9×9 = 571,536 <span data-canon-lattice="28"></span></small></div></div>
-    <p class="intro">Twelve gates rise along the 729  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 15.58. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
+    <p class="intro">Twelve gates rise along the 729  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 27.8367. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
     <div class="mstat" id="mstat"></div>
     <div class="gates" id="gates"></div>
   
@@ -149,7 +149,7 @@ a{color:inherit;text-decoration:none}
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const SIGN_EL = {
   'Aries':'fire','Leo':'fire','Sagittarius':'fire',
@@ -218,8 +218,8 @@ const ELEMENTS = [
   },
   {
     id:'all', tier:'APEX &middot; NINTH ELEMENT', name:'THE ALL', sub:'&#937; THE COMPLETE FORCE',
-    col:'#C9A84C', signs:[], unlock:15.58,
-    desc:'The All is the convergence of all eight elements into a single sovereign field. It encompasses every dimension of existence: the physical, the transcendent, and the experiential. Only one who has reached the Apex threshold of 15.58 may claim it.',
+    col:'#C9A84C', signs:[], unlock:27.8367,
+    desc:'The All is the convergence of all eight elements into a single sovereign field. It encompasses every dimension of existence: the physical, the transcendent, and the experiential. Only one who has reached the Apex threshold of 27.8367 may claim it.',
     facets:['Religion','Character','Mind','Heart','Birth','Death','Life','Family','Friends','Work'],
     motif:'all'
   }
@@ -255,7 +255,7 @@ async function boot(){
     var grid=document.getElementById(containerId);
     grid.innerHTML='';
     els.forEach(function(el){
-      var isMine = SIGN_EL[mySign]===el.id || (el.id==='all' && myAuth>=15.58) || (el.id==='void' && myAuth>=12.72) || (el.id==='space' && myAuth>=9.17) || (el.id==='soul' && myAuth>=5.20);
+      var isMine = SIGN_EL[mySign]===el.id || (el.id==='all' && myAuth>=27.8367) || (el.id==='void' && myAuth>=12.72) || (el.id==='space' && myAuth>=9.17) || (el.id==='soul' && myAuth>=5.20);
       var isLocked = el.unlock && myAuth < el.unlock;
       var card=document.createElement('div');
       card.className='el-card'+(isMine?' mine':'')+(isLocked?' locked':'');
@@ -311,7 +311,7 @@ boot();
 <script type="module">
 
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
   const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
   // name, essence, material, egyptian, roman(Dii Consentes), hindu(Aditya), lore
@@ -327,7 +327,7 @@ boot();
     ['The Gate of Diamond','VISION','Diamond','Horus','Minerva','Tvashta','Unbreakable clarity; the far sight of the highest tiers.'],
     ['The Gate of Adamant','MASTERY','Adamant','Isis','Neptune','Savitar','The metal of myth; near-complete command of the 729.'],
     ['The Gate of Aether','TRANSCENDENCE','Aether','Sekhmet','Juno','Amsha','No longer matter but principle; the threshold of the apex.'],
-    ['The Omega Gate','ASCENSION','Omega','Ra','Jupiter','Vishnu','The final gate at node (9,9,9), authority 15.58  --  the Omega alone may pass.']
+    ['The Omega Gate','ASCENSION','Omega','Ra','Jupiter','Vishnu','The final gate at node (9,9,9), authority 27.8367  --  the Omega alone may pass.']
   ];
   const GEN=Math.sqrt(3), APEX=Math.sqrt(243);
   function threshold(g){ return GEN + (g/11)*(APEX-GEN); } // g=0..11
@@ -342,7 +342,7 @@ boot();
   function render(a,b,c){
     var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     var open=0; for(var g=0;g<12;g++){ if(auth>=threshold(g)) open++; }
-    document.getElementById('mstat').innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') \u00B7 AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 GATES OPEN <b>'+open+'</b> / 12'+(open<12?' \u00B7 next gate at authority '+threshold(open).toFixed(2):' \u00B7 THE OMEGA GATE STANDS OPEN');
+    document.getElementById('mstat').innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') \u00B7 AUTHORITY <b>'+auth.toFixed(2)+'</b> / 27.8367 \u00B7 GATES OPEN <b>'+open+'</b> / 12'+(open<12?' \u00B7 next gate at authority '+threshold(open).toFixed(2):' \u00B7 THE OMEGA GATE STANDS OPEN');
     var box=document.getElementById('gates'); box.innerHTML='';
     GATES.forEach(function(gt,i){
       var isOpen=auth>=threshold(i);
@@ -408,7 +408,7 @@ window.bootGates = bootGates;
 <script type="module">
 
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
   const KINGS=[
     ['The Architect','Structure'],['The Oracle','Foresight'],['The Warden','Protection'],['The Alchemist','Transformation'],
@@ -432,7 +432,7 @@ window.bootGates = bootGates;
   function render(a,b,c){
     var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     var crowned=0; for(var k=0;k<28;k++){ if(auth>=threshold(k)) crowned++; }
-    document.getElementById('k-mstat').innerHTML='AUTHORITY <b>'+auth.toFixed(2)+'</b> / 15.58 \u00B7 KINGS CROWNED <b>'+crowned+'</b> / 28'+(crowned<28?' \u00B7 next King at authority '+threshold(crowned).toFixed(2):' \u00B7 ALL KINGS CROWNED');
+    document.getElementById('k-mstat').innerHTML='AUTHORITY <b>'+auth.toFixed(2)+'</b> / 27.8367 \u00B7 KINGS CROWNED <b>'+crowned+'</b> / 28'+(crowned<28?' \u00B7 next King at authority '+threshold(crowned).toFixed(2):' \u00B7 ALL KINGS CROWNED');
     var box=document.getElementById('kings'); box.innerHTML='';
     KINGS.forEach(function(kg,i){
       var isCrowned=auth>=threshold(i);

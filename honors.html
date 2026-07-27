@@ -618,7 +618,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const LEVELS=[
   {n:1,name:'INITIATE',col:'#D9B86A',mat:'SAND',xp:'1-100',auth:'1.73'},
@@ -631,7 +631,7 @@ const LEVELS=[
   {n:8,name:'ARCHON',col:'#E8D5B7',mat:'PLATINUM',xp:'1.5K-1.9K',auth:'10.55'},
   {n:9,name:'RADIANT',col:'#9B6BF0',mat:'DIAMOND',xp:'1.9K-2.4K',auth:'11.81'},
   {n:10,name:'UNYIELDING',col:'#00E5FF',mat:'ADAMANT',xp:'2.4K-3K',auth:'13.07'},
-  {n:11,name:'TRANSCENDENT',col:'#E2C86D',mat:'AETHER',xp:'3K-3.7K',auth:'14.33'},
+  {n:11,name:'TRANSCENDENT',col:'#E2C86D',mat:'PRIME',xp:'3K-3.7K',auth:'14.33'},
   {n:12,name:'OMEGA MASTER',col:'#C9A84C',mat:'OMEGA',xp:'3.7K+',auth:'27.8367'},
 ];
 
@@ -780,7 +780,7 @@ window.bootAscension = bootAscension;
 <script type="module">
 
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
   const APEX=27.8367;
   const PHASE=['The Awakening','The Calling','The Foundation','The First Gate','The Trials','The Ascent','The Convergence','The Sovereign Trial','The Celestial Alignment','The Dominion','The Legacy','The Omega'];
   function band(auth){ var g=Math.max(1,Math.min(12,Math.ceil(auth/APEX*12))); var lo=(g-1)/12*APEX,hi=g/12*APEX,w=Math.max(0,Math.min(1,(auth-lo)/(hi-lo))); var lv=Math.max(1,Math.min(12,Math.ceil(w*12))); return {g:g,lv:lv}; }
@@ -853,7 +853,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
   let trophyCount=0, medalCount=0, certCount=0;
   try{
     const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-    const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+    var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
     const sess = (await sb.auth.getSession()).data.session;
     if(!sess) return;
     const pr = await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();

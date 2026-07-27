@@ -181,7 +181,7 @@
 
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
   let user=null;
   const DEFAULT='#0A0A0F';
   const PRESETS=[['Void Black','#0A0A0F'],['Obsidian Navy','#06080f'],['Crimson Void','#0c0608'],['Forest Void','#060a08'],['Charcoal','#0e0e12'],['Deep Plum','#0a0710'],['Abyss Teal','#05090b'],['Ash','#101013']];

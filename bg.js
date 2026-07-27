@@ -287,7 +287,56 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
 /* ===== MULTI-LANGUAGE -- translation engine on every page (EN / AR-RTL / FR / ES).
    Its own visible language box is disabled -- same reason as above. ===== */
 (function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}
-if(!document.querySelector('script[data-omega-user]')){var su=document.createElement('script');su.src='/omega-user.js';su.setAttribute('data-omega-user','1');su.defer=true;if(document.body)document.body.appendChild(su);}
+
+  /* Ctrl+K search overlay */
+  if(!document.querySelector('script[data-omega-search]')){
+    var _s_data_omega_search=document.createElement('script');
+    _s_data_omega_search.src='/omega-search.js';
+    _s_data_omega_search.setAttribute('data-omega-search','1');
+    _s_data_omega_search.defer=true;
+    if(document.body)document.body.appendChild(_s_data_omega_search);
+  }
+  /* Notification engine with badge */
+  if(!document.querySelector('script[data-omega-notify]')){
+    var _s_data_omega_notify=document.createElement('script');
+    _s_data_omega_notify.src='/omega-notify.js';
+    _s_data_omega_notify.setAttribute('data-omega-notify','1');
+    _s_data_omega_notify.defer=true;
+    if(document.body)document.body.appendChild(_s_data_omega_notify);
+  }
+  /* AI concierge GraphRAG bridge */
+  if(!document.querySelector('script[data-omega-ai]')){
+    var _s_data_omega_ai=document.createElement('script');
+    _s_data_omega_ai.src='/omega-ai.js';
+    _s_data_omega_ai.setAttribute('data-omega-ai','1');
+    _s_data_omega_ai.defer=true;
+    if(document.body)document.body.appendChild(_s_data_omega_ai);
+  }
+  /* Google Core Web Vitals monitor */
+  if(!document.querySelector('script[data-omega-metrics]')){
+    var _s_data_omega_metrics=document.createElement('script');
+    _s_data_omega_metrics.src='/omega-metrics.js';
+    _s_data_omega_metrics.setAttribute('data-omega-metrics','1');
+    _s_data_omega_metrics.defer=true;
+    if(document.body)document.body.appendChild(_s_data_omega_metrics);
+  }
+  /* Zodiac/element first-run flow */
+  if(!document.querySelector('script[data-omega-onboard]')){
+    var _s_data_omega_onboard=document.createElement('script');
+    _s_data_omega_onboard.src='/omega-onboard.js';
+    _s_data_omega_onboard.setAttribute('data-omega-onboard','1');
+    _s_data_omega_onboard.defer=true;
+    if(document.body)document.body.appendChild(_s_data_omega_onboard);
+  }
+  /* SDT gamification + gate celebrations */
+  if(!document.querySelector('script[data-omega-sdt]')){
+    var _s_data_omega_sdt=document.createElement('script');
+    _s_data_omega_sdt.src='/omega-sdt.js';
+    _s_data_omega_sdt.setAttribute('data-omega-sdt','1');
+    _s_data_omega_sdt.defer=true;
+    if(document.body)document.body.appendChild(_s_data_omega_sdt);
+  }
+  if(!document.querySelector('script[data-omega-user]')){var su=document.createElement('script');su.src='/omega-user.js';su.setAttribute('data-omega-user','1');su.defer=true;if(document.body)document.body.appendChild(su);}
 if(!document.querySelector('script[data-omega-chrono]')){var sc=document.createElement('script');sc.src='/omega-chrono.js';sc.setAttribute('data-omega-chrono','1');sc.defer=true;if(document.body)document.body.appendChild(sc);}
 if(!document.querySelector('script[data-omega-matrix]')){var sm=document.createElement('script');sm.src='/omega-matrix.js';sm.setAttribute('data-omega-matrix','1');sm.defer=true;if(document.body)document.body.appendChild(sm);}
 if(!document.querySelector('script[data-omega-lattice-3d]')){var sl3=document.createElement('script');sl3.src='/omega-lattice-3d.js';sl3.setAttribute('data-omega-lattice-3d','1');sl3.defer=true;if(document.body)document.body.appendChild(sl3);}

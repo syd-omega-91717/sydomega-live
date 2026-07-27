@@ -1,36 +1,55 @@
-/* ============================================================================
-   SYD OMEGA 91717 -- SERVICE WORKER (CACHE KILL-SWITCH, omega-v7)
-   Visitors were being served STALE cached files (old sound, old nav, old pages)
-   because a previous cache-first worker held onto them. This worker, on its
-   first activation in each browser, DELETES every cache, UNREGISTERS itself,
-   and reloads open tabs -- so every device drops the old files and loads the
-   current site fresh from the network. After this runs once everywhere, the
-   stale-content problem is permanently gone. Pure ASCII.
-   ============================================================================ */
-self.addEventListener('install', function () {
+/* ==========================================================================
+   Ω SYD OMEGA 91717 — SOVEREIGN SERVICE WORKER
+   Cache-first for static assets, network-first for API/Supabase calls.
+   Enables offline graceful degradation for core pages.
+   ========================================================================== */
+var CACHE_NAME='omega-91717-v3';
+var CORE_ASSETS=[
+  '/dashboard.html','/vault.html','/gaming.html','/leaderboard.html',
+  '/knowledge.html','/analytics.html','/privacy.html','/404.html',
+  '/bg.js','/omega-user.js','/omega-matrix.js','/omega-chrono.js',
+  '/omega-sdt.js','/omega-search.js','/omega-notify.js','/omega-canon.js',
+  '/omega-tokens.json','/omega-canon.json','/omega-page-emblem.js',
+  'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap'
+];
+
+self.addEventListener('install',function(e){
+  e.waitUntil(caches.open(CACHE_NAME).then(function(cache){
+    return Promise.allSettled(CORE_ASSETS.map(function(url){return cache.add(url).catch(function(){});}));
+  }));
   self.skipWaiting();
 });
 
-self.addEventListener('activate', function (event) {
-  event.waitUntil((async function () {
-    // 1) delete every cache this origin ever created
-    try {
-      var keys = await caches.keys();
-      await Promise.all(keys.map(function (k) { return caches.delete(k); }));
-    } catch (e) {}
-    // 2) remove this service worker entirely (no more stale serving)
-    try { await self.registration.unregister(); } catch (e) {}
-    // 3) reload every open tab so they pull fresh files immediately
-    try {
-      var clients = await self.clients.matchAll({ type: 'window' });
-      clients.forEach(function (c) { try { c.navigate(c.url); } catch (e) {} });
-    } catch (e) {}
-  })());
+self.addEventListener('activate',function(e){
+  e.waitUntil(caches.keys().then(function(names){
+    return Promise.all(names.filter(function(n){return n!==CACHE_NAME;}).map(function(n){return caches.delete(n);}));
+  }));
+  self.clients.claim();
 });
 
-/* Network-only while this worker is briefly alive: never serve from cache. */
-self.addEventListener('fetch', function (event) {
-  event.respondWith(fetch(event.request).catch(function () {
-    return new Response('', { status: 504 });
-  }));
+self.addEventListener('fetch',function(e){
+  var url=e.request.url;
+  /* Network-first for Supabase, API calls */
+  if(url.includes('supabase.co')||url.includes('api.anthropic')||url.includes('esm.sh')){
+    e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));
+    return;
+  }
+  /* Cache-first for static assets */
+  e.respondWith(
+    caches.match(e.request).then(function(cached){
+      if(cached) return cached;
+      return fetch(e.request).then(function(res){
+        if(res&&res.status===200&&res.type==='basic'){
+          var clone=res.clone();
+          caches.open(CACHE_NAME).then(function(cache){cache.put(e.request,clone);});
+        }
+        return res;
+      }).catch(function(){
+        /* Offline fallback */
+        if(e.request.headers.get('accept').includes('text/html')){
+          return caches.match('/dashboard.html');
+        }
+      });
+    })
+  );
 });

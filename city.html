@@ -182,7 +182,7 @@ a{color:inherit;text-decoration:none}
     <div style="display:flex;flex-direction:column;gap:8px" id="arch-layers"></div>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 var DISTRICTS=[
   {zone:'DISTRICT 1',name:'THE GENESIS QUARTER',desc:'The origin point. The Omega core monument stands here. Every sovereign who reaches the (9,9,9) apex node receives a permanent residence deed in this district.',module:'M01 PLATFORM CORE',nodes:'81 APEX NODES',col:'#C9A84C',status:'blueprint'},

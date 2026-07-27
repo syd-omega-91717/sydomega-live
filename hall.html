@@ -161,10 +161,7 @@
 
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const supabase = createClient(
-    "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-    "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"
-  );
+  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
   const ELEM_ORDER=['Fire','Water','Wind','Metal','Sand'];
   function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 
@@ -201,7 +198,7 @@
 
       // --- Hall of Fame: ranked ascendants ---
       try{
-        const APEX=15.588;
+        const APEX=27.83678;
         const { data: board, error: berr } = await supabase.rpc('public_leaderboard', { p_limit: 25 });
         const box=document.getElementById('h-board');
         if(berr){ box.innerHTML='<div class="lmeta">The roll could not be read.</div>'; }

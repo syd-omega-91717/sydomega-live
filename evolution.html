@@ -118,10 +118,7 @@
 </script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const __sbg = createClient(
-    "https://ydqhzvvoyufiiqvzcjns.supabase.co",
-    "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"
-  );
+  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
   (async function(){
     /* Access gate -- no content is shown before a verified, approved session */
     const sess=(await __sbg.auth.getSession()).data.session;

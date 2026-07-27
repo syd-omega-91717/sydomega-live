@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — Sovereign AI Command Centre · 12 Agents">
+<title>&#937; SYD OMEGA 91717 &mdash; Sovereign AI Command</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pad{padding:clamp(14px,3vw,36px)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
+.kpi-n{font-family:var(--D);font-size:20px;color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+/* AGENT GRID */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:20px}
+.agent-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;cursor:pointer;transition:.18s;position:relative;overflow:hidden}
+.agent-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.agent-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac,var(--gold))}
+.agent-glyph{font-size:28px;margin-bottom:8px;line-height:1}
+.agent-name{font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:4px}
+.agent-role{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--ac,var(--cyan));margin-bottom:6px}
+.agent-sign{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.agent-voice{font-size:11px;line-height:1.65;color:var(--ink);opacity:.7;margin-bottom:10px}
+.agent-greeting{font-family:var(--M);font-size:8.5px;letter-spacing:.5px;color:var(--ink);opacity:.6;line-height:1.6;border-left:2px solid var(--ac,var(--gold));padding-left:10px;font-style:italic}
+.agent-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.2);border-radius:10px;color:var(--muted)}
+/* ACTIVE AGENT PANEL */
+.agent-panel{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.03);padding:16px;border-radius:2px;margin-bottom:16px;display:none}
+.agent-panel.visible{display:block}
+/* CHAT */
+.chat-wrap{border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.chat-head{padding:10px 14px;background:rgba(201,168,76,.04);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.chat-msgs{max-height:40vh;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:rgba(2,2,6,.6)}
+.msg{padding:10px 13px;border-radius:2px;font-size:11px;line-height:1.7;max-width:85%}
+.msg-user{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);align-self:flex-end;color:var(--ink)}
+.msg-ai{background:rgba(10,10,15,.8);border:1px solid rgba(201,168,76,.06);color:var(--ink);align-self:flex-start}
+.chat-input-row{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:rgba(10,10,15,.5)}
+.chat-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px 10px;border-radius:2px;outline:none}
+.chat-send{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;transition:.15s}
+.chat-send:hover{background:rgba(201,168,76,.2)}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.agent-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="sovereign-ai" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar">
+      <div class="t">SOVEREIGN AI COMMAND<small>12-AGENT MULTI-AGENT SYSTEM &middot; EACH AGENT BOUND TO A ZODIAC SIGN, ELEMENT &amp; DOMAIN &middot; ANTHROPIC CLAUDE POWERED</small></div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green)" id="ai-status">&#9670; ONLINE</div>
+    </div>
+    <div class="pad">
+      <div class="kpi-row">
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN AGENTS</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="active-agent-kpi">--</div><div class="kpi-l">ACTIVE AGENT</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="my-auth">--</div><div class="kpi-l">MY AUTHORITY</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="my-sign">--</div><div class="kpi-l">MY SIGN</div></div>
+      </div>
+      <!-- ACTIVE AGENT DETAIL -->
+      <div class="agent-panel" id="agent-panel">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px">
+          <div style="font-size:40px" id="ap-glyph">&ndash;</div>
+          <div>
+            <div style="font-family:var(--D);font-size:14px;color:var(--gold)" id="ap-name">&ndash;</div>
+            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin:4px 0" id="ap-role">&ndash;</div>
+            <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)" id="ap-sign">&ndash;</div>
+          </div>
+        </div>
+        <div style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:var(--ink);opacity:.7;line-height:1.7;border-left:2px solid var(--gold);padding-left:12px;font-style:italic;margin-bottom:12px" id="ap-greeting">&ndash;</div>
+        <div class="chat-wrap">
+          <div class="chat-head">
+            <span style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold)">&#9670; AGENT CHANNEL</span>
+            <span style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)" id="ap-domains">&ndash;</span>
+          </div>
+          <div class="chat-msgs" id="chat-msgs"></div>
+          <div class="chat-input-row">
+            <input class="chat-inp" id="chat-inp" type="text" placeholder="Message the agent..." autocomplete="off" aria-label="Message agent">
+            <button class="chat-send" id="chat-btn" onclick="sendToAgent()">SEND &#8594;</button>
+          </div>
+        </div>
+      </div>
+      <!-- 12 AGENT CARDS -->
+      <div class="sechead">12 SOVEREIGN AGENTS &middot; CLICK TO ACTIVATE</div>
+      <div class="agent-grid" id="agent-grid"></div>
+    </div>
+    <div data-page-emblem="sovereign-ai" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; SOVEREIGN AI &middot; 12-AGENT SYSTEM</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+  </main>
+</div>
+<script>
+var EL_COLORS={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D',soul:'#9B6BF0',space:'#00E5FF',void:'#3fb27f',ninth:'#C9A84C'};
+var SIGN_GLYPHS={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
+var _activeAgent=null;var _history=[];var _profile=null;
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+function shtml(id,v){var el=document.getElementById(id);if(el)el.innerHTML=v;}
+var PHI=1.6180339887,EU=2.7182818285;
+
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    _profile=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!_profile.is_owner&&!_profile.access_approved){location.replace('/pending.html');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(_profile,s.user);
+    window.__omegaUserLoaded=true;
+    var a=Number(_profile.is_owner?9:_profile.axis_a||0.001);
+    var b=Number(_profile.is_owner?9:_profile.axis_b||0.001);
+    var c=Number(_profile.is_owner?9:_profile.axis_c||0.001);
+    var auth=_profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    sid('my-auth',auth.toFixed(4));
+    sid('my-sign',(_profile.zodiac_sign||'--').toUpperCase());
+
+    /* Load agents from omega-agents.json */
+    var ar=await fetch('/omega-agents.json');
+    var agentsData=await ar.json();
+    var agents=agentsData.agents||[];
+    renderAgents(agents,_profile);
+  }catch(e){document.getElementById('app').style.display='flex';}
+})();
+
+function renderAgents(agents,profile){
+  var grid=document.getElementById('agent-grid');
+  if(!grid) return;
+  grid.innerHTML=agents.map(function(ag){
+    var col=EL_COLORS[ag.element.toLowerCase()]||'#C9A84C';
+    var glyph=SIGN_GLYPHS[ag.sign]||'\u2606';
+    var isMyAgent=(profile&&profile.zodiac_sign===ag.sign);
+    return '<div class="agent-card"'+(isMyAgent?' style="border-color:'+(col)+';box-shadow:0 0 20px '+(col)+'22"':'')+' data-agent-idx="'+agents.indexOf(ag)+'" onclick="activateAgent(this,'+JSON.stringify(ag).replace(/"/g,'&quot;')+')" style="--ac:'+(col)+'" tabindex="0" role="button" aria-label="Activate '+ag.name+' agent">'
+      +(isMyAgent?'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:'+(col)+';margin-bottom:6px">YOUR ASSIGNED AGENT</div>':'')+
+      '<div class="agent-glyph">'+glyph+'</div>'
+      +'<div class="agent-name">'+ag.name.toUpperCase()+'</div>'
+      +'<div class="agent-role">'+ag.role.toUpperCase()+'</div>'
+      +'<div class="agent-sign">'+ag.sign.toUpperCase()+' &middot; '+(ag.element||'?').toUpperCase()+' &middot; '+(ag.god||'?').toUpperCase()+'</div>'
+      +'<div class="agent-voice">Voice: '+(ag.voice||'?')+'</div>'
+      +'<div class="agent-greeting">&ldquo;'+(ag.greeting||'')+'&rdquo;</div>'
+      +'<div class="agent-tags">'+(ag.domains||[]).slice(0,4).map(function(d){return '<span class="tag">'+d+'</span>';}).join('')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+window.activateAgent=function(el,ag){
+  _activeAgent=ag;_history=[];
+  var col=EL_COLORS[(ag.element||'fire').toLowerCase()]||'#C9A84C';
+  var glyph=SIGN_GLYPHS[ag.sign]||'\u2606';
+  document.getElementById('agent-panel').classList.add('visible');
+  document.getElementById('agent-panel').style.borderColor=col;
+  sid('ap-name',ag.name.toUpperCase());sid('ap-role',ag.role.toUpperCase());
+  sid('ap-sign',ag.sign+' &middot; '+ag.element+' &middot; '+ag.god);
+  document.getElementById('ap-glyph').textContent=glyph;
+  document.getElementById('ap-greeting').textContent=ag.greeting;
+  sid('ap-domains',(ag.domains||[]).join(' &middot; ').toUpperCase());
+  sid('active-agent-kpi',ag.name.toUpperCase());
+  /* Clear chat and add greeting */
+  var msgs=document.getElementById('chat-msgs');
+  msgs.innerHTML='';
+  addMsg('ai',ag.greeting,col);
+  msgs.scrollTop=msgs.scrollHeight;
+  document.getElementById('agent-panel').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+function addMsg(role,text,col){
+  var msgs=document.getElementById('chat-msgs');
+  if(!msgs) return;
+  var d=document.createElement('div');
+  d.className='msg msg-'+(role==='user'?'user':'ai');
+  if(col&&role==='ai') d.style.borderLeftColor=col;
+  d.textContent=text;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+window.sendToAgent=async function(){
+  if(!_activeAgent) return;
+  var inp=document.getElementById('chat-inp');
+  if(!inp||!inp.value.trim()) return;
+  var q=inp.value.trim();inp.value='';
+  addMsg('user',q);
+  _history.push({role:'user',content:q});
+  /* Build agent system prompt */
+  var auth=_profile?(_profile.is_owner?27.8367:Math.sqrt(Math.pow(Number(_profile.axis_a||0.001),3)+Math.pow(Number(_profile.axis_b||0.001),3)+Math.pow(Number(_profile.axis_c||0.001),3))*PHI/EU):0;
+  var system='You are '+_activeAgent.name+', Sovereign Agent of SYD OMEGA 91717. Role: '+_activeAgent.role+'. Voice: '+_activeAgent.voice+'. Domain: '+((_activeAgent.domains||[]).join(', '))+'. Member AUTH='+auth.toFixed(4)+', sign='+(_profile&&_profile.zodiac_sign||'?')+', element='+(_activeAgent.element||'?')+'. Be concise (under 100 words). Stay in character.';
+  try{
+    var r=await sb.functions.invoke('concierge',{body:{model:'claude-sonnet-4-6',max_tokens:200,system:system,messages:_history.slice(-6)}});
+    if(r.data&&r.data.content&&r.data.content[0]){
+      var reply=r.data.content[0].text;
+      _history.push({role:'assistant',content:reply});
+      addMsg('ai',reply,EL_COLORS[(_activeAgent.element||'fire').toLowerCase()]);
+      return;
+    }
+  }catch(e){}
+  /* Fallback */
+  var fb='I am '+_activeAgent.name+', operating in '+(_activeAgent.domains||['my domain'])[0]+'. The AI bridge is temporarily unavailable. Please ensure the concierge edge function is deployed.';
+  _history.push({role:'assistant',content:fb});
+  addMsg('ai',fb);
+};
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement===document.getElementById('chat-inp'))window.sendToAgent();});
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+</body>
+</html>

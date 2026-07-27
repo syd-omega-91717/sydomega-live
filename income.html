@@ -139,7 +139,7 @@ a{color:inherit;text-decoration:none}
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const ALLOCATION = [
   {name:'LEGAL & COMPLIANCE FUND',pct:15,col:'#8B0000',desc:'Securities counsel, KYC/AML, IP registration, Madrid Protocol, licensed advisor retainer. Non-negotiable first allocation.'},

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 &mdash; Knowledge Graph</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pad{padding:clamp(14px,3vw,36px)}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+/* GRAPH CANVAS */
+.graph-wrap{position:relative;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:rgba(2,2,6,.9);margin-bottom:16px}
+#kg-canvas{display:block;width:100%}
+/* NODE DETAIL */
+.node-detail{border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(10,10,15,.55);min-height:120px;margin-bottom:14px;display:none}
+.node-detail.visible{display:block}
+.nd-type{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-bottom:5px}
+.nd-name{font-family:var(--D);font-size:clamp(14px,2vw,18px);color:var(--gold);margin-bottom:8px}
+.nd-desc{font-size:11px;line-height:1.75;color:var(--ink);opacity:.75}
+.nd-edges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.edge-chip{font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:3px 10px;border:1px solid var(--line);border-radius:20px;color:var(--muted)}
+/* NODE GRID */
+.node-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.node-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px;cursor:pointer;transition:.18s}
+.node-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
+.nc-type{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.nc-name{font-family:var(--D);font-size:10px;color:var(--gold)}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.node-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="knowledge" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">SOVEREIGN KNOWLEDGE GRAPH<small>WIKIPEDIA-INSPIRED ENTITY GRAPH &middot; NODES: TRACKS &bull; ELEMENTS &bull; OLYMPIANS &bull; GATES &middot; 12 TRACKS &bull; 9 ELEMENTS &bull; 12 GATES</small></div></div>
+    <div class="pad">
+      <!-- GRAPH CANVAS -->
+      <div class="sechead">KNOWLEDGE GRAPH &middot; CLICK ANY NODE TO EXPLORE RELATIONSHIPS</div>
+      <div class="graph-wrap" style="height:clamp(280px,45vh,480px)">
+        <canvas id="kg-canvas" role="img" aria-label="Interactive knowledge graph showing relationships between sovereign platform concepts"></canvas>
+      </div>
+      <!-- SELECTED NODE DETAIL -->
+      <div id="node-detail" class="node-detail" role="region" aria-label="Selected node details">
+        <div class="nd-type" id="nd-type">SELECT A NODE</div>
+        <div class="nd-name" id="nd-name">&#937; SOVEREIGN KNOWLEDGE GRAPH</div>
+        <div class="nd-desc" id="nd-desc">Click any node in the graph above to explore its relationships, properties, and connections within the sovereign lattice system.</div>
+        <div class="nd-edges" id="nd-edges"></div>
+      </div>
+      <!-- ALL NODES -->
+      <div class="sechead">ALL KNOWLEDGE NODES &middot; <span id="node-count">--</span> TOTAL</div>
+      <div class="node-grid" id="node-grid"><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">LOADING KNOWLEDGE GRAPH&hellip;</div></div>
+    </div>
+    <div data-page-emblem="knowledge" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; KNOWLEDGE GRAPH &middot; WIKIDATA-INSPIRED ENTITY GRAPH</span><span>NODES &bull; EDGES &bull; RELATIONSHIPS &bull; SOVEREIGN LATTICE</span></div>
+  </main>
+</div>
+<script>
+var KG_NODES=[
+  {k:'track_1',t:'track',l:'GENESIS',d:'The origin. First sovereign knowledge track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_2',t:'track',l:'FOUNDATION',d:'Core structure. Second knowledge track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_3',t:'track',l:'ASCENSION',d:'The rise begins. Third knowledge track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_4',t:'track',l:'SOVEREIGNTY',d:'Personal power. Fourth knowledge track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_5',t:'track',l:'HERITAGE',d:'Legacy and lineage. Fifth track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_6',t:'track',l:'MASTERY',d:'Deep expertise. Sixth track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_7',t:'track',l:'CREATION',d:'Building worlds. Seventh track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_8',t:'track',l:'ECONOMY',d:'Value and exchange. Eighth track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_9',t:'track',l:'INTELLIGENCE',d:'AI and mind. Ninth track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_10',t:'track',l:'COVENANT',d:'Law and order. Tenth track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_11',t:'track',l:'LEGACY',d:'The permanent record. Eleventh track.',c:'#C9A84C',x:0,y:0},
+  {k:'track_12',t:'track',l:'OMEGA',d:'The apex. Twelfth sovereign track.',c:'#E2C86D',x:0,y:0},
+  {k:'elem_fire',t:'element',l:'FIRE',d:'Aries, Leo, Sagittarius. Drive and ambition.',c:'#E25800',x:0,y:0},
+  {k:'elem_water',t:'element',l:'WATER',d:'Cancer, Scorpio, Pisces. Depth and intuition.',c:'#0088FF',x:0,y:0},
+  {k:'elem_wind',t:'element',l:'WIND',d:'Gemini, Libra, Aquarius. Intellect and connection.',c:'#00E5FF',x:0,y:0},
+  {k:'elem_metal',t:'element',l:'METAL',d:'Taurus, Virgo, Capricorn. Structure and will.',c:'#8a8676',x:0,y:0},
+  {k:'elem_sand',t:'element',l:'SAND',d:'Boundary element. Transition between physical elements.',c:'#E2C86D',x:0,y:0},
+  {k:'elem_soul',t:'element',l:'SOUL',d:'Metaphysical — inner dimension.',c:'#9B6BF0',x:0,y:0},
+  {k:'elem_space',t:'element',l:'SPACE',d:'Metaphysical — outer dimension.',c:'#00E5FF',x:0,y:0},
+  {k:'elem_void',t:'element',l:'VOID',d:'Metaphysical — the absence that contains all.',c:'#3fb27f',x:0,y:0},
+  {k:'elem_ninth',t:'element',l:'THE NINTH',d:'Transcendent. Activates at Stage 9 for all sovereign members.',c:'#C9A84C',x:0,y:0},
+  {k:'gate_1',t:'gate',l:'INITIATE 2.3197',d:'First authority gate. AUTH ≥ 2.3197.',c:'#3fb27f',x:0,y:0},
+  {k:'gate_12',t:'gate',l:'APEX 27.8367',d:'Twelfth authority gate. sqrt(A³+B³+C³)×φ/e = 27.8367.',c:'#E2C86D',x:0,y:0},
+  {k:'formula',t:'concept',l:'AUTH FORMULA',d:'sqrt(A³+B³+C³)×φ/e. φ=1.618, e=2.718. Apex=27.8367.',c:'#C9A84C',x:0,y:0},
+  {k:'lattice',t:'concept',l:'CANONICAL LATTICE',d:'12×12×9³ = 104,976 nodes. Primary progression system.',c:'#00E5FF',x:0,y:0},
+];
+
+var KG_EDGES=[
+  {from:'track_12',to:'formula',type:'governed_by'},
+  {from:'track_1',to:'elem_fire',type:'affinity'},
+  {from:'elem_fire',to:'gate_1',type:'enables'},
+  {from:'gate_1',to:'gate_12',type:'leads_to'},
+  {from:'formula',to:'lattice',type:'powers'},
+  {from:'lattice',to:'track_12',type:'reaches'},
+  {from:'elem_ninth',to:'gate_12',type:'unlocks'},
+];
+
+(function(){
+  var cv=document.getElementById('kg-canvas');
+  if(!cv)return;
+  var CTX=cv.getContext('2d');
+  var W,H,selectedNode=null;
+  var mouseX=0,mouseY=0;
+  var hoveredNode=null;
+  var TYPE_COLORS={track:'#C9A84C',element:'#9B6BF0',gate:'#3fb27f',concept:'#00E5FF'};
+  var TYPE_ROWS={track:0,element:1,gate:2,concept:3};
+
+  function resize(){
+    var wrap=cv.parentElement;
+    W=wrap.clientWidth; H=wrap.clientHeight;
+    cv.width=W; cv.height=H;
+    layoutNodes();
+  }
+
+  function layoutNodes(){
+    var rows={track:[],element:[],gate:[],concept:[]};
+    KG_NODES.forEach(function(n){if(rows[n.t])rows[n.t].push(n);});
+    Object.keys(rows).forEach(function(type,ti){
+      var group=rows[type];var count=group.length;
+      group.forEach(function(n,i){
+        n.x=W*0.07+(W*0.86)*((i+1)/(count+1));
+        n.y=H*0.12+ti*(H*0.22);
+      });
+    });
+  }
+
+  function drawNode(n,selected,hovered){
+    var r=selected?20:hovered?16:12;
+    var col=TYPE_COLORS[n.t]||'#C9A84C';
+    CTX.beginPath();CTX.arc(n.x,n.y,r,0,Math.PI*2);
+    if(selected){CTX.fillStyle=col+'33';CTX.fill();CTX.strokeStyle=col;CTX.lineWidth=2.5;CTX.stroke();}
+    else if(hovered){CTX.fillStyle=col+'22';CTX.fill();CTX.strokeStyle=col+'88';CTX.lineWidth=1.5;CTX.stroke();}
+    else{CTX.fillStyle=col+'11';CTX.fill();CTX.strokeStyle=col+'44';CTX.lineWidth=1;CTX.stroke();}
+    CTX.beginPath();CTX.arc(n.x,n.y,r*0.4,0,Math.PI*2);CTX.fillStyle=col+(selected?'FF':'88');CTX.fill();
+    CTX.font=(selected?'bold ':'')+'8px 'Courier Prime',monospace';CTX.textAlign='center';CTX.textBaseline='top';
+    CTX.fillStyle=col+(selected?'FF':'AA');CTX.fillText(n.l.split(' ')[0],n.x,n.y+r+3);
+  }
+
+  function draw(){
+    CTX.clearRect(0,0,W,H);
+    /* Draw edges */
+    KG_EDGES.forEach(function(e){
+      var fn=KG_NODES.find(function(n){return n.k===e.from;});
+      var tn=KG_NODES.find(function(n){return n.k===e.to;});
+      if(!fn||!tn)return;
+      CTX.beginPath();CTX.moveTo(fn.x,fn.y);CTX.lineTo(tn.x,tn.y);
+      CTX.strokeStyle='rgba(201,168,76,.12)';CTX.lineWidth=1;CTX.stroke();
+      /* Arrow */
+      var dx=tn.x-fn.x,dy=tn.y-fn.y;var len=Math.sqrt(dx*dx+dy*dy);
+      var ux=dx/len,uy=dy/len;
+      var ax=tn.x-ux*14,ay=tn.y-uy*14;
+      CTX.beginPath();CTX.moveTo(ax,ay);
+      CTX.lineTo(ax-ux*6+uy*4,ay-uy*6-ux*4);
+      CTX.lineTo(ax-ux*6-uy*4,ay-uy*6+ux*4);
+      CTX.closePath();CTX.fillStyle='rgba(201,168,76,.2)';CTX.fill();
+    });
+    /* Draw nodes */
+    KG_NODES.forEach(function(n){
+      drawNode(n,selectedNode&&selectedNode.k===n.k,hoveredNode&&hoveredNode.k===n.k);
+    });
+    /* Legend */
+    var ltypes=['track','element','gate','concept'];
+    var lnames=['TRACKS (12)','ELEMENTS (9)','GATES','CONCEPTS'];
+    ltypes.forEach(function(t,i){
+      CTX.beginPath();CTX.arc(16,14+i*16,5,0,Math.PI*2);
+      CTX.fillStyle=TYPE_COLORS[t]+'88';CTX.fill();
+      CTX.font='7px 'Courier Prime',monospace';CTX.fillStyle='rgba(138,134,118,.6)';
+      CTX.textAlign='left';CTX.textBaseline='middle';CTX.fillText(lnames[i],26,14+i*16);
+    });
+  }
+
+  function nodeAt(mx,my){
+    for(var i=KG_NODES.length-1;i>=0;i--){
+      var n=KG_NODES[i];var dx=mx-n.x,dy=my-n.y;
+      if(dx*dx+dy*dy<400)return n;
+    }return null;
+  }
+
+  cv.addEventListener('mousemove',function(e){
+    var rect=cv.getBoundingClientRect();mouseX=e.clientX-rect.left;mouseY=e.clientY-rect.top;
+    hoveredNode=nodeAt(mouseX,mouseY);
+    cv.style.cursor=hoveredNode?'pointer':'default';draw();
+  });
+  cv.addEventListener('click',function(e){
+    var rect=cv.getBoundingClientRect();
+    var n=nodeAt(e.clientX-rect.left,e.clientY-rect.top);
+    if(n){selectedNode=n;showDetail(n);}else{selectedNode=null;hideDetail();}draw();
+  });
+  cv.addEventListener('touchend',function(e){
+    e.preventDefault();var t=e.changedTouches[0];
+    var rect=cv.getBoundingClientRect();
+    var n=nodeAt(t.clientX-rect.left,t.clientY-rect.top);
+    if(n){selectedNode=n;showDetail(n);}draw();
+  },{passive:false});
+
+  function showDetail(n){
+    var nd=document.getElementById('node-detail');if(nd)nd.classList.add('visible');
+    var t=document.getElementById('nd-type');if(t)t.textContent=n.t.toUpperCase()+' NODE';
+    var na=document.getElementById('nd-name');if(na)na.textContent=n.l;
+    var d=document.getElementById('nd-desc');if(d)d.textContent=n.d;
+    var edges=KG_EDGES.filter(function(e){return e.from===n.k||e.to===n.k;});
+    var ec=document.getElementById('nd-edges');
+    if(ec)ec.innerHTML=edges.map(function(e){
+      var other=e.from===n.k?e.to:e.from;var dir=e.from===n.k?'→':'←';
+      return '<span class="edge-chip">'+dir+' '+e.type+': '+other+'</span>';
+    }).join('');
+  }
+  function hideDetail(){var nd=document.getElementById('node-detail');if(nd)nd.classList.remove('visible');}
+
+  /* Render node cards */
+  var grid=document.getElementById('node-grid');
+  var cnt=document.getElementById('node-count');
+  if(cnt)cnt.textContent=KG_NODES.length;
+  if(grid){grid.innerHTML=KG_NODES.map(function(n){
+    return '<div class="node-card" onclick="window.__kgSelect(''+n.k+'')" tabindex="0" role="button" aria-label="'+n.l+'">'
+      +'<div class="nc-type" style="color:'+(TYPE_COLORS[n.t]||'#C9A84C')+'">'+n.t.toUpperCase()+'</div>'
+      +'<div class="nc-name">'+n.l+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">'+n.d.slice(0,60)+(n.d.length>60?'...':'')+'</div>'
+      +'</div>';
+  }).join('');}
+  window.__kgSelect=function(k){var n=KG_NODES.find(function(x){return x.k===k;});if(n){selectedNode=n;showDetail(n);draw();}};
+
+  window.addEventListener('resize',function(){resize();draw();});
+  resize();draw();
+})();
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+})();
+</script>
+</body>
+</html>

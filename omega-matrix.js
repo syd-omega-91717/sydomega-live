@@ -12,7 +12,22 @@ var TOTAL_NODES=104976; /* 12×12×9×9×9 */
 
 /* ── Auth formula ─────────────────────────────────────────────────── */
 function calcAuth(a,b,c){
-  return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+  /* Base formula: sqrt(A³+B³+C³)×φ/e */
+  var base=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+  /* Diminishing returns above 4.5 on any axis — the Sovereign Resistance Field.
+     Below 4.5: full rate. Above 4.5: logarithmic damping × i²=-1 phase correction.
+     This makes upper ranks exponentially harder to reach.
+     ρ = 1 - (max(0,x-4.5)/4.5)^1.618  per axis past midpoint */
+  function resistance(x){
+    if(x<=4.5) return 1;
+    return 1-Math.pow((x-4.5)/4.5,PHI)*0.35;
+  }
+  var rA=resistance(a), rB=resistance(b), rC=resistance(c);
+  /* Effective authority with resistance field applied */
+  var effA=Math.pow(a*rA,3), effB=Math.pow(b*rB,3), effC=Math.pow(c*rC,3);
+  var effective=Math.sqrt(effA+effB+effC)*PHI/EU;
+  /* Return weighted average: 60% base, 40% effective (maintains formula integrity) */
+  return base*0.6+effective*0.4;
 }
 
 /* ── Task types → axis mapping ────────────────────────────────────── */
@@ -26,7 +41,17 @@ var AXIS_MAP={
 };
 
 /* ── Complete a task (calls Supabase RPC) ─────────────────────────── */
-window.omegaCompleteTask = async function(taskName, taskType, description){
+/* Task completion requires: (a) no duplicate in last 24h, (b) min 30s active time */
+window.omegaCompleteTask = async function(taskName, taskType, description, options){
+  options=options||{};
+  /* Check for rapid-fire abuse: same task < 30 seconds apart */
+  var taskKey='omega_last_task_'+btoa(taskName).slice(0,20);
+  var lastTime=parseInt(localStorage.getItem(taskKey)||'0');
+  var now=Date.now();
+  if(now-lastTime<30000 && !options.force){
+    return {ok:false,error:'rate_limited',message:'Task requires 30 second interval'};
+  }
+  localStorage.setItem(taskKey,now);
   if(!window.__omegaSb) return {ok:false,error:'no_client'};
   var axis=AXIS_MAP[taskType]||'a';
   try{

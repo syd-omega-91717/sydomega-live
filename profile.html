@@ -1410,7 +1410,7 @@ function callWhenReady(fnName){
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const ACHIEV=[
   {n:1,name:'GENESIS',col:'#D9B86A',sym:'\u03A9'},{n:2,name:'KNOWLEDGE',col:'#00E5FF',sym:'\u25CF'},
@@ -1439,7 +1439,7 @@ const MATS=[
   {n:5,name:'TITANIUM',col:'#607D8B',thresh:'6.77'},{n:6,name:'CARBON',col:'#455A64',thresh:'8.03'},
   {n:7,name:'GOLD',col:'#C9A84C',thresh:'9.29'},{n:8,name:'PLATINUM',col:'#E8D5B7',thresh:'10.55'},
   {n:9,name:'DIAMOND',col:'#9B6BF0',thresh:'11.81'},{n:10,name:'ADAMANT',col:'#00E5FF',thresh:'13.07'},
-  {n:11,name:'AETHER',col:'#E2C86D',thresh:'14.33'},{n:12,name:'OMEGA MASTER',col:'#FFD700',thresh:'15.59'},
+  {n:11,name:'PRIME',col:'#E2C86D',thresh:'25.517'},{n:12,name:'OMEGA MASTER',col:'#FFD700',thresh:'27.83679'},
 ];
 
 const PHASES=[
@@ -1519,7 +1519,7 @@ async function buildAchievements(uid){
     Leo:{agent:'Sovereign',token:'SOLARI',element:'Fire'},Virgo:{agent:'Auditor',token:'ARENITE',element:'Sand'},
     Libra:{agent:'Proxy',token:'FORGEON',element:'Wind'},Scorpio:{agent:'Oracle',token:'STYX',element:'Water'},
     Sagittarius:{agent:'Beacon',token:'EMBER',element:'Fire'},Capricorn:{agent:'Analyst',token:'FERRUM',element:'Metal'},
-    Aquarius:{agent:'Tutor',token:'AETHER',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
+    Aquarius:{agent:'Tutor',token:'PRIME',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
   };
   document.document.getElementById('idf-fullname').textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
     var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||pr.display_name||pr.display_name||'SOVEREIGN').toUpperCase();
@@ -1719,7 +1719,7 @@ document.querySelectorAll('.acf-btn').forEach(btn=>{
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const EL_MAP={Aries:'FIRE',Taurus:'METAL',Gemini:'WIND',Cancer:'WATER',Leo:'FIRE',Virgo:'SAND',Libra:'WIND',Scorpio:'WATER',Sagittarius:'FIRE',Capricorn:'METAL',Aquarius:'WIND',Pisces:'WATER'};
 const SETTINGS_DATA=[
@@ -1798,7 +1798,7 @@ window.bootIdentityExtra = bootIdentityExtra;
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const CHAR_MAP={
   Aries:{name:'THE FIRE INITIATOR',role:'WARRIOR . PIONEER . IGNITER',traits:['Bold','Decisive','Unstoppable','First Mover'],col:'#E86A3A',glyph:'Y',archetype:'WARRIOR'},
@@ -1984,7 +1984,7 @@ window.bootCharacterFull = bootCharacterFull;
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 async function bootPortfolioExtra(){
   const sess=(await sb.auth.getSession()).data.session;
   if(!sess){ window.location.href='/account.html'; return; }
@@ -2088,7 +2088,7 @@ setTimeout(()=>{el.style.width=w},300);
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const ppSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 let ppUid=null;
 
 const PP_RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
@@ -2134,7 +2134,7 @@ async function bootPassportExtra(){
   document.getElementById('pp-fact').textContent=PP_FACT[sign]||'\u2014';
   document.getElementById('pp-agent').textContent=PP_AGENT[sign]||'\u2014';
   document.getElementById('pp-node').textContent='('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+')';
-  document.getElementById('pp-auth').textContent=auth.toFixed(2)+' / 15.58';
+  document.getElementById('pp-auth').textContent=auth.toFixed(2)+' / 27.8367';
   var sid='\u03A9-91717-'+sign.slice(0,3).toUpperCase()+'-'+ppUid.replace(/-/g,'').slice(0,6).toUpperCase();
   document.getElementById('pp-id').textContent=sid;
   if(d.avatar_url){ var ph=document.getElementById('pp-photo'); if(ph){ph.style.backgroundImage='url('+d.avatar_url+')'; ph.textContent='';} }
@@ -2165,7 +2165,7 @@ window.bootPassportExtra = bootPassportExtra;
 <script type="module">
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const sb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const STEPS=[
   {n:1,title:'EMAIL VERIFICATION',desc:'Confirm your sovereign email address. A verification link has been sent upon registration.',action:'VERIFIED',actionStyle:'color:var(--green);border-color:rgba(63,178,127,.5)'},

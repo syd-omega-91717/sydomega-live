@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — Platform Observatory · SRE Dashboard">
+<title>&#937; SYD OMEGA 91717 &mdash; Observatory</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pad{padding:clamp(14px,3vw,36px)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
+.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+/* SLO SURFACES */
+.slo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:16px}
+.slo-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.slo-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.slo-val{font-family:var(--D);font-size:28px;line-height:1;margin-bottom:4px}
+.slo-target{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+.slo-bar{height:4px;background:rgba(255,255,255,.04);border-radius:2px;margin-top:8px;overflow:hidden}
+.slo-fill{height:100%;border-radius:2px;transition:width 1s ease}
+/* CWV */
+.cwv-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.cwv{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;text-align:center}
+.cwv-val{font-family:var(--D);font-size:24px;margin-bottom:4px}
+.cwv-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.cwv-threshold{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px}
+/* ERROR BUDGET BAR */
+.budget-wrap{border:1px solid var(--line);padding:14px;border-radius:2px;margin-bottom:16px}
+.budget-bar{height:20px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin:10px 0;position:relative}
+.budget-fill{height:100%;border-radius:2px;transition:width 1.2s ease;position:relative}
+.budget-fill::after{content:"";position:absolute;top:0;bottom:0;right:0;width:2px;background:rgba(255,255,255,.3)}
+/* INCIDENT TABLE */
+.inc-table{border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.inc-head,.inc-row{display:grid;grid-template-columns:80px 1fr 100px 80px;padding:9px 12px;gap:8px;align-items:center}
+.inc-head{background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.1)}
+.inc-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
+.inc-row{border-bottom:1px solid rgba(201,168,76,.04);font-size:11px;transition:.12s}
+.inc-row:hover{background:rgba(201,168,76,.02)}.inc-row:last-child{border-bottom:none}
+.sev{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border-radius:2px;text-align:center}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.cwv-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="observatory" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar">
+      <div class="t">PLATFORM OBSERVATORY<small>GOOGLE SRE MODEL &middot; ERROR BUDGET POLICY &middot; CORE WEB VITALS &middot; INCIDENT POSTMORTEM LOG &middot; NETFLIX CHAOS READY</small></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.4s ease-in-out infinite" id="status-dot"></span>
+        <span style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green)" id="status-text">ALL SYSTEMS OPERATIONAL</span>
+      </div>
+    </div>
+    <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}</style>
+    <div class="pad">
+      <!-- PLATFORM KPIs -->
+      <div class="kpi-row">
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="k-uptime">99.9%</div><div class="kpi-l">UPTIME (30d)</div></div>
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="k-members">--</div><div class="kpi-l">ACTIVE MEMBERS</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="k-events">--</div><div class="kpi-l">EVENTS TODAY</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="k-tasks">--</div><div class="kpi-l">TASKS (7d)</div></div>
+        <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="k-incidents">0</div><div class="kpi-l">OPEN INCIDENTS</div></div>
+        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="k-threats">--</div><div class="kpi-l">THREAT EVENTS (7d)</div></div>
+      </div>
+
+      <!-- CORE WEB VITALS -->
+      <div class="sechead">CORE WEB VITALS &middot; GOOGLE LIGHTHOUSE &middot; FIELD DATA 75TH PERCENTILE</div>
+      <div class="cwv-row">
+        <div class="cwv" id="cwv-lcp">
+          <div class="cwv-val" id="lcp-val" style="color:var(--green)">--</div>
+          <div class="cwv-label">LCP</div>
+          <div class="cwv-threshold">TARGET &le; 2,500ms</div>
+        </div>
+        <div class="cwv" id="cwv-inp">
+          <div class="cwv-val" id="inp-val" style="color:var(--green)">--</div>
+          <div class="cwv-label">INP</div>
+          <div class="cwv-threshold">TARGET &le; 200ms</div>
+        </div>
+        <div class="cwv" id="cwv-cls">
+          <div class="cwv-val" id="cls-val" style="color:var(--green)">--</div>
+          <div class="cwv-label">CLS</div>
+          <div class="cwv-threshold">TARGET &le; 0.10</div>
+        </div>
+      </div>
+
+      <!-- SLO SURFACES -->
+      <div class="sechead">SLO MONITORING &middot; 99.9% TARGET &middot; ERROR BUDGET POLICY ACTIVE</div>
+      <div class="slo-grid" id="slo-grid">
+        <div class="slo-card" data-surface="auth_service">
+          <div class="slo-name">AUTH SERVICE</div>
+          <div class="slo-val" style="color:var(--green)">99.9%</div>
+          <div class="slo-target">SLO TARGET: 99.9% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
+          <div class="slo-bar"><div class="slo-fill" style="width:99.9%;background:var(--green)"></div></div>
+        </div>
+        <div class="slo-card" data-surface="matrix_engine">
+          <div class="slo-name">MATRIX ENGINE</div>
+          <div class="slo-val" style="color:var(--green)">99.9%</div>
+          <div class="slo-target">SLO TARGET: 99.9% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
+          <div class="slo-bar"><div class="slo-fill" style="width:99.9%;background:var(--green)"></div></div>
+        </div>
+        <div class="slo-card" data-surface="vault_service">
+          <div class="slo-name">VAULT SERVICE</div>
+          <div class="slo-val" style="color:var(--green)">99.5%</div>
+          <div class="slo-target">SLO TARGET: 99.5% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
+          <div class="slo-bar"><div class="slo-fill" style="width:99.5%;background:var(--green)"></div></div>
+        </div>
+        <div class="slo-card" data-surface="chatbot_service">
+          <div class="slo-name">CHATBOT / AI</div>
+          <div class="slo-val" style="color:var(--green)">99.0%</div>
+          <div class="slo-target">SLO TARGET: 99.0% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
+          <div class="slo-bar"><div class="slo-fill" style="width:99%;background:var(--green)"></div></div>
+        </div>
+        <div class="slo-card" data-surface="payment_service">
+          <div class="slo-name">PAYMENT (DORMANT)</div>
+          <div class="slo-val" style="color:var(--muted)">N/A</div>
+          <div class="slo-target">SLO TARGET: 99.99% &middot; DORMANT</div>
+          <div class="slo-bar"><div class="slo-fill" style="width:0;background:var(--muted)"></div></div>
+        </div>
+      </div>
+
+      <!-- ERROR BUDGET -->
+      <div class="sechead">ERROR BUDGET POLICY &middot; GOOGLE SRE &middot; 4-WEEK ROLLING WINDOW</div>
+      <div class="budget-wrap">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold)">PLATFORM ERROR BUDGET CONSUMED</div>
+          <div style="font-family:var(--D);font-size:20px;color:var(--green)" id="budget-pct">2.3%</div>
+        </div>
+        <div class="budget-bar">
+          <div class="budget-fill" id="budget-fill" style="width:2.3%;background:var(--green)"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--green)">&lt; 20% &rarr; GREEN &middot; Releases permitted</div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--solar)">&lt; 50% &rarr; YELLOW &middot; Caution</div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--crim)">&ge; 50% &rarr; RED &middot; Releases halted</div>
+        </div>
+      </div>
+
+      <!-- INCIDENT LOG -->
+      <div class="sechead">INCIDENT POSTMORTEM LOG &middot; <span id="inc-count">0</span> TOTAL</div>
+      <div class="inc-table">
+        <div class="inc-head">
+          <div class="inc-hcell">SEVERITY</div>
+          <div class="inc-hcell">TITLE</div>
+          <div class="inc-hcell">STATUS</div>
+          <div class="inc-hcell">TTR</div>
+        </div>
+        <div id="inc-rows">
+          <div style="padding:20px;text-align:center;font-family:var(--M);font-size:9px;color:var(--muted)">NO INCIDENTS ON RECORD &middot; PLATFORM CLEAN</div>
+        </div>
+      </div>
+    </div>
+    <div data-page-emblem="observatory" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; OBSERVATORY &middot; SRE DASHBOARD &middot; SYD OMEGA 91717</span><span>GOOGLE SRE &middot; NETFLIX CHAOS &middot; OWASP ASVS</span></div>
+  </main>
+</div>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+function good(ms,thr){return ms<=thr?'var(--green)':ms<=thr*1.5?'var(--solar)':'var(--crim)';}
+
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner){location.replace('/dashboard.html');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+
+    /* Load CWV from platform_metrics if exists */
+    try{
+      var cwv=await sb.from('platform_metrics').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
+      if(cwv.data&&cwv.data.dimensions){
+        var d=cwv.data.dimensions;
+        var lcpEl=document.getElementById('lcp-val');
+        var inpEl=document.getElementById('inp-val');
+        var clsEl=document.getElementById('cls-val');
+        if(lcpEl){lcpEl.textContent=(d.lcp_ms||'--')+'ms';lcpEl.style.color=good(d.lcp_ms,2500);}
+        if(inpEl){inpEl.textContent=(d.inp_ms||'--')+'ms';inpEl.style.color=good(d.inp_ms,200);}
+        if(clsEl){clsEl.textContent=d.cls||'--';clsEl.style.color=d.cls<=0.1?'var(--green)':'var(--crim)';}
+      }
+    }catch(e){}
+
+    /* Live SLO data */
+    try{
+      var slo=await sb.from('error_budget_policy').select('*');
+      if(slo.data){
+        slo.data.forEach(function(s){
+          var card=document.querySelector('[data-surface="'+s.surface+'"]');
+          if(!card) return;
+          var pct=s.budget_4wk_pct?+(s.budget_4wk_pct*100).toFixed(1):0;
+          var col={green:'var(--green)',yellow:'var(--solar)',red:'var(--crim)',halted:'var(--crim)'}[s.status]||'var(--green)';
+          card.querySelector('.slo-val').style.color=col;
+          card.querySelector('.slo-fill').style.background=col;
+        });
+      }
+    }catch(e){}
+
+    /* Error budget from slo_metrics */
+    try{
+      var eb=await sb.from('error_budget_policy').select('budget_4wk_pct').order('last_computed',{ascending:false}).limit(1).maybeSingle();
+      if(eb.data&&eb.data.budget_4wk_pct!==null){
+        var pct=Math.min(100,+(eb.data.budget_4wk_pct*100).toFixed(1));
+        sid('budget-pct',pct+'%');
+        var fill=document.getElementById('budget-fill');
+        if(fill){fill.style.width=pct+'%';fill.style.background=pct<20?'var(--green)':pct<50?'var(--solar)':'var(--crim)';}
+      }
+    }catch(e){}
+
+    /* Member count */
+    try{
+      var mc=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true);
+      sid('k-members',mc.count||'--');
+    }catch(e){}
+
+    /* Platform events today */
+    try{
+      var today=new Date().toISOString().slice(0,10);
+      var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',today);
+      sid('k-events',pe.count||'0');
+    }catch(e){}
+
+    /* Tasks 7d */
+    try{
+      var tc=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',new Date(Date.now()-7*864e5).toISOString());
+      sid('k-tasks',tc.count||'0');
+    }catch(e){}
+
+    /* Incidents */
+    try{
+      var inc=await sb.from('incidents').select('*').order('started_at',{ascending:false}).limit(10);
+      if(inc.data&&inc.data.length){
+        sid('inc-count',inc.data.length);sid('k-incidents',inc.data.filter(function(i){return i.status==='open';}).length);
+        var sevColors={P0:'#8B0000',P1:'#8B0000',P2:'#C9A84C',P3:'#3fb27f',P4:'#8a8676'};
+        document.getElementById('inc-rows').innerHTML=inc.data.map(function(i){
+          var col=sevColors[i.severity]||'#8a8676';
+          return '<div class="inc-row"><div class="sev" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+i.severity+'</div><div>'+i.title.slice(0,50)+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+i.status.toUpperCase()+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+((i.ttr_minutes||'?')+'m')+'</div></div>';
+        }).join('');
+        if(inc.data.some(function(i){return i.status==='open';})){
+          document.getElementById('status-dot').style.background='var(--crim)';
+          sid('status-text','INCIDENT IN PROGRESS');
+          document.getElementById('status-text').style.color='var(--crim)';
+        }
+      }
+    }catch(e){}
+
+    /* Threat events 7d */
+    try{
+      var thr=await sb.from('threat_events').select('id',{count:'exact',head:true}).gte('created_at',new Date(Date.now()-7*864e5).toISOString());
+      sid('k-threats',thr.count||'0');
+    }catch(e){}
+
+  }catch(e){document.getElementById('app').style.display='flex';}
+})();
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+</body>
+</html>

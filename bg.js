@@ -1400,3 +1400,14 @@ setTimeout(function(){
     sr.setAttribute('data-omega-recommend','1');sr.defer=true;
     if(document.body)document.body.appendChild(sr);
   }
+  /* ── NEW ENGINES: Functional Validation Pass ─────────────────── */
+  /* Cinematic animation engine */
+  if(!document.querySelector('script[data-omega-animate]')){var _oa=document.createElement('script');_oa.src='/omega-animate.js';_oa.setAttribute('data-omega-animate','1');_oa.defer=true;if(document.body)document.body.appendChild(_oa);}
+  /* Live data binding engine */
+  if(!document.querySelector('script[data-omega-live]')){var _ol=document.createElement('script');_ol.src='/omega-live.js';_ol.setAttribute('data-omega-live','1');_ol.defer=true;if(document.body)document.body.appendChild(_ol);}
+  /* Universal component state machine */
+  if(!document.querySelector('script[data-omega-state]')){var _ost=document.createElement('script');_ost.src='/omega-state.js';_ost.setAttribute('data-omega-state','1');_ost.defer=true;if(document.body)document.body.appendChild(_ost);}
+  /* User journey analytics */
+  if(!document.querySelector('script[data-omega-telemetry]')){var _otel=document.createElement('script');_otel.src='/omega-telemetry.js';_otel.setAttribute('data-omega-telemetry','1');_otel.defer=true;if(document.body)document.body.appendChild(_otel);}
+  /* Open-source library manager */
+  if(!document.querySelector('script[data-omega-oss]')){var _ooss=document.createElement('script');_ooss.src='/omega-oss.js';_ooss.setAttribute('data-omega-oss','1');_ooss.defer=true;if(document.body)document.body.appendChild(_ooss);}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — Live Design System · Tokens · Components · Emblems">
+<title>&#937; SYD OMEGA 91717 &mdash; Design System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pad{padding:var(--pad)}.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+/* COLOR SWATCHES */
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.swatch{border-radius:2px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.swatch-color{height:60px}
+.swatch-info{padding:8px;background:rgba(10,10,15,.8)}
+.swatch-name{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--ink)}
+.swatch-hex{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px}
+/* TYPOGRAPHY */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.type-sample{border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(10,10,15,.4)}
+.type-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+/* COMPONENTS LIVE */
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:16px}
+.comp-cell{border:1px solid var(--line);background:rgba(10,10,15,.4);padding:14px;border-radius:2px}
+.comp-label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-bottom:10px}
+/* MATH CONSTANTS */
+.math-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.math-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px;border-top:2px solid var(--gold)}
+.math-val{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1;margin-bottom:4px}
+.math-name{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.type-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="design-system" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">SOVEREIGN DESIGN SYSTEM<small>CANONICAL TOKENS &middot; TYPOGRAPHY &middot; COMPONENTS &middot; MATH CONSTANTS &middot; W3C DTCG FORMAT</small></div></div>
+    <div class="pad">
+      <!-- COLOR TOKENS -->
+      <div class="sechead">COLOR TOKENS &middot; SOVEREIGN PALETTE &middot; CANONICAL &amp; NON-NEGOTIABLE</div>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="swatch-color" style="background:#0A0A0F"></div><div class="swatch-info"><div class="swatch-name">--void</div><div class="swatch-hex">#0A0A0F</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#020206"></div><div class="swatch-info"><div class="swatch-name">--void2</div><div class="swatch-hex">#020206</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#C9A84C"></div><div class="swatch-info"><div class="swatch-name">--gold</div><div class="swatch-hex">#C9A84C</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#E2C86D"></div><div class="swatch-info"><div class="swatch-name">--solar</div><div class="swatch-hex">#E2C86D</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#00E5FF"></div><div class="swatch-info"><div class="swatch-name">--cyan</div><div class="swatch-hex">#00E5FF</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#8B0000"></div><div class="swatch-info"><div class="swatch-name">--crim</div><div class="swatch-hex">#8B0000</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#3fb27f"></div><div class="swatch-info"><div class="swatch-name">--green</div><div class="swatch-hex">#3FB27F</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#9B6BF0"></div><div class="swatch-info"><div class="swatch-name">--purple</div><div class="swatch-hex">#9B6BF0</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#8a8676"></div><div class="swatch-info"><div class="swatch-name">--muted</div><div class="swatch-hex">#8A8676</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#e9e6dc"></div><div class="swatch-info"><div class="swatch-name">--ink</div><div class="swatch-hex">#E9E6DC</div></div></div>
+      </div>
+      <!-- TYPOGRAPHY -->
+      <div class="sechead">TYPOGRAPHY &middot; THREE CANONICAL FAMILIES &middot; VARIABLE WEIGHT</div>
+      <div class="type-grid">
+        <div class="type-sample"><div class="type-label">CINZEL DECORATIVE (--D) &middot; DISPLAY</div><div style="font-family:'Cinzel Decorative',serif;font-size:clamp(18px,3vw,28px);color:var(--gold);line-height:1.2">Sovereign Platform</div><div style="font-family:'Cinzel Decorative',serif;font-size:11px;color:var(--muted);margin-top:6px">Authority Formula: AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div></div>
+        <div class="type-sample"><div class="type-label">RAJDHANI (--R) &middot; BODY</div><div style="font-family:'Rajdhani',sans-serif;font-size:16px;color:var(--ink);line-height:1.6">The sovereign lattice has 104,976 nodes across 12 tracks, 12 phases, and a 9&#179; inner cube. Every member evolves through this structure.</div></div>
+        <div class="type-sample"><div class="type-label">COURIER PRIME (--M) &middot; MONOSPACE &middot; DATA</div><div style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--cyan);letter-spacing:1.5px;line-height:1.8">AUTH = 27.8367<br>AXIS A = 9.000<br>GATE = APEX<br>TRIAL = 557s</div></div>
+        <div class="type-sample"><div class="type-label">SCALE &middot; FLUID clamp() SIZES</div>
+          <div style="font-family:var(--M);font-size:7px;color:var(--muted)">XS: 7px &middot; SM: 9px &middot; BASE: 11px &middot; MD: 14px<br>LG: clamp(16px,2.5vw,22px) &middot; XL: clamp(20px,3vw,32px)</div>
+        </div>
+      </div>
+      <!-- LIVE COMPONENTS -->
+      <div class="sechead">COMPONENT LIBRARY &middot; LIVE RENDERED &middot; ALL STATES PRESENT</div>
+      <div class="comp-grid">
+        <div class="comp-cell"><div class="comp-label">BUTTONS</div><div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button class="btn btn-gold" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;border-radius:2px;cursor:pointer" onclick="this.style.animation='none';requestAnimationFrame(function(){this.style.animation='oa-gold-pulse .35s ease'}.bind(this))">GOLD BTN</button>
+          <button class="btn btn-cyan" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(0,229,255,.2);color:var(--cyan);background:none;border-radius:2px;cursor:pointer">CYAN BTN</button>
+          <button class="btn btn-crim" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(139,0,0,.3);color:var(--crim);background:none;border-radius:2px;cursor:pointer">DANGER BTN</button>
+        </div></div>
+        <div class="comp-cell"><div class="comp-label">STATUS CHIPS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="chip" style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:3px 10px;border:1px solid rgba(63,178,127,.4);border-radius:20px;color:var(--green);display:inline-flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green)"></span>ACTIVE</span>
+            <span class="chip" style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:3px 10px;border:1px solid rgba(226,200,109,.4);border-radius:20px;color:var(--solar);display:inline-flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:var(--solar)"></span>TRIAL</span>
+            <span class="chip" style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:3px 10px;border:1px solid rgba(139,0,0,.4);border-radius:20px;color:var(--crim)">BLOCKED</span>
+          </div>
+        </div>
+        <div class="comp-cell"><div class="comp-label">PROGRESS BAR</div>
+          <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:4px"><span>AXIS A</span><span>7.234</span></div><div style="height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden"><div style="height:100%;width:80%;background:linear-gradient(to right,var(--gold),var(--solar));border-radius:3px;transition:width 1.2s ease"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:4px"><span>AXIS B</span><span>5.891</span></div><div style="height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden"><div style="height:100%;width:65%;background:var(--purple);border-radius:3px"></div></div></div>
+        </div>
+        <div class="comp-cell"><div class="comp-label">GLASS PANEL</div>
+          <div style="background:rgba(201,168,76,.04);backdrop-filter:blur(8px);border:1px solid rgba(201,168,76,.12);border-radius:2px;padding:12px"><div style="font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:4px">GLASS CARD</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">Glassmorphism panel with gold border and blur backdrop.</div></div>
+        </div>
+        <div class="comp-cell"><div class="comp-label">SECTION HEADER</div>
+          <div class="sechead" style="margin-bottom:0">SECTION TITLE &middot; DESCRIPTOR</div>
+        </div>
+        <div class="comp-cell"><div class="comp-label">KPI CARD</div>
+          <div class="kpi" style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px;border-top:2px solid var(--gold)"><div style="font-family:var(--D);font-size:20px;color:var(--gold);line-height:1">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AUTHORITY APEX</div></div>
+        </div>
+      </div>
+      <!-- MATH CONSTANTS -->
+      <div class="sechead">CANONICAL MATH CONSTANTS &middot; ENCODED IN DESIGN TOKENS</div>
+      <div class="math-grid">
+        <div class="math-card"><div class="math-val">&phi; = 1.6180&hellip;</div><div class="math-name">GOLDEN RATIO</div></div>
+        <div class="math-card"><div class="math-val">e = 2.7182&hellip;</div><div class="math-name">EULER'S NUMBER</div></div>
+        <div class="math-card"><div class="math-val">27.8367</div><div class="math-name">AUTH APEX</div></div>
+        <div class="math-card"><div class="math-val">557s</div><div class="math-name">TRIAL (9m17s)</div></div>
+        <div class="math-card"><div class="math-val">33,437s</div><div class="math-name">DEDICATION (9h17m17s)</div></div>
+        <div class="math-card"><div class="math-val">104,976</div><div class="math-name">CANONICAL LATTICE</div></div>
+      </div>
+    </div>
+    <div data-page-emblem="design-system" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; DESIGN SYSTEM &middot; CANONICAL TOKENS &middot; SYD OMEGA 91717</span><span>W3C DTCG &middot; WCAG 2.2 AA &middot; REDUCE-MOTION READY</span></div>
+  </main>
+</div>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+  }catch(e){document.getElementById('app').style.display='flex';}
+})();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+</body>
+</html>

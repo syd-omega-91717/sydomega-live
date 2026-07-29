@@ -1,9 +1,37 @@
-node_modules
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node
+node_modules/
+npm-debug.log*
+.npm/
+
+# Environment & secrets — never commit
 .env
 .env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# Editor / OS
 .DS_Store
-*.log
-dist
-build
-.turbo
-VIEOF
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Build & deploy
+.vercel/
+dist/
+build/
+.cache/
+
+# Repository hygiene — see ARCHITECTURE.md F-4
+*.bak
+*.archive.txt
+*.stale-backup-reference

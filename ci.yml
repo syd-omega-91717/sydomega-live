@@ -1,0 +1,83 @@
+name: CI
+
+# Gate between commit and production. Before this existed, a syntax error in
+# bg.js would take down all 105 pages and nothing would catch it.
+# See ARCHITECTURE.md finding F-5.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # ---- 1. Syntax. The cheapest check and the one that prevents outages.
+      #         bg.js is loaded by 104 of 105 pages; if it does not parse,
+      #         the entire platform is down.
+      - name: JavaScript syntax
+        run: |
+          fail=0
+          for f in *.js; do
+            node --check "$f" || { echo "::error file=$f::syntax error"; fail=1; }
+          done
+          exit $fail
+
+      # ---- 2. Repository integrity: missing modules, RLS gaps, dead files.
+      - name: Repository audit
+        run: python3 scripts/audit.py
+
+      # ---- 3. Style. Configs already existed in the repo but nothing ran them.
+      - name: Prettier
+        run: npx --yes prettier@3 --check . || echo "::warning::formatting drift"
+        continue-on-error: true
+
+      - name: ESLint
+        run: npx --yes eslint@8 . || echo "::warning::lint findings"
+        continue-on-error: true
+
+      # ---- 4. Every page must reference only files that exist.
+      - name: Broken local asset references
+        run: |
+          missing=0
+          for page in *.html; do
+            assets=$(grep -oE '(src|href)="/[^"#?:]+\.(js|css|png|jpg|svg|ico|webp|mp4)"' "$page" \
+                     | sed -E 's/.*"\/(.*)"/\1/' | sort -u)
+            for asset in $assets; do
+              if [ ! -e "$asset" ]; then
+                echo "::error file=$page::missing asset $asset"
+                missing=$((missing+1))
+              fi
+            done
+          done
+          if [ "$missing" -gt 0 ]; then
+            echo "$missing broken asset reference(s)."
+            exit 1
+          fi
+          echo "All local asset references resolve."
+
+      # ---- 5. Secrets. The publishable key is expected in bg.js and is fine.
+      #         A service_role key is not, and would be a full data breach.
+      - name: Service-role key scan
+        run: |
+          if grep -rIn --include='*.js' --include='*.html' --include='*.json' \
+               -e 'service_role' -e 'SUPABASE_SERVICE' . ; then
+            echo "::error::service_role reference found in client code"
+            exit 1
+          fi
+          echo "No service_role key in client code."

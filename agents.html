@@ -507,19 +507,7 @@ el.classList.add('selected');
 document.querySelector('.panel-badge').textContent=name;
 }
 </script>
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
-  (async function(){
-    /* Access gate -- no content is shown before a verified, approved session */
-    const sess=(await __sbg.auth.getSession()).data.session;
-    if(!sess){ document.getElementById('gate').style.display='block'; return; }
-    const prof=(await __sbg.from('profiles').select('access_approved,is_owner,is_trial').eq('id',sess.user.id).maybeSingle()).data;
-    if(!prof){ document.getElementById('gate').style.display='block'; return; }
-    if(!prof.is_owner && prof.access_approved===false && !prof.is_trial){ location.replace('/pending.html'); return; }
-    document.getElementById('app').style.display='flex';
-  })();
-</script>
+
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
 </body>

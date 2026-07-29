@@ -165,109 +165,102 @@
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+var _history=[],_profile=null,_currentAgent=null;
 
-  /* OPTIONAL: paste a Claude-backed endpoint URL here to upgrade the Concierge to a live AI.
-     Leave empty to use the built-in keyless guide (works with no setup). */
-  const AI_ENDPOINT = "https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/concierge";
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 
-  let ctx={sign:'',a:1,b:1,c:1,auth:1.73,tier:1,rank:'Initiate'};
-  const RANKS=['Initiate','Seeker','Adept','Expert','Master','Elite','Sovereign','Legend','Omega'];
-  const GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
-  const AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
-
-  const MODS=[
-    {k:'matrix lattice 729 9x9x9 cube',a:'The matrix is 9\u00d79\u00d79 \u2014 729 nodes. Your position is (Knowledge, Mastery, Contribution); authority = \u221a(A\u00b3+B\u00b3+C\u00b3), from 1.73 at genesis to 27.8367 at the apex. See it in 3D at The Lattice (/matrix.html).'},
-    {k:'level up rank raise grow authority ascend advance progress',a:'You rise by raising three axes: Knowledge in the Academy, Mastery in the Games, Contribution in Contributions. Each verified act adds to a node; certificates land at (3,3,3), (6,6,6), (9,9,9). Your rank is the floor of your lowest axis \u2014 so grow your weakest axis to climb.'},
-    {k:'academy lessons knowledge learn',a:'The Academy (/academy.html) holds lessons that raise your Knowledge axis (A).'},
-    {k:'games gaming mastery arena play stages',a:'The Games (/gaming.html): 12 games \u00d7 12 stages, matrix-gated. Clear the Sequence Lock to take a node and raise Mastery (B). They get hard \u2014 long, fast, and reversed in the upper games.'},
-    {k:'contribution contributions give',a:'Contributions (/contributions.html) raise your Contribution axis (C) through acts of giving.'},
-    {k:'agents agent oracle sentinel sovereign',a:'You have twelve AI agents (/agents.html), one per sign-domain. Each upgrades as your matrix grows. Your own agent is bound to your sign.'},
-    {k:'honors trophies medals certificates grades labels',a:'Honors (/honors.html) shows your grades, levels, certificates, trophies, medals, labels, and commitment \u2014 all computed from your real ascent.'},
-    {k:'horoscope zodiac sign god planet daily stars',a:'Horoscope (/horoscope.html): your daily reading, character, and the ascent of your Olympian and planet through nine forms as your matrix rises.'},
-    {k:'publish publishing works archive manuscript',a:'Publishing (/publishing.html): commit works to your private archive (and attach files up to 5\u202fGB). Works stay private until approved \u2014 they are never public without the Order\u2019s approval.'},
-    {k:'market marketing ads placement boost',a:'Marketing (/marketing.html): reserve placement. Every submission is reviewed and approved before it can publish.'},
-    {k:'consult consultancy advice expert',a:'Consultancy (/consultancy.html): request counsel under a confidentiality agreement with the Order\u2019s commission recorded.'},
-    {k:'contract commission deal',a:'Commissions (/contracts.html): draft a member-to-trade contract; the Order\u2019s 9.17% commission is computed and a sovereign reference is sealed.'},
-    {k:'treasury omega economy token supply',a:'Treasury (/treasury.html): the internal \u03A9 economy. \u03A9 is earned, never bought; fiat purchase and trading are gated until legal review.'},
-    {k:'sigil vault medallion crest',a:'The Sigil Vault (/sigil.html) holds the sovereign medallions you have earned.'},
-    {k:'family heritage bloodline heir',a:'Family & Heritage (/family.html): your bloodline tree and the Heritage Protocol of succession.'},
-    {k:'settings background colour theme music',a:'Settings (/settings.html): change your background colour and manage the ambient score (the \u266a control, bottom-right of every page).'},
-    {k:'charter law articles ownership governance',a:'The Charter (/charter.html): the eleven Articles, the economic framework, and governance of the Order.'},
-    {k:'approval access enter admit',a:'No one becomes active without the Architect\u2019s approval. New members wait in pending until admitted. Owners admit them at /approvals.html.'},
-    {k:'cinema film saga movie myth',a:'Cinema (/cinema.html): the Myth Verse \u2014 the nine-film sovereign saga, 2026\u20132034.'},
-    {k:'news wire dispatch feed',a:'News & Wire (/news.html): sovereign dispatches and the member wire.'},
-    {k:'recover password forgot reset',a:'Forgot your password? Use /reset.html (linked from the member access page). You can also set your phone + country on your profile for recovery.'},
-    {k:'social share follow instagram x facebook',a:'The Social hub (/social.html) lets you follow the Order and share it across networks.'}
-  ];
-
-  function localReply(raw){
-    var m=raw.toLowerCase().trim();
-    if(/^(hi|hey|hello|greetings|salam|salut)\b/.test(m)) return 'Welcome, '+(ctx.sign?ctx.sign+' sovereign':'sovereign')+'. Ask me how to rise, what a chamber does, or where you stand.';
-    if(/my (standing|rank|level|authority|tier|node|position)|where (do i|am i) stand|how am i doing/.test(m)){
-      return 'You stand at node ('+Math.round(ctx.a)+','+Math.round(ctx.b)+','+Math.round(ctx.c)+') \u2014 authority <b>'+ctx.auth.toFixed(2)+'</b> of 27.8367, rank <b>'+ctx.rank+'</b> (Tier '+ctx.tier+'). Your axes: Knowledge '+ctx.a.toFixed(2)+', Mastery '+ctx.b.toFixed(2)+', Contribution '+ctx.c.toFixed(2)+'. Raise your lowest to climb in rank.';
-    }
-    if(/who is my (god|olympian)|my god|my olympian/.test(m) && ctx.sign) return 'Your Olympian is <b>'+GOD[ctx.sign]+'</b>, and your bound agent is <b>'+AGENT[ctx.sign]+'</b>. See their ascent in your Horoscope.';
-    if(/who are you|what are you|your name/.test(m)) return 'I am the Concierge \u2014 the Order\u2019s guide. I read your real standing and point you through every chamber. For domain counsel, speak to your twelve agents.';
-    if(/help|what can you|commands|options/.test(m)) return 'Ask me: \u201chow do I level up?\u201d, \u201cwhat is the matrix?\u201d, \u201cwhere do I stand?\u201d, or \u201cwhat is <chamber>?\u201d (e.g. games, agents, treasury, contracts). I can guide you anywhere in the Order.';
-    // module match: score by keyword overlap
-    var terms=m.split(/\s+/), best=null, bestScore=0;
-    MODS.forEach(function(mod){ var s=0; terms.forEach(function(t){ if(t.length>2 && mod.k.indexOf(t)!==-1) s++; }); if(s>bestScore){ bestScore=s; best=mod; } });
-    if(best && bestScore>0) return best.a;
-    return 'I did not catch a chamber in that. Try a keyword \u2014 matrix, games, agents, honors, treasury, contracts \u2014 or ask \u201chow do I level up?\u201d You can also use Search (/search.html) to jump anywhere.';
-  }
-
-  function addBub(name, html, who){
-    var log=document.getElementById('log');
-    var d=document.createElement('div'); d.className='bub '+who;
-    d.innerHTML=(who==='b'?'<span class="nm">'+name+'</span>':'')+html;
-    log.appendChild(d); log.scrollTop=log.scrollHeight;
-  }
-
-  async function respond(text){
-    if(AI_ENDPOINT){
-      try{
-        var sess=(await supabase.auth.getSession()).data.session;
-        var hdr={'Content-Type':'application/json'};
-        if(sess){ hdr['Authorization']='Bearer '+sess.access_token; hdr['apikey']="sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"; }
-        var r=await fetch(AI_ENDPOINT,{method:'POST',headers:Object.assign({},hdr,{'Authorization':'Bearer '+(sb.auth.session&&sb.auth.session()&&sb.auth.session().access_token||'')}),body:JSON.stringify({message:text,context:ctx})});
-        if(r.ok){ var j=await r.json(); if(j && (j.reply||j.text)){ addBub('CONCIERGE', (j.reply||j.text), 'b'); return; } }
-      }catch(e){}
-    }
-    addBub('CONCIERGE', localReply(text), 'b');
-  }
-
-  function send(){
-    var inp=document.getElementById('msg'); var t=inp.value.trim(); if(!t) return;
-    addBub('YOU', t.replace(/</g,'&lt;'), 'u'); inp.value='';
-    setTimeout(function(){ respond(t); }, 120);
-  }
-
-  function buildChips(){
-    var chips=['How do I level up?','What is the matrix?','Where do I stand?','What is the Games?','How do contracts work?'];
-    var box=document.getElementById('chips');
-    chips.forEach(function(c){ var s=document.createElement('span'); s.className='chip'; s.textContent=c; s.addEventListener('click',function(){ document.getElementById('msg').value=c; send(); }); box.appendChild(s); });
-  }
-
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
-
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Concierge','Sign in to speak with the Concierge.'); return; }
-    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to meet the Concierge.'); return; }
-    ctx.sign=pr.data.sign; ctx.a=Number(pr.data.axis_a||1); ctx.b=Number(pr.data.axis_b||1); ctx.c=Number(pr.data.axis_c||1);
-    ctx.auth=Math.sqrt(ctx.a*ctx.a+ctx.b*ctx.b+ctx.c*ctx.c); ctx.tier=Math.max(1,Math.min(9,Math.floor(Math.min(ctx.a,ctx.b,ctx.c)))); ctx.rank=RANKS[ctx.tier-1];
-    document.getElementById('gate').style.display='none';
+(async function init(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    _profile=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!_profile.is_owner&&!_profile.access_approved){location.replace('/pending.html');return;}
     document.getElementById('app').style.display='flex';
-    buildChips();
-    addBub('CONCIERGE','Welcome, '+ctx.sign+' sovereign. I am the Concierge. Ask me how to rise, what a chamber holds, or where you stand in the 729.','b');
+    if(window.__omegaPopulate)window.__omegaPopulate(_profile,s.user);
+    window.__omegaUserLoaded=true;
+    /* Select default agent based on member sign */
+    if(_profile.agent_name) selectAgentByName(_profile.agent_name);
+    /* Load conversation history from memory */
+    if(window.OmegaMemory){
+      var ctx=await window.OmegaMemory.context();
+      if(ctx) addMsg('system','Memory context loaded: '+ctx.split('\n')[0],'var(--muted)');
+    }
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
+
+function selectAgentByName(name){
+  _currentAgent=name;
+  var agentEl=document.querySelector('[data-agent="'+name+'"]');
+  if(agentEl) agentEl.click();
+}
+
+function addMsg(role,text,col){
+  var msgs=document.getElementById('chat-msgs')||document.querySelector('.chat-msgs,.messages');
+  if(!msgs) return;
+  var d=document.createElement('div');
+  d.style.cssText='padding:10px 14px;border-radius:2px;margin-bottom:8px;max-width:88%;font-size:11px;line-height:1.7;'
+    +(role==='user'?'background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);align-self:flex-end;color:#e9e6dc;margin-left:auto'
+    :role==='system'?'color:rgba(138,134,118,.5);font-family:var(--M,"Courier Prime",monospace);font-size:8px;letter-spacing:1px;text-align:center;width:100%'
+    :'background:rgba(10,10,15,.8);border:1px solid rgba(201,168,76,.06);color:#e9e6dc;align-self:flex-start');
+  if(col) d.style.color=col;
+  /* Render markdown for AI responses */
+  if(role==='ai'&&window.OmegaOSS){
+    window.OmegaOSS.require('marked',function(marked){
+      if(marked){d.innerHTML=marked.parse(text,{breaks:true,gfm:true});d.querySelectorAll('code').forEach(function(c){c.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:.85em;background:rgba(201,168,76,.08);padding:1px 5px;border-radius:2px;color:var(--solar,#E2C86D)';});d.querySelectorAll('a').forEach(function(a){a.style.color='var(--cyan,#00E5FF)';});}else d.textContent=text;
+    });
+  }else{d.textContent=text;}
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function showTyping(show){
+  var t=document.getElementById('chat-typing');
+  if(t) t.style.display=show?'flex':'none';
+}
+
+window.sendChatMessage=async function(){
+  var inp=document.getElementById('chat-input')||document.getElementById('chat-inp');
+  if(!inp||!inp.value.trim()) return;
+  var q=inp.value.trim();inp.value='';
+  addMsg('user',q);
+  _history.push({role:'user',content:q});
+  showTyping(true);
+  /* Route through OmegaIntelligence if available, else direct Supabase */
+  var reply='';
+  if(window.OmegaIntelligence){
+    try{reply=await window.OmegaIntelligence.ask(q,_history.slice(-6));}catch(e){}
   }
-  document.getElementById('send').addEventListener('click',send);
-  document.getElementById('msg').addEventListener('keydown',function(e){ if(e.key==='Enter') send(); });
-  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+  if(!reply){
+    /* Fallback: direct concierge call */
+    try{
+      var PHI=1.6180339887,EU=2.7182818285;
+      var a=Number(_profile.axis_a||0.001),b=Number(_profile.axis_b||0.001),c=Number(_profile.axis_c||0.001);
+      var auth=_profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+      var system='You are the Sovereign Concierge of SYD OMEGA 91717. '
+        +'AUTH=sqrt(A³+B³+C³)×φ/e, apex=27.8367, φ=1.618, e=2.718, lattice=104976 nodes. '
+        +'Member: auth='+auth.toFixed(4)+' element='+(_profile.element||'?')+' sign='+(_profile.zodiac_sign||'?')+'.'
+        +(_currentAgent?' Active agent: '+_currentAgent+'.':'')
+        +' Respond in under 120 words. Use markdown for lists/code.';
+      var r=await sb.functions.invoke('concierge',{body:{model:'claude-sonnet-4-6',max_tokens:300,system:system,messages:_history.slice(-6)}});
+      if(r.data&&r.data.content&&r.data.content[0])reply=r.data.content[0].text;
+    }catch(e){reply='The AI concierge is temporarily unavailable. Please ensure the concierge edge function is deployed with ANTHROPIC_API_KEY set in Supabase secrets.';}
+  }
+  showTyping(false);
+  if(reply){
+    _history.push({role:'assistant',content:reply});
+    addMsg('ai',reply);
+    /* Store to memory */
+    if(window.OmegaMemory) window.OmegaMemory.store('conversation:'+Date.now(),q.slice(0,100)+'→'+reply.slice(0,150),'conversation');
+    /* Telemetry */
+    if(window.OmegaTelemetry) window.OmegaTelemetry.track('chatbot_query',{agent:_currentAgent,query_len:q.length,reply_len:reply.length});
+  }
+};
+
+/* Enter key sends */
+var inp2=document.getElementById('chat-input')||document.getElementById('chat-inp');
+if(inp2) inp2.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMessage();}});
 </script>
 <script src="/nav.js"></script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>

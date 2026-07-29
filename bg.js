@@ -1411,3 +1411,27 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-telemetry]')){var _otel=document.createElement('script');_otel.src='/omega-telemetry.js';_otel.setAttribute('data-omega-telemetry','1');_otel.defer=true;if(document.body)document.body.appendChild(_otel);}
   /* Open-source library manager */
   if(!document.querySelector('script[data-omega-oss]')){var _ooss=document.createElement('script');_ooss.src='/omega-oss.js';_ooss.setAttribute('data-omega-oss','1');_ooss.defer=true;if(document.body)document.body.appendChild(_ooss);}
+
+  /* ── ABSOLUTE MASTER EVOLUTION ENGINES ────────────────────────── */
+  /* Multi-agent AI orchestration with ReAct reasoning */
+  if(!document.querySelector('script[data-omega-intelligence]')){var _oi=document.createElement('script');_oi.src='/omega-intelligence.js';_oi.setAttribute('data-omega-intelligence','1');_oi.defer=true;if(document.body)document.body.appendChild(_oi);}
+  /* Persistent AI memory — cross-session continuity */
+  if(!document.querySelector('script[data-omega-memory]')){var _om=document.createElement('script');_om.src='/omega-memory.js';_om.setAttribute('data-omega-memory','1');_om.defer=true;if(document.body)document.body.appendChild(_om);}
+  /* Sovereign workflow orchestration engine */
+  if(!document.querySelector('script[data-omega-workflow]')){var _ow=document.createElement('script');_ow.src='/omega-workflow.js';_ow.setAttribute('data-omega-workflow','1');_ow.defer=true;if(document.body)document.body.appendChild(_ow);}
+  /* Voice interface — Web Speech API commands + TTS */
+  if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;if(document.body)document.body.appendChild(_ov);}
+  /* Zero Trust continuous auth guardian */
+  if(!document.querySelector('script[data-omega-guardian]')){var _og=document.createElement('script');_og.src='/omega-guardian.js';_og.setAttribute('data-omega-guardian','1');_og.defer=true;if(document.body)document.body.appendChild(_og);}
+
+  /* ── FIOS TRANSFORMATION ENGINES ─────────────────────────────── */
+  /* Capability engine — every page becomes a business capability */
+  if(!document.querySelector('script[data-omega-capability]')){var _ocap=document.createElement('script');_ocap.src='/omega-capability.js';_ocap.setAttribute('data-omega-capability','1');_ocap.defer=true;if(document.body)document.body.appendChild(_ocap);}
+  /* Policy engine — externalised business rules */
+  if(!document.querySelector('script[data-omega-policy]')){var _opol=document.createElement('script');_opol.src='/omega-policy.js';_opol.setAttribute('data-omega-policy','1');_opol.defer=true;if(document.body)document.body.appendChild(_opol);}
+  /* FinOps engine — cost tracking and governance */
+  if(!document.querySelector('script[data-omega-finops]')){var _ofops=document.createElement('script');_ofops.src='/omega-finops.js';_ofops.setAttribute('data-omega-finops','1');_ofops.defer=true;if(document.body)document.body.appendChild(_ofops);}
+  /* Experimentation engine — A/B tests, feature flags */
+  if(!document.querySelector('script[data-omega-experiment]')){var _oexp=document.createElement('script');_oexp.src='/omega-experiment.js';_oexp.setAttribute('data-omega-experiment','1');_oexp.defer=true;if(document.body)document.body.appendChild(_oexp);}
+  /* Digital thread — requirements-to-telemetry traceability */
+  if(!document.querySelector('script[data-omega-thread]')){var _othr=document.createElement('script');_othr.src='/omega-thread.js';_othr.setAttribute('data-omega-thread','1');_othr.defer=true;if(document.body)document.body.appendChild(_othr);}

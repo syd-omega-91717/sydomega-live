@@ -45,6 +45,50 @@
 begin;
 
 -- ---------------------------------------------------------------------------
+-- SIGNATURE RECONCILIATION  (added after production returned 42P13)
+--
+-- Production already has some of these functions with DIFFERENT return types
+-- than the source files describe — finding F-2 again. CREATE OR REPLACE cannot
+-- change a return type, so it fails with:
+--     ERROR: 42P13 cannot change return type of existing function
+--
+-- This block drops EVERY overload of each function by name, resolved from
+-- pg_proc, so it works no matter what signature production actually has.
+--
+-- It does NOT use CASCADE. If a policy, trigger or default depends on one of
+-- these, the drop is skipped with a NOTICE rather than silently destroying the
+-- dependent object — you get told, and CREATE OR REPLACE below still succeeds
+-- whenever the return type happens to match.
+-- ---------------------------------------------------------------------------
+do $reconcile$
+declare
+  fn   text;
+  r    record;
+  names text[] := array['handle_new_user', 'get_pending_requests'];
+begin
+  foreach fn in array names loop
+    for r in
+      select p.oid::regprocedure::text as sig
+      from pg_proc p
+      join pg_namespace n on n.oid = p.pronamespace
+      where n.nspname = 'public' and p.proname = fn
+    loop
+      begin
+        execute 'drop function ' || r.sig;
+        raise notice 'dropped % (will be recreated below)', r.sig;
+      exception
+        when dependent_objects_still_exist then
+          raise notice 'kept % — other objects depend on it; relying on CREATE OR REPLACE', r.sig;
+        when others then
+          raise notice 'could not drop % — %', r.sig, sqlerrm;
+      end;
+    end loop;
+  end loop;
+end $reconcile$;
+
+
+
+-- ---------------------------------------------------------------------------
 -- 1. Make sure the columns the trigger writes actually exist. The 92 source
 --    files disagree about the profiles schema (finding F-2), so add rather
 --    than assume. ADD COLUMN IF NOT EXISTS is a no-op when present.
@@ -105,7 +149,8 @@ on conflict (id) do nothing;
 --    pending members including their auth state. This is the view to check
 --    when someone says "I signed up and nothing happened".
 -- ---------------------------------------------------------------------------
-create or replace view public.pending_access_requests as
+drop view if exists public.pending_access_requests cascade;
+create view public.pending_access_requests as
 select
   p.id,
   coalesce(p.email, u.email)                          as email,

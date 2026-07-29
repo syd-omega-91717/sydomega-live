@@ -121,7 +121,7 @@ INSERT INTO public.capability_registry(capability_id,capability_name,domain,owne
  'Sovereign profile, zodiac assignment, element/agent/token mapping, KYC verification, digital passport, credentials',
  600,ARRAY['profile_completeness','kyc_status','sign_assigned'],
  ARRAY['profile.html','passport.html','kyc.html','identity.html','credentials.html'],
- ARRAY[],
+ ARRAY[]::text[],
  ARRAY['member.onboarded','kyc.verified','identity.updated']),
 
 ('INVESTMENT_ENGINE','Investment & Portfolio Engine','Finance','Analyst',
@@ -200,12 +200,62 @@ CREATE POLICY "members read flags" ON public.feature_flags FOR SELECT TO authent
 DROP POLICY IF EXISTS "owner manages flags" ON public.feature_flags;
 CREATE POLICY "owner manages flags" ON public.feature_flags FOR ALL USING(public.is_platform_owner());
 
-INSERT INTO public.feature_flags(flag_id,description,is_enabled,rollout_pct) VALUES
-  ('voice_interface','omega-voice.js voice commands and TTS',true,100),
-  ('ai_memory','omega-memory.js cross-session AI memory',true,100),
-  ('workflow_engine','omega-workflow.js automated workflows',true,100),
-  ('chart_visualisations','Chart.js axis radar and auth charts',true,100),
-  ('token_economy','ΩSYD token transactions — dormant',false,0),
-  ('payments','Stripe payment processing — dormant',false,0),
-  ('enterprise_api','Enterprise API key access — limited beta',false,10)
-ON CONFLICT(flag_id) DO NOTHING;
+
+-- ── COLUMN GUARDS v2 — two-generation schema reconciliation ─────────────
+-- The existing feature_flags table uses 'flag_key' (NOT NULL) as its identifier.
+-- Our schema uses 'flag_id'. We reconcile both by:
+--   1. Adding any missing columns from either generation
+--   2. Making flag_key nullable so INSERT does not fail
+--   3. INSERTing with both flag_id AND flag_key populated
+--   4. Backfilling each from the other where null
+
+-- Add missing columns from our schema (no-op if already present)
+ALTER TABLE public.feature_flags ADD COLUMN IF NOT EXISTS flag_id     text;
+ALTER TABLE public.feature_flags ADD COLUMN IF NOT EXISTS flag_key    text;
+ALTER TABLE public.feature_flags ADD COLUMN IF NOT EXISTS description  text;
+ALTER TABLE public.feature_flags ADD COLUMN IF NOT EXISTS is_enabled   boolean NOT NULL DEFAULT false;
+ALTER TABLE public.feature_flags ADD COLUMN IF NOT EXISTS rollout_pct  int     NOT NULL DEFAULT 0;
+ALTER TABLE public.feature_flags ADD COLUMN IF NOT EXISTS updated_at   timestamptz NOT NULL DEFAULT now();
+
+-- Make flag_key nullable — the existing NOT NULL will block our insert if we
+-- don't also set flag_key. We set it in the INSERT below, but DROP NOT NULL
+-- first so the ALTER and INSERT are both safe regardless of table generation.
+DO $$
+BEGIN
+  ALTER TABLE public.feature_flags ALTER COLUMN flag_key DROP NOT NULL;
+EXCEPTION WHEN others THEN NULL;
+END;
+$$;
+
+-- Add UNIQUE constraint on flag_id if missing
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname='feature_flags_flag_id_key'
+      AND conrelid='public.feature_flags'::regclass
+  ) THEN
+    ALTER TABLE public.feature_flags ADD CONSTRAINT feature_flags_flag_id_key UNIQUE(flag_id);
+  END IF;
+EXCEPTION WHEN others THEN NULL;
+END;
+$$;
+
+-- INSERT with BOTH flag_id AND flag_key populated (reconciles both generations)
+INSERT INTO public.feature_flags(flag_id, flag_key, description, is_enabled, rollout_pct) VALUES
+  ('voice_interface',    'voice_interface',    'omega-voice.js voice commands and TTS',         true,  100),
+  ('ai_memory',          'ai_memory',          'omega-memory.js cross-session AI memory',       true,  100),
+  ('workflow_engine',    'workflow_engine',     'omega-workflow.js automated workflows',         true,  100),
+  ('chart_visualisations','chart_visualisations','Chart.js axis radar and auth charts',         true,  100),
+  ('token_economy',      'token_economy',       'OMGSYD token transactions — dormant',          false,   0),
+  ('payments',           'payments',            'Stripe payment processing — dormant',           false,   0),
+  ('enterprise_api',     'enterprise_api',      'Enterprise API key access — limited beta',     false,  10)
+ON CONFLICT DO NOTHING;
+
+-- Backfill: ensure flag_key = flag_id where flag_key is null
+UPDATE public.feature_flags SET flag_key = flag_id
+  WHERE flag_key IS NULL AND flag_id IS NOT NULL;
+
+-- Backfill: ensure flag_id = flag_key where flag_id is null
+UPDATE public.feature_flags SET flag_id = flag_key
+  WHERE flag_id IS NULL AND flag_key IS NOT NULL;

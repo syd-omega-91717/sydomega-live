@@ -46,6 +46,50 @@
 begin;
 
 -- ---------------------------------------------------------------------------
+-- SIGNATURE RECONCILIATION  (added after production returned 42P13)
+--
+-- Production already has some of these functions with DIFFERENT return types
+-- than the source files describe — finding F-2 again. CREATE OR REPLACE cannot
+-- change a return type, so it fails with:
+--     ERROR: 42P13 cannot change return type of existing function
+--
+-- This block drops EVERY overload of each function by name, resolved from
+-- pg_proc, so it works no matter what signature production actually has.
+--
+-- It does NOT use CASCADE. If a policy, trigger or default depends on one of
+-- these, the drop is skipped with a NOTICE rather than silently destroying the
+-- dependent object — you get told, and CREATE OR REPLACE below still succeeds
+-- whenever the return type happens to match.
+-- ---------------------------------------------------------------------------
+do $reconcile$
+declare
+  fn   text;
+  r    record;
+  names text[] := array['omega_is_owner', 'grant_permanent_access', 'grant_trial_access', 'expire_trial'];
+begin
+  foreach fn in array names loop
+    for r in
+      select p.oid::regprocedure::text as sig
+      from pg_proc p
+      join pg_namespace n on n.oid = p.pronamespace
+      where n.nspname = 'public' and p.proname = fn
+    loop
+      begin
+        execute 'drop function ' || r.sig;
+        raise notice 'dropped % (will be recreated below)', r.sig;
+      exception
+        when dependent_objects_still_exist then
+          raise notice 'kept % — other objects depend on it; relying on CREATE OR REPLACE', r.sig;
+        when others then
+          raise notice 'could not drop % — %', r.sig, sqlerrm;
+      end;
+    end loop;
+  end loop;
+end $reconcile$;
+
+
+
+-- ---------------------------------------------------------------------------
 -- Audit trail. Written by the privileged functions themselves.
 -- ---------------------------------------------------------------------------
 create table if not exists public.access_grant_audit (

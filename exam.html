@@ -1,6 +1,169 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="robots" content="noindex,nofollow">
-<title>&#937; SYD OMEGA 91717 -- Exam Hall</title>
-<meta http-equiv="refresh" content="0; url=/gaming.html#exam">
-<script>location.replace('/gaming.html#exam');</script>
-</head><body style="background:#0A0A0F"></body></html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — Sovereign Examination · Axis A Knowledge Test · Gate Qualification">
+<title>&#937; SYD OMEGA 91717 &mdash; Examination</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.pad{padding:var(--pad)}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}.kpi-n{font-family:var(--D);font-size:20px;color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+/* EXAM UI */
+.exam-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:20px;border-radius:2px;margin-bottom:12px}
+.exam-q{font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:14px;line-height:1.5}
+.exam-opts{display:flex;flex-direction:column;gap:8px}
+.opt-btn{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--R);font-size:12px;padding:11px 16px;border-radius:2px;cursor:pointer;text-align:left;transition:.18s;line-height:1.5}
+.opt-btn:hover{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05);color:var(--gold)}
+.opt-btn.correct{border-color:var(--green)!important;background:rgba(63,178,127,.08)!important;color:var(--green)!important}
+.opt-btn.wrong{border-color:var(--crim)!important;background:rgba(139,0,0,.06)!important;color:var(--crim)!important}
+.opt-btn:disabled{cursor:default;pointer-events:none}
+.exam-feedback{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:8px 12px;border-radius:2px;margin-top:8px;display:none}
+.exam-progress{height:4px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.exam-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .5s ease}
+.exam-result{text-align:center;padding:30px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:rgba(201,168,76,.03);display:none}
+.result-score{font-family:var(--D);font-size:clamp(40px,8vw,72px);color:var(--gold);line-height:1;margin-bottom:8px}
+.result-label{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:16px}
+.result-detail{font-size:12px;line-height:1.8;color:var(--ink);opacity:.7}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:auto}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="exam" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">SOVEREIGN EXAMINATION<small>AXIS A KNOWLEDGE TEST &middot; GATE QUALIFICATION &middot; EARN CERTIFICATES &middot; ADVANCE YOUR PROGRESSION</small></div><div style="font-family:var(--M);font-size:8px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
+    <div class="pad">
+      <div class="kpi-row">
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="k-score">0%</div><div class="kpi-l">EXAM SCORE</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="k-q">1/10</div><div class="kpi-l">QUESTION</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="k-correct">0</div><div class="kpi-l">CORRECT</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="k-axis">--</div><div class="kpi-l">MY AXIS A</div></div>
+      </div>
+      <div class="sechead">SOVEREIGN KNOWLEDGE EXAMINATION &middot; 10 QUESTIONS &middot; AXIS A</div>
+      <div class="exam-progress"><div class="exam-progress-fill" id="exam-prog" style="width:10%"></div></div>
+      <!-- EXAM QUESTION AREA -->
+      <div id="exam-area"></div>
+      <!-- RESULT PANEL -->
+      <div class="exam-result" id="exam-result">
+        <div class="result-score" id="result-pct">--</div>
+        <div class="result-label">EXAMINATION COMPLETE &middot; AXIS A INCREMENT EARNED</div>
+        <div class="result-detail" id="result-detail"></div>
+        <button onclick="startExam()" style="margin-top:20px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 24px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;border-radius:2px;cursor:pointer">TAKE EXAM AGAIN</button>
+        <a href="/evolution.html" style="display:block;margin-top:10px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);text-decoration:none">VIEW MY EVOLUTION &#8594;</a>
+      </div>
+    </div>
+    <div data-page-emblem="exam" style="margin:20px auto 0"></div>
+    <div class="lf"><span>&#937; EXAMINATION &middot; AXIS A KNOWLEDGE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+  </main>
+</div>
+<script>
+var QUESTIONS=[
+  {q:"What is the canonical Authority Formula?",opts:["AUTH=sqrt(A²+B²+C²)","AUTH=sqrt(A³+B³+C³)×φ/e","AUTH=(A+B+C)/3×φ","AUTH=A×B×C/e"],ans:1,
+   exp:"The cubic formula AUTH=sqrt(A³+B³+C³)×φ/e uses φ=1.618 and e=2.718. The old quadratic form is deprecated."},
+  {q:"What is the Authority Apex — the maximum possible score?",opts:["15.5880","27.8367","9.0000","18.0000"],ans:1,
+   exp:"At A=B=C=9.000: sqrt(729+729+729)×1.6180/2.7182 = sqrt(2187)×0.5954 = 27.8367."},
+  {q:"How many nodes does the Canonical Lattice contain?",opts:["729","59049","104976","571536"],ans:2,
+   exp:"12 tracks × 12 phases × 9³ = 12 × 12 × 729 = 104,976 canonical lattice nodes."},
+  {q:"How long is the Trial Period in seconds?",opts:["300","557","1000","9917"],ans:1,
+   exp:"The Trial Period is 9 minutes and 17 seconds = 557 seconds precisely. Granted exclusively by the Sovereign Founder."},
+  {q:"How many Authority Gates exist in the platform?",opts:["9","10","11","12"],ans:3,
+   exp:"12 gates: INITIATE(2.32) → ACOLYTE → SCHOLAR → KEEPER → GUARDIAN → ARCHITECT → SOVEREIGN → VANGUARD → HERALD → ORACLE → PRIME → APEX(27.84)."},
+  {q:"What is the Daily Dedication Target in seconds?",opts:["86400","33437","9000","3600"],ans:1,
+   exp:"9 hours, 17 minutes, 17 seconds = 33,437 seconds. Chrono B tracks active platform engagement toward this target."},
+  {q:"Which element is assigned exclusively to the Virgo sign?",opts:["Metal","Wind","Water","Sand"],ans:3,
+   exp:"Sand is the sovereign element of Virgo only. Fire: Aries/Leo/Sagittarius. Water: Cancer/Scorpio/Pisces. Wind: Gemini/Libra/Aquarius. Metal: Taurus/Capricorn."},
+  {q:"What is the Golden Ratio (φ) used in the Authority Formula?",opts:["1.4142135","1.6180339887","2.7182818285","3.1415926535"],ans:1,
+   exp:"φ=1.6180339887. It is embedded in the authority formula: AUTH=sqrt(A³+B³+C³)×φ/e alongside Euler's number e=2.718."},
+  {q:"Which of the following is the Aries token?",opts:["AURUM","ARENITE","ZEPHYR","STYX"],ans:1,
+   exp:"ARENITE is the sovereign token of Aries — the Founder's sign. Each of the 12 signs has its own token in the ΩSYD economy."},
+  {q:"Axis C measures which dimension of sovereign progression?",opts:["Knowledge","Mastery","Contribution","Authority"],ans:2,
+   exp:"Axis C = Contribution. Axis A = Knowledge (supervised learning). Axis B = Mastery (performance). All three feed into the Authority Formula."},
+];
+var _cur=0,_correct=0,_answered=0,_profile=null;
+
+function startExam(){_cur=0;_correct=0;_answered=0;document.getElementById('exam-result').style.display='none';showQ();}
+function showQ(){
+  var prog=document.getElementById('exam-prog');
+  if(prog) prog.style.width=((_cur+1)/QUESTIONS.length*100)+'%';
+  var kq=document.getElementById('k-q');if(kq)kq.textContent=(_cur+1)+'/'+QUESTIONS.length;
+  var area=document.getElementById('exam-area');if(!area) return;
+  var q=QUESTIONS[_cur];
+  area.innerHTML='<div class="exam-card"><div class="exam-q">Q'+(_cur+1)+'. '+q.q+'</div>'
+    +'<div class="exam-opts">'+q.opts.map(function(o,i){
+      return '<button class="opt-btn" onclick="answer('+i+')" aria-label="Option '+(i+1)+': '+o+'">'+String.fromCharCode(65+i)+'. '+o+'</button>';
+    }).join('')+'</div>'
+    +'<div class="exam-feedback" id="fb-'+_cur+'"></div></div>';
+}
+window.answer=function(idx){
+  var q=QUESTIONS[_cur];
+  var btns=document.querySelectorAll('.opt-btn');
+  btns.forEach(function(b){b.disabled=true;});
+  btns[idx].classList.add(idx===q.ans?'correct':'wrong');
+  btns[q.ans].classList.add('correct');
+  var fb=document.getElementById('fb-'+_cur);
+  if(fb){
+    fb.style.display='block';
+    fb.style.background=idx===q.ans?'rgba(63,178,127,.06)':'rgba(139,0,0,.06)';
+    fb.style.border='1px solid '+(idx===q.ans?'rgba(63,178,127,.2)':'rgba(139,0,0,.2)');
+    fb.style.color=idx===q.ans?'var(--green)':'var(--crim)';
+    fb.textContent=(idx===q.ans?'CORRECT. ':('Incorrect. Correct: '+String.fromCharCode(65+q.ans)+'. '))+q.exp;
+  }
+  if(idx===q.ans)_correct++;
+  _answered++;
+  var kc=document.getElementById('k-correct');if(kc)kc.textContent=_correct;
+  var sc=document.getElementById('k-score');if(sc)sc.textContent=Math.round(_correct/_answered*100)+'%';
+  setTimeout(function(){
+    _cur++;
+    if(_cur<QUESTIONS.length){showQ();}
+    else{showResult();}
+  },2200);
+};
+function showResult(){
+  document.getElementById('exam-area').innerHTML='';
+  var pct=Math.round(_correct/QUESTIONS.length*100);
+  var grade=pct>=90?'DISTINCTION':pct>=70?'PASS':'REVIEW REQUIRED';
+  var inc=pct>=90?'+0.003':pct>=70?'+0.001':'';
+  document.getElementById('result-pct').textContent=pct+'%';
+  document.getElementById('result-detail').innerHTML=_correct+' of '+QUESTIONS.length+' correct.<br>Grade: '+grade+(inc?' &middot; Axis A increment: '+inc:'')+'<br>Retake anytime to reinforce sovereign knowledge.';
+  document.getElementById('exam-result').style.display='block';
+  document.getElementById('exam-prog').style.width='100%';
+  if(window.OmegaTelemetry)window.OmegaTelemetry.track('exam_completed',{score:pct,correct:_correct,total:QUESTIONS.length});
+  if(pct>=70&&window.OmegaWorkflow)window.OmegaWorkflow.run('task_complete',{task:'exam',axis:'a',score:pct});
+}
+window.startExam=startExam;
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    sid('hdr-auth',auth.toFixed(4));sid('k-axis',a.toFixed(3));
+    /* Start exam */
+    window.startExam();
+  }catch(e){document.getElementById('app').style.display='flex';window.startExam();}
+})();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+</body>
+</html>

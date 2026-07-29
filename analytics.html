@@ -201,6 +201,7 @@ document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('cl
 <script>(function tryP(){if(document.readyState!=='complete'){window.addEventListener('load',tryP);return;}var tr=0,iv=setInterval(function(){tr++;if(window.__omegaPopulate&&window.__omegaSb){window.__omegaSb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return window.__omegaSb.from('profiles').select('*').eq('id',s.user.id).maybeSingle().then(function(q){window.__omegaPopulate(q.data||{},s.user);});}).catch(function(){});clearInterval(iv);}if(tr>30)clearInterval(iv);},200);})();</script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var _profile=null;
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 (async function(){
@@ -273,6 +274,34 @@ async function loadTaskLog(){
   }catch(e){wrap.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px">TASK LOG LOADING — RUN MATRIX_ENGINE.SQL IN SUPABASE TO ACTIVATE.</div>';}
 }
 window.loadTaskLog=loadTaskLog;
+
+  /* ── CHART.JS VISUALISATIONS via OmegaOSS ─────────────────── */
+  function initCharts(pr){
+    if(!window.OmegaOSS) return;
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    /* Axis Radar */
+    var radarCv=document.getElementById('axis-radar')||document.getElementById('axes-chart');
+    if(radarCv){
+      window.OmegaOSS.chart(radarCv,window.OmegaOSS.presets.axisRadar(
+        ['Axis A\nKnowledge','Axis B\nMastery','Axis C\nContrib'],
+        [a,b,c]
+      ));
+    }
+    /* Auth progress line */
+    var lineCv=document.getElementById('auth-line')||document.getElementById('auth-chart');
+    if(lineCv){
+      var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+      var GATES=[0,2.32,4.64,6.96,9.28,11.60,13.92,16.24,18.56,20.88,23.20,25.52,27.84];
+      window.OmegaOSS.chart(lineCv,window.OmegaOSS.presets.authLine(
+        ['INIT','ACO','SCH','KEEP','GUAR','ARCH','SOV','VAN','HER','ORA','PRIME','APEX'],
+        GATES.slice(1).map(function(g){return Math.min(g,auth);})
+      ));
+    }
+  }
+  /* Call after profile loads */
+  setTimeout(function(){if(_profile) initCharts(_profile);},500);
+  document.addEventListener('omega:populated',function(e){if(e.detail&&e.detail.profile){_profile=e.detail.profile;setTimeout(function(){initCharts(_profile);},300);}});
 </script>
 </body>
 </html>

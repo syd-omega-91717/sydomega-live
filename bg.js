@@ -1435,3 +1435,11 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-experiment]')){var _oexp=document.createElement('script');_oexp.src='/omega-experiment.js';_oexp.setAttribute('data-omega-experiment','1');_oexp.defer=true;if(document.body)document.body.appendChild(_oexp);}
   /* Digital thread — requirements-to-telemetry traceability */
   if(!document.querySelector('script[data-omega-thread]')){var _othr=document.createElement('script');_othr.src='/omega-thread.js';_othr.setAttribute('data-omega-thread','1');_othr.defer=true;if(document.body)document.body.appendChild(_othr);}
+
+  /* ── IDOS TRANSFORMATION — Living Operating System ────────────── */
+  /* Living Object System — hover panels, right-click menus, AI insights */
+  if(!document.querySelector('script[data-omega-actions]')){var _oac=document.createElement('script');_oac.src='/omega-actions.js';_oac.setAttribute('data-omega-actions','1');_oac.defer=true;if(document.body)document.body.appendChild(_oac);}
+  /* Real-time intelligence — live ticker, member pulse, activity feed */
+  if(!document.querySelector('script[data-omega-realtime]')){var _ort=document.createElement('script');_ort.src='/omega-realtime.js';_ort.setAttribute('data-omega-realtime','1');_ort.defer=true;if(document.body)document.body.appendChild(_ort);}
+  /* Platform Meaning Index — scores, mission banners, PMI badges */
+  if(!document.querySelector('script[data-omega-pmi]')){var _opmi=document.createElement('script');_opmi.src='/omega-pmi.js';_opmi.setAttribute('data-omega-pmi','1');_opmi.defer=true;if(document.body)document.body.appendChild(_opmi);}

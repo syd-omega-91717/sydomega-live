@@ -2,13 +2,21 @@
 -- SYD OMEGA 91717 — 00_diagnose_signin.sql
 --
 -- Run in the Supabase SQL Editor. Read-only: this file changes nothing.
--- Replace 'friend@example.com' below with your friend's actual email.
+--
+-- HOW TO USE: press Ctrl+H (Cmd+H on Mac) and replace every occurrence of
+--     friend@example.com
+-- with your friend's actual address, then run.
+--
+-- NOTE: this file previously used psql's \set command, which the Supabase web
+-- SQL Editor does not support — it is a psql client feature, not SQL, and the
+-- editor speaks only SQL. That produced:
+--     ERROR: 42601: syntax error at or near "\"
+-- All queries below now use plain literals. Run each block separately if the
+-- editor only shows you the last result set.
 --
 -- Answers, in order: does the account exist, is the email confirmed, is there
 -- a profile row, and are they in the approvals queue.
 -- ============================================================================
-
-\set target_email 'friend@example.com'
 
 
 -- ---------------------------------------------------------------------------
@@ -24,17 +32,19 @@
 --    completed and they must register again.
 -- ---------------------------------------------------------------------------
 select
-  id,
-  email,
-  created_at                                   as signed_up_at,
-  email_confirmed_at,
-  (email_confirmed_at is not null)             as email_confirmed,
-  last_sign_in_at,
-  (last_sign_in_at is not null)                as has_ever_signed_in,
-  banned_until,
-  deleted_at
-from auth.users
-where lower(email) = lower(:'target_email');
+  u.id,
+  u.email,
+  u.created_at                                 as signed_up_at,
+  u.email_confirmed_at,
+  (u.email_confirmed_at is not null)           as email_confirmed,
+  u.last_sign_in_at,
+  (u.last_sign_in_at is not null)              as has_ever_signed_in,
+  -- Read defensively via to_jsonb: these columns exist in current Supabase but
+  -- not in every version, and a missing column would abort the whole query.
+  to_jsonb(u) ->> 'banned_until' as banned_until,
+  to_jsonb(u) ->> 'deleted_at'   as deleted_at
+from auth.users u
+where lower(u.email) = lower('friend@example.com');
 
 
 -- ---------------------------------------------------------------------------
@@ -44,8 +54,8 @@ where lower(email) = lower(:'target_email');
 -- ---------------------------------------------------------------------------
 select id, email, created_at, email_confirmed_at
 from auth.users
-where email ilike '%' || split_part(:'target_email', '@', 1) || '%'
-   or email ilike '%' || split_part(:'target_email', '@', 2) || '%'
+where email ilike '%' || split_part('friend@example.com', '@', 1) || '%'
+   or email ilike '%' || split_part('friend@example.com', '@', 2) || '%'
 order by created_at desc
 limit 20;
 
@@ -59,7 +69,7 @@ limit 20;
 select p.*
 from public.profiles p
 join auth.users u on u.id = p.id
-where lower(u.email) = lower(:'target_email');
+where lower(u.email) = lower('friend@example.com');
 
 
 -- ---------------------------------------------------------------------------

@@ -1443,3 +1443,6 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-realtime]')){var _ort=document.createElement('script');_ort.src='/omega-realtime.js';_ort.setAttribute('data-omega-realtime','1');_ort.defer=true;if(document.body)document.body.appendChild(_ort);}
   /* Platform Meaning Index — scores, mission banners, PMI badges */
   if(!document.querySelector('script[data-omega-pmi]')){var _opmi=document.createElement('script');_opmi.src='/omega-pmi.js';_opmi.setAttribute('data-omega-pmi','1');_opmi.defer=true;if(document.body)document.body.appendChild(_opmi);}
+
+  /* Unified UI — footer, prev/next nav, back button, keyboard shortcuts */
+  if(!document.querySelector('script[data-omega-ui]')){var _oui2=document.createElement('script');_oui2.src='/omega-ui.js';_oui2.setAttribute('data-omega-ui','1');_oui2.defer=true;if(document.body)document.body.appendChild(_oui2);}

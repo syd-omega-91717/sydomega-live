@@ -40,6 +40,50 @@
 begin;
 
 -- ---------------------------------------------------------------------------
+-- SIGNATURE RECONCILIATION  (added after production returned 42P13)
+--
+-- Production already has some of these functions with DIFFERENT return types
+-- than the source files describe — finding F-2 again. CREATE OR REPLACE cannot
+-- change a return type, so it fails with:
+--     ERROR: 42P13 cannot change return type of existing function
+--
+-- This block drops EVERY overload of each function by name, resolved from
+-- pg_proc, so it works no matter what signature production actually has.
+--
+-- It does NOT use CASCADE. If a policy, trigger or default depends on one of
+-- these, the drop is skipped with a NOTICE rather than silently destroying the
+-- dependent object — you get told, and CREATE OR REPLACE below still succeeds
+-- whenever the return type happens to match.
+-- ---------------------------------------------------------------------------
+do $reconcile$
+declare
+  fn   text;
+  r    record;
+  names text[] := array['trial_duration', 'grant_trial_access', 'has_active_access', 'check_trial_status', 'sweep_expired_trials'];
+begin
+  foreach fn in array names loop
+    for r in
+      select p.oid::regprocedure::text as sig
+      from pg_proc p
+      join pg_namespace n on n.oid = p.pronamespace
+      where n.nspname = 'public' and p.proname = fn
+    loop
+      begin
+        execute 'drop function ' || r.sig;
+        raise notice 'dropped % (will be recreated below)', r.sig;
+      exception
+        when dependent_objects_still_exist then
+          raise notice 'kept % — other objects depend on it; relying on CREATE OR REPLACE', r.sig;
+        when others then
+          raise notice 'could not drop % — %', r.sig, sqlerrm;
+      end;
+    end loop;
+  end loop;
+end $reconcile$;
+
+
+
+-- ---------------------------------------------------------------------------
 -- 1. Single source of truth for the duration. 9m17s = 557s.
 -- ---------------------------------------------------------------------------
 create or replace function public.trial_duration()
@@ -60,9 +104,7 @@ grant execute on function public.trial_duration() to authenticated, anon;
 -- CREATE OR REPLACE cannot change a return type, so drop first. Safe: nothing
 -- depends on it structurally, and approvals.html calls it via RPC, which does
 -- not care that it now returns a value.
-drop function if exists public.grant_trial_access(uuid);
-
-create function public.grant_trial_access(p_uid uuid)
+create or replace function public.grant_trial_access(p_uid uuid)
 returns timestamptz language plpgsql security definer set search_path = public as $$
 declare expires timestamptz;
 begin

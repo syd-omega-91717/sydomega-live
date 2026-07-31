@@ -136,31 +136,46 @@ var EL_ICONS={fire:'&#9670;',water:'&#9675;',wind:'&#9671;',metal:'&#9632;',sand
     var myC=Number(pr.is_owner?9:pr.axis_c||0.001);
     var myAuth=pr.is_owner?27.8367:Math.sqrt(Math.pow(myA,3)+Math.pow(myB,3)+Math.pow(myC,3))*PHI/EU;
     sid('my-auth',myAuth.toFixed(4));
-    /* Try live leaderboard snapshot */
+    /* 1. Try server-side rankings edge function (efficient: AUTH computed server-side) */
+    var ranked=false;
     try{
-      var lb=await sb.from('leaderboard_snapshots').select('*').eq('snapshot_date',new Date().toISOString().slice(0,10)).order('rank_global',{ascending:true}).limit(50);
-      var rows=lb.data||[];
-      if(!rows.length) throw new Error('no snapshot today');
-      sid('lb-total',rows.length);
-      sid('lb-date',new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase());
-      /* Find my rank */
-      var me=rows.find(function(r){return r.user_id===s.user.id;});
-      if(me){sid('my-rank',me.rank_global||'--');renderBanner(me,pr);}
-      renderPodium(rows.slice(0,3));
-      renderTable(rows,s.user.id);
-    }catch(e){
-      /* Fall back to live profiles query if no snapshot yet */
-      var pf=await sb.from('profiles').select('id,display_name,axis_a,axis_b,axis_c,element,subscription_tier').eq('access_approved',true).order('axis_a',{ascending:false}).limit(50);
-      var profiles=(pf.data||[]).filter(function(p){return p.axis_a>0.001||p.axis_b>0.001;});
+      var rr=await sb.functions.invoke('rankings',{body:{limit:50,user_id:s.user.id}});
+      if(rr.data&&rr.data.rankings&&rr.data.rankings.length){
+        var rankings=rr.data.rankings;
+        sid('lb-total',rr.data.total||rankings.length);
+        sid('lb-date',new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase());
+        if(rr.data.my_rank){sid('my-rank',rr.data.my_rank);renderBannerRankings(rankings,rr.data.my_rank,pr);}
+        renderPodiumRankings(rankings.slice(0,3));
+        renderTableRankings(rankings,s.user.id);
+        ranked=true;
+      }
+    }catch(e){}
+    /* 2. Try leaderboard_snapshots table */
+    if(!ranked){
+      try{
+        var lb=await sb.from('leaderboard_snapshots').select('*').eq('snapshot_date',new Date().toISOString().slice(0,10)).order('rank_global',{ascending:true}).limit(50);
+        var rows=lb.data||[];
+        if(!rows.length) throw new Error('no snapshot today');
+        sid('lb-total',rows.length);
+        sid('lb-date',new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase());
+        var me=rows.find(function(r){return r.user_id===s.user.id;});
+        if(me){sid('my-rank',me.rank_global||'--');renderBanner(me,pr);}
+        renderPodium(rows.slice(0,3));renderTable(rows,s.user.id);
+        ranked=true;
+      }catch(e){}
+    }
+    /* 3. Fall back to live profiles query */
+    if(!ranked){
+      var pf=await sb.from('profiles').select('id,display_name,axis_a,axis_b,axis_c,element,subscription_tier,is_owner').eq('access_approved',true).limit(100);
+      var profiles=(pf.data||[]);
       profiles.sort(function(a,b){
-        var va=Math.sqrt(Math.pow(a.axis_a||0,3)+Math.pow(a.axis_b||0,3)+Math.pow(a.axis_c||0,3))*PHI/EU;
-        var vb=Math.sqrt(Math.pow(b.axis_a||0,3)+Math.pow(b.axis_b||0,3)+Math.pow(b.axis_c||0,3))*PHI/EU;
+        var va=a.is_owner?27.8367:Math.sqrt(Math.pow(a.axis_a||0,3)+Math.pow(a.axis_b||0,3)+Math.pow(a.axis_c||0,3))*PHI/EU;
+        var vb=b.is_owner?27.8367:Math.sqrt(Math.pow(b.axis_a||0,3)+Math.pow(b.axis_b||0,3)+Math.pow(b.axis_c||0,3))*PHI/EU;
         return vb-va;
       });
-      if(pr.is_owner) profiles.unshift({id:s.user.id,display_name:'MAJOR SLEIMAN YOUSSEF DAGHER',axis_a:9,axis_b:9,axis_c:9,element:'fire'});
       sid('lb-total',profiles.length);
-      sid('lb-date','LIVE FEED');
-      var meR=profiles.findIndex(function(p){return p.user_id===s.user.id||p.id===s.user.id;});
+      sid('lb-date','LIVE');
+      var meR=profiles.findIndex(function(p){return p.id===s.user.id;});
       if(meR>=0) sid('my-rank',meR+1);
       renderPodiumProfiles(profiles.slice(0,3));
       renderTableProfiles(profiles,s.user.id);
@@ -169,6 +184,41 @@ var EL_ICONS={fire:'&#9670;',water:'&#9675;',wind:'&#9671;',metal:'&#9632;',sand
 })();
 
 function fmtAuth(a,b,c,isOwner){if(isOwner)return'27.8367';var PHI=1.6180339887,EU=2.7182818285;return Math.sqrt(Math.pow(Number(a)||0,3)+Math.pow(Number(b)||0,3)+Math.pow(Number(c)||0,3))*PHI/EU;}
+
+/* Rankings edge function renderers */
+function renderBannerRankings(rankings,myRank,pr){
+  var me=rankings.find(function(r){return r.is_owner?pr.is_owner:r.rank===myRank;});
+  var b=document.getElementById('my-rank-banner');
+  if(b)b.style.display='flex';
+  sid('banner-rank',myRank);
+  sid('banner-name',(pr.display_name||'SOVEREIGN MEMBER').toUpperCase());
+  if(me){
+    sid('banner-auth',me.auth);
+    sid('banner-element',me.element||'--');
+    sid('banner-a',me.axis_a);
+    sid('banner-b',me.axis_b);
+    sid('banner-c',me.axis_c);
+  }
+}
+function renderPodiumRankings(rows){
+  var order=[rows[1],rows[0],rows[2]];var ids=['p2','p1','p3'];
+  order.forEach(function(r,i){if(!r)return;var id=ids[i];sid(id+'-auth',r.auth);sid(id+'-name',r.display_name.slice(0,20));sid(id+'-el',r.element);});
+}
+function renderTableRankings(rows,myUid){
+  var el=document.getElementById('lb-rows');if(!el)return;
+  el.innerHTML=rows.map(function(r){
+    var isMe=(r.user_id===myUid);
+    var medal=r.rank===1?'&#9812;':r.rank===2?'&#9813;':r.rank===3?'&#9814;':'';
+    return '<div class="lb-row'+(isMe?' me':'')+'" role="row" aria-label="Rank '+r.rank+'">'
+      +'<div class="lb-rank" style="color:'+(r.rank<=3?'var(--gold)':'var(--muted)')+'">'+medal+r.rank+'</div>'
+      +'<div><div class="lb-name">'+(isMe?'<span style="color:var(--gold)">&#9670; YOU &mdash; </span>':'')+r.display_name.slice(0,25)+'</div><div class="lb-sign">'+r.sign+'</div></div>'
+      +'<div class="lb-auth">'+r.auth+'</div>'
+      +'<div class="lb-axis" style="color:var(--gold)">'+r.axis_a+'</div>'
+      +'<div class="lb-axis" style="color:var(--purple)">'+r.axis_b+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);text-align:center">'+r.element.slice(0,5)+'</div>'
+      +'</div>';
+  }).join('');
+}
 
 function renderBanner(row,pr){
   var b=document.getElementById('my-rank-banner');

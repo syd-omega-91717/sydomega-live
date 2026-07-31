@@ -147,6 +147,18 @@
     {t:'PHI GOLDEN RATIO',d:'1.6180339887 used in authority formula',u:'/analytics.html',c:'CANON'},
     {t:'EULER E',d:'2.7182818285 used in authority formula',u:'/analytics.html',c:'CANON'},
   ];
+  /* ── FUSE.JS (lazy background init for better fuzzy results) ───── */
+  var _fuse=null;
+  function initFuse(){
+    if(_fuse||!window.OmegaOSS) return;
+    window.OmegaOSS.require('fuse',function(Fuse){
+      if(!Fuse) return;
+      _fuse=new Fuse(INDEX,{keys:[{name:'t',weight:2},{name:'d',weight:1}],threshold:0.35,includeScore:true,minMatchCharLength:2});
+    });
+  }
+  /* Warm Fuse.js in background after load */
+  window.addEventListener('load',function(){setTimeout(initFuse,1500);});
+
   function scoreItem(item,q){
     var t=item.t.toLowerCase(),d=item.d.toLowerCase();
     q=q.toLowerCase().trim();
@@ -177,6 +189,11 @@
   }
   function doSearch(q){
     if(!q||q.length<1)return INDEX.slice(0,10);
+    /* Use Fuse.js if available (better typo tolerance + relevance ranking) */
+    if(_fuse&&q.length>=2){
+      var fuseResults=_fuse.search(q).slice(0,10).map(function(r){return r.item;});
+      if(fuseResults.length) return fuseResults;
+    }
     return INDEX.map(function(item){return{item:item,sc:scoreItem(item,q)};})
       .filter(function(r){return r.sc>0;})
       .sort(function(a,b){return b.sc-a.sc;})

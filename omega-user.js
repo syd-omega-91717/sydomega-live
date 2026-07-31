@@ -227,6 +227,8 @@ window.__omegaPopulate = function(pr, user){
   window.__omegaUser    = user;
   window.__omegaAuth    = auth;
   window.__omegaIsOwner = isOwner;
+  window.__omegaUserLoaded = true;
+  try{document.dispatchEvent(new CustomEvent('omega:populated',{detail:{profile:d},bubbles:false}));}catch(_){}
 };
 
 /* ── AUTO-RUN ON EVERY PAGE ─────────────────────────────────────────────── */

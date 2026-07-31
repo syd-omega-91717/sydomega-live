@@ -108,6 +108,39 @@
       }catch(e){}
       return {ok:true};
     },
+    /* task_complete workflow steps — these were referenced but not implemented */
+    validate_task: async function(ctx){
+      if(!ctx.task||!ctx.axis) return {ok:false,error:'missing task or axis'};
+      if(['a','b','c'].indexOf(String(ctx.axis))====-1) return {ok:false,error:'invalid axis'};
+      return {ok:true,validated:true};
+    },
+    increment_axis: async function(ctx){
+      if(!ctx.ok||!window.__omegaSb) return {ok:true,skipped:'no_client'};
+      var axis=String(ctx.axis||'a');
+      var kind=String(ctx.kind||ctx._workflow||'workflow');
+      var task=String(ctx.task||ctx._instance);
+      var title=String(ctx.title||ctx.task||'Workflow Task');
+      var weight=Number(ctx.weight||0.12);
+      try{
+        var r=await window.__omegaSb.rpc('complete_task',{
+          p_kind:kind, p_task:task, p_axis:axis, p_title:title, p_weight:weight
+        });
+        if(r.error) throw r.error;
+        return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};
+      }catch(e){
+        return {ok:true,skipped:'rpc_error',error:e.message};
+      }
+    },
+    recompute_auth: async function(ctx){
+      var PHI=1.6180339887,EU=2.7182818285;
+      var pr=window.__omegaCurrentProfile;
+      if(!pr) return {ok:true};
+      /* If axis was incremented, pull fresh values from server result */
+      var ar=ctx.axis_result||{};
+      var a=Number(ar.a||pr.axis_a||0.001),b=Number(ar.b||pr.axis_b||0.001),c=Number(ar.c||pr.axis_c||0.001);
+      var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+      return {ok:true,auth:auth,a:a,b:b,c:c};
+    },
     build_report: async function(ctx){
       var pr=window.__omegaCurrentProfile;
       if(!pr) return {ok:false};

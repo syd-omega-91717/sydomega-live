@@ -1521,8 +1521,8 @@ async function buildAchievements(uid){
     Sagittarius:{agent:'Beacon',token:'EMBER',element:'Fire'},Capricorn:{agent:'Analyst',token:'FERRUM',element:'Metal'},
     Aquarius:{agent:'Tutor',token:'PRIME',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
   };
-  document.document.getElementById('idf-fullname').textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
-    var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||pr.display_name||pr.display_name||'SOVEREIGN').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){
     document.getElementById('idf-sign').textContent=pr.sign.toUpperCase()+' -- '+bound.element.toUpperCase()+' ELEMENT';

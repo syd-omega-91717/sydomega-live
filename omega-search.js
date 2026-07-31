@@ -155,6 +155,21 @@
     if(t.startsWith(q))return 80;
     if(t.includes(q))return 60;
     if(d.includes(q))return 30;
+    // Multi-word: score by how many query words appear in title or description.
+    // Handles word-order differences like "sovereign city" matching "CITY SOVEREIGN".
+    var words=q.split(/\s+/).filter(Boolean);
+    if(words.length>1){
+      var inT=0,inD=0;
+      for(var i=0;i<words.length;i++){
+        if(t.includes(words[i]))inT++;
+        else if(d.includes(words[i]))inD++;
+      }
+      var hit=inT+inD;
+      if(hit===words.length)return 40+(inT*4); // all words found
+      if(hit>0)return 5+hit*3;                 // partial match
+      return 0;
+    }
+    // Single-word fuzzy subsequence
     var si=0,qi=0,b=0;
     while(si<t.length&&qi<q.length){if(t[si]===q[qi]){qi++;b++;}si++;}
     if(qi===q.length)return 10+b;
@@ -189,7 +204,15 @@
         +'</a>';
     }).join('');
   }
-  var _ov=null;
+  var _ov=null,_sel=-1;
+  function moveSel(dir){
+    var links=_ov?_ov.querySelectorAll('#omega-s-res a'):[];
+    if(!links.length)return;
+    if(_sel>=0&&_sel<links.length)links[_sel].style.background='';
+    _sel=Math.max(0,Math.min(links.length-1,_sel+dir));
+    links[_sel].style.background='rgba(201,168,76,.08)';
+    links[_sel].scrollIntoView({block:'nearest'});
+  }
   function openSearch(){
     if(_ov)return;
     _ov=document.createElement('div');
@@ -213,7 +236,7 @@
     var res=document.getElementById('omega-s-res');
     if(inp){
       inp.focus();
-      inp.addEventListener('input',function(){renderResults(doSearch(inp.value),inp.value,res);});
+      inp.addEventListener('input',function(){_sel=-1;renderResults(doSearch(inp.value),inp.value,res);});
       /* Show top 8 on open */
       renderResults(INDEX.slice(0,8),'',res);
     }
@@ -223,7 +246,14 @@
   window.closeSearch=closeSearch;
   function onKey(e){
     if(e.key==='Escape'){closeSearch();return;}
-    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();if(_ov)closeSearch();else openSearch();}
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();if(_ov)closeSearch();else openSearch();return;}
+    if(!_ov)return;
+    if(e.key==='ArrowDown'){e.preventDefault();moveSel(1);return;}
+    if(e.key==='ArrowUp'){e.preventDefault();moveSel(-1);return;}
+    if(e.key==='Enter'&&_sel>=0){
+      var links=_ov.querySelectorAll('#omega-s-res a');
+      if(links[_sel])links[_sel].click();
+    }
   }
   document.addEventListener('keydown',onKey);
   document.querySelectorAll('[data-search-trigger],[href="#search"]').forEach(function(el){el.addEventListener('click',function(ev){ev.preventDefault();openSearch();});});

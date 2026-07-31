@@ -538,7 +538,7 @@ async function loadRealMatrix(){
   document.getElementById('stat-a-sub').textContent=(a>=9?'Apex -- ':'')+'Knowledge axis, out of 9.000';
   document.getElementById('stat-b-sub').textContent=(b>=9?'Apex -- ':'')+'Mastery axis, out of 9.000';
   document.getElementById('stat-c-sub').textContent=(c>=9?'Apex -- ':'')+'Contribution axis, out of 9.000';
-  document.getElementById('stat-auth-sub').textContent='sqrt('+fmt(a*a)+'+'+fmt(b*b)+'+'+fmt(c*c)+') = '+fmt(auth);
+  document.getElementById('stat-auth-sub').textContent='sqrt('+fmt(Math.pow(a,3))+'+'+fmt(Math.pow(b,3))+'+'+fmt(Math.pow(c,3))+')×φ/e = '+fmt(auth);
 
   // 3D projection coordinate readout
   document.getElementById('coord-a').textContent=fmt(a);
@@ -557,10 +557,10 @@ async function loadRealMatrix(){
   document.getElementById('f-a').textContent=fmt(a);
   document.getElementById('f-b').textContent=fmt(b);
   document.getElementById('f-c').textContent=fmt(c);
-  document.getElementById('f-a2').textContent=fmt(a*a);
-  document.getElementById('f-b2').textContent=fmt(b*b);
-  document.getElementById('f-c2').textContent=fmt(c*c);
-  document.getElementById('f-sum').textContent=fmt(a*a+b*b+c*c);
+  document.getElementById('f-a2').textContent=fmt(Math.pow(a,3));
+  document.getElementById('f-b2').textContent=fmt(Math.pow(b,3));
+  document.getElementById('f-c2').textContent=fmt(Math.pow(c,3));
+  document.getElementById('f-sum').textContent=fmt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3));
   document.getElementById('f-auth').textContent=fmt(auth);
 
   // status badge

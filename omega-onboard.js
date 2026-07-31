@@ -102,7 +102,7 @@
         await window.__omegaSb.rpc('record_sovereign_event',{
           p_event_type:'member.onboarded',
           p_event_data:{sign:selected.sign,element:selected.el,token:selected.token},
-          p_axis_delta:JSON.stringify({a:0.009,b:0.009,c:0.009})
+          p_axis_delta:{a:0.009,b:0.009,c:0.009}
         }).catch(function(){});
         if(ov.parentNode)document.body.removeChild(ov);
         /* Show welcome */

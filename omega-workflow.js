@@ -103,7 +103,7 @@
         await window.__omegaSb.rpc('record_sovereign_event',{
           p_event_type:ctx._workflow||'workflow_complete',
           p_event_data:ctx,
-          p_axis_delta:JSON.stringify({a:0,b:0,c:0})
+          p_axis_delta:{a:0,b:0,c:0}
         });
       }catch(e){}
       return {ok:true};

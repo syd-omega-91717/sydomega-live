@@ -133,11 +133,21 @@
 
   async function callConcierge(system, messages){
     if(!window.__omegaSb) return null;
+    var pr=window.__omegaCurrentProfile||{};
+    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
+    var auth=pr.is_owner?APEX:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    /* Encode multi-turn context into a single message for the concierge endpoint */
+    var lastMsg=messages[messages.length-1];
+    var userMsg=lastMsg&&lastMsg.role==='user'?lastMsg.content:'query';
+    if(messages.length>1){
+      var hist=messages.slice(0,-1).map(function(m){return m.role.toUpperCase()+': '+m.content;}).join('\n');
+      userMsg='[CONTEXT]\n'+hist+'\n\n[QUERY]\n'+userMsg;
+    }
     try{
       var r=await window.__omegaSb.functions.invoke('concierge',{
-        body:{model:'claude-sonnet-4-6',max_tokens:300,system:system,messages:messages}
+        body:{message:userMsg.slice(0,2000),system_override:system,context:{sign:pr.sign||'?',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4),tier:pr.subscription_tier||'free',rank:pr.rank||'--'}}
       });
-      if(r.data&&r.data.content&&r.data.content[0]) return r.data.content[0].text;
+      if(r.data&&r.data.reply) return r.data.reply;
     }catch(e){}
     return null;
   }

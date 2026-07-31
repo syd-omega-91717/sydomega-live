@@ -80,12 +80,14 @@
     }
     var system='You are the Sovereign Copilot of SYD OMEGA 91717. Be concise (under 120 words). Canonical: AUTH=sqrt(A³+B³+C³)×φ/e, Apex=27.8367, Trial=557s, Dedication=33437s, Lattice=104976 nodes, 9 elements, 12 gates, 12 agents.'+ctx;
     try{
-      if(window.__omegaSb){
+      if(window.__omegaSb&&_profile){
+        var a2=Number(_profile.axis_a||0.001),b2=Number(_profile.axis_b||0.001),c2=Number(_profile.axis_c||0.001);
+        var auth2=_profile.is_owner?27.8367:Math.sqrt(Math.pow(a2,3)+Math.pow(b2,3)+Math.pow(c2,3))*1.6180339887/2.7182818285;
         var r=await window.__omegaSb.functions.invoke('concierge',{
-          body:{model:'claude-sonnet-4-6',max_tokens:200,system:system,messages:_history.slice(-6)}
+          body:{message:userMsg,context:{sign:_profile.sign||'?',a:a2.toFixed(3),b:b2.toFixed(3),c:c2.toFixed(3),auth:auth2.toFixed(4),tier:_profile.subscription_tier||'free',rank:_profile.rank||'--'}}
         });
-        if(r.data&&r.data.content&&r.data.content[0]){
-          var reply=r.data.content[0].text;
+        if(r.data&&r.data.reply){
+          var reply=r.data.reply;
           _history.push({role:'assistant',content:reply});
           return reply;
         }

@@ -30,7 +30,7 @@
    Registered by omega-sw-register.js, which bg.js injects.
    ========================================================================== */
 
-var CACHE_VERSION = 'v5';
+var CACHE_VERSION = 'v6';
 var CACHE_NAME    = 'omega-91717-' + CACHE_VERSION;
 
 /* Static shell only. Every entry must exist in the repository — the CI

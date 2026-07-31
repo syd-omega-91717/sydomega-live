@@ -39,6 +39,16 @@
   ],
   "redirects": [
     {
+      "source": "/entreprise",
+      "destination": "/enterprise",
+      "permanent": true
+    },
+    {
+      "source": "/entreprise.html",
+      "destination": "/enterprise.html",
+      "permanent": true
+    },
+    {
       "source": "/:path*.ts",
       "destination": "/dashboard.html",
       "permanent": false

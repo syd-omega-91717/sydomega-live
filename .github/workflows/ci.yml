@@ -81,3 +81,57 @@ jobs:
             exit 1
           fi
           echo "No service_role key in client code."
+
+      # ---- 6. Edge Function TypeScript syntax check.
+      #         Deno's check is cheap and catches import/type errors before deploy.
+      - name: Edge Function syntax (Deno)
+        run: |
+          if command -v deno &>/dev/null; then
+            fail=0
+            for f in supabase/functions/*/index.ts; do
+              deno check "$f" 2>&1 || { echo "::warning file=$f::deno check failed (non-blocking)"; }
+            done
+          else
+            echo "Deno not installed — skipping Edge Function syntax check."
+            echo "Install with: curl -fsSL https://deno.land/install.sh | sh"
+          fi
+        continue-on-error: true
+
+      # ---- 7. Verify sw.js CORE_ASSETS all exist in the deploy root.
+      #         A missing file silently poisons the service worker cache.
+      - name: Service worker precache integrity
+        run: |
+          fail=0
+          assets=$(node -e "
+            const src = require('fs').readFileSync('sw.js','utf8');
+            const m = src.match(/var CORE_ASSETS\s*=\s*\[([\s\S]*?)\]/);
+            if(!m) process.exit(0);
+            m[1].replace(/\/\/[^\n]*/g,'').match(/'([^']+)'/g)
+              .forEach(a => console.log(a.replace(/'/g,'')));
+          ")
+          for asset in $assets; do
+            f="${asset#/}"
+            if [ ! -e "$f" ]; then
+              echo "::error file=sw.js::precache references missing file: $asset"
+              fail=$((fail+1))
+            fi
+          done
+          [ "$fail" -eq 0 ] && echo "All sw.js CORE_ASSETS exist." || exit 1
+
+      # ---- 8. manifest.json icon paths exist.
+      - name: PWA manifest icon check
+        run: |
+          fail=0
+          node -e "
+            const m = JSON.parse(require('fs').readFileSync('manifest.json','utf8'));
+            const icons = [...(m.icons||[]),...(m.shortcuts||[]).flatMap(s=>s.icons||[])];
+            icons.forEach(i => {
+              const f = i.src.replace(/^\//,'');
+              const fs2 = require('fs');
+              if(!fs2.existsSync(f)){
+                console.log('MISSING: ' + i.src);
+                process.exitCode = 1;
+              }
+            });
+          " || { echo "::error file=manifest.json::missing icon file"; exit 1; }
+          echo "All manifest icon files exist."

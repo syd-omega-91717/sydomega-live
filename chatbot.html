@@ -233,19 +233,23 @@ window.sendChatMessage=async function(){
     try{reply=await window.OmegaIntelligence.ask(q,_history.slice(-6));}catch(e){}
   }
   if(!reply){
-    /* Fallback: direct concierge call */
+    /* Fallback: direct concierge call — matches concierge/index.ts contract */
     try{
       var PHI=1.6180339887,EU=2.7182818285;
       var a=Number(_profile.axis_a||0.001),b=Number(_profile.axis_b||0.001),c=Number(_profile.axis_c||0.001);
       var auth=_profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-      var system='You are the Sovereign Concierge of SYD OMEGA 91717. '
-        +'AUTH=sqrt(A³+B³+C³)×φ/e, apex=27.8367, φ=1.618, e=2.718, lattice=104976 nodes. '
-        +'Member: auth='+auth.toFixed(4)+' element='+(_profile.element||'?')+' sign='+(_profile.zodiac_sign||'?')+'.'
-        +(_currentAgent?' Active agent: '+_currentAgent+'.':'')
-        +' Respond in under 120 words. Use markdown for lists/code.';
-      var r=await sb.functions.invoke('concierge',{body:{model:'claude-sonnet-4-6',max_tokens:300,system:system,messages:_history.slice(-6)}});
-      if(r.data&&r.data.content&&r.data.content[0])reply=r.data.content[0].text;
-    }catch(e){reply='The AI concierge is temporarily unavailable. Please ensure the concierge edge function is deployed with ANTHROPIC_API_KEY set in Supabase secrets.';}
+      var r=await sb.functions.invoke('concierge',{body:{
+        message:q,
+        context:{
+          sign:_profile.sign||'unknown',
+          a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),
+          auth:auth.toFixed(4),
+          tier:_profile.subscription_tier||'free',
+          rank:_profile.rank||'--'
+        }
+      }});
+      if(r.data&&r.data.reply)reply=r.data.reply;
+    }catch(e){reply='The Concierge is temporarily unavailable.';}
   }
   showTyping(false);
   if(reply){

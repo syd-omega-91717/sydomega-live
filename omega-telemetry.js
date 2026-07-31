@@ -118,7 +118,7 @@
       auth:auth.toFixed(4),
       gate:gate<0?12:gate+1,
       element:pr.element||'?',
-      sign:pr.zodiac_sign||'?',
+      sign:pr.sign||'?',
       is_owner:pr.is_owner||false
     });
   });

@@ -119,7 +119,7 @@
         member:pr.display_name,
         auth:auth.toFixed(4),
         axis:{a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3)},
-        element:pr.element,sign:pr.zodiac_sign,agent:pr.agent_name,
+        element:pr.element,sign:pr.sign,agent:pr.agent_name,
         tier:pr.subscription_tier,
         formula:'sqrt(A³+B³+C³)×φ/e'
       };
@@ -166,7 +166,7 @@
   });
   document.addEventListener('omega:populated',function(e){
     var pr=e.detail&&e.detail.profile;
-    if(pr&&!pr.zodiac_sign&&!pr.is_owner){
+    if(pr&&!pr.sign&&!pr.is_owner){
       /* No sign = needs onboarding */
       /* OmegaOnboard handles this directly, just emit event */
       if(window.OmegaOS)window.OmegaOS.events.emit('workflow:needs_onboarding',{profile:pr});

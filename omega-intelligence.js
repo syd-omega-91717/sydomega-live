@@ -43,7 +43,7 @@
         var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
         var gi=GATES.findIndex(function(g){return auth<g;});
         return {auth:auth.toFixed(4),axis_a:a.toFixed(3),axis_b:b.toFixed(3),axis_c:c.toFixed(3),
-          element:pr.element,sign:pr.zodiac_sign,agent:pr.agent_name,
+          element:pr.element,sign:pr.sign,agent:pr.agent_name,
           gate_next:gi>=0?gi+1:12,gate_name:gi>=0?GNAMES[gi]:'APEX',
           gate_delta:gi>=0?(GATES[gi]-auth).toFixed(4):'0.0000'};
       }
@@ -101,7 +101,7 @@
     if(profile){
       var a=Number(profile.axis_a||0.001),b=Number(profile.axis_b||0.001),c=Number(profile.axis_c||0.001);
       var auth=profile.is_owner?APEX:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-      ctx='\nMEMBER CONTEXT: auth='+auth.toFixed(4)+' axis_a='+a.toFixed(3)+' axis_b='+b.toFixed(3)+' axis_c='+c.toFixed(3)+' sign='+(profile.zodiac_sign||'?')+' element='+(profile.element||'?')+' is_owner='+(profile.is_owner||false);
+      ctx='\nMEMBER CONTEXT: auth='+auth.toFixed(4)+' axis_a='+a.toFixed(3)+' axis_b='+b.toFixed(3)+' axis_c='+c.toFixed(3)+' sign='+(profile.sign||'?')+' element='+(profile.element||'?')+' is_owner='+(profile.is_owner||false);
     }
 
     var system='You are the Sovereign Intelligence Engine of SYD OMEGA 91717.\n'

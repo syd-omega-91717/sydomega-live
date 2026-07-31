@@ -145,7 +145,7 @@ function setW(id,pct){var el=document.getElementById(id);if(el)el.style.width=Ma
 
     sid('k-auth',auth.toFixed(4));sid('hdr-auth',auth.toFixed(4));
     sid('k-element',(pr.element||'--').toUpperCase());
-    sid('k-sign',(pr.zodiac_sign||'--').toUpperCase().slice(0,4));
+    sid('k-sign',(pr.sign||'--').toUpperCase().slice(0,4));
     sid('ax-a',a.toFixed(3));sid('ax-b',b.toFixed(3));sid('ax-c',c.toFixed(3));
     setW('bar-a',a);setW('bar-b',b);setW('bar-c',c);
 

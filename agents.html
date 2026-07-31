@@ -177,8 +177,8 @@ function shtml(id,v){var el=document.getElementById(id);if(el)el.innerHTML=v;}
       _agents=buildFallbackAgents();
     }
 
-    /* Find member's agent by zodiac_sign */
-    var sign=_profile.zodiac_sign||_profile.sign||'';
+    /* Find member's agent by sign */
+    var sign=_profile.sign||'';
     _myAgent=_agents.find(function(a){return a.sign===sign||a.sign.toLowerCase()===sign.toLowerCase();})||null;
 
     /* KPIs */
@@ -278,7 +278,7 @@ window.sendMsg=async function(){
       var agName=_myAgent&&_myAgent.name||'Sentinel';
       var agRole=_myAgent&&_myAgent.role||'Security';
       var agVoice=_myAgent&&_myAgent.voice||'authoritative';
-      var system='You are '+agName+', Sovereign Agent of SYD OMEGA 91717. Role: '+agRole+'. Voice: '+agVoice+'. CANONICAL: AUTH=sqrt(A\u00b3+B\u00b3+C\u00b3)\u00d7\u03c6/e, apex=27.8367, \u03c6=1.618, e=2.718, 104976 lattice nodes. Member auth='+auth.toFixed(4)+' sign='+(_profile&&_profile.zodiac_sign||'?')+'. Be concise under 100 words. Stay in character.';
+      var system='You are '+agName+', Sovereign Agent of SYD OMEGA 91717. Role: '+agRole+'. Voice: '+agVoice+'. CANONICAL: AUTH=sqrt(A\u00b3+B\u00b3+C\u00b3)\u00d7\u03c6/e, apex=27.8367, \u03c6=1.618, e=2.718, 104976 lattice nodes. Member auth='+auth.toFixed(4)+' sign='+(_profile&&_profile.sign||'?')+'. Be concise under 100 words. Stay in character.';
       var r=await sb.functions.invoke('concierge',{body:{model:'claude-sonnet-4-6',max_tokens:200,system:system,messages:_history.slice(-6)}});
       if(r.data&&r.data.content&&r.data.content[0])reply=r.data.content[0].text;
     }catch(e){}

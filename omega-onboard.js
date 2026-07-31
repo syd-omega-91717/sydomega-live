@@ -25,7 +25,7 @@
   var EL_COLORS={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D'};
 
   function needsOnboarding(pr){
-    return pr&&!pr.zodiac_sign&&!pr.element&&!pr.is_owner;
+    return pr&&!pr.sign&&!pr.element&&!pr.is_owner;
   }
 
   function buildOnboardingFlow(){
@@ -91,7 +91,7 @@
         var s=(await window.__omegaSb.auth.getSession()).data.session;
         if(!s)return;
         await window.__omegaSb.from('profiles').update({
-          zodiac_sign:selected.sign,
+          sign:selected.sign,
           element:selected.el,
           olympian:selected.god,
           agent_name:selected.agent,

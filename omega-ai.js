@@ -39,7 +39,7 @@
       +'Axis B (Mastery): '+b.toFixed(4)+'\n'
       +'Axis C (Contribution): '+c.toFixed(4)+'\n'
       +'Element: '+(profile.element||'?')+'\n'
-      +'Sign: '+(profile.zodiac_sign||'?')+'\n'
+      +'Sign: '+(profile.sign||'?')+'\n'
       +'Tier: '+(profile.subscription_tier||'FREE')+'\n'
       +'Owner: '+(profile.is_owner?'YES':'NO');
   }

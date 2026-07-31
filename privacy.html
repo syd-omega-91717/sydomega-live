@@ -167,7 +167,7 @@ window.viewMyData=async function(){
     var r=await sb.from('profiles').select('*').eq('id',_uid).maybeSingle();
     var out=document.getElementById('data-output');
     if(out&&r.data){
-      var safe={display_name:r.data.display_name,subscription_tier:r.data.subscription_tier,axis_a:r.data.axis_a,axis_b:r.data.axis_b,axis_c:r.data.axis_c,element:r.data.element,zodiac_sign:r.data.zodiac_sign,created_at:r.data.created_at,access_approved:r.data.access_approved};
+      var safe={display_name:r.data.display_name,subscription_tier:r.data.subscription_tier,axis_a:r.data.axis_a,axis_b:r.data.axis_b,axis_c:r.data.axis_c,element:r.data.element,sign:r.data.sign,created_at:r.data.created_at,access_approved:r.data.access_approved};
       out.style.display='block';out.textContent=JSON.stringify(safe,null,2);
     }
     showMsg('action-msg',true,'STORED DATA DISPLAYED ABOVE (GDPR ART. 15 — RIGHT OF ACCESS)');

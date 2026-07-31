@@ -236,7 +236,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
       .join('');
     /* lattice mini */
     /* lattice-mini rendered by omega-lattice.js */
-    if(window.renderLattice9x9){var lm=document.getElementById('lattice-mini');window.renderLattice9x9(lm,earned,{total:729});}
+    if(window.renderLattice9x9){var lm=document.getElementById('lattice-mini');window.renderLattice9x9(lm,Number(pr.nodes_earned||0),{total:729});}
     /* live metrics */
     var lm2=document.getElementById('live-metrics');
     var metrics=[

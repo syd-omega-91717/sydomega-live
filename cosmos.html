@@ -577,7 +577,7 @@ async function boot(){
   const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
   const sign=pr.data?.sign||'Virgo';
   const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
-  const auth=Math.sqrt(a*a+b*b+c*c);
+  const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
   window.__memberSign=sign.toUpperCase();
   window.__agentSignMap={SENTINEL:'Aries',MERCHANT:'Taurus',SCOUT:'Gemini',WARDEN:'Cancer',SOVEREIGN:'Leo',AUDITOR:'Virgo',PROXY:'Libra',ORACLE:'Scorpio',BEACON:'Sagittarius',ANALYST:'Capricorn',TUTOR:'Aquarius',HISTORIAN:'Pisces'};
   const SIGN_TO_AGENT={Aries:'SENTINEL',Taurus:'MERCHANT',Gemini:'SCOUT',Cancer:'WARDEN',Leo:'SOVEREIGN',Virgo:'AUDITOR',Libra:'PROXY',Scorpio:'ORACLE',Sagittarius:'BEACON',Capricorn:'ANALYST',Aquarius:'TUTOR',Pisces:'HISTORIAN'};

@@ -91,7 +91,7 @@ Deno.serve(async (req: Request) => {
     god: GOD[cap(sign)] ?? "the Olympians",
     agent: AGENT[cap(sign)] ?? "your bound agent",
     a, b, c,
-    auth: x.auth != null ? num(x.auth, Math.sqrt(a*a+b*b+c*c)) : Math.sqrt(a*a+b*b+c*c),
+    auth: x.auth != null ? num(x.auth, 0) : Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285,
     rank: String(x.rank ?? "Initiate"),
     tier: num(x.tier, 1),
   };

@@ -190,7 +190,7 @@ async function boot(){
       ORACLE_CTX={
         sign: pr.sign||'',
         a:a, b:b, c:c,
-        auth: Math.sqrt(a*a+b*b+c*c),
+        auth: Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285,
         tier: Number(pr.membership_tier||1),
         rank: RANKS[rankIdx]
       };

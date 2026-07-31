@@ -24,7 +24,7 @@
 
   var PHI=1.6180339887,EU=2.7182818285;
   var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.5170,27.8367];
-  var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','HERALD','ORACLE','CHAMPION','ASCENDANT','APEX'];
+  var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
 
   /* ── A. AUTONOMY: Track choice persistence ──────────────────────────── */
   /* Remember which track the member prefers — respect choice across sessions */

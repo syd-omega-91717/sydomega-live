@@ -15,7 +15,8 @@
   'use strict';
   if (window.__omegaGate) return;
   window.__omegaGate = 1;
-  var APEX = 15.588;
+  var PHI = 1.6180339887, EU = 2.7182818285;
+  var APEX = 27.8367;
 
   var css = [
     '.omg-lock{position:relative!important}',
@@ -31,7 +32,7 @@
   var KEYLABEL = { a: 'KNOWLEDGE', b: 'MASTERY', c: 'CONTRIBUTION', auth: 'AUTHORITY', grade: 'GRADE', level: 'LEVEL', phase: 'PHASE' };
 
   function matrix(a, b, c) {
-    var auth = Math.sqrt(a * a + b * b + c * c);
+    var auth = Math.sqrt(Math.pow(a,3) + Math.pow(b,3) + Math.pow(c,3)) * PHI / EU;
     var g = Math.max(1, Math.min(12, Math.ceil(auth / APEX * 12)));
     var lo = (g - 1) / 12 * APEX, hi = g / 12 * APEX, w = Math.max(0, Math.min(1, (auth - lo) / (hi - lo)));
     var lv = Math.max(1, Math.min(12, Math.ceil(w * 12)));

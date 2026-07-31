@@ -75,7 +75,10 @@
         var dp = api.structure && Number(api.structure.axis_depth);
         var apex = api.structure && Number(api.structure.authority_apex);
         if (ax && dp && apex) {
-          var expect = Math.sqrt(dp * dp * ax);
+          /* AUTH = sqrt(A³+B³+C³)×φ/e; at max depth each axis = dp,
+             so apex = sqrt(dp³ × axes) × φ/e */
+          var PHI_C = 1.6180339887, EU_C = 2.7182818285;
+          var expect = Math.sqrt(Math.pow(dp, 3) * ax) * PHI_C / EU_C;
           if (Math.abs(expect - apex) > 0.001)
             console.error('OmegaCanon: authority_apex is ' + apex + ' but ' + ax +
                           ' axes at depth ' + dp + ' give ' + expect.toFixed(3));

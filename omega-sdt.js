@@ -88,9 +88,9 @@
   };
 
   /* ── Listen for progression events ─────────────────────────────────── */
-  document.addEventListener('omega:task_complete',function(e){
+  document.addEventListener('omega:task',function(e){
     if(e.detail){
-      window.OmegaSDT.pulse(e.detail.axis_type,e.detail.delta,e.detail.auth_after);
+      window.OmegaSDT.pulse(e.detail.axis,e.detail.points,e.detail.auth);
     }
   });
 

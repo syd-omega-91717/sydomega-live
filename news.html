@@ -79,6 +79,14 @@
   .privacy{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px}
   .privacy b{color:var(--gold)}
 
+  .intel-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(0,229,255,.1)}
+  .intel-item:last-child{border-bottom:none}
+  .intel-item a{font-family:var(--body);font-size:15px;font-weight:400;color:var(--ink);flex:1;line-height:1.4;transition:.15s}
+  .intel-item a:hover{color:var(--cyan)}
+  .intel-meta{font-family:var(--mono);font-size:9px;color:var(--muted);white-space:nowrap;flex-shrink:0;text-align:right;line-height:1.7}
+  .intel-meta b{color:var(--solar)}
+  .intel-loading{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;padding:8px 0}
+
   .wire{margin-top:16px}
   .post{border-bottom:1px dashed rgba(201,168,76,.12);padding:14px 0}
   .post:last-child{border-bottom:none}
@@ -115,6 +123,9 @@
 
     <div class="sechead">SOVEREIGN DISPATCHES</div>
     <div id="official"></div>
+
+    <div class="sechead">INDUSTRY INTELLIGENCE  --  AI &amp; PLATFORM FIELD</div>
+    <div class="card" id="intel-box"><div class="intel-loading">LOADING FIELD INTELLIGENCE...</div></div>
 
     <div class="sechead">THE WIRE  --  MEMBER INTEL</div>
     <div class="card">
@@ -205,7 +216,24 @@
     mySign=pr.data.sign;
     document.getElementById('gate').style.display='none';
     document.getElementById('app').style.display='flex';
-    renderOfficial(); loadWire();
+    renderOfficial(); loadWire(); loadIntel();
+  }
+
+  async function loadIntel(){
+    var box=document.getElementById('intel-box');
+    try{
+      var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/intel-feed',{
+        headers:{'apikey':'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'}
+      });
+      if(!r.ok){box.innerHTML='<div class="intel-loading">FIELD INTELLIGENCE UNAVAILABLE</div>';return;}
+      var d=await r.json();
+      if(!d.items||!d.items.length){box.innerHTML='<div class="intel-loading">NO RELEVANT SIGNALS AT THIS TIME</div>';return;}
+      box.innerHTML=d.items.map(function(it){
+        var age=it.age_h>0?(it.age_h+'h ago'):'FRESH';
+        return '<div class="intel-item"><a href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer">'+esc(it.title)+'</a>'
+          +'<div class="intel-meta"><b>'+it.points+'▲</b><br>'+it.comments+' cmt<br>'+age+'</div></div>';
+      }).join('');
+    }catch(e){box.innerHTML='<div class="intel-loading">FIELD INTELLIGENCE UNAVAILABLE</div>';}
   }
   document.getElementById('w-go').addEventListener('click',send);
   document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Ω SYD OMEGA 91717 — SOVEREIGN SERVICE WORKER  (v4)
+   Ω SYD OMEGA 91717 — SOVEREIGN SERVICE WORKER  (v5)
 
    REPLACES the existing sw.js, which was never registered by any page.
    Three defects in v3 are fixed here — register that version and you would
@@ -30,7 +30,7 @@
    Registered by omega-sw-register.js, which bg.js injects.
    ========================================================================== */
 
-var CACHE_VERSION = 'v4';
+var CACHE_VERSION = 'v5';
 var CACHE_NAME    = 'omega-91717-' + CACHE_VERSION;
 
 /* Static shell only. Every entry must exist in the repository — the CI

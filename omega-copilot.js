@@ -105,7 +105,13 @@
     styles.textContent='@keyframes copilot-in{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:none}}'
       +'.cp-msg{padding:10px 14px;border-radius:2px;margin-bottom:8px;font-size:11px;line-height:1.7;max-width:88%}'
       +'.cp-msg-user{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);align-self:flex-end;color:#e9e6dc}'
-      +'.cp-msg-ai{background:rgba(10,10,15,.8);border:1px solid rgba(201,168,76,.08);color:#e9e6dc;align-self:flex-start}';
+      +'.cp-msg-ai{background:rgba(10,10,15,.8);border:1px solid rgba(201,168,76,.08);color:#e9e6dc;align-self:flex-start}'
+      +'.cp-msg-ai p{margin:0 0 6px}.cp-msg-ai p:last-child{margin:0}'
+      +'.cp-msg-ai strong{color:#C9A84C}'
+      +'.cp-msg-ai code{font-family:"Courier Prime",monospace;font-size:10px;background:rgba(201,168,76,.08);padding:1px 5px;border-radius:2px;color:#E2C86D}'
+      +'.cp-msg-ai ul,.cp-msg-ai ol{margin:4px 0 4px 16px;padding:0}'
+      +'.cp-msg-ai li{margin-bottom:2px}'
+      +'.cp-msg-ai h1,.cp-msg-ai h2,.cp-msg-ai h3{font-family:"Cinzel Decorative",serif;color:#C9A84C;font-size:11px;margin:6px 0 4px}';
     document.head.appendChild(styles);
     _el=document.createElement('div');
     _el.id='omega-copilot';
@@ -133,12 +139,33 @@
     addMsg('ai','I am the Sovereign Copilot. Ask me about the Authority Formula, lattice nodes, gates, elements, your progression, or anything on this page.'+(_profile?' You are at AUTH='+window.OmegaCopilot.auth()+'.':''));
   }
 
+  function renderMarkdown(text){
+    /* Render via marked.js if available, else safe plain-text fallback */
+    if(window.marked){
+      try{
+        var html=window.marked.parse(text,{mangle:false,headerIds:false,breaks:true});
+        /* Strip only truly dangerous tags — allow formatting */
+        return html.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/on\w+\s*=/gi,'');
+      }catch(e){}
+    }
+    /* Plain fallback: escape HTML, preserve newlines */
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
   function addMsg(role,text){
     var msgs=document.getElementById('cp-messages');
     if(!msgs) return;
     var d=document.createElement('div');
     d.className='cp-msg cp-msg-'+(role==='user'?'user':'ai');
-    d.textContent=text;
+    if(role==='ai'){
+      /* Load marked.js then render, or render immediately if already loaded */
+      var render=function(){d.innerHTML=renderMarkdown(text);};
+      if(window.marked){render();}
+      else if(window.OmegaOSS){window.OmegaOSS.require('marked',function(){render();});}
+      else{d.textContent=text;}
+    }else{
+      d.textContent=text;
+    }
     msgs.appendChild(d);
     msgs.scrollTop=msgs.scrollHeight;
   }

@@ -154,9 +154,122 @@
         axis:{a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3)},
         element:pr.element,sign:pr.sign,agent:pr.agent_name,
         tier:pr.subscription_tier,
-        formula:'sqrt(A³+B³+C³)×φ/e'
+        formula:'sqrt(A³+B³+C³)×φ/e',
+        tasks_completed:ctx._tasks_count||0,
+        dedications:ctx._dedications||[]
       };
       return {ok:true,report:report};
+    },
+    /* ── gate_unlock workflow ───────────────────────────────────── */
+    record_achievement: async function(ctx){
+      if(!window.__omegaSb||!window.__omegaCurrentProfile) return {ok:true};
+      try{
+        await window.__omegaSb.rpc('record_sovereign_event',{
+          p_event_type:'gate.unlocked',
+          p_event_data:{gate_name:ctx.gate_name,gate_idx:ctx.gate_idx,auth:ctx.auth},
+          p_axis_delta:{a:0,b:0,c:0}
+        });
+      }catch(e){}
+      return {ok:true,recorded:true};
+    },
+    notify_owner: async function(ctx){
+      if(window.OmegaOS){
+        window.OmegaOS.events.emit('gate_unlock:achieved',{gate:ctx.gate_name,auth:ctx.auth,member:(window.__omegaCurrentProfile&&window.__omegaCurrentProfile.display_name)||'Sovereign'});
+      }
+      if(window.OmegaTelemetry){
+        window.OmegaTelemetry.track('gate_unlocked',{gate:ctx.gate_name,auth:ctx.auth});
+      }
+      return {ok:true};
+    },
+    /* ── task_complete gate check ──────────────────────────────── */
+    check_gate: async function(ctx){
+      if(!ctx.auth) return {ok:true,gates_crossed:[]};
+      var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
+      var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
+      var pr=window.__omegaCurrentProfile;
+      var prev_auth=pr?Number(pr.is_owner?27.8367:ctx.auth-(ctx.axis_result&&ctx.axis_result.applied?Number(ctx.weight||0.12):0)):0;
+      var new_auth=ctx.auth;
+      var crossed=[];
+      for(var i=0;i<GATES.length;i++){
+        if(prev_auth<GATES[i]&&new_auth>=GATES[i]) crossed.push({gate:i+1,name:GNAMES[i],threshold:GATES[i]});
+      }
+      if(crossed.length>0){
+        var top=crossed[crossed.length-1];
+        setTimeout(function(){
+          if(window.OmegaWorkflow) window.OmegaWorkflow.run('gate_unlock',{auth:new_auth,gate_name:top.name,gate_idx:top.gate-1});
+        },600);
+      }
+      return {ok:true,gates_crossed:crossed};
+    },
+    /* ── dedication_award workflow ─────────────────────────────── */
+    verify_duration: async function(ctx){
+      var DEDICATION=33437; /* 9h 17m 17s */
+      var dur=Number(ctx.duration||0);
+      if(dur<DEDICATION) return {ok:false,error:'dedication_not_reached',duration:dur,target:DEDICATION};
+      return {ok:true,duration:dur,target:DEDICATION};
+    },
+    award_axis_c: async function(ctx){
+      if(!ctx.ok||!window.__omegaSb) return {ok:true,skipped:'no_client'};
+      var today=new Date().toISOString().slice(0,10);
+      try{
+        var r=await window.__omegaSb.rpc('complete_task',{
+          p_kind:'dedication',
+          p_task:'dedication:daily:'+today,
+          p_axis:'c',
+          p_title:'Daily Dedication Target Reached',
+          p_weight:0.09
+        });
+        if(r.error) throw r.error;
+        return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};
+      }catch(e){
+        return {ok:true,skipped:'rpc_error',error:e.message};
+      }
+    },
+    log_dedication: async function(ctx){
+      if(window.OmegaTelemetry){
+        window.OmegaTelemetry.track('dedication_completed',{duration:ctx.duration,applied:ctx.applied});
+      }
+      if(window.OmegaMemory){
+        window.OmegaMemory.store('last_dedication',new Date().toISOString(),'episodic');
+      }
+      return {ok:true};
+    },
+    /* ── report_generate workflow ──────────────────────────────── */
+    query_profile: async function(ctx){
+      var pr=window.__omegaCurrentProfile;
+      if(pr) return {ok:true,profile:pr};
+      if(!window.__omegaSb) return {ok:false,error:'no_client'};
+      var sess=await window.__omegaSb.auth.getSession();
+      var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
+      if(!uid) return {ok:false,error:'no_session'};
+      var r=await window.__omegaSb.from('profiles').select('*').eq('id',uid).maybeSingle();
+      return {ok:!r.error,profile:r.data||{}};
+    },
+    query_tasks: async function(ctx){
+      if(!window.__omegaSb) return {ok:true,_tasks_count:0};
+      var sess=await window.__omegaSb.auth.getSession();
+      var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
+      if(!uid) return {ok:true,_tasks_count:0};
+      try{
+        var r=await window.__omegaSb.from('task_completions').select('id',{count:'exact',head:true}).eq('user_id',uid);
+        return {ok:true,_tasks_count:r.count||0};
+      }catch(e){return {ok:true,_tasks_count:0};}
+    },
+    query_dedications: async function(ctx){
+      if(!window.__omegaSb) return {ok:true,_dedications:[]};
+      var sess=await window.__omegaSb.auth.getSession();
+      var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
+      if(!uid) return {ok:true,_dedications:[]};
+      try{
+        var r=await window.__omegaSb.from('sovereign_events').select('event_data,created_at').eq('user_id',uid).eq('event_type','dedication.completed').order('created_at',{ascending:false}).limit(30);
+        return {ok:true,_dedications:r.data||[]};
+      }catch(e){return {ok:true,_dedications:[]};}
+    },
+    cache_result: async function(ctx){
+      if(window.OmegaMemory&&ctx.report){
+        window.OmegaMemory.store('last_report',JSON.stringify(ctx.report),'semantic');
+      }
+      return {ok:true,cached:!!(ctx.report)};
     }
   };
 

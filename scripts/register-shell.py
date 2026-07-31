@@ -3,7 +3,7 @@
 Register omega-shell.js in the bg.js loader.
 
 Run from the repository root, AFTER copying omega-shell.js there:
-    python3 scripts/register_shell.py
+    python3 scripts/register-shell.py
 
 Idempotent. Creates bg.js.bak. Verifies with `node --check` if node is present.
 """

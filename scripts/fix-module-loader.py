@@ -2,7 +2,7 @@
 """
 SYD OMEGA 91717 — fix the four broken module injections in bg.js.
 
-Run from the repository root:  python3 scripts/fix_module_loader.py
+Run from the repository root:  python3 scripts/fix-module-loader.py
 Add --dry-run to preview without writing.
 
 BACKGROUND

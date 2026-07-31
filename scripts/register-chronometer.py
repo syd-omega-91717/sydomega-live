@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Register omega-chronometer.js in the bg.js loader.
-Run from the repository root:  python3 scripts/register_chronometer.py
+Run from the repository root:  python3 scripts/register-chronometer.py
 Idempotent. Creates bg.js.bak. Verifies with `node --check`.
 """
 import os, shutil, subprocess, sys

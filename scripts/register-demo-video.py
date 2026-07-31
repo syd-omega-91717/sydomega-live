@@ -2,7 +2,7 @@
 """
 Register omega-demo-video.js in the bg.js loader.
 
-Run from the repository root:  python3 scripts/register_demo_video.py
+Run from the repository root:  python3 scripts/register-demo-video.py
 Idempotent. Creates bg.js.bak. Verifies with `node --check`.
 
 WHY THIS IS NEEDED

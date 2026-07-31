@@ -3,8 +3,8 @@
 # SYD OMEGA 91717 — remove unreachable files from the deploy root.
 # Audit finding F-4. Run from the repository root.
 #
-#   ./scripts/cleanup_dead_files.sh            # dry run, shows what it would do
-#   ./scripts/cleanup_dead_files.sh --apply    # actually removes
+#   ./scripts/cleanup-dead-files.sh            # dry run, shows what it would do
+#   ./scripts/cleanup-dead-files.sh --apply    # actually removes
 #
 # Every file below is either (a) redirected to dashboard.html by vercel.json so
 # it can never be served, or (b) a stale backup. Each is grepped for references

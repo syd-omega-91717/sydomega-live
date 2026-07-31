@@ -2,7 +2,7 @@
 """
 Patch account.html's signup/login flow.
 
-Run from the repository root:  python3 scripts/patch_account_auth.py
+Run from the repository root:  python3 scripts/patch-account-auth.py
 Add --dry-run to preview. Creates account.html.bak.
 
 FIXES FOUR THINGS

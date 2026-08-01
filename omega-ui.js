@@ -90,6 +90,7 @@
     sleep:        {label:'Sleep Engine',    section:'IDENTITY',   prev:'nutrition',      next:'meditate'},
     command:      {label:'Command Brief',   section:'STRATEGY',   prev:'targets',        next:'roadmap'},
     stoic:        {label:'Stoic Protocol',  section:'IDENTITY',   prev:'rituals',        next:'mirror'},
+    body:         {label:'Body Composition',section:'IDENTITY',   prev:'sleep',          next:'nutrition'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

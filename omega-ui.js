@@ -78,6 +78,9 @@
     missions:     {label:'Sovereign Quests',section:'MASTERY',    prev:'achievements',   next:'gaming'},
     mirror:       {label:'Inner Mirror',    section:'IDENTITY',   prev:'profile',        next:'credentials'},
     forge:        {label:'Mind Forge',      section:'MASTERY',    prev:'exam',           next:'achievements'},
+    focus:        {label:'Deep Work',       section:'MASTERY',    prev:'forge',          next:'exam'},
+    rituals:      {label:'Sovereign Rituals',section:'IDENTITY',  prev:'mirror',         next:'profile'},
+    wealth:       {label:'Wealth Engine',   section:'FINANCE',    prev:'wallet',         next:'vault'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

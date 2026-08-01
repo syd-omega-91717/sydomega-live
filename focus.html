@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FOCUS — Deep Work · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="omega.css">
+<style>
+.focus-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center;border-bottom:1px solid rgba(201,168,76,.1)}
+.focus-ring-wrap{position:relative;width:220px;height:220px;margin:0 auto 24px}
+#focus-ring{position:absolute;inset:0}
+.focus-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.focus-time .big{font-family:var(--M,'Courier Prime',monospace);font-size:42px;letter-spacing:4px;color:var(--gold,#C9A84C)}
+.focus-time .lbl{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5)}
+.focus-controls{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+.fc-btn{font-family:var(--M,'Courier Prime',monospace);font-size:9px;letter-spacing:2px;padding:10px 22px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
+.fc-btn:hover,.fc-btn.active{background:rgba(201,168,76,.08);color:var(--gold,#C9A84C);border-color:rgba(201,168,76,.5)}
+.fc-btn.primary{background:rgba(201,168,76,.12);color:var(--gold,#C9A84C);border-color:rgba(201,168,76,.4)}
+.mode-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.mode-chip{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:6px 14px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.mode-chip.sel{border-color:rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:rgba(201,168,76,.07)}
+.task-input-wrap{margin:20px auto;max-width:400px;display:flex;gap:8px}
+.task-input-wrap input{flex:1;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:10px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none}
+.task-input-wrap input:focus{border-color:rgba(201,168,76,.4)}
+.task-input-wrap input::placeholder{color:rgba(138,134,118,.4)}
+.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:20px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.session-card{display:grid;grid-template-columns:1fr 80px 70px 80px;gap:12px;padding:12px 16px;border:1px solid rgba(201,168,76,.08);border-radius:2px;margin-bottom:6px;align-items:center;font-family:var(--M);font-size:9px;letter-spacing:1px}
+.session-card .s-task{color:rgba(201,168,76,.8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.session-card .s-dur{color:rgba(138,134,118,.7);text-align:right}
+.session-card .s-mode{color:rgba(138,134,118,.5);font-size:8px}
+.session-card .s-date{color:rgba(138,134,118,.4);font-size:7.5px;text-align:right}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;text-align:center}
+.stat-box .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.stat-box .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
+.heatmap-wrap{overflow-x:auto;margin-bottom:24px}
+#focus-heatmap{display:block}
+.distraction-log{margin-top:16px}
+.dist-item{display:flex;justify-content:space-between;padding:8px 12px;border:1px solid rgba(201,168,76,.06);border-radius:2px;margin-bottom:4px;font-family:var(--M);font-size:9px}
+.dist-item .dt{color:rgba(201,168,76,.7)}
+.dist-item .dd{color:rgba(138,134,118,.5)}
+.tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
+.tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-panel{display:none}.tab-panel.act{display:block}
+.dist-btn{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 14px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.dist-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.focus-score-ring{position:relative;width:120px;height:120px;display:inline-block}
+.score-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-label .sv{font-family:var(--M);font-size:22px;color:var(--gold,#C9A84C)}
+.score-label .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5)}
+.interrupt-wrap{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="side" id="side"></div>
+<div class="main">
+  <div class="topbar" id="topbar">
+    <div class="tb-left">
+      <span class="tb-title">DEEP WORK</span>
+      <span class="tb-sub">FOCUS ENGINE · SYD OMEGA 91717</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="focus-hero">
+      <div class="mode-row" id="mode-row">
+        <button class="mode-chip sel" data-mins="25" data-name="DEEP WORK">DEEP WORK · 25</button>
+        <button class="mode-chip" data-mins="52" data-name="ULTRADIAN">ULTRADIAN · 52</button>
+        <button class="mode-chip" data-mins="90" data-name="FLOW STATE">FLOW STATE · 90</button>
+        <button class="mode-chip" data-mins="5" data-name="BREAK">BREAK · 5</button>
+        <button class="mode-chip" data-mins="0" data-name="CUSTOM">CUSTOM</button>
+      </div>
+
+      <div class="task-input-wrap">
+        <input type="text" id="task-input" placeholder="WHAT ARE YOU WORKING ON?" maxlength="80">
+        <button class="fc-btn primary" onclick="setTask()">SET</button>
+      </div>
+
+      <div class="focus-ring-wrap">
+        <canvas id="focus-ring" width="220" height="220"></canvas>
+        <div class="focus-time">
+          <div class="big" id="timer-display">25:00</div>
+          <div class="lbl" id="timer-mode">DEEP WORK</div>
+          <div class="lbl" id="current-task" style="margin-top:6px;font-size:7px;color:rgba(201,168,76,.4);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+        </div>
+      </div>
+
+      <div class="focus-controls">
+        <button class="fc-btn primary" id="start-btn" onclick="toggleTimer()">START SESSION</button>
+        <button class="fc-btn" onclick="resetTimer()">RESET</button>
+        <button class="fc-btn" id="dist-btn" onclick="logDistraction()" style="display:none">DISTRACTION</button>
+      </div>
+    </div>
+
+    <div class="content" style="padding-top:8px">
+      <div class="tab-row">
+        <button class="tab-btn act" onclick="switchTab('stats',this)">STATS</button>
+        <button class="tab-btn" onclick="switchTab('sessions',this)">SESSIONS</button>
+        <button class="tab-btn" onclick="switchTab('heatmap',this)">HEATMAP</button>
+        <button class="tab-btn" onclick="switchTab('distractions',this)">DISTRACTIONS</button>
+      </div>
+
+      <!-- STATS -->
+      <div class="tab-panel act" id="tab-stats">
+        <div class="stats-row" id="stats-row">
+          <div class="stat-box"><div class="sv" id="st-today">0</div><div class="sk">TODAY MIN</div></div>
+          <div class="stat-box"><div class="sv" id="st-week">0</div><div class="sk">WEEK HRS</div></div>
+          <div class="stat-box"><div class="sv" id="st-sessions">0</div><div class="sk">SESSIONS</div></div>
+          <div class="stat-box"><div class="sv" id="st-score">0</div><div class="sk">FOCUS SCORE</div></div>
+        </div>
+        <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+          <div>
+            <div class="section-hd">FOCUS SCORE BREAKDOWN</div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap" id="score-breakdown"></div>
+          </div>
+          <div style="text-align:center">
+            <div class="focus-score-ring">
+              <canvas id="score-ring" width="120" height="120"></canvas>
+              <div class="score-label">
+                <div class="sv" id="score-pct">—</div>
+                <div class="sk">SCORE</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section-hd" style="margin-top:24px">TASK BREAKDOWN (TOP 5)</div>
+        <div id="task-breakdown"></div>
+      </div>
+
+      <!-- SESSIONS -->
+      <div class="tab-panel" id="tab-sessions">
+        <div class="section-hd">RECENT SESSIONS</div>
+        <div id="sessions-list"></div>
+      </div>
+
+      <!-- HEATMAP -->
+      <div class="tab-panel" id="tab-heatmap">
+        <div class="section-hd">90-DAY FOCUS HEATMAP</div>
+        <div class="heatmap-wrap"><canvas id="focus-heatmap" width="780" height="120"></canvas></div>
+        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-top:8px">
+          CELL = ONE DAY · COLOR INTENSITY = MINUTES FOCUSED
+        </div>
+      </div>
+
+      <!-- DISTRACTIONS -->
+      <div class="tab-panel" id="tab-distractions">
+        <div class="section-hd">INTERRUPTION LOG</div>
+        <div style="font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:rgba(138,134,118,.6);margin-bottom:12px">
+          Tracking distractions builds awareness. Every interruption logged is a pattern revealed.
+        </div>
+        <div class="interrupt-wrap" id="interrupt-tags">
+          <button class="dist-btn" onclick="addDistraction('SOCIAL MEDIA')">SOCIAL MEDIA</button>
+          <button class="dist-btn" onclick="addDistraction('NOTIFICATION')">NOTIFICATION</button>
+          <button class="dist-btn" onclick="addDistraction('COLLEAGUE')">COLLEAGUE</button>
+          <button class="dist-btn" onclick="addDistraction('PHONE CALL')">PHONE CALL</button>
+          <button class="dist-btn" onclick="addDistraction('EMAIL')">EMAIL</button>
+          <button class="dist-btn" onclick="addDistraction('MIND WANDERING')">MIND WANDERING</button>
+          <button class="dist-btn" onclick="addDistraction('OTHER')">OTHER</button>
+        </div>
+        <div class="distraction-log" id="dist-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lf">
+    <span>&#937; FOCUS ENGINE &middot; SYD OMEGA 91717</span>
+    <span>DEEP WORK IS THE SUPERPOWER OF THE SOVEREIGN</span>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+const STORE_KEY = 'omega_focus_sessions';
+const DIST_KEY  = 'omega_focus_distractions';
+
+/* ── State ─── */
+let timerInterval = null;
+let sessionStart  = null;
+let elapsed       = 0;      // seconds elapsed in current session
+let totalSecs     = 25*60;  // session target seconds
+let running       = false;
+let currentMode   = 'DEEP WORK';
+let currentTask   = '';
+let distractCount = 0;
+let customMins    = 0;
+
+/* ── Mode chips ─── */
+document.getElementById('mode-row').addEventListener('click', e => {
+  const chip = e.target.closest('.mode-chip');
+  if (!chip || running) return;
+  document.querySelectorAll('.mode-chip').forEach(c => c.classList.remove('sel'));
+  chip.classList.add('sel');
+  const mins = parseInt(chip.dataset.mins);
+  currentMode = chip.dataset.name;
+  if (mins === 0) {
+    const m = parseInt(prompt('Custom duration (minutes):', '45') || '45');
+    customMins = Math.max(1, Math.min(480, m||45));
+    totalSecs = customMins * 60;
+    chip.textContent = `CUSTOM · ${customMins}`;
+  } else {
+    totalSecs = mins * 60;
+  }
+  elapsed = 0;
+  updateDisplay();
+});
+
+function setTask(){
+  currentTask = document.getElementById('task-input').value.trim();
+  document.getElementById('current-task').textContent = currentTask || '';
+}
+
+/* ── Timer ─── */
+function toggleTimer(){
+  if (running) { pauseTimer(); }
+  else { startTimer(); }
+}
+
+function startTimer(){
+  running = true;
+  sessionStart = sessionStart || Date.now() - elapsed*1000;
+  document.getElementById('start-btn').textContent = 'PAUSE';
+  document.getElementById('dist-btn').style.display = '';
+  timerInterval = setInterval(tick, 250);
+}
+
+function pauseTimer(){
+  running = false;
+  clearInterval(timerInterval);
+  document.getElementById('start-btn').textContent = 'RESUME';
+}
+
+function resetTimer(){
+  running = false;
+  clearInterval(timerInterval);
+  if (elapsed > 60) saveSession();
+  elapsed = 0;
+  sessionStart = null;
+  distractCount = 0;
+  document.getElementById('start-btn').textContent = 'START SESSION';
+  document.getElementById('dist-btn').style.display = 'none';
+  updateDisplay();
+  renderAll();
+}
+
+function tick(){
+  elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+  if (elapsed >= totalSecs) {
+    elapsed = totalSecs;
+    running = false;
+    clearInterval(timerInterval);
+    saveSession();
+    document.getElementById('start-btn').textContent = 'START SESSION';
+    document.getElementById('dist-btn').style.display = 'none';
+    sessionStart = null;
+    elapsed = 0;
+    distractCount = 0;
+    renderAll();
+    // Completion chime via Audio API
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type='sine'; osc.frequency.value=528;
+      gain.gain.setValueAtTime(0.3,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.5);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime+1.5);
+    } catch(_){}
+  }
+  updateDisplay();
+}
+
+function updateDisplay(){
+  const rem = Math.max(0, totalSecs - elapsed);
+  const m = String(Math.floor(rem/60)).padStart(2,'0');
+  const s = String(rem%60).padStart(2,'0');
+  document.getElementById('timer-display').textContent = m+':'+s;
+  document.getElementById('timer-mode').textContent = currentMode;
+  drawRing(elapsed/totalSecs);
+}
+
+/* ── Ring canvas ─── */
+function drawRing(pct){
+  const c = document.getElementById('focus-ring');
+  const ctx = c.getContext('2d');
+  const cx=110,cy=110,r=95,lw=12;
+  ctx.clearRect(0,0,220,220);
+  // Background arc
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=lw;ctx.stroke();
+  // Progress arc
+  if(pct>0){
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);
+    const grad=ctx.createLinearGradient(cx-r,cy,cx+r,cy);
+    grad.addColorStop(0,'rgba(201,168,76,.4)');
+    grad.addColorStop(1,'rgba(201,168,76,.9)');
+    ctx.strokeStyle=grad;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+  }
+  // Tick marks
+  for(let i=0;i<12;i++){
+    const angle=-Math.PI/2+i*Math.PI/6;
+    const x1=cx+Math.cos(angle)*(r-8);const y1=cy+Math.sin(angle)*(r-8);
+    const x2=cx+Math.cos(angle)*(r+0);const y2=cy+Math.sin(angle)*(r+0);
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;ctx.stroke();
+  }
+}
+drawRing(0);
+
+/* ── Save session ─── */
+function saveSession(){
+  if(elapsed<30) return;
+  const sessions = getSessions();
+  sessions.push({
+    id: Date.now(),
+    task: currentTask||'Untitled',
+    mode: currentMode,
+    duration: elapsed,
+    target: totalSecs,
+    distractions: distractCount,
+    date: new Date().toISOString()
+  });
+  localStorage.setItem(STORE_KEY, JSON.stringify(sessions.slice(-500)));
+}
+
+function getSessions(){ try{return JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch{return[];} }
+function getDistractions(){ try{return JSON.parse(localStorage.getItem(DIST_KEY)||'[]');}catch{return[];} }
+
+/* ── Distraction logging ─── */
+function logDistraction(){
+  // Show the distraction panel quick-add
+  switchTabDirect('distractions');
+}
+function addDistraction(type){
+  const dists = getDistractions();
+  dists.push({type, task:currentTask||'Untitled', ts:new Date().toISOString()});
+  localStorage.setItem(DIST_KEY, JSON.stringify(dists.slice(-500)));
+  distractCount++;
+  renderDistractions();
+}
+window.addDistraction = addDistraction;
+window.logDistraction = logDistraction;
+
+/* ── Render ─── */
+function renderAll(){
+  renderStats();
+  renderSessions();
+  drawHeatmap();
+  renderDistractions();
+}
+
+function renderStats(){
+  const sessions = getSessions();
+  const today = new Date().toDateString();
+  const weekAgo = Date.now()-7*86400000;
+  let todayMin=0, weekMin=0, totalSessions=sessions.length;
+  const taskMap={};
+  sessions.forEach(s=>{
+    const d=Math.floor(s.duration/60);
+    if(new Date(s.date).toDateString()===today) todayMin+=d;
+    if(new Date(s.date).getTime()>weekAgo) weekMin+=d;
+    taskMap[s.task]=(taskMap[s.task]||0)+d;
+  });
+  document.getElementById('st-today').textContent=todayMin;
+  document.getElementById('st-week').textContent=(weekMin/60).toFixed(1);
+  document.getElementById('st-sessions').textContent=totalSessions;
+  // Focus score: sessions × avg completion × (1 - distraction rate)
+  const avgComp=sessions.length?sessions.reduce((a,s)=>a+(s.duration/s.target),0)/sessions.length:0;
+  const totalDist=getDistractions().length;
+  const distRate=sessions.length?Math.min(1,totalDist/(sessions.length*3)):0;
+  const score=Math.round(Math.min(100,totalSessions*2*avgComp*(1-distRate*0.5)));
+  document.getElementById('st-score').textContent=score;
+  drawScoreRing(score);
+  document.getElementById('score-pct').textContent=score;
+  // Breakdown
+  const bd=document.getElementById('score-breakdown');
+  bd.innerHTML=[
+    {k:'COMPLETION RATE',v:Math.round(avgComp*100)+'%'},
+    {k:'DISTRACTION IDX',v:Math.round(distRate*100)+'%'},
+    {k:'CONSISTENCY',v:Math.min(100,Math.round(totalSessions/30*100))+'%'}
+  ].map(x=>`<div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px 16px;text-align:center">
+    <div style="font-family:var(--M);font-size:16px;color:var(--gold)">${x.v}</div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-top:4px">${x.k}</div>
+  </div>`).join('');
+  // Task breakdown
+  const tasks=Object.entries(taskMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxT=tasks[0]?.[1]||1;
+  document.getElementById('task-breakdown').innerHTML=tasks.map(([t,m])=>`
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:3px"><span>${t}</span><span>${m}m</span></div>
+      <div style="height:3px;background:rgba(201,168,76,.08);border-radius:2px"><div style="height:3px;width:${m/maxT*100}%;background:rgba(201,168,76,.5);border-radius:2px"></div></div>
+    </div>`).join('')||'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4)">NO SESSIONS YET</div>';
+}
+
+function drawScoreRing(score){
+  const c=document.getElementById('score-ring');
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,120,120);
+  ctx.beginPath();ctx.arc(60,60,48,0,Math.PI*2);
+  ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=8;ctx.stroke();
+  if(score>0){
+    ctx.beginPath();ctx.arc(60,60,48,-Math.PI/2,-Math.PI/2+Math.PI*2*score/100);
+    ctx.strokeStyle='rgba(201,168,76,.7)';ctx.lineWidth=8;ctx.lineCap='round';ctx.stroke();
+  }
+}
+
+function renderSessions(){
+  const sessions=getSessions().slice().reverse().slice(0,30);
+  document.getElementById('sessions-list').innerHTML=sessions.length?
+    sessions.map(s=>{
+      const dur=`${Math.floor(s.duration/60)}m ${s.duration%60}s`;
+      const comp=Math.round(s.duration/s.target*100);
+      const dt=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      return `<div class="session-card">
+        <div class="s-task">${s.task}</div>
+        <div class="s-dur">${dur} · ${comp}%</div>
+        <div class="s-mode">${s.mode}</div>
+        <div class="s-date">${dt}</div>
+      </div>`;
+    }).join('')
+    :'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);padding:20px 0">NO SESSIONS YET — START YOUR FIRST DEEP WORK SESSION</div>';
+}
+
+function drawHeatmap(){
+  const c=document.getElementById('focus-heatmap');
+  const ctx=c.getContext('2d');
+  const sessions=getSessions();
+  const days=90, cellW=8, cellH=8, gap=2;
+  const cols=Math.ceil(days/7);
+  c.width=(cellW+gap)*cols+60; c.height=(cellH+gap)*7+30;
+  ctx.clearRect(0,0,c.width,c.height);
+  // Build day map
+  const dayMap={};
+  sessions.forEach(s=>{
+    const d=new Date(s.date).toDateString();
+    dayMap[d]=(dayMap[d]||0)+Math.floor(s.duration/60);
+  });
+  const maxMin=Math.max(...Object.values(dayMap),60);
+  const today=new Date(); today.setHours(0,0,0,0);
+  ctx.font='7px Courier Prime,monospace';
+  ctx.fillStyle='rgba(138,134,118,.4)';
+  ['S','M','T','W','T','F','S'].forEach((d,i)=>{
+    ctx.fillText(d,2,i*(cellH+gap)+(cellH+gap)+8);
+  });
+  for(let i=0;i<days;i++){
+    const d=new Date(today);d.setDate(today.getDate()-(days-1-i));
+    const key=d.toDateString();
+    const mins=dayMap[key]||0;
+    const intensity=Math.min(1,mins/maxMin);
+    const col=Math.floor(i/7);
+    const row=d.getDay();
+    const x=col*(cellW+gap)+20;
+    const y=row*(cellH+gap)+10;
+    ctx.fillStyle=intensity>0?`rgba(201,168,76,${0.1+intensity*0.75})`:'rgba(201,168,76,.05)';
+    ctx.fillRect(x,y,cellW,cellH);
+  }
+}
+
+function renderDistractions(){
+  const dists=getDistractions().slice().reverse().slice(0,20);
+  document.getElementById('dist-list').innerHTML=dists.length?
+    dists.map(d=>{
+      const dt=new Date(d.ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="dist-item"><span class="dt">${d.type}</span><span class="dd">DURING: ${d.task} · ${dt}</span></div>`;
+    }).join('')
+    :'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);padding:16px 0">NO DISTRACTIONS LOGGED — STAY IN FLOW</div>';
+}
+
+/* ── Tabs ─── */
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='heatmap') drawHeatmap();
+}
+function switchTabDirect(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    if(b.textContent.trim().toLowerCase().includes(id.toLowerCase())) b.classList.add('act');
+    else b.classList.remove('act');
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  document.getElementById('tab-'+id).classList.add('act');
+}
+window.switchTab=switchTab;
+window.setTask=setTask;
+window.toggleTimer=toggleTimer;
+window.resetTimer=resetTimer;
+renderAll();
+updateDisplay();
+</script>
+</body>
+</html>

@@ -31,6 +31,25 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:0}.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+.tab-panel{display:none}.tab-panel.active{display:block;padding:var(--pad)}
+.bld-tree{display:flex;flex-direction:column;gap:10px}
+.bld-gen{border:1px solid var(--line);background:rgba(10,10,15,.5);border-left:3px solid var(--gold);border-radius:2px;padding:14px}
+.bld-gen-head{font-family:var(--D);font-size:10px;color:var(--gold);margin-bottom:8px;letter-spacing:1px}
+.bld-nodes{display:flex;flex-wrap:wrap;gap:8px}
+.bld-node{border:1px solid var(--line);background:rgba(201,168,76,.05);border-radius:1px;padding:7px 12px;text-align:center}
+.bld-node-name{font-family:var(--D);font-size:9px;color:var(--solar);display:block}
+.bld-node-sign{font-family:var(--M);font-size:7px;color:var(--muted);display:block;margin-top:2px}
+.bld-node-auth{font-family:var(--D);font-size:13px;color:var(--gold);display:block;margin-top:3px}
+.conn-row{display:grid;grid-template-columns:1fr 60px 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.conn-row:last-child{border-bottom:none}
+.conn-name{font-family:var(--R);font-size:11px;color:var(--ink)}
+.conn-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px}
+.conn-bond{font-family:var(--M);font-size:7px;color:var(--cyan);text-align:center}
+.conn-strength{width:100%;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:4px}
+.conn-strength-bar{height:100%;background:var(--gold)}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -51,15 +70,63 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l" data-tooltip="Axis B: Mastery — skill and proficiency earned through challenges">AXIS B MASTERY</div></div>
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
       </div>
-      <div class="sechead" data-reveal="fade-up">BLOODLINE &middot; M5 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">BLOODLINE</div>
-        <div class="hero-sub">M5 &middot; SOVEREIGN LINEAGE</div>
-        <div class="hero-desc">Map your sovereign bloodline. Track genealogy nodes, lineage connections, and heritage depth through generations.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" onclick="bldTab(this,'bld-lineage')">LINEAGE</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="bldTab(this,'bld-nodes')">NODES</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="bldTab(this,'bld-connections')">CONNECTIONS</button>
       </div>
-      
-    </div>
-    <div data-page-emblem="bloodline" style="margin:20px auto 0"></div>
+      <div id="bld-lineage" class="tab-panel active"><div class="sechead">BLOODLINE LINEAGE TREE</div>
+        <div class="bld-tree">
+          <div class="bld-gen"><div class="bld-gen-head">GENERATION I — PRIMORDIAL</div><div class="bld-nodes">
+            <div class="bld-node"><span class="bld-node-name">THE ALL-FATHER</span><span class="bld-node-sign">Ω &middot; Zeus &middot; Gate XII</span><span class="bld-node-auth">27.836</span></div>
+            <div class="bld-node"><span class="bld-node-name">THE VOID MOTHER</span><span class="bld-node-sign">✷ &middot; Hera &middot; Gate XI</span><span class="bld-node-auth">27.100</span></div>
+          </div></div>
+          <div class="bld-gen"><div class="bld-gen-head">GENERATION II — OLYMPIAN SOVEREIGN</div><div class="bld-nodes">
+            <div class="bld-node"><span class="bld-node-name">FIRE SOVEREIGN</span><span class="bld-node-sign">☲ &middot; Ares &middot; Gate X</span><span class="bld-node-auth">25.900</span></div>
+            <div class="bld-node"><span class="bld-node-name">WATER SOVEREIGN</span><span class="bld-node-sign">☰ &middot; Poseidon &middot; Gate X</span><span class="bld-node-auth">25.782</span></div>
+            <div class="bld-node"><span class="bld-node-name">WISDOM SOVEREIGN</span><span class="bld-node-sign">☱ &middot; Athena &middot; Gate X</span><span class="bld-node-auth">25.654</span></div>
+            <div class="bld-node"><span class="bld-node-name">FORGE SOVEREIGN</span><span class="bld-node-sign">☳ &middot; Hephaestus &middot; Gate IX</span><span class="bld-node-auth">24.017</span></div>
+          </div></div>
+          <div class="bld-gen"><div class="bld-gen-head">GENERATION III — KEEPER BLOODLINE</div><div class="bld-nodes">
+            <div class="bld-node"><span class="bld-node-name">HUNT SOVEREIGN</span><span class="bld-node-sign">★ &middot; Artemis &middot; Gate VIII</span><span class="bld-node-auth">20.871</span></div>
+            <div class="bld-node"><span class="bld-node-name">LOVE SOVEREIGN</span><span class="bld-node-sign">✴ &middot; Aphrodite &middot; Gate VIII</span><span class="bld-node-auth">20.450</span></div>
+            <div class="bld-node"><span class="bld-node-name">LIGHT SOVEREIGN</span><span class="bld-node-sign">✶ &middot; Apollo &middot; Gate VIII</span><span class="bld-node-auth">20.234</span></div>
+            <div class="bld-node"><span class="bld-node-name">HARVEST SOVEREIGN</span><span class="bld-node-sign">☰ &middot; Demeter &middot; Gate VII</span><span class="bld-node-auth">17.210</span></div>
+            <div class="bld-node"><span class="bld-node-name">HEARTH SOVEREIGN</span><span class="bld-node-sign">☲ &middot; Hestia &middot; Gate VII</span><span class="bld-node-auth">17.100</span></div>
+            <div class="bld-node"><span class="bld-node-name">HERALD SOVEREIGN</span><span class="bld-node-sign">☱ &middot; Hermes &middot; Gate VI</span><span class="bld-node-auth">13.920</span></div>
+          </div></div>
+          <div class="bld-gen"><div class="bld-gen-head">GENERATION IV — ASCENDING</div><div class="bld-nodes">
+            <div class="bld-node"><span class="bld-node-name">YOUR NODE</span><span class="bld-node-sign" id="bld-my-sign">— &middot; Gate —</span><span class="bld-node-auth" id="bld-my-auth">—</span></div>
+          </div></div>
+        </div>
+      </div>
+      <div id="bld-nodes" class="tab-panel"><div class="sechead">LATTICE NODES</div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px;margin-bottom:14px">
+          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:8px">BASE LATTICE ARCHITECTURE</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+            <div style="text-align:center"><div style="font-family:var(--D);font-size:20px;color:var(--gold)">12</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">SOVEREIGN SIGNS</div></div>
+            <div style="text-align:center"><div style="font-family:var(--D);font-size:20px;color:var(--gold)">12</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">PROGRESSION GATES</div></div>
+            <div style="text-align:center"><div style="font-family:var(--D);font-size:20px;color:var(--gold)">9³</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">AXIS COMBINATIONS</div></div>
+          </div>
+          <div style="text-align:center;font-family:var(--D);font-size:22px;color:var(--solar);margin:12px 0">12 × 12 × 729 = 104,976 NODES</div>
+          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.7">Each node in the sovereign bloodline lattice represents a unique combination of sign, gate, and axis-triad state. Every sovereign occupies exactly one node at any given moment, and progresses through nodes as their AUTH score grows. The total node count defines the scope of all possible sovereign identities in the base lattice.</div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px">
+          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:8px">EXPANDED 28-KINGS LATTICE</div>
+          <div style="text-align:center;font-family:var(--D);font-size:22px;color:var(--solar);margin:12px 0">28 × 28 × 729 = 571,536 NODES</div>
+          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.7">The expanded lattice incorporates all 28 Sovereign Kings, creating a mesh 5.4x larger than the base configuration. This expansion accounts for inter-realm sovereign connections, hereditary lineage bonds, and the complex authority transfers that occur at Gate VII and above.</div>
+        </div>
+      </div>
+      <div id="bld-connections" class="tab-panel"><div class="sechead">BLOODLINE CONNECTIONS</div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px">
+          <div class="conn-row"><div class="conn-name">Fire Sovereign ↔ War Sovereign<small>Primary elemental bond &middot; Aries-Ares axis</small></div><div class="conn-bond">PRIMAL<div class="conn-strength"><div class="conn-strength-bar" style="width:95%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">9.50</div></div>
+          <div class="conn-row"><div class="conn-name">Water Sovereign ↔ Ocean Sovereign<small>Deep element bond &middot; Pisces-Poseidon axis</small></div><div class="conn-bond">PRIMAL<div class="conn-strength"><div class="conn-strength-bar" style="width:88%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">8.80</div></div>
+          <div class="conn-row"><div class="conn-name">Wisdom Sovereign ↔ Wind Sovereign<small>Mind-element resonance &middot; Libra-Athena axis</small></div><div class="conn-bond">MIDDLE<div class="conn-strength"><div class="conn-strength-bar" style="width:82%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">8.20</div></div>
+          <div class="conn-row"><div class="conn-name">Forge Sovereign ↔ Metal Sovereign<small>Craft-metal resonance &middot; Aquarius-Hephaestus axis</small></div><div class="conn-bond">MIDDLE<div class="conn-strength"><div class="conn-strength-bar" style="width:79%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">7.90</div></div>
+          <div class="conn-row"><div class="conn-name">Apex Sovereign ↔ All Sovereign<small>Supreme convergence bond &middot; Capricorn-Zeus axis</small></div><div class="conn-bond">SUPREME<div class="conn-strength"><div class="conn-strength-bar" style="width:100%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">10.00</div></div>
+        </div>
+      </div>
+        <div data-page-emblem="bloodline" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; BLOODLINE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
   </main>
 </div>
@@ -84,6 +151,14 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script><script>
+function bldTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById(id);if(p)p.classList.add('active');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

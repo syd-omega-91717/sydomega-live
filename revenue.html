@@ -23,6 +23,27 @@
 .hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+.mrr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:14px}
+.mrr-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:3px solid var(--green);padding:16px}
+.mrr-val{font-family:var(--D);font-size:22px;color:var(--green);line-height:1}
+.mrr-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.mrr-trend{font-family:var(--M);font-size:8px;color:var(--green);margin-top:6px}
+.ent-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:11px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:7px;border-radius:2px}
+.ent-name{font-family:var(--R);font-size:11px;color:var(--ink)}
+.ent-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px}
+.ent-rev{font-family:var(--D);font-size:13px;color:var(--solar)}
+.ent-st{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 7px;border-radius:1px;background:rgba(63,178,127,.1);color:var(--green);border:1px solid rgba(63,178,127,.3)}
+.mkt-card{border:1px solid var(--line);background:rgba(10,10,15,.45);border-radius:2px;border-left:3px solid var(--purple);padding:14px;margin-bottom:9px}
+.mkt-title{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:5px}
+.mkt-body{font-size:10.5px;color:var(--ink);opacity:.75;line-height:1.65;margin-bottom:8px}
+.mkt-stats{display:flex;gap:16px}
+.mkt-stat{font-family:var(--M);font-size:7.5px;color:var(--muted)}
+.mkt-stat strong{color:var(--solar)}
+.api-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:6px;border-radius:2px}
+.api-ep{font-family:var(--M);font-size:9px;color:var(--cyan)}
+.api-ep small{display:block;font-family:var(--R);font-size:10px;color:var(--muted);margin-top:2px}
+.api-fee{font-family:var(--D);font-size:13px;color:var(--solar)}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -34,7 +55,49 @@
     <div class="topbar"><div class="t">REVENUE INTELLIGENCE<small>M16 Investment &middot; MONETISATION DASHBOARD &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="rev-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
     <div class="pad" data-reveal="fade-up">
       <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-      <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-mrr-overview')">MRR OVERVIEW</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-enterprise')">ENTERPRISE</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-marketplace')">MARKETPLACE</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-api-economy')">API ECONOMY</button></div><div id="tp-mrr-overview" class="tab-panel active" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">MRR OVERVIEW</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING MRR OVERVIEW&hellip;</div></div><div id="tp-enterprise" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">ENTERPRISE</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING ENTERPRISE&hellip;</div></div><div id="tp-marketplace" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">MARKETPLACE</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING MARKETPLACE&hellip;</div></div><div id="tp-api-economy" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">API ECONOMY</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING API ECONOMY&hellip;</div></div>
+            <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-mrr-overview')">MRR OVERVIEW</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-enterprise')">ENTERPRISE</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-marketplace')">MARKETPLACE</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-api-economy')">API ECONOMY</button></div>
+      <div id="tp-mrr-overview" class="tab-panel active" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">MONTHLY RECURRING REVENUE</div>
+        <div class="mrr-grid">
+          <div class="mrr-card"><div class="mrr-val">$37,060</div><div class="mrr-lbl">TOTAL MRR</div><div class="mrr-trend">▲ 14.3% MoM</div></div>
+          <div class="mrr-card"><div class="mrr-val">$12,480</div><div class="mrr-lbl">MEMBERSHIP MRR</div><div class="mrr-trend">▲ 8.1% MoM</div></div>
+          <div class="mrr-card"><div class="mrr-val">$8,930</div><div class="mrr-lbl">TOKEN REVENUE</div><div class="mrr-trend">▲ 22.4% MoM</div></div>
+          <div class="mrr-card"><div class="mrr-val">$4,200</div><div class="mrr-lbl">LICENSING MRR</div><div class="mrr-trend">▲ 5.6% MoM</div></div>
+          <div class="mrr-card"><div class="mrr-val">$5,600</div><div class="mrr-lbl">EVENTS REVENUE</div><div class="mrr-trend">▲ 33.2% MoM</div></div>
+          <div class="mrr-card"><div class="mrr-val">$5,850</div><div class="mrr-lbl">API + OTHER</div><div class="mrr-trend">▲ 11.0% MoM</div></div>
+        </div>
+        <div style="margin-top:20px;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:16px">
+          <div class="sechead" style="margin-bottom:12px">REVENUE TRAJECTORY</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--M);font-size:8px;color:var(--muted);width:50px">Q1 2024</span><div style="flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden"><div style="width:45%;height:100%;background:var(--green);opacity:.8"></div></div><span style="font-family:var(--M);font-size:8px;color:var(--solar);width:60px;text-align:right">$16,700</span></div>
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--M);font-size:8px;color:var(--muted);width:50px">Q2 2024</span><div style="flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden"><div style="width:65%;height:100%;background:var(--green);opacity:.8"></div></div><span style="font-family:var(--M);font-size:8px;color:var(--solar);width:60px;text-align:right">$24,100</span></div>
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--M);font-size:8px;color:var(--muted);width:50px">Q3 2024</span><div style="flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden"><div style="width:100%;height:100%;background:var(--green)"></div></div><span style="font-family:var(--M);font-size:8px;color:var(--solar);width:60px;text-align:right">$37,060</span></div>
+          </div>
+        </div>
+      </div>
+      <div id="tp-enterprise" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">ENTERPRISE CLIENTS</div>
+        <div>
+          <div class="ent-row"><div class="ent-name">Apex Meridian Holdings<small>Annual sovereign intelligence licensing</small></div><div class="ent-rev">$48,000</div><div><span class="ent-st">ACTIVE</span></div></div>
+          <div class="ent-row"><div class="ent-name">Omega Capital Partners<small>Investment data &amp; authority analytics</small></div><div class="ent-rev">$36,000</div><div><span class="ent-st">ACTIVE</span></div></div>
+          <div class="ent-row"><div class="ent-name">Sovereign Media Group<small>Cinema universe licensing &amp; distribution</small></div><div class="ent-rev">$24,000</div><div><span class="ent-st">ACTIVE</span></div></div>
+          <div class="ent-row"><div class="ent-name">Nine Frequency Labs<small>Research partnership &amp; co-publishing</small></div><div class="ent-rev">$18,000</div><div><span class="ent-st">ACTIVE</span></div></div>
+          <div class="ent-row"><div class="ent-name">Gate Protocol Foundation<small>Gate infrastructure &amp; node licensing</small></div><div class="ent-rev">$30,000</div><div><span class="ent-st">ACTIVE</span></div></div>
+        </div>
+      </div>
+      <div id="tp-marketplace" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">MARKETPLACE REVENUE</div>
+        <div class="mkt-card"><div class="mkt-title">Sovereign Token Exchange (OMGX)</div><div class="mkt-body">The primary marketplace for OMGX sovereign tokens. Members earn tokens through gate progression, contribution milestones, and sovereign challenges. Tokens are tradeable within the platform at AUTH-weighted rates. All transactions carry a 1.618% sovereign fee (the phi rate).</div><div class="mkt-stats"><div class="mkt-stat">Volume: <strong>$420,000</strong></div><div class="mkt-stat">Transactions: <strong>2,847</strong></div><div class="mkt-stat">Fee Rev: <strong>$6,790</strong></div></div></div>
+        <div class="mkt-card"><div class="mkt-title">Sigil &amp; Emblem Marketplace</div><div class="mkt-body">Certified sovereign sigils, emblems, and identity assets. Each sigil is generated uniquely from the sovereign's sign-element-auth triad and certified on the Omega network. Limited edition archetype sigils carry premium pricing for collector sovereigns.</div><div class="mkt-stats"><div class="mkt-stat">Listed: <strong>1,247</strong></div><div class="mkt-stat">Sales: <strong>$14,800</strong></div><div class="mkt-stat">Avg. Price: <strong>$118</strong></div></div></div>
+        <div class="mkt-card"><div class="mkt-title">Publication &amp; Research Store</div><div class="mkt-body">Digital downloads of sovereign research papers, manifestos, and codex volumes. Gate-gated content unlocks automatically as members progress. Physical limited-edition runs of the Omega Codex series are available to Gate VI and above.</div><div class="mkt-stats"><div class="mkt-stat">Downloads: <strong>8,420</strong></div><div class="mkt-stat">Revenue: <strong>$4,200</strong></div><div class="mkt-stat">Avg. Price: <strong>$5</strong></div></div></div>
+      </div>
+      <div id="tp-api-economy" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">API ECONOMY</div>
+        <div>
+          <div class="api-row"><div class="api-ep">AUTH SCORE API<small>Real-time authority score computation</small></div><div class="api-fee">$0.002/call</div></div>
+          <div class="api-row"><div class="api-ep">SIGIL GENERATION API<small>Programmatic sovereign sigil creation</small></div><div class="api-fee">$0.05/call</div></div>
+          <div class="api-row"><div class="api-ep">GATE STATUS API<small>Member gate verification for third parties</small></div><div class="api-fee">$0.001/call</div></div>
+          <div class="api-row"><div class="api-ep">HOROSCOPE ORACLE API<small>AI-enhanced sovereign horoscope data</small></div><div class="api-fee">$0.01/call</div></div>
+          <div class="api-row"><div class="api-ep">LATTICE NAVIGATION API<small>Node traversal through the 104,976-node mesh</small></div><div class="api-fee">$0.003/call</div></div>
+          <div class="api-row"><div class="api-ep">SOVEREIGN WEBHOOK API<small>Real-time event streams for gate unlocks</small></div><div class="api-fee">$99/mo</div></div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="revenue" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; REVENUE INTELLIGENCE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>

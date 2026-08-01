@@ -1460,7 +1460,9 @@ setTimeout(function(){
   /* WCAG 2.1 AA — skip links, focus trap, live region, landmark ARIA */
   if(!document.querySelector('script[data-omega-a11y]')){var _oa11y=document.createElement('script');_oa11y.src='/omega-a11y.js';_oa11y.setAttribute('data-omega-a11y','1');_oa11y.defer=true;if(document.body)document.body.appendChild(_oa11y);}
   /* Sovereign chart system — Chart.js auto-mount via [data-omega-chart] */
-  if(!document.querySelector('script[data-omega-chart]')){var _ochrt=document.createElement('script');_ochrt.src='/omega-chart.js';_ochrt.setAttribute('data-omega-chart-mod','1');_ochrt.defer=true;if(document.body)document.body.appendChild(_ochrt);}
+  if(!document.querySelector('script[data-omega-chart-mod]')){var _ochrt=document.createElement('script');_ochrt.src='/omega-chart.js';_ochrt.setAttribute('data-omega-chart-mod','1');_ochrt.defer=true;if(document.body)document.body.appendChild(_ochrt);}
+  /* Sovereign progress ring — Canvas SVG circular authority ring */
+  if(!document.querySelector('script[data-omega-ring]')){var _oring=document.createElement('script');_oring.src='/omega-ring.js';_oring.setAttribute('data-omega-ring','1');_oring.defer=true;if(document.body)document.body.appendChild(_oring);}
 
   /* Welcome demo video — must load on dashboard.html, the login landing page */
   if(!document.querySelector('script[data-omega-demo]')){var _odv=document.createElement('script');_odv.src='/omega-demo-video.js';_odv.setAttribute('data-omega-demo','1');_odv.defer=true;if(document.body)document.body.appendChild(_odv);}

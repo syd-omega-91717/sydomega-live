@@ -31,7 +31,25 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+/* ── UNIVERSE CONTENT ── */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.media-card{border:1px solid var(--line);background:rgba(10,10,15,.6);border-radius:2px;padding:16px 14px;transition:.18s;position:relative;overflow:hidden;cursor:default}
+.media-card:hover{border-color:rgba(0,229,255,.25);transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.5)}
+.media-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--mc,var(--cyan))}
+.media-tag{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--mc,var(--cyan));margin-bottom:6px;border:1px solid;border-color:rgba(0,229,255,.2);display:inline-block;padding:2px 7px;border-radius:1px}
+.media-title{font-family:var(--D);font-size:clamp(9px,1.3vw,11px);color:var(--ink);margin-bottom:5px;line-height:1.3}
+.media-meta{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);line-height:1.6}
+.media-glyph{float:right;font-size:22px;opacity:.5;margin-left:6px;margin-top:-2px}
+.domain-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.domain-tile{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:14px 12px;text-align:center;transition:.18s;cursor:default;border-top:2px solid var(--dt,var(--cyan))}
+.domain-tile:hover{background:rgba(0,229,255,.03)}
+.domain-icon{font-size:20px;margin-bottom:6px}
+.domain-label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted)}
+@media(max-width:700px){
+  .shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}
+  .media-grid{grid-template-columns:1fr 1fr}
+  .domain-band{grid-template-columns:1fr 1fr 1fr}
+}
 </style>
 </head>
 <body>
@@ -52,12 +70,131 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">UNIVERSE &middot; M6 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
+      <div class="hero" data-reveal="fade-up">
         <div class="hero-title">UNIVERSE</div>
         <div class="hero-sub">M6 &middot; SOVEREIGN UNIVERSE</div>
-        <div class="hero-desc">The full SYD OMEGA 91717 content universe — movies, series, games, sub-games, characters, and world-building.</div>
+        <div class="hero-desc">The full SYD OMEGA 91717 content universe — movies, series, games, sub-games, characters, and world-building across the 12-fold lattice.</div>
       </div>
-      
+
+      <!-- CONTENT DOMAINS -->
+      <div class="sechead" data-reveal="fade-up">CONTENT DOMAINS &middot; SIX SOVEREIGN PILLARS</div>
+      <div class="domain-band" data-reveal="fade-up" data-stagger="80">
+        <div class="domain-tile" style="--dt:var(--crim)" data-tooltip="CINEMA — sovereign films, trailers, and cinematic lore encoded into the lattice.">
+          <div class="domain-icon">&#127909;</div><div class="domain-label">CINEMA</div>
+        </div>
+        <div class="domain-tile" style="--dt:var(--cyan)" data-tooltip="SERIES — episodic sovereign storytelling across all 12 signs and 9 elements.">
+          <div class="domain-icon">&#127916;</div><div class="domain-label">SERIES</div>
+        </div>
+        <div class="domain-tile" style="--dt:var(--gold)" data-tooltip="GAMING — sovereign games, sub-games, and competitive trials mapped to the matrix.">
+          <div class="domain-icon">&#127918;</div><div class="domain-label">GAMING</div>
+        </div>
+        <div class="domain-tile" style="--dt:var(--green)" data-tooltip="CHARACTERS — the 12×12 character codex. Every sign × every god × every element.">
+          <div class="domain-icon">&#9965;</div><div class="domain-label">CHARACTERS</div>
+        </div>
+        <div class="domain-tile" style="--dt:var(--purple)" data-tooltip="COSMOS — the world-building layer: 12 cities, 12 factions, 12 kingdoms.">
+          <div class="domain-icon">&#127775;</div><div class="domain-label">COSMOS</div>
+        </div>
+        <div class="domain-tile" style="--dt:var(--solar)" data-tooltip="LORE — the written canon: sovereign chronicles, element mythology, gate histories.">
+          <div class="domain-icon">&#128218;</div><div class="domain-label">LORE</div>
+        </div>
+      </div>
+
+      <!-- CINEMATIC UNIVERSE -->
+      <div class="sechead" data-reveal="fade-up">CINEMATIC UNIVERSE &middot; SOVEREIGN FILMS &amp; SERIES</div>
+      <div class="media-grid" data-reveal="fade-up" data-stagger="70">
+
+        <div class="media-card" style="--mc:var(--crim)" data-tooltip="The origin film — how the Sovereign Order was founded across the 12 signs." data-tooltip-placement="top">
+          <span class="media-glyph">&#127909;</span>
+          <div class="media-tag">FILM &middot; ORIGIN</div>
+          <div class="media-title">THE SOVEREIGN GENESIS</div>
+          <div class="media-meta">SIGN: ALL 12 &middot; ELEMENT: THE ALL<br>GATE UNLOCK: VIII &middot; STATUS: IN DEVELOPMENT</div>
+        </div>
+
+        <div class="media-card" style="--mc:var(--gold)" data-tooltip="The Twelve Houses — a 12-part series, one episode per sovereign sign." data-tooltip-placement="top">
+          <span class="media-glyph">&#127916;</span>
+          <div class="media-tag">SERIES &middot; 12 EPISODES</div>
+          <div class="media-title">THE TWELVE HOUSES</div>
+          <div class="media-meta">SIGN: ARIES → PISCES<br>GATE UNLOCK: IV &middot; STATUS: IN DEVELOPMENT</div>
+        </div>
+
+        <div class="media-card" style="--mc:var(--cyan)" data-tooltip="The Element Wars — a feature tracing the conflict between Primal and Supreme triads." data-tooltip-placement="top">
+          <span class="media-glyph">&#9776;</span>
+          <div class="media-tag">FILM &middot; CONFLICT</div>
+          <div class="media-title">THE ELEMENT WARS</div>
+          <div class="media-meta">ELEMENT: FIRE vs VOID<br>GATE UNLOCK: VI &middot; STATUS: IN DEVELOPMENT</div>
+        </div>
+
+        <div class="media-card" style="--mc:var(--purple)" data-tooltip="Omega Rising — a space-opera set after Gate XII is first achieved by a sovereign member." data-tooltip-placement="top">
+          <span class="media-glyph">&#937;</span>
+          <div class="media-tag">FILM &middot; APEX</div>
+          <div class="media-title">OMEGA RISING</div>
+          <div class="media-meta">GATE UNLOCK: XII &middot; ELEMENT: THE ALL<br>STATUS: CONCEPT</div>
+        </div>
+
+        <div class="media-card" style="--mc:var(--green)" data-tooltip="Chronicles of the Nine — animated lore series mapping each of the 9 elements." data-tooltip-placement="top">
+          <span class="media-glyph">&#10038;</span>
+          <div class="media-tag">ANIMATED &middot; 9 EPISODES</div>
+          <div class="media-title">CHRONICLES OF THE NINE</div>
+          <div class="media-meta">ELEMENTS: ALL 9<br>GATE UNLOCK: II &middot; STATUS: IN DEVELOPMENT</div>
+        </div>
+
+        <div class="media-card" style="--mc:var(--solar)" data-tooltip="The Sand Amplifier — a documentary on Sand as the sovereign accelerant element." data-tooltip-placement="top">
+          <span class="media-glyph">&#9733;</span>
+          <div class="media-tag">DOCUMENTARY &middot; LORE</div>
+          <div class="media-title">THE SAND AMPLIFIER</div>
+          <div class="media-meta">ELEMENT: SAND<br>GATE UNLOCK: I &middot; STATUS: CONCEPT</div>
+        </div>
+
+      </div>
+
+      <!-- GAMING UNIVERSE -->
+      <div class="sechead" data-reveal="fade-up">GAMING UNIVERSE &middot; SOVEREIGN TITLES &amp; ARENAS</div>
+      <div class="media-grid" data-reveal="fade-up" data-stagger="70">
+
+        <div class="media-card" style="--mc:var(--gold)" data-tooltip="Sovereign Arena — competitive real-time battles mapped to the matrix gate system." data-tooltip-placement="top">
+          <span class="media-glyph">&#9876;</span>
+          <div class="media-tag">GAME &middot; COMPETITIVE</div>
+          <div class="media-title">SOVEREIGN ARENA</div>
+          <div class="media-meta">AXIS: B MASTERY &middot; 12 ARENAS<br>GATE UNLOCK: III &middot; STATUS: IN DEVELOPMENT</div>
+        </div>
+
+        <div class="media-card" style="--mc:var(--cyan)" data-tooltip="Lattice Explorer — a puzzle game that maps the 104,976-node lattice." data-tooltip-placement="top">
+          <span class="media-glyph">&#9974;</span>
+          <div class="media-tag">GAME &middot; PUZZLE</div>
+          <div class="media-title">LATTICE EXPLORER</div>
+          <div class="media-meta">AXIS: A KNOWLEDGE &middot; 104,976 NODES<br>GATE UNLOCK: I &middot; STATUS: IN DEVELOPMENT</div>
+        </div>
+
+        <div class="media-card" style="--mc:var(--crim)" data-tooltip="Element Duel — a card battle game using the 9 elements as deck types." data-tooltip-placement="top">
+          <span class="media-glyph">&#9830;</span>
+          <div class="media-tag">GAME &middot; CARD BATTLE</div>
+          <div class="media-title">ELEMENT DUEL</div>
+          <div class="media-meta">ELEMENT: ALL 9 &middot; 9 DECKS<br>GATE UNLOCK: II &middot; STATUS: CONCEPT</div>
+        </div>
+
+      </div>
+
+      <!-- WORLD-BUILDING -->
+      <div class="sechead" data-reveal="fade-up">WORLD-BUILDING &middot; THE SOVEREIGN COSMOS</div>
+      <div class="card" data-reveal="fade-up" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+        <div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">12 SOVEREIGN CITIES</div>
+          <div style="font-size:11.5px;line-height:1.7;color:var(--ink);opacity:.7">One city per sign. Each built on the element and mythology of its patron sign, from Ares-City (Aries/Fire) to Poseidon-Port (Pisces/Water).</div>
+        </div>
+        <div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">12 FACTIONS</div>
+          <div style="font-size:11.5px;line-height:1.7;color:var(--ink);opacity:.7">Each faction controls a sovereign city and operates under its sign's god. Factions compete for lattice dominance through Authority rankings.</div>
+        </div>
+        <div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--purple);margin-bottom:8px">12×12 CHARACTER CODEX</div>
+          <div style="font-size:11.5px;line-height:1.7;color:var(--ink);opacity:.7">144 canonical characters: every sovereign sign × every god pairing. Each character has a unique element, gate threshold, and lattice role.</div>
+        </div>
+        <div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--green);margin-bottom:8px">104,976 NODES</div>
+          <div style="font-size:11.5px;line-height:1.7;color:var(--ink);opacity:.7">The full lattice: 12 tracks × 12 phases × 9×9×9. Every node is a coordinate in the sovereign universe, potentially reachable by any member.</div>
+        </div>
+      </div>
+
     </div>
     <div data-page-emblem="universe" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; UNIVERSE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>

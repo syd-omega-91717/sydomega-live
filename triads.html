@@ -31,7 +31,36 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+/* ── TRIAD GRID ── */
+.triad-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.triad-card{border:1px solid var(--line);background:rgba(10,10,15,.6);border-radius:2px;padding:20px 16px;text-align:center;transition:.18s;position:relative;overflow:hidden;cursor:default}
+.triad-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.triad-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--tc,var(--purple))}
+.triad-card::after{content:attr(data-num);position:absolute;bottom:6px;right:10px;font-family:var(--D);font-size:36px;color:rgba(255,255,255,.04);line-height:1}
+.tc-glyph{font-size:28px;line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 8px var(--tc,var(--purple)))}
+.tc-name{font-family:var(--D);font-size:clamp(9px,1.4vw,12px);color:var(--tc,var(--purple));margin-bottom:6px;letter-spacing:1px}
+.tc-element{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.tc-desc{font-size:11px;line-height:1.6;color:var(--ink);opacity:.65}
+/* ── AXIS TRINITY ── */
+.axis-trinity{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.axis-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:18px 14px;border-top:3px solid var(--ac,var(--purple));text-align:center}
+.axis-card-n{font-family:var(--D);font-size:clamp(22px,3.5vw,30px);color:var(--ac);line-height:1;margin-bottom:6px}
+.axis-card-l{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-bottom:8px}
+.axis-card-d{font-size:11.5px;line-height:1.65;color:var(--ink);opacity:.7}
+/* ── PHASE BAND ── */
+.phase-band{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:14px}
+.phase-cell{background:rgba(10,10,15,.6);padding:16px 12px;text-align:center}
+.phase-cell+.phase-cell{border-left:1px solid var(--line)}
+.phase-glyph{font-family:var(--D);font-size:18px;color:var(--purple);margin-bottom:5px}
+.phase-name{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--muted);margin-bottom:5px}
+.phase-desc{font-size:10.5px;line-height:1.5;color:var(--ink);opacity:.6}
+/* ── CANVAS TRIAD DIAGRAM ── */
+.triad-diagram{display:flex;justify-content:center;padding:8px 0 4px;margin-bottom:14px}
+@media(max-width:700px){
+  .shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}
+  .triad-row,.axis-trinity,.phase-band{grid-template-columns:1fr}
+  .phase-cell+.phase-cell{border-left:none;border-top:1px solid var(--line)}
+}
 </style>
 </head>
 <body>
@@ -52,17 +81,159 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">TRIADS &middot; M12 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
+      <div class="hero" data-reveal="fade-up">
         <div class="hero-title">TRIADS</div>
         <div class="hero-sub">M12 &middot; SOVEREIGN TRIADS</div>
-        <div class="hero-desc">The triadic structure of the sovereign system. Three axes, three phases, three elements per group — the trinity at the heart of the lattice.</div>
+        <div class="hero-desc">The triadic structure of the sovereign system — three axes, three phases, three elements per group. The trinity is the irreducible heart of every lattice node.</div>
+        <div class="triad-diagram"><canvas id="triad-cv" width="200" height="180" style="width:100px;height:90px;opacity:.7"></canvas></div>
       </div>
-      
+
+      <!-- ELEMENT TRIADS -->
+      <div class="sechead" data-reveal="fade-up">THE THREE ELEMENT TRIADS &middot; NINE ELEMENTS IN THREE SOVEREIGN GROUPS</div>
+      <div class="triad-row" data-reveal="fade-up" data-stagger="100">
+
+        <div class="triad-card" style="--tc:#E86A3A" data-num="I" data-tooltip="Triad I — the Primal forces: raw creation, flow, and breath. These elements drive kinetic action." data-tooltip-placement="top">
+          <div class="tc-glyph">&#9778;&thinsp;&#9776;&thinsp;&#9777;</div>
+          <div class="tc-name">TRIAD I &middot; PRIMAL</div>
+          <div class="tc-element">FIRE &middot; WATER &middot; WIND</div>
+          <div class="tc-desc">The elemental forces of creation — heat, flow, and breath. These three drive the kinetic pulse of the sovereign system. Fire ignites, Water channels, Wind disperses.</div>
+        </div>
+
+        <div class="triad-card" style="--tc:#C9A84C" data-num="II" data-tooltip="Triad II — the Middle forces: structure, amplification, and spirit. These elements shape and sustain." data-tooltip-placement="top">
+          <div class="tc-glyph">&#9779;&thinsp;&#9733;&thinsp;&#10036;</div>
+          <div class="tc-name">TRIAD II &middot; MIDDLE</div>
+          <div class="tc-element">METAL &middot; SAND &middot; SOUL</div>
+          <div class="tc-desc">The forces of form and resonance — structure, amplification, and inner spirit. Metal endures, Sand amplifies (the sovereign accelerant), Soul animates with meaning.</div>
+        </div>
+
+        <div class="triad-card" style="--tc:#9B6BF0" data-num="III" data-tooltip="Triad III — the Supreme forces: expanse, dissolution, and totality. These elements transcend the lattice." data-tooltip-placement="top">
+          <div class="tc-glyph">&#10038;&thinsp;&#10039;&thinsp;&#937;</div>
+          <div class="tc-name">TRIAD III &middot; SUPREME</div>
+          <div class="tc-element">SPACE &middot; VOID &middot; THE ALL</div>
+          <div class="tc-desc">The transcendent forces — expanse, dissolution, totality. Space opens the field, Void clears all resistance, The All (Ω) integrates every element into sovereign unity.</div>
+        </div>
+
+      </div>
+
+      <!-- AXIS TRINITY -->
+      <div class="sechead" data-reveal="fade-up">THE AXIS TRINITY &middot; THREE PILLARS OF SOVEREIGN AUTHORITY</div>
+      <div class="axis-trinity" data-reveal="fade-up" data-stagger="120">
+
+        <div class="axis-card" style="--ac:var(--cyan)" data-tooltip="Axis A — Knowledge. Earned through study, research, lore exploration, and exam completion." data-tooltip-placement="top">
+          <div class="axis-card-n">A</div>
+          <div class="axis-card-l">KNOWLEDGE</div>
+          <div class="axis-card-d">The depth of your sovereign lore — earned through the academy, exams, and research. Knowledge is the foundation; without it, mastery has no ground.</div>
+        </div>
+
+        <div class="axis-card" style="--ac:var(--gold)" data-tooltip="Axis B — Mastery. Earned through gaming, challenges, certifications, and demonstrated skill." data-tooltip-placement="top">
+          <div class="axis-card-n">B</div>
+          <div class="axis-card-l">MASTERY</div>
+          <div class="axis-card-d">The sharpness of your sovereign craft — earned through gaming, competitive challenges, and certifications. Mastery transforms knowledge into sovereign power.</div>
+        </div>
+
+        <div class="axis-card" style="--ac:var(--green)" data-tooltip="Axis C — Contribution. Earned through publishing, collaboration, and serving the sovereign network." data-tooltip-placement="top">
+          <div class="axis-card-n">C</div>
+          <div class="axis-card-l">CONTRIBUTION</div>
+          <div class="axis-card-d">The reach of your sovereign impact — earned through publishing, events, and service to the network. Contribution is what makes authority visible to the lattice.</div>
+        </div>
+
+      </div>
+
+      <!-- THREE PHASES -->
+      <div class="sechead" data-reveal="fade-up">THE THREE PHASES &middot; CYCLES OF SOVEREIGN ACTIVATION</div>
+      <div class="phase-band" data-reveal="fade-up">
+        <div class="phase-cell">
+          <div class="phase-glyph" data-tooltip="Morning Phase — the Initiation cycle. New members begin here." data-tooltip-placement="top">&#9675;</div>
+          <div class="phase-name">PHASE I &middot; INITIATION</div>
+          <div class="phase-desc">The circle opens. A member enters the lattice, receives their element, and begins the ascent from Gate I (INITIATE, AUTH 2.32).</div>
+        </div>
+        <div class="phase-cell">
+          <div class="phase-glyph" data-tooltip="Middle Phase — the Activation cycle. The three axes compound and gate thresholds are crossed." data-tooltip-placement="top">&#9651;</div>
+          <div class="phase-name">PHASE II &middot; ACTIVATION</div>
+          <div class="phase-desc">The triangle forms. Axes A, B, and C compound through tasks, study, and contribution. Each gate crossed reveals a new layer of the lattice.</div>
+        </div>
+        <div class="phase-cell">
+          <div class="phase-glyph" data-tooltip="Supreme Phase — the Apex cycle. Gate XII (APEX, AUTH 27.8367) is the sovereign crown." data-tooltip-placement="top">&#9670;</div>
+          <div class="phase-name">PHASE III &middot; APEX</div>
+          <div class="phase-desc">The diamond achieves closure. A member reaches Gate XII (APEX), AUTH = 27.8367. The lattice is complete; sovereignty is proven at all three axes.</div>
+        </div>
+      </div>
+
+      <!-- AUTHORITY FORMULA -->
+      <div class="sechead" data-reveal="fade-up">THE SOVEREIGN FORMULA &middot; TRIADIC AUTHORITY CALCULATION</div>
+      <div class="card" data-reveal="fade-up" style="text-align:center;padding:24px 20px">
+        <div style="font-family:var(--D);font-size:clamp(13px,2.5vw,18px);color:var(--purple);margin-bottom:10px" data-tooltip="Authority is the cube-root-weighted sum of all three axes, scaled by φ/e. This gives contribution at higher values a multiplicative boost." data-tooltip-placement="top">AUTH = sqrt( A³ + B³ + C³ ) × φ / e</div>
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:14px">φ = 1.6180339887 &middot; e = 2.7182818285 &middot; APEX = 27.8367 at (9,9,9)</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;text-align:left">
+          <div style="border:1px solid var(--line);padding:10px 12px;border-radius:2px;border-top:2px solid var(--cyan)">
+            <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">A=1 B=1 C=1</div>
+            <div style="font-family:var(--D);font-size:14px;color:var(--cyan)">1.0954</div>
+            <div style="font-family:var(--M);font-size:7px;color:var(--muted)">Gate I · INITIATE</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:10px 12px;border-radius:2px;border-top:2px solid var(--gold)">
+            <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">A=3 B=3 C=3</div>
+            <div style="font-family:var(--D);font-size:14px;color:var(--gold)">9.2831</div>
+            <div style="font-family:var(--M);font-size:7px;color:var(--muted)">Gate VI · ARCHITECT</div>
+          </div>
+          <div style="border:1px solid var(--line);padding:10px 12px;border-radius:2px;border-top:2px solid var(--purple)">
+            <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">A=9 B=9 C=9</div>
+            <div style="font-family:var(--D);font-size:14px;color:var(--purple)">27.8367</div>
+            <div style="font-family:var(--M);font-size:7px;color:var(--muted)">Gate XII · APEX</div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <div data-page-emblem="triads" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; TRIADS &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
   </main>
 </div>
+<script>
+(function(){
+  var cv=document.getElementById('triad-cv');if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d'),t=0;
+  var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  (function draw(){
+    ctx.clearRect(0,0,200,180);
+    var cx=100,cy=95,R=60;
+    /* Outer spinning triangle */
+    var ang=REDUCE?-Math.PI/2:t*0.008-Math.PI/2;
+    ctx.beginPath();
+    for(var i=0;i<3;i++){
+      var a=ang+i*Math.PI*2/3;
+      i===0?ctx.moveTo(cx+R*Math.cos(a),cy+R*Math.sin(a)):ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
+    }
+    ctx.closePath();
+    ctx.strokeStyle='rgba(155,107,240,'+(0.4+0.15*Math.sin(t*0.04))+')';
+    ctx.lineWidth=1.2;ctx.stroke();
+    /* Inner inverted triangle */
+    var ang2=REDUCE?Math.PI/6:t*-0.006+Math.PI/6;
+    var r2=34;
+    ctx.beginPath();
+    for(var j=0;j<3;j++){
+      var a2=ang2+j*Math.PI*2/3;
+      j===0?ctx.moveTo(cx+r2*Math.cos(a2),cy+r2*Math.sin(a2)):ctx.lineTo(cx+r2*Math.cos(a2),cy+r2*Math.sin(a2));
+    }
+    ctx.closePath();
+    ctx.strokeStyle='rgba(201,168,76,'+(0.35+0.12*Math.sin(t*0.03))+')';
+    ctx.lineWidth=0.8;ctx.stroke();
+    /* Omega centre */
+    ctx.font='bold 18px "Cinzel Decorative",serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(155,107,240,'+(0.7+0.3*Math.sin(t*0.05))+')';
+    ctx.shadowColor='#9B6BF0';ctx.shadowBlur=8;
+    ctx.fillText('Ω',cx,cy);ctx.shadowBlur=0;
+    /* Vertex dots */
+    for(var k=0;k<3;k++){
+      var av=ang+k*Math.PI*2/3;
+      ctx.beginPath();ctx.arc(cx+R*Math.cos(av),cy+R*Math.sin(av),3,0,Math.PI*2);
+      ctx.fillStyle='rgba(155,107,240,.8)';ctx.fill();
+    }
+    t++;
+    if(!REDUCE)requestAnimationFrame(draw);
+  })();
+})();
+</script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));

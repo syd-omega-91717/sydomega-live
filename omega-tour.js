@@ -195,6 +195,14 @@
 
   window.OmegaTour = API;
 
+  /* Auto-start dashboard tour for first-time session members */
+  document.addEventListener('omega:populated', function(e){
+    var slug = (location.pathname||'/').replace(/^\/|\.html$/g,'') || 'dashboard';
+    if(slug === 'dashboard' && _tours[slug]){
+      API.autoStart('dashboard', 4000);
+    }
+  });
+
   /* Register dashboard tour (default) — pages can override or add more */
   API.register('dashboard', [
     {

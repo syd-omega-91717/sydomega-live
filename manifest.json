@@ -62,6 +62,20 @@
       "url": "/leaderboard.html",
       "description": "Authority ranking",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Production Studio",
+      "short_name": "Studio",
+      "url": "/studio.html",
+      "description": "Sovereign media production and creation pipeline",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Intel",
+      "url": "/analytics.html",
+      "description": "Data analytics, authority history, axis radar",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

@@ -1464,6 +1464,9 @@ setTimeout(function(){
   /* Sovereign progress ring — Canvas SVG circular authority ring */
   if(!document.querySelector('script[data-omega-ring]')){var _oring=document.createElement('script');_oring.src='/omega-ring.js';_oring.setAttribute('data-omega-ring','1');_oring.defer=true;if(document.body)document.body.appendChild(_oring);}
 
+  /* PWA install banner + offline network ribbon + native share + badge API */
+  if(!document.querySelector('script[data-omega-pwa]')){var _opwa=document.createElement('script');_opwa.src='/omega-pwa.js';_opwa.setAttribute('data-omega-pwa','1');_opwa.defer=true;if(document.body)document.body.appendChild(_opwa);}
+
   /* Welcome demo video — must load on dashboard.html, the login landing page */
   if(!document.querySelector('script[data-omega-demo]')){var _odv=document.createElement('script');_odv.src='/omega-demo-video.js';_odv.setAttribute('data-omega-demo','1');_odv.defer=true;if(document.body)document.body.appendChild(_odv);}
 

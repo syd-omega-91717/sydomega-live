@@ -111,7 +111,7 @@
     /* task_complete workflow steps — these were referenced but not implemented */
     validate_task: async function(ctx){
       if(!ctx.task||!ctx.axis) return {ok:false,error:'missing task or axis'};
-      if(['a','b','c'].indexOf(String(ctx.axis))====-1) return {ok:false,error:'invalid axis'};
+      if(['a','b','c'].indexOf(String(ctx.axis))===-1) return {ok:false,error:'invalid axis'};
       return {ok:true,validated:true};
     },
     increment_axis: async function(ctx){

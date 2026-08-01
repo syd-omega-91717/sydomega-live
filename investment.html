@@ -23,6 +23,30 @@
 .hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:14px}
+.inv-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-left:3px solid var(--green);padding:16px;transition:.2s}
+.inv-card:hover{background:rgba(63,178,127,.07)}
+.inv-ticker{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:4px}
+.inv-name{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:6px}
+.inv-price{font-family:var(--D);font-size:18px;color:var(--green);line-height:1}
+.inv-change{font-family:var(--M);font-size:7.5px;margin-top:3px}
+.inv-change.up{color:var(--green)}.inv-change.dn{color:var(--crim)}
+.inv-meta{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:7px}
+.crypto-row{display:grid;grid-template-columns:40px 1fr auto auto;gap:10px;align-items:center;padding:10px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:6px;border-radius:2px}
+.crypto-icon{font-size:20px;text-align:center}
+.crypto-name{font-family:var(--R);font-size:11px;color:var(--ink)}
+.crypto-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:1px}
+.crypto-price{font-family:var(--M);font-size:10px;color:var(--solar);text-align:right}
+.crypto-chg{font-family:var(--M);font-size:8px;text-align:right}
+.crypto-chg.up{color:var(--green)}.crypto-chg.dn{color:var(--crim)}
+.inc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:6px;border-radius:2px}
+.inc-label{font-family:var(--R);font-size:11px;color:var(--ink)}
+.inc-label small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:1px}
+.inc-val{font-family:var(--D);font-size:14px;color:var(--solar)}
+.rep-card{border:1px solid var(--line);background:rgba(10,10,15,.45);border-radius:2px;border-top:2px solid var(--cyan);padding:14px;margin-bottom:10px}
+.rep-title{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:5px}
+.rep-body{font-size:10.5px;color:var(--ink);opacity:.75;line-height:1.65}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -34,7 +58,43 @@
     <div class="topbar"><div class="t">INVESTMENT<small>M16 Investment &middot; PORTFOLIO & CRYPTO HOLDINGS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="inv-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
     <div class="pad" data-reveal="fade-up">
       <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-      <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-portfolio')">PORTFOLIO</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-crypto')">CRYPTO</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-income')">INCOME</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-reports')">REPORTS</button></div><div id="tp-portfolio" class="tab-panel active" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">PORTFOLIO</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING PORTFOLIO&hellip;</div></div><div id="tp-crypto" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">CRYPTO</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING CRYPTO&hellip;</div></div><div id="tp-income" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">INCOME</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING INCOME&hellip;</div></div><div id="tp-reports" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">REPORTS</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING REPORTS&hellip;</div></div>
+            <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-portfolio')">PORTFOLIO</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-crypto')">CRYPTO</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-income')">INCOME</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-reports')">REPORTS</button></div>
+      <div id="tp-portfolio" class="tab-panel active" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">SOVEREIGN PORTFOLIO</div>
+        <div class="inv-grid">
+          <div class="inv-card"><div class="inv-ticker">TECH</div><div class="inv-name">Sovereign Technology Fund</div><div class="inv-price">$24,800</div><div class="inv-change up">▲ 12.4% YTD</div><div class="inv-meta">120 units &middot; Entry $22,100 &middot; Gate IV+ access</div></div>
+          <div class="inv-card"><div class="inv-ticker">REAL</div><div class="inv-name">Sovereign Real Estate Trust</div><div class="inv-price">$18,500</div><div class="inv-change up">▲ 7.2% YTD</div><div class="inv-meta">85 units &middot; Entry $17,260 &middot; Gate VI+ access</div></div>
+          <div class="inv-card"><div class="inv-ticker">ENRG</div><div class="inv-name">Apex Energy Holdings</div><div class="inv-price">$31,200</div><div class="inv-change up">▲ 18.9% YTD</div><div class="inv-meta">200 units &middot; Entry $26,250 &middot; Gate VIII+ access</div></div>
+          <div class="inv-card"><div class="inv-ticker">META</div><div class="inv-name">Omega Metaverse Index</div><div class="inv-price">$9,400</div><div class="inv-change dn">▼ 3.1% YTD</div><div class="inv-meta">50 units &middot; Entry $9,700 &middot; Gate III+ access</div></div>
+          <div class="inv-card"><div class="inv-ticker">HLTH</div><div class="inv-name">Sovereign Biotech Alliance</div><div class="inv-price">$14,750</div><div class="inv-change up">▲ 22.3% YTD</div><div class="inv-meta">70 units &middot; Entry $12,050 &middot; Gate V+ access</div></div>
+          <div class="inv-card"><div class="inv-ticker">APEX</div><div class="inv-name">Apex Sovereign Reserve Fund</div><div class="inv-price">$88,367</div><div class="inv-change up">▲ 27.8% YTD</div><div class="inv-meta">Owner exclusive &middot; AUTH = 27.8367</div></div>
+        </div>
+      </div>
+      <div id="tp-crypto" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">CRYPTO HOLDINGS</div>
+        <div>
+          <div class="crypto-row"><div class="crypto-icon">₿</div><div class="crypto-name">Bitcoin<small>BTC</small></div><div class="crypto-price">$67,420</div><div class="crypto-chg up">▲ 4.2%</div></div>
+          <div class="crypto-row"><div class="crypto-icon">Ξ</div><div class="crypto-name">Ethereum<small>ETH</small></div><div class="crypto-price">$3,840</div><div class="crypto-chg up">▲ 2.8%</div></div>
+          <div class="crypto-row"><div class="crypto-icon">◈</div><div class="crypto-name">Sovereign Token<small>OMGX</small></div><div class="crypto-price">$27.84</div><div class="crypto-chg up">▲ 8.9%</div></div>
+          <div class="crypto-row"><div class="crypto-icon">◎</div><div class="crypto-name">Solana<small>SOL</small></div><div class="crypto-price">$182.00</div><div class="crypto-chg dn">▼ 1.2%</div></div>
+          <div class="crypto-row"><div class="crypto-icon">Ω</div><div class="crypto-name">Omega Coin<small>OMC</small></div><div class="crypto-price">$9.18</div><div class="crypto-chg up">▲ 14.5%</div></div>
+          <div class="crypto-row"><div class="crypto-icon">◆</div><div class="crypto-name">Chainlink<small>LINK</small></div><div class="crypto-price">$16.43</div><div class="crypto-chg up">▲ 3.6%</div></div>
+          <div class="crypto-row"><div class="crypto-icon">◉</div><div class="crypto-name">Polkadot<small>DOT</small></div><div class="crypto-price">$8.72</div><div class="crypto-chg dn">▼ 0.9%</div></div>
+        </div>
+      </div>
+      <div id="tp-income" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">INCOME STREAMS</div>
+        <div>
+          <div class="inc-row"><div class="inc-label">Sovereign Membership Revenue<small>Monthly recurring subscriptions</small></div><div class="inc-val">$12,480</div></div>
+          <div class="inc-row"><div class="inc-label">Token Sales &amp; Authority Minting<small>OMGX issuance proceeds</small></div><div class="inc-val">$8,930</div></div>
+          <div class="inc-row"><div class="inc-label">Sovereign Cinema Licensing<small>Film IP &amp; streaming royalties</small></div><div class="inc-val">$4,200</div></div>
+          <div class="inc-row"><div class="inc-label">Research &amp; Publications<small>Digital &amp; print sales</small></div><div class="inc-val">$2,100</div></div>
+          <div class="inc-row"><div class="inc-label">API &amp; Integration Fees<small>Third-party integrations</small></div><div class="inc-val">$3,750</div></div>
+          <div class="inc-row"><div class="inc-label">Sovereign Education &amp; Events<small>Workshops, summits, ceremonies</small></div><div class="inc-val">$5,600</div></div>
+        </div>
+      </div>
+      <div id="tp-reports" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">INVESTMENT REPORTS</div>
+        <div class="rep-card"><div class="rep-title">Q2 2024 — Sovereign Portfolio Performance</div><div class="rep-body">Total portfolio value increased 14.7% quarter-on-quarter, driven by strong performance in the Apex Energy Holdings position and sustained growth in the Sovereign Token (OMGX). Crypto holdings grew 22% buoyed by the broader BTC cycle. Real estate trust maintained steady 7% annualised returns. Overall portfolio AUTH-weighted return: 18.3%.</div></div>
+        <div class="rep-card"><div class="rep-title">Q3 2024 Outlook — Authority-Gated Opportunities</div><div class="rep-body">Gate VIII and above sovereigns will gain access to three new investment tranches in H2 2024: Sovereign Infrastructure Bond (projected 9.2% yield), Omega AI Holdings (projected 31% ROI), and the Apex Reserve Expansion Fund. All new tranches require KYC Step 2 completion and active membership tier of Sovereign Prime or above.</div></div>
+        <div class="rep-card"><div class="rep-title">Annual Report 2023 — The Year of Foundation</div><div class="rep-body">The inaugural year of the sovereign investment platform established baseline positions across all six portfolio sectors. Net positive return of 12.1% against a flat market benchmark. Total member capital deployed: $2.4M across 847 active sovereign investors. The Omega Coin (OMC) was issued at $1.00 and closed the year at $9.18 — a 818% inaugural year gain.</div></div>
+      </div>
     </div>
     <div data-page-emblem="investment" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; INVESTMENT &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>

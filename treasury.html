@@ -31,6 +31,23 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--solar);color:var(--solar);background:rgba(201,168,76,.05)}
+.tab-panel{display:none}.tab-panel.active{display:block;padding:var(--pad)}
+.trs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.trs-kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:3px solid var(--solar);padding:14px}
+.trs-val{font-family:var(--D);font-size:20px;color:var(--solar);line-height:1}
+.trs-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.trs-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:7px;border-radius:2px}
+.trs-name{font-family:var(--R);font-size:11px;color:var(--ink)}
+.trs-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px}
+.trs-amt{font-family:var(--D);font-size:14px;color:var(--solar)}
+.div-card{border:1px solid var(--line);background:rgba(10,10,15,.45);border-radius:2px;border-left:3px solid var(--green);padding:14px;margin-bottom:10px}
+.div-tier{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--green);margin-bottom:5px}
+.div-title{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:6px}
+.div-body{font-size:10.5px;color:var(--ink);opacity:.75;line-height:1.65;margin-bottom:8px}
+.div-rate{font-family:var(--D);font-size:16px;color:var(--green)}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -51,15 +68,53 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
-      <div class="sechead" data-reveal="fade-up">TREASURY &middot; M7 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">TREASURY</div>
-        <div class="hero-sub">M7 &middot; SOVEREIGN TREASURY</div>
-        <div class="hero-desc">The platform treasury. Reserve holdings, token supply, distribution mechanics, and sovereign dividend status.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" onclick="trsTab(this,'trs-reserves')">RESERVES</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="trsTab(this,'trs-supply')">TOKEN SUPPLY</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="trsTab(this,'trs-dividends')">DIVIDENDS</button>
       </div>
-      
-    </div>
-    <div data-page-emblem="treasury" style="margin:20px auto 0"></div>
+      <div id="trs-reserves" class="tab-panel active"><div class="sechead">SOVEREIGN TREASURY RESERVES</div>
+        <div class="trs-grid">
+          <div class="trs-kpi"><div class="trs-val">$4.2M</div><div class="trs-lbl">TOTAL RESERVES</div></div>
+          <div class="trs-kpi"><div class="trs-val">$1.8M</div><div class="trs-lbl">OPERATIONAL RESERVE</div></div>
+          <div class="trs-kpi"><div class="trs-val">$940K</div><div class="trs-lbl">TOKEN LIQUIDITY</div></div>
+          <div class="trs-kpi"><div class="trs-val">$1.46M</div><div class="trs-lbl">APEX RESERVE FUND</div></div>
+        </div>
+        <div><div class="sechead" style="margin-bottom:10px">RESERVE ALLOCATIONS</div>
+          <div class="trs-row"><div class="trs-name">Sovereign Operations Endowment<small>Platform maintenance, security, infrastructure</small></div><div class="trs-amt">$1,800,000</div></div>
+          <div class="trs-row"><div class="trs-name">Token Liquidity Pool<small>OMGX &amp; OMC buyback reserve</small></div><div class="trs-amt">$940,000</div></div>
+          <div class="trs-row"><div class="trs-name">Apex Sovereign Reserve<small>AUTH=27.8367 milestone rewards</small></div><div class="trs-amt">$1,460,000</div></div>
+          <div class="trs-row"><div class="trs-name">Emergency Continuity Fund<small>Platform continuity in force majeure</small></div><div class="trs-amt">$200,000</div></div>
+          <div class="trs-row"><div class="trs-name">Research &amp; Development<small>New feature development &amp; sovereign IP</small></div><div class="trs-amt">$800,000</div></div>
+        </div>
+      </div>
+      <div id="trs-supply" class="tab-panel"><div class="sechead">SOVEREIGN TOKEN SUPPLY</div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px;margin-bottom:14px">
+          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:10px">OMEGA COIN (OMC) — PRIMARY RESERVE</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px">
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">TOTAL SUPPLY</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">91,717,000</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">CIRCULATING</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">42,814,000</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">CURRENT PRICE</div><div style="font-family:var(--D);font-size:18px;color:var(--green)">$9.18</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.65">Total supply of 91,717,000 OMC is fixed — no further minting after genesis issuance. The number 91717 encodes the sovereign mandate date. Tokens unlock according to gate progression and are burned upon Apex attainment as a deflationary mechanism.</div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px">
+          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:10px">SOVEREIGN TOKEN (OMGX) — AUTHORITY INSTRUMENT</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px">
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">MAX SUPPLY</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27,836,700</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">MINTED</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">8,940,000</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">CURRENT PRICE</div><div style="font-family:var(--D);font-size:18px;color:var(--green)">$27.84</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.65">OMGX max supply of 27,836,700 mirrors the Apex AUTH score × 10⁶. New OMGX tokens are minted only through gate unlocks and cannot be purchased directly — only earned through sovereign progression. This makes OMGX the purest measure of authority in the ecosystem.</div>
+        </div>
+      </div>
+      <div id="trs-dividends" class="tab-panel"><div class="sechead">SOVEREIGN DIVIDENDS</div>
+        <div class="div-card"><div class="div-tier">TRIAL TIER</div><div class="div-title">Orientation Dividend</div><div class="div-body">Trial members receive no monetary dividend but earn 1 OMGX token for every completed module and gate challenge. These tokens vest immediately and can be held or traded within the platform marketplace once access is approved.</div><div class="div-rate">1 OMGX / module</div></div>
+        <div class="div-card"><div class="div-tier">SOVEREIGN STANDARD</div><div class="div-title">Monthly Authority Dividend</div><div class="div-body">Standard tier members receive a monthly dividend calculated as AUTH × gate_level × 0.01 USD. Additionally, 2 OMGX tokens per gate unlocked per month. Revenue participation begins at this tier at 0.5% of platform net revenue, distributed quarterly.</div><div class="div-rate">AUTH × Gate × $0.01 / mo</div></div>
+        <div class="div-card"><div class="div-tier">SOVEREIGN PRIME</div><div class="div-title">Prime Revenue Participation</div><div class="div-body">Prime members participate in 2% of platform net revenue, distributed monthly. Additionally receive a Gate Bonus of $100 per gate unlocked within the period. Token allocation doubles to 4 OMGX per gate unlock. Investment tier access opens additional yield positions.</div><div class="div-rate">2% net rev + $100/gate</div></div>
+        <div class="div-card"><div class="div-tier">APEX SOVEREIGN</div><div class="div-title">Apex Perpetual Dividend</div><div class="div-body">Apex Sovereigns (AUTH = 27.8367) receive perpetual 5% revenue participation, unlimited OMGX allocation, and a one-time Apex Sovereign Endowment of $27,836.70 — one dollar for each thousandth of the Apex score. This is the treasury's highest honour.</div><div class="div-rate">5% net rev + $27,836.70 endowment</div></div>
+      </div>
+        <div data-page-emblem="treasury" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; TREASURY &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
   </main>
 </div>
@@ -84,6 +139,14 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script><script>
+function trsTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById(id);if(p)p.classList.add('active');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

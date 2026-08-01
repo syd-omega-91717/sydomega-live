@@ -31,7 +31,33 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--purple);background:rgba(155,107,240,.04)}
+.tab-btn.on{border-bottom-color:var(--purple);color:var(--purple);background:rgba(155,107,240,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.sign-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:2px solid var(--sc,var(--purple));padding:14px;transition:.18s;cursor:default}
+.sign-card:hover{border-color:rgba(155,107,240,.3);transform:translateY(-2px)}
+.sign-card.active{border-color:var(--sc,var(--purple));background:rgba(155,107,240,.06)}
+.sign-sym{font-size:24px;margin-bottom:6px;line-height:1}
+.sign-name{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:3px}
+.sign-date{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.sign-attrs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.sign-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(155,107,240,.3);border-radius:10px;color:var(--muted)}
+.sign-oracle{font-size:11px;line-height:1.7;color:var(--muted)}
+.my-sign-panel{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:3px solid var(--purple);padding:24px;margin-bottom:16px}
+.my-sign-header{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--purple);margin-bottom:10px}
+.my-sign-name{font-family:var(--D);font-size:clamp(20px,4vw,30px);color:var(--ink);margin-bottom:8px}
+.my-sign-oracle{font-size:13px;line-height:1.9;color:var(--ink);opacity:.8;margin-bottom:12px}
+.planet-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.planet-card{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px;text-align:center}
+.planet-sym{font-size:20px;margin-bottom:5px}
+.planet-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
+.planet-sign{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.sign-grid{grid-template-columns:1fr 1fr}.planet-row{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -52,12 +78,128 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">HOROSCOPE &middot; M9 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">HOROSCOPE</div>
-        <div class="hero-sub">M9 &middot; 12 ZODIAC SIGNS</div>
-        <div class="hero-desc">Birth charts, planetary alignments, and zodiac sign profiles. Your sign determines your element, Olympian, agent, and token.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="hrTab(this,'mysign')" role="tab" aria-selected="true">YOUR SIGN</button>
+        <button class="tab-btn" onclick="hrTab(this,'all')" role="tab" aria-selected="false">ALL SIGNS</button>
+        <button class="tab-btn" onclick="hrTab(this,'planets')" role="tab" aria-selected="false">PLANETS</button>
       </div>
-      
+      <div class="tab-panel on" id="hr-mysign" data-reveal="fade-up">
+        <div class="sechead">YOUR SOVEREIGN SIGN &amp; ORACLE</div>
+        <div class="my-sign-panel">
+          <div class="my-sign-header">SOVEREIGN SIGN</div>
+          <div class="my-sign-name" id="hr-sign-name">--</div>
+          <div class="my-sign-oracle" id="hr-sign-oracle">Detecting your sign...</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px">
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">OLYMPIAN</div><div style="font-family:var(--D);font-size:14px;color:var(--purple)" id="hr-god">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">ELEMENT</div><div style="font-family:var(--D);font-size:14px;color:var(--purple)" id="hr-elem">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">GATE</div><div style="font-family:var(--D);font-size:14px;color:var(--solar)" id="hr-gate">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px">MODALITY</div><div style="font-family:var(--D);font-size:14px;color:var(--cyan)" id="hr-mode">--</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="hr-all" data-reveal="fade-up" data-stagger>
+        <div class="sechead">12 ZODIAC SIGNS · SOVEREIGN PROFILES</div>
+        <div class="sign-grid">
+          <div class="sign-card" style="--sc:#E86A3A">
+            <div class="sign-sym">♈</div>
+            <div class="sign-name">Aries</div>
+            <div class="sign-date">Mar 21–Apr 19</div>
+            <div class="sign-attrs"><span class="sign-tag">Ares</span><span class="sign-tag">Fire ☲</span><span class="sign-tag">Gate I</span></div>
+            <div class="sign-oracle">The sovereign pioneer. Bold, direct, first through the lattice gate. Under Ares,...</div>
+          </div>
+          <div class="sign-card" style="--sc:#3fb27f">
+            <div class="sign-sym">♉</div>
+            <div class="sign-name">Taurus</div>
+            <div class="sign-date">Apr 20–May 20</div>
+            <div class="sign-attrs"><span class="sign-tag">Aphrodite</span><span class="sign-tag">Water ☰</span><span class="sign-tag">Gate II</span></div>
+            <div class="sign-oracle">The sovereign builder. Patient, enduring, crafted by beauty and time. Aphrodite ...</div>
+          </div>
+          <div class="sign-card" style="--sc:#00E5FF">
+            <div class="sign-sym">♊</div>
+            <div class="sign-name">Gemini</div>
+            <div class="sign-date">May 21–Jun 20</div>
+            <div class="sign-attrs"><span class="sign-tag">Hermes</span><span class="sign-tag">Wind ☱</span><span class="sign-tag">Gate III</span></div>
+            <div class="sign-oracle">The sovereign messenger. Quick, dual, carrier of truths. Hermes moves through Ge...</div>
+          </div>
+          <div class="sign-card" style="--sc:#9B6BF0">
+            <div class="sign-sym">♋</div>
+            <div class="sign-name">Cancer</div>
+            <div class="sign-date">Jun 21–Jul 22</div>
+            <div class="sign-attrs"><span class="sign-tag">Artemis</span><span class="sign-tag">Sand ★</span><span class="sign-tag">Gate IV</span></div>
+            <div class="sign-oracle">The sovereign keeper. Intuitive, protective, amplified by sand. Artemis guides C...</div>
+          </div>
+          <div class="sign-card" style="--sc:#E2C86D">
+            <div class="sign-sym">♌</div>
+            <div class="sign-name">Leo</div>
+            <div class="sign-date">Jul 23–Aug 22</div>
+            <div class="sign-attrs"><span class="sign-tag">Apollo</span><span class="sign-tag">Soul ✴</span><span class="sign-tag">Gate V</span></div>
+            <div class="sign-oracle">The sovereign radiant. Luminous, commanding, bearer of the soul element. Apollo'...</div>
+          </div>
+          <div class="sign-card" style="--sc:#C9A84C">
+            <div class="sign-sym">♍</div>
+            <div class="sign-name">Virgo</div>
+            <div class="sign-date">Aug 23–Sep 22</div>
+            <div class="sign-attrs"><span class="sign-tag">Athena</span><span class="sign-tag">Metal ☳</span><span class="sign-tag">Gate VI</span></div>
+            <div class="sign-oracle">The sovereign architect. Precise, analytical, structurally perfect. Athena lends...</div>
+          </div>
+          <div class="sign-card" style="--sc:#9B6BF0">
+            <div class="sign-sym">♎</div>
+            <div class="sign-name">Libra</div>
+            <div class="sign-date">Sep 23–Oct 22</div>
+            <div class="sign-attrs"><span class="sign-tag">Hera</span><span class="sign-tag">Space ✶</span><span class="sign-tag">Gate VII</span></div>
+            <div class="sign-oracle">The sovereign diplomat. Balanced, elegant, keeper of space between forces. Hera'...</div>
+          </div>
+          <div class="sign-card" style="--sc:#8B0000">
+            <div class="sign-sym">♏</div>
+            <div class="sign-name">Scorpio</div>
+            <div class="sign-date">Oct 23–Nov 21</div>
+            <div class="sign-attrs"><span class="sign-tag">Demeter</span><span class="sign-tag">Void ✷</span><span class="sign-tag">Gate VIII</span></div>
+            <div class="sign-oracle">The sovereign transformer. Deep, intense, at home in the void. Demeter guides Sc...</div>
+          </div>
+          <div class="sign-card" style="--sc:#E2C86D">
+            <div class="sign-sym">♐</div>
+            <div class="sign-name">Sagittarius</div>
+            <div class="sign-date">Nov 22–Dec 21</div>
+            <div class="sign-attrs"><span class="sign-tag">Zeus</span><span class="sign-tag">The All Ω</span><span class="sign-tag">Gate IX</span></div>
+            <div class="sign-oracle">The sovereign visionary. Expansive, free, marked by The All element. Zeus sets S...</div>
+          </div>
+          <div class="sign-card" style="--sc:#C9A84C">
+            <div class="sign-sym">♑</div>
+            <div class="sign-name">Capricorn</div>
+            <div class="sign-date">Dec 22–Jan 19</div>
+            <div class="sign-attrs"><span class="sign-tag">Hestia</span><span class="sign-tag">Fire ☲</span><span class="sign-tag">Gate X</span></div>
+            <div class="sign-oracle">The sovereign elder. Disciplined, long-burning, keeper of the first flame. Hesti...</div>
+          </div>
+          <div class="sign-card" style="--sc:#00E5FF">
+            <div class="sign-sym">♒</div>
+            <div class="sign-name">Aquarius</div>
+            <div class="sign-date">Jan 20–Feb 18</div>
+            <div class="sign-attrs"><span class="sign-tag">Hephaestus</span><span class="sign-tag">Metal ☳</span><span class="sign-tag">Gate XI</span></div>
+            <div class="sign-oracle">The sovereign innovator. Original, structural, forger of the final gate. Hephaes...</div>
+          </div>
+          <div class="sign-card" style="--sc:#9B6BF0">
+            <div class="sign-sym">♓</div>
+            <div class="sign-name">Pisces</div>
+            <div class="sign-date">Feb 19–Mar 20</div>
+            <div class="sign-attrs"><span class="sign-tag">Poseidon</span><span class="sign-tag">Water ☰</span><span class="sign-tag">Gate XII</span></div>
+            <div class="sign-oracle">The sovereign apex. Boundless, oceanic, carrier of Gate XII. Poseidon holds the ...</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="hr-planets" data-reveal="fade-up">
+        <div class="sechead">9 SOVEREIGN PLANETS · CELESTIAL LATTICE</div>
+        <div class="planet-row">
+          <div class="planet-card"><div class="planet-sym">☉</div><div class="planet-name">Sun</div><div class="planet-sign">Leo</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign self — your authority axis</div></div>
+          <div class="planet-card"><div class="planet-sym">☽</div><div class="planet-name">Moon</div><div class="planet-sign">Cancer</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign feeling — your intuition layer</div></div>
+          <div class="planet-card"><div class="planet-sym">☿</div><div class="planet-name">Mercury</div><div class="planet-sign">Gemini</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign mind — your communication channel</div></div>
+          <div class="planet-card"><div class="planet-sym">♀</div><div class="planet-name">Venus</div><div class="planet-sign">Taurus</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign bond — your element affinity</div></div>
+          <div class="planet-card"><div class="planet-sym">♂</div><div class="planet-name">Mars</div><div class="planet-sign">Aries</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign drive — your gate push</div></div>
+          <div class="planet-card"><div class="planet-sym">♃</div><div class="planet-name">Jupiter</div><div class="planet-sign">Sagittarius</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign expansion — your lattice reach</div></div>
+          <div class="planet-card"><div class="planet-sym">♄</div><div class="planet-name">Saturn</div><div class="planet-sign">Capricorn</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign discipline — your gate threshold</div></div>
+          <div class="planet-card"><div class="planet-sym">♅</div><div class="planet-name">Uranus</div><div class="planet-sign">Aquarius</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign innovation — your lattice forge</div></div>
+          <div class="planet-card"><div class="planet-sym">♆</div><div class="planet-name">Neptune</div><div class="planet-sign">Pisces</div><div class="planet-sign" style="margin-top:4px;font-size:7px">The sovereign depth — your omega key</div></div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="horoscope" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; HOROSCOPE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -82,8 +224,28 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    var SNAMES=['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+    var SGODS=['Ares', 'Aphrodite', 'Hermes', 'Artemis', 'Apollo', 'Athena', 'Hera', 'Demeter', 'Zeus', 'Hestia', 'Hephaestus', 'Poseidon'];
+    var SELEMS=['Fire ☲', 'Water ☰', 'Wind ☱', 'Sand ★', 'Soul ✴', 'Metal ☳', 'Space ✶', 'Void ✷', 'The All Ω', 'Fire ☲', 'Metal ☳', 'Water ☰'];
+    var SGATES=['Gate I', 'Gate II', 'Gate III', 'Gate IV', 'Gate V', 'Gate VI', 'Gate VII', 'Gate VIII', 'Gate IX', 'Gate X', 'Gate XI', 'Gate XII'];
+    var SMODES=['Cardinal · Fire', 'Fixed · Earth', 'Mutable · Air', 'Cardinal · Water', 'Fixed · Fire', 'Mutable · Earth', 'Cardinal · Air', 'Fixed · Water', 'Mutable · Fire', 'Cardinal · Earth', 'Fixed · Air', 'Mutable · Water'];
+    var SORACLES=['The sovereign pioneer. Bold, direct, first through the lattice gate. Under Ares, the Aries sovereign ignites the chain that leads 11 others forward.', 'The sovereign builder. Patient, enduring, crafted by beauty and time. Aphrodite grants the Taurus sovereign the gift of lasting bonds across element lines.', 'The sovereign messenger. Quick, dual, carrier of truths. Hermes moves through Gemini at the speed of thought, connecting all twelve houses.', 'The sovereign keeper. Intuitive, protective, amplified by sand. Artemis guides Cancer through the threshold of the fourth gate.', "The sovereign radiant. Luminous, commanding, bearer of the soul element. Apollo's light flows through Leo, drawing others into alignment.", 'The sovereign architect. Precise, analytical, structurally perfect. Athena lends Virgo the lattice blueprint and the patience to execute it.', "The sovereign diplomat. Balanced, elegant, keeper of space between forces. Hera's sovereign domain is the negotiation of all twelve houses.", 'The sovereign transformer. Deep, intense, at home in the void. Demeter guides Scorpio through the undergate where power is forged.', 'The sovereign visionary. Expansive, free, marked by The All element. Zeus sets Sagittarius at the apex of the nine-fold horizon.', 'The sovereign elder. Disciplined, long-burning, keeper of the first flame. Hestia grants Capricorn the hearth that outlasts every gate.', 'The sovereign innovator. Original, structural, forger of the final gate. Hephaestus builds the lattice upgrade through the Aquarius sovereign.', "The sovereign apex. Boundless, oceanic, carrier of Gate XII. Poseidon holds the lattice's oldest memory and its final key: AUTH = 27.8367."];
+    var signStr=pr.zodiac_sign||'';
+    var si=SNAMES.indexOf(signStr); if(si<0)si=0;
+    function s2(id,v){var el=document.getElementById(id);if(el)el.textContent=v||'--';}
+    s2('hr-sign-name',SNAMES[si]+' '+['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'][si]);
+    s2('hr-sign-oracle',SORACLES[si]);
+    s2('hr-god',SGODS[si]);s2('hr-elem',SELEMS[si]);s2('hr-gate',SGATES[si]);s2('hr-mode',SMODES[si]);
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+function hrTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('hr-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

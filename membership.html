@@ -31,7 +31,34 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--solar);background:rgba(226,200,109,.04)}
+.tab-btn.on{border-bottom-color:var(--solar);color:var(--solar);background:rgba(226,200,109,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:16px}
+.tier-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:3px solid var(--tc,var(--solar));padding:20px;position:relative;transition:.18s}
+.tier-card.active{border-color:var(--tc,var(--solar));box-shadow:0 0 24px rgba(226,200,109,.12)}
+.tier-card:hover{transform:translateY(-2px)}
+.tier-name{font-family:var(--D);font-size:clamp(14px,2vw,18px);color:var(--tc,var(--solar));margin-bottom:6px}
+.tier-price{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+.tier-feats{list-style:none;padding:0;margin:0}
+.tier-feats li{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--ink);margin-bottom:6px;display:flex;gap:8px;align-items:flex-start}
+.tier-feats li::before{content:"✓";color:var(--tc,var(--solar));flex-shrink:0;margin-top:1px}
+.tier-badge{position:absolute;top:12px;right:12px;font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:3px 8px;border:1px solid var(--tc,var(--solar));border-radius:10px;color:var(--tc,var(--solar))}
+.benefit-tbl{border:1px solid var(--line);border-radius:2px;overflow:hidden;overflow-x:auto;margin-bottom:16px}
+.bt-head{display:grid;grid-template-columns:1fr 100px 100px 100px 100px;padding:9px 14px;background:rgba(226,200,109,.06);border-bottom:1px solid var(--line)}
+.bt-row{display:grid;grid-template-columns:1fr 100px 100px 100px 100px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.05);font-size:11px}
+.bt-row:last-child{border-bottom:none}
+.bt-row:hover{background:rgba(226,200,109,.02)}
+.bth{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar);text-align:center}
+.bt-feat{font-family:var(--M);font-size:8px;color:var(--ink)}
+.bt-check{text-align:center;color:var(--green)}
+.bt-cross{text-align:center;color:rgba(255,255,255,.2)}
+.status-card{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:3px solid var(--solar);padding:24px;margin-bottom:16px}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.tier-grid{grid-template-columns:1fr}.bt-head,.bt-row{grid-template-columns:1fr 70px 70px;}.bth:nth-child(n+4),.bt-row>div:nth-child(n+4){display:none}}
 </style>
 </head>
 <body>
@@ -52,12 +79,82 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">MEMBERSHIP &middot; M1 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">MEMBERSHIP</div>
-        <div class="hero-sub">M1 &middot; SOVEREIGN MEMBERSHIP</div>
-        <div class="hero-desc">Your membership status, tier, access rights, and subscription details within SYD OMEGA 91717.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="mbTab(this,'mytier')" role="tab" aria-selected="true">MY TIER</button>
+        <button class="tab-btn" onclick="mbTab(this,'tiers')" role="tab" aria-selected="false">ALL TIERS</button>
+        <button class="tab-btn" onclick="mbTab(this,'benefits')" role="tab" aria-selected="false">BENEFITS</button>
       </div>
-      
+
+      <div class="tab-panel on" id="mb-mytier" data-reveal="fade-up">
+        <div class="sechead">YOUR MEMBERSHIP STATUS</div>
+        <div class="status-card">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px">
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">CURRENT TIER</div><div style="font-family:var(--D);font-size:clamp(16px,3vw,22px);color:var(--solar)" id="mb-tier">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">STATUS</div><div style="font-family:var(--D);font-size:18px;color:var(--green)" id="mb-status">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">AUTHORITY</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)" id="mb-auth">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">GATE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold)" id="mb-gate">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">TRIAL</div><div style="font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink)" id="mb-trial">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">APPROVED</div><div style="font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink)" id="mb-approved">--</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="mb-tiers" data-reveal="fade-up">
+        <div class="sechead">MEMBERSHIP TIERS</div>
+        <div class="tier-grid">
+          <div class="tier-card" style="--tc:#8a8676">
+            <div class="tier-badge">TRIAL</div>
+            <div class="tier-name">TRIAL</div>
+            <div class="tier-price">7-DAY FREE ACCESS</div>
+            <ul class="tier-feats">
+              <li>Dashboard access</li><li>Character profile</li><li>Auth formula viewer</li>
+              <li>Gate I progress</li><li>Basic element view</li>
+            </ul>
+          </div>
+          <div class="tier-card" style="--tc:#C9A84C">
+            <div class="tier-badge">STANDARD</div>
+            <div class="tier-name">SOVEREIGN STANDARD</div>
+            <div class="tier-price">APPROVED MEMBERSHIP</div>
+            <ul class="tier-feats">
+              <li>Full lattice access</li><li>All 12 gates unlockable</li><li>Series & cinema</li>
+              <li>Feed &amp; activity</li><li>Credentials &amp; certs</li><li>Horoscope &amp; heritage</li>
+            </ul>
+          </div>
+          <div class="tier-card" style="--tc:#E2C86D">
+            <div class="tier-badge">PRIME</div>
+            <div class="tier-name">SOVEREIGN PRIME</div>
+            <div class="tier-price">GATE XI+ · AUTH ≥ 27.10</div>
+            <ul class="tier-feats">
+              <li>Everything in Standard</li><li>Kings expansion lattice</li><li>Heritage deep archive</li>
+              <li>Priority support</li><li>Prime certificate</li><li>Exclusive NFT series</li>
+            </ul>
+          </div>
+          <div class="tier-card" style="--tc:#E2C86D">
+            <div class="tier-badge">APEX</div>
+            <div class="tier-name">APEX SOVEREIGN</div>
+            <div class="tier-price">GATE XII · AUTH = 27.8367</div>
+            <ul class="tier-feats">
+              <li>Everything in Prime</li><li>Apex sovereign seal</li><li>Lattice governance vote</li>
+              <li>Revenue participation</li><li>Apex confetti ceremony</li><li>Codex of Omega</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="mb-benefits" data-reveal="fade-up">
+        <div class="sechead">BENEFIT COMPARISON</div>
+        <div class="benefit-tbl">
+          <div class="bt-head"><div class="bth" style="text-align:left">BENEFIT</div><div class="bth">TRIAL</div><div class="bth">STANDARD</div><div class="bth">PRIME</div><div class="bth">APEX</div></div>
+          <div class="bt-row"><div class="bt-feat">Dashboard</div><div class="bt-check">✓</div><div class="bt-check">✓</div><div class="bt-check">✓</div><div class="bt-check">✓</div></div>
+          <div class="bt-row"><div class="bt-feat">All Gates (I–XII)</div><div class="bt-cross">—</div><div class="bt-check">✓</div><div class="bt-check">✓</div><div class="bt-check">✓</div></div>
+          <div class="bt-row"><div class="bt-feat">Cinema &amp; Series</div><div class="bt-cross">—</div><div class="bt-check">✓</div><div class="bt-check">✓</div><div class="bt-check">✓</div></div>
+          <div class="bt-row"><div class="bt-feat">Credentials</div><div class="bt-cross">—</div><div class="bt-check">✓</div><div class="bt-check">✓</div><div class="bt-check">✓</div></div>
+          <div class="bt-row"><div class="bt-feat">Kings Lattice</div><div class="bt-cross">—</div><div class="bt-cross">—</div><div class="bt-check">✓</div><div class="bt-check">✓</div></div>
+          <div class="bt-row"><div class="bt-feat">Heritage Archive</div><div class="bt-cross">—</div><div class="bt-cross">—</div><div class="bt-check">✓</div><div class="bt-check">✓</div></div>
+          <div class="bt-row"><div class="bt-feat">Revenue Share</div><div class="bt-cross">—</div><div class="bt-cross">—</div><div class="bt-cross">—</div><div class="bt-check">✓</div></div>
+          <div class="bt-row"><div class="bt-feat">Apex Seal &amp; NFT</div><div class="bt-cross">—</div><div class="bt-cross">—</div><div class="bt-cross">—</div><div class="bt-check">✓</div></div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="membership" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; MEMBERSHIP &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -82,8 +179,28 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    var s2=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v||'--';};
+    s2('mb-auth',auth.toFixed(4));
+    var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+    var GTHR=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+    var gIdx=GTHR.findIndex(function(t){return auth<t;}); if(gIdx<0)gIdx=11;
+    s2('mb-gate',(gIdx>0?GNAMES[gIdx-1]+' · GATE '+gIdx:GNAMES[0]+' · GATE I'));
+    var tier=pr.is_owner?'APEX SOVEREIGN':pr.is_trial?'TRIAL':'SOVEREIGN STANDARD';
+    if(auth>=27.8367)tier='APEX SOVEREIGN'; else if(auth>=27.1)tier='SOVEREIGN PRIME';
+    s2('mb-tier',tier);
+    s2('mb-status',pr.access_approved?'APPROVED':'PENDING');
+    s2('mb-trial',pr.is_trial?'ACTIVE ('+((new Date(pr.trial_expires_at)-new Date())/86400000).toFixed(1)+' days left)':'INACTIVE');
+    s2('mb-approved',pr.access_approved?'YES — FULL ACCESS':'PENDING APPROVAL');
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+function mbTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('mb-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

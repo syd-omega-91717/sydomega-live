@@ -31,7 +31,28 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
+.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.level-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.level-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:14px;border-top:2px solid var(--lvc,var(--gold));transition:.18s;text-align:center}
+.level-card.earned{border-top-color:var(--green);background:rgba(63,178,127,.04)}
+.level-card:hover{transform:translateY(-2px)}
+.lv-num{font-family:var(--D);font-size:28px;color:var(--lvc,var(--gold));margin-bottom:4px}
+.lv-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:6px}
+.lv-auth{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.lv-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 8px;border-radius:10px;border:1px solid rgba(201,168,76,.25);color:var(--muted)}
+.lv-status.earned{color:var(--green);border-color:rgba(63,178,127,.4);background:rgba(63,178,127,.08)}
+.struct-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.struct-box{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:18px}
+.struct-title{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px}
+.struct-item{font-size:11px;color:var(--ink);margin-bottom:6px;display:flex;gap:8px}
+.struct-item::before{content:"·";color:var(--gold);flex-shrink:0}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.level-grid{grid-template-columns:repeat(3,1fr)}.struct-panel{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -52,12 +73,60 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">LEVELS &middot; M18 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">LEVELS</div>
-        <div class="hero-sub">M18 &middot; 12 SOVEREIGN LEVELS</div>
-        <div class="hero-desc">The 12 sub-levels within each grade band. Combined with phases, they map to the 104,976-node lattice.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="lvTab(this,'all')" role="tab" aria-selected="true">ALL LEVELS</button>
+        <button class="tab-btn" onclick="lvTab(this,'struct')" role="tab" aria-selected="false">STRUCTURE</button>
+        <button class="tab-btn" onclick="lvTab(this,'my')" role="tab" aria-selected="false">MY LEVEL</button>
       </div>
-      
+      <div class="tab-panel on" id="lv-all" data-reveal="fade-up" data-stagger>
+        <div class="sechead">12 SOVEREIGN LEVELS · COMPLETE LADDER</div>
+        <div class="level-grid">
+          <div class="level-card" style="--lvc:#C9A84C" id="lv-card-1"><div class="lv-num">1</div><div class="lv-name">NOVICE</div><div class="lv-auth">AUTH ≥ 2.32</div><div class="lv-status" id="lv-st-1">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#E2C86D" id="lv-card-2"><div class="lv-num">2</div><div class="lv-name">INITIATE</div><div class="lv-auth">AUTH ≥ 3.98</div><div class="lv-status" id="lv-st-2">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#C9A84C" id="lv-card-3"><div class="lv-num">3</div><div class="lv-name">ACOLYTE</div><div class="lv-auth">AUTH ≥ 5.95</div><div class="lv-status" id="lv-st-3">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#00E5FF" id="lv-card-4"><div class="lv-num">4</div><div class="lv-name">SCHOLAR</div><div class="lv-auth">AUTH ≥ 8.29</div><div class="lv-status" id="lv-st-4">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#3fb27f" id="lv-card-5"><div class="lv-num">5</div><div class="lv-name">ADEPT</div><div class="lv-auth">AUTH ≥ 11.0</div><div class="lv-status" id="lv-st-5">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#E86A3A" id="lv-card-6"><div class="lv-num">6</div><div class="lv-name">KEEPER</div><div class="lv-auth">AUTH ≥ 13.92</div><div class="lv-status" id="lv-st-6">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#9B6BF0" id="lv-card-7"><div class="lv-num">7</div><div class="lv-name">MASTER</div><div class="lv-auth">AUTH ≥ 17.21</div><div class="lv-status" id="lv-st-7">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#C9A84C" id="lv-card-8"><div class="lv-num">8</div><div class="lv-name">ARCHITECT</div><div class="lv-auth">AUTH ≥ 20.87</div><div class="lv-status" id="lv-st-8">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#E2C86D" id="lv-card-9"><div class="lv-num">9</div><div class="lv-name">SOVEREIGN</div><div class="lv-auth">AUTH ≥ 24.01</div><div class="lv-status" id="lv-st-9">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#00E5FF" id="lv-card-10"><div class="lv-num">10</div><div class="lv-name">VANGUARD</div><div class="lv-auth">AUTH ≥ 25.9</div><div class="lv-status" id="lv-st-10">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#3fb27f" id="lv-card-11"><div class="lv-num">11</div><div class="lv-name">HERALD</div><div class="lv-auth">AUTH ≥ 27.1</div><div class="lv-status" id="lv-st-11">LOCKED</div></div>
+          <div class="level-card" style="--lvc:#E2C86D" id="lv-card-12"><div class="lv-num">12</div><div class="lv-name">APEX</div><div class="lv-auth">AUTH ≥ 27.8367</div><div class="lv-status" id="lv-st-12">LOCKED</div></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="lv-struct" data-reveal="fade-up">
+        <div class="sechead">LATTICE STRUCTURE · HOW LEVELS WORK</div>
+        <div class="struct-panel">
+          <div class="struct-box">
+            <div class="struct-title">LEVELS × PHASES = LATTICE</div>
+            <div class="struct-item">12 levels × 12 phases = 144 intersections</div>
+            <div class="struct-item">Each intersection × 9³ = 729 axis nodes</div>
+            <div class="struct-item">144 × 729 = 104,976 total lattice nodes</div>
+            <div class="struct-item">Kings expansion: 28×28×729 = 571,536 nodes</div>
+          </div>
+          <div class="struct-box">
+            <div class="struct-title">AXIS → LEVEL MAPPING</div>
+            <div class="struct-item">Axis A drives KNOWLEDGE depth (levels 1–4)</div>
+            <div class="struct-item">Axis B drives MASTERY height (levels 5–8)</div>
+            <div class="struct-item">Axis C drives CONTRIBUTION reach (levels 9–12)</div>
+            <div class="struct-item">All three axes must balance at APEX</div>
+          </div>
+        </div>
+        <div class="glass">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">AUTHORITY FORMULA · LEVEL GATE</div>
+          <div style="font-family:var(--M);font-size:11px;color:var(--ink)">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e &nbsp;&middot;&nbsp; APEX at 27.8367</div>
+        </div>
+      </div>
+      <div class="tab-panel" id="lv-my" data-reveal="fade-up">
+        <div class="sechead">YOUR CURRENT LEVEL</div>
+        <div class="glass" style="text-align:center;padding:32px;margin-bottom:16px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">CURRENT LEVEL</div>
+          <div style="font-family:var(--D);font-size:clamp(22px,5vw,40px);color:var(--gold)" id="my-lv-num">--</div>
+          <div style="font-family:var(--D);font-size:clamp(14px,3vw,20px);color:var(--ink);margin-top:6px" id="my-lv-name">--</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:8px" id="my-lv-next">--</div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="levels" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; LEVELS &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -82,8 +151,28 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    var LVTHR=[2.32, 3.98, 5.95, 8.29, 11, 13.92, 17.21, 20.87, 24.01, 25.9, 27.1, 27.8367];var LVNAMES=['NOVICE', 'INITIATE', 'ACOLYTE', 'SCHOLAR', 'ADEPT', 'KEEPER', 'MASTER', 'ARCHITECT', 'SOVEREIGN', 'VANGUARD', 'HERALD', 'APEX'];
+    var lvIdx=-1;
+    LVTHR.forEach(function(t,i){if(auth>=t)lvIdx=i;});
+    LVTHR.forEach(function(t,i){
+      var card=document.getElementById('lv-card-'+(i+1));
+      var st=document.getElementById('lv-st-'+(i+1));
+      if(auth>=t){if(card)card.classList.add('earned');if(st){st.textContent='EARNED';st.className='lv-status earned';}}
+    });
+    function s2(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+    s2('my-lv-num',String(lvIdx+1 > 0 ? lvIdx+1 : 1));
+    s2('my-lv-name',lvIdx>=0?LVNAMES[lvIdx]:LVNAMES[0]);
+    var nextIdx=lvIdx+1; if(nextIdx<12)s2('my-lv-next','Next: '+LVNAMES[nextIdx]+' at AUTH ≥ '+LVTHR[nextIdx]); else s2('my-lv-next','APEX SOVEREIGN — LATTICE COMPLETE');
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+function lvTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('lv-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

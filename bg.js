@@ -1484,3 +1484,6 @@ setTimeout(function(){
 
   /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
   if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;if(document.body)document.body.appendChild(_ott);}
+
+  /* Sovereign celebration engine — gate unlock bursts, milestone banners, apex sequence */
+  if(!document.querySelector('script[data-omega-confetti]')){var _ocnf=document.createElement('script');_ocnf.src='/omega-confetti.js';_ocnf.setAttribute('data-omega-confetti','1');_ocnf.defer=true;if(document.body)document.body.appendChild(_ocnf);}

@@ -31,6 +31,21 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.04)}
+.tab-panel{display:none}.tab-panel.active{display:block;padding:var(--pad)}
+.grid-table{width:100%;border-collapse:collapse;font-size:10px}
+.grid-table th{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);padding:7px 6px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.grid-table td{padding:6px;border-bottom:1px solid rgba(201,168,76,.06);vertical-align:middle}
+.grid-table tr:hover td{background:rgba(0,229,255,.04)}
+.grid-cell{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:1px;font-family:var(--M);font-size:7px}
+.gc-locked{background:rgba(255,255,255,.03);color:rgba(255,255,255,.2)}
+.gc-active{background:rgba(0,229,255,.15);color:var(--cyan);border:1px solid rgba(0,229,255,.3)}
+.gc-done{background:rgba(201,168,76,.15);color:var(--solar);border:1px solid rgba(201,168,76,.3)}
+.gc-apex{background:rgba(63,178,127,.2);color:var(--green);border:1px solid rgba(63,178,127,.4)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:var(--M);font-size:7.5px;color:var(--muted)}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -51,15 +66,44 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
-      <div class="sechead" data-reveal="fade-up">GRID &middot; M12 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">GRID</div>
-        <div class="hero-sub">M12 &middot; LATTICE GRID VIEW</div>
-        <div class="hero-desc">Full 12×12 canonical lattice grid view — 104,976 nodes across all tracks and phases.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" onclick="grdTab(this,'grd-full')">FULL GRID</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="grdTab(this,'grd-mypath')">MY PATH</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="grdTab(this,'grd-stats')">GRID STATS</button>
       </div>
-      
-    </div>
-    <div data-page-emblem="grid" style="margin:20px auto 0"></div>
+      <div id="grd-full" class="tab-panel active"><div class="sechead">12×12 SOVEREIGN LATTICE GRID</div>
+        <div class="legend"><div class="legend-item"><div class="grid-cell gc-done" style="width:16px;height:16px"></div> UNLOCKED</div><div class="legend-item"><div class="grid-cell gc-active" style="width:16px;height:16px"></div> ACTIVE</div><div class="legend-item"><div class="grid-cell gc-locked" style="width:16px;height:16px"></div> LOCKED</div><div class="legend-item"><div class="grid-cell gc-apex" style="width:16px;height:16px"></div> APEX</div></div>
+        <div style="overflow-x:auto"><table class="grid-table">
+          <thead><tr><th>GATE</th><th>ARIES</th><th>TAURUS</th><th>GEMINI</th><th>CANCER</th><th>LEO</th><th>VIRGO</th><th>LIBRA</th><th>SCORPIO</th><th>SAGITT.</th><th>CAPRIC.</th><th>AQUAR.</th><th>PISCES</th></tr></thead>
+          <tbody id="grd-tbody">
+          </tbody>
+        </table></div>
+      </div>
+      <div id="grd-mypath" class="tab-panel"><div class="sechead">MY SOVEREIGN PATH</div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px;margin-bottom:14px">
+          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:8px">CURRENT POSITION</div>
+          <div style="display:flex;gap:20px;flex-wrap:wrap">
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">SIGN</div><div style="font-family:var(--D);font-size:16px;color:var(--solar)" id="grd-my-sign">—</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">AUTH SCORE</div><div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="grd-my-auth">—</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">ACTIVE GATE</div><div style="font-family:var(--D);font-size:16px;color:var(--cyan)" id="grd-my-gate">—</div></div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">GATE PROGRESSION</div>
+          <div id="grd-path-bars" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </div>
+      <div id="grd-stats" class="tab-panel"><div class="sechead">GRID STATISTICS</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:2px solid var(--cyan);padding:14px"><div style="font-family:var(--D);font-size:22px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">BASE LATTICE NODES</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:2px solid var(--cyan);padding:14px"><div style="font-family:var(--D);font-size:22px;color:var(--cyan)">571,536</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">EXPANDED LATTICE NODES</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:2px solid var(--cyan);padding:14px"><div style="font-family:var(--D);font-size:22px;color:var(--cyan)">144</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SIGN × GATE COMBOS</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:2px solid var(--cyan);padding:14px"><div style="font-family:var(--D);font-size:22px;color:var(--cyan)">729</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS STATES (9³)</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:2px solid var(--solar);padding:14px"><div style="font-family:var(--D);font-size:22px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTH SCORE</div></div>
+          <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-top:2px solid var(--solar);padding:14px"><div style="font-family:var(--D);font-size:22px;color:var(--solar)">12</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">GATE THRESHOLDS</div></div>
+        </div>
+      </div>
+        <div data-page-emblem="grid" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; GRID &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
   </main>
 </div>
@@ -83,6 +127,42 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
+</script>
+<script><script>
+function grdTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById(id);if(p)p.classList.add('active');
+}
+(function(){
+  var SIGNS=['ARIES','TAURUS','GEMINI','CANCER','LEO','VIRGO','LIBRA','SCORPIO','SAGITT.','CAPRIC.','AQUAR.','PISCES'];
+  var GATES=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+  var THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+  var tb=document.getElementById('grd-tbody');
+  if(!tb)return;
+  var html='';
+  GATES.forEach(function(g,gi){
+    html+='<tr><td style="font-family:var(--M);font-size:8px;color:var(--cyan);white-space:nowrap">GATE '+g+'</td>';
+    SIGNS.forEach(function(){
+      var cls=gi<3?'gc-done':gi===3?'gc-active':gi===11?'gc-apex':'gc-locked';
+      html+='<td><div class="grid-cell '+cls+'">'+g+'</div></td>';
+    });
+    html+='</tr>';
+  });
+  tb.innerHTML=html;
+  var pathBars=document.getElementById('grd-path-bars');
+  if(pathBars){
+    var ph='';
+    GATES.forEach(function(g,gi){
+      var pct=Math.min(100,Math.round((gi+1)/12*100));
+      var color=gi<3?'var(--green)':gi===3?'var(--cyan)':'rgba(255,255,255,.08)';
+      var tc=gi<3?'var(--solar)':gi===3?'var(--cyan)':'var(--muted)';
+      ph+='<div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--M);font-size:8px;color:'+tc+';width:70px">GATE '+g+'</span><div style="flex:1;height:6px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+color+';transition:.4s"></div></div><span style="font-family:var(--M);font-size:7px;color:var(--muted);width:35px;text-align:right">'+THRESH[gi]+'</span></div>';
+    });
+    pathBars.innerHTML=ph;
+  }
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>

@@ -31,7 +31,40 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--cyan);background:rgba(0,229,255,.04)}
+.tab-btn.on{border-bottom-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.kyc-steps{margin-bottom:16px}
+.kyc-step{display:flex;gap:16px;align-items:flex-start;padding:18px;border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;margin-bottom:10px;transition:.18s}
+.kyc-step.done{border-left:3px solid var(--green);background:rgba(63,178,127,.04)}
+.kyc-step.pending{border-left:3px solid var(--muted)}
+.kyc-step.locked{border-left:3px solid rgba(139,0,0,.4);opacity:.6}
+.kyc-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--M);font-size:12px;font-weight:700}
+.kyc-dot.done{background:rgba(63,178,127,.15);color:var(--green);border:1.5px solid rgba(63,178,127,.4)}
+.kyc-dot.pending{background:rgba(0,229,255,.08);color:var(--cyan);border:1.5px solid rgba(0,229,255,.25)}
+.kyc-dot.locked{background:rgba(255,255,255,.04);color:var(--muted);border:1.5px solid rgba(255,255,255,.1)}
+.kyc-body{flex:1;min-width:0}
+.kyc-step-title{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:5px}
+.kyc-step-desc{font-size:11px;line-height:1.7;color:var(--muted);margin-bottom:8px}
+.kyc-status{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:3px 10px;border-radius:10px;display:inline-block}
+.kyc-status.done{color:var(--green);border:1px solid rgba(63,178,127,.4);background:rgba(63,178,127,.08)}
+.kyc-status.pending{color:var(--cyan);border:1px solid rgba(0,229,255,.25)}
+.kyc-status.locked{color:var(--muted);border:1px solid rgba(255,255,255,.1)}
+.compliance-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.comp-card{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px}
+.comp-title{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
+.comp-body{font-size:11px;line-height:1.7;color:var(--muted)}
+.doc-row{display:grid;grid-template-columns:1fr 100px 80px;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.doc-head{display:contents}
+.doc-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);padding:9px 14px;background:rgba(0,229,255,.04);border-bottom:1px solid var(--line)}
+.doc-row-item{display:contents}
+.doc-cell{padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.05);font-size:11px;color:var(--ink)}
+.doc-cell:last-child{color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.compliance-grid{grid-template-columns:1fr}.doc-row{grid-template-columns:1fr 80px}}
 </style>
 </head>
 <body>
@@ -52,12 +85,92 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">KYC VERIFICATION &middot; M13 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">KYC VERIFICATION</div>
-        <div class="hero-sub">M13 &middot; KNOW YOUR SOVEREIGN</div>
-        <div class="hero-desc">Identity verification and KYC compliance. Activate full sovereign privileges with verified identity status.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="kycTab(this,'status')" role="tab" aria-selected="true">STATUS</button>
+        <button class="tab-btn" onclick="kycTab(this,'steps')" role="tab" aria-selected="false">STEPS</button>
+        <button class="tab-btn" onclick="kycTab(this,'compliance')" role="tab" aria-selected="false">COMPLIANCE</button>
+        <button class="tab-btn" onclick="kycTab(this,'docs')" role="tab" aria-selected="false">DOCUMENTS</button>
       </div>
-      
+
+      <div class="tab-panel on" id="kyc-status" data-reveal="fade-up">
+        <div class="sechead">YOUR KYC STATUS</div>
+        <div class="glass" style="margin-bottom:16px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px">
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">OVERALL STATUS</div><div style="font-family:var(--D);font-size:18px;color:var(--cyan)" id="kyc-overall">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">EMAIL</div><div style="font-family:var(--D);font-size:18px" id="kyc-email-status" style="color:var(--green)">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">APPROVED</div><div style="font-family:var(--D);font-size:18px" id="kyc-approved-status">--</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">ID VERIFY</div><div style="font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--muted)">FUTURE</div></div>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">AML CHECK</div><div style="font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--muted)">FUTURE</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="kyc-steps" data-reveal="fade-up">
+        <div class="sechead">KYC VERIFICATION PATHWAY · 4 STEPS</div>
+        <div class="kyc-steps">
+          <div class="kyc-step done" id="kyc-step1">
+            <div class="kyc-dot done">✓</div>
+            <div class="kyc-body">
+              <div class="kyc-step-title">Step 1 · Email Verification</div>
+              <div class="kyc-step-desc">Your email address must be confirmed before access is granted. This is the primary identity anchor for the sovereign lattice.</div>
+              <div class="kyc-status done" id="kyc-s1-status">COMPLETE</div>
+            </div>
+          </div>
+          <div class="kyc-step" id="kyc-step2">
+            <div class="kyc-dot" id="kyc-dot2">2</div>
+            <div class="kyc-body">
+              <div class="kyc-step-title">Step 2 · Platform Approval</div>
+              <div class="kyc-step-desc">The platform owner reviews and approves your membership. This is the sovereign gate that grants access to the full lattice.</div>
+              <div class="kyc-status" id="kyc-s2-status">PENDING</div>
+            </div>
+          </div>
+          <div class="kyc-step locked" id="kyc-step3">
+            <div class="kyc-dot locked">3</div>
+            <div class="kyc-body">
+              <div class="kyc-step-title">Step 3 · Identity Verification</div>
+              <div class="kyc-step-desc">Government-issued ID verification. Required for Gate VIII+ privileges and revenue participation. Requires Gate VI (AUTH ≥ 13.92).</div>
+              <div class="kyc-status locked">GATE VI REQUIRED</div>
+            </div>
+          </div>
+          <div class="kyc-step locked" id="kyc-step4">
+            <div class="kyc-dot locked">4</div>
+            <div class="kyc-body">
+              <div class="kyc-step-title">Step 4 · AML / Sanctions Check</div>
+              <div class="kyc-step-desc">Anti-money laundering and sanctions screening. Required for Apex Sovereign status and full economic participation in the lattice.</div>
+              <div class="kyc-status locked">APEX REQUIRED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="kyc-compliance" data-reveal="fade-up">
+        <div class="sechead">LEGAL COMPLIANCE FRAMEWORK</div>
+        <div class="compliance-grid">
+          <div class="comp-card"><div class="comp-title">PRIVACY POLICY</div><div class="comp-body">All member data is stored securely in the sovereign database. No personal data is sold or transferred to third parties. GDPR-aligned data handling.</div></div>
+          <div class="comp-card"><div class="comp-title">TERMS OF SERVICE</div><div class="comp-body">Members agree to the Sovereign Covenant upon joining. Conduct guidelines are tied to the authority system — violations affect axis scores.</div></div>
+          <div class="comp-card"><div class="comp-title">COPYRIGHT &amp; IP</div><div class="comp-body">All SYD OMEGA 91717 lore, lattice system, and canonical content is protected intellectual property. Reproduction requires Apex Sovereign approval.</div></div>
+          <div class="comp-card"><div class="comp-title">FINANCIAL COMPLIANCE</div><div class="comp-body">Revenue participation and token economy are subject to applicable financial regulations. KYC Steps 3–4 are prerequisites for economic participation.</div></div>
+          <div class="comp-card"><div class="comp-title">DATA RETENTION</div><div class="comp-body">Member lattice data (axis scores, gate history, task completions) is retained for the lifetime of the account. Deletion requests processed within 30 days.</div></div>
+          <div class="comp-card"><div class="comp-title">SECURITY STANDARDS</div><div class="comp-body">All authentication is handled via Supabase Auth. Zero Trust threat detection (omega-threat.js) runs on every page. Client errors logged to the sovereign database.</div></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="kyc-docs" data-reveal="fade-up">
+        <div class="sechead">DOCUMENT REQUIREMENTS</div>
+        <div class="doc-row">
+          <div class="doc-head"><div class="doc-hcell">DOCUMENT</div><div class="doc-hcell">STEP</div><div class="doc-hcell">STATUS</div></div>
+          <div class="doc-row-item"><div class="doc-cell">Email confirmation</div><div class="doc-cell">Step 1</div><div class="doc-cell" id="doc-email-st">--</div></div>
+          <div class="doc-row-item"><div class="doc-cell">Platform approval record</div><div class="doc-cell">Step 2</div><div class="doc-cell" id="doc-appr-st">--</div></div>
+          <div class="doc-row-item"><div class="doc-cell">Government-issued photo ID</div><div class="doc-cell">Step 3</div><div class="doc-cell">FUTURE</div></div>
+          <div class="doc-row-item"><div class="doc-cell">Address proof (utility / bank)</div><div class="doc-cell">Step 3</div><div class="doc-cell">FUTURE</div></div>
+          <div class="doc-row-item"><div class="doc-cell">AML questionnaire</div><div class="doc-cell">Step 4</div><div class="doc-cell">FUTURE</div></div>
+          <div class="doc-row-item"><div class="doc-cell">Sanctions screening result</div><div class="doc-cell">Step 4</div><div class="doc-cell">FUTURE</div></div>
+        </div>
+        <div class="glass">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">DOCUMENT SECURITY</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Documents submitted for Steps 3–4 are processed by a regulated third-party verification provider and are never stored on the sovereign database. Only the verification result (pass/fail) is recorded.</div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="kyc" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; KYC VERIFICATION &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -82,8 +195,32 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    function s2(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+    var emailVerified=!!s.user.email_confirmed_at;
+    var approved=pr.is_owner||pr.access_approved;
+    s2('kyc-overall',approved?'STEP 2 COMPLETE':'STEP 1 COMPLETE');
+    s2('kyc-email-status',emailVerified?'VERIFIED':'UNVERIFIED');
+    document.getElementById('kyc-email-status').style.color=emailVerified?'var(--green)':'var(--muted)';
+    s2('kyc-approved-status',approved?'APPROVED':'PENDING');
+    document.getElementById('kyc-approved-status').style.color=approved?'var(--green)':'var(--cyan)';
+    if(approved){
+      var step2=document.getElementById('kyc-step2');
+      if(step2){step2.classList.remove('pending');step2.classList.add('done');}
+      var dot2=document.getElementById('kyc-dot2');if(dot2){dot2.textContent='✓';dot2.className='kyc-dot done';}
+      var s2st=document.getElementById('kyc-s2-status');if(s2st){s2st.textContent='COMPLETE';s2st.className='kyc-status done';}
+    }
+    s2('doc-email-st',emailVerified?'COMPLETE':'PENDING');
+    s2('doc-appr-st',approved?'COMPLETE':'PENDING');
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+function kycTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('kyc-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

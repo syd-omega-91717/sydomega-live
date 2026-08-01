@@ -86,6 +86,7 @@
     atlas:        {label:'Knowledge Atlas', section:'INTEL',      prev:'codex',          next:'intelligence'},
     meditate:     {label:'Breathwork',      section:'IDENTITY',   prev:'rituals',        next:'mirror'},
     library:      {label:'Reading Library', section:'INTEL',      prev:'atlas',          next:'codex'},
+    nutrition:    {label:'Body Fuel',       section:'IDENTITY',   prev:'meditate',       next:'rituals'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

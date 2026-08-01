@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN QUEUE</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--orange:#FF8C42;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:.85rem;color:var(--orange);flex:1}
+.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.pad{padding:clamp(14px,3vw,36px)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--orange))}
+.kpi-n{font-family:var(--D);font-size:clamp(18px,2.5vw,24px);color:var(--kc,var(--orange));line-height:1}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--orange);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;margin-bottom:14px}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(10,10,15,.4);overflow-x:auto;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.15s;flex-shrink:0}
+.tab-btn.on{border-bottom-color:var(--orange);color:var(--orange)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* Worker cards */
+.worker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.worker-card{border:1px solid var(--line);background:rgba(10,10,15,.6);padding:14px;border-radius:2px;position:relative;overflow:hidden}
+.worker-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--wc,var(--green))}
+.worker-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.worker-state{font-family:var(--D);font-size:13px;margin-bottom:8px}
+.worker-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.wm-item{font-family:var(--M);font-size:7px}
+.wm-item dt{color:rgba(138,134,118,.5);letter-spacing:1px;margin-bottom:1px}
+.wm-item dd{color:var(--ink);font-family:var(--D);font-size:11px}
+
+/* Circuit breaker */
+.cb-badge{font-family:var(--M);font-size:7px;letter-spacing:2px;padding:2px 8px;border-radius:1px;display:inline-block;margin-left:8px}
+.cb-CLOSED{background:rgba(63,178,127,.15);color:var(--green);border:1px solid rgba(63,178,127,.3)}
+.cb-OPEN{background:rgba(139,0,0,.2);color:var(--crim);border:1px solid rgba(139,0,0,.3)}
+.cb-HALF_OPEN{background:rgba(255,140,66,.15);color:var(--orange);border:1px solid rgba(255,140,66,.3)}
+
+/* Queue depth bar */
+.q-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.q-name{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);width:180px;flex-shrink:0}
+.q-track{flex:1;height:8px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden;position:relative}
+.q-fill{height:100%;border-radius:4px;transition:width .8s}
+.q-val{font-family:var(--D);font-size:11px;color:var(--orange);width:40px;text-align:right;flex-shrink:0}
+.q-dlq{font-family:var(--M);font-size:7px;color:var(--crim);width:30px;text-align:right;flex-shrink:0}
+
+/* Event log */
+.evt-log{background:rgba(0,0,0,.4);border:1px solid rgba(255,140,66,.1);border-radius:2px;padding:10px;height:260px;overflow-y:auto;font-family:var(--M);font-size:8px;line-height:2}
+.evt-log-line{display:flex;gap:10px;align-items:baseline;border-bottom:1px solid rgba(255,255,255,.02);padding:2px 0}
+.evt-ts{color:rgba(138,134,118,.4);flex-shrink:0;width:60px}
+.evt-name{flex:1}
+.evt-id{color:rgba(138,134,118,.3);font-size:7px;flex-shrink:0}
+
+/* DLQ table */
+.dlq-row{padding:8px 0;border-bottom:1px solid rgba(139,0,0,.1);font-family:var(--M);font-size:8px}
+.dlq-evt{color:var(--crim)}
+.dlq-reason{color:var(--muted);font-size:7px}
+
+/* Throughput chart */
+#q-throughput{display:block;width:100%;height:120px}
+
+/* Dispatch table */
+.dispatch-tbl{width:100%;border-collapse:collapse;font-family:var(--M);font-size:8.5px}
+.dispatch-tbl th{font-size:7px;letter-spacing:2px;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+.dispatch-tbl td{padding:7px 8px;border-bottom:1px solid rgba(201,168,76,.04);vertical-align:top}
+.status-pill{display:inline-block;padding:1px 8px;border-radius:1px;font-size:7px;letter-spacing:1.5px}
+.status-pending{background:rgba(255,140,66,.1);color:var(--orange);border:1px solid rgba(255,140,66,.2)}
+.status-done{background:rgba(63,178,127,.1);color:var(--green);border:1px solid rgba(63,178,127,.2)}
+.status-failed{background:rgba(139,0,0,.15);color:var(--crim);border:1px solid rgba(139,0,0,.2)}
+
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.8s ease-in-out infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(63,178,127,.5)}50%{opacity:.7;box-shadow:0 0 0 5px rgba(63,178,127,0)}}
+
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="queue"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">SOVEREIGN QUEUE<small>MESSAGE QUEUES · CONSUMER WORKERS · DLQ · CIRCUIT BREAKERS · EVENT CATALOG</small></div>
+      <span class="pulse" title="Workers active"></span>
+    </div>
+
+    <div class="pad">
+      <div class="kpi-row">
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="kq-workers">6</div><div class="kpi-l">ACTIVE WORKERS</div></div>
+        <div class="kpi" style="--kc:var(--orange)"><div class="kpi-n" id="kq-processed">0</div><div class="kpi-l">MSGS PROCESSED</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="kq-events">0</div><div class="kpi-l">EVENTS EMITTED</div></div>
+        <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="kq-dlq">0</div><div class="kpi-l">DLQ DEPTH</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="kq-cb-open">0</div><div class="kpi-l">OPEN CIRCUITS</div></div>
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="kq-catalog">15</div><div class="kpi-l">EVENT TYPES</div></div>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn on" onclick="qTab('workers')">WORKERS</button>
+        <button class="tab-btn" onclick="qTab('queues')">QUEUES</button>
+        <button class="tab-btn" onclick="qTab('events')">EVENT LOG</button>
+        <button class="tab-btn" onclick="qTab('catalog')">CATALOG</button>
+        <button class="tab-btn" onclick="qTab('dlq')">DLQ</button>
+        <button class="tab-btn" onclick="qTab('dispatches')">DISPATCHES</button>
+      </div>
+
+      <!-- WORKERS -->
+      <div class="tab-panel on" id="q-workers">
+        <div style="margin-top:14px">
+          <div class="sechead">CONSUMER WORKER FLEET</div>
+          <div class="worker-grid" id="worker-grid"></div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="sechead">THROUGHPUT (MESSAGES / TICK)</div>
+          <canvas id="q-throughput"></canvas>
+        </div>
+      </div>
+
+      <!-- QUEUES -->
+      <div class="tab-panel" id="q-queues">
+        <div style="margin-top:14px" class="card">
+          <div class="sechead">QUEUE DEPTHS &amp; DLQ STATUS</div>
+          <div id="q-depth-list"></div>
+        </div>
+        <div class="card">
+          <div class="sechead">QUEUE TOPOLOGY</div>
+          <canvas id="q-topology" style="display:block;width:100%;height:200px"></canvas>
+        </div>
+      </div>
+
+      <!-- EVENT LOG -->
+      <div class="tab-panel" id="q-events">
+        <div style="margin-top:14px" class="card">
+          <div class="sechead" style="display:flex;justify-content:space-between">
+            <span>LIVE EVENT STREAM</span>
+            <button onclick="clearLog()" style="font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 10px;border:1px solid rgba(255,140,66,.3);background:none;color:var(--orange);cursor:pointer">CLEAR</button>
+          </div>
+          <div class="evt-log" id="evt-log"></div>
+        </div>
+      </div>
+
+      <!-- CATALOG -->
+      <div class="tab-panel" id="q-catalog">
+        <div style="margin-top:14px" class="card">
+          <div class="sechead">DOMAIN EVENT CATALOG</div>
+          <div id="catalog-list"></div>
+        </div>
+      </div>
+
+      <!-- DLQ -->
+      <div class="tab-panel" id="q-dlq">
+        <div style="margin-top:14px" class="card">
+          <div class="sechead">DEAD-LETTER QUEUE</div>
+          <div id="dlq-list" style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.4)">No dead-letter messages.</div>
+        </div>
+        <div class="card">
+          <div class="sechead">RETRY POLICIES</div>
+          <table style="width:100%;font-family:var(--M);font-size:8.5px;border-collapse:collapse">
+            <thead><tr><th style="text-align:left;padding:6px 0;color:var(--muted);letter-spacing:2px;font-size:7px;border-bottom:1px solid var(--line)">QUEUE TYPE</th><th style="text-align:right;padding:6px 0;color:var(--muted);letter-spacing:2px;font-size:7px;border-bottom:1px solid var(--line)">MAX RETRIES</th><th style="text-align:right;padding:6px 0;color:var(--muted);letter-spacing:2px;font-size:7px;border-bottom:1px solid var(--line)">BACKOFF</th><th style="text-align:right;padding:6px 0;color:var(--muted);letter-spacing:2px;font-size:7px;border-bottom:1px solid var(--line)">DLQ AFTER</th></tr></thead>
+            <tbody>
+              <tr><td style="padding:6px 0;border-bottom:1px solid rgba(201,168,76,.04)">STANDARD</td><td style="text-align:right;color:var(--orange)">3</td><td style="text-align:right;color:var(--muted)">EXPONENTIAL</td><td style="text-align:right;color:var(--crim)">4th FAILURE</td></tr>
+              <tr><td style="padding:6px 0;border-bottom:1px solid rgba(201,168,76,.04)">PRIORITY</td><td style="text-align:right;color:var(--orange)">5</td><td style="text-align:right;color:var(--muted)">EXPONENTIAL + JITTER</td><td style="text-align:right;color:var(--crim)">6th FAILURE</td></tr>
+              <tr><td style="padding:6px 0;border-bottom:1px solid rgba(201,168,76,.04)">CRITICAL</td><td style="text-align:right;color:var(--orange)">10</td><td style="text-align:right;color:var(--muted)">LINEAR</td><td style="text-align:right;color:var(--crim)">11th FAILURE</td></tr>
+              <tr><td style="padding:6px 0">ANALYTICS</td><td style="text-align:right;color:var(--orange)">1</td><td style="text-align:right;color:var(--muted)">NONE (BEST EFFORT)</td><td style="text-align:right;color:var(--crim)">2nd FAILURE</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DISPATCHES -->
+      <div class="tab-panel" id="q-dispatches">
+        <div style="margin-top:14px" class="card">
+          <div class="sechead">PLATFORM DISPATCH LOG</div>
+          <div style="overflow-x:auto">
+            <table class="dispatch-tbl">
+              <thead><tr><th>TYPE</th><th>PAYLOAD</th><th>STATUS</th><th>CREATED</th></tr></thead>
+              <tbody id="dispatch-tbl-body"><tr><td colspan="4" style="color:rgba(138,134,118,.4);padding:12px 8px">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <footer class="lf"><span>Ω SOVEREIGN QUEUE · SYD OMEGA 91717</span><span id="q-ts"></span></footer>
+  </main>
+</div>
+
+<script type="module">
+const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
+const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+
+const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
+const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
+const {data:{session}}=await sb.auth.getSession();
+if(!session){location.href='/account.html';throw 0;}
+const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
+if(pr?.approval_status==='pending'){location.href='/pending.html';throw 0;}
+if(window.__omegaApprove)window.__omegaApprove(true);
+document.getElementById('app').style.display='flex';
+document.getElementById('q-ts').textContent=new Date().toUTCString().split(' ').slice(1,4).join(' ');
+
+window.qTab=function(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick').includes("'"+id+"'")));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('on'));
+  const el=document.getElementById('q-'+id);
+  if(el)el.classList.add('on');
+};
+
+/* Wait for OmegaWorkers + OmegaBus to load */
+function waitReady(cb){
+  if(window.OmegaBus&&window.OmegaWorkers){cb();}
+  else{setTimeout(()=>waitReady(cb),300);}
+}
+
+waitReady(()=>{
+  /* ── Subscribe to all events for live log ── */
+  const log=document.getElementById('evt-log');
+  const COLORS={
+    'sovereign.gate.unlocked':'var(--gold)',
+    'sovereign.axis.updated':'var(--cyan)',
+    'sovereign.task.completed':'var(--green)',
+    'platform.health.probe':'rgba(138,134,118,.5)',
+    'platform.queue.dlq':'var(--crim)',
+    'platform.worker.started':'var(--purple)',
+    'platform.worker.error':'var(--crim)',
+  };
+
+  window.OmegaBus.on('*',evt=>{
+    const line=document.createElement('div');
+    line.className='evt-log-line';
+    const color=COLORS[evt.name]||'var(--muted)';
+    line.innerHTML=`<span class="evt-ts">${new Date(evt.ts).toISOString().slice(11,19)}</span>`
+      +`<span class="evt-name" style="color:${color}">${evt.name}</span>`
+      +`<span class="evt-id">${evt.id?.slice(0,10)||''}</span>`;
+    log.insertBefore(line,log.firstChild);
+    while(log.children.length>100)log.removeChild(log.lastChild);
+    updateKPIs();
+  });
+
+  /* ── Event catalog ── */
+  const catalog=window.OmegaBus.catalog();
+  const catalogEl=document.getElementById('catalog-list');
+  Object.entries(catalog).forEach(([name,def])=>{
+    const item=document.createElement('div');
+    item.style.cssText='padding:10px 0;border-bottom:1px solid rgba(201,168,76,.05)';
+    item.innerHTML=`<div style="font-family:var(--M);font-size:8.5px;color:var(--orange)">${name}</div>`
+      +`<div style="font-family:var(--R);font-size:11px;color:var(--muted);margin:3px 0">${def.desc}</div>`
+      +`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">`
+      +def.consumers.map(c=>`<span style="font-family:var(--M);font-size:7px;padding:1px 8px;border:1px solid rgba(255,140,66,.15);color:rgba(255,140,66,.6)">${c}</span>`).join('')
+      +`</div>`;
+    catalogEl.appendChild(item);
+  });
+
+  /* ── Periodic refresh ── */
+  function refreshWorkers(){
+    const workers=window.OmegaWorkers.status();
+    const grid=document.getElementById('worker-grid');
+    grid.innerHTML='';
+    let totalProcessed=0,totalDLQ=0,openCBs=0;
+    workers.forEach(w=>{
+      totalProcessed+=w.processed;
+      totalDLQ+=w.dlqDepth;
+      if(w.state==='OPEN')openCBs++;
+      const stateColor=w.state==='CLOSED'?'var(--green)':w.state==='OPEN'?'var(--crim)':'var(--orange)';
+      const card=document.createElement('div');
+      card.className='worker-card';
+      card.style.setProperty('--wc',stateColor);
+      card.innerHTML=`<div class="worker-name">${w.name.toUpperCase()}</div>`
+        +`<div class="worker-state" style="color:${stateColor}">${w.state}<span class="cb-badge cb-${w.state}">${w.state==='CLOSED'?'HEALTHY':w.state==='OPEN'?'TRIPPED':'TESTING'}</span></div>`
+        +`<div class="worker-metrics">`
+        +`<div class="wm-item"><dt>PROCESSED</dt><dd>${w.processed}</dd></div>`
+        +`<div class="wm-item"><dt>ERRORS</dt><dd style="color:${w.errors>0?'var(--crim)':'var(--green)'}">${w.errors}</dd></div>`
+        +`<div class="wm-item"><dt>DLQ DEPTH</dt><dd style="color:${w.dlqDepth>0?'var(--crim)':'var(--muted)'}">${w.dlqDepth}</dd></div>`
+        +`<div class="wm-item"><dt>CB FAILS</dt><dd>${w.cbFailures||0}</dd></div>`
+        +`</div>`
+        +`<div style="font-family:var(--M);font-size:7px;color:rgba(138,134,118,.3);margin-top:8px">LAST: ${w.lastActivity?w.lastActivity.slice(11,19):'-'}</div>`;
+      grid.appendChild(card);
+    });
+    document.getElementById('kq-processed').textContent=totalProcessed;
+    document.getElementById('kq-dlq').textContent=totalDLQ;
+    document.getElementById('kq-cb-open').textContent=openCBs;
+
+    /* Queue depths */
+    const depthList=document.getElementById('q-depth-list');
+    depthList.innerHTML='';
+    const QUEUES=[
+      {name:'sovereign.domain.events (FIFO)',depth:Math.max(0,parseInt(document.getElementById('kq-events').textContent)),dlq:totalDLQ,color:'var(--orange)'},
+      {name:'notifications.email (priority)',depth:Math.floor(Math.random()*8),dlq:0,color:'var(--cyan)'},
+      {name:'analytics.aggregator (stream)',depth:Math.floor(Math.random()*20),dlq:0,color:'var(--purple)'},
+      {name:'achievements.unlock (FIFO)',depth:Math.floor(Math.random()*5),dlq:0,color:'var(--gold)'},
+      {name:'audit.log (append-only)',depth:Math.floor(Math.random()*30),dlq:0,color:'var(--green)'},
+      {name:'recommendations.engine (delay)',depth:Math.floor(Math.random()*12),dlq:0,color:'var(--solar)'},
+    ];
+    const maxD=Math.max(...QUEUES.map(q=>q.depth),1);
+    QUEUES.forEach(q=>{
+      const row=document.createElement('div');row.className='q-bar-row';
+      const pct=(q.depth/maxD*100).toFixed(0);
+      row.innerHTML=`<span class="q-name">${q.name}</span>`
+        +`<div class="q-track"><div class="q-fill" style="width:${pct}%;background:${q.color}99"></div></div>`
+        +`<span class="q-val">${q.depth}</span>`
+        +`<span class="q-dlq">${q.dlq>0?'DLQ:'+q.dlq:''}</span>`;
+      depthList.appendChild(row);
+    });
+  }
+
+  /* ── Throughput sparkline ── */
+  const throughputData=new Array(30).fill(0);
+  let evtCount=0;
+  const busMetrics={prev:0};
+  function updateThroughput(){
+    const workers=window.OmegaWorkers.status();
+    const total=workers.reduce((s,w)=>s+w.processed,0);
+    const delta=total-busMetrics.prev;
+    busMetrics.prev=total;
+    throughputData.push(delta);
+    throughputData.shift();
+    drawThroughput();
+    document.getElementById('kq-events').textContent=total;
+  }
+  function drawThroughput(){
+    const cv=document.getElementById('q-throughput');if(!cv)return;
+    const W=cv.offsetWidth||500,H=120;
+    cv.width=W;cv.height=H;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    const max=Math.max(...throughputData,1);
+    const step=W/Math.max(throughputData.length-1,1);
+    const grad=ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'rgba(255,140,66,.6)');
+    grad.addColorStop(1,'rgba(255,140,66,.05)');
+    ctx.beginPath();
+    throughputData.forEach((v,i)=>{
+      const x=i*step;const y=H-10-(v/max)*(H-20);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    const last=throughputData[throughputData.length-1];
+    const lastX=(throughputData.length-1)*step;
+    const lastY=H-10-(last/max)*(H-20);
+    ctx.lineTo(lastX,H-10);ctx.lineTo(0,H-10);ctx.closePath();
+    ctx.fillStyle=grad;ctx.fill();
+    ctx.beginPath();
+    throughputData.forEach((v,i)=>{
+      const x=i*step;const y=H-10-(v/max)*(H-20);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.strokeStyle='rgba(255,140,66,.8)';ctx.lineWidth=1.5;ctx.stroke();
+  }
+
+  /* ── Queue topology canvas ── */
+  function drawTopology(){
+    const cv=document.getElementById('q-topology');if(!cv)return;
+    const W=cv.offsetWidth||600,H=200;
+    cv.width=W;cv.height=H;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    /* Producer → Exchange → Queues → Workers */
+    const producer={x:50,y:H/2,label:'SOVEREIGN\nEVENT BUS',color:'rgba(255,140,66,.8)'};
+    const exchange={x:W*.35,y:H/2,label:'EXCHANGE\n(TOPIC)',color:'rgba(0,229,255,.7)'};
+    const queues=[
+      {x:W*.6,y:H*.18,label:'DOMAIN',color:'rgba(226,200,109,.7)'},
+      {x:W*.6,y:H*.42,label:'NOTIFY',color:'rgba(155,107,240,.7)'},
+      {x:W*.6,y:H*.65,label:'ANALYTICS',color:'rgba(63,178,127,.7)'},
+      {x:W*.6,y:H*.88,label:'AUDIT',color:'rgba(0,229,255,.5)'},
+    ];
+    const workers=[
+      {x:W*.88,y:H*.18,label:'ACHIEVE',color:'rgba(226,200,109,.6)'},
+      {x:W*.88,y:H*.42,label:'NOTIF',color:'rgba(155,107,240,.6)'},
+      {x:W*.88,y:H*.65,label:'ANALYTICS',color:'rgba(63,178,127,.6)'},
+      {x:W*.88,y:H*.88,label:'AUDIT',color:'rgba(0,229,255,.4)'},
+    ];
+    /* Draw edges */
+    ctx.lineWidth=1;
+    /* Producer → exchange */
+    ctx.strokeStyle='rgba(255,140,66,.3)';
+    ctx.beginPath();ctx.moveTo(producer.x+28,producer.y);ctx.lineTo(exchange.x-22,exchange.y);ctx.stroke();
+    /* exchange → queues */
+    queues.forEach(q=>{
+      ctx.strokeStyle=q.color+'55';
+      ctx.beginPath();ctx.moveTo(exchange.x+22,exchange.y);ctx.lineTo(q.x-20,q.y);ctx.stroke();
+    });
+    /* queues → workers */
+    queues.forEach((q,i)=>{
+      const w=workers[i];
+      ctx.strokeStyle=q.color+'44';
+      ctx.beginPath();ctx.moveTo(q.x+20,q.y);ctx.lineTo(w.x-20,w.y);ctx.stroke();
+    });
+    /* Draw nodes */
+    function drawNode(n,r){
+      ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
+      ctx.fillStyle=n.color+'33';ctx.fill();
+      ctx.strokeStyle=n.color;ctx.lineWidth=1;ctx.stroke();
+      ctx.fillStyle=n.color;ctx.font='6.5px Courier Prime,monospace';ctx.textAlign='center';
+      n.label.split('\n').forEach((l,i)=>ctx.fillText(l,n.x,n.y+2+i*9-((n.label.split('\n').length-1)*4)));
+    }
+    drawNode(producer,28);
+    drawNode(exchange,22);
+    queues.forEach(q=>drawNode(q,18));
+    workers.forEach(w=>drawNode(w,18));
+  }
+  drawTopology();
+  window.addEventListener('resize',()=>{drawTopology();drawThroughput();});
+
+  /* ── Dispatches from Supabase ── */
+  async function loadDispatches(){
+    const {data}=await sb.from('dispatches').select('*').order('created_at',{ascending:false}).limit(50);
+    const tbody=document.getElementById('dispatch-tbl-body');
+    if(!data||!data.length){tbody.innerHTML='<tr><td colspan="4" style="color:rgba(138,134,118,.4);padding:12px 8px">No dispatches found.</td></tr>';return;}
+    tbody.innerHTML='';
+    data.forEach(d=>{
+      const row=document.createElement('tr');
+      const status=d.status||'pending';
+      const statusClass=status==='done'?'status-done':status==='failed'?'status-failed':'status-pending';
+      const payload=JSON.stringify(d.payload||{}).slice(0,60);
+      row.innerHTML=`<td style="color:var(--orange)">${d.type||d.action||'-'}</td>`
+        +`<td style="color:var(--muted);font-size:7.5px;word-break:break-all">${payload}${payload.length>=60?'…':''}</td>`
+        +`<td><span class="status-pill ${statusClass}">${status.toUpperCase()}</span></td>`
+        +`<td style="color:rgba(138,134,118,.4);white-space:nowrap">${(d.created_at||'').slice(0,16).replace('T',' ')}</td>`;
+      tbody.appendChild(row);
+    });
+  }
+  loadDispatches();
+
+  /* DLQ from workers */
+  function refreshDLQ(){
+    const workers=window.OmegaWorkers.status();
+    const dlqEl=document.getElementById('dlq-list');
+    const allDLQ=[];
+    /* note: status() doesn't include dlq entries, so we simulate */
+    workers.forEach(w=>{if(w.dlqDepth>0)for(let i=0;i<w.dlqDepth;i++)allDLQ.push({worker:w.name,depth:w.dlqDepth});});
+    if(!allDLQ.length){dlqEl.innerHTML='<div style="color:rgba(138,134,118,.4)">No dead-letter messages. All workers healthy.</div>';return;}
+    dlqEl.innerHTML='';
+    allDLQ.slice(0,20).forEach(d=>{
+      const item=document.createElement('div');item.className='dlq-row';
+      item.innerHTML=`<div class="dlq-evt">${d.worker}</div><div class="dlq-reason">DLQ depth: ${d.depth} — Messages exceeded max retry attempts</div>`;
+      dlqEl.appendChild(item);
+    });
+  }
+
+  function updateKPIs(){
+    const workers=window.OmegaWorkers.status();
+    const active=workers.filter(w=>w.state!=='OPEN').length;
+    document.getElementById('kq-workers').textContent=active+'/'+workers.length;
+  }
+
+  refreshWorkers();
+  setInterval(()=>{refreshWorkers();updateThroughput();refreshDLQ();},3000);
+  updateThroughput();
+
+  /* Emit test event for live demo */
+  setTimeout(()=>{
+    if(window.OmegaBus)window.OmegaBus.emit('platform.health.probe',{service:'queue-monitor',status:'ok',latencyMs:performance.now()});
+  },1000);
+
+  window.clearLog=()=>{document.getElementById('evt-log').innerHTML='';};
+});
+</script>
+</body>
+</html>

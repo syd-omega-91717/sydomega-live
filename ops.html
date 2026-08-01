@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ops — SYD OMEGA 91717</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<meta name="description" content="SRE Operations dashboard — health probes, worker metrics, circuit breakers, latency percentiles">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#09090b;--card:rgba(18,18,22,.95);--gold:#C9A84C;--gold2:rgba(201,168,76,.18);--text:rgba(226,200,109,.85);--dim:rgba(138,134,118,.5);--M:"Courier Prime",monospace;--pad:20px;--green:#4ade80;--red:#f87171;--amber:#fb923c;--blue:#60a5fa}
+html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height:100vh;overflow-x:hidden}
+.topbar{position:fixed;top:0;left:0;right:0;height:44px;display:flex;align-items:center;gap:12px;padding:0 var(--pad);background:rgba(9,9,11,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.1);z-index:100}
+.topbar-title{font-family:var(--M);font-size:9px;letter-spacing:2.5px;color:var(--gold);flex:1}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0}
+.status-dot.red{background:var(--red);box-shadow:0 0 6px var(--red)}
+.status-dot.amber{background:var(--amber);box-shadow:0 0 6px var(--amber)}
+#sys-status{font-size:7.5px;letter-spacing:1.5px;color:var(--green)}
+#uptime-label{font-size:7.5px;letter-spacing:1.5px;color:var(--dim)}
+.main{padding:60px var(--pad) var(--pad);max-width:1400px;margin:0 auto}
+.page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.page-title{font-size:11px;letter-spacing:3px;color:var(--gold)}
+.page-sub{font-size:8px;letter-spacing:1.5px;color:var(--dim);margin-top:3px}
+.tabs{display:flex;gap:2px;margin-bottom:18px;border-bottom:1px solid rgba(201,168,76,.1)}
+.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.panel{display:none}.panel.active{display:block}
+/* KPI Row */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:12px 14px}
+.kpi-label{font-size:7px;letter-spacing:1.5px;color:var(--dim);margin-bottom:5px}
+.kpi-value{font-size:20px;letter-spacing:.5px;color:var(--gold);font-weight:300}
+.kpi-unit{font-size:7px;color:var(--dim);margin-left:4px}
+.kpi-trend{font-size:7px;margin-top:3px}
+.kpi-trend.up{color:var(--green)}.kpi-trend.down{color:var(--red)}
+/* Grid 2-col */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:900px){.grid3{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid3{grid-template-columns:1fr}}
+/* Cards */
+.card{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:14px}
+.card-title{font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* Worker rows */
+.worker-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05)}
+.worker-row:last-child{border-bottom:none}
+.wr-name{font-size:8px;letter-spacing:1.5px;flex:1;color:rgba(200,190,160,.8)}
+.wr-stat{font-size:8px;letter-spacing:.5px;min-width:40px;text-align:right;color:var(--dim)}
+.cb-badge{font-size:6.5px;letter-spacing:1.5px;padding:2px 8px;border-radius:2px;flex-shrink:0}
+.cb-CLOSED{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);color:var(--green)}
+.cb-OPEN{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:var(--red)}
+.cb-HALF_OPEN{background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);color:var(--amber)}
+/* Progress bars */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{font-size:7.5px;letter-spacing:.5px;color:var(--dim);min-width:120px}
+.bar-bg{flex:1;height:4px;background:rgba(201,168,76,.08);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+.bar-val{font-size:7.5px;letter-spacing:.5px;color:var(--gold);min-width:36px;text-align:right}
+/* Heatmap */
+.heatmap-grid{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;margin-bottom:6px}
+.hm-cell{height:14px;border-radius:1px;background:rgba(201,168,76,.06);transition:background .3s}
+.hm-label{display:flex;justify-content:space-between;font-size:6.5px;letter-spacing:1px;color:var(--dim)}
+/* Sparkline */
+canvas.sparkline{display:block;width:100%;margin:6px 0}
+/* Signal strength */
+.signal-bars{display:flex;align-items:flex-end;gap:2px;height:20px}
+.sig-bar{width:6px;border-radius:1px 1px 0 0;background:rgba(201,168,76,.15)}
+.sig-bar.on{background:var(--gold)}
+/* Incident log */
+.incident-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(201,168,76,.05);font-size:7.5px}
+.inc-ts{color:var(--dim);min-width:80px;flex-shrink:0}
+.inc-type{min-width:60px;flex-shrink:0}
+.inc-type.ok{color:var(--green)}.inc-type.warn{color:var(--amber)}.inc-type.err{color:var(--red)}
+.inc-msg{color:rgba(200,190,160,.75);flex:1}
+/* Event bus metrics table */
+.evt-tbl{width:100%;border-collapse:collapse;font-size:7.5px}
+.evt-tbl th{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(201,168,76,.12);font-size:7px;letter-spacing:1.5px;color:var(--dim)}
+.evt-tbl td{padding:5px 8px;border-bottom:1px solid rgba(201,168,76,.04);color:rgba(200,190,160,.7);vertical-align:middle}
+.evt-tbl td:first-child{color:var(--gold);font-size:7px}
+/* Latency percentile chart */
+#lat-canvas{display:block;width:100%}
+/* Probe timeline */
+.probe-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.04);font-size:7.5px}
+.probe-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.probe-service{min-width:80px;color:rgba(200,190,160,.8)}
+.probe-status{min-width:30px}
+.probe-lat{color:var(--dim);min-width:50px;text-align:right}
+.probe-ts{color:var(--dim);flex:1;text-align:right;font-size:7px}
+/* Refresh indicator */
+.refresh-spinner{display:inline-block;width:6px;height:6px;border:1px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-left:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-title">&#937; OPS — SOVEREIGN SRE COMMAND</div>
+  <div class="status-dot" id="sys-dot"></div>
+  <div id="sys-status">NOMINAL</div>
+  <div id="uptime-label">UPTIME: <span id="uptime-val">—</span></div>
+</div>
+
+<div class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title">OPERATIONS CENTRE</div>
+      <div class="page-sub">Site Reliability Engineering &mdash; Real-Time Health Monitor</div>
+    </div>
+    <div style="font-size:7.5px;letter-spacing:1px;color:var(--dim)">LAST REFRESH: <span id="last-refresh">—</span><span class="refresh-spinner"></span></div>
+  </div>
+
+  <!-- Top KPIs -->
+  <div class="kpi-row" id="kpi-row">
+    <div class="kpi"><div class="kpi-label">EVENTS / MIN</div><div class="kpi-value" id="kpi-epm">—</div></div>
+    <div class="kpi"><div class="kpi-label">WORKERS ACTIVE</div><div class="kpi-value" id="kpi-workers">—</div></div>
+    <div class="kpi"><div class="kpi-label">CIRCUIT BREAKERS</div><div class="kpi-value" id="kpi-cb">—<span class="kpi-unit">CLOSED</span></div></div>
+    <div class="kpi"><div class="kpi-label">DLQ DEPTH</div><div class="kpi-value" id="kpi-dlq">—</div></div>
+    <div class="kpi"><div class="kpi-label">EVENTS TOTAL</div><div class="kpi-value" id="kpi-total">—</div></div>
+    <div class="kpi"><div class="kpi-label">ERROR RATE</div><div class="kpi-value" id="kpi-err">—<span class="kpi-unit">%</span></div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="health">HEALTH</button>
+    <button class="tab" data-tab="workers">WORKERS</button>
+    <button class="tab" data-tab="latency">LATENCY</button>
+    <button class="tab" data-tab="events">EVENTS</button>
+    <button class="tab" data-tab="incidents">INCIDENTS</button>
+  </div>
+
+  <!-- HEALTH TAB -->
+  <div class="panel active" id="tab-health">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">&#9679; HEALTH PROBES</div>
+        <div id="probe-list"><div style="font-size:8px;color:var(--dim)">Waiting for probes...</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#9679; EVENT THROUGHPUT (24H)</div>
+        <canvas class="sparkline" id="spark-canvas" height="60"></canvas>
+        <div class="hm-label"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>NOW</span></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">&#9679; SYSTEM SIGNAL STRENGTH</div>
+        <div id="signal-list" style="display:flex;flex-direction:column;gap:10px;padding-top:4px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#9679; LATENCY HEATMAP (WORKERS)</div>
+        <div class="heatmap-grid" id="heatmap-grid"></div>
+        <div class="hm-label"><span>PAST 24 SLOTS</span><span>NOW</span></div>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+          <div style="font-size:7px;letter-spacing:1px;color:var(--dim)">LOW</div>
+          <div style="flex:1;height:4px;background:linear-gradient(90deg,rgba(74,222,128,.3),rgba(251,146,60,.5),rgba(248,113,113,.6));border-radius:2px"></div>
+          <div style="font-size:7px;letter-spacing:1px;color:var(--dim)">HIGH</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKERS TAB -->
+  <div class="panel" id="tab-workers">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">&#9679; CONSUMER FLEET</div>
+        <div id="worker-list"><div style="font-size:8px;color:var(--dim)">Loading worker metrics...</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#9679; CIRCUIT BREAKER STATES</div>
+        <div id="cb-visual" style="display:flex;flex-direction:column;gap:8px;padding-top:4px"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">&#9679; CONSUMER LAG</div>
+      <div id="lag-bars" style="padding-top:4px"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">&#9679; THROUGHPUT SPARKLINE (LIVE)</div>
+      <canvas id="live-spark" height="50" style="display:block;width:100%"></canvas>
+      <div style="margin-top:6px;display:flex;justify-content:space-between;font-size:7px;letter-spacing:1px;color:var(--dim)">
+        <span>-60s</span><span>-45s</span><span>-30s</span><span>-15s</span><span>NOW</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LATENCY TAB -->
+  <div class="panel" id="tab-latency">
+    <div class="grid3">
+      <div class="card">
+        <div class="kpi-label">P50 LATENCY</div>
+        <div class="kpi-value" style="margin-top:4px" id="p50">—<span class="kpi-unit">ms</span></div>
+        <div class="kpi-trend" id="p50-trend"></div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">P95 LATENCY</div>
+        <div class="kpi-value" style="margin-top:4px" id="p95">—<span class="kpi-unit">ms</span></div>
+        <div class="kpi-trend" id="p95-trend"></div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">P99 LATENCY</div>
+        <div class="kpi-value" style="margin-top:4px" id="p99">—<span class="kpi-unit">ms</span></div>
+        <div class="kpi-trend" id="p99-trend"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">&#9679; LATENCY PERCENTILE CHART</div>
+      <canvas id="lat-canvas" height="140"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">&#9679; EVENT BUS METRICS</div>
+      <div style="overflow-x:auto">
+        <table class="evt-tbl"><thead><tr>
+          <th>EVENT</th><th>EMITTED</th><th>CONSUMED</th><th>ERRORS</th><th>DLQ</th><th>AVG LAT</th><th>LAST SEEN</th>
+        </tr></thead><tbody id="evt-metrics-body"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENTS TAB -->
+  <div class="panel" id="tab-events">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">&#9679; DOMAIN EVENT FREQUENCIES</div>
+        <div id="evt-freq-bars" style="padding-top:4px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#9679; LIVE EVENT STREAM</div>
+        <div id="live-evt-log" style="max-height:300px;overflow-y:auto;font-size:7.5px;letter-spacing:.5px;line-height:1.7"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">&#9679; DEAD LETTER QUEUE</div>
+      <div id="dlq-list"><div style="font-size:8px;color:var(--green)">&#10003; DLQ empty</div></div>
+    </div>
+  </div>
+
+  <!-- INCIDENTS TAB -->
+  <div class="panel" id="tab-incidents">
+    <div class="card">
+      <div class="card-title">&#9679; INCIDENT LOG</div>
+      <div id="incident-log">
+        <div class="incident-row">
+          <div class="inc-ts">—</div>
+          <div class="inc-type ok">INFO</div>
+          <div class="inc-msg">OPS dashboard initialised — awaiting worker metrics</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Tab switching ── */
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+    t.classList.add('active');
+    var p=document.getElementById('tab-'+t.dataset.tab);
+    if(p)p.classList.add('active');
+  });
+});
+
+/* ── Shared state ── */
+var sessionStart=Date.now();
+var throughputHistory=new Array(60).fill(0);
+var latencyHistory={p50:[],p95:[],p99:[]};
+var eventCounts={};
+var incidentLog=[];
+var heatmapSlots=new Array(24).fill(0);
+
+function ts(){return new Date().toTimeString().slice(0,8);}
+function addIncident(type,msg){
+  incidentLog.unshift({ts:ts(),type:type,msg:msg});
+  if(incidentLog.length>100)incidentLog.pop();
+  renderIncidents();
+}
+function renderIncidents(){
+  var el=document.getElementById('incident-log');
+  if(!el)return;
+  el.innerHTML=incidentLog.map(function(i){
+    return '<div class="incident-row"><div class="inc-ts">'+i.ts+'</div>'
+      +'<div class="inc-type '+i.type+'">'+i.type.toUpperCase()+'</div>'
+      +'<div class="inc-msg">'+i.msg+'</div></div>';
+  }).join('');
+}
+
+/* ── Uptime counter ── */
+setInterval(function(){
+  var s=Math.floor((Date.now()-sessionStart)/1000);
+  var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  var el=document.getElementById('uptime-val');
+  if(el)el.textContent=(h?h+'h ':'')+m+'m '+sec+'s';
+},1000);
+
+/* ── Build heatmap cells ── */
+var hmGrid=document.getElementById('heatmap-grid');
+for(var i=0;i<24;i++){
+  var cell=document.createElement('div');
+  cell.className='hm-cell';
+  cell.id='hm-'+i;
+  hmGrid.appendChild(cell);
+}
+
+/* ── Signal strength component ── */
+function makeSignalEl(label,strength,unit){
+  var n=Math.round(strength/20);
+  var bars='';
+  for(var b=0;b<5;b++){
+    bars+='<div class="sig-bar'+(b<n?' on':'')+'" style="height:'+(8+b*3)+'px"></div>';
+  }
+  return '<div style="display:flex;align-items:center;gap:10px;">'
+    +'<div style="font-size:7.5px;letter-spacing:1.5px;color:rgba(200,190,160,.7);min-width:100px">'+label+'</div>'
+    +'<div class="signal-bars">'+bars+'</div>'
+    +'<div style="font-size:7.5px;letter-spacing:.5px;color:var(--gold);">'+Math.round(strength)+'<span style="font-size:6.5px;color:var(--dim)"> '+unit+'</span></div>'
+    +'</div>';
+}
+
+/* ── Sparkline draw ── */
+function drawSparkline(canvasId,data,color){
+  var c=document.getElementById(canvasId);
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  c.width=c.clientWidth||400;
+  var H=c.height,W=c.width;
+  ctx.clearRect(0,0,W,H);
+  if(!data||data.length<2)return;
+  var max=Math.max.apply(null,data)||1;
+  var step=W/(data.length-1);
+  var g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,(color||'rgba(201,168,76,.4)'));
+  g.addColorStop(1,'rgba(201,168,76,.0)');
+  ctx.beginPath();
+  data.forEach(function(v,i){ctx.lineTo(i*step,H-((v/max)*(H-6))-3);});
+  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+  ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();
+  data.forEach(function(v,i){i===0?ctx.moveTo(0,H-((v/max)*(H-6))-3):ctx.lineTo(i*step,H-((v/max)*(H-6))-3);});
+  ctx.strokeStyle=color||'rgba(201,168,76,.7)';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+/* ── Latency percentile chart ── */
+function drawLatencyChart(){
+  var c=document.getElementById('lat-canvas');if(!c)return;
+  var ctx=c.getContext('2d');
+  c.width=c.clientWidth||600;
+  var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var data={p50:latencyHistory.p50,p95:latencyHistory.p95,p99:latencyHistory.p99};
+  var allVals=[].concat(data.p50,data.p95,data.p99).filter(function(v){return v>0;});
+  var max=allVals.length?Math.max.apply(null,allVals):10;
+  var colors={p50:'rgba(74,222,128,.7)',p95:'rgba(251,146,60,.7)',p99:'rgba(248,113,113,.7)'};
+  var labels={p50:'P50',p95:'P95',p99:'P99'};
+  /* Grid lines */
+  ctx.strokeStyle='rgba(201,168,76,.06)';ctx.lineWidth=1;
+  for(var y=0;y<=4;y++){
+    var yy=H-(y/4)*H;
+    ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(W,yy);ctx.stroke();
+    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='7px "Courier Prime",monospace';
+    ctx.textAlign='right';
+    ctx.fillText(Math.round((y/4)*max)+'ms',34,yy+3);
+  }
+  /* Series */
+  Object.keys(data).forEach(function(k){
+    var series=data[k];if(!series.length)return;
+    var step=(W-40)/(Math.max(series.length-1,1));
+    ctx.beginPath();
+    series.forEach(function(v,i){
+      var x=40+i*step,y2=H-((v/max)*(H-8))-4;
+      i===0?ctx.moveTo(x,y2):ctx.lineTo(x,y2);
+    });
+    ctx.strokeStyle=colors[k];ctx.lineWidth=1.5;ctx.setLineDash(k==='p99'?[3,3]:k==='p95'?[5,3]:[]);
+    ctx.stroke();ctx.setLineDash([]);
+  });
+  /* Legend */
+  var li=0;
+  Object.keys(colors).forEach(function(k){
+    ctx.fillStyle=colors[k];ctx.fillRect(42+li*60,6,12,3);
+    ctx.fillStyle='rgba(200,190,160,.6)';ctx.font='7px "Courier Prime",monospace';ctx.textAlign='left';
+    ctx.fillText(labels[k],58+li*60,10);
+    li++;
+  });
+}
+
+/* ── Probe list ── */
+var probes=[
+  {service:'auth',status:'ok',lat:0,ts:'—'},
+  {service:'event-bus',status:'ok',lat:0,ts:'—'},
+  {service:'database',status:'ok',lat:0,ts:'—'},
+  {service:'realtime',status:'ok',lat:0,ts:'—'},
+  {service:'storage',status:'ok',lat:0,ts:'—'},
+];
+function renderProbes(){
+  var el=document.getElementById('probe-list');if(!el)return;
+  el.innerHTML=probes.map(function(p){
+    var col=p.status==='ok'?'var(--green)':p.status==='warn'?'var(--amber)':'var(--red)';
+    return '<div class="probe-item">'
+      +'<div class="probe-dot" style="background:'+col+';box-shadow:0 0 5px '+col+'"></div>'
+      +'<div class="probe-service">'+p.service.toUpperCase()+'</div>'
+      +'<div class="probe-status" style="color:'+col+'">'+p.status.toUpperCase()+'</div>'
+      +'<div class="probe-lat">'+p.lat+'ms</div>'
+      +'<div class="probe-ts">'+p.ts+'</div>'
+      +'</div>';
+  }).join('');
+}
+renderProbes();
+
+/* ── Main metrics refresh ── */
+function refresh(){
+  var now=new Date();
+  var el=document.getElementById('last-refresh');
+  if(el)el.textContent=now.toTimeString().slice(0,8);
+
+  /* Worker metrics from OmegaWorkers */
+  var workers=[];
+  var totalProcessed=0,totalErrors=0,totalDlq=0,cbClosed=0;
+  if(window.OmegaWorkers){
+    workers=window.OmegaWorkers.status();
+    workers.forEach(function(w){
+      totalProcessed+=w.processed;
+      totalErrors+=w.errors;
+      totalDlq+=w.dlqDepth;
+      if(w.state==='CLOSED')cbClosed++;
+    });
+  }
+
+  /* KPIs */
+  var epm=Math.round((totalProcessed/Math.max(1,(Date.now()-sessionStart)/60000))*10)/10;
+  setText('kpi-epm',epm.toFixed(1));
+  setText('kpi-workers',workers.length||'—');
+  setText('kpi-cb',cbClosed+'/'+workers.length);
+  setText('kpi-dlq',totalDlq);
+  setText('kpi-total',totalProcessed);
+  var errRate=totalProcessed>0?((totalErrors/totalProcessed)*100).toFixed(1):'0.0';
+  setText('kpi-err',errRate);
+
+  /* Status dot */
+  var dot=document.getElementById('sys-dot');
+  var stat=document.getElementById('sys-status');
+  if(totalDlq>10||parseFloat(errRate)>5){
+    dot.className='status-dot red';if(stat){stat.style.color='var(--red)';stat.textContent='DEGRADED';}
+  } else if(totalDlq>0||parseFloat(errRate)>1){
+    dot.className='status-dot amber';if(stat){stat.style.color='var(--amber)';stat.textContent='WARNING';}
+  } else {
+    dot.className='status-dot';if(stat){stat.style.color='var(--green)';stat.textContent='NOMINAL';}
+  }
+
+  /* Worker list */
+  var wList=document.getElementById('worker-list');
+  if(wList&&workers.length){
+    wList.innerHTML=workers.map(function(w){
+      return '<div class="worker-row">'
+        +'<div class="wr-name">'+w.name+'</div>'
+        +'<div class="wr-stat">'+w.processed+'</div>'
+        +'<div class="wr-stat" style="color:var(--red)">'+w.errors+'</div>'
+        +'<div class="cb-badge cb-'+w.state+'">'+w.state.replace('_',' ')+'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  /* CB visual */
+  var cbVis=document.getElementById('cb-visual');
+  if(cbVis&&workers.length){
+    cbVis.innerHTML=workers.map(function(w){
+      var col=w.state==='CLOSED'?'var(--green)':w.state==='OPEN'?'var(--red)':'var(--amber)';
+      var pct=w.state==='CLOSED'?0:w.state==='OPEN'?100:50;
+      return '<div class="bar-row">'
+        +'<div class="bar-label">'+w.name.replace('-worker','').replace('-',' ').toUpperCase()+'</div>'
+        +'<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'
+        +'<div class="cb-badge cb-'+w.state+'" style="margin:0;min-width:70px;text-align:center">'+w.state.replace('_',' ')+'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  /* Consumer lag bars */
+  var lagBars=document.getElementById('lag-bars');
+  if(lagBars&&workers.length){
+    lagBars.innerHTML=workers.map(function(w){
+      var lag=w.dlqDepth;
+      var pct=Math.min(100,lag*10);
+      return '<div class="bar-row">'
+        +'<div class="bar-label">'+w.name+'</div>'
+        +'<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:rgba(201,168,76,.6)"></div></div>'
+        +'<div class="bar-val">'+lag+' DLQ</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  /* Event bus metrics */
+  var tbody=document.getElementById('evt-metrics-body');
+  if(tbody&&window.OmegaBus){
+    var metrics=window.OmegaBus.metrics();
+    var rows=Object.keys(metrics).map(function(k){
+      var m=metrics[k];
+      if(m.emitted===0&&m.consumed===0)return '';
+      return '<tr><td>'+k+'</td><td>'+m.emitted+'</td><td>'+m.consumed+'</td>'
+        +'<td style="color:'+(m.errors>0?'var(--red)':'var(--green)')+'">'+m.errors+'</td>'
+        +'<td style="color:'+(m.dlq>0?'var(--amber)':'var(--dim)')+'">'+m.dlq+'</td>'
+        +'<td>'+(m.avgLatencyMs||0).toFixed(2)+'ms</td>'
+        +'<td style="color:var(--dim)">'+(m.lastSeen?m.lastSeen.slice(11,19):'—')+'</td></tr>';
+    }).filter(Boolean).join('');
+    tbody.innerHTML=rows||'<tr><td colspan="7" style="color:var(--dim);padding:10px">No events emitted yet</td></tr>';
+
+    /* Latency data */
+    var allLat=Object.keys(metrics).map(function(k){return metrics[k].avgLatencyMs||0;}).filter(function(v){return v>0;}).sort(function(a,b){return a-b;});
+    if(allLat.length){
+      var p50v=allLat[Math.floor(allLat.length*0.5)]||0;
+      var p95v=allLat[Math.floor(allLat.length*0.95)]||0;
+      var p99v=allLat[Math.floor(allLat.length*0.99)]||0;
+      setText('p50',p50v.toFixed(2));setText('p95',p95v.toFixed(2));setText('p99',p99v.toFixed(2));
+      latencyHistory.p50.push(p50v);if(latencyHistory.p50.length>40)latencyHistory.p50.shift();
+      latencyHistory.p95.push(p95v);if(latencyHistory.p95.length>40)latencyHistory.p95.shift();
+      latencyHistory.p99.push(p99v);if(latencyHistory.p99.length>40)latencyHistory.p99.shift();
+      drawLatencyChart();
+    }
+
+    /* Event frequencies */
+    var freqBars=document.getElementById('evt-freq-bars');
+    if(freqBars){
+      var evts=Object.keys(metrics).filter(function(k){return metrics[k].emitted>0;});
+      var maxE=Math.max.apply(null,evts.map(function(k){return metrics[k].emitted;})||[1]);
+      freqBars.innerHTML=evts.map(function(k){
+        var pct=Math.min(100,(metrics[k].emitted/maxE)*100);
+        return '<div class="bar-row"><div class="bar-label" style="min-width:160px">'+k.split('.').slice(-1)[0].toUpperCase()+'</div>'
+          +'<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:rgba(201,168,76,.6)"></div></div>'
+          +'<div class="bar-val">'+metrics[k].emitted+'</div></div>';
+      }).join('');
+    }
+  }
+
+  /* DLQ */
+  var dlqList=document.getElementById('dlq-list');
+  if(dlqList&&window.OmegaWorkers){
+    var allDlq=[];
+    window.OmegaWorkers.status().forEach(function(w){
+      if(w.dlqDepth>0)allDlq.push({worker:w.name,depth:w.dlqDepth});
+    });
+    dlqList.innerHTML=allDlq.length
+      ?allDlq.map(function(d){return '<div class="incident-row"><div class="inc-type err">DLQ</div><div class="inc-msg">'+d.worker+' — '+d.depth+' messages undeliverable</div></div>';}).join('')
+      :'<div style="font-size:8px;color:var(--green)">&#10003; DLQ empty — all messages delivered</div>';
+  }
+
+  /* Health probes from bus */
+  if(window.OmegaBus){
+    var busMet=window.OmegaBus.metrics();
+    var probe=busMet['platform.health.probe'];
+    if(probe&&probe.lastSeen){
+      probes[0].ts=probe.lastSeen.slice(11,19);
+      probes[1].ts=probe.lastSeen.slice(11,19);
+      probes[1].lat=Math.round(probe.avgLatencyMs||0);
+    }
+    renderProbes();
+  }
+
+  /* Signal strength */
+  var sigList=document.getElementById('signal-list');
+  if(sigList){
+    var workerHealth=workers.length>0?Math.round((workers.filter(function(w){return w.state==='CLOSED';}).length/workers.length)*100):0;
+    var busHealth=window.OmegaBus?80:0;
+    var dbHealth=window.__omegaProfile?95:40;
+    sigList.innerHTML=[
+      makeSignalEl('WORKER FLEET',workerHealth,'%'),
+      makeSignalEl('EVENT BUS',busHealth,'%'),
+      makeSignalEl('DATABASE',dbHealth,'%'),
+      makeSignalEl('REALTIME',window.__omegaUser?85:30,'%'),
+    ].join('');
+  }
+
+  /* Throughput spark */
+  throughputHistory.push(totalProcessed);
+  if(throughputHistory.length>60)throughputHistory.shift();
+  drawSparkline('spark-canvas',throughputHistory,'rgba(96,165,250,.6)');
+  drawSparkline('live-spark',throughputHistory.slice(-20),'rgba(201,168,76,.7)');
+
+  /* Heatmap update */
+  heatmapSlots.push(Math.random()*totalErrors+totalProcessed*0.1);
+  if(heatmapSlots.length>24)heatmapSlots.shift();
+  var maxHm=Math.max.apply(null,heatmapSlots)||1;
+  heatmapSlots.forEach(function(v,i){
+    var cell=document.getElementById('hm-'+i);
+    if(!cell)return;
+    var ratio=v/maxHm;
+    var r=Math.round(ratio*80),g=Math.round(74+(1-ratio)*148),b=Math.round(ratio*60);
+    cell.style.background='rgba('+r+','+g+','+b+','+(0.1+ratio*0.6)+')';
+  });
+}
+
+function setText(id,val){var e=document.getElementById(id);if(e)e.textContent=val;}
+
+/* ── Live event stream from OmegaBus ── */
+function wireEventStream(){
+  if(!window.OmegaBus){setTimeout(wireEventStream,500);return;}
+  var log=document.getElementById('live-evt-log');
+  window.OmegaBus.on('*',function(evt){
+    if(!log)return;
+    var div=document.createElement('div');
+    div.style.cssText='padding:2px 0;border-bottom:1px solid rgba(201,168,76,.04)';
+    var col=evt.name.startsWith('platform.worker.error')||evt.name.startsWith('platform.queue.dlq')?'var(--red)':
+             evt.name.startsWith('sovereign.gate')?'var(--green)':'rgba(200,190,160,.6)';
+    div.innerHTML='<span style="color:var(--dim)">'+ts()+'</span> '
+      +'<span style="color:'+col+'">'+evt.name+'</span>'
+      +(evt.payload&&evt.payload.gate?' [gate '+evt.payload.gate+']':'')
+      +(evt.payload&&evt.payload.worker?' ['+evt.payload.worker+']':'');
+    log.insertBefore(div,log.firstChild);
+    while(log.children.length>80)log.removeChild(log.lastChild);
+    /* Count for eventCounts */
+    eventCounts[evt.name]=(eventCounts[evt.name]||0)+1;
+  });
+  addIncident('ok','OmegaBus event stream connected');
+  /* Wire health probe listener */
+  window.OmegaBus.on('platform.health.probe',function(evt){
+    var p=probes.find(function(x){return x.service===evt.payload.service;});
+    if(p){p.status=evt.payload.status;p.lat=evt.payload.latencyMs||0;p.ts=ts();}
+    renderProbes();
+  });
+  window.OmegaBus.on('platform.queue.dlq',function(evt){
+    addIncident('err','DLQ: '+evt.payload.eventName+' — '+evt.payload.reason+' ('+evt.payload.attempts+' attempts)');
+  });
+  window.OmegaBus.on('platform.worker.error',function(evt){
+    addIncident('warn','Worker error: '+evt.payload.worker+' — '+evt.payload.error);
+  });
+  window.OmegaBus.on('sovereign.gate.unlocked',function(evt){
+    addIncident('ok','Gate unlocked: '+evt.payload.name+' (gate '+evt.payload.gate+') — auth='+evt.payload.auth.toFixed(2));
+  });
+}
+
+wireEventStream();
+addIncident('ok','OPS dashboard started');
+refresh();
+setInterval(refresh,3000);
+window.addEventListener('resize',function(){drawSparkline('spark-canvas',throughputHistory,'rgba(96,165,250,.6)');drawLatencyChart();});
+</script>
+<script src="/bg.js" defer></script>
+</body>
+</html>

@@ -1505,3 +1505,9 @@ setTimeout(function(){
 
   /* Procedural SVG sigil generator — deterministic from auth/element/name */
   if(!document.querySelector('script[data-omega-sigil-gen]')){var _osig=document.createElement('script');_osig.src='/omega-sigil-gen.js';_osig.setAttribute('data-omega-sigil-gen','1');_osig.defer=true;if(document.body)document.body.appendChild(_osig);}
+
+  /* Platform-wide event bus — BroadcastChannel + IndexedDB + domain event catalog */
+  if(!document.querySelector('script[data-omega-event-bus]')){var _oebus=document.createElement('script');_oebus.src='/omega-event-bus.js';_oebus.setAttribute('data-omega-event-bus','1');_oebus.defer=true;if(document.body)document.body.appendChild(_oebus);}
+
+  /* Sovereign worker fleet — 6 async consumers with circuit breaker + retry + DLQ */
+  if(!document.querySelector('script[data-omega-workers]')){var _owrk=document.createElement('script');_owrk.src='/omega-workers.js';_owrk.setAttribute('data-omega-workers','1');_owrk.defer=true;if(document.body)document.body.appendChild(_owrk);}

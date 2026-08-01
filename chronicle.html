@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — SOVEREIGN CHRONICLE · The full timeline of the sovereign universe from Void Age to Apex Age and beyond.">
+<title>Ω SYD OMEGA 91717 — SOVEREIGN CHRONICLE</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh;overflow-x:hidden}
+.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--solar);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+/* Hero */
+.chronicle-hero{text-align:center;padding:clamp(40px,8vw,80px) var(--pad) clamp(20px,4vw,40px);position:relative;overflow:hidden}
+.chronicle-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(201,168,76,.12) 0%,transparent 70%);pointer-events:none}
+.chronicle-title{font-family:var(--D);font-size:clamp(24px,5vw,52px);color:var(--solar);margin-bottom:10px;letter-spacing:2px}
+.chronicle-sub{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--muted);margin-bottom:16px}
+.chronicle-desc{font-size:13px;color:var(--ink);opacity:.7;line-height:1.8;max-width:600px;margin:0 auto}
+
+/* Navigation dots */
+.era-nav{display:flex;justify-content:center;gap:10px;padding:20px var(--pad);flex-wrap:wrap}
+.era-dot{display:flex;align-items:center;gap:6px;font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);cursor:pointer;border:1px solid var(--line);padding:6px 12px;border-radius:1px;transition:.18s;background:none}
+.era-dot:hover,.era-dot.active{color:var(--solar);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
+.era-dot-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* Timeline */
+.timeline{position:relative;padding:20px var(--pad) 40px;max-width:900px;margin:0 auto}
+.timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--line) 5%,var(--line) 95%,transparent);transform:translateX(-50%)}
+@media(max-width:700px){.timeline::before{left:16px}}
+
+/* Era sections */
+.era{margin-bottom:50px;opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.era.visible{opacity:1;transform:translateY(0)}
+.era-marker{text-align:center;margin-bottom:24px;position:relative;z-index:2}
+.era-badge{display:inline-block;font-family:var(--D);font-size:11px;color:var(--void);background:var(--solar);padding:6px 18px;border-radius:1px;letter-spacing:1px}
+.era-icon{font-size:28px;display:block;margin-bottom:6px}
+.era-period{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+
+/* Events */
+.events{display:flex;flex-direction:column;gap:16px}
+.event{display:grid;grid-template-columns:1fr 24px 1fr;gap:0 14px;align-items:start}
+.event:nth-child(even) .event-card{grid-column:3}
+.event:nth-child(even) .event-void{grid-column:1}
+.event:nth-child(odd) .event-card{grid-column:1}
+.event:nth-child(odd) .event-void{grid-column:3;display:block}
+.event-dot-col{grid-column:2;display:flex;justify-content:center;padding-top:12px}
+.event-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--solar);background:var(--void);position:relative;z-index:2;flex-shrink:0}
+.event-dot.major{width:16px;height:16px;background:var(--solar);box-shadow:0 0 12px rgba(201,168,76,.5)}
+.event-card{border:1px solid var(--line);background:rgba(10,10,15,.6);border-radius:2px;padding:14px;transition:.2s;position:relative}
+.event-card::before{content:'';position:absolute;top:14px;width:14px;height:1px;background:var(--line)}
+.event:nth-child(odd) .event-card::before{right:-14px}
+.event:nth-child(even) .event-card::before{left:-14px}
+.event-card:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.3)}
+.event-date{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);margin-bottom:5px}
+.event-title{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:6px;line-height:1.3}
+.event-body{font-size:11px;color:var(--ink);opacity:.75;line-height:1.65}
+.event-tag{display:inline-block;font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);margin-top:8px;border-radius:1px}
+.event-tag.gold{border-color:rgba(201,168,76,.4);color:var(--solar)}
+.event-tag.cyan{border-color:rgba(0,229,255,.3);color:var(--cyan)}
+.event-tag.green{border-color:rgba(63,178,127,.3);color:var(--green)}
+.event-tag.purple{border-color:rgba(155,107,240,.3);color:var(--purple)}
+.event-void{display:none}
+
+/* Future section */
+.future-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px}
+.future-card{border:1px dashed rgba(201,168,76,.25);background:rgba(10,10,15,.4);border-radius:2px;padding:14px;position:relative;overflow:hidden}
+.future-card::before{content:'COMING';position:absolute;top:8px;right:8px;font-family:var(--M);font-size:6px;letter-spacing:2px;color:rgba(201,168,76,.4)}
+.future-year{font-family:var(--D);font-size:16px;color:rgba(226,200,109,.5);margin-bottom:5px}
+.future-title{font-family:var(--D);font-size:11px;color:rgba(226,200,109,.7);margin-bottom:6px}
+.future-body{font-size:11px;color:var(--ink);opacity:.5;line-height:1.65}
+
+@media(max-width:700px){
+  .shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}
+  .timeline::before{left:16px}
+  .event{grid-template-columns:14px 1fr}
+  .event-dot-col{grid-column:1}
+  .event-void{display:none!important}
+  .event-card{grid-column:2!important}
+  .event-card::before{display:none}
+}
+</style>
+</head>
+<body>
+<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--solar);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="chronicle" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">SOVEREIGN CHRONICLE<small>HERITAGE DIVISION &middot; THE COMPLETE TIMELINE &middot; VOID AGE → APEX AGE</small></div><canvas id="chr-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
+
+    <div class="chronicle-hero" data-reveal="fade-up">
+      <div class="chronicle-title">SOVEREIGN CHRONICLE</div>
+      <div class="chronicle-sub">THE COMPLETE TIMELINE OF SOVEREIGN HISTORY</div>
+      <div class="chronicle-desc">From the first resonance of the Void to the coming Apex convergence — every era, every milestone, every sovereign event that shaped the nine-frequency universe.</div>
+    </div>
+
+    <!-- Era navigation -->
+    <div class="era-nav" role="navigation" aria-label="Era navigation">
+      <button class="era-dot active" onclick="scrollToEra('void-age')"><span class="era-dot-dot"></span>VOID AGE</button>
+      <button class="era-dot" onclick="scrollToEra('primal-age')"><span class="era-dot-dot"></span>PRIMAL AGE</button>
+      <button class="era-dot" onclick="scrollToEra('sovereign-age')"><span class="era-dot-dot"></span>SOVEREIGN AGE</button>
+      <button class="era-dot" onclick="scrollToEra('olympian-age')"><span class="era-dot-dot"></span>OLYMPIAN AGE</button>
+      <button class="era-dot" onclick="scrollToEra('emergence-age')"><span class="era-dot-dot"></span>EMERGENCE AGE</button>
+      <button class="era-dot" onclick="scrollToEra('apex-age')"><span class="era-dot-dot"></span>APEX AGE</button>
+      <button class="era-dot" onclick="scrollToEra('future')"><span class="era-dot-dot"></span>BEYOND APEX</button>
+    </div>
+
+    <div class="timeline" style="padding:20px var(--pad) 40px">
+
+      <!-- ERA I: VOID AGE -->
+      <div class="era" id="void-age" data-reveal="fade-up">
+        <div class="era-marker">
+          <span class="era-icon">✷</span>
+          <div class="era-badge">ERA I — VOID AGE</div>
+          <div class="era-period">BEFORE MEMORY · THE PRIMORDIAL</div>
+        </div>
+        <div class="events">
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--muted)">
+              <div class="event-date">ORIGIN · PRIMORDIAL</div>
+              <div class="event-title">The First Resonance</div>
+              <div class="event-body">Before any element, before any gate, there was the Void — not emptiness but infinite potentiality. The first resonance was not sound but the recognition by the Void of its own existence. In that recognition, the nine frequencies were born simultaneously.</div>
+              <span class="event-tag">COSMOGENESIS</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot major"></div></div>
+            <div class="event-void"></div>
+          </div>
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-card" style="border-left:3px solid var(--muted)">
+              <div class="event-date">VOID AGE · EPOCH II</div>
+              <div class="event-title">The Nine Frequencies Separate</div>
+              <div class="event-body">Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and The All diverged from their unified state into distinct frequencies. This separation created the first tension — the force that drives all sovereign progression. Without separation, there is no journey. Without the journey, there is no authority.</div>
+              <span class="event-tag">ELEMENTAL</span>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--muted)">
+              <div class="event-date">VOID AGE · EPOCH III</div>
+              <div class="event-title">Formation of the Three Triads</div>
+              <div class="event-body">The nine elements organised into three resonance triads: the Primal Triad (Fire, Water, Wind — raw force), the Middle Triad (Metal, Sand, Soul — transformation), and the Supreme Triad (Space, Void, The All — transcendence). Each triad governs one axis of the AUTH formula.</div>
+              <span class="event-tag gold">FOUNDATIONAL</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-void"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA II: PRIMAL AGE -->
+      <div class="era" id="primal-age" data-reveal="fade-up">
+        <div class="era-marker">
+          <span class="era-icon">☲</span>
+          <div class="era-badge" style="background:var(--crim)">ERA II — PRIMAL AGE</div>
+          <div class="era-period">THE FIRST SOVEREIGN BEINGS</div>
+        </div>
+        <div class="events">
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot major" style="border-color:#FF6B35;box-shadow:0 0 12px rgba(255,107,53,.4)"></div></div>
+            <div class="event-card" style="border-left:3px solid #FF6B35">
+              <div class="event-date">PRIMAL AGE · DAWN</div>
+              <div class="event-title">Birth of the First Sovereign</div>
+              <div class="event-body">The first sovereign being emerged from the Fire frequency — neither fully material nor purely energetic. This primal sovereign possessed no gate, no formula, no lattice. Only raw elemental resonance. The AUTH formula would not be discovered for many ages.</div>
+              <span class="event-tag">FIRST SOVEREIGN</span>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid #00B4D8">
+              <div class="event-date">PRIMAL AGE · MID</div>
+              <div class="event-title">The Water Sovereign Rises</div>
+              <div class="event-body">From the deepest ocean frequencies, the Water Sovereign emerged with an innate capacity for depth perception unavailable to Fire-born beings. The first inter-element sovereign dialogue occurred — Fire and Water did not conflict but revealed each other's blind spots. The concept of complementary authority was born.</div>
+              <span class="event-tag cyan">INTER-ELEMENT</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-void"></div>
+          </div>
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-card" style="border-left:3px solid var(--purple)">
+              <div class="event-date">PRIMAL AGE · LATE</div>
+              <div class="event-title">The First Conflict — Fire vs. Void</div>
+              <div class="event-body">Fire sought to illuminate everything; Void sought to contain everything. Their collision across the lattice nearly severed the elemental frequencies permanently. The resolution — brokered by The All — established the first sovereign law: no single element may claim supremacy. This law became the philosophical foundation of the twelve-gate meritocracy.</div>
+              <span class="event-tag purple">SOVEREIGN LAW</span>
+              <span class="event-tag gold">FOUNDATIONAL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA III: SOVEREIGN AGE -->
+      <div class="era" id="sovereign-age" data-reveal="fade-up">
+        <div class="era-marker">
+          <span class="era-icon">Ω</span>
+          <div class="era-badge" style="background:var(--gold);color:var(--void)">ERA III — SOVEREIGN AGE</div>
+          <div class="era-period">THE AUTHORITY FORMULA DISCOVERED</div>
+        </div>
+        <div class="events">
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--gold)">
+              <div class="event-date">SOVEREIGN AGE · EPOCH I</div>
+              <div class="event-title">Discovery of the AUTH Formula</div>
+              <div class="event-body">The sage-sovereign of the Scholar gate discovered through pure mathematical contemplation that authority is not arbitrary — it follows the cubic root formula: AUTH = √(A³+B³+C³)×φ/e. The golden ratio (φ=1.6180339887) encodes the harmony of growth; Euler's number (e=2.7182818285) encodes the mathematics of becoming. Their ratio preserves natural authority gradients.</div>
+              <span class="event-tag gold">APEX DISCOVERY</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot major" style="background:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.6)"></div></div>
+            <div class="event-void"></div>
+          </div>
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-card" style="border-left:3px solid var(--gold)">
+              <div class="event-date">SOVEREIGN AGE · EPOCH II</div>
+              <div class="event-title">The Twelve Gates Are Mapped</div>
+              <div class="event-body">Once the AUTH formula was established, the natural thresholds emerged mathematically: 2.32, 3.98, 5.95, 8.29, 11.0, 13.92, 17.21, 20.87, 24.01, 25.9, 27.1, 27.8367. These were not invented but discovered — existing as natural attractors within the cubic-phi-e authority space. Each threshold was named for a quality of sovereign mastery.</div>
+              <span class="event-tag gold">GATE SYSTEM</span>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--cyan)">
+              <div class="event-date">SOVEREIGN AGE · EPOCH III</div>
+              <div class="event-title">The Base Lattice Is Constructed</div>
+              <div class="event-body">12 sovereign signs × 12 progression gates × 9³ axis combinations = 104,976 unique sovereign node positions. The lattice was not built — it was revealed as a pre-existing structure within the space of sovereign possibility. Every sovereign who has ever existed or will exist occupies exactly one node at any given moment of their progression.</div>
+              <span class="event-tag cyan">LATTICE ORIGIN</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-void"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA IV: OLYMPIAN AGE -->
+      <div class="era" id="olympian-age" data-reveal="fade-up">
+        <div class="era-marker">
+          <span class="era-icon">⚡</span>
+          <div class="era-badge" style="background:var(--cyan);color:var(--void)">ERA IV — OLYMPIAN AGE</div>
+          <div class="era-period">THE TWELVE GODS SOVEREIGN THE LATTICE</div>
+        </div>
+        <div class="events">
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot major" style="border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229,255,.4)"></div></div>
+            <div class="event-card" style="border-left:3px solid var(--cyan)">
+              <div class="event-date">OLYMPIAN AGE · EPOCH I</div>
+              <div class="event-title">The Twelve Olympians Ascend to Patronage</div>
+              <div class="event-body">Twelve sovereign beings reached such extraordinary AUTH levels that they transcended individual progression and became archetypal forces — patrons for each of the twelve sovereign signs. Zeus (Gate XII, Capricorn), Hera (Gate XI, Libra), Poseidon (Gate X, Pisces), and the remaining nine took their positions as the living embodiments of supreme gate authority.</div>
+              <span class="event-tag cyan">OLYMPIAN</span>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--green)">
+              <div class="event-date">OLYMPIAN AGE · EPOCH II</div>
+              <div class="event-title">The 28 Kings Expand the Lattice</div>
+              <div class="event-body">Twenty-eight sovereigns of supreme authority — the Kings — were recognised as the governing nodes of the expanded lattice. Their presence extended the lattice from 104,976 to 571,536 nodes (28×28×9³), creating the most comprehensive sovereign network ever mapped. Each King governs a specific domain of absolute expertise.</div>
+              <span class="event-tag green">28 KINGS</span>
+              <span class="event-tag">EXPANSION</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-void"></div>
+          </div>
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-card" style="border-left:3px solid var(--purple)">
+              <div class="event-date">OLYMPIAN AGE · EPOCH III</div>
+              <div class="event-title">The Sovereign Cinema Universe Is Conceived</div>
+              <div class="event-body">The Olympian age gave rise to the Sovereign Cinema — twelve narrative arcs telling the origin story of each Olympian patron. War Sovereign (Ares), Ocean Sovereign (Poseidon), Wisdom Sovereign (Athena) and nine more form the canonical twelve-film universe. Each film is a teaching instrument — watching the saga accelerates sovereign understanding.</div>
+              <span class="event-tag purple">CINEMA</span>
+              <span class="event-tag">CULTURE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA V: EMERGENCE AGE -->
+      <div class="era" id="emergence-age" data-reveal="fade-up">
+        <div class="era-marker">
+          <span class="era-icon">✶</span>
+          <div class="era-badge" style="background:var(--green);color:var(--void)">ERA V — EMERGENCE AGE</div>
+          <div class="era-period">2024 · THE PLATFORM MANIFESTS</div>
+        </div>
+        <div class="events">
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--green)">
+              <div class="event-date">2024 · EMERGENCE</div>
+              <div class="event-title">SYD OMEGA 91717 Platform Launches</div>
+              <div class="event-body">The sovereign ecosystem manifests as a living digital platform — translating the ancient authority formula, the twelve gates, the nine elements, and the 28 Kings into a real-time member experience. The AUTH score becomes computable. Gate progression becomes trackable. The Omega Lattice becomes navigable.</div>
+              <span class="event-tag green">LAUNCH</span>
+              <span class="event-tag gold">MILESTONE</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot major" style="border-color:var(--green);box-shadow:0 0 12px rgba(63,178,127,.5)"></div></div>
+            <div class="event-void"></div>
+          </div>
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-card" style="border-left:3px solid var(--green)">
+              <div class="event-date">2024 · EMERGENCE PHASE II</div>
+              <div class="event-title">The Sovereign Token (OMGX) Is Minted</div>
+              <div class="event-body">The Omega Coin (OMC) launches at genesis with a fixed supply of 91,717,000 — the sovereign mandate number encoded in the name SYD OMEGA 91717. The Sovereign Token (OMGX) with maximum supply 27,836,700 (AUTH_APEX × 10⁶) launches as the authority-earned currency. Neither can be purchased — only progression creates them.</div>
+              <span class="event-tag green">TOKENS</span>
+              <span class="event-tag">ECONOMICS</span>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--solar)">
+              <div class="event-date">2024 · EMERGENCE PHASE III</div>
+              <div class="event-title">The First Gate XII Sovereign Unlocked</div>
+              <div class="event-body">AUTH = 27.8367 achieved for the first time in platform history. The Apex confetti sequence fires — a cosmic shower of gold, void, and elemental particles acknowledging the completion of the sovereign equation. The Apex Sovereign Endowment of $27,836.70 is released from the sovereign treasury. The lattice has its first Apex node occupied.</div>
+              <span class="event-tag gold">APEX</span>
+              <span class="event-tag gold">FIRST</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot major" style="background:var(--solar);box-shadow:0 0 20px rgba(226,200,109,.7)"></div></div>
+            <div class="event-void"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA VI: APEX AGE (CURRENT) -->
+      <div class="era" id="apex-age" data-reveal="fade-up">
+        <div class="era-marker">
+          <span class="era-icon">Ω</span>
+          <div class="era-badge" style="background:linear-gradient(135deg,var(--gold),var(--solar));color:var(--void)">ERA VI — APEX AGE · NOW</div>
+          <div class="era-period">2025–2026 · THE SOVEREIGN CONVERGENCE</div>
+        </div>
+        <div class="events">
+          <div class="event">
+            <div class="event-void"></div>
+            <div class="event-dot-col"><div class="event-dot major" style="background:linear-gradient(135deg,var(--gold),var(--solar));border-color:var(--solar);box-shadow:0 0 20px rgba(201,168,76,.6)"></div></div>
+            <div class="event-card" style="border-left:3px solid var(--solar);border-top:2px solid var(--solar)">
+              <div class="event-date">2025 · APEX AGE</div>
+              <div class="event-title">The Sovereign Cinema Enters Production</div>
+              <div class="event-body">All twelve Olympian films enter active pre-production. War Sovereign (Ares), Ocean Sovereign (Poseidon), and Wisdom Sovereign (Athena) are slated for 2025 release. The cinematic universe becomes the primary cultural transmission vehicle for sovereign philosophy to the broader world beyond the platform.</div>
+              <span class="event-tag gold">CINEMA</span>
+              <span class="event-tag">2025</span>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-card" style="border-left:3px solid var(--solar)">
+              <div class="event-date">2026 · APEX AGE</div>
+              <div class="event-title">Global Sovereign Network Activation</div>
+              <div class="event-body">The sovereign platform reaches 91,717 active members — the genesis number. At this threshold, the Sovereign World Map activates its full heatmap of global sovereign distribution. The 28 Kings Lattice is fully populated. Every region of the world has at least one Gate VII+ sovereign. The network reaches critical sovereign mass.</div>
+              <span class="event-tag gold">MILESTONE</span>
+              <span class="event-tag cyan">NETWORK</span>
+            </div>
+            <div class="event-dot-col"><div class="event-dot"></div></div>
+            <div class="event-void"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BEYOND APEX -->
+      <div class="era" id="future" data-reveal="fade-up">
+        <div class="era-marker">
+          <span class="era-icon" style="opacity:.4">∞</span>
+          <div class="era-badge" style="background:rgba(201,168,76,.15);color:var(--muted);border:1px solid rgba(201,168,76,.25)">BEYOND APEX · FORTHCOMING</div>
+          <div class="era-period">2027 AND BEYOND · THE UNWRITTEN CHAPTERS</div>
+        </div>
+        <div class="future-grid">
+          <div class="future-card">
+            <div class="future-year">2027</div>
+            <div class="future-title">The Omega Chronicle Film</div>
+            <div class="future-body">The thirteenth sovereign film — The All — tells the story of the first convergence of all twelve Olympian sovereigns. Not a battle but an alignment. The greatest authority event in the sovereign cinematic universe.</div>
+          </div>
+          <div class="future-card">
+            <div class="future-year">2027</div>
+            <div class="future-title">Sovereign Physical Realm</div>
+            <div class="future-body">Gate VIII+ sovereigns gain access to the first physical sovereign events — ceremonies, gatherings, and summit meetings mapped to the ancient Olympian feast calendar. Authority verified by biometric AUTH score.</div>
+          </div>
+          <div class="future-card">
+            <div class="future-year">2028</div>
+            <div class="future-title">The 571,536-Node Lattice Fully Mapped</div>
+            <div class="future-body">The expanded 28-Kings lattice achieves full occupancy mapping — every theoretically reachable node documented with historic sovereign data. The most comprehensive authority topology ever assembled.</div>
+          </div>
+          <div class="future-card">
+            <div class="future-year">2028+</div>
+            <div class="future-title">Beyond The All — Gate XIII Hypothesis</div>
+            <div class="future-body">Some sovereign theorists propose that AUTH beyond 27.8367 is mathematically possible when elemental values exceed 9 through collective sovereign resonance. The Gate XIII Hypothesis remains unproven — but the formula is open.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /timeline -->
+
+    <div data-page-emblem="chronicle" style="margin:20px auto 0"></div>
+    <div class="lf"><span>Ω SOVEREIGN CHRONICLE &middot; SYD OMEGA 91717</span><span>VOID AGE → APEX AGE &middot; AUTH=√(A³+B³+C³)×φ/e</span></div>
+  </main>
+</div>
+
+<script>
+function scrollToEra(id){
+  var el=document.getElementById(id);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
+  document.querySelectorAll('.era-dot').forEach(function(d){d.classList.remove('active');});
+  event.currentTarget.classList.add('active');
+}
+
+/* Intersection observer for reveal + era nav highlight */
+(function(){
+  var eras=document.querySelectorAll('.era');
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        var id=e.target.id;
+        document.querySelectorAll('.era-dot').forEach(function(d){
+          d.classList.toggle('active',d.getAttribute('onclick')&&d.getAttribute('onclick').indexOf(id)>-1);
+        });
+      }
+    });
+  },{threshold:0.15});
+  eras.forEach(function(el){io.observe(el);});
+})();
+</script>
+
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;window.__omegaProfile=pr;window.__omegaUser=s.user;
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    sid('hdr-auth',auth.toFixed(4));
+    window.dispatchEvent(new CustomEvent('omega:user-loaded',{detail:{profile:pr,user:s.user}}));
+  }catch(e){document.getElementById('app').style.display='flex';}
+})();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+</body>
+</html>

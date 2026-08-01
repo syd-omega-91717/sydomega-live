@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign World Map · SYD OMEGA 91717</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script>
+/* APPROVAL GUARD inline boot */
+(function(){
+  var PUBLIC=['/account','/enter','/reset','/terms','/pending','/index','/'];
+  var path=(location.pathname||'/').replace(/\.html$/,'');
+  for(var i=0;i<PUBLIC.length;i++){if(path===PUBLIC[i])return;}
+  var s=document.createElement('style');
+  s.id='omega-approval-guard';
+  s.textContent='body:not(.omega-approved) #app,body:not(.omega-approved) .shell,body:not(.omega-approved) main.main{display:none!important}';
+  (document.head||document.documentElement).appendChild(s);
+  window.__omegaApprove=function(ok){if(ok)document.body&&document.body.classList.add('omega-approved');};
+})();
+</script>
+<script src="/bg.js" defer></script>
+<style>
+/* ── PAGE STYLES ── */
+#map-container{position:relative;flex:1;min-height:0}
+#sovereign-map{width:100%;height:100%;z-index:1}
+.map-sidebar{
+  position:absolute;top:12px;right:12px;z-index:1000;
+  width:clamp(180px,22vw,240px);
+  background:rgba(10,10,15,.92);border:1px solid rgba(201,168,76,.2);
+  border-radius:2px;padding:14px;backdrop-filter:blur(12px)
+}
+.map-sidebar h3{font-family:var(--M,"Courier Prime",monospace);font-size:8px;
+  letter-spacing:3px;color:var(--solar,#E2C86D);margin:0 0 10px}
+.legend-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legend-lbl{font-family:var(--M,"Courier Prime",monospace);font-size:8px;
+  letter-spacing:1px;color:var(--muted,#8a8676)}
+.map-stat{display:flex;justify-content:space-between;margin-bottom:5px;
+  font-family:var(--M,"Courier Prime",monospace);font-size:8px}
+.map-stat .k{color:var(--muted,#8a8676);letter-spacing:1px}
+.map-stat .v{color:var(--solar,#E2C86D);font-weight:700}
+.map-divider{border:none;border-top:1px solid rgba(201,168,76,.1);margin:10px 0}
+.map-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.map-tab{font-family:var(--M,"Courier Prime",monospace);font-size:7px;
+  letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);
+  background:none;color:var(--muted,#8a8676);cursor:pointer;border-radius:1px;transition:.18s}
+.map-tab.active,.map-tab:hover{border-color:var(--solar,#E2C86D);color:var(--solar,#E2C86D);background:rgba(201,168,76,.06)}
+.map-panel{display:none}
+.map-panel.active{display:block}
+/* Leaflet dark override */
+.leaflet-container{background:#020206!important;font-family:var(--R,"Rajdhani",sans-serif)!important}
+.leaflet-tile{filter:brightness(.55) saturate(.3) hue-rotate(180deg)}
+.leaflet-popup-content-wrapper{background:rgba(10,10,15,.96)!important;
+  border:1px solid rgba(201,168,76,.3)!important;border-radius:2px!important;
+  box-shadow:0 8px 32px rgba(0,0,0,.6)!important;color:var(--ink,#e9e6dc)!important}
+.leaflet-popup-tip-container{display:none}
+.leaflet-popup-content{margin:10px 14px!important;font-family:var(--M,"Courier Prime",monospace)!important;font-size:10px!important;line-height:1.6}
+.leaflet-popup-content strong{color:var(--solar,#E2C86D);display:block;font-size:11px;letter-spacing:1px;margin-bottom:4px}
+.leaflet-popup-close-button{color:var(--muted,#8a8676)!important;font-size:18px!important;top:6px!important;right:8px!important}
+.leaflet-control-zoom a{background:rgba(10,10,15,.9)!important;color:var(--solar,#E2C86D)!important;
+  border-color:rgba(201,168,76,.2)!important}
+.leaflet-control-zoom a:hover{background:rgba(201,168,76,.1)!important}
+.leaflet-control-attribution{background:rgba(10,10,15,.7)!important;color:rgba(138,134,118,.6)!important;font-size:9px!important}
+.leaflet-control-attribution a{color:rgba(201,168,76,.5)!important}
+/* search bar */
+.map-search-wrap{position:absolute;top:12px;left:12px;z-index:1000}
+.map-search{
+  font-family:var(--M,"Courier Prime",monospace);font-size:9px;letter-spacing:1px;
+  padding:7px 12px;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,15,.9);
+  color:var(--ink,#e9e6dc);border-radius:2px;width:clamp(160px,20vw,200px);
+  outline:none;transition:.18s;backdrop-filter:blur(12px)
+}
+.map-search:focus{border-color:var(--solar,#E2C86D)}
+.map-search::placeholder{color:rgba(138,134,118,.5)}
+/* element pulse markers */
+@keyframes marker-pulse{0%{transform:translate(-50%,-50%) scale(1);opacity:.9}
+  50%{transform:translate(-50%,-50%) scale(1.4);opacity:.4}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:.9}}
+</style>
+</head>
+<body>
+<div class="shell" id="app">
+
+  <!-- Sidebar -->
+  <nav class="side" id="side-nav" aria-label="Navigation"></nav>
+
+  <div class="main">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="t">SOVEREIGN WORLD MAP<small>ELEMENT · SIGN · GATE DISTRIBUTION</small></div>
+    </header>
+
+    <!-- Map + controls -->
+    <div id="map-container">
+
+      <!-- Search -->
+      <div class="map-search-wrap">
+        <input class="map-search" id="map-search" type="text" placeholder="SEARCH SOVEREIGN..." aria-label="Search sovereign">
+      </div>
+
+      <!-- Leaflet map -->
+      <div id="sovereign-map" aria-label="Sovereign world map"></div>
+
+      <!-- Sidebar panel -->
+      <aside class="map-sidebar" aria-label="Map legend and statistics">
+        <h3>MAP LEGEND</h3>
+        <div class="map-tabs">
+          <button class="map-tab active" data-maptab="elements" onclick="mapTab('elements')">ELEMENTS</button>
+          <button class="map-tab" data-maptab="gates" onclick="mapTab('gates')">GATES</button>
+          <button class="map-tab" data-maptab="stats" onclick="mapTab('stats')">STATS</button>
+        </div>
+
+        <div class="map-panel active" id="maptab-elements">
+          <div class="legend-row"><div class="legend-dot" style="background:#FF6B35"></div><div class="legend-lbl">FIRE · Aries Leo Sagittarius</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#00B4D8"></div><div class="legend-lbl">WATER · Taurus Cancer Pisces</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#B0BEC5"></div><div class="legend-lbl">WIND · Gemini Libra</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#E2C86D"></div><div class="legend-lbl">METAL · Capricorn Aquarius</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#FFD54F"></div><div class="legend-lbl">SAND · Virgo</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#9B6BF0"></div><div class="legend-lbl">SOUL · Scorpio</div></div>
+        </div>
+
+        <div class="map-panel" id="maptab-gates">
+          <div class="legend-row"><div class="legend-dot" style="background:#444;border:1px solid #888"></div><div class="legend-lbl">GATE I–IV · Initiate–Keeper</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#555;border:1px solid #C9A84C"></div><div class="legend-lbl">GATE V–VIII · Guardian–Vanguard</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#E2C86D"></div><div class="legend-lbl">GATE IX–XI · Herald–Prime</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#fff;border:2px solid #E2C86D;animation:marker-pulse 2s infinite"></div><div class="legend-lbl">GATE XII · APEX SOVEREIGN</div></div>
+        </div>
+
+        <div class="map-panel" id="maptab-stats">
+          <div class="map-stat"><span class="k">TOTAL MEMBERS</span><span class="v" id="stat-total">—</span></div>
+          <div class="map-stat"><span class="k">NATIONS</span><span class="v" id="stat-nations">—</span></div>
+          <div class="map-stat"><span class="k">TOP ELEMENT</span><span class="v" id="stat-elem">—</span></div>
+          <div class="map-stat"><span class="k">TOP SIGN</span><span class="v" id="stat-sign">—</span></div>
+          <div class="map-stat"><span class="k">APEX SOVEREIGNS</span><span class="v" id="stat-apex">—</span></div>
+          <hr class="map-divider">
+          <div class="map-stat"><span class="k">MY ELEMENT</span><span class="v" id="stat-my-elem">—</span></div>
+          <div class="map-stat"><span class="k">MY GATE</span><span class="v" id="stat-my-gate">—</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="lf"><span>Ω SYD OMEGA 91717</span><span id="map-ts"></span></footer>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module">
+/* ── Config ── */
+const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
+const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+
+const PHI=1.6180339887,EU=2.7182818285;
+const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+const ELEM_COLOR={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0',Space:'#7C4DFF',Void:'#334',Void2:'#1A1A2E','The All':'#3fb27f'};
+const SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
+
+/* Approximate geographic centroids per zodiac sign (cultural/mythological zones) */
+const SIGN_COORDS={
+  Aries:[39.9,32.8],Taurus:[37.9,23.7],Gemini:[51.5,-0.1],Cancer:[48.8,2.3],
+  Leo:[41.9,12.5],Virgo:[35.6,139.7],Libra:[25.2,55.3],Scorpio:[-33.9,18.4],
+  Sagittarius:[28.6,-106.1],Capricorn:[23.1,113.3],Aquarius:[40.7,-74.0],Pisces:[-15.8,-47.9]
+};
+
+function getGate(auth){
+  let gate=0;
+  GATE_THRESH.forEach((t,i)=>{if(auth>=t)gate=i;});
+  return {num:gate+1,name:GATE_NAMES[gate]};
+}
+function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
+function gateSize(num){return 8+num*1.4;}
+
+window.mapTab=function(id){
+  document.querySelectorAll('.map-tab').forEach(b=>b.classList.toggle('active',b.dataset.maptab===id));
+  document.querySelectorAll('.map-panel').forEach(p=>p.classList.toggle('active',p.id==='maptab-'+id));
+};
+
+/* ── Init Map ── */
+const map=L.map('sovereign-map',{
+  center:[20,10],zoom:2,
+  zoomControl:true,
+  attributionControl:true,
+  minZoom:1,maxZoom:10
+});
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  attribution:'© OpenStreetMap contributors · SYD OMEGA 91717',
+  maxZoom:19
+}).addTo(map);
+
+/* ── Custom marker ── */
+function makeIcon(color,size){
+  const r=size||10;
+  return L.divIcon({
+    html:`<div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:${color};border:2px solid rgba(255,255,255,.3);box-shadow:0 0 ${r+4}px ${color};"></div>`,
+    className:'',iconSize:[r*2,r*2],iconAnchor:[r,r],popupAnchor:[0,-r-4]
+  });
+}
+
+/* ── Auth + Data ── */
+const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
+const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const {data:{session}}=await sb.auth.getSession();
+if(!session){location.href='/account.html';throw 0;}
+
+const {data:myProf}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
+if(myProf&&myProf.approval_status==='pending'){location.href='/pending.html';throw 0;}
+if(window.__omegaApprove)window.__omegaApprove(true);
+
+window.__omegaProfile=myProf||{};
+window.__omegaUser=session.user;
+window.dispatchEvent(new CustomEvent('omega:user-loaded',{detail:{profile:myProf,user:session.user}}));
+
+/* My stats */
+if(myProf){
+  const a=Number(myProf.axis_a||0),b=Number(myProf.axis_b||0),c=Number(myProf.axis_c||0);
+  const auth=myProf.is_owner?27.8367:calcAuth(a,b,c);
+  const gate=getGate(auth);
+  const elem=SIGN_ELEM[myProf.zodiac_sign]||'Void';
+  document.getElementById('stat-my-elem').textContent=elem.toUpperCase();
+  document.getElementById('stat-my-gate').textContent='GATE '+gate.num+' · '+gate.name;
+}
+
+/* Load all approved members */
+const {data:members=[]}=await sb.from('profiles').select('id,display_name,full_name,zodiac_sign,axis_a,axis_b,axis_c,is_owner,country').eq('approval_status','approved');
+
+document.getElementById('stat-total').textContent=members.length;
+
+/* Compute stats */
+const elemCount={},signCount={};
+let apexCount=0;const nations=new Set();
+const markers=[];
+
+members.forEach(m=>{
+  const sign=m.zodiac_sign||'Unknown';
+  const elem=SIGN_ELEM[sign]||'Void';
+  const a=Number(m.axis_a||0),b=Number(m.axis_b||0),c=Number(m.axis_c||0);
+  const auth=m.is_owner?27.8367:calcAuth(a,b,c);
+  const gate=getGate(auth);
+  elemCount[elem]=(elemCount[elem]||0)+1;
+  signCount[sign]=(signCount[sign]||0)+1;
+  if(gate.num===12)apexCount++;
+  if(m.country)nations.add(m.country);
+
+  /* Place marker */
+  const base=SIGN_COORDS[sign]||[0,0];
+  /* jitter so multiple members per sign don't stack */
+  const lat=base[0]+(Math.random()-0.5)*12;
+  const lng=base[1]+(Math.random()-0.5)*12;
+  const color=ELEM_COLOR[elem]||'#E2C86D';
+  const sz=gateSize(gate.num);
+  const marker=L.marker([lat,lng],{icon:makeIcon(color,sz)});
+  const name=m.display_name||m.full_name||'Sovereign';
+  marker.bindPopup(`
+    <strong>${name}</strong>
+    <div>⊕ ${sign} · ${elem}</div>
+    <div>☽ PATRON: ${SIGN_GOD[sign]||'—'}</div>
+    <div>⬡ GATE ${gate.num} · ${gate.name}</div>
+    <div>AUTH ${auth.toFixed(4)}</div>
+  `);
+  markers.push(marker);
+});
+
+/* Add all markers to map */
+const layer=L.layerGroup(markers).addTo(map);
+
+/* Stats */
+const topElem=Object.entries(elemCount).sort((a,b)=>b[1]-a[1])[0];
+const topSign=Object.entries(signCount).sort((a,b)=>b[1]-a[1])[0];
+document.getElementById('stat-nations').textContent=nations.size||members.length;
+document.getElementById('stat-elem').textContent=topElem?topElem[0].toUpperCase():'—';
+document.getElementById('stat-sign').textContent=topSign?topSign[0].toUpperCase():'—';
+document.getElementById('stat-apex').textContent=apexCount;
+
+/* Timestamp */
+document.getElementById('map-ts').textContent='UPDATED '+new Date().toUTCString().split(' ').slice(1,4).join(' ');
+
+/* Search */
+document.getElementById('map-search').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  if(!q){layer.addTo(map);return;}
+  markers.forEach(m=>{
+    const txt=m.getPopup().getContent().toLowerCase();
+    if(txt.includes(q))m.addTo(map);else map.removeLayer(m);
+  });
+});
+
+/* Fit bounds */
+if(markers.length){
+  try{map.fitBounds(layer.getBounds().pad(.1));}catch(e){}
+}
+</script>
+</body>
+</html>

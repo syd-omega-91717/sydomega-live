@@ -81,6 +81,8 @@
     focus:        {label:'Deep Work',       section:'MASTERY',    prev:'forge',          next:'exam'},
     rituals:      {label:'Sovereign Rituals',section:'IDENTITY',  prev:'mirror',         next:'profile'},
     wealth:       {label:'Wealth Engine',   section:'FINANCE',    prev:'wallet',         next:'vault'},
+    habits:       {label:'Habit Stack',     section:'MASTERY',    prev:'missions',       next:'forge'},
+    targets:      {label:'OKR Targets',     section:'STRATEGY',   prev:'roadmap',        next:'ecosystem'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

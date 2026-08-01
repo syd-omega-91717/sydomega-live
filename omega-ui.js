@@ -75,6 +75,9 @@
     oath:         {label:'Sovereign Oath',  section:'IDENTITY',   prev:'rune',           next:'profile'},
     tribe:        {label:'Element Tribes',  section:'COSMOS',     prev:'elements',       next:'horoscope'},
     dna:          {label:'Sovereign DNA',   section:'IDENTITY',   prev:'passport',       next:'rune'},
+    missions:     {label:'Sovereign Quests',section:'MASTERY',    prev:'achievements',   next:'gaming'},
+    mirror:       {label:'Inner Mirror',    section:'IDENTITY',   prev:'profile',        next:'credentials'},
+    forge:        {label:'Mind Forge',      section:'MASTERY',    prev:'exam',           next:'achievements'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

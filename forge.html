@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign Forge · Ω SYD OMEGA 91717</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&display=swap">
+<style>
+:root{--gold:#C9A84C;--cyan:#00E5FF;--green:#00FF88;--crim:#8B0000;--orange:#FF6600;--bg:#02020A;--s:rgba(255,255,255,.03);--M:'Courier Prime',monospace;--D:'Cinzel Decorative',serif;--C:'Cinzel',serif;--pad:clamp(14px,3vw,28px)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:rgba(255,255,255,.85);overflow-x:hidden}
+body{display:flex;flex-direction:column;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:900;background:rgba(2,2,10,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;gap:12px;padding:10px var(--pad)}
+.topbar-brand{font-family:var(--D);font-size:10px;letter-spacing:2px;color:var(--gold);flex:1}
+.layout{display:flex;flex:1}
+.side{width:56px;flex-shrink:0;background:rgba(255,255,255,.01);border-right:1px solid rgba(201,168,76,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:12px}
+.side a{font-size:16px;opacity:.35;text-decoration:none;transition:.15s;display:block;text-align:center;line-height:32px;width:36px}
+.side a:hover{opacity:1}
+.main{flex:1;padding:var(--pad);display:flex;flex-direction:column;gap:20px;max-width:900px;margin:0 auto;width:100%}
+
+/* HERO */
+.forge-hero{background:linear-gradient(135deg,rgba(255,102,0,.05),rgba(201,168,76,.03));border:1px solid rgba(255,102,0,.2);border-radius:4px;padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.fh-text h1{font-family:var(--D);font-size:clamp(14px,2vw,20px);color:var(--orange);letter-spacing:3px;margin-bottom:4px}
+.fh-text p{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(255,102,0,.4);line-height:1.8}
+.fh-score{text-align:center;margin-left:auto}
+.fh-score-n{font-family:var(--D);font-size:28px;color:var(--gold);line-height:1}
+.fh-score-l{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:rgba(138,134,118,.4)}
+
+/* TABS */
+.layer-tabs{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);flex-wrap:wrap}
+.layer-tab{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:9px 18px;cursor:pointer;color:rgba(138,134,118,.5);border-bottom:2px solid transparent;transition:.15s}
+.layer-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* EXERCISE GRID */
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ex-card{background:var(--s);border:1px solid rgba(201,168,76,.12);border-radius:4px;padding:16px 18px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:8px}
+.ex-card:hover{border-color:rgba(255,102,0,.3);transform:translateY(-1px)}
+.ex-icon{font-size:32px;margin-bottom:2px}
+.ex-title{font-family:var(--C);font-size:13px;color:rgba(255,255,255,.9);letter-spacing:.5px}
+.ex-desc{font-family:var(--M);font-size:7.5px;color:rgba(255,255,255,.5);line-height:1.6}
+.ex-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.ex-diff{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:2px 8px;border-radius:1px;border:1px solid}
+.ex-diff.easy{color:rgba(0,255,136,.6);border-color:rgba(0,255,136,.2);background:rgba(0,255,136,.04)}
+.ex-diff.med{color:rgba(201,168,76,.7);border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.04)}
+.ex-diff.hard{color:rgba(255,102,0,.7);border-color:rgba(255,102,0,.2);background:rgba(255,102,0,.04)}
+.ex-diff.apex{color:rgba(200,50,50,.7);border-color:rgba(200,50,50,.25);background:rgba(200,50,50,.04)}
+.ex-xp{font-family:var(--D);font-size:11px;color:var(--gold)}
+.ex-time{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4)}
+.ex-best{font-family:var(--M);font-size:7px;color:rgba(0,229,255,.5)}
+
+/* ACTIVE EXERCISE */
+.active-ex{background:rgba(255,102,0,.03);border:1px solid rgba(255,102,0,.2);border-radius:4px;padding:20px 24px;display:flex;flex-direction:column;gap:16px}
+.ae-header{display:flex;align-items:center;gap:12px}
+.ae-icon{font-size:36px}
+.ae-title{font-family:var(--D);font-size:14px;color:var(--orange);letter-spacing:2px}
+.ae-subtitle{font-family:var(--M);font-size:7.5px;color:rgba(255,102,0,.4);letter-spacing:1.5px;margin-top:2px}
+
+/* TIMER */
+.timer-display{font-family:var(--D);font-size:clamp(32px,5vw,52px);color:var(--gold);text-align:center;letter-spacing:4px;line-height:1}
+.timer-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.4);text-align:center;margin-top:4px}
+.timer-bar-wrap{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.timer-bar{height:100%;background:linear-gradient(90deg,var(--orange),var(--gold));border-radius:2px;transition:width .1s linear}
+
+/* EXERCISE CONTENT */
+.ex-content{background:rgba(0,0,0,.2);border:1px solid rgba(201,168,76,.08);border-radius:3px;padding:16px 20px;font-family:var(--C);font-size:14px;color:rgba(255,255,255,.9);line-height:1.7;letter-spacing:.3px;min-height:80px}
+.ex-input{width:100%;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.15);color:rgba(255,255,255,.9);font-family:var(--C);font-size:13px;padding:12px;border-radius:3px;outline:none;letter-spacing:.3px;transition:.15s}
+.ex-input:focus{border-color:rgba(255,102,0,.4);background:rgba(255,102,0,.03)}
+.ex-textarea{width:100%;min-height:100px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.15);color:rgba(255,255,255,.9);font-family:var(--C);font-size:12px;padding:12px;border-radius:3px;outline:none;letter-spacing:.3px;resize:vertical;transition:.15s;line-height:1.7}
+.ex-textarea:focus{border-color:rgba(255,102,0,.4);background:rgba(255,102,0,.03)}
+
+/* BUTTONS */
+.ex-btn{font-family:var(--D);font-size:9px;letter-spacing:2px;padding:10px 22px;background:linear-gradient(135deg,rgba(255,102,0,.15),rgba(255,102,0,.05));border:1px solid rgba(255,102,0,.3);color:var(--orange);cursor:pointer;border-radius:3px;transition:.2s}
+.ex-btn:hover{background:rgba(255,102,0,.2);box-shadow:0 0 16px rgba(255,102,0,.15)}
+.ex-btn.secondary{border-color:rgba(201,168,76,.2);color:rgba(201,168,76,.6);background:none}
+.ex-btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* RESULT */
+.ex-result{background:rgba(0,255,136,.02);border:1px solid rgba(0,255,136,.15);border-radius:3px;padding:14px 18px;font-family:var(--M);font-size:8px;color:rgba(0,255,136,.7);line-height:1.8;display:none}
+.ex-result.visible{display:block}
+
+/* LEADERBOARD */
+.forge-scores{display:flex;flex-direction:column;gap:6px}
+.fs-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--s);border-radius:2px}
+.fs-rank{font-family:var(--D);font-size:12px;color:rgba(201,168,76,.4);width:28px;text-align:center}
+.fs-name{font-family:var(--C);font-size:11px;flex:1}
+.fs-score{font-family:var(--D);font-size:12px;color:var(--gold)}
+.fs-type{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.35)}
+
+.section-title{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin-bottom:12px}
+.empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.3)}
+#forge-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.97);border:1px solid rgba(255,102,0,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--orange);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+
+@media(max-width:640px){.side{display:none}.ex-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-brand">Ω SOVEREIGN FORGE</div>
+</div>
+<div class="layout">
+  <nav class="side">
+    <a href="/dashboard.html" title="Command Bridge">⌂</a>
+    <a href="/missions.html" title="Missions">⚔</a>
+    <a href="/gaming.html" title="Gaming">🎮</a>
+    <a href="/evolution.html" title="Evolution">⬡</a>
+  </nav>
+  <main class="main">
+
+    <div class="forge-hero">
+      <div class="fh-text">
+        <h1>⚒ SOVEREIGN FORGE</h1>
+        <p>Mental exercises · Timed challenges · Logical reasoning · Creative trials · Speed of thought</p>
+      </div>
+      <div class="fh-score">
+        <div class="fh-score-n" id="forgeScore">0</div>
+        <div class="fh-score-l">FORGE SCORE</div>
+      </div>
+    </div>
+
+    <!-- ACTIVE EXERCISE (hidden by default) -->
+    <div class="active-ex" id="activeEx" style="display:none"></div>
+
+    <!-- TABS -->
+    <div class="layer-tabs">
+      <div class="layer-tab active" data-tab="exercises">⚔ EXERCISES</div>
+      <div class="layer-tab" data-tab="scores">◈ MY SCORES</div>
+    </div>
+
+    <div class="tab-panel active" id="tab-exercises">
+      <div class="section-title">◈ CHOOSE YOUR FORGE TRIAL</div>
+      <div class="ex-grid" id="exGrid"></div>
+    </div>
+    <div class="tab-panel" id="tab-scores">
+      <div class="section-title">◈ PERSONAL BEST SCORES</div>
+      <div class="forge-scores" id="scoresPanel"></div>
+    </div>
+
+  </main>
+</div>
+
+<div id="forge-toast"></div>
+
+<script data-omega-bg="1">
+(function(){if(!document.querySelector('script[data-omega-bg]')){var s=document.createElement('script');s.src='/bg.js';s.defer=true;document.head.appendChild(s);}})();
+</script>
+<script src="/bg.js" defer></script>
+<script src="/omega-ui.js" defer></script>
+<script src="/omega-chrono.js" defer></script>
+
+<script type="module">
+/* ── EXERCISE CATALOG ── */
+var EXERCISES=[
+  {id:'math_speed',icon:'⚡',title:'SPEED ARITHMETIC',desc:'Solve 10 arithmetic problems as fast as possible. Mental math builds sovereign precision.',diff:'easy',xp:40,time:'~60 sec',type:'arithmetic'},
+  {id:'logic_seq',icon:'🔢',title:'SEQUENCE CIPHER',desc:'Find the next number in a logical sequence. Pattern recognition is intelligence.',diff:'med',xp:80,time:'~90 sec',type:'sequence'},
+  {id:'word_vault',icon:'📖',title:'WORD VAULT',desc:'Define 5 advanced vocabulary words from memory or intuition. Language is power.',diff:'med',xp:70,time:'~2 min',type:'vocabulary'},
+  {id:'memory_grid',icon:'🧠',title:'MEMORY MATRIX',desc:'Memorize a 4×4 grid of symbols in 15 seconds, then reproduce it from memory.',diff:'hard',xp:120,time:'~30 sec',type:'memory'},
+  {id:'creative_fire',icon:'🔥',title:'CREATIVE FIRE',desc:'Generate 10 unique ideas for a given prompt in 3 minutes. Quantity breeds quality.',diff:'med',xp:90,time:'3 min',type:'creative'},
+  {id:'logic_deduct',icon:'⚔',title:'DEDUCTION TRIAL',desc:'Solve a multi-step logical deduction puzzle. Only sovereign minds see the full chain.',diff:'hard',xp:150,time:'~3 min',type:'logic'},
+  {id:'speed_read',icon:'👁',title:'SOVEREIGN SCAN',desc:'Read a passage, then answer comprehension questions from memory. Reading speed + retention.',diff:'med',xp:100,time:'~2 min',type:'reading'},
+  {id:'cipher_break',icon:'🔐',title:'CIPHER BREAK',desc:'Decode a short message encrypted with a simple substitution cipher. Decryption is sovereignty.',diff:'apex',xp:200,time:'~5 min',type:'cipher'},
+];
+
+/* ── STATE ── */
+var scores=JSON.parse(localStorage.getItem('omega_forge_scores')||'{}');
+var totalForgeScore=Object.values(scores).reduce((s,v)=>s+(v.best||0),0);
+
+/* ── TABS ── */
+document.querySelectorAll('.layer-tab').forEach(tab=>{
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('.layer-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('tab-'+this.dataset.tab).classList.add('active');
+    if(this.dataset.tab==='scores') renderScores();
+  });
+});
+
+/* ── TOAST ── */
+function toast(msg,col='var(--orange)'){
+  var t=document.getElementById('forge-toast');t.textContent=msg;t.style.color=col;t.style.opacity='1';
+  setTimeout(()=>{t.style.opacity='0';},3000);
+}
+
+/* ── RENDER EXERCISE GRID ── */
+function renderExGrid(){
+  document.getElementById('forgeScore').textContent=totalForgeScore;
+  var grid=document.getElementById('exGrid');
+  grid.innerHTML=EXERCISES.map(ex=>{
+    var best=scores[ex.id]&&scores[ex.id].best;
+    return `<div class="ex-card" data-id="${ex.id}">
+      <div class="ex-icon">${ex.icon}</div>
+      <div class="ex-title">${ex.title}</div>
+      <div class="ex-desc">${ex.desc}</div>
+      <div class="ex-meta">
+        <span class="ex-diff ${ex.diff}">${ex.diff.toUpperCase()}</span>
+        <span class="ex-xp">+${ex.xp} XP</span>
+        <span class="ex-time">⏱ ${ex.time}</span>
+      </div>
+      ${best?`<div class="ex-best">PERSONAL BEST: ${best} pts</div>`:''}
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.ex-card').forEach(card=>{
+    card.addEventListener('click',function(){startExercise(this.dataset.id);});
+  });
+}
+
+/* ── START EXERCISE ── */
+function startExercise(id){
+  var ex=EXERCISES.find(e=>e.id===id);if(!ex) return;
+  var handler=EXERCISE_HANDLERS[ex.type];
+  if(!handler) return;
+  document.getElementById('tab-exercises').style.display='none';
+  document.querySelectorAll('.layer-tabs').forEach(t=>t.style.display='none');
+  handler(ex);
+}
+
+function endExercise(score,xp,id){
+  /* Save score */
+  var prev=scores[id]||{best:0,attempts:0};
+  scores[id]={best:Math.max(prev.best,score),attempts:(prev.attempts||0)+1,lastScore:score};
+  localStorage.setItem('omega_forge_scores',JSON.stringify(scores));
+  totalForgeScore=Object.values(scores).reduce((s,v)=>s+(v.best||0),0);
+  document.getElementById('forgeScore').textContent=totalForgeScore;
+  toast('⚒ FORGE TRIAL COMPLETE — SCORE: '+score+' · +'+xp+' XP','var(--green)');
+  setTimeout(()=>{
+    document.getElementById('activeEx').style.display='none';
+    document.getElementById('tab-exercises').style.display='block';
+    document.querySelectorAll('.layer-tabs').forEach(t=>t.style.display='flex');
+    renderExGrid();
+  },3000);
+}
+
+/* ── TIMER ── */
+function createTimer(sec,onTick,onEnd){
+  var remaining=sec;var iv=null;
+  return {
+    start(){iv=setInterval(()=>{remaining--;onTick(remaining);if(remaining<=0){clearInterval(iv);onEnd();}},1000);},
+    stop(){clearInterval(iv);},
+    remaining(){return remaining;}
+  };
+}
+
+/* ─────────────────────────────────────────────
+   EXERCISE HANDLERS
+   ───────────────────────────────────────────── */
+var EXERCISE_HANDLERS={
+
+/* ── ARITHMETIC ── */
+arithmetic(ex){
+  var problems=[];
+  for(var i=0;i<10;i++){
+    var a=Math.floor(Math.random()*50)+10;
+    var b=Math.floor(Math.random()*50)+10;
+    var ops=['+','-','×'];var op=ops[Math.floor(Math.random()*ops.length)];
+    var ans=op==='+'?a+b:op==='-'?a-b:a*b;
+    problems.push({q:`${a} ${op} ${b}`,a:ans});
+  }
+  var idx=0,correct=0,startTime=Date.now();
+  function renderP(){
+    var p=problems[idx];
+    document.getElementById('activeEx').innerHTML=`
+      <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">QUESTION ${idx+1}/10 · ${correct} CORRECT</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>
+      <div class="ex-content" style="font-size:28px;text-align:center;letter-spacing:4px">${p.q} = ?</div>
+      <input class="ex-input" id="ansInput" type="number" placeholder="YOUR ANSWER" autofocus>
+      <div class="btn-row"><button class="ex-btn" id="submitAns">SUBMIT ↵</button></div>
+      <div class="ex-result" id="resultBox"></div>`;
+    document.getElementById('ansInput').focus();
+    function submit(){
+      var val=parseInt(document.getElementById('ansInput').value);
+      var rb=document.getElementById('resultBox');
+      if(val===p.a){correct++;rb.textContent='✓ CORRECT';rb.style.color='var(--green)';}
+      else{rb.textContent=`✗ ANSWER WAS ${p.a}`;rb.style.color='rgba(200,50,50,.7)';}
+      rb.classList.add('visible');
+      setTimeout(()=>{
+        idx++;
+        if(idx>=problems.length){
+          var elapsed=Math.round((Date.now()-startTime)/1000);
+          var score=Math.round(correct*100+(60-Math.min(60,elapsed))*5);
+          document.getElementById('activeEx').innerHTML=`<div class="ae-title">TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">${score} pts</div><div style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5);text-align:center">${correct}/10 CORRECT · ${elapsed}s · +${ex.xp} XP</div>`;
+          endExercise(score,ex.xp,ex.id);
+        } else renderP();
+      },900);
+    }
+    document.getElementById('submitAns').addEventListener('click',submit);
+    document.getElementById('ansInput').addEventListener('keydown',e=>{if(e.key==='Enter') submit();});
+    document.getElementById('exitBtn').addEventListener('click',()=>{
+      document.getElementById('activeEx').style.display='none';
+      document.getElementById('tab-exercises').style.display='block';
+      document.querySelectorAll('.layer-tabs').forEach(t=>t.style.display='flex');
+    });
+  }
+  document.getElementById('activeEx').style.display='flex';
+  renderP();
+},
+
+/* ── SEQUENCE ── */
+sequence(ex){
+  var sequences=[
+    {seq:[2,4,8,16,32],ans:64,rule:'×2'},
+    {seq:[1,4,9,16,25],ans:36,rule:'n²'},
+    {seq:[3,6,10,15,21],ans:28,rule:'+n'},
+    {seq:[100,50,25,12.5],ans:6.25,rule:'÷2'},
+    {seq:[1,1,2,3,5,8],ans:13,rule:'Fibonacci'},
+    {seq:[2,6,12,20,30],ans:42,rule:'n(n+1)'},
+    {seq:[0,3,8,15,24],ans:35,rule:'n²-1'},
+    {seq:[1,8,27,64,125],ans:216,rule:'n³'},
+  ];
+  var s=sequences[Math.floor(Math.random()*sequences.length)];
+  var startTime=Date.now();
+  document.getElementById('activeEx').style.display='flex';
+  document.getElementById('activeEx').innerHTML=`
+    <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">FIND THE NEXT NUMBER IN THE SEQUENCE</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>
+    <div class="ex-content" style="font-size:20px;text-align:center;letter-spacing:6px">${s.seq.join('   ')}   <span style="color:rgba(201,168,76,.3)">?</span></div>
+    <input class="ex-input" id="seqAns" type="number" placeholder="NEXT NUMBER" autofocus>
+    <div class="btn-row"><button class="ex-btn" id="submitSeq">VERIFY →</button></div>
+    <div class="ex-result" id="seqResult"></div>`;
+  document.getElementById('seqAns').focus();
+  function check(){
+    var val=parseFloat(document.getElementById('seqAns').value);
+    var elapsed=Math.round((Date.now()-startTime)/1000);
+    var rb=document.getElementById('seqResult');
+    if(val===s.ans){
+      var score=Math.max(50,200-elapsed*2);
+      rb.textContent=`✓ CORRECT — Pattern: ${s.rule} — ${elapsed}s — Score: ${score}`;
+      rb.style.color='var(--green)';rb.classList.add('visible');
+      setTimeout(()=>endExercise(score,ex.xp,ex.id),2000);
+    } else {
+      rb.textContent=`✗ INCORRECT — Try again`;rb.style.color='rgba(200,50,50,.7)';rb.classList.add('visible');
+    }
+  }
+  document.getElementById('submitSeq').addEventListener('click',check);
+  document.getElementById('seqAns').addEventListener('keydown',e=>{if(e.key==='Enter') check();});
+  document.getElementById('exitBtn').addEventListener('click',()=>{document.getElementById('activeEx').style.display='none';document.getElementById('tab-exercises').style.display='block';document.querySelectorAll('.layer-tabs').forEach(t=>t.style.display='flex');});
+},
+
+/* ── CREATIVE FIRE ── */
+creative(ex){
+  var prompts=['Uses for a broken compass','Ways to improve human memory','Alternative monetary systems','Metaphors for sovereign power','Solutions to urban isolation','Revolutionary education models','Symbols for new governance','Ways to demonstrate true loyalty'];
+  var prompt=prompts[Math.floor(Math.random()*prompts.length)];
+  var timer=createTimer(180,
+    r=>{var e=document.getElementById('timerDisp');if(e) e.textContent=Math.floor(r/60)+':'+(r%60<10?'0':'')+r%60;},
+    ()=>{submit();}
+  );
+  document.getElementById('activeEx').style.display='flex';
+  document.getElementById('activeEx').innerHTML=`
+    <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">3 MINUTES · GENERATE MAXIMUM IDEAS</div></div></div>
+    <div style="text-align:center"><div class="timer-display" id="timerDisp">3:00</div><div class="timer-label">REMAINING</div></div>
+    <div class="ex-content">PROMPT: <strong style="color:var(--orange)">${prompt.toUpperCase()}</strong></div>
+    <textarea class="ex-textarea" id="creativeInput" placeholder="Write each idea on a new line — aim for 10+ sovereign ideas..."></textarea>
+    <div class="btn-row"><button class="ex-btn" id="submitCreative">⚒ SUBMIT IDEAS</button></div>`;
+  timer.start();
+  function submit(){
+    timer.stop();
+    var lines=document.getElementById('creativeInput').value.split('\n').filter(l=>l.trim().length>3);
+    var count=lines.length;
+    var score=Math.min(300,count*20+(timer.remaining()*2));
+    document.getElementById('activeEx').innerHTML=`<div class="ae-title">CREATIVE TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">${score} pts</div><div style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5);text-align:center">${count} IDEAS GENERATED · +${ex.xp} XP</div>`;
+    endExercise(score,ex.xp,ex.id);
+  }
+  document.getElementById('submitCreative').addEventListener('click',submit);
+},
+
+/* ── LOGIC ── */
+logic(ex){
+  var puzzles=[
+    {q:'Three boxes are labeled A, B, C. One contains gold, two are empty. A says: "The gold is in B." B says: "A is lying." C says: "I am empty." Only one box tells the truth. Where is the gold?',a:'C',hint:'If C is empty and truthful, A lies (gold not in B), B says A lies (true), but only one can be truthful — C.'},
+    {q:'Five sovereigns sit in a row. The Fire sovereign sits to the left of Water. Metal is not next to Wind. Soul is at position 3. Fire is at position 1. Where is Wind?',a:'5',hint:'Fire=1, Water=2 (right of Fire), Soul=3, Metal≠4 (next to Soul at 3, and Wind must be at 5, Metal at 4 violates rule) → Wind=5, Metal=4? Check: Metal at 4 is next to Wind at 5. Violates rule. So Metal=2? No, Water=2. Recalculate: Wind=5.'},
+  ];
+  var p=puzzles[Math.floor(Math.random()*puzzles.length)];
+  var startTime=Date.now();
+  document.getElementById('activeEx').style.display='flex';
+  document.getElementById('activeEx').innerHTML=`
+    <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">MULTI-STEP LOGICAL DEDUCTION</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>
+    <div class="ex-content" style="line-height:1.8">${p.q}</div>
+    <textarea class="ex-textarea" id="logicAns" placeholder="Show your reasoning, then give your final answer..." style="min-height:120px"></textarea>
+    <div class="btn-row"><button class="ex-btn" id="submitLogic">SUBMIT DEDUCTION →</button><button class="ex-btn secondary" id="hintBtn">REVEAL HINT</button></div>
+    <div class="ex-result" id="logicResult"></div>`;
+  document.getElementById('hintBtn').addEventListener('click',function(){
+    var r=document.getElementById('logicResult');r.textContent='HINT: '+p.hint;r.style.color='rgba(201,168,76,.6)';r.classList.add('visible');
+  });
+  document.getElementById('submitLogic').addEventListener('click',function(){
+    var elapsed=Math.round((Date.now()-startTime)/1000);
+    var used=document.getElementById('logicResult').classList.contains('visible');
+    var score=Math.max(30,used?80:200-elapsed*2);
+    var rb=document.getElementById('logicResult');
+    rb.textContent=`ANSWER: ${p.a} · ${used?'HINT USED':'CLEAN SOLVE'} · ${elapsed}s · SCORE: ${score}`;
+    rb.style.color='var(--cyan)';rb.classList.add('visible');
+    setTimeout(()=>endExercise(score,ex.xp,ex.id),3000);
+  });
+  document.getElementById('exitBtn').addEventListener('click',()=>{document.getElementById('activeEx').style.display='none';document.getElementById('tab-exercises').style.display='block';document.querySelectorAll('.layer-tabs').forEach(t=>t.style.display='flex');});
+},
+
+/* ── READING (alias logic for now) ── */
+reading(ex){ EXERCISE_HANDLERS.creative(ex); },
+
+/* ── MEMORY (simplified text version) ── */
+memory(ex){
+  var symbols=['Ω','☲','☰','☱','☳','★','✴','✶','✷','◈','⬡','⚔','◉','⚖','☽'];
+  var grid=[];for(var i=0;i<12;i++) grid.push(symbols[Math.floor(Math.random()*symbols.length)]);
+  var phase='memorize';
+  document.getElementById('activeEx').style.display='flex';
+  var timer=createTimer(15,r=>{var e=document.getElementById('memTimer');if(e)e.textContent=r;},()=>{showRecall();});
+  function showMemorize(){
+    document.getElementById('activeEx').innerHTML=`
+      <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">MEMORIZE IN <span id="memTimer">15</span> SECONDS</div></div></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;padding:8px 0">
+        ${grid.map(s=>`<div style="font-size:28px;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.1);border-radius:3px;padding:12px">${s}</div>`).join('')}
+      </div>
+      <div class="timer-bar-wrap"><div class="timer-bar" id="memBar" style="width:100%"></div></div>`;
+    var pct=100;var barIv=setInterval(()=>{pct-=100/15;var b=document.getElementById('memBar');if(b) b.style.width=Math.max(0,pct)+'%';else clearInterval(barIv);},1000);
+    timer.start();
+  }
+  function showRecall(){
+    var startTime=Date.now();
+    document.getElementById('activeEx').innerHTML=`
+      <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">REPRODUCE THE SEQUENCE — TYPE SYMBOLS SEPARATED BY SPACES</div></div></div>
+      <div class="ex-content" style="font-size:24px;letter-spacing:8px;color:rgba(255,255,255,.15)">? ? ? ? ? ? ? ? ? ? ? ?</div>
+      <input class="ex-input" id="memRecall" placeholder="Type the 12 symbols in order, space-separated..." autofocus>
+      <div class="btn-row"><button class="ex-btn" id="memSubmit">VERIFY MEMORY ↵</button></div>`;
+    document.getElementById('memSubmit').addEventListener('click',function(){
+      var input=document.getElementById('memRecall').value.trim().split(/\s+/);
+      var correct=input.filter((s,i)=>s===grid[i]).length;
+      var elapsed=Math.round((Date.now()-startTime)/1000);
+      var score=Math.round(correct*20+(correct===12?100:0));
+      document.getElementById('activeEx').innerHTML=`
+        <div class="ae-title">MEMORY TRIAL COMPLETE</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;margin:12px 0">
+          ${grid.map((s,i)=>`<div style="font-size:22px;background:${input[i]===s?'rgba(0,255,136,.08)':'rgba(200,50,50,.08)'};border:1px solid ${input[i]===s?'rgba(0,255,136,.2)':'rgba(200,50,50,.2)'};border-radius:3px;padding:8px">${s}</div>`).join('')}
+        </div>
+        <div style="font-family:var(--D);font-size:32px;color:var(--gold);text-align:center">${score} pts</div>
+        <div style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5);text-align:center">${correct}/12 CORRECT · +${ex.xp} XP</div>`;
+      endExercise(score,ex.xp,ex.id);
+    });
+  }
+  showMemorize();
+},
+
+/* ── VOCABULARY ── */
+vocabulary(ex){
+  var words=[
+    {word:'APOCRYPHAL',def:'Of doubtful authenticity; widely circulated but probably not true.'},
+    {word:'SANGUINE',def:'Optimistic, especially in a difficult situation.'},
+    {word:'EQUANIMITY',def:'Mental calmness and composure under pressure.'},
+    {word:'PERIPATETIC',def:'Traveling from place to place; itinerant.'},
+    {word:'SOLIPSISTIC',def:'The view that only the self exists or can be known to exist.'},
+    {word:'LACONIC',def:'Using very few words; brief and concise.'},
+    {word:'PERSPICACIOUS',def:'Having a ready insight into things; shrewd.'},
+    {word:'INIMICAL',def:'Tending to obstruct or harm; hostile.'},
+    {word:'VERISIMILITUDE',def:'The appearance of being true or real.'},
+    {word:'EPISTEMIC',def:'Relating to knowledge or the degree of its validation.'},
+  ];
+  var set=words.sort(()=>Math.random()-.5).slice(0,5);var idx=0;var correct=0;var startTime=Date.now();
+  function renderWord(){
+    var w=set[idx];
+    document.getElementById('activeEx').innerHTML=`
+      <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">WORD ${idx+1}/5 · ${correct} CORRECT</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>
+      <div class="ex-content" style="font-size:22px;text-align:center;letter-spacing:3px;color:var(--gold)">${w.word}</div>
+      <textarea class="ex-textarea" id="wordAns" placeholder="Write your definition of this word..." style="min-height:80px"></textarea>
+      <div class="btn-row"><button class="ex-btn" id="wordSubmit">REVEAL DEFINITION →</button></div>
+      <div class="ex-result" id="wordResult"></div>`;
+    document.getElementById('wordSubmit').addEventListener('click',function(){
+      var rb=document.getElementById('wordResult');
+      rb.innerHTML=`DEFINITION: <em>${w.def}</em><br><br><button class="ex-btn" id="markCorrect" style="margin-right:8px">✓ I GOT IT</button><button class="ex-btn secondary" id="markWrong">✗ MISSED IT</button>`;
+      rb.style.color='rgba(0,229,255,.7)';rb.classList.add('visible');
+      document.getElementById('markCorrect').addEventListener('click',()=>next(true));
+      document.getElementById('markWrong').addEventListener('click',()=>next(false));
+    });
+    document.getElementById('exitBtn').addEventListener('click',()=>{document.getElementById('activeEx').style.display='none';document.getElementById('tab-exercises').style.display='block';document.querySelectorAll('.layer-tabs').forEach(t=>t.style.display='flex');});
+  }
+  function next(got){
+    if(got) correct++;
+    idx++;
+    if(idx>=set.length){
+      var elapsed=Math.round((Date.now()-startTime)/1000);
+      var score=correct*100+Math.max(0,120-elapsed)*2;
+      document.getElementById('activeEx').innerHTML=`<div class="ae-title">VOCABULARY TRIAL COMPLETE</div><div style="font-family:var(--D);font-size:36px;color:var(--gold);text-align:center;margin:16px 0">${score} pts</div><div style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5);text-align:center">${correct}/5 CORRECT · +${ex.xp} XP</div>`;
+      endExercise(score,ex.xp,ex.id);
+    } else renderWord();
+  }
+  document.getElementById('activeEx').style.display='flex';
+  renderWord();
+},
+
+/* ── CIPHER ── */
+cipher(ex){
+  var shift=Math.floor(Math.random()*5)+2;
+  var plain='SOVEREIGNTY IS THE APEX OF HUMAN POTENTIAL';
+  var encoded=plain.split('').map(c=>{if(c>='A'&&c<='Z'){var n=(c.charCodeAt(0)-65+shift)%26;return String.fromCharCode(65+n);}return c;}).join('');
+  var startTime=Date.now();
+  document.getElementById('activeEx').style.display='flex';
+  document.getElementById('activeEx').innerHTML=`
+    <div class="ae-header"><div class="ae-icon">${ex.icon}</div><div><div class="ae-title">${ex.title}</div><div class="ae-subtitle">CAESAR CIPHER — FIND THE SHIFT VALUE AND DECODE</div></div><button class="ex-btn secondary" id="exitBtn">✕ EXIT</button></div>
+    <div class="ex-content" style="font-size:16px;letter-spacing:3px;color:var(--orange)">${encoded}</div>
+    <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.4);margin-top:-8px">EACH LETTER HAS BEEN SHIFTED BY A FIXED AMOUNT. FIND THE SHIFT, DECODE THE MESSAGE.</div>
+    <input class="ex-input" id="cipherAns" placeholder="Type your decoded message..." autofocus>
+    <div class="btn-row"><button class="ex-btn" id="cipherSubmit">DECODE →</button></div>
+    <div class="ex-result" id="cipherResult"></div>`;
+  document.getElementById('cipherSubmit').addEventListener('click',function(){
+    var ans=document.getElementById('cipherAns').value.trim().toUpperCase();
+    var elapsed=Math.round((Date.now()-startTime)/1000);
+    var rb=document.getElementById('cipherResult');
+    var similarity=ans.split('').filter((c,i)=>c===plain[i]).length/plain.length;
+    var score=Math.round(similarity*300+(similarity>0.9?100:0));
+    rb.innerHTML=`SHIFT WAS ${shift} · ORIGINAL: <em>${plain}</em><br>SIMILARITY: ${Math.round(similarity*100)}% · SCORE: ${score}`;
+    rb.style.color=similarity>0.8?'var(--green)':'rgba(200,50,50,.7)';rb.classList.add('visible');
+    setTimeout(()=>endExercise(score,ex.xp,ex.id),3000);
+  });
+  document.getElementById('exitBtn').addEventListener('click',()=>{document.getElementById('activeEx').style.display='none';document.getElementById('tab-exercises').style.display='block';document.querySelectorAll('.layer-tabs').forEach(t=>t.style.display='flex');});
+},
+
+};
+
+/* ── SCORES ── */
+function renderScores(){
+  var panel=document.getElementById('scoresPanel');
+  var entries=EXERCISES.map(ex=>({...ex,best:(scores[ex.id]&&scores[ex.id].best)||0,attempts:(scores[ex.id]&&scores[ex.id].attempts)||0})).sort((a,b)=>b.best-a.best);
+  if(!entries.some(e=>e.best>0)){panel.innerHTML='<div class="empty">NO SCORES YET — FORGE YOUR FIRST TRIAL</div>';return;}
+  panel.innerHTML=entries.map((e,i)=>`
+    <div class="fs-item">
+      <div class="fs-rank">${i+1}</div>
+      <div style="font-size:18px">${e.icon}</div>
+      <div class="fs-name">${e.title}</div>
+      <div class="fs-type">${e.attempts} ATTEMPTS</div>
+      <div class="fs-score">${e.best} pts</div>
+    </div>`).join('');
+}
+
+renderExGrid();
+</script>
+</body>
+</html>

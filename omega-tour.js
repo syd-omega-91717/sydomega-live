@@ -331,6 +331,60 @@
     },
   ]);
 
+  /* Publishing page tour */
+  API.register('publishing', [
+    {
+      target: '.topbar',
+      title: 'THE CREATOR\'S HALL',
+      text: 'This is your authorship portal. Every work you commit here advances your <b style="color:#3fb27f">Axis C Contribution</b>. Your first publication unlocks a permanent +0.25 to Axis C.',
+      placement: 'bottom'
+    },
+    {
+      target: '.card',
+      title: 'COMMIT A WORK',
+      text: 'Choose a form — Manuscript, Treatise, Report, Article, or Codex Entry. Give it a title and write your work. Your first submission advances the Contribution axis immediately on approval.',
+      placement: 'bottom'
+    },
+  ]);
+
+  /* Settings page tour */
+  API.register('settings', [
+    {
+      target: '.topbar',
+      title: 'SOVEREIGN PREFERENCES',
+      text: 'Customize your sovereign environment — background void, language, privacy, and appearance. Your preferences are saved on this device and synced to your profile.',
+      placement: 'bottom'
+    },
+    {
+      target: '[data-membership-card]',
+      title: 'YOUR MEMBERSHIP',
+      text: 'Your current subscription tier and access status. Upgrade to unlock higher gates, premium content, and advanced features across the platform.',
+      placement: 'bottom'
+    },
+  ]);
+
+  /* Identity page tour */
+  API.register('identity', [
+    {
+      target: '.topbar',
+      title: 'DIGITAL IDENTITY',
+      text: 'This page shows your private sovereign credentials — member ID, cosmology chain, subscription tier, and KYC status. This data is visible only to you.',
+      placement: 'bottom'
+    },
+    {
+      target: '.hero-band',
+      title: 'AUTHORITY READOUT',
+      text: 'Your name and live authority score (AUTH = sqrt(A³+B³+C³)×φ/e). The orbital ring represents your position from INITIATE to APEX across the 12 sovereign gates.',
+      placement: 'bottom'
+    },
+    {
+      target: '.card',
+      title: 'YOUR CREDENTIALS',
+      text: 'Every field here is private — member ID, sign, element, Olympian, agent, tier, and KYC status. These are the pillars of your sovereign identity record.',
+      placement: 'top'
+    },
+  ]);
+
   /* Production Studio tour */
   API.register('studio', [
     {

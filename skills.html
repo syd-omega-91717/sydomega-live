@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 &mdash; Sovereign Skills</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,32px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.main{flex:1;min-width:0;overflow-x:hidden}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px var(--pad);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}
+.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.pad{padding:var(--pad)}
+.layer-tabs{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:40}
+.layer-tabs::-webkit-scrollbar{display:none}
+.ltab{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.ltab.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.04)}
+.panel{display:none}.panel.active{display:block}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.btn{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 14px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:rgba(201,168,76,.06);border-radius:2px;cursor:pointer;transition:.15s}
+.btn:hover{background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.5)}
+.btn-sm{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:var(--muted);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.btn-sm:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px 14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
+.kpi-n{font-family:var(--D);font-size:20px;color:var(--kc,var(--gold));line-height:1}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+/* SKILL CARD */
+.skill-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:14px;border-left:3px solid var(--sc,var(--gold));transition:.18s;margin-bottom:8px}
+.skill-card:hover{border-color:rgba(201,168,76,.25);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.sk-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.sk-name{font-family:var(--D);font-size:11px;color:var(--ink)}
+.sk-domain{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--sc,var(--gold));margin-top:2px}
+.sk-actions{display:flex;gap:6px;flex-shrink:0}
+/* LEVEL BAR */
+.level-wrap{margin-bottom:6px}
+.level-label{display:flex;justify-content:space-between;margin-bottom:4px}
+.level-tag{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)}
+.level-val{font-family:var(--D);font-size:10px;color:var(--sc,var(--gold))}
+.level-track{height:4px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden}
+.level-fill{height:100%;border-radius:2px;transition:width .6s ease}
+.level-dots{display:flex;gap:3px;margin-top:5px}
+.level-dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:.12s;flex-shrink:0}
+/* DOMAIN GRID */
+.domain-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px}
+.domain-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;text-align:center}
+.domain-card:hover{border-color:rgba(201,168,76,.25);transform:translateY(-1px)}
+.domain-icon{font-size:22px;margin-bottom:6px}
+.domain-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--ink);margin-bottom:4px}
+.domain-count{font-family:var(--M);font-size:7px;color:var(--muted)}
+/* FORM */
+.form-wrap{border:1px solid rgba(201,168,76,.15);border-radius:2px;background:rgba(10,10,15,.7);padding:16px;margin-bottom:16px}
+.fg{margin-bottom:10px}
+.fg label{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none;transition:.12s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(201,168,76,.4);background:rgba(255,255,255,.06)}
+.fg select option{background:#0d0d18}
+.fg textarea{resize:vertical;min-height:60px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* SCIENCE */
+.sci-block{border:1px solid var(--line);border-left:3px solid var(--sc,var(--cyan));background:rgba(10,10,15,.4);padding:14px;border-radius:2px;margin-bottom:10px}
+.sci-title{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
+.sci-body{font-size:11px;line-height:1.7;color:var(--ink);opacity:.8}
+.sci-cite{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:6px}
+/* SESSION LOG */
+.slog-item{border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.slog-dot{width:8px;height:8px;border-radius:50%;background:var(--sc,var(--gold));flex-shrink:0}
+.slog-text{flex:1;font-size:10px;line-height:1.5}
+.slog-time{font-family:var(--M);font-size:7px;color:var(--muted)}
+/* CHART */
+.chart-wrap{border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.9);padding:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center}
+/* PROGRESS BAR ANIMATION */
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+.active-badge{animation:pulse 2s ease-in-out infinite}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="skills" aria-label="Navigation"></aside>
+  <main class="main" role="main">
+    <div class="topbar">
+      <div class="t">SOVEREIGN SKILLS<small>SKILL INVENTORY &middot; DELIBERATE PRACTICE &middot; MASTERY STACK</small></div>
+      <button class="btn" onclick="openAddSkill()">+ ADD SKILL</button>
+    </div>
+    <div class="layer-tabs" role="tablist">
+      <button class="ltab active" onclick="switchTab(this,'t-overview')">&#9650; OVERVIEW</button>
+      <button class="ltab" onclick="switchTab(this,'t-skills')">&#9670; MY SKILLS</button>
+      <button class="ltab" onclick="switchTab(this,'t-domains')">&#9881; DOMAINS</button>
+      <button class="ltab" onclick="switchTab(this,'t-sessions')">&#8635; SESSIONS</button>
+      <button class="ltab" onclick="switchTab(this,'t-science')">&#9670; SCIENCE</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div id="t-overview" class="panel active">
+      <div class="pad">
+        <div class="kpi-row" id="ov-kpis">
+          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="kpi-total">0</div><div class="kpi-l">TOTAL SKILLS</div></div>
+          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="kpi-mastered">0</div><div class="kpi-l">MASTERED (8+)</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="kpi-developing">0</div><div class="kpi-l">DEVELOPING (4–7)</div></div>
+          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="kpi-sessions">0</div><div class="kpi-l">PRACTICE SESSIONS</div></div>
+          <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="kpi-hours">0</div><div class="kpi-l">HOURS LOGGED</div></div>
+          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="kpi-domains">0</div><div class="kpi-l">ACTIVE DOMAINS</div></div>
+        </div>
+
+        <!-- RADAR CHART -->
+        <div class="sechead">SKILL DOMAIN RADAR <span style="font-family:var(--M);font-size:7px;color:var(--muted)">AVG LEVEL PER DOMAIN</span></div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="domain-radar" style="max-width:260px;max-height:260px"></canvas>
+        </div>
+
+        <!-- TOP SKILLS -->
+        <div class="sechead">TOP SKILLS &middot; BY CURRENT LEVEL <span class="btn-sm" onclick="switchTab(document.querySelectorAll('.ltab')[1],'t-skills')">VIEW ALL</span></div>
+        <div id="top-skills-list"></div>
+
+        <!-- STACK SUGGESTION -->
+        <div class="sechead" style="margin-top:16px">SKILL STACK INSIGHT</div>
+        <div id="stack-insight" style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:14px;border-radius:2px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8">
+          Add skills across multiple domains to unlock Stack Insight — how your unique combination of skills creates asymmetric leverage.
+        </div>
+      </div>
+    </div>
+
+    <!-- MY SKILLS -->
+    <div id="t-skills" class="panel">
+      <div class="pad">
+        <!-- FILTER ROW -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+          <select id="filter-domain" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:8px;padding:6px 10px;border-radius:2px;outline:none">
+            <option value="">ALL DOMAINS</option>
+          </select>
+          <select id="filter-sort" onchange="renderSkillsList()" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:8px;padding:6px 10px;border-radius:2px;outline:none">
+            <option value="level-desc">LEVEL: HIGH → LOW</option>
+            <option value="level-asc">LEVEL: LOW → HIGH</option>
+            <option value="name">NAME A–Z</option>
+            <option value="gap">LARGEST GAP</option>
+            <option value="recent">RECENTLY PRACTICED</option>
+          </select>
+          <div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto" id="skills-count-label"></div>
+        </div>
+        <div id="skills-list"></div>
+        <div id="skills-empty" style="display:none;text-align:center;padding:40px;border:1px solid var(--line);border-radius:2px">
+          <div style="font-family:var(--D);font-size:28px;color:rgba(201,168,76,.15);margin-bottom:10px">&#9670;</div>
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">NO SKILLS YET</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;margin-bottom:14px">Start building your sovereign skill stack</div>
+          <button class="btn" onclick="openAddSkill()">+ ADD FIRST SKILL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOMAINS -->
+    <div id="t-domains" class="panel">
+      <div class="pad">
+        <div class="sechead">SKILL DOMAINS &middot; 8 SOVEREIGN AREAS</div>
+        <div class="domain-grid" id="domain-grid"></div>
+        <div class="sechead">DOMAIN BREAKDOWN</div>
+        <div id="domain-breakdown"></div>
+      </div>
+    </div>
+
+    <!-- SESSIONS -->
+    <div id="t-sessions" class="panel">
+      <div class="pad">
+        <div class="sechead">LOG PRACTICE SESSION <span class="btn" onclick="openLogSession()" style="font-size:7.5px;padding:5px 10px">+ LOG SESSION</span></div>
+        <div class="kpi-row">
+          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="s-total">0</div><div class="kpi-l">TOTAL SESSIONS</div></div>
+          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="s-week">0</div><div class="kpi-l">THIS WEEK</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="s-hours">0h</div><div class="kpi-l">HOURS TOTAL</div></div>
+          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="s-streak">0</div><div class="kpi-l">STREAK (DAYS)</div></div>
+        </div>
+        <div class="sechead">RECENT SESSIONS</div>
+        <div id="session-log"></div>
+      </div>
+    </div>
+
+    <!-- SCIENCE -->
+    <div id="t-science" class="panel">
+      <div class="pad">
+        <div class="sechead">THE SCIENCE OF SKILL ACQUISITION</div>
+        <div class="sci-block" style="--sc:var(--gold)">
+          <div class="sci-title">DELIBERATE PRACTICE (Ericsson, 1993)</div>
+          <div class="sci-body">Elite performance is not a product of raw talent but of deliberate practice — focused, effortful training at the edge of current ability with immediate feedback and repetition. Ericsson's research across chess masters, violinists, and surgeons showed that ~10,000 hours of deliberate practice (not mere experience) separated experts from novices. The key: practice must be <em>deliberate</em> — specific goals, full concentration, immediate feedback, and working outside your comfort zone.</div>
+          <div class="sci-cite">Ericsson, K.A., Krampe, R.T., &amp; Tesch-Römer, C. (1993). Psychological Review, 100(3), 363–406.</div>
+        </div>
+        <div class="sci-block" style="--sc:var(--cyan)">
+          <div class="sci-title">SKILL STACKING (Scott Adams, 2013)</div>
+          <div class="sci-body">You don't need to be the world's best at any single skill. Being in the top 25% at several complementary skills multiplies your competitive advantage. Adams combined mediocre skills in writing, humor, business, and drawing to create Dilbert — a career no one else could replicate. The insight: rare combinations beat rare excellence. Identify your 3–5 skill intersections to find your unfair advantage.</div>
+          <div class="sci-cite">Adams, S. (2013). How to Fail at Almost Everything and Still Win Big. Portfolio/Penguin.</div>
+        </div>
+        <div class="sci-block" style="--sc:var(--purple)">
+          <div class="sci-title">COGNITIVE LOAD THEORY (Sweller, 1988)</div>
+          <div class="sci-body">Working memory can hold 7±2 chunks of information simultaneously. Skill acquisition works by chunking — combining practiced sub-skills into single mental units that require less conscious attention. This is why beginners are overwhelmed while experts see patterns. The implication: break skills into sub-components, master each chunk, then integrate. Use worked examples before problem-solving.</div>
+          <div class="sci-cite">Sweller, J. (1988). Cognitive Science, 12(2), 257–285. Miller, G.A. (1956). Psychological Review, 63(2).</div>
+        </div>
+        <div class="sci-block" style="--sc:var(--green)">
+          <div class="sci-title">THE LEARNING CURVE (Bryan &amp; Harter, 1897)</div>
+          <div class="sci-body">Skill acquisition follows a predictable S-curve: slow initial gains, rapid acceleration through deliberate practice, then a plateau at expert level. Plateaus are not failure — they precede breakthroughs as the brain reorganizes neural pathways. Research shows skills that feel "stuck" often experience sudden jumps when a threshold of underlying practice accumulates. Trust the process.</div>
+          <div class="sci-cite">Bryan, W.L., &amp; Harter, N. (1897). Psychological Review, 4(1), 27–53.</div>
+        </div>
+        <div class="sci-block" style="--sc:var(--solar)">
+          <div class="sci-title">INTERLEAVED PRACTICE (Kornell &amp; Bjork, 2008)</div>
+          <div class="sci-body">Blocked practice (repeating one skill until perfect) feels productive but produces weaker long-term retention. Interleaved practice (mixing different skills in a session) feels harder but creates stronger transfer to novel situations. This works because interleaving forces the brain to discriminate between skills and retrieve the right strategy — building flexible, context-independent expertise.</div>
+          <div class="sci-cite">Kornell, N., &amp; Bjork, R.A. (2008). Psychological Science, 19(6), 585–592.</div>
+        </div>
+        <div class="sechead" style="margin-top:8px">SOVEREIGN SKILL LEVELS</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div class="sci-block" style="--sc:var(--muted)"><div class="sci-title" style="color:var(--muted)">1–2: NOVICE</div><div class="sci-body">Basic awareness. Needs constant guidance. Follows rules without judgment.</div></div>
+          <div class="sci-block" style="--sc:var(--cyan)"><div class="sci-title" style="color:var(--cyan)">3–4: BEGINNER</div><div class="sci-body">Recognizes patterns in limited situations. Building foundational mental models.</div></div>
+          <div class="sci-block" style="--sc:var(--green)"><div class="sci-title" style="color:var(--green)">5–6: COMPETENT</div><div class="sci-body">Can plan and execute without supervision. Sees actions in terms of goals.</div></div>
+          <div class="sci-block" style="--sc:var(--gold)"><div class="sci-title" style="color:var(--gold)">7–8: PROFICIENT</div><div class="sci-body">Intuitive grasp of situations. Adapts to context. Guides others effectively.</div></div>
+          <div class="sci-block" style="--sc:var(--solar)"><div class="sci-title" style="color:var(--solar)">9–10: MASTER</div><div class="sci-body">Transcends rules. Creates new approaches. Shapes the domain itself.</div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ADD SKILL MODAL -->
+<div id="modal-add" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#0d0d18;border:1px solid rgba(201,168,76,.2);border-radius:2px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold)" id="modal-add-title">ADD SKILL</div>
+      <button onclick="closeAddSkill()" class="btn-sm">&#10005;</button>
+    </div>
+    <div style="padding:16px" class="form-wrap" style="border:none;margin:0">
+      <input type="hidden" id="edit-skill-id">
+      <div class="two-col">
+        <div class="fg">
+          <label>SKILL NAME</label>
+          <input type="text" id="sk-name" placeholder="e.g. Python Programming" maxlength="60">
+        </div>
+        <div class="fg">
+          <label>DOMAIN</label>
+          <select id="sk-domain">
+            <option value="technology">TECHNOLOGY</option>
+            <option value="business">BUSINESS</option>
+            <option value="creative">CREATIVE</option>
+            <option value="physical">PHYSICAL</option>
+            <option value="social">SOCIAL</option>
+            <option value="mental">MENTAL</option>
+            <option value="spiritual">SPIRITUAL</option>
+            <option value="language">LANGUAGE</option>
+          </select>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="fg">
+          <label>CURRENT LEVEL (1–10)</label>
+          <input type="number" id="sk-current" min="1" max="10" value="1" step="1">
+        </div>
+        <div class="fg">
+          <label>TARGET LEVEL (1–10)</label>
+          <input type="number" id="sk-target" min="1" max="10" value="8" step="1">
+        </div>
+      </div>
+      <div class="fg">
+        <label>DESCRIPTION / NOTES</label>
+        <textarea id="sk-desc" placeholder="What does this skill mean for your sovereign path?" maxlength="200"></textarea>
+      </div>
+      <div class="fg">
+        <label>LEARNING RESOURCE (URL or title)</label>
+        <input type="text" id="sk-resource" placeholder="e.g. Clean Code by Robert Martin, Coursera Python for Everybody" maxlength="120">
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn-sm" onclick="closeAddSkill()">CANCEL</button>
+        <button class="btn" onclick="saveSkill()">SAVE SKILL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOG SESSION MODAL -->
+<div id="modal-session" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#0d0d18;border:1px solid rgba(201,168,76,.2);border-radius:2px;width:100%;max-width:440px">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold)">LOG PRACTICE SESSION</div>
+      <button onclick="closeLogSession()" class="btn-sm">&#10005;</button>
+    </div>
+    <div style="padding:16px">
+      <div class="fg">
+        <label>SKILL</label>
+        <select id="sess-skill" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none">
+          <option value="">SELECT SKILL</option>
+        </select>
+      </div>
+      <div class="two-col">
+        <div class="fg">
+          <label>DURATION (MINUTES)</label>
+          <input type="number" id="sess-duration" min="5" max="480" value="30" step="5">
+        </div>
+        <div class="fg">
+          <label>QUALITY (1–5)</label>
+          <select id="sess-quality" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none">
+            <option value="5">5 — PEAK FLOW</option>
+            <option value="4" selected>4 — FOCUSED</option>
+            <option value="3">3 — PRODUCTIVE</option>
+            <option value="2">2 — DISTRACTED</option>
+            <option value="1">1 — STRUGGLED</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg">
+        <label>WHAT DID YOU PRACTISE? (optional)</label>
+        <input type="text" id="sess-note" placeholder="e.g. Built a REST API with Flask, resolved 3 bugs" maxlength="100" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none">
+      </div>
+      <div class="fg">
+        <label>LEVEL AFTER SESSION</label>
+        <input type="number" id="sess-new-level" min="1" max="10" step="0.1" placeholder="Optional — update skill level">
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn-sm" onclick="closeLogSession()">CANCEL</button>
+        <button class="btn" onclick="saveSession()">LOG SESSION</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SKILLS_KEY   = 'omega_skills';
+var SESSIONS_KEY = 'omega_skill_sessions';
+
+var DOMAINS = {
+  technology: {label:'TECHNOLOGY', color:'#5C8FD6', icon:'&#9881;'},
+  business:   {label:'BUSINESS',   color:'#C9A84C', icon:'&#9670;'},
+  creative:   {label:'CREATIVE',   color:'#9C6FD6', icon:'&#9728;'},
+  physical:   {label:'PHYSICAL',   color:'#4CAF50', icon:'&#9878;'},
+  social:     {label:'SOCIAL',     color:'#26C6DA', icon:'&#9678;'},
+  mental:     {label:'MENTAL',     color:'#FF9800', icon:'&#9889;'},
+  spiritual:  {label:'SPIRITUAL',  color:'#E57373', icon:'&#9733;'},
+  language:   {label:'LANGUAGE',   color:'#90A4AE', icon:'&#9660;'},
+};
+
+var LEVEL_LABELS = ['','NOVICE','BEGINNER','BEGINNER','DEVELOPING','COMPETENT','COMPETENT','PROFICIENT','PROFICIENT','EXPERT','MASTER'];
+
+function getSkills(){ try{return JSON.parse(localStorage.getItem(SKILLS_KEY)||'[]');}catch{return[];} }
+function getSessions(){ try{return JSON.parse(localStorage.getItem(SESSIONS_KEY)||'[]');}catch{return[];} }
+function saveSkills(d){ localStorage.setItem(SKILLS_KEY,JSON.stringify(d)); }
+function saveSessions(d){ localStorage.setItem(SESSIONS_KEY,JSON.stringify(d)); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function weekAgo(){ var d=new Date();d.setDate(d.getDate()-7);return d.toISOString().slice(0,10); }
+
+function switchTab(btn,id){
+  document.querySelectorAll('.ltab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  var p=document.getElementById(id);if(p)p.classList.add('active');
+  if(id==='t-overview') renderOverview();
+  if(id==='t-skills') renderSkillsList();
+  if(id==='t-domains') renderDomains();
+  if(id==='t-sessions') renderSessions();
+}
+
+/* ── OVERVIEW ─────────────────────────────────────────────── */
+function renderOverview(){
+  var skills=getSkills(), sessions=getSessions();
+  var mastered=skills.filter(function(s){return s.current>=8;}).length;
+  var developing=skills.filter(function(s){return s.current>=4&&s.current<8;}).length;
+  var domains=new Set(skills.map(function(s){return s.domain;})).size;
+  var totalHours=sessions.reduce(function(s,x){return s+Number(x.duration||0);},0)/60;
+
+  document.getElementById('kpi-total').textContent=skills.length;
+  document.getElementById('kpi-mastered').textContent=mastered;
+  document.getElementById('kpi-developing').textContent=developing;
+  document.getElementById('kpi-sessions').textContent=sessions.length;
+  document.getElementById('kpi-hours').textContent=totalHours.toFixed(1);
+  document.getElementById('kpi-domains').textContent=domains;
+
+  /* Radar chart */
+  drawDomainRadar();
+
+  /* Top skills */
+  var top=[].concat(skills).sort(function(a,b){return b.current-a.current;}).slice(0,5);
+  var tEl=document.getElementById('top-skills-list');
+  if(tEl){
+    if(!top.length){tEl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">Add skills to see your top performers</div>';return;}
+    tEl.innerHTML=top.map(function(s){
+      var d=DOMAINS[s.domain]||{color:'var(--gold)',label:'OTHER'};
+      return renderSkillBar(s,d,false);
+    }).join('');
+  }
+
+  /* Stack insight */
+  var si=document.getElementById('stack-insight');
+  if(si&&skills.length>=3){
+    var domainList=Object.keys(DOMAINS).filter(function(dk){return skills.some(function(sk){return sk.domain===dk;});});
+    var topSkills=skills.sort(function(a,b){return b.current-a.current;}).slice(0,3).map(function(s){return s.name;});
+    si.textContent='Your sovereign skill stack spans '+domainList.length+' domain'+(domainList.length>1?'s':'')+' ('+domainList.map(function(dk){return DOMAINS[dk].label;}).join(', ')+'). Your top skills — '+topSkills.join(', ')+' — form a unique combination. Per Scott Adams\'s Skill Stacking theory, rare combinations create asymmetric leverage that pure specialisation cannot replicate.';
+  }
+}
+
+function renderSkillBar(s, d, actions){
+  if(actions===undefined) actions=true;
+  var pct=((s.current||1)/10)*100;
+  var tpct=((s.target||8)/10)*100;
+  var label=LEVEL_LABELS[Math.round(s.current)]||'';
+  return '<div class="skill-card" style="--sc:'+d.color+'">'
+    +'<div class="sk-top">'
+    +'<div><div class="sk-name">'+escH(s.name)+'</div><div class="sk-domain">'+d.label+(s.desc?' &middot; '+escH(s.desc.slice(0,40)):'')+'</div></div>'
+    +(actions?'<div class="sk-actions"><button class="btn-sm" onclick="logSessionForSkill(\''+s.id+'\')">+ SESSION</button><button class="btn-sm" onclick="editSkill(\''+s.id+'\')">EDIT</button><button class="btn-sm" onclick="deleteSkill(\''+s.id+'\')" style="color:var(--crim)">&#10005;</button></div>':'')
+    +'</div>'
+    +'<div class="level-wrap">'
+    +'<div class="level-label"><span class="level-tag">CURRENT</span><span class="level-val">'+s.current.toFixed(1)+'/10 &middot; '+label+'</span></div>'
+    +'<div class="level-track"><div class="level-fill" style="width:'+pct+'%;background:'+d.color+'"></div></div>'
+    +'</div>'
+    +(s.target&&s.target>s.current?'<div class="level-wrap"><div class="level-label"><span class="level-tag">TARGET</span><span class="level-tag">'+s.target+'/10 &middot; gap: '+(s.target-s.current).toFixed(1)+'</span></div><div class="level-track"><div class="level-fill" style="width:'+tpct+'%;background:rgba(255,255,255,.08)"></div></div></div>':'')
+    +'</div>';
+}
+
+function drawDomainRadar(){
+  var cv=document.getElementById('domain-radar');if(!cv) return;
+  var skills=getSkills();
+  var labels=Object.keys(DOMAINS);
+  var W=Math.min(cv.offsetWidth||260,260),H=W;cv.width=W;cv.height=H;
+  var ctx=cv.getContext('2d'),cx=W/2,cy=H/2,maxR=cx*.8,N=labels.length;
+  /* Grid */
+  [2,4,6,8,10].forEach(function(v){
+    ctx.beginPath();
+    for(var i=0;i<N;i++){
+      var a=((i/N)*Math.PI*2)-Math.PI/2,r=(v/10)*maxR;
+      i===0?ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r):ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
+    }
+    ctx.closePath();ctx.strokeStyle='rgba(201,168,76,.07)';ctx.lineWidth=.5;ctx.stroke();
+  });
+  /* Spokes */
+  labels.forEach(function(_,i){
+    var a=((i/N)*Math.PI*2)-Math.PI/2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*maxR,cy+Math.sin(a)*maxR);
+    ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=.5;ctx.stroke();
+  });
+  /* Data */
+  ctx.beginPath();
+  labels.forEach(function(dk,i){
+    var domSkills=skills.filter(function(s){return s.domain===dk;});
+    var avg=domSkills.length?domSkills.reduce(function(s,sk){return s+sk.current;},0)/domSkills.length:0;
+    var a=((i/N)*Math.PI*2)-Math.PI/2,r=(avg/10)*maxR;
+    i===0?ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r):ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
+  });
+  ctx.closePath();ctx.fillStyle='rgba(201,168,76,.12)';ctx.fill();ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=1.5;ctx.stroke();
+  /* Points + labels */
+  labels.forEach(function(dk,i){
+    var domSkills=skills.filter(function(s){return s.domain===dk;});
+    var avg=domSkills.length?domSkills.reduce(function(s,sk){return s+sk.current;},0)/domSkills.length:0;
+    var d=DOMAINS[dk];
+    var a=((i/N)*Math.PI*2)-Math.PI/2,r=(avg/10)*maxR;
+    ctx.beginPath();ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2);ctx.fillStyle=d.color;ctx.fill();
+    var lr=maxR+14;
+    ctx.font='bold 7px "Courier Prime",monospace';ctx.fillStyle=d.color;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(d.label.slice(0,4),cx+Math.cos(a)*lr,cy+Math.sin(a)*lr);
+  });
+}
+
+/* ── SKILLS LIST ──────────────────────────────────────────── */
+function renderSkillsList(){
+  var skills=getSkills();
+  var filterDomain=document.getElementById('filter-domain');
+  var filterSort=document.getElementById('filter-sort');
+  var sessions=getSessions();
+
+  /* Populate domain filter */
+  var domains=Array.from(new Set(skills.map(function(s){return s.domain;}))).sort();
+  if(filterDomain&&filterDomain.options.length===1){
+    domains.forEach(function(dk){
+      var o=document.createElement('option');o.value=dk;o.textContent=(DOMAINS[dk]||{label:dk.toUpperCase()}).label;filterDomain.appendChild(o);
+    });
+  }
+
+  var domain=filterDomain?filterDomain.value:'';
+  var sort=filterSort?filterSort.value:'level-desc';
+  var filtered=domain?skills.filter(function(s){return s.domain===domain;}):skills;
+
+  /* Sort */
+  filtered=[].concat(filtered);
+  if(sort==='level-desc') filtered.sort(function(a,b){return b.current-a.current;});
+  else if(sort==='level-asc') filtered.sort(function(a,b){return a.current-b.current;});
+  else if(sort==='name') filtered.sort(function(a,b){return a.name.localeCompare(b.name);});
+  else if(sort==='gap') filtered.sort(function(a,b){return (b.target-b.current)-(a.target-a.current);});
+  else if(sort==='recent'){
+    filtered.sort(function(a,b){
+      var la=sessions.filter(function(s){return s.skillId===a.id;}).sort(function(x,y){return y.date.localeCompare(x.date);})[0];
+      var lb=sessions.filter(function(s){return s.skillId===b.id;}).sort(function(x,y){return y.date.localeCompare(x.date);})[0];
+      return (lb?lb.date:'0000').localeCompare(la?la.date:'0000');
+    });
+  }
+
+  var lbl=document.getElementById('skills-count-label');
+  if(lbl)lbl.textContent=filtered.length+' SKILL'+(filtered.length!==1?'S':'');
+
+  var list=document.getElementById('skills-list');
+  var empty=document.getElementById('skills-empty');
+  if(!list) return;
+  if(!filtered.length){list.innerHTML='';if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
+  list.innerHTML=filtered.map(function(s){
+    var d=DOMAINS[s.domain]||{color:'var(--gold)',label:(s.domain||'OTHER').toUpperCase()};
+    return renderSkillBar(s,d,true);
+  }).join('');
+}
+
+/* ── DOMAINS ──────────────────────────────────────────────── */
+function renderDomains(){
+  var skills=getSkills();
+  var grid=document.getElementById('domain-grid');
+  var breakdown=document.getElementById('domain-breakdown');
+  if(!grid) return;
+  grid.innerHTML=Object.keys(DOMAINS).map(function(dk){
+    var d=DOMAINS[dk];
+    var count=skills.filter(function(s){return s.domain===dk;}).length;
+    var avg=count?skills.filter(function(s){return s.domain===dk;}).reduce(function(s,sk){return s+sk.current;},0)/count:0;
+    return '<div class="domain-card" onclick="applyDomainFilter(\''+dk+'\')">'
+      +'<div class="domain-icon" style="color:'+d.color+'">'+d.icon+'</div>'
+      +'<div class="domain-name" style="color:'+d.color+'">'+d.label+'</div>'
+      +'<div class="domain-count">'+count+' skill'+(count!==1?'s':'')+' &middot; avg '+avg.toFixed(1)+'/10</div>'
+      +'</div>';
+  }).join('');
+
+  /* Breakdown bars */
+  if(breakdown){
+    var dominated=Object.keys(DOMAINS).map(function(dk){
+      var d=DOMAINS[dk];
+      var domSkills=skills.filter(function(s){return s.domain===dk;});
+      if(!domSkills.length) return null;
+      var avg=domSkills.reduce(function(s,sk){return s+sk.current;},0)/domSkills.length;
+      return {d:d,dk:dk,skills:domSkills,avg:avg};
+    }).filter(Boolean).sort(function(a,b){return b.avg-a.avg;});
+
+    breakdown.innerHTML=dominated.map(function(item){
+      return '<div style="margin-bottom:10px">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
+        +'<span style="font-family:var(--M);font-size:8px;color:'+item.d.color+'">'+item.d.label+'</span>'
+        +'<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+item.skills.length+' skills &middot; avg '+item.avg.toFixed(1)+'/10</span>'
+        +'</div>'
+        +'<div class="level-track"><div class="level-fill" style="width:'+(item.avg/10*100)+'%;background:'+item.d.color+'"></div></div>'
+        +'<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">'
+        +item.skills.map(function(s){
+          return '<a href="#" onclick="switchTab(document.querySelectorAll(\'.ltab\')[1],\'t-skills\')" style="font-family:var(--M);font-size:7px;padding:3px 7px;border:1px solid rgba(255,255,255,.06);color:var(--muted);border-radius:2px;text-decoration:none">'+escH(s.name)+'</a>';
+        }).join('')
+        +'</div></div>';
+    }).join('');
+    if(!dominated.length)breakdown.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">Add skills to see domain breakdown</div>';
+  }
+}
+
+function applyDomainFilter(dk){
+  var filterDomain=document.getElementById('filter-domain');
+  if(filterDomain)filterDomain.value=dk;
+  switchTab(document.querySelectorAll('.ltab')[1],'t-skills');
+}
+
+/* ── SESSIONS ─────────────────────────────────────────────── */
+function renderSessions(){
+  var sessions=getSessions();
+  var skills=getSkills();
+  var today=new Date().toISOString().slice(0,10);
+  var weekAgoStr=new Date(Date.now()-7*864e5).toISOString().slice(0,10);
+  var weekSessions=sessions.filter(function(s){return s.date>=weekAgoStr;});
+  var totalHours=sessions.reduce(function(s,x){return s+Number(x.duration||0);},0)/60;
+
+  document.getElementById('s-total').textContent=sessions.length;
+  document.getElementById('s-week').textContent=weekSessions.length;
+  document.getElementById('s-hours').textContent=totalHours.toFixed(1)+'h';
+
+  /* Streak */
+  var streak=0;var cur=new Date();
+  for(var i=0;i<365;i++){
+    var d=new Date(cur);d.setDate(d.getDate()-i);var ds=d.toISOString().slice(0,10);
+    if(sessions.some(function(s){return s.date===ds;}))streak++;else break;
+  }
+  document.getElementById('s-streak').textContent=streak;
+
+  /* Populate session skill select */
+  var sel=document.getElementById('sess-skill');
+  if(sel&&skills.length){
+    sel.innerHTML='<option value="">SELECT SKILL</option>'+skills.map(function(s){
+      var d=DOMAINS[s.domain]||{label:'OTHER'};
+      return '<option value="'+s.id+'">'+escH(s.name)+' ('+d.label+')</option>';
+    }).join('');
+  }
+
+  /* Recent sessions list */
+  var log=document.getElementById('session-log');
+  if(!log) return;
+  var sorted=[].concat(sessions).sort(function(a,b){return b.date.localeCompare(a.date)||b.id.localeCompare(a.id);});
+  if(!sorted.length){log.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">No sessions logged yet. Start practising!</div>';return;}
+  var QLABELS=['','STRUGGLED','DISTRACTED','PRODUCTIVE','FOCUSED','PEAK FLOW'];
+  var QCOLS=['','var(--crim)','#FF9800','var(--muted)','var(--cyan)','var(--gold)'];
+  log.innerHTML=sorted.slice(0,50).map(function(sess){
+    var sk=skills.find(function(s){return s.id===sess.skillId;});
+    var d=sk?DOMAINS[sk.domain]:{color:'var(--gold)',label:'SKILL'};
+    return '<div class="slog-item">'
+      +'<div class="slog-dot" style="background:'+d.color+'"></div>'
+      +'<div class="slog-text">'
+      +'<span style="font-family:var(--M);font-size:8.5px;color:var(--ink)">'+(sk?escH(sk.name):'[DELETED SKILL]')+'</span>'
+      +(sess.note?' &mdash; '+escH(sess.note):'')
+      +'<div style="margin-top:2px;display:flex;gap:8px">'
+      +'<span style="font-family:var(--M);font-size:7px;color:var(--muted)">'+sess.duration+'min</span>'
+      +'<span style="font-family:var(--M);font-size:7px;color:'+QCOLS[sess.quality||3]+'">'+QLABELS[sess.quality||3]+'</span>'
+      +(sess.newLevel?'<span style="font-family:var(--M);font-size:7px;color:var(--green)">&uarr; '+sess.newLevel+'</span>':'')
+      +'</div></div>'
+      +'<div class="slog-time">'+sess.date+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+/* ── ADD/EDIT SKILL ───────────────────────────────────────── */
+function openAddSkill(){
+  document.getElementById('edit-skill-id').value='';
+  document.getElementById('sk-name').value='';
+  document.getElementById('sk-domain').value='technology';
+  document.getElementById('sk-current').value=1;
+  document.getElementById('sk-target').value=8;
+  document.getElementById('sk-desc').value='';
+  document.getElementById('sk-resource').value='';
+  document.getElementById('modal-add-title').textContent='ADD SKILL';
+  document.getElementById('modal-add').style.display='flex';
+}
+
+function editSkill(id){
+  var s=getSkills().find(function(x){return x.id===id;});if(!s) return;
+  document.getElementById('edit-skill-id').value=s.id;
+  document.getElementById('sk-name').value=s.name;
+  document.getElementById('sk-domain').value=s.domain;
+  document.getElementById('sk-current').value=s.current;
+  document.getElementById('sk-target').value=s.target;
+  document.getElementById('sk-desc').value=s.desc||'';
+  document.getElementById('sk-resource').value=s.resource||'';
+  document.getElementById('modal-add-title').textContent='EDIT SKILL';
+  document.getElementById('modal-add').style.display='flex';
+}
+
+function closeAddSkill(){ document.getElementById('modal-add').style.display='none'; }
+
+function saveSkill(){
+  var name=(document.getElementById('sk-name').value||'').trim();
+  if(!name){alert('Skill name required');return;}
+  var skills=getSkills();
+  var id=document.getElementById('edit-skill-id').value;
+  var skill={
+    id:id||uid(),
+    name:name,
+    domain:document.getElementById('sk-domain').value,
+    current:Math.min(10,Math.max(1,Number(document.getElementById('sk-current').value)||1)),
+    target:Math.min(10,Math.max(1,Number(document.getElementById('sk-target').value)||8)),
+    desc:(document.getElementById('sk-desc').value||'').trim(),
+    resource:(document.getElementById('sk-resource').value||'').trim(),
+    createdAt:id?undefined:today(),
+    updatedAt:today(),
+  };
+  if(id){
+    var idx=skills.findIndex(function(s){return s.id===id;});
+    if(idx>=0){skill.createdAt=skills[idx].createdAt;skills[idx]=skill;}
+    else skills.push(skill);
+  } else {
+    skills.push(skill);
+  }
+  saveSkills(skills);
+  closeAddSkill();
+  renderOverview();
+  renderSkillsList();
+}
+
+function deleteSkill(id){
+  if(!confirm('Delete this skill?')) return;
+  saveSkills(getSkills().filter(function(s){return s.id!==id;}));
+  renderSkillsList();renderOverview();
+}
+
+/* ── LOG SESSION ──────────────────────────────────────────── */
+function openLogSession(){
+  document.getElementById('sess-duration').value=30;
+  document.getElementById('sess-quality').value=4;
+  document.getElementById('sess-note').value='';
+  document.getElementById('sess-new-level').value='';
+  renderSessions();
+  document.getElementById('modal-session').style.display='flex';
+}
+
+function logSessionForSkill(skillId){
+  openLogSession();
+  setTimeout(function(){
+    var sel=document.getElementById('sess-skill');
+    if(sel)sel.value=skillId;
+  },50);
+}
+
+function closeLogSession(){ document.getElementById('modal-session').style.display='none'; }
+
+function saveSession(){
+  var skillId=document.getElementById('sess-skill').value;
+  if(!skillId){alert('Select a skill');return;}
+  var duration=Number(document.getElementById('sess-duration').value)||30;
+  var quality=Number(document.getElementById('sess-quality').value)||4;
+  var note=(document.getElementById('sess-note').value||'').trim();
+  var newLevel=document.getElementById('sess-new-level').value;
+
+  var session={id:uid(),skillId:skillId,date:today(),duration:duration,quality:quality,note:note,createdAt:new Date().toISOString()};
+  if(newLevel&&!isNaN(newLevel)){
+    session.newLevel=Number(newLevel);
+    /* Update skill level */
+    var skills=getSkills();
+    var idx=skills.findIndex(function(s){return s.id===skillId;});
+    if(idx>=0){skills[idx].current=Math.min(10,Math.max(1,Number(newLevel)));skills[idx].updatedAt=today();saveSkills(skills);}
+  }
+  var sessions=getSessions();sessions.push(session);saveSessions(sessions);
+  closeLogSession();
+  renderSessions();renderOverview();
+}
+
+/* ── UTIL ─────────────────────────────────────────────────── */
+function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── INIT ─────────────────────────────────────────────────── */
+renderOverview();
+
+/* Seed example skills if empty */
+if(!getSkills().length){
+  var examples=[
+    {id:uid(),name:'Deep Work',domain:'mental',current:6,target:9,desc:'Cal Newport focused work methodology',createdAt:today(),updatedAt:today()},
+    {id:uid(),name:'Strategic Thinking',domain:'business',current:7,target:9,desc:'Systems thinking & second-order effects',createdAt:today(),updatedAt:today()},
+    {id:uid(),name:'Sovereign Writing',domain:'creative',current:5,target:8,desc:'Clear, precise, persuasive communication',createdAt:today(),updatedAt:today()},
+  ];
+  saveSkills(examples);renderOverview();
+}
+</script>
+<script src="/omega-ui.js" defer></script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+</body>
+</html>

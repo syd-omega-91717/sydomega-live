@@ -93,6 +93,7 @@
     body:         {label:'Body Composition',section:'IDENTITY',   prev:'sleep',          next:'nutrition'},
     journal:      {label:'Sovereign Journal',section:'IDENTITY',  prev:'mirror',         next:'rituals'},
     vision:       {label:'Sovereign Vision', section:'STRATEGY',  prev:'command',        next:'targets'},
+    gratitude:    {label:'Gratitude',        section:'IDENTITY',  prev:'rituals',        next:'mirror'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

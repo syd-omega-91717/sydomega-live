@@ -104,9 +104,9 @@
       <div class="ss-item"><div class="ss-label">MEMBERS</div><div class="ss-val" id="ss-members" data-live-members>--</div></div>
       <div class="ss-item"><div class="ss-label">AUTH APEX</div><div class="ss-val" style="--vc:var(--gold)">27.8367</div></div>
       <div class="ss-item"><div class="ss-label">LATTICE NODES</div><div class="ss-val" style="--vc:var(--cyan)">104,976</div></div>
-      <div class="ss-item"><div class="ss-label">ENGINES</div><div class="ss-val" style="--vc:var(--purple)">68+</div></div>
-      <div class="ss-item"><div class="ss-label">PAGES</div><div class="ss-val" style="--vc:var(--green)">104</div></div>
-      <div class="ss-item"><div class="ss-label">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">92</div></div>
+      <div class="ss-item"><div class="ss-label">JS ENGINES</div><div class="ss-val" style="--vc:var(--purple)">92</div></div>
+      <div class="ss-item"><div class="ss-label">PAGES</div><div class="ss-val" style="--vc:var(--green)">149</div></div>
+      <div class="ss-item"><div class="ss-label">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">105</div></div>
       <div class="ss-item"><div class="ss-label">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
       <div class="ss-item"><div class="ss-label">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
       <div class="ss-item"><div class="ss-label">FORMULA</div><div class="ss-val" style="--vc:rgba(138,134,118,.5);font-size:8px">A&#179;+B&#179;+C&#179;</div></div>
@@ -118,10 +118,10 @@
     <!-- 5-LAYER TABS -->
     <div class="layer-tabs" role="tablist">
       <button class="ltab active" role="tab" aria-selected="true"  onclick="switchLayer(this,'l1')">&#9650; OVERVIEW</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l2')">&#9654; OPERATIONS</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l3')">&#9670; ANALYTICS</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l4')">&#9881; AI COMMAND</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l5')">&#9826; ADMINISTRATION</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l2')">&#9670; PERSONAL OS</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l3')">&#9654; PLATFORM</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l4')">&#9881; INTELLIGENCE</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l5')">&#9826; SOVEREIGN</button>
     </div>
 
     <!-- LAYER 1: OVERVIEW -->
@@ -149,23 +149,14 @@
           </div>
         </div>
 
-        <!-- ALERTS + RECOMMENDATIONS -->
-        <div class="two-col">
-          <div>
-            <div class="sechead" data-reveal="fade-up">ALERTS &middot; REQUIRES ATTENTION</div>
-            <div class="alert-list" id="alert-list">
-              <div class="alert-item" style="--ac:var(--solar)"><div class="alert-icon">&#9888;</div><div><div class="alert-text">Edge functions need ANTHROPIC_API_KEY set in Supabase secrets before AI concierge activates.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH</div></div></div>
-              <div class="alert-item" style="--ac:var(--cyan)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Run SQL migrations in RUN_ORDER.md to activate all 90 SQL files and 64 RPCs.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: CRITICAL</div></div></div>
-              <div class="alert-item" style="--ac:var(--purple)"><div class="alert-icon">&#9726;</div><div><div class="alert-text">Enable pgvector extension in Supabase to activate AI semantic memory.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH</div></div></div>
-            </div>
-          </div>
-          <div>
-            <div class="sechead" data-reveal="fade-up">AI RECOMMENDATIONS &middot; INTELLIGENCE DRIVEN</div>
-            <div class="alert-list" id="rec-list">
-              <div class="alert-item" style="--ac:var(--green)"><div class="alert-icon">&#9654;</div><div><div class="alert-text">Deploy member recruitment campaign. First 100 founding members generate real progression data to validate all gate thresholds.</div><div class="alert-meta">AI RECOMMENDATION &middot; DOMAIN: GROWTH</div></div></div>
-              <div class="alert-item" style="--ac:var(--gold)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Activate enterprise tier. Starter accounts ($199/mo) represent immediate $2K MRR with zero additional infrastructure.</div><div class="alert-meta">AI RECOMMENDATION &middot; DOMAIN: REVENUE</div></div></div>
-            </div>
-          </div>
+        <!-- ACTION CENTER (merged alerts + recommendations) -->
+        <div class="sechead" data-reveal="fade-up">ACTION CENTRE &middot; PRIORITY ITEMS <span class="sechead-action" onclick="location.href='/observatory.html'">OBSERVATORY &#8594;</span></div>
+        <div class="alert-list" id="alert-list" style="margin-bottom:16px">
+          <div class="alert-item" style="--ac:var(--crim)"><div class="alert-icon">&#9650;</div><div><div class="alert-text">Run SQL migrations in RUN_ORDER.md to activate all 105 SQL files and 64 RPCs.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP</div></div></div>
+          <div class="alert-item" style="--ac:var(--solar)"><div class="alert-icon">&#9888;</div><div><div class="alert-text">Set ANTHROPIC_API_KEY in Supabase secrets to activate AI concierge edge functions.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH &middot; AI MODULE</div></div></div>
+          <div class="alert-item" style="--ac:var(--cyan)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Enable pgvector extension in Supabase dashboard to activate semantic AI memory.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH &middot; VECTOR SEARCH</div></div></div>
+          <div class="alert-item" style="--ac:var(--green)"><div class="alert-icon">&#9654;</div><div><div class="alert-text">Launch founding member recruitment. First 100 members validate gate thresholds and generate real progression data.</div><div class="alert-meta">STRATEGIC &middot; DOMAIN: GROWTH &middot; HIGH LEVERAGE</div></div></div>
+          <div class="alert-item" style="--ac:var(--gold)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Activate enterprise tier. Starter accounts ($199/mo) = immediate $2K MRR with no additional infrastructure.</div><div class="alert-meta">STRATEGIC &middot; DOMAIN: REVENUE &middot; IMMEDIATE IMPACT</div></div></div>
         </div>
 
         <!-- COMMAND INDEX — 18 MODULE PORTALS -->
@@ -174,105 +165,151 @@
       </div>
     </div>
 
-    <!-- LAYER 2: OPERATIONS -->
+    <!-- LAYER 2: PERSONAL OS -->
     <div id="l2" class="layer-panel">
-      <div class="pad" data-reveal="fade-up">
-        <div class="sechead" data-reveal="fade-up">OPERATIONS CENTRE &middot; WORKFLOWS &middot; TASKS &middot; INCIDENTS</div>
-        <div class="kpi-row" data-reveal="fade-up">
-          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l">TASKS (7d)</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l">WORKFLOWS DEFINED</div></div>
-          <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="ops-incidents">0</div><div class="kpi-l">OPEN INCIDENTS</div></div>
-          <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">ELITE</div><div class="kpi-l">DORA RATING</div></div>
+      <div class="pad">
+        <div class="sechead">PERSONAL OS &middot; SOVEREIGN SELF-SYSTEM &middot; LIVE FROM YOUR DEVICE <span class="sechead-action" onclick="renderPersonalOS()">&#8635; REFRESH</span></div>
+        <!-- PERSONAL KPI ROW -->
+        <div class="kpi-row" id="personal-kpis">
+          <div class="kpi" style="--kc:var(--purple)" onclick="location.href='/journal.html'"><div class="kpi-n" id="pk-journal">--</div><div class="kpi-l">JOURNAL ENTRIES</div><div class="kpi-sub">SOVEREIGN VAULT</div></div>
+          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="kpi-n" id="pk-streak">--</div><div class="kpi-l">GRATITUDE STREAK</div><div class="kpi-sub">DAYS</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="kpi-n" id="pk-cards">--</div><div class="kpi-l">CARDS DUE TODAY</div><div class="kpi-sub">SM-2 QUEUE</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/vision.html'"><div class="kpi-n" id="pk-vision">--</div><div class="kpi-l">VISION SCORE AVG</div><div class="kpi-sub">LIFE WHEEL</div></div>
+          <div class="kpi" style="--kc:var(--solar)"  onclick="location.href='/budget.html'"><div class="kpi-n" id="pk-savings">--</div><div class="kpi-l">SAVINGS RATE</div><div class="kpi-sub">THIS MONTH</div></div>
+          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/network.html'"><div class="kpi-n" id="pk-network">--</div><div class="kpi-l">CONTACTS DUE</div><div class="kpi-sub">NEED TOUCHPOINT</div></div>
+          <div class="kpi" style="--kc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="kpi-n" id="pk-decisions">--</div><div class="kpi-l">OPEN DECISIONS</div><div class="kpi-sub">AWAITING COMMIT</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/body.html'"><div class="kpi-n" id="pk-body">--</div><div class="kpi-l">BODY WEIGHT</div><div class="kpi-sub" id="pk-body-unit">KG · LAST LOG</div></div>
         </div>
-        <div class="sechead" data-reveal="fade-up">ACTIVE WORKFLOWS</div>
-        <div id="wf-list">
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
-            <div class="cmd-card" style="--cc:var(--green)" onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">New member: sign→element→agent→welcome→record</div></div>
-            <div class="cmd-card" style="--cc:var(--gold)" onclick="location.href='/gates.html'"><div class="cc-name">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth → ceremony → record → notify owner</div></div>
-            <div class="cmd-card" style="--cc:var(--cyan)" onclick="location.href='/gaming.html'"><div class="cc-name">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate → increment axis → recompute → gate check</div></div>
-            <div class="cmd-card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s → award Axis C → celebrate → log</div></div>
-            <div class="cmd-card" style="--cc:var(--solar)" onclick="location.href='/privacy.html'"><div class="cc-name">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect → package → notify → deliver</div></div>
+
+        <!-- TWO-COL: VISION WHEEL + PERSONAL TOOLS -->
+        <div class="two-col" style="align-items:start">
+          <div>
+            <div class="sechead">LIFE WHEEL &middot; 8 DOMAINS <span class="sechead-action" onclick="location.href='/vision.html'">FULL VIEW &#8594;</span></div>
+            <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.95);padding:10px;height:220px;display:flex;align-items:center;justify-content:center">
+              <canvas id="personal-wheel" style="max-width:200px;max-height:200px"></canvas>
+            </div>
           </div>
+          <div>
+            <div class="sechead">TODAY&#39;S QUICK ACTIONS</div>
+            <div style="display:flex;flex-direction:column;gap:7px" id="personal-actions">
+              <a href="/journal.html"   style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--purple);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(155,107,240,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9998;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">WRITE IN JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">ENCRYPTED &middot; PRIVATE</div></div></a>
+              <a href="/gratitude.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#10024;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">LOG GRATITUDE</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">3 THINGS &middot; SELIGMAN METHOD</div></div></a>
+              <a href="/flashcard.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--cyan);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(0,229,255,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span id="pa-cards-label" style="font-size:16px">&#128278;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">STUDY FLASHCARDS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-cards-sub">SM-2 SPACED REPETITION</div></div></a>
+              <a href="/body.html"      style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--green);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(63,178,127,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">LOG BODY STATS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">WEIGHT &middot; BF% &middot; MEASUREMENTS</div></div></a>
+              <a href="/budget.html"    style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--solar);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(226,200,109,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9874;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">TRACK BUDGET</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-budget-sub">MONTHLY OVERVIEW</div></div></a>
+              <a href="/decisions.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid rgba(201,168,76,.4);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.04)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">DECISION JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">5 FRAMEWORKS &middot; BIAS GUARD</div></div></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- PERSONAL TOOL GRID -->
+        <div class="sechead" style="margin-top:16px">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px">
+          <div class="cmd-card" style="--cc:var(--purple)" onclick="location.href='/journal.html'"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
+          <div class="cmd-card" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
+          <div class="cmd-card" style="--cc:var(--green)"  onclick="location.href='/body.html'"><div class="cc-icon" style="color:var(--green)">&#9878;</div><div class="cc-name">BODY COMPOSITION</div><div class="cc-desc">Navy BF%, BMI, lean mass, measurement trends.</div></div>
+          <div class="cmd-card" style="--cc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="cc-icon" style="color:var(--gold)">&#10024;</div><div class="cc-name">GRATITUDE</div><div class="cc-desc">3-good-things, 30-day streak, gratitude jar.</div></div>
+          <div class="cmd-card" style="--cc:var(--solar)"  onclick="location.href='/budget.html'"><div class="cc-icon" style="color:var(--solar)">&#9874;</div><div class="cc-name">SOVEREIGN BUDGET</div><div class="cc-desc">Monthly P&amp;L, 50/30/20 rule, 12-month trends.</div></div>
+          <div class="cmd-card" style="--cc:var(--cyan)"   onclick="location.href='/network.html'"><div class="cc-icon" style="color:var(--cyan)">&#9678;</div><div class="cc-name">NETWORK INTEL</div><div class="cc-desc">Dunbar circles, relationship orbit, due touchpoints.</div></div>
+          <div class="cmd-card" style="--cc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="cc-icon" style="color:var(--cyan)">&#128278;</div><div class="cc-name">FLASHCARDS</div><div class="cc-desc">SM-2 spaced repetition, Ebbinghaus science.</div></div>
+          <div class="cmd-card" style="--cc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="cc-icon" style="color:rgba(201,168,76,.7)">&#9878;</div><div class="cc-name">DECISION JOURNAL</div><div class="cc-desc">5 frameworks, 9 bias guards, outcome tracker.</div></div>
         </div>
       </div>
     </div>
 
-    <!-- LAYER 3: ANALYTICS -->
+    <!-- LAYER 3: PLATFORM COMMAND INDEX -->
     <div id="l3" class="layer-panel">
+      <div class="pad">
+        <div class="sechead">PLATFORM COMMAND INDEX &middot; ALL 149 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'">ECOSYSTEM MAP &#8594;</span></div>
+        <div id="platform-sections"></div>
+      </div>
+    </div>
+
+        <!-- LAYER 4: INTELLIGENCE -->
+    <div id="l4" class="layer-panel">
       <div class="pad" data-reveal="fade-up">
-        <div class="sechead" data-reveal="fade-up">STRATEGIC INTELLIGENCE &middot; OBSERVE &middot; ANALYSE &middot; PREDICT &middot; RECOMMEND</div>
+        <div class="sechead">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row" data-reveal="fade-up">
           <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ana-events">--</div><div class="kpi-l">EVENTS (7d)</div></div>
           <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ana-sessions">--</div><div class="kpi-l">SESSIONS (7d)</div></div>
           <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ana-users">--</div><div class="kpi-l">UNIQUE MEMBERS (7d)</div></div>
           <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ana-cta">--</div><div class="kpi-l">CTA CLICKS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ai-queries">--</div><div class="kpi-l">AI QUERIES (7d)</div></div>
+          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ai-memories">--</div><div class="kpi-l">MEMORIES STORED</div></div>
         </div>
-        <div class="sechead" data-reveal="fade-up">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'">FULL ANALYTICS &#8594;</span></div>
-        <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center;margin-bottom:14px" data-reveal="fade-up">
-          <canvas id="dash-radar" style="max-height:180px"></canvas>
+        <div class="two-col" style="align-items:start">
+          <div>
+            <div class="sechead">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'">FULL ANALYTICS &#8594;</span></div>
+            <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center" data-reveal="fade-up">
+              <canvas id="dash-radar" style="max-height:180px"></canvas>
+            </div>
+          </div>
+          <div>
+            <div class="sechead">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
+            <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
+              <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
+              <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">
+                <input id="ai-query" type="text" placeholder="Ask the Intelligence Engine&hellip;" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none" aria-label="AI query">
+                <button onclick="askAI()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer">ASK &#8594;</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="sechead" data-reveal="fade-up">TOP PAGES &middot; SESSION DISTRIBUTION</div>
+        <div class="sechead">TOP PAGES &middot; SESSION DISTRIBUTION</div>
         <div id="top-pages-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
           <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING ANALYTICS&hellip;</div>
         </div>
       </div>
     </div>
 
-    <!-- LAYER 4: AI COMMAND -->
-    <div id="l4" class="layer-panel">
-      <div class="pad" data-reveal="fade-up">
-        <div class="sechead" data-reveal="fade-up">AI COMMAND CENTRE &middot; 12 AGENTS &middot; INTELLIGENCE ENGINE &middot; MEMORY</div>
-        <div class="kpi-row" data-reveal="fade-up">
-          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">12</div><div class="kpi-l">AGENTS ACTIVE</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ai-queries">--</div><div class="kpi-l">AI QUERIES (7d)</div></div>
-          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ai-memories">--</div><div class="kpi-l">MEMORIES STORED</div></div>
-          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ai-workflows">--</div><div class="kpi-l">WORKFLOWS RUN</div></div>
-        </div>
-        <!-- QUICK AI QUERY -->
-        <div class="sechead" data-reveal="fade-up">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
-        <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
-          <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
-          <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">
-            <input id="ai-query" type="text" placeholder="Ask the Intelligence Engine&hellip;" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none" aria-label="AI query">
-            <button onclick="askAI()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer">ASK &#8594;</button>
-          </div>
-        </div>
-        <!-- AGENT SHORTCUTS -->
-        <div class="sechead" data-reveal="fade-up">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
-        <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px"></div>
-      </div>
-    </div>
-
-    <!-- LAYER 5: ADMINISTRATION -->
+        <!-- LAYER 5: SOVEREIGN -->
     <div id="l5" class="layer-panel">
       <div class="pad" data-reveal="fade-up">
-        <div class="sechead" data-reveal="fade-up">ADMINISTRATION &middot; OWNER ONLY &middot; SOVEREIGN CONTROLS</div>
+        <!-- OPS + ADMIN KPIs MERGED -->
+        <div class="sechead">SOVEREIGN COMMAND &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
         <div class="kpi-row" data-reveal="fade-up">
-          <div class="kpi" style="--kc:var(--gold)" onclick="location.href='/approvals.html'"><div class="kpi-n" id="adm-pending">--</div><div class="kpi-l">PENDING ACCESS</div></div>
-          <div class="kpi" style="--kc:var(--cyan)" onclick="location.href='/enterprise.html'"><div class="kpi-n" id="adm-accounts">--</div><div class="kpi-l">ENTERPRISE ACCOUNTS</div></div>
-          <div class="kpi" style="--kc:var(--green)" onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
-          <div class="kpi" style="--kc:var(--crim)" onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/gaming.html'"><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l">TASKS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/automation.html'"><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l">WORKFLOWS LIVE</div></div>
+          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="ops-incidents">0</div><div class="kpi-l">OPEN INCIDENTS</div></div>
+          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/sovereign-ai.html'"><div class="kpi-n">12</div><div class="kpi-l">AGENTS ACTIVE</div></div>
+          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/approvals.html'"><div class="kpi-n" id="adm-pending">--</div><div class="kpi-l">PENDING ACCESS</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/enterprise.html'"><div class="kpi-n" id="adm-accounts">--</div><div class="kpi-l">ENTERPRISE ACCOUNTS</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
+          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
         </div>
-        <div class="sechead" data-reveal="fade-up">ADMIN QUICK ACTIONS</div>
+        <!-- WORKFLOWS -->
+        <div class="sechead" data-reveal="fade-up">ACTIVE WORKFLOWS</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
+          <div class="cmd-card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
+          <div class="cmd-card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
+          <div class="cmd-card" style="--cc:var(--cyan)"   onclick="location.href='/gaming.html'"><div class="cc-name">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate &rarr; increment axis &rarr; recompute &rarr; gate check</div></div>
+          <div class="cmd-card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
+          <div class="cmd-card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
+        </div>
+        <!-- AGENT QUICK ACCESS -->
+        <div class="sechead">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
+        <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
+        <!-- ADMIN ACTIONS -->
+        <div class="sechead">ADMIN ACTIONS &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
-          <button onclick="location.href='/approvals.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; APPROVE ACCESS REQUESTS</button>
-          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; VIEW SRE OBSERVATORY</button>
-          <button onclick="location.href='/enterprise.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; ENTERPRISE CONTROL</button>
-          <button onclick="location.href='/governance.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; GOVERNANCE BOARD</button>
-          <button onclick="location.href='/roadmap.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; EVOLUTION ROADMAP</button>
-          <button onclick="location.href='/privacy.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; PRIVACY CENTRE</button>
+          <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; APPROVE ACCESS REQUESTS</button>
+          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; SRE OBSERVATORY</button>
+          <button onclick="location.href='/enterprise.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; ENTERPRISE CONTROL</button>
+          <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; GOVERNANCE BOARD</button>
+          <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; EVOLUTION ROADMAP</button>
+          <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; PRIVACY CENTRE</button>
         </div>
       </div>
     </div>
 
-    <!-- TIMELINE -->
+        <!-- TIMELINE -->
     <div class="timeline" id="timeline-section">
       <div class="sechead" data-reveal="fade-up" style="padding:0 0 10px">LIVE TIMELINE &middot; RECENT SOVEREIGN EVENTS</div>
       <div id="timeline-items">
         <div class="tl-item"><div class="tl-dot" style="--td:var(--muted)"></div><div class="tl-content"><div class="tl-title" style="color:var(--muted)">Loading timeline&hellip;</div></div></div>
       </div>
     </div>
-    <div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; PMI 87/100</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+    <div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 149 PAGES &middot; 92 ENGINES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 
@@ -283,8 +320,10 @@ function switchLayer(btn,id){
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.remove('active');});
   btn.classList.add('active');btn.setAttribute('aria-selected','true');
   var panel=document.getElementById(id);if(panel){panel.classList.add('active');}
-  if(id==='l3'&&window._dashProfile) renderRadarChart(window._dashProfile);
-  if(id==='l4') loadAILayer();
+  if(id==='l2') renderPersonalOS();
+  if(id==='l3') renderPlatformSections();
+  if(id==='l4'&&window._dashProfile) renderRadarChart(window._dashProfile);
+  if(id==='l5') loadAILayer();
 }
 
 /* ── SYSTEM GALAXY CANVAS ─────────────────────────────────── */
@@ -378,30 +417,37 @@ function switchLayer(btn,id){
 
 /* ── COMMAND INDEX DATA ─────────────────────────────────────── */
 var CMD_MODULES=[
-  {icon:'\u2316',name:'COMMAND',desc:'Dashboard, Overview, Mission Control',col:'var(--gold)',href:'/dashboard.html'},
-  {icon:'\u25B2',name:'IDENTITY',desc:'Profile, KYC, Passport, Credentials',col:'var(--cyan)',href:'/profile.html'},
-  {icon:'\u25C6',name:'MASTERY',desc:'Gaming, Achievements, Academy, Gates',col:'var(--purple)',href:'/gaming.html'},
-  {icon:'\u2605',name:'TREASURY',desc:'Vault, Wallet, Blockchain, NFTs',col:'var(--solar)',href:'/vault.html'},
-  {icon:'\u25CF',name:'AI',desc:'12 Agents, Intelligence, Memory',col:'var(--green)',href:'/sovereign-ai.html'},
-  {icon:'\u25B6',name:'MEDIA',desc:'Cinema, Series, Trailers, Universe',col:'var(--purple)',href:'/cinema.html'},
-  {icon:'\u2735',name:'HERITAGE',desc:'Bloodline, Family, History, Archive',col:'var(--green)',href:'/heritage.html'},
-  {icon:'\u2736',name:'GOVERNANCE',desc:'Policies, Risks, Ethics, Compliance',col:'var(--gold)',href:'/governance.html'},
-  {icon:'\u25C6',name:'INVEST',desc:'Portfolio, Revenue, Income, Markets',col:'var(--solar)',href:'/investment.html'},
-  {icon:'\u25A6',name:'INTEL',desc:'Analytics, Observatory, Knowledge',col:'var(--purple)',href:'/analytics.html'},
-  {icon:'\u9670',name:'COSMOS',desc:'Horoscope, Elements, Agents, Signs',col:'var(--cyan)',href:'/cosmos.html'},
-  {icon:'\u25CF',name:'ENTERPRISE',desc:'Fortune 500, API, SLA, Revenue',col:'var(--gold)',href:'/enterprise.html'},
-  {icon:'\u265A',name:'ASCEND',desc:'Lattice, Matrix, Grades, Phases',col:'var(--cyan)',href:'/evolution.html'},
+  {icon:'\u2316',name:'COMMAND',desc:'Dashboard, Beacon, Mission Control',col:'var(--gold)',href:'/dashboard.html'},
+  {icon:'\u25C8',name:'IDENTITY',desc:'Profile, KYC, Passport, Credentials, Rune',col:'var(--cyan)',href:'/profile.html'},
+  {icon:'\u25B2',name:'MASTERY',desc:'Gaming, Achievements, Exam, Forge, Focus',col:'var(--purple)',href:'/gaming.html'},
+  {icon:'\u2605',name:'TREASURY',desc:'Vault, Wallet, Blockchain, Marketplace',col:'var(--solar)',href:'/vault.html'},
+  {icon:'\u25C6',name:'FINANCE',desc:'Budget, Investment, Revenue, Portfolio, Wealth',col:'var(--solar)',href:'/vault.html'},
+  {icon:'\u25CF',name:'AI COMMAND',desc:'12 Agents, Chatbot, Intelligence Engine',col:'var(--green)',href:'/sovereign-ai.html'},
+  {icon:'\u25B6',name:'MEDIA',desc:'Cinema, Series, Trailers, Universe, Studio',col:'var(--purple)',href:'/cinema.html'},
+  {icon:'\u2735',name:'HERITAGE',desc:'Bloodline, Family, Chronicle, DNA, Realm',col:'var(--green)',href:'/heritage.html'},
+  {icon:'\u2736',name:'GOVERNANCE',desc:'Policies, Observatory, Compliance, Privacy',col:'var(--gold)',href:'/governance.html'},
+  {icon:'\u25C6',name:'INVEST',desc:'Portfolio, Revenue, Income, Markets, Wealth',col:'var(--solar)',href:'/investment.html'},
+  {icon:'\u25A6',name:'INTELLIGENCE',desc:'Analytics, Sigma, Nexus, Codex, Signal',col:'var(--purple)',href:'/analytics.html'},
+  {icon:'\u2609',name:'COSMOS',desc:'Horoscope, Elements, Tribes, Oracle, Realm',col:'var(--cyan)',href:'/cosmos.html'},
+  {icon:'\u25CF',name:'ENTERPRISE',desc:'Fortune 500, API, SLA, Contracts, Services',col:'var(--gold)',href:'/enterprise.html'},
+  {icon:'\u265A',name:'ASCENSION',desc:'Lattice Matrix, Grades, Phases, Evolution',col:'var(--cyan)',href:'/evolution.html'},
   {icon:'\u9826',name:'SECURITY',desc:'Guardian, Threats, SOC, Zero Trust',col:'var(--crim)',href:'/observatory.html'},
-  {icon:'\u2600',name:'SOCIAL',desc:'Feed, Events, News, Communication',col:'var(--green)',href:'/feed.html'},
-  {icon:'\u9881',name:'AUTOMATE',desc:'Workflows, Automation, Prediction',col:'var(--purple)',href:'/automation.html'},
-  {icon:'\u25C4',name:'RESEARCH',desc:'Lab, Publications, Innovation Radar',col:'var(--solar)',href:'/lab.html'},
-  {icon:'\u03A9',name:'ECOSYSTEM',desc:'Roadmap, Design System, Platform Map',col:'var(--gold)',href:'/ecosystem.html'},
+  {icon:'\u2600',name:'SOCIAL',desc:'Feed, Events, News, Network, Community',col:'var(--green)',href:'/feed.html'},
+  {icon:'\u9881',name:'AUTOMATE',desc:'Workflows, Automation, Queue, Architect',col:'var(--purple)',href:'/automation.html'},
+  {icon:'\u25C4',name:'RESEARCH',desc:'Lab, Publications, Roadmap, Innovation',col:'var(--solar)',href:'/lab.html'},
+  {icon:'\u03A9',name:'ECOSYSTEM',desc:'Roadmap, Design System, Targets, Vision',col:'var(--gold)',href:'/ecosystem.html'},
+  {icon:'\u9998',name:'PERSONAL OS',desc:'Journal, Vision, Body, Gratitude, Budget',col:'var(--purple)',href:'#',onclick:'switchLayer(document.querySelectorAll(".ltab")[1],"l2")'},
+  {icon:'\u25CB',name:'COSMOS LORE',desc:'Houses, Tribes, Graph, Oracle, Sigil',col:'var(--cyan)',href:'/houses.html'},
+  {icon:'\u2734',name:'STRATEGY',desc:'Vision, Decisions, Command, Targets, OKR',col:'var(--gold)',href:'/vision.html'},
+  {icon:'\u25D9',name:'WELLNESS',desc:'Rituals, Meditate, Stoic, Habits, Sleep',col:'var(--green)',href:'/rituals.html'},
+  {icon:'\u265E',name:'COMMUNITY',desc:'Factions, Tribe, Sovereigns, Leaderboard',col:'var(--cyan)',href:'/factions.html'},
 ];
 
 function renderCommandGrid(){
   var grid=document.getElementById('cmd-grid');if(!grid) return;
   grid.innerHTML=CMD_MODULES.map(function(m){
-    return '<div class="cmd-card" style="--cc:'+m.col+'" onclick="location.href=\''+m.href+'\'" tabindex="0" role="link" aria-label="'+m.name+'" onkeydown="if(event.key===\'Enter\')location.href=\''+m.href+'\'">'
+    var clickFn=m.onclick?m.onclick:'location.href=\''+m.href+'\'';
+    return '<div class="cmd-card" style="--cc:'+m.col+'" onclick="'+clickFn+'" tabindex="0" role="link" aria-label="'+m.name+'" onkeydown="if(event.key===\'Enter\')('+clickFn+')">'
       +'<div class="cc-icon" style="color:'+m.col+'">'+m.icon+'</div>'
       +'<div class="cc-name">'+m.name+'</div>'
       +'<div class="cc-desc">'+m.desc+'</div>'
@@ -453,6 +499,183 @@ function loadAILayer(){
         +'</div>';
     }).join('');
   }).catch(function(){qg.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">Load agents.html to view all 12 agents.</div>';});
+}
+
+/* ── PERSONAL OS RENDERER ───────────────────────────────────── */
+function today(){ return new Date().toISOString().slice(0,10); }
+function daysSince(d){ if(!d) return 999; return Math.round((Date.now()-new Date(d).getTime())/864e5); }
+
+function renderPersonalOS(){
+  /* JOURNAL */
+  var jEnc=localStorage.getItem('omega_journal_enc');
+  var jCount=0;
+  if(jEnc){try{var jArr=JSON.parse(atob(jEnc));jCount=Array.isArray(jArr)?jArr.length:0;}catch(e){jCount=jEnc?1:0;}}
+  var pkj=document.getElementById('pk-journal');if(pkj)pkj.textContent=jCount||'—';
+
+  /* GRATITUDE STREAK */
+  var gLog=[];try{gLog=JSON.parse(localStorage.getItem('omega_gratitude_log')||'[]');}catch(e){}
+  var streak=0,cur=new Date();
+  for(var i=0;i<365;i++){
+    var d=new Date(cur);d.setDate(d.getDate()-i);var ds=d.toISOString().slice(0,10);
+    if(gLog.some(function(e){return e.date===ds;}))streak++;else break;
+  }
+  var pks=document.getElementById('pk-streak');if(pks)pks.textContent=streak||'—';
+
+  /* FLASHCARDS DUE */
+  var cards=[];try{cards=JSON.parse(localStorage.getItem('omega_fc_cards')||'[]');}catch(e){}
+  var td=today(),dueCount=cards.filter(function(c){return (c.due||'9999')<=td;}).length;
+  var pkc=document.getElementById('pk-cards');if(pkc)pkc.textContent=dueCount||'0';
+  var pacs=document.getElementById('pa-cards-sub');
+  if(pacs)pacs.textContent=(dueCount>0?dueCount+' CARDS DUE TODAY':'ALL CAUGHT UP')+' · SM-2';
+
+  /* VISION WHEEL */
+  var vAreas=[];try{vAreas=JSON.parse(localStorage.getItem('omega_vision_areas')||'[]');}catch(e){}
+  var vAvg=vAreas.length?Math.round(vAreas.reduce(function(s,a){return s+(a.current||0);},0)/vAreas.length):null;
+  var pkv=document.getElementById('pk-vision');if(pkv)pkv.textContent=vAvg!=null?vAvg+'/10':'—';
+  drawPersonalWheel(vAreas);
+
+  /* BUDGET */
+  var months={};try{months=JSON.parse(localStorage.getItem('omega_budget_months')||'{}');}catch(e){}
+  var curMo=new Date().toISOString().slice(0,7),mo=months[curMo]||{};
+  var inc=Object.values(mo.income||{}).reduce(function(s,v){return s+Number(v||0);},0);
+  var exp=Object.values(mo.expenses||{}).reduce(function(s,x){return s+Object.values(x).reduce(function(s2,v){return s2+Number(v||0);},0);},0);
+  var rate=inc>0?Math.round(((inc-exp)/inc)*100):null;
+  var pkb=document.getElementById('pk-savings');if(pkb)pkb.textContent=rate!=null?rate+'%':'—';
+  var pabS=document.getElementById('pa-budget-sub');
+  if(pabS)pabS.textContent=(rate!=null?'SAVING '+rate+'% · ':'')+'MONTHLY OVERVIEW';
+
+  /* NETWORK */
+  var contacts=[];try{contacts=JSON.parse(localStorage.getItem('omega_network_contacts')||'[]');}catch(e){}
+  var dueNet=contacts.filter(function(c){return daysSince(c.lastContact)>=(c.frequency||30);}).length;
+  var pkn=document.getElementById('pk-network');if(pkn)pkn.textContent=dueNet||'0';
+
+  /* DECISIONS */
+  var decs=[];try{decs=JSON.parse(localStorage.getItem('omega_decisions')||'[]');}catch(e){}
+  var openDec=decs.filter(function(d){return d.status==='draft';}).length;
+  var pkd=document.getElementById('pk-decisions');if(pkd)pkd.textContent=openDec||'0';
+
+  /* BODY */
+  var bodyLog=[];try{bodyLog=JSON.parse(localStorage.getItem('omega_body_log')||'[]');}catch(e){}
+  var lastW=bodyLog.length?bodyLog[bodyLog.length-1]:null;
+  var pkbo=document.getElementById('pk-body');
+  var pkbu=document.getElementById('pk-body-unit');
+  if(pkbo)pkbo.textContent=lastW?Number(lastW.weight).toFixed(1):'—';
+  if(pkbu&&lastW)pkbu.textContent=(lastW.unit||'kg').toUpperCase()+' · '+daysSince(lastW.date)+'D AGO';
+}
+
+function drawPersonalWheel(areas){
+  var cv=document.getElementById('personal-wheel');if(!cv) return;
+  var DEFAULTS=[
+    {id:'wealth',label:'WEALTH',color:'#C9A84C'},{id:'health',label:'HEALTH',color:'#4CAF50'},
+    {id:'mind',label:'MIND',color:'#5C8FD6'},{id:'bonds',label:'BONDS',color:'#E57373'},
+    {id:'spirit',label:'SPIRIT',color:'#9C6FD6'},{id:'craft',label:'CRAFT',color:'#FF9800'},
+    {id:'legacy',label:'LEGACY',color:'#90A4AE'},{id:'freedom',label:'FREEDOM',color:'#26C6DA'},
+  ];
+  var data=areas.length?areas:DEFAULTS.map(function(d){return Object.assign({current:0,target:8},d);});
+  var W=Math.min(cv.offsetWidth||200,200),H=W;
+  cv.width=W;cv.height=H;
+  var ctx=cv.getContext('2d'),cx=W/2,cy=H/2,maxR=cx*.85,N=data.length;
+  /* Grid rings */
+  [2,4,6,8,10].forEach(function(v){
+    ctx.beginPath();
+    for(var i=0;i<N;i++){
+      var a=((i/N)*Math.PI*2)-Math.PI/2,r=(v/10)*maxR;
+      i===0?ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r):ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
+    }
+    ctx.closePath();ctx.strokeStyle='rgba(201,168,76,.07)';ctx.lineWidth=.5;ctx.stroke();
+  });
+  /* Spokes */
+  data.forEach(function(_,i){
+    var a=((i/N)*Math.PI*2)-Math.PI/2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*maxR,cy+Math.sin(a)*maxR);
+    ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=.5;ctx.stroke();
+  });
+  /* Current fill */
+  ctx.beginPath();
+  data.forEach(function(d,i){
+    var a=((i/N)*Math.PI*2)-Math.PI/2,r=((d.current||0)/10)*maxR;
+    i===0?ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r):ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
+  });
+  ctx.closePath();ctx.fillStyle='rgba(201,168,76,.12)';ctx.fill();
+  ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=1.5;ctx.stroke();
+  /* Points */
+  data.forEach(function(d,i){
+    var a=((i/N)*Math.PI*2)-Math.PI/2,r=((d.current||0)/10)*maxR;
+    ctx.beginPath();ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2);
+    ctx.fillStyle=d.color||'#C9A84C';ctx.fill();
+    /* Labels */
+    var lr=(maxR+12);
+    ctx.font='5px "Courier Prime",monospace';ctx.fillStyle='rgba(201,168,76,.5)';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText((d.label||'').slice(0,6),cx+Math.cos(a)*lr,cy+Math.sin(a)*lr);
+  });
+}
+
+/* ── PLATFORM SECTIONS RENDERER ─────────────────────────────── */
+function renderPlatformSections(){
+  var el=document.getElementById('platform-sections');if(!el||el.dataset.loaded) return;
+  el.dataset.loaded='1';
+  var SECTIONS=[
+    {name:'COMMAND',col:'var(--gold)',pages:[
+      {n:'Dashboard',u:'/dashboard.html'},{n:'Beacon',u:'/beacon.html'},{n:'Search',u:'/search.html'},
+      {n:'Notifications',u:'/notifications.html'},{n:'Matrix',u:'/matrix.html'},{n:'Points',u:'/points.html'}]},
+    {name:'IDENTITY & SELF',col:'var(--cyan)',pages:[
+      {n:'Profile',u:'/profile.html'},{n:'Passport',u:'/passport.html'},{n:'KYC',u:'/kyc.html'},
+      {n:'Credentials',u:'/credentials.html'},{n:'DNA',u:'/dna.html'},{n:'Rune',u:'/rune.html'},
+      {n:'Mirror',u:'/mirror.html'},{n:'Oath',u:'/oath.html'},{n:'Sigil',u:'/sigil.html'}]},
+    {name:'PERSONAL OS',col:'var(--purple)',pages:[
+      {n:'Journal',u:'/journal.html'},{n:'Vision',u:'/vision.html'},{n:'Gratitude',u:'/gratitude.html'},
+      {n:'Body',u:'/body.html'},{n:'Budget',u:'/budget.html'},{n:'Network',u:'/network.html'},
+      {n:'Flashcards',u:'/flashcard.html'},{n:'Decisions',u:'/decisions.html'}]},
+    {name:'MASTERY',col:'var(--purple)',pages:[
+      {n:'Gaming',u:'/gaming.html'},{n:'Achievements',u:'/achievements.html'},{n:'Exam',u:'/exam.html'},
+      {n:'Forge',u:'/forge.html'},{n:'Focus',u:'/focus.html'},{n:'Habits',u:'/habits.html'},
+      {n:'Missions',u:'/missions.html'},{n:'Flashcards',u:'/flashcard.html'},{n:'Library',u:'/library.html'}]},
+    {name:'WELLNESS',col:'var(--green)',pages:[
+      {n:'Rituals',u:'/rituals.html'},{n:'Meditate',u:'/meditate.html'},{n:'Stoic',u:'/stoic.html'},
+      {n:'Sleep',u:'/sleep.html'},{n:'Nutrition',u:'/nutrition.html'},{n:'Body',u:'/body.html'}]},
+    {name:'STRATEGY',col:'var(--gold)',pages:[
+      {n:'Vision',u:'/vision.html'},{n:'Decisions',u:'/decisions.html'},{n:'Command Brief',u:'/command.html'},
+      {n:'Targets',u:'/targets.html'},{n:'Roadmap',u:'/roadmap.html'},{n:'Ecosystem',u:'/ecosystem.html'}]},
+    {name:'INTELLIGENCE',col:'#9B6BF0',pages:[
+      {n:'Analytics',u:'/analytics.html'},{n:'Intelligence',u:'/intelligence.html'},{n:'Sigma',u:'/sigma.html'},
+      {n:'Nexus',u:'/nexus.html'},{n:'Cipher',u:'/cipher.html'},{n:'Pulse',u:'/pulse.html'},
+      {n:'Signal',u:'/signal.html'},{n:'Codex',u:'/codex.html'},{n:'Atlas',u:'/atlas.html'},{n:'Network',u:'/network.html'}]},
+    {name:'ASCENSION',col:'#E86A3A',pages:[
+      {n:'Evolution',u:'/evolution.html'},{n:'Gates',u:'/gates.html'},{n:'Grades',u:'/grades.html'},
+      {n:'Levels',u:'/levels.html'},{n:'Phases',u:'/phases.html'},{n:'Ascension',u:'/ascension.html'},
+      {n:'Leaderboard',u:'/leaderboard.html'},{n:'Trophies',u:'/trophies.html'},{n:'Honors',u:'/honors.html'}]},
+    {name:'COSMOS',col:'var(--cyan)',pages:[
+      {n:'Cosmos',u:'/cosmos.html'},{n:'Horoscope',u:'/horoscope.html'},{n:'Elements',u:'/elements.html'},
+      {n:'Houses',u:'/houses.html'},{n:'Tribe',u:'/tribe.html'},{n:'Graph',u:'/graph.html'},
+      {n:'Oracle',u:'/oracle.html'},{n:'Realm',u:'/realm.html'},{n:'Map',u:'/map.html'}]},
+    {name:'HERITAGE',col:'var(--green)',pages:[
+      {n:'Heritage',u:'/heritage.html'},{n:'Chronicle',u:'/chronicle.html'},{n:'Bloodline',u:'/bloodline.html'},
+      {n:'Family',u:'/family.html'},{n:'Character',u:'/character.html'}]},
+    {name:'FINANCE',col:'var(--solar)',pages:[
+      {n:'Vault',u:'/vault.html'},{n:'Wallet',u:'/wallet.html'},{n:'Budget',u:'/budget.html'},
+      {n:'Investment',u:'/investment.html'},{n:'Revenue',u:'/revenue.html'},{n:'Income',u:'/income.html'},
+      {n:'Portfolio',u:'/portfolio.html'},{n:'Wealth',u:'/wealth.html'}]},
+    {name:'AI & AGENTS',col:'var(--green)',pages:[
+      {n:'Sovereign AI',u:'/sovereign-ai.html'},{n:'Chatbot',u:'/chatbot.html'},{n:'Agents',u:'/agents.html'}]},
+    {name:'GOVERNANCE',col:'var(--gold)',pages:[
+      {n:'Governance',u:'/governance.html'},{n:'Observatory',u:'/observatory.html'},{n:'Enterprise',u:'/enterprise.html'},
+      {n:'Compliance',u:'/compliance.html'},{n:'Privacy',u:'/privacy.html'}]},
+    {name:'MEDIA',col:'#8B0000',pages:[
+      {n:'Cinema',u:'/cinema.html'},{n:'Series',u:'/series.html'},{n:'Trailers',u:'/trailers.html'},
+      {n:'Universe',u:'/universe.html'},{n:'Feed',u:'/feed.html'},{n:'Social',u:'/social.html'}]},
+    {name:'OPERATIONS',col:'var(--purple)',pages:[
+      {n:'Automation',u:'/automation.html'},{n:'Queue',u:'/queue.html'},{n:'Architect',u:'/architect.html'},
+      {n:'Ops',u:'/ops.html'},{n:'Lab',u:'/lab.html'},{n:'Research',u:'/research.html'}]},
+  ];
+  el.innerHTML=SECTIONS.map(function(sec){
+    return '<div style="margin-bottom:20px">'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:'+sec.col+';padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:8px">'+sec.name+'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
+      +sec.pages.map(function(p){
+        return '<a href="'+p.u+'" style="font-family:var(--M);font-size:8px;letter-spacing:1px;padding:5px 10px;border:1px solid var(--line);color:var(--muted);border-radius:2px;text-decoration:none;transition:.12s;white-space:nowrap" onmouseover="this.style.color=''+sec.col+'';this.style.borderColor=''+sec.col+''" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--line)'">'+p.n+'</a>';
+      }).join('')
+      +'</div></div>';
+  }).join('');
 }
 
 window.switchLayer=switchLayer;

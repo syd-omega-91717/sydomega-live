@@ -1496,3 +1496,6 @@ setTimeout(function(){
 
   /* Sovereign passport PDF — jsPDF@2 (MIT), [data-passport-download] triggers download */
   if(!document.querySelector('script[data-omega-passport]')){var _opas=document.createElement('script');_opas.src='/omega-passport.js';_opas.setAttribute('data-omega-passport','1');_opas.defer=true;if(document.body)document.body.appendChild(_opas);}
+
+  /* 3-D element realm — Three.js r160 (MIT), mounts canvas[data-realm] */
+  if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;if(document.body)document.body.appendChild(_orlm);}

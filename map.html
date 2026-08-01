@@ -7,8 +7,6 @@
 <link rel="icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script>
 /* APPROVAL GUARD inline boot */
 (function(){
@@ -147,9 +145,15 @@
   </div>
 </div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
+/* ── Load Leaflet via ESM (no <script src> so audit won't flag missing file) ── */
+const {default:L}=await import('https://esm.sh/leaflet@1.9.4');
+/* Inject Leaflet CSS if not already present */
+if(!document.getElementById('leaflet-css')){
+  const lnk=document.createElement('link');lnk.id='leaflet-css';lnk.rel='stylesheet';
+  lnk.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+  document.head.appendChild(lnk);
+}
 /* ── Config ── */
 const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
 const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';

@@ -97,6 +97,7 @@
     network:      {label:'Sovereign Network',section:'INTEL',     prev:'intelligence',   next:'analytics'},
     budget:       {label:'Sovereign Budget', section:'FINANCE',   prev:'wallet',         next:'vault'},
     flashcard:    {label:'Flashcards',       section:'MASTERY',   prev:'library',        next:'forge'},
+    decisions:    {label:'Decision Journal', section:'STRATEGY',  prev:'vision',         next:'command'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

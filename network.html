@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Network · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* ADD CONTACT FORM */
+.n-form{border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:20px;background:rgba(201,168,76,.02)}
+.n-form-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:14px}
+.n-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.n-form-full{grid-column:1/-1}
+.n-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-bottom:4px}
+.n-in{width:100%;font-family:var(--M);font-size:10px;padding:7px 10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;letter-spacing:.5px}
+.n-in:focus{border-color:rgba(201,168,76,.35)}
+.n-in::placeholder{color:rgba(138,134,118,.25)}
+.n-select{width:100%;font-family:var(--M);font-size:10px;padding:7px 10px;background:#0D0D0B;border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;cursor:pointer}
+.n-cats{display:flex;flex-wrap:wrap;gap:4px}
+.n-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.n-cat.on{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08)}
+
+.n-form-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.n-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 18px;border:1px solid rgba(201,168,76,.2);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.n-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.n-btn-primary{border-color:var(--gold);color:var(--gold)}
+.n-btn-primary:hover{background:rgba(201,168,76,.08)}
+.n-btn-cancel{border-color:rgba(138,134,118,.2)}
+.n-btn-danger:hover{color:#c0392b!important;border-color:rgba(192,57,43,.3)!important}
+
+/* CONTACT LIST */
+.n-list-head{display:grid;grid-template-columns:1fr 80px 80px 80px 90px;gap:6px;padding:6px 10px;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:4px}
+.n-list-hd{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim)}
+.n-list-row{display:grid;grid-template-columns:1fr 80px 80px 80px 90px;gap:6px;padding:9px 10px;border-bottom:1px solid rgba(201,168,76,.06);align-items:center;cursor:pointer;transition:.1s}
+.n-list-row:hover{background:rgba(201,168,76,.04)}
+.n-list-row.overdue{border-left:2px solid rgba(192,57,43,.5)}
+.n-contact-name{font-family:var(--M);font-size:10px;color:#c8c4b0;letter-spacing:.3px}
+.n-contact-cat{font-family:var(--M);font-size:7px;letter-spacing:1px}
+.n-contact-last{font-family:var(--M);font-size:8px;color:var(--dim)}
+.n-contact-days{font-family:var(--M);font-size:8px}
+.n-list-acts{display:flex;gap:4px}
+.n-act-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 7px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s;white-space:nowrap}
+.n-act-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.35)}
+
+/* LOG MODAL */
+.n-log-form{border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:16px;background:rgba(201,168,76,.02);display:none}
+.n-log-form.open{display:block}
+
+/* DUE TAB */
+.due-card{border:1px solid rgba(192,57,43,.25);padding:14px;margin-bottom:8px;background:rgba(192,57,43,.03)}
+.due-card.warn{border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.02)}
+.due-name{font-family:var(--M);font-size:12px;color:#c8c4b0;margin-bottom:4px}
+.due-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-bottom:8px}
+.due-overdue{font-family:var(--M);font-size:9px;letter-spacing:1px}
+
+/* ORBIT CANVAS */
+.orbit-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+.orbit-tooltip{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--gold);text-align:center;min-height:20px}
+.orbit-legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.ol-item{display:flex;align-items:center;gap:5px}
+.ol-dot{width:8px;height:8px;border-radius:50%}
+.ol-lbl{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim)}
+
+/* INSIGHTS */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:20px}
+.kpi{border:1px solid rgba(201,168,76,.1);padding:14px;text-align:center}
+.kpi-v{font-family:var(--M);font-size:22px;color:var(--gold);letter-spacing:1px}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.n-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.n-bar-lbl{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);width:90px;flex-shrink:0}
+.n-bar-track{flex:1;height:6px;background:rgba(201,168,76,.1);border-radius:0}
+.n-bar-fill{height:100%;background:rgba(201,168,76,.6);transition:.4s}
+.n-bar-val{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);width:24px;text-align:right}
+
+/* SORT */
+.n-sort-row{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.n-sort-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.n-sort-btn.on{color:var(--gold);border-color:rgba(201,168,76,.3)}
+</style>
+</head>
+<body>
+
+<div class="main">
+
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN NETWORK</span>
+    <span class="tb-meta" id="n-tb-meta">— CONTACTS</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" id="t-contacts">CONTACTS</button>
+    <button class="lt" id="t-due">OUTREACH DUE</button>
+    <button class="lt" id="t-orbit">ORBIT VIEW</button>
+    <button class="lt" id="t-insights">INSIGHTS</button>
+  </div>
+
+  <!-- CONTACTS TAB -->
+  <div class="tab-pane active" id="tab-contacts">
+
+    <div class="n-form" id="n-add-form">
+      <div class="n-form-title" id="n-form-title">ADD CONTACT</div>
+      <input type="hidden" id="n-edit-id"/>
+      <div class="n-form-grid">
+        <div>
+          <div class="n-label">NAME *</div>
+          <input class="n-in" id="nf-name" placeholder="Full name" maxlength="60"/>
+        </div>
+        <div>
+          <div class="n-label">CONTACT FREQUENCY (DAYS)</div>
+          <select class="n-select" id="nf-freq">
+            <option value="7">Every 7 days</option>
+            <option value="14">Every 14 days</option>
+            <option value="30" selected>Every 30 days</option>
+            <option value="60">Every 60 days</option>
+            <option value="90">Every 90 days</option>
+            <option value="180">Every 180 days</option>
+          </select>
+        </div>
+        <div>
+          <div class="n-label">LAST CONTACT DATE</div>
+          <input type="date" class="n-in" id="nf-last"/>
+        </div>
+        <div>
+          <div class="n-label">STRENGTH (1–5)</div>
+          <select class="n-select" id="nf-strength">
+            <option value="3" selected>3 — Moderate</option>
+            <option value="1">1 — Acquaintance</option>
+            <option value="2">2 — Casual</option>
+            <option value="4">4 — Strong</option>
+            <option value="5">5 — Deep</option>
+          </select>
+        </div>
+        <div class="n-form-full">
+          <div class="n-label">CIRCLE</div>
+          <div class="n-cats" id="nf-cats"></div>
+        </div>
+        <div class="n-form-full">
+          <div class="n-label">NOTE</div>
+          <input class="n-in" id="nf-note" placeholder="How you met, context, what matters to them..." maxlength="200"/>
+        </div>
+      </div>
+      <div class="n-form-actions">
+        <button class="n-btn n-btn-primary" id="n-save-btn">SAVE CONTACT</button>
+        <button class="n-btn n-btn-cancel" id="n-cancel-btn" style="display:none">CANCEL</button>
+      </div>
+    </div>
+
+    <!-- LOG INTERACTION -->
+    <div class="n-log-form" id="n-log-form">
+      <div class="n-form-title" id="n-log-title">LOG INTERACTION</div>
+      <input type="hidden" id="n-log-id"/>
+      <div class="n-form-grid">
+        <div>
+          <div class="n-label">DATE</div>
+          <input type="date" class="n-in" id="nl-date"/>
+        </div>
+        <div>
+          <div class="n-label">TYPE</div>
+          <select class="n-select" id="nl-type">
+            <option>CALL</option><option>MESSAGE</option><option>MEETING</option>
+            <option>EMAIL</option><option>SOCIAL</option><option>OTHER</option>
+          </select>
+        </div>
+        <div class="n-form-full">
+          <div class="n-label">NOTE</div>
+          <input class="n-in" id="nl-note" placeholder="What did you discuss? What mattered?" maxlength="200"/>
+        </div>
+      </div>
+      <div class="n-form-actions">
+        <button class="n-btn n-btn-primary" id="nl-save">LOG INTERACTION</button>
+        <button class="n-btn n-btn-cancel" id="nl-cancel">CANCEL</button>
+      </div>
+    </div>
+
+    <div class="n-sort-row">
+      <span style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-right:4px">SORT:</span>
+      <button class="n-sort-btn on" data-sort="due">OVERDUE</button>
+      <button class="n-sort-btn" data-sort="name">NAME</button>
+      <button class="n-sort-btn" data-sort="strength">STRENGTH</button>
+      <button class="n-sort-btn" data-sort="cat">CIRCLE</button>
+    </div>
+
+    <div class="n-list-head">
+      <span class="n-list-hd">NAME</span>
+      <span class="n-list-hd">CIRCLE</span>
+      <span class="n-list-hd">LAST</span>
+      <span class="n-list-hd">DUE IN</span>
+      <span class="n-list-hd">ACTIONS</span>
+    </div>
+    <div id="n-contact-list"></div>
+
+  </div><!-- #tab-contacts -->
+
+  <!-- DUE TAB -->
+  <div class="tab-pane" id="tab-due">
+    <div id="n-due-list"></div>
+  </div>
+
+  <!-- ORBIT VIEW -->
+  <div class="tab-pane" id="tab-orbit">
+    <div class="orbit-wrap">
+      <canvas id="n-orbit" style="max-width:500px;width:100%;display:block;cursor:crosshair"></canvas>
+      <div class="orbit-tooltip" id="n-orbit-tip">HOVER OVER A NODE TO IDENTIFY</div>
+      <div class="orbit-legend" id="n-orbit-legend"></div>
+      <p style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);text-align:center;max-width:420px;line-height:1.9;margin-top:8px">
+        BASED ON DUNBAR'S NUMBER THEORY · INNER CIRCLE: 5 PEOPLE ·
+        TRIBE: 15 · ALLIES: 50 · NETWORK: 150<br>
+        NODE SIZE = RELATIONSHIP STRENGTH · GOLD RING = OVERDUE OUTREACH
+      </p>
+    </div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="tab-pane" id="tab-insights">
+    <div class="kpi-row" id="n-kpis"></div>
+    <div style="margin-bottom:20px">
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:12px">BY CIRCLE</div>
+      <div id="n-cat-bars"></div>
+    </div>
+    <div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:12px">STRENGTH DISTRIBUTION</div>
+      <div id="n-strength-bars"></div>
+    </div>
+  </div>
+
+</div><!-- .main -->
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SOVEREIGN NETWORK — Relationship Intelligence System
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const CONTACTS_KEY     = 'omega_network_contacts';
+const INTERACTIONS_KEY = 'omega_network_interactions';
+
+const CIRCLES = [
+  {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:'#C9A84C', limit:5,  freq:7},
+  {id:'TRIBE',        label:'TRIBE',        color:'#5C8FD6', limit:15, freq:14},
+  {id:'ALLIES',       label:'ALLIES',       color:'#4CAF50', limit:50, freq:30},
+  {id:'NETWORK',      label:'NETWORK',      color:'#90A4AE', limit:150,freq:90},
+  {id:'PROSPECTS',    label:'PROSPECTS',    color:'#FF9800', limit:50, freq:60},
+];
+
+let _contacts    = [];
+let _interactions = [];
+let _sort = 'due';
+let _editCat = 'NETWORK';
+
+/* ── STORAGE ─────────────────────────────────────────────────────────── */
+
+function load() {
+  try { _contacts     = JSON.parse(localStorage.getItem(CONTACTS_KEY))     || []; } catch { _contacts = []; }
+  try { _interactions = JSON.parse(localStorage.getItem(INTERACTIONS_KEY)) || []; } catch { _interactions = []; }
+}
+function saveContacts()     { localStorage.setItem(CONTACTS_KEY,     JSON.stringify(_contacts)); }
+function saveInteractions() { localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(_interactions)); }
+
+function today() { return new Date().toISOString().slice(0,10); }
+function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 9999; }
+function daysUntilDue(c) { return (c.frequency||30) - daysSince(c.lastContact); }
+function isOverdue(c) { return daysUntilDue(c) < 0; }
+function circleOf(id) { return CIRCLES.find(c=>c.id===id)||CIRCLES[3]; }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function updateTopMeta() {
+  const od = _contacts.filter(isOverdue).length;
+  document.getElementById('n-tb-meta').textContent =
+    _contacts.length + ' CONTACTS  ·  ' + od + ' OVERDUE';
+}
+
+/* ── CIRCLE SELECTOR ─────────────────────────────────────────────────── */
+
+function renderCatSelector(selected) {
+  _editCat = selected || 'NETWORK';
+  document.getElementById('nf-cats').innerHTML = CIRCLES.map(c =>
+    `<button class="n-cat ${_editCat===c.id?'on':''}" onclick="pickCat('${c.id}')"
+      style="${_editCat===c.id?'border-color:'+c.color+';color:'+c.color:''}"
+    >${c.label}</button>`
+  ).join('');
+}
+
+window.pickCat = id => { _editCat = id; renderCatSelector(id); };
+
+/* ── ADD / EDIT CONTACT ──────────────────────────────────────────────── */
+
+function clearForm() {
+  document.getElementById('n-edit-id').value = '';
+  document.getElementById('nf-name').value   = '';
+  document.getElementById('nf-note').value   = '';
+  document.getElementById('nf-last').value   = today();
+  document.getElementById('nf-freq').value   = '30';
+  document.getElementById('nf-strength').value = '3';
+  document.getElementById('n-form-title').textContent = 'ADD CONTACT';
+  document.getElementById('n-cancel-btn').style.display = 'none';
+  _editCat = 'NETWORK';
+  renderCatSelector('NETWORK');
+}
+
+function editContact(id) {
+  const c = _contacts.find(x=>x.id===id); if(!c) return;
+  document.getElementById('n-edit-id').value    = c.id;
+  document.getElementById('nf-name').value      = c.name;
+  document.getElementById('nf-note').value      = c.note||'';
+  document.getElementById('nf-last').value      = c.lastContact||today();
+  document.getElementById('nf-freq').value      = String(c.frequency||30);
+  document.getElementById('nf-strength').value  = String(c.strength||3);
+  document.getElementById('n-form-title').textContent = 'EDIT — ' + c.name.toUpperCase();
+  document.getElementById('n-cancel-btn').style.display = '';
+  renderCatSelector(c.category||'NETWORK');
+  document.getElementById('nf-name').focus();
+  document.getElementById('n-add-form').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function saveContact() {
+  const name = document.getElementById('nf-name').value.trim();
+  if (!name) { document.getElementById('nf-name').focus(); return; }
+  const eid  = document.getElementById('n-edit-id').value;
+  const entry = {
+    id: eid || uid(),
+    name,
+    category:    _editCat,
+    frequency:   +document.getElementById('nf-freq').value,
+    lastContact: document.getElementById('nf-last').value || today(),
+    strength:    +document.getElementById('nf-strength').value,
+    note:        document.getElementById('nf-note').value.trim(),
+    createdAt:   Date.now()
+  };
+  if (eid) {
+    const idx = _contacts.findIndex(c=>c.id===eid);
+    if (idx>=0) _contacts[idx] = {..._contacts[idx], ...entry};
+  } else {
+    _contacts.push(entry);
+  }
+  saveContacts();
+  clearForm();
+  renderContactList();
+  updateTopMeta();
+}
+
+function deleteContact(id) {
+  if (!confirm('Remove this contact?')) return;
+  _contacts = _contacts.filter(c=>c.id!==id);
+  _interactions = _interactions.filter(i=>i.contactId!==id);
+  saveContacts(); saveInteractions();
+  renderContactList(); updateTopMeta();
+}
+
+/* ── LOG INTERACTION ─────────────────────────────────────────────────── */
+
+function openLog(id) {
+  const c = _contacts.find(x=>x.id===id); if(!c) return;
+  document.getElementById('n-log-id').value  = id;
+  document.getElementById('nl-date').value   = today();
+  document.getElementById('nl-note').value   = '';
+  document.getElementById('n-log-title').textContent = 'LOG — ' + c.name.toUpperCase();
+  document.getElementById('n-log-form').classList.add('open');
+  document.getElementById('n-log-form').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function saveLog() {
+  const cid  = document.getElementById('n-log-id').value;
+  const date = document.getElementById('nl-date').value || today();
+  const type = document.getElementById('nl-type').value;
+  const note = document.getElementById('nl-note').value.trim();
+  _interactions.push({contactId:cid, date, type, note, ts:Date.now()});
+  // Update lastContact on the contact
+  const idx = _contacts.findIndex(c=>c.id===cid);
+  if (idx>=0 && date >= (_contacts[idx].lastContact||'')) {
+    _contacts[idx].lastContact = date;
+    saveContacts();
+  }
+  saveInteractions();
+  document.getElementById('n-log-form').classList.remove('open');
+  renderContactList();
+  updateTopMeta();
+}
+
+/* ── CONTACT LIST ────────────────────────────────────────────────────── */
+
+function sortedContacts() {
+  const arr = [..._contacts];
+  if (_sort==='name')     return arr.sort((a,b)=>a.name.localeCompare(b.name));
+  if (_sort==='strength') return arr.sort((a,b)=>b.strength-a.strength);
+  if (_sort==='cat')      return arr.sort((a,b)=>a.category.localeCompare(b.category));
+  // due: most overdue first
+  return arr.sort((a,b)=>daysUntilDue(a)-daysUntilDue(b));
+}
+
+function renderContactList() {
+  const el = document.getElementById('n-contact-list');
+  const list = sortedContacts();
+  if (!list.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:24px 0;text-align:center">NO CONTACTS — ADD YOUR FIRST RELATIONSHIP ABOVE</p>';
+    return;
+  }
+  el.innerHTML = list.map(c => {
+    const circ = circleOf(c.category);
+    const due  = daysUntilDue(c);
+    const od   = due < 0;
+    const dueStr = od ? Math.abs(due)+'D OVERDUE' : due===0 ? 'TODAY' : due+'D';
+    const dueCol = od ? '#c0392b' : due<=3 ? '#FF9800' : 'var(--dim)';
+    return `<div class="n-list-row ${od?'overdue':''}">
+      <span class="n-contact-name">${esc(c.name)}${c.note?' <span style="font-size:7px;color:var(--dim);font-style:italic"> · '+esc(c.note.slice(0,30))+'</span>':''}</span>
+      <span class="n-contact-cat" style="color:${circ.color}">${circ.label.replace(' ','&nbsp;')}</span>
+      <span class="n-contact-last">${c.lastContact||'—'}</span>
+      <span class="n-contact-days" style="color:${dueCol}">${dueStr}</span>
+      <div class="n-list-acts">
+        <button class="n-act-btn" onclick="openLog('${c.id}')">LOG</button>
+        <button class="n-act-btn" onclick="editContact('${c.id}')">EDIT</button>
+        <button class="n-act-btn" onclick="deleteContact('${c.id}')" style="color:rgba(192,57,43,.5)">DEL</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── DUE TAB ─────────────────────────────────────────────────────────── */
+
+function renderDue() {
+  const el = document.getElementById('n-due-list');
+  const overdueList = _contacts.filter(c=>daysUntilDue(c)<7).sort((a,b)=>daysUntilDue(a)-daysUntilDue(b));
+  if (!overdueList.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:32px 0;text-align:center">ALL RELATIONSHIPS UP TO DATE — WELL DONE SOVEREIGN</p>';
+    return;
+  }
+  el.innerHTML = overdueList.map(c => {
+    const circ = circleOf(c.category);
+    const due  = daysUntilDue(c);
+    const od   = due < 0;
+    return `<div class="due-card ${od?'':'warn'}">
+      <div class="due-name" style="color:${circ.color}">${esc(c.name)}</div>
+      <div class="due-meta">${circ.label}  ·  EVERY ${c.frequency||30} DAYS  ·  LAST: ${c.lastContact||'NEVER'}</div>
+      <div class="due-overdue" style="color:${od?'#c0392b':'#FF9800'}">
+        ${od ? Math.abs(due)+'D OVERDUE' : due===0 ? 'DUE TODAY' : 'DUE IN '+due+'D'}
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px">
+        <button class="n-act-btn" onclick="openLog('${c.id}');activateTab('contacts')">LOG INTERACTION</button>
+        <button class="n-act-btn" onclick="editContact('${c.id}');activateTab('contacts')">EDIT</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── ORBIT CANVAS ────────────────────────────────────────────────────── */
+
+function drawOrbit() {
+  const canvas = document.getElementById('n-orbit');
+  const size = Math.min(canvas.offsetWidth, 500);
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const cx = size/2, cy = size/2;
+  const maxR = size/2 - 36;
+  const ringRadii = [maxR*0.18, maxR*0.38, maxR*0.62, maxR*0.83, maxR*1.0];
+
+  ctx.clearRect(0,0,size,size);
+
+  // Draw rings
+  ringRadii.forEach((r,i) => {
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle = 'rgba(201,168,76,.07)'; ctx.lineWidth = 1; ctx.stroke();
+    // Label
+    ctx.fillStyle = 'rgba(138,134,118,.3)';
+    ctx.font = '7px "Courier Prime", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(CIRCLES[i].label, cx+r*Math.cos(-0.2)+4, cy+r*Math.sin(-0.2));
+  });
+
+  // Group contacts by category
+  const groups = {};
+  CIRCLES.forEach((c,i) => { groups[c.id] = {circle:c, r:ringRadii[i], contacts:[]}; });
+  _contacts.forEach(c => {
+    if (groups[c.category]) groups[c.category].contacts.push(c);
+  });
+
+  // Node positions by category ring
+  const nodePositions = [];
+  CIRCLES.forEach((circ,ci) => {
+    const ring = groups[circ.id];
+    const contacts = ring.contacts;
+    contacts.forEach((c,i) => {
+      const angle = (i / Math.max(contacts.length,1)) * Math.PI*2 - Math.PI/2;
+      const r = ring.r;
+      const x = cx + Math.cos(angle)*r;
+      const y = cy + Math.sin(angle)*r;
+      const sz = 4 + (c.strength||3)*1.5;
+      const od = isOverdue(c);
+
+      // Overdue ring
+      if (od) {
+        ctx.beginPath(); ctx.arc(x,y,sz+3,0,Math.PI*2);
+        ctx.strokeStyle = 'rgba(192,57,43,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+
+      // Node
+      ctx.beginPath(); ctx.arc(x,y,sz,0,Math.PI*2);
+      ctx.fillStyle = circ.color + 'cc'; ctx.fill();
+      ctx.strokeStyle = circ.color; ctx.lineWidth = 1; ctx.stroke();
+
+      nodePositions.push({x,y,sz,contact:c,circ});
+    });
+  });
+
+  // Center node (self)
+  ctx.beginPath(); ctx.arc(cx,cy,10,0,Math.PI*2);
+  ctx.fillStyle = 'rgba(201,168,76,.3)'; ctx.fill();
+  ctx.strokeStyle = '#C9A84C'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#C9A84C'; ctx.font = 'bold 9px "Courier Prime", monospace';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('Ω', cx, cy);
+
+  // Legend
+  document.getElementById('n-orbit-legend').innerHTML = CIRCLES.map((c,i) => {
+    const n = groups[c.id].contacts.length;
+    return `<div class="ol-item">
+      <div class="ol-dot" style="background:${c.color}"></div>
+      <span class="ol-lbl">${c.label} (${n})</span>
+    </div>`;
+  }).join('');
+
+  // Hover tooltip
+  canvas.onmousemove = function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX-rect.left)*(canvas.width/rect.width);
+    const my = (e.clientY-rect.top)*(canvas.height/rect.height);
+    let found = null;
+    for (const np of nodePositions) {
+      const dx = mx-np.x, dy = my-np.y;
+      if (Math.sqrt(dx*dx+dy*dy) <= np.sz+4) { found = np; break; }
+    }
+    const tip = document.getElementById('n-orbit-tip');
+    if (found) {
+      const due = daysUntilDue(found.contact);
+      const od = due < 0;
+      tip.textContent = found.contact.name.toUpperCase() + '  ·  ' + found.circ.label +
+        '  ·  STR:' + found.contact.strength + '  ·  ' + (od?Math.abs(due)+'D OVERDUE':due+'D TIL DUE');
+      tip.style.color = od ? '#c0392b' : 'var(--gold)';
+    } else {
+      tip.textContent = 'HOVER OVER A NODE TO IDENTIFY';
+      tip.style.color = 'var(--gold)';
+    }
+  };
+}
+
+/* ── INSIGHTS ────────────────────────────────────────────────────────── */
+
+function renderInsights() {
+  const od = _contacts.filter(isOverdue).length;
+  const avgStr = _contacts.length
+    ? (_contacts.reduce((s,c)=>s+(c.strength||3),0)/_contacts.length).toFixed(1) : '—';
+  const totalInts = _interactions.length;
+
+  document.getElementById('n-kpis').innerHTML = [
+    [_contacts.length, 'TOTAL'],
+    [od, 'OVERDUE'],
+    [avgStr, 'AVG STRENGTH'],
+    [totalInts, 'INTERACTIONS'],
+  ].map(([v,l])=>`<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+
+  // By circle
+  const maxC = Math.max(...CIRCLES.map(c=>_contacts.filter(x=>x.category===c.id).length),1);
+  document.getElementById('n-cat-bars').innerHTML = CIRCLES.map(c => {
+    const n = _contacts.filter(x=>x.category===c.id).length;
+    return `<div class="n-bar-row">
+      <span class="n-bar-lbl" style="color:${c.color}">${c.label}</span>
+      <div class="n-bar-track"><div class="n-bar-fill" style="width:${(n/maxC)*100}%;background:${c.color}80"></div></div>
+      <span class="n-bar-val">${n}</span>
+    </div>`;
+  }).join('');
+
+  // By strength
+  const maxS = Math.max(...[1,2,3,4,5].map(s=>_contacts.filter(c=>c.strength===s).length),1);
+  document.getElementById('n-strength-bars').innerHTML = [1,2,3,4,5].map(s => {
+    const n = _contacts.filter(c=>c.strength===s).length;
+    const labels = ['','ACQUAINTANCE','CASUAL','MODERATE','STRONG','DEEP'];
+    return `<div class="n-bar-row">
+      <span class="n-bar-lbl">${s} — ${labels[s]}</span>
+      <div class="n-bar-track"><div class="n-bar-fill" style="width:${(n/maxS)*100}%"></div></div>
+      <span class="n-bar-val">${n}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ── HELPERS ─────────────────────────────────────────────────────────── */
+
+function esc(t) {
+  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── TAB ROUTER ──────────────────────────────────────────────────────── */
+
+window.activateTab = function(name) {
+  ['contacts','due','orbit','insights'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    document.getElementById('t-'+t).classList.toggle('active',t===name);
+  });
+  if (name==='due')      renderDue();
+  if (name==='orbit')    drawOrbit();
+  if (name==='insights') renderInsights();
+};
+
+['contacts','due','orbit','insights'].forEach(t=>{
+  document.getElementById('t-'+t).addEventListener('click',()=>activateTab(t));
+});
+
+/* ── SORT BUTTONS ────────────────────────────────────────────────────── */
+
+document.querySelectorAll('.n-sort-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    _sort = b.dataset.sort;
+    document.querySelectorAll('.n-sort-btn').forEach(x=>x.classList.toggle('on',x===b));
+    renderContactList();
+  });
+});
+
+window.addEventListener('resize',()=>{
+  if (document.getElementById('tab-orbit').classList.contains('active')) drawOrbit();
+});
+
+/* ── EVENT WIRES ─────────────────────────────────────────────────────── */
+
+document.getElementById('n-save-btn').addEventListener('click', saveContact);
+document.getElementById('n-cancel-btn').addEventListener('click', ()=>{clearForm();document.getElementById('n-log-form').classList.remove('open');});
+document.getElementById('nl-save').addEventListener('click', saveLog);
+document.getElementById('nl-cancel').addEventListener('click',()=>document.getElementById('n-log-form').classList.remove('open'));
+
+/* ── BOOT ─────────────────────────────────────────────────────────────── */
+
+load();
+clearForm();
+renderContactList();
+updateTopMeta();
+
+</script>
+</body>
+</html>

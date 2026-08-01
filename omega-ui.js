@@ -94,6 +94,7 @@
     journal:      {label:'Sovereign Journal',section:'IDENTITY',  prev:'mirror',         next:'rituals'},
     vision:       {label:'Sovereign Vision', section:'STRATEGY',  prev:'command',        next:'targets'},
     gratitude:    {label:'Gratitude',        section:'IDENTITY',  prev:'rituals',        next:'mirror'},
+    network:      {label:'Sovereign Network',section:'INTEL',     prev:'intelligence',   next:'analytics'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

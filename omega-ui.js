@@ -99,6 +99,13 @@
     flashcard:    {label:'Flashcards',       section:'MASTERY',   prev:'library',        next:'forge'},
     decisions:    {label:'Decision Journal', section:'STRATEGY',  prev:'vision',         next:'command'},
     skills:       {label:'Sovereign Skills', section:'MASTERY',   prev:'forge',          next:'flashcard'},
+    mood:         {label:'Sovereign Mood',   section:'WELLNESS',  prev:'gratitude',      next:'meditate'},
+    time:         {label:'Sovereign Time',   section:'MASTERY',   prev:'focus',          next:'library'},
+    approvals:    {label:'Approvals',        section:'GOVERNANCE',prev:'compliance',     next:'governance'},
+    awards:       {label:'Awards',           section:'PROGRESSION',prev:'achievements',  next:'trophies'},
+    grid:         {label:'Grid View',        section:'INTEL',     prev:'matrix',         next:'graph'},
+    knowledge:    {label:'Knowledge Base',   section:'INTEL',     prev:'atlas',          next:'codex'},
+    payments:     {label:'Payments',         section:'FINANCE',   prev:'wallet',         next:'vault'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Ω SYD OMEGA 91717 — SOVEREIGN SERVICE WORKER  (v4)
+   Ω SYD OMEGA 91717 — SOVEREIGN SERVICE WORKER  (v5)
 
    REPLACES the existing sw.js, which was never registered by any page.
    Three defects in v3 are fixed here — register that version and you would
@@ -30,13 +30,14 @@
    Registered by omega-sw-register.js, which bg.js injects.
    ========================================================================== */
 
-var CACHE_VERSION = 'v4';
+var CACHE_VERSION = 'v7';
 var CACHE_NAME    = 'omega-91717-' + CACHE_VERSION;
 
 /* Static shell only. Every entry must exist in the repository — the CI
    "Broken local asset references" step will fail the build if one does not. */
 var CORE_ASSETS = [
   '/404.html',
+  '/offline.html',
   '/bg.js',
   '/nav.js',
   '/omega-shell.js',
@@ -136,7 +137,7 @@ self.addEventListener('fetch', function (e) {
         })
         .catch(function () {
           return caches.match(req).then(function (cached) {
-            return cached || caches.match('/404.html');
+            return cached || caches.match('/offline.html') || caches.match('/404.html');
           });
         })
     );

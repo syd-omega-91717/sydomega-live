@@ -57,10 +57,11 @@
   <main class="main" role="main" id="main-content">
     <div class="topbar">
       <div class="t">SOVEREIGN AI COMMAND<small>12-AGENT MULTI-AGENT SYSTEM &middot; EACH AGENT BOUND TO A ZODIAC SIGN, ELEMENT &amp; DOMAIN &middot; ANTHROPIC CLAUDE POWERED</small></div>
+      <canvas id="sai2-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green)" id="ai-status">&#9670; ONLINE</div>
     </div>
-    <div class="pad">
-      <div class="kpi-row">
+    <div class="pad" data-reveal="fade-up">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN AGENTS</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="active-agent-kpi">--</div><div class="kpi-l">ACTIVE AGENT</div></div>
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="my-auth">--</div><div class="kpi-l">MY AUTHORITY</div></div>
@@ -90,7 +91,7 @@
         </div>
       </div>
       <!-- 12 AGENT CARDS -->
-      <div class="sechead">12 SOVEREIGN AGENTS &middot; CLICK TO ACTIVATE</div>
+      <div class="sechead" data-reveal="fade-up">12 SOVEREIGN AGENTS &middot; CLICK TO ACTIVATE</div>
       <div class="agent-grid" id="agent-grid"></div>
     </div>
     <div data-page-emblem="sovereign-ai" style="margin:20px auto 0"></div>
@@ -123,7 +124,7 @@ var PHI=1.6180339887,EU=2.7182818285;
     var c=Number(_profile.is_owner?9:_profile.axis_c||0.001);
     var auth=_profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('my-auth',auth.toFixed(4));
-    sid('my-sign',(_profile.zodiac_sign||'--').toUpperCase());
+    sid('my-sign',(_profile.sign||'--').toUpperCase());
 
     /* Load agents from omega-agents.json */
     var ar=await fetch('/omega-agents.json');
@@ -139,7 +140,7 @@ function renderAgents(agents,profile){
   grid.innerHTML=agents.map(function(ag){
     var col=EL_COLORS[ag.element.toLowerCase()]||'#C9A84C';
     var glyph=SIGN_GLYPHS[ag.sign]||'\u2606';
-    var isMyAgent=(profile&&profile.zodiac_sign===ag.sign);
+    var isMyAgent=(profile&&profile.sign===ag.sign);
     return '<div class="agent-card"'+(isMyAgent?' style="border-color:'+(col)+';box-shadow:0 0 20px '+(col)+'22"':'')+' data-agent-idx="'+agents.indexOf(ag)+'" onclick="activateAgent(this,'+JSON.stringify(ag).replace(/"/g,'&quot;')+')" style="--ac:'+(col)+'" tabindex="0" role="button" aria-label="Activate '+ag.name+' agent">'
       +(isMyAgent?'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:'+(col)+';margin-bottom:6px">YOUR ASSIGNED AGENT</div>':'')+
       '<div class="agent-glyph">'+glyph+'</div>'
@@ -193,11 +194,11 @@ window.sendToAgent=async function(){
   _history.push({role:'user',content:q});
   /* Build agent system prompt */
   var auth=_profile?(_profile.is_owner?27.8367:Math.sqrt(Math.pow(Number(_profile.axis_a||0.001),3)+Math.pow(Number(_profile.axis_b||0.001),3)+Math.pow(Number(_profile.axis_c||0.001),3))*PHI/EU):0;
-  var system='You are '+_activeAgent.name+', Sovereign Agent of SYD OMEGA 91717. Role: '+_activeAgent.role+'. Voice: '+_activeAgent.voice+'. Domain: '+((_activeAgent.domains||[]).join(', '))+'. Member AUTH='+auth.toFixed(4)+', sign='+(_profile&&_profile.zodiac_sign||'?')+', element='+(_activeAgent.element||'?')+'. Be concise (under 100 words). Stay in character.';
+  var system='You are '+_activeAgent.name+', Sovereign Agent of SYD OMEGA 91717. Role: '+_activeAgent.role+'. Voice: '+_activeAgent.voice+'. Domain: '+((_activeAgent.domains||[]).join(', '))+'. Member AUTH='+auth.toFixed(4)+', sign='+(_profile&&_profile.sign||'?')+', element='+(_activeAgent.element||'?')+'. Be concise (under 100 words). Stay in character.';
   try{
-    var r=await sb.functions.invoke('concierge',{body:{model:'claude-sonnet-4-6',max_tokens:200,system:system,messages:_history.slice(-6)}});
-    if(r.data&&r.data.content&&r.data.content[0]){
-      var reply=r.data.content[0].text;
+    var r=await sb.functions.invoke('concierge',{body:{message:q,system_override:system,context:{sign:_profile&&_profile.sign||'?',a:_profile?Number(_profile.axis_a||0.001).toFixed(3):'?',b:_profile?Number(_profile.axis_b||0.001).toFixed(3):'?',c:_profile?Number(_profile.axis_c||0.001).toFixed(3):'?',auth:auth.toFixed(4),tier:_profile&&_profile.subscription_tier||'free',rank:_profile&&_profile.rank||'--'}}});
+    if(r.data&&r.data.reply){
+      var reply=r.data.reply;
       _history.push({role:'assistant',content:reply});
       addMsg('ai',reply,EL_COLORS[(_activeAgent.element||'fire').toLowerCase()]);
       return;

@@ -39,40 +39,38 @@
       +'Axis B (Mastery): '+b.toFixed(4)+'\n'
       +'Axis C (Contribution): '+c.toFixed(4)+'\n'
       +'Element: '+(profile.element||'?')+'\n'
-      +'Sign: '+(profile.zodiac_sign||'?')+'\n'
+      +'Sign: '+(profile.sign||'?')+'\n'
       +'Tier: '+(profile.subscription_tier||'FREE')+'\n'
       +'Owner: '+(profile.is_owner?'YES':'NO');
   }
 
-  /* Send message to AI via Supabase Edge Function or proxy */
+  /* Send message to AI via concierge edge function */
   async function sendMessage(messages, profile){
     var context=buildContext(profile);
-    var systemWithContext=SYSTEM_PROMPT+context;
-    var payload={
-      model:'claude-sonnet-4-6',
-      max_tokens:800,
-      system:systemWithContext,
-      messages:messages
-    };
-    /* Try edge function first */
+    var pr=profile||{};
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    /* Encode multi-turn history into a single message */
+    var lastMsg=messages&&messages[messages.length-1];
+    var userMsg=lastMsg&&lastMsg.role==='user'?lastMsg.content:'query';
+    if(messages&&messages.length>1){
+      var hist=messages.slice(0,-1).map(function(m){return m.role.toUpperCase()+': '+m.content;}).join('\n');
+      userMsg='[CONTEXT]\n'+hist+'\n\n[QUERY]\n'+userMsg;
+    }
     if(window.__omegaSb){
       try{
-        var r=await window.__omegaSb.functions.invoke('concierge',{body:payload});
-        if(r.data&&r.data.content)return r.data.content[0].text||'';
+        var r=await window.__omegaSb.functions.invoke('concierge',{
+          body:{
+            message:userMsg.slice(0,2000),
+            system_override:(SYSTEM_PROMPT+context).slice(0,2000),
+            context:{sign:pr.sign||'?',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4),tier:pr.subscription_tier||'free',rank:pr.rank||'--'}
+          }
+        });
+        if(r.data&&r.data.reply) return r.data.reply;
       }catch(e){}
     }
-    /* Direct API (browser-safe, no key exposed — key injected server-side) */
-    try{
-      var res=await fetch('https://api.anthropic.com/v1/messages',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01'},
-        body:JSON.stringify(payload)
-      });
-      var data=await res.json();
-      if(data.content&&data.content[0])return data.content[0].text||'';
-      if(data.error)return 'ERROR: '+data.error.message;
-    }catch(e){return 'CONNECTION ERROR: '+e.message;}
-    return 'UNABLE TO CONNECT TO AI CONCIERGE';
+    return 'Intelligence engine unavailable. Ensure the concierge edge function is deployed.';
   }
 
   window.OmegaAI={

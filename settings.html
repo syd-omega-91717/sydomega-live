@@ -96,13 +96,13 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="settings"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">SETTINGS<small>YOUR SOVEREIGN PREFERENCES</small></div></div>
+    <div class="topbar"><div class="t">SETTINGS<small>YOUR SOVEREIGN PREFERENCES</small></div><canvas id="set-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
 
-    <div class="sechead">MEMBERSHIP</div>
-    <div style="margin:0 clamp(14px,3vw,36px) 26px"><div data-membership-card></div></div>
+    <div class="sechead" data-reveal="fade-up">MEMBERSHIP</div>
+    <div style="margin:0 clamp(14px,3vw,36px) 26px" data-reveal="fade-up"><div data-membership-card></div></div>
 
-    <div class="sechead">BACKGROUND</div>
-    <div class="card">
+    <div class="sechead" data-reveal="fade-up">BACKGROUND</div>
+    <div class="card" data-reveal="fade-up">
       <p class="lead">Choose the colour of your void. Your choice applies across the whole platform and is remembered on this device.</p>
       <div class="swatches" id="swatches"></div>
       <div class="custom">
@@ -114,8 +114,8 @@
       <div class="msg" id="s-msg"></div>
       <div class="hint">The ambient score control sits bottom-right on every page  --  <b>on/off, twelve tracks, volume, download</b>.</div>
     </div>
-    <div class="sechead">LANGUAGE</div>
-    <div class="card">
+    <div class="sechead" data-reveal="fade-up">LANGUAGE</div>
+    <div class="card" data-reveal="fade-up">
       <p class="lead">Choose your language. Applies across the whole platform, including right-to-left for Arabic.</p>
       <div class="langrow">
         <button class="btn" data-lang="en">English</button>
@@ -125,8 +125,8 @@
       </div>
     </div>
 
-    <div class="sechead">PRIVACY</div>
-    <div class="card">
+    <div class="sechead" data-reveal="fade-up">PRIVACY</div>
+    <div class="card" data-reveal="fade-up">
       <p class="lead">Your profile is <b>private</b> by default -- only you and the Order can see it. You may make it public so other members can view your sovereign profile.</p>
       <div class="langrow">
         <button class="btn" id="pv-private">MAKE PRIVATE</button>
@@ -135,8 +135,8 @@
       <div class="hint" id="pv-status">Checking your current visibility...</div>
     </div>
 
-    <div class="sechead">APPEARANCE</div>
-    <div class="card">
+    <div class="sechead" data-reveal="fade-up">APPEARANCE</div>
+    <div class="card" data-reveal="fade-up">
       <p class="lead">Personalize your view. Choose your background, text colour, and font. Saved on this device.</p>
       <div class="langrow">
         <label style="display:flex;align-items:center;gap:8px">Background <input type="color" id="ap-bg" value="#0A0A0F"></label>
@@ -156,16 +156,16 @@
       </div>
     </div>
 
-    <div class="sechead">PLATFORM TOUR</div>
-    <div class="card">
+    <div class="sechead" data-reveal="fade-up">PLATFORM TOUR</div>
+    <div class="card" data-reveal="fade-up">
       <p class="lead">Watch the welcome demo again anytime -- the same video shown when you first entered as a verified member.</p>
       <div class="langrow">
         <button class="btn" id="btn-watch-demo">WATCH DEMO AGAIN</button>
       </div>
     </div>
 
-    <div class="sechead">ACCOUNT</div>
-    <div class="card">
+    <div class="sechead" data-reveal="fade-up">ACCOUNT</div>
+    <div class="card" data-reveal="fade-up">
       <p class="lead">Manage your sovereign account.</p>
       <div class="acctrow">
         <button class="ghost" id="btn-logout">LOG OUT</button>

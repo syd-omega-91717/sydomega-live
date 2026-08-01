@@ -35,9 +35,46 @@
           "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), accelerometer=(self), gyroscope=(self), magnetometer=(self)"
         }
       ]
+    },
+    {
+      "source": "/:file(.*\\.(js|css))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/:file(.*\\.(png|jpg|svg|ico|webp|woff|woff2))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
     }
   ],
   "redirects": [
+    {
+      "source": "/entreprise",
+      "destination": "/enterprise",
+      "permanent": true
+    },
+    {
+      "source": "/entreprise.html",
+      "destination": "/enterprise.html",
+      "permanent": true
+    },
     {
       "source": "/:path*.ts",
       "destination": "/dashboard.html",

@@ -45,15 +45,15 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="contributions"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">CONTRIBUTIONS<small>AXIS C &middot; CONTRIBUTION ENGINE &middot; 12 DOMAINS &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">CONTRIBUTIONS<small>AXIS C &middot; CONTRIBUTION ENGINE &middot; 12 DOMAINS &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></small></div><canvas id="cont-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
     <div class="hero-band">
       <div class="hb-col"><div class="hn" id="c-acts">--</div><div class="hl">SOVEREIGN ACTS</div><div style="height:10px"></div><div class="hn" style="font-size:14px" id="c-axis">0.001</div><div class="hl">AXIS C DEPTH</div></div>
       <div class="hb-center"><canvas id="c-ring" width="240" height="240" style="width:120px;height:120px;display:block"></canvas></div>
       <div class="hb-col"><div class="hn" id="c-doms">--</div><div class="hl">DOMAINS ACTIVE</div><div style="height:10px"></div><div class="hn" style="font-size:14px;color:var(--cyan)" id="c-pct">0.00%</div><div class="hl">AXIS C PROGRESS</div></div>
     </div>
-    <div class="sechead"><span>THE 12 CONTRIBUTION DOMAINS <span data-canon-lattice="twelve"></span></span></div>
+    <div class="sechead" data-reveal="fade-up"><span>THE 12 CONTRIBUTION DOMAINS <span data-canon-lattice="twelve"></span></span></div>
     <div class="dom-grid" id="doms"></div>
-    <div class="sechead"><span>SOVEREIGN ACTS LOG</span><span id="act-count" style="font-size:8px;color:var(--muted)"></span></div>
+    <div class="sechead" data-reveal="fade-up"><span>SOVEREIGN ACTS LOG</span><span id="act-count" style="font-size:8px;color:var(--muted)"></span></div>
     <div class="act-wrap" id="act-log"><div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">LOADING...</div></div>
     <div data-page-emblem="contributions" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; CONTRIBUTIONS &middot; AXIS C</span><span>12 DOMAINS &middot; EACH 12&times;12&times;9&times;9&times;9 = 104,976</span></div>

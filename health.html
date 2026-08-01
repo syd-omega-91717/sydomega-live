@@ -87,6 +87,7 @@ a{color:inherit;text-decoration:none}
   <main class="main">
     <div class="topbar">
       <div class="t">HEALTH &amp; WELLNESS<small>THE SOVEREIGN BODY &middot; MIND &middot; SOUL &middot; MODULE 13</small></div>
+      <canvas id="hlt-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">A sovereign body is a sovereign platform. Health is not separate from the matrix &mdash; it is the living engine that drives all three axes. The nine domains of the Ninth Element &mdash; a full 9&times;9&times;9&times;9&times;9 = <span data-canon-nodes="nine">59,049</span>-node lattice &mdash; (mind, heart, life, birth, death, family, friends, work, character) are all measured here. Log your state. Watch your wellness score evolve.</p>
 
@@ -94,7 +95,7 @@ a{color:inherit;text-decoration:none}
       <p><b>NINTH ELEMENT CONNECTION:</b> Your health data feeds into the Ninth Element layer of the matrix. Each of the 10 facets &mdash; Religion, Character, Mind, Heart, Birth, Death, Life, Family, Friends, Work &mdash; has a wellness dimension. Logging your daily state advances your Contribution axis (C) and generates an evolution event.</p>
     </div>
 
-    <div class="sechead">WELLNESS COMMAND &mdash; LIVE STATUS</div>
+    <div class="sechead" data-reveal="fade-up">WELLNESS COMMAND &mdash; LIVE STATUS</div>
     <div class="wellness-grid">
       <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2"/></svg></div><div class="label">MIND STATE</div><div class="score" id="ws-mind">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-mind" style="width:0%"></div></div><div class="caption">Mental clarity level</div></div>
       <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></div><div class="label">HEART VITALITY</div><div class="score" id="ws-heart">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-heart" style="width:0%"></div></div><div class="caption">Emotional & physical heart</div></div>
@@ -104,10 +105,10 @@ a{color:inherit;text-decoration:none}
       <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 14l2-5 3 4 3-4 2 5z"/></svg></div><div class="label">SOVEREIGN SCORE</div><div class="score" id="ws-total" style="color:var(--gold)">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-total" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div><div class="caption">Overall wellness rating</div></div>
     </div>
 
-    <div class="sechead">THE NINTH ELEMENT &mdash; 10 LIFE DOMAINS</div>
+    <div class="sechead" data-reveal="fade-up">THE NINTH ELEMENT &mdash; 10 LIFE DOMAINS</div>
     <div class="ninth-grid" id="ninth-grid"></div>
 
-    <div class="sechead">LOG YOUR STATE</div>
+    <div class="sechead" data-reveal="fade-up">LOG YOUR STATE</div>
     <div class="log-form">
       <div class="form-row">
         <div class="field"><label>MIND STATE (1-9)</label><input type="range" id="l-mind" min="1" max="9" value="5" oninput="document.getElementById('v-mind').textContent=this.value"/><span id="v-mind" style="font-family:var(--mono);font-size:11px;color:var(--gold)">5</span></div>
@@ -121,7 +122,7 @@ a{color:inherit;text-decoration:none}
       <div class="log-saved" id="log-saved">&#x2713; STATE LOGGED &mdash; Wellness data recorded. Evolution event fired to matrix.</div>
     </div>
 
-    <div class="sechead">WELLNESS LOG &mdash; RECENT ENTRIES</div>
+    <div class="sechead" data-reveal="fade-up">WELLNESS LOG &mdash; RECENT ENTRIES</div>
     <div class="history-feed" id="history-feed"></div>
   </main>
 </div>

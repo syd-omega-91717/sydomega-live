@@ -72,7 +72,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="subscriptions"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">MEMBERSHIP &middot; SUBSCRIPTION &middot; PAYMENTS<small>YOUR PLAN &middot; TIERS &middot; PAYMENT HISTORY &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">MEMBERSHIP &middot; SUBSCRIPTION &middot; PAYMENTS<small>YOUR PLAN &middot; TIERS &middot; PAYMENT HISTORY &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></small></div><canvas id="sub-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
 
     <!-- STATUS BAND -->
     <div class="status-band">
@@ -104,7 +104,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TAB: MY PLAN -->
     <div class="tab-panel on" id="tab-plan">
-      <div class="sechead">CURRENT MEMBERSHIP PLAN</div>
+      <div class="sechead" data-reveal="fade-up">CURRENT MEMBERSHIP PLAN</div>
       <div id="trial-notice" style="display:none" class="trial-band">
         <div class="trial-title">&#937; SOVEREIGN TRIAL SESSION</div>
         <div class="trial-desc">You have been granted sovereign trial access to the Order. Your session is timed. Access to the full platform is available during your trial. Request permanent membership from the Sovereign Architect.</div>
@@ -129,7 +129,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TAB: TIERS -->
     <div class="tab-panel" id="tab-tiers">
-      <div class="sechead">SOVEREIGN MEMBERSHIP TIERS <span data-canon-lattice="twelve"></span></div>
+      <div class="sechead" data-reveal="fade-up">SOVEREIGN MEMBERSHIP TIERS <span data-canon-lattice="twelve"></span></div>
       <div class="tiers-grid" id="tiers-grid"></div>
       <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);margin-top:8px">
         <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">PAYMENT ACTIVATION</div>
@@ -139,7 +139,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TAB: PAYMENTS -->
     <div class="tab-panel" id="tab-payments">
-      <div class="sechead">PAYMENT HISTORY</div>
+      <div class="sechead" data-reveal="fade-up">PAYMENT HISTORY</div>
       <div id="payments-list"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING PAYMENT HISTORY...</div></div>
     </div>
 

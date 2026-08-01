@@ -39,10 +39,10 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="knowledge" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN KNOWLEDGE GRAPH<small>WIKIPEDIA-INSPIRED ENTITY GRAPH &middot; NODES: TRACKS &bull; ELEMENTS &bull; OLYMPIANS &bull; GATES &middot; 12 TRACKS &bull; 9 ELEMENTS &bull; 12 GATES</small></div></div>
-    <div class="pad">
+    <div class="topbar"><div class="t">SOVEREIGN KNOWLEDGE GRAPH<small>WIKIPEDIA-INSPIRED ENTITY GRAPH &middot; NODES: TRACKS &bull; ELEMENTS &bull; OLYMPIANS &bull; GATES &middot; 12 TRACKS &bull; 9 ELEMENTS &bull; 12 GATES</small></div><canvas id="knw-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
+    <div class="pad" data-reveal="fade-up">
       <!-- GRAPH CANVAS -->
-      <div class="sechead">KNOWLEDGE GRAPH &middot; CLICK ANY NODE TO EXPLORE RELATIONSHIPS</div>
+      <div class="sechead" data-reveal="fade-up">KNOWLEDGE GRAPH &middot; CLICK ANY NODE TO EXPLORE RELATIONSHIPS</div>
       <div class="graph-wrap" style="height:clamp(280px,45vh,480px)">
         <canvas id="kg-canvas" role="img" aria-label="Interactive knowledge graph showing relationships between sovereign platform concepts"></canvas>
       </div>
@@ -54,7 +54,7 @@
         <div class="nd-edges" id="nd-edges"></div>
       </div>
       <!-- ALL NODES -->
-      <div class="sechead">ALL KNOWLEDGE NODES &middot; <span id="node-count">--</span> TOTAL</div>
+      <div class="sechead" data-reveal="fade-up">ALL KNOWLEDGE NODES &middot; <span id="node-count">--</span> TOTAL</div>
       <div class="node-grid" id="node-grid"><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">LOADING KNOWLEDGE GRAPH&hellip;</div></div>
     </div>
     <div data-page-emblem="knowledge" style="margin:20px auto 0"></div>

@@ -68,6 +68,8 @@ window.__omegaPopulate = function(pr, user){
   var a3   = isOwner ? 729.000 : Math.pow(a,3);
   var b3   = isOwner ? 729.000 : Math.pow(b,3);
   var c3   = isOwner ? 729.000 : Math.pow(c,3);
+  /* Cache authority for offline page */
+  try{ localStorage.setItem('omega_cached_auth', auth.toFixed(4)); localStorage.setItem('omega_last_online', Date.now()); }catch(e){}
 
   var name  = isOwner ? OWNER.display_name : (d.display_name||'').toUpperCase()||(user&&user.email||'SOVEREIGN MEMBER').toUpperCase();
   var sign  = (d.sign    || 'AWAITING ASSIGNMENT').toUpperCase();
@@ -227,6 +229,8 @@ window.__omegaPopulate = function(pr, user){
   window.__omegaUser    = user;
   window.__omegaAuth    = auth;
   window.__omegaIsOwner = isOwner;
+  window.__omegaUserLoaded = true;
+  try{document.dispatchEvent(new CustomEvent('omega:populated',{detail:{profile:d},bubbles:false}));}catch(_){}
 };
 
 /* ── AUTO-RUN ON EVERY PAGE ─────────────────────────────────────────────── */

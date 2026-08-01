@@ -93,13 +93,14 @@ a{color:inherit;text-decoration:none}
   <main class="main">
     <div class="topbar">
       <div class="t">SOCIAL HUB<small>CONNECT &middot; BROADCAST &middot; PRESENCE <span data-canon-lattice="twelve"></span></small></div>
+      <canvas id="soc-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:24px">Connect your social accounts once and reach all your platforms from inside the Order. Sign in with each account, compose your broadcast, and transmit sovereign content across your entire digital presence in one action.</p>
 
-    <div class="sechead">CONNECT YOUR ACCOUNTS</div>
+    <div class="sechead" data-reveal="fade-up">CONNECT YOUR ACCOUNTS</div>
     <div class="platforms-grid" id="platforms-grid"></div>
 
-    <div class="sechead">SOVEREIGN BROADCAST</div>
+    <div class="sechead" data-reveal="fade-up">SOVEREIGN BROADCAST</div>
     <div class="composer">
       <p style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">COMPOSE &mdash; SELECT CHANNELS &mdash; TRANSMIT</p>
       <textarea id="broadcast-text" placeholder="Write your sovereign broadcast... Share your milestone, horoscope, achievement, or message across all connected platforms."></textarea>
@@ -109,7 +110,7 @@ a{color:inherit;text-decoration:none}
       <div class="sent-msg" id="sent-msg">&#x2713; BROADCAST QUEUED &mdash; Routes to selected platforms when provider connections are activated.</div>
     </div>
 
-    <div class="sechead">SOCIAL ACTIVITY FEED</div>
+    <div class="sechead" data-reveal="fade-up">SOCIAL ACTIVITY FEED</div>
     <div class="feed-tabs">
       <div class="feed-tab on" data-tab="all">ALL PLATFORMS</div>
       <div class="feed-tab" data-tab="broadcasts">MY BROADCASTS</div>

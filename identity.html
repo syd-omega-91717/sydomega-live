@@ -37,21 +37,21 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="identity"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">DIGITAL IDENTITY<small>M13 &middot; SOVEREIGN IDENTITY &middot; CREDENTIALS &middot; PRIVATE &middot; YOUR ACCOUNT ONLY &middot; <span data-canon-lattice="twelve"></span></small></div></div>
-    <div class="hero-band">
-      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l">MEMBER NAME</div></div>
+    <div class="topbar"><div class="t">DIGITAL IDENTITY<small>M13 &middot; SOVEREIGN IDENTITY &middot; CREDENTIALS &middot; PRIVATE &middot; YOUR ACCOUNT ONLY &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="id-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
+    <div class="hero-band" data-reveal="fade-up">
+      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l" data-tooltip="Your sovereign display name — set in Identity settings">MEMBER NAME</div></div>
       <div class="hb mid"><canvas id="hb-cv-identity" width="80" height="80" style="width:40px;height:40px;display:block"></canvas></div>
-      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l">AUTHORITY SCORE</div></div>
+      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l" data-tooltip="AUTH = sqrt(A³+B³+C³) × φ/e · Max 27.8367 at Gate XII APEX">AUTHORITY SCORE</div></div>
     </div>
-    <div class="sec">
-      <div class="sechead">YOUR DIGITAL IDENTITY &middot; PRIVATE TO YOUR ACCOUNT</div>
-      <div class="card">
+    <div class="sec" data-reveal="fade-up">
+      <div class="sechead" data-reveal="fade-up">YOUR DIGITAL IDENTITY &middot; PRIVATE TO YOUR ACCOUNT</div>
+      <div class="card" data-reveal="fade-up">
       <div class="row"><span class="row-k">MEMBER ID</span><span class="row-v" id="id-uid">--</span></div>
       <div class="row"><span class="row-k">DISPLAY NAME</span><span class="row-v" id="id-name">--</span></div>
       <div class="row"><span class="row-k">EMAIL</span><span class="row-v" id="id-email">--</span></div>
       <div class="row"><span class="row-k">SIGN / ELEMENT</span><span class="row-v" id="id-sign">--</span></div>
       <div class="row"><span class="row-k">OLYMPIAN / AGENT</span><span class="row-v" id="id-god">--</span></div>
-      <div class="row"><span class="row-k">SUBSCRIPTION TIER</span><span class="row-v" id="id-tier">--</span></div>
+      <div class="row"><span class="row-k" data-tooltip="FREE → GENESIS → APEX — higher tiers unlock exclusive content and rewards">SUBSCRIPTION TIER</span><span class="row-v" id="id-tier">--</span></div>
       <div class="row"><span class="row-k">ACCESS STATUS</span><span class="row-v" id="id-status">--</span></div>
       <div class="row"><span class="row-k">KYC STATUS</span><span class="row-v" id="id-kyc">PENDING</span></div>
     </div>

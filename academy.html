@@ -37,7 +37,7 @@
 <div class="shell" id="app" style="display:none">
 <aside class="side" id="omega-side" data-page="academy"></aside>
 <main class="main">
-<div class="topbar"><div class="t">SOVEREIGN ACADEMY &middot; EXAMS<small>M12 &middot; WORLDWIDE CERTIFICATIONS &middot; 9 LEVELS &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+<div class="topbar"><div class="t">SOVEREIGN ACADEMY &middot; EXAMS<small>M12 &middot; WORLDWIDE CERTIFICATIONS &middot; 9 LEVELS &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="acad-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
 <div class="tab-bar">
   <button class="tab-btn on" data-tab="overview">OVERVIEW</button>
   <button class="tab-btn" data-tab="stem">STEM &amp; SCIENCE</button>
@@ -51,7 +51,7 @@
   <button class="tab-btn" data-tab="my_exams">MY EXAMS</button>
 </div>
 <div class="tab-panel on" id="tab-overview">
-  <div class="kpi-row">
+  <div class="kpi-row" data-reveal="fade-up">
     <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ex-passed">--</div><div class="kpi-l">EXAMS PASSED</div></div>
     <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ex-certs">--</div><div class="kpi-l">CERTIFICATES</div></div>
     <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ex-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
@@ -59,10 +59,10 @@
     <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">108+</div><div class="kpi-l">TOTAL EXAMS</div></div>
     <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n">12</div><div class="kpi-l">CERTIFICATES</div></div>
   </div>
-  <div class="sechead">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
+  <div class="sechead" data-reveal="fade-up">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
   <div data-lattice="canonical" data-nodes="0" style="cursor:pointer;max-width:500px" title="Click for 3D view"></div>
 </div><div class="tab-panel" id="tab-stem">
-  <div class="sechead">STEM & SCIENCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#00E5FF" data-task="Mathematics Olympiad" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
   <div class="ec-name">MATHEMATICS OLYMPIAD</div>
@@ -162,7 +162,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-professional">
-  <div class="sechead">PROFESSIONAL &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">PROFESSIONAL &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="CFA Level I–III" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
   <div class="ec-name">CFA LEVEL I–III</div>
@@ -262,7 +262,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-language">
-  <div class="sechead">LANGUAGE & ARTS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">LANGUAGE & ARTS &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Arabic — Sovereign Language" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
   <div class="ec-name">ARABIC — SOVEREIGN LANGUAGE</div>
@@ -362,7 +362,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-sovereign_cert">
-  <div class="sechead">SOVEREIGN CERTIFICATIONS &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">SOVEREIGN CERTIFICATIONS &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#C9A84C" data-task="Omega Initiate Certificate" data-task-type="knowledge">
   <div class="ec-level">LEVEL 1 &middot; AXIS A+B+C</div>
   <div class="ec-name">OMEGA INITIATE CERTIFICATE</div>
@@ -462,7 +462,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-security">
-  <div class="sechead">SECURITY & LAW &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">SECURITY & LAW &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#8B0000" data-task="CISSP — Full Domain" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
   <div class="ec-name">CISSP — FULL DOMAIN</div>
@@ -562,7 +562,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-technology">
-  <div class="sechead">TECHNOLOGY & AI &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#9B6BF0" data-task="Python Advanced Exam" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
   <div class="ec-name">PYTHON ADVANCED EXAM</div>
@@ -662,7 +662,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-healthcare">
-  <div class="sechead">HEALTHCARE & MEDICINE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#3fb27f" data-task="Anatomy & Physiology" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
   <div class="ec-name">ANATOMY & PHYSIOLOGY</div>
@@ -762,7 +762,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-business">
-  <div class="sechead">BUSINESS & FINANCE &middot; 12 EXAMS &middot; AXIS A</div>
+  <div class="sechead" data-reveal="fade-up">BUSINESS & FINANCE &middot; 12 EXAMS &middot; AXIS A</div>
   <div class="exam-grid"><div class="exam-card" style="--ec:#E2C86D" data-task="Financial Modeling" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS C</div>
   <div class="ec-name">FINANCIAL MODELING</div>
@@ -862,7 +862,7 @@
 </div></div>
 </div>
 <div class="tab-panel" id="tab-my_exams">
-  <div class="sechead">MY EXAM HISTORY</div>
+  <div class="sechead" data-reveal="fade-up">MY EXAM HISTORY</div>
   <div id="exam-log"><div style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EXAM HISTORY...</div></div>
 </div>
 <div data-page-emblem="academy" style="margin:20px auto 0"></div>

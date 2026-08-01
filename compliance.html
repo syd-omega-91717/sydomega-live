@@ -69,6 +69,7 @@ a{color:inherit;text-decoration:none}
   <main class="main">
     <div class="topbar">
       <div class="t">GOVERNANCE &amp; COMPLIANCE<small>PILLAR 11 &middot; COMPLIANCE SHIELD &middot; CONSTITUTION ENGINE</small></div>
+      <canvas id="cmp-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">The Compliance Shield enforces the Platform Constitution and ensures global legal operability. Automated cross-jurisdictional logic covers GDPR, CCPA, MiCA, and AML/KYC. Every platform action is audit-logged, hash-chained, and tamper-proof. The 3-of-5 Multi-Sig governance protocol protects treasury actions. The Architect holds a permanent system-level veto.</p>
 
@@ -80,19 +81,19 @@ a{color:inherit;text-decoration:none}
       <div style="border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:20px;color:var(--gold)">&#x221E;</div><div style="font-family:var(--M);font-size:8px;color:var(--muted);letter-spacing:2px;margin-top:4px">AUDIT CHAIN</div></div>
     </div>
 
-    <div class="sechead">COMPLIANCE SHIELD &mdash; ACTIVE MODULES</div>
+    <div class="sechead" data-reveal="fade-up">COMPLIANCE SHIELD &mdash; ACTIVE MODULES</div>
     <div class="shield-grid" id="shield-grid"></div>
 
-    <div class="sechead">JURISDICTIONAL MATRIX</div>
+    <div class="sechead" data-reveal="fade-up">JURISDICTIONAL MATRIX</div>
     <table class="jur-table">
       <thead><tr><th>JURISDICTION</th><th>FRAMEWORK</th><th>SCOPE</th><th>STATUS</th></tr></thead>
       <tbody id="jur-body"></tbody>
     </table>
 
-    <div class="sechead">PLATFORM CONSTITUTION &mdash; CORE ARTICLES</div>
+    <div class="sechead" data-reveal="fade-up">PLATFORM CONSTITUTION &mdash; CORE ARTICLES</div>
     <div style="border:1px solid var(--line);background:var(--panel);padding:22px;display:flex;flex-direction:column;gap:12px" id="constitution"></div>
 
-    <div class="sechead">SOVEREIGN AUDIT LOG</div>
+    <div class="sechead" data-reveal="fade-up">SOVEREIGN AUDIT LOG</div>
     <div class="audit-feed" id="audit-feed"></div>
   </main>
 </div>

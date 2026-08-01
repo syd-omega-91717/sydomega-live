@@ -97,7 +97,7 @@
         var s = r && r.data && r.data.session; if (!s) return;
         sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id', s.user.id).maybeSingle().then(function (res) {
           var d = res && res.data; if (!d) return;
-          var auth = Math.sqrt(Math.pow(d.axis_a||0.001,3)+Math.pow(d.axis_b||0.001,3)+Math.pow(d.axis_c||0.001,3));
+          var auth = Math.sqrt(Math.pow(d.axis_a||0.001,3)+Math.pow(d.axis_b||0.001,3)+Math.pow(d.axis_c||0.001,3))*1.6180339887/2.7182818285;
           var g = Math.max(1, Math.min(12, Math.ceil(auth / APEX * 12)));
           STATE.text = 'I have reached Grade ' + g + ' as a ' + (d.sign || 'Sovereign') + ' in the 104,976-Node Matrix of SYD OMEGA 91717. The Code. The Frequency. The Legacy.';
         }).catch(function () {});

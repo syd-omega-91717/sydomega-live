@@ -6,6 +6,24 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
 <style>:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
+/* AWARD CARDS */
+.award-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:14px}
+.award-card{border:1px solid var(--line);background:rgba(10,10,15,.6);border-radius:2px;padding:18px 16px;transition:.18s;position:relative;overflow:hidden}
+.award-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.5)}
+.award-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac,var(--solar))}
+.award-glyph{font-size:24px;margin-bottom:8px;display:block;filter:drop-shadow(0 0 6px var(--ac,var(--solar)))}
+.award-name{font-family:var(--D);font-size:clamp(9px,1.3vw,11px);color:var(--ac,var(--solar));margin-bottom:5px}
+.award-cat{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--muted);margin-bottom:7px;border:1px solid;border-color:rgba(226,200,109,.2);display:inline-block;padding:2px 7px;border-radius:1px}
+.award-desc{font-size:11px;line-height:1.65;color:var(--ink);opacity:.65}
+.award-gate{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--solar);margin-top:9px;padding-top:7px;border-top:1px solid rgba(226,200,109,.1)}
+/* CEREMONY TABLE */
+.cer-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.06)}
+.cer-row:last-child{border-bottom:none}
+.cer-date{font-family:var(--D);font-size:11px;color:var(--solar);min-width:60px;flex-shrink:0;padding-top:2px}
+.cer-info{flex:1}
+.cer-title{font-family:var(--D);font-size:clamp(9px,1.2vw,11px);color:var(--ink);margin-bottom:3px}
+.cer-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.award-grid{grid-template-columns:1fr 1fr}}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
@@ -23,16 +41,144 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="awards" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN AWARDS<small>M4 Achievement System &middot; HONOURS & RECOGNITION &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><div style="font-family:var(--M);font-size:8px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
-    <div class="pad">
-      <div class="kpi-row"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN AWARDS<small>M4 Achievement System &middot; HONOURS & RECOGNITION &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="awd-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
+    <div class="pad" data-reveal="fade-up">
+      <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
       <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--solar);padding:16px;border-radius:2px;margin-bottom:14px">
         <div style="font-family:var(--D);font-size:clamp(14px,2.5vw,20px);color:var(--solar);margin-bottom:6px">SOVEREIGN AWARDS</div>
         <div style="font-size:12px;line-height:1.75;color:var(--ink);opacity:.75">Lifetime achievement awards, external recognitions, sovereign honours, and platform milestone celebrations beyond the standard 12-gate system.</div>
       </div>
     </div>
     <div class="tab-bar" role="tablist"><button class="tab-btn active" onclick="switchTab(this,'tp-all-awards')">ALL AWARDS</button><button class="tab-btn" onclick="switchTab(this,'tp-sovereign-honours')">SOVEREIGN HONOURS</button><button class="tab-btn" onclick="switchTab(this,'tp-external')">EXTERNAL</button><button class="tab-btn" onclick="switchTab(this,'tp-milestones')">MILESTONES</button><button class="tab-btn" onclick="switchTab(this,'tp-ceremonies')">CEREMONIES</button></div>
-    <div id="tp-all-awards" class="tab-panel active" style="padding:var(--pad)"><div class="sechead">ALL AWARDS</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px" data-omega-state="content-0"><div data-state-loading></div><div data-state-content>CONTENT LOADING…</div></div></div><div id="tp-sovereign-honours" class="tab-panel" style="padding:var(--pad)"><div class="sechead">SOVEREIGN HONOURS</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px" data-omega-state="content-1"><div data-state-loading></div><div data-state-content>CONTENT LOADING…</div></div></div><div id="tp-external" class="tab-panel" style="padding:var(--pad)"><div class="sechead">EXTERNAL</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px" data-omega-state="content-2"><div data-state-loading></div><div data-state-content>CONTENT LOADING…</div></div></div><div id="tp-milestones" class="tab-panel" style="padding:var(--pad)"><div class="sechead">MILESTONES</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px" data-omega-state="content-3"><div data-state-loading></div><div data-state-content>CONTENT LOADING…</div></div></div><div id="tp-ceremonies" class="tab-panel" style="padding:var(--pad)"><div class="sechead">CEREMONIES</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px" data-omega-state="content-4"><div data-state-loading></div><div data-state-content>CONTENT LOADING…</div></div></div>
+    <!-- ALL AWARDS -->
+<div id="tp-all-awards" class="tab-panel active" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">ALL SOVEREIGN AWARDS &middot; LIFETIME ACHIEVEMENT &middot; PLATFORM HONOURS</div>
+  <div class="award-grid" data-reveal="fade-up" data-stagger="80">
+    <div class="award-card" style="--ac:var(--solar)" data-tooltip="The highest honour — bestowed when a member reaches Gate XII, AUTH 27.8367." data-tooltip-placement="top">
+      <span class="award-glyph">&#937;</span>
+      <div class="award-cat">SOVEREIGN HONOUR</div>
+      <div class="award-name">APEX SOVEREIGN</div>
+      <div class="award-desc">The pinnacle award. Bestowed upon reaching Gate XII (APEX) with AUTH = 27.8367. Only achievable at equal mastery of all three axes: A=9, B=9, C=9.</div>
+      <div class="award-gate">GATE XII &middot; AUTH 27.8367 REQUIRED</div>
+    </div>
+    <div class="award-card" style="--ac:var(--cyan)" data-tooltip="The Lorekeeper Award — for members who complete all 12 academy modules." data-tooltip-placement="top">
+      <span class="award-glyph">&#128218;</span>
+      <div class="award-cat">KNOWLEDGE</div>
+      <div class="award-name">THE LOREKEEPER</div>
+      <div class="award-desc">Awarded to members who complete all twelve sovereign academy modules. Knowledge axis reaches 9.0, the maximum depth of sovereign mastery.</div>
+      <div class="award-gate">GATE X &middot; AXIS A = 9.0 REQUIRED</div>
+    </div>
+    <div class="award-card" style="--ac:var(--gold)" data-tooltip="The Grand Master Award — for members who clear all sovereign gaming arenas." data-tooltip-placement="top">
+      <span class="award-glyph">&#9876;</span>
+      <div class="award-cat">MASTERY</div>
+      <div class="award-name">THE GRAND MASTER</div>
+      <div class="award-desc">Awarded to members who clear all twelve sovereign arenas at maximum difficulty. Mastery axis reaches 9.0 through competitive discipline.</div>
+      <div class="award-gate">GATE X &middot; AXIS B = 9.0 REQUIRED</div>
+    </div>
+    <div class="award-card" style="--ac:var(--green)" data-tooltip="The Builder Award — for members who publish 12 sovereign works in the platform." data-tooltip-placement="top">
+      <span class="award-glyph">&#9998;</span>
+      <div class="award-cat">CONTRIBUTION</div>
+      <div class="award-name">THE BUILDER</div>
+      <div class="award-desc">Awarded to members who publish twelve sovereign works — essays, media, research, or events — advancing the network through contribution.</div>
+      <div class="award-gate">GATE X &middot; AXIS C = 9.0 REQUIRED</div>
+    </div>
+    <div class="award-card" style="--ac:var(--purple)" data-tooltip="The Triad Seal — for members who achieve equal mastery on all three axes simultaneously." data-tooltip-placement="top">
+      <span class="award-glyph">&#9651;</span>
+      <div class="award-cat">TRIADIC</div>
+      <div class="award-name">THE TRIAD SEAL</div>
+      <div class="award-desc">The rarest axis award. Given when all three axes reach parity within ±0.1 simultaneously — proof of sovereign balance across Knowledge, Mastery, and Contribution.</div>
+      <div class="award-gate">GATE VIII &middot; |A-B| &lt; 0.1 AND |B-C| &lt; 0.1</div>
+    </div>
+    <div class="award-card" style="--ac:var(--crim)" data-tooltip="The Pioneer Badge — for the first member in each sign to reach Gate VI." data-tooltip-placement="top">
+      <span class="award-glyph">&#9733;</span>
+      <div class="award-cat">PIONEER</div>
+      <div class="award-name">THE PIONEER</div>
+      <div class="award-desc">Awarded to the first member of each sovereign sign to reach Gate VI (ARCHITECT). Twelve Pioneer badges exist — one per sign. Cannot be earned twice.</div>
+      <div class="award-gate">GATE VI &middot; FIRST OF SIGN</div>
+    </div>
+  </div>
+</div>
+
+<!-- SOVEREIGN HONOURS -->
+<div id="tp-sovereign-honours" class="tab-panel" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">SOVEREIGN HONOURS &middot; INTERNAL PLATFORM RECOGNITION</div>
+  <div class="award-grid" data-reveal="fade-up" data-stagger="80">
+    <div class="award-card" style="--ac:var(--solar)" data-tooltip="Order of the Lattice — lifetime recognition for sustained platform contribution.">
+      <span class="award-glyph">&#9830;</span>
+      <div class="award-cat">LIFETIME</div>
+      <div class="award-name">ORDER OF THE LATTICE</div>
+      <div class="award-desc">The sovereign order of sustained excellence. Awarded by the platform owner to members whose presence has measurably shaped the sovereign network over time.</div>
+      <div class="award-gate">OWNER NOMINATION &middot; GATE VIII MINIMUM</div>
+    </div>
+    <div class="award-card" style="--ac:var(--gold)" data-tooltip="The Sovereign Seal — recognises a member's total Authority at end-of-year snapshot.">
+      <span class="award-glyph">&#10025;</span>
+      <div class="award-cat">ANNUAL</div>
+      <div class="award-name">SOVEREIGN SEAL</div>
+      <div class="award-desc">Annual platform award for the member with the highest Authority score at the December 31 snapshot. One per year — permanent record on member profile.</div>
+      <div class="award-gate">ANNUAL APEX &middot; HIGHEST AUTH</div>
+    </div>
+    <div class="award-card" style="--ac:var(--cyan)" data-tooltip="The Codex Award — for members who map new sovereign knowledge to the lattice.">
+      <span class="award-glyph">&#9965;</span>
+      <div class="award-cat">SCHOLARLY</div>
+      <div class="award-name">THE CODEX</div>
+      <div class="award-desc">Awarded to members who contribute original research or lore to the sovereign codex — expanding the canonical record of the platform's universe.</div>
+      <div class="award-gate">GATE VI &middot; AXIS A &ge; 6.0</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXTERNAL -->
+<div id="tp-external" class="tab-panel" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">EXTERNAL RECOGNITIONS &middot; AWARDS FROM BEYOND THE PLATFORM</div>
+  <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--solar);padding:20px;border-radius:2px;margin-bottom:14px" data-reveal="fade-up">
+    <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:8px">EXTERNAL AWARD REGISTRY</div>
+    <div style="font-size:12px;line-height:1.8;color:var(--ink);opacity:.75">Members may submit external awards — industry certifications, academic honours, creative recognition, professional achievements — for registration on their sovereign profile. External awards do not alter axis scores directly but are recorded as verified credentials in the member codex.</div>
+    <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">CATEGORIES: ACADEMIC &middot; INDUSTRY &middot; CREATIVE &middot; ATHLETIC &middot; CIVIC</div>
+  </div>
+  <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px" data-reveal="fade-up">EXTERNAL AWARD SUBMISSIONS OPEN AFTER GATE III UNLOCK</div>
+</div>
+
+<!-- MILESTONES -->
+<div id="tp-milestones" class="tab-panel" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">PLATFORM MILESTONES &middot; SOVEREIGN NETWORK ACHIEVEMENTS</div>
+  <div style="border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:14px" data-reveal="fade-up">
+    <div class="cer-row">
+      <div class="cer-date">M·001</div><div class="cer-info"><div class="cer-title">SOVEREIGN PLATFORM LAUNCH</div><div class="cer-meta">GENESIS &middot; FIRST MEMBER APPROVED &middot; LATTICE ACTIVATED</div></div>
+    </div>
+    <div class="cer-row">
+      <div class="cer-date">M·012</div><div class="cer-info"><div class="cer-title">TWELVE HOUSES COMPLETE</div><div class="cer-meta">ALL 12 SOVEREIGN SIGNS REPRESENTED IN THE MEMBER REGISTER</div></div>
+    </div>
+    <div class="cer-row">
+      <div class="cer-date">M·100</div><div class="cer-info"><div class="cer-title">ONE HUNDRED SOVEREIGN MEMBERS</div><div class="cer-meta">NETWORK CRITICAL MASS &middot; LEADERBOARD ACTIVE</div></div>
+    </div>
+    <div class="cer-row">
+      <div class="cer-date">M·144</div><div class="cer-info"><div class="cer-title">FULL CHARACTER CODEX</div><div class="cer-meta">144 CANONICAL CHARACTERS MAPPED (12×12 SIGN×GOD)</div></div>
+    </div>
+    <div class="cer-row">
+      <div class="cer-date">M·9·9·9</div><div class="cer-info"><div class="cer-title">FIRST APEX SOVEREIGN</div><div class="cer-meta">FIRST MEMBER TO REACH GATE XII &middot; AUTH = 27.8367</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CEREMONIES -->
+<div id="tp-ceremonies" class="tab-panel" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">SOVEREIGN CEREMONIES &middot; ANNUAL AWARD SCHEDULE</div>
+  <div style="border:1px solid var(--line);border-radius:2px;overflow:hidden" data-reveal="fade-up">
+    <div class="cer-row">
+      <div class="cer-date">Q1</div><div class="cer-info"><div class="cer-title">THE WINTER LATTICE CEREMONY</div><div class="cer-meta">JANUARY &middot; YEAR-OPEN SNAPSHOT &middot; PIONEER BADGES CONFIRMED</div></div>
+    </div>
+    <div class="cer-row">
+      <div class="cer-date">Q2</div><div class="cer-info"><div class="cer-title">THE SPRING ASCENSION RITES</div><div class="cer-meta">APRIL &middot; NEW GATE ANNOUNCEMENTS &middot; TRIAD SEAL ELIGIBLE WINDOW</div></div>
+    </div>
+    <div class="cer-row">
+      <div class="cer-date">Q3</div><div class="cer-info"><div class="cer-title">THE MIDSUMMER CODEX AWARD</div><div class="cer-meta">JULY &middot; SCHOLARLY CONTRIBUTIONS REVIEWED &middot; CODEX AWARDS ISSUED</div></div>
+    </div>
+    <div class="cer-row">
+      <div class="cer-date">Q4</div><div class="cer-info"><div class="cer-title">THE SOVEREIGN SEAL CEREMONY</div><div class="cer-meta">DECEMBER 31 &middot; YEAR-CLOSE SNAPSHOT &middot; APEX SOVEREIGN CROWN</div></div>
+    </div>
+  </div>
+  <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:12px;line-height:1.8;padding:10px 14px;border:1px solid var(--line);border-radius:2px" data-reveal="fade-up">All ceremonies are held on the sovereign platform. Members at or above the required gate receive automatic notifications. Ceremony records are permanently stored in the Sovereign Ledger.</div>
+</div>
     <div data-page-emblem="awards" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; SOVEREIGN AWARDS &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
   </main>

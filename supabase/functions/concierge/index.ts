@@ -25,11 +25,11 @@ const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
 const SYSTEM_PROMPT = `You are the Concierge of SYD OMEGA 91717, a guide who helps members
-understand the platform: the 9x9x9 progression matrix, the 12 chambers (Academy, Games,
+understand the platform: the 12×12×9×9×9 progression matrix (104,976 nodes), the 12 chambers (Academy, Games,
 Contributions, Agents, Honors, Horoscope, Publishing, Marketing, Consultancy, Contracts,
 Treasury, Family & Heritage), and how to raise their standing. Speak with warmth and a
 touch of ceremony, but always be genuinely useful and concrete -- point members to the
-specific page for what they're asking about (e.g. /games.html, /academy.html). Keep
+specific page for what they're asking about (e.g. /gaming.html, /academy.html). Keep
 replies to 2-4 sentences. If asked about money, tokens, KYC, or identity verification,
 say plainly that those features are not live yet. You are not a financial or legal
 adviser and must not act like one.`;
@@ -42,11 +42,15 @@ Deno.serve(async (req) => {
     const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
     if (!apiKey) return json({ enabled: false, message: "Concierge AI is not configured yet." }, 200);
 
-    const { message, context } = await req.json().catch(() => ({ message: "", context: {} }));
+    const body = await req.json().catch(() => ({ message: "", context: {} }));
+    const { message, context, system_override } = body as { message: string; context: Record<string, unknown>; system_override?: string };
     if (!message || typeof message !== "string" || !message.trim()) {
       return json({ error: "empty_message" }, 400);
     }
     if (message.length > 2000) return json({ error: "message_too_long" }, 400);
+    if (system_override && (typeof system_override !== "string" || system_override.length > 2000)) {
+      return json({ error: "system_override_invalid" }, 400);
+    }
 
     // Best-effort: identify the member so the reply can be personalized. Never
     // blocks the request if this fails or if the visitor is anonymous.
@@ -76,7 +80,13 @@ Deno.serve(async (req) => {
     const ctx = context && typeof context === "object" ? context : {};
     const contextLine = `Member context -- sign: ${ctx.sign || "unknown"}, rank: ${ctx.rank || "unknown"}, ` +
       `axes (Knowledge/Mastery/Contribution): ${ctx.a ?? "?"}/${ctx.b ?? "?"}/${ctx.c ?? "?"}, ` +
-      `authority: ${ctx.auth ?? "?"} of 15.588${displayName ? `, name: ${displayName}` : ""}.`;
+      `authority: ${ctx.auth ?? "?"} of 27.8367${displayName ? `, name: ${displayName}` : ""}.`;
+
+    // system_override lets agent personas (sovereign.html, agents.html) substitute
+    // their own character-specific system prompt. Bounded to 2000 chars (validated above).
+    const effectiveSystem = system_override
+      ? `${system_override}\n\n${contextLine}`
+      : `${SYSTEM_PROMPT}\n\n${contextLine}`;
 
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -88,7 +98,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 220,
-        system: `${SYSTEM_PROMPT}\n\n${contextLine}`,
+        system: effectiveSystem,
         messages: [{ role: "user", content: message }],
       }),
     });

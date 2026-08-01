@@ -109,8 +109,9 @@
       if(!r)return;
       var n=r.count||0;
       if(n!==_count){
+        var prev=_count;
         _count=n;updateBadge(n);
-        if(n>0&&_count===0){showToast('You have '+n+' new notification'+(n>1?'s':''),'info');}
+        if(n>prev){showToast('You have '+n+' new notification'+(n>1?'s':''),'info');}
       }
     }).catch(function(){});
   }

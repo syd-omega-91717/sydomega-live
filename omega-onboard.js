@@ -25,7 +25,7 @@
   var EL_COLORS={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D'};
 
   function needsOnboarding(pr){
-    return pr&&!pr.zodiac_sign&&!pr.element&&!pr.is_owner;
+    return pr&&!pr.sign&&!pr.element&&!pr.is_owner;
   }
 
   function buildOnboardingFlow(){
@@ -91,7 +91,7 @@
         var s=(await window.__omegaSb.auth.getSession()).data.session;
         if(!s)return;
         await window.__omegaSb.from('profiles').update({
-          zodiac_sign:selected.sign,
+          sign:selected.sign,
           element:selected.el,
           olympian:selected.god,
           agent_name:selected.agent,
@@ -102,7 +102,7 @@
         await window.__omegaSb.rpc('record_sovereign_event',{
           p_event_type:'member.onboarded',
           p_event_data:{sign:selected.sign,element:selected.el,token:selected.token},
-          p_axis_delta:JSON.stringify({a:0.009,b:0.009,c:0.009})
+          p_axis_delta:{a:0.009,b:0.009,c:0.009}
         }).catch(function(){});
         if(ov.parentNode)document.body.removeChild(ov);
         /* Show welcome */

@@ -124,6 +124,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       <div class="t">SOVEREIGN VAULT
         <small>M7 &middot; RESERVE &middot; WALLET &middot; NFT &middot; EARNING LEDGER &middot; ARTICLES &middot; AUDIT LOG &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small>
       </div>
+      <canvas id="vault-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
@@ -143,7 +144,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 1: RESERVE
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel active" id="tab-reserve">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="rsv-aum">&#937; --</div><div class="kpi-l">ABSOLUTE RESERVE (AUM)</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="rsv-dist" style="animation:div-glow 2s ease-in-out infinite">DISTRIBUTING</div><div class="kpi-l">STATUS &middot; 9.17 Hz</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES (12&times;12&times;9&#179;)</div></div>
@@ -199,7 +200,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 2: WALLET
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-wallet">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="wallet-total">&#937; --</div><div class="kpi-l">TOTAL WALLET BALANCE</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="wallet-count">--</div><div class="kpi-l">TOKEN TYPES HELD</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN TOKEN TYPES</div></div>
@@ -234,7 +235,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 3: NFT VAULT
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-nft">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="nft-count">--</div><div class="kpi-l">NFTs HELD</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN LINES</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">108</div><div class="kpi-l">TOTAL NFT TYPES (12&times;9)</div></div>
@@ -268,7 +269,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 4: EARNING LEDGER
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-earning">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="earn-total">--</div><div class="kpi-l">TOTAL POINTS EARNED</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="earn-count">--</div><div class="kpi-l">ACTIONS COMPLETED</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="earn-a">--</div><div class="kpi-l">AXIS A &mdash; KNOWLEDGE</div></div>
@@ -308,13 +309,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 6: AUDIT LOG
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-audit">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="audit-count">--</div><div class="kpi-l">AUDIT EVENTS</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="audit-last">--</div><div class="kpi-l">LAST EVENT</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">LIVE</div><div class="kpi-l">LEDGER STATUS</div></div>
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">RLS</div><div class="kpi-l">SECURITY MODE</div></div>
       </div>
-      <div class="sechead" style="color:var(--cyan)">
+      <div class="sechead" data-reveal="fade-up" style="color:var(--cyan)">
         <span>TREASURY &amp; ACCESS AUDIT LOG &middot; SOVEREIGN EVENT CHAIN</span>
         <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px">&#8635; REFRESH</button>
       </div>
@@ -503,6 +504,7 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
     window.__omegaUserLoaded=true;
+    (function tryVaultRing(){var rv=document.getElementById('vault-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryVaultRing,350);})();
 
     /* AUTHORITY */
     var PHI=1.6180339887,EU=2.7182818285;

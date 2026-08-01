@@ -1447,6 +1447,29 @@ setTimeout(function(){
   /* Async region shell — loading/empty/error states + retry (audit F-6) */
   if(!document.querySelector('script[data-omega-shell]')){var _osh=document.createElement('script');_osh.src='/omega-shell.js';_osh.setAttribute('data-omega-shell','1');_osh.defer=true;if(document.body)document.body.appendChild(_osh);}
 
+  /* Platform keyboard navigation — g-sequences, ?, Ctrl+K, n, c shortcuts */
+  if(!document.querySelector('script[data-omega-keyboard]')){var _okb=document.createElement('script');_okb.src='/omega-keyboard.js';_okb.setAttribute('data-omega-keyboard','1');_okb.defer=true;if(document.body)document.body.appendChild(_okb);}
+  /* Legal compliance — copyright badge, GDPR consent, terms footer links */
+  if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;if(document.body)document.body.appendChild(_olegal);}
+  /* QR code engine — member credential QR, digital pass download */
+  if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;if(document.body)document.body.appendChild(_oqr);}
+  /* Guided platform tour — Shepherd.js (MIT), first-time member walkthrough */
+  if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;if(document.body)document.body.appendChild(_otour);}
+  /* Cinematic transitions — curtain nav, scroll reveals, count-up, stagger */
+  if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;if(document.body)document.body.appendChild(_ocin);}
+  /* WCAG 2.1 AA — skip links, focus trap, live region, landmark ARIA */
+  if(!document.querySelector('script[data-omega-a11y]')){var _oa11y=document.createElement('script');_oa11y.src='/omega-a11y.js';_oa11y.setAttribute('data-omega-a11y','1');_oa11y.defer=true;if(document.body)document.body.appendChild(_oa11y);}
+  /* Sovereign chart system — Chart.js auto-mount via [data-omega-chart] */
+  if(!document.querySelector('script[data-omega-chart-mod]')){var _ochrt=document.createElement('script');_ochrt.src='/omega-chart.js';_ochrt.setAttribute('data-omega-chart-mod','1');_ochrt.defer=true;if(document.body)document.body.appendChild(_ochrt);}
+  /* Sovereign progress ring — Canvas SVG circular authority ring */
+  if(!document.querySelector('script[data-omega-ring]')){var _oring=document.createElement('script');_oring.src='/omega-ring.js';_oring.setAttribute('data-omega-ring','1');_oring.defer=true;if(document.body)document.body.appendChild(_oring);}
+
+  /* PWA install banner + offline network ribbon + native share + badge API */
+  if(!document.querySelector('script[data-omega-pwa]')){var _opwa=document.createElement('script');_opwa.src='/omega-pwa.js';_opwa.setAttribute('data-omega-pwa','1');_opwa.defer=true;if(document.body)document.body.appendChild(_opwa);}
+
+  /* Sovereign share-card generator — canvas identity card with download + native share */
+  if(!document.querySelector('script[data-omega-sharecard]')){var _osc=document.createElement('script');_osc.src='/omega-share-card.js';_osc.setAttribute('data-omega-sharecard','1');_osc.defer=true;if(document.body)document.body.appendChild(_osc);}
+
   /* Welcome demo video — must load on dashboard.html, the login landing page */
   if(!document.querySelector('script[data-omega-demo]')){var _odv=document.createElement('script');_odv.src='/omega-demo-video.js';_odv.setAttribute('data-omega-demo','1');_odv.defer=true;if(document.body)document.body.appendChild(_odv);}
 
@@ -1458,3 +1481,6 @@ setTimeout(function(){
 
   /* Unified UI — footer, prev/next nav, back button, keyboard shortcuts */
   if(!document.querySelector('script[data-omega-ui]')){var _oui2=document.createElement('script');_oui2.src='/omega-ui.js';_oui2.setAttribute('data-omega-ui','1');_oui2.defer=true;if(document.body)document.body.appendChild(_oui2);}
+
+  /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
+  if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;if(document.body)document.body.appendChild(_ott);}

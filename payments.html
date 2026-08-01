@@ -88,6 +88,7 @@ a{color:inherit;text-decoration:none}
   <main class="main">
     <div class="topbar">
       <div class="t">PAYMENTS<small>TRANSACTION LOG &middot; SUBSCRIPTION HISTORY &middot; TRANSFER RECORDS</small></div>
+      <canvas id="pay-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
 
     <div class="ra-banner">
@@ -95,12 +96,12 @@ a{color:inherit;text-decoration:none}
       <span>PAYMENT PROCESSING &mdash; READY TO ACTIVATE &mdash; Stripe integration wired. All transaction UI active. Live processing requires licensed payment counsel sign-off before enabling. Your full history will populate here once payments are active.</span>
     </div>
 
-    <div class="kpi-row" id="kpi-row"></div>
+    <div class="kpi-row" data-reveal="fade-up" id="kpi-row"></div>
 
-    <div class="sechead">PAYMENT METHODS</div>
+    <div class="sechead" data-reveal="fade-up">PAYMENT METHODS</div>
     <div class="methods-grid" id="methods-grid"></div>
 
-    <div class="sechead">TRANSACTION HISTORY</div>
+    <div class="sechead" data-reveal="fade-up">TRANSACTION HISTORY</div>
     <div class="tx-tabs">
       <div class="tx-tab on" data-tab="all">ALL</div>
       <div class="tx-tab" data-tab="subscriptions">SUBSCRIPTIONS</div>
@@ -114,7 +115,7 @@ a{color:inherit;text-decoration:none}
       </table>
     </div>
 
-    <div class="sechead">UPCOMING PAYMENTS</div>
+    <div class="sechead" data-reveal="fade-up">UPCOMING PAYMENTS</div>
     <div id="upcoming-panel" style="border:1px solid var(--line);background:var(--panel);padding:18px;font-family:var(--M);font-size:11px;color:var(--muted);line-height:1.8"></div>
   </main>
 </div>

@@ -230,7 +230,7 @@
 
   /* ── AUTO-MARK ALL LIVING OBJECTS ─────────────────────────────── */
   function markLivingObjects(){
-    var selectors=['.kpi','.agent-card','.module-card','.tier-card','.policy-card','risk-card','.tech-card','.horizon-card','.gate-card','.math-card','.slo-card','.ev-row:not(.ev-head)'];
+    var selectors=['.kpi','.agent-card','.module-card','.tier-card','.policy-card','.risk-card','.tech-card','.horizon-card','.gate-card','.math-card','.slo-card','.ev-row:not(.ev-head)'];
     selectors.forEach(function(sel){
       document.querySelectorAll(sel).forEach(function(el){
         if(!el.dataset.living){

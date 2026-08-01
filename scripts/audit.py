@@ -27,12 +27,22 @@ SQL_DIR = "supabase"
 MAX_ASSET_BYTES = 1_000_000
 REDIRECTED_EXT = (".ts", ".py", ".sol", ".sql", ".docx")
 
+# sw.js is a service worker registered via navigator.serviceWorker.register()
+# in omega-sw-register.js, which bg.js injects. It does not appear in <script>
+# tags and is not injected via .src assignment, so the module-graph scan below
+# would wrongly flag it as "never loaded". Exempt it explicitly.
+SERVICE_WORKER_FILES = {"sw.js"}
+
 # Regex table extraction picks up stray keywords from multi-line DDL and
-# comments. Anything here is not a table name.
+# SQL comments (-- …). Anything here is not a real table name.
 NOT_A_TABLE = {
     "above", "alone", "is", "as", "if", "not", "exists", "the", "and", "or",
     "this", "that", "with", "on", "in", "to", "for", "select", "insert",
     "update", "delete", "where", "from", "table", "temp", "temporary",
+    # "bodies" appears after CREATE TABLE in comment lines such as:
+    # "-- CREATE TABLE bodies and ALTER ... ADD COLUMN statements."
+    # It is not a real table; the comment refers to function bodies in SQL.
+    "bodies",
 }
 
 critical = 0
@@ -66,10 +76,15 @@ for page in (f for f in os.listdir(".") if f.endswith(".html")):
 
 reachable = injected | static_included
 missing = sorted(reachable - on_disk)
-unloaded = sorted(on_disk - reachable)
+# Exclude service workers: they are loaded via navigator.serviceWorker.register(),
+# not via <script> tags or dynamic src injection.
+unloaded = sorted((on_disk - reachable) - SERVICE_WORKER_FILES)
 
 print(f"  on disk: {len(on_disk)}   injected by loader: {len(injected)}   "
       f"in <script> tags: {len(static_included)}")
+if SERVICE_WORKER_FILES & on_disk:
+    print(f"  service workers (exempt from load check): "
+          f"{', '.join(sorted(SERVICE_WORKER_FILES & on_disk))}")
 
 if missing:
     critical += 1
@@ -100,7 +115,10 @@ else:
     destructive = []
 
     for name in sql_files:
-        src = read(os.path.join(SQL_DIR, name))
+        raw = read(os.path.join(SQL_DIR, name))
+        # Strip single-line SQL comments before scanning so that lines like
+        # "-- CREATE TABLE bodies …" do not produce false table-name matches.
+        src = re.sub(r'--[^\n]*', '', raw)
         for t in re.findall(
             r"""create\s+table\s+(?:if\s+not\s+exists\s+)?([`"\w\.]+)""", src, re.I
         ):

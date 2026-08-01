@@ -62,7 +62,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="points"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN POINTS &middot; MATRIX PROGRESSION<small>12&times;12&times;9&times;9&times;9 = 104,976 NODES PER AXIS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN POINTS &middot; MATRIX PROGRESSION<small>12&times;12&times;9&times;9&times;9 = 104,976 NODES PER AXIS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="pts-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
 
     <!-- THREE AXES -->
     <div class="axis-band">
@@ -104,7 +104,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- LATTICE MAP (9x9 inner cube preview) -->
     <div class="sec">
-      <div class="sechead">LATTICE PLANE &middot; 9&#215;9 INNER CUBE (AXIS A KNOWLEDGE)</div>
+      <div class="sechead" data-reveal="fade-up">LATTICE PLANE &middot; 9&#215;9 INNER CUBE (AXIS A KNOWLEDGE)</div>
       <div class="lattice-wrap"><div style="margin-bottom:16px">
   <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">INNER CUBE &middot; 9&times;9&times;9 = 729 NODES (THE PLANE)</div>
   <div id="lattice-plane" data-lattice="plane" data-nodes="0" style="overflow-x:auto"></div>
@@ -117,7 +117,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TASK LOG -->
     <div class="sec" style="padding-top:0">
-      <div class="sechead">SOVEREIGN POINT LOG &middot; RECENT VERIFIED ACTIONS</div>
+      <div class="sechead" data-reveal="fade-up">SOVEREIGN POINT LOG &middot; RECENT VERIFIED ACTIONS</div>
       <div class="task-grid" id="task-log">
         <div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:16px">LOADING POINT LOG...</div>
       </div>

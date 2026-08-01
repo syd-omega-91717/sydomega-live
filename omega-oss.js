@@ -58,9 +58,14 @@
     lucide:    {url:'https://unpkg.com/lucide@latest/dist/umd/lucide.min.js',global:'lucide'},
     chartjs:   {url:'https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js',global:'Chart'},
     fuse:      {url:'https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js',global:'Fuse'},
-    dayjs:     {url:'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js',global:'dayjs'},
+    dayjs:        {url:'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js',global:'dayjs'},
+    dayjsRelTime: {url:'https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.min.js',global:'dayjs'},
     marked:    {url:'https://cdn.jsdelivr.net/npm/marked@12/marked.min.js',global:'marked'},
     hljs:      {url:'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js',global:'hljs'},
+    /* Tippy.js — MIT. Lightweight tooltip/popover library (8KB gzip).
+       Requires @popperjs/core. Lazy-loaded pair: popper first, then tippy. */
+    popper:    {url:'https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js',global:'Popper'},
+    tippy:     {url:'https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js',global:'tippy'},
   };
 
   /* ── PUBLIC API ───────────────────────────────────────────────── */
@@ -122,9 +127,14 @@
       });
     },
 
-    /* Friendly date formatting */
+    /* Friendly date formatting — uses dayjs+relativeTime when loaded, inline fallback */
     fromNow: function(dateStr){
       if(!dateStr) return '--';
+      /* Fast path: dayjs already loaded and extended with relativeTime */
+      try{
+        if(window.dayjs && window.dayjs._omegaRtReady) return window.dayjs(dateStr).fromNow();
+      }catch(e){}
+      /* Inline fallback (synchronous, always works) */
       var d=new Date(dateStr),now=new Date();
       var diff=Math.round((now-d)/1000);
       if(diff<60) return diff+'s ago';
@@ -160,12 +170,84 @@
     }
   };
 
+  /* ── TOOLTIP API (Tippy.js) ──────────────────────────────────── */
+  /* Usage: OmegaOSS.tooltip(el, 'content') or [data-tippy-content="..."] */
+  OSS.tooltip = function(el, content, opts){
+    OSS.require('popper', function(){
+      OSS.require('tippy', function(tippy){
+        if(!tippy||!el) return;
+        tippy(el, Object.assign({
+          content: content||'',
+          theme: 'omega',
+          animation: 'shift-away',
+          placement: 'top',
+          arrow: true,
+          delay: [150, 0],
+          maxWidth: 280,
+          appendTo: document.body,
+        }, opts||{}));
+      });
+    });
+  };
+
+  /* Batch-init all [data-tooltip] elements on the page */
+  OSS.initTooltips = function(){
+    OSS.require('popper', function(){
+      OSS.require('tippy', function(tippy){
+        if(!tippy) return;
+        /* Inject sovereign tooltip theme CSS once */
+        if(!document.getElementById('omega-tippy-css')){
+          var s=document.createElement('style');
+          s.id='omega-tippy-css';
+          s.textContent=[
+            '.tippy-box[data-theme~="omega"]{background:rgba(10,10,15,.97);border:1px solid rgba(201,168,76,.3);',
+            'border-radius:3px;font-family:"Courier Prime",monospace;font-size:10px;letter-spacing:1px;',
+            'color:#e9e6dc;box-shadow:0 8px 24px rgba(0,0,0,.5)}',
+            '.tippy-box[data-theme~="omega"] .tippy-arrow{color:rgba(201,168,76,.3)}'
+          ].join('');
+          (document.head||document.documentElement).appendChild(s);
+        }
+        tippy('[data-tooltip]',{
+          content: function(el){ return el.getAttribute('data-tooltip'); },
+          theme: 'omega',
+          animation: 'shift-away',
+          placement: 'top',
+          arrow: true,
+          delay: [150, 0],
+          maxWidth: 280,
+          appendTo: document.body,
+          allowHTML: false,
+        });
+      });
+    });
+  };
+
+  /* ── DAYJS + RELATIVETIME INIT ───────────────────────────────── */
+  /* Pre-boot dayjs with relativeTime so OSS.fromNow() uses the fast path */
+  OSS.require('dayjs', function(){
+    /* CDN plugin file sets window.dayjs_plugin_relativeTime */
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.min.js';
+    s.async = true;
+    s.onload = function(){
+      try{
+        if(window.dayjs && window.dayjs_plugin_relativeTime){
+          window.dayjs.extend(window.dayjs_plugin_relativeTime);
+          window.dayjs._omegaRtReady = true;
+        }
+      }catch(e){}
+    };
+    document.head.appendChild(s);
+  });
+
   /* ── AUTO-INIT LUCIDE ICONS ───────────────────────────────────── */
   window.addEventListener('load',function(){
     if(document.querySelector('[data-lucide]')) OSS.icons();
+    if(document.querySelector('[data-tooltip]')) OSS.initTooltips();
   });
   document.addEventListener('omega:populated',function(){
     if(document.querySelector('[data-lucide]')) OSS.icons();
+    if(document.querySelector('[data-tooltip]')) OSS.initTooltips();
   });
 
   window.OmegaOSS = OSS;

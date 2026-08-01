@@ -77,7 +77,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="advertising"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN ADVERTISING<small>TIMELINE PLACEMENTS &middot; CATEGORY TARGETING &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN ADVERTISING<small>TIMELINE PLACEMENTS &middot; CATEGORY TARGETING &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="adv-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
     <div class="hero-band">
       <div class="hb left"><div class="hb-n" id="adv-live">--</div><div class="hb-l">LIVE PLACEMENTS</div></div>
       <div class="hb mid"><canvas id="adv-cv" width="90" height="90" style="width:45px;height:45px;display:block"></canvas></div>
@@ -97,7 +97,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     </div>
     <!-- RATES TAB -->
     <div class="tab-panel on" id="tab-rates">
-      <div class="sechead">SOVEREIGN ADVERTISING TIERS &middot; TIMELINE PLACEMENTS</div>
+      <div class="sechead" data-reveal="fade-up">SOVEREIGN ADVERTISING TIERS &middot; TIMELINE PLACEMENTS</div>
       <div class="tier-grid">
         <div class="tier-card" style="--c:var(--solar)">
           <style>.tier-card:nth-child(1)::before{background:var(--solar)}</style>
@@ -154,7 +154,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     </div>
     <!-- SUBMIT TAB -->
     <div class="tab-panel" id="tab-submit">
-      <div class="sechead">SUBMIT ADVERTISEMENT PLACEMENT</div>
+      <div class="sechead" data-reveal="fade-up">SUBMIT ADVERTISEMENT PLACEMENT</div>
       <div class="adv-form">
         <div class="form-grid">
           <input type="text" id="adv-company" placeholder="COMPANY / BRAND NAME">
@@ -189,7 +189,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     </div>
     <!-- LIVE ADS TAB -->
     <div class="tab-panel" id="tab-live">
-      <div class="sechead">LIVE PLACEMENTS</div>
+      <div class="sechead" data-reveal="fade-up">LIVE PLACEMENTS</div>
       <div id="ads-list"><div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:20px">LOADING LIVE PLACEMENTS...</div></div>
     </div>
     <div data-page-emblem="advertising" style="margin:20px auto 0"></div>

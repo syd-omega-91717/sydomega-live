@@ -44,7 +44,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="pantheons"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">THE TWELVE OLYMPIANS<small>SOVEREIGN PANTHEON &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES EACH <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">THE TWELVE OLYMPIANS<small>SOVEREIGN PANTHEON &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES EACH <span data-canon-lattice="twelve"></span></small></div><canvas id="pnth-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
 <style>
 .pg-hero-band{display:grid;grid-template-columns:1fr auto 1fr;border-bottom:1px solid rgba(201,168,76,.15);background:linear-gradient(135deg,rgba(139,0,0,.07),rgba(10,10,15,.9),rgba(201,168,76,.04));min-height:80px}
 .phb-left{padding:18px clamp(14px,2.5vw,28px);border-right:1px solid rgba(201,168,76,.15)}
@@ -61,7 +61,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="mine-lore">Your sovereign archetype is sealed at genesis by your zodiac sign and governs your progression through the 12-fold celestial lattice.</div>
       </div>
     </div>
-    <div class="sechead"><span>THE TWELVE OLYMPIANS <span data-canon-lattice="twelve"></span></span></div>
+    <div class="sechead" data-reveal="fade-up"><span>THE TWELVE OLYMPIANS <span data-canon-lattice="twelve"></span></span></div>
     <div class="god-grid" id="ptbl"><div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">LOADING PANTHEON...</div></div>
     <div data-page-emblem="pantheons" style="margin:14px auto 0"></div>
     <div class="lf"><span>&#937; SYD OMEGA 91717 &middot; SOVEREIGN PANTHEON</span><span>12 OLYMPIANS &middot; EACH 12&times;12&times;9&times;9&times;9 = 104,976 NODES</span></div>

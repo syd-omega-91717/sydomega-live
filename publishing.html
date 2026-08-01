@@ -108,10 +108,11 @@
   <main class="main">
     <div class="topbar">
       <div class="t">PUBLISHING<small>THE CREATOR'S HALL</small></div>
+      <canvas id="pub-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
-    <p class="intro">Commit your works to the Order's archive  --  manuscripts, treatises, reports. Your <b>first publication advances your Contribution axis</b>; the archive then holds your canon. Public showcase and the creator marketplace are gated for a later phase; the act of authorship is live now.</p>
+    <p class="intro" data-reveal="fade-up">Commit your works to the Order's archive  --  manuscripts, treatises, reports. Your <b>first publication advances your Contribution axis</b>; the archive then holds your canon. Public showcase and the creator marketplace are gated for a later phase; the act of authorship is live now.</p>
 
-    <div class="card">
+    <div class="card" data-reveal="fade-up">
       <div class="h">COMMIT A WORK</div>
       <label for="p-kind">FORM</label>
       <select id="p-kind">
@@ -129,7 +130,7 @@
       <div class="gate-note">Public showcase, licensing, and the creator marketplace are <b>PHASE II  --  gated on legal review</b>. Your work remains private to your archive until those activate.</div>
     </div>
 
-    <div class="card">
+    <div class="card" data-reveal="fade-up">
       <div class="h">YOUR ARCHIVE</div>
       <div style="font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);line-height:1.7;margin-bottom:14px">Every work is <b style="color:var(--gold)">private to your archive and portfolio</b>  --  visible only to you. It is <b style="color:var(--gold)">not public</b>. The Order may approve a work for the future public showcase; until then nothing you commit is shown to anyone else.</div>
       <div id="p-list"></div>

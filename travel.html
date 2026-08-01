@@ -66,16 +66,17 @@ a{color:inherit;text-decoration:none}
   <main class="main">
     <div class="topbar">
       <div class="t" data-tier="travel_log">TRAVEL &amp; EXPERIENCES<small>SOVEREIGN DESTINATIONS &middot; HERITAGE ROUTES &middot; MODULE 16</small></div>
+      <canvas id="trvl-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">Travel is a matrix event. Every sovereign destination unlocks a heritage layer, connects you to the Space element, and advances your Contribution axis. These are not tourist routes &mdash; they are pilgrimage paths for the sovereign mind. Each journey logs to your Heritage Archive and evolves your ninth element score.</p>
 
-    <div class="sechead">SOVEREIGN DESTINATIONS</div>
+    <div class="sechead" data-reveal="fade-up">SOVEREIGN DESTINATIONS</div>
     <div class="dest-grid" id="dest-grid"></div>
 
-    <div class="sechead">EXPERIENCE CATEGORIES</div>
+    <div class="sechead" data-reveal="fade-up">EXPERIENCE CATEGORIES</div>
     <div class="exp-grid" id="exp-grid"></div>
 
-    <div class="sechead" style="margin-top:32px">LOG A SOVEREIGN JOURNEY</div>
+    <div class="sechead" data-reveal="fade-up" style="margin-top:32px">LOG A SOVEREIGN JOURNEY</div>
     <div style="border:1px solid var(--line);background:var(--panel);padding:22px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
         <div><label style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:5px">DESTINATION</label><input id="tr-dest" type="text" placeholder="City, Country, Region..." style="width:100%;font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none"/></div>
@@ -90,7 +91,7 @@ a{color:inherit;text-decoration:none}
       <div id="tr-saved" style="font-family:var(--mono);font-size:11px;color:var(--green);margin-top:10px;display:none">&#x2713; JOURNEY LOGGED &mdash; Added to your Heritage Archive and Space element layer.</div>
     </div>
 
-    <div class="sechead">YOUR SOVEREIGN JOURNEY LOG</div>
+    <div class="sechead" data-reveal="fade-up">YOUR SOVEREIGN JOURNEY LOG</div>
     <div id="journey-feed" style="border:1px solid var(--line);background:var(--panel);padding:16px;font-family:var(--mono);font-size:11px;color:var(--muted)">No journeys logged yet. Every destination you record becomes part of your sovereign heritage.</div>
   </main>
 </div>

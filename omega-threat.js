@@ -31,7 +31,7 @@
     'axis_c':      {label:'Axis C — Contribution',sensitivity:'internal', trust:1.0, source:'task_completions', lineage:['task_completions→profiles']},
     'auth':        {label:'Authority Score',       sensitivity:'internal', trust:1.0, source:'computed',         lineage:['profiles→computed']},
     'display_name':{label:'Display Name',         sensitivity:'pii',      trust:1.0, source:'profiles',         lineage:['user_input→profiles']},
-    'zodiac_sign': {label:'Zodiac Sign',           sensitivity:'personal', trust:1.0, source:'onboarding',       lineage:['onboarding→profiles']},
+    'sign': {label:'Zodiac Sign',           sensitivity:'personal', trust:1.0, source:'onboarding',       lineage:['onboarding→profiles']},
     'element':     {label:'Sovereign Element',     sensitivity:'personal', trust:1.0, source:'onboarding',       lineage:['onboarding→profiles']},
     'subscription_tier':{label:'Tier',            sensitivity:'internal', trust:1.0, source:'payments',          lineage:['payment→profiles']},
     'is_owner':    {label:'Owner Flag',            sensitivity:'restricted',trust:1.0,source:'system',           lineage:['system→profiles']},

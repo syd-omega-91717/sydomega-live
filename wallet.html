@@ -37,19 +37,19 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="wallet"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN WALLET<small>M7 &middot; BLOCKCHAIN WALLET &middot; ASSET VAULT &middot; PRIVATE &middot; YOUR ACCOUNT ONLY &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN WALLET<small>M7 &middot; BLOCKCHAIN WALLET &middot; ASSET VAULT &middot; PRIVATE &middot; YOUR ACCOUNT ONLY &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="wlt-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
     <div class="hero-band">
-      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l">MEMBER NAME</div></div>
+      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l" data-tooltip="Your sovereign display name — set in Identity settings">MEMBER NAME</div></div>
       <div class="hb mid"><canvas id="hb-cv-wallet" width="80" height="80" style="width:40px;height:40px;display:block"></canvas></div>
-      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l">AUTHORITY SCORE</div></div>
+      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l" data-tooltip="AUTH = sqrt(A³+B³+C³) × φ/e · Max 27.8367 at Gate XII APEX">AUTHORITY SCORE</div></div>
     </div>
     <div class="sec">
-      <div class="sechead">YOUR SOVEREIGN WALLET &middot; PRIVATE TO YOUR ACCOUNT</div>
-      <div class="card">
-      <div class="row"><span class="row-k">WALLET STATUS</span><span class="row-v" style="color:var(--solar)">ACTIVATION PENDING</span></div>
-      <div class="row"><span class="row-k">TOKEN AFFINITY</span><span class="row-v" id="wl-token">--</span></div>
-      <div class="row"><span class="row-k">SUBSCRIPTION TIER</span><span class="row-v" id="wl-tier">--</span></div>
-      <div class="row"><span class="row-k">NODES EARNED</span><span class="row-v" id="wl-nodes">--</span></div>
+      <div class="sechead" data-reveal="fade-up" data-tooltip="Private account vault — only you can view this data">YOUR SOVEREIGN WALLET &middot; PRIVATE TO YOUR ACCOUNT</div>
+      <div class="card" data-reveal="fade-up">
+      <div class="row"><span class="row-k" data-tooltip="Your on-chain sovereign wallet — activates after KYC/AML and legal review">WALLET STATUS</span><span class="row-v" style="color:var(--solar)">ACTIVATION PENDING</span></div>
+      <div class="row"><span class="row-k" data-tooltip="Your assigned sovereign token linked to your sign and lattice position">TOKEN AFFINITY</span><span class="row-v" id="wl-token">--</span></div>
+      <div class="row"><span class="row-k" data-tooltip="FREE → GENESIS → APEX — higher tiers unlock exclusive content and rewards">SUBSCRIPTION TIER</span><span class="row-v" id="wl-tier">--</span></div>
+      <div class="row"><span class="row-k" data-tooltip="Lattice nodes earned through activity — tracked and recorded on-chain">NODES EARNED</span><span class="row-v" id="wl-nodes">--</span></div>
     </div>
     <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;font-size:12px;color:var(--muted);line-height:1.8">Token economy activates after legal review (KYC/AML, securities, money-transmission). Wallet service is being architected. Your node count and contributions are being tracked and recorded now.</div>
     </div>

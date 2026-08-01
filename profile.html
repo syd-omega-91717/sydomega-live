@@ -427,12 +427,17 @@ a{color:inherit;text-decoration:none}
             <span class="phm-badge" style="color:var(--cyan);border-color:rgba(0,229,255,.4)"><div class="pb-dot" style="background:var(--cyan)"></div>VERIFIED ARCHITECT</span>
             <span class="phm-badge" style="color:var(--crim);border-color:rgba(139,0,0,.4)"><div class="pb-dot" style="background:var(--crim)"></div>ABSOLUTE SOVEREIGN</span>
           </div>
+          <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <canvas id="ph-ring-auth" data-omega-ring data-ring-size="64" data-ring-color="gold" data-ring-value="0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+            <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:3px">AUTHORITY INDEX</div><div style="font-family:var(--D);font-size:22px;color:var(--gold)" id="ph-auth">--</div></div>
+            <button id="ph-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- LIVE STATS (inspired by Image 1-B: Level, Points, Achievements) -->
-    <div class="stat-grid" id="stat-grid">
+    <div class="stat-grid" id="stat-grid" data-reveal="fade-up">
       <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">AUTHORITY</div><div class="sgi-val" id="sg-auth" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-auth-sub">Loading...</div></div>
       <div class="sg-item" style="--c:var(--cyan)"><div class="sgi-label">MATRIX COORD</div><div class="sgi-val" id="sg-coord" style="color:var(--cyan);font-size:14px">(--,--,--)</div><div class="sgi-sub" id="sg-coord-sub">Loading...</div></div>
       <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">MATERIAL TIER</div><div class="sgi-val" id="sg-tier" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-tier-sub">Loading...</div></div>
@@ -461,19 +466,19 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: OVERVIEW -->
     <div class="tab-panel active" id="tab-overview">
-      <div class="sechead">MEMBERSHIP</div>
-      <div class="pad" id="membership-card" style="border:1px solid rgba(201,168,76,.2);padding:16px;margin-bottom:20px">Loading your membership status...</div>
+      <div class="sechead" data-reveal="fade-up">MEMBERSHIP</div>
+      <div class="pad" data-reveal="fade-up" id="membership-card" style="border:1px solid rgba(201,168,76,.2);padding:16px;margin-bottom:20px">Loading your membership status...</div>
 
-      <div class="sechead">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
-      <div class="pad">
+      <div class="sechead" data-reveal="fade-up">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
+      <div class="pad" data-reveal="fade-up">
         <div class="axis-panel">
           <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
           <div class="axis-row"><span class="ar-id" style="color:#E86A3A">B</span><span class="ar-name">MASTERY</span><div class="ar-wrap"><div class="ar-fill" id="bar-b" style="width:0%;background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.3))"></div></div><span class="ar-val" style="color:#E86A3A">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
           <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
         </div>
       </div>
-      <div class="sechead">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
-      <div class="pad"><div class="ach-grid" id="ach-grid"></div></div>
+      <div class="sechead" data-reveal="fade-up">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
+      <div class="pad" data-reveal="fade-up"><div class="ach-grid" id="ach-grid" data-reveal="fade-up" data-stagger="80"></div></div>
       <!-- Architect Console (hidden from non-owners) -->
       <div class="arch-console" id="arch-console">
         <div class="ac-header">
@@ -489,7 +494,7 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: IDENTITY (Official Documents data) -->
     <div class="tab-panel" id="tab-identity">
-      <div class="sechead">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
+      <div class="sechead" data-reveal="fade-up">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
         <div class="id-field"><div class="idf-label">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
@@ -511,8 +516,8 @@ a{color:inherit;text-decoration:none}
     <!-- TAB: CREDENTIALS -->
     <div class="tab-panel" id="tab-credentials">
       <div id="owner-only-credentials" style="display:none">
-      <div class="sechead">OFFICIAL ENGINEERING CREDENTIALS</div>
-      <div class="pad">
+      <div class="sechead" data-reveal="fade-up">OFFICIAL ENGINEERING CREDENTIALS</div>
+      <div class="pad" data-reveal="fade-up">
         <div class="credential-card">
           <div class="cc-top">
             <div>
@@ -540,8 +545,8 @@ a{color:inherit;text-decoration:none}
         Professional credential cards are set individually. This section is available to the Architect only for the platform's own registration.
       </div>
       <!-- 12 Certs - all issued -->
-      <div class="sechead">YOUR SOVEREIGN CERTIFICATES</div>
-      <div class="pad" id="cert-display"></div>
+      <div class="sechead" data-reveal="fade-up">YOUR SOVEREIGN CERTIFICATES</div>
+      <div class="pad" data-reveal="fade-up" id="cert-display"></div>
     </div>
 
     <!-- TAB: MATRIX -->
@@ -597,7 +602,7 @@ function frame(){ctx.clearRect(0,0,120,120);
 })();
 </script>
     <div style="margin:0 clamp(14px,3vw,36px)">
-      <div class="sechead" style="margin-bottom:1rem">LATTICE POSITION <span data-canon-lattice="twelve"></span></div>
+      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem">LATTICE POSITION <span data-canon-lattice="twelve"></span></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.4rem">
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--gold)" id="lat-track">--</div>
@@ -619,7 +624,7 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div style="height:5px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin-bottom:1.4rem">
         <i id="lat-bar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width .8s ease"></i>
       </div>
-      <div class="sechead" style="margin-bottom:1rem">AXIS MAP &mdash; AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&#981;/e <span data-canon-lattice="twelve"></span></div>
+      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem">AXIS MAP &mdash; AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&#981;/e <span data-canon-lattice="twelve"></span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.4rem">
         <div style="border:1px solid rgba(0,229,255,.2);padding:12px;border-radius:2px">
           <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">A &middot; KNOWLEDGE<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
@@ -646,14 +651,14 @@ function frame(){ctx.clearRect(0,0,120,120);
     </div>
 <!-- TAB: SOCIAL (inspired by Image 4) -->
     <div class="tab-panel" id="tab-social">
-      <div class="sechead">SOCIAL CONNECTIONS -- @SYDOMEGA_AI</div>
+      <div class="sechead" data-reveal="fade-up">SOCIAL CONNECTIONS -- @SYDOMEGA_AI</div>
       <div class="social-panel">
         <a class="social-card" target="_blank" rel="noopener noreferrer" href="https://x.com/SYDOMEGA_AI"><span class="sc-icon" style="color:#1DA1F2">&#x25CF;</span><div class="sc-body"><div class="scb-handle">@SYDOMEGA_AI</div><div class="scb-desc">Twitter / X -- Sovereign broadcast</div></div></a>
         <a class="social-card" target="_blank" rel="noopener noreferrer" href="https://instagram.com/sydomega.ai"><span class="sc-icon" style="color:#E1306C">&#x25C8;</span><div class="sc-body"><div class="scb-handle">@sydomega.ai</div><div class="scb-desc">Instagram -- Cinematic universe</div></div></a>
         <a class="social-card" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/search/results/people/?keywords=Sleiman%20Youssef%20Dagher"><span class="sc-icon" style="color:#0A66C2">&#x25B6;</span><div class="sc-body"><div class="scb-handle">Sleiman Youssef Dagher</div><div class="scb-desc">LinkedIn -- Professional network</div></div></a>
         <a class="social-card" target="_blank" rel="noopener noreferrer" href="https://t.me/SYDOMEGA_AI"><span class="sc-icon" style="color:var(--gold)">&#x25B2;</span><div class="sc-body"><div class="scb-handle">SYDOMEGA_AI</div><div class="scb-desc">Telegram -- Order channel</div></div></a>
       </div>
-      <div class="sechead">SOVEREIGN IDENTIFICATION</div>
+      <div class="sechead" data-reveal="fade-up">SOVEREIGN IDENTIFICATION</div>
       <div style="padding:0 clamp(14px,3vw,36px)">
         <div style="border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
           <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">PLATFORM HANDLE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">@SYDOMEGA_AI</div></div>
@@ -668,7 +673,7 @@ function frame(){ctx.clearRect(0,0,120,120);
     <!-- ACCESS CONTROL TAB  --  OWNER ONLY  --  INVISIBLE TO MEMBERS -->
     <div class="tab-panel" id="tab-access">
 <div id="owner-console-block" style="display:none;margin:0 clamp(14px,3vw,36px) 16px">
-  <div class="sechead" style="color:var(--gold)">
+  <div class="sechead" data-reveal="fade-up" style="color:var(--gold)">
     INVISIBLE ARCHITECT CONSOLE <span data-canon-lattice="twelve"></span>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px">
@@ -1202,7 +1207,7 @@ function frame(){ctx.clearRect(0,0,120,120);
 
     <div class="notice">Your Passport is generated from your <b>real standing</b> and is yours immediately. Identity <b>verification (KYC) is built and ready to activate</b>: when you submit a document below it is <b>stored securely and marked pending</b>  --  <b>no "verified" status is ever granted automatically</b>. Verification becomes real only when the Order connects a licensed verification provider and completes its legal arrangements.</div>
 
-    <div class="sechead">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
+    <div class="sechead" data-reveal="fade-up">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
     <div class="kyc">
       <label>GOVERNMENT ID OR PASSPORT (image or PDF)</label>
       <input id="kyc-file" type="file" accept="image/*,application/pdf" />
@@ -1224,7 +1229,7 @@ function frame(){ctx.clearRect(0,0,120,120);
       [*] READY TO ACTIVATE -- KYC provider integration pending legal counsel sign-off. All intake flows, status tracking, and document management are active. Live verification requires a licensed KYC/AML provider connection.
     </div>
 
-    <div class="sechead">CURRENT VERIFICATION STATUS</div>
+    <div class="sechead" data-reveal="fade-up">CURRENT VERIFICATION STATUS</div>
     <div class="kyc-status-hero">
       <div class="ksh-icon" id="kyc-icon" style="border-color:var(--solar);color:var(--solar)">&#x25C8;</div>
       <div class="ksh-meta">
@@ -1234,23 +1239,23 @@ function frame(){ctx.clearRect(0,0,120,120);
       </div>
     </div>
 
-    <div class="sechead">VERIFICATION STEPS</div>
+    <div class="sechead" data-reveal="fade-up">VERIFICATION STEPS</div>
     <div class="steps-wrap" id="steps-wrap"></div>
 
-    <div class="sechead">DOCUMENT SUBMISSION</div>
+    <div class="sechead" data-reveal="fade-up">DOCUMENT SUBMISSION</div>
     <div class="doc-grid" id="doc-grid"></div>
 
-    <div class="sechead">SECURITY TIERS</div>
+    <div class="sechead" data-reveal="fade-up">SECURITY TIERS</div>
     <div class="sec-tier-grid" id="sec-tier-grid"></div>
 
-    <div class="sechead">UNLOCKS ON COMPLETION</div>
+    <div class="sechead" data-reveal="fade-up">UNLOCKS ON COMPLETION</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="unlocks-grid"></div>
   
 </div>
 
     <!-- CHARACTER -->
     <div class="tab-panel" id="tab-settings">
-      <div class="sechead">PLATFORM SETTINGS</div>
+      <div class="sechead" data-reveal="fade-up">PLATFORM SETTINGS</div>
       <div class="settings-grid" id="settings-grid"></div>
       <div style="margin:20px clamp(14px,3vw,32px)">
         <button class="btn-save" id="btn-settings-save">SAVE SETTINGS</button>
@@ -1283,7 +1288,7 @@ t++;requestAnimationFrame(f);}f();})();
     </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px">Your sovereign character is assigned at genesis by your zodiac sign and cannot be chosen &mdash; only evolved. Every action in the matrix refines your archetype. Your character is inherited by your heirs, gaining their traits and merging into the bloodline. This is how the Order grows across generations.</p>
 
-    <div class="sechead">YOUR SOVEREIGN CHARACTER <span data-canon-lattice="twelve"></span></div>
+    <div class="sechead" data-reveal="fade-up">YOUR SOVEREIGN CHARACTER <span data-canon-lattice="twelve"></span></div>
     <div class="char-hero">
       <canvas id="char-canvas" width="160" height="160" style="width:80px;height:80px"></canvas>
       <div class="char-meta">
@@ -1299,16 +1304,16 @@ t++;requestAnimationFrame(f);}f();})();
       </div>
     </div>
 
-    <div class="sechead">CHARACTER EVOLUTION PATH</div>
+    <div class="sechead" data-reveal="fade-up">CHARACTER EVOLUTION PATH</div>
     <div class="evo-row" id="evo-row"></div>
 
-    <div class="sechead">THE 12 SOVEREIGN ARCHETYPES</div>
+    <div class="sechead" data-reveal="fade-up">THE 12 SOVEREIGN ARCHETYPES</div>
     <div class="arch-grid" id="arch-grid"></div>
 
-    <div class="sechead">CHARACTER GENEALOGY TREE</div>
+    <div class="sechead" data-reveal="fade-up">CHARACTER GENEALOGY TREE</div>
     <canvas id="tree-cv" height="240"></canvas>
 
-    <div class="sechead">CHARACTER INHERITANCE SETTINGS</div>
+    <div class="sechead" data-reveal="fade-up">CHARACTER INHERITANCE SETTINGS</div>
     <div class="save-form">
       <p style="font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:14px">DEFINE HOW YOUR CHARACTER TRAITS PASS TO YOUR HEIRS</p>
       <div class="sf-row">
@@ -1521,8 +1526,8 @@ async function buildAchievements(uid){
     Sagittarius:{agent:'Beacon',token:'EMBER',element:'Fire'},Capricorn:{agent:'Analyst',token:'FERRUM',element:'Metal'},
     Aquarius:{agent:'Tutor',token:'PRIME',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
   };
-  document.document.getElementById('idf-fullname').textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
-    var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||pr.display_name||pr.display_name||'SOVEREIGN').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){
     document.getElementById('idf-sign').textContent=pr.sign.toUpperCase()+' -- '+bound.element.toUpperCase()+' ELEMENT';
@@ -2309,6 +2314,14 @@ if('serviceWorker' in navigator){
             var pr=r.data||{};
             if(!pr.id)return;
             window.__omegaPopulate(pr,sess.user);
+            var _phAuth=pr.is_owner?27.8367:Math.sqrt(Math.pow(Number(pr.axis_a||0.001),3)+Math.pow(Number(pr.axis_b||0.001),3)+Math.pow(Number(pr.axis_c||0.001),3))*1.6180339887/2.7182818285;
+            var _phEl=document.getElementById('ph-auth');if(_phEl)_phEl.textContent=_phAuth.toFixed(4);
+            (function tryPhRing(){var rv=document.getElementById('ph-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryPhRing,350);})();
+            var _scBtn=document.getElementById('ph-share-card-btn');
+            if(_scBtn){_scBtn.addEventListener('click',function(){
+              if(window.OmegaShareCard){window.OmegaShareCard.showModal(pr);}
+              else{if(window.OmegaNotify&&window.OmegaNotify.showToast)window.OmegaNotify.showToast('Share card loading…','info');}
+            });}
           });
       }).catch(function(){});
       clearInterval(iv);

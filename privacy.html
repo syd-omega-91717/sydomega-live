@@ -6,6 +6,7 @@
 <title>&#937; SYD OMEGA 91717 &mdash; Privacy Centre</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <script src="/bg.js" defer></script>
+<script src="/omega-export.js" defer></script>
 <style>
 :root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
@@ -151,15 +152,15 @@ window.updateConsent=async function(type,granted){
 };
 
 window.exportMyData=async function(){
-  showMsg('action-msg',true,'PREPARING DATA EXPORT…');
-  try{
-    var r=await sb.rpc('export_my_data');
-    if(r.data&&r.data.ok){
-      var out=document.getElementById('data-output');
-      if(out){out.style.display='block';out.textContent=JSON.stringify(r.data,null,2);}
-      showMsg('action-msg',true,'DATA EXPORT READY — COPY THE DATA ABOVE (GDPR ART. 20)');
-    }
-  }catch(e){showMsg('action-msg',false,'EXPORT FAILED. CONTACT PLATFORM ADMINISTRATOR.');}
+  showMsg('action-msg',true,'PREPARING DATA EXPORT — COLLECTING ALL DATASETS…');
+  if(window.OmegaExport){
+    await window.OmegaExport.request();
+  }else{
+    /* Fallback: load the export module then retry */
+    var s=document.createElement('script');s.src='/omega-export.js';
+    s.onload=function(){if(window.OmegaExport)window.OmegaExport.request();};
+    document.head.appendChild(s);
+  }
 };
 
 window.viewMyData=async function(){
@@ -167,7 +168,7 @@ window.viewMyData=async function(){
     var r=await sb.from('profiles').select('*').eq('id',_uid).maybeSingle();
     var out=document.getElementById('data-output');
     if(out&&r.data){
-      var safe={display_name:r.data.display_name,subscription_tier:r.data.subscription_tier,axis_a:r.data.axis_a,axis_b:r.data.axis_b,axis_c:r.data.axis_c,element:r.data.element,zodiac_sign:r.data.zodiac_sign,created_at:r.data.created_at,access_approved:r.data.access_approved};
+      var safe={display_name:r.data.display_name,subscription_tier:r.data.subscription_tier,axis_a:r.data.axis_a,axis_b:r.data.axis_b,axis_c:r.data.axis_c,element:r.data.element,sign:r.data.sign,created_at:r.data.created_at,access_approved:r.data.access_approved};
       out.style.display='block';out.textContent=JSON.stringify(safe,null,2);
     }
     showMsg('action-msg',true,'STORED DATA DISPLAYED ABOVE (GDPR ART. 15 — RIGHT OF ACCESS)');

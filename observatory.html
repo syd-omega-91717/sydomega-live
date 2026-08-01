@@ -57,15 +57,16 @@
   <main class="main" role="main" id="main-content">
     <div class="topbar">
       <div class="t">PLATFORM OBSERVATORY<small>GOOGLE SRE MODEL &middot; ERROR BUDGET POLICY &middot; CORE WEB VITALS &middot; INCIDENT POSTMORTEM LOG &middot; NETFLIX CHAOS READY</small></div>
+      <canvas id="obs-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
       <div style="display:flex;align-items:center;gap:10px">
         <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.4s ease-in-out infinite" id="status-dot"></span>
         <span style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green)" id="status-text">ALL SYSTEMS OPERATIONAL</span>
       </div>
     </div>
     <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}</style>
-    <div class="pad">
+    <div class="pad" data-reveal="fade-up">
       <!-- PLATFORM KPIs -->
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="k-uptime">99.9%</div><div class="kpi-l">UPTIME (30d)</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="k-members">--</div><div class="kpi-l">ACTIVE MEMBERS</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="k-events">--</div><div class="kpi-l">EVENTS TODAY</div></div>
@@ -75,7 +76,7 @@
       </div>
 
       <!-- CORE WEB VITALS -->
-      <div class="sechead">CORE WEB VITALS &middot; GOOGLE LIGHTHOUSE &middot; FIELD DATA 75TH PERCENTILE</div>
+      <div class="sechead" data-reveal="fade-up">CORE WEB VITALS &middot; GOOGLE LIGHTHOUSE &middot; FIELD DATA 75TH PERCENTILE</div>
       <div class="cwv-row">
         <div class="cwv" id="cwv-lcp">
           <div class="cwv-val" id="lcp-val" style="color:var(--green)">--</div>
@@ -95,7 +96,7 @@
       </div>
 
       <!-- SLO SURFACES -->
-      <div class="sechead">SLO MONITORING &middot; 99.9% TARGET &middot; ERROR BUDGET POLICY ACTIVE</div>
+      <div class="sechead" data-reveal="fade-up">SLO MONITORING &middot; 99.9% TARGET &middot; ERROR BUDGET POLICY ACTIVE</div>
       <div class="slo-grid" id="slo-grid">
         <div class="slo-card" data-surface="auth_service">
           <div class="slo-name">AUTH SERVICE</div>
@@ -130,7 +131,7 @@
       </div>
 
       <!-- ERROR BUDGET -->
-      <div class="sechead">ERROR BUDGET POLICY &middot; GOOGLE SRE &middot; 4-WEEK ROLLING WINDOW</div>
+      <div class="sechead" data-reveal="fade-up">ERROR BUDGET POLICY &middot; GOOGLE SRE &middot; 4-WEEK ROLLING WINDOW</div>
       <div class="budget-wrap">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">
           <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold)">PLATFORM ERROR BUDGET CONSUMED</div>
@@ -147,7 +148,7 @@
       </div>
 
       <!-- INCIDENT LOG -->
-      <div class="sechead">INCIDENT POSTMORTEM LOG &middot; <span id="inc-count">0</span> TOTAL</div>
+      <div class="sechead" data-reveal="fade-up">INCIDENT POSTMORTEM LOG &middot; <span id="inc-count">0</span> TOTAL</div>
       <div class="inc-table">
         <div class="inc-head">
           <div class="inc-hcell">SEVERITY</div>

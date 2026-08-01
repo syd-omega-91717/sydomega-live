@@ -8,6 +8,22 @@
 <link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
 <style>
 :root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
+.series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:14px}
+.ser-card{border:1px solid var(--line);background:rgba(10,10,15,.6);border-radius:2px;padding:18px 16px;transition:.18s;position:relative;overflow:hidden}
+.ser-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.5)}
+.ser-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc,var(--purple))}
+.ser-tag{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--sc,var(--purple));border:1px solid;border-color:rgba(155,107,240,.2);display:inline-block;padding:2px 7px;border-radius:1px;margin-bottom:7px}
+.ser-title{font-family:var(--D);font-size:clamp(9px,1.3vw,11px);color:var(--ink);margin-bottom:6px;line-height:1.3}
+.ser-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);line-height:1.7}
+.ser-ep{font-family:var(--D);font-size:20px;color:var(--sc,var(--purple));float:right;line-height:1;margin-top:-2px;margin-left:8px}
+.by-row{border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:14px}
+.by-item{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.05);transition:.12s}
+.by-item:hover{background:rgba(201,168,76,.02)}
+.by-item:last-child{border-bottom:none}
+.by-sign{font-size:18px;flex-shrink:0;width:28px;text-align:center}
+.by-name{font-family:var(--D);font-size:10px;color:var(--ink);flex:1}
+.by-meta{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)}
+@media(max-width:700px){.series-grid{grid-template-columns:1fr 1fr}}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
@@ -31,10 +47,105 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="series" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN SERIES<small>M6 Media Universe &middot; 144 SERIES ACROSS 12 TRACKS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><div style="font-family:var(--M);font-size:8px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
-    <div class="pad">
-      <div class="kpi-row"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-      <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-all-series')">ALL SERIES</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-track')">BY TRACK</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-element')">BY ELEMENT</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-olympian')">BY OLYMPIAN</button></div><div id="tp-all-series" class="tab-panel active" style="padding:var(--pad)"><div class="sechead">ALL SERIES</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING ALL SERIES&hellip;</div></div><div id="tp-by-track" class="tab-panel" style="padding:var(--pad)"><div class="sechead">BY TRACK</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING BY TRACK&hellip;</div></div><div id="tp-by-element" class="tab-panel" style="padding:var(--pad)"><div class="sechead">BY ELEMENT</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING BY ELEMENT&hellip;</div></div><div id="tp-by-olympian" class="tab-panel" style="padding:var(--pad)"><div class="sechead">BY OLYMPIAN</div><div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING BY OLYMPIAN&hellip;</div></div>
+    <div class="topbar"><div class="t">SOVEREIGN SERIES<small>M6 Media Universe &middot; 144 SERIES ACROSS 12 TRACKS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="ser-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="purple" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
+    <div class="pad" data-reveal="fade-up">
+      <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
+      <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-all-series')">ALL SERIES</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-track')">BY TRACK</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-element')">BY ELEMENT</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-olympian')">BY OLYMPIAN</button></div><!-- ALL SERIES -->
+<div id="tp-all-series" class="tab-panel active" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">ALL SOVEREIGN SERIES &middot; 12 TRACKS &middot; 144 EPISODES CANONICAL</div>
+  <div class="series-grid" data-reveal="fade-up" data-stagger="70">
+    <div class="ser-card" style="--sc:var(--gold)" data-tooltip="The flagship sovereign series — 12 episodes, one per sign. The foundation of the content universe." data-tooltip-placement="top">
+      <span class="ser-ep">12</span>
+      <div class="ser-tag">FLAGSHIP &middot; S1</div>
+      <div class="ser-title">THE TWELVE HOUSES</div>
+      <div class="ser-meta">TRACK: ALL 12 SIGNS<br>ELEMENT: ALL 9<br>GATE UNLOCK: IV<br>STATUS: IN DEVELOPMENT</div>
+    </div>
+    <div class="ser-card" style="--sc:var(--crim)" data-tooltip="Origin series — the formation of the sovereign order across the first three ages." data-tooltip-placement="top">
+      <span class="ser-ep">9</span>
+      <div class="ser-tag">ORIGIN &middot; S0</div>
+      <div class="ser-title">THE SOVEREIGN GENESIS</div>
+      <div class="ser-meta">TRACK: PRIMAL TRIADS<br>ELEMENT: FIRE · WATER · WIND<br>GATE UNLOCK: VI<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="ser-card" style="--sc:var(--purple)" data-tooltip="Chronicles of the Nine — animated lore series mapping each sovereign element." data-tooltip-placement="top">
+      <span class="ser-ep">9</span>
+      <div class="ser-tag">ANIMATED &middot; S2</div>
+      <div class="ser-title">CHRONICLES OF THE NINE</div>
+      <div class="ser-meta">TRACK: 9 ELEMENTS<br>ELEMENT: ALL 9 SEQUENTIALLY<br>GATE UNLOCK: II<br>STATUS: IN DEVELOPMENT</div>
+    </div>
+    <div class="ser-card" style="--sc:var(--cyan)" data-tooltip="Kings of the Lattice — biographical series profiling the 12 sovereign Olympian gods." data-tooltip-placement="top">
+      <span class="ser-ep">12</span>
+      <div class="ser-tag">BIOGRAPHICAL &middot; S3</div>
+      <div class="ser-title">KINGS OF THE LATTICE</div>
+      <div class="ser-meta">TRACK: 12 OLYMPIAN GODS<br>ELEMENT: BY SIGN<br>GATE UNLOCK: V<br>STATUS: IN DEVELOPMENT</div>
+    </div>
+    <div class="ser-card" style="--sc:var(--green)" data-tooltip="The Element Wars — conflict series between the three sovereign triads." data-tooltip-placement="top">
+      <span class="ser-ep">6</span>
+      <div class="ser-tag">CONFLICT &middot; S4</div>
+      <div class="ser-title">THE ELEMENT WARS</div>
+      <div class="ser-meta">TRACK: TRIAD vs TRIAD<br>ELEMENT: FIRE · VOID<br>GATE UNLOCK: VI<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="ser-card" style="--sc:var(--solar)" data-tooltip="Omega Rising — an apex series following the first member to reach Gate XII." data-tooltip-placement="top">
+      <span class="ser-ep">3</span>
+      <div class="ser-tag">APEX &middot; S5</div>
+      <div class="ser-title">OMEGA RISING</div>
+      <div class="ser-meta">TRACK: GATE XII<br>ELEMENT: THE ALL<br>GATE UNLOCK: XII<br>STATUS: CONCEPT</div>
+    </div>
+  </div>
+</div>
+
+<!-- BY TRACK -->
+<div id="tp-by-track" class="tab-panel" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">BY SOVEREIGN TRACK &middot; 12 SIGN-LINKED SERIES</div>
+  <div class="by-row" data-reveal="fade-up">
+    <div class="by-item"><div class="by-sign">&#9800;</div><div class="by-name">ARIES CHRONICLES</div><div class="by-meta">FIRE &middot; ARES &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9801;</div><div class="by-name">TAURUS CHRONICLES</div><div class="by-meta">METAL &middot; APHRODITE &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9802;</div><div class="by-name">GEMINI CHRONICLES</div><div class="by-meta">WIND &middot; HERMES &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9803;</div><div class="by-name">CANCER CHRONICLES</div><div class="by-meta">WATER &middot; ARTEMIS &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9804;</div><div class="by-name">LEO CHRONICLES</div><div class="by-meta">FIRE &middot; APOLLO &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9805;</div><div class="by-name">VIRGO CHRONICLES</div><div class="by-meta">SAND &middot; ATHENA &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9806;</div><div class="by-name">LIBRA CHRONICLES</div><div class="by-meta">WIND &middot; HERA &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9807;</div><div class="by-name">SCORPIO CHRONICLES</div><div class="by-meta">WATER &middot; DEMETER &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9808;</div><div class="by-name">SAGITTARIUS CHRONICLES</div><div class="by-meta">FIRE &middot; ZEUS &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9809;</div><div class="by-name">CAPRICORN CHRONICLES</div><div class="by-meta">METAL &middot; HESTIA &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9810;</div><div class="by-name">AQUARIUS CHRONICLES</div><div class="by-meta">SOUL &middot; HEPHAESTUS &middot; GATE IV</div></div>
+    <div class="by-item"><div class="by-sign">&#9811;</div><div class="by-name">PISCES CHRONICLES</div><div class="by-meta">WATER &middot; POSEIDON &middot; GATE IV</div></div>
+  </div>
+</div>
+
+<!-- BY ELEMENT -->
+<div id="tp-by-element" class="tab-panel" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">BY ELEMENT &middot; NINE ELEMENTAL SERIES ARCS</div>
+  <div class="by-row" data-reveal="fade-up">
+    <div class="by-item"><div class="by-sign" style="color:#E86A3A">&#9778;</div><div class="by-name">FIRES OF THE SOVEREIGN</div><div class="by-meta">FIRE &middot; ARIES · LEO · SAGITTARIUS</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#34C6E6">&#9776;</div><div class="by-name">WATERS OF THE DEEP</div><div class="by-meta">WATER &middot; CANCER · SCORPIO · PISCES</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#A9C2D8">&#9777;</div><div class="by-name">WIND AND WORD</div><div class="by-meta">WIND &middot; GEMINI · LIBRA</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#C7CDD6">&#9779;</div><div class="by-name">THE METAL AGE</div><div class="by-meta">METAL &middot; TAURUS · CAPRICORN</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#D9B86A">&#9733;</div><div class="by-name">THE SAND AMPLIFIER</div><div class="by-meta">SAND &middot; VIRGO &middot; THE ACCELERANT</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#E8E8FF">&#10036;</div><div class="by-name">SOUL SIGNAL</div><div class="by-meta">SOUL &middot; AQUARIUS &middot; INNER SPIRIT</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#9B6BF0">&#10038;</div><div class="by-name">SPACE BETWEEN</div><div class="by-meta">SPACE &middot; EXPANSE &middot; THE FIELD</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#7B00FF">&#10039;</div><div class="by-name">INTO THE VOID</div><div class="by-meta">VOID &middot; DISSOLUTION &middot; SILENCE</div></div>
+    <div class="by-item"><div class="by-sign" style="color:#C9A84C">&#937;</div><div class="by-name">THE ALL — OMEGA ARC</div><div class="by-meta">THE ALL &middot; APEX &middot; INTEGRATION</div></div>
+  </div>
+</div>
+
+<!-- BY OLYMPIAN -->
+<div id="tp-by-olympian" class="tab-panel" style="padding:var(--pad)">
+  <div class="sechead" data-reveal="fade-up">BY OLYMPIAN GOD &middot; 12 DIVINE SOVEREIGN SERIES</div>
+  <div class="by-row" data-reveal="fade-up">
+    <div class="by-item"><div class="by-sign">&#9800;</div><div class="by-name">ARES: THE WAR SOVEREIGN</div><div class="by-meta">ARIES &middot; FIRE &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9801;</div><div class="by-name">APHRODITE: THE SOVEREIGN BIND</div><div class="by-meta">TAURUS &middot; METAL &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9802;</div><div class="by-name">HERMES: THE MESSENGER LATTICE</div><div class="by-meta">GEMINI &middot; WIND &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9803;</div><div class="by-name">ARTEMIS: THE NIGHT SOVEREIGN</div><div class="by-meta">CANCER &middot; WATER &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9804;</div><div class="by-name">APOLLO: THE GOLDEN LATTICE</div><div class="by-meta">LEO &middot; FIRE &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9805;</div><div class="by-name">ATHENA: THE WISDOM CIPHER</div><div class="by-meta">VIRGO &middot; SAND &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9806;</div><div class="by-name">HERA: THE SOVEREIGN COURT</div><div class="by-meta">LIBRA &middot; WIND &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9807;</div><div class="by-name">DEMETER: THE EARTH COVENANT</div><div class="by-meta">SCORPIO &middot; WATER &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9808;</div><div class="by-name">ZEUS: THUNDER SOVEREIGN</div><div class="by-meta">SAGITTARIUS &middot; FIRE &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9809;</div><div class="by-name">HESTIA: THE ETERNAL FLAME</div><div class="by-meta">CAPRICORN &middot; METAL &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9810;</div><div class="by-name">HEPHAESTUS: THE FORGE</div><div class="by-meta">AQUARIUS &middot; SOUL &middot; GATE IV UNLOCK</div></div>
+    <div class="by-item"><div class="by-sign">&#9811;</div><div class="by-name">POSEIDON: THE DEEP SOVEREIGN</div><div class="by-meta">PISCES &middot; WATER &middot; GATE IV UNLOCK</div></div>
+  </div>
+</div>
     </div>
     <div data-page-emblem="series" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; SOVEREIGN SERIES &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>

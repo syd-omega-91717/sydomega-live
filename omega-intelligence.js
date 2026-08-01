@@ -43,7 +43,7 @@
         var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
         var gi=GATES.findIndex(function(g){return auth<g;});
         return {auth:auth.toFixed(4),axis_a:a.toFixed(3),axis_b:b.toFixed(3),axis_c:c.toFixed(3),
-          element:pr.element,sign:pr.zodiac_sign,agent:pr.agent_name,
+          element:pr.element,sign:pr.sign,agent:pr.agent_name,
           gate_next:gi>=0?gi+1:12,gate_name:gi>=0?GNAMES[gi]:'APEX',
           gate_delta:gi>=0?(GATES[gi]-auth).toFixed(4):'0.0000'};
       }
@@ -101,7 +101,7 @@
     if(profile){
       var a=Number(profile.axis_a||0.001),b=Number(profile.axis_b||0.001),c=Number(profile.axis_c||0.001);
       var auth=profile.is_owner?APEX:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-      ctx='\nMEMBER CONTEXT: auth='+auth.toFixed(4)+' axis_a='+a.toFixed(3)+' axis_b='+b.toFixed(3)+' axis_c='+c.toFixed(3)+' sign='+(profile.zodiac_sign||'?')+' element='+(profile.element||'?')+' is_owner='+(profile.is_owner||false);
+      ctx='\nMEMBER CONTEXT: auth='+auth.toFixed(4)+' axis_a='+a.toFixed(3)+' axis_b='+b.toFixed(3)+' axis_c='+c.toFixed(3)+' sign='+(profile.sign||'?')+' element='+(profile.element||'?')+' is_owner='+(profile.is_owner||false);
     }
 
     var system='You are the Sovereign Intelligence Engine of SYD OMEGA 91717.\n'
@@ -133,11 +133,21 @@
 
   async function callConcierge(system, messages){
     if(!window.__omegaSb) return null;
+    var pr=window.__omegaCurrentProfile||{};
+    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
+    var auth=pr.is_owner?APEX:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    /* Encode multi-turn context into a single message for the concierge endpoint */
+    var lastMsg=messages[messages.length-1];
+    var userMsg=lastMsg&&lastMsg.role==='user'?lastMsg.content:'query';
+    if(messages.length>1){
+      var hist=messages.slice(0,-1).map(function(m){return m.role.toUpperCase()+': '+m.content;}).join('\n');
+      userMsg='[CONTEXT]\n'+hist+'\n\n[QUERY]\n'+userMsg;
+    }
     try{
       var r=await window.__omegaSb.functions.invoke('concierge',{
-        body:{model:'claude-sonnet-4-6',max_tokens:300,system:system,messages:messages}
+        body:{message:userMsg.slice(0,2000),system_override:system,context:{sign:pr.sign||'?',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4),tier:pr.subscription_tier||'free',rank:pr.rank||'--'}}
       });
-      if(r.data&&r.data.content&&r.data.content[0]) return r.data.content[0].text;
+      if(r.data&&r.data.reply) return r.data.reply;
     }catch(e){}
     return null;
   }

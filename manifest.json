@@ -1,7 +1,7 @@
 {
-  "name": "SYD OMEGA 91717 \u2014 Sovereign Platform",
+  "name": "SYD OMEGA 91717 — Sovereign Platform",
   "short_name": "OMEGA 91717",
-  "description": "A sovereign multi-platform digital ecosystem. Authority formula: sqrt(A\u00b3+B\u00b3+C\u00b3)\u00d7\u03c6/e. Apex: 27.8367.",
+  "description": "A sovereign multi-platform digital ecosystem. Authority formula: sqrt(A³+B³+C³)×φ/e. Apex: 27.8367.",
   "start_url": "/dashboard.html",
   "scope": "/",
   "display": "standalone",
@@ -11,23 +11,22 @@
   "lang": "en",
   "icons": [
     {
-      "src": "/icons/omega-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/omega-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
+    },
     {
-      "src": "/screenshots/dashboard.png",
-      "sizes": "1280x720",
-      "type": "image/png"
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "categories": [
@@ -38,23 +37,45 @@
   "shortcuts": [
     {
       "name": "Dashboard",
+      "short_name": "Command",
       "url": "/dashboard.html",
-      "description": "Sovereign command centre"
+      "description": "Sovereign command centre",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Vault",
+      "short_name": "Vault",
       "url": "/vault.html",
-      "description": "Reserve, wallet, NFT, ledger"
+      "description": "Reserve, wallet, NFT, ledger",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Gaming",
+      "name": "Gaming Arena",
+      "short_name": "Gaming",
       "url": "/gaming.html",
-      "description": "Games and exams"
+      "description": "144 games and 108 exams",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Leaderboard",
+      "short_name": "Rank",
       "url": "/leaderboard.html",
-      "description": "Authority ranking"
+      "description": "Authority ranking",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Production Studio",
+      "short_name": "Studio",
+      "url": "/studio.html",
+      "description": "Sovereign media production and creation pipeline",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Intel",
+      "url": "/analytics.html",
+      "description": "Data analytics, authority history, axis radar",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

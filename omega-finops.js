@@ -76,14 +76,14 @@
     var origFn = window.__omegaSb.functions&&window.__omegaSb.functions.invoke.bind(window.__omegaSb.functions);
     if(origFn) window.__omegaSb.functions.invoke = function(fn, opts){
       record('edge_calls', 1);
-      /* Estimate AI tokens from body */
-      if(opts&&opts.body&&opts.body.messages){
-        var approxTokens=JSON.stringify(opts.body.messages).length/4;
+      /* Estimate AI tokens from body (concierge format: {message: string}) */
+      if(opts&&opts.body&&opts.body.message){
+        var approxTokens=String(opts.body.message).length/4;
         record('ai_input_token', Math.round(approxTokens));
       }
       return origFn(fn, opts).then(function(r){
-        if(r&&r.data&&r.data.content){
-          var outTokens=JSON.stringify(r.data.content).length/4;
+        if(r&&r.data&&r.data.reply){
+          var outTokens=r.data.reply.length/4;
           record('ai_output_token', Math.round(outTokens));
         }
         return r;

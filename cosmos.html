@@ -157,6 +157,7 @@ a{color:inherit;text-decoration:none}
   <main class="main">
     <div class="topbar">
       <div class="t">COSMOS HUB<small>AI AGENTS . HOROSCOPE . 9 ELEMENTS . 12 GATES . PANTHEONS <span data-canon-lattice="twelve"></span></small> &middot; 12×12×9×9×9 = 104,976 <span data-canon-lattice="twelve"></span></div>
+      <canvas id="cos-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
     </div>
     <!-- TAB NAVIGATION -->
     <div class="tab-nav" id="tab-nav">
@@ -169,7 +170,7 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: AGENTS -->
     <div class="tab-panel active" id="tab-agents">
-      <div class="sechead">AI COUNCIL CHAMBER -- 12 EXECUTOR AGENTS <span data-canon="lore"></span></div>
+      <div class="sechead" data-reveal="fade-up">AI COUNCIL CHAMBER -- 12 EXECUTOR AGENTS <span data-canon="lore"></span></div>
       <div class="agent-wheel-wrap"><canvas id="agent-wheel" width="520" height="520" style="width:100%;height:100%;max-width:520px"></canvas></div>
       <div class="wheel-hint">SELECT AN AGENT ABOVE OR BELOW</div>
       <div class="agents-grid" id="agents-grid"></div>
@@ -194,7 +195,7 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <!-- DAILY ORACLE -->
-    <div class="sechead" style="margin-top:28px">DAILY ORACLE &mdash; <span id="today-date"></span> <span data-canon="fiction"></span></div>
+    <div class="sechead" data-reveal="fade-up" style="margin-top:28px">DAILY ORACLE &mdash; <span id="today-date"></span> <span data-canon="fiction"></span></div>
     <div class="reading-grid">
       <div class="reading-panel"><div class="rp-label">ENERGY</div><div class="rp-value" id="r-energy" style="color:var(--solar)">--</div><div class="rp-sub">Today&apos;s dominant frequency</div></div>
       <div class="reading-panel"><div class="rp-label">FOCUS AXIS</div><div class="rp-value" id="r-axis" style="color:var(--cyan)">--</div><div class="rp-sub">Primary matrix advancement</div></div>
@@ -210,15 +211,15 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <!-- 12 SIGNS GENESIS MANDALA GRID -->
-    <div class="sechead">THE 12 SOVEREIGN SIGNS &mdash; GENESIS MANDALA <span data-canon="lore"></span></div>
+    <div class="sechead" data-reveal="fade-up">THE 12 SOVEREIGN SIGNS &mdash; GENESIS MANDALA <span data-canon="lore"></span></div>
     <div class="mandala-grid" id="mandala-grid"></div>
 
     <!-- PLANETARY STRIP -->
-    <div class="sechead" style="margin-top:32px">PLANETARY POSITIONS &mdash; SYMBOLIC PLACEMENT <span data-canon="fiction"></span></div>
+    <div class="sechead" data-reveal="fade-up" style="margin-top:32px">PLANETARY POSITIONS &mdash; SYMBOLIC PLACEMENT <span data-canon="fiction"></span></div>
     <div class="planet-strip" id="planet-strip"></div>
 
     <!-- COMPATIBILITY -->
-    <div class="sechead" style="margin-top:32px">SIGN COMPATIBILITY <span data-canon="lore"></span></div>
+    <div class="sechead" data-reveal="fade-up" style="margin-top:32px">SIGN COMPATIBILITY <span data-canon="lore"></span></div>
     <div class="compat-grid" id="compat-grid"></div>
 
   
@@ -226,19 +227,19 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: ELEMENTS -->
     <div class="tab-panel" id="tab-elements">
-      <div class="sechead">THE 9 SOVEREIGN ELEMENTS <span data-canon="lore"></span></div>
+      <div class="sechead" data-reveal="fade-up">THE 9 SOVEREIGN ELEMENTS <span data-canon="lore"></span></div>
       <div class="element-grid" id="element-grid"></div>
     </div>
 
     <!-- TAB: GATES -->
     <div class="tab-panel" id="tab-gates">
-      <div class="sechead">THE 12 GATES OF AUTHORITY <span data-canon="mechanic"></span></div>
+      <div class="sechead" data-reveal="fade-up">THE 12 GATES OF AUTHORITY <span data-canon="mechanic"></span></div>
       <div class="gates-grid" id="gates-grid"></div>
     </div>
 
     <!-- TAB: PANTHEONS -->
     <div class="tab-panel" id="tab-pantheons">
-      <div class="sechead">THE 12 OLYMPIAN GODS <span data-canon="lore"></span></div>
+      <div class="sechead" data-reveal="fade-up">THE 12 OLYMPIAN GODS <span data-canon="lore"></span></div>
       <div class="agents-grid" id="pantheons-grid"></div>
     </div>
   </main>
@@ -577,7 +578,7 @@ async function boot(){
   const pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
   const sign=pr.data?.sign||'Virgo';
   const a=parseFloat(pr.data?.axis_a)||1,b=parseFloat(pr.data?.axis_b)||1,c=parseFloat(pr.data?.axis_c)||1;
-  const auth=Math.sqrt(a*a+b*b+c*c);
+  const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
   window.__memberSign=sign.toUpperCase();
   window.__agentSignMap={SENTINEL:'Aries',MERCHANT:'Taurus',SCOUT:'Gemini',WARDEN:'Cancer',SOVEREIGN:'Leo',AUDITOR:'Virgo',PROXY:'Libra',ORACLE:'Scorpio',BEACON:'Sagittarius',ANALYST:'Capricorn',TUTOR:'Aquarius',HISTORIAN:'Pisces'};
   const SIGN_TO_AGENT={Aries:'SENTINEL',Taurus:'MERCHANT',Gemini:'SCOUT',Cancer:'WARDEN',Leo:'SOVEREIGN',Virgo:'AUDITOR',Libra:'PROXY',Scorpio:'ORACLE',Sagittarius:'BEACON',Capricorn:'ANALYST',Aquarius:'TUTOR',Pisces:'HISTORIAN'};

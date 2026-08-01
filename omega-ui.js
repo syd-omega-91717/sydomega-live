@@ -108,6 +108,8 @@
     payments:     {label:'Payments',         section:'FINANCE',   prev:'wallet',         next:'vault'},
     affirmations: {label:'Affirmations',     section:'IDENTITY',  prev:'journal',        next:'rituals'},
     breath:       {label:'Breathwork',       section:'WELLNESS',  prev:'meditate',       next:'sleep'},
+    water:        {label:'Hydration',        section:'WELLNESS',  prev:'nutrition',      next:'health'},
+    reading:      {label:'Sovereign Reading',section:'MASTERY',   prev:'library',        next:'codex'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

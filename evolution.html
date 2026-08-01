@@ -59,11 +59,12 @@ canvas{display:block;width:100%;height:200px}
   <main class="main" role="main" id="main-content">
     <div class="topbar">
       <div class="t">SOVEREIGN EVOLUTION<small>M12 PROGRESSION ENGINE &middot; AXIS GROWTH &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</small></div>
+      <canvas id="evo-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img"></canvas>
       <div style="font-family:var(--M);font-size:8px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
     <div class="pad">
       <!-- KPIs -->
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="k-gate">--</div><div class="kpi-l">CURRENT GATE</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="k-tasks">--</div><div class="kpi-l">TASKS COMPLETED</div></div>
@@ -73,8 +74,8 @@ canvas{display:block;width:100%;height:200px}
       </div>
 
       <!-- THREE AXES -->
-      <div class="sechead">THREE SOVEREIGN AXES &middot; KNOWLEDGE &middot; MASTERY &middot; CONTRIBUTION</div>
-      <div class="axis-wrap">
+      <div class="sechead" data-reveal="fade-up">THREE SOVEREIGN AXES &middot; KNOWLEDGE &middot; MASTERY &middot; CONTRIBUTION</div>
+      <div class="axis-wrap" data-reveal="fade-up" data-stagger="120">
         <div class="axis-card">
           <div class="axis-val" id="ax-a" style="color:var(--gold)">--</div>
           <div class="axis-label">AXIS A &middot; KNOWLEDGE</div>
@@ -93,18 +94,18 @@ canvas{display:block;width:100%;height:200px}
       </div>
 
       <!-- RADAR CHART -->
-      <div class="sechead">PROGRESSION RADAR &middot; AXIS VISUALISATION</div>
-      <div class="chart-wrap">
+      <div class="sechead" data-reveal="fade-up">PROGRESSION RADAR &middot; AXIS VISUALISATION</div>
+      <div class="chart-wrap" data-reveal="fade-up">
         <canvas id="evo-radar" role="img" aria-label="Axis progression radar chart"></canvas>
       </div>
 
       <!-- GATE PROGRESSION -->
-      <div class="sechead">12 AUTHORITY GATES &middot; <span id="gates-reached">--</span> REACHED</div>
-      <div class="gate-row" id="gate-row"></div>
+      <div class="sechead" data-reveal="fade-up">12 AUTHORITY GATES &middot; <span id="gates-reached">--</span> REACHED</div>
+      <div class="gate-row" id="gate-row" data-reveal="fade-up" data-stagger="60"></div>
 
       <!-- EVOLUTION EVENTS -->
-      <div class="sechead">EVOLUTION EVENTS &middot; RECENT AXIS INCREMENTS</div>
-      <div class="ev-table">
+      <div class="sechead" data-reveal="fade-up">EVOLUTION EVENTS &middot; RECENT AXIS INCREMENTS</div>
+      <div class="ev-table" data-reveal="fade-up">
         <div class="ev-head">
           <div class="ev-hcell">EVENT</div>
           <div class="ev-hcell">AXIS</div>
@@ -137,6 +138,7 @@ function setW(id,pct){var el=document.getElementById(id);if(el)el.style.width=Ma
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
+    (function tryEvoRing(){var rv=document.getElementById('evo-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryEvoRing,350);})();
 
     var a=Number(pr.is_owner?9:pr.axis_a||0.001);
     var b=Number(pr.is_owner?9:pr.axis_b||0.001);

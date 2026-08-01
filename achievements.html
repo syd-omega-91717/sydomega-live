@@ -31,22 +31,22 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="achievements"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">ACHIEVEMENTS<small>M4 &middot; TROPHIES &middot; MEDALS &middot; CERTIFICATES &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">ACHIEVEMENTS<small>M4 &middot; TROPHIES &middot; MEDALS &middot; CERTIFICATES &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="ach-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img"></canvas></div>
     <div class="hero-band">
       <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l">MEMBER</div></div>
       <div class="hb mid"><canvas id="cv-achievements" width="90" height="90" style="width:45px;height:45px;display:block"></canvas></div>
       <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l">AUTHORITY</div></div>
     </div>
     <div class="sec">
-<div class="sechead">SOVEREIGN ACHIEVEMENTS</div>
-<div class="grid">
+<div class="sechead" data-reveal="fade-up">SOVEREIGN ACHIEVEMENTS</div>
+<div class="grid" data-reveal="fade-up" data-stagger="100">
   <div class="card" style="--cc:var(--solar)"><div class="card-n" id="ach-trophies" style="color:var(--solar)">--</div><div class="card-l">TROPHIES EARNED</div><div class="card-sub">Mastery milestones. Awarded when Axis B reaches defined thresholds in the 9-stage progression.</div></div>
   <div class="card"><div class="card-n" id="ach-medals" style="color:var(--cyan)">--</div><div class="card-l">MEDALS EARNED</div><div class="card-sub">Contribution milestones. Awarded when Axis C demonstrates consistent sovereign contribution output.</div></div>
   <div class="card" style="border-top-color:var(--green)"><div class="card-n" id="ach-certs" style="color:var(--green)">--</div><div class="card-l">CERTIFICATES</div><div class="card-sub">Knowledge milestones. Awarded when Axis A reaches verified completion thresholds.</div></div>
   <div class="card"><div class="card-n" id="ach-total" style="color:var(--gold)">--</div><div class="card-l">TOTAL HONORS</div><div class="card-sub">Combined sovereign honors count. 36 maximum (12+12+12) at full apex completion.</div></div>
 </div>
-<div class="sechead" style="margin-top:4px">AUTHORITY MILESTONES</div>
-<div id="milestone-grid" style="display:flex;flex-direction:column;gap:6px"></div>
+<div class="sechead" style="margin-top:4px" data-reveal="fade-up">AUTHORITY MILESTONES</div>
+<div id="milestone-grid" style="display:flex;flex-direction:column;gap:6px" data-reveal="fade-up" data-stagger="60"></div>
     </div>
     <div data-page-emblem="achievements" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; ACHIEVEMENTS</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -68,6 +68,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
+    (function tryAchRing(){var rv=document.getElementById('ach-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryAchRing,350);})();
     var troph=Number(pr.trophies_earned||0),medal=Number(pr.medals_earned||0),cert=Number(pr.certificates_earned||0);
     sid('ach-trophies',troph); sid('ach-medals',medal); sid('ach-certs',cert); sid('ach-total',troph+medal+cert);
     var PHI=1.6180339887,EU=2.7182818285;

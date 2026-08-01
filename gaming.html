@@ -70,10 +70,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="gaming"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">GAMES &amp; EXAMS &middot; SOVEREIGN PROGRESSION<small>12&times;12&times;9&times;9&times;9 = 104,976 NODES &middot; GAMES=AXIS B (MASTERY) &middot; EXAMS=AXIS A (KNOWLEDGE) &middot; A&#179;=B&#179;=C&#179;=729</small></div></div>
+    <div class="topbar"><div class="t">GAMES &amp; EXAMS &middot; SOVEREIGN PROGRESSION<small>12&times;12&times;9&times;9&times;9 = 104,976 NODES &middot; GAMES=AXIS B (MASTERY) &middot; EXAMS=AXIS A (KNOWLEDGE) &middot; A&#179;=B&#179;=C&#179;=729</small></div><canvas id="gm-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img"></canvas></div>
 
     <!-- DUAL IDENTITY HERO -->
-    <div class="split-hero">
+    <div class="split-hero" data-reveal="fade-up">
       <div class="hero-half games">
         <div class="hh-label">&#9670; GAMING UNIVERSE &middot; AXIS B &middot; MASTERY</div>
         <div class="hh-title" style="color:var(--purple)">12 GENRES &times; 12 GAMES = 144</div>
@@ -98,8 +98,8 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- OVERVIEW TAB ALWAYS VISIBLE -->
     <div style="padding:clamp(14px,3vw,36px)">
-      <div class="sechead">AUTHORITY COMPUTATION &middot; sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e = APEX 27.8367</div>
-      <div class="progress-split">
+      <div class="sechead" data-reveal="fade-up">AUTHORITY COMPUTATION &middot; sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e = APEX 27.8367</div>
+      <div class="progress-split" data-reveal="fade-up">
         <div class="prog-block">
           <div class="prog-head" style="color:var(--gold)">KNOWLEDGE AXIS A &middot; EXAM PROGRESS</div>
           <div class="bar-row"><div class="bar-lbl">A&#179; = <span id="disp-a3">--</span></div><div class="bar-track"><div class="bar-fill" id="bar-a3" style="background:var(--gold);width:0%"></div></div><div class="bar-val" id="disp-a" style="color:var(--gold)">--</div></div>
@@ -1203,7 +1203,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
   </div>
 </div></div></div>
 <div class="tab-panel" id="tab-progress_tab">
-  <div class="kpi-row">
+  <div class="kpi-row" data-reveal="fade-up">
     <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="prog-games">--</div><div class="kpi-l">GAMES PLAYED</div></div>
     <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="prog-exams">--</div><div class="kpi-l">EXAMS PASSED</div></div>
     <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="prog-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
@@ -1252,6 +1252,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
+    (function tryGmRing(){var rv=document.getElementById('gm-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryGmRing,350);})();
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001);
     var b=Number(pr.is_owner?9:pr.axis_b||0.001);

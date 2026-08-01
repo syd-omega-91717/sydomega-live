@@ -124,6 +124,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       <div class="t">SOVEREIGN VAULT
         <small>M7 &middot; RESERVE &middot; WALLET &middot; NFT &middot; EARNING LEDGER &middot; ARTICLES &middot; AUDIT LOG &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small>
       </div>
+      <canvas id="vault-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
@@ -143,7 +144,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 1: RESERVE
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel active" id="tab-reserve">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="rsv-aum">&#937; --</div><div class="kpi-l">ABSOLUTE RESERVE (AUM)</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="rsv-dist" style="animation:div-glow 2s ease-in-out infinite">DISTRIBUTING</div><div class="kpi-l">STATUS &middot; 9.17 Hz</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES (12&times;12&times;9&#179;)</div></div>
@@ -503,6 +504,7 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
     window.__omegaUserLoaded=true;
+    (function tryVaultRing(){var rv=document.getElementById('vault-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryVaultRing,350);})();
 
     /* AUTHORITY */
     var PHI=1.6180339887,EU=2.7182818285;

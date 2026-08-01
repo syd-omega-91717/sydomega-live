@@ -1467,6 +1467,9 @@ setTimeout(function(){
   /* PWA install banner + offline network ribbon + native share + badge API */
   if(!document.querySelector('script[data-omega-pwa]')){var _opwa=document.createElement('script');_opwa.src='/omega-pwa.js';_opwa.setAttribute('data-omega-pwa','1');_opwa.defer=true;if(document.body)document.body.appendChild(_opwa);}
 
+  /* Sovereign share-card generator — canvas identity card with download + native share */
+  if(!document.querySelector('script[data-omega-sharecard]')){var _osc=document.createElement('script');_osc.src='/omega-share-card.js';_osc.setAttribute('data-omega-sharecard','1');_osc.defer=true;if(document.body)document.body.appendChild(_osc);}
+
   /* Welcome demo video — must load on dashboard.html, the login landing page */
   if(!document.querySelector('script[data-omega-demo]')){var _odv=document.createElement('script');_odv.src='/omega-demo-video.js';_odv.setAttribute('data-omega-demo','1');_odv.defer=true;if(document.body)document.body.appendChild(_odv);}
 

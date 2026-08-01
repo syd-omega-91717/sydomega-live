@@ -231,6 +231,106 @@
     },
   ]);
 
+  /* Evolution page tour */
+  API.register('evolution', [
+    {
+      target: '.topbar',
+      title: 'PROGRESSION ENGINE',
+      text: 'Your authority ring and AUTH score appear here. AUTH = sqrt(A³+B³+C³)×φ/e. Your axis values grow as you complete tasks across all three domains.',
+      placement: 'bottom'
+    },
+    {
+      target: '.kpi-row',
+      title: 'SOVEREIGN KPIs',
+      text: 'Live authority, current gate, tasks completed, and next-gate delta update in real time after each task. Your element and sign are assigned at onboarding.',
+      placement: 'bottom'
+    },
+    {
+      target: '.axis-wrap',
+      title: 'THREE SOVEREIGN AXES',
+      text: '<b style="color:#00E5FF">Axis A</b> = Knowledge (study &amp; research). <b style="color:#9B6BF0">Axis B</b> = Mastery (gaming &amp; certifications). <b style="color:#3fb27f">Axis C</b> = Contribution (publishing &amp; creation). Each runs 0.001 → 9.000.',
+      placement: 'bottom'
+    },
+    {
+      target: '.gate-row',
+      title: '12 AUTHORITY GATES',
+      text: 'From INITIATE (2.3197) to APEX (27.8367) — 12 thresholds to unlock. Gold = reached, cyan = next. Reaching APEX requires all three axes at 9.000.',
+      placement: 'top'
+    },
+    {
+      target: '.ev-table',
+      title: 'EVOLUTION EVENTS',
+      text: 'Every axis increment is recorded here — the sovereign audit trail of your growth. Each event marks a real task completion and axis contribution.',
+      placement: 'top'
+    },
+  ]);
+
+  /* Gates page tour */
+  API.register('gates', [
+    {
+      target: '.topbar',
+      title: 'THE SOVEREIGN GATE SYSTEM',
+      text: 'GATES is the M12 authority threshold system. Your authority ring shows your current progress toward the 12 stages of sovereign ascension.',
+      placement: 'bottom'
+    },
+    {
+      target: '.kpi-row',
+      title: 'YOUR AUTHORITY STATS',
+      text: 'AUTH, Axis A, Axis B, and Axis C — the four pillars of the authority formula. AUTH = sqrt(A³+B³+C³)×φ/e. Your goal is APEX at 27.8367.',
+      placement: 'bottom'
+    },
+    {
+      target: '.hero',
+      title: 'THE GATES',
+      text: 'The M12 system has 12 gates: INITIATE, ACOLYTE, SCHOLAR, KEEPER, GUARDIAN, ARCHITECT, SOVEREIGN, VANGUARD, HERALD, ORACLE, PRIME, APEX. Each unlocks at a defined authority threshold.',
+      placement: 'bottom'
+    },
+  ]);
+
+  /* Leaderboard page tour */
+  API.register('leaderboard', [
+    {
+      target: '.topbar',
+      title: 'AUTHORITY LEADERBOARD',
+      text: 'Rankings are computed daily at midnight using the PageRank-inspired authority formula. Your ring shows your authority relative to APEX (27.8367).',
+      placement: 'bottom'
+    },
+    {
+      target: '.podium',
+      title: 'SOVEREIGN PODIUM',
+      text: 'The top 3 members by authority score. Gold = Rank 1 (APEX). Authority cannot be purchased — it is earned through verified knowledge, mastery, and contribution.',
+      placement: 'bottom'
+    },
+    {
+      target: '.lb-table',
+      title: 'FULL AUTHORITY RANKING',
+      text: 'Every approved member appears here. Your row is highlighted in gold. Rankings update every 24 hours — no real-time manipulation is possible.',
+      placement: 'top'
+    },
+  ]);
+
+  /* Achievements page tour */
+  API.register('achievements', [
+    {
+      target: '.topbar',
+      title: 'SOVEREIGN ACHIEVEMENTS',
+      text: 'Your authority ring tracks your position from INITIATE to APEX. Achievement honors (Trophies, Medals, Certificates) are awarded as your axes progress.',
+      placement: 'bottom'
+    },
+    {
+      target: '.grid',
+      title: 'YOUR HONORS',
+      text: '<b style="color:#E2C86D">Trophies</b> = Axis B milestones. <b style="color:#00E5FF">Medals</b> = Axis C milestones. <b style="color:#3fb27f">Certificates</b> = Axis A milestones. Maximum 12 of each (36 total) at full APEX.',
+      placement: 'bottom'
+    },
+    {
+      target: '#milestone-grid',
+      title: 'AUTHORITY MILESTONES',
+      text: 'The 12 gates you\'ve reached are highlighted in gold. Each gate represents a verified authority threshold — from INITIATE at 2.3197 to APEX at 27.8367.',
+      placement: 'top'
+    },
+  ]);
+
   /* Production Studio tour */
   API.register('studio', [
     {

@@ -65,10 +65,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
   <main class="main" role="main">
     <div class="topbar">
       <div class="t">SOVEREIGN LEADERBOARD<small>DAILY SNAPSHOT &middot; GOOGLE PAGERANK AUTHORITY MODEL &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</small></div>
+      <canvas id="lb-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img"></canvas>
       <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted)">UPDATED: <span id="lb-date">--</span></div>
     </div>
     <div class="pad">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="lb-total">--</div><div class="kpi-l">RANKED MEMBERS</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="my-rank">--</div><div class="kpi-l">MY GLOBAL RANK</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="my-auth">--</div><div class="kpi-l">MY AUTHORITY</div></div>
@@ -83,15 +84,15 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
       </div>
       <!-- TOP 3 PODIUM -->
-      <div class="sechead">TOP 3 SOVEREIGN MEMBERS &middot; RANKED BY AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
-      <div class="podium" id="podium">
+      <div class="sechead" data-reveal="fade-up">TOP 3 SOVEREIGN MEMBERS &middot; RANKED BY AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
+      <div class="podium" id="podium" data-reveal="fade-up" data-stagger="120">
         <div class="pod pod-silver"><div class="pod-rank">2</div><div class="pod-auth" id="p2-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p2-name">--</div><div class="pod-el" id="p2-el">--</div></div>
         <div class="pod pod-gold"><div class="pod-rank">1</div><div class="pod-auth" id="p1-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p1-name">--</div><div class="pod-el" id="p1-el">--</div></div>
         <div class="pod pod-bronze"><div class="pod-rank">3</div><div class="pod-auth" id="p3-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p3-name">--</div><div class="pod-el" id="p3-el">--</div></div>
       </div>
       <!-- FULL TABLE -->
-      <div class="sechead">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED &middot; DAILY SNAPSHOT</div>
-      <div class="lb-table" role="table" aria-label="Leaderboard">
+      <div class="sechead" data-reveal="fade-up">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED &middot; DAILY SNAPSHOT</div>
+      <div class="lb-table" role="table" aria-label="Leaderboard" data-reveal="fade-up">
         <div class="lb-head" role="row">
           <div class="lb-hcell" role="columnheader">RANK</div>
           <div class="lb-hcell" role="columnheader">MEMBER</div>
@@ -130,6 +131,7 @@ var EL_ICONS={fire:'&#9670;',water:'&#9675;',wind:'&#9671;',metal:'&#9632;',sand
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
+    (function tryLbRing(){var rv=document.getElementById('lb-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryLbRing,350);})();
     var PHI=1.6180339887,EU=2.7182818285;
     var myA=Number(pr.is_owner?9:pr.axis_a||0.001);
     var myB=Number(pr.is_owner?9:pr.axis_b||0.001);

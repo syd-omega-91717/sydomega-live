@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN NEXUS</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<script src="/bg.js" defer></script>
+<style>
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
+.shell{display:flex;min-height:100vh}
+.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.main{flex:1;min-width:0;overflow-x:hidden;display:flex;flex-direction:column}
+.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.t{font-family:var(--D);font-size:.85rem;color:var(--cyan);flex:1}
+.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.pad{padding:clamp(14px,3vw,36px)}
+.card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;margin-bottom:14px}
+.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:auto}
+.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+
+/* Nexus canvas */
+.nexus-wrap{position:relative;flex:1;min-height:400px}
+#nexus-canvas{width:100%;height:100%;display:block;background:#000005}
+
+/* Side panel */
+.nexus-side{position:absolute;top:12px;right:12px;width:200px;z-index:10}
+.nexus-panel{background:rgba(10,10,15,.92);border:1px solid rgba(0,229,255,.2);border-radius:2px;padding:12px;backdrop-filter:blur(12px);margin-bottom:8px}
+.nexus-panel h3{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--cyan);margin-bottom:8px}
+.nexus-legend-item{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-family:var(--M);font-size:7px;color:var(--muted)}
+.nexus-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Activity feed panel */
+.nexus-feed{position:absolute;bottom:12px;left:12px;right:12px;z-index:10}
+.feed-strip{background:rgba(10,10,15,.92);border:1px solid rgba(0,229,255,.12);border-radius:2px;padding:10px;backdrop-filter:blur(12px);max-height:110px;overflow:hidden;position:relative}
+.feed-strip::before{content:'';position:absolute;top:0;left:0;right:0;height:20px;background:linear-gradient(to bottom,rgba(10,10,15,.92),transparent);z-index:1}
+.feed-log{font-family:var(--M);font-size:8px;color:var(--muted);line-height:2;display:flex;flex-direction:column-reverse}
+
+/* Stats overlay — top left */
+.nexus-stats{position:absolute;top:12px;left:12px;z-index:10}
+.nexus-stat-card{background:rgba(10,10,15,.88);border:1px solid rgba(0,229,255,.15);border-radius:2px;padding:10px 14px;backdrop-filter:blur(12px);margin-bottom:6px}
+.nsc-n{font-family:var(--D);font-size:20px;color:var(--cyan);line-height:1}
+.nsc-l{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
+
+/* Pulse ring */
+@keyframes nexus-ring{0%{transform:scale(1);opacity:0.8}100%{transform:scale(2.5);opacity:0}}
+
+/* Node tooltip */
+#node-tip{position:absolute;background:rgba(10,10,15,.95);border:1px solid rgba(0,229,255,.3);border-radius:2px;padding:8px 12px;font-family:var(--M);font-size:8px;color:var(--cyan);pointer-events:none;z-index:20;display:none;backdrop-filter:blur(8px);white-space:nowrap}
+
+/* Loading state */
+.nexus-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000005;z-index:30;font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+</head>
+<body>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="nexus"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="t">SOVEREIGN NEXUS<small>LIVE AUTHORITY NETWORK · REAL-TIME CONNECTIONS · FORCE-DIRECTED ELEMENT GRAPH</small></div>
+    </div>
+
+    <div class="nexus-wrap" id="nexus-wrap">
+      <!-- Loading -->
+      <div class="nexus-loading" id="nexus-loading">INITIALISING NEXUS…</div>
+
+      <!-- Canvas -->
+      <canvas id="nexus-canvas"></canvas>
+
+      <!-- Stats — top left -->
+      <div class="nexus-stats">
+        <div class="nexus-stat-card"><div class="nsc-n" id="nx-count">—</div><div class="nsc-l">SOVEREIGNS</div></div>
+        <div class="nexus-stat-card"><div class="nsc-n" id="nx-edges">—</div><div class="nsc-l">CONNECTIONS</div></div>
+        <div class="nexus-stat-card"><div class="nsc-n" id="nx-density">—</div><div class="nsc-l">DENSITY</div></div>
+      </div>
+
+      <!-- Legend — top right -->
+      <div class="nexus-side">
+        <div class="nexus-panel">
+          <h3>ELEMENTS</h3>
+          <div id="nx-legend"></div>
+        </div>
+        <div class="nexus-panel">
+          <h3>CONTROLS</h3>
+          <div style="font-family:var(--M);font-size:7px;color:var(--muted);line-height:2">
+            ⟲ DRAG TO ROTATE<br>
+            ↕ SCROLL TO ZOOM<br>
+            ☉ HOVER NODE INFO<br>
+            ◈ CLICK TO HIGHLIGHT
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity feed — bottom -->
+      <div class="nexus-feed">
+        <div class="feed-strip">
+          <div class="feed-log" id="nx-feed"></div>
+        </div>
+      </div>
+
+      <!-- Node tooltip -->
+      <div id="node-tip"></div>
+    </div>
+
+    <footer class="lf"><span>Ω SOVEREIGN NEXUS · SYD OMEGA 91717</span><span id="nx-ts"></span></footer>
+  </main>
+</div>
+
+<script type="module">
+const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
+const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+const PHI=1.6180339887,EU=2.7182818285;
+const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+const ELEM_COLORS={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0',Space:'#7C4DFF',Void:'#334466','The All':'#E2C86D'};
+const ELEM_SIGILS={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
+
+function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
+function getGate(auth){let g=0;GATE_THRESH.forEach((t,i)=>{if(auth>=t)g=i;});return {num:g+1,name:GATE_NAMES[g]};}
+
+const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
+const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
+const {data:{session}}=await sb.auth.getSession();
+if(!session){location.href='/account.html';throw 0;}
+const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
+if(pr?.approval_status==='pending'){location.href='/pending.html';throw 0;}
+if(window.__omegaApprove)window.__omegaApprove(true);
+document.getElementById('app').style.display='flex';
+document.getElementById('nx-ts').textContent=new Date().toUTCString().split(' ').slice(1,4).join(' ');
+
+/* Load members */
+const {data:all}=await sb.from('profiles').select('id,display_name,full_name,axis_a,axis_b,axis_c,is_owner,zodiac_sign,approval_status').eq('approval_status','approved');
+const members=all||[];
+
+/* Build legend */
+const legendEl=document.getElementById('nx-legend');
+Object.entries(ELEM_COLORS).forEach(([elem,color])=>{
+  const item=document.createElement('div');item.className='nexus-legend-item';
+  item.innerHTML=`<div class="nexus-legend-dot" style="background:${color}"></div>${ELEM_SIGILS[elem]} ${elem.toUpperCase()}`;
+  legendEl.appendChild(item);
+});
+
+/* Build nodes */
+const nodes=members.map(p=>{
+  const a=Number(p.axis_a||0),b=Number(p.axis_b||0),c=Number(p.axis_c||0);
+  const auth=p.is_owner?27.8367:calcAuth(a,b,c);
+  const elem=SIGN_ELEM[p.zodiac_sign]||'Void';
+  const gate=getGate(auth);
+  return {id:p.id,name:p.display_name||p.full_name||'Sovereign',auth,elem,gate,a,b,c};
+});
+
+/* Build edges: same element = connected */
+const edges=[];
+nodes.forEach((n,i)=>{
+  nodes.forEach((m,j)=>{
+    if(j<=i)return;
+    if(n.elem===m.elem&&Math.random()<0.35){
+      edges.push({src:i,dst:j});
+    } else if(Math.abs(n.gate.num-m.gate.num)<=1&&Math.random()<0.08){
+      edges.push({src:i,dst:j});
+    }
+  });
+});
+
+const density=nodes.length>1?(edges.length/(nodes.length*(nodes.length-1)/2)*100).toFixed(1)+'%':'—';
+document.getElementById('nx-count').textContent=nodes.length;
+document.getElementById('nx-edges').textContent=edges.length;
+document.getElementById('nx-density').textContent=density;
+
+/* ── Canvas force simulation (no D3 — raw canvas) ── */
+const cv=document.getElementById('nexus-canvas');
+const wrap=document.getElementById('nexus-wrap');
+let W=wrap.offsetWidth,H=wrap.offsetHeight||500;
+cv.width=W;cv.height=H;
+const ctx=cv.getContext('2d');
+
+/* Init positions */
+nodes.forEach(n=>{
+  n.x=W/2+(Math.random()-.5)*W*.8;
+  n.y=H/2+(Math.random()-.5)*H*.8;
+  n.vx=0;n.vy=0;
+});
+
+/* Force simulation */
+function tick(){
+  const alpha=0.1;
+  /* Repulsion */
+  nodes.forEach((n,i)=>{
+    nodes.forEach((m,j)=>{
+      if(i===j)return;
+      const dx=n.x-m.x,dy=n.y-m.y;
+      const dist=Math.sqrt(dx*dx+dy*dy)||1;
+      const force=80/(dist*dist);
+      n.vx+=dx/dist*force*alpha;
+      n.vy+=dy/dist*force*alpha;
+    });
+    /* Center gravity */
+    n.vx+=(W/2-n.x)*0.003*alpha;
+    n.vy+=(H/2-n.y)*0.003*alpha;
+  });
+  /* Link attraction */
+  edges.forEach(e=>{
+    const n=nodes[e.src],m=nodes[e.dst];
+    const dx=m.x-n.x,dy=m.y-n.y;
+    const dist=Math.sqrt(dx*dx+dy*dy)||1;
+    const target=80;
+    const force=(dist-target)*0.05*alpha;
+    n.vx+=dx/dist*force;n.vy+=dy/dist*force;
+    m.vx-=dx/dist*force;m.vy-=dy/dist*force;
+  });
+  /* Integrate */
+  nodes.forEach(n=>{
+    n.vx*=0.82;n.vy*=0.82;
+    n.x+=n.vx;n.y+=n.vy;
+    n.x=Math.max(20,Math.min(W-20,n.x));
+    n.y=Math.max(20,Math.min(H-20,n.y));
+  });
+}
+
+/* Zoom/pan state */
+let zoom=1,panX=0,panY=0,dragging=false,dragStart={x:0,y:0};
+cv.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(0.3,Math.min(4,zoom-e.deltaY*0.001));},{passive:false});
+cv.addEventListener('mousedown',e=>{dragging=true;dragStart={x:e.clientX-panX,y:e.clientY-panY};});
+window.addEventListener('mouseup',()=>dragging=false);
+window.addEventListener('mousemove',e=>{
+  if(dragging){panX=e.clientX-dragStart.x;panY=e.clientY-dragStart.y;}
+  /* Tooltip */
+  const rect=cv.getBoundingClientRect();
+  const mx=(e.clientX-rect.left-panX)/zoom,my=(e.clientY-rect.top-panY)/zoom;
+  const hit=nodes.find(n=>Math.hypot(n.x-mx,n.y-my)<radius(n)+4);
+  const tip=document.getElementById('node-tip');
+  if(hit){
+    tip.style.display='block';
+    tip.style.left=(e.clientX-rect.left+12)+'px';
+    tip.style.top=(e.clientY-rect.top-10)+'px';
+    tip.innerHTML=`${hit.name}<br>AUTH ${hit.auth.toFixed(4)} · GATE ${hit.gate.num} · ${hit.gate.name}<br>${ELEM_SIGILS[hit.elem]} ${hit.elem.toUpperCase()}`;
+  } else {
+    tip.style.display='none';
+  }
+});
+
+let selected=-1;
+cv.addEventListener('click',e=>{
+  const rect=cv.getBoundingClientRect();
+  const mx=(e.clientX-rect.left-panX)/zoom,my=(e.clientY-rect.top-panY)/zoom;
+  const idx=nodes.findIndex(n=>Math.hypot(n.x-mx,n.y-my)<radius(n)+4);
+  selected=idx;
+});
+
+function radius(n){return Math.max(4,Math.min(16,n.auth/27.8367*16));}
+
+/* Highlight my node */
+const myId=session.user.id;
+const myIdx=nodes.findIndex(n=>n.id===myId);
+
+let frame=0;
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  ctx.translate(panX,panY);
+  ctx.scale(zoom,zoom);
+
+  /* Edges */
+  edges.forEach(e=>{
+    const n=nodes[e.src],m=nodes[e.dst];
+    const isSel=selected===e.src||selected===e.dst;
+    const grad=ctx.createLinearGradient(n.x,n.y,m.x,m.y);
+    grad.addColorStop(0,ELEM_COLORS[n.elem]+'33');
+    grad.addColorStop(1,ELEM_COLORS[m.elem]+'33');
+    ctx.strokeStyle=isSel?'rgba(0,229,255,.4)':grad;
+    ctx.lineWidth=isSel?1.5:0.5;
+    ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke();
+  });
+
+  /* Nodes */
+  nodes.forEach((n,i)=>{
+    const r=radius(n);
+    const color=ELEM_COLORS[n.elem]||'#888';
+    const isMe=i===myIdx;
+    const isSel=i===selected;
+    /* Glow */
+    if(isMe||isSel){
+      ctx.beginPath();ctx.arc(n.x,n.y,r+6,0,Math.PI*2);
+      ctx.fillStyle=(isMe?'rgba(226,200,109,':'rgba(0,229,255,')+(0.08+0.06*Math.sin(frame*.08))+')';
+      ctx.fill();
+    }
+    /* Body */
+    ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
+    const grd=ctx.createRadialGradient(n.x-r*.3,n.y-r*.3,1,n.x,n.y,r);
+    grd.addColorStop(0,color+'ff');
+    grd.addColorStop(1,color+'55');
+    ctx.fillStyle=grd;ctx.fill();
+    if(isMe){ctx.strokeStyle='#E2C86D';ctx.lineWidth=1.5;ctx.stroke();}
+    /* Pulse ring for me */
+    if(isMe){
+      const pr=r+4+Math.sin(frame*.1)*3;
+      ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
+      ctx.strokeStyle='rgba(226,200,109,'+(0.3-0.2*Math.abs(Math.sin(frame*.1)))+')';
+      ctx.lineWidth=1;ctx.stroke();
+    }
+  });
+
+  ctx.restore();
+  frame++;
+  /* Run physics for first 200 frames then slow down */
+  if(frame<200||(frame%3===0)){tick();}
+  requestAnimationFrame(draw);
+}
+
+/* Hide loading once ready */
+setTimeout(()=>{document.getElementById('nexus-loading').style.display='none';},600);
+draw();
+
+/* ── Resize ── */
+window.addEventListener('resize',()=>{
+  W=wrap.offsetWidth;H=wrap.offsetHeight;
+  cv.width=W;cv.height=H;
+});
+
+/* ── Activity feed ── */
+const EVENTS=[
+  'Sovereign joined the nexus',
+  'Gate threshold reached',
+  'Element alignment detected',
+  'Authority score updated',
+  'New connection forged',
+  'Axis recalibrated',
+  'Sovereign ascension detected',
+];
+function addFeedEntry(){
+  if(!nodes.length)return;
+  const n=nodes[Math.floor(Math.random()*nodes.length)];
+  const evt=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+  const feed=document.getElementById('nx-feed');
+  const line=document.createElement('div');
+  line.style.cssText='color:rgba(0,229,255,.5);animation:fadeIn .4s ease';
+  line.innerHTML=`<span style="color:rgba(138,134,118,.4)">[${new Date().toISOString().slice(11,19)}]</span> <span style="color:${ELEM_COLORS[n.elem]}">${n.name}</span> — ${evt}`;
+  feed.appendChild(line);
+  while(feed.children.length>8)feed.removeChild(feed.lastChild);
+}
+addFeedEntry();
+setInterval(addFeedEntry,4000);
+
+/* Subscribe to live profile changes */
+sb.channel('nexus-profiles').on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},(payload)=>{
+  const p=payload.new;
+  const line=document.createElement('div');
+  line.style.color='rgba(0,229,255,.5)';
+  line.textContent='[LIVE] Profile updated: '+p.id?.slice(0,8)+'…';
+  const feed=document.getElementById('nx-feed');
+  feed.appendChild(line);
+  while(feed.children.length>8)feed.removeChild(feed.lastChild);
+}).subscribe();
+</script>
+</body>
+</html>

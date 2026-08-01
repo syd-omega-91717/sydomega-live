@@ -53,14 +53,19 @@
     elements:     {label:'Elements',        section:'COSMOS',     prev:'horoscope',      next:'houses'},
     map:          {label:'Sovereign Map',   section:'COSMOS',     prev:'elements',       next:'graph'},
     graph:        {label:'Constellation',   section:'COSMOS',     prev:'map',            next:'oracle'},
-    oracle:       {label:'Oracle',          section:'COSMOS',     prev:'graph',          next:'chronicle'},
-    chronicle:    {label:'Chronicle',       section:'HERITAGE',   prev:'graph',          next:'heritage'},
+    oracle:       {label:'Oracle',          section:'COSMOS',     prev:'graph',          next:'realm'},
+    realm:        {label:'Sovereign Realm', section:'COSMOS',     prev:'oracle',         next:'chronicle'},
+    chronicle:    {label:'Chronicle',       section:'HERITAGE',   prev:'realm',          next:'heritage'},
     heritage:     {label:'Heritage',        section:'HERITAGE',   prev:'chronicle',      next:'bloodline'},
     family:       {label:'Family',          section:'HERITAGE',   prev:'heritage',       next:'bloodline'},
     bloodline:    {label:'Bloodline',       section:'HERITAGE',   prev:'family',         next:'character'},
     leaderboard:  {label:'Leaderboard',     section:'RANKING',    prev:'dashboard',      next:'achievements'},
     exam:         {label:'Examination',     section:'MASTERY',    prev:'gaming',         next:'evolution'},
     'design-system':{label:'Design System', section:'ENGINEERING',prev:'ecosystem',      next:'lab'},
+    sigma:        {label:'Sigma Protocol',  section:'INTEL',      prev:'analytics',      next:'nexus'},
+    nexus:        {label:'Sovereign Nexus', section:'INTEL',      prev:'sigma',          next:'cipher'},
+    cipher:       {label:'Sovereign Cipher',section:'INTEL',      prev:'nexus',          next:'rune'},
+    rune:         {label:'Sovereign Sigil', section:'IDENTITY',   prev:'cipher',         next:'profile'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

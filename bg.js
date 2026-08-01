@@ -1499,3 +1499,9 @@ setTimeout(function(){
 
   /* 3-D element realm — Three.js r160 (MIT), mounts canvas[data-realm] */
   if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;if(document.body)document.body.appendChild(_orlm);}
+
+  /* Generative music engine — Tone.js v14 (MIT), [data-music-toggle] to play */
+  if(!document.querySelector('script[data-omega-music]')){var _omus=document.createElement('script');_omus.src='/omega-music.js';_omus.setAttribute('data-omega-music','1');_omus.defer=true;if(document.body)document.body.appendChild(_omus);}
+
+  /* Procedural SVG sigil generator — deterministic from auth/element/name */
+  if(!document.querySelector('script[data-omega-sigil-gen]')){var _osig=document.createElement('script');_osig.src='/omega-sigil-gen.js';_osig.setAttribute('data-omega-sigil-gen','1');_osig.defer=true;if(document.body)document.body.appendChild(_osig);}

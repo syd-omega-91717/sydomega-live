@@ -83,6 +83,7 @@
     wealth:       {label:'Wealth Engine',   section:'FINANCE',    prev:'wallet',         next:'vault'},
     habits:       {label:'Habit Stack',     section:'MASTERY',    prev:'missions',       next:'forge'},
     targets:      {label:'OKR Targets',     section:'STRATEGY',   prev:'roadmap',        next:'ecosystem'},
+    atlas:        {label:'Knowledge Atlas', section:'INTEL',      prev:'codex',          next:'intelligence'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

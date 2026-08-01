@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WEALTH — Sovereign Treasury Calculator · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="omega.css">
+<style>
+.wealth-hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:640px){.wealth-hero{grid-template-columns:1fr}}
+.net-worth-box{grid-column:1/-1;border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;text-align:center}
+.net-worth-box .nw-label{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:8px}
+.net-worth-box .nw-val{font-family:var(--M,'Courier Prime',monospace);font-size:42px;letter-spacing:4px;color:var(--gold,#C9A84C)}
+.net-worth-box .nw-sub{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:8px}
+.asset-class-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px}
+.acc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.acc-title{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.acc-total{font-family:var(--M);font-size:14px;letter-spacing:2px;color:rgba(201,168,76,.8)}
+.asset-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.06);cursor:pointer}
+.asset-row:last-of-type{border-bottom:none}
+.asset-row .ar-name{font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(201,168,76,.7);flex:1}
+.asset-row .ar-val{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(138,134,118,.7)}
+.asset-row .ar-pct{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.4);min-width:36px;text-align:right}
+.asset-input{background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;letter-spacing:1px;width:100px;padding:2px 4px;outline:none;text-align:right}
+.asset-input:focus{border-bottom-color:rgba(201,168,76,.5)}
+.add-asset-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:6px 12px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;margin-top:10px;width:100%}
+.add-asset-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+@media(max-width:640px){.calc-grid{grid-template-columns:1fr}}
+.calc-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:20px}
+.calc-title{font-family:var(--M);font-size:9px;letter-spacing:2.5px;color:var(--gold,#C9A84C);margin-bottom:16px}
+.input-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.input-row label{font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.6)}
+.input-row input{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;padding:6px 10px;border-radius:2px;outline:none;width:120px}
+.input-row input:focus{border-color:rgba(201,168,76,.4)}
+.calc-result{margin-top:14px;padding:12px;background:rgba(201,168,76,.05);border-radius:2px;border:1px solid rgba(201,168,76,.1)}
+.calc-result .cr-label{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-bottom:4px}
+.calc-result .cr-val{font-family:var(--M);font-size:20px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.allocation-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;align-items:start}
+@media(max-width:640px){.allocation-wrap{grid-template-columns:1fr}}
+.alloc-bar{margin-bottom:6px}
+.alloc-bar .ab-row{display:flex;justify-content:space-between;margin-bottom:3px;font-family:var(--M);font-size:8px;letter-spacing:1px}
+.alloc-bar .ab-name{color:rgba(201,168,76,.7)}
+.alloc-bar .ab-pct{color:rgba(138,134,118,.5)}
+.alloc-bar .ab-track{height:6px;background:rgba(201,168,76,.06);border-radius:3px}
+.alloc-bar .ab-fill{height:6px;border-radius:3px;transition:width .3s}
+.milestone-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.milestone{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px;text-align:center;transition:.12s}
+.milestone.reached{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
+.milestone .mv{font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--gold,#C9A84C)}
+.milestone .ml{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-top:3px}
+.milestone .mn{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:6px}
+.snapshot-list{margin-top:12px}
+.snapshot-item{display:grid;grid-template-columns:120px 1fr 100px 80px;gap:12px;padding:10px 12px;border:1px solid rgba(201,168,76,.07);border-radius:2px;margin-bottom:6px;align-items:center;font-family:var(--M);font-size:8.5px}
+.snapshot-item .si-date{color:rgba(138,134,118,.5)}
+.snapshot-item .si-bar{height:4px;background:rgba(201,168,76,.08);border-radius:2px}
+.snapshot-item .si-fill{height:4px;background:rgba(201,168,76,.4);border-radius:2px}
+.snapshot-item .si-val{color:rgba(201,168,76,.8);text-align:right}
+.snapshot-item .si-chg{text-align:right}
+.tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
+.tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-panel{display:none}.tab-panel.act{display:block}
+.save-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 18px;border:1px solid rgba(201,168,76,.3);color:var(--gold,#C9A84C);background:rgba(201,168,76,.06);border-radius:2px;cursor:pointer;transition:.12s}
+.save-btn:hover{background:rgba(201,168,76,.12)}
+</style>
+</head>
+<body>
+<div class="side" id="side"></div>
+<div class="main">
+  <div class="topbar" id="topbar">
+    <div class="tb-left">
+      <span class="tb-title">WEALTH</span>
+      <span class="tb-sub">SOVEREIGN WEALTH ENGINE · SYD OMEGA 91717</span>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="save-btn" onclick="saveSnapshot()">SAVE SNAPSHOT</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Net Worth -->
+    <div class="wealth-hero">
+      <div class="net-worth-box">
+        <div class="nw-label">SOVEREIGN NET WORTH</div>
+        <div class="nw-val" id="net-worth-val">$0</div>
+        <div class="nw-sub" id="net-worth-sub">ASSETS — LIABILITIES = SOVEREIGNTY</div>
+      </div>
+    </div>
+
+    <div class="tab-row">
+      <button class="tab-btn act" onclick="switchTab('assets',this)">ASSETS</button>
+      <button class="tab-btn" onclick="switchTab('calculators',this)">CALCULATORS</button>
+      <button class="tab-btn" onclick="switchTab('allocation',this)">ALLOCATION</button>
+      <button class="tab-btn" onclick="switchTab('milestones',this)">MILESTONES</button>
+      <button class="tab-btn" onclick="switchTab('history',this)">HISTORY</button>
+    </div>
+
+    <!-- ASSETS TAB -->
+    <div class="tab-panel act" id="tab-assets">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+
+        <!-- Cash & Liquid -->
+        <div class="asset-class-card">
+          <div class="acc-header">
+            <span class="acc-title">💵 CASH & LIQUID</span>
+            <span class="acc-total" id="tot-cash">$0</span>
+          </div>
+          <div id="list-cash"></div>
+          <button class="add-asset-btn" onclick="addAsset('cash')">+ ADD ACCOUNT</button>
+        </div>
+
+        <!-- Investments -->
+        <div class="asset-class-card">
+          <div class="acc-header">
+            <span class="acc-title">📈 INVESTMENTS</span>
+            <span class="acc-total" id="tot-invest">$0</span>
+          </div>
+          <div id="list-invest"></div>
+          <button class="add-asset-btn" onclick="addAsset('invest')">+ ADD POSITION</button>
+        </div>
+
+        <!-- Crypto -->
+        <div class="asset-class-card">
+          <div class="acc-header">
+            <span class="acc-title">₿ CRYPTO</span>
+            <span class="acc-total" id="tot-crypto">$0</span>
+          </div>
+          <div id="list-crypto"></div>
+          <button class="add-asset-btn" onclick="addAsset('crypto')">+ ADD HOLDING</button>
+        </div>
+
+        <!-- Real Estate -->
+        <div class="asset-class-card">
+          <div class="acc-header">
+            <span class="acc-title">🏛 REAL ESTATE</span>
+            <span class="acc-total" id="tot-realestate">$0</span>
+          </div>
+          <div id="list-realestate"></div>
+          <button class="add-asset-btn" onclick="addAsset('realestate')">+ ADD PROPERTY</button>
+        </div>
+
+        <!-- Business -->
+        <div class="asset-class-card">
+          <div class="acc-header">
+            <span class="acc-title">⚡ BUSINESS EQUITY</span>
+            <span class="acc-total" id="tot-business">$0</span>
+          </div>
+          <div id="list-business"></div>
+          <button class="add-asset-btn" onclick="addAsset('business')">+ ADD VENTURE</button>
+        </div>
+
+        <!-- Liabilities -->
+        <div class="asset-class-card" style="border-color:rgba(139,0,0,.15)">
+          <div class="acc-header">
+            <span class="acc-title" style="color:rgba(200,60,60,.7)">⚠ LIABILITIES</span>
+            <span class="acc-total" style="color:rgba(200,60,60,.8)" id="tot-liabilities">-$0</span>
+          </div>
+          <div id="list-liabilities"></div>
+          <button class="add-asset-btn" onclick="addAsset('liabilities')">+ ADD LIABILITY</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CALCULATORS TAB -->
+    <div class="tab-panel" id="tab-calculators">
+      <div class="calc-grid">
+
+        <!-- Compound Interest -->
+        <div class="calc-card">
+          <div class="calc-title">COMPOUND INTEREST PROJECTOR</div>
+          <div class="input-row"><label>PRINCIPAL ($)</label><input type="number" id="ci-principal" value="10000" oninput="calcCompound()"></div>
+          <div class="input-row"><label>MONTHLY ADDITION ($)</label><input type="number" id="ci-monthly" value="500" oninput="calcCompound()"></div>
+          <div class="input-row"><label>ANNUAL RETURN (%)</label><input type="number" id="ci-rate" value="10" step="0.1" oninput="calcCompound()"></div>
+          <div class="input-row"><label>YEARS</label><input type="number" id="ci-years" value="10" oninput="calcCompound()"></div>
+          <div class="calc-result">
+            <div class="cr-label">PROJECTED VALUE</div>
+            <div class="cr-val" id="ci-result">—</div>
+            <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:6px" id="ci-detail"></div>
+          </div>
+        </div>
+
+        <!-- FIRE Calculator -->
+        <div class="calc-card">
+          <div class="calc-title">FIRE NUMBER CALCULATOR</div>
+          <div class="input-row"><label>ANNUAL EXPENSES ($)</label><input type="number" id="fire-exp" value="60000" oninput="calcFIRE()"></div>
+          <div class="input-row"><label>SAFE WITHDRAWAL (%)</label><input type="number" id="fire-swr" value="4" step="0.1" oninput="calcFIRE()"></div>
+          <div class="input-row"><label>CURRENT SAVINGS ($)</label><input type="number" id="fire-savings" value="0" oninput="calcFIRE()"></div>
+          <div class="input-row"><label>MONTHLY SAVINGS ($)</label><input type="number" id="fire-monthly" value="2000" oninput="calcFIRE()"></div>
+          <div class="input-row"><label>EXPECTED RETURN (%)</label><input type="number" id="fire-return" value="8" step="0.1" oninput="calcFIRE()"></div>
+          <div class="calc-result">
+            <div class="cr-label">FIRE NUMBER</div>
+            <div class="cr-val" id="fire-number">—</div>
+            <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:6px" id="fire-detail"></div>
+          </div>
+        </div>
+
+        <!-- Debt Payoff -->
+        <div class="calc-card">
+          <div class="calc-title">DEBT ELIMINATION CALCULATOR</div>
+          <div class="input-row"><label>DEBT AMOUNT ($)</label><input type="number" id="debt-amt" value="20000" oninput="calcDebt()"></div>
+          <div class="input-row"><label>INTEREST RATE (%)</label><input type="number" id="debt-rate" value="18" step="0.1" oninput="calcDebt()"></div>
+          <div class="input-row"><label>MONTHLY PAYMENT ($)</label><input type="number" id="debt-pay" value="500" oninput="calcDebt()"></div>
+          <div class="calc-result">
+            <div class="cr-label">PAYOFF TIME</div>
+            <div class="cr-val" id="debt-result">—</div>
+            <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:6px" id="debt-detail"></div>
+          </div>
+        </div>
+
+        <!-- Net Worth Projection -->
+        <div class="calc-card">
+          <div class="calc-title">NET WORTH TRAJECTORY</div>
+          <div class="input-row"><label>CURRENT NET WORTH ($)</label><input type="number" id="nwp-current" value="0" oninput="calcNWP()"></div>
+          <div class="input-row"><label>MONTHLY SAVINGS ($)</label><input type="number" id="nwp-save" value="2000" oninput="calcNWP()"></div>
+          <div class="input-row"><label>RETURN RATE (%)</label><input type="number" id="nwp-rate" value="8" step="0.1" oninput="calcNWP()"></div>
+          <div class="calc-result">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+              <div><div class="cr-label">5 YEARS</div><div class="cr-val" id="nwp-5" style="font-size:13px">—</div></div>
+              <div><div class="cr-label">10 YEARS</div><div class="cr-val" id="nwp-10" style="font-size:13px">—</div></div>
+              <div><div class="cr-label">20 YEARS</div><div class="cr-val" id="nwp-20" style="font-size:13px">—</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ALLOCATION TAB -->
+    <div class="tab-panel" id="tab-allocation">
+      <div class="allocation-wrap">
+        <div>
+          <div class="section-hd">CURRENT ALLOCATION</div>
+          <div id="alloc-bars"></div>
+        </div>
+        <div>
+          <div class="section-hd">TARGET ALLOCATION (SOVEREIGN MODEL)</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8;margin-bottom:16px">
+            Based on Ray Dalio's All Weather + sovereign growth model:
+          </div>
+          <div id="target-alloc"></div>
+        </div>
+      </div>
+      <div id="alloc-canvas-wrap" style="margin-top:16px"><canvas id="alloc-canvas" width="300" height="300"></canvas></div>
+    </div>
+
+    <!-- MILESTONES TAB -->
+    <div class="tab-panel" id="tab-milestones">
+      <div class="section-hd">SOVEREIGN WEALTH MILESTONES</div>
+      <div class="milestone-row" id="milestone-row"></div>
+      <div class="section-hd">NEXT MILESTONE</div>
+      <div id="next-milestone"></div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="tab-panel" id="tab-history">
+      <div class="section-hd">NET WORTH SNAPSHOTS</div>
+      <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.5);margin-bottom:12px">
+        Click "SAVE SNAPSHOT" to record your current net worth. Tracks wealth trajectory over time.
+      </div>
+      <div id="snapshot-list"></div>
+    </div>
+
+  </div>
+
+  <div class="lf">
+    <span>&#937; WEALTH ENGINE · SYD OMEGA 91717</span>
+    <span>SOVEREIGNTY IS MEASURED IN FREEDOM, NOT JUST FORTUNE</span>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+const ASSETS_KEY    = 'omega_wealth_assets';
+const SNAPSHOT_KEY  = 'omega_wealth_snapshots';
+
+const CLASSES = ['cash','invest','crypto','realestate','business','liabilities'];
+const CLASS_NAMES = {cash:'Cash & Liquid',invest:'Investments',crypto:'Crypto',realestate:'Real Estate',business:'Business Equity',liabilities:'Liabilities'};
+const CLASS_COLORS = {cash:'rgba(80,200,120,.6)',invest:'rgba(100,160,220,.6)',crypto:'rgba(240,180,50,.6)',realestate:'rgba(200,130,80,.6)',business:'rgba(160,100,220,.6)',liabilities:'rgba(200,60,60,.6)'};
+
+const TARGET_ALLOC = [
+  {name:'CASH & LIQUID',pct:10,color:CLASS_COLORS.cash},
+  {name:'STOCKS/ETF',pct:30,color:CLASS_COLORS.invest},
+  {name:'BONDS',pct:15,color:'rgba(100,180,160,.6)'},
+  {name:'REAL ESTATE',pct:20,color:CLASS_COLORS.realestate},
+  {name:'CRYPTO',pct:10,color:CLASS_COLORS.crypto},
+  {name:'BUSINESS',pct:10,color:CLASS_COLORS.business},
+  {name:'ALTERNATIVES',pct:5,color:'rgba(180,100,180,.6)'},
+];
+
+const MILESTONES = [
+  {val:1000,label:'FIRST SOVEREIGN',name:'$1K Foundation'},
+  {val:10000,label:'DISCIPLINE',name:'$10K Threshold'},
+  {val:25000,label:'MOMENTUM',name:'$25K Mark'},
+  {val:50000,label:'EMERGENCE',name:'$50K Gateway'},
+  {val:100000,label:'SIX FIGURES',name:'$100K Ascension'},
+  {val:250000,label:'QUARTER MILLION',name:'$250K Sovereignty'},
+  {val:500000,label:'HALF MILLION',name:'$500K Domain'},
+  {val:1000000,label:'SOVEREIGN MILLION',name:'$1M Apex'},
+  {val:5000000,label:'OMEGA LEVEL',name:'$5M Empire'},
+  {val:10000000,label:'DYNASTY',name:'$10M Throne'},
+  {val:100000000,label:'SOVEREIGN LORD',name:'$100M Realm'},
+  {val:1000000000,label:'BILLIONAIRE',name:'$1B Legend'},
+];
+
+function getAssets(){ try{return JSON.parse(localStorage.getItem(ASSETS_KEY)||'{}');}catch{return{};} }
+function getSnapshots(){ try{return JSON.parse(localStorage.getItem(SNAPSHOT_KEY)||'[]');}catch{return[];} }
+
+function fmt(n){
+  if(Math.abs(n)>=1e9) return '$'+(n/1e9).toFixed(2)+'B';
+  if(Math.abs(n)>=1e6) return '$'+(n/1e6).toFixed(2)+'M';
+  if(Math.abs(n)>=1e3) return '$'+(n/1e3).toFixed(0)+'K';
+  return '$'+Math.round(n).toLocaleString();
+}
+
+function calcNetWorth(){
+  const assets=getAssets();
+  let total=0;
+  CLASSES.forEach(cls=>{
+    const items=assets[cls]||[];
+    const sum=items.reduce((a,i)=>a+i.value,0);
+    if(cls==='liabilities') total-=sum;
+    else total+=sum;
+  });
+  return total;
+}
+
+function renderAssets(){
+  const assets=getAssets();
+  const nw=calcNetWorth();
+  document.getElementById('net-worth-val').textContent=fmt(nw);
+  const positive=CLASSES.filter(c=>c!=='liabilities').reduce((a,c)=>a+(assets[c]||[]).reduce((s,i)=>s+i.value,0),0);
+  const negative=(assets['liabilities']||[]).reduce((s,i)=>s+i.value,0);
+  document.getElementById('net-worth-sub').textContent=`ASSETS ${fmt(positive)} — LIABILITIES ${fmt(negative)}`;
+
+  CLASSES.forEach(cls=>{
+    const items=assets[cls]||[];
+    const total=items.reduce((a,i)=>a+i.value,0);
+    document.getElementById('tot-'+cls).textContent=(cls==='liabilities'?'-':'')+fmt(total);
+    document.getElementById('list-'+cls).innerHTML=items.map((item,idx)=>`
+      <div class="asset-row">
+        <span class="ar-name" contenteditable="true" onblur="renameAsset('${cls}',${idx},this.textContent)">${item.name}</span>
+        <input class="asset-input" type="number" value="${item.value}" onchange="updateAsset('${cls}',${idx},this.value)" placeholder="0">
+        <button onclick="removeAsset('${cls}',${idx})" style="background:none;border:none;color:rgba(200,60,60,.5);cursor:pointer;font-size:10px;padding:0 4px">✕</button>
+      </div>`).join('');
+  });
+  renderAllocation();
+  renderMilestones();
+}
+
+function addAsset(cls){
+  const assets=getAssets();
+  if(!assets[cls]) assets[cls]=[];
+  const names={cash:'Checking Account',invest:'Stock Portfolio',crypto:'Bitcoin',realestate:'Property',business:'Business Stake',liabilities:'Mortgage'};
+  assets[cls].push({name:names[cls]||'New Item',value:0});
+  localStorage.setItem(ASSETS_KEY, JSON.stringify(assets));
+  renderAssets();
+}
+function updateAsset(cls,idx,val){
+  const assets=getAssets();
+  assets[cls][idx].value=parseFloat(val)||0;
+  localStorage.setItem(ASSETS_KEY, JSON.stringify(assets));
+  renderAssets();
+}
+function removeAsset(cls,idx){
+  const assets=getAssets();
+  assets[cls].splice(idx,1);
+  localStorage.setItem(ASSETS_KEY, JSON.stringify(assets));
+  renderAssets();
+}
+function renameAsset(cls,idx,name){
+  const assets=getAssets();
+  if(assets[cls]&&assets[cls][idx]) assets[cls][idx].name=name.trim()||'Item';
+  localStorage.setItem(ASSETS_KEY, JSON.stringify(assets));
+}
+window.addAsset=addAsset;window.updateAsset=updateAsset;window.removeAsset=removeAsset;window.renameAsset=renameAsset;
+
+function renderAllocation(){
+  const assets=getAssets();
+  const totals={};
+  let grandTotal=0;
+  CLASSES.filter(c=>c!=='liabilities').forEach(cls=>{
+    const sum=(assets[cls]||[]).reduce((a,i)=>a+i.value,0);
+    totals[cls]=sum;
+    grandTotal+=sum;
+  });
+  const bars=document.getElementById('alloc-bars');
+  if(bars){
+    bars.innerHTML=Object.entries(totals).map(([cls,val])=>{
+      const pct=grandTotal?Math.round(val/grandTotal*100):0;
+      return `<div class="alloc-bar">
+        <div class="ab-row"><span class="ab-name">${CLASS_NAMES[cls]}</span><span class="ab-pct">${pct}%</span></div>
+        <div class="ab-track"><div class="ab-fill" style="width:${pct}%;background:${CLASS_COLORS[cls]}"></div></div>
+      </div>`;
+    }).join('');
+  }
+  const target=document.getElementById('target-alloc');
+  if(target){
+    target.innerHTML=TARGET_ALLOC.map(t=>`<div class="alloc-bar">
+      <div class="ab-row"><span class="ab-name">${t.name}</span><span class="ab-pct">${t.pct}%</span></div>
+      <div class="ab-track"><div class="ab-fill" style="width:${t.pct}%;background:${t.color}"></div></div>
+    </div>`).join('');
+  }
+  // Draw donut
+  const c=document.getElementById('alloc-canvas');
+  if(c&&grandTotal>0){
+    const ctx=c.getContext('2d');
+    ctx.clearRect(0,0,300,300);
+    const cx=150,cy=150,r=120,inner=70;
+    let angle=-Math.PI/2;
+    Object.entries(totals).forEach(([cls,val])=>{
+      if(val<=0) return;
+      const slice=val/grandTotal*Math.PI*2;
+      ctx.beginPath();ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,angle,angle+slice);
+      ctx.closePath();ctx.fillStyle=CLASS_COLORS[cls];ctx.fill();
+      angle+=slice;
+    });
+    ctx.beginPath();ctx.arc(cx,cy,inner,0,Math.PI*2);
+    ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--bg')||'#0a0a08';
+    ctx.fill();
+    ctx.font='10px Courier Prime,monospace';ctx.fillStyle='rgba(201,168,76,.6)';ctx.textAlign='center';
+    ctx.fillText('NET ASSETS',cx,cy-6);ctx.fillText(fmt(grandTotal),cx,cy+10);
+  }
+}
+
+function renderMilestones(){
+  const nw=Math.max(0,calcNetWorth());
+  const row=document.getElementById('milestone-row');
+  if(!row) return;
+  row.innerHTML=MILESTONES.map(m=>`
+    <div class="milestone ${nw>=m.val?'reached':''}">
+      <div class="mv">${nw>=m.val?'✓':''}</div>
+      <div class="ml">${m.label}</div>
+      <div class="mn">${m.name}</div>
+    </div>`).join('');
+  const next=MILESTONES.find(m=>nw<m.val);
+  const nm=document.getElementById('next-milestone');
+  if(nm&&next){
+    const pct=Math.min(100,nw/next.val*100);
+    nm.innerHTML=`<div style="border:1px solid rgba(201,168,76,.15);border-radius:2px;padding:16px">
+      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:6px">
+        <span>${next.name}</span><span>${fmt(nw)} / ${fmt(next.val)}</span>
+      </div>
+      <div style="height:6px;background:rgba(201,168,76,.08);border-radius:3px">
+        <div style="height:6px;width:${pct}%;background:rgba(201,168,76,.5);border-radius:3px;transition:width .3s"></div>
+      </div>
+      <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:8px">
+        ${fmt(next.val-nw)} remaining · ${pct.toFixed(1)}% of the way there
+      </div>
+    </div>`;
+  } else if(nm){
+    nm.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--gold);padding:16px 0">ALL MILESTONES REACHED — SOVEREIGN STATUS ACHIEVED</div>';
+  }
+}
+
+/* ── Calculators ─── */
+function calcCompound(){
+  const P=parseFloat(document.getElementById('ci-principal').value)||0;
+  const M=parseFloat(document.getElementById('ci-monthly').value)||0;
+  const r=parseFloat(document.getElementById('ci-rate').value)/100/12||0;
+  const n=parseInt(document.getElementById('ci-years').value)||10;
+  const months=n*12;
+  const future=P*Math.pow(1+r,months)+M*(Math.pow(1+r,months)-1)/r;
+  const invested=P+M*months;
+  document.getElementById('ci-result').textContent=fmt(future);
+  document.getElementById('ci-detail').textContent=`Invested: ${fmt(invested)} · Interest earned: ${fmt(future-invested)}`;
+}
+function calcFIRE(){
+  const exp=parseFloat(document.getElementById('fire-exp').value)||60000;
+  const swr=parseFloat(document.getElementById('fire-swr').value)/100||0.04;
+  const savings=parseFloat(document.getElementById('fire-savings').value)||0;
+  const monthly=parseFloat(document.getElementById('fire-monthly').value)||2000;
+  const ret=parseFloat(document.getElementById('fire-return').value)/100||0.08;
+  const fireNum=exp/swr;
+  const r=ret/12;
+  // Years to FIRE via formula
+  let years=0;
+  if(savings<fireNum){
+    const n=Math.log((fireNum*r+monthly)/(savings*r+monthly))/Math.log(1+r);
+    years=Math.ceil(n/12);
+  }
+  document.getElementById('fire-number').textContent=fmt(fireNum);
+  document.getElementById('fire-detail').textContent=years>0?`~${years} years to financial independence`:'Already at FIRE number!';
+}
+function calcDebt(){
+  const D=parseFloat(document.getElementById('debt-amt').value)||0;
+  const r=parseFloat(document.getElementById('debt-rate').value)/100/12||0;
+  const P=parseFloat(document.getElementById('debt-pay').value)||0;
+  if(P<=D*r){document.getElementById('debt-result').textContent='∞';document.getElementById('debt-detail').textContent='Payment too low to cover interest';return;}
+  const n=Math.log(P/(P-D*r))/Math.log(1+r);
+  const months=Math.ceil(n);
+  const totalPaid=P*months;
+  document.getElementById('debt-result').textContent=`${Math.floor(months/12)}y ${months%12}m`;
+  document.getElementById('debt-detail').textContent=`Total paid: ${fmt(totalPaid)} · Interest: ${fmt(totalPaid-D)}`;
+}
+function calcNWP(){
+  const cur=parseFloat(document.getElementById('nwp-current').value)||0;
+  const save=parseFloat(document.getElementById('nwp-save').value)||0;
+  const r=parseFloat(document.getElementById('nwp-rate').value)/100/12||0;
+  [5,10,20].forEach(yrs=>{
+    const m=yrs*12;
+    const v=cur*Math.pow(1+r,m)+save*(Math.pow(1+r,m)-1)/r;
+    document.getElementById('nwp-'+yrs).textContent=fmt(v);
+  });
+}
+window.calcCompound=calcCompound;window.calcFIRE=calcFIRE;window.calcDebt=calcDebt;window.calcNWP=calcNWP;
+
+/* ── Snapshots ─── */
+function saveSnapshot(){
+  const snaps=getSnapshots();
+  const nw=calcNetWorth();
+  const prev=snaps[snaps.length-1];
+  snaps.push({date:new Date().toISOString(),nw,change:prev?nw-prev.nw:0});
+  localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snaps.slice(-100)));
+  renderHistory();
+  alert('Snapshot saved: '+fmt(nw));
+}
+window.saveSnapshot=saveSnapshot;
+
+function renderHistory(){
+  const snaps=getSnapshots().slice().reverse();
+  const maxNW=Math.max(...snaps.map(s=>s.nw),1);
+  document.getElementById('snapshot-list').innerHTML=snaps.map(s=>{
+    const dt=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    const chg=s.change;
+    const chgStr=(chg>0?'+':'')+fmt(chg);
+    const color=chg>0?'rgba(80,200,120,.7)':chg<0?'rgba(200,60,60,.7)':'rgba(138,134,118,.5)';
+    return `<div class="snapshot-item">
+      <div class="si-date">${dt}</div>
+      <div><div class="si-bar"><div class="si-fill" style="width:${s.nw/maxNW*100}%"></div></div></div>
+      <div class="si-val">${fmt(s.nw)}</div>
+      <div class="si-chg" style="color:${color}">${chgStr}</div>
+    </div>`;
+  }).join('')||'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);padding:20px 0">NO SNAPSHOTS YET — CLICK SAVE SNAPSHOT TO BEGIN TRACKING</div>';
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='allocation') renderAllocation();
+}
+window.switchTab=switchTab;
+
+// Init
+renderAssets();
+renderHistory();
+calcCompound();calcFIRE();calcDebt();calcNWP();
+</script>
+</body>
+</html>

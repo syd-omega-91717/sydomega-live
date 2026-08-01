@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ATLAS — Knowledge Mind Map · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="omega.css">
+<style>
+.atlas-wrap{position:relative;width:100%;border:1px solid rgba(201,168,76,.12);border-radius:2px;overflow:hidden;background:rgba(201,168,76,.02)}
+#atlas-canvas{display:block;width:100%;cursor:grab;touch-action:none}
+#atlas-canvas:active{cursor:grabbing}
+.atlas-toolbar{display:flex;gap:8px;align-items:center;padding:12px 0;flex-wrap:wrap}
+.at-btn{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:1.5px;padding:7px 14px;border:1px solid rgba(201,168,76,.18);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.at-btn:hover,.at-btn.active{color:var(--gold,#C9A84C);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
+.at-sep{width:1px;height:24px;background:rgba(201,168,76,.1);flex-shrink:0}
+.atlas-stats{display:flex;gap:20px;font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
+.atlas-stats span b{color:rgba(201,168,76,.7)}
+.node-panel{position:absolute;top:12px;right:12px;background:rgba(10,10,8,.92);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:16px;width:220px;font-family:var(--M);display:none}
+.node-panel.open{display:block}
+.np-title{font-size:9px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:10px}
+.np-body{font-size:7.5px;letter-spacing:.8px;color:rgba(138,134,118,.7);line-height:1.7}
+.np-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.np-tag{font-size:7px;letter-spacing:1px;padding:2px 8px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:rgba(138,134,118,.5)}
+.np-actions{display:flex;gap:6px;margin-top:12px}
+.np-btn{flex:1;font-family:var(--M);font-size:7px;letter-spacing:1px;padding:5px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;text-align:center}
+.np-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.minimap{position:absolute;bottom:12px;right:12px;border:1px solid rgba(201,168,76,.12);border-radius:2px;opacity:.8}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--bg,#0a0a08);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;width:min(400px,90vw)}
+.modal-box h3{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,#C9A84C);margin:0 0 20px}
+.fg{margin-bottom:12px}
+.fg label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.7);display:block;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none;box-sizing:border-box}
+.fg input:focus,.fg select:focus{border-color:rgba(201,168,76,.4)}
+.fg select option{background:#0a0a08}
+.ma{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+.btn-s{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
+.btn-c{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer}
+.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.6)}
+.legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.help-text{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.4);line-height:1.7}
+</style>
+</head>
+<body>
+<div class="side" id="side"></div>
+<div class="main">
+  <div class="topbar" id="topbar">
+    <div class="tb-left">
+      <span class="tb-title">ATLAS</span>
+      <span class="tb-sub">SOVEREIGN KNOWLEDGE MAP · SYD OMEGA 91717</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="atlas-toolbar">
+      <button class="at-btn" onclick="openAddModal()">+ NODE</button>
+      <button class="at-btn" id="link-btn" onclick="toggleLinkMode()">LINK NODES</button>
+      <button class="at-btn" onclick="deleteSelected()">DELETE</button>
+      <div class="at-sep"></div>
+      <button class="at-btn" onclick="zoom(1.2)">ZOOM IN</button>
+      <button class="at-btn" onclick="zoom(0.8)">ZOOM OUT</button>
+      <button class="at-btn" onclick="fitAll()">FIT</button>
+      <div class="at-sep"></div>
+      <button class="at-btn" onclick="resetAtlas()">RESET</button>
+      <div class="at-sep"></div>
+      <div class="atlas-stats">
+        <span><b id="stat-nodes">0</b> NODES</span>
+        <span><b id="stat-edges">0</b> LINKS</span>
+        <span><b id="stat-clusters">0</b> CLUSTERS</span>
+      </div>
+    </div>
+
+    <div class="atlas-wrap" style="height:580px">
+      <canvas id="atlas-canvas"></canvas>
+      <div class="node-panel" id="node-panel">
+        <div class="np-title" id="np-title">NODE</div>
+        <div class="np-body" id="np-body"></div>
+        <div class="np-tags" id="np-tags"></div>
+        <div class="np-actions">
+          <button class="np-btn" onclick="editSelected()">EDIT</button>
+          <button class="np-btn" onclick="connectFromPanel()">LINK</button>
+          <button class="np-btn" onclick="deleteSelected()" style="color:rgba(200,60,60,.6)">DELETE</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+      <div>
+        <div class="section-hd">NODE CATEGORIES</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#C9A84C"></div>CONCEPT</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#5BC0EB"></div>PERSON / MENTOR</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9BC53D"></div>SKILL</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#E55934"></div>IDEA</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#A663CC"></div>BOOK / RESOURCE</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#F18F01"></div>GOAL</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#20A39E"></div>PROJECT</div>
+      </div>
+      <div>
+        <div class="section-hd">CONTROLS</div>
+        <div class="help-text">
+          · <strong style="color:rgba(201,168,76,.6)">Drag</strong> — pan the canvas<br>
+          · <strong style="color:rgba(201,168,76,.6)">Click node</strong> — select and inspect<br>
+          · <strong style="color:rgba(201,168,76,.6)">Drag node</strong> — reposition<br>
+          · <strong style="color:rgba(201,168,76,.6)">LINK NODES</strong> — click source then target<br>
+          · <strong style="color:rgba(201,168,76,.6)">Scroll</strong> — zoom in/out<br>
+          · <strong style="color:rgba(201,168,76,.6)">FIT</strong> — center all nodes<br>
+          · Double-click empty space — add node
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lf">
+    <span>&#937; ATLAS · SYD OMEGA 91717</span>
+    <span>KNOWLEDGE IS THE MAP · WISDOM IS THE TERRITORY</span>
+  </div>
+</div>
+
+<!-- Add Node Modal -->
+<div class="modal-bg" id="add-modal">
+  <div class="modal-box">
+    <h3 id="modal-title">ADD NODE</h3>
+    <div class="fg"><label>LABEL</label><input type="text" id="n-label" placeholder="Concept name..." maxlength="50"></div>
+    <div class="fg"><label>DESCRIPTION</label><textarea id="n-desc" placeholder="Details, notes, connection rationale..." style="height:70px;resize:vertical"></textarea></div>
+    <div class="fg"><label>CATEGORY</label>
+      <select id="n-cat">
+        <option value="concept">CONCEPT</option>
+        <option value="person">PERSON / MENTOR</option>
+        <option value="skill">SKILL</option>
+        <option value="idea">IDEA</option>
+        <option value="book">BOOK / RESOURCE</option>
+        <option value="goal">GOAL</option>
+        <option value="project">PROJECT</option>
+      </select>
+    </div>
+    <div class="fg"><label>TAGS (COMMA-SEPARATED)</label><input type="text" id="n-tags" placeholder="strategy, finance, mindset..."></div>
+    <div class="ma">
+      <button class="btn-c" onclick="closeAddModal()">CANCEL</button>
+      <button class="btn-s" id="modal-save-btn" onclick="saveNode()">ADD NODE</button>
+    </div>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+const ATLAS_KEY = 'omega_atlas_v2';
+const CAT_COLOR = {concept:'#C9A84C',person:'#5BC0EB',skill:'#9BC53D',idea:'#E55934',book:'#A663CC',goal:'#F18F01',project:'#20A39E'};
+const CAT_RADIUS = {concept:28,person:26,skill:24,idea:24,book:22,goal:26,project:26};
+
+/* ── State ── */
+let nodes=[],edges=[],selected=null,hovered=null;
+let linkMode=false,linkSource=null;
+let dragNode=null,dragOffX=0,dragOffY=0;
+let panX=0,panY=0,panStart=null,scale=1;
+let editingId=null,pendingPos=null;
+const canvas=document.getElementById('atlas-canvas');
+const ctx=canvas.getContext('2d');
+
+/* ── Persistence ── */
+function save(){localStorage.setItem(ATLAS_KEY,JSON.stringify({nodes,edges,panX,panY,scale}));}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(ATLAS_KEY)||'null');
+    if(d){nodes=d.nodes||[];edges=d.edges||[];panX=d.panX||0;panY=d.panY||0;scale=d.scale||1;}
+    else seedDefault();
+  }catch{seedDefault();}
+}
+function seedDefault(){
+  const cx=400,cy=300;
+  nodes=[
+    {id:'n1',label:'Sovereign Vision',desc:'The sovereign endgame — total autonomy of time, capital, and impact.',cat:'concept',tags:['sovereignty','vision'],x:cx,y:cy,vx:0,vy:0},
+    {id:'n2',label:'Deep Work',desc:'Cal Newport: focused, distraction-free cognitive work. The foundation of mastery.',cat:'skill',tags:['focus','mastery'],x:cx+180,y:cy-100,vx:0,vy:0},
+    {id:'n3',label:'Compound Effect',desc:'Small daily improvements compound into extraordinary long-term results.',cat:'concept',tags:['habits','growth'],x:cx-180,y:cy-100,vx:0,vy:0},
+    {id:'n4',label:'First Principles',desc:'Elon Musk method: break problems down to fundamental truths and reason up.',cat:'idea',tags:['thinking','strategy'],x:cx+180,y:cy+120,vx:0,vy:0},
+    {id:'n5',label:'Stoic Philosophy',desc:'Marcus Aurelius, Epictetus, Seneca. Control what you can; accept what you cannot.',cat:'book',tags:['philosophy','mindset'],x:cx-180,y:cy+120,vx:0,vy:0},
+    {id:'n6',label:'Atomic Habits',desc:'James Clear: tiny 1% improvements, cue-routine-reward loops, identity-based change.',cat:'book',tags:['habits','systems'],x:cx,y:cy-200,vx:0,vy:0},
+    {id:'n7',label:'Financial Sovereignty',desc:'Building assets that produce income without requiring your time.',cat:'goal',tags:['wealth','freedom'],x:cx+300,y:cy,vx:0,vy:0},
+    {id:'n8',label:'Leverage',desc:'Naval Ravikant: code, media, capital, and people as force multipliers.',cat:'concept',tags:['wealth','strategy'],x:cx-300,y:cy,vx:0,vy:0},
+  ];
+  edges=[
+    {id:'e1',source:'n1',target:'n2'},{id:'e2',source:'n1',target:'n3'},
+    {id:'e3',source:'n1',target:'n7'},{id:'e4',source:'n3',target:'n6'},
+    {id:'e5',source:'n2',target:'n4'},{id:'e6',source:'n5',target:'n1'},
+    {id:'e7',source:'n8',target:'n7'},{id:'e8',source:'n1',target:'n8'},
+  ];
+  save();
+}
+
+/* ── Canvas sizing ── */
+function resize(){
+  const wrap=canvas.parentElement;
+  canvas.width=wrap.clientWidth;
+  canvas.height=wrap.clientHeight;
+  draw();
+}
+window.addEventListener('resize',resize);
+
+/* ── Coordinate transforms ── */
+function worldToScreen(x,y){return {x:(x+panX)*scale+canvas.width/2,y:(y+panY)*scale+canvas.height/2};}
+function screenToWorld(sx,sy){return {x:(sx-canvas.width/2)/scale-panX,y:(sy-canvas.height/2)/scale-panY};}
+
+/* ── Force simulation ── */
+const K_SPRING=0.04, L_REST=150, K_REPEL=4000, DAMP=0.85;
+function simulate(){
+  nodes.forEach(n=>{n.vx=n.vx||0;n.vy=n.vy||0;});
+  // Repulsion
+  for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+    const dx=nodes[j].x-nodes[i].x,dy=nodes[j].y-nodes[i].y;
+    const dist=Math.sqrt(dx*dx+dy*dy)||1;
+    const f=K_REPEL/(dist*dist);
+    nodes[i].vx-=f*dx/dist;nodes[i].vy-=f*dy/dist;
+    nodes[j].vx+=f*dx/dist;nodes[j].vy+=f*dy/dist;
+  }
+  // Springs
+  edges.forEach(e=>{
+    const s=nodes.find(n=>n.id===e.source),t=nodes.find(n=>n.id===e.target);
+    if(!s||!t) return;
+    const dx=t.x-s.x,dy=t.y-s.y,dist=Math.sqrt(dx*dx+dy*dy)||1;
+    const f=K_SPRING*(dist-L_REST);
+    s.vx+=f*dx/dist;s.vy+=f*dy/dist;
+    t.vx-=f*dx/dist;t.vy-=f*dy/dist;
+  });
+  // Center gravity
+  nodes.forEach(n=>{n.vx-=n.x*0.002;n.vy-=n.y*0.002;});
+  // Integrate
+  nodes.forEach(n=>{
+    if(n===dragNode) return;
+    n.vx*=DAMP;n.vy*=DAMP;
+    n.x+=n.vx;n.y+=n.vy;
+  });
+}
+
+/* ── Drawing ── */
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Grid
+  ctx.save();
+  ctx.strokeStyle='rgba(201,168,76,.04)';ctx.lineWidth=1;
+  const gSize=60*scale;
+  const offX=(panX*scale+canvas.width/2)%gSize;
+  const offY=(panY*scale+canvas.height/2)%gSize;
+  for(let x=offX;x<canvas.width;x+=gSize){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
+  for(let y=offY;y<canvas.height;y+=gSize){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+  ctx.restore();
+
+  // Edges
+  edges.forEach(e=>{
+    const s=nodes.find(n=>n.id===e.source),t=nodes.find(n=>n.id===e.target);
+    if(!s||!t) return;
+    const sp=worldToScreen(s.x,s.y),tp=worldToScreen(t.x,t.y);
+    ctx.beginPath();ctx.moveTo(sp.x,sp.y);ctx.lineTo(tp.x,tp.y);
+    ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;ctx.stroke();
+    // Arrow
+    const angle=Math.atan2(tp.y-sp.y,tp.x-sp.x);
+    const tr=((CAT_RADIUS[t.cat]||24)+2)*scale;
+    const ax=tp.x-Math.cos(angle)*tr,ay=tp.y-Math.sin(angle)*tr;
+    ctx.beginPath();ctx.moveTo(ax,ay);
+    ctx.lineTo(ax-8*scale*Math.cos(angle-0.4),ay-8*scale*Math.sin(angle-0.4));
+    ctx.lineTo(ax-8*scale*Math.cos(angle+0.4),ay-8*scale*Math.sin(angle+0.4));
+    ctx.closePath();ctx.fillStyle='rgba(201,168,76,.2)';ctx.fill();
+  });
+
+  // Link mode source indicator
+  if(linkMode&&linkSource){
+    const sp=worldToScreen(linkSource.x,linkSource.y);
+    ctx.beginPath();ctx.arc(sp.x,sp.y,(CAT_RADIUS[linkSource.cat]||24)*scale+4,0,Math.PI*2);
+    ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Nodes
+  nodes.forEach(n=>{
+    const p=worldToScreen(n.x,n.y);
+    const r=(CAT_RADIUS[n.cat]||24)*scale;
+    const color=CAT_COLOR[n.cat]||'#C9A84C';
+    const isSel=n===selected,isHov=n===hovered;
+    // Glow
+    if(isSel||isHov){
+      ctx.beginPath();ctx.arc(p.x,p.y,r+6,0,Math.PI*2);
+      const grd=ctx.createRadialGradient(p.x,p.y,r,p.x,p.y,r+10);
+      grd.addColorStop(0,color.replace(')',',0.3)').replace('rgb','rgba'));
+      grd.addColorStop(1,'transparent');
+      ctx.fillStyle=grd;ctx.fill();
+    }
+    // Circle
+    ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);
+    ctx.fillStyle=isSel?color+'44':`${color}22`;ctx.fill();
+    ctx.strokeStyle=isSel?color:isHov?color+'aa':color+'55';
+    ctx.lineWidth=isSel?2:1;ctx.stroke();
+    // Label
+    const fontSize=Math.max(8,Math.min(11,10*scale));
+    ctx.font=`${fontSize}px 'Courier Prime',monospace`;
+    ctx.fillStyle=isSel?color:'rgba(201,168,76,.8)';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    // Word wrap
+    const words=n.label.split(' ');
+    if(words.length===1){ctx.fillText(n.label,p.x,p.y);}
+    else{
+      const mid=Math.ceil(words.length/2);
+      ctx.fillText(words.slice(0,mid).join(' '),p.x,p.y-fontSize*0.6);
+      ctx.fillText(words.slice(mid).join(' '),p.x,p.y+fontSize*0.6);
+    }
+  });
+  updateStats();
+}
+
+function updateStats(){
+  document.getElementById('stat-nodes').textContent=nodes.length;
+  document.getElementById('stat-edges').textContent=edges.length;
+  // Cluster = connected components
+  const visited=new Set();let clusters=0;
+  function dfs(id){visited.add(id);edges.filter(e=>e.source===id||e.target===id).forEach(e=>{const other=e.source===id?e.target:e.source;if(!visited.has(other))dfs(other);});}
+  nodes.forEach(n=>{if(!visited.has(n.id)){clusters++;dfs(n.id);}});
+  document.getElementById('stat-clusters').textContent=clusters;
+}
+
+/* ── Animation loop ── */
+let animating=true;
+function loop(){if(animating){simulate();draw();}requestAnimationFrame(loop);}
+
+/* ── Interaction ── */
+function getNodeAt(sx,sy){
+  const w=screenToWorld(sx,sy);
+  return nodes.find(n=>{const dx=n.x-w.x,dy=n.y-w.y,r=(CAT_RADIUS[n.cat]||24)/scale;return dx*dx+dy*dy<r*r;});
+}
+
+canvas.addEventListener('mousedown',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+  const node=getNodeAt(sx,sy);
+  if(node){
+    if(linkMode){
+      if(!linkSource){linkSource=node;}
+      else if(linkSource!==node){
+        const exists=edges.find(ed=>(ed.source===linkSource.id&&ed.target===node.id)||(ed.source===node.id&&ed.target===linkSource.id));
+        if(!exists){edges.push({id:'e'+Date.now(),source:linkSource.id,target:node.id});save();}
+        linkSource=null;toggleLinkMode();
+      }
+      return;
+    }
+    selected=node;dragNode=node;
+    const w=screenToWorld(sx,sy);
+    dragOffX=node.x-w.x;dragOffY=node.y-w.y;
+    showPanel(node);
+  } else {
+    if(linkMode) return;
+    selected=null;hidePanel();
+    panStart={sx,sy,px:panX,py:panY};
+  }
+});
+
+canvas.addEventListener('mousemove',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+  if(dragNode){
+    const w=screenToWorld(sx,sy);
+    dragNode.x=w.x+dragOffX;dragNode.y=w.y+dragOffY;
+    dragNode.vx=0;dragNode.vy=0;
+  } else if(panStart&&!linkMode){
+    panX=panStart.px+(sx-panStart.sx)/scale;
+    panY=panStart.py+(sy-panStart.sy)/scale;
+  }
+  hovered=getNodeAt(sx,sy);
+  canvas.style.cursor=hovered?'pointer':dragNode||panStart?'grabbing':'grab';
+});
+
+canvas.addEventListener('mouseup',e=>{
+  if(dragNode){save();dragNode=null;}
+  panStart=null;
+});
+
+canvas.addEventListener('dblclick',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const sx=e.clientX-rect.left,sy=e.clientY-rect.top;
+  const node=getNodeAt(sx,sy);
+  if(!node){
+    const w=screenToWorld(sx,sy);
+    pendingPos={x:w.x,y:w.y};
+    openAddModal();
+  }
+});
+
+canvas.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const factor=e.deltaY<0?1.1:0.9;
+  scale=Math.min(3,Math.max(0.2,scale*factor));
+},{ passive:false });
+
+/* ── Controls ── */
+function zoom(f){scale=Math.min(3,Math.max(0.2,scale*f));}
+function fitAll(){
+  if(!nodes.length) return;
+  const xs=nodes.map(n=>n.x),ys=nodes.map(n=>n.y);
+  const cx=(Math.min(...xs)+Math.max(...xs))/2;
+  const cy=(Math.min(...ys)+Math.max(...ys))/2;
+  const rangeX=Math.max(...xs)-Math.min(...xs)+100;
+  const rangeY=Math.max(...ys)-Math.min(...ys)+100;
+  panX=-cx;panY=-cy;
+  scale=Math.min(2,Math.min(canvas.width/rangeX,canvas.height/rangeY)*0.9);
+}
+window.zoom=zoom;window.fitAll=fitAll;
+
+function toggleLinkMode(){
+  linkMode=!linkMode;linkSource=null;
+  document.getElementById('link-btn').classList.toggle('active',linkMode);
+  document.getElementById('link-btn').textContent=linkMode?'CANCEL LINK':'LINK NODES';
+}
+window.toggleLinkMode=toggleLinkMode;
+
+function deleteSelected(){
+  if(!selected) return;
+  nodes=nodes.filter(n=>n!==selected);
+  edges=edges.filter(e=>e.source!==selected.id&&e.target!==selected.id);
+  selected=null;hidePanel();save();
+}
+window.deleteSelected=deleteSelected;
+
+function editSelected(){
+  if(!selected) return;
+  editingId=selected.id;
+  document.getElementById('modal-title').textContent='EDIT NODE';
+  document.getElementById('n-label').value=selected.label;
+  document.getElementById('n-desc').value=selected.desc||'';
+  document.getElementById('n-cat').value=selected.cat||'concept';
+  document.getElementById('n-tags').value=(selected.tags||[]).join(', ');
+  document.getElementById('modal-save-btn').textContent='UPDATE NODE';
+  document.getElementById('add-modal').classList.add('open');
+}
+window.editSelected=editSelected;
+
+function connectFromPanel(){ toggleLinkMode();if(selected)linkSource=selected; }
+window.connectFromPanel=connectFromPanel;
+
+/* ── Panel ── */
+function showPanel(node){
+  const panel=document.getElementById('node-panel');
+  panel.classList.add('open');
+  document.getElementById('np-title').textContent=node.label;
+  document.getElementById('np-body').textContent=node.desc||'No description.';
+  document.getElementById('np-tags').innerHTML=(node.tags||[]).map(t=>`<span class="np-tag">${t}</span>`).join('');
+}
+function hidePanel(){document.getElementById('node-panel').classList.remove('open');}
+
+/* ── Modal ── */
+function openAddModal(){
+  editingId=null;
+  document.getElementById('modal-title').textContent='ADD NODE';
+  document.getElementById('n-label').value='';
+  document.getElementById('n-desc').value='';
+  document.getElementById('n-cat').value='concept';
+  document.getElementById('n-tags').value='';
+  document.getElementById('modal-save-btn').textContent='ADD NODE';
+  document.getElementById('add-modal').classList.add('open');
+}
+function closeAddModal(){document.getElementById('add-modal').classList.remove('open');editingId=null;pendingPos=null;}
+window.openAddModal=openAddModal;window.closeAddModal=closeAddModal;
+
+function saveNode(){
+  const label=document.getElementById('n-label').value.trim();
+  if(!label) return;
+  const tags=document.getElementById('n-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  if(editingId){
+    const node=nodes.find(n=>n.id===editingId);
+    if(node){node.label=label;node.desc=document.getElementById('n-desc').value.trim();node.cat=document.getElementById('n-cat').value;node.tags=tags;}
+  } else {
+    const pos=pendingPos||{x:(Math.random()-0.5)*400,y:(Math.random()-0.5)*300};
+    nodes.push({id:'n'+Date.now(),label,desc:document.getElementById('n-desc').value.trim(),cat:document.getElementById('n-cat').value,tags,x:pos.x,y:pos.y,vx:0,vy:0});
+  }
+  save();closeAddModal();
+}
+window.saveNode=saveNode;
+
+function resetAtlas(){
+  if(!confirm('Reset the entire knowledge atlas? This cannot be undone.')) return;
+  localStorage.removeItem(ATLAS_KEY);seedDefault();
+}
+window.resetAtlas=resetAtlas;
+
+/* ── Init ── */
+load();
+resize();
+fitAll();
+loop();
+</script>
+</body>
+</html>

@@ -75,6 +75,18 @@
     oath:         {label:'Sovereign Oath',  section:'IDENTITY',   prev:'rune',           next:'profile'},
     tribe:        {label:'Element Tribes',  section:'COSMOS',     prev:'elements',       next:'horoscope'},
     dna:          {label:'Sovereign DNA',   section:'IDENTITY',   prev:'passport',       next:'rune'},
+    missions:     {label:'Sovereign Quests',section:'MASTERY',    prev:'achievements',   next:'gaming'},
+    mirror:       {label:'Inner Mirror',    section:'IDENTITY',   prev:'profile',        next:'credentials'},
+    forge:        {label:'Mind Forge',      section:'MASTERY',    prev:'exam',           next:'achievements'},
+    focus:        {label:'Deep Work',       section:'MASTERY',    prev:'forge',          next:'exam'},
+    rituals:      {label:'Sovereign Rituals',section:'IDENTITY',  prev:'mirror',         next:'profile'},
+    wealth:       {label:'Wealth Engine',   section:'FINANCE',    prev:'wallet',         next:'vault'},
+    habits:       {label:'Habit Stack',     section:'MASTERY',    prev:'missions',       next:'forge'},
+    targets:      {label:'OKR Targets',     section:'STRATEGY',   prev:'roadmap',        next:'ecosystem'},
+    atlas:        {label:'Knowledge Atlas', section:'INTEL',      prev:'codex',          next:'intelligence'},
+    meditate:     {label:'Breathwork',      section:'IDENTITY',   prev:'rituals',        next:'mirror'},
+    library:      {label:'Reading Library', section:'INTEL',      prev:'atlas',          next:'codex'},
+    nutrition:    {label:'Body Fuel',       section:'IDENTITY',   prev:'meditate',       next:'rituals'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

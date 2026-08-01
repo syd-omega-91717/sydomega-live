@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NUTRITION — Sovereign Body Fuel · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="omega.css">
+<style>
+.macro-ring-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.macro-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.macro-ring-canvas{display:block}
+.macro-label{font-family:var(--M,'Courier Prime',monospace);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.5)}
+.macro-val{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.7)}
+.water-track{border:1px solid rgba(201,168,76,.12);border-radius:2px;padding:20px;margin-bottom:20px}
+.water-cups{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.water-cup{width:38px;height:46px;border:1.5px solid rgba(201,168,76,.2);border-radius:0 0 6px 6px;cursor:pointer;transition:.12s;background:rgba(201,168,76,.03);position:relative;overflow:hidden}
+.water-cup.filled{background:rgba(100,160,220,.2);border-color:rgba(100,160,220,.4)}
+.water-cup::after{content:'💧';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;opacity:.4}
+.water-cup.filled::after{opacity:1}
+.water-cup:hover{border-color:rgba(201,168,76,.5)}
+.water-label{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
+.water-count{font-family:var(--M);font-size:28px;letter-spacing:2px;color:rgba(100,160,220,.7)}
+.log-form{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;margin-bottom:20px}
+.log-form h3{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin:0 0 14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr 1fr}}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
+.fg input,.fg select{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;letter-spacing:1px;padding:7px 10px;border-radius:2px;outline:none;width:100%;box-sizing:border-box}
+.fg input:focus,.fg select:focus{border-color:rgba(201,168,76,.35)}
+.fg select option{background:#0a0a08}
+.log-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.3);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.log-btn:hover{background:rgba(201,168,76,.08);color:var(--gold)}
+.daily-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:600px){.daily-summary{grid-template-columns:1fr 1fr}}
+.ds-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px;text-align:center}
+.ds-box .dv{font-family:var(--M);font-size:18px;letter-spacing:1px;color:var(--gold,#C9A84C)}
+.ds-box .dl{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-top:3px}
+.ds-box .dt{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:2px}
+.food-log-item{display:grid;grid-template-columns:1fr 55px 55px 55px 55px 30px;gap:8px;padding:9px 12px;border:1px solid rgba(201,168,76,.07);border-radius:2px;margin-bottom:5px;align-items:center;font-family:var(--M);font-size:8.5px}
+.food-log-item .fl-name{color:rgba(201,168,76,.75);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.food-log-item .fl-val{color:rgba(138,134,118,.6);text-align:right}
+.food-log-item .fl-del{color:rgba(200,60,60,.4);cursor:pointer;text-align:center;font-size:12px}
+.food-log-item .fl-del:hover{color:rgba(200,60,60,.8)}
+.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:14px}
+.tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
+.tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-panel{display:none}.tab-panel.act{display:block}
+.quick-food{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.qf-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1px;padding:5px 11px;border:1px solid rgba(201,168,76,.12);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.qf-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
+.trend-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:600px){.trend-row{grid-template-columns:1fr}}
+.chart-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px}
+.chart-title{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="side" id="side"></div>
+<div class="main">
+  <div class="topbar" id="topbar">
+    <div class="tb-left">
+      <span class="tb-title">NUTRITION</span>
+      <span class="tb-sub">SOVEREIGN BODY FUEL · SYD OMEGA 91717</span>
+    </div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.4)" id="date-display"></div>
+  </div>
+
+  <div class="content">
+    <div class="tab-row">
+      <button class="tab-btn act" onclick="switchTab('today',this)">TODAY</button>
+      <button class="tab-btn" onclick="switchTab('log',this)">FOOD LOG</button>
+      <button class="tab-btn" onclick="switchTab('trends',this)">TRENDS</button>
+      <button class="tab-btn" onclick="switchTab('guide',this)">FUEL GUIDE</button>
+    </div>
+
+    <!-- TODAY TAB -->
+    <div class="tab-panel act" id="tab-today">
+      <!-- Macro rings -->
+      <div class="macro-ring-row" id="macro-rings"></div>
+
+      <!-- Daily summary -->
+      <div class="daily-summary">
+        <div class="ds-box"><div class="dv" id="ds-cal">0</div><div class="dl">CALORIES</div><div class="dt" id="ds-cal-t">/ 2200</div></div>
+        <div class="ds-box"><div class="dv" id="ds-pro">0g</div><div class="dl">PROTEIN</div><div class="dt" id="ds-pro-t">/ 180g</div></div>
+        <div class="ds-box"><div class="dv" id="ds-carb">0g</div><div class="dl">CARBS</div><div class="dt" id="ds-carb-t">/ 220g</div></div>
+        <div class="ds-box"><div class="dv" id="ds-fat">0g</div><div class="dl">FAT</div><div class="dt" id="ds-fat-t">/ 80g</div></div>
+        <div class="ds-box"><div class="dv" id="ds-fiber">0g</div><div class="dl">FIBER</div><div class="dt">/25g+</div></div>
+      </div>
+
+      <!-- Hydration -->
+      <div class="water-track">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C)">💧 HYDRATION PROTOCOL</div>
+          <div><span class="water-count" id="water-count">0</span><span class="water-label"> / 8 GLASSES</span></div>
+        </div>
+        <div class="water-cups" id="water-cups"></div>
+        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:8px">
+          TARGET: 8 × 250ml = 2L · CLICK EACH CUP TO TRACK
+        </div>
+      </div>
+
+      <!-- Quick add -->
+      <div class="log-form">
+        <h3>LOG FOOD ITEM</h3>
+        <div class="section-hd" style="padding-top:0;margin-top:0">QUICK ADD</div>
+        <div class="quick-food" id="quick-food"></div>
+        <div class="form-grid">
+          <div class="fg" style="grid-column:1/-1"><label>FOOD NAME</label><input type="text" id="food-name" placeholder="e.g. Grilled Chicken Breast" maxlength="60"></div>
+          <div class="fg"><label>CALORIES</label><input type="number" id="food-cal" placeholder="0" min="0"></div>
+          <div class="fg"><label>PROTEIN (g)</label><input type="number" id="food-pro" placeholder="0" min="0"></div>
+          <div class="fg"><label>CARBS (g)</label><input type="number" id="food-carb" placeholder="0" min="0"></div>
+          <div class="fg"><label>FAT (g)</label><input type="number" id="food-fat" placeholder="0" min="0"></div>
+          <div class="fg"><label>FIBER (g)</label><input type="number" id="food-fiber" placeholder="0" min="0"></div>
+          <div class="fg"><label>MEAL</label>
+            <select id="food-meal">
+              <option value="BREAKFAST">BREAKFAST</option>
+              <option value="LUNCH">LUNCH</option>
+              <option value="DINNER">DINNER</option>
+              <option value="SNACK">SNACK</option>
+            </select>
+          </div>
+        </div>
+        <button class="log-btn" onclick="logFood()">LOG FOOD</button>
+      </div>
+
+      <div class="section-hd">TODAY'S ENTRIES</div>
+      <div id="todays-log"></div>
+    </div>
+
+    <!-- FOOD LOG HISTORY -->
+    <div class="tab-panel" id="tab-log">
+      <div class="section-hd">7-DAY FOOD LOG</div>
+      <div id="full-log"></div>
+    </div>
+
+    <!-- TRENDS -->
+    <div class="tab-panel" id="tab-trends">
+      <div class="trend-row">
+        <div class="chart-box">
+          <div class="chart-title">7-DAY CALORIE TREND</div>
+          <canvas id="cal-chart" width="300" height="150"></canvas>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">7-DAY PROTEIN TREND</div>
+          <canvas id="pro-chart" width="300" height="150"></canvas>
+        </div>
+      </div>
+      <div class="section-hd">7-DAY AVERAGES</div>
+      <div id="trend-averages"></div>
+    </div>
+
+    <!-- FUEL GUIDE -->
+    <div class="tab-panel" id="tab-guide">
+      <div class="section-hd">SOVEREIGN NUTRITION PRINCIPLES</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">PROTEIN SOVEREIGNTY</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            Target: <strong style="color:rgba(201,168,76,.7)">0.8–1.2g per pound of bodyweight</strong> daily.<br><br>
+            Protein is the building block of muscle and the most satiating macronutrient. High-protein diets preserve muscle during fat loss and support cognitive function.<br><br>
+            Best sources: eggs, chicken, fish, Greek yogurt, legumes, cottage cheese.
+          </div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">HYDRATION PROTOCOL</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            Minimum: <strong style="color:rgba(201,168,76,.7)">35ml × bodyweight(kg) daily</strong>.<br><br>
+            Even 2% dehydration impairs cognitive performance by up to 20%. The sovereign hydrates before hunger — thirst is already a deficit signal.<br><br>
+            Add electrolytes (sodium, potassium, magnesium) for peak cellular hydration.
+          </div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">NUTRIENT TIMING</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            · <strong style="color:rgba(201,168,76,.6)">Morning:</strong> High protein, moderate fat, lower carb → sustained energy, no insulin spike<br>
+            · <strong style="color:rgba(201,168,76,.6)">Pre-training:</strong> Complex carbs + protein 60-90 min before<br>
+            · <strong style="color:rgba(201,168,76,.6)">Post-training:</strong> Fast protein + simple carbs within 30 min<br>
+            · <strong style="color:rgba(201,168,76,.6)">Evening:</strong> Lower calorie, casein protein for overnight muscle repair
+          </div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">SOVEREIGN SUPERFOODS</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            · <strong style="color:rgba(201,168,76,.6)">Blueberries:</strong> BDNF, neuroplasticity, anthocyanins<br>
+            · <strong style="color:rgba(201,168,76,.6)">Salmon:</strong> Omega-3 DHA — brain fuel, inflammation control<br>
+            · <strong style="color:rgba(201,168,76,.6)">Dark Chocolate 85%+:</strong> Flavonoids, vasodilation<br>
+            · <strong style="color:rgba(201,168,76,.6)">Eggs:</strong> Complete protein, choline for memory encoding<br>
+            · <strong style="color:rgba(201,168,76,.6)">Leafy Greens:</strong> Magnesium, folate, nitric oxide precursors<br>
+            · <strong style="color:rgba(201,168,76,.6)">Bone Broth:</strong> Collagen, gut healing, electrolytes
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lf">
+    <span>&#937; NUTRITION · SYD OMEGA 91717</span>
+    <span>FOOD IS INFORMATION · FUEL THE SOVEREIGN MACHINE</span>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+const LOG_KEY   = 'omega_nutrition_log';
+const WATER_KEY = 'omega_water_track';
+const TARGETS   = {cal:2200, pro:180, carb:220, fat:80, fiber:25};
+
+const QUICK_FOODS = [
+  {name:'Oat Porridge',cal:350,pro:12,carb:58,fat:7,fiber:5,meal:'BREAKFAST'},
+  {name:'Protein Shake',cal:180,pro:35,carb:8,fat:3,fiber:0,meal:'SNACK'},
+  {name:'Chicken Breast 150g',cal:250,pro:46,carb:0,fat:5,fiber:0,meal:'LUNCH'},
+  {name:'Salmon 200g',cal:412,pro:40,carb:0,fat:27,fiber:0,meal:'DINNER'},
+  {name:'Greek Yogurt',cal:130,pro:18,carb:7,fat:4,fiber:0,meal:'SNACK'},
+  {name:'Brown Rice 200g',cal:260,pro:6,carb:54,fat:2,fiber:4,meal:'LUNCH'},
+  {name:'Eggs 3x',cal:210,pro:18,carb:1,fat:15,fiber:0,meal:'BREAKFAST'},
+  {name:'Mixed Greens',cal:25,pro:2,carb:3,fat:0,fiber:2,meal:'LUNCH'},
+];
+
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function getLog(){ try{return JSON.parse(localStorage.getItem(LOG_KEY)||'{}');}catch{return{};} }
+function getWater(){ try{return JSON.parse(localStorage.getItem(WATER_KEY)||'{}');}catch{return{};} }
+
+function getTodayEntries(){
+  const log=getLog();
+  return log[todayKey()]||[];
+}
+
+function getDayTotals(entries){
+  return entries.reduce((t,e)=>({
+    cal:t.cal+(e.cal||0),pro:t.pro+(e.pro||0),carb:t.carb+(e.carb||0),fat:t.fat+(e.fat||0),fiber:t.fiber+(e.fiber||0)
+  }),{cal:0,pro:0,carb:0,fat:0,fiber:0});
+}
+
+function logFood(){
+  const name=document.getElementById('food-name').value.trim();
+  if(!name) return;
+  const entry={
+    id:Date.now(),name,
+    cal:parseFloat(document.getElementById('food-cal').value)||0,
+    pro:parseFloat(document.getElementById('food-pro').value)||0,
+    carb:parseFloat(document.getElementById('food-carb').value)||0,
+    fat:parseFloat(document.getElementById('food-fat').value)||0,
+    fiber:parseFloat(document.getElementById('food-fiber').value)||0,
+    meal:document.getElementById('food-meal').value,
+    time:new Date().toISOString()
+  };
+  const log=getLog();
+  const key=todayKey();
+  if(!log[key]) log[key]=[];
+  log[key].push(entry);
+  // Keep 30 days
+  const keys=Object.keys(log).sort().slice(-30);
+  const trimmed={};keys.forEach(k=>{trimmed[k]=log[k];});
+  localStorage.setItem(LOG_KEY, JSON.stringify(trimmed));
+  ['food-name','food-cal','food-pro','food-carb','food-fat','food-fiber'].forEach(id=>{document.getElementById(id).value='';});
+  renderAll();
+}
+window.logFood=logFood;
+
+function quickLog(food){
+  Object.keys(food).forEach(k=>{
+    const el=document.getElementById('food-'+k);
+    if(el) el.value=food[k];
+  });
+  document.getElementById('food-name').value=food.name;
+  document.getElementById('food-meal').value=food.meal;
+}
+window.quickLog=quickLog;
+
+function deleteEntry(id){
+  const log=getLog();
+  const key=todayKey();
+  if(log[key]) log[key]=log[key].filter(e=>e.id!==id);
+  localStorage.setItem(LOG_KEY, JSON.stringify(log));
+  renderAll();
+}
+window.deleteEntry=deleteEntry;
+
+/* ── Macro rings ── */
+function drawMacroRings(){
+  const totals=getDayTotals(getTodayEntries());
+  const macros=[
+    {label:'CALORIES',val:Math.round(totals.cal),target:TARGETS.cal,unit:'',color:'rgba(201,168,76,.8)'},
+    {label:'PROTEIN',val:Math.round(totals.pro),target:TARGETS.pro,unit:'g',color:'rgba(100,220,160,.8)'},
+    {label:'CARBS',val:Math.round(totals.carb),target:TARGETS.carb,unit:'g',color:'rgba(100,160,220,.8)'},
+    {label:'FAT',val:Math.round(totals.fat),target:TARGETS.fat,unit:'g',color:'rgba(220,160,80,.8)'},
+  ];
+  document.getElementById('macro-rings').innerHTML=macros.map((m,i)=>`
+    <div class="macro-ring-wrap">
+      <canvas class="macro-ring-canvas" id="macro-ring-${i}" width="90" height="90"></canvas>
+      <div class="macro-val">${m.val}${m.unit}<span style="color:rgba(138,134,118,.4);font-size:7px"> /${m.target}${m.unit}</span></div>
+      <div class="macro-label">${m.label}</div>
+    </div>`).join('');
+  macros.forEach((m,i)=>{
+    const c=document.getElementById('macro-ring-'+i);
+    const ctx=c.getContext('2d');
+    const pct=Math.min(1,m.val/m.target);
+    ctx.clearRect(0,0,90,90);
+    ctx.beginPath();ctx.arc(45,45,36,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,.07)';ctx.lineWidth=8;ctx.stroke();
+    if(pct>0){
+      ctx.beginPath();ctx.arc(45,45,36,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);
+      ctx.strokeStyle=m.color;ctx.lineWidth=8;ctx.lineCap='round';ctx.stroke();
+    }
+    ctx.font='bold 11px Courier Prime,monospace';ctx.fillStyle=m.color;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(Math.round(pct*100)+'%',45,45);
+  });
+}
+
+function renderSummary(){
+  const totals=getDayTotals(getTodayEntries());
+  document.getElementById('ds-cal').textContent=Math.round(totals.cal);
+  document.getElementById('ds-pro').textContent=Math.round(totals.pro)+'g';
+  document.getElementById('ds-carb').textContent=Math.round(totals.carb)+'g';
+  document.getElementById('ds-fat').textContent=Math.round(totals.fat)+'g';
+  document.getElementById('ds-fiber').textContent=Math.round(totals.fiber)+'g';
+}
+
+/* ── Water ── */
+function renderWater(){
+  const water=getWater();
+  const count=water[todayKey()]||0;
+  document.getElementById('water-count').textContent=count;
+  document.getElementById('water-cups').innerHTML=Array.from({length:8},(_,i)=>
+    `<div class="water-cup ${i<count?'filled':''}" onclick="toggleCup(${i})"></div>`).join('');
+}
+function toggleCup(i){
+  const water=getWater();
+  const key=todayKey();
+  const current=water[key]||0;
+  water[key]=i<current?i:i+1;
+  // Keep 30 days
+  const keys=Object.keys(water).sort().slice(-30);
+  const trimmed={};keys.forEach(k=>{trimmed[k]=water[k];});
+  localStorage.setItem(WATER_KEY,JSON.stringify(trimmed));
+  renderWater();
+}
+window.toggleCup=toggleCup;
+
+/* ── Today's log ── */
+function renderTodayLog(){
+  const entries=getTodayEntries();
+  const meals=['BREAKFAST','LUNCH','DINNER','SNACK'];
+  let html='';
+  meals.forEach(meal=>{
+    const items=entries.filter(e=>e.meal===meal);
+    if(!items.length) return;
+    html+=`<div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.4);margin:10px 0 6px">${meal}</div>`;
+    items.forEach(e=>{
+      html+=`<div class="food-log-item">
+        <div class="fl-name">${e.name}</div>
+        <div class="fl-val">${e.cal}kcal</div>
+        <div class="fl-val">${e.pro}g P</div>
+        <div class="fl-val">${e.carb}g C</div>
+        <div class="fl-val">${e.fat}g F</div>
+        <div class="fl-del" onclick="deleteEntry(${e.id})">✕</div>
+      </div>`;
+    });
+  });
+  document.getElementById('todays-log').innerHTML=html||'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);padding:16px 0">NO ENTRIES TODAY — LOG YOUR FIRST MEAL</div>';
+}
+
+/* ── Quick food buttons ── */
+function renderQuickFoods(){
+  document.getElementById('quick-food').innerHTML=QUICK_FOODS.map(f=>
+    `<button class="qf-btn" onclick="quickLog(${JSON.stringify(f).replace(/"/g,'&quot;')})">${f.name}</button>`).join('');
+}
+
+/* ── Trends ── */
+function renderTrends(){
+  const log=getLog();
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=7;
+  const calData=[],proData=[];
+  const labels=[];
+  for(let i=days-1;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const key=d.toISOString().slice(0,10);
+    const entries=log[key]||[];
+    const totals=getDayTotals(entries);
+    calData.push(totals.cal);
+    proData.push(totals.pro);
+    labels.push(d.toLocaleDateString('en-GB',{weekday:'short'}));
+  }
+  drawLineChart('cal-chart',calData,labels,'rgba(201,168,76,.6)',TARGETS.cal);
+  drawLineChart('pro-chart',proData,labels,'rgba(100,220,160,.6)',TARGETS.pro);
+
+  const avgCal=Math.round(calData.reduce((a,b)=>a+b,0)/days);
+  const avgPro=Math.round(proData.reduce((a,b)=>a+b,0)/days);
+  document.getElementById('trend-averages').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      ${[{l:'AVG CALORIES',v:avgCal,t:TARGETS.cal},{l:'AVG PROTEIN',v:avgPro+'g',t:TARGETS.pro+'g'},{l:'HYDRATION',v:(getWater()[todayKey()]||0)+'/8',t:'2L'},{l:'LOGGING DAYS',v:Object.keys(log).filter(k=>log[k].length>0).length,t:''}].map(s=>`
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px;text-align:center">
+          <div style="font-family:var(--M);font-size:18px;color:var(--gold)">${s.v}</div>
+          <div style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-top:3px">${s.l}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function drawLineChart(id,data,labels,color,target){
+  const c=document.getElementById(id);if(!c)return;
+  const ctx=c.getContext('2d');
+  const w=c.width,h=c.height,pad=30;
+  ctx.clearRect(0,0,w,h);
+  const max=Math.max(...data,target)*1.1||1;
+  const scaleX=(w-pad*2)/(data.length-1||1);
+  const scaleY=(h-pad*2)/max;
+  // Target line
+  ctx.beginPath();ctx.setLineDash([4,4]);
+  ctx.moveTo(pad,h-pad-target*scaleY);ctx.lineTo(w-pad,h-pad-target*scaleY);
+  ctx.strokeStyle='rgba(201,168,76,.2)';ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  // Line
+  ctx.beginPath();
+  data.forEach((v,i)=>{
+    const x=pad+i*scaleX,y=h-pad-v*scaleY;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+  // Dots + labels
+  ctx.font='8px Courier Prime,monospace';ctx.textAlign='center';
+  data.forEach((v,i)=>{
+    const x=pad+i*scaleX,y=h-pad-v*scaleY;
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    ctx.fillStyle='rgba(138,134,118,.5)';ctx.fillText(labels[i],x,h-5);
+  });
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='trends') renderTrends();
+}
+window.switchTab=switchTab;
+
+function renderAll(){
+  drawMacroRings();
+  renderSummary();
+  renderWater();
+  renderTodayLog();
+}
+
+document.getElementById('date-display').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+renderQuickFoods();
+renderAll();
+</script>
+</body>
+</html>

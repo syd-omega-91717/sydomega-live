@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TARGETS — Sovereign OKR System · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="omega.css">
+<style>
+.quarter-badge{font-family:var(--M,'Courier Prime',monospace);font-size:10px;letter-spacing:3px;color:var(--gold,#C9A84C);padding:8px 18px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.05)}
+.okr-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:640px){.okr-hero{grid-template-columns:1fr 1fr}}
+.okr-stat{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
+.okr-stat .sv{font-family:var(--M);font-size:24px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.okr-stat .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
+.objective-card{border:1px solid rgba(201,168,76,.12);border-radius:2px;margin-bottom:16px;overflow:hidden}
+.obj-header{padding:16px 18px;border-bottom:1px solid rgba(201,168,76,.08);display:flex;align-items:flex-start;gap:12px}
+.obj-num{font-family:var(--M);font-size:20px;letter-spacing:2px;color:rgba(201,168,76,.2);flex-shrink:0;min-width:32px}
+.obj-body{flex:1;min-width:0}
+.obj-title{font-family:var(--M,'Courier Prime',monospace);font-size:10.5px;letter-spacing:1.5px;color:var(--gold,#C9A84C);margin-bottom:4px}
+.obj-desc{font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.6}
+.obj-meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.obj-tag{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:3px 10px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:rgba(138,134,118,.5)}
+.obj-progress{height:4px;background:rgba(201,168,76,.08)}
+.obj-progress-fill{height:4px;transition:width .4s}
+.obj-score{font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:rgba(201,168,76,.6);padding:8px 18px;border-top:1px solid rgba(201,168,76,.06);display:flex;justify-content:space-between}
+.kr-list{padding:12px 18px}
+.kr-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.05)}
+.kr-item:last-child{border-bottom:none}
+.kr-info{flex:1;min-width:0}
+.kr-name{font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(201,168,76,.7)}
+.kr-progress{margin-top:5px}
+.kr-bar-track{height:5px;background:rgba(201,168,76,.06);border-radius:3px}
+.kr-bar-fill{height:5px;border-radius:3px;transition:width .3s}
+.kr-val{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:3px}
+.kr-pct{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.6);width:40px;text-align:right;flex-shrink:0}
+.kr-input{width:60px;background:transparent;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.8);font-family:var(--M);font-size:8.5px;padding:4px 6px;border-radius:2px;outline:none;text-align:right}
+.kr-input:focus{border-color:rgba(201,168,76,.5)}
+.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
+.tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-panel{display:none}.tab-panel.act{display:block}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--bg,#0a0a08);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;width:min(520px,90vw);max-height:85vh;overflow-y:auto}
+.modal-box h3{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,#C9A84C);margin:0 0 20px}
+.fg{margin-bottom:14px}
+.fg label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.7);display:block;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none;box-sizing:border-box}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(201,168,76,.4)}
+.fg select option{background:#0a0a08}
+.ma{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+.btn-s{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
+.btn-c{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,74,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer}
+.add-btn{font-family:var(--M);font-size:8.5px;letter-spacing:2px;padding:9px 18px;border:1px solid rgba(201,168,76,.22);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.add-btn:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.4)}
+.del-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(200,60,60,.2);color:rgba(200,60,60,.4);background:none;border-radius:2px;cursor:pointer}
+.del-btn:hover{border-color:rgba(200,60,60,.5);color:rgba(200,60,60,.8)}
+.q-nav{display:flex;align-items:center;gap:14px}
+.q-nav button{font-family:var(--M);font-size:10px;padding:4px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer}
+.q-nav button:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.review-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;margin-bottom:10px}
+.review-card h4{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin:0 0 10px}
+.review-card textarea{width:100%;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.12);color:rgba(201,168,76,.7);font-family:var(--M);font-size:8.5px;padding:10px;border-radius:2px;outline:none;min-height:80px;box-sizing:border-box;resize:vertical;line-height:1.6}
+.review-card textarea:focus{border-color:rgba(201,168,76,.35)}
+.score-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-family:var(--M);font-size:7.5px;letter-spacing:1px}
+.score-legend span{color:rgba(138,134,118,.5)}.score-legend strong{color:rgba(201,168,76,.7)}
+</style>
+</head>
+<body>
+<div class="side" id="side"></div>
+<div class="main">
+  <div class="topbar" id="topbar">
+    <div class="tb-left">
+      <span class="tb-title">TARGETS</span>
+      <span class="tb-sub">SOVEREIGN OKR SYSTEM · SYD OMEGA 91717</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="q-nav">
+        <button onclick="shiftQuarter(-1)">◀</button>
+        <div class="quarter-badge" id="quarter-label">Q1 2026</div>
+        <button onclick="shiftQuarter(1)">▶</button>
+      </div>
+      <button class="add-btn" onclick="openObjModal()">+ OBJECTIVE</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="okr-hero">
+      <div class="okr-stat"><div class="sv" id="stat-objs">0</div><div class="sk">OBJECTIVES</div></div>
+      <div class="okr-stat"><div class="sv" id="stat-krs">0</div><div class="sk">KEY RESULTS</div></div>
+      <div class="okr-stat"><div class="sv" id="stat-avg">0%</div><div class="sk">AVG PROGRESS</div></div>
+      <div class="okr-stat"><div class="sv" id="stat-score">0.0</div><div class="sk">OKR SCORE</div></div>
+    </div>
+
+    <div class="tab-row">
+      <button class="tab-btn act" onclick="switchTab('okrs',this)">OBJECTIVES</button>
+      <button class="tab-btn" onclick="switchTab('review',this)">WEEKLY REVIEW</button>
+      <button class="tab-btn" onclick="switchTab('guide',this)">OKR GUIDE</button>
+    </div>
+
+    <!-- OBJECTIVES TAB -->
+    <div class="tab-panel act" id="tab-okrs">
+      <div id="objectives-list"></div>
+    </div>
+
+    <!-- WEEKLY REVIEW -->
+    <div class="tab-panel" id="tab-review">
+      <div class="section-hd">WEEKLY CHECK-IN</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);margin-bottom:16px">
+        The weekly review is the engine of OKR success. 15 minutes of reflection prevents months of drift.
+      </div>
+      <div class="review-card">
+        <h4>WHAT MOVED FORWARD THIS WEEK?</h4>
+        <textarea id="rev-wins" placeholder="List key results or objectives that progressed..."></textarea>
+      </div>
+      <div class="review-card">
+        <h4>WHAT BLOCKED OR SLOWED PROGRESS?</h4>
+        <textarea id="rev-blocks" placeholder="Identify constraints, distractions, or resource gaps..."></textarea>
+      </div>
+      <div class="review-card">
+        <h4>WHAT NEEDS TO HAPPEN NEXT WEEK?</h4>
+        <textarea id="rev-next" placeholder="Define 1-3 critical moves for the coming week..."></textarea>
+      </div>
+      <div class="review-card">
+        <h4>SOVEREIGN INSIGHT (WHAT DID YOU LEARN?)</h4>
+        <textarea id="rev-insight" placeholder="Strategic realizations, pattern recognition, course corrections..."></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn-s" onclick="saveReview()">SAVE WEEKLY REVIEW</button>
+      </div>
+      <div id="review-history" style="margin-top:24px"></div>
+    </div>
+
+    <!-- OKR GUIDE -->
+    <div class="tab-panel" id="tab-guide">
+      <div class="section-hd">THE SOVEREIGN OKR FRAMEWORK</div>
+      <div class="score-legend">
+        <span>SCORE GUIDE:</span>
+        <strong>0.0–0.3</strong><span>= Failed</span>
+        <strong>0.4–0.6</strong><span>= Partial</span>
+        <strong>0.7–1.0</strong><span>= Success</span>
+        <strong style="color:rgba(80,200,120,.7)">TARGET: 0.7</strong>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">WHAT IS AN OBJECTIVE?</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            A qualitative, inspiring statement of what you want to <em>become</em> or <em>achieve</em>.<br><br>
+            ✓ Ambitious but achievable<br>
+            ✓ Aligns with your sovereign vision<br>
+            ✓ Time-boxed to the quarter<br>
+            ✗ Not a task list item<br>
+            ✗ Not a binary yes/no<br><br>
+            <em style="color:rgba(201,168,76,.5)">Example: "Achieve sovereign financial independence by building a recurring income engine."</em>
+          </div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">WHAT IS A KEY RESULT?</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            A measurable outcome that proves whether the Objective was achieved.<br><br>
+            ✓ Specific and numeric<br>
+            ✓ Outcome-focused (not activity)<br>
+            ✓ Challenging (60-70% confidence)<br>
+            ✗ Not "do X" — should be "X measured by Y"<br><br>
+            <em style="color:rgba(201,168,76,.5)">Example: "Grow monthly recurring revenue from $0 to $5,000."</em>
+          </div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">THE INTEL THEORY OF OKRs</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            Andy Grove created OKRs at Intel. John Doerr brought them to Google.<br><br>
+            The key insight: <strong style="color:rgba(201,168,76,.7)">Ideas are easy. Execution is everything.</strong><br><br>
+            OKRs close the gap between ambition and action by forcing you to define what "done" looks like — before you begin.
+          </div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:12px">SOVEREIGN OKR RHYTHM</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.8">
+            <strong style="color:rgba(201,168,76,.7)">Quarterly:</strong> Set 3–5 objectives with 3 KRs each<br>
+            <strong style="color:rgba(201,168,76,.7)">Weekly:</strong> Check-in, update progress, remove blockers<br>
+            <strong style="color:rgba(201,168,76,.7)">Monthly:</strong> Mid-quarter review — pivot if needed<br>
+            <strong style="color:rgba(201,168,76,.7)">End:</strong> Score (0.0–1.0), celebrate, retrospect<br><br>
+            A 0.7 score is excellence. 1.0 means you aimed too low.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lf">
+    <span>&#937; TARGETS · SYD OMEGA 91717</span>
+    <span>IDEAS ARE EASY · EXECUTION IS EVERYTHING</span>
+  </div>
+</div>
+
+<!-- Add Objective Modal -->
+<div class="modal-bg" id="obj-modal">
+  <div class="modal-box">
+    <h3>NEW OBJECTIVE</h3>
+    <div class="fg"><label>OBJECTIVE TITLE</label><input type="text" id="obj-title" placeholder="What do you want to achieve this quarter?" maxlength="100"></div>
+    <div class="fg"><label>DESCRIPTION (OPTIONAL)</label><textarea id="obj-desc" placeholder="Why does this matter? What does success look like?" style="height:60px;resize:vertical"></textarea></div>
+    <div class="fg"><label>CATEGORY</label>
+      <select id="obj-cat">
+        <option value="sovereignty">SOVEREIGNTY</option>
+        <option value="wealth">WEALTH & FINANCE</option>
+        <option value="mastery">SKILL MASTERY</option>
+        <option value="health">HEALTH & BODY</option>
+        <option value="relationships">RELATIONSHIPS</option>
+        <option value="impact">IMPACT & LEGACY</option>
+      </select>
+    </div>
+    <div class="section-hd" style="margin-top:4px">KEY RESULTS (3 RECOMMENDED)</div>
+    <div id="kr-inputs">
+      <div class="kr-input-row" style="margin-bottom:10px">
+        <div class="fg" style="margin-bottom:6px"><label>KR 1 — TITLE</label><input type="text" placeholder="Measurable outcome..." maxlength="100"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 60px;gap:8px">
+          <div class="fg" style="margin-bottom:0"><label>START VALUE</label><input type="number" placeholder="0"></div>
+          <div class="fg" style="margin-bottom:0"><label>TARGET VALUE</label><input type="number" placeholder="100"></div>
+          <div class="fg" style="margin-bottom:0"><label>UNIT</label><input type="text" placeholder="$" maxlength="10"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-c" onclick="addKRInput()" style="width:100%;margin-bottom:10px">+ ADD KEY RESULT</button>
+    <div class="ma">
+      <button class="btn-c" onclick="closeObjModal()">CANCEL</button>
+      <button class="btn-s" onclick="saveObjective()">CREATE OBJECTIVE</button>
+    </div>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+const OKR_KEY    = 'omega_okr_data';
+const REV_KEY    = 'omega_okr_reviews';
+const CAT_COLORS = {
+  sovereignty:'rgba(201,168,76,.7)',wealth:'rgba(80,200,120,.7)',mastery:'rgba(100,160,220,.7)',
+  health:'rgba(220,120,80,.7)',relationships:'rgba(180,100,220,.7)',impact:'rgba(240,200,60,.7)'
+};
+const CAT_ICONS = {sovereignty:'⚡',wealth:'💎',mastery:'🎯',health:'💪',relationships:'🌐',impact:'🏛'};
+
+let currentQuarterOffset=0;
+
+function getQuarterLabel(offset=0){
+  const now=new Date();
+  const q=Math.floor((now.getMonth()/3))+offset;
+  const year=now.getFullYear()+Math.floor(q/4);
+  const qq=((q%4)+4)%4+1;
+  return `Q${qq} ${year}`;
+}
+function getQuarterKey(offset=0){ return getQuarterLabel(offset).replace(' ','_'); }
+
+function getOKRs(){ try{return JSON.parse(localStorage.getItem(OKR_KEY)||'{}');}catch{return{};} }
+function getReviews(){ try{return JSON.parse(localStorage.getItem(REV_KEY)||'[]');}catch{return[];} }
+
+function getKRColor(pct){
+  if(pct>=70) return 'rgba(80,200,120,.6)';
+  if(pct>=40) return 'rgba(201,168,76,.6)';
+  return 'rgba(200,60,60,.5)';
+}
+
+function shiftQuarter(dir){ currentQuarterOffset+=dir; renderOKRs(); }
+window.shiftQuarter=shiftQuarter;
+
+function renderOKRs(){
+  document.getElementById('quarter-label').textContent=getQuarterLabel(currentQuarterOffset);
+  const qkey=getQuarterKey(currentQuarterOffset);
+  const okrs=getOKRs();
+  const objectives=okrs[qkey]||[];
+  let totalKRs=0,totalPct=0,allKRCount=0;
+  objectives.forEach(obj=>{
+    obj.krs.forEach(kr=>{
+      totalKRs++;
+      totalPct+=(kr.current-kr.start)/(kr.target-kr.start||1)*100;
+      allKRCount++;
+    });
+  });
+  const avgPct=allKRCount?Math.round(totalPct/allKRCount):0;
+  const score=(avgPct/100).toFixed(2);
+  document.getElementById('stat-objs').textContent=objectives.length;
+  document.getElementById('stat-krs').textContent=totalKRs;
+  document.getElementById('stat-avg').textContent=avgPct+'%';
+  document.getElementById('stat-score').textContent=score;
+
+  const list=document.getElementById('objectives-list');
+  if(!objectives.length){
+    list.innerHTML=`<div style="text-align:center;padding:48px 0;font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4)">
+      NO OBJECTIVES FOR ${getQuarterLabel(currentQuarterOffset)} — CREATE YOUR FIRST OBJECTIVE
+    </div>`;return;
+  }
+  list.innerHTML=objectives.map((obj,oi)=>{
+    const krScores=obj.krs.map(kr=>{
+      const pct=Math.min(100,Math.max(0,Math.round((kr.current-kr.start)/(kr.target-kr.start||1)*100)));
+      return pct;
+    });
+    const avgKR=krScores.length?Math.round(krScores.reduce((a,b)=>a+b,0)/krScores.length):0;
+    const color=CAT_COLORS[obj.cat]||'rgba(201,168,76,.7)';
+    return `<div class="objective-card">
+      <div class="obj-progress" style="background:rgba(201,168,76,.04)"><div class="obj-progress-fill" style="width:${avgKR}%;background:${getKRColor(avgKR)}"></div></div>
+      <div class="obj-header">
+        <div class="obj-num">O${oi+1}</div>
+        <div class="obj-body">
+          <div class="obj-title" style="color:${color}">${CAT_ICONS[obj.cat]||'●'} ${obj.title}</div>
+          ${obj.desc?`<div class="obj-desc">${obj.desc}</div>`:''}
+          <div class="obj-meta">
+            <span class="obj-tag">${obj.cat.toUpperCase()}</span>
+            <span class="obj-tag">${avgKR}% PROGRESS</span>
+            <span class="obj-tag">SCORE: ${(avgKR/100).toFixed(2)}</span>
+          </div>
+        </div>
+        <button class="del-btn" onclick="deleteObjective('${qkey}',${oi})">✕</button>
+      </div>
+      <div class="kr-list">
+        ${obj.krs.map((kr,ki)=>{
+          const pct=Math.min(100,Math.max(0,Math.round((kr.current-kr.start)/(kr.target-kr.start||1)*100)));
+          return `<div class="kr-item">
+            <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.4);width:28px;flex-shrink:0">KR${ki+1}</div>
+            <div class="kr-info">
+              <div class="kr-name">${kr.title}</div>
+              <div class="kr-progress">
+                <div class="kr-bar-track"><div class="kr-bar-fill" style="width:${pct}%;background:${getKRColor(pct)}"></div></div>
+                <div class="kr-val">${kr.unit}${kr.start} → <input class="kr-input" type="number" value="${kr.current}" onchange="updateKR('${qkey}',${oi},${ki},this.value)"> / ${kr.unit}${kr.target}</div>
+              </div>
+            </div>
+            <div class="kr-pct" style="color:${getKRColor(pct)}">${pct}%</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="obj-score">
+        <span style="color:rgba(138,134,118,.5)">QUARTERLY TARGET: ${obj.title.slice(0,40)}${obj.title.length>40?'...':''}</span>
+        <span style="color:${getKRColor(avgKR)}">OKR SCORE: ${(avgKR/100).toFixed(2)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateKR(qkey,oi,ki,val){
+  const okrs=getOKRs();
+  if(okrs[qkey]&&okrs[qkey][oi]&&okrs[qkey][oi].krs[ki]){
+    okrs[qkey][oi].krs[ki].current=parseFloat(val)||0;
+    localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
+    renderOKRs();
+  }
+}
+window.updateKR=updateKR;
+
+function deleteObjective(qkey,idx){
+  const okrs=getOKRs();
+  if(okrs[qkey]) okrs[qkey].splice(idx,1);
+  localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
+  renderOKRs();
+}
+window.deleteObjective=deleteObjective;
+
+function addKRInput(){
+  const container=document.getElementById('kr-inputs');
+  const n=container.querySelectorAll('.kr-input-row').length+1;
+  const div=document.createElement('div');
+  div.className='kr-input-row';
+  div.style.marginBottom='10px';
+  div.innerHTML=`<div class="fg" style="margin-bottom:6px"><label>KR ${n} — TITLE</label><input type="text" placeholder="Measurable outcome..." maxlength="100"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 60px;gap:8px">
+      <div class="fg" style="margin-bottom:0"><label>START VALUE</label><input type="number" placeholder="0"></div>
+      <div class="fg" style="margin-bottom:0"><label>TARGET VALUE</label><input type="number" placeholder="100"></div>
+      <div class="fg" style="margin-bottom:0"><label>UNIT</label><input type="text" placeholder="$" maxlength="10"></div>
+    </div>`;
+  container.appendChild(div);
+}
+window.addKRInput=addKRInput;
+
+function openObjModal(){ document.getElementById('obj-modal').classList.add('open'); }
+function closeObjModal(){ document.getElementById('obj-modal').classList.remove('open'); }
+window.openObjModal=openObjModal; window.closeObjModal=closeObjModal;
+
+function saveObjective(){
+  const title=document.getElementById('obj-title').value.trim();
+  if(!title) return;
+  const krRows=document.querySelectorAll('.kr-input-row');
+  const krs=[];
+  krRows.forEach(row=>{
+    const inputs=row.querySelectorAll('input');
+    const t=inputs[0].value.trim();
+    if(!t) return;
+    krs.push({title:t,start:parseFloat(inputs[1].value)||0,target:parseFloat(inputs[2].value)||100,current:parseFloat(inputs[1].value)||0,unit:inputs[3]?.value||''});
+  });
+  const okrs=getOKRs();
+  const qkey=getQuarterKey(currentQuarterOffset);
+  if(!okrs[qkey]) okrs[qkey]=[];
+  okrs[qkey].push({title,desc:document.getElementById('obj-desc').value.trim(),cat:document.getElementById('obj-cat').value,krs,created:Date.now()});
+  localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
+  closeObjModal();
+  renderOKRs();
+}
+window.saveObjective=saveObjective;
+
+function saveReview(){
+  const reviews=getReviews();
+  reviews.push({
+    date:new Date().toISOString(),
+    week:getISOWeek(new Date()),
+    wins:document.getElementById('rev-wins').value.trim(),
+    blocks:document.getElementById('rev-blocks').value.trim(),
+    next:document.getElementById('rev-next').value.trim(),
+    insight:document.getElementById('rev-insight').value.trim()
+  });
+  localStorage.setItem(REV_KEY, JSON.stringify(reviews.slice(-52)));
+  ['rev-wins','rev-blocks','rev-next','rev-insight'].forEach(id=>{document.getElementById(id).value='';});
+  renderReviewHistory();
+}
+window.saveReview=saveReview;
+
+function getISOWeek(d){
+  const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()+3-(t.getDay()+6)%7);
+  const week1=new Date(t.getFullYear(),0,4);
+  return 1+Math.round(((t-week1)/86400000-3+(week1.getDay()+6)%7)/7);
+}
+
+function renderReviewHistory(){
+  const reviews=getReviews().slice().reverse().slice(0,8);
+  const container=document.getElementById('review-history');
+  if(!reviews.length){container.innerHTML='';return;}
+  container.innerHTML='<div class="section-hd">RECENT REVIEWS</div>'+
+    reviews.map(r=>{
+      const dt=new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+      return `<div style="border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:14px;margin-bottom:8px">
+        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.4);margin-bottom:8px">WEEK ${r.week} · ${dt}</div>
+        ${r.wins?`<div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(201,168,76,.6);margin-bottom:4px"><strong>WINS:</strong> ${r.wins}</div>`:''}
+        ${r.insight?`<div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.5)"><strong>INSIGHT:</strong> ${r.insight}</div>`:''}
+      </div>`;
+    }).join('');
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  document.getElementById('tab-'+id).classList.add('act');
+}
+window.switchTab=switchTab;
+
+// Seed with example OKRs
+function seedDemo(){
+  const okrs=getOKRs();
+  const qkey=getQuarterKey(0);
+  if(!okrs[qkey]||okrs[qkey].length===0){
+    okrs[qkey]=[
+      {title:'Achieve sovereign financial independence through scalable income streams',desc:'Build systems that generate revenue without trading time for money.',cat:'wealth',created:Date.now()-60*86400000,krs:[
+        {title:'Grow monthly recurring revenue',start:0,target:5000,current:2100,unit:'$'},
+        {title:'Reduce active work hours for income',start:50,target:20,current:35,unit:'hrs/wk'},
+        {title:'Build emergency fund',start:0,target:30000,current:18000,unit:'$'},
+      ]},
+      {title:'Master a high-leverage technical skill to command sovereign rates',desc:'Become genuinely excellent at one skill that creates outsized leverage.',cat:'mastery',created:Date.now()-55*86400000,krs:[
+        {title:'Complete deep-work focus hours on craft',start:0,target:200,current:140,unit:'hrs'},
+        {title:'Build and ship public projects',start:0,target:3,current:2,unit:''},
+        {title:'Achieve elite performance benchmark',start:0,target:100,current:68,unit:'%'},
+      ]},
+      {title:'Optimize body and mind for peak sovereign performance',desc:'Physical sovereignty is the foundation of everything else.',cat:'health',created:Date.now()-50*86400000,krs:[
+        {title:'Maintain consistent training schedule',start:0,target:78,current:54,unit:'sessions'},
+        {title:'VO2 max improvement',start:42,target:50,current:46,unit:'ml/kg/min'},
+        {title:'Average sleep quality score',start:65,target:85,current:79,unit:''},
+      ]},
+    ];
+    localStorage.setItem(OKR_KEY, JSON.stringify(okrs));
+  }
+}
+seedDemo();
+renderOKRs();
+renderReviewHistory();
+</script>
+</body>
+</html>

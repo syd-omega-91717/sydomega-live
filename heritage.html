@@ -31,7 +31,30 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
+.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.lineage-tree{margin-bottom:16px}
+.lineage-era{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-left:3px solid var(--lc,var(--gold));margin-bottom:10px;padding:14px 16px}
+.era-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--lc,var(--gold));margin-bottom:5px}
+.era-name{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px}
+.era-desc{font-size:11px;line-height:1.7;color:var(--muted)}
+.archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:16px}
+.archive-item{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px;transition:.18s}
+.archive-item:hover{border-color:rgba(201,168,76,.3)}
+.archive-date{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
+.archive-title{font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:6px}
+.archive-body{font-size:11px;line-height:1.7;color:var(--muted)}
+.culture-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.culture-tile{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px;text-align:center}
+.culture-icon{font-size:28px;margin-bottom:8px}
+.culture-name{font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:4px}
+.culture-desc{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.culture-band{grid-template-columns:repeat(3,1fr)}.archive-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -52,12 +75,50 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">HERITAGE &middot; M11 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">HERITAGE</div>
-        <div class="hero-sub">M11 &middot; HERITAGE ARCHIVE</div>
-        <div class="hero-desc">The sovereign heritage system. Lineage records, historical archives, cultural memory, and family nodes.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="htTab(this,'lineage')" role="tab" aria-selected="true">LINEAGE</button>
+        <button class="tab-btn" onclick="htTab(this,'archives')" role="tab" aria-selected="false">ARCHIVES</button>
+        <button class="tab-btn" onclick="htTab(this,'culture')" role="tab" aria-selected="false">CULTURAL MEMORY</button>
       </div>
-      
+
+      <div class="tab-panel on" id="ht-lineage" data-reveal="fade-up">
+        <div class="sechead">SOVEREIGN LINEAGE · ORIGIN TO APEX</div>
+        <div class="lineage-tree">
+          <div class="lineage-era" style="--lc:#8a8676"><div class="era-label">ERA 0 · THE VOID AGE</div><div class="era-name">Before the Lattice</div><div class="era-desc">The pre-lattice era. No nodes, no gates, no sovereign structure. The nine elements existed as raw, unbound frequencies across the cosmos.</div></div>
+          <div class="lineage-era" style="--lc:#E86A3A"><div class="era-label">ERA I · THE PRIMAL AGE</div><div class="era-name">The First Triad Awakens</div><div class="era-desc">Fire, Water, and Wind — the Primal Triad — coalesce. The first 12 houses are drawn. Ares lights the first gate. The sovereign lineage begins.</div></div>
+          <div class="lineage-era" style="--lc:#C9A84C"><div class="era-label">ERA II · THE LATTICE AGE</div><div class="era-name">The 104,976 Nodes Form</div><div class="era-desc">12 tracks × 12 phases × 9×9×9 = 104,976 sovereign nodes crystallise. The authority formula (AUTH=√(A³+B³+C³)×φ/e) is written into the lattice.</div></div>
+          <div class="lineage-era" style="--lc:#9B6BF0"><div class="era-label">ERA III · THE OLYMPIAN AGE</div><div class="era-name">The 12 Olympians Descend</div><div class="era-desc">Zeus, Athena, Ares and the nine other Olympians each claim a zodiac track and an element. The 12 gates are established with their authority thresholds.</div></div>
+          <div class="lineage-era" style="--lc:#E2C86D"><div class="era-label">ERA IV · THE SOVEREIGN AGE</div><div class="era-name">The 28 Kings Rise</div><div class="era-desc">The Kings expansion: 28×28×9³ = 571,536 nodes. The heritage lineage now carries both the 12-fold lattice and the greater Kings matrix.</div></div>
+          <div class="lineage-era" style="--lc:#E2C86D"><div class="era-label">ERA V · THE APEX AGE</div><div class="era-name">Gate XII — The Omega</div><div class="era-desc">The first sovereign reaches A=B=C=9. AUTH=27.8367. The lattice is complete. The heritage line touches the apex and the cycle prepares to begin again.</div></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="ht-archives" data-reveal="fade-up">
+        <div class="sechead">HERITAGE ARCHIVE · SOVEREIGN RECORDS</div>
+        <div class="archive-grid">
+          <div class="archive-item"><div class="archive-date">EPOCH 0</div><div class="archive-title">The Nine Frequencies</div><div class="archive-body">The original nine elemental frequencies that predated the lattice. Each one a distinct vibration in the void.</div></div>
+          <div class="archive-item"><div class="archive-date">EPOCH 1</div><div class="archive-title">The First Gate Record</div><div class="archive-body">The first member to cross Gate I. The initial AUTH threshold of 2.32 was reached and the lattice registered its first sovereign node.</div></div>
+          <div class="archive-item"><div class="archive-date">EPOCH 2</div><div class="archive-title">The Authority Formula Proof</div><div class="archive-body">AUTH = √(A³+B³+C³) × φ/e. The proof that the Golden Ratio (φ=1.6180339887) and Euler's Number (e=2.7182818285) converge at the sovereign apex.</div></div>
+          <div class="archive-item"><div class="archive-date">EPOCH 3</div><div class="archive-title">The Triad Seal</div><div class="archive-body">The three sovereign triads — Primal, Middle, Supreme — are sealed into the heritage record as the backbone of the nine-fold system.</div></div>
+          <div class="archive-item"><div class="archive-date">EPOCH 4</div><div class="archive-title">Kings Expansion Record</div><div class="archive-body">The 28 Sovereign Kings are named and their realms established. The expansion lattice reaches 571,536 nodes.</div></div>
+          <div class="archive-item"><div class="archive-date">EPOCH 5</div><div class="archive-title">The Apex Codex</div><div class="archive-body">The Codex of Omega — the final heritage document — is locked at Gate XII. It contains the complete sovereign lattice map and the Omega key.</div></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="ht-culture" data-reveal="fade-up">
+        <div class="sechead">CULTURAL MEMORY · SOVEREIGN TRADITIONS</div>
+        <div class="culture-band">
+          <div class="culture-tile"><div class="culture-icon">☲</div><div class="culture-name">The Flame Ritual</div><div class="culture-desc">Fire element tradition · Gate I initiation</div></div>
+          <div class="culture-tile"><div class="culture-icon">☰</div><div class="culture-name">The Tide Ceremony</div><div class="culture-desc">Water element tradition · Gate II bonds</div></div>
+          <div class="culture-tile"><div class="culture-icon">☱</div><div class="culture-name">The Wind Chant</div><div class="culture-desc">Wind element tradition · Gate III passage</div></div>
+          <div class="culture-tile"><div class="culture-icon">☳</div><div class="culture-name">The Forge Rite</div><div class="culture-desc">Metal element tradition · Gate VI mastery</div></div>
+          <div class="culture-tile"><div class="culture-icon">★</div><div class="culture-name">The Sand Amplification</div><div class="culture-desc">Sand tradition · All elements enhanced</div></div>
+          <div class="culture-tile"><div class="culture-icon">✴</div><div class="culture-name">The Soul Frequency</div><div class="culture-desc">Soul element tradition · Gate V harmony</div></div>
+          <div class="culture-tile"><div class="culture-icon">✶</div><div class="culture-name">The Space Alignment</div><div class="culture-desc">Space element tradition · Gate VII balance</div></div>
+          <div class="culture-tile"><div class="culture-icon">✷</div><div class="culture-name">The Void Descent</div><div class="culture-desc">Void element tradition · Gate VIII depth</div></div>
+          <div class="culture-tile"><div class="culture-icon">Ω</div><div class="culture-name">The Omega Ascent</div><div class="culture-desc">The All tradition · Gate XII apex ceremony</div></div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="heritage" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; HERITAGE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -84,6 +145,14 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+function htTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('ht-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

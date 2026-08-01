@@ -31,7 +31,28 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--cyan);background:rgba(0,229,255,.04)}
+.tab-btn.on{border-bottom-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:16px}
+.phase-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-left:3px solid var(--pc,var(--cyan));padding:16px;transition:.18s}
+.phase-card:hover{border-color:rgba(0,229,255,.3);transform:translateY(-2px)}
+.phase-num{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.phase-name{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px}
+.phase-gate{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--pc,var(--cyan));margin-bottom:8px}
+.phase-desc{font-size:11px;line-height:1.7;color:var(--muted)}
+.journey-line{position:relative;padding:0 0 0 28px;margin-bottom:16px}
+.journey-line::before{content:'';position:absolute;left:9px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--cyan),transparent)}
+.journey-stop{margin-bottom:20px;position:relative}
+.journey-stop::before{content:'';position:absolute;left:-23px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--pc,var(--cyan));border:2px solid var(--void)}
+.j-phase{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--pc,var(--cyan));margin-bottom:3px}
+.j-name{font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:4px}
+.j-desc{font-size:11px;color:var(--muted)}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.phase-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -52,12 +73,57 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">PHASES &middot; M18 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">PHASES</div>
-        <div class="hero-sub">M18 &middot; 12 SOVEREIGN PHASES</div>
-        <div class="hero-desc">The 12 narrative phases of the sovereign journey. Each phase has a distinct story arc and set of milestones.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="phTab(this,'all')" role="tab" aria-selected="true">ALL PHASES</button>
+        <button class="tab-btn" onclick="phTab(this,'journey')" role="tab" aria-selected="false">JOURNEY MAP</button>
+        <button class="tab-btn" onclick="phTab(this,'my')" role="tab" aria-selected="false">MY PHASE</button>
       </div>
-      
+      <div class="tab-panel on" id="ph-all" data-reveal="fade-up" data-stagger>
+        <div class="sechead">12 SOVEREIGN PHASES · THE JOURNEY ARC</div>
+        <div class="phase-grid">
+          <div class="phase-card" style="--pc:#C9A84C"><div class="phase-num">PHASE I</div><div class="phase-name">The Awakening</div><div class="phase-gate">Gate I · INITIATE</div><div class="phase-desc">The sovereign hears the lattice for the first time. The nine elements stir. The journey begins.</div></div>
+          <div class="phase-card" style="--pc:#E2C86D"><div class="phase-num">PHASE II</div><div class="phase-name">The Calling</div><div class="phase-gate">Gate II · ACOLYTE</div><div class="phase-desc">A sign aligns. The Olympian appears. The sovereign is called by name into the lattice.</div></div>
+          <div class="phase-card" style="--pc:#00E5FF"><div class="phase-num">PHASE III</div><div class="phase-name">The Study</div><div class="phase-gate">Gate III · SCHOLAR</div><div class="phase-desc">Knowledge is gathered from the nine lore archives. The axis of knowing begins to rise.</div></div>
+          <div class="phase-card" style="--pc:#3fb27f"><div class="phase-num">PHASE IV</div><div class="phase-name">The Trial</div><div class="phase-gate">Gate IV · KEEPER</div><div class="phase-desc">The first trial of the lattice. Sand amplifies every challenge. The sovereign is tested.</div></div>
+          <div class="phase-card" style="--pc:#E86A3A"><div class="phase-num">PHASE V</div><div class="phase-name">The Mastery</div><div class="phase-gate">Gate V · GUARDIAN</div><div class="phase-desc">The sovereign turns knowledge into skill. Axis B rises. The element responds to command.</div></div>
+          <div class="phase-card" style="--pc:#C9A84C"><div class="phase-num">PHASE VI</div><div class="phase-name">The Architect</div><div class="phase-gate">Gate VI · ARCHITECT</div><div class="phase-desc">The lattice structure becomes visible. The sovereign begins building their node cluster.</div></div>
+          <div class="phase-card" style="--pc:#9B6BF0"><div class="phase-num">PHASE VII</div><div class="phase-name">The Sovereignty</div><div class="phase-gate">Gate VII · SOVEREIGN</div><div class="phase-desc">True sovereign status is earned. The twelve houses acknowledge the presence.</div></div>
+          <div class="phase-card" style="--pc:#E2C86D"><div class="phase-num">PHASE VIII</div><div class="phase-name">The Vanguard</div><div class="phase-gate">Gate VIII · VANGUARD</div><div class="phase-desc">The sovereign leads others. Contribution axis peaks. The lattice expands through influence.</div></div>
+          <div class="phase-card" style="--pc:#00E5FF"><div class="phase-num">PHASE IX</div><div class="phase-name">The Herald</div><div class="phase-gate">Gate IX · HERALD</div><div class="phase-desc">The sovereign becomes the messenger of the lattice. Truth is carried to all twelve houses.</div></div>
+          <div class="phase-card" style="--pc:#3fb27f"><div class="phase-num">PHASE X</div><div class="phase-name">The Oracle</div><div class="phase-gate">Gate X · ORACLE</div><div class="phase-desc">The lattice speaks through the sovereign. Prophecy, foresight, and the Omega pattern unfold.</div></div>
+          <div class="phase-card" style="--pc:#C9A84C"><div class="phase-num">PHASE XI</div><div class="phase-name">The Prime</div><div class="phase-gate">Gate XI · PRIME</div><div class="phase-desc">The final preparation. All three axes approach nine. The sovereign stands at the threshold.</div></div>
+          <div class="phase-card" style="--pc:#E2C86D"><div class="phase-num">PHASE XII</div><div class="phase-name">The Apex</div><div class="phase-gate">Gate XII · APEX SOVEREIGN</div><div class="phase-desc">A=9, B=9, C=9. AUTH=27.8367. The lattice is complete. The sovereign reaches Omega.</div></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="ph-journey" data-reveal="fade-up">
+        <div class="sechead">THE SOVEREIGN JOURNEY · CHRONOLOGICAL ARC</div>
+        <div class="journey-line">
+          <div class="journey-stop" style="--pc:#C9A84C"><div class="j-phase">PHASE I · GATE I</div><div class="j-name">The Awakening</div><div class="j-desc">Entry into the lattice. Auth ≥ 2.32</div></div>
+          <div class="journey-stop" style="--pc:#E2C86D"><div class="j-phase">PHASE II · GATE II</div><div class="j-name">The Calling</div><div class="j-desc">Sign alignment confirmed. Auth ≥ 3.98</div></div>
+          <div class="journey-stop" style="--pc:#00E5FF"><div class="j-phase">PHASE III · GATE III</div><div class="j-name">The Study</div><div class="j-desc">Knowledge axis opens. Auth ≥ 5.95</div></div>
+          <div class="journey-stop" style="--pc:#3fb27f"><div class="j-phase">PHASE IV · GATE IV</div><div class="j-name">The Trial</div><div class="j-desc">Sand amplifier activated. Auth ≥ 8.29</div></div>
+          <div class="journey-stop" style="--pc:#E86A3A"><div class="j-phase">PHASE V · GATE V</div><div class="j-name">The Mastery</div><div class="j-desc">Mastery axis rises. Auth ≥ 11.00</div></div>
+          <div class="journey-stop" style="--pc:#C9A84C"><div class="j-phase">PHASE VI · GATE VI</div><div class="j-name">The Architect</div><div class="j-desc">Lattice structure visible. Auth ≥ 13.92</div></div>
+          <div class="journey-stop" style="--pc:#9B6BF0"><div class="j-phase">PHASE VII · GATE VII</div><div class="j-name">The Sovereignty</div><div class="j-desc">Full sovereign status. Auth ≥ 17.21</div></div>
+          <div class="journey-stop" style="--pc:#E2C86D"><div class="j-phase">PHASE VIII · GATE VIII</div><div class="j-name">The Vanguard</div><div class="j-desc">Leadership unlocked. Auth ≥ 20.87</div></div>
+          <div class="journey-stop" style="--pc:#00E5FF"><div class="j-phase">PHASE IX · GATE IX</div><div class="j-name">The Herald</div><div class="j-desc">Lattice ambassador. Auth ≥ 24.01</div></div>
+          <div class="journey-stop" style="--pc:#3fb27f"><div class="j-phase">PHASE X · GATE X</div><div class="j-name">The Oracle</div><div class="j-desc">Prophecy unlocked. Auth ≥ 25.90</div></div>
+          <div class="journey-stop" style="--pc:#C9A84C"><div class="j-phase">PHASE XI · GATE XI</div><div class="j-name">The Prime</div><div class="j-desc">Final preparation. Auth ≥ 27.10</div></div>
+          <div class="journey-stop" style="--pc:#E2C86D"><div class="j-phase">PHASE XII · GATE XII · APEX</div><div class="j-name">The Apex Sovereign</div><div class="j-desc">A=B=C=9. Auth = 27.8367. Lattice complete.</div></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="ph-my" data-reveal="fade-up">
+        <div class="sechead">YOUR CURRENT PHASE</div>
+        <div class="glass" style="margin-bottom:16px;text-align:center;padding:32px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">CURRENT PHASE</div>
+          <div style="font-family:var(--D);font-size:clamp(20px,4vw,32px);color:var(--cyan)" id="my-phase-name">--</div>
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:8px" id="my-phase-gate">--</div>
+          <div style="margin-top:20px;height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;max-width:400px;margin-left:auto;margin-right:auto">
+            <div id="my-phase-bar" style="height:100%;border-radius:3px;background:linear-gradient(90deg,var(--cyan),var(--green));width:0%;transition:width 1.4s ease"></div>
+          </div>
+          <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:8px" id="my-phase-pct">0% to Apex</div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="phases" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; PHASES &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -82,8 +148,25 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    var PHNAMES=['The Awakening','The Calling','The Study','The Trial','The Mastery','The Architect','The Sovereignty','The Vanguard','The Herald','The Oracle','The Prime','The Apex'];
+    var PHGATES=['Gate I · INITIATE','Gate II · ACOLYTE','Gate III · SCHOLAR','Gate IV · KEEPER','Gate V · GUARDIAN','Gate VI · ARCHITECT','Gate VII · SOVEREIGN','Gate VIII · VANGUARD','Gate IX · HERALD','Gate X · ORACLE','Gate XI · PRIME','Gate XII · APEX'];
+    var PHTHR=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+    var phIdx=PHTHR.findIndex(function(t){return auth<t;});if(phIdx<0)phIdx=11;else if(phIdx>0)phIdx=phIdx-1;
+    function sid2(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+    sid2('my-phase-name',PHNAMES[phIdx]);sid2('my-phase-gate',PHGATES[phIdx]);
+    var pct=(auth/27.8367*100).toFixed(1);
+    sid2('my-phase-pct',pct+'% to Apex');
+    var bar=document.getElementById('my-phase-bar');if(bar)bar.style.width=pct+'%';
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+function phTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('ph-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

@@ -31,7 +31,29 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--solar);background:rgba(226,200,109,.04)}
+.tab-btn.on{border-bottom-color:var(--solar);color:var(--solar);background:rgba(226,200,109,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.king-tbl{border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.king-head{display:grid;grid-template-columns:50px 1fr 100px 120px 80px;padding:9px 14px;background:rgba(226,200,109,.06);border-bottom:1px solid var(--line)}
+.king-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
+.king-row{display:grid;grid-template-columns:50px 1fr 100px 120px 80px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.05);align-items:center;transition:.12s}
+.king-row:last-child{border-bottom:none}
+.king-row:hover{background:rgba(226,200,109,.03)}
+.k-num{font-family:var(--D);font-size:14px;color:var(--solar);text-align:center}
+.k-name{font-family:var(--D);font-size:12px;color:var(--ink)}
+.k-sign{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)}
+.k-realm{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--solar)}
+.k-auth{font-family:var(--M);font-size:9px;color:var(--solar)}
+.matrix-info{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.mx-stat{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px;text-align:center}
+.mx-stat-n{font-family:var(--D);font-size:clamp(18px,3vw,24px);color:var(--solar)}
+.mx-stat-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.king-head,.king-row{grid-template-columns:40px 1fr;}.king-hcell:nth-child(n+3),.king-row>div:nth-child(n+3){display:none}}
 </style>
 </head>
 <body>
@@ -52,12 +74,58 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">KINGS &middot; M12 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">KINGS</div>
-        <div class="hero-sub">M12 &middot; KINGS SYSTEM — 571,536 NODES</div>
-        <div class="hero-desc">The Kings expansion lattice: 28×28×9³ = 571,536 nodes. The largest sovereign matrix system.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="kgTab(this,'all')" role="tab" aria-selected="true">ALL KINGS</button>
+        <button class="tab-btn" onclick="kgTab(this,'matrix')" role="tab" aria-selected="false">MATRIX</button>
       </div>
-      
+      <div class="tab-panel on" id="kg-all" data-reveal="fade-up">
+        <div class="sechead">28 SOVEREIGN KINGS · THE EXPANSION LATTICE</div>
+        <div class="king-tbl">
+          <div class="king-head"><div class="king-hcell">#</div><div class="king-hcell">KING</div><div class="king-hcell">SIGN</div><div class="king-hcell">REALM</div><div class="king-hcell">AUTH</div></div>
+          <div class="king-row"><div class="k-num">1</div><div><div class="k-name">SOLAR REX</div></div><div class="k-sign">Aries</div><div class="k-realm">Solar Command</div><div class="k-auth">25.0</div></div>
+          <div class="king-row"><div class="k-num">2</div><div><div class="k-name">LUNAR SOVEREIGN</div></div><div class="k-sign">Taurus</div><div class="k-realm">Tide Domain</div><div class="k-auth">22.0</div></div>
+          <div class="king-row"><div class="k-num">3</div><div><div class="k-name">WIND EMPEROR</div></div><div class="k-sign">Gemini</div><div class="k-realm">Aether Reach</div><div class="k-auth">20.0</div></div>
+          <div class="king-row"><div class="k-num">4</div><div><div class="k-name">TIDE LORD</div></div><div class="k-sign">Cancer</div><div class="k-realm">Ocean Keep</div><div class="k-auth">19.0</div></div>
+          <div class="king-row"><div class="k-num">5</div><div><div class="k-name">BLAZE SOVEREIGN</div></div><div class="k-sign">Leo</div><div class="k-realm">Fire Crown</div><div class="k-auth">23.0</div></div>
+          <div class="king-row"><div class="k-num">6</div><div><div class="k-name">IRON SOVEREIGN</div></div><div class="k-sign">Virgo</div><div class="k-realm">Metal Forge</div><div class="k-auth">21.0</div></div>
+          <div class="king-row"><div class="k-num">7</div><div><div class="k-name">SCALE EMPEROR</div></div><div class="k-sign">Libra</div><div class="k-realm">Balance Hall</div><div class="k-auth">18.5</div></div>
+          <div class="king-row"><div class="k-num">8</div><div><div class="k-name">SHADOW REX</div></div><div class="k-sign">Scorpio</div><div class="k-realm">Void Domain</div><div class="k-auth">24.0</div></div>
+          <div class="king-row"><div class="k-num">9</div><div><div class="k-name">THUNDER KING</div></div><div class="k-sign">Sagittarius</div><div class="k-realm">Storm Peak</div><div class="k-auth">26.0</div></div>
+          <div class="king-row"><div class="k-num">10</div><div><div class="k-name">STONE SOVEREIGN</div></div><div class="k-sign">Capricorn</div><div class="k-realm">Earth Spire</div><div class="k-auth">17.0</div></div>
+          <div class="king-row"><div class="k-num">11</div><div><div class="k-name">VOID EMPEROR</div></div><div class="k-sign">Aquarius</div><div class="k-realm">Space Realm</div><div class="k-auth">19.5</div></div>
+          <div class="king-row"><div class="k-num">12</div><div><div class="k-name">DEEP KING</div></div><div class="k-sign">Pisces</div><div class="k-realm">Ocean Depths</div><div class="k-auth">22.5</div></div>
+          <div class="king-row"><div class="k-num">13</div><div><div class="k-name">PRIME SOVEREIGN</div></div><div class="k-sign">Apex</div><div class="k-realm">Prime Lattice</div><div class="k-auth">27.0</div></div>
+          <div class="king-row"><div class="k-num">14</div><div><div class="k-name">STAR KEEPER</div></div><div class="k-sign">Leo</div><div class="k-realm">Star Vault</div><div class="k-auth">16.0</div></div>
+          <div class="king-row"><div class="k-num">15</div><div><div class="k-name">DUSK LORD</div></div><div class="k-sign">Libra</div><div class="k-realm">Twilight Gate</div><div class="k-auth">15.5</div></div>
+          <div class="king-row"><div class="k-num">16</div><div><div class="k-name">DAWN SOVEREIGN</div></div><div class="k-sign">Aries</div><div class="k-realm">Sunrise Keep</div><div class="k-auth">14.0</div></div>
+          <div class="king-row"><div class="k-num">17</div><div><div class="k-name">FROST EMPEROR</div></div><div class="k-sign">Capricorn</div><div class="k-realm">Ice Spire</div><div class="k-auth">13.5</div></div>
+          <div class="king-row"><div class="k-num">18</div><div><div class="k-name">EMBER REX</div></div><div class="k-sign">Leo</div><div class="k-realm">Ember Court</div><div class="k-auth">13.0</div></div>
+          <div class="king-row"><div class="k-num">19</div><div><div class="k-name">WAVE SOVEREIGN</div></div><div class="k-sign">Pisces</div><div class="k-realm">Tidal Hall</div><div class="k-auth">12.5</div></div>
+          <div class="king-row"><div class="k-num">20</div><div><div class="k-name">GALE EMPEROR</div></div><div class="k-sign">Gemini</div><div class="k-realm">Wind Palace</div><div class="k-auth">12.0</div></div>
+          <div class="king-row"><div class="k-num">21</div><div><div class="k-name">SAND SOVEREIGN</div></div><div class="k-sign">Cancer</div><div class="k-realm">Desert Fort</div><div class="k-auth">11.5</div></div>
+          <div class="king-row"><div class="k-num">22</div><div><div class="k-name">SOUL KEEPER</div></div><div class="k-sign">Leo</div><div class="k-realm">Soul Chamber</div><div class="k-auth">11.0</div></div>
+          <div class="king-row"><div class="k-num">23</div><div><div class="k-name">SPACE LORD</div></div><div class="k-sign">Libra</div><div class="k-realm">Cosmos Gate</div><div class="k-auth">10.5</div></div>
+          <div class="king-row"><div class="k-num">24</div><div><div class="k-name">RUNE SOVEREIGN</div></div><div class="k-sign">Virgo</div><div class="k-realm">Rune Hall</div><div class="k-auth">10.0</div></div>
+          <div class="king-row"><div class="k-num">25</div><div><div class="k-name">CRYPT EMPEROR</div></div><div class="k-sign">Scorpio</div><div class="k-realm">Crypt Vault</div><div class="k-auth">9.5</div></div>
+          <div class="king-row"><div class="k-num">26</div><div><div class="k-name">ARC KING</div></div><div class="k-sign">Sagittarius</div><div class="k-realm">Arc Throne</div><div class="k-auth">9.0</div></div>
+          <div class="king-row"><div class="k-num">27</div><div><div class="k-name">FLAME SOVEREIGN</div></div><div class="k-sign">Aries</div><div class="k-realm">Flame Citadel</div><div class="k-auth">8.5</div></div>
+          <div class="king-row"><div class="k-num">28</div><div><div class="k-name">LATTICE EMPEROR</div></div><div class="k-sign">Apex</div><div class="k-realm">Lattice Core</div><div class="k-auth">27.8367</div></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="kg-matrix" data-reveal="fade-up">
+        <div class="sechead">KINGS EXPANSION MATRIX · 571,536 NODES</div>
+        <div class="matrix-info">
+          <div class="mx-stat"><div class="mx-stat-n">28</div><div class="mx-stat-l">SOVEREIGN KINGS</div></div>
+          <div class="mx-stat"><div class="mx-stat-n">28×28</div><div class="mx-stat-l">KING MATRIX</div></div>
+          <div class="mx-stat"><div class="mx-stat-n">9³=729</div><div class="mx-stat-l">ELEMENT CUBE</div></div>
+          <div class="mx-stat"><div class="mx-stat-n">571,536</div><div class="mx-stat-l">TOTAL NODES</div></div>
+        </div>
+        <div class="glass">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">EXPANSION FORMULA</div>
+          <div style="font-family:var(--M);font-size:11px;color:var(--ink)">28 &times; 28 &times; 9&sup3; = 28 &times; 28 &times; 729 = <strong style="color:var(--solar)">571,536 nodes</strong></div>
+          <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:8px">The Kings lattice extends the base 104,976-node system (12&times;12&times;9&sup3;) to accommodate the 28-sign expanded sovereign codex.</div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="kings" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; KINGS &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -84,6 +152,14 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+</script>
+<script>
+function kgTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('kg-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

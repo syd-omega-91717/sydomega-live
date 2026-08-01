@@ -31,7 +31,43 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--solar);background:rgba(226,200,109,.04)}
+.tab-btn.on{border-bottom-color:var(--solar);color:var(--solar);background:rgba(226,200,109,.06)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.grade-tbl{border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.grade-head{display:grid;grid-template-columns:50px 1fr 120px 130px 80px;padding:9px 14px;background:rgba(226,200,109,.06);border-bottom:1px solid var(--line)}
+.grade-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
+.grade-row{display:grid;grid-template-columns:50px 1fr 120px 130px 80px;padding:12px 14px;border-bottom:1px solid rgba(201,168,76,.05);align-items:center;transition:.12s;cursor:default}
+.grade-row:last-child{border-bottom:none}
+.grade-row:hover{background:rgba(226,200,109,.03)}
+.grade-row.earned{background:rgba(63,178,127,.04)}
+.grade-row.earned .gr-roman{color:var(--green)}
+.grade-row.earned .gr-name{color:var(--ink)}
+.grade-row.locked{opacity:.45}
+.gr-roman{font-family:var(--D);font-size:16px;color:var(--solar);text-align:center}
+.gr-name{font-family:var(--D);font-size:12px;color:var(--ink)}
+.gr-gate{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)}
+.gr-auth{font-family:var(--M);font-size:9px;color:var(--solar)}
+.gr-status{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:3px 9px;border-radius:10px;border:1px solid rgba(226,200,109,.25);color:var(--muted);white-space:nowrap}
+.gr-status.earned{color:var(--green);border-color:rgba(63,178,127,.4);background:rgba(63,178,127,.08)}
+.progress-panel{margin-bottom:16px}
+.progress-item{margin-bottom:14px}
+.pr-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.pr-lname{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)}
+.pr-lval{font-family:var(--D);font-size:12px;color:var(--solar)}
+.pr-track{height:8px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden}
+.pr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--solar),var(--gold));transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:16px}
+.req-card{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px 16px;border-top:2px solid var(--rc,var(--solar))}
+.req-roman{font-family:var(--D);font-size:20px;color:var(--rc,var(--solar));margin-bottom:4px}
+.req-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:8px}
+.req-list{list-style:none;padding:0;margin:0}
+.req-list li{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:4px;display:flex;gap:6px}
+.req-list li::before{content:"·";color:var(--solar);flex-shrink:0}
+@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.grade-head,.grade-row{grid-template-columns:40px 1fr 100px;}.grade-head .grade-hcell:nth-child(4),.grade-head .grade-hcell:nth-child(5),.grade-row .gr-auth,.grade-row .gr-status{display:none}}
 </style>
 </head>
 <body>
@@ -52,12 +88,83 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
       </div>
       <div class="sechead" data-reveal="fade-up">GRADES &middot; M4 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">GRADES</div>
-        <div class="hero-sub">M4 &middot; 12 SOVEREIGN GRADES</div>
-        <div class="hero-desc">The 12 grade bands that mark progression across the 104,976-node canonical lattice.</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn on" onclick="grdTab(this,'all')" role="tab" aria-selected="true">ALL GRADES</button>
+        <button class="tab-btn" onclick="grdTab(this,'progress')" role="tab" aria-selected="false">MY PROGRESS</button>
+        <button class="tab-btn" onclick="grdTab(this,'req')" role="tab" aria-selected="false">REQUIREMENTS</button>
       </div>
-      
+
+      <!-- ALL GRADES -->
+      <div class="tab-panel on" id="grd-all" data-reveal="fade-up">
+        <div class="sechead">12 SOVEREIGN GRADES · AUTH THRESHOLDS</div>
+        <div class="grade-tbl">
+          <div class="grade-head"><div class="grade-hcell">GRADE</div><div class="grade-hcell">NAME</div><div class="grade-hcell">GATE</div><div class="grade-hcell">AUTH ≥</div><div class="grade-hcell">STATUS</div></div>
+          <div class="grade-row locked" id="gr-row-1"><div class="gr-roman">I</div><div><div class="gr-name">INITIATE</div></div><div class="gr-gate">GATE I</div><div class="gr-auth">2.32</div><div class="gr-status" id="gr-s1">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-2"><div class="gr-roman">II</div><div><div class="gr-name">ACOLYTE</div></div><div class="gr-gate">GATE II</div><div class="gr-auth">3.98</div><div class="gr-status" id="gr-s2">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-3"><div class="gr-roman">III</div><div><div class="gr-name">SCHOLAR</div></div><div class="gr-gate">GATE III</div><div class="gr-auth">5.95</div><div class="gr-status" id="gr-s3">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-4"><div class="gr-roman">IV</div><div><div class="gr-name">KEEPER</div></div><div class="gr-gate">GATE IV</div><div class="gr-auth">8.29</div><div class="gr-status" id="gr-s4">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-5"><div class="gr-roman">V</div><div><div class="gr-name">GUARDIAN</div></div><div class="gr-gate">GATE V</div><div class="gr-auth">11.00</div><div class="gr-status" id="gr-s5">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-6"><div class="gr-roman">VI</div><div><div class="gr-name">ARCHITECT</div></div><div class="gr-gate">GATE VI</div><div class="gr-auth">13.92</div><div class="gr-status" id="gr-s6">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-7"><div class="gr-roman">VII</div><div><div class="gr-name">SOVEREIGN</div></div><div class="gr-gate">GATE VII</div><div class="gr-auth">17.21</div><div class="gr-status" id="gr-s7">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-8"><div class="gr-roman">VIII</div><div><div class="gr-name">VANGUARD</div></div><div class="gr-gate">GATE VIII</div><div class="gr-auth">20.87</div><div class="gr-status" id="gr-s8">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-9"><div class="gr-roman">IX</div><div><div class="gr-name">HERALD</div></div><div class="gr-gate">GATE IX</div><div class="gr-auth">24.01</div><div class="gr-status" id="gr-s9">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-10"><div class="gr-roman">X</div><div><div class="gr-name">ORACLE</div></div><div class="gr-gate">GATE X</div><div class="gr-auth">25.90</div><div class="gr-status" id="gr-s10">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-11"><div class="gr-roman">XI</div><div><div class="gr-name">PRIME</div></div><div class="gr-gate">GATE XI</div><div class="gr-auth">27.10</div><div class="gr-status" id="gr-s11">LOCKED</div></div>
+          <div class="grade-row locked" id="gr-row-12"><div class="gr-roman">XII</div><div><div class="gr-name">APEX SOVEREIGN</div></div><div class="gr-gate">GATE XII</div><div class="gr-auth">27.8367</div><div class="gr-status" id="gr-s12">LOCKED</div></div>
+        </div>
+        <div class="glass" style="margin-bottom:16px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">AUTHORITY FORMULA</div>
+          <div style="font-family:var(--M);font-size:11px;color:var(--ink)">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:6px">&phi; = 1.6180339887 &nbsp;&middot;&nbsp; e = 2.7182818285 &nbsp;&middot;&nbsp; APEX at A=B=C=9 &nbsp;&rightarrow;&nbsp; 27.8367</div>
+        </div>
+      </div>
+
+      <!-- MY PROGRESS -->
+      <div class="tab-panel" id="grd-progress" data-reveal="fade-up">
+        <div class="sechead">YOUR GRADE PROGRESSION</div>
+        <div class="progress-panel">
+          <div class="progress-item">
+            <div class="pr-label"><span class="pr-lname">AUTHORITY</span><span class="pr-lval" id="pg-auth">--</span></div>
+            <div class="pr-track"><div class="pr-fill" id="pg-auth-bar" style="width:0%;background:linear-gradient(90deg,var(--solar),var(--gold))"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="pr-label"><span class="pr-lname">AXIS A · KNOWLEDGE</span><span class="pr-lval" id="pg-a">--</span></div>
+            <div class="pr-track"><div class="pr-fill" id="pg-a-bar" style="width:0%;background:linear-gradient(90deg,#E86A3A,var(--solar))"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="pr-label"><span class="pr-lname">AXIS B · MASTERY</span><span class="pr-lval" id="pg-b">--</span></div>
+            <div class="pr-track"><div class="pr-fill" id="pg-b-bar" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--green))"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="pr-label"><span class="pr-lname">AXIS C · CONTRIBUTION</span><span class="pr-lval" id="pg-c">--</span></div>
+            <div class="pr-track"><div class="pr-fill" id="pg-c-bar" style="width:0%;background:linear-gradient(90deg,var(--purple),var(--cyan))"></div></div>
+          </div>
+        </div>
+        <div class="glass">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">CURRENT GRADE</div>
+          <div style="font-family:var(--D);font-size:clamp(18px,4vw,28px);color:var(--solar)" id="cur-grade-name">--</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:6px" id="cur-grade-info">Complete the auth formula to earn your grade</div>
+        </div>
+      </div>
+
+      <!-- REQUIREMENTS -->
+      <div class="tab-panel" id="grd-req" data-reveal="fade-up">
+        <div class="sechead">PER-GRADE REQUIREMENTS</div>
+        <div class="req-grid">
+          <div class="req-card" style="--rc:#C9A84C"><div class="req-roman">I</div><div class="req-name">INITIATE</div><ul class="req-list"><li>Auth ≥ 2.32</li><li>Axis A ≥ 0.5</li><li>Email verified</li><li>Profile complete</li></ul></div>
+          <div class="req-card" style="--rc:#E2C86D"><div class="req-roman">II</div><div class="req-name">ACOLYTE</div><ul class="req-list"><li>Auth ≥ 3.98</li><li>Axis A ≥ 1.0</li><li>First task complete</li><li>Gate I held 7+ days</li></ul></div>
+          <div class="req-card" style="--rc:#00E5FF"><div class="req-roman">III</div><div class="req-name">SCHOLAR</div><ul class="req-list"><li>Auth ≥ 5.95</li><li>A + B ≥ 3.0</li><li>Knowledge cert earned</li><li>5+ tasks complete</li></ul></div>
+          <div class="req-card" style="--rc:#3fb27f"><div class="req-roman">IV</div><div class="req-name">KEEPER</div><ul class="req-list"><li>Auth ≥ 8.29</li><li>A + B + C ≥ 5.0</li><li>12 tasks complete</li><li>Element affinity set</li></ul></div>
+          <div class="req-card" style="--rc:#E86A3A"><div class="req-roman">V</div><div class="req-name">GUARDIAN</div><ul class="req-list"><li>Auth ≥ 11.00</li><li>All axes ≥ 2.0</li><li>25 tasks complete</li><li>Mastery cert earned</li></ul></div>
+          <div class="req-card" style="--rc:#C9A84C"><div class="req-roman">VI</div><div class="req-name">ARCHITECT</div><ul class="req-list"><li>Auth ≥ 13.92</li><li>All axes ≥ 3.0</li><li>50 tasks complete</li><li>Contribution cert earned</li></ul></div>
+          <div class="req-card" style="--rc:#9B6BF0"><div class="req-roman">VII</div><div class="req-name">SOVEREIGN</div><ul class="req-list"><li>Auth ≥ 17.21</li><li>All axes ≥ 4.0</li><li>100 tasks complete</li><li>Architect cert earned</li></ul></div>
+          <div class="req-card" style="--rc:#E2C86D"><div class="req-roman">VIII</div><div class="req-name">VANGUARD</div><ul class="req-list"><li>Auth ≥ 20.87</li><li>All axes ≥ 5.5</li><li>200 tasks complete</li><li>KYC verified</li></ul></div>
+          <div class="req-card" style="--rc:#00E5FF"><div class="req-roman">IX</div><div class="req-name">HERALD</div><ul class="req-list"><li>Auth ≥ 24.01</li><li>All axes ≥ 7.0</li><li>500 tasks complete</li><li>2 referred members active</li></ul></div>
+          <div class="req-card" style="--rc:#3fb27f"><div class="req-roman">X</div><div class="req-name">ORACLE</div><ul class="req-list"><li>Auth ≥ 25.90</li><li>All axes ≥ 8.0</li><li>1,000 tasks complete</li><li>5 referred members</li></ul></div>
+          <div class="req-card" style="--rc:#C9A84C"><div class="req-roman">XI</div><div class="req-name">PRIME</div><ul class="req-list"><li>Auth ≥ 27.10</li><li>All axes ≥ 8.5</li><li>2,500 tasks complete</li><li>Gate XI held 30+ days</li></ul></div>
+          <div class="req-card" style="--rc:#E2C86D"><div class="req-roman">XII</div><div class="req-name">APEX SOVEREIGN</div><ul class="req-list"><li>Auth = 27.8367</li><li>All axes = 9.0</li><li>All certs earned</li><li>Lattice complete</li></ul></div>
+        </div>
+      </div>
     </div>
     <div data-page-emblem="grades" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; GRADES &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
@@ -82,8 +189,42 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    /* Grade unlock logic */
+    var THRESHOLDS=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+    var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+    var highest='--';
+    THRESHOLDS.forEach(function(t,i){
+      var row=document.getElementById('gr-row-'+(i+1));
+      var st=document.getElementById('gr-s'+(i+1));
+      if(auth>=t){
+        if(row){row.classList.remove('locked');row.classList.add('earned');}
+        if(st){st.textContent='EARNED';st.className='gr-status earned';}
+        highest=GNAMES[i];
+      }
+    });
+    /* Progress bars */
+    var authPct=Math.min(100,auth/27.8367*100);
+    var aPct=Math.min(100,a/9*100);
+    var bPct=Math.min(100,b/9*100);
+    var cPct=Math.min(100,c/9*100);
+    function setBar(id,pct){var el=document.getElementById(id);if(el)el.style.width=pct.toFixed(1)+'%';}
+    setBar('pg-auth-bar',authPct);setBar('pg-a-bar',aPct);setBar('pg-b-bar',bPct);setBar('pg-c-bar',cPct);
+    function sid2(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+    sid2('pg-auth',auth.toFixed(4));sid2('pg-a',a.toFixed(3));sid2('pg-b',b.toFixed(3));sid2('pg-c',c.toFixed(3));
+    sid2('cur-grade-name',highest);
+    var next=GNAMES.findIndex(function(n,i){return auth<THRESHOLDS[i];});
+    sid2('cur-grade-info',next>=0?'Next: '+GNAMES[next]+' (AUTH ≥ '+THRESHOLDS[next]+')':'LATTICE COMPLETE · APEX SOVEREIGN');
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
+
+</script>
+<script>
+function grdTab(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');btn.setAttribute('aria-selected','true');
+  var p=document.getElementById('grd-'+id);if(p)p.classList.add('on');
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

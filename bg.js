@@ -1481,3 +1481,6 @@ setTimeout(function(){
 
   /* Unified UI — footer, prev/next nav, back button, keyboard shortcuts */
   if(!document.querySelector('script[data-omega-ui]')){var _oui2=document.createElement('script');_oui2.src='/omega-ui.js';_oui2.setAttribute('data-omega-ui','1');_oui2.defer=true;if(document.body)document.body.appendChild(_oui2);}
+
+  /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
+  if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;if(document.body)document.body.appendChild(_ott);}

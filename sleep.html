@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sleep Optimization · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css">
+<style>
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:'Courier Prime',monospace}
+.sleep-hdr{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.sleep-score-wrap{display:flex;align-items:center;gap:24px;background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:16px 20px;margin-bottom:20px}
+.kpi-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kpi-m{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:10px 12px}
+.kpi-m .lv{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
+.kpi-m .vv{font-family:var(--M);font-size:16px;color:var(--gold);margin-top:3px}
+.layer-tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--dim);padding-bottom:8px;flex-wrap:wrap}
+.tab-btn{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:5px 12px;background:none;border:1px solid transparent;border-radius:2px;color:rgba(138,134,118,.5);cursor:pointer;transition:.12s}
+.tab-btn.active{color:var(--gold);border-color:var(--dim)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.log-form{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:18px;margin-bottom:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row.trio{grid-template-columns:1fr 1fr 1fr}
+.form-grp label{display:block;font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-bottom:5px}
+.form-grp input,.form-grp select,.form-grp textarea{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--dim);border-radius:2px;padding:7px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:11px;box-sizing:border-box}
+.form-grp textarea{height:60px;resize:vertical}
+.star-row{display:flex;gap:6px;margin-top:6px}
+.star{font-size:20px;cursor:pointer;color:rgba(138,134,118,.3);transition:.1s}
+.star.lit{color:var(--gold)}
+.btn-gold{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 20px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;transition:.12s}
+.btn-gold:hover{background:rgba(201,168,76,.08)}
+.sleep-entries{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.sleep-entry{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.se-date{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(138,134,118,.6);min-width:80px}
+.se-hours{font-family:var(--M);font-size:18px;color:var(--gold)}
+.se-hrs-lbl{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4)}
+.se-times{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.5)}
+.se-stars{color:var(--gold);font-size:12px;letter-spacing:2px}
+.se-note{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.45);flex:1}
+.se-del{font-family:var(--M);font-size:9px;color:rgba(201,168,76,.3);cursor:pointer;background:none;border:none;padding:0;margin-left:auto}
+.se-del:hover{color:var(--gold)}
+.chart-box{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-bottom:14px}
+.chart-title{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:10px}
+.debt-bar-wrap{background:rgba(0,0,0,.3);border-radius:2px;height:8px;margin:8px 0;overflow:hidden}
+.debt-bar-fill{height:100%;border-radius:2px;transition:width .5s}
+.science-card{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:14px;margin-bottom:10px}
+.science-card h3{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin:0 0 8px}
+.science-card p{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);line-height:1.7;margin:0}
+.dream-tags{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}
+.dream-tag{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:4px 8px;border:1px solid var(--dim);border-radius:2px;cursor:pointer;color:rgba(138,134,118,.5);background:none;transition:.1s}
+.dream-tag.sel{border-color:rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.06)}
+.dream-entries{display:flex;flex-direction:column;gap:8px}
+.dream-entry{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:3px;padding:12px 16px}
+.de-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.de-date{font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5)}
+.de-tags{display:flex;gap:4px;flex-wrap:wrap}
+.de-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid var(--dim);border-radius:1px;color:rgba(201,168,76,.5)}
+.de-text{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.7);line-height:1.6}
+.circadian-widget{display:flex;align-items:center;gap:20px;background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:14px}
+.circadian-info{flex:1}
+.circadian-info .ci-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:4px}
+.circadian-info .ci-val{font-family:var(--M);font-size:14px;color:var(--gold)}
+.chronotype-row{display:flex;gap:10px;align-items:center;margin-top:10px}
+.chronotype-row label{font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5)}
+.chronotype-row input[type=range]{flex:1;accent-color:var(--gold)}
+@media(max-width:600px){.kpi-mini{grid-template-columns:1fr 1fr}.form-row,.form-row.trio{grid-template-columns:1fr}.sleep-score-wrap{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="layer" id="L0"></div>
+<div class="side" id="sideNav"></div>
+<div class="main">
+  <div class="topbar" id="topBar"></div>
+  <div style="padding:20px var(--pad,20px)">
+
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · RESTORATION</div>
+    <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">SLEEP OPTIMIZATION</h1>
+
+    <div class="sleep-score-wrap">
+      <div><canvas id="scoreRing" width="90" height="90"></canvas></div>
+      <div>
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5)">7-DAY SLEEP SCORE</div>
+        <div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)" id="scoreVal">—</div>
+        <div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.5)" id="scoreGrade">LOG SLEEP TO BEGIN</div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="text-align:right">
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5)">TARGET BEDTIME</div>
+        <div style="font-family:var(--M);font-size:14px;color:var(--gold);margin:4px 0" id="targetBed">—</div>
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5)">TARGET WAKE</div>
+        <div style="font-family:var(--M);font-size:14px;color:var(--gold);margin:4px 0" id="targetWake">—</div>
+      </div>
+    </div>
+
+    <div class="kpi-mini">
+      <div class="kpi-m"><div class="lv">AVG HOURS</div><div class="vv" id="kpiAvg">—</div></div>
+      <div class="kpi-m"><div class="lv">SLEEP DEBT</div><div class="vv" id="kpiDebt">—</div></div>
+      <div class="kpi-m"><div class="lv">CONSISTENCY</div><div class="vv" id="kpiCons">—</div></div>
+      <div class="kpi-m"><div class="lv">NIGHTS LOGGED</div><div class="vv" id="kpiLogs">0</div></div>
+    </div>
+
+    <div class="layer-tabs">
+      <button class="tab-btn active" onclick="switchTab('log',this)">LOG</button>
+      <button class="tab-btn" onclick="switchTab('analysis',this)">ANALYSIS</button>
+      <button class="tab-btn" onclick="switchTab('circadian',this)">CIRCADIAN</button>
+      <button class="tab-btn" onclick="switchTab('dreams',this)">DREAMS</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">SCIENCE</button>
+    </div>
+
+    <!-- LOG -->
+    <div class="tab-pane active" id="tab-log">
+      <div class="log-form">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG SLEEP SESSION</div>
+        <div class="form-row">
+          <div class="form-grp"><label>SLEEP DATE (night of)</label><input type="date" id="inDate"></div>
+          <div class="form-grp"><label>BEDTIME</label><input type="time" id="inBed"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-grp"><label>WAKE TIME</label><input type="time" id="inWake"></div>
+          <div class="form-grp">
+            <label>SLEEP QUALITY (1–5)</label>
+            <div class="star-row" id="starRow">
+              <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row trio">
+          <div class="form-grp"><label>AWAKENINGS</label><input type="number" id="inAwake" min="0" max="20" value="0"></div>
+          <div class="form-grp"><label>DREAMED?</label><select id="inDream"><option value="no">No</option><option value="yes">Yes</option><option value="vivid">Yes — Vivid</option></select></div>
+          <div class="form-grp"><label>SUPPLEMENT</label><select id="inSupp"><option value="">None</option><option value="melatonin">Melatonin</option><option value="magnesium">Magnesium</option><option value="ashwagandha">Ashwagandha</option><option value="l-theanine">L-Theanine</option><option value="glycine">Glycine</option></select></div>
+        </div>
+        <div class="form-grp" style="margin-bottom:12px"><label>NOTES</label><textarea id="inNote" placeholder="Stress, caffeine, alcohol, exercise timing…"></textarea></div>
+        <button class="btn-gold" onclick="addSleep()">LOG SESSION</button>
+      </div>
+      <div class="sleep-entries" id="sleepEntries"></div>
+    </div>
+
+    <!-- ANALYSIS -->
+    <div class="tab-pane" id="tab-analysis">
+      <div class="chart-box">
+        <div class="chart-title">SLEEP DURATION — 30 DAYS</div>
+        <canvas id="trendChart" width="700" height="160" style="width:100%;height:auto"></canvas>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">SLEEP DEBT (weekly deficit vs 8h target)</div>
+        <div style="font-family:var(--M);font-size:22px;color:var(--gold)" id="debtVal">—</div>
+        <div class="debt-bar-wrap"><div class="debt-bar-fill" id="debtBar" style="width:0%"></div></div>
+        <div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);margin-top:4px">Deficit vs 8h/night over last 7 nights</div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">QUALITY TREND (last 14 nights)</div>
+        <canvas id="qualChart" width="700" height="100" style="width:100%;height:auto"></canvas>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">SUPPLEMENT IMPACT ON QUALITY</div>
+        <div id="suppImpact" style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.5)">Log more entries to see supplement correlation.</div>
+      </div>
+    </div>
+
+    <!-- CIRCADIAN -->
+    <div class="tab-pane" id="tab-circadian">
+      <div class="circadian-widget">
+        <canvas id="circadianClock" width="160" height="160"></canvas>
+        <div class="circadian-info">
+          <div class="ci-lbl">YOUR CHRONOTYPE</div>
+          <div class="ci-val" id="chronotypeLabel">NEUTRAL</div>
+          <div class="chronotype-row">
+            <label>EARLY BIRD</label>
+            <input type="range" id="chronoSlider" min="0" max="100" value="50">
+            <label>NIGHT OWL</label>
+          </div>
+          <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><div class="ci-lbl">OPTIMAL BEDTIME</div><div class="ci-val" id="optBed">—</div></div>
+            <div><div class="ci-lbl">OPTIMAL WAKE</div><div class="ci-val" id="optWake">—</div></div>
+            <div><div class="ci-lbl">PEAK FOCUS</div><div class="ci-val" id="optFocus">—</div></div>
+            <div><div class="ci-lbl">EXERCISE WINDOW</div><div class="ci-val" id="optEx">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div class="science-card"><h3>SLEEP CYCLES</h3><p>Each cycle lasts ~90 minutes: NREM1 → NREM2 → NREM3 (deep) → REM. For peak restoration, wake at a cycle boundary — use multiples of 90 min from sleep onset (plus ~15 min to fall asleep).</p></div>
+        <div class="science-card"><h3>ADENOSINE &amp; CAFFEINE</h3><p>Adenosine accumulates during wakefulness, cleared during sleep. Caffeine blocks adenosine receptors. Stop caffeine 8–10h before bed. A coffee nap (20 min post-caffeine) lets caffeine absorb while adenosine clears slightly.</p></div>
+        <div class="science-card"><h3>LIGHT EXPOSURE</h3><p>Morning sunlight within 60 min of wake sets your circadian clock and triggers the cortisol peak. Avoid bright blue light 2–3h before bed. Red/amber light minimally suppresses melatonin.</p></div>
+        <div class="science-card"><h3>TEMPERATURE PROTOCOL</h3><p>Core body temperature must drop ~1–3°F for sleep onset. Keep room at 65–68°F (18–20°C). A warm bath 1–2h before bed paradoxically cools the core via vasodilation.</p></div>
+      </div>
+
+      <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px">
+        <div class="chart-title">90-MINUTE CYCLE CALCULATOR</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+          <div class="form-grp" style="flex:1;min-width:140px"><label>DESIRED WAKE TIME</label><input type="time" id="cycleWake" value="06:30"></div>
+          <div class="form-grp" style="flex:1;min-width:140px"><label>SLEEP ONSET DELAY (min)</label><input type="number" id="onsetDelay" value="15" min="5" max="45"></div>
+          <button class="btn-gold" style="margin-top:14px" onclick="calcCycles()">CALCULATE</button>
+        </div>
+        <div id="cycleResults" style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.6)">Enter wake time and click calculate.</div>
+      </div>
+    </div>
+
+    <!-- DREAMS -->
+    <div class="tab-pane" id="tab-dreams">
+      <div class="log-form">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">RECORD DREAM</div>
+        <div class="form-row">
+          <div class="form-grp"><label>DATE</label><input type="date" id="dreamDate"></div>
+          <div class="form-grp"><label>VIVIDNESS</label><select id="dreamVivid"><option value="1">Faint</option><option value="2">Partial</option><option value="3" selected>Clear</option><option value="4">Vivid</option><option value="5">Ultra-Vivid / Lucid</option></select></div>
+        </div>
+        <div class="form-grp" style="margin-bottom:10px">
+          <label>THEMES</label>
+          <div class="dream-tags" id="dreamTagSel">
+            <button class="dream-tag" data-t="flying">FLYING</button>
+            <button class="dream-tag" data-t="falling">FALLING</button>
+            <button class="dream-tag" data-t="chase">CHASE</button>
+            <button class="dream-tag" data-t="water">WATER</button>
+            <button class="dream-tag" data-t="transformation">TRANSFORMATION</button>
+            <button class="dream-tag" data-t="people">PEOPLE</button>
+            <button class="dream-tag" data-t="conflict">CONFLICT</button>
+            <button class="dream-tag" data-t="discovery">DISCOVERY</button>
+            <button class="dream-tag" data-t="lucid">LUCID</button>
+          </div>
+        </div>
+        <div class="form-grp" style="margin-bottom:12px"><label>DREAM DESCRIPTION</label><textarea id="dreamText" style="height:80px" placeholder="Describe in detail while fresh…"></textarea></div>
+        <button class="btn-gold" onclick="addDream()">SAVE DREAM</button>
+      </div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:8px">DREAM ARCHIVE</div>
+      <div class="dream-entries" id="dreamEntries"></div>
+    </div>
+
+    <!-- SCIENCE -->
+    <div class="tab-pane" id="tab-science">
+      <div class="science-card"><h3>WHY SLEEP IS THE SOVEREIGN'S ULTIMATE WEAPON</h3><p>Sleep is the single most effective performance reset available. The glymphatic system flushes the brain of metabolic waste (including Alzheimer's precursors) during sleep. Memory consolidates from hippocampus to cortex. Testosterone peaks during deep NREM. Growth hormone is released almost exclusively during slow-wave sleep.</p></div>
+      <div class="science-card"><h3>SLEEP STAGES</h3><p>NREM1 (Light, ~5%): Transition. NREM2 (Baseline, ~45%): Sleep spindles consolidate motor skills. NREM3 (Deep SWS, ~25%): Physical restoration, immune function, emotional processing — dominant in first half. REM (~25%): Dreaming, emotional regulation, creative association — dominant in second half. Cutting morning sleep disproportionately sacrifices REM.</p></div>
+      <div class="science-card"><h3>THE 12 COMMANDMENTS OF SLEEP</h3><p>1. Fixed wake time — even weekends. 2. Dark room (blackout). 3. Cool room 18–20°C. 4. No screens 90 min pre-bed. 5. Caffeine cutoff 10h before bed. 6. No alcohol within 3h of bed. 7. No large meals within 2h. 8. Exercise daily — not within 2h of bed. 9. Morning sunlight within 60 min of wake. 10. Wind-down ritual 60 min pre-bed. 11. Bed = sleep only. 12. Stress journal before bed to offload cognitive load.</p></div>
+      <div class="science-card"><h3>SUPPLEMENTS: EVIDENCE-BASED</h3><p>Magnesium Glycinate (300–400mg, 1h before bed): GABA modulation, reduces cortisol. Strong evidence. Glycine (3g): Drops core temp, improves NREM. Good evidence. L-Theanine (200mg): Alpha wave induction. Good evidence. Melatonin (0.5mg): Timing signal only, not sleep inducer — take 1–2h before target sleep. Avoid: Alcohol, Benadryl (suppresses REM), cannabis (blocks REM).</p></div>
+    </div>
+
+  </div>
+  <div class="lf" id="pgFoot"></div>
+</div>
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script>
+const SLEEP_KEY = 'omega_sleep_log';
+const DREAM_KEY = 'omega_dream_log';
+const TARGET_HOURS = 8;
+
+function loadArr(k){ try{return JSON.parse(localStorage.getItem(k))||[];}catch{return [];} }
+function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+
+var sleepLog = loadArr(SLEEP_KEY);
+var dreamLog = loadArr(DREAM_KEY);
+var starVal = 4;
+var selectedDreamTags = new Set();
+
+(function initDefaults(){
+  var d = new Date().toISOString().slice(0,10);
+  document.getElementById('inDate').value = d;
+  document.getElementById('dreamDate').value = d;
+  document.getElementById('inBed').value = '22:30';
+  document.getElementById('inWake').value = '06:30';
+})();
+
+document.getElementById('starRow').addEventListener('click',function(e){
+  if(e.target.classList.contains('star')){
+    starVal=+e.target.dataset.v;
+    document.querySelectorAll('.star').forEach(function(s){s.classList.toggle('lit',+s.dataset.v<=starVal);});
+  }
+});
+document.querySelectorAll('.star').forEach(function(s){if(+s.dataset.v<=4)s.classList.add('lit');});
+
+document.getElementById('dreamTagSel').addEventListener('click',function(e){
+  if(e.target.classList.contains('dream-tag')){
+    var t=e.target.dataset.t;
+    if(selectedDreamTags.has(t)){selectedDreamTags.delete(t);e.target.classList.remove('sel');}
+    else{selectedDreamTags.add(t);e.target.classList.add('sel');}
+  }
+});
+
+function hoursSlept(bed,wake){
+  var[bh,bm]=bed.split(':').map(Number);
+  var[wh,wm]=wake.split(':').map(Number);
+  var bMin=bh*60+bm,wMin=wh*60+wm;
+  if(wMin<=bMin)wMin+=1440;
+  return(wMin-bMin)/60;
+}
+
+function calcScore(entries){
+  if(!entries.length)return null;
+  var last7=entries.slice(-7);
+  var avgH=last7.reduce(function(s,e){return s+e.hours;},0)/last7.length;
+  var durScore=Math.min(40,(avgH/TARGET_HOURS)*40);
+  var consScore=15;
+  if(last7.length>1){
+    var bMins=last7.map(function(e){var[h,m]=e.bedtime.split(':').map(Number);return h*60+m;});
+    var mean=bMins.reduce(function(a,b){return a+b;})/bMins.length;
+    var std=Math.sqrt(bMins.reduce(function(s,v){return s+Math.pow(v-mean,2);},0)/bMins.length);
+    consScore=Math.max(0,30-std/2);
+  }
+  var avgQ=last7.reduce(function(s,e){return s+e.quality;},0)/last7.length;
+  return Math.round(durScore+consScore+(avgQ/5)*30);
+}
+
+function calcDebt(entries){
+  return+entries.slice(-7).reduce(function(s,e){return s+Math.max(0,TARGET_HOURS-e.hours);},0).toFixed(1);
+}
+
+function renderKPIs(){
+  var n=sleepLog.length;
+  document.getElementById('kpiLogs').textContent=n;
+  if(!n)return;
+  var avgH=sleepLog.slice(-14).reduce(function(s,e){return s+e.hours;},0)/Math.min(14,n);
+  document.getElementById('kpiAvg').textContent=avgH.toFixed(1)+'h';
+  var debt=calcDebt(sleepLog);
+  document.getElementById('kpiDebt').textContent=debt+'h';
+  document.getElementById('debtVal').textContent=debt+'h';
+  var debtPct=Math.min(100,(debt/7)*100);
+  document.getElementById('debtBar').style.width=debtPct+'%';
+  document.getElementById('debtBar').style.background=debt<2?'#9BC53D':debt<4?'#C9A84C':'#E55934';
+  var last7=sleepLog.slice(-7);
+  var cons='—';
+  if(last7.length>1){
+    var bMins=last7.map(function(e){var[h,m]=e.bedtime.split(':').map(Number);return h*60+m;});
+    var mean=bMins.reduce(function(a,b){return a+b;})/bMins.length;
+    var std=Math.sqrt(bMins.reduce(function(s,v){return s+Math.pow(v-mean,2);},0)/bMins.length);
+    cons=std<15?'ELITE':std<30?'STRONG':std<45?'MODERATE':'ERRATIC';
+  }
+  document.getElementById('kpiCons').textContent=cons;
+  var score=calcScore(sleepLog);
+  document.getElementById('scoreVal').textContent=score||'—';
+  document.getElementById('scoreGrade').textContent=score>=85?'SOVEREIGN':score>=70?'STRONG':score>=55?'MODERATE':score>=40?'WEAK':'CRITICAL';
+  drawScoreRing(score);
+  renderSuppImpact();
+}
+
+function drawScoreRing(score){
+  var c=document.getElementById('scoreRing'),ctx=c.getContext('2d'),cx=45,cy=45,r=36;
+  ctx.clearRect(0,0,90,90);
+  ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=7;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  if(score){
+    ctx.strokeStyle='rgba(201,168,76,.7)';ctx.lineWidth=7;ctx.lineCap='round';
+    ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+(score/100)*Math.PI*2);ctx.stroke();
+  }
+}
+
+function drawTrendChart(){
+  var c=document.getElementById('trendChart');if(!c)return;
+  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var last30=sleepLog.slice(-30);
+  if(!last30.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px Courier Prime';ctx.textAlign='center';ctx.fillText('Log sleep sessions to see trend',W/2,H/2);return;}
+  var pad={t:10,r:20,b:24,l:36},cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  [0,4,8,10].forEach(function(v){
+    var y=pad.t+cH*(1-v/10);
+    ctx.strokeStyle='rgba(201,168,76,.06)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='9px Courier Prime';ctx.textAlign='right';ctx.fillText(v+'h',pad.l-4,y+4);
+  });
+  var ty=pad.t+cH*(1-TARGET_HOURS/10);
+  ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(201,168,76,.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,ty);ctx.lineTo(W-pad.r,ty);ctx.stroke();ctx.setLineDash([]);
+  var bW=Math.max(4,cW/last30.length-2);
+  last30.forEach(function(e,i){
+    var x=pad.l+i*(cW/last30.length)+(cW/last30.length-bW)/2;
+    var h=cH*Math.min(1,e.hours/10);
+    var y=pad.t+cH-h;
+    ctx.fillStyle=(e.hours>=7.5?'#9BC53D':e.hours>=6?'#C9A84C':'#E55934')+'88';
+    ctx.fillRect(x,y,bW,h);
+  });
+  ctx.strokeStyle='rgba(201,168,76,.7)';ctx.lineWidth=1.5;ctx.lineJoin='round';
+  ctx.beginPath();
+  last30.forEach(function(e,i){
+    var x=pad.l+(i+0.5)*(cW/last30.length);
+    var y=pad.t+cH*(1-Math.min(1,e.hours/10));
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });ctx.stroke();
+}
+
+function drawQualChart(){
+  var c=document.getElementById('qualChart');if(!c)return;
+  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var last14=sleepLog.slice(-14);if(!last14.length)return;
+  var pad=12,step=(W-pad*2)/(last14.length-1||1);
+  ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=1.5;ctx.lineJoin='round';
+  ctx.beginPath();
+  last14.forEach(function(e,i){
+    var x=pad+i*step,y=H-pad-(e.quality-1)/4*(H-pad*2);
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });ctx.stroke();
+  last14.forEach(function(e,i){
+    var x=pad+i*step,y=H-pad-(e.quality-1)/4*(H-pad*2);
+    ctx.fillStyle='rgba(201,168,76,.8)';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+  });
+}
+
+function renderSuppImpact(){
+  var el=document.getElementById('suppImpact');if(!el)return;
+  var suppMap={};
+  sleepLog.forEach(function(e){
+    var s=e.supp||'none';
+    if(!suppMap[s])suppMap[s]={count:0,qualTotal:0};
+    suppMap[s].count++;suppMap[s].qualTotal+=e.quality;
+  });
+  var entries=Object.entries(suppMap).filter(function(x){return x[1].count>=2;});
+  if(!entries.length){el.textContent='Log more entries with supplements to see correlation.';return;}
+  el.innerHTML=entries.map(function(x){
+    var avg=(x[1].qualTotal/x[1].count).toFixed(1);
+    return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.06)">'
+      +'<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.6)">'+(x[0].toUpperCase())+'</span>'
+      +'<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:var(--gold)">'+avg+'/5 ('+x[1].count+' nights)</span></div>';
+  }).join('');
+}
+
+function renderEntries(){
+  var el=document.getElementById('sleepEntries');
+  var sorted=sleepLog.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
+  if(!sorted.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No sleep sessions logged yet.</div>';return;}
+  el.innerHTML=sorted.slice(0,20).map(function(e){
+    return '<div class="sleep-entry">'
+      +'<div class="se-date">'+e.date+'</div>'
+      +'<div><div class="se-hours">'+e.hours.toFixed(1)+'</div><div class="se-hrs-lbl">HOURS</div></div>'
+      +'<div class="se-times">↓ '+e.bedtime+'<br>↑ '+e.waketime+'</div>'
+      +'<div class="se-stars">'+'★'.repeat(e.quality)+'☆'.repeat(5-e.quality)+'</div>'
+      +(e.note?'<div class="se-note">'+e.note+'</div>':'')
+      +'<button class="se-del" onclick="deleteSleep('+e.id+')">✕</button></div>';
+  }).join('');
+}
+
+function renderDreams(){
+  var el=document.getElementById('dreamEntries');
+  var sorted=dreamLog.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
+  if(!sorted.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No dreams recorded yet.</div>';return;}
+  el.innerHTML=sorted.slice(0,20).map(function(d){
+    var tags=(d.tags||[]).map(function(t){return '<span class="de-tag">'+t.toUpperCase()+'</span>';}).join('');
+    var vivid=['','FAINT','PARTIAL','CLEAR','VIVID','ULTRA-VIVID'][d.vividness||3];
+    return '<div class="dream-entry"><div class="de-head"><span class="de-date">'+d.date+' · '+vivid+'</span><div class="de-tags">'+tags+'</div></div><div class="de-text">'+d.text+'</div></div>';
+  }).join('');
+}
+
+function addSleep(){
+  var date=document.getElementById('inDate').value,bed=document.getElementById('inBed').value,wake=document.getElementById('inWake').value;
+  if(!date||!bed||!wake){alert('Fill date, bedtime, and wake time.');return;}
+  var hours=hoursSlept(bed,wake);
+  if(hours<=0||hours>16){alert('Invalid times.');return;}
+  sleepLog.push({id:Date.now(),date,bedtime:bed,waketime:wake,hours:+hours.toFixed(2),quality:starVal,awakenings:+document.getElementById('inAwake').value||0,supp:document.getElementById('inSupp').value,note:document.getElementById('inNote').value.trim()});
+  save(SLEEP_KEY,sleepLog);
+  document.getElementById('inNote').value='';
+  renderAll();
+}
+
+function deleteSleep(id){sleepLog=sleepLog.filter(function(e){return e.id!==id;});save(SLEEP_KEY,sleepLog);renderAll();}
+
+function addDream(){
+  var date=document.getElementById('dreamDate').value,text=document.getElementById('dreamText').value.trim();
+  if(!date||!text){alert('Enter date and dream description.');return;}
+  dreamLog.unshift({id:Date.now(),date,vividness:+document.getElementById('dreamVivid').value,tags:Array.from(selectedDreamTags),text});
+  save(DREAM_KEY,dreamLog);
+  document.getElementById('dreamText').value='';
+  selectedDreamTags.clear();
+  document.querySelectorAll('.dream-tag').forEach(function(t){t.classList.remove('sel');});
+  renderDreams();
+}
+
+function updateCircadian(){
+  var v=+document.getElementById('chronoSlider').value;
+  var optBedMin=Math.round(1320+v*0.6);
+  var optWakeMin=(optBedMin+480)%1440;
+  function fmt(min){var h=Math.floor(min/60)%24,m=min%60;return(h<10?'0':'')+h+':'+(m<10?'0':'')+m;}
+  document.getElementById('optBed').textContent=fmt(optBedMin%1440);
+  document.getElementById('optWake').textContent=fmt(optWakeMin);
+  document.getElementById('optFocus').textContent=fmt((optWakeMin+120)%1440)+' – '+fmt((optWakeMin+240)%1440);
+  document.getElementById('optEx').textContent=fmt((optWakeMin+360)%1440)+' – '+fmt((optWakeMin+450)%1440);
+  document.getElementById('chronotypeLabel').textContent=v<30?'EARLY CHRONOTYPE':v<60?'NEUTRAL CHRONOTYPE':'NIGHT CHRONOTYPE';
+  document.getElementById('targetBed').textContent=fmt(optBedMin%1440);
+  document.getElementById('targetWake').textContent=fmt(optWakeMin);
+  drawCircadianClock(optBedMin%1440,optWakeMin);
+}
+document.getElementById('chronoSlider').addEventListener('input',updateCircadian);
+updateCircadian();
+
+function drawCircadianClock(bedMin,wakeMin){
+  var c=document.getElementById('circadianClock'),ctx=c.getContext('2d'),cx=80,cy=80,r=70;
+  ctx.clearRect(0,0,160,160);
+  ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=10;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  var start=(bedMin/1440)*Math.PI*2-Math.PI/2;
+  var end=(wakeMin/1440)*Math.PI*2-Math.PI/2;
+  if(end<start)end+=Math.PI*2;
+  ctx.strokeStyle='rgba(100,150,220,.6)';ctx.lineWidth=10;ctx.beginPath();ctx.arc(cx,cy,r,start,end);ctx.stroke();
+  for(var h=0;h<24;h++){
+    var a=(h/24)*Math.PI*2-Math.PI/2;
+    ctx.strokeStyle=h%6===0?'rgba(201,168,76,.4)':'rgba(201,168,76,.15)';ctx.lineWidth=h%6===0?2:1;
+    ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*(r-4),cy+Math.sin(a)*(r-4));ctx.lineTo(cx+Math.cos(a)*(r+(h%6===0?-14:-10)),cy+Math.sin(a)*(r+(h%6===0?-14:-10)));ctx.stroke();
+  }
+  ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px Courier Prime';ctx.textAlign='center';
+  ['12am','6am','12pm','6pm'].forEach(function(lbl,i){var a=i*Math.PI/2-Math.PI/2,lr=r+20;ctx.fillText(lbl,cx+Math.cos(a)*lr,cy+Math.sin(a)*lr+3);});
+}
+
+function calcCycles(){
+  var wake=document.getElementById('cycleWake').value,delay=+document.getElementById('onsetDelay').value||15;
+  if(!wake)return;
+  var[wh,wm]=wake.split(':').map(Number),wMin=wh*60+wm;
+  var results=[];
+  for(var cycles=6;cycles>=3;cycles--){
+    var bedtime=((wMin-cycles*90-delay)+1440)%1440;
+    var h=Math.floor(bedtime/60),m=bedtime%60;
+    results.push('<div style="display:flex;gap:16px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.06)">'
+      +'<span style="font-family:\'Courier Prime\',monospace;font-size:8px;color:rgba(138,134,118,.5);width:60px">'+cycles+' CYCLES</span>'
+      +'<span style="font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--gold)">'+(h<10?'0':'')+h+':'+(m<10?'0':'')+m+'</span>'
+      +'<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.4)">'+cycles*1.5+'h sleep</span>'
+      +(cycles>=5?'<span style="font-family:\'Courier Prime\',monospace;font-size:7px;color:#9BC53D">OPTIMAL</span>':'')
+      +'</div>');
+  }
+  document.getElementById('cycleResults').innerHTML=results.join('');
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');
+  if(id==='analysis'){drawTrendChart();drawQualChart();}
+}
+
+function renderAll(){renderKPIs();renderEntries();renderDreams();drawTrendChart();drawQualChart();}
+renderAll();
+</script>
+</body>
+</html>

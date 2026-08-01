@@ -87,6 +87,9 @@
     meditate:     {label:'Breathwork',      section:'IDENTITY',   prev:'rituals',        next:'mirror'},
     library:      {label:'Reading Library', section:'INTEL',      prev:'atlas',          next:'codex'},
     nutrition:    {label:'Body Fuel',       section:'IDENTITY',   prev:'meditate',       next:'rituals'},
+    sleep:        {label:'Sleep Engine',    section:'IDENTITY',   prev:'nutrition',      next:'meditate'},
+    command:      {label:'Command Brief',   section:'STRATEGY',   prev:'targets',        next:'roadmap'},
+    stoic:        {label:'Stoic Protocol',  section:'IDENTITY',   prev:'rituals',        next:'mirror'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

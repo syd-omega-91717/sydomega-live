@@ -37,24 +37,6 @@
       ]
     },
     {
-      "source": "/:file(.*\\.(js|css))",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, stale-while-revalidate=86400"
-        }
-      ]
-    },
-    {
-      "source": "/:file(.*\\.(png|jpg|svg|ico|webp|woff|woff2))",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
       "source": "/manifest.json",
       "headers": [
         {
@@ -74,31 +56,6 @@
       "source": "/entreprise.html",
       "destination": "/enterprise.html",
       "permanent": true
-    },
-    {
-      "source": "/:path*.ts",
-      "destination": "/dashboard.html",
-      "permanent": false
-    },
-    {
-      "source": "/:path*.py",
-      "destination": "/dashboard.html",
-      "permanent": false
-    },
-    {
-      "source": "/:path*.sol",
-      "destination": "/dashboard.html",
-      "permanent": false
-    },
-    {
-      "source": "/:path*.sql",
-      "destination": "/dashboard.html",
-      "permanent": false
-    },
-    {
-      "source": "/:path*.docx",
-      "destination": "/dashboard.html",
-      "permanent": false
     }
   ],
   "rewrites": [

@@ -1487,3 +1487,15 @@ setTimeout(function(){
 
   /* Sovereign celebration engine — gate unlock bursts, milestone banners, apex sequence */
   if(!document.querySelector('script[data-omega-confetti]')){var _ocnf=document.createElement('script');_ocnf.src='/omega-confetti.js';_ocnf.setAttribute('data-omega-confetti','1');_ocnf.defer=true;if(document.body)document.body.appendChild(_ocnf);}
+
+  /* Element particle backgrounds — tsParticles-slim@2 (MIT), fires on omega:user-loaded */
+  if(!document.querySelector('script[data-omega-particles]')){var _opar=document.createElement('script');_opar.src='/omega-particles.js';_opar.setAttribute('data-omega-particles','1');_opar.defer=true;if(document.body)document.body.appendChild(_opar);}
+
+  /* Procedural ambient soundscapes — Web Audio API, [data-ambient-toggle] to unmute */
+  if(!document.querySelector('script[data-omega-ambient]')){var _oamb=document.createElement('script');_oamb.src='/omega-ambient.js';_oamb.setAttribute('data-omega-ambient','1');_oamb.defer=true;if(document.body)document.body.appendChild(_oamb);}
+
+  /* Sovereign passport PDF — jsPDF@2 (MIT), [data-passport-download] triggers download */
+  if(!document.querySelector('script[data-omega-passport]')){var _opas=document.createElement('script');_opas.src='/omega-passport.js';_opas.setAttribute('data-omega-passport','1');_opas.defer=true;if(document.body)document.body.appendChild(_opas);}
+
+  /* 3-D element realm — Three.js r160 (MIT), mounts canvas[data-realm] */
+  if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;if(document.body)document.body.appendChild(_orlm);}

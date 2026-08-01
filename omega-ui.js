@@ -106,6 +106,8 @@
     grid:         {label:'Grid View',        section:'INTEL',     prev:'matrix',         next:'graph'},
     knowledge:    {label:'Knowledge Base',   section:'INTEL',     prev:'atlas',          next:'codex'},
     payments:     {label:'Payments',         section:'FINANCE',   prev:'wallet',         next:'vault'},
+    affirmations: {label:'Affirmations',     section:'IDENTITY',  prev:'journal',        next:'rituals'},
+    breath:       {label:'Breathwork',       section:'WELLNESS',  prev:'meditate',       next:'sleep'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

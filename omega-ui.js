@@ -69,6 +69,9 @@
     queue:        {label:'Queue Monitor',   section:'OPS',        prev:'ops',            next:'architect'},
     architect:    {label:'Architect',       section:'OPS',        prev:'queue',          next:'ops'},
     ops:          {label:'Operations',      section:'OPS',        prev:'architect',      next:'queue'},
+    pulse:        {label:'Market Pulse',    section:'INTEL',      prev:'sigma',          next:'nexus'},
+    oath:         {label:'Sovereign Oath',  section:'IDENTITY',   prev:'rune',           next:'profile'},
+    tribe:        {label:'Element Tribes',  section:'COSMOS',     prev:'elements',       next:'horoscope'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

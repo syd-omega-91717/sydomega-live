@@ -74,8 +74,8 @@
       if(td) td.textContent=fmtMS(remSec);
       if(tf)  tf.style.width=pct.toFixed(2)+'%';
       if(td){
-        if(remSec<60)  td.style.color='#8B0000';
-        else if(remSec<180) td.style.color='#ff9900';
+        if(remSec<120)  td.style.color='#8B0000';
+        else if(remSec<300) td.style.color='#ff9900';
         else td.style.color='#C9A84C';
       }
       if(rem<=0){

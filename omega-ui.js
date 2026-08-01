@@ -69,9 +69,12 @@
     queue:        {label:'Queue Monitor',   section:'OPS',        prev:'ops',            next:'architect'},
     architect:    {label:'Architect',       section:'OPS',        prev:'queue',          next:'ops'},
     ops:          {label:'Operations',      section:'OPS',        prev:'architect',      next:'queue'},
-    pulse:        {label:'Market Pulse',    section:'INTEL',      prev:'sigma',          next:'nexus'},
+    pulse:        {label:'Market Pulse',    section:'INTEL',      prev:'sigma',          next:'signal'},
+    signal:       {label:'Signal Intel',   section:'INTEL',      prev:'pulse',          next:'nexus'},
+    codex:        {label:'Knowledge Codex',section:'INTEL',      prev:'signal',         next:'intelligence'},
     oath:         {label:'Sovereign Oath',  section:'IDENTITY',   prev:'rune',           next:'profile'},
     tribe:        {label:'Element Tribes',  section:'COSMOS',     prev:'elements',       next:'horoscope'},
+    dna:          {label:'Sovereign DNA',   section:'IDENTITY',   prev:'passport',       next:'rune'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

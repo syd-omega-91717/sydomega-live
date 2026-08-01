@@ -308,7 +308,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
 
-var TRIAL_SECS=33437; /* 9h 17m 17s */ /* 9 minutes 17 seconds */
+var TRIAL_SECS=557; /* 9 minutes 17 seconds — the approval window */
 var allMembers=[];
 var timers={};
 var ownerUid=null;
@@ -341,7 +341,7 @@ function startChrono(uid,expISO,startISO){
     var ss=Math.floor((rem%60000)/1000);
     var str=(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss;
     cdEl.textContent=str;
-    cdEl.style.color=rem<60000?'var(--crim)':rem<120000?'var(--solar)':'var(--green)';
+    cdEl.style.color=rem<120000?'var(--crim)':rem<300000?'var(--solar)':'var(--green)';
     if(rem<=0){
       cdEl.textContent='EXPIRED';cdEl.style.color='var(--crim)';
       clearInterval(timers[uid]);
@@ -354,7 +354,7 @@ function startChrono(uid,expISO,startISO){
       var total=TRIAL_SECS*1000;
       var pct=Math.round(rem/total*100);
       pbEl.style.width=Math.max(0,Math.min(100,pct))+'%';
-      pbEl.style.background=rem<60000?'var(--crim)':rem<120000?'var(--solar)':'var(--gold)';
+      pbEl.style.background=rem<120000?'var(--crim)':rem<300000?'var(--solar)':'var(--gold)';
     }
   },1000);
 }
@@ -393,12 +393,12 @@ function buildCard(m){
   /* action buttons */
   var btns='';
   if(isPending||isExpired){
-    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; GRANT TRIAL<br><small style="font-size:7px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9H 17M 17S</small></button>';
+    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; GRANT TRIAL<br><small style="font-size:7px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9M 17S WINDOW</small></button>';
     btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
     btns+='<button class="ac reject" data-uid="'+m.id+'" onclick="reject(this.dataset.uid)">&#10005; REJECT</button>';
   }
   if(isActive){
-    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; EXTEND +9:17:17</button>';
+    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; EXTEND +9:17</button>';
     btns+='<button class="ac permanent" data-uid=""+m.id+"" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
     btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; REVOKE</button>';
   }
@@ -487,11 +487,11 @@ async function load(){
 
 /* ── ACTIONS ── */
 async function approve(uid){
-  var exp=new Date(Date.now()+33437*1000).toISOString();
+  var exp=new Date(Date.now()+557*1000).toISOString();
   try{await sb.rpc('approve_member',{p_uid:uid});}catch(e){
     await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
   }
-  toast('✓ TRIAL GRANTED — 9 HOURS 17 MINUTES 17 SECONDS','var(--green)');
+  toast('✓ TRIAL GRANTED — 9 MINUTES 17 SECONDS','var(--green)');
   load();
 }
 async function grantPermanent(uid){
@@ -503,11 +503,14 @@ async function grantPermanent(uid){
   load();
 }
 async function extend(uid){
-  var exp=new Date(Date.now()+33437*1000).toISOString();
-  try{await sb.rpc('approve_member',{p_uid:uid});}catch(e){
+  /* Find current expiry and add 557s on top; fall back to now+557s */
+  var m=allMembers.find(function(x){return x.id===uid;});
+  var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
+  var exp=new Date(base+557*1000).toISOString();
+  try{await sb.rpc('extend_trial',{p_uid:uid,p_seconds:557});}catch(e){
     await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
   }
-  toast('↻ ACCESS EXTENDED +9:17','var(--cyan)');
+  toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');
   load();
 }
 async function reject(uid){

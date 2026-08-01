@@ -200,7 +200,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 2: WALLET
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-wallet">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="wallet-total">&#937; --</div><div class="kpi-l">TOTAL WALLET BALANCE</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="wallet-count">--</div><div class="kpi-l">TOKEN TYPES HELD</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN TOKEN TYPES</div></div>
@@ -235,7 +235,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 3: NFT VAULT
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-nft">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="nft-count">--</div><div class="kpi-l">NFTs HELD</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN LINES</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">108</div><div class="kpi-l">TOTAL NFT TYPES (12&times;9)</div></div>
@@ -269,7 +269,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 4: EARNING LEDGER
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-earning">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="earn-total">--</div><div class="kpi-l">TOTAL POINTS EARNED</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="earn-count">--</div><div class="kpi-l">ACTIONS COMPLETED</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="earn-a">--</div><div class="kpi-l">AXIS A &mdash; KNOWLEDGE</div></div>
@@ -309,13 +309,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
          TAB 6: AUDIT LOG
          ════════════════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-audit">
-      <div class="kpi-row">
+      <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="audit-count">--</div><div class="kpi-l">AUDIT EVENTS</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="audit-last">--</div><div class="kpi-l">LAST EVENT</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">LIVE</div><div class="kpi-l">LEDGER STATUS</div></div>
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">RLS</div><div class="kpi-l">SECURITY MODE</div></div>
       </div>
-      <div class="sechead" style="color:var(--cyan)">
+      <div class="sechead" data-reveal="fade-up" style="color:var(--cyan)">
         <span>TREASURY &amp; ACCESS AUDIT LOG &middot; SOVEREIGN EVENT CHAIN</span>
         <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px">&#8635; REFRESH</button>
       </div>

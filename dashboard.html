@@ -126,7 +126,7 @@
 
     <!-- LAYER 1: OVERVIEW -->
     <div id="l1" class="layer-panel active">
-      <div class="pad">
+      <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
         <div class="kpi-row" data-reveal="fade-up">
           <div class="kpi" id="kpi-auth" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div>
@@ -140,7 +140,7 @@
         </div>
 
         <!-- SYSTEM GALAXY -->
-        <div class="sechead">SYSTEM GALAXY &middot; 18 SOVEREIGN MODULES &middot; CLICK TO NAVIGATE <span class="sechead-action" onclick="location.href='/ecosystem.html'">FULL MAP &#8594;</span></div>
+        <div class="sechead" data-reveal="fade-up">SYSTEM GALAXY &middot; 18 SOVEREIGN MODULES &middot; CLICK TO NAVIGATE <span class="sechead-action" onclick="location.href='/ecosystem.html'">FULL MAP &#8594;</span></div>
         <div class="galaxy-wrap" style="height:clamp(240px,38vh,400px)">
           <canvas id="galaxy-canvas" role="img" aria-label="Sovereign platform module galaxy"></canvas>
           <div class="galaxy-center-label">
@@ -152,7 +152,7 @@
         <!-- ALERTS + RECOMMENDATIONS -->
         <div class="two-col">
           <div>
-            <div class="sechead">ALERTS &middot; REQUIRES ATTENTION</div>
+            <div class="sechead" data-reveal="fade-up">ALERTS &middot; REQUIRES ATTENTION</div>
             <div class="alert-list" id="alert-list">
               <div class="alert-item" style="--ac:var(--solar)"><div class="alert-icon">&#9888;</div><div><div class="alert-text">Edge functions need ANTHROPIC_API_KEY set in Supabase secrets before AI concierge activates.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH</div></div></div>
               <div class="alert-item" style="--ac:var(--cyan)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Run SQL migrations in RUN_ORDER.md to activate all 90 SQL files and 64 RPCs.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: CRITICAL</div></div></div>
@@ -160,7 +160,7 @@
             </div>
           </div>
           <div>
-            <div class="sechead">AI RECOMMENDATIONS &middot; INTELLIGENCE DRIVEN</div>
+            <div class="sechead" data-reveal="fade-up">AI RECOMMENDATIONS &middot; INTELLIGENCE DRIVEN</div>
             <div class="alert-list" id="rec-list">
               <div class="alert-item" style="--ac:var(--green)"><div class="alert-icon">&#9654;</div><div><div class="alert-text">Deploy member recruitment campaign. First 100 founding members generate real progression data to validate all gate thresholds.</div><div class="alert-meta">AI RECOMMENDATION &middot; DOMAIN: GROWTH</div></div></div>
               <div class="alert-item" style="--ac:var(--gold)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Activate enterprise tier. Starter accounts ($199/mo) represent immediate $2K MRR with zero additional infrastructure.</div><div class="alert-meta">AI RECOMMENDATION &middot; DOMAIN: REVENUE</div></div></div>
@@ -169,22 +169,22 @@
         </div>
 
         <!-- COMMAND INDEX — 18 MODULE PORTALS -->
-        <div class="sechead">COMMAND INDEX &middot; 18 SOVEREIGN MODULE PORTALS</div>
+        <div class="sechead" data-reveal="fade-up">COMMAND INDEX &middot; 18 SOVEREIGN MODULE PORTALS</div>
         <div class="cmd-grid" id="cmd-grid"></div>
       </div>
     </div>
 
     <!-- LAYER 2: OPERATIONS -->
     <div id="l2" class="layer-panel">
-      <div class="pad">
-        <div class="sechead">OPERATIONS CENTRE &middot; WORKFLOWS &middot; TASKS &middot; INCIDENTS</div>
-        <div class="kpi-row">
+      <div class="pad" data-reveal="fade-up">
+        <div class="sechead" data-reveal="fade-up">OPERATIONS CENTRE &middot; WORKFLOWS &middot; TASKS &middot; INCIDENTS</div>
+        <div class="kpi-row" data-reveal="fade-up">
           <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l">TASKS (7d)</div></div>
           <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l">WORKFLOWS DEFINED</div></div>
           <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="ops-incidents">0</div><div class="kpi-l">OPEN INCIDENTS</div></div>
           <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">ELITE</div><div class="kpi-l">DORA RATING</div></div>
         </div>
-        <div class="sechead">ACTIVE WORKFLOWS</div>
+        <div class="sechead" data-reveal="fade-up">ACTIVE WORKFLOWS</div>
         <div id="wf-list">
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
             <div class="cmd-card" style="--cc:var(--green)" onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">New member: sign→element→agent→welcome→record</div></div>
@@ -199,19 +199,19 @@
 
     <!-- LAYER 3: ANALYTICS -->
     <div id="l3" class="layer-panel">
-      <div class="pad">
-        <div class="sechead">STRATEGIC INTELLIGENCE &middot; OBSERVE &middot; ANALYSE &middot; PREDICT &middot; RECOMMEND</div>
-        <div class="kpi-row">
+      <div class="pad" data-reveal="fade-up">
+        <div class="sechead" data-reveal="fade-up">STRATEGIC INTELLIGENCE &middot; OBSERVE &middot; ANALYSE &middot; PREDICT &middot; RECOMMEND</div>
+        <div class="kpi-row" data-reveal="fade-up">
           <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ana-events">--</div><div class="kpi-l">EVENTS (7d)</div></div>
           <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ana-sessions">--</div><div class="kpi-l">SESSIONS (7d)</div></div>
           <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ana-users">--</div><div class="kpi-l">UNIQUE MEMBERS (7d)</div></div>
           <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ana-cta">--</div><div class="kpi-l">CTA CLICKS (7d)</div></div>
         </div>
-        <div class="sechead">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'">FULL ANALYTICS &#8594;</span></div>
+        <div class="sechead" data-reveal="fade-up">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'">FULL ANALYTICS &#8594;</span></div>
         <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center;margin-bottom:14px" data-reveal="fade-up">
           <canvas id="dash-radar" style="max-height:180px"></canvas>
         </div>
-        <div class="sechead">TOP PAGES &middot; SESSION DISTRIBUTION</div>
+        <div class="sechead" data-reveal="fade-up">TOP PAGES &middot; SESSION DISTRIBUTION</div>
         <div id="top-pages-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
           <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING ANALYTICS&hellip;</div>
         </div>
@@ -220,16 +220,16 @@
 
     <!-- LAYER 4: AI COMMAND -->
     <div id="l4" class="layer-panel">
-      <div class="pad">
-        <div class="sechead">AI COMMAND CENTRE &middot; 12 AGENTS &middot; INTELLIGENCE ENGINE &middot; MEMORY</div>
-        <div class="kpi-row">
+      <div class="pad" data-reveal="fade-up">
+        <div class="sechead" data-reveal="fade-up">AI COMMAND CENTRE &middot; 12 AGENTS &middot; INTELLIGENCE ENGINE &middot; MEMORY</div>
+        <div class="kpi-row" data-reveal="fade-up">
           <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">12</div><div class="kpi-l">AGENTS ACTIVE</div></div>
           <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ai-queries">--</div><div class="kpi-l">AI QUERIES (7d)</div></div>
           <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ai-memories">--</div><div class="kpi-l">MEMORIES STORED</div></div>
           <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ai-workflows">--</div><div class="kpi-l">WORKFLOWS RUN</div></div>
         </div>
         <!-- QUICK AI QUERY -->
-        <div class="sechead">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
+        <div class="sechead" data-reveal="fade-up">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
         <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
           <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
           <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">
@@ -238,22 +238,22 @@
           </div>
         </div>
         <!-- AGENT SHORTCUTS -->
-        <div class="sechead">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
+        <div class="sechead" data-reveal="fade-up">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
         <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px"></div>
       </div>
     </div>
 
     <!-- LAYER 5: ADMINISTRATION -->
     <div id="l5" class="layer-panel">
-      <div class="pad">
-        <div class="sechead">ADMINISTRATION &middot; OWNER ONLY &middot; SOVEREIGN CONTROLS</div>
-        <div class="kpi-row">
+      <div class="pad" data-reveal="fade-up">
+        <div class="sechead" data-reveal="fade-up">ADMINISTRATION &middot; OWNER ONLY &middot; SOVEREIGN CONTROLS</div>
+        <div class="kpi-row" data-reveal="fade-up">
           <div class="kpi" style="--kc:var(--gold)" onclick="location.href='/approvals.html'"><div class="kpi-n" id="adm-pending">--</div><div class="kpi-l">PENDING ACCESS</div></div>
           <div class="kpi" style="--kc:var(--cyan)" onclick="location.href='/enterprise.html'"><div class="kpi-n" id="adm-accounts">--</div><div class="kpi-l">ENTERPRISE ACCOUNTS</div></div>
           <div class="kpi" style="--kc:var(--green)" onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
           <div class="kpi" style="--kc:var(--crim)" onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
         </div>
-        <div class="sechead">ADMIN QUICK ACTIONS</div>
+        <div class="sechead" data-reveal="fade-up">ADMIN QUICK ACTIONS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
           <button onclick="location.href='/approvals.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; APPROVE ACCESS REQUESTS</button>
           <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; VIEW SRE OBSERVATORY</button>
@@ -267,7 +267,7 @@
 
     <!-- TIMELINE -->
     <div class="timeline" id="timeline-section">
-      <div class="sechead" style="padding:0 0 10px">LIVE TIMELINE &middot; RECENT SOVEREIGN EVENTS</div>
+      <div class="sechead" data-reveal="fade-up" style="padding:0 0 10px">LIVE TIMELINE &middot; RECENT SOVEREIGN EVENTS</div>
       <div id="timeline-items">
         <div class="tl-item"><div class="tl-dot" style="--td:var(--muted)"></div><div class="tl-content"><div class="tl-title" style="color:var(--muted)">Loading timeline&hellip;</div></div></div>
       </div>

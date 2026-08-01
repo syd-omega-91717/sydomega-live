@@ -54,7 +54,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <div class="topbar"><div class="t">DATA ANALYTICS &amp; INTELLIGENCE<small>M17 &middot; DATA SCIENCE &middot; ML &middot; AI &middot; ALGORITHMS &middot; PYTHON &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="an-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0"></canvas><a href="/studio.html" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--void);background:var(--gold);padding:7px 14px;border:1px solid var(--gold);flex-shrink:0;cursor:pointer;transition:.18s" onmouseenter="this.style.background='transparent';this.style.color='var(--gold)'" onmouseleave="this.style.background='var(--gold)';this.style.color='var(--void)'">&#9654; STUDIO</a></div>
 
     <!-- KPI ROW -->
-    <div class="kpi-row">
+    <div class="kpi-row" data-reveal="fade-up">
       <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="an-auth">--</div><div class="kpi-l">AUTHORITY</div><div class="kpi-d">sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div></div>
       <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="an-nodes">--</div><div class="kpi-l">NODES CLEARED</div><div class="kpi-d">of 104,976</div></div>
       <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="an-tasks">--</div><div class="kpi-l">VERIFIED ACTIONS</div><div class="kpi-d">AXIS A+B+C events</div></div>
@@ -73,7 +73,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- MATRIX OVERVIEW -->
     <div class="tab-panel on" id="tab-overview">
-      <div class="sechead">AXIS PROGRESSION ANALYSIS</div>
+      <div class="sechead" data-reveal="fade-up">AXIS PROGRESSION ANALYSIS</div>
       <div class="chart-wrap">
         <div class="chart-head"><span>AUTHORITY RADAR &middot; LIVE POSITION</span><canvas id="mini-radar" width="160" height="60" style="width:80px;height:30px"></canvas></div>
         <div class="chart-body">
@@ -101,7 +101,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- ALGORITHMS -->
     <div class="tab-panel" id="tab-algorithms">
-      <div class="sechead">ALGORITHMS POWERING THE PLATFORM</div>
+      <div class="sechead" data-reveal="fade-up">ALGORITHMS POWERING THE PLATFORM</div>
       <div class="grid4">
         <div class="algo-card" style="--ac:var(--gold)">
           <div class="algo-n">DIJKSTRA &mdash; MATRIX PATHFINDING</div>
@@ -140,7 +140,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div class="code-block"># No goto. No skip.<br>assert node_n+1 == node_n + step<br>assert step == 0.001<br>assert path.is_verified()</div>
         </div>
       </div>
-      <div class="sechead" style="margin-top:4px">FORMULA DERIVATION &middot; COMPLETE MATHEMATICAL PROOF</div>
+      <div class="sechead" data-reveal="fade-up" style="margin-top:4px">FORMULA DERIVATION &middot; COMPLETE MATHEMATICAL PROOF</div>
       <div class="code-block" style="font-size:10px;line-height:2">
 A, B, C &isin; [0.001, 9.000] &middot; GENESIS=0.001 &middot; APEX=9.000 &middot; STEP=0.001<br>
 AUTHORITY = sqrt( A&sup3; + B&sup3; + C&sup3; ) &times; &phi; / e<br>
@@ -154,7 +154,7 @@ i&sup2; = -1 &rArr; complex gate damping at each threshold crossing
 
     <!-- DATA SCIENCE -->
     <div class="tab-panel" id="tab-datascience">
-      <div class="sechead">DATA SCIENCE &middot; PYTHON &middot; ML &middot; POSTGRESQL</div>
+      <div class="sechead" data-reveal="fade-up">DATA SCIENCE &middot; PYTHON &middot; ML &middot; POSTGRESQL</div>
       <div class="grid4">
         <div class="algo-card" style="--ac:var(--cyan)">
           <div class="algo-n">POSTGRESQL &middot; PGBOUNCER</div>
@@ -181,13 +181,13 @@ i&sup2; = -1 &rArr; complex gate damping at each threshold crossing
           <div class="code-block">git push origin main<br>&rArr; Vercel deploys in 30s<br>&rArr; CDN invalidates globally<br>&rArr; TTFB &lt;100ms worldwide</div>
         </div>
       </div>
-      <div class="sechead" style="margin-top:4px">LIVE PLATFORM METRICS</div>
+      <div class="sechead" data-reveal="fade-up" style="margin-top:4px">LIVE PLATFORM METRICS</div>
       <div id="live-metrics"><div style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING METRICS...</div></div>
     </div>
 
     <!-- TASK LOG -->
     <div class="tab-panel" id="tab-tasklog">
-      <div class="sechead">VERIFIED ACTION LOG &middot; MATRIX EVENTS<button onclick="loadTaskLog()" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:4px 10px;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:2px">&#8635; REFRESH</button></div>
+      <div class="sechead" data-reveal="fade-up">VERIFIED ACTION LOG &middot; MATRIX EVENTS<button onclick="loadTaskLog()" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:4px 10px;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:2px">&#8635; REFRESH</button></div>
       <div id="task-log-wrap"><div style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING TASK LOG...</div></div>
     </div>
 

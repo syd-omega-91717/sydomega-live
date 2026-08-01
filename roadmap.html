@@ -39,7 +39,7 @@
   <aside class="side" id="omega-side" data-page="roadmap" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar"><div class="t">EVOLUTION ROADMAP<small>STRATEGIC VISION &middot; PRIORITY MATRIX &middot; HORIZON PLANNING &middot; 100-YEAR ARCHITECTURE</small></div><canvas id="rdmp-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img"></canvas></div>
-    <div class="pad">
+    <div class="pad" data-reveal="fade-up">
       <!-- PLATFORM HEALTH SCORE -->
       <div style="border:1px solid var(--line);background:rgba(201,168,76,.04);padding:20px;border-radius:2px;border-top:3px solid var(--gold);text-align:center;margin-bottom:16px">
         <div style="font-family:var(--D);font-size:clamp(36px,7vw,64px);color:var(--gold);line-height:1;margin-bottom:8px">87<span style="font-size:.4em">/100</span></div>
@@ -47,7 +47,7 @@
         <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-top:8px">ARCHITECTURE 92 &middot; ENGINEERING 88 &middot; AI 84 &middot; SECURITY 89 &middot; UX 86 &middot; BUSINESS 82</div>
       </div>
       <!-- HORIZON PLANNING -->
-      <div class="sechead">HORIZON PLANNING &middot; 100-YEAR ARCHITECTURE VISION</div>
+      <div class="sechead" data-reveal="fade-up">HORIZON PLANNING &middot; 100-YEAR ARCHITECTURE VISION</div>
       <div class="horizon-grid">
         <div class="horizon-card" style="--hc:var(--green)">
           <div class="h-label">H1 &middot; NOW &mdash; 6 MONTHS &middot; FOUNDATION</div>
@@ -103,7 +103,7 @@
         </div>
       </div>
       <!-- PRIORITY MATRIX -->
-      <div class="sechead">PRIORITY MATRIX &middot; CLASSIFIED BY IMPACT &times; EFFORT</div>
+      <div class="sechead" data-reveal="fade-up">PRIORITY MATRIX &middot; CLASSIFIED BY IMPACT &times; EFFORT</div>
       <div class="matrix-grid">
         <div class="p-card" style="--pc:var(--crim)"><div class="p-badge">CRITICAL &middot; DO NOW</div><div class="p-title">Run SQL Migrations</div><div class="p-desc">All 8+ SQL files in RUN_ORDER.md sequence. Activates 30+ RPCs, RLS policies, and triggers.</div><div class="p-meta">EFFORT: LOW &middot; IMPACT: CRITICAL &middot; DEPENDENCY: EVERYTHING</div></div>
         <div class="p-card" style="--pc:var(--crim)"><div class="p-badge">CRITICAL &middot; DO NOW</div><div class="p-title">Deploy Edge Functions</div><div class="p-desc">concierge (AI), intel-feed (news), notify-access (email), checkout (payments dormant).</div><div class="p-meta">EFFORT: LOW &middot; IMPACT: CRITICAL &middot; UNLOCKS: AI COPILOT</div></div>
@@ -116,7 +116,7 @@
         <div class="p-card" style="--pc:var(--purple)"><div class="p-badge">EXPERIMENTAL</div><div class="p-title">Voice-First Mode</div><div class="p-desc">omega-voice.js is deployed. Expand to full voice navigation, voice exam completion, and voice agents.</div><div class="p-meta">EFFORT: MEDIUM &middot; IMPACT: ACCESSIBILITY + PREMIUM</div></div>
       </div>
       <!-- MATURITY ASSESSMENT -->
-      <div class="sechead">PLATFORM MATURITY ASSESSMENT &middot; 12 DIMENSIONS</div>
+      <div class="sechead" data-reveal="fade-up">PLATFORM MATURITY ASSESSMENT &middot; 12 DIMENSIONS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:14px">
         <div id="mat-entries"></div>
       </div>

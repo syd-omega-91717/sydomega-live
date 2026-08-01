@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Gratitude · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* TODAY TAB */
+.today-date{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:20px}
+.g-entry-block{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:12px;background:rgba(201,168,76,.02);position:relative}
+.g-entry-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+.g-cats{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+.g-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.g-cat.on{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08)}
+.g-area{width:100%;min-height:68px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;line-height:1.75;resize:none;outline:none;letter-spacing:.3px}
+.g-area:focus{border-color:rgba(201,168,76,.28)}
+.g-area::placeholder{color:rgba(138,134,118,.25)}
+
+.g-note-wrap{margin-bottom:16px}
+.g-note-lbl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px}
+.g-note{width:100%;min-height:60px;padding:10px;background:rgba(201,168,76,.02);border:1px solid rgba(201,168,76,.08);color:#c8c4b0;font-family:var(--M);font-size:11px;line-height:1.75;resize:vertical;outline:none}
+.g-note:focus{border-color:rgba(201,168,76,.25)}
+.g-note::placeholder{color:rgba(138,134,118,.2)}
+
+.g-save-row{display:flex;align-items:center;gap:12px}
+.g-save-btn{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:10px 24px;border:1px solid var(--gold);color:var(--gold);background:none;cursor:pointer;transition:.15s}
+.g-save-btn:hover{background:rgba(201,168,76,.08)}
+.g-flash{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);opacity:0;transition:opacity .3s}
+
+/* HISTORY TAB */
+.g-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:20px}
+.g-cal-hd{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);text-align:center;padding:4px 0}
+.g-cal-day{font-family:var(--M);font-size:8px;letter-spacing:.5px;text-align:center;padding:6px 2px;border:1px solid transparent;cursor:default;transition:.1s}
+.g-cal-day.has-entry{border-color:rgba(201,168,76,.3);color:var(--gold);cursor:pointer}
+.g-cal-day.has-entry:hover{background:rgba(201,168,76,.08)}
+.g-cal-day.today{border-color:rgba(201,168,76,.6)!important;color:var(--gold)!important}
+.g-cal-day.empty{color:rgba(138,134,118,.15)}
+
+.g-hist-entry{border:1px solid rgba(201,168,76,.1);padding:14px;margin-bottom:10px;background:rgba(201,168,76,.02)}
+.g-he-date{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+.g-he-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.g-he-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.2);color:var(--dim);flex-shrink:0;margin-top:1px}
+.g-he-text{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.75);line-height:1.6}
+.g-he-note{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.45);line-height:1.6;margin-top:6px;font-style:italic;padding-left:4px;border-left:1px solid rgba(201,168,76,.15)}
+
+/* STREAK CALENDAR */
+.streak-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.streak-dot{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+
+/* JAR TAB */
+.jar-wrap{text-align:center;padding:20px 0}
+.jar-icon{font-size:48px;margin-bottom:16px}
+.jar-quote{font-family:var(--M);font-size:13px;color:#c8c4b0;line-height:1.9;max-width:500px;margin:0 auto 16px;letter-spacing:.3px;font-style:italic;min-height:80px}
+.jar-meta{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:24px}
+.jar-btn{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:10px 28px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;transition:.15s}
+.jar-btn:hover{background:rgba(201,168,76,.08)}
+.jar-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-top:32px}
+.kpi{border:1px solid rgba(201,168,76,.1);padding:14px 10px;text-align:center}
+.kpi-v{font-family:var(--M);font-size:22px;color:var(--gold);letter-spacing:1px}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+
+/* SCIENCE TAB */
+.sci-card{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:12px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.7);line-height:1.85;letter-spacing:.2px}
+.sci-source{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.35);margin-top:8px}
+</style>
+</head>
+<body>
+
+<div class="main">
+
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN GRATITUDE</span>
+    <span class="tb-meta" id="g-tb-meta">— ENTRIES</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" id="t-today">TODAY</button>
+    <button class="lt" id="t-history">HISTORY</button>
+    <button class="lt" id="t-jar">GRATITUDE JAR</button>
+    <button class="lt" id="t-science">SCIENCE</button>
+  </div>
+
+  <!-- TODAY -->
+  <div class="tab-pane active" id="tab-today">
+    <div class="today-date" id="g-today-lbl"></div>
+
+    <div id="g-entries-wrap"></div>
+
+    <div class="g-note-wrap">
+      <div class="g-note-lbl">DAILY REFLECTION (OPTIONAL)</div>
+      <textarea class="g-note" id="g-note" rows="3" placeholder="What made today meaningful? What are you looking forward to?"></textarea>
+    </div>
+
+    <div class="g-save-row">
+      <button class="g-save-btn" id="g-save">SAVE GRATITUDE</button>
+      <span class="g-flash" id="g-flash">✓ SAVED</span>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="tab-pane" id="tab-history">
+    <div style="margin-bottom:12px">
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:10px">30-DAY STREAK TRACKER</div>
+      <div class="streak-row" id="g-streak-dots"></div>
+    </div>
+    <div id="g-hist-cal" style="margin-bottom:20px"></div>
+    <div id="g-hist-list"></div>
+  </div>
+
+  <!-- GRATITUDE JAR -->
+  <div class="tab-pane" id="tab-jar">
+    <div class="jar-wrap">
+      <div class="jar-icon">🏺</div>
+      <div class="jar-quote" id="jar-quote">Your gratitude jar is empty — fill it with today's entry.</div>
+      <div class="jar-meta" id="jar-meta"></div>
+      <button class="jar-btn" id="jar-draw">DRAW FROM THE JAR</button>
+      <div class="jar-stats" id="jar-stats"></div>
+    </div>
+  </div>
+
+  <!-- SCIENCE -->
+  <div class="tab-pane" id="tab-science">
+    <div class="sci-card">
+      <div class="sci-title">THE THREE GOOD THINGS PRACTICE</div>
+      <div class="sci-body">
+        Every evening, write down three things that went well today and explain why they happened.
+        This simple practice shifts attention away from threat-detection mode toward recognizing
+        positive events — training the brain's reticular activating system to notice opportunity
+        over adversity. Even on difficult days, three good things can always be found.
+      </div>
+      <div class="sci-source">SOURCE: Seligman et al. (2005) — Positive Psychology Progress, American Psychologist</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">NEUROSCIENCE OF GRATITUDE</div>
+      <div class="sci-body">
+        Gratitude practice activates the medial prefrontal cortex and anterior cingulate cortex —
+        regions associated with social bonding, reward processing and moral cognition. fMRI studies
+        show increased activity in the hypothalamus (regulating sleep, metabolism, stress) and
+        nucleus accumbens (dopamine release). Regular practice literally rewires neural pathways
+        toward positivity within 21 days.
+      </div>
+      <div class="sci-source">SOURCE: Fox et al. (2015) — Social Cognitive and Affective Neuroscience; Emmons &amp; McCullough (2003)</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">PROVEN BENEFITS (RESEARCH-BACKED)</div>
+      <div class="sci-body">
+        · 25% increase in happiness scores after 6 weeks of gratitude journaling<br>
+        · 10% better sleep quality and 23% fewer wake-time negative thoughts<br>
+        · 23% lower cortisol (stress hormone) in daily gratitude practitioners<br>
+        · Reduced symptoms of depression equal to pharmacological intervention in 12-week studies<br>
+        · Stronger social relationships: gratitude expression increases relationship satisfaction by 31%<br>
+        · Improved self-regulation and willpower: grateful people have 18% better impulse control
+      </div>
+      <div class="sci-source">SOURCE: Emmons (2013) Gratitude Works!; Wood et al. (2009) Journal of Research in Personality</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">GRATITUDE CATEGORIES</div>
+      <div class="sci-body">
+        <b style="color:rgba(201,168,76,.7)">PEOPLE</b> — Gratitude for specific people amplifies social bonds and increases reciprocal kindness.<br>
+        <b style="color:rgba(201,168,76,.7)">EXPERIENCES</b> — Savoring experiences counters hedonic adaptation and extends positive emotions.<br>
+        <b style="color:rgba(201,168,76,.7)">ABILITIES</b> — Recognizing your own capabilities builds self-efficacy and confidence.<br>
+        <b style="color:rgba(201,168,76,.7)">THINGS</b> — Gratitude for possessions reduces materialism and increases contentment.<br>
+        <b style="color:rgba(201,168,76,.7)">GROWTH</b> — Gratitude for challenges and lessons turns adversity into perceived opportunity.
+      </div>
+      <div class="sci-source">SOURCE: Watkins et al. (2003) Personality and Individual Differences; McCraty &amp; Childre (2004)</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">SOVEREIGN GRATITUDE PROTOCOL</div>
+      <div class="sci-body">
+        MORNING: Read one past gratitude from the jar before starting work — primes the mind for positivity.<br>
+        EVENING: Write 3+ gratitudes within 1 hour of sleep — strongest effect on dream quality and mood.<br>
+        SPECIFICITY: "My friend Jean helped me think through a hard decision" outperforms "good friends."<br>
+        WHY IT HAPPENED: Always include a cause — "because I asked for help" builds agency and self-trust.<br>
+        STREAK: Consistency matters more than quantity. One gratitude daily &gt; seven once weekly.
+      </div>
+      <div class="sci-source">INTERNAL SOVEREIGN PROTOCOL · SYD OMEGA 91717</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+
+const LOG_KEY = 'omega_gratitude_log';
+const CATS    = ['PEOPLE','EXPERIENCES','ABILITIES','THINGS','GROWTH'];
+const PROMPTS = [
+  'Who made you smile today, and why?',
+  'What moment today brought you peace?',
+  'What ability do you have that you\'re grateful for?',
+  'What challenge taught you something valuable?',
+  'What small pleasure did you experience today?',
+  'Who showed up for you today?',
+  'What in your environment are you grateful for?',
+  'What progress did you make, however small?',
+  'What beauty did you notice today?',
+  'What hardship are you secretly grateful for?',
+  'What made you laugh or feel light today?',
+  'What opportunity presented itself today?',
+];
+
+let _log = [];   // [{date, items:[{text,cat}], note, ts}]
+let _todayCats = ['PEOPLE','EXPERIENCES','GROWTH'];
+
+/* ── STORAGE ─────────────────────────────────────────────────────────── */
+
+function load() {
+  try { _log = JSON.parse(localStorage.getItem(LOG_KEY)) || []; } catch { _log = []; }
+}
+function save() { localStorage.setItem(LOG_KEY, JSON.stringify(_log)); }
+function today() { return new Date().toISOString().slice(0,10); }
+
+function updateTopMeta() {
+  const streak = calcStreak();
+  document.getElementById('g-tb-meta').textContent =
+    streak + '-DAY STREAK  ·  ' + _log.length + ' ENTR' + (_log.length===1?'Y':'IES');
+}
+
+/* ── TODAY TAB ───────────────────────────────────────────────────────── */
+
+function initToday() {
+  const d = today();
+  document.getElementById('g-today-lbl').textContent =
+    new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+
+  // Load existing today entry if any
+  const ex = _log.find(e=>e.date===d);
+  _todayCats = ex ? ex.items.map(i=>i.cat) : ['PEOPLE','EXPERIENCES','GROWTH'];
+  const texts = ex ? ex.items.map(i=>i.text) : ['','',''];
+  while (_todayCats.length < 3) _todayCats.push(CATS[_todayCats.length]);
+  while (texts.length < 3) texts.push('');
+
+  document.getElementById('g-note').value = ex?.note||'';
+
+  renderEntryBlocks(texts);
+}
+
+function renderEntryBlocks(texts) {
+  const wrap = document.getElementById('g-entries-wrap');
+  const labels = ['FIRST GRATITUDE','SECOND GRATITUDE','THIRD GRATITUDE'];
+  wrap.innerHTML = [0,1,2].map(i => {
+    const prompt = PROMPTS[Math.floor(Math.random()*PROMPTS.length)];
+    return `<div class="g-entry-block">
+      <div class="g-entry-num">${labels[i]}</div>
+      <div class="g-cats">
+        ${CATS.map(c=>`<button class="g-cat ${_todayCats[i]===c?'on':''}" onclick="setCat(${i},'${c}')">${c}</button>`).join('')}
+      </div>
+      <textarea class="g-area" id="ga-${i}" rows="3" placeholder="${prompt}">${esc(texts[i])}</textarea>
+    </div>`;
+  }).join('');
+}
+
+window.setCat = (i, cat) => {
+  _todayCats[i] = cat;
+  const block = document.querySelectorAll('.g-entry-block')[i];
+  block.querySelectorAll('.g-cat').forEach(b => b.classList.toggle('on', b.textContent===cat));
+};
+
+function saveToday() {
+  const d = today();
+  const items = [0,1,2].map(i=>({
+    text: document.getElementById('ga-'+i).value.trim(),
+    cat:  _todayCats[i]||'PEOPLE'
+  })).filter(it=>it.text);
+  if (!items.length) return;
+  const note = document.getElementById('g-note').value.trim();
+  const entry = {date:d, items, note, ts:Date.now()};
+  const idx = _log.findIndex(e=>e.date===d);
+  if (idx>=0) _log[idx]=entry; else _log.push(entry);
+  _log.sort((a,b)=>b.date.localeCompare(a.date));
+  save();
+  flash('g-flash');
+  updateTopMeta();
+}
+
+/* ── HISTORY TAB ─────────────────────────────────────────────────────── */
+
+function renderHistory() {
+  renderStreakDots();
+  renderHistList();
+}
+
+function renderStreakDots() {
+  const dates = new Set(_log.map(e=>e.date));
+  const wrap = document.getElementById('g-streak-dots');
+  wrap.innerHTML = Array.from({length:30},(_,i)=>{
+    const d = new Date(); d.setDate(d.getDate()-(29-i));
+    const key = d.toISOString().slice(0,10);
+    const has = dates.has(key);
+    const isToday = key===today();
+    return `<div class="streak-dot" title="${key}"
+      style="background:${has?'rgba(201,168,76,.8)':'rgba(201,168,76,.1)'};
+             border:${isToday?'1px solid var(--gold)':'1px solid transparent'}"></div>`;
+  }).join('');
+}
+
+function renderHistList() {
+  const el = document.getElementById('g-hist-list');
+  if (!_log.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:32px 0;text-align:center">NO ENTRIES YET</p>';
+    return;
+  }
+  el.innerHTML = _log.slice(0,30).map(e => `
+    <div class="g-hist-entry">
+      <div class="g-he-date">${e.date}</div>
+      ${(e.items||[]).map(it=>`
+        <div class="g-he-item">
+          <span class="g-he-cat">${it.cat}</span>
+          <span class="g-he-text">${esc(it.text)}</span>
+        </div>`).join('')}
+      ${e.note?`<div class="g-he-note">${esc(e.note)}</div>`:''}
+    </div>
+  `).join('');
+}
+
+/* ── GRATITUDE JAR ───────────────────────────────────────────────────── */
+
+let _jarAll = [];
+
+function buildJarPool() {
+  _jarAll = [];
+  _log.forEach(e => (e.items||[]).forEach(it => _jarAll.push({...it, date:e.date})));
+}
+
+function drawFromJar() {
+  if (!_jarAll.length) return;
+  const item = _jarAll[Math.floor(Math.random()*_jarAll.length)];
+  document.getElementById('jar-quote').textContent = '"' + item.text + '"';
+  document.getElementById('jar-meta').textContent = item.cat + '  ·  ' + item.date;
+}
+
+function renderJarStats() {
+  const freq = {};
+  CATS.forEach(c=>freq[c]=0);
+  _jarAll.forEach(it=>{ freq[it.cat]=(freq[it.cat]||0)+1; });
+  const streak = calcStreak();
+  document.getElementById('jar-stats').innerHTML = [
+    [_jarAll.length, 'GRATITUDES'],
+    [_log.length,    'ENTRIES'],
+    [streak,         'DAY STREAK'],
+    [freq.PEOPLE||0, 'PEOPLE'],
+    [freq.GROWTH||0, 'GROWTH'],
+  ].map(([v,l])=>`<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+}
+
+/* ── HELPERS ─────────────────────────────────────────────────────────── */
+
+function calcStreak() {
+  if (!_log.length) return 0;
+  const dates = new Set(_log.map(e=>e.date));
+  let s = 0; const d = new Date();
+  while (dates.has(d.toISOString().slice(0,10))) { s++; d.setDate(d.getDate()-1); }
+  return s;
+}
+
+function flash(id) {
+  const el = document.getElementById(id);
+  el.style.opacity = '1';
+  setTimeout(()=>{ el.style.opacity='0'; }, 2200);
+}
+
+function esc(t) {
+  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── TAB ROUTER ──────────────────────────────────────────────────────── */
+
+function activateTab(name) {
+  ['today','history','jar','science'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    document.getElementById('t-'+t).classList.toggle('active',t===name);
+  });
+  if (name==='history') renderHistory();
+  if (name==='jar') { buildJarPool(); renderJarStats(); drawFromJar(); }
+}
+
+['today','history','jar','science'].forEach(t=>{
+  document.getElementById('t-'+t).addEventListener('click',()=>activateTab(t));
+});
+
+/* ── EVENT WIRES ─────────────────────────────────────────────────────── */
+
+document.getElementById('g-save').addEventListener('click', saveToday);
+document.getElementById('jar-draw').addEventListener('click', drawFromJar);
+
+/* ── BOOT ─────────────────────────────────────────────────────────────── */
+
+load();
+initToday();
+updateTopMeta();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Decisions · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* FORM ELEMENTS */
+.d-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-bottom:5px}
+.d-in{width:100%;font-family:var(--M);font-size:11px;padding:8px 12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;letter-spacing:.3px;margin-bottom:10px}
+.d-in:focus{border-color:rgba(201,168,76,.35)}
+.d-in::placeholder{color:rgba(138,134,118,.25)}
+.d-area{width:100%;font-family:var(--M);font-size:11px;padding:10px 12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;resize:vertical;outline:none;min-height:72px;line-height:1.75;margin-bottom:10px}
+.d-area:focus{border-color:rgba(201,168,76,.3)}
+.d-area::placeholder{color:rgba(138,134,118,.2)}
+.d-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 18px;border:1px solid rgba(201,168,76,.2);color:var(--gold);background:none;cursor:pointer;transition:.1s;margin-right:8px}
+.d-btn:hover{background:rgba(201,168,76,.08)}
+.d-btn-sec{color:var(--dim);border-color:rgba(201,168,76,.12)}
+.d-btn-sec:hover{color:var(--gold)}
+
+.sect-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* FRAMEWORK CARDS */
+.fw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px}
+.fw-card{border:1px solid rgba(201,168,76,.12);padding:14px;cursor:pointer;transition:.1s}
+.fw-card:hover,.fw-card.on{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
+.fw-card.on .fw-name{color:var(--gold)}
+.fw-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:rgba(138,134,118,.7);margin-bottom:4px;transition:.1s}
+.fw-desc{font-family:var(--M);font-size:8px;color:rgba(138,134,118,.45);line-height:1.7}
+
+/* OPTIONS */
+.opt-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.opt-in{flex:1;font-family:var(--M);font-size:11px;padding:7px 10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;outline:none}
+.opt-in:focus{border-color:rgba(201,168,76,.3)}
+.opt-del{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.3);background:none;border:none;cursor:pointer}
+.opt-del:hover{color:#c0392b}
+
+/* PROS / CONS */
+.pc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.pc-col-title{font-family:var(--M);font-size:8px;letter-spacing:2px;margin-bottom:8px}
+.pc-item{display:flex;gap:6px;align-items:center;margin-bottom:5px}
+.pc-item-in{flex:1;font-family:var(--M);font-size:10px;padding:5px 8px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;outline:none}
+.pc-item-in:focus{border-color:rgba(201,168,76,.25)}
+.pc-del{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.25);background:none;border:none;cursor:pointer}
+.pc-del:hover{color:#c0392b}
+
+/* 10/10/10 */
+.ttt-row{margin-bottom:14px}
+.ttt-label{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+
+/* BIAS CHECK */
+.bias-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px;margin-bottom:16px}
+.bias-item{display:flex;align-items:flex-start;gap:8px;padding:8px;border:1px solid rgba(201,168,76,.08);background:rgba(201,168,76,.02);cursor:pointer;transition:.1s}
+.bias-item:hover{border-color:rgba(201,168,76,.2)}
+.bias-item.checked{border-color:rgba(192,57,43,.3);background:rgba(192,57,43,.03)}
+.bias-check{width:14px;height:14px;border:1px solid rgba(201,168,76,.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.1s;margin-top:1px}
+.bias-item.checked .bias-check{background:rgba(192,57,43,.2);border-color:rgba(192,57,43,.5)}
+.bias-text{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.65);line-height:1.6}
+.bias-name{color:rgba(138,134,118,.85);display:block;margin-bottom:2px}
+
+/* DECISION JOURNAL */
+.dec-card{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:10px;background:rgba(201,168,76,.02)}
+.dec-hd{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.dec-title{font-family:var(--M);font-size:11px;color:#c8c4b0;flex:1;letter-spacing:.3px}
+.dec-status{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid}
+.dec-meta{font-family:var(--M);font-size:8px;color:var(--dim);margin-bottom:8px}
+.dec-chosen{font-family:var(--M);font-size:10px;color:var(--gold);margin-bottom:6px}
+.dec-outcome{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);font-style:italic;border-left:2px solid rgba(201,168,76,.2);padding-left:10px;margin-bottom:8px;line-height:1.7}
+.dec-acts{display:flex;gap:6px;flex-wrap:wrap}
+.dec-act{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.dec-act:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
+
+/* REF CARDS */
+.ref-card{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:12px}
+.ref-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.ref-body{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);line-height:1.9}
+
+/* COMMIT SECTION */
+.commit-wrap{border:1px solid rgba(201,168,76,.2);padding:18px;background:rgba(201,168,76,.04)}
+.commit-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:12px}
+.choice-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.choice-btn{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:8px 16px;border:1px solid rgba(201,168,76,.15);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.choice-btn:hover,.choice-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+</style>
+</head>
+<body>
+
+<div class="main">
+
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN DECISIONS</span>
+    <span class="tb-meta" id="d-tb-meta">— DECISIONS</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" id="t-new">NEW DECISION</button>
+    <button class="lt" id="t-journal">JOURNAL</button>
+    <button class="lt" id="t-frameworks">FRAMEWORKS</button>
+  </div>
+
+  <!-- NEW DECISION -->
+  <div class="tab-pane active" id="tab-new">
+    <input type="hidden" id="d-edit-id"/>
+
+    <!-- STEP 1: Context -->
+    <div style="margin-bottom:20px">
+      <div class="sect-title">① DEFINE THE DECISION</div>
+      <div class="d-label">DECISION TITLE *</div>
+      <input class="d-in" id="d-title" placeholder="What am I deciding? (Short, clear statement)"/>
+      <div class="d-label">CONTEXT &amp; CONSTRAINTS</div>
+      <textarea class="d-area" id="d-context" placeholder="Why does this matter? What constraints exist? What's the deadline?"></textarea>
+      <div class="d-label">URGENCY</div>
+      <select class="d-in" id="d-urgency" style="cursor:pointer">
+        <option value="low">LOW — Can wait, no deadline pressure</option>
+        <option value="medium" selected>MEDIUM — Should decide within a week</option>
+        <option value="high">HIGH — Need to decide today or tomorrow</option>
+        <option value="immediate">IMMEDIATE — Must decide right now</option>
+      </select>
+    </div>
+
+    <!-- STEP 2: Options -->
+    <div style="margin-bottom:20px">
+      <div class="sect-title">② LIST YOUR OPTIONS</div>
+      <div id="d-options-list"></div>
+      <button class="d-btn" id="d-add-opt">+ ADD OPTION</button>
+    </div>
+
+    <!-- STEP 3: Framework -->
+    <div style="margin-bottom:20px">
+      <div class="sect-title">③ CHOOSE ANALYSIS FRAMEWORK</div>
+      <div class="fw-grid" id="d-fw-grid"></div>
+    </div>
+
+    <!-- STEP 4: Analysis (framework-specific) -->
+    <div id="d-analysis-wrap" style="margin-bottom:20px"></div>
+
+    <!-- STEP 5: Bias Check -->
+    <div style="margin-bottom:20px">
+      <div class="sect-title">④ COGNITIVE BIAS GUARD</div>
+      <p style="font-family:var(--M);font-size:9px;color:var(--dim);margin-bottom:10px;line-height:1.7">Check any biases that might be influencing this decision:</p>
+      <div class="bias-wrap" id="d-bias-wrap"></div>
+    </div>
+
+    <!-- STEP 5: Commit -->
+    <div class="commit-wrap">
+      <div class="commit-title">⑤ COMMIT TO A CHOICE</div>
+      <div class="d-label">I CHOOSE TO</div>
+      <div class="choice-btns" id="d-choice-btns"></div>
+      <div class="d-label">REVIEW DATE (WHEN WILL I ASSESS THE OUTCOME?)</div>
+      <input type="date" class="d-in" id="d-review-date" style="max-width:200px"/>
+      <div class="d-label">COMMIT STATEMENT (WHY THIS OPTION?)</div>
+      <textarea class="d-area" id="d-commit-stmt" rows="2" placeholder="I choose this because… The key reason is…"></textarea>
+      <button class="d-btn" id="d-commit-btn">COMMIT THIS DECISION</button>
+      <button class="d-btn d-btn-sec" id="d-save-draft">SAVE AS DRAFT</button>
+    </div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div class="tab-pane" id="tab-journal">
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap" id="d-status-filter">
+      <button class="d-btn" data-filter="all">ALL</button>
+      <button class="d-btn" data-filter="draft">DRAFTS</button>
+      <button class="d-btn" data-filter="decided">DECIDED</button>
+      <button class="d-btn" data-filter="reviewing">REVIEWING</button>
+    </div>
+    <div id="d-journal-list"></div>
+  </div>
+
+  <!-- FRAMEWORKS REFERENCE -->
+  <div class="tab-pane" id="tab-frameworks">
+    <div class="ref-card">
+      <div class="ref-title">PROS &amp; CONS — WEIGHTED</div>
+      <div class="ref-body">
+        List positives and negatives for your chosen option. Rate the importance of each (1-5).
+        Sum the weighted scores. Best for: medium-stakes personal or professional decisions.<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> You have a single option to evaluate against the status quo.
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-title">10 / 10 / 10</div>
+      <div class="ref-body">
+        Ask: How will I feel about this decision in 10 minutes? 10 months? 10 years?
+        Short-term emotion vs long-term regret. From Suzy Welch's decision framework.<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Emotional decisions where short-term fear conflicts with long-term values.
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-title">REGRET MINIMIZATION (BEZOS)</div>
+      <div class="ref-body">
+        Project yourself to age 80 looking back. Will you regret NOT taking this action?
+        Jeff Bezos used this to leave his hedge fund job to found Amazon.<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Major life decisions where comfort bias pulls toward inaction.
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-title">PRE-MORTEM</div>
+      <div class="ref-body">
+        Imagine it's 1 year from now. Your decision turned out to be a failure.
+        What went wrong? Write the failure story. Now ask: can you prevent those causes?
+        From Gary Klein — used by NASA, Google, military planners.<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> High-stakes, irreversible, or overconfident scenarios.
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-title">EISENHOWER MATRIX (URGENCY × IMPORTANCE)</div>
+      <div class="ref-body">
+        Is this decision URGENT (must act soon) and IMPORTANT (high impact)?<br>
+        Q1 URGENT + IMPORTANT → Decide &amp; act immediately<br>
+        Q2 NOT URGENT + IMPORTANT → Schedule, plan carefully<br>
+        Q3 URGENT + NOT IMPORTANT → Delegate or simplify<br>
+        Q4 NOT URGENT + NOT IMPORTANT → Eliminate or ignore<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Prioritizing which decisions deserve deep analysis.
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-title">INVERSION (CHARLIE MUNGER)</div>
+      <div class="ref-body">
+        Instead of asking "How do I succeed?", ask "What would guarantee failure?"
+        List everything that would make this go terribly wrong. Then simply avoid those things.
+        From Charlie Munger / Warren Buffett.<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Complex, high-stakes decisions with many unknown risks.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SOVEREIGN DECISIONS — Decision Journal with Frameworks
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const DEC_KEY = 'omega_decisions';
+
+const FRAMEWORKS = [
+  {id:'pros_cons', name:'PROS & CONS', desc:'Weighted positives and negatives'},
+  {id:'ten_ten_ten', name:'10 / 10 / 10', desc:'10 min · 10 months · 10 years'},
+  {id:'regret', name:'REGRET MIN.', desc:'What will 80-year-old me regret?'},
+  {id:'premortem', name:'PRE-MORTEM', desc:'Assume it failed — what went wrong?'},
+  {id:'inversion', name:'INVERSION', desc:'What guarantees failure? Avoid those.'},
+];
+
+const BIASES = [
+  {id:'confirmation', name:'Confirmation Bias', desc:'Seeking info that confirms what I already believe'},
+  {id:'sunk_cost',    name:'Sunk Cost Fallacy', desc:'Continuing due to past investment already made'},
+  {id:'loss_aversion',name:'Loss Aversion / FOMO', desc:'Overweighting potential losses vs equivalent gains'},
+  {id:'anchoring',    name:'Anchoring Bias', desc:'Over-relying on the first piece of info received'},
+  {id:'availability', name:'Availability Heuristic', desc:'Overweighting recent/vivid examples in memory'},
+  {id:'overconfidence',name:'Overconfidence', desc:'Believing I know more than I do about the outcome'},
+  {id:'status_quo',   name:'Status Quo Bias', desc:'Defaulting to inaction because change feels risky'},
+  {id:'social',       name:'Social Pressure', desc:'Deciding to please others rather than myself'},
+  {id:'optimism',     name:'Optimism Bias', desc:'Assuming everything will go better than base rates suggest'},
+];
+
+let _decisions = [];
+let _options   = ['', ''];
+let _fw        = 'pros_cons';
+let _fw_data   = {};
+let _biases    = new Set();
+let _chosenOpt = '';
+let _filter    = 'all';
+
+/* ── STORAGE ─────────────────────────────────────────────────────────── */
+
+function load() {
+  try { _decisions = JSON.parse(localStorage.getItem(DEC_KEY)) || []; } catch { _decisions = []; }
+}
+function save() { localStorage.setItem(DEC_KEY, JSON.stringify(_decisions)); }
+function uid()  { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function today(){ return new Date().toISOString().slice(0,10); }
+
+function updateTopMeta() {
+  const decided = _decisions.filter(d=>d.status==='decided').length;
+  document.getElementById('d-tb-meta').textContent = _decisions.length + ' DECISIONS  ·  ' + decided + ' COMMITTED';
+}
+
+/* ── INIT FORM ───────────────────────────────────────────────────────── */
+
+function initForm() {
+  // Framework selector
+  document.getElementById('d-fw-grid').innerHTML = FRAMEWORKS.map(f =>
+    `<div class="fw-card ${_fw===f.id?'on':''}" onclick="selectFW('${f.id}')">
+      <div class="fw-name">${f.name}</div>
+      <div class="fw-desc">${f.desc}</div>
+    </div>`
+  ).join('');
+
+  // Options
+  renderOptions();
+
+  // Bias checkboxes
+  document.getElementById('d-bias-wrap').innerHTML = BIASES.map(b =>
+    `<div class="bias-item ${_biases.has(b.id)?'checked':''}" onclick="toggleBias('${b.id}')">
+      <div class="bias-check">${_biases.has(b.id)?'<span style="font-size:9px;color:#E57373">!</span>':''}</div>
+      <div class="bias-text"><span class="bias-name">${b.name}</span>${b.desc}</div>
+    </div>`
+  ).join('');
+
+  // Analysis area
+  renderAnalysis();
+
+  // Review date default: 30 days from now
+  if (!document.getElementById('d-review-date').value) {
+    const d = new Date(); d.setDate(d.getDate()+30);
+    document.getElementById('d-review-date').value = d.toISOString().slice(0,10);
+  }
+
+  renderChoiceButtons();
+}
+
+/* ── OPTIONS ─────────────────────────────────────────────────────────── */
+
+function renderOptions() {
+  const el = document.getElementById('d-options-list');
+  el.innerHTML = _options.map((opt,i) => `
+    <div class="opt-row">
+      <input class="opt-in" placeholder="Option ${i+1}..." value="${esc(opt)}" maxlength="80"
+        oninput="updateOpt(${i},this.value)" onchange="renderChoiceButtons()"/>
+      ${i>=2?`<button class="opt-del" onclick="removeOpt(${i})">×</button>`:'<span style="width:18px"></span>'}
+    </div>`
+  ).join('');
+}
+
+window.updateOpt = (i, val) => { _options[i]=val; renderChoiceButtons(); };
+window.removeOpt = i => { _options.splice(i,1); renderOptions(); renderChoiceButtons(); };
+
+/* ── FRAMEWORK SELECTOR ──────────────────────────────────────────────── */
+
+window.selectFW = id => {
+  _fw = id; _fw_data = {};
+  document.querySelectorAll('.fw-card').forEach(c=>{
+    c.classList.toggle('on', c.getAttribute('onclick')===`selectFW('${id}')`);
+    c.querySelector('.fw-name').style.color = c.classList.contains('on')? 'var(--gold)':'';
+  });
+  renderAnalysis();
+};
+
+/* ── ANALYSIS AREA ───────────────────────────────────────────────────── */
+
+function renderAnalysis() {
+  const el = document.getElementById('d-analysis-wrap');
+  if (!_fw) { el.innerHTML=''; return; }
+
+  if (_fw === 'pros_cons') {
+    if (!_fw_data.pros) _fw_data.pros = [''];
+    if (!_fw_data.cons) _fw_data.cons = [''];
+    el.innerHTML = `<div class="sect-title">PROS &amp; CONS ANALYSIS</div>
+      <div class="pc-wrap">
+        <div>
+          <div class="pc-col-title" style="color:#66BB6A">✓ PROS (POSITIVES)</div>
+          <div id="pc-pros-list">${renderPCItems('pros')}</div>
+          <button class="d-btn d-btn-sec" style="font-size:7px;padding:4px 10px;margin-top:4px" onclick="addPCItem('pros')">+ ADD PRO</button>
+        </div>
+        <div>
+          <div class="pc-col-title" style="color:#E57373">✗ CONS (NEGATIVES)</div>
+          <div id="pc-cons-list">${renderPCItems('cons')}</div>
+          <button class="d-btn d-btn-sec" style="font-size:7px;padding:4px 10px;margin-top:4px" onclick="addPCItem('cons')">+ ADD CON</button>
+        </div>
+      </div>`;
+  }
+  else if (_fw === 'ten_ten_ten') {
+    el.innerHTML = `<div class="sect-title">10 / 10 / 10 ANALYSIS</div>
+      ${[
+        ['10 MINUTES', 'How will I feel about this in 10 minutes?'],
+        ['10 MONTHS',  'How will I feel about this in 10 months?'],
+        ['10 YEARS',   'How will I feel about this in 10 years?'],
+      ].map(([lbl, ph], i) => `<div class="ttt-row">
+        <div class="ttt-label">${lbl}</div>
+        <textarea class="d-area" rows="2" placeholder="${ph}"
+          oninput="updateFWData('ttt${i}',this.value)">${esc(_fw_data['ttt'+i]||'')}</textarea>
+      </div>`).join('')}`;
+  }
+  else if (_fw === 'regret') {
+    el.innerHTML = `<div class="sect-title">REGRET MINIMIZATION</div>
+      <p style="font-family:var(--M);font-size:9px;color:var(--dim);margin-bottom:12px;line-height:1.8">
+        Imagine you are 80 years old, looking back at your life. You have a long conversation with your grandchild about this decision.
+      </p>
+      <div class="d-label">WILL I REGRET NOT TAKING THIS ACTION?</div>
+      <textarea class="d-area" rows="3" placeholder="At 80, looking back, I would regret NOT doing this because…"
+        oninput="updateFWData('regret_yes',this.value)">${esc(_fw_data.regret_yes||'')}</textarea>
+      <div class="d-label">WILL I REGRET TAKING THIS ACTION?</div>
+      <textarea class="d-area" rows="3" placeholder="At 80, looking back, I would regret doing this because…"
+        oninput="updateFWData('regret_no',this.value)">${esc(_fw_data.regret_no||'')}</textarea>`;
+  }
+  else if (_fw === 'premortem') {
+    el.innerHTML = `<div class="sect-title">PRE-MORTEM ANALYSIS</div>
+      <p style="font-family:var(--M);font-size:9px;color:var(--dim);margin-bottom:12px;line-height:1.8">
+        It is now one year from today. This decision turned out to be a disaster. Write the story of what went wrong.
+      </p>
+      <div class="d-label">THE FAILURE STORY</div>
+      <textarea class="d-area" rows="4" placeholder="We failed because… The critical mistake was… What we didn't anticipate was…"
+        oninput="updateFWData('failure_story',this.value)">${esc(_fw_data.failure_story||'')}</textarea>
+      <div class="d-label">FAILURE PREVENTION — HOW DO WE PREVENT THIS?</div>
+      <textarea class="d-area" rows="3" placeholder="To prevent this outcome, we should… The key safeguards are…"
+        oninput="updateFWData('prevention',this.value)">${esc(_fw_data.prevention||'')}</textarea>`;
+  }
+  else if (_fw === 'inversion') {
+    el.innerHTML = `<div class="sect-title">INVERSION (CHARLIE MUNGER)</div>
+      <p style="font-family:var(--M);font-size:9px;color:var(--dim);margin-bottom:12px;line-height:1.8">
+        Instead of asking how to succeed, ask what would guarantee failure. Then don't do those things.
+      </p>
+      <div class="d-label">WHAT WOULD GUARANTEE FAILURE?</div>
+      <textarea class="d-area" rows="4" placeholder="This will definitely fail if I… The surest path to disaster is… Things that would certainly destroy this are…"
+        oninput="updateFWData('failure_causes',this.value)">${esc(_fw_data.failure_causes||'')}</textarea>
+      <div class="d-label">THEREFORE, WHAT MUST I AVOID OR ENSURE?</div>
+      <textarea class="d-area" rows="3" placeholder="To avoid failure, I must not… I must ensure…"
+        oninput="updateFWData('inversions',this.value)">${esc(_fw_data.inversions||'')}</textarea>`;
+  }
+}
+
+function renderPCItems(type) {
+  return (_fw_data[type]||['']).map((v,i)=>`
+    <div class="pc-item">
+      <input class="pc-item-in" value="${esc(v)}" placeholder="..."
+        oninput="updatePC('${type}',${i},this.value)" maxlength="100"/>
+      ${i>0?`<button class="pc-del" onclick="delPC('${type}',${i})">×</button>`:''}
+    </div>`
+  ).join('');
+}
+
+window.addPCItem = type => {
+  if (!_fw_data[type]) _fw_data[type] = [''];
+  _fw_data[type].push('');
+  document.getElementById('pc-'+type+'-list').innerHTML = renderPCItems(type);
+};
+window.updatePC   = (type,i,v) => { if(_fw_data[type]) _fw_data[type][i]=v; };
+window.delPC      = (type,i)   => { _fw_data[type].splice(i,1); document.getElementById('pc-'+type+'-list').innerHTML=renderPCItems(type); };
+window.updateFWData = (k,v)   => { _fw_data[k]=v; };
+
+/* ── BIAS ────────────────────────────────────────────────────────────── */
+
+window.toggleBias = id => {
+  if (_biases.has(id)) _biases.delete(id); else _biases.add(id);
+  document.querySelectorAll('.bias-item').forEach((el,i)=>{
+    const bid = BIASES[i].id;
+    el.classList.toggle('checked', _biases.has(bid));
+    const chk = el.querySelector('.bias-check');
+    chk.innerHTML = _biases.has(bid)? '<span style="font-size:9px;color:#E57373">!</span>':'';
+  });
+};
+
+/* ── CHOICE BUTTONS ──────────────────────────────────────────────────── */
+
+function renderChoiceButtons() {
+  const opts = _options.filter(o=>o.trim());
+  document.getElementById('d-choice-btns').innerHTML = opts.map(o =>
+    `<button class="choice-btn ${_chosenOpt===o?'on':''}" onclick="pickChoice('${esc(o)}')">${esc(o)}</button>`
+  ).join('') || '<span style="font-family:var(--M);font-size:9px;color:var(--dim)">Add options above first</span>';
+}
+
+window.pickChoice = o => {
+  _chosenOpt = o;
+  document.querySelectorAll('.choice-btn').forEach(b=>{
+    b.classList.toggle('on', b.textContent===o);
+  });
+};
+
+/* ── SAVE DECISION ───────────────────────────────────────────────────── */
+
+function buildDecision(status) {
+  return {
+    id:          document.getElementById('d-edit-id').value || uid(),
+    title:       document.getElementById('d-title').value.trim(),
+    context:     document.getElementById('d-context').value.trim(),
+    urgency:     document.getElementById('d-urgency').value,
+    options:     _options.filter(o=>o.trim()),
+    framework:   _fw,
+    fw_data:     {..._fw_data},
+    biases:      [..._biases],
+    chosenOption:_chosenOpt,
+    commitStmt:  document.getElementById('d-commit-stmt').value.trim(),
+    reviewDate:  document.getElementById('d-review-date').value,
+    status,
+    decidedAt:   status==='decided'?today():null,
+    outcome:     '',
+    ts:          Date.now()
+  };
+}
+
+function commitDecision() {
+  const d = buildDecision('decided');
+  if (!d.title) { document.getElementById('d-title').focus(); return; }
+  if (!d.chosenOption) { alert('Please select a chosen option.'); return; }
+  upsertDecision(d);
+  clearForm();
+  activateTab('journal');
+}
+
+function saveDraft() {
+  const d = buildDecision('draft');
+  if (!d.title) { document.getElementById('d-title').focus(); return; }
+  upsertDecision(d);
+  clearForm();
+  activateTab('journal');
+}
+
+function upsertDecision(d) {
+  const idx = _decisions.findIndex(x=>x.id===d.id);
+  if (idx>=0) _decisions[idx]=d; else _decisions.unshift(d);
+  save(); updateTopMeta();
+}
+
+function clearForm() {
+  document.getElementById('d-edit-id').value   = '';
+  document.getElementById('d-title').value     = '';
+  document.getElementById('d-context').value   = '';
+  document.getElementById('d-commit-stmt').value='';
+  document.getElementById('d-urgency').value   = 'medium';
+  _options=['',' ']; _fw='pros_cons'; _fw_data={}; _biases=new Set(); _chosenOpt='';
+  initForm();
+}
+
+/* ── JOURNAL TAB ─────────────────────────────────────────────────────── */
+
+function renderJournal() {
+  const statusColors = {draft:'rgba(201,168,76,.4)', decided:'rgba(102,187,106,.5)', reviewing:'rgba(92,143,214,.5)'};
+  let list = _decisions;
+  if (_filter !== 'all') list = list.filter(d=>d.status===_filter);
+
+  const el = document.getElementById('d-journal-list');
+  if (!list.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:32px 0;text-align:center">NO DECISIONS YET — CREATE YOUR FIRST IN NEW DECISION TAB</p>';
+    return;
+  }
+  el.innerHTML = list.map(d => {
+    const col = statusColors[d.status]||statusColors.draft;
+    return `<div class="dec-card">
+      <div class="dec-hd">
+        <span class="dec-title">${esc(d.title)}</span>
+        <span class="dec-status" style="color:${col};border-color:${col}">${(d.status||'DRAFT').toUpperCase()}</span>
+      </div>
+      <div class="dec-meta">${d.decidedAt||'DRAFT'}  ·  ${d.urgency?.toUpperCase()||''}  ·  ${FRAMEWORKS.find(f=>f.id===d.framework)?.name||''}</div>
+      ${d.chosenOption?`<div class="dec-chosen">→ CHOSE: ${esc(d.chosenOption)}</div>`:''}
+      ${d.commitStmt?`<div class="dec-outcome">"${esc(d.commitStmt)}"</div>`:''}
+      ${d.outcome?`<div class="dec-outcome" style="border-color:rgba(102,187,106,.3)"><b style="color:rgba(102,187,106,.7)">OUTCOME:</b> ${esc(d.outcome)}</div>`:''}
+      <div class="dec-acts">
+        <button class="dec-act" onclick="editDecision('${d.id}')">EDIT</button>
+        ${d.status==='decided'?`<button class="dec-act" onclick="addOutcome('${d.id}')">LOG OUTCOME</button>`:''}
+        <button class="dec-act" onclick="delDecision('${d.id}')" style="color:rgba(192,57,43,.5)">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.editDecision = id => {
+  const d = _decisions.find(x=>x.id===id); if(!d) return;
+  document.getElementById('d-edit-id').value    = d.id;
+  document.getElementById('d-title').value      = d.title||'';
+  document.getElementById('d-context').value    = d.context||'';
+  document.getElementById('d-urgency').value    = d.urgency||'medium';
+  document.getElementById('d-commit-stmt').value= d.commitStmt||'';
+  document.getElementById('d-review-date').value= d.reviewDate||'';
+  _options = d.options?.length>=2 ? [...d.options] : ['',''];
+  _fw      = d.framework||'pros_cons';
+  _fw_data = {...(d.fw_data||{})};
+  _biases  = new Set(d.biases||[]);
+  _chosenOpt = d.chosenOption||'';
+  initForm();
+  activateTab('new');
+};
+
+window.addOutcome = id => {
+  const d = _decisions.find(x=>x.id===id); if(!d) return;
+  const out = prompt('How did this decision turn out? (Optional reflection):', d.outcome||'');
+  if (out===null) return;
+  d.outcome = out;
+  d.status  = 'reviewing';
+  save(); renderJournal();
+};
+
+window.delDecision = id => {
+  if (!confirm('Delete this decision permanently?')) return;
+  _decisions = _decisions.filter(d=>d.id!==id);
+  save(); updateTopMeta(); renderJournal();
+};
+
+/* ── HELPERS ─────────────────────────────────────────────────────────── */
+
+function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── TAB ROUTER ──────────────────────────────────────────────────────── */
+
+window.activateTab = function(name) {
+  ['new','journal','frameworks'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    document.getElementById('t-'+t).classList.toggle('active',t===name);
+  });
+  if (name==='journal') renderJournal();
+};
+
+['new','journal','frameworks'].forEach(t=>{
+  document.getElementById('t-'+t).addEventListener('click',()=>activateTab(t));
+});
+
+/* ── FILTER BUTTONS ──────────────────────────────────────────────────── */
+
+document.querySelectorAll('#d-status-filter button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    _filter=b.dataset.filter;
+    document.querySelectorAll('#d-status-filter button').forEach(x=>x.style.color=x===b?'var(--gold)':'');
+    renderJournal();
+  });
+});
+
+/* ── EVENT WIRES ─────────────────────────────────────────────────────── */
+
+document.getElementById('d-add-opt').addEventListener('click',()=>{
+  if (_options.length>=5) return;
+  _options.push(''); renderOptions();
+});
+document.getElementById('d-commit-btn').addEventListener('click', commitDecision);
+document.getElementById('d-save-draft').addEventListener('click', saveDraft);
+
+/* ── BOOT ─────────────────────────────────────────────────────────────── */
+
+load();
+initForm();
+updateTopMeta();
+
+</script>
+</body>
+</html>

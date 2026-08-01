@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Time · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;--solar:#FF9800;--red:#EF5350;--teal:#26C6DA;
+}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* TIMER */
+.timer-block{border:1px solid rgba(201,168,76,.12);padding:30px;text-align:center;margin-bottom:20px;background:rgba(0,0,0,.3)}
+.timer-display{font-family:var(--M);font-size:56px;letter-spacing:8px;color:var(--gold);margin-bottom:16px;line-height:1}
+.timer-phase{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:20px}
+.timer-controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.btn-ctrl{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 22px;border:1px solid rgba(201,168,76,.25);color:var(--gold);background:rgba(201,168,76,.06);cursor:pointer;transition:.1s}
+.btn-ctrl:hover{background:rgba(201,168,76,.14)}
+.btn-ctrl.active{background:rgba(201,168,76,.18);border-color:rgba(201,168,76,.5)}
+.btn-ctrl.red{border-color:rgba(239,83,80,.3);color:#EF5350;background:rgba(239,83,80,.05)}
+.btn-ctrl.red:hover{background:rgba(239,83,80,.12)}
+
+/* PROGRESS RING */
+.ring-wrap{display:flex;justify-content:center;margin-bottom:12px}
+
+/* SESSION FORM */
+.form-group{margin-bottom:14px}
+.form-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;display:block}
+.form-input{width:100%;padding:9px 12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none}
+.form-input:focus{border-color:rgba(201,168,76,.28)}
+select.form-input option{background:#0a0a08;color:#c8c4b0}
+
+/* PRESET MODES */
+.modes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:20px}
+.mode-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);cursor:pointer;transition:.1s;text-align:center}
+.mode-card:hover,.mode-card.sel{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
+.mode-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:4px}
+.mode-time{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim)}
+
+/* SECTION */
+.sect{margin-bottom:24px}
+.sect-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* LOG CARDS */
+.entry-card{border:1px solid rgba(201,168,76,.08);padding:12px;margin-bottom:8px;background:rgba(0,0,0,.2);display:flex;gap:12px;align-items:center}
+.entry-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.entry-body{flex:1}
+.entry-top{display:flex;justify-content:space-between;margin-bottom:3px;flex-wrap:wrap;gap:4px}
+.entry-task{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--gold)}
+.entry-dur{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--teal)}
+.entry-meta{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim)}
+.entry-del{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);background:none;border:none;cursor:pointer;padding:2px 6px}
+.entry-del:hover{color:#EF5350}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold)}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+
+/* CATEGORY CHART */
+#cat-canvas,#daily-canvas{display:block;width:100%;border:1px solid rgba(201,168,76,.1);background:rgba(0,0,0,.3)}
+
+/* INSIGHT ITEMS */
+.insight-item{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8;padding:8px 12px;border-left:2px solid rgba(201,168,76,.2);margin-bottom:8px}
+
+/* SCIENCE */
+.sci-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.2)}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+.sci-cite{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8}
+
+/* EMPTY */
+.empty-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
+
+/* ALLOCATION GRID */
+.alloc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.alloc-card{border:1px solid rgba(201,168,76,.08);padding:12px;background:rgba(0,0,0,.2)}
+.alloc-cat{font-family:var(--M);font-size:8px;letter-spacing:2px;margin-bottom:6px}
+.alloc-bar-track{height:4px;background:rgba(201,168,76,.08);border-radius:2px;margin-bottom:4px}
+.alloc-bar-fill{height:100%;border-radius:2px}
+.alloc-pct{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN TIME</span>
+    <span class="tb-meta" id="tb-today">── TODAY: 0H 0M</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" onclick="switchTab(this,'t1')">◆ TIMER</button>
+    <button class="lt" onclick="switchTab(this,'t2')">▶ LOG</button>
+    <button class="lt" onclick="switchTab(this,'t3')">▲ AUDIT</button>
+    <button class="lt" onclick="switchTab(this,'t4')">⚙ SCIENCE</button>
+  </div>
+
+  <!-- TAB 1: TIMER -->
+  <div class="tab-pane active" id="t1">
+    <div class="sect">
+      <div class="sect-hd">SESSION MODE</div>
+      <div class="modes-grid" id="modes-grid"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="task-input">TASK / INTENTION</label>
+      <input class="form-input" type="text" id="task-input" placeholder="What are you working on?"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="cat-select">CATEGORY</label>
+      <select class="form-input" id="cat-select">
+        <option value="deep-work">DEEP WORK</option>
+        <option value="learning">LEARNING</option>
+        <option value="strategy">STRATEGY</option>
+        <option value="creative">CREATIVE</option>
+        <option value="admin">ADMIN / OPERATIONS</option>
+        <option value="communication">COMMUNICATION</option>
+        <option value="physical">PHYSICAL / HEALTH</option>
+        <option value="rest">REST / RECOVERY</option>
+      </select>
+    </div>
+
+    <div class="timer-block">
+      <div class="ring-wrap">
+        <canvas id="ring-canvas" width="120" height="120"></canvas>
+      </div>
+      <div class="timer-display" id="timer-display">25:00</div>
+      <div class="timer-phase" id="timer-phase">READY TO START</div>
+      <div class="timer-controls">
+        <button class="btn-ctrl active" id="btn-start" onclick="startTimer()">▶ START</button>
+        <button class="btn-ctrl" id="btn-pause" onclick="pauseTimer()" style="display:none">⏸ PAUSE</button>
+        <button class="btn-ctrl" id="btn-resume" onclick="resumeTimer()" style="display:none">▶ RESUME</button>
+        <button class="btn-ctrl red" onclick="resetTimer()">■ RESET</button>
+      </div>
+    </div>
+
+    <div class="sect" style="margin-top:16px">
+      <div class="sect-hd">CUSTOM DURATION</div>
+      <div class="form-group">
+        <label class="form-label">MINUTES: <span id="custom-val" class="slider-val" style="color:var(--gold)">25</span></label>
+        <input type="range" id="custom-range" min="5" max="120" step="5" value="25"
+          oninput="setCustomDuration(this.value)" style="width:100%;margin-top:4px;-webkit-appearance:none;height:3px;background:rgba(201,168,76,.15);outline:none"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: LOG -->
+  <div class="tab-pane" id="t2">
+    <div class="sect">
+      <div class="sect-hd">TODAY'S SESSIONS</div>
+      <div id="today-list"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">RECENT HISTORY</div>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: AUDIT -->
+  <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">TIME STATISTICS</div>
+      <div class="stat-row" id="audit-stats"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">CATEGORY ALLOCATION</div>
+      <div class="alloc-grid" id="alloc-grid"></div>
+    </div>
+    <div class="sect" style="margin-top:20px">
+      <div class="sect-hd">7-DAY FOCUS TREND</div>
+      <canvas id="daily-canvas" height="140"></canvas>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">TIME AUDIT INSIGHTS</div>
+      <div id="audit-insights"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div class="sci-card">
+      <div class="sci-title">DEEP WORK & DELIBERATE PRACTICE</div>
+      <div class="sci-cite">Newport, C. (2016) — Deep Work: Rules for Focused Success in a Distracted World. Grand Central Publishing</div>
+      <div class="sci-body">Cal Newport defines Deep Work as professional activities performed in a state of distraction-free concentration that push cognitive capabilities to their limit. These are the sessions that create new value, improve skill, and are hard to replicate. The Sovereign Time system tracks deep work separately from shallow work, helping you understand the ratio of value-creating vs. administrative time in your sovereign schedule.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">POMODORO TECHNIQUE & ATTENTION CYCLES</div>
+      <div class="sci-cite">Cirillo, F. (1992) — The Pomodoro Technique. Originally in: La Tecnica del Pomodoro. Re-published 2006</div>
+      <div class="sci-body">Francesco Cirillo's Pomodoro Technique uses 25-minute focused sprints followed by 5-minute breaks, with a longer 20-30 minute break every four cycles. This rhythm aligns with natural ultradian cycles of alertness and recovery. Research on attention confirms that performance on sustained attention tasks degrades without brief breaks — the Pomodoro structure is a protocol for maintaining cognitive freshness across long work sessions.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">TIME AUDIT & PARKINSON'S LAW</div>
+      <div class="sci-cite">Parkinson, C.N. (1955) — Parkinson's Law. The Economist. November 19, 1955</div>
+      <div class="sci-body">Cyril Northcote Parkinson observed that "work expands to fill the time available for its completion." Time auditing reveals where your calendar and your values diverge — most people discover their highest-value activities receive disproportionately less time than low-value admin. The sovereign discipline of recording every block creates the data needed to challenge self-perception and redesign your time architecture around actual priorities.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">FLOW STATE & OPTIMAL CHALLENGE</div>
+      <div class="sci-cite">Csikszentmihalyi, M. (1990) — Flow: The Psychology of Optimal Experience. Harper & Row</div>
+      <div class="sci-body">Mihaly Csikszentmihalyi's research on peak experience found that flow states emerge when skill level and challenge level are both high and matched. Flow requires: clear goals, immediate feedback, and concentration on the task. The Sovereign Time system's task labeling and category tracking creates the clarity layer that makes flow more likely — you can't enter flow on an undefined task.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">ULTRADIAN RHYTHMS & PERFORMANCE WINDOWS</div>
+      <div class="sci-cite">Peretz Lavie (1982) — Ultrashort Sleep-Waking Schedule. Psychophysiology, 19(5) + Kleitman, N. (1963) — Sleep and Wakefulness</div>
+      <div class="sci-body">Nathaniel Kleitman (who discovered REM sleep) also described the Basic Rest-Activity Cycle (BRAC) — approximately 90-minute cycles of higher and lower alertness that continue during waking hours. Peak performance windows occur in the first half of each ultradian cycle; the second half is a natural recovery window. Structuring work sessions to align with these 90-minute natural rhythms can dramatically increase productivity without increasing total hours worked.</div>
+    </div>
+  </div>
+</div>
+
+<script src="omega-ui.js"></script>
+<script>
+const TIME_KEY = 'omega_time_log';
+
+const MODES = [
+  {name:'POMODORO',  work:25, break:5,  color:'#C9A84C', desc:'25 min focus'},
+  {name:'DEEP WORK', work:90, break:20, color:'#5C8FD6', desc:'90 min session'},
+  {name:'SPRINT',    work:50, break:10, color:'#4CAF50', desc:'50 min block'},
+  {name:'MICRO',     work:15, break:3,  color:'#9C6FD6', desc:'15 min burst'},
+];
+
+const CAT_COLORS = {
+  'deep-work':     '#C9A84C',
+  'learning':      '#5C8FD6',
+  'strategy':      '#9C6FD6',
+  'creative':      '#FF9800',
+  'admin':         '#78909C',
+  'communication': '#26C6DA',
+  'physical':      '#4CAF50',
+  'rest':          '#EF5350',
+};
+
+const CAT_LABELS = {
+  'deep-work':'DEEP WORK','learning':'LEARNING','strategy':'STRATEGY',
+  'creative':'CREATIVE','admin':'ADMIN','communication':'COMMS',
+  'physical':'PHYSICAL','rest':'REST',
+};
+
+let selectedMode = MODES[0];
+let timerState = 'idle'; /* idle | running | paused */
+let timerInterval = null;
+let timerTotal = 0;
+let timerRemaining = 0;
+let sessionStart = null;
+
+/* ─── INIT ─── */
+function init(){
+  renderModes();
+  setTimerDuration(selectedMode.work * 60);
+  drawRing(1);
+  updateTodayMeta();
+}
+
+/* ─── RENDER MODES ─── */
+function renderModes(){
+  var g=document.getElementById('modes-grid');
+  g.innerHTML='';
+  MODES.forEach(function(m){
+    var d=document.createElement('div');
+    d.className='mode-card'+(m===selectedMode?' sel':'');
+    d.innerHTML='<div class="mode-name" style="color:'+m.color+'">'+m.name+'</div><div class="mode-time">'+m.desc+'</div>';
+    d.onclick=function(){
+      selectedMode=m;
+      document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('sel');});
+      d.classList.add('sel');
+      resetTimer();
+      document.getElementById('custom-range').value=m.work;
+      document.getElementById('custom-val').textContent=m.work;
+    };
+    g.appendChild(d);
+  });
+}
+
+/* ─── TIMER CONTROLS ─── */
+function setTimerDuration(secs){
+  timerTotal=secs;
+  timerRemaining=secs;
+  updateDisplay();
+}
+
+function setCustomDuration(mins){
+  document.getElementById('custom-val').textContent=mins;
+  if(timerState==='idle') setTimerDuration(parseInt(mins)*60);
+}
+
+function startTimer(){
+  if(timerState==='running') return;
+  var task=document.getElementById('task-input').value.trim();
+  if(!task){alert('Enter a task / intention first.');return;}
+  timerState='running';
+  sessionStart=Date.now();
+  document.getElementById('btn-start').style.display='none';
+  document.getElementById('btn-pause').style.display='';
+  document.getElementById('timer-phase').textContent='FOCUSING — '+selectedMode.name;
+  timerInterval=setInterval(tick,1000);
+}
+
+function pauseTimer(){
+  if(timerState!=='running') return;
+  clearInterval(timerInterval);
+  timerState='paused';
+  document.getElementById('btn-pause').style.display='none';
+  document.getElementById('btn-resume').style.display='';
+  document.getElementById('timer-phase').textContent='PAUSED';
+}
+
+function resumeTimer(){
+  if(timerState!=='paused') return;
+  timerState='running';
+  document.getElementById('btn-resume').style.display='none';
+  document.getElementById('btn-pause').style.display='';
+  document.getElementById('timer-phase').textContent='FOCUSING — '+selectedMode.name;
+  timerInterval=setInterval(tick,1000);
+}
+
+function resetTimer(){
+  clearInterval(timerInterval);
+  timerState='idle';
+  timerRemaining=timerTotal;
+  sessionStart=null;
+  document.getElementById('btn-start').style.display='';
+  document.getElementById('btn-pause').style.display='none';
+  document.getElementById('btn-resume').style.display='none';
+  document.getElementById('timer-phase').textContent='READY TO START';
+  updateDisplay();
+  drawRing(1);
+}
+
+function tick(){
+  timerRemaining--;
+  updateDisplay();
+  drawRing(timerRemaining/timerTotal);
+  if(timerRemaining<=0) completeSession();
+}
+
+function completeSession(){
+  clearInterval(timerInterval);
+  timerState='idle';
+  var elapsed=Math.round((Date.now()-sessionStart)/1000);
+  var task=document.getElementById('task-input').value.trim();
+  var cat=document.getElementById('cat-select').value;
+  var entry={
+    id:Date.now(),
+    ts:new Date().toISOString(),
+    task:task,
+    category:cat,
+    duration:elapsed,
+    mode:selectedMode.name,
+    completed:true,
+  };
+  var logs=loadLogs();
+  logs.unshift(entry);
+  saveLogs(logs);
+  updateTodayMeta();
+  document.getElementById('btn-start').style.display='';
+  document.getElementById('btn-pause').style.display='none';
+  document.getElementById('btn-resume').style.display='none';
+  document.getElementById('timer-phase').textContent='SESSION COMPLETE · TAKE A BREAK';
+  document.getElementById('task-input').value='';
+  if(window.Notification&&Notification.permission==='granted'){
+    new Notification('Ω SYD OMEGA 91717',{body:'Session complete: '+task,icon:'/icons/icon-192.png'});
+  }
+}
+
+function updateDisplay(){
+  var m=Math.floor(timerRemaining/60);
+  var s=timerRemaining%60;
+  document.getElementById('timer-display').textContent=pad(m)+':'+pad(s);
+}
+
+function pad(n){return n<10?'0'+n:n;}
+
+/* ─── RING CANVAS ─── */
+function drawRing(frac){
+  var c=document.getElementById('ring-canvas');
+  var ctx=c.getContext('2d');
+  var W=c.width,H=c.height,cx=W/2,cy=H/2,r=50;
+  ctx.clearRect(0,0,W,H);
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=6;ctx.stroke();
+  if(frac<1){
+    var start=-Math.PI/2;
+    var end=start+(1-frac)*Math.PI*2;
+    ctx.beginPath();ctx.arc(cx,cy,r,start,end);
+    ctx.strokeStyle=selectedMode.color;ctx.lineWidth=6;ctx.lineCap='round';ctx.stroke();
+  }
+}
+
+/* ─── STORAGE ─── */
+function loadLogs(){try{return JSON.parse(localStorage.getItem(TIME_KEY)||'[]');}catch(e){return[];}}
+function saveLogs(l){localStorage.setItem(TIME_KEY,JSON.stringify(l));}
+
+/* ─── TODAY META ─── */
+function updateTodayMeta(){
+  var today=new Date().toISOString().slice(0,10);
+  var logs=loadLogs().filter(function(l){return l.ts.slice(0,10)===today;});
+  var secs=logs.reduce(function(a,l){return a+l.duration;},0);
+  var h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60);
+  document.getElementById('tb-today').textContent='── TODAY: '+h+'H '+m+'M';
+}
+
+/* ─── LOG TAB ─── */
+function renderLog(){
+  var logs=loadLogs();
+  var today=new Date().toISOString().slice(0,10);
+  var todayLogs=logs.filter(function(l){return l.ts.slice(0,10)===today;});
+  var pastLogs=logs.filter(function(l){return l.ts.slice(0,10)!==today;});
+
+  var tl=document.getElementById('today-list');
+  var hl=document.getElementById('history-list');
+
+  tl.innerHTML=todayLogs.length?'':
+    '<div class="empty-state">NO SESSIONS TODAY. START YOUR FIRST FOCUS BLOCK.</div>';
+  todayLogs.forEach(function(e){tl.appendChild(makeCard(e));});
+
+  hl.innerHTML=pastLogs.length?'':
+    '<div class="empty-state">PREVIOUS SESSIONS WILL APPEAR HERE.</div>';
+  pastLogs.slice(0,20).forEach(function(e){hl.appendChild(makeCard(e));});
+}
+
+function makeCard(e){
+  var d=new Date(e.ts);
+  var dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  var durStr=fmtDur(e.duration);
+  var col=CAT_COLORS[e.category]||'#C9A84C';
+  var div=document.createElement('div'); div.className='entry-card';
+  div.innerHTML='<div class="entry-dot" style="background:'+col+'"></div>'+
+    '<div class="entry-body">'+
+      '<div class="entry-top">'+
+        '<span class="entry-task">'+e.task+'</span>'+
+        '<span style="display:flex;gap:8px;align-items:center">'+
+          '<span class="entry-dur">'+durStr+'</span>'+
+          '<button class="entry-del" onclick="delEntry('+e.id+')">✕</button>'+
+        '</span>'+
+      '</div>'+
+      '<div class="entry-meta">'+e.mode+' · '+(CAT_LABELS[e.category]||e.category)+' · '+dateStr+'</div>'+
+    '</div>';
+  return div;
+}
+
+function delEntry(id){
+  var logs=loadLogs().filter(function(l){return l.id!==id;});
+  saveLogs(logs);
+  renderLog();
+  updateTodayMeta();
+}
+
+function fmtDur(secs){
+  var h=Math.floor(secs/3600);
+  var m=Math.floor((secs%3600)/60);
+  var s=secs%60;
+  if(h>0) return h+'h '+m+'m';
+  if(m>0) return m+'m '+s+'s';
+  return s+'s';
+}
+
+/* ─── AUDIT TAB ─── */
+function renderAudit(){
+  var logs=loadLogs();
+  var ag=document.getElementById('audit-stats');
+  var ins=document.getElementById('audit-insights');
+  var alloc=document.getElementById('alloc-grid');
+
+  if(!logs.length){
+    ag.innerHTML='<div class="empty-state" style="grid-column:1/-1">LOG SESSIONS TO SEE TIME AUDIT DATA.</div>';
+    alloc.innerHTML=''; ins.innerHTML='';
+    drawDailyTrend([]); return;
+  }
+
+  var totalSecs=logs.reduce(function(a,l){return a+l.duration;},0);
+  var today=new Date().toISOString().slice(0,10);
+  var todaySecs=logs.filter(function(l){return l.ts.slice(0,10)===today;})
+    .reduce(function(a,l){return a+l.duration;},0);
+  var avgSession=Math.round(totalSecs/logs.length);
+  var deepSecs=logs.filter(function(l){return l.category==='deep-work';})
+    .reduce(function(a,l){return a+l.duration;},0);
+  var days=new Set(logs.map(function(l){return l.ts.slice(0,10);})).size;
+  var avgDay=Math.round(totalSecs/days);
+
+  ag.innerHTML=[
+    {v:fmtDur(totalSecs),l:'TOTAL LOGGED'},
+    {v:fmtDur(todaySecs),l:'TODAY'},
+    {v:fmtDur(avgSession),l:'AVG SESSION'},
+    {v:fmtDur(avgDay),l:'AVG / DAY'},
+    {v:fmtDur(deepSecs),l:'DEEP WORK'},
+    {v:logs.length,l:'SESSIONS'},
+  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+
+  /* category breakdown */
+  var catTotals={};
+  logs.forEach(function(l){catTotals[l.category]=(catTotals[l.category]||0)+l.duration;});
+  var sorted=Object.entries(catTotals).sort(function(a,b){return b[1]-a[1];});
+  alloc.innerHTML='';
+  sorted.forEach(function(e){
+    var pct=Math.round((e[1]/totalSecs)*100);
+    var col=CAT_COLORS[e[0]]||'#C9A84C';
+    var div=document.createElement('div'); div.className='alloc-card';
+    div.innerHTML='<div class="alloc-cat" style="color:'+col+'">'+(CAT_LABELS[e[0]]||e[0])+'</div>'+
+      '<div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:'+pct+'%;background:'+col+'80"></div></div>'+
+      '<div class="alloc-pct">'+pct+'% · '+fmtDur(e[1])+'</div>';
+    alloc.appendChild(div);
+  });
+
+  /* insights */
+  var insights=[];
+  var deepPct=Math.round((deepSecs/totalSecs)*100);
+  if(deepPct<20) insights.push('Deep work represents only '+deepPct+'% of your logged time. Newport recommends 4h/day minimum. Admin and communication are consuming your highest-value cognitive windows.');
+  else if(deepPct>50) insights.push('Excellent — deep work is '+deepPct+'% of your logged time. You are protecting your highest-value cognitive bandwidth effectively.');
+  if(avgSession<1200) insights.push('Average session length is '+fmtDur(avgSession)+'. Sessions under 20 minutes rarely reach flow state. Try extending your minimum session to 25-50 minutes to allow deeper concentration.');
+  if(avgDay>10*3600) insights.push('You are logging '+fmtDur(avgDay)+'/day on average. Verify this includes genuine focus sessions, not just elapsed time. Quality of hours matters more than quantity.');
+  var topCat=sorted[0];
+  if(topCat) insights.push('Largest time block: '+(CAT_LABELS[topCat[0]]||topCat[0])+' at '+Math.round((topCat[1]/totalSecs)*100)+'% of total time. Audit whether this reflects your stated priorities.');
+
+  if(!insights.length) insights.push('Strong discipline. Log at least 7 days of sessions to unlock deeper pattern recognition and weekly trend analysis.');
+  ins.innerHTML=insights.map(function(i){return'<div class="insight-item">'+i+'</div>';}).join('');
+
+  drawDailyTrend(logs);
+}
+
+function drawDailyTrend(logs){
+  var c=document.getElementById('daily-canvas');
+  c.width=c.offsetWidth||600;
+  var ctx=c.getContext('2d');
+  var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+
+  var days=[];
+  for(var i=6;i>=0;i--){
+    var d=new Date(); d.setDate(d.getDate()-i);
+    var key=d.toISOString().slice(0,10);
+    var secs=logs.filter(function(l){return l.ts.slice(0,10)===key;})
+      .reduce(function(a,l){return a+l.duration;},0);
+    var deepSecs=logs.filter(function(l){return l.ts.slice(0,10)===key&&l.category==='deep-work';})
+      .reduce(function(a,l){return a+l.duration;},0);
+    days.push({label:d.toLocaleDateString('en-US',{weekday:'short'}),total:secs,deep:deepSecs});
+  }
+
+  var max=Math.max.apply(null,days.map(function(d){return d.total;}));
+  if(!max) max=3600;
+  var pad=32,pw=W-pad*2,ph=H-pad*2;
+  var bw=(pw/7)*0.55,gap=(pw/7)*0.45;
+
+  /* grid */
+  [0,2,4,6,8].forEach(function(h){
+    var y=pad+ph-(h*3600/max)*ph;
+    ctx.strokeStyle='rgba(201,168,76,.06)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke();
+    ctx.fillStyle='rgba(201,168,76,.25)';ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(h+'h',2,y+3);
+  });
+
+  days.forEach(function(d,i){
+    var x=pad+i*(bw+gap);
+    if(d.total>0){
+      var bh=(d.total/max)*ph;
+      ctx.fillStyle='rgba(201,168,76,.25)';
+      ctx.fillRect(x,pad+ph-bh,bw,bh);
+    }
+    if(d.deep>0){
+      var dbh=(d.deep/max)*ph;
+      ctx.fillStyle='rgba(201,168,76,.6)';
+      ctx.fillRect(x,pad+ph-dbh,bw,dbh);
+    }
+    ctx.fillStyle='rgba(201,168,76,.4)';ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(d.label,x+bw/2-6,H-4);
+  });
+
+  ctx.fillStyle='rgba(201,168,76,.4)';ctx.fillRect(W-120,8,14,6);
+  ctx.fillStyle='rgba(201,168,76,.3)';ctx.font='7px "Courier Prime",monospace';ctx.fillText('TOTAL',W-102,14);
+  ctx.fillStyle='rgba(201,168,76,.7)';ctx.fillRect(W-120,22,14,6);
+  ctx.fillText('DEEP WORK',W-102,28);
+}
+
+/* ─── TAB SWITCH ─── */
+function switchTab(btn,id){
+  document.querySelectorAll('.lt').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='t2') renderLog();
+  if(id==='t3') renderAudit();
+}
+
+/* Notification permission request */
+if(window.Notification&&Notification.permission==='default'){
+  Notification.requestPermission();
+}
+
+init();
+</script>
+</body>
+</html>

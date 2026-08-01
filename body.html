@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Body Composition · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css">
+<style>
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:'Courier Prime',monospace}
+.layer-tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--dim);padding-bottom:8px;flex-wrap:wrap}
+.tab-btn{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:5px 12px;background:none;border:1px solid transparent;border-radius:2px;color:rgba(138,134,118,.5);cursor:pointer;transition:.12s}
+.tab-btn.active{color:var(--gold);border-color:var(--dim)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kpi{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:10px 12px}
+.kpi .lv{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
+.kpi .vv{font-family:var(--M);font-size:18px;color:var(--gold);margin-top:3px}
+.log-form{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:18px;margin-bottom:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row.trio{grid-template-columns:1fr 1fr 1fr}
+.form-row.quad{grid-template-columns:1fr 1fr 1fr 1fr}
+.form-grp label{display:block;font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-bottom:5px}
+.form-grp input,.form-grp select{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--dim);border-radius:2px;padding:7px 10px;color:rgba(220,210,180,.8);font-family:var(--M);font-size:11px;box-sizing:border-box}
+.btn-gold{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 20px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;transition:.12s}
+.btn-gold:hover{background:rgba(201,168,76,.08)}
+.chart-box{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-bottom:14px}
+.chart-title{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:10px}
+.entry-row{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:3px;padding:10px 14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.er-date{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.5);min-width:80px}
+.er-val{font-family:var(--M);font-size:16px;color:var(--gold)}
+.er-unit{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4)}
+.er-tag{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:2px 6px;border:1px solid var(--dim);border-radius:1px;color:rgba(201,168,76,.5)}
+.er-del{font-family:var(--M);font-size:9px;color:rgba(201,168,76,.3);cursor:pointer;background:none;border:none;margin-left:auto}
+.er-del:hover{color:var(--gold)}
+.measurement-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.science-card{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:14px;margin-bottom:10px}
+.science-card h3{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin:0 0 8px}
+.science-card p{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);line-height:1.7;margin:0}
+.goal-bar-wrap{background:rgba(0,0,0,.3);border-radius:2px;height:6px;margin:6px 0;overflow:hidden}
+.goal-bar-fill{height:100%;border-radius:2px;background:rgba(201,168,76,.6);transition:width .5s}
+.metric-selector{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.metric-chip{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:4px 10px;border:1px solid var(--dim);border-radius:2px;cursor:pointer;color:rgba(138,134,118,.5);background:none;transition:.1s}
+.metric-chip.active{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.06)}
+@media(max-width:600px){.kpi-row{grid-template-columns:1fr 1fr}.form-row,.form-row.trio,.form-row.quad{grid-template-columns:1fr}.measurement-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layer" id="L0"></div>
+<div class="side" id="sideNav"></div>
+<div class="main">
+  <div class="topbar" id="topBar"></div>
+  <div style="padding:20px var(--pad,20px)">
+
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · PHYSICAL</div>
+    <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">BODY COMPOSITION</h1>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="lv">CURRENT WEIGHT</div><div class="vv" id="kpiWeight">—</div></div>
+      <div class="kpi"><div class="lv">BODY FAT %</div><div class="vv" id="kpiBF">—</div></div>
+      <div class="kpi"><div class="lv">LEAN MASS</div><div class="vv" id="kpiLean">—</div></div>
+      <div class="kpi"><div class="lv">BMI</div><div class="vv" id="kpiBMI">—</div></div>
+    </div>
+
+    <div class="layer-tabs">
+      <button class="tab-btn active" onclick="switchTab('log',this)">LOG</button>
+      <button class="tab-btn" onclick="switchTab('trends',this)">TRENDS</button>
+      <button class="tab-btn" onclick="switchTab('goals',this)">GOALS</button>
+      <button class="tab-btn" onclick="switchTab('measurements',this)">MEASUREMENTS</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">SCIENCE</button>
+    </div>
+
+    <!-- LOG TAB -->
+    <div class="tab-pane active" id="tab-log">
+      <div class="log-form">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG BODY METRICS</div>
+        <div class="form-row">
+          <div class="form-grp"><label>DATE</label><input type="date" id="lDate"></div>
+          <div class="form-grp"><label>UNIT SYSTEM</label><select id="lUnit" onchange="updateUnits()"><option value="metric">Metric (kg / cm)</option><option value="imperial">Imperial (lbs / in)</option></select></div>
+        </div>
+        <div class="form-row trio">
+          <div class="form-grp"><label id="weightLabel">WEIGHT (kg)</label><input type="number" id="lWeight" step="0.1" placeholder="0.0"></div>
+          <div class="form-grp"><label>BODY FAT %</label><input type="number" id="lBF" step="0.1" min="0" max="60" placeholder="0.0"></div>
+          <div class="form-grp"><label id="heightLabel">HEIGHT (cm)</label><input type="number" id="lHeight" step="0.1" placeholder="0"></div>
+        </div>
+        <div class="form-row quad">
+          <div class="form-grp"><label>TIME OF DAY</label><select id="lTime"><option value="morning">Morning (fasted)</option><option value="evening">Evening</option><option value="afternoon">Afternoon</option></select></div>
+          <div class="form-grp"><label>HYDRATION</label><select id="lHydration"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+          <div class="form-grp"><label>CONDITION</label><select id="lCondition"><option value="normal">Normal</option><option value="postworkout">Post-workout</option><option value="illness">Illness</option><option value="travel">Travel</option></select></div>
+          <div class="form-grp"><label>WAIST (cm)</label><input type="number" id="lWaist" step="0.1" placeholder="0"></div>
+        </div>
+        <button class="btn-gold" onclick="addLog()">LOG METRICS</button>
+      </div>
+      <div id="logEntries"></div>
+    </div>
+
+    <!-- TRENDS TAB -->
+    <div class="tab-pane" id="tab-trends">
+      <div class="metric-selector">
+        <button class="metric-chip active" data-m="weight" onclick="selectMetric('weight',this)">WEIGHT</button>
+        <button class="metric-chip" data-m="bf" onclick="selectMetric('bf',this)">BODY FAT %</button>
+        <button class="metric-chip" data-m="lean" onclick="selectMetric('lean',this)">LEAN MASS</button>
+        <button class="metric-chip" data-m="waist" onclick="selectMetric('waist',this)">WAIST</button>
+        <button class="metric-chip" data-m="bmi" onclick="selectMetric('bmi',this)">BMI</button>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title" id="trendTitle">WEIGHT — 90 DAYS</div>
+        <canvas id="trendChart" width="700" height="200" style="width:100%;height:auto"></canvas>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="chart-box">
+          <div class="chart-title">ROLLING 7-DAY AVERAGE</div>
+          <canvas id="avgChart" width="350" height="120" style="width:100%;height:auto"></canvas>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">CHANGE SINCE START</div>
+          <div id="changeStats" style="font-family:var(--M);font-size:11px;color:rgba(138,134,118,.6);line-height:2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GOALS TAB -->
+    <div class="tab-pane" id="tab-goals">
+      <div class="log-form">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">SET COMPOSITION GOALS</div>
+        <div class="form-row trio">
+          <div class="form-grp"><label id="gwLabel">GOAL WEIGHT (kg)</label><input type="number" id="gWeight" step="0.1" placeholder="Target weight"></div>
+          <div class="form-grp"><label>GOAL BODY FAT %</label><input type="number" id="gBF" step="0.1" placeholder="Target BF%"></div>
+          <div class="form-grp"><label>TARGET DATE</label><input type="date" id="gDate"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-grp"><label>TRAINING GOAL</label><select id="gGoal"><option value="cut">Cut (Fat Loss)</option><option value="bulk">Bulk (Muscle Gain)</option><option value="recomp">Recomposition</option><option value="maintain">Maintain</option></select></div>
+          <div class="form-grp"><label>TRAINING FREQUENCY</label><select id="gFreq"><option value="3">3x / week</option><option value="4">4x / week</option><option value="5">5x / week</option><option value="6">6x / week</option></select></div>
+        </div>
+        <button class="btn-gold" onclick="saveGoals()">SAVE GOALS</button>
+      </div>
+
+      <div id="goalProgress" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px"></div>
+
+      <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">RATE OF PROGRESS GUIDE</div>
+        <div id="rateGuide" style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.6);line-height:2"></div>
+      </div>
+    </div>
+
+    <!-- MEASUREMENTS TAB -->
+    <div class="tab-pane" id="tab-measurements">
+      <div class="log-form">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG BODY MEASUREMENTS (cm)</div>
+        <div class="form-row">
+          <div class="form-grp"><label>DATE</label><input type="date" id="mDate"></div>
+          <div class="form-grp"><label>NECK</label><input type="number" id="mNeck" step="0.1" placeholder="cm"></div>
+        </div>
+        <div class="form-row trio">
+          <div class="form-grp"><label>CHEST</label><input type="number" id="mChest" step="0.1" placeholder="cm"></div>
+          <div class="form-grp"><label>WAIST</label><input type="number" id="mWaist" step="0.1" placeholder="cm"></div>
+          <div class="form-grp"><label>HIPS</label><input type="number" id="mHips" step="0.1" placeholder="cm"></div>
+        </div>
+        <div class="form-row quad">
+          <div class="form-grp"><label>LEFT ARM</label><input type="number" id="mArmL" step="0.1" placeholder="cm"></div>
+          <div class="form-grp"><label>RIGHT ARM</label><input type="number" id="mArmR" step="0.1" placeholder="cm"></div>
+          <div class="form-grp"><label>LEFT THIGH</label><input type="number" id="mThighL" step="0.1" placeholder="cm"></div>
+          <div class="form-grp"><label>RIGHT THIGH</label><input type="number" id="mThighR" step="0.1" placeholder="cm"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-grp"><label>CALVES</label><input type="number" id="mCalf" step="0.1" placeholder="cm"></div>
+          <div class="form-grp"><label>SHOULDERS</label><input type="number" id="mShoulder" step="0.1" placeholder="cm"></div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:6px">NAVY BF% ESTIMATE (auto-calculated from neck/waist/hips/height)</div>
+          <div style="font-family:var(--M);font-size:14px;color:var(--gold)" id="navyBF">Enter measurements to calculate</div>
+        </div>
+        <button class="btn-gold" onclick="addMeasurement()">LOG MEASUREMENTS</button>
+      </div>
+      <div id="measurementLog"></div>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-pane" id="tab-science">
+      <div class="science-card"><h3>BODY FAT PERCENTAGE REFERENCE</h3><p><b>Essential Fat:</b> 3–5% (men) / 10–13% (women) — minimum for organ function.<br><b>Athletic:</b> 6–13% (men) / 14–20% (women) — peak performance range.<br><b>Fitness:</b> 14–17% (men) / 21–24% (women) — lean and healthy.<br><b>Average:</b> 18–24% (men) / 25–31% (women) — typical for sedentary adults.<br><b>Obese:</b> 25%+ (men) / 32%+ (women) — elevated metabolic disease risk.<br>Measurement methods by accuracy: DEXA scan > Hydrostatic weighing > BOD POD > Navy formula > BIA scale > BMI (least accurate).</p></div>
+      <div class="science-card"><h3>OPTIMAL RATES OF CHANGE</h3><p><b>Fat loss:</b> 0.5–1% body weight per week (faster = muscle loss risk). Example: 90kg person → 450–900g/week deficit. Requires ~500–1000 kcal daily deficit.<br><b>Muscle gain (natural):</b> ~0.5–1kg/month for beginners, ~0.25kg/month for advanced. Requires slight caloric surplus (200–300 kcal) + progressive overload + adequate protein (1.6–2.2g/kg).<br><b>Recomposition:</b> Simultaneous fat loss + muscle gain. Possible for beginners and those returning from training. Requires precise protein + calorie targets.</p></div>
+      <div class="science-card"><h3>THE BODY RECOMPOSITION PROTOCOL</h3><p>1. Protein: 2.0–2.2g per kg of bodyweight (minimum). The single most important variable.<br>2. Resistance training: 3–6 sessions/week, progressive overload, compound movements.<br>3. Calorie intake: Slight deficit (200–300 kcal) for fat loss, or maintenance for recomp.<br>4. Sleep: 7–9 hours. Growth hormone peaks during SWS. Cutting sleep cuts muscle gains ~50%.<br>5. Stress management: High cortisol drives fat storage and muscle breakdown.<br>6. Weigh daily (same conditions, morning, fasted) and use 7-day average. Daily fluctuations of 1–3kg from water are normal.</p></div>
+      <div class="science-card"><h3>WAIST-TO-HEIGHT RATIO (WHTR)</h3><p>Waist circumference / Height. More predictive of cardiovascular risk than BMI. Target: &lt;0.5 (half your height or less). &lt;0.5 = low risk, 0.5–0.6 = increased risk, &gt;0.6 = high risk. This single metric correlates strongly with visceral fat, insulin resistance, and cardiometabolic disease.</p></div>
+      <div class="science-card"><h3>BMI LIMITATIONS</h3><p>Body Mass Index (kg/m²) does not distinguish between fat mass and lean mass. A highly muscular athlete will register "overweight" or "obese" on BMI. It also fails to account for fat distribution — visceral (abdominal) fat is far more dangerous than subcutaneous fat, and BMI cannot detect this. Use BMI only as a broad population-level screening tool, not as an individual health metric. Combine with BF%, waist circumference, and WHTR for a complete picture.</p></div>
+    </div>
+
+  </div>
+  <div class="lf" id="pgFoot"></div>
+</div>
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script>
+const LOG_KEY='omega_body_log';
+const MEAS_KEY='omega_body_measurements';
+const GOALS_KEY='omega_body_goals';
+const HEIGHT_KEY='omega_body_height';
+
+function loadArr(k){try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}}
+function loadObj(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch{return {};}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
+
+var bodyLog=loadArr(LOG_KEY),measLog=loadArr(MEAS_KEY),goals=loadObj(GOALS_KEY);
+var selectedMetric='weight',unitSystem='metric';
+
+/* DEFAULTS */
+(function(){
+  var d=new Date().toISOString().slice(0,10);
+  document.getElementById('lDate').value=d;
+  document.getElementById('mDate').value=d;
+  var h=localStorage.getItem(HEIGHT_KEY);
+  if(h) document.getElementById('lHeight').value=h;
+})();
+
+/* UNITS */
+function updateUnits(){
+  unitSystem=document.getElementById('lUnit').value;
+  var isImp=unitSystem==='imperial';
+  document.getElementById('weightLabel').textContent='WEIGHT ('+( isImp?'lbs':'kg')+')';
+  document.getElementById('heightLabel').textContent='HEIGHT ('+( isImp?'in':'cm')+')';
+  document.getElementById('gwLabel').textContent='GOAL WEIGHT ('+(isImp?'lbs':'kg')+')';
+}
+
+/* BMI */
+function calcBMI(weightKg,heightCm){
+  if(!heightCm||!weightKg) return null;
+  return +(weightKg/Math.pow(heightCm/100,2)).toFixed(1);
+}
+function bmiLabel(bmi){
+  if(bmi<18.5) return 'UNDERWEIGHT';
+  if(bmi<25) return 'NORMAL';
+  if(bmi<30) return 'OVERWEIGHT';
+  return 'OBESE';
+}
+
+/* TO KG/CM */
+function toMetric(weight,height,sys){
+  if(sys==='imperial') return{weight:weight*0.453592,height:height*2.54};
+  return{weight,height};
+}
+
+/* ADD LOG */
+function addLog(){
+  var date=document.getElementById('lDate').value;
+  var weight=+document.getElementById('lWeight').value;
+  var bf=+document.getElementById('lBF').value||null;
+  var height=+document.getElementById('lHeight').value;
+  var waist=+document.getElementById('lWaist').value||null;
+  if(!date||!weight){alert('Enter date and weight.');return;}
+  var m=toMetric(weight,height,document.getElementById('lUnit').value);
+  if(height) localStorage.setItem(HEIGHT_KEY,m.height);
+  var entry={id:Date.now(),date,weight:+m.weight.toFixed(2),bf,height:m.height||null,waist,unit:document.getElementById('lUnit').value,time:document.getElementById('lTime').value,hydration:document.getElementById('lHydration').value,condition:document.getElementById('lCondition').value};
+  bodyLog.push(entry);
+  bodyLog.sort(function(a,b){return a.date.localeCompare(b.date);});
+  save(LOG_KEY,bodyLog);
+  renderAll();
+}
+
+function deleteLog(id){bodyLog=bodyLog.filter(function(e){return e.id!==id;});save(LOG_KEY,bodyLog);renderAll();}
+
+/* KPIs */
+function renderKPIs(){
+  var n=bodyLog.length;if(!n) return;
+  var latest=bodyLog[n-1];
+  document.getElementById('kpiWeight').textContent=latest.weight.toFixed(1)+'kg';
+  document.getElementById('kpiBF').textContent=latest.bf?latest.bf.toFixed(1)+'%':'—';
+  var h=localStorage.getItem(HEIGHT_KEY);
+  var bmi=h?calcBMI(latest.weight,+h):null;
+  document.getElementById('kpiBMI').textContent=bmi?bmi+' ('+bmiLabel(bmi)+')':'—';
+  if(latest.bf&&latest.weight){
+    var lean=latest.weight*(1-latest.bf/100);
+    document.getElementById('kpiLean').textContent=lean.toFixed(1)+'kg';
+  }
+}
+
+/* LOG ENTRIES */
+function renderLogEntries(){
+  var el=document.getElementById('logEntries');
+  var sorted=bodyLog.slice().reverse().slice(0,30);
+  if(!sorted.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No logs yet. Start tracking your body composition.</div>';return;}
+  el.innerHTML=sorted.map(function(e){
+    var h=localStorage.getItem(HEIGHT_KEY),bmi=h?calcBMI(e.weight,+h):null;
+    return '<div class="entry-row">'
+      +'<div class="er-date">'+e.date+'</div>'
+      +'<div><div class="er-val">'+e.weight.toFixed(1)+'</div><div class="er-unit">KG</div></div>'
+      +(e.bf?'<div><div class="er-val">'+e.bf.toFixed(1)+'</div><div class="er-unit">BF%</div></div>':'')
+      +(bmi?'<div class="er-tag">BMI '+bmi+'</div>':'')
+      +(e.waist?'<div class="er-tag">WAIST '+e.waist+'cm</div>':'')
+      +'<div class="er-tag">'+e.time.toUpperCase()+'</div>'
+      +'<button class="er-del" onclick="deleteLog('+e.id+')">✕</button>'
+      +'</div>';
+  }).join('');
+}
+
+/* TREND CHART */
+var metricLabels={weight:'WEIGHT (kg)',bf:'BODY FAT %',lean:'LEAN MASS (kg)',waist:'WAIST (cm)',bmi:'BMI'};
+function getMetricVal(e,m){
+  var h=localStorage.getItem(HEIGHT_KEY);
+  if(m==='weight') return e.weight;
+  if(m==='bf') return e.bf;
+  if(m==='lean') return e.bf&&e.weight?+(e.weight*(1-e.bf/100)).toFixed(2):null;
+  if(m==='waist') return e.waist;
+  if(m==='bmi') return h?calcBMI(e.weight,+h):null;
+  return null;
+}
+function selectMetric(m,btn){
+  selectedMetric=m;
+  document.querySelectorAll('.metric-chip').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('trendTitle').textContent=metricLabels[m]+' — 90 DAYS';
+  drawTrendChart();drawAvgChart();renderChangeStats();
+}
+function drawTrendChart(){
+  var c=document.getElementById('trendChart');if(!c)return;
+  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var data=bodyLog.slice(-90).map(function(e){return{date:e.date,val:getMetricVal(e,selectedMetric)};}).filter(function(d){return d.val!=null;});
+  if(!data.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px Courier Prime';ctx.textAlign='center';ctx.fillText('No data for this metric',W/2,H/2);return;}
+  var vals=data.map(function(d){return d.val;});
+  var minV=Math.min.apply(null,vals),maxV=Math.max.apply(null,vals);
+  var pad={t:15,r:20,b:30,l:48},cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  var range=maxV-minV||1,step=cH/(maxV-minV+range*.2);
+  var yMin=minV-range*.1,yMax=maxV+range*.1;
+  // grid
+  var gridVals=[minV,minV+range*.5,maxV];
+  gridVals.forEach(function(v){
+    var y=pad.t+cH*(1-(v-yMin)/(yMax-yMin));
+    ctx.strokeStyle='rgba(201,168,76,.06)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='9px Courier Prime';ctx.textAlign='right';ctx.fillText(v.toFixed(1),pad.l-4,y+4);
+  });
+  // area fill
+  ctx.fillStyle='rgba(201,168,76,.05)';
+  ctx.beginPath();
+  data.forEach(function(d,i){
+    var x=pad.l+i*(cW/(data.length-1||1));
+    var y=pad.t+cH*(1-(d.val-yMin)/(yMax-yMin));
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });
+  ctx.lineTo(pad.l+cW,pad.t+cH);ctx.lineTo(pad.l,pad.t+cH);ctx.closePath();ctx.fill();
+  // line
+  ctx.strokeStyle='rgba(201,168,76,.8)';ctx.lineWidth=2;ctx.lineJoin='round';
+  ctx.beginPath();
+  data.forEach(function(d,i){
+    var x=pad.l+i*(cW/(data.length-1||1));
+    var y=pad.t+cH*(1-(d.val-yMin)/(yMax-yMin));
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });ctx.stroke();
+  // dots for last 5
+  data.slice(-5).forEach(function(d,idx){
+    var i=data.length-5+idx;
+    var x=pad.l+i*(cW/(data.length-1||1));
+    var y=pad.t+cH*(1-(d.val-yMin)/(yMax-yMin));
+    ctx.fillStyle='var(--gold,#C9A84C)';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+  });
+}
+
+function drawAvgChart(){
+  var c=document.getElementById('avgChart');if(!c)return;
+  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var data=bodyLog.slice(-14).map(function(e){return getMetricVal(e,selectedMetric);}).filter(function(v){return v!=null;});
+  if(data.length<2){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='10px Courier Prime';ctx.textAlign='center';ctx.fillText('Need more data',W/2,H/2);return;}
+  var avg=data.reduce(function(a,b){return a+b;})/data.length;
+  var minV=Math.min.apply(null,data),maxV=Math.max.apply(null,data);
+  var range=maxV-minV||1,yMin=minV-range*.1,yMax=maxV+range*.1,pad=12;
+  // bars
+  var bW=(W-pad*2)/(data.length*1.5);
+  data.forEach(function(v,i){
+    var x=pad+i*(W-pad*2)/data.length;
+    var h=(v-yMin)/(yMax-yMin)*(H-pad*2);
+    ctx.fillStyle='rgba(201,168,76,.3)';
+    ctx.fillRect(x,H-pad-h,bW,h);
+  });
+  // avg line
+  var avgY=H-pad-(avg-yMin)/(yMax-yMin)*(H-pad*2);
+  ctx.strokeStyle='rgba(201,168,76,.8)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(pad,avgY);ctx.lineTo(W-pad,avgY);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='rgba(201,168,76,.7)';ctx.font='9px Courier Prime';ctx.textAlign='right';
+  ctx.fillText('avg '+avg.toFixed(1),W-pad-2,avgY-3);
+}
+
+function renderChangeStats(){
+  var el=document.getElementById('changeStats');
+  var data=bodyLog.map(function(e){return{date:e.date,val:getMetricVal(e,selectedMetric)};}).filter(function(d){return d.val!=null;});
+  if(data.length<2){el.textContent='Need at least 2 entries.';return;}
+  var first=data[0],last=data[data.length-1];
+  var diff=last.val-first.val,pct=((diff/first.val)*100).toFixed(1);
+  var col=selectedMetric==='bf'||selectedMetric==='waist'?'down':'up';
+  var good=(col==='down'&&diff<0)||(col==='up'&&diff>0);
+  el.innerHTML='<span style="color:rgba(138,134,118,.5)">Start: </span><span style="color:var(--gold)">'+first.val.toFixed(1)+'</span> ('+first.date+')<br>'
+    +'<span style="color:rgba(138,134,118,.5)">Current: </span><span style="color:var(--gold)">'+last.val.toFixed(1)+'</span> ('+last.date+')<br>'
+    +'<span style="color:rgba(138,134,118,.5)">Change: </span><span style="color:'+(good?'#9BC53D':'#E55934')+'">'+(diff>0?'+':'')+diff.toFixed(1)+' ('+pct+'%)</span><br>'
+    +'<span style="color:rgba(138,134,118,.5)">Entries: </span><span style="color:var(--gold)">'+data.length+'</span>';
+}
+
+/* GOALS */
+function loadGoalForm(){
+  if(goals.weight) document.getElementById('gWeight').value=goals.weight;
+  if(goals.bf) document.getElementById('gBF').value=goals.bf;
+  if(goals.date) document.getElementById('gDate').value=goals.date;
+  if(goals.goal) document.getElementById('gGoal').value=goals.goal;
+  if(goals.freq) document.getElementById('gFreq').value=goals.freq;
+  renderGoalProgress();renderRateGuide();
+}
+function saveGoals(){
+  goals={weight:+document.getElementById('gWeight').value||null,bf:+document.getElementById('gBF').value||null,date:document.getElementById('gDate').value,goal:document.getElementById('gGoal').value,freq:+document.getElementById('gFreq').value};
+  save(GOALS_KEY,goals);renderGoalProgress();renderRateGuide();
+}
+function renderGoalProgress(){
+  var el=document.getElementById('goalProgress');if(!bodyLog.length){el.innerHTML='';return;}
+  var latest=bodyLog[bodyLog.length-1];
+  var items=[];
+  if(goals.weight&&latest.weight){
+    var pct=Math.min(100,Math.max(0,(1-Math.abs(latest.weight-goals.weight)/Math.abs(goals.weight-bodyLog[0].weight||1))*100));
+    items.push({label:'WEIGHT GOAL',curr:latest.weight.toFixed(1)+'kg',target:goals.weight+'kg',pct});
+  }
+  if(goals.bf&&latest.bf){
+    var pct2=Math.min(100,Math.max(0,(1-Math.abs(latest.bf-goals.bf)/Math.abs((goals.bf-bodyLog[0].bf)||1))*100));
+    items.push({label:'BODY FAT GOAL',curr:latest.bf.toFixed(1)+'%',target:goals.bf+'%',pct:pct2});
+  }
+  el.innerHTML=items.map(function(item){
+    return '<div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:14px">'
+      +'<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:6px">'+item.label+'</div>'
+      +'<div style="display:flex;justify-content:space-between;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--gold);margin-bottom:4px"><span>'+item.curr+'</span><span style="color:rgba(138,134,118,.4)">→ '+item.target+'</span></div>'
+      +'<div class="goal-bar-wrap"><div class="goal-bar-fill" style="width:'+item.pct+'%"></div></div>'
+      +'<div style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.4);text-align:right">'+Math.round(item.pct)+'% progress</div>'
+      +'</div>';
+  }).join('');
+}
+function renderRateGuide(){
+  var el=document.getElementById('rateGuide');
+  var g=goals.goal||'cut';
+  var guides={cut:'Fat loss target: 0.5–1% of bodyweight/week.\nProtein: 2.2g/kg bodyweight.\nCalorie deficit: 500–750 kcal/day.\nTraining: Maintain resistance work to preserve muscle.\nExpected progress: 2–4 kg/month.',bulk:'Muscle gain target: 0.5–1 kg/month.\nProtein: 1.8–2.2g/kg bodyweight.\nCaloric surplus: 200–300 kcal/day (lean bulk).\nTraining: Progressive overload, 3–6x/week.\nExpected progress: Slow and steady wins.',recomp:'Recomposition: Simultaneous fat loss + muscle gain.\nProtein: 2.2–2.6g/kg bodyweight (higher for recomp).\nCalories: Maintenance or slight deficit.\nBest for: Beginners, returning athletes, those with high BF%.\nProgress tracking: Scale may not move but body composition shifts.',maintain:'Maintenance: Hold current weight and composition.\nProtein: 1.6–2.0g/kg bodyweight.\nCalories: Maintenance level.\nTraining: Consistent volume to maintain adaptation.\nFocus on body composition refinement over time.'};
+  el.textContent=guides[g];
+}
+
+/* MEASUREMENTS */
+function navyBF(neck,waist,hips,height,sex){
+  if(!neck||!waist||!height) return null;
+  if(sex==='male') return +(495/(1.0324-0.19077*Math.log10(waist-neck)+0.15456*Math.log10(height))-450).toFixed(1);
+  if(!hips) return null;
+  return +(495/(1.29579-0.35004*Math.log10(waist+hips-neck)+0.22100*Math.log10(height))-450).toFixed(1);
+}
+function updateNavyBF(){
+  var neck=+document.getElementById('mNeck').value,waist=+document.getElementById('mWaist').value,hips=+document.getElementById('mHips').value;
+  var h=+localStorage.getItem(HEIGHT_KEY)||0;
+  if(!h){document.getElementById('navyBF').textContent='Log height first';return;}
+  var bf=navyBF(neck,waist,hips,h,'male');
+  document.getElementById('navyBF').textContent=bf?bf+'% (Navy method, male)':'Enter neck + waist measurements';
+}
+['mNeck','mWaist','mHips'].forEach(function(id){var el=document.getElementById(id);if(el) el.addEventListener('input',updateNavyBF);});
+
+function addMeasurement(){
+  var date=document.getElementById('mDate').value;if(!date){alert('Enter date.');return;}
+  var entry={id:Date.now(),date,neck:+document.getElementById('mNeck').value||null,chest:+document.getElementById('mChest').value||null,waist:+document.getElementById('mWaist').value||null,hips:+document.getElementById('mHips').value||null,armL:+document.getElementById('mArmL').value||null,armR:+document.getElementById('mArmR').value||null,thighL:+document.getElementById('mThighL').value||null,thighR:+document.getElementById('mThighR').value||null,calf:+document.getElementById('mCalf').value||null,shoulder:+document.getElementById('mShoulder').value||null};
+  measLog.unshift(entry);save(MEAS_KEY,measLog);renderMeasurements();
+}
+function renderMeasurements(){
+  var el=document.getElementById('measurementLog');
+  if(!measLog.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No measurements yet.</div>';return;}
+  var FIELDS={neck:'Neck',chest:'Chest',waist:'Waist',hips:'Hips',armL:'L.Arm',armR:'R.Arm',thighL:'L.Thigh',thighR:'R.Thigh',calf:'Calves',shoulder:'Shoulders'};
+  el.innerHTML=measLog.slice(0,10).map(function(m){
+    var stats=Object.entries(FIELDS).filter(function(x){return m[x[0]];}).map(function(x){return '<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.5)">'+x[1]+': </span><span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:var(--gold)">'+m[x[0]]+'</span>';}).join(' · ');
+    return '<div class="entry-row"><div class="er-date">'+m.date+'</div><div style="flex:1;flex-wrap:wrap">'+stats+'</div></div>';
+  }).join('');
+}
+
+/* TABS */
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');
+  if(id==='trends'){drawTrendChart();drawAvgChart();renderChangeStats();}
+  if(id==='goals'){loadGoalForm();}
+}
+
+/* INIT */
+function renderAll(){renderKPIs();renderLogEntries();renderMeasurements();}
+renderAll();loadGoalForm();
+</script>
+</body>
+</html>

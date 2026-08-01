@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Flashcards · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* STUDY CARD */
+.fc-study-wrap{max-width:560px;margin:0 auto}
+.fc-deck-select-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.fc-deck-sel{font-family:var(--M);font-size:10px;padding:7px 12px;background:#0D0D0B;border:1px solid rgba(201,168,76,.2);color:#c8c4b0;outline:none;flex:1}
+.fc-session-info{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)}
+
+.fc-progress-bar{height:3px;background:rgba(201,168,76,.1);margin-bottom:20px;border-radius:0}
+.fc-progress-fill{height:100%;background:rgba(201,168,76,.6);transition:.3s;border-radius:0}
+
+/* 3D flip card */
+.fc-card-wrap{perspective:1200px;margin-bottom:20px}
+.fc-card{
+  width:100%;min-height:220px;position:relative;
+  transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+}
+.fc-card.flipped{transform:rotateY(180deg)}
+.fc-face{
+  position:absolute;width:100%;min-height:220px;
+  backface-visibility:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:28px 24px;border:1px solid rgba(201,168,76,.2);
+  background:rgba(201,168,76,.03);
+}
+.fc-face-back{
+  transform:rotateY(180deg);
+  background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.35);
+}
+.fc-card-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--dim);margin-bottom:12px;align-self:flex-start}
+.fc-card-text{font-family:var(--M);font-size:14px;color:#c8c4b0;line-height:1.8;text-align:center;letter-spacing:.4px;word-break:break-word}
+.fc-card-hint{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);margin-top:8px;font-style:italic}
+.fc-flip-hint{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.3);text-align:center;margin-bottom:16px}
+
+/* QUALITY BUTTONS */
+.fc-quality-row{display:none;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:20px}
+.fc-quality-row.show{display:flex}
+.fc-q-btn{
+  font-family:var(--M);font-size:8px;letter-spacing:1px;padding:10px 14px;
+  border:1px solid rgba(201,168,76,.2);background:none;cursor:pointer;transition:.15s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;min-width:70px;
+}
+.fc-q-btn:hover{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.5)}
+.fc-q-btn .q-label{font-size:10px;letter-spacing:1px}
+.fc-q-btn .q-interval{font-size:7px;color:var(--dim);letter-spacing:.5px}
+.fc-q-1{border-color:rgba(229,115,115,.4);color:#E57373}
+.fc-q-1:hover{background:rgba(229,115,115,.06)}
+.fc-q-2{border-color:rgba(255,152,0,.4);color:#FF9800}
+.fc-q-2:hover{background:rgba(255,152,0,.06)}
+.fc-q-3{border-color:rgba(201,168,76,.4);color:var(--gold)}
+.fc-q-4{border-color:rgba(102,187,106,.4);color:#66BB6A}
+.fc-q-4:hover{background:rgba(102,187,106,.06)}
+.fc-q-5{border-color:rgba(92,143,214,.4);color:#5C8FD6}
+.fc-q-5:hover{background:rgba(92,143,214,.06)}
+
+.fc-empty{font-family:var(--M);font-size:11px;color:var(--dim);text-align:center;padding:48px 0;line-height:1.9}
+
+/* DECKS TAB */
+.deck-form{border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:20px;background:rgba(201,168,76,.02)}
+.d-form-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:12px}
+.d-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.d-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-bottom:4px}
+.d-in{width:100%;font-family:var(--M);font-size:10px;padding:7px 10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;letter-spacing:.5px}
+.d-in:focus{border-color:rgba(201,168,76,.35)}
+.d-in::placeholder{color:rgba(138,134,118,.25)}
+.d-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.2);color:var(--gold);background:none;cursor:pointer;transition:.1s;margin-right:6px;margin-top:6px}
+.d-btn:hover{background:rgba(201,168,76,.08)}
+
+.deck-card{border:1px solid rgba(201,168,76,.1);padding:14px;margin-bottom:10px;cursor:pointer;transition:.1s}
+.deck-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.03)}
+.deck-card.selected{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.05)}
+.deck-hd{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.deck-name{font-family:var(--M);font-size:11px;color:#c8c4b0;flex:1}
+.deck-count{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)}
+.deck-due{font-family:var(--M);font-size:8px;color:var(--gold)}
+
+/* CARD LIST */
+.card-form{border:1px solid rgba(201,168,76,.12);padding:14px;margin-bottom:12px;background:rgba(0,0,0,.15)}
+.c-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.c-area{width:100%;font-family:var(--M);font-size:11px;padding:10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;resize:vertical;outline:none;min-height:60px;line-height:1.7}
+.c-area:focus{border-color:rgba(201,168,76,.3)}
+.c-area::placeholder{color:rgba(138,134,118,.25)}
+.card-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.06)}
+.card-row-front{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.75);flex:1}
+.card-row-meta{font-family:var(--M);font-size:7px;color:var(--dim);white-space:nowrap;margin-top:2px}
+.c-del{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.3);background:none;border:none;cursor:pointer}
+.c-del:hover{color:#c0392b}
+
+/* PROGRESS TAB */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:20px}
+.kpi{border:1px solid rgba(201,168,76,.1);padding:14px;text-align:center}
+.kpi-v{font-family:var(--M);font-size:22px;color:var(--gold);letter-spacing:1px}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.ef-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.ef-label{font-family:var(--M);font-size:8px;color:var(--dim);width:120px}
+.ef-track{flex:1;height:5px;background:rgba(201,168,76,.1)}
+.ef-fill{height:100%;background:rgba(201,168,76,.6)}
+.ef-val{font-family:var(--M);font-size:8px;color:var(--dim);width:32px;text-align:right}
+</style>
+</head>
+<body>
+
+<div class="main">
+
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN FLASHCARDS</span>
+    <span class="tb-meta" id="fc-tb-meta">SM-2 SPACED REPETITION</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" id="t-study">STUDY</button>
+    <button class="lt" id="t-decks">DECKS &amp; CARDS</button>
+    <button class="lt" id="t-progress">PROGRESS</button>
+  </div>
+
+  <!-- STUDY -->
+  <div class="tab-pane active" id="tab-study">
+    <div class="fc-study-wrap">
+      <div class="fc-deck-select-row">
+        <select class="fc-deck-sel" id="fc-deck-sel"></select>
+        <span class="fc-session-info" id="fc-sess-info"></span>
+      </div>
+      <div class="fc-progress-bar"><div class="fc-progress-fill" id="fc-prog" style="width:0%"></div></div>
+      <div id="fc-study-area"></div>
+    </div>
+  </div>
+
+  <!-- DECKS & CARDS -->
+  <div class="tab-pane" id="tab-decks">
+
+    <div class="deck-form">
+      <div class="d-form-title" id="deck-form-title">NEW DECK</div>
+      <input type="hidden" id="df-edit-id"/>
+      <div class="d-form-row">
+        <div>
+          <div class="d-label">DECK NAME *</div>
+          <input class="d-in" id="df-name" placeholder="e.g. Biology, Spanish, History" maxlength="40"/>
+        </div>
+        <div>
+          <div class="d-label">DESCRIPTION</div>
+          <input class="d-in" id="df-desc" placeholder="What does this deck cover?" maxlength="80"/>
+        </div>
+      </div>
+      <button class="d-btn" id="df-save">CREATE DECK</button>
+      <button class="d-btn" id="df-cancel" style="display:none">CANCEL</button>
+    </div>
+
+    <div id="fc-decks-list"></div>
+
+    <div id="fc-cards-section" style="display:none">
+      <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin:20px 0 12px;border-top:1px solid rgba(201,168,76,.1);padding-top:16px" id="fc-cards-title">CARDS</div>
+      <div class="card-form">
+        <div class="c-form-row">
+          <div>
+            <div class="d-label">FRONT (QUESTION)</div>
+            <textarea class="c-area" id="cf-front" placeholder="What is…? Define…" rows="3"></textarea>
+          </div>
+          <div>
+            <div class="d-label">BACK (ANSWER)</div>
+            <textarea class="c-area" id="cf-back" placeholder="The answer…" rows="3"></textarea>
+          </div>
+        </div>
+        <div style="margin-bottom:8px">
+          <div class="d-label">HINT (OPTIONAL)</div>
+          <input class="d-in" id="cf-hint" placeholder="Memory aid or context…" maxlength="100"/>
+        </div>
+        <button class="d-btn" id="cf-save">ADD CARD</button>
+      </div>
+      <div id="fc-card-list"></div>
+    </div>
+
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="tab-pane" id="tab-progress">
+    <div class="kpi-row" id="fc-kpis"></div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:12px">EASINESS FACTOR DISTRIBUTION</div>
+    <div id="fc-ef-bars"></div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:20px;margin-bottom:12px">ABOUT SM-2 ALGORITHM</div>
+    <div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);line-height:1.9;border:1px solid rgba(201,168,76,.08);padding:14px">
+      The SM-2 algorithm (SuperMemo 2, Piotr Wozniak 1987) schedules card reviews using the Ebbinghaus
+      forgetting curve. Cards rated AGAIN reset to interval=1. HARD/GOOD/EASY increase the interval
+      by the easiness factor (EF, starts at 2.5). After each review EF adjusts: high quality →
+      harder cards stay at same EF, low quality → EF decreases (minimum 1.3). The result is
+      exponentially increasing intervals — a card learned today, reviewed tomorrow, then in 6 days,
+      then 15, then 34 days… Long-term retention with minimal time investment.
+    </div>
+  </div>
+
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SOVEREIGN FLASHCARDS — SM-2 Spaced Repetition System
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const DECKS_KEY = 'omega_fc_decks';
+const CARDS_KEY = 'omega_fc_cards';
+
+let _decks = [];
+let _cards = [];
+let _activeDeckId = null;
+let _session = [];      // due cards for current session
+let _sessIdx = 0;
+let _sessReviewed = 0;
+let _flipped = false;
+
+/* ── STORAGE ─────────────────────────────────────────────────────────── */
+
+function load() {
+  try { _decks = JSON.parse(localStorage.getItem(DECKS_KEY))||[]; } catch { _decks=[]; }
+  try { _cards = JSON.parse(localStorage.getItem(CARDS_KEY))||[]; } catch { _cards=[]; }
+}
+function saveDecks() { localStorage.setItem(DECKS_KEY, JSON.stringify(_decks)); }
+function saveCards() { localStorage.setItem(CARDS_KEY, JSON.stringify(_cards)); }
+
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function today() { return new Date().toISOString().slice(0,10); }
+
+/* ── SM-2 ALGORITHM ──────────────────────────────────────────────────── */
+
+function sm2Review(card, q) {
+  // q: 1=Again(fail), 2=Hard, 3=Good, 4=Easy, 5=Perfect
+  const mapped = [0,1,2,3,4,5][q] || 0;  // direct map
+
+  if (mapped < 3) {
+    // Failed: reset
+    card.reps     = 0;
+    card.interval = 1;
+  } else {
+    // Passed
+    if (card.reps === 0)      card.interval = 1;
+    else if (card.reps === 1) card.interval = 6;
+    else                      card.interval = Math.round(card.interval * card.ef);
+    card.reps++;
+    // Update EF
+    card.ef = card.ef + (0.1 - (5-mapped)*(0.08 + (5-mapped)*0.02));
+    if (card.ef < 1.3) card.ef = 1.3;
+  }
+
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + card.interval);
+  card.due          = dueDate.toISOString().slice(0,10);
+  card.lastReviewed = today();
+  return card;
+}
+
+function nextIntervalHint(card, q) {
+  // Preview without modifying
+  if (q < 3) return '<1d';
+  const newInterval = card.reps < 2 ? (card.reps===0?1:6) : Math.round(card.interval * card.ef);
+  if (newInterval < 1)   return '<1d';
+  if (newInterval === 1) return '1d';
+  if (newInterval < 30)  return newInterval+'d';
+  return Math.round(newInterval/30)+'mo';
+}
+
+/* ── STUDY TAB ───────────────────────────────────────────────────────── */
+
+function buildStudySession(deckId) {
+  const d = today();
+  let pool = _cards.filter(c => c.deckId === deckId && (!c.due || c.due <= d));
+  // Shuffle
+  pool = pool.sort(()=>Math.random()-0.5);
+  _session    = pool;
+  _sessIdx    = 0;
+  _sessReviewed = 0;
+  _flipped    = false;
+}
+
+function updateDeckSelector() {
+  const sel = document.getElementById('fc-deck-sel');
+  if (!_decks.length) {
+    sel.innerHTML = '<option value="">No decks — create one in DECKS tab</option>';
+    return;
+  }
+  sel.innerHTML = _decks.map(d => {
+    const due = dueCount(d.id);
+    return `<option value="${d.id}">${d.name} (${due} due)</option>`;
+  }).join('');
+  if (!_activeDeckId || !_decks.find(d=>d.id===_activeDeckId)) {
+    _activeDeckId = _decks[0].id;
+  }
+  sel.value = _activeDeckId;
+}
+
+function dueCount(deckId) {
+  const d = today();
+  return _cards.filter(c=>c.deckId===deckId&&(!c.due||c.due<=d)).length;
+}
+
+function startSession() {
+  _activeDeckId = document.getElementById('fc-deck-sel').value;
+  buildStudySession(_activeDeckId);
+  renderStudyCard();
+}
+
+function renderStudyCard() {
+  const area = document.getElementById('fc-study-area');
+  const total = _session.length;
+  const pct = total > 0 ? (_sessReviewed / total) * 100 : 0;
+  document.getElementById('fc-prog').style.width = pct + '%';
+
+  if (!_session.length) {
+    area.innerHTML = `<div class="fc-empty">
+      🎯 NO CARDS DUE<br>ALL CARDS IN THIS DECK ARE SCHEDULED FOR FUTURE REVIEW<br>
+      <br>COME BACK WHEN CARDS ARE DUE, OR ADD MORE CARDS IN THE DECKS TAB
+    </div>`;
+    document.getElementById('fc-sess-info').textContent = '';
+    return;
+  }
+
+  if (_sessIdx >= _session.length) {
+    area.innerHTML = `<div class="fc-empty">
+      ✓ SESSION COMPLETE — ${_sessReviewed} CARD${_sessReviewed!==1?'S':''} REVIEWED<br>
+      NEXT REVIEWS SCHEDULED BASED ON YOUR RECALL QUALITY<br>
+      <br>
+      <button class="d-btn" onclick="startSession()" style="margin-top:8px">STUDY AGAIN</button>
+    </div>`;
+    document.getElementById('fc-sess-info').textContent = '';
+    saveCards();
+    updateTopMeta();
+    return;
+  }
+
+  const card = _session[_sessIdx];
+  const remaining = _session.length - _sessIdx;
+  document.getElementById('fc-sess-info').textContent = `${_sessIdx+1} / ${_session.length}  ·  ${remaining} REMAINING`;
+  _flipped = false;
+
+  area.innerHTML = `
+    <div class="fc-card-wrap">
+      <div class="fc-card" id="fc-flip-card" onclick="flipCard()">
+        <div class="fc-face">
+          <div class="fc-card-label">QUESTION — CLICK TO REVEAL</div>
+          <div class="fc-card-text">${esc(card.front)}</div>
+          ${card.hint?`<div class="fc-card-hint">HINT: ${esc(card.hint)}</div>`:''}
+        </div>
+        <div class="fc-face fc-face-back">
+          <div class="fc-card-label">ANSWER</div>
+          <div class="fc-card-text">${esc(card.back)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-flip-hint" id="fc-flip-hint">CLICK CARD OR PRESS SPACE TO REVEAL ANSWER</div>
+    <div class="fc-quality-row" id="fc-q-row">
+      ${[
+        [1,'AGAIN','<1d','fc-q-1'],
+        [2,'HARD','','fc-q-2'],
+        [3,'GOOD','','fc-q-3'],
+        [4,'EASY','','fc-q-4'],
+        [5,'PERFECT','','fc-q-5'],
+      ].map(([q,lbl,intv,cls])=>`
+        <button class="fc-q-btn ${cls}" onclick="rateCard(${q})">
+          <span class="q-label">${lbl}</span>
+          <span class="q-interval">${nextIntervalHint(card,q)}</span>
+        </button>`
+      ).join('')}
+    </div>`;
+}
+
+window.flipCard = function() {
+  if (_flipped) return;
+  _flipped = true;
+  document.getElementById('fc-flip-card').classList.add('flipped');
+  document.getElementById('fc-flip-hint').textContent = 'HOW WELL DID YOU REMEMBER?';
+  document.getElementById('fc-q-row').classList.add('show');
+};
+
+window.rateCard = function(q) {
+  const card = _session[_sessIdx];
+  sm2Review(card, q);
+  // Update in _cards
+  const idx = _cards.findIndex(c=>c.id===card.id);
+  if (idx>=0) _cards[idx] = card;
+  _sessIdx++;
+  _sessReviewed++;
+  saveCards();
+  renderStudyCard();
+};
+
+window.startSession = startSession;
+
+// Keyboard shortcut: Space = flip, 1-5 = rate
+document.addEventListener('keydown', e => {
+  if (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if (!document.getElementById('tab-study').classList.contains('active')) return;
+  if (e.key===' '||e.key==='f') { e.preventDefault(); window.flipCard && window.flipCard(); }
+  if (_flipped && ['1','2','3','4','5'].includes(e.key)) { window.rateCard && window.rateCard(+e.key); }
+});
+
+/* ── DECKS TAB ───────────────────────────────────────────────────────── */
+
+function renderDeckList() {
+  const el = document.getElementById('fc-decks-list');
+  if (!_decks.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:16px 0">NO DECKS — CREATE YOUR FIRST DECK ABOVE</p>';
+    return;
+  }
+  el.innerHTML = _decks.map(d => {
+    const total = _cards.filter(c=>c.deckId===d.id).length;
+    const due = dueCount(d.id);
+    return `<div class="deck-card ${_activeDeckId===d.id?'selected':''}" onclick="selectDeck('${d.id}')">
+      <div class="deck-hd">
+        <span class="deck-name">${esc(d.name)}</span>
+        <span class="deck-count">${total} CARDS</span>
+        <span class="deck-due">${due} DUE</span>
+      </div>
+      ${d.desc?`<div style="font-family:var(--M);font-size:9px;color:var(--dim)">${esc(d.desc)}</div>`:''}
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <button class="d-btn" style="padding:4px 10px;font-size:7px" onclick="event.stopPropagation();editDeck('${d.id}')">EDIT</button>
+        <button class="d-btn" style="padding:4px 10px;font-size:7px;color:rgba(192,57,43,.6)" onclick="event.stopPropagation();delDeck('${d.id}')">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.selectDeck = function(id) {
+  _activeDeckId = id;
+  renderDeckList();
+  renderCardSection();
+};
+
+function saveDeck() {
+  const name = document.getElementById('df-name').value.trim();
+  if (!name) return;
+  const eid = document.getElementById('df-edit-id').value;
+  if (eid) {
+    const d = _decks.find(x=>x.id===eid);
+    if (d) { d.name=name; d.desc=document.getElementById('df-desc').value.trim(); }
+  } else {
+    const id = uid();
+    _decks.push({id, name, desc:document.getElementById('df-desc').value.trim()});
+    _activeDeckId = id;
+  }
+  saveDecks();
+  clearDeckForm();
+  renderDeckList();
+  renderCardSection();
+  updateDeckSelector();
+  updateTopMeta();
+}
+
+window.editDeck = id => {
+  const d = _decks.find(x=>x.id===id); if(!d) return;
+  document.getElementById('df-edit-id').value = d.id;
+  document.getElementById('df-name').value    = d.name;
+  document.getElementById('df-desc').value    = d.desc||'';
+  document.getElementById('deck-form-title').textContent = 'EDIT DECK';
+  document.getElementById('df-save').textContent = 'UPDATE DECK';
+  document.getElementById('df-cancel').style.display = '';
+};
+
+window.delDeck = id => {
+  if (!confirm('Delete this deck and all its cards?')) return;
+  _decks  = _decks.filter(d=>d.id!==id);
+  _cards  = _cards.filter(c=>c.deckId!==id);
+  if (_activeDeckId===id) _activeDeckId = _decks[0]?.id||null;
+  saveDecks(); saveCards();
+  renderDeckList(); renderCardSection(); updateDeckSelector(); updateTopMeta();
+};
+
+function clearDeckForm() {
+  document.getElementById('df-edit-id').value = '';
+  document.getElementById('df-name').value    = '';
+  document.getElementById('df-desc').value    = '';
+  document.getElementById('deck-form-title').textContent = 'NEW DECK';
+  document.getElementById('df-save').textContent = 'CREATE DECK';
+  document.getElementById('df-cancel').style.display = 'none';
+}
+
+/* ── CARD MANAGEMENT ─────────────────────────────────────────────────── */
+
+function renderCardSection() {
+  const sec = document.getElementById('fc-cards-section');
+  if (!_activeDeckId) { sec.style.display='none'; return; }
+  const deck = _decks.find(d=>d.id===_activeDeckId);
+  if (!deck) { sec.style.display='none'; return; }
+  sec.style.display = 'block';
+  document.getElementById('fc-cards-title').textContent = 'CARDS — ' + deck.name.toUpperCase();
+  renderCardList();
+}
+
+function renderCardList() {
+  const el = document.getElementById('fc-card-list');
+  const cards = _cards.filter(c=>c.deckId===_activeDeckId);
+  if (!cards.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:9px;color:var(--dim);padding:12px 0">NO CARDS YET — ADD YOUR FIRST CARD ABOVE</p>';
+    return;
+  }
+  el.innerHTML = cards.map(c => {
+    const due = c.due||'NEW';
+    const dueOk = !c.due || c.due > today();
+    return `<div class="card-row">
+      <div style="flex:1">
+        <div class="card-row-front">${esc(c.front.slice(0,80))}${c.front.length>80?'…':''}</div>
+        <div class="card-row-meta">INT:${c.interval||0}d  EF:${(c.ef||2.5).toFixed(1)}  DUE:${due}  REPS:${c.reps||0}</div>
+      </div>
+      <button class="c-del" onclick="delCard('${c.id}')">×</button>
+    </div>`;
+  }).join('');
+}
+
+function addCard() {
+  const front = document.getElementById('cf-front').value.trim();
+  const back  = document.getElementById('cf-back').value.trim();
+  if (!front || !back || !_activeDeckId) return;
+  _cards.push({
+    id: uid(), deckId: _activeDeckId,
+    front, back, hint: document.getElementById('cf-hint').value.trim(),
+    interval:0, reps:0, ef:2.5, due:null, lastReviewed:null
+  });
+  saveCards();
+  document.getElementById('cf-front').value = '';
+  document.getElementById('cf-back').value  = '';
+  document.getElementById('cf-hint').value  = '';
+  renderCardList(); updateDeckSelector(); updateTopMeta();
+}
+
+window.delCard = id => {
+  _cards = _cards.filter(c=>c.id!==id);
+  saveCards(); renderCardList(); updateDeckSelector(); updateTopMeta();
+};
+
+/* ── PROGRESS TAB ────────────────────────────────────────────────────── */
+
+function renderProgress() {
+  const total    = _cards.length;
+  const reviewed = _cards.filter(c=>c.lastReviewed).length;
+  const mature   = _cards.filter(c=>c.interval>=21).length;
+  const dueToday = _cards.filter(c=>!c.due||c.due<=today()).length;
+
+  document.getElementById('fc-kpis').innerHTML = [
+    [total,    'TOTAL CARDS'],
+    [reviewed, 'REVIEWED'],
+    [mature,   'MATURE (21d+)'],
+    [dueToday, 'DUE TODAY'],
+    [_decks.length, 'DECKS'],
+  ].map(([v,l])=>`<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+
+  // EF distribution
+  const efBuckets = [
+    ['1.3–1.7', c=>c.ef>=1.3&&c.ef<1.7],
+    ['1.7–2.1', c=>c.ef>=1.7&&c.ef<2.1],
+    ['2.1–2.5', c=>c.ef>=2.1&&c.ef<2.5],
+    ['2.5–2.9', c=>c.ef>=2.5&&c.ef<2.9],
+    ['2.9+',    c=>c.ef>=2.9],
+  ];
+  const maxEF = Math.max(...efBuckets.map(([,fn])=>_cards.filter(fn).length),1);
+  document.getElementById('fc-ef-bars').innerHTML = efBuckets.map(([lbl,fn])=>{
+    const n = _cards.filter(fn).length;
+    return `<div class="ef-bar-row">
+      <span class="ef-label">EF ${lbl}</span>
+      <div class="ef-track"><div class="ef-fill" style="width:${(n/maxEF)*100}%"></div></div>
+      <span class="ef-val">${n}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ── HELPERS ─────────────────────────────────────────────────────────── */
+
+function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function updateTopMeta() {
+  const due = _cards.filter(c=>!c.due||c.due<=today()).length;
+  document.getElementById('fc-tb-meta').textContent =
+    _cards.length + ' CARDS  ·  ' + due + ' DUE TODAY  ·  ' + _decks.length + ' DECKS';
+}
+
+/* ── TAB ROUTER ──────────────────────────────────────────────────────── */
+
+function activateTab(name) {
+  ['study','decks','progress'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    document.getElementById('t-'+t).classList.toggle('active',t===name);
+  });
+  if (name==='study')    { updateDeckSelector(); startSession(); }
+  if (name==='decks')    { renderDeckList(); renderCardSection(); }
+  if (name==='progress') renderProgress();
+}
+
+['study','decks','progress'].forEach(t=>{
+  document.getElementById('t-'+t).addEventListener('click',()=>activateTab(t));
+});
+
+/* ── EVENT WIRES ─────────────────────────────────────────────────────── */
+
+document.getElementById('df-save').addEventListener('click', saveDeck);
+document.getElementById('df-cancel').addEventListener('click', clearDeckForm);
+document.getElementById('cf-save').addEventListener('click', addCard);
+document.getElementById('fc-deck-sel').addEventListener('change', function(){ _activeDeckId=this.value; startSession(); });
+
+// Enter in card form
+document.getElementById('cf-hint').addEventListener('keydown', e=>{ if(e.key==='Enter') addCard(); });
+
+/* ── BOOT ─────────────────────────────────────────────────────────────── */
+
+load();
+updateDeckSelector();
+updateTopMeta();
+startSession();
+
+</script>
+</body>
+</html>

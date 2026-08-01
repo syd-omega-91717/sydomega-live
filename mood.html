@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Mood · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;--solar:#FF9800;--red:#EF5350;--teal:#26C6DA;
+}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* CIRCUMPLEX CANVAS */
+.circumplex-wrap{display:flex;align-items:flex-start;gap:24px;margin-bottom:24px;flex-wrap:wrap}
+#circumplex{border:1px solid rgba(201,168,76,.12);background:rgba(0,0,0,.3);cursor:crosshair;display:block;max-width:100%}
+.circ-right{flex:1;min-width:200px}
+.circ-selected{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:12px}
+.circ-name{font-family:var(--M);font-size:20px;letter-spacing:4px;color:var(--gold);margin-bottom:4px}
+.circ-desc{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--dim);line-height:1.7}
+
+/* MOOD STATES GRID */
+.states-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-bottom:16px}
+.state-chip{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:8px 10px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:rgba(0,0,0,.2);cursor:pointer;transition:.15s;text-align:center;border-radius:2px}
+.state-chip:hover{border-color:rgba(201,168,76,.3);color:var(--gold)}
+.state-chip.sel{color:#0a0a08;font-weight:700}
+
+/* SLIDERS */
+.slider-row{margin-bottom:14px}
+.slider-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:6px}
+.slider-val{color:var(--gold)}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;background:rgba(201,168,76,.15);outline:none;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--gold);border-radius:50%;cursor:pointer}
+
+/* TAGS */
+.tags-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.etag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s;border-radius:2px}
+.etag.on{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08)}
+
+/* NOTE AREA */
+.mood-note{width:100%;min-height:72px;padding:10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;line-height:1.75;resize:none;outline:none;letter-spacing:.3px;margin-bottom:14px}
+.mood-note:focus{border-color:rgba(201,168,76,.28)}
+
+/* SAVE BUTTON */
+.btn-save{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:12px 28px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.35);color:var(--gold);cursor:pointer;transition:.1s;width:100%}
+.btn-save:hover{background:rgba(201,168,76,.15)}
+
+/* SECTIONS */
+.sect{margin-bottom:24px}
+.sect-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* HISTORY CARDS */
+.log-card{border:1px solid rgba(201,168,76,.08);padding:14px;margin-bottom:8px;background:rgba(0,0,0,.2);display:flex;gap:12px;align-items:flex-start}
+.log-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.log-body{flex:1}
+.log-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px}
+.log-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold)}
+.log-date{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim)}
+.log-bars{display:flex;gap:8px;margin-bottom:6px}
+.log-bar-wrap{flex:1}
+.log-bar-label{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-bottom:3px}
+.log-bar-track{height:3px;background:rgba(201,168,76,.08);border-radius:2px}
+.log-bar-fill{height:100%;border-radius:2px;transition:.3s}
+.log-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+.log-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.15);color:var(--dim)}
+.log-note{font-family:var(--M);font-size:9px;letter-spacing:.3px;color:rgba(200,196,176,.6);line-height:1.6}
+.log-del{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);background:none;border:none;cursor:pointer;padding:2px 6px}
+.log-del:hover{color:#EF5350}
+
+/* TREND CHART */
+#trend-canvas{display:block;width:100%;max-width:100%;border:1px solid rgba(201,168,76,.1);background:rgba(0,0,0,.3)}
+
+/* STATS GRID */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold)}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+
+/* PATTERN LIST */
+.pattern-item{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(200,196,176,.7);line-height:1.8;padding:8px 12px;border-left:2px solid rgba(201,168,76,.2);margin-bottom:8px}
+
+/* SCIENCE CARDS */
+.sci-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.2)}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+.sci-cite{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8}
+
+/* EMPTY STATE */
+.empty-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN MOOD</span>
+    <span class="tb-meta" id="tb-streak">── STREAK: 0 DAYS</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" onclick="switchTab(this,'t1')">◆ CHECK-IN</button>
+    <button class="lt" onclick="switchTab(this,'t2')">▶ HISTORY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">▲ PATTERNS</button>
+    <button class="lt" onclick="switchTab(this,'t4')">⚙ SCIENCE</button>
+  </div>
+
+  <!-- TAB 1: CHECK-IN -->
+  <div class="tab-pane active" id="t1">
+    <div class="sect">
+      <div class="sect-hd">SELECT YOUR EMOTIONAL STATE</div>
+      <div class="circumplex-wrap">
+        <canvas id="circumplex" width="300" height="300"></canvas>
+        <div class="circ-right">
+          <div class="circ-selected">SELECTED STATE</div>
+          <div class="circ-name" id="sel-name">—</div>
+          <div class="circ-desc" id="sel-desc">Click the circumplex or choose below</div>
+        </div>
+      </div>
+      <div class="states-grid" id="states-grid"></div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">INTENSITY LEVELS</div>
+      <div class="slider-row">
+        <div class="slider-label"><span>MOOD VALENCE</span><span class="slider-val" id="lbl-valence">5</span></div>
+        <input type="range" id="sl-valence" min="1" max="10" value="5" oninput="document.getElementById('lbl-valence').textContent=this.value"/>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>ENERGY / AROUSAL</span><span class="slider-val" id="lbl-energy">5</span></div>
+        <input type="range" id="sl-energy" min="1" max="10" value="5" oninput="document.getElementById('lbl-energy').textContent=this.value"/>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>STRESS LEVEL</span><span class="slider-val" id="lbl-stress">3</span></div>
+        <input type="range" id="sl-stress" min="1" max="10" value="3" oninput="document.getElementById('lbl-stress').textContent=this.value"/>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">EMOTIONAL CONTEXT TAGS</div>
+      <div class="tags-row" id="tags-row"></div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">REFLECTION NOTE</div>
+      <textarea class="mood-note" id="mood-note" placeholder="What's shaping your current state? Any insights, events, or intentions..."></textarea>
+      <button class="btn-save" onclick="saveEntry()">▲ LOG MOOD ENTRY</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: HISTORY -->
+  <div class="tab-pane" id="t2">
+    <div class="sect">
+      <div class="sect-hd">7-DAY MOOD TREND</div>
+      <canvas id="trend-canvas" height="140"></canvas>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">LOG ENTRIES</div>
+      <div id="log-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: PATTERNS -->
+  <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">MOOD STATISTICS</div>
+      <div class="stat-grid" id="stat-grid"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">PATTERN INSIGHTS</div>
+      <div id="pattern-list"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">EMOTIONAL FREQUENCY</div>
+      <canvas id="freq-canvas" height="160"></canvas>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div class="sci-card">
+      <div class="sci-title">CIRCUMPLEX MODEL OF AFFECT</div>
+      <div class="sci-cite">Russell, J.A. (1980) — A Circumplex Model of Affect. Journal of Personality and Social Psychology, 39(6)</div>
+      <div class="sci-body">James Russell proposed that all emotions can be plotted on two fundamental dimensions: valence (pleasure-displeasure) and arousal (activation-deactivation). This two-dimensional space explains how emotions that feel similar are close together, while opposites are far apart. The circumplex model is foundational to affective science and forms the basis of most modern mood-tracking systems.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">BROADEN-AND-BUILD THEORY</div>
+      <div class="sci-cite">Fredrickson, B.L. (2001) — The Role of Positive Emotions in Positive Psychology. American Psychologist, 56(3)</div>
+      <div class="sci-body">Barbara Fredrickson's Broaden-and-Build theory states that positive emotions broaden one's awareness and encourage novel, varied, and exploratory thoughts and actions. Over time, this broadened behavioral repertoire builds lasting personal resources — social bonds, knowledge, physical vitality. Tracking and cultivating positive states is not indulgence but a strategic compound investment in long-term capability.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">EMOTIONAL GRANULARITY</div>
+      <div class="sci-cite">Barrett, L.F. (2017) — How Emotions Are Made. Houghton Mifflin Harcourt</div>
+      <div class="sci-body">Lisa Feldman Barrett's research shows that people who can precisely distinguish between emotional states ("emotional granularity") experience less reactivity, drink less alcohol under stress, regulate emotion more effectively, and have better mental health. The sovereign practice of naming exact emotions — not just "bad" but "anxious," "frustrated," "melancholic" — is itself a regulatory intervention.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">AFFECT LABELING</div>
+      <div class="sci-cite">Lieberman, M.D. et al. (2007) — Putting Feelings into Words. Psychological Science, 18(5)</div>
+      <div class="sci-body">Labeling emotional experiences ("affect labeling") decreases amygdala activation and increases prefrontal regulatory control. This is the neuroscience of why journaling and mood logging work: the act of naming reduces the intensity of negative states. Putting emotions into words is a direct neurological intervention, not merely a soft-skill exercise.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">MOOD FORECASTING & CALIBRATION</div>
+      <div class="sci-cite">Wilson, T.D. & Gilbert, D.T. (2003) — Affective Forecasting. Advances in Experimental Social Psychology, 35</div>
+      <div class="sci-body">Humans systematically misjudge how long and intensely future events will affect their mood — a phenomenon called "impact bias." Longitudinal mood tracking creates a calibration database: by reviewing how predicted events actually affected your state, you develop more accurate affective forecasting, leading to better decisions about time, relationships, and effort allocation.</div>
+    </div>
+  </div>
+</div>
+
+<script src="omega-ui.js"></script>
+<script>
+const MOOD_KEY = 'omega_mood_log';
+
+/* ─── MOOD STATE DEFINITIONS (Russell Circumplex Model) ─── */
+const STATES = [
+  /* High valence, high arousal */
+  {name:'ECSTATIC',    v:9,a:9, color:'#C9A84C', desc:'Peak elation, overwhelming joy and excitement'},
+  {name:'EXCITED',     v:8,a:8, color:'#FF9800', desc:'Energized enthusiasm, eager anticipation'},
+  {name:'ENTHUSIASTIC',v:8,a:7, color:'#FFB74D', desc:'Strong motivation, fired up and ready'},
+  {name:'JOYFUL',      v:8,a:6, color:'#4CAF50', desc:'Bright happiness, light and free feeling'},
+  /* High valence, moderate arousal */
+  {name:'HAPPY',       v:7,a:5, color:'#66BB6A', desc:'Positive, pleasant, life feels good'},
+  {name:'CONTENT',     v:7,a:4, color:'#81C784', desc:'Satisfied, at ease, things are right'},
+  {name:'GRATEFUL',    v:8,a:4, color:'#A5D6A7', desc:'Deep appreciation, warmth and abundance'},
+  {name:'HOPEFUL',     v:7,a:6, color:'#5C8FD6', desc:'Optimistic, forward-looking, possibility-oriented'},
+  /* Low valence, high arousal */
+  {name:'ANXIOUS',     v:3,a:8, color:'#EF5350', desc:'Worried, tense, hypervigilant scanning'},
+  {name:'STRESSED',    v:2,a:8, color:'#E53935', desc:'Overwhelmed, under pressure, stretched thin'},
+  {name:'FRUSTRATED',  v:2,a:7, color:'#FF7043', desc:'Blocked goals, things aren\'t working'},
+  {name:'ANGRY',       v:2,a:9, color:'#B71C1C', desc:'Strong displeasure, sense of injustice or obstruction'},
+  /* Low valence, low arousal */
+  {name:'SAD',         v:2,a:2, color:'#78909C', desc:'Low, heavy, withdrawn from the world'},
+  {name:'MELANCHOLIC', v:3,a:2, color:'#90A4AE', desc:'Reflective sorrow, bittersweet or nostalgic'},
+  {name:'FATIGUED',    v:3,a:1, color:'#B0BEC5', desc:'Depleted, running on empty, need rest'},
+  {name:'BORED',       v:3,a:2, color:'#9E9E9E', desc:'Understimulated, restless without direction'},
+  /* Low valence, moderate arousal */
+  {name:'WORRIED',     v:3,a:5, color:'#FF8A65', desc:'Preoccupied with concerns, mind racing'},
+  {name:'UNCERTAIN',   v:4,a:4, color:'#CE93D8', desc:'Unclear path forward, ambivalence'},
+  /* High valence, low arousal */
+  {name:'CALM',        v:7,a:2, color:'#26C6DA', desc:'Peaceful, centered, steady and still'},
+  {name:'SERENE',      v:8,a:2, color:'#4DD0E1', desc:'Tranquil clarity, deep inner quiet'},
+  {name:'RELAXED',     v:7,a:3, color:'#80DEEA', desc:'Loose and at ease, no pressure'},
+  {name:'FOCUSED',     v:7,a:6, color:'#9C6FD6', desc:'Absorbed in flow, sharp and present'},
+];
+
+const EMOTION_TAGS = [
+  'CONNECTED','ISOLATED','CREATIVE','BLOCKED','PRODUCTIVE','SCATTERED',
+  'LOVED','LONELY','CONFIDENT','INSECURE','INSPIRED','DEPLETED',
+  'GRATEFUL','RESENTFUL','PRESENT','DISTRACTED','CLEAR','CONFUSED',
+  'COURAGEOUS','FEARFUL','STRONG','WEAK','PLAYFUL','SERIOUS',
+];
+
+let selectedState = null;
+let selectedTags = [];
+
+/* ─── INIT ─── */
+function init(){
+  renderStatesGrid();
+  renderTagsRow();
+  drawCircumplex();
+  updateStreak();
+}
+
+/* ─── CIRCUMPLEX CANVAS ─── */
+function drawCircumplex(hoveredState){
+  var c = document.getElementById('circumplex');
+  var ctx = c.getContext('2d');
+  var W = c.width, H = c.height;
+  ctx.clearRect(0,0,W,H);
+
+  /* axes */
+  ctx.strokeStyle = 'rgba(201,168,76,.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
+
+  /* quadrant labels */
+  ctx.font = '7px "Courier Prime", monospace';
+  ctx.fillStyle = 'rgba(201,168,76,.3)';
+  ctx.fillText('HIGH ENERGY', W/2+6, 14);
+  ctx.fillText('LOW ENERGY',  W/2+6, H-4);
+  ctx.fillStyle = 'rgba(201,168,76,.3)';
+  ctx.fillText('−', 6, H/2-4);
+  ctx.fillText('+', W-14, H/2-4);
+
+  /* plot each state */
+  STATES.forEach(function(s){
+    var x = (s.v/10)*(W-20)+10;
+    var y = H - (s.a/10)*(H-20)-10;
+    var r = (hoveredState===s||selectedState===s) ? 8 : 5;
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle = s.color;
+    ctx.globalAlpha = (selectedState===s) ? 1 : (hoveredState===s ? .9 : .55);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    if(selectedState===s||hoveredState===s){
+      ctx.font = '7px "Courier Prime",monospace';
+      ctx.fillStyle = '#fff';
+      ctx.fillText(s.name, x+10, y+4);
+    }
+  });
+}
+
+document.getElementById('circumplex').addEventListener('click', function(e){
+  var rect = this.getBoundingClientRect();
+  var W = this.width, H = this.height;
+  var scaleX = W/rect.width, scaleY = H/rect.height;
+  var cx = (e.clientX-rect.left)*scaleX;
+  var cy = (e.clientY-rect.top)*scaleY;
+  var best=null, bestD=99999;
+  STATES.forEach(function(s){
+    var x=(s.v/10)*(W-20)+10, y=H-(s.a/10)*(H-20)-10;
+    var d=Math.hypot(cx-x,cy-y);
+    if(d<bestD){bestD=d;best=s;}
+  });
+  if(best){selectState(best);}
+});
+
+document.getElementById('circumplex').addEventListener('mousemove',function(e){
+  var rect=this.getBoundingClientRect();
+  var W=this.width,H=this.height;
+  var scaleX=W/rect.width,scaleY=H/rect.height;
+  var cx=(e.clientX-rect.left)*scaleX,cy=(e.clientY-rect.top)*scaleY;
+  var best=null,bestD=99999;
+  STATES.forEach(function(s){
+    var x=(s.v/10)*(W-20)+10,y=H-(s.a/10)*(H-20)-10;
+    var d=Math.hypot(cx-x,cy-y);
+    if(d<bestD){bestD=d;best=s;}
+  });
+  if(bestD<20) drawCircumplex(best);
+  else drawCircumplex(null);
+});
+
+function selectState(s){
+  selectedState=s;
+  document.getElementById('sel-name').textContent=s.name;
+  document.getElementById('sel-name').style.color=s.color;
+  document.getElementById('sel-desc').textContent=s.desc;
+  document.getElementById('sl-valence').value=s.v;
+  document.getElementById('lbl-valence').textContent=s.v;
+  document.getElementById('sl-energy').value=s.a;
+  document.getElementById('lbl-energy').textContent=s.a;
+  drawCircumplex(null);
+  /* update chips */
+  document.querySelectorAll('.state-chip').forEach(function(el){
+    el.classList.toggle('sel',el.dataset.name===s.name);
+    el.style.background = el.dataset.name===s.name ? s.color : '';
+  });
+}
+
+/* ─── STATES GRID ─── */
+function renderStatesGrid(){
+  var g=document.getElementById('states-grid');
+  g.innerHTML='';
+  STATES.forEach(function(s){
+    var b=document.createElement('button');
+    b.className='state-chip';
+    b.dataset.name=s.name;
+    b.textContent=s.name;
+    b.style.borderColor=s.color+'44';
+    b.onclick=function(){selectState(s);};
+    g.appendChild(b);
+  });
+}
+
+/* ─── TAGS ROW ─── */
+function renderTagsRow(){
+  var r=document.getElementById('tags-row');
+  r.innerHTML='';
+  EMOTION_TAGS.forEach(function(t){
+    var b=document.createElement('button');
+    b.className='etag';
+    b.textContent=t;
+    b.onclick=function(){
+      b.classList.toggle('on');
+      if(b.classList.contains('on')) selectedTags.push(t);
+      else selectedTags=selectedTags.filter(function(x){return x!==t;});
+    };
+    r.appendChild(b);
+  });
+}
+
+/* ─── SAVE ENTRY ─── */
+function saveEntry(){
+  if(!selectedState){alert('Select an emotional state first.');return;}
+  var logs=loadLogs();
+  var entry={
+    id:Date.now(),
+    ts:new Date().toISOString(),
+    state:selectedState.name,
+    color:selectedState.color,
+    valence:parseInt(document.getElementById('sl-valence').value),
+    energy:parseInt(document.getElementById('sl-energy').value),
+    stress:parseInt(document.getElementById('sl-stress').value),
+    tags:[...selectedTags],
+    note:document.getElementById('mood-note').value.trim()
+  };
+  logs.unshift(entry);
+  saveLogs(logs);
+  resetForm();
+  updateStreak();
+  alert('Mood entry logged.');
+}
+
+function resetForm(){
+  selectedState=null;
+  selectedTags=[];
+  document.getElementById('sel-name').textContent='—';
+  document.getElementById('sel-name').style.color='var(--gold)';
+  document.getElementById('sel-desc').textContent='Click the circumplex or choose below';
+  document.getElementById('sl-valence').value=5; document.getElementById('lbl-valence').textContent='5';
+  document.getElementById('sl-energy').value=5;  document.getElementById('lbl-energy').textContent='5';
+  document.getElementById('sl-stress').value=3;  document.getElementById('lbl-stress').textContent='3';
+  document.getElementById('mood-note').value='';
+  document.querySelectorAll('.state-chip').forEach(function(el){el.classList.remove('sel');el.style.background='';});
+  document.querySelectorAll('.etag').forEach(function(el){el.classList.remove('on');});
+  drawCircumplex(null);
+}
+
+/* ─── STORAGE ─── */
+function loadLogs(){try{return JSON.parse(localStorage.getItem(MOOD_KEY)||'[]');}catch(e){return[];}}
+function saveLogs(l){localStorage.setItem(MOOD_KEY,JSON.stringify(l));}
+
+/* ─── STREAK ─── */
+function updateStreak(){
+  var logs=loadLogs();
+  if(!logs.length){document.getElementById('tb-streak').textContent='── STREAK: 0 DAYS';return;}
+  var days=new Set(logs.map(function(l){return l.ts.slice(0,10)}));
+  var streak=0,d=new Date();
+  while(true){
+    var key=d.toISOString().slice(0,10);
+    if(days.has(key)){streak++;d.setDate(d.getDate()-1);}
+    else break;
+  }
+  document.getElementById('tb-streak').textContent='── STREAK: '+streak+' DAYS';
+}
+
+/* ─── HISTORY TAB ─── */
+function renderHistory(){
+  var logs=loadLogs();
+  var ll=document.getElementById('log-list');
+  if(!logs.length){ll.innerHTML='<div class="empty-state">NO MOOD ENTRIES YET. LOG YOUR FIRST CHECK-IN.</div>';drawTrend([]);return;}
+  ll.innerHTML='';
+  logs.slice(0,30).forEach(function(e){
+    var d=new Date(e.ts);
+    var dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    var card=document.createElement('div');card.className='log-card';
+    card.innerHTML='<div class="log-dot" style="background:'+e.color+'"></div>'+
+      '<div class="log-body">'+
+        '<div class="log-top"><span class="log-state">'+e.state+'</span>'+
+          '<span style="display:flex;gap:6px;align-items:center">'+
+            '<span class="log-date">'+dateStr+'</span>'+
+            '<button class="log-del" onclick="delEntry('+e.id+')">✕</button>'+
+          '</span></div>'+
+        '<div class="log-bars">'+
+          '<div class="log-bar-wrap"><div class="log-bar-label">VALENCE '+e.valence+'</div><div class="log-bar-track"><div class="log-bar-fill" style="width:'+(e.valence*10)+'%;background:'+e.color+'"></div></div></div>'+
+          '<div class="log-bar-wrap"><div class="log-bar-label">ENERGY '+e.energy+'</div><div class="log-bar-track"><div class="log-bar-fill" style="width:'+(e.energy*10)+'%;background:var(--blue)"></div></div></div>'+
+          '<div class="log-bar-wrap"><div class="log-bar-label">STRESS '+e.stress+'</div><div class="log-bar-track"><div class="log-bar-fill" style="width:'+(e.stress*10)+'%;background:var(--red)"></div></div></div>'+
+        '</div>'+
+        (e.tags.length?'<div class="log-tags">'+e.tags.map(function(t){return'<span class="log-tag">'+t+'</span>';}).join('')+'</div>':'')+
+        (e.note?'<div class="log-note">'+e.note.substring(0,200)+'</div>':'')+
+      '</div>';
+    ll.appendChild(card);
+  });
+  drawTrend(logs);
+}
+
+function delEntry(id){
+  var logs=loadLogs().filter(function(l){return l.id!==id;});
+  saveLogs(logs);
+  renderHistory();
+  updateStreak();
+}
+
+/* ─── TREND CHART ─── */
+function drawTrend(logs){
+  var c=document.getElementById('trend-canvas');
+  var ctx=c.getContext('2d');
+  c.width=c.offsetWidth||600;
+  var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+
+  var days=[];
+  for(var i=6;i>=0;i--){
+    var d=new Date(); d.setDate(d.getDate()-i);
+    var key=d.toISOString().slice(0,10);
+    var dayLogs=logs.filter(function(l){return l.ts.slice(0,10)===key;});
+    var avg=dayLogs.length?dayLogs.reduce(function(a,l){return a+l.valence;},0)/dayLogs.length:null;
+    var avgE=dayLogs.length?dayLogs.reduce(function(a,l){return a+l.energy;},0)/dayLogs.length:null;
+    days.push({key:key,label:d.toLocaleDateString('en-US',{weekday:'short'}),valence:avg,energy:avgE,count:dayLogs.length});
+  }
+
+  var pad=32, pw=W-pad*2, ph=H-pad*2;
+  var xStep=pw/6;
+
+  /* grid lines */
+  [0,2.5,5,7.5,10].forEach(function(v){
+    var y=pad+ph-(v/10)*ph;
+    ctx.strokeStyle='rgba(201,168,76,.07)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+    ctx.fillStyle='rgba(201,168,76,.3)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(v,4,y+3);
+  });
+
+  /* draw lines */
+  function drawLine(data,color){
+    var pts=days.map(function(d,i){return{x:pad+i*xStep,y:d[data]===null?null:pad+ph-(d[data]/10)*ph};});
+    ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath();
+    var started=false;
+    pts.forEach(function(p){
+      if(p.y===null){started=false;return;}
+      if(!started){ctx.moveTo(p.x,p.y);started=true;}
+      else ctx.lineTo(p.x,p.y);
+    });
+    ctx.stroke();
+    pts.forEach(function(p){
+      if(p.y===null) return;
+      ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2);
+      ctx.fillStyle=color; ctx.fill();
+    });
+  }
+
+  drawLine('valence','#C9A84C');
+  drawLine('energy','#5C8FD6');
+
+  /* day labels */
+  days.forEach(function(d,i){
+    var x=pad+i*xStep;
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(d.label,x-8,H-4);
+    if(d.count>0){
+      ctx.fillStyle='rgba(201,168,76,.5)';
+      ctx.fillText(d.count,x-3,pad+ph+14);
+    }
+  });
+
+  /* legend */
+  ctx.fillStyle='#C9A84C'; ctx.fillRect(W-110,8,14,2);
+  ctx.fillStyle='rgba(201,168,76,.6)'; ctx.font='7px "Courier Prime",monospace'; ctx.fillText('VALENCE',W-92,12);
+  ctx.fillStyle='#5C8FD6'; ctx.fillRect(W-110,22,14,2);
+  ctx.fillStyle='rgba(201,168,76,.6)'; ctx.fillText('ENERGY',W-92,26);
+}
+
+/* ─── PATTERNS TAB ─── */
+function renderPatterns(){
+  var logs=loadLogs();
+  var sg=document.getElementById('stat-grid');
+  var pl=document.getElementById('pattern-list');
+
+  if(!logs.length){
+    sg.innerHTML='<div class="empty-state" style="grid-column:1/-1">LOG AT LEAST 3 ENTRIES TO SEE PATTERNS</div>';
+    pl.innerHTML='';
+    drawFreq([]);
+    return;
+  }
+
+  var avgV=(logs.reduce(function(a,l){return a+l.valence;},0)/logs.length).toFixed(1);
+  var avgE=(logs.reduce(function(a,l){return a+l.energy;},0)/logs.length).toFixed(1);
+  var avgS=(logs.reduce(function(a,l){return a+l.stress;},0)/logs.length).toFixed(1);
+  var posCount=logs.filter(function(l){return l.valence>=6;}).length;
+  var posRate=Math.round((posCount/logs.length)*100);
+
+  /* streak calc */
+  var days=new Set(logs.map(function(l){return l.ts.slice(0,10)}));
+  var streak=0,d=new Date();
+  while(true){var k=d.toISOString().slice(0,10);if(days.has(k)){streak++;d.setDate(d.getDate()-1);}else break;}
+
+  sg.innerHTML=[
+    {v:logs.length,l:'TOTAL ENTRIES'},
+    {v:avgV,l:'AVG VALENCE'},
+    {v:avgE,l:'AVG ENERGY'},
+    {v:avgS,l:'AVG STRESS'},
+    {v:posRate+'%',l:'POSITIVE RATE'},
+    {v:streak,l:'DAY STREAK'},
+  ].map(function(x){return'<div class="stat-card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+
+  /* insights */
+  var insights=[];
+  if(parseFloat(avgV)>=7) insights.push('Your average valence is high ('+avgV+'/10) — you are operating in a predominantly positive emotional state. This supports creative thinking and long-term resource building.');
+  else if(parseFloat(avgV)<5) insights.push('Your average valence is below neutral ('+avgV+'/10). Focus on small wins, connection, and environment design to shift baseline mood upward.');
+  if(parseFloat(avgS)>=7) insights.push('Stress levels are elevated ('+avgS+'/10 avg). Consider adding recovery rituals: sleep protocol, breath work, or scheduled decompression blocks.');
+  if(parseFloat(avgE)<=4) insights.push('Energy readings are low ('+avgE+'/10 avg). Review sleep quality, nutrition timing, and physical activity — these are the primary energy levers.');
+
+  /* most common states */
+  var freq={};
+  logs.forEach(function(l){freq[l.state]=(freq[l.state]||0)+1;});
+  var sorted=Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];});
+  if(sorted.length>0) insights.push('Most frequent state: '+sorted[0]+' ('+freq[sorted[0]]+' entries). This is your emotional baseline signature.');
+  if(sorted.length>1) insights.push('Second most common: '+sorted[1]+' ('+freq[sorted[1]]+' entries).');
+
+  /* most common tags */
+  var tagFreq={};
+  logs.forEach(function(l){l.tags.forEach(function(t){tagFreq[t]=(tagFreq[t]||0)+1;});});
+  var topTags=Object.keys(tagFreq).sort(function(a,b){return tagFreq[b]-tagFreq[a];}).slice(0,3);
+  if(topTags.length) insights.push('Top emotional context tags: '+topTags.join(', ')+'. These reflect recurring themes in your inner life.');
+
+  if(!insights.length) insights.push('Log more entries to unlock pattern analysis. Minimum 7 entries recommended for meaningful insights.');
+
+  pl.innerHTML=insights.map(function(i){return'<div class="pattern-item">'+i+'</div>';}).join('');
+
+  drawFreq(freq);
+}
+
+function drawFreq(freq){
+  var c=document.getElementById('freq-canvas');
+  c.width=c.offsetWidth||600;
+  var ctx=c.getContext('2d');
+  var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+
+  var entries=Object.entries(freq).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
+  if(!entries.length){
+    ctx.fillStyle='rgba(201,168,76,.3)'; ctx.font='9px "Courier Prime",monospace';
+    ctx.fillText('NO DATA',W/2-25,H/2);
+    return;
+  }
+  var max=entries[0][1];
+  var barW=(W-60)/(entries.length*1.5);
+  var gap=barW*0.5;
+  var xStart=30;
+
+  entries.forEach(function(e,i){
+    var x=xStart+i*(barW+gap);
+    var bh=Math.max(4,(e[1]/max)*(H-40));
+    var state=STATES.find(function(s){return s.name===e[0];});
+    var col=state?state.color:'#C9A84C';
+    ctx.fillStyle=col+'99';
+    ctx.fillRect(x,H-bh-20,barW,bh);
+    ctx.fillStyle='rgba(201,168,76,.5)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(e[1],x+barW/2-4,H-bh-24);
+    ctx.save(); ctx.translate(x+barW/2,H-4); ctx.rotate(-Math.PI/4);
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(e[0].substring(0,8),0,0);
+    ctx.restore();
+  });
+}
+
+/* ─── TAB SWITCH ─── */
+function switchTab(btn,id){
+  document.querySelectorAll('.lt').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='t2') renderHistory();
+  if(id==='t3') renderPatterns();
+}
+
+init();
+</script>
+</body>
+</html>

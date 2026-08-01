@@ -66,6 +66,9 @@
     nexus:        {label:'Sovereign Nexus', section:'INTEL',      prev:'sigma',          next:'cipher'},
     cipher:       {label:'Sovereign Cipher',section:'INTEL',      prev:'nexus',          next:'rune'},
     rune:         {label:'Sovereign Sigil', section:'IDENTITY',   prev:'cipher',         next:'profile'},
+    queue:        {label:'Queue Monitor',   section:'OPS',        prev:'ops',            next:'architect'},
+    architect:    {label:'Architect',       section:'OPS',        prev:'queue',          next:'ops'},
+    ops:          {label:'Operations',      section:'OPS',        prev:'architect',      next:'queue'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

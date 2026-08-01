@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Architect — SYD OMEGA 91717</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<meta name="description" content="Platform architecture blueprint — event-driven sovereignty engine topology">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#09090b;--card:rgba(18,18,22,.95);--gold:#C9A84C;--gold2:rgba(201,168,76,.18);--gold3:rgba(201,168,76,.06);--text:rgba(226,200,109,.85);--dim:rgba(138,134,118,.5);--M:"Courier Prime",monospace;--S:"Space Grotesk",sans-serif;--pad:20px}
+html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height:100vh;overflow-x:hidden}
+.topbar{position:fixed;top:0;left:0;right:0;height:44px;display:flex;align-items:center;gap:12px;padding:0 var(--pad);background:rgba(9,9,11,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.1);z-index:100}
+.topbar-title{font-family:var(--M);font-size:9px;letter-spacing:2.5px;color:var(--gold);flex:1}
+.main{padding:60px var(--pad) var(--pad);max-width:1400px;margin:0 auto}
+.page-header{margin-bottom:24px}
+.page-title{font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:4px}
+.page-sub{font-size:8px;letter-spacing:1.5px;color:var(--dim)}
+.tabs{display:flex;gap:2px;margin-bottom:20px;border-bottom:1px solid rgba(201,168,76,.1)}
+.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.panel{display:none}.panel.active{display:block}
+.arch-canvas-wrap{position:relative;background:var(--card);border:1px solid rgba(201,168,76,.12);border-radius:4px;overflow:hidden;margin-bottom:20px}
+#arch-canvas{display:block;width:100%;cursor:grab}
+#arch-canvas:active{cursor:grabbing}
+.arch-toolbar{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.08);align-items:center;flex-wrap:wrap}
+.arch-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:5px 12px;border:1px solid rgba(201,168,76,.2);color:var(--dim);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.arch-btn:hover,.arch-btn.active{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.04)}
+.arch-legend{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:7px;letter-spacing:1px;color:var(--dim)}
+.leg-dot{width:8px;height:8px;border-radius:50%}
+.node-detail{background:var(--card);border:1px solid rgba(201,168,76,.18);border-radius:4px;padding:16px;margin-bottom:16px;display:none}
+.node-detail.visible{display:block}
+.nd-title{font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.nd-desc{font-size:8px;letter-spacing:.5px;color:rgba(200,190,160,.7);line-height:1.7;margin-bottom:10px}
+.nd-tags{display:flex;gap:6px;flex-wrap:wrap}
+.nd-tag{font-size:7px;letter-spacing:1.5px;padding:3px 8px;border:1px solid rgba(201,168,76,.15);color:var(--dim);border-radius:2px}
+.pattern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px}
+.pattern-card{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:16px;cursor:pointer;transition:.12s}
+.pattern-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.03)}
+.pc-icon{font-size:18px;margin-bottom:8px}
+.pc-name{font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:4px}
+.pc-desc{font-size:7.5px;letter-spacing:.5px;color:var(--dim);line-height:1.6;margin-bottom:10px}
+.pc-tags{display:flex;gap:4px;flex-wrap:wrap}
+.pc-tag{font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.1);color:rgba(138,134,118,.4);border-radius:1px}
+.flow-section{margin-bottom:20px}
+.flow-title{font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:12px}
+.flow-diagram{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:20px;overflow-x:auto}
+.flow-row{display:flex;align-items:center;gap:0;margin-bottom:12px;min-width:600px}
+.flow-node{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:8px 12px;font-size:7.5px;letter-spacing:1.5px;color:var(--gold);white-space:nowrap;text-align:center;min-width:100px}
+.flow-arrow{font-size:10px;color:rgba(201,168,76,.3);padding:0 6px;flex-shrink:0}
+.flow-label{font-size:7px;letter-spacing:1px;color:var(--dim);text-align:center;margin-top:3px}
+.flow-col{display:flex;flex-direction:column;align-items:center;gap:3px}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.metric-card{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:12px}
+.mc-label{font-size:7px;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px}
+.mc-value{font-size:16px;letter-spacing:1px;color:var(--gold);font-weight:300}
+.mc-unit{font-size:7px;color:var(--dim);margin-left:3px}
+.decisions-table{width:100%;border-collapse:collapse;font-size:8px}
+.decisions-table th{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(201,168,76,.15);letter-spacing:1.5px;font-size:7px;color:var(--dim)}
+.decisions-table td{padding:8px 10px;border-bottom:1px solid rgba(201,168,76,.05);letter-spacing:.5px;color:rgba(200,190,160,.7);vertical-align:top}
+.decisions-table td:first-child{color:var(--gold);white-space:nowrap}
+.badge{display:inline-block;font-size:6.5px;letter-spacing:1px;padding:2px 6px;border-radius:2px;margin:1px}
+.badge-green{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:#4ade80}
+.badge-blue{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa}
+.badge-gold{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold)}
+.badge-red{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#f87171}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-title">&#937; ARCHITECT — PLATFORM BLUEPRINT</div>
+</div>
+
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">PLATFORM ARCHITECTURE</div>
+    <div class="page-sub">Event-Driven Sovereignty Engine &mdash; System Topology &amp; Design Decisions</div>
+  </div>
+
+  <div class="tabs" id="arch-tabs">
+    <button class="tab active" data-tab="topology">TOPOLOGY</button>
+    <button class="tab" data-tab="patterns">PATTERNS</button>
+    <button class="tab" data-tab="flows">EVENT FLOWS</button>
+    <button class="tab" data-tab="decisions">ADR</button>
+  </div>
+
+  <!-- TOPOLOGY TAB -->
+  <div class="panel active" id="tab-topology">
+    <div class="arch-canvas-wrap">
+      <div class="arch-toolbar">
+        <button class="arch-btn active" id="btn-all">ALL LAYERS</button>
+        <button class="arch-btn" id="btn-client">CLIENT</button>
+        <button class="arch-btn" id="btn-bus">EVENT BUS</button>
+        <button class="arch-btn" id="btn-data">DATA</button>
+        <button class="arch-btn" id="btn-workers">WORKERS</button>
+        <button class="arch-btn" id="btn-reset">RESET VIEW</button>
+        <div class="arch-legend">
+          <div class="leg-item"><div class="leg-dot" style="background:#C9A84C"></div>UI / Client</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#60a5fa"></div>Event Bus</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#a78bfa"></div>Workers</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#34d399"></div>Data / Store</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#fb923c"></div>External</div>
+        </div>
+      </div>
+      <canvas id="arch-canvas" height="520"></canvas>
+    </div>
+    <div class="node-detail" id="node-detail">
+      <div class="nd-title" id="nd-title">NODE</div>
+      <div class="nd-desc" id="nd-desc"></div>
+      <div class="nd-tags" id="nd-tags"></div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric-card"><div class="mc-label">SERVICES</div><div class="mc-value">14<span class="mc-unit">nodes</span></div></div>
+      <div class="metric-card"><div class="mc-label">EVENT TYPES</div><div class="mc-value">15<span class="mc-unit">domain</span></div></div>
+      <div class="metric-card"><div class="mc-label">WORKERS</div><div class="mc-value">6<span class="mc-unit">consumers</span></div></div>
+      <div class="metric-card"><div class="mc-label">STORES</div><div class="mc-value">4<span class="mc-unit">idb+ls+rlt+sb</span></div></div>
+      <div class="metric-card"><div class="mc-label">PATTERN</div><div class="mc-value" style="font-size:11px">EDA</div></div>
+      <div class="metric-card"><div class="mc-label">DELIVERY</div><div class="mc-value" style="font-size:11px">AT-LEAST</div></div>
+    </div>
+  </div>
+
+  <!-- PATTERNS TAB -->
+  <div class="panel" id="tab-patterns">
+    <div class="pattern-grid" id="pattern-grid"></div>
+  </div>
+
+  <!-- FLOWS TAB -->
+  <div class="panel" id="tab-flows">
+    <div class="flow-section">
+      <div class="flow-title">GATE UNLOCK SAGA</div>
+      <div class="flow-diagram">
+        <div class="flow-row">
+          <div class="flow-col"><div class="flow-node">User Action</div><div class="flow-label">axis delta</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">sovereign.axis.updated</div><div class="flow-label">emitted</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Achievement Worker</div><div class="flow-label">consumes</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">AUTH Formula</div><div class="flow-label">recalculate</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Gate Threshold?</div><div class="flow-label">check</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">sovereign.gate.unlocked</div><div class="flow-label">emit if crossed</div></div>
+        </div>
+        <div class="flow-row">
+          <div class="flow-col" style="margin-left:360px"><div class="flow-node">Notification Worker</div><div class="flow-label">push alert</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Analytics Worker</div><div class="flow-label">record</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Audit Worker</div><div class="flow-label">append log</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Supabase Realtime</div><div class="flow-label">broadcast</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="flow-section">
+      <div class="flow-title">MESSAGE DELIVERY WITH RETRY + DLQ</div>
+      <div class="flow-diagram">
+        <div class="flow-row">
+          <div class="flow-col"><div class="flow-node">OmegaBus.emit()</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">IndexedDB persist</div><div class="flow-label">event sourcing</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Local Dispatch</div><div class="flow-label">_subs[]</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">BroadcastChannel</div><div class="flow-label">cross-tab</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Supabase Realtime</div><div class="flow-label">cross-device</div></div>
+        </div>
+        <div class="flow-row">
+          <div class="flow-col" style="margin-left:240px"><div class="flow-node">Worker.handler(evt)</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node">Success?</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(74,222,128,.3);color:#4ade80">processed++</div></div>
+        </div>
+        <div class="flow-row">
+          <div class="flow-col" style="margin-left:360px"><div class="flow-node" style="border-color:rgba(248,113,113,.3);color:#f87171">Retry 1 (500ms)</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(248,113,113,.3);color:#f87171">Retry 2 (1s)</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(248,113,113,.3);color:#f87171">Retry 3 (2s)</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(251,146,60,.4);color:#fb923c">DLQ</div><div class="flow-label">dead-letter</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="flow-section">
+      <div class="flow-title">CIRCUIT BREAKER STATE MACHINE</div>
+      <div class="flow-diagram">
+        <div class="flow-row">
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(74,222,128,.3);color:#4ade80">CLOSED</div><div class="flow-label">normal ops</div></div>
+          <div class="flow-arrow">→ failures≥5 →</div>
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(248,113,113,.3);color:#f87171">OPEN</div><div class="flow-label">reject all calls</div></div>
+          <div class="flow-arrow">→ timeout 30s →</div>
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(251,146,60,.3);color:#fb923c">HALF-OPEN</div><div class="flow-label">probe allowed</div></div>
+          <div class="flow-arrow">→ success →</div>
+          <div class="flow-col"><div class="flow-node" style="border-color:rgba(74,222,128,.3);color:#4ade80">CLOSED</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADR TAB -->
+  <div class="panel" id="tab-decisions">
+    <table class="decisions-table" id="adr-table">
+      <thead>
+        <tr><th>ADR</th><th>DECISION</th><th>STATUS</th><th>RATIONALE</th><th>TRADE-OFFS</th></tr>
+      </thead>
+      <tbody id="adr-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+/* ── Tab switching ── */
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+    t.classList.add('active');
+    var panel=document.getElementById('tab-'+t.dataset.tab);
+    if(panel)panel.classList.add('active');
+  });
+});
+
+/* ── Architecture Patterns Data ── */
+var PATTERNS=[
+  {icon:'⚡',name:'EVENT-DRIVEN ARCHITECTURE',desc:'All state changes are communicated via domain events published to OmegaBus. Producers emit; consumers subscribe. Loose coupling — producers never know who consumes. Enables fan-out, audit, and replay.',tags:['EDA','async','pub-sub','domain events','fan-out']},
+  {icon:'📨',name:'COMMAND QUERY SEPARATION',desc:'Reads (queries) go directly to Supabase and localStorage. Writes (commands) emit domain events that propagate state changes. Side-effect-free reads, clearly separated mutation paths.',tags:['CQRS','read model','write model','projections']},
+  {icon:'📜',name:'EVENT SOURCING',desc:'Every domain event is persisted to IndexedDB event store before dispatch. The event log is the source of truth — any state can be rebuilt by replaying events. OmegaBus.replay() provides replay capability.',tags:['event store','IndexedDB','replay','audit','immutable log']},
+  {icon:'🔄',name:'SAGA PATTERN',desc:'Multi-step processes (gate unlock saga, member onboarding saga) are coordinated via a sequence of domain events. Each step emits the next event. Compensating events handle failures without distributed transactions.',tags:['saga','choreography','distributed workflow','compensating events']},
+  {icon:'📤',name:'OUTBOX PATTERN',desc:'Events are written to IndexedDB (the outbox) atomically with the originating state change. The event bus reads from the outbox and delivers at-least-once. Prevents message loss on network failures.',tags:['outbox','at-least-once','reliability','transactional messaging']},
+  {icon:'🔌',name:'CIRCUIT BREAKER',desc:'Each worker wraps its handler in a CircuitBreaker. After 5 consecutive failures the circuit opens and calls are rejected for 30 seconds. After the timeout, a half-open probe is allowed. Prevents cascade failures.',tags:['circuit breaker','resilience','fault isolation','half-open probe']},
+  {icon:'🔁',name:'RETRY WITH BACKOFF',desc:'Failed message processing retries up to 3 times with exponential backoff (500ms → 1s → 2s). After exhausting retries the message is moved to the Dead-Letter Queue for inspection.',tags:['retry','exponential backoff','DLQ','resilience','idempotency']},
+  {icon:'🏗️',name:'CLEAN ARCHITECTURE',desc:'Domain logic (authority formula, gate thresholds, element mappings) lives in core modules. Infrastructure concerns (Supabase, IndexedDB, BroadcastChannel) are in adapters. The core never depends on infrastructure.',tags:['clean arch','hexagonal','ports & adapters','domain core','infrastructure']},
+  {icon:'📡',name:'DOMAIN-DRIVEN DESIGN',desc:'Bounded contexts: Identity (member, profile, passport), Progression (axes, gates, levels), Cosmos (elements, realm, oracle), Operations (workers, queues, health). Each context owns its domain events and aggregate root.',tags:['DDD','bounded context','aggregate','ubiquitous language','domain model']},
+  {icon:'🌐',name:'CROSS-TAB PUB/SUB',desc:'BroadcastChannel API enables same-origin cross-tab event delivery. Events emitted in one tab are received by all open tabs on the same domain. Enables live leaderboard and realtime notification sync across browser windows.',tags:['BroadcastChannel','cross-tab','same-origin','real-time sync']},
+  {icon:'☁️',name:'CLOUD-NATIVE / TWELVE-FACTOR',desc:'Stateless static client deployed via Vercel CDN. Config via environment (Supabase project ref, anon key). Backing services (Supabase DB, Auth, Realtime, Storage) treated as attached resources. No build step, direct asset serving.',tags:['twelve-factor','stateless','CDN','Vercel','serverless']},
+  {icon:'🔐',name:'ZERO TRUST / SECURITY',desc:'RLS policies enforce row-level access on every table. is_platform_owner() reads from platform_owners table (not profiles, avoiding recursion). Service role key never exposed in client JS. Anon key intentionally public (Supabase design).',tags:['zero trust','RLS','Supabase','row-level security','auth guard']},
+];
+
+var grid=document.getElementById('pattern-grid');
+PATTERNS.forEach(function(p){
+  var c=document.createElement('div');
+  c.className='pattern-card';
+  c.innerHTML='<div class="pc-icon">'+p.icon+'</div>'
+    +'<div class="pc-name">'+p.name+'</div>'
+    +'<div class="pc-desc">'+p.desc+'</div>'
+    +'<div class="pc-tags">'+p.tags.map(function(t){return '<span class="pc-tag">'+t+'</span>';}).join('')+'</div>';
+  grid.appendChild(c);
+});
+
+/* ── ADR Data ── */
+var ADRS=[
+  ['ADR-001','Static HTML + Supabase (no backend)','<span class="badge badge-green">ACCEPTED</span>','Zero ops overhead. Vercel CDN for global delivery. Supabase provides DB, Auth, Realtime, Storage — full BaaS.','No server-side logic. Complex operations require Supabase RPCs or Edge Functions.'],
+  ['ADR-002','Event Bus via BroadcastChannel + IndexedDB','<span class="badge badge-green">ACCEPTED</span>','Client-side EDA without a message broker. BroadcastChannel for cross-tab; IndexedDB for persistence and replay.','Events don't cross devices unless Supabase Realtime is wired. Events lost if browser storage cleared.'],
+  ['ADR-003','At-Least-Once delivery with idempotency keys','<span class="badge badge-green">ACCEPTED</span>','Simpler than exactly-once. Handlers must be idempotent (incrementing counters is naturally idempotent for analytics).','Duplicate events possible on retry. Handlers must handle duplicates gracefully.'],
+  ['ADR-004','esm.sh for all third-party libraries','<span class="badge badge-green">ACCEPTED</span>','No npm install, no bundler. CI audit.py scans <script src> basenames for existence — esm.sh import() bypasses this safely.','Network dependency at runtime. CDN unavailability breaks features (mitigated by dynamic import with catch).'],
+  ['ADR-005','Authority formula: sqrt(A³+B³+C³)×φ/e','<span class="badge badge-green">ACCEPTED</span>','Mathematical sovereignty score combining three axes. φ/e ratio (~0.5955) creates natural logarithmic progression to APEX=27.8367.','Formula is public (client-side). Axis values must be server-validated via RLS to prevent cheating.'],
+  ['ADR-006','CircuitBreaker per worker (threshold=5, timeout=30s)','<span class="badge badge-green">ACCEPTED</span>','Prevents cascading failures if a worker handler throws repeatedly. HALF_OPEN probe detects recovery automatically.','30s recovery window may delay event processing during transient failures.'],
+  ['ADR-007','Saga via choreography (not orchestration)','<span class="badge badge-green">ACCEPTED</span>','Each service emits events and reacts to events — no central orchestrator. Lower coupling, no single point of failure.','Harder to trace multi-step flows. Compensating events must be designed upfront.'],
+  ['ADR-008','localStorage for analytics aggregation','<span class="badge badge-green">ACCEPTED</span>','Fast, synchronous, no network. Appropriate for client-side KPI aggregation that doesn\'t need cross-device consistency.','Data lost on storage clear or different browser. Not suitable for authoritative server-side analytics.'],
+  ['ADR-009','Supabase anon key in client JS','<span class="badge badge-green">ACCEPTED</span>','Supabase design intent — anon key is intentionally public and safe with RLS. Service role key NEVER in client code.','Misunderstood by developers unfamiliar with Supabase. Clearly documented in CLAUDE.md.'],
+  ['ADR-010','No build step (Vercel outputDirectory: ".")','<span class="badge badge-green">ACCEPTED</span>','Fastest possible iteration. No webpack/vite/rollup. Pure HTML/JS/CSS — any editor can contribute.','No tree-shaking or minification. Larger payloads. Mitigated by CDN caching and small file sizes.'],
+];
+
+var tbody=document.getElementById('adr-body');
+ADRS.forEach(function(row){
+  var tr=document.createElement('tr');
+  tr.innerHTML=row.map(function(c,i){return '<td>'+c+'</td>';}).join('');
+  tbody.appendChild(tr);
+});
+
+/* ── Canvas Topology ── */
+var canvas=document.getElementById('arch-canvas');
+var ctx=canvas.getContext('2d');
+var W,H,scale=1,tx=0,ty=0,dragging=false,lastX,lastY;
+var activeFilter='all';
+
+var NODES=[
+  /* Client Layer */
+  {id:'dashboard',x:100,y:80,label:'DASHBOARD',sub:'Command Bridge',color:'#C9A84C',layer:'client',r:26,
+    desc:'Central command hub. Aggregates KPIs from all bounded contexts. Real-time auth score, gate status, element, axis chart. Entry point for all navigation flows.',
+    tags:['SPA','entry point','aggregation','real-time']},
+  {id:'realm',x:260,y:80,label:'REALM',sub:'3D Element Sphere',color:'#C9A84C',layer:'client',r:22,
+    desc:'Three.js r160 3-D element sphere. Emits sovereign.realm.visited on load. Recommendation worker reads element from this event.',
+    tags:['Three.js','WebGL','element','3D','realm.visited']},
+  {id:'cipher',x:380,y:80,label:'CIPHER',sub:'Crypto Engine',color:'#C9A84C',layer:'client',r:22,
+    desc:'Element-scale substitution cipher. Emits sovereign.cipher.used. Musical semitone scales as cipher alphabet. Canvas waveform visualiser.',
+    tags:['cryptography','element','cipher.used','canvas']},
+  {id:'sigma',x:500,y:80,label:'SIGMA',sub:'Analytics View',color:'#C9A84C',layer:'client',r:22,
+    desc:'Live platform analytics — authority distribution, percentile bars, gate distribution, element matrix, axis scatter plot, Supabase latency signal.',
+    tags:['analytics','D3','canvas','Supabase','signal']},
+  {id:'nexus',x:620,y:80,label:'NEXUS',sub:'Network Graph',color:'#C9A84C',layer:'client',r:22,
+    desc:'Force-directed member network. Supabase realtime subscription for live updates. Node size = auth score. Element-coloured nodes.',
+    tags:['network graph','canvas physics','Supabase Realtime','social']},
+  {id:'queue',x:740,y:80,label:'QUEUE',sub:'Queue Monitor',color:'#C9A84C',layer:'client',r:22,
+    desc:'Enterprise queue monitoring dashboard. 6 tabs: Workers, Queues, Event Log, Catalog, DLQ, Dispatches. Live throughput sparkline.',
+    tags:['ops','queue monitor','DLQ','circuit breaker','workers']},
+
+  /* Event Bus Layer */
+  {id:'omega-bus',x:420,y:230,label:'OMEGA BUS',sub:'Event Bus',color:'#60a5fa',layer:'bus',r:32,
+    desc:'Platform-wide event bus. BroadcastChannel (cross-tab) + IndexedDB (event sourcing) + Supabase Realtime (cross-device). 15 domain event types. Metrics per event. At-least-once delivery.',
+    tags:['EDA','BroadcastChannel','IndexedDB','Supabase Realtime','pub-sub','event sourcing']},
+
+  /* Worker Layer */
+  {id:'analytics-w',x:100,y:380,label:'ANALYTICS',sub:'Worker',color:'#a78bfa',layer:'workers',r:22,
+    desc:'Aggregates platform KPIs in localStorage. Tracks event frequency, session event count. Consumes: gate.unlocked, axis.updated, task.completed, event.registered, music.played, cipher.used, realm.visited.',
+    tags:['worker','localStorage','analytics','aggregation']},
+  {id:'notif-w',x:240,y:380,label:'NOTIFICATION',sub:'Worker',color:'#a78bfa',layer:'workers',r:22,
+    desc:'Pushes gate.unlocked celebrations via OmegaCelebrate. Appends entries to #omega-notif-feed DOM element. Shows last 20 events.',
+    tags:['worker','notifications','DOM','OmegaCelebrate']},
+  {id:'achieve-w',x:380,y:380,label:'ACHIEVEMENT',sub:'Worker',color:'#a78bfa',layer:'workers',r:22,
+    desc:'Watches axis.updated and task.completed. Recalculates AUTH formula. Compares to GATE_THRESH[12]. Emits sovereign.gate.unlocked when a new gate is crossed.',
+    tags:['worker','gate unlock','AUTH formula','achievement','gate thresholds']},
+  {id:'rec-w',x:520,y:380,label:'RECOMMEND',sub:'Worker',color:'#a78bfa',layer:'workers',r:22,
+    desc:'Element-based page recommendations. Maps element → page list (ELEM_PAGES). Injects links into [data-recommendations] DOM slots.',
+    tags:['worker','recommendations','element','DOM injection']},
+  {id:'audit-w',x:660,y:380,label:'AUDIT',sub:'Worker',color:'#a78bfa',layer:'workers',r:22,
+    desc:'Append-only sovereign event audit log in localStorage. Max 200 entries. Logs: gate.unlocked, member.approved, member.ascended, task.completed, event.registered.',
+    tags:['worker','audit log','append-only','localStorage','compliance']},
+  {id:'gate-mon',x:800,y:380,label:'GATE MONITOR',sub:'Worker',color:'#a78bfa',layer:'workers',r:22,
+    desc:'Health probe handler. Updates aggregate health check timestamp. Tracks worker count. Triggered by platform.health.probe events every 60s.',
+    tags:['worker','health probe','monitoring','gate monitor']},
+
+  /* Data Layer */
+  {id:'indexeddb',x:180,y:510,label:'INDEXEDDB',sub:'Event Store',color:'#34d399',layer:'data',r:22,
+    desc:'Local event store for event sourcing. All emitted events persisted (id, name, payload, ts, v). Indexed by name and ts. OmegaBus.replay() reads from here.',
+    tags:['IndexedDB','event store','event sourcing','replay','persistence']},
+  {id:'localstorage',x:340,y:510,label:'LOCALSTORAGE',sub:'KV Store',color:'#34d399',layer:'data',r:22,
+    desc:'Key-value store for analytics aggregates and audit log. Keys: omega_analytics_agg, omega_analytics_audit_log, omega_analytics_recommendations, omega_analytics_last_gate.',
+    tags:['localStorage','KV store','analytics','audit','recommendations']},
+  {id:'supabase',x:540,y:510,label:'SUPABASE',sub:'Cloud Backend',color:'#34d399',layer:'data',r:28,
+    desc:'PostgreSQL + Auth + Realtime + Storage + Edge Functions. RLS on all tables. is_platform_owner() via platform_owners table. Auth: JWT. Realtime: WebSocket pub/sub.',
+    tags:['Supabase','PostgreSQL','RLS','Auth','Realtime','Storage','cloud']},
+  {id:'broadcast',x:720,y:510,label:'BROADCAST CH.',sub:'Cross-Tab Bus',color:'#34d399',layer:'data',r:22,
+    desc:'BroadcastChannel(\'omega-event-bus\') — same-origin cross-tab pub/sub. Events emitted in any tab are received by all open tabs. Used for live leaderboard sync.',
+    tags:['BroadcastChannel','cross-tab','same-origin','web API']},
+];
+
+var EDGES=[
+  /* Clients → Bus */
+  {from:'dashboard',to:'omega-bus'},{from:'realm',to:'omega-bus'},{from:'cipher',to:'omega-bus'},
+  {from:'sigma',to:'omega-bus'},{from:'nexus',to:'omega-bus'},{from:'queue',to:'omega-bus'},
+  /* Bus → Workers */
+  {from:'omega-bus',to:'analytics-w'},{from:'omega-bus',to:'notif-w'},{from:'omega-bus',to:'achieve-w'},
+  {from:'omega-bus',to:'rec-w'},{from:'omega-bus',to:'audit-w'},{from:'omega-bus',to:'gate-mon'},
+  /* Workers → Bus (achievement worker emits gate.unlocked) */
+  {from:'achieve-w',to:'omega-bus',dashed:true,color:'rgba(201,168,76,.3)'},
+  /* Bus ↔ Data */
+  {from:'omega-bus',to:'indexeddb'},{from:'omega-bus',to:'broadcast'},{from:'omega-bus',to:'supabase'},
+  /* Workers → Data */
+  {from:'analytics-w',to:'localstorage'},{from:'audit-w',to:'localstorage'},{from:'rec-w',to:'localstorage'},
+  /* Clients → Supabase */
+  {from:'sigma',to:'supabase',dashed:true,color:'rgba(96,165,250,.2)'},{from:'nexus',to:'supabase',dashed:true,color:'rgba(96,165,250,.2)'},
+];
+
+function nodeById(id){return NODES.find(function(n){return n.id===id;});}
+function getPos(n){return {x:n.x*scale+tx,y:n.y*scale+ty};}
+
+function matchesFilter(n){
+  if(activeFilter==='all')return true;
+  return n.layer===activeFilter;
+}
+
+function draw(){
+  W=canvas.clientWidth;H=canvas.height;
+  canvas.width=W;
+  ctx.clearRect(0,0,W,H);
+
+  /* Grid */
+  ctx.strokeStyle='rgba(201,168,76,.04)';ctx.lineWidth=1;
+  for(var gx=0;gx<W;gx+=40){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+  for(var gy=0;gy<H;gy+=40){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+
+  /* Edges */
+  EDGES.forEach(function(e){
+    var a=nodeById(e.from),b=nodeById(e.to);
+    if(!a||!b)return;
+    if(!matchesFilter(a)&&!matchesFilter(b))return;
+    var pa=getPos(a),pb=getPos(b);
+    ctx.beginPath();
+    ctx.setLineDash(e.dashed?[4,4]:[]);
+    ctx.strokeStyle=e.color||'rgba(201,168,76,.15)';
+    ctx.lineWidth=e.dashed?1:1.5;
+    /* Curved */
+    var mx=(pa.x+pb.x)/2,my=(pa.y+pb.y)/2-20*scale;
+    ctx.moveTo(pa.x,pa.y);
+    ctx.quadraticCurveTo(mx,my,pb.x,pb.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    /* Arrow */
+    var dx=pb.x-mx,dy=pb.y-my,ang=Math.atan2(dy,dx);
+    var ar=6*scale;
+    ctx.beginPath();
+    ctx.fillStyle=e.color||'rgba(201,168,76,.25)';
+    ctx.moveTo(pb.x,pb.y);
+    ctx.lineTo(pb.x-ar*Math.cos(ang-0.4),pb.y-ar*Math.sin(ang-0.4));
+    ctx.lineTo(pb.x-ar*Math.cos(ang+0.4),pb.y-ar*Math.sin(ang+0.4));
+    ctx.closePath();ctx.fill();
+  });
+
+  /* Nodes */
+  NODES.forEach(function(n){
+    if(!matchesFilter(n)){ctx.globalAlpha=0.15;}else{ctx.globalAlpha=1;}
+    var p=getPos(n);
+    var r=n.r*scale;
+    /* Glow */
+    var g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r*2);
+    g.addColorStop(0,n.color+'22');g.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(p.x,p.y,r*1.8,0,Math.PI*2);
+    ctx.fillStyle=g;ctx.fill();
+    /* Circle */
+    ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);
+    ctx.strokeStyle=n.color+'88';ctx.lineWidth=1.5;
+    ctx.fillStyle='rgba(9,9,11,.9)';ctx.fill();ctx.stroke();
+    /* Inner ring */
+    ctx.beginPath();ctx.arc(p.x,p.y,r*0.75,0,Math.PI*2);
+    ctx.strokeStyle=n.color+'44';ctx.lineWidth=.5;ctx.stroke();
+    /* Label */
+    ctx.fillStyle=n.color;
+    ctx.font='bold '+(7*scale)+'px "Courier Prime",monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(n.label,p.x,p.y-(3*scale));
+    ctx.fillStyle=n.color+'88';
+    ctx.font=(5.5*scale)+'px "Courier Prime",monospace';
+    ctx.fillText(n.sub,p.x,p.y+(6*scale));
+    ctx.globalAlpha=1;
+  });
+}
+
+/* Hit test */
+function hitNode(mx,my){
+  return NODES.find(function(n){
+    var p=getPos(n);
+    var dx=mx-p.x,dy=my-p.y;
+    return Math.sqrt(dx*dx+dy*dy)<n.r*scale+4;
+  })||null;
+}
+
+/* Click */
+canvas.addEventListener('click',function(e){
+  if(dragging)return;
+  var rect=canvas.getBoundingClientRect();
+  var n=hitNode(e.clientX-rect.left,e.clientY-rect.top);
+  var det=document.getElementById('node-detail');
+  if(n){
+    document.getElementById('nd-title').textContent=n.label+' — '+n.sub;
+    document.getElementById('nd-desc').textContent=n.desc;
+    document.getElementById('nd-tags').innerHTML=n.tags.map(function(t){return '<span class="nd-tag">'+t+'</span>';}).join('');
+    det.classList.add('visible');
+    det.scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    det.classList.remove('visible');
+  }
+});
+
+/* Drag / pan */
+canvas.addEventListener('mousedown',function(e){dragging=false;lastX=e.clientX;lastY=e.clientY;
+  canvas.addEventListener('mousemove',onDrag);});
+function onDrag(e){
+  var dx=e.clientX-lastX,dy=e.clientY-lastY;
+  if(Math.abs(dx)+Math.abs(dy)>3)dragging=true;
+  tx+=dx;ty+=dy;lastX=e.clientX;lastY=e.clientY;draw();
+}
+document.addEventListener('mouseup',function(){canvas.removeEventListener('mousemove',onDrag);});
+
+/* Filter buttons */
+['all','client','bus','data','workers'].forEach(function(f){
+  var btn=document.getElementById('btn-'+f);
+  if(!btn)return;
+  btn.addEventListener('click',function(){
+    activeFilter=f;
+    document.querySelectorAll('.arch-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    draw();
+  });
+});
+document.getElementById('btn-reset').addEventListener('click',function(){scale=1;tx=0;ty=0;draw();});
+
+/* Zoom */
+canvas.addEventListener('wheel',function(e){
+  e.preventDefault();
+  scale=Math.max(0.4,Math.min(2.5,scale*(e.deltaY<0?1.1:0.91)));
+  draw();
+},{passive:false});
+
+/* Touch pinch */
+var _touches={};
+canvas.addEventListener('touchstart',function(e){
+  Array.from(e.touches).forEach(function(t){_touches[t.identifier]={x:t.clientX,y:t.clientY};});
+},{passive:true});
+canvas.addEventListener('touchmove',function(e){
+  e.preventDefault();
+  if(e.touches.length===2){
+    var t0=e.touches[0],t1=e.touches[1];
+    var prev0=_touches[t0.identifier],prev1=_touches[t1.identifier];
+    if(prev0&&prev1){
+      var prevDist=Math.hypot(prev0.x-prev1.x,prev0.y-prev1.y);
+      var curDist=Math.hypot(t0.clientX-t1.clientX,t0.clientY-t1.clientY);
+      scale=Math.max(0.4,Math.min(2.5,scale*(curDist/prevDist)));
+      draw();
+    }
+    Array.from(e.touches).forEach(function(t){_touches[t.identifier]={x:t.clientX,y:t.clientY};});
+  }
+},{passive:false});
+
+window.addEventListener('resize',draw);
+draw();
+</script>
+<script src="/bg.js" defer></script>
+</body>
+</html>

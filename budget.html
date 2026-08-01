@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Budget · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* MONTH NAV */
+.month-nav{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.mn-btn{font-family:var(--M);font-size:12px;color:var(--dim);background:none;border:1px solid rgba(201,168,76,.1);padding:4px 10px;cursor:pointer;transition:.1s}
+.mn-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
+.mn-label{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold);min-width:120px;text-align:center}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:20px}
+.kpi{border:1px solid rgba(201,168,76,.1);padding:14px 12px;text-align:center;position:relative;overflow:hidden}
+.kpi-v{font-family:var(--M);font-size:20px;color:var(--gold);letter-spacing:1px}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.kpi-sub{font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5);margin-top:3px}
+
+/* CATEGORY BARS */
+.cat-section{margin-bottom:20px}
+.sect-title{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.08)}
+.cat-bar-row{display:grid;grid-template-columns:90px 1fr 60px 60px;gap:8px;align-items:center;margin-bottom:6px}
+.cat-label{font-family:var(--M);font-size:8px;letter-spacing:1px}
+.cat-track{height:8px;background:rgba(201,168,76,.1);position:relative}
+.cat-fill{height:100%;transition:.4s;position:absolute;left:0;top:0}
+.cat-fill-bg{height:100%;background:rgba(201,168,76,.06);position:absolute;left:0;top:0;width:100%}
+.cat-actual{font-family:var(--M);font-size:8px;color:var(--dim);text-align:right}
+.cat-budget{font-family:var(--M);font-size:8px;color:rgba(138,134,118,.35);text-align:right}
+.cat-over{color:#c0392b!important}
+
+/* FORM */
+.b-form{border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:16px;background:rgba(201,168,76,.02)}
+.b-form-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:12px}
+.b-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.b-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-bottom:4px}
+.b-in{width:100%;font-family:var(--M);font-size:10px;padding:7px 10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;letter-spacing:.5px}
+.b-in:focus{border-color:rgba(201,168,76,.35)}
+.b-in::placeholder{color:rgba(138,134,118,.25)}
+.b-select{width:100%;font-family:var(--M);font-size:10px;padding:7px 10px;background:#0D0D0B;border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none}
+.b-full{grid-column:1/-1}
+.b-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 18px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;transition:.1s;margin-right:6px}
+.b-btn:hover{background:rgba(201,168,76,.08)}
+
+/* TRANSACTION LIST */
+.tx-list{margin-top:12px}
+.tx-row{display:grid;grid-template-columns:72px 1fr 90px 50px;gap:6px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(201,168,76,.06)}
+.tx-date{font-family:var(--M);font-size:8px;color:var(--dim)}
+.tx-desc{font-family:var(--M);font-size:10px;color:rgba(138,134,118,.75)}
+.tx-cat{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.12)}
+.tx-amt{font-family:var(--M);font-size:10px;text-align:right}
+.tx-del{font-family:var(--M);font-size:9px;color:rgba(138,134,118,.3);background:none;border:none;cursor:pointer}
+.tx-del:hover{color:#c0392b}
+
+/* BUDGET TARGETS */
+.bt-row{display:grid;grid-template-columns:90px 1fr 80px;gap:8px;align-items:center;margin-bottom:6px}
+.bt-label{font-family:var(--M);font-size:8px;letter-spacing:1px}
+.bt-in{font-family:var(--M);font-size:10px;padding:5px 8px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;text-align:right;width:100%}
+.bt-in:focus{border-color:rgba(201,168,76,.35)}
+.bt-currency{font-family:var(--M);font-size:8px;color:var(--dim)}
+
+/* TRENDS */
+.trends-month-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.trend-yr-btn{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer}
+.trend-yr-btn.on{color:var(--gold);border-color:rgba(201,168,76,.3)}
+</style>
+</head>
+<body>
+
+<div class="main">
+
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN BUDGET</span>
+    <span class="tb-meta" id="b-tb-meta">LOADING…</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" id="t-overview">OVERVIEW</button>
+    <button class="lt" id="t-expenses">EXPENSES</button>
+    <button class="lt" id="t-income">INCOME</button>
+    <button class="lt" id="t-targets">TARGETS</button>
+    <button class="lt" id="t-trends">TRENDS</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="tab-pane active" id="tab-overview">
+    <div class="month-nav">
+      <button class="mn-btn" id="b-prev-mo">◂</button>
+      <span class="mn-label" id="b-month-lbl"></span>
+      <button class="mn-btn" id="b-next-mo">▸</button>
+    </div>
+    <div class="kpi-row" id="b-kpis"></div>
+    <div class="cat-section">
+      <div class="sect-title">SPENDING BY CATEGORY  ·  ACTUAL vs BUDGET</div>
+      <div id="b-cat-bars"></div>
+    </div>
+  </div>
+
+  <!-- EXPENSES -->
+  <div class="tab-pane" id="tab-expenses">
+    <div class="month-nav">
+      <button class="mn-btn" id="b-prev-mo2">◂</button>
+      <span class="mn-label" id="b-month-lbl2"></span>
+      <button class="mn-btn" id="b-next-mo2">▸</button>
+    </div>
+    <div class="b-form">
+      <div class="b-form-title">ADD EXPENSE</div>
+      <div class="b-form-grid">
+        <div>
+          <div class="b-label">DATE</div>
+          <input type="date" class="b-in" id="ex-date"/>
+        </div>
+        <div>
+          <div class="b-label">AMOUNT</div>
+          <input type="number" class="b-in" id="ex-amount" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+        <div>
+          <div class="b-label">CATEGORY</div>
+          <select class="b-select" id="ex-cat"></select>
+        </div>
+        <div>
+          <div class="b-label">DESCRIPTION</div>
+          <input class="b-in" id="ex-desc" placeholder="e.g. Rent, Groceries…" maxlength="60"/>
+        </div>
+      </div>
+      <button class="b-btn" id="ex-save">ADD EXPENSE</button>
+    </div>
+    <div class="tx-list" id="b-expense-list"></div>
+  </div>
+
+  <!-- INCOME -->
+  <div class="tab-pane" id="tab-income">
+    <div class="month-nav">
+      <button class="mn-btn" id="b-prev-mo3">◂</button>
+      <span class="mn-label" id="b-month-lbl3"></span>
+      <button class="mn-btn" id="b-next-mo3">▸</button>
+    </div>
+    <div class="b-form">
+      <div class="b-form-title">ADD INCOME</div>
+      <div class="b-form-grid">
+        <div>
+          <div class="b-label">DATE</div>
+          <input type="date" class="b-in" id="inc-date"/>
+        </div>
+        <div>
+          <div class="b-label">AMOUNT</div>
+          <input type="number" class="b-in" id="inc-amount" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+        <div class="b-full">
+          <div class="b-label">SOURCE</div>
+          <input class="b-in" id="inc-source" placeholder="e.g. Primary job, Freelance, Dividends…" maxlength="60"/>
+        </div>
+      </div>
+      <button class="b-btn" id="inc-save">ADD INCOME</button>
+    </div>
+    <div class="tx-list" id="b-income-list"></div>
+  </div>
+
+  <!-- TARGETS -->
+  <div class="tab-pane" id="tab-targets">
+    <div class="b-form">
+      <div class="b-form-title">MONTHLY BUDGET TARGETS</div>
+      <div id="b-target-rows"></div>
+      <div style="margin-top:12px">
+        <button class="b-btn" id="b-save-targets">SAVE TARGETS</button>
+        <span style="font-family:var(--M);font-size:9px;color:var(--gold);margin-left:12px;opacity:0;transition:opacity .3s" id="b-target-flash">✓ SAVED</span>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:12px">SOVEREIGN BUDGET PRINCIPLES</div>
+      <div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);line-height:1.9">
+        50/30/20 RULE: 50% NEEDS · 30% WANTS · 20% SAVINGS &amp; INVESTMENTS<br>
+        SOVEREIGN RULE: INVEST FIRST — PAY YOURSELF BEFORE EXPENSES<br>
+        EMERGENCY FUND: 3–6 MONTHS OF EXPENSES IN LIQUID RESERVE<br>
+        SAVINGS RATE TARGET: &gt;25% FOR FINANCIAL SOVEREIGNTY<br>
+        ZERO-BASED: EVERY DOLLAR ASSIGNED A JOB BEFORE THE MONTH BEGINS
+      </div>
+    </div>
+  </div>
+
+  <!-- TRENDS -->
+  <div class="tab-pane" id="tab-trends">
+    <div class="trends-month-row" id="b-yr-select"></div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">INCOME vs EXPENSES — MONTHLY</div>
+    <canvas id="b-trend-chart" style="width:100%;height:140px;display:block;margin-bottom:20px"></canvas>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">SAVINGS RATE % — MONTHLY</div>
+    <canvas id="b-savings-chart" style="width:100%;height:100px;display:block"></canvas>
+  </div>
+
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SOVEREIGN BUDGET — Monthly Finance Tracker
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const MONTHS_KEY  = 'omega_budget_months';
+const TARGETS_KEY = 'omega_budget_targets';
+
+const CATS = [
+  {id:'HOUSING',    label:'HOUSING',    color:'#E57373', icon:'🏠'},
+  {id:'TRANSPORT',  label:'TRANSPORT',  color:'#FF9800', icon:'🚗'},
+  {id:'FOOD',       label:'FOOD',       color:'#FFCA28', icon:'🍽'},
+  {id:'HEALTH',     label:'HEALTH',     color:'#66BB6A', icon:'💊'},
+  {id:'GROWTH',     label:'GROWTH',     color:'#5C8FD6', icon:'📚'},
+  {id:'LIFESTYLE',  label:'LIFESTYLE',  color:'#9C6FD6', icon:'✨'},
+  {id:'GIVING',     label:'GIVING',     color:'#26C6DA', icon:'🤝'},
+  {id:'OTHER',      label:'OTHER',      color:'#90A4AE', icon:'•'},
+];
+
+const DEFAULT_TARGETS = {
+  HOUSING:1500, TRANSPORT:300, FOOD:600, HEALTH:200,
+  GROWTH:300, LIFESTYLE:300, GIVING:100, OTHER:100
+};
+
+let _months  = {};   // { 'YYYY-MM': { income:[{source,amount,date}], expenses:[{cat,desc,amount,date,id}] } }
+let _targets = {};
+let _curMonth = currentMonth();
+
+function currentMonth() { return new Date().toISOString().slice(0,7); }
+function monthLabel(m) {
+  const [y,mo] = m.split('-');
+  return new Date(+y,+mo-1,1).toLocaleDateString('en-US',{month:'long',year:'numeric'}).toUpperCase();
+}
+
+/* ── STORAGE ─────────────────────────────────────────────────────────── */
+
+function load() {
+  try { _months  = JSON.parse(localStorage.getItem(MONTHS_KEY))  || {}; } catch { _months = {}; }
+  try { _targets = JSON.parse(localStorage.getItem(TARGETS_KEY)) || {}; } catch { _targets = {}; }
+  CATS.forEach(c => { if (!_targets[c.id]) _targets[c.id] = DEFAULT_TARGETS[c.id]||0; });
+}
+function saveMonths()  { localStorage.setItem(MONTHS_KEY,  JSON.stringify(_months)); }
+function saveTargets() { localStorage.setItem(TARGETS_KEY, JSON.stringify(_targets)); }
+
+function monthData(m) {
+  if (!_months[m]) _months[m] = {income:[], expenses:[]};
+  return _months[m];
+}
+
+function totalIncome(m)   { return (monthData(m).income||[]).reduce((s,i)=>s+i.amount,0); }
+function totalExpenses(m) { return (monthData(m).expenses||[]).reduce((s,e)=>s+e.amount,0); }
+function byCat(m, catId)  { return (monthData(m).expenses||[]).filter(e=>e.cat===catId).reduce((s,e)=>s+e.amount,0); }
+
+function fmt(n) { return n.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}); }
+function fmtD(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+function updateTopMeta() {
+  const inc = totalIncome(_curMonth);
+  const exp = totalExpenses(_curMonth);
+  const rate = inc>0 ? Math.round(((inc-exp)/inc)*100) : 0;
+  document.getElementById('b-tb-meta').textContent =
+    monthLabel(_curMonth) + '  ·  SAVINGS ' + rate + '%';
+}
+
+/* ── MONTH NAV ───────────────────────────────────────────────────────── */
+
+function changeMonth(delta) {
+  const [y,m] = _curMonth.split('-').map(Number);
+  const d = new Date(y, m-1+delta, 1);
+  _curMonth = d.toISOString().slice(0,7);
+  syncMonthLabels();
+  updateTopMeta();
+  rerenderActiveTab();
+}
+
+function syncMonthLabels() {
+  ['b-month-lbl','b-month-lbl2','b-month-lbl3'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.textContent = monthLabel(_curMonth);
+  });
+}
+
+function rerenderActiveTab() {
+  const active = document.querySelector('.tab-pane.active');
+  if (!active) return;
+  const id = active.id;
+  if (id==='tab-overview')  renderOverview();
+  if (id==='tab-expenses')  renderExpenseList();
+  if (id==='tab-income')    renderIncomeList();
+}
+
+/* ── OVERVIEW TAB ────────────────────────────────────────────────────── */
+
+function renderOverview() {
+  const inc = totalIncome(_curMonth);
+  const exp = totalExpenses(_curMonth);
+  const sav = inc - exp;
+  const rate = inc>0 ? Math.round((sav/inc)*100) : 0;
+  const rateCol = rate>=25?'#66BB6A':rate>=10?'#C9A84C':'#E57373';
+
+  document.getElementById('b-kpis').innerHTML = [
+    [fmt(inc), 'INCOME'],
+    [fmt(exp), 'EXPENSES'],
+    [fmt(sav>0?sav:0), 'SURPLUS'],
+    [rate+'%', 'SAVINGS RATE', rate>0?rateCol:'#E57373'],
+  ].map(([v,l,col])=>`<div class="kpi"><div class="kpi-v" style="color:${col||'var(--gold)'};">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+
+  const totalBudget = CATS.reduce((s,c)=>s+(_targets[c.id]||0),0);
+  document.getElementById('b-cat-bars').innerHTML = CATS.map(c => {
+    const actual  = byCat(_curMonth, c.id);
+    const budget  = _targets[c.id]||0;
+    const pct     = budget>0 ? Math.min(actual/budget,1.5) : 0;
+    const over    = actual > budget && budget > 0;
+    return `<div class="cat-bar-row">
+      <span class="cat-label" style="color:${c.color}">${c.icon} ${c.label}</span>
+      <div class="cat-track">
+        <div class="cat-fill-bg"></div>
+        <div class="cat-fill" style="width:${Math.min(pct,1)*100}%;background:${c.color}${over?'':'99'}"></div>
+      </div>
+      <span class="cat-actual ${over?'cat-over':''}">${fmt(actual)}</span>
+      <span class="cat-budget">${budget?fmt(budget):'—'}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ── EXPENSES TAB ────────────────────────────────────────────────────── */
+
+function renderExpenseList() {
+  const exps = [...(monthData(_curMonth).expenses||[])].sort((a,b)=>b.date.localeCompare(a.date));
+  const el = document.getElementById('b-expense-list');
+  if (!exps.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:16px 0;text-align:center">NO EXPENSES THIS MONTH</p>';
+    return;
+  }
+  el.innerHTML = '<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);display:grid;grid-template-columns:72px 1fr 90px 50px;gap:6px;padding:4px 6px;border-bottom:1px solid rgba(201,168,76,.1);margin-bottom:4px"><span>DATE</span><span>DESCRIPTION</span><span>CATEGORY</span><span style="text-align:right">AMOUNT</span></div>' +
+    exps.map(e => {
+      const cat = CATS.find(c=>c.id===e.cat)||CATS[CATS.length-1];
+      return `<div class="tx-row">
+        <span class="tx-date">${e.date}</span>
+        <span class="tx-desc">${esc(e.desc)}</span>
+        <span class="tx-cat" style="color:${cat.color};border-color:${cat.color}30">${cat.label}</span>
+        <span class="tx-amt" style="color:var(--dim)">$${fmtD(e.amount)} <button class="tx-del" onclick="delExpense('${e.id}')">×</button></span>
+      </div>`;
+    }).join('');
+}
+
+function addExpense() {
+  const amount = +document.getElementById('ex-amount').value;
+  const desc   = document.getElementById('ex-desc').value.trim();
+  const cat    = document.getElementById('ex-cat').value;
+  const date   = document.getElementById('ex-date').value || currentMonth()+'-01';
+  if (!amount || !desc) return;
+  const md = monthData(_curMonth);
+  md.expenses.push({id:uid(), cat, desc, amount, date});
+  saveMonths(); updateTopMeta();
+  document.getElementById('ex-amount').value = '';
+  document.getElementById('ex-desc').value   = '';
+  renderExpenseList(); renderOverview();
+}
+
+window.delExpense = id => {
+  const md = monthData(_curMonth);
+  md.expenses = (md.expenses||[]).filter(e=>e.id!==id);
+  saveMonths(); updateTopMeta();
+  renderExpenseList(); renderOverview();
+};
+
+/* ── INCOME TAB ──────────────────────────────────────────────────────── */
+
+function renderIncomeList() {
+  const incs = [...(monthData(_curMonth).income||[])].sort((a,b)=>b.date.localeCompare(a.date));
+  const el = document.getElementById('b-income-list');
+  if (!incs.length) {
+    el.innerHTML = '<p style="font-family:var(--M);font-size:10px;color:var(--dim);padding:16px 0;text-align:center">NO INCOME LOGGED THIS MONTH</p>';
+    return;
+  }
+  el.innerHTML = incs.map(i =>
+    `<div class="tx-row">
+      <span class="tx-date">${i.date}</span>
+      <span class="tx-desc">${esc(i.source)}</span>
+      <span class="tx-cat" style="color:var(--gold);border-color:rgba(201,168,76,.2)">INCOME</span>
+      <span class="tx-amt" style="color:#66BB6A">$${fmtD(i.amount)} <button class="tx-del" onclick="delIncome('${i.id}')">×</button></span>
+    </div>`
+  ).join('');
+}
+
+function addIncome() {
+  const amount = +document.getElementById('inc-amount').value;
+  const source = document.getElementById('inc-source').value.trim();
+  const date   = document.getElementById('inc-date').value || currentMonth()+'-01';
+  if (!amount || !source) return;
+  monthData(_curMonth).income.push({id:uid(), source, amount, date});
+  saveMonths(); updateTopMeta();
+  document.getElementById('inc-amount').value = '';
+  document.getElementById('inc-source').value = '';
+  renderIncomeList(); renderOverview();
+}
+
+window.delIncome = id => {
+  const md = monthData(_curMonth);
+  md.income = (md.income||[]).filter(i=>i.id!==id);
+  saveMonths(); updateTopMeta();
+  renderIncomeList(); renderOverview();
+};
+
+/* ── TARGETS TAB ─────────────────────────────────────────────────────── */
+
+function renderTargets() {
+  document.getElementById('b-target-rows').innerHTML = CATS.map(c =>
+    `<div class="bt-row">
+      <span class="bt-label" style="color:${c.color}">${c.icon} ${c.label}</span>
+      <input class="bt-in" type="number" id="tgt-${c.id}" value="${_targets[c.id]||0}" min="0" step="10" placeholder="0"/>
+      <span class="bt-currency">/ MO</span>
+    </div>`
+  ).join('');
+}
+
+function saveTargetValues() {
+  CATS.forEach(c => { _targets[c.id] = +(document.getElementById('tgt-'+c.id).value||0); });
+  saveTargets();
+  const fl = document.getElementById('b-target-flash');
+  fl.style.opacity='1'; setTimeout(()=>{fl.style.opacity='0';},2200);
+  renderOverview();
+}
+
+/* ── TRENDS TAB ──────────────────────────────────────────────────────── */
+
+let _trendYear = new Date().getFullYear();
+
+function renderTrends() {
+  const years = [...new Set(Object.keys(_months).map(m=>m.slice(0,4)))].sort();
+  const curYear = String(_trendYear);
+  document.getElementById('b-yr-select').innerHTML = years.map(y=>
+    `<button class="trend-yr-btn ${y===curYear?'on':''}" onclick="setTrendYear(${y})">${y}</button>`
+  ).join('');
+  drawTrendChart();
+  drawSavingsChart();
+}
+
+window.setTrendYear = y => { _trendYear = y; renderTrends(); };
+
+function trendMonths() {
+  return Array.from({length:12},(_,i)=>`${_trendYear}-${String(i+1).padStart(2,'0')}`);
+}
+
+function drawTrendChart() {
+  const c = document.getElementById('b-trend-chart');
+  c.width = c.offsetWidth||600; c.height = 140;
+  const ctx = c.getContext('2d');
+  const months = trendMonths();
+  const incVals = months.map(m=>totalIncome(m));
+  const expVals = months.map(m=>totalExpenses(m));
+  const maxV = Math.max(...incVals,...expVals,1);
+  const W=c.width, H=c.height, pad=10, bw=(W/12)/2-2;
+  ctx.clearRect(0,0,W,H);
+
+  months.forEach((m,i) => {
+    const x = i*(W/12)+pad/2;
+    const incH = (incVals[i]/maxV)*(H-24);
+    const expH = (expVals[i]/maxV)*(H-24);
+    // Income bar (left)
+    ctx.fillStyle = 'rgba(102,187,106,.55)';
+    ctx.fillRect(x, H-4-incH, bw, incH);
+    // Expense bar (right)
+    ctx.fillStyle = 'rgba(229,115,115,.55)';
+    ctx.fillRect(x+bw+1, H-4-expH, bw, expH);
+    // Month label
+    ctx.fillStyle = m===_curMonth ? '#C9A84C' : 'rgba(138,134,118,.35)';
+    ctx.font = '7px "Courier Prime", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(new Date(m+'-15').toLocaleDateString('en-US',{month:'short'}).toUpperCase(), x+bw, H);
+  });
+
+  // Legend
+  ctx.fillStyle='rgba(102,187,106,.7)'; ctx.fillRect(W-110,6,10,8);
+  ctx.fillStyle='rgba(138,134,118,.5)'; ctx.font='7px "Courier Prime",monospace'; ctx.textAlign='left';
+  ctx.fillText('INCOME', W-96, 14);
+  ctx.fillStyle='rgba(229,115,115,.7)'; ctx.fillRect(W-50,6,10,8);
+  ctx.fillText('EXPENSES', W-36, 14);
+}
+
+function drawSavingsChart() {
+  const c = document.getElementById('b-savings-chart');
+  c.width = c.offsetWidth||600; c.height = 100;
+  const ctx = c.getContext('2d');
+  const months = trendMonths();
+  const rates = months.map(m=>{
+    const inc=totalIncome(m), exp=totalExpenses(m);
+    return inc>0 ? Math.max(((inc-exp)/inc)*100, -100) : 0;
+  });
+  const maxR = Math.max(...rates.map(Math.abs),1);
+  const W=c.width, H=c.height, bw=W/12-3;
+  ctx.clearRect(0,0,W,H);
+  const zero = H/2;
+
+  // Zero line
+  ctx.strokeStyle='rgba(201,168,76,.2)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,zero); ctx.lineTo(W,zero); ctx.stroke();
+
+  rates.forEach((r,i) => {
+    const x = i*(W/12)+1;
+    const h = (Math.abs(r)/100)*(H/2-8);
+    ctx.fillStyle = r>=0 ? 'rgba(201,168,76,.6)' : 'rgba(229,115,115,.6)';
+    if (r>=0) ctx.fillRect(x, zero-h, bw, h);
+    else      ctx.fillRect(x, zero,   bw, h);
+    // Label %
+    if (r!==0) {
+      ctx.fillStyle='rgba(138,134,118,.5)'; ctx.font='7px "Courier Prime",monospace'; ctx.textAlign='center';
+      ctx.fillText(Math.round(r)+'%', x+bw/2, r>=0?zero-h-3:zero+h+10);
+    }
+  });
+}
+
+/* ── HELPERS ─────────────────────────────────────────────────────────── */
+
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── TAB ROUTER ──────────────────────────────────────────────────────── */
+
+function activateTab(name) {
+  ['overview','expenses','income','targets','trends'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    document.getElementById('t-'+t).classList.toggle('active',t===name);
+  });
+  if (name==='overview')  renderOverview();
+  if (name==='expenses')  { renderExpenseList(); }
+  if (name==='income')    { renderIncomeList(); }
+  if (name==='targets')   renderTargets();
+  if (name==='trends')    renderTrends();
+}
+
+['overview','expenses','income','targets','trends'].forEach(t=>{
+  document.getElementById('t-'+t).addEventListener('click',()=>activateTab(t));
+});
+
+/* ── MONTH NAV BUTTONS ───────────────────────────────────────────────── */
+
+['b-prev-mo','b-prev-mo2','b-prev-mo3'].forEach(id=>
+  document.getElementById(id).addEventListener('click',()=>changeMonth(-1))
+);
+['b-next-mo','b-next-mo2','b-next-mo3'].forEach(id=>
+  document.getElementById(id).addEventListener('click',()=>changeMonth(1))
+);
+
+/* ── EVENT WIRES ─────────────────────────────────────────────────────── */
+
+document.getElementById('ex-save').addEventListener('click', addExpense);
+document.getElementById('inc-save').addEventListener('click', addIncome);
+document.getElementById('b-save-targets').addEventListener('click', saveTargetValues);
+
+window.addEventListener('resize',()=>{
+  if(document.getElementById('tab-trends').classList.contains('active')) renderTrends();
+});
+
+/* ── INIT SELECTS ────────────────────────────────────────────────────── */
+
+document.getElementById('ex-cat').innerHTML = CATS.map(c=>
+  `<option value="${c.id}">${c.icon} ${c.label}</option>`
+).join('');
+document.getElementById('ex-date').value = new Date().toISOString().slice(0,10);
+document.getElementById('inc-date').value = new Date().toISOString().slice(0,10);
+
+/* ── BOOT ─────────────────────────────────────────────────────────────── */
+
+load();
+syncMonthLabels();
+updateTopMeta();
+renderOverview();
+
+</script>
+</body>
+</html>

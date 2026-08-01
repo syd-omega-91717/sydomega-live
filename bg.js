@@ -1447,6 +1447,17 @@ setTimeout(function(){
   /* Async region shell — loading/empty/error states + retry (audit F-6) */
   if(!document.querySelector('script[data-omega-shell]')){var _osh=document.createElement('script');_osh.src='/omega-shell.js';_osh.setAttribute('data-omega-shell','1');_osh.defer=true;if(document.body)document.body.appendChild(_osh);}
 
+  /* Platform keyboard navigation — g-sequences, ?, Ctrl+K, n, c shortcuts */
+  if(!document.querySelector('script[data-omega-keyboard]')){var _okb=document.createElement('script');_okb.src='/omega-keyboard.js';_okb.setAttribute('data-omega-keyboard','1');_okb.defer=true;if(document.body)document.body.appendChild(_okb);}
+  /* Legal compliance — copyright badge, GDPR consent, terms footer links */
+  if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;if(document.body)document.body.appendChild(_olegal);}
+  /* QR code engine — member credential QR, digital pass download */
+  if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;if(document.body)document.body.appendChild(_oqr);}
+  /* Guided platform tour — Shepherd.js (MIT), first-time member walkthrough */
+  if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;if(document.body)document.body.appendChild(_otour);}
+  /* Cinematic transitions — curtain nav, scroll reveals, count-up, stagger */
+  if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;if(document.body)document.body.appendChild(_ocin);}
+
   /* Welcome demo video — must load on dashboard.html, the login landing page */
   if(!document.querySelector('script[data-omega-demo]')){var _odv=document.createElement('script');_odv.src='/omega-demo-video.js';_odv.setAttribute('data-omega-demo','1');_odv.defer=true;if(document.body)document.body.appendChild(_odv);}
 

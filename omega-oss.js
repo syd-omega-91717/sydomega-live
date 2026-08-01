@@ -58,7 +58,8 @@
     lucide:    {url:'https://unpkg.com/lucide@latest/dist/umd/lucide.min.js',global:'lucide'},
     chartjs:   {url:'https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js',global:'Chart'},
     fuse:      {url:'https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js',global:'Fuse'},
-    dayjs:     {url:'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js',global:'dayjs'},
+    dayjs:        {url:'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js',global:'dayjs'},
+    dayjsRelTime: {url:'https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.min.js',global:'dayjs'},
     marked:    {url:'https://cdn.jsdelivr.net/npm/marked@12/marked.min.js',global:'marked'},
     hljs:      {url:'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js',global:'hljs'},
     /* Tippy.js — MIT. Lightweight tooltip/popover library (8KB gzip).
@@ -126,9 +127,14 @@
       });
     },
 
-    /* Friendly date formatting */
+    /* Friendly date formatting — uses dayjs+relativeTime when loaded, inline fallback */
     fromNow: function(dateStr){
       if(!dateStr) return '--';
+      /* Fast path: dayjs already loaded and extended with relativeTime */
+      try{
+        if(window.dayjs && window.dayjs._omegaRtReady) return window.dayjs(dateStr).fromNow();
+      }catch(e){}
+      /* Inline fallback (synchronous, always works) */
       var d=new Date(dateStr),now=new Date();
       var diff=Math.round((now-d)/1000);
       if(diff<60) return diff+'s ago';
@@ -215,6 +221,24 @@
       });
     });
   };
+
+  /* ── DAYJS + RELATIVETIME INIT ───────────────────────────────── */
+  /* Pre-boot dayjs with relativeTime so OSS.fromNow() uses the fast path */
+  OSS.require('dayjs', function(){
+    /* CDN plugin file sets window.dayjs_plugin_relativeTime */
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.min.js';
+    s.async = true;
+    s.onload = function(){
+      try{
+        if(window.dayjs && window.dayjs_plugin_relativeTime){
+          window.dayjs.extend(window.dayjs_plugin_relativeTime);
+          window.dayjs._omegaRtReady = true;
+        }
+      }catch(e){}
+    };
+    document.head.appendChild(s);
+  });
 
   /* ── AUTO-INIT LUCIDE ICONS ───────────────────────────────────── */
   window.addEventListener('load',function(){

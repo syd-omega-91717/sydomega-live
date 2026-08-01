@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Journal · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--bg:#0D0D0B;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+
+/* LOCK SCREEN */
+#j-lock{position:fixed;inset:0;background:#0D0D0B;z-index:9999;display:flex;align-items:center;justify-content:center}
+.j-lock-box{width:min(380px,90vw);padding:40px 32px;border:1px solid rgba(201,168,76,.2);background:rgba(13,13,11,.98);text-align:center}
+.j-lock-omega{font-family:var(--M);font-size:36px;color:var(--gold);letter-spacing:4px;margin-bottom:6px}
+.j-lock-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--dim);margin-bottom:4px}
+.j-lock-sub{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.3);margin-bottom:32px}
+.j-lock-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);text-align:left;margin-bottom:6px}
+.j-lock-box input{width:100%;padding:10px 14px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:#c8c4b0;font-family:var(--M);font-size:11px;letter-spacing:2px;margin-bottom:14px;outline:none}
+.j-lock-box input:focus{border-color:rgba(201,168,76,.4)}
+.j-lock-btn{width:100%;padding:12px;background:none;border:1px solid var(--gold);color:var(--gold);font-family:var(--M);font-size:10px;letter-spacing:3px;cursor:pointer;transition:.15s;margin-bottom:10px}
+.j-lock-btn:hover{background:rgba(201,168,76,.08)}
+.j-lock-msg{font-family:var(--M);font-size:9px;letter-spacing:1px;color:#c0392b;min-height:18px}
+.j-lock-hint{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.3);margin-top:20px;line-height:1.9}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* WRITE */
+.j-write-meta{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.j-date-in{font-family:var(--M);font-size:10px;letter-spacing:1px;padding:7px 12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none}
+.j-date-in:focus{border-color:rgba(201,168,76,.35)}
+.j-wc{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--dim)}
+
+.j-mood-row{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.j-mood-lbl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-right:4px}
+.j-mood-btn{font-size:18px;padding:5px 9px;background:none;border:1px solid rgba(201,168,76,.12);cursor:pointer;border-radius:2px;transition:.1s;opacity:.4;line-height:1}
+.j-mood-btn.on,.j-mood-btn:hover{opacity:1;border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.06)}
+
+.j-area{width:100%;min-height:260px;padding:14px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:12px;line-height:1.85;resize:vertical;outline:none;letter-spacing:.4px;margin-bottom:14px}
+.j-area:focus{border-color:rgba(201,168,76,.3)}
+.j-area::placeholder{color:rgba(138,134,118,.25)}
+
+.j-tags-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px;min-height:30px}
+.j-tag-chip{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.2);color:var(--gold);background:rgba(201,168,76,.05);cursor:pointer;transition:.1s}
+.j-tag-chip:hover{background:rgba(201,168,76,.12)}
+.j-tag-in{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:5px 10px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;outline:none;min-width:140px;flex:1;max-width:200px}
+.j-tag-in:focus{border-color:rgba(201,168,76,.3)}
+
+.j-save-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.j-save-btn{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:10px 24px;border:1px solid var(--gold);color:var(--gold);background:none;cursor:pointer;transition:.15s}
+.j-save-btn:hover{background:rgba(201,168,76,.08)}
+.j-saved-flash{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);opacity:0;transition:opacity .3s}
+
+/* BROWSE */
+.j-entry-card{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:10px;background:rgba(201,168,76,.02)}
+.j-entry-hd{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.j-entry-dt{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold)}
+.j-entry-moodico{font-size:15px;line-height:1}
+.j-entry-wc{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)}
+.j-entry-tagrow{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.j-entry-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 5px;border:1px solid rgba(201,168,76,.12);color:var(--dim)}
+.j-entry-body{font-family:var(--M);font-size:11px;color:rgba(138,134,118,.65);line-height:1.75;max-height:72px;overflow:hidden;transition:max-height .4s;white-space:pre-wrap}
+.j-entry-body.open{max-height:3000px}
+.j-entry-acts{display:flex;gap:6px;margin-top:10px}
+.j-btn-xs{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.j-btn-xs:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
+.j-btn-del:hover{color:#c0392b!important;border-color:rgba(192,57,43,.3)!important}
+.j-empty{font-family:var(--M);font-size:10px;color:var(--dim);text-align:center;padding:48px 0}
+
+/* INSIGHTS */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:20px}
+.kpi{border:1px solid rgba(201,168,76,.1);padding:14px 10px;text-align:center}
+.kpi-v{font-family:var(--M);font-size:20px;color:var(--gold);letter-spacing:1px}
+.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+.chart-lbl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px;margin-top:16px}
+
+/* SECURITY */
+.sec-section{margin-bottom:28px}
+.sec-title{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+.sec-in{width:100%;font-family:var(--M);font-size:10px;padding:8px 12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:#c8c4b0;outline:none;letter-spacing:1px;margin-bottom:8px}
+.sec-in:focus{border-color:rgba(201,168,76,.35)}
+.sec-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.2);color:var(--dim);background:none;cursor:pointer;transition:.1s;margin-right:8px;margin-bottom:6px}
+.sec-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.sec-msg{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--gold);margin-top:8px;min-height:16px}
+.sec-salt{font-family:var(--M);font-size:8px;letter-spacing:.5px;color:rgba(138,134,118,.4);word-break:break-all;padding:10px;border:1px solid rgba(201,168,76,.08);background:rgba(0,0,0,.2);margin-bottom:12px;line-height:1.9}
+.sec-desc{font-family:var(--M);font-size:8px;letter-spacing:.5px;color:rgba(138,134,118,.5);line-height:1.9}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══════════════════════════════════════════════════════ -->
+<div id="j-lock">
+  <div class="j-lock-box">
+    <div class="j-lock-omega">Ω</div>
+    <div class="j-lock-title">SOVEREIGN JOURNAL</div>
+    <div class="j-lock-sub">PRIVATE · ENCRYPTED · ZERO-KNOWLEDGE</div>
+
+    <div id="j-setup-form" style="display:none">
+      <div class="j-lock-label">CREATE PASSPHRASE</div>
+      <input type="password" id="lk-new1" placeholder="MIN 8 CHARACTERS" autocomplete="new-password"/>
+      <div class="j-lock-label">CONFIRM PASSPHRASE</div>
+      <input type="password" id="lk-new2" placeholder="CONFIRM" autocomplete="new-password"/>
+      <button class="j-lock-btn" id="j-init-btn">INITIALIZE JOURNAL</button>
+    </div>
+
+    <div id="j-unlock-form" style="display:none">
+      <div class="j-lock-label">PASSPHRASE</div>
+      <input type="password" id="lk-phrase" placeholder="ENTER PASSPHRASE" autocomplete="current-password"/>
+      <button class="j-lock-btn" id="j-unlock-btn">UNLOCK</button>
+    </div>
+
+    <div class="j-lock-msg" id="j-lock-msg"></div>
+    <div class="j-lock-hint">
+      AES-256-GCM · PBKDF2-SHA256 · 100,000 ITERATIONS<br>
+      ALL ENTRIES ENCRYPTED CLIENT-SIDE<br>
+      YOUR PASSPHRASE NEVER LEAVES THIS DEVICE
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ════════════════════════════════════════════════════════════ -->
+<div id="j-main" style="display:none">
+<div class="main">
+
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN JOURNAL</span>
+    <span class="tb-meta" id="j-tb-meta">— ENTRIES</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" id="t-write">WRITE</button>
+    <button class="lt" id="t-browse">BROWSE</button>
+    <button class="lt" id="t-insights">INSIGHTS</button>
+    <button class="lt" id="t-security">SECURITY</button>
+  </div>
+
+  <!-- WRITE -->
+  <div class="tab-pane active" id="tab-write">
+    <div class="j-write-meta">
+      <input type="date" class="j-date-in" id="j-date"/>
+      <span class="j-wc" id="j-wc">0 WORDS</span>
+    </div>
+    <div class="j-mood-row">
+      <span class="j-mood-lbl">MOOD</span>
+      <button class="j-mood-btn" data-m="1" title="Struggling">😤</button>
+      <button class="j-mood-btn" data-m="2" title="Low">🙁</button>
+      <button class="j-mood-btn" data-m="3" title="Neutral">😐</button>
+      <button class="j-mood-btn" data-m="4" title="Good">🙂</button>
+      <button class="j-mood-btn" data-m="5" title="Excellent">🔥</button>
+    </div>
+    <textarea class="j-area" id="j-content" placeholder="Begin your sovereign entry…&#10;&#10;What happened? What did you think? What did you learn?&#10;What are you grateful for? What will you do differently?"></textarea>
+    <div class="j-tags-wrap" id="j-tag-wrap">
+      <input class="j-tag-in" id="j-tag-in" placeholder="TAG + ENTER" maxlength="24"/>
+    </div>
+    <div class="j-save-row">
+      <button class="j-save-btn" id="j-save-btn">SAVE ENTRY</button>
+      <span class="j-saved-flash" id="j-flash">✓ SAVED</span>
+    </div>
+  </div>
+
+  <!-- BROWSE -->
+  <div class="tab-pane" id="tab-browse">
+    <div id="j-browse-list"></div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="tab-pane" id="tab-insights">
+    <div class="kpi-row" id="j-kpis"></div>
+    <div class="chart-lbl">WORD COUNT — LAST 30 DAYS</div>
+    <canvas id="j-wc-chart" style="width:100%;height:100px;display:block"></canvas>
+    <div class="chart-lbl">MOOD TREND — LAST 30 DAYS</div>
+    <canvas id="j-mood-chart" style="width:100%;height:100px;display:block"></canvas>
+    <div class="chart-lbl" style="margin-top:20px">MOST USED TAGS</div>
+    <div id="j-tag-cloud" style="margin-bottom:20px"></div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="tab-pane" id="tab-security">
+
+    <div class="sec-section">
+      <div class="sec-title">ENCRYPTION STATUS</div>
+      <div class="sec-salt" id="j-salt-info">—</div>
+      <p class="sec-desc">
+        AES-256-GCM encryption · passphrase-derived key via PBKDF2-SHA256 (100,000 iterations) ·
+        random 128-bit salt · random 96-bit IV per write · entries stored only in localStorage ·
+        session key cached in sessionStorage (cleared on tab close)
+      </p>
+    </div>
+
+    <div class="sec-section">
+      <div class="sec-title">CHANGE PASSPHRASE</div>
+      <input type="password" class="sec-in" id="cp-curr" placeholder="CURRENT PASSPHRASE"/>
+      <input type="password" class="sec-in" id="cp-new1" placeholder="NEW PASSPHRASE (MIN 8 CHARS)"/>
+      <input type="password" class="sec-in" id="cp-new2" placeholder="CONFIRM NEW PASSPHRASE"/>
+      <button class="sec-btn" id="j-cp-btn">UPDATE PASSPHRASE</button>
+      <div class="sec-msg" id="j-cp-msg"></div>
+    </div>
+
+    <div class="sec-section">
+      <div class="sec-title">BACKUP &amp; RESTORE</div>
+      <button class="sec-btn" id="j-export-btn">EXPORT ENCRYPTED BACKUP</button>
+      <button class="sec-btn" id="j-import-trigger">IMPORT BACKUP</button>
+      <input type="file" id="j-import-file" accept=".json" style="display:none"/>
+      <div class="sec-msg" id="j-backup-msg"></div>
+    </div>
+
+    <div class="sec-section">
+      <button class="sec-btn" id="j-lock-btn" style="border-color:rgba(192,57,43,.3);color:rgba(192,57,43,.7)">LOCK SESSION</button>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SOVEREIGN JOURNAL — AES-256-GCM ENCRYPTED PRIVATE JOURNAL
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const ENC_KEY   = 'omega_journal_enc';
+const SALT_KEY  = 'omega_journal_salt';
+const SESS_KEY  = 'omega_journal_skey';
+const MOODS     = ['','😤','🙁','😐','🙂','🔥'];
+
+let _key     = null;
+let _entries = [];
+let _tags    = [];
+let _mood    = 3;
+
+/* ── CRYPTO ──────────────────────────────────────────────────────────── */
+
+const b64ToBytes = b64 => Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+const bytesToB64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const hexOf = buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+
+async function deriveKey(phrase, salt) {
+  const mat = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(phrase), 'PBKDF2', false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt, iterations:100000, hash:'SHA-256'},
+    mat, {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']
+  );
+}
+
+async function encryptJSON(key, data) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt(
+    {name:'AES-GCM', iv}, key, new TextEncoder().encode(JSON.stringify(data))
+  );
+  const out = new Uint8Array(12 + ct.byteLength);
+  out.set(iv); out.set(new Uint8Array(ct), 12);
+  return bytesToB64(out);
+}
+
+async function decryptJSON(key, b64) {
+  const raw = b64ToBytes(b64);
+  const pt  = await crypto.subtle.decrypt({name:'AES-GCM', iv:raw.slice(0,12)}, key, raw.slice(12));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+async function cacheKey(key) {
+  const raw = await crypto.subtle.exportKey('raw', key);
+  sessionStorage.setItem(SESS_KEY, bytesToB64(raw));
+}
+
+async function restoreKey() {
+  const b64 = sessionStorage.getItem(SESS_KEY);
+  if (!b64) return null;
+  try {
+    return await crypto.subtle.importKey(
+      'raw', b64ToBytes(b64), {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']
+    );
+  } catch { return null; }
+}
+
+/* ── STORAGE ─────────────────────────────────────────────────────────── */
+
+async function loadEntries(key) {
+  const enc = localStorage.getItem(ENC_KEY);
+  _entries = enc ? await decryptJSON(key, enc) : [];
+}
+
+async function persist() {
+  localStorage.setItem(ENC_KEY, await encryptJSON(_key, _entries));
+}
+
+/* ── LOCK SCREEN ─────────────────────────────────────────────────────── */
+
+async function boot() {
+  const saltB64 = localStorage.getItem(SALT_KEY);
+  const cached  = await restoreKey();
+  if (cached && saltB64) {
+    try {
+      await loadEntries(cached);
+      _key = cached;
+      unlock_show();
+      return;
+    } catch { sessionStorage.removeItem(SESS_KEY); }
+  }
+  document.getElementById('j-lock').style.display = 'flex';
+  if (!saltB64) {
+    document.getElementById('j-setup-form').style.display = 'block';
+  } else {
+    document.getElementById('j-unlock-form').style.display = 'block';
+    setTimeout(() => document.getElementById('lk-phrase').focus(), 80);
+  }
+}
+
+async function doSetup() {
+  const p1 = document.getElementById('lk-new1').value;
+  const p2 = document.getElementById('lk-new2').value;
+  const msg = document.getElementById('j-lock-msg');
+  if (p1.length < 8) { msg.textContent = 'PASSPHRASE MUST BE AT LEAST 8 CHARACTERS'; return; }
+  if (p1 !== p2)     { msg.textContent = 'PASSPHRASES DO NOT MATCH'; return; }
+  msg.textContent = 'INITIALIZING…';
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  localStorage.setItem(SALT_KEY, bytesToB64(salt));
+  const key = await deriveKey(p1, salt);
+  _key = key; _entries = [];
+  await persist();
+  await cacheKey(key);
+  unlock_show();
+}
+
+async function doUnlock() {
+  const phrase = document.getElementById('lk-phrase').value;
+  const msg    = document.getElementById('j-lock-msg');
+  if (!phrase) { msg.textContent = 'ENTER YOUR PASSPHRASE'; return; }
+  msg.textContent = 'VERIFYING…';
+  try {
+    const salt = b64ToBytes(localStorage.getItem(SALT_KEY));
+    const key  = await deriveKey(phrase, salt);
+    await loadEntries(key);
+    _key = key;
+    await cacheKey(key);
+    unlock_show();
+  } catch {
+    msg.textContent = 'INCORRECT PASSPHRASE';
+    document.getElementById('lk-phrase').value = '';
+  }
+}
+
+function doLock() {
+  sessionStorage.removeItem(SESS_KEY);
+  _key = null; _entries = [];
+  document.getElementById('j-main').style.display = 'none';
+  document.getElementById('j-lock').style.display = 'flex';
+  if (document.getElementById('lk-phrase'))
+    document.getElementById('lk-phrase').value = '';
+  document.getElementById('j-lock-msg').textContent = '';
+}
+
+function unlock_show() {
+  document.getElementById('j-lock').style.display = 'none';
+  document.getElementById('j-main').style.display  = 'block';
+  initUI();
+}
+
+/* ── UI INIT ──────────────────────────────────────────────────────────── */
+
+function today() { return new Date().toISOString().slice(0,10); }
+
+function initUI() {
+  const d = today();
+  document.getElementById('j-date').value = d;
+
+  const ex = _entries.find(e => e.date === d);
+  if (ex) {
+    document.getElementById('j-content').value = ex.content;
+    _mood = ex.mood || 3;
+    _tags = [...(ex.tags||[])];
+  } else {
+    _mood = 3; _tags = [];
+  }
+  setMoodUI(_mood);
+  renderTags();
+  updateWC();
+  updateTopMeta();
+
+  const saltB64 = localStorage.getItem(SALT_KEY);
+  if (saltB64) {
+    const hex = hexOf(b64ToBytes(saltB64));
+    document.getElementById('j-salt-info').textContent =
+      'SALT  : ' + hex + '\n' +
+      'ALG   : AES-256-GCM\n' +
+      'KDF   : PBKDF2-SHA256 × 100,000\n' +
+      'STATUS: ACTIVE';
+  }
+}
+
+function updateTopMeta() {
+  const streak = calcStreak();
+  document.getElementById('j-tb-meta').textContent =
+    streak + '-DAY STREAK  ·  ' + _entries.length + ' ENTR' + (_entries.length===1?'Y':'IES');
+}
+
+/* ── WRITE TAB ───────────────────────────────────────────────────────── */
+
+function updateWC() {
+  const t = document.getElementById('j-content').value.trim();
+  const w = t ? t.split(/\s+/).length : 0;
+  document.getElementById('j-wc').textContent = w + ' WORD' + (w!==1?'S':'');
+}
+
+function setMoodUI(n) {
+  _mood = n;
+  document.querySelectorAll('.j-mood-btn').forEach(b => {
+    b.classList.toggle('on', +b.dataset.m === n);
+  });
+}
+
+function renderTags() {
+  const wrap = document.getElementById('j-tag-wrap');
+  const inp  = document.getElementById('j-tag-in');
+  wrap.innerHTML = '';
+  _tags.forEach((t, i) => {
+    const chip = document.createElement('button');
+    chip.className = 'j-tag-chip';
+    chip.textContent = t + ' ×';
+    chip.onclick = () => { _tags.splice(i,1); renderTags(); };
+    wrap.appendChild(chip);
+  });
+  wrap.appendChild(inp);
+}
+
+async function saveEntry() {
+  const date    = document.getElementById('j-date').value;
+  const content = document.getElementById('j-content').value.trim();
+  if (!content) return;
+  const words = content.split(/\s+/).length;
+  const entry = {date, content, mood:_mood, tags:[..._tags], words, ts:Date.now()};
+  const idx   = _entries.findIndex(e => e.date === date);
+  if (idx >= 0) _entries[idx] = entry; else _entries.push(entry);
+  _entries.sort((a,b) => b.date.localeCompare(a.date));
+  await persist();
+  const fl = document.getElementById('j-flash');
+  fl.style.opacity = '1';
+  setTimeout(() => { fl.style.opacity = '0'; }, 2200);
+  updateTopMeta();
+}
+
+/* ── BROWSE TAB ──────────────────────────────────────────────────────── */
+
+function renderBrowse() {
+  const el = document.getElementById('j-browse-list');
+  if (!_entries.length) {
+    el.innerHTML = '<div class="j-empty">NO ENTRIES YET — BEGIN WRITING TO SEE THEM HERE</div>';
+    return;
+  }
+  el.innerHTML = _entries.slice(0,60).map((e,i) => `
+    <div class="j-entry-card">
+      <div class="j-entry-hd">
+        <span class="j-entry-dt">${e.date}</span>
+        <span class="j-entry-moodico">${MOODS[e.mood]||'😐'}</span>
+        <span class="j-entry-wc">${e.words}W</span>
+        <div class="j-entry-tagrow">${(e.tags||[]).map(t=>`<span class="j-entry-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="j-entry-body" id="jb-${i}">${esc(e.content)}</div>
+      <div class="j-entry-acts">
+        <button class="j-btn-xs" onclick="toggleRead(${i})">READ MORE</button>
+        <button class="j-btn-xs" onclick="editEnt(${i})">EDIT</button>
+        <button class="j-btn-xs j-btn-del" onclick="delEnt(${i})">DELETE</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.toggleRead = i => document.getElementById('jb-'+i)?.classList.toggle('open');
+
+window.editEnt = i => {
+  const e = _entries[i];
+  document.getElementById('j-date').value    = e.date;
+  document.getElementById('j-content').value = e.content;
+  _mood = e.mood||3; _tags = [...(e.tags||[])];
+  setMoodUI(_mood); renderTags(); updateWC();
+  activateTab('write');
+};
+
+window.delEnt = async i => {
+  if (!confirm('Delete this entry? This is irreversible.')) return;
+  _entries.splice(i,1);
+  await persist();
+  renderBrowse();
+  updateTopMeta();
+};
+
+/* ── INSIGHTS TAB ────────────────────────────────────────────────────── */
+
+function renderInsights() {
+  const streak = calcStreak();
+  const total  = _entries.reduce((s,e) => s+e.words, 0);
+  const avg    = _entries.length ? Math.round(total/_entries.length) : 0;
+  const moodAvg = _entries.length
+    ? (_entries.reduce((s,e)=>s+(e.mood||3),0)/_entries.length).toFixed(1) : '—';
+
+  document.getElementById('j-kpis').innerHTML = [
+    [streak,                'DAY STREAK'],
+    [_entries.length,       'ENTRIES'],
+    [total.toLocaleString(),'TOTAL WORDS'],
+    [avg,                   'AVG WORDS'],
+    [moodAvg,               'AVG MOOD'],
+  ].map(([v,l]) => `<div class="kpi"><div class="kpi-v">${v}</div><div class="kpi-l">${l}</div></div>`).join('');
+
+  drawWCChart();
+  drawMoodChart();
+  renderCloud();
+}
+
+function last30() {
+  return Array.from({length:30}, (_,i) => {
+    const d = new Date(); d.setDate(d.getDate()-(29-i));
+    return d.toISOString().slice(0,10);
+  });
+}
+
+function drawWCChart() {
+  const c = document.getElementById('j-wc-chart');
+  c.width  = c.offsetWidth || 600; c.height = 100;
+  const ctx = c.getContext('2d');
+  const days = last30();
+  const map  = Object.fromEntries(_entries.map(e=>[e.date,e.words]));
+  const vals = days.map(d => map[d]||0);
+  const maxV = Math.max(...vals, 1);
+  const W = c.width, H = c.height, bw = W/days.length - 1.5;
+  ctx.clearRect(0,0,W,H);
+  vals.forEach((v,i) => {
+    const bh = (v/maxV)*(H-16);
+    ctx.fillStyle = v ? 'rgba(201,168,76,.55)' : 'rgba(201,168,76,.07)';
+    ctx.fillRect(i*(W/days.length)+1, H-bh-4, bw, bh);
+  });
+}
+
+function drawMoodChart() {
+  const c = document.getElementById('j-mood-chart');
+  c.width  = c.offsetWidth || 600; c.height = 100;
+  const ctx = c.getContext('2d');
+  const days = last30();
+  const map  = Object.fromEntries(_entries.map(e=>[e.date,e.mood||3]));
+  const vals = days.map(d => map[d]||null);
+  const W = c.width, H = c.height, pad = 10;
+  ctx.clearRect(0,0,W,H);
+  [1,2,3,4,5].forEach(m => {
+    const y = H - pad - ((m-1)/4)*(H-2*pad);
+    ctx.strokeStyle = 'rgba(201,168,76,.06)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  });
+  const pts = vals.map((v,i) => v!==null ? {x:i*(W/29), y:H-pad-((v-1)/4)*(H-2*pad)} : null).filter(Boolean);
+  if (pts.length > 1) {
+    ctx.strokeStyle = 'rgba(201,168,76,.6)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+    pts.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.stroke();
+  }
+  pts.forEach(p => {
+    ctx.fillStyle = '#C9A84C';
+    ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
+  });
+}
+
+function renderCloud() {
+  const freq = {};
+  _entries.forEach(e => (e.tags||[]).forEach(t => { freq[t]=(freq[t]||0)+1; }));
+  const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,24);
+  const maxF = sorted[0]?.[1]||1;
+  document.getElementById('j-tag-cloud').innerHTML = sorted.length
+    ? '<div style="display:flex;flex-wrap:wrap;gap:6px">' +
+      sorted.map(([t,c]) => {
+        const op = .35 + (c/maxF)*.65;
+        const sz = 7 + Math.round((c/maxF)*7);
+        return `<span style="font-family:var(--M);font-size:${sz}px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,${(op*.4).toFixed(2)});color:rgba(201,168,76,${op.toFixed(2)})">${t} <span style="opacity:.45">${c}</span></span>`;
+      }).join('') + '</div>'
+    : '<span style="font-family:var(--M);font-size:9px;color:var(--dim)">NO TAGS YET</span>';
+}
+
+/* ── SECURITY TAB ────────────────────────────────────────────────────── */
+
+async function changePassphrase() {
+  const curr = document.getElementById('cp-curr').value;
+  const n1   = document.getElementById('cp-new1').value;
+  const n2   = document.getElementById('cp-new2').value;
+  const msg  = document.getElementById('j-cp-msg');
+  if (n1.length < 8)  { msg.textContent = 'NEW PASSPHRASE TOO SHORT'; return; }
+  if (n1 !== n2)      { msg.textContent = 'PASSPHRASES DO NOT MATCH'; return; }
+  msg.textContent = 'VERIFYING…';
+  try {
+    const salt    = b64ToBytes(localStorage.getItem(SALT_KEY));
+    const currKey = await deriveKey(curr, salt);
+    await loadEntries(currKey);
+    const newSalt = crypto.getRandomValues(new Uint8Array(16));
+    const newKey  = await deriveKey(n1, newSalt);
+    localStorage.setItem(SALT_KEY, bytesToB64(newSalt));
+    _key = newKey;
+    await persist();
+    await cacheKey(newKey);
+    msg.textContent = 'PASSPHRASE UPDATED SUCCESSFULLY';
+    ['cp-curr','cp-new1','cp-new2'].forEach(id => document.getElementById(id).value = '');
+    const hex = hexOf(newSalt);
+    document.getElementById('j-salt-info').textContent =
+      'SALT  : ' + hex + '\nALG   : AES-256-GCM\nKDF   : PBKDF2-SHA256 × 100,000\nSTATUS: ACTIVE';
+  } catch { msg.textContent = 'CURRENT PASSPHRASE INCORRECT'; }
+}
+
+async function exportBackup() {
+  const enc  = localStorage.getItem(ENC_KEY);
+  const salt = localStorage.getItem(SALT_KEY);
+  if (!enc || !salt) { document.getElementById('j-backup-msg').textContent = 'NO DATA TO EXPORT'; return; }
+  const blob = new Blob(
+    [JSON.stringify({v:1, enc, salt, ts:Date.now(), count:_entries.length})],
+    {type:'application/json'}
+  );
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: 'sovereign-journal-' + today() + '.json'
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+  document.getElementById('j-backup-msg').textContent = 'EXPORTED · ' + _entries.length + ' ENTRIES';
+}
+
+async function importBackup(file) {
+  const msg = document.getElementById('j-backup-msg');
+  try {
+    const data = JSON.parse(await file.text());
+    if (!data.enc || !data.salt || data.v !== 1) throw new Error('invalid format');
+    if (!confirm('This replaces your current journal. Continue?')) return;
+    localStorage.setItem(ENC_KEY,  data.enc);
+    localStorage.setItem(SALT_KEY, data.salt);
+    sessionStorage.removeItem(SESS_KEY);
+    msg.textContent = 'IMPORTED · PLEASE RE-ENTER YOUR BACKUP PASSPHRASE';
+    setTimeout(() => doLock(), 2000);
+  } catch (err) { msg.textContent = 'IMPORT FAILED · ' + err.message; }
+}
+
+/* ── HELPERS ─────────────────────────────────────────────────────────── */
+
+function esc(t) {
+  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function calcStreak() {
+  if (!_entries.length) return 0;
+  const dates = new Set(_entries.map(e=>e.date));
+  let s = 0; const d = new Date();
+  while (dates.has(d.toISOString().slice(0,10))) { s++; d.setDate(d.getDate()-1); }
+  return s;
+}
+
+/* ── TAB ROUTER ──────────────────────────────────────────────────────── */
+
+function activateTab(name) {
+  ['write','browse','insights','security'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+    document.getElementById('t-'+t).classList.toggle('active', t===name);
+  });
+  if (name==='browse')   renderBrowse();
+  if (name==='insights') renderInsights();
+}
+
+['write','browse','insights','security'].forEach(t => {
+  document.getElementById('t-'+t).addEventListener('click', () => activateTab(t));
+});
+
+/* ── EVENT WIRES ─────────────────────────────────────────────────────── */
+
+document.getElementById('j-init-btn').addEventListener('click', doSetup);
+document.getElementById('j-unlock-btn').addEventListener('click', doUnlock);
+document.getElementById('j-lock-btn').addEventListener('click', doLock);
+document.getElementById('j-save-btn').addEventListener('click', saveEntry);
+document.getElementById('j-cp-btn').addEventListener('click', changePassphrase);
+document.getElementById('j-export-btn').addEventListener('click', exportBackup);
+document.getElementById('j-import-trigger').addEventListener('click', () => document.getElementById('j-import-file').click());
+document.getElementById('j-import-file').addEventListener('change', function() { if(this.files[0]) importBackup(this.files[0]); this.value=''; });
+
+document.getElementById('j-content').addEventListener('input', updateWC);
+
+document.querySelectorAll('.j-mood-btn').forEach(b => {
+  b.addEventListener('click', () => setMoodUI(+b.dataset.m));
+});
+
+document.getElementById('j-tag-in').addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  const v = this.value.trim().toLowerCase().replace(/[^a-z0-9\-]/g,'');
+  if (v && !_tags.includes(v) && _tags.length < 8) { _tags.push(v); renderTags(); }
+  this.value = '';
+});
+
+document.getElementById('lk-phrase') &&
+  document.getElementById('lk-phrase').addEventListener('keydown', e => { if(e.key==='Enter') doUnlock(); });
+document.getElementById('lk-new2') &&
+  document.getElementById('lk-new2').addEventListener('keydown', e => { if(e.key==='Enter') doSetup(); });
+
+/* ── BOOT ─────────────────────────────────────────────────────────────── */
+boot();
+
+</script>
+</body>
+</html>

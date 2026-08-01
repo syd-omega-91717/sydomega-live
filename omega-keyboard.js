@@ -38,13 +38,13 @@
     a:'/analytics.html',  m:'/matrix.html',     p:'/profile.html',
     s:'/settings.html',   v:'/vault.html',       k:'/knowledge.html',
     x:'/exam.html',       q:'/gaming.html',      t:'/gates.html',
-    i:'/intelligence.html',
+    i:'/intelligence.html', o:'/studio.html',    r:'/publishing.html',
   };
   var G_LABEL = {
     d:'Dashboard', e:'Evolution', l:'Leaderboard', a:'Analytics',
     m:'Matrix', p:'Profile', s:'Settings', v:'Vault',
     k:'Knowledge Graph', x:'Exam', q:'Gaming', t:'Gates',
-    i:'Intelligence',
+    i:'Intelligence', o:'Studio', r:'Publishing',
   };
   var SHORTCUT_HELP = [
     {group:'Navigation — press g then', shortcuts:[
@@ -54,6 +54,7 @@
       {keys:['g','s'],desc:'Settings'},   {keys:['g','v'],desc:'Vault'},
       {keys:['g','k'],desc:'Knowledge'},  {keys:['g','x'],desc:'Exam'},
       {keys:['g','q'],desc:'Gaming'},     {keys:['g','t'],desc:'Gates'},
+      {keys:['g','o'],desc:'Studio'},     {keys:['g','r'],desc:'Publishing'},
     ]},
     {group:'Actions',shortcuts:[
       {keys:['Ctrl','K'],desc:'Open search'},

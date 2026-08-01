@@ -195,11 +195,11 @@
 
   window.OmegaTour = API;
 
-  /* Auto-start dashboard tour for first-time session members */
+  /* Auto-start tour for first-time session per page */
   document.addEventListener('omega:populated', function(e){
     var slug = (location.pathname||'/').replace(/^\/|\.html$/g,'') || 'dashboard';
-    if(slug === 'dashboard' && _tours[slug]){
-      API.autoStart('dashboard', 4000);
+    if(_tours[slug]){
+      API.autoStart(slug, slug === 'dashboard' ? 4000 : 3000);
     }
   });
 
@@ -227,6 +227,34 @@
       target: null,
       title: 'WELCOME TO THE PLATFORM',
       text: 'Ω SYD OMEGA 91717 is a living sovereign system. Complete tasks to advance your authority. Explore the Gates, Evolution, and Knowledge tracks to grow across all three axes.',
+      placement: 'top'
+    },
+  ]);
+
+  /* Production Studio tour */
+  API.register('studio', [
+    {
+      target: '.topbar',
+      title: 'PRODUCTION COMMAND BAR',
+      text: 'Your Axis C contribution ring and live authority are visible here. Press <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:0 5px;border-radius:2px">+ NEW WORK</kbd> to start a new creation.',
+      placement: 'bottom'
+    },
+    {
+      target: '.pipeline',
+      title: 'CREATION PIPELINE',
+      text: 'Your works flow through DRAFT → IN REVIEW → APPROVED stages. Every committed work is private by default and visible only in your archive.',
+      placement: 'bottom'
+    },
+    {
+      target: '.create-grid',
+      title: 'QUICK CREATE',
+      text: 'Choose a form — Manuscript, Treatise, Report, Article, or Codex Entry. Each advances your <b style="color:#C9A84C">Axis C Contribution</b>. Your first publication unlocks +0.25 immediately.',
+      placement: 'top'
+    },
+    {
+      target: '.axis-grid',
+      title: 'YOUR AXIS PROGRESSION',
+      text: 'These live rings show your position on all three axes. Knowledge (A), Mastery (B), and Contribution (C) each run 0.001 to 9.000. The Creator\'s Hall powers Axis C.',
       placement: 'top'
     },
   ]);

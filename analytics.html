@@ -51,7 +51,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="analytics"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">DATA ANALYTICS &amp; INTELLIGENCE<small>M17 &middot; DATA SCIENCE &middot; ML &middot; AI &middot; ALGORITHMS &middot; PYTHON &middot; <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t">DATA ANALYTICS &amp; INTELLIGENCE<small>M17 &middot; DATA SCIENCE &middot; ML &middot; AI &middot; ALGORITHMS &middot; PYTHON &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="an-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0"></canvas><a href="/studio.html" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--void);background:var(--gold);padding:7px 14px;border:1px solid var(--gold);flex-shrink:0;cursor:pointer;transition:.18s" onmouseenter="this.style.background='transparent';this.style.color='var(--gold)'" onmouseleave="this.style.background='var(--gold)';this.style.color='var(--void)'">&#9654; STUDIO</a></div>
 
     <!-- KPI ROW -->
     <div class="kpi-row">
@@ -91,6 +91,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div id="cube-bars"></div>
         </div></div>
         <div class="chart-wrap"><div class="chart-head">LATTICE PLANE &middot; 9&#215;9 INNER CUBE</div><div class="chart-body"><div id="lattice-mini" data-lattice="plane" data-nodes="0"></div></div></div>
+      </div>
+      <!-- LIVE AUTHORITY CHARTS -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:14px">
+        <div class="chart-wrap"><div class="chart-head">AUTHORITY HISTORY &middot; 90 DAYS</div><div class="chart-body" style="min-height:180px;position:relative"><canvas id="an-chart-auth" data-omega-chart="auth"></canvas></div></div>
+        <div class="chart-wrap"><div class="chart-head">AXIS RADAR &middot; LIVE A / B / C</div><div class="chart-body" style="min-height:180px;position:relative"><canvas id="an-chart-radar" data-omega-chart="axis-radar"></canvas></div></div>
       </div>
     </div>
 
@@ -229,6 +234,23 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     document.getElementById('an-bar-auth').style.width=(auth/27.8367*100).toFixed(1)+'%';
     if(window.__drawApex) window.__drawApex(auth/27.8367*100);
     if(window.__miniRadar) window.__miniRadar(adisp,bdisp,cdisp);
+    /* Sovereign authority ring in topbar */
+    (function tryRing(){
+      var rv=document.getElementById('an-ring-auth');
+      if(!rv)return;
+      if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}
+      setTimeout(tryRing,350);
+    })();
+    /* Wire live charts via OmegaChart */
+    (function tryCharts(){
+      if(!window.OmegaChart){setTimeout(tryCharts,400);return;}
+      var uid=s&&s.user&&s.user.id;
+      if(!uid)return;
+      var authCv=document.getElementById('an-chart-auth');
+      var radarCv=document.getElementById('an-chart-radar');
+      if(authCv) window.OmegaChart.auth(authCv,uid);
+      if(radarCv) window.OmegaChart.axisRadar(radarCv,uid);
+    })();
     /* cube bars */
     var cb=document.getElementById('cube-bars');
     if(cb) cb.innerHTML=[{n:'A&#179;',v:a3,m:729,c:'var(--gold)'},{n:'B&#179;',v:b3,m:729,c:'var(--cyan)'},{n:'C&#179;',v:c3,m:729,c:'var(--purple)'}]

@@ -76,27 +76,27 @@
       "permanent": true
     },
     {
-      "source": "/:path*.ts",
+      "source": "/:path(.*\\.ts)",
       "destination": "/dashboard.html",
       "permanent": false
     },
     {
-      "source": "/:path*.py",
+      "source": "/:path(.*\\.py)",
       "destination": "/dashboard.html",
       "permanent": false
     },
     {
-      "source": "/:path*.sol",
+      "source": "/:path(.*\\.sol)",
       "destination": "/dashboard.html",
       "permanent": false
     },
     {
-      "source": "/:path*.sql",
+      "source": "/:path(.*\\.sql)",
       "destination": "/dashboard.html",
       "permanent": false
     },
     {
-      "source": "/:path*.docx",
+      "source": "/:path(.*\\.docx)",
       "destination": "/dashboard.html",
       "permanent": false
     }

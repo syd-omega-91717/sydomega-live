@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LIBRARY — Sovereign Reading List · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="omega.css">
+<style>
+.search-bar{display:flex;gap:8px;margin-bottom:20px}
+.search-bar input{flex:1;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M,'Courier Prime',monospace);font-size:10px;letter-spacing:1px;padding:11px 14px;border-radius:2px;outline:none}
+.search-bar input:focus{border-color:rgba(201,168,76,.4)}
+.search-bar input::placeholder{color:rgba(138,134,118,.3)}
+.search-bar button{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:11px 18px;border:1px solid rgba(201,168,76,.3);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s;white-space:nowrap}
+.search-bar button:hover{background:rgba(201,168,76,.08);color:var(--gold)}
+.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:20px}
+.book-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;overflow:hidden;transition:.12s;cursor:pointer}
+.book-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.03)}
+.book-cover{width:100%;height:160px;object-fit:cover;background:rgba(201,168,76,.05);display:flex;align-items:center;justify-content:center}
+.book-cover-placeholder{width:100%;height:160px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));flex-direction:column;gap:8px}
+.book-cover-placeholder span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.4);text-align:center;padding:0 8px}
+.book-info{padding:12px}
+.book-title{font-family:var(--M,'Courier Prime',monospace);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.85);margin-bottom:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.book-author{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.6);margin-bottom:6px}
+.book-meta{display:flex;justify-content:space-between;align-items:center}
+.book-year{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.4)}
+.add-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.add-btn:hover{background:rgba(201,168,76,.08);color:var(--gold)}
+.add-btn.added{border-color:rgba(80,200,120,.3);color:rgba(80,200,120,.6)}
+.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
+.tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
+.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-panel{display:none}.tab-panel.act{display:block}
+.shelf-item{display:grid;grid-template-columns:52px 1fr auto;gap:14px;padding:12px 14px;border:1px solid rgba(201,168,76,.08);border-radius:2px;margin-bottom:6px;align-items:center}
+.shelf-cover{width:52px;height:70px;background:rgba(201,168,76,.06);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
+.shelf-cover img{width:100%;height:100%;object-fit:cover}
+.shelf-body .sb-title{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.85);margin-bottom:3px}
+.shelf-body .sb-author{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.6);margin-bottom:6px}
+.shelf-body .sb-status{display:flex;gap:6px;align-items:center}
+.status-badge{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 9px;border-radius:10px;border:1px solid}
+.status-badge.want{border-color:rgba(201,168,76,.2);color:rgba(138,134,118,.5)}
+.status-badge.reading{border-color:rgba(100,160,220,.3);color:rgba(100,160,220,.7)}
+.status-badge.done{border-color:rgba(80,200,120,.3);color:rgba(80,200,120,.7)}
+.shelf-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.shelf-action-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;transition:.12s;white-space:nowrap}
+.shelf-action-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.rating-row{display:flex;gap:3px}
+.star{cursor:pointer;color:rgba(201,168,76,.2);font-size:14px;transition:.1s}
+.star.on{color:rgba(201,168,76,.8)}
+.star:hover{color:rgba(201,168,76,.6)}
+.notes-input{width:100%;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:rgba(201,168,76,.7);font-family:var(--M);font-size:8px;padding:7px 10px;border-radius:2px;outline:none;margin-top:6px;box-sizing:border-box;resize:vertical;line-height:1.5}
+.notes-input:focus{border-color:rgba(201,168,76,.3)}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
+.stat-box .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.stat-box .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
+.filter-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.filter-chip{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:5px 12px;border:1px solid rgba(201,168,76,.12);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;transition:.12s}
+.filter-chip.sel,.filter-chip:hover{border-color:rgba(201,168,76,.4);color:var(--gold)}
+.loading{font-family:var(--M);font-size:9px;letter-spacing:2px;color:rgba(138,134,118,.4);text-align:center;padding:40px;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+</style>
+</head>
+<body>
+<div class="side" id="side"></div>
+<div class="main">
+  <div class="topbar" id="topbar">
+    <div class="tb-left">
+      <span class="tb-title">LIBRARY</span>
+      <span class="tb-sub">SOVEREIGN READING LIST · SYD OMEGA 91717</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="tab-row">
+      <button class="tab-btn act" onclick="switchTab('discover',this)">DISCOVER</button>
+      <button class="tab-btn" onclick="switchTab('shelf',this)">MY SHELF</button>
+      <button class="tab-btn" onclick="switchTab('stats',this)">STATS</button>
+      <button class="tab-btn" onclick="switchTab('curated',this)">SOVEREIGN READS</button>
+    </div>
+
+    <!-- DISCOVER TAB -->
+    <div class="tab-panel act" id="tab-discover">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="SEARCH BOOKS, AUTHORS, TOPICS..." onkeydown="if(event.key==='Enter')searchBooks()">
+        <button onclick="searchBooks()">SEARCH</button>
+      </div>
+      <div id="search-status" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-bottom:14px"></div>
+      <div id="search-results" class="book-grid"></div>
+      <div id="discover-featured"></div>
+    </div>
+
+    <!-- MY SHELF TAB -->
+    <div class="tab-panel" id="tab-shelf">
+      <div class="filter-row">
+        <button class="filter-chip sel" onclick="filterShelf('all',this)">ALL</button>
+        <button class="filter-chip" onclick="filterShelf('want',this)">WANT TO READ</button>
+        <button class="filter-chip" onclick="filterShelf('reading',this)">READING</button>
+        <button class="filter-chip" onclick="filterShelf('done',this)">COMPLETED</button>
+      </div>
+      <div id="shelf-list"></div>
+    </div>
+
+    <!-- STATS TAB -->
+    <div class="tab-panel" id="tab-stats">
+      <div class="stat-row">
+        <div class="stat-box"><div class="sv" id="stat-total">0</div><div class="sk">TOTAL BOOKS</div></div>
+        <div class="stat-box"><div class="sv" id="stat-read">0</div><div class="sk">COMPLETED</div></div>
+        <div class="stat-box"><div class="sv" id="stat-reading">0</div><div class="sk">IN PROGRESS</div></div>
+        <div class="stat-box"><div class="sv" id="stat-avg">—</div><div class="sk">AVG RATING</div></div>
+      </div>
+      <div class="section-hd">GENRE BREAKDOWN</div>
+      <div id="genre-breakdown"></div>
+    </div>
+
+    <!-- CURATED TAB -->
+    <div class="tab-panel" id="tab-curated">
+      <div class="section-hd">THE SOVEREIGN READING LIST</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);margin-bottom:20px;line-height:1.7">
+        Curated books that every sovereign should read. Not suggestions — imperatives.
+      </div>
+      <div id="curated-list"></div>
+    </div>
+
+  </div>
+
+  <div class="lf">
+    <span>&#937; LIBRARY · SYD OMEGA 91717</span>
+    <span>READERS ARE LEADERS · THE SOVEREIGN NEVER STOPS LEARNING</span>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="omega-ui.js"></script>
+<script type="module">
+const SHELF_KEY = 'omega_library_shelf';
+
+const CURATED = [
+  {title:'Thinking, Fast and Slow',author:'Daniel Kahneman',year:'2011',cat:'psychology',why:'The cognitive architecture of all decisions. Two-system thinking is foundational to self-mastery.'},
+  {title:'Principles',author:'Ray Dalio',year:'2017',cat:'strategy',why:'Operating principles for life and business. The most practical framework for sovereignty.'},
+  {title:'Meditations',author:'Marcus Aurelius',year:'161-180 AD',cat:'philosophy',why:'The private journal of the most powerful man in the world. Pure stoic sovereignty.'},
+  {title:'The Almanack of Naval Ravikant',author:'Eric Jorgenson',year:'2020',cat:'wealth',why:'How to build wealth and happiness without luck. The sovereign mental model for wealth creation.'},
+  {title:'Atomic Habits',author:'James Clear',year:'2018',cat:'systems',why:'The definitive guide to building the systems that make sovereignty automatic.'},
+  {title:'Poor Charlie\'s Almanack',author:'Charlie Munger',year:'2005',cat:'mental models',why:'The mental model lattice that Munger used to build Berkshire with Buffett.'},
+  {title:'Deep Work',author:'Cal Newport',year:'2016',cat:'productivity',why:'Focus is the superpower of the modern era. This book is the manual.'},
+  {title:'Zero to One',author:'Peter Thiel',year:'2014',cat:'business',why:'The playbook for building monopolies and escaping competition.'},
+  {title:'The 48 Laws of Power',author:'Robert Greene',year:'1998',cat:'strategy',why:'The uncensored laws of power, influence, and sovereign positioning.'},
+  {title:'Skin in the Game',author:'Nassim Nicholas Taleb',year:'2018',cat:'risk',why:'Accountability, asymmetric risk, and what it means to truly have sovereignty.'},
+  {title:'The Psychology of Money',author:'Morgan Housel',year:'2020',cat:'wealth',why:'The behavioral foundation of all financial sovereignty.'},
+  {title:'Man\'s Search for Meaning',author:'Viktor Frankl',year:'1946',cat:'philosophy',why:'Meaning as the ultimate sovereign force. Written in a concentration camp — unshakeable.'},
+  {title:'Antifragile',author:'Nassim Nicholas Taleb',year:'2012',cat:'strategy',why:'Building systems that gain from disorder. The sovereign does not just survive volatility — they profit from it.'},
+  {title:'The War of Art',author:'Steven Pressfield',year:'2002',cat:'mastery',why:'Resistance is the enemy of sovereign creation. This is the map of the battle.'},
+  {title:'12 Rules for Life',author:'Jordan Peterson',year:'2018',cat:'philosophy',why:'Meaning, responsibility, and the archetypal framework of the sovereign life.'},
+];
+
+function getShelf(){ try{return JSON.parse(localStorage.getItem(SHELF_KEY)||'[]');}catch{return[];} }
+function saveShelf(shelf){ localStorage.setItem(SHELF_KEY, JSON.stringify(shelf)); }
+
+function inShelf(key){ return getShelf().some(b=>b.key===key); }
+function getBook(key){ return getShelf().find(b=>b.key===key); }
+
+function addToShelf(book){
+  const shelf=getShelf();
+  if(shelf.some(b=>b.key===book.key)) return;
+  shelf.push({...book,status:'want',rating:0,notes:'',addedAt:new Date().toISOString()});
+  saveShelf(shelf);
+  renderShelf();
+  renderStats();
+}
+window.addToShelf=addToShelf;
+
+function updateStatus(key,status){
+  const shelf=getShelf();
+  const b=shelf.find(x=>x.key===key);
+  if(b){b.status=status;saveShelf(shelf);renderShelf();}
+}
+function updateRating(key,rating){
+  const shelf=getShelf();
+  const b=shelf.find(x=>x.key===key);
+  if(b){b.rating=rating;saveShelf(shelf);renderShelf();}
+}
+function updateNotes(key,notes){
+  const shelf=getShelf();
+  const b=shelf.find(x=>x.key===key);
+  if(b){b.notes=notes;saveShelf(shelf);}
+}
+function removeFromShelf(key){
+  const shelf=getShelf().filter(b=>b.key!==key);
+  saveShelf(shelf);renderShelf();renderStats();
+}
+window.updateStatus=updateStatus;window.updateRating=updateRating;
+window.updateNotes=updateNotes;window.removeFromShelf=removeFromShelf;
+
+/* ── Open Library search ── */
+async function searchBooks(){
+  const q=document.getElementById('search-input').value.trim();
+  if(!q) return;
+  const status=document.getElementById('search-status');
+  const results=document.getElementById('search-results');
+  status.textContent='SEARCHING OPEN LIBRARY...';
+  results.innerHTML='<div class="loading">LOADING...</div>';
+  try{
+    const url=`https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=12&fields=key,title,author_name,first_publish_year,cover_i,subject`;
+    const data=await fetch(url).then(r=>r.json());
+    const docs=data.docs||[];
+    status.textContent=`${docs.length} RESULTS FOR "${q.toUpperCase()}"`;
+    results.innerHTML=docs.map(book=>{
+      const key=book.key||`ol-${Date.now()}-${Math.random()}`;
+      const title=book.title||'Unknown Title';
+      const author=(book.author_name||['Unknown'])[0];
+      const year=book.first_publish_year||'';
+      const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:'';
+      const shelfBook={key,title,author,year,cover,source:'openlibrary'};
+      const added=inShelf(key);
+      return `<div class="book-card" onclick="showBookDetail(${JSON.stringify(shelfBook).replace(/'/g,'&#39;').replace(/"/g,'&quot;')})">
+        ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
+          :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span><span>${title.slice(0,30)}</span></div>`}
+        <div class="book-info">
+          <div class="book-title">${title}</div>
+          <div class="book-author">${author}</div>
+          <div class="book-meta">
+            <span class="book-year">${year}</span>
+            <button class="add-btn ${added?'added':''}" onclick="event.stopPropagation();addToShelf(${JSON.stringify(shelfBook).replace(/"/g,'&quot;')})">${added?'ON SHELF':'+ ADD'}</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('')||'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4)">NO RESULTS FOUND</div>';
+  }catch(err){
+    status.textContent='ERROR FETCHING RESULTS';
+    results.innerHTML='<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4)">UNABLE TO REACH OPEN LIBRARY — CHECK CONNECTION</div>';
+  }
+}
+window.searchBooks=searchBooks;
+
+function showBookDetail(book){
+  // Add to shelf if not already there, else show detail
+  if(!inShelf(book.key)) addToShelf(book);
+  else alert(`"${book.title}" is already on your shelf.`);
+}
+window.showBookDetail=showBookDetail;
+
+/* ── Featured books (sovereignty classics) ── */
+async function loadFeatured(){
+  const classics=['the republic plato','art of war sun tzu','meditations marcus aurelius'];
+  document.getElementById('discover-featured').innerHTML=`<div class="section-hd">SOVEREIGN CLASSICS</div>
+    <div class="loading">LOADING CLASSICS...</div>`;
+  try{
+    const results=await Promise.all(classics.map(q=>
+      fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=1&fields=key,title,author_name,first_publish_year,cover_i`).then(r=>r.json())));
+    const books=results.map(d=>d.docs?.[0]).filter(Boolean);
+    document.getElementById('discover-featured').innerHTML=`<div class="section-hd">SOVEREIGN CLASSICS</div>
+      <div class="book-grid">
+        ${books.map(book=>{
+          const key=book.key;
+          const title=book.title;
+          const author=(book.author_name||['Unknown'])[0];
+          const year=book.first_publish_year||'';
+          const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:'';
+          const shelfBook={key,title,author,year,cover,source:'openlibrary'};
+          const added=inShelf(key);
+          return `<div class="book-card">
+            ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
+              :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span></div>`}
+            <div class="book-info">
+              <div class="book-title">${title}</div>
+              <div class="book-author">${author}</div>
+              <div class="book-meta">
+                <span class="book-year">${year}</span>
+                <button class="add-btn ${added?'added':''}" onclick="addToShelf(${JSON.stringify(shelfBook).replace(/"/g,'&quot;')})">${added?'ON SHELF':'+ ADD'}</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }catch{
+    document.getElementById('discover-featured').innerHTML='';
+  }
+}
+
+/* ── Shelf rendering ── */
+let shelfFilter='all';
+function filterShelf(status,btn){
+  shelfFilter=status;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('sel'));
+  if(btn) btn.classList.add('sel');
+  renderShelf();
+}
+window.filterShelf=filterShelf;
+
+function renderShelf(){
+  const shelf=getShelf().filter(b=>shelfFilter==='all'||b.status===shelfFilter);
+  document.getElementById('shelf-list').innerHTML=shelf.length?
+    shelf.map(b=>`
+      <div class="shelf-item">
+        <div class="shelf-cover">
+          ${b.cover?`<img src="${b.cover}" alt="${b.title}">`:'📚'}
+        </div>
+        <div class="shelf-body">
+          <div class="sb-title">${b.title}</div>
+          <div class="sb-author">${b.author}${b.year?' · '+b.year:''}</div>
+          <div class="sb-status">
+            <select onchange="updateStatus('${b.key}',this.value)" style="background:transparent;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);font-family:var(--M);font-size:7.5px;padding:3px 6px;border-radius:2px;outline:none;cursor:pointer">
+              <option value="want" ${b.status==='want'?'selected':''}>WANT TO READ</option>
+              <option value="reading" ${b.status==='reading'?'selected':''}>READING NOW</option>
+              <option value="done" ${b.status==='done'?'selected':''}>COMPLETED</option>
+            </select>
+            <div class="rating-row">
+              ${[1,2,3,4,5].map(i=>`<span class="star ${b.rating>=i?'on':''}" onclick="updateRating('${b.key}',${i})">★</span>`).join('')}
+            </div>
+          </div>
+          ${b.status==='done'?`<textarea class="notes-input" placeholder="Key insights and notes..." onchange="updateNotes('${b.key}',this.value)" rows="2">${b.notes||''}</textarea>`:''}
+        </div>
+        <div class="shelf-actions">
+          <button class="shelf-action-btn" onclick="removeFromShelf('${b.key}')">REMOVE</button>
+        </div>
+      </div>`).join('')
+    :'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);padding:24px 0">NO BOOKS FOUND — SEARCH AND ADD BOOKS TO YOUR SHELF</div>';
+}
+
+function renderStats(){
+  const shelf=getShelf();
+  const done=shelf.filter(b=>b.status==='done');
+  const reading=shelf.filter(b=>b.status==='reading');
+  const rated=done.filter(b=>b.rating>0);
+  const avgRating=rated.length?Math.round(rated.reduce((a,b)=>a+b.rating,0)/rated.length*10)/10:0;
+  document.getElementById('stat-total').textContent=shelf.length;
+  document.getElementById('stat-read').textContent=done.length;
+  document.getElementById('stat-reading').textContent=reading.length;
+  document.getElementById('stat-avg').textContent=avgRating||'—';
+}
+
+function renderCurated(){
+  document.getElementById('curated-list').innerHTML=CURATED.map((b,i)=>`
+    <div style="display:grid;grid-template-columns:32px 1fr auto;gap:12px;padding:12px 14px;border:1px solid rgba(201,168,76,.08);border-radius:2px;margin-bottom:6px;align-items:center">
+      <div style="font-family:var(--M);font-size:14px;color:rgba(201,168,76,.3);text-align:center">${i+1}</div>
+      <div>
+        <div style="font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.85);margin-bottom:3px">${b.title}</div>
+        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.6);margin-bottom:4px">${b.author} · ${b.year} · <em>${b.cat}</em></div>
+        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:.8px;color:rgba(138,134,118,.5);line-height:1.6">${b.why}</div>
+      </div>
+      <button class="add-btn" onclick="addToShelf({key:'curated-${i}',title:'${b.title.replace(/'/g,'&#39;')}',author:'${b.author.replace(/'/g,'&#39;')}',year:'${b.year}',cover:'',source:'curated'})">+ ADD</button>
+    </div>`).join('');
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='shelf') renderShelf();
+  if(id==='stats') renderStats();
+  if(id==='curated') renderCurated();
+}
+window.switchTab=switchTab;
+
+loadFeatured();
+renderStats();
+renderCurated();
+</script>
+</body>
+</html>

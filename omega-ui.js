@@ -84,6 +84,8 @@
     habits:       {label:'Habit Stack',     section:'MASTERY',    prev:'missions',       next:'forge'},
     targets:      {label:'OKR Targets',     section:'STRATEGY',   prev:'roadmap',        next:'ecosystem'},
     atlas:        {label:'Knowledge Atlas', section:'INTEL',      prev:'codex',          next:'intelligence'},
+    meditate:     {label:'Breathwork',      section:'IDENTITY',   prev:'rituals',        next:'mirror'},
+    library:      {label:'Reading Library', section:'INTEL',      prev:'atlas',          next:'codex'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

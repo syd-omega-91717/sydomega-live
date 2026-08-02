@@ -1,305 +1,259 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN SIGIL</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; SIGIL</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:.85rem;color:var(--solar);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-.pad{padding:clamp(14px,3vw,36px)}
-.card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;margin-bottom:14px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--solar);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-
-/* Sigil display */
-.sigil-stage{display:flex;align-items:center;justify-content:center;min-height:320px;background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:20px;position:relative}
-.sigil-stage svg{max-width:300px;max-height:300px;width:100%;height:auto;filter:drop-shadow(0 0 20px var(--sigil-glow,rgba(226,200,109,.3)))}
-
-/* Loading spinner */
-.sigil-spin{font-family:var(--D);font-size:48px;color:var(--gold);animation:spin 3s linear infinite;display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Controls */
-.btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid var(--solar);background:rgba(226,200,109,.08);color:var(--solar);cursor:pointer;border-radius:2px;transition:.15s}
-.btn:hover{background:rgba(226,200,109,.2)}
-.btn-purple{border-color:var(--purple);background:rgba(155,107,240,.08);color:var(--purple)}
-.btn-purple:hover{background:rgba(155,107,240,.2)}
-.btn-cyan{border-color:var(--cyan);background:rgba(0,229,255,.05);color:var(--cyan)}
-.btn-cyan:hover{background:rgba(0,229,255,.1)}
-
-/* Attribute sliders */
-.slider-row{margin-bottom:12px}
-.slider-label{display:flex;justify-content:space-between;font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
-.slider-label span{color:var(--solar)}
-input[type=range]{width:100%;accent-color:var(--gold)}
-
-/* Variant grid */
-.variant-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:10px}
-.variant-tile{border:1px solid var(--line);background:rgba(10,10,15,.6);padding:10px;text-align:center;cursor:pointer;border-radius:2px;transition:.18s}
-.variant-tile:hover{border-color:var(--solar);background:rgba(201,168,76,.05)}
-.variant-tile svg{max-width:100px;max-height:100px;width:100%;height:auto}
-.variant-name{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);margin-top:6px}
-
-/* Info stats */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.info-stat{font-family:var(--M);font-size:7.5px}
-.info-stat dt{letter-spacing:1px;color:var(--muted);margin-bottom:2px}
-.info-stat dd{font-family:var(--D);font-size:13px;color:var(--solar)}
-
-@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.sigil-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;gap:1rem}
+.sigil-frame{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;max-width:400px;width:100%}
+#sigil-host{width:300px;height:300px;border:1px solid var(--line);border-radius:8px;background:var(--void);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.sigil-actions{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center}
+.sigil-label{color:var(--muted);font-family:var(--M);font-size:.75rem;letter-spacing:.08em;text-align:center}
+.variants-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.75rem;padding:1rem}
+.variant-item{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.75rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:pointer;transition:border-color .2s}
+.variant-item:hover,.variant-item.sel{border-color:var(--gold)}
+.variant-host{width:80px;height:80px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.variant-name{color:var(--muted);font-size:.72rem;font-family:var(--M);text-align:center}
+.customize-form{max-width:480px;margin:0 auto;padding:1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.slider-row{display:flex;align-items:center;gap:.75rem}
+.slider-row label{color:var(--muted);font-size:.78rem;min-width:100px;font-family:var(--M)}
+.slider-row input[type=range]{flex:1;accent-color:var(--gold)}
+.slider-val{color:var(--gold);font-family:var(--M);font-size:.8rem;min-width:2.5rem;text-align:right}
+.elem-row{display:flex;gap:.5rem;flex-wrap:wrap}
+.elem-btn{padding:.3rem .7rem;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:var(--M);font-size:.75rem;cursor:pointer;transition:border-color .2s,color .2s}
+.elem-btn.sel{border-color:var(--gold);color:var(--gold)}
+.section-label{color:var(--muted);font-size:.78rem;letter-spacing:.08em;font-family:var(--M)}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="rune"></aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="t">SOVEREIGN SIGIL<small>PROCEDURAL SVG IDENTITY RUNE · DETERMINISTIC FROM AUTHORITY PARAMETERS</small></div>
-    </div>
-
-    <div class="pad">
-      <div class="grid2">
-        <!-- Left: sigil display -->
-        <div>
-          <div class="card">
-            <div class="sechead">YOUR SOVEREIGN SIGIL</div>
-            <div class="sigil-stage" id="sigil-stage">
-              <span class="sigil-spin">Ω</span>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-              <button class="btn" onclick="downloadSigil()">&#11015; DOWNLOAD SVG</button>
-              <button class="btn btn-purple" onclick="animateSigil()">&#9654; ANIMATE</button>
-              <button class="btn btn-cyan" onclick="copySvg()">&#9632; COPY SVG</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="sechead">SIGIL PARAMETERS</div>
-            <dl class="info-grid" id="sigil-info"></dl>
-          </div>
-        </div>
-
-        <!-- Right: controls -->
-        <div>
-          <div class="card">
-            <div class="sechead">CUSTOMISE</div>
-
-            <div class="slider-row">
-              <div class="slider-label">SIZE <span id="sz-val">300</span>px</div>
-              <input type="range" id="ctrl-size" min="150" max="600" value="300" oninput="updateSigil()">
-            </div>
-
-            <div class="slider-row">
-              <div class="slider-label">AXIS A OVERRIDE <span id="a-val">—</span></div>
-              <input type="range" id="ctrl-a" min="0" max="10" step="0.1" value="5" oninput="updateSigil()">
-            </div>
-            <div class="slider-row">
-              <div class="slider-label">AXIS B OVERRIDE <span id="b-val">—</span></div>
-              <input type="range" id="ctrl-b" min="0" max="10" step="0.1" value="5" oninput="updateSigil()">
-            </div>
-            <div class="slider-row">
-              <div class="slider-label">AXIS C OVERRIDE <span id="c-val">—</span></div>
-              <input type="range" id="ctrl-c" min="0" max="10" step="0.1" value="5" oninput="updateSigil()">
-            </div>
-
-            <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">ELEMENT OVERRIDE</div>
-            <div id="elem-override" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px"></div>
-
-            <button class="btn" onclick="resetToProfile()" style="width:100%">&#8635; RESET TO PROFILE</button>
-          </div>
-
-          <div class="card">
-            <div class="sechead">ELEMENT VARIANTS</div>
-            <div class="variant-grid" id="variant-grid"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <footer class="lf"><span>Ω SOVEREIGN SIGIL · SYD OMEGA 91717</span><span id="rune-ts"></span></footer>
-  </main>
+<aside id="omega-side" data-page="rune"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">SIGIL<span class="topbar-sub">SOVEREIGN RUNE</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-live data-ring-value="0" aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('sigil')">SIGIL</button>
+  <button class="tab-btn" onclick="setTab('variants')">VARIANTS</button>
+  <button class="tab-btn" onclick="setTab('customize')">CUSTOMIZE</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<script type="module">
-const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
-const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
-const PHI=1.6180339887,EU=2.7182818285;
-const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
-const ELEM_SIGILS={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
-const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+<!-- SIGIL TAB -->
+<div class="tab-panel active" id="tab-sigil">
+  <div class="sigil-stage">
+    <div class="sigil-frame">
+      <div class="sigil-label" id="sigil-user-label">LOADING…</div>
+      <div id="sigil-host"></div>
+      <div class="sigil-label" id="sigil-elem-label">—</div>
+      <div class="sigil-actions">
+        <button class="btn-gold" onclick="downloadSigil()">DOWNLOAD</button>
+        <button class="btn-gold" onclick="copySigil()">COPY SVG</button>
+        <button class="btn-gold" onclick="animateSigil()">ANIMATE</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
-function getGate(auth){let g=0;GATE_THRESH.forEach((t,i)=>{if(auth>=t)g=i;});return g+1;}
+<!-- VARIANTS TAB -->
+<div class="tab-panel" id="tab-variants">
+  <div class="variants-grid" id="variants-grid"></div>
+</div>
 
-const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
-const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
-const {data:{session}}=await sb.auth.getSession();
-if(!session){location.href='/account.html';throw 0;}
-const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-if(pr?.approval_status==='pending'){location.href='/pending.html';throw 0;}
-if(window.__omegaApprove)window.__omegaApprove(true);
-document.getElementById('app').style.display='flex';
-document.getElementById('rune-ts').textContent=new Date().toUTCString().split(' ').slice(1,4).join(' ');
+<!-- CUSTOMIZE TAB -->
+<div class="tab-panel" id="tab-customize">
+  <div class="customize-form">
+    <div>
+      <div class="section-label">ELEMENT</div>
+      <div class="elem-row" id="elem-row">
+        <button class="elem-btn" data-elem="Fire" onclick="setElem('Fire')">FIRE</button>
+        <button class="elem-btn" data-elem="Water" onclick="setElem('Water')">WATER</button>
+        <button class="elem-btn" data-elem="Wind" onclick="setElem('Wind')">WIND</button>
+        <button class="elem-btn" data-elem="Metal" onclick="setElem('Metal')">METAL</button>
+        <button class="elem-btn" data-elem="Sand" onclick="setElem('Sand')">SAND</button>
+      </div>
+    </div>
+    <div class="slider-row">
+      <label>AUTHORITY</label>
+      <input type="range" id="sl-auth" min="0" max="100" value="50" oninput="onSlider()"/>
+      <span class="slider-val" id="sv-auth">50</span>
+    </div>
+    <div class="slider-row">
+      <label>COMPLEXITY</label>
+      <input type="range" id="sl-comp" min="1" max="5" value="3" step="1" oninput="onSlider()"/>
+      <span class="slider-val" id="sv-comp">3</span>
+    </div>
+    <div class="slider-row">
+      <label>SCALE</label>
+      <input type="range" id="sl-scale" min="50" max="150" value="100" oninput="onSlider()"/>
+      <span class="slider-val" id="sv-scale">100</span>
+    </div>
+    <button class="btn-gold" onclick="applyCustom()">APPLY</button>
+  </div>
+</div>
 
-/* Profile defaults */
-const profA=Number(pr?.axis_a||0),profB=Number(pr?.axis_b||0),profC=Number(pr?.axis_c||0);
-const profAuth=pr?.is_owner?27.8367:calcAuth(profA,profB,profC);
-const profGate=getGate(profAuth);
-const profElem=SIGN_ELEM[pr?.zodiac_sign]||'Void';
-const profName=pr?.display_name||pr?.full_name||'Sovereign';
+<!-- SCIENCE TAB -->
+<div class="tab-panel" id="tab-science">
+  <div style="padding:1.5rem;max-width:720px">
+    <p class="sechead">SIGIL ARCHITECTURE</p>
+    <div class="card-grid">
+      <div class="card"><div class="card-title">OmegaSigil ENGINE</div><div class="card-body">The sigil renderer is a standalone SVG generator (window.OmegaSigil). It derives glyph geometry from the sovereign identity hash, element alignment, authority score, and complexity level. Each sovereign gets a unique, mathematically derived symbol.</div></div>
+      <div class="card"><div class="card-title">VARIANT SYSTEM</div><div class="card-body">Six visual variants: STANDARD, INVERSE, MONO, NEON, GHOST, and MINIMAL. Each variant applies a different rendering pass over the base sigil geometry — same structure, different aesthetic register.</div></div>
+      <div class="card"><div class="card-title">SVG EXPORT</div><div class="card-body">The sigil exports as a clean inline SVG string. Download saves a .svg file. Copy puts the SVG source on the clipboard. The exported sigil is self-contained and renders in any SVG-capable environment.</div></div>
+      <div class="card"><div class="card-title">IDENTITY BINDING</div><div class="card-body">The sigil is bound to the authenticated user's identity hash. Axis overrides (authority, complexity, scale) are cosmetic — the underlying geometry is immutable and unique per sovereign.</div></div>
+    </div>
+  </div>
+</div>
+</div>
 
-/* Init sliders */
-document.getElementById('ctrl-a').value=profA;
-document.getElementById('ctrl-b').value=profB;
-document.getElementById('ctrl-c').value=profC;
+<script>
+var EC={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
+var VARIANTS=['STANDARD','INVERSE','MONO','NEON','GHOST','MINIMAL'];
+var currentProfile=null,currentUser=null;
+var overrides={element:null,auth:null,complexity:3,scale:100};
 
-let currentElem=profElem;
-let animating=false;
-
-/* Wait for sigil gen script to load */
-function waitForSigil(){
-  if(window.OmegaSigil){
-    buildVariantGrid();
-    buildElemOverride();
-    updateSigil();
-  } else {
-    setTimeout(waitForSigil,200);
-  }
+function setTab(name){
+  var tabs=['sigil','variants','customize','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-waitForSigil();
 
-window.updateSigil=function(){
-  if(!window.OmegaSigil)return;
-  const a=Number(document.getElementById('ctrl-a').value);
-  const b=Number(document.getElementById('ctrl-b').value);
-  const c=Number(document.getElementById('ctrl-c').value);
-  const sz=Number(document.getElementById('ctrl-size').value);
-  document.getElementById('a-val').textContent=a.toFixed(1);
-  document.getElementById('b-val').textContent=b.toFixed(1);
-  document.getElementById('c-val').textContent=c.toFixed(1);
-  document.getElementById('sz-val').textContent=sz;
-  const auth=calcAuth(a,b,c);
-  const gate=getGate(auth);
-  const opts={auth,elem:currentElem,axisA:a,axisB:b,axisC:c,gate,name:profName,size:sz};
-  const stage=document.getElementById('sigil-stage');
-  stage.innerHTML=window.OmegaSigil.generate(opts);
-  /* Info */
-  const infoEl=document.getElementById('sigil-info');
-  infoEl.innerHTML=[
-    ['AUTHORITY',auth.toFixed(4)],
-    ['GATE',gate+' · '+GATE_NAMES[gate-1]],
-    ['ELEMENT',ELEM_SIGILS[currentElem]+' '+currentElem.toUpperCase()],
-    ['COMPLEXITY',gate+' points'],
-  ].map(([k,v])=>`<div class="info-stat"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+function getSigil(){return window.OmegaSigil||null;}
+
+function mountSigil(host,opts){
+  var S=getSigil();
+  if(!S){host.innerHTML='<span style="color:var(--muted);font-size:.75rem;font-family:var(--M)">SIGIL ENGINE LOADING…</span>';return;}
+  host.innerHTML='';
+  try{S.mount(host,opts);}catch(e){host.innerHTML='<span style="color:var(--crim);font-size:.75rem">ERROR</span>';}
+}
+
+function sigilOpts(variant){
+  var pr=currentProfile||{};
+  var elem=overrides.element||pr.element||'Sand';
+  var auth=overrides.auth!=null?overrides.auth:(pr.authority||50);
+  return{
+    userId:currentUser?currentUser.id:'anon',
+    element:elem,
+    authority:auth,
+    complexity:overrides.complexity,
+    scale:overrides.scale/100,
+    variant:variant||'STANDARD',
+    color:EC[elem]||'#D4AF37'
+  };
+}
+
+function mountMain(){
+  var host=document.getElementById('sigil-host');
+  mountSigil(host,sigilOpts('STANDARD'));
+  var pr=currentProfile||{};
+  var elem=overrides.element||pr.element||'Sand';
+  var label=document.getElementById('sigil-elem-label');
+  if(label)label.textContent=elem.toUpperCase()+' · '+(pr.sign||'UNKNOWN');
+}
+
+function buildVariants(){
+  var grid=document.getElementById('variants-grid');
+  grid.innerHTML='';
+  VARIANTS.forEach(function(v){
+    var item=document.createElement('div');
+    item.className='variant-item'+(v==='STANDARD'?' sel':'');
+    item.dataset.variant=v;
+    var host=document.createElement('div');host.className='variant-host';
+    var name=document.createElement('div');name.className='variant-name';name.textContent=v;
+    item.appendChild(host);item.appendChild(name);
+    item.addEventListener('click',function(){
+      document.querySelectorAll('.variant-item').forEach(function(el){el.classList.remove('sel');});
+      item.classList.add('sel');
+      var mainHost=document.getElementById('sigil-host');
+      mountSigil(mainHost,sigilOpts(v));
+      setTab('sigil');
+    });
+    grid.appendChild(item);
+    setTimeout(function(){mountSigil(host,sigilOpts(v));},50);
+  });
+}
+
+function waitForSigil(){
+  if(window.OmegaSigil){mountMain();buildVariants();}
+  else{setTimeout(waitForSigil,200);}
+}
+
+window.setElem=function(elem){
+  overrides.element=elem;
+  document.querySelectorAll('.elem-btn').forEach(function(b){b.classList.toggle('sel',b.dataset.elem===elem);});
 };
 
-window.resetToProfile=function(){
-  currentElem=profElem;
-  document.getElementById('ctrl-a').value=profA;
-  document.getElementById('ctrl-b').value=profB;
-  document.getElementById('ctrl-c').value=profC;
-  document.querySelectorAll('.elem-override-btn').forEach(b=>b.classList.toggle('on',b.dataset.elem===profElem));
-  updateSigil();
+window.onSlider=function(){
+  var a=document.getElementById('sl-auth').value;
+  var c=document.getElementById('sl-comp').value;
+  var sc=document.getElementById('sl-scale').value;
+  document.getElementById('sv-auth').textContent=a;
+  document.getElementById('sv-comp').textContent=c;
+  document.getElementById('sv-scale').textContent=sc;
+  overrides.auth=parseInt(a);
+  overrides.complexity=parseInt(c);
+  overrides.scale=parseInt(sc);
+};
+
+window.applyCustom=function(){
+  window.onSlider();
+  mountMain();
+  buildVariants();
+  setTab('sigil');
 };
 
 window.downloadSigil=function(){
-  if(!window.OmegaSigil)return;
-  const a=Number(document.getElementById('ctrl-a').value);
-  const b=Number(document.getElementById('ctrl-b').value);
-  const c=Number(document.getElementById('ctrl-c').value);
-  const auth=calcAuth(a,b,c);
-  const gate=getGate(auth);
-  window.OmegaSigil.download({auth,elem:currentElem,axisA:a,axisB:b,axisC:c,gate,name:profName,size:600});
+  var host=document.getElementById('sigil-host');
+  var svg=host.querySelector('svg');
+  if(!svg){alert('No sigil rendered.');return;}
+  var blob=new Blob([svg.outerHTML],{type:'image/svg+xml'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='omega-sigil.svg';
+  a.click();
+  URL.revokeObjectURL(a.href);
 };
 
-window.copySvg=function(){
-  const stage=document.getElementById('sigil-stage');
-  const svg=stage.innerHTML;
-  navigator.clipboard.writeText(svg).then(()=>{
-    const btn=document.querySelector('.btn-cyan');
-    const orig=btn.textContent;btn.textContent='✓ COPIED';
-    setTimeout(()=>btn.textContent=orig,1400);
-  }).catch(()=>{});
+window.copySigil=function(){
+  var host=document.getElementById('sigil-host');
+  var svg=host.querySelector('svg');
+  if(!svg){alert('No sigil rendered.');return;}
+  navigator.clipboard.writeText(svg.outerHTML).then(function(){
+    var btn=event.target;var orig=btn.textContent;btn.textContent='COPIED';
+    setTimeout(function(){btn.textContent=orig;},1500);
+  }).catch(function(){alert('Copy failed — use browser context menu.');});
 };
 
 window.animateSigil=function(){
-  if(!window.OmegaSigil)return;
-  animating=!animating;
-  if(!animating)return;
-  let t=0;
-  function step(){
-    if(!animating)return;
-    const a=Number(document.getElementById('ctrl-a').value);
-    const b=Number(document.getElementById('ctrl-b').value);
-    const c=Number(document.getElementById('ctrl-c').value);
-    const sz=Number(document.getElementById('ctrl-size').value);
-    const auth=calcAuth(a,b,c);
-    const gate=getGate(auth);
-    /* Animated by modulating name hash slightly */
-    const fakeName=profName+String(Math.round(t*0.5));
-    const stage=document.getElementById('sigil-stage');
-    stage.innerHTML=window.OmegaSigil.generate({auth,elem:currentElem,axisA:a,axisB:b,axisC:c,gate,name:fakeName,size:sz});
-    t++;
-    requestAnimationFrame(step);
-  }
-  step();
+  var S=getSigil();
+  if(!S||!S.animate)return;
+  var host=document.getElementById('sigil-host');
+  try{S.animate(host);}catch(e){}
 };
-
-function buildElemOverride(){
-  const container=document.getElementById('elem-override');
-  Object.keys(ELEM_SIGILS).forEach(elem=>{
-    const btn=document.createElement('button');
-    btn.className='elem-override-btn btn'+(elem===currentElem?' '+'on':'');
-    btn.dataset.elem=elem;
-    btn.style.cssText='font-size:7px;letter-spacing:1px;padding:5px 8px;margin:0';
-    btn.textContent=ELEM_SIGILS[elem]+' '+elem.slice(0,4).toUpperCase();
-    if(elem===currentElem)btn.style.background='rgba(226,200,109,.2)';
-    btn.addEventListener('click',()=>{
-      currentElem=elem;
-      document.querySelectorAll('.elem-override-btn').forEach(b=>{
-        b.classList.remove('on');
-        b.style.background='';
-      });
-      btn.classList.add('on');
-      btn.style.background='rgba(226,200,109,.2)';
-      updateSigil();
-    });
-    container.appendChild(btn);
-  });
-}
-
-function buildVariantGrid(){
-  const grid=document.getElementById('variant-grid');
-  Object.keys(ELEM_SIGILS).forEach(elem=>{
-    const tile=document.createElement('div');
-    tile.className='variant-tile';
-    const auth=calcAuth(profA,profB,profC);
-    const gate=getGate(auth);
-    tile.innerHTML=window.OmegaSigil.generate({auth,elem,axisA:profA,axisB:profB,axisC:profC,gate,name:profName,size:100});
-    tile.innerHTML+=`<div class="variant-name">${ELEM_SIGILS[elem]} ${elem.toUpperCase()}</div>`;
-    tile.addEventListener('click',()=>{
-      currentElem=elem;
-      document.querySelectorAll('.elem-override-btn').forEach(b=>{
-        b.classList.toggle('on',b.dataset.elem===elem);
-        b.style.background=b.dataset.elem===elem?'rgba(226,200,109,.2)':'';
-      });
-      updateSigil();
-    });
-    grid.appendChild(tile);
-  });
-}
 </script>
-</body>
-</html>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  currentProfile=pr;
+  currentUser=s.user;
+  document.getElementById('app').style.display='flex';
+  var nameLabel=document.getElementById('sigil-user-label');
+  if(nameLabel)nameLabel.textContent=(pr.display_name||s.user.email||'SOVEREIGN').toUpperCase();
+  var initElem=pr.element||'Sand';
+  overrides.element=initElem;
+  document.querySelectorAll('.elem-btn').forEach(function(b){b.classList.toggle('sel',b.dataset.elem===initElem);});
+  if(pr.authority!=null){
+    var sa=document.getElementById('sl-auth');
+    if(sa){sa.value=Math.min(100,Math.round(pr.authority));document.getElementById('sv-auth').textContent=sa.value;overrides.auth=parseInt(sa.value);}
+  }
+  waitForSigil();
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+})();
+</script>
+<script src="/bg.js"></script>
+</body></html>

@@ -1,258 +1,157 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — CINEMA · Sovereign Platform">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<title>&#937; SYD OMEGA 91717 &mdash; CINEMA</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json">
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Cinema</title>
+<meta name="description" content="Sovereign Cinema — 12 Films, 12 Series, the Olympian canon. M6."/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--purple);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--purple)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--purple);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--purple);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--purple);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
-.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
-.tab-btn:hover{color:var(--purple);background:rgba(155,107,240,.04)}
-.tab-btn.on{border-bottom-color:var(--purple);color:var(--purple);background:rgba(155,107,240,.06)}
-.tab-panel{display:none}.tab-panel.on{display:block}
-.film-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:16px}
-.film-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:3px solid var(--fc,var(--purple));padding:16px;position:relative;overflow:hidden;transition:.18s}
-.film-card:hover{border-color:rgba(155,107,240,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.film-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.film-card{border:1px solid var(--line);background:var(--surface);border-top:3px solid var(--fc,var(--gold));padding:16px;transition:.18s;position:relative;overflow:hidden}
+.film-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .film-num{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
-.film-god{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--fc,var(--purple));margin-bottom:4px}
-.film-title{font-family:var(--D);font-size:clamp(12px,1.5vw,16px);color:var(--ink);margin-bottom:6px;line-height:1.3}
+.film-god{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--fc,var(--gold));margin-bottom:4px}
+.film-title{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px;line-height:1.3}
 .film-desc{font-size:11px;line-height:1.7;color:var(--muted)}
-.film-meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-.film-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(155,107,240,.3);border-radius:10px;color:var(--muted)}
-.series-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:16px}
-.ser-row{border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:12px 16px;display:flex;align-items:center;gap:14px;transition:.18s}
-.ser-row:hover{border-color:rgba(155,107,240,.25)}
-.ser-num{font-family:var(--D);font-size:18px;color:rgba(155,107,240,.4);flex-shrink:0;width:36px;text-align:center}
-.ser-info{flex:1;min-width:0}
-.ser-title{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
-.ser-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
-.olympian-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:16px}
-.olym-card{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-left:3px solid var(--oc,var(--purple));padding:14px 16px}
-.olym-god{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--oc,var(--purple));margin-bottom:4px}
+.film-meta{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.film-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--muted)}
+.olym-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.olym-card{border:1px solid var(--line);background:var(--surface);border-left:3px solid var(--oc,var(--gold));padding:14px 16px}
+.olym-god{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--oc,var(--gold));margin-bottom:4px}
 .olym-film{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px}
 .olym-sign{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.film-grid{grid-template-columns:1fr}}
+.elem-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.elem-row{border:1px solid var(--line);background:var(--surface);padding:12px 16px;display:flex;align-items:center;gap:14px}
+.elem-glyph{font-family:var(--D);font-size:18px;flex-shrink:0;width:32px;text-align:center}
+.elem-info{flex:1;min-width:0}
+.elem-title{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
+.elem-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
 </style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--purple);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="cinema" aria-label="Navigation"></aside>
-  <main class="main" role="main" id="main-content">
-    <div class="topbar">
-      <div class="t">CINEMA<small>M6 &middot; Sovereign Cinema — 12 Films × 12 Series &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="cin-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="purple" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
-    </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up">CINEMA &middot; M6 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="tab-bar" role="tablist" aria-label="Cinema sections">
-        <button class="tab-btn on" onclick="cinTab(this,'all')" role="tab" aria-selected="true">ALL FILMS</button>
-        <button class="tab-btn" onclick="cinTab(this,'olympian')" role="tab" aria-selected="false">BY OLYMPIAN</button>
-        <button class="tab-btn" onclick="cinTab(this,'element')" role="tab" aria-selected="false">BY ELEMENT</button>
-        <button class="tab-btn" onclick="cinTab(this,'series')" role="tab" aria-selected="false">SERIES</button>
-      </div>
-
-      <!-- ALL FILMS -->
-      <div class="tab-panel on" id="cin-all" data-reveal="fade-up" data-stagger>
-        <div class="sechead">12 SOVEREIGN FILMS · ONE PER OLYMPIAN</div>
-        <div class="film-grid">
-          <div class="film-card" style="--fc:#E86A3A" data-tooltip="Gate I+ · Ares · Aries · Action/War epic" data-tooltip-placement="top">
-            <div class="film-num">FILM I</div><div class="film-god">ARES · ARIES</div>
-            <div class="film-title">WAR SOVEREIGN</div>
-            <div class="film-desc">The first sovereign rises through battle. A war epic spanning 9 fronts across the elemental lattice.</div>
-            <div class="film-meta"><span class="film-tag">ACTION</span><span class="film-tag">GATE I+</span><span class="film-tag">FIRE ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#9B6BF0" data-tooltip="Gate II+ · Aphrodite · Taurus · Drama/Romance" data-tooltip-placement="top">
-            <div class="film-num">FILM II</div><div class="film-god">APHRODITE · TAURUS</div>
-            <div class="film-title">LOVE SOVEREIGN</div>
-            <div class="film-desc">Sovereign bonds forged across element lines. The most decorated film in the Omega canon.</div>
-            <div class="film-meta"><span class="film-tag">DRAMA</span><span class="film-tag">GATE II+</span><span class="film-tag">WATER ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#00E5FF" data-tooltip="Gate III+ · Hermes · Gemini · Thriller/Speed" data-tooltip-placement="top">
-            <div class="film-num">FILM III</div><div class="film-god">HERMES · GEMINI</div>
-            <div class="film-title">MESSENGER SOVEREIGN</div>
-            <div class="film-desc">The fastest sovereign on the lattice carries a message that will reshape 12 houses.</div>
-            <div class="film-meta"><span class="film-tag">THRILLER</span><span class="film-tag">GATE III+</span><span class="film-tag">WIND ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#3fb27f" data-tooltip="Gate IV+ · Artemis · Cancer · Hunt/Nature" data-tooltip-placement="top">
-            <div class="film-num">FILM IV</div><div class="film-god">ARTEMIS · CANCER</div>
-            <div class="film-title">HUNT SOVEREIGN</div>
-            <div class="film-desc">Under the silver light of the lattice moon, one sovereign hunts the rogue element that threatens the nine.</div>
-            <div class="film-meta"><span class="film-tag">ADVENTURE</span><span class="film-tag">GATE IV+</span><span class="film-tag">SAND ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#E2C86D" data-tooltip="Gate V+ · Apollo · Leo · Epic/Music" data-tooltip-placement="top">
-            <div class="film-num">FILM V</div><div class="film-god">APOLLO · LEO</div>
-            <div class="film-title">LIGHT SOVEREIGN</div>
-            <div class="film-desc">A musical sovereign epic. The bearer of the solar element composes the frequency that unlocks Gate X.</div>
-            <div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE V+</span><span class="film-tag">SOUL ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#C9A84C" data-tooltip="Gate VI+ · Athena · Virgo · Strategy/Wisdom" data-tooltip-placement="top">
-            <div class="film-num">FILM VI</div><div class="film-god">ATHENA · VIRGO</div>
-            <div class="film-title">WISDOM SOVEREIGN</div>
-            <div class="film-desc">The architect of the lattice reveals the 9-fold formula. A cerebral thriller for the sovereign mind.</div>
-            <div class="film-meta"><span class="film-tag">STRATEGY</span><span class="film-tag">GATE VI+</span><span class="film-tag">METAL ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#9B6BF0" data-tooltip="Gate VII+ · Hera · Libra · Power/Royalty" data-tooltip-placement="top">
-            <div class="film-num">FILM VII</div><div class="film-god">HERA · LIBRA</div>
-            <div class="film-title">QUEEN SOVEREIGN</div>
-            <div class="film-desc">The sovereign court of 12 houses must reach balance. A political epic at the height of the lattice.</div>
-            <div class="film-meta"><span class="film-tag">POLITICAL</span><span class="film-tag">GATE VII+</span><span class="film-tag">SPACE ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#3fb27f" data-tooltip="Gate VIII+ · Demeter · Scorpio · Mystery/Growth" data-tooltip-placement="top">
-            <div class="film-num">FILM VIII</div><div class="film-god">DEMETER · SCORPIO</div>
-            <div class="film-title">EARTH SOVEREIGN</div>
-            <div class="film-desc">The lattice root system awakens. A sovereign must descend to the void to reclaim the ninth element.</div>
-            <div class="film-meta"><span class="film-tag">MYSTERY</span><span class="film-tag">GATE VIII+</span><span class="film-tag">VOID ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#E2C86D" data-tooltip="Gate IX+ · Zeus · Sagittarius · Epic/Authority" data-tooltip-placement="top">
-            <div class="film-num">FILM IX</div><div class="film-god">ZEUS · SAGITTARIUS</div>
-            <div class="film-title">THUNDER SOVEREIGN</div>
-            <div class="film-desc">Authority at its apex. Zeus calls the 12 sovereigns to the summit. The lattice balance will be decided.</div>
-            <div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE IX+</span><span class="film-tag">THE ALL</span></div>
-          </div>
-          <div class="film-card" style="--fc:#E86A3A" data-tooltip="Gate X+ · Hestia · Capricorn · Origin/Fire" data-tooltip-placement="top">
-            <div class="film-num">FILM X</div><div class="film-god">HESTIA · CAPRICORN</div>
-            <div class="film-title">HEARTH SOVEREIGN</div>
-            <div class="film-desc">Where the first flame was lit, the sovereign origin is revealed. A prequel spanning the initial lattice age.</div>
-            <div class="film-meta"><span class="film-tag">ORIGIN</span><span class="film-tag">GATE X+</span><span class="film-tag">FIRE ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#C9A84C" data-tooltip="Gate XI+ · Hephaestus · Aquarius · Craft/Forge" data-tooltip-placement="top">
-            <div class="film-num">FILM XI</div><div class="film-god">HEPHAESTUS · AQUARIUS</div>
-            <div class="film-title">FORGE SOVEREIGN</div>
-            <div class="film-desc">The architect sovereign builds the final lattice gate. A techno-mythic epic of creation and sacrifice.</div>
-            <div class="film-meta"><span class="film-tag">CRAFT</span><span class="film-tag">GATE XI+</span><span class="film-tag">METAL ELEMENT</span></div>
-          </div>
-          <div class="film-card" style="--fc:#00E5FF" data-tooltip="Gate XII · Poseidon · Pisces · Apex/Ocean" data-tooltip-placement="top">
-            <div class="film-num">FILM XII · APEX</div><div class="film-god">POSEIDON · PISCES</div>
-            <div class="film-title">OCEAN SOVEREIGN</div>
-            <div class="film-desc">The final sovereign film. The depths of the lattice hold the Omega key. AUTH = 27.8367 required.</div>
-            <div class="film-meta"><span class="film-tag">APEX</span><span class="film-tag">GATE XII</span><span class="film-tag">WATER ELEMENT</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BY OLYMPIAN -->
-      <div class="tab-panel" id="cin-olympian" data-reveal="fade-up">
-        <div class="sechead">12 OLYMPIAN DIRECTORS · ONE FILM EACH</div>
-        <div class="olympian-row">
-          <div class="olym-card" style="--oc:#E86A3A"><div class="olym-god">ARES · GOD OF WAR</div><div class="olym-film">War Sovereign · Film I</div><div class="olym-sign">Aries · Fire · Gate I</div></div>
-          <div class="olym-card" style="--oc:#9B6BF0"><div class="olym-god">APHRODITE · GODDESS OF LOVE</div><div class="olym-film">Love Sovereign · Film II</div><div class="olym-sign">Taurus · Water · Gate II</div></div>
-          <div class="olym-card" style="--oc:#00E5FF"><div class="olym-god">HERMES · MESSENGER OF GODS</div><div class="olym-film">Messenger Sovereign · Film III</div><div class="olym-sign">Gemini · Wind · Gate III</div></div>
-          <div class="olym-card" style="--oc:#3fb27f"><div class="olym-god">ARTEMIS · GODDESS OF THE HUNT</div><div class="olym-film">Hunt Sovereign · Film IV</div><div class="olym-sign">Cancer · Sand · Gate IV</div></div>
-          <div class="olym-card" style="--oc:#E2C86D"><div class="olym-god">APOLLO · GOD OF LIGHT</div><div class="olym-film">Light Sovereign · Film V</div><div class="olym-sign">Leo · Soul · Gate V</div></div>
-          <div class="olym-card" style="--oc:#C9A84C"><div class="olym-god">ATHENA · GODDESS OF WISDOM</div><div class="olym-film">Wisdom Sovereign · Film VI</div><div class="olym-sign">Virgo · Metal · Gate VI</div></div>
-          <div class="olym-card" style="--oc:#9B6BF0"><div class="olym-god">HERA · QUEEN OF OLYMPUS</div><div class="olym-film">Queen Sovereign · Film VII</div><div class="olym-sign">Libra · Space · Gate VII</div></div>
-          <div class="olym-card" style="--oc:#3fb27f"><div class="olym-god">DEMETER · GODDESS OF EARTH</div><div class="olym-film">Earth Sovereign · Film VIII</div><div class="olym-sign">Scorpio · Void · Gate VIII</div></div>
-          <div class="olym-card" style="--oc:#E2C86D"><div class="olym-god">ZEUS · KING OF GODS</div><div class="olym-film">Thunder Sovereign · Film IX</div><div class="olym-sign">Sagittarius · The All · Gate IX</div></div>
-          <div class="olym-card" style="--oc:#E86A3A"><div class="olym-god">HESTIA · GODDESS OF HEARTH</div><div class="olym-film">Hearth Sovereign · Film X</div><div class="olym-sign">Capricorn · Fire · Gate X</div></div>
-          <div class="olym-card" style="--oc:#C9A84C"><div class="olym-god">HEPHAESTUS · GOD OF FORGE</div><div class="olym-film">Forge Sovereign · Film XI</div><div class="olym-sign">Aquarius · Metal · Gate XI</div></div>
-          <div class="olym-card" style="--oc:#00E5FF"><div class="olym-god">POSEIDON · GOD OF THE SEA</div><div class="olym-film">Ocean Sovereign · Film XII</div><div class="olym-sign">Pisces · Water · Gate XII · APEX</div></div>
-        </div>
-      </div>
-
-      <!-- BY ELEMENT -->
-      <div class="tab-panel" id="cin-element" data-reveal="fade-up">
-        <div class="sechead">9 ELEMENT TRACKS · FILMS GROUPED BY ELEMENTAL AFFINITY</div>
-        <div class="series-band">
-          <div class="ser-row"><div class="ser-num" style="color:#E86A3A">☲</div><div class="ser-info"><div class="ser-title">Fire · Films I & X</div><div class="ser-meta">War Sovereign · Hearth Sovereign</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#00E5FF">☰</div><div class="ser-info"><div class="ser-title">Water · Films II & XII</div><div class="ser-meta">Love Sovereign · Ocean Sovereign</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#3fb27f">☱</div><div class="ser-info"><div class="ser-title">Wind · Film III</div><div class="ser-meta">Messenger Sovereign</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#C9A84C">☳</div><div class="ser-info"><div class="ser-title">Metal · Films VI & XI</div><div class="ser-meta">Wisdom Sovereign · Forge Sovereign</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#E2C86D">★</div><div class="ser-info"><div class="ser-title">Sand · Film IV</div><div class="ser-meta">Hunt Sovereign — amplifier track</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#9B6BF0">✴</div><div class="ser-info"><div class="ser-title">Soul · Film V</div><div class="ser-meta">Light Sovereign</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#9B6BF0">✶</div><div class="ser-info"><div class="ser-title">Space · Film VII</div><div class="ser-meta">Queen Sovereign</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#8a8676">✷</div><div class="ser-info"><div class="ser-title">Void · Film VIII</div><div class="ser-meta">Earth Sovereign</div></div></div>
-          <div class="ser-row"><div class="ser-num" style="color:#E2C86D">Ω</div><div class="ser-info"><div class="ser-title">The All · Film IX</div><div class="ser-meta">Thunder Sovereign — apex track</div></div></div>
-        </div>
-      </div>
-
-      <!-- SERIES -->
-      <div class="tab-panel" id="cin-series" data-reveal="fade-up">
-        <div class="sechead">FEATURED SERIES · 12 PER FILM = 144 TOTAL</div>
-        <div class="series-band">
-          <div class="ser-row"><div class="ser-num">I</div><div class="ser-info"><div class="ser-title">Twelve Houses</div><div class="ser-meta">War Sovereign universe · 12 episodes · Gate I+</div></div></div>
-          <div class="ser-row"><div class="ser-num">II</div><div class="ser-info"><div class="ser-title">Sovereign Genesis</div><div class="ser-meta">Origin story · 8 episodes · Gate II+</div></div></div>
-          <div class="ser-row"><div class="ser-num">III</div><div class="ser-info"><div class="ser-title">Chronicles of the Nine</div><div class="ser-meta">9-element arc · 9 episodes · Gate III+</div></div></div>
-          <div class="ser-row"><div class="ser-num">IV</div><div class="ser-info"><div class="ser-title">Kings of the Lattice</div><div class="ser-meta">28 sovereign kings · 12 episodes · Gate IV+</div></div></div>
-          <div class="ser-row"><div class="ser-num">V</div><div class="ser-info"><div class="ser-title">Element Wars</div><div class="ser-meta">Fire vs Water vs Wind · 9 episodes · Gate V+</div></div></div>
-          <div class="ser-row"><div class="ser-num">VI</div><div class="ser-info"><div class="ser-title">Omega Rising</div><div class="ser-meta">The final ascension arc · 12 episodes · Gate VI+</div></div></div>
-          <div class="ser-row"><div class="ser-num">VII</div><div class="ser-info"><div class="ser-title">Sand Amplifier</div><div class="ser-meta">The amplifier explained · 6 episodes · Gate VII+</div></div></div>
-          <div class="ser-row"><div class="ser-num">VIII</div><div class="ser-info"><div class="ser-title">Soul Frequency</div><div class="ser-meta">Apollo's music frequency series · 8 episodes · Gate VIII+</div></div></div>
-          <div class="ser-row"><div class="ser-num">IX</div><div class="ser-info"><div class="ser-title">The Void Depths</div><div class="ser-meta">Poseidon's ocean lattice · 9 episodes · Gate IX+</div></div></div>
-          <div class="ser-row"><div class="ser-num">X</div><div class="ser-info"><div class="ser-title">Forge & Flame</div><div class="ser-meta">Hephaestus crafts the gates · 6 episodes · Gate X+</div></div></div>
-          <div class="ser-row"><div class="ser-num">XI</div><div class="ser-info"><div class="ser-title">Hearth of the Cosmos</div><div class="ser-meta">Hestia's origin flame · 4 episodes · Gate XI+</div></div></div>
-          <div class="ser-row"><div class="ser-num">XII</div><div class="ser-info"><div class="ser-title">Omega Apex Chronicles</div><div class="ser-meta">Gate XII completion · 12 episodes · APEX</div></div></div>
-        </div>
-      </div>
-    </div>
-    <div data-page-emblem="cinema" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; CINEMA &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
-  </main>
+<aside id="omega-side" data-page="cinema"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">CINEMA<span class="topbar-sub">M6 &middot; 12 FILMS &times; 12 OLYMPIANS &middot; 144 SERIES</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="kpi-row" style="margin:12px 0 0">
+  <div class="kpi-card"><div class="kpi-val" id="stat-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="stat-a">—</div><div class="kpi-label">AXIS A KNOWLEDGE</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="stat-b">—</div><div class="kpi-label">AXIS B MASTERY</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="stat-c">—</div><div class="kpi-label">AXIS C CONTRIBUTION</div></div>
 </div>
+<div class="tab-bar" style="margin-top:8px">
+  <button class="tab-btn active" onclick="setTab('films')">ALL FILMS</button>
+  <button class="tab-btn" onclick="setTab('olympians')">BY OLYMPIAN</button>
+  <button class="tab-btn" onclick="setTab('elements')">BY ELEMENT</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+</div>
+
+<div class="tab-panel active" id="tab-films">
+  <div class="sechead">12 SOVEREIGN FILMS &middot; ONE PER OLYMPIAN</div>
+  <div class="film-grid">
+    <div class="film-card" style="--fc:#E86A3A"><div class="film-num">FILM I</div><div class="film-god">ARES &middot; ARIES</div><div class="film-title">WAR SOVEREIGN</div><div class="film-desc">The first sovereign rises through battle. A war epic spanning 9 fronts across the elemental lattice.</div><div class="film-meta"><span class="film-tag">ACTION</span><span class="film-tag">GATE I+</span><span class="film-tag">FIRE</span></div></div>
+    <div class="film-card" style="--fc:#9B6BF0"><div class="film-num">FILM II</div><div class="film-god">APHRODITE &middot; TAURUS</div><div class="film-title">LOVE SOVEREIGN</div><div class="film-desc">Sovereign bonds forged across element lines. The most decorated film in the Omega canon.</div><div class="film-meta"><span class="film-tag">DRAMA</span><span class="film-tag">GATE II+</span><span class="film-tag">WATER</span></div></div>
+    <div class="film-card" style="--fc:#00E5FF"><div class="film-num">FILM III</div><div class="film-god">HERMES &middot; GEMINI</div><div class="film-title">MESSENGER SOVEREIGN</div><div class="film-desc">The fastest sovereign on the lattice carries a message that will reshape 12 houses.</div><div class="film-meta"><span class="film-tag">THRILLER</span><span class="film-tag">GATE III+</span><span class="film-tag">WIND</span></div></div>
+    <div class="film-card" style="--fc:#3fb27f"><div class="film-num">FILM IV</div><div class="film-god">ARTEMIS &middot; CANCER</div><div class="film-title">HUNT SOVEREIGN</div><div class="film-desc">Under the silver light of the lattice moon, one sovereign hunts the rogue element that threatens the nine.</div><div class="film-meta"><span class="film-tag">ADVENTURE</span><span class="film-tag">GATE IV+</span><span class="film-tag">SAND</span></div></div>
+    <div class="film-card" style="--fc:#E2C86D"><div class="film-num">FILM V</div><div class="film-god">APOLLO &middot; LEO</div><div class="film-title">LIGHT SOVEREIGN</div><div class="film-desc">A musical sovereign epic. The bearer of the solar element composes the frequency that unlocks Gate X.</div><div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE V+</span><span class="film-tag">SOUL</span></div></div>
+    <div class="film-card" style="--fc:#C9A84C"><div class="film-num">FILM VI</div><div class="film-god">ATHENA &middot; VIRGO</div><div class="film-title">WISDOM SOVEREIGN</div><div class="film-desc">The architect of the lattice reveals the 9-fold formula. A cerebral thriller for the sovereign mind.</div><div class="film-meta"><span class="film-tag">STRATEGY</span><span class="film-tag">GATE VI+</span><span class="film-tag">METAL</span></div></div>
+    <div class="film-card" style="--fc:#9B6BF0"><div class="film-num">FILM VII</div><div class="film-god">HERA &middot; LIBRA</div><div class="film-title">QUEEN SOVEREIGN</div><div class="film-desc">The sovereign court of 12 houses must reach balance. A political epic at the height of the lattice.</div><div class="film-meta"><span class="film-tag">POLITICAL</span><span class="film-tag">GATE VII+</span><span class="film-tag">SPACE</span></div></div>
+    <div class="film-card" style="--fc:#3fb27f"><div class="film-num">FILM VIII</div><div class="film-god">DEMETER &middot; SCORPIO</div><div class="film-title">EARTH SOVEREIGN</div><div class="film-desc">The lattice root system awakens. A sovereign must descend to the void to reclaim the ninth element.</div><div class="film-meta"><span class="film-tag">MYSTERY</span><span class="film-tag">GATE VIII+</span><span class="film-tag">VOID</span></div></div>
+    <div class="film-card" style="--fc:#E2C86D"><div class="film-num">FILM IX</div><div class="film-god">ZEUS &middot; SAGITTARIUS</div><div class="film-title">THUNDER SOVEREIGN</div><div class="film-desc">Authority at its apex. Zeus calls the 12 sovereigns to the summit. The lattice balance will be decided.</div><div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE IX+</span><span class="film-tag">THE ALL</span></div></div>
+    <div class="film-card" style="--fc:#E86A3A"><div class="film-num">FILM X</div><div class="film-god">HESTIA &middot; CAPRICORN</div><div class="film-title">HEARTH SOVEREIGN</div><div class="film-desc">Where the first flame was lit, the sovereign origin is revealed. A prequel spanning the initial lattice age.</div><div class="film-meta"><span class="film-tag">ORIGIN</span><span class="film-tag">GATE X+</span><span class="film-tag">FIRE</span></div></div>
+    <div class="film-card" style="--fc:#C9A84C"><div class="film-num">FILM XI</div><div class="film-god">HEPHAESTUS &middot; AQUARIUS</div><div class="film-title">FORGE SOVEREIGN</div><div class="film-desc">The architect sovereign builds the final lattice gate. A techno-mythic epic of creation and sacrifice.</div><div class="film-meta"><span class="film-tag">CRAFT</span><span class="film-tag">GATE XI+</span><span class="film-tag">METAL</span></div></div>
+    <div class="film-card" style="--fc:#00E5FF"><div class="film-num">FILM XII &middot; APEX</div><div class="film-god">POSEIDON &middot; PISCES</div><div class="film-title">OCEAN SOVEREIGN</div><div class="film-desc">The final sovereign film. The depths of the lattice hold the Omega key. AUTH = 27.8367 required.</div><div class="film-meta"><span class="film-tag">APEX</span><span class="film-tag">GATE XII</span><span class="film-tag">WATER</span></div></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-olympians">
+  <div class="sechead">12 OLYMPIAN DIRECTORS &middot; ONE FILM EACH</div>
+  <div class="olym-grid">
+    <div class="olym-card" style="--oc:#E86A3A"><div class="olym-god">ARES &middot; GOD OF WAR</div><div class="olym-film">War Sovereign &middot; Film I</div><div class="olym-sign">Aries &middot; Fire &middot; Gate I</div></div>
+    <div class="olym-card" style="--oc:#9B6BF0"><div class="olym-god">APHRODITE &middot; GODDESS OF LOVE</div><div class="olym-film">Love Sovereign &middot; Film II</div><div class="olym-sign">Taurus &middot; Water &middot; Gate II</div></div>
+    <div class="olym-card" style="--oc:#00E5FF"><div class="olym-god">HERMES &middot; MESSENGER OF GODS</div><div class="olym-film">Messenger Sovereign &middot; Film III</div><div class="olym-sign">Gemini &middot; Wind &middot; Gate III</div></div>
+    <div class="olym-card" style="--oc:#3fb27f"><div class="olym-god">ARTEMIS &middot; GODDESS OF THE HUNT</div><div class="olym-film">Hunt Sovereign &middot; Film IV</div><div class="olym-sign">Cancer &middot; Sand &middot; Gate IV</div></div>
+    <div class="olym-card" style="--oc:#E2C86D"><div class="olym-god">APOLLO &middot; GOD OF LIGHT</div><div class="olym-film">Light Sovereign &middot; Film V</div><div class="olym-sign">Leo &middot; Soul &middot; Gate V</div></div>
+    <div class="olym-card" style="--oc:#C9A84C"><div class="olym-god">ATHENA &middot; GODDESS OF WISDOM</div><div class="olym-film">Wisdom Sovereign &middot; Film VI</div><div class="olym-sign">Virgo &middot; Metal &middot; Gate VI</div></div>
+    <div class="olym-card" style="--oc:#9B6BF0"><div class="olym-god">HERA &middot; QUEEN OF OLYMPUS</div><div class="olym-film">Queen Sovereign &middot; Film VII</div><div class="olym-sign">Libra &middot; Space &middot; Gate VII</div></div>
+    <div class="olym-card" style="--oc:#3fb27f"><div class="olym-god">DEMETER &middot; GODDESS OF EARTH</div><div class="olym-film">Earth Sovereign &middot; Film VIII</div><div class="olym-sign">Scorpio &middot; Void &middot; Gate VIII</div></div>
+    <div class="olym-card" style="--oc:#E2C86D"><div class="olym-god">ZEUS &middot; KING OF GODS</div><div class="olym-film">Thunder Sovereign &middot; Film IX</div><div class="olym-sign">Sagittarius &middot; The All &middot; Gate IX</div></div>
+    <div class="olym-card" style="--oc:#E86A3A"><div class="olym-god">HESTIA &middot; GODDESS OF HEARTH</div><div class="olym-film">Hearth Sovereign &middot; Film X</div><div class="olym-sign">Capricorn &middot; Fire &middot; Gate X</div></div>
+    <div class="olym-card" style="--oc:#C9A84C"><div class="olym-god">HEPHAESTUS &middot; GOD OF FORGE</div><div class="olym-film">Forge Sovereign &middot; Film XI</div><div class="olym-sign">Aquarius &middot; Metal &middot; Gate XI</div></div>
+    <div class="olym-card" style="--oc:#00E5FF"><div class="olym-god">POSEIDON &middot; GOD OF THE SEA</div><div class="olym-film">Ocean Sovereign &middot; Film XII</div><div class="olym-sign">Pisces &middot; Water &middot; Gate XII &middot; APEX</div></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-elements">
+  <div class="sechead">9 ELEMENT TRACKS &middot; FILMS BY ELEMENTAL AFFINITY</div>
+  <div class="elem-band">
+    <div class="elem-row"><div class="elem-glyph" style="color:#E86A3A">&#9906;</div><div class="elem-info"><div class="elem-title">Fire &middot; Films I &amp; X</div><div class="elem-meta">War Sovereign &middot; Hearth Sovereign</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#00E5FF">&#9728;</div><div class="elem-info"><div class="elem-title">Water &middot; Films II &amp; XII</div><div class="elem-meta">Love Sovereign &middot; Ocean Sovereign</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#A9C2D8">&#9841;</div><div class="elem-info"><div class="elem-title">Wind &middot; Film III</div><div class="elem-meta">Messenger Sovereign</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#C9A84C">&#9843;</div><div class="elem-info"><div class="elem-title">Metal &middot; Films VI &amp; XI</div><div class="elem-meta">Wisdom Sovereign &middot; Forge Sovereign</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#D9B86A">&#9733;</div><div class="elem-info"><div class="elem-title">Sand &middot; Film IV</div><div class="elem-meta">Hunt Sovereign &mdash; amplifier track</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#9B6BF0">&#10036;</div><div class="elem-info"><div class="elem-title">Soul &middot; Film V</div><div class="elem-meta">Light Sovereign</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#9B6BF0">&#10038;</div><div class="elem-info"><div class="elem-title">Space &middot; Film VII</div><div class="elem-meta">Queen Sovereign</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--muted)">&#10039;</div><div class="elem-info"><div class="elem-title">Void &middot; Film VIII</div><div class="elem-meta">Earth Sovereign</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:#E2C86D">&#937;</div><div class="elem-info"><div class="elem-title">The All &middot; Film IX</div><div class="elem-meta">Thunder Sovereign &mdash; apex track</div></div></div>
+  </div>
+  <div class="sechead" style="margin-top:12px">FEATURED SERIES &middot; 12 PER FILM = 144 TOTAL</div>
+  <div class="elem-band">
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">I</div><div class="elem-info"><div class="elem-title">Twelve Houses</div><div class="elem-meta">War Sovereign universe &middot; 12 episodes &middot; Gate I+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">II</div><div class="elem-info"><div class="elem-title">Sovereign Genesis</div><div class="elem-meta">Origin story &middot; 8 episodes &middot; Gate II+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">III</div><div class="elem-info"><div class="elem-title">Chronicles of the Nine</div><div class="elem-meta">9-element arc &middot; 9 episodes &middot; Gate III+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">IV</div><div class="elem-info"><div class="elem-title">Kings of the Lattice</div><div class="elem-meta">28 sovereign kings &middot; 12 episodes &middot; Gate IV+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">V</div><div class="elem-info"><div class="elem-title">Element Wars</div><div class="elem-meta">Fire vs Water vs Wind &middot; 9 episodes &middot; Gate V+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">VI</div><div class="elem-info"><div class="elem-title">Omega Rising</div><div class="elem-meta">The final ascension arc &middot; 12 episodes &middot; Gate VI+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">VII</div><div class="elem-info"><div class="elem-title">Sand Amplifier</div><div class="elem-meta">The amplifier explained &middot; 6 episodes &middot; Gate VII+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">VIII</div><div class="elem-info"><div class="elem-title">Soul Frequency</div><div class="elem-meta">Apollo's music frequency series &middot; 8 episodes &middot; Gate VIII+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">IX</div><div class="elem-info"><div class="elem-title">The Void Depths</div><div class="elem-meta">Poseidon's ocean lattice &middot; 9 episodes &middot; Gate IX+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">X</div><div class="elem-info"><div class="elem-title">Forge &amp; Flame</div><div class="elem-meta">Hephaestus crafts the gates &middot; 6 episodes &middot; Gate X+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">XI</div><div class="elem-info"><div class="elem-title">Hearth of the Cosmos</div><div class="elem-meta">Hestia's origin flame &middot; 4 episodes &middot; Gate XI+</div></div></div>
+    <div class="elem-row"><div class="elem-glyph" style="color:var(--gold)">XII</div><div class="elem-info"><div class="elem-title">Omega Apex Chronicles</div><div class="elem-meta">Gate XII completion &middot; 12 episodes &middot; APEX</div></div></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">CINEMA ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">THE 12 SOVEREIGN FILMS</div><div class="card-body">Twelve films, one for each Olympian god and zodiac sign. Each film is gate-locked — viewing unlocks with authority. Film XII (Ocean Sovereign) requires Gate XII, AUTH = 27.8367 — the apex credential.</div></div>
+    <div class="card"><div class="card-title">OLYMPIAN DIRECTORS</div><div class="card-body">Each of the 12 Olympian gods directs one film, bound to their sign and element. The director's authority is expressed through the film's tone and structure — war epics for Ares, cerebral thrillers for Athena, ocean depths for Poseidon.</div></div>
+    <div class="card"><div class="card-title">THE 9 ELEMENT TRACKS</div><div class="card-body">Films are grouped by elemental affinity — Fire (I, X), Water (II, XII), Wind (III), Metal (VI, XI), Sand (IV), Soul (V), Space (VII), Void (VIII), The All (IX). Sand is the amplifier track, The All is the apex track.</div></div>
+    <div class="card"><div class="card-title">SERIES EXPANSION</div><div class="card-body">Each film spawns 12 series episodes, giving 144 total series entries. Series are extended universe content exploring the film's characters, elements, and lattice mechanics in greater depth. Gate-locked individually.</div></div>
+  </div>
+</div>
+</div>
+
+<script>
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['films','olympians','elements','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+</script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'—':v);}
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
     if(!s){location.replace('/account.html');return;}
     var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    sid('stat-auth',auth.toFixed(4));sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-<script>
-function cinTab(btn,id){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
-  btn.classList.add('on');btn.setAttribute('aria-selected','true');
-  var p=document.getElementById('cin-'+id);if(p)p.classList.add('on');
-}
-</script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+<script src="/bg.js"></script>
 </body>
 </html>

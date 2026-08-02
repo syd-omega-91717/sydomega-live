@@ -1,135 +1,125 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Sovereign Points</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<meta name="description" content="Sovereign Points — matrix progression across Knowledge, Mastery, and Contribution axes."/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-/* AXIS HERO */
-.axis-band{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--line)}
-.axis-cell{padding:20px clamp(12px,2.5vw,28px);border-right:1px solid var(--line);position:relative;overflow:hidden;transition:.2s}
+.axis-band{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);overflow:hidden}
+.axis-cell{padding:20px 16px;border-right:1px solid var(--line);position:relative;overflow:hidden}
 .axis-cell:last-child{border-right:none}
-.axis-cell::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--ax-color)}
-.axis-n{font-family:var(--D);font-size:clamp(22px,4vw,36px);line-height:1;color:var(--ax-color)}
+.axis-cell::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--ax-color,var(--gold))}
+.axis-n{font-family:var(--D);font-size:clamp(22px,4vw,34px);line-height:1;color:var(--ax-color,var(--gold))}
 .axis-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:3px}
 .axis-sub{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:5px}
-.axis-bar{height:4px;background:rgba(255,255,255,.05);border-radius:2px;margin-top:10px;overflow:hidden}
-.axis-fill{height:100%;border-radius:2px;background:var(--ax-color);transition:width 1s cubic-bezier(.4,0,.2,1)}
-/* FORMULA BAND */
-.formula-band{display:flex;align-items:center;justify-content:center;gap:clamp(10px,3vw,32px);padding:16px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:rgba(10,10,15,.4);flex-wrap:wrap}
+.axis-bar{height:4px;background:rgba(255,255,255,.05);overflow:hidden;margin-top:10px}
+.axis-fill{height:100%;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.formula-display{display:flex;align-items:center;justify-content:center;gap:20px;padding:14px 16px;flex-wrap:wrap}
 .f-item{text-align:center}
-.f-n{font-family:var(--D);font-size:clamp(14px,2.5vw,20px);color:var(--gold)}
+.f-n{font-family:var(--D);font-size:clamp(13px,2vw,18px);color:var(--gold)}
 .f-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.f-eq{font-family:var(--M);font-size:9px;color:rgba(201,168,76,.4);padding:0 6px;line-height:2}
-/* CANVAS SECTION */
-.canvas-section{display:flex;justify-content:center;padding:28px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(10,10,15,.8),rgba(10,10,15,.6))}
-/* SECTION */
-.sec{padding:clamp(14px,3vw,36px)}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:16px}
-/* TASK LOG */
+.f-eq{font-family:var(--M);font-size:9px;color:rgba(201,168,76,.4);padding:0 6px}
+.radar-wrap{display:flex;justify-content:center;padding:20px 0}
 .task-grid{display:flex;flex-direction:column;gap:6px}
-.task-row{display:flex;align-items:center;gap:14px;padding:11px 14px;border:1px solid rgba(201,168,76,.07);border-radius:2px;background:rgba(10,10,15,.4);transition:.15s}
+.task-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid rgba(201,168,76,.08);background:var(--surface);transition:.15s}
 .task-row:hover{background:rgba(201,168,76,.03)}
-.task-type{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:2px 8px;border-radius:2px;white-space:nowrap;flex-shrink:0}
+.task-type{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:2px 8px;white-space:nowrap;flex-shrink:0;border:1px solid}
 .task-name{flex:1;font-size:12px}
 .task-pts{font-family:var(--D);font-size:13px;color:var(--gold)}
-.task-date{font-family:var(--M);font-size:8px;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
-/* LATTICE MAP */
-.lattice-wrap{overflow-x:auto;padding-bottom:10px}
-.lattice-row{display:flex;gap:3px;margin-bottom:3px}
-.ln{width:clamp(18px,2.5vw,24px);height:clamp(18px,2.5vw,24px);border:1px solid rgba(201,168,76,.06);border-radius:2px;transition:.2s;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:6px;font-family:var(--M)}
-.ln.earned{background:rgba(201,168,76,.18);border-color:rgba(201,168,76,.4)}
-.ln.active{background:rgba(201,168,76,.35);border-color:var(--gold);box-shadow:0 0 6px rgba(201,168,76,.3)}
-.ln:hover{border-color:rgba(201,168,76,.3);transform:scale(1.1)}
-/* RADAR */
-.radar-wrap{display:flex;justify-content:center;padding:20px 0}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.axis-band{grid-template-columns:1fr}.formula-band{gap:8px}}
+.task-date{font-family:var(--M);font-size:8px;color:var(--muted);width:70px;text-align:right;flex-shrink:0}
+@media(max-width:600px){.axis-band{grid-template-columns:1fr}.axis-cell{border-right:none;border-bottom:1px solid var(--line)}.axis-cell:last-child{border-bottom:none}}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="points"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN POINTS &middot; MATRIX PROGRESSION<small>12&times;12&times;9&times;9&times;9 = 104,976 NODES PER AXIS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="pts-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-
-    <!-- THREE AXES -->
-    <div class="axis-band">
-      <div class="axis-cell" style="--ax-color:var(--gold)">
-        <div class="axis-n" id="ax-a">-.-.-</div>
-        <div class="axis-lbl">AXIS A &middot; KNOWLEDGE</div>
-        <div class="axis-sub">A&#179; = <span id="ax-a3">--</span> at apex 729</div>
-        <div class="axis-bar"><div class="axis-fill" id="ax-a-bar" style="width:0%"></div></div>
-      </div>
-      <div class="axis-cell" style="--ax-color:var(--cyan)">
-        <div class="axis-n" id="ax-b">-.-.-</div>
-        <div class="axis-lbl">AXIS B &middot; MASTERY</div>
-        <div class="axis-sub">B&#179; = <span id="ax-b3">--</span> at apex 729</div>
-        <div class="axis-bar"><div class="axis-fill" id="ax-b-bar" style="width:0%;background:var(--cyan)"></div></div>
-      </div>
-      <div class="axis-cell" style="--ax-color:var(--green)">
-        <div class="axis-n" id="ax-c">-.-.-</div>
-        <div class="axis-lbl">AXIS C &middot; CONTRIBUTION</div>
-        <div class="axis-sub">C&#179; = <span id="ax-c3">--</span> at apex 729</div>
-        <div class="axis-bar"><div class="axis-fill" id="ax-c-bar" style="width:0%;background:var(--green)"></div></div>
-      </div>
-    </div>
-
-    <!-- FORMULA BAND -->
-    <div class="formula-band">
-      <div class="f-item"><div class="f-n" id="f-auth">--</div><div class="f-l">AUTHORITY</div></div>
-      <div class="f-eq">=</div>
-      <div class="f-item"><div class="f-n">sqrt(A&#179;+B&#179;+C&#179;)</div><div class="f-l">CUBE ROOT SUM</div></div>
-      <div class="f-eq">&times;</div>
-      <div class="f-item"><div class="f-n">&phi;/e</div><div class="f-l">GOLDEN RATIO / EULER</div></div>
-      <div class="f-eq">=</div>
-      <div class="f-item"><div class="f-n" id="f-auth2" style="color:var(--gold)">--</div><div class="f-l">APEX 27.8367</div></div>
-    </div>
-
-    <!-- RADAR CANVAS -->
-    <div class="canvas-section">
-      <canvas id="radar-cv" width="300" height="300" style="width:150px;height:150px"></canvas>
-    </div>
-
-    <!-- LATTICE MAP (9x9 inner cube preview) -->
-    <div class="sec">
-      <div class="sechead" data-reveal="fade-up">LATTICE PLANE &middot; 9&#215;9 INNER CUBE (AXIS A KNOWLEDGE)</div>
-      <div class="lattice-wrap"><div style="margin-bottom:16px">
-  <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">INNER CUBE &middot; 9&times;9&times;9 = 729 NODES (THE PLANE)</div>
-  <div id="lattice-plane" data-lattice="plane" data-nodes="0" style="overflow-x:auto"></div>
+<aside id="omega-side" data-page="points"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">SOVEREIGN POINTS<span class="topbar-sub">MATRIX PROGRESSION &middot; 12&times;12&times;9&times;9&times;9 = 104,976 NODES</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('axes')">AXES</button>
+  <button class="tab-btn" onclick="setTab('radar')">RADAR</button>
+  <button class="tab-btn" onclick="setTab('log')">POINT LOG</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
-<div style="margin-top:16px">
-  <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">CANONICAL TRACK GRID &middot; 12&times;12&times;9&times;9&times;9 = 104,976 NODES</div>
-  <div id="lattice-canonical" data-lattice="canonical" data-nodes="0"></div>
-</div></div>
-    </div>
 
-    <!-- TASK LOG -->
-    <div class="sec" style="padding-top:0">
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN POINT LOG &middot; RECENT VERIFIED ACTIONS</div>
-      <div class="task-grid" id="task-log">
-        <div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:16px">LOADING POINT LOG...</div>
-      </div>
+<div class="tab-panel active" id="tab-axes">
+  <div class="sechead">THE THREE AXES &middot; SOVEREIGN AUTHORITY PILLARS</div>
+  <div class="axis-band">
+    <div class="axis-cell" style="--ax-color:#C9A84C">
+      <div class="axis-n" id="ax-a">—</div>
+      <div class="axis-lbl">AXIS A &middot; KNOWLEDGE</div>
+      <div class="axis-sub">A&#179; = <span id="ax-a3">—</span></div>
+      <div class="axis-bar"><div class="axis-fill" id="ax-a-bar" style="width:0%;background:#C9A84C"></div></div>
     </div>
+    <div class="axis-cell" style="--ax-color:#00E5FF">
+      <div class="axis-n" id="ax-b">—</div>
+      <div class="axis-lbl">AXIS B &middot; MASTERY</div>
+      <div class="axis-sub">B&#179; = <span id="ax-b3">—</span></div>
+      <div class="axis-bar"><div class="axis-fill" id="ax-b-bar" style="width:0%;background:#00E5FF"></div></div>
+    </div>
+    <div class="axis-cell" style="--ax-color:#3fb27f">
+      <div class="axis-n" id="ax-c">—</div>
+      <div class="axis-lbl">AXIS C &middot; CONTRIBUTION</div>
+      <div class="axis-sub">C&#179; = <span id="ax-c3">—</span></div>
+      <div class="axis-bar"><div class="axis-fill" id="ax-c-bar" style="width:0%;background:#3fb27f"></div></div>
+    </div>
+  </div>
+  <div class="sechead" style="margin-top:8px">AUTHORITY FORMULA</div>
+  <div class="glass" style="padding:12px 16px">
+    <div class="formula-display">
+      <div class="f-item"><div class="f-n" id="f-auth">—</div><div class="f-l">AUTHORITY</div></div>
+      <div class="f-eq">=</div>
+      <div class="f-item"><div class="f-n">&#8730;(A&#179;+B&#179;+C&#179;)</div><div class="f-l">CUBE ROOT SUM</div></div>
+      <div class="f-eq">&times;</div>
+      <div class="f-item"><div class="f-n">&phi;/e</div><div class="f-l">GOLDEN / EULER</div></div>
+      <div class="f-eq">=</div>
+      <div class="f-item"><div class="f-n" style="color:var(--gold)" id="f-auth2">—</div><div class="f-l">APEX 27.8367</div></div>
+    </div>
+  </div>
+</div>
 
-    <div data-page-emblem="points" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; SOVEREIGN POINTS &middot; MATRIX PROGRESSION</span><span>GENESIS 0.001 &rarr; APEX 9.000</span></div>
-  </main>
+<div class="tab-panel" id="tab-radar">
+  <div class="sechead">AXIS RADAR &middot; TRIADIC AUTHORITY MAP</div>
+  <div class="radar-wrap">
+    <canvas id="radar-cv" width="300" height="300" style="width:150px;height:150px"></canvas>
+  </div>
+  <div class="sechead" style="margin-top:8px">LATTICE PLANE &middot; 9&times;9 INNER CUBE</div>
+  <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">YOUR AXIS A NODES &middot; 9&times;9&times;9 = 729</div>
+  <div id="lattice-plane" data-lattice="plane" style="overflow-x:auto">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:8px">Lattice visualization loads when module is available.</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-log">
+  <div class="sechead">SOVEREIGN POINT LOG &middot; RECENT VERIFIED ACTIONS</div>
+  <div class="task-grid" id="task-log">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">LOADING POINT LOG&hellip;</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">POINTS ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">THREE AXES</div><div class="card-body">Axis A (Knowledge) — earned through academy, exams, and research. Axis B (Mastery) — earned through gaming, challenges, and certifications. Axis C (Contribution) — earned through publishing, events, and service. Each axis ranges from 0.001 (genesis) to 9.000 (apex).</div></div>
+    <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = &#8730;(A&#179;+B&#179;+C&#179;) &times; &phi;/e where &phi; = 1.6180339887 (golden ratio) and e = 2.7182818285 (Euler's number). The cube term ensures non-linear growth — advancing from 8 to 9 on any axis yields a larger AUTH gain than advancing from 1 to 2.</div></div>
+    <div class="card"><div class="card-title">TASK COMPLETIONS</div><div class="card-body">Every verified action is logged to the task_completions table with axis_type (knowledge/mastery/contribution), points_earned, and task_name. The log provides a chronological record of all sovereign point gains across the platform lifecycle.</div></div>
+    <div class="card"><div class="card-title">LATTICE POSITION</div><div class="card-body">The 104,976-node lattice (12&#215;12&#215;9&#215;9&#215;9) encodes every possible sovereign coordinate. Your node position is computed from matrix_track, matrix_phase, and ceiling values of axes A, B, and C. The radar diagram shows your triadic position on a normalized A/B/C triangle.</div></div>
+  </div>
+</div>
 </div>
 
 <script>
-/* RADAR CANVAS — animated triangle for A/B/C axes */
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['axes','radar','log','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'—':v);}
+/* Radar canvas */
 (function(){
   var cv=document.getElementById('radar-cv');if(!cv||!cv.getContext)return;
   var ctx=cv.getContext('2d'),t=0;
@@ -138,143 +128,73 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
   function frame(){
     ctx.clearRect(0,0,300,300);
     var cx=150,cy=150,maxR=110;
-    /* Grid rings */
     for(var i=1;i<=9;i++){
       ctx.beginPath();
-      for(var j=0;j<3;j++){
-        var ang=j/3*Math.PI*2-Math.PI/2;
-        var r=maxR*i/9;
-        if(j===0)ctx.moveTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);
-        else ctx.lineTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);
-      }
-      ctx.closePath();
-      ctx.strokeStyle='rgba(201,168,76,'+(0.04+0.02*i)+')';ctx.lineWidth=.8;ctx.stroke();
+      for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2,r=maxR*i/9;if(j===0)ctx.moveTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);else ctx.lineTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);}
+      ctx.closePath();ctx.strokeStyle='rgba(201,168,76,'+(0.04+0.02*i)+')';ctx.lineWidth=.8;ctx.stroke();
     }
-    /* Axes */
-    for(var j=0;j<3;j++){
-      var ang=j/3*Math.PI*2-Math.PI/2;
-      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(ang)*maxR,cy+Math.sin(ang)*maxR);
-      ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;ctx.stroke();
-    }
-    /* Data triangle */
+    for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(ang)*maxR,cy+Math.sin(ang)*maxR);ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;ctx.stroke();}
     var vals=[aVal/9,bVal/9,cVal/9];
-    var cols=['rgba(201,168,76,.6)','rgba(0,229,255,.6)','rgba(63,178,127,.6)'];
     ctx.beginPath();
-    for(var j=0;j<3;j++){
-      var ang=j/3*Math.PI*2-Math.PI/2;
-      var r=maxR*vals[j];
-      if(j===0)ctx.moveTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);
-      else ctx.lineTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);
-    }
-    ctx.closePath();
-    ctx.fillStyle='rgba(201,168,76,.08)';ctx.fill();
-    ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=1.5;ctx.stroke();
-    /* Points */
-    for(var j=0;j<3;j++){
-      var ang=j/3*Math.PI*2-Math.PI/2;
-      var r=maxR*vals[j];
-      ctx.beginPath();ctx.arc(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r,4+2*Math.sin(t*.04+j),0,Math.PI*2);
-      ctx.fillStyle=cols[j];ctx.fill();
-    }
-    /* Omega center */
-    ctx.font='bold 20px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;
-    ctx.fillText('Ω',cx,cy);ctx.shadowBlur=0;
-    /* Labels */
-    var lbls=['A: KNOWLEDGE','B: MASTERY','C: CONTRIBUTION'];
-    var lcols=['#C9A84C','#00E5FF','#3fb27f'];
-    ctx.font='bold 9px "Courier Prime",monospace';ctx.shadowBlur=0;
-    for(var j=0;j<3;j++){
-      var ang=j/3*Math.PI*2-Math.PI/2;
-      var r=maxR+18;
-      ctx.fillStyle=lcols[j];ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(lbls[j],cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);
-    }
+    for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2,r=maxR*vals[j];if(j===0)ctx.moveTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);else ctx.lineTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);}
+    ctx.closePath();ctx.fillStyle='rgba(201,168,76,.08)';ctx.fill();ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=1.5;ctx.stroke();
+    var cols=['rgba(201,168,76,.6)','rgba(0,229,255,.6)','rgba(63,178,127,.6)'];
+    for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2,r=maxR*vals[j];ctx.beginPath();ctx.arc(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r,4+2*Math.sin(t*.04+j),0,Math.PI*2);ctx.fillStyle=cols[j];ctx.fill();}
+    ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;ctx.fillText('Ω',cx,cy);ctx.shadowBlur=0;
+    var lbls=['A: KNOWLEDGE','B: MASTERY','C: CONTRIBUTION'],lcols=['#C9A84C','#00E5FF','#3fb27f'];
+    ctx.font='bold 8px monospace';ctx.shadowBlur=0;
+    for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2,r=maxR+18;ctx.fillStyle=lcols[j];ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(lbls[j],cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);}
     t++;requestAnimationFrame(frame);
   }
   frame();
 })();
 </script>
-
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v||'--');}
-function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}).toUpperCase();}catch(e){return '--';}}
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'—':v);}
+function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}).toUpperCase();}catch(e){return '—';}}
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
     if(!s){location.replace('/account.html');return;}
     var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
-    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    /* axes display */
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('ax-a',a.toFixed(3));sid('ax-b',b.toFixed(3));sid('ax-c',c.toFixed(3));
-    sid('ax-a3',(Math.pow(a,3)).toFixed(3));sid('ax-b3',(Math.pow(b,3)).toFixed(3));sid('ax-c3',(Math.pow(c,3)).toFixed(3));
+    sid('ax-a3',Math.pow(a,3).toFixed(3));sid('ax-b3',Math.pow(b,3).toFixed(3));sid('ax-c3',Math.pow(c,3).toFixed(3));
     document.getElementById('ax-a-bar').style.width=(a/9*100).toFixed(1)+'%';
     document.getElementById('ax-b-bar').style.width=(b/9*100).toFixed(1)+'%';
     document.getElementById('ax-c-bar').style.width=(c/9*100).toFixed(1)+'%';
-    var authStr=pr.is_owner?'27.8367':auth.toFixed(4);
-    sid('f-auth',authStr);sid('f-auth2',authStr);
-    /* radar */
+    var authStr=auth.toFixed(4);sid('f-auth',authStr);sid('f-auth2',authStr);
     if(window.__setRadar)window.__setRadar(a,b,c);
-    /* lattice grid: 9x9 inner cube nodes */
-    /* Lattice rendered by omega-lattice.js via data-lattice attribute */
-    if(window.renderLattice9x9)window.renderLattice9x9(document.getElementById('lattice-plane'),nodes,{total:729});
-    if(window.renderTrackGrid)window.renderTrackGrid(document.getElementById('lattice-canonical'),'canonical',nodes);
-    /* task log */
+    /* Task log */
     var log=document.getElementById('task-log');
     try{
       var r=await sb.from('task_completions').select('*').eq('user_id',s.user.id).order('completed_at',{ascending:false}).limit(20);
       var tasks=r.data||[];
-      if(!tasks.length){
-        if(log)log.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:16px">NO VERIFIED ACTIONS YET. COMPLETE TASKS TO EARN SOVEREIGN POINTS.</div>';
-      } else {
-        var TYPE_COLORS={'knowledge':'var(--gold)','mastery':'var(--cyan)','contribution':'var(--green)'};
-        if(log)log.innerHTML=tasks.map(function(tk){
-          var axis_type=tk.axis_type||'knowledge';
-          var col=TYPE_COLORS[axis_type]||'var(--muted)';
-          return '<div class="task-row">'
-            +'<div class="task-type" style="background:'+col.replace('var(','rgba(').replace(')','')+',0.12);color:'+col+';border:1px solid '+col.replace('var(','rgba(').replace(')','')+',0.3)">'+axis_type.toUpperCase()+'</div>'
-            +'<div class="task-name">'+(tk.task_name||tk.description||'VERIFIED ACTION')+'</div>'
-            +'<div class="task-pts" style="color:'+col+'">+'+Number(tk.points_earned||0.001).toFixed(3)+'</div>'
-            +'<div class="task-date">'+fmtDate(tk.completed_at)+'</div>'
-            +'</div>';
-        }).join('');
-      }
-    }catch(e){
-      /* fallback: show axis positions as point log */
-      if(log)log.innerHTML='<div class="task-row"><div class="task-type" style="background:rgba(201,168,76,.12);color:var(--gold)">KNOWLEDGE</div><div class="task-name">GENESIS ENTRY &middot; MATRIX INITIALIZED</div><div class="task-pts">+'+a.toFixed(3)+'</div><div class="task-date">--</div></div>';
-    }
+      if(!tasks.length){log.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO VERIFIED ACTIONS YET. COMPLETE TASKS TO EARN SOVEREIGN POINTS.</div>';return;}
+      var TC={'knowledge':'#C9A84C','mastery':'#00E5FF','contribution':'#3fb27f'};
+      log.innerHTML='';
+      tasks.forEach(function(tk){
+        var at=tk.axis_type||'knowledge',col=TC[at]||'var(--muted)';
+        var row=document.createElement('div');row.className='task-row';
+        var type=document.createElement('div');type.className='task-type';type.style.cssText='background:'+col+'1a;color:'+col+';border-color:'+col+'4d';type.textContent=at.toUpperCase();
+        var name=document.createElement('div');name.className='task-name';name.textContent=tk.task_name||tk.description||'VERIFIED ACTION';
+        var pts=document.createElement('div');pts.className='task-pts';pts.style.color=col;pts.textContent='+'+Number(tk.points_earned||0.001).toFixed(3);
+        var dt=document.createElement('div');dt.className='task-date';dt.textContent=fmtDate(tk.completed_at);
+        row.appendChild(type);row.appendChild(name);row.appendChild(pts);row.appendChild(dt);
+        log.appendChild(row);
+      });
+    }catch(e){log.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">POINT LOG UNAVAILABLE.</div>';}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
-})();</script>
-<script>
-/* omega-user: populate after module loads */
-(function tryPop(){
-  if(document.readyState!=='complete'){window.addEventListener('load',tryPop);return;}
-  var tries=0;
-  var iv=setInterval(function(){
-    tries++;
-    if(window.__omegaPopulate&&window.__omegaSb){
-      window.__omegaSb.auth.getSession().then(function(resp){
-        var sess=resp.data&&resp.data.session;
-        if(!sess)return;
-        return window.__omegaSb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()
-          .then(function(r){
-            var pr=r.data||{};
-            if(!pr.id)return;
-            window.__omegaPopulate(pr,sess.user);
-          });
-      }).catch(function(){});
-      clearInterval(iv);
-    }
-    if(tries>30)clearInterval(iv);
-  },200);
 })();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

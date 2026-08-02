@@ -1,182 +1,105 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — SIGIL · Sovereign Platform">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<title>&#937; SYD OMEGA 91717 &mdash; SIGIL</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json">
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Sigil</title>
+<meta name="description" content="Your sovereign sigil — derived from your sign, element, and authority. View, customise, and download your personal mark."/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--gold);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--gold);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--gold);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
-.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
-.tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
-.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
-.tab-panel{display:none}.tab-panel.on{display:block}
-.sigil-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;border:1px solid var(--line);background:rgba(10,10,15,.6);border-radius:2px;margin-bottom:16px}
-.sigil-canvas-wrap{position:relative;margin-bottom:16px}
+.sigil-stage{display:flex;flex-direction:column;align-items:center;padding:24px;border:1px solid var(--line);background:var(--surface);margin-bottom:16px}
 .sigil-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-top:8px;text-align:center}
-.sigil-meta{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;width:100%;max-width:500px;margin-top:8px}
+.sigil-meta{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;width:100%;max-width:480px;margin-top:12px}
 .sigil-field{text-align:center}
-.sigil-field-l{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
-.sigil-field-v{font-family:var(--D);font-size:13px;color:var(--gold)}
-.sigil-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px}
-.gallery-item{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:12px;text-align:center;transition:.18s}
+.sf-lbl{font-family:var(--M);font-size:6.5px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
+.sf-val{font-family:var(--D);font-size:13px;color:var(--gold)}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.gallery-item{border:1px solid var(--line);background:var(--surface);padding:12px;text-align:center;transition:.14s}
 .gallery-item:hover{border-color:rgba(201,168,76,.3)}
-.gallery-canvas{display:block;margin:0 auto 8px}
 .gallery-name{font-family:var(--D);font-size:10px;color:var(--ink);margin-bottom:2px}
 .gallery-sign{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted)}
-.builder-panel{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:20px;margin-bottom:16px}
-.builder-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-.builder-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);width:100px;flex-shrink:0}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.sigil-meta{grid-template-columns:1fr 1fr}.sigil-gallery{grid-template-columns:repeat(3,1fr)}}
+.color-swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.14s}
+.color-swatch:hover,.color-swatch.active{border-color:var(--ink)}
 </style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="sigil" aria-label="Navigation"></aside>
-  <main class="main" role="main" id="main-content">
-    <div class="topbar">
-      <div class="t">SIGIL<small>M13 &middot; Sovereign Sigil &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="sig-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
-    </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up">SIGIL &middot; M13 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="tab-bar" role="tablist">
-        <button class="tab-btn on" onclick="sgTab(this,'my')" role="tab" aria-selected="true">MY SIGIL</button>
-        <button class="tab-btn" onclick="sgTab(this,'gallery')" role="tab" aria-selected="false">GALLERY</button>
-        <button class="tab-btn" onclick="sgTab(this,'builder')" role="tab" aria-selected="false">BUILDER</button>
-      </div>
-
-      <div class="tab-panel on" id="sg-my" data-reveal="fade-up">
-        <div class="sechead">YOUR SOVEREIGN SIGIL</div>
-        <div class="sigil-stage">
-          <canvas id="sigil-cv" width="220" height="220" aria-label="Sovereign sigil" role="img" data-tooltip="Your personal sovereign sigil — derived from your sign, element, and authority" data-tooltip-placement="top"></canvas>
-          <div class="sigil-label" id="sigil-sub-label">SOVEREIGN SIGIL · SYD OMEGA 91717</div>
-          <div class="sigil-meta">
-            <div class="sigil-field"><div class="sigil-field-l">SIGN</div><div class="sigil-field-v" id="sg-sign">--</div></div>
-            <div class="sigil-field"><div class="sigil-field-l">ELEMENT</div><div class="sigil-field-v" id="sg-elem">--</div></div>
-            <div class="sigil-field"><div class="sigil-field-l">AUTHORITY</div><div class="sigil-field-v" id="sg-auth">--</div></div>
-            <div class="sigil-field"><div class="sigil-field-l">GATE</div><div class="sigil-field-v" id="sg-gate">--</div></div>
-          </div>
-        </div>
-        <div class="glass">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">SIGIL COMPOSITION</div>
-          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Your sigil is derived from three components: your zodiac glyph (outer ring), your element symbol (centre), and your authority value inscribed around the perimeter. As your authority grows, the sigil evolves.</div>
-        </div>
-      </div>
-
-      <div class="tab-panel" id="sg-gallery" data-reveal="fade-up">
-        <div class="sechead">SIGIL GALLERY · 12 ELEMENT ARCHETYPES</div>
-        <div class="sigil-gallery" id="sg-gallery-grid"></div>
-      </div>
-
-      <div class="tab-panel" id="sg-builder" data-reveal="fade-up">
-        <div class="sechead">SIGIL BUILDER</div>
-        <div class="builder-panel">
-          <div class="builder-row">
-            <div class="builder-lbl">PRIMARY COLOR</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button onclick="setSigilColor('#C9A84C')" style="width:28px;height:28px;background:#C9A84C;border:2px solid transparent;border-radius:50%;cursor:pointer"></button>
-              <button onclick="setSigilColor('#00E5FF')" style="width:28px;height:28px;background:#00E5FF;border:2px solid transparent;border-radius:50%;cursor:pointer"></button>
-              <button onclick="setSigilColor('#9B6BF0')" style="width:28px;height:28px;background:#9B6BF0;border:2px solid transparent;border-radius:50%;cursor:pointer"></button>
-              <button onclick="setSigilColor('#3fb27f')" style="width:28px;height:28px;background:#3fb27f;border:2px solid transparent;border-radius:50%;cursor:pointer"></button>
-              <button onclick="setSigilColor('#E86A3A')" style="width:28px;height:28px;background:#E86A3A;border:2px solid transparent;border-radius:50%;cursor:pointer"></button>
-              <button onclick="setSigilColor('#E2C86D')" style="width:28px;height:28px;background:#E2C86D;border:2px solid transparent;border-radius:50%;cursor:pointer"></button>
-            </div>
-          </div>
-          <div class="builder-row">
-            <div class="builder-lbl">DOWNLOAD</div>
-            <button class="btn btn-gold" onclick="downloadSigil()">DOWNLOAD PNG</button>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:center">
-          <canvas id="sigil-builder-cv" width="300" height="300" aria-label="Sigil builder" role="img"></canvas>
-        </div>
-      </div>
-    </div>
-    <div data-page-emblem="sigil" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; SIGIL &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
-  </main>
+<aside id="omega-side" data-page="sigil"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">SIGIL<span class="topbar-sub">SOVEREIGN MARK &middot; SIGN &middot; ELEMENT &middot; AUTHORITY</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('mysigil')">MY SIGIL</button>
+  <button class="tab-btn" onclick="setTab('gallery')">GALLERY</button>
+  <button class="tab-btn" onclick="setTab('builder')">BUILDER</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
-    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-    var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-    var GTHR=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-    var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
-    var SYMS=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
-    function s2(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
-    var sign=pr.zodiac_sign||SIGNS[0];
-    var si=SIGNS.indexOf(sign);if(si<0)si=0;
-    var sym=SYMS[si];
-    var gIdx=GTHR.findIndex(function(t){return auth<t;});if(gIdx<0)gIdx=11;
-    s2('sg-sign',sign+' '+sym);s2('sg-elem',sym);s2('sg-auth',auth.toFixed(4));
-    s2('sg-gate',gIdx>0?GNAMES[gIdx-1]+' · GATE '+gIdx:GNAMES[0]+' · GATE I');
-    _sigilSign=sign;_sigilElem=sym;_sigilAuth=auth;
-    drawSigil(document.getElementById('sigil-cv'),sign,sym,auth,'#C9A84C');
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
-})();
-</script>
+
+<div class="tab-panel active" id="tab-mysigil">
+  <div class="sechead">YOUR SOVEREIGN SIGIL</div>
+  <div class="sigil-stage">
+    <canvas id="sigil-cv" width="220" height="220" aria-label="Sovereign sigil"></canvas>
+    <div class="sigil-label">SOVEREIGN SIGIL &middot; SYD OMEGA 91717</div>
+    <div class="sigil-meta">
+      <div class="sigil-field"><div class="sf-lbl">SIGN</div><div class="sf-val" id="sg-sign">—</div></div>
+      <div class="sigil-field"><div class="sf-lbl">ELEMENT</div><div class="sf-val" id="sg-elem">—</div></div>
+      <div class="sigil-field"><div class="sf-lbl">AUTHORITY</div><div class="sf-val" id="sg-auth">—</div></div>
+      <div class="sigil-field"><div class="sf-lbl">GATE</div><div class="sf-val" id="sg-gate">—</div></div>
+    </div>
+  </div>
+  <div class="glass">
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">SIGIL COMPOSITION</div>
+    <div style="font-size:12px;line-height:1.8;color:var(--muted)">Your sigil is derived from three components: your zodiac glyph (outer ring), your element symbol (centre), and your authority value inscribed around the perimeter. As your authority grows, the sigil evolves.</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-gallery">
+  <div class="sechead">SIGIL GALLERY &mdash; 12 ELEMENT ARCHETYPES</div>
+  <div class="gallery-grid" id="gallery-grid"></div>
+</div>
+
+<div class="tab-panel" id="tab-builder">
+  <div class="sechead">SIGIL BUILDER</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">PRIMARY COLOUR</div>
+    <div class="card-body" style="padding-top:8px">
+      <div class="color-swatch-row" id="swatch-row"></div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;margin-bottom:16px">
+    <canvas id="sigil-builder-cv" width="300" height="300" aria-label="Sigil builder"></canvas>
+  </div>
+  <button class="btn-gold" onclick="downloadSigil()">DOWNLOAD PNG</button>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">SIGIL ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">SIGIL DERIVATION</div><div class="card-body">Your sovereign sigil is algorithmically derived from your profile data. No two sigils are identical — the combination of zodiac sign, element, and authority score produces a unique geometric mark for every member.</div></div>
+    <div class="card"><div class="card-title">CANVAS RENDERING</div><div class="card-body">Sigils are drawn in real-time using the HTML5 Canvas API. A six-pointed star forms the primary frame; the element glyph anchors the centre; the authority value rotates around the outer perimeter in 8px monospace text.</div></div>
+    <div class="card"><div class="card-title">AUTHORITY EVOLUTION</div><div class="card-body">As your authority score increases from 0 to 27.8367, the sigil's perimeter inscription updates to reflect your current value. The star geometry and outer rings remain constant; the text evolves with your progress.</div></div>
+    <div class="card"><div class="card-title">DOWNLOAD &amp; EXPORT</div><div class="card-body">The Download PNG function uses Canvas.toDataURL() to export your sigil at full resolution. The exported file is a 220×220 or 300×300 PNG — suitable for use as a profile mark, avatar, or certificate seal.</div></div>
+  </div>
+</div>
+</div>
+
 <script>
-function sgTab(btn,id){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
-  btn.classList.add('on');btn.setAttribute('aria-selected','true');
-  var p=document.getElementById('sg-'+id);if(p)p.classList.add('on');
+var _sigilColor='#C9A84C',_sigilSign='',_sigilElem='',_sigilAuth=0;
+var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+var SYMS=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+var GTHR=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var SWATCHES=['#C9A84C','#00E5FF','#9B6BF0','#3fb27f','#E86A3A','#E2C86D'];
+var PHI=1.6180339887,EU=2.7182818285;
+
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['mysigil','gallery','builder','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-var _sigilColor='#C9A84C';
-function setSigilColor(c){_sigilColor=c;drawSigil(document.getElementById('sigil-cv'),_sigilSign,_sigilElem,_sigilAuth,c);}
-var _sigilSign='',_sigilElem='',_sigilAuth=0;
+
 function drawSigil(cv,sign,elem,auth,color){
   if(!cv||!cv.getContext)return;
   var ctx=cv.getContext('2d');
@@ -185,7 +108,6 @@ function drawSigil(cv,sign,elem,auth,color){
   ctx.strokeStyle=color||'#C9A84C';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.globalAlpha=0.2;ctx.stroke();
   ctx.beginPath();ctx.arc(cx,cy,R*0.72,0,Math.PI*2);ctx.globalAlpha=0.15;ctx.stroke();
-  /* 6-pointed star */
   ctx.globalAlpha=0.6;ctx.beginPath();
   for(var i=0;i<6;i++){
     var a=i*Math.PI/3-Math.PI/2;
@@ -193,11 +115,9 @@ function drawSigil(cv,sign,elem,auth,color){
     i===0?ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r):ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
   }
   ctx.closePath();ctx.stroke();
-  /* Element glyph centre */
   ctx.globalAlpha=0.85;ctx.fillStyle=color||'#C9A84C';ctx.font='bold 28px serif';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(elem||'Ω',cx,cy);
-  /* Auth ring text */
-  ctx.globalAlpha=0.45;ctx.font='8px "Courier Prime",monospace';ctx.fillStyle=color||'#C9A84C';
+  ctx.globalAlpha=0.45;ctx.font='8px monospace';ctx.fillStyle=color||'#C9A84C';
   var txt='AUTH '+parseFloat(auth||0).toFixed(3)+' · SYD OMEGA 91717';
   var r2=R*0.88;
   for(var j=0;j<txt.length;j++){
@@ -206,28 +126,73 @@ function drawSigil(cv,sign,elem,auth,color){
   }
   ctx.globalAlpha=1;
 }
-function buildGallery(){
-  var grid=document.getElementById('sg-gallery-grid');if(!grid)return;
-  var SIGNS=[['Aries','♈','#E86A3A'],['Taurus','♉','#3fb27f'],['Gemini','♊','#00E5FF'],['Cancer','♋','#9B6BF0'],['Leo','♌','#E2C86D'],['Virgo','♍','#C9A84C'],['Libra','♎','#9B6BF0'],['Scorpio','♏','#8B0000'],['Sagittarius','♐','#E2C86D'],['Capricorn','♑','#C9A84C'],['Aquarius','♒','#00E5FF'],['Pisces','♓','#9B6BF0']];
-  SIGNS.forEach(function(s){
-    var item=document.createElement('div');item.className='gallery-item';
-    var cv=document.createElement('canvas');cv.width=120;cv.height=120;cv.className='gallery-canvas';
-    drawSigil(cv,s[0],s[1],12,s[2]);
-    item.appendChild(cv);
-    item.innerHTML+=`<div class="gallery-name">${s[0]}</div><div class="gallery-sign">${s[1]} · Archetype</div>`;
-    grid.appendChild(item);
-  });
+
+function setSigilColor(c,btn){
+  _sigilColor=c;
+  document.querySelectorAll('.color-swatch').forEach(function(s){s.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  drawSigil(document.getElementById('sigil-cv'),_sigilSign,_sigilElem,_sigilAuth,c);
+  drawSigil(document.getElementById('sigil-builder-cv'),_sigilSign,_sigilElem,_sigilAuth,c);
 }
+
 function downloadSigil(){
   var cv=document.getElementById('sigil-cv');if(!cv)return;
   var a=document.createElement('a');a.download='sovereign-sigil.png';a.href=cv.toDataURL();a.click();
 }
-document.addEventListener('DOMContentLoaded',function(){
-  buildGallery();
-  var bcv=document.getElementById('sigil-builder-cv');
-  if(bcv)drawSigil(bcv,'Leo','♌',15,'#C9A84C');
-});
+
+function buildGallery(){
+  var grid=document.getElementById('gallery-grid');if(!grid)return;
+  var GCOLS=['#E86A3A','#3fb27f','#00E5FF','#9B6BF0','#E2C86D','#C9A84C','#9B6BF0','#8B0000','#E2C86D','#C9A84C','#00E5FF','#9B6BF0'];
+  SIGNS.forEach(function(s,i){
+    var item=document.createElement('div');item.className='gallery-item';
+    var cv=document.createElement('canvas');cv.width=120;cv.height=120;cv.style.display='block';cv.style.margin='0 auto 8px';
+    drawSigil(cv,s,SYMS[i],12,GCOLS[i]);
+    item.appendChild(cv);
+    item.innerHTML+='<div class="gallery-name">'+s+'</div><div class="gallery-sign">'+SYMS[i]+' &middot; Archetype</div>';
+    grid.appendChild(item);
+  });
+}
+
+function buildSwatches(){
+  var row=document.getElementById('swatch-row');if(!row)return;
+  SWATCHES.forEach(function(c,i){
+    var btn=document.createElement('button');
+    btn.className='color-swatch'+(i===0?' active':'');
+    btn.style.background=c;btn.title=c;
+    btn.onclick=function(){setSigilColor(c,btn);};
+    row.appendChild(btn);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',function(){buildGallery();buildSwatches();});
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  var a=Number(pr.is_owner?9:pr.axis_a||0),b=Number(pr.is_owner?9:pr.axis_b||0),c=Number(pr.is_owner?9:pr.axis_c||0);
+  var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+  var sign=pr.zodiac_sign||SIGNS[0];
+  var si=SIGNS.indexOf(sign);if(si<0)si=0;
+  var sym=SYMS[si];
+  var gIdx=GTHR.findIndex(function(t){return auth<t;});if(gIdx<0)gIdx=11;
+  document.getElementById('sg-sign').textContent=sign+' '+sym;
+  document.getElementById('sg-elem').textContent=pr.element||sym;
+  document.getElementById('sg-auth').textContent=auth.toFixed(4);
+  document.getElementById('sg-gate').textContent=(gIdx>0?GNAMES[gIdx-1]:GNAMES[0])+' · GATE '+(gIdx>0?gIdx:1);
+  _sigilSign=sign;_sigilElem=sym;_sigilAuth=auth;
+  drawSigil(document.getElementById('sigil-cv'),sign,sym,auth,'#C9A84C');
+  drawSigil(document.getElementById('sigil-builder-cv'),sign,sym,auth,'#C9A84C');
+}
+boot();
+</script>
+<script src="/bg.js"></script>
 </body>
 </html>

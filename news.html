@@ -1,246 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717  --  News Intelligence</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; News Intelligence</title>
+<meta name="description" content="Sovereign dispatches, member wire, and AI field intelligence for the Order."/>
 <meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717  --  News Intelligence"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/news.html"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717  --  News Intelligence"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-  :root{
-    --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c;
-    --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f;
-    --ink:#e9e6dc; --muted:#85837b;
-    --line:rgba(201,168,76,0.16);
-    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 26% 14%,rgba(0,229,255,.06),transparent 42%),radial-gradient(circle at 82% 86%,rgba(201,168,76,.06),transparent 42%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
-
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:20px 0 6px;font-size:16px}
-  .intro b{color:var(--gold);font-weight:400}
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:26px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-
-  .disp{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px 20px;margin-bottom:10px;border-left:2px solid var(--gold)}
-  .disp .dh{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
-  .disp .tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--void);background:var(--gold);padding:2px 8px}
-  .disp .dt{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted)}
-  .disp .ti{font-family:var(--display);font-weight:700;color:var(--solar);font-size:16px;letter-spacing:.5px;margin-top:10px}
-  .disp .bd{font-weight:300;color:var(--ink);line-height:1.7;font-size:15px;margin-top:6px}
-
-  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:20px}
-  textarea{width:100%;font-family:var(--body);font-size:16px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:13px 15px;color-scheme:dark;min-height:80px;resize:vertical;line-height:1.6}
-  textarea:focus{outline:none;border-color:var(--cyan)}
-  .postrow{display:flex;gap:10px;align-items:flex-start}
-  .postrow textarea{flex:1}
-  .btn{font-family:var(--mono);letter-spacing:2px;font-size:11px;color:var(--void);background:var(--gold);padding:0 18px;border:1px solid var(--gold);cursor:pointer;align-self:stretch}
-  .btn:hover{background:transparent;color:var(--gold)}
-  .btn:disabled{opacity:.5;cursor:default}
-  .msg{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:8px}
-  .privacy{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px}
-  .privacy b{color:var(--gold)}
-
-  .intel-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(0,229,255,.1)}
-  .intel-item:last-child{border-bottom:none}
-  .intel-item a{font-family:var(--body);font-size:15px;font-weight:400;color:var(--ink);flex:1;line-height:1.4;transition:.15s}
-  .intel-item a:hover{color:var(--cyan)}
-  .intel-meta{font-family:var(--mono);font-size:9px;color:var(--muted);white-space:nowrap;flex-shrink:0;text-align:right;line-height:1.7}
-  .intel-meta b{color:var(--solar)}
-  .intel-loading{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;padding:8px 0}
-
-  .wire{margin-top:16px}
-  .post{border-bottom:1px dashed rgba(201,168,76,.12);padding:14px 0}
-  .post:last-child{border-bottom:none}
-  .post .ph2{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:1px}
-  .post .who{color:var(--gold)}
-  .post .when{color:var(--muted);font-size:10px}
-  .post .bd{font-weight:300;color:var(--ink);line-height:1.6;font-size:15px;margin-top:6px;white-space:pre-wrap}
-  .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
-
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+.dispatch{border:1px solid var(--line);border-left:2px solid var(--gold);background:var(--surface);padding:16px 18px;margin-bottom:10px}
+.dispatch-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:8px}
+.dispatch-tag{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--void);background:var(--gold);padding:2px 8px}
+.dispatch-date{font-family:var(--M);font-size:9px;color:var(--muted)}
+.dispatch-title{font-family:var(--D);font-size:14px;color:var(--solar);margin-bottom:6px}
+.dispatch-body{font-size:12px;line-height:1.75;color:var(--ink)}
+.wire-post{border-bottom:1px dashed rgba(201,168,76,.1);padding:12px 0}
+.wire-post:last-child{border-bottom:none}
+.wire-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px}
+.wire-sign{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--gold)}
+.wire-date{font-family:var(--M);font-size:9px;color:var(--muted)}
+.wire-body{font-size:12px;color:var(--ink);line-height:1.6;white-space:pre-wrap}
+.compose-area{margin-bottom:16px}
+.compose-textarea{width:100%;background:rgba(201,168,76,.05);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:.5px;padding:12px;min-height:80px;resize:vertical;outline:none}
+.compose-textarea:focus{border-color:rgba(201,168,76,.4)}
+.compose-footer{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.compose-msg{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--cyan)}
+.intel-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(0,229,255,.1)}
+.intel-item:last-child{border-bottom:none}
+.intel-link{font-size:14px;color:var(--ink);flex:1;line-height:1.4;transition:.15s}
+.intel-link:hover{color:var(--cyan)}
+.intel-meta{font-family:var(--M);font-size:8px;color:var(--muted);white-space:nowrap;text-align:right;line-height:1.7}
+.intel-meta b{color:var(--solar)}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">&#937;</div>
-  <h2 id="gate-h">News Intelligence</h2>
-  <p id="gate-p">Sign in to read the dispatches.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
+<aside id="omega-side" data-page="news"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">NEWS INTELLIGENCE<span class="topbar-sub">SOVEREIGN DISPATCHES &middot; THE WIRE &middot; FIELD INTELLIGENCE</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('dispatches')">DISPATCHES</button>
+  <button class="tab-btn" onclick="setTab('wire')">THE WIRE</button>
+  <button class="tab-btn" onclick="setTab('intelligence')">INTELLIGENCE</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="news"></aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="t">NEWS INTELLIGENCE<small>DISPATCHES OF THE ORDER</small></div>
-      <canvas id="nws-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-    </div>
-    <p class="intro" data-reveal="fade-up">The state of the Order, declared from above and gathered from the field. <b>Sovereign Dispatches</b> are official; <b>The Wire</b> is the open intel of every member.</p>
-
-    <div class="sechead" data-reveal="fade-up">SOVEREIGN DISPATCHES</div>
-    <div id="official"></div>
-
-    <div class="sechead" data-reveal="fade-up">INDUSTRY INTELLIGENCE  --  AI &amp; PLATFORM FIELD</div>
-    <div class="card" data-reveal="fade-up" id="intel-box"><div class="intel-loading">LOADING FIELD INTELLIGENCE...</div></div>
-
-    <div class="sechead" data-reveal="fade-up">THE WIRE  --  MEMBER INTEL</div>
-    <div class="card" data-reveal="fade-up">
-      <div class="postrow">
-        <textarea id="w-body" maxlength="600" placeholder="Send a dispatch to the Order..."></textarea>
-        <button class="btn" id="w-go">SEND</button>
-      </div>
-      <div class="msg" id="w-msg"></div>
-      <div class="privacy"><b>Visible to the Order.</b> Your dispatch is shown to all members under your sign. Send no secrets.</div>
-    </div>
-    <div class="wire card" id="wire" style="margin-top:14px"></div>
-  </main>
+<div class="tab-panel active" id="tab-dispatches">
+  <div class="sechead">SOVEREIGN DISPATCHES &mdash; OFFICIAL ORDER COMMUNICATIONS</div>
+  <div id="dispatches-box">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading dispatches&hellip;</div>
+  </div>
 </div>
 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
-  let user=null, mySign='';
+<div class="tab-panel" id="tab-wire">
+  <div class="sechead">THE WIRE &mdash; MEMBER INTEL</div>
+  <div class="compose-area glass">
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">SEND A DISPATCH</div>
+    <textarea class="compose-textarea" id="w-body" maxlength="600" placeholder="Send a dispatch to the Order&hellip;"></textarea>
+    <div class="compose-footer">
+      <button class="btn-gold" id="w-go" style="padding:8px 20px">SEND</button>
+      <span class="compose-msg" id="w-msg"></span>
+    </div>
+    <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:8px">Visible to the Order. Send no secrets.</div>
+  </div>
+  <div id="wire-box">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading the wire&hellip;</div>
+  </div>
+</div>
 
-  const OFFICIAL=[
-    {tag:'SYSTEM',date:'2026',ti:'THE ASCENSION ENGINE IS LIVE',bd:'Twelve phases, each a 729-node matrix  --  8,748 sovereign states. Your authority is computed from Knowledge, Mastery, and Contribution. Nothing is given.'},
-    {tag:'VAULT',date:'2026',ti:'THE SIGIL VAULT OPENS',bd:'Every earned crest  --  genesis, sign, element, rank, and the three Ascent thresholds  --  now mints as a sovereign medallion on your record.'},
-    {tag:'MESH',date:'2026',ti:'THE TWELVE AGENTS STAND READY',bd:'Sentinel through Sovereign  --  each agent bound to its sign and domain, reading your live standing and answering in its own voice.'},
-    {tag:'TREASURY',date:'2026',ti:'THE &#937; LEDGER HOLDS',bd:'&#937; is earned, never bought. The master vault locks 51%; the burn protocol removes 1% on every transfer. The sovereign field is the members\u2019 49%.'},
-    {tag:'PHASE II',date:'2026',ti:'THE ECONOMIC LAYER AWAITS COUNSEL',bd:'The public Marketplace, fiat acquisition of &#937;, and asset minting remain sealed until legal review clears classification, KYC/AML, and payment terms. The Order moves only when it is safe.'}
-  ];
-  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+<div class="tab-panel" id="tab-intelligence">
+  <div class="sechead">INDUSTRY INTELLIGENCE &mdash; AI &amp; PLATFORM FIELD</div>
+  <div id="intel-box">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);letter-spacing:2px;padding:12px">LOADING FIELD INTELLIGENCE&hellip;</div>
+  </div>
+</div>
 
-  async function renderOfficial(){
-    var box=document.getElementById('official'); box.innerHTML='';
-    try{
-      var r=await supabase.rpc('published_dispatches',{p_limit:30});
-      if(r.data && r.data.length){
-        r.data.forEach(function(n){
-          var dt=n.created_at?new Date(n.created_at).toLocaleDateString():'';
-          var el=document.createElement('div'); el.className='disp';
-          el.innerHTML='<div class="dh"><span class="tag">'+esc((n.category||'DISPATCH'))+'</span><span class="dt">'+dt+'</span></div><div class="ti">'+esc(n.title)+'</div><div class="bd"></div>';
-          el.querySelector('.bd').textContent=n.body||'';
-          box.appendChild(el);
-        });
-        return;
-      }
-    }catch(e){ /* fall through to the static seed below */ }
-    OFFICIAL.forEach(function(d){
-      var el=document.createElement('div'); el.className='disp';
-      el.innerHTML='<div class="dh"><span class="tag">'+d.tag+'</span><span class="dt">'+d.date+'</span></div><div class="ti">'+d.ti+'</div><div class="bd">'+d.bd+'</div>';
-      box.appendChild(el);
-    });
-  }
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">NEWS INTELLIGENCE ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">SOVEREIGN DISPATCHES</div><div class="card-body">Official communications from the sovereign order, pulled via the published_dispatches RPC. When the RPC is unavailable, five seeded dispatches cover the core platform milestones: The Ascension Engine, Sigil Vault, Twelve Agents, Omega Ledger, and the pending Economic Layer.</div></div>
+    <div class="card"><div class="card-title">THE WIRE</div><div class="card-body">Member-generated intel sent to the dispatches table. All posts are public to the Order. Posts are stored with the member's zodiac sign as their identity. The Wire is a living bulletin board of sovereign intelligence from every member.</div></div>
+    <div class="card"><div class="card-title">FIELD INTELLIGENCE</div><div class="card-body">AI and platform field signals are aggregated via the intel-feed edge function. The feed pulls industry signals relevant to the sovereign platform's domains — AI, finance, media, and governance.</div></div>
+    <div class="card"><div class="card-title">COMMUNICATION PROTOCOL</div><div class="card-body">All dispatches pass through XSS-safe rendering. Posts are character-limited to 600. The Wire shows the latest 60 posts ordered by recency. Sovereign Dispatches show the latest 30 official communications.</div></div>
+  </div>
+</div>
+</div>
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
-
-  async function loadWire(){
-    var box=document.getElementById('wire');
-    try{
-      var r=await supabase.from('dispatches').select('sign,body,created_at').order('created_at',{ascending:false}).limit(60);
-      box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">The Wire is quiet. Send the first dispatch.</div>'; return; }
-      r.data.forEach(function(p){
-        var dt=p.created_at?new Date(p.created_at).toLocaleString():'';
-        var el=document.createElement('div'); el.className='post';
-        el.innerHTML='<div class="ph2"><span class="who">'+(p.sign?esc(p.sign).toUpperCase():'A SOVEREIGN')+'</span><span class="when">'+dt+'</span></div><div class="bd"></div>';
-        el.querySelector('.bd').textContent=p.body||'';
-        box.appendChild(el);
-      });
-    }catch(e){ box.innerHTML='<div class="empty">The Wire is unavailable right now.</div>'; }
-  }
-
-  async function send(){
-    var body=document.getElementById('w-body').value.trim();
-    var out=document.getElementById('w-msg'), btn=document.getElementById('w-go');
-    if(body.length<3){ out.style.color='var(--crimson)'; out.textContent='Write your dispatch.'; return; }
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Sending...';
-    var r=await supabase.from('dispatches').insert({user_id:user.id,sign:mySign,body:body});
-    btn.disabled=false;
-    if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not send ('+(r.error.code||r.error.message||'')+').'; return; }
-    out.style.color='var(--cyan)'; out.textContent='Dispatch sent to the Order.';
-    document.getElementById('w-body').value='';
-    loadWire();
-  }
-
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('News Intelligence','Sign in to read the dispatches.'); return; }
-    user=sess.user;
-    var pr=await supabase.from('profiles').select('sign').eq('id',user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to join the Wire.'); return; }
-    mySign=pr.data.sign;
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
-    renderOfficial(); loadWire(); loadIntel();
-  }
-
-  async function loadIntel(){
-    var box=document.getElementById('intel-box');
-    try{
-      var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/intel-feed',{
-        headers:{'apikey':'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'}
-      });
-      if(!r.ok){box.innerHTML='<div class="intel-loading">FIELD INTELLIGENCE UNAVAILABLE</div>';return;}
-      var d=await r.json();
-      if(!d.items||!d.items.length){box.innerHTML='<div class="intel-loading">NO RELEVANT SIGNALS AT THIS TIME</div>';return;}
-      box.innerHTML=d.items.map(function(it){
-        var age=it.age_h>0?(it.age_h+'h ago'):'FRESH';
-        return '<div class="intel-item"><a href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer">'+esc(it.title)+'</a>'
-          +'<div class="intel-meta"><b>'+it.points+'▲</b><br>'+it.comments+' cmt<br>'+age+'</div></div>';
-      }).join('');
-    }catch(e){box.innerHTML='<div class="intel-loading">FIELD INTELLIGENCE UNAVAILABLE</div>';}
-  }
-  document.getElementById('w-go').addEventListener('click',send);
-  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+<script>
+var _mySign='',_user=null;
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['dispatches','wire','intelligence','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+var OFFICIAL=[
+  {tag:'SYSTEM',date:'2026',ti:'THE ASCENSION ENGINE IS LIVE',bd:'Twelve phases, each a 729-node matrix — 8,748 sovereign states. Your authority is computed from Knowledge, Mastery, and Contribution. Nothing is given.'},
+  {tag:'VAULT',date:'2026',ti:'THE SIGIL VAULT OPENS',bd:'Every earned crest — genesis, sign, element, rank, and the three Ascent thresholds — now mints as a sovereign medallion on your record.'},
+  {tag:'MESH',date:'2026',ti:'THE TWELVE AGENTS STAND READY',bd:'Sentinel through Sovereign — each agent bound to its sign and domain, reading your live standing and answering in its own voice.'},
+  {tag:'TREASURY',date:'2026',ti:'THE &#937; LEDGER HOLDS',bd:'&#937; is earned, never bought. The master vault locks 51%; the burn protocol removes 1% on every transfer. The sovereign field is the members\' 49%.'},
+  {tag:'PHASE II',date:'2026',ti:'THE ECONOMIC LAYER AWAITS COUNSEL',bd:'The public Marketplace, fiat acquisition of &#937;, and asset minting remain sealed until legal review clears classification, KYC/AML, and payment terms.'}
+];
+function renderDispatches(items){
+  var box=document.getElementById('dispatches-box');if(!box)return;
+  box.innerHTML=(items||OFFICIAL).map(function(d){
+    return'<div class="dispatch">'
+      +'<div class="dispatch-head"><span class="dispatch-tag">'+esc(d.tag||d.category||'DISPATCH')+'</span><span class="dispatch-date">'+esc(d.date||d.created_at||'')+'</span></div>'
+      +'<div class="dispatch-title">'+esc(d.ti||d.title||'')+'</div>'
+      +'<div class="dispatch-body">'+(d.bd||d.body||'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+function renderWire(posts){
+  var box=document.getElementById('wire-box');if(!box)return;
+  if(!posts||!posts.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">The Wire is quiet. Send the first dispatch.</div>';return;}
+  box.innerHTML='<div class="glass">'+posts.map(function(p){
+    var dt=p.created_at?new Date(p.created_at).toLocaleString():'';
+    return'<div class="wire-post">'
+      +'<div class="wire-head"><span class="wire-sign">'+(p.sign?esc(p.sign).toUpperCase():'A SOVEREIGN')+'</span><span class="wire-date">'+dt+'</span></div>'
+      +'<div class="wire-body"></div>'
+      +'</div>';
+  }).join('')+'</div>';
+  var bodies=box.querySelectorAll('.wire-body');
+  posts.forEach(function(p,i){if(bodies[i])bodies[i].textContent=p.body||'';});
+}
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+async function loadDispatches(){
+  try{
+    var r=await sb.rpc('published_dispatches',{p_limit:30});
+    if(r.data&&r.data.length){renderDispatches(r.data);return;}
+  }catch(e){}
+  renderDispatches(null);
+}
+
+async function loadWire(){
+  try{
+    var r=await sb.from('dispatches').select('sign,body,created_at').order('created_at',{ascending:false}).limit(60);
+    renderWire(r.data||[]);
+  }catch(e){renderWire([]);}
+}
+
+async function loadIntel(){
+  var box=document.getElementById('intel-box');
+  try{
+    var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/intel-feed',{
+      headers:{'apikey':'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'}
+    });
+    if(!r.ok){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';return;}
+    var d=await r.json();
+    if(!d.items||!d.items.length){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO RELEVANT SIGNALS AT THIS TIME</div>';return;}
+    box.innerHTML='<div class="glass">'+d.items.map(function(it){
+      var age=it.age_h>0?(it.age_h+'h ago'):'FRESH';
+      function e(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+      return'<div class="intel-item"><a class="intel-link" href="'+e(it.url)+'" target="_blank" rel="noopener noreferrer">'+e(it.title)+'</a>'
+        +'<div class="intel-meta"><b>'+it.points+'&#9650;</b><br>'+it.comments+' cmt<br>'+age+'</div></div>';
+    }).join('')+'</div>';
+  }catch(e){box.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">FIELD INTELLIGENCE UNAVAILABLE</div>';}
+}
+
+async function send(){
+  var body=document.getElementById('w-body').value.trim();
+  var out=document.getElementById('w-msg'),btn=document.getElementById('w-go');
+  if(body.length<3){out.style.color='var(--crim)';out.textContent='Write your dispatch.';return;}
+  btn.disabled=true;out.style.color='var(--cyan)';out.textContent='Sending...';
+  var r=await sb.from('dispatches').insert({user_id:_user.id,sign:_mySign,body:body});
+  btn.disabled=false;
+  if(r.error){out.style.color='var(--crim)';out.textContent='Could not send ('+r.error.message+').';return;}
+  out.style.color='var(--cyan)';out.textContent='Dispatch sent to the Order.';
+  document.getElementById('w-body').value='';
+  loadWire();
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  _user=sess.user;
+  var pr=(await sb.from('profiles').select('*').eq('id',_user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,_user);
+  _mySign=pr.zodiac_sign||pr.sign||'';
+  document.getElementById('w-go').addEventListener('click',send);
+  loadDispatches();loadWire();loadIntel();
+}
+boot();
+</script>
+<script src="/bg.js"></script>
 </body>
 </html>

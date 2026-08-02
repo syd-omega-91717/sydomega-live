@@ -3,137 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — BLOODLINE · Sovereign Platform">
+<meta name="description" content="SYD OMEGA 91717 — BLOODLINE · Sovereign lineage tree, genetic heritage, and ancestral traits">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; BLOODLINE</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--gold);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--gold);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--gold);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:0}.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
-.tab-panel{display:none}.tab-panel.active{display:block;padding:var(--pad)}
-.bld-tree{display:flex;flex-direction:column;gap:10px}
-.bld-gen{border:1px solid var(--line);background:rgba(10,10,15,.5);border-left:3px solid var(--gold);border-radius:2px;padding:14px}
-.bld-gen-head{font-family:var(--D);font-size:10px;color:var(--gold);margin-bottom:8px;letter-spacing:1px}
-.bld-nodes{display:flex;flex-wrap:wrap;gap:8px}
-.bld-node{border:1px solid var(--line);background:rgba(201,168,76,.05);border-radius:1px;padding:7px 12px;text-align:center}
-.bld-node-name{font-family:var(--D);font-size:9px;color:var(--solar);display:block}
-.bld-node-sign{font-family:var(--M);font-size:7px;color:var(--muted);display:block;margin-top:2px}
-.bld-node-auth{font-family:var(--D);font-size:13px;color:var(--gold);display:block;margin-top:3px}
-.conn-row{display:grid;grid-template-columns:1fr 60px 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
-.conn-row:last-child{border-bottom:none}
-.conn-name{font-family:var(--R);font-size:11px;color:var(--ink)}
-.conn-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px}
-.conn-bond{font-family:var(--M);font-size:7px;color:var(--cyan);text-align:center}
-.conn-strength{width:100%;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:4px}
-.conn-strength-bar{height:100%;background:var(--gold)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
-</style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="bloodline" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">BLOODLINE<small>M5 &middot; Sovereign Lineage &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="bld-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+      <div class="t">BLOODLINE<small>HERITAGE &middot; LINEAGE &middot; GENETIC LEGACY &middot; DYNASTY</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l" data-tooltip="AUTH = sqrt(A³+B³+C³) × φ/e · Apex at 27.8367 (Gate XII)">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l" data-tooltip="Axis A: Knowledge — your depth of sovereign mastery and lore">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l" data-tooltip="Axis B: Mastery — skill and proficiency earned through challenges">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="tree" role="tab">LINEAGE TREE</button>
+      <button class="tab" data-tab="traits" role="tab">INHERITED TRAITS</button>
+      <button class="tab" data-tab="dynasty" role="tab">DYNASTY PLAN</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
+    </div>
+
+    <!-- LINEAGE TREE TAB -->
+    <div class="tab-panel active pad" id="tab-tree">
+      <div class="sechead">SOVEREIGN LINEAGE TREE</div>
+      <div style="border:1px solid var(--line);background:rgba(10,10,15,.45);padding:14px;border-radius:2px;margin-bottom:14px">
+        <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:8px">ADD LINEAGE MEMBER</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
+          <input id="lt-name" class="inp" style="width:100%" placeholder="Full name">
+          <select id="lt-gen" class="inp" style="width:100%">
+            <option value="0">Self</option><option value="1">Parent</option><option value="2">Grandparent</option>
+            <option value="3">Great-grandparent</option><option value="4">2× Great-grandparent</option>
+          </select>
+          <select id="lt-side" class="inp" style="width:100%">
+            <option value="paternal">Paternal (Father's side)</option><option value="maternal">Maternal (Mother's side)</option>
+            <option value="self">Self / Both</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <input id="lt-born" class="inp" style="width:100%" placeholder="Birth year">
+          <input id="lt-origin" class="inp" style="width:100%" placeholder="Country / Region of origin">
+        </div>
+        <input id="lt-note" class="inp" style="width:100%;margin-bottom:8px" placeholder="Notable achievement, trait, or story...">
+        <button class="btn" onclick="addLineageMember()">ADD TO TREE</button>
       </div>
-      <div class="tab-bar" role="tablist">
-        <button class="tab-btn active" role="tab" aria-selected="true" onclick="bldTab(this,'bld-lineage')">LINEAGE</button>
-        <button class="tab-btn" role="tab" aria-selected="false" onclick="bldTab(this,'bld-nodes')">NODES</button>
-        <button class="tab-btn" role="tab" aria-selected="false" onclick="bldTab(this,'bld-connections')">CONNECTIONS</button>
-      </div>
-      <div id="bld-lineage" class="tab-panel active"><div class="sechead">BLOODLINE LINEAGE TREE</div>
-        <div class="bld-tree">
-          <div class="bld-gen"><div class="bld-gen-head">GENERATION I — PRIMORDIAL</div><div class="bld-nodes">
-            <div class="bld-node"><span class="bld-node-name">THE ALL-FATHER</span><span class="bld-node-sign">Ω &middot; Zeus &middot; Gate XII</span><span class="bld-node-auth">27.836</span></div>
-            <div class="bld-node"><span class="bld-node-name">THE VOID MOTHER</span><span class="bld-node-sign">✷ &middot; Hera &middot; Gate XI</span><span class="bld-node-auth">27.100</span></div>
-          </div></div>
-          <div class="bld-gen"><div class="bld-gen-head">GENERATION II — OLYMPIAN SOVEREIGN</div><div class="bld-nodes">
-            <div class="bld-node"><span class="bld-node-name">FIRE SOVEREIGN</span><span class="bld-node-sign">☲ &middot; Ares &middot; Gate X</span><span class="bld-node-auth">25.900</span></div>
-            <div class="bld-node"><span class="bld-node-name">WATER SOVEREIGN</span><span class="bld-node-sign">☰ &middot; Poseidon &middot; Gate X</span><span class="bld-node-auth">25.782</span></div>
-            <div class="bld-node"><span class="bld-node-name">WISDOM SOVEREIGN</span><span class="bld-node-sign">☱ &middot; Athena &middot; Gate X</span><span class="bld-node-auth">25.654</span></div>
-            <div class="bld-node"><span class="bld-node-name">FORGE SOVEREIGN</span><span class="bld-node-sign">☳ &middot; Hephaestus &middot; Gate IX</span><span class="bld-node-auth">24.017</span></div>
-          </div></div>
-          <div class="bld-gen"><div class="bld-gen-head">GENERATION III — KEEPER BLOODLINE</div><div class="bld-nodes">
-            <div class="bld-node"><span class="bld-node-name">HUNT SOVEREIGN</span><span class="bld-node-sign">★ &middot; Artemis &middot; Gate VIII</span><span class="bld-node-auth">20.871</span></div>
-            <div class="bld-node"><span class="bld-node-name">LOVE SOVEREIGN</span><span class="bld-node-sign">✴ &middot; Aphrodite &middot; Gate VIII</span><span class="bld-node-auth">20.450</span></div>
-            <div class="bld-node"><span class="bld-node-name">LIGHT SOVEREIGN</span><span class="bld-node-sign">✶ &middot; Apollo &middot; Gate VIII</span><span class="bld-node-auth">20.234</span></div>
-            <div class="bld-node"><span class="bld-node-name">HARVEST SOVEREIGN</span><span class="bld-node-sign">☰ &middot; Demeter &middot; Gate VII</span><span class="bld-node-auth">17.210</span></div>
-            <div class="bld-node"><span class="bld-node-name">HEARTH SOVEREIGN</span><span class="bld-node-sign">☲ &middot; Hestia &middot; Gate VII</span><span class="bld-node-auth">17.100</span></div>
-            <div class="bld-node"><span class="bld-node-name">HERALD SOVEREIGN</span><span class="bld-node-sign">☱ &middot; Hermes &middot; Gate VI</span><span class="bld-node-auth">13.920</span></div>
-          </div></div>
-          <div class="bld-gen"><div class="bld-gen-head">GENERATION IV — ASCENDING</div><div class="bld-nodes">
-            <div class="bld-node"><span class="bld-node-name">YOUR NODE</span><span class="bld-node-sign" id="bld-my-sign">— &middot; Gate —</span><span class="bld-node-auth" id="bld-my-auth">—</span></div>
-          </div></div>
+      <div id="tree-display" style="display:grid;gap:12px"></div>
+    </div>
+
+    <!-- INHERITED TRAITS TAB -->
+    <div class="tab-panel pad" id="tab-traits" style="display:none">
+      <div class="sechead">INHERITED TRAITS REGISTER</div>
+      <div style="font-size:12px;line-height:1.8;opacity:.75;margin-bottom:14px">Traits inherited from your lineage — physical, cognitive, emotional, and behavioral patterns. Identifying them is the first step to consciously cultivating or transforming them.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:16px">
+        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:8px">STRENGTHS INHERITED</div>
+          <textarea id="tr-strengths" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Mental resilience, physical constitution, intelligence, social grace..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid #FF4444;background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:#FF4444;margin-bottom:8px">PATTERNS TO TRANSCEND</div>
+          <textarea id="tr-patterns" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Intergenerational trauma, addictive tendencies, limiting beliefs..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:8px">GIFTS TO AMPLIFY</div>
+          <textarea id="tr-gifts" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Talents, artistic ability, entrepreneurial spirit, leadership..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--cyan);margin-bottom:8px">HEALTH PREDISPOSITIONS</div>
+          <textarea id="tr-health" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Family health history, genetic predispositions to address..."></textarea>
         </div>
       </div>
-      <div id="bld-nodes" class="tab-panel"><div class="sechead">LATTICE NODES</div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px;margin-bottom:14px">
-          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:8px">BASE LATTICE ARCHITECTURE</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
-            <div style="text-align:center"><div style="font-family:var(--D);font-size:20px;color:var(--gold)">12</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">SOVEREIGN SIGNS</div></div>
-            <div style="text-align:center"><div style="font-family:var(--D);font-size:20px;color:var(--gold)">12</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">PROGRESSION GATES</div></div>
-            <div style="text-align:center"><div style="font-family:var(--D);font-size:20px;color:var(--gold)">9³</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">AXIS COMBINATIONS</div></div>
-          </div>
-          <div style="text-align:center;font-family:var(--D);font-size:22px;color:var(--solar);margin:12px 0">12 × 12 × 729 = 104,976 NODES</div>
-          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.7">Each node in the sovereign bloodline lattice represents a unique combination of sign, gate, and axis-triad state. Every sovereign occupies exactly one node at any given moment, and progresses through nodes as their AUTH score grows. The total node count defines the scope of all possible sovereign identities in the base lattice.</div>
+      <button class="btn" onclick="saveTraits()">SAVE TRAIT REGISTER</button>
+    </div>
+
+    <!-- DYNASTY PLAN TAB -->
+    <div class="tab-panel pad" id="tab-dynasty" style="display:none">
+      <div class="sechead">SOVEREIGN DYNASTY PLAN</div>
+      <div style="font-size:12px;line-height:1.8;opacity:.75;margin-bottom:16px">A dynasty is intentional — built through deliberate value transmission, wealth structures, and cultural artifacts designed to outlast one generation.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:16px">
+        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:8px">FAMILY MISSION</div>
+          <textarea id="dyn-mission" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="The purpose your bloodline exists to fulfill across generations..."></textarea>
         </div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px">
-          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:8px">EXPANDED 28-KINGS LATTICE</div>
-          <div style="text-align:center;font-family:var(--D);font-size:22px;color:var(--solar);margin:12px 0">28 × 28 × 729 = 571,536 NODES</div>
-          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.7">The expanded lattice incorporates all 28 Sovereign Kings, creating a mesh 5.4x larger than the base configuration. This expansion accounts for inter-realm sovereign connections, hereditary lineage bonds, and the complex authority transfers that occur at Gate VII and above.</div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--cyan);margin-bottom:8px">VALUES TO TRANSMIT</div>
+          <textarea id="dyn-values" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="The 3-5 core values you will actively teach and model..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:8px">WEALTH STRUCTURES</div>
+          <textarea id="dyn-wealth" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Trusts, entities, endowments, real estate designed for generational transfer..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--purple);margin-bottom:8px">CULTURAL ARTIFACTS</div>
+          <textarea id="dyn-artifacts" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Books, recordings, ceremonies, traditions you will create and preserve..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid #FF9800;background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:#FF9800;margin-bottom:8px">100-YEAR VISION</div>
+          <textarea id="dyn-vision" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Where will your bloodline be in 100 years if you execute this plan?"></textarea>
         </div>
       </div>
-      <div id="bld-connections" class="tab-panel"><div class="sechead">BLOODLINE CONNECTIONS</div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px">
-          <div class="conn-row"><div class="conn-name">Fire Sovereign ↔ War Sovereign<small>Primary elemental bond &middot; Aries-Ares axis</small></div><div class="conn-bond">PRIMAL<div class="conn-strength"><div class="conn-strength-bar" style="width:95%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">9.50</div></div>
-          <div class="conn-row"><div class="conn-name">Water Sovereign ↔ Ocean Sovereign<small>Deep element bond &middot; Pisces-Poseidon axis</small></div><div class="conn-bond">PRIMAL<div class="conn-strength"><div class="conn-strength-bar" style="width:88%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">8.80</div></div>
-          <div class="conn-row"><div class="conn-name">Wisdom Sovereign ↔ Wind Sovereign<small>Mind-element resonance &middot; Libra-Athena axis</small></div><div class="conn-bond">MIDDLE<div class="conn-strength"><div class="conn-strength-bar" style="width:82%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">8.20</div></div>
-          <div class="conn-row"><div class="conn-name">Forge Sovereign ↔ Metal Sovereign<small>Craft-metal resonance &middot; Aquarius-Hephaestus axis</small></div><div class="conn-bond">MIDDLE<div class="conn-strength"><div class="conn-strength-bar" style="width:79%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">7.90</div></div>
-          <div class="conn-row"><div class="conn-name">Apex Sovereign ↔ All Sovereign<small>Supreme convergence bond &middot; Capricorn-Zeus axis</small></div><div class="conn-bond">SUPREME<div class="conn-strength"><div class="conn-strength-bar" style="width:100%"></div></div></div><div style="font-family:var(--D);font-size:11px;color:var(--solar);text-align:right">10.00</div></div>
-        </div>
+      <button class="btn" onclick="saveDynasty()">SAVE DYNASTY PLAN</button>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">BLOODLINE SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">EPIGENETIC TRANSMISSION</div><div class="sci-body">Epigenetic changes — modifications to gene expression from experience — pass to offspring. A grandparent's famine changes metabolic programming in grandchildren. Trauma, but also mastery and health, transmit biologically.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">GENETIC INTELLIGENCE</div><div class="sci-body">Twin studies (Bouchard, 1990) show 50-80% heritability for general intelligence. Identifying cognitive strengths in lineage helps predict and develop individual potential. Genes are a starting hand, not a fate.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">DYNASTIES IN HISTORY</div><div class="sci-body">The Rothschilds, Medicis, Rockefellers, and Fuggers built multi-generational wealth through explicit cultural transmission: family banks, councils, covenants, and explicit value training for each generation's leaders.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">INTERGENERATIONAL TRAUMA</div><div class="sci-body">Holocaust survivor descendants show altered FKBP5 gene methylation linked to stress response (Yehuda et al., 2016). Trauma transmits. So does the sovereign's response — conscious healing in one generation protects the next.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">CULTURAL TRANSMISSION</div><div class="sci-body">Henrich's "The Secret of Our Success": humans are uniquely dependent on cultural inheritance. A bloodline that deliberately curates and transmits values, skills, and knowledge compounds cultural capital across generations.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">THE DYNASTY BLUEPRINT</div><div class="sci-body">The greatest dynasties share: (1) a shared mission, (2) explicit value transmission, (3) legal wealth structures, (4) family governance mechanisms, (5) commitment to excellence. The sovereign builds each deliberately.</div></div>
       </div>
-        <div data-page-emblem="bloodline" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; BLOODLINE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+    </div>
+
+    <div class="lf"><span>&#937; BLOODLINE &middot; SYD OMEGA 91717</span><span>LINEAGE &middot; GENETIC LEGACY &middot; DYNASTY</span></div>
   </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+var LK='omega_lineage',TK='omega_traits',DK2='omega_dynasty';
+var lineage=JSON.parse(localStorage.getItem(LK)||'[]');
+var traits=JSON.parse(localStorage.getItem(TK)||'{}');
+var dynasty=JSON.parse(localStorage.getItem(DK2)||'{}');
+var GEN_LABELS=['Self','Parent','Grandparent','Great-grandparent','2× Great-grandparent'];
+var GEN_COLORS=['#C9A84C','#E2C86D','#00E5FF','#9B6BF0','#4CAF50'];
+
+function renderTree(){
+  var el=document.getElementById('tree-display');
+  if(!lineage.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:10px">No lineage members added yet.</div>';return;}
+  var gens=[0,1,2,3,4];
+  el.innerHTML=gens.map(function(g){
+    var members=lineage.filter(function(m){return parseInt(m.gen)===g;});
+    if(!members.length)return '';
+    var col=GEN_COLORS[g]||'#888';
+    return '<div>'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:'+col+';margin-bottom:6px">'+GEN_LABELS[g].toUpperCase()+'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">'
+      +members.map(function(m){
+        return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:10px 12px;border-radius:2px">'
+          +'<div style="font-family:var(--D);font-size:12px;color:'+col+';margin-bottom:3px">'+m.name+'</div>'
+          +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+(m.side==='paternal'?'Paternal':m.side==='maternal'?'Maternal':'—')+(m.born?' &middot; b. '+m.born:'')+' '+(m.origin?'&middot; '+m.origin:'')+'</div>'
+          +(m.note?'<div style="font-size:11px;opacity:.75;margin-top:4px">'+m.note+'</div>':'')
+          +'</div>';
+      }).join('')
+      +'</div></div>';
+  }).filter(Boolean).join('');
+}
+
+function loadTraits(){Object.entries({tr-strengths:'strengths','tr-patterns':'patterns','tr-gifts':'gifts','tr-health':'health'}).forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=traits[e[1]]||'';});}
+
+function loadDynasty(){[['dyn-mission','mission'],['dyn-values','values'],['dyn-wealth','wealth'],['dyn-artifacts','artifacts'],['dyn-vision','vision']].forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=dynasty[e[1]]||'';});}
+
+window.addLineageMember=function(){
+  var n=document.getElementById('lt-name').value.trim();if(!n)return;
+  lineage.push({id:Date.now(),name:n,gen:document.getElementById('lt-gen').value,side:document.getElementById('lt-side').value,born:document.getElementById('lt-born').value,origin:document.getElementById('lt-origin').value,note:document.getElementById('lt-note').value});
+  localStorage.setItem(LK,JSON.stringify(lineage));
+  document.getElementById('lt-name').value='';document.getElementById('lt-born').value='';document.getElementById('lt-origin').value='';document.getElementById('lt-note').value='';
+  renderTree();
+};
+window.saveTraits=function(){
+  traits={strengths:document.getElementById('tr-strengths').value,patterns:document.getElementById('tr-patterns').value,gifts:document.getElementById('tr-gifts').value,health:document.getElementById('tr-health').value};
+  localStorage.setItem(TK,JSON.stringify(traits));
+};
+window.saveDynasty=function(){
+  dynasty={mission:document.getElementById('dyn-mission').value,values:document.getElementById('dyn-values').value,wealth:document.getElementById('dyn-wealth').value,artifacts:document.getElementById('dyn-artifacts').value,vision:document.getElementById('dyn-vision').value};
+  localStorage.setItem(DK2,JSON.stringify(dynasty));
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -142,23 +190,17 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);window.__omegaUserLoaded=true;
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderTree();loadDynasty();
+    traits=JSON.parse(localStorage.getItem(TK)||'{}');
+    [['tr-strengths','strengths'],['tr-patterns','patterns'],['tr-gifts','gifts'],['tr-health','health']].forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=traits[e[1]]||'';});
+    document.querySelectorAll('.tab').forEach(function(btn){btn.onclick=function(){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});btn.classList.add('active');var panel=document.getElementById('tab-'+btn.dataset.tab);if(panel){panel.style.display='';panel.classList.add('active');}};});
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
-</script>
-<script><script>
-function bldTab(btn,id){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-  btn.classList.add('active');btn.setAttribute('aria-selected','true');
-  var p=document.getElementById(id);if(p)p.classList.add('active');
-}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

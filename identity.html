@@ -1,72 +1,166 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title data-i18n-title>&#937; SYD OMEGA 91717 &mdash; DIGITAL IDENTITY</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — Digital Identity · Sovereign Profile · Private">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<title>&#937; SYD OMEGA 91717 &mdash; DIGITAL IDENTITY</title>
+<link rel="stylesheet" href="/omega-ui.css">
+<link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-.hero-band{display:grid;grid-template-columns:1fr 80px 1fr;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(139,0,0,.06),rgba(10,10,15,.88),rgba(201,168,76,.03))}
-.hb{padding:16px clamp(14px,2.5vw,28px)}
-.hb.mid{display:flex;align-items:center;justify-content:center;padding:0}
-.hb.right{border-left:1px solid var(--line);text-align:right}
-.hb.left{border-right:1px solid var(--line)}
-.hb-n{font-family:var(--D);font-size:clamp(14px,2.5vw,20px);color:var(--gold);line-height:1}
-.hb-l{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
-.sec{padding:clamp(14px,3vw,36px)}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px}
-.card{border:1px solid var(--line);padding:20px;border-radius:2px;background:rgba(10,10,15,.5);margin-bottom:14px}
-.row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap;gap:8px}
-.row:last-child{border-bottom:none}
-.row-k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)}
-.row-v{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink)}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
-</style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="identity"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">DIGITAL IDENTITY<small>M13 &middot; SOVEREIGN IDENTITY &middot; CREDENTIALS &middot; PRIVATE &middot; YOUR ACCOUNT ONLY &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="id-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-    <div class="hero-band" data-reveal="fade-up">
-      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l" data-tooltip="Your sovereign display name — set in Identity settings">MEMBER NAME</div></div>
-      <div class="hb mid"><canvas id="hb-cv-identity" width="80" height="80" style="width:40px;height:40px;display:block"></canvas></div>
-      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l" data-tooltip="AUTH = sqrt(A³+B³+C³) × φ/e · Max 27.8367 at Gate XII APEX">AUTHORITY SCORE</div></div>
+  <aside class="side" id="omega-side" data-page="identity" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar">
+      <div class="t">DIGITAL IDENTITY<small>SOVEREIGN IDENTITY &middot; PRIVATE TO YOUR ACCOUNT ONLY</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="sec" data-reveal="fade-up">
-      <div class="sechead" data-reveal="fade-up">YOUR DIGITAL IDENTITY &middot; PRIVATE TO YOUR ACCOUNT</div>
-      <div class="card" data-reveal="fade-up">
-      <div class="row"><span class="row-k">MEMBER ID</span><span class="row-v" id="id-uid">--</span></div>
-      <div class="row"><span class="row-k">DISPLAY NAME</span><span class="row-v" id="id-name">--</span></div>
-      <div class="row"><span class="row-k">EMAIL</span><span class="row-v" id="id-email">--</span></div>
-      <div class="row"><span class="row-k">SIGN / ELEMENT</span><span class="row-v" id="id-sign">--</span></div>
-      <div class="row"><span class="row-k">OLYMPIAN / AGENT</span><span class="row-v" id="id-god">--</span></div>
-      <div class="row"><span class="row-k" data-tooltip="FREE → GENESIS → APEX — higher tiers unlock exclusive content and rewards">SUBSCRIPTION TIER</span><span class="row-v" id="id-tier">--</span></div>
-      <div class="row"><span class="row-k">ACCESS STATUS</span><span class="row-v" id="id-status">--</span></div>
-      <div class="row"><span class="row-k">KYC STATUS</span><span class="row-v" id="id-kyc">PENDING</span></div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" data-tab="profile" role="tab">PROFILE</button>
+      <button class="tab-btn" data-tab="access" role="tab">ACCESS</button>
+      <button class="tab-btn" data-tab="axes" role="tab">AXES</button>
+      <button class="tab-btn" data-tab="science" role="tab">SCIENCE</button>
     </div>
+
+    <!-- PROFILE TAB -->
+    <div class="tab-panel active pad" id="tab-profile">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n" id="k-tier">--</div><div class="kpi-l">TIER</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-status">--</div><div class="kpi-l">ACCESS</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-kyc">--</div><div class="kpi-l">KYC STATUS</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+      </div>
+      <div class="sechead">SOVEREIGN IDENTITY RECORD &middot; PRIVATE</div>
+      <div class="glass" style="margin-bottom:14px">
+        <div style="display:grid;gap:0">
+          <div class="row-data"><span class="row-k">MEMBER ID</span><span class="row-v f-m" id="id-uid">--</span></div>
+          <div class="row-data"><span class="row-k">DISPLAY NAME</span><span class="row-v" id="id-name">--</span></div>
+          <div class="row-data"><span class="row-k">EMAIL</span><span class="row-v f-m" id="id-email">--</span></div>
+          <div class="row-data"><span class="row-k">SIGN / ELEMENT</span><span class="row-v" id="id-sign">--</span></div>
+          <div class="row-data"><span class="row-k">OLYMPIAN / AGENT</span><span class="row-v" id="id-god">--</span></div>
+          <div class="row-data"><span class="row-k">SUBSCRIPTION TIER</span><span class="row-v c-gold" id="id-tier">--</span></div>
+          <div class="row-data"><span class="row-k">ACCESS STATUS</span><span class="row-v c-green" id="id-status">--</span></div>
+          <div class="row-data"><span class="row-k">KYC STATUS</span><span class="row-v" id="id-kyc2">PENDING</span></div>
+        </div>
+      </div>
+      <div class="sechead">CANVAS SEAL</div>
+      <div style="text-align:center;padding:20px 0">
+        <canvas id="identity-seal" width="160" height="160" style="width:80px;height:80px"></canvas>
+      </div>
     </div>
+
+    <!-- ACCESS TAB -->
+    <div class="tab-panel pad" id="tab-access" style="display:none">
+      <div class="sechead">ACCESS LEVEL &middot; PLATFORM RIGHTS</div>
+      <div id="access-cards" style="display:grid;gap:10px"></div>
+    </div>
+
+    <!-- AXES TAB -->
+    <div class="tab-panel pad" id="tab-axes" style="display:none">
+      <div class="sechead">THREE SOVEREIGN AXES &middot; AUTHORITY FORMULA</div>
+      <div class="glass-cyan" style="margin-bottom:16px;text-align:center;padding:24px">
+        <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">AUTH = sqrt(A&#179; + B&#179; + C&#179;) &times; &phi;/e</div>
+        <div style="font-family:var(--D);font-size:clamp(24px,4vw,36px);color:var(--gold)" id="ax-auth">--</div>
+        <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:6px">APEX = 27.8367 &middot; &phi; = 1.6180 &middot; e = 2.7182</div>
+      </div>
+      <div style="display:grid;gap:10px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:5px"><span>AXIS A — KNOWLEDGE</span><span id="ax-a-val">--</span></div>
+          <div class="bar-track"><div class="bar-fill" id="ax-a-bar" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:5px"><span>AXIS B — MASTERY</span><span id="ax-b-val">--</span></div>
+          <div class="bar-track"><div class="bar-fill" id="ax-b-bar" style="width:0%;background:var(--purple)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:5px"><span>AXIS C — CONTRIBUTION</span><span id="ax-c-val">--</span></div>
+          <div class="bar-track"><div class="bar-fill" id="ax-c-bar" style="width:0%;background:var(--cyan)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:5px"><span>AUTHORITY COMPOSITE</span><span id="ax-auth-val">--</span></div>
+          <div class="bar-track"><div class="bar-fill" id="ax-auth-bar" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--green))"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">SOVEREIGN IDENTITY &middot; THE SCIENCE</div>
+      <div class="card-grid">
+        <div class="card" style="--card-accent:var(--gold)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">DIGITAL SOVEREIGNTY</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Your identity is a cryptographically-signed record in the Supabase sovereign ledger. Member ID is immutable once issued. Display name, cosmology, and preference data can evolve.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--cyan)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">AUTHORITY FORMULA</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e. Three axes — Knowledge (A), Mastery (B), Contribution (C) — each ranging 0–9. At A=B=C=9, AUTH reaches the Apex: 27.8367.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--purple)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">ACCESS TIERS</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">FREE → GENESIS → APEX. Higher tiers unlock exclusive content, priority access, and platform rewards. Subscription managed through Stripe. KYC required for APEX tier.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--green)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">PRIVACY GUARANTEE</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">All identity data is encrypted at rest in Supabase with Row Level Security. Your profile is visible only to you and the platform owner. Never sold, never shared.</div>
+        </div>
+      </div>
+    </div>
+
     <div data-page-emblem="identity" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; DIGITAL IDENTITY &middot; PRIVATE ACCOUNT DATA</span><span>VISIBLE ONLY TO YOU</span></div>
   </main>
 </div>
+<style>
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
+.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
+.row-data{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap;gap:8px}
+.row-data:last-child{border-bottom:none}
+.row-k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)}
+.row-v{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink)}
+</style>
 <script>
-(function(){var cv=document.getElementById('hb-cv-identity');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();
+(function(){
+  var cv=document.getElementById('identity-seal');
+  if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d'),t=0;
+  (function f(){
+    ctx.clearRect(0,0,160,160);
+    for(var i=0;i<6;i++){
+      ctx.beginPath();
+      ctx.arc(80,80,20+i*8+4*Math.sin(t*.025+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.55+.2*Math.sin(t*.018+i)));
+      ctx.strokeStyle='rgba(201,168,76,'+(0.06+0.1*(6-i)/6)+')';
+      ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.font='bold 32px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';
+    ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;
+    ctx.fillText('Ω',80,80);ctx.shadowBlur=0;
+    t++;requestAnimationFrame(f);
+  })();
+})();
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
+  var btn=document.querySelector('[data-tab="'+name+'"]');
+  if(btn)btn.classList.add('active');
+  var panel=document.getElementById('tab-'+name);
+  if(panel)panel.style.display='block';
+}
+document.querySelectorAll('.tab-btn').forEach(function(b){
+  b.addEventListener('click',function(){setTab(b.dataset.tab);});
+});
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v||'--');}
+function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -74,41 +168,50 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex'
+    document.getElementById('app').style.display='flex';
     var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),cc=Number(pr.axis_c||0.001);
-    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(cc,3))*PHI/EU;
-    function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     var name=(pr.display_name||s.user.email||'SOVEREIGN MEMBER').toUpperCase();
-    sid('user-name',name);
-    sid('user-auth',auth.toFixed(4));
+    sid('hdr-auth',auth.toFixed(4));
+    sid('k-auth',auth.toFixed(3));
+    sid('k-tier',(pr.subscription_tier||'FREE').toUpperCase());
+    var isSovereign=pr.is_owner,isPermanent=pr.access_approved&&!pr.is_trial,isTrial=pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>new Date();
+    sid('k-status',isSovereign?'SOVEREIGN':isPermanent?'PERMANENT':isTrial?'TRIAL':'PENDING');
+    sid('k-kyc',(pr.kyc_status||'PENDING').toUpperCase());
+    sid('id-uid',s.user.id.slice(0,28)+'...');
     sid('id-name',name);
     sid('id-email',s.user.email||'--');
-    sid('id-uid',s.user.id.slice(0,24)+'...');
     sid('id-sign',(pr.sign||'--').toUpperCase()+'  /  '+(pr.element||'--').toUpperCase());
     sid('id-god',(pr.god||'--').toUpperCase()+'  /  '+(pr.agent||'--').toUpperCase());
     sid('id-tier',(pr.subscription_tier||'FREE').toUpperCase());
-    sid('id-kyc',(pr.kyc_status||'PENDING').toUpperCase());
-    var isSovereign=pr.is_owner;
-    var isPermanent=pr.access_approved&&!pr.is_trial;
-    var isTrial=pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>new Date();
-    sid('id-status',isSovereign?'\u221e LIFETIME SOVEREIGN':isPermanent?'\u221e PERMANENT':isTrial?'TRIAL ACTIVE':'PENDING');
-;
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
-    var auth=(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU).toFixed(4);
-    sid('user-name',(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase());
-    sid('user-auth',pr.is_owner?'27.8367':auth);
-    sid('id-uid',s.user.id.slice(0,28)+'...');
-    sid('id-name',(pr.display_name||'--').toUpperCase());
-    sid('id-email',s.user.email||'--');
-    sid('id-sign',(pr.sign||'--').toUpperCase()+'  /  '+(pr.element||'--').toUpperCase());
-    sid('id-god',(pr.god||'--').toUpperCase()+'  /  '+(pr.agent||'--').toUpperCase());
-    sid('id-tier',(pr.subscription_tier||'FREE').toUpperCase());
-    sid('id-status',pr.is_owner?'\u221e LIFETIME SOVEREIGN':pr.access_approved&&!pr.is_trial?'PERMANENT':pr.is_trial?'TRIAL ACTIVE':'PENDING');
-    sid('id-kyc',(pr.kyc_status||'PENDING').toUpperCase());
+    sid('id-status',isSovereign?'∞ LIFETIME SOVEREIGN':isPermanent?'∞ PERMANENT':isTrial?'TRIAL ACTIVE':'PENDING');
+    sid('id-kyc2',(pr.kyc_status||'PENDING').toUpperCase());
+    sid('ax-auth',auth.toFixed(4));
+    sid('ax-a-val',a.toFixed(3)+' / 9');
+    sid('ax-b-val',b.toFixed(3)+' / 9');
+    sid('ax-c-val',c.toFixed(3)+' / 9');
+    sid('ax-auth-val',auth.toFixed(3)+' / 27.84');
+    var set=function(id,pct){var el=document.getElementById(id);if(el)setTimeout(function(){el.style.width=Math.min(100,pct)+'%';},100);};
+    set('ax-a-bar',a/9*100);set('ax-b-bar',b/9*100);set('ax-c-bar',c/9*100);set('ax-auth-bar',auth/27.8367*100);
+    var ACCESS_ITEMS=[
+      {label:'Platform Access',val:pr.access_approved||pr.is_owner?'GRANTED':'PENDING',ok:pr.access_approved||pr.is_owner},
+      {label:'Sovereign Content',val:pr.is_owner?'FULL':pr.access_approved?'STANDARD':'LOCKED',ok:pr.access_approved||pr.is_owner},
+      {label:'Trial Mode',val:pr.is_trial?'ACTIVE':'INACTIVE',ok:!pr.is_trial},
+      {label:'KYC Verified',val:(pr.kyc_status||'PENDING').toUpperCase(),ok:pr.kyc_status==='verified'},
+      {label:'Subscription Tier',val:(pr.subscription_tier||'FREE').toUpperCase(),ok:true},
+      {label:'API Access',val:pr.is_owner?'FULL':pr.access_approved?'STANDARD':'NONE',ok:pr.access_approved||pr.is_owner},
+    ];
+    var ac=document.getElementById('access-cards');
+    if(ac){ac.innerHTML=ACCESS_ITEMS.map(function(item){
+      return '<div class="glass" style="display:flex;align-items:center;justify-content:space-between;gap:12px">'
+        +'<span style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">'+item.label+'</span>'
+        +'<span style="font-family:var(--D);font-size:13px;color:'+(item.ok?'var(--green)':'var(--solar)')+'">'+item.val+'</span>'
+        +'</div>';
+    }).join('');}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
+<script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

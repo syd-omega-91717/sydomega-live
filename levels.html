@@ -3,135 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — LEVELS · Sovereign Platform">
+<meta name="description" content="SYD OMEGA 91717 — LEVELS · 12 Sovereign Authority Levels · Lattice Progression">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; LEVELS</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--gold);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--gold);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--gold);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
-.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
-.tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
-.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
-.tab-panel{display:none}.tab-panel.on{display:block}
-.level-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
-.level-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:14px;border-top:2px solid var(--lvc,var(--gold));transition:.18s;text-align:center}
-.level-card.earned{border-top-color:var(--green);background:rgba(63,178,127,.04)}
-.level-card:hover{transform:translateY(-2px)}
-.lv-num{font-family:var(--D);font-size:28px;color:var(--lvc,var(--gold));margin-bottom:4px}
-.lv-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:6px}
-.lv-auth{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
-.lv-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 8px;border-radius:10px;border:1px solid rgba(201,168,76,.25);color:var(--muted)}
-.lv-status.earned{color:var(--green);border-color:rgba(63,178,127,.4);background:rgba(63,178,127,.08)}
-.struct-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.struct-box{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:18px}
-.struct-title{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px}
-.struct-item{font-size:11px;color:var(--ink);margin-bottom:6px;display:flex;gap:8px}
-.struct-item::before{content:"·";color:var(--gold);flex-shrink:0}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.level-grid{grid-template-columns:repeat(3,1fr)}.struct-panel{grid-template-columns:1fr}}
-</style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="levels" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">LEVELS<small>M18 &middot; 12 Sovereign Levels &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="lvl-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+      <div class="t">LEVELS<small>M18 &middot; 12 SOVEREIGN LEVELS &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l" data-tooltip="AUTH = sqrt(A³+B³+C³) × φ/e · Apex at 27.8367 (Gate XII)">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l" data-tooltip="Axis A: Knowledge — your depth of sovereign mastery and lore">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l" data-tooltip="Axis B: Mastery — skill and proficiency earned through challenges">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" data-tab="all" role="tab">ALL LEVELS</button>
+      <button class="tab-btn" data-tab="structure" role="tab">STRUCTURE</button>
+      <button class="tab-btn" data-tab="my" role="tab">MY LEVEL</button>
+      <button class="tab-btn" data-tab="science" role="tab">SCIENCE</button>
+    </div>
+
+    <!-- ALL LEVELS TAB -->
+    <div class="tab-panel active pad" id="tab-all">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l">AXIS A KNOWLEDGE</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
       </div>
-      <div class="sechead" data-reveal="fade-up">LEVELS &middot; M18 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="tab-bar" role="tablist">
-        <button class="tab-btn on" onclick="lvTab(this,'all')" role="tab" aria-selected="true">ALL LEVELS</button>
-        <button class="tab-btn" onclick="lvTab(this,'struct')" role="tab" aria-selected="false">STRUCTURE</button>
-        <button class="tab-btn" onclick="lvTab(this,'my')" role="tab" aria-selected="false">MY LEVEL</button>
-      </div>
-      <div class="tab-panel on" id="lv-all" data-reveal="fade-up" data-stagger>
-        <div class="sechead">12 SOVEREIGN LEVELS · COMPLETE LADDER</div>
-        <div class="level-grid">
-          <div class="level-card" style="--lvc:#C9A84C" id="lv-card-1"><div class="lv-num">1</div><div class="lv-name">NOVICE</div><div class="lv-auth">AUTH ≥ 2.32</div><div class="lv-status" id="lv-st-1">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#E2C86D" id="lv-card-2"><div class="lv-num">2</div><div class="lv-name">INITIATE</div><div class="lv-auth">AUTH ≥ 3.98</div><div class="lv-status" id="lv-st-2">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#C9A84C" id="lv-card-3"><div class="lv-num">3</div><div class="lv-name">ACOLYTE</div><div class="lv-auth">AUTH ≥ 5.95</div><div class="lv-status" id="lv-st-3">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#00E5FF" id="lv-card-4"><div class="lv-num">4</div><div class="lv-name">SCHOLAR</div><div class="lv-auth">AUTH ≥ 8.29</div><div class="lv-status" id="lv-st-4">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#3fb27f" id="lv-card-5"><div class="lv-num">5</div><div class="lv-name">ADEPT</div><div class="lv-auth">AUTH ≥ 11.0</div><div class="lv-status" id="lv-st-5">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#E86A3A" id="lv-card-6"><div class="lv-num">6</div><div class="lv-name">KEEPER</div><div class="lv-auth">AUTH ≥ 13.92</div><div class="lv-status" id="lv-st-6">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#9B6BF0" id="lv-card-7"><div class="lv-num">7</div><div class="lv-name">MASTER</div><div class="lv-auth">AUTH ≥ 17.21</div><div class="lv-status" id="lv-st-7">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#C9A84C" id="lv-card-8"><div class="lv-num">8</div><div class="lv-name">ARCHITECT</div><div class="lv-auth">AUTH ≥ 20.87</div><div class="lv-status" id="lv-st-8">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#E2C86D" id="lv-card-9"><div class="lv-num">9</div><div class="lv-name">SOVEREIGN</div><div class="lv-auth">AUTH ≥ 24.01</div><div class="lv-status" id="lv-st-9">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#00E5FF" id="lv-card-10"><div class="lv-num">10</div><div class="lv-name">VANGUARD</div><div class="lv-auth">AUTH ≥ 25.9</div><div class="lv-status" id="lv-st-10">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#3fb27f" id="lv-card-11"><div class="lv-num">11</div><div class="lv-name">HERALD</div><div class="lv-auth">AUTH ≥ 27.1</div><div class="lv-status" id="lv-st-11">LOCKED</div></div>
-          <div class="level-card" style="--lvc:#E2C86D" id="lv-card-12"><div class="lv-num">12</div><div class="lv-name">APEX</div><div class="lv-auth">AUTH ≥ 27.8367</div><div class="lv-status" id="lv-st-12">LOCKED</div></div>
-        </div>
-      </div>
-      <div class="tab-panel" id="lv-struct" data-reveal="fade-up">
-        <div class="sechead">LATTICE STRUCTURE · HOW LEVELS WORK</div>
-        <div class="struct-panel">
-          <div class="struct-box">
-            <div class="struct-title">LEVELS × PHASES = LATTICE</div>
-            <div class="struct-item">12 levels × 12 phases = 144 intersections</div>
-            <div class="struct-item">Each intersection × 9³ = 729 axis nodes</div>
-            <div class="struct-item">144 × 729 = 104,976 total lattice nodes</div>
-            <div class="struct-item">Kings expansion: 28×28×729 = 571,536 nodes</div>
-          </div>
-          <div class="struct-box">
-            <div class="struct-title">AXIS → LEVEL MAPPING</div>
-            <div class="struct-item">Axis A drives KNOWLEDGE depth (levels 1–4)</div>
-            <div class="struct-item">Axis B drives MASTERY height (levels 5–8)</div>
-            <div class="struct-item">Axis C drives CONTRIBUTION reach (levels 9–12)</div>
-            <div class="struct-item">All three axes must balance at APEX</div>
+      <div class="sechead">12 SOVEREIGN LEVELS &middot; COMPLETE AUTHORITY LADDER</div>
+      <div id="level-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- STRUCTURE TAB -->
+    <div class="tab-panel pad" id="tab-structure" style="display:none">
+      <div class="sechead">LATTICE STRUCTURE &middot; HOW LEVELS WORK</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="glass">
+          <div style="font-family:var(--D);font-size:12px;color:var(--gold);margin-bottom:8px">LEVELS × PHASES = LATTICE</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">
+            12 levels × 12 phases = 144 intersections<br>
+            Each intersection × 9³ = 729 axis nodes<br>
+            144 × 729 = 104,976 total lattice nodes<br>
+            Kings expansion: 28×28×729 = 571,536 nodes
           </div>
         </div>
         <div class="glass">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">AUTHORITY FORMULA · LEVEL GATE</div>
-          <div style="font-family:var(--M);font-size:11px;color:var(--ink)">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e &nbsp;&middot;&nbsp; APEX at 27.8367</div>
+          <div style="font-family:var(--D);font-size:12px;color:var(--cyan);margin-bottom:8px">AXIS → LEVEL MAPPING</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">
+            Axis A drives KNOWLEDGE depth (levels 1–4)<br>
+            Axis B drives MASTERY height (levels 5–8)<br>
+            Axis C drives CONTRIBUTION reach (levels 9–12)<br>
+            All three axes must balance at APEX
+          </div>
         </div>
       </div>
-      <div class="tab-panel" id="lv-my" data-reveal="fade-up">
-        <div class="sechead">YOUR CURRENT LEVEL</div>
-        <div class="glass" style="text-align:center;padding:32px;margin-bottom:16px">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">CURRENT LEVEL</div>
-          <div style="font-family:var(--D);font-size:clamp(22px,5vw,40px);color:var(--gold)" id="my-lv-num">--</div>
-          <div style="font-family:var(--D);font-size:clamp(14px,3vw,20px);color:var(--ink);margin-top:6px" id="my-lv-name">--</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:8px" id="my-lv-next">--</div>
+      <div class="glass-cyan" style="text-align:center;padding:20px">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">AUTHORITY FORMULA · LEVEL GATE</div>
+        <div style="font-family:var(--D);font-size:clamp(16px,3vw,24px);color:var(--gold)">AUTH = &radic;(A&sup3; + B&sup3; + C&sup3;) &times; &phi; / e</div>
+        <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:8px">APEX AT 27.8367 · &phi; = 1.6180 · e = 2.7182</div>
+      </div>
+      <div class="sechead" style="margin-top:16px">LEVEL THRESHOLDS</div>
+      <div id="thresh-list" style="display:grid;gap:6px"></div>
+    </div>
+
+    <!-- MY LEVEL TAB -->
+    <div class="tab-panel pad" id="tab-my" style="display:none">
+      <div class="sechead">YOUR CURRENT LEVEL</div>
+      <div class="glass" style="text-align:center;padding:32px;margin-bottom:16px">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">CURRENT LEVEL</div>
+        <div style="font-family:var(--D);font-size:clamp(40px,8vw,64px);color:var(--gold)" id="my-lv-num">--</div>
+        <div style="font-family:var(--D);font-size:clamp(16px,3vw,22px);color:var(--ink);margin-top:6px" id="my-lv-name">--</div>
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:12px" id="my-lv-next">--</div>
+      </div>
+      <div class="sechead">PROGRESS TO APEX</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span style="font-family:var(--M);font-size:8px;color:var(--muted);min-width:100px">AUTHORITY</span>
+        <div class="bar-track" style="flex:1"><div class="bar-fill" id="my-auth-bar" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div>
+        <span style="font-family:var(--M);font-size:8px;color:var(--muted);min-width:60px;text-align:right" id="my-auth-pct">0%</span>
+      </div>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">SOVEREIGN LEVELS &middot; THE SCIENCE</div>
+      <div class="card-grid">
+        <div class="card" style="--card-accent:var(--gold)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">THE LEVEL SYSTEM</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">12 Sovereign Levels represent the complete authority arc from Novice to Apex. Each level corresponds to an AUTH score threshold, derived from the three-axis formula: sqrt(A³+B³+C³)×φ/e.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--cyan)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">CUBIC AUTHORITY</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">The cubic relationship (A³) ensures that growth in each axis is compoundingly rewarded. A member at A=9 receives 729 units of authority from that axis alone — 9× more than a member at A=3 (27 units).</div>
+        </div>
+        <div class="card" style="--card-accent:var(--purple)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">GOLDEN RATIO SCALING</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">Multiplying by φ (1.618...) and dividing by e (2.718...) produces a ratio of ~0.595. This φ/e scaling brings the theoretical max (sqrt(3×729) = 46.77) down to the canonical Apex of 27.8367.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--green)">
+          <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">LATTICE MATHEMATICS</div>
+          <div style="font-size:11px;line-height:1.8;color:var(--muted)">12 levels × 12 phases × 729 axis states = 104,976 unique sovereign positions in the canonical lattice. The Kings expansion (28×28×729) reaches 571,536 nodes — all encoded in the platform architecture.</div>
         </div>
       </div>
     </div>
+
     <div data-page-emblem="levels" style="margin:20px auto 0"></div>
     <div class="lf"><span>&#937; LEVELS &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
   </main>
 </div>
+<style>
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
+.tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
+.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
+.lv-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:2px solid var(--lvc,var(--gold));padding:14px;text-align:center;transition:.18s}
+.lv-card.earned{border-top-color:var(--green);background:rgba(63,178,127,.04)}
+.lv-card:hover{transform:translateY(-2px)}
+</style>
+<script>
+var LVLS=[
+  {n:1,name:'NOVICE',     thr:2.32,  col:'#C9A84C'},
+  {n:2,name:'INITIATE',   thr:3.98,  col:'#E2C86D'},
+  {n:3,name:'ACOLYTE',    thr:5.95,  col:'#C9A84C'},
+  {n:4,name:'SCHOLAR',    thr:8.29,  col:'#00E5FF'},
+  {n:5,name:'ADEPT',      thr:11.0,  col:'#3fb27f'},
+  {n:6,name:'KEEPER',     thr:13.92, col:'#E86A3A'},
+  {n:7,name:'MASTER',     thr:17.21, col:'#9B6BF0'},
+  {n:8,name:'ARCHITECT',  thr:20.87, col:'#C9A84C'},
+  {n:9,name:'SOVEREIGN',  thr:24.01, col:'#E2C86D'},
+  {n:10,name:'VANGUARD',  thr:25.9,  col:'#00E5FF'},
+  {n:11,name:'HERALD',    thr:27.1,  col:'#3fb27f'},
+  {n:12,name:'APEX',      thr:27.8367,col:'#E2C86D'},
+];
+function build(){
+  var grid=document.getElementById('level-grid');
+  if(grid){grid.innerHTML=LVLS.map(function(l){
+    return '<div class="lv-card" id="lvc-'+l.n+'" style="--lvc:'+l.col+'">'
+      +'<div style="font-family:var(--D);font-size:28px;color:'+l.col+'">'+l.n+'</div>'
+      +'<div style="font-family:var(--D);font-size:11px;color:var(--ink);margin:4px 0">'+l.name+'</div>'
+      +'<div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:6px">AUTH &ge; '+l.thr+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;padding:2px 8px;border:1px solid rgba(138,134,118,.3);border-radius:10px;color:var(--muted)" id="lvst-'+l.n+'">LOCKED</div>'
+      +'</div>';
+  }).join('');}
+  var tl=document.getElementById('thresh-list');
+  if(tl){tl.innerHTML=LVLS.map(function(l){
+    return '<div style="display:flex;align-items:center;gap:12px;padding:6px 10px;border:1px solid var(--line);border-left:3px solid '+l.col+'">'
+      +'<span style="font-family:var(--M);font-size:8px;min-width:30px;color:'+l.col+'">LV '+l.n+'</span>'
+      +'<span style="font-family:var(--D);font-size:12px;color:var(--ink);flex:1">'+l.name+'</span>'
+      +'<span style="font-family:var(--M);font-size:8px;color:var(--muted)">AUTH &ge; '+l.thr+'</span>'
+      +'</div>';
+  }).join('');}
+}
+build();
+function updateLevel(auth){
+  var lvIdx=-1;
+  LVLS.forEach(function(l,i){if(auth>=l.thr)lvIdx=i;});
+  LVLS.forEach(function(l,i){
+    var card=document.getElementById('lvc-'+l.n);
+    var st=document.getElementById('lvst-'+l.n);
+    if(auth>=l.thr){
+      if(card)card.classList.add('earned');
+      if(st){st.textContent='EARNED';st.style.cssText='font-family:var(--M);font-size:7px;padding:2px 8px;border:1px solid rgba(63,178,127,.4);border-radius:10px;color:var(--green);background:rgba(63,178,127,.08)';}
+    }
+  });
+  function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v);}
+  var cur=lvIdx>=0?LVLS[lvIdx]:{n:0,name:'UNRANKED',thr:0};
+  sid('my-lv-num',String(cur.n>0?cur.n:1));
+  sid('my-lv-name',lvIdx>=0?cur.name:LVLS[0].name);
+  var nextIdx=lvIdx+1;
+  if(nextIdx<12)sid('my-lv-next','NEXT: '+LVLS[nextIdx].name+' at AUTH ≥ '+LVLS[nextIdx].thr);
+  else sid('my-lv-next','APEX SOVEREIGN — LATTICE COMPLETE');
+  var pct=(auth/27.8367*100).toFixed(1);
+  var bar=document.getElementById('my-auth-bar');if(bar)setTimeout(function(){bar.style.width=Math.min(100,pct)+'%';},100);
+  var pctEl=document.getElementById('my-auth-pct');if(pctEl)pctEl.textContent=pct+'%';
+}
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
+  var btn=document.querySelector('[data-tab="'+name+'"]');if(btn)btn.classList.add('active');
+  var panel=document.getElementById('tab-'+name);if(panel)panel.style.display='block';
+}
+document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
+</script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
@@ -140,40 +197,19 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
   try{
     var s=(await sb.auth.getSession()).data.session;
     if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    var pr=(await sb.from('profiles').select('access_approved,is_owner,axis_a,axis_b,axis_c,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle()).data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-    var LVTHR=[2.32, 3.98, 5.95, 8.29, 11, 13.92, 17.21, 20.87, 24.01, 25.9, 27.1, 27.8367];var LVNAMES=['NOVICE', 'INITIATE', 'ACOLYTE', 'SCHOLAR', 'ADEPT', 'KEEPER', 'MASTER', 'ARCHITECT', 'SOVEREIGN', 'VANGUARD', 'HERALD', 'APEX'];
-    var lvIdx=-1;
-    LVTHR.forEach(function(t,i){if(auth>=t)lvIdx=i;});
-    LVTHR.forEach(function(t,i){
-      var card=document.getElementById('lv-card-'+(i+1));
-      var st=document.getElementById('lv-st-'+(i+1));
-      if(auth>=t){if(card)card.classList.add('earned');if(st){st.textContent='EARNED';st.className='lv-status earned';}}
-    });
-    function s2(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
-    s2('my-lv-num',String(lvIdx+1 > 0 ? lvIdx+1 : 1));
-    s2('my-lv-name',lvIdx>=0?LVNAMES[lvIdx]:LVNAMES[0]);
-    var nextIdx=lvIdx+1; if(nextIdx<12)s2('my-lv-next','Next: '+LVNAMES[nextIdx]+' at AUTH ≥ '+LVTHR[nextIdx]); else s2('my-lv-next','APEX SOVEREIGN — LATTICE COMPLETE');
+    updateLevel(auth);
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-<script>
-function lvTab(btn,id){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
-  btn.classList.add('on');btn.setAttribute('aria-selected','true');
-  var p=document.getElementById('lv-'+id);if(p)p.classList.add('on');
-}
-</script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+<script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

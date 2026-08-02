@@ -3,138 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — KINGS · Sovereign Platform">
+<meta name="description" content="SYD OMEGA 91717 — KINGS · Hall of sovereign rulers, power study, and leadership models">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; KINGS</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--solar);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--solar)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--solar);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--solar);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--solar);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
-.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
-.tab-btn:hover{color:var(--solar);background:rgba(226,200,109,.04)}
-.tab-btn.on{border-bottom-color:var(--solar);color:var(--solar);background:rgba(226,200,109,.06)}
-.tab-panel{display:none}.tab-panel.on{display:block}
-.king-tbl{border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px}
-.king-head{display:grid;grid-template-columns:50px 1fr 100px 120px 80px;padding:9px 14px;background:rgba(226,200,109,.06);border-bottom:1px solid var(--line)}
-.king-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
-.king-row{display:grid;grid-template-columns:50px 1fr 100px 120px 80px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.05);align-items:center;transition:.12s}
-.king-row:last-child{border-bottom:none}
-.king-row:hover{background:rgba(226,200,109,.03)}
-.k-num{font-family:var(--D);font-size:14px;color:var(--solar);text-align:center}
-.k-name{font-family:var(--D);font-size:12px;color:var(--ink)}
-.k-sign{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)}
-.k-realm{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--solar)}
-.k-auth{font-family:var(--M);font-size:9px;color:var(--solar)}
-.matrix-info{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
-.mx-stat{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px;text-align:center}
-.mx-stat-n{font-family:var(--D);font-size:clamp(18px,3vw,24px);color:var(--solar)}
-.mx-stat-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.king-head,.king-row{grid-template-columns:40px 1fr;}.king-hcell:nth-child(n+3),.king-row>div:nth-child(n+3){display:none}}
-</style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--solar);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="kings" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">KINGS<small>M12 &middot; Kings System — 571,536 Nodes &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="kng-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div class="t">KINGS<small>HERITAGE &middot; HALL OF SOVEREIGN RULERS &middot; POWER STUDY</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="hall" role="tab">HALL OF KINGS</button>
+      <button class="tab" data-tab="study" role="tab">POWER STUDY</button>
+      <button class="tab" data-tab="model" role="tab">MY MODEL KING</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
+    </div>
+
+    <!-- HALL OF KINGS TAB -->
+    <div class="tab-panel active pad" id="tab-hall">
+      <div class="sechead">HALL OF SOVEREIGN RULERS</div>
+      <div id="kings-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- POWER STUDY TAB -->
+    <div class="tab-panel pad" id="tab-study" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="sechead" style="border:none;padding:0;margin:0;flex:1">POWER STUDY NOTES</div>
+        <button class="btn" onclick="document.getElementById('study-form').style.display='block'">+ ADD NOTE</button>
       </div>
-      <div class="sechead" data-reveal="fade-up">KINGS &middot; M12 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="tab-bar" role="tablist">
-        <button class="tab-btn on" onclick="kgTab(this,'all')" role="tab" aria-selected="true">ALL KINGS</button>
-        <button class="tab-btn" onclick="kgTab(this,'matrix')" role="tab" aria-selected="false">MATRIX</button>
+      <div id="study-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <input id="sn-king" class="inp" style="width:100%" placeholder="Ruler / Figure">
+          <select id="sn-cat" class="inp" style="width:100%">
+            <option>Power &amp; Strategy</option><option>Governance</option><option>War &amp; Conflict</option>
+            <option>Wealth</option><option>Legacy</option><option>Failure &amp; Fall</option>
+          </select>
+        </div>
+        <input id="sn-lesson" class="inp" style="width:100%;margin-bottom:8px" placeholder="Key lesson learned...">
+        <textarea id="sn-notes" class="inp" rows="3" style="width:100%;resize:vertical;margin-bottom:8px" placeholder="Extended notes..."></textarea>
+        <button class="btn" onclick="addStudyNote()">SAVE NOTE</button>
+        <button class="btn" onclick="document.getElementById('study-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
       </div>
-      <div class="tab-panel on" id="kg-all" data-reveal="fade-up">
-        <div class="sechead">28 SOVEREIGN KINGS · THE EXPANSION LATTICE</div>
-        <div class="king-tbl">
-          <div class="king-head"><div class="king-hcell">#</div><div class="king-hcell">KING</div><div class="king-hcell">SIGN</div><div class="king-hcell">REALM</div><div class="king-hcell">AUTH</div></div>
-          <div class="king-row"><div class="k-num">1</div><div><div class="k-name">SOLAR REX</div></div><div class="k-sign">Aries</div><div class="k-realm">Solar Command</div><div class="k-auth">25.0</div></div>
-          <div class="king-row"><div class="k-num">2</div><div><div class="k-name">LUNAR SOVEREIGN</div></div><div class="k-sign">Taurus</div><div class="k-realm">Tide Domain</div><div class="k-auth">22.0</div></div>
-          <div class="king-row"><div class="k-num">3</div><div><div class="k-name">WIND EMPEROR</div></div><div class="k-sign">Gemini</div><div class="k-realm">Aether Reach</div><div class="k-auth">20.0</div></div>
-          <div class="king-row"><div class="k-num">4</div><div><div class="k-name">TIDE LORD</div></div><div class="k-sign">Cancer</div><div class="k-realm">Ocean Keep</div><div class="k-auth">19.0</div></div>
-          <div class="king-row"><div class="k-num">5</div><div><div class="k-name">BLAZE SOVEREIGN</div></div><div class="k-sign">Leo</div><div class="k-realm">Fire Crown</div><div class="k-auth">23.0</div></div>
-          <div class="king-row"><div class="k-num">6</div><div><div class="k-name">IRON SOVEREIGN</div></div><div class="k-sign">Virgo</div><div class="k-realm">Metal Forge</div><div class="k-auth">21.0</div></div>
-          <div class="king-row"><div class="k-num">7</div><div><div class="k-name">SCALE EMPEROR</div></div><div class="k-sign">Libra</div><div class="k-realm">Balance Hall</div><div class="k-auth">18.5</div></div>
-          <div class="king-row"><div class="k-num">8</div><div><div class="k-name">SHADOW REX</div></div><div class="k-sign">Scorpio</div><div class="k-realm">Void Domain</div><div class="k-auth">24.0</div></div>
-          <div class="king-row"><div class="k-num">9</div><div><div class="k-name">THUNDER KING</div></div><div class="k-sign">Sagittarius</div><div class="k-realm">Storm Peak</div><div class="k-auth">26.0</div></div>
-          <div class="king-row"><div class="k-num">10</div><div><div class="k-name">STONE SOVEREIGN</div></div><div class="k-sign">Capricorn</div><div class="k-realm">Earth Spire</div><div class="k-auth">17.0</div></div>
-          <div class="king-row"><div class="k-num">11</div><div><div class="k-name">VOID EMPEROR</div></div><div class="k-sign">Aquarius</div><div class="k-realm">Space Realm</div><div class="k-auth">19.5</div></div>
-          <div class="king-row"><div class="k-num">12</div><div><div class="k-name">DEEP KING</div></div><div class="k-sign">Pisces</div><div class="k-realm">Ocean Depths</div><div class="k-auth">22.5</div></div>
-          <div class="king-row"><div class="k-num">13</div><div><div class="k-name">PRIME SOVEREIGN</div></div><div class="k-sign">Apex</div><div class="k-realm">Prime Lattice</div><div class="k-auth">27.0</div></div>
-          <div class="king-row"><div class="k-num">14</div><div><div class="k-name">STAR KEEPER</div></div><div class="k-sign">Leo</div><div class="k-realm">Star Vault</div><div class="k-auth">16.0</div></div>
-          <div class="king-row"><div class="k-num">15</div><div><div class="k-name">DUSK LORD</div></div><div class="k-sign">Libra</div><div class="k-realm">Twilight Gate</div><div class="k-auth">15.5</div></div>
-          <div class="king-row"><div class="k-num">16</div><div><div class="k-name">DAWN SOVEREIGN</div></div><div class="k-sign">Aries</div><div class="k-realm">Sunrise Keep</div><div class="k-auth">14.0</div></div>
-          <div class="king-row"><div class="k-num">17</div><div><div class="k-name">FROST EMPEROR</div></div><div class="k-sign">Capricorn</div><div class="k-realm">Ice Spire</div><div class="k-auth">13.5</div></div>
-          <div class="king-row"><div class="k-num">18</div><div><div class="k-name">EMBER REX</div></div><div class="k-sign">Leo</div><div class="k-realm">Ember Court</div><div class="k-auth">13.0</div></div>
-          <div class="king-row"><div class="k-num">19</div><div><div class="k-name">WAVE SOVEREIGN</div></div><div class="k-sign">Pisces</div><div class="k-realm">Tidal Hall</div><div class="k-auth">12.5</div></div>
-          <div class="king-row"><div class="k-num">20</div><div><div class="k-name">GALE EMPEROR</div></div><div class="k-sign">Gemini</div><div class="k-realm">Wind Palace</div><div class="k-auth">12.0</div></div>
-          <div class="king-row"><div class="k-num">21</div><div><div class="k-name">SAND SOVEREIGN</div></div><div class="k-sign">Cancer</div><div class="k-realm">Desert Fort</div><div class="k-auth">11.5</div></div>
-          <div class="king-row"><div class="k-num">22</div><div><div class="k-name">SOUL KEEPER</div></div><div class="k-sign">Leo</div><div class="k-realm">Soul Chamber</div><div class="k-auth">11.0</div></div>
-          <div class="king-row"><div class="k-num">23</div><div><div class="k-name">SPACE LORD</div></div><div class="k-sign">Libra</div><div class="k-realm">Cosmos Gate</div><div class="k-auth">10.5</div></div>
-          <div class="king-row"><div class="k-num">24</div><div><div class="k-name">RUNE SOVEREIGN</div></div><div class="k-sign">Virgo</div><div class="k-realm">Rune Hall</div><div class="k-auth">10.0</div></div>
-          <div class="king-row"><div class="k-num">25</div><div><div class="k-name">CRYPT EMPEROR</div></div><div class="k-sign">Scorpio</div><div class="k-realm">Crypt Vault</div><div class="k-auth">9.5</div></div>
-          <div class="king-row"><div class="k-num">26</div><div><div class="k-name">ARC KING</div></div><div class="k-sign">Sagittarius</div><div class="k-realm">Arc Throne</div><div class="k-auth">9.0</div></div>
-          <div class="king-row"><div class="k-num">27</div><div><div class="k-name">FLAME SOVEREIGN</div></div><div class="k-sign">Aries</div><div class="k-realm">Flame Citadel</div><div class="k-auth">8.5</div></div>
-          <div class="king-row"><div class="k-num">28</div><div><div class="k-name">LATTICE EMPEROR</div></div><div class="k-sign">Apex</div><div class="k-realm">Lattice Core</div><div class="k-auth">27.8367</div></div>
-        </div>
-      </div>
-      <div class="tab-panel" id="kg-matrix" data-reveal="fade-up">
-        <div class="sechead">KINGS EXPANSION MATRIX · 571,536 NODES</div>
-        <div class="matrix-info">
-          <div class="mx-stat"><div class="mx-stat-n">28</div><div class="mx-stat-l">SOVEREIGN KINGS</div></div>
-          <div class="mx-stat"><div class="mx-stat-n">28×28</div><div class="mx-stat-l">KING MATRIX</div></div>
-          <div class="mx-stat"><div class="mx-stat-n">9³=729</div><div class="mx-stat-l">ELEMENT CUBE</div></div>
-          <div class="mx-stat"><div class="mx-stat-n">571,536</div><div class="mx-stat-l">TOTAL NODES</div></div>
-        </div>
-        <div class="glass">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">EXPANSION FORMULA</div>
-          <div style="font-family:var(--M);font-size:11px;color:var(--ink)">28 &times; 28 &times; 9&sup3; = 28 &times; 28 &times; 729 = <strong style="color:var(--solar)">571,536 nodes</strong></div>
-          <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:8px">The Kings lattice extends the base 104,976-node system (12&times;12&times;9&sup3;) to accommodate the 28-sign expanded sovereign codex.</div>
-        </div>
+      <div id="study-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- MODEL KING TAB -->
+    <div class="tab-panel pad" id="tab-model" style="display:none">
+      <div class="sechead">MY MODEL SOVEREIGN</div>
+      <div style="max-width:500px">
+        <div style="font-size:12px;line-height:1.8;opacity:.75;margin-bottom:16px">Choose your model sovereign — the ruler whose character, methods, and achievements most align with the sovereign you are becoming. Study them deeply. Embody their virtues.</div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">MODEL SOVEREIGN</div><input id="mk-name" class="inp" style="width:100%" placeholder="Who is your model king / ruler?"></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">WHY THIS RULER</div><textarea id="mk-why" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What draws you to this figure?"></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">VIRTUES TO EMULATE</div><textarea id="mk-virtues" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What virtues do you draw from their example?"></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">FAILURES TO AVOID</div><textarea id="mk-failures" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="What mistakes of theirs will you consciously not repeat?"></textarea></div>
+        <button class="btn" onclick="saveModel()">SAVE MODEL</button>
+        <div id="model-display" style="display:none;margin-top:16px;border:1px solid var(--line);border-top:3px solid var(--gold);background:rgba(10,10,15,.55);padding:18px;border-radius:2px"></div>
       </div>
     </div>
-    <div data-page-emblem="kings" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; KINGS &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">POWER SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">THE 48 LAWS OF POWER</div><div class="sci-body">Robert Greene's synthesis of 3,000 years of power study: power obeys consistent laws across cultures and centuries. Understanding these patterns is defensive as much as offensive — the sovereign uses them to avoid being played.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">THE PRINCE (MACHIAVELLI)</div><div class="sci-body">Written in 1513, still studied in every major political science program. Machiavelli's central insight: virtue and effectiveness often diverge. The sovereign must be lion enough to frighten wolves and fox enough to recognize traps.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">STOIC LEADERSHIP</div><div class="sci-body">Marcus Aurelius ruled Rome at its height while practicing radical inner discipline. Meditations reveals: sovereign power begins with self-governance. The Stoics taught that external authority is worthless without internal sovereignty.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">THE GREAT MAN THEORY</div><div class="sci-body">Carlyle's 19th century thesis that history is shaped by exceptional individuals — hotly debated. Modern historiography shows context matters enormously, yet some individuals clearly bend the arc of history. The sovereign studies both forces.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">LEADERSHIP ARCHETYPES</div><div class="sci-body">Moore &amp; Gillette's mature masculine archetypes: King (order, generativity), Warrior (action, discipline), Magician (transformation, knowledge), Lover (passion, connection). The sovereign integrates all four rather than defaulting to one.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">LEGITIMACY THEORY</div><div class="sci-body">Max Weber: rulers derive authority from tradition (divine right), charisma (personal power), or rational-legal grounds (institutional). The sovereign builds all three: tradition through legacy, charisma through character, legal through structure.</div></div>
+      </div>
+    </div>
+
+    <div class="lf"><span>&#937; KINGS &middot; SYD OMEGA 91717</span><span>HALL OF SOVEREIGN RULERS &middot; POWER STUDY</span></div>
   </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+
+var KINGS_DATA=[
+  {name:'Alexander the Great',era:'356–323 BC',realm:'Macedon / Persia',color:'#C9A84C',virtue:'Vision &amp; Conquest',lesson:'Relentless expansion collapses without institutional depth. Build systems, not just campaigns.',desc:'Conquered the known world by 30. Undefeated in battle. Student of Aristotle. Forged a multicultural empire from Greece to India. His death without succession plan caused its fragmentation — the sovereign's ultimate lesson.'},
+  {name:'Marcus Aurelius',era:'121–180 AD',realm:'Roman Empire',color:'#E2C86D',virtue:'Inner Sovereignty',lesson:'True power is self-mastery. The world bends to the person who first bends themselves.',desc:'The last of the Five Good Emperors. Philosopher-king who wrote Meditations as a private journal of self-governance. Ruled Rome during plague and war while maintaining Stoic discipline. Proof that inner mastery and outer power coexist.'},
+  {name:'Cyrus the Great',era:'600–530 BC',realm:'Persian Empire',color:'#FF9800',virtue:'Magnanimity',lesson:'Great rulers win through generosity and respect, not only force. Conquered nations converted to allies.',desc:'Founded the Achaemenid Persian Empire. Wrote the world\'s first declaration of human rights on the Cyrus Cylinder. Freed enslaved peoples, respected local customs and religions. Called "The Father" by the Persians, "The Great" by the Greeks.'},
+  {name:'Charlemagne',era:'742–814 AD',realm:'Frankish Empire',color:'#9B6BF0',virtue:'Civilizational Building',lesson:'Legacy outlasts conquest — build institutions, not just armies.',desc:'United most of Western Europe for the first time since Rome. Revived learning, standardized law, rebuilt infrastructure. The Carolingian Renaissance reshaped European civilization. His political model endured 1,000 years after his death.'},
+  {name:'Saladin',era:'1137–1193 AD',realm:'Egypt / Syria',color:'#00BCD4',virtue:'Honor &amp; Chivalry',lesson:'The most enduring power is moral authority. Enemies respected Saladin more than feared him.',desc:'Sultan of Egypt and Syria who recaptured Jerusalem from the Crusaders in 1187. Famous for chivalric mercy — his enemies sent their sick to his physician when theirs died. Proved that honor is a strategic asset, not a weakness.'},
+  {name:'Frederick the Great',era:'1712–1786',realm:'Prussia',color:'#4CAF50',virtue:'Strategic Intellect',lesson:'Discipline and strategy multiply any resource. Prussia was small; Frederick made it great.',desc:'Transformed Prussia into a major European power. Military genius, Enlightenment philosopher, prolific writer, and friend of Voltaire. His "oblique order" battle formation remains in military textbooks. Proved that intellectual sovereignty drives all other kinds.'},
+  {name:'Shaka Zulu',era:'1787–1828',realm:'Zulu Kingdom',color:'#FF4444',virtue:'Military Innovation',lesson:'Radical innovation from first principles — question every inherited assumption of your domain.',desc:'Founded and transformed the Zulu Empire through revolutionary military tactics: new weapon design (assegai), new formation (bull horn), new training (barefoot long-distance). Turned a small clan into the dominant power of Southern Africa within a decade.'},
+  {name:'Napoleon Bonaparte',era:'1769–1821',realm:'French Empire',color:'#FF9800',virtue:'Execution Velocity',lesson:'Speed of decision and action is a force multiplier that compensates for almost any deficit.',desc:'Rose from Corsican lieutenant to Emperor. Conquered most of Europe. Codified modern law (Napoleonic Code). His administrative innovations outlasted his empire. His failure in Russia — hubris meeting logistics — is the sovereign\'s warning about overextension.'},
+  {name:'Meiji Emperor',era:'1852–1912',realm:'Japan',color:'#00E5FF',virtue:'Transformation Leadership',lesson:'The greatest leaders create the conditions for their people\'s transformation, not just their own.',desc:'Presided over the Meiji Restoration — Japan\'s transformation from feudal isolation to modern world power in 30 years. Abolished the samurai class, adopted Western technology while preserving Japanese culture. A sovereign who changed everything while losing nothing essential.'},
+];
+
+var SK='omega_study_notes',MK='omega_model_king';
+var studyNotes=JSON.parse(localStorage.getItem(SK)||'[]');
+var modelKing=JSON.parse(localStorage.getItem(MK)||'{}');
+
+function renderKings(){
+  document.getElementById('kings-grid').innerHTML=KINGS_DATA.map(function(k){
+    return '<div style="border:1px solid var(--line);border-top:2px solid '+k.color+';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+k.era+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+k.color+';border:1px solid '+k.color+';padding:1px 5px">'+k.realm.toUpperCase()+'</div>'
+      +'</div>'
+      +'<div style="font-family:var(--D);font-size:13px;color:'+k.color+';margin-bottom:4px">'+k.name+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:8px">VIRTUE: '+k.virtue.toUpperCase()+'</div>'
+      +'<div style="font-size:11px;line-height:1.6;opacity:.8;margin-bottom:8px">'+k.desc+'</div>'
+      +'<div style="border-top:1px solid var(--line);padding-top:8px;margin-top:4px">'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--gold);margin-bottom:3px">KEY LESSON</div>'
+      +'<div style="font-size:11px;font-style:italic;opacity:.75">'+k.lesson+'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderStudyNotes(){
+  var el=document.getElementById('study-list');
+  if(!studyNotes.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO STUDY NOTES YET</div>';return;}
+  var CAT_COL={'Power & Strategy':'#FF9800',Governance:'#00E5FF','War & Conflict':'#FF4444',Wealth:'#C9A84C',Legacy:'#4CAF50','Failure & Fall':'#8B0000'};
+  el.innerHTML=[].concat(studyNotes).reverse().map(function(n){
+    var col=CAT_COL[n.cat]||'var(--gold)';
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
+      +'<div style="font-family:var(--D);font-size:11px;color:var(--gold)">'+n.king+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+n.cat.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto">'+n.date+'</div>'
+      +'</div>'
+      +'<div style="font-size:13px;font-weight:600;margin-bottom:4px">'+n.lesson+'</div>'
+      +(n.notes?'<div style="font-size:11px;opacity:.75">'+n.notes+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function renderModelDisplay(){
+  var el=document.getElementById('model-display');
+  if(!modelKing.name){el.style.display='none';return;}
+  el.style.display='block';
+  document.getElementById('mk-name').value=modelKing.name||'';
+  document.getElementById('mk-why').value=modelKing.why||'';
+  document.getElementById('mk-virtues').value=modelKing.virtues||'';
+  document.getElementById('mk-failures').value=modelKing.failures||'';
+  el.innerHTML='<div style="font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:8px">'+modelKing.name+'</div>'
+    +[['WHY',modelKing.why],['VIRTUES TO EMULATE',modelKing.virtues],['FAILURES TO AVOID',modelKing.failures]].filter(function(r){return r[1];}).map(function(r){
+      return '<div style="margin-bottom:8px"><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:12px;line-height:1.6;opacity:.85">'+r[1]+'</div></div>';
+    }).join('');
+}
+
+window.addStudyNote=function(){
+  var k=document.getElementById('sn-king').value.trim();var l=document.getElementById('sn-lesson').value.trim();if(!k||!l)return;
+  studyNotes.push({id:Date.now(),king:k,cat:document.getElementById('sn-cat').value,lesson:l,notes:document.getElementById('sn-notes').value,date:new Date().toISOString().slice(0,10)});
+  localStorage.setItem(SK,JSON.stringify(studyNotes));
+  document.getElementById('study-form').style.display='none';document.getElementById('sn-king').value='';document.getElementById('sn-lesson').value='';document.getElementById('sn-notes').value='';
+  renderStudyNotes();
+};
+window.saveModel=function(){
+  modelKing={name:document.getElementById('mk-name').value,why:document.getElementById('mk-why').value,virtues:document.getElementById('mk-virtues').value,failures:document.getElementById('mk-failures').value};
+  localStorage.setItem(MK,JSON.stringify(modelKing));renderModelDisplay();
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -143,23 +182,15 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);window.__omegaUserLoaded=true;
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderKings();renderStudyNotes();renderModelDisplay();
+    document.querySelectorAll('.tab').forEach(function(btn){btn.onclick=function(){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});btn.classList.add('active');var panel=document.getElementById('tab-'+btn.dataset.tab);if(panel){panel.style.display='';panel.classList.add('active');}};});
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
-</script>
-<script>
-function kgTab(btn,id){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
-  btn.classList.add('on');btn.setAttribute('aria-selected','true');
-  var p=document.getElementById('kg-'+id);if(p)p.classList.add('on');
-}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

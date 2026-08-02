@@ -1,125 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 -- The Houses Lattice</title>
-<meta name="theme-color" content="#C9A84C"/>
-<style>
-:root{--void:#0A0A0F;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:'Rajdhani',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
-.side{width:80px;flex-shrink:0}
-.shell{display:flex;min-height:100vh}
-.main{flex:1;min-width:0}
-.topbar{border-bottom:1px solid var(--line);padding:20px clamp(14px,3vw,36px);background:rgba(8,8,15,.9)}
-.topbar .t{font-family:'Cinzel Decorative',serif;font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-.topbar .t small{display:block;font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-.pad{padding:clamp(14px,3vw,36px)}
-.notice{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:14px 18px;font-family:'Courier Prime',monospace;font-size:11px;color:var(--muted);line-height:1.8;margin-bottom:28px}
-.notice b{color:var(--gold)}
-.sechead{font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--gold);letter-spacing:2px;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.card{border:1px solid var(--line);background:var(--panel);padding:16px}
-.card .ring{display:inline-block;width:48px;height:48px;margin-bottom:8px}
-.card .hn{font-family:'Courier Prime',monospace;font-size:9px;color:var(--muted);letter-spacing:2px}
-.card .ht{font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--gold);margin:4px 0}
-.card .hd{font-size:12px;font-weight:300;color:var(--ink);line-height:1.6;margin-top:6px}
-.alch-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.alch-card{border:1px solid var(--line);background:var(--panel);padding:16px;text-align:center}
-.alch-card .ph{font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--solar)}
-.alch-card .m{font-family:'Courier Prime',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin:4px 0}
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — HOUSES · The 12 astrological houses and their sovereign meanings">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<title>&#937; SYD OMEGA 91717 &mdash; HOUSES</title>
+<link rel="stylesheet" href="/omega-ui.css">
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
 </head>
 <body>
-<div class="shell">
-  <aside class="side" id="omega-side" data-page="houses"></aside>
-  <main class="main">
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="houses" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">THE HOUSES LATTICE<small>12 x 12 x 9 x 9 x 9 -- SYMBOLIC LORE, SEPARATE FROM THE PROGRESSION MATRIX</small></div>
-      <canvas id="hse-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+      <div class="t">ASTRAL HOUSES<small>COSMOS &middot; 12 HOUSES &middot; SOVEREIGN CHART LATTICE</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="notice"><span data-canon="lore"></span> &nbsp; <b>NOTE:</b> This is a separate symbolic framework from the real 729-node progression matrix (see /matrix.html), which is what actually gates your access and advancement. The Houses Lattice below is lore -- a second, independent lens on the twelve signs, not a live system.</div>
 
-      <div class="sechead" data-reveal="fade-up">THE TWELVE HOUSES</div>
-      <div class="grid" id="houses-grid"></div>
-
-      <div class="sechead" data-reveal="fade-up">THE NINE GOVERNANCE COLUMNS</div>
-      <div class="grid" id="gov-grid"></div>
-
-      <div class="sechead" data-reveal="fade-up">THE FOUR ALCHEMICAL PHASES</div>
-      <div class="alch-row" id="alch-grid"></div>
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="houses" role="tab">THE 12 HOUSES</button>
+      <button class="tab" data-tab="chart" role="tab">YOUR CHART</button>
+      <button class="tab" data-tab="wheel" role="tab">WHEEL</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
     </div>
+
+    <!-- HOUSES TAB -->
+    <div class="tab-panel active pad" id="tab-houses">
+      <div class="sechead">THE 12 SOVEREIGN HOUSES</div>
+      <div id="house-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- CHART TAB -->
+    <div class="tab-panel pad" id="tab-chart" style="display:none">
+      <div class="sechead">YOUR SOVEREIGN CHART</div>
+      <div style="max-width:500px;margin-bottom:18px">
+        <div style="font-size:12px;line-height:1.8;color:var(--ink);opacity:.8;margin-bottom:14px">Map your natal planets to each house. This builds your personal sovereignty lattice — understanding which life domains are most influenced by your natal configuration.</div>
+        <div id="chart-form" style="display:grid;gap:8px"></div>
+        <button class="btn" style="margin-top:12px" onclick="saveChart()">SAVE CHART</button>
+      </div>
+      <div class="sechead">YOUR HOUSE ACTIVATIONS</div>
+      <div id="chart-display" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px"></div>
+    </div>
+
+    <!-- WHEEL TAB -->
+    <div class="tab-panel pad" id="tab-wheel" style="display:none">
+      <div class="sechead">HOUSE WHEEL</div>
+      <canvas id="wheel-canvas" width="500" height="500" style="width:100%;max-width:500px;display:block;margin:0 auto;border:1px solid var(--line)"></canvas>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">HOUSE SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">JUNGIAN ARCHETYPES</div><div class="sci-body">Jung's archetypal framework maps closely to astrological houses. The 12 houses represent the 12 primary life arenas — Self, Resources, Communication, Home, Creativity, Service, Partnership, Transformation, Wisdom, Career, Community, and Transcendence.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">ANGULAR VS CADENT HOUSES</div><div class="sci-body">Angular houses (1,4,7,10) are strongest, linked to action and external manifestation. Succedent (2,5,8,11) consolidate. Cadent (3,6,9,12) process and transition. This distinction comes from Hellenistic astrology and the concept of "places of power."</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">HEMISPHERIC ANALYSIS</div><div class="sci-body">Southern hemisphere (7-12) = public, relationship-oriented domains. Northern (1-6) = private, self-development domains. Eastern (10-3) = self-directed. Western (4-9) = other-directed. Hemisphere concentration reveals fundamental life orientation.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">HOUSE RULERS</div><div class="sci-body">Each house is ruled by a planet based on its natural sign. The ruler's position reveals where energy flows from that house — a planet ruling the 2nd house of wealth in the 10th house of career suggests wealth tied to professional reputation.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">INTERCEPTED HOUSES</div><div class="sci-body">In whole-sign and Placidus systems, some signs are "intercepted" — entirely contained within a house. These represent repressed or unconscious domains requiring conscious development. A common finding in psychological astrology.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">THE SOVEREIGN LATTICE</div><div class="sci-body">The SYD OMEGA 12-house lattice maps each house to a strategic life domain: Authority, Wealth, Intelligence, Heritage, Creation, Service, Alliance, Transformation, Wisdom, Legacy, Network, and Mystery. A sovereign governs all 12.</div></div>
+      </div>
+    </div>
+
+    <div class="lf"><span>&#937; ASTRAL HOUSES &middot; SYD OMEGA 91717</span><span>12 HOUSES &middot; SOVEREIGN CHART LATTICE</span></div>
   </main>
 </div>
-
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+.hcard{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;transition:border-color .2s}
+.hcard:hover{border-color:rgba(201,168,76,.35)}
+</style>
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
-function fillRing(el, glyph, col){
-  if(!el) return;
-  if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); return; }
-  let tries=0;
-  const t=setInterval(()=>{
-    tries++;
-    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {}); clearInterval(t); }
-    else if(tries>20) clearInterval(t);
-  },150);
+var HOUSES=[
+  {n:1,name:'House of Self',       sign:'Aries',   planet:'Mars',    domain:'Identity',        color:'#E86A3A',keywords:'Self, Appearance, Beginnings, Vitality',desc:'The Ascendant house — the lens through which you meet the world. Your mask, your drive, the first impression you make. In sovereign terms: WHO YOU ARE.'},
+  {n:2,name:'House of Wealth',     sign:'Taurus',  planet:'Venus',   domain:'Resources',       color:'#C9A84C',keywords:'Money, Possessions, Values, Security',desc:'Material resources, income, and what you value. The sovereign treasury of tangible assets and the values that generate or destroy them. WHAT YOU OWN.'},
+  {n:3,name:'House of Mind',       sign:'Gemini',  planet:'Mercury', domain:'Communication',   color:'#E2C86D',keywords:'Learning, Speech, Siblings, Short Travel',desc:'Immediate environment, communication, and early education. The sovereign intelligence engine: how you process, articulate, and transmit information. HOW YOU THINK.'},
+  {n:4,name:'House of Heritage',   sign:'Cancer',  planet:'Moon',    domain:'Foundation',      color:'#00BCD4',keywords:'Home, Family, Ancestry, Roots',desc:'The IC — the lowest point of the chart and your deepest foundation. Heritage, lineage, psychological roots, and where you draw sovereign strength. WHERE YOU COME FROM.'},
+  {n:5,name:'House of Creation',   sign:'Leo',     planet:'Sun',     domain:'Expression',      color:'#FFD700',keywords:'Creativity, Children, Romance, Play',desc:'Joy, creative output, love affairs, and the sovereign spark of creation. This house governs what you make that bears your unique signature. WHAT YOU CREATE.'},
+  {n:6,name:'House of Service',    sign:'Virgo',   planet:'Mercury', domain:'Work & Health',   color:'#4CAF50',keywords:'Health, Routine, Service, Craft',desc:'Daily work, health habits, and service to others. The sovereign discipline engine — rituals, systems, and the mastery achieved through disciplined practice. HOW YOU SERVE.'},
+  {n:7,name:'House of Alliance',   sign:'Libra',   planet:'Venus',   domain:'Partnership',     color:'#9B6BF0',keywords:'Marriage, Partnership, Open Enemies, Contracts',desc:'One-on-one relationships and formal partnerships. The mirror that shows you what you project. Sovereign alliances are strategic — chosen consciously. WHO YOU ALLY WITH.'},
+  {n:8,name:'House of Power',      sign:'Scorpio', planet:'Pluto',   domain:'Transformation',  color:'#8B0000',keywords:'Death, Rebirth, Shared Resources, Occult',desc:'The deepest house — transformation, death, sexuality, shared resources, and sovereign power. What must die for the sovereign to be reborn. WHAT TRANSFORMS YOU.'},
+  {n:9,name:'House of Wisdom',     sign:'Sagittarius',planet:'Jupiter',domain:'Expansion',    color:'#FF9800',keywords:'Philosophy, Higher Learning, Travel, Religion',desc:'Worldview, higher education, philosophy, and long-range vision. The sovereign mind expanding beyond immediate experience into systems of meaning. WHAT YOU BELIEVE.'},
+  {n:10,name:'House of Legacy',    sign:'Capricorn',planet:'Saturn', domain:'Career & Status', color:'#00E5FF',keywords:'Career, Reputation, Achievement, Authority',desc:'The Midheaven — the highest point of the chart. Your public legacy, professional peak, and sovereign authority in the world. WHAT YOU BUILD.'},
+  {n:11,name:'House of Network',   sign:'Aquarius',planet:'Uranus',  domain:'Community',       color:'#3fb27f',keywords:'Friends, Groups, Hopes, Collective',desc:'Networks, alliances, collective vision, and the hopes that animate sovereign ambition. Your sovereign network is your force multiplier. WHO SUPPORTS YOU.'},
+  {n:12,name:'House of Mystery',   sign:'Pisces',  planet:'Neptune', domain:'Transcendence',   color:'#7C4DFF',keywords:'Hidden Things, Spirituality, Isolation, Karma',desc:'The most enigmatic house — the unconscious, hidden enemies, spiritual retreat, and karmic patterns. The sovereign confronts their shadow here. WHAT LIES BENEATH.'},
+];
+
+var PLANETS=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','N.Node','Chiron'];
+var KEY='omega_chart';
+var chart=JSON.parse(localStorage.getItem(KEY)||'{}');
+
+function renderHouses(userSign){
+  var grid=document.getElementById('house-grid');
+  grid.innerHTML=HOUSES.map(function(h){
+    var mine=userSign&&h.sign.toLowerCase()===userSign.toLowerCase();
+    return '<div class="hcard" style="border-top:2px solid '+h.color+'">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">HOUSE '+h.n+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+h.color+';border:1px solid '+h.color+';padding:1px 5px">'+h.sign.toUpperCase()+'</div>'
+      +(mine?'<div style="font-family:var(--M);font-size:7px;color:var(--green);margin-left:auto">&#10003; YOUR SIGN</div>':'')
+      +'</div>'
+      +'<div style="font-family:var(--D);font-size:12px;color:'+h.color+';margin-bottom:4px">'+h.name+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:6px">'+h.domain.toUpperCase()+' &middot; '+h.planet.toUpperCase()+'</div>'
+      +'<div style="font-size:11px;line-height:1.6;color:var(--ink);opacity:.8;margin-bottom:8px">'+h.desc+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);opacity:.7">'+h.keywords+'</div>'
+      +'</div>';
+  }).join('');
 }
 
-function waitForCanon(){
-  return new Promise(resolve=>{
-    if(window.OmegaCanon && window.OmegaCanon.ready){ resolve(window.OmegaCanon); return; }
-    document.addEventListener('omega-canon-ready', ()=>resolve(window.OmegaCanon), {once:true});
-    setTimeout(()=>resolve(window.OmegaCanon||null), 4000);
-  });
+function buildChartForm(){
+  var form=document.getElementById('chart-form');
+  form.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">'
+    +PLANETS.map(function(p){
+      return '<div><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">'+p.toUpperCase()+'</div>'
+        +'<select id="cp-'+p.replace('.','').replace(' ','')+'" class="inp" style="width:100%">'
+        +'<option value="">—</option>'
+        +HOUSES.map(function(h){return '<option value="'+h.n+'"'+(chart[p]===h.n?' selected':'')+'>H'+h.n+' '+h.sign+'</option>';}).join('')
+        +'</select></div>';
+    }).join('')+'</div>';
 }
 
-async function boot(){
-  const sess=(await sb.auth.getSession()).data.session;
-  if(!sess){ window.location.href='/account.html'; return; }
-
-  const canon = await waitForCanon();
-  const lore = canon && canon.loreLattice;
-  if(!lore){ document.getElementById('houses-grid').innerHTML='<div style="color:var(--muted);font-family:\'Courier Prime\',monospace;font-size:11px">Could not load lattice data.</div>'; return; }
-
-  const hCols=['#E86A3A','#C7CDD6','#A9C2D8','#34C6E6','#E86A3A','#D9B86A','#A9C2D8','#8B0000','#C9A84C','#E2C86D','#9B6BF0','#3fb27f'];
-  const hg=document.getElementById('houses-grid');
-  lore.houses.forEach((h,i)=>{
-    const c=document.createElement('div'); c.className='card'; c.style.cursor='pointer';
-    c.innerHTML=`<span class="ring"></span><div class="hn">${h.house.toUpperCase()} &middot; ${h.sign.toUpperCase()}</div><div class="ht">${h.domain}</div>`;
-    hg.appendChild(c);
-    fillRing(c.querySelector('.ring'), h.n, hCols[i]);
-    c.addEventListener('click',()=>window.OmegaEmblemPanel.open({
-      glyph:h.sign, color:hCols[i], title:h.house, subtitle:h.sign.toUpperCase()+' . '+h.domain.toUpperCase(),
-      sections:[{label:'MEANING',body:h.desc}]
-    }));
-  });
-
-  const gCols=['#C9A84C','#00E5FF','#3fb27f','#9B6BF0','#E2C86D','#34C6E6','#E86A3A','#8B0000','#C7CDD6'];
-  const gg=document.getElementById('gov-grid');
-  lore.governance_columns.forEach((g,i)=>{
-    const c=document.createElement('div'); c.className='card'; c.style.cursor='pointer';
-    c.innerHTML=`<span class="ring"></span><div class="hn">COLUMN ${g.n}</div><div class="ht">${g.name}</div>`;
-    gg.appendChild(c);
-    fillRing(c.querySelector('.ring'), g.n, gCols[i]);
-    c.addEventListener('click',()=>window.OmegaEmblemPanel.open({
-      glyph:g.n, color:gCols[i], title:g.name, subtitle:'GOVERNANCE COLUMN '+g.n,
-      sections:[{label:'MEANING',body:g.desc}]
-    }));
-  });
-
-  const ag=document.getElementById('alch-grid');
-  lore.alchemy.forEach(a=>{
-    const c=document.createElement('div'); c.className='alch-card';
-    c.innerHTML=`<div class="ph">${a.phase}</div><div class="m">${a.meaning.toUpperCase()}</div><div class="hd">${a.desc}</div>`;
-    ag.appendChild(c);
-  });
+function renderChartDisplay(){
+  var el=document.getElementById('chart-display');
+  var hasAny=PLANETS.some(function(p){return chart[p];});
+  if(!hasAny){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:10px">No chart data entered yet. Use the form above.</div>';return;}
+  el.innerHTML=PLANETS.filter(function(p){return chart[p];}).map(function(p){
+    var h=HOUSES[chart[p]-1];
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+h.color+';background:rgba(10,10,15,.45);padding:10px 12px;border-radius:2px">'
+      +'<div style="font-family:var(--M);font-size:8px;color:'+h.color+';margin-bottom:3px">'+p.toUpperCase()+' in H'+h.n+'</div>'
+      +'<div style="font-size:12px;font-weight:600">'+h.name+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:2px">'+h.domain+'</div>'
+      +'</div>';
+  }).join('');
 }
-boot();
+
+function drawWheel(){
+  var cv=document.getElementById('wheel-canvas');if(!cv)return;
+  var ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)/2-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A0A0F';ctx.fillRect(0,0,W,H);
+  var slice=Math.PI*2/12;
+  HOUSES.forEach(function(h,i){
+    var a0=i*slice-Math.PI/2,a1=a0+slice;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,a0,a1);ctx.closePath();
+    ctx.fillStyle=h.color+'22';ctx.fill();
+    ctx.strokeStyle=h.color+'66';ctx.lineWidth=1;ctx.stroke();
+    var am=a0+slice/2,tx=cx+Math.cos(am)*(R*0.72),ty=cy+Math.sin(am)*(R*0.72);
+    ctx.font='bold 10px monospace';ctx.fillStyle=h.color;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(h.n,tx,ty);
+    var lx=cx+Math.cos(am)*(R*0.87),ly=cy+Math.sin(am)*(R*0.87);
+    ctx.font='8px monospace';ctx.fillStyle='rgba(201,168,76,.7)';
+    ctx.fillText(h.sign.slice(0,3).toUpperCase(),lx,ly);
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a0)*R,cy+Math.sin(a0)*R);
+    ctx.strokeStyle='rgba(201,168,76,.2)';ctx.lineWidth=1;ctx.stroke();
+  });
+  ctx.beginPath();ctx.arc(cx,cy,R*0.3,0,Math.PI*2);
+  ctx.fillStyle='#0A0A0F';ctx.fill();
+  ctx.strokeStyle='rgba(201,168,76,.4)';ctx.lineWidth=1;ctx.stroke();
+  ctx.font='10px monospace';ctx.fillStyle='rgba(201,168,76,.8)';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('&#937;',cx,cy);
+}
+
+window.saveChart=function(){
+  PLANETS.forEach(function(p){
+    var el=document.getElementById('cp-'+p.replace('.','').replace(' ',''));
+    if(el&&el.value)chart[p]=parseInt(el.value);else delete chart[p];
+  });
+  localStorage.setItem(KEY,JSON.stringify(chart));
+  renderChartDisplay();
+};
+
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderHouses(pr.sign||'');
+    buildChartForm();
+    renderChartDisplay();
+    drawWheel();
+    document.querySelectorAll('.tab').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+        document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+        btn.classList.add('active');
+        var panel=document.getElementById('tab-'+btn.dataset.tab);
+        if(panel){panel.style.display='';panel.classList.add('active');}
+        if(btn.dataset.tab==='wheel')setTimeout(drawWheel,50);
+      };
+    });
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>
 </html>

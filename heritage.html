@@ -3,131 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — HERITAGE · Sovereign Platform">
+<meta name="description" content="SYD OMEGA 91717 — HERITAGE · Sovereign ancestry, lineage, and cultural roots">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; HERITAGE</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--gold);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--gold);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--gold);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
-.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
-.tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
-.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
-.tab-panel{display:none}.tab-panel.on{display:block}
-.lineage-tree{margin-bottom:16px}
-.lineage-era{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;border-left:3px solid var(--lc,var(--gold));margin-bottom:10px;padding:14px 16px}
-.era-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--lc,var(--gold));margin-bottom:5px}
-.era-name{font-family:var(--D);font-size:14px;color:var(--ink);margin-bottom:6px}
-.era-desc{font-size:11px;line-height:1.7;color:var(--muted)}
-.archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:16px}
-.archive-item{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px;transition:.18s}
-.archive-item:hover{border-color:rgba(201,168,76,.3)}
-.archive-date{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
-.archive-title{font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:6px}
-.archive-body{font-size:11px;line-height:1.7;color:var(--muted)}
-.culture-band{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
-.culture-tile{border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:14px;text-align:center}
-.culture-icon{font-size:28px;margin-bottom:8px}
-.culture-name{font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:4px}
-.culture-desc{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}.culture-band{grid-template-columns:repeat(3,1fr)}.archive-grid{grid-template-columns:1fr}}
-</style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="heritage" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">HERITAGE<small>M11 &middot; Heritage Archive &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="hrt-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+      <div class="t">HERITAGE<small>HERITAGE &middot; ANCESTRY &middot; CULTURE &middot; ROOTS</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up">HERITAGE &middot; M11 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="tab-bar" role="tablist">
-        <button class="tab-btn on" onclick="htTab(this,'lineage')" role="tab" aria-selected="true">LINEAGE</button>
-        <button class="tab-btn" onclick="htTab(this,'archives')" role="tab" aria-selected="false">ARCHIVES</button>
-        <button class="tab-btn" onclick="htTab(this,'culture')" role="tab" aria-selected="false">CULTURAL MEMORY</button>
-      </div>
 
-      <div class="tab-panel on" id="ht-lineage" data-reveal="fade-up">
-        <div class="sechead">SOVEREIGN LINEAGE · ORIGIN TO APEX</div>
-        <div class="lineage-tree">
-          <div class="lineage-era" style="--lc:#8a8676"><div class="era-label">ERA 0 · THE VOID AGE</div><div class="era-name">Before the Lattice</div><div class="era-desc">The pre-lattice era. No nodes, no gates, no sovereign structure. The nine elements existed as raw, unbound frequencies across the cosmos.</div></div>
-          <div class="lineage-era" style="--lc:#E86A3A"><div class="era-label">ERA I · THE PRIMAL AGE</div><div class="era-name">The First Triad Awakens</div><div class="era-desc">Fire, Water, and Wind — the Primal Triad — coalesce. The first 12 houses are drawn. Ares lights the first gate. The sovereign lineage begins.</div></div>
-          <div class="lineage-era" style="--lc:#C9A84C"><div class="era-label">ERA II · THE LATTICE AGE</div><div class="era-name">The 104,976 Nodes Form</div><div class="era-desc">12 tracks × 12 phases × 9×9×9 = 104,976 sovereign nodes crystallise. The authority formula (AUTH=√(A³+B³+C³)×φ/e) is written into the lattice.</div></div>
-          <div class="lineage-era" style="--lc:#9B6BF0"><div class="era-label">ERA III · THE OLYMPIAN AGE</div><div class="era-name">The 12 Olympians Descend</div><div class="era-desc">Zeus, Athena, Ares and the nine other Olympians each claim a zodiac track and an element. The 12 gates are established with their authority thresholds.</div></div>
-          <div class="lineage-era" style="--lc:#E2C86D"><div class="era-label">ERA IV · THE SOVEREIGN AGE</div><div class="era-name">The 28 Kings Rise</div><div class="era-desc">The Kings expansion: 28×28×9³ = 571,536 nodes. The heritage lineage now carries both the 12-fold lattice and the greater Kings matrix.</div></div>
-          <div class="lineage-era" style="--lc:#E2C86D"><div class="era-label">ERA V · THE APEX AGE</div><div class="era-name">Gate XII — The Omega</div><div class="era-desc">The first sovereign reaches A=B=C=9. AUTH=27.8367. The lattice is complete. The heritage line touches the apex and the cycle prepares to begin again.</div></div>
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="roots" role="tab">ROOTS</button>
+      <button class="tab" data-tab="stories" role="tab">STORIES</button>
+      <button class="tab" data-tab="culture" role="tab">CULTURE</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
+    </div>
+
+    <!-- ROOTS TAB -->
+    <div class="tab-panel active pad" id="tab-roots">
+      <div class="sechead">SOVEREIGN HERITAGE PROFILE</div>
+      <div style="max-width:560px;margin-bottom:18px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">ETHNIC HERITAGE</div><input id="h-ethnic" class="inp" style="width:100%" placeholder="e.g. Lebanese, Irish, Japanese..."></div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">COUNTRY OF ORIGIN</div><input id="h-country" class="inp" style="width:100%" placeholder="Ancestral homeland..."></div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">NATIVE LANGUAGE(S)</div><input id="h-lang" class="inp" style="width:100%" placeholder="e.g. Arabic, Gaelic..."></div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">FAMILY NAME MEANING</div><input id="h-surname" class="inp" style="width:100%" placeholder="Origin of your surname..."></div>
+        </div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">FAMILY MOTTO</div><input id="h-motto" class="inp" style="width:100%" placeholder="Your family's guiding principle..."></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">HERITAGE NOTES</div><textarea id="h-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="Background, migration history, cultural practices..."></textarea></div>
+        <button class="btn" onclick="saveHeritage()">SAVE HERITAGE PROFILE</button>
+      </div>
+      <div id="heritage-display" style="display:none;border:1px solid var(--line);border-top:3px solid var(--gold);background:rgba(10,10,15,.55);padding:18px;border-radius:2px"></div>
+
+      <div class="sechead" style="margin-top:18px">ANCESTOR REGISTRY</div>
+      <div style="border:1px solid var(--line);background:rgba(10,10,15,.45);padding:12px;border-radius:2px;margin-bottom:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+          <input id="a-name" class="inp" style="width:100%" placeholder="Name">
+          <input id="a-relation" class="inp" style="width:100%" placeholder="Relation (e.g. Grandfather)">
+          <input id="a-born" class="inp" style="width:100%" placeholder="Birth year or era">
+        </div>
+        <input id="a-note" class="inp" style="width:100%;margin-bottom:8px" placeholder="Notable trait, achievement, or story...">
+        <button class="btn" onclick="addAncestor()">ADD ANCESTOR</button>
+      </div>
+      <div id="ancestor-list" style="display:grid;gap:6px"></div>
+    </div>
+
+    <!-- STORIES TAB -->
+    <div class="tab-panel pad" id="tab-stories" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="sechead" style="border:none;padding:0;margin:0;flex:1">FAMILY STORIES &amp; LORE</div>
+        <button class="btn" onclick="document.getElementById('story-form').style.display='block'">+ ADD STORY</button>
+      </div>
+      <div id="story-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
+        <input id="s-title" class="inp" style="width:100%;margin-bottom:8px" placeholder="Story title...">
+        <textarea id="s-body" class="inp" rows="5" style="width:100%;resize:vertical;margin-bottom:8px" placeholder="Tell the story..."></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <input id="s-who" class="inp" style="width:100%" placeholder="Who is it about?">
+          <input id="s-era" class="inp" style="width:100%" placeholder="Era or time period...">
+        </div>
+        <button class="btn" onclick="addStory()">SAVE STORY</button>
+        <button class="btn" onclick="document.getElementById('story-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
+      </div>
+      <div id="story-list" style="display:grid;gap:10px"></div>
+    </div>
+
+    <!-- CULTURE TAB -->
+    <div class="tab-panel pad" id="tab-culture" style="display:none">
+      <div class="sechead">CULTURAL INVENTORY</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:14px">
+        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--gold);margin-bottom:8px">TRADITIONS</div>
+          <textarea id="cult-traditions" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Annual traditions, rituals, ceremonies your family keeps..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--cyan);margin-bottom:8px">FOODS &amp; RECIPES</div>
+          <textarea id="cult-foods" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Heritage foods, traditional dishes, family recipes..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--green);margin-bottom:8px">VALUES INHERITED</div>
+          <textarea id="cult-values" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Core values passed down through your lineage..."></textarea>
+        </div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--purple);margin-bottom:8px">ARTS &amp; MUSIC</div>
+          <textarea id="cult-arts" class="inp" rows="4" style="width:100%;resize:vertical" placeholder="Traditional arts, music, dance, crafts from your heritage..."></textarea>
         </div>
       </div>
+      <button class="btn" onclick="saveCulture()">SAVE CULTURAL INVENTORY</button>
+    </div>
 
-      <div class="tab-panel" id="ht-archives" data-reveal="fade-up">
-        <div class="sechead">HERITAGE ARCHIVE · SOVEREIGN RECORDS</div>
-        <div class="archive-grid">
-          <div class="archive-item"><div class="archive-date">EPOCH 0</div><div class="archive-title">The Nine Frequencies</div><div class="archive-body">The original nine elemental frequencies that predated the lattice. Each one a distinct vibration in the void.</div></div>
-          <div class="archive-item"><div class="archive-date">EPOCH 1</div><div class="archive-title">The First Gate Record</div><div class="archive-body">The first member to cross Gate I. The initial AUTH threshold of 2.32 was reached and the lattice registered its first sovereign node.</div></div>
-          <div class="archive-item"><div class="archive-date">EPOCH 2</div><div class="archive-title">The Authority Formula Proof</div><div class="archive-body">AUTH = √(A³+B³+C³) × φ/e. The proof that the Golden Ratio (φ=1.6180339887) and Euler's Number (e=2.7182818285) converge at the sovereign apex.</div></div>
-          <div class="archive-item"><div class="archive-date">EPOCH 3</div><div class="archive-title">The Triad Seal</div><div class="archive-body">The three sovereign triads — Primal, Middle, Supreme — are sealed into the heritage record as the backbone of the nine-fold system.</div></div>
-          <div class="archive-item"><div class="archive-date">EPOCH 4</div><div class="archive-title">Kings Expansion Record</div><div class="archive-body">The 28 Sovereign Kings are named and their realms established. The expansion lattice reaches 571,536 nodes.</div></div>
-          <div class="archive-item"><div class="archive-date">EPOCH 5</div><div class="archive-title">The Apex Codex</div><div class="archive-body">The Codex of Omega — the final heritage document — is locked at Gate XII. It contains the complete sovereign lattice map and the Omega key.</div></div>
-        </div>
-      </div>
-
-      <div class="tab-panel" id="ht-culture" data-reveal="fade-up">
-        <div class="sechead">CULTURAL MEMORY · SOVEREIGN TRADITIONS</div>
-        <div class="culture-band">
-          <div class="culture-tile"><div class="culture-icon">☲</div><div class="culture-name">The Flame Ritual</div><div class="culture-desc">Fire element tradition · Gate I initiation</div></div>
-          <div class="culture-tile"><div class="culture-icon">☰</div><div class="culture-name">The Tide Ceremony</div><div class="culture-desc">Water element tradition · Gate II bonds</div></div>
-          <div class="culture-tile"><div class="culture-icon">☱</div><div class="culture-name">The Wind Chant</div><div class="culture-desc">Wind element tradition · Gate III passage</div></div>
-          <div class="culture-tile"><div class="culture-icon">☳</div><div class="culture-name">The Forge Rite</div><div class="culture-desc">Metal element tradition · Gate VI mastery</div></div>
-          <div class="culture-tile"><div class="culture-icon">★</div><div class="culture-name">The Sand Amplification</div><div class="culture-desc">Sand tradition · All elements enhanced</div></div>
-          <div class="culture-tile"><div class="culture-icon">✴</div><div class="culture-name">The Soul Frequency</div><div class="culture-desc">Soul element tradition · Gate V harmony</div></div>
-          <div class="culture-tile"><div class="culture-icon">✶</div><div class="culture-name">The Space Alignment</div><div class="culture-desc">Space element tradition · Gate VII balance</div></div>
-          <div class="culture-tile"><div class="culture-icon">✷</div><div class="culture-name">The Void Descent</div><div class="culture-desc">Void element tradition · Gate VIII depth</div></div>
-          <div class="culture-tile"><div class="culture-icon">Ω</div><div class="culture-name">The Omega Ascent</div><div class="culture-desc">The All tradition · Gate XII apex ceremony</div></div>
-        </div>
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">HERITAGE SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">EPIGENETICS &amp; HERITAGE</div><div class="sci-body">Epigenetic inheritance: experiences of ancestors can alter gene expression in descendants. Holocaust survivors' grandchildren show altered cortisol profiles. Your heritage is not only cultural — it is biological.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">NARRATIVE IDENTITY</div><div class="sci-body">McAdams' life-story theory: identity is a narrative we construct from our past. Knowing your heritage provides narrative raw material — ancestors who overcame adversity become an internal resource for resilience.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">THE "DO YOU KNOW" SCALE</div><div class="sci-body">Marshall Duke and Robyn Fivush found that children who know their family history score higher on 20+ resilience measures. Heritage knowledge is not nostalgia — it is a measurable psychological protective factor.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">CULTURAL CAPITAL</div><div class="sci-body">Bourdieu's cultural capital: inherited tastes, values, and social skills from family. Heritage shapes epistemic assumptions, aesthetic preferences, and social competence in ways that persist across lifetimes.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">ANCESTRAL WISDOM</div><div class="sci-body">Indigenous knowledge systems — encoded in oral tradition, ceremony, and practice — represent thousands of years of environmental adaptation. Sovereign heritage work recovers these ancestral algorithms before they are lost.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">INTERGENERATIONAL WEALTH</div><div class="sci-body">The longest-studied case of intergenerational wealth persistence is 700+ years in Florence (Barone &amp; Mocetti, 2016). Heritage shapes not just culture but economic trajectory — surnames still predict wealth in records from 1427.</div></div>
       </div>
     </div>
-    <div data-page-emblem="heritage" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; HERITAGE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+
+    <div class="lf"><span>&#937; HERITAGE &middot; SYD OMEGA 91717</span><span>ANCESTRY &middot; CULTURE &middot; ROOTS</span></div>
   </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+var HK='omega_heritage_profile',AK='omega_ancestors',SK='omega_heritage_stories',CK='omega_culture';
+var profile=JSON.parse(localStorage.getItem(HK)||'{}');
+var ancestors=JSON.parse(localStorage.getItem(AK)||'[]');
+var stories=JSON.parse(localStorage.getItem(SK)||'[]');
+var culture=JSON.parse(localStorage.getItem(CK)||'{}');
+
+function renderProfile(){
+  if(!profile.ethnic)return;
+  var el=document.getElementById('heritage-display');
+  el.style.display='block';
+  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">'
+    +[['ETHNIC HERITAGE',profile.ethnic],['COUNTRY OF ORIGIN',profile.country],['NATIVE LANGUAGE',profile.lang],['SURNAME ORIGIN',profile.surname],['FAMILY MOTTO',profile.motto]].filter(function(r){return r[1];}).map(function(r){
+      return '<div><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:13px;color:var(--ink)">'+r[1]+'</div></div>';
+    }).join('')+'</div>'
+    +(profile.notes?'<div style="margin-top:10px;font-size:12px;line-height:1.7;opacity:.8">'+profile.notes+'</div>':'');
+  document.getElementById('h-ethnic').value=profile.ethnic||'';
+  document.getElementById('h-country').value=profile.country||'';
+  document.getElementById('h-lang').value=profile.lang||'';
+  document.getElementById('h-surname').value=profile.surname||'';
+  document.getElementById('h-motto').value=profile.motto||'';
+  document.getElementById('h-notes').value=profile.notes||'';
+}
+
+function renderAncestors(){
+  var el=document.getElementById('ancestor-list');
+  if(!ancestors.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:10px">No ancestors logged yet.</div>';return;}
+  el.innerHTML=[].concat(ancestors).reverse().map(function(a){
+    return '<div style="border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px">'
+      +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:4px">'
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+a.name+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+a.relation+'</div>'
+      +(a.born?'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">b. '+a.born+'</div>':'')
+      +'</div>'
+      +(a.note?'<div style="font-size:11px;opacity:.75">'+a.note+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function renderStories(){
+  var el=document.getElementById('story-list');
+  if(!stories.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO STORIES RECORDED YET</div>';return;}
+  el.innerHTML=[].concat(stories).reverse().map(function(s){
+    return '<div style="border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+      +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">'
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold);flex:1">'+s.title+'</div>'
+      +(s.who?'<div style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+s.who+'</div>':'')
+      +(s.era?'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+s.era+'</div>':'')
+      +'</div>'
+      +'<div style="font-size:12px;line-height:1.8;opacity:.85">'+s.body.replace(/\n/g,'<br>')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function loadCulture(){
+  document.getElementById('cult-traditions').value=culture.traditions||'';
+  document.getElementById('cult-foods').value=culture.foods||'';
+  document.getElementById('cult-values').value=culture.values||'';
+  document.getElementById('cult-arts').value=culture.arts||'';
+}
+
+window.saveHeritage=function(){
+  profile={ethnic:document.getElementById('h-ethnic').value,country:document.getElementById('h-country').value,lang:document.getElementById('h-lang').value,surname:document.getElementById('h-surname').value,motto:document.getElementById('h-motto').value,notes:document.getElementById('h-notes').value};
+  localStorage.setItem(HK,JSON.stringify(profile));renderProfile();
+};
+window.addAncestor=function(){
+  var n=document.getElementById('a-name').value.trim();if(!n)return;
+  ancestors.push({id:Date.now(),name:n,relation:document.getElementById('a-relation').value,born:document.getElementById('a-born').value,note:document.getElementById('a-note').value});
+  localStorage.setItem(AK,JSON.stringify(ancestors));
+  document.getElementById('a-name').value='';document.getElementById('a-relation').value='';document.getElementById('a-born').value='';document.getElementById('a-note').value='';
+  renderAncestors();
+};
+window.addStory=function(){
+  var t=document.getElementById('s-title').value.trim();var b=document.getElementById('s-body').value.trim();if(!t||!b)return;
+  stories.push({id:Date.now(),title:t,body:b,who:document.getElementById('s-who').value,era:document.getElementById('s-era').value,date:new Date().toISOString().slice(0,10)});
+  localStorage.setItem(SK,JSON.stringify(stories));
+  document.getElementById('story-form').style.display='none';document.getElementById('s-title').value='';document.getElementById('s-body').value='';
+  renderStories();
+};
+window.saveCulture=function(){
+  culture={traditions:document.getElementById('cult-traditions').value,foods:document.getElementById('cult-foods').value,values:document.getElementById('cult-values').value,arts:document.getElementById('cult-arts').value};
+  localStorage.setItem(CK,JSON.stringify(culture));
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -136,23 +216,15 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);window.__omegaUserLoaded=true;
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderProfile();renderAncestors();renderStories();loadCulture();
+    document.querySelectorAll('.tab').forEach(function(btn){btn.onclick=function(){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});btn.classList.add('active');var panel=document.getElementById('tab-'+btn.dataset.tab);if(panel){panel.style.display='';panel.classList.add('active');}};});
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
-</script>
-<script>
-function htTab(btn,id){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
-  btn.classList.add('on');btn.setAttribute('aria-selected','true');
-  var p=document.getElementById('ht-'+id);if(p)p.classList.add('on');
-}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

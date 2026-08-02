@@ -1,111 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 -- The Twelve Olympians</title>
-<meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — PANTHEONS · The 12 Olympian archetypes and sovereign mythology">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<title>&#937; SYD OMEGA 91717 &mdash; PANTHEONS</title>
+<link rel="stylesheet" href="/omega-ui.css">
+<link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-.mine-strip{display:flex;align-items:center;gap:20px;padding:22px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(139,0,0,.1),rgba(10,10,15,.8))}
-.mine-emb{width:64px;height:64px;flex-shrink:0}
-.mine-name{font-family:var(--D);font-size:18px;color:var(--gold);letter-spacing:.06em}
-.mine-sign{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.mine-lore{font-size:13px;color:var(--ink);opacity:.75;margin-top:6px;max-width:60ch;line-height:1.7}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding:16px clamp(14px,3vw,36px) 10px;border-bottom:1px solid var(--line);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
-.god-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:0 clamp(14px,3vw,36px) 24px}
-.god-card{border:1px solid var(--line);background:rgba(10,10,15,.45);padding:18px;border-radius:2px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
-.god-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.45)}
-.god-card.mine{border-color:rgba(201,168,76,.55);background:rgba(201,168,76,.06)}
-.god-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
-.god-name{font-family:var(--D);font-size:13px;color:var(--gold);letter-spacing:.05em;margin-bottom:2px}
-.god-sign{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:8px}
-.god-domain{font-size:12px;color:var(--ink);opacity:.7;line-height:1.6;margin-bottom:8px}
-.el-pill{display:inline-block;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 10px;border:1px solid;border-radius:2px}
-.el-fire{color:#e25b3a;border-color:rgba(226,91,58,.4);background:rgba(226,91,58,.06)}
-.el-water{color:#3b8bd8;border-color:rgba(59,139,216,.4);background:rgba(59,139,216,.06)}
-.el-wind{color:#7bcfed;border-color:rgba(123,207,237,.4);background:rgba(123,207,237,.06)}
-.el-metal{color:#b0b5c3;border-color:rgba(176,181,195,.4);background:rgba(176,181,195,.06)}
-.el-sand{color:var(--gold);border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.06)}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:8px}
-.lf span{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)}
-</style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="pantheons"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">THE TWELVE OLYMPIANS<small>SOVEREIGN PANTHEON &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES EACH <span data-canon-lattice="twelve"></span></small></div><canvas id="pnth-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-<style>
-.pg-hero-band{display:grid;grid-template-columns:1fr auto 1fr;border-bottom:1px solid rgba(201,168,76,.15);background:linear-gradient(135deg,rgba(139,0,0,.07),rgba(10,10,15,.9),rgba(201,168,76,.04));min-height:80px}
-.phb-left{padding:18px clamp(14px,2.5vw,28px);border-right:1px solid rgba(201,168,76,.15)}
-.phb-right{padding:18px clamp(14px,2.5vw,28px);border-left:1px solid rgba(201,168,76,.15);text-align:right}
-.phb-center{display:flex;align-items:center;justify-content:center;padding:0 20px}
-.phb-stat{font-family:"Cinzel Decorative",serif;font-size:clamp(13px,2vw,18px);color:#C9A84C;line-height:1}
-.phb-lbl{font-family:"Courier Prime",monospace;font-size:7.5px;letter-spacing:2.5px;color:#8a8676;margin-top:4px}
-@media(max-width:660px){.pg-hero-band{grid-template-columns:1fr}.phb-center{display:none}.phb-left{border-right:none;border-bottom:1px solid rgba(201,168,76,.15)}.phb-right{border-left:none;text-align:left}}
-</style><div class="pg-hero-band"><div class="phb-left"><div class="phb-stat" id="phb-l-pantheons">--</div><div class="phb-lbl">YOUR OLYMPIAN</div></div><div class="phb-center"><canvas id="phb-cv-pantheons" width="100" height="100" style="width:50px;height:50px;display:block"></canvas></div><div class="phb-right"><div class="phb-stat" id="phb-r-pantheons">--</div><div class="phb-lbl">AUTHORITY</div></div></div><script>(function(){var cv=document.getElementById("phb-cv-pantheons");if(!cv||!cv.getContext)return;var ctx=cv.getContext("2d"),t=0;function frame(){ctx.clearRect(0,0,100,100);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(50,50,14+i*4+2*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle="rgba(201,168,76,"+(0.08+0.1*(8-i)/8)+")";ctx.lineWidth=.8;ctx.stroke();}ctx.font="bold 18px \"Cinzel Decorative\",serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(201,168,76,"+(0.7+0.3*Math.sin(t*.04))+")";ctx.shadowColor="#C9A84C";ctx.shadowBlur=9;ctx.fillText("\u03A9",50,50);ctx.shadowBlur=0;t++;requestAnimationFrame(frame);}frame();})();</script>    <div class="mine-strip">
-      <div class="mine-emb"><span id="mine-emb" data-omega-emblem="Aries" style="display:inline-block;width:64px;height:64px"></span></div>
-      <div>
-        <div class="mine-name" id="mine">YOUR OLYMPIAN</div>
-        <div class="mine-sign" id="mine-sign">LOADING...</div>
-        <div class="mine-lore">Your sovereign archetype is sealed at genesis by your zodiac sign and governs your progression through the 12-fold celestial lattice.</div>
+  <aside class="side" id="omega-side" data-page="pantheons" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar">
+      <div class="t">PANTHEONS<small>COSMOS &middot; 12 OLYMPIANS &middot; SOVEREIGN ARCHETYPES</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+    </div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="olympians" role="tab">OLYMPIANS</button>
+      <button class="tab" data-tab="yours" role="tab">YOUR ARCHETYPE</button>
+      <button class="tab" data-tab="pantheons" role="tab">OTHER PANTHEONS</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
+    </div>
+
+    <!-- OLYMPIANS TAB -->
+    <div class="tab-panel active pad" id="tab-olympians">
+      <div class="sechead">THE 12 OLYMPIAN ARCHETYPES</div>
+      <div id="god-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- YOUR ARCHETYPE TAB -->
+    <div class="tab-panel pad" id="tab-yours" style="display:none">
+      <div class="sechead">YOUR SOVEREIGN ARCHETYPE</div>
+      <div id="my-archetype" style="max-width:560px">
+        <div style="font-size:12px;line-height:1.8;opacity:.8;margin-bottom:16px">Your patron archetype shapes how you approach mastery, conflict, creation, and legacy. It is not your identity — it is your primary operating mode. The sovereign consciously selects and evolves their archetype.</div>
+        <div style="margin-bottom:12px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:5px">SELECT YOUR PRIMARY ARCHETYPE</div>
+          <select id="arch-select" class="inp" style="width:100%"></select>
+        </div>
+        <div id="arch-detail" style="margin-bottom:12px"></div>
+        <div style="margin-bottom:12px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:5px">NOTES ON YOUR ARCHETYPE</div>
+          <textarea id="arch-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="How does this archetype manifest in your life?"></textarea>
+        </div>
+        <button class="btn" onclick="saveArchetype()">SAVE ARCHETYPE</button>
       </div>
     </div>
-    <div class="sechead" data-reveal="fade-up"><span>THE TWELVE OLYMPIANS <span data-canon-lattice="twelve"></span></span></div>
-    <div class="god-grid" id="ptbl"><div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:14px">LOADING PANTHEON...</div></div>
-    <div data-page-emblem="pantheons" style="margin:14px auto 0"></div>
-    <div class="lf"><span>&#937; SYD OMEGA 91717 &middot; SOVEREIGN PANTHEON</span><span>12 OLYMPIANS &middot; EACH 12&times;12&times;9&times;9&times;9 = 104,976 NODES</span></div>
-  
-    <div style="display:flex;justify-content:center;padding:14px 0 6px;border-top:1px solid rgba(201,168,76,.12)">
-      <canvas id="pgcv_pantheons" width="72" height="72" style="width:36px;height:36px;opacity:.55"></canvas>
+
+    <!-- OTHER PANTHEONS TAB -->
+    <div class="tab-panel pad" id="tab-pantheons" style="display:none">
+      <div class="sechead">WORLD PANTHEONS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div style="border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">GREEK / ROMAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">The 12 Olympians map the full spectrum of human capacity: intellect (Athena), power (Zeus), beauty (Aphrodite), war (Ares), craft (Hephaestus), harvest (Demeter), commerce (Hermes), sun (Apollo), moon (Artemis), ocean (Poseidon), underworld (Hades), hearth (Hestia).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--cyan);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">NORSE</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Aesir and Vanir: Odin (wisdom, war, death), Thor (strength, protection), Freya (love, fertility, magic), Loki (trickster, change), Tyr (justice), Baldur (beauty, light), Skadi (mountains, winter), Bragi (poetry), Frigg (home), Heimdall (vigilance).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--green);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-bottom:8px">EGYPTIAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Ennead and beyond: Ra/Amun (sun, creation), Osiris (resurrection), Isis (magic, wisdom), Horus (kingship), Set (chaos, strength), Thoth (knowledge), Anubis (death, judgment), Sekhmet (war), Bastet (protection), Ma'at (truth, order).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid var(--purple);background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--purple);margin-bottom:8px">HINDU</div><div style="font-size:12px;line-height:1.7;opacity:.8">The Trimurti and Deva: Brahma (creation), Vishnu (preservation), Shiva (destruction/transformation), Lakshmi (wealth, prosperity), Saraswati (knowledge, arts), Durga (power), Ganesh (obstacles, beginnings), Indra (thunder, rain, war), Kali (time, death, liberation).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid #FF9800;background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:#FF9800;margin-bottom:8px">MESOPOTAMIAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">Sumerian and Akkadian: Anu (sky), Enlil (wind), Enki/Ea (wisdom, water), Inanna/Ishtar (love, war), Nanna/Sin (moon), Utu/Shamash (sun, justice), Nergal (underworld), Nabu (writing, wisdom), Marduk (sovereignty), Gilgamesh (heroic journey).</div></div>
+        <div style="border:1px solid var(--line);border-top:2px solid #E86A3A;background:rgba(10,10,15,.5);padding:14px;border-radius:2px"><div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:#E86A3A;margin-bottom:8px">AZTEC / MAYAN</div><div style="font-size:12px;line-height:1.7;opacity:.8">Quetzalcoatl (wisdom, wind, creation), Huitzilopochtli (war, sun), Tlaloc (rain, agriculture), Tezcatlipoca (night sky, sorcery), Xipe Totec (renewal), Coatlicue (earth mother), Itzamná (lord of heavens, Maya), Kukulcán (feathered serpent, Maya).</div></div>
+      </div>
     </div>
-    <script>(function(){{var cv=document.getElementById('pgcv_pantheons');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;function f(){{ctx.clearRect(0,0,72,72);for(var i=0;i<6;i++){{ctx.beginPath();ctx.arc(36,36,12+i*4+3*Math.sin(t*.03+i),t*.007,t*.007+Math.PI*(.45+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.8;ctx.stroke();}}ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.6+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=8;ctx.fillText('\u03A9',36,36);ctx.shadowBlur=0;t++;requestAnimationFrame(f);}}f();}})();</script></main>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">PANTHEON SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">ARCHETYPAL PSYCHOLOGY</div><div class="sci-body">James Hillman extended Jung's work into "archetypal psychology" — the gods are not metaphors but autonomous psychic forces. Each deity represents a distinct mode of consciousness operating within the psyche, not just a projection onto the heavens.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">THE HERO'S JOURNEY</div><div class="sci-body">Joseph Campbell's comparative mythology identified the monomyth across 3,000+ years of story: departure, initiation, return. Every major pantheon encodes this journey differently, revealing a universal structure of human psychological transformation.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">GODS AS COGNITIVE MODELS</div><div class="sci-body">Julian Jaynes' "Bicameral Mind" thesis: the Olympian gods may represent the inner voice of the right brain speaking to the left. Pantheons externalise and crystallize inner psychological functions into recognizable, teachable archetypes.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">SYNCHRONICITY &amp; ARCHETYPE</div><div class="sci-body">Jung's synchronicity: meaningful coincidences cluster around archetypal themes. When the Zeus archetype is active (power, expansion, fathering), related events synchronize. The sovereign learns to read these patterns as navigation signals.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">POLYTHEISM AS DIVERSITY</div><div class="sci-body">Monotheism unifies; polytheism diversifies. Jungian analyst David Miller argued that psychological polytheism — holding multiple divine perspectives simultaneously — is more adaptive than single-archetype identification. The sovereign is multi-archetypal.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">MYTHIC LEADERSHIP</div><div class="sci-body">Corporate anthropologist Anne Freedman found that the most effective leaders archetypal self-identify clearly and consistently. Teams with archetypal-coherent leadership (King, Warrior, Magician, Lover — Moore &amp; Gillette) show 23% higher cohesion.</div></div>
+      </div>
+    </div>
+
+    <div class="lf"><span>&#937; PANTHEONS &middot; SYD OMEGA 91717</span><span>12 OLYMPIANS &middot; SOVEREIGN ARCHETYPES</span></div>
+  </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
-import{createClient}from"https://esm.sh/@supabase/supabase-js@2";
-var sb=window.__omegaSb||(window.__omegaSb=createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
-try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
-var ROMAN=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
-var ELC={fire:"el-fire",water:"el-water",wind:"el-wind",metal:"el-metal",sand:"el-sand"};
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+var GODS=[
+  {n:1,name:'Zeus',   roman:'Jupiter', domain:'Sovereignty &amp; Law',    sign:'Sagittarius',element:'Fire', color:'#FFD700',symbol:'&#9889;',archetype:'The King',       shadow:'Tyranny',   gift:'Vision &amp; Authority',   desc:'The supreme sovereign — wielder of thunderbolt and law. Zeus governs through vision, authority, and expansive judgment. His shadow is tyranny and hubris. The Zeus archetype leads; it does not follow.'},
+  {n:2,name:'Ares',   roman:'Mars',    domain:'War &amp; Courage',       sign:'Aries',      element:'Fire', color:'#FF4444',symbol:'&#9876;',archetype:'The Warrior',     shadow:'Aggression',gift:'Courage &amp; Force',      desc:'God of war and raw courage. Ares embodies the capacity to fight, to defend, and to act decisively in the face of opposition. His shadow is brutality without purpose.'},
+  {n:3,name:'Athena', roman:'Minerva', domain:'Wisdom &amp; Strategy',   sign:'Capricorn',  element:'Air',  color:'#00E5FF',symbol:'&#127981;',archetype:'The Strategist',  shadow:'Coldness',  gift:'Wisdom &amp; Craft',       desc:'Goddess of wisdom and strategic war. Athena plans, analyzes, and executes with precision. Born fully armored — wisdom that is already battle-ready. Shadow: coldness, intellectual arrogance.'},
+  {n:4,name:'Apollo', roman:'Apollo',  domain:'Truth &amp; Arts',        sign:'Leo',        element:'Fire', color:'#E2C86D',symbol:'&#9728;', archetype:'The Creator',     shadow:'Perfectionism',gift:'Beauty &amp; Truth',     desc:'God of the sun, truth, poetry, music, and prophecy. Apollo represents the sovereign creative drive — the pursuit of excellence and the light of truth. Shadow: perfectionism and narcissism.'},
+  {n:5,name:'Hermes', roman:'Mercury', domain:'Commerce &amp; Speed',    sign:'Gemini',     element:'Air',  color:'#4CAF50',symbol:'&#9992;',archetype:'The Magician',    shadow:'Deception', gift:'Communication &amp; Speed', desc:'The divine messenger — swift, clever, patron of merchants, travelers, and thieves. Hermes traverses all realms. The Magician archetype transforms knowledge into power. Shadow: manipulation.'},
+  {n:6,name:'Poseidon',roman:'Neptune',domain:'Depth &amp; Power',      sign:'Pisces',     element:'Water',color:'#00BCD4',symbol:'&#129446;',archetype:'The Shaper',     shadow:'Chaos',     gift:'Depth &amp; Emotion',      desc:'God of the sea, earthquakes, and horses. Poseidon governs the unconscious depths — the roiling emotional sea beneath the surface. His gift is depth; his shadow, destructive rage.'},
+  {n:7,name:'Dionysus',roman:'Bacchus',domain:'Ecstasy &amp; Rebirth',  sign:'Scorpio',    element:'Water',color:'#9B6BF0',symbol:'&#127815;',archetype:'The Lover',      shadow:'Excess',    gift:'Joy &amp; Liberation',     desc:'God of wine, ritual madness, and ecstatic liberation. Dionysus dissolves boundaries — between life and death, self and other. The sovereign Lover archetype creates intimacy and joy.'},
+  {n:8,name:'Hephaestus',roman:'Vulcan',domain:'Craft &amp; Fire',     sign:'Virgo',      element:'Fire', color:'#FF9800',symbol:'&#128296;',archetype:'The Craftsman',  shadow:'Isolation', gift:'Mastery &amp; Creation',   desc:'The divine smith — forge, fire, and flawless craft. Hephaestus was cast out but created incomparable things. The sovereign craftsman finds mastery in disciplined making. Shadow: isolation.'},
+  {n:9,name:'Artemis', roman:'Diana',  domain:'Wilderness &amp; Focus', sign:'Cancer',     element:'Water',color:'#C0C0C0',symbol:'&#127769;',archetype:'The Huntress',   shadow:'Detachment',gift:'Focus &amp; Freedom',      desc:'Goddess of the hunt, moon, and wild things. Artemis is fiercely independent, focused, and protective of the sacred. Shadow: emotional detachment and refusal of intimacy.'},
+  {n:10,name:'Aphrodite',roman:'Venus',domain:'Love &amp; Beauty',      sign:'Taurus',     element:'Earth',color:'#FF69B4',symbol:'&#x2640;',archetype:'The Lover/Queen', shadow:'Vanity',    gift:'Magnetic Beauty',          desc:'Goddess of love, beauty, and desire. Aphrodite creates connection and draws others through magnetic beauty and grace. Shadow: vanity, manipulation through desire.'},
+  {n:11,name:'Demeter', roman:'Ceres', domain:'Harvest &amp; Nourishment',sign:'Virgo',   element:'Earth',color:'#8BC34A',symbol:'&#127805;',archetype:'The Nurturer',   shadow:'Suffocation',gift:'Abundance &amp; Care',    desc:'Goddess of the harvest and grain. Demeter nourishes, tends, and grieves — her daughter Persephone\'s abduction brought winter to the world. Shadow: smothering, refusal to let go.'},
+  {n:12,name:'Hades',   roman:'Pluto', domain:'Underworld &amp; Wealth',sign:'Scorpio',   element:'Earth',color:'#8B0000',symbol:'&#128565;',archetype:'The Transformer',shadow:'Isolation', gift:'Transformation &amp; Wealth',desc:'Lord of the underworld and hidden wealth. Hades governs what lies beneath — death, rebirth, the unconscious, and the buried treasures of the deep self. The sovereign confronts Hades to be reborn.'},
+];
+
+var KEY='omega_archetype';
+var stored=JSON.parse(localStorage.getItem(KEY)||'{}');
+
+function renderGods(){
+  document.getElementById('god-grid').innerHTML=GODS.map(function(g){
+    return '<div style="border:1px solid var(--line);border-top:2px solid '+g.color+';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">OLYMPIAN '+g.n+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+g.color+';border:1px solid '+g.color+';padding:1px 5px">'+g.element.toUpperCase()+'</div>'
+      +'<div style="font-size:16px;margin-left:auto">'+g.symbol+'</div>'
+      +'</div>'
+      +'<div style="font-family:var(--D);font-size:14px;color:'+g.color+';margin-bottom:2px">'+g.name+' &middot; '+g.roman+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:8px">'+g.domain.toUpperCase()+' &middot; '+g.sign.toUpperCase()+'</div>'
+      +'<div style="font-size:11px;line-height:1.6;opacity:.8;margin-bottom:8px">'+g.desc+'</div>'
+      +'<div style="display:flex;gap:8px">'
+      +'<div style="font-family:var(--M);font-size:7px;color:var(--green);background:rgba(63,178,127,.1);border:1px solid rgba(63,178,127,.3);padding:2px 6px">'+g.archetype+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:#FF9800;background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.3);padding:2px 6px">SHADOW: '+g.shadow+'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function buildArchSelect(){
+  var sel=document.getElementById('arch-select');
+  sel.innerHTML='<option value="">— Select your archetype —</option>'
+    +GODS.map(function(g){return '<option value="'+g.n+'"'+(stored.godId===g.n?' selected':'')+'>'+g.name+' ('+g.roman+') — '+g.archetype+'</option>';}).join('');
+  sel.onchange=function(){showArchDetail(parseInt(sel.value));};
+  if(stored.godId)showArchDetail(stored.godId);
+  if(stored.notes)document.getElementById('arch-notes').value=stored.notes;
+}
+
+function showArchDetail(gid){
+  var g=GODS[gid-1];if(!g)return;
+  var el=document.getElementById('arch-detail');
+  el.innerHTML='<div style="border:1px solid var(--line);border-top:2px solid '+g.color+';background:rgba(10,10,15,.5);padding:14px;border-radius:2px;margin-top:10px">'
+    +'<div style="font-family:var(--D);font-size:16px;color:'+g.color+';margin-bottom:6px">'+g.name+' &mdash; '+g.archetype+'</div>'
+    +'<div style="font-size:12px;line-height:1.7;opacity:.85;margin-bottom:10px">'+g.desc+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    +'<div><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">SOVEREIGN GIFT</div><div style="font-size:12px;color:var(--green)">'+g.gift+'</div></div>'
+    +'<div><div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:3px">SHADOW TO INTEGRATE</div><div style="font-size:12px;color:#FF9800">'+g.shadow+'</div></div>'
+    +'</div></div>';
+}
+
+window.saveArchetype=function(){
+  var sel=document.getElementById('arch-select');
+  stored.godId=parseInt(sel.value)||null;
+  stored.notes=document.getElementById('arch-notes').value.trim();
+  localStorage.setItem(KEY,JSON.stringify(stored));
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace("/account.html");return;}
-    var pr=(await sb.from("profiles").select("access_approved,is_owner,sign,element,god").eq("id",s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace("/pending.html");return;}
-    document.getElementById("app").style.display="flex";
-    var mn=document.getElementById("mine"),ms=document.getElementById("mine-sign"),me=document.getElementById("mine-emb");
-    if(mn)mn.textContent=(pr.god||"THE ORDER").toUpperCase();
-    if(ms)ms.textContent=(pr.sign||"SIGN UNSET").toUpperCase()+" \u00B7 "+(pr.element||"").toUpperCase();
-    if(me&&pr.sign)me.setAttribute("data-omega-emblem",pr.sign.charAt(0).toUpperCase()+pr.sign.slice(1));
-    await new Promise(function(r){if(window.OmegaCanon)r();else document.addEventListener("omega-canon-ready",r,{once:true});setTimeout(r,3500);});
-    var tracks=(window.OmegaCanon&&window.OmegaCanon.tracks)||[];
-    var tb=document.getElementById("ptbl");if(!tb)return;
-    if(!tracks.length){tb.innerHTML="<div style='font-family:var(--M);font-size:10px;color:var(--muted)'>CANON LOADING...</div>";return;}
-    tb.innerHTML=tracks.map(function(t,i){
-      var mine=pr.god&&t.god&&t.god.toLowerCase()===pr.god.toLowerCase();
-      var elc=ELC[t.element]||"el-sand";
-      return "<div class='god-card"+(mine?" mine":"")+"'>"
-        +"<div class='god-num'>OLYMPIAN "+ROMAN[i]+(mine?" \u2713 YOURS":"")+"</div>"
-        +"<div class='god-name'>"+(t.god||"").toUpperCase()+"</div>"
-        +"<div class='god-sign'>"+(t.sign||"").toUpperCase()+" \u00B7 "+(t.token||"")+"</div>"
-        +"<div class='god-domain'>Domain of "+(t.gate||"")+"</div>"
-        +"<div class='el-pill "+elc+"'>"+(t.element||"").toUpperCase()+"</div>"
-        +"<div style='margin-top:8px'><span data-canon-lattice='twelve'></span></div>"
-        +"</div>";
-    }).join("");
-  }catch(e){document.getElementById("app").style.display="flex";console.log(e);}
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    window.__omegaUserLoaded=true;
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderGods();
+    buildArchSelect();
+    document.querySelectorAll('.tab').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+        document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+        btn.classList.add('active');
+        var panel=document.getElementById('tab-'+btn.dataset.tab);
+        if(panel){panel.style.display='';panel.classList.add('active');}
+      };
+    });
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>
 </html>

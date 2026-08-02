@@ -1,160 +1,444 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — Innovation Lab · OSS Technology Radar">
-<title>&#937; SYD OMEGA 91717 &mdash; Innovation Lab</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Innovation Lab · SYD OMEGA 91717</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:var(--pad)}.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
+.tab-btn.active{background:#00E5FF;color:#000;border-color:#00E5FF;}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
+.stat-num{font-family:'Courier New',monospace;font-size:22px;color:#00E5FF;font-weight:700;}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
 /* RADAR */
-.radar-wrap{position:relative;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:rgba(2,2,6,.9);margin-bottom:16px}
-#radar-canvas{display:block;width:100%}
-/* TECH CARDS */
-.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px}
-.tech-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-left:3px solid var(--tc,var(--gold))}
-.tc-status{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--tc,var(--gold));margin-bottom:5px}
-.tc-name{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:4px}
-.tc-cat{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px}
-.tc-desc{font-size:11px;line-height:1.65;color:var(--ink);opacity:.7;margin-bottom:8px}
-.tc-meta{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.5);display:flex;gap:8px;flex-wrap:wrap}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.tech-grid{grid-template-columns:1fr}}
+.radar-section{margin-bottom:20px;}
+.radar-legend{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:'Courier New',monospace;font-size:10px;color:#888;}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
+.ring-labels{display:flex;gap:12px;justify-content:flex-end;margin-bottom:6px;flex-wrap:wrap;}
+.ring-lbl{font-family:'Courier New',monospace;font-size:9px;letter-spacing:1px;}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.tech-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;position:relative;}
+.tech-ring-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.tech-name{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;font-weight:700;margin-bottom:4px;display:flex;align-items:center;}
+.tech-cat{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px;}
+.tech-desc{font-size:11px;color:#888;line-height:1.55;}
+.tech-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.ring-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:9px;border:1px solid;letter-spacing:1px;}
+.move-badge{padding:2px 6px;font-family:'Courier New',monospace;font-size:9px;border:1px solid #333;color:#555;}
+.move-up{color:#4CAF50;border-color:#4CAF50;}
+.move-down{color:#FF4444;border-color:#FF4444;}
+.move-same{color:#555;border-color:#333;}
+.del-btn{position:absolute;top:8px;right:8px;background:none;border:none;color:#333;cursor:pointer;font-size:10px;}
+.del-btn:hover{color:#FF4444;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
+.form-group textarea{min-height:80px;resize:vertical;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#00E5FF;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-primary{padding:10px 24px;background:#00E5FF;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
+.btn-primary:hover{background:#00b8cc;}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+.filter-tag.active{background:#0a1a1a;border-color:#00E5FF;color:#00E5FF;}
+.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;}
+.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;margin-bottom:20px;}
+.experiments-list{margin-top:10px;}
+.exp-item{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:14px;margin-bottom:10px;position:relative;}
+.exp-item.status-running{border-left-color:#FFD700;}
+.exp-item.status-success{border-left-color:#4CAF50;}
+.exp-item.status-failed{border-left-color:#FF4444;}
+.exp-item.status-paused{border-left-color:#555;}
+.exp-title{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;margin-bottom:4px;}
+.exp-hypo{font-size:11px;color:#888;margin-bottom:6px;line-height:1.5;}
+.exp-meta{display:flex;gap:8px;flex-wrap:wrap;font-family:'Courier New',monospace;font-size:9px;color:#555;}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:16px;}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;letter-spacing:1px;margin-bottom:8px;}
+.sci-body{font-size:11px;color:#888;line-height:1.65;}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
 </style>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="lab" aria-label="Navigation"></aside>
-  <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">INNOVATION LAB<small>OSS TECHNOLOGY RADAR &middot; ADOPT/TRIAL/ASSESS/HOLD &middot; MIT/APACHE LICENSED &middot; PRODUCTION-GRADE ONLY</small></div><canvas id="lab-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-    <div class="pad" data-reveal="fade-up">
-      <!-- RADAR CANVAS -->
-      <div class="sechead" data-reveal="fade-up">TECHNOLOGY RADAR &middot; SOVEREIGN PLATFORM OSS STACK</div>
-      <div class="radar-wrap" style="height:clamp(280px,40vh,460px)">
-        <canvas id="radar-canvas" role="img" aria-label="Technology radar showing adopt, trial, assess, and hold zones"></canvas>
-      </div>
-      <!-- TECH CARDS -->
-      <div class="sechead" data-reveal="fade-up">OSS TECHNOLOGY REGISTRY &middot; LICENSE &middot; STATUS &middot; INTEGRATION PLAN</div>
-      <div class="tech-grid" id="tech-grid"></div>
-    </div>
-    <div data-page-emblem="lab" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; INNOVATION LAB &middot; OSS RADAR &middot; SYD OMEGA 91717</span><span>PRODUCTION-GRADE ONLY &middot; MIT/APACHE LICENSED</span></div>
-  </main>
+<div id="omega-nav"></div>
+<main class="page-content">
+<div class="page-header">
+  <div class="page-title">INNOVATION LAB</div>
+  <div class="page-subtitle">TECHNOLOGY RADAR · EXPERIMENTS · FRONTIER RESEARCH</div>
 </div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('radar')">RADAR</button>
+  <button class="tab-btn" onclick="switchTab('add')">ADD TECH</button>
+  <button class="tab-btn" onclick="switchTab('experiments')">EXPERIMENTS</button>
+  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
+</div>
+
+<!-- RADAR TAB -->
+<div id="tab-radar" class="tab-pane active">
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="stat-adopt">0</div><div class="stat-lbl">ADOPT</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-trial">0</div><div class="stat-lbl">TRIAL</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-assess">0</div><div class="stat-lbl">ASSESS</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-hold">0</div><div class="stat-lbl">HOLD</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL</div></div>
+  </div>
+  <div class="radar-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#4CAF50"></div>ADOPT — Use confidently in production</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FFD700"></div>TRIAL — Worth pursuing with clear need</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FF9800"></div>ASSESS — Explore with caution</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FF4444"></div>HOLD — Proceed with extra care</div>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="radar-canvas" height="360"></canvas>
+  </div>
+  <div class="filter-row" id="ring-filter">
+    <div class="filter-tag active" data-r="all" onclick="setRingFilter('all',this)">ALL</div>
+    <div class="filter-tag" data-r="adopt" onclick="setRingFilter('adopt',this)">ADOPT</div>
+    <div class="filter-tag" data-r="trial" onclick="setRingFilter('trial',this)">TRIAL</div>
+    <div class="filter-tag" data-r="assess" onclick="setRingFilter('assess',this)">ASSESS</div>
+    <div class="filter-tag" data-r="hold" onclick="setRingFilter('hold',this)">HOLD</div>
+  </div>
+  <div class="tech-grid" id="tech-grid"></div>
+</div>
+
+<!-- ADD TECH TAB -->
+<div id="tab-add" class="tab-pane">
+  <div class="section-label">ADD TECHNOLOGY</div>
+  <div class="form-group">
+    <label>TECHNOLOGY NAME</label>
+    <input type="text" id="t-name" placeholder="e.g. Rust, WebAssembly, LangChain..." maxlength="80">
+  </div>
+  <div class="form-group">
+    <label>DESCRIPTION</label>
+    <textarea id="t-desc" placeholder="What is this technology and why does it matter to you?"></textarea>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>RADAR RING</label>
+      <select id="t-ring">
+        <option value="adopt">Adopt</option>
+        <option value="trial">Trial</option>
+        <option value="assess">Assess</option>
+        <option value="hold">Hold</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>CATEGORY</label>
+      <select id="t-cat">
+        <option value="languages">Languages & Frameworks</option>
+        <option value="platforms">Platforms</option>
+        <option value="tools">Tools</option>
+        <option value="techniques">Techniques</option>
+        <option value="ai">AI & ML</option>
+        <option value="infrastructure">Infrastructure</option>
+        <option value="data">Data</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>MOVEMENT</label>
+      <select id="t-move">
+        <option value="same">No change</option>
+        <option value="up">Moving in (closer to Adopt)</option>
+        <option value="down">Moving out (toward Hold)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>URL / REFERENCE (optional)</label>
+      <input type="url" id="t-url" placeholder="https://...">
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-primary" onclick="saveTech()">ADD TO RADAR</button>
+    <button class="btn-secondary" onclick="clearTechForm()">CLEAR</button>
+  </div>
+  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;"></div>
+</div>
+
+<!-- EXPERIMENTS TAB -->
+<div id="tab-experiments" class="tab-pane">
+  <div class="section-label">LOG EXPERIMENT</div>
+  <div class="form-group">
+    <label>EXPERIMENT NAME</label>
+    <input type="text" id="e-name" placeholder="What are you testing?" maxlength="80">
+  </div>
+  <div class="form-group">
+    <label>HYPOTHESIS</label>
+    <textarea id="e-hypo" placeholder="If I do X, then Y will happen because Z..." style="min-height:60px;"></textarea>
+  </div>
+  <div class="form-group">
+    <label>OUTCOME / RESULT</label>
+    <textarea id="e-result" placeholder="What actually happened? What did you learn?" style="min-height:60px;"></textarea>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>STATUS</label>
+      <select id="e-status">
+        <option value="running">Running</option>
+        <option value="success">Success</option>
+        <option value="failed">Failed</option>
+        <option value="paused">Paused</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>CATEGORY</label>
+      <select id="e-cat">
+        <option value="product">Product</option>
+        <option value="technology">Technology</option>
+        <option value="process">Process</option>
+        <option value="personal">Personal</option>
+        <option value="business">Business</option>
+        <option value="creative">Creative</option>
+      </select>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:20px;">
+    <button class="btn-primary" onclick="saveExperiment()">LOG EXPERIMENT</button>
+    <button class="btn-secondary" onclick="clearExpForm()">CLEAR</button>
+  </div>
+  <div id="exp-msg" style="font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;margin-bottom:14px;"></div>
+  <div class="section-label">EXPERIMENT LOG</div>
+  <div class="experiments-list" id="experiments-list"></div>
+</div>
+
+<!-- SCIENCE TAB -->
+<div id="tab-science" class="tab-pane">
+  <div class="science-grid">
+    <div class="sci-card">
+      <div class="sci-title">TECHNOLOGY RADAR ORIGIN</div>
+      <div class="sci-body">ThoughtWorks Technology Radar (2010) popularized quadrant-ring categorization of technology adoption. The four rings — Adopt, Trial, Assess, Hold — represent opinionated guidance based on production experience. The key insight: not using a technology is also a choice that needs reasoning.</div>
+      <div class="sci-ref">ThoughtWorks (2010). Technology Radar Vol. 1</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">CHASM CROSSING</div>
+      <div class="sci-body">Moore (1991): technology adoption follows a bell curve with a chasm between Early Adopters and Early Majority. Positioning yourself in the Early Adopter segment of technologies that cross the chasm provides compounding advantage — you have years of depth before the mainstream catches up.</div>
+      <div class="sci-ref">Moore, G.A. (1991). Crossing the Chasm</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">SCIENTIFIC METHOD</div>
+      <div class="sci-body">Experiments require falsifiable hypotheses (Popper, 1934). A good experiment hypothesis: (1) specific and measurable, (2) testable within a defined timeframe, (3) connected to a clear mechanism. Most innovation failures are due to untested assumptions, not execution problems.</div>
+      <div class="sci-ref">Popper, K. (1934). The Logic of Scientific Discovery</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">GARTNER HYPE CYCLE</div>
+      <div class="sci-body">Gartner (1995): Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment → Slope of Enlightenment → Plateau of Productivity. The best investments are in the Trough — when a technology is real but pessimism suppresses adoption and prices. Most people buy at the Peak.</div>
+      <div class="sci-ref">Gartner Inc. (1995). Hype Cycle Framework</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">FAST FAILURE PRINCIPLE</div>
+      <div class="sci-body">Thomke (2003): the cost of knowledge is the cost of experiments. Digital technology enables cheap, fast experiments. The goal is not to avoid failure but to fail fast, cheaply, and informatively. Each experiment should answer exactly one question, with a clear binary verdict: confirmed or refuted.</div>
+      <div class="sci-ref">Thomke, S.H. (2003). Experimentation Matters, HBS Press</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">COMBINATORIAL INNOVATION</div>
+      <div class="sci-body">Weitzman (1998): growth comes from recombining existing ideas in new ways. The innovation frontier expands when you have breadth across domains (tools, frameworks, techniques) AND depth in at least one. The radar forces systematic breadth; experiments build depth.</div>
+      <div class="sci-ref">Weitzman, M.L. (1998). Quarterly Journal of Economics</div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script src="/omega-ui.js"></script>
 <script>
-var TECH=[
-  {name:'Lucide Icons',cat:'Frontend',status:'ADOPT',color:'#3fb27f',license:'MIT',desc:'1,400+ clean SVG icons. Replaces emoji and unicode glyphs with consistent, accessible vector icons across all pages.',integration:'omega-oss.js auto-loads on demand. Use data-lucide="name" attribute.',effort:'LOW',value:'HIGH'},
-  {name:'Chart.js 4.x',cat:'Frontend',status:'ADOPT',color:'#3fb27f',license:'MIT',desc:'Lightweight chart library. Powers auth-over-time line charts, axis radar charts, and revenue bar graphs on analytics pages.',integration:'omega-oss.js lazy-loads. OmegaOSS.chart(canvas, config).',effort:'LOW',value:'HIGH'},
-  {name:'Fuse.js 7.x',cat:'Frontend',status:'ADOPT',color:'#3fb27f',license:'Apache 2.0',desc:'Fuzzy search library. Enhances omega-search.js with relevance scoring, typo tolerance, and field weighting.',integration:'omega-oss.js lazy-loads. OmegaOSS.fuzzySearch(items, query, keys).',effort:'LOW',value:'HIGH'},
-  {name:'marked.js 12',cat:'Frontend',status:'ADOPT',color:'#3fb27f',license:'MIT',desc:'Markdown renderer for chatbot/agent responses. Converts Claude's markdown output to styled sovereign HTML.',integration:'omega-oss.js lazy-loads. OmegaOSS.markdown(el, md).',effort:'LOW',value:'HIGH'},
-  {name:'Day.js',cat:'Frontend',status:'ADOPT',color:'#3fb27f',license:'MIT',desc:'Tiny 2KB date library (Moment.js alternative). Formats timestamps, relative dates (3 hours ago), and durations across feed and notifications.',integration:'omega-oss.js lazy-loads. OmegaOSS.fromNow(dateStr).',effort:'LOW',value:'MEDIUM'},
-  {name:'highlight.js 11',cat:'Frontend',status:'ADOPT',color:'#3fb27f',license:'BSD',desc:'Syntax highlighting for code blocks in chatbot responses, research pages, and the innovation lab.',integration:'omega-oss.js lazy-loads alongside marked.js.',effort:'LOW',value:'MEDIUM'},
-  {name:'pgvector',cat:'Database',status:'TRIAL',color:'#C9A84C',license:'PostgreSQL',desc:'PostgreSQL extension for vector embeddings. Enables semantic search over sovereign knowledge graph, member content similarity, and RAG retrieval.',integration:'Supabase supports pgvector natively. Enable in Dashboard → Database → Extensions.',effort:'MEDIUM',value:'VERY HIGH'},
-  {name:'pg_trgm',cat:'Database',status:'ADOPT',color:'#3fb27f',license:'PostgreSQL',desc:'PostgreSQL trigram extension for fuzzy text search. Powers platform-wide search without external search service.',integration:'Supabase built-in. CREATE INDEX USING gin(col gin_trgm_ops).',effort:'LOW',value:'HIGH'},
-  {name:'PostgREST',cat:'Backend',status:'ADOPTED',color:'#8a8676',license:'MIT',desc:'Already running inside Supabase. The Supabase API layer IS PostgREST. No additional integration needed.',integration:'N/A — already in production.',effort:'ZERO',value:'ALREADY LIVE'},
-  {name:'Three.js r128',cat:'Frontend',status:'TRIAL',color:'#C9A84C',license:'MIT',desc:'WebGL 3D engine. Already referenced in platform.jsx. Powers 9D visual representations of the sovereign lattice.',integration:'omega-9d.js already loads Three.js. Expand for lattice 3D visualisation.',effort:'HIGH',value:'HIGH'},
-  {name:'D3.js v7',cat:'Frontend',status:'TRIAL',color:'#C9A84C',license:'ISC',desc:'Data-driven SVG visualisations. Best for knowledge graph, lattice grid, and force-directed layouts that Chart.js cannot handle.',integration:'Load via OmegaOSS.require() when needed for complex visualisations.',effort:'MEDIUM',value:'HIGH'},
-  {name:'OpenAI Whisper (OSS)',cat:'AI',status:'ASSESS',color:'#00E5FF',license:'MIT',desc:'Speech-to-text for sovereign voice commands. Members speak to activate tasks, complete exams, or ask the AI copilot.',integration:'Requires server-side Python. Future Edge Function integration.',effort:'HIGH',value:'STRATEGIC'},
-  {name:'LangChain.js',cat:'AI',status:'ASSESS',color:'#00E5FF',license:'MIT',desc:'Agent orchestration framework for multi-step reasoning, tool use, and RAG pipelines. Alternative to custom concierge edge function.',integration:'Assess for future concierge v2 if Anthropic SDK patterns prove insufficient.',effort:'MEDIUM',value:'STRATEGIC'},
-  {name:'Zod',cat:'Backend',status:'TRIAL',color:'#C9A84C',license:'MIT',desc:'TypeScript schema validation. Validates edge function inputs, preventing malformed data from reaching RPCs.',integration:'Add to supabase/functions/*/index.ts for input validation on all endpoints.',effort:'LOW',value:'HIGH'},
-  {name:'Resend',cat:'Communication',status:'ADOPTED',color:'#8a8676',license:'Commercial',desc:'Already integrated in notify-access edge function. Sends approval/rejection emails to s.y.dagher@gmail.com.',integration:'N/A — already in production.',effort:'ZERO',value:'ALREADY LIVE'},
-  {name:'Stripe',cat:'Finance',status:'HOLD',color:'#8B0000',license:'Commercial',desc:'Payment processing. checkout edge function already exists but is DORMANT. Activates when payments_enabled=true in profiles.',integration:'Edge function ready. Set STRIPE_SECRET_KEY in Supabase secrets when activating.',effort:'LOW',value:'CRITICAL (pending legal)'},
-];
+var techs = [];
+var experiments = [];
+var ringFilter = 'all';
 
-var STATUS_COLORS={ADOPT:'#3fb27f',TRIAL:'#C9A84C',ASSESS:'#00E5FF',HOLD:'#8B0000',ADOPTED:'#8a8676'};
+var RING_COLORS = {adopt:'#4CAF50',trial:'#FFD700',assess:'#FF9800',hold:'#FF4444'};
+var CAT_COLORS = {languages:'#00E5FF',platforms:'#9B6BF0',tools:'#FFD700',techniques:'#4CAF50',ai:'#FF4444',infrastructure:'#FF9800',data:'#00BCD4'};
 
-// TECH RADAR CANVAS
-(function(){
-  var cv=document.getElementById('radar-canvas');if(!cv) return;
-  var ctx=cv.getContext('2d');var W,H;
-  var RINGS=['ADOPT','TRIAL','ASSESS','HOLD'];
-  var RING_COLORS=['rgba(63,178,127,.06)','rgba(201,168,76,.06)','rgba(0,229,255,.06)','rgba(139,0,0,.06)'];
-  var items=[]; /* positioned tech dots */
-  function resize(){
-    var wrap=cv.parentElement;W=wrap.clientWidth;H=wrap.clientHeight;cv.width=W;cv.height=H;
-    positionItems();
-  }
-  function positionItems(){
-    items=[];
-    var cx=W/2,cy=H/2;
-    var maxR=Math.min(W,H)*.44;
-    var rZones=[0,.25,.5,.75,1];
-    TECH.forEach(function(t){
-      var ri=RINGS.indexOf(t.status==='ADOPTED'?'ADOPT':t.status);
-      if(ri<0) ri=3;
-      var r1=maxR*rZones[ri],r2=maxR*rZones[ri+1];
-      var r=r1+(r2-r1)*.2+Math.random()*(r2-r1)*.6;
-      var a=Math.random()*Math.PI*2;
-      items.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r,t:t,r:ri});
-    });
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    var cx=W/2,cy=H/2;var maxR=Math.min(W,H)*.44;
-    /* Rings */
-    [1,.75,.5,.25].forEach(function(f,i){
-      ctx.beginPath();ctx.arc(cx,cy,maxR*f,0,Math.PI*2);
-      ctx.fillStyle=RING_COLORS[i];ctx.fill();
-      ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=.5;ctx.stroke();
-    });
-    /* Ring labels */
-    RINGS.forEach(function(r,i){
-      var f=[1,.75,.5,.25][i];
-      ctx.font='7px "Courier Prime",monospace';ctx.fillStyle='rgba(138,134,118,.4)';ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(r,cx,cy-maxR*f+10);
-    });
-    /* Tech dots */
-    items.forEach(function(it){
-      var col=STATUS_COLORS[it.t.status==='ADOPTED'?'ADOPT':it.t.status]||'#C9A84C';
-      ctx.beginPath();ctx.arc(it.x,it.y,5,0,Math.PI*2);
-      ctx.fillStyle=col+'88';ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();
-      ctx.font='7px "Courier Prime",monospace';ctx.fillStyle=col+'AA';ctx.textAlign='center';ctx.textBaseline='bottom';
-      ctx.fillText(it.t.name.split(' ')[0],it.x,it.y-7);
-    });
-    /* Center */
-    ctx.beginPath();ctx.arc(cx,cy,8,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.2)';ctx.fill();
-    ctx.font='bold 9px "Cinzel Decorative",serif';ctx.fillStyle='rgba(201,168,76,.6)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ω',cx,cy);
-  }
-  window.addEventListener('resize',function(){resize();draw();});
-  resize();draw();
-})();
+function load(){
+  try{techs=JSON.parse(localStorage.getItem('omega_techs')||'[]');}catch(e){techs=[];}
+  try{experiments=JSON.parse(localStorage.getItem('omega_experiments')||'[]');}catch(e){experiments=[];}
+}
+function save(){
+  localStorage.setItem('omega_techs',JSON.stringify(techs));
+  localStorage.setItem('omega_experiments',JSON.stringify(experiments));
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// TECH GRID
-var grid=document.getElementById('tech-grid');
-if(grid){grid.innerHTML=TECH.map(function(t){
-  var col=STATUS_COLORS[t.status==='ADOPTED'?'ADOPT':t.status]||'#C9A84C';
-  return '<div class="tech-card" style="--tc:'+col+'">'
-    +'<div class="tc-status">'+t.status+' &middot; '+t.license+'</div>'
-    +'<div class="tc-name">'+t.name+'</div>'
-    +'<div class="tc-cat">'+t.cat.toUpperCase()+' &middot; EFFORT: '+t.effort+' &middot; VALUE: '+t.value+'</div>'
-    +'<div class="tc-desc">'+t.desc+'</div>'
-    +'<div class="tc-meta"><span>'+t.integration.slice(0,80)+'</span></div>'
-    +'</div>';
-}).join('');}
+function switchTab(t){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  var labels={radar:'RADAR','add':'ADD TECH',experiments:'EXPERIMENTS',science:'SCIENCE'};
+  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===labels[t])b.classList.add('active');});
+  if(t==='radar'){renderRadar();}
+  if(t==='experiments'){renderExperiments();}
+}
+
+function renderStats(){
+  ['adopt','trial','assess','hold'].forEach(r=>{
+    document.getElementById('stat-'+r).textContent=techs.filter(t=>t.ring===r).length;
+  });
+  document.getElementById('stat-total').textContent=techs.length;
+}
+
+function setRingFilter(r,el){
+  ringFilter=r;
+  document.querySelectorAll('#ring-filter .filter-tag').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  renderTechGrid();
+}
+
+function renderRadar(){
+  renderStats();
+  drawRadarCanvas();
+  renderTechGrid();
+}
+
+function drawRadarCanvas(){
+  var canvas=document.getElementById('radar-canvas');
+  var W=canvas.offsetWidth||600;
+  canvas.width=W;canvas.height=360;
+  var ctx=canvas.getContext('2d');
+  var cx=W/2,cy=180;
+  var rings=[{r:160,ring:'hold',label:'HOLD'},{r:120,ring:'assess',label:'ASSESS'},{r:80,ring:'trial',label:'TRIAL'},{r:40,ring:'adopt',label:'ADOPT'}];
+  ctx.clearRect(0,0,W,360);
+  // draw rings
+  rings.forEach(({r,ring,label})=>{
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle=RING_COLORS[ring]+'33';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=RING_COLORS[ring]+'11';ctx.fill();
+    ctx.fillStyle=RING_COLORS[ring]+'88';
+    ctx.font='9px Courier New';ctx.textAlign='left';
+    ctx.fillText(label,cx+r+4,cy-4);
+  });
+  // draw quadrant lines
+  ctx.beginPath();ctx.moveTo(cx,cy-165);ctx.lineTo(cx,cy+165);ctx.strokeStyle='#1a1a1a';ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-165,cy);ctx.lineTo(cx+165,cy);ctx.strokeStyle='#1a1a1a';ctx.stroke();
+  // quadrant labels
+  ctx.font='9px Courier New';ctx.fillStyle='#444';ctx.textAlign='center';
+  ctx.fillText('LANGUAGES',cx-100,cy-170);
+  ctx.fillText('PLATFORMS',cx+100,cy-170);
+  ctx.fillText('TOOLS',cx-100,cy+175);
+  ctx.fillText('TECHNIQUES',cx+100,cy+175);
+  // place techs
+  var catQuadrant={languages:0,platforms:1,tools:2,techniques:3,ai:0,infrastructure:1,data:2};
+  var ringRadius={adopt:25,trial:55,assess:100,hold:142};
+  var quadrantAngle=[Math.PI+Math.PI/4, -Math.PI/4, Math.PI/4+Math.PI/2, Math.PI/4];
+  var spread=Math.PI/2-0.3;
+  var placed={};
+  techs.forEach(tech=>{
+    var q=catQuadrant[tech.cat]||0;
+    if(!placed[tech.ring+q])placed[tech.ring+q]=0;
+    var idx=placed[tech.ring+q]++;
+    var baseAngle=quadrantAngle[q];
+    var angleStep=spread/(Math.max(techs.filter(t=>t.ring===tech.ring&&(catQuadrant[t.cat]||0)===q).length,1)+1);
+    var angle=baseAngle-spread/2+angleStep*(idx+1);
+    var r=ringRadius[tech.ring]||50;
+    var x=cx+Math.cos(angle)*r,y=cy+Math.sin(angle)*r;
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fillStyle=RING_COLORS[tech.ring]||'#888';ctx.fill();
+    ctx.font='8px Courier New';ctx.fillStyle='#ccc';ctx.textAlign='center';
+    ctx.fillText(tech.name.slice(0,10),x,y+14);
+  });
+}
+
+function renderTechGrid(){
+  var grid=document.getElementById('tech-grid');
+  var list=ringFilter==='all'?techs:techs.filter(t=>t.ring===ringFilter);
+  if(!list.length){
+    grid.innerHTML='<div style="grid-column:1/-1;"><div class="empty-state">NO TECHNOLOGIES YET<br><small>Go to ADD TECH to populate your radar</small></div></div>';
+    return;
+  }
+  var order={adopt:0,trial:1,assess:2,hold:3};
+  list=[...list].sort((a,b)=>(order[a.ring]||0)-(order[b.ring]||0));
+  grid.innerHTML=list.map(t=>techCard(t)).join('');
+}
+
+function techCard(t){
+  var col=RING_COLORS[t.ring]||'#888';
+  var catCol=CAT_COLORS[t.cat]||'#444';
+  var moveCls=t.move==='up'?'move-up':t.move==='down'?'move-down':'move-same';
+  var moveLabel=t.move==='up'?'▲ IN':t.move==='down'?'▼ OUT':'● SAME';
+  return '<div class="tech-card" style="border-top:2px solid '+col+'">'
+    +'<button class="del-btn" onclick="delTech(\''+t.id+'\')">DEL</button>'
+    +'<div class="tech-name"><span class="tech-ring-dot" style="background:'+col+'"></span>'+esc(t.name)+'</div>'
+    +'<div class="tech-cat" style="color:'+catCol+'">'+t.cat.toUpperCase()+'</div>'
+    +'<div class="tech-desc">'+esc(t.desc)+'</div>'
+    +'<div class="tech-meta">'
+    +'<span class="ring-badge" style="color:'+col+';border-color:'+col+'">'+t.ring.toUpperCase()+'</span>'
+    +'<span class="move-badge '+moveCls+'">'+moveLabel+'</span>'
+    +(t.url?'<a href="'+esc(t.url)+'" target="_blank" rel="noopener" style="font-family:\'Courier New\',monospace;font-size:9px;color:#444;text-decoration:none;">LINK ↗</a>':'')
+    +'</div></div>';
+}
+
+function delTech(id){if(!confirm('Remove?'))return;techs=techs.filter(x=>x.id!==id);save();renderRadar();}
+
+function saveTech(){
+  var name=document.getElementById('t-name').value.trim();
+  var desc=document.getElementById('t-desc').value.trim();
+  var ring=document.getElementById('t-ring').value;
+  var cat=document.getElementById('t-cat').value;
+  var move=document.getElementById('t-move').value;
+  var url=document.getElementById('t-url').value.trim();
+  if(!name){alert('Name required.');return;}
+  techs.push({id:uid(),name,desc,ring,cat,move,url,added:new Date().toISOString()});
+  save();clearTechForm();
+  document.getElementById('add-msg').textContent=name.toUpperCase()+' ADDED TO RADAR';
+  setTimeout(()=>{document.getElementById('add-msg').textContent='';},2500);
+}
+
+function clearTechForm(){
+  ['t-name','t-desc','t-url'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('t-ring').value='assess';
+  document.getElementById('t-cat').value='tools';
+  document.getElementById('t-move').value='same';
+}
+
+// EXPERIMENTS
+function saveExperiment(){
+  var name=document.getElementById('e-name').value.trim();
+  var hypo=document.getElementById('e-hypo').value.trim();
+  var result=document.getElementById('e-result').value.trim();
+  var status=document.getElementById('e-status').value;
+  var cat=document.getElementById('e-cat').value;
+  if(!name||!hypo){alert('Name and hypothesis required.');return;}
+  experiments.unshift({id:uid(),name,hypo,result,status,cat,created:new Date().toISOString()});
+  save();clearExpForm();renderExperiments();
+  document.getElementById('exp-msg').textContent='EXPERIMENT LOGGED · '+new Date().toLocaleTimeString();
+  setTimeout(()=>{document.getElementById('exp-msg').textContent='';},2500);
+}
+
+function clearExpForm(){
+  ['e-name','e-hypo','e-result'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('e-status').value='running';
+  document.getElementById('e-cat').value='product';
+}
+
+var STATUS_COLORS={running:'#FFD700',success:'#4CAF50',failed:'#FF4444',paused:'#555'};
+
+function renderExperiments(){
+  var list=document.getElementById('experiments-list');
+  if(!experiments.length){list.innerHTML='<div class="empty-state">NO EXPERIMENTS YET</div>';return;}
+  list.innerHTML=experiments.map(e=>{
+    var col=STATUS_COLORS[e.status]||'#888';
+    return '<div class="exp-item status-'+e.status+'" style="border-left-color:'+col+'">'
+      +'<div class="exp-title">'+esc(e.name)+'</div>'
+      +'<div class="exp-hypo">H: '+esc(e.hypo)+'</div>'
+      +(e.result?'<div class="exp-hypo" style="color:#aaa">→ '+esc(e.result)+'</div>':'')
+      +'<div class="exp-meta">'
+      +'<span style="color:'+col+'">'+e.status.toUpperCase()+'</span>'
+      +'<span>'+e.cat.toUpperCase()+'</span>'
+      +'<span>'+new Date(e.created).toLocaleDateString()+'</span>'
+      +'</div></div>';
+  }).join('');
+}
+
+load();
+renderRadar();
 </script>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
-  }catch(e){document.getElementById('app').style.display='flex';}
-})();
-</script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

@@ -5,53 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&#937; SYD OMEGA 91717 &mdash; Offline</title>
 <meta name="robots" content="noindex,nofollow" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
 <style>
 :root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.18)}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:var(--void);color:var(--ink);font-family:'Courier Prime',monospace;overflow:hidden}
-
-/* CONSTELLATION CANVAS */
+html,body{width:100%;height:100%;background:var(--void);color:var(--ink);font-family:monospace;overflow:hidden}
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-
-/* RADIAL GLOW */
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.07) 0%,transparent 65%)}
-
-/* MAIN */
 .center{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:24px}
-
-/* EMBLEM */
 .emblem-wrap{position:relative;width:140px;height:140px;margin:0 auto 32px}
 #emblem-svg{position:absolute;top:0;left:0}
-
-/* HEADLINE */
-.headline{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,5vw,34px);color:var(--gold);letter-spacing:3px;margin-bottom:12px;line-height:1.15}
+.headline{font-family:serif;font-size:clamp(20px,5vw,34px);color:var(--gold);letter-spacing:3px;margin-bottom:12px;line-height:1.15}
 .sub{font-size:13px;color:var(--muted);letter-spacing:1.5px;max-width:44ch;line-height:1.85;margin:0 auto 28px}
 .sub b{color:var(--solar)}
-
-/* STATUS */
 .status-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px}
 .status-dot{width:8px;height:8px;border-radius:50%;background:#8B0000;animation:blink 1.8s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .status-text{font-size:11px;letter-spacing:2px;color:var(--muted)}
-
-/* ACTION BUTTONS */
 .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
-.btn{font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;padding:11px 22px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;transition:.18s;border-radius:1px}
+.btn{font-family:monospace;font-size:10px;letter-spacing:2px;padding:11px 22px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;transition:.18s}
 .btn:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
 .btn-solid{background:var(--gold);color:var(--void);border-color:var(--gold)}
 .btn-solid:hover{background:transparent;color:var(--gold)}
-
-/* CODE BLOCK */
 .code{border:1px solid var(--line);background:rgba(2,2,6,.7);padding:16px 20px;font-size:9px;letter-spacing:.5px;color:rgba(201,168,76,.5);line-height:1.9;margin:0 auto;max-width:460px;text-align:left}
 .code span{color:var(--solar)}
-
-/* FOOTER */
 .footer{position:fixed;bottom:18px;left:0;right:0;text-align:center;font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.35)}
-
-/* RINGS */
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes spin-rev{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
 @media(prefers-reduced-motion:reduce){#ring1,#ring2{animation:none!important}.status-dot{animation:none!important;opacity:.5}}
@@ -62,11 +39,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 <canvas id="c"></canvas>
 
 <div class="center">
-
-  <!-- EMBLEM -->
   <div class="emblem-wrap">
     <svg id="emblem-svg" width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-      <!-- Outer ring (slow rotation) -->
       <g id="ring1" style="transform-origin:70px 70px;animation:spin 22s linear infinite">
         <circle cx="70" cy="70" r="64" fill="none" stroke="#C9A84C" stroke-width="1" stroke-dasharray="6 14" stroke-opacity=".35"/>
         <line x1="70" y1="6" x2="70" y2="14" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
@@ -74,7 +48,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
         <line x1="70" y1="134" x2="70" y2="126" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
         <line x1="6" y1="70" x2="14" y2="70" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
       </g>
-      <!-- Middle ring (counter-rotation) -->
       <g id="ring2" style="transform-origin:70px 70px;animation:spin-rev 34s linear infinite">
         <circle cx="70" cy="70" r="46" fill="none" stroke="#C9A84C" stroke-width=".8" stroke-dasharray="3 12" stroke-opacity=".25"/>
         <circle cx="70" cy="24" r="2.5" fill="#C9A84C" fill-opacity=".7"/>
@@ -82,12 +55,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
         <circle cx="70" cy="116" r="2" fill="#C9A84C" fill-opacity=".5"/>
         <circle cx="24" cy="70" r="2" fill="#E2C86D" fill-opacity=".5"/>
       </g>
-      <!-- Inner solid ring -->
       <circle cx="70" cy="70" r="30" fill="none" stroke="#C9A84C" stroke-width=".8" stroke-opacity=".2"/>
-      <!-- Glow core -->
       <circle cx="70" cy="70" r="20" fill="#C9A84C" fill-opacity=".04"/>
-      <!-- Ω -->
-      <text x="70" y="77" text-anchor="middle" font-family="Cinzel Decorative,serif" font-size="28" fill="#C9A84C" fill-opacity=".9">&#937;</text>
+      <text x="70" y="77" text-anchor="middle" font-family="serif" font-size="28" fill="#C9A84C" fill-opacity=".9">&#937;</text>
     </svg>
   </div>
 
@@ -114,95 +84,61 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     SW_VERSION &nbsp;&nbsp;&nbsp;&nbsp;: v7 &middot; ACTIVE<br>
     LAST_SYNC &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span id="last-sync">--</span>
   </div>
-
 </div>
 
 <div class="footer">&#169; 2025 &#937; SYD OMEGA 91717 &middot; ALL RIGHTS RESERVED &middot; OFFLINE MODE</div>
 
 <script>
-/* Constellation particle canvas */
 (function(){
-  var cv = document.getElementById('c');
-  var ctx = cv.getContext('2d');
-  var pts = [];
-  function resize(){
-    cv.width = window.innerWidth; cv.height = window.innerHeight;
-  }
-  function mkPt(){
-    return {x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.4};
-  }
-  resize(); window.addEventListener('resize',resize);
-  for(var i=0;i<38;i++) pts.push(mkPt());
+  var cv=document.getElementById('c');
+  var ctx=cv.getContext('2d');
+  var pts=[];
+  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+  function mkPt(){return{x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.4};}
+  resize();window.addEventListener('resize',resize);
+  for(var i=0;i<38;i++)pts.push(mkPt());
   function frame(){
     ctx.clearRect(0,0,cv.width,cv.height);
     pts.forEach(function(p){
-      p.x+=p.vx; p.y+=p.vy;
+      p.x+=p.vx;p.y+=p.vy;
       if(p.x<0||p.x>cv.width)p.vx*=-1;
       if(p.y<0||p.y>cv.height)p.vy*=-1;
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
       ctx.fillStyle='rgba(201,168,76,.35)';ctx.fill();
       for(var j=pts.indexOf(p)+1;j<pts.length;j++){
-        var dx=p.x-pts[j].x,dy=p.y-pts[j].y;
-        var d=Math.sqrt(dx*dx+dy*dy);
-        if(d<110){
-          ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(pts[j].x,pts[j].y);
-          ctx.strokeStyle='rgba(201,168,76,'+(1-d/110)*.08+')';ctx.lineWidth=.5;ctx.stroke();
-        }
+        var dx=p.x-pts[j].x,dy=p.y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<110){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(201,168,76,'+(1-d/110)*.08+')';ctx.lineWidth=.5;ctx.stroke();}
       }
     });
     requestAnimationFrame(frame);
   }
-  if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches) frame();
+  if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)frame();
 })();
 
-/* Network reconnect poller */
 (function(){
-  var dot = document.getElementById('dot');
-  var txt = document.getElementById('status-text');
-
+  var dot=document.getElementById('dot');
+  var txt=document.getElementById('status-text');
   function check(){
-    if(navigator.onLine){
-      dot.style.background = '#3fb27f';
-      txt.textContent = 'NETWORK RESTORED — REDIRECTING';
-      setTimeout(function(){ window.location.reload(); }, 1200);
-    }
+    if(navigator.onLine){dot.style.background='#3fb27f';txt.textContent='NETWORK RESTORED — REDIRECTING';setTimeout(function(){window.location.reload();},1200);}
   }
-  window.addEventListener('online', check);
-  setInterval(check, 4000);
-
-  /* Cache count */
+  window.addEventListener('online',check);
+  setInterval(check,4000);
   if('caches' in window){
     caches.keys().then(function(names){
-      var total = 0;
-      Promise.all(names.map(function(n){
-        return caches.open(n).then(function(c){return c.keys();}).then(function(ks){total+=ks.length;});
-      })).then(function(){
-        var el = document.getElementById('cache-count');
-        if(el) el.textContent = total + ' ASSETS CACHED';
+      var total=0;
+      Promise.all(names.map(function(n){return caches.open(n).then(function(c){return c.keys();}).then(function(ks){total+=ks.length;});})).then(function(){
+        var el=document.getElementById('cache-count');if(el)el.textContent=total+' ASSETS CACHED';
       });
     });
-  } else {
-    var el = document.getElementById('cache-count');
-    if(el) el.textContent = 'CACHE API UNAVAILABLE';
-  }
-
-  /* Last sync time from SW cache metadata */
-  var ls = document.getElementById('last-sync');
-  if(ls){
-    var t = localStorage.getItem('omega_last_online');
-    ls.textContent = t ? new Date(Number(t)).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase() : 'UNKNOWN';
-  }
-
-  /* Auth from cache */
-  var auth = localStorage.getItem('omega_cached_auth');
-  var ad = document.getElementById('auth-display');
-  if(auth && ad) ad.textContent = parseFloat(auth).toFixed(4) + ' (CACHED)';
+  } else {var el=document.getElementById('cache-count');if(el)el.textContent='CACHE API UNAVAILABLE';}
+  var ls=document.getElementById('last-sync');
+  if(ls){var t=localStorage.getItem('omega_last_online');ls.textContent=t?new Date(Number(t)).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase():'UNKNOWN';}
+  var auth=localStorage.getItem('omega_cached_auth');
+  var ad=document.getElementById('auth-display');
+  if(auth&&ad)ad.textContent=parseFloat(auth).toFixed(4)+' (CACHED)';
 })();
 
-/* Persist last-online timestamp when going offline */
-window.addEventListener('beforeunload', function(){
-  if(navigator.onLine) localStorage.setItem('omega_last_online', Date.now());
-});
+window.addEventListener('beforeunload',function(){if(navigator.onLine)localStorage.setItem('omega_last_online',Date.now());});
 </script>
 </body>
 </html>

@@ -4,208 +4,184 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Hall of Sovereigns</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The ranked order — sovereign leaderboard by authority, sign, and matrix standing."/>
 <meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717 &mdash; Hall of Sovereigns"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/sovereigns.html"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717 &mdash; Hall of Sovereigns"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.09),transparent 55%)}
-a{color:inherit;text-decoration:none}
-.shell{position:relative;z-index:1;display:flex;min-height:100vh}
-.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 100px}
-.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px}
-.topbar .t{font-family:var(--D);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-.topbar .t small{display:block;font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-.sechead{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-
-/* Privacy notice */
-.priv-notice{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:12px 16px;font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.7;margin-bottom:24px;display:flex;gap:10px;align-items:flex-start}
-.priv-notice .pi{color:var(--gold);flex-shrink:0;margin-top:1px}
-
-/* Stats row */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:24px}
-.stat{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:14px;text-align:center}
-.stat .sl{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
-.stat .sv{font-family:var(--D);font-size:22px;font-weight:700;color:var(--gold)}
-
-/* Leaderboard */
 .lb-table{width:100%;border-collapse:collapse}
 .lb-table thead th{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
 .lb-table tbody tr{border-bottom:1px dashed rgba(201,168,76,.08);transition:background .15s}
 .lb-table tbody tr:hover{background:rgba(13,13,21,.7)}
-.lb-table td{padding:13px 14px;font-family:var(--M);font-size:11px;vertical-align:middle}
-.rank-cell{font-family:var(--D);font-size:18px;font-weight:700;min-width:50px}
+.lb-table td{padding:12px 14px;font-family:var(--M);font-size:11px;vertical-align:middle}
+.rank-cell{font-family:var(--D);font-size:18px;min-width:50px}
 .rank-1{color:var(--gold);text-shadow:0 0 16px rgba(201,168,76,.5)}
 .rank-2{color:#C7CDD6}
 .rank-3{color:#D9B86A}
 .rank-other{color:var(--muted)}
-.sov-label{font-family:var(--M);font-size:11px;letter-spacing:1px}
 .sov-you{color:var(--cyan)}
 .sov-other{color:var(--ink)}
 .sign-badge{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--solar)}
-.auth-val{font-family:var(--D);font-size:14px;font-weight:700}
+.auth-val{font-family:var(--D);font-size:14px}
 .mat-badge{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:2px 7px;border:1px solid}
-.tier-bar{height:3px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden;margin-top:5px}
-.tier-fill{height:100%;border-radius:2px}
-.medal-row{display:flex;gap:4px}
-.medal{width:8px;height:8px;border-radius:50%}
-
-/* Throne card (top 3) */
-.throne-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:28px}
-.throne-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:18px;text-align:center;position:relative;overflow:hidden}
-.throne-card.t1{border-color:rgba(201,168,76,.5);background:linear-gradient(160deg,rgba(201,168,76,.07),transparent)}
+.tier-bar{height:3px;background:rgba(201,168,76,.1);margin-top:4px}
+.tier-fill{height:100%}
+.throne-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.throne-card{border:1px solid var(--line);background:var(--surface);padding:18px;text-align:center;position:relative}
+.throne-card.t1{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.04)}
 .throne-card.t2{border-color:rgba(199,205,214,.3)}
 .throne-card.t3{border-color:rgba(217,184,106,.3)}
-.throne-card .tc-rank{font-family:var(--D);font-size:32px;font-weight:900;margin-bottom:8px}
-.throne-card .tc-label{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:4px}
-.throne-card .tc-auth{font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--muted)}
-.throne-card .tc-sign{font-family:var(--M);font-size:9px;letter-spacing:2px;margin-top:8px;padding:2px 8px;border:1px solid rgba(201,168,76,.2);display:inline-block;color:var(--solar)}
-
+.tc-rank{font-family:var(--D);font-size:32px;margin-bottom:8px}
+.tc-label{font-family:var(--D);font-size:13px;margin-bottom:4px}
+.tc-auth{font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--muted)}
+.tc-sign{font-family:var(--M);font-size:9px;letter-spacing:2px;margin-top:8px;padding:2px 8px;border:1px solid rgba(201,168,76,.2);display:inline-block;color:var(--solar)}
+.priv-notice{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:12px 16px;font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.7;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
 .empty{font-family:var(--M);font-size:12px;color:var(--muted);padding:24px;text-align:center}
-
-@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}.lb-table td:nth-child(5){display:none}.lb-table th:nth-child(5){display:none}}
+@media(max-width:600px){.lb-table td:nth-child(5),.lb-table th:nth-child(5){display:none}}
 </style>
 </head>
 <body>
-<div class="shell">
-  <aside class="side" id="omega-side" data-page="sovereigns"></aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="t">HALL OF SOVEREIGNS<small>THE RANKED ORDER &middot; AUTHORITY BY MATRIX</small></div>
-      <canvas id="sov-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-    </div>
+<aside id="omega-side" data-page="sovereigns"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">HALL OF SOVEREIGNS<span class="topbar-sub">THE RANKED ORDER &middot; AUTHORITY BY MATRIX</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('leaderboard')">LEADERBOARD</button>
+  <button class="tab-btn" onclick="setTab('throne')">APEX THRONE</button>
+  <button class="tab-btn" onclick="setTab('stats')">STATS</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+</div>
 
-    <div class="priv-notice">
-      <span class="pi">&#x25CF;</span>
-      <span>SOVEREIGN PRIVACY PROTOCOL ACTIVE &mdash; All member identities are protected. Only sovereign rank numbers and matrix metrics are visible. No account names, emails, or personal details are shown to anyone in this chamber.</span>
-    </div>
-
-    <div class="stats-row" id="stats-row"></div>
-
-    <div class="sechead" data-reveal="fade-up">THE APEX THRONE &mdash; TOP 3 SOVEREIGNS</div>
-    <div class="throne-row" id="throne-row"></div>
-
-    <div class="sechead" data-reveal="fade-up">FULL LEADERBOARD &mdash; ALL SOVEREIGNS BY AUTHORITY</div>
+<div class="tab-panel active" id="tab-leaderboard">
+  <div class="sechead">ALL SOVEREIGNS BY AUTHORITY</div>
+  <div class="priv-notice">
+    <span style="color:var(--gold);flex-shrink:0">&#x25CF;</span>
+    <span>SOVEREIGN PRIVACY PROTOCOL ACTIVE &mdash; All member identities are protected. Only sovereign rank numbers and matrix metrics are visible. No account names, emails, or personal details are shown.</span>
+  </div>
+  <div style="overflow-x:auto">
     <table class="lb-table">
       <thead><tr>
-        <th>RANK</th>
-        <th>SOVEREIGN</th>
-        <th>SIGN</th>
-        <th>AUTHORITY</th>
-        <th>MATERIAL TIER</th>
-        <th>MATRIX</th>
+        <th>RANK</th><th>SOVEREIGN</th><th>SIGN</th><th>AUTHORITY</th><th>TIER</th><th>MATRIX</th>
       </tr></thead>
-      <tbody id="lb-body"></tbody>
+      <tbody id="lb-body"><tr><td colspan="6" class="empty">LOADING LEADERBOARD&hellip;</td></tr></tbody>
     </table>
-  </main>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-throne">
+  <div class="sechead">THE APEX THRONE &mdash; TOP 3 SOVEREIGNS</div>
+  <div class="throne-row" id="throne-row">
+    <div class="empty">LOADING&hellip;</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-stats">
+  <div class="sechead">ORDER STATISTICS</div>
+  <div class="kpi-row" id="stats-row">
+    <div class="kpi-card"><div class="kpi-val" id="stat-total">--</div><div class="kpi-label">TOTAL SOVEREIGNS</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="stat-apex">--</div><div class="kpi-label">APEX AUTHORITY</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="stat-signs">--</div><div class="kpi-label">ACTIVE SIGNS</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="stat-avg">--</div><div class="kpi-label">AVG AUTHORITY</div></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">LEADERBOARD ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">PRIVACY BY DESIGN</div><div class="card-body">No member name, email, or personal identifier is shown in the Hall of Sovereigns. Members are identified only by their rank number and whether "YOU" indicates their own row. The privacy protocol is enforced client-side by substituting identity with rank ordinal before rendering.</div></div>
+    <div class="card"><div class="card-title">AUTHORITY RANKING</div><div class="card-body">Ranking is by authority score: AUTH = sqrt(A³ + B³ + C³) × φ/e. The leaderboard fetches approved profiles ordered by axis_a (as a proxy), then computes authority client-side and re-sorts the result. This avoids a server-side sort on a computed column while keeping the ranking accurate.</div></div>
+    <div class="card"><div class="card-title">MATERIAL TIERS</div><div class="card-body">The twelve Material Tiers — Sand through Omega Master — map to the floor of the minimum axis score. A member at A=6, B=4, C=7 has a minimum of 4, placing them at Steel. The material tier is a visual shorthand for overall balance, not just total authority. Imbalanced members have lower material tiers than their total authority would imply.</div></div>
+    <div class="card"><div class="card-title">THRONE DISPLAY</div><div class="card-body">The Apex Throne highlights the top three sovereigns with special visual treatment: gold border for rank 1, silver for rank 2, bronze for rank 3. The throne panel is a separate view to give the top three appropriate ceremony without overwhelming the main leaderboard table.</div></div>
+  </div>
+</div>
 </div>
 
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
-/* Material tier labels */
-const MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Diamond','Adamant','Aether','Omega Master'];
-const MAT_COL=['#D9B86A','#A9C2D8','#C7CDD6','#8B8F9C','#78909C','#607D8B','#C9A84C','#E8D5B7','#9B6BF0','#E2C86D','#00E5FF','#C9A84C'];
+var MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Diamond','Adamant','Aether','Omega Master'];
+var MAT_COL=['#D9B86A','#A9C2D8','#C7CDD6','#8B8F9C','#78909C','#607D8B','#C9A84C','#E8D5B7','#9B6BF0','#E2C86D','#00E5FF','#C9A84C'];
+var PHI=1.6180339887,EU=2.7182818285;
+var ranked=[];
+var uid='';
 
-async function boot(){
-  const sess = (await sb.auth.getSession()).data.session;
-  if(!sess){ window.location.href='/account.html'; return; }
-  const uid = sess.user.id;
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['leaderboard','throne','stats','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
 
-  /* PRIVACY: only fetch non-identifying fields  --  no display_name, no email, no id exposed to UI */
-  const { data: rows } = await sb
-    .from('profiles')
-    .select('id,sign,axis_a,axis_b,axis_c')
-    .eq('access_approved', true)
-    .not('axis_a','is',null)
-    .order('axis_a', { ascending: false })
-    .limit(200);
+function matIdx(r){return Math.min(11,Math.max(0,Math.floor(Math.min(r.a,r.b,r.c))-1));}
 
-  if(!rows || !rows.length){
-    document.getElementById('lb-body').innerHTML='<tr><td colspan="6" class="empty">No sovereigns ranked yet. Be the first to evolve.</td></tr>';
-    return;
-  }
-
-  /* Compute authority and sort */
-  const ranked = rows
-    .map(r => ({
-      id: r.id,
-      isMe: r.id === uid,
-      sign: r.sign || '--',
-      a: parseFloat(r.axis_a)||1,
-      b: parseFloat(r.axis_b)||1,
-      c: parseFloat(r.axis_c)||1,
-    }))
-    .map(r => ({...r, auth: Math.sqrt(r.a*r.a + r.b*r.b + r.c*r.c)}))
-    .sort((a,b) => b.auth - a.auth);
-
-  /* Stats */
-  const sr = document.getElementById('stats-row'); sr.innerHTML='';
-  [{l:'TOTAL SOVEREIGNS',v:ranked.length},{l:'APEX AUTHORITY',v:ranked[0]?.auth.toFixed(2)||'--'},{l:'ACTIVE SIGNS',v:new Set(ranked.map(r=>r.sign)).size},{l:'AVG AUTHORITY',v:(ranked.reduce((s,r)=>s+r.auth,0)/ranked.length).toFixed(2)}].forEach(s=>{
-    const d=document.createElement('div'); d.className='stat';
-    d.innerHTML=`<div class="sl">${s.l}</div><div class="sv">${s.v}</div>`;
-    sr.appendChild(d);
+function renderLeaderboard(){
+  var lb=document.getElementById('lb-body');lb.innerHTML='';
+  if(!ranked.length){lb.innerHTML='<tr><td colspan="6" class="empty">No sovereigns ranked yet. Be the first to evolve.</td></tr>';return;}
+  ranked.forEach(function(r,i){
+    var rank=i+1;
+    var rankCls=rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other';
+    var label=r.isMe?'YOU':'SOVEREIGN #'+rank;
+    var labelCls=r.isMe?'sov-you':'sov-other';
+    var mi=matIdx(r);var matCol=MAT_COL[mi];
+    var authPct=Math.min(100,(r.auth/27.8367)*100);
+    var rankCol=rank<=3?['#C9A84C','#C7CDD6','#D9B86A'][i]:'var(--ink)';
+    var tr=document.createElement('tr');
+    if(r.isMe)tr.style.background='rgba(0,229,255,.04)';
+    tr.innerHTML='<td><span class="rank-cell '+rankCls+'">#'+rank+'</span></td>'
+      +'<td><span class="'+labelCls+'">'+label+'</span></td>'
+      +'<td><span class="sign-badge">'+r.sign+'</span></td>'
+      +'<td><span class="auth-val" style="color:'+rankCol+'">'+r.auth.toFixed(2)+'</span><div class="tier-bar"><div class="tier-fill" style="width:'+authPct+'%;background:linear-gradient(90deg,'+matCol+',transparent)"></div></div></td>'
+      +'<td><span class="mat-badge" style="color:'+matCol+';border-color:'+matCol+'44">'+MATS[mi]+'</span></td>'
+      +'<td style="color:var(--muted)">('+r.a.toFixed(1)+','+r.b.toFixed(1)+','+r.c.toFixed(1)+')</td>';
+    lb.appendChild(tr);
   });
+}
 
-  /* Throne top 3 */
-  const tr = document.getElementById('throne-row'); tr.innerHTML='';
-  ranked.slice(0,3).forEach((r,i)=>{
-    const cn=['t1','t2','t3'][i], col=['#C9A84C','#C7CDD6','#D9B86A'][i];
-    const d=document.createElement('div'); d.className=`throne-card ${cn}`;
-    const label = r.isMe ? 'YOU' : `SOVEREIGN #${i+1}`;
-    const tierIdx=Math.min(11,Math.max(0,Math.floor(Math.min(r.a,r.b,r.c))-1));
-    d.innerHTML=`<div class="tc-rank" style="color:${col}">#${i+1}</div><div class="tc-label" style="color:${col}">${label}</div><div class="tc-auth">AUTHORITY ${r.auth.toFixed(2)}</div><div class="tc-sign">${r.sign}</div><div style="font-family:var(--M);font-size:9px;color:${MAT_COL[tierIdx]};margin-top:6px;letter-spacing:2px">${MATS[tierIdx]}</div>`;
+function renderThrone(){
+  var tr=document.getElementById('throne-row');tr.innerHTML='';
+  if(!ranked.length){tr.innerHTML='<div class="empty">No data.</div>';return;}
+  ranked.slice(0,3).forEach(function(r,i){
+    var cn=['t1','t2','t3'][i];var col=['#C9A84C','#C7CDD6','#D9B86A'][i];
+    var label=r.isMe?'YOU':'SOVEREIGN #'+(i+1);
+    var mi=matIdx(r);
+    var d=document.createElement('div');d.className='throne-card '+cn;
+    d.innerHTML='<div class="tc-rank" style="color:'+col+'">#'+(i+1)+'</div>'
+      +'<div class="tc-label" style="color:'+col+'">'+label+'</div>'
+      +'<div class="tc-auth">AUTHORITY '+r.auth.toFixed(2)+'</div>'
+      +'<div class="tc-sign">'+r.sign+'</div>'
+      +'<div style="font-family:var(--M);font-size:9px;color:'+MAT_COL[mi]+';margin-top:6px;letter-spacing:2px">'+MATS[mi]+'</div>';
     tr.appendChild(d);
   });
+}
 
-  /* Full table */
-  const lb = document.getElementById('lb-body'); lb.innerHTML='';
-  ranked.forEach((r,i)=>{
-    const rank=i+1;
-    const rankCol = rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other';
-    const label = r.isMe ? 'YOU' : `SOVEREIGN #${rank}`;
-    const labelClass = r.isMe ? 'sov-you' : 'sov-other';
-    const tierIdx=Math.min(11,Math.max(0,Math.floor(Math.min(r.a,r.b,r.c))-1));
-    const matCol=MAT_COL[tierIdx];
-    const authPct = Math.min(100,(r.auth/27.8367)*100);
-    const tr2=document.createElement('tr');
-    if(r.isMe) tr2.style.background='rgba(0,229,255,0.04)';
-    tr2.innerHTML=`
-      <td><span class="rank-cell ${rankCol}">${rank}</span></td>
-      <td><span class="sov-label ${labelClass}">${label}</span></td>
-      <td><span class="sign-badge">${r.sign}</span></td>
-      <td><span class="auth-val" style="color:${rank<=3?['#C9A84C','#C7CDD6','#D9B86A'][i]:'var(--ink)'}">${r.auth.toFixed(2)}</span><div class="tier-bar"><div class="tier-fill" style="width:${authPct}%;background:linear-gradient(90deg,${matCol},transparent)"></div></div></td>
-      <td><span class="mat-badge" style="color:${matCol};border-color:${matCol}44">${MATS[tierIdx]}</span></td>
-      <td style="font-family:var(--M);font-size:9px;color:var(--muted)">(${r.a.toFixed(1)},${r.b.toFixed(1)},${r.c.toFixed(1)})</td>`;
-    lb.appendChild(tr2);
-  });
+function renderStats(){
+  if(!ranked.length)return;
+  document.getElementById('stat-total').textContent=ranked.length;
+  document.getElementById('stat-apex').textContent=ranked[0].auth.toFixed(2);
+  document.getElementById('stat-signs').textContent=new Set(ranked.map(function(r){return r.sign;})).size;
+  document.getElementById('stat-avg').textContent=(ranked.reduce(function(s,r){return s+r.auth;},0)/ranked.length).toFixed(2);
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  uid=sess.user.id;
+  var pr=(await sb.from('profiles').select('is_owner,access_approved').eq('id',uid).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  var r=await sb.from('profiles').select('id,sign,axis_a,axis_b,axis_c').eq('access_approved',true).not('axis_a','is',null).order('axis_a',{ascending:false}).limit(200);
+  var rows=r.data||[];
+  ranked=rows.map(function(row){
+    var a=parseFloat(row.axis_a)||1,b=parseFloat(row.axis_b)||1,c=parseFloat(row.axis_c)||1;
+    return{id:row.id,isMe:row.id===uid,sign:row.sign||'--',a:a,b:b,c:c,auth:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU};
+  }).sort(function(a,b){return b.auth-a.auth;});
+  renderLeaderboard();
+  renderThrone();
+  renderStats();
 }
 boot();
 </script>
-<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script src="/bg.js"></script>
 </body>
 </html>

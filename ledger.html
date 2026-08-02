@@ -1,243 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 -- System Asset Ledger</title>
-<meta name="description" content="Sovereign asset ledger. The 12x12x9x9x9 matrix. 104,976 nodes."/>
-<meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Asset Ledger</title>
+<meta name="description" content="Sovereign asset ledger — the 12×12×9×9×9 matrix, 104,976 nodes, and your full portfolio record."/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:'Cinzel Decorative',serif;--R:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh;overflow-x:hidden}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible}
-.main{flex:1;min-width:0;display:flex;flex-direction:column}
-
-/* TOPBAR */
-.topbar{background:linear-gradient(90deg,rgba(10,10,15,.97),rgba(2,2,6,.95));border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
-.topbar-omega{font-family:var(--D);font-size:18px;color:var(--gold);letter-spacing:.08em;flex:1}
-.topbar-omega span{font-size:11px;display:block;letter-spacing:3px;color:var(--muted);font-family:var(--M);margin-top:2px}
-.search-bar{background:rgba(201,168,76,.07);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:1px;padding:8px 14px;border-radius:2px;width:clamp(160px,28vw,320px);outline:none;transition:border .2s}
-.search-bar:focus{border-color:rgba(201,168,76,.4)}
-.search-bar::placeholder{color:var(--muted)}
-
-/* HERO BAND */
-.hero-band{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:0;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(139,0,0,.08),rgba(10,10,15,.7),rgba(0,229,255,.05))}
-.hero-left{padding:24px clamp(14px,3vw,36px);border-right:1px solid var(--line)}
-.hero-right{padding:24px clamp(14px,3vw,36px);border-left:1px solid var(--line);text-align:right}
-.hero-center{padding:20px;display:flex;align-items:center;justify-content:center}
-.hero-stat{font-family:var(--D);font-size:clamp(14px,2.2vw,22px);color:var(--gold);margin-bottom:4px}
-.hero-sub{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--muted)}
-.hero-canvas-wrap{width:100px;height:100px;position:relative}
-#ledger-cv{display:block}
-
-/* LEDGER TABLE */
-.ledger-section{padding:clamp(14px,3vw,36px)}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
 .ledger-table{width:100%;border-collapse:collapse}
-.ledger-table th{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--muted);padding:10px 14px;border-bottom:2px solid var(--line);text-align:left;white-space:nowrap}
+.ledger-table th{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);padding:10px 14px;border-bottom:2px solid var(--line);text-align:left;white-space:nowrap}
 .ledger-table th:last-child{text-align:right}
-.ledger-table td{padding:12px 14px;border-bottom:1px solid rgba(201,168,76,.07);font-size:13px;vertical-align:middle;transition:background .18s}
+.ledger-table td{padding:12px 14px;border-bottom:1px solid rgba(201,168,76,.07);font-size:13px;vertical-align:middle}
 .ledger-table tr:hover td{background:rgba(201,168,76,.04)}
-.asset-id{font-family:var(--D);font-size:12px;color:var(--solar);letter-spacing:.05em}
-.asset-cat{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:2px 7px;border-radius:2px;border:1px solid;display:inline-block}
+.asset-id{font-family:var(--D);font-size:11px;color:var(--solar);letter-spacing:.05em}
+.asset-cat{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block}
 .asset-cat.physical{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
 .asset-cat.digital{color:var(--cyan);border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.05)}
 .asset-cat.sovereign{color:var(--crim);border-color:rgba(139,0,0,.4);background:rgba(139,0,0,.06)}
-.asset-val{font-family:var(--D);font-size:13px;color:var(--green)}
-.asset-val.pending{color:var(--muted);font-family:var(--M);font-size:9px;letter-spacing:1.5px}
-.status-pill{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:3px 10px;border:1px solid;border-radius:2px;display:inline-block;float:right}
-.status-pill.verified{color:var(--green);border-color:rgba(63,178,127,.4);background:rgba(63,178,127,.06)}
-.status-pill.locked{color:var(--solar);border-color:rgba(226,200,109,.35);background:rgba(226,200,109,.05)}
-.status-pill.active{color:var(--cyan);border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.05)}
-.status-pill.pending{color:var(--muted);border-color:rgba(138,134,118,.3);background:transparent}
-
-/* LATTICE FOOTER */
-.lattice-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf-item{font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--muted)}
-.lf-item b{color:var(--gold)}
-
-/* NAV PILLS */
-.nav-pills{display:flex;gap:8px;align-items:center}
-.npill{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:transparent;cursor:pointer;border-radius:2px;transition:.2s}
-.npill:hover{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.6)}
-
-/* Emblem zone */
-.page-emblem-row{display:flex;justify-content:center;padding:18px 0 0;border-top:1px solid var(--line);margin-top:auto}
-
-@media(max-width:760px){
-  .hero-band{grid-template-columns:1fr}
-  .hero-center{display:none}
-  .hero-right{border-left:none;border-top:1px solid var(--line);text-align:left}
-}
+.status-pill{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:3px 10px;border:1px solid;display:inline-block;float:right}
+.status-pill.verified{color:var(--green);border-color:rgba(63,178,127,.4)}
+.status-pill.locked{color:var(--solar);border-color:rgba(226,200,109,.35)}
+.status-pill.active{color:var(--cyan);border-color:rgba(0,229,255,.3)}
+.status-pill.pending{color:var(--muted);border-color:rgba(138,134,118,.3)}
+.search-wrap{margin-bottom:12px}
+.ledger-search{width:100%;max-width:360px;background:rgba(201,168,76,.07);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;letter-spacing:1px;padding:8px 14px;outline:none}
+.ledger-search:focus{border-color:rgba(201,168,76,.4)}
+.ledger-search::placeholder{color:var(--muted)}
+.matrix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.mx-cell{border:1px solid var(--line);background:var(--surface);padding:14px;text-align:center}
+.mx-val{font-family:var(--D);font-size:22px;color:var(--gold);margin-bottom:4px}
+.mx-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)}
+.lf-bar{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);background:var(--surface);margin-bottom:8px}
+.lf-key{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);width:140px;flex-shrink:0}
+.lf-val{font-family:var(--M);font-size:10px;color:var(--gold)}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="ledger"></aside>
-  <main class="main">
+<aside id="omega-side" data-page="ledger"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">ASSET LEDGER<span class="topbar-sub">SOVEREIGN RECORD &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('overview')">OVERVIEW</button>
+  <button class="tab-btn" onclick="setTab('registry')">REGISTRY</button>
+  <button class="tab-btn" onclick="setTab('matrix')">MATRIX</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+</div>
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="topbar-omega">&#937; SYSTEM ASSET LEDGER<span>SOVEREIGN RECORD &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES</span></div>
-      <input type="text" class="search-bar" id="omniSearch" placeholder="Search ledger entries..." autocomplete="off">
-      <div class="nav-pills">
-        <button class="npill" onclick="history.back()">&#8592; BACK</button>
-        <button class="npill" onclick="history.forward()">NEXT &#8594;</button>
-      </div>
-    </div>
+<div class="tab-panel active" id="tab-overview">
+  <div class="sechead">PORTFOLIO SUMMARY</div>
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-val" id="ov-assets">12</div><div class="kpi-label">ASSETS</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="ov-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="ov-node">—</div><div class="kpi-label">LATTICE NODE</div></div>
+    <div class="kpi-card"><div class="kpi-val">104,976</div><div class="kpi-label">TOTAL NODES</div></div>
+  </div>
+  <div class="sechead" style="margin-top:8px">LATTICE CONSTANTS</div>
+  <div class="lf-bar"><div class="lf-key">AUTH FORMULA</div><div class="lf-val">&radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div></div>
+  <div class="lf-bar"><div class="lf-key">LATTICE STRUCTURE</div><div class="lf-val">12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</div></div>
+  <div class="lf-bar"><div class="lf-key">APEX AUTHORITY</div><div class="lf-val">27.8367</div></div>
+  <div class="lf-bar"><div class="lf-key">PHI / EULER</div><div class="lf-val">1.6180339887 / 2.7182818285</div></div>
+</div>
 
-    <!-- HERO -->
-    <div class="hero-band">
-      <div class="hero-left">
-        <div class="hero-stat" id="asset-count">-- ASSETS</div>
-        <div class="hero-sub">SOVEREIGN PORTFOLIO</div>
-        <div style="height:8px"></div>
-        <div class="hero-stat" id="asset-val-total" style="color:var(--green)">-- TOTAL VALUE</div>
-        <div class="hero-sub">COMBINED STANDING</div>
-      </div>
-      <div class="hero-center">
-        <div class="hero-canvas-wrap">
-          <canvas id="ledger-cv" width="200" height="200" style="width:100px;height:100px"></canvas>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="hero-stat" id="asset-auth">-- AUTH</div>
-        <div class="hero-sub">AUTHORITY SCORE</div>
-        <div style="height:8px"></div>
-        <div class="hero-stat" style="color:var(--cyan)" id="asset-node">-- NODE</div>
-        <div class="hero-sub">LATTICE POSITION</div>
-      </div>
-    </div>
+<div class="tab-panel" id="tab-registry">
+  <div class="sechead">ASSET REGISTRY &mdash; <span id="entry-count" style="color:var(--muted)">12 ENTRIES</span></div>
+  <div class="search-wrap">
+    <input type="text" class="ledger-search" id="ledger-search" placeholder="Search assets&hellip;" autocomplete="off"/>
+  </div>
+  <div style="overflow-x:auto;border:1px solid var(--line);background:var(--surface)">
+    <table class="ledger-table">
+      <thead><tr><th>ASSET ID</th><th>NODE CATEGORY</th><th>ALLOCATION WEIGHT</th><th style="text-align:right">STATUS</th></tr></thead>
+      <tbody id="ledger-body"></tbody>
+    </table>
+  </div>
+</div>
 
-    <!-- TABLE -->
-    <div class="ledger-section">
-      <div class="sechead">
-        <span>ASSET REGISTRY <span data-canon-lattice="twelve"></span></span>
-        <span id="ledger-filter-count" style="font-size:8px;color:var(--muted)"></span>
-      </div>
-      <div style="overflow-x:auto">
-        <table class="ledger-table" id="ledger-table">
-          <thead>
-            <tr>
-              <th>ASSET ID</th>
-              <th>STRUCTURAL NODE CATEGORY</th>
-              <th>ALLOCATION WEIGHT</th>
-              <th style="text-align:right">SOVEREIGN STATUS</th>
-            </tr>
-          </thead>
-          <tbody id="ledger-body"></tbody>
-        </table>
-      </div>
-    </div>
+<div class="tab-panel" id="tab-matrix">
+  <div class="sechead">LATTICE POSITION &mdash; YOUR SOVEREIGN NODE</div>
+  <div class="matrix-grid">
+    <div class="mx-cell"><div class="mx-val" id="mx-track">—</div><div class="mx-lbl">MATRIX TRACK</div></div>
+    <div class="mx-cell"><div class="mx-val" id="mx-phase">—</div><div class="mx-lbl">MATRIX PHASE</div></div>
+    <div class="mx-cell"><div class="mx-val" id="mx-node">—</div><div class="mx-lbl">NODE INDEX</div></div>
+    <div class="mx-cell"><div class="mx-val">104,976</div><div class="mx-lbl">TOTAL NODES</div></div>
+  </div>
+  <div class="glass">
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">NODE CALCULATION</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.8">NODE = ((TRACK−1) × 12 + (PHASE−1)) × 729 + (ceil(A)−1) × 81 + (ceil(B)−1) × 9 + ceil(C)<br/>where A, B, C ∈ [1,9] and TRACK, PHASE ∈ [1,12]</div>
+  </div>
+</div>
 
-    <div class="page-emblem-row">
-      <div data-page-emblem="ledger" style="margin:0 auto 20px"></div>
-    </div>
-    <div class="lattice-footer">
-      <div class="lf-item">&#937; SYD OMEGA 91717 &middot; SOVEREIGN ASSET LEDGER</div>
-      <div class="lf-item">AUTH = sqrt(A³+B³+C³)×φ/e &middot; APEX <b>27.8367</b></div>
-      <div class="lf-item">LATTICE <b>12×12×9×9×9 = 104,976</b></div>
-    </div>
-
-  </main>
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">LEDGER ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">SOVEREIGN ASSET REGISTER</div><div class="card-body">The Asset Ledger is a record of all sovereign asset classes within the SYD OMEGA 91717 platform. Assets span three categories: Sovereign (core platform infrastructure), Digital (data and blockchain), and Physical (tangible reserve assets).</div></div>
+    <div class="card"><div class="card-title">THE 104,976-NODE LATTICE</div><div class="card-body">The full lattice is 12 × 12 × 9 × 9 × 9 = 104,976 coordinate nodes. Each node encodes a unique combination of matrix track, phase, and axis values (A, B, C). Your lattice position is your sovereign coordinate.</div></div>
+    <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = √(A³+B³+C³) × φ/e where φ = 1.6180339887 (golden ratio) and e = 2.7182818285 (Euler's number). Maximum authority of 27.8367 is achieved at axis values (9,9,9). All ledger valuations are anchored to AUTH.</div></div>
+    <div class="card"><div class="card-title">ASSET STATUS CLASSES</div><div class="card-body">Assets carry four status types: VERIFIED (cryptographically confirmed active assets), ACTIVE (operationally live), RESONANCE LOCK (gate-locked pending authority threshold), PENDING (staged for future activation on compliance sign-off).</div></div>
+  </div>
+</div>
 </div>
 
 <script>
-(function(){
-  const ASSETS=[
-    {id:'&#937;-CORE-001',cat:'sovereign',node:'Core Portal Interface Layer',weight:'51% Absolute Master Stake',status:'verified'},
-    {id:'&#937;-EVOL-002',cat:'digital',node:'Dynamic Regulatory Logic Node',weight:'Contribution Class Alpha',status:'locked'},
-    {id:'&#937;-NETW-003',cat:'digital',node:'Omni-Fulfillment Mesh Pipeline',weight:'Execution Vector Global',status:'active'},
-    {id:'&#937;-PHYS-004',cat:'physical',node:'Swiss Vault Gold Bars',weight:'Reserve Collateral',status:'pending'},
-    {id:'&#937;-PHYS-005',cat:'physical',node:'Singapore High-Rise Property',weight:'Heritage Allocation',status:'pending'},
-    {id:'&#937;-BLKC-006',cat:'sovereign',node:'Blockchain Identity Node',weight:'Immutable Record Layer',status:'verified'},
-    {id:'&#937;-ACAD-007',cat:'digital',node:'Academy Knowledge Matrix',weight:'Knowledge Axis A',status:'active'},
-    {id:'&#937;-NFT-008',cat:'digital',node:'NFT Sovereign Lines',weight:'Digital Lineage',status:'locked'},
-    {id:'&#937;-FAM-009',cat:'sovereign',node:'Family Nest Protocol',weight:'Bloodline Reserve',status:'verified'},
-    {id:'&#937;-INV-010',cat:'digital',node:'Investment Engine Alpha',weight:'Portfolio Allocation',status:'active'},
-    {id:'&#937;-INTEL-011',cat:'sovereign',node:'Intelligence Lab Node',weight:'Data Sovereignty Layer',status:'verified'},
-    {id:'&#937;-HER-012',cat:'physical',node:'Heritage Archive System',weight:'Cultural Preservation',status:'locked'},
-  ];
-  function status(s){const map={verified:'VERIFIED SECURE',locked:'RESONANCE LOCK',active:'ACTIVE OPERATION',pending:'PENDING'};return map[s]||s.toUpperCase();}
-  function render(list){
-    const tb=document.getElementById('ledger-body');
-    if(!tb)return;
-    tb.innerHTML=list.map(a=>`<tr>
-      <td><div class="asset-id">${a.id}</div></td>
-      <td>${a.node}</td>
-      <td>${a.weight}</td>
-      <td><span class="status-pill ${a.status}">${status(a.status)}</span></td>
-    </tr>`).join('');
-    const fc=document.getElementById('ledger-filter-count');
-    if(fc) fc.textContent=list.length+' ENTRIES';
+var ASSETS=[
+  {id:'&#937;-CORE-001',cat:'sovereign',node:'Core Portal Interface Layer',weight:'51% Absolute Master Stake',status:'verified'},
+  {id:'&#937;-EVOL-002',cat:'digital',node:'Dynamic Regulatory Logic Node',weight:'Contribution Class Alpha',status:'locked'},
+  {id:'&#937;-NETW-003',cat:'digital',node:'Omni-Fulfillment Mesh Pipeline',weight:'Execution Vector Global',status:'active'},
+  {id:'&#937;-PHYS-004',cat:'physical',node:'Swiss Vault Gold Bars',weight:'Reserve Collateral',status:'pending'},
+  {id:'&#937;-PHYS-005',cat:'physical',node:'Singapore High-Rise Property',weight:'Heritage Allocation',status:'pending'},
+  {id:'&#937;-BLKC-006',cat:'sovereign',node:'Blockchain Identity Node',weight:'Immutable Record Layer',status:'verified'},
+  {id:'&#937;-ACAD-007',cat:'digital',node:'Academy Knowledge Matrix',weight:'Knowledge Axis A',status:'active'},
+  {id:'&#937;-NFT-008',cat:'digital',node:'NFT Sovereign Lines',weight:'Digital Lineage',status:'locked'},
+  {id:'&#937;-FAM-009',cat:'sovereign',node:'Family Nest Protocol',weight:'Bloodline Reserve',status:'verified'},
+  {id:'&#937;-INV-010',cat:'digital',node:'Investment Engine Alpha',weight:'Portfolio Allocation',status:'active'},
+  {id:'&#937;-INTEL-011',cat:'sovereign',node:'Intelligence Lab Node',weight:'Data Sovereignty Layer',status:'verified'},
+  {id:'&#937;-HER-012',cat:'physical',node:'Heritage Archive System',weight:'Cultural Preservation',status:'locked'}
+];
+var STATUS_LABELS={verified:'VERIFIED',locked:'RESONANCE LOCK',active:'ACTIVE',pending:'PENDING'};
+function renderAssets(list){
+  var tb=document.getElementById('ledger-body');if(!tb)return;
+  var ec=document.getElementById('entry-count');if(ec)ec.textContent=list.length+' ENTRIES';
+  if(!list.length){
+    tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted);font-family:var(--M);font-size:9px">No assets match your search.</td></tr>';
+    return;
   }
-  render(ASSETS);
-  document.getElementById('asset-count').textContent=ASSETS.length+' ASSETS';
-  document.getElementById('omniSearch').addEventListener('input',function(){
-    const q=this.value.trim().toLowerCase();
-    render(q?ASSETS.filter(a=>(a.id+a.node+a.weight).toLowerCase().includes(q)):ASSETS);
+  tb.innerHTML=list.map(function(a){
+    return'<tr>'
+      +'<td><div class="asset-id">'+a.id+'</div><div style="margin-top:4px"><span class="asset-cat '+a.cat+'">'+a.cat.toUpperCase()+'</span></div></td>'
+      +'<td style="font-size:11px;color:var(--ink)">'+a.node+'</td>'
+      +'<td style="font-family:var(--M);font-size:9px;color:var(--muted)">'+a.weight+'</td>'
+      +'<td><span class="status-pill '+a.status+'">'+STATUS_LABELS[a.status]+'</span></td>'
+      +'</tr>';
+  }).join('');
+}
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','registry','matrix','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+document.addEventListener('DOMContentLoaded',function(){
+  renderAssets(ASSETS);
+  var s=document.getElementById('ledger-search');
+  if(s)s.addEventListener('input',function(){
+    var q=this.value.trim().toLowerCase();
+    renderAssets(q?ASSETS.filter(function(a){return(a.id+a.node+a.weight+a.cat).toLowerCase().includes(q);}):ASSETS);
   });
-})();
+});
 </script>
-
-<script>
-/* Rotating Ω cube */
-(function(){
-  const cv=document.getElementById('ledger-cv');
-  if(!cv||!cv.getContext)return;
-  const ctx=cv.getContext('2d'),S=100;
-  const verts=[[-S,-S,-S],[S,-S,-S],[S,S,-S],[-S,S,-S],[-S,-S,S],[S,-S,S],[S,S,S],[-S,S,S]];
-  const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-  let t=0;
-  function proj(x,y,z,rx,ry){
-    const cX=Math.cos(rx),sX=Math.sin(rx),cY=Math.cos(ry),sY=Math.sin(ry);
-    let tx=x*cY+z*sY,tz=-x*sY+z*cY,ty=y*cX-tz*sX;
-    const sc=100/(100+ty*.5);return{x:100+tx*sc*0.45,y:100+y*sc*0.45};
-  }
-  function frame(){
-    ctx.clearRect(0,0,200,200);
-    const pts=verts.map(v=>proj(v[0],v[1],v[2],t*.3,t));
-    edges.forEach(([a,b])=>{
-      ctx.beginPath();ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);
-      ctx.strokeStyle='rgba(201,168,76,0.35)';ctx.lineWidth=1;ctx.stroke();
-    });
-    ctx.font='bold 48px "Cinzel Decorative",serif';
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='#C9A84C';ctx.shadowBlur=18+6*Math.sin(t*1.5);
-    ctx.fillStyle='#C9A84C';ctx.fillText('\u03A9',100,100);
-    ctx.shadowBlur=0;
-    t+=0.012;requestAnimationFrame(frame);
-  }
-  frame();
-})();
-</script>
-
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-const sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-try{window.OmegaSB=window.OmegaSB||{get:()=>Promise.resolve(sb),url:'https://ydqhzvvoyufiiqvzcjns.supabase.co'};}catch(e){}
-(async()=>{
-  try{
-    const s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    const pr=(await sb.from('profiles').select('access_approved,is_owner,axis_a,axis_b,axis_c,matrix_track,matrix_phase').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    document.getElementById('app').style.display='flex';
-    /* authority with new formula: sqrt(A^3+B^3+C^3)*phi/e */
-    const a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
-    const PHI=1.6180339887,E=2.7182818285;
-    const auth=Math.round(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/E*1000)/1000;
-    const tr=pr.matrix_track||1,ph=pr.matrix_phase||1;
-    const node=((tr-1)*12+(ph-1))*729+(Math.max(1,Math.min(9,Math.ceil(a)))-1)*81+(Math.max(1,Math.min(9,Math.ceil(b)))-1)*9+Math.max(1,Math.min(9,Math.ceil(c)));
-    const authEl=document.getElementById('asset-auth');if(authEl)authEl.textContent=auth.toFixed(3)+' AUTH';
-    const nodeEl=document.getElementById('asset-node');if(nodeEl)nodeEl.textContent=node.toLocaleString()+' / 104,976';
-  }catch(e){document.getElementById('app').style.display='flex';console.log(e);}
-})();
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+var PHI=1.6180339887,EU=2.7182818285;
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
+  var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+  var tr=Number(pr.matrix_track||1),ph=Number(pr.matrix_phase||1);
+  var aI=Math.max(1,Math.min(9,Math.ceil(a))),bI=Math.max(1,Math.min(9,Math.ceil(b))),cI=Math.max(1,Math.min(9,Math.ceil(c)));
+  var node=((tr-1)*12+(ph-1))*729+(aI-1)*81+(bI-1)*9+cI;
+  document.getElementById('ov-auth').textContent=auth.toFixed(3);
+  document.getElementById('ov-node').textContent=node.toLocaleString();
+  document.getElementById('mx-track').textContent=tr;
+  document.getElementById('mx-phase').textContent=ph;
+  document.getElementById('mx-node').textContent=node.toLocaleString()+' / 104,976';
+}
+boot();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

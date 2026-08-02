@@ -1,237 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717  --  Blockchain & NFT</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Blockchain</title>
+<meta name="description" content="The sovereign blockchain economy — 12 element tokens, NFT lines, and the Omega Token lattice."/>
 <meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717  --  Blockchain & NFT"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/blockchain.html"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717  --  Blockchain & NFT"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-  :root{ --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:'Cinzel Decorative',serif; --body:'Rajdhani',sans-serif; --mono:'Courier Prime',monospace; }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 15% 0%,rgba(0,229,255,.07),transparent 45%),radial-gradient(circle at 85% 100%,rgba(201,168,76,.07),transparent 48%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
-
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:76ch;margin:16px 0 4px;font-size:15px}
-  .intro b{color:var(--gold);font-weight:400}
-  .notice{margin:18px 0;border:1px solid rgba(139,0,0,.4);background:rgba(139,0,0,.06);border-left:3px solid var(--crimson);padding:14px 16px;font-size:13px;font-weight:300;color:#d9cfc7;line-height:1.6}
-  .notice b{color:var(--solar);font-weight:400}
-
-  .counts{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 4px}
-  .count{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:11px 14px;min-width:110px}
-  .count .v{font-family:var(--display);font-weight:700;color:var(--solar);font-size:18px}
-  .count .k{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:3px}
-
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:28px 0 6px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-  .seclead{font-weight:300;color:var(--muted);font-size:13px;margin-bottom:14px;max-width:74ch;line-height:1.6}
-
-  /* workflow */
-  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:6px}
-  @media(max-width:760px){ .flow{grid-template-columns:1fr 1fr} }
-  .fstep{position:relative;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:14px;text-align:center;overflow:hidden}
-  .fstep .fn{font-family:var(--display);font-weight:900;font-size:22px;color:var(--gold);opacity:.5}
-  .fstep .ft{font-family:var(--display);font-weight:700;font-size:13px;color:var(--gold);margin-top:4px}
-  .fstep .fd{font-weight:300;color:var(--muted);font-size:11px;margin-top:6px;line-height:1.45}
-  .fstep .gate{position:absolute;top:8px;right:8px;font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--solar);border:1px solid rgba(226,200,109,.5);padding:2px 5px}
-
-  /* tokens */
-  .tokens{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-  .tok{position:relative;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:16px;overflow:hidden;transition:transform .15s,border-color .15s;border-top:3px solid var(--ec)}
-  .tok::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 0%,var(--ecsoft),transparent 60%);pointer-events:none}
-  .tok:hover{transform:translateY(-3px);border-color:var(--ec)}
-  .tok.mine{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,229,255,.14)}
-  .tok .sym{font-family:var(--display);font-weight:900;font-size:20px;color:var(--ec)}
-  .tok .sub{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);margin-top:4px}
-  .tok .core{font-weight:300;color:#bdbab0;font-size:12px;margin-top:9px;line-height:1.45}
-  .tok .core b{color:var(--solar);font-weight:400}
-  .tok .wlab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted);margin-top:12px}
-  .tok .wtr{height:6px;background:#15151f;border:1px solid var(--line);overflow:hidden;margin-top:4px}
-  .tok .wfl{height:100%;width:0;background:var(--ec);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
-  .tok .tag{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--void);background:var(--cyan);padding:2px 7px;z-index:1}
-
-  /* nft lines */
-  .nfts{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px}
-  .nft{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:15px;transition:transform .14s,border-color .14s}
-  .nft:hover{transform:translateY(-2px);border-color:var(--gold)}
-  .nft .nh{display:flex;align-items:center;gap:9px}
-  .nft .ni{font-family:var(--display);font-weight:700;color:var(--gold);font-size:15px}
-  .nft .nl{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--cyan);margin-top:7px}
-  .nft .nd{font-weight:300;color:var(--muted);font-size:11.5px;margin-top:6px;line-height:1.45}
-  .nft .ne{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--solar);margin-top:9px;border-top:1px solid var(--line);padding-top:8px}
-
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
-  @media(prefers-reduced-motion:reduce){ .tok .wfl{transition:none} }
+.token-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.token-card{border:1px solid var(--line);border-top:2px solid var(--tc,var(--gold));background:var(--surface);padding:14px;transition:.14s;position:relative}
+.token-card:hover{transform:translateY(-2px)}
+.token-card.mine{border-color:var(--cyan);box-shadow:0 0 18px rgba(0,229,255,.12)}
+.tc-sign{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.tc-name{font-family:var(--D);font-size:14px;margin-bottom:4px}
+.tc-core{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.tc-weight-bar{height:3px;background:rgba(255,255,255,.08);margin-top:8px;overflow:hidden}
+.tc-weight-fill{height:100%;transition:width .5s ease}
+.mine-badge{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;color:var(--cyan);border:1px solid var(--cyan);padding:2px 6px}
+.nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.nft-card{border:1px solid var(--line);border-left:2px solid var(--gold);background:var(--surface);padding:14px}
+.nft-phase{font-family:var(--D);font-size:18px;color:var(--gold);margin-bottom:4px}
+.nft-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--ink);margin-bottom:6px}
+.nft-desc{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.nft-count{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--gold)}
+.wf-step{display:flex;gap:14px;align-items:flex-start;padding:14px;border:1px solid var(--line);background:var(--surface);margin-bottom:8px}
+.wf-num{font-family:var(--D);font-size:20px;color:var(--gold);flex-shrink:0;width:32px;text-align:center}
+.wf-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--ink);margin-bottom:4px}
+.wf-body{font-size:11px;color:var(--muted);line-height:1.6}
+.stat-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.stat-pill{border:1px solid var(--line);background:var(--surface);padding:10px 16px;text-align:center}
+.sp-val{font-family:var(--D);font-size:16px;color:var(--gold)}
+.sp-lbl{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);margin-top:3px}
+.gate-notice{border:1px solid rgba(226,200,109,.3);background:rgba(226,200,109,.05);border-left:3px solid var(--solar);padding:12px 16px;font-family:var(--M);font-size:9px;color:var(--solar);letter-spacing:.5px;margin-bottom:16px}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">&#937;</div>
-  <h2 id="gate-h">Blockchain & NFT</h2>
-  <p id="gate-p">Sign in to study the sovereign chain.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
+<aside id="omega-side" data-page="blockchain"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">BLOCKCHAIN<span class="topbar-sub">OMEGA TOKEN ECONOMY &middot; NFT LINES &middot; SOVEREIGN LEDGER</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('tokens')">TOKENS</button>
+  <button class="tab-btn" onclick="setTab('nft')">NFT LINES</button>
+  <button class="tab-btn" onclick="setTab('workflow')">WORKFLOW</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="blockchain"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">BLOCKCHAIN &amp; NFT<small>TWELVE TOKENS  .  TWELVE NFT LINES  .  9x9x9 EACH</small></div><canvas id="bc-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><a href="/points.html" style="text-decoration:none;text-align:right"><div style="font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:2px;color:var(--cyan)">SOVEREIGN POINTS</div><div style="font-family:var(--D,'Cinzel Decorative',serif);font-size:16px;color:var(--cyan)" id="points-mini">--</div></a></div>
-    <p class="intro" data-reveal="fade-up">The sovereign chain mirrors the matrix. <b>Twelve tokens</b>, one per sign, each bound to a <b>core of the system</b> and carrying a different weight. <b>Twelve NFT lines</b>, each minting across a full <b>9x9x9  --  729 positions</b>. Every verified action a sovereign takes resolves to a node, and a node resolves to credit and to mintable proof.</p>
-
-    <div class="notice">This layer is <b>concept and interface, fully designed and ready to activate</b>. <b>No token holds monetary value, none is a security, and nothing is minted, sold, or tradable</b> today. Weights shown are <b>internal resonance figures, not prices</b>. The chain comes alive only when the Order connects a settlement/chain provider and completes its legal arrangements  --  everything here is built to switch on from your side.</div>
-
-    <div class="counts">
-      <div class="count"><div class="v">12</div><div class="k">TOKENS</div></div>
-      <div class="count"><div class="v">12</div><div class="k">NFT LINES</div></div>
-      <div class="count"><div class="v">729</div><div class="k">PER LINE  .  9x9x9</div></div>
-      <div class="count"><div class="v">8,748</div><div class="k">FULL FIELD</div></div>
-      <div class="count"><div class="v">9.17%</div><div class="k">ORDER COMMISSION</div></div>
-      <div class="count"><div class="v">917.385B</div><div class="k">&#937; MAX SUPPLY</div></div>
-    </div>
-
-    <div class="sechead" data-reveal="fade-up">THE WORKFLOW  .  EACH IN 12, EACH OVER 9x9x9</div>
-    <p class="seclead">The same five-step cycle runs for every token and every NFT line. The first two steps are <b>live now</b> from your real activity; the last three are <b>built and ready to activate</b>.</p>
-    <div class="flow">
-      <div class="fstep"><div class="fn">1</div><div class="ft">EARN</div><div class="fd">A verified action moves a coordinate in your 729.</div></div>
-      <div class="fstep"><div class="fn">2</div><div class="ft">RESOLVE</div><div class="fd">The node maps to token credit and NFT eligibility.</div></div>
-      <div class="fstep"><div class="gate">READY</div><div class="fn">3</div><div class="ft">MINT</div><div class="fd">At thresholds, proof is minted to your wallet.</div></div>
-      <div class="fstep"><div class="gate">READY</div><div class="fn">4</div><div class="ft">HOLD</div><div class="fd">Tokens and NFTs rest in your Sovereign Wallet.</div></div>
-      <div class="fstep"><div class="gate">READY</div><div class="fn">5</div><div class="ft">TRADE</div><div class="fd">Exchange on the Marketplace when settlement opens.</div></div>
-    </div>
-
-    <div class="sechead" data-reveal="fade-up">THE TWELVE TOKENS</div>
-    <p class="seclead" id="tok-lead">One token per sign, each bound to a core of the system, each with a distinct internal weight.</p>
-    <div class="tokens" id="tokens"></div>
-
-    <div class="sechead" data-reveal="fade-up">THE TWELVE NFT LINES</div>
-    <p class="seclead">Each line is a collection minted across a full 9x9x9  --  729 positions  --  with rarity rising through the nine materials from Sand to Omega. Each is bound to a phase of the ascent.</p>
-    <div class="nfts" id="nfts"></div>
-  </main>
+<div class="tab-panel active" id="tab-tokens">
+  <div id="sign-notice"></div>
+  <div class="sechead">12 ELEMENT TOKENS &mdash; SOVEREIGN ECONOMY</div>
+  <div class="stat-pills">
+    <div class="stat-pill"><div class="sp-val">12</div><div class="sp-lbl">TOKENS</div></div>
+    <div class="stat-pill"><div class="sp-val">917.385B Ω</div><div class="sp-lbl">MAX SUPPLY</div></div>
+    <div class="stat-pill"><div class="sp-val">9.17%</div><div class="sp-lbl">COMMISSION</div></div>
+    <div class="stat-pill"><div class="sp-val" id="pts-val">—</div><div class="sp-lbl">YOUR POINTS</div></div>
+  </div>
+  <div class="token-grid" id="token-grid"></div>
 </div>
 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
+<div class="tab-panel" id="tab-nft">
+  <div class="sechead">12 NFT LINES &mdash; SOVEREIGN COLLECTIBLES</div>
+  <div class="stat-pills">
+    <div class="stat-pill"><div class="sp-val">12</div><div class="sp-lbl">NFT LINES</div></div>
+    <div class="stat-pill"><div class="sp-val">729</div><div class="sp-lbl">PER LINE</div></div>
+    <div class="stat-pill"><div class="sp-val">8,748</div><div class="sp-lbl">FULL FIELD</div></div>
+  </div>
+  <div class="nft-grid" id="nft-grid"></div>
+</div>
 
-  const ECOL={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
-  const ESOFT={Fire:'rgba(232,106,58,.12)',Water:'rgba(52,198,230,.12)',Wind:'rgba(169,194,216,.12)',Metal:'rgba(199,205,214,.12)',Sand:'rgba(217,184,106,.12)'};
-  const GLY={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
+<div class="tab-panel" id="tab-workflow">
+  <div class="sechead">TOKEN WORKFLOW &mdash; EARN TO TRADE</div>
+  <div class="wf-step"><div class="wf-num">I</div><div><div class="wf-title">EARN</div><div class="wf-body">Complete tasks, modules, and milestones to earn Omega Token (Ω) rewards. Platform activity is the primary source of sovereign tokens.</div></div></div>
+  <div class="wf-step"><div class="wf-num">II</div><div><div class="wf-title">RESOLVE</div><div class="wf-body">Authority events resolve the weight of your token resonance. Higher authority across all three axes amplifies your token allocation weight.</div></div></div>
+  <div class="wf-step"><div class="wf-num">III</div><div><div class="wf-title">MINT</div><div class="wf-body">Sovereign NFTs are minted at gate thresholds and milestone events. Your sign element determines which NFT line you are eligible for.</div></div></div>
+  <div class="wf-step"><div class="wf-num">IV</div><div><div class="wf-title">HOLD</div><div class="wf-body">Tokens and NFTs held in your sovereign wallet contribute to your lattice standing. Long-term holding grants resonance weight bonuses.</div></div></div>
+  <div class="wf-step"><div class="wf-num">V</div><div><div class="wf-title">TRADE</div><div class="wf-body">The sovereign marketplace enables peer-to-peer exchange of tokens and NFTs. All trades are subject to the 9.17% sovereign commission rate.</div></div></div>
+</div>
 
-  // sign, element, token, core, role, weight(1-9)
-  const TOKENS=[
-    ['Aries','Fire','PYRON','The Academy','fuels the trials of Knowledge',6],
-    ['Taurus','Metal','AURUM','The Marketplace','anchors every fair exchange',9],
-    ['Gemini','Wind','ZEPHYR','The Wire','carries word and signal',5],
-    ['Cancer','Water','NEREID','Family & Heritage','binds the bloodlines',6],
-    ['Leo','Fire','SOLARII','Membership','crowns sovereign standing',8],
-    ['Virgo','Sand','ARENITE','The Treasury','verifies the whole ledger',7],
-    ['Libra','Wind','FORGEON','Commissions','settles the contracts',7],
-    ['Scorpio','Water','STYX','The Oracle','prices risk and foresight',8],
-    ['Sagittarius','Fire','EMBER','The Beacon','ignites the newcomer',6],
-    ['Capricorn','Metal','FERRUM','Consultancy','stores the value of counsel',7],
-    ['Aquarius','Wind','PRIME','Governance','governs the open field',9],
-    ['Pisces','Water','ABYSS','The Archive','holds the deep record',6]
-  ];
-  // phase/sign, line name, what it proves
-  const NFTS=[
-    ['I','Sigils','Phase medallions of the ascent.'],
-    ['II','Gate Seals','Proof of each of the Twelve Gates passed.'],
-    ['III','Certificates','Cryptographic Certificates of Ascent.'],
-    ['IV','Trophies','Marks of Mastery milestones.'],
-    ['V','Medals','Marks of Contribution to the Order.'],
-    ['VI','King Crowns','The 28 Kings, crowned by authority.'],
-    ['VII','Faction Banners','The arms of the Twelve Houses.'],
-    ['VIII','Triad Glyphs','The living shape of your triad.'],
-    ['IX','Reliquaries','The nine materials, Sand to Omega.'],
-    ['X','Passports','Editions of the Sovereign identity.'],
-    ['XI','Pantheon Icons','Your name across the four traditions.'],
-    ['XII','Omega Marks','The apex artifacts of (9,9,9).']
-  ];
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">BLOCKCHAIN ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">OMEGA TOKEN (Ω)</div><div class="card-body">The Omega Token is the native utility currency of the SYD OMEGA 91717 platform. Max supply: 917.385B Ω. Tokens are earned through platform participation and denominate all internal platform rewards and commissions.</div></div>
+    <div class="card"><div class="card-title">12 ELEMENT TOKENS</div><div class="card-body">Each zodiac sign maps to one of the 12 element tokens. Resonance weight (1–9) determines token allocation per sign. The 9.17% sovereign commission applies to all marketplace transactions.</div></div>
+    <div class="card"><div class="card-title">NFT SOVEREIGN LINES</div><div class="card-body">12 NFT lines with 729 editions each (total 8,748). Lines map to the 12 gate phases: Sigils, Gate Seals, Certificates, Trophies, Medals, King Crowns, Faction Banners, Triad Glyphs, Reliquaries, Passports, Pantheon Icons, Omega Marks.</div></div>
+    <div class="card"><div class="card-title">LATTICE ECONOMY</div><div class="card-body">The full token economy maps across the 12×12×9×9×9 lattice (104,976 nodes). Each node is a potential anchor point for sovereign assets. Token and NFT values are anchored to authority score and lattice position.</div></div>
+  </div>
+</div>
+</div>
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
-
-  function render(mySign){
-    var box=document.getElementById('tokens'); box.innerHTML='';
-    TOKENS.forEach(function(t){
-      var mine=t[0]===mySign, col=ECOL[t[1]]||'#C9A84C';
-      var el=document.createElement('div'); el.className='tok'+(mine?' mine':''); el.style.setProperty('--ec',col); el.style.setProperty('--ecsoft',ESOFT[t[1]]||'transparent');
-      el.innerHTML=(mine?'<div class="tag">YOUR TOKEN</div>':'')+
-        '<div class="sym">'+t[2]+'</div><div class="sub">'+(GLY[t[0]]||'')+' '+t[0].toUpperCase()+' \u00B7 '+t[1].toUpperCase()+'</div>'+
-        '<div class="core">Bound to <b>'+t[3]+'</b> \u2014 '+t[4]+'.</div>'+
-        '<div class="wlab"><span>RESONANCE WEIGHT</span><span>'+t[5]+' / 9</span></div><div class="wtr"><div class="wfl"></div></div>';
-      box.appendChild(el);
-      var fl=el.querySelector('.wfl'); setTimeout(function(){ fl.style.width=(t[5]/9*100)+'%'; },100);
-    });
-    if(mySign){ var me=TOKENS.find(function(x){return x[0]===mySign;}); if(me) document.getElementById('tok-lead').innerHTML='Your sign bears <b style="color:var(--cyan)">'+me[2]+'</b>, bound to <b>'+me[3]+'</b>. One token per sign, each with a distinct internal weight.'; }
-
-    var nb=document.getElementById('nfts'); nb.innerHTML='';
-    NFTS.forEach(function(n){
-      var el=document.createElement('div'); el.className='nft';
-      el.innerHTML='<div class="nh"><div class="ni">'+n[1]+'</div></div><div class="nl">PHASE '+n[0]+' LINE</div><div class="nd">'+n[2]+'</div><div class="ne">729 POSITIONS \u00B7 9 RARITIES \u00B7 READY TO MINT</div>';
-      nb.appendChild(el);
-    });
-  }
-
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Blockchain & NFT','Sign in to study the sovereign chain.'); return; }
-    var pr=await supabase.from('profiles').select('sign').eq('id',sess.user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to study the chain.'); return; }
-    document.getElementById('gate').style.display='none';
-    try{
-      var pts=await supabase.rpc('my_points_balance');
-      var pel=document.getElementById('points-mini');
-      if(pel) pel.textContent=(pts.data&&pts.data.balance!=null?pts.data.balance:0)+' PTS';
-    }catch(e){}
-    document.getElementById('app').style.display='flex';
-    render(pr.data.sign);
-  }
-  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+<script>
+var EC={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
+var TOKENS=[
+  ['Aries','Fire','PYRON','The Academy','fuels the trials of Knowledge',6],
+  ['Taurus','Metal','AURUM','The Marketplace','anchors every fair exchange',9],
+  ['Gemini','Wind','ZEPHYR','The Wire','carries word and signal',5],
+  ['Cancer','Water','NEREID','Family & Heritage','binds the bloodlines',6],
+  ['Leo','Fire','SOLARII','Membership','crowns sovereign standing',8],
+  ['Virgo','Sand','ARENITE','The Treasury','verifies the whole ledger',7],
+  ['Libra','Wind','FORGEON','Commissions','settles the contracts',7],
+  ['Scorpio','Water','STYX','The Oracle','prices risk and foresight',8],
+  ['Sagittarius','Fire','EMBER','The Beacon','ignites the newcomer',6],
+  ['Capricorn','Metal','FERRUM','Consultancy','stores the value of counsel',7],
+  ['Aquarius','Wind','PRIME','Governance','governs the open field',9],
+  ['Pisces','Water','ABYSS','The Archive','holds the deep record',6]
+];
+var NFTS=[
+  ['I','Sigils','Phase medallions of the ascent.'],
+  ['II','Gate Seals','Proof of each of the Twelve Gates passed.'],
+  ['III','Certificates','Cryptographic Certificates of Ascent.'],
+  ['IV','Trophies','Marks of Mastery milestones.'],
+  ['V','Medals','Marks of Contribution to the Order.'],
+  ['VI','King Crowns','The 28 Kings, crowned by authority.'],
+  ['VII','Faction Banners','The arms of the Twelve Houses.'],
+  ['VIII','Triad Glyphs','The living shape of your triad.'],
+  ['IX','Reliquaries','The nine materials, Sand to Omega.'],
+  ['X','Passports','Editions of the Sovereign identity.'],
+  ['XI','Pantheon Icons','Your name across the four traditions.'],
+  ['XII','Omega Marks','The apex artifacts of (9,9,9).']
+];
+var _mySign='';
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['tokens','nft','workflow','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+function buildTokens(){
+  var grid=document.getElementById('token-grid');if(!grid)return;
+  grid.innerHTML=TOKENS.map(function(t){
+    var col=EC[t[1]]||'#C9A84C';
+    var mine=_mySign===t[0];
+    var pct=Math.round((t[5]/9)*100);
+    return'<div class="token-card'+(mine?' mine':'')+'" style="--tc:'+col+'">'
+      +(mine?'<div class="mine-badge">YOUR TOKEN</div>':'')
+      +'<div class="tc-sign">'+t[0].toUpperCase()+' &middot; '+t[1].toUpperCase()+'</div>'
+      +'<div class="tc-name" style="color:'+col+'">'+t[2]+'</div>'
+      +'<div class="tc-core">'+t[3]+' &mdash; '+t[4]+'</div>'
+      +'<div class="tc-weight-bar"><div class="tc-weight-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'
+      +'<div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);margin-top:4px">RESONANCE WEIGHT '+t[5]+'/9</div>'
+      +'</div>';
+  }).join('');
+}
+function buildNFTs(){
+  var grid=document.getElementById('nft-grid');if(!grid)return;
+  grid.innerHTML=NFTS.map(function(n){
+    return'<div class="nft-card">'
+      +'<div class="nft-phase">PHASE '+n[0]+'</div>'
+      +'<div class="nft-name">'+n[1].toUpperCase()+'</div>'
+      +'<div class="nft-desc">'+n[2]+'</div>'
+      +'<div class="nft-count">729 EDITIONS &middot; CRYPTOGRAPHIC MINT</div>'
+      +'</div>';
+  }).join('');
+}
+document.addEventListener('DOMContentLoaded',function(){buildNFTs();});
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  _mySign=pr.zodiac_sign||'';
+  if(!_mySign){
+    var notice=document.getElementById('sign-notice');
+    if(notice)notice.innerHTML='<div class="gate-notice">Complete your profile (Axis Setup) to unlock your sovereign element token assignment.</div>';
+  }
+  buildTokens();
+  try{
+    var pts=(await sb.rpc('my_points_balance')).data;
+    var pv=document.getElementById('pts-val');
+    if(pv)pv.textContent=pts!=null?('Ω '+Number(pts).toFixed(0)):'—';
+  }catch(e){console.warn('pts',e);}
+}
+boot();
+</script>
+<script src="/bg.js"></script>
 </body>
 </html>

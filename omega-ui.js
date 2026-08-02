@@ -122,7 +122,8 @@
     notes:        {label:'Sovereign Notes',    section:'MASTERY',  prev:'vocabulary',     next:'codex'},
     reading:      {label:'Sovereign Reading',section:'MASTERY',   prev:'library',        next:'vocabulary'},
     quotes:       {label:'Sovereign Wisdom', section:'IDENTITY',  prev:'mirror',         next:'journal'},
-    weekly:       {label:'Weekly Review',    section:'STRATEGY',  prev:'command',        next:'roadmap'},
+    weekly:       {label:'Weekly Review',    section:'STRATEGY',  prev:'command',        next:'projects'},
+    projects:     {label:'Sovereign Projects',section:'STRATEGY', prev:'weekly',         next:'roadmap'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

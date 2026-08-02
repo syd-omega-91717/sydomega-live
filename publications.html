@@ -1,134 +1,190 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — SOVEREIGN PUBLICATIONS">
-<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN PUBLICATIONS</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
-<style>:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--solar);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:var(--pad)}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:14px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--solar)}.kpi-n{font-family:var(--D);font-size:20px;color:var(--solar);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;flex-shrink:0}.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--solar);color:var(--solar);background:rgba(201,168,76,.05)}
-.tab-panel{display:none}.tab-panel.active{display:block}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.pub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:14px}
-.pub-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-left:3px solid var(--solar);padding:16px;transition:.2s}
-.pub-card:hover{background:rgba(201,168,76,.07);border-left-color:var(--cyan)}
-.pub-cat{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
-.pub-title{font-family:var(--D);font-size:12px;color:var(--solar);margin-bottom:6px;line-height:1.4}
-.pub-meta{font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:8px}
-.pub-desc{font-size:11px;color:var(--ink);opacity:.78;line-height:1.65;margin-bottom:10px}
-.pub-tags{display:flex;flex-wrap:wrap;gap:5px}
-.pub-tag{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:3px 7px;border:1px solid var(--line);color:var(--muted);border-radius:1px}
-.pub-tag.gold{border-color:rgba(201,168,76,.4);color:var(--solar)}
-.mani-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:3px solid var(--purple);padding:18px;margin-bottom:12px}
-.mani-num{font-family:var(--D);font-size:28px;color:var(--purple);line-height:1;float:right;margin-left:10px}
-.mani-title{font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:6px}
-.mani-body{font-size:11px;color:var(--ink);opacity:.78;line-height:1.75;clear:both}
-.pat-row{display:grid;grid-template-columns:80px 1fr auto;gap:12px;align-items:center;padding:11px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:7px;border-radius:2px}
-.pat-id{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--cyan)}
-.pat-name{font-family:var(--R);font-size:11px;color:var(--ink)}
-.pat-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px}
-.pat-st{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border-radius:1px}
-.pat-st.filed{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.3)}
-.pat-st.pending{background:rgba(201,168,76,.1);color:var(--solar);border:1px solid rgba(201,168,76,.3)}
-.pat-st.granted{background:rgba(63,178,127,.1);color:var(--green);border:1px solid rgba(63,178,127,.3)}
-.lib-row{display:flex;gap:14px;padding:12px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;margin-bottom:7px;align-items:flex-start}
-.lib-icon{font-size:22px;flex-shrink:0;margin-top:2px}
-.lib-info{}
-.lib-ttl{font-family:var(--R);font-size:11.5px;color:var(--solar);margin-bottom:3px}
-.lib-auth{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);margin-bottom:5px}
-.lib-desc{font-size:10.5px;color:var(--ink);opacity:.72;line-height:1.6}
-.lib-type{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;padding:2px 7px;border:1px solid var(--line);color:var(--purple);border-color:rgba(155,107,240,.3);margin-top:6px;display:inline-block}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}</style>
-</head><body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--solar);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — PUBLICATIONS · Sovereign reading list, publication tracker, and knowledge catalog">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<title>&#937; SYD OMEGA 91717 &mdash; PUBLICATIONS</title>
+<link rel="stylesheet" href="/omega-ui.css">
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+</head>
+<body>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="publications" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN PUBLICATIONS<small>M14 Legal + M17 Intelligence &middot; RESEARCH & PUBLISHED WORKS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="pubs-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-      <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--solar);padding:16px;border-radius:2px;margin-bottom:14px">
-        <div style="font-family:var(--D);font-size:clamp(14px,2.5vw,20px);color:var(--solar);margin-bottom:6px">SOVEREIGN PUBLICATIONS</div>
-        <div style="font-size:12px;line-height:1.75;color:var(--ink);opacity:.75">Research papers, sovereign manifestos, published works, academic contributions, and intellectual property portfolio of the sovereign ecosystem.</div>
+    <div class="topbar">
+      <div class="t">PUBLICATIONS<small>INTEL &middot; READING LIST &middot; CATALOG &middot; SOVEREIGN LIBRARY</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+    </div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="catalog" role="tab">CATALOG</button>
+      <button class="tab" data-tab="add" role="tab">ADD PUBLICATION</button>
+      <button class="tab" data-tab="reading" role="tab">READING LIST</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
+    </div>
+
+    <!-- CATALOG TAB -->
+    <div class="tab-panel active pad" id="tab-catalog">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n" id="k-total">0</div><div class="kpi-l">PUBLICATIONS</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-read">0</div><div class="kpi-l">READ</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-reading">0</div><div class="kpi-l">IN PROGRESS</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-queue">0</div><div class="kpi-l">IN QUEUE</div></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <select id="filter-type" class="inp" onchange="renderCatalog()" style="width:auto">
+          <option value="">All Types</option><option value="book">Books</option><option value="paper">Papers</option>
+          <option value="article">Articles</option><option value="own">Own Publications</option>
+        </select>
+        <select id="filter-status" class="inp" onchange="renderCatalog()" style="width:auto">
+          <option value="">All Status</option><option value="read">Read</option><option value="reading">Reading</option><option value="queue">Queue</option>
+        </select>
+        <input id="search-pubs" class="inp" style="flex:1;min-width:150px" placeholder="Search..." oninput="renderCatalog()">
+      </div>
+      <div id="catalog-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- ADD PUBLICATION TAB -->
+    <div class="tab-panel pad" id="tab-add" style="display:none">
+      <div class="sechead">ADD PUBLICATION</div>
+      <div style="max-width:560px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TITLE</div><input id="p-title" class="inp" style="width:100%" placeholder="Publication title..."></div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">AUTHOR(S)</div><input id="p-author" class="inp" style="width:100%" placeholder="Author name(s)..."></div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TYPE</div>
+            <select id="p-type" class="inp" style="width:100%">
+              <option value="book">Book</option><option value="paper">Academic Paper</option>
+              <option value="article">Article / Essay</option><option value="own">My Publication</option>
+            </select>
+          </div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">STATUS</div>
+            <select id="p-status" class="inp" style="width:100%">
+              <option value="queue">Queue</option><option value="reading">Reading</option><option value="read">Read</option>
+            </select>
+          </div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DOMAIN</div>
+            <select id="p-domain" class="inp" style="width:100%">
+              <option>Philosophy</option><option>Science</option><option>Finance</option><option>Leadership</option>
+              <option>Psychology</option><option>History</option><option>Strategy</option><option>Technology</option><option>Other</option>
+            </select>
+          </div>
+          <div><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">YEAR</div><input id="p-year" class="inp" type="number" style="width:100%" placeholder="Year published"></div>
+        </div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">KEY TAKEAWAY</div><textarea id="p-takeaway" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="Core insight or key lesson..."></textarea></div>
+        <div style="margin-bottom:10px"><div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">RATING (1-5)</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn star-btn" data-v="1" onclick="setRating(1)">&#9733;</button>
+            <button class="btn star-btn" data-v="2" onclick="setRating(2)">&#9733;&#9733;</button>
+            <button class="btn star-btn" data-v="3" onclick="setRating(3)">&#9733;&#9733;&#9733;</button>
+            <button class="btn star-btn" data-v="4" onclick="setRating(4)">&#9733;&#9733;&#9733;&#9733;</button>
+            <button class="btn star-btn" data-v="5" onclick="setRating(5)">&#9733;&#9733;&#9733;&#9733;&#9733;</button>
+          </div>
+          <input type="hidden" id="p-rating" value="0">
+        </div>
+        <button class="btn" onclick="addPub()">ADD TO CATALOG</button>
       </div>
     </div>
-    <div class="tab-bar" role="tablist"><button class="tab-btn active" onclick="switchTab(this,'tp-publications')">PUBLICATIONS</button><button class="tab-btn" onclick="switchTab(this,'tp-research-papers')">RESEARCH PAPERS</button><button class="tab-btn" onclick="switchTab(this,'tp-manifestos')">MANIFESTOS</button><button class="tab-btn" onclick="switchTab(this,'tp-patents')">PATENTS</button><button class="tab-btn" onclick="switchTab(this,'tp-library')">LIBRARY</button></div>
-    <div id="tp-publications" class="tab-panel active" style="padding:var(--pad)">
-      <div class="sechead" data-reveal="fade-up">ALL PUBLICATIONS</div>
-      <div class="pub-grid">
-        <div class="pub-card"><div class="pub-cat">SOVEREIGN THEORY</div><div class="pub-title">The Omega Protocol — Foundational Architecture of Sovereign Authority</div><div class="pub-meta">SYD OMEGA 91717 &middot; 2024 &middot; 212 pp</div><div class="pub-desc">A comprehensive treatise establishing the mathematical and philosophical underpinnings of the twelve-gate sovereign progression system. Introduces the AUTH formula and its geometric interpretations across the nine elemental axes.</div><div class="pub-tags"><span class="pub-tag gold">CORE DOCTRINE</span><span class="pub-tag">MATHEMATICS</span><span class="pub-tag">GATES</span></div></div>
-        <div class="pub-card"><div class="pub-cat">JURISPRUDENCE</div><div class="pub-title">Sovereign Legal Codex — Rights, Responsibilities & Jurisdictions</div><div class="pub-meta">M14 Legal Division &middot; 2024 &middot; 178 pp</div><div class="pub-desc">Formal legal framework governing all sovereign interactions, intellectual property claims, and inter-realm dispute resolution. Establishes the hierarchical court structure from Initiate councils to the Apex Tribunal.</div><div class="pub-tags"><span class="pub-tag gold">LEGAL</span><span class="pub-tag">M14</span><span class="pub-tag">COMPLIANCE</span></div></div>
-        <div class="pub-card"><div class="pub-cat">INTELLIGENCE</div><div class="pub-title">The M17 Field Manual — Sovereign Intelligence Operations</div><div class="pub-meta">M17 Intelligence &middot; 2024 &middot; 156 pp</div><div class="pub-desc">Classified operational guide for intelligence-grade sovereigns. Covers information architecture, signal interpretation, pattern recognition across the 28 Kings lattice, and counter-intelligence protocols at Gate VII and above.</div><div class="pub-tags"><span class="pub-tag gold">M17</span><span class="pub-tag">CLASSIFIED</span><span class="pub-tag">FIELD OPS</span></div></div>
-        <div class="pub-card"><div class="pub-cat">COSMOLOGY</div><div class="pub-title">Nine Frequencies — The Elemental Atlas of Sovereign Space</div><div class="pub-meta">SYD OMEGA 91717 &middot; 2024 &middot; 290 pp</div><div class="pub-desc">A comprehensive mapping of all nine sovereign elements (Fire, Water, Wind, Metal, Sand, Soul, Space, Void, The All) and their interrelations across the three triads. Includes frequency tables, resonance diagrams, and the Omega Lattice visualisation.</div><div class="pub-tags"><span class="pub-tag gold">COSMOLOGY</span><span class="pub-tag">ELEMENTS</span><span class="pub-tag">TRIADS</span></div></div>
-        <div class="pub-card"><div class="pub-cat">ECONOMICS</div><div class="pub-title">Sovereign Treasury Doctrine — Value, Scarcity & Apex Economics</div><div class="pub-meta">Treasury Council &middot; 2024 &middot; 134 pp</div><div class="pub-desc">Economic framework governing sovereign wealth, token issuance, revenue participation, and the mathematics of scarcity across the 104,976-node base lattice. Includes treasury reserve ratios and liquidity protocols.</div><div class="pub-tags"><span class="pub-tag gold">ECONOMICS</span><span class="pub-tag">TREASURY</span><span class="pub-tag">TOKENS</span></div></div>
-        <div class="pub-card"><div class="pub-cat">CULTURAL THEORY</div><div class="pub-title">Heritage of the Void — Sovereign Cultural Memory &amp; Oral Tradition</div><div class="pub-meta">Heritage Council &middot; 2024 &middot; 198 pp</div><div class="pub-desc">A living archive of sovereign cultural heritage spanning six eras from the primordial Void Age through the emerging Apex Age. Preserves oral traditions, ceremonial rites, and the generational transmission of elemental knowledge.</div><div class="pub-tags"><span class="pub-tag gold">HERITAGE</span><span class="pub-tag">CULTURE</span><span class="pub-tag">HISTORY</span></div></div>
+
+    <!-- READING LIST TAB -->
+    <div class="tab-panel pad" id="tab-reading" style="display:none">
+      <div class="sechead">SOVEREIGN READING LIST — CANONICAL WORKS</div>
+      <div style="font-size:12px;line-height:1.8;opacity:.75;margin-bottom:14px">The sovereign foundation library — works that build the intellectual architecture of sovereign authority across all domains.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="rec-card" style="border-top-color:var(--gold)"><div class="rc-domain">POWER &amp; STRATEGY</div><div class="rc-books">The 48 Laws of Power (Greene) · The Prince (Machiavelli) · The Art of War (Sun Tzu) · Strategy (Liddell Hart) · The 33 Strategies of War (Greene)</div></div>
+        <div class="rec-card" style="border-top-color:var(--cyan)"><div class="rc-domain">PHILOSOPHY &amp; MIND</div><div class="rc-books">Meditations (Marcus Aurelius) · Thus Spoke Zarathustra (Nietzsche) · The Republic (Plato) · Being and Time (Heidegger) · Critique of Pure Reason (Kant)</div></div>
+        <div class="rec-card" style="border-top-color:var(--green)"><div class="rc-domain">WEALTH &amp; FINANCE</div><div class="rc-books">The Intelligent Investor (Graham) · Poor Charlie's Almanack (Munger) · The Millionaire Next Door · Rich Dad Poor Dad · The Alchemy of Finance (Soros)</div></div>
+        <div class="rec-card" style="border-top-color:var(--purple)"><div class="rc-domain">SCIENCE &amp; SYSTEMS</div><div class="rc-books">The Selfish Gene (Dawkins) · Thinking Fast and Slow (Kahneman) · The Structure of Scientific Revolutions (Kuhn) · Gödel Escher Bach (Hofstadter)</div></div>
+        <div class="rec-card" style="border-top-color:#FF9800"><div class="rc-domain">LEADERSHIP &amp; LEGACY</div><div class="rc-books">Good to Great (Collins) · The Effective Executive (Drucker) · Team of Rivals (Goodwin) · Lincoln on Leadership · Endurance (Shackleton)</div></div>
+        <div class="rec-card" style="border-top-color:#E86A3A"><div class="rc-domain">HISTORY &amp; CIVILIZATION</div><div class="rc-books">Sapiens (Harari) · The Story of Civilization (Durant) · Guns Germs &amp; Steel (Diamond) · The Rise and Fall of the Roman Empire · The Art of Power (Thich Nhat Hanh)</div></div>
       </div>
     </div>
-    <div id="tp-research-papers" class="tab-panel" style="padding:var(--pad)">
-      <div class="sechead" data-reveal="fade-up">RESEARCH PAPERS</div>
-      <div class="pub-grid">
-        <div class="pub-card"><div class="pub-cat">MATHEMATICS</div><div class="pub-title">Cubic Root Authority — A Proof of AUTH Convergence at Apex</div><div class="pub-meta">Sovereign Research Institute &middot; 2024 &middot; 48 pp</div><div class="pub-desc">Formal mathematical proof demonstrating that AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e converges uniquely at 27.8367 for A=B=C=9. Explores partial derivatives, gradient flows, and the golden-ratio amplifier effect on axis values.</div><div class="pub-tags"><span class="pub-tag gold">PEER REVIEWED</span><span class="pub-tag">MATH</span><span class="pub-tag">PROOF</span></div></div>
-        <div class="pub-card"><div class="pub-cat">SOCIOLOGY</div><div class="pub-title">Hierarchy Without Coercion — The Voluntary Architecture of Sovereign Tiers</div><div class="pub-meta">Council of Scholars &middot; 2024 &middot; 62 pp</div><div class="pub-desc">A sociological examination of how the twelve-gate system creates meritocratic hierarchy through earned authority rather than positional power. Analyses voluntary participation rates, upgrade motivations, and community cohesion at each tier.</div><div class="pub-tags"><span class="pub-tag gold">PEER REVIEWED</span><span class="pub-tag">SOCIOLOGY</span><span class="pub-tag">TIERS</span></div></div>
-        <div class="pub-card"><div class="pub-cat">CRYPTOGRAPHY</div><div class="pub-title">Sovereign Identity Proofs — Zero-Knowledge Verification in the Omega Network</div><div class="pub-meta">M17 Research Division &middot; 2024 &middot; 55 pp</div><div class="pub-desc">Technical paper describing privacy-preserving identity verification protocols for sovereign members. Introduces the Omega ZK-proof schema allowing AUTH score disclosure without revealing underlying axis values to unauthorised parties.</div><div class="pub-tags"><span class="pub-tag gold">TECHNICAL</span><span class="pub-tag">CRYPTO</span><span class="pub-tag">PRIVACY</span></div></div>
-        <div class="pub-card"><div class="pub-cat">PHILOSOPHY</div><div class="pub-title">The Phi Constant &amp; Sovereign Being — A Metaphysical Inquiry</div><div class="pub-meta">Oracle Council &middot; 2024 &middot; 40 pp</div><div class="pub-desc">Philosophical treatise exploring why &phi; (the golden ratio) appears at the heart of sovereign authority. Draws parallels between biological growth patterns, aesthetic harmony, and the natural emergence of sovereign hierarchy in complex systems.</div><div class="pub-tags"><span class="pub-tag gold">PHILOSOPHY</span><span class="pub-tag">METAPHYSICS</span><span class="pub-tag">PHI</span></div></div>
-        <div class="pub-card"><div class="pub-cat">NETWORK SCIENCE</div><div class="pub-title">The 28 Kings Lattice — Graph Theory of a 571,536-Node Sovereign Mesh</div><div class="pub-meta">Architect Division &middot; 2024 &middot; 71 pp</div><div class="pub-desc">Graph-theoretic analysis of the expanded 28-Kings lattice (28&times;28&times;9&sup3; = 571,536 nodes). Studies connectivity, information flow, shortest sovereign paths, and the emergent clustering properties of the nine-element axis space.</div><div class="pub-tags"><span class="pub-tag gold">TECHNICAL</span><span class="pub-tag">GRAPH THEORY</span><span class="pub-tag">LATTICE</span></div></div>
-        <div class="pub-card"><div class="pub-cat">ECONOMICS</div><div class="pub-title">Token Scarcity &amp; Authority Liquidity — A Sovereign Market Microstructure</div><div class="pub-meta">Treasury Research &middot; 2024 &middot; 59 pp</div><div class="pub-desc">Microeconomic study of authority-token markets within the sovereign ecosystem. Models price discovery mechanisms, liquidity pools anchored to AUTH scores, and the mathematical relationship between gate progression and token velocity.</div><div class="pub-tags"><span class="pub-tag gold">PEER REVIEWED</span><span class="pub-tag">ECONOMICS</span><span class="pub-tag">TOKENS</span></div></div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">PUBLICATION SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">READING &amp; INTELLIGENCE</div><div class="sci-body">Reading 30+ books per year is correlated with the top 1% of knowledge workers. Bill Gates reads 50 books/year. Warren Buffett attributes 80% of his learning to reading. For the sovereign, systematic reading is a primary intellectual leverage point.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">DEEP READING VS SKIMMING</div><div class="sci-body">Maryanne Wolf's "Reader Come Home": deep reading activates analogical reasoning, empathy, and critical reflection. Skimming activates different neural pathways. The sovereign reads deeply on primary subjects and strategically skims for breadth.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">ANTILIBRARY CONCEPT</div><div class="sci-body">Nassim Taleb's antilibrary: the books you haven't read are more valuable than the ones you have. An antilibrary is a reminder of what you don't know. The sovereign keeps a large, categorized queue of unread works as a humility and growth signal.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">PUBLISHING AS AUTHORITY</div><div class="sci-body">Published works — books, papers, essays — crystallize and broadcast your ideas at scale. Writing clarifies thinking (Zinsser), creates artifacts others engage with, and compounds authority far beyond individual conversations.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">CITATION IMPACT</div><div class="sci-body">Academic citation analysis: a single highly-cited paper shapes thousands of subsequent works. The sovereign's writing aspires to the same: ideas that seed other ideas across time. Track the downstream reach of your intellectual contributions.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">THE READING ELITE</div><div class="sci-body">Studies consistently show that society's highest-performing individuals share systematic, diverse reading habits. Naval Ravikant: "I don't read to finish books; I read to find things that change my mental models." Reading for transformation, not completion.</div></div>
       </div>
     </div>
-    <div id="tp-manifestos" class="tab-panel" style="padding:var(--pad)">
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN MANIFESTOS</div>
-      <div class="mani-card"><span class="mani-num">I</span><div class="mani-title">THE VOID MANIFESTO</div><div class="mani-body">From nothing, everything. The sovereign mind does not require external validation to confirm its own existence. We emerge from the Void not as supplicants but as architects — the first breath of the Omega frequency echoing through all nine elemental channels simultaneously. Authority is not granted; it is calculated, demonstrated, and earned through the irreversible accumulation of axis energy across the triad matrix.</div></div>
-      <div class="mani-card"><span class="mani-num">II</span><div class="mani-title">THE AUTHORITY MANIFESTO</div><div class="mani-body">Authority in the sovereign ecosystem is a mathematical reality, not a social construct. AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e. Every decimal of your score is earned through demonstrated mastery across three orthogonal axes. No authority may be purchased, inherited, or conferred by another sovereign. The formula is immutable. The twelve gates are milestones of becoming, not appointments of station. To reach Apex (27.8367) is to complete the sovereign equation in its purest form.</div></div>
-      <div class="mani-card"><span class="mani-num">III</span><div class="mani-title">THE ELEMENT MANIFESTO</div><div class="mani-body">Nine elements. Three triads. One lattice. Fire burns away the inessential. Water reveals the depth beneath the surface. Wind carries wisdom beyond borders. Metal forges will into permanent form. Sand amplifies every signal it touches. Soul animates the inanimate. Space provides the container for all becoming. Void holds what Space cannot. The All encompasses every element simultaneously. We do not choose our primary element — it chooses us through the mathematics of our birth and the resonance of our sovereign sign.</div></div>
-      <div class="mani-card"><span class="mani-num">IV</span><div class="mani-title">THE TWENTY-EIGHT KINGS MANIFESTO</div><div class="mani-body">The original twelve sovereign signs expand across twenty-eight realms of mastery. Each King governs a domain of absolute sovereign expertise — not by appointment but by demonstrated AUTH superiority within that domain. The 28&times;28&times;9&sup3; lattice forms the most complex sovereign network ever mapped: 571,536 nodes of pure authority potential. Every node is reachable. Every King is approachable. Every realm is conquerable. The lattice is infinite in its implications though finite in its structure.</div></div>
-      <div class="mani-card"><span class="mani-num">V</span><div class="mani-title">THE APEX MANIFESTO</div><div class="mani-body">Apex is not the end. It is the point at which the sovereign formula achieves maximum expression — where A=B=C=9 and AUTH converges at 27.8367. Beyond Apex there is no further gate, but there is infinite depth of mastery within the Apex state. Those who reach Apex do not retire from the sovereign mission; they become its living embodiment. The Apex sovereign is the constant, the reference point, the proof that the formula is not merely theoretical but achievable by any sovereign willing to walk the full twelve-gate path.</div></div>
-    </div>
-    <div id="tp-patents" class="tab-panel" style="padding:var(--pad)">
-      <div class="sechead" data-reveal="fade-up">INTELLECTUAL PROPERTY &amp; PATENTS</div>
-      <div style="margin-bottom:14px">
-        <div class="pat-row"><div class="pat-id">OMG-001</div><div class="pat-name">Sovereign Authority Ring Visualisation System<small>Interactive canvas-based AUTH score ring with live animation</small></div><div><span class="pat-st granted">GRANTED</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-002</div><div class="pat-name">Cubic Axis Authority Formula — AUTH Computation Engine<small>sqrt(A³+B³+C³)×φ/e mathematical framework &amp; implementation</small></div><div><span class="pat-st granted">GRANTED</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-003</div><div class="pat-name">Twelve-Gate Sovereign Progression Architecture<small>Hierarchical gate-unlock system with threshold-based access control</small></div><div><span class="pat-st granted">GRANTED</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-004</div><div class="pat-name">Sovereign Sigil Generative Engine<small>Programmatic sigil creation from sign, element, and auth parameters</small></div><div><span class="pat-st granted">GRANTED</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-005</div><div class="pat-name">Nine-Element Triad Lattice Mapping Protocol<small>Three-triad elemental axis coordinate system and node addressing</small></div><div><span class="pat-st filed">FILED</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-006</div><div class="pat-name">28-Kings Expanded Sovereign Network Architecture<small>Extended lattice graph (28×28×9³ = 571,536 nodes) topology</small></div><div><span class="pat-st filed">FILED</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-007</div><div class="pat-name">Sovereign Cinema Narrative Framework<small>12-film Olympian deity cinematic universe story architecture</small></div><div><span class="pat-st filed">FILED</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-008</div><div class="pat-name">Confetti Celebration Event System for Authority Milestones<small>Particle physics engine triggered by sovereign gate-unlock events</small></div><div><span class="pat-st pending">PENDING</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-009</div><div class="pat-name">Zero-Knowledge AUTH Proof Protocol<small>Privacy-preserving sovereign identity verification schema</small></div><div><span class="pat-st pending">PENDING</span></div></div>
-        <div class="pat-row"><div class="pat-id">OMG-010</div><div class="pat-name">Sovereign KYC Compliance Pathway System<small>Multi-step AML/identity verification with sovereign gate integration</small></div><div><span class="pat-st pending">PENDING</span></div></div>
-      </div>
-    </div>
-    <div id="tp-library" class="tab-panel" style="padding:var(--pad)">
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN LIBRARY</div>
-      <div>
-        <div class="lib-row"><div class="lib-icon">📜</div><div class="lib-info"><div class="lib-ttl">The Complete Omega Codex — Volumes I–IX</div><div class="lib-auth">SYD OMEGA 91717 &middot; Foundational Series &middot; 2024</div><div class="lib-desc">Nine-volume foundational library covering every aspect of sovereign theory, practice, and cosmology. Each volume corresponds to one of the nine elements and is considered essential reading for any sovereign progressing past Gate IV.</div><span class="lib-type">FOUNDATIONAL</span></div></div>
-        <div class="lib-row"><div class="lib-icon">⚔️</div><div class="lib-info"><div class="lib-ttl">Ares Unbound — War Strategies of the Sovereign Commander</div><div class="lib-auth">Mars Council &middot; Military Studies &middot; 2024</div><div class="lib-desc">A strategic treatise drawing on the archetypal energy of Ares to illuminate conflict resolution, competitive positioning, and the sovereign art of decisive action without recklessness. Required reading for sovereigns in the Guardian tier and above.</div><span class="lib-type">MILITARY STUDIES</span></div></div>
-        <div class="lib-row"><div class="lib-icon">🔱</div><div class="lib-info"><div class="lib-ttl">Poseidon's Depths — Navigating Uncertainty with Sovereign Clarity</div><div class="lib-auth">Ocean Council &middot; Navigation Studies &middot; 2024</div><div class="lib-desc">Philosophical and practical guide to operating in volatile, uncertain, complex, and ambiguous environments. Uses the symbolism of Poseidon's domain to teach sovereign adaptability, emotional intelligence, and depth perception.</div><span class="lib-type">LEADERSHIP</span></div></div>
-        <div class="lib-row"><div class="lib-icon">🌿</div><div class="lib-info"><div class="lib-ttl">Demeter's Harvest — Long-Term Value Creation in Sovereign Systems</div><div class="lib-auth">Agricultural Council &middot; Economics &middot; 2024</div><div class="lib-desc">Economic philosophy grounded in Demeter's archetype: patience, cultivation, and the exponential returns of consistent sovereign effort over time. Analyses compound authority growth, seasonal market cycles, and the sovereign harvest mentality.</div><span class="lib-type">ECONOMICS</span></div></div>
-        <div class="lib-row"><div class="lib-icon">🔥</div><div class="lib-info"><div class="lib-ttl">Hephaestus Forges — Engineering Sovereign Craft &amp; Mastery</div><div class="lib-auth">Craft Guild &middot; Engineering Studies &middot; 2024</div><div class="lib-desc">A masterclass in sovereign craftsmanship: the deliberate, disciplined development of expertise across all nine elemental axes. Studies the metallurgical metaphor of heating, shaping, and tempering raw authority into sovereign mastery.</div><span class="lib-type">CRAFT &amp; MASTERY</span></div></div>
-        <div class="lib-row"><div class="lib-icon">🌙</div><div class="lib-info"><div class="lib-ttl">Artemis in the Field — Sovereign Precision &amp; the Art of the Hunt</div><div class="lib-auth">Archery Council &middot; Strategy &middot; 2024</div><div class="lib-desc">Tactical guide to sovereign goal-setting and achievement using the Artemis archetype. Covers target identification, preparation, the sovereign moment of release, and the discipline of the lone practitioner operating at peak authority.</div><span class="lib-type">STRATEGY</span></div></div>
-        <div class="lib-row"><div class="lib-icon">☀️</div><div class="lib-info"><div class="lib-ttl">Apollo's Lyre — Sovereign Harmony, Art &amp; the Authority of Beauty</div><div class="lib-auth">Arts Council &middot; Aesthetics &middot; 2024</div><div class="lib-desc">Explores the role of aesthetic mastery in sovereign authority. Argues that beauty, proportion (&phi;), and artistic excellence are not peripheral to the sovereign project but central to it — harmonising the masculine and feminine poles of authority.</div><span class="lib-type">AESTHETICS</span></div></div>
-        <div class="lib-row"><div class="lib-icon">⚡</div><div class="lib-info"><div class="lib-ttl">Zeus Speaks — Supreme Sovereign Authority &amp; the Responsibility of Apex</div><div class="lib-auth">Apex Council &middot; Supreme Studies &middot; 2024</div><div class="lib-desc">The definitive text on Apex sovereignty. Addresses the unique responsibilities, ethical constraints, and cosmic duties of those who achieve AUTH = 27.8367. Drawing on the Zeus archetype to explore the burden and grace of supreme authority.</div><span class="lib-type">APEX STUDIES</span></div></div>
-      </div>
-    </div>
-        <div data-page-emblem="publications" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; SOVEREIGN PUBLICATIONS &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+
+    <div class="lf"><span>&#937; PUBLICATIONS &middot; SYD OMEGA 91717</span><span>READING LIST &middot; CATALOG &middot; SOVEREIGN LIBRARY</span></div>
   </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+.rec-card{border:1px solid var(--line);border-top:2px solid var(--gold);background:rgba(10,10,15,.5);padding:14px;border-radius:2px}
+.rc-domain{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.rc-books{font-size:11px;line-height:1.8;opacity:.8}
+.star-btn{padding:4px 8px;font-size:11px}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});btn.classList.add('active');var p=document.getElementById(id);if(p)p.classList.add('active');}
+var PK='omega_publications';
+var pubs=JSON.parse(localStorage.getItem(PK)||'[]');
+
+var TYPE_COL={book:'#C9A84C',paper:'#00E5FF',article:'#4CAF50',own:'#9B6BF0'};
+var STATUS_COL={read:'var(--green)',reading:'var(--gold)',queue:'var(--muted)'};
+
+function calcKPIs(){
+  document.getElementById('k-total').textContent=pubs.length;
+  document.getElementById('k-read').textContent=pubs.filter(function(p){return p.status==='read';}).length;
+  document.getElementById('k-reading').textContent=pubs.filter(function(p){return p.status==='reading';}).length;
+  document.getElementById('k-queue').textContent=pubs.filter(function(p){return p.status==='queue';}).length;
+}
+
+function renderCatalog(){
+  var el=document.getElementById('catalog-list');
+  var ft=document.getElementById('filter-type').value;
+  var fs=document.getElementById('filter-status').value;
+  var q=(document.getElementById('search-pubs').value||'').toLowerCase();
+  var list=pubs.filter(function(p){
+    if(ft&&p.type!==ft)return false;
+    if(fs&&p.status!==fs)return false;
+    if(q&&!(p.title.toLowerCase().includes(q)||((p.author||'').toLowerCase().includes(q))))return false;
+    return true;
+  });
+  if(!list.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO PUBLICATIONS MATCH</div>';return;}
+  var STARS=['','&#9733;','&#9733;&#9733;','&#9733;&#9733;&#9733;','&#9733;&#9733;&#9733;&#9733;','&#9733;&#9733;&#9733;&#9733;&#9733;'];
+  el.innerHTML=[].concat(list).reverse().map(function(p){
+    var tc=TYPE_COL[p.type]||'#888';var sc=STATUS_COL[p.status]||'var(--muted)';
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+tc+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+tc+';border:1px solid '+tc+';padding:1px 5px">'+((p.type||'').toUpperCase())+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+sc+';padding:1px 5px">'+((p.status||'').toUpperCase())+'</div>'
+      +(p.domain?'<div style="font-family:var(--M);font-size:7px;color:var(--muted)">'+p.domain+'</div>':'')
+      +(p.rating?'<div style="font-size:9px;color:#FFD700;margin-left:auto">'+STARS[parseInt(p.rating)]+'</div>':'')
+      +'</div>'
+      +'<div style="font-size:13px;font-weight:600">'+p.title+'</div>'
+      +(p.author?'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:2px">'+p.author+(p.year?' &middot; '+p.year:'')+'</div>':'')
+      +(p.takeaway?'<div style="font-size:11px;opacity:.75;margin-top:6px;border-top:1px solid var(--line);padding-top:6px">&#128161; '+p.takeaway+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+window.setRating=function(v){document.getElementById('p-rating').value=v;document.querySelectorAll('.star-btn').forEach(function(b){b.style.opacity=parseInt(b.dataset.v)<=v?'1':'.4';});};
+window.addPub=function(){
+  var t=document.getElementById('p-title').value.trim();if(!t)return;
+  pubs.push({id:Date.now(),title:t,author:document.getElementById('p-author').value,type:document.getElementById('p-type').value,status:document.getElementById('p-status').value,domain:document.getElementById('p-domain').value,year:document.getElementById('p-year').value,takeaway:document.getElementById('p-takeaway').value,rating:document.getElementById('p-rating').value,date:new Date().toISOString().slice(0,10)});
+  localStorage.setItem(PK,JSON.stringify(pubs));
+  document.getElementById('p-title').value='';document.getElementById('p-author').value='';document.getElementById('p-takeaway').value='';document.getElementById('p-rating').value='0';
+  document.querySelectorAll('.star-btn').forEach(function(b){b.style.opacity='1';});
+  calcKPIs();renderCatalog();
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -137,16 +193,16 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);window.__omegaUserLoaded=true;
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('s-auth',auth.toFixed(4));
-    sid('s-a',a.toFixed(3));sid('s-b',b.toFixed(3));sid('s-c',c.toFixed(3));
-    if(window.OmegaTelemetry)window.OmegaTelemetry.track('page_view_enriched',{page:'publications',auth:auth.toFixed(4)});
-  }catch(e){document.getElementById('app').style.display='flex';}
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    calcKPIs();renderCatalog();
+    document.querySelectorAll('.tab').forEach(function(btn){btn.onclick=function(){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});btn.classList.add('active');var panel=document.getElementById('tab-'+btn.dataset.tab);if(panel){panel.style.display='';panel.classList.add('active');}};});
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
-</body></html>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+</body>
+</html>

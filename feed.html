@@ -1,86 +1,114 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — ACTIVITY FEED">
-<title>&#937; SYD OMEGA 91717 &mdash; ACTIVITY FEED</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Activity Feed</title>
+<meta name="description" content="SYD OMEGA 91717 — Member Activity Stream"/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--green);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:var(--pad)}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--green)}.kpi-n{font-family:var(--D);font-size:20px;color:var(--green);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--green);color:var(--green);background:rgba(201,168,76,.05)}
-.tab-panel{display:none}.tab-panel.active{display:block}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--green);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--green);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-/* FEED */
-.feed-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.06);align-items:flex-start}
+.feed-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(201,168,76,.06);align-items:flex-start}
 .feed-item:last-child{border-bottom:none}
 .feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--fd,var(--green))}
 .feed-body{flex:1}
 .feed-text{font-size:12px;line-height:1.6;color:var(--ink);margin-bottom:3px}
-.feed-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-.feed-kind{font-family:var(--M);font-size:6.5px;letter-spacing:2px;padding:2px 6px;border:1px solid;border-radius:1px;margin-left:6px;vertical-align:middle}
-.post-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;padding:16px 14px;margin-bottom:10px;transition:.18s}
-.post-card:hover{border-color:rgba(63,178,127,.2)}
-.post-card::before{content:'';display:block;width:32px;height:2px;background:var(--green);margin-bottom:10px}
-.post-title{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:5px}
-.post-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+.feed-meta{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)}
+.feed-kind{font-family:var(--M);font-size:6.5px;letter-spacing:2px;padding:2px 6px;border:1px solid;margin-left:6px;vertical-align:middle}
+.post-card{border:1px solid var(--line);background:var(--surface);padding:14px;margin-bottom:8px;transition:.18s}
+.post-card:hover{border-color:rgba(63,178,127,.25)}
+.post-card::before{content:'';display:block;width:28px;height:2px;background:var(--green);margin-bottom:8px}
+.post-title{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:4px}
+.post-meta{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)}
+.bar-track{height:4px;background:rgba(255,255,255,.04);border-radius:2px;margin-top:4px}
+.bar-fill-anim{height:100%;border-radius:2px;transition:width 1s ease}
 </style>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--green);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="feed" aria-label="Navigation"></aside>
-  <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">ACTIVITY FEED<small>M8 Communication &middot; MEMBER ACTIVITY STREAM &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="feed-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--green)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-      <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-feed')">FEED</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-posts')">POSTS</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-my-activity')">MY ACTIVITY</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-trending')">TRENDING</button></div><div id="tp-feed" class="tab-panel active" style="padding:var(--pad)">
-  <div class="sechead" data-reveal="fade-up">PLATFORM ACTIVITY &middot; LIVE MEMBER STREAM</div>
-  <div id="feed-list" style="border:1px solid var(--line);border-radius:2px;padding:14px 16px" data-reveal="fade-up">
+<aside id="omega-side" data-page="feed" aria-label="Navigation"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">ACTIVITY FEED<span class="topbar-sub">M8 COMMUNICATION &middot; MEMBER ACTIVITY STREAM &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+  <span style="font-family:var(--M);font-size:8px;color:var(--green)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></span>
+</header>
+
+<div class="kpi-row" style="padding:0 var(--page-pad);margin-bottom:12px">
+  <div class="kpi" style="border-top-color:var(--green)"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+  <div class="kpi" style="border-top-color:var(--cyan)"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div>
+  <div class="kpi" style="border-top-color:var(--gold)"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div>
+  <div class="kpi" style="border-top-color:var(--green)"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('feed')">FEED</button>
+  <button class="tab-btn" onclick="setTab('posts')">POSTS</button>
+  <button class="tab-btn" onclick="setTab('mine')">MY ACTIVITY</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+</div>
+
+<div class="tab-panel active" id="tab-feed">
+  <div class="sechead">PLATFORM ACTIVITY &middot; LIVE MEMBER STREAM</div>
+  <div class="glass" id="feed-list" style="padding:14px 16px">
     <div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">LOADING ACTIVITY&hellip;</div>
   </div>
-</div>
-<div id="tp-posts" class="tab-panel" style="padding:var(--pad)">
-  <div class="sechead" data-reveal="fade-up">SOVEREIGN POSTS &middot; MEMBER PUBLICATIONS</div>
-  <div id="posts-list" data-reveal="fade-up">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line);border-radius:2px">LOADING POSTS&hellip;</div>
-  </div>
-</div>
-<div id="tp-my-activity" class="tab-panel" style="padding:var(--pad)">
-  <div class="sechead" data-reveal="fade-up">MY ACTIVITY &middot; YOUR SOVEREIGN RECORD</div>
-  <div id="my-list" style="border:1px solid var(--line);border-radius:2px;padding:14px 16px" data-reveal="fade-up">
-    <div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">LOADING YOUR ACTIVITY&hellip;</div>
-  </div>
-</div>
-<div id="tp-trending" class="tab-panel" style="padding:var(--pad)">
-  <div class="sechead" data-reveal="fade-up">TRENDING &middot; TOP PLATFORM MOVEMENTS</div>
-  <div id="trend-list" style="border:1px solid var(--line);border-radius:2px;padding:14px 16px" data-reveal="fade-up">
+  <div class="sechead" style="margin-top:20px">TRENDING &middot; LAST 7 DAYS</div>
+  <div class="glass" id="trend-list" style="padding:14px 16px">
     <div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">LOADING TRENDS&hellip;</div>
   </div>
 </div>
-    </div>
-    <div data-page-emblem="feed" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; ACTIVITY FEED &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
-  </main>
+
+<div class="tab-panel" id="tab-posts">
+  <div class="sechead">SOVEREIGN POSTS &middot; MEMBER PUBLICATIONS</div>
+  <div id="posts-list">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">LOADING POSTS&hellip;</div>
+  </div>
 </div>
+
+<div class="tab-panel" id="tab-mine">
+  <div class="sechead">MY ACTIVITY &middot; YOUR SOVEREIGN RECORD</div>
+  <div class="glass" id="my-list" style="padding:14px 16px">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">LOADING YOUR ACTIVITY&hellip;</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">SOVEREIGN COMMUNICATION LAYER</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">ACTIVITY AS EVIDENCE</div><div class="card-body">The activity feed is not social media. Every entry in the feed is a recorded matrix action — a task completed, a gate crossed, a certificate earned. Activity is the proof of sovereignty, not the performance of it.</div></div>
+    <div class="card"><div class="card-title">AXIS ATTRIBUTION</div><div class="card-body">Every action in the platform is tagged to an axis: A (Knowledge), B (Mastery), or C (Contribution). The feed reflects this tagging. Watching the feed reveals where the Order's collective energy flows and which axes are being built fastest.</div></div>
+    <div class="card"><div class="card-title">PUBLICATIONS AS PROOF</div><div class="card-body">Sovereign posts are not social updates. Each publication is a piece of sovereign intelligence — a report, essay, or analysis submitted to the Order's knowledge base. Publications advance Axis A and earn certificates when reviewed and approved.</div></div>
+    <div class="card"><div class="card-title">PLATFORM ARCHITECTURE</div><div class="card-body">The activity stream reads from the task_completions table via Supabase Realtime. The feed is live and RLS-protected: platform owners see all activity; members see public records only. No user data is exposed beyond what the profile owner has approved.</div></div>
+  </div>
+  <div class="sechead" style="margin-top:24px">FEED ITEM KIND LEGEND</div>
+  <div class="tbl-wrap">
+    <div class="tbl-head" style="grid-template-columns:1fr 1fr 2fr"><span>AXIS</span><span>COLOUR</span><span>DESCRIPTION</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--cyan)">AXIS A</span><span>CYAN</span><span>Knowledge tasks: exams, study, library reads</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--gold)">AXIS B</span><span>GOLD</span><span>Mastery tasks: training, games, crafts, art</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--green)">AXIS C</span><span>GREEN</span><span>Contribution tasks: events, missions, publishing</span></div>
+  </div>
+</div>
+</div>
+
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});btn.classList.add('active');var p=document.getElementById(id);if(p)p.classList.add('active');}
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['feed','posts','mine','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+function timeAgo(ts){
+  if(!ts)return '';
+  var d=Math.floor((Date.now()-new Date(ts))/1000);
+  if(d<60)return d+'s ago';
+  if(d<3600)return Math.floor(d/60)+'m ago';
+  if(d<86400)return Math.floor(d/3600)+'h ago';
+  return Math.floor(d/86400)+'d ago';
+}
+function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3fb27f';}
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -90,54 +118,37 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
+
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('s-auth',auth.toFixed(4));
     sid('s-a',a.toFixed(3));sid('s-b',b.toFixed(3));sid('s-c',c.toFixed(3));
 
-    /* --- HELPER: format a timestamp ago --- */
-    function timeAgo(ts){
-      if(!ts)return '';
-      var d=Math.floor((Date.now()-new Date(ts))/1000);
-      if(d<60)return d+'s ago';
-      if(d<3600)return Math.floor(d/60)+'m ago';
-      if(d<86400)return Math.floor(d/3600)+'h ago';
-      return Math.floor(d/86400)+'d ago';
-    }
-    /* --- KIND → color --- */
-    function kindCol(k){var m={'task_complete':'#3fb27f','gate_unlock':'#C9A84C','exam_pass':'#00E5FF','login':'#8a8676','profile_update':'#9B6BF0','publish':'#E2C86D'};return m[k]||'#3fb27f';}
-    /* --- KIND → label --- */
-    function kindLabel(k){var m={'task_complete':'TASK','gate_unlock':'GATE','exam_pass':'EXAM','login':'LOGIN','profile_update':'PROFILE','publish':'PUBLISH'};return m[k]||k.toUpperCase();}
-
-    /* --- PLATFORM ACTIVITY FEED --- */
     (async function loadFeed(){
       try{
         var fl=document.getElementById('feed-list');
-        /* Try to read from a sovereign_events or task_completions table */
         var res=await sb.from('task_completions').select('user_id,task,axis,created_at').order('created_at',{ascending:false}).limit(30);
         var rows=res.data||[];
         if(!rows.length){fl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ACTIVITY RECORDED YET</div>';return;}
         fl.innerHTML=rows.map(function(r){
-          var col=kindCol(r.axis||'task');
-          var axis=r.axis?r.axis.toUpperCase():'';
+          var col=kindCol(r.axis);
           return '<div class="feed-item"><div class="feed-dot" style="--fd:'+col+'"></div>'
-            +'<div class="feed-body"><div class="feed-text">'+String(r.task||'Task completed').replace(/</g,'&lt;').substr(0,80)+'<span class="feed-kind" style="color:'+col+';border-color:'+col+'22">AXIS '+axis+'</span></div>'
+            +'<div class="feed-body"><div class="feed-text">'+String(r.task||'Task completed').replace(/</g,'&lt;').substr(0,80)
+            +'<span class="feed-kind" style="color:'+col+';border-color:'+col+'33">AXIS '+String(r.axis||'').toUpperCase()+'</span></div>'
             +'<div class="feed-meta">'+timeAgo(r.created_at)+'</div></div></div>';
         }).join('');
       }catch(e){var fl=document.getElementById('feed-list');if(fl)fl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">FEED UNAVAILABLE</div>';}
     })();
 
-    /* --- MY ACTIVITY --- */
     (async function loadMine(){
       try{
         var ml=document.getElementById('my-list');
         var res=await sb.from('task_completions').select('task,axis,created_at').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20);
         var rows=res.data||[];
-        if(!rows.length){ml.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ACTIVITY YET — COMPLETE TASKS TO SEE YOUR RECORD</div>';return;}
+        if(!rows.length){ml.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ACTIVITY YET &mdash; COMPLETE TASKS TO SEE YOUR RECORD</div>';return;}
         ml.innerHTML=rows.map(function(r){
-          var col=kindCol(r.axis||'task');
+          var col=kindCol(r.axis);
           return '<div class="feed-item"><div class="feed-dot" style="--fd:'+col+'"></div>'
             +'<div class="feed-body"><div class="feed-text">'+String(r.task||'Task completed').replace(/</g,'&lt;').substr(0,80)+'</div>'
             +'<div class="feed-meta">AXIS '+String(r.axis||'').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div></div>';
@@ -145,21 +156,19 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
       }catch(e){var ml=document.getElementById('my-list');if(ml)ml.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">ACTIVITY UNAVAILABLE</div>';}
     })();
 
-    /* --- POSTS (from content table if it exists) --- */
     (async function loadPosts(){
       try{
         var pl=document.getElementById('posts-list');
         var res=await sb.from('publications').select('title,author_name,created_at,kind').order('created_at',{ascending:false}).limit(12);
         var rows=res.data||[];
-        if(!rows.length){pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line);border-radius:2px">NO PUBLICATIONS YET — BE THE FIRST TO PUBLISH IN THE SOVEREIGN NETWORK</div>';return;}
+        if(!rows.length){pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">NO PUBLICATIONS YET &mdash; BE THE FIRST TO PUBLISH IN THE SOVEREIGN NETWORK</div>';return;}
         pl.innerHTML=rows.map(function(r){
           return '<div class="post-card"><div class="post-title">'+String(r.title||'Untitled').replace(/</g,'&lt;').substr(0,80)+'</div>'
             +'<div class="post-meta">'+String(r.author_name||'ANONYMOUS').toUpperCase()+' &middot; '+(r.kind||'ESSAY').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div>';
         }).join('');
-      }catch(e){var pl=document.getElementById('posts-list');if(pl)pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line);border-radius:2px">PUBLICATIONS UNAVAILABLE</div>';}
+      }catch(e){var pl=document.getElementById('posts-list');if(pl)pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">PUBLICATIONS UNAVAILABLE</div>';}
     })();
 
-    /* --- TRENDING (top axis movers in last 7 days) --- */
     (async function loadTrend(){
       try{
         var tl=document.getElementById('trend-list');
@@ -172,21 +181,21 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
         var NAMES={a:'KNOWLEDGE (AXIS A)',b:'MASTERY (AXIS B)',c:'CONTRIBUTION (AXIS C)'};
         var COLORS={a:'var(--cyan)',b:'var(--gold)',c:'var(--green)'};
         var sorted=[['a',counts.a],['b',counts.b],['c',counts.c]].sort(function(x,y){return y[1]-x[1];});
-        tl.innerHTML='<div style="margin-bottom:10px;font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted)">TASK DISTRIBUTION — LAST 7 DAYS &middot; '+total+' TOTAL</div>'
+        tl.innerHTML='<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">TASK DISTRIBUTION &middot; LAST 7 DAYS &middot; '+rows.length+' TOTAL</div>'
           +sorted.map(function(pair){
             var k=pair[0],v=pair[1];
             var pct=total?Math.round(v/total*100):0;
             return '<div style="margin-bottom:10px">'
               +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
-              +'<span style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:'+COLORS[k]+'">'+NAMES[k]+'</span>'
+              +'<span style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:'+COLORS[k]+'">'+NAMES[k]+'</span>'
               +'<span style="font-family:var(--D);font-size:11px;color:'+COLORS[k]+'">'+v+' ('+pct+'%)</span></div>'
-              +'<div style="height:4px;background:rgba(255,255,255,.04);border-radius:2px"><div style="height:100%;width:'+pct+'%;background:'+COLORS[k]+';border-radius:2px;transition:width 1s ease"></div></div></div>';
+              +'<div class="bar-track"><div class="bar-fill-anim" style="width:'+pct+'%;background:'+COLORS[k]+'"></div></div></div>';
           }).join('');
       }catch(e){var tl=document.getElementById('trend-list');if(tl)tl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">TRENDS UNAVAILABLE</div>';}
     })();
   }catch(e){document.getElementById('app').style.display='flex';}
 })();
 </script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+<script src="/bg.js"></script>
 </body>
 </html>

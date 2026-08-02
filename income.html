@@ -1,168 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Income &amp; Allocation</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta name="description" content="Sovereign revenue architecture, income allocation, and investment direction."/>
 <meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717 &mdash; Income &amp; Allocation"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/income.html"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717 &mdash; Income &amp; Allocation"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.shell{position:relative;z-index:1;display:flex;min-height:100vh}
-.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px;max-width:1300px}
-.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-.sechead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:28px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:10px}
-.kpi{border:1px solid var(--line);background:var(--panel);padding:18px 20px}
-.kpi .label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
-.kpi .value{font-family:var(--display);font-size:22px;font-weight:700;color:var(--gold)}
-.kpi .sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px}
-.kpi.highlight{border-color:rgba(201,168,76,.4);box-shadow:inset 0 0 16px rgba(201,168,76,.06)}
-.notice{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);border:1px solid rgba(201,168,76,.2);padding:10px 14px;margin-bottom:28px}
-.notice b{color:var(--gold)}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.panel{border:1px solid var(--line);background:var(--panel);padding:20px}
-/* Revenue table */
-.rev-table{width:100%;border-collapse:collapse}
-.rev-table th{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
-.rev-table td{font-family:var(--mono);font-size:11px;padding:10px 10px;border-bottom:1px dashed rgba(201,168,76,.08)}
-.rev-table tr:last-child td{border-bottom:none}
-.rev-table .tier-name{color:var(--solar)}
-.rev-table .price{color:var(--gold)}
-/* Allocation bars */
-.alloc-item{margin-bottom:16px}
+.alloc-item{margin-bottom:14px}
 .alloc-item .ahead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.alloc-item .aname{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink)}
-.alloc-item .apct{font-family:var(--mono);font-size:10px;color:var(--gold)}
-.alloc-bar{height:6px;background:rgba(201,168,76,.1);border-radius:0;overflow:hidden}
+.alloc-item .aname{font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--ink)}
+.alloc-item .apct{font-family:var(--M);font-size:10px;color:var(--gold)}
+.alloc-bar{height:5px;background:rgba(201,168,76,.1);overflow:hidden}
 .alloc-fill{height:100%;transition:width .8s}
-.alloc-item .adesc{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
-/* Investment direction */
-.invest-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px}
-.invest-card .inv-num{font-family:var(--display);font-size:32px;color:var(--gold);margin-bottom:8px}
-.invest-card .inv-name{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--solar);margin-bottom:10px}
-.invest-card .inv-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7}
-.invest-card .inv-pct{font-family:var(--display);font-size:18px;color:var(--cyan);margin-top:10px}
-/* Canvas chart */
-#revenue-canvas{width:100%;height:180px;display:block}
-.commission-rule{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:12px 16px;margin-top:14px}
-@media(max-width:960px){.two-col,.three-col{grid-template-columns:1fr}.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}}
+.alloc-item .adesc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.55}
+.invest-card{border:1px solid var(--line);background:var(--surface);padding:16px}
+.inv-num{font-family:var(--D);font-size:28px;color:var(--gold);margin-bottom:4px}
+.inv-name{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--solar);margin-bottom:8px}
+.inv-desc{font-size:11.5px;color:var(--muted);line-height:1.65}
+.inv-pct{font-family:var(--D);font-size:16px;color:var(--cyan);margin-top:8px}
+.invest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.rev-table{width:100%;border-collapse:collapse}
+.rev-table th{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);padding:8px 12px;border-bottom:2px solid var(--line);text-align:left;white-space:nowrap}
+.rev-table td{padding:10px 12px;border-bottom:1px dashed rgba(201,168,76,.08);font-size:12px;vertical-align:middle}
+.tier-name{font-family:var(--M);color:var(--solar)}
+.price-cell{font-family:var(--M);color:var(--gold);text-align:right}
+.annual-cell{font-family:var(--M);font-size:11px;color:var(--muted);text-align:right}
 </style>
 </head>
 <body>
-<div id="gate" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;font-family:'Cinzel Decorative',serif">
-  <div style="font-size:56px;color:#C9A84C">&#937;</div>
-  <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:3px;color:#85837b">VERIFYING ARCHITECT IDENTITY&hellip;</div>
-</div>
-<div id="app-shell" style="display:none">
-<div class="shell">
-<aside class="side" id="omega-side" data-page="income"></aside>
-<main class="main">
-<div class="topbar">
-  <div class="t">INCOME &amp; ALLOCATION<small>SOVEREIGN REVENUE &middot; INVESTMENT DIRECTION &middot; GROWTH ENGINE</small></div>
-  <canvas id="inc-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-</div>
-
-<div class="notice"><b>ARCHITECT VIEW</b> &mdash; This chamber shows platform revenue architecture, allocation rules, and investment direction. All monetary projections are illustrative and require licensed financial counsel before any real-world deployment.</div>
-
-<div class="sechead" data-reveal="fade-up">REVENUE ARCHITECTURE &middot; LIVE COUNTERS</div>
-<div class="kpi-row" data-reveal="fade-up">
-  <div class="kpi highlight"><div class="label">MEMBERSHIP INCOME</div><div class="value" id="kpi-membership">--</div><div class="sub">9 tiers active &middot; $9.17 &rarr; $917.17/mo</div></div>
-  <div class="kpi"><div class="label">MARKETPLACE COMMISSION</div><div class="value" id="kpi-market">9.17%</div><div class="sub">Per transaction &middot; automatic</div></div>
-  <div class="kpi"><div class="label">CONSULTANCY REVENUE</div><div class="value" id="kpi-consult">--</div><div class="sub">Per booking &middot; 6 domains</div></div>
-  <div class="kpi"><div class="label">PUBLISHING ROYALTIES</div><div class="value" id="kpi-publish">--</div><div class="sub">Per approved publication</div></div>
-  <div class="kpi"><div class="label">ACTIVE MEMBERS</div><div class="value" id="kpi-members">--</div><div class="sub">Approved + subscribed</div></div>
-  <div class="kpi"><div class="label">TOTAL PLATFORM VALUE</div><div class="value" id="kpi-total">&#937; ENGINE</div><div class="sub">Matrix nodes &times; 91.7</div></div>
+<aside id="omega-side" data-page="income"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">INCOME &amp; ALLOCATION<span class="topbar-sub">REVENUE ARCHITECTURE &middot; TIERS &middot; INVESTMENT DIRECTION</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('overview')">OVERVIEW</button>
+  <button class="tab-btn" onclick="setTab('tiers')">TIERS</button>
+  <button class="tab-btn" onclick="setTab('allocation')">ALLOCATION</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<div class="sechead" data-reveal="fade-up">SUBSCRIPTION TIER ENGINE &middot; 12 TIERS</div>
-<div class="panel" style="overflow-x:auto">
-<table class="rev-table">
-  <tr><th>TIER</th><th>RANK</th><th>PRICE/MO</th><th>ANNUAL VALUE</th><th>MIN MEMBERS FOR BREAK-EVEN</th></tr>
-  <tr><td class="tier-name">TIER I</td><td>INITIATE</td><td class="price">$9.17</td><td>$110.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER II</td><td>SEEKER</td><td class="price">$27.17</td><td>$326.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER III</td><td>ADEPT</td><td class="price">$91.17</td><td>$1,094.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER IV</td><td>EXPERT</td><td class="price">$171.17</td><td>$2,054.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER V</td><td>MASTER</td><td class="price">$271.17</td><td>$3,254.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER VI</td><td>ELITE</td><td class="price">$391.17</td><td>$4,694.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER VII</td><td>SOVEREIGN</td><td class="price">$517.17</td><td>$6,206.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER VIII</td><td>LEGEND</td><td class="price">$717.17</td><td>$8,606.04</td><td>1</td></tr>
-  <tr><td class="tier-name">TIER IX</td><td>OMEGA</td><td class="price">$917.17</td><td>$11,006.04</td><td>1</td></tr>
-</table>
-<div class="commission-rule">&#937; MASTER COMMISSION RULE &mdash; 9.17% of all transactions flows directly to the Sovereign Vault. This is the foundational economic axiom of the platform.</div>
+<div class="tab-panel active" id="tab-overview">
+  <div class="sechead">REVENUE ARCHITECTURE</div>
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-val" id="kpi-members">—</div><div class="kpi-label">ACTIVE MEMBERS</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="kpi-membership">—</div><div class="kpi-label">EST. MONTHLY INCOME</div></div>
+    <div class="kpi-card"><div class="kpi-val">9.17%</div><div class="kpi-label">COMMISSION RATE</div></div>
+    <div class="kpi-card"><div class="kpi-val">104,976</div><div class="kpi-label">LATTICE NODES</div></div>
+  </div>
+  <div class="sechead" style="margin-top:8px">INCOME PROJECTION &mdash; 12-MONTH ARC (ILLUSTRATIVE)</div>
+  <div class="glass" style="padding:12px">
+    <canvas id="revenue-canvas" style="width:100%;height:160px;display:block"></canvas>
+  </div>
+  <div class="sechead" style="margin-top:8px">&#937; COMMISSION RULE</div>
+  <div class="glass" style="padding:14px 16px;font-family:var(--M);font-size:10px;letter-spacing:1.5px;color:var(--gold)">9.17% of all transactions flows directly to the Sovereign Vault. This is the foundational economic axiom of the platform.</div>
+  <div id="restricted-notice" style="display:none;margin-top:12px">
+    <div class="glass" style="padding:12px;font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted)">Live revenue data is visible to the Architect only. KPI projections above are illustrative.</div>
+  </div>
 </div>
 
-<div class="sechead" data-reveal="fade-up">INCOME ALLOCATION DIRECTIVE &middot; WHERE EVERY DOLLAR GOES</div>
-<div class="two-col">
-<div class="panel">
-  <div style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:18px">ALLOCATION RULES &middot; % OF NET INCOME</div>
-  <div id="alloc-bars"></div>
+<div class="tab-panel" id="tab-tiers">
+  <div class="sechead">SUBSCRIPTION TIER ENGINE &middot; 9 TIERS</div>
+  <div style="overflow-x:auto;border:1px solid var(--line);background:var(--surface)">
+    <table class="rev-table">
+      <thead><tr><th>TIER</th><th>RANK</th><th>PRICE / MO</th><th style="text-align:right">ANNUAL VALUE</th></tr></thead>
+      <tbody>
+        <tr><td class="tier-name">TIER I</td><td>INITIATE</td><td class="price-cell">$9.17</td><td class="annual-cell">$110.04</td></tr>
+        <tr><td class="tier-name">TIER II</td><td>SEEKER</td><td class="price-cell">$27.17</td><td class="annual-cell">$326.04</td></tr>
+        <tr><td class="tier-name">TIER III</td><td>ADEPT</td><td class="price-cell">$91.17</td><td class="annual-cell">$1,094.04</td></tr>
+        <tr><td class="tier-name">TIER IV</td><td>EXPERT</td><td class="price-cell">$171.17</td><td class="annual-cell">$2,054.04</td></tr>
+        <tr><td class="tier-name">TIER V</td><td>MASTER</td><td class="price-cell">$271.17</td><td class="annual-cell">$3,254.04</td></tr>
+        <tr><td class="tier-name">TIER VI</td><td>ELITE</td><td class="price-cell">$391.17</td><td class="annual-cell">$4,694.04</td></tr>
+        <tr><td class="tier-name">TIER VII</td><td>SOVEREIGN</td><td class="price-cell">$517.17</td><td class="annual-cell">$6,206.04</td></tr>
+        <tr><td class="tier-name">TIER VIII</td><td>LEGEND</td><td class="price-cell">$717.17</td><td class="annual-cell">$8,606.04</td></tr>
+        <tr><td class="tier-name">TIER IX</td><td>OMEGA</td><td class="price-cell">$917.17</td><td class="annual-cell">$11,006.04</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-<div>
-  <canvas id="revenue-canvas"></canvas>
-  <div style="margin-top:16px;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted)">INCOME GROWTH PROJECTION (ILLUSTRATIVE &middot; 12-MONTH ARC)</div>
+
+<div class="tab-panel" id="tab-allocation">
+  <div class="sechead">INCOME ALLOCATION DIRECTIVE &middot; % OF NET INCOME</div>
+  <div class="glass" style="padding:16px" id="alloc-bars"></div>
+  <div class="sechead" style="margin-top:8px">INVESTMENT DIRECTION</div>
+  <div class="invest-grid" id="invest-grid"></div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">INCOME ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">REVENUE STREAMS</div><div class="card-body">Nine subscription tiers from $9.17/mo (Initiate) to $917.17/mo (Omega). Plus 9.17% marketplace commission on every transaction, consultancy bookings, and publishing royalties. All revenue flows through the Sovereign Vault before allocation.</div></div>
+    <div class="card"><div class="card-title">ALLOCATION RULE</div><div class="card-body">Every dollar of net income is distributed across seven categories: Technology (25%), Content (20%), Legal (15%), Marketing (15%), Reserve (12%), R&D (8%), and Architect Draw (5%). The order is non-negotiable — the platform secures before the architect earns.</div></div>
+    <div class="card"><div class="card-title">INVESTMENT DIRECTION</div><div class="card-body">Surplus capital flows to six directions: Platform Infrastructure Bonds (30%), Licensed Legal Reserves (20%), Content & Media Production (20%), Sovereign Growth Fund (15%), Affiliate & Partner Network (10%), and Technology R&D (5%).</div></div>
+    <div class="card"><div class="card-title">LEGAL NOTICE</div><div class="card-body">All monetary projections are illustrative and require licensed financial counsel before any real-world deployment. The Economic Layer (Phase II — fiat acquisition of Ω, Marketplace, and asset minting) remains sealed pending legal review on classification, KYC/AML, and payment terms.</div></div>
+  </div>
 </div>
 </div>
 
-<div class="sechead" data-reveal="fade-up">INVESTMENT DIRECTION &middot; WHERE TO PLACE SURPLUS</div>
-<div class="three-col" id="invest-grid"></div>
-
-</main>
-</div>
-</div>
-
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
-
-const ALLOCATION = [
-  {name:'LEGAL & COMPLIANCE FUND',pct:15,col:'#8B0000',desc:'Securities counsel, KYC/AML, IP registration, Madrid Protocol, licensed advisor retainer. Non-negotiable first allocation.'},
+<script>
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','tiers','allocation','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+var ALLOCATION=[
   {name:'TECHNOLOGY INFRASTRUCTURE',pct:25,col:'#00E5FF',desc:'Servers, CDN, Supabase scale, domain, CI/CD, security hardening, monitoring. The foundation that must never fail.'},
   {name:'CONTENT CREATION',pct:20,col:'#C9A84C',desc:'Cinema, gaming builds, media production, graphic assets, motion design, cinematic expansion of the universe.'},
+  {name:'LEGAL & COMPLIANCE FUND',pct:15,col:'#8B0000',desc:'Securities counsel, KYC/AML, IP registration, Madrid Protocol, licensed advisor retainer. Non-negotiable first allocation.'},
   {name:'MARKETING & GROWTH',pct:15,col:'#3fb27f',desc:'Targeted member acquisition, social campaigns, affiliate program, partnership outreach, SEO.'},
   {name:'RESERVE & STABILITY',pct:12,col:'#D9B86A',desc:'Emergency fund, cash flow buffer, minimum 3 months operating reserve at all times. The sovereign safety layer.'},
   {name:'RESEARCH & DEVELOPMENT',pct:8,col:'#9B6BF0',desc:'AI agent development, blockchain R&D, new module builds, experiment budget for untested ideas.'},
   {name:'ARCHITECT SOVEREIGN DRAW',pct:5,col:'#E2C86D',desc:'Your personal allocation. Grows proportionally as platform revenue scales. Sovereign earns after the platform is secured.'}
 ];
-
-const INVESTMENTS = [
-  {num:'01',name:'PLATFORM INFRASTRUCTURE BONDS',pct:'30%',desc:'Reinvest into the platform itself. Every dollar that improves server capacity, security, or UX multiplies subscriber retention. The highest-ROI investment at early stage.'},
-  {num:'02',name:'LICENSED LEGAL RESERVES',pct:'20%',desc:'Pre-fund the legal framework before you need it. Securities counsel, token legal opinion, KYC provider contracts. Build the legal moat early.'},
-  {num:'03',name:'CONTENT & MEDIA PRODUCTION',pct:'20%',desc:'The cinema universe, gaming builds, and educational academy are the stickiest retention mechanisms. Invest in the content that makes leaving impossible.'},
+var INVESTMENTS=[
+  {num:'01',name:'PLATFORM INFRASTRUCTURE BONDS',pct:'30%',desc:'Reinvest into the platform itself. Every dollar that improves server capacity, security, or UX multiplies subscriber retention.'},
+  {num:'02',name:'LICENSED LEGAL RESERVES',pct:'20%',desc:'Pre-fund the legal framework before you need it. Securities counsel, token legal opinion, KYC provider contracts.'},
+  {num:'03',name:'CONTENT & MEDIA PRODUCTION',pct:'20%',desc:'The cinema universe, gaming builds, and educational academy are the stickiest retention mechanisms.'},
   {num:'04',name:'SOVEREIGN GROWTH FUND',pct:'15%',desc:'A ring-fenced fund that compounds interest and appreciation. Only touched for strategic expansion after all operational needs are met.'},
-  {num:'05',name:'AFFILIATE & PARTNER NETWORK',pct:'10%',desc:'Build a network of advocates who earn commissions for bringing qualified members. The most efficient paid growth mechanism at this stage.'},
+  {num:'05',name:'AFFILIATE & PARTNER NETWORK',pct:'10%',desc:'A network of advocates who earn commissions for bringing qualified members. The most efficient paid growth mechanism at this stage.'},
   {num:'06',name:'TECHNOLOGY R&D',pct:'5%',desc:'Experimental AI agent builds, blockchain protocol testing, simulation engine R&D. The seeds of Phase 3 and Phase 4 architecture.'}
 ];
-
 function buildAllocBars(){
-  var c=document.getElementById('alloc-bars'); c.innerHTML='';
+  var c=document.getElementById('alloc-bars');c.innerHTML='';
   ALLOCATION.forEach(function(a){
     var div=document.createElement('div');div.className='alloc-item';
     div.innerHTML='<div class="ahead"><span class="aname">'+a.name+'</span><span class="apct">'+a.pct+'%</span></div>'+
@@ -170,87 +131,66 @@ function buildAllocBars(){
       '<div class="adesc">'+a.desc+'</div>';
     c.appendChild(div);
   });
-  setTimeout(function(){
-    document.querySelectorAll('.alloc-fill').forEach(function(el){ el.style.width=el.getAttribute('data-w')+'%'; });
-  },120);
+  setTimeout(function(){document.querySelectorAll('.alloc-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')+'%';});},120);
 }
-
 function buildInvestGrid(){
-  var g=document.getElementById('invest-grid'); g.innerHTML='';
+  var g=document.getElementById('invest-grid');g.innerHTML='';
   INVESTMENTS.forEach(function(inv){
     var div=document.createElement('div');div.className='invest-card';
     div.innerHTML='<div class="inv-num">'+inv.num+'</div><div class="inv-name">'+inv.name+'</div><div class="inv-desc">'+inv.desc+'</div><div class="inv-pct">'+inv.pct+' ALLOCATION</div>';
     g.appendChild(div);
   });
 }
-
 function buildRevenueChart(){
   var cv=document.getElementById('revenue-canvas');
-  var W=cv.offsetWidth||600,H=180;
+  if(!cv)return;
+  var W=cv.offsetWidth||600,H=160;
   cv.width=W;cv.height=H;
   var ctx=cv.getContext('2d');
   var months=['J','F','M','A','M','J','J','A','S','O','N','D'];
   var data=[2,4,7,11,16,22,29,37,46,56,67,80];
-  var maxV=80,padL=30,padB=28,padT=14,padR=14;
+  var maxV=80,padL=34,padB=26,padT=12,padR=12;
   var gW=W-padL-padR,gH=H-padB-padT;
-  // Grid lines
   for(var i=0;i<=4;i++){
     var y=padT+gH*(1-i/4);
     ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);
     ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(133,131,123,0.6)';ctx.font='8px "Courier Prime"';ctx.textAlign='right';
-    ctx.fillText('$'+(Math.round(i*maxV/4*10)/10)+'k',padL-4,y+3);
+    ctx.fillStyle='rgba(133,131,123,.6)';ctx.font='8px monospace';ctx.textAlign='right';
+    ctx.fillText('$'+(i*20)+'k',padL-4,y+3);
   }
-  // Area
   ctx.beginPath();
-  data.forEach(function(v,i){
-    var x=padL+i*gW/11,y=padT+gH*(1-v/maxV);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
+  data.forEach(function(v,i){var x=padL+i*gW/11,y=padT+gH*(1-v/maxV);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
   ctx.lineTo(padL+11*gW/11,padT+gH);ctx.lineTo(padL,padT+gH);ctx.closePath();
-  var g=ctx.createLinearGradient(0,padT,0,padT+gH);
-  g.addColorStop(0,'rgba(201,168,76,0.35)');g.addColorStop(1,'rgba(201,168,76,0.02)');
-  ctx.fillStyle=g;ctx.fill();
-  // Line
+  var gr=ctx.createLinearGradient(0,padT,0,padT+gH);
+  gr.addColorStop(0,'rgba(201,168,76,.35)');gr.addColorStop(1,'rgba(201,168,76,.02)');
+  ctx.fillStyle=gr;ctx.fill();
   ctx.beginPath();
-  data.forEach(function(v,i){ var x=padL+i*gW/11,y=padT+gH*(1-v/maxV); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  data.forEach(function(v,i){var x=padL+i*gW/11,y=padT+gH*(1-v/maxV);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
   ctx.strokeStyle='#C9A84C';ctx.lineWidth=2;ctx.stroke();
-  // Labels
-  ctx.fillStyle='rgba(133,131,123,0.7)';ctx.textAlign='center';
-  months.forEach(function(m,i){ ctx.fillText(m,padL+i*gW/11,H-8); });
+  ctx.fillStyle='rgba(133,131,123,.7)';ctx.textAlign='center';
+  months.forEach(function(m,i){ctx.fillText(m,padL+i*gW/11,H-8);});
 }
-
-async function loadKPIs(){
-  var members=(await sb.from('profiles').select('id',{count:'exact'}).eq('access_approved',true)).count || 0;
-  document.getElementById('kpi-members').textContent=members;
-  var tierBase=9.17;
-  var estMonthly=(members*tierBase).toFixed(0);
-  document.getElementById('kpi-membership').textContent='~$'+estMonthly+'/mo';
-  document.getElementById('kpi-consult').textContent='READY TO ACTIVATE';
-  document.getElementById('kpi-publish').textContent='READY TO ACTIVATE';
-}
-
+buildAllocBars();buildInvestGrid();
+setTimeout(buildRevenueChart,150);
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 async function boot(){
-  const sess=(await sb.auth.getSession()).data.session;
-  if(!sess){ window.location.href='/account.html'; return; }
-  const pr=(await sb.from('profiles').select('is_owner').eq('id',sess.user.id).maybeSingle()).data;
-  if(!pr?.is_owner){
-    document.getElementById('gate').innerHTML=`
-      <div style="font-size:56px;color:#8B0000">&#937;</div>
-      <div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:#8B0000;font-weight:700">ACCESS DENIED</div>
-      <div style="font-family:'Courier Prime',monospace;font-size:11px;color:#85837b;line-height:1.7">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
-      <a href="/dashboard.html" style="font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:3px;color:#85837b;margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>`;
-    return;
-  }
-  document.getElementById('gate').style.display='none';
-  document.getElementById('app-shell').style.display='block';
-  buildAllocBars();
-  buildInvestGrid();
-  setTimeout(buildRevenueChart,100);
-  loadKPIs();
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  if(!pr.is_owner){document.getElementById('restricted-notice').style.display='block';return;}
+  var r=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true);
+  var members=r.count||0;
+  document.getElementById('kpi-members').textContent=members;
+  document.getElementById('kpi-membership').textContent='~$'+(members*9.17).toFixed(0)+'/mo';
 }
 boot();
 </script>
-<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script src="/bg.js"></script>
 </body>
 </html>

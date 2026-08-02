@@ -1,169 +1,334 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — Sovereign Examination · Axis A Knowledge Test · Gate Qualification">
-<title>&#937; SYD OMEGA 91717 &mdash; Examination</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign Examination · SYD OMEGA 91717</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:var(--pad)}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}.kpi-n{font-family:var(--D);font-size:20px;color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-/* EXAM UI */
-.exam-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:20px;border-radius:2px;margin-bottom:12px}
-.exam-q{font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:14px;line-height:1.5}
-.exam-opts{display:flex;flex-direction:column;gap:8px}
-.opt-btn{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);color:var(--ink);font-family:var(--R);font-size:12px;padding:11px 16px;border-radius:2px;cursor:pointer;text-align:left;transition:.18s;line-height:1.5}
-.opt-btn:hover{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05);color:var(--gold)}
-.opt-btn.correct{border-color:var(--green)!important;background:rgba(63,178,127,.08)!important;color:var(--green)!important}
-.opt-btn.wrong{border-color:var(--crim)!important;background:rgba(139,0,0,.06)!important;color:var(--crim)!important}
-.opt-btn:disabled{cursor:default;pointer-events:none}
-.exam-feedback{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:8px 12px;border-radius:2px;margin-top:8px;display:none}
-.exam-progress{height:4px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-bottom:16px}
-.exam-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .5s ease}
-.exam-result{text-align:center;padding:30px;border:1px solid rgba(201,168,76,.3);border-radius:2px;background:rgba(201,168,76,.03);display:none}
-.result-score{font-family:var(--D);font-size:clamp(40px,8vw,72px);color:var(--gold);line-height:1;margin-bottom:8px}
-.result-label{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:16px}
-.result-detail{font-size:12px;line-height:1.8;color:var(--ink);opacity:.7}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:auto}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
+.tab-btn.active{background:#9B6BF0;color:#fff;border-color:#9B6BF0;}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
+.stat-num{font-family:'Courier New',monospace;font-size:20px;color:#9B6BF0;font-weight:700;}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
+/* EXAM CARD */
+.exam-card{background:#0d0d0d;border:1px solid #222;padding:28px;max-width:600px;margin:0 auto 20px;text-align:center;position:relative;}
+.exam-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#9B6BF0,#00E5FF);}
+.exam-q{font-family:'Courier New',monospace;font-size:14px;color:#e0e0e0;line-height:1.6;margin-bottom:20px;}
+.exam-domain{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:2px;margin-bottom:16px;}
+.flip-btn{padding:10px 24px;background:#1a1a2e;border:1px solid #9B6BF0;color:#9B6BF0;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;margin-bottom:16px;}
+.flip-btn:hover{background:#9B6BF0;color:#fff;}
+.exam-answer{background:#111;border:1px solid #222;padding:16px;margin-bottom:20px;font-size:12px;color:#ccc;line-height:1.6;text-align:left;display:none;}
+.grade-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.grade-btn{padding:10px 20px;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border:1px solid;font-weight:700;}
+.grade-easy{background:#4CAF50;border-color:#4CAF50;color:#000;}
+.grade-good{background:#00E5FF;border-color:#00E5FF;color:#000;}
+.grade-hard{background:#FF9800;border-color:#FF9800;color:#000;}
+.grade-miss{background:#FF4444;border-color:#FF4444;color:#fff;}
+.progress-hdr{display:flex;justify-content:space-between;font-family:'Courier New',monospace;font-size:10px;color:#555;margin-bottom:6px;}
+.progress-bar{background:#1a1a1a;height:6px;border-radius:3px;overflow:hidden;margin-bottom:20px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#9B6BF0,#00E5FF);transition:width .4s;}
+/* QUESTION LIST */
+.q-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:14px;margin-bottom:8px;position:relative;}
+.q-text{font-family:'Courier New',monospace;font-size:11px;color:#e0e0e0;margin-bottom:4px;}
+.q-answer{font-size:11px;color:#666;margin-top:4px;}
+.q-meta{display:flex;gap:8px;margin-top:8px;font-family:'Courier New',monospace;font-size:9px;color:#555;flex-wrap:wrap;}
+.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:10px;}
+.del-btn:hover{color:#FF4444;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
+.form-group textarea{resize:vertical;line-height:1.6;min-height:80px;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#9B6BF0;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-primary{padding:10px 24px;background:#9B6BF0;border:none;color:#fff;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
+.btn-primary:hover{background:#7a4fcf;}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+.filter-tag.active{background:#1a1a2e;border-color:#9B6BF0;color:#9B6BF0;}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:16px;}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;letter-spacing:1px;margin-bottom:8px;}
+.sci-body{font-size:11px;color:#888;line-height:1.65;}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
+.session-result{background:#0d0d0d;border:1px solid #9B6BF0;padding:24px;text-align:center;max-width:500px;margin:0 auto;}
+.result-big{font-family:'Courier New',monospace;font-size:36px;color:#9B6BF0;font-weight:700;}
+.result-label{font-family:'Courier New',monospace;font-size:10px;color:#555;letter-spacing:2px;margin-bottom:8px;}
 </style>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="exam" aria-label="Navigation"></aside>
-  <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN EXAMINATION<small>AXIS A KNOWLEDGE TEST &middot; GATE QUALIFICATION &middot; EARN CERTIFICATES &middot; ADVANCE YOUR PROGRESSION</small></div><canvas id="exm-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="k-score">0%</div><div class="kpi-l">EXAM SCORE</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="k-q">1/10</div><div class="kpi-l">QUESTION</div></div>
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="k-correct">0</div><div class="kpi-l">CORRECT</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="k-axis">--</div><div class="kpi-l">MY AXIS A</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN KNOWLEDGE EXAMINATION &middot; 10 QUESTIONS &middot; AXIS A</div>
-      <div class="exam-progress"><div class="exam-progress-fill" id="exam-prog" style="width:10%"></div></div>
-      <!-- EXAM QUESTION AREA -->
-      <div id="exam-area"></div>
-      <!-- RESULT PANEL -->
-      <div class="exam-result" id="exam-result">
-        <div class="result-score" id="result-pct">--</div>
-        <div class="result-label">EXAMINATION COMPLETE &middot; AXIS A INCREMENT EARNED</div>
-        <div class="result-detail" id="result-detail"></div>
-        <button onclick="startExam()" style="margin-top:20px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 24px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;border-radius:2px;cursor:pointer">TAKE EXAM AGAIN</button>
-        <a href="/evolution.html" style="display:block;margin-top:10px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);text-decoration:none">VIEW MY EVOLUTION &#8594;</a>
-      </div>
-    </div>
-    <div data-page-emblem="exam" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; EXAMINATION &middot; AXIS A KNOWLEDGE &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
-  </main>
+<div id="omega-nav"></div>
+<main class="page-content">
+<div class="page-header">
+  <div class="page-title">SOVEREIGN EXAMINATION</div>
+  <div class="page-subtitle">TEST &middot; GRADE &middot; REPEAT &middot; MASTER</div>
 </div>
-<script>
-var QUESTIONS=[
-  {q:"What is the canonical Authority Formula?",opts:["AUTH=sqrt(A²+B²+C²)","AUTH=sqrt(A³+B³+C³)×φ/e","AUTH=(A+B+C)/3×φ","AUTH=A×B×C/e"],ans:1,
-   exp:"The cubic formula AUTH=sqrt(A³+B³+C³)×φ/e uses φ=1.618 and e=2.718. The old quadratic form is deprecated."},
-  {q:"What is the Authority Apex — the maximum possible score?",opts:["15.5880","27.8367","9.0000","18.0000"],ans:1,
-   exp:"At A=B=C=9.000: sqrt(729+729+729)×1.6180/2.7182 = sqrt(2187)×0.5954 = 27.8367."},
-  {q:"How many nodes does the Canonical Lattice contain?",opts:["729","59049","104976","571536"],ans:2,
-   exp:"12 tracks × 12 phases × 9³ = 12 × 12 × 729 = 104,976 canonical lattice nodes."},
-  {q:"How long is the Trial Period in seconds?",opts:["300","557","1000","9917"],ans:1,
-   exp:"The Trial Period is 9 minutes and 17 seconds = 557 seconds precisely. Granted exclusively by the Sovereign Founder."},
-  {q:"How many Authority Gates exist in the platform?",opts:["9","10","11","12"],ans:3,
-   exp:"12 gates: INITIATE(2.32) → ACOLYTE → SCHOLAR → KEEPER → GUARDIAN → ARCHITECT → SOVEREIGN → VANGUARD → HERALD → ORACLE → PRIME → APEX(27.84)."},
-  {q:"What is the Daily Dedication Target in seconds?",opts:["86400","33437","9000","3600"],ans:1,
-   exp:"9 hours, 17 minutes, 17 seconds = 33,437 seconds. Chrono B tracks active platform engagement toward this target."},
-  {q:"Which element is assigned exclusively to the Virgo sign?",opts:["Metal","Wind","Water","Sand"],ans:3,
-   exp:"Sand is the sovereign element of Virgo only. Fire: Aries/Leo/Sagittarius. Water: Cancer/Scorpio/Pisces. Wind: Gemini/Libra/Aquarius. Metal: Taurus/Capricorn."},
-  {q:"What is the Golden Ratio (φ) used in the Authority Formula?",opts:["1.4142135","1.6180339887","2.7182818285","3.1415926535"],ans:1,
-   exp:"φ=1.6180339887. It is embedded in the authority formula: AUTH=sqrt(A³+B³+C³)×φ/e alongside Euler's number e=2.718."},
-  {q:"Which of the following is the Aries token?",opts:["AURUM","ARENITE","ZEPHYR","STYX"],ans:1,
-   exp:"ARENITE is the sovereign token of Aries — the Founder's sign. Each of the 12 signs has its own token in the ΩSYD economy."},
-  {q:"Axis C measures which dimension of sovereign progression?",opts:["Knowledge","Mastery","Contribution","Authority"],ans:2,
-   exp:"Axis C = Contribution. Axis A = Knowledge (supervised learning). Axis B = Mastery (performance). All three feed into the Authority Formula."},
-];
-var _cur=0,_correct=0,_answered=0,_profile=null;
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('exam')">EXAM</button>
+  <button class="tab-btn" onclick="switchTab('questions')">QUESTIONS</button>
+  <button class="tab-btn" onclick="switchTab('add')">ADD Q&amp;A</button>
+  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
+</div>
 
-function startExam(){_cur=0;_correct=0;_answered=0;document.getElementById('exam-result').style.display='none';showQ();}
-function showQ(){
-  var prog=document.getElementById('exam-prog');
-  if(prog) prog.style.width=((_cur+1)/QUESTIONS.length*100)+'%';
-  var kq=document.getElementById('k-q');if(kq)kq.textContent=(_cur+1)+'/'+QUESTIONS.length;
-  var area=document.getElementById('exam-area');if(!area) return;
-  var q=QUESTIONS[_cur];
-  area.innerHTML='<div class="exam-card"><div class="exam-q">Q'+(_cur+1)+'. '+q.q+'</div>'
-    +'<div class="exam-opts">'+q.opts.map(function(o,i){
-      return '<button class="opt-btn" onclick="answer('+i+')" aria-label="Option '+(i+1)+': '+o+'">'+String.fromCharCode(65+i)+'. '+o+'</button>';
-    }).join('')+'</div>'
-    +'<div class="exam-feedback" id="fb-'+_cur+'"></div></div>';
+<div id="tab-exam" class="tab-pane active">
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL Q&amp;A</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-due">0</div><div class="stat-lbl">DUE TODAY</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-mastered">0</div><div class="stat-lbl">MASTERED</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-accuracy">0%</div><div class="stat-lbl">ACCURACY</div></div>
+  </div>
+  <div id="exam-area"></div>
+</div>
+
+<div id="tab-questions" class="tab-pane">
+  <div class="filter-row" id="dom-filter">
+    <div class="filter-tag active" data-d="all" onclick="setDomFilter('all',this)">ALL</div>
+    <div class="filter-tag" data-d="strategy" onclick="setDomFilter('strategy',this)">STRATEGY</div>
+    <div class="filter-tag" data-d="finance" onclick="setDomFilter('finance',this)">FINANCE</div>
+    <div class="filter-tag" data-d="science" onclick="setDomFilter('science',this)">SCIENCE</div>
+    <div class="filter-tag" data-d="philosophy" onclick="setDomFilter('philosophy',this)">PHILOSOPHY</div>
+    <div class="filter-tag" data-d="health" onclick="setDomFilter('health',this)">HEALTH</div>
+    <div class="filter-tag" data-d="custom" onclick="setDomFilter('custom',this)">CUSTOM</div>
+  </div>
+  <div id="questions-list"></div>
+</div>
+
+<div id="tab-add" class="tab-pane">
+  <div class="section-label">ADD QUESTION &amp; ANSWER</div>
+  <div class="form-group"><label>QUESTION</label><textarea id="q-question" placeholder="What is the question?" rows="3"></textarea></div>
+  <div class="form-group"><label>ANSWER</label><textarea id="q-answer" placeholder="What is the correct answer?" rows="4"></textarea></div>
+  <div class="form-row">
+    <div class="form-group"><label>DOMAIN</label>
+      <select id="q-domain">
+        <option value="strategy">Strategy</option>
+        <option value="finance">Finance</option>
+        <option value="science">Science</option>
+        <option value="philosophy">Philosophy</option>
+        <option value="health">Health</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="form-group"><label>DIFFICULTY</label>
+      <select id="q-diff">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-primary" onclick="addQuestion()">ADD QUESTION</button>
+    <button class="btn-secondary" onclick="loadSeedQuestions()">LOAD SEEDS</button>
+  </div>
+  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;"></div>
+</div>
+
+<div id="tab-science" class="tab-pane">
+  <div class="science-grid">
+    <div class="sci-card"><div class="sci-title">TESTING EFFECT</div><div class="sci-body">Roediger & Karpicke (2006): retrieval practice (testing) produces dramatically better long-term retention than re-reading (study effect). Being forced to recall an answer — even incorrectly — strengthens the memory trace more than passive review. Tests are not assessments; they are the learning itself.</div><div class="sci-ref">Roediger & Karpicke (2006). Psychological Science</div></div>
+    <div class="sci-card"><div class="sci-title">SPACED REPETITION (SM-2)</div><div class="sci-body">Ebbinghaus (1885) forgetting curve + Wozniak (1987) SM-2 algorithm: review items at expanding intervals (1d → 6d → 14d → 28d...) calibrated by recall quality. This exploits the spacing effect and desirable difficulty principle. SM-2 reduces study time by 60–80% vs. mass practice for the same retention.</div><div class="sci-ref">Wozniak (1987). SuperMemo SM-2 Algorithm</div></div>
+    <div class="sci-card"><div class="sci-title">INTERLEAVING</div><div class="sci-body">Rohrer & Taylor (2007): mixing problem types (interleaving) during practice produces worse immediate performance but far better long-term retention and transfer — because it forces discrimination between concepts. Examining across multiple domains in a single session exploits this effect.</div><div class="sci-ref">Rohrer & Taylor (2007). European Journal of Cognitive Psychology</div></div>
+    <div class="sci-card"><div class="sci-title">DESIRABLE DIFFICULTY</div><div class="sci-body">Bjork (1994): learning is most effective when it is effortful. Generation (producing answers vs. recognizing them), spacing, and interleaving all introduce desirable difficulty. The harder a retrieval feels in the moment, the stronger the memory trace it builds. Easy practice feels productive but is not.</div><div class="sci-ref">Bjork, R.A. (1994). Memory Distortions</div></div>
+    <div class="sci-card"><div class="sci-title">METACOGNITION</div><div class="sci-body">Flavell (1979): metacognition — knowing what you know — is a trainable skill. People systematically overestimate their knowledge (Dunning-Kruger, 1999). Self-examination with grading forces calibration of confidence vs. accuracy, building the metacognitive awareness that separates experts from novices.</div><div class="sci-ref">Flavell (1979) · Dunning & Kruger (1999)</div></div>
+    <div class="sci-card"><div class="sci-title">DELIBERATE PRACTICE</div><div class="sci-body">Ericsson (1993): expert performance results from deliberate practice — focused repetition in areas of weakness with immediate feedback. Examination that identifies weak domains and routes more questions there is computational deliberate practice. 10,000 hours of random practice ≠ 10,000 hours of deliberate practice.</div><div class="sci-ref">Ericsson et al. (1993). Psychological Review</div></div>
+  </div>
+</div>
+</main>
+<script src="/omega-ui.js"></script>
+<script>
+var questions=[];
+var domFilter='all';
+var sessionQueue=[];
+var sessionIdx=0;
+var sessionAnswered=0;
+var sessionCorrect=0;
+var showingAnswer=false;
+var DOMAIN_COLORS={strategy:'#FFD700',finance:'#4CAF50',science:'#00E5FF',philosophy:'#9B6BF0',health:'#FF9800',custom:'#888'};
+var SEEDS=[
+  {q:'What is the Rule of 72?',a:'Divide 72 by an annual interest rate to estimate years to double. At 7%: 72÷7 ≈ 10.3 years.',domain:'finance',diff:'easy'},
+  {q:'What is the Pareto Principle?',a:'80% of outcomes come from 20% of causes. Apply it to identify the high-leverage 20% of inputs.',domain:'strategy',diff:'easy'},
+  {q:'Define second-order thinking.',a:'Thinking about consequences of consequences — "and then what?" First-order: action → immediate effect. Second-order: action → effect → downstream effects.',domain:'philosophy',diff:'medium'},
+  {q:'What is the forgetting curve and how do you fight it?',a:'Ebbinghaus 1885: without reinforcement, ~50% forgotten in 24h, ~70% in a week. Countermeasure: spaced repetition — review at expanding intervals.',domain:'science',diff:'medium'},
+  {q:'What is the OODA loop?',a:'Observe → Orient → Decide → Act. Boyd\'s decision framework. Faster OODA cycles confer decisive advantage in competitive environments.',domain:'strategy',diff:'medium'},
+  {q:'What are Dunbar\'s Number tiers?',a:'Inner 5 (intimate), Close 15, Tribe 50, Network 150, Outer 500. Cognitive limit for maintaining stable social relationships.',domain:'science',diff:'hard'},
+  {q:'What is the 4% rule in finance?',a:'Bengen 1994: a portfolio can sustain 4% annual withdrawal for 30+ years. FI number = Annual Expenses × 25.',domain:'finance',diff:'medium'},
+  {q:'What is the testing effect?',a:'Roediger & Karpicke 2006: retrieval practice (testing yourself) produces far better long-term retention than re-reading. Tests ARE the learning.',domain:'science',diff:'easy'},
+  {q:'Define the authority formula AUTH.',a:'AUTH = sqrt(A³ + B³ + C³) × φ/e. APEX = 27.8367. A=Accomplishment, B=Breadth, C=Consistency. φ=1.618 (golden ratio), e=2.718.',domain:'custom',diff:'hard'},
+  {q:'What is Cognitive Load Theory?',a:'Sweller 1988: working memory holds ~4 chunks. Externalizing knowledge (notes, systems) frees working memory for higher-order reasoning. Reduce extraneous load, maximize germane load.',domain:'science',diff:'hard'},
+];
+
+function load(){
+  try{questions=JSON.parse(localStorage.getItem('omega_exam')||'null')||[];}catch(e){questions=[];}
+  if(!questions.length)questions=SEEDS.map(function(s,i){return Object.assign({id:'s'+i,repetitions:0,interval:1,easiness:2.5,nextReview:new Date().toISOString().slice(0,10)},s);});
 }
-window.answer=function(idx){
-  var q=QUESTIONS[_cur];
-  var btns=document.querySelectorAll('.opt-btn');
-  btns.forEach(function(b){b.disabled=true;});
-  btns[idx].classList.add(idx===q.ans?'correct':'wrong');
-  btns[q.ans].classList.add('correct');
-  var fb=document.getElementById('fb-'+_cur);
-  if(fb){
-    fb.style.display='block';
-    fb.style.background=idx===q.ans?'rgba(63,178,127,.06)':'rgba(139,0,0,.06)';
-    fb.style.border='1px solid '+(idx===q.ans?'rgba(63,178,127,.2)':'rgba(139,0,0,.2)');
-    fb.style.color=idx===q.ans?'var(--green)':'var(--crim)';
-    fb.textContent=(idx===q.ans?'CORRECT. ':('Incorrect. Correct: '+String.fromCharCode(65+q.ans)+'. '))+q.exp;
+function save(){localStorage.setItem('omega_exam',JSON.stringify(questions));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function today(){return new Date().toISOString().slice(0,10);}
+function isDue(q){return q.nextReview<=today();}
+
+function switchTab(t){
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+t).classList.add('active');
+  var labels={exam:'EXAM',questions:'QUESTIONS',add:'ADD Q&A',science:'SCIENCE'};
+  document.querySelectorAll('.tab-btn').forEach(function(b){if(b.textContent===labels[t])b.classList.add('active');});
+  if(t==='exam')renderExam();
+  if(t==='questions')renderQuestions();
+}
+
+function renderStats(){
+  var due=questions.filter(isDue).length;
+  var mastered=questions.filter(function(q){return q.interval>=21;}).length;
+  document.getElementById('stat-total').textContent=questions.length;
+  document.getElementById('stat-due').textContent=due;
+  document.getElementById('stat-mastered').textContent=mastered;
+  var acc=sessionAnswered?Math.round(sessionCorrect/sessionAnswered*100):0;
+  document.getElementById('stat-accuracy').textContent=acc+'%';
+}
+
+function renderExam(){
+  renderStats();
+  var area=document.getElementById('exam-area');
+  if(!sessionQueue.length||sessionIdx>=sessionQueue.length){
+    startSession(area);return;
   }
-  if(idx===q.ans)_correct++;
-  _answered++;
-  var kc=document.getElementById('k-correct');if(kc)kc.textContent=_correct;
-  var sc=document.getElementById('k-score');if(sc)sc.textContent=Math.round(_correct/_answered*100)+'%';
-  setTimeout(function(){
-    _cur++;
-    if(_cur<QUESTIONS.length){showQ();}
-    else{showResult();}
-  },2200);
-};
-function showResult(){
-  document.getElementById('exam-area').innerHTML='';
-  var pct=Math.round(_correct/QUESTIONS.length*100);
-  var grade=pct>=90?'DISTINCTION':pct>=70?'PASS':'REVIEW REQUIRED';
-  var inc=pct>=90?'+0.003':pct>=70?'+0.001':'';
-  document.getElementById('result-pct').textContent=pct+'%';
-  document.getElementById('result-detail').innerHTML=_correct+' of '+QUESTIONS.length+' correct.<br>Grade: '+grade+(inc?' &middot; Axis A increment: '+inc:'')+'<br>Retake anytime to reinforce sovereign knowledge.';
-  document.getElementById('exam-result').style.display='block';
-  document.getElementById('exam-prog').style.width='100%';
-  if(window.OmegaTelemetry)window.OmegaTelemetry.track('exam_completed',{score:pct,correct:_correct,total:QUESTIONS.length});
-  if(pct>=70&&window.OmegaWorkflow)window.OmegaWorkflow.run('task_complete',{task:'exam',axis:'a',score:pct});
+  showQuestion(area);
 }
-window.startExam=startExam;
+
+function startSession(area){
+  var due=questions.filter(isDue);
+  if(!due.length){
+    area.innerHTML='<div class="session-result"><div class="result-label">ALL CAUGHT UP</div><div class="result-big">✓</div><div style="font-family:\'Courier New\',monospace;font-size:11px;color:#555;margin-top:12px;">No questions due today.<br>Next review: '+nextDue()+'</div></div>';
+    return;
+  }
+  sessionQueue=shuffle(due);
+  sessionIdx=0;sessionAnswered=0;sessionCorrect=0;showingAnswer=false;
+  showQuestion(area);
+}
+
+function nextDue(){
+  var dates=questions.map(function(q){return q.nextReview;}).sort();
+  return dates[0]||'—';
+}
+
+function shuffle(arr){var a=[...arr];for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+function showQuestion(area){
+  if(sessionIdx>=sessionQueue.length){showResult(area);return;}
+  var q=sessionQueue[sessionIdx];
+  var col=DOMAIN_COLORS[q.domain]||'#888';
+  var pct=sessionQueue.length?(sessionIdx/sessionQueue.length*100):0;
+  area.innerHTML='<div class="progress-hdr"><span>'+sessionIdx+' / '+sessionQueue.length+'</span><span style="color:'+col+'">'+q.domain.toUpperCase()+'</span></div>'
+    +'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>'
+    +'<div class="exam-card">'
+    +'<div class="exam-domain" style="color:'+col+'">'+q.domain.toUpperCase()+' &middot; '+q.diff.toUpperCase()+' &middot; INTERVAL: '+q.interval+'d</div>'
+    +'<div class="exam-q">'+esc(q.q)+'</div>'
+    +'<button class="flip-btn" onclick="showAnswer()">REVEAL ANSWER</button>'
+    +'<div class="exam-answer" id="exam-answer">'+esc(q.a)+'</div>'
+    +'<div class="grade-row" id="grade-row" style="display:none;">'
+    +'<button class="grade-btn grade-miss" onclick="grade(0)">MISS</button>'
+    +'<button class="grade-btn grade-hard" onclick="grade(3)">HARD</button>'
+    +'<button class="grade-btn grade-good" onclick="grade(4)">GOOD</button>'
+    +'<button class="grade-btn grade-easy" onclick="grade(5)">EASY</button>'
+    +'</div></div>';
+}
+
+function showAnswer(){
+  document.getElementById('exam-answer').style.display='block';
+  document.getElementById('grade-row').style.display='flex';
+  document.querySelector('.flip-btn').style.display='none';
+}
+
+function grade(q_grade){
+  var q=sessionQueue[sessionIdx];
+  var orig=questions.find(function(x){return x.id===q.id;});
+  if(orig){
+    if(q_grade>=3){
+      orig.easiness=Math.max(1.3,orig.easiness+(0.1-(5-q_grade)*(0.08+(5-q_grade)*0.02)));
+      if(orig.repetitions===0)orig.interval=1;
+      else if(orig.repetitions===1)orig.interval=6;
+      else orig.interval=Math.round(orig.interval*orig.easiness);
+      orig.repetitions++;
+    } else {orig.repetitions=0;orig.interval=1;}
+    var next=new Date();next.setDate(next.getDate()+orig.interval);
+    orig.nextReview=next.toISOString().slice(0,10);
+  }
+  sessionAnswered++;
+  if(q_grade>=4)sessionCorrect++;
+  save();sessionIdx++;
+  renderExam();
+}
+
+function showResult(area){
+  var acc=sessionAnswered?Math.round(sessionCorrect/sessionAnswered*100):0;
+  area.innerHTML='<div class="session-result">'
+    +'<div class="result-label">SESSION COMPLETE</div>'
+    +'<div class="result-big">'+acc+'%</div>'
+    +'<div style="font-family:\'Courier New\',monospace;font-size:11px;color:#555;margin-top:10px;">'+sessionCorrect+' correct / '+sessionAnswered+' reviewed</div>'
+    +'<button class="flip-btn" onclick="sessionQueue=[];renderExam();" style="margin-top:20px;">NEW SESSION</button>'
+    +'</div>';
+  renderStats();
+}
+
+function setDomFilter(d,el){
+  domFilter=d;
+  document.querySelectorAll('#dom-filter .filter-tag').forEach(function(x){x.classList.remove('active');});
+  el.classList.add('active');renderQuestions();
+}
+
+function renderQuestions(){
+  var list=document.getElementById('questions-list');
+  var filtered=domFilter==='all'?questions:questions.filter(function(q){return q.domain===domFilter;});
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:40px;color:#333;font-family:\'Courier New\',monospace;">NO QUESTIONS</div>';return;}
+  list.innerHTML=filtered.map(function(q){
+    var col=DOMAIN_COLORS[q.domain]||'#888';
+    var due=isDue(q);
+    return '<div class="q-card" style="border-left-color:'+col+(due?';border-left-color:#FF4444':'')+'">'
+      +'<button class="del-btn" onclick="delQ(\''+q.id+'\')">DEL</button>'
+      +'<div class="q-text">'+esc(q.q)+'</div>'
+      +'<div class="q-answer">A: '+esc(q.a.slice(0,100))+(q.a.length>100?'...':'')+'</div>'
+      +'<div class="q-meta">'
+      +'<span style="color:'+col+'">'+q.domain.toUpperCase()+'</span>'
+      +'<span>INTERVAL: '+q.interval+'d</span>'
+      +'<span>REPS: '+q.repetitions+'</span>'
+      +'<span>NEXT: '+q.nextReview+'</span>'
+      +(due?'<span style="color:#FF4444">DUE</span>':'')
+      +'</div></div>';
+  }).join('');
+}
+
+function delQ(id){if(!confirm('Delete?'))return;questions=questions.filter(function(x){return x.id!==id;});save();renderQuestions();}
+
+function addQuestion(){
+  var q_text=document.getElementById('q-question').value.trim();
+  var a_text=document.getElementById('q-answer').value.trim();
+  var domain=document.getElementById('q-domain').value;
+  var diff=document.getElementById('q-diff').value;
+  if(!q_text||!a_text){alert('Question and answer required.');return;}
+  questions.push({id:uid(),q:q_text,a:a_text,domain:domain,diff:diff,repetitions:0,interval:1,easiness:2.5,nextReview:today()});
+  save();
+  document.getElementById('q-question').value='';document.getElementById('q-answer').value='';
+  document.getElementById('add-msg').textContent='QUESTION ADDED';
+  setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
+}
+
+function loadSeedQuestions(){
+  if(!confirm('Load seed questions? They will be appended.'))return;
+  SEEDS.forEach(function(s,i){questions.push(Object.assign({id:uid(),repetitions:0,interval:1,easiness:2.5,nextReview:today()},s));});
+  save();
+  document.getElementById('add-msg').textContent=SEEDS.length+' SEEDS LOADED';
+  setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
+}
+
+load();renderExam();
 </script>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
-    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('k-axis',a.toFixed(3));
-    /* Start exam */
-    window.startExam();
-  }catch(e){document.getElementById('app').style.display='flex';window.startExam();}
-})();
-</script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

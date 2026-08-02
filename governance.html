@@ -1,148 +1,305 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — Governance · Ethics · Risk · Compliance">
-<title>&#937; SYD OMEGA 91717 &mdash; Governance</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
-.kpi-n{font-family:var(--D);font-size:20px;color:var(--kc,var(--gold));line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:16px}
-.policy-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-left:3px solid var(--pc,var(--gold))}
-.policy-id{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--pc,var(--gold));margin-bottom:4px}
-.policy-title{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:6px}
-.policy-body{font-size:11px;line-height:1.7;color:var(--ink);opacity:.7}
-.risk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:16px}
-.risk-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-left:4px solid var(--rc,var(--gold))}
-.risk-score{font-family:var(--D);font-size:28px;color:var(--rc,var(--gold));line-height:1;margin-bottom:4px}
-.risk-label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
-.risk-title{font-family:var(--R);font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px}
-.risk-mit{font-size:10px;line-height:1.6;color:var(--ink);opacity:.65}
-.ethics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:16px}
-.eth-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
-.eth-id{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:4px}
-.eth-principle{font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:6px}
-.eth-desc{font-size:11px;line-height:1.65;color:var(--ink);opacity:.7}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}}
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — GOVERNANCE · Risk, policy, ethics, and sovereign decision making">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<title>&#937; SYD OMEGA 91717 &mdash; GOVERNANCE</title>
+<link rel="stylesheet" href="/omega-ui.css">
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="governance" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN GOVERNANCE<small>ISO 27001 &middot; TOGAF &middot; RISK REGISTER &middot; ETHICS BOARD &middot; 10 CANONICAL POLICIES &middot; 8 ETHICS DECLARATIONS</small></div><canvas id="gov-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="k-pols">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
-        <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="k-risks">--</div><div class="kpi-l">OPEN RISKS</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="k-critical">--</div><div class="kpi-l">CRITICAL RISKS</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">8</div><div class="kpi-l">ETHICS PRINCIPLES</div></div>
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="k-maturity">--</div><div class="kpi-l">GOV MATURITY</div></div>
-      </div>
+    <div class="topbar">
+      <div class="t">GOVERNANCE<small>GOVERN &middot; RISK &middot; POLICY &middot; ETHICS &middot; DECISIONS</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+    </div>
 
-      <!-- CANONICAL POLICIES -->
-      <div class="sechead" data-reveal="fade-up">CANONICAL GOVERNANCE POLICIES &middot; SOVEREIGN DIRECTIVES</div>
-      <div class="grid-3" id="policy-grid">
-        <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">LOADING POLICIES&hellip;</div>
-      </div>
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="overview" role="tab">OVERVIEW</button>
+      <button class="tab" data-tab="risk" role="tab">RISK REGISTER</button>
+      <button class="tab" data-tab="policies" role="tab">POLICIES</button>
+      <button class="tab" data-tab="decisions" role="tab">DECISIONS</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
+    </div>
 
-      <!-- RISK REGISTER -->
-      <div class="sechead" data-reveal="fade-up">ISO 27001 RISK REGISTER &middot; LIKELIHOOD &times; IMPACT = SCORE</div>
-      <div class="risk-grid" id="risk-grid">
-        <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">LOADING RISKS&hellip;</div>
+    <!-- OVERVIEW TAB -->
+    <div class="tab-panel active pad" id="tab-overview">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n" id="k-risks">0</div><div class="kpi-l">OPEN RISKS</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-policies">0</div><div class="kpi-l">POLICIES</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-decisions">0</div><div class="kpi-l">DECISIONS LOGGED</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-risk-score">--</div><div class="kpi-l">RISK SCORE</div></div>
       </div>
-
-      <!-- ETHICS BOARD -->
-      <div class="sechead" data-reveal="fade-up">ETHICS DECLARATIONS &middot; SOVEREIGN PRINCIPLES &middot; IMMUTABLE</div>
-      <div class="ethics-grid" id="ethics-grid">
-        <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:14px">LOADING ETHICS&hellip;</div>
+      <div class="sechead">GOVERNANCE FRAMEWORK</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--gold);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">RISK MANAGEMENT</div>
+          <div style="font-size:12px;line-height:1.7;opacity:.8">Identify, assess, and mitigate risks across all life domains. Build sovereign resilience through systematic risk awareness.</div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--cyan);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">POLICY FRAMEWORK</div>
+          <div style="font-size:12px;line-height:1.7;opacity:.8">Personal policies are pre-committed decisions that remove cognitive load at the point of choice. They encode your values into automatic behavior.</div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--green);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-bottom:6px">DECISION AUDIT</div>
+          <div style="font-size:12px;line-height:1.7;opacity:.8">Track major decisions with rationale, expected outcomes, and actual results. Learn from every fork in the path.</div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--purple);padding:14px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--purple);margin-bottom:6px">ETHICS ENGINE</div>
+          <div style="font-size:12px;line-height:1.7;opacity:.8">Sovereign ethics are self-governing moral standards. Not compliance-driven but integrity-driven — chosen principles that survive scrutiny.</div>
+        </div>
       </div>
     </div>
-    <div data-page-emblem="governance" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; GOVERNANCE &middot; ISO 27001 &middot; TOGAF &middot; SYD OMEGA 91717</span><span>10 POLICIES &middot; RISK REGISTER &middot; 8 ETHICS PRINCIPLES</span></div>
+
+    <!-- RISK REGISTER TAB -->
+    <div class="tab-panel pad" id="tab-risk" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="sechead" style="border:none;padding:0;margin:0;flex:1">RISK REGISTER</div>
+        <button class="btn" onclick="showAddRisk()">+ ADD RISK</button>
+      </div>
+      <div id="add-risk-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">RISK TITLE</div>
+            <input id="r-title" class="inp" style="width:100%" placeholder="Risk description...">
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DOMAIN</div>
+            <select id="r-domain" class="inp" style="width:100%">
+              <option>Health</option><option>Finance</option><option>Relationships</option>
+              <option>Career</option><option>Legal</option><option>Reputation</option><option>Other</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">SEVERITY (1-5)</div>
+            <select id="r-severity" class="inp" style="width:100%">
+              <option value="1">1 — Trivial</option><option value="2">2 — Minor</option>
+              <option value="3" selected>3 — Moderate</option><option value="4">4 — Major</option><option value="5">5 — Critical</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">LIKELIHOOD (1-5)</div>
+            <select id="r-likelihood" class="inp" style="width:100%">
+              <option value="1">1 — Rare</option><option value="2">2 — Unlikely</option>
+              <option value="3" selected>3 — Possible</option><option value="4">4 — Likely</option><option value="5">5 — Certain</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">MITIGATION PLAN</div>
+          <textarea id="r-mitigation" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="How do you plan to mitigate this risk?"></textarea>
+        </div>
+        <button class="btn" onclick="addRisk()">SAVE RISK</button>
+        <button class="btn" onclick="document.getElementById('add-risk-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
+      </div>
+      <div id="risk-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- POLICIES TAB -->
+    <div class="tab-panel pad" id="tab-policies" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="sechead" style="border:none;padding:0;margin:0;flex:1">SOVEREIGN POLICIES</div>
+        <button class="btn" onclick="showAddPolicy()">+ ADD POLICY</button>
+      </div>
+      <div id="add-policy-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">POLICY STATEMENT</div>
+          <input id="p-text" class="inp" style="width:100%" placeholder="e.g. Never negotiate on first offer...">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DOMAIN</div>
+            <select id="p-domain" class="inp" style="width:100%">
+              <option>Finance</option><option>Health</option><option>Relationships</option>
+              <option>Work</option><option>Mind</option><option>Conduct</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">STATUS</div>
+            <select id="p-status" class="inp" style="width:100%">
+              <option value="active">Active</option><option value="draft">Draft</option><option value="retired">Retired</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" onclick="addPolicy()">SAVE POLICY</button>
+        <button class="btn" onclick="document.getElementById('add-policy-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
+      </div>
+      <div id="policy-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- DECISIONS TAB -->
+    <div class="tab-panel pad" id="tab-decisions" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="sechead" style="border:none;padding:0;margin:0;flex:1">DECISION LOG</div>
+        <button class="btn" onclick="showAddDecision()">+ LOG DECISION</button>
+      </div>
+      <div id="add-decision-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DECISION</div>
+          <input id="d-title" class="inp" style="width:100%" placeholder="What did you decide?">
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">RATIONALE</div>
+          <textarea id="d-rationale" class="inp" rows="2" style="width:100%;resize:vertical" placeholder="Why did you make this decision?"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">EXPECTED OUTCOME</div>
+            <input id="d-expected" class="inp" style="width:100%" placeholder="What do you expect?">
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">CONFIDENCE (1-10)</div>
+            <input id="d-confidence" class="inp" type="number" min="1" max="10" value="7" style="width:100%">
+          </div>
+        </div>
+        <button class="btn" onclick="addDecision()">LOG DECISION</button>
+        <button class="btn" onclick="document.getElementById('add-decision-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
+      </div>
+      <div id="decision-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">GOVERNANCE SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">RISK MATRIX</div><div class="sci-body">ISO 31000 risk management framework: Risk = Severity × Likelihood. A systematic risk register externalizes threat awareness, reducing cognitive load and preventing availability bias in risk perception.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">PRECOMMITMENT DEVICES</div><div class="sci-body">Ulysses contracts (Ariely, Schelling): binding yourself in advance to a policy removes the temptation at the moment of weakness. Policies convert willpower problems into identity problems — far more durable.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">DECISION JOURNALING</div><div class="sci-body">Annie Duke's "Thinking in Bets": track decisions before knowing outcomes. This separates decision quality from outcome quality — the only way to improve decision-making without confounding luck.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">SECOND-ORDER THINKING</div><div class="sci-body">Howard Marks: ask not just "what happens next?" but "what happens after that?" Governance requires modeling second and third-order consequences, especially in high-stakes, complex domains.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">ETHICS AS STRATEGY</div><div class="sci-body">Long-run game theory: cooperators outperform defectors when games repeat. Sovereign ethics are strategic as much as moral — reputational capital, trust, and relationship equity compound enormously over time.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">CORPORATE GOVERNANCE RESEARCH</div><div class="sci-body">Gompers, Ishii, Metrick (2003): firms with stronger governance frameworks outperform peers by 8.5% annually. The same principle applies to personal governance: structure creates alpha.</div></div>
+      </div>
+    </div>
+
+    <div class="lf"><span>&#937; GOVERNANCE &middot; SYD OMEGA 91717</span><span>RISK &middot; POLICY &middot; ETHICS &middot; DECISIONS</span></div>
   </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-var CAT_COLORS={security:'var(--crim)',privacy:'var(--purple)',data:'var(--cyan)',ai:'var(--gold)',ethics:'var(--green)',finance:'var(--solar)',operations:'var(--gold)',legal:'var(--solar)',platform:'var(--gold)'};
+
+var RK='omega_gov_risks',PK='omega_gov_policies',DK='omega_gov_decisions';
+var risks=JSON.parse(localStorage.getItem(RK)||'[]');
+var policies=JSON.parse(localStorage.getItem(PK)||'[]');
+var decisions=JSON.parse(localStorage.getItem(DK)||'[]');
+
+function save(){localStorage.setItem(RK,JSON.stringify(risks));localStorage.setItem(PK,JSON.stringify(policies));localStorage.setItem(DK,JSON.stringify(decisions));}
+
+var SEV_COLORS=['','#4CAF50','#8BC34A','#FFD700','#FF9800','#FF4444'];
+
+function renderRisks(){
+  var el=document.getElementById('risk-list');if(!el)return;
+  document.getElementById('k-risks').textContent=risks.filter(function(r){return r.status!=='closed';}).length;
+  var score=risks.reduce(function(s,r){return s+(parseInt(r.severity||1)*parseInt(r.likelihood||1));},0);
+  document.getElementById('k-risk-score').textContent=score||'--';
+  if(!risks.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO RISKS REGISTERED</div>';return;}
+  el.innerHTML=[].concat(risks).reverse().map(function(r){
+    var sc=parseInt(r.severity||1)*parseInt(r.likelihood||1);
+    var col=sc>=16?'#FF4444':sc>=9?'#FF9800':sc>=4?'#FFD700':'#4CAF50';
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
+      +'<div style="font-family:var(--M);font-size:8px;color:'+col+';border:1px solid '+col+';padding:1px 5px">SCORE '+sc+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+r.domain+'</div>'
+      +'<div style="font-size:13px;font-weight:600;flex:1">'+r.title+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted)">'+r.date+'</div>'
+      +'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px">S:'+r.severity+' × L:'+r.likelihood+' &nbsp; MITIGATION: <span style="color:var(--ink);opacity:.7">'+r.mitigation+'</span></div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderPolicies(){
+  var el=document.getElementById('policy-list');if(!el)return;
+  document.getElementById('k-policies').textContent=policies.filter(function(p){return p.status==='active';}).length;
+  if(!policies.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO POLICIES DEFINED</div>';return;}
+  var STATUS_COL={active:'var(--green)',draft:'var(--gold)',retired:'var(--muted)'};
+  el.innerHTML=[].concat(policies).reverse().map(function(p){
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+(STATUS_COL[p.status]||'var(--line)')+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+(STATUS_COL[p.status]||'var(--muted)')+'">'+p.status.toUpperCase()+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+p.domain+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto">'+p.date+'</div>'
+      +'</div>'
+      +'<div style="font-size:13px;line-height:1.5">'+p.text+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderDecisions(){
+  var el=document.getElementById('decision-list');if(!el)return;
+  document.getElementById('k-decisions').textContent=decisions.length;
+  if(!decisions.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO DECISIONS LOGGED</div>';return;}
+  el.innerHTML=[].concat(decisions).reverse().map(function(d){
+    return '<div style="border:1px solid var(--line);background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--cyan)">CONF '+d.confidence+'/10</div>'
+      +'<div style="font-size:13px;flex:1;font-weight:600">'+d.title+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted)">'+d.date+'</div>'
+      +'</div>'
+      +'<div style="font-size:11px;opacity:.75;margin-bottom:4px">'+d.rationale+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">EXPECTED: <span style="color:var(--ink);opacity:.7">'+d.expected+'</span></div>'
+      +'</div>';
+  }).join('');
+}
+
+window.showAddRisk=function(){var f=document.getElementById('add-risk-form');f.style.display=f.style.display==='none'?'block':'none';};
+window.showAddPolicy=function(){var f=document.getElementById('add-policy-form');f.style.display=f.style.display==='none'?'block':'none';};
+window.showAddDecision=function(){var f=document.getElementById('add-decision-form');f.style.display=f.style.display==='none'?'block':'none';};
+
+window.addRisk=function(){
+  var t=document.getElementById('r-title').value.trim();if(!t)return;
+  risks.push({id:Date.now(),title:t,domain:document.getElementById('r-domain').value,severity:document.getElementById('r-severity').value,likelihood:document.getElementById('r-likelihood').value,mitigation:document.getElementById('r-mitigation').value.trim(),date:new Date().toISOString().slice(0,10),status:'open'});
+  save();document.getElementById('add-risk-form').style.display='none';renderRisks();
+};
+window.addPolicy=function(){
+  var t=document.getElementById('p-text').value.trim();if(!t)return;
+  policies.push({id:Date.now(),text:t,domain:document.getElementById('p-domain').value,status:document.getElementById('p-status').value,date:new Date().toISOString().slice(0,10)});
+  save();document.getElementById('add-policy-form').style.display='none';renderPolicies();
+};
+window.addDecision=function(){
+  var t=document.getElementById('d-title').value.trim();if(!t)return;
+  decisions.push({id:Date.now(),title:t,rationale:document.getElementById('d-rationale').value.trim(),expected:document.getElementById('d-expected').value.trim(),confidence:document.getElementById('d-confidence').value,date:new Date().toISOString().slice(0,10)});
+  save();document.getElementById('add-decision-form').style.display='none';renderDecisions();
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
     if(!s){location.replace('/account.html');return;}
     var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
-
-    /* Governance health */
-    if(pr.is_owner){
-      try{
-        var gh=await sb.rpc('get_governance_health');
-        if(gh.data&&gh.data.ok){
-          sid('k-risks',gh.data.open_risks);sid('k-critical',gh.data.critical_risks);
-          sid('k-maturity',gh.data.governance_maturity);
-        }
-      }catch(e){}
-    }
-
-    /* Load policies */
-    try{
-      var pols=await sb.from('governance_policies').select('*').eq('status','active').order('policy_id');
-      if(pols.data&&pols.data.length){
-        sid('k-pols',pols.data.length);
-        document.getElementById('policy-grid').innerHTML=pols.data.map(function(p){
-          var col=CAT_COLORS[p.category]||'var(--gold)';
-          return '<div class="policy-card" style="--pc:'+col+'">'
-            +'<div class="policy-id">'+p.policy_id+' &middot; '+p.category.toUpperCase()+' &middot; v'+p.version+'</div>'
-            +'<div class="policy-title">'+p.title+'</div>'
-            +'<div class="policy-body">'+(p.description||'')+'</div>'
-            +'</div>';
-        }).join('');
-      }
-    }catch(e){}
-
-    /* Load risks */
-    try{
-      var risks=await sb.from('risk_register').select('*').order('risk_score',{ascending:false});
-      if(risks.data&&risks.data.length){
-        document.getElementById('risk-grid').innerHTML=risks.data.map(function(r){
-          var sc=r.risk_score||0;var col=sc>=15?'var(--crim)':sc>=9?'var(--solar)':'var(--green)';
-          return '<div class="risk-card" style="--rc:'+col+'">'
-            +'<div class="risk-score">'+sc+'</div>'
-            +'<div class="risk-label">'+(r.status||'open').toUpperCase()+' &middot; '+r.category.toUpperCase()+' &middot; '+r.risk_id+'</div>'
-            +'<div class="risk-title">'+r.title+'</div>'
-            +'<div class="risk-mit">Mitigation: '+(r.mitigation||'Pending')+'</div>'
-            +'</div>';
-        }).join('');
-      }
-    }catch(e){}
-
-    /* Load ethics */
-    try{
-      var eth=await sb.from('ethics_declarations').select('*').order('declaration_id');
-      if(eth.data&&eth.data.length){
-        document.getElementById('ethics-grid').innerHTML=eth.data.map(function(e){
-          return '<div class="eth-card"><div class="eth-id">'+e.declaration_id+'</div><div class="eth-principle">'+e.principle+'</div><div class="eth-desc">'+e.description+'</div></div>';
-        }).join('');
-      }
-    }catch(e){}
-  }catch(e){document.getElementById('app').style.display='flex';}
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderRisks();renderPolicies();renderDecisions();
+    document.querySelectorAll('.tab').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+        document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+        btn.classList.add('active');
+        var panel=document.getElementById('tab-'+btn.dataset.tab);
+        if(panel){panel.style.display='';panel.classList.add('active');}
+      };
+    });
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>

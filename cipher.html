@@ -1,360 +1,334 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN CIPHER</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; CIPHER</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:.85rem;color:var(--purple);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-.pad{padding:clamp(14px,3vw,36px)}
-.card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;margin-bottom:14px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--purple);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-
-/* Element selector */
-.elem-sel{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.elem-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:6px 12px;border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.8);color:var(--muted);cursor:pointer;border-radius:2px;transition:.15s}
-.elem-btn:hover,.elem-btn.on{border-color:var(--purple);color:var(--purple);background:rgba(155,107,240,.08)}
-
-/* Cipher textarea */
-.cipher-area{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(155,107,240,.2);border-radius:2px;padding:12px;font-family:var(--M);font-size:10px;color:var(--ink);resize:vertical;line-height:1.8;outline:none;transition:.2s}
-.cipher-area:focus{border-color:var(--purple)}
-.cipher-out{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.15);border-radius:2px;padding:12px;font-family:var(--M);font-size:10px;color:var(--cyan);line-height:1.8;white-space:pre-wrap;word-break:break-all;overflow-y:auto;user-select:all}
-
-.btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid var(--purple);background:rgba(155,107,240,.1);color:var(--purple);cursor:pointer;border-radius:2px;transition:.15s}
-.btn:hover{background:rgba(155,107,240,.25);border-color:rgba(155,107,240,.7)}
-.btn-gold{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--gold)}
-.btn-gold:hover{background:rgba(201,168,76,.2)}
-.btn-green{border-color:var(--green);background:rgba(63,178,127,.1);color:var(--green)}
-.btn-green:hover{background:rgba(63,178,127,.2)}
-
-/* Key display */
-.key-display{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.key-chip{font-family:var(--M);font-size:8px;padding:3px 8px;background:rgba(155,107,240,.1);border:1px solid rgba(155,107,240,.2);border-radius:2px;color:var(--muted)}
-
-/* Morse-style waveform */
-#cipher-wave{display:block;width:100%;height:48px;border:1px solid rgba(155,107,240,.12);border-radius:2px;background:rgba(0,0,0,.3);margin-top:10px}
-
-/* Stats bar */
-.stat-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px}
-.stat-item{font-family:var(--M);font-size:7.5px;letter-spacing:1px}
-.stat-item span{color:var(--solar);font-family:var(--D);font-size:12px;display:block}
-
-/* Mode toggle */
-.mode-toggle{display:inline-flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:14px}
-.mode-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:7px 16px;background:none;border:none;color:var(--muted);cursor:pointer;transition:.15s}
-.mode-btn.on{background:rgba(155,107,240,.15);color:var(--purple)}
-
-/* Alphabet table */
-.alpha-tbl{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:4px;margin-top:8px}
-.alpha-cell{font-family:var(--M);font-size:7.5px;display:flex;justify-content:space-between;align-items:center;padding:3px 6px;background:rgba(0,0,0,.3);border:1px solid rgba(155,107,240,.1);border-radius:2px}
+.cipher-area{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(155,107,240,.2);border-radius:6px;padding:12px;font-family:var(--M);font-size:10px;color:var(--ink);resize:vertical;line-height:1.8;outline:none;transition:border-color .2s}
+.cipher-area:focus{border-color:#9B6BF0}
+.cipher-out{width:100%;min-height:120px;background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.15);border-radius:6px;padding:12px;font-family:var(--M);font-size:10px;color:var(--cyan);line-height:1.8;white-space:pre-wrap;word-break:break-all;overflow-y:auto;user-select:all}
+.btn-purple{border-color:#9B6BF0;background:rgba(155,107,240,.1);color:#9B6BF0}
+.btn-purple:hover{background:rgba(155,107,240,.25)}
+.mode-toggle{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:1rem}
+.mode-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 18px;background:none;border:none;color:var(--muted);cursor:pointer;transition:.15s}
+.mode-btn.active{background:rgba(155,107,240,.15);color:#9B6BF0}
+.elem-sel{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
+.elem-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.8);color:var(--muted);cursor:pointer;border-radius:4px;transition:.15s}
+.elem-btn:hover,.elem-btn.active{border-color:#9B6BF0;color:#9B6BF0;background:rgba(155,107,240,.08)}
+.key-chip{font-family:var(--M);font-size:8px;padding:3px 8px;background:rgba(155,107,240,.1);border:1px solid rgba(155,107,240,.2);border-radius:3px;color:var(--muted);display:inline-block}
+#cipher-wave{display:block;width:100%;height:48px;border:1px solid rgba(155,107,240,.12);border-radius:4px;background:rgba(0,0,0,.3);margin-top:8px}
+.stat-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}
+.stat-item{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+.stat-item span{color:var(--solar);font-family:var(--M);font-size:14px;display:block}
+.alpha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:4px}
+.alpha-cell{font-family:var(--M);font-size:7.5px;display:flex;justify-content:space-between;align-items:center;padding:3px 6px;background:rgba(0,0,0,.3);border:1px solid rgba(155,107,240,.1);border-radius:3px}
 .alpha-plain{color:var(--gold)}
-.alpha-cipher{color:var(--cyan);font-size:8.5px}
-
-/* History */
-.hist-item{padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05);font-family:var(--M);font-size:8px}
-.hist-plain{color:var(--muted)}
-.hist-coded{color:var(--cyan);word-break:break-all;margin-top:2px}
-.hist-meta{color:rgba(138,134,118,.4);font-size:7px;margin-top:2px}
-
-@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.alpha-cipher{color:var(--cyan);font-size:9px}
+.hist-item{padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05)}
+.hist-mode{font-family:var(--M);font-size:8px;color:var(--muted)}
+.hist-coded{font-family:var(--M);font-size:8px;color:var(--cyan);word-break:break-all;margin-top:2px}
+.hist-meta{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.4);margin-top:2px}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+@media(max-width:700px){.io-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="cipher"></aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="t">SOVEREIGN CIPHER<small>ELEMENT-SCALE CRYPTOGRAPHY · 9 ELEMENTAL KEYS · SOVEREIGN ENCODING PROTOCOL</small></div>
-    </div>
-
-    <div class="pad">
-      <!-- Mode + Element selector -->
-      <div class="mode-toggle">
-        <button class="mode-btn on" id="mode-enc" onclick="setMode('encode')">⬆ ENCODE</button>
-        <button class="mode-btn" id="mode-dec" onclick="setMode('decode')">⬇ DECODE</button>
-      </div>
-
-      <div class="card">
-        <div class="sechead">SELECT CIPHER KEY (ELEMENT)</div>
-        <div class="elem-sel" id="elem-sel"></div>
-        <div style="font-family:var(--M);font-size:7.5px;color:var(--muted)">
-          Each element maps to a unique musical scale — semitone offsets form the cipher substitution alphabet.
-          The key rotates through the scale pattern to encode each character.
-        </div>
-        <div class="key-display" id="key-display"></div>
-      </div>
-
-      <div class="grid2">
-        <div class="card">
-          <div class="sechead" id="input-head">PLAINTEXT INPUT</div>
-          <textarea class="cipher-area" id="cipher-input" placeholder="Enter your sovereign message…" oninput="cipher()"></textarea>
-          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-            <button class="btn" onclick="cipher()">&#9654; CIPHER</button>
-            <button class="btn btn-gold" onclick="copyOutput()">&#9632; COPY</button>
-            <button class="btn" onclick="document.getElementById('cipher-input').value='';cipher()">&#215; CLEAR</button>
-          </div>
-          <div class="stat-row">
-            <div class="stat-item"><span id="stat-len">0</span>CHARACTERS</div>
-            <div class="stat-item"><span id="stat-words">0</span>WORDS</div>
-            <div class="stat-item"><span id="stat-entropy">0.00</span>ENTROPY</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="sechead" id="output-head">CIPHERED OUTPUT</div>
-          <div class="cipher-out" id="cipher-output">—</div>
-          <canvas id="cipher-wave"></canvas>
-          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-green" onclick="swapIO()">&#8645; SWAP</button>
-            <button class="btn" onclick="saveHistory()">&#43; ARCHIVE</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alphabet visualisation -->
-      <div class="card">
-        <div class="sechead">CURRENT CIPHER ALPHABET</div>
-        <div class="alpha-tbl" id="alpha-tbl"></div>
-      </div>
-
-      <!-- Archive -->
-      <div class="card">
-        <div class="sechead">CIPHER ARCHIVE</div>
-        <div id="hist-list" style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.4)">No entries yet.</div>
-      </div>
-    </div>
-
-    <footer class="lf"><span>Ω SOVEREIGN CIPHER · SYD OMEGA 91717</span><span id="cipher-ts"></span></footer>
-  </main>
+<aside id="omega-side" data-page="cipher"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">SOVEREIGN CIPHER<span class="topbar-sub">ELEMENT-SCALE CRYPTOGRAPHY · 9 ELEMENTAL KEYS</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-live data-ring-value="0" aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('encode')">ENCODE</button>
+  <button class="tab-btn" onclick="setTab('alphabet')">ALPHABET</button>
+  <button class="tab-btn" onclick="setTab('archive')">ARCHIVE</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<script type="module">
-const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
-const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
-const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
-const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
-const {data:{session}}=await sb.auth.getSession();
-if(!session){location.href='/account.html';throw 0;}
-const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-if(pr?.approval_status==='pending'){location.href='/pending.html';throw 0;}
-if(window.__omegaApprove)window.__omegaApprove(true);
-document.getElementById('app').style.display='flex';
-document.getElementById('cipher-ts').textContent=new Date().toUTCString().split(' ').slice(1,4).join(' ');
+<!-- ENCODE TAB -->
+<div class="tab-panel active" id="tab-encode">
+  <div style="padding:1.25rem">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-enc" onclick="setMode('encode')">&#8679; ENCODE</button>
+      <button class="mode-btn" id="mode-dec" onclick="setMode('decode')">&#8681; DECODE</button>
+    </div>
+    <div class="glass" style="margin-bottom:1rem">
+      <div class="sechead" style="margin-bottom:.75rem">SELECT CIPHER KEY (ELEMENT)</div>
+      <div class="elem-sel" id="elem-sel"></div>
+      <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:.5rem">Each element maps to a unique musical scale — semitone offsets form the cipher substitution alphabet.</div>
+      <div id="key-display" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+    </div>
+    <div class="io-grid">
+      <div class="glass">
+        <div class="sechead" id="input-head" style="margin-bottom:.75rem">PLAINTEXT INPUT</div>
+        <textarea class="cipher-area" id="cipher-input" placeholder="Enter your sovereign message…" oninput="cipher()"></textarea>
+        <div style="display:flex;gap:6px;margin-top:.75rem;flex-wrap:wrap">
+          <button class="btn-gold" onclick="cipher()" style="font-size:8px;padding:7px 14px">&#9654; CIPHER</button>
+          <button class="btn-gold" onclick="copyOutput()" style="font-size:8px;padding:7px 14px">&#9632; COPY</button>
+          <button class="btn-gold" onclick="document.getElementById('cipher-input').value='';cipher()" style="font-size:8px;padding:7px 14px">&#215; CLEAR</button>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item"><span id="stat-len">0</span>CHARS</div>
+          <div class="stat-item"><span id="stat-words">0</span>WORDS</div>
+          <div class="stat-item"><span id="stat-entropy">0.00</span>ENTROPY</div>
+        </div>
+      </div>
+      <div class="glass">
+        <div class="sechead" id="output-head" style="margin-bottom:.75rem">CIPHERED OUTPUT</div>
+        <div class="cipher-out" id="cipher-output">—</div>
+        <canvas id="cipher-wave"></canvas>
+        <div style="display:flex;gap:6px;margin-top:.75rem;flex-wrap:wrap">
+          <button class="btn-gold" onclick="swapIO()" style="font-size:8px;padding:7px 14px">&#8645; SWAP</button>
+          <button class="btn-gold" onclick="saveHistory()" style="font-size:8px;padding:7px 14px">&#43; ARCHIVE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-/* ── Element scale definitions (semitones) ── */
-const SCALES={
-  Fire:   [0,2,4,7,9],
-  Water:  [0,3,5,7,10,12],
-  Wind:   [0,2,4,6,9,11],
-  Metal:  [0,2,5,7,9],
-  Sand:   [0,2,3,7,9],
-  Soul:   [0,3,5,6,10,12],
-  Space:  [0,4,7,10,14],
-  Void:   [0,7,12],
-  'The All':[0,2,4,5,7,9,11,12]
-};
-const ELEM_COLORS={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0',Space:'#7C4DFF',Void:'#334466','The All':'#E2C86D'};
-const ELEM_SIGILS={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
+<!-- ALPHABET TAB -->
+<div class="tab-panel" id="tab-alphabet">
+  <div style="padding:1.25rem">
+    <p class="sechead">CURRENT CIPHER ALPHABET</p>
+    <div class="glass" style="margin-bottom:1rem">
+      <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:.75rem">Plain → Cipher substitution for the selected element key. Change elements on the ENCODE tab to update this view.</div>
+      <div class="alpha-grid" id="alpha-tbl"></div>
+    </div>
+  </div>
+</div>
 
-/* Detect user element from zodiac sign */
-const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
-const defaultElem=(pr?.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign])||'Fire';
+<!-- ARCHIVE TAB -->
+<div class="tab-panel" id="tab-archive">
+  <div style="padding:1.25rem">
+    <p class="sechead">CIPHER ARCHIVE</p>
+    <div class="glass">
+      <div id="hist-list" style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.4)">No entries yet. Use the ARCHIVE button on the ENCODE tab to save a cipher.</div>
+    </div>
+  </div>
+</div>
 
-let currentElem=defaultElem;
-let cipherMode='encode';
-const history=[];
+<!-- SCIENCE TAB -->
+<div class="tab-panel" id="tab-science">
+  <div style="padding:1.5rem;max-width:720px">
+    <p class="sechead">CIPHER ARCHITECTURE</p>
+    <div class="card-grid">
+      <div class="card"><div class="card-title">ELEMENT-SCALE CIPHER</div><div class="card-body">The Sovereign Cipher uses musical scale semitone offsets as substitution keys. Each of the 9 elements has a unique scale pattern. The cipher rotates through scale positions to encode each character, producing a different substitution alphabet per element.</div></div>
+      <div class="card"><div class="card-title">THE 9 ELEMENT KEYS</div><div class="card-body">Fire [0,2,4,7,9] · Water [0,3,5,7,10,12] · Wind [0,2,4,6,9,11] · Metal [0,2,5,7,9] · Sand [0,2,3,7,9] · Soul [0,3,5,6,10,12] · Space [0,4,7,10,14] · Void [0,7,12] · The All [0,2,4,5,7,9,11,12]</div></div>
+      <div class="card"><div class="card-title">WAVEFORM VISUALISER</div><div class="card-body">The waveform below the ciphered output visualises the encoded character stream as a frequency wave. Each character's Unicode value modulates the wave amplitude using the element's scale pattern — the cipher made visible as sound.</div></div>
+      <div class="card"><div class="card-title">ENTROPY METRIC</div><div class="card-body">Shannon entropy measures the information density of the plaintext. Higher entropy means more unpredictable content, which typically ciphers into stronger encoded output. The Void key (scale [0,7,12]) produces the most compressed cipher alphabet — fewest substitution options, maximum pattern repetition.</div></div>
+    </div>
+  </div>
+</div>
+</div>
 
-/* ── Build cipher alphabet from scale ── */
-function buildAlphabet(elem){
-  const scale=SCALES[elem]||SCALES['Fire'];
-  /* A-Z mapped using scale semitones cyclically, shifted by element index */
-  const elemIdx=Object.keys(SCALES).indexOf(elem);
-  const alpha='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const result={};
-  alpha.split('').forEach((ch,i)=>{
-    /* pick scale position, rotate by elem index */
-    const scalePos=(i+elemIdx)%scale.length;
-    const semitone=scale[scalePos];
-    /* encode: shift letter by semitone value + index modulation */
-    const shift=(semitone+(i*elemIdx+7))%26;
-    const encoded=alpha[(alpha.indexOf(ch)+shift)%26];
-    result[ch]=encoded;
-  });
-  /* digits: shift by scale length */
-  '0123456789'.split('').forEach((d,i)=>{
-    result[d]=String((parseInt(d)+scale.length)%10);
-  });
-  return result;
+<script>
+function setTab(name){
+  var tabs=['encode','alphabet','archive','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-
-function buildReverseAlphabet(alpha){
-  const rev={};
-  Object.entries(alpha).forEach(([k,v])=>{rev[v]=k;});
-  return rev;
-}
-
-/* ── Core cipher function ── */
-function encodeText(text,elem,mode){
-  const alpha=buildAlphabet(elem);
-  const rev=buildReverseAlphabet(alpha);
-  const map=mode==='encode'?alpha:rev;
-  return text.split('').map(ch=>{
-    const up=ch.toUpperCase();
-    if(map[up])return ch===ch.toLowerCase()&&ch!==up?map[up].toLowerCase():map[up];
-    return ch;
-  }).join('');
-}
-
-/* ── Render alphabet table ── */
-function renderAlphaTable(){
-  const tbl=document.getElementById('alpha-tbl');
-  const alpha=buildAlphabet(currentElem);
-  tbl.innerHTML='';
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(ch=>{
-    const cell=document.createElement('div');cell.className='alpha-cell';
-    cell.innerHTML=`<span class="alpha-plain">${ch}</span><span class="alpha-cipher">${alpha[ch]}</span>`;
-    tbl.appendChild(cell);
-  });
-}
-
-/* ── Waveform visualiser ── */
-function drawWave(text){
-  const cv=document.getElementById('cipher-wave');if(!cv)return;
-  const W=cv.offsetWidth||500;cv.width=W;cv.height=48;
-  const ctx=cv.getContext('2d');
-  ctx.clearRect(0,0,W,48);
-  if(!text){return;}
-  const scale=SCALES[currentElem]||[0,2,4];
-  const grad=ctx.createLinearGradient(0,0,W,0);
-  grad.addColorStop(0,ELEM_COLORS[currentElem]+'33');
-  grad.addColorStop(0.5,ELEM_COLORS[currentElem]+'bb');
-  grad.addColorStop(1,ELEM_COLORS[currentElem]+'33');
-  ctx.strokeStyle=grad;ctx.lineWidth=1.5;
-  ctx.beginPath();
-  const chars=text.split('');
-  const step=W/Math.max(chars.length,1);
-  chars.forEach((ch,i)=>{
-    const code=ch.charCodeAt(0);
-    const scaleV=scale[code%scale.length]/14;
-    const y=24+Math.sin(i*0.5+scaleV*Math.PI)*20*scaleV;
-    const x=i*step+step/2;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.stroke();
-}
-
-/* ── Entropy calculation ── */
-function entropy(text){
-  if(!text)return 0;
-  const freq={};
-  text.split('').forEach(c=>{freq[c]=(freq[c]||0)+1;});
-  const n=text.length;
-  return -Object.values(freq).reduce((s,c)=>{const p=c/n;return s+p*Math.log2(p);},0);
-}
-
-/* ── Main cipher action ── */
-window.cipher=function(){
-  const input=document.getElementById('cipher-input').value;
-  const output=encodeText(input,currentElem,cipherMode);
-  document.getElementById('cipher-output').textContent=output||'—';
-  document.getElementById('stat-len').textContent=input.length;
-  document.getElementById('stat-words').textContent=input.trim()?input.trim().split(/\s+/).length:0;
-  document.getElementById('stat-entropy').textContent=entropy(input).toFixed(2);
-  drawWave(output);
-};
-
-window.copyOutput=function(){
-  const out=document.getElementById('cipher-output').textContent;
-  navigator.clipboard.writeText(out).then(()=>{
-    const btn=document.querySelector('.btn-gold');
-    const orig=btn.textContent;btn.textContent='✓ COPIED';
-    setTimeout(()=>btn.textContent=orig,1400);
-  }).catch(()=>{});
-};
-
-window.swapIO=function(){
-  const input=document.getElementById('cipher-input');
-  const output=document.getElementById('cipher-output');
-  const prev=input.value;
-  input.value=output.textContent==='—'?'':output.textContent;
-  setMode(cipherMode==='encode'?'decode':'encode');
-  cipher();
-};
-
-window.saveHistory=function(){
-  const input=document.getElementById('cipher-input').value;
-  const output=document.getElementById('cipher-output').textContent;
-  if(!input.trim()||output==='—')return;
-  history.unshift({plain:input,coded:output,elem:currentElem,mode:cipherMode,ts:new Date().toISOString()});
-  renderHistory();
-};
-
-function renderHistory(){
-  const el=document.getElementById('hist-list');
-  if(!history.length){el.innerHTML='<div style="color:rgba(138,134,118,.4)">No entries yet.</div>';return;}
-  el.innerHTML='';
-  history.slice(0,10).forEach(h=>{
-    const item=document.createElement('div');item.className='hist-item';
-    item.innerHTML=`<div class="hist-plain">${h.mode.toUpperCase()} · ${h.elem} · ${h.plain.slice(0,60)}${h.plain.length>60?'…':''}</div>`
-      +`<div class="hist-coded">${h.coded.slice(0,100)}${h.coded.length>100?'…':''}</div>`
-      +`<div class="hist-meta">${h.ts.slice(0,19).replace('T',' ')} UTC</div>`;
-    el.appendChild(item);
-  });
-}
-
-/* ── Mode switch ── */
-window.setMode=function(mode){
-  cipherMode=mode;
-  document.getElementById('mode-enc').classList.toggle('on',mode==='encode');
-  document.getElementById('mode-dec').classList.toggle('on',mode==='decode');
-  document.getElementById('input-head').textContent=mode==='encode'?'PLAINTEXT INPUT':'CIPHERTEXT INPUT';
-  document.getElementById('output-head').textContent=mode==='encode'?'CIPHERED OUTPUT':'DECODED OUTPUT';
-  cipher();
-};
-
-/* ── Elem selector ── */
-const selContainer=document.getElementById('elem-sel');
-Object.entries(SCALES).forEach(([elem])=>{
-  const btn=document.createElement('button');
-  btn.className='elem-btn'+(elem===currentElem?' on':'');
-  btn.textContent=ELEM_SIGILS[elem]+' '+elem.toUpperCase();
-  btn.addEventListener('click',()=>{
-    currentElem=elem;
-    document.querySelectorAll('.elem-btn').forEach(b=>b.classList.remove('on'));
-    btn.classList.add('on');
-    renderKeyDisplay();
-    renderAlphaTable();
-    cipher();
-  });
-  selContainer.appendChild(btn);
-});
-
-function renderKeyDisplay(){
-  const scale=SCALES[currentElem]||[];
-  const kd=document.getElementById('key-display');
-  kd.innerHTML='';
-  scale.forEach(s=>{
-    const chip=document.createElement('span');chip.className='key-chip';
-    chip.textContent='♩'+s;
-    kd.appendChild(chip);
-  });
-}
-
-renderKeyDisplay();
-renderAlphaTable();
-cipher();
 </script>
-</body>
-</html>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+
+  var SCALES={
+    Fire:[0,2,4,7,9],Water:[0,3,5,7,10,12],Wind:[0,2,4,6,9,11],
+    Metal:[0,2,5,7,9],Sand:[0,2,3,7,9],Soul:[0,3,5,6,10,12],
+    Space:[0,4,7,10,14],Void:[0,7,12],'The All':[0,2,4,5,7,9,11,12]
+  };
+  var ELEM_COLORS={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0',Space:'#7C4DFF',Void:'#334466','The All':'#E2C86D'};
+  var ELEM_SIGILS={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
+  var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+
+  var defaultElem=(pr.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign])||'Fire';
+  var currentElem=defaultElem;
+  var cipherMode='encode';
+  var history=[];
+
+  function buildAlphabet(elem){
+    var scale=SCALES[elem]||SCALES['Fire'];
+    var elemIdx=Object.keys(SCALES).indexOf(elem);
+    var alpha='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var result={};
+    alpha.split('').forEach(function(ch,i){
+      var scalePos=(i+elemIdx)%scale.length;
+      var semitone=scale[scalePos];
+      var shift=(semitone+(i*elemIdx+7))%26;
+      result[ch]=alpha[(alpha.indexOf(ch)+shift)%26];
+    });
+    '0123456789'.split('').forEach(function(d){
+      result[d]=String((parseInt(d)+scale.length)%10);
+    });
+    return result;
+  }
+
+  function buildRevAlpha(alpha){
+    var rev={};
+    Object.entries(alpha).forEach(function(entry){rev[entry[1]]=entry[0];});
+    return rev;
+  }
+
+  function encodeText(text,elem,mode){
+    var alpha=buildAlphabet(elem);
+    var rev=buildRevAlpha(alpha);
+    var map=mode==='encode'?alpha:rev;
+    return text.split('').map(function(ch){
+      var up=ch.toUpperCase();
+      if(map[up])return ch===ch.toLowerCase()&&ch!==up?map[up].toLowerCase():map[up];
+      return ch;
+    }).join('');
+  }
+
+  function renderAlphaTable(){
+    var tbl=document.getElementById('alpha-tbl');if(!tbl)return;
+    var alpha=buildAlphabet(currentElem);
+    tbl.innerHTML='';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function(ch){
+      var cell=document.createElement('div');cell.className='alpha-cell';
+      var plain=document.createElement('span');plain.className='alpha-plain';plain.textContent=ch;
+      var cipher=document.createElement('span');cipher.className='alpha-cipher';cipher.textContent=alpha[ch]||ch;
+      cell.appendChild(plain);cell.appendChild(cipher);
+      tbl.appendChild(cell);
+    });
+  }
+
+  function drawWave(text){
+    var cv=document.getElementById('cipher-wave');if(!cv)return;
+    var W=cv.offsetWidth||500;cv.width=W;cv.height=48;
+    var ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,48);
+    if(!text)return;
+    var scale=SCALES[currentElem]||[0,2,4];
+    var grad=ctx.createLinearGradient(0,0,W,0);
+    var col=ELEM_COLORS[currentElem]||'#C9A84C';
+    grad.addColorStop(0,col+'33');grad.addColorStop(0.5,col+'bb');grad.addColorStop(1,col+'33');
+    ctx.strokeStyle=grad;ctx.lineWidth=1.5;
+    ctx.beginPath();
+    var chars=text.split('');
+    var step=W/Math.max(chars.length,1);
+    chars.forEach(function(ch,i){
+      var code=ch.charCodeAt(0);
+      var scaleV=scale[code%scale.length]/14;
+      var y=24+Math.sin(i*0.5+scaleV*Math.PI)*20*scaleV;
+      var x=i*step+step/2;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+
+  function entropy(text){
+    if(!text)return 0;
+    var freq={};
+    text.split('').forEach(function(c){freq[c]=(freq[c]||0)+1;});
+    var n=text.length;
+    return -Object.values(freq).reduce(function(s,c){var p=c/n;return s+p*Math.log2(p);},0);
+  }
+
+  window.cipher=function(){
+    var input=document.getElementById('cipher-input').value;
+    var output=encodeText(input,currentElem,cipherMode);
+    document.getElementById('cipher-output').textContent=output||'—';
+    document.getElementById('stat-len').textContent=input.length;
+    document.getElementById('stat-words').textContent=input.trim()?input.trim().split(/\s+/).length:0;
+    document.getElementById('stat-entropy').textContent=entropy(input).toFixed(2);
+    drawWave(output);
+    renderAlphaTable();
+  };
+
+  window.copyOutput=function(){
+    var out=document.getElementById('cipher-output').textContent;
+    navigator.clipboard.writeText(out).then(function(){
+      var btn=document.querySelector('.btn-gold');
+      var orig=btn.textContent;btn.textContent='COPIED';
+      setTimeout(function(){btn.textContent=orig;},1400);
+    }).catch(function(){});
+  };
+
+  window.swapIO=function(){
+    var input=document.getElementById('cipher-input');
+    var output=document.getElementById('cipher-output');
+    var prev=output.textContent;
+    input.value=prev==='—'?'':prev;
+    setMode(cipherMode==='encode'?'decode':'encode');
+    cipher();
+  };
+
+  window.saveHistory=function(){
+    var input=document.getElementById('cipher-input').value;
+    var output=document.getElementById('cipher-output').textContent;
+    if(!input.trim()||output==='—')return;
+    history.unshift({plain:input,coded:output,elem:currentElem,mode:cipherMode,ts:new Date().toISOString()});
+    renderHistory();
+  };
+
+  function renderHistory(){
+    var el=document.getElementById('hist-list');
+    if(!history.length){
+      el.innerHTML='<div style="color:rgba(138,134,118,.4)">No entries yet.</div>';
+      return;
+    }
+    el.innerHTML='';
+    history.slice(0,10).forEach(function(h){
+      var item=document.createElement('div');item.className='hist-item';
+      var mode=document.createElement('div');mode.className='hist-mode';
+      mode.textContent=h.mode.toUpperCase()+' · '+h.elem+' · '+h.plain.slice(0,60)+(h.plain.length>60?'…':'');
+      var coded=document.createElement('div');coded.className='hist-coded';
+      coded.textContent=h.coded.slice(0,100)+(h.coded.length>100?'…':'');
+      var meta=document.createElement('div');meta.className='hist-meta';
+      meta.textContent=h.ts.slice(0,19).replace('T',' ')+' UTC';
+      item.appendChild(mode);item.appendChild(coded);item.appendChild(meta);
+      el.appendChild(item);
+    });
+  }
+
+  window.setMode=function(mode){
+    cipherMode=mode;
+    document.getElementById('mode-enc').classList.toggle('active',mode==='encode');
+    document.getElementById('mode-dec').classList.toggle('active',mode==='decode');
+    document.getElementById('input-head').textContent=mode==='encode'?'PLAINTEXT INPUT':'CIPHERTEXT INPUT';
+    document.getElementById('output-head').textContent=mode==='encode'?'CIPHERED OUTPUT':'DECODED OUTPUT';
+    cipher();
+  };
+
+  function renderKeyDisplay(){
+    var scale=SCALES[currentElem]||[];
+    var kd=document.getElementById('key-display');
+    kd.innerHTML='';
+    scale.forEach(function(s){
+      var chip=document.createElement('span');chip.className='key-chip';chip.textContent='♩'+s;
+      kd.appendChild(chip);
+    });
+  }
+
+  var selContainer=document.getElementById('elem-sel');
+  Object.keys(SCALES).forEach(function(elem){
+    var btn=document.createElement('button');
+    btn.className='elem-btn'+(elem===currentElem?' active':'');
+    btn.textContent=ELEM_SIGILS[elem]+' '+elem.toUpperCase();
+    btn.addEventListener('click',function(){
+      currentElem=elem;
+      document.querySelectorAll('.elem-btn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      renderKeyDisplay();
+      renderAlphaTable();
+      cipher();
+    });
+    selContainer.appendChild(btn);
+  });
+
+  renderKeyDisplay();
+  renderAlphaTable();
+  cipher();
+})();
+</script>
+<script src="/bg.js"></script>
+</body></html>

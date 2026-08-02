@@ -1,460 +1,312 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Element Tribes · Ω SYD OMEGA 91717</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&display=swap">
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Element Tribes</title>
+<meta name="description" content="Nine elemental bloodlines · Tribal authority rankings · Inter-element resonance matrix"/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-  :root{--gold:#C9A84C;--cyan:#00E5FF;--crim:#8B0000;--green:#00FF88;--bg:#02020A;--surface:rgba(255,255,255,.03);--M:'Courier Prime',monospace;--D:'Cinzel Decorative',serif;--C:'Cinzel',serif;--pad:clamp(14px,3vw,28px)}
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%;background:var(--bg);color:rgba(255,255,255,.85);overflow-x:hidden}
-  body{display:flex;flex-direction:column;min-height:100vh}
+.elem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.elem-card{padding:16px 18px;cursor:pointer;transition:.2s;position:relative;overflow:hidden;border:1px solid}
+.elem-card:hover{transform:translateY(-2px)}
+.elem-icon{font-size:28px;margin-bottom:8px;display:block;line-height:1}
+.elem-name{font-family:var(--D);font-size:10px;letter-spacing:2px;margin-bottom:4px}
+.elem-principle{font-family:var(--M);font-size:7px;letter-spacing:1.5px;opacity:.6;margin-bottom:10px}
+.elem-count{font-family:var(--D);font-size:22px;line-height:1}
+.elem-count-label{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;opacity:.5;margin-top:2px}
+.elem-bar{height:3px;background:rgba(255,255,255,.06);margin-top:10px;overflow:hidden}
+.elem-bar-fill{height:100%;transition:width 1s ease}
 
-  /* TOPBAR */
-  .topbar{position:sticky;top:0;z-index:900;background:rgba(2,2,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;gap:12px;padding:10px var(--pad)}
-  .topbar-brand{font-family:var(--D);font-size:10px;letter-spacing:2px;color:var(--gold);flex:1}
+.tribe-rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.tribe-rank-card{background:var(--surface);border:1px solid rgba(201,168,76,.12);padding:16px 18px}
+.trc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.trc-icon{font-size:20px}
+.trc-name{font-family:var(--D);font-size:10px;letter-spacing:2px}
+.trc-count{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-left:auto}
+.member-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.member-row:last-child{border-bottom:none}
+.mr-rank{font-family:var(--D);font-size:11px;color:rgba(201,168,76,.4);width:24px;flex-shrink:0;text-align:center}
+.mr-rank.gold-r{color:var(--gold)}
+.mr-rank.silver-r{color:rgba(192,192,192,.7)}
+.mr-rank.bronze-r{color:rgba(205,127,50,.7)}
+.mr-name{font-size:10px;flex:1;color:rgba(255,255,255,.75)}
+.mr-auth{font-family:var(--M);font-size:7px;color:var(--gold);text-align:right}
+.mr-gate{font-family:var(--M);font-size:6.5px;color:rgba(0,229,255,.4);text-align:right}
 
-  /* LAYOUT */
-  .layout{display:flex;flex:1}
-  .side{width:56px;flex-shrink:0;background:rgba(255,255,255,.01);border-right:1px solid rgba(201,168,76,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:12px}
-  .side a{font-size:16px;opacity:.35;text-decoration:none;transition:.15s;display:block;text-align:center;line-height:32px;width:36px}
-  .side a:hover{opacity:1}
-  .main{flex:1;padding:var(--pad);display:flex;flex-direction:column;gap:24px;max-width:1100px;margin:0 auto;width:100%}
+.matrix-wrap{overflow-x:auto}
+table.affinity-matrix{border-collapse:collapse;width:100%;font-family:var(--M);font-size:7.5px}
+table.affinity-matrix th,table.affinity-matrix td{padding:6px 8px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+table.affinity-matrix th{color:rgba(138,134,118,.5);letter-spacing:1px}
+table.affinity-matrix .cell-self{background:rgba(201,168,76,.05);color:rgba(201,168,76,.4)}
+table.affinity-matrix td{color:rgba(0,229,255,.6)}
 
-  /* HERO */
-  .tribe-hero{background:linear-gradient(135deg,rgba(0,229,255,.04),rgba(201,168,76,.03));border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:24px 28px;text-align:center}
-  .tribe-hero h1{font-family:var(--D);font-size:clamp(16px,2.5vw,24px);color:var(--cyan);letter-spacing:3px;margin-bottom:8px}
-  .tribe-hero p{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:rgba(0,229,255,.4);line-height:1.8}
+.dominance-wrap{height:200px;margin-bottom:20px}
+#dominanceCanvas{width:100%;height:200px}
 
-  /* SECTION TITLE */
-  .section-title{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin-bottom:12px}
+.empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.3)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  /* ELEMENT GRID */
-  .element-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-  .elem-card{border-radius:4px;padding:16px 18px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
-  .elem-card:hover{transform:translateY(-2px)}
-  .elem-card::before{content:'';position:absolute;inset:0;opacity:.06;border-radius:4px}
-  .elem-icon{font-size:28px;margin-bottom:8px;display:block;line-height:1}
-  .elem-name{font-family:var(--D);font-size:10px;letter-spacing:2px;margin-bottom:4px}
-  .elem-principle{font-family:var(--M);font-size:7px;letter-spacing:1.5px;opacity:.6;margin-bottom:10px}
-  .elem-count{font-family:var(--D);font-size:22px;line-height:1}
-  .elem-count-label{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;opacity:.5;margin-top:2px}
-  .elem-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:10px;overflow:hidden}
-  .elem-bar-fill{height:100%;border-radius:2px;transition:width 1s ease}
+#tribe-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(0,229,255,.3);padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--cyan);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 
-  /* TRIBE RANKING */
-  .tribe-rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
-  .tribe-rank-card{background:var(--surface);border:1px solid rgba(201,168,76,.12);border-radius:4px;padding:16px 18px}
-  .trc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-  .trc-icon{font-size:20px}
-  .trc-name{font-family:var(--D);font-size:10px;letter-spacing:2px}
-  .trc-rank{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-left:auto}
-
-  .member-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-  .member-row:last-child{border-bottom:none}
-  .mr-rank{font-family:var(--D);font-size:11px;color:rgba(201,168,76,.4);width:24px;flex-shrink:0;text-align:center}
-  .mr-rank.gold{color:var(--gold)}
-  .mr-rank.silver{color:rgba(192,192,192,.7)}
-  .mr-rank.bronze{color:rgba(205,127,50,.7)}
-  .mr-name{font-family:var(--C);font-size:10px;flex:1;color:rgba(255,255,255,.75)}
-  .mr-auth{font-family:var(--M);font-size:7px;color:var(--gold);text-align:right}
-  .mr-gate{font-family:var(--M);font-size:6.5px;color:rgba(0,229,255,.4);text-align:right}
-
-  /* INTER-ELEMENT MATRIX */
-  .matrix-wrap{overflow-x:auto}
-  table.affinity-matrix{border-collapse:collapse;width:100%;font-family:var(--M);font-size:7.5px}
-  table.affinity-matrix th,table.affinity-matrix td{padding:6px 8px;text-align:center;border:1px solid rgba(255,255,255,.04)}
-  table.affinity-matrix th{color:rgba(138,134,118,.5);letter-spacing:1px}
-  table.affinity-matrix .cell-self{background:rgba(201,168,76,.05);color:rgba(201,168,76,.4)}
-  table.affinity-matrix td{color:rgba(0,229,255,.6)}
-
-  /* ACTIVITY STREAM */
-  .activity-stream{display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto}
-  .activity-item{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:rgba(255,255,255,.01);border-radius:2px;border-left:2px solid transparent}
-  .ai-elem{font-size:14px;flex-shrink:0;line-height:1;margin-top:2px}
-  .ai-body{flex:1;min-width:0}
-  .ai-action{font-family:var(--M);font-size:7.5px;color:rgba(255,255,255,.7);line-height:1.4}
-  .ai-meta{font-family:var(--M);font-size:6.5px;color:rgba(138,134,118,.35);margin-top:2px}
-
-  /* DOMINANCE CHART */
-  .dominance-canvas-wrap{position:relative;height:200px}
-  #dominanceCanvas{width:100%;height:200px}
-
-  /* TABS */
-  .layer-tabs{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px;flex-wrap:wrap}
-  .layer-tab{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:9px 18px;cursor:pointer;color:rgba(138,134,118,.5);border-bottom:2px solid transparent;transition:.15s;white-space:nowrap}
-  .layer-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-  .tab-panel{display:none}.tab-panel.active{display:block}
-
-  /* STATS ROW */
-  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  .stat-card{background:var(--surface);border:1px solid rgba(201,168,76,.1);border-radius:3px;padding:12px;text-align:center}
-  .stat-num{font-family:var(--D);font-size:20px;color:var(--gold);line-height:1}
-  .stat-label{font-family:var(--M);font-size:6.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin-top:4px}
-
-  /* EMPTY */
-  .empty{text-align:center;padding:32px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.3)}
-  .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  #tribe-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(0,229,255,.3);border-radius:3px;padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--cyan);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
-
-  @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr}.side{display:none}.element-grid{grid-template-columns:1fr 1fr}}
+/* science */
+.sci-table{width:100%;border-collapse:collapse;font-family:var(--M);font-size:12px}
+.sci-table th{color:var(--cyan);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:2px}
+.sci-table td{padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.08)}
+.sci-table tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
+<aside id="omega-side" data-page="tribe"></aside>
+<div class="page-shell" id="app" style="display:none">
 
-<div class="topbar">
-  <div class="topbar-brand">Ω ELEMENT TRIBES</div>
+<header class="topbar">
+  <div class="topbar-title">ELEMENT TRIBES<span class="topbar-sub">NINE ELEMENTAL BLOODLINES &middot; TRIBAL AUTHORITY RANKINGS</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="cyan" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('tribes')">TRIBES</button>
+  <button class="tab-btn" onclick="setTab('rankings')">RANKINGS</button>
+  <button class="tab-btn" onclick="setTab('matrix')">MATRIX</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<div class="layout">
-  <nav class="side">
-    <a href="/dashboard.html" title="Command Bridge">⌂</a>
-    <a href="/elements.html" title="Elements">✴</a>
-    <a href="/leaderboard.html" title="Leaderboard">◈</a>
-    <a href="/analytics.html" title="Analytics">⬡</a>
-  </nav>
+<!-- TRIBES TAB -->
+<div class="tab-panel active" id="tab-tribes">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-val" id="sTotalMembers">—</div><div class="kpi-label">TOTAL MEMBERS</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="sActiveTribes">—</div><div class="kpi-label">ACTIVE TRIBES</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="sDominantTribe">—</div><div class="kpi-label">DOMINANT TRIBE</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="sTopAuthority">—</div><div class="kpi-label">TOP AUTHORITY</div></div>
+  </div>
 
-  <main class="main">
+  <div class="sechead">NINE ELEMENTAL TRIBES</div>
+  <div class="elem-grid" id="elementGrid">
+    <div class="empty"><span class="spin"></span>LOADING TRIBES...</div>
+  </div>
 
-    <div class="tribe-hero">
-      <h1>SOVEREIGN ELEMENT TRIBES</h1>
-      <p>Nine elemental bloodlines · Tribal authority rankings · Inter-element resonance matrix</p>
-      <p style="margin-top:4px">Fire · Water · Wind · Metal · Sand · Soul · Space · Void · The All</p>
-    </div>
-
-    <!-- GLOBAL STATS -->
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-num" id="sTotalMembers">—</div><div class="stat-label">TOTAL MEMBERS</div></div>
-      <div class="stat-card"><div class="stat-num" id="sActiveTribes">—</div><div class="stat-label">ACTIVE TRIBES</div></div>
-      <div class="stat-card"><div class="stat-num" id="sDominantTribe">—</div><div class="stat-label">DOMINANT TRIBE</div></div>
-      <div class="stat-card"><div class="stat-num" id="sTopAuthority">—</div><div class="stat-label">TOP AUTHORITY</div></div>
-    </div>
-
-    <!-- TABS -->
-    <div class="layer-tabs">
-      <div class="layer-tab active" data-tab="overview">TRIBE OVERVIEW</div>
-      <div class="layer-tab" data-tab="rankings">RANKINGS</div>
-      <div class="layer-tab" data-tab="matrix">AFFINITY MATRIX</div>
-      <div class="layer-tab" data-tab="activity">LIVE ACTIVITY</div>
-    </div>
-
-    <!-- TAB: OVERVIEW -->
-    <div class="tab-panel active" id="tab-overview">
-      <div class="section-title">◈ NINE ELEMENTAL TRIBES</div>
-      <div class="element-grid" id="elementGrid">
-        <div class="empty"><span class="spin"></span>LOADING TRIBES...</div>
-      </div>
-
-      <div style="margin-top:24px">
-        <div class="section-title">◉ TRIBAL DOMINANCE</div>
-        <div class="dominance-canvas-wrap">
-          <canvas id="dominanceCanvas"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: RANKINGS -->
-    <div class="tab-panel" id="tab-rankings">
-      <div class="section-title">◈ TOP MEMBERS PER TRIBE</div>
-      <div class="tribe-rank-grid" id="tribeRankGrid">
-        <div class="empty"><span class="spin"></span>LOADING...</div>
-      </div>
-    </div>
-
-    <!-- TAB: MATRIX -->
-    <div class="tab-panel" id="tab-matrix">
-      <div class="section-title">◈ INTER-ELEMENT AFFINITY MATRIX</div>
-      <div class="matrix-wrap" id="matrixWrap">
-        <div class="empty"><span class="spin"></span>COMPUTING RESONANCE...</div>
-      </div>
-    </div>
-
-    <!-- TAB: ACTIVITY -->
-    <div class="tab-panel" id="tab-activity">
-      <div class="section-title">◈ LIVE TRIBE ACTIVITY STREAM</div>
-      <div class="activity-stream" id="activityStream">
-        <div class="empty"><span class="spin"></span>LOADING ACTIVITY...</div>
-      </div>
-    </div>
-
-  </main>
+  <div class="sechead">TRIBAL DOMINANCE CHART</div>
+  <div class="dominance-wrap">
+    <canvas id="dominanceCanvas"></canvas>
+  </div>
 </div>
+
+<!-- RANKINGS TAB -->
+<div class="tab-panel" id="tab-rankings">
+  <div class="sechead">TOP MEMBERS PER TRIBE</div>
+  <div class="tribe-rank-grid" id="tribeRankGrid">
+    <div class="empty"><span class="spin"></span>LOADING...</div>
+  </div>
+</div>
+
+<!-- MATRIX TAB -->
+<div class="tab-panel" id="tab-matrix">
+  <div class="sechead">INTER-ELEMENT AFFINITY MATRIX</div>
+  <p style="font-family:var(--M);font-size:10px;color:var(--muted);margin-bottom:14px;letter-spacing:1px">100 = PERFECT HARMONY · VALUES REPRESENT ELEMENTAL RESONANCE COEFFICIENT (0–100)</p>
+  <div class="matrix-wrap" id="matrixWrap">
+    <div class="empty"><span class="spin"></span>COMPUTING RESONANCE...</div>
+  </div>
+</div>
+
+<!-- SCIENCE TAB -->
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">ELEMENT TRIBE SYSTEM &mdash; SOVEREIGN SCIENCE</div>
+  <div class="card-grid" style="--cols:1">
+    <div class="card">
+      <div class="card-title">HOW TRIBES WORK</div>
+      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
+        <p>Each sovereign is born into one of the nine elemental tribes based on their assigned element (determined by birth sign or authority unlock level). Tribes are not chosen — they are discovered. The platform tracks tribe membership, authority distribution, and inter-tribal resonance in real time.</p>
+        <p style="margin-top:12px">The Tribal Dominance Chart reflects the live count of members per tribe. The Affinity Matrix shows the conceptual resonance coefficient between any two elements — a measure of how naturally those elemental forces amplify or challenge each other.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sechead">AFFINITY MATRIX LEGEND</div>
+  <div class="card" style="overflow-x:auto">
+    <table class="sci-table">
+      <thead><tr><th>SCORE</th><th>MEANING</th><th>EXAMPLE PAIRING</th></tr></thead>
+      <tbody>
+        <tr><td style="color:rgba(0,255,136,.7)">80–100</td><td>High resonance — natural amplification</td><td>SOUL ↔ VOID</td></tr>
+        <tr><td style="color:var(--gold)">60–79</td><td>Moderate resonance — productive tension</td><td>FIRE ↔ WIND</td></tr>
+        <tr><td style="color:var(--cyan)">40–59</td><td>Neutral — independent forces</td><td>FIRE ↔ METAL</td></tr>
+        <tr><td style="color:var(--muted)">0–39</td><td>Low resonance — opposing principles</td><td>FIRE ↔ VOID</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sechead">ELEMENT PRINCIPLES</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">PHYSICAL ELEMENTS (5)</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:2;color:var(--muted)">Fire · Water · Wind · Metal · Sand<br><span style="color:var(--solar)">Assigned at birth through astrological sign</span></div></div>
+    <div class="card"><div class="card-title">TRANSCENDENT ELEMENTS (3)</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:2;color:var(--muted)">Soul (AUTH ≥ 5.20) · Space (AUTH ≥ 9.17) · Void (AUTH ≥ 12.72)<br><span style="color:var(--cyan)">Unlocked through authority progression</span></div></div>
+    <div class="card"><div class="card-title">APEX ELEMENT (1)</div><div class="card-body" style="font-family:var(--M);font-size:11px;line-height:2;color:var(--muted)">The All (AUTH ≥ 27.8367)<br><span style="color:var(--gold)">Convergence of all nine elemental forces</span></div></div>
+  </div>
+</div>
+
+</div><!-- end page-shell -->
 
 <div id="tribe-toast"></div>
 
-<script data-omega-bg="1">
-(function(){if(!document.querySelector('script[data-omega-bg]')){var s=document.createElement('script');s.src='/bg.js';s.defer=true;document.head.appendChild(s);}})();
+<script>
+function setTab(name){
+  var tabs=['tribes','rankings','matrix','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
 </script>
-<script src="/bg.js" defer></script>
-<script src="/omega-ui.js" defer></script>
-<script src="/omega-chrono.js" defer></script>
 
 <script type="module">
-/* ── ELEMENT CONFIG ── */
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
 var ELEMENTS=[
-  {id:'fire',  name:'FIRE',  sigil:'☲', color:'#FF4500', glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
-  {id:'water', name:'WATER', sigil:'☰', color:'#00BFFF', glow:'rgba(0,191,255,.25)', principle:'ADAPTIVE FLOW',    desc:'Strategic patience, fluid intelligence'},
-  {id:'wind',  name:'WIND',  sigil:'☱', color:'#98E8C1', glow:'rgba(152,232,193,.2)',principle:'FREE THOUGHT',     desc:'Creative velocity, conceptual innovation'},
-  {id:'metal', name:'METAL', sigil:'☳', color:'#B0C4DE', glow:'rgba(176,196,222,.2)',principle:'IRON PRECISION',   desc:'Disciplined execution, structural mastery'},
-  {id:'sand',  name:'SAND',  sigil:'★', color:'#DEB887', glow:'rgba(222,184,135,.2)',principle:'ENDURING FORM',    desc:'Resilience, foundational patience'},
-  {id:'soul',  name:'SOUL',  sigil:'✴', color:'#DA70D6', glow:'rgba(218,112,214,.2)',principle:'INNER AUTHORITY',  desc:'Intuitive wisdom, emotional sovereignty'},
-  {id:'space', name:'SPACE', sigil:'✶', color:'#7B68EE', glow:'rgba(123,104,238,.2)',principle:'INFINITE VISION',  desc:'Expansive strategy, universal perspective'},
-  {id:'void',  name:'VOID',  sigil:'✷', color:'#708090', glow:'rgba(112,128,144,.2)',principle:'ABSOLUTE SILENCE', desc:'Mastery through restraint, pure awareness'},
-  {id:'all',   name:'THE ALL',sigil:'Ω', color:'#C9A84C', glow:'rgba(201,168,76,.25)', principle:'SOVEREIGN UNITY', desc:'Complete integration of all nine forces'}
+  {id:'fire',  name:'FIRE',  sigil:'☲',color:'#FF4500',glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
+  {id:'water', name:'WATER', sigil:'☰',color:'#00BFFF',glow:'rgba(0,191,255,.25)', principle:'ADAPTIVE FLOW',    desc:'Strategic patience, fluid intelligence'},
+  {id:'wind',  name:'WIND',  sigil:'☱',color:'#98E8C1',glow:'rgba(152,232,193,.2)',principle:'FREE THOUGHT',     desc:'Creative velocity, conceptual innovation'},
+  {id:'metal', name:'METAL', sigil:'☳',color:'#B0C4DE',glow:'rgba(176,196,222,.2)',principle:'IRON PRECISION',   desc:'Disciplined execution, structural mastery'},
+  {id:'sand',  name:'SAND',  sigil:'★', color:'#DEB887',glow:'rgba(222,184,135,.2)',principle:'ENDURING FORM',    desc:'Resilience, foundational patience'},
+  {id:'soul',  name:'SOUL',  sigil:'✴',color:'#DA70D6',glow:'rgba(218,112,214,.2)',principle:'INNER AUTHORITY',  desc:'Intuitive wisdom, emotional sovereignty'},
+  {id:'space', name:'SPACE', sigil:'✶',color:'#7B68EE',glow:'rgba(123,104,238,.2)',principle:'INFINITE VISION',  desc:'Expansive strategy, universal perspective'},
+  {id:'void',  name:'VOID',  sigil:'✷',color:'#708090',glow:'rgba(112,128,144,.2)',principle:'ABSOLUTE SILENCE', desc:'Mastery through restraint, pure awareness'},
+  {id:'all',   name:'THE ALL',sigil:'Ω',color:'#C9A84C',glow:'rgba(201,168,76,.25)', principle:'SOVEREIGN UNITY', desc:'Complete integration of all nine forces'}
 ];
 
-/* Affinity resonance (conceptual — inter-element harmony score 0-100) */
 var AFFINITY={
-  fire:  {fire:100,water:35,wind:80,metal:55,sand:45,soul:70,space:60,void:30,all:85},
-  water: {fire:35,water:100,wind:65,metal:70,sand:60,soul:80,space:75,void:85,all:90},
-  wind:  {fire:80,water:65,wind:100,metal:45,sand:40,soul:65,space:85,void:55,all:80},
-  metal: {fire:55,water:70,wind:45,metal:100,sand:80,soul:55,space:50,void:70,all:75},
-  sand:  {fire:45,water:60,wind:40,metal:80,sand:100,soul:60,space:45,void:65,all:70},
-  soul:  {fire:70,water:80,wind:65,metal:55,sand:60,soul:100,space:80,void:90,all:95},
-  space: {fire:60,water:75,wind:85,metal:50,sand:45,soul:80,space:100,void:80,all:90},
-  void:  {fire:30,water:85,wind:55,metal:70,sand:65,soul:90,space:80,void:100,all:95},
-  all:   {fire:85,water:90,wind:80,metal:75,sand:70,soul:95,space:90,void:95,all:100}
+  fire:{fire:100,water:35,wind:80,metal:55,sand:45,soul:70,space:60,void:30,all:85},
+  water:{fire:35,water:100,wind:65,metal:70,sand:60,soul:80,space:75,void:85,all:90},
+  wind:{fire:80,water:65,wind:100,metal:45,sand:40,soul:65,space:85,void:55,all:80},
+  metal:{fire:55,water:70,wind:45,metal:100,sand:80,soul:55,space:50,void:70,all:75},
+  sand:{fire:45,water:60,wind:40,metal:80,sand:100,soul:60,space:45,void:65,all:70},
+  soul:{fire:70,water:80,wind:65,metal:55,sand:60,soul:100,space:80,void:90,all:95},
+  space:{fire:60,water:75,wind:85,metal:50,sand:45,soul:80,space:100,void:80,all:90},
+  void:{fire:30,water:85,wind:55,metal:70,sand:65,soul:90,space:80,void:100,all:95},
+  all:{fire:85,water:90,wind:80,metal:75,sand:70,soul:95,space:90,void:95,all:100}
 };
 
-/* ── STATE ── */
-var sb=null;
-var currentUser=null;
-var tribeData={};
-var profiles=[];
-
-/* ── TOAST ── */
-function toast(msg,col='var(--cyan)'){
-  var t=document.getElementById('tribe-toast');
-  t.textContent=msg;t.style.color=col;t.style.opacity='1';
-  setTimeout(()=>{t.style.opacity='0';},3000);
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function timeAgo(iso){
+  if(!iso)return '';
+  var diff=(Date.now()-new Date(iso).getTime())/1000;
+  if(diff<60)return 'JUST NOW';
+  if(diff<3600)return Math.floor(diff/60)+'M AGO';
+  if(diff<86400)return Math.floor(diff/3600)+'H AGO';
+  return Math.floor(diff/86400)+'D AGO';
+}
+function toast(msg,col){
+  col=col||'var(--cyan)';
+  var t=document.getElementById('tribe-toast');t.textContent=msg;t.style.color=col;t.style.opacity='1';
+  setTimeout(function(){t.style.opacity='0';},3000);
 }
 
-/* ── TABS ── */
-document.querySelectorAll('.layer-tab').forEach(tab=>{
-  tab.addEventListener('click',function(){
-    document.querySelectorAll('.layer-tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    this.classList.add('active');
-    document.getElementById('tab-'+this.dataset.tab).classList.add('active');
-  });
-});
+var profiles=[],tribeData={};
 
-/* ── INIT ── */
-function init(sb_,user){
-  sb=sb_;currentUser=user;
-  loadTribeData();
-}
-
-document.addEventListener('omega:user-loaded',function(e){
-  var d=e.detail||{};
-  init(window.__omegaSb,d.user);
-});
-if(window.__omegaSb&&window.__omegaUser) init(window.__omegaSb,window.__omegaUser);
-setTimeout(function(){
-  if(!sb&&window.__omegaSb){
-    window.__omegaSb.auth.getSession().then(r=>{
-      var ses=r.data&&r.data.session;
-      if(ses) init(window.__omegaSb,ses.user);
-    });
-  }
-},1500);
-
-/* ── LOAD TRIBE DATA ── */
-async function loadTribeData(){
-  if(!sb) return;
-  try{
-    var {data}=await sb.from('profiles')
-      .select('id,display_name,element,authority_score,gate_level,access_approved,created_at')
-      .eq('access_approved',true)
-      .order('authority_score',{ascending:false})
-      .limit(200);
-    profiles=data||[];
-  }catch(e){
-    /* No data — generate representative demo */
-    profiles=generateDemoProfiles();
-  }
-
-  /* Group by element */
-  tribeData={};
-  ELEMENTS.forEach(el=>{tribeData[el.id]=[];});
-  profiles.forEach(p=>{
-    var eid=(p.element||'').toLowerCase().replace(/\s+/g,'');
-    if(eid==='theall') eid='all';
-    if(tribeData[eid]) tribeData[eid].push(p);
-    else if(!eid) tribeData['void'].push(p);
-  });
-
-  renderGlobalStats();
-  renderElementGrid();
-  renderRankings();
-  renderMatrix();
-  renderActivity();
-  drawDominanceChart();
-}
-
-/* ── DEMO PROFILES (when Supabase offline) ── */
 function generateDemoProfiles(){
   var names=['CORVUS','LYSANDER','MIRA','THERON','OPHELIA','CASPIAN','SELENE','DORIAN','ARIA','SAGE','ORION','NOVA','PHOENIX','ATLAS','LUNA'];
   var elements=['fire','water','wind','metal','sand','soul','space','void','all'];
-  return names.map((n,i)=>({
-    id:'demo_'+i,display_name:n,
-    element:elements[i%elements.length],
-    authority_score:(Math.random()*25+3).toFixed(2)*1,
-    gate_level:Math.floor(Math.random()*12)+1,
-    access_approved:true,
-    created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()
-  }));
+  return names.map(function(n,i){return{id:'demo_'+i,display_name:n,element:elements[i%elements.length],authority_score:(Math.random()*25+3).toFixed(2)*1,gate_level:Math.floor(Math.random()*12)+1,access_approved:true,created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()};});
 }
 
-/* ── GLOBAL STATS ── */
+function groupByElement(ps){
+  var td={};ELEMENTS.forEach(function(el){td[el.id]=[];});
+  ps.forEach(function(p){
+    var eid=(p.element||'').toLowerCase().replace(/\s+/g,'');
+    if(eid==='theall')eid='all';
+    if(td[eid])td[eid].push(p);else if(!eid)td['void'].push(p);
+  });
+  return td;
+}
+
 function renderGlobalStats(){
   document.getElementById('sTotalMembers').textContent=profiles.length;
-  var activeTribes=ELEMENTS.filter(el=>(tribeData[el.id]||[]).length>0).length;
+  var activeTribes=ELEMENTS.filter(function(el){return(tribeData[el.id]||[]).length>0;}).length;
   document.getElementById('sActiveTribes').textContent=activeTribes;
-  var dominant=ELEMENTS.reduce((best,el)=>((tribeData[el.id]||[]).length>(tribeData[best.id]||[]).length?el:best),ELEMENTS[0]);
+  var dominant=ELEMENTS.reduce(function(best,el){return(tribeData[el.id]||[]).length>(tribeData[best.id]||[]).length?el:best;},ELEMENTS[0]);
   document.getElementById('sDominantTribe').textContent=dominant.sigil;
-  var top=profiles.reduce((best,p)=>((p.authority_score||0)>(best.authority_score||0)?p:best),profiles[0]||{});
+  var top=profiles.reduce(function(best,p){return(p.authority_score||0)>(best.authority_score||0)?p:best;},profiles[0]||{});
   document.getElementById('sTopAuthority').textContent=top.authority_score?top.authority_score.toFixed(1):'—';
 }
 
-/* ── ELEMENT GRID ── */
 function renderElementGrid(){
   var grid=document.getElementById('elementGrid');
-  var maxCount=Math.max(...ELEMENTS.map(el=>(tribeData[el.id]||[]).length),1);
-  grid.innerHTML=ELEMENTS.map(el=>{
+  var maxCount=Math.max.apply(null,ELEMENTS.map(function(el){return(tribeData[el.id]||[]).length;}));
+  maxCount=Math.max(maxCount,1);
+  grid.innerHTML='';
+  ELEMENTS.forEach(function(el){
     var members=tribeData[el.id]||[];
     var pct=(members.length/maxCount*100).toFixed(1);
-    var avgAuth=members.length?( members.reduce((s,m)=>s+(m.authority_score||0),0)/members.length).toFixed(2):'—';
-    return `<div class="elem-card" style="background:${el.glow};border:1px solid ${el.color}22" data-elem="${el.id}">
-      <span class="elem-icon">${el.sigil}</span>
-      <div class="elem-name" style="color:${el.color}">${el.name}</div>
-      <div class="elem-principle">${el.principle}</div>
-      <div class="elem-count" style="color:${el.color}">${members.length}</div>
-      <div class="elem-count-label">MEMBERS · AVG AUTH ${avgAuth}</div>
-      <div class="elem-bar"><div class="elem-bar-fill" style="width:${pct}%;background:${el.color}"></div></div>
-    </div>`;
-  }).join('');
-
-  grid.querySelectorAll('.elem-card').forEach(card=>{
+    var avgAuth=members.length?(members.reduce(function(s,m){return s+(m.authority_score||0);},0)/members.length).toFixed(2):'—';
+    var card=document.createElement('div');
+    card.className='elem-card';
+    card.style.background=el.glow;card.style.borderColor=el.color+'22';
+    card.dataset.elem=el.id;
+    card.innerHTML='<span class="elem-icon">'+el.sigil+'</span>'+
+      '<div class="elem-name" style="color:'+el.color+'">'+el.name+'</div>'+
+      '<div class="elem-principle">'+el.principle+'</div>'+
+      '<div class="elem-count" style="color:'+el.color+'">'+members.length+'</div>'+
+      '<div class="elem-count-label">MEMBERS · AVG AUTH '+avgAuth+'</div>'+
+      '<div class="elem-bar"><div class="elem-bar-fill" style="width:'+pct+'%;background:'+el.color+'"></div></div>';
     card.addEventListener('click',function(){
-      var eid=this.dataset.elem;
-      document.querySelector('[data-tab="rankings"]').click();
-      /* scroll to tribe card */
-      setTimeout(()=>{
-        var target=document.getElementById('tribe-card-'+eid);
-        if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
+      setTab('rankings');
+      setTimeout(function(){
+        var target=document.getElementById('tribe-card-'+el.id);
+        if(target)target.scrollIntoView({behavior:'smooth',block:'center'});
       },100);
     });
+    grid.appendChild(card);
   });
 }
 
-/* ── RANKINGS ── */
 function renderRankings(){
   var grid=document.getElementById('tribeRankGrid');
-  grid.innerHTML=ELEMENTS.map(el=>{
+  grid.innerHTML='';
+  ELEMENTS.forEach(function(el){
     var members=(tribeData[el.id]||[]).slice(0,5);
-    var rows=members.length?members.map((m,i)=>{
-      var rankCls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-      var name=(m.display_name||('MEMBER·'+(m.id||'').slice(-4))).toUpperCase();
-      return `<div class="member-row">
-        <div class="mr-rank ${rankCls}">${i+1}</div>
-        <div class="mr-name">${escHtml(name)}</div>
-        <div>
-          <div class="mr-auth">${(m.authority_score||0).toFixed(2)} AUTH</div>
-          <div class="mr-gate">GATE ${m.gate_level||'—'}</div>
-        </div>
-      </div>`;
-    }).join(''):
-    '<div class="empty" style="padding:12px;font-size:7px">NO MEMBERS</div>';
-
-    return `<div class="tribe-rank-card" id="tribe-card-${el.id}" style="border-top:2px solid ${el.color}44">
-      <div class="trc-header">
-        <div class="trc-icon">${el.sigil}</div>
-        <div class="trc-name" style="color:${el.color}">${el.name}</div>
-        <div class="trc-rank">${(tribeData[el.id]||[]).length} MEMBERS</div>
-      </div>
-      ${rows}
-    </div>`;
-  }).join('');
+    var card=document.createElement('div');
+    card.className='tribe-rank-card';card.id='tribe-card-'+el.id;
+    card.style.borderTop='2px solid '+el.color+'44';
+    var hdr=document.createElement('div');hdr.className='trc-header';
+    var ic=document.createElement('div');ic.className='trc-icon';ic.textContent=el.sigil;
+    var nm=document.createElement('div');nm.className='trc-name';nm.style.color=el.color;nm.textContent=el.name;
+    var ct=document.createElement('div');ct.className='trc-count';ct.textContent=(tribeData[el.id]||[]).length+' MEMBERS';
+    hdr.appendChild(ic);hdr.appendChild(nm);hdr.appendChild(ct);card.appendChild(hdr);
+    if(members.length){
+      members.forEach(function(m,i){
+        var row=document.createElement('div');row.className='member-row';
+        var rk=document.createElement('div');rk.className='mr-rank '+(i===0?'gold-r':i===1?'silver-r':i===2?'bronze-r':'');rk.textContent=i+1;
+        var name=document.createElement('div');name.className='mr-name';name.textContent=(m.display_name||'MEMBER·'+(m.id||'').slice(-4)).toUpperCase();
+        var info=document.createElement('div');
+        var auth=document.createElement('div');auth.className='mr-auth';auth.textContent=(m.authority_score||0).toFixed(2)+' AUTH';
+        var gate=document.createElement('div');gate.className='mr-gate';gate.textContent='GATE '+(m.gate_level||'—');
+        info.appendChild(auth);info.appendChild(gate);
+        row.appendChild(rk);row.appendChild(name);row.appendChild(info);
+        card.appendChild(row);
+      });
+    } else {
+      var empty=document.createElement('div');empty.className='empty';empty.style.padding='12px';empty.style.fontSize='7px';empty.textContent='NO MEMBERS';
+      card.appendChild(empty);
+    }
+    grid.appendChild(card);
+  });
 }
 
-/* ── AFFINITY MATRIX ── */
 function renderMatrix(){
-  var shortNames=ELEMENTS.map(el=>el.sigil+' '+el.name.slice(0,3));
-  var header='<tr><th></th>'+shortNames.map(n=>`<th>${n}</th>`).join('')+'</tr>';
-  var rows=ELEMENTS.map((el,i)=>{
-    var cells=ELEMENTS.map((el2,j)=>{
+  var shortNames=ELEMENTS.map(function(el){return el.sigil+' '+el.name.slice(0,3);});
+  var header='<tr><th></th>'+shortNames.map(function(n){return'<th>'+n+'</th>';}).join('')+'</tr>';
+  var rows=ELEMENTS.map(function(el,i){
+    var cells=ELEMENTS.map(function(el2,j){
       var val=AFFINITY[el.id][el2.id];
       var isSelf=i===j;
       var color=val>80?'rgba(0,255,136,.7)':val>60?'rgba(201,168,76,.6)':val>40?'rgba(0,229,255,.5)':'rgba(138,134,118,.4)';
-      return `<td class="${isSelf?'cell-self':''}" style="${isSelf?'':'color:'+color}">${val}</td>`;
+      return'<td class="'+(isSelf?'cell-self':'')+'" style="'+(isSelf?'':'color:'+color)+'">'+val+'</td>';
     }).join('');
-    return `<tr><th style="color:${el.color};white-space:nowrap">${el.sigil} ${el.name.slice(0,4)}</th>${cells}</tr>`;
+    return'<tr><th style="color:'+el.color+';white-space:nowrap">'+el.sigil+' '+el.name.slice(0,4)+'</th>'+cells+'</tr>';
   }).join('');
-
-  document.getElementById('matrixWrap').innerHTML=`<table class="affinity-matrix"><thead>${header}</thead><tbody>${rows}</tbody></table>
-  <div style="font-family:var(--M);font-size:7px;color:rgba(138,134,118,.35);margin-top:10px;letter-spacing:1px">100=PERFECT HARMONY · VALUES REPRESENT ELEMENTAL RESONANCE COEFFICIENT</div>`;
+  document.getElementById('matrixWrap').innerHTML='<table class="affinity-matrix"><thead>'+header+'</thead><tbody>'+rows+'</tbody></table>';
 }
 
-/* ── ACTIVITY STREAM ── */
-async function renderActivity(){
-  var stream=document.getElementById('activityStream');
-  var activities=[];
-
-  /* Real activity from profiles (joined recently, high auth) */
-  var recent=profiles.filter(p=>p.created_at).slice(0,5).map(p=>{
-    var el=ELEMENTS.find(e=>e.id===(p.element||'').toLowerCase())||ELEMENTS[6];
-    return {elem:el,name:(p.display_name||'MEMBER').toUpperCase(),action:'joined the '+el.name+' tribe',ts:p.created_at,color:el.color};
-  });
-  activities.push(...recent);
-
-  /* Top authority movements */
-  profiles.filter(p=>(p.authority_score||0)>20).slice(0,4).forEach(p=>{
-    var el=ELEMENTS.find(e=>e.id===(p.element||'').toLowerCase())||ELEMENTS[8];
-    activities.push({elem:el,name:(p.display_name||'MEMBER').toUpperCase(),action:`reached AUTH ${(p.authority_score||0).toFixed(2)} — Gate ${p.gate_level||'—'} secured`,ts:new Date(Date.now()-Math.random()*3600000).toISOString(),color:el.color});
-  });
-
-  /* Sort by recency */
-  activities.sort((a,b)=>new Date(b.ts)-new Date(a.ts));
-
-  if(!activities.length){stream.innerHTML='<div class="empty">NO ACTIVITY YET</div>';return;}
-
-  stream.innerHTML=activities.map(a=>
-    `<div class="activity-item" style="border-left-color:${a.color}44">
-      <div class="ai-elem">${a.elem.sigil}</div>
-      <div class="ai-body">
-        <div class="ai-action"><span style="color:${a.color}">${escHtml(a.name)}</span> ${escHtml(a.action)}</div>
-        <div class="ai-meta">${timeAgo(a.ts)}</div>
-      </div>
-    </div>`
-  ).join('');
-
-  /* Real-time subscription */
-  if(sb){
-    try{
-      sb.channel('tribe-activity')
-        .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},(payload)=>{
-          var p=payload.new;
-          if(!p||!p.access_approved) return;
-          var el=ELEMENTS.find(e=>e.id===(p.element||'').toLowerCase())||ELEMENTS[0];
-          var item=document.createElement('div');
-          item.className='activity-item';
-          item.style.borderLeftColor=el.color+'44';
-          item.innerHTML=`<div class="ai-elem">${el.sigil}</div><div class="ai-body"><div class="ai-action"><span style="color:${el.color}">${escHtml((p.display_name||'MEMBER').toUpperCase())}</span> updated profile</div><div class="ai-meta">JUST NOW</div></div>`;
-          stream.insertBefore(item,stream.firstChild);
-          if(stream.children.length>30) stream.lastChild.remove();
-        })
-        .subscribe();
-    }catch(e){}
-  }
-}
-
-/* ── DOMINANCE CHART (native canvas) ── */
 function drawDominanceChart(){
   var canvas=document.getElementById('dominanceCanvas');
+  if(!canvas)return;
   var ctx=canvas.getContext('2d');
   var dpr=window.devicePixelRatio||1;
   var w=canvas.parentElement.clientWidth;
@@ -462,36 +314,25 @@ function drawDominanceChart(){
   canvas.width=w*dpr;canvas.height=h*dpr;
   canvas.style.width=w+'px';canvas.style.height=h+'px';
   ctx.scale(dpr,dpr);
-
-  ctx.fillStyle='rgba(2,2,10,0)';ctx.fillRect(0,0,w,h);
-
-  var maxCount=Math.max(...ELEMENTS.map(el=>(tribeData[el.id]||[]).length),1);
+  var maxCount=Math.max.apply(null,ELEMENTS.map(function(el){return(tribeData[el.id]||[]).length;}));
+  maxCount=Math.max(maxCount,1);
   var barW=Math.floor((w-40)/ELEMENTS.length)-4;
   var padLeft=20;
-
-  ELEMENTS.forEach((el,i)=>{
+  ELEMENTS.forEach(function(el,i){
     var count=(tribeData[el.id]||[]).length;
     var barH=count/maxCount*(h-50);
     var x=padLeft+i*(barW+4);
     var y=h-30-barH;
-
-    /* Glow */
     var grd=ctx.createLinearGradient(x,y,x,h-30);
-    grd.addColorStop(0,el.color+'CC');
-    grd.addColorStop(1,el.color+'22');
-    ctx.fillStyle=grd;
-    ctx.fillRect(x,y,barW,barH);
-
-    /* Label */
+    grd.addColorStop(0,el.color+'CC');grd.addColorStop(1,el.color+'22');
+    ctx.fillStyle=grd;ctx.fillRect(x,y,barW,barH);
     ctx.fillStyle=el.color;
-    ctx.font=`bold ${Math.min(barW,14)}px 'Courier Prime',monospace`;
+    ctx.font='bold '+Math.min(barW,14)+'px monospace';
     ctx.textAlign='center';
     ctx.fillText(el.sigil,x+barW/2,h-14);
-
-    /* Count */
     if(count>0){
       ctx.fillStyle='rgba(255,255,255,.5)';
-      ctx.font=`9px 'Courier Prime',monospace`;
+      ctx.font='9px monospace';
       ctx.fillText(count,x+barW/2,y-4);
     }
   });
@@ -499,16 +340,26 @@ function drawDominanceChart(){
 
 window.addEventListener('resize',drawDominanceChart);
 
-/* ── UTILS ── */
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function timeAgo(iso){
-  if(!iso) return '';
-  var diff=(Date.now()-new Date(iso).getTime())/1000;
-  if(diff<60) return 'JUST NOW';
-  if(diff<3600) return Math.floor(diff/60)+'M AGO';
-  if(diff<86400) return Math.floor(diff/3600)+'H AGO';
-  return Math.floor(diff/86400)+'D AGO';
-}
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('is_owner,access_approved').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+
+  try{
+    var d=(await sb.from('profiles').select('id,display_name,element,authority_score,gate_level,access_approved,created_at').eq('access_approved',true).order('authority_score',{ascending:false}).limit(200)).data||[];
+    profiles=d;
+  }catch(e){profiles=generateDemoProfiles();}
+
+  tribeData=groupByElement(profiles);
+  renderGlobalStats();
+  renderElementGrid();
+  renderRankings();
+  renderMatrix();
+  setTimeout(drawDominanceChart,100);
+})();
 </script>
-</body>
-</html>
+<script src="/bg.js"></script>
+</body></html>

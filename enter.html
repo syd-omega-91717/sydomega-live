@@ -24,9 +24,6 @@
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
@@ -273,7 +270,7 @@ countdown();
     var pulse=.85+.15*Math.sin(t*1.8);
     ctx.fillStyle='rgba(201,168,76,'+pulse+')';
     ctx.shadowColor='rgba(201,168,76,0.8)'; ctx.shadowBlur=40+20*Math.sin(t*1.2);
-    ctx.font='700 '+Math.round(H*1.6)+'px "Cinzel Decorative",serif';
+    ctx.font='700 '+Math.round(H*1.6)+'px serif';
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText('\u03A9',CX,CY-4);
     ctx.shadowBlur=0;
@@ -351,6 +348,6 @@ document.getElementById('btn-enter').addEventListener('click',function(){
   },700);
 });
 </script>
-<script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
+<script src="/bg.js" defer></script>
 </body>
 </html>

@@ -1,93 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN PASSPORT</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign Passport · SYD OMEGA 91717</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-.hero-band{display:grid;grid-template-columns:1fr 80px 1fr;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(139,0,0,.06),rgba(10,10,15,.88),rgba(201,168,76,.03))}
-.hb{padding:16px clamp(14px,2.5vw,28px)}
-.hb.mid{display:flex;align-items:center;justify-content:center;padding:0}
-.hb.right{border-left:1px solid var(--line);text-align:right}
-.hb.left{border-right:1px solid var(--line)}
-.hb-n{font-family:var(--D);font-size:clamp(14px,2.5vw,20px);color:var(--gold);line-height:1}
-.hb-l{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
-.sec{padding:clamp(14px,3vw,36px)}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px}
-.card{border:1px solid var(--line);padding:20px;border-radius:2px;background:rgba(10,10,15,.5);margin-bottom:14px}
-.row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap;gap:8px}
-.row:last-child{border-bottom:none}
-.row-k{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)}
-.row-v{font-family:var(--M);font-size:10px;letter-spacing:1px;color:var(--ink)}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
+.tab-btn.active{background:#00E5FF;color:#000;border-color:#00E5FF;}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+/* PASSPORT DOCUMENT */
+.passport-doc{background:linear-gradient(160deg,#0a0a14,#0d0d1a,#080812);border:2px solid #00E5FF;border-radius:4px;padding:0;max-width:560px;margin:0 auto 24px;overflow:hidden;position:relative;}
+.passport-doc::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#00E5FF,#9B6BF0,#00E5FF);}
+.pp-header{background:rgba(0,229,255,.06);border-bottom:1px solid rgba(0,229,255,.15);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;}
+.pp-country{font-family:'Courier New',monospace;font-size:10px;color:#00E5FF;letter-spacing:3px;}
+.pp-omega{font-family:'Courier New',monospace;font-size:18px;color:#00E5FF;font-weight:700;}
+.pp-body{padding:24px;display:grid;grid-template-columns:140px 1fr;gap:24px;}
+.pp-photo{width:120px;height:140px;background:#0d0d0d;border:1px solid rgba(0,229,255,.2);display:flex;align-items:center;justify-content:center;font-size:56px;flex-shrink:0;}
+.pp-fields{display:grid;gap:10px;}
+.pp-field{border-bottom:1px solid rgba(0,229,255,.1);padding-bottom:8px;}
+.pp-field-label{font-family:'Courier New',monospace;font-size:8px;color:#555;letter-spacing:2px;margin-bottom:3px;}
+.pp-field-value{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;}
+.pp-field-value.large{font-size:16px;color:#00E5FF;font-weight:700;}
+.pp-mrz{background:#0d0d0d;border-top:1px solid rgba(0,229,255,.1);padding:12px 24px;font-family:'Courier New',monospace;font-size:9px;color:#333;letter-spacing:2px;word-break:break-all;}
+.pp-stamp-area{padding:0 24px 20px;display:flex;gap:12px;flex-wrap:wrap;}
+.pp-stamp{width:60px;height:60px;border:1px solid;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:7px;letter-spacing:1px;text-align:center;opacity:.7;}
+/* EDIT FORM */
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#00E5FF;}
+.form-group textarea{min-height:80px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-primary{padding:10px 24px;background:#00E5FF;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
+.btn-primary:hover{background:#00b8cc;}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
+/* STAMPS */
+.stamps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.stamp-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;display:flex;align-items:center;gap:12px;}
+.stamp-icon{width:50px;height:50px;border:2px solid;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.stamp-info{flex:1;}
+.stamp-name{font-family:'Courier New',monospace;font-size:11px;color:#e0e0e0;font-weight:700;}
+.stamp-date{font-family:'Courier New',monospace;font-size:9px;color:#555;margin-top:2px;}
+.stamp-del{background:none;border:none;color:#333;cursor:pointer;font-size:11px;}
+.stamp-del:hover{color:#FF4444;}
+.add-stamp-form{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:16px;}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:16px;margin-bottom:12px;}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;letter-spacing:1px;margin-bottom:8px;}
+.sci-body{font-size:11px;color:#888;line-height:1.65;}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="passport"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN PASSPORT<small>M13 &middot; DIGITAL PASSPORT &middot; IDENTITY DOCUMENT &middot; PRIVATE &middot; YOUR ACCOUNT ONLY &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="psp-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-    <div class="hero-band">
-      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l">MEMBER NAME</div></div>
-      <div class="hb mid"><canvas id="hb-cv-passport" width="80" height="80" style="width:40px;height:40px;display:block"></canvas></div>
-      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l">AUTHORITY SCORE</div></div>
-    </div>
-    <div class="sec">
-      <div class="sechead" data-reveal="fade-up">YOUR SOVEREIGN PASSPORT &middot; PRIVATE TO YOUR ACCOUNT</div>
-      <div class="card" data-reveal="fade-up" style="border:2px solid rgba(201,168,76,.35);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.9))">
-      <div style="font-family:var(--D);font-size:11px;letter-spacing:.05em;color:var(--gold);margin-bottom:14px">&#937; SYD OMEGA 91717 &middot; SOVEREIGN PASSPORT</div>
-      <div class="row"><span class="row-k">FULL NAME</span><span class="row-v" id="pp-name">--</span></div>
-      <div class="row"><span class="row-k">MEMBER SINCE</span><span class="row-v" id="pp-since">--</span></div>
-      <div class="row"><span class="row-k">COSMOLOGY</span><span class="row-v" id="pp-cosmo">--</span></div>
-      <div class="row"><span class="row-k">AUTHORITY</span><span class="row-v" id="pp-auth" style="color:var(--gold)">--</span></div>
-      <div class="row"><span class="row-k">MATRIX NODES</span><span class="row-v" id="pp-nodes">--</span></div>
-      <div class="row"><span class="row-k">ACHIEVEMENTS</span><span class="row-v" id="pp-ach">--</span></div>
-    </div>
-    </div>
-    <div data-page-emblem="passport" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; SOVEREIGN PASSPORT &middot; PRIVATE ACCOUNT DATA</span><span>VISIBLE ONLY TO YOU</span></div>
-  </main>
+<div id="omega-nav"></div>
+<main class="page-content">
+<div class="page-header">
+  <div class="page-title">SOVEREIGN PASSPORT</div>
+  <div class="page-subtitle">IDENTITY · AUTHORITY · PROVENANCE</div>
 </div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('view')">PASSPORT</button>
+  <button class="tab-btn" onclick="switchTab('edit')">EDIT</button>
+  <button class="tab-btn" onclick="switchTab('stamps')">STAMPS</button>
+  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
+</div>
+
+<!-- VIEW -->
+<div id="tab-view" class="tab-pane active">
+  <div class="passport-doc" id="passport-doc">
+    <div class="pp-header">
+      <div>
+        <div class="pp-country">SOVEREIGN DOMAIN · OMEGA JURISDICTION</div>
+        <div style="font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:2px;margin-top:3px;">PERSONAL SOVEREIGNTY RECORD</div>
+      </div>
+      <div class="pp-omega">⍟</div>
+    </div>
+    <div class="pp-body">
+      <div class="pp-photo" id="pp-photo">⍟</div>
+      <div class="pp-fields" id="pp-fields"></div>
+    </div>
+    <div class="pp-stamp-area" id="pp-stamps-preview"></div>
+    <div class="pp-mrz" id="pp-mrz">P&lt;OMEGA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>0000000000OMEGA9100101M2600101&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;6</div>
+  </div>
+</div>
+
+<!-- EDIT -->
+<div id="tab-edit" class="tab-pane">
+  <div class="section-label">SOVEREIGN IDENTITY</div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>SOVEREIGN NAME</label>
+      <input type="text" id="e-name" placeholder="Your sovereign name..." maxlength="60">
+    </div>
+    <div class="form-group">
+      <label>TITLE</label>
+      <input type="text" id="e-title" placeholder="e.g. Architect, Founder, Sovereign..." maxlength="50">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>DATE OF INITIATION</label>
+      <input type="date" id="e-initiation">
+    </div>
+    <div class="form-group">
+      <label>BIRTH DATE</label>
+      <input type="date" id="e-dob">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>NATIONALITY / ORIGIN</label>
+      <input type="text" id="e-origin" placeholder="Country of origin..." maxlength="60">
+    </div>
+    <div class="form-group">
+      <label>CURRENT BASE</label>
+      <input type="text" id="e-base" placeholder="Current city / country..." maxlength="60">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>SOVEREIGN MISSION</label>
+    <textarea id="e-mission" placeholder="Your personal mission statement in one sentence..."></textarea>
+  </div>
+  <div class="form-group">
+    <label>UNIQUE IDENTIFIER (OMEGA ID)</label>
+    <input type="text" id="e-id" placeholder="SYD-OMEGA-XXXXXX" maxlength="30">
+  </div>
+  <div class="form-group">
+    <label>AVATAR EMOJI</label>
+    <input type="text" id="e-avatar" placeholder="⍟" maxlength="4">
+  </div>
+  <div class="form-group">
+    <label>AUTHORITY SCORE (0–27.8367)</label>
+    <input type="number" id="e-auth" placeholder="0.00" step="0.0001" min="0" max="27.8367">
+  </div>
+  <button class="btn-primary" onclick="savePassport()">SAVE PASSPORT</button>
+  <div id="edit-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;"></div>
+</div>
+
+<!-- STAMPS -->
+<div id="tab-stamps" class="tab-pane">
+  <div class="section-label">ADD SOVEREIGNTY STAMP</div>
+  <div class="add-stamp-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>STAMP NAME</label>
+        <input type="text" id="s-name" placeholder="Achievement, country, milestone..." maxlength="40">
+      </div>
+      <div class="form-group">
+        <label>EMOJI ICON</label>
+        <input type="text" id="s-icon" placeholder="🌍" maxlength="4">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>COLOR</label>
+        <select id="s-color">
+          <option value="#00E5FF">Cyan</option>
+          <option value="#9B6BF0">Purple</option>
+          <option value="#FFD700">Gold</option>
+          <option value="#4CAF50">Green</option>
+          <option value="#FF4444">Red</option>
+          <option value="#FF9800">Orange</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>DATE</label>
+        <input type="date" id="s-date">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="addStamp()">ADD STAMP</button>
+  </div>
+  <div class="section-label">YOUR STAMPS</div>
+  <div class="stamps-grid" id="stamps-grid"></div>
+</div>
+
+<!-- SCIENCE -->
+<div id="tab-science" class="tab-pane">
+  <div class="sci-card">
+    <div class="sci-title">SOVEREIGN IDENTITY</div>
+    <div class="sci-body">Erikson (1950) identity theory: stable identity is built through progressive integration of past experiences, present roles, and future commitments. A documented sovereign identity — codified mission, values, provenance — creates the psychological foundation for self-directed life construction.</div>
+    <div class="sci-ref">Erikson, E.H. (1950). Childhood and Society</div>
+  </div>
+  <div class="sci-card">
+    <div class="sci-title">NARRATIVE IDENTITY</div>
+    <div class="sci-body">McAdams (1993): people construct identity as personal narrative — a coherent story that integrates past, present, and future into a meaningful whole. High-functioning individuals have detailed, coherent self-narratives. Writing your passport forces narrative coherence and self-authorship.</div>
+    <div class="sci-ref">McAdams, D.P. (1993). The Stories We Live By</div>
+  </div>
+  <div class="sci-card">
+    <div class="sci-title">AUTHORITY AND IDENTITY</div>
+    <div class="sci-body">Weber (1922) identified three foundations of authority: traditional, charismatic, and rational-legal. Sovereign personal authority synthesizes all three: a rational system (this OS), charismatic vision (mission), and earned legitimacy (provenance and track record). The passport documents this authority.</div>
+    <div class="sci-ref">Weber, M. (1922). Economy and Society</div>
+  </div>
+  <div class="sci-card">
+    <div class="sci-title">SELF-CONCEPT CLARITY</div>
+    <div class="sci-body">Campbell et al. (1996): self-concept clarity — how confidently and consistently you define yourself — predicts psychological well-being, resilience, and identity-consistent behavior. High SCC individuals make faster, more consistent decisions and are less susceptible to social comparison pressure.</div>
+    <div class="sci-ref">Campbell et al. (1996). Journal of Personality and Social Psychology</div>
+  </div>
+</div>
+</main>
+
+<script src="/omega-ui.js"></script>
 <script>
-(function(){var cv=document.getElementById('hb-cv-passport');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();
-</script>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v||'--');}
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex';
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
-    var auth=(Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU).toFixed(4);
-    sid('user-name',(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase());
-    sid('user-auth',pr.is_owner?'27.8367':auth);
-    var since=pr.created_at?new Date(pr.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase():'--';
-    sid('pp-name',(pr.display_name||'SOVEREIGN MEMBER').toUpperCase());
-    sid('pp-since',since);
-    sid('pp-cosmo',[(pr.sign||'--'),(pr.element||'--'),(pr.god||'--'),(pr.agent||'--')].join(' / ').toUpperCase());
-    sid('pp-auth',pr.is_owner?'27.8367 APEX':auth);
-    sid('pp-nodes',Number(pr.nodes_earned||0).toLocaleString());
-    sid('pp-ach','TROPHIES: '+(pr.trophies_earned||0)+' / MEDALS: '+(pr.medals_earned||0)+' / CERTS: '+(pr.certificates_earned||0));
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
-})();
+var passport = {};
+var stamps = [];
+
+function load(){
+  try{passport=JSON.parse(localStorage.getItem('omega_passport')||'{}');}catch(e){passport={};}
+  try{stamps=JSON.parse(localStorage.getItem('omega_stamps')||'[]');}catch(e){stamps=[];}
+}
+function save(){
+  localStorage.setItem('omega_passport',JSON.stringify(passport));
+  localStorage.setItem('omega_stamps',JSON.stringify(stamps));
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function switchTab(t){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  var labels={view:'PASSPORT',edit:'EDIT',stamps:'STAMPS',science:'SCIENCE'};
+  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===labels[t])b.classList.add('active');});
+  if(t==='view'){renderPassport();}
+  if(t==='edit'){loadEditForm();}
+  if(t==='stamps'){renderStamps();}
+}
+
+function renderPassport(){
+  var p=passport;
+  var fields=document.getElementById('pp-fields');
+  var photo=document.getElementById('pp-photo');
+  photo.textContent=p.avatar||'⍟';
+  fields.innerHTML=[
+    {l:'SURNAME / NAME',v:p.name||'—'},
+    {l:'TITLE',v:p.title||'SOVEREIGN'},
+    {l:'OMEGA ID',v:p.id||'SYD-OMEGA-000000'},
+    {l:'DATE OF INITIATION',v:p.initiation?new Date(p.initiation).toLocaleDateString():'—'},
+    {l:'DATE OF BIRTH',v:p.dob?new Date(p.dob).toLocaleDateString():'—'},
+    {l:'ORIGIN',v:p.origin||'—'},
+    {l:'BASE OF OPERATIONS',v:p.base||'—'},
+    {l:'AUTHORITY SCORE',v:p.auth?Number(p.auth).toFixed(4)+' / 27.8367':'—'},
+  ].map(f=>'<div class="pp-field">'
+    +'<div class="pp-field-label">'+f.l+'</div>'
+    +'<div class="pp-field-value'+(f.l==='SURNAME / NAME'?' large':'')+'">'+esc(f.v)+'</div>'
+    +'</div>').join('');
+  if(p.mission){
+    fields.innerHTML+='<div class="pp-field"><div class="pp-field-label">SOVEREIGN MISSION</div>'
+      +'<div class="pp-field-value" style="font-size:10px;color:#888;line-height:1.4;">'+esc(p.mission)+'</div></div>';
+  }
+  // MRZ line
+  var nm=(p.name||'SOVEREIGN').toUpperCase().replace(/\s+/g,'<');
+  var id=(p.id||'OMEGA000000').toUpperCase().replace(/-/g,'');
+  document.getElementById('pp-mrz').innerHTML='P&lt;OMEGA'+nm+'&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>'+id+'OMEGA9100101M2600101&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;6';
+  // stamps preview
+  var sp=document.getElementById('pp-stamps-preview');
+  sp.innerHTML=stamps.slice(0,6).map(s=>'<div class="pp-stamp" style="border-color:'+s.color+';color:'+s.color+'">'+s.icon+'</div>').join('');
+}
+
+function loadEditForm(){
+  var p=passport;
+  var fields={name:'e-name',title:'e-title',initiation:'e-initiation',dob:'e-dob',origin:'e-origin',base:'e-base',mission:'e-mission',id:'e-id',avatar:'e-avatar',auth:'e-auth'};
+  Object.entries(fields).forEach(([k,id])=>{
+    var el=document.getElementById(id);
+    if(el&&p[k])el.value=p[k];
+  });
+}
+
+function savePassport(){
+  passport={
+    name:document.getElementById('e-name').value.trim(),
+    title:document.getElementById('e-title').value.trim(),
+    initiation:document.getElementById('e-initiation').value,
+    dob:document.getElementById('e-dob').value,
+    origin:document.getElementById('e-origin').value.trim(),
+    base:document.getElementById('e-base').value.trim(),
+    mission:document.getElementById('e-mission').value.trim(),
+    id:document.getElementById('e-id').value.trim(),
+    avatar:document.getElementById('e-avatar').value.trim()||'⍟',
+    auth:document.getElementById('e-auth').value,
+    updated:new Date().toISOString()
+  };
+  save();
+  document.getElementById('edit-msg').textContent='PASSPORT UPDATED · '+new Date().toLocaleTimeString();
+  setTimeout(()=>{document.getElementById('edit-msg').textContent='';},2500);
+}
+
+function addStamp(){
+  var name=document.getElementById('s-name').value.trim();
+  var icon=document.getElementById('s-icon').value.trim()||'⍟';
+  var color=document.getElementById('s-color').value;
+  var date=document.getElementById('s-date').value||new Date().toISOString().slice(0,10);
+  if(!name)return;
+  stamps.push({id:uid(),name,icon,color,date});
+  save();
+  document.getElementById('s-name').value='';document.getElementById('s-icon').value='';
+  renderStamps();
+}
+
+function renderStamps(){
+  var grid=document.getElementById('stamps-grid');
+  if(!stamps.length){grid.innerHTML='<div style="color:#333;font-family:\'Courier New\',monospace;font-size:12px;padding:20px;">NO STAMPS YET</div>';return;}
+  grid.innerHTML=stamps.map(s=>'<div class="stamp-card">'
+    +'<div class="stamp-icon" style="border-color:'+s.color+';color:'+s.color+'">'+s.icon+'</div>'
+    +'<div class="stamp-info"><div class="stamp-name">'+esc(s.name)+'</div><div class="stamp-date">'+s.date+'</div></div>'
+    +'<button class="stamp-del" onclick="delStamp(\''+s.id+'\')">×</button>'
+    +'</div>').join('');
+}
+function delStamp(id){stamps=stamps.filter(x=>x.id!==id);save();renderStamps();}
+
+load();
+renderPassport();
 </script>
 </body>
 </html>

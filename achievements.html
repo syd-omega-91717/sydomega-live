@@ -1,94 +1,393 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 &mdash; ACHIEVEMENTS</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Achievements · SYD OMEGA 91717</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:13px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.86rem;color:var(--solar);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-.hero-band{display:grid;grid-template-columns:1fr 90px 1fr;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(10,10,15,.9),rgba(10,10,15,.88))}
-.hb{padding:16px clamp(14px,2.5vw,28px)}.hb.mid{display:flex;align-items:center;justify-content:center;padding:0}.hb.right{border-left:1px solid var(--line);text-align:right}.hb.left{border-right:1px solid var(--line)}
-.hb-n{font-family:var(--D);font-size:clamp(13px,2.5vw,20px);color:var(--solar);line-height:1}.hb-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sec{padding:clamp(14px,3vw,36px)}.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
-.card{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:16px;border-radius:2px;transition:.18s;position:relative;overflow:hidden}
-.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--solar);opacity:.7}
-.card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
-.card-n{font-family:var(--D);font-size:clamp(20px,3.5vw,32px);color:var(--solar);line-height:1;margin-bottom:4px}
-.card-l{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted)}
-.card-sub{font-size:11px;color:var(--ink);opacity:.65;margin-top:6px;line-height:1.6}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.hero-band{display:none}.grid{grid-template-columns:1fr 1fr}}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
+.tab-btn.active{background:#9B6BF0;color:#fff;border-color:#9B6BF0;}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+.xp-banner{background:linear-gradient(135deg,#0d0d0d,#0a0a1a);border:1px solid #222;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.xp-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#9B6BF0,#00E5FF,#9B6BF0);}
+.xp-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.xp-level{text-align:center;}
+.xp-level-num{font-family:'Courier New',monospace;font-size:40px;color:#9B6BF0;font-weight:700;line-height:1;}
+.xp-level-lbl{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:2px;margin-top:4px;}
+.xp-main{flex:1;}
+.xp-title{font-family:'Courier New',monospace;font-size:14px;color:#e0e0e0;margin-bottom:4px;}
+.xp-bar-wrap{background:#1a1a1a;height:8px;border-radius:4px;overflow:hidden;margin:8px 0;}
+.xp-bar{height:100%;background:linear-gradient(90deg,#9B6BF0,#00E5FF);transition:width .5s;}
+.xp-nums{display:flex;justify-content:space-between;font-family:'Courier New',monospace;font-size:9px;color:#555;}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
+.stat-num{font-family:'Courier New',monospace;font-size:20px;color:#9B6BF0;font-weight:700;}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.ach-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;position:relative;transition:border-color .2s;}
+.ach-card.unlocked{border-color:#9B6BF0;}
+.ach-card.locked{opacity:.5;}
+.ach-card.rare{border-color:#FFD700;}
+.ach-card.epic{border-color:#FF9800;}
+.ach-card.legendary{border-color:#FF4444;}
+.ach-icon{font-size:28px;margin-bottom:8px;}
+.ach-name{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;font-weight:700;margin-bottom:4px;}
+.ach-desc{font-size:11px;color:#666;line-height:1.5;}
+.ach-xp{font-family:'Courier New',monospace;font-size:10px;color:#9B6BF0;margin-top:8px;}
+.rarity-badge{position:absolute;top:8px;right:8px;font-family:'Courier New',monospace;font-size:8px;padding:2px 6px;border:1px solid;}
+.rarity-common{color:#888;border-color:#333;}
+.rarity-rare{color:#FFD700;border-color:#FFD700;}
+.rarity-epic{color:#FF9800;border-color:#FF9800;}
+.rarity-legendary{color:#FF4444;border-color:#FF4444;}
+.unlock-date{font-family:'Courier New',monospace;font-size:9px;color:#444;margin-top:6px;}
+.unlock-btn{width:100%;margin-top:10px;padding:6px;background:#1a1a2e;border:1px solid #9B6BF0;color:#9B6BF0;cursor:pointer;font-family:'Courier New',monospace;font-size:10px;letter-spacing:1px;}
+.unlock-btn:hover{background:#9B6BF0;color:#fff;}
+.unlock-btn.unlocked-btn{background:#9B6BF0;color:#fff;cursor:default;}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+.filter-tag.active{background:#1a1a2e;border-color:#9B6BF0;color:#9B6BF0;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#9B6BF0;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-primary{padding:10px 24px;background:#9B6BF0;border:none;color:#fff;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
+.btn-primary:hover{background:#7a4fcf;}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:16px;}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;letter-spacing:1px;margin-bottom:8px;}
+.sci-body{font-size:11px;color:#888;line-height:1.65;}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
+.notification{position:fixed;top:20px;right:20px;background:#1a1a2e;border:1px solid #9B6BF0;padding:14px 20px;font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;z-index:1000;display:none;animation:slidein .3s ease;}
+@keyframes slidein{from{transform:translateX(100px);opacity:0}to{transform:none;opacity:1}}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="achievements"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">ACHIEVEMENTS<small>M4 &middot; TROPHIES &middot; MEDALS &middot; CERTIFICATES &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="ach-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-    <div class="hero-band">
-      <div class="hb left"><div class="hb-n" id="user-name">--</div><div class="hb-l">MEMBER</div></div>
-      <div class="hb mid"><canvas id="cv-achievements" width="90" height="90" style="width:45px;height:45px;display:block"></canvas></div>
-      <div class="hb right"><div class="hb-n" id="user-auth" style="color:var(--gold)">--</div><div class="hb-l">AUTHORITY</div></div>
-    </div>
-    <div class="sec">
-<div class="sechead" data-reveal="fade-up">SOVEREIGN ACHIEVEMENTS</div>
-<div class="grid" data-reveal="fade-up" data-stagger="100">
-  <div class="card" data-reveal="fade-up" style="--cc:var(--solar)"><div class="card-n" id="ach-trophies" style="color:var(--solar)">--</div><div class="card-l">TROPHIES EARNED</div><div class="card-sub">Mastery milestones. Awarded when Axis B reaches defined thresholds in the 9-stage progression.</div></div>
-  <div class="card" data-reveal="fade-up"><div class="card-n" id="ach-medals" style="color:var(--cyan)">--</div><div class="card-l">MEDALS EARNED</div><div class="card-sub">Contribution milestones. Awarded when Axis C demonstrates consistent sovereign contribution output.</div></div>
-  <div class="card" data-reveal="fade-up" style="border-top-color:var(--green)"><div class="card-n" id="ach-certs" style="color:var(--green)">--</div><div class="card-l">CERTIFICATES</div><div class="card-sub">Knowledge milestones. Awarded when Axis A reaches verified completion thresholds.</div></div>
-  <div class="card" data-reveal="fade-up"><div class="card-n" id="ach-total" style="color:var(--gold)">--</div><div class="card-l">TOTAL HONORS</div><div class="card-sub">Combined sovereign honors count. 36 maximum (12+12+12) at full apex completion.</div></div>
+<div id="omega-nav"></div>
+<div class="notification" id="notif"></div>
+<main class="page-content">
+<div class="page-header">
+  <div class="page-title">SOVEREIGN ACHIEVEMENTS</div>
+  <div class="page-subtitle">EARN XP · UNLOCK TIERS · ASCEND</div>
 </div>
-<div class="sechead" style="margin-top:4px" data-reveal="fade-up">AUTHORITY MILESTONES</div>
-<div id="milestone-grid" style="display:flex;flex-direction:column;gap:6px" data-reveal="fade-up" data-stagger="60"></div>
-    </div>
-    <div data-page-emblem="achievements" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; ACHIEVEMENTS</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
-  </main>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('board')">BOARD</button>
+  <button class="tab-btn" onclick="switchTab('create')">CREATE</button>
+  <button class="tab-btn" onclick="switchTab('log')">LOG</button>
+  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
 </div>
-<script>(function(){var cv=document.getElementById('cv-achievements');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,90,90);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(45,45,12+i*4+3*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.07+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=9;ctx.fillText('\u03A9',45,45);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
-<script>(function tryP(){if(document.readyState!=='complete'){window.addEventListener('load',tryP);return;}var tr=0,iv=setInterval(function(){tr++;if(window.__omegaPopulate&&window.__omegaSb){window.__omegaSb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return window.__omegaSb.from('profiles').select('*').eq('id',s.user.id).maybeSingle().then(function(q){window.__omegaPopulate(q.data||{},s.user);});}).catch(function(){});clearInterval(iv);}if(tr>30)clearInterval(iv);},200);})();</script>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
-    (function tryAchRing(){var rv=document.getElementById('ach-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryAchRing,350);})();
-    var troph=Number(pr.trophies_earned||0),medal=Number(pr.medals_earned||0),cert=Number(pr.certificates_earned||0);
-    sid('ach-trophies',troph); sid('ach-medals',medal); sid('ach-certs',cert); sid('ach-total',troph+medal+cert);
-    var PHI=1.6180339887,EU=2.7182818285;
-    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(Number(pr.axis_a||0.001),3)+Math.pow(Number(pr.axis_b||0.001),3)+Math.pow(Number(pr.axis_c||0.001),3))*PHI/EU;
-    var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.5170,27.8367];
-    var NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
-    var mg=document.getElementById('milestone-grid');
-    if(mg) mg.innerHTML=GATES.map(function(g,i){
-      var reached=auth>=g;
-      var col=reached?'var(--gold)':'rgba(138,134,118,.3)';
-      var pct=Math.min(100,(auth/g*100));
-      return '<div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid '+(reached?'rgba(201,168,76,.25)':'rgba(201,168,76,.06)')+';border-radius:2px;background:'+(reached?'rgba(201,168,76,.05)':'rgba(10,10,15,.4)')+'">'
-        +'<div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:'+col+';width:100px;flex-shrink:0">'+NAMES[i]+'</div>'
-        +'<div style="flex:1;height:5px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden"><div style="height:100%;width:'+pct.toFixed(1)+'%;background:'+col+';border-radius:2px;transition:width 1.2s"></div></div>'
-        +'<div style="font-family:var(--D);font-size:11px;color:'+col+';width:55px;text-align:right">'+g.toFixed(4)+'</div>'
-        +'<div style="font-family:var(--M);font-size:8px;color:'+(reached?'var(--green)':'var(--muted)')+';width:50px;text-align:right">'+(reached?'&#10003; SEALED':'LOCKED')+'</div>'
-        +'</div>';
-    }).join('');
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
-})();
+
+<!-- BOARD -->
+<div id="tab-board" class="tab-pane active">
+  <div class="xp-banner">
+    <div class="xp-row">
+      <div class="xp-level">
+        <div class="xp-level-num" id="xp-level">1</div>
+        <div class="xp-level-lbl">LEVEL</div>
+      </div>
+      <div class="xp-main">
+        <div class="xp-title" id="xp-rank">INITIATE</div>
+        <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
+        <div class="xp-nums"><span id="xp-cur">0 XP</span><span id="xp-next">1000 XP</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="stat-total-xp">0</div><div class="stat-lbl">TOTAL XP</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-unlocked">0</div><div class="stat-lbl">UNLOCKED</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-locked">0</div><div class="stat-lbl">LOCKED</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-pct">0%</div><div class="stat-lbl">COMPLETION</div></div>
+  </div>
+  <div class="filter-row" id="cat-filter">
+    <div class="filter-tag active" data-c="all" onclick="setCat('all',this)">ALL</div>
+    <div class="filter-tag" data-c="mastery" onclick="setCat('mastery',this)">MASTERY</div>
+    <div class="filter-tag" data-c="wealth" onclick="setCat('wealth',this)">WEALTH</div>
+    <div class="filter-tag" data-c="health" onclick="setCat('health',this)">HEALTH</div>
+    <div class="filter-tag" data-c="identity" onclick="setCat('identity',this)">IDENTITY</div>
+    <div class="filter-tag" data-c="relations" onclick="setCat('relations',this)">RELATIONS</div>
+    <div class="filter-tag" data-c="custom" onclick="setCat('custom',this)">CUSTOM</div>
+  </div>
+  <div class="achievements-grid" id="achievements-grid"></div>
+</div>
+
+<!-- CREATE -->
+<div id="tab-create" class="tab-pane">
+  <div class="section-label">CREATE CUSTOM ACHIEVEMENT</div>
+  <div class="form-group">
+    <label>ACHIEVEMENT NAME</label>
+    <input type="text" id="c-name" placeholder="What did you accomplish?" maxlength="80">
+  </div>
+  <div class="form-group">
+    <label>DESCRIPTION</label>
+    <input type="text" id="c-desc" placeholder="Describe the achievement..." maxlength="120">
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>ICON (emoji)</label>
+      <input type="text" id="c-icon" placeholder="🏆" maxlength="4">
+    </div>
+    <div class="form-group">
+      <label>CATEGORY</label>
+      <select id="c-cat">
+        <option value="mastery">Mastery</option>
+        <option value="wealth">Wealth</option>
+        <option value="health">Health</option>
+        <option value="identity">Identity</option>
+        <option value="relations">Relations</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>RARITY</label>
+      <select id="c-rarity">
+        <option value="common">Common (100 XP)</option>
+        <option value="rare">Rare (250 XP)</option>
+        <option value="epic">Epic (500 XP)</option>
+        <option value="legendary">Legendary (1000 XP)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>UNLOCK NOW?</label>
+      <select id="c-unlock">
+        <option value="no">No — keep locked</option>
+        <option value="yes">Yes — unlock immediately</option>
+      </select>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-primary" onclick="createAchievement()">CREATE</button>
+    <button class="btn-secondary" onclick="clearCreate()">CLEAR</button>
+  </div>
+  <div id="create-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;"></div>
+</div>
+
+<!-- LOG -->
+<div id="tab-log" class="tab-pane">
+  <div class="section-label">UNLOCK HISTORY</div>
+  <div id="unlock-log"></div>
+</div>
+
+<!-- SCIENCE -->
+<div id="tab-science" class="tab-pane">
+  <div class="science-grid">
+    <div class="sci-card">
+      <div class="sci-title">GAMIFICATION & INTRINSIC MOTIVATION</div>
+      <div class="sci-body">Deci & Ryan (1985) Self-Determination Theory: intrinsic motivation (autonomy, competence, relatedness) outperforms extrinsic rewards long-term. Well-designed achievement systems build competence scaffolding — each unlock signals genuine growth, not just points.</div>
+      <div class="sci-ref">Deci & Ryan (1985). Intrinsic Motivation and Self-Determination</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">VARIABLE REWARD SCHEDULE</div>
+      <div class="sci-body">Skinner (1938): variable ratio reinforcement is the most resistant to extinction. Achievement systems with unpredictable unlock timing (meeting hidden milestones) create stronger engagement loops than fixed schedules. Rarity tiers simulate this effect.</div>
+      <div class="sci-ref">Skinner, B.F. (1938). The Behavior of Organisms</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">PROGRESS & MEANING</div>
+      <div class="sci-body">Amabile & Kramer (2011, The Progress Principle): the single strongest motivator is making progress on meaningful work. Visible progress indicators (XP bars, completion percentages) trigger the same neural circuits as actual progress — the brain treats the signal as real.</div>
+      <div class="sci-ref">Amabile & Kramer (2011). Harvard Business Review</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">MASTERY ORIENTATION</div>
+      <div class="sci-body">Dweck (2006, Mindset): mastery-oriented goals (growth, learning) outperform performance-oriented goals (beating others, appearing smart) in long-term achievement. Achievement systems should reward effort and process milestones, not just outcomes.</div>
+      <div class="sci-ref">Dweck, C.S. (2006). Mindset: The New Psychology of Success</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">IDENTITY-BASED HABITS</div>
+      <div class="sci-body">Clear (2018, Atomic Habits): the most powerful form of motivation is identity change — "I am a person who does X." Each achievement is a vote for your sovereign identity. 100 small achievements create an irrefutable internal narrative of mastery and discipline.</div>
+      <div class="sci-ref">Clear, J. (2018). Atomic Habits</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">FLOW STATE</div>
+      <div class="sci-body">Csikszentmihalyi (1990): flow occurs when challenge matches skill. Achievement systems that scale rarity (common → legendary) dynamically adjust the challenge horizon, keeping the "next unlock" always within reach but genuinely earned — the optimal frustration zone.</div>
+      <div class="sci-ref">Csikszentmihalyi (1990). Flow: The Psychology of Optimal Experience</div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script src="/omega-ui.js"></script>
+<script>
+var achievements = [];
+var unlockLog = [];
+var catFilter = 'all';
+
+var XP_MAP = {common:100,rare:250,epic:500,legendary:1000};
+var RANKS = [
+  {level:1,title:'INITIATE',xp:0},{level:2,title:'APPRENTICE',xp:1000},
+  {level:3,title:'PRACTITIONER',xp:2500},{level:4,title:'ADEPT',xp:5000},
+  {level:5,title:'EXPERT',xp:10000},{level:6,title:'MASTER',xp:20000},
+  {level:7,title:'GRANDMASTER',xp:35000},{level:8,title:'SOVEREIGN',xp:55000},
+  {level:9,title:'APEX',xp:80000},{level:10,title:'OMEGA',xp:120000}
+];
+var CAT_COLORS = {mastery:'#9B6BF0',wealth:'#FFD700',health:'#4CAF50',identity:'#00E5FF',relations:'#FF9800',custom:'#888'};
+
+var SEED_ACHIEVEMENTS = [
+  {id:'s01',name:'First Step',desc:'Complete your first sovereign action',icon:'👣',cat:'identity',rarity:'common',unlocked:false,seed:true},
+  {id:'s02',name:'Knowledge Seeker',desc:'Add 10 vocabulary words',icon:'📚',cat:'mastery',rarity:'common',unlocked:false,seed:true},
+  {id:'s03',name:'Iron Will',desc:'Complete a 30-day habit streak',icon:'🔩',cat:'identity',rarity:'rare',unlocked:false,seed:true},
+  {id:'s04',name:'Mind Mapper',desc:'Create your first mind map',icon:'🗺️',cat:'mastery',rarity:'common',unlocked:false,seed:true},
+  {id:'s05',name:'Sovereign Body',desc:'Log 30 workout sessions',icon:'💪',cat:'health',rarity:'rare',unlocked:false,seed:true},
+  {id:'s06',name:'Fasting Master',desc:'Complete a 24+ hour fast',icon:'⚡',cat:'health',rarity:'epic',unlocked:false,seed:true},
+  {id:'s07',name:'Wealth Builder',desc:'Add your first investment account',icon:'💎',cat:'wealth',rarity:'common',unlocked:false,seed:true},
+  {id:'s08',name:'100K Club',desc:'Reach $100,000 net worth',icon:'🏦',cat:'wealth',rarity:'epic',unlocked:false,seed:true},
+  {id:'s09',name:'Inner Circle',desc:'Maintain 5 inner-circle relationships',icon:'🤝',cat:'relations',rarity:'rare',unlocked:false,seed:true},
+  {id:'s10',name:'Philosopher',desc:'Write 100 principles',icon:'⚖️',cat:'identity',rarity:'epic',unlocked:false,seed:true},
+  {id:'s11',name:'Polymath',desc:'Learn skills in 5 different domains',icon:'🌐',cat:'mastery',rarity:'epic',unlocked:false,seed:true},
+  {id:'s12',name:'OMEGA ASCENDED',desc:'Reach Level 10 — the apex of sovereignty',icon:'⚡',cat:'identity',rarity:'legendary',unlocked:false,seed:true},
+];
+
+function load(){
+  try{achievements=JSON.parse(localStorage.getItem('omega_achievements')||'null');}catch(e){}
+  if(!achievements||!achievements.length)achievements=[...SEED_ACHIEVEMENTS.map(a=>({...a}))];
+  try{unlockLog=JSON.parse(localStorage.getItem('omega_ach_log')||'[]');}catch(e){unlockLog=[];}
+}
+function save(){
+  localStorage.setItem('omega_achievements',JSON.stringify(achievements));
+  localStorage.setItem('omega_ach_log',JSON.stringify(unlockLog));
+}
+function uid(){return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function totalXP(){return achievements.filter(a=>a.unlocked).reduce((s,a)=>s+XP_MAP[a.rarity],0);}
+function getRank(xp){
+  var rank=RANKS[0];
+  for(var i=0;i<RANKS.length;i++){if(xp>=RANKS[i].xp)rank=RANKS[i];}
+  return rank;
+}
+function getNextRank(xp){
+  for(var i=0;i<RANKS.length;i++){if(RANKS[i].xp>xp)return RANKS[i];}
+  return null;
+}
+
+function switchTab(t){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  var labels={board:'BOARD',create:'CREATE',log:'LOG',science:'SCIENCE'};
+  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===labels[t])b.classList.add('active');});
+  if(t==='board'){renderBoard();}
+  if(t==='log'){renderLog();}
+}
+
+function renderXP(){
+  var xp=totalXP();
+  var rank=getRank(xp);
+  var next=getNextRank(xp);
+  document.getElementById('xp-level').textContent=rank.level;
+  document.getElementById('xp-rank').textContent=rank.title;
+  document.getElementById('xp-cur').textContent=xp.toLocaleString()+' XP';
+  if(next){
+    var pct=(xp-rank.xp)/(next.xp-rank.xp)*100;
+    document.getElementById('xp-bar').style.width=Math.min(100,pct)+'%';
+    document.getElementById('xp-next').textContent=next.xp.toLocaleString()+' XP';
+  } else {
+    document.getElementById('xp-bar').style.width='100%';
+    document.getElementById('xp-next').textContent='MAX LEVEL';
+  }
+  var unlocked=achievements.filter(a=>a.unlocked).length;
+  var total=achievements.length;
+  document.getElementById('stat-total-xp').textContent=xp.toLocaleString();
+  document.getElementById('stat-unlocked').textContent=unlocked;
+  document.getElementById('stat-locked').textContent=total-unlocked;
+  document.getElementById('stat-pct').textContent=Math.round(unlocked/total*100)+'%';
+}
+
+function setCat(c,el){
+  catFilter=c;
+  document.querySelectorAll('#cat-filter .filter-tag').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  renderGrid();
+}
+
+function renderBoard(){renderXP();renderGrid();}
+
+function renderGrid(){
+  var grid=document.getElementById('achievements-grid');
+  var list=catFilter==='all'?achievements:achievements.filter(a=>a.cat===catFilter);
+  var unlocked=list.filter(a=>a.unlocked);
+  var locked=list.filter(a=>!a.unlocked);
+  var sorted=[...unlocked,...locked];
+  grid.innerHTML=sorted.map(a=>achCard(a)).join('');
+}
+
+function achCard(a){
+  var col=CAT_COLORS[a.cat]||'#888';
+  var rarityClass='rarity-'+a.rarity;
+  var rarityLabel={common:'COMMON',rare:'RARE',epic:'EPIC',legendary:'LEGENDARY'}[a.rarity]||'';
+  return '<div class="ach-card '+(a.unlocked?'unlocked':'locked')+' '+(a.rarity!=='common'&&a.unlocked?a.rarity:'')+'" style="border-color:'+(a.unlocked?col:'#1a1a1a')+'">'
+    +'<div class="rarity-badge '+rarityClass+'">'+rarityLabel+'</div>'
+    +'<div class="ach-icon">'+a.icon+'</div>'
+    +'<div class="ach-name">'+esc(a.name)+'</div>'
+    +'<div class="ach-desc">'+esc(a.desc)+'</div>'
+    +'<div class="ach-xp" style="color:'+col+'">+'+XP_MAP[a.rarity]+' XP</div>'
+    +(a.unlocked&&a.unlockedAt?'<div class="unlock-date">'+new Date(a.unlockedAt).toLocaleDateString()+'</div>':'')
+    +(!a.unlocked?'<button class="unlock-btn" onclick="unlock(\''+a.id+'\')">MARK ACHIEVED</button>':'<button class="unlock-btn unlocked-btn" disabled>✓ ACHIEVED</button>')
+    +'</div>';
+}
+
+function unlock(id){
+  var a=achievements.find(x=>x.id===id);
+  if(!a||a.unlocked)return;
+  a.unlocked=true;a.unlockedAt=new Date().toISOString();
+  unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[a.rarity],rarity:a.rarity,cat:a.cat,date:a.unlockedAt});
+  save();renderBoard();
+  showNotif('ACHIEVEMENT UNLOCKED: '+a.name+' +'+XP_MAP[a.rarity]+' XP');
+}
+
+function showNotif(msg){
+  var el=document.getElementById('notif');
+  el.textContent=msg;el.style.display='block';
+  clearTimeout(el._t);el._t=setTimeout(()=>{el.style.display='none';},3000);
+}
+
+function createAchievement(){
+  var name=document.getElementById('c-name').value.trim();
+  var desc=document.getElementById('c-desc').value.trim();
+  var icon=document.getElementById('c-icon').value.trim()||'🏆';
+  var cat=document.getElementById('c-cat').value;
+  var rarity=document.getElementById('c-rarity').value;
+  var doUnlock=document.getElementById('c-unlock').value==='yes';
+  if(!name){alert('Name required.');return;}
+  var a={id:uid(),name,desc,icon,cat,rarity,unlocked:doUnlock,
+    ...(doUnlock?{unlockedAt:new Date().toISOString()}:{})};
+  achievements.unshift(a);
+  if(doUnlock)unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[rarity],rarity,cat,date:a.unlockedAt});
+  save();clearCreate();
+  document.getElementById('create-msg').textContent='ACHIEVEMENT CREATED'+(doUnlock?' & UNLOCKED':'');
+  setTimeout(()=>{document.getElementById('create-msg').textContent='';},2500);
+  if(doUnlock)showNotif('ACHIEVEMENT UNLOCKED: '+a.name+' +'+XP_MAP[rarity]+' XP');
+}
+
+function clearCreate(){
+  ['c-name','c-desc','c-icon'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('c-cat').value='mastery';
+  document.getElementById('c-rarity').value='common';
+  document.getElementById('c-unlock').value='no';
+}
+
+function renderLog(){
+  var el=document.getElementById('unlock-log');
+  if(!unlockLog.length){el.innerHTML='<div style="text-align:center;padding:40px;color:#333;font-family:\'Courier New\',monospace;font-size:12px;">NO ACHIEVEMENTS UNLOCKED YET</div>';return;}
+  el.innerHTML=unlockLog.map(l=>{
+    var col=CAT_COLORS[l.cat]||'#888';
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid #111;">'
+      +'<span style="font-size:20px;">🏆</span>'
+      +'<div style="flex:1;"><div style="font-family:\'Courier New\',monospace;font-size:11px;color:#e0e0e0;">'+esc(l.name)+'</div>'
+      +'<div style="font-family:\'Courier New\',monospace;font-size:9px;color:#555;">'+new Date(l.date).toLocaleString()+'</div></div>'
+      +'<span style="font-family:\'Courier New\',monospace;font-size:12px;color:'+col+';">+'+l.xp+' XP</span>'
+      +'</div>';
+  }).join('');
+}
+
+load();
+renderBoard();
 </script>
 </body>
 </html>

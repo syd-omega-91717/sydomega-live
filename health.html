@@ -4,192 +4,228 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Health &amp; Wellness</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
+<meta name="description" content="Sovereign wellness tracking — nine domains of the Ninth Element. Log your state. Watch your wellness score evolve."/>
 <meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717 &mdash; Health &amp; Wellness"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/health.html"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717 &mdash; Health &amp; Wellness"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d15;--panel-2:#11111c;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 20%,rgba(63,178,127,.06),transparent 50%)}
-a{color:inherit;text-decoration:none}
-.shell{position:relative;z-index:1;display:flex;min-height:100vh}
-.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px}
-.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px}
-.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-.sechead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-
-.wellness-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.w-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:18px;text-align:center}
-.w-card .icon{font-size:28px;margin-bottom:10px}
-.w-card .label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
-.w-card .score{font-family:var(--display);font-size:26px;font-weight:700;color:var(--green)}
-.w-card .bar-wrap{background:rgba(201,168,76,.08);border-radius:2px;height:4px;margin-top:10px;overflow:hidden}
-.w-card .bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width 1s ease}
-.w-card .caption{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:6px}
-
-.ninth-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
-.ninth-cell{border:1px solid var(--line);background:var(--panel);padding:14px;text-align:center;cursor:pointer;transition:border-color .2s}
-.ninth-cell:hover{border-color:rgba(201,168,76,.4)}
-.ninth-cell .n-glyph{font-size:22px;margin-bottom:7px}
-.ninth-cell .n-name{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--solar);margin-bottom:4px}
-.ninth-cell .n-desc{font-size:11px;color:var(--muted);font-weight:300;line-height:1.5}
-.ninth-cell .n-score{font-family:var(--mono);font-size:11px;color:var(--cyan);margin-top:6px}
-
-.log-form{border:1px solid var(--line);background:var(--panel);padding:20px}
-.form-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px}
-.field label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);display:block;margin-bottom:5px}
-.field select,.field input{width:100%;font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
-.field select:focus,.field input:focus{border-color:rgba(201,168,76,.4)}
-.btn-log{font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:10px 22px;color:var(--void);background:var(--green);border:none;cursor:pointer}
-.btn-log:hover{opacity:.85}
-.log-saved{font-family:var(--mono);font-size:11px;color:var(--green);margin-top:10px;display:none}
-
-.history-feed{display:flex;flex-direction:column;gap:0}
-.h-entry{border-bottom:1px dashed rgba(201,168,76,.09);padding:12px 0;display:flex;gap:14px;align-items:center}
-.h-entry .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.h-entry .info{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.h-entry .info b{color:var(--solar)}
-
-.matrix-note{border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);padding:16px 18px;margin-top:16px}
-.matrix-note p{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8}
-.matrix-note b{color:var(--gold)}
-
-@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}}
-  .w-card .icon svg{width:26px;height:26px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.wellness-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.w-card{border:1px solid var(--line);background:var(--surface);padding:16px;text-align:center}
+.w-icon{font-size:24px;margin-bottom:8px;line-height:1}
+.w-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.w-score{font-family:var(--D);font-size:28px;font-weight:700;color:var(--green)}
+.w-bar-wrap{background:rgba(201,168,76,.08);height:3px;margin-top:8px;overflow:hidden}
+.w-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width 1s ease}
+.w-caption{font-family:var(--M);font-size:8px;color:var(--muted);margin-top:5px}
+.ninth-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ninth-cell{border:1px solid var(--line);background:var(--surface);padding:13px;text-align:center;cursor:default}
+.n-glyph{font-size:20px;margin-bottom:6px}
+.n-name{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--solar);margin-bottom:3px}
+.n-desc{font-size:10px;color:var(--muted);line-height:1.5}
+.n-score{font-family:var(--M);font-size:10px;color:var(--cyan);margin-top:5px}
+.log-form{border:1px solid var(--line);background:var(--surface);padding:18px}
+.log-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:14px}
+.log-field label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);display:block;margin-bottom:5px}
+.log-field input[type=range]{width:100%;accent-color:var(--gold)}
+.log-field input[type=text]{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:7px 10px;outline:none}
+.log-field input[type=text]:focus{border-color:rgba(201,168,76,.4)}
+.val-badge{font-family:var(--M);font-size:11px;color:var(--gold);margin-top:3px;display:block}
+.h-entry{border-bottom:1px dashed rgba(201,168,76,.08);padding:10px 0;display:flex;align-items:center;gap:12px}
+.h-entry:last-child{border-bottom:none}
+.h-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.h-info{font-family:var(--M);font-size:10px;color:var(--muted);flex:1;line-height:1.6}
+.h-info b{color:var(--solar)}
+.log-saved{font-family:var(--M);font-size:10px;color:var(--green);margin-top:10px;display:none;padding:8px 12px;border:1px solid rgba(63,178,127,.3)}
 </style>
 </head>
 <body>
-<div class="shell">
-  <aside class="side" id="omega-side" data-page="health"></aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="t">HEALTH &amp; WELLNESS<small>THE SOVEREIGN BODY &middot; MIND &middot; SOUL &middot; MODULE 13</small></div>
-      <canvas id="hlt-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-    </div>
-    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">A sovereign body is a sovereign platform. Health is not separate from the matrix &mdash; it is the living engine that drives all three axes. The nine domains of the Ninth Element &mdash; a full 9&times;9&times;9&times;9&times;9 = <span data-canon-nodes="nine">59,049</span>-node lattice &mdash; (mind, heart, life, birth, death, family, friends, work, character) are all measured here. Log your state. Watch your wellness score evolve.</p>
-
-    <div class="matrix-note">
-      <p><b>NINTH ELEMENT CONNECTION:</b> Your health data feeds into the Ninth Element layer of the matrix. Each of the 10 facets &mdash; Religion, Character, Mind, Heart, Birth, Death, Life, Family, Friends, Work &mdash; has a wellness dimension. Logging your daily state advances your Contribution axis (C) and generates an evolution event.</p>
-    </div>
-
-    <div class="sechead" data-reveal="fade-up">WELLNESS COMMAND &mdash; LIVE STATUS</div>
-    <div class="wellness-grid">
-      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2"/></svg></div><div class="label">MIND STATE</div><div class="score" id="ws-mind">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-mind" style="width:0%"></div></div><div class="caption">Mental clarity level</div></div>
-      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></div><div class="label">HEART VITALITY</div><div class="score" id="ws-heart">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-heart" style="width:0%"></div></div><div class="caption">Emotional & physical heart</div></div>
-      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div><div class="label">ENERGY LEVEL</div><div class="score" id="ws-energy">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-energy" style="width:0%"></div></div><div class="caption">Daily vitality</div></div>
-      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.5 2 7L12 17l-6.5 4 2-7L2 9.5 7 9z"/></svg></div><div class="label">SOUL ALIGNMENT</div><div class="score" id="ws-soul">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-soul" style="width:0%;background:linear-gradient(90deg,#E8E8FF,#9B6BF0)"></div></div><div class="caption">Sixth element resonance</div></div>
-      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M12 15l-4 6M12 15l4 6M6 11h12"/></svg></div><div class="label">PHYSICAL BODY</div><div class="score" id="ws-body">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-body" style="width:0%"></div></div><div class="caption">Strength & movement</div></div>
-      <div class="w-card"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 14l2-5 3 4 3-4 2 5z"/></svg></div><div class="label">SOVEREIGN SCORE</div><div class="score" id="ws-total" style="color:var(--gold)">--</div><div class="bar-wrap"><div class="bar-fill" id="wb-total" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div><div class="caption">Overall wellness rating</div></div>
-    </div>
-
-    <div class="sechead" data-reveal="fade-up">THE NINTH ELEMENT &mdash; 10 LIFE DOMAINS</div>
-    <div class="ninth-grid" id="ninth-grid"></div>
-
-    <div class="sechead" data-reveal="fade-up">LOG YOUR STATE</div>
-    <div class="log-form">
-      <div class="form-row">
-        <div class="field"><label>MIND STATE (1-9)</label><input type="range" id="l-mind" min="1" max="9" value="5" oninput="document.getElementById('v-mind').textContent=this.value"/><span id="v-mind" style="font-family:var(--mono);font-size:11px;color:var(--gold)">5</span></div>
-        <div class="field"><label>HEART VITALITY (1-9)</label><input type="range" id="l-heart" min="1" max="9" value="5" oninput="document.getElementById('v-heart').textContent=this.value"/><span id="v-heart" style="font-family:var(--mono);font-size:11px;color:var(--gold)">5</span></div>
-        <div class="field"><label>ENERGY LEVEL (1-9)</label><input type="range" id="l-energy" min="1" max="9" value="5" oninput="document.getElementById('v-energy').textContent=this.value"/><span id="v-energy" style="font-family:var(--mono);font-size:11px;color:var(--gold)">5</span></div>
-        <div class="field"><label>PHYSICAL BODY (1-9)</label><input type="range" id="l-body" min="1" max="9" value="5" oninput="document.getElementById('v-body').textContent=this.value"/><span id="v-body" style="font-family:var(--mono);font-size:11px;color:var(--gold)">5</span></div>
-        <div class="field"><label>SOUL ALIGNMENT (1-9)</label><input type="range" id="l-soul" min="1" max="9" value="5" oninput="document.getElementById('v-soul').textContent=this.value"/><span id="v-soul" style="font-family:var(--mono);font-size:11px;color:var(--gold)">5</span></div>
-        <div class="field"><label>NOTES (OPTIONAL)</label><input type="text" id="l-notes" placeholder="Any context for today..."/></div>
-      </div>
-      <button class="btn-log" id="btn-log">LOG TODAY'S STATE</button>
-      <div class="log-saved" id="log-saved">&#x2713; STATE LOGGED &mdash; Wellness data recorded. Evolution event fired to matrix.</div>
-    </div>
-
-    <div class="sechead" data-reveal="fade-up">WELLNESS LOG &mdash; RECENT ENTRIES</div>
-    <div class="history-feed" id="history-feed"></div>
-  </main>
+<aside id="omega-side" data-page="health"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">HEALTH &amp; WELLNESS<span class="topbar-sub">SOVEREIGN BODY &middot; MIND &middot; SOUL &middot; NINTH ELEMENT &middot; MODULE 13</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('wellness')">WELLNESS</button>
+  <button class="tab-btn" onclick="setTab('log')">LOG STATE</button>
+  <button class="tab-btn" onclick="setTab('history')">HISTORY</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
+<div class="tab-panel active" id="tab-wellness">
+  <div class="sechead">WELLNESS COMMAND &mdash; LIVE STATUS</div>
+  <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px">A sovereign body is a sovereign platform. Health is not separate from the matrix — it is the living engine that drives all three axes. Log your state daily to keep your Mastery axis active.</div>
+  <div class="wellness-grid">
+    <div class="w-card">
+      <div class="w-icon">&#9675;</div>
+      <div class="w-label">MIND STATE</div>
+      <div class="w-score" id="ws-mind">--</div>
+      <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-mind" style="width:0%"></div></div>
+      <div class="w-caption">Mental clarity</div>
+    </div>
+    <div class="w-card">
+      <div class="w-icon">&#10084;</div>
+      <div class="w-label">HEART VITALITY</div>
+      <div class="w-score" id="ws-heart">--</div>
+      <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-heart" style="width:0%"></div></div>
+      <div class="w-caption">Emotional &amp; physical heart</div>
+    </div>
+    <div class="w-card">
+      <div class="w-icon">&#9889;</div>
+      <div class="w-label">ENERGY LEVEL</div>
+      <div class="w-score" id="ws-energy">--</div>
+      <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-energy" style="width:0%"></div></div>
+      <div class="w-caption">Daily vitality</div>
+    </div>
+    <div class="w-card">
+      <div class="w-icon">&#9733;</div>
+      <div class="w-label">SOUL ALIGNMENT</div>
+      <div class="w-score" id="ws-soul" style="color:#9B6BF0">--</div>
+      <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-soul" style="width:0%;background:linear-gradient(90deg,#9B6BF0,#00E5FF)"></div></div>
+      <div class="w-caption">Sixth element resonance</div>
+    </div>
+    <div class="w-card">
+      <div class="w-icon">&#9651;</div>
+      <div class="w-label">PHYSICAL BODY</div>
+      <div class="w-score" id="ws-body">--</div>
+      <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-body" style="width:0%"></div></div>
+      <div class="w-caption">Strength &amp; movement</div>
+    </div>
+    <div class="w-card">
+      <div class="w-icon">&#937;</div>
+      <div class="w-label">SOVEREIGN SCORE</div>
+      <div class="w-score" id="ws-total" style="color:var(--gold)">--</div>
+      <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-total" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--solar))"></div></div>
+      <div class="w-caption">Overall wellness rating</div>
+    </div>
+  </div>
+  <div class="sechead" style="margin-top:24px">THE NINTH ELEMENT &mdash; 10 LIFE DOMAINS</div>
+  <div class="ninth-grid" id="ninth-grid"></div>
+</div>
+
+<div class="tab-panel" id="tab-log">
+  <div class="sechead">LOG YOUR STATE</div>
+  <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px">Rate each dimension from 1 (low) to 9 (sovereign peak). Your first log of the day advances the Mastery axis.</div>
+  <div class="log-form">
+    <div class="log-row">
+      <div class="log-field">
+        <label>MIND STATE (1-9)</label>
+        <input type="range" id="l-mind" min="1" max="9" value="5" oninput="document.getElementById('v-mind').textContent=this.value"/>
+        <span class="val-badge" id="v-mind">5</span>
+      </div>
+      <div class="log-field">
+        <label>HEART VITALITY (1-9)</label>
+        <input type="range" id="l-heart" min="1" max="9" value="5" oninput="document.getElementById('v-heart').textContent=this.value"/>
+        <span class="val-badge" id="v-heart">5</span>
+      </div>
+      <div class="log-field">
+        <label>ENERGY LEVEL (1-9)</label>
+        <input type="range" id="l-energy" min="1" max="9" value="5" oninput="document.getElementById('v-energy').textContent=this.value"/>
+        <span class="val-badge" id="v-energy">5</span>
+      </div>
+      <div class="log-field">
+        <label>PHYSICAL BODY (1-9)</label>
+        <input type="range" id="l-body" min="1" max="9" value="5" oninput="document.getElementById('v-body').textContent=this.value"/>
+        <span class="val-badge" id="v-body">5</span>
+      </div>
+      <div class="log-field">
+        <label>SOUL ALIGNMENT (1-9)</label>
+        <input type="range" id="l-soul" min="1" max="9" value="5" oninput="document.getElementById('v-soul').textContent=this.value"/>
+        <span class="val-badge" id="v-soul">5</span>
+      </div>
+      <div class="log-field">
+        <label>NOTES (OPTIONAL)</label>
+        <input type="text" id="l-notes" placeholder="Context for today…"/>
+      </div>
+    </div>
+    <button class="btn-gold" id="btn-log">LOG TODAY'S STATE</button>
+    <div class="log-saved" id="log-saved">&#x2713; STATE LOGGED &mdash; Wellness data recorded. Mastery axis event fired.</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-history">
+  <div class="sechead">WELLNESS LOG &mdash; RECENT ENTRIES</div>
+  <div id="history-feed">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:20px">LOADING HISTORY&hellip;</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">WELLNESS ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">THE NINTH ELEMENT</div><div class="card-body">The Ninth Element layer covers the 10 life domains: Religion, Character, Mind, Heart, Birth, Death, Life, Family, Friends, Work. Each domain has a wellness dimension. Health data feeds directly into the matrix — maintaining your biological sovereignty is part of your ascension path.</div></div>
+    <div class="card"><div class="card-title">MASTERY AXIS (B)</div><div class="card-body">Each wellness log fires an OmegaProgress event that advances the Mastery axis (B). This is the discipline axis — consistent daily logging demonstrates the sovereign discipline required to maintain peak frequency. The axis advance is recorded in the health_logs table and reflected on your profile ring.</div></div>
+    <div class="card"><div class="card-title">THE 5 DIMENSIONS</div><div class="card-body">Mind, Heart, Energy, Body, and Soul form the five wellness pillars. Each is scored 1–9 (matching the sovereign matrix scale). The Sovereign Score is the mean of all five, providing a single at-a-glance frequency rating. Scores are averaged across the last 14 entries for display.</div></div>
+    <div class="card"><div class="card-title">DATA SOVEREIGNTY</div><div class="card-body">All health logs are stored in the Supabase health_logs table, protected by Row Level Security. Only the authenticated member can read their own logs. No health data is shared, aggregated, or used for any purpose outside the member's personal wellness dashboard.</div></div>
+  </div>
+</div>
+</div>
+
+<script>
 var NINTH=[
-  {glyph:'&#x25CF;',name:'RELIGION',desc:'Spiritual practice and faith'},
-  {glyph:'&#x25C8;',name:'CHARACTER',desc:'Who you are at your core'},
-  {glyph:'&#x9775;',name:'MIND',desc:'Mental state and clarity'},
-  {glyph:'&#x2764;',name:'HEART',desc:'Emotional and physical vitality'},
-  {glyph:'&#x2726;',name:'BIRTH',desc:'Your origin and gifts'},
-  {glyph:'&#x25A1;',name:'DEATH',desc:'Acceptance and transcendence'},
-  {glyph:'&#x267B;',name:'LIFE',desc:'Purpose and daily vitality'},
-  {glyph:'&#x22D4;',name:'FAMILY',desc:'Lineage and bonds'},
-  {glyph:'&#x2606;',name:'FRIENDS',desc:'Community and trust'},
-  {glyph:'&#x22D4;',name:'WORK',desc:'Contribution and craft'},
+  {g:'&#9679;',n:'RELIGION',d:'Spiritual practice and faith'},
+  {g:'&#9672;',n:'CHARACTER',d:'Who you are at your core'},
+  {g:'&#9881;',n:'MIND',d:'Mental state and clarity'},
+  {g:'&#10084;',n:'HEART',d:'Emotional and physical vitality'},
+  {g:'&#9733;',n:'BIRTH',d:'Your origin and gifts'},
+  {g:'&#9744;',n:'DEATH',d:'Acceptance and transcendence'},
+  {g:'&#9854;',n:'LIFE',d:'Purpose and daily vitality'},
+  {g:'&#8917;',n:'FAMILY',d:'Lineage and bonds'},
+  {g:'&#9734;',n:'FRIENDS',d:'Community and trust'},
+  {g:'&#8853;',n:'WORK',d:'Contribution and craft'}
 ];
+</script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
-function renderNinth(scores){
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['wellness','log','history','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+
+function renderNinth(){
   var grid=document.getElementById('ninth-grid');
   grid.innerHTML='';
-  NINTH.forEach(function(d,i){
-    var sc=scores&&scores[i]?scores[i]:Math.floor(4+Math.random()*5);
+  NINTH.forEach(function(d){
     var cell=document.createElement('div');
     cell.className='ninth-cell';
-    cell.innerHTML=
-      '<div class="n-glyph">'+d.glyph+'</div>'+
-      '<div class="n-name">'+d.name+'</div>'+
-      '<div class="n-desc">'+d.desc+'</div>'+
-      '<div class="n-score">'+sc+' / 9</div>';
+    cell.innerHTML='<div class="n-glyph">'+d.g+'</div>'
+      +'<div class="n-name">'+d.n+'</div>'
+      +'<div class="n-desc">'+d.d+'</div>'
+      +'<div class="n-score">-- / 9</div>';
     grid.appendChild(cell);
   });
 }
 
 async function loadHistory(){
   var feed=document.getElementById('history-feed');
-  var { data } = await sb.from('health_logs').select('mind,heart,energy,body,soul,total,notes,created_at').order('created_at',{ascending:false}).limit(60);
-  var stored=(data||[]).map(function(x){return {mind:x.mind,heart:x.heart,energy:x.energy,body:x.body,soul:x.soul,total:x.total,notes:x.notes,ts:x.created_at};});
+  var r=await sb.from('health_logs').select('mind,heart,energy,body,soul,total,notes,created_at').order('created_at',{ascending:false}).limit(60);
+  var rows=r.data||[];
   feed.innerHTML='';
-  if(!stored.length){
-    feed.innerHTML='<div class="h-entry"><div class="info">No entries yet. Log your first state above.</div></div>';
+  if(!rows.length){
+    feed.innerHTML='<div class="h-entry"><div class="h-info">No entries yet. Log your first state in the LOG STATE tab.</div></div>';
     return;
   }
   var avg={mind:0,heart:0,energy:0,body:0,soul:0,cnt:0};
-  stored.slice(0,14).forEach(function(e){
+  rows.slice(0,14).forEach(function(e){
     var entry=document.createElement('div');
     entry.className='h-entry';
-    var col=e.total>=7?'var(--green)':e.total>=5?'var(--gold)':'var(--crimson)';
-    entry.innerHTML=
-      '<div class="dot" style="background:'+col+'"></div>'+
-      '<div class="info"><b>'+new Date(e.ts).toLocaleDateString()+'</b> &nbsp;&middot;&nbsp; Mind:'+e.mind+' Heart:'+e.heart+' Energy:'+e.energy+' Body:'+e.body+' Soul:'+e.soul+' &nbsp;&middot;&nbsp; Score: <b style="color:'+col+'">'+e.total.toFixed(1)+'</b></div>';
-    if(e.notes) entry.innerHTML+='<div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:22px">'+e.notes+'</div>';
+    var col=e.total>=7?'var(--green)':e.total>=5?'var(--gold)':'var(--crim)';
+    entry.innerHTML='<div class="h-dot" style="background:'+col+'"></div>'
+      +'<div class="h-info"><b>'+new Date(e.created_at).toLocaleDateString()+'</b> &middot; Mind:'+e.mind+' Heart:'+e.heart+' Energy:'+e.energy+' Body:'+e.body+' Soul:'+e.soul+' &middot; Score: <b style="color:'+col+'">'+Number(e.total).toFixed(1)+'</b>'+(e.notes?'<br><span style="opacity:.6">'+e.notes+'</span>':'')+'</div>';
     feed.appendChild(entry);
-    avg.mind+=e.mind; avg.heart+=e.heart; avg.energy+=e.energy; avg.body+=e.body; avg.soul+=e.soul; avg.cnt++;
+    avg.mind+=e.mind;avg.heart+=e.heart;avg.energy+=e.energy;avg.body+=e.body;avg.soul+=e.soul;avg.cnt++;
   });
   if(avg.cnt){
     var n=avg.cnt;
     ['mind','heart','energy','body','soul'].forEach(function(k){
       var v=(avg[k]/n).toFixed(1);
-      var el=document.getElementById('ws-'+k); if(el) el.textContent=v;
-      var bar=document.getElementById('wb-'+k); if(bar) bar.style.width=(avg[k]/n/9*100)+'%';
+      var el=document.getElementById('ws-'+k);if(el)el.textContent=v;
+      var bar=document.getElementById('wb-'+k);if(bar)bar.style.width=(avg[k]/n/9*100)+'%';
     });
     var total=(avg.mind+avg.heart+avg.energy+avg.body+avg.soul)/(n*5);
-    var tv=document.getElementById('ws-total'); if(tv) tv.textContent=(total*9).toFixed(1);
-    var tb=document.getElementById('wb-total'); if(tb) tb.style.width=(total*100)+'%';
+    var tv=document.getElementById('ws-total');if(tv)tv.textContent=(total*9).toFixed(1);
+    var tb=document.getElementById('wb-total');if(tb)tb.style.width=(total*100)+'%';
   }
 }
 
@@ -201,24 +237,30 @@ document.getElementById('btn-log').addEventListener('click',async function(){
   var soul=+document.getElementById('l-soul').value;
   var notes=document.getElementById('l-notes').value.trim();
   var total=(mind+heart+energy+body+soul)/5;
-  var { error } = await sb.from('health_logs').insert({mind,heart,energy,body,soul,total,notes});
-  
-  /* progression: this action now advances the matrix (was inert) */
-  window.OmegaProgress&&OmegaProgress.record({kind:'health',task:'health:'+Date.now(),axis:'b',title:'Discipline Logged'});if(error){ alert('Could not save log: '+error.message); return; }
-  await loadHistory();
-  var s=document.getElementById('log-saved'); s.style.display='block';
+  var btn=document.getElementById('btn-log');
+  btn.disabled=true;
+  var ins=await sb.from('health_logs').insert({mind:mind,heart:heart,energy:energy,body:body,soul:soul,total:total,notes:notes||null});
+  if(ins.error){btn.disabled=false;alert('Could not save log: '+ins.error.message);return;}
+  if(window.OmegaProgress)window.OmegaProgress.record({kind:'health',task:'health:'+Date.now(),axis:'b',title:'Discipline Logged'});
+  btn.disabled=false;
+  var s=document.getElementById('log-saved');s.style.display='block';
   setTimeout(function(){s.style.display='none';},3000);
+  await loadHistory();
+  setTab('history');
 });
 
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
   renderNinth();
   loadHistory();
 }
 boot();
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script src="/bg.js"></script>
 </body>
 </html>

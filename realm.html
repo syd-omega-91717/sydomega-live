@@ -1,284 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sovereign Realm · SYD OMEGA 91717</title>
-<link rel="icon" href="/favicon.ico">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-<script>
-(function(){
-  var PUBLIC=['/account','/enter','/reset','/terms','/pending','/index','/'];
-  var path=(location.pathname||'/').replace(/\.html$/,'');
-  for(var i=0;i<PUBLIC.length;i++){if(path===PUBLIC[i])return;}
-  var s=document.createElement('style');
-  s.id='omega-approval-guard';
-  s.textContent='body:not(.omega-approved) #app,body:not(.omega-approved) .shell,body:not(.omega-approved) main.main{display:none!important}';
-  (document.head||document.documentElement).appendChild(s);
-  window.__omegaApprove=function(ok){if(ok)document.body&&document.body.classList.add('omega-approved');};
-})();
-</script>
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Sovereign Realm</title>
+<meta name="description" content="Sovereign Realm — the 3-D element sphere. Drag to rotate. Tap to explore."/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-/* ── Full-bleed canvas layout ── */
-.realm-wrap{
-  position:relative;flex:1;min-height:0;background:#000005;overflow:hidden;
-  display:flex;align-items:stretch
-}
-#realm-canvas{
-  width:100%;height:100%;display:block;cursor:grab;
-  touch-action:none
-}
+#tab-realm{padding:0;flex:1;min-height:400px;display:flex;flex-direction:column}
+.realm-wrap{position:relative;flex:1;min-height:0;background:#000005;overflow:hidden;display:flex;align-items:stretch}
+#realm-canvas{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
 #realm-canvas:active{cursor:grabbing}
-
-/* ── Floating HUD panels ── */
-.realm-hud{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  pointer-events:none;z-index:10
-}
-.realm-panel{
-  position:absolute;pointer-events:all;
-  background:rgba(10,10,15,.88);border:1px solid rgba(201,168,76,.2);
-  border-radius:2px;padding:14px;backdrop-filter:blur(16px);
-  font-family:var(--M,"Courier Prime",monospace)
-}
-.realm-panel h3{
-  font-size:8px;letter-spacing:3px;color:var(--solar,#E2C86D);
-  margin-bottom:10px;text-transform:uppercase
-}
-
-/* Profile panel — top-left */
+.realm-hud{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+.realm-panel{position:absolute;pointer-events:all;background:rgba(10,10,15,.88);border:1px solid rgba(201,168,76,.2);padding:14px;backdrop-filter:blur(16px);font-family:var(--M)}
+.realm-panel h3{font-size:8px;letter-spacing:3px;color:var(--solar);margin-bottom:10px;text-transform:uppercase}
 .realm-profile{top:12px;left:12px;width:clamp(160px,18vw,200px)}
-.realm-auth{
-  font-family:var(--D,"Cinzel Decorative",serif);
-  font-size:clamp(28px,4vw,42px);color:var(--solar,#E2C86D);
-  line-height:1;margin-bottom:4px
-}
-.realm-gate{font-size:8px;letter-spacing:2px;color:var(--muted,#8a8676);margin-bottom:10px}
+.realm-auth{font-family:var(--D);font-size:clamp(28px,4vw,42px);color:var(--solar);line-height:1;margin-bottom:4px}
+.realm-gate{font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px}
 .realm-stat{display:flex;justify-content:space-between;margin-bottom:4px}
-.realm-stat .k{font-size:7.5px;letter-spacing:1px;color:var(--muted,#8a8676)}
-.realm-stat .v{font-size:8.5px;color:var(--ink,#e9e6dc);font-weight:700}
-
-/* Element selector — bottom-centre */
-.realm-elems{
-  bottom:12px;left:50%;transform:translateX(-50%);
-  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:90vw
-}
-.realm-elem-btn{
-  font-size:7px;letter-spacing:1.5px;padding:5px 10px;
-  border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.85);
-  color:var(--muted,#8a8676);cursor:pointer;border-radius:1px;
-  transition:.18s;pointer-events:all
-}
-.realm-elem-btn:hover,.realm-elem-btn.active{
-  border-color:var(--solar,#E2C86D);color:var(--solar,#E2C86D);
-  background:rgba(201,168,76,.08)
-}
-
-/* Info panel — top-right */
+.realm-stat .k{font-size:7.5px;letter-spacing:1px;color:var(--muted)}
+.realm-stat .v{font-size:8.5px;color:var(--ink);font-weight:700}
+.realm-elems{bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:90vw}
+.realm-elem-btn{font-size:7px;letter-spacing:1.5px;padding:5px 10px;border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.85);color:var(--muted);cursor:pointer;transition:.18s;pointer-events:all}
+.realm-elem-btn:hover,.realm-elem-btn.active{border-color:var(--solar);color:var(--solar);background:rgba(201,168,76,.08)}
 .realm-info{top:12px;right:12px;width:clamp(150px,17vw,190px)}
-.realm-elem-name{
-  font-family:var(--D,"Cinzel Decorative",serif);
-  font-size:clamp(14px,2vw,20px);margin-bottom:6px
-}
-.realm-elem-desc{font-size:8.5px;letter-spacing:.5px;color:var(--muted,#8a8676);line-height:1.7}
+.realm-elem-name{font-family:var(--D);font-size:clamp(14px,2vw,20px);margin-bottom:6px}
+.realm-elem-desc{font-size:8.5px;letter-spacing:.5px;color:var(--muted);line-height:1.7}
 .realm-sigil{font-size:28px;margin-bottom:8px;display:block}
-
-/* Controls hint — bottom-left */
-.realm-hints{bottom:12px;left:12px;font-size:7.5px;letter-spacing:1px;color:var(--muted,#8a8676);line-height:1.9}
-
-/* Loading overlay */
-.realm-loading{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  background:#000005;z-index:20;transition:opacity .8s ease
-}
+.realm-hints{bottom:12px;left:12px;font-size:7.5px;letter-spacing:1px;color:var(--muted);line-height:1.9}
+.realm-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000005;z-index:20;transition:opacity .8s ease}
 .realm-loading.hide{opacity:0;pointer-events:none}
-.realm-loading-sym{
-  font-family:var(--D,"Cinzel Decorative",serif);
-  font-size:clamp(48px,8vw,88px);color:var(--gold,#C9A84C);
-  animation:realm-spin 3s linear infinite;display:block
-}
+.realm-loading-sym{font-family:var(--D);font-size:clamp(48px,8vw,88px);color:var(--gold);animation:realm-spin 3s linear infinite;display:block}
 @keyframes realm-spin{to{transform:rotate(360deg)}}
-.realm-loading-txt{
-  font-family:var(--M,"Courier Prime",monospace);font-size:9px;
-  letter-spacing:3px;color:var(--muted,#8a8676);margin-top:20px;
-  animation:realm-blink 1.4s ease-in-out infinite
-}
+.realm-loading-txt{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:20px;animation:realm-blink 1.4s ease-in-out infinite}
 @keyframes realm-blink{0%,100%{opacity:1}50%{opacity:.3}}
+.elem-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.elem-card{border:1px solid var(--line);background:var(--surface);border-left:3px solid var(--ec,var(--gold));padding:14px;cursor:pointer;transition:.15s}
+.elem-card:hover{border-color:rgba(201,168,76,.4)}
+.elem-sigil-big{font-size:28px;margin-bottom:6px}
+.elem-card-name{font-family:var(--D);font-size:13px;color:var(--ec,var(--gold));margin-bottom:4px}
+.elem-card-desc{font-size:11px;color:var(--muted);line-height:1.6}
 </style>
 </head>
 <body>
-<div class="shell" id="app">
-  <nav class="side" id="side-nav" aria-label="Navigation"></nav>
+<aside id="omega-side" data-page="realm"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">SOVEREIGN REALM<span class="topbar-sub">3-D ELEMENT SPHERE &middot; DRAG TO ROTATE &middot; NINE ELEMENTS</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('realm')">REALM</button>
+  <button class="tab-btn" onclick="setTab('elements')">ELEMENTS</button>
+  <button class="tab-btn" onclick="setTab('profile')">PROFILE</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+</div>
 
-  <div class="main" style="display:flex;flex-direction:column">
-    <header class="topbar">
-      <div class="t">SOVEREIGN REALM<small>3-D ELEMENT SPHERE · THREE.JS · DRAG TO ROTATE</small></div>
-    </header>
-
-    <div class="realm-wrap" id="realm-wrap">
-      <!-- Loading state -->
-      <div class="realm-loading" id="realm-loading" aria-live="polite">
-        <span class="realm-loading-sym">Ω</span>
-        <div class="realm-loading-txt">INITIALISING SOVEREIGN REALM...</div>
+<div class="tab-panel active" id="tab-realm">
+  <div class="realm-wrap" id="realm-wrap">
+    <div class="realm-loading" id="realm-loading" aria-live="polite">
+      <span class="realm-loading-sym">&#937;</span>
+      <div class="realm-loading-txt">INITIALISING SOVEREIGN REALM...</div>
+    </div>
+    <canvas id="realm-canvas" aria-label="Sovereign 3-D element sphere, drag to rotate"></canvas>
+    <div class="realm-hud" aria-hidden="true">
+      <div class="realm-panel realm-profile">
+        <h3>SOVEREIGN</h3>
+        <div class="realm-auth" id="hud-auth">&mdash;</div>
+        <div class="realm-gate" id="hud-gate">&mdash;</div>
+        <div class="realm-stat"><span class="k">SIGN</span><span class="v" id="hud-sign">&mdash;</span></div>
+        <div class="realm-stat"><span class="k">ELEMENT</span><span class="v" id="hud-elem">&mdash;</span></div>
+        <div class="realm-stat"><span class="k">PATRON</span><span class="v" id="hud-god">&mdash;</span></div>
+        <div class="realm-stat"><span class="k">AXIS A</span><span class="v" id="hud-a">&mdash;</span></div>
+        <div class="realm-stat"><span class="k">AXIS B</span><span class="v" id="hud-b">&mdash;</span></div>
+        <div class="realm-stat"><span class="k">AXIS C</span><span class="v" id="hud-c">&mdash;</span></div>
       </div>
-
-      <!-- Three.js canvas -->
-      <canvas id="realm-canvas" data-realm aria-label="Sovereign 3-D element sphere, drag to rotate"></canvas>
-
-      <!-- HUD -->
-      <div class="realm-hud" aria-hidden="true">
-
-        <!-- Profile panel -->
-        <div class="realm-panel realm-profile">
-          <h3>SOVEREIGN</h3>
-          <div class="realm-auth" id="hud-auth">—</div>
-          <div class="realm-gate" id="hud-gate">—</div>
-          <div class="realm-stat"><span class="k">SIGN</span><span class="v" id="hud-sign">—</span></div>
-          <div class="realm-stat"><span class="k">ELEMENT</span><span class="v" id="hud-elem">—</span></div>
-          <div class="realm-stat"><span class="k">PATRON</span><span class="v" id="hud-god">—</span></div>
-          <div class="realm-stat"><span class="k">AXIS A</span><span class="v" id="hud-a">—</span></div>
-          <div class="realm-stat"><span class="k">AXIS B</span><span class="v" id="hud-b">—</span></div>
-          <div class="realm-stat"><span class="k">AXIS C</span><span class="v" id="hud-c">—</span></div>
-        </div>
-
-        <!-- Element info panel -->
-        <div class="realm-panel realm-info">
-          <h3>ELEMENT</h3>
-          <span class="realm-sigil" id="info-sigil">Ω</span>
-          <div class="realm-elem-name" id="info-name" style="color:var(--solar,#E2C86D)">—</div>
-          <div class="realm-elem-desc" id="info-desc">—</div>
-        </div>
-
-        <!-- Controls hint -->
-        <div class="realm-panel realm-hints">
-          <div>⟲ DRAG TO ROTATE</div>
-          <div>✦ SCROLL TO ZOOM</div>
-          <div>◈ TAP ELEMENT TO SWITCH</div>
-          <div>⊕ PINCH TO ZOOM (MOBILE)</div>
-        </div>
-
-        <!-- Element selector -->
-        <div class="realm-elems" id="realm-elems" role="group" aria-label="Select sovereign element">
-          <button class="realm-elem-btn" data-elem="Fire" onclick="switchElem('Fire')">☲ FIRE</button>
-          <button class="realm-elem-btn" data-elem="Water" onclick="switchElem('Water')">☰ WATER</button>
-          <button class="realm-elem-btn" data-elem="Wind" onclick="switchElem('Wind')">☱ WIND</button>
-          <button class="realm-elem-btn" data-elem="Metal" onclick="switchElem('Metal')">☳ METAL</button>
-          <button class="realm-elem-btn" data-elem="Sand" onclick="switchElem('Sand')">★ SAND</button>
-          <button class="realm-elem-btn" data-elem="Soul" onclick="switchElem('Soul')">✴ SOUL</button>
-          <button class="realm-elem-btn" data-elem="Space" onclick="switchElem('Space')">✶ SPACE</button>
-          <button class="realm-elem-btn" data-elem="Void" onclick="switchElem('Void')">✷ VOID</button>
-          <button class="realm-elem-btn" data-elem="The All" onclick="switchElem('The All')">Ω THE ALL</button>
-        </div>
+      <div class="realm-panel realm-info">
+        <h3>ELEMENT</h3>
+        <span class="realm-sigil" id="info-sigil">&#937;</span>
+        <div class="realm-elem-name" id="info-name" style="color:var(--solar)">&mdash;</div>
+        <div class="realm-elem-desc" id="info-desc">&mdash;</div>
+      </div>
+      <div class="realm-panel realm-hints">
+        <div>&#8635; DRAG TO ROTATE</div>
+        <div>&#10022; SCROLL TO ZOOM</div>
+        <div>&#9672; TAP ELEMENT TO SWITCH</div>
+        <div>&#8853; PINCH TO ZOOM (MOBILE)</div>
+      </div>
+      <div class="realm-elems" id="realm-elems" role="group" aria-label="Select sovereign element">
+        <button class="realm-elem-btn" data-elem="Fire" onclick="switchElem('Fire')">&#9650; FIRE</button>
+        <button class="realm-elem-btn" data-elem="Water" onclick="switchElem('Water')">&#9661; WATER</button>
+        <button class="realm-elem-btn" data-elem="Wind" onclick="switchElem('Wind')">&#9671; WIND</button>
+        <button class="realm-elem-btn" data-elem="Metal" onclick="switchElem('Metal')">&#9632; METAL</button>
+        <button class="realm-elem-btn" data-elem="Sand" onclick="switchElem('Sand')">&#9733; SAND</button>
+        <button class="realm-elem-btn" data-elem="Soul" onclick="switchElem('Soul')">&#10036; SOUL</button>
+        <button class="realm-elem-btn" data-elem="Space" onclick="switchElem('Space')">&#10038; SPACE</button>
+        <button class="realm-elem-btn" data-elem="Void" onclick="switchElem('Void')">&#10039; VOID</button>
+        <button class="realm-elem-btn" data-elem="The All" onclick="switchElem('The All')">&#937; THE ALL</button>
       </div>
     </div>
-
-    <footer class="lf"><span>Ω SYD OMEGA 91717</span><span id="realm-ts"></span></footer>
   </div>
 </div>
 
-<script type="module">
-const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
-const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+<div class="tab-panel" id="tab-elements">
+  <div class="sechead">NINE SOVEREIGN ELEMENTS &middot; FIRE THROUGH THE ALL</div>
+  <div class="elem-cards" id="elem-cards"></div>
+</div>
 
-const PHI=1.6180339887,EU=2.7182818285;
-const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
-const SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
+<div class="tab-panel" id="tab-profile">
+  <div class="sechead">SOVEREIGN PROFILE &middot; REALM STANDING</div>
+  <div class="kpi-row" id="profile-kpis">
+    <div class="kpi-card"><div class="kpi-val" id="pr-auth">&mdash;</div><div class="kpi-label">AUTHORITY</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="pr-gate">&mdash;</div><div class="kpi-label">GATE</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="pr-elem">&mdash;</div><div class="kpi-label">ELEMENT</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="pr-sign">&mdash;</div><div class="kpi-label">SIGN</div></div>
+  </div>
+  <div class="card-grid" style="margin-top:14px">
+    <div class="card">
+      <div class="card-title">AXIS A &mdash; KNOWLEDGE</div>
+      <div class="card-body" id="pr-axis-a">&mdash;</div>
+    </div>
+    <div class="card">
+      <div class="card-title">AXIS B &mdash; MASTERY</div>
+      <div class="card-body" id="pr-axis-b">&mdash;</div>
+    </div>
+    <div class="card">
+      <div class="card-title">AXIS C &mdash; CONTRIBUTION</div>
+      <div class="card-body" id="pr-axis-c">&mdash;</div>
+    </div>
+    <div class="card">
+      <div class="card-title">PATRON OLYMPIAN</div>
+      <div class="card-body" id="pr-god">&mdash;</div>
+    </div>
+  </div>
+</div>
 
-const ELEM_INFO={
-  Fire:  {sigil:'☲',color:'#FF6B35',desc:'Primal ignition. The sovereign will expressed as unstoppable energy. Creation through destruction. The element of Ares, Apollo, and Zeus.'},
-  Water: {sigil:'☰',color:'#00B4D8',desc:'Deep intuition flowing beneath the visible. Memory, depth, and connection. The element of Poseidon, Artemis, and Aphrodite.'},
-  Wind:  {sigil:'☱',color:'#B0BEC5',desc:'Mercury\'s swift transmission. Ideas that travel without resistance. Authority through communication and movement.'},
-  Metal: {sigil:'☳',color:'#E2C86D',desc:'Saturn\'s crystallised permanence. The element of discipline and long-term structural authority. Hestia\'s endurance made manifest.'},
-  Sand:  {sigil:'★', color:'#FFD54F',desc:'Athena\'s granular wisdom. Every detail counts. Precision as the highest form of sovereign power.'},
-  Soul:  {sigil:'✴',color:'#9B6BF0',desc:'Scorpio\'s transformative depth. The element that destroys to regenerate. Demeter\'s sacred cycle of death and rebirth.'},
-  Space: {sigil:'✶',color:'#7C4DFF',desc:'The void between all things. Where pure potential resides. Neither empty nor full — the sovereign medium of all possibility.'},
-  Void:  {sigil:'✷',color:'#334466',desc:'The absolute dark that contains all light. The pre-sovereign state from which all authority emerges and to which it returns.'},
-  'The All':{sigil:'Ω',color:'#E2C86D',desc:'The Apex element. The complete sovereign resonance of all nine elements unified. The state of APEX SOVEREIGN.'}
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">REALM ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">THE SOVEREIGN REALM</div><div class="card-body">The Sovereign Realm is a 3-D interactive element sphere rendered on a WebGL canvas via Three.js (OmegaRealm). Drag to rotate, scroll to zoom. Each of the nine elements occupies a sovereign position on the sphere, glowing with its spectral color. Your zodiac sign determines your native element at initialization.</div></div>
+    <div class="card"><div class="card-title">NINE ELEMENTS</div><div class="card-body">Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and The All — nine sovereign elements that form the triad system. Three per triad: Primal (Fire/Water/Wind), Middle (Metal/Sand/Soul), Supreme (Space/Void/The All). The apex element — The All — integrates all nine at Gate XII.</div></div>
+    <div class="card"><div class="card-title">ELEMENT AFFINITY</div><div class="card-body">Your zodiac sign assigns your native element at onboarding. Aries/Leo/Sagittarius map to Fire. Taurus/Cancer/Pisces to Water. Gemini/Libra to Wind. Capricorn/Aquarius to Metal. Virgo to Sand. Scorpio to Soul. The sphere initialises centred on your element, glowing at maximum intensity.</div></div>
+    <div class="card"><div class="card-title">REALM ENGINE</div><div class="card-body">OmegaRealm.mount(canvas, element) initialises the Three.js scene. OmegaRealm.setElement(elem) shifts focus to any of the nine elements. OmegaAmbient plays elemental audio resonance when an element is selected. All rendering is client-side — no server round-trips after initial load.</div></div>
+  </div>
+</div>
+</div>
+
+<script>
+var ELEM_INFO={
+  Fire:  {sigil:'&#9650;',color:'#FF6B35',desc:'Primal ignition. The sovereign will expressed as unstoppable energy. Creation through destruction. The element of Ares, Apollo, and Zeus.'},
+  Water: {sigil:'&#9661;',color:'#00B4D8',desc:'Deep intuition flowing beneath the visible. Memory, depth, and connection. The element of Poseidon, Artemis, and Aphrodite.'},
+  Wind:  {sigil:'&#9671;',color:'#B0BEC5',desc:"Mercury's swift transmission. Ideas that travel without resistance. Authority through communication and movement."},
+  Metal: {sigil:'&#9632;',color:'#E2C86D',desc:"Saturn's crystallised permanence. The element of discipline and long-term structural authority. Hestia's endurance made manifest."},
+  Sand:  {sigil:'&#9733;',color:'#FFD54F',desc:"Athena's granular wisdom. Every detail counts. Precision as the highest form of sovereign power."},
+  Soul:  {sigil:'&#10036;',color:'#9B6BF0',desc:"Scorpio's transformative depth. The element that destroys to regenerate. Demeter's sacred cycle of death and rebirth."},
+  Space: {sigil:'&#10038;',color:'#7C4DFF',desc:'The void between all things. Where pure potential resides. Neither empty nor full — the sovereign medium of all possibility.'},
+  Void:  {sigil:'&#10039;',color:'#334466',desc:'The absolute dark that contains all light. The pre-sovereign state from which all authority emerges and to which it returns.'},
+  'The All':{sigil:'&#937;',color:'#E2C86D',desc:'The Apex element. The complete sovereign resonance of all nine elements unified. The state of APEX SOVEREIGN.'}
 };
+var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+var SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
+var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
 
-function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
-function getGate(auth){
-  let gate=0;
-  GATE_THRESH.forEach((t,i)=>{if(auth>=t)gate=i;});
-  return {num:gate+1,name:GATE_NAMES[gate]};
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['realm','elements','profile','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-
-/* ── Auth ── */
-const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
-const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
-const {data:{session}}=await sb.auth.getSession();
-if(!session){location.href='/account.html';throw 0;}
-const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-if(pr&&pr.approval_status==='pending'){location.href='/pending.html';throw 0;}
-if(window.__omegaApprove)window.__omegaApprove(true);
-window.__omegaProfile=pr||{};
-window.__omegaUser=session.user;
-window.dispatchEvent(new CustomEvent('omega:user-loaded',{detail:{profile:pr,user:session.user}}));
-
-/* ── Profile HUD ── */
-const a=Number(pr&&pr.axis_a||0),b=Number(pr&&pr.axis_b||0),c=Number(pr&&pr.axis_c||0);
-const auth=pr&&pr.is_owner?27.8367:calcAuth(a,b,c);
-const gate=getGate(auth);
-const sign=pr&&pr.zodiac_sign||'—';
-const myElem=SIGN_ELEM[sign]||'Void';
-const god=SIGN_GOD[sign]||'—';
-const name=pr&&(pr.display_name||pr.full_name)||'Sovereign';
-
-document.getElementById('hud-auth').textContent=auth.toFixed(4);
-document.getElementById('hud-gate').textContent='GATE '+gate.num+' · '+gate.name;
-document.getElementById('hud-sign').textContent=sign.toUpperCase();
-document.getElementById('hud-elem').textContent=myElem.toUpperCase();
-document.getElementById('hud-god').textContent=god.toUpperCase();
-document.getElementById('hud-a').textContent=a.toFixed(3);
-document.getElementById('hud-b').textContent=b.toFixed(3);
-document.getElementById('hud-c').textContent=c.toFixed(3);
-
-/* ── Element info update ── */
+function getGate(auth){
+  var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});
+  return 'GATE '+(g+1)+' · '+GATE_NAMES[g];
+}
 function updateElemInfo(elem){
-  const info=ELEM_INFO[elem]||ELEM_INFO['Void'];
-  document.getElementById('info-sigil').textContent=info.sigil;
+  var info=ELEM_INFO[elem]||ELEM_INFO['Void'];
+  document.getElementById('info-sigil').innerHTML=info.sigil;
   document.getElementById('info-name').style.color=info.color;
   document.getElementById('info-name').textContent=elem.toUpperCase();
   document.getElementById('info-desc').textContent=info.desc;
-  document.querySelectorAll('.realm-elem-btn').forEach(b=>{
+  document.querySelectorAll('.realm-elem-btn').forEach(function(b){
     b.classList.toggle('active',b.dataset.elem===elem);
-    if(b.dataset.elem===elem)b.style.borderColor=info.color;
-    else b.style.borderColor='';
+    b.style.borderColor=b.dataset.elem===elem?info.color:'';
   });
 }
-
-/* ── Element switcher (global for onclick) ── */
 window.switchElem=function(elem){
   updateElemInfo(elem);
-  if(window.OmegaRealm&&window.OmegaRealm.isActive()){
-    window.OmegaRealm.setElement(elem);
-  }
+  if(window.OmegaRealm&&window.OmegaRealm.isActive())window.OmegaRealm.setElement(elem);
   if(window.OmegaAmbient)window.OmegaAmbient.play(elem);
 };
 
-/* ── Init element display ── */
-updateElemInfo(myElem);
-
-/* ── Wait for omega-realm.js to load, then mount ── */
-function tryMount(){
-  const cv=document.getElementById('realm-canvas');
-  if(window.OmegaRealm){
-    window.OmegaRealm.mount(cv,myElem);
-    setTimeout(()=>{
-      document.getElementById('realm-loading').classList.add('hide');
-    },600);
-  } else {
-    setTimeout(tryMount,200);
-  }
-}
-tryMount();
-
-document.getElementById('realm-ts').textContent=new Date().toUTCString().split(' ').slice(1,4).join(' ');
+/* Build element cards */
+var ec=document.getElementById('elem-cards');
+Object.keys(ELEM_INFO).forEach(function(key){
+  var info=ELEM_INFO[key];
+  var d=document.createElement('div');d.className='elem-card';d.style.setProperty('--ec',info.color);
+  d.innerHTML='<div class="elem-sigil-big">'+info.sigil+'</div>'
+    +'<div class="elem-card-name">'+key.toUpperCase()+'</div>'
+    +'<div class="elem-card-desc">'+info.desc+'</div>';
+  d.addEventListener('click',function(){switchElem(key);setTab('realm');});
+  ec.appendChild(d);
+});
 </script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+    var PHI=1.6180339887,EU=2.7182818285;
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001);
+    var b=Number(pr.is_owner?9:pr.axis_b||0.001);
+    var c=Number(pr.is_owner?9:pr.axis_c||0.001);
+    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
+    var sign=pr.sign||pr.zodiac_sign||'Aries';
+    var myElem=SIGN_ELEM[sign]||'Void';
+    var god=SIGN_GOD[sign]||'—';
+    var gate=getGate(auth);
+    /* HUD */
+    document.getElementById('hud-auth').textContent=auth.toFixed(4);
+    document.getElementById('hud-gate').textContent=gate;
+    document.getElementById('hud-sign').textContent=sign.toUpperCase();
+    document.getElementById('hud-elem').textContent=myElem.toUpperCase();
+    document.getElementById('hud-god').textContent=god.toUpperCase();
+    document.getElementById('hud-a').textContent=a.toFixed(3);
+    document.getElementById('hud-b').textContent=b.toFixed(3);
+    document.getElementById('hud-c').textContent=c.toFixed(3);
+    /* Profile tab */
+    document.getElementById('pr-auth').textContent=auth.toFixed(4);
+    document.getElementById('pr-gate').textContent=gate;
+    document.getElementById('pr-elem').textContent=myElem.toUpperCase();
+    document.getElementById('pr-sign').textContent=sign.toUpperCase();
+    document.getElementById('pr-axis-a').textContent=a.toFixed(3)+' — Knowledge axis. Earned through academy study and research.';
+    document.getElementById('pr-axis-b').textContent=b.toFixed(3)+' — Mastery axis. Earned through gaming and skill demonstration.';
+    document.getElementById('pr-axis-c').textContent=c.toFixed(3)+' — Contribution axis. Earned through content and community activity.';
+    document.getElementById('pr-god').textContent=god+' — patron Olympian of '+sign+'.';
+    updateElemInfo(myElem);
+    /* Mount realm */
+    function tryMount(){
+      if(window.OmegaRealm){
+        window.OmegaRealm.mount(document.getElementById('realm-canvas'),myElem);
+        setTimeout(function(){document.getElementById('realm-loading').classList.add('hide');},600);
+      } else {
+        setTimeout(tryMount,200);
+      }
+    }
+    tryMount();
+  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+})();
+</script>
+<script src="/bg.js"></script>
 </body>
 </html>

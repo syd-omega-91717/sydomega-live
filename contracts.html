@@ -1,227 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717  --  Commission Contracts</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Commission Contracts</title>
+<meta name="description" content="Draft, manage, and track sovereign commission contracts within the Order."/>
 <meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717  --  Commission Contracts"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url" content="https://www.sydomega.com/contracts.html"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717  --  Commission Contracts"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-  :root{
-    --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c;
-    --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f;
-    --ink:#e9e6dc; --muted:#85837b;
-    --line:rgba(201,168,76,0.16);
-    --display:'Cinzel Decorative', serif; --body:'Rajdhani', sans-serif; --mono:'Courier Prime', monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 26% 14%,rgba(201,168,76,.07),transparent 42%),radial-gradient(circle at 82% 86%,rgba(0,229,255,.05),transparent 42%)}
-  a{color:inherit;text-decoration:none}
-  .shell{position:relative;z-index:1;display:flex;min-height:100vh}
-  .side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-  .brand{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px;text-align:center}
-  .brand small{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:6px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:2px}
-  .nav a,.nav .lk{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--ink);padding:11px 12px;border-left:2px solid transparent;cursor:pointer}
-  .nav a:hover{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.04)}
-  .nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
-  .nav .sec{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin:18px 0 6px 12px}
-  .nav .lk{color:var(--muted);cursor:default}
-  .nav .lk .ph{font-size:8px;letter-spacing:1px;color:var(--crimson);border:1px solid rgba(139,0,0,.5);padding:2px 5px}
-  .side .out{margin-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);padding:11px 12px;cursor:pointer;border-top:1px solid var(--line)}
-
-  .main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 60px}
-  .topbar{border-bottom:1px solid var(--line);padding-bottom:18px}
-  .topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-  .topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
-  .intro{font-weight:300;color:var(--muted);max-width:64ch;margin:22px 0 8px;font-size:16px}
-  .intro b{color:var(--gold);font-weight:400}
-  .sechead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-
-  .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:24px}
-  label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:7px}
-  input,textarea{width:100%;font-family:var(--body);font-size:16px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);padding:12px 14px;color-scheme:dark}
-  textarea{min-height:100px;resize:vertical;line-height:1.6}
-  input:focus,textarea:focus{outline:none;border-color:var(--cyan)}
-  .fld{margin-top:14px}
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:600px){ .two{grid-template-columns:1fr} }
-  .calc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);padding:16px}
-  @media(max-width:600px){ .calc{grid-template-columns:1fr} }
-  .calc .c .k{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted)}
-  .calc .c .v{font-family:var(--display);font-weight:700;font-size:18px;margin-top:5px}
-  .calc .c .v.gold{color:var(--solar)}
-  .calc .c .v.cy{color:var(--cyan)}
-  .btn{font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:13px 22px;border:1px solid var(--gold);cursor:pointer;margin-top:16px}
-  .btn:hover{background:transparent;color:var(--gold)}
-  .btn:disabled{opacity:.5;cursor:default}
-  .msg{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);min-height:14px;margin-top:12px}
-  .gate-note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:14px;line-height:1.7}
-  .gate-note b{color:var(--crimson)}
-
-  .ctr{border:1px solid var(--line);background:var(--panel);margin-bottom:10px}
-  .ctr .ch{width:100%;text-align:left;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;color:var(--ink)}
-  .ctr .ref{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan)}
-  .ctr .cp{font-family:var(--display);font-weight:700;color:var(--gold);font-size:15px;margin-top:4px}
-  .ctr .rt{font-family:var(--mono);font-size:10px;color:var(--solar);letter-spacing:1px}
-  .ctr .ar{font-family:var(--mono);color:var(--cyan);font-size:16px;transition:transform .25s}
-  .ctr.open .ar{transform:rotate(180deg)}
-  .ctr .cb{max-height:0;overflow:hidden;transition:max-height .4s ease}
-  .ctr.open .cb{max-height:600px}
-  .ctr .cb .inner{padding:0 18px 18px;font-family:var(--mono);font-size:12px;color:var(--ink);line-height:1.8}
-  .ctr .cb .inner .terms{font-family:var(--body);font-weight:300;color:var(--muted);margin-top:8px;white-space:pre-wrap;line-height:1.6}
-  .ctr .cb .inner b{color:var(--gold)}
-  .empty{font-family:var(--mono);font-size:12px;color:var(--muted)}
-
-  .gate-card{max-width:440px;margin:14vh auto 0;border:1px solid var(--line);background:var(--panel);padding:40px 30px;text-align:center}
-  .gate-card .g{font-family:var(--display);font-size:56px;color:var(--gold)}
-  .gate-card h2{font-family:var(--display);color:var(--gold);font-weight:700;margin:10px 0}
-  .gate-card p{font-weight:300;color:var(--muted);margin-bottom:22px}
-  .gate-card a{display:inline-block;font-family:var(--mono);letter-spacing:2px;font-size:12px;color:var(--void);background:var(--gold);padding:14px 26px}
-  #app{display:none}
-  @media(max-width:760px){ .shell{flex-direction:column} .side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)} .nav{flex-direction:row;flex-wrap:wrap} .nav .sec,.nav .lk{display:none} }
+.form-row{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.form-row label{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.form-row input,.form-row textarea,.form-row select{background:var(--void);border:1px solid var(--line);color:var(--ink);font-family:var(--M);font-size:11px;padding:8px 10px;width:100%;box-sizing:border-box;outline:none}
+.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--gold)}
+.form-row textarea{resize:vertical;min-height:70px}
+.calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.calc-cell{border:1px solid var(--line);background:var(--surface);padding:10px;text-align:center}
+.calc-val{font-family:var(--D);font-size:18px;color:var(--solar)}
+.calc-lbl{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-top:4px}
+.contract-row{border:1px solid var(--line);background:var(--surface);padding:12px 14px;margin-bottom:8px;cursor:pointer}
+.contract-row:hover{border-color:var(--gold)}
+.cr-header{display:flex;justify-content:space-between;align-items:center}
+.cr-ref{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.cr-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 8px}
+.cr-status.active{background:rgba(0,229,255,.12);color:var(--cyan)}
+.cr-status.closed{background:rgba(255,255,255,.05);color:var(--muted)}
+.cr-status.pending{background:rgba(201,168,76,.12);color:var(--gold)}
+.cr-party{font-family:var(--D);font-size:13px;color:var(--ink);margin-top:4px}
+.cr-val{font-family:var(--M);font-size:9px;color:var(--gold);margin-top:2px}
+.cr-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--muted)}
+.contract-row.open .cr-body{display:block}
+.ref-block{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold);padding:8px 12px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);margin-bottom:12px}
 </style>
 </head>
 <body>
-<div id="gate" class="gate-card" style="display:none">
-  <div class="g">&#937;</div>
-  <h2 id="gate-h">Commission Contracts</h2>
-  <p id="gate-p">Sign in to draft a contract.</p>
-  <a href="/account.html">GO TO MEMBER ACCESS &rarr;</a>
+<aside id="omega-side" data-page="contracts"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">COMMISSION CONTRACTS<span class="topbar-sub">SOVEREIGN AGREEMENTS &middot; COMMISSION TRACKING</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('draft')">DRAFT</button>
+  <button class="tab-btn" onclick="setTab('contracts')">MY CONTRACTS</button>
+  <button class="tab-btn" onclick="setTab('calculator')">CALCULATOR</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="contracts"></aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="t">COMMISSION CONTRACTS<small>MEMBER &mdash; TRADE  .  THE ORDER'S CUT PRESERVED</small></div>
-      <canvas id="cnt-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+<div class="tab-panel active" id="tab-draft">
+  <div class="sechead">DRAFT CONTRACT</div>
+  <div class="ref-block">REFERENCE: <span id="draft-ref">Generating&hellip;</span></div>
+  <div id="draft-form">
+    <div class="form-row">
+      <label>COUNTERPARTY NAME</label>
+      <input type="text" id="f-party" placeholder="Name or entity"/>
     </div>
-    <p class="intro" data-reveal="fade-up">Draft an agreement between yourself and an outside party. The Order records the instrument, assigns a sovereign reference, and computes <b>SYD OMEGA's preserved commission</b> on the deal. A recorded instrument  --  not a substitute for counsel.</p>
-
-    <div class="sechead" data-reveal="fade-up">DRAFT A CONTRACT</div>
-    <div class="card" data-reveal="fade-up">
-      <div class="fld"><label for="k-cp">COUNTERPARTY (OUTSIDE TRADE)</label><input id="k-cp" maxlength="120" placeholder="Name of the outside party" /></div>
-      <div class="fld"><label for="k-scope">SCOPE OF THE DEAL</label><input id="k-scope" maxlength="200" placeholder="What is being transacted" /></div>
-      <div class="two" style="margin-top:14px">
-        <div><label for="k-val">DEAL VALUE</label><input id="k-val" type="number" min="0" step="0.01" placeholder="0" /></div>
-        <div><label for="k-rate">ORDER COMMISSION (%)</label><input id="k-rate" type="number" min="0" max="100" step="0.01" value="9.17" /></div>
-      </div>
-      <div class="fld"><label for="k-terms">TERMS</label><textarea id="k-terms" maxlength="4000" placeholder="The terms binding both parties..."></textarea></div>
-      <div class="calc">
-        <div class="c"><div class="k">DEAL VALUE</div><div class="v" id="c-val">0</div></div>
-        <div class="c"><div class="k">ORDER COMMISSION</div><div class="v cy" id="c-rate">9.17%</div></div>
-        <div class="c"><div class="k">SYD OMEGA RECEIVES</div><div class="v gold" id="c-com">0</div></div>
-      </div>
-      <label style="display:flex;align-items:flex-start;gap:10px;margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--ink);cursor:pointer;line-height:1.5"><input type="checkbox" id="k-agree" style="width:18px;height:18px;accent-color:#C9A84C;margin-top:1px;flex-shrink:0"/> Both parties accept the <b style="color:var(--gold)">Confidentiality &amp; Commission Agreement</b>  --  strict confidentiality for legal and security, with the recorded commission payable to the Order's account.</label>
-      <button class="btn" id="k-go">SEAL CONTRACT</button>
-      <div class="msg" id="k-msg"></div>
-      <div class="gate-note">This records the instrument and the Order's commission. <b>Legal execution, signatures, and settlement are PHASE II  --  gated on counsel.</b> No funds move and no binding legal effect is created at this stage.</div>
+    <div class="form-row">
+      <label>SCOPE OF WORK</label>
+      <textarea id="f-scope" placeholder="Describe the service or deliverable"></textarea>
     </div>
-
-    <div class="sechead" data-reveal="fade-up">YOUR CONTRACTS</div>
-    <div class="card" data-reveal="fade-up"><div id="k-list"></div></div>
-  </main>
+    <div class="form-row">
+      <label>DEAL VALUE (USD)</label>
+      <input type="number" id="f-deal" placeholder="0.00" step="0.01" oninput="updateCalc()"/>
+    </div>
+    <div class="form-row">
+      <label>COMMISSION RATE (%)</label>
+      <input type="number" id="f-rate" value="9.17" step="0.01" oninput="updateCalc()"/>
+    </div>
+    <div class="calc-grid" id="draft-calc">
+      <div class="calc-cell"><div class="calc-val" id="dc-deal">$0</div><div class="calc-lbl">DEAL VALUE</div></div>
+      <div class="calc-cell"><div class="calc-val" id="dc-rate">9.17%</div><div class="calc-lbl">RATE</div></div>
+      <div class="calc-cell"><div class="calc-val" id="dc-comm">$0</div><div class="calc-lbl">&#937; COMMISSION</div></div>
+    </div>
+    <div class="form-row">
+      <label>TERMS</label>
+      <textarea id="f-terms" placeholder="Payment terms, deadlines, conditions"></textarea>
+    </div>
+    <div class="form-row">
+      <label>STATUS</label>
+      <select id="f-status">
+        <option value="pending">PENDING</option>
+        <option value="active">ACTIVE</option>
+        <option value="closed">CLOSED</option>
+      </select>
+    </div>
+    <button class="btn-gold" id="submit-btn" onclick="submitContract()">SEAL CONTRACT</button>
+    <div id="draft-msg" style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:8px"></div>
+  </div>
 </div>
 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
-  let user=null;
-  function fmt(n){ return (Math.round(n*100)/100).toLocaleString('en-US'); }
-  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+<div class="tab-panel" id="tab-contracts">
+  <div class="sechead">MY CONTRACTS</div>
+  <div id="contracts-list">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading contracts&hellip;</div>
+  </div>
+</div>
 
-  function refresh(){
-    var v=parseFloat(document.getElementById('k-val').value)||0;
-    var r=parseFloat(document.getElementById('k-rate').value)||0;
-    document.getElementById('c-val').textContent=fmt(v);
-    document.getElementById('c-rate').textContent=fmt(r)+'%';
-    document.getElementById('c-com').textContent=fmt(v*r/100);
-  }
+<div class="tab-panel" id="tab-calculator">
+  <div class="sechead">COMMISSION CALCULATOR</div>
+  <div class="form-row" style="max-width:320px">
+    <label>DEAL VALUE (USD)</label>
+    <input type="number" id="calc-deal" placeholder="0.00" step="0.01" oninput="liveCalc()"/>
+  </div>
+  <div class="form-row" style="max-width:320px">
+    <label>COMMISSION RATE (%)</label>
+    <input type="number" id="calc-rate" value="9.17" step="0.01" oninput="liveCalc()"/>
+  </div>
+  <div class="calc-grid" style="max-width:480px">
+    <div class="calc-cell"><div class="calc-val" id="lc-deal">$0</div><div class="calc-lbl">DEAL VALUE</div></div>
+    <div class="calc-cell"><div class="calc-val" id="lc-rate">9.17%</div><div class="calc-lbl">RATE</div></div>
+    <div class="calc-cell"><div class="calc-val" id="lc-comm">$0</div><div class="calc-lbl">&#937; COMMISSION</div></div>
+  </div>
+</div>
 
-  function showGate(h,p){ document.getElementById('gate-h').textContent=h; document.getElementById('gate-p').textContent=p; document.getElementById('gate').style.display='block'; document.getElementById('app').style.display='none'; }
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">CONTRACT ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">SOVEREIGN REFERENCE</div><div class="card-body">Each contract carries a unique Ω-91717 reference generated from a base-36 timestamp. References are immutable once sealed and serve as permanent identifiers in the Sovereign Ledger.</div></div>
+    <div class="card"><div class="card-title">DEFAULT RATE</div><div class="card-body">The default commission rate of 9.17% is the sovereign standard — calibrated to the Ω matrix. All rates are adjustable per contract. The Ω commission value is calculated as: Deal Value × (Rate / 100).</div></div>
+    <div class="card"><div class="card-title">CONTRACT STATUS</div><div class="card-body">PENDING: agreement drafted, awaiting execution. ACTIVE: contract in force, work underway. CLOSED: contract concluded, commission settled. Status transitions are logged in the Sovereign Ledger.</div></div>
+    <div class="card"><div class="card-title">COUNTERPARTY RECORD</div><div class="card-body">Counterparty names and scope descriptions are stored in commission_contracts, linked to your sovereign profile. All records are private by default — accessible only to you and designated co-signatories.</div></div>
+  </div>
+</div>
+</div>
 
-  async function loadList(){
-    var box=document.getElementById('k-list');
-    try{
-      var r=await supabase.from('commission_contracts').select('reference,counterparty,scope,deal_value,commission_rate,commission_value,terms,status,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(40);
-      box.innerHTML='';
-      if(!r.data||!r.data.length){ box.innerHTML='<div class="empty">No contracts yet  --  draft your first above.</div>'; return; }
-      r.data.forEach(function(k){
-        var dt=k.created_at?new Date(k.created_at).toLocaleDateString():'';
-        var d=document.createElement('div'); d.className='ctr';
-        d.innerHTML='<button class="ch"><span><span class="ref">'+esc(k.reference)+'</span><span class="cp"></span><span class="rt">'+fmt(k.commission_rate)+'%  .  &#937; cut '+fmt(k.commission_value)+'</span></span><span class="ar">&#9662;</span></button>'
-          +'<div class="cb"><div class="inner">SCOPE  --  <span class="scp"></span><br>DEAL VALUE  --  <b>'+fmt(k.deal_value)+'</b>  .  COMMISSION  --  <b>'+fmt(k.commission_value)+'</b> ('+fmt(k.commission_rate)+'%)<br>STATUS  --  <b>'+(k.status||'drafted').toUpperCase()+'</b>  .  '+dt+'<div class="terms"></div></div></div>';
-        d.querySelector('.cp').textContent=k.counterparty||'';
-        d.querySelector('.scp').textContent=k.scope||'';
-        d.querySelector('.terms').textContent=k.terms||'';
-        d.querySelector('.ch').addEventListener('click',function(){ d.classList.toggle('open'); });
-        box.appendChild(d);
-      });
-    }catch(e){ box.innerHTML='<div class="empty">Contracts unavailable right now.</div>'; }
-  }
-
-  async function seal(){
-    var cp=document.getElementById('k-cp').value.trim();
-    var scope=document.getElementById('k-scope').value.trim();
-    var val=parseFloat(document.getElementById('k-val').value)||0;
-    var rate=parseFloat(document.getElementById('k-rate').value)||0;
-    var terms=document.getElementById('k-terms').value.trim();
-    var out=document.getElementById('k-msg'), btn=document.getElementById('k-go');
-    if(cp.length<2){ out.style.color='var(--crimson)'; out.textContent='Name the counterparty.'; return; }
-    if(scope.length<3){ out.style.color='var(--crimson)'; out.textContent='Describe the scope.'; return; }
-    if(val<=0){ out.style.color='var(--crimson)'; out.textContent='Enter a deal value.'; return; }
-    if(!document.getElementById('k-agree').checked){ out.style.color='var(--crimson)'; out.textContent='Both parties must accept the Confidentiality & Commission Agreement.'; return; }
-    var com=val*rate/100;
-    var ref='\u03A9-91717-'+Date.now().toString(36).toUpperCase();
-    btn.disabled=true; out.style.color='var(--cyan)'; out.textContent='Sealing...';
-    var r=await supabase.from('commission_contracts').insert({user_id:user.id,reference:ref,counterparty:cp,scope:scope,deal_value:val,commission_rate:rate,commission_value:com,terms:terms,confidentiality_accepted:true});
-    btn.disabled=false;
-    if(r.error){ out.style.color='var(--crimson)'; out.textContent='Could not seal ('+(r.error.code||r.error.message||'')+').'; return; }
-    out.style.color='var(--cyan)'; out.textContent='Contract sealed  --  '+ref+'.';
-    document.getElementById('k-cp').value=''; document.getElementById('k-scope').value=''; document.getElementById('k-val').value=''; document.getElementById('k-terms').value=''; refresh();
-    loadList();
-  }
-
-  async function boot(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('Commission Contracts','Sign in to draft a contract.'); return; }
-    user=sess.user;
-    var pr=await supabase.from('profiles').select('sign').eq('id',user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to draft contracts.'); return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='flex';
-    refresh(); loadList();
-  }
-  document.getElementById('k-val').addEventListener('input',refresh);
-  document.getElementById('k-rate').addEventListener('input',refresh);
-  document.getElementById('k-go').addEventListener('click',seal);
-  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-  boot();
+<script>
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['draft','contracts','calculator','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+function fmt(n){return'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function updateCalc(){
+  var deal=parseFloat(document.getElementById('f-deal').value)||0;
+  var rate=parseFloat(document.getElementById('f-rate').value)||9.17;
+  var comm=deal*(rate/100);
+  document.getElementById('dc-deal').textContent=fmt(deal);
+  document.getElementById('dc-rate').textContent=rate.toFixed(2)+'%';
+  document.getElementById('dc-comm').textContent=fmt(comm);
+}
+function liveCalc(){
+  var deal=parseFloat(document.getElementById('calc-deal').value)||0;
+  var rate=parseFloat(document.getElementById('calc-rate').value)||9.17;
+  var comm=deal*(rate/100);
+  document.getElementById('lc-deal').textContent=fmt(deal);
+  document.getElementById('lc-rate').textContent=rate.toFixed(2)+'%';
+  document.getElementById('lc-comm').textContent=fmt(comm);
+}
+function genRef(){return'Ω-91717-'+Date.now().toString(36).toUpperCase();}
 </script>
-<script src="/nav.js"></script>
-<script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+var currentUserId=null;
+
+document.getElementById('draft-ref').textContent=genRef();
+
+function renderContracts(list){
+  var el=document.getElementById('contracts-list');
+  if(!list||!list.length){
+    el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">No contracts on record.</div>';
+    return;
+  }
+  el.innerHTML=list.map(function(c){
+    var comm=(c.deal_value||0)*(c.commission_rate||9.17)/100;
+    return'<div class="contract-row" onclick="this.classList.toggle(\'open\')">'
+      +'<div class="cr-header">'
+      +'<div class="cr-ref">'+c.reference+'</div>'
+      +'<div class="cr-status '+(c.status||'pending')+'">'+String(c.status||'PENDING').toUpperCase()+'</div>'
+      +'</div>'
+      +'<div class="cr-party">'+c.counterparty+'</div>'
+      +'<div class="cr-val">Deal: '+fmt(c.deal_value)+' &middot; &#937; Commission: '+fmt(comm)+'</div>'
+      +'<div class="cr-body">'
+      +'<strong style="color:var(--ink)">Scope:</strong> '+(c.scope||'—')+'<br>'
+      +'<strong style="color:var(--ink)">Terms:</strong> '+(c.terms||'—')
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+window.submitContract=async function(){
+  var btn=document.getElementById('submit-btn');
+  var msg=document.getElementById('draft-msg');
+  var party=document.getElementById('f-party').value.trim();
+  var scope=document.getElementById('f-scope').value.trim();
+  var deal=parseFloat(document.getElementById('f-deal').value)||0;
+  var rate=parseFloat(document.getElementById('f-rate').value)||9.17;
+  var terms=document.getElementById('f-terms').value.trim();
+  var status=document.getElementById('f-status').value;
+  if(!party||!scope){msg.textContent='Counterparty and scope are required.';return;}
+  btn.disabled=true;btn.textContent='SEALING…';
+  var ref=document.getElementById('draft-ref').textContent;
+  var{error}=await sb.from('commission_contracts').insert({
+    user_id:currentUserId,
+    counterparty:party,
+    scope:scope,
+    deal_value:deal,
+    commission_rate:rate,
+    commission_value:deal*(rate/100),
+    terms:terms,
+    reference:ref,
+    status:status
+  });
+  if(error){msg.textContent='Error: '+error.message;btn.disabled=false;btn.textContent='SEAL CONTRACT';return;}
+  msg.textContent='Contract sealed: '+ref;
+  document.getElementById('f-party').value='';
+  document.getElementById('f-scope').value='';
+  document.getElementById('f-deal').value='';
+  document.getElementById('f-rate').value='9.17';
+  document.getElementById('f-terms').value='';
+  document.getElementById('draft-ref').textContent=genRef();
+  btn.disabled=false;btn.textContent='SEAL CONTRACT';
+  setTab('contracts');
+  await loadContracts();
+};
+
+async function loadContracts(){
+  var{data}=await sb.from('commission_contracts').select('*').eq('user_id',currentUserId).order('created_at',{ascending:false});
+  renderContracts(data);
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  currentUserId=sess.user.id;
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  await loadContracts();
+}
+boot();
+</script>
+<script src="/bg.js"></script>
 </body>
 </html>

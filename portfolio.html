@@ -1,226 +1,191 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Portfolio</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<meta name="description" content="Your sovereign portfolio — authority score, axis breakdown, holdings, and achievements across the 9×9×9 Matrix."/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.9rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-/* HERO BAND */
-.hero-band{display:grid;grid-template-columns:1fr 90px 1fr;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.88),rgba(0,229,255,.03))}
-.hb{padding:18px clamp(14px,2.5vw,28px)}
-.hb.mid{display:flex;align-items:center;justify-content:center;padding:0}
-.hb.right{border-left:1px solid var(--line);text-align:right}
-.hb.left{border-right:1px solid var(--line)}
-.hb-n{font-family:var(--D);font-size:clamp(14px,2.5vw,22px);color:var(--gold);line-height:1}
-.hb-l{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
-/* PRIVACY BAR */
-.privacy-bar{display:flex;align-items:center;gap:14px;padding:10px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:rgba(10,10,15,.4)}
-.priv-pill{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:4px 12px;border:1px solid;border-radius:2px;cursor:pointer;transition:.18s}
-.priv-pill.private{border-color:rgba(139,0,0,.4);color:var(--crim)}
-.priv-pill.public{border-color:rgba(63,178,127,.4);color:var(--green)}
-.priv-info{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-left:auto}
-/* TABS */
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(10,10,15,.4)}
-.tab-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:.65rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s}
-.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold)}
-.tab-panel{display:none;padding:clamp(14px,3vw,36px)}
-.tab-panel.on{display:block}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:16px}
-/* STATS GRID */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.stat-card{border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);transition:.18s}
-.stat-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
-.sc-n{font-family:var(--D);font-size:clamp(18px,3vw,26px);color:var(--gold);line-height:1}
-.sc-l{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);margin-top:5px}
-/* ASSET TABLE */
-.asset-row{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap;transition:.15s}
-.asset-row:hover{background:rgba(201,168,76,.02)}
-.asset-type{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:2px 8px;border:1px solid rgba(201,168,76,.2);color:var(--gold);border-radius:2px;white-space:nowrap;flex-shrink:0}
-.asset-name{flex:1;font-size:12px;min-width:120px}
-.asset-val{font-family:var(--D);font-size:13px;color:var(--green);white-space:nowrap}
-.asset-date{font-family:var(--M);font-size:8px;color:var(--muted);width:70px;text-align:right;flex-shrink:0}
-/* AXIS BARS */
-.axis-section{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
-.axis-row{display:flex;align-items:center;gap:14px}
-.axis-lbl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);width:100px;flex-shrink:0}
-.axis-track{flex:1;height:8px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden;position:relative}
-.axis-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.4,0,.2,1)}
-.axis-val{font-family:var(--D);font-size:12px;width:50px;text-align:right;flex-shrink:0}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.hero-band{display:none}.stats-row{grid-template-columns:1fr 1fr}}
+.axis-bar-wrap{margin-bottom:14px}
+.axis-label{display:flex;justify-content:space-between;font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+.axis-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.axis-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.auth-block{display:flex;flex-direction:column;align-items:center;padding:20px;border:1px solid var(--gold);margin-bottom:16px}
+.auth-val{font-family:var(--D);font-size:40px;color:var(--gold)}
+.auth-lbl{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.auth-pct{font-family:var(--M);font-size:9px;color:var(--muted);margin-top:4px}
+.asset-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--line);margin-bottom:6px;background:var(--surface)}
+.asset-name{font-family:var(--D);font-size:13px;color:var(--ink)}
+.asset-qty{font-family:var(--M);font-size:9px;color:var(--gold)}
+.asset-val{font-family:var(--M);font-size:9px;color:var(--muted)}
+.ach-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.ach-chip{display:flex;flex-direction:column;align-items:center;padding:12px 18px;border:1px solid var(--line);background:var(--surface);min-width:80px}
+.ach-num{font-family:var(--D);font-size:22px;color:var(--solar)}
+.ach-lbl{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
+.privacy-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);margin-bottom:14px;background:var(--surface)}
+.privacy-row label{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted);cursor:pointer}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="portfolio"></aside>
-  <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN PORTFOLIO<small>ASSETS &middot; MATRIX POSITION &middot; ACHIEVEMENTS &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="pfo-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-    <div class="hero-band">
-      <div class="hb left"><div class="hb-n" id="pf-name">--</div><div class="hb-l">MEMBER</div></div>
-      <div class="hb mid"><canvas id="pf-cv" width="90" height="90" style="width:45px;height:45px;display:block"></canvas></div>
-      <div class="hb right"><div class="hb-n" id="pf-auth" style="color:var(--gold)">--</div><div class="hb-l">AUTHORITY SCORE</div></div>
-    </div>
-    <!-- PRIVACY TOGGLE -->
-    <div class="privacy-bar">
-      <button class="priv-pill private" id="priv-btn" onclick="togglePrivacy()">&#128274; PRIVATE</button>
-      <span style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)">Your portfolio is private. Only you can see this page.</span>
-      <span class="priv-info" id="priv-info">PRIVATE ACCOUNT</span>
-    </div>
-    <!-- TABS -->
-    <div class="tab-bar">
-      <button class="tab-btn on" data-tab="overview">OVERVIEW</button>
-      <button class="tab-btn" data-tab="matrix">MATRIX POSITION</button>
-      <button class="tab-btn" data-tab="assets">ASSETS & HOLDINGS</button>
-      <button class="tab-btn" data-tab="achievements">ACHIEVEMENTS</button>
-    </div>
-    <!-- OVERVIEW -->
-    <div class="tab-panel on" id="tab-overview">
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN PORTFOLIO OVERVIEW</div>
-      <div class="stats-row">
-        <div class="stat-card"><div class="sc-n" id="pf-tier">--</div><div class="sc-l">MEMBERSHIP TIER</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-sign" style="color:var(--cyan)">--</div><div class="sc-l">COSMIC SIGN</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-element">--</div><div class="sc-l">ELEMENT</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-god">--</div><div class="sc-l">OLYMPIAN</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-agent" style="color:var(--green)">--</div><div class="sc-l">AGENT</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-token" style="color:var(--solar)">--</div><div class="sc-l">TOKEN AFFINITY</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up">AXIS AUTHORITY PROFILE</div>
-      <div class="axis-section">
-        <div class="axis-row">
-          <div class="axis-lbl">AXIS A &middot; KNOWLEDGE</div>
-          <div class="axis-track"><div class="axis-fill" id="pf-bar-a" style="background:var(--gold);width:0%"></div></div>
-          <div class="axis-val" id="pf-val-a" style="color:var(--gold)">--</div>
-        </div>
-        <div class="axis-row">
-          <div class="axis-lbl">AXIS B &middot; MASTERY</div>
-          <div class="axis-track"><div class="axis-fill" id="pf-bar-b" style="background:var(--cyan);width:0%"></div></div>
-          <div class="axis-val" id="pf-val-b" style="color:var(--cyan)">--</div>
-        </div>
-        <div class="axis-row">
-          <div class="axis-lbl">AXIS C &middot; CONTRIBUTION</div>
-          <div class="axis-track"><div class="axis-fill" id="pf-bar-c" style="background:var(--green);width:0%"></div></div>
-          <div class="axis-val" id="pf-val-c" style="color:var(--green)">--</div>
-        </div>
-      </div>
-    </div>
-    <!-- MATRIX POSITION -->
-    <div class="tab-panel" id="tab-matrix">
-      <div class="sechead" data-reveal="fade-up">MATRIX POSITION &middot; 12&times;12&times;9&times;9&times;9 = 104,976 NODES PER AXIS</div>
-      <div class="stats-row">
-        <div class="stat-card"><div class="sc-n" id="pf-nodes">--</div><div class="sc-l">NODES EARNED</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-auth2" style="color:var(--gold)">--</div><div class="sc-l">AUTHORITY AUTH</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-a3" style="color:var(--gold)">--</div><div class="sc-l">A&#179; (KNOWLEDGE CUBE)</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-b3" style="color:var(--cyan)">--</div><div class="sc-l">B&#179; (MASTERY CUBE)</div></div>
-        <div class="stat-card"><div class="sc-n" id="pf-c3" style="color:var(--green)">--</div><div class="sc-l">C&#179; (CONTRIBUTION CUBE)</div></div>
-      </div>
-      <div style="border:1px solid var(--line);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted);line-height:1.9">
-        AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX: sqrt(2187)&times;&phi;/e = 27.8367 &middot; GENESIS: 0.001 &rarr; APEX: 9.000<br>
-        PROGRESSION: +0.001 per verified task &middot; 12&times;12&times;9&times;9&times;9 = 104,976 nodes per axis &middot; 3&times;104,976 = 314,928 total
-      </div>
-    </div>
-    <!-- ASSETS -->
-    <div class="tab-panel" id="tab-assets">
-      <div class="sechead" data-reveal="fade-up">ASSETS & HOLDINGS</div>
-      <div id="pf-assets"><div style="font-family:var(--M);font-size:10px;color:var(--muted)">LOADING ASSETS...</div></div>
-    </div>
-    <!-- ACHIEVEMENTS -->
-    <div class="tab-panel" id="tab-achievements">
-      <div class="sechead" data-reveal="fade-up">ACHIEVEMENTS</div>
-      <div class="stats-row">
-        <div class="stat-card" style="text-align:center"><div class="sc-n" id="pf-trophies" style="color:var(--solar)">--</div><div class="sc-l">TROPHIES</div></div>
-        <div class="stat-card" style="text-align:center"><div class="sc-n" id="pf-medals" style="color:var(--cyan)">--</div><div class="sc-l">MEDALS</div></div>
-        <div class="stat-card" style="text-align:center"><div class="sc-n" id="pf-certs" style="color:var(--green)">--</div><div class="sc-l">CERTIFICATES</div></div>
-        <div class="stat-card" style="text-align:center"><div class="sc-n" id="pf-grade">--</div><div class="sc-l">CURRENT GRADE</div></div>
-      </div>
-    </div>
-    <div data-page-emblem="portfolio" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; SOVEREIGN PORTFOLIO &middot; PRIVATE ACCOUNT</span><span>VISIBLE ONLY TO YOU UNLESS MADE PUBLIC</span></div>
-  </main>
+<aside id="omega-side" data-page="portfolio"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">PORTFOLIO<span class="topbar-sub">SOVEREIGN HOLDINGS &middot; AUTHORITY &middot; MATRIX POSITION</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('overview')">OVERVIEW</button>
+  <button class="tab-btn" onclick="setTab('matrix')">MATRIX</button>
+  <button class="tab-btn" onclick="setTab('assets')">ASSETS</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
+
+<div class="tab-panel active" id="tab-overview">
+  <div class="sechead">AUTHORITY SCORE</div>
+  <div class="auth-block">
+    <div class="auth-val" id="auth-val">—</div>
+    <div class="auth-lbl">AUTHORITY</div>
+    <div class="auth-pct" id="auth-pct"></div>
+  </div>
+  <div class="kpi-row" id="overview-kpis"></div>
+  <div class="sechead" style="margin-top:16px">AXIS BREAKDOWN</div>
+  <div id="axis-bars">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading axes&hellip;</div>
+  </div>
+  <div class="sechead" style="margin-top:16px">ACHIEVEMENTS</div>
+  <div class="ach-row" id="ach-row">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading achievements&hellip;</div>
+  </div>
+  <div class="sechead" style="margin-top:16px">PRIVACY</div>
+  <div class="privacy-row">
+    <input type="checkbox" id="pub-toggle" onchange="togglePrivacy(this.checked)"/>
+    <label for="pub-toggle">PUBLIC PORTFOLIO &mdash; visible to other sovereigns</label>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-matrix">
+  <div class="sechead">MATRIX POSITION</div>
+  <div class="card-grid" id="matrix-cards">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading matrix data&hellip;</div>
+  </div>
+  <div class="sechead" style="margin-top:16px">COSMOLOGY</div>
+  <div class="card-grid" id="cosmo-cards">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading cosmology&hellip;</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-assets">
+  <div class="sechead">HOLDINGS</div>
+  <div id="assets-list">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">Loading assets&hellip;</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">PORTFOLIO ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = √(A³+B³+C³) × φ/e — where A=Knowledge, B=Mastery, C=Contribution (each 0–9). APEX = 27.8367. φ=1.6180339887, e=2.7182818285. Authority is the sovereign measure of your position across all three axes of the 9×9×9 Matrix.</div></div>
+    <div class="card"><div class="card-title">THREE AXES</div><div class="card-body">Axis A (Knowledge) advances through study, research, and verified output. Axis B (Mastery) advances through skill trials, dojo performance, and discipline logs. Axis C (Contribution) advances through missions, peer rating, and published work. Each axis is scored 0–9.</div></div>
+    <div class="card"><div class="card-title">SOVEREIGN ASSETS</div><div class="card-body">Holdings represent your stake in the Sovereign Order — tokens, collectibles, credentials, and domain resources. Assets are recorded in the user_assets ledger and updated by mission outcomes, trade, and sovereign grants.</div></div>
+    <div class="card"><div class="card-title">PRIVACY CONTROLS</div><div class="card-body">Your portfolio is private by default. Enabling the public toggle shares your authority score, axis levels, and achievement count with the Order. Holdings and cosmology details remain visible only to you.</div></div>
+  </div>
+</div>
+</div>
+
 <script>
-(function(){var cv=document.getElementById('pf-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,90,90);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(45,45,12+i*4+3*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.07+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=9;ctx.fillText('Ω',45,45);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();
-document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('on');});document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('on');});b.classList.add('on');var p=document.getElementById('tab-'+b.dataset.tab);if(p)p.classList.add('on');});});
-var _public=localStorage.getItem('omega_portfolio_public')==='1';
-function updatePrivacy(){var btn=document.getElementById('priv-btn');var info=document.getElementById('priv-info');if(btn){btn.className='priv-pill '+(_public?'public':'private');btn.innerHTML=_public?'&#128275; PUBLIC':'&#128274; PRIVATE';}if(info)info.textContent=_public?'PUBLIC PORTFOLIO':'PRIVATE ACCOUNT';}
-function togglePrivacy(){_public=!_public;localStorage.setItem('omega_portfolio_public',_public?'1':'0');updatePrivacy();}
-window.togglePrivacy=togglePrivacy;
-updatePrivacy();
+var PHI=1.6180339887,EU=2.7182818285,APEX=27.8367;
+function authScore(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','matrix','assets','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+function togglePrivacy(on){localStorage.setItem('omega_portfolio_public',on?'1':'0');}
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();}catch(e){return '--';}}
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex';
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
-    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    var name=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
-    /* hero */
-    sid('pf-name',name); sid('pf-auth',auth.toFixed(4)); sid('pf-auth2',auth.toFixed(4));
-    /* cosmology */
-    sid('pf-tier',(pr.subscription_tier||'free').toUpperCase());
-    sid('pf-sign',(pr.sign||'--').toUpperCase());
-    sid('pf-element',(pr.element||'--').toUpperCase());
-    sid('pf-god',(pr.god||'--').toUpperCase());
-    sid('pf-agent',(pr.agent||'--').toUpperCase());
-    sid('pf-token',(pr.token||pr.sign||'--').toUpperCase());
-    /* axis bars */
-    var adisp=pr.is_owner?9.000:a, bdisp=pr.is_owner?9.000:b, cdisp=pr.is_owner?9.000:c;
-    sid('pf-val-a',adisp.toFixed(3)); sid('pf-val-b',bdisp.toFixed(3)); sid('pf-val-c',cdisp.toFixed(3));
-    document.getElementById('pf-bar-a').style.width=(adisp/9*100).toFixed(1)+'%';
-    document.getElementById('pf-bar-b').style.width=(bdisp/9*100).toFixed(1)+'%';
-    document.getElementById('pf-bar-c').style.width=(cdisp/9*100).toFixed(1)+'%';
-    /* matrix */
-    sid('pf-nodes',Number(pr.nodes_earned||0).toLocaleString());
-    sid('pf-a3',Math.pow(pr.is_owner?9:a,3).toFixed(3));
-    sid('pf-b3',Math.pow(pr.is_owner?9:b,3).toFixed(3));
-    sid('pf-c3',Math.pow(pr.is_owner?9:c,3).toFixed(3));
-    /* achievements */
-    sid('pf-trophies',pr.trophies_earned||0);
-    sid('pf-medals',pr.medals_earned||0);
-    sid('pf-certs',pr.certificates_earned||0);
-    sid('pf-grade',(pr.subscription_tier||'FREE').toUpperCase());
-    /* assets */
-    var assetEl=document.getElementById('pf-assets');
-    try{
-      var r=await sb.from('user_assets').select('*').eq('user_id',s.user.id).order('created_at',{ascending:false});
-      var assets=r.data||[];
-      if(!assets.length){
-        if(assetEl)assetEl.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:16px">NO ASSETS RECORDED YET. ASSETS ARE ACQUIRED THROUGH MATRIX PROGRESSION AND PLATFORM ACTIVITIES.</div>';
-      } else {
-        if(assetEl)assetEl.innerHTML=assets.map(function(asset){
-          return '<div class="asset-row">'
-            +'<div class="asset-type">'+(asset.asset_type||'ASSET').toUpperCase()+'</div>'
-            +'<div class="asset-name">'+(asset.name||asset.description||'SOVEREIGN ASSET').toUpperCase()+'</div>'
-            +'<div class="asset-val">'+Number(asset.value||0).toLocaleString()+'</div>'
-            +'<div class="asset-date">'+fmtDate(asset.created_at)+'</div>'
-            +'</div>';
-        }).join('');
-      }
-    }catch(e){
-      if(assetEl)assetEl.innerHTML='<div style="font-family:var(--M);font-size:10px;color:var(--muted);padding:16px">ASSET REGISTRY LOADING. YOUR MATRIX POSITIONS AND ACHIEVEMENTS ARE TRACKED AND WILL APPEAR HERE.</div>';
-    }
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
-})();
+
+function renderOverview(pr){
+  var a=Number(pr.axis_a||0),b=Number(pr.axis_b||0),c=Number(pr.axis_c||0);
+  var auth=authScore(a,b,c);
+  document.getElementById('auth-val').textContent=auth.toFixed(2);
+  document.getElementById('auth-pct').textContent=((auth/APEX)*100).toFixed(1)+'% OF APEX';
+
+  document.getElementById('overview-kpis').innerHTML=[
+    ['NODES',pr.nodes_earned||0],
+    ['TIER',pr.subscription_tier||'FREE'],
+    ['TOKEN',pr.token||'—']
+  ].map(function(k){return'<div class="kpi-card"><div class="kpi-val">'+k[1]+'</div><div class="kpi-label">'+k[0]+'</div></div>';}).join('');
+
+  document.getElementById('axis-bars').innerHTML=[
+    {label:'A — KNOWLEDGE',val:a,col:'var(--gold)'},
+    {label:'B — MASTERY',val:b,col:'var(--cyan)'},
+    {label:'C — CONTRIBUTION',val:c,col:'var(--green)'}
+  ].map(function(ax){
+    return'<div class="axis-bar-wrap">'
+      +'<div class="axis-label"><span>'+ax.label+'</span><span>'+ax.val+'/9</span></div>'
+      +'<div class="axis-track"><div class="axis-fill" style="width:'+((ax.val/9)*100)+'%;background:'+ax.col+'"></div></div>'
+      +'</div>';
+  }).join('');
+
+  document.getElementById('ach-row').innerHTML=[
+    ['TROPHIES',pr.trophies_earned||0],
+    ['MEDALS',pr.medals_earned||0],
+    ['CERTIFICATES',pr.certificates_earned||0]
+  ].map(function(k){return'<div class="ach-chip"><div class="ach-num">'+k[1]+'</div><div class="ach-lbl">'+k[0]+'</div></div>';}).join('');
+
+  document.getElementById('pub-toggle').checked=localStorage.getItem('omega_portfolio_public')==='1';
+}
+
+function renderMatrix(pr){
+  var a=Number(pr.axis_a||0),b=Number(pr.axis_b||0),c=Number(pr.axis_c||0);
+  document.getElementById('matrix-cards').innerHTML=[
+    {t:'NODES EARNED',v:pr.nodes_earned||0},
+    {t:'A³ — KNOWLEDGE',v:Math.pow(a,3)},
+    {t:'B³ — MASTERY',v:Math.pow(b,3)},
+    {t:'C³ — CONTRIBUTION',v:Math.pow(c,3)}
+  ].map(function(x){return'<div class="card"><div class="card-title">'+x.t+'</div><div class="card-body" style="font-family:var(--D);font-size:22px;color:var(--solar)">'+x.v+'</div></div>';}).join('');
+
+  document.getElementById('cosmo-cards').innerHTML=[
+    {t:'SIGN',v:pr.sign||'—'},
+    {t:'ELEMENT',v:pr.element||'—'},
+    {t:'OLYMPIAN',v:pr.god||'—'},
+    {t:'SOVEREIGN AGENT',v:pr.agent||'—'}
+  ].map(function(x){return'<div class="card"><div class="card-title">'+x.t+'</div><div class="card-body">'+x.v+'</div></div>';}).join('');
+}
+
+async function renderAssets(userId){
+  var al=document.getElementById('assets-list');
+  var{data:assets}=await sb.from('user_assets').select('*').eq('user_id',userId).order('created_at',{ascending:false});
+  if(!assets||!assets.length){
+    al.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">No holdings on record.</div>';
+    return;
+  }
+  al.innerHTML=assets.map(function(a){
+    return'<div class="asset-row">'
+      +'<div class="asset-name">'+a.name+'</div>'
+      +'<div style="display:flex;gap:12px">'
+      +'<div class="asset-qty">QTY '+a.quantity+'</div>'
+      +'<div class="asset-val">'+a.asset_type+'</div>'
+      +'</div></div>';
+  }).join('');
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  renderOverview(pr);
+  renderMatrix(pr);
+  await renderAssets(sess.user.id);
+}
+boot();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN QUEUE</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 :root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--orange:#FF8C42;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -203,16 +202,16 @@ const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
 const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
 const {data:{session}}=await sb.auth.getSession();
 if(!session){location.href='/account.html';throw 0;}
-const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-if(pr?.approval_status==='pending'){location.href='/pending.html';throw 0;}
-if(window.__omegaApprove)window.__omegaApprove(true);
+const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+if(!pr?.is_owner&&!pr?.access_approved){location.href='/pending.html';throw 0;}
+if(window.__omegaPopulate)window.__omegaPopulate(pr,session.user);
 document.getElementById('app').style.display='flex';
 document.getElementById('q-ts').textContent=new Date().toUTCString().split(' ').slice(1,4).join(' ');
 
 window.qTab=function(id){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick').includes("'"+id+"'")));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('on'));
-  const el=document.getElementById('q-'+id);
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('on',b.getAttribute('onclick').includes("'"+id+"'"));});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  var el=document.getElementById('q-'+id);
   if(el)el.classList.add('on');
 };
 
@@ -399,7 +398,7 @@ waitReady(()=>{
       ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
       ctx.fillStyle=n.color+'33';ctx.fill();
       ctx.strokeStyle=n.color;ctx.lineWidth=1;ctx.stroke();
-      ctx.fillStyle=n.color;ctx.font='6.5px Courier Prime,monospace';ctx.textAlign='center';
+      ctx.fillStyle=n.color;ctx.font='6.5px monospace';ctx.textAlign='center';
       n.label.split('\n').forEach((l,i)=>ctx.fillText(l,n.x,n.y+2+i*9-((n.label.split('\n').length-1)*4)));
     }
     drawNode(producer,28);
@@ -464,5 +463,6 @@ waitReady(()=>{
   window.clearLog=()=>{document.getElementById('evt-log').innerHTML='';};
 });
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

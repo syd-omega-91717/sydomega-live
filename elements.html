@@ -1,158 +1,223 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; The Nine Elements</title>
-<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
+<meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
-<meta name="mobile-web-app-capable" content="yes"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
 <meta property="og:title" content="SYD OMEGA 91717 &mdash; The Nine Elements"/>
-<meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/elements.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717 &mdash; The Nine Elements"/>
-<meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 729-node matrix, 12 Olympians."/>
-<meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
-<meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d15;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crimson:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.16);--display:'Cinzel Decorative',serif;--body:'Rajdhani',sans-serif;--mono:'Courier Prime',monospace;}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.shell{position:relative;z-index:1;display:flex;min-height:100vh}
-.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,rgba(13,13,21,.6),transparent)}
-.main{flex:1;min-width:0;padding:24px clamp(16px,3vw,40px) 80px;max-width:1400px}
-.topbar{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:32px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.topbar .t{font-family:var(--display);font-weight:700;color:var(--gold);font-size:clamp(18px,3vw,26px);letter-spacing:2px}
-.topbar .t small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:4px}
 .legend-strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px}
-.leg{font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:4px 10px;border:1px solid;border-radius:0}
-.sechead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--cyan);margin:32px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.leg{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:4px 10px;border:1px solid}
 .elements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-bottom:40px}
-.el-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);padding:0;overflow:hidden;position:relative;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.el-card{border:1px solid var(--line);background:linear-gradient(180deg,var(--surface),transparent);padding:0;overflow:hidden;position:relative;cursor:pointer;transition:transform .18s,box-shadow .18s}
 .el-card:hover{transform:translateY(-3px)}
 .el-card.mine{box-shadow:inset 0 0 0 1px rgba(0,229,255,.5)}
 .el-card.locked{opacity:.45;pointer-events:none}
 .el-canvas-wrap{width:100%;height:160px;position:relative}
 .el-canvas-wrap canvas{width:100%;height:100%;display:block}
 .el-body{padding:18px 20px 20px}
-.el-tier{font-family:var(--mono);font-size:8px;letter-spacing:3px;margin-bottom:8px}
-.el-name{font-family:var(--display);font-size:22px;font-weight:700;margin-bottom:4px}
-.el-sub{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+.el-tier{font-family:var(--M);font-size:8px;letter-spacing:3px;margin-bottom:8px}
+.el-name{font-family:var(--D);font-size:22px;font-weight:700;margin-bottom:4px}
+.el-sub{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
 .el-desc{font-size:13px;font-weight:300;color:var(--ink);line-height:1.75;margin-bottom:14px}
 .el-signs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.el-sign{font-family:var(--mono);font-size:9px;letter-spacing:1px;padding:3px 8px;border:1px solid}
-.el-unlock{font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid;display:inline-block;margin-top:6px}
+.el-sign{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:3px 8px;border:1px solid}
+.el-unlock{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:6px 12px;border:1px solid;display:inline-block;margin-top:6px}
 .el-facets{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:10px}
-.el-facet{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);padding:5px 8px;border:1px solid rgba(201,168,76,.1);background:rgba(201,168,76,.02)}
-.mine-badge{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:3px 8px;color:var(--void);background:var(--cyan);z-index:2}
+.el-facet{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted);padding:5px 8px;border:1px solid rgba(201,168,76,.1);background:rgba(201,168,76,.02)}
+.mine-badge{position:absolute;top:12px;right:12px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:3px 8px;color:var(--void);background:var(--cyan);z-index:2}
 .apex-ring{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-.apex-tag{font-family:var(--mono);font-size:8px;letter-spacing:1px;padding:5px 6px;text-align:center;border:1px solid rgba(201,168,76,.3);color:var(--gold)}
-@media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}.elements-grid{grid-template-columns:1fr}}
+.apex-tag{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:5px 6px;text-align:center;border:1px solid rgba(201,168,76,.3);color:var(--gold)}
 .intro{font-size:.85rem;color:var(--muted);line-height:1.85;max-width:80ch;margin-bottom:1.2rem}
 .intro b{color:var(--ink)}
-.mstat{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.06em;margin-bottom:1.2rem;padding:.6rem 1rem;border:1px solid var(--line);background:rgba(0,229,255,.04);border-radius:2px}
+.mstat{font-family:var(--M);font-size:.7rem;color:var(--cyan);letter-spacing:.06em;margin-bottom:1.2rem;padding:.6rem 1rem;border:1px solid var(--line);background:rgba(0,229,255,.04)}
 .gates,.kings{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
-.gate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.5rem;padding:1rem .7rem;border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:2px;cursor:pointer;transition:all .25s}
+.gate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.5rem;padding:1rem .7rem;border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));cursor:pointer;transition:all .25s}
 .gate.open{border-color:rgba(63,178,127,.4)}
 .gate.current{border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.15)}
 .gate.sealed{opacity:.55}
 .gate:hover{transform:translateY(-3px);border-color:var(--gold)}
 .gate .body{width:100%}
-.gate .gname{font-family:'Cinzel Decorative',serif;font-size:.78rem;color:var(--ink)}
-.gate .gess{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.04em;margin-top:.35rem;line-height:1.5}
-.gate .state{font-family:'Courier Prime',monospace;font-size:.55rem;letter-spacing:.1em;padding:.15rem .5rem;border:1px solid var(--line);border-radius:2px;color:var(--muted)}
+.gate .gname{font-family:var(--D);font-size:.78rem;color:var(--ink)}
+.gate .gess{font-family:var(--M);font-size:.55rem;color:var(--muted);letter-spacing:.04em;margin-top:.35rem;line-height:1.5}
+.gate .state{font-family:var(--M);font-size:.55rem;letter-spacing:.1em;padding:.15rem .5rem;border:1px solid var(--line);color:var(--muted)}
 .gate.open .state{color:var(--green);border-color:rgba(63,178,127,.4)}
 .gate.current .state{color:var(--gold);border-color:rgba(201,168,76,.4)}
-
-.king{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.35rem;padding:1rem .7rem;border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:2px;transition:all .25s}
+.king{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.35rem;padding:1rem .7rem;border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));transition:all .25s}
 .king.crowned{border-color:rgba(201,168,76,.4)}
 .king.next{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,229,255,.12)}
 .king.locked{opacity:.5}
 .king:hover{transform:translateY(-3px)}
 .king .crown{font-size:1.2rem;color:var(--gold)}
-.king .num{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em}
-.king .nm{font-family:'Cinzel Decorative',serif;font-size:.78rem;color:var(--ink)}
-.king .dm{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--cyan);letter-spacing:.06em}
-.king .th{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);margin-top:.3rem}
+.king .num{font-family:var(--M);font-size:.55rem;color:var(--muted);letter-spacing:.08em}
+.king .nm{font-family:var(--D);font-size:.78rem;color:var(--ink)}
+.king .dm{font-family:var(--M);font-size:.55rem;color:var(--cyan);letter-spacing:.06em}
+.king .th{font-family:var(--M);font-size:.55rem;color:var(--muted);margin-top:.3rem}
 .king.crowned .th{color:var(--green)}
+
+/* science table */
+.sci-table{width:100%;border-collapse:collapse;font-family:var(--M);font-size:12px}
+.sci-table th{color:var(--cyan);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:2px}
+.sci-table td{padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.08)}
+.sci-table tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
-<div class="shell">
-<aside class="side" id="omega-side" data-page="elements"></aside>
-<main class="main">
-<div class="topbar">
-  <div class="t">THE NINE ELEMENTS<small>ELEMENTAL SOVEREIGNTY &middot; EVOLUTION LAYERS <span data-canon-lattice="twelve"></span></small></div>
-  <canvas id="el-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+<aside id="omega-side" data-page="elements"></aside>
+<div class="page-shell" id="app" style="display:none">
+
+<header class="topbar">
+  <div class="topbar-title">THE NINE ELEMENTS<span class="topbar-sub">ELEMENTAL SOVEREIGNTY &middot; EVOLUTION LAYERS</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="solar" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('elements')">9 ELEMENTS</button>
+  <button class="tab-btn" onclick="setTab('gates')">12 GATES</button>
+  <button class="tab-btn" onclick="setTab('kings')">28 KINGS</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
-<div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:1.5rem;overflow-x:auto">
-  <div class="mtab-btn active" data-mtab="elements" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">9 ELEMENTS</div>
-  <div class="mtab-btn" data-mtab="gates" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">12 GATES</div>
-  <div class="mtab-btn" data-mtab="kings" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">28 KINGS</div>
+<!-- ELEMENTS TAB -->
+<div class="tab-panel active" id="tab-elements">
+  <p style="font-weight:300;color:var(--muted);max-width:72ch;margin-bottom:20px;font-size:15px;line-height:1.7">Five elements govern the physical world through your birth sign. Four transcendent elements unlock as your authority ascends through the matrix. All nine are alive in you &mdash; only the higher ones require awakening.</p>
+
+  <div class="legend-strip" id="legend-strip">
+    <div class="leg" style="color:#E86A3A;border-color:rgba(232,106,58,.4)">FIRE &middot; PHYSICAL</div>
+    <div class="leg" style="color:#34C6E6;border-color:rgba(52,198,230,.4)">WATER &middot; PHYSICAL</div>
+    <div class="leg" style="color:#A9C2D8;border-color:rgba(169,194,216,.4)">WIND &middot; PHYSICAL</div>
+    <div class="leg" style="color:#C7CDD6;border-color:rgba(199,205,214,.4)">METAL &middot; PHYSICAL</div>
+    <div class="leg" style="color:#D9B86A;border-color:rgba(217,184,106,.4)">SAND &middot; PHYSICAL</div>
+    <div class="leg" style="color:#E8E8FF;border-color:rgba(232,232,255,.4)">SOUL &middot; TRANSCENDENT</div>
+    <div class="leg" style="color:#9B6BF0;border-color:rgba(155,107,240,.4)">SPACE &middot; TRANSCENDENT</div>
+    <div class="leg" style="color:#7B00FF;border-color:rgba(123,0,255,.4)">VOID &middot; TRANSCENDENT</div>
+    <div class="leg" style="color:#C9A84C;border-color:rgba(201,168,76,.5)">THE ALL &middot; APEX</div>
+  </div>
+
+  <div class="sechead">THE FIVE PHYSICAL ELEMENTS &middot; BIRTH-ASSIGNED</div>
+  <div class="elements-grid" id="physical-grid"></div>
+
+  <div class="sechead">THE FOUR TRANSCENDENT ELEMENTS &middot; AUTHORITY-UNLOCKED</div>
+  <div class="elements-grid" id="transcendent-grid"></div>
 </div>
 
-<div class="mtab-panel" id="mtab-elements">
-<p style="font-weight:300;color:var(--muted);max-width:72ch;margin-bottom:20px;font-size:15px;line-height:1.7">Five elements govern the physical world through your birth sign. Four transcendent elements unlock as your authority ascends through the matrix. All nine are alive in you &mdash; only the higher ones require awakening.</p>
-
-<div class="legend-strip" id="legend-strip">
-  <div class="leg" style="color:#E86A3A;border-color:rgba(232,106,58,.4)">FIRE &middot; PHYSICAL</div>
-  <div class="leg" style="color:#34C6E6;border-color:rgba(52,198,230,.4)">WATER &middot; PHYSICAL</div>
-  <div class="leg" style="color:#A9C2D8;border-color:rgba(169,194,216,.4)">WIND &middot; PHYSICAL</div>
-  <div class="leg" style="color:#C7CDD6;border-color:rgba(199,205,214,.4)">METAL &middot; PHYSICAL</div>
-  <div class="leg" style="color:#D9B86A;border-color:rgba(217,184,106,.4)">SAND &middot; PHYSICAL</div>
-  <div class="leg" style="color:#E8E8FF;border-color:rgba(232,232,255,.4)">SOUL &middot; TRANSCENDENT</div>
-  <div class="leg" style="color:#9B6BF0;border-color:rgba(155,107,240,.4)">SPACE &middot; TRANSCENDENT</div>
-  <div class="leg" style="color:#7B00FF;border-color:rgba(123,0,255,.4)">VOID &middot; TRANSCENDENT</div>
-  <div class="leg" style="color:#C9A84C;border-color:rgba(201,168,76,.5)">THE ALL &middot; APEX</div>
+<!-- GATES TAB -->
+<div class="tab-panel" id="tab-gates">
+  <div class="sechead">THE TWELVE GATES</div>
+  <p class="intro">Twelve gates rise along the 729 &mdash; one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 27.8367. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>.</p>
+  <div class="mstat" id="mstat"></div>
+  <div class="gates" id="gates"></div>
 </div>
 
-<div class="sechead" data-reveal="fade-up">THE FIVE PHYSICAL ELEMENTS &middot; BIRTH-ASSIGNED <span data-canon-lattice="twelve"></span></div>
-<div class="elements-grid" id="physical-grid"></div>
-
-<div class="sechead" data-reveal="fade-up">THE FOUR TRANSCENDENT ELEMENTS &middot; AUTHORITY-UNLOCKED <span data-canon-lattice="twelve"></span></div>
-<div class="elements-grid" id="transcendent-grid"></div>
-
-<div id="omega-trial-bar-placeholder"></div>
+<!-- KINGS TAB -->
+<div class="tab-panel" id="tab-kings">
+  <div class="sechead">THE 28 KINGS</div>
+  <p class="intro">Twenty-eight Kings preside over the twenty-eight Mansions &mdash; the lunar stations recognised from Arabia to the Vedas. Each is an archetype of mastery. They are <b>crowned in sequence as your authority rises</b>, from the first King at genesis to the Omega King at the apex.</p>
+  <div class="mstat" id="k-mstat"></div>
+  <div class="kings" id="kings"></div>
 </div>
 
-<div class="mtab-panel" id="mtab-gates" style="display:none">
-  
-    <div class="topbar"><div class="t">THE TWELVE GATES <span data-canon="mechanic"></span><small>TWELVE PHASES  .  TWELVE THRESHOLDS  .  9x9x9 &middot; 28×28×9×9×9 = 571,536 <span data-canon-lattice="28"></span></small></div></div>
-    <p class="intro" data-reveal="fade-up">Twelve gates rise along the 729  --  one for each Phase of the ascent. Each opens when your <b>authority</b> (&radic; of your three axes in the matrix) crosses its threshold, from genesis at 1.73 to the apex at 27.8367. Each gate carries its name across the great traditions: the Egyptian <b>Book of Gates</b>, the Roman <b>Dii Consentes</b>, and the Hindu <b>twelve Adityas</b>  --  three authentic twelve-fold orders, beside the Order's own.</p>
-    <div class="mstat" id="mstat"></div>
-    <div class="gates" id="gates"></div>
-  
+<!-- SCIENCE TAB -->
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">ELEMENTAL SYSTEM &mdash; SOVEREIGN SCIENCE</div>
+  <div class="card-grid" style="--cols:1">
+    <div class="card">
+      <div class="card-title">THE NINE-ELEMENT FRAMEWORK</div>
+      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
+        <p>The Sovereign Element System maps nine archetypal forces to the human experience. Five physical elements are assigned at birth through the Western astrological tradition. Four transcendent elements unlock through authority progression in the 9×9×9 matrix.</p>
+        <p style="margin-top:10px">Element assignment uses a hybrid mapping: Western astrology (12 signs), Five Chinese elements (Wu Xing), and 4 transcendent additions unique to the Order. Sand is the universal amplifier — the only element that multiplies all others.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sechead">ELEMENT UNLOCK THRESHOLDS</div>
+  <div class="card" style="overflow-x:auto">
+    <table class="sci-table">
+      <thead><tr><th>ELEMENT</th><th>TYPE</th><th>SIGNS</th><th>UNLOCK AT</th><th>PRINCIPLE</th></tr></thead>
+      <tbody>
+        <tr><td>FIRE</td><td style="color:var(--solar)">PHYSICAL</td><td>Aries, Leo, Sagittarius</td><td style="color:var(--green)">BIRTH</td><td>Action &amp; Will</td></tr>
+        <tr><td>WATER</td><td style="color:var(--solar)">PHYSICAL</td><td>Cancer, Scorpio, Pisces</td><td style="color:var(--green)">BIRTH</td><td>Depth &amp; Intuition</td></tr>
+        <tr><td>WIND</td><td style="color:var(--solar)">PHYSICAL</td><td>Gemini, Libra, Aquarius</td><td style="color:var(--green)">BIRTH</td><td>Thought &amp; Freedom</td></tr>
+        <tr><td>METAL</td><td style="color:var(--solar)">PHYSICAL</td><td>Taurus, Capricorn</td><td style="color:var(--green)">BIRTH</td><td>Endurance &amp; Structure</td></tr>
+        <tr><td>SAND</td><td style="color:var(--solar)">PHYSICAL · AMPLIFIER</td><td>Virgo</td><td style="color:var(--green)">BIRTH</td><td>Precision &amp; Amplification</td></tr>
+        <tr><td>SOUL</td><td style="color:var(--cyan)">TRANSCENDENT</td><td>All signs</td><td style="color:var(--gold)">AUTH ≥ 5.20</td><td>Essence &amp; Inner Light</td></tr>
+        <tr><td>SPACE</td><td style="color:var(--cyan)">TRANSCENDENT</td><td>All signs</td><td style="color:var(--gold)">AUTH ≥ 9.17</td><td>Expansion &amp; Cosmos</td></tr>
+        <tr><td>VOID</td><td style="color:var(--cyan)">TRANSCENDENT</td><td>All signs</td><td style="color:var(--gold)">AUTH ≥ 12.72</td><td>Primordial &amp; Pre-creation</td></tr>
+        <tr><td>THE ALL</td><td style="color:var(--gold)">APEX</td><td>All signs</td><td style="color:var(--crim)">AUTH ≥ 27.8367</td><td>Convergence of All Forces</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sechead">THE TWELVE GATES &mdash; AUTHORITY THRESHOLDS</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">GATE MATHEMATICS</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
+        <div>Genesis threshold = &radic;3 &#x2248; <span style="color:var(--gold)">1.7321</span></div>
+        <div>Apex threshold = &radic;243 = <span style="color:var(--gold)">27.8367</span></div>
+        <div>Gate n threshold = 1.7321 + (n/11) × (27.8367 − 1.7321)</div>
+        <div style="color:var(--cyan)">12 evenly spaced authority thresholds</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">28 KINGS &mdash; MANSION SYSTEM</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
+        <div>28 Mansions = 28 lunar stations</div>
+        <div>Traditions: Arabic, Vedic, Chinese</div>
+        <div>King k crowned at authority &ge; GEN + (k/27) × (APEX − GEN)</div>
+        <div style="color:var(--gold)">Omega King at authority = 27.8367</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">AUTHORITY FORMULA</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
+        <div style="color:var(--gold)">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
+        <div>&phi; = 1.6180339887 (Golden Ratio)</div>
+        <div>e &nbsp;= 2.7182818285 (Euler)</div>
+        <div style="color:var(--cyan)">APEX = 27.8367 (&radic;243 &times; &phi;/e)</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="mtab-panel" id="mtab-kings" style="display:none">
-  
-    <div class="topbar"><div class="t">THE 28 KINGS <span data-canon="mechanic"></span><small>REGENTS OF THE TWENTY-EIGHT MANSIONS</small> <span data-canon-lattice="28"></span></div></div>
-    <p class="intro" data-reveal="fade-up">Twenty-eight Kings preside over the twenty-eight Mansions  --  the lunar stations recognised from Arabia to the Vedas. Each is an archetype of mastery. They are <b>crowned in sequence as your authority rises</b>, from the first King at genesis to the Omega King at the apex.</p>
-    <div class="mstat" id="k-mstat"></div>
-    <div class="kings" id="kings"></div>
-  
-</div>
-</div>
+</div><!-- end page-shell -->
+
+<script>
+function setTab(name){
+  var tabs=['elements','gates','kings','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  if(name==='gates'&&!window.__gatesBuilt){window.__gatesBuilt=true;callWhenReady('bootGates');}
+  if(name==='kings'&&!window.__kingsBuilt){window.__kingsBuilt=true;callWhenReady('bootKings');}
+}
+function callWhenReady(fnName){
+  if(typeof window[fnName]==='function'){window[fnName]();return;}
+  var tries=0;
+  var t=setInterval(function(){
+    tries++;
+    if(typeof window[fnName]==='function'){window[fnName]();clearInterval(t);}
+    else if(tries>30){clearInterval(t);}
+  },100);
+}
+(function(){
+  if(location.hash){
+    var t=location.hash.replace('#','');
+    var allowed=['elements','gates','kings','science'];
+    if(allowed.indexOf(t)>=0) setTimeout(function(){setTab(t);},200);
+  }
+})();
+</script>
 
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
-const SIGN_EL = {
+const SIGN_EL={
   'Aries':'fire','Leo':'fire','Sagittarius':'fire',
   'Cancer':'water','Scorpio':'water','Pisces':'water',
   'Gemini':'wind','Libra':'wind','Aquarius':'wind',
@@ -160,333 +225,214 @@ const SIGN_EL = {
   'Virgo':'sand'
 };
 
-const ELEMENTS = [
-  {
-    id:'fire', tier:'PHYSICAL', name:'FIRE', sub:'THE FORCE OF ACTION',
-    col:'#E86A3A', signs:['Aries','Leo','Sagittarius'], unlock:null,
-    desc:'Fire is the primal surge &mdash; the will to act, to lead, to war and to create. It burns through resistance and forges destiny in the crucible of motion.',
-    facets:['Leadership','Passion','Courage','Destruction','Rebirth','Ambition'],
-    motif:'fire'
-  },
-  {
-    id:'water', tier:'PHYSICAL', name:'WATER', sub:'THE FORCE OF DEPTH',
-    col:'#34C6E6', signs:['Cancer','Scorpio','Pisces'], unlock:null,
-    desc:'Water is the ancient intelligence &mdash; emotion, memory, intuition, and the hidden currents that shape all living things from beneath.',
-    facets:['Intuition','Memory','Empathy','Mystery','Healing','Transformation'],
-    motif:'water'
-  },
-  {
-    id:'wind', tier:'PHYSICAL', name:'WIND', sub:'THE FORCE OF THOUGHT',
-    col:'#A9C2D8', signs:['Gemini','Libra','Aquarius'], unlock:null,
-    desc:'Wind is the invisible architect &mdash; communication, intellect, freedom, and the connective breath that carries meaning between minds.',
-    facets:['Intellect','Communication','Freedom','Curiosity','Balance','Innovation'],
-    motif:'wind'
-  },
-  {
-    id:'metal', tier:'PHYSICAL', name:'METAL', sub:'THE FORCE OF ENDURANCE',
-    col:'#C7CDD6', signs:['Taurus','Capricorn'], unlock:null,
-    desc:'Metal is the sovereign foundation &mdash; discipline, structure, patience, wealth, and the unbreakable will to outlast every force that opposes it.',
-    facets:['Discipline','Wealth','Structure','Patience','Loyalty','Permanence'],
-    motif:'metal'
-  },
-  {
-    id:'sand', tier:'PHYSICAL &middot; UNIVERSAL AMPLIFIER', name:'SAND', sub:'THE FORCE OF REFINEMENT',
-    col:'#D9B86A', signs:['Virgo'], unlock:null,
-    desc:'Sand is the sovereign amplifier &mdash; precision, mastery of detail, service, and the sacred ability to refine any force into perfection. Virgo alone carries this element. It multiplies all others.',
-    facets:['Precision','Mastery','Service','Analysis','Refinement','Amplification'],
-    motif:'sand'
-  },
-  {
-    id:'soul', tier:'TRANSCENDENT &middot; SIXTH ELEMENT', name:'SOUL', sub:'THE FORCE OF ESSENCE',
-    col:'#E8E8FF', signs:[], unlock:5.20,
-    desc:'Soul is the luminous self beyond body and sign. It is the essence that persists through lives, carries the memory of all past forms, and connects the mortal to the infinite. Unlocked when authority surpasses the threshold of 5.20.',
-    facets:['Essence','Memory across lives','Inner light','Spiritual will','Sacred purpose','Beyond-body awareness'],
-    motif:'soul'
-  },
-  {
-    id:'space', tier:'TRANSCENDENT &middot; SEVENTH ELEMENT', name:'SPACE', sub:'THE FORCE OF EXPANSION',
-    col:'#9B6BF0', signs:[], unlock:9.17,
-    desc:'Space is the infinite container &mdash; the silent expanse that holds all stars, all worlds, all possibilities. At resonance frequency 9.17, the sovereign begins to operate beyond terrestrial limits. The cosmos becomes a field of action.',
-    facets:['Infinity','Stars','Potential','Silence','Cosmic law','Multidimensional awareness'],
-    motif:'space'
-  },
-  {
-    id:'void', tier:'TRANSCENDENT &middot; EIGHTH ELEMENT', name:'VOID', sub:'THE FORCE OF THE PRIMORDIAL',
-    col:'#7B00FF', signs:[], unlock:12.72,
-    desc:'Void is not emptiness &mdash; it is the absolute state before creation. The source from which all elements emerge. To hold the Void is to hold creation itself as a tool. Only sovereigns near apex authority can bear this element without dissolution.',
-    facets:['Primordial source','Pre-creation state','Absolute silence','Infinite potential','Black genesis','Dissolution and rebirth'],
-    motif:'void'
-  },
-  {
-    id:'all', tier:'APEX &middot; NINTH ELEMENT', name:'THE ALL', sub:'&#937; THE COMPLETE FORCE',
-    col:'#C9A84C', signs:[], unlock:27.8367,
-    desc:'The All is the convergence of all eight elements into a single sovereign field. It encompasses every dimension of existence: the physical, the transcendent, and the experiential. Only one who has reached the Apex threshold of 27.8367 may claim it.',
-    facets:['Religion','Character','Mind','Heart','Birth','Death','Life','Family','Friends','Work'],
-    motif:'all'
-  }
+const ELEMENTS=[
+  {id:'fire',tier:'PHYSICAL',name:'FIRE',sub:'THE FORCE OF ACTION',col:'#E86A3A',signs:['Aries','Leo','Sagittarius'],unlock:null,desc:'Fire is the primal surge &mdash; the will to act, to lead, to war and to create. It burns through resistance and forges destiny in the crucible of motion.',facets:['Leadership','Passion','Courage','Destruction','Rebirth','Ambition'],motif:'fire'},
+  {id:'water',tier:'PHYSICAL',name:'WATER',sub:'THE FORCE OF DEPTH',col:'#34C6E6',signs:['Cancer','Scorpio','Pisces'],unlock:null,desc:'Water is the ancient intelligence &mdash; emotion, memory, intuition, and the hidden currents that shape all living things from beneath.',facets:['Intuition','Memory','Empathy','Mystery','Healing','Transformation'],motif:'water'},
+  {id:'wind',tier:'PHYSICAL',name:'WIND',sub:'THE FORCE OF THOUGHT',col:'#A9C2D8',signs:['Gemini','Libra','Aquarius'],unlock:null,desc:'Wind is the invisible architect &mdash; communication, intellect, freedom, and the connective breath that carries meaning between minds.',facets:['Intellect','Communication','Freedom','Curiosity','Balance','Innovation'],motif:'wind'},
+  {id:'metal',tier:'PHYSICAL',name:'METAL',sub:'THE FORCE OF ENDURANCE',col:'#C7CDD6',signs:['Taurus','Capricorn'],unlock:null,desc:'Metal is the sovereign foundation &mdash; discipline, structure, patience, wealth, and the unbreakable will to outlast every force that opposes it.',facets:['Discipline','Wealth','Structure','Patience','Loyalty','Permanence'],motif:'metal'},
+  {id:'sand',tier:'PHYSICAL &middot; UNIVERSAL AMPLIFIER',name:'SAND',sub:'THE FORCE OF REFINEMENT',col:'#D9B86A',signs:['Virgo'],unlock:null,desc:'Sand is the sovereign amplifier &mdash; precision, mastery of detail, service, and the sacred ability to refine any force into perfection. Virgo alone carries this element. It multiplies all others.',facets:['Precision','Mastery','Service','Analysis','Refinement','Amplification'],motif:'sand'},
+  {id:'soul',tier:'TRANSCENDENT &middot; SIXTH ELEMENT',name:'SOUL',sub:'THE FORCE OF ESSENCE',col:'#E8E8FF',signs:[],unlock:5.20,desc:'Soul is the luminous self beyond body and sign. It is the essence that persists through lives, carries the memory of all past forms, and connects the mortal to the infinite. Unlocked when authority surpasses the threshold of 5.20.',facets:['Essence','Memory across lives','Inner light','Spiritual will','Sacred purpose','Beyond-body awareness'],motif:'soul'},
+  {id:'space',tier:'TRANSCENDENT &middot; SEVENTH ELEMENT',name:'SPACE',sub:'THE FORCE OF EXPANSION',col:'#9B6BF0',signs:[],unlock:9.17,desc:'Space is the infinite container &mdash; the silent expanse that holds all stars, all worlds, all possibilities. At resonance frequency 9.17, the sovereign begins to operate beyond terrestrial limits. The cosmos becomes a field of action.',facets:['Infinity','Stars','Potential','Silence','Cosmic law','Multidimensional awareness'],motif:'space'},
+  {id:'void',tier:'TRANSCENDENT &middot; EIGHTH ELEMENT',name:'VOID',sub:'THE FORCE OF THE PRIMORDIAL',col:'#7B00FF',signs:[],unlock:12.72,desc:'Void is not emptiness &mdash; it is the absolute state before creation. The source from which all elements emerge. To hold the Void is to hold creation itself as a tool. Only sovereigns near apex authority can bear this element without dissolution.',facets:['Primordial source','Pre-creation state','Absolute silence','Infinite potential','Black genesis','Dissolution and rebirth'],motif:'void'},
+  {id:'all',tier:'APEX &middot; NINTH ELEMENT',name:'THE ALL',sub:'&#937; THE COMPLETE FORCE',col:'#C9A84C',signs:[],unlock:27.8367,desc:'The All is the convergence of all eight elements into a single sovereign field. It encompasses every dimension of existence: the physical, the transcendent, and the experiential. Only one who has reached the Apex threshold of 27.8367 may claim it.',facets:['Religion','Character','Mind','Heart','Birth','Death','Life','Family','Friends','Work'],motif:'all'}
 ];
 
-function drawElementCanvas(canvas, motif, col, authority, unlockAt) {
-  // Uses the shared, single-source-of-truth motif animator (also used by
-  // cosmos.html) so both pages show the exact same real per-element animation.
-  var locked = unlockAt && authority < unlockAt;
+function drawElementCanvas(canvas,motif,col,authority,unlockAt){
+  var locked=unlockAt&&authority<unlockAt;
   function tryMount(){
-    if(window.OmegaElementMotif){
-      window.OmegaElementMotif.mount(canvas, motif, col, {locked:locked, unlockAt:unlockAt, authority:authority});
-      return;
-    }
-    setTimeout(tryMount, 150);
+    if(window.OmegaElementMotif){window.OmegaElementMotif.mount(canvas,motif,col,{locked:locked,unlockAt:unlockAt,authority:authority});return;}
+    setTimeout(tryMount,150);
   }
   tryMount();
 }
 
-async function boot(){
-  var sess=(await sb.auth.getSession()).data.session;
-  var mySign='', myAuth=1.73;
-  if(sess){
-    var pr=(await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle()).data;
-    if(pr){
-      mySign=pr.sign||'';
-      var a=parseFloat(pr.axis_a||1),b=parseFloat(pr.axis_b||1),c=parseFloat(pr.axis_c||1);
-      myAuth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+function buildGrid(containerId,els,mySign,myAuth){
+  var grid=document.getElementById(containerId);
+  grid.innerHTML='';
+  els.forEach(function(el){
+    var isMine=SIGN_EL[mySign]===el.id||(el.id==='all'&&myAuth>=27.8367)||(el.id==='void'&&myAuth>=12.72)||(el.id==='space'&&myAuth>=9.17)||(el.id==='soul'&&myAuth>=5.20);
+    var isLocked=el.unlock&&myAuth<el.unlock;
+    var card=document.createElement('div');
+    card.className='el-card'+(isMine?' mine':'')+(isLocked?' locked':'');
+    card.style.borderColor=isLocked?'rgba(201,168,76,0.08)':(isMine?'rgba(0,229,255,0.4)':'var(--line)');
+
+    if(isMine&&!isLocked){
+      var badge=document.createElement('div');badge.className='mine-badge';badge.textContent='YOURS';card.appendChild(badge);
     }
-  }
 
-  function buildGrid(containerId, els){
-    var grid=document.getElementById(containerId);
-    grid.innerHTML='';
-    els.forEach(function(el){
-      var isMine = SIGN_EL[mySign]===el.id || (el.id==='all' && myAuth>=27.8367) || (el.id==='void' && myAuth>=12.72) || (el.id==='space' && myAuth>=9.17) || (el.id==='soul' && myAuth>=5.20);
-      var isLocked = el.unlock && myAuth < el.unlock;
-      var card=document.createElement('div');
-      card.className='el-card'+(isMine?' mine':'')+(isLocked?' locked':'');
-      card.style.borderColor=isLocked?'rgba(201,168,76,0.08)':(isMine?'rgba(0,229,255,0.4)':'var(--line)');
+    var wrap=document.createElement('div');wrap.className='el-canvas-wrap';
+    var cv=document.createElement('canvas');cv.width=640;cv.height=320;
+    wrap.appendChild(cv);card.appendChild(wrap);
 
-      if(isMine && !isLocked) card.innerHTML='<div class="mine-badge">YOURS</div>';
+    var body=document.createElement('div');body.className='el-body';
+    body.innerHTML='<div class="el-tier" style="color:'+el.col+'">'+el.tier+'</div>'+
+      '<div class="el-name" style="color:'+el.col+'">'+el.name+'</div>'+
+      '<div class="el-sub">'+el.sub+'</div>'+
+      '<div class="el-desc">'+el.desc+'</div>';
 
-      var wrap=document.createElement('div');wrap.className='el-canvas-wrap';
-      var cv=document.createElement('canvas');cv.width=640;cv.height=320;
-      wrap.appendChild(cv);card.appendChild(wrap);
+    if(el.signs.length){
+      var sigHtml='<div class="el-signs">';
+      el.signs.forEach(function(s){sigHtml+='<div class="el-sign" style="color:'+el.col+';border-color:'+el.col+'44">'+s+'</div>';});
+      sigHtml+='</div>';
+      body.innerHTML+=sigHtml;
+    }
+    if(el.unlock){
+      var met=myAuth>=el.unlock;
+      body.innerHTML+='<div class="el-unlock" style="color:'+(met?el.col:'var(--muted)')+';border-color:'+(met?el.col+'66':'rgba(201,168,76,.15)')+'">'+
+        (met?'UNLOCKED &mdash; AUTHORITY '+myAuth.toFixed(2):'UNLOCK AT AUTHORITY '+el.unlock)+'</div>';
+    }
+    if(el.id==='all'){
+      body.innerHTML+='<div class="apex-ring">';
+      el.facets.forEach(function(f){body.innerHTML+='<div class="apex-tag">'+f+'</div>';});
+      body.innerHTML+='</div>';
+    } else {
+      var facetHtml='<div class="el-facets">';
+      el.facets.forEach(function(f){facetHtml+='<div class="el-facet">'+f+'</div>';});
+      facetHtml+='</div>';
+      body.innerHTML+=facetHtml;
+    }
 
-      var body=document.createElement('div');body.className='el-body';
-      body.innerHTML='<div class="el-tier" style="color:'+el.col+'">'+el.tier+'</div>'+
-        '<div class="el-name" style="color:'+el.col+'">'+el.name+'</div>'+
-        '<div class="el-sub">'+el.sub+'</div>'+
-        '<div class="el-desc">'+el.desc+'</div>';
-
-      if(el.signs.length){
-        var sigHtml='<div class="el-signs">';
-        el.signs.forEach(function(s){ sigHtml+='<div class="el-sign" style="color:'+el.col+';border-color:'+el.col+'44">'+s+'</div>'; });
-        sigHtml+='</div>';
-        body.innerHTML+=sigHtml;
-      }
-      if(el.unlock){
-        var met=myAuth>=el.unlock;
-        body.innerHTML+='<div class="el-unlock" style="color:'+(met?el.col:'var(--muted)')+';border-color:'+(met?el.col+'66':'rgba(201,168,76,.15)')+'">'+
-          (met?'UNLOCKED &mdash; AUTHORITY '+myAuth.toFixed(2):'UNLOCK AT AUTHORITY '+el.unlock)+
-          '</div>';
-      }
-
-      if(el.id==='all'){
-        body.innerHTML+='<div class="apex-ring">';
-        el.facets.forEach(function(f){ body.innerHTML+='<div class="apex-tag">'+f+'</div>'; });
-        body.innerHTML+='</div>';
-      } else {
-        var facetHtml='<div class="el-facets">';
-        el.facets.forEach(function(f){ facetHtml+='<div class="el-facet">'+f+'</div>'; });
-        facetHtml+='</div>';
-        body.innerHTML+=facetHtml;
-      }
-
-      card.appendChild(body);
-      grid.appendChild(card);
-      drawElementCanvas(cv, el.motif, el.col, myAuth, el.unlock);
-    });
-  }
-
-  buildGrid('physical-grid', ELEMENTS.slice(0,5));
-  buildGrid('transcendent-grid', ELEMENTS.slice(5));
-}
-boot();
-</script>
-<script type="module">
-
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
-
-  const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-  // name, essence, material, egyptian, roman(Dii Consentes), hindu(Aditya), lore
-  const GATES=[
-    ['The Gate of Sand','AWAKENING','Sand','Atum','Vesta','Mitra','To pass is to begin  --  to be counted and take your first node in the lattice.'],
-    ['The Gate of Glass','CLARITY','Glass','Khepri','Ceres','Varuna','Sand fused by heat; here you first see the shape of the 729.'],
-    ['The Gate of Iron','DISCIPLINE','Iron','Shu','Mercury','Aryaman','The first hard metal  --  it opens only to those who return.'],
-    ['The Gate of Steel','TEMPERING','Steel','Geb','Vulcan','Bhaga','Iron folded against fire; the three axes must rise together.'],
-    ['The Gate of Titanium','ENDURANCE','Titanium','Nut','Diana','Dhata','Light and unbreaking; the place where most falter.'],
-    ['The Gate of Carbon','TRANSFORMATION','Carbon','Osiris','Apollo','Indra','Pressure becomes diamond; the sovereign is remade.'],
-    ['The Gate of Gold','SOVEREIGNTY','Gold','Anubis','Venus','Vivasvan','The metal of the Order; to pass is to be named Sovereign.'],
-    ['The Gate of Platinum','DOMINION','Platinum','Thoth','Mars','Pushan','Rarer than gold; Legends stand here.'],
-    ['The Gate of Diamond','VISION','Diamond','Horus','Minerva','Tvashta','Unbreakable clarity; the far sight of the highest tiers.'],
-    ['The Gate of Adamant','MASTERY','Adamant','Isis','Neptune','Savitar','The metal of myth; near-complete command of the 729.'],
-    ['The Gate of Aether','TRANSCENDENCE','Aether','Sekhmet','Juno','Amsha','No longer matter but principle; the threshold of the apex.'],
-    ['The Omega Gate','ASCENSION','Omega','Ra','Jupiter','Vishnu','The final gate at node (9,9,9), authority 27.8367  --  the Omega alone may pass.']
-  ];
-  const GEN=Math.sqrt(3), APEX=Math.sqrt(243);
-  function threshold(g){ return GEN + (g/11)*(APEX-GEN); } // g=0..11
-
-  function showGate(h,p){
-    let n=document.getElementById('gt-notice');
-    if(!n){ n=document.createElement('div'); n.id='gt-notice'; n.style.cssText='padding:24px;text-align:center;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted,#85837b)'; document.getElementById('gates')?.parentNode.insertBefore(n, document.getElementById('gates')); }
-    n.style.display='block'; n.textContent=p;
-    const g=document.getElementById('gates'); if(g) g.style.display='none';
-  }
-
-  function render(a,b,c){
-    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
-    var open=0; for(var g=0;g<12;g++){ if(auth>=threshold(g)) open++; }
-    document.getElementById('mstat').innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') \u00B7 AUTHORITY <b>'+auth.toFixed(2)+'</b> / 27.8367 \u00B7 GATES OPEN <b>'+open+'</b> / 12'+(open<12?' \u00B7 next gate at authority '+threshold(open).toFixed(2):' \u00B7 THE OMEGA GATE STANDS OPEN');
-    var box=document.getElementById('gates'); box.innerHTML='';
-    GATES.forEach(function(gt,i){
-      var isOpen=auth>=threshold(i);
-      var isCurrent=(!isOpen) && (i===open);
-      var GATE_COLS=['#D9B86A','#A9C2D8','#8B8F9C','#6B7280','#607D8B','#455A64','#C9A84C','#E8D5B7','#9B6BF0','#00E5FF','#8B0000','#C9A84C'];
-      var el=document.createElement('div'); el.className='gate'+(i===11?' omega':'')+(isOpen?' open':' sealed')+(isCurrent?' current':'');
-      el.style.cursor='pointer';
-      el.innerHTML='<span class="gate-ring-emblem" style="display:inline-block;width:52px;height:52px"></span><div class="body">'+
-        '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' \u00B7 PHASE '+(i+1)+' \u00B7 OPENS AT AUTHORITY '+threshold(i).toFixed(2)+'</div>'+
-        '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
-      box.appendChild(el);
-      var ringEl=el.querySelector('.gate-ring-emblem');
-      fillRing(ringEl, ROMAN[i], GATE_COLS[i], !isOpen);
-      el.addEventListener('click',function(idx,unlocked){ return function(){ openGatePanel(GATES[idx],idx,unlocked,GATE_COLS[idx]); }; }(i,isOpen));
-    });
-  }
-
-  function openGatePanel(gt,i,isOpen,col){
-    window.OmegaEmblemPanel.open({
-      glyph: ROMAN[i], color: col,
-      title: gt[0],
-      subtitle: gt[1]+' . PHASE '+(i+1),
-      badge: isOpen?'OPEN':'SEALED',
-      sections: [
-        { label: 'LORE', body: gt[6] },
-        { label: 'THRESHOLD & MATERIAL', stats: [
-          {k:'Opens At Authority', v: threshold(i).toFixed(2)},
-          {k:'Material', v: gt[2]},
-        ]},
-        { label: 'CROSS-PANTHEON NAMES', stats: [
-          {k:'Egyptian (Duat)', v: gt[3]},
-          {k:'Roman (Consentes)', v: gt[4]},
-          {k:'Hindu (Aditya)', v: gt[5]},
-        ]},
-      ]
-    });
-  }
-
-  function fillRing(el, glyph, col, locked){
-    if(!el) return;
-    if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); return; }
-    var tries=0;
-    var t=setInterval(function(){
-      tries++;
-      if(window.OmegaEmblem){ el.innerHTML=window.OmegaEmblem.ring(glyph, col, {locked:locked}); clearInterval(t); }
-      else if(tries>20){ clearInterval(t); }
-    },150);
-  }
-
-  async function bootGates(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('The Twelve Gates','Sign in to stand before the Gates.'); return; }
-    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to stand before the Gates.'); return; }
-    const n=document.getElementById('gt-notice'); if(n) n.style.display='none';
-    const g=document.getElementById('gates'); if(g) g.style.display='';
-    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
-  }
-  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-window.bootGates = bootGates;
-
-</script>
-<script type="module">
-
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
-
-  const KINGS=[
-    ['The Architect','Structure'],['The Oracle','Foresight'],['The Warden','Protection'],['The Alchemist','Transformation'],
-    ['The Cartographer','Discovery'],['The Arbiter','Justice'],['The Scribe','Record'],['The Forgemaster','Craft'],
-    ['The Strategist','War'],['The Healer','Restoration'],['The Navigator','Direction'],['The Sentinel','Vigilance'],
-    ['The Merchant','Exchange'],['The Astronomer','Cosmos'],['The Herald','The Word'],['The Mason','Foundation'],
-    ['The Sovereign','Command'],['The Cipher','Secrets'],['The Gardener','Growth'],['The Judge','Verdict'],
-    ['The Pilgrim','Journey'],['The Smith','Tempering'],['The Seer','Vision'],['The Keeper','Memory'],
-    ['The Vanguard','Advance'],['The Chancellor','Governance'],['The Ascendant','Elevation'],['The Omega King','Completion']
-  ];
-  const GEN=1.7320508, APEX=27.8367457;
-  function threshold(k){ return GEN + (k/27)*(APEX-GEN); } // k=0..27
-
-  function showGate(h,p){
-    let n=document.getElementById('k-notice');
-    if(!n){ n=document.createElement('div'); n.id='k-notice'; n.style.cssText='padding:24px;text-align:center;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--muted,#85837b)'; document.getElementById('kings')?.parentNode.insertBefore(n, document.getElementById('kings')); }
-    n.style.display='block'; n.textContent=p;
-    const g=document.getElementById('kings'); if(g) g.style.display='none';
-  }
-
-  function render(a,b,c){
-    var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
-    var crowned=0; for(var k=0;k<28;k++){ if(auth>=threshold(k)) crowned++; }
-    document.getElementById('k-mstat').innerHTML='AUTHORITY <b>'+auth.toFixed(2)+'</b> / 27.8367 \u00B7 KINGS CROWNED <b>'+crowned+'</b> / 28'+(crowned<28?' \u00B7 next King at authority '+threshold(crowned).toFixed(2):' \u00B7 ALL KINGS CROWNED');
-    var box=document.getElementById('kings'); box.innerHTML='';
-    KINGS.forEach(function(kg,i){
-      var isCrowned=auth>=threshold(i);
-      var isNext=(!isCrowned) && (i===crowned);
-      var el=document.createElement('div'); el.className='king'+(isCrowned?' crowned':' locked')+(isNext?' next':'');
-      el.innerHTML='<div class="crown">\u265A</div><div class="num">MANSION '+(i+1)+'</div><div class="nm">'+kg[0]+'</div><div class="dm">'+kg[1].toUpperCase()+'</div><div class="th">'+(isCrowned?'CROWNED':'AUTHORITY \u2265 '+threshold(i).toFixed(2))+'</div><div data-canon-lattice=\'28\'></div><div data-canon-lattice=\"28\"></div>';
-      box.appendChild(el);
-    });
-  }
-
-  async function bootKings(){
-    var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ showGate('The 28 Kings','Sign in to claim your Kings.'); return; }
-    var pr=await supabase.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
-    if(!pr.data || !pr.data.sign){ showGate('Set Your Cosmology','Set your cosmology first to claim your Kings.'); return; }
-    const n=document.getElementById('k-notice'); if(n) n.style.display='none';
-    const g=document.getElementById('kings'); if(g) g.style.display='';
-    render(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
-  }
-  document.getElementById('logout')?.addEventListener('click',async function(){ await supabase.auth.signOut(); window.location.href='/account.html'; });
-window.bootKings = bootKings;
-
-</script>
-<script>
-document.querySelectorAll('.mtab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='var(--muted)';});
-    document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
-    btn.classList.add('active');btn.style.borderBottomColor='var(--gold)';btn.style.color='var(--gold)';
-    document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
-    if(btn.dataset.mtab==='gates' && !window.__gatesBuilt){ window.__gatesBuilt=true; callWhenReady('bootGates'); }
-    if(btn.dataset.mtab==='kings' && !window.__kingsBuilt){ window.__kingsBuilt=true; callWhenReady('bootKings'); }
+    card.appendChild(body);
+    grid.appendChild(card);
+    drawElementCanvas(cv,el.motif,el.col,myAuth,el.unlock);
   });
-});
-function callWhenReady(fnName){
-  if(typeof window[fnName]==='function'){ window[fnName](); return; }
-  var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
-    else if(tries>30){ clearInterval(t); }
-  },100);
 }
-(function(){
-  if(location.hash){
-    const t=location.hash.replace('#','');
-    const btn=document.querySelector('.mtab-btn[data-mtab="'+t+'"]');
-    if(btn) btn.click();
-  }
+
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+
+  var mySign=pr.sign||'';
+  var a=parseFloat(pr.axis_a||1),b=parseFloat(pr.axis_b||1),c=parseFloat(pr.axis_c||1);
+  var myAuth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+
+  buildGrid('physical-grid',ELEMENTS.slice(0,5),mySign,myAuth);
+  buildGrid('transcendent-grid',ELEMENTS.slice(5),mySign,myAuth);
 })();
 </script>
-<script src="/nav.js"></script><script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-</body>
-</html>
-    <div style="display:flex;justify-content:center;padding:18px 0 8px;border-top:1px solid rgba(201,168,76,.15)"><canvas id="pg-cv-el" width="80" height="80" style="width:40px;height:40px;opacity:.6"></canvas></div>
-    <script>(function(){var cv=document.getElementById('pg-cv-el');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;function f(){ctx.clearRect(0,0,80,80);ctx.save();ctx.translate(40,40);ctx.rotate(t*.008);for(var i=0;i<6;i++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(26+4*Math.sin(t*.04+i),0);ctx.strokeStyle='rgba(201,168,76,'+(0.25+0.25*Math.sin(t*.05+i))+')';ctx.lineWidth=1;ctx.stroke();}ctx.restore();ctx.font='bold 18px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';ctx.fillText('Ω',40,40);t++;requestAnimationFrame(f);}f();})();</script>
+
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+const GATES=[
+  ['The Gate of Sand','AWAKENING','Sand','Atum','Vesta','Mitra','To pass is to begin  --  to be counted and take your first node in the lattice.'],
+  ['The Gate of Glass','CLARITY','Glass','Khepri','Ceres','Varuna','Sand fused by heat; here you first see the shape of the 729.'],
+  ['The Gate of Iron','DISCIPLINE','Iron','Shu','Mercury','Aryaman','The first hard metal  --  it opens only to those who return.'],
+  ['The Gate of Steel','TEMPERING','Steel','Geb','Vulcan','Bhaga','Iron folded against fire; the three axes must rise together.'],
+  ['The Gate of Titanium','ENDURANCE','Titanium','Nut','Diana','Dhata','Light and unbreaking; the place where most falter.'],
+  ['The Gate of Carbon','TRANSFORMATION','Carbon','Osiris','Apollo','Indra','Pressure becomes diamond; the sovereign is remade.'],
+  ['The Gate of Gold','SOVEREIGNTY','Gold','Anubis','Venus','Vivasvan','The metal of the Order; to pass is to be named Sovereign.'],
+  ['The Gate of Platinum','DOMINION','Platinum','Thoth','Mars','Pushan','Rarer than gold; Legends stand here.'],
+  ['The Gate of Diamond','VISION','Diamond','Horus','Minerva','Tvashta','Unbreakable clarity; the far sight of the highest tiers.'],
+  ['The Gate of Adamant','MASTERY','Adamant','Isis','Neptune','Savitar','The metal of myth; near-complete command of the 729.'],
+  ['The Gate of Aether','TRANSCENDENCE','Aether','Sekhmet','Juno','Amsha','No longer matter but principle; the threshold of the apex.'],
+  ['The Omega Gate','ASCENSION','Omega','Ra','Jupiter','Vishnu','The final gate at node (9,9,9), authority 27.8367  --  the Omega alone may pass.']
+];
+const GEN=Math.sqrt(3),APEX=Math.sqrt(243);
+function threshold(g){return GEN+(g/11)*(APEX-GEN);}
+
+function showNotice(boxId,noticeId,h,p){
+  var n=document.getElementById(noticeId);
+  if(!n){n=document.createElement('div');n.id=noticeId;n.style.cssText='padding:24px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)';document.getElementById(boxId)?.parentNode.insertBefore(n,document.getElementById(boxId));}
+  n.style.display='block';n.textContent=p;
+  var g=document.getElementById(boxId);if(g)g.style.display='none';
+}
+
+function renderGates(a,b,c){
+  var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+  var open=0;for(var g=0;g<12;g++){if(auth>=threshold(g))open++;}
+  var mstat=document.getElementById('mstat');
+  if(mstat)mstat.innerHTML='STANDING ('+Math.round(a)+','+Math.round(b)+','+Math.round(c)+') · AUTHORITY <b>'+auth.toFixed(2)+'</b> / 27.8367 · GATES OPEN <b>'+open+'</b> / 12'+(open<12?' · next gate at authority '+threshold(open).toFixed(2):' · THE OMEGA GATE STANDS OPEN');
+  var box=document.getElementById('gates');box.innerHTML='';
+  var GATE_COLS=['#D9B86A','#A9C2D8','#8B8F9C','#6B7280','#607D8B','#455A64','#C9A84C','#E8D5B7','#9B6BF0','#00E5FF','#8B0000','#C9A84C'];
+  GATES.forEach(function(gt,i){
+    var isOpen=auth>=threshold(i);var isCurrent=(!isOpen)&&(i===open);
+    var el=document.createElement('div');el.className='gate'+(isOpen?' open':' sealed')+(isCurrent?' current':'');
+    el.style.cursor='pointer';
+    el.innerHTML='<span class="gate-ring-emblem" style="display:inline-block;width:52px;height:52px"></span><div class="body">'+
+      '<div class="gname">'+gt[0]+'</div><div class="gess">'+gt[1]+' · PHASE '+(i+1)+' · OPENS AT AUTHORITY '+threshold(i).toFixed(2)+'</div>'+
+      '</div><div class="state">'+(isOpen?'OPEN':(isCurrent?'NEXT':'SEALED'))+'</div>';
+    box.appendChild(el);
+    fillRing(el.querySelector('.gate-ring-emblem'),ROMAN[i],GATE_COLS[i],!isOpen);
+    el.addEventListener('click',(function(idx,unlocked){return function(){
+      if(window.OmegaEmblemPanel)window.OmegaEmblemPanel.open({
+        glyph:ROMAN[idx],color:GATE_COLS[idx],
+        title:GATES[idx][0],subtitle:GATES[idx][1]+' . PHASE '+(idx+1),
+        badge:unlocked?'OPEN':'SEALED',
+        sections:[
+          {label:'LORE',body:GATES[idx][6]},
+          {label:'THRESHOLD & MATERIAL',stats:[{k:'Opens At Authority',v:threshold(idx).toFixed(2)},{k:'Material',v:GATES[idx][2]}]},
+          {label:'CROSS-PANTHEON NAMES',stats:[{k:'Egyptian (Duat)',v:GATES[idx][3]},{k:'Roman (Consentes)',v:GATES[idx][4]},{k:'Hindu (Aditya)',v:GATES[idx][5]}]}
+        ]
+      });
+    };})(i,isOpen));
+  });
+}
+
+function fillRing(el,glyph,col,locked){
+  if(!el)return;
+  if(window.OmegaEmblem){el.innerHTML=window.OmegaEmblem.ring(glyph,col,{locked:locked});return;}
+  var tries=0;var t=setInterval(function(){tries++;if(window.OmegaEmblem){el.innerHTML=window.OmegaEmblem.ring(glyph,col,{locked:locked});clearInterval(t);}else if(tries>20){clearInterval(t);}},150);
+}
+
+window.bootGates=async function(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){showNotice('gates','gt-notice','Gates','Sign in to stand before the Gates.');return;}
+  var pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+  if(!pr.data||!pr.data.sign){showNotice('gates','gt-notice','Gates','Set your cosmology first to stand before the Gates.');return;}
+  var n=document.getElementById('gt-notice');if(n)n.style.display='none';
+  var g=document.getElementById('gates');if(g)g.style.display='';
+  renderGates(Number(pr.data.axis_a||1),Number(pr.data.axis_b||1),Number(pr.data.axis_c||1));
+};
+</script>
+
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+const KINGS=[
+  ['The Architect','Structure'],['The Oracle','Foresight'],['The Warden','Protection'],['The Alchemist','Transformation'],
+  ['The Cartographer','Discovery'],['The Arbiter','Justice'],['The Scribe','Record'],['The Forgemaster','Craft'],
+  ['The Strategist','War'],['The Healer','Restoration'],['The Navigator','Direction'],['The Sentinel','Vigilance'],
+  ['The Merchant','Exchange'],['The Astronomer','Cosmos'],['The Herald','The Word'],['The Mason','Foundation'],
+  ['The Sovereign','Command'],['The Cipher','Secrets'],['The Gardener','Growth'],['The Judge','Verdict'],
+  ['The Pilgrim','Journey'],['The Smith','Tempering'],['The Seer','Vision'],['The Keeper','Memory'],
+  ['The Vanguard','Advance'],['The Chancellor','Governance'],['The Ascendant','Elevation'],['The Omega King','Completion']
+];
+const GEN=1.7320508,APEX=27.8367457;
+function threshold(k){return GEN+(k/27)*(APEX-GEN);}
+
+window.bootKings=async function(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){return;}
+  var pr=await sb.from('profiles').select('sign,axis_a,axis_b,axis_c').eq('id',sess.user.id).maybeSingle();
+  if(!pr.data||!pr.data.sign){
+    var box=document.getElementById('kings');if(box)box.innerHTML='<div style="padding:24px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">Set your cosmology first to claim your Kings.</div>';return;
+  }
+  var a=Number(pr.data.axis_a||1),b=Number(pr.data.axis_b||1),c=Number(pr.data.axis_c||1);
+  var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
+  var crowned=0;for(var k=0;k<28;k++){if(auth>=threshold(k))crowned++;}
+  var kmstat=document.getElementById('k-mstat');
+  if(kmstat)kmstat.innerHTML='AUTHORITY <b>'+auth.toFixed(2)+'</b> / 27.8367 · KINGS CROWNED <b>'+crowned+'</b> / 28'+(crowned<28?' · next King at authority '+threshold(crowned).toFixed(2):' · ALL KINGS CROWNED');
+  var box=document.getElementById('kings');box.innerHTML='';
+  KINGS.forEach(function(kg,i){
+    var isCrowned=auth>=threshold(i);var isNext=(!isCrowned)&&(i===crowned);
+    var el=document.createElement('div');el.className='king'+(isCrowned?' crowned':' locked')+(isNext?' next':'');
+    var crownD=document.createElement('div');crownD.className='crown';crownD.textContent='♚';
+    var numD=document.createElement('div');numD.className='num';numD.textContent='MANSION '+(i+1);
+    var nmD=document.createElement('div');nmD.className='nm';nmD.textContent=kg[0];
+    var dmD=document.createElement('div');dmD.className='dm';dmD.textContent=kg[1].toUpperCase();
+    var thD=document.createElement('div');thD.className='th';thD.textContent=isCrowned?'CROWNED':'AUTHORITY ≥ '+threshold(i).toFixed(2);
+    el.appendChild(crownD);el.appendChild(numD);el.appendChild(nmD);el.appendChild(dmD);el.appendChild(thD);
+    box.appendChild(el);
+  });
+};
+</script>
+<script src="/bg.js"></script>
+</body></html>

@@ -1,135 +1,144 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sovereign DNA · Ω SYD OMEGA 91717</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&display=swap">
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; DNA</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--gold:#C9A84C;--cyan:#00E5FF;--green:#00FF88;--bg:#02020A;--s:rgba(255,255,255,.03);--M:'Courier Prime',monospace;--D:'Cinzel Decorative',serif;--C:'Cinzel',serif;--pad:clamp(14px,3vw,28px)}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:var(--bg);color:rgba(255,255,255,.85);overflow-x:hidden}
-body{display:flex;flex-direction:column;min-height:100vh}
-.topbar{position:sticky;top:0;z-index:900;background:rgba(2,2,10,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;gap:12px;padding:10px var(--pad)}
-.topbar-brand{font-family:var(--D);font-size:10px;letter-spacing:2px;color:var(--gold);flex:1}
-.layout{display:flex;flex:1}
-.side{width:56px;flex-shrink:0;background:rgba(255,255,255,.01);border-right:1px solid rgba(201,168,76,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:12px}
-.side a{font-size:16px;opacity:.35;text-decoration:none;transition:.15s;display:block;text-align:center;line-height:32px;width:36px}
-.side a:hover{opacity:1}
-.main{flex:1;padding:var(--pad);display:flex;flex-direction:column;gap:24px;max-width:900px;margin:0 auto;width:100%}
-
-/* DNA CARD */
-.dna-card{background:linear-gradient(135deg,rgba(201,168,76,.04),rgba(0,229,255,.02));border:1px solid rgba(201,168,76,.25);border-radius:6px;padding:28px 32px;position:relative;overflow:hidden}
+.dna-card{background:linear-gradient(135deg,rgba(201,168,76,.04),rgba(0,229,255,.02));border:1px solid rgba(201,168,76,.25);border-radius:6px;padding:28px 32px;position:relative;overflow:hidden;margin-bottom:16px}
 .dna-card::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,.06),transparent 70%);border-radius:50%}
 .dna-id{font-family:var(--M);font-size:7.5px;letter-spacing:3px;color:rgba(201,168,76,.4);margin-bottom:10px}
 .dna-code{font-family:var(--D);font-size:clamp(16px,2.5vw,22px);color:var(--gold);letter-spacing:4px;word-break:break-all;margin-bottom:8px;line-height:1.4}
-.dna-type{font-family:var(--C);font-size:clamp(14px,2vw,18px);color:rgba(255,255,255,.9);letter-spacing:2px;margin-bottom:4px}
+.dna-type{font-family:var(--D);font-size:clamp(14px,2vw,18px);color:rgba(255,255,255,.9);letter-spacing:2px;margin-bottom:4px}
 .dna-principle{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(201,168,76,.5)}
 .dna-elem{font-size:42px;position:absolute;bottom:16px;right:24px;opacity:.2}
-
-/* ARCHETYPE BADGE */
 .archetype-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:10px 16px;margin-top:12px}
 .ab-icon{font-size:28px}
-.ab-text .ab-name{font-family:var(--D);font-size:11px;color:var(--gold);letter-spacing:2px}
-.ab-text .ab-desc{font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.6);letter-spacing:1px;margin-top:2px}
-
-/* CANVAS SECTION */
-.canvas-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-.canvas-wrap{background:var(--s);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:16px;text-align:center}
-.canvas-title{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px}
-
-/* ATTRIBUTES */
-.attributes-grid{display:flex;flex-direction:column;gap:8px}
-.attr-row{display:flex;align-items:center;gap:10px}
-.attr-name{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.6);width:120px;flex-shrink:0}
-.attr-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
-.attr-bar{height:100%;border-radius:2px;transition:width 1.2s ease}
-.attr-val{font-family:var(--M);font-size:7.5px;color:var(--gold);width:36px;text-align:right;flex-shrink:0}
-
-/* PERSONALITY MATRIX */
-.personality-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pcard{background:var(--s);border:1px solid rgba(201,168,76,.1);border-radius:3px;padding:14px}
-.pcard-title{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:6px}
-.pcard-val{font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:3px}
-.pcard-label{font-family:var(--M);font-size:8px;color:rgba(255,255,255,.7)}
-.pcard-desc{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.45);margin-top:4px;line-height:1.5}
-
-/* HELIX CANVAS */
-#helixCanvas{display:block;max-width:100%}
-
-/* SOVEREIGN FORMULA */
+.ab-name{font-family:var(--D);font-size:11px;color:var(--gold);letter-spacing:2px}
+.ab-desc{font-family:var(--M);font-size:7.5px;color:var(--muted);letter-spacing:1px;margin-top:2px}
 .formula-card{background:rgba(0,0,0,.3);border:1px solid rgba(0,229,255,.12);border-radius:3px;padding:16px 20px;font-family:var(--M);line-height:2}
 .formula-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .f-label{font-size:7.5px;letter-spacing:2px;color:rgba(0,229,255,.4);flex-shrink:0}
 .f-value{font-size:clamp(13px,1.8vw,16px);color:var(--cyan)}
 .f-computed{font-family:var(--D);font-size:18px;color:var(--gold)}
-
-/* TABS */
-.layer-tabs{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);flex-wrap:wrap}
-.layer-tab{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:9px 18px;cursor:pointer;color:rgba(138,134,118,.5);border-bottom:2px solid transparent;transition:.15s}
-.layer-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tab-panel{display:none}.tab-panel.active{display:block}
-
-/* SECTION TITLES */
-.section-title{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:rgba(201,168,76,.5);margin-bottom:12px}
-
-/* LOADING */
-.empty{text-align:center;padding:40px;font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.3)}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* TIMELINE */
-.timeline{display:flex;flex-direction:column;gap:0}
+.canvas-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;margin-bottom:24px}
+.canvas-wrap{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:16px;text-align:center}
+.canvas-title{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px}
+.attributes-grid{display:flex;flex-direction:column;gap:8px}
+.attr-row{display:flex;align-items:center;gap:10px}
+.attr-name{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);width:130px;flex-shrink:0}
+.attr-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.attr-bar{height:100%;border-radius:2px;transition:width 1.2s ease}
+.attr-val{font-family:var(--M);font-size:7.5px;color:var(--gold);width:36px;text-align:right;flex-shrink:0}
+.personality-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pcard{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);border-radius:3px;padding:14px}
+.pcard-title{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:6px}
+.pcard-val{font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:3px}
+.pcard-label{font-family:var(--M);font-size:8px;color:rgba(255,255,255,.7)}
+.pcard-desc{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:4px;line-height:1.5}
+.timeline{display:flex;flex-direction:column}
 .tl-item{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .tl-body{flex:1}
-.tl-title{font-family:var(--C);font-size:11px;color:rgba(255,255,255,.8);margin-bottom:3px}
-.tl-desc{font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);line-height:1.5}
-
-@media(max-width:640px){.side{display:none}.canvas-section{grid-template-columns:1fr}.personality-grid{grid-template-columns:1fr}}
+.tl-title{font-family:var(--D);font-size:11px;color:rgba(255,255,255,.8);margin-bottom:3px}
+.tl-desc{font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.5}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(201,168,76,.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:640px){.canvas-section{grid-template-columns:1fr}.personality-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-brand">Ω SOVEREIGN DNA</div>
+<aside id="omega-side" data-page="dna"></aside>
+<div class="page-shell" id="app" style="display:none">
+
+<header class="topbar">
+  <div class="topbar-title">SOVEREIGN DNA<span class="topbar-sub">ARCHETYPE ENGINE</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('dna')">DNA</button>
+  <button class="tab-btn" onclick="setTab('attributes')">ATTRIBUTES</button>
+  <button class="tab-btn" onclick="setTab('helix')">HELIX</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
-<div class="layout">
-  <nav class="side">
-    <a href="/dashboard.html" title="Command Bridge">⌂</a>
-    <a href="/profile.html" title="Profile">◎</a>
-    <a href="/elements.html" title="Elements">✴</a>
-    <a href="/evolution.html" title="Evolution">⬡</a>
-  </nav>
-  <main class="main" id="mainContent">
-    <div class="empty"><span class="spin"></span>COMPUTING SOVEREIGN DNA...</div>
-  </main>
+
+<div class="tab-panel active" id="tab-dna">
+  <div id="dnaCard"><div style="padding:40px;text-align:center;font-family:monospace;font-size:8px;letter-spacing:2px;color:var(--muted)"><span class="spin"></span>COMPUTING SOVEREIGN DNA...</div></div>
 </div>
 
-<script data-omega-bg="1">
-(function(){if(!document.querySelector('script[data-omega-bg]')){var s=document.createElement('script');s.src='/bg.js';s.defer=true;document.head.appendChild(s);}})();
-</script>
-<script src="/bg.js" defer></script>
-<script src="/omega-ui.js" defer></script>
-<script src="/omega-chrono.js" defer></script>
+<div class="tab-panel" id="tab-attributes">
+  <div id="attrContent"></div>
+</div>
 
-<script type="module">
-/* ═══════════════════════════════════════════════════════════════
-   SOVEREIGN DNA ENGINE
-   Derives a unique personal archetype signature from:
-   - Element (9 possible)
-   - Gate Level (1-12)
-   - Authority Score (0-27.8367)
-   - Member age (days since joining)
-   - Gate cluster (early/mid/apex)
+<div class="tab-panel" id="tab-helix">
+  <div id="helixContent"></div>
+</div>
 
-   Output:
-   - DNA Code string (e.g. "Ω·FIRE·VII·APEX·27.83")
-   - Sovereign Type (e.g. "The Sovereign Architect")
-   - 8 attribute scores (radar chart)
-   - Big-Five style personality profile (sovereign variant)
-   - DNA Helix canvas visualization
-   ═══════════════════════════════════════════════════════════════ */
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">SOVEREIGN SCIENCE</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">AUTHORITY FORMULA</div>
+      <div class="card-body">
+        <p style="font-family:var(--M);font-size:10px;line-height:1.8;color:var(--cyan)">AUTH = √(A³+B³+C³) × φ/e</p>
+        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:8px;line-height:1.6">φ = 1.6180339887 (golden ratio) · e = 2.7182818285 (Euler) · APEX = 27.8367. Cubic sums weight exponential growth across Achievement (A), Behavioral integrity (B), and Community impact (C).</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">9 SOVEREIGN ELEMENTS</div>
+      <div class="card-body">
+        <table style="width:100%;font-family:var(--M);font-size:7.5px;border-collapse:collapse">
+          <tr style="color:var(--gold)"><th style="text-align:left;padding:4px 0">Element</th><th style="padding:4px 6px">Sigil</th><th style="text-align:left;padding:4px 0">Peak Attribute</th></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">FIRE</td><td style="text-align:center">☲</td><td style="color:var(--muted)">Willpower 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">WATER</td><td style="text-align:center">☰</td><td style="color:var(--muted)">Intuition 85</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">WIND</td><td style="text-align:center">☱</td><td style="color:var(--muted)">Creativity 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">METAL</td><td style="text-align:center">☳</td><td style="color:var(--muted)">Precision 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">SAND</td><td style="text-align:center">★</td><td style="color:var(--muted)">Endurance 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">SOUL</td><td style="text-align:center">✴</td><td style="color:var(--muted)">Intuition 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">SPACE</td><td style="text-align:center">✶</td><td style="color:var(--muted)">Vision 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">VOID</td><td style="text-align:center">✷</td><td style="color:var(--muted)">All at 90</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">THE ALL</td><td style="text-align:center">Ω</td><td style="color:var(--muted)">All at 90</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">27 ARCHETYPES</div>
+      <div class="card-body">
+        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">9 Elements × 3 Gate Clusters = 27 unique sovereign archetypes. Gate clusters: Early (I–IV), Mid (V–IX), Apex (X–XII). Each archetype expresses a distinct sovereign authority pattern.</p>
+        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7;margin-top:8px">Apex archetypes represent the highest expression: Solar Emperor (FIRE), Oceanic Sage (WATER), Celestial Poet (WIND), The Architect (METAL), Stone Sovereign (SAND), Soul Sovereign (SOUL), The Infinite (SPACE), Void Master (VOID), Omega Sovereign (THE ALL).</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">8 SOVEREIGNTY DIMENSIONS</div>
+      <div class="card-body">
+        <table style="width:100%;font-family:var(--M);font-size:7.5px;border-collapse:collapse">
+          <tr style="color:var(--gold)"><th style="text-align:left;padding:4px 0">Dimension</th><th style="text-align:left;padding:4px 0">Peak Element</th></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Sovereign Will</td><td style="color:var(--muted)">FIRE 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Fluid Adaptation</td><td style="color:var(--muted)">WATER 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Creative Force</td><td style="color:var(--muted)">WIND 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Iron Precision</td><td style="color:var(--muted)">METAL 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Enduring Form</td><td style="color:var(--muted)">SAND 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Deep Intuition</td><td style="color:var(--muted)">SOUL 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Infinite Vision</td><td style="color:var(--muted)">SPACE 95</td></tr>
+          <tr><td style="padding:3px 0;color:rgba(255,255,255,.8)">Absolute Discipline</td><td style="color:var(--muted)">METAL 90</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-title">DNA CODE ANATOMY</div>
+      <div class="card-body">
+        <p style="font-family:var(--M);font-size:8px;color:var(--cyan);letter-spacing:2px">Ω · ELEM · GATE · CLUSTER · AUTH</p>
+        <p style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:8px;line-height:1.7">The DNA Code is a compressed sovereign identifier. Ω marks the omega lineage. ELEM is the first 4 characters of your element. GATE is the roman numeral of your current gate (I–XII). CLUSTER identifies your gate tier (EARLY, MID, APEX). AUTH is your authority score to 2 decimal places. Example: Ω·FIRE·VII·MID·18.45 = Fire sovereign, Gate VII, mid cluster, authority 18.45.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-/* ── ELEMENT DEFINITIONS ── */
+</div>
+
+<script>
+function esc(s){var d=document.createElement('div');d.textContent=String(s);return d.innerHTML;}
+
 var ELEMENTS={
   fire:  {name:'FIRE',  sigil:'☲',color:'#FF4500',attrs:{willpower:95,adaptability:40,creativity:70,precision:60,endurance:50,intuition:65,vision:75,discipline:55}},
   water: {name:'WATER', sigil:'☰',color:'#00BFFF',attrs:{willpower:55,adaptability:95,creativity:65,precision:70,endurance:80,intuition:85,vision:70,discipline:60}},
@@ -141,253 +150,179 @@ var ELEMENTS={
   void:  {name:'VOID',  sigil:'✷',color:'#708090',attrs:{willpower:85,adaptability:85,creativity:60,precision:75,endurance:90,intuition:90,vision:65,discipline:75}},
   all:   {name:'THE ALL',sigil:'Ω',color:'#C9A84C',attrs:{willpower:90,adaptability:90,creativity:90,precision:90,endurance:90,intuition:90,vision:90,discipline:90}}
 };
-
-/* ── ARCHETYPES (element × gate cluster) ── */
 var ARCHETYPES={
-  fire_early: {name:'The Igniter',       desc:'Raw sovereign force, unstoppable initiation'},
-  fire_mid:   {name:'The Warlord',        desc:'Strategic aggression, battlefield mastery'},
-  fire_apex:  {name:'The Solar Emperor',  desc:'Absolute solar authority, transformative will'},
-  water_early:{name:'The Strategist',     desc:'Patient intelligence, adaptive positioning'},
-  water_mid:  {name:'The Diplomat',       desc:'Fluid power, mastery of perception'},
-  water_apex: {name:'The Oceanic Sage',   desc:'Depth of wisdom beyond measurement'},
-  wind_early: {name:'The Innovator',      desc:'Creative velocity, disruptive vision'},
-  wind_mid:   {name:'The Visionary',      desc:'Wind-shaped futures, conceptual sovereignty'},
-  wind_apex:  {name:'The Celestial Poet', desc:'Articulates what others cannot conceive'},
-  metal_early:{name:'The Builder',        desc:'Precision execution, structural mastery'},
-  metal_mid:  {name:'The Engineer',       desc:'Systematic dominance, ironclad discipline'},
-  metal_apex: {name:'The Architect',      desc:'Designs the very laws that others obey'},
-  sand_early: {name:'The Endurer',        desc:'Foundational resilience, patient sovereignty'},
-  sand_mid:   {name:'The Protector',      desc:'Shields the realm, endures all storms'},
-  sand_apex:  {name:'The Stone Sovereign',desc:'Ancient authority, immovable foundation'},
-  soul_early: {name:'The Empath',         desc:'Inner knowing, intuitive authority'},
-  soul_mid:   {name:'The Oracle Reader',  desc:'Reads the invisible forces of the realm'},
-  soul_apex:  {name:'The Soul Sovereign', desc:'Commands through pure conscious presence'},
-  space_early:{name:'The Explorer',       desc:'Expanding frontiers, universal perspective'},
-  space_mid:  {name:'The Cosmologist',    desc:'Maps territories beyond ordinary perception'},
-  space_apex: {name:'The Infinite',       desc:'Consciousness unbounded by dimension'},
-  void_early: {name:'The Silent One',     desc:'Power in restraint, mastery through absence'},
-  void_mid:   {name:'The Shadow Sovereign',desc:'Operates in pure silence, strikes unseen'},
-  void_apex:  {name:'The Void Master',    desc:'Complete authority through absolute stillness'},
-  all_early:  {name:'The Initiate',       desc:'All nine forces awakening within'},
-  all_mid:    {name:'The Synthesizer',    desc:'Integrating all elemental forces as one'},
-  all_apex:   {name:'The Omega Sovereign',desc:'Complete integration — the living embodiment of Ω'}
+  fire_early:{name:'The Igniter',desc:'Raw sovereign force, unstoppable initiation'},
+  fire_mid:{name:'The Warlord',desc:'Strategic aggression, battlefield mastery'},
+  fire_apex:{name:'The Solar Emperor',desc:'Absolute solar authority, transformative will'},
+  water_early:{name:'The Strategist',desc:'Patient intelligence, adaptive positioning'},
+  water_mid:{name:'The Diplomat',desc:'Fluid power, mastery of perception'},
+  water_apex:{name:'The Oceanic Sage',desc:'Depth of wisdom beyond measurement'},
+  wind_early:{name:'The Innovator',desc:'Creative velocity, disruptive vision'},
+  wind_mid:{name:'The Visionary',desc:'Wind-shaped futures, conceptual sovereignty'},
+  wind_apex:{name:'The Celestial Poet',desc:'Articulates what others cannot conceive'},
+  metal_early:{name:'The Builder',desc:'Precision execution, structural mastery'},
+  metal_mid:{name:'The Engineer',desc:'Systematic dominance, ironclad discipline'},
+  metal_apex:{name:'The Architect',desc:'Designs the very laws that others obey'},
+  sand_early:{name:'The Endurer',desc:'Foundational resilience, patient sovereignty'},
+  sand_mid:{name:'The Protector',desc:'Shields the realm, endures all storms'},
+  sand_apex:{name:'The Stone Sovereign',desc:'Ancient authority, immovable foundation'},
+  soul_early:{name:'The Empath',desc:'Inner knowing, intuitive authority'},
+  soul_mid:{name:'The Oracle Reader',desc:'Reads the invisible forces of the realm'},
+  soul_apex:{name:'The Soul Sovereign',desc:'Commands through pure conscious presence'},
+  space_early:{name:'The Explorer',desc:'Expanding frontiers, universal perspective'},
+  space_mid:{name:'The Cosmologist',desc:'Maps territories beyond ordinary perception'},
+  space_apex:{name:'The Infinite',desc:'Consciousness unbounded by dimension'},
+  void_early:{name:'The Silent One',desc:'Power in restraint, mastery through absence'},
+  void_mid:{name:'The Shadow Sovereign',desc:'Operates in pure silence, strikes unseen'},
+  void_apex:{name:'The Void Master',desc:'Complete authority through absolute stillness'},
+  all_early:{name:'The Initiate',desc:'All nine forces awakening within'},
+  all_mid:{name:'The Synthesizer',desc:'Integrating all elemental forces as one'},
+  all_apex:{name:'The Omega Sovereign',desc:'Complete integration — the living embodiment of Ω'}
 };
-
-/* ── SOVEREIGNTY PERSONALITY DIMENSIONS ── */
 var DIMENSIONS=[
-  {key:'willpower',  label:'SOVEREIGN WILL',    colors:['#FF4500','#FF6633']},
-  {key:'adaptability',label:'FLUID ADAPTATION', colors:['#00BFFF','#00E5FF']},
-  {key:'creativity', label:'CREATIVE FORCE',    colors:['#98E8C1','#00FF88']},
-  {key:'precision',  label:'IRON PRECISION',    colors:['#B0C4DE','#C8D8F0']},
-  {key:'endurance',  label:'ENDURING FORM',     colors:['#DEB887','#ECC890']},
-  {key:'intuition',  label:'DEEP INTUITION',    colors:['#DA70D6','#E890F0']},
-  {key:'vision',     label:'INFINITE VISION',   colors:['#7B68EE','#9B88FF']},
-  {key:'discipline', label:'ABSOLUTE DISCIPLINE',colors:['#C9A84C','#E0C060']}
+  {key:'willpower',   label:'SOVEREIGN WILL',      colors:['#FF4500','#FF6633']},
+  {key:'adaptability',label:'FLUID ADAPTATION',    colors:['#00BFFF','#00E5FF']},
+  {key:'creativity',  label:'CREATIVE FORCE',      colors:['#98E8C1','#00FF88']},
+  {key:'precision',   label:'IRON PRECISION',      colors:['#B0C4DE','#C8D8F0']},
+  {key:'endurance',   label:'ENDURING FORM',       colors:['#DEB887','#ECC890']},
+  {key:'intuition',   label:'DEEP INTUITION',      colors:['#DA70D6','#E890F0']},
+  {key:'vision',      label:'INFINITE VISION',     colors:['#7B68EE','#9B88FF']},
+  {key:'discipline',  label:'ABS. DISCIPLINE',     colors:['#C9A84C','#E0C060']}
 ];
-
-/* ── GATE ROMAN NUMERALS ── */
 var ROMANS=['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-
-/* ── AUTHORITY FORMULA ── */
 var PHI=1.6180339887,E_=2.7182818285,APEX=27.8367;
 
-/* ── STATE ── */
-var profile=null,user=null,sb=null;
-
-/* ── INIT ── */
-document.addEventListener('omega:user-loaded',function(e){
-  var d=e.detail||{};
-  sb=window.__omegaSb;user=d.user;profile=d.profile;
-  render(profile,user);
-});
-if(window.__omegaProfile){
-  sb=window.__omegaSb;user=window.__omegaUser;profile=window.__omegaProfile;
-  render(profile,user);
+function setTab(name){
+  var tabs=['dna','attributes','helix','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  if(name==='helix'&&window.__dnaElemDef) setTimeout(function(){drawHelix(window.__dnaElemDef);},50);
+  if(name==='attributes'&&window.__dnaAttrs&&window.__dnaElemDef) setTimeout(function(){drawRadar(window.__dnaAttrs,window.__dnaElemDef);},50);
 }
-setTimeout(function(){
-  if(!profile&&window.__omegaSb){
-    window.__omegaSb.auth.getSession().then(async r=>{
-      var ses=r.data&&r.data.session;
-      if(!ses) return;
-      var pr=await window.__omegaSb.from('profiles').select('*').eq('id',ses.user.id).maybeSingle();
-      profile=pr.data||{};user=ses.user;sb=window.__omegaSb;
-      render(profile,user);
-    });
-  }
-},1800);
 
-/* ═══════════════════════════════════════════
-   MAIN RENDER
-   ═══════════════════════════════════════════ */
 function render(pr,u){
   pr=pr||{};
   var elem=(pr.element||'void').toLowerCase().replace(/\s+/g,'').replace('theall','all');
-  var elemDef=ELEMENTS[elem]||ELEMENTS['void'];
+  var elemDef=ELEMENTS[elem]||ELEMENTS.void;
   var gate=Math.min(12,Math.max(1,parseInt(pr.gate_level)||1));
   var auth=Math.min(APEX,Math.max(0,parseFloat(pr.authority_score)||3.14));
   var gateCluster=gate<=4?'early':gate<=9?'mid':'apex';
-  var archetypeKey=elem+'_'+gateCluster;
-  var archetype=ARCHETYPES[archetypeKey]||ARCHETYPES['void_early'];
+  var archetype=ARCHETYPES[elem+'_'+gateCluster]||ARCHETYPES.void_early;
   var memberSince=u&&u.created_at?u.created_at:pr.created_at||new Date().toISOString();
   var daysSince=Math.floor((Date.now()-new Date(memberSince).getTime())/86400000);
-
-  /* ── Compute attribute scores (element base × gate × auth modifier) ── */
-  var authMod=auth/APEX;
-  var gateMod=gate/12;
+  var authMod=auth/APEX,gateMod=gate/12;
   var attrs={};
-  DIMENSIONS.forEach(d=>{
+  DIMENSIONS.forEach(function(d){
     var base=elemDef.attrs[d.key]||50;
-    var boosted=base*(0.6+0.25*authMod+0.15*gateMod);
-    attrs[d.key]=Math.min(100,Math.round(boosted));
+    attrs[d.key]=Math.min(100,Math.round(base*(0.6+0.25*authMod+0.15*gateMod)));
   });
-
-  /* ── Compute DNA Code ── */
-  var dnaCode=`Ω·${elemDef.name.slice(0,4)}·${ROMANS[gate]}·${gateCluster.toUpperCase()}·${auth.toFixed(2)}`;
-
-  /* ── Big-Five Sovereign Variant ── */
+  var dnaCode='Ω·'+elemDef.name.slice(0,4)+'·'+ROMANS[gate]+'·'+gateCluster.toUpperCase()+'·'+auth.toFixed(2);
   var personality={
-    openness:    Math.round((attrs.creativity+attrs.vision)/2),
-    dominance:   Math.round((attrs.willpower+attrs.discipline)/2),
-    resilience:  Math.round((attrs.endurance+attrs.adaptability)/2),
-    perception:  Math.round((attrs.intuition+attrs.precision)/2)
+    openness:  Math.round((attrs.creativity+attrs.vision)/2),
+    dominance: Math.round((attrs.willpower+attrs.discipline)/2),
+    resilience:Math.round((attrs.endurance+attrs.adaptability)/2),
+    perception:Math.round((attrs.intuition+attrs.precision)/2)
   };
+  window.__dnaElemDef=elemDef;
+  window.__dnaAttrs=attrs;
 
-  /* ── Build HTML ── */
-  var main=document.getElementById('mainContent');
-  main.innerHTML=`
-    <!-- DNA CARD -->
-    <div class="dna-card">
-      <div class="dna-id">SOVEREIGN DNA SEQUENCE · ${(u&&u.id||'UNVERIFIED').slice(-8).toUpperCase()}</div>
-      <div class="dna-code">${dnaCode}</div>
-      <div class="dna-type">${archetype.name.toUpperCase()}</div>
-      <div class="dna-principle">${archetype.desc}</div>
-      <div class="archetype-badge">
-        <div class="ab-icon">${elemDef.sigil}</div>
-        <div class="ab-text">
-          <div class="ab-name">${elemDef.name} · GATE ${ROMANS[gate]} · ${gateCluster.toUpperCase()} CLUSTER</div>
-          <div class="ab-desc">AUTHORITY ${auth.toFixed(4)} · DAY ${daysSince} OF SOVEREIGN JOURNEY</div>
-        </div>
-      </div>
-      <div class="dna-elem">${elemDef.sigil}</div>
-    </div>
+  var userId=(u&&u.id||'UNVERIFIED').slice(-8).toUpperCase();
+  document.getElementById('dnaCard').innerHTML=
+    '<div class="dna-card">'+
+      '<div class="dna-id">SOVEREIGN DNA SEQUENCE · '+esc(userId)+'</div>'+
+      '<div class="dna-code">'+esc(dnaCode)+'</div>'+
+      '<div class="dna-type">'+esc(archetype.name.toUpperCase())+'</div>'+
+      '<div class="dna-principle">'+esc(archetype.desc)+'</div>'+
+      '<div class="archetype-badge">'+
+        '<div class="ab-icon">'+elemDef.sigil+'</div>'+
+        '<div><div class="ab-name">'+esc(elemDef.name)+' · GATE '+ROMANS[gate]+' · '+esc(gateCluster.toUpperCase())+' CLUSTER</div>'+
+        '<div class="ab-desc">AUTHORITY '+auth.toFixed(4)+' · DAY '+daysSince+' OF SOVEREIGN JOURNEY</div></div>'+
+      '</div>'+
+      '<div class="dna-elem">'+elemDef.sigil+'</div>'+
+    '</div>'+
+    '<div class="formula-card">'+
+      '<div class="formula-line">'+
+        '<span class="f-label">AUTH FORMULA</span>'+
+        '<span class="f-value">√(A³+B³+C³) × φ/e</span>'+
+        '<span class="f-label">φ='+PHI+' e='+E_+'</span>'+
+      '</div>'+
+      '<div class="formula-line" style="margin-top:6px">'+
+        '<span class="f-label">YOUR AUTHORITY</span>'+
+        '<span class="f-computed">'+auth.toFixed(4)+'</span>'+
+        '<span class="f-label">/ APEX '+APEX+'</span>'+
+        '<span style="font-family:var(--M);font-size:7.5px;color:var(--green)"> '+(auth/APEX*100).toFixed(1)+'% OF APEX</span>'+
+      '</div>'+
+    '</div>';
 
-    <!-- FORMULA -->
-    <div class="formula-card">
-      <div class="formula-line">
-        <span class="f-label">AUTH FORMULA</span>
-        <span class="f-value">√(A³+B³+C³) × φ/e</span>
-        <span class="f-label">WHERE φ=${PHI}, e=${E_}</span>
-      </div>
-      <div class="formula-line" style="margin-top:6px">
-        <span class="f-label">YOUR AUTHORITY</span>
-        <span class="f-computed">${auth.toFixed(4)}</span>
-        <span class="f-label">/ APEX ${APEX}</span>
-        <span style="font-family:var(--M);font-size:7.5px;color:rgba(0,255,136,.6)"> ${(auth/APEX*100).toFixed(1)}% OF APEX</span>
-      </div>
-    </div>
-
-    <!-- TABS -->
-    <div class="layer-tabs">
-      <div class="layer-tab active" data-tab="attributes">◉ ATTRIBUTES</div>
-      <div class="layer-tab" data-tab="personality">◈ PERSONALITY</div>
-      <div class="layer-tab" data-tab="helix">⬡ DNA HELIX</div>
-      <div class="layer-tab" data-tab="path">★ SOVEREIGN PATH</div>
-    </div>
-
-    <!-- ATTRIBUTES TAB -->
-    <div class="tab-panel active" id="tab-attributes">
-      <div class="canvas-section">
-        <div>
-          <div class="section-title">◈ SOVEREIGN ATTRIBUTE SCORES</div>
-          <div class="attributes-grid" id="attrGrid"></div>
-        </div>
-        <div class="canvas-wrap">
-          <div class="canvas-title">ATTRIBUTE RADAR</div>
-          <canvas id="radarCanvas" width="240" height="240"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- PERSONALITY TAB -->
-    <div class="tab-panel" id="tab-personality">
-      <div class="section-title">◈ SOVEREIGN PERSONALITY MATRIX</div>
-      <div class="personality-grid" id="personalityGrid"></div>
-    </div>
-
-    <!-- HELIX TAB -->
-    <div class="tab-panel" id="tab-helix">
-      <div class="canvas-wrap" style="background:none;border:none;padding:0">
-        <div class="canvas-title">◉ SOVEREIGN DNA HELIX — ${elemDef.name} ELEMENT</div>
-        <canvas id="helixCanvas" width="700" height="300"></canvas>
-      </div>
-    </div>
-
-    <!-- PATH TAB -->
-    <div class="tab-panel" id="tab-path">
-      <div class="section-title">◈ SOVEREIGN ARCHETYPE EVOLUTION PATH</div>
-      <div class="timeline" id="pathTimeline"></div>
-    </div>
-  `;
-
-  /* ── Wire tabs ── */
-  document.querySelectorAll('.layer-tab').forEach(tab=>{
-    tab.addEventListener('click',function(){
-      document.querySelectorAll('.layer-tab').forEach(t=>t.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-      this.classList.add('active');
-      document.getElementById('tab-'+this.dataset.tab).classList.add('active');
-      if(this.dataset.tab==='helix') drawHelix(elemDef);
-      if(this.dataset.tab==='attributes') drawRadar(attrs,elemDef);
-    });
-  });
-
-  /* ── Render sub-components ── */
+  document.getElementById('attrContent').innerHTML=
+    '<div class="canvas-section">'+
+      '<div>'+
+        '<div class="sechead" style="margin-bottom:12px">ATTRIBUTE SCORES</div>'+
+        '<div class="attributes-grid" id="attrGrid"></div>'+
+      '</div>'+
+      '<div class="canvas-wrap">'+
+        '<div class="canvas-title">ATTRIBUTE RADAR</div>'+
+        '<canvas id="radarCanvas" width="240" height="240"></canvas>'+
+      '</div>'+
+    '</div>'+
+    '<div style="margin-top:20px">'+
+      '<div class="sechead" style="margin-bottom:12px">PERSONALITY MATRIX</div>'+
+      '<div class="personality-grid" id="personalityGrid"></div>'+
+    '</div>'+
+    '<div style="margin-top:20px">'+
+      '<div class="sechead" style="margin-bottom:12px">EVOLUTION PATH</div>'+
+      '<div class="timeline" id="pathTimeline"></div>'+
+    '</div>';
   renderAttrs(attrs,elemDef);
-  renderPersonality(personality,elem,elemDef);
-  renderPath(elem,gate,gateCluster,elemDef);
-  setTimeout(()=>drawRadar(attrs,elemDef),50);
+  renderPersonality(personality,elemDef);
+  renderPath(gate,elemDef);
+  setTimeout(function(){drawRadar(attrs,elemDef);},50);
+
+  document.getElementById('helixContent').innerHTML=
+    '<div class="canvas-wrap" style="background:none;border:none;padding:0">'+
+      '<div class="canvas-title">SOVEREIGN DNA HELIX — '+esc(elemDef.name)+' ELEMENT</div>'+
+      '<canvas id="helixCanvas" width="700" height="300" style="max-width:100%;display:block;margin:0 auto"></canvas>'+
+    '</div>';
 }
 
-/* ── ATTRIBUTES LIST ── */
 function renderAttrs(attrs,elemDef){
   var grid=document.getElementById('attrGrid');
   if(!grid) return;
-  grid.innerHTML=DIMENSIONS.map(d=>`
-    <div class="attr-row">
-      <div class="attr-name">${d.label}</div>
-      <div class="attr-bar-wrap"><div class="attr-bar" style="width:0%;background:linear-gradient(90deg,${d.colors[0]},${d.colors[1]})" data-target="${attrs[d.key]}"></div></div>
-      <div class="attr-val">${attrs[d.key]}</div>
-    </div>`).join('');
-  /* Animate bars */
-  requestAnimationFrame(()=>{
-    document.querySelectorAll('.attr-bar[data-target]').forEach(bar=>{
-      bar.style.width=bar.dataset.target+'%';
-    });
+  grid.innerHTML=DIMENSIONS.map(function(d){
+    return '<div class="attr-row">'+
+      '<div class="attr-name">'+d.label+'</div>'+
+      '<div class="attr-bar-wrap"><div class="attr-bar" style="width:0%;background:linear-gradient(90deg,'+d.colors[0]+','+d.colors[1]+')" data-target="'+attrs[d.key]+'"></div></div>'+
+      '<div class="attr-val">'+attrs[d.key]+'</div>'+
+    '</div>';
+  }).join('');
+  requestAnimationFrame(function(){
+    document.querySelectorAll('.attr-bar[data-target]').forEach(function(bar){bar.style.width=bar.dataset.target+'%';});
   });
 }
 
-/* ── PERSONALITY ── */
-function renderPersonality(p,elem,elemDef){
-  var grid=document.getElementById('personalityGrid');if(!grid) return;
+function renderPersonality(p,elemDef){
+  var grid=document.getElementById('personalityGrid');
+  if(!grid) return;
   var cards=[
-    {key:'openness',    title:'OPENNESS',    label:p.openness>70?'VISIONARY':p.openness>40?'ADAPTIVE':'PRECISE',  desc:'Degree of creative expansion vs structural focus'},
-    {key:'dominance',   title:'DOMINANCE',   label:p.dominance>70?'SOVEREIGN APEX':p.dominance>40?'AUTHORITY':'POTENTIAL', desc:'Strength of sovereign will and discipline'},
-    {key:'resilience',  title:'RESILIENCE',  label:p.resilience>70?'INDESTRUCTIBLE':p.resilience>40?'DURABLE':'EMERGING', desc:'Capacity to absorb, adapt, and persist'},
-    {key:'perception',  title:'PERCEPTION',  label:p.perception>70?'ORACLE-LEVEL':p.perception>40?'ACUTE':'DEVELOPING', desc:'Precision of inner and outer awareness'}
+    {key:'openness',   title:'OPENNESS',   label:p.openness>70?'VISIONARY':p.openness>40?'ADAPTIVE':'PRECISE',           desc:'Degree of creative expansion vs structural focus'},
+    {key:'dominance',  title:'DOMINANCE',  label:p.dominance>70?'SOVEREIGN APEX':p.dominance>40?'AUTHORITY':'POTENTIAL',  desc:'Strength of sovereign will and discipline'},
+    {key:'resilience', title:'RESILIENCE', label:p.resilience>70?'INDESTRUCTIBLE':p.resilience>40?'DURABLE':'EMERGING',   desc:'Capacity to absorb, adapt, and persist'},
+    {key:'perception', title:'PERCEPTION', label:p.perception>70?'ORACLE-LEVEL':p.perception>40?'ACUTE':'DEVELOPING',     desc:'Precision of inner and outer awareness'}
   ];
-  grid.innerHTML=cards.map(c=>`
-    <div class="pcard" style="border-top:2px solid ${elemDef.color}44">
-      <div class="pcard-title">${c.title}</div>
-      <div class="pcard-val" style="color:${elemDef.color}">${p[c.key]}%</div>
-      <div class="pcard-label">${c.label}</div>
-      <div class="pcard-desc">${c.desc}</div>
-    </div>`).join('');
+  grid.innerHTML=cards.map(function(c){
+    return '<div class="pcard" style="border-top:2px solid '+elemDef.color+'44">'+
+      '<div class="pcard-title">'+c.title+'</div>'+
+      '<div class="pcard-val" style="color:'+elemDef.color+'">'+p[c.key]+'%</div>'+
+      '<div class="pcard-label">'+c.label+'</div>'+
+      '<div class="pcard-desc">'+c.desc+'</div>'+
+    '</div>';
+  }).join('');
 }
 
-/* ── SOVEREIGN PATH TIMELINE ── */
-function renderPath(elem,gate,cluster,elemDef){
-  var tl=document.getElementById('pathTimeline');if(!tl) return;
-  var gates=[
+function renderPath(gate,elemDef){
+  var tl=document.getElementById('pathTimeline');
+  if(!tl) return;
+  var milestones=[
     {g:1, title:'AWAKENING',    desc:'The sovereign spark ignites — Gate I opens, the journey begins'},
     {g:3, title:'FOUNDATION',   desc:'Core attributes crystallizing — discipline takes root'},
     {g:5, title:'EMERGENCE',    desc:'Authority becomes visible — the tribe recognizes the signal'},
@@ -396,135 +331,111 @@ function renderPath(elem,gate,cluster,elemDef){
     {g:11,title:'TRANSCENDENCE',desc:'Beyond the ordinary — the realm reshapes around your will'},
     {g:12,title:'OMEGA APEX',   desc:'Complete sovereignty — AUTH approaches the sacred APEX'}
   ];
-  tl.innerHTML=gates.map(g=>{
-    var passed=gate>=g.g;
-    var current=gate>=g.g&&gate<(g.g+2);
-    return `<div class="tl-item">
-      <div class="tl-dot" style="background:${passed?elemDef.color:'rgba(138,134,118,.2)'};${current?'box-shadow:0 0 8px '+elemDef.color:''}"></div>
-      <div class="tl-body">
-        <div class="tl-title" style="color:${passed?'rgba(255,255,255,.9)':'rgba(138,134,118,.4)'}">${g.title} ${passed?'✓':''} ${current?'← YOU ARE HERE':''}</div>
-        <div class="tl-desc">${g.desc}</div>
-      </div>
-    </div>`;
+  tl.innerHTML=milestones.map(function(m){
+    var passed=gate>=m.g,current=gate>=m.g&&gate<(m.g+2);
+    return '<div class="tl-item">'+
+      '<div class="tl-dot" style="background:'+(passed?elemDef.color:'rgba(138,134,118,.2)')+(current?';box-shadow:0 0 8px '+elemDef.color:'')+';margin-top:4px"></div>'+
+      '<div class="tl-body">'+
+        '<div class="tl-title" style="color:'+(passed?'rgba(255,255,255,.9)':'rgba(138,134,118,.4)')+'">'+m.title+(passed?' ✓':'')+(current?' ← YOU ARE HERE':'')+'</div>'+
+        '<div class="tl-desc">'+m.desc+'</div>'+
+      '</div>'+
+    '</div>';
   }).join('');
 }
 
-/* ── RADAR CHART ── */
 function drawRadar(attrs,elemDef){
-  var canvas=document.getElementById('radarCanvas');if(!canvas) return;
-  var dpr=window.devicePixelRatio||1;
-  var size=240;
+  var canvas=document.getElementById('radarCanvas');
+  if(!canvas) return;
+  var dpr=window.devicePixelRatio||1,size=240;
   canvas.width=size*dpr;canvas.height=size*dpr;
   canvas.style.width=size+'px';canvas.style.height=size+'px';
   var ctx=canvas.getContext('2d');
   ctx.scale(dpr,dpr);
-  var cx=size/2,cy=size/2,r=90;
-  var keys=DIMENSIONS.map(d=>d.key);
-  var n=keys.length;
-  var vals=keys.map(k=>attrs[k]/100);
-
-  /* Grid rings */
+  var cx=size/2,cy=size/2,r=90,n=DIMENSIONS.length;
+  var vals=DIMENSIONS.map(function(d){return attrs[d.key]/100;});
   for(var ring=1;ring<=4;ring++){
     ctx.beginPath();
     for(var i=0;i<n;i++){
-      var angle=i/n*Math.PI*2-Math.PI/2;
-      var x=cx+Math.cos(angle)*r*(ring/4);
-      var y=cy+Math.sin(angle)*r*(ring/4);
-      if(i===0) ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      var a=i/n*Math.PI*2-Math.PI/2;
+      var rx=cx+Math.cos(a)*r*(ring/4),ry=cy+Math.sin(a)*r*(ring/4);
+      if(i===0) ctx.moveTo(rx,ry);else ctx.lineTo(rx,ry);
     }
-    ctx.closePath();
-    ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=1;ctx.stroke();
+    ctx.closePath();ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=1;ctx.stroke();
   }
-
-  /* Axes */
   for(var i=0;i<n;i++){
-    var angle=i/n*Math.PI*2-Math.PI/2;
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.lineTo(cx+Math.cos(angle)*r,cy+Math.sin(angle)*r);
+    var a=i/n*Math.PI*2-Math.PI/2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
     ctx.strokeStyle='rgba(201,168,76,.1)';ctx.stroke();
-    /* Label */
-    var lx=cx+Math.cos(angle)*(r+16),ly=cy+Math.sin(angle)*(r+16);
     ctx.fillStyle='rgba(138,134,118,.5)';
-    ctx.font=`8px 'Courier Prime',monospace`;
+    ctx.font='8px monospace';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(DIMENSIONS[i].label.slice(0,3),lx,ly);
+    ctx.fillText(DIMENSIONS[i].label.slice(0,3),cx+Math.cos(a)*(r+16),cy+Math.sin(a)*(r+16));
   }
-
-  /* Data polygon */
   ctx.beginPath();
   for(var i=0;i<n;i++){
-    var angle=i/n*Math.PI*2-Math.PI/2;
-    var v=vals[i];
-    var x=cx+Math.cos(angle)*r*v;
-    var y=cy+Math.sin(angle)*r*v;
-    if(i===0) ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    var a=i/n*Math.PI*2-Math.PI/2,v=vals[i];
+    var px=cx+Math.cos(a)*r*v,py=cy+Math.sin(a)*r*v;
+    if(i===0) ctx.moveTo(px,py);else ctx.lineTo(px,py);
   }
   ctx.closePath();
   var grd=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-  grd.addColorStop(0,elemDef.color+'55');
-  grd.addColorStop(1,elemDef.color+'18');
-  ctx.fillStyle=grd;
-  ctx.fill();
+  grd.addColorStop(0,elemDef.color+'55');grd.addColorStop(1,elemDef.color+'18');
+  ctx.fillStyle=grd;ctx.fill();
   ctx.strokeStyle=elemDef.color+'CC';ctx.lineWidth=1.5;ctx.stroke();
-
-  /* Points */
   for(var i=0;i<n;i++){
-    var angle=i/n*Math.PI*2-Math.PI/2;
-    var v=vals[i];
-    ctx.beginPath();
-    ctx.arc(cx+Math.cos(angle)*r*v,cy+Math.sin(angle)*r*v,3,0,Math.PI*2);
+    var a=i/n*Math.PI*2-Math.PI/2,v=vals[i];
+    ctx.beginPath();ctx.arc(cx+Math.cos(a)*r*v,cy+Math.sin(a)*r*v,3,0,Math.PI*2);
     ctx.fillStyle=elemDef.color;ctx.fill();
   }
 }
 
-/* ── DNA HELIX ── */
 function drawHelix(elemDef){
-  var canvas=document.getElementById('helixCanvas');if(!canvas) return;
+  var canvas=document.getElementById('helixCanvas');
+  if(!canvas) return;
   var dpr=window.devicePixelRatio||1;
-  var w=Math.min(700,canvas.parentElement.clientWidth||700);
-  var h=300;
+  var w=Math.min(700,canvas.parentElement.clientWidth||700),h=300;
   canvas.width=w*dpr;canvas.height=h*dpr;
   canvas.style.width=w+'px';canvas.style.height=h+'px';
   var ctx=canvas.getContext('2d');
-  ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,w,h);
-
-  var cx=h/2,amp=80,freq=0.06;
-  var steps=w;
-
-  /* Draw two strands */
+  ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);
+  var cy=h/2,amp=80,freq=0.06;
   for(var strand=0;strand<2;strand++){
-    var offset=strand*Math.PI;
+    var off=strand*Math.PI;
     ctx.beginPath();
     for(var x=0;x<w;x++){
-      var y=cx+amp*Math.sin(x*freq+offset);
+      var y=cy+amp*Math.sin(x*freq+off);
       if(x===0) ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
     ctx.strokeStyle=strand===0?elemDef.color+'CC':'rgba(0,229,255,.6)';
     ctx.lineWidth=2;ctx.stroke();
   }
-
-  /* Rungs */
   for(var x=0;x<w;x+=30){
-    var y1=cx+amp*Math.sin(x*freq);
-    var y2=cx+amp*Math.sin(x*freq+Math.PI);
+    var y1=cy+amp*Math.sin(x*freq),y2=cy+amp*Math.sin(x*freq+Math.PI);
     var grd=ctx.createLinearGradient(x,y1,x,y2);
-    grd.addColorStop(0,elemDef.color+'80');
-    grd.addColorStop(1,'rgba(0,229,255,.5)');
-    ctx.beginPath();ctx.moveTo(x,y1);ctx.lineTo(x,y2);
-    ctx.strokeStyle=grd;ctx.lineWidth=1.5;ctx.stroke();
-    /* Dots */
+    grd.addColorStop(0,elemDef.color+'80');grd.addColorStop(1,'rgba(0,229,255,.5)');
+    ctx.beginPath();ctx.moveTo(x,y1);ctx.lineTo(x,y2);ctx.strokeStyle=grd;ctx.lineWidth=1.5;ctx.stroke();
     ctx.beginPath();ctx.arc(x,y1,3,0,Math.PI*2);ctx.fillStyle=elemDef.color;ctx.fill();
     ctx.beginPath();ctx.arc(x,y2,3,0,Math.PI*2);ctx.fillStyle='rgba(0,229,255,.8)';ctx.fill();
   }
-
-  /* Label */
   ctx.fillStyle='rgba(201,168,76,.3)';
-  ctx.font=`9px 'Courier Prime',monospace`;
+  ctx.font='9px monospace';
   ctx.textAlign='left';ctx.textBaseline='top';
-  ctx.fillText('5\'  ——  SOVEREIGN STRAND  ——  3\'',8,8);
+  ctx.fillText("5'  ——  SOVEREIGN STRAND  ——  3'",8,8);
 }
 </script>
-</body>
-</html>
+
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+  render(pr,s.user);
+})();
+</script>
+<script src="/bg.js"></script>
+</body></html>

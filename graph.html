@@ -1,234 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sovereign Constellation Graph · SYD OMEGA 91717</title>
-<link rel="icon" href="/favicon.ico">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-<script>
-(function(){
-  var PUBLIC=['/account','/enter','/reset','/terms','/pending','/index','/'];
-  var path=(location.pathname||'/').replace(/\.html$/,'');
-  for(var i=0;i<PUBLIC.length;i++){if(path===PUBLIC[i])return;}
-  var s=document.createElement('style');
-  s.id='omega-approval-guard';
-  s.textContent='body:not(.omega-approved) #app,body:not(.omega-approved) .shell,body:not(.omega-approved) main.main{display:none!important}';
-  (document.head||document.documentElement).appendChild(s);
-  window.__omegaApprove=function(ok){if(ok)document.body&&document.body.classList.add('omega-approved');};
-})();
-</script>
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; CONSTELLATION GRAPH</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-#graph-wrap{position:relative;flex:1;min-height:0;overflow:hidden}
+#tab-graph{padding:0;flex:1;min-height:400px;display:flex;flex-direction:column}
+.graph-wrap{flex:1;position:relative;min-height:400px;overflow:hidden;background:var(--void)}
 #graph-svg{width:100%;height:100%;display:block}
-.graph-panel{
-  position:absolute;top:12px;right:12px;z-index:10;
-  width:clamp(170px,20vw,220px);
-  background:rgba(10,10,15,.92);border:1px solid rgba(201,168,76,.2);
-  border-radius:2px;padding:14px;backdrop-filter:blur(12px)
-}
-.graph-panel h3{font-family:var(--M,"Courier Prime",monospace);font-size:8px;
-  letter-spacing:3px;color:var(--solar,#E2C86D);margin:0 0 10px}
-.gp-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.graph-legend-panel{position:absolute;top:.75rem;right:.75rem;z-index:10;width:clamp(150px,18vw,200px);background:rgba(10,10,15,.92);border:1px solid rgba(201,168,76,.2);border-radius:4px;padding:.85rem;backdrop-filter:blur(12px)}
+.graph-legend-panel h3{font-family:var(--M);font-size:.7rem;letter-spacing:.2em;color:var(--solar);margin:0 0 .6rem}
+.gp-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem}
 .gp-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.gp-lbl{font-family:var(--M,"Courier Prime",monospace);font-size:8px;
-  letter-spacing:1px;color:var(--muted,#8a8676)}
-.graph-controls{
-  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
-  z-index:10;display:flex;gap:8px;flex-wrap:wrap;justify-content:center
-}
-.gctrl{font-family:var(--M,"Courier Prime",monospace);font-size:7.5px;
-  letter-spacing:1.5px;padding:6px 12px;border:1px solid rgba(201,168,76,.3);
-  background:rgba(10,10,15,.9);color:var(--muted,#8a8676);
-  cursor:pointer;border-radius:1px;transition:.18s;backdrop-filter:blur(8px)}
-.gctrl:hover,.gctrl.active{border-color:var(--solar,#E2C86D);color:var(--solar,#E2C86D)}
-/* D3 tooltip */
-.d3-tip{
-  position:fixed;z-index:1000;pointer-events:none;
-  background:rgba(10,10,15,.97);border:1px solid rgba(201,168,76,.4);
-  border-radius:2px;padding:8px 12px;
-  font-family:var(--M,"Courier Prime",monospace);font-size:9px;
-  color:var(--ink,#e9e6dc);line-height:1.7;
-  box-shadow:0 8px 32px rgba(0,0,0,.7);
-  max-width:200px;word-break:break-word;display:none
-}
+.gp-lbl{font-family:var(--M);font-size:.68rem;letter-spacing:.04em;color:var(--muted)}
+.graph-controls{position:absolute;bottom:.75rem;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.gctrl{font-family:var(--M);font-size:.7rem;letter-spacing:.1em;padding:.35rem .75rem;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,15,.9);color:var(--muted);cursor:pointer;border-radius:2px;transition:.18s;backdrop-filter:blur(8px)}
+.gctrl:hover,.gctrl.active{border-color:var(--solar);color:var(--solar)}
+.d3-tip{position:fixed;z-index:1000;pointer-events:none;background:rgba(10,10,15,.97);border:1px solid rgba(201,168,76,.4);border-radius:4px;padding:.5rem .75rem;font-family:var(--M);font-size:.78rem;color:var(--ink);line-height:1.7;box-shadow:0 8px 32px rgba(0,0,0,.7);max-width:200px;word-break:break-word;display:none}
+.legend-section{padding:1rem}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.65rem}
+.legend-item{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.75rem;display:flex;align-items:center;gap:.65rem}
+.legend-dot2{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.legend-text2 .legend-label2{color:var(--gold);font-size:.78rem;font-family:var(--D);letter-spacing:.05em}
+.legend-text2 .legend-desc2{color:var(--muted);font-size:.72rem;margin-top:.15rem}
+.members-list{padding:1rem}
+.member-row{display:flex;align-items:center;gap:.85rem;padding:.6rem .75rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:.5rem}
+.member-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.member-name{flex:1;font-size:.82rem;min-width:0}
+.member-sign{font-family:var(--M);font-size:.7rem;color:var(--muted);min-width:80px}
+.member-auth{font-family:var(--D);font-size:.8rem;color:var(--gold);min-width:60px;text-align:right}
+.members-empty{text-align:center;color:var(--muted);padding:2rem;font-size:.83rem}
 </style>
 </head>
 <body>
-<div class="shell" id="app">
-  <nav class="side" id="side-nav" aria-label="Navigation"></nav>
+<aside id="omega-side" data-page="graph"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">CONSTELLATION GRAPH<span class="topbar-sub">SIGN · ELEMENT · OLYMPIAN NETWORK</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('graph')">GRAPH</button>
+  <button class="tab-btn" onclick="setTab('legend')">LEGEND</button>
+  <button class="tab-btn" onclick="setTab('members')">MEMBERS</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+</div>
 
-  <div class="main">
-    <header class="topbar">
-      <div class="t">CONSTELLATION GRAPH<small>SIGN · ELEMENT · OLYMPIAN FORCE NETWORK</small></div>
-    </header>
-
-    <div id="graph-wrap">
-      <svg id="graph-svg" aria-label="Sovereign constellation force graph"></svg>
-
-      <!-- Legend -->
-      <aside class="graph-panel" aria-label="Graph legend">
-        <h3>NODE KEY</h3>
-        <div class="gp-row"><div class="gp-dot" style="background:#FF6B35"></div><div class="gp-lbl">FIRE ELEMENT</div></div>
-        <div class="gp-row"><div class="gp-dot" style="background:#00B4D8"></div><div class="gp-lbl">WATER ELEMENT</div></div>
-        <div class="gp-row"><div class="gp-dot" style="background:#B0BEC5"></div><div class="gp-lbl">WIND ELEMENT</div></div>
-        <div class="gp-row"><div class="gp-dot" style="background:#E2C86D"></div><div class="gp-lbl">METAL ELEMENT</div></div>
-        <div class="gp-row"><div class="gp-dot" style="background:#FFD54F"></div><div class="gp-lbl">SAND ELEMENT</div></div>
-        <div class="gp-row"><div class="gp-dot" style="background:#9B6BF0"></div><div class="gp-lbl">SOUL ELEMENT</div></div>
-        <hr style="border:none;border-top:1px solid rgba(201,168,76,.1);margin:10px 0">
-        <div class="gp-row"><div class="gp-dot" style="background:rgba(255,255,255,.15);border:2px solid #E2C86D"></div><div class="gp-lbl">OLYMPIAN GOD</div></div>
-        <div class="gp-row"><div class="gp-dot" style="background:rgba(255,255,255,.05);border:1.5px solid rgba(138,134,118,.5)"></div><div class="gp-lbl">ZODIAC SIGN</div></div>
-      </aside>
-
-      <!-- Controls -->
-      <div class="graph-controls">
-        <button class="gctrl active" onclick="setView('all')">ALL NODES</button>
-        <button class="gctrl" onclick="setView('elements')">ELEMENTS</button>
-        <button class="gctrl" onclick="setView('signs')">SIGNS</button>
-        <button class="gctrl" onclick="setView('gods')">GODS</button>
-        <button class="gctrl" onclick="resetZoom()">RESET</button>
-      </div>
-
-      <!-- Tooltip -->
-      <div class="d3-tip" id="d3-tip"></div>
+<!-- GRAPH TAB -->
+<div class="tab-panel active" id="tab-graph">
+  <div class="graph-wrap" id="graph-wrap">
+    <svg id="graph-svg" aria-label="Sovereign constellation force graph"></svg>
+    <aside class="graph-legend-panel" aria-label="Graph legend">
+      <h3>NODE KEY</h3>
+      <div class="gp-row"><div class="gp-dot" style="background:#E86A3A"></div><div class="gp-lbl">FIRE ELEMENT</div></div>
+      <div class="gp-row"><div class="gp-dot" style="background:#34C6E6"></div><div class="gp-lbl">WATER ELEMENT</div></div>
+      <div class="gp-row"><div class="gp-dot" style="background:#A9C2D8"></div><div class="gp-lbl">WIND ELEMENT</div></div>
+      <div class="gp-row"><div class="gp-dot" style="background:#C7CDD6"></div><div class="gp-lbl">METAL ELEMENT</div></div>
+      <div class="gp-row"><div class="gp-dot" style="background:#D9B86A"></div><div class="gp-lbl">SAND ELEMENT</div></div>
+      <div class="gp-row"><div class="gp-dot" style="background:#9B6BF0"></div><div class="gp-lbl">SOUL ELEMENT</div></div>
+      <hr style="border:none;border-top:1px solid rgba(201,168,76,.1);margin:.6rem 0">
+      <div class="gp-row"><div class="gp-dot" style="background:rgba(255,255,255,.15);border:2px solid #D4AF37"></div><div class="gp-lbl">OLYMPIAN GOD</div></div>
+      <div class="gp-row"><div class="gp-dot" style="background:rgba(255,255,255,.05);border:1.5px solid rgba(138,134,118,.5)"></div><div class="gp-lbl">ZODIAC SIGN</div></div>
+    </aside>
+    <div class="graph-controls">
+      <button class="gctrl active" id="ctrl-all" onclick="setView('all')">ALL NODES</button>
+      <button class="gctrl" id="ctrl-elements" onclick="setView('elements')">ELEMENTS</button>
+      <button class="gctrl" id="ctrl-signs" onclick="setView('signs')">SIGNS</button>
+      <button class="gctrl" id="ctrl-gods" onclick="setView('gods')">GODS</button>
+      <button class="gctrl" id="ctrl-reset" onclick="resetZoom()">RESET</button>
     </div>
-
-    <footer class="lf"><span>Ω SYD OMEGA 91717</span><span id="graph-ts"></span></footer>
+    <div class="d3-tip" id="d3-tip"></div>
   </div>
 </div>
 
-<script type="module">
-const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
-const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+<!-- LEGEND TAB -->
+<div class="tab-panel" id="tab-legend">
+  <div class="legend-section">
+    <p class="sechead">ELEMENTAL ALIGNMENTS</p>
+    <div class="legend-grid">
+      <div class="legend-item"><div class="legend-dot2" style="background:#E86A3A"></div><div class="legend-text2"><div class="legend-label2">FIRE</div><div class="legend-desc2">Aries · Leo · Sagittarius — sovereign operators</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#34C6E6"></div><div class="legend-text2"><div class="legend-label2">WATER</div><div class="legend-desc2">Cancer · Scorpio · Pisces — depth navigators</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#A9C2D8"></div><div class="legend-text2"><div class="legend-label2">WIND</div><div class="legend-desc2">Gemini · Libra · Aquarius — information vectors</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#C7CDD6"></div><div class="legend-text2"><div class="legend-label2">METAL</div><div class="legend-desc2">Taurus · Virgo · Capricorn — structure builders</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#D9B86A"></div><div class="legend-text2"><div class="legend-label2">SAND</div><div class="legend-desc2">Cusp operators — boundary walkers</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#9B6BF0"></div><div class="legend-text2"><div class="legend-label2">SOUL</div><div class="legend-desc2">Scorpio (deep) — shadow navigators</div></div></div>
+    </div>
+    <p class="sechead" style="margin-top:1rem">OLYMPIAN PATRONS</p>
+    <div class="legend-grid">
+      <div class="legend-item"><div class="legend-dot2" style="background:#E2C86D"></div><div class="legend-text2"><div class="legend-label2">ZEUS · SAGITTARIUS</div><div class="legend-desc2">Authority, expansion, divine law</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#00E5FF"></div><div class="legend-text2"><div class="legend-label2">ATHENA · VIRGO</div><div class="legend-desc2">Wisdom, craft, strategic intelligence</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#FFD700"></div><div class="legend-text2"><div class="legend-label2">APOLLO · LEO</div><div class="legend-desc2">Truth, art, solar sovereignty</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#0077FF"></div><div class="legend-text2"><div class="legend-label2">POSEIDON · PISCES/SCORPIO</div><div class="legend-desc2">Depth, mystery, unconscious forces</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#8B0000"></div><div class="legend-text2"><div class="legend-label2">ARES · ARIES</div><div class="legend-desc2">Conflict, drive, sovereign assertion</div></div></div>
+      <div class="legend-item"><div class="legend-dot2" style="background:#C0C0C0"></div><div class="legend-text2"><div class="legend-label2">HERMES · GEMINI</div><div class="legend-desc2">Communication, trade, intelligence</div></div></div>
+    </div>
+  </div>
+</div>
 
-const PHI=1.6180339887,EU=2.7182818285;
-const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+<!-- MEMBERS TAB -->
+<div class="tab-panel" id="tab-members">
+  <div class="members-list" id="members-list"><div class="members-empty">Loading members…</div></div>
+</div>
 
-const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
-const SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
-const ELEM_COLOR={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0',Space:'#7C4DFF',Void:'#334','The All':'#3fb27f'};
-const GOD_COLOR={Ares:'#8B0000',Aphrodite:'#FF69B4',Hermes:'#C0C0C0',Artemis:'#C8E6C9',Apollo:'#FFD700',Athena:'#00E5FF',Hera:'#9B6BF0',Demeter:'#8BC34A',Zeus:'#E2C86D',Hestia:'#FF7043',Hephaestus:'#FF5722',Poseidon:'#0077FF'};
+<!-- SCIENCE TAB -->
+<div class="tab-panel" id="tab-science">
+  <div style="padding:1.5rem;max-width:720px">
+    <p class="sechead">GRAPH ARCHITECTURE</p>
+    <div class="card-grid">
+      <div class="card"><div class="card-title">D3 FORCE ENGINE</div><div class="card-body">The constellation graph renders via D3 v7 force simulation, loaded dynamically from esm.sh. Five force types: link (distance by type), charge (repulsion by node type), center (gravity), collision (size-aware). Draggable nodes.</div></div>
+      <div class="card"><div class="card-title">NODE HIERARCHY</div><div class="card-body">Four node types: ELEMENT (largest, 28px, glowing), GOD (22px, glowing), SIGN (14px, element-coloured), MEMBER (6–17px, authority-scaled). Links: sign→element, sign→god, member→sign.</div></div>
+      <div class="card"><div class="card-title">MEMBER DATA</div><div class="card-body">Member nodes are sourced from <code>profiles</code> where <code>access_approved=true</code>. Node size scales with gate number (auth → gate → radius). Only public profile fields are used (display_name, zodiac_sign, axis_a/b/c).</div></div>
+      <div class="card"><div class="card-title">SVG RENDERING</div><div class="card-body">Graph renders as inline SVG inside the page. Zoom: D3 zoom (scale 0.2–4×). Pan: drag anywhere on SVG canvas. Glow filter applied to element and god nodes via SVG feGaussianBlur. All labels are SVG text elements.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+var EC={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A',Soul:'#9B6BF0',Space:'#7C4DFF',Void:'#334','The All':'#3fb27f'};
+var GC={Ares:'#8B0000',Aphrodite:'#FF69B4',Hermes:'#C0C0C0',Artemis:'#C8E6C9',Apollo:'#FFD700',Athena:'#00E5FF',Hera:'#9B6BF0',Demeter:'#8BC34A',Zeus:'#E2C86D',Hestia:'#FF7043',Hephaestus:'#FF5722',Poseidon:'#0077FF'};
+var SE={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+var SG={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
+var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+var PHI=1.6180339887,EU=2.7182818285;
+var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+
+function setTab(name){
+  var tabs=['graph','legend','members','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
 
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
-function getGate(auth){
-  let gate=0;
-  GATE_THRESH.forEach((t,i)=>{if(auth>=t)gate=i;});
-  return {num:gate+1,name:GATE_NAMES[gate]};
-}
+function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return{num:g+1,name:GATE_NAMES[g]};}
 
-/* ── Auth ── */
-const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
-const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
-const {data:{session}}=await sb.auth.getSession();
-if(!session){location.href='/account.html';throw 0;}
-const {data:myProf}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-if(myProf&&myProf.approval_status==='pending'){location.href='/pending.html';throw 0;}
-if(window.__omegaApprove)window.__omegaApprove(true);
-window.__omegaProfile=myProf||{};
-window.__omegaUser=session.user;
-window.dispatchEvent(new CustomEvent('omega:user-loaded',{detail:{profile:myProf,user:session.user}}));
-
-/* ── Members ── */
-const {data:members=[]}=await sb.from('profiles').select('id,display_name,full_name,zodiac_sign,axis_a,axis_b,axis_c,is_owner').eq('approval_status','approved');
-
-/* ── Build graph data ── */
-const nodes=[];
-const links=[];
-const nodeMap={};
-
-function addNode(id,label,type,color,size,meta){
-  if(!nodeMap[id]){
-    const n={id,label,type,color,size:size||12,meta:meta||{}};
-    nodes.push(n);
-    nodeMap[id]=n;
-  }
-  return nodeMap[id];
-}
-
-/* Element nodes */
-Object.entries(ELEM_COLOR).forEach(([elem,col])=>{
-  if(['Space','Void','The All'].includes(elem))return;
-  addNode('elem:'+elem,elem,'element',col,28,{type:'element',name:elem});
-});
-
-/* God nodes */
-Object.entries(GOD_COLOR).forEach(([god,col])=>{
-  addNode('god:'+god,god,'god',col,22,{type:'god',name:god});
-});
-
-/* Sign nodes + links */
-const SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
-SIGNS.forEach(sign=>{
-  const elem=SIGN_ELEM[sign];
-  const god=SIGN_GOD[sign];
-  const col=ELEM_COLOR[elem]||'#E2C86D';
-  addNode('sign:'+sign,sign,'sign',col+'88',14,{type:'sign',sign,element:elem,god});
-  links.push({source:'sign:'+sign,target:'elem:'+elem,type:'sign-elem'});
-  links.push({source:'sign:'+sign,target:'god:'+god,type:'sign-god'});
-});
-
-/* Member nodes */
-members.forEach(m=>{
-  const sign=m.zodiac_sign;
-  if(!sign||!SIGN_ELEM[sign])return;
-  const a=Number(m.axis_a||0),b=Number(m.axis_b||0),c=Number(m.axis_c||0);
-  const auth=m.is_owner?27.8367:calcAuth(a,b,c);
-  const gate=getGate(auth);
-  const elem=SIGN_ELEM[sign];
-  const col=ELEM_COLOR[elem]||'#E2C86D';
-  const name=m.display_name||m.full_name||'Sovereign';
-  const sz=6+gate.num*0.8;
-  addNode('member:'+m.id,name,'member',col+'60',sz,{type:'member',name,sign,element:elem,auth:auth.toFixed(4),gate:gate.num+' · '+gate.name});
-  links.push({source:'member:'+m.id,target:'sign:'+sign,type:'member-sign'});
-});
-
-/* ── D3 ── */
-const d3=await import('https://esm.sh/d3@7');
-
-const wrap=document.getElementById('graph-wrap');
-const W=wrap.clientWidth||800;
-const H=wrap.clientHeight||600;
-
-const svg=d3.select('#graph-svg')
-  .attr('viewBox',[0,0,W,H]);
-
-/* Defs — glow filter */
-const defs=svg.append('defs');
-const filter=defs.append('filter').attr('id','glow').attr('x','-50%').attr('y','-50%').attr('width','200%').attr('height','200%');
-filter.append('feGaussianBlur').attr('stdDeviation','4').attr('result','coloredBlur');
-const feMerge=filter.append('feMerge');
-feMerge.append('feMergeNode').attr('in','coloredBlur');
-feMerge.append('feMergeNode').attr('in','SourceGraphic');
-
-const g=svg.append('g');
-
-/* Zoom */
-const zoom=d3.zoom().scaleExtent([0.2,4]).on('zoom',e=>g.attr('transform',e.transform));
-svg.call(zoom);
-
-window.resetZoom=()=>svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity.translate(W/2,H/2).scale(0.8));
-
-let currentView='all';
+var currentView='all';
 window.setView=function(v){
   currentView=v;
-  document.querySelectorAll('.gctrl').forEach(b=>{
-    b.classList.toggle('active',b.textContent.toLowerCase().includes(v==='all'?'all':v));
-  });
+  ['all','elements','signs','gods'].forEach(function(n){var b=document.getElementById('ctrl-'+n);if(b)b.classList.toggle('active',n===v);});
   updateVisibility();
 };
 
+var linkSel=null,nodeSel=null;
 function updateVisibility(){
-  node.style('opacity',d=>{
+  if(!nodeSel)return;
+  nodeSel.style('opacity',function(d){
     if(currentView==='all')return null;
     if(currentView==='elements')return d.type==='element'?1:0.08;
-    if(currentView==='signs')return ['element','sign'].includes(d.type)?1:0.08;
+    if(currentView==='signs')return['element','sign'].includes(d.type)?1:0.08;
     if(currentView==='gods')return d.type==='god'?1:0.08;
     return null;
   });
-  link.style('opacity',d=>{
+  linkSel.style('opacity',function(d){
     if(currentView==='all')return null;
     if(currentView==='elements')return 0.03;
     if(currentView==='signs')return d.type==='sign-elem'?0.4:0.04;
@@ -237,94 +160,131 @@ function updateVisibility(){
   });
 }
 
-/* Simulation */
-const sim=d3.forceSimulation(nodes)
-  .force('link',d3.forceLink(links).id(d=>d.id).distance(d=>{
-    if(d.type==='sign-elem')return 80;
-    if(d.type==='sign-god')return 90;
-    return 50;
-  }).strength(d=>d.type==='member-sign'?0.3:0.6))
-  .force('charge',d3.forceManyBody().strength(d=>{
-    if(d.type==='element')return -400;
-    if(d.type==='god')return -300;
-    if(d.type==='sign')return -200;
-    return -60;
-  }))
-  .force('center',d3.forceCenter(W/2,H/2))
-  .force('collision',d3.forceCollide().radius(d=>d.size+4))
-  .alphaDecay(0.02);
+window.resetZoom=function(){if(window._graphZoomFn)window._graphZoomFn();};
 
-/* Links */
-const link=g.append('g')
-  .selectAll('line')
-  .data(links)
-  .join('line')
-  .attr('stroke',d=>{
-    if(d.type==='sign-elem')return 'rgba(201,168,76,.25)';
-    if(d.type==='sign-god')return 'rgba(0,229,255,.15)';
-    return 'rgba(255,255,255,.04)';
-  })
-  .attr('stroke-width',d=>d.type==='member-sign'?0.5:1.2);
+function buildMembersTab(members){
+  var list=document.getElementById('members-list');
+  list.innerHTML='';
+  if(!members||!members.length){var em=document.createElement('div');em.className='members-empty';em.textContent='No members found.';list.appendChild(em);return;}
+  members.forEach(function(m){
+    var sign=m.zodiac_sign||'';
+    if(!sign)return;
+    var a=Number(m.axis_a||0),b=Number(m.axis_b||0),c=Number(m.axis_c||0);
+    var auth=m.is_owner?27.8367:calcAuth(a,b,c);
+    var gate=getGate(auth);
+    var elem=SE[sign]||'Sand';
+    var col=EC[elem]||'#D9B86A';
+    var row=document.createElement('div');row.className='member-row';
+    var dot=document.createElement('div');dot.className='member-dot';dot.style.background=col;
+    var name=document.createElement('div');name.className='member-name';name.textContent=(m.display_name||'Anonymous').toUpperCase();
+    var signEl=document.createElement('div');signEl.className='member-sign';signEl.textContent=sign.toUpperCase()+' · '+elem.toUpperCase();
+    var authEl=document.createElement('div');authEl.className='member-auth';authEl.textContent=auth.toFixed(4);
+    row.appendChild(dot);row.appendChild(name);row.appendChild(signEl);row.appendChild(authEl);
+    list.appendChild(row);
+  });
+}
 
-/* Nodes */
-const node=g.append('g')
-  .selectAll('g')
-  .data(nodes)
-  .join('g')
-  .attr('cursor','pointer')
-  .call(d3.drag()
-    .on('start',dragStart)
-    .on('drag',dragged)
-    .on('end',dragEnd));
-
-node.append('circle')
-  .attr('r',d=>d.size)
-  .attr('fill',d=>d.color)
-  .attr('stroke',d=>{
-    if(d.type==='element')return d.color;
-    if(d.type==='god')return d.color;
-    if(d.type==='sign')return d.color;
-    return 'rgba(255,255,255,.1)';
-  })
-  .attr('stroke-width',d=>['element','god'].includes(d.type)?2:1)
-  .attr('filter',d=>['element','god'].includes(d.type)?'url(#glow)':null);
-
-node.filter(d=>['element','god','sign'].includes(d.type))
-  .append('text')
-  .attr('text-anchor','middle')
-  .attr('dy',d=>d.type==='element'?'0.35em':d.size+10)
-  .attr('fill',d=>d.type==='element'?'#020206':d.color)
-  .attr('font-family','"Courier Prime",monospace')
-  .attr('font-size',d=>d.type==='element'?8:7)
-  .attr('font-weight','bold')
-  .attr('letter-spacing','1px')
-  .attr('pointer-events','none')
-  .text(d=>d.label.toUpperCase());
-
-/* Tooltip */
-const tip=document.getElementById('d3-tip');
-node.on('mousemove',(e,d)=>{
-  tip.style.display='block';
-  tip.style.left=(e.clientX+14)+'px';
-  tip.style.top=(e.clientY-10)+'px';
-  const m=d.meta;
-  if(m.type==='element')tip.innerHTML=`<b style="color:${d.color}">${m.name} ELEMENT</b>`;
-  else if(m.type==='god')tip.innerHTML=`<b style="color:${d.color}">OLYMPIAN · ${m.name.toUpperCase()}</b>`;
-  else if(m.type==='sign')tip.innerHTML=`<b style="color:${d.color}">${m.sign.toUpperCase()}</b><br>ELEMENT · ${m.element}<br>PATRON · ${m.god}`;
-  else tip.innerHTML=`<b>${m.name}</b><br>SIGN · ${m.sign||'?'}<br>ELEMENT · ${m.element||'?'}<br>AUTH · ${m.auth||'?'}<br>GATE ${m.gate||'?'}`;
-}).on('mouseleave',()=>{tip.style.display='none';});
-
-function dragStart(e,d){if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;}
-function dragged(e,d){d.fx=e.x;d.fy=e.y;}
-function dragEnd(e,d){if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}
-
-sim.on('tick',()=>{
-  link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
-      .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
-  node.attr('transform',d=>`translate(${d.x},${d.y})`);
-});
-
-document.getElementById('graph-ts').textContent='RENDERED '+new Date().toUTCString().split(' ').slice(1,4).join(' ');
+async function initGraph(d3,members){
+  var wrap=document.getElementById('graph-wrap');
+  var W=wrap.clientWidth||800;
+  var H=wrap.clientHeight||600;
+  var nodes=[],links=[],nodeMap={};
+  function addNode(id,label,type,color,size,meta){
+    if(!nodeMap[id]){var n={id:id,label:label,type:type,color:color,size:size||12,meta:meta||{}};nodes.push(n);nodeMap[id]=n;}
+    return nodeMap[id];
+  }
+  Object.entries(EC).forEach(function(entry){
+    var elem=entry[0],col=entry[1];
+    if(['Space','Void','The All'].includes(elem))return;
+    addNode('elem:'+elem,elem,'element',col,28,{type:'element',name:elem});
+  });
+  Object.entries(GC).forEach(function(entry){addNode('god:'+entry[0],entry[0],'god',entry[1],22,{type:'god',name:entry[0]});});
+  SIGNS.forEach(function(sign){
+    var elem=SE[sign],god=SG[sign];
+    var col=(EC[elem]||'#D4AF37')+'88';
+    addNode('sign:'+sign,sign,'sign',col,14,{type:'sign',sign:sign,element:elem,god:god});
+    links.push({source:'sign:'+sign,target:'elem:'+elem,type:'sign-elem'});
+    links.push({source:'sign:'+sign,target:'god:'+god,type:'sign-god'});
+  });
+  members.forEach(function(m){
+    var sign=m.zodiac_sign;
+    if(!sign||!SE[sign])return;
+    var a=Number(m.axis_a||0),b=Number(m.axis_b||0),c=Number(m.axis_c||0);
+    var auth=m.is_owner?27.8367:calcAuth(a,b,c);
+    var gate=getGate(auth);
+    var elem=SE[sign];
+    var col=(EC[elem]||'#D4AF37')+'60';
+    var sz=6+gate.num*0.8;
+    addNode('member:'+m.id,(m.display_name||m.full_name||'Sovereign'),'member',col,sz,{type:'member',name:m.display_name||'Sovereign',sign:sign,element:elem,auth:auth.toFixed(4),gate:gate.num+' · '+gate.name});
+    links.push({source:'member:'+m.id,target:'sign:'+sign,type:'member-sign'});
+  });
+  var svg=d3.select('#graph-svg').attr('viewBox',[0,0,W,H]);
+  var defs=svg.append('defs');
+  var filter=defs.append('filter').attr('id','glow').attr('x','-50%').attr('y','-50%').attr('width','200%').attr('height','200%');
+  filter.append('feGaussianBlur').attr('stdDeviation','4').attr('result','coloredBlur');
+  var fm=filter.append('feMerge');
+  fm.append('feMergeNode').attr('in','coloredBlur');
+  fm.append('feMergeNode').attr('in','SourceGraphic');
+  var g=svg.append('g');
+  var zoom=d3.zoom().scaleExtent([0.2,4]).on('zoom',function(e){g.attr('transform',e.transform);});
+  svg.call(zoom);
+  window._graphZoomFn=function(){svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity.translate(W/2,H/2).scale(0.8));};
+  var sim=d3.forceSimulation(nodes)
+    .force('link',d3.forceLink(links).id(function(d){return d.id;}).distance(function(d){return d.type==='sign-elem'?80:d.type==='sign-god'?90:50;}).strength(function(d){return d.type==='member-sign'?0.3:0.6;}))
+    .force('charge',d3.forceManyBody().strength(function(d){return d.type==='element'?-400:d.type==='god'?-300:d.type==='sign'?-200:-60;}))
+    .force('center',d3.forceCenter(W/2,H/2))
+    .force('collision',d3.forceCollide().radius(function(d){return d.size+4;}))
+    .alphaDecay(0.02);
+  linkSel=g.append('g').selectAll('line').data(links).join('line')
+    .attr('stroke',function(d){return d.type==='sign-elem'?'rgba(201,168,76,.25)':d.type==='sign-god'?'rgba(0,229,255,.15)':'rgba(255,255,255,.04)';})
+    .attr('stroke-width',function(d){return d.type==='member-sign'?0.5:1.2;});
+  nodeSel=g.append('g').selectAll('g').data(nodes).join('g').attr('cursor','pointer')
+    .call(d3.drag().on('start',function(e,d){if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;}).on('drag',function(e,d){d.fx=e.x;d.fy=e.y;}).on('end',function(e,d){if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}));
+  nodeSel.append('circle').attr('r',function(d){return d.size;}).attr('fill',function(d){return d.color;})
+    .attr('stroke',function(d){return ['element','god','sign'].includes(d.type)?d.color:'rgba(255,255,255,.1)';})
+    .attr('stroke-width',function(d){return['element','god'].includes(d.type)?2:1;})
+    .attr('filter',function(d){return['element','god'].includes(d.type)?'url(#glow)':null;});
+  nodeSel.filter(function(d){return['element','god','sign'].includes(d.type);})
+    .append('text').attr('text-anchor','middle')
+    .attr('dy',function(d){return d.type==='element'?'0.35em':d.size+10;})
+    .attr('fill',function(d){return d.type==='element'?'#020206':d.color;})
+    .attr('font-family','monospace').attr('font-size',function(d){return d.type==='element'?8:7;})
+    .attr('font-weight','bold').attr('letter-spacing','1px').attr('pointer-events','none')
+    .text(function(d){return d.label.toUpperCase();});
+  var tip=document.getElementById('d3-tip');
+  nodeSel.on('mousemove',function(e,d){
+    tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';
+    var m=d.meta;
+    var inner='';
+    if(m.type==='element')inner='<b style="color:'+d.color+'">'+m.name+' ELEMENT</b>';
+    else if(m.type==='god')inner='<b style="color:'+d.color+'">OLYMPIAN · '+m.name.toUpperCase()+'</b>';
+    else if(m.type==='sign')inner='<b style="color:'+d.color+'">'+m.sign.toUpperCase()+'</b><br>ELEMENT · '+(m.element||'')+'<br>PATRON · '+(m.god||'');
+    else{var nm=document.createElement('div');nm.textContent=m.name;inner='<b>'+nm.textContent+'</b><br>SIGN · '+(m.sign||'?')+'<br>ELEMENT · '+(m.element||'?')+'<br>AUTH · '+(m.auth||'?')+'<br>GATE '+(m.gate||'?');}
+    tip.innerHTML=inner;
+  }).on('mouseleave',function(){tip.style.display='none';});
+  sim.on('tick',function(){
+    linkSel.attr('x1',function(d){return d.source.x;}).attr('y1',function(d){return d.source.y;})
+           .attr('x2',function(d){return d.target.x;}).attr('y2',function(d){return d.target.y;});
+    nodeSel.attr('transform',function(d){return'translate('+d.x+','+d.y+')';});
+  });
+}
 </script>
-</body>
-</html>
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+  var membersRes=await sb.from('profiles').select('id,display_name,full_name,zodiac_sign,axis_a,axis_b,axis_c,is_owner').eq('access_approved',true);
+  var members=membersRes.data||[];
+  buildMembersTab(members);
+  var d3=await import('https://esm.sh/d3@7');
+  await initGraph(d3,members);
+})();
+</script>
+<script src="/bg.js"></script>
+</body></html>

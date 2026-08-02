@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Wisdom · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;--purple:#9C6FD6;--blue:#5C8FD6;}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* DAILY QUOTE */
+.dq-block{border:1px solid rgba(201,168,76,.15);padding:30px 24px;margin-bottom:20px;background:rgba(0,0,0,.35);text-align:center}
+.dq-text{font-family:var(--M);font-size:14px;letter-spacing:1px;color:var(--gold);line-height:2;max-width:560px;margin:0 auto 14px}
+.dq-attr{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--dim)}
+.dq-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.15);color:var(--dim);display:inline-block;margin-top:10px}
+
+/* SEARCH */
+.search-bar{display:flex;gap:6px;margin-bottom:12px}
+.search-input{flex:1;padding:9px 12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none}
+.search-input:focus{border-color:rgba(201,168,76,.28)}
+.search-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 16px;border:1px solid rgba(201,168,76,.2);color:var(--gold);background:rgba(201,168,76,.05);cursor:pointer;transition:.1s}
+.search-btn:hover{background:rgba(201,168,76,.12)}
+
+/* FILTER */
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.flt{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.flt:hover,.flt.sel{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
+
+/* QUOTE CARDS */
+.q-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:8px;background:rgba(0,0,0,.2)}
+.q-text{font-family:var(--M);font-size:10px;letter-spacing:.5px;color:rgba(200,196,176,.85);line-height:1.85;margin-bottom:8px}
+.q-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.q-attr{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold)}
+.q-actions{display:flex;gap:6px;align-items:center}
+.q-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.q-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.q-btn.del:hover{color:#EF5350;border-color:rgba(239,83,80,.3)}
+.q-btn.fav{color:var(--gold)}
+.q-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.q-tag-chip{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid rgba(201,168,76,.1);color:var(--dim)}
+
+/* SECT */
+.sect{margin-bottom:24px}
+.sect-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* FORM */
+.form-group{margin-bottom:12px}
+.form-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;display:block}
+.form-input{width:100%;padding:9px 12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none}
+.form-input:focus{border-color:rgba(201,168,76,.28)}
+textarea.form-input{min-height:80px;resize:none;line-height:1.75}
+.btn-action{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:11px 24px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.35);color:var(--gold);cursor:pointer;transition:.1s;width:100%}
+.btn-action:hover{background:rgba(201,168,76,.15)}
+
+/* AUTHOR GRID */
+.author-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.author-card{border:1px solid rgba(201,168,76,.08);padding:12px;background:rgba(0,0,0,.2);cursor:pointer;transition:.1s}
+.author-card:hover{border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.04)}
+.author-name{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--gold);margin-bottom:2px}
+.author-count{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim)}
+
+.empty-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN WISDOM</span>
+    <span class="tb-meta" id="tb-count">── 0 QUOTES</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" onclick="switchTab(this,'t1')">◆ DAILY WISDOM</button>
+    <button class="lt" onclick="switchTab(this,'t2')">▶ LIBRARY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">▲ ADD QUOTE</button>
+    <button class="lt" onclick="switchTab(this,'t4')">⚙ BY AUTHOR</button>
+  </div>
+
+  <!-- TAB 1: DAILY WISDOM -->
+  <div class="tab-pane active" id="t1">
+    <div class="dq-block" id="daily-quote-block">
+      <div class="dq-text" id="dq-text">Loading your wisdom library...</div>
+      <div class="dq-attr" id="dq-attr">—</div>
+      <div id="dq-tags"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button class="lt" onclick="rotateDQ()" style="flex:1;padding:11px">⟳ NEXT QUOTE</button>
+      <button class="lt" onclick="favDQ()" style="flex:1;padding:11px">★ FAVOURITE</button>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">FEATURED CATEGORIES</div>
+      <div class="filter-row" id="cat-feat-row"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: LIBRARY -->
+  <div class="tab-pane" id="t2">
+    <div class="search-bar">
+      <input class="search-input" type="text" id="search-inp" placeholder="Search quotes, authors, or tags..." oninput="renderLibrary()"/>
+      <button class="search-btn" onclick="renderLibrary()">▶</button>
+    </div>
+    <div class="filter-row" id="lib-filter-row"></div>
+    <div id="quote-list"></div>
+  </div>
+
+  <!-- TAB 3: ADD QUOTE -->
+  <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">CAPTURE WISDOM</div>
+      <div class="form-group">
+        <label class="form-label" for="q-text">QUOTE TEXT</label>
+        <textarea class="form-input" id="q-text" placeholder="Enter the quote exactly as written..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="q-author">AUTHOR / SOURCE</label>
+        <input class="form-input" type="text" id="q-author" placeholder="Marcus Aurelius, Meditations"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="q-tags">TAGS (comma-separated)</label>
+        <input class="form-input" type="text" id="q-tags" placeholder="stoicism, resilience, mindset"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="q-note">PERSONAL NOTE (optional)</label>
+        <input class="form-input" type="text" id="q-note" placeholder="Why this quote matters to you..."/>
+      </div>
+      <button class="btn-action" onclick="addQuote()">+ SAVE TO WISDOM LIBRARY</button>
+    </div>
+  </div>
+
+  <!-- TAB 4: BY AUTHOR -->
+  <div class="tab-pane" id="t4">
+    <div class="sect">
+      <div class="sect-hd">AUTHORS IN YOUR LIBRARY</div>
+      <div class="author-grid" id="author-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script src="omega-ui.js"></script>
+<script>
+const Q_KEY = 'omega_quotes';
+
+const SEED_QUOTES = [
+  {id:1, text:'You have power over your mind, not outside events. Realize this, and you will find strength.', author:'Marcus Aurelius, Meditations', tags:['stoicism','mindset','power'], fav:false, note:''},
+  {id:2, text:'The impediment to action advances action. What stands in the way becomes the way.', author:'Marcus Aurelius, Meditations', tags:['stoicism','obstacles','strategy'], fav:false, note:''},
+  {id:3, text:'It is not that I am smart, it is just that I stay with problems longer.', author:'Albert Einstein', tags:['persistence','genius','mastery'], fav:false, note:''},
+  {id:4, text:'Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn\'t, pays it.', author:'Albert Einstein (attributed)', tags:['wealth','compounding','patience'], fav:false, note:''},
+  {id:5, text:'The only way to do great work is to love what you do.', author:'Steve Jobs', tags:['purpose','mastery','work'], fav:false, note:''},
+  {id:6, text:'Waste no more time arguing what a good man should be. Be one.', author:'Marcus Aurelius, Meditations', tags:['stoicism','character','action'], fav:false, note:''},
+  {id:7, text:'The man who reads everything is like the man who eats everything: he can digest nothing.', author:'Edmund Burke', tags:['reading','focus','curation'], fav:false, note:''},
+  {id:8, text:'First, have a definite, clear practical ideal; a goal, an objective. Second, have the necessary means to achieve your ends: wisdom, money, materials, and methods. Third, adjust all your means to that end.', author:'Aristotle', tags:['strategy','goals','wisdom'], fav:false, note:''},
+  {id:9, text:'The secret of getting ahead is getting started.', author:'Mark Twain', tags:['action','momentum','beginnings'], fav:false, note:''},
+  {id:10, text:'An investment in knowledge pays the best interest.', author:'Benjamin Franklin', tags:['knowledge','wealth','learning'], fav:false, note:''},
+  {id:11, text:'Wealth consists not in having great possessions, but in having few wants.', author:'Epictetus', tags:['stoicism','wealth','simplicity'], fav:false, note:''},
+  {id:12, text:'He who has a why to live can bear almost any how.', author:'Friedrich Nietzsche', tags:['purpose','resilience','meaning'], fav:false, note:''},
+  {id:13, text:'The quality of your life is the quality of your relationships.', author:'Tony Robbins', tags:['relationships','life','quality'], fav:false, note:''},
+  {id:14, text:'Begin at once to live, and count each separate day as a separate life.', author:'Seneca, Letters to Lucilius', tags:['stoicism','presence','urgency'], fav:false, note:''},
+  {id:15, text:'It is not death that a man should fear, but he should fear never beginning to live.', author:'Marcus Aurelius, Meditations', tags:['stoicism','life','fear'], fav:false, note:''},
+  {id:16, text:'The greatest wealth is to live content with little.', author:'Plato', tags:['philosophy','wealth','contentment'], fav:false, note:''},
+  {id:17, text:'Discipline is the bridge between goals and accomplishment.', author:'Jim Rohn', tags:['discipline','achievement','mastery'], fav:false, note:''},
+  {id:18, text:'Take care of your body. It\'s the only place you have to live.', author:'Jim Rohn', tags:['health','body','sovereignty'], fav:false, note:''},
+  {id:19, text:'The reading of all good books is like conversation with the finest men of past centuries.', author:'René Descartes', tags:['reading','knowledge','mentorship'], fav:false, note:''},
+  {id:20, text:'Absorb what is useful, discard what is useless, and add what is specifically your own.', author:'Bruce Lee', tags:['mastery','learning','identity'], fav:false, note:''},
+  {id:21, text:'Success is peace of mind, which is a direct result of self-satisfaction in knowing you made the effort to become the best of which you are capable.', author:'John Wooden', tags:['success','peace','effort'], fav:false, note:''},
+  {id:22, text:'The more I read, the more I acquire, the more certain I am that I know nothing.', author:'Voltaire', tags:['wisdom','humility','reading'], fav:false, note:''},
+  {id:23, text:'Action is the foundational key to all success.', author:'Pablo Picasso', tags:['action','success','mastery'], fav:false, note:''},
+  {id:24, text:'Give me six hours to chop down a tree and I will spend the first four sharpening the axe.', author:'Abraham Lincoln', tags:['preparation','strategy','mastery'], fav:false, note:''},
+  {id:25, text:'The two most powerful warriors are patience and time.', author:'Leo Tolstoy, War and Peace', tags:['patience','time','strategy'], fav:false, note:''},
+];
+
+let allQuotes = [];
+let dqIndex = 0;
+let libFilter = 'all';
+
+/* ─── INIT ─── */
+function init(){
+  allQuotes = loadQuotes();
+  if(!allQuotes.length){
+    allQuotes = SEED_QUOTES.map(function(q){return Object.assign({},q);});
+    saveQuotes(allQuotes);
+  }
+  updateMeta();
+  buildCatFilter();
+  rotateDQ();
+}
+
+/* ─── DAILY QUOTE ─── */
+function rotateDQ(){
+  if(!allQuotes.length) return;
+  dqIndex=(dqIndex+1)%allQuotes.length;
+  showDQ(allQuotes[dqIndex]);
+}
+
+function showDQ(q){
+  document.getElementById('dq-text').textContent='"'+q.text+'"';
+  document.getElementById('dq-attr').textContent='— '+(q.author||'Unknown');
+  var tDiv=document.getElementById('dq-tags'); tDiv.innerHTML='';
+  (q.tags||[]).forEach(function(t){
+    var s=document.createElement('span'); s.className='dq-tag'; s.textContent=t;
+    tDiv.appendChild(s);
+  });
+}
+
+function favDQ(){
+  var q=allQuotes[dqIndex];
+  if(!q) return;
+  var idx=allQuotes.indexOf(q);
+  allQuotes[idx].fav=!allQuotes[idx].fav;
+  saveQuotes(allQuotes);
+}
+
+function buildCatFilter(){
+  var allTags={};
+  allQuotes.forEach(function(q){(q.tags||[]).forEach(function(t){allTags[t]=(allTags[t]||0)+1;});});
+  var top=Object.entries(allTags).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(e){return e[0];});
+  var row=document.getElementById('cat-feat-row'); row.innerHTML='';
+  ['all','favorites'].concat(top).forEach(function(tag){
+    var b=document.createElement('button'); b.className='flt'+(tag==='all'?' sel':'');
+    b.textContent=tag==='all'?'ALL':tag==='favorites'?'★ FAV':tag.toUpperCase();
+    b.onclick=function(){
+      document.querySelectorAll('#cat-feat-row .flt').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');
+      var pool=tag==='all'?allQuotes:tag==='favorites'?allQuotes.filter(function(q){return q.fav;}):allQuotes.filter(function(q){return(q.tags||[]).includes(tag);});
+      if(pool.length){dqIndex=Math.floor(Math.random()*pool.length);showDQ(pool[dqIndex]);}
+    };
+    row.appendChild(b);
+  });
+}
+
+/* ─── LIBRARY ─── */
+function renderLibrary(){
+  var q=document.getElementById('search-inp').value.toLowerCase().trim();
+  var data=libFilter==='all'?allQuotes:libFilter==='favorites'?allQuotes.filter(function(x){return x.fav;}):
+    allQuotes.filter(function(x){return(x.tags||[]).includes(libFilter);});
+  if(q){data=data.filter(function(x){return(x.text+' '+(x.author||'')+' '+(x.tags||[]).join(' ')).toLowerCase().includes(q);});}
+
+  var list=document.getElementById('quote-list'); list.innerHTML='';
+  if(!data.length){list.innerHTML='<div class="empty-state">NO QUOTES FOUND.</div>';return;}
+  data.forEach(function(qt){list.appendChild(makeQCard(qt));});
+}
+
+function makeQCard(q){
+  var d=document.createElement('div'); d.className='q-card';
+  d.innerHTML='<div class="q-text">"'+q.text+'"</div>'+
+    '<div class="q-meta">'+
+      '<div class="q-attr">— '+(q.author||'Unknown')+'</div>'+
+      '<div class="q-actions">'+
+        '<button class="q-btn fav'+(q.fav?' fav':'')+'" onclick="toggleFav('+q.id+',this)">'+(q.fav?'★':'☆')+'</button>'+
+        '<button class="q-btn del" onclick="delQuote('+q.id+')">✕</button>'+
+      '</div>'+
+    '</div>'+
+    (q.tags&&q.tags.length?'<div class="q-tags">'+q.tags.map(function(t){return'<span class="q-tag-chip">'+t+'</span>';}).join('')+'</div>':'')+
+    (q.note?'<div style="font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid rgba(201,168,76,.06)">'+q.note+'</div>':'');
+  return d;
+}
+
+function toggleFav(id,btn){
+  var idx=allQuotes.findIndex(function(q){return q.id===id;});
+  if(idx>-1){allQuotes[idx].fav=!allQuotes[idx].fav;saveQuotes(allQuotes);btn.textContent=allQuotes[idx].fav?'★':'☆';}
+}
+
+function delQuote(id){
+  allQuotes=allQuotes.filter(function(q){return q.id!==id;});
+  saveQuotes(allQuotes);
+  renderLibrary();
+  updateMeta();
+}
+
+function buildLibFilter(){
+  var allTags={};
+  allQuotes.forEach(function(q){(q.tags||[]).forEach(function(t){allTags[t]=(allTags[t]||0)+1;});});
+  var top=Object.entries(allTags).sort(function(a,b){return b[1]-a[1];}).slice(0,8).map(function(e){return e[0];});
+  var row=document.getElementById('lib-filter-row'); row.innerHTML='';
+  ['all','favorites'].concat(top).forEach(function(tag){
+    var b=document.createElement('button'); b.className='flt'+(tag===libFilter?' sel':'');
+    b.textContent=tag==='all'?'ALL':tag==='favorites'?'★ FAV':tag.toUpperCase();
+    b.onclick=function(){
+      libFilter=tag;
+      document.querySelectorAll('#lib-filter-row .flt').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');
+      renderLibrary();
+    };
+    row.appendChild(b);
+  });
+}
+
+/* ─── ADD QUOTE ─── */
+function addQuote(){
+  var text=document.getElementById('q-text').value.trim();
+  if(!text){alert('Enter quote text.');return;}
+  var author=document.getElementById('q-author').value.trim();
+  var rawTags=document.getElementById('q-tags').value;
+  var tags=rawTags?rawTags.split(',').map(function(t){return t.trim().toLowerCase();}).filter(Boolean):[];
+  var note=document.getElementById('q-note').value.trim();
+  allQuotes.unshift({id:Date.now(),text:text,author:author||'Unknown',tags:tags,fav:false,note:note});
+  saveQuotes(allQuotes);
+  document.getElementById('q-text').value='';
+  document.getElementById('q-author').value='';
+  document.getElementById('q-tags').value='';
+  document.getElementById('q-note').value='';
+  updateMeta();
+  buildCatFilter();
+}
+
+/* ─── AUTHORS ─── */
+function renderAuthors(){
+  var freq={};
+  allQuotes.forEach(function(q){var a=q.author||'Unknown';freq[a]=(freq[a]||0)+1;});
+  var sorted=Object.entries(freq).sort(function(a,b){return b[1]-a[1];});
+  var g=document.getElementById('author-grid'); g.innerHTML='';
+  if(!sorted.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1">ADD QUOTES TO SEE AUTHORS.</div>';return;}
+  sorted.forEach(function(e){
+    var d=document.createElement('div'); d.className='author-card';
+    d.innerHTML='<div class="author-name">'+e[0]+'</div><div class="author-count">'+e[1]+' quote'+(e[1]>1?'s':'')+'</div>';
+    d.onclick=function(){
+      libFilter='all';
+      document.getElementById('search-inp').value=e[0].split(',')[0];
+      switchTab(document.querySelectorAll('.lt')[1],'t2');
+      renderLibrary();
+    };
+    g.appendChild(d);
+  });
+}
+
+/* ─── META ─── */
+function updateMeta(){document.getElementById('tb-count').textContent='── '+allQuotes.length+' QUOTES';}
+
+/* ─── STORAGE ─── */
+function loadQuotes(){try{return JSON.parse(localStorage.getItem(Q_KEY)||'[]');}catch(e){return[];}}
+function saveQuotes(q){localStorage.setItem(Q_KEY,JSON.stringify(q));}
+
+/* ─── TAB SWITCH ─── */
+function switchTab(btn,id){
+  document.querySelectorAll('.lt').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='t2'){buildLibFilter();renderLibrary();}
+  if(id==='t4') renderAuthors();
+}
+
+init();
+</script>
+</body>
+</html>

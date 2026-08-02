@@ -110,6 +110,8 @@
     breath:       {label:'Breathwork',       section:'WELLNESS',  prev:'meditate',       next:'sleep'},
     water:        {label:'Hydration',        section:'WELLNESS',  prev:'nutrition',      next:'health'},
     reading:      {label:'Sovereign Reading',section:'MASTERY',   prev:'library',        next:'codex'},
+    quotes:       {label:'Sovereign Wisdom', section:'IDENTITY',  prev:'mirror',         next:'journal'},
+    weekly:       {label:'Weekly Review',    section:'STRATEGY',  prev:'command',        next:'roadmap'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

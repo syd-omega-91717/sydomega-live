@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Affirmations · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;--solar:#FF9800;
+}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* DAILY DISPLAY */
+.affirmation-stage{border:1px solid rgba(201,168,76,.15);padding:36px 24px;text-align:center;margin-bottom:20px;background:rgba(0,0,0,.35);position:relative;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.aff-category{font-family:var(--M);font-size:7px;letter-spacing:4px;color:var(--dim);margin-bottom:12px}
+.aff-text{font-family:var(--M);font-size:15px;letter-spacing:1.5px;color:var(--gold);line-height:2;max-width:560px;text-align:center;transition:opacity .4s}
+.aff-counter{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:14px}
+.aff-nav{display:flex;justify-content:center;gap:10px;margin-top:18px}
+.btn-nav{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.2);color:var(--gold);background:rgba(201,168,76,.05);cursor:pointer;transition:.1s}
+.btn-nav:hover{background:rgba(201,168,76,.12)}
+.btn-nav.gold{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.45)}
+
+/* SECT */
+.sect{margin-bottom:24px}
+.sect-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* CATEGORIES */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-bottom:16px}
+.cat-btn{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:10px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:rgba(0,0,0,.2);cursor:pointer;transition:.1s;text-align:center}
+.cat-btn:hover,.cat-btn.sel{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
+
+/* FORM */
+.form-group{margin-bottom:14px}
+.form-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;display:block}
+.form-input{width:100%;padding:9px 12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none}
+.form-input:focus{border-color:rgba(201,168,76,.28)}
+select.form-input option{background:#0a0a08;color:#c8c4b0}
+textarea.form-input{min-height:72px;resize:none;line-height:1.75}
+.btn-action{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:11px 24px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.35);color:var(--gold);cursor:pointer;transition:.1s;width:100%;margin-top:6px}
+.btn-action:hover{background:rgba(201,168,76,.15)}
+
+/* AFFIRMATION CARDS */
+.aff-card{border:1px solid rgba(201,168,76,.08);padding:14px;margin-bottom:8px;background:rgba(0,0,0,.2);display:flex;gap:10px;align-items:flex-start}
+.aff-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.aff-body{flex:1}
+.aff-card-text{font-family:var(--M);font-size:10px;letter-spacing:.5px;color:rgba(200,196,176,.85);line-height:1.75;margin-bottom:4px}
+.aff-card-meta{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap}
+.aff-actions{display:flex;gap:6px;margin-left:auto;flex-shrink:0}
+.aff-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.15);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.aff-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.aff-btn.fav{color:var(--gold)}
+.aff-btn.del:hover{color:#EF5350;border-color:rgba(239,83,80,.3)}
+
+/* DAILY LOG */
+.log-row{border:1px solid rgba(201,168,76,.06);padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.15)}
+.log-date{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim)}
+.log-count{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--gold)}
+.streak-display{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.streak-dot{width:14px;height:14px;border-radius:2px}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold)}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+
+/* SCIENCE */
+.sci-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.2)}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+.sci-cite{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8}
+
+.empty-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN AFFIRMATIONS</span>
+    <span class="tb-meta" id="tb-streak">── STREAK: 0 DAYS</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" onclick="switchTab(this,'t1')">◆ DAILY PRACTICE</button>
+    <button class="lt" onclick="switchTab(this,'t2')">▶ MY AFFIRMATIONS</button>
+    <button class="lt" onclick="switchTab(this,'t3')">▲ TRACKING</button>
+    <button class="lt" onclick="switchTab(this,'t4')">⚙ SCIENCE</button>
+  </div>
+
+  <!-- TAB 1: DAILY PRACTICE -->
+  <div class="tab-pane active" id="t1">
+    <div class="sect">
+      <div class="sect-hd">FILTER BY DOMAIN</div>
+      <div class="cat-grid" id="cat-filter-grid"></div>
+    </div>
+
+    <div class="affirmation-stage">
+      <div class="aff-category" id="stage-cat">ALL DOMAINS</div>
+      <div class="aff-text" id="stage-text">Loading affirmations...</div>
+      <div class="aff-counter" id="stage-counter">1 of —</div>
+      <div class="aff-nav">
+        <button class="btn-nav" onclick="prevAff()">◂ PREV</button>
+        <button class="btn-nav gold" onclick="markRead()">✓ AFFIRMED</button>
+        <button class="btn-nav" onclick="nextAff()">NEXT ▸</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button class="btn-nav" onclick="toggleFavCurrent()" style="flex:1">★ SAVE TO FAVORITES</button>
+      <button class="btn-nav" onclick="shuffleAff()" style="flex:1">⟳ SHUFFLE</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: MY AFFIRMATIONS -->
+  <div class="tab-pane" id="t2">
+    <div class="sect">
+      <div class="sect-hd">ADD AFFIRMATION</div>
+      <div class="form-group">
+        <label class="form-label" for="aff-input">AFFIRMATION TEXT</label>
+        <textarea class="form-input" id="aff-input" placeholder="Write in the first person, present tense: I am... I have... I create..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="aff-cat">DOMAIN</label>
+        <select class="form-input" id="aff-cat">
+          <option value="identity">IDENTITY</option>
+          <option value="mastery">MASTERY</option>
+          <option value="wealth">WEALTH</option>
+          <option value="health">HEALTH</option>
+          <option value="relationships">RELATIONSHIPS</option>
+          <option value="purpose">PURPOSE</option>
+          <option value="mindset">MINDSET</option>
+          <option value="sovereign">SOVEREIGN</option>
+        </select>
+      </div>
+      <button class="btn-action" onclick="addAffirmation()">+ ADD AFFIRMATION</button>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">LIBRARY</div>
+      <div class="cat-grid" id="lib-filter-grid" style="margin-bottom:12px"></div>
+      <div id="aff-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: TRACKING -->
+  <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">STATISTICS</div>
+      <div class="stat-row" id="track-stats"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">30-DAY STREAK</div>
+      <div class="streak-display" id="streak-display"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">PRACTICE HISTORY</div>
+      <div id="log-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div class="sci-card">
+      <div class="sci-title">SELF-AFFIRMATION THEORY</div>
+      <div class="sci-cite">Steele, C.M. (1988) — The Psychology of Self-Affirmation. Advances in Experimental Social Psychology, 21</div>
+      <div class="sci-body">Claude Steele's Self-Affirmation Theory demonstrates that reflecting on core values and personal strengths buffers against threatening information and reduces defensive responses. Affirming important values activates the self-system in a global way — not just defending one aspect of self, but affirming total self-integrity. This explains why affirmation practice reduces stress reactivity and improves decision quality under pressure.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">POSITIVE SELF-AFFIRMATIONS & NEURAL PATHWAYS</div>
+      <div class="sci-cite">Cascio, C.N. et al. (2016) — Self-affirmation activates brain systems associated with self-related processing and reward. Social Cognitive and Affective Neuroscience, 11(4)</div>
+      <div class="sci-body">fMRI research shows that self-affirmation tasks activate the ventromedial prefrontal cortex (vmPFC) and ventral striatum — regions associated with self-related processing and reward valuation. These are the same systems activated by receiving social approval. The neural signature of effective affirmation practice resembles experiencing valued social regard, explaining its mood-regulating and motivation-sustaining effects.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">IDENTITY-BASED HABIT FORMATION</div>
+      <div class="sci-cite">Clear, J. (2018) — Atomic Habits. Avery Publishing / Duhigg, C. (2012) — The Power of Habit. Random House</div>
+      <div class="sci-body">James Clear synthesizes habit research to argue that the most durable behavior change comes from identity-based affirmation: not "I want to run" but "I am a runner." Each identity-affirming statement acts as a vote for a self-concept, and each action consistent with that identity reinforces the belief. Affirmation practice is therefore not wishful thinking but the deliberate construction of a self-model that future behavior must match.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">AFFIRMATIONS & ACADEMIC PERFORMANCE</div>
+      <div class="sci-cite">Cohen, G.L. & Sherman, D.K. (2014) — The Psychology of Change. Annual Review of Psychology, 65</div>
+      <div class="sci-body">A series of randomized controlled studies showed that brief values-affirmation exercises (15 minutes, writing about important personal values) produced significant GPA gains for at-risk students lasting up to two years. The effect operated through reduced stress rumination and improved sense of belonging, suggesting that affirmation practice frees cognitive resources otherwise consumed by threat-monitoring and self-doubt.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">OPTIMAL AFFIRMATION STRUCTURE</div>
+      <div class="sci-cite">Creswell, J.D. et al. (2005) — Affirmation of personal values buffers neuroendocrine and psychological stress responses. Psychological Science, 16(11)</div>
+      <div class="sci-body">Research on effective affirmation structure shows that first-person, present-tense framing ("I am") is significantly more effective than future-tense or third-person framing. Specificity matters: "I handle financial challenges with clarity and resourcefulness" outperforms generic "I am successful." The most potent affirmations link identity to a valued domain and describe a behavioral capability rather than a desired outcome.</div>
+    </div>
+  </div>
+</div>
+
+<script src="omega-ui.js"></script>
+<script>
+const AFF_KEY   = 'omega_affirmations';
+const LOG_KEY   = 'omega_aff_log';
+
+const CAT_COLORS = {
+  identity:'#C9A84C', mastery:'#5C8FD6', wealth:'#4CAF50',
+  health:'#26C6DA', relationships:'#FF9800', purpose:'#9C6FD6',
+  mindset:'#EF5350', sovereign:'#CE93D8',
+};
+const CAT_LABELS = {
+  identity:'IDENTITY', mastery:'MASTERY', wealth:'WEALTH',
+  health:'HEALTH', relationships:'RELATIONS', purpose:'PURPOSE',
+  mindset:'MINDSET', sovereign:'SOVEREIGN',
+};
+
+const SEED_AFFIRMATIONS = [
+  {id:1, text:'I am a sovereign being who commands my mind, body, and future with absolute clarity.', cat:'sovereign', fav:false},
+  {id:2, text:'I create wealth through disciplined action, strategic thinking, and compounding excellence.', cat:'wealth', fav:false},
+  {id:3, text:'I operate at my highest level because I protect my time, energy, and attention as sacred resources.', cat:'mastery', fav:false},
+  {id:4, text:'I am in complete command of my emotional state and choose my responses deliberately.', cat:'mindset', fav:false},
+  {id:5, text:'My body is a high-performance instrument that I fuel, train, and restore with precision.', cat:'health', fav:false},
+  {id:6, text:'I attract deep, loyal, and growth-oriented relationships by showing up as my best self.', cat:'relationships', fav:false},
+  {id:7, text:'I know exactly who I am, what I stand for, and where I am going — doubt has no domain here.', cat:'identity', fav:false},
+  {id:8, text:'I am building something that will outlast me. Every action today is a brick in my legacy.', cat:'purpose', fav:false},
+  {id:9, text:'I learn faster than the world changes. Adaptability is my core competitive advantage.', cat:'mastery', fav:false},
+  {id:10, text:'Financial abundance flows to me as a natural result of the value I create and the discipline I maintain.', cat:'wealth', fav:false},
+  {id:11, text:'I face uncertainty with composure. Pressure reveals my character — and my character is unshakeable.', cat:'mindset', fav:false},
+  {id:12, text:'I am the architect of my reality. My mind designs it, my actions construct it.', cat:'sovereign', fav:false},
+  {id:13, text:'Every challenge I meet is making me more capable, more resilient, and more sovereign.', cat:'identity', fav:false},
+  {id:14, text:'I sleep deeply, wake powerfully, and recover fully. My biology works in my favor.', cat:'health', fav:false},
+  {id:15, text:'I lead with integrity and excellence. My word is my bond and my work is my signature.', cat:'purpose', fav:false},
+];
+
+let allAffirmations = [];
+let currentFilter = 'all';
+let libFilter = 'all';
+let currentIndex = 0;
+let filtered = [];
+
+/* ─── INIT ─── */
+function init(){
+  allAffirmations = loadAff();
+  if(!allAffirmations.length){
+    allAffirmations = SEED_AFFIRMATIONS.map(function(a){return Object.assign({},a);});
+    saveAff(allAffirmations);
+  }
+  buildFilterGrids();
+  applyFilter('all');
+  updateStreak();
+}
+
+/* ─── FILTER GRIDS ─── */
+function buildFilterGrids(){
+  var cats = ['all'].concat(Object.keys(CAT_COLORS));
+  ['cat-filter-grid','lib-filter-grid'].forEach(function(id){
+    var g = document.getElementById(id);
+    g.innerHTML = '';
+    cats.forEach(function(c){
+      var b = document.createElement('button');
+      b.className = 'cat-btn' + (c==='all'?' sel':'');
+      b.textContent = c==='all' ? 'ALL' : CAT_LABELS[c];
+      if(c!=='all') b.style.borderColor = CAT_COLORS[c]+'44';
+      b.onclick = function(){
+        if(id==='cat-filter-grid'){
+          document.querySelectorAll('#cat-filter-grid .cat-btn').forEach(function(x){x.classList.remove('sel');});
+          b.classList.add('sel');
+          applyFilter(c);
+        } else {
+          document.querySelectorAll('#lib-filter-grid .cat-btn').forEach(function(x){x.classList.remove('sel');});
+          b.classList.add('sel');
+          libFilter = c;
+          renderLibrary();
+        }
+      };
+      g.appendChild(b);
+    });
+  });
+}
+
+function applyFilter(cat){
+  currentFilter = cat;
+  filtered = cat==='all' ? allAffirmations : allAffirmations.filter(function(a){return a.cat===cat;});
+  currentIndex = 0;
+  shuffleArr(filtered);
+  showCurrent();
+}
+
+function shuffleArr(arr){
+  for(var i=arr.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=arr[i];arr[i]=arr[j];arr[j]=t;
+  }
+}
+
+/* ─── STAGE DISPLAY ─── */
+function showCurrent(){
+  if(!filtered.length){
+    document.getElementById('stage-text').textContent='No affirmations in this category. Add some!';
+    document.getElementById('stage-cat').textContent='—';
+    document.getElementById('stage-counter').textContent='—';
+    return;
+  }
+  var a = filtered[currentIndex];
+  var el = document.getElementById('stage-text');
+  el.style.opacity='0';
+  setTimeout(function(){
+    el.textContent = a.text;
+    el.style.opacity='1';
+    document.getElementById('stage-cat').textContent = CAT_LABELS[a.cat]||a.cat;
+    document.getElementById('stage-counter').textContent=(currentIndex+1)+' of '+filtered.length;
+  },200);
+}
+
+function nextAff(){currentIndex=(currentIndex+1)%filtered.length;showCurrent();}
+function prevAff(){currentIndex=(currentIndex-1+filtered.length)%filtered.length;showCurrent();}
+function shuffleAff(){shuffleArr(filtered);currentIndex=0;showCurrent();}
+
+function markRead(){
+  var log = loadLog();
+  var today = new Date().toISOString().slice(0,10);
+  var todayEntry = log.find(function(l){return l.date===today;});
+  if(todayEntry){todayEntry.count++;}
+  else{log.unshift({date:today,count:1});}
+  saveLog(log);
+  updateStreak();
+  nextAff();
+}
+
+function toggleFavCurrent(){
+  if(!filtered.length) return;
+  var a = filtered[currentIndex];
+  var idx = allAffirmations.findIndex(function(x){return x.id===a.id;});
+  if(idx>-1){allAffirmations[idx].fav=!allAffirmations[idx].fav;saveAff(allAffirmations);}
+}
+
+/* ─── LIBRARY ─── */
+function addAffirmation(){
+  var text = document.getElementById('aff-input').value.trim();
+  if(!text){alert('Enter an affirmation.');return;}
+  var cat  = document.getElementById('aff-cat').value;
+  var entry = {id:Date.now(), text:text, cat:cat, fav:false};
+  allAffirmations.unshift(entry);
+  saveAff(allAffirmations);
+  document.getElementById('aff-input').value='';
+  applyFilter(currentFilter);
+  renderLibrary();
+}
+
+function renderLibrary(){
+  var list = document.getElementById('aff-list');
+  var data = libFilter==='all' ? allAffirmations :
+    libFilter==='fav' ? allAffirmations.filter(function(a){return a.fav;}) :
+    allAffirmations.filter(function(a){return a.cat===libFilter;});
+  if(!data.length){
+    list.innerHTML='<div class="empty-state">NO AFFIRMATIONS IN THIS CATEGORY.</div>';
+    return;
+  }
+  list.innerHTML='';
+  data.forEach(function(a){
+    var col = CAT_COLORS[a.cat]||'#C9A84C';
+    var d = document.createElement('div'); d.className='aff-card';
+    d.innerHTML='<div class="aff-dot" style="background:'+col+'"></div>'+
+      '<div class="aff-body">'+
+        '<div class="aff-card-text">'+a.text+'</div>'+
+        '<div class="aff-card-meta">'+
+          '<span style="color:'+col+'">'+(CAT_LABELS[a.cat]||a.cat)+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<div class="aff-actions">'+
+        '<button class="aff-btn fav'+(a.fav?' fav':'')+'" onclick="toggleFav('+a.id+',this)">'+(a.fav?'★':'☆')+'</button>'+
+        '<button class="aff-btn del" onclick="delAff('+a.id+')">✕</button>'+
+      '</div>';
+    list.appendChild(d);
+  });
+}
+
+function toggleFav(id,btn){
+  var idx=allAffirmations.findIndex(function(a){return a.id===id;});
+  if(idx>-1){
+    allAffirmations[idx].fav=!allAffirmations[idx].fav;
+    saveAff(allAffirmations);
+    btn.textContent=allAffirmations[idx].fav?'★':'☆';
+  }
+}
+
+function delAff(id){
+  allAffirmations=allAffirmations.filter(function(a){return a.id!==id;});
+  saveAff(allAffirmations);
+  applyFilter(currentFilter);
+  renderLibrary();
+}
+
+/* ─── TRACKING ─── */
+function renderTracking(){
+  var log = loadLog();
+  var stats = document.getElementById('track-stats');
+  var total = log.reduce(function(a,l){return a+l.count;},0);
+  var today = new Date().toISOString().slice(0,10);
+  var todayCount = (log.find(function(l){return l.date===today;})||{count:0}).count;
+  var days = log.length;
+  var streak = calcStreak(log);
+  var favCount = allAffirmations.filter(function(a){return a.fav;}).length;
+
+  stats.innerHTML=[
+    {v:total,l:'TOTAL AFFIRMED'},
+    {v:todayCount,l:'TODAY'},
+    {v:days,l:'ACTIVE DAYS'},
+    {v:streak,l:'DAY STREAK'},
+    {v:allAffirmations.length,l:'LIBRARY SIZE'},
+    {v:favCount,l:'FAVORITES'},
+  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+
+  /* 30-day streak dots */
+  var sd = document.getElementById('streak-display');
+  sd.innerHTML='';
+  var daySet=new Set(log.map(function(l){return l.date;}));
+  for(var i=29;i>=0;i--){
+    var d=new Date(); d.setDate(d.getDate()-i);
+    var key=d.toISOString().slice(0,10);
+    var active=daySet.has(key);
+    var dot=document.createElement('div');
+    dot.className='streak-dot';
+    dot.style.background=active?'rgba(201,168,76,.7)':'rgba(201,168,76,.08)';
+    dot.title=key+(active?' ✓':'');
+    sd.appendChild(dot);
+  }
+
+  /* log list */
+  var ll = document.getElementById('log-list');
+  ll.innerHTML = log.length ? '' : '<div class="empty-state">USE ✓ AFFIRMED TO START TRACKING YOUR PRACTICE.</div>';
+  log.slice(0,14).forEach(function(l){
+    var row=document.createElement('div'); row.className='log-row';
+    row.innerHTML='<span class="log-date">'+l.date+'</span><span class="log-count">'+l.count+' affirmations</span>';
+    ll.appendChild(row);
+  });
+}
+
+function calcStreak(log){
+  var days=new Set(log.map(function(l){return l.date;}));
+  var streak=0,d=new Date();
+  while(true){var k=d.toISOString().slice(0,10);if(days.has(k)){streak++;d.setDate(d.getDate()-1);}else break;}
+  return streak;
+}
+
+function updateStreak(){
+  document.getElementById('tb-streak').textContent='── STREAK: '+calcStreak(loadLog())+' DAYS';
+}
+
+/* ─── STORAGE ─── */
+function loadAff(){try{return JSON.parse(localStorage.getItem(AFF_KEY)||'[]');}catch(e){return[];}}
+function saveAff(a){localStorage.setItem(AFF_KEY,JSON.stringify(a));}
+function loadLog(){try{return JSON.parse(localStorage.getItem(LOG_KEY)||'[]');}catch(e){return[];}}
+function saveLog(l){localStorage.setItem(LOG_KEY,JSON.stringify(l));}
+
+/* ─── TAB SWITCH ─── */
+function switchTab(btn,id){
+  document.querySelectorAll('.lt').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='t2') renderLibrary();
+  if(id==='t3') renderTracking();
+}
+
+init();
+</script>
+</body>
+</html>

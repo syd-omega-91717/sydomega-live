@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Workout · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --green:#4CAF50;--blue:#5C8FD6;--red:#EF5350;--teal:#26C6DA;--solar:#FF9800;
+}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* WORKOUT BUILDER */
+.session-header{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+@media(max-width:480px){.session-header{grid-template-columns:1fr}}
+
+.form-group{margin-bottom:12px}
+.form-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;display:block}
+.form-input{width:100%;padding:9px 12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none}
+.form-input:focus{border-color:rgba(201,168,76,.28)}
+select.form-input option{background:#0a0a08;color:#c8c4b0}
+
+/* EXERCISE BUILDER */
+.exer-block{border:1px solid rgba(201,168,76,.1);padding:14px;margin-bottom:10px;background:rgba(0,0,0,.2);position:relative}
+.exer-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap}
+.exer-name-wrap{flex:1;min-width:160px}
+.exer-name-input{width:100%;padding:7px 10px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none}
+.exer-name-input:focus{border-color:rgba(201,168,76,.28)}
+.exer-muscle{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:5px 10px;background:none;border:1px solid rgba(201,168,76,.1);color:var(--dim);cursor:pointer;font-size:10px;outline:none}
+.exer-muscle option{background:#0a0a08}
+
+/* SETS TABLE */
+.sets-table{width:100%;border-collapse:collapse;margin-bottom:8px}
+.sets-table th{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);text-align:left;padding:4px 6px;border-bottom:1px solid rgba(201,168,76,.08)}
+.sets-table td{padding:4px 6px}
+.set-input{width:100%;padding:5px 6px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none;text-align:center}
+.set-input:focus{border-color:rgba(201,168,76,.25)}
+.set-rm{font-family:var(--M);font-size:7px;color:var(--dim);background:none;border:none;cursor:pointer;padding:0 4px}
+.set-rm:hover{color:#EF5350}
+.set-done{width:20px;height:20px;cursor:pointer;accent-color:var(--gold)}
+.exer-actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn-sm{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(201,168,76,.12);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.btn-sm:hover{color:var(--gold);border-color:rgba(201,168,76,.35)}
+.btn-sm.del:hover{color:#EF5350;border-color:rgba(239,83,80,.3)}
+.exer-notes{width:100%;padding:6px 8px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.06);color:rgba(200,196,176,.6);font-family:var(--M);font-size:9px;outline:none;margin-top:6px}
+
+/* TIMER */
+.rest-timer{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.08);margin-bottom:16px;flex-wrap:wrap}
+.rest-display{font-family:var(--M);font-size:22px;letter-spacing:4px;color:var(--teal)}
+.rest-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:5px 10px;border:1px solid rgba(38,198,218,.2);color:var(--teal);background:none;cursor:pointer;transition:.1s}
+.rest-btn:hover{background:rgba(38,198,218,.08)}
+.rest-presets{display:flex;gap:4px}
+
+/* SAVE BUTTON */
+.btn-save{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:12px 28px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.35);color:var(--gold);cursor:pointer;transition:.1s;width:100%;margin-top:8px}
+.btn-save:hover{background:rgba(201,168,76,.15)}
+
+/* SECT */
+.sect{margin-bottom:24px}
+.sect-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* WORKOUT LOG CARDS */
+.wk-card{border:1px solid rgba(201,168,76,.08);padding:14px;margin-bottom:8px;background:rgba(0,0,0,.2)}
+.wk-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.wk-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold)}
+.wk-date{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim)}
+.wk-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)}
+.wk-exercises{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.wk-ex-chip{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(201,168,76,.12);color:var(--dim)}
+.wk-del{font-family:var(--M);font-size:7px;color:var(--dim);background:none;border:none;cursor:pointer;padding:2px 6px}
+.wk-del:hover{color:#EF5350}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold)}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+
+/* MUSCLE MAP */
+.muscle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:20px}
+.muscle-card{border:1px solid rgba(201,168,76,.08);padding:12px;background:rgba(0,0,0,.2);text-align:center}
+.muscle-name{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:4px}
+.muscle-bar-track{height:3px;background:rgba(201,168,76,.08);border-radius:2px}
+.muscle-bar-fill{height:100%;border-radius:2px;transition:.3s}
+.muscle-count{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-top:4px}
+
+#freq-canvas{display:block;width:100%;border:1px solid rgba(201,168,76,.1);background:rgba(0,0,0,.3)}
+.sci-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.2)}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+.sci-cite{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8}
+.empty-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN WORKOUT</span>
+    <span class="tb-meta" id="tb-meta">── 0 SESSIONS · 0 THIS WEEK</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" onclick="switchTab(this,'t1')">◆ LOG SESSION</button>
+    <button class="lt" onclick="switchTab(this,'t2')">▶ HISTORY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">▲ PROGRESS</button>
+    <button class="lt" onclick="switchTab(this,'t4')">⚙ SCIENCE</button>
+  </div>
+
+  <!-- TAB 1: LOG SESSION -->
+  <div class="tab-pane active" id="t1">
+    <div class="session-header">
+      <div class="form-group">
+        <label class="form-label" for="wk-name">SESSION NAME</label>
+        <input class="form-input" type="text" id="wk-name" placeholder="e.g. Push Day, Leg Day, Full Body"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="wk-type">TYPE</label>
+        <select class="form-input" id="wk-type">
+          <option value="strength">STRENGTH</option>
+          <option value="hypertrophy">HYPERTROPHY</option>
+          <option value="cardio">CARDIO</option>
+          <option value="hiit">HIIT</option>
+          <option value="mobility">MOBILITY / STRETCH</option>
+          <option value="sport">SPORT / PLAY</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">REST TIMER</div>
+      <div class="rest-timer">
+        <div class="rest-display" id="rest-display">00:00</div>
+        <div class="rest-presets">
+          <button class="rest-btn" onclick="startRest(60)">1 MIN</button>
+          <button class="rest-btn" onclick="startRest(90)">90S</button>
+          <button class="rest-btn" onclick="startRest(120)">2 MIN</button>
+          <button class="rest-btn" onclick="startRest(180)">3 MIN</button>
+          <button class="rest-btn" onclick="stopRest()" style="color:var(--red);border-color:rgba(239,83,80,.3)">■ STOP</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">EXERCISES</div>
+      <div id="exercises-list"></div>
+      <button class="btn-sm" style="width:100%;margin-top:4px;padding:10px" onclick="addExercise()">+ ADD EXERCISE</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="wk-notes">SESSION NOTES</label>
+      <input class="form-input" type="text" id="wk-notes" placeholder="Energy level, PRs, observations..."/>
+    </div>
+
+    <button class="btn-save" onclick="saveSession()">▲ COMPLETE SESSION</button>
+  </div>
+
+  <!-- TAB 2: HISTORY -->
+  <div class="tab-pane" id="t2">
+    <div id="history-list"></div>
+  </div>
+
+  <!-- TAB 3: PROGRESS -->
+  <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">TRAINING STATISTICS</div>
+      <div class="stat-row" id="prog-stats"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">MUSCLE FREQUENCY (LAST 30 DAYS)</div>
+      <div class="muscle-grid" id="muscle-grid"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">WEEKLY VOLUME TREND</div>
+      <canvas id="freq-canvas" height="140"></canvas>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div class="sci-card">
+      <div class="sci-title">PROGRESSIVE OVERLOAD</div>
+      <div class="sci-cite">Kraemer, W.J. & Ratamess, N.A. (2004) — Fundamentals of resistance training. Medicine & Science in Sports & Exercise, 36(4)</div>
+      <div class="sci-body">Progressive overload — the systematic increase of training stress over time — is the foundational mechanism of all strength and hypertrophy adaptation. The body adapts to the demands placed upon it; without increasing those demands (more weight, reps, sets, or reduced rest), adaptation plateaus. Logging sets, reps, and loads creates the data needed to identify stagnation and apply progressive overload with precision rather than guesswork.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">VOLUME, FREQUENCY & MUSCLE PROTEIN SYNTHESIS</div>
+      <div class="sci-cite">Schoenfeld, B.J. et al. (2017) — Dose-response relationship between weekly resistance training volume and increases in muscle mass. Journal of Sports Sciences, 35(11)</div>
+      <div class="sci-body">Brad Schoenfeld's meta-analysis found a dose-response relationship between weekly training volume (sets per muscle group) and hypertrophy, with higher volumes (10+ sets/week per muscle) generally producing greater gains. Muscle protein synthesis (MPS) remains elevated for ~48 hours post-training, making twice-weekly frequency per muscle group more effective than once-weekly for growth. Tracking muscle frequency helps ensure each group receives adequate stimulus.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">REST INTERVALS & HORMONAL RESPONSE</div>
+      <div class="sci-cite">Ahtiainen, J.P. et al. (2005) — Short vs. long rest period between sets. European Journal of Applied Physiology, 93(1-2)</div>
+      <div class="sci-body">Rest interval length is not merely comfort preference — it directly affects the training stimulus. Short rests (60-90s) produce greater growth hormone spikes and metabolic stress, beneficial for hypertrophy. Longer rests (3-5 minutes) allow greater force production per subsequent set, optimal for maximal strength development. The 2-minute rest timer covers both modalities; the sovereign discipline is matching rest interval strategy to training goal.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">STRENGTH TRAINING & COGNITIVE PERFORMANCE</div>
+      <div class="sci-cite">Liu-Ambrose, T. et al. (2010) — Resistance training and executive functions. JAMA Internal Medicine (formerly Archives of Internal Medicine), 170(2)</div>
+      <div class="sci-body">A randomized controlled trial demonstrated that resistance training significantly improved executive cognitive functions — including selective attention, conflict resolution, and associative memory — compared to balance and tone training. The mechanism involves BDNF (brain-derived neurotrophic factor) upregulation: resistance training is a potent BDNF stimulus, promoting neuroplasticity and new synapse formation. Physical training is cognitive training.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">TRAINING CONSISTENCY OVER INTENSITY</div>
+      <div class="sci-cite">Steele, J. et al. (2017) — Resistance training to momentary muscular failure improves cardiovascular fitness. Journal of Human Kinetics, 56</div>
+      <div class="sci-body">Long-term training data consistently shows that consistency of training frequency predicts outcomes better than any single session's intensity. Missing sessions compounds: a 2-week detraining period can lose 10-15% of strength gains. The sovereign approach is to never miss a session by making sessions flexible — a 20-minute mobility session on a low-energy day is infinitely superior to zero. Logging every session, regardless of intensity, reinforces the identity of someone who trains.</div>
+    </div>
+  </div>
+</div>
+
+<script src="omega-ui.js"></script>
+<script>
+const WK_KEY = 'omega_workout_log';
+const MUSCLES = ['CHEST','BACK','SHOULDERS','BICEPS','TRICEPS','QUADS','HAMSTRINGS','GLUTES','CORE','CALVES'];
+let exerCount = 0;
+let restInterval = null;
+let restRemaining = 0;
+
+/* ─── INIT ─── */
+function init(){addExercise();updateMeta();}
+
+/* ─── REST TIMER ─── */
+function startRest(secs){
+  clearInterval(restInterval);
+  restRemaining=secs;
+  updateRestDisplay();
+  restInterval=setInterval(function(){
+    restRemaining--;
+    updateRestDisplay();
+    if(restRemaining<=0){clearInterval(restInterval);document.getElementById('rest-display').textContent='GO!';}
+  },1000);
+}
+function stopRest(){clearInterval(restInterval);document.getElementById('rest-display').textContent='00:00';}
+function updateRestDisplay(){
+  var m=Math.floor(restRemaining/60),s=restRemaining%60;
+  document.getElementById('rest-display').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+}
+
+/* ─── EXERCISE BUILDER ─── */
+function addExercise(){
+  var id='ex-'+exerCount++;
+  var list=document.getElementById('exercises-list');
+  var div=document.createElement('div'); div.className='exer-block'; div.id=id;
+  div.innerHTML=
+    '<div class="exer-top">'+
+      '<div class="exer-name-wrap"><input class="exer-name-input" type="text" placeholder="Exercise name (e.g. Bench Press)"/></div>'+
+      '<select class="exer-muscle">'+MUSCLES.map(function(m){return'<option>'+m+'</option>';}).join('')+'</select>'+
+    '</div>'+
+    '<table class="sets-table">'+
+      '<thead><tr><th>#</th><th>WEIGHT (kg)</th><th>REPS</th><th>RIR</th><th>✓</th><th></th></tr></thead>'+
+      '<tbody id="sets-'+id+'"></tbody>'+
+    '</table>'+
+    '<div class="exer-actions">'+
+      '<button class="btn-sm" onclick="addSet(\''+id+'\')">+ SET</button>'+
+      '<button class="btn-sm del" onclick="document.getElementById(\''+id+'\').remove()">REMOVE EXERCISE</button>'+
+    '</div>'+
+    '<input class="exer-notes" type="text" placeholder="Notes: form cues, variations, RPE..."/>';
+  list.appendChild(div);
+  addSet(id); addSet(id); addSet(id);
+}
+
+function addSet(exId){
+  var tbody=document.getElementById('sets-'+exId);
+  if(!tbody) return;
+  var i=tbody.rows.length+1;
+  var row=tbody.insertRow();
+  row.innerHTML='<td style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)">'+i+'</td>'+
+    '<td><input class="set-input" type="number" placeholder="0" min="0" step="2.5"/></td>'+
+    '<td><input class="set-input" type="number" placeholder="0" min="0"/></td>'+
+    '<td><input class="set-input" type="number" placeholder="0" min="0" max="5" title="Reps in Reserve"/></td>'+
+    '<td><input class="set-done" type="checkbox"/></td>'+
+    '<td><button class="set-rm" onclick="this.closest(\'tr\').remove()">✕</button></td>';
+}
+
+/* ─── COLLECT SESSION ─── */
+function collectSession(){
+  var name=document.getElementById('wk-name').value.trim()||'Workout '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  var type=document.getElementById('wk-type').value;
+  var notes=document.getElementById('wk-notes').value.trim();
+  var exercises=[];
+  document.querySelectorAll('.exer-block').forEach(function(block){
+    var exName=block.querySelector('.exer-name-input').value.trim();
+    if(!exName) return;
+    var muscle=block.querySelector('.exer-muscle').value;
+    var exNotes=block.querySelector('.exer-notes').value.trim();
+    var sets=[];
+    block.querySelectorAll('.sets-table tbody tr').forEach(function(row){
+      var inputs=row.querySelectorAll('input[type=number]');
+      if(inputs.length>=2){
+        sets.push({weight:parseFloat(inputs[0].value)||0,reps:parseInt(inputs[1].value)||0,rir:parseInt(inputs[2]&&inputs[2].value)||null,done:row.querySelector('input[type=checkbox]').checked});
+      }
+    });
+    if(sets.length) exercises.push({name:exName,muscle:muscle,sets:sets,notes:exNotes});
+  });
+  return{id:Date.now(),ts:new Date().toISOString(),name:name,type:type,notes:notes,exercises:exercises};
+}
+
+function saveSession(){
+  var session=collectSession();
+  if(!session.exercises.length){alert('Add at least one exercise with sets.');return;}
+  var logs=loadLogs(); logs.unshift(session); saveLogs(logs);
+  updateMeta();
+  resetForm();
+  alert('Session logged: '+session.name+' · '+session.exercises.length+' exercises');
+}
+
+function resetForm(){
+  document.getElementById('wk-name').value='';
+  document.getElementById('wk-notes').value='';
+  document.getElementById('exercises-list').innerHTML='';
+  exerCount=0;
+  addExercise();
+}
+
+/* ─── HISTORY ─── */
+function renderHistory(){
+  var logs=loadLogs();
+  var list=document.getElementById('history-list'); list.innerHTML='';
+  if(!logs.length){list.innerHTML='<div class="empty-state">COMPLETE YOUR FIRST SESSION TO SEE HISTORY.</div>';return;}
+  logs.slice(0,25).forEach(function(s){
+    var d=new Date(s.ts);
+    var dateStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    var totalSets=s.exercises.reduce(function(a,e){return a+e.sets.length;},0);
+    var card=document.createElement('div'); card.className='wk-card';
+    card.innerHTML='<div class="wk-top">'+
+      '<span class="wk-name">'+s.name+'</span>'+
+      '<span style="display:flex;gap:6px;align-items:center">'+
+        '<span class="wk-date">'+dateStr+'</span>'+
+        '<button class="wk-del" onclick="delSession('+s.id+')">✕</button>'+
+      '</span></div>'+
+      '<div class="wk-meta">'+s.exercises.length+' exercises · '+totalSets+' sets · '+(s.type||'').toUpperCase()+'</div>'+
+      '<div class="wk-exercises">'+s.exercises.map(function(e){return'<span class="wk-ex-chip">'+e.name+'</span>';}).join('')+'</div>';
+    list.appendChild(card);
+  });
+}
+
+function delSession(id){
+  saveLogs(loadLogs().filter(function(l){return l.id!==id;}));
+  renderHistory();
+  updateMeta();
+}
+
+/* ─── PROGRESS ─── */
+function renderProgress(){
+  var logs=loadLogs();
+  var sg=document.getElementById('prog-stats');
+  if(!logs.length){sg.innerHTML='<div class="empty-state" style="grid-column:1/-1">LOG SESSIONS TO SEE PROGRESS.</div>';drawFreqChart([]);return;}
+
+  var today=new Date();
+  var weekAgo=new Date(); weekAgo.setDate(weekAgo.getDate()-7);
+  var thisWeek=logs.filter(function(l){return new Date(l.ts)>=weekAgo;}).length;
+  var totalSets=logs.reduce(function(a,l){return a+l.exercises.reduce(function(b,e){return b+e.sets.length;},0);},0);
+  var days=new Set(logs.map(function(l){return l.ts.slice(0,10);})).size;
+
+  sg.innerHTML=[
+    {v:logs.length,l:'TOTAL SESSIONS'},
+    {v:thisWeek,l:'THIS WEEK'},
+    {v:days,l:'ACTIVE DAYS'},
+    {v:totalSets,l:'TOTAL SETS'},
+  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+
+  /* muscle frequency */
+  var mFreq={};
+  var thirtyAgo=new Date(); thirtyAgo.setDate(thirtyAgo.getDate()-30);
+  var recentLogs=logs.filter(function(l){return new Date(l.ts)>=thirtyAgo;});
+  recentLogs.forEach(function(l){l.exercises.forEach(function(e){mFreq[e.muscle]=(mFreq[e.muscle]||0)+e.sets.length;});});
+  var maxFreq=Math.max.apply(null,Object.values(mFreq).concat([1]));
+  var mg=document.getElementById('muscle-grid'); mg.innerHTML='';
+  MUSCLES.forEach(function(m){
+    var cnt=mFreq[m]||0;
+    var pct=Math.round((cnt/maxFreq)*100);
+    var div=document.createElement('div'); div.className='muscle-card';
+    div.innerHTML='<div class="muscle-name">'+m+'</div>'+
+      '<div class="muscle-bar-track"><div class="muscle-bar-fill" style="width:'+pct+'%;background:rgba(201,168,76,'+(cnt?0.6:0.08)+')"></div></div>'+
+      '<div class="muscle-count">'+cnt+' sets</div>';
+    mg.appendChild(div);
+  });
+
+  drawFreqChart(logs);
+}
+
+function drawFreqChart(logs){
+  var c=document.getElementById('freq-canvas');
+  c.width=c.offsetWidth||600;
+  var ctx=c.getContext('2d'); var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+
+  var days=[]; for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push({d:d,label:d.toLocaleDateString('en-US',{weekday:'short'})});}
+  var pad=32,pw=W-pad*2,ph=H-pad*2;
+  var bw=(pw/7)*0.6,gap=(pw/7)*0.4;
+  var maxSets=1;
+  var daySets=days.map(function(day){
+    var key=day.d.toISOString().slice(0,10);
+    var s=logs.filter(function(l){return l.ts.slice(0,10)===key;}).reduce(function(a,l){return a+l.exercises.reduce(function(b,e){return b+e.sets.length;},0);},0);
+    if(s>maxSets) maxSets=s;
+    return s;
+  });
+
+  days.forEach(function(day,i){
+    var x=pad+i*(bw+gap);
+    if(daySets[i]>0){
+      var bh=(daySets[i]/maxSets)*ph;
+      ctx.fillStyle='rgba(201,168,76,.35)';
+      ctx.fillRect(x,pad+ph-bh,bw,bh);
+      ctx.fillStyle='rgba(201,168,76,.5)'; ctx.font='7px "Courier Prime",monospace';
+      ctx.fillText(daySets[i],x+bw/2-3,pad+ph-bh-5);
+    }
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(day.label,x+bw/2-8,H-4);
+  });
+}
+
+/* ─── META ─── */
+function updateMeta(){
+  var logs=loadLogs();
+  var weekAgo=new Date(); weekAgo.setDate(weekAgo.getDate()-7);
+  var thisWeek=logs.filter(function(l){return new Date(l.ts)>=weekAgo;}).length;
+  document.getElementById('tb-meta').textContent='── '+logs.length+' SESSIONS · '+thisWeek+' THIS WEEK';
+}
+
+/* ─── STORAGE ─── */
+function loadLogs(){try{return JSON.parse(localStorage.getItem(WK_KEY)||'[]');}catch(e){return[];}}
+function saveLogs(l){localStorage.setItem(WK_KEY,JSON.stringify(l));}
+
+/* ─── TAB SWITCH ─── */
+function switchTab(btn,id){
+  document.querySelectorAll('.lt').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='t2') renderHistory();
+  if(id==='t3') renderProgress();
+}
+
+init();
+</script>
+</body>
+</html>

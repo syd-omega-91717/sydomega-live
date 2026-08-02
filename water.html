@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Hydration · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --teal:#26C6DA;--blue:#5C8FD6;--green:#4CAF50;
+}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* HYDRATION DISPLAY */
+.hydro-stage{display:flex;flex-direction:column;align-items:center;padding:20px 0;margin-bottom:20px}
+.hydro-pct{font-family:var(--M);font-size:48px;letter-spacing:4px;color:var(--teal);line-height:1}
+.hydro-sub{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--dim);margin-top:8px;margin-bottom:18px}
+#hydro-canvas{display:block}
+
+/* QUICK ADD */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;margin-bottom:16px}
+.qty-btn{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:12px 8px;border:1px solid rgba(38,198,218,.2);color:var(--teal);background:rgba(38,198,218,.04);cursor:pointer;transition:.1s;text-align:center}
+.qty-btn:hover{background:rgba(38,198,218,.1);border-color:rgba(38,198,218,.45)}
+
+/* GOAL SLIDER */
+.slider-row{margin-bottom:14px}
+.slider-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:6px}
+.slider-val{color:var(--teal)}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;background:rgba(38,198,218,.15);outline:none;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--teal);border-radius:50%;cursor:pointer}
+
+/* SECT */
+.sect{margin-bottom:24px}
+.sect-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* LOG */
+.log-entry{border:1px solid rgba(38,198,218,.08);padding:10px 14px;margin-bottom:5px;background:rgba(0,0,0,.2);display:flex;justify-content:space-between;align-items:center}
+.log-amount{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--teal)}
+.log-time{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim)}
+.log-del{font-family:var(--M);font-size:7px;color:var(--dim);background:none;border:none;cursor:pointer;padding:2px 6px}
+.log-del:hover{color:#EF5350}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--teal)}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+
+/* SCIENCE */
+.sci-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.2)}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+.sci-cite{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8}
+
+.streak-dots{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+.s-dot{width:14px;height:14px;border-radius:2px}
+.tip-box{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8;padding:12px 14px;border:1px solid rgba(38,198,218,.1);background:rgba(38,198,218,.03);margin-bottom:12px}
+.empty-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN HYDRATION</span>
+    <span class="tb-meta" id="tb-today">── TODAY: 0 ml</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" onclick="switchTab(this,'t1')">◆ TODAY</button>
+    <button class="lt" onclick="switchTab(this,'t2')">▶ HISTORY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">⚙ SCIENCE</button>
+  </div>
+
+  <!-- TAB 1: TODAY -->
+  <div class="tab-pane active" id="t1">
+    <div class="hydro-stage">
+      <canvas id="hydro-canvas" width="200" height="200"></canvas>
+      <div class="hydro-pct" id="hydro-pct">0%</div>
+      <div class="hydro-sub" id="hydro-sub">0 / 2500 ml</div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">QUICK ADD</div>
+      <div class="quick-grid" id="quick-grid"></div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">DAILY GOAL</div>
+      <div class="slider-row">
+        <div class="slider-label"><span>TARGET (ML)</span><span class="slider-val" id="lbl-goal">2500</span></div>
+        <input type="range" id="sl-goal" min="1000" max="5000" step="250" value="2500"
+          oninput="setGoal(this.value)"/>
+      </div>
+      <div class="tip-box" id="tip-box">Stay sovereign. Hydration powers every cognitive and physical process in your body.</div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd">TODAY'S LOG</div>
+      <div id="today-log"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: HISTORY -->
+  <div class="tab-pane" id="t2">
+    <div class="sect">
+      <div class="sect-hd">STATISTICS</div>
+      <div class="stat-row" id="hist-stats"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">30-DAY STREAK</div>
+      <div class="streak-dots" id="streak-dots"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">7-DAY CHART</div>
+      <canvas id="hist-canvas" width="600" height="140" style="display:block;width:100%;border:1px solid rgba(201,168,76,.1);background:rgba(0,0,0,.3)"></canvas>
+    </div>
+  </div>
+
+  <!-- TAB 3: SCIENCE -->
+  <div class="tab-pane" id="t3">
+    <div class="sci-card">
+      <div class="sci-title">HYDRATION & COGNITIVE PERFORMANCE</div>
+      <div class="sci-cite">Ganio, M.S. et al. (2011) — Mild dehydration impairs cognitive performance. British Journal of Nutrition, 106(10)</div>
+      <div class="sci-body">Even mild dehydration (1-2% body weight loss) significantly impairs cognitive performance: reaction time slows, short-term memory degrades, attention wanders, and fatigue perception increases. The brain is approximately 75% water — even small deficits affect the electrochemical processes underlying concentration and decision-making. Sovereign performers do not allow dehydration to be an unexamined drag on their cognitive output.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">OPTIMAL DAILY INTAKE</div>
+      <div class="sci-cite">Institute of Medicine (2004) — Dietary Reference Intakes: Water, Potassium, Sodium, Chloride, and Sulfate. National Academies Press</div>
+      <div class="sci-body">The US Institute of Medicine's DRI established 3.7 L/day for men and 2.7 L/day for women as adequate total water intake (including food-derived water). The commonly cited "8×8" rule (8 cups × 8oz) has no scientific basis, but the principle of regular, proactive hydration throughout the day — rather than reactive drinking when thirsty — is well-supported by exercise physiology research. Thirst is already a lag indicator; you are already mildly dehydrated when it activates.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">HYDRATION & EXERCISE PERFORMANCE</div>
+      <div class="sci-cite">Armstrong, L.E. et al. (2012) — Mild dehydration affects mood in healthy young women. Journal of Nutrition, 142(2)</div>
+      <div class="sci-body">Even 1.36% dehydration (roughly 750ml deficit for a 55kg person) measurably increased task difficulty ratings, reduced concentration, and elevated perceived headache and fatigue in controlled studies — even without physical exertion. Exercise amplifies these effects dramatically: a 2% water loss reduces endurance performance by up to 10%, and a 3% loss can cause heat exhaustion risk in warm environments. Hydration is a performance variable, not a comfort one.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">HYDRATION TIMING & CELLULAR FUNCTION</div>
+      <div class="sci-cite">Popkin, B.M. et al. (2010) — Water, hydration and health. Nutrition Reviews, 68(8)</div>
+      <div class="sci-body">Barry Popkin's comprehensive review found that optimal cellular hydration supports: kidney function and toxin clearance, cardiovascular efficiency (blood volume and viscosity), joint lubrication, thermoregulation, nutrient transport, and skin barrier integrity. The kidneys can process roughly 0.8-1L per hour maximum — spread water intake evenly rather than consuming large amounts at once, which exceeds renal clearance capacity and dilutes electrolytes.</div>
+    </div>
+  </div>
+</div>
+
+<script src="omega-ui.js"></script>
+<script>
+const WATER_KEY  = 'omega_water_log';
+const GOAL_KEY   = 'omega_water_goal';
+
+const QUICK_AMOUNTS = [150,200,250,350,500,750];
+let dailyGoal = parseInt(localStorage.getItem(GOAL_KEY)||'2500');
+
+const TIPS = [
+  'Drink a full glass immediately upon waking — you lose ~500ml overnight through respiration.',
+  'Cold water slightly increases metabolic rate: 500ml raises metabolism by ~30% for 30-40 minutes.',
+  'Add a pinch of sea salt and a squeeze of lemon to morning water for electrolyte priming.',
+  'Coffee and tea contribute to hydration — the mild diuretic effect is offset by their water content.',
+  'Eat water-rich foods: cucumber (96%), celery (95%), tomato (94%), spinach (92%).',
+  'Urine color is a real-time hydration indicator: pale yellow is optimal. Dark = dehydrated.',
+  'Pre-hydrate before deep work sessions: cognitive demands increase cellular water consumption.',
+  'Post-exercise: drink 1.5× the weight lost in sweat (16-24oz per pound / 500-700ml per 0.5kg).',
+];
+
+/* ─── INIT ─── */
+function init(){
+  buildQuickGrid();
+  document.getElementById('sl-goal').value=dailyGoal;
+  document.getElementById('lbl-goal').textContent=dailyGoal;
+  renderToday();
+  rotateTip();
+}
+
+function buildQuickGrid(){
+  var g=document.getElementById('quick-grid'); g.innerHTML='';
+  QUICK_AMOUNTS.forEach(function(ml){
+    var b=document.createElement('button'); b.className='qty-btn';
+    b.innerHTML='+'+(ml>=1000?(ml/1000)+'L':ml+'ml');
+    b.onclick=function(){addWater(ml);};
+    g.appendChild(b);
+  });
+}
+
+function rotateTip(){
+  var t=TIPS[Math.floor(Math.random()*TIPS.length)];
+  document.getElementById('tip-box').textContent=t;
+}
+
+/* ─── GOAL ─── */
+function setGoal(v){
+  dailyGoal=parseInt(v);
+  document.getElementById('lbl-goal').textContent=v;
+  localStorage.setItem(GOAL_KEY,v);
+  renderToday();
+}
+
+/* ─── ADD / DELETE ─── */
+function addWater(ml){
+  var logs=loadLogs();
+  logs.push({id:Date.now(),ts:new Date().toISOString(),ml:ml});
+  saveLogs(logs);
+  renderToday();
+}
+
+function delEntry(id){
+  var logs=loadLogs().filter(function(l){return l.id!==id;});
+  saveLogs(logs);
+  renderToday();
+}
+
+/* ─── RENDER TODAY ─── */
+function renderToday(){
+  var today=new Date().toISOString().slice(0,10);
+  var logs=loadLogs().filter(function(l){return l.ts.slice(0,10)===today;});
+  var total=logs.reduce(function(a,l){return a+l.ml;},0);
+  var pct=Math.min(100,Math.round((total/dailyGoal)*100));
+
+  document.getElementById('hydro-pct').textContent=pct+'%';
+  document.getElementById('hydro-sub').textContent=total+' / '+dailyGoal+' ml';
+  document.getElementById('tb-today').textContent='── TODAY: '+total+' ml';
+  drawHydroCanvas(pct/100);
+
+  var ll=document.getElementById('today-log'); ll.innerHTML='';
+  if(!logs.length){ll.innerHTML='<div class="empty-state">NO INTAKE LOGGED TODAY.<br>TAP A QUICK ADD BUTTON TO START.</div>';return;}
+  var sorted=[...logs].reverse();
+  sorted.forEach(function(l){
+    var d=new Date(l.ts);
+    var t=d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    var div=document.createElement('div'); div.className='log-entry';
+    div.innerHTML='<span class="log-amount">+'+(l.ml>=1000?(l.ml/1000)+'L':l.ml+'ml')+'</span>'+
+      '<span style="display:flex;gap:8px;align-items:center"><span class="log-time">'+t+'</span>'+
+      '<button class="log-del" onclick="delEntry('+l.id+')">✕</button></span>';
+    ll.appendChild(div);
+  });
+}
+
+/* ─── CANVAS ─── */
+function drawHydroCanvas(frac){
+  var c=document.getElementById('hydro-canvas');
+  var ctx=c.getContext('2d');
+  var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var cx=W/2,cy=H/2,r=80;
+
+  /* water wave */
+  var waveH=r*2*(1-Math.min(frac,1));
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
+
+  /* fill */
+  ctx.fillStyle='rgba(38,198,218,.08)';
+  ctx.fillRect(cx-r,cy-r,r*2,r*2);
+
+  /* wave animation placeholder — static fill */
+  var wy=cy-r+r*2*Math.min(frac,1);
+  var grd=ctx.createLinearGradient(cx,cy+r,cx,cy-r);
+  grd.addColorStop(0,'rgba(38,198,218,.55)');
+  grd.addColorStop(1,'rgba(38,198,218,.2)');
+  ctx.fillStyle=grd;
+  ctx.fillRect(cx-r,wy,r*2,(cy+r)-wy);
+  ctx.restore();
+
+  /* ring */
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(38,198,218,.25)'; ctx.lineWidth=2; ctx.stroke();
+
+  /* progress arc */
+  if(frac>0){
+    ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+frac*Math.PI*2);
+    ctx.strokeStyle='rgba(38,198,218,.7)'; ctx.lineWidth=3; ctx.lineCap='round'; ctx.stroke();
+  }
+}
+
+/* ─── HISTORY ─── */
+function renderHistory(){
+  var logs=loadLogs();
+  var sg=document.getElementById('hist-stats');
+  if(!logs.length){sg.innerHTML='<div class="empty-state" style="grid-column:1/-1">LOG WATER TO SEE HISTORY.</div>';drawHist([]);return;}
+
+  var days=new Set(logs.map(function(l){return l.ts.slice(0,10);}));
+  var totalMl=logs.reduce(function(a,l){return a+l.ml;},0);
+  var avgDay=Math.round(totalMl/days.size);
+  var today=new Date().toISOString().slice(0,10);
+  var todayMl=logs.filter(function(l){return l.ts.slice(0,10)===today;}).reduce(function(a,l){return a+l.ml;},0);
+
+  /* streak */
+  var streak=0,d=new Date();
+  while(true){
+    var k=d.toISOString().slice(0,10);
+    var dayMl=logs.filter(function(l){return l.ts.slice(0,10)===k;}).reduce(function(a,l){return a+l.ml;},0);
+    if(dayMl>=dailyGoal){streak++;d.setDate(d.getDate()-1);}else break;
+  }
+
+  sg.innerHTML=[
+    {v:totalMl+'ml',l:'TOTAL LOGGED'},
+    {v:todayMl+'ml',l:'TODAY'},
+    {v:avgDay+'ml',l:'DAILY AVG'},
+    {v:streak,l:'GOAL STREAK'},
+    {v:days.size,l:'ACTIVE DAYS'},
+  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+
+  /* 30-day dots */
+  var sd=document.getElementById('streak-dots'); sd.innerHTML='';
+  for(var i=29;i>=0;i--){
+    var dd=new Date(); dd.setDate(dd.getDate()-i);
+    var key=dd.toISOString().slice(0,10);
+    var ml=logs.filter(function(l){return l.ts.slice(0,10)===key;}).reduce(function(a,l){return a+l.ml;},0);
+    var dot=document.createElement('div'); dot.className='s-dot';
+    var pct2=Math.min(1,ml/dailyGoal);
+    dot.style.background='rgba(38,198,218,'+(pct2*0.8+0.05)+')';
+    dot.title=key+' — '+ml+'ml';
+    sd.appendChild(dot);
+  }
+
+  drawHist(logs);
+}
+
+function drawHist(logs){
+  var c=document.getElementById('hist-canvas');
+  c.width=c.offsetWidth||600;
+  var ctx=c.getContext('2d'); var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+
+  var days=[];
+  for(var i=6;i>=0;i--){
+    var d=new Date(); d.setDate(d.getDate()-i);
+    var key=d.toISOString().slice(0,10);
+    var ml=logs.filter(function(l){return l.ts.slice(0,10)===key;}).reduce(function(a,l){return a+l.ml;},0);
+    days.push({label:d.toLocaleDateString('en-US',{weekday:'short'}),ml:ml});
+  }
+  var maxMl=Math.max(dailyGoal,Math.max.apply(null,days.map(function(d){return d.ml;})));
+  var pad=32,pw=W-pad*2,ph=H-pad*2;
+  var bw=(pw/7)*0.6,gap=(pw/7)*0.4;
+
+  /* goal line */
+  var gy=pad+ph-(dailyGoal/maxMl)*ph;
+  ctx.strokeStyle='rgba(38,198,218,.3)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(pad,gy); ctx.lineTo(W-pad,gy); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(38,198,218,.35)'; ctx.font='7px "Courier Prime",monospace';
+  ctx.fillText('GOAL',W-pad+2,gy+3);
+
+  days.forEach(function(d,i){
+    var x=pad+i*(bw+gap);
+    if(d.ml>0){
+      var bh=(d.ml/maxMl)*ph;
+      var col=d.ml>=dailyGoal?'rgba(38,198,218,.6)':'rgba(38,198,218,.25)';
+      ctx.fillStyle=col;
+      ctx.fillRect(x,pad+ph-bh,bw,bh);
+    }
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(d.label,x+bw/2-8,H-4);
+    if(d.ml>0){
+      ctx.fillStyle='rgba(38,198,218,.5)'; ctx.font='7px "Courier Prime",monospace';
+      ctx.fillText((d.ml/1000).toFixed(1)+'L',x,pad+ph-(d.ml/maxMl)*ph-5);
+    }
+  });
+}
+
+/* ─── STORAGE ─── */
+function loadLogs(){try{return JSON.parse(localStorage.getItem(WATER_KEY)||'[]');}catch(e){return[];}}
+function saveLogs(l){localStorage.setItem(WATER_KEY,JSON.stringify(l));}
+
+/* ─── TAB SWITCH ─── */
+function switchTab(btn,id){
+  document.querySelectorAll('.lt').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='t2') renderHistory();
+}
+
+init();
+</script>
+</body>
+</html>

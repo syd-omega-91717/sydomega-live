@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sovereign Reading · SYD OMEGA 91717</title>
+<link rel="stylesheet" href="bg.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;--solar:#FF9800;
+}
+
+.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
+.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
+.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+
+.layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.flt-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:5px 12px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.flt-btn:hover,.flt-btn.sel{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
+
+/* BOOK CARDS */
+.book-card{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:10px;background:rgba(0,0,0,.2);position:relative}
+.book-top{display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap}
+.book-spine{width:6px;min-height:60px;border-radius:2px;flex-shrink:0}
+.book-info{flex:1;min-width:160px}
+.book-title{font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--gold);margin-bottom:3px}
+.book-author{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-bottom:6px}
+.book-meta{display:flex;gap:8px;flex-wrap:wrap}
+.book-tag{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 8px;border:1px solid rgba(201,168,76,.12);color:var(--dim)}
+.book-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.bk-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.15);color:var(--dim);background:none;cursor:pointer;transition:.1s}
+.bk-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
+.bk-btn.del:hover{color:#EF5350;border-color:rgba(239,83,80,.3)}
+
+/* PROGRESS BAR */
+.prog-wrap{margin-bottom:10px}
+.prog-label{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:4px}
+.prog-track{height:3px;background:rgba(201,168,76,.08);border-radius:2px}
+.prog-fill{height:100%;border-radius:2px;transition:.3s}
+
+/* HIGHLIGHTS */
+.highlight-list{margin-top:10px;border-top:1px solid rgba(201,168,76,.06);padding-top:10px}
+.hl-item{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.75);line-height:1.75;padding:8px 12px;border-left:2px solid rgba(201,168,76,.25);margin-bottom:7px;position:relative}
+.hl-del{position:absolute;right:6px;top:6px;font-family:var(--M);font-size:7px;color:var(--dim);background:none;border:none;cursor:pointer;padding:2px 4px}
+.hl-del:hover{color:#EF5350}
+.hl-pg{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-top:3px}
+
+/* ADD HIGHLIGHT MINI-FORM */
+.hl-form{display:none;margin-top:8px;padding:10px;border:1px solid rgba(201,168,76,.08);background:rgba(0,0,0,.3)}
+.hl-form.open{display:block}
+.hl-input{width:100%;padding:8px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:10px;outline:none;line-height:1.6;resize:none}
+.hl-input:focus{border-color:rgba(201,168,76,.28)}
+.hl-pg-input{width:80px;padding:6px 8px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:10px;outline:none;margin-right:8px}
+
+/* SECT */
+.sect{margin-bottom:24px}
+.sect-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)}
+
+/* FORM */
+.form-group{margin-bottom:12px}
+.form-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;display:block}
+.form-input{width:100%;padding:9px 12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.1);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none}
+.form-input:focus{border-color:rgba(201,168,76,.28)}
+select.form-input option{background:#0a0a08;color:#c8c4b0}
+.btn-action{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:11px 24px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.35);color:var(--gold);cursor:pointer;transition:.1s;width:100%}
+.btn-action:hover{background:rgba(201,168,76,.15)}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold)}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
+
+/* GENRE CHART */
+#genre-canvas{display:block;width:100%;border:1px solid rgba(201,168,76,.1);background:rgba(0,0,0,.3)}
+
+/* SCIENCE */
+.sci-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.2)}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
+.sci-cite{font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--dim);margin-bottom:8px}
+.sci-body{font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8}
+
+.empty-state{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Ω SOVEREIGN READING</span>
+    <span class="tb-meta" id="tb-stats">── 0 BOOKS · 0 HIGHLIGHTS</span>
+  </div>
+
+  <div class="layer-tabs">
+    <button class="lt active" onclick="switchTab(this,'t1')">◆ LIBRARY</button>
+    <button class="lt" onclick="switchTab(this,'t2')">▶ ADD BOOK</button>
+    <button class="lt" onclick="switchTab(this,'t3')">▲ INSIGHTS</button>
+    <button class="lt" onclick="switchTab(this,'t4')">⚙ SCIENCE</button>
+  </div>
+
+  <!-- TAB 1: LIBRARY -->
+  <div class="tab-pane active" id="t1">
+    <div class="filter-bar" id="status-filter"></div>
+    <div id="book-list"></div>
+  </div>
+
+  <!-- TAB 2: ADD BOOK -->
+  <div class="tab-pane" id="t2">
+    <div class="sect">
+      <div class="sect-hd">ADD TO LIBRARY</div>
+      <div class="form-group">
+        <label class="form-label" for="bk-title">TITLE</label>
+        <input class="form-input" type="text" id="bk-title" placeholder="Book title"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bk-author">AUTHOR</label>
+        <input class="form-input" type="text" id="bk-author" placeholder="Author name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bk-pages">TOTAL PAGES</label>
+        <input class="form-input" type="number" id="bk-pages" placeholder="300" min="1"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bk-genre">GENRE</label>
+        <select class="form-input" id="bk-genre">
+          <option value="philosophy">PHILOSOPHY</option>
+          <option value="strategy">STRATEGY / BUSINESS</option>
+          <option value="science">SCIENCE</option>
+          <option value="biography">BIOGRAPHY</option>
+          <option value="history">HISTORY</option>
+          <option value="psychology">PSYCHOLOGY</option>
+          <option value="finance">FINANCE</option>
+          <option value="technology">TECHNOLOGY</option>
+          <option value="fiction">FICTION</option>
+          <option value="other">OTHER</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bk-status">STATUS</label>
+        <select class="form-input" id="bk-status">
+          <option value="reading">CURRENTLY READING</option>
+          <option value="queued">IN QUEUE</option>
+          <option value="completed">COMPLETED</option>
+        </select>
+      </div>
+      <button class="btn-action" onclick="addBook()">+ ADD TO LIBRARY</button>
+    </div>
+  </div>
+
+  <!-- TAB 3: INSIGHTS -->
+  <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">READING STATISTICS</div>
+      <div class="stat-row" id="read-stats"></div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">GENRE BREAKDOWN</div>
+      <canvas id="genre-canvas" height="160"></canvas>
+    </div>
+    <div class="sect">
+      <div class="sect-hd">TOP HIGHLIGHTS</div>
+      <div id="top-highlights"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div class="sci-card">
+      <div class="sci-title">READING & VOCABULARY / FLUID INTELLIGENCE</div>
+      <div class="sci-cite">Cunningham, A.E. & Stanovich, K.E. (1998) — What reading does for the mind. American Educator, 22(1-2)</div>
+      <div class="sci-body">Anne Cunningham and Keith Stanovich's longitudinal research demonstrated that reading volume is the single strongest predictor of vocabulary growth, crystallized intelligence, and general knowledge — even controlling for aptitude. The Matthew Effect ("the rich get richer") applies directly to reading: those who read consistently develop cognitive resources that accelerate further learning. Reading is not leisure; it is compound cognitive investment.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">DEEP READING & THEORY OF MIND</div>
+      <div class="sci-cite">Mar, R.A. et al. (2006) — Bookworms versus nerds. Journal of Research in Personality, 40(5) / Kidd & Castano (2013) — Science, 342(6156)</div>
+      <div class="sci-body">Fiction reading significantly improves Theory of Mind — the ability to understand others' mental states and emotions. David Kidd and Emanuele Castano's Science study showed that even brief exposure to literary fiction improved empathic accuracy on a validated test. Exposure to complex characters requires the reader to simulate multiple perspectives, building the same neural circuits used in real social cognition. Reading is social intelligence training.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">ACTIVE READING & RETENTION</div>
+      <div class="sci-cite">Roediger, H.L. & Karpicke, J.D. (2006) — Test-enhanced learning. Psychological Science, 17(3)</div>
+      <div class="sci-body">The Testing Effect shows that self-testing after reading improves long-term retention dramatically more than re-reading does. Annotation, highlighting with context, and writing summaries after chapters are all active retrieval practices that produce durable memory encoding. Passive re-reading creates an illusion of knowing — you recognize the content but cannot recall or apply it. The Sovereign Reading system's highlight capture encourages active extraction, not passive absorption.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">READING SPEED & COMPREHENSION TRADE-OFF</div>
+      <div class="sci-cite">Rayner, K. et al. (2016) — So much to read, so little time. Psychological Science in the Public Interest, 17(1)</div>
+      <div class="sci-body">A major meta-analysis by Keith Rayner concluded that speed reading techniques marketed as achieving 1,000+ wpm result in decreased comprehension to chance levels — reading faster than approximately 400 wpm requires skimming, which prevents syntactic processing. The optimal sovereign reading strategy is not speed, but prioritization: read fewer books deeply, extract and synthesize more per book, and let comprehension set the pace — not a word-per-minute goal.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">READING BEFORE BED & SLEEP QUALITY</div>
+      <div class="sci-cite">Lewis, D. (2009) — Reading reduces stress by 68%. University of Sussex study / Chang, A.M. et al. (2014) — PNAS, 112(4)</div>
+      <div class="sci-body">University of Sussex research found that reading for as little as 6 minutes reduced physiological stress markers (heart rate, muscle tension) by 68% — outperforming listening to music, taking a walk, or playing video games. However, the Chang 2014 PNAS study showed that e-readers with blue light suppress melatonin and shift circadian phase, delaying sleep onset by ~90 minutes. The sovereign protocol: print or e-ink for evening reading; backlit screens at least 2 hours before sleep.</div>
+    </div>
+  </div>
+</div>
+
+<script src="omega-ui.js"></script>
+<script>
+const READ_KEY = 'omega_reading';
+
+const GENRE_COLORS = {
+  philosophy:'#9C6FD6', strategy:'#C9A84C', science:'#5C8FD6',
+  biography:'#FF9800', history:'#4CAF50', psychology:'#26C6DA',
+  finance:'#E57373', technology:'#80DEEA', fiction:'#CE93D8', other:'#90A4AE',
+};
+const GENRE_LABELS = {
+  philosophy:'PHILOSOPHY', strategy:'STRATEGY', science:'SCIENCE',
+  biography:'BIOGRAPHY', history:'HISTORY', psychology:'PSYCHOLOGY',
+  finance:'FINANCE', technology:'TECH', fiction:'FICTION', other:'OTHER',
+};
+const STATUS_COLORS = {reading:'#C9A84C', queued:'rgba(138,134,118,.4)', completed:'#4CAF50'};
+const STATUS_LABELS = {reading:'READING', queued:'QUEUED', completed:'DONE'};
+
+let statusFilter = 'all';
+let openHighlightForm = null; /* book id with open form */
+
+/* ─── INIT ─── */
+function init(){
+  buildStatusFilter();
+  renderLibrary();
+  updateMeta();
+}
+
+function buildStatusFilter(){
+  var bar=document.getElementById('status-filter'); bar.innerHTML='';
+  ['all','reading','queued','completed'].forEach(function(s){
+    var b=document.createElement('button'); b.className='flt-btn'+(s===statusFilter?' sel':'');
+    b.textContent=s==='all'?'ALL':(STATUS_LABELS[s]||s);
+    b.onclick=function(){
+      statusFilter=s;
+      document.querySelectorAll('#status-filter .flt-btn').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');
+      renderLibrary();
+    };
+    bar.appendChild(b);
+  });
+}
+
+/* ─── ADD BOOK ─── */
+function addBook(){
+  var title=document.getElementById('bk-title').value.trim();
+  var author=document.getElementById('bk-author').value.trim();
+  if(!title){alert('Enter a title.');return;}
+  var books=loadBooks();
+  books.unshift({
+    id:Date.now(), title:title, author:author||'Unknown',
+    pages:parseInt(document.getElementById('bk-pages').value)||0,
+    progress:0, genre:document.getElementById('bk-genre').value,
+    status:document.getElementById('bk-status').value,
+    addedAt:new Date().toISOString(), highlights:[], rating:0,
+  });
+  saveBooks(books);
+  updateMeta();
+  renderLibrary();
+  document.getElementById('bk-title').value='';
+  document.getElementById('bk-author').value='';
+  document.getElementById('bk-pages').value='';
+  switchTab(document.querySelector('.lt'),  't1');
+}
+
+/* ─── RENDER LIBRARY ─── */
+function renderLibrary(){
+  var books=loadBooks();
+  var filtered=statusFilter==='all'?books:books.filter(function(b){return b.status===statusFilter;});
+  var list=document.getElementById('book-list'); list.innerHTML='';
+  if(!filtered.length){list.innerHTML='<div class="empty-state">NO BOOKS IN THIS CATEGORY.<br>ADD YOUR FIRST BOOK TO START.</div>';return;}
+  filtered.forEach(function(b){list.appendChild(makeBookCard(b));});
+}
+
+function makeBookCard(b){
+  var col=GENRE_COLORS[b.genre]||'#C9A84C';
+  var stCol=STATUS_COLORS[b.status]||'var(--dim)';
+  var pct=b.pages>0?Math.min(100,Math.round((b.progress/b.pages)*100)):0;
+  var div=document.createElement('div'); div.className='book-card'; div.id='book-'+b.id;
+  div.innerHTML=
+    '<div class="book-top">'+
+      '<div class="book-spine" style="background:'+col+'66"></div>'+
+      '<div class="book-info">'+
+        '<div class="book-title">'+b.title+'</div>'+
+        '<div class="book-author">'+b.author+'</div>'+
+        '<div class="book-meta">'+
+          '<span class="book-tag" style="color:'+col+';border-color:'+col+'33">'+(GENRE_LABELS[b.genre]||b.genre)+'</span>'+
+          '<span class="book-tag" style="color:'+stCol+'">'+STATUS_LABELS[b.status]+'</span>'+
+          (b.pages?'<span class="book-tag">'+b.pages+'P</span>':'')+'</div>'+
+      '</div>'+
+      '<div class="book-actions">'+
+        '<button class="bk-btn" onclick="openProg('+b.id+')">✎ PROGRESS</button>'+
+        '<button class="bk-btn" onclick="toggleHlForm('+b.id+')">+ HIGHLIGHT</button>'+
+        '<button class="bk-btn del" onclick="delBook('+b.id+')">✕</button>'+
+      '</div>'+
+    '</div>'+
+    (b.pages?'<div class="prog-wrap"><div class="prog-label"><span>PROGRESS</span><span>'+b.progress+'/'+b.pages+' pages ('+pct+'%)</span></div>'+
+      '<div class="prog-track"><div class="prog-fill" id="pf-'+b.id+'" style="width:'+pct+'%;background:'+col+'"></div></div></div>':'')+'';
+
+  /* Highlights */
+  if(b.highlights&&b.highlights.length){
+    var hl=document.createElement('div'); hl.className='highlight-list';
+    b.highlights.slice(-5).reverse().forEach(function(h){
+      var hi=document.createElement('div'); hi.className='hl-item';
+      hi.innerHTML=h.text+(h.page?'<div class="hl-pg">p.'+h.page+'</div>':'')+
+        '<button class="hl-del" onclick="delHighlight('+b.id+',\''+h.id+'\')">✕</button>';
+      hl.appendChild(hi);
+    });
+    div.appendChild(hl);
+  }
+
+  /* Highlight form */
+  var hf=document.createElement('div'); hf.className='hl-form'; hf.id='hlf-'+b.id;
+  hf.innerHTML='<textarea class="hl-input" id="hlt-'+b.id+'" rows="3" placeholder="Paste highlight or key insight..."></textarea>'+
+    '<div style="display:flex;gap:6px;margin-top:6px;align-items:center">'+
+      '<input class="hl-pg-input" type="number" id="hlp-'+b.id+'" placeholder="Page #"/>'+
+      '<button class="bk-btn" onclick="saveHighlight('+b.id+')" style="flex:1">SAVE</button>'+
+      '<button class="bk-btn" onclick="toggleHlForm('+b.id+')" style="flex:1">CANCEL</button>'+
+    '</div>';
+  div.appendChild(hf);
+  return div;
+}
+
+function openProg(id){
+  var books=loadBooks();
+  var b=books.find(function(x){return x.id===id;});
+  if(!b) return;
+  var cur=prompt('Current page number? (of '+b.pages+')',b.progress);
+  if(cur===null) return;
+  b.progress=Math.min(b.pages||99999,Math.max(0,parseInt(cur)||0));
+  if(b.pages&&b.progress>=b.pages) b.status='completed';
+  else if(b.progress>0) b.status='reading';
+  saveBooks(books);
+  renderLibrary();
+}
+
+function toggleHlForm(id){
+  var f=document.getElementById('hlf-'+id);
+  if(f) f.classList.toggle('open');
+}
+
+function saveHighlight(id){
+  var text=(document.getElementById('hlt-'+id)||{}).value;
+  if(!text||!text.trim()) return;
+  var pg=(document.getElementById('hlp-'+id)||{}).value;
+  var books=loadBooks();
+  var b=books.find(function(x){return x.id===id;});
+  if(!b) return;
+  if(!b.highlights) b.highlights=[];
+  b.highlights.push({id:Date.now()+'',text:text.trim(),page:pg?parseInt(pg):null});
+  saveBooks(books);
+  renderLibrary();
+  updateMeta();
+}
+
+function delHighlight(bookId,hlId){
+  var books=loadBooks();
+  var b=books.find(function(x){return x.id===bookId;});
+  if(!b) return;
+  b.highlights=(b.highlights||[]).filter(function(h){return h.id!==hlId;});
+  saveBooks(books);
+  renderLibrary();
+  updateMeta();
+}
+
+function delBook(id){
+  if(!confirm('Remove this book from your library?')) return;
+  saveBooks(loadBooks().filter(function(b){return b.id!==id;}));
+  renderLibrary();
+  updateMeta();
+}
+
+/* ─── INSIGHTS ─── */
+function renderInsights(){
+  var books=loadBooks();
+  var sg=document.getElementById('read-stats');
+  if(!books.length){sg.innerHTML='<div class="empty-state" style="grid-column:1/-1">ADD BOOKS TO SEE INSIGHTS.</div>';drawGenre([]);return;}
+
+  var done=books.filter(function(b){return b.status==='completed';}).length;
+  var reading=books.filter(function(b){return b.status==='reading';}).length;
+  var totalHL=books.reduce(function(a,b){return a+(b.highlights||[]).length;},0);
+  var totalPages=books.filter(function(b){return b.status==='completed';}).reduce(function(a,b){return a+(b.pages||0);},0);
+
+  sg.innerHTML=[
+    {v:books.length,l:'TOTAL BOOKS'},
+    {v:done,l:'COMPLETED'},
+    {v:reading,l:'ACTIVE'},
+    {v:totalHL,l:'HIGHLIGHTS'},
+    {v:totalPages,l:'PAGES READ'},
+  ].map(function(x){return'<div class="stat-box"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+
+  /* top highlights */
+  var all=[];
+  books.forEach(function(b){(b.highlights||[]).forEach(function(h){all.push({text:h.text,book:b.title,page:h.page});});});
+  var th=document.getElementById('top-highlights');
+  if(!all.length){th.innerHTML='<div class="empty-state">HIGHLIGHT KEY PASSAGES TO BUILD YOUR WISDOM LIBRARY.</div>';}
+  else{
+    var sample=all.sort(function(){return Math.random()-.5;}).slice(0,5);
+    th.innerHTML=sample.map(function(h){
+      return'<div class="hl-item">'+h.text+(h.page?'<div class="hl-pg">p.'+h.page+' — '+h.book+'</div>':'<div class="hl-pg">'+h.book+'</div>')+'</div>';
+    }).join('');
+  }
+
+  drawGenre(books);
+}
+
+function drawGenre(books){
+  var c=document.getElementById('genre-canvas');
+  c.width=c.offsetWidth||600;
+  var ctx=c.getContext('2d'); var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  if(!books.length) return;
+
+  var freq={};
+  books.forEach(function(b){freq[b.genre]=(freq[b.genre]||0)+1;});
+  var entries=Object.entries(freq).sort(function(a,b){return b[1]-a[1];});
+  var max=entries[0][1];
+  var pad=32,pw=W-pad*2,ph=H-pad*2;
+  var bw=(pw/(entries.length+1))*0.7,gap=(pw/(entries.length+1))*0.3;
+
+  entries.forEach(function(e,i){
+    var x=pad+i*(bw+gap);
+    var bh=(e[1]/max)*ph;
+    var col=GENRE_COLORS[e[0]]||'#C9A84C';
+    ctx.fillStyle=col+'55';
+    ctx.fillRect(x,pad+ph-bh,bw,bh);
+    ctx.fillStyle=col+'88'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText(e[1],x+bw/2-3,pad+ph-bh-5);
+    ctx.save(); ctx.translate(x+bw/2,H-4); ctx.rotate(-Math.PI/4);
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillText((GENRE_LABELS[e[0]]||e[0]).substring(0,7),0,0);
+    ctx.restore();
+  });
+}
+
+/* ─── META ─── */
+function updateMeta(){
+  var books=loadBooks();
+  var hl=books.reduce(function(a,b){return a+(b.highlights||[]).length;},0);
+  document.getElementById('tb-stats').textContent='── '+books.length+' BOOKS · '+hl+' HIGHLIGHTS';
+}
+
+/* ─── STORAGE ─── */
+function loadBooks(){try{return JSON.parse(localStorage.getItem(READ_KEY)||'[]');}catch(e){return[];}}
+function saveBooks(b){localStorage.setItem(READ_KEY,JSON.stringify(b));}
+
+/* ─── TAB SWITCH ─── */
+function switchTab(btn,id){
+  document.querySelectorAll('.lt').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='t1') renderLibrary();
+  if(id==='t3') renderInsights();
+}
+
+init();
+</script>
+</body>
+</html>

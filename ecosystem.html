@@ -1,206 +1,263 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — Platform Ecosystem Map · 18 Modules Interconnected">
-<title>&#937; SYD OMEGA 91717 &mdash; Ecosystem</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; Platform Ecosystem</title>
+<meta name="description" content="The 18-module sovereign platform ecosystem — interactive map and complete module directory."/>
+<meta name="theme-color" content="#C9A84C"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:var(--pad)}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-/* ECO CANVAS */
-.eco-wrap{position:relative;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:rgba(2,2,6,.9);margin-bottom:16px}
-#eco-canvas{display:block;width:100%}
-/* MODULE GRID */
-.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:16px}
-.module-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;border-left:3px solid var(--mc,var(--gold))}
-.module-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
-.mc-id{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--mc,var(--gold));margin-bottom:4px}
-.mc-name{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:6px}
-.mc-desc{font-size:11px;line-height:1.65;color:var(--ink);opacity:.65;margin-bottom:8px}
-.mc-pages{display:flex;flex-wrap:wrap;gap:4px}
-.mc-page{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:var(--muted);text-decoration:none;transition:.12s}
-.mc-page:hover{border-color:var(--gold);color:var(--gold)}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}}
+.eco-canvas-wrap{border:1px solid var(--line);background:var(--surface);position:relative;height:460px;margin-bottom:12px;overflow:hidden}
+#eco-canvas{display:block;width:100%;height:100%;cursor:pointer}
+.eco-detail{border:1px solid var(--line);background:var(--surface);padding:14px;min-height:70px;font-size:12px;color:var(--muted)}
+.eco-detail .ed-id{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);margin-bottom:4px}
+.eco-detail .ed-name{font-family:var(--D);font-size:15px;color:var(--gold);margin-bottom:5px}
+.eco-detail .ed-desc{font-size:11px;color:var(--muted);line-height:1.65;margin-bottom:8px}
+.eco-detail .ed-pages{display:flex;flex-wrap:wrap;gap:5px}
+.eco-detail .ed-pages a{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--cyan);border:1px solid var(--line);padding:3px 7px;text-decoration:none}
+.eco-detail .ed-pages a:hover{border-color:var(--cyan)}
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.mod-card{border:1px solid var(--line);border-top:2px solid var(--mc,var(--gold));background:var(--surface);padding:14px}
+.mod-id{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
+.mod-name{font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:5px}
+.mod-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px}
+.mod-pages{display:flex;flex-wrap:wrap;gap:4px}
+.mod-pages a{font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--cyan);border:1px solid rgba(0,229,255,.2);padding:2px 5px;text-decoration:none}
+.mod-pages a:hover{border-color:var(--cyan)}
 </style>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="ecosystem" aria-label="Navigation"></aside>
-  <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">PLATFORM ECOSYSTEM<small>18 SOVEREIGN MODULES &middot; ALL INTERCONNECTED &middot; EVERY MODULE COMMUNICATES &middot; LIVING DIGITAL ORGANISM</small></div><canvas id="eco-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
-    <div class="pad" data-reveal="fade-up">
-      <!-- CANVAS MAP -->
-      <div class="sechead" data-reveal="fade-up">ECOSYSTEM MAP &middot; CLICK ANY NODE TO NAVIGATE</div>
-      <div class="eco-wrap" style="height:clamp(300px,45vh,500px)">
-        <canvas id="eco-canvas" role="img" aria-label="Platform ecosystem map showing 18 interconnected modules"></canvas>
-      </div>
-      <!-- MODULE GRID -->
-      <div class="sechead" data-reveal="fade-up">18 SOVEREIGN MODULES &middot; COMPLETE PLATFORM COVERAGE</div>
-      <div class="module-grid" id="module-grid"></div>
-    </div>
-    <div data-page-emblem="ecosystem" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; ECOSYSTEM &middot; 18 MODULES &middot; SYD OMEGA 91717</span><span>EVERY MODULE INTERCONNECTED &middot; LIVING DIGITAL ORGANISM</span></div>
-  </main>
+<aside id="omega-side" data-page="ecosystem" aria-label="Navigation"></aside>
+<div class="page-shell" id="app" style="display:none">
+<header class="topbar">
+  <div class="topbar-title">PLATFORM ECOSYSTEM<span class="topbar-sub">18 SOVEREIGN MODULES &middot; COMPLETE PLATFORM COVERAGE</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('map')">MAP</button>
+  <button class="tab-btn" onclick="setTab('modules')">MODULES</button>
+  <button class="tab-btn" onclick="setTab('navigate')">NAVIGATE</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
-<script>
-var MODULES=[
-  {id:'M1', name:'PLATFORM CORE',     color:'#C9A84C',desc:'Identity, auth, profile, search, subscriptions, KYC, payments.',                     pages:['dashboard','profile','account','pending','search','payments','subscriptions']},
-  {id:'M2', name:'CONSULTANCY HUB',   color:'#E2C86D',desc:'Expert services — medical, legal, engineering, business, publishing, economy.',        pages:['consultancy','services','contracts']},
-  {id:'M3', name:'GAMING LAYER',      color:'#9B6BF0',desc:'144 games, 9 stages, ascension, rewards, NFT minting, economy.',                       pages:['gaming','achievements','trophies','honors','hall']},
-  {id:'M4', name:'ACHIEVEMENT SYSTEM',color:'#C9A84C',desc:'12 trophies, 12 medals, 12 certificates. Four states: Bronze→Silver→Gold→Omega.',      pages:['achievements','honors','trophies']},
-  {id:'M5', name:'FAMILY SYSTEM',     color:'#3fb27f',desc:'Family tree, genealogy, shared assets, privacy tiers, inheritance.',                    pages:['family','bloodline','heritage']},
-  {id:'M6', name:'MEDIA UNIVERSE',    color:'#9B6BF0',desc:'12 movies × 12 series = 144 total. Games synchronized. NFT links.',                     pages:['cinema','media','series','trailers']},
-  {id:'M7', name:'BLOCKCHAIN LAYER',  color:'#E2C86D',desc:'NFT engine, wallet, asset tracking, marketplace, treasury vault, ΩSYD token.',          pages:['vault','blockchain','treasury']},
-  {id:'M8', name:'COMMUNICATION',     color:'#00E5FF',desc:'AI chat, social feed, messaging, notifications, scheduling, community.',                 pages:['chatbot','social','notifications','feed','events']},
-  {id:'M9', name:'HOROSCOPE+SYMBOLIC',color:'#9B6BF0',desc:'Birth charts, planets, elements, profiles, 12 Olympians, matching system.',              pages:['horoscope','cosmos','elements','houses']},
-  {id:'M10',name:'NEWS INTELLIGENCE', color:'#00E5FF',desc:'News aggregation, AI summaries, video integration, trend tracking.',                     pages:['news']},
-  {id:'M11',name:'HERITAGE SYSTEM',   color:'#3fb27f',desc:'Lineage, historical archives, culture, family memory, audit logs.',                      pages:['heritage','bloodline','character']},
-  {id:'M12',name:'PROGRESS ENGINE',   color:'#C9A84C',desc:'XP, radar charts, learning path, time tracking, lattice position.',                      pages:['points','evolution','matrix','ascension','gates','grades','levels','phases','grid','kings','triads','universe']},
-  {id:'M13',name:'CREDENTIALS',       color:'#00E5FF',desc:'Digital passport, identity card, crypto card, KYC, verification docs.',                  pages:['credentials','kyc','passport','identity','sigil']},
-  {id:'M14',name:'LEGAL LAYER',       color:'#E2C86D',desc:'Contracts, copyright, terms, ownership, licenses, report protection.',                   pages:['contracts','compliance','terms','charter']},
-  {id:'M15',name:'ELEMENTAL SYSTEM',  color:'#E25800',desc:'9 elements: Fire/Water/Wind/Metal/Sand/Soul/Space/Void/The Ninth. 3D interactive.',      pages:['elements','cosmos']},
-  {id:'M16',name:'INVESTMENT LAYER',  color:'#E2C86D',desc:'Portfolio tracking, crypto view, investment reports, wallets, allocation engine.',        pages:['investment','income','portfolio','revenue']},
-  {id:'M17',name:'INTELLIGENCE LAYER',color:'#9B6BF0',desc:'AI logs, 12 agents, knowledge graph, reasoning models, analytics.',                      pages:['sovereign-ai','intelligence','analytics','automation']},
-  {id:'M18',name:'HIERARCHY SYSTEM',  color:'#C9A84C',desc:'Guest→Subscriber→Verified→Owner. 1-9 stages. 9.9.9 master state. Governance.',          pages:['approvals','sovereigns','enterprise','governance','observatory']},
-];
 
-// CANVAS ECOSYSTEM MAP
-(function(){
-  var cv=document.getElementById('eco-canvas');
-  if(!cv) return;
-  var ctx=cv.getContext('2d');
-  var W,H,hovered=null,selected=null;
-  var nodes=[];
-  var RINGS=[
-    [0,1,2,3,4,5],
-    [6,7,8,9,10,11],
-    [12,13,14,15,16,17]
-  ];
-  function resize(){
-    var wrap=cv.parentElement;W=wrap.clientWidth;H=wrap.clientHeight;
-    cv.width=W;cv.height=H;layoutNodes();
-  }
-  function layoutNodes(){
-    nodes=[];
-    var cx=W/2,cy=H/2;
-    var radii=[Math.min(W,H)*.16,Math.min(W,H)*.3,Math.min(W,H)*.44];
-    RINGS.forEach(function(ring,ri){
-      ring.forEach(function(mi,i){
-        var angle=-Math.PI/2+i*(2*Math.PI/ring.length);
-        var r=radii[ri];
-        nodes[mi]={x:cx+Math.cos(angle)*r,y:cy+Math.sin(angle)*r,m:MODULES[mi],r:ri};
-      });
-    });
-    /* Center node */
-    nodes.push({x:cx,y:cy,m:{id:'Ω',name:'SOVEREIGN CORE',color:'#C9A84C',desc:'AUTH=sqrt(A³+B³+C³)×φ/e | APEX=27.8367',pages:['dashboard']},r:-1,center:true});
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    /* Draw connection lines */
-    nodes.forEach(function(n){
-      if(n.center) return;
-      var cx=W/2,cy=H/2;
-      ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(cx,cy);
-      ctx.strokeStyle='rgba(201,168,76,0.04)';ctx.lineWidth=.5;ctx.stroke();
-      /* Ring connections */
-      var ring=RINGS[n.r];if(!ring) return;
-      ring.forEach(function(mi){
-        if(nodes[mi]&&mi!==MODULES.indexOf(n.m)){
-          ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(nodes[mi].x,nodes[mi].y);
-          ctx.strokeStyle='rgba(201,168,76,0.03)';ctx.lineWidth=.5;ctx.stroke();
-        }
-      });
-    });
-    /* Draw nodes */
-    nodes.forEach(function(n){
-      var isH=hovered===n,isS=selected===n;
-      var r=n.center?20:isH?14:10;
-      var col=n.m.color||'#C9A84C';
-      ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
-      ctx.fillStyle=col+(isH||isS?'33':'11');ctx.fill();
-      ctx.strokeStyle=col+(isH||isS?'FF':'55');ctx.lineWidth=isH||isS?1.5:1;ctx.stroke();
-      ctx.beginPath();ctx.arc(n.x,n.y,r*.4,0,Math.PI*2);
-      ctx.fillStyle=col+(isH||isS?'FF':'88');ctx.fill();
-      /* Label */
-      ctx.font=(n.center?'bold ':'')+'8px "Courier Prime",monospace';ctx.textAlign='center';ctx.textBaseline='bottom';
-      ctx.fillStyle=col+(isH||isS?'FF':'99');
-      var label=n.center?'Ω':n.m.id;
-      ctx.fillText(label,n.x,n.y-r-3);
-    });
-  }
-  function nodeAt(mx,my){
-    for(var i=nodes.length-1;i>=0;i--){
-      var n=nodes[i],dx=mx-n.x,dy=my-n.y;
-      if(dx*dx+dy*dy<(n.center?400:196)) return n;
-    }
-    return null;
-  }
-  cv.addEventListener('mousemove',function(e){
-    var rect=cv.getBoundingClientRect();
-    hovered=nodeAt(e.clientX-rect.left,e.clientY-rect.top);
-    cv.style.cursor=hovered?'pointer':'default';draw();
-  });
-  cv.addEventListener('click',function(e){
-    var rect=cv.getBoundingClientRect();
-    var n=nodeAt(e.clientX-rect.left,e.clientY-rect.top);
-    if(n&&!n.center){
-      selected=n;
-      var m=n.m;
-      /* Scroll module grid into view and highlight */
-      var card=document.querySelector('[data-module="'+m.id+'"]');
-      if(card){card.scrollIntoView({behavior:'smooth',block:'center'});card.style.borderLeftColor=m.color;card.style.boxShadow='0 0 20px '+m.color+'22';}
-      draw();
-    }
-  });
-  cv.addEventListener('touchend',function(e){
-    e.preventDefault();var t=e.changedTouches[0];
-    var rect=cv.getBoundingClientRect();
-    var n=nodeAt(t.clientX-rect.left,t.clientY-rect.top);
-    if(n&&!n.center){selected=n;draw();}
-  },{passive:false});
-  window.addEventListener('resize',function(){resize();draw();});
-  resize();draw();
-  setInterval(draw,3000);
-})();
+<div class="tab-panel active" id="tab-map">
+  <div class="sechead">ECOSYSTEM MAP &middot; CLICK ANY NODE TO NAVIGATE</div>
+  <div class="eco-canvas-wrap"><canvas id="eco-canvas" aria-label="Ecosystem map"></canvas></div>
+  <div class="eco-detail" id="eco-detail">
+    <div style="font-family:var(--M);font-size:9px;color:var(--muted)">CLICK A NODE TO SEE MODULE DETAILS</div>
+  </div>
+</div>
 
-// MODULE GRID
-var grid=document.getElementById('module-grid');
-if(grid){grid.innerHTML=MODULES.map(function(m){
-  return '<div class="module-card" data-module="'+m.id+'" style="--mc:'+m.color+'">'
-    +'<div class="mc-id">'+m.id+' &middot; '+m.color+'</div>'
-    +'<div class="mc-name">'+m.name+'</div>'
-    +'<div class="mc-desc">'+m.desc+'</div>'
-    +'<div class="mc-pages">'+m.pages.slice(0,5).map(function(p){
-      return '<a class="mc-page" href="/'+p+'.html">'+p.toUpperCase()+'</a>';
-    }).join('')+'</div>'
-    +'</div>';
-}).join('');}
-</script>
+<div class="tab-panel" id="tab-modules">
+  <div class="sechead">18 SOVEREIGN MODULES</div>
+  <div class="mod-grid" id="mod-grid"></div>
+</div>
+
+<div class="tab-panel" id="tab-navigate">
+  <div class="sechead">QUICK NAVIGATION BY MODULE</div>
+  <div id="nav-grid"></div>
+</div>
+
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">PLATFORM ARCHITECTURE</div>
+  <div class="card-grid">
+    <div class="card"><div class="card-title">18 MODULES, ONE ORGANISM</div><div class="card-body">The platform is not a collection of features. It is 18 interdependent modules forming a single sovereign organism. Each module has a designated ID (M1–M18), a color code, and a set of pages. Every page belongs to exactly one module, and every module connects to at least two others.</div></div>
+    <div class="card"><div class="card-title">THREE RINGS OF SOVEREIGNTY</div><div class="card-body">The ecosystem map is arranged in three concentric rings. The inner ring holds the core (Ω). The middle ring holds the primary modules (identity, ascension, media, economy). The outer ring holds the extended modules (heritage, intelligence, legal, elemental). Rings reflect dependency depth, not importance.</div></div>
+    <div class="card"><div class="card-title">MODULE INTERDEPENDENCY</div><div class="card-body">M1 (Platform Core) is the root — all modules depend on it for auth. M12 (Progress Engine) is the central value layer — it receives signals from M3 (Gaming), M4 (Achievements), M8 (Communication), and M11 (Heritage). M17 (Intelligence) reads from all modules. No module is isolated.</div></div>
+    <div class="card"><div class="card-title">62-PAGE PLATFORM</div><div class="card-body">The full platform comprises 62 pages mapped across 18 modules. Each page is a self-contained HTML/JS application that communicates with Supabase via the publishable API key. All inter-page data sharing happens through the profiles table, shared localStorage keys, and the Omega progress engine.</div></div>
+  </div>
+  <div class="sechead" style="margin-top:24px">MODULE REGISTRY</div>
+  <div class="tbl-wrap">
+    <div class="tbl-head" style="grid-template-columns:60px 1fr 2fr"><span>ID</span><span>MODULE</span><span>AXIS</span></div>
+    <div class="tbl-row" style="grid-template-columns:60px 1fr 2fr"><span style="color:var(--gold)">M1</span><span>PLATFORM CORE</span><span>Identity, Auth, Payments</span></div>
+    <div class="tbl-row" style="grid-template-columns:60px 1fr 2fr"><span style="color:var(--gold)">M3</span><span>GAMING LAYER</span><span>Mastery B — 144 games</span></div>
+    <div class="tbl-row" style="grid-template-columns:60px 1fr 2fr"><span style="color:var(--green)">M5</span><span>FAMILY SYSTEM</span><span>Contribution C — Heritage</span></div>
+    <div class="tbl-row" style="grid-template-columns:60px 1fr 2fr"><span style="color:var(--purple)">M9</span><span>HOROSCOPE+SYMBOLIC</span><span>Knowledge A — Cosmos</span></div>
+    <div class="tbl-row" style="grid-template-columns:60px 1fr 2fr"><span style="color:var(--cyan)">M17</span><span>INTELLIGENCE LAYER</span><span>All axes — 12 AI agents</span></div>
+  </div>
+</div>
+</div>
+
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
-  }catch(e){document.getElementById('app').style.display='flex';}
+
+var MODULES=[
+  {id:'M1', name:'PLATFORM CORE',     color:'#C9A84C',desc:'Identity, auth, profile, search, subscriptions, KYC, payments.',pages:['dashboard','profile','account','search','payments']},
+  {id:'M2', name:'CONSULTANCY HUB',   color:'#E2C86D',desc:'Expert services — medical, legal, engineering, business.',pages:['consultancy','services','contracts']},
+  {id:'M3', name:'GAMING LAYER',      color:'#9B6BF0',desc:'144 games, 9 stages, ascension, rewards, NFT minting, economy.',pages:['gaming','achievements','honors','hall']},
+  {id:'M4', name:'ACHIEVEMENT SYSTEM',color:'#C9A84C',desc:'12 trophies, 12 medals, 12 certificates. Four states: Bronze→Silver→Gold→Omega.',pages:['achievements','honors']},
+  {id:'M5', name:'FAMILY SYSTEM',     color:'#3fb27f',desc:'Family tree, genealogy, shared assets, privacy tiers, inheritance.',pages:['family','bloodline','heritage']},
+  {id:'M6', name:'MEDIA UNIVERSE',    color:'#9B6BF0',desc:'12 movies × 12 series = 144 total. Games synchronized. NFT links.',pages:['cinema','media','series','trailers']},
+  {id:'M7', name:'BLOCKCHAIN LAYER',  color:'#E2C86D',desc:'NFT engine, wallet, asset tracking, marketplace, treasury vault, ΩSYD token.',pages:['vault','blockchain','treasury']},
+  {id:'M8', name:'COMMUNICATION',     color:'#00E5FF',desc:'AI chat, social feed, messaging, notifications, scheduling.',pages:['social','notifications','feed','events']},
+  {id:'M9', name:'HOROSCOPE+SYMBOLIC',color:'#9B6BF0',desc:'Birth charts, planets, elements, profiles, 12 Olympians.',pages:['horoscope','cosmos','elements','houses']},
+  {id:'M10',name:'NEWS INTELLIGENCE', color:'#00E5FF',desc:'News aggregation, AI summaries, video integration, trend tracking.',pages:['news']},
+  {id:'M11',name:'HERITAGE SYSTEM',   color:'#3fb27f',desc:'Lineage, historical archives, culture, family memory, audit logs.',pages:['heritage','bloodline','character']},
+  {id:'M12',name:'PROGRESS ENGINE',   color:'#C9A84C',desc:'XP, radar charts, learning path, time tracking, lattice position.',pages:['matrix','ascension','gates','grades','levels','phases','grid']},
+  {id:'M13',name:'CREDENTIALS',       color:'#00E5FF',desc:'Digital passport, identity card, crypto card, KYC, verification.',pages:['credentials','kyc','passport','identity','sigil']},
+  {id:'M14',name:'LEGAL LAYER',       color:'#E2C86D',desc:'Contracts, copyright, terms, ownership, licenses, report protection.',pages:['contracts','compliance','terms','charter']},
+  {id:'M15',name:'ELEMENTAL SYSTEM',  color:'#E25800',desc:'9 elements: Fire/Water/Wind/Metal/Sand/Soul/Space/Void/The Ninth.',pages:['elements','cosmos']},
+  {id:'M16',name:'INVESTMENT LAYER',  color:'#E2C86D',desc:'Portfolio tracking, crypto view, investment reports, wallets.',pages:['investment','portfolio','revenue']},
+  {id:'M17',name:'INTELLIGENCE LAYER',color:'#9B6BF0',desc:'AI logs, 12 agents, knowledge graph, reasoning models, analytics.',pages:['sovereign-ai','intelligence','analytics','automation']},
+  {id:'M18',name:'HIERARCHY SYSTEM',  color:'#C9A84C',desc:'Guest→Subscriber→Verified→Owner. 1-9 stages. 9.9.9 master state.',pages:['approvals','sovereigns','enterprise']},
+];
+
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['map','modules','navigate','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+
+function buildModGrid(){
+  var grid=document.getElementById('mod-grid');
+  grid.innerHTML='';
+  MODULES.forEach(function(m){
+    var div=document.createElement('div');
+    div.className='mod-card';
+    div.style.setProperty('--mc',m.color);
+    div.innerHTML='<div class="mod-id">'+m.id+'</div><div class="mod-name">'+m.name+'</div><div class="mod-desc">'+m.desc+'</div><div class="mod-pages">'+m.pages.map(function(p){return '<a href="/'+p+'.html">'+p+'</a>';}).join('')+'</div>';
+    grid.appendChild(div);
+  });
+}
+
+function buildNavGrid(){
+  var grid=document.getElementById('nav-grid');
+  grid.innerHTML='';
+  MODULES.forEach(function(m){
+    var div=document.createElement('div');
+    div.style.cssText='margin-bottom:16px';
+    div.innerHTML='<div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:'+m.color+';margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)">'+m.id+' &middot; '+m.name+'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'+m.pages.map(function(p){return '<a href="/'+p+'.html" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--ink);border:1px solid var(--line);padding:5px 10px;text-decoration:none;transition:.15s" onmouseover="this.style.borderColor=\''+m.color+'\'" onmouseout="this.style.borderColor=\'\'">'+p.toUpperCase()+'</a>';}).join('')+'</div>';
+    grid.appendChild(div);
+  });
+}
+
+(function initCanvas(){
+  var cv=document.getElementById('eco-canvas');
+  if(!cv)return;
+  var ctx=cv.getContext('2d');
+  var W,H,hovered=null,selected=null;
+  var nodes=[];
+  var RINGS=[MODULES.slice(0,3),MODULES.slice(3,9),MODULES.slice(9)];
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  function resize(){
+    var wrap=cv.parentElement;
+    W=wrap.clientWidth;H=wrap.clientHeight;
+    cv.width=W;cv.height=H;
+    layoutNodes();draw();
+  }
+
+  function layoutNodes(){
+    nodes=[];
+    var cx=W/2,cy=H/2;
+    var radii=[Math.min(W,H)*.14,Math.min(W,H)*.28,Math.min(W,H)*.42];
+    nodes.push({x:cx,y:cy,center:true,r:0,m:{id:'Ω',name:'SOVEREIGN CORE',color:'#C9A84C',desc:'The living heart of the Order — all 18 modules orbit this point.',pages:[]}});
+    RINGS.forEach(function(ring,ri){
+      ring.forEach(function(m,i){
+        var angle=-Math.PI/2+i*(2*Math.PI/ring.length);
+        var r=radii[ri];
+        nodes.push({x:cx+Math.cos(angle)*r,y:cy+Math.sin(angle)*r,center:false,r:ri+1,m:m});
+      });
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var cx=W/2,cy=H/2;
+    [0,1,2].forEach(function(ri){
+      var rad=[Math.min(W,H)*.14,Math.min(W,H)*.28,Math.min(W,H)*.42][ri];
+      ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,0.07)';ctx.lineWidth=1;ctx.stroke();
+    });
+    nodes.forEach(function(n){
+      if(n.center)return;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(n.x,n.y);
+      ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=1;ctx.stroke();
+    });
+    nodes.forEach(function(n){
+      var isH=hovered===n,isS=selected===n;
+      var r=n.center?20:(isH||isS)?13:9;
+      var col=n.m.color||'#C9A84C';
+      if(isH||isS){ctx.shadowColor=col;ctx.shadowBlur=14;}
+      ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
+      ctx.fillStyle=isS?col:isH?col+'66':'rgba(13,13,21,0.9)';
+      ctx.fill();
+      ctx.strokeStyle=col;ctx.lineWidth=isH||isS?2:1;ctx.stroke();
+      ctx.shadowBlur=0;
+      ctx.font=(n.center?'bold 14px':'bold 9px')+' monospace';
+      ctx.fillStyle=isS?'#000':col;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(n.center?'Ω':n.m.id,n.x,n.y);
+    });
+  }
+
+  function findNode(ex,ey){
+    var rect=cv.getBoundingClientRect();
+    var mx=ex-rect.left,my=ey-rect.top;
+    return nodes.find(function(n){
+      var dx=n.x-mx,dy=n.y-my;
+      return Math.sqrt(dx*dx+dy*dy)<(n.center?22:16);
+    })||null;
+  }
+
+  cv.addEventListener('mousemove',function(e){
+    hovered=findNode(e.clientX,e.clientY);
+    cv.style.cursor=hovered?'pointer':'default';
+    if(!reduce)draw();
+  });
+
+  cv.addEventListener('click',function(e){
+    var n=findNode(e.clientX,e.clientY);
+    if(!n)return;
+    selected=n;
+    draw();
+    var det=document.getElementById('eco-detail');
+    det.innerHTML='<div class="ed-id">'+n.m.id+'</div><div class="ed-name" style="color:'+n.m.color+'">'+n.m.name+'</div><div class="ed-desc">'+n.m.desc+'</div>'
+      +(n.m.pages&&n.m.pages.length?'<div class="ed-pages">'+n.m.pages.map(function(p){return '<a href="/'+p+'.html">'+p.toUpperCase()+'</a>';}).join('')+'</div>':'');
+  });
+
+  window.addEventListener('resize',resize);
+  resize();
+  if(!reduce){var af=function(){draw();requestAnimationFrame(af);};af();}
 })();
+
+function buildModGrid(){
+  var grid=document.getElementById('mod-grid');
+  grid.innerHTML='';
+  MODULES.forEach(function(m){
+    var div=document.createElement('div');
+    div.className='mod-card';
+    div.style.setProperty('--mc',m.color);
+    div.innerHTML='<div class="mod-id">'+m.id+'</div><div class="mod-name">'+m.name+'</div><div class="mod-desc">'+m.desc+'</div><div class="mod-pages">'+m.pages.map(function(p){return '<a href="/'+p+'.html">'+p+'</a>';}).join('')+'</div>';
+    grid.appendChild(div);
+  });
+}
+
+function buildNavGrid(){
+  var grid=document.getElementById('nav-grid');
+  grid.innerHTML='';
+  MODULES.forEach(function(m){
+    var div=document.createElement('div');
+    div.style.cssText='margin-bottom:16px';
+    div.innerHTML='<div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:'+m.color+';margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)">'+m.id+' &middot; '+m.name+'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'+m.pages.map(function(p){return '<a href="/'+p+'.html" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--ink);border:1px solid var(--line);padding:5px 10px;text-decoration:none">'+p.toUpperCase()+'</a>';}).join('')+'</div>';
+    grid.appendChild(div);
+  });
+}
+
+async function boot(){
+  var sess=(await sb.auth.getSession()).data.session;
+  if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('is_owner,access_approved').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
+  buildModGrid();buildNavGrid();
+}
+boot();
 </script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+<script src="/bg.js"></script>
 </body>
 </html>

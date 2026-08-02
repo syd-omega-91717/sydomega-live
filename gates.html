@@ -3,94 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — GATES · Sovereign Platform">
+<meta name="description" content="SYD OMEGA 91717 — GATES · 12 sovereign mastery thresholds">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; GATES</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--gold);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--gold);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--gold);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
-</style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="gates" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">GATES<small>M12 &middot; 12 Authority Gates &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="gate-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+      <div class="t">GATES<small>PROGRESSION &middot; 12 MASTERY THRESHOLDS &middot; SOVEREIGN CURRICULUM</small></div>
+      <canvas id="g-ring" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l" data-tooltip="AUTH = sqrt(A³+B³+C³) × φ/e · Apex at 27.8367 (Gate XII)">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l" data-tooltip="Axis A: Knowledge — your depth of sovereign mastery and lore">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l" data-tooltip="Axis B: Mastery — skill and proficiency earned through challenges">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l" data-tooltip="Axis C: Contribution — your impact on the sovereign network">AXIS C CONTRIBUTION</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up">GATES &middot; M12 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero" data-reveal="fade-up">
-        <div class="hero-title">GATES</div>
-        <div class="hero-sub">M12 &middot; 12 AUTHORITY GATES</div>
-        <div class="hero-desc">The 12 authority thresholds from Initiate (2.3197) to Apex (27.8367). AUTH=sqrt(A³+B³+C³)×φ/e.</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:14px" data-reveal="fade-up" data-stagger="80"><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 1: INITIATE — 2.3197</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 2: ACOLYTE — 4.6394</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 3: SCHOLAR — 6.9592</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 4: KEEPER — 9.2789</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 5: GUARDIAN — 11.5986</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 6: ARCHITECT — 13.9183</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 7: SOVEREIGN — 16.2381</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 8: VANGUARD — 18.5578</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 9: HERALD — 20.8775</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 10: ORACLE — 23.1972</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 11: PRIME — 25.5170</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Gate 12: APEX — 27.8367</div>
-</div></div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="gates" role="tab">GATES</button>
+      <button class="tab" data-tab="attempt" role="tab">LOG ATTEMPT</button>
+      <button class="tab" data-tab="history" role="tab">HISTORY</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
     </div>
-    <div data-page-emblem="gates" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; GATES &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+
+    <!-- GATES TAB -->
+    <div class="tab-panel active pad" id="tab-gates">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n" id="k-open">--</div><div class="kpi-l">GATES OPEN</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-mastered">--</div><div class="kpi-l">MASTERED</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-locked">--</div><div class="kpi-l">LOCKED</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-total">12</div><div class="kpi-l">TOTAL GATES</div></div>
+      </div>
+      <div class="sechead">THE 12 SOVEREIGN GATES</div>
+      <div id="gate-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- LOG ATTEMPT TAB -->
+    <div class="tab-panel pad" id="tab-attempt" style="display:none">
+      <div class="sechead">LOG GATE ATTEMPT</div>
+      <div style="max-width:520px">
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">SELECT GATE</div>
+          <select id="a-gate" class="inp" style="width:100%"></select>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">OUTCOME</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="btn-pass" onclick="logAttempt('pass')" style="flex:1;background:rgba(63,178,127,.2);border-color:var(--green);color:var(--green)">PASSED</button>
+            <button class="btn" id="btn-fail" onclick="logAttempt('fail')" style="flex:1;background:rgba(255,68,68,.15);border-color:#FF4444;color:#FF4444">FAILED</button>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">NOTES</div>
+          <textarea id="a-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="What did you learn? What held you back?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="tab-panel pad" id="tab-history" style="display:none">
+      <div class="sechead">ATTEMPT HISTORY</div>
+      <div id="history-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">GATES SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">THRESHOLD THEORY</div><div class="sci-body">Cognitive thresholds are qualitative jumps in capability — not linear accumulation. Crossing a gate represents a phase transition: new perception, new capacity, new level of performance that cannot be undone.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">THE HERO'S JOURNEY</div><div class="sci-body">Campbell's monomyth maps 12 stages of transformation matching the 12 gates: call, threshold crossing, trials, ordeal, reward, return. Each gate is a trial the hero must overcome to evolve.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">ZONE OF PROXIMAL DEVELOPMENT</div><div class="sci-body">Vygotsky's ZPD — the gap between what you can do alone and what you can do with guidance — is the exact zone where gate attempts are most productive. Too easy = no growth. Too hard = no progress.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">MASTERY-BASED PROGRESSION</div><div class="sci-body">Gates enforce mastery before advancement — proven more effective than time-based progression. Students who master prerequisites perform 80%+ better on advanced material (Bloom, 1984).</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">CHUNKING &amp; EXPERTISE</div><div class="sci-body">Chess masters hold 50,000+ board positions as single chunks in long-term memory. Gates measure whether you can access domain chunks fluently — the hallmark of genuine expertise over surface knowledge.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">GROWTH MINDSET</div><div class="sci-body">Dweck's research: viewing gates as challenges to overcome (not fixed tests of ability) increases pass rates. The fail path is data, not judgment — it maps exactly what to practice next.</div></div>
+      </div>
+    </div>
+
+    <div class="lf"><span>&#937; GATES &middot; SYD OMEGA 91717</span><span>12 SOVEREIGN MASTERY THRESHOLDS</span></div>
   </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+
+var GATES=[
+  {id:1,title:'Gate of Awareness',   domain:'MIND',   auth:0,    desc:'Know thyself — motivations, fears, patterns, blindspots. The first gate is always self-knowledge.'},
+  {id:2,title:'Gate of Discipline',  domain:'BODY',   auth:2.32, desc:'30-day unbroken streak of a chosen practice. Prove that your will can govern your body.'},
+  {id:3,title:'Gate of Knowledge',   domain:'INTEL',  auth:4.64, desc:'Master a domain to the level where you can teach it. Demonstrate command of core concepts.'},
+  {id:4,title:'Gate of Finance',     domain:'WEALTH', auth:6.96, desc:'Build a financial foundation: income, savings rate, net worth tracking, and a written wealth plan.'},
+  {id:5,title:'Gate of Creation',    domain:'CRAFT',  auth:9.28, desc:'Ship a complete creative work: book, product, system, or art. Creation at scale proves craft.'},
+  {id:6,title:'Gate of Tribe',       domain:'SOCIAL', auth:11.60,desc:'Build a network of 50+ meaningful connections across 3+ domains. Prove sovereign social capital.'},
+  {id:7,title:'Gate of Leadership',  domain:'POWER',  auth:13.92,desc:'Lead a group or team through a real challenge to completion. Influence without force.'},
+  {id:8,title:'Gate of Resilience',  domain:'TRIAL',  auth:16.24,desc:'Survive and grow from a significant adversity. Document the lessons. Prove antifragility.'},
+  {id:9,title:'Gate of Contribution',domain:'LEGACY', auth:18.56,desc:'Create something that outlasts a single interaction — content, systems, or institutions others use.'},
+  {id:10,title:'Gate of Legacy',     domain:'LEGACY', auth:20.88,desc:'Establish a legacy vehicle: foundation, published body of work, institution, or dynasty.'},
+  {id:11,title:'Gate of Mastery',    domain:'APEX',   auth:23.20,desc:'Achieve recognized excellence in your primary domain. External validation of internal mastery.'},
+  {id:12,title:'Gate of Apex',       domain:'APEX',   auth:27.84,desc:'The final gate. AUTH = APEX. Complete sovereignty across all axes, domains, and dimensions.'},
+];
+var DOMAIN_COLORS={MIND:'#9B6BF0',BODY:'#4CAF50',INTEL:'#00E5FF',WEALTH:'#C9A84C',CRAFT:'#FF9800',SOCIAL:'#00BCD4',POWER:'#E2C86D',TRIAL:'#FF4444',LEGACY:'#4CAF50',APEX:'#FFD700'};
+var KEY='omega_gates';var HKEY='omega_gate_history';
+var gateData=JSON.parse(localStorage.getItem(KEY)||'{}');
+var history=JSON.parse(localStorage.getItem(HKEY)||'[]');
+
+function saveGates(){localStorage.setItem(KEY,JSON.stringify(gateData));}
+function saveHistory(){localStorage.setItem(HKEY,JSON.stringify(history));}
+
+function statusOf(gid,auth){
+  var g=GATES[gid-1];
+  if(!g)return 'locked';
+  if(gateData[gid]&&gateData[gid].mastered)return 'mastered';
+  if(auth>=g.auth)return 'open';
+  return 'locked';
+}
+
+function renderGates(auth){
+  var sel=document.getElementById('a-gate');
+  sel.innerHTML=GATES.map(function(g){return '<option value="'+g.id+'">Gate '+g.id+': '+g.title+'</option>';}).join('');
+
+  var open=0,mastered=0,locked=0;
+  var html=GATES.map(function(g){
+    var st=statusOf(g.id,auth);
+    var dc=DOMAIN_COLORS[g.domain]||'#888';
+    if(st==='mastered')mastered++;else if(st==='open')open++;else locked++;
+    var attempts=(gateData[g.id]&&gateData[g.id].attempts)||0;
+    var passes=(gateData[g.id]&&gateData[g.id].passes)||0;
+    return '<div style="border:1px solid '+(st==='mastered'?dc:st==='open'?'rgba(201,168,76,.35)':'var(--line)')+';background:rgba(10,10,15,'+(st==='locked'?'.3':'.55')+');padding:14px;border-radius:2px;opacity:'+(st==='locked'?.55:1)+'">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">GATE '+g.id+'</div>'
+      +'<div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:'+dc+';border:1px solid '+dc+';padding:1px 5px">'+g.domain+'</div>'
+      +(st==='mastered'?'<div style="font-family:var(--M);font-size:7px;color:var(--green);margin-left:auto">&#10003; MASTERED</div>'
+        :st==='open'?'<div style="font-family:var(--M);font-size:7px;color:var(--gold);margin-left:auto">UNLOCKED</div>'
+        :'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-left:auto">&#128274; AUTH&ge;'+g.auth.toFixed(2)+'</div>')
+      +'</div>'
+      +'<div style="font-family:var(--D);font-size:12px;color:'+(st==='mastered'?dc:st==='open'?'var(--gold)':'var(--muted)')+';margin-bottom:6px">'+g.title+'</div>'
+      +'<div style="font-size:11px;color:var(--ink);opacity:.75;line-height:1.6;margin-bottom:8px">'+g.desc+'</div>'
+      +(st!=='locked'?'<div style="display:flex;gap:8px;margin-top:6px">'
+        +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+attempts+' attempts</div>'
+        +'<div style="font-family:var(--M);font-size:8px;color:var(--green)">'+passes+' passed</div>'
+        +(st==='open'?'<button onclick="masterGate('+g.id+')" style="margin-left:auto;background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:8px;padding:3px 8px;cursor:pointer;letter-spacing:1px">MARK MASTERED</button>':'')
+        +'</div>':'')
+      +'</div>';
+  }).join('');
+  document.getElementById('gate-grid').innerHTML=html;
+  document.getElementById('k-open').textContent=open;
+  document.getElementById('k-mastered').textContent=mastered;
+  document.getElementById('k-locked').textContent=locked;
+}
+
+function renderHistory(){
+  var el=document.getElementById('history-list');
+  if(!history.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ATTEMPTS LOGGED YET</div>';return;}
+  var sorted=[].concat(history).reverse().slice(0,50);
+  el.innerHTML=sorted.map(function(h){
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+(h.outcome==='pass'?'var(--green)':'#FF4444')+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
+      +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">'
+      +'<div style="font-family:var(--M);font-size:8px;color:'+(h.outcome==='pass'?'var(--green)':'#FF4444')+'">'+(h.outcome==='pass'?'PASSED':'FAILED')+'</div>'
+      +'<div style="font-family:var(--D);font-size:11px;color:var(--gold)">'+h.gateTitle+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-left:auto">'+h.date+'</div>'
+      +'</div>'
+      +(h.notes?'<div style="font-size:11px;color:var(--ink);opacity:.75">'+h.notes+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+window.masterGate=function(gid){
+  if(!gateData[gid])gateData[gid]={attempts:0,passes:0};
+  gateData[gid].mastered=true;
+  gateData[gid].masteredDate=new Date().toISOString().slice(0,10);
+  saveGates();
+  renderGates(window.__lastAuth||0);
+};
+
+window.logAttempt=function(outcome){
+  var gid=parseInt(document.getElementById('a-gate').value);
+  var notes=document.getElementById('a-notes').value.trim();
+  var g=GATES[gid-1];
+  if(!gateData[gid])gateData[gid]={attempts:0,passes:0};
+  gateData[gid].attempts++;
+  if(outcome==='pass')gateData[gid].passes++;
+  saveGates();
+  history.push({gid:gid,gateTitle:g.title,outcome:outcome,notes:notes,date:new Date().toISOString().slice(0,10)});
+  saveHistory();
+  document.getElementById('a-notes').value='';
+  renderGates(window.__lastAuth||0);
+  renderHistory();
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -101,12 +207,24 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
-    (function tryGateRing(){var rv=document.getElementById('gate-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryGateRing,350);})();
+
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    window.__lastAuth=auth;
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderGates(auth);
+    renderHistory();
+
+    document.querySelectorAll('.tab').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+        document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+        btn.classList.add('active');
+        var panel=document.getElementById('tab-'+btn.dataset.tab);
+        if(panel){panel.style.display='';panel.classList.add('active');}
+      };
+    });
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>

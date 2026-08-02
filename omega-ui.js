@@ -124,6 +124,16 @@
     quotes:       {label:'Sovereign Wisdom', section:'IDENTITY',  prev:'mirror',         next:'journal'},
     weekly:       {label:'Weekly Review',    section:'STRATEGY',  prev:'command',        next:'projects'},
     projects:     {label:'Sovereign Projects',section:'STRATEGY', prev:'weekly',         next:'roadmap'},
+    ascension:    {label:'Ascension',        section:'PROGRESSION',prev:'phases',        next:'matrix'},
+    houses:       {label:'Astral Houses',    section:'COSMOS',    prev:'elements',       next:'map'},
+    treasury:     {label:'Sovereign Treasury',section:'FINANCE',  prev:'vault',          next:'investment'},
+    pantheons:    {label:'Pantheons',        section:'COSMOS',    prev:'oracle',         next:'realm'},
+    services:     {label:'Platform Services',section:'STRATEGY',  prev:'ecosystem',      next:'design-system'},
+    contributions:{label:'Contributions',    section:'MASTERY',   prev:'missions',       next:'achievements'},
+    publications: {label:'Publications',     section:'INTEL',     prev:'library',        next:'atlas'},
+    kings:        {label:'Sovereign Kings',  section:'HERITAGE',  prev:'bloodline',      next:'character'},
+    notifications:{label:'Notifications',    section:'PLATFORM',  prev:'dashboard',      next:'settings'},
+    identity:     {label:'Sovereign Identity',section:'IDENTITY', prev:'profile',        next:'credentials'},
   };
 
   var _slug = (location.pathname.replace(/^\/|\.html$/g,'')||'dashboard');

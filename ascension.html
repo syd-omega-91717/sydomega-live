@@ -3,88 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — ASCENSION · Sovereign Platform">
+<meta name="description" content="SYD OMEGA 91717 — ASCENSION · Track your sovereign evolution through 9 stages">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; ASCENSION</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--gold);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--gold);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--gold);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
-</style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="ascension" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">ASCENSION<small>M12 &middot; The Rise &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="asc-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
+      <div class="t">ASCENSION<small>PROGRESSION &middot; 9 STAGES &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div>
+      <canvas id="asc-ring" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up">ASCENSION &middot; M12 &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="hero">
-        <div class="hero-title">ASCENSION</div>
-        <div class="hero-sub">M12 &middot; THE RISE</div>
-        <div class="hero-desc">Evolution through 9 stages from Initiate to Apex. Track your ascension along all three axes.</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:14px"><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 1: Initiate — AUTH ≥ 2.3197</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 2: Acolyte — AUTH ≥ 4.6394</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 3: Scholar — AUTH ≥ 6.9592</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 4: Keeper — AUTH ≥ 9.2789</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 5: Guardian — AUTH ≥ 11.5986</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 6: Architect — AUTH ≥ 13.9183</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 7: Sovereign — AUTH ≥ 16.2381</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 8: Vanguard — AUTH ≥ 18.5578</div>
-</div><div style="border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-radius:2px">
-  <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--gold)">Stage 9: Herald — AUTH ≥ 20.8775</div>
-</div></div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="ascension" role="tab">ASCENSION</button>
+      <button class="tab" data-tab="axes" role="tab">AXES</button>
+      <button class="tab" data-tab="milestones" role="tab">MILESTONES</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
     </div>
-    <div data-page-emblem="ascension" style="margin:20px auto 0"></div>
+
+    <!-- ASCENSION TAB -->
+    <div class="tab-panel active pad" id="tab-ascension">
+      <div class="kpi-row" id="kpi-row">
+        <div class="kpi"><div class="kpi-n" id="k-stage">--</div><div class="kpi-l">CURRENT STAGE</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-apex">27.8367</div><div class="kpi-l">APEX TARGET</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-pct">--</div><div class="kpi-l">% TO APEX</div></div>
+      </div>
+
+      <div class="sechead">9 STAGES OF SOVEREIGN ASCENSION</div>
+
+      <div id="stage-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
+
+      <div style="margin-top:18px;border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--gold);padding:18px;border-radius:2px">
+        <div class="sechead" style="border:none;padding-bottom:8px;margin-bottom:10px">AUTHORITY FORMULA</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">FORMULA</div>
+            <div style="font-family:var(--M);font-size:11px;color:var(--gold)">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-top:4px">&phi; = 1.6180339887 &nbsp;&nbsp; e = 2.7182818285</div>
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">AXES</div>
+            <div style="font-size:12px;line-height:1.8">
+              <span style="color:var(--gold)">A</span> Knowledge &nbsp;
+              <span style="color:var(--cyan)">B</span> Mastery &nbsp;
+              <span style="color:var(--green)">C</span> Contribution
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AXES TAB -->
+    <div class="tab-panel pad" id="tab-axes" style="display:none">
+      <div class="sechead">AXIS BREAKDOWN</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--gold);padding:16px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:8px">AXIS A &mdash; KNOWLEDGE</div>
+          <div class="kpi-n" id="ax-a" style="font-size:28px">--</div>
+          <div class="kpi-l">CURRENT SCORE / 9.0</div>
+          <div style="margin-top:12px;background:rgba(201,168,76,.1);border-radius:2px;height:6px">
+            <div id="bar-a" style="height:6px;background:var(--gold);border-radius:2px;width:0%;transition:width .5s"></div>
+          </div>
+          <div style="margin-top:14px;display:grid;gap:6px" id="axis-a-skills">
+            <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">KNOWLEDGE DOMAINS</div>
+            <div class="ax-skill">Philosophy &amp; Wisdom</div>
+            <div class="ax-skill">Science &amp; Mathematics</div>
+            <div class="ax-skill">History &amp; Culture</div>
+            <div class="ax-skill">Economics &amp; Finance</div>
+            <div class="ax-skill">Language &amp; Communication</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--cyan);padding:16px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:8px">AXIS B &mdash; MASTERY</div>
+          <div class="kpi-n" id="ax-b" style="font-size:28px">--</div>
+          <div class="kpi-l">CURRENT SCORE / 9.0</div>
+          <div style="margin-top:12px;background:rgba(0,229,255,.1);border-radius:2px;height:6px">
+            <div id="bar-b" style="height:6px;background:var(--cyan);border-radius:2px;width:0%;transition:width .5s"></div>
+          </div>
+          <div style="margin-top:14px;display:grid;gap:6px">
+            <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">MASTERY DOMAINS</div>
+            <div class="ax-skill">Craft &amp; Discipline</div>
+            <div class="ax-skill">Physical Sovereignty</div>
+            <div class="ax-skill">Mental Architecture</div>
+            <div class="ax-skill">Emotional Intelligence</div>
+            <div class="ax-skill">Skill Stack Depth</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:2px solid var(--green);padding:16px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--green);margin-bottom:8px">AXIS C &mdash; CONTRIBUTION</div>
+          <div class="kpi-n" id="ax-c" style="font-size:28px">--</div>
+          <div class="kpi-l">CURRENT SCORE / 9.0</div>
+          <div style="margin-top:12px;background:rgba(63,178,127,.1);border-radius:2px;height:6px">
+            <div id="bar-c" style="height:6px;background:var(--green);border-radius:2px;width:0%;transition:width .5s"></div>
+          </div>
+          <div style="margin-top:14px;display:grid;gap:6px">
+            <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted)">CONTRIBUTION DOMAINS</div>
+            <div class="ax-skill">Creative Output</div>
+            <div class="ax-skill">Community Impact</div>
+            <div class="ax-skill">Wealth Creation</div>
+            <div class="ax-skill">Knowledge Sharing</div>
+            <div class="ax-skill">Legacy Building</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px">
+        <div class="sechead">AUTHORITY CANVAS</div>
+        <canvas id="auth-canvas" width="500" height="200" style="width:100%;max-width:500px;border:1px solid var(--line);display:block;margin:0 auto"></canvas>
+      </div>
+    </div>
+
+    <!-- MILESTONES TAB -->
+    <div class="tab-panel pad" id="tab-milestones" style="display:none">
+      <div class="sechead">ASCENSION MILESTONES</div>
+      <div id="milestone-list" style="display:grid;gap:8px"></div>
+      <div style="margin-top:20px;border:1px solid var(--line);padding:14px;border-radius:2px">
+        <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">LOG MILESTONE</div>
+        <input id="ml-text" class="inp" placeholder="Milestone description..." style="width:100%;margin-bottom:8px">
+        <select id="ml-cat" class="inp" style="width:100%;margin-bottom:8px">
+          <option value="knowledge">Knowledge</option>
+          <option value="mastery">Mastery</option>
+          <option value="contribution">Contribution</option>
+          <option value="stage">Stage Unlock</option>
+        </select>
+        <button class="btn" onclick="addMilestone()">LOG MILESTONE</button>
+      </div>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">ASCENSION SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">DELIBERATE PRACTICE</div><div class="sci-body">Ericsson's research shows 10,000 hours of deliberate practice — focused, feedback-driven repetition — separates experts from amateurs. Quality over quantity of practice determines mastery depth.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">FLOW STATE THEORY</div><div class="sci-body">Csikszentmihalyi's flow occurs when challenge slightly exceeds skill. Sustained flow accelerates ascension by creating optimal learning conditions: high engagement, automatic processing, time distortion.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">THRESHOLD THEORY</div><div class="sci-body">Malcolm Gladwell popularized the 10,000-hour rule from Ericsson's work. Expertise in any domain requires crossing cognitive thresholds that enable qualitatively new levels of performance and perception.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">AXIS SYNERGY</div><div class="sci-body">The cubic root in AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) creates exponential returns when all three axes develop together. A single axis at 9.0 yields AUTH=15.3; all three at 5.0 yield AUTH=17.4.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">NEUROPLASTICITY</div><div class="sci-body">The brain rewires itself through learning (LTP) and pruning. Consistent high-effort practice thickens myelin sheaths, increasing signal speed. Each stage of ascension represents measurable neurological change.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">SOVEREIGN IDENTITY</div><div class="sci-body">Identity-based goal pursuit (Deci &amp; Ryan's SDT) drives intrinsic motivation. Anchoring growth to a sovereign identity — rather than external validation — creates durable, self-reinforcing ascension momentum.</div></div>
+      </div>
+    </div>
+
     <div class="lf"><span>&#937; ASCENSION &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
   </main>
 </div>
+<style>
+.ax-skill{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--ink);opacity:.75;padding:4px 8px;border:1px solid var(--line);border-radius:1px}
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+var STAGES=[
+  {n:1,title:'INITIATE',    min:0,      max:2.3197,  color:'#8a8676', desc:'The journey begins. Awareness precedes all growth.'},
+  {n:2,title:'ACOLYTE',     min:2.3197, max:4.6394,  color:'#C0A960', desc:'Consistent practice builds the first foundations.'},
+  {n:3,title:'SCHOLAR',     min:4.6394, max:6.9592,  color:'#C9A84C', desc:'Knowledge deepens. Patterns begin to emerge.'},
+  {n:4,title:'KEEPER',      min:6.9592, max:9.2789,  color:'#E2C86D', desc:'Custodian of hard-won wisdom and discipline.'},
+  {n:5,title:'GUARDIAN',    min:9.2789, max:11.5986, color:'#00BCD4', desc:'Protector of the sovereign path. Strength compounds.'},
+  {n:6,title:'ARCHITECT',   min:11.5986,max:13.9183, color:'#00E5FF', desc:'Builder of systems. The mind constructs reality.'},
+  {n:7,title:'SOVEREIGN',   min:13.9183,max:16.2381, color:'#9B6BF0', desc:'Self-governed in thought, action, and will.'},
+  {n:8,title:'VANGUARD',    min:16.2381,max:18.5578, color:'#4CAF50', desc:'Leading edge of human excellence and contribution.'},
+  {n:9,title:'HERALD',      min:18.5578,max:27.8367, color:'#FF9800', desc:'Harbinger of the sovereign apex. Near-complete authority.'},
+];
+var APEX=27.8367,PHI=1.6180339887,EU=2.7182818285;
+var KEY='omega_milestones';
+var milestones=JSON.parse(localStorage.getItem(KEY)||'[]');
+
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+
+function currentStage(auth){
+  for(var i=STAGES.length-1;i>=0;i--){if(auth>=STAGES[i].min)return STAGES[i];}
+  return STAGES[0];
+}
+
+function renderStages(auth){
+  var st=currentStage(auth);
+  var grid=document.getElementById('stage-grid');
+  grid.innerHTML=STAGES.map(function(s){
+    var active=s.n===st.n;
+    var unlocked=auth>=s.min;
+    var pct=unlocked?Math.min(100,Math.round((Math.min(auth,s.max)-s.min)/(s.max-s.min)*100)):0;
+    return '<div style="border:1px solid '+(active?s.color:'var(--line)')+';background:rgba(10,10,15,'+(active?'.7':'.4')+');padding:14px;border-radius:2px'+(active?';box-shadow:0 0 12px '+s.color+'33':'')+'">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">STAGE '+s.n+'</div>'
+      +(active?'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;background:'+s.color+';color:#000;padding:1px 5px">CURRENT</div>':'')
+      +(unlocked&&!active?'<div style="font-family:var(--M);font-size:7px;color:var(--green)">&check; CLEARED</div>':'')
+      +'</div>'
+      +'<div style="font-family:var(--D);font-size:13px;color:'+s.color+';margin-bottom:4px">'+s.title+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:8px">AUTH &ge; '+s.min.toFixed(4)+'</div>'
+      +'<div style="font-size:11px;color:var(--ink);opacity:.75;margin-bottom:10px">'+s.desc+'</div>'
+      +'<div style="background:rgba(255,255,255,.06);border-radius:2px;height:4px">'
+      +'<div style="height:4px;background:'+s.color+';border-radius:2px;width:'+pct+'%;transition:width .5s"></div></div>'
+      +'<div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px">'+pct+'% complete</div>'
+      +'</div>';
+  }).join('');
+}
+
+function drawAuthCanvas(a,b,c,auth){
+  var cv=document.getElementById('auth-canvas');if(!cv)return;
+  var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0A0A0F';ctx.fillRect(0,0,W,H);
+  var vals=[{v:a,c:'#C9A84C',l:'A'},{v:b,c:'#00E5FF',l:'B'},{v:c,c:'#4CAF50',l:'C'},{v:auth,c:'#E2C86D',l:'AUTH'}];
+  var bw=60,gap=20,x0=40,yB=H-30;
+  vals.forEach(function(d,i){
+    var x=x0+i*(bw+gap);
+    var h=(d.v/APEX)*(H-60);
+    ctx.fillStyle=d.c+'33';ctx.fillRect(x,yB-h,bw,h);
+    ctx.fillStyle=d.c;ctx.fillRect(x,yB-h,bw,3);
+    ctx.font='9px monospace';ctx.fillStyle=d.c;ctx.textAlign='center';
+    ctx.fillText(d.l,x+bw/2,yB+14);
+    ctx.fillText(d.v.toFixed(2),x+bw/2,yB-h-6);
+  });
+  ctx.strokeStyle='rgba(201,168,76,.2)';ctx.beginPath();
+  var apexY=yB-(APEX/APEX)*(H-60);ctx.setLineDash([4,4]);
+  ctx.moveTo(20,apexY);ctx.lineTo(W-20,apexY);ctx.stroke();ctx.setLineDash([]);
+  ctx.font='8px monospace';ctx.fillStyle='rgba(201,168,76,.5)';ctx.textAlign='left';
+  ctx.fillText('APEX 27.8367',24,apexY-4);
+}
+
+function renderMilestones(){
+  var el=document.getElementById('milestone-list');if(!el)return;
+  if(!milestones.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO MILESTONES LOGGED YET</div>';return;}
+  var sorted=[].concat(milestones).reverse();
+  el.innerHTML=sorted.map(function(m){
+    var colors={knowledge:'#C9A84C',mastery:'#00E5FF',contribution:'#4CAF50',stage:'#9B6BF0'};
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+(colors[m.cat]||'#C9A84C')+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:flex-start">'
+      +'<div style="flex:1">'
+      +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:'+(colors[m.cat]||'var(--gold)')+';margin-bottom:4px">'+m.cat.toUpperCase()+'</div>'
+      +'<div style="font-size:13px">'+m.text+'</div>'
+      +'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted);flex-shrink:0">'+m.date+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+window.addMilestone=function(){
+  var t=document.getElementById('ml-text').value.trim();
+  var cat=document.getElementById('ml-cat').value;
+  if(!t)return;
+  milestones.push({id:Date.now(),text:t,cat:cat,date:new Date().toISOString().slice(0,10)});
+  localStorage.setItem(KEY,JSON.stringify(milestones));
+  document.getElementById('ml-text').value='';
+  renderMilestones();
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -95,11 +269,39 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     window.__omegaUserLoaded=true;
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
+
+    var a=Number(pr.is_owner?9:pr.axis_a||0.001);
+    var b=Number(pr.is_owner?9:pr.axis_b||0.001);
+    var c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    var pct=Math.min(100,(auth/APEX*100)).toFixed(1);
+    var st=currentStage(auth);
+
+    sid('hdr-auth',auth.toFixed(4));
+    sid('k-auth',auth.toFixed(4));
+    sid('k-stage',st.n+' · '+st.title);
+    sid('k-pct',pct+'%');
+    sid('ax-a',a.toFixed(3));
+    sid('ax-b',b.toFixed(3));
+    sid('ax-c',c.toFixed(3));
+    document.getElementById('bar-a').style.width=(a/9*100)+'%';
+    document.getElementById('bar-b').style.width=(b/9*100)+'%';
+    document.getElementById('bar-c').style.width=(c/9*100)+'%';
+
+    renderStages(auth);
+    renderMilestones();
+    drawAuthCanvas(a,b,c,auth);
+
+    document.querySelectorAll('.tab').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+        document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+        btn.classList.add('active');
+        var panel=document.getElementById('tab-'+btn.dataset.tab);
+        if(panel){panel.style.display='';panel.classList.add('active');}
+        if(btn.dataset.tab==='axes')drawAuthCanvas(a,b,c,auth);
+      };
+    });
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>

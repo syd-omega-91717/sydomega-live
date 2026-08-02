@@ -3,125 +3,319 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — TREASURY · Sovereign Platform">
+<meta name="description" content="SYD OMEGA 91717 — TREASURY · Sovereign wealth ledger, reserves, and cash flows">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; TREASURY</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
-<style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--solar);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--solar)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--solar);line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--solar);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--solar);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--solar);color:var(--solar);background:rgba(201,168,76,.05)}
-.tab-panel{display:none}.tab-panel.active{display:block;padding:var(--pad)}
-.trs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
-.trs-kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:3px solid var(--solar);padding:14px}
-.trs-val{font-family:var(--D);font-size:20px;color:var(--solar);line-height:1}
-.trs-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.trs-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:7px;border-radius:2px}
-.trs-name{font-family:var(--R);font-size:11px;color:var(--ink)}
-.trs-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px}
-.trs-amt{font-family:var(--D);font-size:14px;color:var(--solar)}
-.div-card{border:1px solid var(--line);background:rgba(10,10,15,.45);border-radius:2px;border-left:3px solid var(--green);padding:14px;margin-bottom:10px}
-.div-tier{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--green);margin-bottom:5px}
-.div-title{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:6px}
-.div-body{font-size:10.5px;color:var(--ink);opacity:.75;line-height:1.65;margin-bottom:8px}
-.div-rate{font-family:var(--D);font-size:16px;color:var(--green)}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
-</style>
 </head>
 <body>
-<a href="#main-content" class="skip-link" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--solar);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="treasury" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">TREASURY<small>M7 &middot; Sovereign Treasury &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
-      <canvas id="trs-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
+      <div class="t">TREASURY<small>FINANCE &middot; ASSETS &middot; RESERVES &middot; CASH FLOWS</small></div>
+      <canvas data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-a">--</div><div class="kpi-l">AXIS A KNOWLEDGE</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-b">--</div><div class="kpi-l">AXIS B MASTERY</div></div>
-        <div class="kpi"><div class="kpi-n" id="stat-c">--</div><div class="kpi-l">AXIS C CONTRIBUTION</div></div>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="overview" role="tab">OVERVIEW</button>
+      <button class="tab" data-tab="assets" role="tab">ASSETS</button>
+      <button class="tab" data-tab="reserves" role="tab">RESERVES</button>
+      <button class="tab" data-tab="flows" role="tab">CASH FLOWS</button>
+      <button class="tab" data-tab="science" role="tab">SCIENCE</button>
+    </div>
+
+    <!-- OVERVIEW TAB -->
+    <div class="tab-panel active pad" id="tab-overview">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n" id="k-total">$0</div><div class="kpi-l">TOTAL WEALTH</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-liquid">$0</div><div class="kpi-l">LIQUID</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-illiquid">$0</div><div class="kpi-l">ILLIQUID</div></div>
+        <div class="kpi"><div class="kpi-n" id="k-reserve">$0</div><div class="kpi-l">RESERVES</div></div>
       </div>
-      <div class="tab-bar" role="tablist">
-        <button class="tab-btn active" role="tab" aria-selected="true" onclick="trsTab(this,'trs-reserves')">RESERVES</button>
-        <button class="tab-btn" role="tab" aria-selected="false" onclick="trsTab(this,'trs-supply')">TOKEN SUPPLY</button>
-        <button class="tab-btn" role="tab" aria-selected="false" onclick="trsTab(this,'trs-dividends')">DIVIDENDS</button>
+      <div class="sechead">TREASURY OVERVIEW</div>
+      <canvas id="treasury-canvas" width="600" height="180" style="width:100%;max-width:600px;border:1px solid var(--line);display:block"></canvas>
+    </div>
+
+    <!-- ASSETS TAB -->
+    <div class="tab-panel pad" id="tab-assets" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="sechead" style="border:none;padding:0;margin:0;flex:1">ASSET LEDGER</div>
+        <button class="btn" onclick="document.getElementById('add-asset-form').style.display='block'">+ ADD ASSET</button>
       </div>
-      <div id="trs-reserves" class="tab-panel active"><div class="sechead">SOVEREIGN TREASURY RESERVES</div>
-        <div class="trs-grid">
-          <div class="trs-kpi"><div class="trs-val">$4.2M</div><div class="trs-lbl">TOTAL RESERVES</div></div>
-          <div class="trs-kpi"><div class="trs-val">$1.8M</div><div class="trs-lbl">OPERATIONAL RESERVE</div></div>
-          <div class="trs-kpi"><div class="trs-val">$940K</div><div class="trs-lbl">TOKEN LIQUIDITY</div></div>
-          <div class="trs-kpi"><div class="trs-val">$1.46M</div><div class="trs-lbl">APEX RESERVE FUND</div></div>
-        </div>
-        <div><div class="sechead" style="margin-bottom:10px">RESERVE ALLOCATIONS</div>
-          <div class="trs-row"><div class="trs-name">Sovereign Operations Endowment<small>Platform maintenance, security, infrastructure</small></div><div class="trs-amt">$1,800,000</div></div>
-          <div class="trs-row"><div class="trs-name">Token Liquidity Pool<small>OMGX &amp; OMC buyback reserve</small></div><div class="trs-amt">$940,000</div></div>
-          <div class="trs-row"><div class="trs-name">Apex Sovereign Reserve<small>AUTH=27.8367 milestone rewards</small></div><div class="trs-amt">$1,460,000</div></div>
-          <div class="trs-row"><div class="trs-name">Emergency Continuity Fund<small>Platform continuity in force majeure</small></div><div class="trs-amt">$200,000</div></div>
-          <div class="trs-row"><div class="trs-name">Research &amp; Development<small>New feature development &amp; sovereign IP</small></div><div class="trs-amt">$800,000</div></div>
-        </div>
-      </div>
-      <div id="trs-supply" class="tab-panel"><div class="sechead">SOVEREIGN TOKEN SUPPLY</div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px;margin-bottom:14px">
-          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:10px">OMEGA COIN (OMC) — PRIMARY RESERVE</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px">
-            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">TOTAL SUPPLY</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">91,717,000</div></div>
-            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">CIRCULATING</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">42,814,000</div></div>
-            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">CURRENT PRICE</div><div style="font-family:var(--D);font-size:18px;color:var(--green)">$9.18</div></div>
+      <div id="add-asset-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">ASSET NAME</div>
+            <input id="a-name" class="inp" style="width:100%" placeholder="e.g. Primary Residence">
           </div>
-          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.65">Total supply of 91,717,000 OMC is fixed — no further minting after genesis issuance. The number 91717 encodes the sovereign mandate date. Tokens unlock according to gate progression and are burned upon Apex attainment as a deflationary mechanism.</div>
-        </div>
-        <div style="border:1px solid var(--line);background:rgba(10,10,15,.5);border-radius:2px;padding:16px">
-          <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:10px">SOVEREIGN TOKEN (OMGX) — AUTHORITY INSTRUMENT</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px">
-            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">MAX SUPPLY</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27,836,700</div></div>
-            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">MINTED</div><div style="font-family:var(--D);font-size:18px;color:var(--solar)">8,940,000</div></div>
-            <div><div style="font-family:var(--M);font-size:7px;color:var(--muted)">CURRENT PRICE</div><div style="font-family:var(--D);font-size:18px;color:var(--green)">$27.84</div></div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TYPE</div>
+            <select id="a-type" class="inp" style="width:100%">
+              <option value="liquid">Liquid (Cash/Savings)</option>
+              <option value="equity">Equity/Stocks</option>
+              <option value="crypto">Crypto</option>
+              <option value="real-estate">Real Estate</option>
+              <option value="business">Business Equity</option>
+              <option value="intellectual">Intellectual Property</option>
+              <option value="other">Other</option>
+            </select>
           </div>
-          <div style="font-size:11px;color:var(--ink);opacity:.7;line-height:1.65">OMGX max supply of 27,836,700 mirrors the Apex AUTH score × 10⁶. New OMGX tokens are minted only through gate unlocks and cannot be purchased directly — only earned through sovereign progression. This makes OMGX the purest measure of authority in the ecosystem.</div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">CURRENT VALUE (USD)</div>
+            <input id="a-value" class="inp" type="number" style="width:100%" placeholder="0">
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">COST BASIS (USD)</div>
+            <input id="a-cost" class="inp" type="number" style="width:100%" placeholder="0">
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">NOTES</div>
+          <input id="a-notes" class="inp" style="width:100%" placeholder="Any relevant notes...">
+        </div>
+        <button class="btn" onclick="addAsset()">SAVE ASSET</button>
+        <button class="btn" onclick="document.getElementById('add-asset-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
+      </div>
+      <div id="asset-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- RESERVES TAB -->
+    <div class="tab-panel pad" id="tab-reserves" style="display:none">
+      <div class="sechead">SOVEREIGN RESERVES</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:18px">
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--gold);padding:16px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">EMERGENCY FUND</div>
+          <div class="kpi-n" id="r-emerg">$0</div>
+          <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TARGET (6-month expenses)</div>
+          <input id="r-emerg-target" class="inp" type="number" style="width:100%;margin-bottom:8px" placeholder="Target amount...">
+          <div id="r-emerg-bar-wrap" style="background:rgba(201,168,76,.1);border-radius:2px;height:6px;margin-bottom:4px">
+            <div id="r-emerg-bar" style="height:6px;background:var(--gold);border-radius:2px;width:0%"></div>
+          </div>
+          <div id="r-emerg-pct" style="font-family:var(--M);font-size:8px;color:var(--muted)">0% funded</div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--cyan);padding:16px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">OPPORTUNITY RESERVE</div>
+          <div class="kpi-n" id="r-opp">$0</div>
+          <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
+          <div style="font-size:12px;line-height:1.7;opacity:.75">Capital set aside to deploy rapidly when high-conviction opportunities arise. The sovereign stays liquid for asymmetric bets.</div>
+        </div>
+        <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--green);padding:16px;border-radius:2px">
+          <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-bottom:10px">LEGACY RESERVE</div>
+          <div class="kpi-n" id="r-legacy">$0</div>
+          <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
+          <div style="font-size:12px;line-height:1.7;opacity:.75">Capital designated for generational transfer — family trusts, endowments, or children's education. Sovereignty extends beyond a single life.</div>
         </div>
       </div>
-      <div id="trs-dividends" class="tab-panel"><div class="sechead">SOVEREIGN DIVIDENDS</div>
-        <div class="div-card"><div class="div-tier">TRIAL TIER</div><div class="div-title">Orientation Dividend</div><div class="div-body">Trial members receive no monetary dividend but earn 1 OMGX token for every completed module and gate challenge. These tokens vest immediately and can be held or traded within the platform marketplace once access is approved.</div><div class="div-rate">1 OMGX / module</div></div>
-        <div class="div-card"><div class="div-tier">SOVEREIGN STANDARD</div><div class="div-title">Monthly Authority Dividend</div><div class="div-body">Standard tier members receive a monthly dividend calculated as AUTH × gate_level × 0.01 USD. Additionally, 2 OMGX tokens per gate unlocked per month. Revenue participation begins at this tier at 0.5% of platform net revenue, distributed quarterly.</div><div class="div-rate">AUTH × Gate × $0.01 / mo</div></div>
-        <div class="div-card"><div class="div-tier">SOVEREIGN PRIME</div><div class="div-title">Prime Revenue Participation</div><div class="div-body">Prime members participate in 2% of platform net revenue, distributed monthly. Additionally receive a Gate Bonus of $100 per gate unlocked within the period. Token allocation doubles to 4 OMGX per gate unlock. Investment tier access opens additional yield positions.</div><div class="div-rate">2% net rev + $100/gate</div></div>
-        <div class="div-card"><div class="div-tier">APEX SOVEREIGN</div><div class="div-title">Apex Perpetual Dividend</div><div class="div-body">Apex Sovereigns (AUTH = 27.8367) receive perpetual 5% revenue participation, unlimited OMGX allocation, and a one-time Apex Sovereign Endowment of $27,836.70 — one dollar for each thousandth of the Apex score. This is the treasury's highest honour.</div><div class="div-rate">5% net rev + $27,836.70 endowment</div></div>
+      <div style="border:1px solid var(--line);background:rgba(10,10,15,.45);padding:14px;border-radius:2px">
+        <div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">UPDATE RESERVES</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div>
+            <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px">EMERGENCY ($)</div>
+            <input id="ru-emerg" class="inp" type="number" style="width:100%" placeholder="0">
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px">OPPORTUNITY ($)</div>
+            <input id="ru-opp" class="inp" type="number" style="width:100%" placeholder="0">
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:8px;color:var(--muted);margin-bottom:4px">LEGACY ($)</div>
+            <input id="ru-legacy" class="inp" type="number" style="width:100%" placeholder="0">
+          </div>
+        </div>
+        <button class="btn" style="margin-top:10px" onclick="saveReserves()">UPDATE RESERVES</button>
       </div>
-        <div data-page-emblem="treasury" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; TREASURY &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
+    </div>
+
+    <!-- CASH FLOWS TAB -->
+    <div class="tab-panel pad" id="tab-flows" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="sechead" style="border:none;padding:0;margin:0;flex:1">CASH FLOW LOG</div>
+        <button class="btn" onclick="document.getElementById('add-flow-form').style.display='block'">+ LOG FLOW</button>
+      </div>
+      <div id="add-flow-form" style="display:none;border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">DESCRIPTION</div>
+            <input id="f-desc" class="inp" style="width:100%" placeholder="What is this flow?">
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">AMOUNT ($)</div>
+            <input id="f-amount" class="inp" type="number" style="width:100%" placeholder="0">
+          </div>
+          <div>
+            <div style="font-family:var(--M);font-size:9px;color:var(--muted);margin-bottom:4px">TYPE</div>
+            <select id="f-type" class="inp" style="width:100%">
+              <option value="in">Inflow (+)</option><option value="out">Outflow (−)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" onclick="addFlow()">LOG FLOW</button>
+        <button class="btn" onclick="document.getElementById('add-flow-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
+      </div>
+      <div class="kpi-row" style="margin-bottom:14px">
+        <div class="kpi"><div class="kpi-n" id="f-total-in" style="color:var(--green)">$0</div><div class="kpi-l">TOTAL IN</div></div>
+        <div class="kpi"><div class="kpi-n" id="f-total-out" style="color:#FF4444">$0</div><div class="kpi-l">TOTAL OUT</div></div>
+        <div class="kpi"><div class="kpi-n" id="f-net">$0</div><div class="kpi-l">NET FLOW</div></div>
+      </div>
+      <div id="flow-list" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-science" style="display:none">
+      <div class="sechead">TREASURY SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">SOVEREIGN WEALTH DOCTRINE</div><div class="sci-body">Sovereign wealth funds (Norway, Singapore, UAE) hold assets in perpetuity across generations. The personal sovereign applies the same principle: categorize wealth by time horizon — consumption, generation, legacy.</div></div>
+        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">RESERVE RATIOS</div><div class="sci-body">Classic personal finance recommends 3-6 months of expenses in liquid reserves. The sovereign standard is 12 months emergency + 10-20% of net worth in opportunity capital. Liquidity is optionality.</div></div>
+        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">WEALTH TRILEMMA</div><div class="sci-body">All wealth faces a trilemma: liquidity, return, safety — pick two. Cash is liquid and safe but low-return. Real estate is illiquid, safe, moderate-return. Crypto is liquid, high-return, high-risk.</div></div>
+        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">CASH FLOW SOVEREIGNTY</div><div class="sci-body">Kiyosaki's framework: assets produce income, liabilities consume it. The treasury goal is a system where passive cash flows exceed expenses — complete operational sovereignty without active labor income.</div></div>
+        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">DEPRECIATION AWARENESS</div><div class="sci-body">All assets depreciate except those that compound: equity stakes, intellectual property, skilled human capital. Track cost basis against current value to identify wealth creation vs. wealth preservation assets.</div></div>
+        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">THE WEALTH EQUATION</div><div class="sci-body">Net Worth = Assets − Liabilities. But sovereign wealth adds time-adjusted present value: what is each asset's real worth discounted for illiquidity, tax drag, and concentration risk? True wealth is net of friction.</div></div>
+      </div>
+    </div>
+
+    <div class="lf"><span>&#937; TREASURY &middot; SYD OMEGA 91717</span><span>ASSETS &middot; RESERVES &middot; CASH FLOWS</span></div>
   </main>
 </div>
+<style>
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
+</style>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+
+var AK='omega_treasury_assets',RK='omega_treasury_reserves',FK='omega_treasury_flows';
+var assets=JSON.parse(localStorage.getItem(AK)||'[]');
+var reserves=JSON.parse(localStorage.getItem(RK)||'{emerg:0,opp:0,legacy:0,emergTarget:0}');
+var flows=JSON.parse(localStorage.getItem(FK)||'[]');
+
+function save(){localStorage.setItem(AK,JSON.stringify(assets));localStorage.setItem(RK,JSON.stringify(reserves));localStorage.setItem(FK,JSON.stringify(flows));}
+
+var TYPE_COL={liquid:'#00E5FF',equity:'#4CAF50',crypto:'#FF9800','real-estate':'#9B6BF0',business:'#C9A84C',intellectual:'#E2C86D',other:'#888'};
+function fmt(v){return '$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
+
+function calcTotals(){
+  var total=0,liquid=0,illiquid=0;
+  assets.forEach(function(a){
+    var v=Number(a.value||0);total+=v;
+    if(a.type==='liquid')liquid+=v;else illiquid+=v;
+  });
+  return{total:total,liquid:liquid,illiquid:illiquid};
+}
+
+function drawCanvas(){
+  var cv=document.getElementById('treasury-canvas');if(!cv)return;
+  var t=calcTotals();
+  var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A0A0F';ctx.fillRect(0,0,W,H);
+  if(!t.total){
+    ctx.font='11px monospace';ctx.fillStyle='rgba(138,134,118,.5)';ctx.textAlign='center';
+    ctx.fillText('NO ASSETS RECORDED',W/2,H/2);return;
+  }
+  var bars=[{l:'LIQUID',v:t.liquid,c:'#00E5FF'},{l:'ILLIQUID',v:t.illiquid,c:'#9B6BF0'},{l:'RESERVES',v:Number(reserves.emerg||0)+Number(reserves.opp||0)+Number(reserves.legacy||0),c:'#C9A84C'}];
+  var maxV=Math.max.apply(null,bars.map(function(b){return b.v;}));
+  var bw=80,gap=40,x0=60,yB=H-30;
+  bars.forEach(function(b,i){
+    var x=x0+i*(bw+gap);
+    var h=maxV>0?(b.v/maxV)*(H-60):0;
+    ctx.fillStyle=b.c+'33';ctx.fillRect(x,yB-h,bw,h);
+    ctx.fillStyle=b.c;ctx.fillRect(x,yB-h,bw,3);
+    ctx.font='8px monospace';ctx.fillStyle=b.c;ctx.textAlign='center';
+    ctx.fillText(b.l,x+bw/2,yB+14);
+    if(b.v>0)ctx.fillText(fmt(b.v),x+bw/2,yB-h-8);
+  });
+}
+
+function renderOverview(){
+  var t=calcTotals();
+  var res=Number(reserves.emerg||0)+Number(reserves.opp||0)+Number(reserves.legacy||0);
+  document.getElementById('k-total').textContent=fmt(t.total);
+  document.getElementById('k-liquid').textContent=fmt(t.liquid);
+  document.getElementById('k-illiquid').textContent=fmt(t.illiquid);
+  document.getElementById('k-reserve').textContent=fmt(res);
+  drawCanvas();
+}
+
+function renderAssets(){
+  var el=document.getElementById('asset-list');if(!el)return;
+  if(!assets.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ASSETS RECORDED</div>';return;}
+  el.innerHTML=[].concat(assets).reverse().map(function(a){
+    var col=TYPE_COL[a.type]||'#888';
+    var pnl=Number(a.value||0)-Number(a.cost||0);
+    var ret=Number(a.cost||0)>0?(pnl/Number(a.cost||0)*100).toFixed(1):null;
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
+      +'<div style="flex:1">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
+      +'<div style="font-family:var(--M);font-size:7px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+a.type.toUpperCase()+'</div>'
+      +'<div style="font-size:13px;font-weight:600">'+a.name+'</div>'
+      +'</div>'
+      +(a.notes?'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+a.notes+'</div>':'')
+      +'</div>'
+      +'<div style="text-align:right;flex-shrink:0">'
+      +'<div style="font-family:var(--D);font-size:14px;color:'+col+'">'+fmt(a.value)+'</div>'
+      +(ret!==null?'<div style="font-family:var(--M);font-size:8px;color:'+(pnl>=0?'var(--green)':'#FF4444')+'">'+(pnl>=0?'+':'')+ret+'%</div>':'')
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderReserves(){
+  var e=Number(reserves.emerg||0),o=Number(reserves.opp||0),l=Number(reserves.legacy||0),t=Number(reserves.emergTarget||0);
+  document.getElementById('r-emerg').textContent=fmt(e);
+  document.getElementById('r-opp').textContent=fmt(o);
+  document.getElementById('r-legacy').textContent=fmt(l);
+  if(t>0){var pct=Math.min(100,Math.round(e/t*100));document.getElementById('r-emerg-bar').style.width=pct+'%';document.getElementById('r-emerg-pct').textContent=pct+'% funded';}
+  document.getElementById('ru-emerg').value=e||'';
+  document.getElementById('ru-opp').value=o||'';
+  document.getElementById('ru-legacy').value=l||'';
+}
+
+function renderFlows(){
+  var el=document.getElementById('flow-list');if(!el)return;
+  var tin=0,tout=0;
+  flows.forEach(function(f){if(f.type==='in')tin+=Number(f.amount||0);else tout+=Number(f.amount||0);});
+  document.getElementById('f-total-in').textContent=fmt(tin);
+  document.getElementById('f-total-out').textContent=fmt(tout);
+  var net=tin-tout;document.getElementById('f-net').textContent=(net>=0?'+':'')+fmt(Math.abs(net));
+  document.getElementById('f-net').style.color=net>=0?'var(--green)':'#FF4444';
+  if(!flows.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO FLOWS LOGGED</div>';return;}
+  el.innerHTML=[].concat(flows).reverse().slice(0,50).map(function(f){
+    var col=f.type==='in'?'var(--green)':'#FF4444';
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
+      +'<div style="font-family:var(--M);font-size:8px;color:'+col+'">'+(f.type==='in'?'+':'−')+'</div>'
+      +'<div style="flex:1;font-size:12px">'+f.desc+'</div>'
+      +'<div style="font-family:var(--D);font-size:13px;color:'+col+'">'+fmt(f.amount)+'</div>'
+      +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+f.date+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+window.addAsset=function(){
+  var n=document.getElementById('a-name').value.trim();if(!n)return;
+  assets.push({id:Date.now(),name:n,type:document.getElementById('a-type').value,value:document.getElementById('a-value').value,cost:document.getElementById('a-cost').value,notes:document.getElementById('a-notes').value.trim(),date:new Date().toISOString().slice(0,10)});
+  save();document.getElementById('add-asset-form').style.display='none';renderAssets();renderOverview();
+};
+window.saveReserves=function(){
+  reserves.emerg=Number(document.getElementById('ru-emerg').value||0);
+  reserves.opp=Number(document.getElementById('ru-opp').value||0);
+  reserves.legacy=Number(document.getElementById('ru-legacy').value||0);
+  reserves.emergTarget=Number(document.getElementById('r-emerg-target').value||reserves.emergTarget||0);
+  save();renderReserves();renderOverview();
+};
+window.addFlow=function(){
+  var d=document.getElementById('f-desc').value.trim();if(!d)return;
+  flows.push({id:Date.now(),desc:d,amount:document.getElementById('f-amount').value,type:document.getElementById('f-type').value,date:new Date().toISOString().slice(0,10)});
+  save();document.getElementById('add-flow-form').style.display='none';renderFlows();
+};
+
 (async function(){
   try{
     var s=(await sb.auth.getSession()).data.session;
@@ -135,18 +329,20 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
+    document.getElementById('hdr-auth').textContent=auth.toFixed(4);
+    renderOverview();renderAssets();renderReserves();renderFlows();
+    document.querySelectorAll('.tab').forEach(function(btn){
+      btn.onclick=function(){
+        document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+        document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+        btn.classList.add('active');
+        var panel=document.getElementById('tab-'+btn.dataset.tab);
+        if(panel){panel.style.display='';panel.classList.add('active');}
+        if(btn.dataset.tab==='overview')setTimeout(drawCanvas,50);
+      };
+    });
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
-</script>
-<script><script>
-function trsTab(btn,id){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-  btn.classList.add('active');btn.setAttribute('aria-selected','true');
-  var p=document.getElementById(id);if(p)p.classList.add('active');
-}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>

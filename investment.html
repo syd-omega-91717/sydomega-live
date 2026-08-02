@@ -1,128 +1,284 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — INVESTMENT">
-<title>&#937; SYD OMEGA 91717 &mdash; INVESTMENT</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Investment Engine · SYD OMEGA 91717</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--solar);flex:1}.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
-.pad{padding:var(--pad)}.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--solar)}.kpi-n{font-family:var(--D);font-size:20px;color:var(--solar);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--solar);color:var(--solar);background:rgba(201,168,76,.05)}
-.tab-panel{display:none}.tab-panel.active{display:block}
-.hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--solar);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
-.hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--solar);margin-bottom:10px}
-.hero-sub{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-
-.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:14px}
-.inv-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-left:3px solid var(--green);padding:16px;transition:.2s}
-.inv-card:hover{background:rgba(63,178,127,.07)}
-.inv-ticker{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:4px}
-.inv-name{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:6px}
-.inv-price{font-family:var(--D);font-size:18px;color:var(--green);line-height:1}
-.inv-change{font-family:var(--M);font-size:7.5px;margin-top:3px}
-.inv-change.up{color:var(--green)}.inv-change.dn{color:var(--crim)}
-.inv-meta{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:7px}
-.crypto-row{display:grid;grid-template-columns:40px 1fr auto auto;gap:10px;align-items:center;padding:10px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:6px;border-radius:2px}
-.crypto-icon{font-size:20px;text-align:center}
-.crypto-name{font-family:var(--R);font-size:11px;color:var(--ink)}
-.crypto-name small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:1px}
-.crypto-price{font-family:var(--M);font-size:10px;color:var(--solar);text-align:right}
-.crypto-chg{font-family:var(--M);font-size:8px;text-align:right}
-.crypto-chg.up{color:var(--green)}.crypto-chg.dn{color:var(--crim)}
-.inc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);margin-bottom:6px;border-radius:2px}
-.inc-label{font-family:var(--R);font-size:11px;color:var(--ink)}
-.inc-label small{display:block;font-family:var(--M);font-size:7px;color:var(--muted);margin-top:1px}
-.inc-val{font-family:var(--D);font-size:14px;color:var(--solar)}
-.rep-card{border:1px solid var(--line);background:rgba(10,10,15,.45);border-radius:2px;border-top:2px solid var(--cyan);padding:14px;margin-bottom:10px}
-.rep-title{font-family:var(--D);font-size:11px;color:var(--solar);margin-bottom:5px}
-.rep-body{font-size:10.5px;color:var(--ink);opacity:.75;line-height:1.65}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.kpi-row{grid-template-columns:1fr 1fr}}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
+.tab-btn.active{background:#4CAF50;color:#000;border-color:#4CAF50;}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+.portfolio-banner{background:linear-gradient(135deg,#0d0d0d,#0a140a);border:1px solid #1a1a1a;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.portfolio-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#4CAF50,#FFD700,#4CAF50);}
+.pb-row{display:flex;gap:24px;flex-wrap:wrap;align-items:center;}
+.pb-val{font-family:'Courier New',monospace;font-size:32px;color:#4CAF50;font-weight:700;}
+.pb-label{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:2px;margin-bottom:4px;}
+.pb-change{font-family:'Courier New',monospace;font-size:14px;}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
+.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#4CAF50;font-weight:700;}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
+.holding-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.holding-ticker{font-family:'Courier New',monospace;font-size:14px;color:#4CAF50;font-weight:700;min-width:60px;}
+.holding-name{flex:1;font-size:11px;color:#888;}
+.holding-val{font-family:'Courier New',monospace;font-size:14px;color:#e0e0e0;font-weight:700;text-align:right;}
+.holding-pnl{font-family:'Courier New',monospace;font-size:11px;text-align:right;}
+.holding-pnl.pos{color:#4CAF50;}
+.holding-pnl.neg{color:#FF4444;}
+.holding-weight{font-family:'Courier New',monospace;font-size:9px;color:#555;text-align:right;min-width:40px;}
+.del-btn{background:none;border:none;color:#333;cursor:pointer;font-size:10px;}
+.del-btn:hover{color:#FF4444;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
+.form-group input,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#4CAF50;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-primary{padding:10px 24px;background:#4CAF50;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
+.btn-primary:hover{background:#388E3C;}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+.filter-tag.active{background:#0a140a;border-color:#4CAF50;color:#4CAF50;}
+.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:16px;}
+.canvas-wrap canvas{display:block;width:100%;}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #4CAF50;padding:16px;}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#4CAF50;letter-spacing:1px;margin-bottom:8px;}
+.sci-body{font-size:11px;color:#888;line-height:1.65;}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
+.progress-bar{background:#1a1a1a;height:4px;border-radius:2px;overflow:hidden;margin-top:6px;}
+.progress-fill{height:100%;background:#4CAF50;}
 </style>
 </head>
 <body>
-<a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--solar);color:#000;padding:8px 14px;font-family:var(--M);font-size:8px;letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="investment" aria-label="Navigation"></aside>
-  <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">INVESTMENT<small>M16 Investment &middot; PORTFOLIO & CRYPTO HOLDINGS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="inv-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:8px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
-    <div class="pad" data-reveal="fade-up">
-      <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-            <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-portfolio')">PORTFOLIO</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-crypto')">CRYPTO</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-income')">INCOME</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-reports')">REPORTS</button></div>
-      <div id="tp-portfolio" class="tab-panel active" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">SOVEREIGN PORTFOLIO</div>
-        <div class="inv-grid">
-          <div class="inv-card"><div class="inv-ticker">TECH</div><div class="inv-name">Sovereign Technology Fund</div><div class="inv-price">$24,800</div><div class="inv-change up">▲ 12.4% YTD</div><div class="inv-meta">120 units &middot; Entry $22,100 &middot; Gate IV+ access</div></div>
-          <div class="inv-card"><div class="inv-ticker">REAL</div><div class="inv-name">Sovereign Real Estate Trust</div><div class="inv-price">$18,500</div><div class="inv-change up">▲ 7.2% YTD</div><div class="inv-meta">85 units &middot; Entry $17,260 &middot; Gate VI+ access</div></div>
-          <div class="inv-card"><div class="inv-ticker">ENRG</div><div class="inv-name">Apex Energy Holdings</div><div class="inv-price">$31,200</div><div class="inv-change up">▲ 18.9% YTD</div><div class="inv-meta">200 units &middot; Entry $26,250 &middot; Gate VIII+ access</div></div>
-          <div class="inv-card"><div class="inv-ticker">META</div><div class="inv-name">Omega Metaverse Index</div><div class="inv-price">$9,400</div><div class="inv-change dn">▼ 3.1% YTD</div><div class="inv-meta">50 units &middot; Entry $9,700 &middot; Gate III+ access</div></div>
-          <div class="inv-card"><div class="inv-ticker">HLTH</div><div class="inv-name">Sovereign Biotech Alliance</div><div class="inv-price">$14,750</div><div class="inv-change up">▲ 22.3% YTD</div><div class="inv-meta">70 units &middot; Entry $12,050 &middot; Gate V+ access</div></div>
-          <div class="inv-card"><div class="inv-ticker">APEX</div><div class="inv-name">Apex Sovereign Reserve Fund</div><div class="inv-price">$88,367</div><div class="inv-change up">▲ 27.8% YTD</div><div class="inv-meta">Owner exclusive &middot; AUTH = 27.8367</div></div>
-        </div>
-      </div>
-      <div id="tp-crypto" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">CRYPTO HOLDINGS</div>
-        <div>
-          <div class="crypto-row"><div class="crypto-icon">₿</div><div class="crypto-name">Bitcoin<small>BTC</small></div><div class="crypto-price">$67,420</div><div class="crypto-chg up">▲ 4.2%</div></div>
-          <div class="crypto-row"><div class="crypto-icon">Ξ</div><div class="crypto-name">Ethereum<small>ETH</small></div><div class="crypto-price">$3,840</div><div class="crypto-chg up">▲ 2.8%</div></div>
-          <div class="crypto-row"><div class="crypto-icon">◈</div><div class="crypto-name">Sovereign Token<small>OMGX</small></div><div class="crypto-price">$27.84</div><div class="crypto-chg up">▲ 8.9%</div></div>
-          <div class="crypto-row"><div class="crypto-icon">◎</div><div class="crypto-name">Solana<small>SOL</small></div><div class="crypto-price">$182.00</div><div class="crypto-chg dn">▼ 1.2%</div></div>
-          <div class="crypto-row"><div class="crypto-icon">Ω</div><div class="crypto-name">Omega Coin<small>OMC</small></div><div class="crypto-price">$9.18</div><div class="crypto-chg up">▲ 14.5%</div></div>
-          <div class="crypto-row"><div class="crypto-icon">◆</div><div class="crypto-name">Chainlink<small>LINK</small></div><div class="crypto-price">$16.43</div><div class="crypto-chg up">▲ 3.6%</div></div>
-          <div class="crypto-row"><div class="crypto-icon">◉</div><div class="crypto-name">Polkadot<small>DOT</small></div><div class="crypto-price">$8.72</div><div class="crypto-chg dn">▼ 0.9%</div></div>
-        </div>
-      </div>
-      <div id="tp-income" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">INCOME STREAMS</div>
-        <div>
-          <div class="inc-row"><div class="inc-label">Sovereign Membership Revenue<small>Monthly recurring subscriptions</small></div><div class="inc-val">$12,480</div></div>
-          <div class="inc-row"><div class="inc-label">Token Sales &amp; Authority Minting<small>OMGX issuance proceeds</small></div><div class="inc-val">$8,930</div></div>
-          <div class="inc-row"><div class="inc-label">Sovereign Cinema Licensing<small>Film IP &amp; streaming royalties</small></div><div class="inc-val">$4,200</div></div>
-          <div class="inc-row"><div class="inc-label">Research &amp; Publications<small>Digital &amp; print sales</small></div><div class="inc-val">$2,100</div></div>
-          <div class="inc-row"><div class="inc-label">API &amp; Integration Fees<small>Third-party integrations</small></div><div class="inc-val">$3,750</div></div>
-          <div class="inc-row"><div class="inc-label">Sovereign Education &amp; Events<small>Workshops, summits, ceremonies</small></div><div class="inc-val">$5,600</div></div>
-        </div>
-      </div>
-      <div id="tp-reports" class="tab-panel" style="padding:var(--pad)"><div class="sechead" data-reveal="fade-up">INVESTMENT REPORTS</div>
-        <div class="rep-card"><div class="rep-title">Q2 2024 — Sovereign Portfolio Performance</div><div class="rep-body">Total portfolio value increased 14.7% quarter-on-quarter, driven by strong performance in the Apex Energy Holdings position and sustained growth in the Sovereign Token (OMGX). Crypto holdings grew 22% buoyed by the broader BTC cycle. Real estate trust maintained steady 7% annualised returns. Overall portfolio AUTH-weighted return: 18.3%.</div></div>
-        <div class="rep-card"><div class="rep-title">Q3 2024 Outlook — Authority-Gated Opportunities</div><div class="rep-body">Gate VIII and above sovereigns will gain access to three new investment tranches in H2 2024: Sovereign Infrastructure Bond (projected 9.2% yield), Omega AI Holdings (projected 31% ROI), and the Apex Reserve Expansion Fund. All new tranches require KYC Step 2 completion and active membership tier of Sovereign Prime or above.</div></div>
-        <div class="rep-card"><div class="rep-title">Annual Report 2023 — The Year of Foundation</div><div class="rep-body">The inaugural year of the sovereign investment platform established baseline positions across all six portfolio sectors. Net positive return of 12.1% against a flat market benchmark. Total member capital deployed: $2.4M across 847 active sovereign investors. The Omega Coin (OMC) was issued at $1.00 and closed the year at $9.18 — a 818% inaugural year gain.</div></div>
-      </div>
-    </div>
-    <div data-page-emblem="investment" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; INVESTMENT &middot; SYD OMEGA 91717</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
-  </main>
+<div id="omega-nav"></div>
+<main class="page-content">
+<div class="page-header">
+  <div class="page-title">INVESTMENT ENGINE</div>
+  <div class="page-subtitle">PORTFOLIO &middot; HOLDINGS &middot; PERFORMANCE &middot; ALLOCATION</div>
 </div>
-<script type="module">
-import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});btn.classList.add('active');var p=document.getElementById(id);if(p)p.classList.add('active');}
-(async function(){
-  try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-    document.getElementById('app').style.display='flex';
-    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-    window.__omegaUserLoaded=true;
-    var PHI=1.6180339887,EU=2.7182818285;
-    var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
-    var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('s-auth',auth.toFixed(4));
-    sid('s-a',a.toFixed(3));sid('s-b',b.toFixed(3));sid('s-c',c.toFixed(3));
-  }catch(e){document.getElementById('app').style.display='flex';}
-})();
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('portfolio')">PORTFOLIO</button>
+  <button class="tab-btn" onclick="switchTab('add')">ADD HOLDING</button>
+  <button class="tab-btn" onclick="switchTab('alloc')">ALLOCATION</button>
+  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
+</div>
+
+<div id="tab-portfolio" class="tab-pane active">
+  <div class="portfolio-banner">
+    <div class="pb-row">
+      <div><div class="pb-label">PORTFOLIO VALUE</div><div class="pb-val" id="port-val">$0</div></div>
+      <div><div class="pb-label">TOTAL COST BASIS</div><div class="pb-val" style="font-size:20px;color:#888;" id="port-cost">$0</div></div>
+      <div><div class="pb-label">TOTAL GAIN/LOSS</div><div class="pb-change" id="port-pnl">$0</div></div>
+      <div><div class="pb-label">RETURN</div><div class="pb-change" id="port-ret">0%</div></div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="stat-holdings">0</div><div class="stat-lbl">HOLDINGS</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-winners">0</div><div class="stat-lbl">WINNERS</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-losers">0</div><div class="stat-lbl">LOSERS</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-cash">$0</div><div class="stat-lbl">CASH</div></div>
+  </div>
+  <div class="filter-row">
+    <div class="filter-tag active" data-t="all" onclick="setTypeFilter('all',this)">ALL</div>
+    <div class="filter-tag" data-t="equity" onclick="setTypeFilter('equity',this)">EQUITY</div>
+    <div class="filter-tag" data-t="etf" onclick="setTypeFilter('etf',this)">ETF</div>
+    <div class="filter-tag" data-t="crypto" onclick="setTypeFilter('crypto',this)">CRYPTO</div>
+    <div class="filter-tag" data-t="bond" onclick="setTypeFilter('bond',this)">BOND</div>
+    <div class="filter-tag" data-t="real-estate" onclick="setTypeFilter('real-estate',this)">REAL ESTATE</div>
+    <div class="filter-tag" data-t="other" onclick="setTypeFilter('other',this)">OTHER</div>
+  </div>
+  <div id="holdings-list"></div>
+</div>
+
+<div id="tab-add" class="tab-pane">
+  <div class="section-label">ADD / UPDATE HOLDING</div>
+  <div class="form-row">
+    <div class="form-group"><label>TICKER / NAME</label><input type="text" id="h-ticker" placeholder="e.g. AAPL, BTC, SPY..." maxlength="20"></div>
+    <div class="form-group"><label>FULL NAME (optional)</label><input type="text" id="h-name" placeholder="Apple Inc., Bitcoin..." maxlength="60"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>TYPE</label>
+      <select id="h-type">
+        <option value="equity">Equity (Stock)</option>
+        <option value="etf">ETF / Index Fund</option>
+        <option value="crypto">Crypto</option>
+        <option value="bond">Bond / Fixed Income</option>
+        <option value="real-estate">Real Estate / REIT</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label>QUANTITY / SHARES</label><input type="number" id="h-qty" placeholder="0" min="0" step="any"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>AVERAGE COST (USD)</label><input type="number" id="h-cost" placeholder="0.00" min="0" step="0.01"></div>
+    <div class="form-group"><label>CURRENT PRICE (USD)</label><input type="number" id="h-price" placeholder="0.00" min="0" step="0.01"></div>
+  </div>
+  <div class="form-group"><label>NOTES / THESIS (optional)</label><input type="text" id="h-notes" placeholder="Why you hold this..." maxlength="120"></div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-primary" onclick="saveHolding()">SAVE HOLDING</button>
+    <button class="btn-secondary" onclick="clearHoldingForm()">CLEAR</button>
+  </div>
+  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#4CAF50;"></div>
+</div>
+
+<div id="tab-alloc" class="tab-pane">
+  <div class="canvas-wrap"><canvas id="alloc-canvas" height="220"></canvas></div>
+  <div id="alloc-detail"></div>
+</div>
+
+<div id="tab-science" class="tab-pane">
+  <div class="science-grid">
+    <div class="sci-card"><div class="sci-title">MODERN PORTFOLIO THEORY</div><div class="sci-body">Markowitz (1952): diversification reduces risk without proportionally reducing return. The efficient frontier shows the set of portfolios with maximum return for a given risk level. Correlation below 1.0 between assets generates diversification benefit — hold uncorrelated assets.</div><div class="sci-ref">Markowitz, H. (1952). Journal of Finance</div></div>
+    <div class="sci-card"><div class="sci-title">FACTOR INVESTING</div><div class="sci-body">Fama & French (1992) three-factor model: market risk, size (small caps outperform), and value (cheap stocks outperform) explain most equity returns. Carhart (1997) added momentum as a fourth factor. Understanding factors lets you target return premia systematically rather than picking stocks.</div><div class="sci-ref">Fama & French (1992). Journal of Finance</div></div>
+    <div class="sci-card"><div class="sci-title">DOLLAR COST AVERAGING</div><div class="sci-body">DCA (Tobin, 1958): investing fixed amounts at regular intervals reduces timing risk by automatically buying more shares when prices are low and fewer when high. For long-horizon investors, DCA produces equal or better returns than lump sum in volatile markets with significantly lower psychological stress.</div><div class="sci-ref">Tobin, J. (1958). Review of Economic Studies</div></div>
+    <div class="sci-card"><div class="sci-title">BEHAVIORAL BIASES</div><div class="sci-body">Kahneman & Tversky (1979): loss aversion — losses feel ~2.5x more painful than equivalent gains feel good. This causes premature selling of winners (disposition effect) and holding losers too long. Tracking your portfolio systematically counters emotional decision-making with data.</div><div class="sci-ref">Kahneman & Tversky (1979). Econometrica</div></div>
+    <div class="sci-card"><div class="sci-title">COMPOUND RETURNS</div><div class="sci-body">Warren Buffett's mentor Graham (1949) called compounding the core engine of wealth. At 10% annual return: $10,000 grows to $67,275 in 20 years, $174,494 in 30 years, $452,593 in 40 years. The Rule of 72: divide 72 by the return rate to get years to double. Time is the primary variable.</div><div class="sci-ref">Graham, B. (1949). The Intelligent Investor</div></div>
+    <div class="sci-card"><div class="sci-title">REBALANCING</div><div class="sci-body">Bernstein (1996): systematic rebalancing to target weights forces buy-low/sell-high behavior mechanically. Annual or threshold-based rebalancing (drift >5%) adds 0.4–0.8% annual return vs. unmanaged portfolios through variance drain reduction and forced discipline.</div><div class="sci-ref">Bernstein, W. (1996). Efficient Frontier</div></div>
+  </div>
+</div>
+</main>
+<script src="/omega-ui.js"></script>
+<script>
+var holdings=[];
+var typeFilter='all';
+var TYPE_COLORS={equity:'#4CAF50',etf:'#00E5FF',crypto:'#FF9800',bond:'#FFD700','real-estate':'#9B6BF0',other:'#888'};
+
+function load(){try{holdings=JSON.parse(localStorage.getItem('omega_investments')||'[]');}catch(e){holdings=[];}}
+function save(){localStorage.setItem('omega_investments',JSON.stringify(holdings));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmt(v){return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fmtPct(v){return (v>=0?'+':'')+v.toFixed(2)+'%';}
+
+function switchTab(t){
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+t).classList.add('active');
+  var labels={portfolio:'PORTFOLIO',add:'ADD HOLDING',alloc:'ALLOCATION',science:'SCIENCE'};
+  document.querySelectorAll('.tab-btn').forEach(function(b){if(b.textContent===labels[t])b.classList.add('active');});
+  if(t==='portfolio')renderPortfolio();
+  if(t==='alloc')renderAlloc();
+}
+
+function setTypeFilter(t,el){
+  typeFilter=t;
+  document.querySelectorAll('.filter-tag').forEach(function(x){x.classList.remove('active');});
+  el.classList.add('active');
+  renderHoldings();
+}
+
+function calcPortfolio(){
+  var val=holdings.reduce(function(s,h){return s+h.qty*h.price;},0);
+  var cost=holdings.reduce(function(s,h){return s+h.qty*h.cost;},0);
+  return {val:val,cost:cost,pnl:val-cost,ret:cost?((val-cost)/cost*100):0};
+}
+
+function renderPortfolio(){
+  var p=calcPortfolio();
+  document.getElementById('port-val').textContent=fmt(p.val);
+  document.getElementById('port-cost').textContent=fmt(p.cost);
+  var pnlEl=document.getElementById('port-pnl');
+  pnlEl.textContent=(p.pnl>=0?'+':'-')+fmt(Math.abs(p.pnl));
+  pnlEl.style.color=p.pnl>=0?'#4CAF50':'#FF4444';
+  var retEl=document.getElementById('port-ret');
+  retEl.textContent=fmtPct(p.ret);
+  retEl.style.color=p.ret>=0?'#4CAF50':'#FF4444';
+  document.getElementById('stat-holdings').textContent=holdings.length;
+  document.getElementById('stat-winners').textContent=holdings.filter(function(h){return h.price>=h.cost;}).length;
+  document.getElementById('stat-losers').textContent=holdings.filter(function(h){return h.price<h.cost;}).length;
+  var cash=holdings.filter(function(h){return h.type==='other'&&h.ticker.toLowerCase().includes('cash');});
+  document.getElementById('stat-cash').textContent=fmt(cash.reduce(function(s,h){return s+h.qty*h.price;},0));
+  renderHoldings();
+}
+
+function renderHoldings(){
+  var list=document.getElementById('holdings-list');
+  var filtered=typeFilter==='all'?holdings:holdings.filter(function(h){return h.type===typeFilter;});
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:40px;color:#333;font-family:\'Courier New\',monospace;font-size:12px;">NO HOLDINGS YET — ADD HOLDING</div>';return;}
+  var totalVal=calcPortfolio().val||1;
+  var sorted=[...filtered].sort(function(a,b){return b.qty*b.price-a.qty*a.price;});
+  list.innerHTML=sorted.map(function(h){
+    var val=h.qty*h.price;
+    var cost=h.qty*h.cost;
+    var pnl=val-cost;
+    var pct=cost?(pnl/cost*100):0;
+    var weight=val/totalVal*100;
+    var col=TYPE_COLORS[h.type]||'#888';
+    return '<div class="holding-card" style="border-left:3px solid '+col+'">'
+      +'<div class="holding-ticker" style="color:'+col+'">'+esc(h.ticker)+'</div>'
+      +'<div class="holding-name">'+(h.name?esc(h.name)+' &middot; ':'')+esc(h.type).toUpperCase()+'<br><small>'+h.qty+' units @ $'+h.cost+'</small></div>'
+      +'<div><div class="holding-val">'+fmt(val)+'</div><div class="holding-pnl '+(pnl>=0?'pos':'neg')+'">'+(pnl>=0?'+':'-')+fmt(Math.abs(pnl))+' ('+fmtPct(pct)+')</div></div>'
+      +'<div class="holding-weight">'+weight.toFixed(1)+'%<div class="progress-bar"><div class="progress-fill" style="width:'+Math.min(100,weight)+'%;background:'+col+'"></div></div></div>'
+      +'<button class="del-btn" onclick="delHolding(\''+h.id+'\')">DEL</button>'
+      +'</div>';
+  }).join('');
+}
+
+function delHolding(id){if(!confirm('Remove?'))return;holdings=holdings.filter(function(x){return x.id!==id;});save();renderPortfolio();}
+
+function saveHolding(){
+  var ticker=(document.getElementById('h-ticker').value.trim()||'').toUpperCase();
+  var qty=parseFloat(document.getElementById('h-qty').value)||0;
+  var cost=parseFloat(document.getElementById('h-cost').value)||0;
+  var price=parseFloat(document.getElementById('h-price').value)||cost;
+  var type=document.getElementById('h-type').value;
+  var name=document.getElementById('h-name').value.trim();
+  var notes=document.getElementById('h-notes').value.trim();
+  if(!ticker){alert('Ticker required.');return;}
+  var existing=holdings.find(function(h){return h.ticker===ticker;});
+  if(existing){Object.assign(existing,{qty:qty,cost:cost,price:price,type:type,name:name,notes:notes});}
+  else{holdings.push({id:uid(),ticker:ticker,qty:qty,cost:cost,price:price,type:type,name:name,notes:notes,added:new Date().toISOString()});}
+  save();clearHoldingForm();
+  document.getElementById('add-msg').textContent=ticker+' SAVED';
+  setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
+}
+
+function clearHoldingForm(){
+  ['h-ticker','h-name','h-qty','h-cost','h-price','h-notes'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('h-type').value='equity';
+}
+
+function renderAlloc(){
+  var canvas=document.getElementById('alloc-canvas');
+  var W=canvas.offsetWidth||600;canvas.width=W;canvas.height=220;
+  var ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,220);
+  if(!holdings.length){ctx.fillStyle='#333';ctx.font='11px Courier New';ctx.textAlign='center';ctx.fillText('NO HOLDINGS',W/2,110);return;}
+  var types={};
+  holdings.forEach(function(h){if(!types[h.type])types[h.type]=0;types[h.type]+=h.qty*h.price;});
+  var total=Object.values(types).reduce(function(s,v){return s+v;},0)||1;
+  var cx=110,cy=110,r=95;
+  var startAngle=-Math.PI/2;
+  Object.entries(types).forEach(function([t,v]){
+    var slice=v/total*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,startAngle,startAngle+slice);
+    ctx.closePath();ctx.fillStyle=TYPE_COLORS[t]||'#888';ctx.fill();
+    ctx.strokeStyle='#0d0d0d';ctx.lineWidth=2;ctx.stroke();
+    startAngle+=slice;
+  });
+  ctx.beginPath();ctx.arc(cx,cy,42,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill();
+  ctx.fillStyle='#4CAF50';ctx.font='bold 10px Courier New';ctx.textAlign='center';
+  ctx.fillText('PORTFOLIO',cx,cy+4);
+  var lx=240,ly=20;
+  Object.entries(types).forEach(function([t,v]){
+    ctx.fillStyle=TYPE_COLORS[t]||'#888';ctx.fillRect(lx,ly,10,10);
+    ctx.fillStyle='#888';ctx.font='10px Courier New';ctx.textAlign='left';
+    ctx.fillText(t.toUpperCase()+' '+Math.round(v/total*100)+'%',lx+14,ly+9);ly+=18;
+  });
+  var detail=document.getElementById('alloc-detail');
+  detail.innerHTML=Object.entries(types).map(function([t,v]){
+    var col=TYPE_COLORS[t]||'#888';
+    var pct=(v/total*100).toFixed(1);
+    return '<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-family:\'Courier New\',monospace;font-size:10px;margin-bottom:4px;"><span style="color:'+col+'">'+t.toUpperCase()+'</span><span>'+fmt(v)+' &middot; '+pct+'%</span></div>'
+      +'<div class="progress-bar"><div class="progress-fill" style="width:'+Math.min(100,parseFloat(pct))+'%;background:'+col+'"></div></div></div>';
+  }).join('');
+}
+
+load();renderPortfolio();
 </script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

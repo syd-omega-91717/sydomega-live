@@ -4,11 +4,10 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="SYD OMEGA 91717 — Command Bridge · Mission Control · Living Operating System">
 <title>&#937; SYD OMEGA 91717 &mdash; Command Bridge</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:serif;--R:sans-serif;--M:monospace;--pad:clamp(14px,3vw,36px)}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 /* LAYOUT */
 .shell{display:flex;min-height:100vh}
@@ -115,17 +114,16 @@
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:87%;background:var(--green)"></div></div>
 
-    <!-- 5-LAYER TABS -->
+    <!-- 4-TAB SYSTEM -->
     <div class="layer-tabs" role="tablist">
-      <button class="ltab active" role="tab" aria-selected="true"  onclick="switchLayer(this,'l1')">&#9650; OVERVIEW</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l2')">&#9670; PERSONAL OS</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l3')">&#9654; PLATFORM</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l4')">&#9881; INTELLIGENCE</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="switchLayer(this,'l5')">&#9826; SOVEREIGN</button>
+      <button class="ltab active" role="tab" aria-selected="true"  onclick="setTab('overview')">&#9650; OVERVIEW</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('personal')">&#9670; PERSONAL</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('platform')">&#9654; PLATFORM</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('science')">&#8982; SCIENCE</button>
     </div>
 
-    <!-- LAYER 1: OVERVIEW -->
-    <div id="l1" class="layer-panel active">
+    <!-- LAYER: OVERVIEW -->
+    <div id="l-overview" class="layer-panel active">
       <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
         <div class="kpi-row" data-reveal="fade-up">
@@ -165,8 +163,8 @@
       </div>
     </div>
 
-    <!-- LAYER 2: PERSONAL OS -->
-    <div id="l2" class="layer-panel">
+    <!-- LAYER: PERSONAL -->
+    <div id="l-personal" class="layer-panel">
       <div class="pad">
         <div class="sechead">PERSONAL OS &middot; SOVEREIGN SELF-SYSTEM &middot; LIVE FROM YOUR DEVICE <span class="sechead-action" onclick="renderPersonalOS()">&#8635; REFRESH</span></div>
         <!-- PERSONAL KPI ROW -->
@@ -217,19 +215,13 @@
       </div>
     </div>
 
-    <!-- LAYER 3: PLATFORM COMMAND INDEX -->
-    <div id="l3" class="layer-panel">
+    <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
+    <div id="l-platform" class="layer-panel">
       <div class="pad">
         <div class="sechead">PLATFORM COMMAND INDEX &middot; ALL 169 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'">ECOSYSTEM MAP &#8594;</span></div>
         <div id="platform-sections"></div>
-      </div>
-    </div>
-
-        <!-- LAYER 4: INTELLIGENCE -->
-    <div id="l4" class="layer-panel">
-      <div class="pad" data-reveal="fade-up">
-        <div class="sechead">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
-        <div class="kpi-row" data-reveal="fade-up">
+        <div class="sechead" style="margin-top:24px">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
+        <div class="kpi-row">
           <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ana-events">--</div><div class="kpi-l">EVENTS (7d)</div></div>
           <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ana-sessions">--</div><div class="kpi-l">SESSIONS (7d)</div></div>
           <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ana-users">--</div><div class="kpi-l">UNIQUE MEMBERS (7d)</div></div>
@@ -237,10 +229,10 @@
           <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ai-queries">--</div><div class="kpi-l">AI QUERIES (7d)</div></div>
           <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ai-memories">--</div><div class="kpi-l">MEMORIES STORED</div></div>
         </div>
-        <div class="two-col" style="align-items:start">
+        <div class="two-col" style="align-items:start;margin-bottom:14px">
           <div>
             <div class="sechead">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'">FULL ANALYTICS &#8594;</span></div>
-            <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center" data-reveal="fade-up">
+            <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="dash-radar" style="max-height:180px"></canvas>
             </div>
           </div>
@@ -256,18 +248,11 @@
           </div>
         </div>
         <div class="sechead">TOP PAGES &middot; SESSION DISTRIBUTION</div>
-        <div id="top-pages-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+        <div id="top-pages-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:24px">
           <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px;text-align:center;border:1px solid var(--line);border-radius:2px">LOADING ANALYTICS&hellip;</div>
         </div>
-      </div>
-    </div>
-
-        <!-- LAYER 5: SOVEREIGN -->
-    <div id="l5" class="layer-panel">
-      <div class="pad" data-reveal="fade-up">
-        <!-- OPS + ADMIN KPIs MERGED -->
         <div class="sechead">SOVEREIGN COMMAND &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
-        <div class="kpi-row" data-reveal="fade-up">
+        <div class="kpi-row">
           <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/gaming.html'"><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l">TASKS (7d)</div></div>
           <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/automation.html'"><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l">WORKFLOWS LIVE</div></div>
           <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="ops-incidents">0</div><div class="kpi-l">OPEN INCIDENTS</div></div>
@@ -277,8 +262,7 @@
           <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
           <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
         </div>
-        <!-- WORKFLOWS -->
-        <div class="sechead" data-reveal="fade-up">ACTIVE WORKFLOWS</div>
+        <div class="sechead">ACTIVE WORKFLOWS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
           <div class="cmd-card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
           <div class="cmd-card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
@@ -286,10 +270,8 @@
           <div class="cmd-card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
           <div class="cmd-card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
-        <!-- AGENT QUICK ACCESS -->
         <div class="sechead">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
         <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
-        <!-- ADMIN ACTIONS -->
         <div class="sechead">ADMIN ACTIONS &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
           <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; APPROVE ACCESS REQUESTS</button>
@@ -298,6 +280,44 @@
           <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; GOVERNANCE BOARD</button>
           <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; EVOLUTION ROADMAP</button>
           <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; PRIVACY CENTRE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYER: SCIENCE -->
+    <div id="l-science" class="layer-panel">
+      <div class="pad">
+        <div class="sechead">SOVEREIGN CONSTANTS &amp; SYSTEM ARCHITECTURE</div>
+        <div style="margin-bottom:24px">
+          <div style="font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--gold);padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.03);line-height:2;margin-bottom:16px">
+            AUTH = sqrt(A&#179; + B&#179; + C&#179;) &times; &phi; / e<br>
+            A = B = C = 9 &rarr; A&#179;+B&#179;+C&#179; = 2187<br>
+            sqrt(2187) &times; 1.6180339887 / 2.7182818285 = <strong>27.8367</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:9px;letter-spacing:1px;line-height:2">
+            <span style="color:var(--muted)">PHI (&phi;)</span><span style="color:var(--gold)">1.6180339887</span>
+            <span style="color:var(--muted)">EULER (e)</span><span style="color:var(--gold)">2.7182818285</span>
+            <span style="color:var(--muted)">AUTHORITY APEX</span><span style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
+            <span style="color:var(--muted)">TRIAL WINDOW</span><span>557 SECONDS (9 MIN 17 SEC)</span>
+            <span style="color:var(--muted)">LATTICE</span><span>12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</span>
+            <span style="color:var(--muted)">PLATFORM PAGES</span><span>169 HTML &middot; 92 JS ENGINES</span>
+            <span style="color:var(--muted)">SQL FILES</span><span>105 MIGRATIONS &middot; 64 RPCS</span>
+          </div>
+        </div>
+        <div class="sechead">GATE THRESHOLDS &middot; 12 SOVEREIGN LEVELS</div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:9px;letter-spacing:1px;line-height:2">
+          <span style="color:var(--muted)">GATE 1 — INITIATE</span><span>AUTH &ge; 2.3197</span>
+          <span style="color:var(--muted)">GATE 2 — ACOLYTE</span><span>AUTH &ge; 4.6394</span>
+          <span style="color:var(--muted)">GATE 3 — SCHOLAR</span><span>AUTH &ge; 6.9592</span>
+          <span style="color:var(--muted)">GATE 4 — KEEPER</span><span>AUTH &ge; 9.2789</span>
+          <span style="color:var(--muted)">GATE 5 — GUARDIAN</span><span>AUTH &ge; 11.5986</span>
+          <span style="color:var(--muted)">GATE 6 — ARCHITECT</span><span>AUTH &ge; 13.9183</span>
+          <span style="color:var(--muted)">GATE 7 — SOVEREIGN</span><span>AUTH &ge; 16.2381</span>
+          <span style="color:var(--muted)">GATE 8 — VANGUARD</span><span>AUTH &ge; 18.5578</span>
+          <span style="color:var(--muted)">GATE 9 — HERALD</span><span>AUTH &ge; 20.8775</span>
+          <span style="color:var(--muted)">GATE 10 — ORACLE</span><span>AUTH &ge; 23.1972</span>
+          <span style="color:var(--muted)">GATE 11 — PRIME</span><span>AUTH &ge; 25.517</span>
+          <span style="color:var(--gold)">GATE 12 — APEX</span><span style="color:var(--gold)">AUTH = 27.8367 — INVISIBLE ARCHITECT</span>
         </div>
       </div>
     </div>
@@ -314,16 +334,13 @@
 </div>
 
 <script>
-/* ── LAYER SWITCHER ─────────────────────────────────────────── */
-function switchLayer(btn,id){
-  document.querySelectorAll('.ltab').forEach(function(b){b.classList.remove('active');b.setAttribute('aria-selected','false');});
-  document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.remove('active');});
-  btn.classList.add('active');btn.setAttribute('aria-selected','true');
-  var panel=document.getElementById(id);if(panel){panel.classList.add('active');}
-  if(id==='l2') renderPersonalOS();
-  if(id==='l3') renderPlatformSections();
-  if(id==='l4'&&window._dashProfile) renderRadarChart(window._dashProfile);
-  if(id==='l5') loadAILayer();
+/* ── TAB SWITCHER ────────────────────────────────────────────── */
+function setTab(name){
+  var tabs=['overview','personal','platform','science'];
+  document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
+  document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
+  if(name==='personal') renderPersonalOS();
+  if(name==='platform'){setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);loadAILayer();},100);}
 }
 
 /* ── SYSTEM GALAXY CANVAS ─────────────────────────────────── */
@@ -389,7 +406,7 @@ function switchLayer(btn,id){
       ctx.beginPath();ctx.arc(n.x,n.y,r*.4,0,Math.PI*2);ctx.fillStyle=col+(isH?'FF':'99');ctx.fill();
       /* Label */
       if(isH||n.orbit===0){
-        ctx.font=(n.orbit===0?'bold ':'')+('8px "Courier Prime",monospace');
+        ctx.font=(n.orbit===0?'bold ':'')+('8px monospace');
         ctx.fillStyle=col+(isH?'FF':'99');ctx.textAlign='center';ctx.textBaseline='bottom';
         ctx.fillText(n.mod.name,n.x,n.y-r-3);
       }
@@ -436,7 +453,7 @@ var CMD_MODULES=[
   {icon:'\u9881',name:'AUTOMATE',desc:'Workflows, Automation, Queue, Architect',col:'var(--purple)',href:'/automation.html'},
   {icon:'\u25C4',name:'RESEARCH',desc:'Lab, Publications, Roadmap, Innovation',col:'var(--solar)',href:'/lab.html'},
   {icon:'\u03A9',name:'ECOSYSTEM',desc:'Roadmap, Design System, Targets, Vision',col:'var(--gold)',href:'/ecosystem.html'},
-  {icon:'\u9998',name:'PERSONAL OS',desc:'Journal, Vision, Body, Gratitude, Budget',col:'var(--purple)',href:'#',onclick:'switchLayer(document.querySelectorAll(".ltab")[1],"l2")'},
+  {icon:'\u9998',name:'PERSONAL OS',desc:'Journal, Vision, Body, Gratitude, Budget',col:'var(--purple)',href:'#',onclick:'setTab(\'personal\')'},
   {icon:'\u25CB',name:'COSMOS LORE',desc:'Houses, Tribes, Graph, Oracle, Sigil',col:'var(--cyan)',href:'/houses.html'},
   {icon:'\u2734',name:'STRATEGY',desc:'Vision, Decisions, Command, Targets, OKR',col:'var(--gold)',href:'/vision.html'},
   {icon:'\u25D9',name:'WELLNESS',desc:'Rituals, Meditate, Stoic, Habits, Sleep',col:'var(--green)',href:'/rituals.html'},
@@ -605,7 +622,7 @@ function drawPersonalWheel(areas){
     ctx.fillStyle=d.color||'#C9A84C';ctx.fill();
     /* Labels */
     var lr=(maxR+12);
-    ctx.font='5px "Courier Prime",monospace';ctx.fillStyle='rgba(201,168,76,.5)';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='5px monospace';ctx.fillStyle='rgba(201,168,76,.5)';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText((d.label||'').slice(0,6),cx+Math.cos(a)*lr,cy+Math.sin(a)*lr);
   });
 }
@@ -684,7 +701,7 @@ function renderPlatformSections(){
   }).join('');
 }
 
-window.switchLayer=switchLayer;
+window.setTab=setTab;
 window.askAI=askAI;
 </script>
 <script type="module">

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; Sovereign Academy</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:serif;--R:sans-serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
@@ -39,16 +39,10 @@
 <main class="main">
 <div class="topbar"><div class="t">SOVEREIGN ACADEMY &middot; EXAMS<small>M12 &middot; WORLDWIDE CERTIFICATIONS &middot; 9 LEVELS &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="acad-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
 <div class="tab-bar">
-  <button class="tab-btn on" data-tab="overview">OVERVIEW</button>
-  <button class="tab-btn" data-tab="stem">STEM &amp; SCIENCE</button>
-  <button class="tab-btn" data-tab="professional">PROFESSIONAL</button>
-  <button class="tab-btn" data-tab="language">LANGUAGE &amp; ARTS</button>
-  <button class="tab-btn" data-tab="sovereign_cert">SOVEREIGN CERTS</button>
-  <button class="tab-btn" data-tab="security">SECURITY &amp; LAW</button>
-  <button class="tab-btn" data-tab="technology">TECHNOLOGY &amp; AI</button>
-  <button class="tab-btn" data-tab="healthcare">HEALTHCARE &amp; MEDICINE</button>
-  <button class="tab-btn" data-tab="business">BUSINESS &amp; FINANCE</button>
-  <button class="tab-btn" data-tab="my_exams">MY EXAMS</button>
+  <button class="tab-btn on" data-tab="overview">&#9670; OVERVIEW</button>
+  <button class="tab-btn" data-tab="exams">&#9670; EXAMS</button>
+  <button class="tab-btn" data-tab="my_exams">&#9670; MY RECORD</button>
+  <button class="tab-btn" data-tab="science">&#9670; SCIENCE</button>
 </div>
 <div class="tab-panel on" id="tab-overview">
   <div class="kpi-row" data-reveal="fade-up">
@@ -865,10 +859,40 @@
   <div class="sechead" data-reveal="fade-up">MY EXAM HISTORY</div>
   <div id="exam-log"><div style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EXAM HISTORY...</div></div>
 </div>
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">&#9670; SCIENCE &middot; SYSTEM CONSTANTS</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px">
+    <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" style="font-size:16px">AUTH = <span style="font-family:var(--M)">sqrt(A³+B³+C³) × φ/e</span></div><div class="kpi-l">AUTHORITY FORMULA</div></div>
+    <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX (OWNER AUTHORITY)</div></div>
+    <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">1.6180339887</div><div class="kpi-l">φ — GOLDEN RATIO</div></div>
+    <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">2.7182818285</div><div class="kpi-l">e — EULER'S NUMBER</div></div>
+  </div>
+  <div class="sechead">GATE THRESHOLDS</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+    <div class="kpi" style="--kc:var(--muted)"><div class="kpi-n">0.001</div><div class="kpi-l">AXIS FLOOR</div></div>
+    <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">1.618</div><div class="kpi-l">GATE I — φ</div></div>
+    <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">2.718</div><div class="kpi-l">GATE II — e</div></div>
+    <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">9.000</div><div class="kpi-l">GATE III — SOVEREIGN</div></div>
+    <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">27.8367</div><div class="kpi-l">GATE IV — APEX</div></div>
+  </div>
+</div>
 <div data-page-emblem="academy" style="margin:20px auto 0"></div>
 <div class="lf"><span>&#937; SOVEREIGN ACADEMY &middot; 108+ WORLDWIDE EXAMS</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</span></div>
 </main></div>
-<script>document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('on');});document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('on');});b.classList.add('on');var p=document.getElementById('tab-'+b.dataset.tab);if(p)p.classList.add('on');});});</script>
+<script>
+var TAB_GROUPS={
+  overview:['tab-overview'],
+  exams:['tab-stem','tab-professional','tab-language','tab-sovereign_cert','tab-security','tab-technology','tab-healthcare','tab-business'],
+  my_exams:['tab-my_exams'],
+  science:['tab-science']
+};
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('on',b.dataset.tab===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('on',(TAB_GROUPS[name]||[]).indexOf(p.id)>-1);});
+}
+document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
+window.setTab=setTab;
+</script>
 <script>(function tryP(){if(document.readyState!=='complete'){window.addEventListener('load',tryP);return;}var tr=0,iv=setInterval(function(){tr++;if(window.__omegaPopulate&&window.__omegaSb){window.__omegaSb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return window.__omegaSb.from('profiles').select('*').eq('id',s.user.id).maybeSingle().then(function(q){window.__omegaPopulate(q.data||{},s.user);});}).catch(function(){});clearInterval(iv);}if(tr>30)clearInterval(iv);},200);})();</script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';

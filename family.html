@@ -24,11 +24,9 @@
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:serif;--B:sans-serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(217,184,106,.06),transparent 55%)}
@@ -126,13 +124,13 @@ a{color:inherit;text-decoration:none}
 @media(max-width:760px){.shell{flex-direction:column}.side{width:100%;height:auto}.status-grid{grid-template-columns:1fr}.family-roles{grid-template-columns:1fr}}
 /* ===== BLOODLINE + HERITAGE TABS (ported, styling rebuilt) ===== */
 #mtab-bloodline .topbar,#mtab-heritage .topbar{padding:1rem 0 1.2rem}
-#mtab-bloodline .topbar .t,#mtab-heritage .topbar .t{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold)}
+#mtab-bloodline .topbar .t,#mtab-heritage .topbar .t{font-family:serif;font-size:1.3rem;color:var(--gold)}
 #mtab-bloodline .topbar .t small,#mtab-heritage .topbar .t small{display:block;font-family:var(--M);font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.4rem}
 
 .node-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem;margin-bottom:1rem}
 .node-card{position:relative;border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));border-radius:2px;padding:1rem}
 .node-card .nc-rel{font-family:var(--M);font-size:.6rem;color:var(--cyan);letter-spacing:.08em}
-.node-card .nc-name{font-family:'Cinzel Decorative',serif;font-size:.9rem;color:var(--ink);margin:.4rem 0}
+.node-card .nc-name{font-family:serif;font-size:.9rem;color:var(--ink);margin:.4rem 0}
 .node-card .nc-dates{font-family:var(--M);font-size:.65rem;color:var(--muted)}
 .node-card .nc-notes{font-size:.75rem;color:var(--muted);margin-top:.4rem;line-height:1.6}
 .node-card .nc-badge{position:absolute;top:.7rem;right:.7rem;font-family:var(--M);font-size:.5rem;color:var(--green);letter-spacing:.06em}
@@ -144,7 +142,7 @@ a{color:inherit;text-decoration:none}
 .form-node{border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:1.2rem}
 .fn-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1rem}
 .fn-field label{display:block;font-family:var(--M);font-size:.58rem;color:var(--muted);letter-spacing:.08em;margin-bottom:.4rem}
-.fn-field input,.fn-field select{width:100%;padding:.5rem .6rem;background:rgba(10,10,15,.6);border:1px solid var(--line);color:var(--ink);font-family:'Rajdhani',sans-serif;border-radius:2px}
+.fn-field input,.fn-field select{width:100%;padding:.5rem .6rem;background:rgba(10,10,15,.6);border:1px solid var(--line);color:var(--ink);font-family:sans-serif;border-radius:2px}
 .fn-field input:focus,.fn-field select:focus{outline:none;border-color:var(--gold)}
 .fn-saved{display:none;margin-top:.8rem;font-family:var(--M);font-size:.7rem;color:var(--green)}
 .fn-saved.show{display:block}
@@ -153,8 +151,8 @@ a{color:inherit;text-decoration:none}
 .tl-node{border-left:2px solid var(--line);padding-left:1rem}
 .tl-node.active-node{border-left-color:var(--gold)}
 .tl-card{padding:.9rem;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px}
-.tl-era{font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.08em;margin-bottom:.4rem}
-.tl-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--ink)}
+.tl-era{font-family:monospace;font-size:.7rem;letter-spacing:.08em;margin-bottom:.4rem}
+.tl-title{font-family:serif;font-size:.85rem;color:var(--ink)}
 .tl-body{font-size:.78rem;color:var(--muted);line-height:1.65;margin-top:.4rem}
 .tl-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem}
 .tl-tag{font-family:var(--M);font-size:.55rem;color:var(--muted);border:1px solid var(--line);padding:.15rem .5rem;border-radius:2px}
@@ -163,7 +161,7 @@ a{color:inherit;text-decoration:none}
 .roots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.8rem;margin-bottom:1rem}
 .root-cell{text-align:center;padding:1rem .7rem;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px}
 .root-cell .glyph{font-size:1.4rem;color:var(--gold);margin-bottom:.4rem}
-.root-cell .name{font-family:'Cinzel Decorative',serif;font-size:.78rem;color:var(--ink)}
+.root-cell .name{font-family:serif;font-size:.78rem;color:var(--ink)}
 .root-cell .desc{font-size:.68rem;color:var(--muted);margin-top:.4rem;line-height:1.5}
 .root-cell .active-mark{font-family:var(--M);font-size:.5rem;color:var(--cyan);letter-spacing:.06em;margin-top:.5rem}
 
@@ -201,9 +199,10 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
-      <div class="mtab-btn active" data-mtab="family" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">FAMILY VAULT</div>
-      <div class="mtab-btn" data-mtab="bloodline" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">BLOODLINE</div>
-      <div class="mtab-btn" data-mtab="heritage" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">HERITAGE ARCHIVE</div>
+      <div class="mtab-btn active" data-mtab="family" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; FAMILY VAULT</div>
+      <div class="mtab-btn" data-mtab="bloodline" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; BLOODLINE</div>
+      <div class="mtab-btn" data-mtab="heritage" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; HERITAGE ARCHIVE</div>
+      <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
     </div>
 
     <div class="mtab-panel" id="mtab-family">
@@ -505,7 +504,7 @@ function drawConstellation(mems){
   });
   function frame(){
     t+=.01;ctx.clearRect(0,0,W,H);
-    ctx.font='9px "Courier Prime",monospace';ctx.textAlign='left';ctx.fillStyle='rgba(201,168,76,0.22)';
+    ctx.font='9px monospace';ctx.textAlign='left';ctx.fillStyle='rgba(201,168,76,0.22)';
     ctx.fillText('ANCESTORS',10,CY-80);ctx.fillText('LINEAGE',10,CY+4);ctx.fillText('DESCENDANTS',10,CY+110);
     /* Stars */
     for(let i=0;i<30;i++){const sx=(i*61+t*3)%W,sy=(i*43+t*2)%H;ctx.beginPath();ctx.arc(sx,sy,.8,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+(0.04+0.08*Math.sin(t+i))+')';ctx.fill();}
@@ -519,9 +518,9 @@ function drawConstellation(mems){
       ctx.fillStyle=gg;ctx.beginPath();ctx.arc(px,py,r+8,0,Math.PI*2);ctx.fill();
       ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);ctx.strokeStyle=n.col+(n.isRoot?'cc':'88');ctx.lineWidth=n.isRoot?2:1.5;ctx.shadowColor=n.col;ctx.shadowBlur=n.isRoot?16:8;ctx.stroke();ctx.shadowBlur=0;
       ctx.fillStyle=n.col;ctx.shadowColor=n.col;ctx.shadowBlur=8;
-      ctx.font='700 '+(n.isRoot?14:10)+'px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('\u03A9',px,py+1);ctx.shadowBlur=0;
-      ctx.fillStyle=n.col;ctx.font='600 7px "Courier Prime",monospace';ctx.fillText(n.name,px,py+r+7);
-      ctx.fillStyle='rgba(133,131,123,0.6)';ctx.font='6px "Courier Prime",monospace';ctx.fillText(n.role.toUpperCase(),px,py+r+15);
+      ctx.font='700 '+(n.isRoot?14:10)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('\u03A9',px,py+1);ctx.shadowBlur=0;
+      ctx.fillStyle=n.col;ctx.font='600 7px monospace';ctx.fillText(n.name,px,py+r+7);
+      ctx.fillStyle='rgba(133,131,123,0.6)';ctx.font='6px monospace';ctx.fillText(n.role.toUpperCase(),px,py+r+15);
     });
     requestAnimationFrame(frame);}frame();
 }
@@ -633,9 +632,9 @@ function drawTree(nodes){
   const rootX=W/2, rootY=50;
   ctx.beginPath(); ctx.arc(rootX,rootY,18,0,Math.PI*2);
   ctx.fillStyle='rgba(201,168,76,0.9)'; ctx.shadowColor='rgba(201,168,76,.6)'; ctx.shadowBlur=20; ctx.fill(); ctx.shadowBlur=0;
-  ctx.fillStyle='rgba(7,7,11,1)'; ctx.font='700 10px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(7,7,11,1)'; ctx.font='700 10px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText('\u03A9',rootX,rootY+1);
-  ctx.fillStyle='rgba(201,168,76,0.8)'; ctx.font='9px "Courier Prime",monospace'; ctx.textAlign='center';
+  ctx.fillStyle='rgba(201,168,76,0.8)'; ctx.font='9px monospace'; ctx.textAlign='center';
   ctx.fillText('S.Y.D. \u2022 ARCHITECT',rootX,rootY+30);
   /* Member nodes */
   if(nodes.length){
@@ -647,12 +646,12 @@ function drawTree(nodes){
       ctx.beginPath(); ctx.moveTo(rootX,rootY+18); ctx.lineTo(nx,ny-14); ctx.stroke();
       ctx.beginPath(); ctx.arc(nx,ny,12,0,Math.PI*2);
       ctx.fillStyle='rgba(139,0,0,0.6)'; ctx.fill();
-      ctx.fillStyle='rgba(233,230,220,0.8)'; ctx.font='8px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(233,230,220,0.8)'; ctx.font='8px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText(n.name.split(' ')[0].slice(0,6).toUpperCase(),nx,ny);
       ctx.fillText(n.rel,nx,ny+22);
     });
   } else {
-    ctx.fillStyle='rgba(133,131,123,0.4)'; ctx.font='10px "Courier Prime",monospace'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(133,131,123,0.4)'; ctx.font='10px monospace'; ctx.textAlign='center';
     ctx.fillText('SEAL NODES BELOW TO BUILD THE CONSTELLATION',W/2,H/2);
   }
   /* Stars */
@@ -807,31 +806,61 @@ async function bootHeritage(){
 window.bootHeritage = bootHeritage;
 
 </script>
+<div class="mtab-panel" id="mtab-science" style="display:none">
+  <div class="pad">
+    <div class="sechead">AUTHORITY FORMULA</div>
+    <div style="border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
+      <div style="font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
+      <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:2">
+        &phi; (PHI) = 1.6180339887<br>
+        e (EULER) = 2.7182818285<br>
+        APEX AUTH = 27.8367 (A=B=C=9)<br>
+        LATTICE = 12&times;12&times;9&times;9&times;9 = 104,976 NODES
+      </div>
+    </div>
+    <div class="sechead">SYSTEM CONSTANTS</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
+      <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
+    </div>
+    <div class="sechead">GATE THRESHOLDS</div>
+    <div style="font-family:var(--M);font-size:9px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
+      SAND GENESIS &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
+      GLASS AWAKENING &bull; AUTH &ge; 2.99<br>
+      IRON FORGING &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
+      STEEL TEMPERING &bull; AUTH &ge; 5.51<br>
+      TITANIUM ASCENT &bull; AUTH &ge; 6.77<br>
+      CARBON PRECISION &bull; AUTH &ge; 8.03<br>
+      GOLD SOVEREIGNTY &bull; AUTH &ge; 9.29<br>
+      PLATINUM LEGACY &bull; AUTH &ge; 10.55<br>
+      OMEGA THRESHOLD &bull; AUTH &ge; 25.517<br>
+      OMEGA MASTER &nbsp;&nbsp;&bull; AUTH &ge; 27.836
+    </div>
+  </div>
+</div>
 <script>
-document.querySelectorAll('.mtab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='#85837b';});
-    document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
+document.querySelectorAll('.mtab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.mtab-btn').forEach(function(b){b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='#85837b';});
+    document.querySelectorAll('.mtab-panel').forEach(function(p){p.style.display='none';});
     btn.classList.add('active');btn.style.borderBottomColor='#C9A84C';btn.style.color='#C9A84C';
     document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
-    if(btn.dataset.mtab==='bloodline' && !window.__bloodBuilt){ window.__bloodBuilt=true; callWhenReady('bootBloodline'); }
-    if(btn.dataset.mtab==='heritage' && !window.__heritBuilt){ window.__heritBuilt=true; callWhenReady('bootHeritage'); }
+    if(btn.dataset.mtab==='bloodline'&&!window.__bloodBuilt){window.__bloodBuilt=true;callWhenReady('bootBloodline');}
+    if(btn.dataset.mtab==='heritage'&&!window.__heritBuilt){window.__heritBuilt=true;callWhenReady('bootHeritage');}
   });
 });
 function callWhenReady(fnName){
-  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  if(typeof window[fnName]==='function'){window[fnName]();return;}
   var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
-    else if(tries>30){ clearInterval(t); }
-  },100);
+  var t=setInterval(function(){tries++;if(typeof window[fnName]==='function'){window[fnName]();clearInterval(t);}else if(tries>30){clearInterval(t);}},100);
 }
 (function(){
   if(location.hash){
-    const t=location.hash.replace('#','');
-    const btn=document.querySelector('.mtab-btn[data-mtab="'+t+'"]');
-    if(btn) btn.click();
+    var h=location.hash.replace('#','');
+    var btn=document.querySelector('.mtab-btn[data-mtab="'+h+'"]');
+    if(btn)btn.click();
   }
 })();
 </script>

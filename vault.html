@@ -2,14 +2,13 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.supabase.co https://fonts.googleapis.com https://fonts.gstatic.com https://esm.sh; script-src 'self' 'unsafe-inline' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.supabase.co https://esm.sh; script-src 'self' 'unsafe-inline' https://esm.sh; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co;">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; Sovereign Vault</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:serif;--R:sans-serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}
@@ -18,31 +17,22 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px}
 .t{font-family:var(--D);font-size:.82rem;color:var(--gold);flex:1}
 .t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-
-/* ── TAB NAV (vertical left sidebar style) ──────────────────── */
-.tab-nav{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;flex-shrink:0}
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;flex-shrink:0;position:sticky;top:0;z-index:40}
+.tab-bar::-webkit-scrollbar{display:none}
 .tab-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 20px;cursor:pointer;border-right:1px solid var(--line);transition:all .18s;border-bottom:3px solid transparent;background:none;color:var(--muted);font-family:var(--M);font-size:7.5px;letter-spacing:2px;white-space:nowrap;border-top:none;border-left:none}
 .tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,168,76,.06)}
 .tab-icon{font-size:18px;line-height:1}
-
-/* ── TAB PANELS ──────────────────────────────────────────────── */
 .tab-panels{flex:1;overflow-y:auto}
 .tab-panel{display:none;padding:clamp(14px,3vw,36px)}
 .tab-panel.active{display:block}
-
-/* ── SECTION HEADERS ─────────────────────────────────────────── */
 .sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .sechead-gold{color:var(--gold)}
 .sechead-purple{color:var(--purple)}
-
-/* ── KPI GRID ────────────────────────────────────────────────── */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
 .kpi-n{font-family:var(--D);font-size:22px;color:var(--kc,var(--gold));line-height:1}
 .kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-
-/* ── RESERVE TAB ─────────────────────────────────────────────── */
 .reserve-hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
 .rh-block{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5)}
 .rh-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
@@ -52,27 +42,19 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .sp-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse-dot 1.4s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 @keyframes div-glow{0%,100%{text-shadow:0 0 8px rgba(63,178,127,.6)}50%{text-shadow:0 0 20px rgba(63,178,127,.9)}}
-
-/* Emblem cube canvas */
 .emblem-block{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;border:1px solid var(--line);border-radius:2px;background:rgba(10,10,15,.5);gap:8px}
-
-/* ── TOKEN GRID ──────────────────────────────────────────────── */
 .token-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:14px}
 .token-card{border:1px solid rgba(201,168,76,.18);background:rgba(10,10,15,.5);padding:12px;border-radius:2px;text-align:center;transition:.18s}
 .token-card:hover{border-color:rgba(201,168,76,.35)}
 .tk-sym{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .tk-bal{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1;margin-bottom:3px}
 .tk-name{font-family:var(--M);font-size:7px;color:rgba(138,134,118,.5)}
-
-/* ── NFT GRID ────────────────────────────────────────────────── */
 .nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px}
 .nft-card{border:1px solid rgba(155,107,240,.2);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;transition:.18s}
 .nft-card:hover{border-color:rgba(155,107,240,.4)}
 .nft-line{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--purple);margin-bottom:5px}
 .nft-name{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:5px}
 .nft-meta{font-family:var(--M);font-size:7.5px;color:var(--muted)}
-
-/* ── EARNING LEDGER TABLE ────────────────────────────────────── */
 .ledger-table{border:1px solid var(--line);border-radius:2px;overflow:hidden}
 .ledger-head{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:8px 12px;background:rgba(226,200,109,.04);border-bottom:1px solid rgba(226,200,109,.1)}
 .ledger-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
@@ -80,8 +62,6 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .ledger-row:hover{background:rgba(201,168,76,.02)}
 .ledger-ts{font-family:var(--M);font-size:8px;color:var(--muted)}
 .ledger-pts{font-family:var(--D);font-size:11px}
-
-/* ── ARTICLES ────────────────────────────────────────────────── */
 .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:14px}
 .article-card{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5);position:relative;overflow:hidden;transition:.18s}
 .article-card:hover{border-color:rgba(201,168,76,.3)}
@@ -89,23 +69,16 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .art-n{font-family:var(--D);font-size:clamp(28px,5vw,48px);color:rgba(201,168,76,.12);position:absolute;top:8px;right:14px;line-height:1}
 .art-title{font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:8px;letter-spacing:.04em}
 .art-text{font-size:11px;line-height:1.75;color:var(--ink);opacity:.75}
-
-/* ── AUDIT LOG TABLE ─────────────────────────────────────────── */
 .audit-table{border:1px solid rgba(0,229,255,.1);border-radius:2px;overflow:hidden}
 .audit-head{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:8px 12px;background:rgba(0,229,255,.04);border-bottom:1px solid rgba(0,229,255,.1)}
 .audit-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)}
 .audit-row{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:9px 12px;border-bottom:1px solid rgba(0,229,255,.04);font-size:11px}
-
-/* ── DISTRIBUTION VISUAL ─────────────────────────────────────── */
-.dist-ring{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:14px}
-.dist-canvas-wrap{position:relative;width:120px;height:120px}
-.dist-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:6px;text-align:center}
-
-/* ── FOOTER ──────────────────────────────────────────────────── */
+.sci-block{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5);margin-bottom:12px}
+.sci-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);margin-bottom:8px}
+.sci-val{font-family:var(--D);font-size:clamp(20px,3.5vw,32px);color:var(--gold);line-height:1.2;margin-bottom:6px}
+.sci-sub{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);line-height:2}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;flex-shrink:0}
 .lf span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted)}
-
-/* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media(max-width:700px){
   .reserve-hero{grid-template-columns:1fr}
   .kpi-row{grid-template-columns:1fr 1fr}
@@ -122,27 +95,23 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- TOPBAR -->
     <div class="topbar">
       <div class="t">SOVEREIGN VAULT
-        <small>M7 &middot; RESERVE &middot; WALLET &middot; NFT &middot; EARNING LEDGER &middot; ARTICLES &middot; AUDIT LOG &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small>
+        <small>M7 &middot; RESERVE &middot; HOLDINGS &middot; LEDGER &middot; SCIENCE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small>
       </div>
       <canvas id="vault-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
 
-    <!-- TAB NAV -->
-    <div class="tab-nav">
-      <div class="tab-btn active" data-tab="reserve"><div class="tab-icon">&#9670;</div>RESERVE</div>
-      <div class="tab-btn" data-tab="wallet"><div class="tab-icon">&#9675;</div>WALLET</div>
-      <div class="tab-btn" data-tab="nft"><div class="tab-icon">&#9671;</div>NFT VAULT</div>
-      <div class="tab-btn" data-tab="earning"><div class="tab-icon">&#9672;</div>EARNING LEDGER</div>
-      <div class="tab-btn" data-tab="articles"><div class="tab-icon">&#937;</div>ARTICLES</div>
-      <div class="tab-btn" data-tab="audit"><div class="tab-icon">&#9632;</div>AUDIT LOG</div>
+    <!-- TAB BAR -->
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" onclick="setTab('reserve')" role="tab" aria-selected="true"><div class="tab-icon">&#9670;</div>RESERVE</button>
+      <button class="tab-btn" onclick="setTab('holdings')" role="tab" aria-selected="false"><div class="tab-icon">&#9675;</div>HOLDINGS</button>
+      <button class="tab-btn" onclick="setTab('ledger')" role="tab" aria-selected="false"><div class="tab-icon">&#9672;</div>LEDGER</button>
+      <button class="tab-btn" onclick="setTab('science')" role="tab" aria-selected="false"><div class="tab-icon">&#9881;</div>SCIENCE</button>
     </div>
 
     <div class="tab-panels">
 
-    <!-- ════════════════════════════════════════════════════════════
-         TAB 1: RESERVE
-         ════════════════════════════════════════════════════════════ -->
+    <!-- ── TAB 1: RESERVE ─────────────────────────────────────── -->
     <div class="tab-panel active" id="tab-reserve">
       <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="rsv-aum">&#937; --</div><div class="kpi-l">ABSOLUTE RESERVE (AUM)</div></div>
@@ -196,20 +165,19 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       <div data-lattice="canonical" data-nodes="0" style="cursor:pointer;max-width:500px" title="Click for 3D lattice view"></div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════
-         TAB 2: WALLET
-         ════════════════════════════════════════════════════════════ -->
-    <div class="tab-panel" id="tab-wallet">
+    <!-- ── TAB 2: HOLDINGS (wallet + NFT) ─────────────────────── -->
+    <div class="tab-panel" id="tab-holdings">
       <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="wallet-total">&#937; --</div><div class="kpi-l">TOTAL WALLET BALANCE</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="wallet-count">--</div><div class="kpi-l">TOKEN TYPES HELD</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="nft-count">--</div><div class="kpi-l">NFTs HELD</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN TOKEN TYPES</div></div>
+        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">108</div><div class="kpi-l">NFT TYPES (12&times;9)</div></div>
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">PENDING</div><div class="kpi-l">ECONOMY ACTIVATION</div></div>
       </div>
 
       <div class="sechead sechead-gold">12 SOVEREIGN TOKEN BALANCES &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
       <div class="token-grid" id="wallet-token-grid">
-        <!-- Dynamically populated or shown as pending -->
         <div class="token-card"><div class="tk-sym">ARENITE</div><div class="tk-bal">--</div><div class="tk-name">ARIES &mdash; FOUNDER TOKEN</div></div>
         <div class="token-card"><div class="tk-sym">TAURITE</div><div class="tk-bal">--</div><div class="tk-name">TAURUS SOVEREIGN</div></div>
         <div class="token-card"><div class="tk-sym">GEMITE</div><div class="tk-bal">--</div><div class="tk-name">GEMINI SOVEREIGN</div></div>
@@ -224,27 +192,14 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="token-card"><div class="tk-sym">PISCITE</div><div class="tk-bal">--</div><div class="tk-name">PISCES SOVEREIGN</div></div>
       </div>
 
-      <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.4);font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:var(--muted);line-height:2">
+      <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.4);font-family:var(--M);font-size:8.5px;letter-spacing:1px;color:var(--muted);line-height:2;margin-bottom:20px">
         12 SOVEREIGN TOKEN TYPES &middot; ONE PER ZODIAC TRACK &middot; ARENITE IS THE FOUNDER TOKEN (ARIES)<br>
         TOKEN ECONOMY ACTIVATES IN PHASE III &middot; KYC/AML COMPLIANCE &middot; LEGAL REVIEW REQUIRED PER JURISDICTION<br>
         CURRENT STATUS: TREASURY SIMULATION &middot; BALANCES ARE PROVISIONAL UNTIL ECONOMY GOES LIVE
       </div>
-    </div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         TAB 3: NFT VAULT
-         ════════════════════════════════════════════════════════════ -->
-    <div class="tab-panel" id="tab-nft">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="nft-count">--</div><div class="kpi-l">NFTs HELD</div></div>
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN LINES</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">108</div><div class="kpi-l">TOTAL NFT TYPES (12&times;9)</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">PHASE II</div><div class="kpi-l">MINT STATUS</div></div>
-      </div>
 
       <div class="sechead sechead-purple">NFT VAULT &middot; 12 SOVEREIGN LINES &middot; 9 TIERS EACH = 108 TYPES</div>
       <div class="nft-grid" id="nft-grid">
-        <!-- 12 Sovereign NFT Lines preview -->
         <div class="nft-card"><div class="nft-line">ARIES LINE</div><div class="nft-name">ARENITE GENESIS</div><div class="nft-meta">TIER 1 &middot; PHASE II &middot; PENDING</div></div>
         <div class="nft-card"><div class="nft-line">TAURUS LINE</div><div class="nft-name">TAURITE GENESIS</div><div class="nft-meta">TIER 1 &middot; PHASE II &middot; PENDING</div></div>
         <div class="nft-card"><div class="nft-line">GEMINI LINE</div><div class="nft-name">GEMITE GENESIS</div><div class="nft-meta">TIER 1 &middot; PHASE II &middot; PENDING</div></div>
@@ -265,21 +220,19 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════
-         TAB 4: EARNING LEDGER
-         ════════════════════════════════════════════════════════════ -->
-    <div class="tab-panel" id="tab-earning">
+    <!-- ── TAB 3: LEDGER (earning + audit) ────────────────────── -->
+    <div class="tab-panel" id="tab-ledger">
       <div class="kpi-row" data-reveal="fade-up">
         <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="earn-total">--</div><div class="kpi-l">TOTAL POINTS EARNED</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="earn-count">--</div><div class="kpi-l">ACTIONS COMPLETED</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="earn-a">--</div><div class="kpi-l">AXIS A &mdash; KNOWLEDGE</div></div>
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="earn-b">--</div><div class="kpi-l">AXIS B &mdash; MASTERY</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="earn-c">--</div><div class="kpi-l">AXIS C &mdash; CONTRIBUTION</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">LIVE</div><div class="kpi-l">LEDGER STATUS</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="audit-count">--</div><div class="kpi-l">AUDIT EVENTS</div></div>
       </div>
 
       <div class="sechead sechead-gold">SOVEREIGN EARNING LEDGER &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="ledger-table">
+      <div class="ledger-table" style="margin-bottom:22px">
         <div class="ledger-head">
           <div class="ledger-hcell">TIMESTAMP</div>
           <div class="ledger-hcell">TASK / ACTION</div>
@@ -288,34 +241,8 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
         <div id="earn-log"><div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EARNING LEDGER&hellip;</span></div></div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════════════════
-         TAB 5: ARTICLES — 11 IMMUTABLE SOVEREIGN ARTICLES
-         ════════════════════════════════════════════════════════════ -->
-    <div class="tab-panel" id="tab-articles">
-      <div class="sechead sechead-gold">&#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY &middot; SEALED &middot; IRREVOCABLE &middot; GENESIS BLOCK</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;padding:10px 14px;border:1px solid var(--line);border-radius:2px;background:rgba(201,168,76,.03)">
-        SOVEREIGN FOUNDER: MAJOR SLEIMAN YOUSSEF DAGHER &middot; LEBANESE ORDER OF ENGINEERS NO. 30875<br>
-        ALL ARTICLES ARE SEALED INTO THE GENESIS BLOCK &middot; IRREVOCABLE BY ANY MECHANISM OR JURISDICTION
-      </div>
-      <div class="articles-grid" id="articles-grid">
-        <!-- Rendered by JS -->
-        <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px">LOADING COVENANT ARTICLES&hellip;</div>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         TAB 6: AUDIT LOG
-         ════════════════════════════════════════════════════════════ -->
-    <div class="tab-panel" id="tab-audit">
-      <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="audit-count">--</div><div class="kpi-l">AUDIT EVENTS</div></div>
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="audit-last">--</div><div class="kpi-l">LAST EVENT</div></div>
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">LIVE</div><div class="kpi-l">LEDGER STATUS</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">RLS</div><div class="kpi-l">SECURITY MODE</div></div>
-      </div>
-      <div class="sechead" data-reveal="fade-up" style="color:var(--cyan)">
+      <div class="sechead" style="color:var(--cyan)">
         <span>TREASURY &amp; ACCESS AUDIT LOG &middot; SOVEREIGN EVENT CHAIN</span>
         <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px">&#8635; REFRESH</button>
       </div>
@@ -330,9 +257,57 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
     </div>
 
+    <!-- ── TAB 4: SCIENCE ─────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-science">
+      <div class="sechead sechead-gold">SYSTEM CONSTANTS &middot; IMMUTABLE SOVEREIGN MATHEMATICS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px">
+        <div class="sci-block"><div class="sci-label">AUTHORITY APEX</div><div class="sci-val">27.8367</div><div class="sci-sub">sqrt(9&#179;+9&#179;+9&#179;)&times;&phi;/e = sqrt(2187)&times;1.6180/2.7183</div></div>
+        <div class="sci-block"><div class="sci-label">GOLDEN RATIO (&phi;)</div><div class="sci-val">1.6180339887</div><div class="sci-sub">PHI &middot; FIBONACCI LIMIT &middot; SOVEREIGNTY CONSTANT</div></div>
+        <div class="sci-block"><div class="sci-label">EULER&apos;S NUMBER (e)</div><div class="sci-val">2.7182818285</div><div class="sci-sub">EU &middot; NATURAL LOGARITHM BASE &middot; GROWTH ENGINE</div></div>
+        <div class="sci-block"><div class="sci-label">SOVEREIGN FREQUENCY</div><div class="sci-val">9.17 Hz</div><div class="sci-sub">THETA-ALPHA BOUNDARY &middot; FLOW STATE &middot; 9 MIN 17 SEC TRIAL</div></div>
+        <div class="sci-block"><div class="sci-label">LATTICE NODES</div><div class="sci-val">104,976</div><div class="sci-sub">12 &times; 12 &times; 9 &times; 9 &times; 9 = CANONICAL NETWORK SIZE</div></div>
+        <div class="sci-block"><div class="sci-label">INNER CUBE (PLANE)</div><div class="sci-val">729</div><div class="sci-sub">9&#179; = SOVEREIGNTY CORE &middot; A&#179;+B&#179;+C&#179; AT APEX = 2187</div></div>
+      </div>
+
+      <div class="sechead sechead-gold">AUTHORITY FORMULA &middot; LIVE CALCULATION ENGINE</div>
+      <div style="border:1px solid rgba(201,168,76,.2);padding:20px;border-radius:2px;background:rgba(10,10,15,.8);margin-bottom:20px;font-family:var(--M);font-size:9px;letter-spacing:1.5px;line-height:2.2;color:var(--muted)">
+        <div style="font-family:var(--D);font-size:18px;color:var(--gold);margin-bottom:12px">AUTH = &radic;(A&#179; + B&#179; + C&#179;) &times; &phi; / e</div>
+        A = KNOWLEDGE &middot; Axis A tracks learning events<br>
+        B = MASTERY &middot; Axis B tracks demonstrated skills<br>
+        C = CONTRIBUTION &middot; Axis C tracks what you give to the Order<br>
+        &phi; = 1.6180339887 (Golden Ratio) &middot; scales authority toward ascension<br>
+        e = 2.7182818285 (Euler) &middot; grounds growth in natural law<br>
+        APEX A=B=C=9 &rarr; sqrt(2187) &times; &phi;/e = <span style="color:var(--gold)">27.8367</span>
+      </div>
+
+      <div class="sechead sechead-gold">12 AUTHORITY GATES &middot; PROGRESSION THRESHOLDS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:20px">
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE I</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">2.3197</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">INITIATE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE II</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">4.6394</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">ACOLYTE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE III</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">6.9592</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">SCHOLAR</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IV</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">9.2789</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">KEEPER</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE V</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">11.5986</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">GUARDIAN</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">13.9183</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">ARCHITECT</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">16.2381</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">SOVEREIGN</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VIII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">18.5578</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">VANGUARD</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IX</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">20.8775</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">HERALD</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE X</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">23.1972</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">ORACLE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE XI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">25.5170</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">PRIME</div></div>
+        <div style="border:1px solid rgba(201,168,76,.4);padding:10px 14px;border-radius:2px;background:rgba(201,168,76,.06)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold)">GATE XII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">27.8367</div><div style="font-family:var(--M);font-size:8px;color:var(--gold)">APEX &middot; SOVEREIGN FOUNDER</div></div>
+      </div>
+
+      <div class="sechead sechead-gold">&#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY &middot; SEALED &middot; GENESIS BLOCK</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;padding:10px 14px;border:1px solid var(--line);border-radius:2px;background:rgba(201,168,76,.03)">
+        SOVEREIGN FOUNDER: MAJOR SLEIMAN YOUSSEF DAGHER &middot; LEBANESE ORDER OF ENGINEERS NO. 30875<br>
+        ALL ARTICLES ARE SEALED INTO THE GENESIS BLOCK &middot; IRREVOCABLE BY ANY MECHANISM OR JURISDICTION
+      </div>
+      <div class="articles-grid" id="articles-grid">
+        <div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:16px">LOADING COVENANT ARTICLES&hellip;</div>
+      </div>
+    </div>
+
     </div><!-- end tab-panels -->
 
-    <!-- PAGE EMBLEM -->
     <div data-page-emblem="vault" style="margin:16px auto 0"></div>
     <div class="lf">
       <span>&#937; SOVEREIGN VAULT &middot; M7 &middot; ALL RIGHTS RESERVED</span>
@@ -341,28 +316,18 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
   </main>
 </div>
 
-<!-- ── TAB SWITCHER ───────────────────────────────────────────────────── -->
 <script>
-(function(){
-  var btns=document.querySelectorAll('.tab-btn[data-tab]');
-  var panels=document.querySelectorAll('.tab-panel');
-  btns.forEach(function(btn){
-    btn.addEventListener('click',function(){
-      btns.forEach(function(b){b.classList.remove('active');});
-      panels.forEach(function(p){p.classList.remove('active');});
-      btn.classList.add('active');
-      var p=document.getElementById('tab-'+btn.getAttribute('data-tab'));
-      if(p) p.classList.add('active');
-      if(btn.getAttribute('data-tab')==='audit') setTimeout(loadAuditLog,200);
-    });
-  });
-})();
+function setTab(name){
+  var tabs=['reserve','holdings','ledger','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  if(name==='ledger')setTimeout(function(){if(window.loadAuditLog)window.loadAuditLog();},200);
+}
 </script>
 
 <!-- ── CANVAS EMBLEMS ─────────────────────────────────────────────────── -->
 <script>
 (function(){
-  /* VAULT CUBE — 9×9×9 isometric */
   function drawVaultCube(canvas){
     var ctx=canvas.getContext('2d');
     var W=canvas.width,H=canvas.height;
@@ -370,12 +335,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     var t=0;
     function frame(){
       ctx.clearRect(0,0,W,H);
-      var anim=t*0.004;
-      var cells=[];
-      var c3=0;
+      var cells=[];var c3=0;
       for(var z=0;z<N;z++)for(var y=0;y<N;y++)for(var x=0;x<N;x++){
         c3++;
-        var sx=cx+x*cs+y*(-cs)+0;
+        var sx=cx+x*cs+y*(-cs);
         var sy=cy+x*cs*.5+y*cs*.5+z*(-cs);
         cells.push({sx:sx,sy:sy,d:x+y-z,idx:c3});
       }
@@ -383,41 +346,37 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       cells.forEach(function(c){
         var lit=c.idx<=(Math.floor(t/3)%729)+1;
         var alpha=lit?0.7:0.04;
-        /* top */ctx.beginPath();ctx.moveTo(c.sx+cs,c.sy);ctx.lineTo(c.sx,c.sy+cs*.5);ctx.lineTo(c.sx-cs,c.sy);ctx.lineTo(c.sx,c.sy-cs*.5);ctx.closePath();
+        ctx.beginPath();ctx.moveTo(c.sx+cs,c.sy);ctx.lineTo(c.sx,c.sy+cs*.5);ctx.lineTo(c.sx-cs,c.sy);ctx.lineTo(c.sx,c.sy-cs*.5);ctx.closePath();
         ctx.fillStyle=lit?'rgba(201,168,76,'+alpha+')':'rgba(255,255,255,.02)';ctx.fill();
         ctx.strokeStyle=lit?'rgba(201,168,76,.3)':'rgba(201,168,76,.05)';ctx.lineWidth=.5;ctx.stroke();
-        /* right */ctx.beginPath();ctx.moveTo(c.sx+cs,c.sy);ctx.lineTo(c.sx+cs,c.sy+cs*.5);ctx.lineTo(c.sx,c.sy+cs);ctx.lineTo(c.sx,c.sy+cs*.5);ctx.closePath();
+        ctx.beginPath();ctx.moveTo(c.sx+cs,c.sy);ctx.lineTo(c.sx+cs,c.sy+cs*.5);ctx.lineTo(c.sx,c.sy+cs);ctx.lineTo(c.sx,c.sy+cs*.5);ctx.closePath();
         ctx.fillStyle=lit?'rgba(150,110,28,'+alpha*.7+')':'rgba(255,255,255,.01)';ctx.fill();ctx.stroke();
-        /* left */ctx.beginPath();ctx.moveTo(c.sx,c.sy+cs*.5);ctx.lineTo(c.sx,c.sy+cs);ctx.lineTo(c.sx-cs,c.sy+cs*.5);ctx.lineTo(c.sx-cs,c.sy);ctx.closePath();
+        ctx.beginPath();ctx.moveTo(c.sx,c.sy+cs*.5);ctx.lineTo(c.sx,c.sy+cs);ctx.lineTo(c.sx-cs,c.sy+cs*.5);ctx.lineTo(c.sx-cs,c.sy);ctx.closePath();
         ctx.fillStyle=lit?'rgba(100,75,18,'+alpha*.5+')':'rgba(255,255,255,.01)';ctx.fill();ctx.stroke();
       });
-      ctx.font='bold '+(cs*1.1)+'px "Cinzel Decorative",serif';
+      ctx.font='bold '+(cs*1.1)+'px serif';
       ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillStyle='rgba(201,168,76,'+(0.1+0.07*Math.sin(anim*2))+')';
+      ctx.fillStyle='rgba(201,168,76,'+(0.1+0.07*Math.sin(t*.008))+')';
       ctx.shadowColor='#C9A84C';ctx.shadowBlur=cs*.8;
-      ctx.fillText('\u03A9',cx,cy+N*cs*.25);
+      ctx.fillText('Ω',cx,cy+N*cs*.25);
       ctx.shadowBlur=0;
       t++;requestAnimationFrame(frame);
     }
     frame();
   }
 
-  /* DISTRIBUTION EMBLEM — 12-fold rotating ring */
   function drawDistRing(canvas){
     var ctx=canvas.getContext('2d');
     var W=canvas.width,H=canvas.height,cx=W/2,cy=H/2,r=W*.38;
     var t=0;
-    var SIGNS=['\u2648','\u2649','\u264A','\u264B','\u264C','\u264D','\u264E','\u264F','\u2650','\u2651','\u2652','\u2653'];
+    var SIGNS=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
     function frame(){
       ctx.clearRect(0,0,W,H);
       var rot=t*0.008;
-      /* Outer ring */
       ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
       ctx.strokeStyle='rgba(201,168,76,.25)';ctx.lineWidth=1.5;ctx.stroke();
-      /* Inner ring */
       ctx.beginPath();ctx.arc(cx,cy,r*.6,0,Math.PI*2);
       ctx.strokeStyle='rgba(0,229,255,.12)';ctx.lineWidth=.8;ctx.stroke();
-      /* 12 nodes */
       for(var i=0;i<12;i++){
         var angle=rot+i*Math.PI/6;
         var nx=cx+Math.cos(angle)*r,ny=cy+Math.sin(angle)*r;
@@ -425,16 +384,15 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         ctx.beginPath();ctx.arc(nx,ny,active?5:3,0,Math.PI*2);
         ctx.fillStyle=active?'rgba(226,200,109,1)':'rgba(201,168,76,.4)';ctx.fill();
         if(active){ctx.shadowColor='#C9A84C';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;}
-        ctx.font=(active?'bold ':'')+((r*.18))+'px "Courier Prime",monospace';
+        ctx.font=(active?'bold ':'')+((r*.18))+'px monospace';
         ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.fillStyle=active?'rgba(226,200,109,.9)':'rgba(201,168,76,.3)';
         ctx.fillText(SIGNS[i],cx+Math.cos(angle)*r*.78,cy+Math.sin(angle)*r*.78);
       }
-      /* Center Ω */
-      ctx.font='bold '+(r*.45)+'px "Cinzel Decorative",serif';
+      ctx.font='bold '+(r*.45)+'px serif';
       ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillStyle='rgba(201,168,76,'+(0.35+0.15*Math.sin(t*.05))+')';
-      ctx.fillText('\u03A9',cx,cy);
+      ctx.fillText('Ω',cx,cy);
       t++;requestAnimationFrame(frame);
     }
     frame();
@@ -456,11 +414,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 (function(){
   var ARTS=[
     {n:"I",  title:"ABSOLUTE OWNERSHIP",   col:"#C9A84C",text:"100% absolute ownership — no co-founders, no partners, no shareholders. The Order belongs wholly and irrevocably to Major Sleiman Youssef Dagher. Lebanese Order of Engineers No. 30875."},
-    {n:"II", title:"MASTER STAKE",         col:"#E2C86D",text:"51% Master Stake — 467,756,700,000 \u03A9 permanently locked in the Sovereign Vault. This stake cannot be diluted, transferred, or overridden by any mechanism or jurisdiction."},
+    {n:"II", title:"MASTER STAKE",         col:"#E2C86D",text:"51% Master Stake — 467,756,700,000 Ω permanently locked in the Sovereign Vault. This stake cannot be diluted, transferred, or overridden by any mechanism or jurisdiction."},
     {n:"III",title:"IRREVOCABLE PROPERTY", col:"#C9A84C",text:"Irrevocable Property Documents hashed into the Genesis Block. All intellectual property, code, design, architecture, and platform identity belongs exclusively to the Sovereign Founder."},
     {n:"IV", title:"SOVEREIGN DIRECTIVE",  col:"#E2C86D",text:"The 999-Point Blueprint is sealed in the Immutable Ledger. Every module, phase, and governance rule follows the sovereign directive — unchanged and unchangeable."},
-    {n:"V",  title:"AUTHORITY FORMULA",    col:"#00E5FF",text:"AUTH=\u221a(A\u00b3+B\u00b3+C\u00b3)\u00d7\u03c6/e. Apex=27.8367. This formula is the permanent engine of progression. A\u00b3=B\u00b3=C\u00b3=729 at peak. The Sovereign Founder holds AUTH=27.8367 permanently."},
-    {n:"VI", title:"THE 9\u00d79\u00d79 LATTICE",col:"#9B6BF0",text:"729 inner nodes. The Plane. Nested within 12\u00d712\u00d79\u00b3=104,976 canonical nodes. The lattice is the spine of all progression, certification, and achievement in the platform."},
+    {n:"V",  title:"AUTHORITY FORMULA",    col:"#00E5FF",text:"AUTH=√(A³+B³+C³)×φ/e. Apex=27.8367. This formula is the permanent engine of progression. A³=B³=C³=729 at peak. The Sovereign Founder holds AUTH=27.8367 permanently."},
+    {n:"VI", title:"THE 9×9×9 LATTICE",col:"#9B6BF0",text:"729 inner nodes. The Plane. Nested within 12×12×9³=104,976 canonical nodes. The lattice is the spine of all progression, certification, and achievement in the platform."},
     {n:"VII",title:"TRIAL SOVEREIGNTY",    col:"#C9A84C",text:"Only the Sovereign Founder may grant, extend, renew, revoke, reject, or make permanent any access. Trial duration: 9 minutes 17 seconds. No authority supersedes the Founder's directive."},
     {n:"VIII",title:"DEDICATION LAW",      col:"#E2C86D",text:"Members must dedicate a minimum of 9 hours, 17 minutes, and 17 seconds (33,437 seconds) per day to the platform to advance their standing and rank among peers."},
     {n:"IX", title:"TOKEN SOVEREIGNTY",    col:"#C9A84C",text:"12 sovereign token types, one per track, one per zodiac sign. ARENITE is the Founder Token — permanently held at apex by the Sovereign Founder. The token economy is dormant until legal review is complete."},
@@ -470,24 +428,26 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
   function renderArts(){
     var grid=document.getElementById('articles-grid');
     if(!grid)return;
-    grid.innerHTML=ARTS.map(function(a){
-      return '<div class="article-card">'
-        +'<div class="art-n">'+a.n+'</div>'
-        +'<div class="art-title" style="color:'+a.col+'">ARTICLE '+a.n+' &mdash; '+a.title.toUpperCase()+'</div>'
-        +'<div class="art-text">'+a.text+'</div>'
-        +'</div>';
-    }).join('');
+    grid.innerHTML='';
+    ARTS.forEach(function(a){
+      var card=document.createElement('div');
+      card.className='article-card';
+      var num=document.createElement('div');num.className='art-n';num.textContent=a.n;
+      var title=document.createElement('div');title.className='art-title';title.style.color=a.col;title.textContent='ARTICLE '+a.n+' — '+a.title.toUpperCase();
+      var text=document.createElement('div');text.className='art-text';text.textContent=a.text;
+      card.appendChild(num);card.appendChild(title);card.appendChild(text);
+      grid.appendChild(card);
+    });
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',renderArts);
   else renderArts();
 })();
 </script>
 
-<!-- ── MAIN MODULE: AUTH + ALL TAB DATA ──────────────────────────────── -->
+<!-- ── MAIN MODULE ────────────────────────────────────────────────────── -->
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-var supabase=sb;
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();}catch(e){return '--';}}
@@ -500,58 +460,61 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
 
-    /* REVEAL APP */
     document.getElementById('app').style.display='flex';
     if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
     window.__omegaUserLoaded=true;
-    (function tryVaultRing(){var rv=document.getElementById('vault-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryVaultRing,350);})();
+    (function tryRing(){var rv=document.getElementById('vault-ring-auth');if(!rv)return;if(window.OmegaRing){window.OmegaRing.fromAuth(rv,pr);return;}setTimeout(tryRing,350);})();
 
-    /* AUTHORITY */
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001);
     var b=Number(pr.is_owner?9:pr.axis_b||0.001);
     var c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));
-    sid('earn-a',a.toFixed(3)); sid('earn-b',b.toFixed(3)); sid('earn-c',c.toFixed(3));
+    sid('earn-a',a.toFixed(3));sid('earn-b',b.toFixed(3));sid('earn-c',c.toFixed(3));
 
-    /* WALLET TOKENS */
     try{
       var wb=await sb.from('wallet_balances').select('*').eq('user_id',sess.user.id);
       var wallets=wb.data||[];
       var total=wallets.reduce(function(s,w){return s+Number(w.balance||0);},0);
-      sid('wallet-total','\u03A9 '+(total>0?total.toFixed(3):'0.000'));
+      sid('wallet-total','Ω '+(total>0?total.toFixed(3):'0.000'));
       sid('wallet-count',wallets.length||'12');
       if(wallets.length){
         var tg=document.getElementById('wallet-token-grid');
-        if(tg)tg.innerHTML=wallets.map(function(w){
-          return '<div class="token-card">'
-            +'<div class="tk-sym">'+String(w.token_symbol||'?').toUpperCase()+'</div>'
-            +'<div class="tk-bal">'+Number(w.balance||0).toFixed(3)+'</div>'
-            +'<div class="tk-name">'+String(w.token_name||'SOVEREIGN TOKEN')+'</div>'
-            +'</div>';
-        }).join('');
+        if(tg){
+          tg.innerHTML='';
+          wallets.forEach(function(w){
+            var card=document.createElement('div');card.className='token-card';
+            var sym=document.createElement('div');sym.className='tk-sym';sym.textContent=String(w.token_symbol||'?').toUpperCase();
+            var bal=document.createElement('div');bal.className='tk-bal';bal.textContent=Number(w.balance||0).toFixed(3);
+            var nm=document.createElement('div');nm.className='tk-name';nm.textContent=String(w.token_name||'SOVEREIGN TOKEN');
+            card.appendChild(sym);card.appendChild(bal);card.appendChild(nm);
+            tg.appendChild(card);
+          });
+        }
       }
     }catch(e){}
 
-    /* NFT VAULT */
     try{
       var nf=await sb.from('user_assets').select('*').eq('user_id',sess.user.id).eq('asset_type','nft');
       var nfts=nf.data||[];
       sid('nft-count',nfts.length||'0');
       if(nfts.length){
         var ng=document.getElementById('nft-grid');
-        if(ng)ng.innerHTML=nfts.map(function(n){
-          return '<div class="nft-card">'
-            +'<div class="nft-line">'+String(n.track_name||'SOVEREIGN').toUpperCase()+' LINE</div>'
-            +'<div class="nft-name">'+String(n.name||'SOVEREIGN NFT').toUpperCase()+'</div>'
-            +'<div class="nft-meta">'+fmt(n.created_at)+'</div>'
-            +'</div>';
-        }).join('');
+        if(ng){
+          ng.innerHTML='';
+          nfts.forEach(function(n){
+            var card=document.createElement('div');card.className='nft-card';
+            var line=document.createElement('div');line.className='nft-line';line.textContent=String(n.track_name||'SOVEREIGN').toUpperCase()+' LINE';
+            var name=document.createElement('div');name.className='nft-name';name.textContent=String(n.name||'SOVEREIGN NFT').toUpperCase();
+            var meta=document.createElement('div');meta.className='nft-meta';meta.textContent=fmt(n.created_at);
+            card.appendChild(line);card.appendChild(name);card.appendChild(meta);
+            ng.appendChild(card);
+          });
+        }
       }
     }catch(e){}
 
-    /* EARNING LEDGER */
     try{
       var tc=await sb.from('task_completions').select('*').eq('user_id',sess.user.id).order('completed_at',{ascending:false}).limit(40);
       var tasks=tc.data||[];
@@ -559,70 +522,76 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
       sid('earn-total',tot.toFixed(3)+' PTS');
       sid('earn-count',tasks.length);
       var el=document.getElementById('earn-log');
-      if(el)el.innerHTML=tasks.length?tasks.map(function(t){
-        var col={'a':'var(--gold)','b':'var(--purple)','c':'var(--green)'}[t.axis_type]||'var(--muted)';
-        return '<div class="ledger-row">'
-          +'<span class="ledger-ts">'+fmt(t.completed_at)+'</span>'
-          +'<span>'+String(t.task_name||'').toUpperCase()+'</span>'
-          +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">AXIS '+String(t.axis_type||'A').toUpperCase()+'</span>'
-          +'<span class="ledger-pts" style="color:'+col+'">+'+Number(t.points_earned||0.001).toFixed(3)+'</span>'
-          +'</div>';
-      }).join('')
-      :'<div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">NO EARNINGS YET \u00b7 COMPLETE MATRIX TASKS TO BEGIN</span></div>';
+      if(el){
+        if(tasks.length){
+          el.innerHTML='';
+          tasks.forEach(function(t){
+            var col={'a':'var(--gold)','b':'var(--purple)','c':'var(--green)'}[t.axis_type]||'var(--muted)';
+            var row=document.createElement('div');row.className='ledger-row';
+            row.innerHTML='<span class="ledger-ts">'+fmt(t.completed_at)+'</span>'
+              +'<span>'+String(t.task_name||'').toUpperCase()+'</span>'
+              +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">AXIS '+String(t.axis_type||'A').toUpperCase()+'</span>'
+              +'<span class="ledger-pts" style="color:'+col+'">+'+Number(t.points_earned||0.001).toFixed(3)+'</span>';
+            el.appendChild(row);
+          });
+        }else{
+          el.innerHTML='<div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">NO EARNINGS YET · COMPLETE MATRIX TASKS TO BEGIN</span></div>';
+        }
+      }
     }catch(e){
       var el2=document.getElementById('earn-log');
       if(el2)el2.innerHTML='<div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">RUN MATRIX_ENGINE.SQL TO ACTIVATE EARNING LEDGER</span></div>';
     }
 
-    /* AUTO-LOAD AUDIT */
     loadAuditLog();
-
   }catch(e){
-    /* Still reveal so user sees something */
     var app=document.getElementById('app');
     if(app)app.style.display='flex';
     console.warn('vault init:',e);
   }
 })();
 
-/* AUDIT LOG LOADER */
 window.loadAuditLog=async function(){
   var list=document.getElementById('audit-log-list');
   var cnt=document.getElementById('audit-count');
-  var last=document.getElementById('audit-last');
   if(!list)return;
   try{
     var r=await sb.rpc('access_audit_log');
     var rows=(r.data||[]).slice(0,60);
     if(!rows.length)throw new Error('empty');
     if(cnt)cnt.textContent=rows.length;
-    if(last&&rows[0])last.textContent=new Date(rows[0].created_at||Date.now()).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}).toUpperCase();
-    list.innerHTML=rows.map(function(row){
+    list.innerHTML='';
+    rows.forEach(function(row){
       var ts=new Date(row.created_at||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();
       var evt=String(row.action||row.event||'EVENT').toUpperCase().slice(0,60);
       var typ=String(row.event_type||'LOG').toUpperCase().slice(0,12);
       var stat=String(row.status||'RECORDED').toUpperCase();
       var col=stat==='CONFIRMED'?'var(--green)':stat==='SEALED'?'var(--gold)':stat==='REJECTED'?'var(--crim)':'var(--muted)';
-      return '<div class="audit-row">'
-        +'<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+ts+'</span>'
+      var r2=document.createElement('div');r2.className='audit-row';
+      r2.innerHTML='<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+ts+'</span>'
         +'<span>'+evt+'</span>'
         +'<span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+typ+'</span>'
-        +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">'+stat.slice(0,10)+'</span>'
-        +'</div>';
-    }).join('');
+        +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">'+stat.slice(0,10)+'</span>';
+      list.appendChild(r2);
+    });
   }catch(e){
     if(cnt)cnt.textContent='5+';
     var DEMO=[
       {ts:'2026-07-27',evt:'11 ARTICLES SEALED INTO GENESIS BLOCK',typ:'COVENANT',st:'SEALED'},
-      {ts:'2026-07-27',evt:'OWNER APEX LOCKED: AUTH=27.8367 = sqrt(A\u00b3+B\u00b3+C\u00b3)\u00d7\u03c6/e',typ:'APEX',st:'CONFIRMED'},
+      {ts:'2026-07-27',evt:'OWNER APEX LOCKED: AUTH=27.8367 = sqrt(A³+B³+C³)×φ/e',typ:'APEX',st:'CONFIRMED'},
       {ts:'2026-07-27',evt:'TRIAL SYSTEM ACTIVE: 9 MIN 17 SEC = 557 SECONDS',typ:'ACCESS',st:'CONFIRMED'},
       {ts:'2026-07-27',evt:'DEDICATION TARGET: 9H 17M 17S = 33,437 SECONDS',typ:'SYSTEM',st:'CONFIRMED'},
       {ts:'2026-07-27',evt:'RLS ENABLED ON ALL 42 DATABASE TABLES',typ:'SECURITY',st:'CONFIRMED'}
     ];
-    if(list)list.innerHTML=DEMO.map(function(r){
-      var col=r.st==='CONFIRMED'?'var(--green)':r.st==='SEALED'?'var(--gold)':'var(--muted)';
-      return '<div class="audit-row"><span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+r.ts+'</span><span>'+r.evt+'</span><span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+r.typ+'</span><span style="font-family:var(--M);font-size:8px;color:'+col+'">'+r.st+'</span></div>';
-    }).join('');
+    if(list){
+      list.innerHTML='';
+      DEMO.forEach(function(r){
+        var col=r.st==='CONFIRMED'?'var(--green)':r.st==='SEALED'?'var(--gold)':'var(--muted)';
+        var row=document.createElement('div');row.className='audit-row';
+        row.innerHTML='<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+r.ts+'</span><span>'+r.evt+'</span><span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+r.typ+'</span><span style="font-family:var(--M);font-size:8px;color:'+col+'">'+r.st+'</span>';
+        list.appendChild(row);
+      });
+    }
   }
 };
 </script>

@@ -31,11 +31,9 @@
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:serif;--B:sans-serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
@@ -448,20 +446,10 @@ a{color:inherit;text-decoration:none}
 
     <!-- TABS -->
     <div class="tab-nav">
-      <div class="tab-btn active" data-tab="overview">OVERVIEW</div>
-      <div class="tab-btn" data-tab="identity">IDENTITY</div>
-      <div class="tab-btn" data-tab="credentials">CREDENTIALS</div>
-      <div class="tab-btn" data-tab="matrix">MATRIX</div>
-      <div class="tab-btn" data-tab="social">SOCIAL</div>
-      <div class="tab-btn" data-tab="portfolio">PORTFOLIO</div>
-      <div class="tab-btn" data-tab="passport">PASSPORT</div>
-      <div class="tab-btn" data-tab="kyc">KYC</div>
-      <div class="tab-btn" data-tab="settings">SETTINGS</div>
-      <div class="tab-btn" data-tab="character">CHARACTER</div>
-      <div class="tab-btn access-tab" id="access-tab-btn" data-tab="access">
-        ACCESS
-        <div class="access-badge" id="access-badge" style="display:none">0</div>
-      </div>
+      <div class="tab-btn active" data-tab="overview">&#9670; OVERVIEW</div>
+      <div class="tab-btn" data-tab="identity">&#9670; IDENTITY</div>
+      <div class="tab-btn" data-tab="passport">&#9670; PASSPORT</div>
+      <div class="tab-btn" data-tab="science">&#9670; SCIENCE</div>
     </div>
 
     <!-- TAB: OVERVIEW -->
@@ -562,7 +550,7 @@ a{color:inherit;text-decoration:none}
     <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
   </div>
 </div>
-<script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+<script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
   <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--gold)" id="mat-a-disp">--</div>
     <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
@@ -595,7 +583,7 @@ function frame(){ctx.clearRect(0,0,120,120);
     ctx.beginPath();ctx.arc(60,60,16+i*5+3*Math.sin(t*.03+i),t*.009*((i%2)?1:-1),t*.009*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));
     ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();
   }
-  ctx.font='bold 20px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';
   ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
   t++;requestAnimationFrame(frame);}frame();
@@ -1277,7 +1265,7 @@ function frame(){ctx.clearRect(0,0,120,120);
 var ctx=cv.getContext('2d'),t=0;
 function f(){ctx.clearRect(0,0,80,80);
 for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,12+i*3+2*Math.sin(t*.03+i),t*.009*((i%2)?1:-1),t*.009*((i%2)?1:-1)+Math.PI*(.5+.2*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}
-ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';
 ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;
 t++;requestAnimationFrame(f);}f();})();
 </script>
@@ -1329,41 +1317,79 @@ t++;requestAnimationFrame(f);}f();})();
       <button class="btn-save" id="btn-char-save">SEAL CHARACTER RECORD</button>
       <div class="saved-msg" id="char-saved-msg">Character record sealed to the immutable archive.</div>
     </div>
-  
+
+    </div>
+
+    <!-- TAB: SCIENCE -->
+    <div class="tab-panel" id="tab-science">
+      <div class="pad">
+        <div class="sechead">AUTHORITY FORMULA</div>
+        <div style="border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
+          <div style="font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
+          <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:2">
+            &phi; (PHI) = 1.6180339887<br>
+            e (EULER) = 2.7182818285<br>
+            APEX AUTH = 27.8367 (A=B=C=9)<br>
+            LATTICE = 12&times;12&times;9&times;9&times;9 = 104,976 NODES
+          </div>
+        </div>
+        <div class="sechead">SYSTEM CONSTANTS</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
+        </div>
+        <div class="sechead">GATE THRESHOLDS</div>
+        <div style="font-family:var(--M);font-size:9px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
+          SAND GENESIS &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
+          GLASS AWAKENING &bull; AUTH &ge; 2.99<br>
+          IRON FORGING &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
+          STEEL TEMPERING &bull; AUTH &ge; 5.51<br>
+          TITANIUM ASCENT &bull; AUTH &ge; 6.77<br>
+          CARBON PRECISION &bull; AUTH &ge; 8.03<br>
+          GOLD SOVEREIGNTY &bull; AUTH &ge; 9.29<br>
+          PLATINUM LEGACY &bull; AUTH &ge; 10.55<br>
+          OMEGA THRESHOLD &bull; AUTH &ge; 25.517<br>
+          OMEGA MASTER &nbsp;&nbsp;&bull; AUTH &ge; 27.836
+        </div>
+      </div>
     </div>
 
   </main>
 </div>
 <script>
-/* Tab switching */
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active');
-    const t=btn.dataset.tab;
-    if(t==='portfolio' && !window.__portBuilt){ window.__portBuilt=true; callWhenReady('bootPortfolioExtra'); }
-    if(t==='passport' && !window.__ppBuilt){ window.__ppBuilt=true; callWhenReady('bootPassportExtra'); }
-    if(t==='kyc' && !window.__kycBuilt){ window.__kycBuilt=true; callWhenReady('bootKYCExtra'); }
-    if(t==='settings' && !window.__idExtraBuilt){ window.__idExtraBuilt=true; callWhenReady('bootIdentityExtra'); }
-    if(t==='character' && !window.__charBuilt){ window.__charBuilt=true; callWhenReady('bootCharacterFull'); }
-  });
-});
+var TAB_GROUPS={
+  overview:['tab-overview'],
+  identity:['tab-identity','tab-credentials','tab-matrix','tab-social','tab-settings','tab-character','tab-access'],
+  passport:['tab-portfolio','tab-passport','tab-kyc'],
+  science:['tab-science']
+};
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',(TAB_GROUPS[name]||[]).indexOf(p.id)>-1);});
+  if(name==='identity'){
+    if(!window.__idExtraBuilt){window.__idExtraBuilt=true;callWhenReady('bootIdentityExtra');}
+    if(!window.__charBuilt){window.__charBuilt=true;callWhenReady('bootCharacterFull');}
+  }
+  if(name==='passport'){
+    if(!window.__portBuilt){window.__portBuilt=true;callWhenReady('bootPortfolioExtra');}
+    if(!window.__ppBuilt){window.__ppBuilt=true;callWhenReady('bootPassportExtra');}
+    if(!window.__kycBuilt){window.__kycBuilt=true;callWhenReady('bootKYCExtra');}
+  }
+}
+window.setTab=setTab;
+document.querySelectorAll('.tab-btn').forEach(function(btn){btn.addEventListener('click',function(){setTab(btn.dataset.tab);});});
 function callWhenReady(fnName){
-  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  if(typeof window[fnName]==='function'){window[fnName]();return;}
   var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
-    else if(tries>30){ clearInterval(t); }
-  },100);
+  var t=setInterval(function(){tries++;if(typeof window[fnName]==='function'){window[fnName]();clearInterval(t);}else if(tries>30){clearInterval(t);}},100);
 }
 (function(){
   if(location.hash){
-    const t=location.hash.replace('#','');
-    const btn=document.querySelector('.tab-btn[data-tab="'+t+'"]');
-    if(btn) btn.click();
+    var h=location.hash.replace('#','');
+    var m={overview:'overview',identity:'identity',credentials:'identity',matrix:'identity',social:'identity',access:'identity',settings:'identity',character:'identity',portfolio:'passport',passport:'passport',kyc:'passport'};
+    setTab(m[h]||'overview');
   }
 })();
 
@@ -1408,7 +1434,7 @@ function callWhenReady(fnName){
     /* Omega */
     ctx.fillStyle='rgba(201,168,76,'+(0.88+.12*Math.sin(t*1.5))+')';
     ctx.shadowColor='rgba(201,168,76,.8)';ctx.shadowBlur=20+6*Math.sin(t);
-    ctx.font='900 38px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='900 38px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('\u03A9',CX,CY+2);ctx.shadowBlur=0;
     requestAnimationFrame(f);}f();
 })();
@@ -1464,7 +1490,7 @@ function drawAchBadge(cv,sym,col){
     ctx.save();ctx.translate(40,40);ctx.rotate(t*.5);
     ctx.beginPath();ctx.arc(0,0,32,0,Math.PI*2);ctx.strokeStyle=col+'55';ctx.lineWidth=1;ctx.stroke();ctx.restore();
     ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=8;
-    ctx.font='700 16px "Courier Prime",monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='700 16px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(sym,40,41);ctx.shadowBlur=0;requestAnimationFrame(f);}f();
 }
 
@@ -1865,7 +1891,7 @@ function drawCharPortrait(sign, col){
     cg.addColorStop(0,col+'44'); cg.addColorStop(1,'transparent');
     ctx.beginPath(); ctx.arc(0,0,35,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
     /* Glyph */
-    ctx.fillStyle=col; ctx.font='700 28px "Cinzel Decorative",serif';
+    ctx.fillStyle=col; ctx.font='700 28px serif';
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.shadowColor=col; ctx.shadowBlur=20+(0.15*Math.sin(t*2))*10;
     const ch=CHAR_MAP[sign];
@@ -1920,8 +1946,8 @@ function drawGenTree(sign){
   ctx.fillStyle=rg; ctx.fill();
   ctx.beginPath(); ctx.arc(rootX,rootY,20,0,Math.PI*2);
   ctx.strokeStyle=col+'aa'; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=16; ctx.stroke(); ctx.shadowBlur=0;
-  ctx.fillStyle=col; ctx.font='700 12px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('\u03A9',rootX,rootY+1);
-  ctx.fillStyle='rgba(133,131,123,0.7)'; ctx.font='9px "Courier Prime",monospace'; ctx.fillText('YOU &mdash; ARCHITECT',rootX,rootY+34);
+  ctx.fillStyle=col; ctx.font='700 12px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('\u03A9',rootX,rootY+1);
+  ctx.fillStyle='rgba(133,131,123,0.7)'; ctx.font='9px monospace'; ctx.fillText('YOU \u2014 ARCHITECT',rootX,rootY+34);
   /* Child nodes */
   const children=['HEIR A','HEIR B','HEIR C'];
   children.forEach((name,i)=>{
@@ -1930,7 +1956,7 @@ function drawGenTree(sign){
     ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(rootX,rootY+20); ctx.lineTo(nx,ny-14); ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath(); ctx.arc(nx,ny,14,0,Math.PI*2);
     ctx.strokeStyle=col+'44'; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.fillStyle='rgba(133,131,123,0.5)'; ctx.font='8px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(name,nx,ny);
+    ctx.fillStyle='rgba(133,131,123,0.5)'; ctx.font='8px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(name,nx,ny);
     ctx.fillStyle='rgba(133,131,123,0.4)'; ctx.fillText('PENDING',nx,ny+24);
   });
   /* Stars bg */

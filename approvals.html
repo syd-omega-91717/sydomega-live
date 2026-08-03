@@ -4,10 +4,9 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; OWNER CONSOLE &mdash; ACCESS CONTROL</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:serif;--R:sans-serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 /* GATE */
@@ -58,10 +57,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .tab-bar{display:flex;border-bottom:1px solid var(--line);overflow-x:auto;background:rgba(10,10,15,.4)}
 .tab-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:.65rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;position:relative}
 .tab-btn:hover{color:var(--ink)}
-.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold)}
+.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold)}
 .tab-btn .badge{position:absolute;top:4px;right:4px;font-family:var(--M);font-size:6px;background:var(--crim);color:#fff;border-radius:10px;padding:1px 5px;min-width:14px;text-align:center;display:none}
 .tab-panel{display:none;padding:clamp(14px,3vw,36px);flex:1;overflow-y:auto}
-.tab-panel.on{display:block}
+.tab-panel.active{display:block}
 /* SECHEAD */
 .sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 /* MEMBER CARDS */
@@ -128,7 +127,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 #toast{position:fixed;bottom:24px;right:24px;z-index:9000;font-family:var(--M);font-size:10px;letter-spacing:2px;padding:10px 18px;border-radius:2px;background:rgba(10,10,15,.93);border:1px solid rgba(201,168,76,.3);color:var(--gold);opacity:0;transition:opacity .3s;pointer-events:none;max-width:340px}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap;margin-top:auto}
 .lf span{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
-@media(max-width:700px){.stats-bar{grid-template-columns:repeat(3,1fr)}.hero-band{display:none}.mc-timeline{grid-template-columns:1fr 1fr}.mc-top{flex-wrap:wrap}}
+/* science */
+.sci-block{margin-bottom:24px}
+.sci-kv{display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:9px;letter-spacing:1px;line-height:2}
+.sci-kv .k{color:var(--muted)}
+.sci-kv .v{color:var(--ink)}
+.sci-formula{font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--gold);padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.03);line-height:2;margin-bottom:16px}
+@media(max-width:700px){.stats-bar{grid-template-columns:repeat(3,1fr)}.hero-band{display:none}.mc-timeline{grid-template-columns:1fr 1fr}.mc-top{flex-wrap:wrap}.sci-kv{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -192,35 +197,25 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TABS -->
     <div class="tab-bar">
-      <button class="tab-btn on" data-tab="members">MEMBERS<span class="badge" id="badge-pending"></span></button>
-      <button class="tab-btn" data-tab="contracts">CONTRACTS</button>
-      <button class="tab-btn" data-tab="reservations">RESERVATIONS</button>
-      <button class="tab-btn" data-tab="dispatch">DISPATCH</button>
-      <button class="tab-btn" data-tab="audit">AUDIT LOG</button>
-      <button class="tab-btn" data-tab="errors">ERRORS</button>
+      <button class="tab-btn active" onclick="setTab('members')">MEMBERS<span class="badge" id="badge-pending"></span></button>
+      <button class="tab-btn" onclick="setTab('operations')">OPERATIONS</button>
+      <button class="tab-btn" onclick="setTab('audit')">AUDIT</button>
+      <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
     </div>
 
     <!-- TAB: MEMBERS -->
-    <div class="tab-panel on" id="tab-members">
+    <div class="tab-panel active" id="tab-members">
       <div class="sechead">ACCESS CONTROL &mdash; MEMBER ROSTER</div>
       <div id="member-list"><div class="empty">LOADING MEMBERS...</div></div>
     </div>
 
-    <!-- TAB: CONTRACTS -->
-    <div class="tab-panel" id="tab-contracts">
+    <!-- TAB: OPERATIONS (contracts + reservations + dispatch) -->
+    <div class="tab-panel" id="tab-operations">
       <div class="sechead">CONTRACT QUEUE<button class="q-btn" style="font-size:8px" onclick="loadContracts()">&#8635; REFRESH</button></div>
       <div id="contracts-queue"><div class="empty">LOADING...</div></div>
-    </div>
-
-    <!-- TAB: RESERVATIONS -->
-    <div class="tab-panel" id="tab-reservations">
-      <div class="sechead">RESERVATION QUEUE<button class="q-btn" style="font-size:8px" onclick="loadReservations()">&#8635; REFRESH</button></div>
+      <div class="sechead" style="margin-top:28px">RESERVATION QUEUE<button class="q-btn" style="font-size:8px" onclick="loadReservations()">&#8635; REFRESH</button></div>
       <div id="reservations-queue"><div class="empty">LOADING...</div></div>
-    </div>
-
-    <!-- TAB: DISPATCH -->
-    <div class="tab-panel" id="tab-dispatch">
-      <div class="sechead">SOVEREIGN DISPATCH</div>
+      <div class="sechead" style="margin-top:28px">SOVEREIGN DISPATCH</div>
       <div class="d-form">
         <input id="disp-title" type="text" placeholder="DISPATCH TITLE" autocomplete="off">
         <select id="disp-category">
@@ -236,28 +231,59 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
     </div>
 
-    <!-- TAB: AUDIT LOG -->
+    <!-- TAB: AUDIT (audit log + errors) -->
     <div class="tab-panel" id="tab-audit">
       <div class="sechead">ACCESS AUDIT LOG<button class="q-btn" style="font-size:8px" id="audit-refresh" onclick="loadAudit()">&#8635; REFRESH</button></div>
-<div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
-  <canvas id="cv-audit" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
-  <div>
-    <div style="font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--cyan);margin-bottom:3px" id="hd-title-audit">&#937; SOVEREIGN ENGINE</div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
-  </div>
-  <div style="margin-left:auto;text-align:right">
-    <div style="font-family:var(--D);font-size:18px;color:var(--cyan)" id="hd-auth-audit">27.8367</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
-  </div>
-</div>
-<script>(function(){var cv=document.getElementById('cv-audit');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
+      <div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
+        <canvas id="cv-audit" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
+        <div>
+          <div style="font-family:var(--D);font-size:10px;letter-spacing:.05em;color:var(--cyan);margin-bottom:3px" id="hd-title-audit">&#937; SOVEREIGN ENGINE</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
+        </div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-family:var(--D);font-size:18px;color:var(--cyan)" id="hd-auth-audit">27.8367</div>
+          <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
+        </div>
+      </div>
+      <script>(function(){var cv=document.getElementById('cv-audit');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
       <div id="audit-list"><div class="empty">LOADING AUDIT LOG...</div></div>
+      <div class="sechead" style="margin-top:28px">CLIENT ERROR MONITOR<button class="q-btn" style="font-size:8px" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button></div>
+      <div id="err-list"><div class="empty">LOADING...</div></div>
     </div>
 
-    <!-- TAB: ERRORS -->
-    <div class="tab-panel" id="tab-errors">
-      <div class="sechead">CLIENT ERROR MONITOR<button class="q-btn" style="font-size:8px" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button></div>
-      <div id="err-list"><div class="empty">LOADING...</div></div>
+    <!-- TAB: SCIENCE -->
+    <div class="tab-panel" id="tab-science">
+      <div class="sechead">SOVEREIGN CONSTANTS &amp; SYSTEM ARCHITECTURE</div>
+      <div class="sci-block">
+        <div class="sci-formula">
+          AUTH = sqrt(A&#179; + B&#179; + C&#179;) &times; &phi; / e<br>
+          A = B = C = 9 &rarr; A&#179;+B&#179;+C&#179; = 2187<br>
+          sqrt(2187) &times; 1.6180339887 / 2.7182818285 = <strong>27.8367</strong>
+        </div>
+        <div class="sci-kv">
+          <span class="k">PHI (&phi;)</span><span class="v" style="color:var(--gold)">1.6180339887</span>
+          <span class="k">EULER (e)</span><span class="v" style="color:var(--gold)">2.7182818285</span>
+          <span class="k">AUTHORITY APEX</span><span class="v" style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
+          <span class="k">TRIAL WINDOW</span><span class="v">557 SECONDS (9 MIN 17 SEC)</span>
+          <span class="k">LATTICE</span><span class="v">12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</span>
+          <span class="k">DESIGNATION</span><span class="v">9.9.9 &mdash; ARIES &middot; FIRE &middot; ARES &middot; SENTINEL &middot; ARENITE</span>
+        </div>
+      </div>
+      <div class="sechead" style="margin-top:24px">GATE THRESHOLDS</div>
+      <div class="sci-kv">
+        <span class="k">GATE 1</span><span class="v">AUTH &ge; 1.0 &mdash; ENTRY</span>
+        <span class="k">GATE 2</span><span class="v">AUTH &ge; 2.0 &mdash; BASIC ACCESS</span>
+        <span class="k">GATE 3</span><span class="v">AUTH &ge; 3.0 &mdash; VERIFIED</span>
+        <span class="k">GATE 4</span><span class="v">AUTH &ge; 5.0 &mdash; TRUSTED</span>
+        <span class="k">GATE 5</span><span class="v">AUTH &ge; 7.0 &mdash; ELEVATED</span>
+        <span class="k">GATE 6</span><span class="v">AUTH &ge; 9.0 &mdash; SOVEREIGN TIER I</span>
+        <span class="k">GATE 7</span><span class="v">AUTH &ge; 11.0 &mdash; SOVEREIGN TIER II</span>
+        <span class="k">GATE 8</span><span class="v">AUTH &ge; 13.0 &mdash; SENTINEL</span>
+        <span class="k">GATE 9</span><span class="v">AUTH &ge; 15.0 &mdash; ORACLE</span>
+        <span class="k">GATE 10</span><span class="v">AUTH &ge; 18.0 &mdash; ARENITE</span>
+        <span class="k">GATE 11</span><span class="v">AUTH &ge; 22.0 &mdash; APEX APPROACH</span>
+        <span class="k">GATE 12</span><span class="v" style="color:var(--gold)">AUTH = 27.8367 &mdash; INVISIBLE ARCHITECT</span>
+      </div>
     </div>
 
     <div data-page-emblem="approvals" style="margin:20px auto 0"></div>
@@ -271,19 +297,18 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <!-- CANVAS ANIMATIONS -->
 <script>
 /* Topbar mini ring */
-(function(){var cv=document.getElementById('tb-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,50,50);for(var i=0;i<4;i++){ctx.beginPath();ctx.arc(25,25,7+i*4+2*Math.sin(t*.04+i),t*.015*((i%2)?1:-1),t*.015*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.03+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.12*(4-i)/4)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 9px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.fillText('Ω',25,25);t++;requestAnimationFrame(f);})();})();
+(function(){var cv=document.getElementById('tb-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,50,50);for(var i=0;i<4;i++){ctx.beginPath();ctx.arc(25,25,7+i*4+2*Math.sin(t*.04+i),t*.015*((i%2)?1:-1),t*.015*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.03+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.12*(4-i)/4)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 9px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.fillText('Ω',25,25);t++;requestAnimationFrame(f);})();})();
 /* Hero ring */
-(function(){var cv=document.getElementById('hero-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function g(){ctx.clearRect(0,0,90,90);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(45,45,10+i*4+3*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.07+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 16px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=9;ctx.fillText('Ω',45,45);ctx.shadowBlur=0;t++;requestAnimationFrame(g);})();})();
+(function(){var cv=document.getElementById('hero-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function g(){ctx.clearRect(0,0,90,90);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(45,45,10+i*4+3*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.07+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 16px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=9;ctx.fillText('Ω',45,45);ctx.shadowBlur=0;t++;requestAnimationFrame(g);})();})();
 /* Tab switching */
-document.querySelectorAll('.tab-btn').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');});
-    document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
-    btn.classList.add('on');
-    var p=document.getElementById('tab-'+btn.dataset.tab);
-    if(p)p.classList.add('on');
-  });
-});
+function setTab(name){
+  var tabs=['members','operations','audit','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  if(name==='operations'){setTimeout(function(){if(window.loadContracts)loadContracts();if(window.loadReservations)loadReservations();},200);}
+  if(name==='audit'){setTimeout(function(){if(window.loadAudit)loadAudit();if(window.loadErrors)loadErrors();},200);}
+}
+window.setTab=setTab;
 /* Filter bar */
 var _filter='all';
 window.setFilter=function(btn,f){
@@ -399,12 +424,12 @@ function buildCard(m){
   }
   if(isActive){
     btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; EXTEND +9:17</button>';
-    btns+='<button class="ac permanent" data-uid=""+m.id+"" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
+    btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
     btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; REVOKE</button>';
   }
   if(isPermanent){
     btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#8635; RENEW TRIAL</button>';
-    btns+='<button class="ac revoke" data-uid=""+m.id+"" onclick="revoke(this.dataset.uid)">&#9632; REVOKE</button>';
+    btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; REVOKE</button>';
   }
   if(isRejected&&!isExpired){
     btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; RECONSIDER</button>';

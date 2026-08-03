@@ -4,10 +4,10 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 -- Sovereign Covenant</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:serif;--R:sans-serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}
@@ -36,6 +36,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .seal-text{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--muted);margin-top:12px;line-height:1.8}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)}
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none}.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}.kpi-n{font-family:var(--D);font-size:20px;color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -51,16 +55,56 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="hero-founder">SOVEREIGN FOUNDER: MAJOR SLEIMAN YOUSSEF DAGHER &middot; LEBANESE ORDER OF ENGINEERS NO. 30875</div>
       </div>
     </div>
-    <div class="sec">
-      <div class="sechead">THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY</div>
-      <div class="articles-grid" id="articles-grid"></div>
-      <div class="seal">
-        <div class="seal-omega">&#937;</div>
-        <div class="seal-text">
-          THESE ELEVEN ARTICLES ARE SEALED IN THE IMMUTABLE LOGIC LAYER<br>
-          HASHED INTO THE GENESIS BLOCK &middot; BEYOND REVISION OR APPEAL<br>
-          MAJOR SLEIMAN YOUSSEF DAGHER &middot; SOVEREIGN ARCHITECT &middot; LEVEL 9.9.9<br>
-          AUTH = sqrt(A&#179;+B&#179;+C&#179;) &times; &phi;/e = 27.8367 &middot; APEX &middot; ABSOLUTE
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" onclick="switchTabSC(this,'tp-articles')">&#9670; ARTICLES</button>
+      <button class="tab-btn" onclick="switchTabSC(this,'tp-sigil')">&#9670; SIGIL</button>
+      <button class="tab-btn" onclick="switchTabSC(this,'tp-lattice')">&#9670; LATTICE</button>
+      <button class="tab-btn" onclick="switchTabSC(this,'tp-science')">&#9670; SCIENCE</button>
+    </div>
+    <div id="tp-articles" class="tab-panel active">
+      <div class="sec">
+        <div class="sechead">THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY</div>
+        <div class="articles-grid" id="articles-grid"></div>
+      </div>
+    </div>
+    <div id="tp-sigil" class="tab-panel">
+      <div class="sec">
+        <div class="seal">
+          <div class="seal-omega">&#937;</div>
+          <div class="seal-text">
+            THESE ELEVEN ARTICLES ARE SEALED IN THE IMMUTABLE LOGIC LAYER<br>
+            HASHED INTO THE GENESIS BLOCK &middot; BEYOND REVISION OR APPEAL<br>
+            MAJOR SLEIMAN YOUSSEF DAGHER &middot; SOVEREIGN ARCHITECT &middot; LEVEL 9.9.9<br>
+            AUTH = sqrt(A&#179;+B&#179;+C&#179;) &times; &phi;/e = 27.8367 &middot; APEX &middot; ABSOLUTE
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tp-lattice" class="tab-panel">
+      <div class="sec">
+        <div class="sechead">SOVEREIGN LATTICE &middot; SYSTEM CONSTANTS</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+          <div class="kpi"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+          <div class="kpi"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+          <div class="kpi"><div class="kpi-n">11</div><div class="kpi-l">IMMUTABLE ARTICLES</div></div>
+        </div>
+      </div>
+    </div>
+    <div id="tp-science" class="tab-panel">
+      <div class="sec">
+        <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+          <div class="kpi"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+          <div class="kpi"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+          <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
+          <div class="kpi"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
+          <div class="kpi"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
+          <div class="kpi"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
         </div>
       </div>
     </div>
@@ -68,6 +112,14 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <div class="lf"><span>&#937; SYD OMEGA 91717 &middot; SOVEREIGN COVENANT</span><span>11 IMMUTABLE ARTICLES &middot; IRREVOCABLE</span></div>
   </main>
 </div>
+<script>
+function switchTabSC(btn,id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  var p=document.getElementById(id);if(p)p.classList.add('active');
+}
+</script>
 <script>
 var ARTICLES=[
   {n:"I",title:"ABSOLUTE OWNERSHIP",text:"100% Absolute Ownership — no co-founders, no partners, no dilution. The Order belongs wholly to Major Sleiman Youssef Dagher."},

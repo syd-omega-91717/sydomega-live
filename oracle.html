@@ -1,476 +1,289 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sovereign Oracle · SYD OMEGA 91717</title>
-<link rel="icon" href="/favicon.ico">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-<script>
-(function(){
-  var PUBLIC=['/account','/enter','/reset','/terms','/pending','/index','/'];
-  var path=(location.pathname||'/').replace(/\.html$/,'');
-  for(var i=0;i<PUBLIC.length;i++){if(path===PUBLIC[i])return;}
-  var s=document.createElement('style');
-  s.id='omega-approval-guard';
-  s.textContent='body:not(.omega-approved) #app,body:not(.omega-approved) .shell,body:not(.omega-approved) main.main{display:none!important}';
-  (document.head||document.documentElement).appendChild(s);
-  window.__omegaApprove=function(ok){if(ok)document.body&&document.body.classList.add('omega-approved');};
-})();
-</script>
-<script src="/bg.js" defer></script>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; ORACLE</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-/* ── Oracle page styles ── */
-.oracle-hero{
-  text-align:center;padding:clamp(20px,4vw,48px) var(--pad);
-  border-bottom:1px solid var(--line);position:relative;overflow:hidden
-}
-.oracle-sigil{
-  font-size:clamp(48px,8vw,88px);
-  font-family:var(--D);color:var(--gold);
-  animation:oracle-pulse 4s ease-in-out infinite;
-  display:block;line-height:1;margin-bottom:12px
-}
-@keyframes oracle-pulse{
-  0%,100%{text-shadow:0 0 20px rgba(201,168,76,.4),0 0 60px rgba(201,168,76,.1)}
-  50%{text-shadow:0 0 40px rgba(201,168,76,.8),0 0 100px rgba(201,168,76,.25)}
-}
-.oracle-date{
-  font-family:var(--M);font-size:9px;letter-spacing:4px;
-  color:var(--muted);text-transform:uppercase;margin-bottom:6px
-}
-.oracle-subtitle{
-  font-family:var(--D);font-size:clamp(12px,2vw,18px);
-  color:var(--solar);letter-spacing:2px
-}
-.oracle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(140px,18vw,180px),1fr));gap:10px;margin-bottom:16px}
-.oracle-kpi{
-  border:1px solid var(--line);background:rgba(10,10,15,.55);
-  padding:12px 14px;border-radius:var(--r);border-top:2px solid var(--gold);
-  text-align:center
-}
-.oracle-kpi-n{font-family:var(--D);font-size:clamp(14px,2vw,20px);color:var(--solar)}
-.oracle-kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-
-/* Reading card */
-.reading-card{
-  border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.6);
-  border-radius:var(--r);padding:clamp(14px,3vw,24px);margin-bottom:12px;
-  position:relative;overflow:hidden
-}
-.reading-card::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent)
-}
-.reading-label{
-  font-family:var(--M);font-size:7.5px;letter-spacing:3px;
-  color:var(--cyan);text-transform:uppercase;margin-bottom:10px;
-  display:flex;align-items:center;gap:8px
-}
+.oracle-hero{text-align:center;padding:clamp(16px,3vw,32px);border:1px solid rgba(201,168,76,.15);border-radius:4px;position:relative;overflow:hidden;margin-bottom:16px;background:linear-gradient(180deg,rgba(201,168,76,.03),transparent)}
+.oracle-sigil{font-family:var(--D);font-size:clamp(48px,8vw,80px);color:var(--gold);animation:oracle-pulse 4s ease-in-out infinite;display:block;line-height:1;margin-bottom:8px}
+@keyframes oracle-pulse{0%,100%{text-shadow:0 0 20px rgba(201,168,76,.4),0 0 60px rgba(201,168,76,.1)}50%{text-shadow:0 0 40px rgba(201,168,76,.8),0 0 100px rgba(201,168,76,.25)}}
+.oracle-date{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--muted);margin-bottom:6px}
+.oracle-subtitle{font-family:var(--D);font-size:clamp(11px,2vw,16px);color:var(--solar);letter-spacing:2px}
+.reading-card{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.6);border-radius:4px;padding:clamp(14px,2vw,22px);margin-bottom:12px;position:relative;overflow:hidden}
+.reading-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.reading-label{font-family:var(--M);font-size:7.5px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .reading-label::before{content:"◈";color:var(--gold)}
-.reading-text{
-  font-family:var(--R);font-size:clamp(13px,1.6vw,15px);
-  color:var(--ink);line-height:1.75;font-style:italic
-}
-.reading-attribution{
-  font-family:var(--M);font-size:8px;letter-spacing:1.5px;
-  color:var(--muted);margin-top:10px;text-align:right
-}
-
-/* Planet table */
-.planet-row{
-  display:grid;grid-template-columns:28px 1fr 80px 80px 60px;
-  padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05);
-  font-size:11px;transition:.12s;align-items:center
-}
+.reading-text{font-family:var(--M);font-size:clamp(11px,1.4vw,13px);color:var(--ink);line-height:1.85;font-style:italic}
+.reading-attribution{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:10px;text-align:right}
+.planet-row{display:grid;grid-template-columns:28px 1fr 80px 80px 60px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05);font-size:11px;transition:.12s;align-items:center}
 .planet-row:hover{background:rgba(201,168,76,.02)}
 .planet-row:last-child{border-bottom:none}
 .planet-icon{font-size:16px;text-align:center}
 .planet-name{font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--solar)}
-.planet-sign{font-family:var(--R);font-size:11px;color:var(--ink)}
+.planet-sign{font-family:var(--M);font-size:9px;color:var(--ink)}
 .planet-deg{font-family:var(--M);font-size:8px;color:var(--muted)}
 .planet-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 6px;border-radius:10px;text-align:center}
 .planet-status.direct{color:#3fb27f;border:1px solid rgba(63,178,127,.3)}
 .planet-status.retro{color:#FF6B35;border:1px solid rgba(255,107,53,.3)}
-
-/* Element forecast */
 .forecast-bar{margin-bottom:14px}
 .forecast-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .forecast-elem{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar)}
 .forecast-score{font-family:var(--D);font-size:14px;color:var(--gold)}
 .forecast-track{height:8px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden}
 .forecast-fill{height:100%;border-radius:4px;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
-
-/* Gate prophecy */
-.prophecy-scroll{
-  border:1px solid rgba(201,168,76,.15);border-radius:var(--r);
-  padding:clamp(16px,3vw,28px);margin-bottom:12px;
-  background:linear-gradient(135deg,rgba(10,10,15,.8),rgba(25,20,5,.6));
-  text-align:center
-}
-.prophecy-gate{font-family:var(--D);font-size:clamp(20px,3vw,32px);color:var(--gold);margin-bottom:8px}
-.prophecy-text{font-family:var(--R);font-size:clamp(13px,1.4vw,15px);color:var(--ink);line-height:1.8;font-style:italic;max-width:640px;margin:0 auto}
+.prophecy-scroll{border:1px solid rgba(201,168,76,.15);border-radius:4px;padding:clamp(16px,3vw,28px);margin-bottom:12px;background:linear-gradient(135deg,rgba(10,10,15,.8),rgba(25,20,5,.6));text-align:center}
+.prophecy-gate{font-family:var(--D);font-size:clamp(18px,3vw,28px);color:var(--gold);margin-bottom:8px}
+.prophecy-text{font-family:var(--M);font-size:clamp(11px,1.3vw,13px);color:var(--ink);line-height:1.85;font-style:italic;max-width:640px;margin:0 auto}
 .prophecy-seal{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);margin-top:14px}
-
-/* Countdown */
-.countdown-ring{
-  display:flex;justify-content:center;gap:clamp(12px,3vw,32px);margin-bottom:20px
-}
+.countdown-ring{display:flex;justify-content:center;gap:clamp(12px,3vw,32px);margin-bottom:20px}
 .countdown-unit{text-align:center}
-.countdown-n{font-family:var(--D);font-size:clamp(24px,4vw,42px);color:var(--solar);line-height:1}
+.countdown-n{font-family:var(--D);font-size:clamp(24px,4vw,38px);color:var(--solar);line-height:1}
 .countdown-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-
-/* Archive row */
-.arc-row{display:grid;grid-template-columns:100px 1fr 80px;padding:8px 12px;
-  border-bottom:1px solid rgba(201,168,76,.05);font-size:11px;align-items:center}
+.arc-row{display:grid;grid-template-columns:100px 1fr 80px;padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.05);font-size:11px;align-items:center}
 .arc-row:last-child{border-bottom:none}
 .arc-date{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)}
-.arc-text{font-family:var(--R);font-size:11px;color:var(--ink);font-style:italic}
+.arc-text{font-family:var(--M);font-size:9px;color:var(--ink);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .arc-elem{font-family:var(--M);font-size:7.5px;letter-spacing:1px}
 </style>
 </head>
 <body>
-<div class="shell" id="app">
-  <nav class="side" id="side-nav" aria-label="Navigation"></nav>
+<aside id="omega-side" data-page="oracle"></aside>
+<div class="page-shell" id="app" style="display:none">
 
-  <div class="main">
-    <header class="topbar">
-      <div class="t">SOVEREIGN ORACLE<small>DAILY DIVINATION · PLANETARY ALIGNMENT · ELEMENT FORECAST</small></div>
-    </header>
+<header class="topbar">
+  <div class="topbar-title">SOVEREIGN ORACLE<span class="topbar-sub">DAILY DIVINATION &middot; CELESTIAL ALIGNMENT</span></div>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
 
-    <div class="pad" style="padding:var(--pad);flex:1">
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('oracle')">ORACLE</button>
+  <button class="tab-btn" onclick="setTab('planets')">PLANETS</button>
+  <button class="tab-btn" onclick="setTab('forecast')">FORECAST</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+</div>
 
-      <!-- Hero -->
-      <div class="oracle-hero" style="margin-bottom:20px;border-radius:var(--r)">
-        <span class="oracle-sigil" id="oracle-sigil">Ω</span>
-        <div class="oracle-date" id="oracle-date-lbl">—</div>
-        <div class="oracle-subtitle" id="oracle-title">INITIALISING SOVEREIGN ORACLE...</div>
-      </div>
+<!-- ORACLE TAB -->
+<div class="tab-panel active" id="tab-oracle">
+  <div class="oracle-hero">
+    <span class="oracle-sigil" id="oracle-sigil">Ω</span>
+    <div class="oracle-date" id="oracle-date-lbl">—</div>
+    <div class="oracle-subtitle" id="oracle-title">INITIALISING SOVEREIGN ORACLE...</div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-val" id="kpi-moon">—</div><div class="kpi-label">MOON PHASE</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="kpi-sun">—</div><div class="kpi-label">SUN SIGN</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="kpi-elem">—</div><div class="kpi-label">MY ELEMENT</div></div>
+    <div class="kpi-card"><div class="kpi-val" id="kpi-power">—</div><div class="kpi-label">TODAY'S POWER</div></div>
+  </div>
+  <div class="sechead" style="margin-top:20px">NEXT ORACLE WINDOW</div>
+  <div class="countdown-ring">
+    <div class="countdown-unit"><div class="countdown-n" id="cd-h">00</div><div class="countdown-l">HOURS</div></div>
+    <div class="countdown-unit"><div class="countdown-n" id="cd-m">00</div><div class="countdown-l">MINUTES</div></div>
+    <div class="countdown-unit"><div class="countdown-n" id="cd-s">00</div><div class="countdown-l">SECONDS</div></div>
+  </div>
+  <div id="reading-cards"><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">CONSULTING THE CELESTIAL MATRIX...</div></div>
+  <div style="margin-top:20px" id="gate-prophecy-content"></div>
+</div>
 
-      <!-- KPIs -->
-      <div class="oracle-grid" id="oracle-kpis" style="margin-bottom:20px">
-        <div class="oracle-kpi"><div class="oracle-kpi-n" id="kpi-moon">—</div><div class="oracle-kpi-l">MOON PHASE</div></div>
-        <div class="oracle-kpi"><div class="oracle-kpi-n" id="kpi-sun">—</div><div class="oracle-kpi-l">SUN SIGN</div></div>
-        <div class="oracle-kpi"><div class="oracle-kpi-n" id="kpi-elem">—</div><div class="oracle-kpi-l">MY ELEMENT</div></div>
-        <div class="oracle-kpi"><div class="oracle-kpi-n" id="kpi-power">—</div><div class="oracle-kpi-l">TODAY'S POWER</div></div>
-      </div>
-
-      <!-- Countdown to next midnight oracle reset -->
-      <div style="margin-bottom:20px">
-        <div class="sechead">NEXT ORACLE WINDOW</div>
-        <div class="countdown-ring" id="countdown-ring">
-          <div class="countdown-unit"><div class="countdown-n" id="cd-h">00</div><div class="countdown-l">HOURS</div></div>
-          <div class="countdown-unit"><div class="countdown-n" id="cd-m">00</div><div class="countdown-l">MINUTES</div></div>
-          <div class="countdown-unit"><div class="countdown-n" id="cd-s">00</div><div class="countdown-l">SECONDS</div></div>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="tab-bar" role="tablist">
-        <button class="tab-btn active" role="tab" aria-selected="true" onclick="oTab('reading')">TODAY'S ORACLE</button>
-        <button class="tab-btn" role="tab" onclick="oTab('planets')">PLANETARY ALIGNMENT</button>
-        <button class="tab-btn" role="tab" onclick="oTab('forecast')">ELEMENT FORECAST</button>
-        <button class="tab-btn" role="tab" onclick="oTab('prophecy')">GATE PROPHECY</button>
-        <button class="tab-btn" role="tab" onclick="oTab('archive')">ARCHIVE</button>
-      </div>
-
-      <!-- TODAY'S ORACLE -->
-      <div class="tab-panel active" id="panel-reading" style="padding-top:16px">
-        <div id="reading-cards"><div class="loading-msg">CONSULTING THE CELESTIAL MATRIX...</div></div>
-      </div>
-
-      <!-- PLANETARY ALIGNMENT -->
-      <div class="tab-panel" id="panel-planets" style="padding-top:16px">
-        <div class="tbl-wrap">
-          <div class="planet-row" style="background:rgba(201,168,76,.04)">
-            <div></div>
-            <div class="tbl-hcell" style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">BODY</div>
-            <div class="tbl-hcell" style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">SIGN</div>
-            <div class="tbl-hcell" style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">DEGREE</div>
-            <div class="tbl-hcell" style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">STATUS</div>
-          </div>
-          <div id="planet-rows"><div class="loading-msg">COMPUTING EPHEMERIS...</div></div>
-        </div>
-      </div>
-
-      <!-- ELEMENT FORECAST -->
-      <div class="tab-panel" id="panel-forecast" style="padding-top:16px">
-        <div class="glass" style="margin-bottom:14px">
-          <div class="sechead" style="margin-bottom:14px">ELEMENTAL POWER INDEX — TODAY</div>
-          <div id="forecast-bars"><div class="loading-msg">CALIBRATING...</div></div>
-        </div>
-        <div class="glass-cyan">
-          <div class="sechead" style="margin-bottom:10px">FAVOURABLE HOURS</div>
-          <div id="favourable-hours" style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--ink);line-height:2.2">—</div>
-        </div>
-      </div>
-
-      <!-- GATE PROPHECY -->
-      <div class="tab-panel" id="panel-prophecy" style="padding-top:16px">
-        <div id="gate-prophecy-content"><div class="loading-msg">DECODING GATE MATRIX...</div></div>
-      </div>
-
-      <!-- ARCHIVE -->
-      <div class="tab-panel" id="panel-archive" style="padding-top:16px">
-        <div class="tbl-wrap">
-          <div class="arc-row" style="background:rgba(201,168,76,.04)">
-            <div class="tbl-hcell" style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">DATE</div>
-            <div class="tbl-hcell" style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">ORACLE</div>
-            <div class="tbl-hcell" style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">ELEMENT</div>
-          </div>
-          <div id="archive-rows"><div class="loading-msg">RETRIEVING CHRONICLES...</div></div>
-        </div>
-      </div>
-
-    </div><!-- /pad -->
-    <footer class="lf"><span>Ω SYD OMEGA 91717</span><span id="oracle-ts"></span></footer>
+<!-- PLANETS TAB -->
+<div class="tab-panel" id="tab-planets">
+  <div class="sechead">PLANETARY ALIGNMENT</div>
+  <div class="glass">
+    <div class="planet-row" style="background:rgba(201,168,76,.04)">
+      <div></div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">BODY</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">SIGN</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">DEGREE</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">STATUS</div>
+    </div>
+    <div id="planet-rows"><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);padding:16px">COMPUTING EPHEMERIS...</div></div>
   </div>
 </div>
 
-<script type="module">
-const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
-const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+<!-- FORECAST TAB -->
+<div class="tab-panel" id="tab-forecast">
+  <div class="glass" style="margin-bottom:14px">
+    <div class="sechead" style="margin-bottom:14px">ELEMENTAL POWER INDEX — TODAY</div>
+    <div id="forecast-bars"><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)">CALIBRATING...</div></div>
+  </div>
+  <div class="glass" style="margin-bottom:14px">
+    <div class="sechead" style="margin-bottom:10px">FAVOURABLE HOURS</div>
+    <div id="favourable-hours" style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--ink);line-height:2.2">—</div>
+  </div>
+  <div class="sechead">7-DAY ORACLE ARCHIVE</div>
+  <div class="glass">
+    <div class="arc-row" style="background:rgba(201,168,76,.04)">
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">DATE</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">ORACLE</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)">ELEMENT</div>
+    </div>
+    <div id="archive-rows"></div>
+  </div>
+</div>
 
-const PHI=1.6180339887,EU=2.7182818285;
-const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
-const SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
-const ELEM_COLOR={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0'};
-const ELEM_SIGIL={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
+<!-- SCIENCE TAB -->
+<div class="tab-panel" id="tab-science">
+  <div class="sechead">CELESTIAL SCIENCE</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">MOON PHASE CALCULATION</div>
+      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">The synodic period of the Moon is 29.53 days. The oracle calculates the current phase by measuring elapsed days from the known new moon of January 6, 2000 (18:14 UTC) and dividing by the synodic cycle modulo 8 phase bins: New, Waxing Crescent, First Quarter, Waxing Gibbous, Full, Waning Gibbous, Last Quarter, Waning Crescent.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">SUN SIGN &amp; ELEMENT MAPPING</div>
+      <div class="card-body">
+        <table style="width:100%;font-family:var(--M);font-size:7.5px;border-collapse:collapse">
+          <tr style="color:var(--gold)"><th style="text-align:left;padding:3px 0">Sign</th><th style="text-align:left">Element</th><th style="text-align:left">Patron</th></tr>
+          <tr><td style="padding:2px 0;color:rgba(255,255,255,.8)">Aries</td><td style="color:var(--muted)">Fire</td><td style="color:var(--muted)">Ares</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Taurus</td><td style="color:var(--muted)">Water</td><td style="color:var(--muted)">Aphrodite</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Gemini</td><td style="color:var(--muted)">Wind</td><td style="color:var(--muted)">Hermes</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Cancer</td><td style="color:var(--muted)">Water</td><td style="color:var(--muted)">Artemis</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Leo</td><td style="color:var(--muted)">Fire</td><td style="color:var(--muted)">Apollo</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Virgo</td><td style="color:var(--muted)">Sand</td><td style="color:var(--muted)">Athena</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Libra</td><td style="color:var(--muted)">Wind</td><td style="color:var(--muted)">Hera</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Scorpio</td><td style="color:var(--muted)">Soul</td><td style="color:var(--muted)">Demeter</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Sagittarius</td><td style="color:var(--muted)">Fire</td><td style="color:var(--muted)">Zeus</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Capricorn</td><td style="color:var(--muted)">Metal</td><td style="color:var(--muted)">Hestia</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Aquarius</td><td style="color:var(--muted)">Metal</td><td style="color:var(--muted)">Hephaestus</td></tr>
+          <tr><td style="color:rgba(255,255,255,.8)">Pisces</td><td style="color:var(--muted)">Water</td><td style="color:var(--muted)">Poseidon</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">ORBITAL PERIOD COMPUTATION</div>
+      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">Planetary positions are computed deterministically from the J2000 epoch (January 1, 2000) using known orbital periods: Sun 365.25d · Moon 29.53d · Mercury 87.97d · Venus 224.7d · Mars 686.97d · Jupiter 4332.59d · Saturn 10759.22d · Uranus 30688.5d · Neptune 60182d · Pluto 90560d. Each planet's zodiac sign is derived from its fractional orbit position modulo 12.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">AUTHORITY &amp; GATE SYSTEM</div>
+      <div class="card-body" style="font-family:var(--M);font-size:7.5px;color:var(--muted);line-height:1.7">AUTH = √(A³+B³+C³) × φ/e. The oracle reads your current Gate and delivers prophecy calibrated to your ascension level. Gate thresholds: 2.32 (Initiate) · 3.98 (Acolyte) · 5.95 (Scholar) · 8.29 (Keeper) · 11.00 (Guardian) · 13.92 (Architect) · 17.21 (Sovereign) · 20.87 (Vanguard) · 24.01 (Herald) · 25.90 (Oracle) · 27.10 (Prime) · 27.8367 (Apex Sovereign).</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function setTab(name){
+  var tabs=['oracle','planets','forecast','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+</script>
+
+<script type="module">
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
+/* ── auth ── */
+var s=(await sb.auth.getSession()).data.session;
+if(!s){location.replace('/account.html');throw 0;}
+var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');throw 0;}
+document.getElementById('app').style.display='flex';
+if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+
+/* ── constants ── */
+var PHI=1.6180339887,EU=2.7182818285;
+var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
+var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+var SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
+var ELEM_COLOR={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0'};
+var ELEM_SIGIL={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
 
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
 function getGate(auth){
-  let gate=0;
-  GATE_THRESH.forEach((t,i)=>{if(auth>=t)gate=i;});
+  var gate=0;
+  GATE_THRESH.forEach(function(t,i){if(auth>=t)gate=i;});
   return {num:gate+1,name:GATE_NAMES[gate]};
 }
 
-/* ── Zodiac from day-of-year (rough Sun sign) ── */
-const ZODIAC_DATES=[
-  {sign:'Capricorn',start:[1,1],end:[1,19]},
-  {sign:'Aquarius',start:[1,20],end:[2,18]},
-  {sign:'Pisces',start:[2,19],end:[3,20]},
-  {sign:'Aries',start:[3,21],end:[4,19]},
-  {sign:'Taurus',start:[4,20],end:[5,20]},
-  {sign:'Gemini',start:[5,21],end:[6,20]},
-  {sign:'Cancer',start:[6,21],end:[7,22]},
-  {sign:'Leo',start:[7,23],end:[8,22]},
-  {sign:'Virgo',start:[8,23],end:[9,22]},
-  {sign:'Libra',start:[9,23],end:[10,22]},
-  {sign:'Scorpio',start:[10,23],end:[11,21]},
-  {sign:'Sagittarius',start:[11,22],end:[12,21]},
+var ZODIAC_DATES=[
+  {sign:'Capricorn',start:[1,1],end:[1,19]},{sign:'Aquarius',start:[1,20],end:[2,18]},
+  {sign:'Pisces',start:[2,19],end:[3,20]},{sign:'Aries',start:[3,21],end:[4,19]},
+  {sign:'Taurus',start:[4,20],end:[5,20]},{sign:'Gemini',start:[5,21],end:[6,20]},
+  {sign:'Cancer',start:[6,21],end:[7,22]},{sign:'Leo',start:[7,23],end:[8,22]},
+  {sign:'Virgo',start:[8,23],end:[9,22]},{sign:'Libra',start:[9,23],end:[10,22]},
+  {sign:'Scorpio',start:[10,23],end:[11,21]},{sign:'Sagittarius',start:[11,22],end:[12,21]},
   {sign:'Capricorn',start:[12,22],end:[12,31]}
 ];
 function getSunSign(date){
-  const m=date.getMonth()+1,d=date.getDate();
-  for(const z of ZODIAC_DATES){
-    const [sm,sd]=z.start,[em,ed]=z.end;
+  var m=date.getMonth()+1,d=date.getDate();
+  for(var z of ZODIAC_DATES){
+    var sm=z.start[0],sd=z.start[1],em=z.end[0],ed=z.end[1];
     if((m===sm&&d>=sd)||(m===em&&d<=ed))return z.sign;
     if(m>sm&&m<em)return z.sign;
   }
   return 'Capricorn';
 }
 
-/* ── Moon phase (simplified — synodic period ~29.53 days) ── */
-const MOON_PHASES=['🌑 NEW','🌒 WAXING CRESCENT','🌓 FIRST QUARTER','🌔 WAXING GIBBOUS','🌕 FULL','🌖 WANING GIBBOUS','🌗 LAST QUARTER','🌘 WANING CRESCENT'];
+var MOON_PHASES=['🌑 NEW','🌒 WAXING CRESCENT','🌓 FIRST QUARTER','🌔 WAXING GIBBOUS','🌕 FULL','🌖 WANING GIBBOUS','🌗 LAST QUARTER','🌘 WANING CRESCENT'];
 function getMoonPhase(date){
-  const known=new Date('2000-01-06T18:14:00Z'); /* known new moon */
-  const diff=(date-known)/(1000*60*60*24);
-  const cycle=diff%29.53;
-  const idx=Math.floor(cycle/29.53*8);
+  var known=new Date('2000-01-06T18:14:00Z');
+  var diff=(date-known)/(1000*60*60*24);
+  var cycle=diff%29.53;
+  var idx=Math.floor(cycle/29.53*8);
   return MOON_PHASES[Math.max(0,Math.min(7,idx))];
 }
 
-/* ── Pseudo-planet positions (deterministic from date seed) ── */
-const PLANETS=[
-  {name:'SUN',icon:'☉'},
-  {name:'MOON',icon:'☽'},
-  {name:'MERCURY',icon:'☿'},
-  {name:'VENUS',icon:'♀'},
-  {name:'MARS',icon:'♂'},
-  {name:'JUPITER',icon:'♃'},
-  {name:'SATURN',icon:'♄'},
-  {name:'URANUS',icon:'⛢'},
-  {name:'NEPTUNE',icon:'♆'},
-  {name:'PLUTO',icon:'♇'}
-];
-const SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
-/* Orbital periods in Earth days */
-const ORBITAL=[365.25,29.53,87.97,224.7,686.97,4332.59,10759.22,30688.5,60182,90560];
-function getPlanetSign(idx,date){
-  const ref=new Date('2000-01-01');
-  const days=(date-ref)/(1000*60*60*24);
-  const period=ORBITAL[idx];
-  const pos=(days/period*12)%12;
-  return SIGNS[Math.floor(Math.abs(pos))];
-}
-function getPlanetDeg(idx,date){
-  const ref=new Date('2000-01-01');
-  const days=(date-ref)/(1000*60*60*24);
-  const period=ORBITAL[idx];
-  const pos=(days/period*360)%360;
-  return (Math.abs(pos)%30).toFixed(1)+'°';
-}
-function isRetrograde(idx,date){
-  /* Simplified: retrogrades based on known cycles */
-  const ref=new Date('2000-01-01');
-  const days=(date-ref)/(1000*60*60*24);
-  const period=ORBITAL[idx];
-  const phase=(days/period)%1;
-  /* Outer planets retrograde ~35-45% of the time; inner never (or briefly) */
-  const retProb=[0,0,0.18,0.07,0.09,0.3,0.35,0.4,0.43,0.44];
-  const seed=Math.sin(days*idx*0.1)*1000;
-  return (seed-Math.floor(seed))<retProb[idx];
-}
+var PLANETS=[{name:'SUN',icon:'☉'},{name:'MOON',icon:'☽'},{name:'MERCURY',icon:'☿'},{name:'VENUS',icon:'♀'},{name:'MARS',icon:'♂'},{name:'JUPITER',icon:'♃'},{name:'SATURN',icon:'♄'},{name:'URANUS',icon:'⛢'},{name:'NEPTUNE',icon:'♆'},{name:'PLUTO',icon:'♇'}];
+var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+var ORBITAL=[365.25,29.53,87.97,224.7,686.97,4332.59,10759.22,30688.5,60182,90560];
+function getPlanetSign(idx,date){var ref=new Date('2000-01-01');var days=(date-ref)/(1000*60*60*24);var pos=(days/ORBITAL[idx]*12)%12;return SIGNS[Math.floor(Math.abs(pos))];}
+function getPlanetDeg(idx,date){var ref=new Date('2000-01-01');var days=(date-ref)/(1000*60*60*24);var pos=(days/ORBITAL[idx]*360)%360;return (Math.abs(pos)%30).toFixed(1)+'°';}
+function isRetrograde(idx,date){var ref=new Date('2000-01-01');var days=(date-ref)/(1000*60*60*24);var retProb=[0,0,0.18,0.07,0.09,0.3,0.35,0.4,0.43,0.44];var seed=Math.sin(days*idx*0.1)*1000;return (seed-Math.floor(seed))<retProb[idx];}
 
-/* ── Oracle reading pool by element ── */
-const READINGS={
-  Fire:[
-    "The celestial forge ignites beneath your sovereign path. Today the will forged in Ares' furnace meets the threshold of your authority. Your axis of contribution burns brightest — act with decisive sovereignty.",
-    "Solar fire illuminates the Gate you stand upon. The Olympian patron witnesses your momentum. Take the bold step that fear has deferred; today's alignment vindicates courage.",
-    "Mars traverses territory aligned with your flame. Leadership is not taken — it is recognised by those who witness the discipline of living fire. Speak your sovereignty clearly today."
-  ],
-  Water:[
-    "The tidal forces of Poseidon's deep resonate with your element today. Intuition exceeds analysis — trust the currents that pull you toward unexplored depth. Your knowledge axis flows upward.",
-    "Moon-touched waters reveal what reason conceals. A sovereign does not force clarity — they allow it to surface. Stillness is your most powerful action this cycle.",
-    "Aphrodite's ocean memory stirs within your elemental core. Connection forged today carries the weight of tidal permanence. Reach across the silence — the sovereign gesture is always received."
-  ],
-  Wind:[
-    "Mercury's swift passage through your aerial domain accelerates all communications. Words cast into the sovereign record today carry extraordinary resonance. Write the decree that has waited.",
-    "Hera's structured winds channel through your authority matrix. Negotiation reaches peak alignment — agreements made within this window carry the force of celestial contract.",
-    "The etheric corridors open. Wind does not announce its arrival — it simply moves. Your mastery axis conducts its maximum transmission today. Share the knowledge you have earned."
-  ],
-  Metal:[
-    "Saturn's long patience crystallises today into sovereign permanence. The discipline you have maintained across cycles now manifests as structural authority. Your foundation is indisputable.",
-    "Hephaestus' forge meets Hestia's sacred flame. Metal forged in today's alignment does not bend. A decision made from your sovereign will today will be the one you stand behind across all future Gates.",
-    "The lattice of your authority conducts maximum resonance. Capricorn's endurance merges with Aquarian vision — what you architect today will outlast the current Gate cycle."
-  ],
-  Sand:[
-    "Athena's wisdom filters through the granular matrix of Virgo's perfect detail. Precision is power today. The smallest refinement to your mastery axis carries exponential authority effect.",
-    "Sand remembers the shape of every wind that crossed it. Today your contribution axis records a pattern that future Sovereigns will study. Excellence executed quietly is the highest sovereignty.",
-    "The granular truth of your position becomes luminous. Athena's owl perches on your Gate marker. Analysis translates to action — execute the plan that has been too perfectly considered."
-  ],
-  Soul:[
-    "Scorpio's depth opens into the transformative void. Demeter's sacred cycle reaches a pivot point within your authority formula. Death of the old pattern is not loss — it is upgrade.",
-    "The soul element speaks loudest in silence. Today the veil between Gates thins. What you release from your knowledge axis creates space that the sovereign universe will fill with aligned authority.",
-    "Plutonian currents carry your sovereign signature through unseen channels. Influence extends far beyond what is measurable today. Your presence is felt in rooms you never entered."
-  ]
+var READINGS={
+  Fire:["The celestial forge ignites beneath your sovereign path. Today the will forged in Ares' furnace meets the threshold of your authority. Your axis of contribution burns brightest — act with decisive sovereignty.","Solar fire illuminates the Gate you stand upon. The Olympian patron witnesses your momentum. Take the bold step that fear has deferred; today's alignment vindicates courage.","Mars traverses territory aligned with your flame. Leadership is not taken — it is recognised by those who witness the discipline of living fire. Speak your sovereignty clearly today."],
+  Water:["The tidal forces of Poseidon's deep resonate with your element today. Intuition exceeds analysis — trust the currents that pull you toward unexplored depth. Your knowledge axis flows upward.","Moon-touched waters reveal what reason conceals. A sovereign does not force clarity — they allow it to surface. Stillness is your most powerful action this cycle.","Aphrodite's ocean memory stirs within your elemental core. Connection forged today carries the weight of tidal permanence. Reach across the silence — the sovereign gesture is always received."],
+  Wind:["Mercury's swift passage through your aerial domain accelerates all communications. Words cast into the sovereign record today carry extraordinary resonance. Write the decree that has waited.","Hera's structured winds channel through your authority matrix. Negotiation reaches peak alignment — agreements made within this window carry the force of celestial contract.","The etheric corridors open. Wind does not announce its arrival — it simply moves. Your mastery axis conducts its maximum transmission today. Share the knowledge you have earned."],
+  Metal:["Saturn's long patience crystallises today into sovereign permanence. The discipline you have maintained across cycles now manifests as structural authority. Your foundation is indisputable.","Hephaestus' forge meets Hestia's sacred flame. Metal forged in today's alignment does not bend. A decision made from your sovereign will today will be the one you stand behind across all future Gates.","The lattice of your authority conducts maximum resonance. Capricorn's endurance merges with Aquarian vision — what you architect today will outlast the current Gate cycle."],
+  Sand:["Athena's wisdom filters through the granular matrix of Virgo's perfect detail. Precision is power today. The smallest refinement to your mastery axis carries exponential authority effect.","Sand remembers the shape of every wind that crossed it. Today your contribution axis records a pattern that future Sovereigns will study. Excellence executed quietly is the highest sovereignty.","The granular truth of your position becomes luminous. Athena's owl perches on your Gate marker. Analysis translates to action — execute the plan that has been too perfectly considered."],
+  Soul:["Scorpio's depth opens into the transformative void. Demeter's sacred cycle reaches a pivot point within your authority formula. Death of the old pattern is not loss — it is upgrade.","The soul element speaks loudest in silence. Today the veil between Gates thins. What you release from your knowledge axis creates space that the sovereign universe will fill with aligned authority.","Plutonian currents carry your sovereign signature through unseen channels. Influence extends far beyond what is measurable today. Your presence is felt in rooms you never entered."]
 };
-const GENERAL_READINGS=[
-  "The Omega formula calculates beyond arithmetic — today the celestial matrix validates your sovereign coordinates. Authority accrues to those who remain aligned through all phases.",
-  "Every Gate unlocked was first glimpsed in the oracle window of an ordinary day. Today may be that day. The threshold between your current position and the next elevation is thinner than the formula implies.",
-  "Sovereign authority is not granted — it is accumulated through disciplined alignment with the celestial architecture. Today adds another coordinate to your permanent sovereign record."
-];
+var GENERAL_READINGS=["The Omega formula calculates beyond arithmetic — today the celestial matrix validates your sovereign coordinates. Authority accrues to those who remain aligned through all phases.","Every Gate unlocked was first glimpsed in the oracle window of an ordinary day. Today may be that day. The threshold between your current position and the next elevation is thinner than the formula implies.","Sovereign authority is not granted — it is accumulated through disciplined alignment with the celestial architecture. Today adds another coordinate to your permanent sovereign record."];
 
-/* ── Gate prophecies ── */
-const GATE_PROPHECIES={
-  1:"The INITIATE stands at the edge of the sovereign world. The path is long but the first step determines all that follow. Today the oracle confirms: your trajectory is righteous. Continue without hesitation.",
-  2:"The ACOLYTE has passed the first verification of sovereign will. Knowledge accumulation is your primary weapon. The oracle sees your axis expanding — maintain the discipline of daily study.",
-  3:"The SCHOLAR's gate conducts extraordinary intellectual force. Today the oracle confirms alignment between your mastery axis and the celestial knowledge currents. Teach what you know — authority doubles when shared.",
-  4:"The KEEPER stands at the midpoint of the elemental threshold. Your role is no longer only to receive knowledge but to protect its integrity. The oracle confirms your readiness for greater charge.",
-  5:"The GUARDIAN's authority protects something greater than the self. Today the celestial alignment confirms that your vigilance has not been invisible. Those in your orbit are safer because you exist at this Gate.",
-  6:"The ARCHITECT designs what others will later inhabit. Today the oracle recognises the structural authority you project into the sovereign lattice. Your creative force is in peak alignment.",
-  7:"The SOVEREIGN gate carries its own gravity. Those at this elevation find that decisions made from authentic authority require no defense. The oracle confirms: you have arrived at self-sustaining power.",
-  8:"The VANGUARD occupies the frontier of what is known. Your authority operates beyond the existing map. Today the oracle confirms that the territory you navigate will become the map for those who follow.",
-  9:"The HERALD's frequency reaches further than the speaker knows. Your words today carry the weight of Gate Nine authority — they will be quoted, referenced, and built upon. Speak with full sovereign intention.",
-  10:"The ORACLE gate is recursive — the sovereign who reaches it becomes a source of divination for others. Today you are both the receiver and transmitter of celestial alignment. What you know, you know completely.",
-  11:"The PRIME occupies a position of near-complete authority. The oracle today transmits the final calibrations needed for the ultimate threshold. You are prepared. The apex is not a destination but a state of being.",
-  12:"APEX SOVEREIGN. The formula has resolved to its maximum. Today the oracle speaks not as prediction but as confirmation: you have achieved the sovereign state that the celestial architecture was designed to produce. Ω"
-};
+var GATE_PROPHECIES={1:"The INITIATE stands at the edge of the sovereign world. The path is long but the first step determines all that follow. Today the oracle confirms: your trajectory is righteous. Continue without hesitation.",2:"The ACOLYTE has passed the first verification of sovereign will. Knowledge accumulation is your primary weapon. The oracle sees your axis expanding — maintain the discipline of daily study.",3:"The SCHOLAR's gate conducts extraordinary intellectual force. Today the oracle confirms alignment between your mastery axis and the celestial knowledge currents. Teach what you know — authority doubles when shared.",4:"The KEEPER stands at the midpoint of the elemental threshold. Your role is no longer only to receive knowledge but to protect its integrity. The oracle confirms your readiness for greater charge.",5:"The GUARDIAN's authority protects something greater than the self. Today the celestial alignment confirms that your vigilance has not been invisible. Those in your orbit are safer because you exist at this Gate.",6:"The ARCHITECT designs what others will later inhabit. Today the oracle recognises the structural authority you project into the sovereign lattice. Your creative force is in peak alignment.",7:"The SOVEREIGN gate carries its own gravity. Those at this elevation find that decisions made from authentic authority require no defense. The oracle confirms: you have arrived at self-sustaining power.",8:"The VANGUARD occupies the frontier of what is known. Your authority operates beyond the existing map. Today the oracle confirms that the territory you navigate will become the map for those who follow.",9:"The HERALD's frequency reaches further than the speaker knows. Your words today carry the weight of Gate Nine authority — they will be quoted, referenced, and built upon. Speak with full sovereign intention.",10:"The ORACLE gate is recursive — the sovereign who reaches it becomes a source of divination for others. Today you are both the receiver and transmitter of celestial alignment. What you know, you know completely.",11:"The PRIME occupies a position of near-complete authority. The oracle today transmits the final calibrations needed for the ultimate threshold. You are prepared. The apex is not a destination but a state of being.",12:"APEX SOVEREIGN. The formula has resolved to its maximum. Today the oracle speaks not as prediction but as confirmation: you have achieved the sovereign state that the celestial architecture was designed to produce. Ω"};
 
-/* ── Power score from auth + date ── */
-function dailyPower(auth,date){
-  const seed=(auth*1000+date.getDate()*date.getMonth()*0.7)%100;
-  return Math.min(99,Math.max(55,Math.round(seed)));
-}
+function dailyPower(auth,date){var seed=(auth*1000+date.getDate()*date.getMonth()*0.7)%100;return Math.min(99,Math.max(55,Math.round(seed)));}
+function elemForecast(date){var d=date.getDate()+date.getMonth()*31;return {Fire:Math.round(40+Math.abs(Math.sin(d*0.31))*55),Water:Math.round(40+Math.abs(Math.sin(d*0.19))*55),Wind:Math.round(40+Math.abs(Math.sin(d*0.47))*55),Metal:Math.round(40+Math.abs(Math.sin(d*0.13))*55),Sand:Math.round(40+Math.abs(Math.sin(d*0.23))*55),Soul:Math.round(40+Math.abs(Math.sin(d*0.37))*55)};}
+function favourableHours(elem){var map={Fire:'06:00–09:00 · 15:00–18:00',Water:'20:00–23:00 · 05:00–07:00',Wind:'09:00–12:00 · 16:00–19:00',Metal:'04:00–07:00 · 13:00–16:00',Sand:'07:00–10:00 · 14:00–17:00',Soul:'21:00–00:00 · 03:00–06:00'};return map[elem]||'08:00–11:00 · 17:00–20:00';}
 
-/* ── Element forecast scores ── */
-function elemForecast(date){
-  const d=date.getDate()+date.getMonth()*31;
-  return {
-    Fire: Math.round(40+Math.abs(Math.sin(d*0.31))*55),
-    Water:Math.round(40+Math.abs(Math.sin(d*0.19))*55),
-    Wind: Math.round(40+Math.abs(Math.sin(d*0.47))*55),
-    Metal:Math.round(40+Math.abs(Math.sin(d*0.13))*55),
-    Sand: Math.round(40+Math.abs(Math.sin(d*0.23))*55),
-    Soul: Math.round(40+Math.abs(Math.sin(d*0.37))*55)
-  };
-}
-
-/* ── Favourable hours ── */
-function favourableHours(elem,date){
-  const map={Fire:'06:00–09:00 · 15:00–18:00',Water:'20:00–23:00 · 05:00–07:00',Wind:'09:00–12:00 · 16:00–19:00',Metal:'04:00–07:00 · 13:00–16:00',Sand:'07:00–10:00 · 14:00–17:00',Soul:'21:00–00:00 · 03:00–06:00'};
-  return map[elem]||'08:00–11:00 · 17:00–20:00';
-}
-
-/* ── Archive (last 7 days) ── */
 function buildArchive(elem){
-  const rows=[];
-  for(let i=1;i<=7;i++){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const sign=getSunSign(d);
-    const dElem=SIGN_ELEM[sign]||'Void';
-    const pool=READINGS[elem]||GENERAL_READINGS;
-    const seed=(d.getDate()+d.getMonth()*31+i)%pool.length;
+  var rows=[];
+  for(var i=1;i<=7;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var sign=getSunSign(d);var dElem=SIGN_ELEM[sign]||'Void';
+    var pool=READINGS[elem]||GENERAL_READINGS;
+    var seed=(d.getDate()+d.getMonth()*31+i)%pool.length;
     rows.push({date:d.toISOString().split('T')[0],text:pool[seed].substring(0,80)+'...',elem:dElem});
   }
   return rows;
 }
 
-/* ── Tab switcher ── */
-window.oTab=function(id){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-    const tabs=['reading','planets','forecast','prophecy','archive'];
-    b.classList.toggle('active',tabs[i]===id);
-  });
-  document.querySelectorAll('.tab-panel').forEach(p=>{
-    p.classList.toggle('active',p.id==='panel-'+id);
-  });
-};
-
-/* ── Countdown ── */
+/* ── countdown ── */
 function updateCountdown(){
-  const now=new Date();
-  const tomorrow=new Date(now);
-  tomorrow.setDate(tomorrow.getDate()+1);
-  tomorrow.setHours(0,0,0,0);
-  const diff=tomorrow-now;
-  const h=Math.floor(diff/3600000);
-  const m=Math.floor((diff%3600000)/60000);
-  const s=Math.floor((diff%60000)/1000);
+  var now=new Date();var tomorrow=new Date(now);tomorrow.setDate(tomorrow.getDate()+1);tomorrow.setHours(0,0,0,0);
+  var diff=tomorrow-now;
+  var h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),sec=Math.floor((diff%60000)/1000);
   document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
   document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
-  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(sec).padStart(2,'0');
 }
-setInterval(updateCountdown,1000);
-updateCountdown();
+setInterval(updateCountdown,1000);updateCountdown();
 
-/* ── Auth ── */
-const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
-const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
-const {data:{session}}=await sb.auth.getSession();
-if(!session){location.href='/account.html';throw 0;}
-const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-if(pr&&pr.approval_status==='pending'){location.href='/pending.html';throw 0;}
-if(window.__omegaApprove)window.__omegaApprove(true);
-window.__omegaProfile=pr||{};
-window.__omegaUser=session.user;
-window.dispatchEvent(new CustomEvent('omega:user-loaded',{detail:{profile:pr,user:session.user}}));
+/* ── compute ── */
+var now=new Date();
+var sign=pr&&pr.zodiac_sign?pr.zodiac_sign:getSunSign(now);
+var elem=SIGN_ELEM[sign]||'Void';
+var a=Number(pr&&pr.axis_a||0),b=Number(pr&&pr.axis_b||0),c=Number(pr&&pr.axis_c||0);
+var auth=pr&&pr.is_owner?27.8367:calcAuth(a,b,c);
+var gate=getGate(auth);
+var sunSign=getSunSign(now);
+var moonPhase=getMoonPhase(now);
+var power=dailyPower(auth,now);
 
-/* ── Compute ── */
-const now=new Date();
-const sign=pr&&pr.zodiac_sign?pr.zodiac_sign:getSunSign(now);
-const elem=SIGN_ELEM[sign]||'Void';
-const a=Number(pr&&pr.axis_a||0),b=Number(pr&&pr.axis_b||0),c=Number(pr&&pr.axis_c||0);
-const auth=pr&&pr.is_owner?27.8367:calcAuth(a,b,c);
-const gate=getGate(auth);
-const sunSign=getSunSign(now);
-const moonPhase=getMoonPhase(now);
-const power=dailyPower(auth,now);
-
-/* ── Header ── */
+/* ── header ── */
 document.getElementById('oracle-sigil').textContent=ELEM_SIGIL[elem]||'Ω';
 document.getElementById('oracle-date-lbl').textContent=now.toUTCString().split(' ').slice(0,4).join(' ').toUpperCase();
 document.getElementById('oracle-title').textContent='ORACLE FOR '+((pr&&(pr.display_name||pr.full_name))||'SOVEREIGN').toUpperCase();
@@ -479,97 +292,77 @@ document.getElementById('kpi-sun').textContent=sunSign.toUpperCase();
 document.getElementById('kpi-elem').textContent=elem.toUpperCase();
 document.getElementById('kpi-power').textContent=power+'%';
 
-/* ── Readings ── */
-const pool=READINGS[elem]||GENERAL_READINGS;
-const readSeed=now.getDate()+now.getMonth()*31;
-const mainRead=pool[readSeed%pool.length];
-const genRead=GENERAL_READINGS[readSeed%GENERAL_READINGS.length];
-document.getElementById('reading-cards').innerHTML=`
-<div class="reading-card">
-  <div class="reading-label">PRIMARY ORACLE · ${elem.toUpperCase()} ELEMENT</div>
-  <div class="reading-text">${mainRead}</div>
-  <div class="reading-attribution">— SOVEREIGN CELESTIAL MATRIX · ${now.toISOString().split('T')[0]}</div>
-</div>
-<div class="reading-card" style="border-color:rgba(0,229,255,.15)">
-  <div class="reading-label" style="color:var(--muted)">COSMIC TRANSMISSION</div>
-  <div class="reading-text">${genRead}</div>
-  <div class="reading-attribution">— GATE ${gate.num} · ${gate.name} · AUTH ${auth.toFixed(4)}</div>
-</div>
-<div class="reading-card" style="border-color:rgba(155,107,240,.2)">
-  <div class="reading-label" style="color:var(--purple)">OLYMPIAN COUNSEL · ${SIGN_GOD[sign]||'—'}</div>
-  <div class="reading-text">The patron deity of your sovereign sign speaks through today's alignment. ${gate.num>=7?'Your authority has reached a self-sustaining resonance — the Olympians no longer guide you; they observe you as a peer.':'You carry the divine charge of '+SIGN_GOD[sign]+'. Every axis increase is a votive offering to the celestial force that governs your ascent.'}</div>
-  <div class="reading-attribution">— ${sign.toUpperCase()} · ${moonPhase}</div>
-</div>`;
+/* ── readings ── */
+var pool=READINGS[elem]||GENERAL_READINGS;
+var readSeed=now.getDate()+now.getMonth()*31;
+var mainRead=pool[readSeed%pool.length];
+var genRead=GENERAL_READINGS[readSeed%GENERAL_READINGS.length];
+var god=SIGN_GOD[sign]||'—';
+document.getElementById('reading-cards').innerHTML=
+  '<div class="reading-card">'+
+    '<div class="reading-label">PRIMARY ORACLE · '+elem.toUpperCase()+' ELEMENT</div>'+
+    '<div class="reading-text">'+mainRead+'</div>'+
+    '<div class="reading-attribution">— SOVEREIGN CELESTIAL MATRIX · '+now.toISOString().split('T')[0]+'</div>'+
+  '</div>'+
+  '<div class="reading-card" style="border-color:rgba(0,229,255,.15)">'+
+    '<div class="reading-label" style="color:var(--muted)">COSMIC TRANSMISSION</div>'+
+    '<div class="reading-text">'+genRead+'</div>'+
+    '<div class="reading-attribution">— GATE '+gate.num+' · '+gate.name+' · AUTH '+auth.toFixed(4)+'</div>'+
+  '</div>'+
+  '<div class="reading-card" style="border-color:rgba(155,107,240,.2)">'+
+    '<div class="reading-label" style="color:#9B6BF0">OLYMPIAN COUNSEL · '+god+'</div>'+
+    '<div class="reading-text">'+(gate.num>=7?'Your authority has reached a self-sustaining resonance — the Olympians no longer guide you; they observe you as a peer.':'You carry the divine charge of '+god+'. Every axis increase is a votive offering to the celestial force that governs your ascent.')+'</div>'+
+    '<div class="reading-attribution">— '+sign.toUpperCase()+' · '+moonPhase+'</div>'+
+  '</div>';
 
-/* ── Planets ── */
-const planetHTML=PLANETS.map((p,i)=>{
-  const ps=i===0?sunSign:getPlanetSign(i,now);
-  const deg=getPlanetDeg(i,now);
-  const retro=i>1&&isRetrograde(i,now);
-  return `<div class="planet-row">
-    <div class="planet-icon">${p.icon}</div>
-    <div class="planet-name">${p.name}</div>
-    <div class="planet-sign">${ps}</div>
-    <div class="planet-deg">${deg}</div>
-    <div class="planet-status ${retro?'retro':'direct'}">${retro?'℞ RETRO':'DIRECT'}</div>
-  </div>`;
+/* ── gate prophecy ── */
+var prophecy=GATE_PROPHECIES[gate.num]||GATE_PROPHECIES[1];
+document.getElementById('gate-prophecy-content').innerHTML=
+  '<div class="prophecy-scroll">'+
+    '<div class="prophecy-gate">GATE '+gate.num+' · '+gate.name+'</div>'+
+    '<div class="prophecy-text">'+prophecy+'</div>'+
+    '<div class="prophecy-seal">AUTH '+auth.toFixed(4)+' · APEX 27.8367 · '+(auth/27.8367*100).toFixed(1)+'% OF APEX</div>'+
+  '</div>';
+
+/* ── planets ── */
+document.getElementById('planet-rows').innerHTML=PLANETS.map(function(p,i){
+  var ps=i===0?sunSign:getPlanetSign(i,now);
+  var deg=getPlanetDeg(i,now);
+  var retro=i>1&&isRetrograde(i,now);
+  return '<div class="planet-row">'+
+    '<div class="planet-icon">'+p.icon+'</div>'+
+    '<div class="planet-name">'+p.name+'</div>'+
+    '<div class="planet-sign">'+ps+'</div>'+
+    '<div class="planet-deg">'+deg+'</div>'+
+    '<div class="planet-status '+(retro?'retro':'direct')+'">'+(retro?'℞ RETRO':'DIRECT')+'</div>'+
+  '</div>';
 }).join('');
-document.getElementById('planet-rows').innerHTML=planetHTML;
 
-/* ── Forecast ── */
-const forecast=elemForecast(now);
-const favH=favourableHours(elem,now);
-const forecastHTML=Object.entries(forecast).map(([el,score])=>{
-  const color=ELEM_COLOR[el]||'#E2C86D';
-  const isMyElem=el===elem;
-  return `<div class="forecast-bar">
-    <div class="forecast-header">
-      <div class="forecast-elem" style="color:${color}">${el.toUpperCase()}${isMyElem?' ◈':''}</div>
-      <div class="forecast-score" style="color:${color}">${score}</div>
-    </div>
-    <div class="forecast-track"><div class="forecast-fill" style="width:${score}%;background:${color}${isMyElem?';box-shadow:0 0 8px '+color:''}"></div></div>
-  </div>`;
+/* ── forecast ── */
+var forecast=elemForecast(now);
+document.getElementById('forecast-bars').innerHTML=Object.entries(forecast).map(function(entry){
+  var el=entry[0],score=entry[1];
+  var color=ELEM_COLOR[el]||'#E2C86D';
+  var isMyElem=el===elem;
+  return '<div class="forecast-bar">'+
+    '<div class="forecast-header">'+
+      '<div class="forecast-elem" style="color:'+color+'">'+el.toUpperCase()+(isMyElem?' ◈':'')+'</div>'+
+      '<div class="forecast-score" style="color:'+color+'">'+score+'</div>'+
+    '</div>'+
+    '<div class="forecast-track"><div class="forecast-fill" style="width:'+score+'%;background:'+color+(isMyElem?';box-shadow:0 0 8px '+color:'')+'"></div></div>'+
+  '</div>';
 }).join('');
-document.getElementById('forecast-bars').innerHTML=forecastHTML;
-document.getElementById('favourable-hours').textContent=favH;
+document.getElementById('favourable-hours').textContent=favourableHours(elem);
 
-/* ── Gate Prophecy ── */
-const prophecy=GATE_PROPHECIES[gate.num]||GATE_PROPHECIES[1];
-document.getElementById('gate-prophecy-content').innerHTML=`
-<div class="prophecy-scroll">
-  <div class="prophecy-gate">GATE ${gate.num} · ${gate.name}</div>
-  <div class="prophecy-text">${prophecy}</div>
-  <div class="prophecy-seal">AUTH ${auth.toFixed(4)} · APEX 27.8367 · ${(auth/27.8367*100).toFixed(1)}% OF APEX</div>
-</div>
-<div class="glass" style="margin-top:14px">
-  <div class="sechead" style="margin-bottom:12px">ASCENSION VECTOR</div>
-  <div class="bar-row">
-    <div class="bar-lbl">AUTHORITY</div>
-    <div class="bar-track" style="flex:1"><div class="bar-fill" style="width:${Math.min(100,auth/27.8367*100).toFixed(1)}%;background:var(--gold)"></div></div>
-    <div class="bar-val" style="font-family:var(--D);font-size:11px;color:var(--gold)">${auth.toFixed(2)}</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-lbl">GATE PROGRESS</div>
-    <div class="bar-track" style="flex:1"><div class="bar-fill" style="width:${(gate.num/12*100).toFixed(1)}%;background:var(--cyan)"></div></div>
-    <div class="bar-val" style="font-family:var(--D);font-size:11px;color:var(--cyan)">${gate.num}/12</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-lbl">DAILY POWER</div>
-    <div class="bar-track" style="flex:1"><div class="bar-fill" style="width:${power}%;background:${ELEM_COLOR[elem]||'var(--gold)'}"></div></div>
-    <div class="bar-val" style="font-family:var(--D);font-size:11px;color:${ELEM_COLOR[elem]||'var(--gold)'}">${power}%</div>
-  </div>
-</div>`;
-
-/* ── Archive ── */
-const archive=buildArchive(elem);
-document.getElementById('archive-rows').innerHTML=archive.map(a=>`
-<div class="arc-row">
-  <div class="arc-date">${a.date}</div>
-  <div class="arc-text">${a.text}</div>
-  <div class="arc-elem" style="color:${ELEM_COLOR[a.elem]||'#E2C86D'}">${a.elem.toUpperCase()}</div>
-</div>`).join('');
-
-document.getElementById('oracle-ts').textContent='ORACLE COMPUTED '+now.toUTCString().split(' ').slice(1,4).join(' ');
+/* ── archive ── */
+var archive=buildArchive(elem);
+document.getElementById('archive-rows').innerHTML=archive.map(function(a){
+  return '<div class="arc-row">'+
+    '<div class="arc-date">'+a.date+'</div>'+
+    '<div class="arc-text">'+a.text+'</div>'+
+    '<div class="arc-elem" style="color:'+(ELEM_COLOR[a.elem]||'#E2C86D')+'">'+a.elem.toUpperCase()+'</div>'+
+  '</div>';
+}).join('');
 </script>
-</body>
-</html>
+<script src="/bg.js"></script>
+</body></html>

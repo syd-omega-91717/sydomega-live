@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FOCUS — Deep Work · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega.css">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 .focus-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center;border-bottom:1px solid rgba(201,168,76,.1)}
 .focus-ring-wrap{position:relative;width:220px;height:220px;margin:0 auto 24px}
 #focus-ring{position:absolute;inset:0}
 .focus-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.focus-time .big{font-family:var(--M,'Courier Prime',monospace);font-size:42px;letter-spacing:4px;color:var(--gold,#C9A84C)}
+.focus-time .big{font-family:var(--M);font-size:42px;letter-spacing:4px;color:var(--gold,#C9A84C)}
 .focus-time .lbl{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5)}
 .focus-controls{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center}
-.fc-btn{font-family:var(--M,'Courier Prime',monospace);font-size:9px;letter-spacing:2px;padding:10px 22px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
+.fc-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:10px 22px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
 .fc-btn:hover,.fc-btn.active{background:rgba(201,168,76,.08);color:var(--gold,#C9A84C);border-color:rgba(201,168,76,.5)}
 .fc-btn.primary{background:rgba(201,168,76,.12);color:var(--gold,#C9A84C);border-color:rgba(201,168,76,.4)}
 .mode-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
@@ -23,7 +23,7 @@
 .task-input-wrap input{flex:1;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:10px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none}
 .task-input-wrap input:focus{border-color:rgba(201,168,76,.4)}
 .task-input-wrap input::placeholder{color:rgba(138,134,118,.4)}
-.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:20px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:20px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .session-card{display:grid;grid-template-columns:1fr 80px 70px 80px;gap:12px;padding:12px 16px;border:1px solid rgba(201,168,76,.08);border-radius:2px;margin-bottom:6px;align-items:center;font-family:var(--M);font-size:9px;letter-spacing:1px}
 .session-card .s-task{color:rgba(201,168,76,.8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .session-card .s-dur{color:rgba(138,134,118,.7);text-align:right}
@@ -53,16 +53,11 @@
 </style>
 </head>
 <body>
-<div class="side" id="side"></div>
-<div class="main">
-  <div class="topbar" id="topbar">
-    <div class="tb-left">
-      <span class="tb-title">DEEP WORK</span>
-      <span class="tb-sub">FOCUS ENGINE · SYD OMEGA 91717</span>
-    </div>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="focus"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">DEEP WORK<small>FOCUS ENGINE &middot; SYD OMEGA 91717</small></div></div>
 
-  <div class="content">
     <div class="focus-hero">
       <div class="mode-row" id="mode-row">
         <button class="mode-chip sel" data-mins="25" data-name="DEEP WORK">DEEP WORK · 25</button>
@@ -93,12 +88,12 @@
       </div>
     </div>
 
-    <div class="content" style="padding-top:8px">
+    <div style="padding:0 var(--pad,20px)">
       <div class="tab-row">
-        <button class="tab-btn act" onclick="switchTab('stats',this)">STATS</button>
-        <button class="tab-btn" onclick="switchTab('sessions',this)">SESSIONS</button>
-        <button class="tab-btn" onclick="switchTab('heatmap',this)">HEATMAP</button>
-        <button class="tab-btn" onclick="switchTab('distractions',this)">DISTRACTIONS</button>
+        <button class="tab-btn act" onclick="switchTab('stats',this)">&#9670; STATS</button>
+        <button class="tab-btn" onclick="switchTab('sessions',this)">&#9670; SESSIONS</button>
+        <button class="tab-btn" onclick="switchTab('distractions',this)">&#9670; DISTRACTIONS</button>
+        <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
       </div>
 
       <!-- STATS -->
@@ -126,21 +121,17 @@
         </div>
         <div class="section-hd" style="margin-top:24px">TASK BREAKDOWN (TOP 5)</div>
         <div id="task-breakdown"></div>
+        <div class="section-hd" style="margin-top:24px">90-DAY FOCUS HEATMAP</div>
+        <div class="heatmap-wrap"><canvas id="focus-heatmap" width="780" height="120"></canvas></div>
+        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-top:8px">
+          CELL = ONE DAY · COLOR INTENSITY = MINUTES FOCUSED
+        </div>
       </div>
 
       <!-- SESSIONS -->
       <div class="tab-panel" id="tab-sessions">
         <div class="section-hd">RECENT SESSIONS</div>
         <div id="sessions-list"></div>
-      </div>
-
-      <!-- HEATMAP -->
-      <div class="tab-panel" id="tab-heatmap">
-        <div class="section-hd">90-DAY FOCUS HEATMAP</div>
-        <div class="heatmap-wrap"><canvas id="focus-heatmap" width="780" height="120"></canvas></div>
-        <div style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-top:8px">
-          CELL = ONE DAY · COLOR INTENSITY = MINUTES FOCUSED
-        </div>
       </div>
 
       <!-- DISTRACTIONS -->
@@ -160,13 +151,32 @@
         </div>
         <div class="distraction-log" id="dist-list"></div>
       </div>
-    </div>
-  </div>
 
-  <div class="lf">
-    <span>&#937; FOCUS ENGINE &middot; SYD OMEGA 91717</span>
-    <span>DEEP WORK IS THE SUPERPOWER OF THE SOVEREIGN</span>
-  </div>
+      <!-- SCIENCE -->
+      <div class="tab-panel" id="tab-science">
+        <div class="stats-row">
+          <div class="stat-box"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+          <div class="stat-box"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
+          <div class="stat-box"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
+          <div class="stat-box"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-box"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
+          <div class="stat-box"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
+          <div class="stat-box"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
+          <div class="stat-box"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
+        </div>
+        <div style="border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:20px;font-family:var(--M);font-size:10px;color:rgba(138,134,118,.6);line-height:1.9">
+          <strong style="color:rgba(201,168,76,.7)">DEEP WORK (CAL NEWPORT)</strong> — Professional activity performed in a state of distraction-free concentration that pushes cognitive capabilities to the limit. These efforts create new value, improve skill, and are hard to replicate.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">ULTRADIAN RHYTHMS</strong> — The brain operates in 90-minute rest-activity cycles (ultradian cycles). The optimal focus session aligns to exactly 90 minutes of deep work followed by 20 minutes of true rest.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">THE 4-HOUR RULE</strong> — Research (Ericsson, Newport) consistently shows elite performers rarely sustain more than 4 hours of genuine deep work per day. Distribute sessions in the morning when prefrontal cortex capacity peaks.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">FLOW STATE TRIGGERS</strong> — Clear goals, immediate feedback, challenge-to-skill ratio of ~4% above current ability, no interruptions for first 15 minutes.
+        </div>
+      </div>
+    </div>
+
+  <div class="lf"><span>&#937; FOCUS ENGINE &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
 <script src="bg.js"></script>
@@ -440,7 +450,7 @@ function drawHeatmap(){
   });
   const maxMin=Math.max(...Object.values(dayMap),60);
   const today=new Date(); today.setHours(0,0,0,0);
-  ctx.font='7px Courier Prime,monospace';
+  ctx.font='7px monospace';
   ctx.fillStyle='rgba(138,134,118,.4)';
   ['S','M','T','W','T','F','S'].forEach((d,i)=>{
     ctx.fillText(d,2,i*(cellH+gap)+(cellH+gap)+8);
@@ -475,7 +485,7 @@ function switchTab(id,btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
   if(btn) btn.classList.add('act');
   document.getElementById('tab-'+id).classList.add('act');
-  if(id==='heatmap') drawHeatmap();
+  if(id==='stats') drawHeatmap();
 }
 function switchTabDirect(id){
   document.querySelectorAll('.tab-btn').forEach(b=>{

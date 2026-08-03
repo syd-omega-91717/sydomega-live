@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LIBRARY — Sovereign Reading List · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega.css">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 .search-bar{display:flex;gap:8px;margin-bottom:20px}
-.search-bar input{flex:1;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M,'Courier Prime',monospace);font-size:10px;letter-spacing:1px;padding:11px 14px;border-radius:2px;outline:none}
+.search-bar input{flex:1;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:10px;letter-spacing:1px;padding:11px 14px;border-radius:2px;outline:none}
 .search-bar input:focus{border-color:rgba(201,168,76,.4)}
 .search-bar input::placeholder{color:rgba(138,134,118,.3)}
 .search-bar button{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:11px 18px;border:1px solid rgba(201,168,76,.3);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s;white-space:nowrap}
@@ -19,14 +19,14 @@
 .book-cover-placeholder{width:100%;height:160px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));flex-direction:column;gap:8px}
 .book-cover-placeholder span{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.4);text-align:center;padding:0 8px}
 .book-info{padding:12px}
-.book-title{font-family:var(--M,'Courier Prime',monospace);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.85);margin-bottom:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.book-title{font-family:var(--M);font-size:9px;letter-spacing:1px;color:rgba(201,168,76,.85);margin-bottom:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .book-author{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.6);margin-bottom:6px}
 .book-meta{display:flex;justify-content:space-between;align-items:center}
 .book-year{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.4)}
 .add-btn{font-family:var(--M);font-size:7px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,.2);color:rgba(201,168,76,.6);background:none;border-radius:2px;cursor:pointer;transition:.12s}
 .add-btn:hover{background:rgba(201,168,76,.08);color:var(--gold)}
 .add-btn.added{border-color:rgba(80,200,120,.3);color:rgba(80,200,120,.6)}
-.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
 .tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
 .tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
@@ -62,21 +62,16 @@
 </style>
 </head>
 <body>
-<div class="side" id="side"></div>
-<div class="main">
-  <div class="topbar" id="topbar">
-    <div class="tb-left">
-      <span class="tb-title">LIBRARY</span>
-      <span class="tb-sub">SOVEREIGN READING LIST · SYD OMEGA 91717</span>
-    </div>
-  </div>
-
-  <div class="content">
+<div class="shell">
+<aside class="side" id="omega-side" data-page="library"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">LIBRARY<small>SOVEREIGN READING LIST &middot; SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
     <div class="tab-row">
-      <button class="tab-btn act" onclick="switchTab('discover',this)">DISCOVER</button>
-      <button class="tab-btn" onclick="switchTab('shelf',this)">MY SHELF</button>
-      <button class="tab-btn" onclick="switchTab('stats',this)">STATS</button>
-      <button class="tab-btn" onclick="switchTab('curated',this)">SOVEREIGN READS</button>
+      <button class="tab-btn act" onclick="switchTab('discover',this)">&#9670; DISCOVER</button>
+      <button class="tab-btn" onclick="switchTab('shelf',this)">&#9670; MY SHELF</button>
+      <button class="tab-btn" onclick="switchTab('stats',this)">&#9670; STATS</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- DISCOVER TAB -->
@@ -88,6 +83,9 @@
       <div id="search-status" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-bottom:14px"></div>
       <div id="search-results" class="book-grid"></div>
       <div id="discover-featured"></div>
+      <div class="section-hd" style="margin-top:24px">THE SOVEREIGN READING LIST</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);margin-bottom:16px;line-height:1.7">Curated books every sovereign must read. Not suggestions — imperatives.</div>
+      <div id="curated-list"></div>
     </div>
 
     <!-- MY SHELF TAB -->
@@ -113,21 +111,31 @@
       <div id="genre-breakdown"></div>
     </div>
 
-    <!-- CURATED TAB -->
-    <div class="tab-panel" id="tab-curated">
-      <div class="section-hd">THE SOVEREIGN READING LIST</div>
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);margin-bottom:20px;line-height:1.7">
-        Curated books that every sovereign should read. Not suggestions — imperatives.
+    <!-- SCIENCE -->
+    <div class="tab-panel" id="tab-science">
+      <div class="stat-row">
+        <div class="stat-box"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="stat-box"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
+        <div class="stat-box"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
+        <div class="stat-box"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
       </div>
-      <div id="curated-list"></div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
+        <div class="stat-box"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
+        <div class="stat-box"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
+        <div class="stat-box"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
+      </div>
+      <div style="border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:20px;font-family:var(--M);font-size:10px;color:rgba(138,134,118,.6);line-height:1.9">
+        <strong style="color:rgba(201,168,76,.7)">THE COMPOUNDING READER</strong> — Reading 30 minutes per day = 13 books per year = 390 books per 30 years. Charlie Munger's mental model lattice was built entirely through voracious reading. One idea absorbed changes a decision; one decision changes a decade.<br><br>
+        <strong style="color:rgba(201,168,76,.7)">DUAL CODING</strong> — Knowledge retained longer when encountered in multiple formats. Read → summarize in your own words → apply in real context within 24 hours. The sovereign reader transforms text into executable system.<br><br>
+        <strong style="color:rgba(201,168,76,.7)">CATEGORY ROTATION</strong> — Elite decision-makers read across philosophy, science, history, biography, and technical domains simultaneously. Cross-domain synthesis produces the highest-leverage insights. Single-genre specialization produces competence, not wisdom.<br><br>
+        <strong style="color:rgba(201,168,76,.7)">THE LINDY EFFECT</strong> — A book that has survived 100 years has a greater probability of surviving another 100 than one published last year. Prioritize classics. Filter new titles through this lens.
+      </div>
     </div>
 
   </div>
-
-  <div class="lf">
-    <span>&#937; LIBRARY · SYD OMEGA 91717</span>
-    <span>READERS ARE LEADERS · THE SOVEREIGN NEVER STOPS LEARNING</span>
-  </div>
+  <div class="lf"><span>&#937; LIBRARY &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
 <script src="bg.js"></script>
@@ -349,7 +357,6 @@ function switchTab(id,btn){
   document.getElementById('tab-'+id).classList.add('act');
   if(id==='shelf') renderShelf();
   if(id==='stats') renderStats();
-  if(id==='curated') renderCurated();
 }
 window.switchTab=switchTab;
 

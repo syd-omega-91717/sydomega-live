@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HABITS — Atomic Habit Stack · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega.css">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 .habit-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 @media(max-width:640px){.habit-hero{grid-template-columns:1fr 1fr}}
 .hero-stat{border:1px solid rgba(201,168,76,.12);border-radius:2px;padding:16px;text-align:center}
-.hero-stat .sv{font-family:var(--M,'Courier Prime',monospace);font-size:26px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.hero-stat .sv{font-family:var(--M);font-size:26px;letter-spacing:2px;color:var(--gold,#C9A84C)}
 .hero-stat .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
-.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .habit-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;margin-bottom:10px;overflow:hidden}
 .habit-card-header{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;transition:.12s}
 .habit-card-header:hover{background:rgba(201,168,76,.03)}
 .hc-check{width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:.15s}
 .habit-card.done-today .hc-check{background:rgba(201,168,76,.2);border-color:rgba(201,168,76,.7);color:var(--gold,#C9A84C)}
 .hc-info{flex:1;min-width:0}
-.hc-name{font-family:var(--M,'Courier Prime',monospace);font-size:9.5px;letter-spacing:1px;color:rgba(201,168,76,.85)}
+.hc-name{font-family:var(--M);font-size:9.5px;letter-spacing:1px;color:rgba(201,168,76,.85)}
 .hc-meta{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:2px}
 .hc-streak{font-family:var(--M);font-size:8px;letter-spacing:1px;padding:3px 9px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:rgba(201,168,76,.7);white-space:nowrap}
 .habit-streak-row{display:flex;gap:4px;padding:8px 14px 12px;overflow-x:auto}
@@ -62,17 +62,11 @@
 </style>
 </head>
 <body>
-<div class="side" id="side"></div>
-<div class="main">
-  <div class="topbar" id="topbar">
-    <div class="tb-left">
-      <span class="tb-title">HABITS</span>
-      <span class="tb-sub">ATOMIC HABIT STACK · SYD OMEGA 91717</span>
-    </div>
-    <div><button class="add-habit-btn" onclick="openModal()">+ NEW HABIT</button></div>
-  </div>
-
-  <div class="content">
+<div class="shell">
+<aside class="side" id="omega-side" data-page="habits"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">HABITS<small>ATOMIC HABIT STACK &middot; SYD OMEGA 91717</small></div><button class="add-habit-btn" onclick="openModal()">&#43; NEW HABIT</button></div>
+  <div style="padding:20px var(--pad,20px)">
     <div class="habit-hero" id="habit-hero">
       <div class="hero-stat"><div class="sv" id="stat-active">0</div><div class="sk">ACTIVE HABITS</div></div>
       <div class="hero-stat"><div class="sv" id="stat-done">0</div><div class="sk">DONE TODAY</div></div>
@@ -81,11 +75,10 @@
     </div>
 
     <div class="tab-row">
-      <button class="tab-btn act" onclick="switchTab('today',this)">TODAY</button>
-      <button class="tab-btn" onclick="switchTab('all',this)">ALL HABITS</button>
-      <button class="tab-btn" onclick="switchTab('chain',this)">HABIT CHAIN</button>
-      <button class="tab-btn" onclick="switchTab('heatmap',this)">HEATMAP</button>
-      <button class="tab-btn" onclick="switchTab('science',this)">SCIENCE</button>
+      <button class="tab-btn act" onclick="switchTab('today',this)">&#9670; TODAY</button>
+      <button class="tab-btn" onclick="switchTab('all',this)">&#9670; ALL HABITS</button>
+      <button class="tab-btn" onclick="switchTab('chain',this)">&#9670; CHAIN</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- TODAY -->
@@ -98,7 +91,7 @@
       <div id="all-list"></div>
     </div>
 
-    <!-- HABIT CHAIN -->
+    <!-- CHAIN TAB: habit chain + heatmap -->
     <div class="tab-panel" id="tab-chain">
       <div class="section-hd">ATOMIC HABIT CHAIN</div>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.7;margin-bottom:16px">
@@ -108,16 +101,24 @@
       <div id="chain-list"></div>
       <div class="section-hd" style="margin-top:24px">INSIGHTS</div>
       <div id="insight-list"></div>
-    </div>
-
-    <!-- HEATMAP -->
-    <div class="tab-panel" id="tab-heatmap">
-      <div class="section-hd">90-DAY HABIT HEATMAP</div>
+      <div class="section-hd" style="margin-top:24px">90-DAY HEATMAP</div>
       <div id="heatmap-container"></div>
     </div>
 
     <!-- SCIENCE -->
     <div class="tab-panel" id="tab-science">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="hero-stat"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="hero-stat"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
+        <div class="hero-stat"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
+        <div class="hero-stat"><div class="sv">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="hero-stat"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
+        <div class="hero-stat"><div class="sv">1.618</div><div class="sk">SOVEREIGN GATE</div></div>
+        <div class="hero-stat"><div class="sv">2.718</div><div class="sk">PRIME GATE</div></div>
+        <div class="hero-stat"><div class="sv">9.000</div><div class="sk">APEX GATE</div></div>
+      </div>
       <div class="section-hd">THE HABIT LOOP SCIENCE</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div class="insight-item">
@@ -177,10 +178,8 @@
     </div>
   </div>
 
-  <div class="lf">
-    <span>&#937; HABITS · SYD OMEGA 91717</span>
-    <span>YOU DO NOT RISE TO YOUR GOALS — YOU FALL TO YOUR SYSTEMS</span>
-  </div>
+  <div class="lf"><span>&#937; HABITS &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
 <!-- Add Habit Modal -->

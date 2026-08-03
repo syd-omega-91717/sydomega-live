@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sleep Optimization · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:'Courier Prime',monospace}
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:monospace}
 .sleep-hdr{display:flex;align-items:center;gap:16px;margin-bottom:20px}
 .sleep-score-wrap{display:flex;align-items:center;gap:24px;background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:16px 20px;margin-bottom:20px}
 .kpi-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
@@ -66,10 +66,10 @@
 </style>
 </head>
 <body>
-<div class="layer" id="L0"></div>
-<div class="side" id="sideNav"></div>
-<div class="main">
-  <div class="topbar" id="topBar"></div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="sleep"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">SLEEP OPTIMIZATION<small>IDENTITY &middot; RESTORATION &middot; SYD OMEGA 91717</small></div></div>
   <div style="padding:20px var(--pad,20px)">
 
     <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · RESTORATION</div>
@@ -99,11 +99,10 @@
     </div>
 
     <div class="layer-tabs">
-      <button class="tab-btn active" onclick="switchTab('log',this)">LOG</button>
-      <button class="tab-btn" onclick="switchTab('analysis',this)">ANALYSIS</button>
-      <button class="tab-btn" onclick="switchTab('circadian',this)">CIRCADIAN</button>
-      <button class="tab-btn" onclick="switchTab('dreams',this)">DREAMS</button>
-      <button class="tab-btn" onclick="switchTab('science',this)">SCIENCE</button>
+      <button class="tab-btn active" onclick="switchTab('log',this)">&#9670; LOG</button>
+      <button class="tab-btn" onclick="switchTab('analysis',this)">&#9670; ANALYSIS</button>
+      <button class="tab-btn" onclick="switchTab('circadian',this)">&#9670; CIRCADIAN</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- LOG -->
@@ -132,6 +131,33 @@
         <button class="btn-gold" onclick="addSleep()">LOG SESSION</button>
       </div>
       <div class="sleep-entries" id="sleepEntries"></div>
+
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin:24px 0 10px;border-top:1px solid var(--dim);padding-top:16px">DREAM JOURNAL</div>
+      <div class="log-form">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">RECORD DREAM</div>
+        <div class="form-row">
+          <div class="form-grp"><label>DATE</label><input type="date" id="dreamDate"></div>
+          <div class="form-grp"><label>VIVIDNESS</label><select id="dreamVivid"><option value="1">Faint</option><option value="2">Partial</option><option value="3" selected>Clear</option><option value="4">Vivid</option><option value="5">Ultra-Vivid / Lucid</option></select></div>
+        </div>
+        <div class="form-grp" style="margin-bottom:10px">
+          <label>THEMES</label>
+          <div class="dream-tags" id="dreamTagSel">
+            <button class="dream-tag" data-t="flying">FLYING</button>
+            <button class="dream-tag" data-t="falling">FALLING</button>
+            <button class="dream-tag" data-t="chase">CHASE</button>
+            <button class="dream-tag" data-t="water">WATER</button>
+            <button class="dream-tag" data-t="transformation">TRANSFORMATION</button>
+            <button class="dream-tag" data-t="people">PEOPLE</button>
+            <button class="dream-tag" data-t="conflict">CONFLICT</button>
+            <button class="dream-tag" data-t="discovery">DISCOVERY</button>
+            <button class="dream-tag" data-t="lucid">LUCID</button>
+          </div>
+        </div>
+        <div class="form-grp" style="margin-bottom:12px"><label>DREAM DESCRIPTION</label><textarea id="dreamText" style="height:80px" placeholder="Describe in detail while fresh…"></textarea></div>
+        <button class="btn-gold" onclick="addDream()">SAVE DREAM</button>
+      </div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:8px">DREAM ARCHIVE</div>
+      <div class="dream-entries" id="dreamEntries"></div>
     </div>
 
     <!-- ANALYSIS -->
@@ -195,37 +221,20 @@
       </div>
     </div>
 
-    <!-- DREAMS -->
-    <div class="tab-pane" id="tab-dreams">
-      <div class="log-form">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">RECORD DREAM</div>
-        <div class="form-row">
-          <div class="form-grp"><label>DATE</label><input type="date" id="dreamDate"></div>
-          <div class="form-grp"><label>VIVIDNESS</label><select id="dreamVivid"><option value="1">Faint</option><option value="2">Partial</option><option value="3" selected>Clear</option><option value="4">Vivid</option><option value="5">Ultra-Vivid / Lucid</option></select></div>
-        </div>
-        <div class="form-grp" style="margin-bottom:10px">
-          <label>THEMES</label>
-          <div class="dream-tags" id="dreamTagSel">
-            <button class="dream-tag" data-t="flying">FLYING</button>
-            <button class="dream-tag" data-t="falling">FALLING</button>
-            <button class="dream-tag" data-t="chase">CHASE</button>
-            <button class="dream-tag" data-t="water">WATER</button>
-            <button class="dream-tag" data-t="transformation">TRANSFORMATION</button>
-            <button class="dream-tag" data-t="people">PEOPLE</button>
-            <button class="dream-tag" data-t="conflict">CONFLICT</button>
-            <button class="dream-tag" data-t="discovery">DISCOVERY</button>
-            <button class="dream-tag" data-t="lucid">LUCID</button>
-          </div>
-        </div>
-        <div class="form-grp" style="margin-bottom:12px"><label>DREAM DESCRIPTION</label><textarea id="dreamText" style="height:80px" placeholder="Describe in detail while fresh…"></textarea></div>
-        <button class="btn-gold" onclick="addDream()">SAVE DREAM</button>
-      </div>
-      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:8px">DREAM ARCHIVE</div>
-      <div class="dream-entries" id="dreamEntries"></div>
-    </div>
-
     <!-- SCIENCE -->
     <div class="tab-pane" id="tab-science">
+      <div class="kpi-mini">
+        <div class="kpi-m"><div class="lv">APEX AUTH</div><div class="vv">27.8367</div></div>
+        <div class="kpi-m"><div class="lv">PHI &phi;</div><div class="vv">1.6180</div></div>
+        <div class="kpi-m"><div class="lv">EULER e</div><div class="vv">2.7183</div></div>
+        <div class="kpi-m"><div class="lv">AUTH FORMULA</div><div class="vv" style="font-size:11px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div></div>
+      </div>
+      <div class="kpi-mini">
+        <div class="kpi-m"><div class="lv">INITIATE GATE</div><div class="vv">0.001</div></div>
+        <div class="kpi-m"><div class="lv">SOVEREIGN GATE</div><div class="vv">1.618</div></div>
+        <div class="kpi-m"><div class="lv">PRIME GATE</div><div class="vv">2.718</div></div>
+        <div class="kpi-m"><div class="lv">APEX GATE</div><div class="vv">9.000</div></div>
+      </div>
       <div class="science-card"><h3>WHY SLEEP IS THE SOVEREIGN'S ULTIMATE WEAPON</h3><p>Sleep is the single most effective performance reset available. The glymphatic system flushes the brain of metabolic waste (including Alzheimer's precursors) during sleep. Memory consolidates from hippocampus to cortex. Testosterone peaks during deep NREM. Growth hormone is released almost exclusively during slow-wave sleep.</p></div>
       <div class="science-card"><h3>SLEEP STAGES</h3><p>NREM1 (Light, ~5%): Transition. NREM2 (Baseline, ~45%): Sleep spindles consolidate motor skills. NREM3 (Deep SWS, ~25%): Physical restoration, immune function, emotional processing — dominant in first half. REM (~25%): Dreaming, emotional regulation, creative association — dominant in second half. Cutting morning sleep disproportionately sacrifices REM.</p></div>
       <div class="science-card"><h3>THE 12 COMMANDMENTS OF SLEEP</h3><p>1. Fixed wake time — even weekends. 2. Dark room (blackout). 3. Cool room 18–20°C. 4. No screens 90 min pre-bed. 5. Caffeine cutoff 10h before bed. 6. No alcohol within 3h of bed. 7. No large meals within 2h. 8. Exercise daily — not within 2h of bed. 9. Morning sunlight within 60 min of wake. 10. Wind-down ritual 60 min pre-bed. 11. Bed = sleep only. 12. Stress journal before bed to offload cognitive load.</p></div>
@@ -233,7 +242,8 @@
     </div>
 
   </div>
-  <div class="lf" id="pgFoot"></div>
+  <div class="lf"><span>&#937; SLEEP OPTIMIZATION &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 <script src="bg.js"></script>
 <script src="omega-ui.js"></script>
@@ -346,12 +356,12 @@ function drawTrendChart(){
   var ctx=c.getContext('2d'),W=c.width,H=c.height;
   ctx.clearRect(0,0,W,H);
   var last30=sleepLog.slice(-30);
-  if(!last30.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px Courier Prime';ctx.textAlign='center';ctx.fillText('Log sleep sessions to see trend',W/2,H/2);return;}
+  if(!last30.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('Log sleep sessions to see trend',W/2,H/2);return;}
   var pad={t:10,r:20,b:24,l:36},cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
   [0,4,8,10].forEach(function(v){
     var y=pad.t+cH*(1-v/10);
     ctx.strokeStyle='rgba(201,168,76,.06)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
-    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='9px Courier Prime';ctx.textAlign='right';ctx.fillText(v+'h',pad.l-4,y+4);
+    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='9px monospace';ctx.textAlign='right';ctx.fillText(v+'h',pad.l-4,y+4);
   });
   var ty=pad.t+cH*(1-TARGET_HOURS/10);
   ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(201,168,76,.3)';ctx.lineWidth=1;
@@ -404,15 +414,15 @@ function renderSuppImpact(){
   el.innerHTML=entries.map(function(x){
     var avg=(x[1].qualTotal/x[1].count).toFixed(1);
     return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.06)">'
-      +'<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.6)">'+(x[0].toUpperCase())+'</span>'
-      +'<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:var(--gold)">'+avg+'/5 ('+x[1].count+' nights)</span></div>';
+      +'<span style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.6)">'+(x[0].toUpperCase())+'</span>'
+      +'<span style="font-family:var(--M);font-size:9px;color:var(--gold)">'+avg+'/5 ('+x[1].count+' nights)</span></div>';
   }).join('');
 }
 
 function renderEntries(){
   var el=document.getElementById('sleepEntries');
   var sorted=sleepLog.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
-  if(!sorted.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No sleep sessions logged yet.</div>';return;}
+  if(!sorted.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No sleep sessions logged yet.</div>';return;}
   el.innerHTML=sorted.slice(0,20).map(function(e){
     return '<div class="sleep-entry">'
       +'<div class="se-date">'+e.date+'</div>'
@@ -427,7 +437,7 @@ function renderEntries(){
 function renderDreams(){
   var el=document.getElementById('dreamEntries');
   var sorted=dreamLog.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
-  if(!sorted.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No dreams recorded yet.</div>';return;}
+  if(!sorted.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No dreams recorded yet.</div>';return;}
   el.innerHTML=sorted.slice(0,20).map(function(d){
     var tags=(d.tags||[]).map(function(t){return '<span class="de-tag">'+t.toUpperCase()+'</span>';}).join('');
     var vivid=['','FAINT','PARTIAL','CLEAR','VIVID','ULTRA-VIVID'][d.vividness||3];
@@ -489,7 +499,7 @@ function drawCircadianClock(bedMin,wakeMin){
     ctx.strokeStyle=h%6===0?'rgba(201,168,76,.4)':'rgba(201,168,76,.15)';ctx.lineWidth=h%6===0?2:1;
     ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*(r-4),cy+Math.sin(a)*(r-4));ctx.lineTo(cx+Math.cos(a)*(r+(h%6===0?-14:-10)),cy+Math.sin(a)*(r+(h%6===0?-14:-10)));ctx.stroke();
   }
-  ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px Courier Prime';ctx.textAlign='center';
+  ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px monospace';ctx.textAlign='center';
   ['12am','6am','12pm','6pm'].forEach(function(lbl,i){var a=i*Math.PI/2-Math.PI/2,lr=r+20;ctx.fillText(lbl,cx+Math.cos(a)*lr,cy+Math.sin(a)*lr+3);});
 }
 
@@ -502,10 +512,10 @@ function calcCycles(){
     var bedtime=((wMin-cycles*90-delay)+1440)%1440;
     var h=Math.floor(bedtime/60),m=bedtime%60;
     results.push('<div style="display:flex;gap:16px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.06)">'
-      +'<span style="font-family:\'Courier Prime\',monospace;font-size:8px;color:rgba(138,134,118,.5);width:60px">'+cycles+' CYCLES</span>'
-      +'<span style="font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--gold)">'+(h<10?'0':'')+h+':'+(m<10?'0':'')+m+'</span>'
-      +'<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.4)">'+cycles*1.5+'h sleep</span>'
-      +(cycles>=5?'<span style="font-family:\'Courier Prime\',monospace;font-size:7px;color:#9BC53D">OPTIMAL</span>':'')
+      +'<span style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5);width:60px">'+cycles+' CYCLES</span>'
+      +'<span style="font-family:var(--M);font-size:12px;color:var(--gold)">'+(h<10?'0':'')+h+':'+(m<10?'0':'')+m+'</span>'
+      +'<span style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4)">'+cycles*1.5+'h sleep</span>'
+      +(cycles>=5?'<span style="font-family:var(--M);font-size:7px;color:#9BC53D">OPTIMAL</span>':'')
       +'</div>');
   }
   document.getElementById('cycleResults').innerHTML=results.join('');

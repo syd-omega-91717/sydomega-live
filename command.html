@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Daily Command Brief · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:'Courier Prime',monospace}
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:monospace}
 .cmd-hero{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 .cmd-clock{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .clock-time{font-family:var(--M);font-size:52px;letter-spacing:4px;color:var(--gold);line-height:1}
@@ -61,10 +61,10 @@
 </style>
 </head>
 <body>
-<div class="layer" id="L0"></div>
-<div class="side" id="sideNav"></div>
-<div class="main">
-  <div class="topbar" id="topBar"></div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="command"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">DAILY COMMAND BRIEF<small>STRATEGY &middot; OPERATIONS &middot; SYD OMEGA 91717</small></div></div>
   <div style="padding:20px var(--pad,20px)">
 
     <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">STRATEGY · OPERATIONS</div>
@@ -102,10 +102,10 @@
     </div>
 
     <div class="layer-tabs">
-      <button class="tab-btn active" onclick="switchTab('priorities',this)">PRIORITIES</button>
-      <button class="tab-btn" onclick="switchTab('schedule',this)">SCHEDULE</button>
-      <button class="tab-btn" onclick="switchTab('review',this)">REVIEW</button>
-      <button class="tab-btn" onclick="switchTab('archive',this)">ARCHIVE</button>
+      <button class="tab-btn active" onclick="switchTab('priorities',this)">&#9670; PRIORITIES</button>
+      <button class="tab-btn" onclick="switchTab('schedule',this)">&#9670; SCHEDULE</button>
+      <button class="tab-btn" onclick="switchTab('review',this)">&#9670; REVIEW</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- PRIORITIES -->
@@ -164,16 +164,38 @@
           <button class="btn-gold" onclick="saveReview()">SEAL THE DAY</button>
         </div>
       </div>
-    </div>
-
-    <!-- ARCHIVE -->
-    <div class="tab-pane" id="tab-archive">
-      <div class="sec-title">PAST BRIEFS</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin:20px 0 10px;border-top:1px solid var(--dim);padding-top:16px">PAST BRIEFS</div>
       <div id="pastBriefs"></div>
     </div>
 
+    <!-- SCIENCE -->
+    <div class="tab-pane" id="tab-science">
+      <div class="kpi-row">
+        <div class="kpi"><div class="lv">APEX AUTH</div><div class="vv">27.8367</div></div>
+        <div class="kpi"><div class="lv">PHI &phi;</div><div class="vv">1.6180</div></div>
+        <div class="kpi"><div class="lv">EULER e</div><div class="vv">2.7183</div></div>
+        <div class="kpi"><div class="lv">AUTH FORMULA</div><div class="vv" style="font-size:11px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="lv">INITIATE GATE</div><div class="vv">0.001</div></div>
+        <div class="kpi"><div class="lv">SOVEREIGN GATE</div><div class="vv">1.618</div></div>
+        <div class="kpi"><div class="lv">PRIME GATE</div><div class="vv">2.718</div></div>
+        <div class="kpi"><div class="lv">APEX GATE</div><div class="vv">9.000</div></div>
+      </div>
+      <div class="priorities-section">
+        <div class="sec-title">THE SCIENCE OF DAILY COMMAND</div>
+        <div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.6);line-height:1.8">
+          <strong style="color:rgba(201,168,76,.7)">PREFRONTAL CORTEX DEPLETION</strong> — Decision-making quality degrades ~2% per decision. Batch trivial decisions in morning routines. Reserve peak prefrontal bandwidth (7–11am) for strategic priorities.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">IMPLEMENTATION INTENTIONS</strong> — Research shows "I will do X at time Y in location Z" increases follow-through by 91% vs vague intentions. The command brief forces this specificity.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">ULTRADIAN RHYTHMS</strong> — The brain cycles through 90-minute rest-activity rhythms. Schedule deep work in 90-min blocks. Use natural dip (1–3pm) for admin, communication, and light tasks.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">PLANNING STREAK EFFECT</strong> — Consistent daily planning creates meta-cognitive loops that increase self-awareness, reduce reactive behavior, and build sovereign identity over time.
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div class="lf" id="pgFoot"></div>
+  <div class="lf"><span>&#937; DAILY COMMAND BRIEF &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 <script src="bg.js"></script>
 <script src="omega-ui.js"></script>
@@ -271,7 +293,7 @@ function deleteBlock(id){todayBrief.schedule=todayBrief.schedule.filter(function
 function updateBlock(id,val){var b=todayBrief.schedule.find(function(x){return x.id===id;});if(b)b.task=val;persistBrief();}
 function renderSchedule(){
   var el=document.getElementById('scheduleGrid'),blocks=todayBrief.schedule||[];
-  if(!blocks.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:8px 0">No time blocks yet.</div>';return;}
+  if(!blocks.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4);padding:8px 0">No time blocks yet.</div>';return;}
   var nowMin=(function(){var n=new Date();return n.getHours()*60+n.getMinutes();})();
   el.innerHTML=blocks.map(function(b){
     var[bh,bm]=b.time.split(':').map(Number),bMin=bh*60+bm;
@@ -279,7 +301,7 @@ function renderSchedule(){
     return '<div class="time-block" style="'+(active?'border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.06)':'')+(past?'opacity:.5':'')+'">'
       +'<div class="tb-time">'+b.time+'</div>'
       +'<input class="tb-input" value="'+b.task.replace(/"/g,'&quot;')+'" onchange="updateBlock('+b.id+',this.value)">'
-      +(active?'<span style="font-family:\'Courier Prime\',monospace;font-size:7px;color:var(--gold);letter-spacing:1px">NOW</span>':'')
+      +(active?'<span style="font-family:var(--M);font-size:7px;color:var(--gold);letter-spacing:1px">NOW</span>':'')
       +'<button class="tb-del" onclick="deleteBlock('+b.id+')">✕</button></div>';
   }).join('');
 }
@@ -340,7 +362,7 @@ function renderKPIs(){
 function renderArchive(){
   var el=document.getElementById('pastBriefs');
   var sorted=briefs.slice().sort(function(a,b){return b.date.localeCompare(a.date);}).slice(0,30);
-  if(!sorted.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4)">No past briefs yet.</div>';return;}
+  if(!sorted.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4)">No past briefs yet.</div>';return;}
   el.innerHTML=sorted.map(function(b){
     var done=b.priorities?b.priorities.filter(function(p){return p.done;}).length:0;
     var total=b.priorities?b.priorities.filter(function(p){return p.text;}).length:0;
@@ -362,7 +384,7 @@ function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');
   if(id==='schedule')renderSchedule();
-  if(id==='archive')renderArchive();
+  if(id==='review')renderArchive();
 }
 
 /* INIT */

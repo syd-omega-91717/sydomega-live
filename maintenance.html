@@ -4,10 +4,10 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="SYD OMEGA 91717 — MAINTENANCE">
 <title>&#937; SYD OMEGA 91717 &mdash; MAINTENANCE</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,36px)}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:serif;--R:sans-serif;--M:monospace;--pad:clamp(14px,3vw,36px)}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0;overflow-x:hidden}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:11px var(--pad);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
@@ -34,11 +34,51 @@
     <div class="topbar"><div class="t">MAINTENANCE<small>SYSTEM &middot; PLATFORM EVOLVING &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><div style="font-family:var(--M);font-size:8px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
     <div class="pad">
       <div class="kpi-row"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-      <div class="sechead">MAINTENANCE</div>
+    </div>
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" onclick="switchTab(this,'tp-status')">&#9670; STATUS</button>
+      <button class="tab-btn" onclick="switchTab(this,'tp-system')">&#9670; SYSTEM</button>
+      <button class="tab-btn" onclick="switchTab(this,'tp-protocol')">&#9670; PROTOCOL</button>
+      <button class="tab-btn" onclick="switchTab(this,'tp-science')">&#9670; SCIENCE</button>
+    </div>
+    <div id="tp-status" class="tab-panel active" style="padding:var(--pad)">
+      <div class="sechead">PLATFORM STATUS</div>
       <div class="hero">
         <div class="hero-title">MAINTENANCE</div>
-        <div class="hero-sub">SYSTEM</div>
-        <div class="hero-desc">The platform is undergoing a sovereign update.</div>
+        <div class="hero-sub">SYSTEM EVOLVING</div>
+        <div class="hero-desc">The platform is undergoing a sovereign update. All services will resume at full authority upon completion.</div>
+      </div>
+    </div>
+    <div id="tp-system" class="tab-panel" style="padding:var(--pad)">
+      <div class="sechead">SYSTEM STATUS</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n">ACTIVE</div><div class="kpi-l">CORE STATE</div></div>
+        <div class="kpi"><div class="kpi-n">12/12</div><div class="kpi-l">AGENTS ONLINE</div></div>
+        <div class="kpi"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi"><div class="kpi-n">SEALED</div><div class="kpi-l">CANON LOCK</div></div>
+      </div>
+    </div>
+    <div id="tp-protocol" class="tab-panel" style="padding:var(--pad)">
+      <div class="sechead">MAINTENANCE PROTOCOL</div>
+      <div class="hero">
+        <div class="hero-title">EVOLVING THE LATTICE</div>
+        <div class="hero-sub">SOVEREIGN UPDATE IN PROGRESS</div>
+        <div class="hero-desc">All 104,976 lattice nodes are being recalibrated to maintain peak frequency alignment at 9.1717 Hz. The Architect oversees each update cycle personally. No data is lost during sovereign evolution.</div>
+      </div>
+    </div>
+    <div id="tp-science" class="tab-panel" style="padding:var(--pad)">
+      <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
+        <div class="kpi"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
+        <div class="kpi"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
+        <div class="kpi"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
       </div>
     </div>
     <div data-page-emblem="maintenance" style="margin:20px auto 0"></div>

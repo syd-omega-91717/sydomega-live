@@ -27,11 +27,9 @@
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#85837b;--D:'Cinzel Decorative',serif;--M:'Courier Prime',monospace}
+:root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--muted:#85837b;--D:serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
@@ -67,6 +65,12 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
 .auto-check{font-size:8px;letter-spacing:2px;color:rgba(133,131,123,.4);margin-top:18px}
 .ac-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--muted);animation:dot-blink 1.5s ease-in-out infinite}
 @keyframes dot-blink{0%,100%{opacity:.2}50%{opacity:1}}
+.tab-bar{display:flex;border-bottom:1px solid rgba(201,168,76,.18);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;width:100%;margin:14px 0 0}.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+.tab-panel{display:none;width:100%;padding:18px 0}.tab-panel.active{display:block}
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.kpi{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold);text-align:left}
+.kpi-n{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -75,34 +79,82 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
   <!-- Animated Omega logo -->
   <canvas id="gate-omega" width="160" height="160" style="width:80px;height:80px"></canvas>
 
-  <div class="gate-title" id="gate-title" style="color:var(--gold)" data-i18n="pending.submitted">ACCESS REQUEST SUBMITTED</div>
-  <div class="gate-sub"><span data-i18n="pending.registered">YOUR IDENTITY HAS BEEN REGISTERED</span><br/><span data-i18n="pending.review">THE ARCHITECT WILL REVIEW AND GRANT ACCESS</span></div>
-
-  <!-- Expired badge (shown when trial ended) -->
-  <div class="expired-badge" id="expired-badge">
-    <div class="eb-title" data-i18n="pending.trial_ended">TRIAL SESSION ENDED</div>
-    <div class="eb-sub">Your 9h-17m-17s trial has expired.<br/>Request renewed access from the Architect.<br/>Create a new session or contact the Order.</div>
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" data-ptab="status">&#9670; STATUS</button>
+    <button class="tab-btn" data-ptab="frequency">&#9670; FREQUENCY</button>
+    <button class="tab-btn" data-ptab="protocol">&#9670; PROTOCOL</button>
+    <button class="tab-btn" data-ptab="science">&#9670; SCIENCE</button>
   </div>
 
-  <!-- Status box -->
-  <div class="status-box">
-    <div class="sb-label" data-i18n="pending.status_label">ACCESS STATUS</div>
-    <div class="sb-status" id="sb-status" style="color:var(--solar)" data-i18n="pending.pending_review">PENDING ARCHITECT REVIEW</div>
-    <div class="sb-detail" id="sb-detail">The Architect reviews and approves all members personally.<br/>Access is granted for a sovereign trial period of 9 hours 17 minutes 17 seconds.</div>
+  <div id="ptab-status" class="tab-panel active">
+    <div class="gate-title" id="gate-title" style="color:var(--gold)" data-i18n="pending.submitted">ACCESS REQUEST SUBMITTED</div>
+    <div class="gate-sub"><span data-i18n="pending.registered">YOUR IDENTITY HAS BEEN REGISTERED</span><br/><span data-i18n="pending.review">THE ARCHITECT WILL REVIEW AND GRANT ACCESS</span></div>
+    <div class="expired-badge" id="expired-badge">
+      <div class="eb-title" data-i18n="pending.trial_ended">TRIAL SESSION ENDED</div>
+      <div class="eb-sub">Your 9h-17m-17s trial has expired.<br/>Request renewed access from the Architect.<br/>Create a new session or contact the Order.</div>
+    </div>
+    <div class="status-box">
+      <div class="sb-label" data-i18n="pending.status_label">ACCESS STATUS</div>
+      <div class="sb-status" id="sb-status" style="color:var(--solar)" data-i18n="pending.pending_review">PENDING ARCHITECT REVIEW</div>
+      <div class="sb-detail" id="sb-detail">The Architect reviews and approves all members personally.<br/>Access is granted for a sovereign trial period of 9 hours 17 minutes 17 seconds.</div>
+    </div>
+    <div class="btns">
+      <button class="btn-check" id="btn-check" data-i18n="pending.check">CHECK ACCESS STATUS</button>
+      <a class="btn-logout" id="btn-logout" href="#" data-i18n="pending.signout">SIGN OUT AND RETURN</a>
+    </div>
+    <div class="auto-check">
+      AUTO-CHECKING <span class="ac-dot"></span><span class="ac-dot" style="animation-delay:.3s"></span><span class="ac-dot" style="animation-delay:.6s"></span> EVERY 15 SECONDS
+    </div>
   </div>
 
-  <div class="freq">9.1717 Hz -- FREQUENCY LOCK ACTIVE</div>
-
-  <div class="btns">
-    <button class="btn-check" id="btn-check" data-i18n="pending.check">CHECK ACCESS STATUS</button>
-    <a class="btn-logout" id="btn-logout" href="#" data-i18n="pending.signout">SIGN OUT AND RETURN</a>
+  <div id="ptab-frequency" class="tab-panel">
+    <div class="freq">9.1717 Hz &mdash; FREQUENCY LOCK ACTIVE</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz SOVEREIGN FREQ</div></div>
+      <div class="kpi"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+      <div class="kpi"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+      <div class="kpi"><div class="kpi-n">9×9×9</div><div class="kpi-l">729 INNER NODES</div></div>
+    </div>
   </div>
 
-  <div class="auto-check">
-    AUTO-CHECKING <span class="ac-dot"></span><span class="ac-dot" style="animation-delay:.3s"></span><span class="ac-dot" style="animation-delay:.6s"></span> EVERY 15 SECONDS
+  <div id="ptab-protocol" class="tab-panel">
+    <div class="status-box">
+      <div class="sb-label">ACCESS PROTOCOL</div>
+      <div class="sb-status" style="color:var(--cyan)">SOVEREIGN REVIEW SYSTEM</div>
+      <div class="sb-detail">The Architect personally reviews every access request. The Order operates on a trust-first model — every member is evaluated for sovereign alignment before entry is granted. Trial access spans exactly 9 hours, 17 minutes, 17 seconds.</div>
+    </div>
+  </div>
+
+  <div id="ptab-science" class="tab-panel">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+      <div class="kpi"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+      <div class="kpi"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+      <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
+      <div class="kpi"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
+      <div class="kpi"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
+      <div class="kpi"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
+    </div>
   </div>
 </div>
 
+<!-- Tab switching -->
+<script>
+(function(){
+  document.querySelectorAll('.tab-btn[data-ptab]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.tab-btn[data-ptab]').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+      var p=document.getElementById('ptab-'+b.dataset.ptab);
+      if(p)p.classList.add('active');
+    });
+  });
+})();
+</script>
 <!-- Star canvas -->
 <script>
 (function(){
@@ -134,7 +186,7 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
     });
     ctx.fillStyle='rgba(201,168,76,'+(0.82+.18*Math.sin(t*1.5))+')';
     ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=18+6*Math.sin(t);
-    ctx.font='700 38px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='700 38px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('\u03A9',CX,CY+2);ctx.shadowBlur=0;
     requestAnimationFrame(f);}f();
 })();

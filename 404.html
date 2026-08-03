@@ -4,32 +4,80 @@
 <meta charset="UTF-8">
 <link rel="manifest" href="/manifest.json"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; 404 Node Not Found</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--muted:#8a8676}
+:root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--muted:#8a8676;--line:rgba(201,168,76,.15);--D:serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:#e9e6dc;font-family:'Rajdhani',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
-.omega{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,20vw,160px);color:rgba(201,168,76,.08);line-height:1;margin-bottom:-20px}
-.code{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,3vw,20px);color:var(--gold);letter-spacing:6px;margin-bottom:12px}
-.msg{font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
-.sub{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:32px}
-a{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:3px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:10px 20px;border-radius:2px;margin:4px;display:inline-block;transition:.18s}
+body{background:var(--void);color:#e9e6dc;font-family:sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.omega{font-family:var(--D);font-size:clamp(80px,20vw,160px);color:rgba(201,168,76,.08);line-height:1;margin-bottom:-20px}
+.code{font-family:var(--D);font-size:clamp(14px,3vw,20px);color:var(--gold);letter-spacing:6px;margin-bottom:12px}
+.msg{font-family:var(--M);font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.sub{font-family:var(--M);font-size:9px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:20px}
+a{font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:10px 20px;border-radius:2px;margin:4px;display:inline-block;transition:.18s}
 a:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
 canvas{position:fixed;inset:0;z-index:-1;width:100%;height:100%;opacity:.4}
+.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;width:100%;max-width:620px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+.tab-panel{display:none;width:100%;max-width:620px;padding:20px 0}.tab-panel.active{display:block}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold);text-align:left}
+.kpi-n{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
 <canvas id="cv"></canvas>
 <div class="omega">&#937;</div>
-<div class="code">404 &mdash; NODE NOT FOUND</div>
-<div class="msg">The lattice node you are seeking does not exist.</div>
-<div class="sub">9&#215;9&#215;9 = 729 INNER NODES &middot; 12&#215;12&#215;9&#179; = 104,976 CANONICAL &middot; THIS URL IS NONE OF THEM</div>
-<div>
+<div class="tab-bar" role="tablist">
+  <button class="tab-btn active" data-tab="error">&#9670; ERROR</button>
+  <button class="tab-btn" data-tab="navigate">&#9670; NAVIGATE</button>
+  <button class="tab-btn" data-tab="lattice">&#9670; LATTICE</button>
+  <button class="tab-btn" data-tab="science">&#9670; SCIENCE</button>
+</div>
+<div id="tab-error" class="tab-panel active">
+  <div class="code">404 &mdash; NODE NOT FOUND</div>
+  <div class="msg">The lattice node you are seeking does not exist.</div>
+  <div class="sub">9&#215;9&#215;9 = 729 INNER NODES &middot; 12&#215;12&#215;9&#179; = 104,976 CANONICAL &middot; THIS URL IS NONE OF THEM</div>
+</div>
+<div id="tab-navigate" class="tab-panel">
   <a href="/dashboard.html">&#9670; RETURN TO DASHBOARD</a>
   <a href="/gaming.html">&#9671; GAMING UNIVERSE</a>
   <a href="/knowledge.html">&#9670; KNOWLEDGE GRAPH</a>
 </div>
+<div id="tab-lattice" class="tab-panel">
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER NODES</div></div>
+    <div class="kpi"><div class="kpi-n">104,976</div><div class="kpi-l">CANONICAL NODES</div></div>
+    <div class="kpi"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+    <div class="kpi"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+  </div>
+</div>
+<div id="tab-science" class="tab-panel">
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+    <div class="kpi"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+    <div class="kpi"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+    <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
+    <div class="kpi"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
+    <div class="kpi"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
+    <div class="kpi"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
+  </div>
+</div>
 <script>
+(function(){
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+      var p=document.getElementById('tab-'+b.dataset.tab);
+      if(p)p.classList.add('active');
+    });
+  });
+})();
 (function(){
   var cv=document.getElementById('cv');
   var ctx=cv.getContext('2d');

@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Body Composition · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:'Courier Prime',monospace}
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:monospace}
 .layer-tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--dim);padding-bottom:8px;flex-wrap:wrap}
 .tab-btn{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:5px 12px;background:none;border:1px solid transparent;border-radius:2px;color:rgba(138,134,118,.5);cursor:pointer;transition:.12s}
 .tab-btn.active{color:var(--gold);border-color:var(--dim)}
@@ -45,10 +45,10 @@
 </style>
 </head>
 <body>
-<div class="layer" id="L0"></div>
-<div class="side" id="sideNav"></div>
-<div class="main">
-  <div class="topbar" id="topBar"></div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="body"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">BODY COMPOSITION<small>IDENTITY &middot; PHYSICAL &middot; SYD OMEGA 91717</small></div></div>
   <div style="padding:20px var(--pad,20px)">
 
     <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · PHYSICAL</div>
@@ -62,11 +62,10 @@
     </div>
 
     <div class="layer-tabs">
-      <button class="tab-btn active" onclick="switchTab('log',this)">LOG</button>
-      <button class="tab-btn" onclick="switchTab('trends',this)">TRENDS</button>
-      <button class="tab-btn" onclick="switchTab('goals',this)">GOALS</button>
-      <button class="tab-btn" onclick="switchTab('measurements',this)">MEASUREMENTS</button>
-      <button class="tab-btn" onclick="switchTab('science',this)">SCIENCE</button>
+      <button class="tab-btn active" onclick="switchTab('log',this)">&#9670; LOG</button>
+      <button class="tab-btn" onclick="switchTab('trends',this)">&#9670; TRENDS</button>
+      <button class="tab-btn" onclick="switchTab('track',this)">&#9670; TRACK</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- LOG TAB -->
@@ -118,8 +117,8 @@
       </div>
     </div>
 
-    <!-- GOALS TAB -->
-    <div class="tab-pane" id="tab-goals">
+    <!-- TRACK TAB: goals + measurements -->
+    <div class="tab-pane" id="tab-track">
       <div class="log-form">
         <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">SET COMPOSITION GOALS</div>
         <div class="form-row trio">
@@ -140,10 +139,7 @@
         <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">RATE OF PROGRESS GUIDE</div>
         <div id="rateGuide" style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.6);line-height:2"></div>
       </div>
-    </div>
 
-    <!-- MEASUREMENTS TAB -->
-    <div class="tab-pane" id="tab-measurements">
       <div class="log-form">
         <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">LOG BODY MEASUREMENTS (cm)</div>
         <div class="form-row">
@@ -174,8 +170,21 @@
       <div id="measurementLog"></div>
     </div>
 
+
     <!-- SCIENCE TAB -->
     <div class="tab-pane" id="tab-science">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n">27.8367</div><div class="lv">APEX AUTH</div></div>
+        <div class="kpi"><div class="kpi-n">1.6180</div><div class="lv">PHI &phi;</div></div>
+        <div class="kpi"><div class="kpi-n">2.7183</div><div class="lv">EULER e</div></div>
+        <div class="kpi"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="lv">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n">0.001</div><div class="lv">INITIATE GATE</div></div>
+        <div class="kpi"><div class="kpi-n">1.618</div><div class="lv">SOVEREIGN GATE</div></div>
+        <div class="kpi"><div class="kpi-n">2.718</div><div class="lv">PRIME GATE</div></div>
+        <div class="kpi"><div class="kpi-n">9.000</div><div class="lv">APEX GATE</div></div>
+      </div>
       <div class="science-card"><h3>BODY FAT PERCENTAGE REFERENCE</h3><p><b>Essential Fat:</b> 3–5% (men) / 10–13% (women) — minimum for organ function.<br><b>Athletic:</b> 6–13% (men) / 14–20% (women) — peak performance range.<br><b>Fitness:</b> 14–17% (men) / 21–24% (women) — lean and healthy.<br><b>Average:</b> 18–24% (men) / 25–31% (women) — typical for sedentary adults.<br><b>Obese:</b> 25%+ (men) / 32%+ (women) — elevated metabolic disease risk.<br>Measurement methods by accuracy: DEXA scan > Hydrostatic weighing > BOD POD > Navy formula > BIA scale > BMI (least accurate).</p></div>
       <div class="science-card"><h3>OPTIMAL RATES OF CHANGE</h3><p><b>Fat loss:</b> 0.5–1% body weight per week (faster = muscle loss risk). Example: 90kg person → 450–900g/week deficit. Requires ~500–1000 kcal daily deficit.<br><b>Muscle gain (natural):</b> ~0.5–1kg/month for beginners, ~0.25kg/month for advanced. Requires slight caloric surplus (200–300 kcal) + progressive overload + adequate protein (1.6–2.2g/kg).<br><b>Recomposition:</b> Simultaneous fat loss + muscle gain. Possible for beginners and those returning from training. Requires precise protein + calorie targets.</p></div>
       <div class="science-card"><h3>THE BODY RECOMPOSITION PROTOCOL</h3><p>1. Protein: 2.0–2.2g per kg of bodyweight (minimum). The single most important variable.<br>2. Resistance training: 3–6 sessions/week, progressive overload, compound movements.<br>3. Calorie intake: Slight deficit (200–300 kcal) for fat loss, or maintenance for recomp.<br>4. Sleep: 7–9 hours. Growth hormone peaks during SWS. Cutting sleep cuts muscle gains ~50%.<br>5. Stress management: High cortisol drives fat storage and muscle breakdown.<br>6. Weigh daily (same conditions, morning, fasted) and use 7-day average. Daily fluctuations of 1–3kg from water are normal.</p></div>
@@ -184,7 +193,8 @@
     </div>
 
   </div>
-  <div class="lf" id="pgFoot"></div>
+  <div class="lf"><span>&#937; BODY COMPOSITION &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 <script src="bg.js"></script>
 <script src="omega-ui.js"></script>
@@ -275,7 +285,7 @@ function renderKPIs(){
 function renderLogEntries(){
   var el=document.getElementById('logEntries');
   var sorted=bodyLog.slice().reverse().slice(0,30);
-  if(!sorted.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No logs yet. Start tracking your body composition.</div>';return;}
+  if(!sorted.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No logs yet. Start tracking your body composition.</div>';return;}
   el.innerHTML=sorted.map(function(e){
     var h=localStorage.getItem(HEIGHT_KEY),bmi=h?calcBMI(e.weight,+h):null;
     return '<div class="entry-row">'
@@ -313,7 +323,7 @@ function drawTrendChart(){
   var ctx=c.getContext('2d'),W=c.width,H=c.height;
   ctx.clearRect(0,0,W,H);
   var data=bodyLog.slice(-90).map(function(e){return{date:e.date,val:getMetricVal(e,selectedMetric)};}).filter(function(d){return d.val!=null;});
-  if(!data.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px Courier Prime';ctx.textAlign='center';ctx.fillText('No data for this metric',W/2,H/2);return;}
+  if(!data.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('No data for this metric',W/2,H/2);return;}
   var vals=data.map(function(d){return d.val;});
   var minV=Math.min.apply(null,vals),maxV=Math.max.apply(null,vals);
   var pad={t:15,r:20,b:30,l:48},cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
@@ -324,7 +334,7 @@ function drawTrendChart(){
   gridVals.forEach(function(v){
     var y=pad.t+cH*(1-(v-yMin)/(yMax-yMin));
     ctx.strokeStyle='rgba(201,168,76,.06)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
-    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='9px Courier Prime';ctx.textAlign='right';ctx.fillText(v.toFixed(1),pad.l-4,y+4);
+    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='9px monospace';ctx.textAlign='right';ctx.fillText(v.toFixed(1),pad.l-4,y+4);
   });
   // area fill
   ctx.fillStyle='rgba(201,168,76,.05)';
@@ -357,7 +367,7 @@ function drawAvgChart(){
   var ctx=c.getContext('2d'),W=c.width,H=c.height;
   ctx.clearRect(0,0,W,H);
   var data=bodyLog.slice(-14).map(function(e){return getMetricVal(e,selectedMetric);}).filter(function(v){return v!=null;});
-  if(data.length<2){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='10px Courier Prime';ctx.textAlign='center';ctx.fillText('Need more data',W/2,H/2);return;}
+  if(data.length<2){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('Need more data',W/2,H/2);return;}
   var avg=data.reduce(function(a,b){return a+b;})/data.length;
   var minV=Math.min.apply(null,data),maxV=Math.max.apply(null,data);
   var range=maxV-minV||1,yMin=minV-range*.1,yMax=maxV+range*.1,pad=12;
@@ -373,7 +383,7 @@ function drawAvgChart(){
   var avgY=H-pad-(avg-yMin)/(yMax-yMin)*(H-pad*2);
   ctx.strokeStyle='rgba(201,168,76,.8)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
   ctx.beginPath();ctx.moveTo(pad,avgY);ctx.lineTo(W-pad,avgY);ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle='rgba(201,168,76,.7)';ctx.font='9px Courier Prime';ctx.textAlign='right';
+  ctx.fillStyle='rgba(201,168,76,.7)';ctx.font='9px monospace';ctx.textAlign='right';
   ctx.fillText('avg '+avg.toFixed(1),W-pad-2,avgY-3);
 }
 
@@ -418,10 +428,10 @@ function renderGoalProgress(){
   }
   el.innerHTML=items.map(function(item){
     return '<div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:14px">'
-      +'<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:6px">'+item.label+'</div>'
-      +'<div style="display:flex;justify-content:space-between;font-family:\'Courier Prime\',monospace;font-size:12px;color:var(--gold);margin-bottom:4px"><span>'+item.curr+'</span><span style="color:rgba(138,134,118,.4)">→ '+item.target+'</span></div>'
+      +'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:6px">'+item.label+'</div>'
+      +'<div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;color:var(--gold);margin-bottom:4px"><span>'+item.curr+'</span><span style="color:rgba(138,134,118,.4)">→ '+item.target+'</span></div>'
       +'<div class="goal-bar-wrap"><div class="goal-bar-fill" style="width:'+item.pct+'%"></div></div>'
-      +'<div style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.4);text-align:right">'+Math.round(item.pct)+'% progress</div>'
+      +'<div style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.4);text-align:right">'+Math.round(item.pct)+'% progress</div>'
       +'</div>';
   }).join('');
 }
@@ -455,10 +465,10 @@ function addMeasurement(){
 }
 function renderMeasurements(){
   var el=document.getElementById('measurementLog');
-  if(!measLog.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No measurements yet.</div>';return;}
+  if(!measLog.length){el.innerHTML='<div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.4);padding:10px 0">No measurements yet.</div>';return;}
   var FIELDS={neck:'Neck',chest:'Chest',waist:'Waist',hips:'Hips',armL:'L.Arm',armR:'R.Arm',thighL:'L.Thigh',thighR:'R.Thigh',calf:'Calves',shoulder:'Shoulders'};
   el.innerHTML=measLog.slice(0,10).map(function(m){
-    var stats=Object.entries(FIELDS).filter(function(x){return m[x[0]];}).map(function(x){return '<span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(138,134,118,.5)">'+x[1]+': </span><span style="font-family:\'Courier Prime\',monospace;font-size:9px;color:var(--gold)">'+m[x[0]]+'</span>';}).join(' · ');
+    var stats=Object.entries(FIELDS).filter(function(x){return m[x[0]];}).map(function(x){return '<span style="font-family:var(--M);font-size:9px;color:rgba(138,134,118,.5)">'+x[1]+': </span><span style="font-family:var(--M);font-size:9px;color:var(--gold)">'+m[x[0]]+'</span>';}).join(' · ');
     return '<div class="entry-row"><div class="er-date">'+m.date+'</div><div style="flex:1;flex-wrap:wrap">'+stats+'</div></div>';
   }).join('');
 }
@@ -469,7 +479,7 @@ function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');
   if(id==='trends'){drawTrendChart();drawAvgChart();renderChangeStats();}
-  if(id==='goals'){loadGoalForm();}
+  if(id==='track'){loadGoalForm();}
 }
 
 /* INIT */

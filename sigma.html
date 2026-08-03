@@ -1,39 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; SIGMA PROTOCOL</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
-<script src="/bg.js" defer></script>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}
-.t small{display:block;font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:2px}
-.pad{padding:clamp(14px,3vw,36px)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold));position:relative;overflow:hidden}
-.kpi-n{font-family:var(--D);font-size:clamp(18px,3vw,24px);color:var(--kc,var(--gold));line-height:1}
-.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.kpi-d{font-family:var(--M);font-size:7px;color:var(--muted);margin-top:3px;opacity:.55}
-.sechead{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:16px;border-radius:2px;margin-bottom:14px}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
-.lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
-.tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(10,10,15,.4);overflow-x:auto;scrollbar-width:none}
-.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 18px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.15s;flex-shrink:0}
-.tab-btn.on{border-bottom-color:var(--gold);color:var(--gold)}
-.tab-panel{display:none}.tab-panel.on{display:block}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-canvas.sigma-chart{display:block;width:100%;max-height:200px}
-
 /* Gate distribution bars */
 .gate-bar-wrap{margin-bottom:8px}
 .gate-bar-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
@@ -41,8 +11,7 @@ canvas.sigma-chart{display:block;width:100%;max-height:200px}
 .gate-bar-cnt{font-family:var(--D);font-size:11px;color:var(--gold)}
 .gate-bar-track{height:5px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
 .gate-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width 1.2s cubic-bezier(.4,0,.2,1)}
-
-/* Element circle grid */
+/* Element tile grid */
 .elem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .elem-tile{border:1px solid var(--line);background:rgba(10,10,15,.6);padding:12px;text-align:center;border-radius:2px;transition:.18s;cursor:default}
 .elem-tile:hover{background:rgba(201,168,76,.06);border-color:var(--solar)}
@@ -50,211 +19,216 @@ canvas.sigma-chart{display:block;width:100%;max-height:200px}
 .elem-name{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .elem-count{font-family:var(--D);font-size:16px}
 .elem-pct{font-family:var(--M);font-size:7px;color:var(--muted)}
-
-/* Live pulse dot */
-.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:sigma-pulse 1.8s ease-in-out infinite;flex-shrink:0}
-@keyframes sigma-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(63,178,127,.5)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(63,178,127,0)}}
-
-/* Formula display */
-.formula-block{background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.12);padding:16px;border-radius:2px;font-family:var(--M);font-size:10px;color:var(--solar);line-height:2;overflow-x:auto}
-.formula-var{color:var(--cyan)}
-.formula-result{color:var(--green);font-size:12px;font-family:var(--D)}
-
 /* Percentile bar */
 .pctile-track{height:12px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;position:relative;margin:8px 0}
-.pctile-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--solar));transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+.pctile-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple,#9B6BF0),var(--cyan),var(--solar));transition:width 1.5s cubic-bezier(.4,0,.2,1)}
 .pctile-mark{position:absolute;top:0;bottom:0;width:2px;background:var(--gold);border-radius:2px;transition:left 1.5s cubic-bezier(.4,0,.2,1)}
-
-/* Axis scatter */
-#sigma-scatter{border:1px solid rgba(201,168,76,.1);background:rgba(0,0,0,.3);border-radius:2px;width:100%;height:200px;display:block}
-
 /* Signal strength */
 .signal-bars{display:flex;align-items:flex-end;gap:3px;height:24px}
-.signal-bar{background:var(--gold);width:6px;border-radius:1px;opacity:.2;transition:opacity .3s}
+.signal-bar{background:var(--green);width:6px;border-radius:1px;opacity:.2;transition:opacity .3s}
 .signal-bar.on{opacity:1}
-
+/* Pulse dot */
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:sigma-pulse 1.8s ease-in-out infinite;flex-shrink:0}
+@keyframes sigma-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(63,178,127,.5)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(63,178,127,0)}}
+/* Formula */
+.formula-block{background:rgba(0,0,0,.4);border:1px solid rgba(201,168,76,.12);padding:16px;border-radius:2px;font-family:var(--M);font-size:10px;color:var(--solar);line-height:2;overflow-x:auto}
+.formula-var{color:var(--cyan)}
+.formula-result{color:var(--green);font-size:14px;font-family:var(--D);display:block;margin-top:4px}
 /* Constants table */
 .const-tbl{width:100%;border-collapse:collapse}
 .const-tbl td{padding:7px 0;border-bottom:1px solid rgba(201,168,76,.06);font-family:var(--M);font-size:8.5px;vertical-align:top}
-.const-tbl td:first-child{color:var(--muted);letter-spacing:1px;width:40%}
+.const-tbl td:first-child{color:var(--muted);letter-spacing:1px;width:55%}
 .const-tbl td:last-child{color:var(--solar);text-align:right;font-size:9.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:700px){.grid2{grid-template-columns:1fr}.elem-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
-<div class="shell" id="app" style="display:none">
-  <aside class="side" id="omega-side" data-page="sigma"></aside>
-  <main class="main">
+<aside id="omega-side" data-page="sigma"></aside>
+<div class="page-shell" id="app" style="display:none">
 
-    <div class="topbar">
-      <div class="t">SIGMA PROTOCOL<small>SOVEREIGN ANALYTICS ENGINE · LIVE AUTHORITY METRICS · PLATFORM SIGNAL</small></div>
-      <span class="pulse-dot" title="Live data"></span>
-    </div>
+<header class="topbar">
+  <div class="topbar-title">SIGMA PROTOCOL<span class="topbar-sub">SOVEREIGN ANALYTICS ENGINE · LIVE AUTHORITY METRICS</span></div>
+  <span class="pulse-dot" title="Live data" style="margin-right:8px"></span>
+  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
+</header>
 
-    <div class="pad">
-      <!-- KPI row -->
-      <div class="kpi-row" id="sigma-kpis">
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="sk-total">—</div><div class="kpi-l">TOTAL SOVEREIGNS</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="sk-active">—</div><div class="kpi-l">APPROVED MEMBERS</div></div>
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="sk-apex">—</div><div class="kpi-l">APEX SOVEREIGNS</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="sk-auth-avg">—</div><div class="kpi-l">MEAN AUTHORITY</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="sk-auth-max">—</div><div class="kpi-l">PEAK AUTHORITY</div></div>
-        <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="sk-pctile">—</div><div class="kpi-l">YOUR PERCENTILE</div></div>
-      </div>
-
-      <!-- Tab bar -->
-      <div class="tab-bar">
-        <button class="tab-btn on" onclick="sigTab('overview')">OVERVIEW</button>
-        <button class="tab-btn" onclick="sigTab('authority')">AUTHORITY</button>
-        <button class="tab-btn" onclick="sigTab('elements')">ELEMENTS</button>
-        <button class="tab-btn" onclick="sigTab('gates')">GATES</button>
-        <button class="tab-btn" onclick="sigTab('constants')">CONSTANTS</button>
-        <button class="tab-btn" onclick="sigTab('signal')">SIGNAL</button>
-      </div>
-
-      <!-- OVERVIEW -->
-      <div class="tab-panel on" id="sig-overview">
-        <div class="grid2" style="margin-top:14px">
-          <div class="card">
-            <div class="sechead">AUTHORITY DISTRIBUTION</div>
-            <canvas id="sigma-dist" class="sigma-chart" height="180"></canvas>
-          </div>
-          <div class="card">
-            <div class="sechead">YOUR STANDING</div>
-            <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">AUTHORITY SCORE</div>
-            <div style="font-family:var(--D);font-size:clamp(28px,5vw,48px);color:var(--gold);line-height:1" id="my-auth-big">—</div>
-            <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin:6px 0 4px" id="my-gate-label">—</div>
-            <div class="pctile-track">
-              <div class="pctile-fill" id="pctile-fill" style="width:0%"></div>
-              <div class="pctile-mark" id="pctile-mark" style="left:0%"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:7px;color:var(--muted)">
-              <span>0</span><span style="color:var(--gold)" id="pctile-label">—</span><span>27.8367</span>
-            </div>
-            <div style="margin-top:14px;font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted)">AXIS BREAKDOWN</div>
-            <canvas id="sigma-axes" width="200" height="120" style="margin-top:8px;display:block;width:100%"></canvas>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="sechead">TOP SOVEREIGNS</div>
-          <div id="top-list" style="font-family:var(--M);font-size:8.5px;color:var(--muted)">Loading…</div>
-        </div>
-      </div>
-
-      <!-- AUTHORITY TAB -->
-      <div class="tab-panel" id="sig-authority">
-        <div style="margin-top:14px" class="card">
-          <div class="sechead">AUTHORITY FORMULA EXPLORER</div>
-          <div class="formula-block">
-            AUTH = sqrt( <span class="formula-var">A</span>³ + <span class="formula-var">B</span>³ + <span class="formula-var">C</span>³ ) × φ / e<br>
-            where φ = 1.6180339887 (Golden Ratio), e = 2.7182818285 (Euler's Number)<br>
-            APEX threshold = <span class="formula-var">27.8367</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px">
-            <div>
-              <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS A</label>
-              <input id="calc-a" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
-              <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-a-val">5.000</div>
-            </div>
-            <div>
-              <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS B</label>
-              <input id="calc-b" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
-              <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-b-val">5.000</div>
-            </div>
-            <div>
-              <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS C</label>
-              <input id="calc-c" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
-              <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-c-val">5.000</div>
-            </div>
-          </div>
-          <div style="text-align:center;margin-top:16px;padding:14px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px">
-            <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">COMPUTED AUTHORITY</div>
-            <div class="formula-result" id="calc-result">9.6453</div>
-            <div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:6px" id="calc-gate-label">GATE 5 · GUARDIAN</div>
-          </div>
-          <canvas id="sigma-auth-curve" class="sigma-chart" style="margin-top:16px;height:160px" height="160"></canvas>
-        </div>
-      </div>
-
-      <!-- ELEMENTS TAB -->
-      <div class="tab-panel" id="sig-elements">
-        <div style="margin-top:14px" class="card">
-          <div class="sechead">ELEMENT DISTRIBUTION</div>
-          <div class="elem-grid" id="elem-grid">
-            <!-- populated by JS -->
-          </div>
-        </div>
-        <div class="card">
-          <div class="sechead">ELEMENT vs GATE MATRIX</div>
-          <canvas id="sigma-elem-matrix" class="sigma-chart" height="220"></canvas>
-        </div>
-      </div>
-
-      <!-- GATES TAB -->
-      <div class="tab-panel" id="sig-gates">
-        <div style="margin-top:14px" class="card">
-          <div class="sechead">GATE DISTRIBUTION</div>
-          <div id="gate-bars"><!-- populated by JS --></div>
-        </div>
-        <div class="card">
-          <div class="sechead">GATE THRESHOLDS</div>
-          <table class="const-tbl" style="width:100%">
-            <tbody id="gate-thresh-tbl"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- CONSTANTS TAB -->
-      <div class="tab-panel" id="sig-constants">
-        <div style="margin-top:14px" class="card">
-          <div class="sechead">SOVEREIGN MATHEMATICAL CONSTANTS</div>
-          <table class="const-tbl"><tbody id="const-tbl-body"></tbody></table>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <div class="sechead">CONVERGENCE ANALYSIS</div>
-          <div style="font-family:var(--M);font-size:8.5px;color:var(--muted);line-height:2">
-            The authority function <code style="color:var(--solar)">f(A,B,C) = sqrt(A³+B³+C³)·φ/e</code> achieves its global maximum when A=B=C=10, yielding AUTH=27.8367 (APEX SOVEREIGN threshold). The geometric growth of cubic terms creates exponential authority scaling — early axis investment returns disproportionate authority at higher values. The ratio φ/e ≈ 0.5957 acts as a sovereign compression factor, anchoring APEX to a compact range.<br><br>
-            Sensitivity analysis: at A=B=C=5 (midpoint), ∂AUTH/∂A = 1.031 — each unit gain delivers ~1 authority point. At APEX threshold A=B=C=9.8, the sensitivity rises to 3.42, confirming superlinear returns near convergence.
-          </div>
-        </div>
-      </div>
-
-      <!-- SIGNAL TAB -->
-      <div class="tab-panel" id="sig-signal">
-        <div style="margin-top:14px" class="card">
-          <div class="sechead">PLATFORM SIGNAL STRENGTH</div>
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-            <div class="signal-bars" id="signal-bars">
-              <div class="signal-bar on" style="height:6px"></div>
-              <div class="signal-bar on" style="height:9px"></div>
-              <div class="signal-bar on" style="height:13px"></div>
-              <div class="signal-bar on" style="height:17px"></div>
-              <div class="signal-bar" style="height:21px"></div>
-            </div>
-            <div>
-              <div style="font-family:var(--D);font-size:16px;color:var(--green)" id="sig-status">SOVEREIGN SIGNAL: STRONG</div>
-              <div style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)" id="sig-latency">Measuring latency…</div>
-            </div>
-          </div>
-          <div id="sig-realtime-log" style="background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.08);padding:12px;font-family:var(--M);font-size:8px;color:var(--muted);height:200px;overflow-y:auto;line-height:2">
-            <div style="color:var(--cyan)">▶ SOVEREIGN SIGNAL MONITOR INITIALISED</div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <div class="sechead">AXIS SCATTER MATRIX</div>
-          <canvas id="sigma-scatter" style="width:100%;height:220px;display:block"></canvas>
-        </div>
-      </div>
-
-    </div><!-- /pad -->
-    <footer class="lf"><span>Ω SIGMA PROTOCOL · SYD OMEGA 91717</span><span id="sigma-ts"></span></footer>
-  </main>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setTab('overview')">OVERVIEW</button>
+  <button class="tab-btn" onclick="setTab('authority')">AUTHORITY</button>
+  <button class="tab-btn" onclick="setTab('analytics')">ANALYTICS</button>
+  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
+<!-- OVERVIEW -->
+<div class="tab-panel active" id="tab-overview">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-val" id="sk-total">—</div><div class="kpi-label">TOTAL SOVEREIGNS</div></div>
+    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="sk-active">—</div><div class="kpi-label">APPROVED</div></div>
+    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="sk-apex">—</div><div class="kpi-label">APEX</div></div>
+    <div class="kpi-card" style="--kc:#9B6BF0"><div class="kpi-val" id="sk-auth-avg">—</div><div class="kpi-label">MEAN AUTH</div></div>
+    <div class="kpi-card" style="--kc:var(--solar)"><div class="kpi-val" id="sk-auth-max">—</div><div class="kpi-label">PEAK AUTH</div></div>
+    <div class="kpi-card" style="--kc:var(--crim)"><div class="kpi-val" id="sk-pctile">—</div><div class="kpi-label">YOUR PERCENTILE</div></div>
+  </div>
+
+  <div class="grid2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="sechead">AUTHORITY DISTRIBUTION</div>
+      <canvas id="sigma-dist" style="display:block;width:100%;height:180px"></canvas>
+    </div>
+    <div class="card">
+      <div class="sechead">YOUR STANDING</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">AUTHORITY SCORE</div>
+      <div style="font-family:var(--D);font-size:clamp(28px,5vw,48px);color:var(--gold);line-height:1" id="my-auth-big">—</div>
+      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin:6px 0 4px" id="my-gate-label">—</div>
+      <div class="pctile-track">
+        <div class="pctile-fill" id="pctile-fill" style="width:0%"></div>
+        <div class="pctile-mark" id="pctile-mark" style="left:0%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:7px;color:var(--muted)">
+        <span>0</span><span style="color:var(--gold)" id="pctile-label">—</span><span>27.8367</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sechead">TOP SOVEREIGNS</div>
+    <div id="top-list" style="font-family:var(--M);font-size:8.5px;color:var(--muted)">Loading…</div>
+  </div>
+</div>
+
+<!-- AUTHORITY -->
+<div class="tab-panel" id="tab-authority">
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">AUTHORITY FORMULA EXPLORER</div>
+    <div class="formula-block">
+      AUTH = sqrt( <span class="formula-var">A</span>³ + <span class="formula-var">B</span>³ + <span class="formula-var">C</span>³ ) × φ / e<br>
+      where φ = 1.6180339887 (Golden Ratio), e = 2.7182818285 (Euler's Number)<br>
+      APEX threshold = <span class="formula-var">27.8367</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px">
+      <div>
+        <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS A</label>
+        <input id="calc-a" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
+        <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-a-val">5.000</div>
+      </div>
+      <div>
+        <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS B</label>
+        <input id="calc-b" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
+        <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-b-val">5.000</div>
+      </div>
+      <div>
+        <label style="font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS C</label>
+        <input id="calc-c" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
+        <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-c-val">5.000</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:16px;padding:14px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px">
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px">COMPUTED AUTHORITY</div>
+      <span class="formula-result" id="calc-result">9.6453</span>
+      <div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-top:6px" id="calc-gate-label">GATE 5 · GUARDIAN</div>
+    </div>
+    <canvas id="sigma-auth-curve" style="display:block;width:100%;height:160px;margin-top:16px"></canvas>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="sechead">AXIS BREAKDOWN</div>
+      <canvas id="sigma-axes" style="display:block;width:100%;height:140px"></canvas>
+    </div>
+    <div class="card">
+      <div class="sechead">CONVERGENCE ANALYSIS</div>
+      <div style="font-family:var(--M);font-size:8.5px;color:var(--muted);line-height:2">
+        The authority function <code style="color:var(--solar)">f(A,B,C)=sqrt(A³+B³+C³)·φ/e</code> achieves its global maximum when A=B=C=10, yielding AUTH=27.8367 (APEX SOVEREIGN threshold).<br><br>
+        The ratio φ/e ≈ 0.5957 acts as a sovereign compression factor. Sensitivity at midpoint (5,5,5): ∂AUTH/∂A = 1.031. Near APEX (9.8,9.8,9.8): ∂AUTH/∂A = 3.42 — superlinear returns confirm cubic scaling.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="tab-panel" id="tab-analytics">
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">ELEMENT DISTRIBUTION</div>
+    <div class="elem-grid" id="elem-grid"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">ELEMENT vs AUTHORITY CHART</div>
+    <canvas id="sigma-elem-matrix" style="display:block;width:100%;height:220px"></canvas>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">GATE DISTRIBUTION</div>
+    <div id="gate-bars"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">GATE THRESHOLDS</div>
+    <table class="const-tbl"><tbody id="gate-thresh-tbl"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="sechead">AXIS A vs AUTHORITY SCATTER</div>
+    <canvas id="sigma-scatter" style="display:block;width:100%;height:220px"></canvas>
+  </div>
+</div>
+
+<!-- SCIENCE -->
+<div class="tab-panel" id="tab-science">
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">SOVEREIGN MATHEMATICAL CONSTANTS</div>
+    <table class="const-tbl"><tbody id="const-tbl-body"></tbody></table>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">PLATFORM SIGNAL MONITOR</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+      <div class="signal-bars" id="signal-bars">
+        <div class="signal-bar on" style="height:6px"></div>
+        <div class="signal-bar on" style="height:9px"></div>
+        <div class="signal-bar on" style="height:13px"></div>
+        <div class="signal-bar on" style="height:17px"></div>
+        <div class="signal-bar" style="height:21px"></div>
+      </div>
+      <div>
+        <div style="font-family:var(--D);font-size:14px;color:var(--green)" id="sig-status">SOVEREIGN SIGNAL: STRONG</div>
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:var(--muted)" id="sig-latency">Measuring latency…</div>
+      </div>
+    </div>
+    <div id="sig-realtime-log" style="background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.08);padding:12px;font-family:var(--M);font-size:8px;color:var(--muted);height:180px;overflow-y:auto;line-height:2">
+      <div style="color:var(--cyan)">▶ SOVEREIGN SIGNAL MONITOR INITIALISED</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="sechead">AUTHORITY FORMULA DERIVATION</div>
+    <div style="font-family:var(--M);font-size:8.5px;color:var(--muted);line-height:2.2">
+      <div style="color:var(--solar);margin-bottom:10px">AUTH = √(A³ + B³ + C³) × φ / e</div>
+      <strong style="color:var(--ink)">Why cubic terms?</strong> Cubic growth rewards consistent multi-axis development — a sovereign who specialises (high in one axis) scores lower than one who distributes effort equally across all three axes. The cubic function amplifies this effect: 10³ = 1000, but 5³+5³+5³ = 375, producing a 2.65× incentive for balance.<br><br>
+      <strong style="color:var(--ink)">Why φ/e?</strong> The ratio of the Golden Ratio to Euler's Number (≈ 0.5957) is not arbitrary — it compresses the raw cubic sum into a human-readable range of 0–27.8367, anchoring APEX to a value with geometric elegance. The APEX threshold itself (≈ 27.8367) equals √3000 × φ/e, achievable only at perfect axis saturation (A=B=C=10).<br><br>
+      <strong style="color:var(--ink)">Gate system:</strong> 12 gates partition the authority continuum from 0 to APEX, each representing a tier of sovereign standing from INITIATE through APEX SOVEREIGN. Gate thresholds are spaced to create meaningful milestones at each stage of development.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sechead">12-GATE SYSTEM REFERENCE</div>
+    <div style="font-family:var(--M);font-size:8.5px;color:var(--muted);line-height:2">
+      The 12-gate system mirrors the 12 zodiac signs, creating a harmonic resonance between the member's celestial element and their authority tier. Each gate name reflects a stage of sovereign mastery: from INITIATE (first awakening) through PRIME (near-perfect convergence) to APEX SOVEREIGN (full realisation). Gate thresholds are visible in the ANALYTICS tab.
+    </div>
+  </div>
+</div>
+
+</div><!-- /page-shell -->
+
+<script>
+function setTab(name){
+  var tabs=['overview','authority','analytics','science'];
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+</script>
+
 <script type="module">
-const SUPABASE_URL='https://ydqhzvvoyufiiqvzcjns.supabase.co';
-const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
+var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+
 const PHI=1.6180339887,EU=2.7182818285;
 const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
 const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
@@ -262,348 +236,334 @@ const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'F
 const ELEM_INFO={Fire:{sigil:'☲',color:'#FF6B35'},Water:{sigil:'☰',color:'#00B4D8'},Wind:{sigil:'☱',color:'#B0BEC5'},Metal:{sigil:'☳',color:'#E2C86D'},Sand:{sigil:'★',color:'#FFD54F'},Soul:{sigil:'✴',color:'#9B6BF0'},Space:{sigil:'✶',color:'#7C4DFF'},Void:{sigil:'✷',color:'#334466'},'The All':{sigil:'Ω',color:'#E2C86D'}};
 
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
-function getGate(auth){let g=0;GATE_THRESH.forEach((t,i)=>{if(auth>=t)g=i;});return {num:g+1,name:GATE_NAMES[g]};}
-function $$(s){return document.querySelector(s);}
+function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return{num:g+1,name:GATE_NAMES[g]};}
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
-const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
-const {data:{session}}=await sb.auth.getSession();
-if(!session){location.href='/account.html';throw 0;}
-const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-if(pr?.approval_status==='pending'){location.href='/pending.html';throw 0;}
-if(window.__omegaApprove)window.__omegaApprove(true);
-document.getElementById('app').style.display='flex';
+(async function(){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){location.replace('/account.html');return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+  document.getElementById('app').style.display='flex';
+  if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 
-const myA=Number(pr?.axis_a||0),myB=Number(pr?.axis_b||0),myC=Number(pr?.axis_c||0);
-const myAuth=pr?.is_owner?27.8367:calcAuth(myA,myB,myC);
-const myGate=getGate(myAuth);
+  var myA=Number(pr.axis_a||0),myB=Number(pr.axis_b||0),myC=Number(pr.axis_c||0);
+  var myAuth=pr.is_owner?27.8367:calcAuth(myA,myB,myC);
+  var myGate=getGate(myAuth);
 
-/* Load all approved profiles */
-const {data:all}=await sb.from('profiles').select('display_name,full_name,axis_a,axis_b,axis_c,is_owner,zodiac_sign,approval_status').eq('approval_status','approved').order('axis_a',{ascending:false});
-const approved=all||[];
+  /* Load approved profiles */
+  var res=await sb.from('profiles').select('display_name,full_name,axis_a,axis_b,axis_c,is_owner,zodiac_sign,access_approved').eq('access_approved',true).order('axis_a',{ascending:false});
+  var approved=(res.data||[]);
+  var auths=approved.map(function(p){return p.is_owner?27.8367:calcAuth(Number(p.axis_a||0),Number(p.axis_b||0),Number(p.axis_c||0));});
+  var totalN=auths.length;
+  var avgAuth=totalN>0?auths.reduce(function(s,a){return s+a;},0)/totalN:0;
+  var maxAuth=totalN>0?Math.max.apply(null,auths):0;
+  var apexN=auths.filter(function(a){return a>=27.8367;}).length;
+  var sortedAuths=auths.slice().sort(function(x,y){return x-y;});
+  var myPctile=totalN>1?Math.round(sortedAuths.filter(function(a){return a<myAuth;}).length/(totalN-1)*100):100;
 
-const auths=approved.map(p=>p.is_owner?27.8367:calcAuth(Number(p.axis_a||0),Number(p.axis_b||0),Number(p.axis_c||0)));
-const totalN=auths.length;
-const avgAuth=totalN>0?auths.reduce((s,a)=>s+a,0)/totalN:0;
-const maxAuth=totalN>0?Math.max(...auths):0;
-const apexN=auths.filter(a=>a>=27.8367).length;
-const sortedAuths=[...auths].sort((x,y)=>x-y);
-const myPctile=totalN>1?Math.round(sortedAuths.filter(a=>a<myAuth).length/(totalN-1)*100):100;
+  /* KPIs */
+  document.getElementById('sk-total').textContent=totalN;
+  document.getElementById('sk-active').textContent=totalN;
+  document.getElementById('sk-apex').textContent=apexN;
+  document.getElementById('sk-auth-avg').textContent=avgAuth.toFixed(3);
+  document.getElementById('sk-auth-max').textContent=maxAuth.toFixed(4);
+  document.getElementById('sk-pctile').textContent=myPctile+'%';
+  document.getElementById('my-auth-big').textContent=myAuth.toFixed(4);
+  document.getElementById('my-gate-label').textContent='GATE '+myGate.num+' · '+myGate.name;
+  document.getElementById('pctile-fill').style.width=Math.min(myPctile,100)+'%';
+  document.getElementById('pctile-mark').style.left=Math.min(myPctile,100)+'%';
+  document.getElementById('pctile-label').textContent=myPctile+'th PERCENTILE';
 
-/* KPIs */
-$$('#sk-total').textContent=totalN;
-$$('#sk-active').textContent=totalN;
-$$('#sk-apex').textContent=apexN;
-$$('#sk-auth-avg').textContent=avgAuth.toFixed(3);
-$$('#sk-auth-max').textContent=maxAuth.toFixed(4);
-$$('#sk-pctile').textContent=myPctile+'%';
-$$('#my-auth-big').textContent=myAuth.toFixed(4);
-$$('#my-gate-label').textContent='GATE '+myGate.num+' · '+myGate.name;
-$$('#pctile-fill').style.width=Math.min(myPctile,100)+'%';
-$$('#pctile-mark').style.left=Math.min(myPctile,100)+'%';
-$$('#pctile-label').textContent=myPctile+'th PERCENTILE';
-$$('#sigma-ts').textContent=new Date().toUTCString().split(' ').slice(1,4).join(' ');
+  /* Top list */
+  var topAuth=approved.map(function(p){return{name:p.display_name||p.full_name||'Sovereign',auth:p.is_owner?27.8367:calcAuth(Number(p.axis_a||0),Number(p.axis_b||0),Number(p.axis_c||0))};}).sort(function(a,b){return b.auth-a.auth;}).slice(0,10);
+  var topEl=document.getElementById('top-list');
+  if(topAuth.length===0){topEl.textContent='No data.';}
+  else{
+    topEl.innerHTML='';
+    topAuth.forEach(function(m,i){
+      var gate=getGate(m.auth);
+      var row=document.createElement('div');
+      row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)';
+      var isMe=m.name===(pr.display_name||pr.full_name||'Sovereign');
+      var numSpan=document.createElement('span');
+      numSpan.style.cssText='font-family:var(--D);font-size:10px;color:var(--muted);margin-right:10px';
+      numSpan.textContent=String(i+1).padStart(2,'0');
+      var nameSpan=document.createElement('span');
+      nameSpan.style.color=isMe?'var(--gold)':'var(--muted)';
+      nameSpan.appendChild(numSpan);
+      nameSpan.appendChild(document.createTextNode(m.name));
+      var authSpan=document.createElement('span');
+      authSpan.style.cssText='font-family:var(--D);font-size:11px;color:'+(isMe?'var(--solar)':'var(--ink)');
+      authSpan.textContent=m.auth.toFixed(4);
+      row.appendChild(nameSpan);
+      row.appendChild(authSpan);
+      topEl.appendChild(row);
+    });
+  }
 
-/* Tab switching */
-window.sigTab=function(id){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('on',b.getAttribute('onclick').includes("'"+id+"'"));});
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('on'));
-  const el=document.getElementById('sig-'+id);
-  if(el)el.classList.add('on');
-};
+  /* ── CHARTS ── */
+  function drawDist(){
+    var cv=document.getElementById('sigma-dist');if(!cv)return;
+    var ctx=cv.getContext('2d');
+    var W=cv.offsetWidth||400,H=180;
+    cv.width=W;cv.height=H;
+    ctx.clearRect(0,0,W,H);
+    if(!sortedAuths.length)return;
+    var bins=20,maxV=30;
+    var counts=new Array(bins).fill(0);
+    sortedAuths.forEach(function(a){var b=Math.min(Math.floor(a/maxV*bins),bins-1);counts[b]++;});
+    var maxC=Math.max.apply(null,counts)||1;
+    var barW=W/bins;
+    var grad=ctx.createLinearGradient(0,0,W,0);
+    grad.addColorStop(0,'rgba(155,107,240,.6)');
+    grad.addColorStop(.5,'rgba(0,229,255,.6)');
+    grad.addColorStop(1,'rgba(226,200,109,.8)');
+    var myBin=Math.min(Math.floor(myAuth/maxV*bins),bins-1);
+    counts.forEach(function(c,i){
+      var x=i*barW,h=(c/maxC)*(H-20),y=H-h;
+      ctx.fillStyle=grad;
+      ctx.fillRect(x+1,y,barW-2,h);
+      if(i===myBin){ctx.strokeStyle='rgba(201,168,76,.8)';ctx.lineWidth=1;ctx.strokeRect(x+1,y,barW-2,h);}
+    });
+    ctx.fillStyle='rgba(138,134,118,.6)';ctx.font='8px monospace';ctx.textAlign='center';
+    [0,7.5,15,22.5,27.8367].forEach(function(v){ctx.fillText(v.toFixed(1),v/maxV*W,H-2);});
+  }
+  drawDist();
 
-/* ── OVERVIEW CHARTS ── */
-function drawDist(){
-  const cv=document.getElementById('sigma-dist');
-  if(!cv)return;
-  const ctx=cv.getContext('2d');
-  const W=cv.offsetWidth||400,H=180;
-  cv.width=W;cv.height=H;
-  ctx.clearRect(0,0,W,H);
-  if(!sortedAuths.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.fillRect(0,0,W,H);return;}
-  /* histogram: 20 bins 0..30 */
-  const bins=20,maxV=30;
-  const counts=new Array(bins).fill(0);
-  sortedAuths.forEach(a=>{const b=Math.min(Math.floor(a/maxV*bins),bins-1);counts[b]++;});
-  const maxC=Math.max(...counts)||1;
-  const barW=W/bins;
-  /* gradient */
-  const grad=ctx.createLinearGradient(0,0,W,0);
-  grad.addColorStop(0,'rgba(155,107,240,.6)');
-  grad.addColorStop(0.5,'rgba(0,229,255,.6)');
-  grad.addColorStop(1,'rgba(226,200,109,.8)');
-  counts.forEach((c,i)=>{
-    const x=i*barW,h=(c/maxC)*(H-20),y=H-h;
-    ctx.fillStyle=grad;
-    ctx.fillRect(x+1,y,barW-2,h);
-    /* highlight user's bin */
-    const myBin=Math.min(Math.floor(myAuth/maxV*bins),bins-1);
-    if(i===myBin){ctx.strokeStyle='rgba(201,168,76,.8)';ctx.lineWidth=1;ctx.strokeRect(x+1,y,barW-2,h);}
-  });
-  /* axis labels */
-  ctx.fillStyle='rgba(138,134,118,.6)';
-  ctx.font='8px Courier Prime,monospace';
-  ctx.textAlign='center';
-  [0,7.5,15,22.5,27.8367].forEach(v=>{
-    const x=v/maxV*W;
-    ctx.fillText(v.toFixed(1),x,H-2);
-  });
-}
-drawDist();
-
-function drawAxesRadar(){
-  const cv=document.getElementById('sigma-axes');if(!cv)return;
-  const W=cv.offsetWidth||200,H=120;
-  cv.width=W;cv.height=H;
-  const ctx=cv.getContext('2d');
-  const cx=W/2,cy=H/2,r=Math.min(W,H)*0.42;
-  const axes=[{l:'A',v:myA,max:10},{l:'B',v:myB,max:10},{l:'C',v:myC,max:10}];
-  const N=3;
-  ctx.clearRect(0,0,W,H);
-  /* grid rings */
-  [0.25,0.5,0.75,1].forEach(frac=>{
+  function drawAxesRadar(){
+    var cv=document.getElementById('sigma-axes');if(!cv)return;
+    var W=cv.offsetWidth||200,H=140;
+    cv.width=W;cv.height=H;
+    var ctx=cv.getContext('2d');
+    var cx=W/2,cy=H/2,r=Math.min(W,H)*0.4;
+    var axes=[{l:'A',v:myA,max:10},{l:'B',v:myB,max:10},{l:'C',v:myC,max:10}];
+    var N=3;
+    ctx.clearRect(0,0,W,H);
+    [0.25,0.5,0.75,1].forEach(function(frac){
+      ctx.beginPath();ctx.strokeStyle='rgba(201,168,76,0.08)';
+      for(var i=0;i<N;i++){
+        var ang=-Math.PI/2+i*(2*Math.PI/N);
+        var px=cx+Math.cos(ang)*r*frac,py=cy+Math.sin(ang)*r*frac;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      }
+      ctx.closePath();ctx.stroke();
+    });
     ctx.beginPath();
-    ctx.strokeStyle='rgba(201,168,76,0.08)';
-    for(let i=0;i<N;i++){
-      const ang=-Math.PI/2+i*(2*Math.PI/N);
-      const px=cx+Math.cos(ang)*r*frac,py=cy+Math.sin(ang)*r*frac;
+    axes.forEach(function(ax,i){
+      var ang=-Math.PI/2+i*(2*Math.PI/N);
+      var frac=ax.v/ax.max;
+      var px=cx+Math.cos(ang)*r*frac,py=cy+Math.sin(ang)*r*frac;
       i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-    }
-    ctx.closePath();ctx.stroke();
+    });
+    ctx.closePath();
+    ctx.fillStyle='rgba(226,200,109,.15)';ctx.fill();
+    ctx.strokeStyle='rgba(226,200,109,.6)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='rgba(138,134,118,.8)';ctx.font='bold 9px monospace';ctx.textAlign='center';
+    axes.forEach(function(ax,i){
+      var ang=-Math.PI/2+i*(2*Math.PI/N);
+      var px=cx+Math.cos(ang)*(r+16),py=cy+Math.sin(ang)*(r+16)+3;
+      ctx.fillText(ax.l+': '+ax.v.toFixed(2),px,py);
+    });
+  }
+  drawAxesRadar();
+
+  /* ── AUTHORITY CALCULATOR ── */
+  function updateCalc(){
+    var a=Number(document.getElementById('calc-a').value),b=Number(document.getElementById('calc-b').value),c=Number(document.getElementById('calc-c').value);
+    document.getElementById('calc-a-val').textContent=a.toFixed(3);
+    document.getElementById('calc-b-val').textContent=b.toFixed(3);
+    document.getElementById('calc-c-val').textContent=c.toFixed(3);
+    var auth=calcAuth(a,b,c);
+    document.getElementById('calc-result').textContent=auth.toFixed(4);
+    var g=getGate(auth);
+    document.getElementById('calc-gate-label').textContent='GATE '+g.num+' · '+g.name;
+    drawAuthCurve(a,b,c);
+  }
+  ['calc-a','calc-b','calc-c'].forEach(function(id){document.getElementById(id)?.addEventListener('input',updateCalc);});
+
+  function drawAuthCurve(a,b,c){
+    var cv=document.getElementById('sigma-auth-curve');if(!cv)return;
+    var W=cv.offsetWidth||400,H=160;
+    cv.width=W;cv.height=H;
+    var ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    var N=100;
+    var colors=['rgba(226,200,109,.8)','rgba(0,229,255,.8)','rgba(155,107,240,.8)'];
+    var vals=[a,b,c];
+    ['A','B','C'].forEach(function(ax,ai){
+      ctx.beginPath();
+      for(var i=0;i<=N;i++){
+        var t=i/N*10;
+        var v=vals.slice();v[ai]=t;
+        var auth=calcAuth(v[0],v[1],v[2]);
+        var x=i/N*W,y=H-auth/30*H;
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle=colors[ai];ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle=colors[ai];ctx.font='8px monospace';
+      ctx.fillText('AXIS '+ax,8+ai*70,14);
+    });
+    var apexY=H-27.8367/30*H;
+    ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(201,168,76,.3)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,apexY);ctx.lineTo(W,apexY);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px monospace';
+    ctx.fillText('APEX',W-36,apexY-3);
+  }
+  updateCalc();
+
+  /* ── ELEMENTS TAB ── */
+  var elemCounts={};
+  approved.forEach(function(p){var elem=SIGN_ELEM[p.zodiac_sign]||'Void';elemCounts[elem]=(elemCounts[elem]||0)+1;});
+  var elemGrid=document.getElementById('elem-grid');
+  Object.entries(ELEM_INFO).forEach(function(entry){
+    var name=entry[0],info=entry[1];
+    var cnt=elemCounts[name]||0;
+    var pct=totalN>0?((cnt/totalN)*100).toFixed(1):'0.0';
+    var tile=document.createElement('div');tile.className='elem-tile';
+    var sigSpan=document.createElement('span');sigSpan.className='elem-sigil';sigSpan.textContent=info.sigil;
+    var nameDiv=document.createElement('div');nameDiv.className='elem-name';nameDiv.textContent=name.toUpperCase();
+    var cntDiv=document.createElement('div');cntDiv.className='elem-count';cntDiv.style.color=info.color;cntDiv.textContent=cnt;
+    var pctDiv=document.createElement('div');pctDiv.className='elem-pct';pctDiv.textContent=pct+'%';
+    tile.appendChild(sigSpan);tile.appendChild(nameDiv);tile.appendChild(cntDiv);tile.appendChild(pctDiv);
+    elemGrid.appendChild(tile);
   });
-  /* fill */
-  ctx.beginPath();
-  axes.forEach((ax,i)=>{
-    const ang=-Math.PI/2+i*(2*Math.PI/N);
-    const frac=ax.v/ax.max;
-    const px=cx+Math.cos(ang)*r*frac,py=cy+Math.sin(ang)*r*frac;
-    i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+
+  function drawElemMatrix(){
+    var cv=document.getElementById('sigma-elem-matrix');if(!cv)return;
+    var W=cv.offsetWidth||500,H=220;
+    cv.width=W;cv.height=H;
+    var ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    var elems=Object.keys(ELEM_INFO);
+    var barW=(W-80)/elems.length;
+    var maxC=Math.max.apply(null,elems.map(function(e){return elemCounts[e]||0;}))||1;
+    elems.forEach(function(elem,i){
+      var cnt=elemCounts[elem]||0;
+      var h=cnt/maxC*(H-40);
+      var x=80+i*barW;
+      var info=ELEM_INFO[elem];
+      ctx.fillStyle=info.color+'cc';
+      ctx.fillRect(x+2,H-30-h,barW-4,h);
+      ctx.save();ctx.translate(x+barW/2,H-15);ctx.rotate(-0.4);
+      ctx.fillStyle='rgba(138,134,118,.7)';ctx.font='7px monospace';ctx.textAlign='right';
+      ctx.fillText(elem.slice(0,4).toUpperCase(),0,0);
+      ctx.restore();
+      ctx.fillStyle=info.color;ctx.font='9px monospace';ctx.textAlign='center';
+      if(cnt>0)ctx.fillText(cnt,x+barW/2,H-30-h-4);
+    });
+  }
+  drawElemMatrix();
+
+  /* ── GATES TAB ── */
+  var gateCounts=new Array(12).fill(0);
+  auths.forEach(function(a){var g=getGate(a);gateCounts[g.num-1]++;});
+  var gateContainer=document.getElementById('gate-bars');
+  var maxGC=Math.max.apply(null,gateCounts)||1;
+  gateCounts.forEach(function(c,i){
+    var pct=(c/maxGC*100).toFixed(0);
+    var wrap=document.createElement('div');wrap.className='gate-bar-wrap';
+    var head=document.createElement('div');head.className='gate-bar-head';
+    var nameSpan=document.createElement('span');nameSpan.className='gate-bar-name';nameSpan.textContent='GATE '+(i+1)+' · '+GATE_NAMES[i];
+    var cntSpan=document.createElement('span');cntSpan.className='gate-bar-cnt';cntSpan.textContent=c;
+    head.appendChild(nameSpan);head.appendChild(cntSpan);
+    var track=document.createElement('div');track.className='gate-bar-track';
+    var fill=document.createElement('div');fill.className='gate-bar-fill';fill.style.width=pct+'%';
+    track.appendChild(fill);
+    wrap.appendChild(head);wrap.appendChild(track);
+    gateContainer.appendChild(wrap);
   });
-  ctx.closePath();
-  ctx.fillStyle='rgba(226,200,109,.15)';ctx.fill();
-  ctx.strokeStyle='rgba(226,200,109,.6)';ctx.lineWidth=1.5;ctx.stroke();
-  /* labels */
-  ctx.fillStyle='rgba(138,134,118,.8)';ctx.font='bold 9px Courier Prime,monospace';ctx.textAlign='center';
-  axes.forEach((ax,i)=>{
-    const ang=-Math.PI/2+i*(2*Math.PI/N);
-    const px=cx+Math.cos(ang)*(r+14),py=cy+Math.sin(ang)*(r+14)+3;
-    ctx.fillText(ax.l+': '+ax.v.toFixed(2),px,py);
+
+  var gateThTbl=document.getElementById('gate-thresh-tbl');
+  GATE_THRESH.forEach(function(t,i){
+    var row=document.createElement('tr');
+    var td1=document.createElement('td');td1.textContent='GATE '+(i+1)+' — '+GATE_NAMES[i];
+    var td2=document.createElement('td');td2.textContent='≥ '+t;
+    row.appendChild(td1);row.appendChild(td2);
+    gateThTbl.appendChild(row);
   });
-}
-drawAxesRadar();
 
-/* Top list */
-const topAuth=approved.map(p=>({
-  name:p.display_name||p.full_name||'Sovereign',
-  auth:p.is_owner?27.8367:calcAuth(Number(p.axis_a||0),Number(p.axis_b||0),Number(p.axis_c||0))
-})).sort((a,b)=>b.auth-a.auth).slice(0,10);
+  /* Scatter */
+  function drawScatter(){
+    var cv=document.getElementById('sigma-scatter');if(!cv)return;
+    var W=cv.offsetWidth||500,H=220;
+    cv.width=W;cv.height=H;
+    var ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(40,10);ctx.lineTo(40,H-30);ctx.lineTo(W-10,H-30);ctx.stroke();
+    ctx.fillStyle='rgba(138,134,118,.5)';ctx.font='8px monospace';
+    ctx.textAlign='center';ctx.fillText('AXIS A',W/2,H-5);
+    ctx.save();ctx.translate(10,H/2);ctx.rotate(-Math.PI/2);ctx.fillText('AUTH',0,0);ctx.restore();
+    approved.forEach(function(p){
+      var a=Number(p.axis_a||0);
+      var auth=p.is_owner?27.8367:calcAuth(a,Number(p.axis_b||0),Number(p.axis_c||0));
+      var x=40+(a/10)*(W-50);
+      var y=H-30-(auth/30)*(H-40);
+      var elem=SIGN_ELEM[p.zodiac_sign]||'Void';
+      var clr=(ELEM_INFO[elem]?.color)||'#8a8676';
+      ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+      ctx.fillStyle=clr+'99';ctx.fill();
+    });
+    var myX=40+(myA/10)*(W-50);
+    var myY=H-30-(myAuth/30)*(H-40);
+    ctx.beginPath();ctx.arc(myX,myY,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(226,200,109,.9)';ctx.fill();
+    ctx.strokeStyle='white';ctx.lineWidth=1;ctx.stroke();
+  }
+  drawScatter();
 
-const topEl=document.getElementById('top-list');
-if(topAuth.length===0){topEl.textContent='No data.';}
-else{
-  topEl.innerHTML='';
-  topAuth.forEach((m,i)=>{
-    const gate=getGate(m.auth);
-    const row=document.createElement('div');
-    row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)';
-    const isMe=m.name===(pr?.display_name||pr?.full_name||'Sovereign');
-    row.innerHTML=`<span style="color:${isMe?'var(--gold)':'var(--muted)'}"><span style="font-family:var(--D);font-size:10px;color:var(--muted);margin-right:10px">${String(i+1).padStart(2,'0')}</span>${m.name}</span>`
-      +`<span style="font-family:var(--D);font-size:11px;color:${isMe?'var(--solar)':'var(--ink)'}">${m.auth.toFixed(4)}</span>`;
-    topEl.appendChild(row);
+  /* ── CONSTANTS ── */
+  var CONSTS=[
+    ['φ (Golden Ratio)','1.6180339887498948…'],
+    ['e (Euler\'s Number)','2.7182818284590452…'],
+    ['φ/e (Authority Factor)','0.5956993044924…'],
+    ['APEX Threshold','27.8367'],
+    ['Gate Count','12'],
+    ['Element Count','9'],
+    ['Zodiac Signs','12'],
+    ['Axis Max (nominal)','10.000'],
+    ['Max Authority (A=B=C=10)','√(3000)×φ/e = '+calcAuth(10,10,10).toFixed(4)],
+    ['Authority at midpoint (5,5,5)',calcAuth(5,5,5).toFixed(4)],
+    ['∂AUTH/∂A at (5,5,5)','1.031 (approx)'],
+    ['∂AUTH/∂A at (9.8,9.8,9.8)','3.42 (approx)'],
+  ];
+  var ctTbl=document.getElementById('const-tbl-body');
+  CONSTS.forEach(function(row){
+    var tr=document.createElement('tr');
+    var td1=document.createElement('td');td1.textContent=row[0];
+    var td2=document.createElement('td');td2.textContent=row[1];
+    tr.appendChild(td1);tr.appendChild(td2);
+    ctTbl.appendChild(tr);
   });
-}
 
-/* ── AUTHORITY CALCULATOR ── */
-function updateCalc(){
-  const a=Number($$('#calc-a').value),b=Number($$('#calc-b').value),c=Number($$('#calc-c').value);
-  $$('#calc-a-val').textContent=a.toFixed(3);
-  $$('#calc-b-val').textContent=b.toFixed(3);
-  $$('#calc-c-val').textContent=c.toFixed(3);
-  const auth=calcAuth(a,b,c);
-  $$('#calc-result').textContent=auth.toFixed(4);
-  const g=getGate(auth);
-  $$('#calc-gate-label').textContent='GATE '+g.num+' · '+g.name;
-  drawAuthCurve(a,b,c);
-}
-['calc-a','calc-b','calc-c'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateCalc));
+  /* ── SIGNAL MONITOR ── */
+  function logSignal(msg){
+    var log=document.getElementById('sig-realtime-log');if(!log)return;
+    var line=document.createElement('div');
+    line.textContent='['+new Date().toISOString().slice(11,19)+'] '+msg;
+    log.appendChild(line);
+    log.scrollTop=log.scrollHeight;
+  }
+  function measureLatency(){
+    var t0=performance.now();
+    sb.from('profiles').select('id').limit(1).then(function(){
+      var lat=Math.round(performance.now()-t0);
+      var el=document.getElementById('sig-latency');
+      if(el)el.textContent='Supabase latency: '+lat+'ms';
+      var bars=document.querySelectorAll('#signal-bars .signal-bar');
+      var strength=lat<100?5:lat<200?4:lat<400?3:lat<800?2:1;
+      bars.forEach(function(b,i){b.classList.toggle('on',i<strength);});
+      var statusEl=document.getElementById('sig-status');
+      if(statusEl)statusEl.textContent='SOVEREIGN SIGNAL: '+(strength>=4?'STRONG':strength===3?'MODERATE':strength===2?'WEAK':'CRITICAL');
+      logSignal('LATENCY PROBE: '+lat+'ms · SIGNAL STRENGTH: '+strength+'/5');
+    });
+  }
+  measureLatency();
+  setInterval(function(){measureLatency();logSignal('HEARTBEAT · Members online: ~'+totalN);},12000);
 
-function drawAuthCurve(a,b,c){
-  const cv=document.getElementById('sigma-auth-curve');if(!cv)return;
-  const W=cv.offsetWidth||400,H=160;
-  cv.width=W;cv.height=H;
-  const ctx=cv.getContext('2d');
-  ctx.clearRect(0,0,W,H);
-  const N=100;
-  /* show auth vs each axis 0..10, others fixed */
-  const axes=['A','B','C'];
-  const colors=['rgba(226,200,109,.8)','rgba(0,229,255,.8)','rgba(155,107,240,.8)'];
-  const vals=[a,b,c];
-  axes.forEach((ax,ai)=>{
-    ctx.beginPath();
-    for(let i=0;i<=N;i++){
-      const t=i/N*10;
-      const v=[...vals];v[ai]=t;
-      const auth=calcAuth(v[0],v[1],v[2]);
-      const x=i/N*W;
-      const y=H-auth/30*H;
-      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.strokeStyle=colors[ai];ctx.lineWidth=1.5;ctx.stroke();
-    /* legend */
-    ctx.fillStyle=colors[ai];ctx.font='8px Courier Prime,monospace';
-    ctx.fillText('AXIS '+ax,8+ai*70,14);
-  });
-  /* APEX line */
-  const apexY=H-27.8367/30*H;
-  ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(201,168,76,.3)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(0,apexY);ctx.lineTo(W,apexY);ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px Courier Prime,monospace';
-  ctx.fillText('APEX',W-36,apexY-3);
-}
-updateCalc();
-
-/* ── ELEMENTS TAB ── */
-const elemCounts={};
-approved.forEach(p=>{
-  const elem=SIGN_ELEM[p.zodiac_sign]||'Void';
-  elemCounts[elem]=(elemCounts[elem]||0)+1;
-});
-const elemGrid=document.getElementById('elem-grid');
-Object.entries(ELEM_INFO).forEach(([name,info])=>{
-  const cnt=elemCounts[name]||0;
-  const pct=totalN>0?((cnt/totalN)*100).toFixed(1):0;
-  const tile=document.createElement('div');
-  tile.className='elem-tile';
-  tile.innerHTML=`<span class="elem-sigil">${info.sigil}</span><div class="elem-name">${name.toUpperCase()}</div><div class="elem-count" style="color:${info.color}">${cnt}</div><div class="elem-pct">${pct}%</div>`;
-  elemGrid.appendChild(tile);
-});
-
-function drawElemMatrix(){
-  const cv=document.getElementById('sigma-elem-matrix');if(!cv)return;
-  const W=cv.offsetWidth||500,H=220;
-  cv.width=W;cv.height=H;
-  const ctx=cv.getContext('2d');
-  ctx.clearRect(0,0,W,H);
-  const elems=Object.keys(ELEM_INFO);
-  const barW=(W-80)/elems.length;
-  elems.forEach((elem,i)=>{
-    const cnt=elemCounts[elem]||0;
-    const h=totalN>0?(cnt/Math.max(...Object.values(elemCounts)))*(H-40):0;
-    const x=80+i*barW;
-    const info=ELEM_INFO[elem];
-    ctx.fillStyle=info.color+'cc';
-    ctx.fillRect(x+2,H-30-h,barW-4,h);
-    /* label */
-    ctx.save();ctx.translate(x+barW/2,H-15);ctx.rotate(-0.4);
-    ctx.fillStyle='rgba(138,134,118,.7)';ctx.font='7px Courier Prime,monospace';ctx.textAlign='right';
-    ctx.fillText(elem.slice(0,4).toUpperCase(),0,0);
-    ctx.restore();
-    ctx.fillStyle=info.color;ctx.font='9px Courier Prime,monospace';ctx.textAlign='center';
-    ctx.fillText(cnt,x+barW/2,H-30-h-4);
-  });
-}
-drawElemMatrix();
-
-/* ── GATES TAB ── */
-const gateCounts=new Array(12).fill(0);
-auths.forEach(a=>{const g=getGate(a);gateCounts[g.num-1]++;});
-const gateContainer=document.getElementById('gate-bars');
-const maxGC=Math.max(...gateCounts)||1;
-gateCounts.forEach((c,i)=>{
-  const pct=(c/maxGC*100).toFixed(0);
-  const wrap=document.createElement('div');wrap.className='gate-bar-wrap';
-  wrap.innerHTML=`<div class="gate-bar-head"><span class="gate-bar-name">GATE ${i+1} · ${GATE_NAMES[i]}</span><span class="gate-bar-cnt">${c}</span></div><div class="gate-bar-track"><div class="gate-bar-fill" style="width:${pct}%"></div></div>`;
-  gateContainer.appendChild(wrap);
-});
-
-const gateThTbl=document.getElementById('gate-thresh-tbl');
-GATE_THRESH.forEach((t,i)=>{
-  const row=document.createElement('tr');
-  row.innerHTML=`<td>GATE ${i+1} — ${GATE_NAMES[i]}</td><td>≥ ${t}</td>`;
-  gateThTbl.appendChild(row);
-});
-
-/* ── CONSTANTS TAB ── */
-const CONSTS=[
-  ['φ (Golden Ratio)','1.6180339887498948…'],
-  ['e (Euler\'s Number)','2.7182818284590452…'],
-  ['φ/e (Authority Factor)','0.5956993044924…'],
-  ['APEX Threshold','27.8367'],
-  ['Gate Count','12'],
-  ['Element Count','9'],
-  ['Zodiac Signs','12'],
-  ['Axis Max (nominal)','10.000'],
-  ['Max Authority (A=B=C=10)','√(3000)×φ/e = '+calcAuth(10,10,10).toFixed(4)],
-  ['Authority at midpoint (5,5,5)',calcAuth(5,5,5).toFixed(4)],
-  ['∂AUTH/∂A at (5,5,5)','1.031 (approx)'],
-  ['∂AUTH/∂A at (9.8,9.8,9.8)','3.42 (approx)'],
-];
-const ctTbl=document.getElementById('const-tbl-body');
-CONSTS.forEach(([k,v])=>{
-  const row=document.createElement('tr');
-  row.innerHTML=`<td>${k}</td><td>${v}</td>`;
-  ctTbl.appendChild(row);
-});
-
-/* ── SIGNAL TAB ── */
-function measureLatency(){
-  const t0=performance.now();
-  sb.from('profiles').select('id').limit(1).then(()=>{
-    const lat=Math.round(performance.now()-t0);
-    const el=document.getElementById('sig-latency');
-    if(el)el.textContent='Supabase latency: '+lat+'ms';
-    const bars=document.querySelectorAll('#signal-bars .signal-bar');
-    const strength=lat<100?5:lat<200?4:lat<400?3:lat<800?2:1;
-    bars.forEach((b,i)=>b.classList.toggle('on',i<strength));
-    const statusEl=document.getElementById('sig-status');
-    if(statusEl)statusEl.textContent='SOVEREIGN SIGNAL: '+(strength>=4?'STRONG':strength===3?'MODERATE':strength===2?'WEAK':'CRITICAL');
-    logSignal('LATENCY PROBE: '+lat+'ms · SIGNAL STRENGTH: '+strength+'/5');
-  });
-}
-function logSignal(msg){
-  const log=document.getElementById('sig-realtime-log');if(!log)return;
-  const line=document.createElement('div');
-  line.textContent='['+new Date().toISOString().slice(11,19)+'] '+msg;
-  log.appendChild(line);
-  log.scrollTop=log.scrollHeight;
-}
-setInterval(()=>{measureLatency();logSignal('HEARTBEAT · Members online: ~'+totalN);},12000);
-measureLatency();
-
-/* Scatter */
-function drawScatter(){
-  const cv=document.getElementById('sigma-scatter');if(!cv)return;
-  const W=cv.offsetWidth||500,H=220;
-  cv.width=W;cv.height=H;
-  const ctx=cv.getContext('2d');
-  ctx.clearRect(0,0,W,H);
-  /* axes */
-  ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(40,10);ctx.lineTo(40,H-30);ctx.lineTo(W-10,H-30);ctx.stroke();
-  /* labels */
-  ctx.fillStyle='rgba(138,134,118,.5)';ctx.font='8px Courier Prime,monospace';
-  ctx.textAlign='center';ctx.fillText('AXIS A',W/2,H-5);
-  ctx.save();ctx.translate(10,H/2);ctx.rotate(-Math.PI/2);ctx.fillText('AUTH',0,0);ctx.restore();
-  /* points */
-  approved.forEach(p=>{
-    const a=Number(p.axis_a||0);
-    const auth=p.is_owner?27.8367:calcAuth(a,Number(p.axis_b||0),Number(p.axis_c||0));
-    const x=40+(a/10)*(W-50);
-    const y=H-30-(auth/30)*(H-40);
-    const elem=SIGN_ELEM[p.zodiac_sign]||'Void';
-    const clr=ELEM_INFO[elem]?.color||'#8a8676';
-    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
-    ctx.fillStyle=clr+'99';ctx.fill();
-  });
-  /* my point */
-  const myX=40+(myA/10)*(W-50);
-  const myY=H-30-(myAuth/30)*(H-40);
-  ctx.beginPath();ctx.arc(myX,myY,5,0,Math.PI*2);
-  ctx.fillStyle='rgba(226,200,109,.9)';ctx.fill();
-  ctx.strokeStyle='white';ctx.lineWidth=1;ctx.stroke();
-}
-drawScatter();
+})();
 </script>
-</body>
-</html>
+<script src="/bg.js"></script>
+</body></html>

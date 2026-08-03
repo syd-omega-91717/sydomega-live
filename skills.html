@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; Sovereign Skills</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;600&family=Courier+Prime:wght@400;700&display=swap">
 <script src="/bg.js" defer></script>
 <style>
-:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:"Cinzel Decorative",serif;--R:"Rajdhani",sans-serif;--M:"Courier Prime",monospace;--pad:clamp(14px,3vw,32px)}
+:root{--void:#0A0A0F;--void2:#020206;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--purple:#9B6BF0;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.15);--D:serif;--R:sans-serif;--M:monospace;--pad:clamp(14px,3vw,32px)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}
@@ -89,11 +88,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       <button class="btn" onclick="openAddSkill()">+ ADD SKILL</button>
     </div>
     <div class="layer-tabs" role="tablist">
-      <button class="ltab active" onclick="switchTab(this,'t-overview')">&#9650; OVERVIEW</button>
-      <button class="ltab" onclick="switchTab(this,'t-skills')">&#9670; MY SKILLS</button>
-      <button class="ltab" onclick="switchTab(this,'t-domains')">&#9881; DOMAINS</button>
-      <button class="ltab" onclick="switchTab(this,'t-sessions')">&#8635; SESSIONS</button>
-      <button class="ltab" onclick="switchTab(this,'t-science')">&#9670; SCIENCE</button>
+      <button class="ltab active" role="tab" aria-selected="true" onclick="setTab('overview')">&#9650; OVERVIEW</button>
+      <button class="ltab" role="tab" aria-selected="false" onclick="setTab('skills')">&#9670; MY SKILLS</button>
+      <button class="ltab" role="tab" aria-selected="false" onclick="setTab('practice')">&#9881; PRACTICE</button>
+      <button class="ltab" role="tab" aria-selected="false" onclick="setTab('science')">&#9670; SCIENCE</button>
     </div>
 
     <!-- OVERVIEW -->
@@ -115,7 +113,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
 
         <!-- TOP SKILLS -->
-        <div class="sechead">TOP SKILLS &middot; BY CURRENT LEVEL <span class="btn-sm" onclick="switchTab(document.querySelectorAll('.ltab')[1],'t-skills')">VIEW ALL</span></div>
+        <div class="sechead">TOP SKILLS &middot; BY CURRENT LEVEL <span class="btn-sm" onclick="setTab('skills')">VIEW ALL</span></div>
         <div id="top-skills-list"></div>
 
         <!-- STACK SUGGESTION -->
@@ -153,18 +151,8 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
     </div>
 
-    <!-- DOMAINS -->
-    <div id="t-domains" class="panel">
-      <div class="pad">
-        <div class="sechead">SKILL DOMAINS &middot; 8 SOVEREIGN AREAS</div>
-        <div class="domain-grid" id="domain-grid"></div>
-        <div class="sechead">DOMAIN BREAKDOWN</div>
-        <div id="domain-breakdown"></div>
-      </div>
-    </div>
-
-    <!-- SESSIONS -->
-    <div id="t-sessions" class="panel">
+    <!-- PRACTICE (domains + sessions) -->
+    <div id="t-practice" class="panel">
       <div class="pad">
         <div class="sechead">LOG PRACTICE SESSION <span class="btn" onclick="openLogSession()" style="font-size:7.5px;padding:5px 10px">+ LOG SESSION</span></div>
         <div class="kpi-row">
@@ -175,6 +163,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
         <div class="sechead">RECENT SESSIONS</div>
         <div id="session-log"></div>
+        <div class="sechead" style="margin-top:16px">SKILL DOMAINS &middot; 8 SOVEREIGN AREAS</div>
+        <div class="domain-grid" id="domain-grid"></div>
+        <div class="sechead">DOMAIN BREAKDOWN</div>
+        <div id="domain-breakdown"></div>
       </div>
     </div>
 
@@ -345,16 +337,15 @@ function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(
 function today(){ return new Date().toISOString().slice(0,10); }
 function weekAgo(){ var d=new Date();d.setDate(d.getDate()-7);return d.toISOString().slice(0,10); }
 
-function switchTab(btn,id){
-  document.querySelectorAll('.ltab').forEach(function(b){b.classList.remove('active');});
-  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
-  btn.classList.add('active');
-  var p=document.getElementById(id);if(p)p.classList.add('active');
-  if(id==='t-overview') renderOverview();
-  if(id==='t-skills') renderSkillsList();
-  if(id==='t-domains') renderDomains();
-  if(id==='t-sessions') renderSessions();
+function setTab(name){
+  var tabs=['overview','skills','practice','science'];
+  document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('active',p.id==='t-'+name);});
+  if(name==='overview') renderOverview();
+  if(name==='skills') renderSkillsList();
+  if(name==='practice'){renderSessions();renderDomains();}
 }
+window.setTab=setTab;
 
 /* ── OVERVIEW ─────────────────────────────────────────────── */
 function renderOverview(){
@@ -450,7 +441,7 @@ function drawDomainRadar(){
     var a=((i/N)*Math.PI*2)-Math.PI/2,r=(avg/10)*maxR;
     ctx.beginPath();ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2);ctx.fillStyle=d.color;ctx.fill();
     var lr=maxR+14;
-    ctx.font='bold 7px "Courier Prime",monospace';ctx.fillStyle=d.color;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='bold 7px monospace';ctx.fillStyle=d.color;ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(d.label.slice(0,4),cx+Math.cos(a)*lr,cy+Math.sin(a)*lr);
   });
 }
@@ -538,7 +529,7 @@ function renderDomains(){
         +'<div class="level-track"><div class="level-fill" style="width:'+(item.avg/10*100)+'%;background:'+item.d.color+'"></div></div>'
         +'<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">'
         +item.skills.map(function(s){
-          return '<a href="#" onclick="switchTab(document.querySelectorAll(\'.ltab\')[1],\'t-skills\')" style="font-family:var(--M);font-size:7px;padding:3px 7px;border:1px solid rgba(255,255,255,.06);color:var(--muted);border-radius:2px;text-decoration:none">'+escH(s.name)+'</a>';
+          return '<a href="#" onclick="setTab(\'skills\')" style="font-family:var(--M);font-size:7px;padding:3px 7px;border:1px solid rgba(255,255,255,.06);color:var(--muted);border-radius:2px;text-decoration:none">'+escH(s.name)+'</a>';
         }).join('')
         +'</div></div>';
     }).join('');
@@ -549,7 +540,7 @@ function renderDomains(){
 function applyDomainFilter(dk){
   var filterDomain=document.getElementById('filter-domain');
   if(filterDomain)filterDomain.value=dk;
-  switchTab(document.querySelectorAll('.ltab')[1],'t-skills');
+  setTab('skills');
 }
 
 /* ── SESSIONS ─────────────────────────────────────────────── */

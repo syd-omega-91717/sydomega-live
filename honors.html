@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Honors | &#937; SYD OMEGA 91717</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -18,24 +17,24 @@
 --text:#E8E0D0;--muted:#8A8070;
 --green:#00C896;--bronze:#CD7F32;--silver:#C0C0C0;
 }
-html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:sans-serif;overflow-x:hidden}
 #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(2,2,6,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
+.nav-brand{font-family:serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
 .nav-links{display:flex;gap:1.5rem;list-style:none}
 .nav-links a{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;transition:color .2s}
 .nav-links a:hover,.nav-links a.active{color:var(--gold)}
 .nav-right{display:flex;align-items:center;gap:1rem}
-.nav-status{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
+.nav-status{font-family:monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
 .nav-back{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:.3rem .8rem;transition:all .2s}
 .nav-back:hover{color:var(--gold);border-color:var(--gold)}
 
 .page{position:relative;z-index:1;padding-top:64px;min-height:100vh}
 
 .hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}
-.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
-.hero-title{font-family:'Cinzel Decorative',serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
+.hero-eyebrow{font-family:monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-family:serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
 .hero-sub{font-size:.95rem;color:var(--muted);letter-spacing:.05em;max-width:600px}
 
 /* HONOR STATS */
@@ -43,13 +42,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .hstat{border:1px solid var(--border);padding:1.25rem;text-align:center;position:relative;overflow:hidden;transition:border-color .3s}
 .hstat:hover{border-color:var(--gold)}
 .hstat-icon{font-size:1.8rem;margin-bottom:.5rem;display:block}
-.hstat-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem}
-.hstat-val{font-family:'Cinzel Decorative',serif;font-size:1.5rem;color:var(--gold)}
+.hstat-label{font-family:monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem}
+.hstat-val{font-family:serif;font-size:1.5rem;color:var(--gold)}
 .hstat-tier{font-size:.7rem;margin-top:.2rem}
 
 /* FILTER TABS */
 .filter-row{max-width:1400px;margin:0 auto 2rem;padding:0 2rem;display:flex;gap:.5rem;flex-wrap:wrap}
-.filter-btn{font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
+.filter-btn{font-family:monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
 .filter-btn:hover,.filter-btn.active{color:var(--gold);border-color:var(--gold);background:rgba(201,168,76,0.06)}
 
 /* TROPHY GRID */
@@ -66,7 +65,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .honor-card.locked{opacity:.45;filter:grayscale(.6)}
 
 .honor-visual{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.honor-glyph{font-family:'Cinzel Decorative',serif;font-size:3rem;position:relative;z-index:1;transition:transform .35s}
+.honor-glyph{font-family:serif;font-size:3rem;position:relative;z-index:1;transition:transform .35s}
 .honor-card:hover .honor-glyph{transform:scale(1.12)}
 .honor-ring{position:absolute;width:80px;height:80px;border-radius:50%;border:1px solid;opacity:.3;transition:opacity .35s}
 .honor-card:hover .honor-ring{opacity:.6}
@@ -75,12 +74,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 @keyframes ring-pulse{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(1.05);opacity:.25}}
 
 .honor-meta{padding:1rem 1.25rem 1.25rem}
-.honor-type{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
-.honor-name{font-family:'Cinzel Decorative',serif;font-size:.85rem;line-height:1.3;margin-bottom:.4rem}
+.honor-type{font-family:monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
+.honor-name{font-family:serif;font-size:.85rem;line-height:1.3;margin-bottom:.4rem}
 .honor-desc{font-size:.75rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem}
 .honor-footer{display:flex;align-items:center;justify-content:space-between}
-.honor-tier-badge{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid}
-.honor-date{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted)}
+.honor-tier-badge{font-family:monospace;font-size:.6rem;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid}
+.honor-date{font-family:monospace;font-size:.6rem;color:var(--muted)}
 
 /* TIER COLORS */
 .tier-omega .honor-name{color:var(--gold)}
@@ -118,7 +117,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .tier-cyan .honor-visual{background:radial-gradient(ellipse at center,rgba(0,229,255,0.06),transparent 70%)}
 .tier-cyan .honor-glyph{color:var(--cyan)}
 
-.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:'Cinzel Decorative',serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
+.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
 
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--void2)}
@@ -131,64 +130,64 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 #mtab-ascension{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start}
 .proto-panel{flex:0 0 300px;border:1px solid var(--border);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.5));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:2px;padding:1.2rem;position:sticky;top:1rem}
 .proto-header{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-.ph-sys{font-family:'Courier Prime',monospace;font-size:.56rem;color:var(--green);letter-spacing:.08em;margin-bottom:.5rem}
-.ph-title{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold)}
-.ph-status{font-family:'Courier Prime',monospace;font-size:.62rem;color:var(--cyan);letter-spacing:.06em;margin-top:.4rem}
+.ph-sys{font-family:monospace;font-size:.56rem;color:var(--green);letter-spacing:.08em;margin-bottom:.5rem}
+.ph-title{font-family:serif;font-size:1rem;color:var(--gold)}
+.ph-status{font-family:monospace;font-size:.62rem;color:var(--cyan);letter-spacing:.06em;margin-top:.4rem}
 .level-ladder{display:flex;flex-direction:column;gap:.5rem;max-height:520px;overflow-y:auto}
 .level-row{display:flex;align-items:center;gap:.7rem;padding:.6rem;border:1px solid var(--border);border-radius:2px;background:rgba(10,10,15,.3);cursor:pointer;transition:all .2s;position:relative}
 .level-row:hover{border-color:var(--gold)}
 .level-row.current{border-color:var(--gold);box-shadow:0 0 14px rgba(201,168,76,.15)}
 .level-row .lr-connector{display:none}
 .level-row .lr-body{flex:1;min-width:0}
-.lrb-num{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
-.lrb-name{font-family:'Cinzel Decorative',serif;font-size:.75rem;margin-top:.2rem}
+.lrb-num{font-family:monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
+.lrb-name{font-family:serif;font-size:.75rem;margin-top:.2rem}
 .lr-meta{text-align:right}
-.lrm-xp{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--gold)}
-.lrm-axis{font-family:'Courier Prime',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.06em;margin-top:.2rem}
+.lrm-xp{font-family:monospace;font-size:.6rem;color:var(--gold)}
+.lrm-axis{font-family:monospace;font-size:.5rem;color:var(--muted);letter-spacing:.06em;margin-top:.2rem}
 
 .content-panel{flex:1;min-width:300px}
 .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.ti-title{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold)}
-.ti-title small{display:block;font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.4rem}
-.sechead{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.16em;text-transform:uppercase;margin:1.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.ti-title{font-family:serif;font-size:1.3rem;color:var(--gold)}
+.ti-title small{display:block;font-family:monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.4rem}
+.sechead{font-family:monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.16em;text-transform:uppercase;margin:1.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
 
 .authority-section{margin-bottom:1rem}
 .auth-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.7rem}
 .auth-stat{padding:.8rem;border:1px solid var(--border);background:rgba(10,10,15,.4);border-radius:2px}
-.as-label{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em}
-.as-val{font-family:'Cinzel Decorative',serif;font-size:1.2rem;margin:.4rem 0}
-.as-formula{font-family:'Courier Prime',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.04em}
+.as-label{font-family:monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em}
+.as-val{font-family:serif;font-size:1.2rem;margin:.4rem 0}
+.as-formula{font-family:monospace;font-size:.5rem;color:var(--muted);letter-spacing:.04em}
 
 .phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem}
 .phase-card{position:relative;border:1px solid var(--border);border-top:3px solid var(--gold);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));border-radius:2px;padding:1rem;overflow:hidden}
-.pc-phase{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
-.pc-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;margin:.4rem 0}
+.pc-phase{font-family:monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
+.pc-title{font-family:serif;font-size:.85rem;margin:.4rem 0}
 .pc-desc{font-size:.72rem;color:var(--muted);line-height:1.6;margin-bottom:.7rem}
 .pc-nodes{display:grid;grid-template-columns:repeat(9,1fr);gap:.2rem;margin-bottom:.6rem}
 .pc-node{aspect-ratio:1;border-radius:1px}
 .pc-progress-bar{height:3px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden;margin-bottom:.6rem}
 .pc-fill{height:100%;transition:width .6s ease}
-.pc-status{display:inline-block;font-family:'Courier Prime',monospace;font-size:.52rem;letter-spacing:.08em;padding:.15rem .5rem;border:1px solid;border-radius:2px}
+.pc-status{display:inline-block;font-family:monospace;font-size:.52rem;letter-spacing:.08em;padding:.15rem .5rem;border:1px solid;border-radius:2px}
 
 /* Record tab */
 #mtab-record .topbar{padding:1rem 0 1.2rem}
-#mtab-record .topbar .t{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold)}
-#mtab-record .topbar small{display:block;font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.4rem}
+#mtab-record .topbar .t{font-family:serif;font-size:1.3rem;color:var(--gold)}
+#mtab-record .topbar small{display:block;font-family:monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.4rem}
 #mtab-record .hero{margin-bottom:1.5rem}
 .stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:500px;margin:0 auto}
 .stat3{text-align:center;padding:1rem;border:1px solid var(--border);background:rgba(10,10,15,.4);border-radius:2px}
-.stat3 .v{font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--gold)}
-.stat3 .l{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.1em;margin-top:.3rem}
-.auth{font-family:'Courier Prime',monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.06em}
+.stat3 .v{font-family:serif;font-size:1.6rem;color:var(--gold)}
+.stat3 .l{font-family:monospace;font-size:.58rem;color:var(--muted);letter-spacing:.1em;margin-top:.3rem}
+.auth{font-family:monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.06em}
 .rowsec{margin-bottom:1.5rem}
-.rowsec h3{font-family:'Cinzel Decorative',serif;font-size:.9rem;color:var(--gold);margin-bottom:.3rem}
-.rowsec .sub{font-family:'Courier Prime',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.04em;margin-bottom:.7rem}
+.rowsec h3{font-family:serif;font-size:.9rem;color:var(--gold);margin-bottom:.3rem}
+.rowsec .sub{font-family:monospace;font-size:.62rem;color:var(--muted);letter-spacing:.04em;margin-bottom:.7rem}
 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:.5rem}
 .slot{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:2px;background:rgba(10,10,15,.4);opacity:.4;transition:all .25s}
-.slot .n{font-family:'Cinzel Decorative',serif;font-size:.85rem}
+.slot .n{font-family:serif;font-size:.85rem}
 .slot.earned{opacity:1;border-color:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.15)}
 .slot.earned.t4{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,229,255,.2)}
-.summary{text-align:center;font-family:'Courier Prime',monospace;font-size:.75rem;color:var(--gold);letter-spacing:.08em;padding:1rem 0}
+.summary{text-align:center;font-family:monospace;font-size:.75rem;color:var(--gold);letter-spacing:.08em;padding:1rem 0}
 @media(max-width:900px){#mtab-ascension{flex-direction:column}.proto-panel{position:static;flex:1 1 auto;width:100%}}
 </style>
 </head>
@@ -207,9 +206,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   </div>
 
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--border);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
-    <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">HONORS CATALOG</div>
-    <div class="mtab-btn" data-mtab="ascension" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">ASCENSION</div>
-    <div class="mtab-btn" data-mtab="record" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">MY RECORD</div>
+    <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; HONORS CATALOG</div>
+    <div class="mtab-btn" data-mtab="ascension" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; ASCENSION</div>
+    <div class="mtab-btn" data-mtab="record" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; MY RECORD</div>
+    <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
   </div>
 
   <div class="mtab-panel" id="mtab-catalog">
@@ -464,7 +464,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
-        <div class="honor-glyph" style="font-size:1.4rem;font-family:'Courier Prime',monospace">9.9.9</div>
+        <div class="honor-glyph" style="font-size:1.4rem;font-family:monospace">9.9.9</div>
       </div>
       <div class="honor-meta">
         <div class="honor-type">Level Badge</div>
@@ -482,7 +482,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="honor-visual">
         <div class="honor-ring2"></div>
         <div class="honor-ring"></div>
-        <div class="honor-glyph" style="font-size:2rem;font-family:'Courier Prime',monospace">XII</div>
+        <div class="honor-glyph" style="font-size:2rem;font-family:monospace">XII</div>
       </div>
       <div class="honor-meta">
         <div class="honor-type">Grade Card</div>
@@ -750,9 +750,9 @@ function drawGauge(auth,maxAuth){
     }
     /* Center */
     ctx.fillStyle='rgba(201,168,76,'+(0.8+.15*Math.sin(t*1.5))+')';
-    ctx.font='700 32px "Cinzel Decorative",serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='700 32px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.shadowColor='rgba(201,168,76,.6)'; ctx.shadowBlur=18; ctx.fillText(auth.toFixed(2),CX,CY-8); ctx.shadowBlur=0;
-    ctx.fillStyle='rgba(133,131,123,0.7)'; ctx.font='700 14px "Courier Prime",monospace'; ctx.fillText('AUTHORITY',CX,CY+20);
+    ctx.fillStyle='rgba(133,131,123,0.7)'; ctx.font='700 14px monospace'; ctx.fillText('AUTHORITY',CX,CY+20);
     requestAnimationFrame(frame);
   }
   frame();
@@ -913,33 +913,63 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
 })();
 </script>
 
+<div class="mtab-panel" id="mtab-science" style="display:none;max-width:1400px;margin:0 auto;padding:0 2rem 3rem">
+  <div style="margin-top:1.5rem">
+    <div class="sechead">AUTHORITY FORMULA</div>
+    <div style="border:1px solid var(--border);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
+      <div style="font-family:serif;font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
+      <div style="font-family:monospace;font-size:9px;color:var(--muted);line-height:2">
+        &phi; (PHI) = 1.6180339887<br>
+        e (EULER) = 2.7182818285<br>
+        APEX AUTH = 27.8367 (A=B=C=9)<br>
+        LATTICE = 12&times;12&times;9&times;9&times;9 = 104,976 NODES
+      </div>
+    </div>
+    <div class="sechead">SYSTEM CONSTANTS</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
+      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:monospace;font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
+    </div>
+    <div class="sechead">GATE THRESHOLDS</div>
+    <div style="font-family:monospace;font-size:9px;line-height:2;color:var(--muted);border:1px solid var(--border);padding:16px">
+      SAND GENESIS &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
+      GLASS AWAKENING &bull; AUTH &ge; 2.99<br>
+      IRON FORGING &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
+      STEEL TEMPERING &bull; AUTH &ge; 5.51<br>
+      TITANIUM ASCENT &bull; AUTH &ge; 6.77<br>
+      CARBON PRECISION &bull; AUTH &ge; 8.03<br>
+      GOLD SOVEREIGNTY &bull; AUTH &ge; 9.29<br>
+      PLATINUM LEGACY &bull; AUTH &ge; 10.55<br>
+      OMEGA THRESHOLD &bull; AUTH &ge; 25.517<br>
+      OMEGA MASTER &nbsp;&nbsp;&bull; AUTH &ge; 27.836
+    </div>
+  </div>
+</div>
 <script>
-document.querySelectorAll('.mtab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.mtab-btn').forEach(b=>{b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='var(--muted)';});
-    document.querySelectorAll('.mtab-panel').forEach(p=>p.style.display='none');
+document.querySelectorAll('.mtab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.mtab-btn').forEach(function(b){b.classList.remove('active');b.style.borderBottomColor='transparent';b.style.color='var(--muted)';});
+    document.querySelectorAll('.mtab-panel').forEach(function(p){p.style.display='none';});
     btn.classList.add('active');btn.style.borderBottomColor='var(--gold)';btn.style.color='var(--gold)';
     document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
-    if(btn.dataset.mtab==='ascension' && !window.__ascBuilt){ window.__ascBuilt=true; callWhenReady('bootAscension'); }
-    if(btn.dataset.mtab==='record' && !window.__achBuilt){ window.__achBuilt=true; callWhenReady('bootAchievements'); }
+    if(btn.dataset.mtab==='ascension'&&!window.__ascBuilt){window.__ascBuilt=true;callWhenReady('bootAscension');}
+    if(btn.dataset.mtab==='record'&&!window.__achBuilt){window.__achBuilt=true;callWhenReady('bootAchievements');}
   });
 });
 function callWhenReady(fnName){
-  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  if(typeof window[fnName]==='function'){window[fnName]();return;}
   var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
-    else if(tries>30){ clearInterval(t); } // deferred module genuinely failed to load; give up quietly rather than hang forever
-  },100);
+  var t=setInterval(function(){tries++;if(typeof window[fnName]==='function'){window[fnName]();clearInterval(t);}else if(tries>30){clearInterval(t);}},100);
 }
 (function(){
   var wanted=sessionStorage.getItem('omega_mtab');
-  if(!wanted && location.hash){ wanted=location.hash.replace('#',''); }
+  if(!wanted&&location.hash){wanted=location.hash.replace('#','');}
   if(wanted){
     sessionStorage.removeItem('omega_mtab');
     var btn=document.querySelector('.mtab-btn[data-mtab="'+wanted+'"]');
-    if(btn) btn.click();
+    if(btn)btn.click();
   }
 })();
 </script>

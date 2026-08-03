@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Media | &#937; SYD OMEGA 91717</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -18,16 +17,16 @@
 --text:#E8E0D0;--muted:#8A8070;
 --green:#00C896;
 }
-html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+html,body{width:100%;min-height:100vh;background:var(--void2);color:var(--text);font-family:sans-serif;overflow-x:hidden}
 #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(2,2,6,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
+.nav-brand{font-family:serif;font-size:1rem;color:var(--gold);letter-spacing:.15em;text-decoration:none}
 .nav-links{display:flex;gap:1.5rem;list-style:none}
 .nav-links a{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;transition:color .2s}
 .nav-links a:hover,.nav-links a.active{color:var(--gold)}
 .nav-right{display:flex;align-items:center;gap:1rem}
-.nav-status{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
+.nav-status{font-family:monospace;font-size:.7rem;color:var(--green);letter-spacing:.08em}
 .nav-back{color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:.3rem .8rem;transition:all .2s}
 .nav-back:hover{color:var(--gold);border-color:var(--gold)}
 
@@ -35,8 +34,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* HERO */
 .hero-band{padding:3rem 2rem 2rem;max-width:1400px;margin:0 auto}
-.hero-eyebrow{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
-.hero-title{font-family:'Cinzel Decorative',serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
+.hero-eyebrow{font-family:monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-family:serif;font-size:2.2rem;color:var(--gold);line-height:1.15;margin-bottom:.5rem}
 .hero-sub{font-size:.95rem;color:var(--muted);letter-spacing:.05em;max-width:600px}
 
 /* UNIVERSE STATS */
@@ -44,19 +43,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .ustat{border:1px solid var(--border);padding:1rem 1.25rem;text-align:center;position:relative;overflow:hidden;transition:border-color .3s}
 .ustat:hover{border-color:var(--gold)}
 .ustat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.ustat-val{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:var(--gold);line-height:1}
-.ustat-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.35rem}
+.ustat-val{font-family:serif;font-size:1.8rem;color:var(--gold);line-height:1}
+.ustat-label{font-family:monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.35rem}
 
 /* FILTER ROW */
 .filter-row{max-width:1400px;margin:0 auto 2rem;padding:0 2rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-.filter-btn{font-family:'Courier Prime',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
+.filter-btn{font-family:monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
 .filter-btn:hover,.filter-btn.active{color:var(--gold);border-color:var(--gold);background:rgba(201,168,76,0.06)}
 .filter-divider{width:1px;height:20px;background:var(--border);margin:0 .5rem}
 
 /* SECTION HEADER */
 .section-hd{max-width:1400px;margin:0 auto;padding:0 2rem 1rem;display:flex;align-items:center;justify-content:space-between}
-.section-title{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);letter-spacing:.1em}
-.section-count{font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em}
+.section-title{font-family:serif;font-size:1rem;color:var(--gold);letter-spacing:.1em}
+.section-count{font-family:monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em}
 
 /* FRANCHISE GRID */
 /* .franchise-grid defined once below (duplicate removed) */
@@ -69,9 +68,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .card-poster{position:relative;width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .poster-bg{position:absolute;inset:0}
 .poster-gradient{position:absolute;inset:0;z-index:1}
-.poster-number{position:absolute;top:1rem;left:1rem;z-index:3;font-family:'Courier Prime',monospace;font-size:.65rem;color:rgba(201,168,76,.6);letter-spacing:.15em}
-.poster-phase{position:absolute;top:1rem;right:1rem;z-index:3;font-family:'Courier Prime',monospace;font-size:.6rem;border:1px solid;padding:.2rem .4rem;letter-spacing:.08em}
-.poster-glyph{font-family:'Cinzel Decorative',serif;font-size:3.5rem;position:relative;z-index:2;transition:transform .35s,text-shadow .35s}
+.poster-number{position:absolute;top:1rem;left:1rem;z-index:3;font-family:monospace;font-size:.65rem;color:rgba(201,168,76,.6);letter-spacing:.15em}
+.poster-phase{position:absolute;top:1rem;right:1rem;z-index:3;font-family:monospace;font-size:.6rem;border:1px solid;padding:.2rem .4rem;letter-spacing:.08em}
+.poster-glyph{font-family:serif;font-size:3.5rem;position:relative;z-index:2;transition:transform .35s,text-shadow .35s}
 .franchise-card:hover .poster-glyph{transform:scale(1.1);text-shadow:0 0 40px currentColor}
 .poster-ring{position:absolute;width:100px;height:100px;border-radius:50%;border:1px solid;opacity:.2;z-index:1;animation:spin-slow 20s linear infinite}
 .poster-ring2{position:absolute;width:150px;height:150px;border-radius:50%;border:1px solid;opacity:.08;z-index:1;animation:spin-slow 35s linear infinite reverse}
@@ -80,17 +79,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* CARD META */
 .card-meta{padding:1rem 1.25rem 1.25rem}
-.card-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
-.card-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--gold);line-height:1.3;margin-bottom:.4rem}
+.card-label{font-family:monospace;font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
+.card-title{font-family:serif;font-size:.85rem;color:var(--gold);line-height:1.3;margin-bottom:.4rem}
 .card-desc{font-size:.75rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem}
 .card-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
-.card-tag{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);border:1px solid rgba(201,168,76,0.15);padding:.15rem .4rem;letter-spacing:.06em}
+.card-tag{font-family:monospace;font-size:.58rem;color:var(--muted);border:1px solid rgba(201,168,76,0.15);padding:.15rem .4rem;letter-spacing:.06em}
 .card-footer{display:flex;align-items:center;justify-content:space-between}
-.card-status{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid}
+.card-status{font-family:monospace;font-size:.6rem;letter-spacing:.08em;padding:.2rem .5rem;border:1px solid}
 .card-status.building{color:var(--gold);border-color:var(--gold)}
 .card-status.roadmap{color:var(--muted);border-color:var(--muted)}
 .card-status.active{color:var(--green);border-color:var(--green)}
-.card-spin{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted)}
+.card-spin{font-family:monospace;font-size:.6rem;color:var(--muted)}
 
 /* ELEMENT COLORS */
 .el-fire .poster-glyph{color:var(--crimson2)}
@@ -140,22 +139,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .game-card{border:1px solid var(--border);background:var(--glass);padding:1rem;transition:all .3s;position:relative;overflow:hidden}
 .game-card:hover{border-color:var(--gold);transform:translateY(-3px)}
 .game-card.locked{opacity:.35}
-.game-icon{font-family:'Cinzel Decorative',serif;font-size:2rem;margin-bottom:.5rem;display:block}
-.game-num{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
+.game-icon{font-family:serif;font-size:2rem;margin-bottom:.5rem;display:block}
+.game-num{font-family:monospace;font-size:.58rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.3rem}
 .game-title{font-size:.78rem;color:var(--text);line-height:1.3;margin-bottom:.5rem}
-.game-el{font-family:'Courier Prime',monospace;font-size:.6rem;letter-spacing:.08em;padding:.15rem .4rem;border:1px solid;display:inline-block}
+.game-el{font-family:monospace;font-size:.6rem;letter-spacing:.08em;padding:.15rem .4rem;border:1px solid;display:inline-block}
 
 /* RENDER PASSES */
 .render-section{max-width:1400px;margin:0 auto;padding:0 2rem 3rem}
 .render-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
 .render-pass{border:1px solid var(--border);padding:1.25rem;position:relative;overflow:hidden}
 .render-pass::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.render-num{font-family:'Courier Prime',monospace;font-size:2rem;color:rgba(201,168,76,0.08);position:absolute;top:.5rem;right:.75rem;font-weight:700;line-height:1}
-.render-label{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--cyan);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
-.render-name{font-family:'Cinzel Decorative',serif;font-size:.8rem;color:var(--gold);margin-bottom:.3rem}
+.render-num{font-family:monospace;font-size:2rem;color:rgba(201,168,76,0.08);position:absolute;top:.5rem;right:.75rem;font-weight:700;line-height:1}
+.render-label{font-family:monospace;font-size:.6rem;color:var(--cyan);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
+.render-name{font-family:serif;font-size:.8rem;color:var(--gold);margin-bottom:.3rem}
 .render-desc{font-size:.72rem;color:var(--muted);line-height:1.5}
 
-.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:'Cinzel Decorative',serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
+.omega-sig{position:fixed;bottom:1.5rem;right:2rem;z-index:50;opacity:.18;font-family:serif;font-size:3rem;color:var(--gold);pointer-events:none;user-select:none}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--void2)}
 ::-webkit-scrollbar-thumb{background:var(--border)}
@@ -165,14 +164,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 @media(max-width:600px){.franchise-grid{grid-template-columns:1fr}.game-grid{grid-template-columns:repeat(2,1fr)}.universe-stats{grid-template-columns:repeat(2,1fr)}}
 /* ===== UNIVERSE + SAGA TABS (ported, styling rebuilt) ===== */
 #mtab-universe .topbar,#mtab-saga .topbar{padding:1rem 0 1.2rem}
-#mtab-universe .topbar .t,#mtab-saga .topbar .t{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold)}
-#mtab-universe .topbar .t small,#mtab-saga .topbar .t small{display:block;font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.4rem}
-.sechead{font-family:'Courier Prime',monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.16em;text-transform:uppercase;margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+#mtab-universe .topbar .t,#mtab-saga .topbar .t{font-family:serif;font-size:1.3rem;color:var(--gold)}
+#mtab-universe .topbar .t small,#mtab-saga .topbar .t small{display:block;font-family:monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.4rem}
+.sechead{font-family:monospace;font-size:.7rem;color:var(--cyan);letter-spacing:.16em;text-transform:uppercase;margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
 .pad{padding:1rem 0}
 
 /* nested sub-tabs inside Universe */
 .tab-nav{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto}
-.tab-nav .tab-btn{padding:.6rem 1rem;cursor:pointer;font-family:'Courier Prime',monospace;font-size:.68rem;letter-spacing:.1em;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab-nav .tab-btn{padding:.6rem 1rem;cursor:pointer;font-family:monospace;font-size:.68rem;letter-spacing:.1em;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
 .tab-nav .tab-btn.active,.tab-nav .tab-btn:hover{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
@@ -180,16 +179,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .canon-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
 .canon-tier{display:block;padding:1rem;border:1px solid var(--border);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));border-radius:2px;text-decoration:none;transition:all .25s}
 .canon-tier:hover{border-color:var(--gold);transform:translateY(-2px)}
-.canon-tier .ct-n{font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--gold)}
-.canon-tier .ct-l{font-family:'Courier Prime',monospace;font-size:.62rem;color:var(--cyan);letter-spacing:.1em;margin:.3rem 0}
+.canon-tier .ct-n{font-family:serif;font-size:1.6rem;color:var(--gold)}
+.canon-tier .ct-l{font-family:monospace;font-size:.62rem;color:var(--cyan);letter-spacing:.1em;margin:.3rem 0}
 .canon-tier .ct-d{font-size:.75rem;color:var(--muted);line-height:1.6}
 
 .sg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.7rem}
 .sg-card{border-left:3px solid var(--border);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(10,10,15,.4);border-radius:2px;padding:.7rem;transition:all .25s}
 .sg-card:hover{transform:translateY(-2px)}
-.sg-card .sg-num{font-family:'Cinzel Decorative',serif;font-size:.85rem}
+.sg-card .sg-num{font-family:serif;font-size:.85rem}
 .sg-card .sg-title{font-size:.72rem;color:var(--text);margin:.3rem 0}
-.sg-card .sg-film{font-family:'Courier Prime',monospace;font-size:.56rem;letter-spacing:.04em}
+.sg-card .sg-film{font-family:monospace;font-size:.56rem;letter-spacing:.04em}
 
 .arc-timeline{display:flex;flex-wrap:wrap;gap:.6rem}
 
@@ -205,11 +204,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .poster-canvas{width:100%;height:80px;display:block}
 .poster-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(10,10,15,.85));pointer-events:none}
 .poster-info{padding:1rem;position:relative}
-.film-num{font-family:'Courier Prime',monospace;font-size:.58rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:.4rem}
-.film-title{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold)}
+.film-num{font-family:monospace;font-size:.58rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:.4rem}
+.film-title{font-family:serif;font-size:1rem;color:var(--gold)}
 .film-sub{font-size:.75rem;color:var(--muted);margin:.3rem 0}
-.film-year{font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);margin-bottom:.5rem}
-.film-status{display:inline-block;font-family:'Courier Prime',monospace;font-size:.56rem;letter-spacing:.08em;padding:.2rem .6rem;border-radius:2px;border:1px solid}
+.film-year{font-family:monospace;font-size:.6rem;color:var(--muted);margin-bottom:.5rem}
+.film-status{display:inline-block;font-family:monospace;font-size:.56rem;letter-spacing:.08em;padding:.2rem .6rem;border-radius:2px;border:1px solid}
 .status-prod{color:var(--green);border-color:rgba(63,178,127,.4)}
 .status-pre{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .status-dev{color:var(--muted);border-color:var(--border)}
@@ -221,20 +220,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .fc{position:relative;border-top:3px solid var(--border);border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));border-radius:2px;padding:1rem;transition:all .25s}
 .fc:hover{transform:translateY(-3px)}
 .fc-canvas{width:100%;height:60px;display:block;margin-bottom:.6rem}
-.fc-num{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
-.fc-title{font-family:'Cinzel Decorative',serif;font-size:.9rem;margin:.4rem 0}
+.fc-num{font-family:monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
+.fc-title{font-family:serif;font-size:.9rem;margin:.4rem 0}
 .fc-desc{font-size:.72rem;color:var(--muted);line-height:1.6;margin-bottom:.6rem}
 .fc-items{display:flex;flex-direction:column;gap:.4rem}
 .fi{display:flex;justify-content:space-between;align-items:center;padding:.4rem .6rem;border:1px solid var(--border);border-radius:2px;text-decoration:none;color:var(--text);font-size:.7rem}
-.fi-type{font-family:'Courier Prime',monospace;font-size:.5rem;letter-spacing:.06em;border:1px solid;padding:.1rem .4rem;border-radius:2px}
+.fi-type{font-family:monospace;font-size:.5rem;letter-spacing:.06em;border:1px solid;padding:.1rem .4rem;border-radius:2px}
 
 /* Saga tab: series and game cards */
 .series-card,.game-card{border-top:3px solid var(--col,var(--gold));border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(10,10,15,.4);border-radius:2px;padding:.9rem}
-.s-num,.g-num{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
-.s-title,.g-title{font-family:'Cinzel Decorative',serif;font-size:.82rem;margin:.4rem 0}
+.s-num,.g-num{font-family:monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em}
+.s-title,.g-title{font-family:serif;font-size:.82rem;margin:.4rem 0}
 .s-desc,.g-desc{font-size:.7rem;color:var(--muted);line-height:1.6;margin-bottom:.5rem}
-.g-genre{font-family:'Courier Prime',monospace;font-size:.55rem;color:var(--cyan);letter-spacing:.04em;margin-bottom:.4rem}
-.s-status,.g-status{display:inline-block;font-family:'Courier Prime',monospace;font-size:.5rem;letter-spacing:.06em;color:var(--solar);border:1px solid rgba(226,200,109,.4);padding:.15rem .5rem;border-radius:2px}
+.g-genre{font-family:monospace;font-size:.55rem;color:var(--cyan);letter-spacing:.04em;margin-bottom:.4rem}
+.s-status,.g-status{display:inline-block;font-family:monospace;font-size:.5rem;letter-spacing:.06em;color:var(--solar);border:1px solid rgba(226,200,109,.4);padding:.15rem .5rem;border-radius:2px}
 </style>
 </head>
 <body>
@@ -253,9 +252,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
   <!-- ===== TOP-LEVEL MEDIA HUB TABS (merged: Catalog / Universe / Saga Films) ===== -->
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin:0 0 1.5rem;overflow-x:auto">
-    <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">CATALOG</div>
-    <div class="mtab-btn" data-mtab="universe" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">CREATIVE UNIVERSE</div>
-    <div class="mtab-btn" data-mtab="saga" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">SAGA FILMS</div>
+    <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; CATALOG</div>
+    <div class="mtab-btn" data-mtab="universe" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; UNIVERSE</div>
+    <div class="mtab-btn" data-mtab="saga" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SAGA FILMS</div>
+    <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
   </div>
 
   <div class="mtab-panel active" id="mtab-catalog">
@@ -302,7 +302,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 1</div>
         <div class="poster-glyph">&#9651;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(201,168,76,.5);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(201,168,76,.5);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -325,7 +325,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 1</div>
         <div class="poster-glyph">&#9670;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(0,229,255,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(0,229,255,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -348,7 +348,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 2</div>
         <div class="poster-glyph">&#9651;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(52,152,219,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(52,152,219,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -371,7 +371,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 2</div>
         <div class="poster-glyph">&#9674;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(155,89,182,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(155,89,182,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -394,7 +394,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 2</div>
         <div class="poster-glyph">&#9632;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(39,174,96,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(39,174,96,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -417,7 +417,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 3</div>
         <div class="poster-glyph">&#9636;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(189,195,199,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(189,195,199,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -440,7 +440,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 3</div>
         <div class="poster-glyph">&#9711;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(192,57,43,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(192,57,43,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -463,7 +463,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 3</div>
         <div class="poster-glyph">&#9650;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(52,152,219,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(52,152,219,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -486,7 +486,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 3</div>
         <div class="poster-glyph">&#9633;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(0,229,255,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(0,229,255,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -509,7 +509,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 4</div>
         <div class="poster-glyph">&#9824;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(155,89,182,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(155,89,182,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -532,7 +532,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 4</div>
         <div class="poster-glyph">&#9670;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(201,168,76,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(201,168,76,.3);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -555,7 +555,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="poster-phase">PHASE 4</div>
         <div class="poster-glyph">&#937;</div>
         <div class="poster-bottom-bar">
-          <div style="font-family:'Courier Prime',monospace;font-size:.58rem;color:rgba(201,168,76,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
+          <div style="font-family:monospace;font-size:.58rem;color:rgba(201,168,76,.4);letter-spacing:.1em">12 SERIES // 12 SUB-GAMES</div>
         </div>
       </div>
       <div class="card-meta">
@@ -673,7 +673,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
          principal photography has begun. -->
     <div class="pad" data-reveal="fade-up" style="margin:16px 0 0">
       <div style="border-left:2px solid rgba(232,106,58,.5);background:rgba(232,106,58,.05);padding:14px 16px;max-width:78ch;border-radius:2px">
-        <div style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:2px;color:#E86A3A;margin-bottom:8px">CREATIVE WORK &middot; INTELLECTUAL PROPERTY NOTICE</div>
+        <div style="font-family:monospace;font-size:9px;letter-spacing:2px;color:#E86A3A;margin-bottom:8px">CREATIVE WORK &middot; INTELLECTUAL PROPERTY NOTICE</div>
         <p style="font-weight:300;color:var(--muted);font-size:13px;line-height:1.75;margin:0">
           This work is fictional and inspired by mythology, symbolism, astronomy, and speculative fantasy.
           It does not promote or endorse religious beliefs, occult practices, or astrological doctrine.
@@ -689,10 +689,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="pad" data-reveal="fade-up" style="margin:20px 0">
       <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75">Twelve films. Twelve series. Twelve games. One saga. The &#937; Cinematic Universe chronicles the rise of the sovereign order across nine eras &mdash; from the discovery of the frequency to the birth of a new civilisation. Each chapter is bound to a phase of the matrix, an element of the canon, and a gate of the Order.</p>
       <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap">
-        <div style="font-family:'Courier Prime',monospace;font-size:10px;color:var(--solar)">9 SAGA FILMS</div>
-        <div style="font-family:'Courier Prime',monospace;font-size:10px;color:var(--cyan)">9 ONGOING SERIES</div>
-        <div style="font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted)">9 GAME TITLES</div>
-        <div style="font-family:'Courier Prime',monospace;font-size:10px;color:var(--gold)">NFT-LINKED CONTENT</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--solar)">9 SAGA FILMS</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--cyan)">9 ONGOING SERIES</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--muted)">9 GAME TITLES</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--gold)">NFT-LINKED CONTENT</div>
       </div>
     </div>
 
@@ -709,19 +709,39 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="arc-timeline" id="arc-timeline"></div>
 
     <div class="pad" data-reveal="fade-up" style="margin-top:36px;border:1px solid var(--border);background:rgba(201,168,76,.04);padding:22px">
-      <div style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px">FRANCHISE PILLARS</div>
+      <div style="font-family:monospace;font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px">FRANCHISE PILLARS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px">
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">MOVIES</div></div>
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">SERIES</div></div>
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="5"/><path d="M7 12h3M8.5 10.5v3"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">GAMES</div></div>
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><path d="M4 5h7v15H4zM13 5h7v15h-7z"/><path d="M11 5v15"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">BOOKS</div></div>
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="18" height="7"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">COMICS</div></div>
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">NFT</div></div>
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">MERCH</div></div>
-        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="4"/><path d="M12 3v18"/></svg></div><div style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--solar)">EXPERIENCES</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">MOVIES</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">SERIES</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="5"/><path d="M7 12h3M8.5 10.5v3"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">GAMES</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><path d="M4 5h7v15H4zM13 5h7v15h-7z"/><path d="M11 5v15"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">BOOKS</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="18" height="7"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">COMICS</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">NFT</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">MERCH</div></div>
+        <div style="text-align:center;padding:12px;border:1px solid var(--border)"><div class="fp-emblem spin" style="margin-bottom:6px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="4"/><path d="M12 3v18"/></svg></div><div style="font-family:monospace;font-size:9px;color:var(--solar)">EXPERIENCES</div></div>
       </div>
     </div>
-  
+
+  </div>
+
+  <div class="mtab-panel" id="mtab-science" style="display:none">
+    <div style="padding:24px clamp(14px,3vw,36px)">
+      <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px">
+        <div class="ustat"><div class="ustat-val" style="font-size:1rem">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div><div class="ustat-label">AUTHORITY FORMULA</div></div>
+        <div class="ustat"><div class="ustat-val">27.8367</div><div class="ustat-label">APEX</div></div>
+        <div class="ustat"><div class="ustat-val">1.6180339887</div><div class="ustat-label">&phi; GOLDEN RATIO</div></div>
+        <div class="ustat"><div class="ustat-val">2.7182818285</div><div class="ustat-label">e EULER'S NUMBER</div></div>
+      </div>
+      <div class="sechead">GATE THRESHOLDS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+        <div class="ustat"><div class="ustat-val">0.001</div><div class="ustat-label">AXIS FLOOR</div></div>
+        <div class="ustat"><div class="ustat-val">1.618</div><div class="ustat-label">GATE I &mdash; &phi;</div></div>
+        <div class="ustat"><div class="ustat-val">2.718</div><div class="ustat-label">GATE II &mdash; e</div></div>
+        <div class="ustat"><div class="ustat-val">9.000</div><div class="ustat-label">GATE III &mdash; SOVEREIGN</div></div>
+        <div class="ustat"><div class="ustat-val">27.8367</div><div class="ustat-label">GATE IV &mdash; APEX</div></div>
+      </div>
+    </div>
   </div>
 
 
@@ -770,7 +790,7 @@ function drawFranchiseGlyph(cv,col){
     ctx.beginPath();ctx.arc(0,0,42,0,Math.PI*2);ctx.strokeStyle=col+'44';ctx.lineWidth=1;ctx.stroke();
     ctx.restore();
     ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=12;
-    ctx.font='700 20px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('\u03A9',60,41);ctx.shadowBlur=0;
+    ctx.font='700 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('\u03A9',60,41);ctx.shadowBlur=0;
     requestAnimationFrame(f);
   }
   f();
@@ -835,13 +855,13 @@ function buildChronos(){
      ['PARAGON','GOLD','The metal of the Order itself. To reach it is to be named, not just counted.'],
      ['ARCHON','PLATINUM','Rarer than gold. Very few members are ever seen standing here.'],
      ['OMEGA MASTER','OMEGA','Coordinate (9,9,9). All 104,976 nodes activated. The frequency is complete.']
-    ].map((s,i)=>`<div style="border:1px solid var(--border);background:linear-gradient(180deg,rgba(201,168,76,.06),transparent);padding:16px;display:flex;gap:16px;align-items:center;margin-bottom:10px"><div style="font-family:'Cinzel Decorative',serif;font-size:22px;color:var(--gold);min-width:32px">${i+1}</div><div><div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--gold);margin-bottom:3px">${s[0]} &mdash; ${s[1]}</div><div style="font-size:11px;color:var(--muted);font-weight:300">${s[2]}</div></div></div>`).join('');
+    ].map((s,i)=>`<div style="border:1px solid var(--border);background:linear-gradient(180deg,rgba(201,168,76,.06),transparent);padding:16px;display:flex;gap:16px;align-items:center;margin-bottom:10px"><div style="font-family:serif;font-size:22px;color:var(--gold);min-width:32px">${i+1}</div><div><div style="font-family:serif;font-size:14px;color:var(--gold);margin-bottom:3px">${s[0]} &mdash; ${s[1]}</div><div style="font-size:11px;color:var(--muted);font-weight:300">${s[2]}</div></div></div>`).join('');
 }
 
 function buildLebanon(){
   const g=document.getElementById('lebanon-content');
   g.innerHTML='<p style="font-weight:300;color:var(--muted);max-width:70ch;font-size:14px;line-height:1.7;margin-bottom:16px">Every member carries a lineage into the Order -- not fictional, their own. The Heritage Archive lets any sovereign record it: the eras, the cultural roots, the continuity between where they came from and where the matrix is taking them. The Cedar Root Chronicles is that idea told as story. <a href="heritage.html" style="color:var(--solar)">Open your own Heritage Archive &rarr;</a></p>'+
-    ['THE CEDAR ROOT','THE GLASS HORIZON','OMEGA HERITAGE','SYD OMEGA DEMOS','CULTURAL LEDGER'].map((ch,i)=>`<div style="border:1px solid var(--border);background:linear-gradient(180deg,rgba(201,168,76,.06),transparent);padding:16px;display:flex;gap:16px;align-items:center;margin-bottom:10px"><div style="font-family:'Cinzel Decorative',serif;font-size:22px;color:var(--solar);min-width:32px">${i+1}</div><div><div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--solar);margin-bottom:3px">${ch}</div><div style="font-size:11px;color:var(--muted);font-weight:300">Chapter ${i+1} of the Infinite Lebanon Saga -- Cedar Root Chronicles.</div></div></div>`).join('');
+    ['THE CEDAR ROOT','THE GLASS HORIZON','OMEGA HERITAGE','SYD OMEGA DEMOS','CULTURAL LEDGER'].map((ch,i)=>`<div style="border:1px solid var(--border);background:linear-gradient(180deg,rgba(201,168,76,.06),transparent);padding:16px;display:flex;gap:16px;align-items:center;margin-bottom:10px"><div style="font-family:serif;font-size:22px;color:var(--solar);min-width:32px">${i+1}</div><div><div style="font-family:serif;font-size:14px;color:var(--solar);margin-bottom:3px">${ch}</div><div style="font-size:11px;color:var(--muted);font-weight:300">Chapter ${i+1} of the Infinite Lebanon Saga -- Cedar Root Chronicles.</div></div></div>`).join('');
 }
 
 async function bootUniverse(){
@@ -982,7 +1002,7 @@ function renderFilms(){
       }
       /* Central glyph */
       ctx.fillStyle=f.elCol+'cc';
-      ctx.font='700 '+(w*0.18)+'px "Cinzel Decorative",serif';
+      ctx.font='700 '+(w*0.18)+'px serif';
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.shadowColor=f.elCol; ctx.shadowBlur=20;
       ctx.fillText(String(f.n),0,0);

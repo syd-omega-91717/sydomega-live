@@ -24,11 +24,9 @@
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
-:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:'Cinzel Decorative',serif;--B:'Rajdhani',sans-serif;--M:'Courier Prime',monospace}
+:root{--void:#0A0A0F;--panel:#0d0d18;--gold:#C9A84C;--solar:#E2C86D;--cyan:#00E5FF;--crim:#8B0000;--green:#3fb27f;--ink:#e9e6dc;--muted:#85837b;--line:rgba(201,168,76,0.12);--D:serif;--B:sans-serif;--M:monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--B);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 50% -5%,rgba(155,107,240,.06),transparent 60%)}
@@ -161,11 +159,10 @@ a{color:inherit;text-decoration:none}
     </div>
     <!-- TAB NAVIGATION -->
     <div class="tab-nav" id="tab-nav">
-      <div class="tab-btn active" data-tab="agents"><div class="tb-icon" style="color:#00E5FF">&#x25C9;</div><div class="tb-label">AI AGENTS</div></div>
-      <div class="tab-btn" data-tab="horoscope"><div class="tb-icon" style="color:#9B6BF0">&#x2609;</div><div class="tb-label">HOROSCOPE</div></div>
-      <div class="tab-btn" data-tab="elements"><div class="tb-icon" style="color:#D9B86A">&#x25CF;</div><div class="tb-label">9 ELEMENTS</div></div>
-      <div class="tab-btn" data-tab="gates"><div class="tb-icon" style="color:#C9A84C">&#x2302;</div><div class="tb-label">12 GATES</div></div>
-      <div class="tab-btn" data-tab="pantheons"><div class="tb-icon" style="color:#E86A3A">&#x2736;</div><div class="tb-label">PANTHEONS</div></div>
+      <div class="tab-btn active" data-tab="agents"><div class="tb-icon" style="color:#00E5FF">&#x25C9;</div><div class="tb-label">&#9670; AGENTS</div></div>
+      <div class="tab-btn" data-tab="cosmos"><div class="tb-icon" style="color:#9B6BF0">&#x2609;</div><div class="tb-label">&#9670; COSMOS</div></div>
+      <div class="tab-btn" data-tab="gates"><div class="tb-icon" style="color:#C9A84C">&#x2302;</div><div class="tb-label">&#9670; GATES</div></div>
+      <div class="tab-btn" data-tab="science"><div class="tb-icon" style="color:#E2C86D">&#x2736;</div><div class="tb-label">&#9670; SCIENCE</div></div>
     </div>
 
     <!-- TAB: AGENTS -->
@@ -187,7 +184,7 @@ a{color:inherit;text-decoration:none}
         <div class="ht-title" id="ht-title">THE CELESTIAL ORACLE</div>
         <div class="ht-sub" id="ht-sub">DAILY READING &middot; 9.1717Hz CELESTIAL ALIGNMENT</div>
         <div class="ht-desc" id="ht-desc">The cosmos has been tracking your matrix coordinates since before you drew your first breath. Every planetary position at your moment of birth locked a code into your sovereign cosmology. That code is evolving with you, right now.</div>
-        <div style="margin-top:10px"><a href="#" id="ht-codex-link" onclick="if(window.openSignCodex)openSignCodex(window.__viewingSign||window.__memberSign);return false;" style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:2px;color:#00E5FF;text-decoration:none">VIEW FULL CONNECTED IDENTITY &rarr;</a></div>
+        <div style="margin-top:10px"><a href="#" id="ht-codex-link" onclick="if(window.openSignCodex)openSignCodex(window.__viewingSign||window.__memberSign);return false;" style="font-family:monospace;font-size:9px;letter-spacing:2px;color:#00E5FF;text-decoration:none">VIEW FULL CONNECTED IDENTITY &rarr;</a></div>
       </div>
       <div class="hero-canvas-wrap">
         <canvas id="hero-wheel" width="320" height="320" style="width:160px;height:160px"></canvas>
@@ -242,6 +239,25 @@ a{color:inherit;text-decoration:none}
       <div class="sechead" data-reveal="fade-up">THE 12 OLYMPIAN GODS <span data-canon="lore"></span></div>
       <div class="agents-grid" id="pantheons-grid"></div>
     </div>
+
+    <!-- TAB: SCIENCE -->
+    <div class="tab-panel" id="tab-science">
+      <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+      <div class="gates-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px">
+        <div class="gate-card"><div class="gc-n" style="color:var(--gold);font-size:1rem">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div><div class="gc-auth">AUTHORITY FORMULA</div></div>
+        <div class="gate-card"><div class="gc-n">27.8367</div><div class="gc-auth">APEX (OWNER AUTHORITY)</div></div>
+        <div class="gate-card"><div class="gc-n">1.6180339887</div><div class="gc-auth">&phi; &mdash; GOLDEN RATIO</div></div>
+        <div class="gate-card"><div class="gc-n">2.7182818285</div><div class="gc-auth">e &mdash; EULER'S NUMBER</div></div>
+      </div>
+      <div class="sechead">GATE THRESHOLDS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+        <div class="gate-card"><div class="gc-n">0.001</div><div class="gc-auth">AXIS FLOOR</div></div>
+        <div class="gate-card gate-card--unlocked"><div class="gc-n">1.618</div><div class="gc-auth">GATE I &mdash; &phi;</div></div>
+        <div class="gate-card gate-card--unlocked"><div class="gc-n">2.718</div><div class="gc-auth">GATE II &mdash; e</div></div>
+        <div class="gate-card gate-card--unlocked"><div class="gc-n">9.000</div><div class="gc-auth">GATE III &mdash; SOVEREIGN</div></div>
+        <div class="gate-card gate-card--unlocked"><div class="gc-n">27.8367</div><div class="gc-auth">GATE IV &mdash; APEX</div></div>
+      </div>
+    </div>
   </main>
 </div>
 
@@ -250,29 +266,31 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 /* TAB SWITCHING */
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active');
-    if(btn.dataset.tab==='horoscope' && !window.__horoBuilt){ window.__horoBuilt=true; callWhenReady('bootHoroscopeFull'); }
-  });
-});
+var TAB_GROUPS={
+  agents:['tab-agents'],
+  cosmos:['tab-horoscope','tab-elements','tab-pantheons'],
+  gates:['tab-gates'],
+  science:['tab-science']
+};
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',(TAB_GROUPS[name]||[]).indexOf(p.id)>-1);});
+  if(name==='cosmos'&&!window.__horoBuilt){window.__horoBuilt=true;callWhenReady('bootHoroscopeFull');}
+}
+document.querySelectorAll('.tab-btn').forEach(function(btn){btn.addEventListener('click',function(){setTab(btn.dataset.tab);});});
+window.setTab=setTab;
 function callWhenReady(fnName){
-  if(typeof window[fnName]==='function'){ window[fnName](); return; }
+  if(typeof window[fnName]==='function'){window[fnName]();return;}
   var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    if(typeof window[fnName]==='function'){ window[fnName](); clearInterval(t); }
-    else if(tries>30){ clearInterval(t); }
-  },100);
+  var t=setInterval(function(){tries++;if(typeof window[fnName]==='function'){window[fnName]();clearInterval(t);}else if(tries>30){clearInterval(t);}},100);
 }
 
 /* URL hash tab */
 if(location.hash){
-  const tab=location.hash.replace('#','');
-  document.querySelector('[data-tab="'+tab+'"]')?.click();
+  var hashMap={horoscope:'cosmos',elements:'cosmos',pantheons:'cosmos'};
+  var rawTab=location.hash.replace('#','');
+  var resolvedTab=hashMap[rawTab]||rawTab;
+  setTab(resolvedTab);
 }
 
 const AGENTS=[
@@ -378,11 +396,11 @@ function buildAgentWheel(memberSign){
       ctx.strokeStyle=sel?ag.col:hov?ag.col+'bb':ag.col+'44';ctx.lineWidth=sel?2:1;
       if(sel){ctx.shadowColor=ag.col;ctx.shadowBlur=16;}ctx.stroke();ctx.shadowBlur=0;
       ctx.fillStyle=sel?ag.col:hov?ag.col:'rgba(133,131,123,0.6)';
-      ctx.font='700 '+(sel?10:8)+'px "Courier Prime",monospace';
+      ctx.font='700 '+(sel?10:8)+'px monospace';
       ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ag.glyph,ax,ay+1);
       if(hov||sel){
         ctx.fillStyle=sel?ag.col:'rgba(201,168,76,0.7)';
-        ctx.font='700 7px "Courier Prime",monospace';ctx.fillText(ag.name,ax,ay+(r+10));
+        ctx.font='700 7px monospace';ctx.fillText(ag.name,ax,ay+(r+10));
       }
     });
     /* Center */
@@ -390,7 +408,7 @@ function buildAgentWheel(memberSign){
     cg.addColorStop(0,'rgba(201,168,76,0.2)');cg.addColorStop(1,'transparent');
     ctx.beginPath();ctx.arc(cx/2,cy/2,45,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
     ctx.fillStyle='rgba(201,168,76,'+(0.8+0.18*Math.sin(t*1.5))+')';
-    ctx.font='700 36px "Cinzel Decorative",serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='700 36px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.shadowColor='rgba(201,168,76,.6)';ctx.shadowBlur=18;ctx.fillText('\u03A9',cx/2,cy/2+2);ctx.shadowBlur=0;
     ctx.restore();
     requestAnimationFrame(draw);
@@ -464,7 +482,7 @@ function drawSignCanvas(cv,sign,size){
     ctx.restore();
     /* Glyph */
     ctx.fillStyle=s.col;ctx.shadowColor=s.col;ctx.shadowBlur=14+4*Math.sin(t*1.5);
-    ctx.font='700 '+Math.round(size*.55)+'px "Cinzel Decorative",serif';
+    ctx.font='700 '+Math.round(size*.55)+'px serif';
     ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.g,0,2);ctx.shadowBlur=0;
     /* Orbiting dots */
     for(let i=0;i<6;i++){
@@ -838,7 +856,7 @@ function drawMandala(canvas, sign, size, animated){
     /* CENTRAL GLYPH (classical, not emoji) */
     const gl=s.glyph;
     ctx.fillStyle=col; ctx.shadowColor=col; ctx.shadowBlur=12+4*Math.sin(t*1.5);
-    ctx.font='700 '+(size*0.3)+'px "Cinzel Decorative",serif';
+    ctx.font='700 '+(size*0.3)+'px serif';
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(gl,CX,CY+2);
     ctx.shadowBlur=0;
@@ -882,7 +900,7 @@ function drawHeroWheel(sign){
       if(isActive){ctx.shadowColor=s.col;ctx.shadowBlur=16;}
       ctx.stroke(); ctx.shadowBlur=0;
       ctx.fillStyle=isActive?s.col:'rgba(133,131,123,0.6)';
-      ctx.font=(isActive?'700 ':'')+Math.round(isActive?13:10)+'px "Cinzel Decorative",serif';
+      ctx.font=(isActive?'700 ':'')+Math.round(isActive?13:10)+'px serif';
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText(s.glyph,ax,ay+1);
       /* connecting line */
@@ -896,7 +914,7 @@ function drawHeroWheel(sign){
     ctx.strokeStyle='rgba(201,168,76,0.3)'; ctx.lineWidth=1; ctx.stroke();
     const activeSign=SIGNS[si];
     ctx.fillStyle=(activeSign&&activeSign.col||'#C9A84C'); ctx.shadowColor=(activeSign&&activeSign.col||'#C9A84C'); ctx.shadowBlur=20+4*Math.sin(t*2);
-    ctx.font='700 52px "Cinzel Decorative",serif';
+    ctx.font='700 52px serif';
     ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(activeSign.glyph,CX,CY+3);
     ctx.shadowBlur=0;
     /* Frequency ring */
@@ -923,7 +941,7 @@ function drawPlanetNode(cv, planet){
     ctx.beginPath(); ctx.arc(0,0,20,-Math.PI*0.7,Math.PI*0.7);
     ctx.strokeStyle=planet.col+'88'; ctx.lineWidth=1.2; ctx.stroke(); ctx.restore();
     ctx.fillStyle=planet.col; ctx.shadowColor=planet.col; ctx.shadowBlur=8+3*Math.sin(t*1.5);
-    ctx.font='700 10px "Courier Prime",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='700 10px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(planet.name.slice(0,3),40,40); ctx.shadowBlur=0;
     requestAnimationFrame(frame);
   }

@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Budget · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Budget &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:monospace}
 
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+.stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -82,19 +81,17 @@
 </head>
 <body>
 
-<div class="main">
-
-  <div class="topbar">
-    <span class="topbar-title">Ω SOVEREIGN BUDGET</span>
-    <span class="tb-meta" id="b-tb-meta">LOADING…</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="budget"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">BUDGET<small>SOVEREIGN FINANCE &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="b-tb-meta">LOADING…</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" id="t-overview">OVERVIEW</button>
-    <button class="lt" id="t-expenses">EXPENSES</button>
-    <button class="lt" id="t-income">INCOME</button>
-    <button class="lt" id="t-targets">TARGETS</button>
-    <button class="lt" id="t-trends">TRENDS</button>
+    <button class="lt active" id="t-overview">&#9670; OVERVIEW</button>
+    <button class="lt" id="t-expenses">&#9670; EXPENSES</button>
+    <button class="lt" id="t-income">&#9670; INCOME</button>
+    <button class="lt" id="t-science">&#9670; SCIENCE</button>
   </div>
 
   <!-- OVERVIEW -->
@@ -171,8 +168,20 @@
     <div class="tx-list" id="b-income-list"></div>
   </div>
 
-  <!-- TARGETS -->
-  <div class="tab-pane" id="tab-targets">
+  <!-- SCIENCE -->
+  <div class="tab-pane" id="tab-science">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card"><div class="stat-val">50/30</div><div class="stat-lbl">NEEDS/WANTS RULE</div></div>
+      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">WEALTH RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">&gt;25%</div><div class="stat-lbl">SAVINGS RATE TARGET</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">6×</div><div class="stat-lbl">EMERGENCY MONTHS</div></div>
+      <div class="stat-card"><div class="stat-val">20%</div><div class="stat-lbl">INVEST FIRST</div></div>
+      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
     <div class="b-form">
       <div class="b-form-title">MONTHLY BUDGET TARGETS</div>
       <div id="b-target-rows"></div>
@@ -181,27 +190,18 @@
         <span style="font-family:var(--M);font-size:9px;color:var(--gold);margin-left:12px;opacity:0;transition:opacity .3s" id="b-target-flash">✓ SAVED</span>
       </div>
     </div>
-    <div style="margin-top:16px">
-      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:12px">SOVEREIGN BUDGET PRINCIPLES</div>
-      <div style="font-family:var(--M);font-size:10px;color:rgba(138,134,118,.65);line-height:1.9">
-        50/30/20 RULE: 50% NEEDS · 30% WANTS · 20% SAVINGS &amp; INVESTMENTS<br>
-        SOVEREIGN RULE: INVEST FIRST — PAY YOURSELF BEFORE EXPENSES<br>
-        EMERGENCY FUND: 3–6 MONTHS OF EXPENSES IN LIQUID RESERVE<br>
-        SAVINGS RATE TARGET: &gt;25% FOR FINANCIAL SOVEREIGNTY<br>
-        ZERO-BASED: EVERY DOLLAR ASSIGNED A JOB BEFORE THE MONTH BEGINS
-      </div>
+    <div style="margin-top:24px">
+      <div class="trends-month-row" id="b-yr-select"></div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">INCOME vs EXPENSES — MONTHLY</div>
+      <canvas id="b-trend-chart" style="width:100%;height:140px;display:block;margin-bottom:20px"></canvas>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">SAVINGS RATE % — MONTHLY</div>
+      <canvas id="b-savings-chart" style="width:100%;height:100px;display:block"></canvas>
     </div>
   </div>
 
-  <!-- TRENDS -->
-  <div class="tab-pane" id="tab-trends">
-    <div class="trends-month-row" id="b-yr-select"></div>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">INCOME vs EXPENSES — MONTHLY</div>
-    <canvas id="b-trend-chart" style="width:100%;height:140px;display:block;margin-bottom:20px"></canvas>
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">SAVINGS RATE % — MONTHLY</div>
-    <canvas id="b-savings-chart" style="width:100%;height:100px;display:block"></canvas>
-  </div>
-
+</div>
+<div class="lf"><span>&#937; BUDGET &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
 <script src="bg.js"></script>
@@ -475,14 +475,14 @@ function drawTrendChart() {
     ctx.fillRect(x+bw+1, H-4-expH, bw, expH);
     // Month label
     ctx.fillStyle = m===_curMonth ? '#C9A84C' : 'rgba(138,134,118,.35)';
-    ctx.font = '7px "Courier Prime", monospace';
+    ctx.font = '7px monospace';
     ctx.textAlign = 'center';
     ctx.fillText(new Date(m+'-15').toLocaleDateString('en-US',{month:'short'}).toUpperCase(), x+bw, H);
   });
 
   // Legend
   ctx.fillStyle='rgba(102,187,106,.7)'; ctx.fillRect(W-110,6,10,8);
-  ctx.fillStyle='rgba(138,134,118,.5)'; ctx.font='7px "Courier Prime",monospace'; ctx.textAlign='left';
+  ctx.fillStyle='rgba(138,134,118,.5)'; ctx.font='7px monospace'; ctx.textAlign='left';
   ctx.fillText('INCOME', W-96, 14);
   ctx.fillStyle='rgba(229,115,115,.7)'; ctx.fillRect(W-50,6,10,8);
   ctx.fillText('EXPENSES', W-36, 14);
@@ -514,7 +514,7 @@ function drawSavingsChart() {
     else      ctx.fillRect(x, zero,   bw, h);
     // Label %
     if (r!==0) {
-      ctx.fillStyle='rgba(138,134,118,.5)'; ctx.font='7px "Courier Prime",monospace'; ctx.textAlign='center';
+      ctx.fillStyle='rgba(138,134,118,.5)'; ctx.font='7px monospace'; ctx.textAlign='center';
       ctx.fillText(Math.round(r)+'%', x+bw/2, r>=0?zero-h-3:zero+h+10);
     }
   });
@@ -528,7 +528,7 @@ function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').repla
 /* ── TAB ROUTER ──────────────────────────────────────────────────────── */
 
 function activateTab(name) {
-  ['overview','expenses','income','targets','trends'].forEach(t=>{
+  ['overview','expenses','income','science'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('active',t===name);
     document.getElementById('t-'+t).classList.toggle('active',t===name);
   });
@@ -536,10 +536,10 @@ function activateTab(name) {
   if (name==='expenses')  { renderExpenseList(); }
   if (name==='income')    { renderIncomeList(); }
   if (name==='targets')   renderTargets();
-  if (name==='trends')    renderTrends();
+  if (name==='science')   renderTrends();
 }
 
-['overview','expenses','income','targets','trends'].forEach(t=>{
+['overview','expenses','income','science'].forEach(t=>{
   document.getElementById('t-'+t).addEventListener('click',()=>activateTab(t));
 });
 
@@ -559,7 +559,7 @@ document.getElementById('inc-save').addEventListener('click', addIncome);
 document.getElementById('b-save-targets').addEventListener('click', saveTargetValues);
 
 window.addEventListener('resize',()=>{
-  if(document.getElementById('tab-trends').classList.contains('active')) renderTrends();
+  if(document.getElementById('tab-science').classList.contains('active')) renderTrends();
 });
 
 /* ── INIT SELECTS ────────────────────────────────────────────────────── */

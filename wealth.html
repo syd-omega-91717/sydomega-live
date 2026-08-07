@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>WEALTH — Sovereign Treasury Calculator · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega.css">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
 .wealth-hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
 @media(max-width:640px){.wealth-hero{grid-template-columns:1fr}}
 .net-worth-box{grid-column:1/-1;border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;text-align:center}
-.net-worth-box .nw-label{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:8px}
-.net-worth-box .nw-val{font-family:var(--M,'Courier Prime',monospace);font-size:42px;letter-spacing:4px;color:var(--gold,#C9A84C)}
+.net-worth-box .nw-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:8px}
+.net-worth-box .nw-val{font-family:var(--M);font-size:42px;letter-spacing:4px;color:var(--gold,#C9A84C)}
 .net-worth-box .nw-sub{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:8px}
 .asset-class-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px}
 .acc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -25,7 +25,7 @@
 .asset-input:focus{border-bottom-color:rgba(201,168,76,.5)}
 .add-asset-btn{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:6px 12px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;margin-top:10px;width:100%}
 .add-asset-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
-.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
 @media(max-width:640px){.calc-grid{grid-template-columns:1fr}}
 .calc-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:20px}
@@ -67,19 +67,15 @@
 </style>
 </head>
 <body>
-<div class="side" id="side"></div>
-<div class="main">
-  <div class="topbar" id="topbar">
-    <div class="tb-left">
-      <span class="tb-title">WEALTH</span>
-      <span class="tb-sub">SOVEREIGN WEALTH ENGINE · SYD OMEGA 91717</span>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="save-btn" onclick="saveSnapshot()">SAVE SNAPSHOT</button>
-    </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="wealth"></aside>
+<main class="main">
+  <div class="topbar">
+    <div class="t">WEALTH<small>SOVEREIGN WEALTH ENGINE &middot; SYD OMEGA 91717</small></div>
+    <button class="save-btn" onclick="saveSnapshot()">SAVE SNAPSHOT</button>
   </div>
 
-  <div class="content">
+  <div style="padding:20px var(--pad,20px)">
 
     <!-- Net Worth -->
     <div class="wealth-hero">
@@ -91,11 +87,10 @@
     </div>
 
     <div class="tab-row">
-      <button class="tab-btn act" onclick="switchTab('assets',this)">ASSETS</button>
-      <button class="tab-btn" onclick="switchTab('calculators',this)">CALCULATORS</button>
-      <button class="tab-btn" onclick="switchTab('allocation',this)">ALLOCATION</button>
-      <button class="tab-btn" onclick="switchTab('milestones',this)">MILESTONES</button>
-      <button class="tab-btn" onclick="switchTab('history',this)">HISTORY</button>
+      <button class="tab-btn act" onclick="switchTab('assets',this)">&#9670; ASSETS</button>
+      <button class="tab-btn" onclick="switchTab('calculators',this)">&#9670; CALCULATORS</button>
+      <button class="tab-btn" onclick="switchTab('milestones',this)">&#9670; MILESTONES</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- ASSETS TAB -->
@@ -227,10 +222,7 @@
         </div>
 
       </div>
-    </div>
-
-    <!-- ALLOCATION TAB -->
-    <div class="tab-panel" id="tab-allocation">
+      <div class="section-hd" style="margin-top:24px">PORTFOLIO ALLOCATION</div>
       <div class="allocation-wrap">
         <div>
           <div class="section-hd">CURRENT ALLOCATION</div>
@@ -253,23 +245,86 @@
       <div class="milestone-row" id="milestone-row"></div>
       <div class="section-hd">NEXT MILESTONE</div>
       <div id="next-milestone"></div>
-    </div>
-
-    <!-- HISTORY TAB -->
-    <div class="tab-panel" id="tab-history">
-      <div class="section-hd">NET WORTH SNAPSHOTS</div>
+      <div class="section-hd" style="margin-top:24px">NET WORTH SNAPSHOTS</div>
       <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.5);margin-bottom:12px">
         Click "SAVE SNAPSHOT" to record your current net worth. Tracks wealth trajectory over time.
       </div>
       <div id="snapshot-list"></div>
     </div>
 
+    <!-- SCIENCE TAB -->
+    <div class="tab-panel" id="tab-science">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">27.8367</div>
+          <div class="cr-label" style="margin-top:6px">APEX AUTH</div>
+        </div>
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">φ/e</div>
+          <div class="cr-label" style="margin-top:6px">WEALTH RATIO</div>
+        </div>
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">4%</div>
+          <div class="cr-label" style="margin-top:6px">SWR RULE</div>
+        </div>
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">72</div>
+          <div class="cr-label" style="margin-top:6px">RULE OF 72</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">1.618</div>
+          <div class="cr-label" style="margin-top:6px">GOLDEN RATIO φ</div>
+        </div>
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">10×</div>
+          <div class="cr-label" style="margin-top:6px">GROWTH TARGET</div>
+        </div>
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">25×</div>
+          <div class="cr-label" style="margin-top:6px">FIRE MULTIPLE</div>
+        </div>
+        <div class="calc-card" style="text-align:center;padding:16px">
+          <div class="cr-val" style="font-size:20px">2.718</div>
+          <div class="cr-label" style="margin-top:6px">EULER'S e</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+        <div class="calc-card">
+          <div class="calc-title">COMPOUND INTEREST LAW</div>
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
+            The eighth wonder of the world — money that earns money. A = P(1+r/n)^nt. Starting early multiplies wealth exponentially. Every dollar invested today is worth e^(r×t) in continuous compounding. The Rule of 72: divide 72 by your interest rate to find doubling time.
+          </div>
+        </div>
+        <div class="calc-card">
+          <div class="calc-title">FIRE MOVEMENT</div>
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
+            Financial Independence / Retire Early. Build a portfolio 25× your annual expenses. The 4% safe withdrawal rate sustains 30+ year retirements. LEAN FIRE: minimal expenses. FAT FIRE: lifestyle maintained. BARISTA FIRE: semi-retirement with part-time income.
+          </div>
+        </div>
+        <div class="calc-card">
+          <div class="calc-title">WEALTH CONSCIOUSNESS</div>
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
+            Sovereign wealth is not about accumulation alone — it is about freedom, options, and anti-fragility. The OMEGA model: ASSETS > LIABILITIES. Cash flow > net worth. Time freedom > monetary freedom. Every asset must either appreciate, generate income, or both.
+          </div>
+        </div>
+        <div class="calc-card">
+          <div class="calc-title">SOVEREIGN ALLOCATION MODEL</div>
+          <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
+            Ray Dalio All Weather blend: 30% stocks, 15% bonds, 20% real estate, 10% cash, 10% crypto, 10% business equity, 5% alternatives. Rebalance quarterly. Never hold more than 30% in any single class. Diversification is the only free lunch in finance.
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="lf">
-    <span>&#937; WEALTH ENGINE · SYD OMEGA 91717</span>
+    <span>&#937; WEALTH ENGINE &middot; SYD OMEGA 91717</span>
     <span>SOVEREIGNTY IS MEASURED IN FREEDOM, NOT JUST FORTUNE</span>
   </div>
+</main>
 </div>
 
 <script src="bg.js"></script>
@@ -423,7 +478,7 @@ function renderAllocation(){
     ctx.beginPath();ctx.arc(cx,cy,inner,0,Math.PI*2);
     ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--bg')||'#0a0a08';
     ctx.fill();
-    ctx.font='10px Courier Prime,monospace';ctx.fillStyle='rgba(201,168,76,.6)';ctx.textAlign='center';
+    ctx.font='10px monospace';ctx.fillStyle='rgba(201,168,76,.6)';ctx.textAlign='center';
     ctx.fillText('NET ASSETS',cx,cy-6);ctx.fillText(fmt(grandTotal),cx,cy+10);
   }
 }
@@ -544,7 +599,7 @@ function switchTab(id,btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
   if(btn) btn.classList.add('act');
   document.getElementById('tab-'+id).classList.add('act');
-  if(id==='allocation') renderAllocation();
+  if(id==='assets') renderAllocation();
 }
 window.switchTab=switchTab;
 

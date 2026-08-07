@@ -3,19 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Hydration · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Hydration &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:monospace;
   --teal:#26C6DA;--blue:#5C8FD6;--green:#4CAF50;
 }
 
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -54,6 +50,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 /* STATS */
 .stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
 .stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
 .stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--teal)}
 .stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
@@ -70,16 +67,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 </style>
 </head>
 <body>
-<div class="main">
-  <div class="topbar">
-    <span class="topbar-title">Ω SOVEREIGN HYDRATION</span>
-    <span class="tb-meta" id="tb-today">── TODAY: 0 ml</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="water"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">HYDRATION<small>SOVEREIGN WATER &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-today">── TODAY: 0 ml</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" onclick="switchTab(this,'t1')">◆ TODAY</button>
-    <button class="lt" onclick="switchTab(this,'t2')">▶ HISTORY</button>
-    <button class="lt" onclick="switchTab(this,'t3')">⚙ SCIENCE</button>
+    <button class="lt active" onclick="switchTab(this,'t1')">&#9670; TODAY</button>
+    <button class="lt" onclick="switchTab(this,'t2')">&#9670; HISTORY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">&#9670; GOALS</button>
+    <button class="lt" onclick="switchTab(this,'t4')">&#9670; SCIENCE</button>
   </div>
 
   <!-- TAB 1: TODAY -->
@@ -127,8 +125,40 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
   </div>
 
-  <!-- TAB 3: SCIENCE -->
+  <!-- TAB 3: GOALS -->
   <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">DAILY HYDRATION TARGET</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">
+        <div class="sci-card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)">2,500</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">ML / DAY (DEFAULT)</div></div>
+        <div class="sci-card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)">3,700</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">ML / DAY (ACTIVE)</div></div>
+        <div class="sci-card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--teal,#26C6DA)">8</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">CUPS MINIMUM</div></div>
+      </div>
+      <div class="sect-hd">SOVEREIGN HYDRATION RULES</div>
+      <div style="font-family:var(--M);font-size:9px;letter-spacing:.8px;color:rgba(200,196,176,.7);line-height:2">
+        · Drink 500ml upon waking before any food or coffee<br>
+        · Add 500ml per hour of intense exercise<br>
+        · Reduce intake 2-3 hours before sleep<br>
+        · Electrolytes (sodium, potassium, magnesium) matter as much as volume<br>
+        · Urine color goal: pale yellow — not clear, not dark
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card"><div class="stat-val">2.5L</div><div class="stat-lbl">DAILY TARGET</div></div>
+      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">HYDRATION RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">75%</div><div class="stat-lbl">BRAIN WATER</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">1-2%</div><div class="stat-lbl">DEHYDRATION IMPAIRS</div></div>
+      <div class="stat-card"><div class="stat-val">0.8L</div><div class="stat-lbl">KIDNEY MAX/HR</div></div>
+      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
     <div class="sci-card">
       <div class="sci-title">HYDRATION & COGNITIVE PERFORMANCE</div>
       <div class="sci-cite">Ganio, M.S. et al. (2011) — Mild dehydration impairs cognitive performance. British Journal of Nutrition, 106(10)</div>
@@ -150,8 +180,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div class="sci-body">Barry Popkin's comprehensive review found that optimal cellular hydration supports: kidney function and toxin clearance, cardiovascular efficiency (blood volume and viscosity), joint lubrication, thermoregulation, nutrient transport, and skin barrier integrity. The kidneys can process roughly 0.8-1L per hour maximum — spread water intake evenly rather than consuming large amounts at once, which exceeds renal clearance capacity and dilutes electrolytes.</div>
     </div>
   </div>
+
+  </div>
+  <div class="lf"><span>&#937; HYDRATION &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
+<script src="bg.js"></script>
 <script src="omega-ui.js"></script>
 <script>
 const WATER_KEY  = 'omega_water_log';
@@ -346,7 +381,7 @@ function drawHist(logs){
   ctx.strokeStyle='rgba(38,198,218,.3)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
   ctx.beginPath(); ctx.moveTo(pad,gy); ctx.lineTo(W-pad,gy); ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle='rgba(38,198,218,.35)'; ctx.font='7px "Courier Prime",monospace';
+  ctx.fillStyle='rgba(38,198,218,.35)'; ctx.font='7px monospace';
   ctx.fillText('GOAL',W-pad+2,gy+3);
 
   days.forEach(function(d,i){
@@ -357,10 +392,10 @@ function drawHist(logs){
       ctx.fillStyle=col;
       ctx.fillRect(x,pad+ph-bh,bw,bh);
     }
-    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px monospace';
     ctx.fillText(d.label,x+bw/2-8,H-4);
     if(d.ml>0){
-      ctx.fillStyle='rgba(38,198,218,.5)'; ctx.font='7px "Courier Prime",monospace';
+      ctx.fillStyle='rgba(38,198,218,.5)'; ctx.font='7px monospace';
       ctx.fillText((d.ml/1000).toFixed(1)+'L',x,pad+ph-(d.ml/maxMl)*ph-5);
     }
   });

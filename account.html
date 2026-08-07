@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717  --  Member Access</title>
+<title>&#937; SYD OMEGA 91717 -- Member Access</title>
 <meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="theme-color" content="#C9A84C"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -12,19 +12,19 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SYD OMEGA 91717"/>
-<meta property="og:title" content="SYD OMEGA 91717  --  Member Access"/>
+<meta property="og:title" content="SYD OMEGA 91717 -- Member Access"/>
 <meta property="og:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta property="og:image" content="https://www.sydomega.com/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://www.sydomega.com/account.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SYD OMEGA 91717  --  Member Access"/>
+<meta name="twitter:title" content="SYD OMEGA 91717 -- Member Access"/>
 <meta name="twitter:description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
 <meta name="twitter:image" content="https://www.sydomega.com/og-image.png"/>
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
-
-<meta name="description" content="Create your SYD OMEGA account. Your cosmology and evolving matrix position, saved to your sovereign profile." />
+<link rel="icon" href="/favicon.ico"><link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
   :root{
     --void:#0A0A0F; --void-2:#0d0d15;
@@ -38,28 +38,20 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--void);color:var(--ink);font-family:var(--body);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
+  body{background:var(--void);color:var(--ink);font-family:var(--body);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  .field{position:fixed;inset:0;z-index:0;pointer-events:none}
-  .field::before{content:"";position:absolute;inset:-20%;
-    background:radial-gradient(circle at 50% 12%, rgba(201,168,76,0.10), transparent 42%),radial-gradient(circle at 82% 72%, rgba(0,229,255,0.06), transparent 40%),radial-gradient(circle at 12% 82%, rgba(139,0,0,0.10), transparent 38%);}
-  .grid{position:absolute;inset:0;opacity:0.22;
-    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size:64px 64px;mask-image:radial-gradient(circle at 50% 25%,black,transparent 75%);-webkit-mask-image:radial-gradient(circle at 50% 25%,black,transparent 75%);}
-  .wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:0 24px}
-  header{position:relative;z-index:2;border-bottom:1px solid var(--line)}
-  .bar{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .mark{font-family:var(--display);font-weight:900;color:var(--gold);font-size:22px;letter-spacing:1px}
-  .mark span{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:3px;margin-left:10px}
-  .home{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan)}
-  .home:hover,.home:focus{color:var(--gold);outline:none}
-
-  .panel{text-align:center;padding:64px 0 60px}
+  /* Tab system */
+  .layer-tabs{display:flex;gap:2px;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
+  .lt{font-family:var(--mono);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+  .lt.active{color:var(--gold);border-bottom-color:var(--gold)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+  /* Auth panel sections */
+  .panel{text-align:center;padding:40px 0 30px}
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:6px;color:var(--cyan);margin-bottom:16px}
-  h1{font-family:var(--display);font-weight:700;letter-spacing:2px;font-size:clamp(28px,5.5vw,46px);color:var(--gold)}
-  .panel p.sub{font-weight:300;color:var(--muted);max-width:52ch;margin:18px auto 0;font-size:16px}
-
-  .form{margin:38px auto 0;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:left}
+  h1{font-family:var(--display);font-weight:700;letter-spacing:2px;font-size:clamp(24px,4vw,38px);color:var(--gold)}
+  .panel p.sub{font-weight:300;color:var(--muted);max-width:52ch;margin:18px auto 0;font-size:15px}
+  /* Form */
+  .form{margin:30px auto 0;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:left}
   label{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--muted)}
   input,select{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--void-2);border:1px solid var(--line);padding:13px 15px;width:100%;color-scheme:dark}
   input:focus,select:focus{outline:none;border-color:var(--cyan)}
@@ -73,197 +65,309 @@
   .row2 .btn{width:auto;flex:1}
   .msg{font-family:var(--mono);font-size:12px;letter-spacing:1px;min-height:18px;margin-top:4px}
   .msg.ok{color:var(--cyan)} .msg.bad{color:var(--crimson)}
-
+  /* Identity display */
   .crown{text-align:center;margin-bottom:8px}
-  .glyph{font-family:var(--display);font-size:clamp(56px,12vw,96px);color:var(--gold);line-height:1;text-shadow:0 0 50px rgba(201,168,76,.35)}
-  .sign{font-family:var(--display);font-weight:700;font-size:clamp(24px,5vw,38px);color:var(--ink);letter-spacing:2px;margin-top:10px}
+  .glyph{font-family:var(--display);font-size:clamp(48px,10vw,80px);color:var(--gold);line-height:1;text-shadow:0 0 50px rgba(201,168,76,.35)}
+  .sign{font-family:var(--display);font-weight:700;font-size:clamp(20px,4vw,32px);color:var(--ink);letter-spacing:2px;margin-top:10px}
   .range{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:2px;margin-top:8px}
-  .character{font-weight:300;color:var(--gold);max-width:54ch;margin:16px auto 0;text-align:center;font-size:16px}
-
-  .chain{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:30px 0;font-family:var(--mono);font-size:12px;letter-spacing:1px}
+  .character{font-weight:300;color:var(--gold);max-width:54ch;margin:16px auto 0;text-align:center;font-size:15px}
+  .chain{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:24px 0;font-family:var(--mono);font-size:12px;letter-spacing:1px}
   .chain span{border:1px solid var(--line);padding:9px 14px;color:var(--ink)}
   .chain b{color:var(--gold);font-weight:400}
   .chain .arrow{border:none;color:var(--cyan);align-self:center;padding:9px 2px}
-
-  .matrix{border:1px solid var(--line);margin-top:8px;padding:26px;background:linear-gradient(180deg,var(--void-2),transparent);text-align:left}
+  /* Matrix */
+  .matrix{border:1px solid var(--line);margin-top:12px;padding:20px;background:linear-gradient(180deg,var(--void-2),transparent);text-align:left}
   .matrix .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:16px}
-  .coords{display:flex;flex-wrap:wrap;gap:24px;align-items:baseline}
+  .coords{display:flex;flex-wrap:wrap;gap:20px;align-items:baseline}
   .coord{font-family:var(--mono)}
   .coord .lbl{font-size:10px;letter-spacing:2px;color:var(--muted);display:block}
-  .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:28px}
-  .radar-wrap{display:flex;justify-content:center;margin:26px 0 6px}
-  #d-radar{width:240px;height:240px;max-width:82%}
+  .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:24px}
+  .radar-wrap{display:flex;justify-content:center;margin:20px 0 4px}
+  #d-radar{width:200px;height:200px;max-width:80%}
   .rdr-guide{fill:none;stroke:var(--line);stroke-width:1}
   .rdr-spoke{stroke:var(--line);stroke-width:1}
   .rdr-label{fill:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:1px}
   .rdr-now{fill:var(--acc);fill-opacity:.16;stroke:var(--acc);stroke-width:1.5}
   .rdr-dot{fill:var(--acc)}
-  .mrow{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:18px;line-height:1.9}
+  .mrow{font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:14px;line-height:2}
   .mrow b{color:var(--gold);font-weight:400}
-  .ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;font-family:var(--mono);font-size:10px;letter-spacing:1px}
+  .ladder{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:1px}
   .rung{border:1px solid var(--line);padding:6px 9px;color:var(--muted)}
   .rung.on{border-color:var(--gold);color:var(--gold)}
-
-  .evt{border:1px solid var(--line);margin-top:24px;padding:24px;text-align:left}
-  .evt .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
+  /* Events */
+  .evt{border:1px solid var(--line);margin-top:18px;padding:18px;text-align:left}
+  .evt .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .erow{display:flex;flex-direction:column;gap:12px}
-
-  .ledger{margin-top:22px;text-align:left}
+  .ledger{margin-top:18px;text-align:left}
   .ledger .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .ev{font-family:var(--mono);font-size:12px;color:var(--muted);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:12px}
   .ev:last-child{border-bottom:none}
   .ev .ax{color:var(--gold);min-width:104px}
   .ev .nt{color:var(--ink);flex:1}
-
-  .certs{margin-top:24px;text-align:left}
+  /* Certs */
+  .certs{margin-top:18px;text-align:left}
   .certs .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .seals{display:flex;flex-wrap:wrap;gap:12px}
-  .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,0.08),transparent);padding:16px 18px;min-width:200px;flex:1}
-  .seal .s-mark{font-family:var(--display);color:var(--gold);font-size:22px;letter-spacing:1px}
-  .seal .s-title{font-family:var(--mono);font-size:12px;color:var(--ink);letter-spacing:1px;margin-top:8px;line-height:1.5}
-  .seal .s-date{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px}
+  .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,0.08),transparent);padding:14px 16px;min-width:180px;flex:1}
+  .seal .s-mark{font-family:var(--display);color:var(--gold);font-size:18px;letter-spacing:1px}
+  .seal .s-title{font-family:var(--mono);font-size:12px;color:var(--ink);letter-spacing:1px;margin-top:6px;line-height:1.5}
+  .seal .s-date{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:6px}
   .certs .empty{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px}
-
-  .agent{border:1px solid var(--line);border-left:2px solid var(--acc);margin-top:24px;padding:24px;text-align:left}
-  .ag-head{display:flex;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-  .sigil{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid var(--acc);color:var(--acc);font-family:var(--mono);font-size:11px;letter-spacing:1px;border-radius:50%;margin-right:12px}
-  .ag-head .lead{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--acc)}
-  .ag-head .dom{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-left:10px}
-  .chain b#d-agent{color:var(--acc)}
-  .agent .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:14px}
-  .chatlog{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto;margin-bottom:14px}
-  .cmsg{font-size:15px;line-height:1.55;padding:10px 14px;border:1px solid var(--line);max-width:92%}
+  /* Agent */
+  .agent{border:1px solid var(--line);border-left:2px solid var(--acc);margin-top:18px;padding:18px;text-align:left}
+  .ag-head{display:flex;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .sigil{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--acc);color:var(--acc);font-family:var(--mono);font-size:10px;letter-spacing:1px;border-radius:50%;margin-right:10px}
+  .ag-head .lead{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--acc)}
+  .ag-head .dom{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);margin-left:10px}
+  .agent .kicker{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
+  .chatlog{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;margin-bottom:12px}
+  .cmsg{font-size:14px;line-height:1.55;padding:10px 14px;border:1px solid var(--line);max-width:92%}
   .cmsg.me{align-self:flex-end;color:var(--ink);border-color:var(--cyan)}
   .cmsg.ag{align-self:flex-start;color:var(--acc);border-color:var(--acc);background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent)}
   .chatrow{display:flex;gap:10px}
   .chatrow input{flex:1}
   .chatrow .btn{width:auto;white-space:nowrap}
-
-  .whoami{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:26px;text-align:center}
+  .whoami{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:20px;text-align:center}
   .whoami b{color:var(--cyan);font-weight:400}
-  .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:18px;text-align:center;line-height:1.8}
-  .actions{display:flex;justify-content:center;margin-top:24px}
+  .note{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:14px;text-align:center;line-height:1.8}
+  .actions{display:flex;justify-content:center;margin-top:20px}
+  /* Cosmology / science tabs */
+  .sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:16px}
+  .sign-card{border:1px solid var(--line);padding:14px;background:rgba(0,0,0,.2)}
+  .sign-card .sg-glyph{font-size:22px;color:var(--gold);margin-bottom:6px}
+  .sign-card .sg-name{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--gold)}
+  .sign-card .sg-range{font-family:var(--mono);font-size:7.5px;letter-spacing:1px;color:var(--muted);margin-top:2px}
+  .sign-card .sg-elem{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--cyan);margin-top:6px}
+  .sign-card .sg-agent{font-family:var(--mono);font-size:7.5px;letter-spacing:1px;color:rgba(200,190,160,.6);margin-top:2px}
+  .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+  .stat-val{font-family:var(--mono);font-size:18px;color:var(--gold);letter-spacing:1px}
+  .stat-lbl{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
-<div class="field"><div class="grid"></div></div>
-<header><div class="wrap bar"><div class="mark">&#937;<span>91717</span></div><a class="home" href="/">&larr; HOME</a></div></header>
+<canvas id="bg-particle-cv" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.12"></canvas>
+<div class="shell" style="position:relative;z-index:1">
+<aside class="side" id="omega-side" data-page="account"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">ACCOUNT<small>MEMBER IDENTITY &middot; SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-<main class="wrap">
+    <div class="layer-tabs">
+      <button class="lt active" data-tab="identity">&#9670; IDENTITY</button>
+      <button class="lt" data-tab="matrix">&#9670; MATRIX</button>
+      <button class="lt" data-tab="cosmology">&#9670; COSMOLOGY</button>
+      <button class="lt" data-tab="science">&#9670; SCIENCE</button>
+    </div>
 
-  <!-- ===== AUTH ===== -->
-  <section class="panel" id="view-auth" style="display:none">
-    <div class="eyebrow" data-i18n="auth.member_access">MEMBER ACCESS</div>
-    <h1 data-i18n="auth.join">Join the Order</h1>
-    <p class="sub">Create your account to claim a permanent place. Your cosmology and your evolving matrix position are saved to your sovereign profile  --  waiting for you each time you return.</p>
-    <div class="form">
-      <label for="au-email">EMAIL</label>
-      <input type="email" id="au-email" placeholder="you@example.com" autocomplete="email" />
-      <label for="au-pw">PASSWORD</label>
-      <input type="password" id="au-pw" placeholder="at least 6 characters" autocomplete="current-password" />
-      <div class="row2">
-        <button class="btn" id="btn-signup" data-i18n="auth.create">CREATE ACCOUNT</button>
-        <button class="btn" id="btn-login" data-i18n="auth.login">LOG IN</button>
+    <!-- TAB 1: IDENTITY -->
+    <div class="tab-pane active" id="tab-identity">
+
+      <!-- AUTH VIEW -->
+      <section class="panel" id="view-auth" style="display:none">
+        <div class="eyebrow" data-i18n="auth.member_access">MEMBER ACCESS</div>
+        <h1 data-i18n="auth.join">Join the Order</h1>
+        <p class="sub">Create your account to claim a permanent place. Your cosmology and your evolving matrix position are saved to your sovereign profile -- waiting for you each time you return.</p>
+        <div class="form">
+          <label for="au-email">EMAIL</label>
+          <input type="email" id="au-email" placeholder="you@example.com" autocomplete="email" />
+          <label for="au-pw">PASSWORD</label>
+          <input type="password" id="au-pw" placeholder="at least 6 characters" autocomplete="current-password" />
+          <div class="row2">
+            <button class="btn" id="btn-signup" data-i18n="auth.create">CREATE ACCOUNT</button>
+            <button class="btn" id="btn-login" data-i18n="auth.login">LOG IN</button>
+          </div>
+          <div class="msg" id="au-msg"></div>
+          <a href="/reset.html" style="display:block;margin-top:14px;font-family:monospace;font-size:11px;letter-spacing:1px;color:#00E5FF;text-decoration:none">FORGOT YOUR PASSWORD? &rarr;</a>
+        </div>
+      </section>
+
+      <!-- GATE VIEW -->
+      <section class="panel" id="view-gate" style="display:none">
+        <div class="eyebrow" data-i18n="auth.threshold">THE THRESHOLD</div>
+        <h1 data-i18n="auth.set_cosmology">Set Your Cosmology</h1>
+        <p class="sub">Your birth date resolves your sign, and your sign deterministically assigns your element, your Olympian, your planet, and the agent bound to your path. This is saved to your profile once.</p>
+        <div class="form">
+          <label for="dob" data-i18n="auth.dob">YOUR DATE OF BIRTH</label>
+          <input type="date" id="dob" min="1900-01-01" />
+          <button class="btn" id="gate-go" data-i18n="auth.reveal_save">REVEAL &amp; SAVE</button>
+          <div class="msg bad" id="gate-err"></div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD VIEW -->
+      <section class="panel" id="view-dash" style="display:none">
+        <div class="crown">
+          <div class="glyph" id="d-glyph"></div>
+          <div class="sign" id="d-sign"></div>
+          <div class="range" id="d-range"></div>
+        </div>
+        <p class="character" id="d-character"></p>
+
+        <div class="chain">
+          <span>ELEMENT &middot; <b id="d-element"></b></span><span class="arrow">&rarr;</span>
+          <span>OLYMPIAN &middot; <b id="d-olympian"></b></span><span class="arrow">&rarr;</span>
+          <span>PLANET &middot; <b id="d-planet"></b></span><span class="arrow">&rarr;</span>
+          <span>AGENT &middot; <b id="d-agent"></b></span>
+        </div>
+
+        <div class="matrix">
+          <div class="kicker">YOUR MATRIX POSITION</div>
+          <div class="coords">
+            <div class="coord"><span class="lbl">KNOWLEDGE (A)</span><span class="num" id="d-a">1.00</span></div>
+            <div class="coord"><span class="lbl">MASTERY (B)</span><span class="num" id="d-b">1.00</span></div>
+            <div class="coord"><span class="lbl">CONTRIBUTION (C)</span><span class="num" id="d-c">1.00</span></div>
+            <div class="coord"><span class="lbl">AUTHORITY &radic;(A&#179;+B&#179;+C&#179;)</span><span class="num" id="d-auth">1.73</span></div>
+          </div>
+          <div class="radar-wrap">
+            <svg id="d-radar" viewBox="0 0 240 240" role="img" aria-label="Your matrix shape across Knowledge, Mastery, and Contribution">
+              <g id="rdr-guides"></g>
+              <polygon id="rdr-now" class="rdr-now" points=""></polygon>
+              <g id="rdr-dots"></g>
+            </svg>
+          </div>
+          <div class="mrow">TIER: <b id="d-tier">1</b> &nbsp;&middot;&nbsp; MATERIAL: <b id="d-material">Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX &radic;2187 &asymp; <b>27.8367</b> &nbsp;&middot;&nbsp; NEXT MILESTONE: <b id="d-next">(3,3,3)</b></div>
+          <div class="ladder" id="d-ladder"></div>
+        </div>
+
+        <div class="certs">
+          <div class="kicker">CERTIFICATES OF ASCENT</div>
+          <div class="seals" id="d-certs"></div>
+        </div>
+
+        <div class="evt">
+          <div class="kicker">RECORD AN EVOLUTION EVENT</div>
+          <div class="erow">
+            <select id="ev-axis">
+              <option value="a">Knowledge (A) -- what you learned</option>
+              <option value="b">Mastery (B) -- what you demonstrated</option>
+              <option value="c">Contribution (C) -- what you gave back</option>
+            </select>
+            <input type="text" id="ev-note" placeholder="Describe the action, briefly..." maxlength="280" />
+            <button class="btn" id="ev-go">RECORD EVENT&nbsp;&nbsp;+0.25</button>
+            <div class="msg" id="ev-msg"></div>
+          </div>
+        </div>
+
+        <div class="ledger">
+          <div class="kicker">RECENT EVOLUTION</div>
+          <div id="d-events"></div>
+        </div>
+
+        <div class="agent">
+          <div class="ag-head"><span class="sigil" id="ag-sigil">&#937;</span><span class="lead">COUNSEL OF YOUR AGENT &middot; <span id="ag-name"></span></span><span class="dom" id="ag-dom"></span></div>
+          <div class="chatlog" id="ag-log"></div>
+          <div class="chatrow">
+            <input type="text" id="ag-input" placeholder="Ask your agent... (try: what should I focus on?)" maxlength="300" />
+            <button class="btn" id="ag-send">SEND</button>
+          </div>
+        </div>
+
+        <div class="whoami">SIGNED IN AS <b id="who"></b></div>
+        <div class="note">Your profile evolves and is saved with every event. Tier advances when your lowest axis crosses each whole node, toward the apex at (9,9,9).</div>
+        <div class="actions"><button class="ghost" id="btn-logout">LOG OUT</button></div>
+      </section>
+
+    </div><!-- /tab-identity -->
+
+    <!-- TAB 2: MATRIX -->
+    <div class="tab-pane" id="tab-matrix">
+      <div class="matrix">
+        <div class="kicker">THE AUTHORITY FORMULA</div>
+        <div class="mrow">AUTH &equals; &radic;(A&#179; + B&#179; + C&#179;) &times; &phi; / e<br>APEX AUTH &asymp; <b>27.8367</b> at node (9,9,9)<br>PHI &equals; <b>1.6180339887</b> &nbsp;&middot;&nbsp; EULER &equals; <b>2.7182818285</b></div>
       </div>
-      <div class="msg" id="au-msg"></div>
-      <a href="/reset.html" style="display:block;margin-top:14px;font-family:monospace;font-size:11px;letter-spacing:1px;color:#00E5FF;text-decoration:none">FORGOT YOUR PASSWORD? &rarr;</a>
-    </div>
-  </section>
-
-  <!-- ===== GATE ===== -->
-  <section class="panel" id="view-gate" style="display:none">
-    <div class="eyebrow" data-i18n="auth.threshold">THE THRESHOLD</div>
-    <h1 data-i18n="auth.set_cosmology">Set Your Cosmology</h1>
-    <p class="sub">Your birth date resolves your sign, and your sign deterministically assigns your element, your Olympian, your planet, and the agent bound to your path. This is saved to your profile once.</p>
-    <div class="form">
-      <label for="dob" data-i18n="auth.dob">YOUR DATE OF BIRTH</label>
-      <input type="date" id="dob" min="1900-01-01" />
-      <button class="btn" id="gate-go" data-i18n="auth.reveal_save">REVEAL &amp; SAVE</button>
-      <div class="msg bad" id="gate-err"></div>
-    </div>
-  </section>
-
-  <!-- ===== DASHBOARD ===== -->
-  <section class="panel" id="view-dash" style="display:none">
-    <div class="crown">
-      <div class="glyph" id="d-glyph"></div>
-      <div class="sign" id="d-sign"></div>
-      <div class="range" id="d-range"></div>
-    </div>
-    <p class="character" id="d-character"></p>
-
-    <div class="chain">
-      <span>ELEMENT  .  <b id="d-element"></b></span><span class="arrow">&rarr;</span>
-      <span>OLYMPIAN  .  <b id="d-olympian"></b></span><span class="arrow">&rarr;</span>
-      <span>PLANET  .  <b id="d-planet"></b></span><span class="arrow">&rarr;</span>
-      <span>AGENT  .  <b id="d-agent"></b></span>
-    </div>
-
-    <div class="matrix">
-      <div class="kicker">YOUR MATRIX POSITION</div>
-      <div class="coords">
-        <div class="coord"><span class="lbl">KNOWLEDGE (A)</span><span class="num" id="d-a">1.00</span></div>
-        <div class="coord"><span class="lbl">MASTERY (B)</span><span class="num" id="d-b">1.00</span></div>
-        <div class="coord"><span class="lbl">CONTRIBUTION (C)</span><span class="num" id="d-c">1.00</span></div>
-        <div class="coord"><span class="lbl">AUTHORITY &radic;(A&#179;+B&#179;+C&#179;)</span><span class="num" id="d-auth">1.73</span></div>
+      <div class="matrix" style="margin-top:12px">
+        <div class="kicker">THE 3 AXES</div>
+        <div class="mrow">
+          <b>A — KNOWLEDGE</b>&nbsp; What you have studied, learned, and absorbed. Record every book finished, lesson completed, insight captured.<br>
+          <b>B — MASTERY</b>&nbsp; What you have demonstrated, practiced, and refined. Record skills executed, projects delivered, habits sustained.<br>
+          <b>C — CONTRIBUTION</b>&nbsp; What you have given back. Record teaching moments, creations shared, service rendered to the Order.
+        </div>
       </div>
-      <div class="radar-wrap">
-        <svg id="d-radar" viewBox="0 0 240 240" role="img" aria-label="Your matrix shape across Knowledge, Mastery, and Contribution">
-          <g id="rdr-guides"></g>
-          <polygon id="rdr-now" class="rdr-now" points=""></polygon>
-          <g id="rdr-dots"></g>
-        </svg>
+      <div class="matrix" style="margin-top:12px">
+        <div class="kicker">MATERIAL TIERS</div>
+        <div class="ladder" style="margin-top:0">
+          <span class="rung on">1 &middot; Sand</span>
+          <span class="rung">2 &middot; Glass</span>
+          <span class="rung">3 &middot; Iron</span>
+          <span class="rung">4 &middot; Steel</span>
+          <span class="rung">5 &middot; Titanium</span>
+          <span class="rung">6 &middot; Carbon</span>
+          <span class="rung">7 &middot; Gold</span>
+          <span class="rung">8 &middot; Platinum</span>
+          <span class="rung">9 &middot; Omega Master</span>
+        </div>
+        <div class="mrow" style="margin-top:14px">Each EVOLUTION EVENT adds <b>+0.25</b> to the selected axis.<br>Tier is set by your <b>lowest</b> axis. Reach (3,3,3) &rarr; Tier 3 &rarr; (6,6,6) &rarr; Tier 6 &rarr; (9,9,9) &rarr; APEX.</div>
       </div>
-      <div class="mrow">TIER: <b id="d-tier">1</b> &nbsp; . &nbsp; MATERIAL: <b id="d-material">Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX &radic;2187 &asymp; <b>27.8367</b> &nbsp; . &nbsp; NEXT MILESTONE: <b id="d-next">(3,3,3)</b></div>
-      <div class="ladder" id="d-ladder"></div>
-    </div>
+    </div><!-- /tab-matrix -->
 
-    <div class="certs">
-      <div class="kicker">CERTIFICATES OF ASCENT</div>
-      <div class="seals" id="d-certs"></div>
-    </div>
-
-    <div class="evt">
-      <div class="kicker">RECORD AN EVOLUTION EVENT</div>
-      <div class="erow">
-        <select id="ev-axis">
-          <option value="a">Knowledge (A)  --  what you learned</option>
-          <option value="b">Mastery (B)  --  what you demonstrated</option>
-          <option value="c">Contribution (C)  --  what you gave back</option>
-        </select>
-        <input type="text" id="ev-note" placeholder="Describe the action, briefly..." maxlength="280" />
-        <button class="btn" id="ev-go">RECORD EVENT&nbsp;&nbsp;+0.25</button>
-        <div class="msg" id="ev-msg"></div>
+    <!-- TAB 3: COSMOLOGY -->
+    <div class="tab-pane" id="tab-cosmology">
+      <div class="matrix">
+        <div class="kicker">THE 5 ELEMENTS</div>
+        <div class="chain" style="justify-content:flex-start;margin:12px 0 0">
+          <span>Fire &#9906; &middot; <b>+Mastery (B)</b></span>
+          <span>Water &#9906; &middot; <b>+Contribution (C)</b></span>
+          <span>Wind &#9906; &middot; <b>+Knowledge (A)</b></span>
+          <span>Metal &#9906; &middot; <b>+Mastery &amp; Contribution</b></span>
+          <span>Sand &#9906; &middot; <b>+0.15 all axes</b></span>
+        </div>
       </div>
-    </div>
-
-    <div class="ledger">
-      <div class="kicker">RECENT EVOLUTION</div>
-      <div id="d-events"></div>
-    </div>
-
-    <div class="agent">
-      <div class="ag-head"><span class="sigil" id="ag-sigil">&#937;</span><span class="lead">COUNSEL OF YOUR AGENT  .  <span id="ag-name"></span></span><span class="dom" id="ag-dom"></span></div>
-      <div class="chatlog" id="ag-log"></div>
-      <div class="chatrow">
-        <input type="text" id="ag-input" placeholder="Ask your agent... (try: what should I focus on?)" maxlength="300" />
-        <button class="btn" id="ag-send">SEND</button>
+      <div class="sign-grid" style="margin-top:16px">
+        <div class="sign-card"><div class="sg-glyph">&#9800;&#65038;</div><div class="sg-name">ARIES</div><div class="sg-range">Mar 21 &ndash; Apr 19</div><div class="sg-elem">Fire &middot; Ares &middot; Mars</div><div class="sg-agent">AGENT: Sentinel</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9801;&#65038;</div><div class="sg-name">TAURUS</div><div class="sg-range">Apr 20 &ndash; May 20</div><div class="sg-elem">Metal &middot; Aphrodite &middot; Venus</div><div class="sg-agent">AGENT: Merchant</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9802;&#65038;</div><div class="sg-name">GEMINI</div><div class="sg-range">May 21 &ndash; Jun 20</div><div class="sg-elem">Wind &middot; Hermes &middot; Mercury</div><div class="sg-agent">AGENT: Scout</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9803;&#65038;</div><div class="sg-name">CANCER</div><div class="sg-range">Jun 21 &ndash; Jul 22</div><div class="sg-elem">Water &middot; Artemis &middot; Moon</div><div class="sg-agent">AGENT: Warden</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9804;&#65038;</div><div class="sg-name">LEO</div><div class="sg-range">Jul 23 &ndash; Aug 22</div><div class="sg-elem">Fire &middot; Apollo &middot; Sun</div><div class="sg-agent">AGENT: Sovereign</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9805;&#65038;</div><div class="sg-name">VIRGO</div><div class="sg-range">Aug 23 &ndash; Sep 22</div><div class="sg-elem">Sand &middot; Athena &middot; Vesta</div><div class="sg-agent">AGENT: Auditor</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9806;&#65038;</div><div class="sg-name">LIBRA</div><div class="sg-range">Sep 23 &ndash; Oct 22</div><div class="sg-elem">Wind &middot; Hera &middot; Juno</div><div class="sg-agent">AGENT: Proxy</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9807;&#65038;</div><div class="sg-name">SCORPIO</div><div class="sg-range">Oct 23 &ndash; Nov 21</div><div class="sg-elem">Water &middot; Demeter &middot; Pluto</div><div class="sg-agent">AGENT: Oracle</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9808;&#65038;</div><div class="sg-name">SAGITTARIUS</div><div class="sg-range">Nov 22 &ndash; Dec 21</div><div class="sg-elem">Fire &middot; Zeus &middot; Jupiter</div><div class="sg-agent">AGENT: Beacon</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9809;&#65038;</div><div class="sg-name">CAPRICORN</div><div class="sg-range">Dec 22 &ndash; Jan 19</div><div class="sg-elem">Metal &middot; Hestia &middot; Saturn</div><div class="sg-agent">AGENT: Analyst</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9810;&#65038;</div><div class="sg-name">AQUARIUS</div><div class="sg-range">Jan 20 &ndash; Feb 18</div><div class="sg-elem">Wind &middot; Hephaestus &middot; Uranus</div><div class="sg-agent">AGENT: Tutor</div></div>
+        <div class="sign-card"><div class="sg-glyph">&#9811;&#65038;</div><div class="sg-name">PISCES</div><div class="sg-range">Feb 19 &ndash; Mar 20</div><div class="sg-elem">Water &middot; Poseidon &middot; Neptune</div><div class="sg-agent">AGENT: Historian</div></div>
       </div>
-    </div>
+    </div><!-- /tab-cosmology -->
 
-    <div class="whoami">SIGNED IN AS <b id="who"></b></div>
-    <div class="note">Your profile evolves and is saved with every event. Tier advances when your lowest axis crosses each whole node, toward the apex at (9,9,9).</div>
-    <div class="actions"><button class="ghost" id="btn-logout">LOG OUT</button></div>
-  </section>
+    <!-- TAB 4: SCIENCE -->
+    <div class="tab-pane" id="tab-science">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+        <div class="stat-card"><div class="stat-val">9</div><div class="stat-lbl">MATERIAL TIERS</div></div>
+        <div class="stat-card"><div class="stat-val">&phi;/e</div><div class="stat-lbl">AUTHORITY RATIO</div></div>
+        <div class="stat-card"><div class="stat-val">(9,9,9)</div><div class="stat-lbl">APEX NODE</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
+        <div class="stat-card"><div class="stat-val">5</div><div class="stat-lbl">ELEMENTS</div></div>
+        <div class="stat-card"><div class="stat-val">12</div><div class="stat-lbl">OLYMPIAN SIGNS</div></div>
+        <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
+      </div>
+      <div class="matrix">
+        <div class="kicker">SOVEREIGN MATHEMATICS</div>
+        <div class="mrow">AUTH &equals; &radic;(A&#179; + B&#179; + C&#179;) &times; 1.6180339887 / 2.7182818285<br>
+        At genesis node (1,1,1): AUTH &equals; &radic;3 &times; &phi;/e &asymp; <b>1.031</b><br>
+        At apex node (9,9,9): AUTH &equals; &radic;2187 &times; &phi;/e &asymp; <b>27.8367</b><br>
+        The matrix encodes knowledge, mastery, and contribution as a sovereign proof of work.</div>
+      </div>
+    </div><!-- /tab-science -->
 
+  </div>
+  <div class="lf"><span>&#937; ACCOUNT &middot; SYD OMEGA 91717</span></div>
 </main>
-
-<footer style="border-top:1px solid var(--line);padding:30px 0;text-align:center">
-  <div class="wrap"><div style="font-family:var(--display);color:var(--gold);font-size:16px;letter-spacing:2px">&#937; 91717</div>
-  <p style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:8px">SOVEREIGN ENGINEERING PROTOCOL  .  &#937; SYD OMEGA 91717 &middot; SOVEREIGN PLATFORM</p></div>
-</footer>
+</div>
 
 <script type="module">
+  /* Tab switching */
+  document.querySelectorAll('.lt').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.lt').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.tab-pane').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      var p=document.getElementById('tab-'+b.dataset.tab);
+      if(p)p.classList.add('active');
+    });
+  });
+
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   const SUPABASE_URL = "https://ydqhzvvoyufiiqvzcjns.supabase.co";
@@ -278,18 +382,18 @@
     Sand:{affinity:'+0.15 to all axes'}
   };
   const SIGNS = [
-    ['Aries','\u2648\uFE0E','Mar 21  -  Apr 19','Fire','Ares','Mars','Sentinel','You move first and ask later  --  the spark that begins the work.'],
-    ['Taurus','\u2649\uFE0E','Apr 20  -  May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
-    ['Gemini','\u264A\uFE0E','May 21  -  Jun 20','Wind','Hermes','Mercury','Scout','You carry signal between worlds and miss nothing.'],
-    ['Cancer','\u264B\uFE0E','Jun 21  -  Jul 22','Water','Artemis','Moon','Warden','You guard what matters and read the unspoken current.'],
-    ['Leo','\u264C\uFE0E','Jul 23  -  Aug 22','Fire','Apollo','Sun','Sovereign','You were made to lead, and the room knows it.'],
-    ['Virgo','\u264D\uFE0E','Aug 23  -  Sep 22','Sand','Athena','Vesta','Auditor','You refine until it is true  --  the patient foundation of all of it.'],
-    ['Libra','\u264E\uFE0E','Sep 23  -  Oct 22','Wind','Hera','Juno','Proxy','You hold the balance and broker what others cannot.'],
-    ['Scorpio','\u264F\uFE0E','Oct 23  -  Nov 21','Water','Demeter','Pluto','Oracle','You see to the bottom and transform what you touch.'],
-    ['Sagittarius','\u2650\uFE0E','Nov 22  -  Dec 21','Fire','Zeus','Jupiter','Beacon','You aim past the horizon and call others to follow.'],
-    ['Capricorn','\u2651\uFE0E','Dec 22  -  Jan 19','Metal','Hestia','Saturn','Analyst','You endure, you compound, and you arrive.'],
-    ['Aquarius','\u2652\uFE0E','Jan 20  -  Feb 18','Wind','Hephaestus','Uranus','Tutor','You think in systems no one has drawn yet.'],
-    ['Pisces','\u2653\uFE0E','Feb 19  -  Mar 20','Water','Poseidon','Neptune','Historian','You hold the deep memory and feel the whole tide at once.']
+    ['Aries','♈︎','Mar 21  -  Apr 19','Fire','Ares','Mars','Sentinel','You move first and ask later  --  the spark that begins the work.'],
+    ['Taurus','♉︎','Apr 20  -  May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
+    ['Gemini','♊︎','May 21  -  Jun 20','Wind','Hermes','Mercury','Scout','You carry signal between worlds and miss nothing.'],
+    ['Cancer','♋︎','Jun 21  -  Jul 22','Water','Artemis','Moon','Warden','You guard what matters and read the unspoken current.'],
+    ['Leo','♌︎','Jul 23  -  Aug 22','Fire','Apollo','Sun','Sovereign','You were made to lead, and the room knows it.'],
+    ['Virgo','♍︎','Aug 23  -  Sep 22','Sand','Athena','Vesta','Auditor','You refine until it is true  --  the patient foundation of all of it.'],
+    ['Libra','♎︎','Sep 23  -  Oct 22','Wind','Hera','Juno','Proxy','You hold the balance and broker what others cannot.'],
+    ['Scorpio','♏︎','Oct 23  -  Nov 21','Water','Demeter','Pluto','Oracle','You see to the bottom and transform what you touch.'],
+    ['Sagittarius','♐︎','Nov 22  -  Dec 21','Fire','Zeus','Jupiter','Beacon','You aim past the horizon and call others to follow.'],
+    ['Capricorn','♑︎','Dec 22  -  Jan 19','Metal','Hestia','Saturn','Analyst','You endure, you compound, and you arrive.'],
+    ['Aquarius','♒︎','Jan 20  -  Feb 18','Wind','Hephaestus','Uranus','Tutor','You think in systems no one has drawn yet.'],
+    ['Pisces','♓︎','Feb 19  -  Mar 20','Water','Poseidon','Neptune','Historian','You hold the deep memory and feel the whole tide at once.']
   ];
   function signOf(m,d){
     const b=[[1,19,'Capricorn'],[2,18,'Aquarius'],[3,20,'Pisces'],[4,19,'Aries'],[5,20,'Taurus'],[6,20,'Gemini'],[7,22,'Cancer'],[8,22,'Leo'],[9,22,'Virgo'],[10,22,'Libra'],[11,21,'Scorpio'],[12,21,'Sagittarius']];
@@ -333,7 +437,15 @@
   const vAuth=document.getElementById('view-auth');
   const vGate=document.getElementById('view-gate');
   const vDash=document.getElementById('view-dash');
-  function show(v){ [vAuth,vGate,vDash].forEach(x=>{ x.style.display='none'; }); v.style.display='block'; }
+  function show(v){
+    [vAuth,vGate,vDash].forEach(x=>{ x.style.display='none'; }); v.style.display='block';
+    document.querySelectorAll('.lt').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.tab-pane').forEach(function(x){x.classList.remove('active');});
+    var idt=document.querySelector('.lt[data-tab="identity"]');
+    if(idt)idt.classList.add('active');
+    var idp=document.getElementById('tab-identity');
+    if(idp)idp.classList.add('active');
+  }
 
   let currentUser=null;
   let currentProfile=null;
@@ -366,16 +478,11 @@
     const msg=document.getElementById('au-msg');
     if(!email || pw.length<6){ msg.className='msg bad'; msg.textContent='Enter an email and a password of at least 6 characters.'; return; }
     msg.className='msg'; msg.textContent='Creating your account...';
-    /* emailRedirectTo must be explicit: without it the confirmation link uses
-       the dashboard Site URL, which breaks silently if that is stale. */
     const { data, error } = await supabase.auth.signUp({
       email, password:pw,
       options:{ emailRedirectTo: window.location.origin + '/account.html' }
     });
     if(error){ msg.className='msg bad'; msg.textContent=error.message; return; }
-    /* Supabase returns success for an ALREADY-REGISTERED email to prevent
-       address enumeration, with an empty identities array. Without this check
-       a returning member is told to check an inbox that gets nothing. */
     if(data && data.user && Array.isArray(data.user.identities) && data.user.identities.length===0){
       msg.className='msg bad';
       msg.innerHTML='This email is already registered. Use <b>Log in</b>, or <a href="/reset.html">reset your password</a>.';
@@ -417,9 +524,6 @@
     const { error } = await supabase.auth.signInWithPassword({ email, password:pw });
     if(error){
       msg.className='msg bad';
-      /* Supabase's raw strings are misleading to members. "Invalid login
-         credentials" means no such account OR wrong password — it does NOT
-         mean unconfirmed, which has its own distinct error. */
       if(/invalid login credentials/i.test(error.message)){
         msg.innerHTML='That email and password did not match an account. '+
           'Either the password is wrong, or no account exists for this address. '+
@@ -447,17 +551,12 @@
     const s=find(signOf(m,d));
     const prof={ sign:s[0], element:s[3], olympian:s[4], planet:s[5], agent:s[6], dob:val };
     const btn=document.getElementById('gate-go'); btn.disabled=true;
-    /* Real profiles columns are `god` and `birth_date` -- NOT `olympian`/`dob`.
-       There is no `planet` column at all; planet is canon-derived from the sign
-       (SIGNS[5]) and rendered directly, so it does not need storing.
-       Sending the old names made PostgREST reject the whole upsert, which
-       blocked every new member from completing onboarding. */
     const { error } = await supabase.from('profiles').upsert(
       { id:currentUser.id, email:currentUser.email, sign:prof.sign, element:prof.element, god:prof.olympian, agent:prof.agent, birth_date:prof.dob },
       { onConflict:'id' }
     );
     btn.disabled=false;
-    if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+'). Try again.'; console.log('save error',error); return; }
+    if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+''). Try again.'; console.log('save error',error); return; }
     const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
     window.location.href='/dashboard.html'; return;
   }
@@ -465,12 +564,11 @@
   function renderDash(prof){
     currentProfile=prof;
     const s=find(prof.sign);
-    document.getElementById('d-glyph').textContent = s? s[1] : '\u03A9';
+    document.getElementById('d-glyph').textContent = s? s[1] : 'Ω';
     document.getElementById('d-sign').textContent = (prof.sign||'').toUpperCase();
     document.getElementById('d-range').textContent = s? s[2] : '';
     document.getElementById('d-character').textContent = s? '"'+s[7]+'"' : '';
     document.getElementById('d-element').textContent = prof.element||'';
-    /* `god` is the real column; `planet` has no column and is canon-derived. */
     document.getElementById('d-olympian').textContent = prof.god || (s? s[4] : '');
     document.getElementById('d-planet').textContent = s? s[5] : '';
     document.getElementById('d-agent').textContent = prof.agent||'';
@@ -478,15 +576,14 @@
     document.getElementById('who').textContent = currentUser ? currentUser.email : '';
     document.getElementById('ag-name').textContent = prof.agent || '';
     document.documentElement.style.setProperty('--acc', ELEM_ACCENT[prof.element] || '#C9A84C');
-    document.getElementById('ag-sigil').textContent = AGENT_SIGIL[prof.agent] || '\u03A9';
-    document.getElementById('ag-dom').textContent = AGENT_DOMAIN[prof.agent] ? ' .  '+AGENT_DOMAIN[prof.agent] : '';
+    document.getElementById('ag-sigil').textContent = AGENT_SIGIL[prof.agent] || 'Ω';
+    document.getElementById('ag-dom').textContent = AGENT_DOMAIN[prof.agent] ? ' . '+AGENT_DOMAIN[prof.agent] : '';
     const aglog=document.getElementById('ag-log');
     if(aglog && !aglog.children.length){
       const w=document.createElement('div'); w.className='cmsg ag';
       w.textContent='I am '+(prof.agent||'your agent')+', bound to your '+(prof.sign||'')+' path. Ask me what to focus on, where you stand, or how to reach your next milestone.';
       aglog.appendChild(w);
     }
-
     const a=Number(prof.axis_a ?? 1), b=Number(prof.axis_b ?? 1), c=Number(prof.axis_c ?? 1);
     const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     const tier=Math.max(1, Math.min(9, Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
@@ -518,7 +615,7 @@
     loadEvents();
     const before = document.getElementById('d-certs').querySelectorAll('.seal').length;
     const after = await loadCerts();
-    if(after > before){ msg.className='msg ok'; msg.textContent='A new Certificate of Ascent has been issued  --  well earned.'; }
+    if(after > before){ msg.className='msg ok'; msg.textContent='A new Certificate of Ascent has been issued — well earned.'; }
     else { msg.className='msg ok'; msg.textContent='Recorded. Your matrix advanced.'; }
   }
 
@@ -529,7 +626,7 @@
       const { data } = await supabase.from('evolution_events').select('axis,note,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(8);
       box.innerHTML='';
       const names={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'};
-      if(!data || !data.length){ box.innerHTML='<div class="ev"><span class="nt" style="color:var(--muted)">No events yet  --  record your first above.</span></div>'; return; }
+      if(!data || !data.length){ box.innerHTML='<div class="ev"><span class="nt" style="color:var(--muted)">No events yet — record your first above.</span></div>'; return; }
       data.forEach(ev=>{
         const row=document.createElement('div'); row.className='ev';
         const ax=document.createElement('span'); ax.className='ax'; ax.textContent=names[ev.axis]||ev.axis;
@@ -545,10 +642,10 @@
     try{
       const { data } = await supabase.from('certificates').select('milestone,title,issued_at').eq('user_id',currentUser.id).order('milestone',{ascending:true});
       box.innerHTML='';
-      if(!data || !data.length){ box.innerHTML='<div class="empty">No certificates yet  --  reach node (3,3,3) to earn your first seal.</div>'; return 0; }
+      if(!data || !data.length){ box.innerHTML='<div class="empty">No certificates yet — reach node (3,3,3) to earn your first seal.</div>'; return 0; }
       data.forEach(c=>{
         const card=document.createElement('div'); card.className='seal';
-        const mk=document.createElement('div'); mk.className='s-mark'; mk.textContent='\u03A9  .  '+c.milestone;
+        const mk=document.createElement('div'); mk.className='s-mark'; mk.textContent='Ω . '+c.milestone;
         const ti=document.createElement('div'); ti.className='s-title'; ti.textContent=c.title;
         const dt=document.createElement('div'); dt.className='s-date'; dt.textContent='ISSUED '+(c.issued_at? new Date(c.issued_at).toLocaleDateString() : '');
         card.appendChild(mk); card.appendChild(ti); card.appendChild(dt); box.appendChild(card);
@@ -573,19 +670,17 @@
     const character=(find(p.sign)||[])[7]||'';
     const adv={Knowledge:'record what you have studied, read, or learned',Mastery:'record skills you have demonstrated or tasks you have completed',Contribution:'record what you have taught, created, or given to others'};
     const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-
     const t=(text||'').toLowerCase();
     const has=(...w)=>w.some(k=>t.includes(k));
-
     if(has('hello','hi ','hey','greet')||t==='hi') return 'I am '+agent+', bound to your '+sign+' path. '+character+' Ask me what to focus on, or where you stand.';
     if(has('who are you','what are you','your name','which agent')) return 'I am '+agent+', the guide assigned to '+sign+' under the element of '+element+'. I walk with you from the genesis node to the apex.';
     if(has('help','what can','commands','options')) return 'Ask me: "what should I focus on", "where do I stand", "how do I reach the next milestone", or about Knowledge, Mastery, or Contribution.';
     if(has('knowledge')) return 'Knowledge (Axis A) stands at '+a.toFixed(2)+'. To raise it, '+adv.Knowledge+'. Each event adds 0.25 toward the next node.';
-    if(has('mastery')) return 'Mastery (Axis B) stands at '+b.toFixed(2)+'. To raise it, '+adv.Mastery+'. Discipline compounds  --  return often.';
+    if(has('mastery')) return 'Mastery (Axis B) stands at '+b.toFixed(2)+'. To raise it, '+adv.Mastery+'. Discipline compounds — return often.';
     if(has('contribution')) return 'Contribution (Axis C) stands at '+c.toFixed(2)+'. To raise it, '+adv.Contribution+'. What you give the Order returns to you.';
     if(has('milestone','certificate','seal','ascend','rank up','next node')){
-      if(milestone===null) return 'You have reached the apex (9,9,9)  --  Omega Master. There is no higher node. Now you guide others.';
-      return 'Your next milestone is ('+milestone+','+milestone+','+milestone+'). Your lowest axis is '+low[0]+' at '+low[1].toFixed(2)+'  --  it must reach '+milestone+'. '+cap(adv[low[0]])+'.';
+      if(milestone===null) return 'You have reached the apex (9,9,9) — Omega Master. There is no higher node. Now you guide others.';
+      return 'Your next milestone is ('+milestone+','+milestone+','+milestone+'). Your lowest axis is '+low[0]+' at '+low[1].toFixed(2)+' — it must reach '+milestone+'. '+cap(adv[low[0]])+'.';
     }
     if(has('focus','should i','what do i do','what now','start','do next','advance','progress','improve','grow')){
       return 'Focus on your weakest axis: '+low[0]+', at '+low[1].toFixed(2)+'. '+cap(adv[low[0]])+'. About '+eventsToNext+' event'+(eventsToNext===1?'':'s')+' lifts you to the next node.';
@@ -593,7 +688,7 @@
     if(has('tier','rank','level','material','where','stand','position','authority','status')){
       return 'You stand at Tier '+tier+', material '+material+', authority '+auth.toFixed(2)+' of the apex 27.8367. Axes: Knowledge '+a.toFixed(2)+', Mastery '+b.toFixed(2)+', Contribution '+c.toFixed(2)+'.';
     }
-    return character+' Balance is the law of the matrix  --  your weakest axis is '+low[0]+' at '+low[1].toFixed(2)+'. Tend to it, and authority follows. Ask me "what should I focus on" for the path.';
+    return character+' Balance is the law of the matrix — your weakest axis is '+low[0]+' at '+low[1].toFixed(2)+'. Tend to it, and authority follows. Ask me "what should I focus on" for the path.';
   }
   function appendMsg(who, text){
     const log=document.getElementById('ag-log');
@@ -622,7 +717,6 @@
   route();
 </script>
 <script src="/bg.js"></script><script src="/omega-demo-video.js" defer></script>
-<canvas id="bg-particle-cv" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;opacity:.15"></canvas>
 <script>
 (function(){var cv=document.getElementById('bg-particle-cv');if(!cv||!cv.getContext)return;
 var ctx=cv.getContext('2d'),pts=[],W=window.innerWidth,H=window.innerHeight;
@@ -630,7 +724,8 @@ cv.width=W;cv.height=H;
 for(var i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
 function frame(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.6)';ctx.fill();});requestAnimationFrame(frame);}frame();
 window.addEventListener('resize',function(){W=window.innerWidth;H=window.innerHeight;cv.width=W;cv.height=H;});
-})();</script>
+})();
+</script>
 <span data-canon-lattice="twelve" style="display:none"></span>
 </body>
 </html>

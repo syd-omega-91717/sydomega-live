@@ -8,16 +8,16 @@
 <meta name="description" content="SRE Operations dashboard — health probes, worker metrics, circuit breakers, latency percentiles">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#09090b;--card:rgba(18,18,22,.95);--gold:#C9A84C;--gold2:rgba(201,168,76,.18);--text:rgba(226,200,109,.85);--dim:rgba(138,134,118,.5);--M:"Courier Prime",monospace;--pad:20px;--green:#4ade80;--red:#f87171;--amber:#fb923c;--blue:#60a5fa}
+:root{--bg:#09090b;--card:rgba(18,18,22,.95);--gold:#C9A84C;--gold2:rgba(201,168,76,.18);--text:rgba(226,200,109,.85);--dim:rgba(138,134,118,.5);--M:monospace;--pad:20px;--green:#4ade80;--red:#f87171;--amber:#fb923c;--blue:#60a5fa}
 html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height:100vh;overflow-x:hidden}
-.topbar{position:fixed;top:0;left:0;right:0;height:44px;display:flex;align-items:center;gap:12px;padding:0 var(--pad);background:rgba(9,9,11,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.1);z-index:100}
-.topbar-title{font-family:var(--M);font-size:9px;letter-spacing:2.5px;color:var(--gold);flex:1}
 .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0}
 .status-dot.red{background:var(--red);box-shadow:0 0 6px var(--red)}
 .status-dot.amber{background:var(--amber);box-shadow:0 0 6px var(--amber)}
 #sys-status{font-size:7.5px;letter-spacing:1.5px;color:var(--green)}
 #uptime-label{font-size:7.5px;letter-spacing:1.5px;color:var(--dim)}
-.main{padding:60px var(--pad) var(--pad);max-width:1400px;margin:0 auto}
+.stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
 .page-title{font-size:11px;letter-spacing:3px;color:var(--gold)}
 .page-sub{font-size:8px;letter-spacing:1.5px;color:var(--dim);margin-top:3px}
@@ -93,21 +93,11 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-title">&#937; OPS — SOVEREIGN SRE COMMAND</div>
-  <div class="status-dot" id="sys-dot"></div>
-  <div id="sys-status">NOMINAL</div>
-  <div id="uptime-label">UPTIME: <span id="uptime-val">—</span></div>
-</div>
-
-<div class="main">
-  <div class="page-header">
-    <div>
-      <div class="page-title">OPERATIONS CENTRE</div>
-      <div class="page-sub">Site Reliability Engineering &mdash; Real-Time Health Monitor</div>
-    </div>
-    <div style="font-size:7.5px;letter-spacing:1px;color:var(--dim)">LAST REFRESH: <span id="last-refresh">—</span><span class="refresh-spinner"></span></div>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="ops"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">OPS<small>SOVEREIGN SRE COMMAND &middot; SYD OMEGA 91717</small></div><div class="status-dot" id="sys-dot" style="margin-left:auto"></div><span id="sys-status" style="font-size:7.5px;letter-spacing:1.5px;color:var(--green);margin-left:4px">NOMINAL</span><span id="uptime-label" style="font-size:7.5px;letter-spacing:1.5px;color:var(--dim);margin-left:8px">UPTIME: <span id="uptime-val">—</span></span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <!-- Top KPIs -->
   <div class="kpi-row" id="kpi-row">
@@ -120,11 +110,10 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="health">HEALTH</button>
-    <button class="tab" data-tab="workers">WORKERS</button>
-    <button class="tab" data-tab="latency">LATENCY</button>
-    <button class="tab" data-tab="events">EVENTS</button>
-    <button class="tab" data-tab="incidents">INCIDENTS</button>
+    <button class="tab active" data-tab="health">&#9670; HEALTH</button>
+    <button class="tab" data-tab="workers">&#9670; WORKERS</button>
+    <button class="tab" data-tab="events">&#9670; EVENTS</button>
+    <button class="tab" data-tab="science">&#9670; SCIENCE</button>
   </div>
 
   <!-- HEALTH TAB -->
@@ -184,8 +173,39 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
   </div>
 
   <!-- LATENCY TAB -->
-  <div class="panel" id="tab-latency">
-    <div class="grid3">
+  <!-- EVENTS TAB -->
+  <div class="panel" id="tab-events">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">&#9679; DOMAIN EVENT FREQUENCIES</div>
+        <div id="evt-freq-bars" style="padding-top:4px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#9679; LIVE EVENT STREAM</div>
+        <div id="live-evt-log" style="max-height:300px;overflow-y:auto;font-size:7.5px;letter-spacing:.5px;line-height:1.7"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">&#9679; DEAD LETTER QUEUE</div>
+      <div id="dlq-list"><div style="font-size:8px;color:var(--green)">&#10003; DLQ empty</div></div>
+    </div>
+  </div>
+
+  <!-- SCIENCE TAB -->
+  <div class="panel" id="tab-science">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
+      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">SYSTEM RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">&lt;50ms</div><div class="stat-lbl">P95 LATENCY</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">EDA</div><div class="stat-lbl">EVENT-DRIVEN</div></div>
+      <div class="stat-card"><div class="stat-val">3×</div><div class="stat-lbl">DLQ RETRY LIMIT</div></div>
+      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
+    <div class="grid3" style="margin-bottom:14px">
       <div class="card">
         <div class="kpi-label">P50 LATENCY</div>
         <div class="kpi-value" style="margin-top:4px" id="p50">—<span class="kpi-unit">ms</span></div>
@@ -207,36 +227,6 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
       <canvas id="lat-canvas" height="140"></canvas>
     </div>
     <div class="card">
-      <div class="card-title">&#9679; EVENT BUS METRICS</div>
-      <div style="overflow-x:auto">
-        <table class="evt-tbl"><thead><tr>
-          <th>EVENT</th><th>EMITTED</th><th>CONSUMED</th><th>ERRORS</th><th>DLQ</th><th>AVG LAT</th><th>LAST SEEN</th>
-        </tr></thead><tbody id="evt-metrics-body"></tbody></table>
-      </div>
-    </div>
-  </div>
-
-  <!-- EVENTS TAB -->
-  <div class="panel" id="tab-events">
-    <div class="grid2">
-      <div class="card">
-        <div class="card-title">&#9679; DOMAIN EVENT FREQUENCIES</div>
-        <div id="evt-freq-bars" style="padding-top:4px"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">&#9679; LIVE EVENT STREAM</div>
-        <div id="live-evt-log" style="max-height:300px;overflow-y:auto;font-size:7.5px;letter-spacing:.5px;line-height:1.7"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">&#9679; DEAD LETTER QUEUE</div>
-      <div id="dlq-list"><div style="font-size:8px;color:var(--green)">&#10003; DLQ empty</div></div>
-    </div>
-  </div>
-
-  <!-- INCIDENTS TAB -->
-  <div class="panel" id="tab-incidents">
-    <div class="card">
       <div class="card-title">&#9679; INCIDENT LOG</div>
       <div id="incident-log">
         <div class="incident-row">
@@ -247,6 +237,10 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
       </div>
     </div>
   </div>
+
+</div>
+<div class="lf"><span>&#937; OPS &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
 <script>
@@ -356,7 +350,7 @@ function drawLatencyChart(){
   for(var y=0;y<=4;y++){
     var yy=H-(y/4)*H;
     ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(W,yy);ctx.stroke();
-    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(138,134,118,.4)';ctx.font='7px monospace';
     ctx.textAlign='right';
     ctx.fillText(Math.round((y/4)*max)+'ms',34,yy+3);
   }
@@ -376,7 +370,7 @@ function drawLatencyChart(){
   var li=0;
   Object.keys(colors).forEach(function(k){
     ctx.fillStyle=colors[k];ctx.fillRect(42+li*60,6,12,3);
-    ctx.fillStyle='rgba(200,190,160,.6)';ctx.font='7px "Courier Prime",monospace';ctx.textAlign='left';
+    ctx.fillStyle='rgba(200,190,160,.6)';ctx.font='7px monospace';ctx.textAlign='left';
     ctx.fillText(labels[k],58+li*60,10);
     li++;
   });

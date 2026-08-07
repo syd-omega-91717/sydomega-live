@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MEDITATE — Sovereign Breathwork · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega.css">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
 .med-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:24px}
-.med-hero h2{font-family:var(--M,'Courier Prime',monospace);font-size:10px;letter-spacing:4px;color:var(--gold,#C9A84C);margin:0 0 6px}
+.med-hero h2{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--gold,#C9A84C);margin:0 0 6px}
 .med-hero p{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin:0}
-.breath-stage{font-family:var(--M,'Courier Prime',monospace);font-size:13px;letter-spacing:6px;color:var(--gold,#C9A84C);min-height:28px;margin-bottom:8px;text-align:center}
+.breath-stage{font-family:var(--M);font-size:13px;letter-spacing:6px;color:var(--gold,#C9A84C);min-height:28px;margin-bottom:8px;text-align:center}
 .breath-count{font-family:var(--M);font-size:48px;letter-spacing:2px;color:var(--gold,#C9A84C);min-width:60px;text-align:center}
 .session-progress{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:8px}
 .ring-wrap{position:relative;width:260px;height:260px;margin:0 auto 24px}
@@ -19,17 +19,17 @@
 .tech-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;cursor:pointer;transition:.15s}
 .tech-card:hover{background:rgba(201,168,76,.04);border-color:rgba(201,168,76,.25)}
 .tech-card.active{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.07)}
-.tc-name{font-family:var(--M,'Courier Prime',monospace);font-size:9px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:4px}
+.tc-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:4px}
 .tc-pattern{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-bottom:6px}
 .tc-desc{font-family:var(--M);font-size:7px;letter-spacing:.8px;color:rgba(138,134,118,.4);line-height:1.6}
 .med-controls{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;justify-content:center}
-.med-btn{font-family:var(--M,'Courier Prime',monospace);font-size:9px;letter-spacing:2px;padding:11px 24px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
+.med-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:11px 24px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
 .med-btn:hover,.med-btn.primary{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.5);color:var(--gold,#C9A84C)}
 .session-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .session-stat{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
 .session-stat .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,#C9A84C)}
 .session-stat .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
-.section-hd{font-family:var(--M,'Courier Prime',monospace);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
+.section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
 .tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
 .tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
@@ -45,21 +45,19 @@
 </style>
 </head>
 <body>
-<div class="side" id="side"></div>
-<div class="main">
-  <div class="topbar" id="topbar">
-    <div class="tb-left">
-      <span class="tb-title">MEDITATE</span>
-      <span class="tb-sub">SOVEREIGN BREATHWORK · SYD OMEGA 91717</span>
-    </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="meditate"></aside>
+<main class="main">
+  <div class="topbar">
+    <div class="t">MEDITATE<small>SOVEREIGN BREATHWORK &middot; SYD OMEGA 91717</small></div>
   </div>
 
-  <div class="content">
+  <div style="padding:20px var(--pad,20px)">
     <div class="tab-row">
-      <button class="tab-btn act" onclick="switchTab('breathe',this)">BREATHWORK</button>
-      <button class="tab-btn" onclick="switchTab('techniques',this)">TECHNIQUES</button>
-      <button class="tab-btn" onclick="switchTab('stats',this)">STATS</button>
-      <button class="tab-btn" onclick="switchTab('science',this)">SCIENCE</button>
+      <button class="tab-btn act" onclick="switchTab('breathe',this)">&#9670; BREATHWORK</button>
+      <button class="tab-btn" onclick="switchTab('techniques',this)">&#9670; TECHNIQUES</button>
+      <button class="tab-btn" onclick="switchTab('stats',this)">&#9670; STATS</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- BREATHWORK TAB -->
@@ -161,6 +159,18 @@
 
     <!-- SCIENCE TAB -->
     <div class="tab-panel" id="tab-science">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="session-stat"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
+        <div class="session-stat"><div class="sv">5.5</div><div class="sk">RESONANCE BPM</div></div>
+        <div class="session-stat"><div class="sv">4-4-4</div><div class="sk">BOX PROTOCOL</div></div>
+        <div class="session-stat"><div class="sv">φ/e</div><div class="sk">BREATH RATIO</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="session-stat"><div class="sv">1.618</div><div class="sk">PHI CONSTANT</div></div>
+        <div class="session-stat"><div class="sv">2.718</div><div class="sk">EULER BASE</div></div>
+        <div class="session-stat"><div class="sv">HRV</div><div class="sk">SOVEREIGN METRIC</div></div>
+        <div class="session-stat"><div class="sv">CO₂</div><div class="sk">TOLERANCE KEY</div></div>
+      </div>
       <div class="section-hd">THE BREATH-BRAIN CONNECTION</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px">
@@ -200,9 +210,10 @@
   </div>
 
   <div class="lf">
-    <span>&#937; MEDITATE · SYD OMEGA 91717</span>
+    <span>&#937; MEDITATE &middot; SYD OMEGA 91717</span>
     <span>THE BREATH IS THE REMOTE CONTROL OF THE MIND</span>
   </div>
+</main>
 </div>
 
 <script src="bg.js"></script>

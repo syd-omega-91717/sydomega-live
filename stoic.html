@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Stoic Protocol · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:'Courier Prime',monospace}
+:root{--gold:#C9A84C;--dim:rgba(201,168,76,.15);--M:monospace}
 .stoic-hero{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 .memento-card{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .daily-quote{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:20px}
@@ -53,14 +53,13 @@
 </style>
 </head>
 <body>
-<div class="layer" id="L0"></div>
-<div class="side" id="sideNav"></div>
-<div class="main">
-  <div class="topbar" id="topBar"></div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="stoic"></aside>
+<main class="main">
+  <div class="topbar">
+    <div class="t">STOIC PROTOCOL<small>IDENTITY &middot; PHILOSOPHY &middot; SYD OMEGA 91717</small></div>
+  </div>
   <div style="padding:20px var(--pad,20px)">
-
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · PHILOSOPHY</div>
-    <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">STOIC PROTOCOL</h1>
 
     <div class="stoic-hero">
       <div class="memento-card">
@@ -81,12 +80,10 @@
     </div>
 
     <div class="layer-tabs">
-      <button class="tab-btn active" onclick="switchTab('journal',this)">JOURNAL</button>
-      <button class="tab-btn" onclick="switchTab('virtues',this)">FOUR VIRTUES</button>
-      <button class="tab-btn" onclick="switchTab('dichotomy',this)">DICHOTOMY</button>
-      <button class="tab-btn" onclick="switchTab('practices',this)">PRACTICES</button>
-      <button class="tab-btn" onclick="switchTab('philosophers',this)">PHILOSOPHERS</button>
-      <button class="tab-btn" onclick="switchTab('library',this)">SAVED WISDOM</button>
+      <button class="tab-btn active" onclick="switchTab('journal',this)">&#9670; JOURNAL</button>
+      <button class="tab-btn" onclick="switchTab('virtues',this)">&#9670; VIRTUES</button>
+      <button class="tab-btn" onclick="switchTab('practices',this)">&#9670; PRACTICES</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
     <!-- JOURNAL -->
@@ -106,6 +103,10 @@
       </div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px" id="journalStreak"></div>
       <div id="journalEntries"></div>
+      <div style="border-top:1px solid var(--dim);margin-top:20px;padding-top:16px">
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:10px">SAVED WISDOM</div>
+        <div id="savedQuotes"></div>
+      </div>
     </div>
 
     <!-- VIRTUES -->
@@ -120,29 +121,26 @@
         <div class="virtue-card"><div class="vc-name">TEMPERANCE</div><div class="vc-greek">SŌPHROSYNĒ</div><div class="vc-desc">Self-discipline and moderation. Knowing when enough is enough. Mastery of desire and appetite — the foundation of freedom.</div><div class="vc-score"><input type="range" id="vTemperance" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vTemperanceVal">5/10</div></div></div>
       </div>
       <div style="text-align:center"><button class="btn-gold" onclick="saveVirtues()">SAVE VIRTUE ASSESSMENT</button></div>
-    </div>
-
-    <!-- DICHOTOMY -->
-    <div class="tab-pane" id="tab-dichotomy">
-      <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:16px">
-        <div style="font-family:var(--M);font-size:11px;color:rgba(220,210,180,.7);line-height:1.8;font-style:italic">"Some things are in our control and others not. Things in our control are opinion, pursuit, desire, aversion — whatever are our own actions. Things not in our control are body, reputation, command — whatever are not our own actions." <span style="font-style:normal;font-size:9px;color:rgba(201,168,76,.5);letter-spacing:1px">— EPICTETUS, ENCHIRIDION</span></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;padding:8px 0;margin-bottom:8px">
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:#9BC53D;text-align:center">IN YOUR CONTROL</div>
-        <div></div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(200,100,100,.7);text-align:center">NOT IN YOUR CONTROL</div>
-      </div>
-      <div class="dc-item"><div class="dc-in">Your thoughts and judgments</div><div class="dc-sep">vs</div><div class="dc-out">What others think of you</div></div>
-      <div class="dc-item"><div class="dc-in">Your effort and preparation</div><div class="dc-sep">vs</div><div class="dc-out">The outcome of your work</div></div>
-      <div class="dc-item"><div class="dc-in">Your response to adversity</div><div class="dc-sep">vs</div><div class="dc-out">Whether adversity comes</div></div>
-      <div class="dc-item"><div class="dc-in">Your values and principles</div><div class="dc-sep">vs</div><div class="dc-out">Other people's values</div></div>
-      <div class="dc-item"><div class="dc-in">How you treat others</div><div class="dc-sep">vs</div><div class="dc-out">How others treat you</div></div>
-      <div class="dc-item"><div class="dc-in">Your habits and disciplines</div><div class="dc-sep">vs</div><div class="dc-out">Your natural talents / genetics</div></div>
-      <div class="dc-item"><div class="dc-in">Your attention and focus</div><div class="dc-sep">vs</div><div class="dc-out">Economy, politics, weather</div></div>
-      <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-top:14px">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">PRACTICE: CLASSIFY YOUR CONCERNS</div>
-        <textarea id="concernText" style="width:100%;background:rgba(0,0,0,.2);border:1px solid var(--dim);border-radius:2px;padding:8px;color:rgba(220,210,180,.7);font-family:var(--M);font-size:11px;box-sizing:border-box;height:80px;resize:vertical" placeholder="Write a current stressor. Is it in your control? What action can you take on the part that is?"></textarea>
-        <div style="margin-top:6px;font-family:var(--M);font-size:9px;color:rgba(138,134,118,.5)">Ask: <em>Is this in my control?</em> → If yes: act. If no: release it.</div>
+      <div style="border-top:1px solid var(--dim);margin-top:24px;padding-top:16px">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:14px">DICHOTOMY OF CONTROL</div>
+        <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-bottom:14px">
+          <div style="font-family:var(--M);font-size:10px;color:rgba(220,210,180,.7);line-height:1.8;font-style:italic">"Some things are in our control and others not." <span style="font-style:normal;font-size:8px;color:rgba(201,168,76,.5);letter-spacing:1px">— EPICTETUS</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;padding:8px 0;margin-bottom:8px">
+          <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:#9BC53D;text-align:center">IN YOUR CONTROL</div>
+          <div></div>
+          <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(200,100,100,.7);text-align:center">NOT IN YOUR CONTROL</div>
+        </div>
+        <div class="dc-item"><div class="dc-in">Your thoughts and judgments</div><div class="dc-sep">vs</div><div class="dc-out">What others think of you</div></div>
+        <div class="dc-item"><div class="dc-in">Your effort and preparation</div><div class="dc-sep">vs</div><div class="dc-out">The outcome of your work</div></div>
+        <div class="dc-item"><div class="dc-in">Your response to adversity</div><div class="dc-sep">vs</div><div class="dc-out">Whether adversity comes</div></div>
+        <div class="dc-item"><div class="dc-in">Your values and principles</div><div class="dc-sep">vs</div><div class="dc-out">Other people's values</div></div>
+        <div class="dc-item"><div class="dc-in">Your habits and disciplines</div><div class="dc-sep">vs</div><div class="dc-out">Your natural talents / genetics</div></div>
+        <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-top:14px">
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">PRACTICE: CLASSIFY YOUR CONCERNS</div>
+          <textarea id="concernText" style="width:100%;background:rgba(0,0,0,.2);border:1px solid var(--dim);border-radius:2px;padding:8px;color:rgba(220,210,180,.7);font-family:var(--M);font-size:10px;box-sizing:border-box;height:70px;resize:vertical" placeholder="Write a current stressor. Is it in your control? What action can you take?"></textarea>
+          <div style="margin-top:6px;font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5)">Ask: <em>Is this in my control?</em> → If yes: act. If no: release it.</div>
+        </div>
       </div>
     </div>
 
@@ -163,51 +161,72 @@
           <div style="display:flex;gap:3px;flex-wrap:wrap" id="practiceStreak"></div>
         </div>
       </div>
-    </div>
-
-    <!-- PHILOSOPHERS -->
-    <div class="tab-pane" id="tab-philosophers">
-      <div class="phil-card">
-        <div class="phil-name">MARCUS AURELIUS</div><div class="phil-dates">121 – 180 CE · Roman Emperor · Philosopher</div>
-        <div class="phil-bio">The philosopher-king. Emperor of Rome for 19 years, simultaneously writing the most intimate philosophical diary ever discovered — Meditations, written only for himself, never intended for publication. He practiced Stoicism under conditions of absolute power, pandemic, war, personal tragedy, and betrayal.</div>
-        <div class="pq">"You have power over your mind — not outside events. Realize this, and you will find strength."</div>
-        <div class="pq">"The impediment to action advances action. What stands in the way becomes the way."</div>
-        <div class="pq">"You could leave life right now. Let that determine what you do and say and think."</div>
-        <div class="pq">"The soul becomes dyed with the colour of its thoughts."</div>
-      </div>
-      <div class="phil-card">
-        <div class="phil-name">EPICTETUS</div><div class="phil-dates">50 – 135 CE · Former Slave · Philosopher</div>
-        <div class="phil-bio">Born into slavery, Epictetus developed the most rigorous Stoic discipline — perhaps because freedom, for him, was never external, only internal. His master broke his leg to demonstrate power. Epictetus calmly noted the leg would break before it did. He taught that what happens to you is irrelevant; only your response determines your character.</div>
-        <div class="pq">"We cannot choose our external circumstances, but we can always choose how we respond to them."</div>
-        <div class="pq">"Men are disturbed not by events, but by their opinions about events."</div>
-        <div class="pq">"Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control."</div>
-        <div class="pq">"No man is free who is not master of himself."</div>
-      </div>
-      <div class="phil-card">
-        <div class="phil-name">SENECA</div><div class="phil-dates">4 BCE – 65 CE · Statesman · Author</div>
-        <div class="phil-bio">The most prolific Stoic writer and Rome's wealthiest man. This apparent contradiction reflects his philosophy: wealth and power are not inherently evil, only the attachment to them. Wrote On the Shortness of Life, On Anger, Letters to Lucilius — some of the most readable philosophy ever written.</div>
-        <div class="pq">"The whole future lies in uncertainty: live immediately."</div>
-        <div class="pq">"Dum differtur vita transcurrit — While we are postponing, life speeds by."</div>
-        <div class="pq">"Omnia aliena sunt, tempus tantum nostrum est — Everything is alien to us; time alone belongs to us."</div>
-        <div class="pq">"Begin at once to live, and count each separate day as a separate life."</div>
-      </div>
-      <div class="phil-card">
-        <div class="phil-name">ZENO OF CITIUM</div><div class="phil-dates">334 – 262 BCE · Founder of Stoicism</div>
-        <div class="phil-bio">After being shipwrecked and losing his entire fortune, Zeno found a philosophy text in an Athens bookshop and eventually founded his own school — teaching in the Stoa Poikilē (painted porch), giving Stoicism its name. He built a complete philosophical system: logic, physics, and ethics unified around living according to nature and reason.</div>
-        <div class="pq">"We have two ears and one mouth, so we should listen more than we say."</div>
-        <div class="pq">"The goal of life is to live in agreement with Nature."</div>
-        <div class="pq">"Man conquers the world by conquering himself."</div>
+      <div style="border-top:1px solid var(--dim);margin-top:24px;padding-top:16px">
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:14px">STOIC PHILOSOPHERS</div>
+        <div class="phil-card">
+          <div class="phil-name">MARCUS AURELIUS</div><div class="phil-dates">121 – 180 CE · Roman Emperor · Philosopher</div>
+          <div class="phil-bio">The philosopher-king. Practiced Stoicism under conditions of absolute power, pandemic, war, personal tragedy, and betrayal. Meditations written only for himself — never intended for publication.</div>
+          <div class="pq">"You have power over your mind — not outside events. Realize this, and you will find strength."</div>
+          <div class="pq">"The impediment to action advances action. What stands in the way becomes the way."</div>
+        </div>
+        <div class="phil-card">
+          <div class="phil-name">EPICTETUS</div><div class="phil-dates">50 – 135 CE · Former Slave · Philosopher</div>
+          <div class="phil-bio">Born into slavery, Epictetus developed the most rigorous Stoic discipline — because freedom, for him, was never external, only internal. What happens to you is irrelevant; only your response determines your character.</div>
+          <div class="pq">"We cannot choose our external circumstances, but we can always choose how we respond to them."</div>
+          <div class="pq">"No man is free who is not master of himself."</div>
+        </div>
+        <div class="phil-card">
+          <div class="phil-name">SENECA</div><div class="phil-dates">4 BCE – 65 CE · Statesman · Author</div>
+          <div class="phil-bio">The most prolific Stoic writer. On the Shortness of Life, On Anger, Letters to Lucilius — some of the most readable philosophy ever written. Wealth and power are not evil, only the attachment to them.</div>
+          <div class="pq">"The whole future lies in uncertainty: live immediately."</div>
+          <div class="pq">"Begin at once to live, and count each separate day as a separate life."</div>
+        </div>
+        <div class="phil-card">
+          <div class="phil-name">ZENO OF CITIUM</div><div class="phil-dates">334 – 262 BCE · Founder of Stoicism</div>
+          <div class="phil-bio">After being shipwrecked and losing his fortune, Zeno founded his school — teaching in the Stoa Poikilē (painted porch), giving Stoicism its name. Logic, physics, and ethics unified around living according to nature.</div>
+          <div class="pq">"Man conquers the world by conquering himself."</div>
+          <div class="pq">"The goal of life is to live in agreement with Nature."</div>
+        </div>
       </div>
     </div>
 
-    <!-- SAVED WISDOM -->
-    <div class="tab-pane" id="tab-library">
-      <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:10px">SAVED WISDOM</div>
-      <div id="savedQuotes"></div>
+    <!-- SCIENCE TAB -->
+    <div class="tab-pane" id="tab-science">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">APEX AUTH</div></div>
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">4</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">CARDINAL VIRTUES</div></div>
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">300</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">YEARS OF SCHOOL</div></div>
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">φ/e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">VIRTUE RATIO</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">1.618</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">PHI CONSTANT</div></div>
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">2.718</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">EULER BASE</div></div>
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">2,000</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">YEARS PROVEN</div></div>
+        <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">CBT</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">BUILT ON STOICISM</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="virtue-card">
+          <div class="vc-name">STOICISM &amp; MODERN NEUROSCIENCE</div>
+          <div class="vc-desc">The Stoics discovered through philosophy what neuroscience confirmed: the amygdala fires before the prefrontal cortex. The 90-second rule (Jill Bolte Taylor) — any emotion lasts 90 seconds neurologically. Beyond that, you are choosing to stay in it. The Stoic pause is neurological recalibration.</div>
+        </div>
+        <div class="virtue-card">
+          <div class="vc-name">COGNITIVE BEHAVIOURAL THERAPY</div>
+          <div class="vc-desc">CBT, the world's most evidence-backed psychotherapy, is Stoicism formalized. Aaron Beck and Albert Ellis directly cited Epictetus: "Men are disturbed not by events, but by their opinions about events." Reframing, thought records, and behavioural activation all derive from Stoic practice.</div>
+        </div>
+        <div class="virtue-card">
+          <div class="vc-name">NEGATIVE VISUALIZATION</div>
+          <div class="vc-desc">Modern research on hedonic adaptation confirms the Stoic technique of premeditatio malorum. Visualizing loss increases gratitude (positive psychology) and reduces anxiety through exposure desensitization. Athletes use this as "stress inoculation training" — pre-experiencing adversity to remove its sting.</div>
+        </div>
+        <div class="virtue-card">
+          <div class="vc-name">THE SOVEREIGN PHILOSOPHY</div>
+          <div class="vc-desc">Stoicism is not emotional suppression — it is emotional sovereignty. The Stoic feels fully, then chooses their response. Viktor Frankl in the concentration camps discovered what Marcus Aurelius built an empire on: between stimulus and response lies freedom. That gap is where sovereignty lives.</div>
+        </div>
+      </div>
     </div>
 
   </div>
-  <div class="lf" id="pgFoot"></div>
+  <div class="lf"><span>&#937; STOIC PROTOCOL &middot; SYD OMEGA 91717</span><span>AMOR FATI &middot; MEMENTO MORI</span></div>
+</main>
 </div>
 <script src="bg.js"></script>
 <script src="omega-ui.js"></script>
@@ -264,7 +283,7 @@ showQuote();
   var birthYear=localStorage.getItem(MEMENTO_KEY)?+localStorage.getItem(MEMENTO_KEY):null;
   function render(){
     if(!birthYear){
-      document.getElementById('mementoSub').innerHTML='<input id="byi" type="number" min="1900" max="2015" placeholder="Birth year" style="background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);padding:4px 8px;color:var(--gold);font-family:\'Courier Prime\',monospace;font-size:12px;width:90px;border-radius:2px;text-align:center"> <button onclick="window._setBy()" style="font-family:\'Courier Prime\',monospace;font-size:8px;padding:4px 10px;background:none;border:1px solid rgba(201,168,76,.2);color:var(--gold);border-radius:2px;cursor:pointer;margin-left:4px">SET</button>';
+      document.getElementById('mementoSub').innerHTML='<input id="byi" type="number" min="1900" max="2015" placeholder="Birth year" style="background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.2);padding:4px 8px;color:var(--gold);font-family:monospace;font-size:12px;width:90px;border-radius:2px;text-align:center"> <button onclick="window._setBy()" style="font-family:monospace;font-size:8px;padding:4px 10px;background:none;border:1px solid rgba(201,168,76,.2);color:var(--gold);border-radius:2px;cursor:pointer;margin-left:4px">SET</button>';
       return;
     }
     var now=new Date(),age=now.getFullYear()-birthYear+now.getMonth()/12,lifeExp=85,yearsLeft=Math.max(0,lifeExp-age),weeksLeft=Math.round(yearsLeft*52),pct=age/lifeExp;
@@ -313,7 +332,7 @@ function drawVirtueRadar(){
   ctx.fillStyle='rgba(201,168,76,.15)';ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=2;
   ctx.beginPath();vals.forEach(function(v,i){var x=cx+Math.cos(angles[i])*r*v,y=cy+Math.sin(angles[i])*r*v;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});
   ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.fillStyle='rgba(201,168,76,.6)';ctx.font='8px Courier Prime';ctx.textAlign='center';
+  ctx.fillStyle='rgba(201,168,76,.6)';ctx.font='8px monospace';ctx.textAlign='center';
   angles.forEach(function(a,i){var x=cx+Math.cos(a)*(r+22),y=cy+Math.sin(a)*(r+22);ctx.fillText(labels[i],x,y+3);});
 }
 loadVirtueSliders();
@@ -349,7 +368,7 @@ function renderPractices(){
     var done=practiceLog[todayKey]&&practiceLog[todayKey][i];
     return '<div style="display:flex;align-items:center;gap:10px;padding:4px 0">'
       +'<div onclick="toggleP('+i+')" style="width:18px;height:18px;border:1px solid rgba(201,168,76,'+(done?'.4':'.15')+');border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:'+(done?'rgba(201,168,76,.1)':'none')+';">'+(done?'✓':'')+'</div>'
-      +'<span style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba('+(done?'201,168,76,.7':'138,134,118,.5')+')">'+(i+1)+'. '+name+'</span></div>';
+      +'<span style="font-family:monospace;font-size:10px;color:rgba('+(done?'201,168,76,.7':'138,134,118,.5')+')">'+(i+1)+'. '+name+'</span></div>';
   }).join('');
   var html='';
   for(var j=29;j>=0;j--){var d=new Date();d.setDate(d.getDate()-j);var k=d.toISOString().slice(0,10);var count=practiceLog[k]?Object.values(practiceLog[k]).filter(Boolean).length:0;html+='<div class="sr-dot'+(count>0?' done':'')+(j===0?' today':'')+'" style="margin:1px;opacity:'+(0.4+count/PNAMES.length*0.6)+'" title="'+k+': '+count+' practices"></div>';}
@@ -361,8 +380,8 @@ renderPractices();
 /* SAVED WISDOM */
 function renderSaved(){
   var saved=loadArr(SAVED_KEY),el=document.getElementById('savedQuotes');
-  if(!saved.length){el.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:10px;color:rgba(138,134,118,.4)">No saved wisdom yet. Star quotes you want to keep.</div>';return;}
-  el.innerHTML=saved.map(function(q,i){return '<div style="background:rgba(201,168,76,.04);border-left:2px solid rgba(201,168,76,.3);padding:12px 16px;margin-bottom:10px;border-radius:0 3px 3px 0;display:flex;gap:12px;align-items:flex-start"><div style="flex:1"><div style="font-family:\'Courier Prime\',monospace;font-size:11px;color:rgba(220,210,180,.7);font-style:italic;line-height:1.7;margin-bottom:6px">'+q.t+'</div><div style="font-family:\'Courier Prime\',monospace;font-size:8px;letter-spacing:2px;color:rgba(201,168,76,.5)">— '+q.a+'</div></div><button onclick="removeSaved('+i+')" style="font-family:\'Courier Prime\',monospace;font-size:9px;color:rgba(201,168,76,.3);background:none;border:none;cursor:pointer;flex-shrink:0">✕</button></div>';}).join('');
+  if(!saved.length){el.innerHTML='<div style="font-family:monospace;font-size:10px;color:rgba(138,134,118,.4)">No saved wisdom yet. Star quotes you want to keep.</div>';return;}
+  el.innerHTML=saved.map(function(q,i){return '<div style="background:rgba(201,168,76,.04);border-left:2px solid rgba(201,168,76,.3);padding:12px 16px;margin-bottom:10px;border-radius:0 3px 3px 0;display:flex;gap:12px;align-items:flex-start"><div style="flex:1"><div style="font-family:monospace;font-size:11px;color:rgba(220,210,180,.7);font-style:italic;line-height:1.7;margin-bottom:6px">'+q.t+'</div><div style="font-family:monospace;font-size:8px;letter-spacing:2px;color:rgba(201,168,76,.5)">— '+q.a+'</div></div><button onclick="removeSaved('+i+')" style="font-family:monospace;font-size:9px;color:rgba(201,168,76,.3);background:none;border:none;cursor:pointer;flex-shrink:0">✕</button></div>';}).join('');
 }
 function removeSaved(i){var saved=loadArr(SAVED_KEY);saved.splice(i,1);save(SAVED_KEY,saved);renderSaved();}
 renderSaved();

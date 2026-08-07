@@ -3,19 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Time · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Time &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:monospace;
   --green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;--solar:#FF9800;--red:#EF5350;--teal:#26C6DA;
 }
 
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -96,17 +92,17 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 </style>
 </head>
 <body>
-<div class="main">
-  <div class="topbar">
-    <span class="topbar-title">Ω SOVEREIGN TIME</span>
-    <span class="tb-meta" id="tb-today">── TODAY: 0H 0M</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="time"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">TIME<small>SOVEREIGN MASTERY &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-today">── TODAY: 0H 0M</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" onclick="switchTab(this,'t1')">◆ TIMER</button>
-    <button class="lt" onclick="switchTab(this,'t2')">▶ LOG</button>
-    <button class="lt" onclick="switchTab(this,'t3')">▲ AUDIT</button>
-    <button class="lt" onclick="switchTab(this,'t4')">⚙ SCIENCE</button>
+    <button class="lt active" onclick="switchTab(this,'t1')">&#9670; TIMER</button>
+    <button class="lt" onclick="switchTab(this,'t2')">&#9670; LOG</button>
+    <button class="lt" onclick="switchTab(this,'t3')">&#9670; AUDIT</button>
+    <button class="lt" onclick="switchTab(this,'t4')">&#9670; SCIENCE</button>
   </div>
 
   <!-- TAB 1: TIMER -->
@@ -141,9 +137,9 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="timer-display" id="timer-display">25:00</div>
       <div class="timer-phase" id="timer-phase">READY TO START</div>
       <div class="timer-controls">
-        <button class="btn-ctrl active" id="btn-start" onclick="startTimer()">▶ START</button>
+        <button class="btn-ctrl active" id="btn-start" onclick="startTimer()">&#9670; START</button>
         <button class="btn-ctrl" id="btn-pause" onclick="pauseTimer()" style="display:none">⏸ PAUSE</button>
-        <button class="btn-ctrl" id="btn-resume" onclick="resumeTimer()" style="display:none">▶ RESUME</button>
+        <button class="btn-ctrl" id="btn-resume" onclick="resumeTimer()" style="display:none">&#9670; RESUME</button>
         <button class="btn-ctrl red" onclick="resetTimer()">■ RESET</button>
       </div>
     </div>
@@ -192,6 +188,18 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card"><div class="stat-val">90</div><div class="stat-lbl">ULTRADIAN MIN</div></div>
+      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">FOCUS RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">4H</div><div class="stat-lbl">DEEP WORK/DAY</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">25</div><div class="stat-lbl">POMODORO MIN</div></div>
+      <div class="stat-card"><div class="stat-val">52/17</div><div class="stat-lbl">WORK/BREAK SPLIT</div></div>
+      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
     <div class="sci-card">
       <div class="sci-title">DEEP WORK & DELIBERATE PRACTICE</div>
       <div class="sci-cite">Newport, C. (2016) — Deep Work: Rules for Focused Success in a Distracted World. Grand Central Publishing</div>
@@ -218,8 +226,13 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="sci-body">Nathaniel Kleitman (who discovered REM sleep) also described the Basic Rest-Activity Cycle (BRAC) — approximately 90-minute cycles of higher and lower alertness that continue during waking hours. Peak performance windows occur in the first half of each ultradian cycle; the second half is a natural recovery window. Structuring work sessions to align with these 90-minute natural rhythms can dramatically increase productivity without increasing total hours worked.</div>
     </div>
   </div>
+
+  </div>
+  <div class="lf"><span>&#937; TIME &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
+<script src="bg.js"></script>
 <script src="omega-ui.js"></script>
 <script>
 const TIME_KEY = 'omega_time_log';
@@ -557,7 +570,7 @@ function drawDailyTrend(logs){
     var y=pad+ph-(h*3600/max)*ph;
     ctx.strokeStyle='rgba(201,168,76,.06)';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke();
-    ctx.fillStyle='rgba(201,168,76,.25)';ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.25)';ctx.font='7px monospace';
     ctx.fillText(h+'h',2,y+3);
   });
 
@@ -573,12 +586,12 @@ function drawDailyTrend(logs){
       ctx.fillStyle='rgba(201,168,76,.6)';
       ctx.fillRect(x,pad+ph-dbh,bw,dbh);
     }
-    ctx.fillStyle='rgba(201,168,76,.4)';ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.4)';ctx.font='7px monospace';
     ctx.fillText(d.label,x+bw/2-6,H-4);
   });
 
   ctx.fillStyle='rgba(201,168,76,.4)';ctx.fillRect(W-120,8,14,6);
-  ctx.fillStyle='rgba(201,168,76,.3)';ctx.font='7px "Courier Prime",monospace';ctx.fillText('TOTAL',W-102,14);
+  ctx.fillStyle='rgba(201,168,76,.3)';ctx.font='7px monospace';ctx.fillText('TOTAL',W-102,14);
   ctx.fillStyle='rgba(201,168,76,.7)';ctx.fillRect(W-120,22,14,6);
   ctx.fillText('DEEP WORK',W-102,28);
 }

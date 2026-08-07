@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Wisdom · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Wisdom &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;--purple:#9C6FD6;--blue:#5C8FD6;}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:monospace;--purple:#9C6FD6;--blue:#5C8FD6;}
 
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
+.stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -74,17 +73,17 @@ textarea.form-input{min-height:80px;resize:none;line-height:1.75}
 </style>
 </head>
 <body>
-<div class="main">
-  <div class="topbar">
-    <span class="topbar-title">Ω SOVEREIGN WISDOM</span>
-    <span class="tb-meta" id="tb-count">── 0 QUOTES</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="quotes"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">WISDOM<small>SOVEREIGN QUOTES &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-count">── 0 QUOTES</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" onclick="switchTab(this,'t1')">◆ DAILY WISDOM</button>
-    <button class="lt" onclick="switchTab(this,'t2')">▶ LIBRARY</button>
-    <button class="lt" onclick="switchTab(this,'t3')">▲ ADD QUOTE</button>
-    <button class="lt" onclick="switchTab(this,'t4')">⚙ BY AUTHOR</button>
+    <button class="lt active" onclick="switchTab(this,'t1')">&#9670; DAILY WISDOM</button>
+    <button class="lt" onclick="switchTab(this,'t2')">&#9670; LIBRARY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">&#9670; ADD QUOTE</button>
+    <button class="lt" onclick="switchTab(this,'t4')">&#9670; SCIENCE</button>
   </div>
 
   <!-- TAB 1: DAILY WISDOM -->
@@ -138,15 +137,32 @@ textarea.form-input{min-height:80px;resize:none;line-height:1.75}
     </div>
   </div>
 
-  <!-- TAB 4: BY AUTHOR -->
+  <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card"><div class="stat-val">10K+</div><div class="stat-lbl">HOURS TO MASTERY</div></div>
+      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">WISDOM RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">3×</div><div class="stat-lbl">DAILY REVIEW TARGET</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">21</div><div class="stat-lbl">DAYS TO HABIT</div></div>
+      <div class="stat-card"><div class="stat-val">90%</div><div class="stat-lbl">SPACED REPETITION</div></div>
+      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
     <div class="sect">
       <div class="sect-hd">AUTHORS IN YOUR LIBRARY</div>
       <div class="author-grid" id="author-grid"></div>
     </div>
   </div>
+
+</div>
+<div class="lf"><span>&#937; WISDOM &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
+<script src="bg.js"></script>
 <script src="omega-ui.js"></script>
 <script>
 const Q_KEY = 'omega_quotes';

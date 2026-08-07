@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Journal · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Journal &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#C9A84C;--bg:#0D0D0B;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace}
+:root{--gold:#C9A84C;--bg:#0D0D0B;--dim:rgba(138,134,118,.5);--M:monospace}
 
 /* LOCK SCREEN */
 #j-lock{position:fixed;inset:0;background:#0D0D0B;z-index:9999;display:flex;align-items:center;justify-content:center}
@@ -24,10 +24,6 @@
 .j-lock-hint{font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(138,134,118,.3);margin-top:20px;line-height:1.9}
 
 /* MAIN */
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -93,6 +89,9 @@
 .sec-msg{font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--gold);margin-top:8px;min-height:16px}
 .sec-salt{font-family:var(--M);font-size:8px;letter-spacing:.5px;color:rgba(138,134,118,.4);word-break:break-all;padding:10px;border:1px solid rgba(201,168,76,.08);background:rgba(0,0,0,.2);margin-bottom:12px;line-height:1.9}
 .sec-desc{font-family:var(--M);font-size:8px;letter-spacing:.5px;color:rgba(138,134,118,.5);line-height:1.9}
+.stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 </style>
 </head>
 <body>
@@ -129,18 +128,17 @@
 
 <!-- ══ MAIN ════════════════════════════════════════════════════════════ -->
 <div id="j-main" style="display:none">
-<div class="main">
-
-  <div class="topbar">
-    <span class="topbar-title">Ω SOVEREIGN JOURNAL</span>
-    <span class="tb-meta" id="j-tb-meta">— ENTRIES</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="journal"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">JOURNAL<small>SOVEREIGN WRITING &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="j-tb-meta">— ENTRIES</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" id="t-write">WRITE</button>
-    <button class="lt" id="t-browse">BROWSE</button>
-    <button class="lt" id="t-insights">INSIGHTS</button>
-    <button class="lt" id="t-security">SECURITY</button>
+    <button class="lt active" id="t-write">&#9670; WRITE</button>
+    <button class="lt" id="t-browse">&#9670; BROWSE</button>
+    <button class="lt" id="t-insights">&#9670; INSIGHTS</button>
+    <button class="lt" id="t-security">&#9670; SCIENCE</button>
   </div>
 
   <!-- WRITE -->
@@ -183,8 +181,21 @@
     <div id="j-tag-cloud" style="margin-bottom:20px"></div>
   </div>
 
-  <!-- SECURITY -->
+  <!-- SCIENCE -->
   <div class="tab-pane" id="tab-security">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-box"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-box"><div class="stat-val">AES-256</div><div class="stat-lbl">ENCRYPTION</div></div>
+      <div class="stat-box"><div class="stat-val">φ/e</div><div class="stat-lbl">REFLECTION RATIO</div></div>
+      <div class="stat-box"><div class="stat-val">750</div><div class="stat-lbl">WORDS/DAY TARGET</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-box"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-box"><div class="stat-val">PBKDF2</div><div class="stat-lbl">KEY DERIVATION</div></div>
+      <div class="stat-box"><div class="stat-val">100K</div><div class="stat-lbl">HASH ITERATIONS</div></div>
+      <div class="stat-box"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
+    <div class="sect-hd" style="margin-bottom:16px">ENCRYPTION & SECURITY</div>
 
     <div class="sec-section">
       <div class="sec-title">ENCRYPTION STATUS</div>
@@ -219,6 +230,9 @@
 
   </div>
 
+</div>
+<div class="lf"><span>&#937; JOURNAL &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 </div>
 

@@ -3,16 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Weekly Review · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Weekly Review &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;--green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;}
+:root{--gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:monospace;--green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;}
 
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -71,6 +67,8 @@ textarea.q-area.sm{min-height:54px}
 /* STATS */
 .stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
 .stat-box{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.sci-card{border:1px solid rgba(201,168,76,.08);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.2)}
+.sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .stat-val{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold)}
 .stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
@@ -88,16 +86,17 @@ textarea.q-area.sm{min-height:54px}
 </style>
 </head>
 <body>
-<div class="main">
-  <div class="topbar">
-    <span class="topbar-title">Ω WEEKLY REVIEW</span>
-    <span class="tb-meta" id="tb-streak">── STREAK: 0 WEEKS</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="weekly"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">WEEKLY REVIEW<small>SOVEREIGN PLANNING &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-streak">── STREAK: 0 WEEKS</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" onclick="switchTab(this,'t1')">◆ THIS WEEK</button>
-    <button class="lt" onclick="switchTab(this,'t2')">▶ ARCHIVE</button>
-    <button class="lt" onclick="switchTab(this,'t3')">▲ TRENDS</button>
+    <button class="lt active" onclick="switchTab(this,'t1')">&#9670; THIS WEEK</button>
+    <button class="lt" onclick="switchTab(this,'t2')">&#9670; ARCHIVE</button>
+    <button class="lt" onclick="switchTab(this,'t3')">&#9670; TRENDS</button>
+    <button class="lt" onclick="switchTab(this,'t4')">&#9670; SCIENCE</button>
   </div>
 
   <!-- TAB 1: THIS WEEK -->
@@ -154,7 +153,7 @@ textarea.q-area.sm{min-height:54px}
       </div>
     </div>
 
-    <button class="btn-save" onclick="saveWeek()">▲ COMPLETE WEEKLY REVIEW</button>
+    <button class="btn-save" onclick="saveWeek()">&#9670; COMPLETE WEEKLY REVIEW</button>
   </div>
 
   <!-- TAB 2: ARCHIVE -->
@@ -173,6 +172,38 @@ textarea.q-area.sm{min-height:54px}
       <canvas id="trend-canvas" height="140"></canvas>
     </div>
   </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-box"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-box"><div class="stat-val">52</div><div class="stat-lbl">REVIEWS/YEAR</div></div>
+      <div class="stat-box"><div class="stat-val">φ/e</div><div class="stat-lbl">REVIEW RATIO</div></div>
+      <div class="stat-box"><div class="stat-val">6</div><div class="stat-lbl">LIFE DOMAINS</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-box"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-box"><div class="stat-val">90</div><div class="stat-lbl">DAY CYCLE</div></div>
+      <div class="stat-box"><div class="stat-val">GTD</div><div class="stat-lbl">REVIEW SYSTEM</div></div>
+      <div class="stat-box"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">THE WEEKLY REVIEW — DAVID ALLEN</div>
+      <div class="sci-body" style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">David Allen's GTD system identifies the weekly review as the cornerstone of the entire productivity system. Without a consistent review practice, your mind cannot trust the system — it starts re-processing commitments, creating anxiety and cognitive overhead. The weekly review clears the mental inbox, updates project lists, and closes open loops that otherwise drain attention continuously.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">REFLECTION & DELIBERATE PRACTICE</div>
+      <div class="sci-body" style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">K. Anders Ericsson's deliberate practice research shows that experts consistently outperform others not because of more practice, but because of more structured feedback and reflection. A weekly review creates a feedback loop: what worked, what failed, and why. Without systematic reflection, improvement is random rather than directed. Sovereign growth requires knowing not just what you did, but what it cost and what it produced.</div>
+    </div>
+    <div class="sci-card">
+      <div class="sci-title">THE OMEGA REVIEW PROTOCOL</div>
+      <div class="sci-body" style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">AUTH = √(A³+B³+C³) × φ/e where A=wins, B=lessons, C=intentions. The sovereign review scores six life domains (health, mindset, deep work, finance, relations, growth) on a 10-point scale. Weekly domain scores compound into quarterly trajectories. Trend analysis reveals which domains are growing versus stagnating — the asymmetry of sovereign attention.</div>
+    </div>
+  </div>
+
+  </div>
+  <div class="lf"><span>&#937; WEEKLY REVIEW &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
 <!-- READ-ONLY MODAL -->
@@ -184,6 +215,7 @@ textarea.q-area.sm{min-height:54px}
   </div>
 </div>
 
+<script src="bg.js"></script>
 <script src="omega-ui.js"></script>
 <script>
 const WR_KEY = 'omega_weekly_reviews';
@@ -446,7 +478,7 @@ function drawTrend(reviews){
   ctx.clearRect(0,0,W,H);
 
   var last8=[...reviews].sort(function(a,b){return a.weekKey.localeCompare(b.weekKey);}).slice(-8);
-  if(!last8.length){ctx.fillStyle='rgba(201,168,76,.2)';ctx.font='9px "Courier Prime",monospace';ctx.fillText('NO DATA',W/2-30,H/2);return;}
+  if(!last8.length){ctx.fillStyle='rgba(201,168,76,.2)';ctx.font='9px monospace';ctx.fillText('NO DATA',W/2-30,H/2);return;}
 
   var pad=32,pw=W-pad*2,ph=H-pad*2;
   var step=pw/(last8.length-1||1);
@@ -456,7 +488,7 @@ function drawTrend(reviews){
     var y=pad+ph-(v/10)*ph;
     ctx.strokeStyle='rgba(201,168,76,.07)';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke();
-    ctx.fillStyle='rgba(201,168,76,.3)';ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.3)';ctx.font='7px monospace';
     ctx.fillText(v,2,y+3);
   });
 
@@ -475,7 +507,7 @@ function drawTrend(reviews){
     if(p.y===null) return;
     ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);
     ctx.fillStyle='#C9A84C';ctx.fill();
-    ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px monospace';
     var label=last8[i].weekKey.slice(5).replace('-','/');
     ctx.fillText(label,p.x-10,H-4);
     if(last8[i].avg) ctx.fillText(last8[i].avg,p.x-8,p.y-10);

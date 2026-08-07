@@ -3,19 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Mood · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Mood &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:monospace;
   --green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;--solar:#FF9800;--red:#EF5350;--teal:#26C6DA;
 }
 
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -101,17 +97,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 </style>
 </head>
 <body>
-<div class="main">
-  <div class="topbar">
-    <span class="topbar-title">Ω SOVEREIGN MOOD</span>
-    <span class="tb-meta" id="tb-streak">── STREAK: 0 DAYS</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="mood"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">MOOD MATRIX<small>EMOTIONAL INTELLIGENCE &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-streak">── STREAK: 0 DAYS</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" onclick="switchTab(this,'t1')">◆ CHECK-IN</button>
-    <button class="lt" onclick="switchTab(this,'t2')">▶ HISTORY</button>
-    <button class="lt" onclick="switchTab(this,'t3')">▲ PATTERNS</button>
-    <button class="lt" onclick="switchTab(this,'t4')">⚙ SCIENCE</button>
+    <button class="lt active" onclick="switchTab(this,'t1')">&#9670; CHECK-IN</button>
+    <button class="lt" onclick="switchTab(this,'t2')">&#9670; HISTORY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">&#9670; PATTERNS</button>
+    <button class="lt" onclick="switchTab(this,'t4')">&#9670; SCIENCE</button>
   </div>
 
   <!-- TAB 1: CHECK-IN -->
@@ -153,7 +149,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div class="sect">
       <div class="sect-hd">REFLECTION NOTE</div>
       <textarea class="mood-note" id="mood-note" placeholder="What's shaping your current state? Any insights, events, or intentions..."></textarea>
-      <button class="btn-save" onclick="saveEntry()">▲ LOG MOOD ENTRY</button>
+      <button class="btn-save" onclick="saveEntry()">&#9670; LOG MOOD ENTRY</button>
     </div>
   </div>
 
@@ -187,6 +183,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card"><div class="stat-val">2D</div><div class="stat-lbl">CIRCUMPLEX AXES</div></div>
+      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">AFFECT RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">27</div><div class="stat-lbl">MOOD STATES</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">90s</div><div class="stat-lbl">EMOTION HALF-LIFE</div></div>
+      <div class="stat-card"><div class="stat-val">3×</div><div class="stat-lbl">POSITIVITY RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
     <div class="sci-card">
       <div class="sci-title">CIRCUMPLEX MODEL OF AFFECT</div>
       <div class="sci-cite">Russell, J.A. (1980) — A Circumplex Model of Affect. Journal of Personality and Social Psychology, 39(6)</div>
@@ -213,8 +221,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div class="sci-body">Humans systematically misjudge how long and intensely future events will affect their mood — a phenomenon called "impact bias." Longitudinal mood tracking creates a calibration database: by reviewing how predicted events actually affected your state, you develop more accurate affective forecasting, leading to better decisions about time, relationships, and effort allocation.</div>
     </div>
   </div>
+
+  </div>
+  <div class="lf"><span>&#937; MOOD MATRIX &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
+<script src="bg.js"></script>
 <script src="omega-ui.js"></script>
 <script>
 const MOOD_KEY = 'omega_mood_log';
@@ -283,7 +296,7 @@ function drawCircumplex(hoveredState){
   ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
 
   /* quadrant labels */
-  ctx.font = '7px "Courier Prime", monospace';
+  ctx.font = '7px monospace';
   ctx.fillStyle = 'rgba(201,168,76,.3)';
   ctx.fillText('HIGH ENERGY', W/2+6, 14);
   ctx.fillText('LOW ENERGY',  W/2+6, H-4);
@@ -303,7 +316,7 @@ function drawCircumplex(hoveredState){
     ctx.fill();
     ctx.globalAlpha = 1;
     if(selectedState===s||hoveredState===s){
-      ctx.font = '7px "Courier Prime",monospace';
+      ctx.font = '7px monospace';
       ctx.fillStyle = '#fff';
       ctx.fillText(s.name, x+10, y+4);
     }
@@ -507,7 +520,7 @@ function drawTrend(logs){
     var y=pad+ph-(v/10)*ph;
     ctx.strokeStyle='rgba(201,168,76,.07)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
-    ctx.fillStyle='rgba(201,168,76,.3)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.3)'; ctx.font='7px monospace';
     ctx.fillText(v,4,y+3);
   });
 
@@ -535,7 +548,7 @@ function drawTrend(logs){
   /* day labels */
   days.forEach(function(d,i){
     var x=pad+i*xStep;
-    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px monospace';
     ctx.fillText(d.label,x-8,H-4);
     if(d.count>0){
       ctx.fillStyle='rgba(201,168,76,.5)';
@@ -545,7 +558,7 @@ function drawTrend(logs){
 
   /* legend */
   ctx.fillStyle='#C9A84C'; ctx.fillRect(W-110,8,14,2);
-  ctx.fillStyle='rgba(201,168,76,.6)'; ctx.font='7px "Courier Prime",monospace'; ctx.fillText('VALENCE',W-92,12);
+  ctx.fillStyle='rgba(201,168,76,.6)'; ctx.font='7px monospace'; ctx.fillText('VALENCE',W-92,12);
   ctx.fillStyle='#5C8FD6'; ctx.fillRect(W-110,22,14,2);
   ctx.fillStyle='rgba(201,168,76,.6)'; ctx.fillText('ENERGY',W-92,26);
 }
@@ -619,7 +632,7 @@ function drawFreq(freq){
 
   var entries=Object.entries(freq).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
   if(!entries.length){
-    ctx.fillStyle='rgba(201,168,76,.3)'; ctx.font='9px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.3)'; ctx.font='9px monospace';
     ctx.fillText('NO DATA',W/2-25,H/2);
     return;
   }
@@ -635,10 +648,10 @@ function drawFreq(freq){
     var col=state?state.color:'#C9A84C';
     ctx.fillStyle=col+'99';
     ctx.fillRect(x,H-bh-20,barW,bh);
-    ctx.fillStyle='rgba(201,168,76,.5)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.5)'; ctx.font='7px monospace';
     ctx.fillText(e[1],x+barW/2-4,H-bh-24);
     ctx.save(); ctx.translate(x+barW/2,H-4); ctx.rotate(-Math.PI/4);
-    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(201,168,76,.4)'; ctx.font='7px monospace';
     ctx.fillText(e[0].substring(0,8),0,0);
     ctx.restore();
   });

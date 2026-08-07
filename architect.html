@@ -8,11 +8,11 @@
 <meta name="description" content="Platform architecture blueprint — event-driven sovereignty engine topology">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#09090b;--card:rgba(18,18,22,.95);--gold:#C9A84C;--gold2:rgba(201,168,76,.18);--gold3:rgba(201,168,76,.06);--text:rgba(226,200,109,.85);--dim:rgba(138,134,118,.5);--M:"Courier Prime",monospace;--S:"Space Grotesk",sans-serif;--pad:20px}
+:root{--bg:#09090b;--card:rgba(18,18,22,.95);--gold:#C9A84C;--gold2:rgba(201,168,76,.18);--gold3:rgba(201,168,76,.06);--text:rgba(226,200,109,.85);--dim:rgba(138,134,118,.5);--M:monospace;--S:"Space Grotesk",sans-serif;--pad:20px}
 html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height:100vh;overflow-x:hidden}
-.topbar{position:fixed;top:0;left:0;right:0;height:44px;display:flex;align-items:center;gap:12px;padding:0 var(--pad);background:rgba(9,9,11,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.1);z-index:100}
-.topbar-title{font-family:var(--M);font-size:9px;letter-spacing:2.5px;color:var(--gold);flex:1}
-.main{padding:60px var(--pad) var(--pad);max-width:1400px;margin:0 auto}
+.stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .page-header{margin-bottom:24px}
 .page-title{font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:4px}
 .page-sub{font-size:8px;letter-spacing:1.5px;color:var(--dim)}
@@ -68,21 +68,17 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-title">&#937; ARCHITECT — PLATFORM BLUEPRINT</div>
-</div>
-
-<div class="main">
-  <div class="page-header">
-    <div class="page-title">PLATFORM ARCHITECTURE</div>
-    <div class="page-sub">Event-Driven Sovereignty Engine &mdash; System Topology &amp; Design Decisions</div>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="architect"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">ARCHITECT<small>PLATFORM BLUEPRINT &middot; SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="tabs" id="arch-tabs">
-    <button class="tab active" data-tab="topology">TOPOLOGY</button>
-    <button class="tab" data-tab="patterns">PATTERNS</button>
-    <button class="tab" data-tab="flows">EVENT FLOWS</button>
-    <button class="tab" data-tab="decisions">ADR</button>
+    <button class="tab active" data-tab="topology">&#9670; TOPOLOGY</button>
+    <button class="tab" data-tab="patterns">&#9670; PATTERNS</button>
+    <button class="tab" data-tab="flows">&#9670; EVENT FLOWS</button>
+    <button class="tab" data-tab="decisions">&#9670; SCIENCE</button>
   </div>
 
   <!-- TOPOLOGY TAB -->
@@ -204,6 +200,18 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 
   <!-- ADR TAB -->
   <div class="panel" id="tab-decisions">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card"><div class="stat-val">EDA</div><div class="stat-lbl">EVENT-DRIVEN ARCH</div></div>
+      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">SYSTEM RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">15</div><div class="stat-lbl">EVENT TYPES</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card"><div class="stat-val">AES-256</div><div class="stat-lbl">DATA SECURITY</div></div>
+      <div class="stat-card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
+      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
     <table class="decisions-table" id="adr-table">
       <thead>
         <tr><th>ADR</th><th>DECISION</th><th>STATUS</th><th>RATIONALE</th><th>TRADE-OFFS</th></tr>
@@ -211,6 +219,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
       <tbody id="adr-body"></tbody>
     </table>
   </div>
+
+</div>
+<div class="lf"><span>&#937; ARCHITECT &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
 <script>
@@ -421,11 +433,11 @@ function draw(){
     ctx.strokeStyle=n.color+'44';ctx.lineWidth=.5;ctx.stroke();
     /* Label */
     ctx.fillStyle=n.color;
-    ctx.font='bold '+(7*scale)+'px "Courier Prime",monospace';
+    ctx.font='bold '+(7*scale)+'px monospace';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(n.label,p.x,p.y-(3*scale));
     ctx.fillStyle=n.color+'88';
-    ctx.font=(5.5*scale)+'px "Courier Prime",monospace';
+    ctx.font=(5.5*scale)+'px monospace';
     ctx.fillText(n.sub,p.x,p.y+(6*scale));
     ctx.globalAlpha=1;
   });

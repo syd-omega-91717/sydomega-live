@@ -3,90 +3,182 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&#937; SYD OMEGA 91717 &mdash; Offline</title>
+<title>&#937; Offline &middot; SYD OMEGA 91717</title>
 <meta name="robots" content="noindex,nofollow" />
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/omega-ui.css">
 <style>
-:root{--void:#0A0A0F;--gold:#C9A84C;--solar:#E2C86D;--muted:#8a8676;--ink:#e9e6dc;--line:rgba(201,168,76,.18)}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:var(--void);color:var(--ink);font-family:monospace;overflow:hidden}
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.07) 0%,transparent 65%)}
-.center{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:24px}
-.emblem-wrap{position:relative;width:140px;height:140px;margin:0 auto 32px}
-#emblem-svg{position:absolute;top:0;left:0}
-.headline{font-family:serif;font-size:clamp(20px,5vw,34px);color:var(--gold);letter-spacing:3px;margin-bottom:12px;line-height:1.15}
-.sub{font-size:13px;color:var(--muted);letter-spacing:1.5px;max-width:44ch;line-height:1.85;margin:0 auto 28px}
-.sub b{color:var(--solar)}
-.status-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px}
+.shell{position:relative;z-index:1}
+.layer-tabs{display:flex;gap:2px;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
+.lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.lt.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.emblem-wrap{display:flex;justify-content:center;margin:20px 0 28px}
+.headline{font-family:var(--D);font-size:clamp(20px,5vw,32px);color:var(--gold);letter-spacing:3px;margin-bottom:12px;text-align:center}
+.sub{font-family:var(--M);font-size:11px;color:var(--dim);letter-spacing:1px;max-width:50ch;line-height:1.85;margin:0 auto 24px;text-align:center}
+.status-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:24px}
 .status-dot{width:8px;height:8px;border-radius:50%;background:#8B0000;animation:blink 1.8s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.status-text{font-size:11px;letter-spacing:2px;color:var(--muted)}
-.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
-.btn{font-family:monospace;font-size:10px;letter-spacing:2px;padding:11px 22px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;transition:.18s}
-.btn:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
-.btn-solid{background:var(--gold);color:var(--void);border-color:var(--gold)}
-.btn-solid:hover{background:transparent;color:var(--gold)}
-.code{border:1px solid var(--line);background:rgba(2,2,6,.7);padding:16px 20px;font-size:9px;letter-spacing:.5px;color:rgba(201,168,76,.5);line-height:1.9;margin:0 auto;max-width:460px;text-align:left}
-.code span{color:var(--solar)}
-.footer{position:fixed;bottom:18px;left:0;right:0;text-align:center;font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.35)}
+.status-text{font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--dim)}
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
+.obtn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:10px 20px;border:1px solid rgba(201,168,76,.35);color:var(--gold);background:transparent;cursor:pointer;transition:.18s}
+.obtn:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
+.obtn.solid{background:var(--gold);color:#000;border-color:var(--gold)}
+.obtn.solid:hover{background:transparent;color:var(--gold)}
+.code-block{border:1px solid rgba(201,168,76,.12);background:rgba(0,0,0,.4);padding:16px 20px;font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(201,168,76,.5);line-height:2;margin:0 auto 24px;max-width:480px}
+.code-block .hl{color:var(--gold)}
+.info-block{border:1px solid rgba(201,168,76,.1);padding:16px;margin-bottom:12px;background:rgba(0,0,0,.1)}
+.info-block .ib-title{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+.info-block .ib-row{font-family:var(--M);font-size:11px;color:rgba(200,190,160,.7);padding:5px 0;border-bottom:1px solid rgba(201,168,76,.05);display:flex;gap:12px}
+.info-block .ib-row:last-child{border-bottom:none}
+.info-block .ib-key{color:var(--dim);min-width:130px}
+.stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
+.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes spin-rev{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
 @media(prefers-reduced-motion:reduce){#ring1,#ring2{animation:none!important}.status-dot{animation:none!important;opacity:.5}}
 </style>
 </head>
-<body>
+<body class="omega-approved">
 
 <canvas id="c"></canvas>
 
-<div class="center">
-  <div class="emblem-wrap">
-    <svg id="emblem-svg" width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-      <g id="ring1" style="transform-origin:70px 70px;animation:spin 22s linear infinite">
-        <circle cx="70" cy="70" r="64" fill="none" stroke="#C9A84C" stroke-width="1" stroke-dasharray="6 14" stroke-opacity=".35"/>
-        <line x1="70" y1="6" x2="70" y2="14" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
-        <line x1="134" y1="70" x2="126" y2="70" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
-        <line x1="70" y1="134" x2="70" y2="126" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
-        <line x1="6" y1="70" x2="14" y2="70" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
-      </g>
-      <g id="ring2" style="transform-origin:70px 70px;animation:spin-rev 34s linear infinite">
-        <circle cx="70" cy="70" r="46" fill="none" stroke="#C9A84C" stroke-width=".8" stroke-dasharray="3 12" stroke-opacity=".25"/>
-        <circle cx="70" cy="24" r="2.5" fill="#C9A84C" fill-opacity=".7"/>
-        <circle cx="116" cy="70" r="2" fill="#E2C86D" fill-opacity=".5"/>
-        <circle cx="70" cy="116" r="2" fill="#C9A84C" fill-opacity=".5"/>
-        <circle cx="24" cy="70" r="2" fill="#E2C86D" fill-opacity=".5"/>
-      </g>
-      <circle cx="70" cy="70" r="30" fill="none" stroke="#C9A84C" stroke-width=".8" stroke-opacity=".2"/>
-      <circle cx="70" cy="70" r="20" fill="#C9A84C" fill-opacity=".04"/>
-      <text x="70" y="77" text-anchor="middle" font-family="serif" font-size="28" fill="#C9A84C" fill-opacity=".9">&#937;</text>
-    </svg>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="offline"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">OFFLINE<small>SIGNAL INTERRUPTED &middot; SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-  <h1 class="headline">YOU ARE OFFLINE</h1>
-  <p class="sub">The sovereign network connection has been severed.<br>Your authority record is <b>preserved in the matrix</b>.<br>Reconnect to resume your ascension.</p>
+    <div class="layer-tabs">
+      <button class="lt active" data-tab="offline">&#9670; OFFLINE</button>
+      <button class="lt" data-tab="cache">&#9670; CACHE</button>
+      <button class="lt" data-tab="restore">&#9670; RESTORE</button>
+      <button class="lt" data-tab="science">&#9670; SCIENCE</button>
+    </div>
 
-  <div class="status-row">
-    <div class="status-dot" id="dot"></div>
-    <div class="status-text" id="status-text">NETWORK DISCONNECTED &mdash; SCANNING</div>
-  </div>
+    <!-- TAB 1: OFFLINE -->
+    <div class="tab-pane active" id="tab-offline">
+      <div class="emblem-wrap">
+        <svg id="emblem-svg" width="120" height="120" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <g id="ring1" style="transform-origin:70px 70px;animation:spin 22s linear infinite">
+            <circle cx="70" cy="70" r="64" fill="none" stroke="#C9A84C" stroke-width="1" stroke-dasharray="6 14" stroke-opacity=".35"/>
+            <line x1="70" y1="6" x2="70" y2="14" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
+            <line x1="134" y1="70" x2="126" y2="70" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
+            <line x1="70" y1="134" x2="70" y2="126" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
+            <line x1="6" y1="70" x2="14" y2="70" stroke="#C9A84C" stroke-width="2" stroke-opacity=".6"/>
+          </g>
+          <g id="ring2" style="transform-origin:70px 70px;animation:spin-rev 34s linear infinite">
+            <circle cx="70" cy="70" r="46" fill="none" stroke="#C9A84C" stroke-width=".8" stroke-dasharray="3 12" stroke-opacity=".25"/>
+            <circle cx="70" cy="24" r="2.5" fill="#C9A84C" fill-opacity=".7"/>
+            <circle cx="116" cy="70" r="2" fill="#E2C86D" fill-opacity=".5"/>
+            <circle cx="70" cy="116" r="2" fill="#C9A84C" fill-opacity=".5"/>
+            <circle cx="24" cy="70" r="2" fill="#E2C86D" fill-opacity=".5"/>
+          </g>
+          <circle cx="70" cy="70" r="30" fill="none" stroke="#C9A84C" stroke-width=".8" stroke-opacity=".2"/>
+          <circle cx="70" cy="70" r="20" fill="#C9A84C" fill-opacity=".04"/>
+          <text x="70" y="77" text-anchor="middle" font-family="serif" font-size="28" fill="#C9A84C" fill-opacity=".9">&#937;</text>
+        </svg>
+      </div>
 
-  <div class="actions">
-    <button class="btn btn-solid" onclick="window.location.reload()">&#8635; RECONNECT</button>
-    <button class="btn" onclick="history.back()">&#8592; GO BACK</button>
-    <button class="btn" onclick="window.location.href='/dashboard.html'">&#937; DASHBOARD</button>
-  </div>
+      <h1 class="headline">YOU ARE OFFLINE</h1>
+      <p class="sub">The sovereign network connection has been severed.<br>Your authority record is preserved in the matrix.<br>Reconnect to resume your ascension.</p>
 
-  <div class="code">
-    <span>// SOVEREIGN SYSTEM STATUS</span><br>
-    MEMBER_STATUS &nbsp;&nbsp;&nbsp;: AUTHENTICATED<br>
-    AUTHORITY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span id="auth-display">PRESERVED IN CACHE</span><br>
-    NETWORK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span>OFFLINE &mdash; AWAITING RESTORATION</span><br>
-    CACHED_PAGES &nbsp;&nbsp;: <span id="cache-count">LOADING</span><br>
-    SW_VERSION &nbsp;&nbsp;&nbsp;&nbsp;: v7 &middot; ACTIVE<br>
-    LAST_SYNC &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span id="last-sync">--</span>
+      <div class="status-row">
+        <div class="status-dot" id="dot"></div>
+        <div class="status-text" id="status-text">NETWORK DISCONNECTED &mdash; SCANNING</div>
+      </div>
+
+      <div class="actions">
+        <button class="obtn solid" onclick="window.location.reload()">&#8635; RECONNECT</button>
+        <button class="obtn" onclick="history.back()">&#8592; GO BACK</button>
+        <button class="obtn" onclick="window.location.href='/dashboard.html'">&#937; DASHBOARD</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: CACHE -->
+    <div class="tab-pane" id="tab-cache">
+      <div class="code-block">
+        <span class="hl">// SOVEREIGN SYSTEM STATUS</span><br>
+        MEMBER_STATUS &nbsp;&nbsp;: AUTHENTICATED<br>
+        AUTHORITY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="hl" id="auth-display">PRESERVED IN CACHE</span><br>
+        NETWORK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="hl">OFFLINE &mdash; AWAITING RESTORATION</span><br>
+        CACHED_PAGES &nbsp;&nbsp;: <span class="hl" id="cache-count">LOADING</span><br>
+        SW_VERSION &nbsp;&nbsp;&nbsp;&nbsp;: v7 &middot; ACTIVE<br>
+        LAST_SYNC &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="hl" id="last-sync">--</span>
+      </div>
+      <div class="info-block">
+        <div class="ib-title">SERVICE WORKER</div>
+        <div class="ib-row"><span class="ib-key">VERSION</span><span>v7 — Active</span></div>
+        <div class="ib-row"><span class="ib-key">STRATEGY</span><span>Cache-first with network fallback</span></div>
+        <div class="ib-row"><span class="ib-key">SCOPE</span><span>/ (entire origin)</span></div>
+        <div class="ib-row"><span class="ib-key">PRECACHED</span><span>Core assets, pages, design system</span></div>
+      </div>
+      <div class="info-block">
+        <div class="ib-title">CACHED ASSETS</div>
+        <div class="ib-row"><span class="ib-key">omega-ui.css</span><span>Design system — available offline</span></div>
+        <div class="ib-row"><span class="ib-key">bg.js / nav.js</span><span>Core loader — available offline</span></div>
+        <div class="ib-row"><span class="ib-key">HTML pages</span><span>All core pages — available offline</span></div>
+        <div class="ib-row"><span class="ib-key">Auth state</span><span>Preserved in localStorage</span></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: RESTORE -->
+    <div class="tab-pane" id="tab-restore">
+      <div class="info-block">
+        <div class="ib-title">RECONNECTION OPTIONS</div>
+        <div class="ib-row"><span class="ib-key">AUTO DETECT</span><span>Page monitors connection every 4s and auto-redirects when restored</span></div>
+        <div class="ib-row"><span class="ib-key">MANUAL</span><span>Click RECONNECT to attempt reload now</span></div>
+        <div class="ib-row"><span class="ib-key">NAVIGATE</span><span>Use cached pages via GO BACK or DASHBOARD</span></div>
+      </div>
+      <div class="info-block">
+        <div class="ib-title">TROUBLESHOOTING</div>
+        <div class="ib-row"><span class="ib-key">VPN/FIREWALL</span><span>Disable VPN or firewall temporarily</span></div>
+        <div class="ib-row"><span class="ib-key">DNS</span><span>Try flushing DNS cache (ipconfig /flushdns)</span></div>
+        <div class="ib-row"><span class="ib-key">CLEAR CACHE</span><span>Open DevTools → Application → Service Workers → Unregister</span></div>
+        <div class="ib-row"><span class="ib-key">HARD REFRESH</span><span>Ctrl+Shift+R / Cmd+Shift+R forces network fetch</span></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+        <button class="obtn solid" onclick="window.location.reload()">&#8635; ATTEMPT RECONNECT</button>
+        <button class="obtn" onclick="history.back()">&#8592; GO BACK</button>
+        <button class="obtn" onclick="window.location.href='/dashboard.html'">&#937; DASHBOARD</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: SCIENCE -->
+    <div class="tab-pane" id="tab-science">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+        <div class="stat-card"><div class="stat-val">v7</div><div class="stat-lbl">SW VERSION</div></div>
+        <div class="stat-card"><div class="stat-val">&phi;/e</div><div class="stat-lbl">RESILIENCE RATIO</div></div>
+        <div class="stat-card"><div class="stat-val">&infin;</div><div class="stat-lbl">CACHED ASSETS</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+        <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
+        <div class="stat-card"><div class="stat-val">9.17Hz</div><div class="stat-lbl">RESONANCE LOCK</div></div>
+        <div class="stat-card"><div class="stat-val">100%</div><div class="stat-lbl">DATA PRESERVED</div></div>
+        <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
+      </div>
+    </div>
+
   </div>
+  <div class="lf"><span>&#937; OFFLINE &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
-<div class="footer">&#169; 2025 &#937; SYD OMEGA 91717 &middot; ALL RIGHTS RESERVED &middot; OFFLINE MODE</div>
+<script>
+document.querySelectorAll('.lt').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.lt').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.tab-pane').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    var p=document.getElementById('tab-'+b.dataset.tab);
+    if(p)p.classList.add('active');
+  });
+});
+</script>
 
 <script>
 (function(){

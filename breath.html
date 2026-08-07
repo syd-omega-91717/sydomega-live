@@ -3,19 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sovereign Breathwork · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="bg.css"/>
+<title>Sovereign Breathwork &middot; SYD OMEGA 91717</title>
+<link rel="stylesheet" href="/omega-ui.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:'Courier Prime',monospace;
+  --gold:#C9A84C;--dim:rgba(138,134,118,.5);--M:monospace;
   --green:#4CAF50;--blue:#5C8FD6;--purple:#9C6FD6;--teal:#26C6DA;
 }
 
-.main{display:flex;flex-direction:column;min-height:100vh;padding:0 var(--pad,20px)}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,.1);flex-wrap:wrap;margin-bottom:16px}
-.topbar-title{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold)}
-.tb-meta{font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim);margin-left:auto}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
 .lt{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
@@ -75,16 +71,17 @@
 </style>
 </head>
 <body>
-<div class="main">
-  <div class="topbar">
-    <span class="topbar-title">Ω SOVEREIGN BREATHWORK</span>
-    <span class="tb-meta" id="tb-sessions">── SESSIONS: 0</span>
-  </div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="breath"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">BREATHWORK<small>SOVEREIGN BREATHING &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-sessions">── SESSIONS: 0</span></div>
+  <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
-    <button class="lt active" onclick="switchTab(this,'t1')">◆ PRACTICE</button>
-    <button class="lt" onclick="switchTab(this,'t2')">▶ HISTORY</button>
-    <button class="lt" onclick="switchTab(this,'t3')">⚙ SCIENCE</button>
+    <button class="lt active" onclick="switchTab(this,'t1')">&#9670; PRACTICE</button>
+    <button class="lt" onclick="switchTab(this,'t2')">&#9670; HISTORY</button>
+    <button class="lt" onclick="switchTab(this,'t3')">&#9670; TECHNIQUES</button>
+    <button class="lt" onclick="switchTab(this,'t4')">&#9670; SCIENCE</button>
   </div>
 
   <!-- TAB 1: PRACTICE -->
@@ -107,7 +104,7 @@
     </div>
 
     <div class="controls">
-      <button class="btn-ctrl" id="btn-start" onclick="startSession()">▶ BEGIN SESSION</button>
+      <button class="btn-ctrl" id="btn-start" onclick="startSession()">&#9670; BEGIN SESSION</button>
       <button class="btn-ctrl red" id="btn-stop" onclick="stopSession()" style="display:none">■ END SESSION</button>
     </div>
   </div>
@@ -124,8 +121,35 @@
     </div>
   </div>
 
-  <!-- TAB 3: SCIENCE -->
+  <!-- TAB 3: TECHNIQUES -->
   <div class="tab-pane" id="t3">
+    <div class="sect">
+      <div class="sect-hd">SOVEREIGN BREATHING PROTOCOLS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+        <div class="sci-card"><div class="sci-title">BOX BREATHING · 4-4-4-4</div><div class="sci-body">Inhale 4 · Hold 4 · Exhale 4 · Hold 4. Equal ratio. Balance and composure. US Navy SEAL standard for stress control under fire.</div></div>
+        <div class="sci-card"><div class="sci-title">4-7-8 CALM</div><div class="sci-body">Inhale 4 · Hold 7 · Exhale 8. Extended hold maximizes O₂ absorption. Long exhale triggers diving reflex. Fast anxiety reduction protocol.</div></div>
+        <div class="sci-card"><div class="sci-title">COHERENCE · 5-0-5-0</div><div class="sci-body">Inhale 5 · Exhale 5. Six breaths per minute. Synchronizes heart rate, blood pressure, and respiratory rhythms. HRV optimization protocol.</div></div>
+        <div class="sci-card"><div class="sci-title">PHYSIOLOGICAL SIGH</div><div class="sci-body">Double inhale through nose + long exhale. Fastest single-breath stress intervention. Re-inflates collapsed alveoli. Rapidly expels CO₂.</div></div>
+        <div class="sci-card"><div class="sci-title">POWER BREATH · 6-0-2-0</div><div class="sci-body">Long inhale 6 · Short exhale 2. Sympathetic activation. Energy and focus amplification. Pre-performance arousal protocol.</div></div>
+        <div class="sci-card"><div class="sci-title">WAKING BREATH · 1-0-1-0</div><div class="sci-body">Natural breath with awareness. Baseline. First practice before adding ratios. Grounds the nervous system in present-moment sensation.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCIENCE -->
+  <div class="tab-pane" id="t4">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+      <div class="stat-box"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-box"><div class="stat-val">5.5</div><div class="stat-lbl">BREATHS/MIN</div></div>
+      <div class="stat-box"><div class="stat-val">φ/e</div><div class="stat-lbl">BREATH RATIO</div></div>
+      <div class="stat-box"><div class="stat-val">4-4-4</div><div class="stat-lbl">BOX PROTOCOL</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+      <div class="stat-box"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-box"><div class="stat-val">HRV</div><div class="stat-lbl">KEY BIOMARKER</div></div>
+      <div class="stat-box"><div class="stat-val">68%</div><div class="stat-lbl">STRESS REDUCTION</div></div>
+      <div class="stat-box"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+    </div>
     <div class="sci-card">
       <div class="sci-title">VAGAL TONE & HEART RATE VARIABILITY</div>
       <div class="sci-cite">Porges, S.W. (1995) — Orienting in a defensive world: Mammalian modifications of our evolutionary heritage. Psychophysiology, 32(4)</div>
@@ -152,8 +176,13 @@
       <div class="sci-body">Breathing at approximately 5.5-6 breaths per minute (roughly 5 seconds in, 5 seconds out) produces cardiac coherence — a state where heart rate, blood pressure, and respiratory rhythms synchronize. HeartMath Institute research shows coherent states improve cognitive performance, emotional regulation, and immune function. This is the physiological mechanism behind the sovereign practice of slow, rhythmic conscious breathing.</div>
     </div>
   </div>
+
+  </div>
+  <div class="lf"><span>&#937; BREATHWORK &middot; SYD OMEGA 91717</span></div>
+</main>
 </div>
 
+<script src="bg.js"></script>
 <script src="omega-ui.js"></script>
 <script>
 const BREATH_KEY = 'omega_breath_log';

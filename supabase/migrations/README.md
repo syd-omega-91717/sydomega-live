@@ -76,8 +76,11 @@ files). Ordered by, in priority order:
    placed after the alphabetical group per real git order. Cross-file
    `REFERENCES public.*` was checked across this batch; no dependency
    ordering risk found among them.
-4. `owner_apex_lock.sql` (`0087`, last) — its own header says "Run this in
-   the Supabase SQL editor after all migrations complete."
+4. `owner_apex_lock.sql` was originally placed last (`0087`) — its own
+   header says "Run this in the Supabase SQL editor after all migrations
+   complete." **Later removed entirely from this directory**; see
+   "`owner_apex_lock.sql` removed from the automatic sequence entirely"
+   further down.
 
 ## Why replaying this sequence on a fresh database is expected to be safe
 
@@ -123,23 +126,34 @@ see "Not addressed here."
   diagnostic-only (all `SELECT`, own headers confirm no schema change).
   Meant to be run ad hoc while debugging, not replayed as schema history.
 
+- **`owner_apex_lock.sql`** — a personal, one-off, owner-authenticated
+  data-seed script (hardcodes one specific account, sets it to maximum
+  values on every axis), not a schema migration. Its own header says "Run
+  this in the Supabase SQL editor after all migrations complete." Removed
+  after GitHub's Supabase Preview check confirmed in practice that it can
+  never succeed in an automated context — see "`owner_apex_lock.sql`
+  removed from the automatic sequence entirely" further down.
+
   Note: `01_check_demo_columns.sql` (→ `0083_check_demo_columns.sql`) was
   *not* excluded despite the diagnostic-sounding name — it contains a real
   `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` + `GRANT` alongside its
   diagnostic `SELECT`s, so it's a genuine idempotent schema change.
 
-## A judgment call worth explicit review
+## A judgment call that was later resolved — see below
 
-**`owner_apex_lock.sql` (`0087`)** contains no `CREATE`/`ALTER` — only
-`UPDATE`/`INSERT` statements that set one specific, hardcoded owner
-account (matched by email) to maximum values on every axis/achievement
-column, plus a call to `grant_permanent_access()`. It reads as a personal
-one-off data-seed script rather than a schema migration, and isn't fully
-idempotent (the certificate `INSERT` has no `ON CONFLICT` guard — repeat
-runs would insert duplicate certificate rows). Included because it doesn't
-meet the letter of any exclusion criterion above, but whether a personal
-data-seed script belongs in an automated schema-migration pipeline at all
-is a call for you to make, not one this reorganization made silently.
+**`owner_apex_lock.sql`** (originally included as `0087`) contains no
+`CREATE`/`ALTER` — only `UPDATE`/`INSERT` statements that set one
+specific, hardcoded owner account (matched by email) to maximum values on
+every axis/achievement column, plus a call to `grant_permanent_access()`.
+It reads as a personal one-off data-seed script rather than a schema
+migration, and isn't fully idempotent (the certificate `INSERT` has no
+`ON CONFLICT` guard — repeat runs would insert duplicate certificate
+rows). Originally included because it didn't meet the letter of any
+exclusion criterion above, with the actual "does this belong in an
+automated pipeline" call left open. **It was later removed** once GitHub's
+Supabase Preview check demonstrated in practice that it can't ever
+succeed in an automated context — see "`owner_apex_lock.sql` removed from
+the automatic sequence entirely" further down for the full reasoning.
 
 ## Not addressed here (explicitly out of scope)
 
@@ -396,20 +410,41 @@ no longer fails there either. Applied identically to
 `supabase/migrations/0077_...` and the loose
 `supabase/omega_interest_graph.sql`.
 
-**One file still fails on a fresh apply — investigated, not a bug:**
+## `owner_apex_lock.sql` removed from the automatic sequence entirely
 
-1. **`0087_owner_apex_lock.sql`: "Not authorised: only a platform owner
-   may grant permanent access."** Confirmed this is **not a bug**: it
-   calls `grant_permanent_access()`, which correctly checks
-   `is_platform_owner()` (itself keyed on `auth.uid()`, i.e. the calling
-   session's authenticated identity via JWT). A plain `psql`/SQL-editor
-   session has no JWT context, so `auth.uid()` is `NULL` and the owner
-   check correctly denies it — verified by re-running with
-   `request.jwt.claim.sub` set to a seeded owner's id, which succeeds
-   (`is_platform_owner()` → `true`, `grant_permanent_access()` completes).
-   The security check is working as designed; this file needs to be run
-   in a context where the caller is actually authenticated as the owner.
+`0087_owner_apex_lock.sql` was investigated earlier (see the "judgment
+call" note above) and confirmed **not a bug**: it calls
+`grant_permanent_access()`, which correctly checks `is_platform_owner()`
+(itself keyed on `auth.uid()`, the calling session's authenticated
+identity via JWT). A plain `psql`/SQL-editor session — or any automated
+CI/preview context — has no JWT, so `auth.uid()` is `NULL` and the owner
+check correctly denies it; verified this by re-running with
+`request.jwt.claim.sub` set to a seeded owner's id, which succeeds.
 
-`0087` is the only remaining failure on a fresh database, and it's a
-confirmed-correct security check, not a bug — nothing left open from this
-validation effort.
+That confirmed-correct behavior turned out to have a real, concrete
+consequence: GitHub's "Supabase Preview" check (the actual Supabase
+branching integration, not this project's own local reproduction)
+attempted to apply the full migration sequence including `0087`, and
+failed with exactly this error — `ERROR: Not authorised: only a platform
+owner may grant permanent access (SQLSTATE 42501)`. Since no automated
+context can ever authenticate as the real owner, **this file cannot ever
+succeed there, on this PR or any future one** — it would fail this check
+permanently, forever, regardless of what else changes in the repo.
+
+The file's own header already says what it actually is: *"Run this in the
+Supabase SQL editor after all migrations complete"* — a manual, one-off,
+owner-authenticated administrative action (it hardcodes one specific
+account and sets it to maximum values on every axis), not a repeatable
+schema migration. That's the same category as `omega_dispatch_reset.sql`
+and the `chunk_*.sql`/`migration_runner.sql` bootstrap bundle, both
+already excluded from this directory for the same reason: not meant to
+run as part of an automatic, unattended pipeline.
+
+**Removed `supabase/migrations/0087_owner_apex_lock.sql`.** The loose
+file `supabase/owner_apex_lock.sql` is untouched and still available —
+the owner can run it manually, authenticated, in the Supabase SQL editor,
+exactly as its header always instructed. `supabase/migrations/` now
+contains **86 files** (`0001`–`0086`); no other file was renumbered.
+
+With this file no longer part of the automatic sequence, **all 86 files
+now apply cleanly on a fresh database — zero failures.**

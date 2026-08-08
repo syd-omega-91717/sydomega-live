@@ -21,6 +21,16 @@ CREATE TABLE IF NOT EXISTS public.ai_memory(
   UNIQUE(user_id, memory_key),
   CONSTRAINT mem_type_ck CHECK(memory_type IN('semantic','episodic','procedural','conversation','declarative'))
 );
+-- Guarantee these columns exist even if public.ai_memory already exists in a
+-- divergent shape (e.g. created out-of-band, predating this file), in which
+-- case the CREATE TABLE above was skipped and the indexes/policies below
+-- would fail -- same defensive pattern as omega_master_deploy.sql's
+-- "guarantee the ownership column exists first" comment.
+ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS user_id     uuid;
+ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS memory_key  text;
+ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS memory_type text NOT NULL DEFAULT 'semantic';
+ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS agent_name  text;
+ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS updated_at  timestamptz NOT NULL DEFAULT now();
 CREATE INDEX IF NOT EXISTS idx_mem_user   ON public.ai_memory(user_id, memory_type, updated_at DESC);
 CREATE INDEX IF NOT EXISTS idx_mem_key    ON public.ai_memory(user_id, memory_key);
 CREATE INDEX IF NOT EXISTS idx_mem_agent  ON public.ai_memory(agent_name, user_id);

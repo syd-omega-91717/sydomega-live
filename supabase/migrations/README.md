@@ -205,33 +205,68 @@ database — this change only affects behavior when a conflicting `my_matrix()`
 already exists. Applied identically to both `supabase/migrations/0004_...`
 and the loose `supabase/omega_nested_matrix.sql`, keeping the two in sync.
 
-This is a narrower instance of the same class of risk as the `expire_trial()`
-finding below — a function redefined multiple times across the file
-history, where only the *later* redefinitions were made defensive. Other
-functions redefined more than once across the file set have not been
-individually re-audited for the same gap; `my_matrix()` was fixed because
-it was the one actually observed failing.
+This is a narrower instance of the same class of risk as the `0018` finding
+below — a function redefined multiple times across the file history, where
+only some of the redefinitions were made defensive.
 
-**Three files still fail on a fresh apply — investigated individually,
+## Systematic sweep for the same bug class, and a second real fix
+
+Given two of these (`my_matrix()`, and a second one below) were reported
+from a live Supabase Preview run, every function created in more than one
+migration file was compared pairwise for same-argument-types-but-different-
+return-type collisions (the specific shape that triggers `42P13`), cross-
+checked against actual execution to rule out false positives from the
+static pattern-matching (e.g. whitespace-only argument formatting
+differences, and drop-in-a-preceding-file splits like `step1_drop.sql` /
+`step2_create.sql`). Two more real, undefended conflicts turned up, both
+inside `0018_trial_access.sql`, both colliding with what
+`omega_master_deploy.sql` (`0001`) already creates earlier in the same
+sequence — **these failed even on a completely fresh database**, not only
+an already-upgraded one:
+
+- **`grant_trial_access(uuid)`** — reported directly via a live Supabase
+  Preview run (`ERROR: cannot change return type of existing function`,
+  `SQLSTATE 42P13`, at the `CREATE OR REPLACE FUNCTION grant_trial_access`
+  statement). `0018` defines it `RETURNS void`; `trial_917.sql` (`0082`)
+  and `chronometers.sql` (`0084`) later redefine it `RETURNS timestamptz`.
+  `0082` already self-defends (a dynamic `DROP FUNCTION` block covering
+  this name among others), so the only real gap was `0018` itself lacking
+  defense against a database that already has the later signature — true
+  of the reporting project, false of the empty scratch database this
+  directory was first validated against. **Reproduced locally** (pre-seed
+  a scratch database with the `timestamptz` signature, then run `0018` as
+  it was — same `SQLSTATE`, same message) and **fixed**: added
+  `DROP FUNCTION IF EXISTS grant_trial_access(UUID);` before its
+  `CREATE OR REPLACE`.
+- **`expire_trial(uuid)`** and **`grant_permanent_access(uuid)`** — both
+  previously documented below as open, unfixed failures. `0001` creates
+  both `RETURNS jsonb`; `0018` redefines both `RETURNS void` with no
+  defense, which fails regardless of the database's prior state, since
+  `0001` runs immediately before it in the same sequence. Confirmed `bg.js`
+  never reads either function's return value, so `jsonb` vs `void` doesn't
+  affect app behavior — but the sequence couldn't replay past this point at
+  all before this fix. **Fixed**: added the same `DROP FUNCTION IF EXISTS`
+  guard before each, in `0018`.
+
+All three fixes applied identically to `supabase/migrations/0018_trial_access.sql`
+and the loose `supabase/trial_access.sql` (confirmed byte-identical after).
+**Result: 85 of 87 files now apply cleanly on a genuinely fresh database**
+(up from 84), and separately confirmed the `grant_trial_access` fix resolves
+the exact reported error when replayed against a database already holding
+the later signature.
+
+Two other functions redefined with argument-list differences across files
+(`apply_subscription`, `lattice_node`) were checked and are **not** at risk
+— in both cases every occurrence's actual argument types and return type
+are identical; the static scan's initial flag was a whitespace-formatting
+artifact, not a real signature change. Functions not created in more than
+one file, or whose repeated definitions never change signature, were not
+individually re-audited beyond this sweep.
+
+**Two files still fail on a fresh apply — investigated individually,
 not patched:**
 
-1. **`0018_trial_access.sql`: `cannot change return type of existing
-   function` on `expire_trial(uuid)`.** `0001_omega_master_deploy.sql`
-   defines `expire_trial(p_uid uuid) RETURNS jsonb`; `0018` redefines the
-   same signature as `RETURNS void`, which Postgres rejects without an
-   explicit `DROP FUNCTION` first. This function is redefined **nine
-   times** across the full file set (`0001`, `0018`, `0027`, `0028`,
-   `0041`, `0057` — literally named `fix_expire_trial.sql` — `0074`
-   —`surgical_fix_expire_trial.sql`, `0079`, `0082`, `0084`), which reads
-   as real, iterative production history rather than one clean intended
-   version. Checked whether this matters functionally: `bg.js` (loaded on
-   every page) calls `sb.rpc('expire_trial',...)` and never reads the
-   return value, so the `jsonb` vs `void` choice doesn't affect app
-   behavior — but the sequence still can't replay past this point
-   unmodified. Determining the actually-correct final signature requires
-   knowing what's live on the real production database; not guessed at
-   here.
-2. **`0077_omega_interest_graph.sql`: `column "created_at" does not
+1. **`0077_omega_interest_graph.sql`: `column "created_at" does not
    exist"` while creating an index.** `0056_entreprise_schema_v2.sql` and
    `0077_omega_interest_graph.sql` both define `public.interest_signals`
    with genuinely incompatible schemas (`recorded_at` vs `created_at`
@@ -251,7 +286,7 @@ not patched:**
    actually live in production can only be checked against the real
    database** (e.g. `select column_name from information_schema.columns
    where table_name='interest_signals'`); not resolved here.
-3. **`0087_owner_apex_lock.sql`: "Not authorised: only a platform owner
+2. **`0087_owner_apex_lock.sql`: "Not authorised: only a platform owner
    may grant permanent access."** Confirmed this is **not a bug**: it
    calls `grant_permanent_access()`, which correctly checks
    `is_platform_owner()` (itself keyed on `auth.uid()`, i.e. the calling
@@ -263,8 +298,7 @@ not patched:**
    The security check is working as designed; this file needs to be run
    in a context where the caller is actually authenticated as the owner.
 
-No SQL statement's *content* was changed by this validation pass — only
-the two-file reordering above. The two real findings (2) and (1) are
+The remaining `interest_signals` duplicate-schema finding (1 above) is
 pre-existing in the source files, not introduced by this reorganization,
-and are left for a human with access to the real production database to
-resolve correctly.
+and is left for a human with access to the real production database to
+resolve correctly — it can't be safely guessed at from the repo alone.

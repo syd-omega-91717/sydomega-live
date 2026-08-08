@@ -366,30 +366,39 @@ that can only be discovered by actually running the migration against the
 real project and reporting what comes back, the same way this one was
 found.
 
-**Two files still fail on a fresh apply — investigated individually,
-not patched:**
+## `interest_signals` resolved — a fifth real error confirmed which shape is live
 
-1. **`0077_omega_interest_graph.sql`: `column "created_at" does not
-   exist"` while creating an index.** `0056_entreprise_schema_v2.sql` and
-   `0077_omega_interest_graph.sql` both define `public.interest_signals`
-   with genuinely incompatible schemas (`recorded_at` vs `created_at`
-   timestamp column, `public.profiles` vs `auth.users` as the `user_id`
-   FK target, different check constraints). Since both use `CREATE TABLE
-   IF NOT EXISTS`, whichever runs first "wins" and the other's
-   column-specific statements later in its own file (like this index)
-   fail against the shape that actually exists. This is the concrete,
-   now-proven version of the duplicate-table-definitions problem
-   REPO_AUDIT.md §4 already flagged in the abstract (47 tables, including
-   this one, defined in more than one file) — previously described there
-   as "expected safe" per the idempotent `IF NOT EXISTS` pattern; this is
-   a demonstrated case where that expectation doesn't hold. The only
-   writer, `record_interest_signal()` (in `0077`), doesn't name the
-   timestamp column explicitly, so it would insert fine against either
-   shape — but the schema itself is genuinely forked. **Which shape is
-   actually live in production can only be checked against the real
-   database** (e.g. `select column_name from information_schema.columns
-   where table_name='interest_signals'`); not resolved here.
-2. **`0087_owner_apex_lock.sql`: "Not authorised: only a platform owner
+The `interest_signals` duplicate-schema fork documented above as
+unresolved ("which shape is actually live in production can only be
+checked against the real database") **was resolved by exactly that** — a
+live Supabase Preview run on `0077_omega_interest_graph.sql` reported
+`ERROR: column "created_at" does not exist (SQLSTATE 42703)` at
+`CREATE INDEX ... interest_signals_user_idx ... (user_id, signal_type,
+created_at DESC)`. Since `0077`'s own `CREATE TABLE` declares
+`created_at`, and `CREATE TABLE IF NOT EXISTS` only no-ops against a table
+that already exists, this confirms the reporting project's live
+`interest_signals` table is `entreprise_schema_v2.sql`'s shape (`0056`) —
+`recorded_at`, not `created_at`.
+
+**Fixed**, now that the ambiguity is resolved: reproduced locally (built
+the exact `0056`-shaped table, confirmed `0077` as originally written hits
+the identical error) and added
+`ALTER TABLE public.interest_signals ADD COLUMN IF NOT EXISTS created_at
+timestamptz NOT NULL DEFAULT now();` right after `0077`'s `CREATE TABLE`,
+before the index — same defensive pattern as the `ai_memory` fix above.
+Checked `0056`'s full column list against everything `0077` needs
+(`user_id`, `signal_type`, `content_id`, `content_type`, `axis_type`,
+`weight`): all already present and compatible in both shapes, so
+`created_at` was the only genuinely missing column requiring a guard.
+Verified the fix resolves the reproduction, and the full 87-file sequence
+now applies **86 of 87 clean on a fresh database** (up from 85) — `0077`
+no longer fails there either. Applied identically to
+`supabase/migrations/0077_...` and the loose
+`supabase/omega_interest_graph.sql`.
+
+**One file still fails on a fresh apply — investigated, not a bug:**
+
+1. **`0087_owner_apex_lock.sql`: "Not authorised: only a platform owner
    may grant permanent access."** Confirmed this is **not a bug**: it
    calls `grant_permanent_access()`, which correctly checks
    `is_platform_owner()` (itself keyed on `auth.uid()`, i.e. the calling
@@ -401,7 +410,6 @@ not patched:**
    The security check is working as designed; this file needs to be run
    in a context where the caller is actually authenticated as the owner.
 
-The remaining `interest_signals` duplicate-schema finding (1 above) is
-pre-existing in the source files, not introduced by this reorganization,
-and is left for a human with access to the real production database to
-resolve correctly — it can't be safely guessed at from the repo alone.
+`0087` is the only remaining failure on a fresh database, and it's a
+confirmed-correct security check, not a bug — nothing left open from this
+validation effort.

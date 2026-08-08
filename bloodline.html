@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="SYD OMEGA 91717 — BLOODLINE · Sovereign lineage tree, genetic heritage, and ancestral traits">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>&#937; SYD OMEGA 91717 &mdash; BLOODLINE</title>
 
 <link rel="manifest" href="/manifest.json">
@@ -162,7 +161,7 @@ function renderTree(){
   }).filter(Boolean).join('');
 }
 
-function loadTraits(){Object.entries({tr-strengths:'strengths','tr-patterns':'patterns','tr-gifts':'gifts','tr-health':'health'}).forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=traits[e[1]]||'';});}
+function loadTraits(){Object.entries({'tr-strengths':'strengths','tr-patterns':'patterns','tr-gifts':'gifts','tr-health':'health'}).forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=traits[e[1]]||'';});}
 
 function loadDynasty(){[['dyn-mission','mission'],['dyn-values','values'],['dyn-wealth','wealth'],['dyn-artifacts','artifacts'],['dyn-vision','vision']].forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=dynasty[e[1]]||'';});}
 

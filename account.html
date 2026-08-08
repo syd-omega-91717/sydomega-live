@@ -556,7 +556,7 @@
       { onConflict:'id' }
     );
     btn.disabled=false;
-    if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+''). Try again.'; console.log('save error',error); return; }
+    if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+'). Try again.'; console.log('save error',error); return; }
     const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
     window.location.href='/dashboard.html'; return;
   }

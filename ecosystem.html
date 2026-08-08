@@ -222,30 +222,6 @@ function buildNavGrid(){
   if(!reduce){var af=function(){draw();requestAnimationFrame(af);};af();}
 })();
 
-function buildModGrid(){
-  var grid=document.getElementById('mod-grid');
-  grid.innerHTML='';
-  MODULES.forEach(function(m){
-    var div=document.createElement('div');
-    div.className='mod-card';
-    div.style.setProperty('--mc',m.color);
-    div.innerHTML='<div class="mod-id">'+m.id+'</div><div class="mod-name">'+m.name+'</div><div class="mod-desc">'+m.desc+'</div><div class="mod-pages">'+m.pages.map(function(p){return '<a href="/'+p+'.html">'+p+'</a>';}).join('')+'</div>';
-    grid.appendChild(div);
-  });
-}
-
-function buildNavGrid(){
-  var grid=document.getElementById('nav-grid');
-  grid.innerHTML='';
-  MODULES.forEach(function(m){
-    var div=document.createElement('div');
-    div.style.cssText='margin-bottom:16px';
-    div.innerHTML='<div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:'+m.color+';margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(201,168,76,.1)">'+m.id+' &middot; '+m.name+'</div>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'+m.pages.map(function(p){return '<a href="/'+p+'.html" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--ink);border:1px solid var(--line);padding:5px 10px;text-decoration:none">'+p.toUpperCase()+'</a>';}).join('')+'</div>';
-    grid.appendChild(div);
-  });
-}
-
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}

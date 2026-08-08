@@ -4,19 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fasting · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega-ui.css">
-<script src="omega-ui.js" defer></script>
+<link rel="manifest" href="/manifest.json">
 <style>
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid #C9A84C}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:#C9A84C;line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
 :root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--t:#fff;--d:#888;--gold:#c9a84c;--acc:#c9a84c;--blue:#3498db;--green:#27ae60;--red:#e74c3c;--orange:#e67e22}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--g);color:var(--t);font-family:'Courier New',monospace;min-height:100vh}
-.main{max-width:960px;margin:0 auto;padding:24px 16px 100px}
-h1{font-size:1.1rem;letter-spacing:.15em;color:var(--gold);margin-bottom:4px}
-.sub{font-size:.7rem;color:var(--d);letter-spacing:.1em;margin-bottom:24px}
-.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid #222}
-.tab{padding:8px 14px;font-size:.7rem;letter-spacing:.1em;cursor:pointer;color:var(--d);border:none;background:none;transition:color .2s}
-.tab.active{color:var(--gold);border-bottom:2px solid var(--gold)}
-.panel{display:none}.panel.active{display:block}
 .card{background:var(--b);border:1px solid #222;border-radius:4px;padding:16px;margin-bottom:16px}
 .card-title{font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
 label{font-size:.6rem;color:var(--d);letter-spacing:.08em;display:block;margin-bottom:4px}
@@ -26,9 +20,8 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
 .btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:#e0b85c}
 .btn-ghost{background:none;border:1px solid #333;color:var(--d);padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px;transition:all .2s}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.btn-danger{background:var(--red);color:#fff}
-.btn-green{background:var(--green);color:#fff}
-/* TIMER */
+.btn-danger{background:var(--red);color:#fff;padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
+.btn-green{background:var(--green);color:#fff;padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
 .timer-wrap{text-align:center;padding:32px 0}
 .fast-ring-wrap{position:relative;width:240px;height:240px;margin:0 auto 24px}
 .fast-ring-wrap canvas{position:absolute;top:0;left:0}
@@ -44,16 +37,13 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
 .protocol-name{font-size:.75rem;color:var(--t);margin-bottom:4px;font-weight:bold}
 .protocol-ratio{font-size:.65rem;color:var(--gold);margin-bottom:2px}
 .protocol-desc{font-size:.55rem;color:var(--d)}
-/* phase bar */
 .phase-bar-wrap{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:16px 0 4px;background:#111}
 .phase-seg{height:100%;transition:all .3s}
 .phase-labels{display:flex;justify-content:space-between;font-size:.55rem;color:var(--d);margin-bottom:16px}
-/* stats */
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .stat{background:var(--b);border:1px solid #222;border-radius:4px;padding:14px;text-align:center}
 .stat-val{font-size:1.3rem;color:var(--gold);font-weight:bold;margin-bottom:4px}
 .stat-lbl{font-size:.55rem;color:var(--d);letter-spacing:.1em}
-/* log */
 .log-item{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;background:var(--p);border:1px solid #1a1a1a;padding:10px 14px;border-radius:3px;margin-bottom:6px}
 .log-date{font-size:.7rem;color:var(--t)}
 .log-duration{font-size:.8rem;color:var(--gold);font-weight:bold}
@@ -61,12 +51,10 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
 .log-result{font-size:.6rem;padding:2px 8px;border-radius:10px}
 .log-complete{background:rgba(39,174,96,.15);color:var(--green)}
 .log-broken{background:rgba(231,76,60,.15);color:var(--red)}
-/* streak */
 .streak-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
 .streak-cell{aspect-ratio:1;border-radius:2px;background:#111}
 .streak-cell.done{background:var(--gold)}
 .streak-cell.broken{background:rgba(231,76,60,.3)}
-/* science refs */
 .ref-block{border-left:2px solid var(--gold);padding:8px 14px;margin-bottom:12px;background:#111}
 .ref-title{font-size:.7rem;color:var(--t);margin-bottom:4px}
 .ref-body{font-size:.6rem;color:var(--d);line-height:1.5}
@@ -81,172 +69,212 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 </style>
 </head>
 <body>
-<div class="main">
-  <h1>SOVEREIGN FASTING</h1>
-  <p class="sub">METABOLIC MASTERY · AUTOPHAGY · CELLULAR RENEWAL · DISCIPLINED CLARITY</p>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="fasting"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">FASTING<small>METABOLIC MASTERY · AUTOPHAGY · CELLULAR RENEWAL · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-  <div class="stat-grid">
-    <div class="stat"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">DAY STREAK</div></div>
-    <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL FASTS</div></div>
-    <div class="stat"><div class="stat-val" id="st-best">0h</div><div class="stat-lbl">PERSONAL BEST</div></div>
-    <div class="stat"><div class="stat-val" id="st-avg">0h</div><div class="stat-lbl">AVG DURATION</div></div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('timer')">FAST TIMER</button>
-    <button class="tab" onclick="switchTab('history')">HISTORY</button>
-    <button class="tab" onclick="switchTab('science')">SCIENCE</button>
-  </div>
-
-  <!-- TIMER -->
-  <div id="tab-timer" class="panel active">
-    <div class="card">
-      <div class="card-title">SELECT PROTOCOL</div>
-      <div class="protocol-grid" id="protocol-grid"></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">DAY STREAK</div></div>
+      <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL FASTS</div></div>
+      <div class="stat"><div class="stat-val" id="st-best">0h</div><div class="stat-lbl">PERSONAL BEST</div></div>
+      <div class="stat"><div class="stat-val" id="st-avg">0h</div><div class="stat-lbl">AVG DURATION</div></div>
     </div>
 
-    <div class="card">
-      <div class="card-title" id="protocol-title">FAST TIMER</div>
-      <div class="timer-wrap">
-        <div class="fast-ring-wrap">
-          <canvas id="ring-canvas" width="240" height="240"></canvas>
-          <div class="fast-center">
-            <div class="fast-time" id="fast-time">00:00:00</div>
-            <div class="fast-label" id="fast-label">SELECT A PROTOCOL</div>
-            <div class="fast-pct" id="fast-pct"></div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="timer" onclick="switchTab('timer',this)">&#9670; FAST TIMER</button>
+      <button class="tab-btn" data-tab="history" onclick="switchTab('history',this)">&#9670; HISTORY</button>
+      <button class="tab-btn" data-tab="protocols" onclick="switchTab('protocols',this)">&#9670; PROTOCOLS</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+    </div>
+
+    <!-- FAST TIMER -->
+    <div id="tab-timer" class="tab-panel act">
+      <div class="card">
+        <div class="card-title">SELECT PROTOCOL</div>
+        <div class="protocol-grid" id="protocol-grid"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" id="protocol-title">FAST TIMER</div>
+        <div class="timer-wrap">
+          <div class="fast-ring-wrap">
+            <canvas id="ring-canvas" width="240" height="240"></canvas>
+            <div class="fast-center">
+              <div class="fast-time" id="fast-time">00:00:00</div>
+              <div class="fast-label" id="fast-label">SELECT A PROTOCOL</div>
+              <div class="fast-pct" id="fast-pct"></div>
+            </div>
+          </div>
+          <div class="fast-status" id="fast-status">NOT FASTING</div>
+          <div id="phase-section" style="display:none">
+            <p style="font-size:.6rem;color:var(--d);margin-bottom:6px;text-align:left">METABOLIC PHASES</p>
+            <div class="phase-bar-wrap" id="phase-bar"></div>
+            <div class="phase-labels" id="phase-labels"></div>
+            <div id="current-phase" style="font-size:.7rem;color:var(--gold);text-align:center;margin-bottom:8px"></div>
+          </div>
+          <div id="timer-btns" style="display:flex;gap:10px;justify-content:center;margin-top:8px">
+            <button class="btn btn-gold" id="start-btn" onclick="startFast()">START FAST</button>
           </div>
         </div>
-        <div class="fast-status" id="fast-status">NOT FASTING</div>
-        <!-- Metabolic phase bar -->
-        <div id="phase-section" style="display:none">
-          <p style="font-size:.6rem;color:var(--d);margin-bottom:6px;text-align:left">METABOLIC PHASES</p>
-          <div class="phase-bar-wrap" id="phase-bar"></div>
-          <div class="phase-labels" id="phase-labels"></div>
-          <div id="current-phase" style="font-size:.7rem;color:var(--gold);text-align:center;margin-bottom:8px"></div>
-        </div>
-        <div id="timer-btns" style="display:flex;gap:10px;justify-content:center;margin-top:8px">
-          <button class="btn btn-gold" id="start-btn" onclick="startFast()">START FAST</button>
+      </div>
+      <div id="active-controls" style="display:none">
+        <div class="card">
+          <div class="card-title">FAST IN PROGRESS</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-ghost" onclick="pauseResume()" id="pause-btn">PAUSE</button>
+            <button class="btn-green" onclick="endFast(true)">COMPLETE FAST &#x2713;</button>
+            <button class="btn-danger" onclick="endFast(false)">BREAK FAST &#x2715;</button>
+          </div>
+          <p style="font-size:.6rem;color:var(--d);margin-top:10px">SUGGESTED BREAKING FOODS: SMALL PORTION OF DATES, BONE BROTH, EGGS, OR AVOCADO. AVOID REFINED CARBS.</p>
         </div>
       </div>
     </div>
 
-    <div id="active-controls" style="display:none">
+    <!-- HISTORY -->
+    <div id="tab-history" class="tab-panel">
       <div class="card">
-        <div class="card-title">FAST IN PROGRESS</div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-ghost" onclick="pauseResume()" id="pause-btn">PAUSE</button>
-          <button class="btn btn-green" onclick="endFast(true)">COMPLETE FAST ✓</button>
-          <button class="btn btn-danger" onclick="endFast(false)">BREAK FAST ✕</button>
+        <div class="card-title">30-DAY STREAK CALENDAR</div>
+        <div class="streak-grid" id="streak-grid"></div>
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:.6rem;color:var(--d)">
+          <span><span style="background:var(--gold);padding:0 6px">&nbsp;</span> COMPLETED</span>
+          <span><span style="background:rgba(231,76,60,.3);border:1px solid #333;padding:0 6px">&nbsp;</span> BROKEN</span>
+          <span><span style="background:#111;border:1px solid #333;padding:0 6px">&nbsp;</span> NO FAST</span>
         </div>
-        <p style="font-size:.6rem;color:var(--d);margin-top:10px">SUGGESTED BREAKING FOODS: SMALL PORTION OF DATES, BONE BROTH, EGGS, OR AVOCADO. AVOID REFINED CARBS.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">FAST LOG</div>
+        <div id="log-list">
+          <div class="empty">NO FASTS LOGGED YET</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">WEEKLY DURATION CHART</div>
+        <canvas id="history-canvas" height="160"></canvas>
       </div>
     </div>
-  </div>
 
-  <!-- HISTORY -->
-  <div id="tab-history" class="panel">
-    <div class="card">
-      <div class="card-title">30-DAY STREAK CALENDAR</div>
-      <div class="streak-grid" id="streak-grid"></div>
-      <div style="display:flex;gap:12px;margin-top:8px;font-size:.6rem;color:var(--d)">
-        <span><span style="background:var(--gold);padding:0 6px">&nbsp;</span> COMPLETED</span>
-        <span><span style="background:rgba(231,76,60,.3);border:1px solid #333;padding:0 6px">&nbsp;</span> BROKEN</span>
-        <span><span style="background:#111;border:1px solid #333;padding:0 6px">&nbsp;</span> NO FAST</span>
+    <!-- PROTOCOLS -->
+    <div id="tab-protocols" class="tab-panel">
+      <div class="card">
+        <div class="card-title">METABOLIC PHASES OF FASTING</div>
+        <div class="benefit-grid">
+          <div class="benefit-card"><div class="benefit-icon">&#9889;</div><div class="benefit-name">0–4 HRS: FED STATE</div><div class="benefit-desc">Insulin elevated. Glucose used as primary fuel. Fat burning minimal. Digestion active.</div></div>
+          <div class="benefit-card"><div class="benefit-icon">&#128267;</div><div class="benefit-name">4–8 HRS: POST-ABSORPTIVE</div><div class="benefit-desc">Blood glucose normalizes. Liver glycogen begins depleting. Fat oxidation increases modestly.</div></div>
+          <div class="benefit-card"><div class="benefit-icon">&#128293;</div><div class="benefit-name">8–12 HRS: FAT BURNING</div><div class="benefit-desc">Liver glycogen depleted. Fatty acid oxidation dominant. Ketone production begins. Mental clarity sharpens.</div></div>
+          <div class="benefit-card"><div class="benefit-icon">&#9851;</div><div class="benefit-name">12–16 HRS: KETOSIS ONSET</div><div class="benefit-desc">Blood ketones measurable. Autophagy upregulated. Insulin reaches lowest point. HGH begins rising.</div></div>
+          <div class="benefit-card"><div class="benefit-icon">&#129516;</div><div class="benefit-name">16–24 HRS: DEEP KETOSIS</div><div class="benefit-desc">Autophagy markedly elevated (Yoshinori Ohsumi, 2016 Nobel Prize). Cellular cleanup peaks. Inflammation markers drop.</div></div>
+          <div class="benefit-card"><div class="benefit-icon">&#128737;</div><div class="benefit-name">24–72 HRS: EXTENDED FAST</div><div class="benefit-desc">Stem cell regeneration (Longo, 2019). Immune system reset. Significant metabolic reprogramming. Medical supervision recommended beyond 48h.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">PROTOCOL GUIDE</div>
+        <div style="font-size:.65rem;color:var(--d);line-height:1.8">
+          <p style="margin-bottom:8px"><span style="color:var(--gold)">12:12</span> — Beginner friendly. 12h fast, 12h eating window. Supports circadian alignment.</p>
+          <p style="margin-bottom:8px"><span style="color:var(--gold)">16:8</span> — Most popular. 16h fast, 8h eating window. Best balance of benefit vs. lifestyle.</p>
+          <p style="margin-bottom:8px"><span style="color:var(--gold)">18:6</span> — Advanced lean. 18h fast. Deeper ketosis, enhanced fat adaptation.</p>
+          <p style="margin-bottom:8px"><span style="color:var(--gold)">20:4</span> — Warrior protocol. 20h fast, 4h eating. Significant metabolic pressure.</p>
+          <p style="margin-bottom:8px"><span style="color:var(--gold)">OMAD</span> — One Meal A Day. 23h fast. Maximum simplicity; requires nutritional diligence.</p>
+          <p style="margin-bottom:8px"><span style="color:var(--gold)">36H</span> — Extended fast. Deep autophagy, stem cell activation. Prepare and break carefully.</p>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title">FAST LOG</div>
-      <div id="log-list">
-        <div class="empty">NO FASTS LOGGED YET</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">WEEKLY DURATION CHART</div>
-      <canvas id="history-canvas" height="160"></canvas>
-    </div>
-  </div>
 
-  <!-- SCIENCE -->
-  <div id="tab-science" class="panel">
-    <div class="card">
-      <div class="card-title">METABOLIC PHASES OF FASTING</div>
-      <div class="benefit-grid">
-        <div class="benefit-card"><div class="benefit-icon">⚡</div><div class="benefit-name">0–4 HRS: FED STATE</div><div class="benefit-desc">Insulin elevated. Glucose used as primary fuel. Fat burning minimal. Digestion active.</div></div>
-        <div class="benefit-card"><div class="benefit-icon">🔋</div><div class="benefit-name">4–8 HRS: POST-ABSORPTIVE</div><div class="benefit-desc">Blood glucose normalizes. Liver glycogen begins depleting. Fat oxidation increases modestly.</div></div>
-        <div class="benefit-card"><div class="benefit-icon">🔥</div><div class="benefit-name">8–12 HRS: FAT BURNING</div><div class="benefit-desc">Liver glycogen depleted. Fatty acid oxidation dominant. Ketone production begins. Mental clarity sharpens.</div></div>
-        <div class="benefit-card"><div class="benefit-icon">♻️</div><div class="benefit-name">12–16 HRS: KETOSIS ONSET</div><div class="benefit-desc">Blood ketones measurable. Autophagy upregulated. Insulin reaches lowest point. HGH begins rising.</div></div>
-        <div class="benefit-card"><div class="benefit-icon">🧬</div><div class="benefit-name">16–24 HRS: DEEP KETOSIS</div><div class="benefit-desc">Autophagy markedly elevated (Yoshinori Ohsumi, 2016 Nobel Prize). Cellular cleanup peaks. Inflammation markers drop.</div></div>
-        <div class="benefit-card"><div class="benefit-icon">🛡️</div><div class="benefit-name">24–72 HRS: EXTENDED FAST</div><div class="benefit-desc">Stem cell regeneration (Longo, 2019). Immune system reset. Significant metabolic reprogramming. Medical supervision recommended beyond 48h.</div></div>
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">RESEARCH FOUNDATIONS</div>
+        <div class="ref-block">
+          <div class="ref-title">AUTOPHAGY — Yoshinori Ohsumi (2016 Nobel Prize in Physiology or Medicine)</div>
+          <div class="ref-body">Ohsumi's work established the molecular mechanisms of autophagy — the cellular process of self-cleaning where damaged organelles and proteins are broken down and recycled. Fasting, particularly beyond 16 hours, is among the most potent triggers of autophagy in humans. This process is implicated in cancer prevention, neurodegeneration protection, and longevity.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">INTERMITTENT FASTING — Longo &amp; Panda (2016) Cell Metabolism</div>
+          <div class="ref-body">Valter Longo and Satchidananda Panda's research established the metabolic benefits of time-restricted eating (TRE): improved insulin sensitivity, reduced inflammation, weight management, and circadian rhythm alignment. 16:8 TRE (16h fast, 8h eating window) produces measurable metabolic improvements without caloric restriction in otherwise healthy adults.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">KETOSIS &amp; COGNITIVE PERFORMANCE — Cahill (2006) Annual Review of Nutrition</div>
+          <div class="ref-body">George Cahill's landmark review established ketone bodies (specifically beta-hydroxybutyrate) as a superior fuel for the brain during fasting. BHB produces more ATP per unit of oxygen than glucose, and has neuroprotective properties. The cognitive clarity many fasters report after 12-16 hours reflects ketone-fueled brain metabolism.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">HUMAN GROWTH HORMONE — Ho et al. (1988) Journal of Clinical Investigation</div>
+          <div class="ref-body">Ho's research showed that fasting stimulates HGH secretion by up to 5-fold within 24 hours. HGH promotes fat metabolism, muscle preservation, and cellular repair. This hormonal response partially explains the body-composition benefits of intermittent fasting independent of caloric intake.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">FASTING-MIMICKING DIET — Longo et al. (2015) Cell Metabolism</div>
+          <div class="ref-body">Valter Longo's ProLon protocol (5-day fasting-mimicking diet, monthly) demonstrated reduction in risk factors for aging, diabetes, cardiovascular disease, and cancer in a randomized trial. Extended fasting triggers stem cell regeneration (Cheng et al. 2019, Cell Stem Cell) and immune system reset — mechanisms unavailable through daily caloric restriction.</div>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title">RESEARCH FOUNDATIONS</div>
-      <div class="ref-block">
-        <div class="ref-title">AUTOPHAGY — Yoshinori Ohsumi (2016 Nobel Prize in Physiology or Medicine)</div>
-        <div class="ref-body">Ohsumi's work established the molecular mechanisms of autophagy — the cellular process of self-cleaning where damaged organelles and proteins are broken down and recycled. Fasting, particularly beyond 16 hours, is among the most potent triggers of autophagy in humans. This process is implicated in cancer prevention, neurodegeneration protection, and longevity.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">INTERMITTENT FASTING — Longo &amp; Panda (2016) Cell Metabolism</div>
-        <div class="ref-body">Valter Longo and Satchidananda Panda's research established the metabolic benefits of time-restricted eating (TRE): improved insulin sensitivity, reduced inflammation, weight management, and circadian rhythm alignment. 16:8 TRE (16h fast, 8h eating window) produces measurable metabolic improvements without caloric restriction in otherwise healthy adults.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">KETOSIS &amp; COGNITIVE PERFORMANCE — Cahill (2006) Annual Review of Nutrition</div>
-        <div class="ref-body">George Cahill's landmark review established ketone bodies (specifically beta-hydroxybutyrate) as a superior fuel for the brain during fasting. BHB produces more ATP per unit of oxygen than glucose, and has neuroprotective properties. The cognitive clarity many fasters report after 12-16 hours reflects ketone-fueled brain metabolism.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">HUMAN GROWTH HORMONE — Ho et al. (1988) Journal of Clinical Investigation</div>
-        <div class="ref-body">Ho's research showed that fasting stimulates HGH secretion by up to 5-fold within 24 hours. HGH promotes fat metabolism, muscle preservation, and cellular repair. This hormonal response partially explains the body-composition benefits of intermittent fasting independent of caloric intake.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">FASTING-MIMICKING DIET — Longo et al. (2015) Cell Metabolism</div>
-        <div class="ref-body">Valter Longo's ProLon protocol (5-day fasting-mimicking diet, monthly) demonstrated reduction in risk factors for aging, diabetes, cardiovascular disease, and cancer in a randomized trial. Extended fasting triggers stem cell regeneration (Cheng et al. 2019, Cell Stem Cell) and immune system reset — mechanisms unavailable through daily caloric restriction.</div>
-      </div>
-    </div>
+
   </div>
+</main>
 </div>
-
 <script>
-const PROTOCOLS=[
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='history'){renderLog();renderStreak();drawHistory();}
+}
+
+var PROTOCOLS=[
   {id:'12:12',name:'12:12',ratio:'12H FAST · 12H EAT',hours:12,desc:'Beginner friendly'},
   {id:'16:8',name:'16:8',ratio:'16H FAST · 8H EAT',hours:16,desc:'Most popular'},
   {id:'18:6',name:'18:6',ratio:'18H FAST · 6H EAT',hours:18,desc:'Advanced lean'},
   {id:'20:4',name:'20:4',ratio:'20H FAST · 4H EAT',hours:20,desc:'Warrior protocol'},
   {id:'OMAD',name:'OMAD',ratio:'23H FAST · 1H EAT',hours:23,desc:'One meal a day'},
-  {id:'36H',name:'36H',ratio:'36H EXTENDED',hours:36,desc:'Extended fast'},
+  {id:'36H',name:'36H',ratio:'36H EXTENDED',hours:36,desc:'Extended fast'}
 ];
 
-const PHASES=[
+var PHASES=[
   {h:0,label:'FED',color:'#e74c3c'},
   {h:4,label:'POST-ABS',color:'#e67e22'},
   {h:8,label:'FAT BURN',color:'#f39c12'},
   {h:12,label:'KETOSIS',color:'#27ae60'},
   {h:16,label:'DEEP',color:'#3498db'},
-  {h:24,label:'EXTENDED',color:'#9b59b6'},
+  {h:24,label:'EXTENDED',color:'#9b59b6'}
 ];
 
-let log=JSON.parse(localStorage.getItem('omega_fasting_log')||'[]');
-let active=JSON.parse(localStorage.getItem('omega_fasting_active')||'null');
-let selectedProto=PROTOCOLS[1];
-let timerInterval=null;
-let paused=false;
-let pausedAt=0;
+var log=JSON.parse(localStorage.getItem('omega_fasting_log')||'[]');
+var active=JSON.parse(localStorage.getItem('omega_fasting_active')||'null');
+var selectedProto=PROTOCOLS[1];
+var timerInterval=null;
+var paused=false;
+var pausedAt=0;
 
 function save(){localStorage.setItem('omega_fasting_log',JSON.stringify(log));}
 function saveActive(){localStorage.setItem('omega_fasting_active',JSON.stringify(active));}
 
 function renderProtocols(){
-  const grid=document.getElementById('protocol-grid');
-  grid.innerHTML=PROTOCOLS.map(p=>`<button class="protocol-btn ${p.id===selectedProto.id?'selected':''}" onclick="selectProto('${p.id}')">
-    <div class="protocol-name">${p.name}</div>
-    <div class="protocol-ratio">${p.ratio}</div>
-    <div class="protocol-desc">${p.desc}</div>
-  </button>`).join('');
+  var grid=document.getElementById('protocol-grid');
+  grid.innerHTML=PROTOCOLS.map(function(p){
+    return '<button class="protocol-btn '+(p.id===selectedProto.id?'selected':'')+'" onclick="selectProto(\''+p.id+'\')">'
+      +'<div class="protocol-name">'+p.name+'</div>'
+      +'<div class="protocol-ratio">'+p.ratio+'</div>'
+      +'<div class="protocol-desc">'+p.desc+'</div>'
+      +'</button>';
+  }).join('');
 }
 
 function selectProto(id){
   if(active) return;
-  selectedProto=PROTOCOLS.find(p=>p.id===id);
-  document.getElementById('protocol-title').textContent=`${selectedProto.name} PROTOCOL — ${selectedProto.hours}H TARGET`;
+  selectedProto=PROTOCOLS.find(function(p){return p.id===id;});
+  document.getElementById('protocol-title').textContent=selectedProto.name+' PROTOCOL — '+selectedProto.hours+'H TARGET';
   renderProtocols();
   drawRing(0);
 }
@@ -284,136 +312,132 @@ function startTick(){
 
 function tick(){
   if(!active) return;
-  const elapsed=Math.floor((Date.now()-active.start-active.pausedMs)/1000);
-  const target=selectedProto.hours*3600;
-  const pct=Math.min(1,elapsed/target);
-  const h=Math.floor(elapsed/3600);
-  const m=Math.floor((elapsed%3600)/60);
-  const s=elapsed%60;
-  document.getElementById('fast-time').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  var elapsed=Math.floor((Date.now()-active.start-active.pausedMs)/1000);
+  var target=selectedProto.hours*3600;
+  var pct=Math.min(1,elapsed/target);
+  var h=Math.floor(elapsed/3600);
+  var m=Math.floor((elapsed%3600)/60);
+  var s=elapsed%60;
+  document.getElementById('fast-time').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   document.getElementById('fast-label').textContent=elapsed>=target?'TARGET REACHED!':'FASTING';
-  document.getElementById('fast-pct').textContent=`${Math.round(pct*100)}% OF ${selectedProto.hours}H`;
-  document.getElementById('fast-status').textContent=elapsed>=target?`✓ ${selectedProto.name} COMPLETE`:`ELAPSED: ${h}H ${m}M`;
+  document.getElementById('fast-pct').textContent=Math.round(pct*100)+'% OF '+selectedProto.hours+'H';
+  document.getElementById('fast-status').textContent=elapsed>=target?'&#x2713; '+selectedProto.name+' COMPLETE':'ELAPSED: '+h+'H '+m+'M';
   drawRing(pct);
   updatePhase(elapsed/3600);
 }
 
 function drawRing(pct){
-  const canvas=document.getElementById('ring-canvas');
-  const ctx=canvas.getContext('2d');
-  const W=240,cx=120,cy=120,r=105,lw=12;
+  var canvas=document.getElementById('ring-canvas');
+  var ctx=canvas.getContext('2d');
+  var W=240,cx=120,cy=120,r=105,lw=12;
   ctx.clearRect(0,0,W,W);
   ctx.strokeStyle='#1a1a1a';ctx.lineWidth=lw;
   ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
   if(pct>0){
-    const color=pct>=1?'#27ae60':'#c9a84c';
-    ctx.strokeStyle=color;ctx.lineWidth=lw;
+    ctx.strokeStyle=pct>=1?'#27ae60':'#c9a84c';ctx.lineWidth=lw;
     ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+pct*Math.PI*2);ctx.stroke();
   }
 }
 
 function updatePhase(hours){
-  const bar=document.getElementById('phase-bar');
-  const labels=document.getElementById('phase-labels');
-  const curr=document.getElementById('current-phase');
-  const target=selectedProto.hours;
-  bar.innerHTML=PHASES.map((ph,i)=>{
-    const next=PHASES[i+1]||{h:target};
-    const segStart=ph.h/target*100;
-    const segEnd=Math.min(100,next.h/target*100);
-    const segW=segEnd-segStart;
-    const filled=hours>=next.h?1:hours<=ph.h?0:(hours-ph.h)/(next.h-ph.h);
-    return `<div class="phase-seg" style="width:${segW}%;background:${filled>=1?ph.color:filled>0?ph.color+'99':'#1a1a1a'}"></div>`;
+  var bar=document.getElementById('phase-bar');
+  var labels=document.getElementById('phase-labels');
+  var curr=document.getElementById('current-phase');
+  var target=selectedProto.hours;
+  bar.innerHTML=PHASES.map(function(ph,i){
+    var next=PHASES[i+1]||{h:target};
+    var segStart=ph.h/target*100;
+    var segEnd=Math.min(100,next.h/target*100);
+    var segW=segEnd-segStart;
+    var filled=hours>=next.h?1:hours<=ph.h?0:(hours-ph.h)/(next.h-ph.h);
+    return '<div class="phase-seg" style="width:'+segW+'%;background:'+(filled>=1?ph.color:filled>0?ph.color+'99':'#1a1a1a')+'"></div>';
   }).join('');
-  labels.innerHTML=`<span>0H</span><span>${target/2}H</span><span>${target}H</span>`;
-  const currentPhase=PHASES.slice().reverse().find(ph=>hours>=ph.h);
-  curr.textContent=currentPhase?`PHASE: ${currentPhase.label} (${currentPhase.h}H+)`:'';
+  labels.innerHTML='<span>0H</span><span>'+target/2+'H</span><span>'+target+'H</span>';
+  var currentPhase=PHASES.slice().reverse().find(function(ph){return hours>=ph.h;});
+  curr.textContent=currentPhase?'PHASE: '+currentPhase.label+' ('+currentPhase.h+'H+)':'';
 }
 
 function endFast(completed){
   if(!active) return;
   clearInterval(timerInterval);
-  const elapsed=Math.floor((Date.now()-active.start-active.pausedMs)/1000);
-  const hh=Math.floor(elapsed/3600);
-  const mm=Math.floor((elapsed%3600)/60);
+  var elapsed=Math.floor((Date.now()-active.start-active.pausedMs)/1000);
+  var hh=Math.floor(elapsed/3600);
+  var mm=Math.floor((elapsed%3600)/60);
   log.unshift({
-    id:Date.now(),
-    proto:active.proto,
+    id:Date.now(),proto:active.proto,
     start:new Date(active.start).toISOString().slice(0,10),
-    elapsed,
-    completed,
-    display:`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`
+    elapsed:elapsed,completed:completed,
+    display:String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')
   });
   save();
-  active=null;
-  saveActive();
-  paused=false;
+  active=null; saveActive(); paused=false;
   document.getElementById('active-controls').style.display='none';
   document.getElementById('timer-btns').style.display='flex';
   document.getElementById('phase-section').style.display='none';
   document.getElementById('fast-time').textContent='00:00:00';
   document.getElementById('fast-label').textContent='SELECT A PROTOCOL';
   document.getElementById('fast-pct').textContent='';
-  document.getElementById('fast-status').textContent=completed?'FAST COMPLETE ✓':'FAST BROKEN';
+  document.getElementById('fast-status').textContent=completed?'FAST COMPLETE &#x2713;':'FAST BROKEN';
   document.getElementById('pause-btn').textContent='PAUSE';
   drawRing(0);
   updateStats();
-  if(completed) alert(`FAST COMPLETE! ${hh}h ${mm}m — Sovereign discipline.`);
+  if(completed) alert('FAST COMPLETE! '+hh+'h '+mm+'m — Sovereign discipline.');
 }
 
 function renderLog(){
-  const list=document.getElementById('log-list');
+  var list=document.getElementById('log-list');
   if(!log.length){list.innerHTML='<div class="empty">NO FASTS LOGGED</div>';return;}
-  list.innerHTML=log.slice(0,20).map(l=>`<div class="log-item">
-    <div><div class="log-date">${l.start}</div><div class="log-type">${l.proto} PROTOCOL</div></div>
-    <div class="log-duration">${l.display}</div>
-    <div class="log-result ${l.completed?'log-complete':'log-broken'}">${l.completed?'COMPLETE':'BROKEN'}</div>
-  </div>`).join('');
+  list.innerHTML=log.slice(0,20).map(function(l){
+    return '<div class="log-item">'
+      +'<div><div class="log-date">'+l.start+'</div><div class="log-type">'+l.proto+' PROTOCOL</div></div>'
+      +'<div class="log-duration">'+l.display+'</div>'
+      +'<div class="log-result '+(l.completed?'log-complete':'log-broken')+'">'+(l.completed?'COMPLETE':'BROKEN')+'</div>'
+      +'</div>';
+  }).join('');
 }
 
 function renderStreak(){
-  const grid=document.getElementById('streak-grid');
-  const days=28;
-  const cells=[];
-  for(let i=days-1;i>=0;i--){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const key=d.toISOString().slice(0,10);
-    const dayLog=log.filter(l=>l.start===key);
-    const done=dayLog.some(l=>l.completed);
-    const broken=dayLog.some(l=>!l.completed)&&!done;
-    cells.push(`<div class="streak-cell ${done?'done':broken?'broken':''}" title="${key}"></div>`);
+  var grid=document.getElementById('streak-grid');
+  var days=28; var cells=[];
+  for(var i=days-1;i>=0;i--){
+    var d=new Date(); d.setDate(d.getDate()-i);
+    var key=d.toISOString().slice(0,10);
+    var dayLog=log.filter(function(l){return l.start===key;});
+    var done=dayLog.some(function(l){return l.completed;});
+    var broken=dayLog.some(function(l){return !l.completed;})&&!done;
+    cells.push('<div class="streak-cell '+(done?'done':broken?'broken':'')+'" title="'+key+'"></div>');
   }
   grid.innerHTML=cells.join('');
 }
 
 function drawHistory(){
-  const canvas=document.getElementById('history-canvas');
-  const W=canvas.offsetWidth||600; canvas.width=W; canvas.height=160;
-  const ctx=canvas.getContext('2d');
+  var canvas=document.getElementById('history-canvas');
+  var W=canvas.offsetWidth||600; canvas.width=W; canvas.height=160;
+  var ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,160);
   if(!log.length){ctx.fillStyle='#555';ctx.font='12px monospace';ctx.textAlign='center';ctx.fillText('NO DATA',W/2,80);return;}
-  const weeks=8;
-  const now=new Date();
-  const wData=[];
-  for(let i=weeks-1;i>=0;i--){
-    const start=new Date(now); start.setDate(start.getDate()-i*7-6);
-    const end=new Date(now); end.setDate(end.getDate()-i*7);
-    const sk=start.toISOString().slice(0,10); const ek=end.toISOString().slice(0,10);
-    const weekLog=log.filter(l=>l.start>=sk&&l.start<=ek&&l.completed);
-    const totalH=weekLog.reduce((s,l)=>s+l.elapsed,0)/3600;
-    const label=`W${weeks-i}`;
-    wData.push({label,totalH});
+  var weeks=8; var now=new Date(); var wData=[];
+  for(var i=weeks-1;i>=0;i--){
+    var start=new Date(now); start.setDate(start.getDate()-i*7-6);
+    var end=new Date(now); end.setDate(end.getDate()-i*7);
+    var sk=start.toISOString().slice(0,10); var ek=end.toISOString().slice(0,10);
+    var weekLog=log.filter(function(l){return l.start>=sk&&l.start<=ek&&l.completed;});
+    var totalH=weekLog.reduce(function(s,l){return s+l.elapsed;},0)/3600;
+    wData.push({label:'W'+(weeks-i),totalH:totalH});
   }
-  const maxV=Math.max(...wData.map(w=>w.totalH),1);
-  const pad={l:40,r:10,t:10,b:30}; const W2=W-pad.l-pad.r; const H2=130-pad.t-pad.b;
+  var maxV=Math.max.apply(null,wData.map(function(w){return w.totalH;}).concat([1]));
+  var pad={l:40,r:10,t:10,b:30}; var W2=W-pad.l-pad.r; var H2=130-pad.t-pad.b;
   ctx.strokeStyle='#1a1a1a';ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){const y=pad.t+H2-(H2/4*i);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+W2,y);ctx.stroke();ctx.fillStyle='#555';ctx.font='9px monospace';ctx.textAlign='right';ctx.fillText((maxV/4*i).toFixed(0)+'h',pad.l-4,y+3);}
-  const bw=Math.floor(W2/weeks)-4;
-  wData.forEach((w,i)=>{
-    const x=pad.l+i*(bw+4);
-    const h=(w.totalH/maxV)*H2;
-    const y=pad.t+H2-h;
-    ctx.fillStyle=w.totalH>0?'var(--gold)':'#1a1a1a';
+  for(var j=0;j<=4;j++){
+    var y=pad.t+H2-(H2/4*j);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+W2,y);ctx.stroke();
+    ctx.fillStyle='#555';ctx.font='9px monospace';ctx.textAlign='right';
+    ctx.fillText((maxV/4*j).toFixed(0)+'h',pad.l-4,y+3);
+  }
+  var bw=Math.floor(W2/weeks)-4;
+  wData.forEach(function(w,i){
+    var x=pad.l+i*(bw+4); var h=(w.totalH/maxV)*H2; var y=pad.t+H2-h;
+    ctx.fillStyle=w.totalH>0?'#c9a84c':'#1a1a1a';
     ctx.fillRect(x,y,bw,h);
     ctx.fillStyle='#666';ctx.font='8px monospace';ctx.textAlign='center';
     ctx.fillText(w.label,x+bw/2,pad.t+H2+14);
@@ -421,50 +445,38 @@ function drawHistory(){
 }
 
 function updateStats(){
-  document.getElementById('st-total').textContent=log.filter(l=>l.completed).length;
-  const best=Math.max(0,...log.filter(l=>l.completed).map(l=>l.elapsed));
+  var completed=log.filter(function(l){return l.completed;});
+  document.getElementById('st-total').textContent=completed.length;
+  var best=completed.length?Math.max.apply(null,completed.map(function(l){return l.elapsed;})):0;
   document.getElementById('st-best').textContent=best?Math.floor(best/3600)+'h':'0h';
-  const avgE=log.filter(l=>l.completed).reduce((s,l)=>s+l.elapsed,0)/(log.filter(l=>l.completed).length||1);
-  document.getElementById('st-avg').textContent=log.length?Math.floor(avgE/3600)+'h':'0h';
-  // streak
-  let streak=0;
-  const d=new Date();
-  while(true){
-    const key=d.toISOString().slice(0,10);
-    if(log.some(l=>l.start===key&&l.completed)){streak++;d.setDate(d.getDate()-1);}
+  var avgE=completed.length?completed.reduce(function(s,l){return s+l.elapsed;},0)/completed.length:0;
+  document.getElementById('st-avg').textContent=completed.length?Math.floor(avgE/3600)+'h':'0h';
+  var streak=0; var d=new Date();
+  for(;;){
+    var key=d.toISOString().slice(0,10);
+    if(log.some(function(l){return l.start===key&&l.completed;})){streak++;d.setDate(d.getDate()-1);}
     else break;
   }
   document.getElementById('st-streak').textContent=streak;
 }
 
-function switchTab(t){
-  document.querySelectorAll('.tab').forEach((b,i)=>{
-    const names=['timer','history','science'];
-    b.classList.toggle('active',names[i]===t);
-  });
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  if(t==='history'){renderLog();renderStreak();drawHistory();}
-}
-
-// restore active fast on page load
 function restoreActive(){
   if(active){
-    const proto=PROTOCOLS.find(p=>p.id===active.proto)||PROTOCOLS[1];
+    var proto=PROTOCOLS.find(function(p){return p.id===active.proto;})||PROTOCOLS[1];
     selectedProto=proto;
     document.getElementById('active-controls').style.display='block';
     document.getElementById('timer-btns').style.display='none';
     document.getElementById('phase-section').style.display='block';
-    document.getElementById('protocol-title').textContent=`${proto.name} PROTOCOL — ${proto.hours}H TARGET`;
+    document.getElementById('protocol-title').textContent=proto.name+' PROTOCOL — '+proto.hours+'H TARGET';
     startTick();
   }
 }
 
-// init
 renderProtocols();
 drawRing(0);
 updateStats();
 restoreActive();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

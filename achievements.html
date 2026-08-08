@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Achievements · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#9B6BF0;color:#fff;border-color:#9B6BF0;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid #C9A84C}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:#C9A84C;line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
 .xp-banner{background:linear-gradient(135deg,#0d0d0d,#0a0a1a);border:1px solid #222;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
 .xp-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#9B6BF0,#00E5FF,#9B6BF0);}
 .xp-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
@@ -68,152 +67,175 @@
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
 <div class="notification" id="notif"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">SOVEREIGN ACHIEVEMENTS</div>
-  <div class="page-subtitle">EARN XP · UNLOCK TIERS · ASCEND</div>
-</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="achievements"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">SOVEREIGN ACHIEVEMENTS<small>EARN XP · UNLOCK TIERS · ASCEND · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('board')">BOARD</button>
-  <button class="tab-btn" onclick="switchTab('create')">CREATE</button>
-  <button class="tab-btn" onclick="switchTab('log')">LOG</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
-</div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="board" onclick="switchTab('board',this)">&#9670; BOARD</button>
+      <button class="tab-btn" data-tab="create" onclick="switchTab('create',this)">&#9670; CREATE</button>
+      <button class="tab-btn" data-tab="log" onclick="switchTab('log',this)">&#9670; LOG</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+    </div>
 
-<!-- BOARD -->
-<div id="tab-board" class="tab-pane active">
-  <div class="xp-banner">
-    <div class="xp-row">
-      <div class="xp-level">
-        <div class="xp-level-num" id="xp-level">1</div>
-        <div class="xp-level-lbl">LEVEL</div>
+    <!-- BOARD -->
+    <div id="tab-board" class="tab-panel act">
+      <div class="xp-banner">
+        <div class="xp-row">
+          <div class="xp-level">
+            <div class="xp-level-num" id="xp-level">1</div>
+            <div class="xp-level-lbl">LEVEL</div>
+          </div>
+          <div class="xp-main">
+            <div class="xp-title" id="xp-rank">INITIATE</div>
+            <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
+            <div class="xp-nums"><span id="xp-cur">0 XP</span><span id="xp-next">1000 XP</span></div>
+          </div>
+        </div>
       </div>
-      <div class="xp-main">
-        <div class="xp-title" id="xp-rank">INITIATE</div>
-        <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
-        <div class="xp-nums"><span id="xp-cur">0 XP</span><span id="xp-next">1000 XP</span></div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num" id="stat-total-xp">0</div><div class="stat-lbl">TOTAL XP</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-unlocked">0</div><div class="stat-lbl">UNLOCKED</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-locked">0</div><div class="stat-lbl">LOCKED</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-pct">0%</div><div class="stat-lbl">COMPLETION</div></div>
+      </div>
+      <div class="filter-row" id="cat-filter">
+        <div class="filter-tag active" data-c="all" onclick="setCat('all',this)">ALL</div>
+        <div class="filter-tag" data-c="mastery" onclick="setCat('mastery',this)">MASTERY</div>
+        <div class="filter-tag" data-c="wealth" onclick="setCat('wealth',this)">WEALTH</div>
+        <div class="filter-tag" data-c="health" onclick="setCat('health',this)">HEALTH</div>
+        <div class="filter-tag" data-c="identity" onclick="setCat('identity',this)">IDENTITY</div>
+        <div class="filter-tag" data-c="relations" onclick="setCat('relations',this)">RELATIONS</div>
+        <div class="filter-tag" data-c="custom" onclick="setCat('custom',this)">CUSTOM</div>
+      </div>
+      <div class="achievements-grid" id="achievements-grid"></div>
+    </div>
+
+    <!-- CREATE -->
+    <div id="tab-create" class="tab-panel">
+      <div class="section-label">CREATE CUSTOM ACHIEVEMENT</div>
+      <div class="form-group">
+        <label>ACHIEVEMENT NAME</label>
+        <input type="text" id="c-name" placeholder="What did you accomplish?" maxlength="80">
+      </div>
+      <div class="form-group">
+        <label>DESCRIPTION</label>
+        <input type="text" id="c-desc" placeholder="Describe the achievement..." maxlength="120">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>ICON (emoji)</label>
+          <input type="text" id="c-icon" placeholder="&#127942;" maxlength="4">
+        </div>
+        <div class="form-group">
+          <label>CATEGORY</label>
+          <select id="c-cat">
+            <option value="mastery">Mastery</option>
+            <option value="wealth">Wealth</option>
+            <option value="health">Health</option>
+            <option value="identity">Identity</option>
+            <option value="relations">Relations</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>RARITY</label>
+          <select id="c-rarity">
+            <option value="common">Common (100 XP)</option>
+            <option value="rare">Rare (250 XP)</option>
+            <option value="epic">Epic (500 XP)</option>
+            <option value="legendary">Legendary (1000 XP)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>UNLOCK NOW?</label>
+          <select id="c-unlock">
+            <option value="no">No &mdash; keep locked</option>
+            <option value="yes">Yes &mdash; unlock immediately</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-primary" onclick="createAchievement()">CREATE</button>
+        <button class="btn-secondary" onclick="clearCreate()">CLEAR</button>
+      </div>
+      <div id="create-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;"></div>
+    </div>
+
+    <!-- LOG -->
+    <div id="tab-log" class="tab-panel">
+      <div class="section-label">UNLOCK HISTORY</div>
+      <div id="unlock-log"></div>
+    </div>
+
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="science-grid">
+        <div class="sci-card">
+          <div class="sci-title">GAMIFICATION &amp; INTRINSIC MOTIVATION</div>
+          <div class="sci-body">Deci &amp; Ryan (1985) Self-Determination Theory: intrinsic motivation (autonomy, competence, relatedness) outperforms extrinsic rewards long-term. Well-designed achievement systems build competence scaffolding &mdash; each unlock signals genuine growth, not just points.</div>
+          <div class="sci-ref">Deci &amp; Ryan (1985). Intrinsic Motivation and Self-Determination</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">VARIABLE REWARD SCHEDULE</div>
+          <div class="sci-body">Skinner (1938): variable ratio reinforcement is the most resistant to extinction. Achievement systems with unpredictable unlock timing (meeting hidden milestones) create stronger engagement loops than fixed schedules. Rarity tiers simulate this effect.</div>
+          <div class="sci-ref">Skinner, B.F. (1938). The Behavior of Organisms</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">PROGRESS &amp; MEANING</div>
+          <div class="sci-body">Amabile &amp; Kramer (2011, The Progress Principle): the single strongest motivator is making progress on meaningful work. Visible progress indicators (XP bars, completion percentages) trigger the same neural circuits as actual progress &mdash; the brain treats the signal as real.</div>
+          <div class="sci-ref">Amabile &amp; Kramer (2011). Harvard Business Review</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">MASTERY ORIENTATION</div>
+          <div class="sci-body">Dweck (2006, Mindset): mastery-oriented goals (growth, learning) outperform performance-oriented goals (beating others, appearing smart) in long-term achievement. Achievement systems should reward effort and process milestones, not just outcomes.</div>
+          <div class="sci-ref">Dweck, C.S. (2006). Mindset: The New Psychology of Success</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">IDENTITY-BASED HABITS</div>
+          <div class="sci-body">Clear (2018, Atomic Habits): the most powerful form of motivation is identity change &mdash; "I am a person who does X." Each achievement is a vote for your sovereign identity. 100 small achievements create an irrefutable internal narrative of mastery and discipline.</div>
+          <div class="sci-ref">Clear, J. (2018). Atomic Habits</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">FLOW STATE</div>
+          <div class="sci-body">Csikszentmihalyi (1990): flow occurs when challenge matches skill. Achievement systems that scale rarity (common &rarr; legendary) dynamically adjust the challenge horizon, keeping the "next unlock" always within reach but genuinely earned &mdash; the optimal frustration zone.</div>
+          <div class="sci-ref">Csikszentmihalyi (1990). Flow: The Psychology of Optimal Experience</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num" id="stat-total-xp">0</div><div class="stat-lbl">TOTAL XP</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-unlocked">0</div><div class="stat-lbl">UNLOCKED</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-locked">0</div><div class="stat-lbl">LOCKED</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-pct">0%</div><div class="stat-lbl">COMPLETION</div></div>
-  </div>
-  <div class="filter-row" id="cat-filter">
-    <div class="filter-tag active" data-c="all" onclick="setCat('all',this)">ALL</div>
-    <div class="filter-tag" data-c="mastery" onclick="setCat('mastery',this)">MASTERY</div>
-    <div class="filter-tag" data-c="wealth" onclick="setCat('wealth',this)">WEALTH</div>
-    <div class="filter-tag" data-c="health" onclick="setCat('health',this)">HEALTH</div>
-    <div class="filter-tag" data-c="identity" onclick="setCat('identity',this)">IDENTITY</div>
-    <div class="filter-tag" data-c="relations" onclick="setCat('relations',this)">RELATIONS</div>
-    <div class="filter-tag" data-c="custom" onclick="setCat('custom',this)">CUSTOM</div>
-  </div>
-  <div class="achievements-grid" id="achievements-grid"></div>
-</div>
 
-<!-- CREATE -->
-<div id="tab-create" class="tab-pane">
-  <div class="section-label">CREATE CUSTOM ACHIEVEMENT</div>
-  <div class="form-group">
-    <label>ACHIEVEMENT NAME</label>
-    <input type="text" id="c-name" placeholder="What did you accomplish?" maxlength="80">
   </div>
-  <div class="form-group">
-    <label>DESCRIPTION</label>
-    <input type="text" id="c-desc" placeholder="Describe the achievement..." maxlength="120">
-  </div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>ICON (emoji)</label>
-      <input type="text" id="c-icon" placeholder="🏆" maxlength="4">
-    </div>
-    <div class="form-group">
-      <label>CATEGORY</label>
-      <select id="c-cat">
-        <option value="mastery">Mastery</option>
-        <option value="wealth">Wealth</option>
-        <option value="health">Health</option>
-        <option value="identity">Identity</option>
-        <option value="relations">Relations</option>
-        <option value="custom">Custom</option>
-      </select>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>RARITY</label>
-      <select id="c-rarity">
-        <option value="common">Common (100 XP)</option>
-        <option value="rare">Rare (250 XP)</option>
-        <option value="epic">Epic (500 XP)</option>
-        <option value="legendary">Legendary (1000 XP)</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>UNLOCK NOW?</label>
-      <select id="c-unlock">
-        <option value="no">No — keep locked</option>
-        <option value="yes">Yes — unlock immediately</option>
-      </select>
-    </div>
-  </div>
-  <div style="display:flex;gap:8px;">
-    <button class="btn-primary" onclick="createAchievement()">CREATE</button>
-    <button class="btn-secondary" onclick="clearCreate()">CLEAR</button>
-  </div>
-  <div id="create-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;"></div>
-</div>
-
-<!-- LOG -->
-<div id="tab-log" class="tab-pane">
-  <div class="section-label">UNLOCK HISTORY</div>
-  <div id="unlock-log"></div>
-</div>
-
-<!-- SCIENCE -->
-<div id="tab-science" class="tab-pane">
-  <div class="science-grid">
-    <div class="sci-card">
-      <div class="sci-title">GAMIFICATION & INTRINSIC MOTIVATION</div>
-      <div class="sci-body">Deci & Ryan (1985) Self-Determination Theory: intrinsic motivation (autonomy, competence, relatedness) outperforms extrinsic rewards long-term. Well-designed achievement systems build competence scaffolding — each unlock signals genuine growth, not just points.</div>
-      <div class="sci-ref">Deci & Ryan (1985). Intrinsic Motivation and Self-Determination</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">VARIABLE REWARD SCHEDULE</div>
-      <div class="sci-body">Skinner (1938): variable ratio reinforcement is the most resistant to extinction. Achievement systems with unpredictable unlock timing (meeting hidden milestones) create stronger engagement loops than fixed schedules. Rarity tiers simulate this effect.</div>
-      <div class="sci-ref">Skinner, B.F. (1938). The Behavior of Organisms</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">PROGRESS & MEANING</div>
-      <div class="sci-body">Amabile & Kramer (2011, The Progress Principle): the single strongest motivator is making progress on meaningful work. Visible progress indicators (XP bars, completion percentages) trigger the same neural circuits as actual progress — the brain treats the signal as real.</div>
-      <div class="sci-ref">Amabile & Kramer (2011). Harvard Business Review</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">MASTERY ORIENTATION</div>
-      <div class="sci-body">Dweck (2006, Mindset): mastery-oriented goals (growth, learning) outperform performance-oriented goals (beating others, appearing smart) in long-term achievement. Achievement systems should reward effort and process milestones, not just outcomes.</div>
-      <div class="sci-ref">Dweck, C.S. (2006). Mindset: The New Psychology of Success</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">IDENTITY-BASED HABITS</div>
-      <div class="sci-body">Clear (2018, Atomic Habits): the most powerful form of motivation is identity change — "I am a person who does X." Each achievement is a vote for your sovereign identity. 100 small achievements create an irrefutable internal narrative of mastery and discipline.</div>
-      <div class="sci-ref">Clear, J. (2018). Atomic Habits</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">FLOW STATE</div>
-      <div class="sci-body">Csikszentmihalyi (1990): flow occurs when challenge matches skill. Achievement systems that scale rarity (common → legendary) dynamically adjust the challenge horizon, keeping the "next unlock" always within reach but genuinely earned — the optimal frustration zone.</div>
-      <div class="sci-ref">Csikszentmihalyi (1990). Flow: The Psychology of Optimal Experience</div>
-    </div>
-  </div>
-</div>
 </main>
+</div>
 
-<script src="/omega-ui.js"></script>
 <script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='board'){renderBoard();}
+  if(id==='log'){renderLog();}
+}
+
 var achievements = [];
 var unlockLog = [];
 var catFilter = 'all';
@@ -229,23 +251,23 @@ var RANKS = [
 var CAT_COLORS = {mastery:'#9B6BF0',wealth:'#FFD700',health:'#4CAF50',identity:'#00E5FF',relations:'#FF9800',custom:'#888'};
 
 var SEED_ACHIEVEMENTS = [
-  {id:'s01',name:'First Step',desc:'Complete your first sovereign action',icon:'👣',cat:'identity',rarity:'common',unlocked:false,seed:true},
-  {id:'s02',name:'Knowledge Seeker',desc:'Add 10 vocabulary words',icon:'📚',cat:'mastery',rarity:'common',unlocked:false,seed:true},
-  {id:'s03',name:'Iron Will',desc:'Complete a 30-day habit streak',icon:'🔩',cat:'identity',rarity:'rare',unlocked:false,seed:true},
-  {id:'s04',name:'Mind Mapper',desc:'Create your first mind map',icon:'🗺️',cat:'mastery',rarity:'common',unlocked:false,seed:true},
-  {id:'s05',name:'Sovereign Body',desc:'Log 30 workout sessions',icon:'💪',cat:'health',rarity:'rare',unlocked:false,seed:true},
-  {id:'s06',name:'Fasting Master',desc:'Complete a 24+ hour fast',icon:'⚡',cat:'health',rarity:'epic',unlocked:false,seed:true},
-  {id:'s07',name:'Wealth Builder',desc:'Add your first investment account',icon:'💎',cat:'wealth',rarity:'common',unlocked:false,seed:true},
-  {id:'s08',name:'100K Club',desc:'Reach $100,000 net worth',icon:'🏦',cat:'wealth',rarity:'epic',unlocked:false,seed:true},
-  {id:'s09',name:'Inner Circle',desc:'Maintain 5 inner-circle relationships',icon:'🤝',cat:'relations',rarity:'rare',unlocked:false,seed:true},
-  {id:'s10',name:'Philosopher',desc:'Write 100 principles',icon:'⚖️',cat:'identity',rarity:'epic',unlocked:false,seed:true},
-  {id:'s11',name:'Polymath',desc:'Learn skills in 5 different domains',icon:'🌐',cat:'mastery',rarity:'epic',unlocked:false,seed:true},
-  {id:'s12',name:'OMEGA ASCENDED',desc:'Reach Level 10 — the apex of sovereignty',icon:'⚡',cat:'identity',rarity:'legendary',unlocked:false,seed:true},
+  {id:'s01',name:'First Step',desc:'Complete your first sovereign action',icon:'&#128099;',cat:'identity',rarity:'common',unlocked:false,seed:true},
+  {id:'s02',name:'Knowledge Seeker',desc:'Add 10 vocabulary words',icon:'&#128218;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
+  {id:'s03',name:'Iron Will',desc:'Complete a 30-day habit streak',icon:'&#128057;',cat:'identity',rarity:'rare',unlocked:false,seed:true},
+  {id:'s04',name:'Mind Mapper',desc:'Create your first mind map',icon:'&#128506;',cat:'mastery',rarity:'common',unlocked:false,seed:true},
+  {id:'s05',name:'Sovereign Body',desc:'Log 30 workout sessions',icon:'&#128170;',cat:'health',rarity:'rare',unlocked:false,seed:true},
+  {id:'s06',name:'Fasting Master',desc:'Complete a 24+ hour fast',icon:'&#9889;',cat:'health',rarity:'epic',unlocked:false,seed:true},
+  {id:'s07',name:'Wealth Builder',desc:'Add your first investment account',icon:'&#128142;',cat:'wealth',rarity:'common',unlocked:false,seed:true},
+  {id:'s08',name:'100K Club',desc:'Reach $100,000 net worth',icon:'&#127974;',cat:'wealth',rarity:'epic',unlocked:false,seed:true},
+  {id:'s09',name:'Inner Circle',desc:'Maintain 5 inner-circle relationships',icon:'&#129309;',cat:'relations',rarity:'rare',unlocked:false,seed:true},
+  {id:'s10',name:'Philosopher',desc:'Write 100 principles',icon:'&#9878;',cat:'identity',rarity:'epic',unlocked:false,seed:true},
+  {id:'s11',name:'Polymath',desc:'Learn skills in 5 different domains',icon:'&#127758;',cat:'mastery',rarity:'epic',unlocked:false,seed:true},
+  {id:'s12',name:'OMEGA ASCENDED',desc:'Reach Level 10 — the apex of sovereignty',icon:'&#9889;',cat:'identity',rarity:'legendary',unlocked:false,seed:true},
 ];
 
 function load(){
   try{achievements=JSON.parse(localStorage.getItem('omega_achievements')||'null');}catch(e){}
-  if(!achievements||!achievements.length)achievements=[...SEED_ACHIEVEMENTS.map(a=>({...a}))];
+  if(!achievements||!achievements.length)achievements=[...SEED_ACHIEVEMENTS.map(function(a){return Object.assign({},a);})];
   try{unlockLog=JSON.parse(localStorage.getItem('omega_ach_log')||'[]');}catch(e){unlockLog=[];}
 }
 function save(){
@@ -255,7 +277,7 @@ function save(){
 function uid(){return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function totalXP(){return achievements.filter(a=>a.unlocked).reduce((s,a)=>s+XP_MAP[a.rarity],0);}
+function totalXP(){return achievements.filter(function(a){return a.unlocked;}).reduce(function(s,a){return s+XP_MAP[a.rarity];},0);}
 function getRank(xp){
   var rank=RANKS[0];
   for(var i=0;i<RANKS.length;i++){if(xp>=RANKS[i].xp)rank=RANKS[i];}
@@ -264,16 +286,6 @@ function getRank(xp){
 function getNextRank(xp){
   for(var i=0;i<RANKS.length;i++){if(RANKS[i].xp>xp)return RANKS[i];}
   return null;
-}
-
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  var labels={board:'BOARD',create:'CREATE',log:'LOG',science:'SCIENCE'};
-  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===labels[t])b.classList.add('active');});
-  if(t==='board'){renderBoard();}
-  if(t==='log'){renderLog();}
 }
 
 function renderXP(){
@@ -291,7 +303,7 @@ function renderXP(){
     document.getElementById('xp-bar').style.width='100%';
     document.getElementById('xp-next').textContent='MAX LEVEL';
   }
-  var unlocked=achievements.filter(a=>a.unlocked).length;
+  var unlocked=achievements.filter(function(a){return a.unlocked;}).length;
   var total=achievements.length;
   document.getElementById('stat-total-xp').textContent=xp.toLocaleString();
   document.getElementById('stat-unlocked').textContent=unlocked;
@@ -301,7 +313,7 @@ function renderXP(){
 
 function setCat(c,el){
   catFilter=c;
-  document.querySelectorAll('#cat-filter .filter-tag').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('#cat-filter .filter-tag').forEach(function(x){x.classList.remove('active');});
   el.classList.add('active');
   renderGrid();
 }
@@ -310,11 +322,11 @@ function renderBoard(){renderXP();renderGrid();}
 
 function renderGrid(){
   var grid=document.getElementById('achievements-grid');
-  var list=catFilter==='all'?achievements:achievements.filter(a=>a.cat===catFilter);
-  var unlocked=list.filter(a=>a.unlocked);
-  var locked=list.filter(a=>!a.unlocked);
+  var list=catFilter==='all'?achievements:achievements.filter(function(a){return a.cat===catFilter;});
+  var unlocked=list.filter(function(a){return a.unlocked;});
+  var locked=list.filter(function(a){return !a.unlocked;});
   var sorted=[...unlocked,...locked];
-  grid.innerHTML=sorted.map(a=>achCard(a)).join('');
+  grid.innerHTML=sorted.map(function(a){return achCard(a);}).join('');
 }
 
 function achCard(a){
@@ -328,12 +340,12 @@ function achCard(a){
     +'<div class="ach-desc">'+esc(a.desc)+'</div>'
     +'<div class="ach-xp" style="color:'+col+'">+'+XP_MAP[a.rarity]+' XP</div>'
     +(a.unlocked&&a.unlockedAt?'<div class="unlock-date">'+new Date(a.unlockedAt).toLocaleDateString()+'</div>':'')
-    +(!a.unlocked?'<button class="unlock-btn" onclick="unlock(\''+a.id+'\')">MARK ACHIEVED</button>':'<button class="unlock-btn unlocked-btn" disabled>✓ ACHIEVED</button>')
+    +(!a.unlocked?'<button class="unlock-btn" onclick="unlock(\''+a.id+'\')">MARK ACHIEVED</button>':'<button class="unlock-btn unlocked-btn" disabled>&#10003; ACHIEVED</button>')
     +'</div>';
 }
 
 function unlock(id){
-  var a=achievements.find(x=>x.id===id);
+  var a=achievements.find(function(x){return x.id===id;});
   if(!a||a.unlocked)return;
   a.unlocked=true;a.unlockedAt=new Date().toISOString();
   unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[a.rarity],rarity:a.rarity,cat:a.cat,date:a.unlockedAt});
@@ -344,29 +356,29 @@ function unlock(id){
 function showNotif(msg){
   var el=document.getElementById('notif');
   el.textContent=msg;el.style.display='block';
-  clearTimeout(el._t);el._t=setTimeout(()=>{el.style.display='none';},3000);
+  clearTimeout(el._t);el._t=setTimeout(function(){el.style.display='none';},3000);
 }
 
 function createAchievement(){
   var name=document.getElementById('c-name').value.trim();
   var desc=document.getElementById('c-desc').value.trim();
-  var icon=document.getElementById('c-icon').value.trim()||'🏆';
+  var icon=document.getElementById('c-icon').value.trim()||'&#127942;';
   var cat=document.getElementById('c-cat').value;
   var rarity=document.getElementById('c-rarity').value;
   var doUnlock=document.getElementById('c-unlock').value==='yes';
   if(!name){alert('Name required.');return;}
-  var a={id:uid(),name,desc,icon,cat,rarity,unlocked:doUnlock,
-    ...(doUnlock?{unlockedAt:new Date().toISOString()}:{})};
+  var a={id:uid(),name:name,desc:desc,icon:icon,cat:cat,rarity:rarity,unlocked:doUnlock};
+  if(doUnlock)a.unlockedAt=new Date().toISOString();
   achievements.unshift(a);
-  if(doUnlock)unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[rarity],rarity,cat,date:a.unlockedAt});
+  if(doUnlock)unlockLog.unshift({id:a.id,name:a.name,xp:XP_MAP[rarity],rarity:rarity,cat:cat,date:a.unlockedAt});
   save();clearCreate();
   document.getElementById('create-msg').textContent='ACHIEVEMENT CREATED'+(doUnlock?' & UNLOCKED':'');
-  setTimeout(()=>{document.getElementById('create-msg').textContent='';},2500);
+  setTimeout(function(){document.getElementById('create-msg').textContent='';},2500);
   if(doUnlock)showNotif('ACHIEVEMENT UNLOCKED: '+a.name+' +'+XP_MAP[rarity]+' XP');
 }
 
 function clearCreate(){
-  ['c-name','c-desc','c-icon'].forEach(id=>{document.getElementById(id).value='';});
+  ['c-name','c-desc','c-icon'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('c-cat').value='mastery';
   document.getElementById('c-rarity').value='common';
   document.getElementById('c-unlock').value='no';
@@ -375,10 +387,10 @@ function clearCreate(){
 function renderLog(){
   var el=document.getElementById('unlock-log');
   if(!unlockLog.length){el.innerHTML='<div style="text-align:center;padding:40px;color:#333;font-family:\'Courier New\',monospace;font-size:12px;">NO ACHIEVEMENTS UNLOCKED YET</div>';return;}
-  el.innerHTML=unlockLog.map(l=>{
+  el.innerHTML=unlockLog.map(function(l){
     var col=CAT_COLORS[l.cat]||'#888';
     return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid #111;">'
-      +'<span style="font-size:20px;">🏆</span>'
+      +'<span style="font-size:20px;">&#127942;</span>'
       +'<div style="flex:1;"><div style="font-family:\'Courier New\',monospace;font-size:11px;color:#e0e0e0;">'+esc(l.name)+'</div>'
       +'<div style="font-family:\'Courier New\',monospace;font-size:9px;color:#555;">'+new Date(l.date).toLocaleString()+'</div></div>'
       +'<span style="font-family:\'Courier New\',monospace;font-size:12px;color:'+col+';">+'+l.xp+' XP</span>'
@@ -389,5 +401,6 @@ function renderLog(){
 load();
 renderBoard();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

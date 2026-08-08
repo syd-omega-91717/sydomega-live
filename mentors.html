@@ -4,230 +4,242 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mentors · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega-ui.css">
-<script src="omega-ui.js" defer></script>
+<link rel="manifest" href="/manifest.json">
 <style>
-:root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--t:#fff;--d:#888;--gold:#c9a84c;--acc:#c9a84c;--blue:#3498db;--green:#27ae60;--red:#e74c3c;--purple:#9b59b6}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--g);color:var(--t);font-family:'Courier New',monospace;min-height:100vh}
-.main{max-width:960px;margin:0 auto;padding:24px 16px 100px}
-h1{font-size:1.1rem;letter-spacing:.15em;color:var(--gold);margin-bottom:4px}
-.sub{font-size:.7rem;color:var(--d);letter-spacing:.1em;margin-bottom:24px}
-.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid #222;flex-wrap:wrap}
-.tab{padding:8px 14px;font-size:.7rem;letter-spacing:.1em;cursor:pointer;color:var(--d);border:none;background:none;transition:color .2s}
-.tab.active{color:var(--gold);border-bottom:2px solid var(--gold)}
-.panel{display:none}.panel.active{display:block}
-.card{background:var(--b);border:1px solid #222;border-radius:4px;padding:16px;margin-bottom:16px}
-.card-title{font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
-label{font-size:.6rem;color:var(--d);letter-spacing:.08em;display:block;margin-bottom:4px}
-input,select,textarea{width:100%;background:#111;border:1px solid #333;color:var(--t);padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid #C9A84C}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:#C9A84C;line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.card{background:var(--surface,#1a1a1a);border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:16px}
+.card-title{font-size:.65rem;letter-spacing:.12em;color:#c9a84c;margin-bottom:12px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:rgba(10,10,15,.55);border:1px solid rgba(201,168,76,.15);padding:14px;text-align:center}
+.stat-val{font-size:1.4rem;color:#c9a84c;font-weight:bold;margin-bottom:4px}
+.stat-lbl{font-size:.55rem;color:#888;letter-spacing:.1em}
+label{font-size:.6rem;color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
+input,select,textarea{width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#c9a84c}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .form-row.trio{grid-template-columns:1fr 1fr 1fr}
 .btn{padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit;transition:all .2s}
-.btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:#e0b85c}
-.btn-ghost{background:none;border:1px solid #333;color:var(--d);padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px;transition:all .2s}
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.btn-red{background:var(--red);color:#fff;font-size:.6rem;padding:4px 10px;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
+.btn-gold{background:#c9a84c;color:#000}.btn-gold:hover{background:#e0b85c}
 .btn-sm{padding:5px 12px;font-size:.6rem}
-/* mentor board */
+.btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px;transition:all .2s}
+.btn-ghost:hover{border-color:#c9a84c;color:#c9a84c}
+.btn-red{background:#e74c3c;color:#fff;font-size:.6rem;padding:4px 10px;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
 .mentor-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.mentor-card{background:var(--p);border:1px solid #1a1a1a;border-radius:6px;padding:18px;position:relative;transition:border-color .2s;cursor:pointer}
+.mentor-card{background:#111;border:1px solid #1a1a1a;border-radius:6px;padding:18px;position:relative;transition:border-color .2s}
 .mentor-card:hover{border-color:#333}
-.mentor-card.primary{border-top:3px solid var(--gold)}
-.mentor-card.secondary{border-top:3px solid var(--blue)}
-.mentor-card.virtual{border-top:3px solid var(--purple)}
+.mentor-card.primary{border-top:3px solid #c9a84c}
+.mentor-card.secondary{border-top:3px solid #3498db}
+.mentor-card.virtual{border-top:3px solid #9b59b6}
 .mentor-initials{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:bold;margin-bottom:10px;letter-spacing:.05em}
-.mentor-name{font-size:.9rem;color:var(--t);letter-spacing:.05em;margin-bottom:4px}
-.mentor-title{font-size:.6rem;color:var(--d);letter-spacing:.08em;margin-bottom:8px}
+.mentor-name{font-size:.9rem;color:#fff;letter-spacing:.05em;margin-bottom:4px}
+.mentor-title{font-size:.6rem;color:#888;letter-spacing:.08em;margin-bottom:8px}
 .mentor-domain-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
-.domain-tag{font-size:.55rem;padding:2px 6px;border-radius:2px;background:#1a1a1a;color:var(--d)}
+.domain-tag{font-size:.55rem;padding:2px 6px;border-radius:2px;background:#1a1a1a;color:#888}
 .mentor-lesson{font-size:.68rem;color:#999;line-height:1.5;font-style:italic;margin-bottom:10px}
-.mentor-meta{font-size:.55rem;color:var(--d);display:flex;gap:8px;flex-wrap:wrap}
+.mentor-meta{font-size:.55rem;color:#888;display:flex;gap:8px;flex-wrap:wrap}
 .type-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.55rem;letter-spacing:.08em}
-.type-primary{background:rgba(201,168,76,.15);color:var(--gold)}
-.type-secondary{background:rgba(52,152,219,.15);color:var(--blue)}
-.type-virtual{background:rgba(155,89,182,.15);color:var(--purple)}
-/* lesson log */
-.lesson-item{background:var(--p);border:1px solid #1a1a1a;padding:12px 14px;border-radius:3px;margin-bottom:8px}
-.lesson-mentor{font-size:.65rem;color:var(--gold);margin-bottom:4px}
+.type-primary{background:rgba(201,168,76,.15);color:#c9a84c}
+.type-secondary{background:rgba(52,152,219,.15);color:#3498db}
+.type-virtual{background:rgba(155,89,182,.15);color:#9b59b6}
+.lesson-item{background:#111;border:1px solid #1a1a1a;padding:12px 14px;border-radius:3px;margin-bottom:8px}
+.lesson-mentor{font-size:.65rem;color:#c9a84c;margin-bottom:4px}
 .lesson-text{font-size:.75rem;color:#aaa;line-height:1.6;margin-bottom:6px}
-.lesson-meta{font-size:.55rem;color:var(--d)}
-/* radar chart */
-canvas{display:block;width:100%;max-width:400px;margin:0 auto}
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
-.stat{background:var(--b);border:1px solid #222;border-radius:4px;padding:14px;text-align:center}
-.stat-val{font-size:1.4rem;color:var(--gold);font-weight:bold;margin-bottom:4px}
-.stat-lbl{font-size:.55rem;color:var(--d);letter-spacing:.1em}
-.ref-block{border-left:2px solid var(--gold);padding:8px 14px;margin-bottom:12px;background:#111}
-.ref-title{font-size:.7rem;color:var(--t);margin-bottom:4px}
-.ref-body{font-size:.6rem;color:var(--d);line-height:1.5}
-.empty{text-align:center;color:var(--d);font-size:.7rem;padding:40px 0;letter-spacing:.1em}
-.lesson-form{display:none}
-.lesson-form.open{display:block}
+.ref-block{border-left:2px solid #c9a84c;padding:8px 14px;margin-bottom:12px;background:#111}
+.ref-title{font-size:.7rem;color:#fff;margin-bottom:4px}
+.ref-body{font-size:.6rem;color:#888;line-height:1.5}
+.empty{text-align:center;color:#888;font-size:.7rem;padding:40px 0;letter-spacing:.1em}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}.mentor-board{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="main">
-  <h1>SOVEREIGN MENTOR BOARD</h1>
-  <p class="sub">REAL · VIRTUAL · HISTORICAL · THOSE WHO SHAPED YOUR TRAJECTORY</p>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="mentors"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">SOVEREIGN MENTOR BOARD<small>REAL · VIRTUAL · HISTORICAL · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-  <div class="stat-grid">
-    <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">MENTORS</div></div>
-    <div class="stat"><div class="stat-val" id="st-primary">0</div><div class="stat-lbl">PRIMARY</div></div>
-    <div class="stat"><div class="stat-val" id="st-virtual">0</div><div class="stat-lbl">VIRTUAL</div></div>
-    <div class="stat"><div class="stat-val" id="st-lessons">0</div><div class="stat-lbl">LESSONS LOGGED</div></div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('board')">BOARD</button>
-    <button class="tab" onclick="switchTab('add')">ADD MENTOR</button>
-    <button class="tab" onclick="switchTab('lessons')">LESSON LOG</button>
-    <button class="tab" onclick="switchTab('science')">SCIENCE</button>
-  </div>
-
-  <!-- BOARD -->
-  <div id="tab-board" class="panel active">
-    <div id="mentor-board" class="mentor-board">
-      <div class="empty">ADD YOUR FIRST MENTOR</div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">MENTORS</div></div>
+      <div class="stat"><div class="stat-val" id="st-primary">0</div><div class="stat-lbl">PRIMARY</div></div>
+      <div class="stat"><div class="stat-val" id="st-virtual">0</div><div class="stat-lbl">VIRTUAL</div></div>
+      <div class="stat"><div class="stat-val" id="st-lessons">0</div><div class="stat-lbl">LESSONS LOGGED</div></div>
     </div>
-  </div>
 
-  <!-- ADD -->
-  <div id="tab-add" class="panel">
-    <div class="card">
-      <div class="card-title">ADD TO YOUR BOARD</div>
-      <div class="form-row">
-        <div>
-          <label>NAME</label>
-          <input id="m-name" type="text" placeholder="Full name...">
-        </div>
-        <div>
-          <label>TITLE / ROLE</label>
-          <input id="m-title" type="text" placeholder="e.g. CEO, Author, Coach, Philosopher...">
-        </div>
-      </div>
-      <div class="form-row trio">
-        <div>
-          <label>TYPE</label>
-          <select id="m-type">
-            <option value="primary">PRIMARY (direct)</option>
-            <option value="secondary">SECONDARY (indirect)</option>
-            <option value="virtual">VIRTUAL (books/media)</option>
-          </select>
-        </div>
-        <div>
-          <label>DOMAIN</label>
-          <select id="m-domain">
-            <option value="business">BUSINESS</option>
-            <option value="mindset">MINDSET</option>
-            <option value="philosophy">PHILOSOPHY</option>
-            <option value="health">HEALTH</option>
-            <option value="finance">FINANCE</option>
-            <option value="leadership">LEADERSHIP</option>
-            <option value="technology">TECHNOLOGY</option>
-            <option value="creative">CREATIVE</option>
-            <option value="spirituality">SPIRITUALITY</option>
-            <option value="strategy">STRATEGY</option>
-          </select>
-        </div>
-        <div>
-          <label>RELATIONSHIP SINCE</label>
-          <input id="m-since" type="date">
-        </div>
-      </div>
-      <div style="margin-bottom:10px">
-        <label>THE MOST IMPORTANT LESSON THEY TAUGHT YOU</label>
-        <textarea id="m-lesson" rows="3" placeholder="In 1-3 sentences: the core lesson, shift, or insight..."></textarea>
-      </div>
-      <div class="form-row">
-        <div>
-          <label>KEY WORK (book, company, course)</label>
-          <input id="m-work" type="text" placeholder="e.g. Principles (2017)">
-        </div>
-        <div>
-          <label>HOW THEY INFLUENCE YOU</label>
-          <input id="m-influence" type="text" placeholder="e.g. Daily reading, quarterly call, framework...">
-        </div>
-      </div>
-      <div style="margin-bottom:12px">
-        <label>COLOR TAG (for board avatar)</label>
-        <input id="m-color" type="color" value="#c9a84c" style="width:60px;height:36px;padding:2px;cursor:pointer">
-      </div>
-      <button class="btn btn-gold" onclick="addMentor()">+ ADD TO BOARD</button>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="board" onclick="switchTab('board',this)">&#9670; BOARD</button>
+      <button class="tab-btn" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD MENTOR</button>
+      <button class="tab-btn" data-tab="lessons" onclick="switchTab('lessons',this)">&#9670; LESSON LOG</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
-    <div class="card">
-      <div class="card-title">SOVEREIGN SEED BOARD — HISTORICAL VIRTUALI MENTORS</div>
-      <p style="font-size:.65rem;color:var(--d);margin-bottom:12px">THE MOST IMPACTFUL THINKERS, BUILDERS, AND STRATEGISTS OF ALL TIME. ADD AS VIRTUAL MENTORS.</p>
-      <div id="seed-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px"></div>
-    </div>
-  </div>
 
-  <!-- LESSON LOG -->
-  <div id="tab-lessons" class="panel">
-    <div class="card">
-      <div class="card-title">LOG A LESSON OR INSIGHT</div>
-      <div class="form-row">
-        <div>
-          <label>MENTOR</label>
-          <select id="l-mentor"></select>
-        </div>
-        <div>
-          <label>DATE</label>
-          <input id="l-date" type="date">
-        </div>
-      </div>
-      <div style="margin-bottom:10px">
-        <label>LESSON / INSIGHT</label>
-        <textarea id="l-text" rows="3" placeholder="What did they teach you today? What insight surfaced from their work?"></textarea>
-      </div>
-      <button class="btn btn-gold btn-sm" onclick="addLesson()">+ LOG LESSON</button>
-    </div>
-    <div id="lesson-list">
-      <div class="empty">NO LESSONS LOGGED YET</div>
-    </div>
-  </div>
-
-  <!-- SCIENCE -->
-  <div id="tab-science" class="panel">
-    <div class="card">
-      <div class="card-title">THE SCIENCE OF MENTORSHIP</div>
-      <div class="ref-block">
-        <div class="ref-title">SOCIAL LEARNING THEORY — Albert Bandura (1977)</div>
-        <div class="ref-body">Bandura established that humans learn most effectively through observation and modeling — not only through direct experience. Observing a competent model (mentor) performing a skill activates the same neural networks as performing the skill oneself (Rizzolatti's mirror neuron system, 1996). Mentorship creates an accelerated learning loop: observe → model → practice → feedback.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">DELIBERATE PRACTICE &amp; COACHING — Ericsson, Krampe &amp; Tesch-Römer (1993)</div>
-        <div class="ref-body">Ericsson's seminal study of elite performers found that expert-level performance required not just practice, but deliberate practice with immediate expert feedback. A mentor compresses the feedback loop that would otherwise take years of trial-and-error. Ericsson: "Without a teacher who can provide immediate feedback, most individuals will stop improving after reaching an acceptable level."</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">NETWORK THEORY &amp; WEAK TIES — Mark Granovetter (1973)</div>
-        <div class="ref-body">Granovetter's "Strength of Weak Ties" established that loose acquaintances (secondary mentors, virtual mentors) provide more novel information than close ties, who share your existing knowledge base. A diverse mentor board spanning multiple domains — business, philosophy, health, strategy — provides more cognitive leverage than a deep network in one domain.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">VIRTUAL MENTORSHIP — biographical learning research (Alheit, 2009)</div>
-        <div class="ref-body">Books, lectures, and recorded interviews function as asynchronous mentorship. Alheit's biographical learning research shows that deep engagement with another's life narrative — through autobiography, case study, or extended reading — triggers identity formation processes similar to direct mentoring relationships. Virtual mentors are not substitutes; they are a distinct, complementary channel.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">ROLE MODELS &amp; IDENTITY — Lockwood &amp; Kunda (1997)</div>
-        <div class="ref-body">Lockwood and Kunda demonstrated that role model exposure increases aspiration and motivation — but only when the model's achievements are seen as attainable. The optimal mentor board contains mentors at each level: someone 10% ahead (immediately achievable), 100% ahead (directional), and 1000% ahead (aspirational). This creates a pull across multiple time horizons simultaneously.</div>
+    <!-- BOARD -->
+    <div id="tab-board" class="tab-panel act">
+      <div id="mentor-board" class="mentor-board">
+        <div class="empty">ADD YOUR FIRST MENTOR</div>
       </div>
     </div>
+
+    <!-- ADD MENTOR -->
+    <div id="tab-add" class="tab-panel">
+      <div class="card">
+        <div class="card-title">ADD TO YOUR BOARD</div>
+        <div class="form-row">
+          <div>
+            <label>NAME</label>
+            <input id="m-name" type="text" placeholder="Full name...">
+          </div>
+          <div>
+            <label>TITLE / ROLE</label>
+            <input id="m-title" type="text" placeholder="e.g. CEO, Author, Coach, Philosopher...">
+          </div>
+        </div>
+        <div class="form-row trio">
+          <div>
+            <label>TYPE</label>
+            <select id="m-type">
+              <option value="primary">PRIMARY (direct)</option>
+              <option value="secondary">SECONDARY (indirect)</option>
+              <option value="virtual">VIRTUAL (books/media)</option>
+            </select>
+          </div>
+          <div>
+            <label>DOMAIN</label>
+            <select id="m-domain">
+              <option value="business">BUSINESS</option>
+              <option value="mindset">MINDSET</option>
+              <option value="philosophy">PHILOSOPHY</option>
+              <option value="health">HEALTH</option>
+              <option value="finance">FINANCE</option>
+              <option value="leadership">LEADERSHIP</option>
+              <option value="technology">TECHNOLOGY</option>
+              <option value="creative">CREATIVE</option>
+              <option value="spirituality">SPIRITUALITY</option>
+              <option value="strategy">STRATEGY</option>
+            </select>
+          </div>
+          <div>
+            <label>RELATIONSHIP SINCE</label>
+            <input id="m-since" type="date">
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <label>THE MOST IMPORTANT LESSON THEY TAUGHT YOU</label>
+          <textarea id="m-lesson" rows="3" placeholder="In 1-3 sentences: the core lesson, shift, or insight..."></textarea>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>KEY WORK (book, company, course)</label>
+            <input id="m-work" type="text" placeholder="e.g. Principles (2017)">
+          </div>
+          <div>
+            <label>HOW THEY INFLUENCE YOU</label>
+            <input id="m-influence" type="text" placeholder="e.g. Daily reading, quarterly call, framework...">
+          </div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>COLOR TAG (for board avatar)</label>
+          <input id="m-color" type="color" value="#c9a84c" style="width:60px;height:36px;padding:2px;cursor:pointer">
+        </div>
+        <button class="btn btn-gold" onclick="addMentor()">+ ADD TO BOARD</button>
+      </div>
+      <div class="card">
+        <div class="card-title">SOVEREIGN SEED BOARD — HISTORICAL VIRTUAL MENTORS</div>
+        <p style="font-size:.65rem;color:#888;margin-bottom:12px">THE MOST IMPACTFUL THINKERS, BUILDERS, AND STRATEGISTS OF ALL TIME.</p>
+        <div id="seed-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px"></div>
+      </div>
+    </div>
+
+    <!-- LESSON LOG -->
+    <div id="tab-lessons" class="tab-panel">
+      <div class="card">
+        <div class="card-title">LOG A LESSON OR INSIGHT</div>
+        <div class="form-row">
+          <div>
+            <label>MENTOR</label>
+            <select id="l-mentor"></select>
+          </div>
+          <div>
+            <label>DATE</label>
+            <input id="l-date" type="date">
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <label>LESSON / INSIGHT</label>
+          <textarea id="l-text" rows="3" placeholder="What did they teach you today? What insight surfaced from their work?"></textarea>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="addLesson()">+ LOG LESSON</button>
+      </div>
+      <div id="lesson-list">
+        <div class="empty">NO LESSONS LOGGED YET</div>
+      </div>
+    </div>
+
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">THE SCIENCE OF MENTORSHIP</div>
+        <div class="ref-block">
+          <div class="ref-title">SOCIAL LEARNING THEORY — Albert Bandura (1977)</div>
+          <div class="ref-body">Bandura established that humans learn most effectively through observation and modeling — not only through direct experience. Observing a competent model (mentor) performing a skill activates the same neural networks as performing the skill oneself (Rizzolatti's mirror neuron system, 1996). Mentorship creates an accelerated learning loop: observe → model → practice → feedback.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">DELIBERATE PRACTICE &amp; COACHING — Ericsson, Krampe &amp; Tesch-Römer (1993)</div>
+          <div class="ref-body">Ericsson's seminal study of elite performers found that expert-level performance required not just practice, but deliberate practice with immediate expert feedback. A mentor compresses the feedback loop that would otherwise take years of trial-and-error. Ericsson: "Without a teacher who can provide immediate feedback, most individuals will stop improving after reaching an acceptable level."</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">NETWORK THEORY &amp; WEAK TIES — Mark Granovetter (1973)</div>
+          <div class="ref-body">Granovetter's "Strength of Weak Ties" established that loose acquaintances (secondary mentors, virtual mentors) provide more novel information than close ties, who share your existing knowledge base. A diverse mentor board spanning multiple domains — business, philosophy, health, strategy — provides more cognitive leverage than a deep network in one domain.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">VIRTUAL MENTORSHIP — Biographical Learning Research (Alheit, 2009)</div>
+          <div class="ref-body">Books, lectures, and recorded interviews function as asynchronous mentorship. Alheit's biographical learning research shows that deep engagement with another's life narrative — through autobiography, case study, or extended reading — triggers identity formation processes similar to direct mentoring relationships. Virtual mentors are not substitutes; they are a distinct, complementary channel.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">ROLE MODELS &amp; IDENTITY — Lockwood &amp; Kunda (1997)</div>
+          <div class="ref-body">Lockwood and Kunda demonstrated that role model exposure increases aspiration and motivation — but only when the model's achievements are seen as attainable. The optimal mentor board contains mentors at each level: someone 10% ahead (immediately achievable), 100% ahead (directional), and 1000% ahead (aspirational). This creates a pull across multiple time horizons simultaneously.</div>
+        </div>
+      </div>
+    </div>
+
   </div>
+</main>
 </div>
-
 <script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else{var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='add') renderSeedGrid();
+  if(id==='lessons'){renderLessonMentorSelect();renderLessonList();}
+}
+
 const DOMAIN_COLORS={business:'#27ae60',mindset:'#f39c12',philosophy:'#c9a84c',health:'#e74c3c',finance:'#3498db',leadership:'#9b59b6',technology:'#2980b9',creative:'#e91e63',spirituality:'#1abc9c',strategy:'#e67e22'};
 
 const SEEDS_LIST=[
   {name:'Marcus Aurelius',title:'Emperor · Stoic Philosopher',domain:'philosophy',work:'Meditations',lesson:'Control only what is in your power. Act for the common good. Meet every event with equanimity.'},
-  {name:'Charlie Munger',title:'Investor · Polymath',domain:'business',work:'Poor Charlie\'s Almanack',lesson:'Build a latticework of mental models. Invert. Think in systems. Never stop learning.'},
+  {name:'Charlie Munger',title:'Investor · Polymath',domain:'business',work:"Poor Charlie's Almanack",lesson:'Build a latticework of mental models. Invert. Think in systems. Never stop learning.'},
   {name:'Ray Dalio',title:'Hedge Fund Founder',domain:'finance',work:'Principles (2017)',lesson:'Radical transparency + idea meritocracy. Write your principles. Pain + reflection = progress.'},
   {name:'Andrew Huberman',title:'Neuroscientist · Stanford',domain:'health',work:'Huberman Lab Podcast',lesson:'Optimize sleep, light, and stress response first. The nervous system is the master lever.'},
   {name:'Naval Ravikant',title:'Entrepreneur · Philosopher',domain:'strategy',work:'The Almanack of Naval Ravikant',lesson:'Build specific knowledge, accountability, and leverage. Play long-term games with long-term people.'},
   {name:'Peter Attia',title:'Longevity Physician',domain:'health',work:'Outlive (2023)',lesson:'Healthspan requires decades of proactive protocol. Strength training and metabolic health are the pillars.'},
-  {name:'Richard Feynman',title:'Physicist · Educator',domain:'technology',work:'Surely You\'re Joking Mr. Feynman',lesson:'If you can\'t explain it simply, you don\'t understand it. Curiosity over credentials.'},
+  {name:'Richard Feynman',title:'Physicist · Educator',domain:'technology',work:"Surely You're Joking Mr. Feynman",lesson:"If you can't explain it simply, you don't understand it. Curiosity over credentials."},
   {name:'Epictetus',title:'Stoic Philosopher',domain:'philosophy',work:'Enchiridion',lesson:'Freedom comes from mastering your responses, not controlling outcomes. The dichotomy of control is everything.'},
 ];
 
@@ -260,7 +272,7 @@ function addMentor(){
   document.getElementById('m-lesson').value='';document.getElementById('m-work').value='';
   document.getElementById('m-influence').value='';
   updateStats();renderBoard();renderLessonMentorSelect();
-  alert(`${name} added to your board.`);
+  alert(name+' added to your board.');
 }
 
 function addSeed(idx){
@@ -279,9 +291,9 @@ function renderSeedGrid(){
   grid.innerHTML=SEEDS_LIST.map((s,i)=>{
     const exists=mentors.find(m=>m.name===s.name);
     return `<div style="background:#111;border:1px solid #1a1a1a;border-radius:4px;padding:10px;display:flex;flex-direction:column;gap:6px">
-      <div style="font-size:.75rem;color:var(--t)">${s.name}</div>
-      <div style="font-size:.6rem;color:var(--d)">${s.title}</div>
-      ${exists?'<span style="font-size:.55rem;color:var(--gold)">✓ ON BOARD</span>':`<button class="btn btn-ghost btn-sm" onclick="addSeed(${i})" style="font-size:.55rem">+ ADD</button>`}
+      <div style="font-size:.75rem;color:#fff">${s.name}</div>
+      <div style="font-size:.6rem;color:#888">${s.title}</div>
+      ${exists?'<span style="font-size:.55rem;color:#c9a84c">ON BOARD</span>':`<button class="btn btn-ghost btn-sm" onclick="addSeed(${i})" style="font-size:.55rem">+ ADD</button>`}
     </div>`;
   }).join('');
 }
@@ -300,7 +312,7 @@ function renderBoard(){
       <div class="mentor-initials" style="background:${m.color}22;color:${m.color};border:1px solid ${m.color}44">${initials(m.name)}</div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <span class="type-badge type-${m.type}">${m.type.toUpperCase()}</span>
-        <button class="btn-red" onclick="deleteMentor(${m.id})" style="font-size:.5rem;padding:2px 6px">✕</button>
+        <button class="btn-red" onclick="deleteMentor(${m.id})" style="font-size:.5rem;padding:2px 6px">X</button>
       </div>
     </div>
     <div class="mentor-name">${m.name}</div>
@@ -308,7 +320,7 @@ function renderBoard(){
     <div class="mentor-domain-tags"><span class="domain-tag" style="color:${DOMAIN_COLORS[m.domain]||'#888'}">${m.domain.toUpperCase()}</span></div>
     ${m.lesson?`<div class="mentor-lesson">"${m.lesson}"</div>`:''}
     <div class="mentor-meta">
-      ${m.work?`<span>📘 ${m.work}</span>`:''}
+      ${m.work?`<span>${m.work}</span>`:''}
       ${m.since?`<span>SINCE ${m.since.slice(0,7)}</span>`:''}
       ${m.influence?`<span>${m.influence}</span>`:''}
     </div>
@@ -348,22 +360,11 @@ function updateStats(){
   document.getElementById('st-lessons').textContent=lessons.length;
 }
 
-function switchTab(t){
-  document.querySelectorAll('.tab').forEach((b,i)=>{
-    const names=['board','add','lessons','science'];
-    b.classList.toggle('active',names[i]===t);
-  });
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  if(t==='add') renderSeedGrid();
-  if(t==='lessons'){renderLessonMentorSelect();renderLessonList();}
-}
-
-// init
 document.getElementById('m-since').value=new Date().toISOString().slice(0,10);
 document.getElementById('l-date').value=new Date().toISOString().slice(0,10);
 updateStats();
 renderBoard();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

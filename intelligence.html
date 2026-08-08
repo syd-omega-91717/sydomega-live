@@ -5,86 +5,80 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Intelligence Engine · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#9B6BF0;color:#fff;border-color:#9B6BF0;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
-.intel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px;}
-.intel-card{background:#0d0d0d;border:1px solid #1a1a1a;border-top:3px solid #9B6BF0;padding:20px;cursor:pointer;transition:border-color .2s;}
-.intel-card:hover{border-color:#9B6BF0;}
-.intel-card-icon{font-size:22px;margin-bottom:8px;}
-.intel-card-title{font-family:'Courier New',monospace;font-size:12px;color:#9B6BF0;letter-spacing:2px;margin-bottom:6px;}
-.intel-card-desc{font-size:11px;color:#666;line-height:1.55;}
-.intel-card-link{display:block;margin-top:10px;font-family:'Courier New',monospace;font-size:10px;color:#444;letter-spacing:1px;}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
-.stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
-.stat-num{font-family:'Courier New',monospace;font-size:22px;color:#9B6BF0;font-weight:700;}
-.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
-.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
-/* INTELLIGENCE LOG */
-.form-group{margin-bottom:14px;}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
-.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
-.form-group textarea{min-height:100px;resize:vertical;}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#9B6BF0;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.btn-primary{padding:10px 24px;background:#9B6BF0;border:none;color:#fff;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
-.btn-primary:hover{background:#7a4fcf;}
-.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
-.log-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:14px;margin-bottom:10px;position:relative;}
-.log-card.type-threat{border-left-color:#FF4444;}
-.log-card.type-opportunity{border-left-color:#4CAF50;}
-.log-card.type-insight{border-left-color:#FFD700;}
-.log-card.type-trend{border-left-color:#00BCD4;}
-.log-card.type-competitor{border-left-color:#FF9800;}
-.log-title{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;margin-bottom:4px;}
-.log-body{font-size:11px;color:#888;line-height:1.55;}
-.log-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;font-family:'Courier New',monospace;font-size:9px;color:#444;}
-.type-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:9px;border:1px solid;letter-spacing:1px;}
-.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:11px;}
-.del-btn:hover{color:#FF4444;}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
-.filter-tag.active{background:#1a1a2e;border-color:#9B6BF0;color:#9B6BF0;}
-.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
-.swot-box{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;}
-.swot-label{font-family:'Courier New',monospace;font-size:11px;letter-spacing:2px;margin-bottom:10px;}
-.swot-list{list-style:none;padding:0;}
-.swot-list li{font-size:11px;color:#888;padding:4px 0;border-bottom:1px solid #111;line-height:1.4;}
-.swot-list li::before{margin-right:8px;}
-.swot-add{display:flex;gap:6px;margin-top:8px;}
-.swot-add input{flex:1;background:#111;border:1px solid #222;color:#ccc;padding:6px;font-family:'Courier New',monospace;font-size:10px;}
-.swot-add input:focus{outline:none;border-color:#9B6BF0;}
-.swot-add button{padding:6px 10px;background:#1a1a2e;border:1px solid #9B6BF0;color:#9B6BF0;cursor:pointer;font-family:'Courier New',monospace;font-size:10px;}
-.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;}
-.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:16px;}
-.canvas-wrap canvas{display:block;width:100%;max-width:100%;}
-.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:16px;}
-.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;letter-spacing:1px;margin-bottom:8px;}
-.sci-body{font-size:11px;color:#888;line-height:1.65;}
-.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid #C9A84C}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:#C9A84C;line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.intel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px}
+.intel-card{background:#0d0d0d;border:1px solid #1a1a1a;border-top:3px solid #9B6BF0;padding:20px;cursor:pointer;transition:border-color .2s}
+.intel-card:hover{border-color:#9B6BF0}
+.intel-card-icon{font-size:22px;margin-bottom:8px}
+.intel-card-title{font-family:'Courier New',monospace;font-size:12px;color:#9B6BF0;letter-spacing:2px;margin-bottom:6px}
+.intel-card-desc{font-size:11px;color:#666;line-height:1.55}
+.intel-card-link{display:block;margin-top:10px;font-family:'Courier New',monospace;font-size:10px;color:#444;letter-spacing:1px}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
+.stat-num{font-family:'Courier New',monospace;font-size:22px;color:#9B6BF0;font-weight:700}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
+.form-group textarea{min-height:100px;resize:vertical}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#9B6BF0}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-primary{padding:10px 24px;background:#9B6BF0;border:none;color:#fff;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
+.btn-primary:hover{background:#7a4fcf}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer}
+.log-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:14px;margin-bottom:10px;position:relative}
+.log-card.type-threat{border-left-color:#FF4444}
+.log-card.type-opportunity{border-left-color:#4CAF50}
+.log-card.type-insight{border-left-color:#FFD700}
+.log-card.type-trend{border-left-color:#00BCD4}
+.log-card.type-competitor{border-left-color:#FF9800}
+.log-title{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;margin-bottom:4px}
+.log-body{font-size:11px;color:#888;line-height:1.55}
+.log-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;font-family:'Courier New',monospace;font-size:9px;color:#444}
+.type-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:9px;border:1px solid;letter-spacing:1px}
+.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:11px}
+.del-btn:hover{color:#FF4444}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.filter-tag.active{background:#1a1a2e;border-color:#9B6BF0;color:#9B6BF0}
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.swot-box{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px}
+.swot-label{font-family:'Courier New',monospace;font-size:11px;letter-spacing:2px;margin-bottom:10px}
+.swot-list{list-style:none;padding:0}
+.swot-list li{font-size:11px;color:#888;padding:4px 0;border-bottom:1px solid #111;line-height:1.4}
+.swot-add{display:flex;gap:6px;margin-top:8px}
+.swot-add input{flex:1;background:#111;border:1px solid #222;color:#ccc;padding:6px;font-family:'Courier New',monospace;font-size:10px}
+.swot-add input:focus{outline:none;border-color:#9B6BF0}
+.swot-add button{padding:6px 10px;background:#1a1a2e;border:1px solid #9B6BF0;color:#9B6BF0;cursor:pointer;font-family:'Courier New',monospace;font-size:10px}
+.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:16px}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;letter-spacing:1px;margin-bottom:8px}
+.sci-body{font-size:11px;color:#888;line-height:1.65}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">INTELLIGENCE ENGINE</div>
-  <div class="page-subtitle">SCAN · ANALYZE · SYNTHESIZE · DECIDE</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="intelligence"></aside>
+<main class="main">
+<div class="topbar"><div class="t">INTELLIGENCE ENGINE<small>SCAN · ANALYZE · SYNTHESIZE · DECIDE · SYD OMEGA 91717</small></div></div>
+<div style="padding:20px var(--pad,20px)">
+
+<div class="tab-row">
+  <button class="tab-btn act" data-tab="hub" onclick="switchTab('hub',this)">&#9670; HUB</button>
+  <button class="tab-btn" data-tab="log" onclick="switchTab('log',this)">&#9670; INTEL LOG</button>
+  <button class="tab-btn" data-tab="swot" onclick="switchTab('swot',this)">&#9670; SWOT</button>
+  <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
 </div>
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('hub')">HUB</button>
-  <button class="tab-btn" onclick="switchTab('log')">INTEL LOG</button>
-  <button class="tab-btn" onclick="switchTab('swot')">SWOT</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
-</div>
-
-<!-- HUB TAB -->
-<div id="tab-hub" class="tab-pane active">
+<!-- HUB -->
+<div id="tab-hub" class="tab-panel act">
   <div class="stats-row">
     <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL INTEL</div></div>
     <div class="stat-box"><div class="stat-num" id="stat-threats">0</div><div class="stat-lbl">THREATS</div></div>
@@ -150,8 +144,8 @@
   </div>
 </div>
 
-<!-- INTEL LOG TAB -->
-<div id="tab-log" class="tab-pane">
+<!-- INTEL LOG -->
+<div id="tab-log" class="tab-panel">
   <div class="section-label">LOG INTELLIGENCE</div>
   <div class="form-row">
     <div class="form-group">
@@ -193,11 +187,11 @@
       </select>
     </div>
   </div>
-  <div style="display:flex;gap:8px;margin-bottom:20px;">
+  <div style="display:flex;gap:8px;margin-bottom:20px">
     <button class="btn-primary" onclick="saveIntel()">LOG INTELLIGENCE</button>
     <button class="btn-secondary" onclick="clearIntelForm()">CLEAR</button>
   </div>
-  <div id="log-msg" style="font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;margin-bottom:14px;"></div>
+  <div id="log-msg" style="font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;margin-bottom:14px"></div>
   <div class="section-label">INTELLIGENCE FEED</div>
   <div class="filter-row">
     <div class="filter-tag active" data-t="all" onclick="setLogFilter('all',this)">ALL</div>
@@ -210,36 +204,36 @@
   <div id="intel-feed"></div>
 </div>
 
-<!-- SWOT TAB -->
-<div id="tab-swot" class="tab-pane">
+<!-- SWOT -->
+<div id="tab-swot" class="tab-panel">
   <div class="section-label">SOVEREIGN SWOT ANALYSIS</div>
   <div class="swot-grid">
-    <div class="swot-box" style="border-left:3px solid #4CAF50;">
-      <div class="swot-label" style="color:#4CAF50;">S — STRENGTHS</div>
+    <div class="swot-box" style="border-left:3px solid #4CAF50">
+      <div class="swot-label" style="color:#4CAF50">S — STRENGTHS</div>
       <ul class="swot-list" id="swot-S"></ul>
       <div class="swot-add">
         <input type="text" id="sw-S" placeholder="Add strength..." onkeydown="if(event.key==='Enter')addSwot('S')">
         <button onclick="addSwot('S')">+</button>
       </div>
     </div>
-    <div class="swot-box" style="border-left:3px solid #FF4444;">
-      <div class="swot-label" style="color:#FF4444;">W — WEAKNESSES</div>
+    <div class="swot-box" style="border-left:3px solid #FF4444">
+      <div class="swot-label" style="color:#FF4444">W — WEAKNESSES</div>
       <ul class="swot-list" id="swot-W"></ul>
       <div class="swot-add">
         <input type="text" id="sw-W" placeholder="Add weakness..." onkeydown="if(event.key==='Enter')addSwot('W')">
         <button onclick="addSwot('W')">+</button>
       </div>
     </div>
-    <div class="swot-box" style="border-left:3px solid #FFD700;">
-      <div class="swot-label" style="color:#FFD700;">O — OPPORTUNITIES</div>
+    <div class="swot-box" style="border-left:3px solid #FFD700">
+      <div class="swot-label" style="color:#FFD700">O — OPPORTUNITIES</div>
       <ul class="swot-list" id="swot-O"></ul>
       <div class="swot-add">
         <input type="text" id="sw-O" placeholder="Add opportunity..." onkeydown="if(event.key==='Enter')addSwot('O')">
         <button onclick="addSwot('O')">+</button>
       </div>
     </div>
-    <div class="swot-box" style="border-left:3px solid #FF9800;">
-      <div class="swot-label" style="color:#FF9800;">T — THREATS</div>
+    <div class="swot-box" style="border-left:3px solid #FF9800">
+      <div class="swot-label" style="color:#FF9800">T — THREATS</div>
       <ul class="swot-list" id="swot-T"></ul>
       <div class="swot-add">
         <input type="text" id="sw-T" placeholder="Add threat..." onkeydown="if(event.key==='Enter')addSwot('T')">
@@ -250,8 +244,20 @@
   <button class="btn-secondary" onclick="clearSwot()">CLEAR SWOT</button>
 </div>
 
-<!-- SCIENCE TAB -->
-<div id="tab-science" class="tab-pane">
+<!-- SCIENCE -->
+<div id="tab-science" class="tab-panel">
+  <div class="kpi-row">
+    <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+    <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+    <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+    <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+    <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+    <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+    <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+  </div>
   <div class="science-grid">
     <div class="sci-card">
       <div class="sci-title">COMPETITIVE INTELLIGENCE</div>
@@ -285,15 +291,27 @@
     </div>
   </div>
 </div>
+
+</div>
 </main>
+</div>
 
-<script src="/omega-ui.js"></script>
 <script>
-var intel = [];
-var swot = {S:[],W:[],O:[],T:[]};
-var logFilter = 'all';
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='hub'){renderStats();}
+  if(id==='log'){renderFeed();}
+  if(id==='swot'){renderSwot();}
+}
 
-var TYPE_COLORS = {insight:'#FFD700',threat:'#FF4444',opportunity:'#4CAF50',trend:'#00BCD4',competitor:'#FF9800',data:'#9B6BF0'};
+var intel=[];
+var swot={S:[],W:[],O:[],T:[]};
+var logFilter='all';
+var TYPE_COLORS={insight:'#FFD700',threat:'#FF4444',opportunity:'#4CAF50',trend:'#00BCD4',competitor:'#FF9800',data:'#9B6BF0'};
 
 function load(){
   try{intel=JSON.parse(localStorage.getItem('omega_intel')||'[]');}catch(e){intel=[];}
@@ -306,22 +324,11 @@ function save(){
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  var labels={hub:'HUB',log:'INTEL LOG',swot:'SWOT',science:'SCIENCE'};
-  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===labels[t])b.classList.add('active');});
-  if(t==='hub'){renderStats();}
-  if(t==='log'){renderFeed();}
-  if(t==='swot'){renderSwot();}
-}
-
 function renderStats(){
   document.getElementById('stat-total').textContent=intel.length;
-  document.getElementById('stat-threats').textContent=intel.filter(x=>x.type==='threat').length;
-  document.getElementById('stat-opps').textContent=intel.filter(x=>x.type==='opportunity').length;
-  document.getElementById('stat-insights').textContent=intel.filter(x=>x.type==='insight').length;
+  document.getElementById('stat-threats').textContent=intel.filter(function(x){return x.type==='threat';}).length;
+  document.getElementById('stat-opps').textContent=intel.filter(function(x){return x.type==='opportunity';}).length;
+  document.getElementById('stat-insights').textContent=intel.filter(function(x){return x.type==='insight';}).length;
 }
 
 function saveIntel(){
@@ -331,10 +338,10 @@ function saveIntel(){
   var source=document.getElementById('il-source').value.trim();
   var domain=document.getElementById('il-domain').value;
   if(!title||!body){alert('Title and body required.');return;}
-  intel.unshift({id:uid(),title,body,type,source,domain,created:new Date().toISOString()});
+  intel.unshift({id:uid(),title:title,body:body,type:type,source:source,domain:domain,created:new Date().toISOString()});
   save();clearIntelForm();renderStats();
   document.getElementById('log-msg').textContent='INTELLIGENCE LOGGED · '+new Date().toLocaleTimeString();
-  setTimeout(()=>{document.getElementById('log-msg').textContent='';},2500);
+  setTimeout(function(){document.getElementById('log-msg').textContent='';},2500);
   renderFeed();
 }
 
@@ -348,16 +355,16 @@ function clearIntelForm(){
 
 function setLogFilter(t,el){
   logFilter=t;
-  document.querySelectorAll('.filter-tag').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.filter-tag').forEach(function(x){x.classList.remove('active');});
   el.classList.add('active');
   renderFeed();
 }
 
 function renderFeed(){
   var feed=document.getElementById('intel-feed');
-  var list=logFilter==='all'?intel:intel.filter(x=>x.type===logFilter);
+  var list=logFilter==='all'?intel:intel.filter(function(x){return x.type===logFilter;});
   if(!list.length){feed.innerHTML='<div class="empty-state">NO INTEL LOGGED YET</div>';return;}
-  feed.innerHTML=list.map(x=>intelCard(x)).join('');
+  feed.innerHTML=list.map(function(x){return intelCard(x);}).join('');
 }
 
 function intelCard(x){
@@ -376,16 +383,17 @@ function intelCard(x){
 
 function delIntel(id){
   if(!confirm('Delete?'))return;
-  intel=intel.filter(x=>x.id!==id);
+  intel=intel.filter(function(x){return x.id!==id;});
   save();renderFeed();renderStats();
 }
 
-// SWOT
 function renderSwot(){
-  ['S','W','O','T'].forEach(k=>{
+  ['S','W','O','T'].forEach(function(k){
     var ul=document.getElementById('swot-'+k);
     if(!swot[k])swot[k]=[];
-    ul.innerHTML=swot[k].map((item,i)=>'<li>'+esc(item)+' <span onclick="removeSwot(\''+k+'\','+i+')" style="cursor:pointer;color:#444;margin-left:6px;">×</span></li>').join('');
+    ul.innerHTML=swot[k].map(function(item,i){
+      return '<li>'+esc(item)+' <span onclick="removeSwot(\''+k+'\','+i+')" style="cursor:pointer;color:#444;margin-left:6px;">\xd7</span></li>';
+    }).join('');
   });
 }
 function addSwot(k){
@@ -402,5 +410,6 @@ function clearSwot(){if(!confirm('Clear all SWOT items?'))return;swot={S:[],W:[]
 load();
 renderStats();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

@@ -385,12 +385,12 @@ function renderAllocation(){
     var col=Math.abs(diff)<=3?'#4CAF50':Math.abs(diff)<=8?'#FFD700':'#FF4444';
     return '<div class="alloc-bar">'
       +'<div class="alloc-label">'
-      +'<span style="color:'+(TYPE_COLORS[k]||\'#888\')+'">'+(TYPE_LABELS[k]||k)+'</span>'
+      +'<span style="color:'+(TYPE_COLORS[k]||'#888')+'">'+(TYPE_LABELS[k]||k)+'</span>'
       +'<span>ACTUAL '+actual+'% · TARGET <input type="number" value="'+target+'" min="0" max="100" '
       +'style="width:40px;background:#0d0d0d;border:1px solid #333;color:#FFD700;font-family:\'Courier New\',monospace;font-size:10px;padding:2px 4px;" '
       +'onchange="setTarget(\''+k+'\',this.value)">% · <span style="color:'+col+'">'+diffStr+'</span></span>'
       +'</div>'
-      +'<div class="progress-bar"><div class="progress-fill" style="width:'+Math.min(100,parseFloat(actual))+'%;background:'+(TYPE_COLORS[k]||\'#888\')+';opacity:.6"></div></div>'
+      +'<div class="progress-bar"><div class="progress-fill" style="width:'+Math.min(100,parseFloat(actual))+'%;background:'+(TYPE_COLORS[k]||'#888')+';opacity:.6"></div></div>'
       +'</div>';
   }).join('');
   if(!accounts.filter(a=>a.type!=='debt').length)el.innerHTML='<div class="empty-state">ADD NON-DEBT ACCOUNTS TO SEE ALLOCATION</div>';

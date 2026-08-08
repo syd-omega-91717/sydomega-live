@@ -263,6 +263,60 @@ artifact, not a real signature change. Functions not created in more than
 one file, or whose repeated definitions never change signature, were not
 individually re-audited beyond this sweep.
 
+## A third real error, and a wider sweep for the same idempotency gap in DDL
+
+`0036_conversations.sql` was reported failing (`ERROR: relation
+"conversations" already exists`, `SQLSTATE 42P07`) against a project that
+already had the table. Unlike the `42P13` function-signature bugs above,
+this one predates any of this reorganization's numbering — the file's
+`CREATE TABLE conversations (...)` / `CREATE TABLE messages (...)`
+statements never had an `IF NOT EXISTS` guard, unlike every other table
+creation in this codebase (`chunk_06_migrations.sql`'s independent
+embedded copy of the same two tables already has the guard; the canonical
+loose file and `migration_runner.sql` never did). **Reproduced locally**
+(pre-create `conversations` in a scratch database, then run the file as it
+was — identical error) and **fixed**: added `IF NOT EXISTS` to both
+`CREATE TABLE` statements, applied identically to
+`supabase/migrations/0036_...` and the loose `supabase/conversations.sql`.
+
+Worth noting, not fixed here: neither table has any RLS policy in this
+file (a separate file 50 migrations later, `rls_missing_tables.sql`,
+conditionally closes that gap), and **no file in the entire 87-file set
+grants `conversations`/`messages` access to the `anon`/`authenticated`
+roles at all** — meaning these tables are unreachable via the Supabase
+client API (PostgREST requires an explicit `GRANT`) regardless of RLS
+state, for the whole sequence. So the missing-RLS window isn't a live
+security exposure, but it may mean whatever client feature these tables
+back isn't actually wired up to work yet — out of scope to fix blind.
+
+Given this was a different bug class than the `42P13` ones (a missing
+`IF NOT EXISTS` on `CREATE TABLE`, not a missing `DROP FUNCTION` before a
+signature change), the same kind of sweep was run for every other
+idempotency gap in DDL across all 87 files:
+
+- **`CREATE TABLE` without `IF NOT EXISTS`**: only `conversations.sql`
+  (fixed above). Three other regex matches were comment text
+  ("...the `CREATE TABLE` above...", "...`CREATE TABLE` bodies...."), not
+  real statements.
+- **`CREATE INDEX` without `IF NOT EXISTS`**: none found.
+- **`CREATE TRIGGER` without a preceding `DROP TRIGGER IF EXISTS`**: none
+  found.
+- **`CREATE TYPE`** (which has no `IF NOT EXISTS` form in Postgres at
+  all): none found.
+- **`CREATE POLICY` colliding with an identically-named policy on the same
+  table from an earlier file, without a drop**: initial static scan
+  flagged `omega_rls_fix.sql` (`0051`) redefining four policies
+  (`profiles_select`, `profiles_update`, `profiles_insert`,
+  `platform_owners_read`) that `omega_master_deploy.sql` (`0001`) already
+  creates — checked against the actual file and this is a **false
+  positive**: `0051` drops every existing policy on those two tables
+  dynamically (`DO` block iterating `pg_policies`, `EXECUTE format('DROP
+  POLICY IF EXISTS %I ON ...')`), which the regex-based scan doesn't
+  recognize as a name-specific drop but is in fact more thorough than one.
+  Confirmed safe by the fact this file has never failed in any of the
+  clean-database test runs above (`85/87`, unaffected before and after
+  this check).
+
 **Two files still fail on a fresh apply — investigated individually,
 not patched:**
 

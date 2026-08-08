@@ -40,6 +40,17 @@ CREATE OR REPLACE FUNCTION public.matrix_node(a int,b int,c int)
 RETURNS int LANGUAGE sql IMMUTABLE AS $$ SELECT (a-1)*81 + (b-1)*9 + (c-1) + 1 $$;
 
 -- read my full nested matrix: 12 tracks, each with (a,b,c), node, % of 729
+--
+-- Defensive drop: later migrations (omega_authority_v2.sql, step1_drop.sql/
+-- step2_create.sql, targeted_fix.sql) redefine my_matrix() with a different
+-- RETURNS TABLE shape (adds phase, widens a/b/c to numeric), which Postgres
+-- rejects with 42P13 ("cannot change return type of existing function")
+-- unless the old signature is dropped first. On a truly empty database this
+-- is the first definition, so the drop is a no-op; on a database that
+-- already has a later signature applied by hand (as omega_authority_v2.sql's
+-- own header already anticipates for its own redefinition), the drop lets
+-- this migration apply regardless of the starting state.
+DROP FUNCTION IF EXISTS public.my_matrix();
 CREATE OR REPLACE FUNCTION public.my_matrix()
 RETURNS TABLE(track int, sign text, element text, a int, b int, c int, node int, pct numeric)
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$

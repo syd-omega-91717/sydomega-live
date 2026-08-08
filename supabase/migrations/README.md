@@ -317,6 +317,55 @@ idempotency gap in DDL across all 87 files:
   clean-database test runs above (`85/87`, unaffected before and after
   this check).
 
+## A fourth real error: a table that exists out-of-band, in a shape this repo doesn't know
+
+`0059_omega_ai_memory.sql` was reported failing (`ERROR: column "user_id"
+does not exist`, `SQLSTATE 42703`, at `CREATE INDEX IF NOT EXISTS
+idx_mem_user ON public.ai_memory(user_id, ...)`). This is a third distinct
+bug class from the two above: unlike `interest_signals` (two files in
+*this repo* define the same table incompatibly), **no other file anywhere
+in the repository creates `ai_memory`** — grepped the entire tree,
+including `chunk_*.sql` and `migration_runner.sql`, confirmed. The file's
+own `CREATE TABLE IF NOT EXISTS public.ai_memory(...)` correctly declares
+`user_id`; the only explanation consistent with the error is that the
+reporting project already has an `ai_memory` table created by some means
+this repository has no record of (Supabase dashboard UI, an uncommitted
+one-off script, or similar) — `CREATE TABLE IF NOT EXISTS` is a no-op
+against it, and the subsequent `CREATE INDEX` then references a column
+that table doesn't actually have.
+
+There is no way to know that table's real shape from the repo alone, so
+this **can't** be fixed by picking a "correct" schema the way the
+`interest_signals` case could theoretically be resolved by checking which
+of two known candidates is live. Instead, applied the same defensive
+pattern this codebase already uses for exactly this situation —
+`omega_master_deploy.sql`'s own comment: *"a table may already exist in a
+divergent shape ... in which case the CREATE TABLE above was skipped and
+the policy below would fail"*, guarded there with
+`ALTER TABLE public.%I ADD COLUMN IF NOT EXISTS user_id uuid;`. Added the
+equivalent for every column `0059`'s indexes/policies/trigger depend on
+(`user_id`, `memory_key`, `memory_type`, `agent_name`, `updated_at`)
+immediately after the `CREATE TABLE`, before anything references them.
+**Reproduced locally** (created a minimal `ai_memory` stand-in missing
+`user_id`, confirmed the exact error, then confirmed the fix resolves it)
+and applied identically to `supabase/migrations/0059_...` and the loose
+`supabase/omega_ai_memory.sql`.
+
+Swept all 87 files for the same pattern (a `CREATE INDEX` referencing a
+column that's only guaranteed by that file's own `CREATE TABLE IF NOT
+EXISTS`, with no defensive `ALTER TABLE ADD COLUMN IF NOT EXISTS` guard)
+— **zero other candidates found**; `ai_memory` was the only case.
+
+This bug class is fundamentally different from the previous two in one
+important way: it depends on state — what tables a given real project
+already has, in what shape — that genuinely cannot be determined from this
+repository alone. The sweep above rules out *this specific* unguarded-
+column pattern across all 87 files, but it can't rule out every table in
+this set turning out to already exist somewhere in an unexpected shape;
+that can only be discovered by actually running the migration against the
+real project and reporting what comes back, the same way this one was
+found.
+
 **Two files still fail on a fresh apply — investigated individually,
 not patched:**
 

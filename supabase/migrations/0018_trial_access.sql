@@ -13,6 +13,13 @@ ALTER TABLE profiles
    Sets access_approved = true, marks as trial, stamps expiry at exactly
    9.1717 minutes (= 550.302 seconds) from now.
    Owner (is_owner = true) is never set as trial. */
+-- Defensive drop: later migrations (trial_917.sql, chronometers.sql) redefine
+-- this to RETURN timestamptz instead of void. On a database that already has
+-- that later signature (a real, actively-used project -- not the empty
+-- database this file was first validated against), the undefended
+-- CREATE OR REPLACE below fails with 42P13. See 0004's my_matrix() fix for
+-- the same pattern.
+DROP FUNCTION IF EXISTS grant_trial_access(UUID);
 CREATE OR REPLACE FUNCTION grant_trial_access(p_uid UUID)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
@@ -27,6 +34,11 @@ $$;
 /* --- 3. EXPIRE TRIAL (called by client when countdown hits zero) ---
    Revokes access, clears trial flags, resets all three matrix axes to genesis
    values (1.0), and wipes the member's task_completions so progress is clean. */
+-- Defensive drop: omega_master_deploy.sql (runs first) already creates
+-- expire_trial(uuid) RETURNING jsonb; this redefines it to RETURN void,
+-- which Postgres rejects without a DROP first (42P13) -- fails even on a
+-- freshly-applied database, not just an existing one.
+DROP FUNCTION IF EXISTS expire_trial(UUID);
 CREATE OR REPLACE FUNCTION expire_trial(p_uid UUID)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
@@ -44,6 +56,10 @@ END;
 $$;
 
 /* --- 4. GRANT PERMANENT ACCESS (owner override, no timer) --- */
+-- Defensive drop: same reason as expire_trial above -- omega_master_deploy.sql
+-- already creates this returning jsonb; redefining it to void without a drop
+-- first fails with 42P13 even on a freshly-applied database.
+DROP FUNCTION IF EXISTS grant_permanent_access(UUID);
 CREATE OR REPLACE FUNCTION grant_permanent_access(p_uid UUID)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN

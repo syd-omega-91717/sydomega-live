@@ -15,6 +15,17 @@ CREATE TABLE IF NOT EXISTS public.interest_signals (
   weight        numeric NOT NULL DEFAULT 1.0 CHECK (weight > 0),
   created_at    timestamptz NOT NULL DEFAULT now()
 );
+-- Guarantee created_at exists even if public.interest_signals already exists
+-- in the shape entreprise_schema_v2.sql defines (recorded_at instead of
+-- created_at, different FK target and CHECK constraint list) -- confirmed
+-- live via a Supabase Preview run reporting exactly this: CREATE TABLE
+-- IF NOT EXISTS was a no-op against that shape, and this file's own
+-- CREATE INDEX below failed on the missing column. Same defensive pattern
+-- as omega_master_deploy.sql's "guarantee the ownership column exists
+-- first" and 0059's ai_memory fix. Every other column this file needs
+-- (user_id, signal_type, content_id, content_type, axis_type, weight)
+-- is already present in both known shapes, so only created_at needs this.
+ALTER TABLE public.interest_signals ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 
 -- Index for per-user interest queries (recommendation feed)
 CREATE INDEX IF NOT EXISTS interest_signals_user_idx

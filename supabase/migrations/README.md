@@ -150,16 +150,88 @@ is a call for you to make, not one this reorganization made silently.
   reduction of redundancy. Expected safe to replay per the idempotent
   patterns already documented in root `CLAUDE.md` §5, but not verified
   line-by-line for every one of the 87 files.
-- **This sequence has not been executed against a live or test Postgres
-  database.** Order and safety were derived from documentation, file
-  headers, git history, and static inspection of the self-defensive
-  drop-before-redefine pattern already present in the source files — not
-  from actually running `supabase db push` (or equivalent) end to end.
-  **Before pointing any real deployment at `supabase/migrations/`, run it
-  against a fresh/scratch Supabase project first** and confirm it applies
-  cleanly start to finish.
 - `migration_runner.sql` and the `chunk_*.sql` files were left in place,
   unedited, and are now known-stale for at least the 30 files identified
   above. Whether to regenerate, correct, or remove them is a separate
   decision — flagging so they aren't mistaken for a trustworthy manual
   fallback in the meantime.
+
+## Execution validation
+
+This sequence has now been run end to end against a real PostgreSQL 16
+instance (not a hosted Supabase project — no Supabase account/API token
+was available in the environment this was validated from) built up with a
+minimal stand-in for the platform pieces a real Supabase project provides
+for free: an `auth` schema with `auth.users` and `auth.uid()`, the
+`anon`/`authenticated`/`service_role` roles, a `storage` schema with
+`storage.buckets`/`storage.objects`/`storage.foldername()`, and the
+`pgvector` extension. This is not a full emulation (no real Auth/Storage
+services, no PostgREST, no real JWT verification), but it exercises the
+actual SQL.
+
+**Result: 84 of 87 files apply cleanly on a fresh database, in order,
+zero manual intervention.** Getting there surfaced two real ordering bugs,
+now fixed by pure renumbering (no SQL content changed):
+
+- `omega_sovereign_points.sql` references `public.exam_results` (created
+  by `omega_exams.sql`) and `public.matrix_progress` (created by
+  `omega_nested_matrix.sql`), but originally sat before both in the
+  derived order. Renumbered so `omega_exams.sql` → `omega_nested_matrix.sql`
+  → `omega_sovereign_points.sql`, shifting `0003`–`0007` accordingly.
+
+**Three files still fail on a fresh apply — investigated individually,
+not patched:**
+
+1. **`0018_trial_access.sql`: `cannot change return type of existing
+   function` on `expire_trial(uuid)`.** `0001_omega_master_deploy.sql`
+   defines `expire_trial(p_uid uuid) RETURNS jsonb`; `0018` redefines the
+   same signature as `RETURNS void`, which Postgres rejects without an
+   explicit `DROP FUNCTION` first. This function is redefined **nine
+   times** across the full file set (`0001`, `0018`, `0027`, `0028`,
+   `0041`, `0057` — literally named `fix_expire_trial.sql` — `0074`
+   —`surgical_fix_expire_trial.sql`, `0079`, `0082`, `0084`), which reads
+   as real, iterative production history rather than one clean intended
+   version. Checked whether this matters functionally: `bg.js` (loaded on
+   every page) calls `sb.rpc('expire_trial',...)` and never reads the
+   return value, so the `jsonb` vs `void` choice doesn't affect app
+   behavior — but the sequence still can't replay past this point
+   unmodified. Determining the actually-correct final signature requires
+   knowing what's live on the real production database; not guessed at
+   here.
+2. **`0077_omega_interest_graph.sql`: `column "created_at" does not
+   exist"` while creating an index.** `0056_entreprise_schema_v2.sql` and
+   `0077_omega_interest_graph.sql` both define `public.interest_signals`
+   with genuinely incompatible schemas (`recorded_at` vs `created_at`
+   timestamp column, `public.profiles` vs `auth.users` as the `user_id`
+   FK target, different check constraints). Since both use `CREATE TABLE
+   IF NOT EXISTS`, whichever runs first "wins" and the other's
+   column-specific statements later in its own file (like this index)
+   fail against the shape that actually exists. This is the concrete,
+   now-proven version of the duplicate-table-definitions problem
+   REPO_AUDIT.md §4 already flagged in the abstract (47 tables, including
+   this one, defined in more than one file) — previously described there
+   as "expected safe" per the idempotent `IF NOT EXISTS` pattern; this is
+   a demonstrated case where that expectation doesn't hold. The only
+   writer, `record_interest_signal()` (in `0077`), doesn't name the
+   timestamp column explicitly, so it would insert fine against either
+   shape — but the schema itself is genuinely forked. **Which shape is
+   actually live in production can only be checked against the real
+   database** (e.g. `select column_name from information_schema.columns
+   where table_name='interest_signals'`); not resolved here.
+3. **`0087_owner_apex_lock.sql`: "Not authorised: only a platform owner
+   may grant permanent access."** Confirmed this is **not a bug**: it
+   calls `grant_permanent_access()`, which correctly checks
+   `is_platform_owner()` (itself keyed on `auth.uid()`, i.e. the calling
+   session's authenticated identity via JWT). A plain `psql`/SQL-editor
+   session has no JWT context, so `auth.uid()` is `NULL` and the owner
+   check correctly denies it — verified by re-running with
+   `request.jwt.claim.sub` set to a seeded owner's id, which succeeds
+   (`is_platform_owner()` → `true`, `grant_permanent_access()` completes).
+   The security check is working as designed; this file needs to be run
+   in a context where the caller is actually authenticated as the owner.
+
+No SQL statement's *content* was changed by this validation pass — only
+the two-file reordering above. The two real findings (2) and (1) are
+pre-existing in the source files, not introduced by this reorganization,
+and are left for a human with access to the real production database to
+resolve correctly.

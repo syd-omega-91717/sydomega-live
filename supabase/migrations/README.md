@@ -179,6 +179,39 @@ now fixed by pure renumbering (no SQL content changed):
   derived order. Renumbered so `omega_exams.sql` → `omega_nested_matrix.sql`
   → `omega_sovereign_points.sql`, shifting `0003`–`0007` accordingly.
 
+**A fresh/empty database is not the only real starting state.** Applying
+`migrations/` to an *existing* Supabase project (one already carrying years
+of hand-pasted schema changes, not a blank one) surfaced a real bug a
+truly-empty scratch database can't: `omega_nested_matrix.sql` creates
+`public.my_matrix()` with its original 8-column return shape and no
+defensive drop. Three later files —
+`omega_authority_v2.sql` (whose own header already says *"my_matrix()
+cannot change its RETURN TABLE without a DROP first"*), the
+`step1_drop.sql`/`step2_create.sql` pair, and `targeted_fix.sql` (whose
+header documents this exact error, `SQLSTATE 42P13`) — each correctly
+drop-then-recreate it with a newer shape (adds `phase`, widens `a/b/c` to
+`numeric`). If the target database already has that newer shape (as a real,
+actively-used project would, from those fix files having been pasted in by
+hand at some point), replaying `omega_nested_matrix.sql`'s un-defended
+`CREATE OR REPLACE` from the start of the sequence collides with it and
+fails with exactly this error. **Reproduced locally** (pre-seed a scratch
+database with the newer signature, then run `omega_nested_matrix.sql`
+as it was) and **fixed**: added `DROP FUNCTION IF EXISTS
+public.my_matrix();` immediately before its `CREATE OR REPLACE`, matching
+the same defensive pattern the three later fix files already use for this
+exact function. Verified the fix resolves the reproduction, and that the
+full 87-file sequence still applies the same (84/87) on a genuinely fresh
+database — this change only affects behavior when a conflicting `my_matrix()`
+already exists. Applied identically to both `supabase/migrations/0004_...`
+and the loose `supabase/omega_nested_matrix.sql`, keeping the two in sync.
+
+This is a narrower instance of the same class of risk as the `expire_trial()`
+finding below — a function redefined multiple times across the file
+history, where only the *later* redefinitions were made defensive. Other
+functions redefined more than once across the file set have not been
+individually re-audited for the same gap; `my_matrix()` was fixed because
+it was the one actually observed failing.
+
 **Three files still fail on a fresh apply — investigated individually,
 not patched:**
 

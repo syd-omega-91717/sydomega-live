@@ -8,8 +8,6 @@
 <link rel="manifest" href="/manifest.json"/>
 <title>&#937; SYD OMEGA 91717 -- Access Pending</title>
 <meta name="description" content="The Code. The Frequency. The Legacy. A sovereign multi-platform ecosystem -- 9.17Hz, 104,976-node matrix, 12 Olympians."/>
-<meta name="theme-color" content="#C9A84C"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="SYD OMEGA"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -34,11 +32,9 @@ html,body{height:100%;overflow:hidden}
 body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
 #bg-cv{position:fixed;inset:0;z-index:0}
 .gate{position:relative;z-index:1;text-align:center;padding:32px 24px;max-width:480px;width:100%}
-/* Omega logo */
 #gate-omega{display:block;margin:0 auto 20px}
 .gate-title{font-family:var(--D);font-size:clamp(16px,4vw,26px);font-weight:700;letter-spacing:2px;margin-bottom:8px}
 .gate-sub{font-family:var(--M);font-size:9px;letter-spacing:4px;color:var(--muted);margin-bottom:28px;line-height:1.9}
-/* Status box */
 .status-box{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:20px 22px;margin-bottom:22px;position:relative;overflow:hidden}
 .status-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scan 3s ease-in-out infinite}
 @keyframes scan{0%,100%{opacity:.2}50%{opacity:1}}
@@ -46,85 +42,81 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
 .sb-status{font-family:var(--D);font-size:16px;margin-bottom:4px;animation:status-breathe 3s ease-in-out infinite}
 @keyframes status-breathe{0%,100%{opacity:.7}50%{opacity:1}}
 .sb-detail{font-size:9px;color:var(--muted);letter-spacing:1px;line-height:1.8}
-/* Frequency */
 .freq{font-family:var(--D);font-size:13px;color:var(--cyan);letter-spacing:3px;margin-bottom:24px;animation:freq-breathe 2s ease-in-out infinite}
 @keyframes freq-breathe{0%,100%{opacity:.5}50%{opacity:1;text-shadow:0 0 14px rgba(0,229,255,.6)}}
-/* Buttons */
 .btns{display:flex;flex-direction:column;gap:10px;align-items:center}
 .btn-check{font-family:var(--M);font-size:10px;letter-spacing:3px;padding:13px 36px;color:var(--void);background:linear-gradient(90deg,var(--gold),var(--solar));border:none;cursor:pointer;transition:box-shadow .2s;width:100%;max-width:280px;animation:btn-shimmer 3s ease-in-out infinite}
 @keyframes btn-shimmer{0%,100%{box-shadow:0 0 0 rgba(201,168,76,0)}50%{box-shadow:0 0 18px rgba(201,168,76,.35)}}
 .btn-check:hover{box-shadow:0 0 24px rgba(201,168,76,.5)}
 .btn-logout{font-family:var(--M);font-size:9px;letter-spacing:3px;padding:10px 28px;color:var(--muted);border:1px solid rgba(201,168,76,.15);background:transparent;cursor:pointer;transition:all .2s;width:100%;max-width:280px;text-decoration:none;display:block;text-align:center}
 .btn-logout:hover{border-color:rgba(201,168,76,.35);color:var(--gold)}
-/* Expired state */
 .expired-badge{background:rgba(139,0,0,.15);border:1px solid rgba(139,0,0,.4);padding:12px 18px;margin-bottom:18px;display:none}
 .eb-title{font-family:var(--D);font-size:14px;color:var(--crim);margin-bottom:4px}
 .eb-sub{font-size:9px;color:var(--muted);letter-spacing:1px;line-height:1.7}
-/* Auto-check indicator */
 .auto-check{font-size:8px;letter-spacing:2px;color:rgba(133,131,123,.4);margin-top:18px}
 .ac-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--muted);animation:dot-blink 1.5s ease-in-out infinite}
 @keyframes dot-blink{0%,100%{opacity:.2}50%{opacity:1}}
 .tab-bar{display:flex;border-bottom:1px solid rgba(201,168,76,.18);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;width:100%;margin:14px 0 0}.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
-.tab-panel{display:none;width:100%;padding:18px 0}.tab-panel.active{display:block}
+.tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.act{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+.tab-panel{display:none;width:100%;padding:18px 0}.tab-panel.act{display:block}
 .kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
 .kpi{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold);text-align:left}
 .kpi-n{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
+<aside class="side" id="omega-side" data-page="pending" style="display:none"></aside>
 <canvas id="bg-cv"></canvas>
 <div class="gate">
-  <!-- Animated Omega logo -->
   <canvas id="gate-omega" width="160" height="160" style="width:80px;height:80px"></canvas>
 
   <div class="tab-bar" role="tablist">
-    <button class="tab-btn active" data-ptab="status">&#9670; STATUS</button>
-    <button class="tab-btn" data-ptab="frequency">&#9670; FREQUENCY</button>
-    <button class="tab-btn" data-ptab="protocol">&#9670; PROTOCOL</button>
-    <button class="tab-btn" data-ptab="science">&#9670; SCIENCE</button>
+    <button class="tab-btn act" onclick="switchTab('status',this)">&#9670; STATUS</button>
+    <button class="tab-btn" onclick="switchTab('frequency',this)">&#9670; FREQUENCY</button>
+    <button class="tab-btn" onclick="switchTab('protocol',this)">&#9670; PROTOCOL</button>
+    <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
   </div>
 
-  <div id="ptab-status" class="tab-panel active">
-    <div class="gate-title" id="gate-title" style="color:var(--gold)" data-i18n="pending.submitted">ACCESS REQUEST SUBMITTED</div>
-    <div class="gate-sub"><span data-i18n="pending.registered">YOUR IDENTITY HAS BEEN REGISTERED</span><br/><span data-i18n="pending.review">THE ARCHITECT WILL REVIEW AND GRANT ACCESS</span></div>
+  <div id="tab-status" class="tab-panel act">
+    <div class="gate-title" id="gate-title" style="color:var(--gold)">ACCESS REQUEST SUBMITTED</div>
+    <div class="gate-sub">YOUR IDENTITY HAS BEEN REGISTERED<br/>THE ARCHITECT WILL REVIEW AND GRANT ACCESS</div>
     <div class="expired-badge" id="expired-badge">
-      <div class="eb-title" data-i18n="pending.trial_ended">TRIAL SESSION ENDED</div>
+      <div class="eb-title">TRIAL SESSION ENDED</div>
       <div class="eb-sub">Your 9h-17m-17s trial has expired.<br/>Request renewed access from the Architect.<br/>Create a new session or contact the Order.</div>
     </div>
     <div class="status-box">
-      <div class="sb-label" data-i18n="pending.status_label">ACCESS STATUS</div>
-      <div class="sb-status" id="sb-status" style="color:var(--solar)" data-i18n="pending.pending_review">PENDING ARCHITECT REVIEW</div>
+      <div class="sb-label">ACCESS STATUS</div>
+      <div class="sb-status" id="sb-status" style="color:var(--solar)">PENDING ARCHITECT REVIEW</div>
       <div class="sb-detail" id="sb-detail">The Architect reviews and approves all members personally.<br/>Access is granted for a sovereign trial period of 9 hours 17 minutes 17 seconds.</div>
     </div>
     <div class="btns">
-      <button class="btn-check" id="btn-check" data-i18n="pending.check">CHECK ACCESS STATUS</button>
-      <a class="btn-logout" id="btn-logout" href="#" data-i18n="pending.signout">SIGN OUT AND RETURN</a>
+      <button class="btn-check" id="btn-check">CHECK ACCESS STATUS</button>
+      <a class="btn-logout" id="btn-logout" href="#">SIGN OUT AND RETURN</a>
     </div>
     <div class="auto-check">
       AUTO-CHECKING <span class="ac-dot"></span><span class="ac-dot" style="animation-delay:.3s"></span><span class="ac-dot" style="animation-delay:.6s"></span> EVERY 15 SECONDS
     </div>
   </div>
 
-  <div id="ptab-frequency" class="tab-panel">
+  <div id="tab-frequency" class="tab-panel">
     <div class="freq">9.1717 Hz &mdash; FREQUENCY LOCK ACTIVE</div>
     <div class="kpi-row">
       <div class="kpi"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz SOVEREIGN FREQ</div></div>
       <div class="kpi"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
       <div class="kpi"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-      <div class="kpi"><div class="kpi-n">9×9×9</div><div class="kpi-l">729 INNER NODES</div></div>
+      <div class="kpi"><div class="kpi-n">9&times;9&times;9</div><div class="kpi-l">729 INNER NODES</div></div>
     </div>
   </div>
 
-  <div id="ptab-protocol" class="tab-panel">
+  <div id="tab-protocol" class="tab-panel">
     <div class="status-box">
       <div class="sb-label">ACCESS PROTOCOL</div>
       <div class="sb-status" style="color:var(--cyan)">SOVEREIGN REVIEW SYSTEM</div>
-      <div class="sb-detail">The Architect personally reviews every access request. The Order operates on a trust-first model — every member is evaluated for sovereign alignment before entry is granted. Trial access spans exactly 9 hours, 17 minutes, 17 seconds.</div>
+      <div class="sb-detail">The Architect personally reviews every access request. The Order operates on a trust-first model &mdash; every member is evaluated for sovereign alignment before entry is granted. Trial access spans exactly 9 hours, 17 minutes, 17 seconds.</div>
     </div>
   </div>
 
-  <div id="ptab-science" class="tab-panel">
+  <div id="tab-science" class="tab-panel">
     <div class="kpi-row">
       <div class="kpi"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
       <div class="kpi"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
@@ -140,21 +132,14 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
   </div>
 </div>
 
-<!-- Tab switching -->
 <script>
-(function(){
-  document.querySelectorAll('.tab-btn[data-ptab]').forEach(function(b){
-    b.addEventListener('click',function(){
-      document.querySelectorAll('.tab-btn[data-ptab]').forEach(function(x){x.classList.remove('active');});
-      b.classList.add('active');
-      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-      var p=document.getElementById('ptab-'+b.dataset.ptab);
-      if(p)p.classList.add('active');
-    });
-  });
-})();
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  document.getElementById('tab-'+id).classList.add('act');
+}
 </script>
-<!-- Star canvas -->
 <script>
 (function(){
   var cv=document.getElementById('bg-cv');
@@ -172,7 +157,6 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
     requestAnimationFrame(f);}f();
 })();
 
-/* Omega canvas */
 (function(){
   var cv=document.getElementById('gate-omega');
   var ctx=cv.getContext('2d'),CX=80,CY=80;var t=0;
@@ -186,11 +170,10 @@ body{background:var(--void);color:#e9e6dc;font-family:var(--M);display:flex;alig
     ctx.fillStyle='rgba(201,168,76,'+(0.82+.18*Math.sin(t*1.5))+')';
     ctx.shadowColor='rgba(201,168,76,.7)';ctx.shadowBlur=18+6*Math.sin(t);
     ctx.font='700 38px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('\u03A9',CX,CY+2);ctx.shadowBlur=0;
+    ctx.fillText('Ω',CX,CY+2);ctx.shadowBlur=0;
     requestAnimationFrame(f);}f();
 })();
 
-/* Check if ?status=expired */
 if(location.search.includes('expired')){
   document.getElementById('expired-badge').style.display='block';
   document.getElementById('gate-title').textContent='TRIAL SESSION EXPIRED';
@@ -204,9 +187,6 @@ if(location.search.includes('expired')){
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q"));
-/* Share this single client with every shared script (bg.js, emblems,
-   gate, membership, progress ...) so the page has exactly one
-   GoTrueClient rather than one per module. */
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 async function checkStatus(){
@@ -214,16 +194,13 @@ async function checkStatus(){
   if(!sess){window.location.href='/account.html';return;}
   const {data:pr}=await sb.from('profiles').select('is_owner,access_approved,is_trial,trial_expires_at').eq('id',sess.user.id).maybeSingle();
   if(!pr) return;
-  /* Owner always gets through */
   if(pr.is_owner||pr.access_approved){window.location.href='/dashboard.html';return;}
-  /* Active trial */
   if(pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>Date.now()){
     window.location.href='/dashboard.html';return;
   }
   document.getElementById('sb-status').textContent='STILL PENDING -- ARCHITECT WILL REVIEW SHORTLY';
 }
 
-/* Auto-check every 15 seconds */
 checkStatus();
 setInterval(checkStatus,15000);
 

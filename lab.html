@@ -5,257 +5,272 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Innovation Lab · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#00E5FF;color:#000;border-color:#00E5FF;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
-.stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
-.stat-num{font-family:'Courier New',monospace;font-size:22px;color:#00E5FF;font-weight:700;}
-.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
-/* RADAR */
-.radar-section{margin-bottom:20px;}
-.radar-legend{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;}
-.legend-item{display:flex;align-items:center;gap:6px;font-family:'Courier New',monospace;font-size:10px;color:#888;}
-.legend-dot{width:10px;height:10px;border-radius:50%;}
-.ring-labels{display:flex;gap:12px;justify-content:flex-end;margin-bottom:6px;flex-wrap:wrap;}
-.ring-lbl{font-family:'Courier New',monospace;font-size:9px;letter-spacing:1px;}
-.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
-.tech-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;position:relative;}
-.tech-ring-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
-.tech-name{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;font-weight:700;margin-bottom:4px;display:flex;align-items:center;}
-.tech-cat{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px;}
-.tech-desc{font-size:11px;color:#888;line-height:1.55;}
-.tech-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
-.ring-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:9px;border:1px solid;letter-spacing:1px;}
-.move-badge{padding:2px 6px;font-family:'Courier New',monospace;font-size:9px;border:1px solid #333;color:#555;}
-.move-up{color:#4CAF50;border-color:#4CAF50;}
-.move-down{color:#FF4444;border-color:#FF4444;}
-.move-same{color:#555;border-color:#333;}
-.del-btn{position:absolute;top:8px;right:8px;background:none;border:none;color:#333;cursor:pointer;font-size:10px;}
-.del-btn:hover{color:#FF4444;}
-.form-group{margin-bottom:14px;}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
-.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
-.form-group textarea{min-height:80px;resize:vertical;}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#00E5FF;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.btn-primary{padding:10px 24px;background:#00E5FF;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
-.btn-primary:hover{background:#00b8cc;}
-.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
-.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
-.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
-.filter-tag.active{background:#0a1a1a;border-color:#00E5FF;color:#00E5FF;}
-.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;}
-.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;margin-bottom:20px;}
-.experiments-list{margin-top:10px;}
-.exp-item{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:14px;margin-bottom:10px;position:relative;}
-.exp-item.status-running{border-left-color:#FFD700;}
-.exp-item.status-success{border-left-color:#4CAF50;}
-.exp-item.status-failed{border-left-color:#FF4444;}
-.exp-item.status-paused{border-left-color:#555;}
-.exp-title{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;margin-bottom:4px;}
-.exp-hypo{font-size:11px;color:#888;margin-bottom:6px;line-height:1.5;}
-.exp-meta{display:flex;gap:8px;flex-wrap:wrap;font-family:'Courier New',monospace;font-size:9px;color:#555;}
-.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:16px;}
-.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;letter-spacing:1px;margin-bottom:8px;}
-.sci-body{font-size:11px;color:#888;line-height:1.65;}
-.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid #C9A84C}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:#C9A84C;line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-box{flex:1;min-width:80px;background:#0d0d0d;border:1px solid #1a1a1a;padding:12px;text-align:center}
+.stat-num{font-family:'Courier New',monospace;font-size:22px;color:#00E5FF;font-weight:700}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px}
+.radar-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:'Courier New',monospace;font-size:10px;color:#888}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tech-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;position:relative}
+.tech-ring-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.tech-name{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;font-weight:700;margin-bottom:4px;display:flex;align-items:center}
+.tech-cat{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px}
+.tech-desc{font-size:11px;color:#888;line-height:1.55}
+.tech-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ring-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:9px;border:1px solid;letter-spacing:1px}
+.move-badge{padding:2px 6px;font-family:'Courier New',monospace;font-size:9px;border:1px solid #333;color:#555}
+.move-up{color:#4CAF50;border-color:#4CAF50}
+.move-down{color:#FF4444;border-color:#FF4444}
+.move-same{color:#555;border-color:#333}
+.del-btn{position:absolute;top:8px;right:8px;background:none;border:none;color:#333;cursor:pointer;font-size:10px;font-family:inherit}
+.del-btn:hover{color:#FF4444}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#00E5FF}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-primary{padding:10px 24px;background:#00E5FF;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
+.btn-primary:hover{background:#00b8cc}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.filter-tag.active{background:#0a1a1a;border-color:#00E5FF;color:#00E5FF}
+.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px}
+.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;margin-bottom:16px}
+.exp-item{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:14px;margin-bottom:10px;position:relative}
+.exp-item.status-running{border-left-color:#FFD700}
+.exp-item.status-success{border-left-color:#4CAF50}
+.exp-item.status-failed{border-left-color:#FF4444}
+.exp-item.status-paused{border-left-color:#555}
+.exp-title{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;margin-bottom:4px}
+.exp-hypo{font-size:11px;color:#888;margin-bottom:6px;line-height:1.5}
+.exp-meta{display:flex;gap:8px;flex-wrap:wrap;font-family:'Courier New',monospace;font-size:9px;color:#555}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:16px}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;letter-spacing:1px;margin-bottom:8px}
+.sci-body{font-size:11px;color:#888;line-height:1.65}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">INNOVATION LAB</div>
-  <div class="page-subtitle">TECHNOLOGY RADAR · EXPERIMENTS · FRONTIER RESEARCH</div>
-</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="lab"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">INNOVATION LAB<small>TECHNOLOGY RADAR · EXPERIMENTS · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('radar')">RADAR</button>
-  <button class="tab-btn" onclick="switchTab('add')">ADD TECH</button>
-  <button class="tab-btn" onclick="switchTab('experiments')">EXPERIMENTS</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
-</div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="radar" onclick="switchTab('radar',this)">&#9670; RADAR</button>
+      <button class="tab-btn" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD TECH</button>
+      <button class="tab-btn" data-tab="experiments" onclick="switchTab('experiments',this)">&#9670; EXPERIMENTS</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+    </div>
 
-<!-- RADAR TAB -->
-<div id="tab-radar" class="tab-pane active">
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num" id="stat-adopt">0</div><div class="stat-lbl">ADOPT</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-trial">0</div><div class="stat-lbl">TRIAL</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-assess">0</div><div class="stat-lbl">ASSESS</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-hold">0</div><div class="stat-lbl">HOLD</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL</div></div>
-  </div>
-  <div class="radar-legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#4CAF50"></div>ADOPT — Use confidently in production</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#FFD700"></div>TRIAL — Worth pursuing with clear need</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#FF9800"></div>ASSESS — Explore with caution</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#FF4444"></div>HOLD — Proceed with extra care</div>
-  </div>
-  <div class="canvas-wrap">
-    <canvas id="radar-canvas" height="360"></canvas>
-  </div>
-  <div class="filter-row" id="ring-filter">
-    <div class="filter-tag active" data-r="all" onclick="setRingFilter('all',this)">ALL</div>
-    <div class="filter-tag" data-r="adopt" onclick="setRingFilter('adopt',this)">ADOPT</div>
-    <div class="filter-tag" data-r="trial" onclick="setRingFilter('trial',this)">TRIAL</div>
-    <div class="filter-tag" data-r="assess" onclick="setRingFilter('assess',this)">ASSESS</div>
-    <div class="filter-tag" data-r="hold" onclick="setRingFilter('hold',this)">HOLD</div>
-  </div>
-  <div class="tech-grid" id="tech-grid"></div>
-</div>
+    <!-- RADAR -->
+    <div id="tab-radar" class="tab-panel act">
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num" id="stat-adopt">0</div><div class="stat-lbl">ADOPT</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-trial">0</div><div class="stat-lbl">TRIAL</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-assess">0</div><div class="stat-lbl">ASSESS</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-hold">0</div><div class="stat-lbl">HOLD</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL</div></div>
+      </div>
+      <div class="radar-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#4CAF50"></div>ADOPT — Use confidently in production</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#FFD700"></div>TRIAL — Worth pursuing with clear need</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#FF9800"></div>ASSESS — Explore with caution</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#FF4444"></div>HOLD — Proceed with extra care</div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="radar-canvas" height="360"></canvas>
+      </div>
+      <div class="filter-row" id="ring-filter">
+        <div class="filter-tag active" data-r="all" onclick="setRingFilter('all',this)">ALL</div>
+        <div class="filter-tag" data-r="adopt" onclick="setRingFilter('adopt',this)">ADOPT</div>
+        <div class="filter-tag" data-r="trial" onclick="setRingFilter('trial',this)">TRIAL</div>
+        <div class="filter-tag" data-r="assess" onclick="setRingFilter('assess',this)">ASSESS</div>
+        <div class="filter-tag" data-r="hold" onclick="setRingFilter('hold',this)">HOLD</div>
+      </div>
+      <div class="tech-grid" id="tech-grid"></div>
+    </div>
 
-<!-- ADD TECH TAB -->
-<div id="tab-add" class="tab-pane">
-  <div class="section-label">ADD TECHNOLOGY</div>
-  <div class="form-group">
-    <label>TECHNOLOGY NAME</label>
-    <input type="text" id="t-name" placeholder="e.g. Rust, WebAssembly, LangChain..." maxlength="80">
-  </div>
-  <div class="form-group">
-    <label>DESCRIPTION</label>
-    <textarea id="t-desc" placeholder="What is this technology and why does it matter to you?"></textarea>
-  </div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>RADAR RING</label>
-      <select id="t-ring">
-        <option value="adopt">Adopt</option>
-        <option value="trial">Trial</option>
-        <option value="assess">Assess</option>
-        <option value="hold">Hold</option>
-      </select>
+    <!-- ADD TECH -->
+    <div id="tab-add" class="tab-panel">
+      <div class="section-label">ADD TECHNOLOGY</div>
+      <div class="form-group">
+        <label>TECHNOLOGY NAME</label>
+        <input type="text" id="t-name" placeholder="e.g. Rust, WebAssembly, LangChain..." maxlength="80">
+      </div>
+      <div class="form-group">
+        <label>DESCRIPTION</label>
+        <textarea id="t-desc" placeholder="What is this technology and why does it matter to you?"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>RADAR RING</label>
+          <select id="t-ring">
+            <option value="adopt">Adopt</option>
+            <option value="trial">Trial</option>
+            <option value="assess" selected>Assess</option>
+            <option value="hold">Hold</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>CATEGORY</label>
+          <select id="t-cat">
+            <option value="languages">Languages &amp; Frameworks</option>
+            <option value="platforms">Platforms</option>
+            <option value="tools" selected>Tools</option>
+            <option value="techniques">Techniques</option>
+            <option value="ai">AI &amp; ML</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="data">Data</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>MOVEMENT</label>
+          <select id="t-move">
+            <option value="same">No change</option>
+            <option value="up">Moving in (closer to Adopt)</option>
+            <option value="down">Moving out (toward Hold)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>URL / REFERENCE (optional)</label>
+          <input type="text" id="t-url" placeholder="URL or reference...">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-primary" onclick="saveTech()">ADD TO RADAR</button>
+        <button class="btn-secondary" onclick="clearTechForm()">CLEAR</button>
+      </div>
+      <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF"></div>
     </div>
-    <div class="form-group">
-      <label>CATEGORY</label>
-      <select id="t-cat">
-        <option value="languages">Languages & Frameworks</option>
-        <option value="platforms">Platforms</option>
-        <option value="tools">Tools</option>
-        <option value="techniques">Techniques</option>
-        <option value="ai">AI & ML</option>
-        <option value="infrastructure">Infrastructure</option>
-        <option value="data">Data</option>
-      </select>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>MOVEMENT</label>
-      <select id="t-move">
-        <option value="same">No change</option>
-        <option value="up">Moving in (closer to Adopt)</option>
-        <option value="down">Moving out (toward Hold)</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>URL / REFERENCE (optional)</label>
-      <input type="url" id="t-url" placeholder="https://...">
-    </div>
-  </div>
-  <div style="display:flex;gap:8px;">
-    <button class="btn-primary" onclick="saveTech()">ADD TO RADAR</button>
-    <button class="btn-secondary" onclick="clearTechForm()">CLEAR</button>
-  </div>
-  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;"></div>
-</div>
 
-<!-- EXPERIMENTS TAB -->
-<div id="tab-experiments" class="tab-pane">
-  <div class="section-label">LOG EXPERIMENT</div>
-  <div class="form-group">
-    <label>EXPERIMENT NAME</label>
-    <input type="text" id="e-name" placeholder="What are you testing?" maxlength="80">
-  </div>
-  <div class="form-group">
-    <label>HYPOTHESIS</label>
-    <textarea id="e-hypo" placeholder="If I do X, then Y will happen because Z..." style="min-height:60px;"></textarea>
-  </div>
-  <div class="form-group">
-    <label>OUTCOME / RESULT</label>
-    <textarea id="e-result" placeholder="What actually happened? What did you learn?" style="min-height:60px;"></textarea>
-  </div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>STATUS</label>
-      <select id="e-status">
-        <option value="running">Running</option>
-        <option value="success">Success</option>
-        <option value="failed">Failed</option>
-        <option value="paused">Paused</option>
-      </select>
+    <!-- EXPERIMENTS -->
+    <div id="tab-experiments" class="tab-panel">
+      <div class="section-label">LOG EXPERIMENT</div>
+      <div class="form-group">
+        <label>EXPERIMENT NAME</label>
+        <input type="text" id="e-name" placeholder="What are you testing?" maxlength="80">
+      </div>
+      <div class="form-group">
+        <label>HYPOTHESIS</label>
+        <textarea id="e-hypo" placeholder="If I do X, then Y will happen because Z..." style="min-height:60px"></textarea>
+      </div>
+      <div class="form-group">
+        <label>OUTCOME / RESULT</label>
+        <textarea id="e-result" placeholder="What actually happened? What did you learn?" style="min-height:60px"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>STATUS</label>
+          <select id="e-status">
+            <option value="running">Running</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+            <option value="paused">Paused</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>CATEGORY</label>
+          <select id="e-cat">
+            <option value="product">Product</option>
+            <option value="technology">Technology</option>
+            <option value="process">Process</option>
+            <option value="personal">Personal</option>
+            <option value="business">Business</option>
+            <option value="creative">Creative</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button class="btn-primary" onclick="saveExperiment()">LOG EXPERIMENT</button>
+        <button class="btn-secondary" onclick="clearExpForm()">CLEAR</button>
+      </div>
+      <div id="exp-msg" style="font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;margin-bottom:14px"></div>
+      <div class="section-label">EXPERIMENT LOG</div>
+      <div id="experiments-list"></div>
     </div>
-    <div class="form-group">
-      <label>CATEGORY</label>
-      <select id="e-cat">
-        <option value="product">Product</option>
-        <option value="technology">Technology</option>
-        <option value="process">Process</option>
-        <option value="personal">Personal</option>
-        <option value="business">Business</option>
-        <option value="creative">Creative</option>
-      </select>
-    </div>
-  </div>
-  <div style="display:flex;gap:8px;margin-bottom:20px;">
-    <button class="btn-primary" onclick="saveExperiment()">LOG EXPERIMENT</button>
-    <button class="btn-secondary" onclick="clearExpForm()">CLEAR</button>
-  </div>
-  <div id="exp-msg" style="font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;margin-bottom:14px;"></div>
-  <div class="section-label">EXPERIMENT LOG</div>
-  <div class="experiments-list" id="experiments-list"></div>
-</div>
 
-<!-- SCIENCE TAB -->
-<div id="tab-science" class="tab-pane">
-  <div class="science-grid">
-    <div class="sci-card">
-      <div class="sci-title">TECHNOLOGY RADAR ORIGIN</div>
-      <div class="sci-body">ThoughtWorks Technology Radar (2010) popularized quadrant-ring categorization of technology adoption. The four rings — Adopt, Trial, Assess, Hold — represent opinionated guidance based on production experience. The key insight: not using a technology is also a choice that needs reasoning.</div>
-      <div class="sci-ref">ThoughtWorks (2010). Technology Radar Vol. 1</div>
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="science-grid">
+        <div class="sci-card">
+          <div class="sci-title">TECHNOLOGY RADAR ORIGIN</div>
+          <div class="sci-body">ThoughtWorks Technology Radar (2010) popularized quadrant-ring categorization of technology adoption. The four rings — Adopt, Trial, Assess, Hold — represent opinionated guidance based on production experience. The key insight: not using a technology is also a choice that needs reasoning.</div>
+          <div class="sci-ref">ThoughtWorks (2010). Technology Radar Vol. 1</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">CHASM CROSSING</div>
+          <div class="sci-body">Moore (1991): technology adoption follows a bell curve with a chasm between Early Adopters and Early Majority. Positioning yourself in the Early Adopter segment of technologies that cross the chasm provides compounding advantage — you have years of depth before the mainstream catches up.</div>
+          <div class="sci-ref">Moore, G.A. (1991). Crossing the Chasm</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">SCIENTIFIC METHOD</div>
+          <div class="sci-body">Experiments require falsifiable hypotheses (Popper, 1934). A good experiment hypothesis: (1) specific and measurable, (2) testable within a defined timeframe, (3) connected to a clear mechanism. Most innovation failures are due to untested assumptions, not execution problems.</div>
+          <div class="sci-ref">Popper, K. (1934). The Logic of Scientific Discovery</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">GARTNER HYPE CYCLE</div>
+          <div class="sci-body">Gartner (1995): Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment → Slope of Enlightenment → Plateau of Productivity. The best investments are in the Trough — when a technology is real but pessimism suppresses adoption and prices. Most people buy at the Peak.</div>
+          <div class="sci-ref">Gartner Inc. (1995). Hype Cycle Framework</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">FAST FAILURE PRINCIPLE</div>
+          <div class="sci-body">Thomke (2003): the cost of knowledge is the cost of experiments. Digital technology enables cheap, fast experiments. The goal is not to avoid failure but to fail fast, cheaply, and informatively. Each experiment should answer exactly one question, with a clear binary verdict: confirmed or refuted.</div>
+          <div class="sci-ref">Thomke, S.H. (2003). Experimentation Matters, HBS Press</div>
+        </div>
+        <div class="sci-card">
+          <div class="sci-title">COMBINATORIAL INNOVATION</div>
+          <div class="sci-body">Weitzman (1998): growth comes from recombining existing ideas in new ways. The innovation frontier expands when you have breadth across domains (tools, frameworks, techniques) AND depth in at least one. The radar forces systematic breadth; experiments build depth.</div>
+          <div class="sci-ref">Weitzman, M.L. (1998). Quarterly Journal of Economics</div>
+        </div>
+      </div>
     </div>
-    <div class="sci-card">
-      <div class="sci-title">CHASM CROSSING</div>
-      <div class="sci-body">Moore (1991): technology adoption follows a bell curve with a chasm between Early Adopters and Early Majority. Positioning yourself in the Early Adopter segment of technologies that cross the chasm provides compounding advantage — you have years of depth before the mainstream catches up.</div>
-      <div class="sci-ref">Moore, G.A. (1991). Crossing the Chasm</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">SCIENTIFIC METHOD</div>
-      <div class="sci-body">Experiments require falsifiable hypotheses (Popper, 1934). A good experiment hypothesis: (1) specific and measurable, (2) testable within a defined timeframe, (3) connected to a clear mechanism. Most innovation failures are due to untested assumptions, not execution problems.</div>
-      <div class="sci-ref">Popper, K. (1934). The Logic of Scientific Discovery</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">GARTNER HYPE CYCLE</div>
-      <div class="sci-body">Gartner (1995): Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment → Slope of Enlightenment → Plateau of Productivity. The best investments are in the Trough — when a technology is real but pessimism suppresses adoption and prices. Most people buy at the Peak.</div>
-      <div class="sci-ref">Gartner Inc. (1995). Hype Cycle Framework</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">FAST FAILURE PRINCIPLE</div>
-      <div class="sci-body">Thomke (2003): the cost of knowledge is the cost of experiments. Digital technology enables cheap, fast experiments. The goal is not to avoid failure but to fail fast, cheaply, and informatively. Each experiment should answer exactly one question, with a clear binary verdict: confirmed or refuted.</div>
-      <div class="sci-ref">Thomke, S.H. (2003). Experimentation Matters, HBS Press</div>
-    </div>
-    <div class="sci-card">
-      <div class="sci-title">COMBINATORIAL INNOVATION</div>
-      <div class="sci-body">Weitzman (1998): growth comes from recombining existing ideas in new ways. The innovation frontier expands when you have breadth across domains (tools, frameworks, techniques) AND depth in at least one. The radar forces systematic breadth; experiments build depth.</div>
-      <div class="sci-ref">Weitzman, M.L. (1998). Quarterly Journal of Economics</div>
-    </div>
+
   </div>
-</div>
 </main>
-
-<script src="/omega-ui.js"></script>
+</div>
 <script>
-var techs = [];
-var experiments = [];
-var ringFilter = 'all';
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else{var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='radar') renderRadar();
+  if(id==='experiments') renderExperiments();
+}
 
-var RING_COLORS = {adopt:'#4CAF50',trial:'#FFD700',assess:'#FF9800',hold:'#FF4444'};
-var CAT_COLORS = {languages:'#00E5FF',platforms:'#9B6BF0',tools:'#FFD700',techniques:'#4CAF50',ai:'#FF4444',infrastructure:'#FF9800',data:'#00BCD4'};
+var techs=[];
+var experiments=[];
+var ringFilter='all';
+var RING_COLORS={adopt:'#4CAF50',trial:'#FFD700',assess:'#FF9800',hold:'#FF4444'};
+var CAT_COLORS={languages:'#00E5FF',platforms:'#9B6BF0',tools:'#FFD700',techniques:'#4CAF50',ai:'#FF4444',infrastructure:'#FF9800',data:'#00BCD4'};
 
 function load(){
   try{techs=JSON.parse(localStorage.getItem('omega_techs')||'[]');}catch(e){techs=[];}
@@ -267,16 +282,6 @@ function save(){
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  var labels={radar:'RADAR','add':'ADD TECH',experiments:'EXPERIMENTS',science:'SCIENCE'};
-  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===labels[t])b.classList.add('active');});
-  if(t==='radar'){renderRadar();}
-  if(t==='experiments'){renderExperiments();}
-}
 
 function renderStats(){
   ['adopt','trial','assess','hold'].forEach(r=>{
@@ -306,8 +311,7 @@ function drawRadarCanvas(){
   var cx=W/2,cy=180;
   var rings=[{r:160,ring:'hold',label:'HOLD'},{r:120,ring:'assess',label:'ASSESS'},{r:80,ring:'trial',label:'TRIAL'},{r:40,ring:'adopt',label:'ADOPT'}];
   ctx.clearRect(0,0,W,360);
-  // draw rings
-  rings.forEach(({r,ring,label})=>{
+  rings.forEach(function({r,ring,label}){
     ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
     ctx.strokeStyle=RING_COLORS[ring]+'33';ctx.lineWidth=1;ctx.stroke();
     ctx.fillStyle=RING_COLORS[ring]+'11';ctx.fill();
@@ -315,19 +319,16 @@ function drawRadarCanvas(){
     ctx.font='9px Courier New';ctx.textAlign='left';
     ctx.fillText(label,cx+r+4,cy-4);
   });
-  // draw quadrant lines
   ctx.beginPath();ctx.moveTo(cx,cy-165);ctx.lineTo(cx,cy+165);ctx.strokeStyle='#1a1a1a';ctx.stroke();
   ctx.beginPath();ctx.moveTo(cx-165,cy);ctx.lineTo(cx+165,cy);ctx.strokeStyle='#1a1a1a';ctx.stroke();
-  // quadrant labels
   ctx.font='9px Courier New';ctx.fillStyle='#444';ctx.textAlign='center';
   ctx.fillText('LANGUAGES',cx-100,cy-170);
   ctx.fillText('PLATFORMS',cx+100,cy-170);
   ctx.fillText('TOOLS',cx-100,cy+175);
   ctx.fillText('TECHNIQUES',cx+100,cy+175);
-  // place techs
   var catQuadrant={languages:0,platforms:1,tools:2,techniques:3,ai:0,infrastructure:1,data:2};
   var ringRadius={adopt:25,trial:55,assess:100,hold:142};
-  var quadrantAngle=[Math.PI+Math.PI/4, -Math.PI/4, Math.PI/4+Math.PI/2, Math.PI/4];
+  var quadrantAngle=[Math.PI+Math.PI/4,-Math.PI/4,Math.PI/4+Math.PI/2,Math.PI/4];
   var spread=Math.PI/2-0.3;
   var placed={};
   techs.forEach(tech=>{
@@ -349,30 +350,24 @@ function drawRadarCanvas(){
 function renderTechGrid(){
   var grid=document.getElementById('tech-grid');
   var list=ringFilter==='all'?techs:techs.filter(t=>t.ring===ringFilter);
-  if(!list.length){
-    grid.innerHTML='<div style="grid-column:1/-1;"><div class="empty-state">NO TECHNOLOGIES YET<br><small>Go to ADD TECH to populate your radar</small></div></div>';
-    return;
-  }
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1"><div class="empty-state">NO TECHNOLOGIES YET — GO TO ADD TECH</div></div>';return;}
   var order={adopt:0,trial:1,assess:2,hold:3};
   list=[...list].sort((a,b)=>(order[a.ring]||0)-(order[b.ring]||0));
-  grid.innerHTML=list.map(t=>techCard(t)).join('');
-}
-
-function techCard(t){
-  var col=RING_COLORS[t.ring]||'#888';
-  var catCol=CAT_COLORS[t.cat]||'#444';
-  var moveCls=t.move==='up'?'move-up':t.move==='down'?'move-down':'move-same';
-  var moveLabel=t.move==='up'?'▲ IN':t.move==='down'?'▼ OUT':'● SAME';
-  return '<div class="tech-card" style="border-top:2px solid '+col+'">'
-    +'<button class="del-btn" onclick="delTech(\''+t.id+'\')">DEL</button>'
-    +'<div class="tech-name"><span class="tech-ring-dot" style="background:'+col+'"></span>'+esc(t.name)+'</div>'
-    +'<div class="tech-cat" style="color:'+catCol+'">'+t.cat.toUpperCase()+'</div>'
-    +'<div class="tech-desc">'+esc(t.desc)+'</div>'
-    +'<div class="tech-meta">'
-    +'<span class="ring-badge" style="color:'+col+';border-color:'+col+'">'+t.ring.toUpperCase()+'</span>'
-    +'<span class="move-badge '+moveCls+'">'+moveLabel+'</span>'
-    +(t.url?'<a href="'+esc(t.url)+'" target="_blank" rel="noopener" style="font-family:\'Courier New\',monospace;font-size:9px;color:#444;text-decoration:none;">LINK ↗</a>':'')
-    +'</div></div>';
+  grid.innerHTML=list.map(t=>{
+    var col=RING_COLORS[t.ring]||'#888';
+    var catCol=CAT_COLORS[t.cat]||'#444';
+    var moveCls=t.move==='up'?'move-up':t.move==='down'?'move-down':'move-same';
+    var moveLabel=t.move==='up'?'IN':t.move==='down'?'OUT':'SAME';
+    return '<div class="tech-card" style="border-top:2px solid '+col+'">'
+      +'<button class="del-btn" onclick="delTech(\''+t.id+'\')">DEL</button>'
+      +'<div class="tech-name"><span class="tech-ring-dot" style="background:'+col+'"></span>'+esc(t.name)+'</div>'
+      +'<div class="tech-cat" style="color:'+catCol+'">'+t.cat.toUpperCase()+'</div>'
+      +'<div class="tech-desc">'+esc(t.desc)+'</div>'
+      +'<div class="tech-meta">'
+      +'<span class="ring-badge" style="color:'+col+';border-color:'+col+'">'+t.ring.toUpperCase()+'</span>'
+      +'<span class="move-badge '+moveCls+'">'+moveLabel+'</span>'
+      +'</div></div>';
+  }).join('');
 }
 
 function delTech(id){if(!confirm('Remove?'))return;techs=techs.filter(x=>x.id!==id);save();renderRadar();}
@@ -398,7 +393,6 @@ function clearTechForm(){
   document.getElementById('t-move').value='same';
 }
 
-// EXPERIMENTS
 function saveExperiment(){
   var name=document.getElementById('e-name').value.trim();
   var hypo=document.getElementById('e-hypo').value.trim();
@@ -440,5 +434,6 @@ function renderExperiments(){
 load();
 renderRadar();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

@@ -5,145 +5,172 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Investment Engine · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#4CAF50;color:#000;border-color:#4CAF50;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
-.portfolio-banner{background:linear-gradient(135deg,#0d0d0d,#0a140a);border:1px solid #1a1a1a;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
-.portfolio-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#4CAF50,#FFD700,#4CAF50);}
-.pb-row{display:flex;gap:24px;flex-wrap:wrap;align-items:center;}
-.pb-val{font-family:'Courier New',monospace;font-size:32px;color:#4CAF50;font-weight:700;}
-.pb-label{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:2px;margin-bottom:4px;}
-.pb-change{font-family:'Courier New',monospace;font-size:14px;}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
-.stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
-.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#4CAF50;font-weight:700;}
-.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
-.holding-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-.holding-ticker{font-family:'Courier New',monospace;font-size:14px;color:#4CAF50;font-weight:700;min-width:60px;}
-.holding-name{flex:1;font-size:11px;color:#888;}
-.holding-val{font-family:'Courier New',monospace;font-size:14px;color:#e0e0e0;font-weight:700;text-align:right;}
-.holding-pnl{font-family:'Courier New',monospace;font-size:11px;text-align:right;}
-.holding-pnl.pos{color:#4CAF50;}
-.holding-pnl.neg{color:#FF4444;}
-.holding-weight{font-family:'Courier New',monospace;font-size:9px;color:#555;text-align:right;min-width:40px;}
-.del-btn{background:none;border:none;color:#333;cursor:pointer;font-size:10px;}
-.del-btn:hover{color:#FF4444;}
-.form-group{margin-bottom:14px;}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
-.form-group input,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
-.form-group input:focus,.form-group select:focus{outline:none;border-color:#4CAF50;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.btn-primary{padding:10px 24px;background:#4CAF50;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
-.btn-primary:hover{background:#388E3C;}
-.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
-.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
-.filter-tag.active{background:#0a140a;border-color:#4CAF50;color:#4CAF50;}
-.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:16px;}
-.canvas-wrap canvas{display:block;width:100%;}
-.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #4CAF50;padding:16px;}
-.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#4CAF50;letter-spacing:1px;margin-bottom:8px;}
-.sci-body{font-size:11px;color:#888;line-height:1.65;}
-.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
-.progress-bar{background:#1a1a1a;height:4px;border-radius:2px;overflow:hidden;margin-top:6px;}
-.progress-fill{height:100%;background:#4CAF50;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid #C9A84C}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:#C9A84C;line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.portfolio-banner{background:linear-gradient(135deg,#0d0d0d,#0a140a);border:1px solid #1a1a1a;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.portfolio-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#4CAF50,#FFD700,#4CAF50)}
+.pb-row{display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.pb-val{font-family:'Courier New',monospace;font-size:28px;color:#4CAF50;font-weight:700}
+.pb-label{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:2px;margin-bottom:4px}
+.pb-change{font-family:'Courier New',monospace;font-size:14px}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-box{flex:1;min-width:80px;background:#0d0d0d;border:1px solid #1a1a1a;padding:12px;text-align:center}
+.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#4CAF50;font-weight:700}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px}
+.holding-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.holding-ticker{font-family:'Courier New',monospace;font-size:14px;color:#4CAF50;font-weight:700;min-width:56px}
+.holding-name{flex:1;font-size:11px;color:#888}
+.holding-val{font-family:'Courier New',monospace;font-size:14px;color:#e0e0e0;font-weight:700;text-align:right}
+.holding-pnl{font-family:'Courier New',monospace;font-size:11px;text-align:right}
+.holding-pnl.pos{color:#4CAF50}
+.holding-pnl.neg{color:#FF4444}
+.holding-weight{font-family:'Courier New',monospace;font-size:9px;color:#555;text-align:right;min-width:40px}
+.del-btn{background:none;border:none;color:#333;cursor:pointer;font-size:10px;font-family:inherit}
+.del-btn:hover{color:#FF4444}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px}
+.form-group input,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#4CAF50}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-primary{padding:10px 24px;background:#4CAF50;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
+.btn-primary:hover{background:#388E3C}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.filter-tag.active{background:#0a140a;border-color:#4CAF50;color:#4CAF50}
+.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:16px}
+.canvas-wrap canvas{display:block;width:100%}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #4CAF50;padding:16px}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#4CAF50;letter-spacing:1px;margin-bottom:8px}
+.sci-body{font-size:11px;color:#888;line-height:1.65}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
+.progress-bar{background:#1a1a1a;height:4px;border-radius:2px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;background:#4CAF50}
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">INVESTMENT ENGINE</div>
-  <div class="page-subtitle">PORTFOLIO &middot; HOLDINGS &middot; PERFORMANCE &middot; ALLOCATION</div>
-</div>
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('portfolio')">PORTFOLIO</button>
-  <button class="tab-btn" onclick="switchTab('add')">ADD HOLDING</button>
-  <button class="tab-btn" onclick="switchTab('alloc')">ALLOCATION</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
-</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="investment"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">INVESTMENT ENGINE<small>PORTFOLIO · HOLDINGS · ALLOCATION · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-<div id="tab-portfolio" class="tab-pane active">
-  <div class="portfolio-banner">
-    <div class="pb-row">
-      <div><div class="pb-label">PORTFOLIO VALUE</div><div class="pb-val" id="port-val">$0</div></div>
-      <div><div class="pb-label">TOTAL COST BASIS</div><div class="pb-val" style="font-size:20px;color:#888;" id="port-cost">$0</div></div>
-      <div><div class="pb-label">TOTAL GAIN/LOSS</div><div class="pb-change" id="port-pnl">$0</div></div>
-      <div><div class="pb-label">RETURN</div><div class="pb-change" id="port-ret">0%</div></div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="portfolio" onclick="switchTab('portfolio',this)">&#9670; PORTFOLIO</button>
+      <button class="tab-btn" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD HOLDING</button>
+      <button class="tab-btn" data-tab="alloc" onclick="switchTab('alloc',this)">&#9670; ALLOCATION</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
-  </div>
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num" id="stat-holdings">0</div><div class="stat-lbl">HOLDINGS</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-winners">0</div><div class="stat-lbl">WINNERS</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-losers">0</div><div class="stat-lbl">LOSERS</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-cash">$0</div><div class="stat-lbl">CASH</div></div>
-  </div>
-  <div class="filter-row">
-    <div class="filter-tag active" data-t="all" onclick="setTypeFilter('all',this)">ALL</div>
-    <div class="filter-tag" data-t="equity" onclick="setTypeFilter('equity',this)">EQUITY</div>
-    <div class="filter-tag" data-t="etf" onclick="setTypeFilter('etf',this)">ETF</div>
-    <div class="filter-tag" data-t="crypto" onclick="setTypeFilter('crypto',this)">CRYPTO</div>
-    <div class="filter-tag" data-t="bond" onclick="setTypeFilter('bond',this)">BOND</div>
-    <div class="filter-tag" data-t="real-estate" onclick="setTypeFilter('real-estate',this)">REAL ESTATE</div>
-    <div class="filter-tag" data-t="other" onclick="setTypeFilter('other',this)">OTHER</div>
-  </div>
-  <div id="holdings-list"></div>
-</div>
 
-<div id="tab-add" class="tab-pane">
-  <div class="section-label">ADD / UPDATE HOLDING</div>
-  <div class="form-row">
-    <div class="form-group"><label>TICKER / NAME</label><input type="text" id="h-ticker" placeholder="e.g. AAPL, BTC, SPY..." maxlength="20"></div>
-    <div class="form-group"><label>FULL NAME (optional)</label><input type="text" id="h-name" placeholder="Apple Inc., Bitcoin..." maxlength="60"></div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>TYPE</label>
-      <select id="h-type">
-        <option value="equity">Equity (Stock)</option>
-        <option value="etf">ETF / Index Fund</option>
-        <option value="crypto">Crypto</option>
-        <option value="bond">Bond / Fixed Income</option>
-        <option value="real-estate">Real Estate / REIT</option>
-        <option value="other">Other</option>
-      </select>
+    <!-- PORTFOLIO -->
+    <div id="tab-portfolio" class="tab-panel act">
+      <div class="portfolio-banner">
+        <div class="pb-row">
+          <div><div class="pb-label">PORTFOLIO VALUE</div><div class="pb-val" id="port-val">$0</div></div>
+          <div><div class="pb-label">TOTAL COST BASIS</div><div class="pb-val" style="font-size:20px;color:#888" id="port-cost">$0</div></div>
+          <div><div class="pb-label">TOTAL GAIN/LOSS</div><div class="pb-change" id="port-pnl">$0</div></div>
+          <div><div class="pb-label">RETURN</div><div class="pb-change" id="port-ret">0%</div></div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num" id="stat-holdings">0</div><div class="stat-lbl">HOLDINGS</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-winners">0</div><div class="stat-lbl">WINNERS</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-losers">0</div><div class="stat-lbl">LOSERS</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-cash">$0</div><div class="stat-lbl">CASH</div></div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-tag active" data-t="all" onclick="setTypeFilter('all',this)">ALL</div>
+        <div class="filter-tag" data-t="equity" onclick="setTypeFilter('equity',this)">EQUITY</div>
+        <div class="filter-tag" data-t="etf" onclick="setTypeFilter('etf',this)">ETF</div>
+        <div class="filter-tag" data-t="crypto" onclick="setTypeFilter('crypto',this)">CRYPTO</div>
+        <div class="filter-tag" data-t="bond" onclick="setTypeFilter('bond',this)">BOND</div>
+        <div class="filter-tag" data-t="real-estate" onclick="setTypeFilter('real-estate',this)">REAL ESTATE</div>
+        <div class="filter-tag" data-t="other" onclick="setTypeFilter('other',this)">OTHER</div>
+      </div>
+      <div id="holdings-list"></div>
     </div>
-    <div class="form-group"><label>QUANTITY / SHARES</label><input type="number" id="h-qty" placeholder="0" min="0" step="any"></div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>AVERAGE COST (USD)</label><input type="number" id="h-cost" placeholder="0.00" min="0" step="0.01"></div>
-    <div class="form-group"><label>CURRENT PRICE (USD)</label><input type="number" id="h-price" placeholder="0.00" min="0" step="0.01"></div>
-  </div>
-  <div class="form-group"><label>NOTES / THESIS (optional)</label><input type="text" id="h-notes" placeholder="Why you hold this..." maxlength="120"></div>
-  <div style="display:flex;gap:8px;">
-    <button class="btn-primary" onclick="saveHolding()">SAVE HOLDING</button>
-    <button class="btn-secondary" onclick="clearHoldingForm()">CLEAR</button>
-  </div>
-  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#4CAF50;"></div>
-</div>
 
-<div id="tab-alloc" class="tab-pane">
-  <div class="canvas-wrap"><canvas id="alloc-canvas" height="220"></canvas></div>
-  <div id="alloc-detail"></div>
-</div>
+    <!-- ADD HOLDING -->
+    <div id="tab-add" class="tab-panel">
+      <div class="section-label">ADD / UPDATE HOLDING</div>
+      <div class="form-row">
+        <div class="form-group"><label>TICKER / NAME</label><input type="text" id="h-ticker" placeholder="e.g. AAPL, BTC, SPY..." maxlength="20"></div>
+        <div class="form-group"><label>FULL NAME (optional)</label><input type="text" id="h-name" placeholder="Apple Inc., Bitcoin..." maxlength="60"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>TYPE</label>
+          <select id="h-type">
+            <option value="equity">Equity (Stock)</option>
+            <option value="etf">ETF / Index Fund</option>
+            <option value="crypto">Crypto</option>
+            <option value="bond">Bond / Fixed Income</option>
+            <option value="real-estate">Real Estate / REIT</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>QUANTITY / SHARES</label><input type="number" id="h-qty" placeholder="0" min="0" step="any"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>AVERAGE COST (USD)</label><input type="number" id="h-cost" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="form-group"><label>CURRENT PRICE (USD)</label><input type="number" id="h-price" placeholder="0.00" min="0" step="0.01"></div>
+      </div>
+      <div class="form-group"><label>NOTES / THESIS (optional)</label><input type="text" id="h-notes" placeholder="Why you hold this..." maxlength="120"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-primary" onclick="saveHolding()">SAVE HOLDING</button>
+        <button class="btn-secondary" onclick="clearHoldingForm()">CLEAR</button>
+      </div>
+      <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#4CAF50"></div>
+    </div>
 
-<div id="tab-science" class="tab-pane">
-  <div class="science-grid">
-    <div class="sci-card"><div class="sci-title">MODERN PORTFOLIO THEORY</div><div class="sci-body">Markowitz (1952): diversification reduces risk without proportionally reducing return. The efficient frontier shows the set of portfolios with maximum return for a given risk level. Correlation below 1.0 between assets generates diversification benefit — hold uncorrelated assets.</div><div class="sci-ref">Markowitz, H. (1952). Journal of Finance</div></div>
-    <div class="sci-card"><div class="sci-title">FACTOR INVESTING</div><div class="sci-body">Fama & French (1992) three-factor model: market risk, size (small caps outperform), and value (cheap stocks outperform) explain most equity returns. Carhart (1997) added momentum as a fourth factor. Understanding factors lets you target return premia systematically rather than picking stocks.</div><div class="sci-ref">Fama & French (1992). Journal of Finance</div></div>
-    <div class="sci-card"><div class="sci-title">DOLLAR COST AVERAGING</div><div class="sci-body">DCA (Tobin, 1958): investing fixed amounts at regular intervals reduces timing risk by automatically buying more shares when prices are low and fewer when high. For long-horizon investors, DCA produces equal or better returns than lump sum in volatile markets with significantly lower psychological stress.</div><div class="sci-ref">Tobin, J. (1958). Review of Economic Studies</div></div>
-    <div class="sci-card"><div class="sci-title">BEHAVIORAL BIASES</div><div class="sci-body">Kahneman & Tversky (1979): loss aversion — losses feel ~2.5x more painful than equivalent gains feel good. This causes premature selling of winners (disposition effect) and holding losers too long. Tracking your portfolio systematically counters emotional decision-making with data.</div><div class="sci-ref">Kahneman & Tversky (1979). Econometrica</div></div>
-    <div class="sci-card"><div class="sci-title">COMPOUND RETURNS</div><div class="sci-body">Warren Buffett's mentor Graham (1949) called compounding the core engine of wealth. At 10% annual return: $10,000 grows to $67,275 in 20 years, $174,494 in 30 years, $452,593 in 40 years. The Rule of 72: divide 72 by the return rate to get years to double. Time is the primary variable.</div><div class="sci-ref">Graham, B. (1949). The Intelligent Investor</div></div>
-    <div class="sci-card"><div class="sci-title">REBALANCING</div><div class="sci-body">Bernstein (1996): systematic rebalancing to target weights forces buy-low/sell-high behavior mechanically. Annual or threshold-based rebalancing (drift >5%) adds 0.4–0.8% annual return vs. unmanaged portfolios through variance drain reduction and forced discipline.</div><div class="sci-ref">Bernstein, W. (1996). Efficient Frontier</div></div>
+    <!-- ALLOCATION -->
+    <div id="tab-alloc" class="tab-panel">
+      <div class="canvas-wrap"><canvas id="alloc-canvas" height="220"></canvas></div>
+      <div id="alloc-detail"></div>
+    </div>
+
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="science-grid">
+        <div class="sci-card"><div class="sci-title">MODERN PORTFOLIO THEORY</div><div class="sci-body">Markowitz (1952): diversification reduces risk without proportionally reducing return. The efficient frontier shows the set of portfolios with maximum return for a given risk level. Correlation below 1.0 between assets generates diversification benefit — hold uncorrelated assets.</div><div class="sci-ref">Markowitz, H. (1952). Journal of Finance</div></div>
+        <div class="sci-card"><div class="sci-title">FACTOR INVESTING</div><div class="sci-body">Fama &amp; French (1992) three-factor model: market risk, size (small caps outperform), and value (cheap stocks outperform) explain most equity returns. Carhart (1997) added momentum as a fourth factor. Understanding factors lets you target return premia systematically rather than picking stocks.</div><div class="sci-ref">Fama &amp; French (1992). Journal of Finance</div></div>
+        <div class="sci-card"><div class="sci-title">DOLLAR COST AVERAGING</div><div class="sci-body">DCA (Tobin, 1958): investing fixed amounts at regular intervals reduces timing risk by automatically buying more shares when prices are low and fewer when high. For long-horizon investors, DCA produces equal or better returns than lump sum in volatile markets with significantly lower psychological stress.</div><div class="sci-ref">Tobin, J. (1958). Review of Economic Studies</div></div>
+        <div class="sci-card"><div class="sci-title">BEHAVIORAL BIASES</div><div class="sci-body">Kahneman &amp; Tversky (1979): loss aversion — losses feel ~2.5x more painful than equivalent gains feel good. This causes premature selling of winners (disposition effect) and holding losers too long. Tracking your portfolio systematically counters emotional decision-making with data.</div><div class="sci-ref">Kahneman &amp; Tversky (1979). Econometrica</div></div>
+        <div class="sci-card"><div class="sci-title">COMPOUND RETURNS</div><div class="sci-body">Warren Buffett's mentor Graham (1949) called compounding the core engine of wealth. At 10% annual return: $10,000 grows to $67,275 in 20 years, $174,494 in 30 years, $452,593 in 40 years. The Rule of 72: divide 72 by the return rate to get years to double. Time is the primary variable.</div><div class="sci-ref">Graham, B. (1949). The Intelligent Investor</div></div>
+        <div class="sci-card"><div class="sci-title">REBALANCING</div><div class="sci-body">Bernstein (1996): systematic rebalancing to target weights forces buy-low/sell-high behavior mechanically. Annual or threshold-based rebalancing (drift &gt;5%) adds 0.4–0.8% annual return vs. unmanaged portfolios through variance drain reduction and forced discipline.</div><div class="sci-ref">Bernstein, W. (1996). Efficient Frontier</div></div>
+      </div>
+    </div>
+
   </div>
-</div>
 </main>
-<script src="/omega-ui.js"></script>
+</div>
 <script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else{var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='portfolio') renderPortfolio();
+  if(id==='alloc') renderAlloc();
+}
+
 var holdings=[];
 var typeFilter='all';
 var TYPE_COLORS={equity:'#4CAF50',etf:'#00E5FF',crypto:'#FF9800',bond:'#FFD700','real-estate':'#9B6BF0',other:'#888'};
@@ -155,16 +182,6 @@ function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 function fmt(v){return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 function fmtPct(v){return (v>=0?'+':'')+v.toFixed(2)+'%';}
 
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById('tab-'+t).classList.add('active');
-  var labels={portfolio:'PORTFOLIO',add:'ADD HOLDING',alloc:'ALLOCATION',science:'SCIENCE'};
-  document.querySelectorAll('.tab-btn').forEach(function(b){if(b.textContent===labels[t])b.classList.add('active');});
-  if(t==='portfolio')renderPortfolio();
-  if(t==='alloc')renderAlloc();
-}
-
 function setTypeFilter(t,el){
   typeFilter=t;
   document.querySelectorAll('.filter-tag').forEach(function(x){x.classList.remove('active');});
@@ -175,7 +192,7 @@ function setTypeFilter(t,el){
 function calcPortfolio(){
   var val=holdings.reduce(function(s,h){return s+h.qty*h.price;},0);
   var cost=holdings.reduce(function(s,h){return s+h.qty*h.cost;},0);
-  return {val:val,cost:cost,pnl:val-cost,ret:cost?((val-cost)/cost*100):0};
+  return{val:val,cost:cost,pnl:val-cost,ret:cost?((val-cost)/cost*100):0};
 }
 
 function renderPortfolio(){
@@ -203,12 +220,8 @@ function renderHoldings(){
   var totalVal=calcPortfolio().val||1;
   var sorted=[...filtered].sort(function(a,b){return b.qty*b.price-a.qty*a.price;});
   list.innerHTML=sorted.map(function(h){
-    var val=h.qty*h.price;
-    var cost=h.qty*h.cost;
-    var pnl=val-cost;
-    var pct=cost?(pnl/cost*100):0;
-    var weight=val/totalVal*100;
-    var col=TYPE_COLORS[h.type]||'#888';
+    var val=h.qty*h.price;var cost=h.qty*h.cost;var pnl=val-cost;var pct=cost?(pnl/cost*100):0;
+    var weight=val/totalVal*100;var col=TYPE_COLORS[h.type]||'#888';
     return '<div class="holding-card" style="border-left:3px solid '+col+'">'
       +'<div class="holding-ticker" style="color:'+col+'">'+esc(h.ticker)+'</div>'
       +'<div class="holding-name">'+(h.name?esc(h.name)+' &middot; ':'')+esc(h.type).toUpperCase()+'<br><small>'+h.qty+' units @ $'+h.cost+'</small></div>'
@@ -231,8 +244,8 @@ function saveHolding(){
   var notes=document.getElementById('h-notes').value.trim();
   if(!ticker){alert('Ticker required.');return;}
   var existing=holdings.find(function(h){return h.ticker===ticker;});
-  if(existing){Object.assign(existing,{qty:qty,cost:cost,price:price,type:type,name:name,notes:notes});}
-  else{holdings.push({id:uid(),ticker:ticker,qty:qty,cost:cost,price:price,type:type,name:name,notes:notes,added:new Date().toISOString()});}
+  if(existing){Object.assign(existing,{qty,cost,price,type,name,notes});}
+  else{holdings.push({id:uid(),ticker,qty,cost,price,type,name,notes,added:new Date().toISOString()});}
   save();clearHoldingForm();
   document.getElementById('add-msg').textContent=ticker+' SAVED';
   setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
@@ -251,8 +264,7 @@ function renderAlloc(){
   var types={};
   holdings.forEach(function(h){if(!types[h.type])types[h.type]=0;types[h.type]+=h.qty*h.price;});
   var total=Object.values(types).reduce(function(s,v){return s+v;},0)||1;
-  var cx=110,cy=110,r=95;
-  var startAngle=-Math.PI/2;
+  var cx=110,cy=110,r=95;var startAngle=-Math.PI/2;
   Object.entries(types).forEach(function([t,v]){
     var slice=v/total*Math.PI*2;
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,startAngle,startAngle+slice);
@@ -261,8 +273,7 @@ function renderAlloc(){
     startAngle+=slice;
   });
   ctx.beginPath();ctx.arc(cx,cy,42,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill();
-  ctx.fillStyle='#4CAF50';ctx.font='bold 10px Courier New';ctx.textAlign='center';
-  ctx.fillText('PORTFOLIO',cx,cy+4);
+  ctx.fillStyle='#4CAF50';ctx.font='bold 10px Courier New';ctx.textAlign='center';ctx.fillText('PORTFOLIO',cx,cy+4);
   var lx=240,ly=20;
   Object.entries(types).forEach(function([t,v]){
     ctx.fillStyle=TYPE_COLORS[t]||'#888';ctx.fillRect(lx,ly,10,10);
@@ -271,14 +282,14 @@ function renderAlloc(){
   });
   var detail=document.getElementById('alloc-detail');
   detail.innerHTML=Object.entries(types).map(function([t,v]){
-    var col=TYPE_COLORS[t]||'#888';
-    var pct=(v/total*100).toFixed(1);
-    return '<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-family:\'Courier New\',monospace;font-size:10px;margin-bottom:4px;"><span style="color:'+col+'">'+t.toUpperCase()+'</span><span>'+fmt(v)+' &middot; '+pct+'%</span></div>'
+    var col=TYPE_COLORS[t]||'#888';var pct=(v/total*100).toFixed(1);
+    return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-family:\'Courier New\',monospace;font-size:10px;margin-bottom:4px"><span style="color:'+col+'">'+t.toUpperCase()+'</span><span>'+fmt(v)+' &middot; '+pct+'%</span></div>'
       +'<div class="progress-bar"><div class="progress-fill" style="width:'+Math.min(100,parseFloat(pct))+'%;background:'+col+'"></div></div></div>';
   }).join('');
 }
 
 load();renderPortfolio();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

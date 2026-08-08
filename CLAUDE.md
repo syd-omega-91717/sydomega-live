@@ -128,11 +128,19 @@ in `bg.js` rather than defining page-local styles that will drift.
   not suggestions.
 - **Schema management:** currently a flat `supabase/*.sql` directory,
   mostly idempotent (`CREATE TABLE IF NOT EXISTS`, `ON CONFLICT DO
-  NOTHING`) so re-running files is safe, but there is no single ordered
-  migration history — see `REPO_AUDIT.md` §4 for the concrete list of
-  tables defined redundantly across files. New schema changes should
-  still go in a new, clearly-named `.sql` file; the ordering problem is
-  tracked as repo debt, not something to work around ad hoc.
+  NOTHING`) so re-running files is safe. `supabase/migrations/` now holds
+  an ordered, Supabase-CLI-convention copy of this same content
+  (`NNNN_<name>.sql`, applied via `supabase db push`) — see
+  `supabase/migrations/README.md` for how the order and content were
+  derived, what was deliberately excluded (a conditional `DROP TABLE`
+  file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
+  only scripts), and the one open item: it has not yet been executed
+  against a live/test database, so run it against a scratch Supabase
+  project before pointing any real deployment at it. The flat
+  `supabase/*.sql` bag at repo root is unchanged and still the source of
+  truth for new schema changes — see `REPO_AUDIT.md` §4 for the still-open
+  duplicate-table-definitions list (47 tables defined in more than one
+  file; not deduplicated by the migrations/ work, only reordered).
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
   operationally ready should ship dormant behind a flag here, matching
@@ -182,9 +190,12 @@ orphaned file.
 
 ## 8. Known debt (see `REPO_AUDIT.md` for detail)
 
-- `supabase/` needs to move to ordered, Supabase-CLI-managed migrations
-  instead of a flat file bag — 47 tables are currently defined in more
-  than one file.
+- `supabase/migrations/` now exists (ordered, Supabase-CLI convention,
+  content verified to match the current loose files) but is untested
+  against a live database and the 47-tables-in-multiple-files redundancy
+  is still unresolved — see `supabase/migrations/README.md`. The flat
+  `supabase/*.sql` bag remains the working source for new changes until
+  migrations/ is validated and adopted as canonical.
 - `sovereign-covenant.html` and `system_manifest.json` state the token
   economy's 51%-stake / physical-reserve-backing language in the present
   tense, while the backend implementation is explicitly dormant pending

@@ -100,7 +100,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
         <div class="form-row">
           <div>
             <label>WORD / PHRASE</label>
-            <input id="w-term" type="text" placeholder="e.g. Sanguine, Ephemeral, Paradigm...">
+            <div style="display:flex;gap:6px">
+              <input id="w-term" type="text" placeholder="e.g. Sanguine, Ephemeral, Paradigm..." style="flex:1">
+              <button type="button" class="btn-ghost" onclick="lookupWord()" id="lookup-btn" style="white-space:nowrap">LOOKUP</button>
+            </div>
+            <div id="lookup-msg" style="font-size:.55rem;color:#888;margin-top:4px"></div>
           </div>
           <div>
             <label>PART OF SPEECH</label>
@@ -283,6 +287,36 @@ const SEEDS=[
   {term:'Solipsism',pos:'noun',def:'The view that the self is all that can be known to exist; extreme preoccupation with oneself.',example:'His solipsism prevented him from understanding why others found his arguments unpersuasive.',domain:'philosophy',etym:'Latin: solus = alone + ipse = self',synonyms:'self-absorption, egocentrism'},
   {term:'Fungible',pos:'adjective',def:'Interchangeable; able to replace or be replaced by another identical item.',example:'Oil is fungible — a barrel from Texas and a barrel from Saudi Arabia are economically equivalent.',domain:'finance',etym:'Latin: fungi = to perform (Medieval: fungor = discharge a duty)',synonyms:'interchangeable, substitutable, exchangeable'},
 ];
+
+const DICT_POS_MAP={noun:'noun',verb:'verb',adjective:'adjective',adverb:'adverb',phrase:'phrase',idiom:'idiom'};
+
+function lookupWord(){
+  const term=document.getElementById('w-term').value.trim();
+  if(!term){alert('Enter a word first.');return;}
+  const btn=document.getElementById('lookup-btn');
+  const msg=document.getElementById('lookup-msg');
+  btn.disabled=true;btn.textContent='...';msg.textContent='Looking up "'+term+'" via Free Dictionary API...';
+  fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(term))
+    .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
+    .then(function(data){
+      const entry=data[0];
+      const meaning=(entry.meanings||[])[0];
+      if(!meaning){msg.textContent='No definitions found for "'+term+'".';return;}
+      const def=(meaning.definitions||[])[0]||{};
+      document.getElementById('w-pos').value=DICT_POS_MAP[meaning.partOfSpeech]||'other';
+      if(def.definition)document.getElementById('w-def').value=def.definition;
+      if(def.example)document.getElementById('w-ex').value=def.example;
+      const syns=(def.synonyms&&def.synonyms.length?def.synonyms:meaning.synonyms)||[];
+      if(syns.length)document.getElementById('w-syn').value=syns.slice(0,6).join(', ');
+      msg.textContent='Loaded from dictionaryapi.dev — review and edit before adding (etymology not provided by this source).';
+    })
+    .catch(function(){
+      msg.textContent='No entry found for "'+term+'" — try a different spelling, or enter the definition manually.';
+    })
+    .finally(function(){
+      btn.disabled=false;btn.textContent='LOOKUP';
+    });
+}
 
 function save(){localStorage.setItem('omega_vocab',JSON.stringify(words));}
 function saveLog(){localStorage.setItem('omega_vocab_log',JSON.stringify(reviewLog));}

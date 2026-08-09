@@ -7,19 +7,19 @@
 <link rel="manifest" href="/manifest.json">
 <style>
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid #C9A84C}
-.kpi-c .kpi-n{font-family:serif;font-size:16px;color:#C9A84C;line-height:1}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
 .kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
-:root{--card-bg:#111;--card-border:#222;--tag-bg:#1a1a2e;--tag-active:#00E5FF}
-.note-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
-.note-card:hover{border-color:#00E5FF;background:#111}
+:root{--card-bg:#111;--card-border:#222;--tag-bg:#1a1a2e;--tag-active:var(--cyan)}
+.note-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--cyan);padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
+.note-card:hover{border-color:var(--cyan);background:#111}
 .note-card.pinned{border-left-color:#FFD700}
 .note-title{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:6px}
 .note-preview{font-size:11px;color:#666;line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden}
 .note-meta{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .note-date{font-size:10px;color:#444;font-family:'Courier New',monospace}
-.tag-chip{display:inline-block;padding:2px 8px;background:#1a1a2e;border:1px solid #333;color:#00E5FF;font-size:9px;font-family:'Courier New',monospace;letter-spacing:1px;border-radius:2px}
-.tag-chip.active,.tag-chip:hover{background:#00E5FF;color:#000;cursor:pointer}
+.tag-chip{display:inline-block;padding:2px 8px;background:#1a1a2e;border:1px solid #333;color:var(--cyan);font-size:9px;font-family:'Courier New',monospace;letter-spacing:1px;border-radius:2px}
+.tag-chip.active,.tag-chip:hover{background:var(--cyan);color:#000;cursor:pointer}
 .pin-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:14px}
 .pin-btn.pinned{color:#FFD700}
 .del-btn{position:absolute;top:10px;right:34px;background:none;border:none;color:#333;cursor:pointer;font-size:11px;letter-spacing:1px}
@@ -28,49 +28,49 @@
 .form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px}
 .form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
 .form-group textarea{min-height:220px;resize:vertical;line-height:1.6}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#00E5FF}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--cyan)}
 .tags-input-row{display:flex;gap:8px}
 .tags-input-row input{flex:1}
-.tag-add-btn{padding:10px 16px;background:#1a1a2e;border:1px solid #00E5FF;color:#00E5FF;cursor:pointer;font-family:'Courier New',monospace;font-size:11px}
-.tag-add-btn:hover{background:#00E5FF;color:#000}
+.tag-add-btn{padding:10px 16px;background:#1a1a2e;border:1px solid var(--cyan);color:var(--cyan);cursor:pointer;font-family:'Courier New',monospace;font-size:11px}
+.tag-add-btn:hover{background:var(--cyan);color:#000}
 .active-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.active-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#1a1a2e;border:1px solid #00E5FF;color:#00E5FF;font-size:10px;font-family:'Courier New',monospace}
+.active-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#1a1a2e;border:1px solid var(--cyan);color:var(--cyan);font-size:10px;font-family:'Courier New',monospace}
 .active-tag .rm{cursor:pointer;color:#FF4444;font-size:12px;line-height:1}
-.btn-primary{padding:10px 24px;background:#00E5FF;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
+.btn-primary{padding:10px 24px;background:var(--cyan);border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
 .btn-primary:hover{background:#00b8cc}
 .btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer}
 .btn-secondary:hover{border-color:#666;color:#e0e0e0}
 .toolbar{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
 .toolbar button{padding:5px 10px;background:#1a1a1a;border:1px solid #222;color:#888;cursor:pointer;font-family:'Courier New',monospace;font-size:10px}
-.toolbar button:hover{background:#222;color:#00E5FF}
+.toolbar button:hover{background:#222;color:var(--cyan)}
 .search-bar{display:flex;gap:8px;margin-bottom:16px}
 .search-bar input{flex:1;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px}
-.search-bar input:focus{outline:none;border-color:#00E5FF}
+.search-bar input:focus{outline:none;border-color:var(--cyan)}
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
-.filter-tag.active{background:#1a1a2e;border-color:#00E5FF;color:#00E5FF}
+.filter-tag.active{background:#1a1a2e;border-color:var(--cyan);color:var(--cyan)}
 .empty-state{text-align:center;padding:60px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px}
 .note-view{background:#0d0d0d;border:1px solid #222;padding:24px;margin-bottom:16px}
-.note-view-title{font-family:'Courier New',monospace;font-size:16px;color:#00E5FF;margin-bottom:4px}
+.note-view-title{font-family:'Courier New',monospace;font-size:16px;color:var(--cyan);margin-bottom:4px}
 .note-view-body{font-size:13px;color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px}
 .note-view-body code{background:#1a1a1a;border:1px solid #333;padding:2px 6px;font-family:'Courier New',monospace;color:#FFD700;font-size:11px}
 .note-view-body strong{color:#fff}
 .note-view-body em{color:#aaa;font-style:italic}
-.note-view-body h1,.note-view-body h2,.note-view-body h3{color:#00E5FF;font-family:'Courier New',monospace;margin:12px 0 6px}
+.note-view-body h1,.note-view-body h2,.note-view-body h3{color:var(--cyan);font-family:'Courier New',monospace;margin:12px 0 6px}
 .note-view-body h1{font-size:15px;border-bottom:1px solid #222;padding-bottom:6px}
 .note-view-body h2{font-size:13px}
 .note-view-body h3{font-size:12px}
 .note-view-body ul,.note-view-body ol{padding-left:20px;margin:8px 0}
 .note-view-body li{margin-bottom:4px}
-.note-view-body blockquote{border-left:3px solid #00E5FF;padding-left:12px;color:#888;margin:8px 0}
+.note-view-body blockquote{border-left:3px solid var(--cyan);padding-left:12px;color:#888;margin:8px 0}
 .note-view-actions{display:flex;gap:8px;margin-top:16px}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
-.stat-num{font-family:'Courier New',monospace;font-size:22px;color:#00E5FF;font-weight:700}
+.stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--cyan);font-weight:700}
 .stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px}
 .science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:16px}
-.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;letter-spacing:1px;margin-bottom:8px}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--purple);padding:16px}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:var(--purple);letter-spacing:1px;margin-bottom:8px}
 .sci-body{font-size:11px;color:#888;line-height:1.65}
 .sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
 .all-tags-cloud{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}

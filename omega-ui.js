@@ -157,6 +157,36 @@
     main.appendChild(footer);
   }
 
+  /* ── COPYRIGHT NOTICE ─────────────────────────────────────────────
+     Appended into whichever footer the page ends up with (its own
+     .lf, or the unified one injectFooter() just built) so every page
+     carries a copyright line without editing ~250 files individually.
+     Runs after injectFooter() so the unified footer exists if needed.
+     A handful of pages (terms, privacy, reset, pending) use a bare
+     .wrap layout with no .main/.lf at all -- those get a small fixed
+     corner badge instead, since these are exactly the pages where the
+     notice matters most (public, unauthenticated, legally load-bearing)
+     and silently finding nowhere to attach would defeat the point.
+     Year is computed at render time so it never goes stale. */
+  function injectCopyright(){
+    if(document.getElementById('omega-copyright')) return;
+    var text = '© '+new Date().getFullYear()+' SYD OMEGA 91717. All rights reserved.';
+    var footer = document.querySelector('.main .lf, main .lf, #omega-unified-footer');
+    if(footer){
+      var c = document.createElement('span');
+      c.id = 'omega-copyright';
+      c.style.cssText = 'font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1.5px;color:rgba(138,134,118,.5)';
+      c.textContent = text;
+      footer.appendChild(c);
+      return;
+    }
+    var badge = document.createElement('div');
+    badge.id = 'omega-copyright';
+    badge.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:40;text-align:center;padding:6px 10px;font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.45);background:rgba(2,2,6,.7);pointer-events:none';
+    badge.textContent = text;
+    document.body.appendChild(badge);
+  }
+
   /* ── QUICK PREV/NEXT NAV ──────────────────────────────────────── */
   function injectPrevNext(){
     if(!_meta.prev&&!_meta.next) return;
@@ -251,6 +281,7 @@
   fixOverflow();
   function run(){
     injectFooter();
+    injectCopyright();
     injectPrevNext();
     injectDashLink();
     setTimeout(enhanceSearch,1000);

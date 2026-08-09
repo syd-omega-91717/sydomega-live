@@ -39,27 +39,31 @@ generate since nothing runs `npm install` in this repo.
 
 **Gaps:**
 
-- No `.gitattributes` file exists. The repo commits one binary video
-  (`SYDOMEGA91717_DEMOD-1-.mp4`, 3.7 MB) and one binary document
-  (`SYD-OMEGA-Legal-IP-Brief.docx`, 15 KB) directly into git with no
-  `-diff`/`-text` handling, and no Git LFS. At the current size this is not
-  urgent, but it's the wrong pattern to keep scaling — every future video
-  asset added the same way permanently bloats every future clone.
-  **Recommendation:** either move media assets to Supabase Storage /
-  Vercel Blob and reference by URL, or add `.gitattributes` with
-  `*.mp4 filter=lfs diff=lfs merge=lfs -text` and migrate via `git lfs
-  migrate import`.
-- `scripts/audit.py` already flags `SYD-OMEGA-Legal-IP-Brief.docx` as
-  **"unreachable but deployed"** — it sits in the deploy root but nothing
-  links to it, so it's silently served at a guessable public URL by a site
-  that also sets `X-Robots-Tag: noindex, nofollow`. If it's meant to be
-  private, it shouldn't be in the static deploy root at all (move it out
-  of the repo, or at minimum out of the Vercel `outputDirectory`).
-- `*.stale-backup-reference` is ignored going forward, but
-  `supabase/achievements.sql.stale-backup-reference` is already **tracked**
-  in the repo (ignore rules don't retroactively untrack committed files).
-  It should be `git rm --cached` if it's genuinely dead weight, matching
-  the pattern's own intent.
+- **[Fixed]** No `.gitattributes` file existed. The repo commits one binary
+  video (`SYDOMEGA91717_DEMOD-1-.mp4`, 3.7 MB) and one binary document
+  (`SYD-OMEGA-Legal-IP-Brief.docx`, 15 KB) directly into git. A
+  `.gitattributes` now marks both `-diff -text` so they're never treated as
+  text in diffs/merges. Still open, non-urgent: neither is on Git LFS, so
+  both permanently bloat every clone; either migrate via `git lfs migrate
+  import` or move them to Supabase Storage/Vercel Blob and reference by
+  URL.
+- **[Corrected]** `scripts/audit.py` flags `SYD-OMEGA-Legal-IP-Brief.docx`
+  as **"unreachable but deployed"** because it sits in the repo's deploy
+  root with nothing linking to it — but that check only looks at the
+  working tree, not at `.vercelignore`. `.vercelignore` (present since
+  before this audit was written) excludes `*.docx`/`*.md`/`*.pdf`/`*.sql`
+  from the actual Vercel deployment, and is the *only* defense — an
+  earlier vercel.json extension-redirect backup for the same extensions
+  was removed for invalid route-source syntax and never restored (see
+  `.vercelignore`'s own header comment, now corrected). So the docx is not
+  live-served today, but the safety margin is thinner than "defense in
+  depth" implies: one `.vercelignore` edit away from exposure, with no
+  redirect backstop. `scripts/audit.py`'s warning is still worth keeping
+  as a tripwire; it just isn't proof of live exposure by itself.
+- **[Resolved]** `*.stale-backup-reference` is ignored going forward, and
+  the previously-tracked `supabase/achievements.sql.stale-backup-reference`
+  is no longer in the tree (`git ls-files` confirms it's gone) — no action
+  needed.
 
 ## 3. Secrets posture
 
@@ -112,11 +116,19 @@ Reproduced from the tool already in this repo, for visibility:
   that runs automatically.
 - One asset exceeds 1 MB in the deploy root (the 3.7 MB demo video, §2).
 
-## 5. Content-level finding worth your attention (not a code bug)
+## 5. Content-level finding — [Fixed since this audit was written]
+
+`sovereign-covenant.html` now opens with a visible `sc-notice` banner
+("TOKEN ECONOMY STATUS: DORMANT... issuance is not live... Read the marked
+articles as roadmap, not present-tense fact") and tags Articles II, VIII,
+and IX individually with "PLANNED · NOT YET ACTIVE". `system_manifest.json`
+now states `monetary_policy.status` explicitly as "PLANNED — NOT YET
+ACTIVE" with the same `tokens_enabled` gating spelled out. The finding
+below is kept for context on why that change was made; no action remains.
 
 `sovereign-covenant.html` (a real, deployed, linked-to page — reachable
-from the nav under "Order" in `nav.js`) states as covenant text, in the
-present tense:
+from the nav under "Order" in `nav.js`) previously stated as covenant text,
+in the present tense:
 
 > "51% Master Stake — 467,756,700,000 Ω permanently locked in the
 > Sovereign Vault. Irrevocable by any mechanism."
@@ -179,12 +191,14 @@ Worth stating plainly, since a lot of this repo's surface language
 |---|---|
 | Secrets in tracked code | Clean; CI enforces it |
 | RLS coverage | Clean; CI enforces it (0 critical) |
-| `.gitignore` correctness | Adequate; missing `.gitattributes`/LFS story for binaries |
-| SQL schema organization | Needs work — 105 loose files, 47 tables redefined across files |
-| Dead/unreachable committed files | 2 found (`.docx`, `.sql.stale-backup-reference`) |
+| `.gitignore` correctness | Adequate; `.gitattributes` now present, LFS migration still open |
+| SQL schema organization | Needs work — 107 loose files, 47 tables redefined across files |
+| Dead/unreachable committed files | 0 open — stale-backup-reference gone, docx mitigated by `.vercelignore` |
 | Committed binary size | Fine today (3.7 MB), no growth plan |
-| Content/compliance | 1 real finding — §5, present-tense claims on a dormant feature |
+| Content/compliance | Fixed — §5, dormant-token-economy disclaimers now live on both pages |
 
-Nothing here is a critical blocker. The two highest-value fixes, in order:
-adopt real Supabase migrations (§4), and soften the tense on the covenant
-page and manifest until the token economy is actually switched on (§5).
+Nothing here is a critical blocker. §5's tense fix and the stale-backup
+cleanup are done. What remains, highest-value first: validate and adopt
+`supabase/migrations/` against a live database and resolve the 47
+duplicate-table-definitions (§4), then migrate the two committed binaries
+off plain git (LFS or object storage) as a housekeeping item (§2).

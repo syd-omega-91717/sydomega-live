@@ -2092,11 +2092,11 @@ ctx.fillStyle=grad;ctx.fill();
 // Line
 ctx.beginPath();ctx.moveTo(toX(0),toY(pts[0]));
 for(let i=1;i<pts.length;i++)ctx.lineTo(toX(i),toY(pts[i]));
-ctx.strokeStyle='#C9A84C';ctx.lineWidth=1.5;ctx.stroke();
+ctx.strokeStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.lineWidth=1.5;ctx.stroke();
 // Apex marker
 const last=pts.length-1;
 ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),4,0,Math.PI*2);
-ctx.fillStyle='#C9A84C';ctx.fill();
+ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.fill();
 ctx.fillStyle='rgba(201,168,76,0.3)';ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),8,0,Math.PI*2);ctx.fill();
 })();
 

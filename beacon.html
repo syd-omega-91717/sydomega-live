@@ -128,7 +128,7 @@ function drawRing(pct){
     if(Math.abs(pct-cur)<0.003)cur=pct;
     x.clearRect(0,0,w,w);x.lineWidth=10;x.lineCap='round';
     x.beginPath();x.arc(cx,cy,r,-Math.PI/2,1.5*Math.PI);x.strokeStyle='#15151f';x.stroke();
-    x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+cur*2*Math.PI);x.strokeStyle='#00E5FF';x.shadowColor='rgba(0,229,255,.5)';x.shadowBlur=12;x.stroke();x.shadowBlur=0;
+    x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+cur*2*Math.PI);x.strokeStyle=(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF');x.shadowColor='rgba(0,229,255,.5)';x.shadowBlur=12;x.stroke();x.shadowBlur=0;
     if(cur!==pct&&!reduce)requestAnimationFrame(step);
   }
   step();

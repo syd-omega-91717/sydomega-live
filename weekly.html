@@ -570,7 +570,7 @@ function drawTrend(reviews){
   pts.forEach(function(p,i){
     if(p.y===null) return;
     ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);
-    ctx.fillStyle='#C9A84C';ctx.fill();
+    ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.fill();
     ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px monospace';
     var label=last8[i].weekKey.slice(5).replace('-','/');
     ctx.fillText(label,p.x-10,H-4);

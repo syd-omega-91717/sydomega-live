@@ -745,7 +745,7 @@ function drawGauge(auth,maxAuth){
     if(pct>0){
       ctx.beginPath(); ctx.arc(CX,CY,R,-Math.PI*.85,-Math.PI*.85+Math.PI*1.7*pct);
       const g=ctx.createLinearGradient(-R,0,R,0);
-      g.addColorStop(0,'rgba(201,168,76,0.4)'); g.addColorStop(1,'#C9A84C');
+      g.addColorStop(0,'rgba(201,168,76,0.4)'); g.addColorStop(1,(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'));
       ctx.strokeStyle=g; ctx.lineWidth=14; ctx.shadowColor='rgba(201,168,76,0.5)'; ctx.shadowBlur=12; ctx.stroke(); ctx.shadowBlur=0;
     }
     /* Center */

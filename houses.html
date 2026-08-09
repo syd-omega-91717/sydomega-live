@@ -146,7 +146,7 @@ function renderChartDisplay(){
 function drawWheel(){
   var cv=document.getElementById('wheel-canvas');if(!cv)return;
   var ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)/2-20;
-  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A0A0F';ctx.fillRect(0,0,W,H);
+  ctx.clearRect(0,0,W,H);ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
   var slice=Math.PI*2/12;
   HOUSES.forEach(function(h,i){
     var a0=i*slice-Math.PI/2,a1=a0+slice;
@@ -163,7 +163,7 @@ function drawWheel(){
     ctx.strokeStyle='rgba(201,168,76,.2)';ctx.lineWidth=1;ctx.stroke();
   });
   ctx.beginPath();ctx.arc(cx,cy,R*0.3,0,Math.PI*2);
-  ctx.fillStyle='#0A0A0F';ctx.fill();
+  ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fill();
   ctx.strokeStyle='rgba(201,168,76,.4)';ctx.lineWidth=1;ctx.stroke();
   ctx.font='10px monospace';ctx.fillStyle='rgba(201,168,76,.8)';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText('&#937;',cx,cy);

@@ -215,7 +215,7 @@ function drawCanvas(){
   var cv=document.getElementById('treasury-canvas');if(!cv)return;
   var t=calcTotals();
   var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
-  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A0A0F';ctx.fillRect(0,0,W,H);
+  ctx.clearRect(0,0,W,H);ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
   if(!t.total){
     ctx.font='11px monospace';ctx.fillStyle='rgba(138,134,118,.5)';ctx.textAlign='center';
     ctx.fillText('NO ASSETS RECORDED',W/2,H/2);return;

@@ -386,7 +386,7 @@ function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Mat
 function renderDrillCard(){
   if(drillIndex>=drillQueue.length){
     document.getElementById('drill-area').innerHTML=`<div style="text-align:center;padding:40px 0">
-      <div style="font-size:2rem;color:#c9a84c;margin-bottom:12px">SESSION COMPLETE</div>
+      <div style="font-size:2rem;color:var(--gold);margin-bottom:12px">SESSION COMPLETE</div>
       <div style="font-size:.75rem;color:#888;margin-bottom:20px">${drillQueue.length} WORDS REVIEWED</div>
       <button class="btn btn-gold" onclick="startDrill('due')">DRILL AGAIN</button>
     </div>`;
@@ -399,7 +399,7 @@ function renderDrillCard(){
   document.getElementById('drill-area').innerHTML=`
     <div class="drill-front" onclick="revealDrill()">
       <div class="drill-word">${w.term}</div>
-      <div style="font-size:.65rem;color:#c9a84c;margin-top:6px">${POS_LABELS[w.pos]||''}</div>
+      <div style="font-size:.65rem;color:var(--gold);margin-top:6px">${POS_LABELS[w.pos]||''}</div>
       <div class="drill-hint">TAP TO REVEAL DEFINITION</div>
     </div>
     <div id="drill-back" class="drill-back">
@@ -476,7 +476,7 @@ function renderWOTD(){
   const w=words[idx];
   container.innerHTML=`<div style="text-align:center;padding:16px">
     <div style="font-size:1.6rem;color:#fff;letter-spacing:.1em;margin-bottom:6px">${w.term}</div>
-    <div style="font-size:.65rem;color:#c9a84c;margin-bottom:12px">${POS_LABELS[w.pos]||''} · ${(DOMAIN_LABELS[w.domain]||w.domain).toUpperCase()}</div>
+    <div style="font-size:.65rem;color:var(--gold);margin-bottom:12px">${POS_LABELS[w.pos]||''} · ${(DOMAIN_LABELS[w.domain]||w.domain).toUpperCase()}</div>
     <div style="font-size:.8rem;color:#aaa;line-height:1.6;max-width:400px;margin:0 auto 12px">${w.def}</div>
     ${w.example?`<div style="font-size:.7rem;color:#666;font-style:italic;max-width:400px;margin:0 auto">"${w.example}"</div>`:''}
     ${w.etym?`<div style="font-size:.6rem;color:#888;margin-top:10px">ETYMOLOGY: ${w.etym}</div>`:''}

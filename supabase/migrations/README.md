@@ -11,7 +11,10 @@ applied going forward.
 current loose file at `supabase/<name>.sql`.** No SQL statement was added,
 removed, or rewritten — only file naming/numbering changed. This directory
 and the loose files at `supabase/` root currently agree exactly; verified
-by direct comparison of all 87 files, zero mismatches.
+by direct comparison of the files present at the time (see the dated
+sections below for each later addition — this directory now holds 91
+files, `0001`–`0091`; the exact count and its history are cumulative, not
+restated at every step below).
 
 ## How the order was derived
 
@@ -448,3 +451,32 @@ contains **86 files** (`0001`–`0086`); no other file was renumbered.
 
 With this file no longer part of the automatic sequence, **all 86 files
 now apply cleanly on a fresh database — zero failures.**
+
+(Two more files were added after this point without a corresponding note
+here — `0087_omega_ai_memory_recall_fix.sql` and
+`0088_omega_rls_index_coverage.sql` — bringing the total to 88 before the
+addition documented immediately below. Noted here for anyone reconciling
+this file's running commentary against the actual directory listing.)
+
+## Three schema-fix files added: `0089`–`0091`
+
+`supabase/omega_user_assets_fix.sql`, `supabase/omega_extend_trial_fix.sql`,
+and `supabase/omega_notifications_fix.sql` (see each file's own header for
+the bug it fixes — a table or RPC that client code queries but that never
+had a `CREATE TABLE`/`CREATE FUNCTION` anywhere in `supabase/*.sql`, so the
+Supabase JS client's `{data:null,error}` non-throwing behavior on a
+missing relation silently produced an always-empty UI for every member)
+existed as loose files at `supabase/` root but had never been copied into
+this directory, unlike every other loose file. Added as
+`0089_omega_user_assets_fix.sql`, `0090_omega_extend_trial_fix.sql`, and
+`0091_omega_notifications_fix.sql` — byte-for-byte copies of the loose
+files (`diff` confirms zero mismatches), appended at the end since all
+three are additive (`CREATE TABLE IF NOT EXISTS` / `CREATE OR REPLACE
+FUNCTION`) with no dependency ordering concern beyond `is_platform_owner()`,
+which is already defined by `0001`. `supabase/migrations/` now contains
+**91 files** (`0001`–`0091`).
+
+None of these three have been applied to any live database from this
+session — no session in this project's history has held live Supabase
+credentials. Applying them (`supabase db push`, or pasting each file into
+the Supabase SQL editor) is still an owner action.

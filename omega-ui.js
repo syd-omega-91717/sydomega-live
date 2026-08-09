@@ -141,7 +141,7 @@
 
   /* ── INJECT UNIFIED FOOTER ─────────────────────────────────────── */
   function injectFooter(){
-    var main = document.querySelector('.main,main');
+    var main = document.querySelector('.main,main,.page-shell');
     if(!main || document.getElementById('omega-unified-footer')) return;
     /* Only inject if page lacks .lf footer */
     if(main.querySelector('.lf')) return;
@@ -171,7 +171,7 @@
   function injectCopyright(){
     if(document.getElementById('omega-copyright')) return;
     var text = '© '+new Date().getFullYear()+' SYD OMEGA 91717. All rights reserved.';
-    var footer = document.querySelector('.main .lf, main .lf, #omega-unified-footer');
+    var footer = document.querySelector('.main .lf, main .lf, .page-shell .lf, #omega-unified-footer');
     if(footer){
       var c = document.createElement('span');
       c.id = 'omega-copyright';

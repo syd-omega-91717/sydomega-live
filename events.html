@@ -40,7 +40,7 @@
 </head>
 <body>
 <aside id="omega-side" data-page="events"></aside>
-<div class="page-shell">
+<div class="page-shell" id="app" style="display:none">
 <header class="topbar">
   <div class="topbar-title">EVENTS &amp; CONFERENCES<span class="topbar-sub">SOVEREIGN GATHERINGS &middot; LIVING CALENDAR</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
@@ -205,6 +205,9 @@ document.getElementById('btn-ev').addEventListener('click',async function(){
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
   var res=await sb.from('event_rsvps').select('event_ref');
   joined=new Set((res.data||[]).map(function(r){return r.event_ref;}));
   renderEvents();

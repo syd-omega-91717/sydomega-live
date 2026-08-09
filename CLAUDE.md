@@ -190,6 +190,37 @@ orphaned file.
 
 ## 8. Known debt (see `REPO_AUDIT.md` for detail)
 
+- **No real client-side threat-detection exists, despite the security
+  narrative implying it does — a naming mismatch made this hard to spot.**
+  `omega-threat.js` (loaded by every page via `bg.js`) is actually the
+  "digital thread" requirements-traceability engine (`window.OmegaThread`
+  — REQ registry, change log, DORA metrics) — unrelated to security. There
+  is no separate `omega-thread.js` on disk; a previous session already
+  found this (see the comment at `bg.js` around the module-loader section)
+  and left it as-is rather than guess at the fix, which was the right call
+  — renaming risks breaking whatever the filename mismatch was deliberately
+  worked around for, and writing a real threat-detection module from
+  scratch is a feature decision, not a bug fix. Only fixed what was
+  unambiguously wrong: `omega-threat.js`'s own header comment mis-identified
+  itself as `omega-thread.js`, and a stale comment in `bg.js` pointed at a
+  `DECISIONS.md` file that doesn't exist anywhere in this repo. Both
+  corrected to state the actual situation instead of a broken pointer.
+  Consequence worth knowing: `omega-guardian.js` (`window.OmegaGuardian`,
+  a client-side "Zero Trust" session-scoring system with a visible score
+  badge in every topbar) listens for a `threat_signal` event that is never
+  emitted anywhere in the codebase — confirmed via repo-wide grep. More
+  significantly, `OmegaGuardian.gate()` — the function meant to wrap and
+  deny privileged actions below a risk threshold — is defined but never
+  called by any page or module. No action on the platform is actually
+  gated by it today; the badge always effectively reads "100" (only the
+  module's own standalone 30-minute idle timer ever moves the score, and
+  nothing consumes that score to deny anything). This isn't a security
+  hole on its own — client-side gating was never a real security boundary
+  regardless (RLS is, per §5) — but the badge visually implies active
+  protection that isn't happening. Left as a documented gap rather than
+  either wiring `gate()` into real actions (an architecture decision:
+  which actions, at what thresholds) or removing the badge (a product
+  decision), matching this file's own rule against guessing at those.
 - **[Fixed, needs deploy] `extend_trial` RPC was missing — the approvals
   page's "extend" button silently did nothing.** `approvals.html`'s
   `extend(uid)` calls `sb.rpc('extend_trial',{p_uid,p_seconds:557})` to

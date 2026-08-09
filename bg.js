@@ -1437,7 +1437,10 @@ setTimeout(function(){
   /* Experimentation engine — A/B tests, feature flags */
   if(!document.querySelector('script[data-omega-experiment]')){var _oexp=document.createElement('script');_oexp.src='/omega-experiment.js';_oexp.setAttribute('data-omega-experiment','1');_oexp.defer=true;if(document.body)document.body.appendChild(_oexp);}
   /* Digital thread — requirements-to-telemetry traceability */
-  /* REMOVED omega-thread.js — no file on disk; distinct from omega-threat.js. See DECISIONS.md. */
+  /* No omega-thread.js on disk. The digital-thread/requirements-traceability
+     content (window.OmegaThread) actually lives inside omega-threat.js
+     (loaded above, filename mismatch against its own header comment and
+     window.OmegaThread export) -- there is no separate file to load here. */
 
   /* ── IDOS TRANSFORMATION — Living Operating System ────────────── */
   /* Living Object System — hover panels, right-click menus, AI insights */

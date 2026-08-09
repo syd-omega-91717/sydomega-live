@@ -9,6 +9,7 @@
   /* Map every page to a section */
   var PS={
     dashboard:'command',beacon:'command',notifications:'command',search:'command',
+    command:'command',
     profile:'identity',passport:'identity',kyc:'identity',settings:'identity',
     character:'identity',
     ascension:'ascend',matrix:'ascend',academy:'ascend',gaming:'ascend',
@@ -49,7 +50,8 @@
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
      sub:[['dashboard','DASHBOARD','/dashboard.html'],['beacon','BEACON','/beacon.html'],
           ['search','SEARCH','/search.html'],['notifications','ALERTS','/notifications.html'],
-          ['chatbot','CONCIERGE AI','/chatbot.html'],['matrix','THE MATRIX','/matrix.html'],['points','SOVEREIGN POINTS','/points.html']]},
+          ['chatbot','CONCIERGE AI','/chatbot.html'],['matrix','THE MATRIX','/matrix.html'],['points','SOVEREIGN POINTS','/points.html'],
+          ['command','COMMAND BRIEF','/command.html']]},
     {key:'identity',icon:'\u25C8', label:'IDENTITY', href:'/profile.html', col:'#00E5FF',
      sub:[['identity','IDENTITY HUB','/profile.html#identity'],['profile','PROFILE','/profile.html'],
           ['passport','PASSPORT','/profile.html#passport'],['kyc','KYC VERIFY','/profile.html#kyc'],
@@ -326,7 +328,7 @@
     /* DRAWER -- ALL 9 SECTIONS */
     var DRAWER_SECTIONS=[
       {icon:'\u2316',label:'COMMAND',col:'#C9A84C',href:'/dashboard.html',key:'command',
-       links:[['DASHBOARD','/dashboard.html'],['BEACON','/beacon.html'],['SEARCH','/search.html'],['ALERTS','/notifications.html'],['AI CONCIERGE','/chatbot.html']]},
+       links:[['DASHBOARD','/dashboard.html'],['BEACON','/beacon.html'],['SEARCH','/search.html'],['ALERTS','/notifications.html'],['AI CONCIERGE','/chatbot.html'],['COMMAND BRIEF','/command.html']]},
       {icon:'\u25C8',label:'IDENTITY',col:'#00E5FF',href:'/profile.html',key:'identity',
        links:[['IDENTITY HUB','/profile.html'],['PROFILE','/profile.html'],['PASSPORT','/profile.html#passport'],['KYC','/profile.html#kyc'],['SETTINGS','/profile.html#settings']]},
       {icon:'\u25B2',label:'ASCEND',col:'#E86A3A',href:'/honors.html#ascension',key:'ascend',

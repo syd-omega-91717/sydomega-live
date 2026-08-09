@@ -166,13 +166,13 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var STAGES=[
-  {n:1,title:'INITIATE',    min:0,      max:2.3197,  color:'#8a8676', desc:'The journey begins. Awareness precedes all growth.'},
+  {n:1,title:'INITIATE',    min:0,      max:2.3197,  color:(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676'), desc:'The journey begins. Awareness precedes all growth.'},
   {n:2,title:'ACOLYTE',     min:2.3197, max:4.6394,  color:'#C0A960', desc:'Consistent practice builds the first foundations.'},
-  {n:3,title:'SCHOLAR',     min:4.6394, max:6.9592,  color:'#C9A84C', desc:'Knowledge deepens. Patterns begin to emerge.'},
-  {n:4,title:'KEEPER',      min:6.9592, max:9.2789,  color:'#E2C86D', desc:'Custodian of hard-won wisdom and discipline.'},
+  {n:3,title:'SCHOLAR',     min:4.6394, max:6.9592,  color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'Knowledge deepens. Patterns begin to emerge.'},
+  {n:4,title:'KEEPER',      min:6.9592, max:9.2789,  color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'), desc:'Custodian of hard-won wisdom and discipline.'},
   {n:5,title:'GUARDIAN',    min:9.2789, max:11.5986, color:'#00BCD4', desc:'Protector of the sovereign path. Strength compounds.'},
-  {n:6,title:'ARCHITECT',   min:11.5986,max:13.9183, color:'#00E5FF', desc:'Builder of systems. The mind constructs reality.'},
-  {n:7,title:'SOVEREIGN',   min:13.9183,max:16.2381, color:'#9B6BF0', desc:'Self-governed in thought, action, and will.'},
+  {n:6,title:'ARCHITECT',   min:11.5986,max:13.9183, color:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'), desc:'Builder of systems. The mind constructs reality.'},
+  {n:7,title:'SOVEREIGN',   min:13.9183,max:16.2381, color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'), desc:'Self-governed in thought, action, and will.'},
   {n:8,title:'VANGUARD',    min:16.2381,max:18.5578, color:'#4CAF50', desc:'Leading edge of human excellence and contribution.'},
   {n:9,title:'HERALD',      min:18.5578,max:27.8367, color:'#FF9800', desc:'Harbinger of the sovereign apex. Near-complete authority.'},
 ];
@@ -215,7 +215,7 @@ function drawAuthCanvas(a,b,c,auth){
   var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
-  var vals=[{v:a,c:'#C9A84C',l:'A'},{v:b,c:'#00E5FF',l:'B'},{v:c,c:'#4CAF50',l:'C'},{v:auth,c:'#E2C86D',l:'AUTH'}];
+  var vals=[{v:a,c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),l:'A'},{v:b,c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),l:'B'},{v:c,c:'#4CAF50',l:'C'},{v:auth,c:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),l:'AUTH'}];
   var bw=60,gap=20,x0=40,yB=H-30;
   vals.forEach(function(d,i){
     var x=x0+i*(bw+gap);
@@ -238,8 +238,8 @@ function renderMilestones(){
   if(!milestones.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO MILESTONES LOGGED YET</div>';return;}
   var sorted=[].concat(milestones).reverse();
   el.innerHTML=sorted.map(function(m){
-    var colors={knowledge:'#C9A84C',mastery:'#00E5FF',contribution:'#4CAF50',stage:'#9B6BF0'};
-    return '<div style="border:1px solid var(--line);border-left:3px solid '+(colors[m.cat]||'#C9A84C')+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:flex-start">'
+    var colors={knowledge:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),mastery:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),contribution:'#4CAF50',stage:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')};
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+(colors[m.cat]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'))+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:flex-start">'
       +'<div style="flex:1">'
       +'<div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:'+(colors[m.cat]||'var(--gold)')+';margin-bottom:4px">'+m.cat.toUpperCase()+'</div>'
       +'<div style="font-size:13px">'+m.text+'</div>'

@@ -211,7 +211,7 @@ document.querySelectorAll('.lt').forEach(function(b){
   var dot=document.getElementById('dot');
   var txt=document.getElementById('status-text');
   function check(){
-    if(navigator.onLine){dot.style.background='#3fb27f';txt.textContent='NETWORK RESTORED — REDIRECTING';setTimeout(function(){window.location.reload();},1200);}
+    if(navigator.onLine){dot.style.background=(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f');txt.textContent='NETWORK RESTORED — REDIRECTING';setTimeout(function(){window.location.reload();},1200);}
   }
   window.addEventListener('online',check);
   setInterval(check,4000);

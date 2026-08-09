@@ -263,7 +263,7 @@ const CONTACTS_KEY     = 'omega_network_contacts';
 const INTERACTIONS_KEY = 'omega_network_interactions';
 
 const CIRCLES = [
-  {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:'#C9A84C', limit:5,  freq:7},
+  {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), limit:5,  freq:7},
   {id:'TRIBE',        label:'TRIBE',        color:'#5C8FD6', limit:15, freq:14},
   {id:'ALLIES',       label:'ALLIES',       color:'#4CAF50', limit:50, freq:30},
   {id:'NETWORK',      label:'NETWORK',      color:'#90A4AE', limit:150,freq:90},

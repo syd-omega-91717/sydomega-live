@@ -186,7 +186,7 @@ const AREAS_KEY  = 'omega_vision_areas';
 const MF_KEY     = 'omega_vision_manifest';
 
 const AREAS = [
-  {id:'wealth',  label:'WEALTH',       icon:'💰', color:'#C9A84C', desc:'Financial sovereignty & abundance'},
+  {id:'wealth',  label:'WEALTH',       icon:'💰', color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'Financial sovereignty & abundance'},
   {id:'health',  label:'HEALTH',       icon:'💪', color:'#4CAF50', desc:'Physical vitality & longevity'},
   {id:'mind',    label:'MIND',         icon:'🧠', color:'#5C8FD6', desc:'Knowledge, clarity & growth'},
   {id:'bonds',   label:'BONDS',        icon:'❤️', color:'#E57373', desc:'Relationships & love'},

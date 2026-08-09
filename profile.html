@@ -550,7 +550,7 @@ a{color:inherit;text-decoration:none}
   </div>
 <div data-page-emblem="profile" style="margin:20px auto 0"></div>
 </div>
-<script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+<script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
   <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--gold)" id="mat-a-disp">--</div>
     <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
@@ -585,7 +585,7 @@ function frame(){ctx.clearRect(0,0,120,120);
   }
   ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';
-  ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
+  ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
   t++;requestAnimationFrame(frame);}frame();
 })();
 </script>
@@ -1266,7 +1266,7 @@ var ctx=cv.getContext('2d'),t=0;
 function f(){ctx.clearRect(0,0,80,80);
 for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,12+i*3+2*Math.sin(t*.03+i),t*.009*((i%2)?1:-1),t*.009*((i%2)?1:-1)+Math.PI*(.5+.2*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}
 ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;
+ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;
 t++;requestAnimationFrame(f);}f();})();
 </script>
 
@@ -1444,33 +1444,33 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const ACHIEV=[
-  {n:1,name:'GENESIS',col:'#D9B86A',sym:'\u03A9'},{n:2,name:'KNOWLEDGE',col:'#00E5FF',sym:'\u25CF'},
-  {n:3,name:'MASTERY',col:'#E86A3A',sym:'\u25C8'},{n:4,name:'CONTRIBUTION',col:'#3fb27f',sym:'\u25B2'},
-  {n:5,name:'ELEMENTAL',col:'#D9B86A',sym:'\u2609'},{n:6,name:'CELESTIAL',col:'#9B6BF0',sym:'\u2736'},
-  {n:7,name:'SOVEREIGN',col:'#C9A84C',sym:'\u03A9'},{n:8,name:'BLOODLINE',col:'#8B0000',sym:'\u22D4'},
-  {n:9,name:'ECONOMIC',col:'#C9A84C',sym:'\u25C8'},{n:10,name:'ORACLE',col:'#9B6BF0',sym:'\u2316'},
-  {n:11,name:'GUARDIAN',col:'#C9A84C',sym:'\u25B6'},{n:12,name:'APEX',col:'#FFD700',sym:'\u03A9'},
-  {n:13,name:'1ST LIGHT',col:'#D9B86A',sym:'\u2726',type:'MEDAL'},{n:14,name:'PIONEER',col:'#00E5FF',sym:'\u25CF',type:'MEDAL'},
-  {n:15,name:'CRAFTMASTER',col:'#E86A3A',sym:'\u2699',type:'MEDAL'},{n:16,name:'BUILDER',col:'#C9A84C',sym:'\u25B2',type:'MEDAL'},
-  {n:17,name:'NAVIGATOR',col:'#9B6BF0',sym:'\u2609',type:'MEDAL'},{n:18,name:'ARCHITECT',col:'#C9A84C',sym:'\u22D4',type:'MEDAL'},
-  {n:19,name:'GUARDIAN',col:'#D9B86A',sym:'\u25C8',type:'MEDAL'},{n:20,name:'CONSUL',col:'#3fb27f',sym:'\u2726',type:'MEDAL'},
-  {n:21,name:'RESEARCHER',col:'#9B6BF0',sym:'\u2316',type:'MEDAL'},{n:22,name:'PROPHET',col:'#9B6BF0',sym:'\u2736',type:'MEDAL'},
+  {n:1,name:'GENESIS',col:'#D9B86A',sym:'\u03A9'},{n:2,name:'KNOWLEDGE',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},
+  {n:3,name:'MASTERY',col:'#E86A3A',sym:'\u25C8'},{n:4,name:'CONTRIBUTION',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25B2'},
+  {n:5,name:'ELEMENTAL',col:'#D9B86A',sym:'\u2609'},{n:6,name:'CELESTIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736'},
+  {n:7,name:'SOVEREIGN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u03A9'},{n:8,name:'BLOODLINE',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),sym:'\u22D4'},
+  {n:9,name:'ECONOMIC',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25C8'},{n:10,name:'ORACLE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316'},
+  {n:11,name:'GUARDIAN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B6'},{n:12,name:'APEX',col:'#FFD700',sym:'\u03A9'},
+  {n:13,name:'1ST LIGHT',col:'#D9B86A',sym:'\u2726',type:'MEDAL'},{n:14,name:'PIONEER',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF',type:'MEDAL'},
+  {n:15,name:'CRAFTMASTER',col:'#E86A3A',sym:'\u2699',type:'MEDAL'},{n:16,name:'BUILDER',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B2',type:'MEDAL'},
+  {n:17,name:'NAVIGATOR',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2609',type:'MEDAL'},{n:18,name:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u22D4',type:'MEDAL'},
+  {n:19,name:'GUARDIAN',col:'#D9B86A',sym:'\u25C8',type:'MEDAL'},{n:20,name:'CONSUL',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u2726',type:'MEDAL'},
+  {n:21,name:'RESEARCHER',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316',type:'MEDAL'},{n:22,name:'PROPHET',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736',type:'MEDAL'},
   {n:23,name:'KEEPER',col:'#D9B86A',sym:'\u21C4',type:'MEDAL'},{n:24,name:'OMEGA SVRN',col:'#FFD700',sym:'\u03A9',type:'MEDAL'},
-  {n:25,name:'GENESIS CERT',col:'#D9B86A',sym:'\u25A3',type:'CERT'},{n:26,name:'KNOWLEDGE I',col:'#00E5FF',sym:'\u25A3',type:'CERT'},
-  {n:27,name:'MASTERY I',col:'#E86A3A',sym:'\u25A3',type:'CERT'},{n:28,name:'MASTERY II',col:'#E2C86D',sym:'\u25A3',type:'CERT'},
-  {n:29,name:'ECONOMIST',col:'#C9A84C',sym:'\u25A3',type:'CERT'},{n:30,name:'CELESTIAL',col:'#9B6BF0',sym:'\u25A3',type:'CERT'},
-  {n:31,name:'ARCHITECT',col:'#C9A84C',sym:'\u25A3',type:'CERT'},{n:32,name:'HERITAGE',col:'#D9B86A',sym:'\u25A3',type:'CERT'},
-  {n:33,name:'ORACLE',col:'#9B6BF0',sym:'\u25A3',type:'CERT'},{n:34,name:'CONSULTANT',col:'#3fb27f',sym:'\u25A3',type:'CERT'},
-  {n:35,name:'PLATFORM MST',col:'#C9A84C',sym:'\u25A3',type:'CERT'},{n:36,name:'OMEGA SVRN',col:'#FFD700',sym:'\u25A3',type:'CERT'},
+  {n:25,name:'GENESIS CERT',col:'#D9B86A',sym:'\u25A3',type:'CERT'},{n:26,name:'KNOWLEDGE I',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25A3',type:'CERT'},
+  {n:27,name:'MASTERY I',col:'#E86A3A',sym:'\u25A3',type:'CERT'},{n:28,name:'MASTERY II',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),sym:'\u25A3',type:'CERT'},
+  {n:29,name:'ECONOMIST',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:30,name:'CELESTIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},
+  {n:31,name:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:32,name:'HERITAGE',col:'#D9B86A',sym:'\u25A3',type:'CERT'},
+  {n:33,name:'ORACLE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},{n:34,name:'CONSULTANT',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25A3',type:'CERT'},
+  {n:35,name:'PLATFORM MST',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:36,name:'OMEGA SVRN',col:'#FFD700',sym:'\u25A3',type:'CERT'},
 ];
 
 const MATS=[
   {n:1,name:'SAND',col:'#D9B86A',thresh:'1.73'},{n:2,name:'GLASS',col:'#A9C2D8',thresh:'2.99'},
   {n:3,name:'IRON',col:'#C7CDD6',thresh:'4.25'},{n:4,name:'STEEL',col:'#8B8F9C',thresh:'5.51'},
   {n:5,name:'TITANIUM',col:'#607D8B',thresh:'6.77'},{n:6,name:'CARBON',col:'#455A64',thresh:'8.03'},
-  {n:7,name:'GOLD',col:'#C9A84C',thresh:'9.29'},{n:8,name:'PLATINUM',col:'#E8D5B7',thresh:'10.55'},
-  {n:9,name:'DIAMOND',col:'#9B6BF0',thresh:'11.81'},{n:10,name:'ADAMANT',col:'#00E5FF',thresh:'13.07'},
-  {n:11,name:'PRIME',col:'#E2C86D',thresh:'25.517'},{n:12,name:'OMEGA MASTER',col:'#FFD700',thresh:'27.83679'},
+  {n:7,name:'GOLD',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),thresh:'9.29'},{n:8,name:'PLATINUM',col:'#E8D5B7',thresh:'10.55'},
+  {n:9,name:'DIAMOND',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),thresh:'11.81'},{n:10,name:'ADAMANT',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),thresh:'13.07'},
+  {n:11,name:'PRIME',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),thresh:'25.517'},{n:12,name:'OMEGA MASTER',col:'#FFD700',thresh:'27.83679'},
 ];
 
 const PHASES=[
@@ -1836,7 +1836,7 @@ const CHAR_MAP={
   Taurus:{name:'THE METAL SOVEREIGN',role:'BUILDER . PROTECTOR . ENDURER',traits:['Steadfast','Disciplined','Builder','Loyal'],col:'#C7CDD6',glyph:'B',archetype:'GUARDIAN'},
   Gemini:{name:'THE WIND MESSENGER',role:'COMMUNICATOR . THINKER . CONNECTOR',traits:['Adaptive','Dual-natured','Brilliant','Swift'],col:'#A9C2D8',glyph:'C',archetype:'HERALD'},
   Cancer:{name:'THE WATER KEEPER',role:'PROTECTOR . NURTURER . INTUITIVE',traits:['Deep','Protective','Intuitive','Loyal'],col:'#34C6E6',glyph:'D',archetype:'GUARDIAN'},
-  Leo:{name:'THE FIRE SOVEREIGN',role:'LEADER . CREATOR . ILLUMINATOR',traits:['Radiant','Command','Creative','Noble'],col:'#C9A84C',glyph:'S',archetype:'SOVEREIGN'},
+  Leo:{name:'THE FIRE SOVEREIGN',role:'LEADER . CREATOR . ILLUMINATOR',traits:['Radiant','Command','Creative','Noble'],col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),glyph:'S',archetype:'SOVEREIGN'},
   Virgo:{name:'THE SAND ARCHITECT',role:'ANALYST . BUILDER . AMPLIFIER',traits:['Precise','Universal','Service','Mastery'],col:'#D9B86A',glyph:'V',archetype:'ARCHITECT'},
   Libra:{name:'THE WIND JUSTICIAR',role:'BALANCER . DIPLOMAT . HARMONISER',traits:['Fair','Aesthetic','Wise','Bridge-builder'],col:'#A9C2D8',glyph:'J',archetype:'DIPLOMAT'},
   Scorpio:{name:'THE WATER EXECUTOR',role:'TRANSFORMER . DETECTOR . AVENGER',traits:['Intense','Strategic','Hidden depth','Relentless'],col:'#34C6E6',glyph:'X',archetype:'EXECUTOR'},
@@ -1864,7 +1864,7 @@ const ARCHETYPES=[
 const EVO_STAGES=[
   {label:'SAND',col:'#D9B86A'},{label:'GLASS',col:'#A9C2D8'},{label:'IRON',col:'#C7CDD6'},
   {label:'STEEL',col:'#8B8F9C'},{label:'TITANIUM',col:'#607D8B'},{label:'CARBON',col:'#455A64'},
-  {label:'GOLD',col:'#C9A84C'},{label:'PLATINUM',col:'#E8D5B7'},{label:'OMEGA',col:'#C9A84C'},
+  {label:'GOLD',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},{label:'PLATINUM',col:'#E8D5B7'},{label:'OMEGA',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
 ];
 
 function drawCharPortrait(sign, col){
@@ -1938,7 +1938,7 @@ function drawGenTree(sign){
   const bg=ctx.createLinearGradient(0,0,0,H); bg.addColorStop(0,'rgba(13,13,21,1)'); bg.addColorStop(1,'rgba(7,7,11,1)');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
   /* Root node */
-  const col=sign&&CHAR_MAP[sign]?CHAR_MAP[sign].col:'#C9A84C';
+  const col=sign&&CHAR_MAP[sign]?CHAR_MAP[sign].col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
   const rootX=W/2, rootY=50;
   ctx.beginPath(); ctx.arc(rootX,rootY,20,0,Math.PI*2);
   const rg=ctx.createRadialGradient(rootX,rootY,0,rootX,rootY,20);

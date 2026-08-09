@@ -404,7 +404,7 @@ function renderTrends(){
     });
     ctx.stroke();
   });
-  drawTrend('c-weight','weight','#c9a84c',1);
+  drawTrend('c-weight','weight',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),1);
 }
 
 var now=new Date();

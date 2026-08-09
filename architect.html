@@ -294,22 +294,22 @@ var activeFilter='all';
 
 var NODES=[
   /* Client Layer */
-  {id:'dashboard',x:100,y:80,label:'DASHBOARD',sub:'Command Bridge',color:'#C9A84C',layer:'client',r:26,
+  {id:'dashboard',x:100,y:80,label:'DASHBOARD',sub:'Command Bridge',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),layer:'client',r:26,
     desc:'Central command hub. Aggregates KPIs from all bounded contexts. Real-time auth score, gate status, element, axis chart. Entry point for all navigation flows.',
     tags:['SPA','entry point','aggregation','real-time']},
-  {id:'realm',x:260,y:80,label:'REALM',sub:'3D Element Sphere',color:'#C9A84C',layer:'client',r:22,
+  {id:'realm',x:260,y:80,label:'REALM',sub:'3D Element Sphere',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),layer:'client',r:22,
     desc:'Three.js r160 3-D element sphere. Emits sovereign.realm.visited on load. Recommendation worker reads element from this event.',
     tags:['Three.js','WebGL','element','3D','realm.visited']},
-  {id:'cipher',x:380,y:80,label:'CIPHER',sub:'Crypto Engine',color:'#C9A84C',layer:'client',r:22,
+  {id:'cipher',x:380,y:80,label:'CIPHER',sub:'Crypto Engine',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),layer:'client',r:22,
     desc:'Element-scale substitution cipher. Emits sovereign.cipher.used. Musical semitone scales as cipher alphabet. Canvas waveform visualiser.',
     tags:['cryptography','element','cipher.used','canvas']},
-  {id:'sigma',x:500,y:80,label:'SIGMA',sub:'Analytics View',color:'#C9A84C',layer:'client',r:22,
+  {id:'sigma',x:500,y:80,label:'SIGMA',sub:'Analytics View',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),layer:'client',r:22,
     desc:'Live platform analytics — authority distribution, percentile bars, gate distribution, element matrix, axis scatter plot, Supabase latency signal.',
     tags:['analytics','D3','canvas','Supabase','signal']},
-  {id:'nexus',x:620,y:80,label:'NEXUS',sub:'Network Graph',color:'#C9A84C',layer:'client',r:22,
+  {id:'nexus',x:620,y:80,label:'NEXUS',sub:'Network Graph',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),layer:'client',r:22,
     desc:'Force-directed member network. Supabase realtime subscription for live updates. Node size = auth score. Element-coloured nodes.',
     tags:['network graph','canvas physics','Supabase Realtime','social']},
-  {id:'queue',x:740,y:80,label:'QUEUE',sub:'Queue Monitor',color:'#C9A84C',layer:'client',r:22,
+  {id:'queue',x:740,y:80,label:'QUEUE',sub:'Queue Monitor',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),layer:'client',r:22,
     desc:'Enterprise queue monitoring dashboard. 6 tabs: Workers, Queues, Event Log, Catalog, DLQ, Dispatches. Live throughput sparkline.',
     tags:['ops','queue monitor','DLQ','circuit breaker','workers']},
 

@@ -358,7 +358,7 @@ function drawTrendChart(){
     var i=data.length-5+idx;
     var x=pad.l+i*(cW/(data.length-1||1));
     var y=pad.t+cH*(1-(d.val-yMin)/(yMax-yMin));
-    ctx.fillStyle='var(--gold,#C9A84C)';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
   });
 }
 

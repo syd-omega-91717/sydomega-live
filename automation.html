@@ -261,7 +261,7 @@ function setTab(name){
     ctx.font='bold 22px serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';
-    ctx.shadowColor='#C9A84C';ctx.shadowBlur=10+5*Math.sin(t*.04);
+    ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=10+5*Math.sin(t*.04);
     ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
     t++;requestAnimationFrame(frame);
   }

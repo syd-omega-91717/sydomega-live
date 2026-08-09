@@ -219,7 +219,7 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 const READ_KEY = 'omega_reading';
 
 const GENRE_COLORS = {
-  philosophy:'#9C6FD6', strategy:'#C9A84C', science:'#5C8FD6',
+  philosophy:'#9C6FD6', strategy:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), science:'#5C8FD6',
   biography:'#FF9800', history:'#4CAF50', psychology:'#26C6DA',
   finance:'#E57373', technology:'#80DEEA', fiction:'#CE93D8', other:'#90A4AE',
 };
@@ -228,7 +228,7 @@ const GENRE_LABELS = {
   biography:'BIOGRAPHY', history:'HISTORY', psychology:'PSYCHOLOGY',
   finance:'FINANCE', technology:'TECH', fiction:'FICTION', other:'OTHER',
 };
-const STATUS_COLORS = {reading:'#C9A84C', queued:'rgba(138,134,118,.4)', completed:'#4CAF50'};
+const STATUS_COLORS = {reading:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), queued:'rgba(138,134,118,.4)', completed:'#4CAF50'};
 const STATUS_LABELS = {reading:'READING', queued:'QUEUED', completed:'DONE'};
 
 let statusFilter = 'all';
@@ -288,7 +288,7 @@ function renderLibrary(){
 }
 
 function makeBookCard(b){
-  var col=GENRE_COLORS[b.genre]||'#C9A84C';
+  var col=GENRE_COLORS[b.genre]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
   var stCol=STATUS_COLORS[b.status]||'var(--dim)';
   var pct=b.pages>0?Math.min(100,Math.round((b.progress/b.pages)*100)):0;
   var div=document.createElement('div'); div.className='book-card'; div.id='book-'+b.id;
@@ -436,7 +436,7 @@ function drawGenre(books){
   entries.forEach(function(e,i){
     var x=pad+i*(bw+gap);
     var bh=(e[1]/max)*ph;
-    var col=GENRE_COLORS[e[0]]||'#C9A84C';
+    var col=GENRE_COLORS[e[0]]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     ctx.fillStyle=col+'55';
     ctx.fillRect(x,pad+ph-bh,bw,bh);
     ctx.fillStyle=col+'88'; ctx.font='7px monospace';

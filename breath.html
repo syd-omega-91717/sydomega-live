@@ -190,7 +190,7 @@ const BREATH_KEY = 'omega_breath_log';
 const TECHNIQUES = [
   {name:'BOX BREATHING',   ratio:[4,4,4,4],   phases:['INHALE','HOLD','EXHALE','HOLD'],     color:'#5C8FD6', desc:'Equal 4-count. Balance and composure. Navy SEAL standard.'},
   {name:'4-7-8 CALM',      ratio:[4,7,8,0],   phases:['INHALE','HOLD','EXHALE','—'],         color:'#9C6FD6', desc:'Extended hold and exhale. Fast anxiety reduction.'},
-  {name:'COHERENCE',       ratio:[5,0,5,0],   phases:['INHALE','—','EXHALE','—'],             color:'#C9A84C', desc:'5-5 rhythm. HRV optimization. 6 breaths/min.'},
+  {name:'COHERENCE',       ratio:[5,0,5,0],   phases:['INHALE','—','EXHALE','—'],             color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'5-5 rhythm. HRV optimization. 6 breaths/min.'},
   {name:'POWER BREATH',    ratio:[6,0,2,0],   phases:['INHALE','—','EXHALE','—'],             color:'#4CAF50', desc:'Long inhale, short exhale. Energy activation.'},
   {name:'PHYSIOLOGICAL SIGH', ratio:[2,1,8,0],phases:['DOUBLE INHALE','PAUSE','EXHALE LONG','—'],color:'#26C6DA', desc:'Fastest stress reset. Double inhale + long exhale.'},
   {name:'RESONANT',        ratio:[5,0,5,0],   phases:['INHALE','—','EXHALE','—'],             color:'#FF9800', desc:'Cardiac coherence. Maximum HRV synchronization.'},
@@ -410,7 +410,7 @@ function renderHistory(){
   bl.innerHTML='';
   logs.slice(0,20).forEach(function(l){
     var d=new Date(l.ts);
-    var t=TECHNIQUES.find(function(t){return t.name===l.technique;})||{color:'#C9A84C'};
+    var t=TECHNIQUES.find(function(t){return t.name===l.technique;})||{color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')};
     var div=document.createElement('div'); div.className='log-card';
     div.innerHTML='<div><div class="log-name" style="color:'+t.color+'">'+l.technique+'</div>'+
       '<div class="log-meta">'+l.cycles+' cycles · '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</div></div>'+

@@ -235,7 +235,7 @@ const MOOD_KEY = 'omega_mood_log';
 /* ─── MOOD STATE DEFINITIONS (Russell Circumplex Model) ─── */
 const STATES = [
   /* High valence, high arousal */
-  {name:'ECSTATIC',    v:9,a:9, color:'#C9A84C', desc:'Peak elation, overwhelming joy and excitement'},
+  {name:'ECSTATIC',    v:9,a:9, color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'Peak elation, overwhelming joy and excitement'},
   {name:'EXCITED',     v:8,a:8, color:'#FF9800', desc:'Energized enthusiasm, eager anticipation'},
   {name:'ENTHUSIASTIC',v:8,a:7, color:'#FFB74D', desc:'Strong motivation, fired up and ready'},
   {name:'JOYFUL',      v:8,a:6, color:'#4CAF50', desc:'Bright happiness, light and free feeling'},
@@ -542,7 +542,7 @@ function drawTrend(logs){
     });
   }
 
-  drawLine('valence','#C9A84C');
+  drawLine('valence',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'));
   drawLine('energy','#5C8FD6');
 
   /* day labels */
@@ -645,7 +645,7 @@ function drawFreq(freq){
     var x=xStart+i*(barW+gap);
     var bh=Math.max(4,(e[1]/max)*(H-40));
     var state=STATES.find(function(s){return s.name===e[0];});
-    var col=state?state.color:'#C9A84C';
+    var col=state?state.color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     ctx.fillStyle=col+'99';
     ctx.fillRect(x,H-bh-20,barW,bh);
     ctx.fillStyle='rgba(201,168,76,.5)'; ctx.font='7px monospace';

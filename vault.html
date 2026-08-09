@@ -356,7 +356,7 @@ function setTab(name){
       ctx.font='bold '+(cs*1.1)+'px serif';
       ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillStyle='rgba(201,168,76,'+(0.1+0.07*Math.sin(t*.008))+')';
-      ctx.shadowColor='#C9A84C';ctx.shadowBlur=cs*.8;
+      ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=cs*.8;
       ctx.fillText('Ω',cx,cy+N*cs*.25);
       ctx.shadowBlur=0;
       t++;requestAnimationFrame(frame);
@@ -382,7 +382,7 @@ function setTab(name){
         var active=i===Math.floor(t/30)%12;
         ctx.beginPath();ctx.arc(nx,ny,active?5:3,0,Math.PI*2);
         ctx.fillStyle=active?'rgba(226,200,109,1)':'rgba(201,168,76,.4)';ctx.fill();
-        if(active){ctx.shadowColor='#C9A84C';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;}
+        if(active){ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;}
         ctx.font=(active?'bold ':'')+((r*.18))+'px monospace';
         ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.fillStyle=active?'rgba(226,200,109,.9)':'rgba(201,168,76,.3)';

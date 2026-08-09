@@ -171,7 +171,7 @@ function setTab(name){
     ctx.strokeStyle='rgba(201,168,76,'+(0.35+0.12*Math.sin(t*0.03))+')';ctx.lineWidth=0.8;ctx.stroke();
     ctx.font='bold 18px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='rgba(155,107,240,'+(0.7+0.3*Math.sin(t*0.05))+')';
-    ctx.shadowColor='#9B6BF0';ctx.shadowBlur=8;ctx.fillText('Ω',cx,cy);ctx.shadowBlur=0;
+    ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0');ctx.shadowBlur=8;ctx.fillText('Ω',cx,cy);ctx.shadowBlur=0;
     for(var k=0;k<3;k++){var av=ang+k*Math.PI*2/3;ctx.beginPath();ctx.arc(cx+R*Math.cos(av),cy+R*Math.sin(av),3,0,Math.PI*2);ctx.fillStyle='rgba(155,107,240,.8)';ctx.fill();}
     t++;if(!REDUCE)requestAnimationFrame(draw);
   })();

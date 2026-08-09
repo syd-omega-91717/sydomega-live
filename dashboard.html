@@ -349,16 +349,16 @@ function setTab(name){
   var cv=document.getElementById('galaxy-canvas');if(!cv) return;
   var ctx=cv.getContext('2d');var W,H,t=0;
   var MODULES=[
-    {name:'CORE',col:'#C9A84C',href:'/dashboard.html',r:0},
-    {name:'IDENTITY',col:'#00E5FF',href:'/profile.html',r:1},{name:'MASTERY',col:'#9B6BF0',href:'/gaming.html',r:1},
-    {name:'TREASURY',col:'#E2C86D',href:'/vault.html',r:1},{name:'AI',col:'#3fb27f',href:'/sovereign-ai.html',r:1},
-    {name:'MEDIA',col:'#9B6BF0',href:'/cinema.html',r:1},{name:'HERITAGE',col:'#3fb27f',href:'/heritage.html',r:1},
-    {name:'GOVERN',col:'#C9A84C',href:'/governance.html',r:2},{name:'INVEST',col:'#E2C86D',href:'/investment.html',r:2},
-    {name:'SOCIAL',col:'#00E5FF',href:'/feed.html',r:2},{name:'COSMOS',col:'#9B6BF0',href:'/cosmos.html',r:2},
-    {name:'NEWS',col:'#00E5FF',href:'/news.html',r:2},{name:'ENTERPRISE',col:'#C9A84C',href:'/enterprise.html',r:2},
-    {name:'RESEARCH',col:'#3fb27f',href:'/lab.html',r:2},{name:'LATTICE',col:'#C9A84C',href:'/matrix.html',r:2},
-    {name:'LEGAL',col:'#E2C86D',href:'/compliance.html',r:2},{name:'FAMILY',col:'#3fb27f',href:'/family.html',r:2},
-    {name:'HEALTH',col:'#3fb27f',href:'/observatory.html',r:2},
+    {name:'CORE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/dashboard.html',r:0},
+    {name:'IDENTITY',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),href:'/profile.html',r:1},{name:'MASTERY',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),href:'/gaming.html',r:1},
+    {name:'TREASURY',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),href:'/vault.html',r:1},{name:'AI',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/sovereign-ai.html',r:1},
+    {name:'MEDIA',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),href:'/cinema.html',r:1},{name:'HERITAGE',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/heritage.html',r:1},
+    {name:'GOVERN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/governance.html',r:2},{name:'INVEST',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),href:'/investment.html',r:2},
+    {name:'SOCIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),href:'/feed.html',r:2},{name:'COSMOS',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),href:'/cosmos.html',r:2},
+    {name:'NEWS',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),href:'/news.html',r:2},{name:'ENTERPRISE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/enterprise.html',r:2},
+    {name:'RESEARCH',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/lab.html',r:2},{name:'LATTICE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/matrix.html',r:2},
+    {name:'LEGAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),href:'/compliance.html',r:2},{name:'FAMILY',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/family.html',r:2},
+    {name:'HEALTH',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/observatory.html',r:2},
   ];
   var nodes=[];
   function resize(){W=cv.offsetWidth;H=cv.offsetHeight||360;cv.width=W;cv.height=H;}
@@ -508,9 +508,9 @@ function loadAILayer(){
   qg.dataset.loaded='1';
   fetch('/omega-agents.json').then(function(r){return r.json();}).then(function(data){
     var agents=data.agents||[];
-    var EL={'fire':'#E25800','water':'#0088FF','wind':'#00E5FF','metal':'#8a8676','sand':'#E2C86D'};
+    var EL={'fire':'#E25800','water':'#0088FF','wind':(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),'metal':(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676'),'sand':(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')};
     qg.innerHTML=agents.map(function(ag){
-      var col=EL[(ag.element||'fire').toLowerCase()]||'#C9A84C';
+      var col=EL[(ag.element||'fire').toLowerCase()]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
       return '<div style="border:1px solid rgba(201,168,76,.15);padding:10px;border-radius:2px;cursor:pointer;border-left:2px solid '+col+';transition:.15s" onclick="location.href=\'/agents.html\'" onmouseover="this.style.background=\'rgba(201,168,76,.04)\'" onmouseout="this.style.background=\'none\'">'
         +'<div style="font-family:var(--D);font-size:10px;color:'+col+'">'+ag.name+'</div>'
         +'<div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);margin-top:3px">'+ag.sign.toUpperCase()+' &middot; '+ag.role+'</div>'
@@ -584,7 +584,7 @@ function renderPersonalOS(){
 function drawPersonalWheel(areas){
   var cv=document.getElementById('personal-wheel');if(!cv) return;
   var DEFAULTS=[
-    {id:'wealth',label:'WEALTH',color:'#C9A84C'},{id:'health',label:'HEALTH',color:'#4CAF50'},
+    {id:'wealth',label:'WEALTH',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},{id:'health',label:'HEALTH',color:'#4CAF50'},
     {id:'mind',label:'MIND',color:'#5C8FD6'},{id:'bonds',label:'BONDS',color:'#E57373'},
     {id:'spirit',label:'SPIRIT',color:'#9C6FD6'},{id:'craft',label:'CRAFT',color:'#FF9800'},
     {id:'legacy',label:'LEGACY',color:'#90A4AE'},{id:'freedom',label:'FREEDOM',color:'#26C6DA'},
@@ -620,7 +620,7 @@ function drawPersonalWheel(areas){
   data.forEach(function(d,i){
     var a=((i/N)*Math.PI*2)-Math.PI/2,r=((d.current||0)/10)*maxR;
     ctx.beginPath();ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2);
-    ctx.fillStyle=d.color||'#C9A84C';ctx.fill();
+    ctx.fillStyle=d.color||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.fill();
     /* Labels */
     var lr=(maxR+12);
     ctx.font='5px monospace';ctx.fillStyle='rgba(201,168,76,.5)';ctx.textAlign='center';ctx.textBaseline='middle';
@@ -660,7 +660,7 @@ function renderPlatformSections(){
       {n:'Vision',u:'/vision.html'},{n:'Decisions',u:'/decisions.html'},{n:'Command Brief',u:'/command.html'},
       {n:'Targets',u:'/targets.html'},{n:'Roadmap',u:'/roadmap.html'},{n:'Ecosystem',u:'/ecosystem.html'},
       {n:'Weekly Review',u:'/weekly.html'},{n:'Projects',u:'/projects.html'}]},
-    {name:'INTELLIGENCE',col:'#9B6BF0',pages:[
+    {name:'INTELLIGENCE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),pages:[
       {n:'Analytics',u:'/analytics.html'},{n:'Intelligence',u:'/intelligence.html'},{n:'Sigma',u:'/sigma.html'},
       {n:'Nexus',u:'/nexus.html'},{n:'Cipher',u:'/cipher.html'},{n:'Pulse',u:'/pulse.html'},
       {n:'Signal',u:'/signal.html'},{n:'Codex',u:'/codex.html'},{n:'Atlas',u:'/atlas.html'},{n:'Network',u:'/network.html'},{n:'Mind Map',u:'/mindmap.html'}]},
@@ -684,7 +684,7 @@ function renderPlatformSections(){
     {name:'GOVERNANCE',col:'var(--gold)',pages:[
       {n:'Governance',u:'/governance.html'},{n:'Observatory',u:'/observatory.html'},{n:'Enterprise',u:'/enterprise.html'},
       {n:'Compliance',u:'/compliance.html'},{n:'Privacy',u:'/privacy.html'}]},
-    {name:'MEDIA',col:'#8B0000',pages:[
+    {name:'MEDIA',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),pages:[
       {n:'Cinema',u:'/cinema.html'},{n:'Series',u:'/series.html'},{n:'Trailers',u:'/trailers.html'},
       {n:'Universe',u:'/universe.html'},{n:'Feed',u:'/feed.html'},{n:'Social',u:'/social.html'}]},
     {name:'OPERATIONS',col:'var(--purple)',pages:[

@@ -178,9 +178,9 @@ function switchTab(id,btn){
 if(location.search.includes('expired')){
   document.getElementById('expired-badge').style.display='block';
   document.getElementById('gate-title').textContent='TRIAL SESSION EXPIRED';
-  document.getElementById('gate-title').style.color='#8B0000';
+  document.getElementById('gate-title').style.color=(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000');
   document.getElementById('sb-status').textContent='9H-17M-17S TRIAL ENDED';
-  document.getElementById('sb-status').style.color='#8B0000';
+  document.getElementById('sb-status').style.color=(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000');
   document.getElementById('sb-detail').textContent='Your trial access has concluded. The Architect must grant a new session to re-enter the Order.';
 }
 </script>

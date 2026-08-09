@@ -223,7 +223,7 @@ function switchTab(id,btn){
 
 var accounts=[];
 var targets={checking:10,savings:15,investment:40,retirement:15,crypto:10,'real-estate':0,business:5,debt:0,other:5};
-var TYPE_COLORS={checking:'#00E5FF',savings:'#4CAF50',investment:'#FFD700',retirement:'#9B6BF0',
+var TYPE_COLORS={checking:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),savings:'#4CAF50',investment:'#FFD700',retirement:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),
   crypto:'#FF9800','real-estate':'#FF4444',business:'#00BCD4',debt:'#555',other:'#888'};
 var TYPE_LABELS={checking:'CHECKING',savings:'SAVINGS',investment:'INVESTMENT',retirement:'RETIREMENT',
   crypto:'CRYPTO','real-estate':'REAL ESTATE',business:'BUSINESS',debt:'DEBT',other:'OTHER'};

@@ -158,7 +158,7 @@ TIERS.forEach(function(t){
   function frame(){
     ctx.clearRect(0,0,120,120);
     for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(60,60,16+i*5+3*Math.sin(t*.03+i),t*.008,t*.008+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}
-    ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
+    ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
     t++;requestAnimationFrame(frame);
   }frame();
 })();

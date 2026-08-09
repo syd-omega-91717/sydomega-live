@@ -245,7 +245,7 @@ window.transmit=async function(){
     ctx.font='bold 18px serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';
-    ctx.shadowColor='#C9A84C';ctx.shadowBlur=8+4*Math.sin(t*.04);
+    ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=8+4*Math.sin(t*.04);
     ctx.fillText('Ω',40,40);ctx.shadowBlur=0;
     t++;requestAnimationFrame(frame);
   }

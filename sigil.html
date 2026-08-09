@@ -87,12 +87,12 @@
 </div>
 
 <script>
-var _sigilColor='#C9A84C',_sigilSign='',_sigilElem='',_sigilAuth=0;
+var _sigilColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),_sigilSign='',_sigilElem='',_sigilAuth=0;
 var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
 var SYMS=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
 var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
 var GTHR=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-var SWATCHES=['#C9A84C','#00E5FF','#9B6BF0','#3fb27f','#E86A3A','#E2C86D'];
+var SWATCHES=[(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),'#E86A3A',(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')];
 var PHI=1.6180339887,EU=2.7182818285;
 
 function setTab(name){
@@ -105,7 +105,7 @@ function drawSigil(cv,sign,elem,auth,color){
   var ctx=cv.getContext('2d');
   var W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)*0.4;
   ctx.clearRect(0,0,W,H);
-  ctx.strokeStyle=color||'#C9A84C';ctx.lineWidth=1.5;
+  ctx.strokeStyle=color||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.lineWidth=1.5;
   ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.globalAlpha=0.2;ctx.stroke();
   ctx.beginPath();ctx.arc(cx,cy,R*0.72,0,Math.PI*2);ctx.globalAlpha=0.15;ctx.stroke();
   ctx.globalAlpha=0.6;ctx.beginPath();
@@ -115,9 +115,9 @@ function drawSigil(cv,sign,elem,auth,color){
     i===0?ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r):ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
   }
   ctx.closePath();ctx.stroke();
-  ctx.globalAlpha=0.85;ctx.fillStyle=color||'#C9A84C';ctx.font='bold 28px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.globalAlpha=0.85;ctx.fillStyle=color||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.font='bold 28px serif';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(elem||'Ω',cx,cy);
-  ctx.globalAlpha=0.45;ctx.font='8px monospace';ctx.fillStyle=color||'#C9A84C';
+  ctx.globalAlpha=0.45;ctx.font='8px monospace';ctx.fillStyle=color||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
   var txt='AUTH '+parseFloat(auth||0).toFixed(3)+' · SYD OMEGA 91717';
   var r2=R*0.88;
   for(var j=0;j<txt.length;j++){
@@ -142,7 +142,7 @@ function downloadSigil(){
 
 function buildGallery(){
   var grid=document.getElementById('gallery-grid');if(!grid)return;
-  var GCOLS=['#E86A3A','#3fb27f','#00E5FF','#9B6BF0','#E2C86D','#C9A84C','#9B6BF0','#8B0000','#E2C86D','#C9A84C','#00E5FF','#9B6BF0'];
+  var GCOLS=['#E86A3A',(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')];
   SIGNS.forEach(function(s,i){
     var item=document.createElement('div');item.className='gallery-item';
     var cv=document.createElement('canvas');cv.width=120;cv.height=120;cv.style.display='block';cv.style.margin='0 auto 8px';

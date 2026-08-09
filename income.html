@@ -106,13 +106,13 @@ function setTab(name){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
 var ALLOCATION=[
-  {name:'TECHNOLOGY INFRASTRUCTURE',pct:25,col:'#00E5FF',desc:'Servers, CDN, Supabase scale, domain, CI/CD, security hardening, monitoring. The foundation that must never fail.'},
-  {name:'CONTENT CREATION',pct:20,col:'#C9A84C',desc:'Cinema, gaming builds, media production, graphic assets, motion design, cinematic expansion of the universe.'},
-  {name:'LEGAL & COMPLIANCE FUND',pct:15,col:'#8B0000',desc:'Securities counsel, KYC/AML, IP registration, Madrid Protocol, licensed advisor retainer. Non-negotiable first allocation.'},
-  {name:'MARKETING & GROWTH',pct:15,col:'#3fb27f',desc:'Targeted member acquisition, social campaigns, affiliate program, partnership outreach, SEO.'},
+  {name:'TECHNOLOGY INFRASTRUCTURE',pct:25,col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),desc:'Servers, CDN, Supabase scale, domain, CI/CD, security hardening, monitoring. The foundation that must never fail.'},
+  {name:'CONTENT CREATION',pct:20,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'Cinema, gaming builds, media production, graphic assets, motion design, cinematic expansion of the universe.'},
+  {name:'LEGAL & COMPLIANCE FUND',pct:15,col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),desc:'Securities counsel, KYC/AML, IP registration, Madrid Protocol, licensed advisor retainer. Non-negotiable first allocation.'},
+  {name:'MARKETING & GROWTH',pct:15,col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),desc:'Targeted member acquisition, social campaigns, affiliate program, partnership outreach, SEO.'},
   {name:'RESERVE & STABILITY',pct:12,col:'#D9B86A',desc:'Emergency fund, cash flow buffer, minimum 3 months operating reserve at all times. The sovereign safety layer.'},
-  {name:'RESEARCH & DEVELOPMENT',pct:8,col:'#9B6BF0',desc:'AI agent development, blockchain R&D, new module builds, experiment budget for untested ideas.'},
-  {name:'ARCHITECT SOVEREIGN DRAW',pct:5,col:'#E2C86D',desc:'Your personal allocation. Grows proportionally as platform revenue scales. Sovereign earns after the platform is secured.'}
+  {name:'RESEARCH & DEVELOPMENT',pct:8,col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'AI agent development, blockchain R&D, new module builds, experiment budget for untested ideas.'},
+  {name:'ARCHITECT SOVEREIGN DRAW',pct:5,col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),desc:'Your personal allocation. Grows proportionally as platform revenue scales. Sovereign earns after the platform is secured.'}
 ];
 var INVESTMENTS=[
   {num:'01',name:'PLATFORM INFRASTRUCTURE BONDS',pct:'30%',desc:'Reinvest into the platform itself. Every dollar that improves server capacity, security, or UX multiplies subscriber retention.'},

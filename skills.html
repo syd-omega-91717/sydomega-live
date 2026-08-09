@@ -319,7 +319,7 @@ var SESSIONS_KEY = 'omega_skill_sessions';
 
 var DOMAINS = {
   technology: {label:'TECHNOLOGY', color:'#5C8FD6', icon:'&#9881;'},
-  business:   {label:'BUSINESS',   color:'#C9A84C', icon:'&#9670;'},
+  business:   {label:'BUSINESS',   color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), icon:'&#9670;'},
   creative:   {label:'CREATIVE',   color:'#9C6FD6', icon:'&#9728;'},
   physical:   {label:'PHYSICAL',   color:'#4CAF50', icon:'&#9878;'},
   social:     {label:'SOCIAL',     color:'#26C6DA', icon:'&#9678;'},

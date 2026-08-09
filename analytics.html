@@ -219,7 +219,7 @@ function setTab(name){
     ctx.clearRect(0,0,160,60);
     var cx=80,cy=30,r=22;
     var vals=[(window.__mrA||0.001)/9,(window.__mrB||0.001)/9,(window.__mrC||0.001)/9];
-    var cols=['#C9A84C','#00E5FF','#E2C86D'];
+    var cols=[(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')];
     ctx.beginPath();
     for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2,rv=r*vals[j];if(j===0)ctx.moveTo(cx+Math.cos(ang)*rv,cy+Math.sin(ang)*rv);else ctx.lineTo(cx+Math.cos(ang)*rv,cy+Math.sin(ang)*rv);}
     ctx.closePath();ctx.fillStyle='rgba(201,168,76,.1)';ctx.fill();ctx.strokeStyle='rgba(201,168,76,.5)';ctx.lineWidth=1;ctx.stroke();

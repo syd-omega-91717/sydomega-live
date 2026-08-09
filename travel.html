@@ -103,13 +103,13 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var DESTS=[
-  {region:'MIDDLE EAST',name:'BEIRUT, LEBANON',desc:'The heart of the Dagher lineage and one of the oldest sovereign cities in the known world. Heritage routes through the Bekaa, Byblos, and the ancient Phoenician coast.',tags:['HERITAGE','CULTURE','LINEAGE'],link:'Heritage Archive &rarr; Origin Lands',col:'#C9A84C',heritage:true},
-  {region:'MEDITERRANEAN',name:'ATHENS, GREECE',desc:'The birthplace of the Twelve Olympians and the original pantheon that governs the &#937; cosmology. Walk the Acropolis. Trace the twelve signs to their mythological roots.',tags:['PANTHEON','MYTHOLOGY','KNOWLEDGE'],link:'Pantheons Module &rarr; Greek Canon',col:'#A9C2D8'},
-  {region:'NORTH AFRICA',name:'CAIRO, EGYPT',desc:'The seat of the Duat and the Book of Gates. Atum, Shu, Geb sequence alive in stone. The cross-pantheon layer of the Order traces its Egyptian thread here.',tags:['GATES','DUAT','COSMIC'],link:'The 12 Gates &rarr; Egyptian Canon',col:'#D9B86A'},
-  {region:'SOUTH ASIA',name:'VARANASI, INDIA',desc:'The city of the Navagraha. The twelve Adityas. Where Hindu cosmology meets the &#937; planetary framework. The resonance frequency is felt in the Ganges rituals.',tags:['NAVAGRAHA','PLANETS','SPIRITUAL'],link:'Pantheons &rarr; Hindu Canon',col:'#E86A3A'},
-  {region:'EUROPE',name:'ROME, ITALY',desc:'The Dii Consentes &mdash; the Roman counterpart to the Twelve Olympians. The matrix has a Roman layer: Jupiter, Juno, Mars, Venus, each mapped to their gate.',tags:['ROMAN','PANTHEON','HISTORY'],link:'Pantheons &rarr; Roman Canon',col:'#C7CDD6'},
-  {region:'EAST ASIA',name:'KYOTO, JAPAN',desc:'A city of discipline, ascension, and the quiet power of Metal and Void. The spiritual architecture of Kyoto mirrors the &#937; hierarchy of gradual, earned sovereignty.',tags:['DISCIPLINE','METAL','VOID'],link:'Elements &rarr; Metal &amp; Void',col:'#85837b'},
-  {region:'AMERICAS',name:'MACHU PICCHU, PERU',desc:'A mountain sovereignty: isolation, altitude, and ancient coordinate logic that mirrors the 9&#215;9&#215;9 lattice. The Incan calendar is a 729-node system in stone.',tags:['MATRIX','HERITAGE','ANCIENT'],link:'The Lattice &rarr; 729 Nodes',col:'#3fb27f'},
+  {region:'MIDDLE EAST',name:'BEIRUT, LEBANON',desc:'The heart of the Dagher lineage and one of the oldest sovereign cities in the known world. Heritage routes through the Bekaa, Byblos, and the ancient Phoenician coast.',tags:['HERITAGE','CULTURE','LINEAGE'],link:'Heritage Archive &rarr; Origin Lands',col:'#C9A84C',heritage:true,wiki:'Beirut'},
+  {region:'MEDITERRANEAN',name:'ATHENS, GREECE',desc:'The birthplace of the Twelve Olympians and the original pantheon that governs the &#937; cosmology. Walk the Acropolis. Trace the twelve signs to their mythological roots.',tags:['PANTHEON','MYTHOLOGY','KNOWLEDGE'],link:'Pantheons Module &rarr; Greek Canon',col:'#A9C2D8',wiki:'Athens'},
+  {region:'NORTH AFRICA',name:'CAIRO, EGYPT',desc:'The seat of the Duat and the Book of Gates. Atum, Shu, Geb sequence alive in stone. The cross-pantheon layer of the Order traces its Egyptian thread here.',tags:['GATES','DUAT','COSMIC'],link:'The 12 Gates &rarr; Egyptian Canon',col:'#D9B86A',wiki:'Cairo'},
+  {region:'SOUTH ASIA',name:'VARANASI, INDIA',desc:'The city of the Navagraha. The twelve Adityas. Where Hindu cosmology meets the &#937; planetary framework. The resonance frequency is felt in the Ganges rituals.',tags:['NAVAGRAHA','PLANETS','SPIRITUAL'],link:'Pantheons &rarr; Hindu Canon',col:'#E86A3A',wiki:'Varanasi'},
+  {region:'EUROPE',name:'ROME, ITALY',desc:'The Dii Consentes &mdash; the Roman counterpart to the Twelve Olympians. The matrix has a Roman layer: Jupiter, Juno, Mars, Venus, each mapped to their gate.',tags:['ROMAN','PANTHEON','HISTORY'],link:'Pantheons &rarr; Roman Canon',col:'#C7CDD6',wiki:'Rome'},
+  {region:'EAST ASIA',name:'KYOTO, JAPAN',desc:'A city of discipline, ascension, and the quiet power of Metal and Void. The spiritual architecture of Kyoto mirrors the &#937; hierarchy of gradual, earned sovereignty.',tags:['DISCIPLINE','METAL','VOID'],link:'Elements &rarr; Metal &amp; Void',col:'#85837b',wiki:'Kyoto'},
+  {region:'AMERICAS',name:'MACHU PICCHU, PERU',desc:'A mountain sovereignty: isolation, altitude, and ancient coordinate logic that mirrors the 9&#215;9&#215;9 lattice. The Incan calendar is a 729-node system in stone.',tags:['MATRIX','HERITAGE','ANCIENT'],link:'The Lattice &rarr; 729 Nodes',col:'#3fb27f',wiki:'Machu_Picchu'},
   {region:'SPACE DIMENSION',name:'SPACE FRONTIER',desc:'The 7th element. Beyond territory. The Space element sovereign experience: stargazing retreats, observatory access, and the perspective that dissolves all false hierarchy.',tags:['SPACE','7TH ELEMENT','COSMOS'],link:'Elements &rarr; Space',col:'#9B6BF0'},
 ];
 
@@ -127,10 +127,28 @@ function setTab(name){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
 
+window.loadDestInfo=function(i){
+  var d=DESTS[i];
+  var el=document.getElementById('dest-info-'+i);
+  el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING&hellip;</span>';
+  fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(d.wiki))
+    .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
+    .then(function(data){
+      var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(d.wiki));
+      el.innerHTML='<div style="font-size:11px;line-height:1.7;color:var(--muted)">'+extract+'</div>'
+        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
+    })
+    .catch(function(){
+      el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--crim)">Could not reach Wikipedia.</span> '
+        +'<button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:7px;color:var(--muted);background:none;border:1px solid var(--line);cursor:pointer;padding:2px 6px">RETRY</button>';
+    });
+};
+
 function renderDests(){
   var grid=document.getElementById('dest-grid');
   grid.innerHTML='';
-  DESTS.forEach(function(d){
+  DESTS.forEach(function(d,i){
     var card=document.createElement('div');
     card.className='dest-card';
     card.style.setProperty('--dc',d.col);
@@ -140,7 +158,8 @@ function renderDests(){
       '<div class="dest-name">'+d.name+'</div>'+
       '<div class="dest-desc">'+d.desc+'</div>'+
       '<div class="tag-row">'+d.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('')+'</div>'+
-      '<div class="matrix-link">&#x25B6; '+d.link+'</div>';
+      '<div class="matrix-link">&#x25B6; '+d.link+'</div>'+
+      (d.wiki?'<div id="dest-info-'+i+'" style="margin-top:8px" onclick="event.stopPropagation()"><button onclick="loadDestInfo('+i+')" style="font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer">REAL PLACE INFO (WIKIPEDIA)</button></div>':'');
     grid.appendChild(card);
   });
 }

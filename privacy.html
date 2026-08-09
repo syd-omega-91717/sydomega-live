@@ -165,12 +165,23 @@ function showMsg(id,ok,text){
 
 window.updateConsent=async function(type,granted){
   var lbl=document.getElementById('lbl-'+type);
+  var tog=document.getElementById('toggle-'+type);
   if(lbl)lbl.textContent='SAVING…';
   try{
-    await sb.rpc('update_consent',{p_type:type,p_granted:granted,p_version:'2.0'});
+    var r=await sb.rpc('update_consent',{p_type:type,p_granted:granted,p_version:'2.0'});
+    if(r.error||!(r.data&&r.data.ok)){
+      if(tog)tog.checked=!granted;
+      if(lbl)lbl.textContent=(!granted)?'GRANTED':'NOT GRANTED';
+      showMsg('consent-msg',false,'COULD NOT UPDATE CONSENT: '+((r.data&&r.data.error)||r.error?.message||'unknown error')+'. PLEASE TRY AGAIN.');
+      return;
+    }
     if(lbl)lbl.textContent=granted?'GRANTED':'NOT GRANTED';
     showMsg('consent-msg',true,'CONSENT UPDATED: '+type.toUpperCase()+' = '+(granted?'GRANTED':'REVOKED'));
-  }catch(e){showMsg('consent-msg',false,'ERROR UPDATING CONSENT. PLEASE TRY AGAIN.');}
+  }catch(e){
+    if(tog)tog.checked=!granted;
+    if(lbl)lbl.textContent=(!granted)?'GRANTED':'NOT GRANTED';
+    showMsg('consent-msg',false,'ERROR UPDATING CONSENT. PLEASE TRY AGAIN.');
+  }
 };
 
 window.exportMyData=async function(){

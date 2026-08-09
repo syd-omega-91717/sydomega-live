@@ -201,7 +201,8 @@ async function submitAd(){
   btn.disabled=true;fb.style.color='var(--cyan)';fb.textContent='Submitting...';
   try{
     var s=(await sb.auth.getSession()).data.session;
-    await sb.from('advertisements').insert({company_name:company,contact_email:email,headline:headline,body:body,tier:tier,category:cat,destination_url:url,timeline_period:timeline,status:'pending',submitted_by:s?s.user.id:null,submitted_at:new Date().toISOString()});
+    var ins=await sb.from('advertisements').insert({company_name:company,contact_email:email,headline:headline,body:body,tier:tier,category:cat,destination_url:url,timeline_period:timeline,status:'pending',submitted_by:s?s.user.id:null,submitted_at:new Date().toISOString()});
+    if(ins.error) throw ins.error;
     fb.style.color='var(--green)';fb.textContent='SUBMISSION RECEIVED. THE ARCHITECT WILL REVIEW WITHIN 48 HOURS.';
     ['adv-company','adv-email','adv-headline','adv-body','adv-url'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   }catch(e){fb.style.color='var(--solar)';fb.textContent='SUBMISSION NOTED. CONTACT THE ORDER DIRECTLY TO PROCEED.';}

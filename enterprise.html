@@ -178,7 +178,7 @@ function setTab(name){
         if(rows){rows.innerHTML=accs.data.map(function(a){
           var col={active:'var(--green)',pending:'var(--solar)',suspended:'var(--crim)',expired:'var(--muted)'}[a.status]||'var(--muted)';
           return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
-            +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'')+'</div></div>'
+            +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'').replace(/</g,'&lt;')+'</div></div>'
             +'<div style="font-family:var(--M);font-size:8px">'+String(a.license_type||'').toUpperCase()+'</div>'
             +'<div style="font-family:var(--M);font-size:8px;color:'+col+'">'+String(a.status||'').toUpperCase()+'</div>'
             +'<div style="font-family:var(--D);font-size:13px;color:var(--gold)">'+(a.monthly_value?'$'+Math.round(a.monthly_value):'--')+'</div>'

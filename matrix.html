@@ -595,7 +595,8 @@ async function loadRealMatrix(){
   if(ev.data && ev.data.length){
     list.innerHTML = ev.data.map(function(e){
       var when = e.created_at ? new Date(e.created_at).toLocaleDateString() : '';
-      return '<div class="ev-item"><span class="ev-icon">'+(e.axis||'?')+'</span><span class="ev-text">'+(e.note||'Evolution event')+'</span><span class="ev-weight">'+when+'</span></div>';
+      var noteEsc=String(e.note||'Evolution event').replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});
+      return '<div class="ev-item"><span class="ev-icon">'+(e.axis||'?')+'</span><span class="ev-text">'+noteEsc+'</span><span class="ev-weight">'+when+'</span></div>';
     }).join('');
   } else {
     list.innerHTML = '<div class="ev-item"><span class="ev-text">No evolution events recorded yet -- your actions across the platform will appear here.</span></div>';

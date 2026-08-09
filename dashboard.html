@@ -335,6 +335,7 @@
 </div>
 
 <script>
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 /* ── TAB SWITCHER ────────────────────────────────────────────── */
 function setTab(name){
   var tabs=['overview','personal','platform','science'];
@@ -806,7 +807,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
             var dt=new Date(e.created_at);
             var ago=Math.round((Date.now()-dt)/1000);
             var agoStr=ago<60?ago+'s ago':ago<3600?Math.round(ago/60)+'m ago':ago<86400?Math.round(ago/3600)+'h ago':Math.round(ago/86400)+'d ago';
-            return '<div class="tl-item"><div class="tl-dot" style="--td:'+col+'"></div><div class="tl-content"><div class="tl-title">'+e.title+'</div><div class="tl-time">'+agoStr+'</div></div></div>';
+            return '<div class="tl-item"><div class="tl-dot" style="--td:'+col+'"></div><div class="tl-content"><div class="tl-title">'+esc(e.title)+'</div><div class="tl-time">'+agoStr+'</div></div></div>';
           }).join('');
         }else{
           tlEl.innerHTML='<div class="tl-item"><div class="tl-dot" style="--td:var(--muted)"></div><div class="tl-content"><div class="tl-title" style="color:var(--muted)">No events yet. Complete tasks to begin your sovereign record.</div></div></div>';

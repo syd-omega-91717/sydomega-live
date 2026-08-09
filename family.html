@@ -531,18 +531,7 @@ function buildMemberCards(rows){
   rows.forEach(m=>{
     const c=document.createElement('div');c.className='mc'+(m.is_heir?' heir':'');
     c.innerHTML=`<div class="mc-rel">${m.relation?.toUpperCase()||'FAMILY'}</div><div class="mc-name">${m.name}</div><div class="mc-sign">${m.sign||'SIGN NOT SET'}</div><div class="mc-actions"><button class="mc-btn mc-heir-btn" data-id="${m.id}" data-heir="${m.is_heir?1:0}">${m.is_heir?'REVOKE HEIR':'SET HEIR'}</button><button class="mc-btn mc-del" data-id="${m.id}">REMOVE</button></div>`;
-    c.querySelector('.mc-heir-btn').addEventListener('click',async e=>{const id=e.target.dataset.id;const h=e.target.dataset.heir==='1';if(!h){/* FAMILY PAGE BOOT */
-  var s=(await sb.auth.getSession()).data.session;
-  if(!s){location.replace('/account.html');return;}
-  var uid=s.user.id;
-  var pr=(await sb.from('profiles').select('*').eq('id',uid).maybeSingle()).data||{};
-  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-  if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-  document.getElementById('app').style.display='flex';
-  var name=(pr.display_name||s.user.email||'SOVEREIGN MEMBER').toUpperCase();
-  ['user-name','ft-title'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=name;});
-  if(pr.is_owner){var fn=document.getElementById('family-founder-name');if(fn)fn.style.display='inline';}
-  await sb.from('family_nodes').update({is_heir:false}).eq('user_id',uid);await sb.from('family_nodes').update({is_heir:true}).eq('id',id).eq('user_id',uid);}else{await sb.from('family_nodes').update({is_heir:false}).eq('id',id).eq('user_id',uid);}boot();});
+    c.querySelector('.mc-heir-btn').addEventListener('click',async e=>{const id=e.target.dataset.id;const h=e.target.dataset.heir==='1';if(!h){await sb.from('family_nodes').update({is_heir:false}).eq('user_id',uid);await sb.from('family_nodes').update({is_heir:true}).eq('id',id).eq('user_id',uid);}else{await sb.from('family_nodes').update({is_heir:false}).eq('id',id).eq('user_id',uid);}boot();});
     c.querySelector('.mc-del').addEventListener('click',async e=>{if(confirm('Remove node?')){await sb.from('family_nodes').delete().eq('id',e.target.dataset.id).eq('user_id',uid);boot();}});
     g.appendChild(c);
   });

@@ -326,8 +326,8 @@ function complete(id,src,xp){
   showXP(xp);
   toast('MISSION COMPLETE: +'+xp+' XP','var(--green)');
   renderAll();
-  if(sb&&window.__omegaUser){
-    sb.from('mission_completions').upsert({user_id:window.__omegaUser.id,mission_id:id,xp_earned:xp,completed_at:new Date().toISOString(),mission_date:today}).catch(function(){});
+  if(window.__omegaUser){
+    window.OmegaProgress&&OmegaProgress.record({kind:'mission',task:'mission:'+src+':'+id+':'+today,axis:'a',title:m?m.title:'Mission Complete',silent:true});
   }
 }
 

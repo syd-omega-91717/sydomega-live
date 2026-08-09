@@ -190,6 +190,33 @@ orphaned file.
 
 ## 8. Known debt (see `REPO_AUDIT.md` for detail)
 
+- **[Fixed, needs deploy] `extend_trial` RPC was missing — the approvals
+  page's "extend" button silently did nothing.** `approvals.html`'s
+  `extend(uid)` calls `sb.rpc('extend_trial',{p_uid,p_seconds:557})` to
+  give a pending member +9:17 more minutes, wrapped in try/catch with a
+  client-side `.update()` fallback written on the assumption that
+  `sb.rpc()` throws on a missing function. It doesn't — like `.from()`,
+  it resolves to `{data:null,error}` — so the fallback never ran, and the
+  owner would see the "EXTENDED +9:17 MINUTES" success toast while nothing
+  changed in the database. `grant_permanent_access`/`reject_member`/
+  `revoke_member` (the sibling buttons on the same page) all have real
+  RPCs already and are unaffected. Added
+  `supabase/omega_extend_trial_fix.sql`, matching this function family's
+  existing convention (`omega_access_control.sql`) exactly. **Not yet
+  applied to the live database** — same caveat as `user_assets` below.
+- **Cross-referenced every `.from('table')`/`.rpc('fn')` call site against
+  the schema; two more misses found, deliberately left undone.**
+  `subscriptions.html` queries `public.transactions` (payment history) and
+  `vault.html` queries `public.wallet_balances` (Ω token wallet) — neither
+  table exists. Unlike `user_assets`/`extend_trial` above, these don't
+  read as accidental: `subscriptions.html`'s own empty-state copy already
+  says "PAYMENT ACTIVATION PENDING LEGAL REVIEW", and `wallet_balances` is
+  Ω-token balance display, consistent with the token economy already
+  being documented elsewhere as dormant (`platform_settings.tokens_enabled
+  = false`, no tokens issued — see `sovereign-covenant.html`). Building
+  either is real payment/token-infrastructure design work, not a bug fix
+  — left undone pending an explicit decision, per this file's own rule
+  against shipping monetizable features without gating them first.
 - **`user_assets` table is missing from the live schema — action needed.**
   `portfolio.html` (SOVEREIGN ASSETS panel) and `vault.html` (NFT grid)
   both query `public.user_assets`, and portfolio.html's own copy calls it

@@ -196,14 +196,21 @@ orphaned file.
   is still unresolved — see `supabase/migrations/README.md`. The flat
   `supabase/*.sql` bag remains the working source for new changes until
   migrations/ is validated and adopted as canonical.
-- `sovereign-covenant.html` and `system_manifest.json` state the token
+- ~~`sovereign-covenant.html` and `system_manifest.json` stated the token
   economy's 51%-stake / physical-reserve-backing language in the present
-  tense, while the backend implementation is explicitly dormant pending
-  legal sign-off. Tense should match reality until the feature is
-  actually switched on.
-- One unreachable committed file (`SYD-OMEGA-Legal-IP-Brief.docx`) sits in
-  the public deploy root; one binary video (3.7 MB) is committed directly
-  to git with no LFS/`.gitattributes` story.
+  tense~~ — fixed: both now carry explicit dormant/planned disclaimers
+  (`sc-notice` block and per-article `PLANNED · NOT YET ACTIVE` tags in
+  `sovereign-covenant.html`; `monetary_policy.status` in
+  `system_manifest.json`), gated on `platform_settings.tokens_enabled`.
+- `SYD-OMEGA-Legal-IP-Brief.docx` and one binary video (3.7 MB,
+  `SYDOMEGA91717_DEMOD-1-.mp4`) are committed directly to git in the repo
+  root. `.vercelignore` excludes `*.docx`/`*.md`/`*.pdf` from the actual
+  Vercel deployment (see `.vercelignore` — it is the *only* defense, an
+  earlier vercel.json redirect backup was removed for invalid syntax), so
+  the docx is not live-served, but both files still bloat every clone with
+  no LFS story. `.gitattributes` now marks them `-diff -text`; moving them
+  to Supabase Storage/Vercel Blob and migrating to Git LFS remain open,
+  non-urgent (see `REPO_AUDIT.md`).
 
 ## 9. Working in this repo — practical rules
 

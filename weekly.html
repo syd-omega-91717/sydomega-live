@@ -153,6 +153,8 @@ textarea.q-area.sm{min-height:54px}
     </div>
 
     <button class="btn-save" onclick="saveWeek()">&#9670; COMPLETE WEEKLY REVIEW</button>
+    <button class="btn-save" style="background:none;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);margin-left:8px" onclick="generateAIReflection()" id="ai-reflect-btn">&#9670; AI REFLECTION</button>
+    <div id="ai-reflect-out" style="display:none;margin-top:14px;padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.04);font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.85);line-height:1.8"></div>
   </div>
 
   <!-- TAB 2: ARCHIVE -->
@@ -394,6 +396,68 @@ function saveWeek(){
   updateStreak();
   alert('Weekly review saved. Sovereign.');
 }
+
+/* ─── AI REFLECTION ───
+   Synthesizes what was actually written into this week's review via the
+   concierge Edge Function (supabase/functions/concierge -- dormant unless
+   ANTHROPIC_API_KEY is configured; the "not enabled yet" branch below is the
+   expected response on a deployment where it isn't). Nothing here is saved
+   automatically -- purely a read-back reflection, matching this page's
+   existing local-only data model. */
+function generateAIReflection(){
+  var btn=document.getElementById('ai-reflect-btn');
+  var out=document.getElementById('ai-reflect-out');
+  var wins=getWins(), scores=getScores();
+  var highlight=document.getElementById('q-highlight').value.trim();
+  var learning=document.getElementById('q-learning').value.trim();
+  var improve=document.getElementById('q-improve').value.trim();
+  var gratitude=document.getElementById('q-gratitude').value.trim();
+  var intention=document.getElementById('q-intention').value.trim();
+  if(!wins.length && !highlight && !learning){
+    alert('Add at least one win or fill in a reflection field before generating an AI summary.');
+    return;
+  }
+  btn.disabled=true; btn.textContent='◆ REFLECTING…';
+  out.style.display='none';
+
+  var lines=[];
+  if(wins.length) lines.push('Wins this week: '+wins.join('; '));
+  var domainLines=Object.keys(scores).map(function(k){
+    var d=DOMAINS.find(function(x){return x.key===k;});
+    return (d?d.label:k)+': '+scores[k]+'/10';
+  });
+  if(domainLines.length) lines.push('Domain scores: '+domainLines.join(', '));
+  if(highlight) lines.push('Biggest win: '+highlight);
+  if(learning) lines.push('What I learned: '+learning);
+  if(improve) lines.push('What I would do differently: '+improve);
+  if(gratitude) lines.push('Grateful for: '+gratitude);
+  if(intention) lines.push('Intention for next week: '+intention);
+  var message='Here is my weekly review:\n'+lines.join('\n');
+
+  var persona='You are a warm, direct reflection coach helping a member process their weekly '+
+    'review. Read what they wrote, then respond with: one sentence naming the clearest pattern '+
+    'or throughline across their wins, scores, and reflections; one honest observation about '+
+    'what might be holding them back, only if something genuinely stands out; and one specific, '+
+    'concrete suggestion for the coming week grounded in what they actually wrote. 4-6 sentences '+
+    'total. Do not invent facts about their life beyond what they wrote. You are not a therapist '+
+    'and must not act like one.';
+
+  function done(text){
+    btn.disabled=false; btn.textContent='◆ AI REFLECTION';
+    out.textContent=text;
+    out.style.display='block';
+  }
+  (window.OmegaSB?window.OmegaSB.get():Promise.reject(new Error('unavailable'))).then(function(sb){
+    return sb.functions.invoke('concierge',{body:{message:message,context:{},system_override:persona}});
+  }).then(function(r){
+    if(r.data&&r.data.reply) done(r.data.reply);
+    else if(r.data&&r.data.enabled===false) done('AI reflection is not enabled on this platform yet.');
+    else done('Could not generate a reflection right now. Please try again later.');
+  }).catch(function(){
+    done('Could not generate a reflection right now. Please try again later.');
+  });
+}
+window.generateAIReflection=generateAIReflection;
 
 /* ─── ARCHIVE ─── */
 function renderArchive(){

@@ -194,79 +194,6 @@
         </div>
       </section>
 
-      <!-- DASHBOARD VIEW -->
-      <section class="panel" id="view-dash" style="display:none">
-        <div class="crown">
-          <div class="glyph" id="d-glyph"></div>
-          <div class="sign" id="d-sign"></div>
-          <div class="range" id="d-range"></div>
-        </div>
-        <p class="character" id="d-character"></p>
-
-        <div class="chain">
-          <span>ELEMENT &middot; <b id="d-element"></b></span><span class="arrow">&rarr;</span>
-          <span>OLYMPIAN &middot; <b id="d-olympian"></b></span><span class="arrow">&rarr;</span>
-          <span>PLANET &middot; <b id="d-planet"></b></span><span class="arrow">&rarr;</span>
-          <span>AGENT &middot; <b id="d-agent"></b></span>
-        </div>
-
-        <div class="matrix">
-          <div class="kicker">YOUR MATRIX POSITION</div>
-          <div class="coords">
-            <div class="coord"><span class="lbl">KNOWLEDGE (A)</span><span class="num" id="d-a">1.00</span></div>
-            <div class="coord"><span class="lbl">MASTERY (B)</span><span class="num" id="d-b">1.00</span></div>
-            <div class="coord"><span class="lbl">CONTRIBUTION (C)</span><span class="num" id="d-c">1.00</span></div>
-            <div class="coord"><span class="lbl">AUTHORITY &radic;(A&#179;+B&#179;+C&#179;)</span><span class="num" id="d-auth">1.73</span></div>
-          </div>
-          <div class="radar-wrap">
-            <svg id="d-radar" viewBox="0 0 240 240" role="img" aria-label="Your matrix shape across Knowledge, Mastery, and Contribution">
-              <g id="rdr-guides"></g>
-              <polygon id="rdr-now" class="rdr-now" points=""></polygon>
-              <g id="rdr-dots"></g>
-            </svg>
-          </div>
-          <div class="mrow">TIER: <b id="d-tier">1</b> &nbsp;&middot;&nbsp; MATERIAL: <b id="d-material">Sand</b><br>ELEMENT AFFINITY: <b id="d-affinity"></b><br>APEX &radic;2187 &asymp; <b>27.8367</b> &nbsp;&middot;&nbsp; NEXT MILESTONE: <b id="d-next">(3,3,3)</b></div>
-          <div class="ladder" id="d-ladder"></div>
-        </div>
-
-        <div class="certs">
-          <div class="kicker">CERTIFICATES OF ASCENT</div>
-          <div class="seals" id="d-certs"></div>
-        </div>
-
-        <div class="evt">
-          <div class="kicker">RECORD AN EVOLUTION EVENT</div>
-          <div class="erow">
-            <select id="ev-axis">
-              <option value="a">Knowledge (A) -- what you learned</option>
-              <option value="b">Mastery (B) -- what you demonstrated</option>
-              <option value="c">Contribution (C) -- what you gave back</option>
-            </select>
-            <input type="text" id="ev-note" placeholder="Describe the action, briefly..." maxlength="280" />
-            <button class="btn" id="ev-go">RECORD EVENT&nbsp;&nbsp;+0.25</button>
-            <div class="msg" id="ev-msg"></div>
-          </div>
-        </div>
-
-        <div class="ledger">
-          <div class="kicker">RECENT EVOLUTION</div>
-          <div id="d-events"></div>
-        </div>
-
-        <div class="agent">
-          <div class="ag-head"><span class="sigil" id="ag-sigil">&#937;</span><span class="lead">COUNSEL OF YOUR AGENT &middot; <span id="ag-name"></span></span><span class="dom" id="ag-dom"></span></div>
-          <div class="chatlog" id="ag-log"></div>
-          <div class="chatrow">
-            <input type="text" id="ag-input" placeholder="Ask your agent... (try: what should I focus on?)" maxlength="300" />
-            <button class="btn" id="ag-send">SEND</button>
-          </div>
-        </div>
-
-        <div class="whoami">SIGNED IN AS <b id="who"></b></div>
-        <div class="note">Your profile evolves and is saved with every event. Tier advances when your lowest axis crosses each whole node, toward the apex at (9,9,9).</div>
-        <div class="actions"><button class="ghost" id="btn-logout">LOG OUT</button></div>
-      </section>
-
     </div><!-- /tab-identity -->
 
     <!-- TAB 2: MATRIX -->
@@ -375,13 +302,6 @@
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
   const supabase = window.__omegaSb || (window.__omegaSb = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY));
 
-  const ELEMENTS = {
-    Fire:{affinity:'+Mastery (Axis B)'},
-    Water:{affinity:'+Contribution (Axis C)'},
-    Wind:{affinity:'+Knowledge (Axis A)'},
-    Metal:{affinity:'+Mastery & +Contribution'},
-    Sand:{affinity:'+0.15 to all axes'}
-  };
   const SIGNS = [
     ['Aries','♈︎','Mar 21  -  Apr 19','Fire','Ares','Mars','Sentinel','You move first and ask later  --  the spark that begins the work.'],
     ['Taurus','♉︎','Apr 20  -  May 20','Metal','Aphrodite','Venus','Merchant','You build what lasts and value what is real.'],
@@ -403,43 +323,11 @@
     return 'Capricorn';
   }
   function find(n){ return SIGNS.find(s=>s[0]===n); }
-  const MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
-  const ELEM_ACCENT={Fire:'#E86A3A',Water:'#34C6E6',Wind:'#A9C2D8',Metal:'#C7CDD6',Sand:'#D9B86A'};
-  const AGENT_SIGIL={Sentinel:'SE',Merchant:'ME',Scout:'SC',Warden:'WA',Sovereign:'SO',Auditor:'AU',Proxy:'PR',Oracle:'OR',Beacon:'BE',Analyst:'AN',Tutor:'TU',Historian:'HI'};
-  const AGENT_DOMAIN={Sentinel:'SECURITY',Analyst:'FINANCE',Historian:'ARCHIVE',Tutor:'EDUCATION',Merchant:'COMMERCE',Proxy:'EXECUTION',Oracle:'PREDICTION',Scout:'DISCOVERY',Warden:'FAMILY',Auditor:'VALIDATION',Beacon:'ONBOARDING',Sovereign:'MASTER'};
-
-  const SVGNS='http://www.w3.org/2000/svg';
-  const RDR_R=90, RDR_CX=120, RDR_CY=120, RDR_ANG=[-90,30,150];
-  function rdrPt(i,v){ const r=(Math.max(1,Math.min(9,v))/9)*RDR_R; const a=RDR_ANG[i]*Math.PI/180; return [RDR_CX+r*Math.cos(a), RDR_CY+r*Math.sin(a)]; }
-  let rdrGuidesDrawn=false;
-  function drawGuides(){
-    const g=document.getElementById('rdr-guides'); if(!g) return; g.innerHTML='';
-    [3,6,9].forEach(m=>{
-      const poly=document.createElementNS(SVGNS,'polygon');
-      poly.setAttribute('points',[rdrPt(0,m),rdrPt(1,m),rdrPt(2,m)].map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
-      poly.setAttribute('class','rdr-guide'); g.appendChild(poly);
-    });
-    for(let i=0;i<3;i++){ const p=rdrPt(i,9); const ln=document.createElementNS(SVGNS,'line');
-      ln.setAttribute('x1',RDR_CX); ln.setAttribute('y1',RDR_CY); ln.setAttribute('x2',p[0].toFixed(1)); ln.setAttribute('y2',p[1].toFixed(1)); ln.setAttribute('class','rdr-spoke'); g.appendChild(ln); }
-    const letters=['A','B','C'];
-    for(let i=0;i<3;i++){ const p=rdrPt(i,10.3); const tx=document.createElementNS(SVGNS,'text');
-      tx.setAttribute('x',p[0].toFixed(1)); tx.setAttribute('y',(p[1]+(i===0?-2:4)).toFixed(1)); tx.setAttribute('class','rdr-label'); tx.setAttribute('text-anchor','middle'); tx.textContent=letters[i]; g.appendChild(tx); }
-    rdrGuidesDrawn=true;
-  }
-  function drawMatrix(a,b,c){
-    if(!rdrGuidesDrawn) drawGuides();
-    const now=document.getElementById('rdr-now'); if(!now) return;
-    const pa=rdrPt(0,a),pb=rdrPt(1,b),pc=rdrPt(2,c);
-    now.setAttribute('points',[pa,pb,pc].map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
-    const dots=document.getElementById('rdr-dots'); dots.innerHTML='';
-    [pa,pb,pc].forEach(p=>{ const dot=document.createElementNS(SVGNS,'circle'); dot.setAttribute('cx',p[0].toFixed(1)); dot.setAttribute('cy',p[1].toFixed(1)); dot.setAttribute('r','2.8'); dot.setAttribute('class','rdr-dot'); dots.appendChild(dot); });
-  }
 
   const vAuth=document.getElementById('view-auth');
   const vGate=document.getElementById('view-gate');
-  const vDash=document.getElementById('view-dash');
   function show(v){
-    [vAuth,vGate,vDash].forEach(x=>{ x.style.display='none'; }); v.style.display='block';
+    [vAuth,vGate].forEach(x=>{ x.style.display='none'; }); v.style.display='block';
     document.querySelectorAll('.lt').forEach(function(x){x.classList.remove('active');});
     document.querySelectorAll('.tab-pane').forEach(function(x){x.classList.remove('active');});
     var idt=document.querySelector('.lt[data-tab="identity"]');
@@ -449,7 +337,6 @@
   }
 
   let currentUser=null;
-  let currentProfile=null;
 
   async function route(){
     const { data:{ session } } = await supabase.auth.getSession();
@@ -541,7 +428,6 @@
     }
     msg.textContent='';
   }
-  async function logOut(){ await supabase.auth.signOut(); }
 
   async function reveal(){
     const val=document.getElementById('dob').value;
@@ -562,158 +448,11 @@
     window.location.href='/dashboard.html'; return;
   }
 
-  function renderDash(prof){
-    currentProfile=prof;
-    const s=find(prof.sign);
-    document.getElementById('d-glyph').textContent = s? s[1] : 'Ω';
-    document.getElementById('d-sign').textContent = (prof.sign||'').toUpperCase();
-    document.getElementById('d-range').textContent = s? s[2] : '';
-    document.getElementById('d-character').textContent = s? '"'+s[7]+'"' : '';
-    document.getElementById('d-element').textContent = prof.element||'';
-    document.getElementById('d-olympian').textContent = prof.god || (s? s[4] : '');
-    document.getElementById('d-planet').textContent = s? s[5] : '';
-    document.getElementById('d-agent').textContent = prof.agent||'';
-    document.getElementById('d-affinity').textContent = (ELEMENTS[prof.element]||{}).affinity || '';
-    document.getElementById('who').textContent = currentUser ? currentUser.email : '';
-    document.getElementById('ag-name').textContent = prof.agent || '';
-    document.documentElement.style.setProperty('--acc', ELEM_ACCENT[prof.element] || '#C9A84C');
-    document.getElementById('ag-sigil').textContent = AGENT_SIGIL[prof.agent] || 'Ω';
-    document.getElementById('ag-dom').textContent = AGENT_DOMAIN[prof.agent] ? ' . '+AGENT_DOMAIN[prof.agent] : '';
-    const aglog=document.getElementById('ag-log');
-    if(aglog && !aglog.children.length){
-      const w=document.createElement('div'); w.className='cmsg ag';
-      w.textContent='I am '+(prof.agent||'your agent')+', bound to your '+(prof.sign||'')+' path. Ask me what to focus on, where you stand, or how to reach your next milestone.';
-      aglog.appendChild(w);
-    }
-    const a=Number(prof.axis_a ?? 1), b=Number(prof.axis_b ?? 1), c=Number(prof.axis_c ?? 1);
-    const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
-    const tier=Math.max(1, Math.min(9, Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
-    document.getElementById('d-a').textContent=a.toFixed(2);
-    document.getElementById('d-b').textContent=b.toFixed(2);
-    document.getElementById('d-c').textContent=c.toFixed(2);
-    document.getElementById('d-auth').textContent=auth.toFixed(2);
-    document.getElementById('d-tier').textContent=String(tier);
-    document.getElementById('d-material').textContent=MATS[tier-1];
-    const mn=Math.min(a,b,c);
-    document.getElementById('d-next').textContent = mn<3?'(3,3,3)':mn<6?'(6,6,6)':mn<9?'(9,9,9)':'APEX REACHED';
-    const lad=document.getElementById('d-ladder'); lad.innerHTML='';
-    MATS.forEach((mt,i)=>{ const x=document.createElement('span'); x.className='rung'+((i+1)<=tier?' on':''); x.textContent=(i+1)+' . '+mt; lad.appendChild(x); });
-    drawMatrix(a,b,c);
-  }
-
-  async function logEvent(){
-    const axis=document.getElementById('ev-axis').value;
-    const note=document.getElementById('ev-note').value.trim();
-    const msg=document.getElementById('ev-msg'); const btn=document.getElementById('ev-go');
-    if(!note){ msg.className='msg bad'; msg.textContent='Describe the action so the event is real.'; return; }
-    btn.disabled=true; msg.className='msg'; msg.textContent='Recording...';
-    const { data, error } = await supabase.rpc('log_evolution', { p_axis:axis, p_note:note });
-    btn.disabled=false;
-    if(error){ msg.className='msg bad'; msg.textContent='Could not record ('+(error.code||error.message||'')+').'; console.log('rpc error',error); return; }
-    msg.className='msg'; msg.textContent='';
-    document.getElementById('ev-note').value='';
-    if(data){ renderDash(data); }
-    loadEvents();
-    const before = document.getElementById('d-certs').querySelectorAll('.seal').length;
-    const after = await loadCerts();
-    if(after > before){ msg.className='msg ok'; msg.textContent='A new Certificate of Ascent has been issued — well earned.'; }
-    else { msg.className='msg ok'; msg.textContent='Recorded. Your matrix advanced.'; }
-  }
-
-  async function loadEvents(){
-    if(!currentUser) return;
-    const box=document.getElementById('d-events');
-    try{
-      const { data } = await supabase.from('evolution_events').select('axis,note,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(8);
-      box.innerHTML='';
-      const names={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'};
-      if(!data || !data.length){ box.innerHTML='<div class="ev"><span class="nt" style="color:var(--muted)">No events yet — record your first above.</span></div>'; return; }
-      data.forEach(ev=>{
-        const row=document.createElement('div'); row.className='ev';
-        const ax=document.createElement('span'); ax.className='ax'; ax.textContent=names[ev.axis]||ev.axis;
-        const nt=document.createElement('span'); nt.className='nt'; nt.textContent=ev.note||'';
-        row.appendChild(ax); row.appendChild(nt); box.appendChild(row);
-      });
-    }catch(e){ box.innerHTML=''; }
-  }
-
-  async function loadCerts(){
-    if(!currentUser) return 0;
-    const box=document.getElementById('d-certs');
-    try{
-      const { data } = await supabase.from('certificates').select('milestone,title,issued_at').eq('user_id',currentUser.id).order('milestone',{ascending:true});
-      box.innerHTML='';
-      if(!data || !data.length){ box.innerHTML='<div class="empty">No certificates yet — reach node (3,3,3) to earn your first seal.</div>'; return 0; }
-      data.forEach(c=>{
-        const card=document.createElement('div'); card.className='seal';
-        const mk=document.createElement('div'); mk.className='s-mark'; mk.textContent='Ω . '+c.milestone;
-        const ti=document.createElement('div'); ti.className='s-title'; ti.textContent=c.title;
-        const dt=document.createElement('div'); dt.className='s-date'; dt.textContent='ISSUED '+(c.issued_at? new Date(c.issued_at).toLocaleDateString() : '');
-        card.appendChild(mk); card.appendChild(ti); card.appendChild(dt); box.appendChild(card);
-      });
-      return data.length;
-    }catch(e){ box.innerHTML=''; return 0; }
-  }
-
-  function agentReply(text){
-    const p=currentProfile||{};
-    const a=Number(p.axis_a ?? 1), b=Number(p.axis_b ?? 1), c=Number(p.axis_c ?? 1);
-    const auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
-    const tier=Math.max(1,Math.min(9,Math.min(Math.floor(a),Math.floor(b),Math.floor(c))));
-    const material=MATS[tier-1];
-    const axes=[['Knowledge',a],['Mastery',b],['Contribution',c]].sort((x,y)=>x[1]-y[1]);
-    const low=axes[0];
-    const mn=Math.min(a,b,c);
-    const nextNode=Math.min(9,Math.floor(low[1])+1);
-    const eventsToNext=Math.max(1,Math.ceil((nextNode-low[1])/0.25));
-    const milestone = mn<3?3:mn<6?6:mn<9?9:null;
-    const agent=p.agent||'your agent', sign=p.sign||'your sign', element=p.element||'your element';
-    const character=(find(p.sign)||[])[7]||'';
-    const adv={Knowledge:'record what you have studied, read, or learned',Mastery:'record skills you have demonstrated or tasks you have completed',Contribution:'record what you have taught, created, or given to others'};
-    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-    const t=(text||'').toLowerCase();
-    const has=(...w)=>w.some(k=>t.includes(k));
-    if(has('hello','hi ','hey','greet')||t==='hi') return 'I am '+agent+', bound to your '+sign+' path. '+character+' Ask me what to focus on, or where you stand.';
-    if(has('who are you','what are you','your name','which agent')) return 'I am '+agent+', the guide assigned to '+sign+' under the element of '+element+'. I walk with you from the genesis node to the apex.';
-    if(has('help','what can','commands','options')) return 'Ask me: "what should I focus on", "where do I stand", "how do I reach the next milestone", or about Knowledge, Mastery, or Contribution.';
-    if(has('knowledge')) return 'Knowledge (Axis A) stands at '+a.toFixed(2)+'. To raise it, '+adv.Knowledge+'. Each event adds 0.25 toward the next node.';
-    if(has('mastery')) return 'Mastery (Axis B) stands at '+b.toFixed(2)+'. To raise it, '+adv.Mastery+'. Discipline compounds — return often.';
-    if(has('contribution')) return 'Contribution (Axis C) stands at '+c.toFixed(2)+'. To raise it, '+adv.Contribution+'. What you give the Order returns to you.';
-    if(has('milestone','certificate','seal','ascend','rank up','next node')){
-      if(milestone===null) return 'You have reached the apex (9,9,9) — Omega Master. There is no higher node. Now you guide others.';
-      return 'Your next milestone is ('+milestone+','+milestone+','+milestone+'). Your lowest axis is '+low[0]+' at '+low[1].toFixed(2)+' — it must reach '+milestone+'. '+cap(adv[low[0]])+'.';
-    }
-    if(has('focus','should i','what do i do','what now','start','do next','advance','progress','improve','grow')){
-      return 'Focus on your weakest axis: '+low[0]+', at '+low[1].toFixed(2)+'. '+cap(adv[low[0]])+'. About '+eventsToNext+' event'+(eventsToNext===1?'':'s')+' lifts you to the next node.';
-    }
-    if(has('tier','rank','level','material','where','stand','position','authority','status')){
-      return 'You stand at Tier '+tier+', material '+material+', authority '+auth.toFixed(2)+' of the apex 27.8367. Axes: Knowledge '+a.toFixed(2)+', Mastery '+b.toFixed(2)+', Contribution '+c.toFixed(2)+'.';
-    }
-    return character+' Balance is the law of the matrix — your weakest axis is '+low[0]+' at '+low[1].toFixed(2)+'. Tend to it, and authority follows. Ask me "what should I focus on" for the path.';
-  }
-  function appendMsg(who, text){
-    const log=document.getElementById('ag-log');
-    const d=document.createElement('div'); d.className='cmsg '+(who==='me'?'me':'ag'); d.textContent=text;
-    log.appendChild(d); log.scrollTop=log.scrollHeight;
-  }
-  function chat(){
-    const input=document.getElementById('ag-input'); const text=input.value.trim();
-    if(!text) return;
-    appendMsg('me', text); input.value='';
-    const reply=agentReply(text);
-    setTimeout(()=>appendMsg('ag', reply), 180);
-  }
-
   document.getElementById('btn-signup').addEventListener('click',signUp);
   document.getElementById('btn-login').addEventListener('click',logIn);
-  document.getElementById('btn-logout').addEventListener('click',logOut);
   document.getElementById('gate-go').addEventListener('click',reveal);
-  document.getElementById('ev-go').addEventListener('click',logEvent);
   document.getElementById('au-pw').addEventListener('keydown',e=>{ if(e.key==='Enter') logIn(); });
   document.getElementById('dob').addEventListener('keydown',e=>{ if(e.key==='Enter') reveal(); });
-  document.getElementById('ev-note').addEventListener('keydown',e=>{ if(e.key==='Enter') logEvent(); });
-  document.getElementById('ag-send').addEventListener('click',chat);
-  document.getElementById('ag-input').addEventListener('keydown',e=>{ if(e.key==='Enter') chat(); });
 
   route();
 </script>

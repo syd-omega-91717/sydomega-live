@@ -145,15 +145,15 @@ function setTab(name){
 }
 
 var DISTRICTS=[
-  {zone:'DISTRICT 1',name:'THE GENESIS QUARTER',desc:'The origin point. The Omega core monument stands here. Every sovereign who reaches the (9,9,9) apex node receives a permanent residence deed in this district.',module:'M01 PLATFORM CORE',nodes:'81 APEX NODES',col:'#C9A84C',status:'blueprint'},
-  {zone:'DISTRICT 2',name:'THE INTELLIGENCE HUB',desc:'Home of the 12 AI agents, the data infrastructure, and the neural mesh that runs the city\'s cognitive layer. Built on wind and space elements.',module:'M05 AI COGNITION',nodes:'72 NODES',col:'#00E5FF',status:'concept'},
+  {zone:'DISTRICT 1',name:'THE GENESIS QUARTER',desc:'The origin point. The Omega core monument stands here. Every sovereign who reaches the (9,9,9) apex node receives a permanent residence deed in this district.',module:'M01 PLATFORM CORE',nodes:'81 APEX NODES',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),status:'blueprint'},
+  {zone:'DISTRICT 2',name:'THE INTELLIGENCE HUB',desc:'Home of the 12 AI agents, the data infrastructure, and the neural mesh that runs the city\'s cognitive layer. Built on wind and space elements.',module:'M05 AI COGNITION',nodes:'72 NODES',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),status:'concept'},
   {zone:'DISTRICT 3',name:'THE ACADEMY CAMPUS',desc:'A sovereign university where all 12 disciplines are physically taught. The matrix engine is embedded in the walls.',module:'M09 EDUCATION',nodes:'81 NODES',col:'#34C6E6',status:'blueprint'},
-  {zone:'DISTRICT 4',name:'THE MEDIA CITADEL',desc:'The cinematic and cultural heart. Nine theatres for the nine saga films. A heritage museum. An NFT gallery. The myth-verse rendered in stone.',module:'M08 MEDIA CENTER',nodes:'72 NODES',col:'#8B0000',status:'concept'},
-  {zone:'DISTRICT 5',name:'THE TRADING FLOOR',desc:'All commerce, marketplace, and economic activity concentrated in one sovereign district. The Merchant agent governs. No external exchange allowed.',module:'M12 INVESTMENT',nodes:'81 NODES',col:'#E2C86D',status:'blueprint'},
-  {zone:'DISTRICT 6',name:'THE HERITAGE ARCHIVE',desc:'A physical archive district where lineages are recorded in stone and code. Your family tree has a node in this district. Heritage is infrastructure.',module:'M11 FAMILY',nodes:'64 NODES',col:'#C9A84C',status:'concept'},
-  {zone:'DISTRICT 7',name:'THE WELLNESS DISTRICT',desc:'Every health and wellness facility aligned to the Ninth Element. Mind, heart, soul, body — each has a dedicated centre powered by the frequency.',module:'M13 HEALTH',nodes:'72 NODES',col:'#3fb27f',status:'concept'},
+  {zone:'DISTRICT 4',name:'THE MEDIA CITADEL',desc:'The cinematic and cultural heart. Nine theatres for the nine saga films. A heritage museum. An NFT gallery. The myth-verse rendered in stone.',module:'M08 MEDIA CENTER',nodes:'72 NODES',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),status:'concept'},
+  {zone:'DISTRICT 5',name:'THE TRADING FLOOR',desc:'All commerce, marketplace, and economic activity concentrated in one sovereign district. The Merchant agent governs. No external exchange allowed.',module:'M12 INVESTMENT',nodes:'81 NODES',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),status:'blueprint'},
+  {zone:'DISTRICT 6',name:'THE HERITAGE ARCHIVE',desc:'A physical archive district where lineages are recorded in stone and code. Your family tree has a node in this district. Heritage is infrastructure.',module:'M11 FAMILY',nodes:'64 NODES',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),status:'concept'},
+  {zone:'DISTRICT 7',name:'THE WELLNESS DISTRICT',desc:'Every health and wellness facility aligned to the Ninth Element. Mind, heart, soul, body — each has a dedicated centre powered by the frequency.',module:'M13 HEALTH',nodes:'72 NODES',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),status:'concept'},
   {zone:'DISTRICT 8',name:'THE GAME ARENA',desc:'The physical gaming universe. Nine arenas for nine game modes. Tournaments happen in real space. Matrix Mastery axis events are held here.',module:'M03 GAMING',nodes:'81 NODES',col:'#E86A3A',status:'concept'},
-  {zone:'DISTRICT 9',name:'THE VOID OBSERVATORY',desc:'The 9th district. Dedicated to the Space and Void elements. An observatory facing the cosmos. The nexus of the city\'s 9.17 Hz resonance.',module:'M18 CITY INFRA',nodes:'9 APEX NODES',col:'#9B6BF0',status:'concept'},
+  {zone:'DISTRICT 9',name:'THE VOID OBSERVATORY',desc:'The 9th district. Dedicated to the Space and Void elements. An observatory facing the cosmos. The nexus of the city\'s 9.17 Hz resonance.',module:'M18 CITY INFRA',nodes:'9 APEX NODES',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),status:'concept'},
 ];
 
 var COUNCILS=[
@@ -225,7 +225,7 @@ function drawCity(){
   var t=0,buildings=[];
   for(var i=0;i<60;i++){
     buildings.push({x:Math.random()*W,h:20+Math.random()*120,w:6+Math.random()*22,
-      col:Math.random()>0.7?'#C9A84C':Math.random()>0.5?'#00E5FF':'rgba(201,168,76,0.3)',
+      col:Math.random()>0.7?(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'):Math.random()>0.5?(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'):'rgba(201,168,76,0.3)',
       speed:0.0005+Math.random()*0.001});
   }
   function frame(){

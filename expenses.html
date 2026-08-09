@@ -240,7 +240,7 @@ const CATS={
 };
 const CAT_COLORS={
   housing:'#3498db',food:'#e67e22',transport:'#9b59b6',health:'#e74c3c',
-  fitness:'#27ae60',education:'#c9a84c',entertainment:'#1abc9c',tech:'#2980b9',
+  fitness:'#27ae60',education:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),entertainment:'#1abc9c',tech:'#2980b9',
   clothing:'#e91e63',personal:'#ff9800',savings:'#4caf50',business:'#795548',
   gifts:'#f06292',travel:'#00bcd4',other:'#607d8b'
 };

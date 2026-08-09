@@ -181,7 +181,7 @@ function switchTab(id,btn){
 var streams=[];
 var goal=10000;
 var streamFilter='all';
-var TYPE_COLORS={'active-income':'#00E5FF',passive:'#4CAF50',business:'#FFD700',investment:'#9B6BF0',royalty:'#FF9800',rental:'#FF4444'};
+var TYPE_COLORS={'active-income':(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),passive:'#4CAF50',business:'#FFD700',investment:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),royalty:'#FF9800',rental:'#FF4444'};
 
 function load(){
   try{streams=JSON.parse(localStorage.getItem('omega_revenue')||'[]');}catch(e){streams=[];}

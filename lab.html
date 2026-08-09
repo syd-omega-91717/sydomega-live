@@ -271,7 +271,7 @@ var techs=[];
 var experiments=[];
 var ringFilter='all';
 var RING_COLORS={adopt:'#4CAF50',trial:'#FFD700',assess:'#FF9800',hold:'#FF4444'};
-var CAT_COLORS={languages:'#00E5FF',platforms:'#9B6BF0',tools:'#FFD700',techniques:'#4CAF50',ai:'#FF4444',infrastructure:'#FF9800',data:'#00BCD4'};
+var CAT_COLORS={languages:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),platforms:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),tools:'#FFD700',techniques:'#4CAF50',ai:'#FF4444',infrastructure:'#FF9800',data:'#00BCD4'};
 
 function load(){
   try{techs=JSON.parse(localStorage.getItem('omega_techs')||'[]');}catch(e){techs=[];}

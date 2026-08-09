@@ -294,14 +294,14 @@ if(location.hash){
 }
 
 const AGENTS=[
-  {n:1,name:'SOVEREIGN',role:'MASTER CONTROLLER',el:'Aether',col:'#C9A84C',glyph:'\u03A9',desc:'The apex executor. Manages all agents, carries the constitutional veto, and speaks directly for the Architect.'},
+  {n:1,name:'SOVEREIGN',role:'MASTER CONTROLLER',el:'Aether',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),glyph:'\u03A9',desc:'The apex executor. Manages all agents, carries the constitutional veto, and speaks directly for the Architect.'},
   {n:2,name:'SENTINEL',role:'SECURITY GUARDIAN',el:'Metal',col:'#C7CDD6',glyph:'\u25CF',desc:'Monitors every session and API call. Runs zero-trust checks and auto-locks compromised accounts in 9.17 seconds.'},
   {n:3,name:'ANALYST',role:'FINANCIAL ARCHITECT',el:'Water',col:'#34C6E6',glyph:'\u25C8',desc:'Processes all economic data, portfolio valuations, and runs the 41% auto-split investment engine.'},
   {n:4,name:'HISTORIAN',role:'MEMORY KEEPER',el:'Sand',col:'#D9B86A',glyph:'\u2736',desc:'Manages the 5-layer memory stack, heritage vault, and ensures every record is hash-verified and tamper-proof.'},
   {n:5,name:'TUTOR',role:'KNOWLEDGE ENGINE',el:'Wind',col:'#A9C2D8',glyph:'\u2726',desc:'Orchestrates the academy, exam hall, and knowledge axis progression through personalised learning paths.'},
   {n:6,name:'MERCHANT',role:'COMMERCE MASTER',el:'Water',col:'#34C6E6',glyph:'\u21C4',desc:'Runs the marketplace, manages listings, processes settlement flows, and enforces the 9.17% commission protocol.'},
   {n:7,name:'PROXY',role:'EXECUTION DELEGATE',el:'Aether',col:'#E8E8FF',glyph:'\u25B6',desc:'Handles task delegation and authority routing. Coordinates execution across multiple services simultaneously.'},
-  {n:8,name:'ORACLE',role:'PREDICTION ENGINE',el:'Space',col:'#9B6BF0',glyph:'\u2609',desc:'Generates daily celestial readings, operates the prediction network, and models civilizational trajectories.'},
+  {n:8,name:'ORACLE',role:'PREDICTION ENGINE',el:'Space',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),glyph:'\u2609',desc:'Generates daily celestial readings, operates the prediction network, and models civilizational trajectories.'},
   {n:9,name:'SCOUT',role:'DISCOVERY AGENT',el:'Wind',col:'#A9C2D8',glyph:'\u25C9',desc:'Monitors news feeds, trend signals, and research discoveries. Ranks information by relevance to the sovereign matrix.'},
   {n:10,name:'WARDEN',role:'FAMILY PROTECTOR',el:'Earth',col:'#D9B86A',glyph:'\u22D4',desc:'Guards the family constellation, monitors bloodline vault, and dispatches alerts at milestone matrix nodes.'},
   {n:11,name:'AUDITOR',role:'INTEGRITY VALIDATOR',el:'Metal',col:'#C7CDD6',glyph:'\u2699',desc:'Validates every credential, certificate, and progression claim with hash-chain verification protocols.'},
@@ -316,11 +316,11 @@ const SIGNS=[
   {n:'LEO',g:'\u264C',dates:'JUL 23-AUG 22',el:'FIRE',col:'#E86A3A',deity:'APOLLO',desc:'The sovereign commander. Fire at its apex.'},
   {n:'VIRGO',g:'\u264D',dates:'AUG 23-SEP 22',el:'SAND',col:'#D9B86A',deity:'ATHENA',desc:'The sovereign architect. Sand is the universal amplifier.'},
   {n:'LIBRA',g:'\u264E',dates:'SEP 23-OCT 22',el:'WIND',col:'#A9C2D8',deity:'HERA',desc:'The sovereign diplomat. Wind as justice and balance.'},
-  {n:'SCORPIO',g:'\u264F',dates:'OCT 23-NOV 21',el:'WATER',col:'#8B0000',deity:'DEMETER',desc:'The sovereign executor. Water in its most powerful form.'},
-  {n:'SAGITTARIUS',g:'\u2650',dates:'NOV 22-DEC 21',el:'FIRE',col:'#C9A84C',deity:'ZEUS',desc:'The sovereign explorer. Fire that expands beyond borders.'},
-  {n:'CAPRICORN',g:'\u2651',dates:'DEC 22-JAN 19',el:'METAL',col:'#E2C86D',deity:'HESTIA',desc:'The sovereign master. Metal discipline across time.'},
-  {n:'AQUARIUS',g:'\u2652',dates:'JAN 20-FEB 18',el:'WIND',col:'#9B6BF0',deity:'HEPHAESTUS',desc:'The sovereign visionary. Wind as civilizational revolution.'},
-  {n:'PISCES',g:'\u2653',dates:'FEB 19-MAR 20',el:'WATER',col:'#3fb27f',deity:'POSEIDON',desc:'The sovereign mystic. Water as transcendence.'},
+  {n:'SCORPIO',g:'\u264F',dates:'OCT 23-NOV 21',el:'WATER',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),deity:'DEMETER',desc:'The sovereign executor. Water in its most powerful form.'},
+  {n:'SAGITTARIUS',g:'\u2650',dates:'NOV 22-DEC 21',el:'FIRE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),deity:'ZEUS',desc:'The sovereign explorer. Fire that expands beyond borders.'},
+  {n:'CAPRICORN',g:'\u2651',dates:'DEC 22-JAN 19',el:'METAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),deity:'HESTIA',desc:'The sovereign master. Metal discipline across time.'},
+  {n:'AQUARIUS',g:'\u2652',dates:'JAN 20-FEB 18',el:'WIND',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),deity:'HEPHAESTUS',desc:'The sovereign visionary. Wind as civilizational revolution.'},
+  {n:'PISCES',g:'\u2653',dates:'FEB 19-MAR 20',el:'WATER',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),deity:'POSEIDON',desc:'The sovereign mystic. Water as transcendence.'},
 ];
 
 const ELEMENTS=[
@@ -329,10 +329,10 @@ const ELEMENTS=[
   {n:3,name:'WIND',type:'PHYSICAL',col:'#A9C2D8',signs:'Gemini, Libra, Aquarius',desc:'The communication element. Wind carries knowledge across all dimensions of the Order.'},
   {n:4,name:'METAL',type:'PHYSICAL',col:'#C7CDD6',signs:'Taurus, Capricorn',desc:'The endurance element. Metal governs physical reserves, long-game economics, and structural legacy.'},
   {n:5,name:'SAND',type:'PHYSICAL',col:'#D9B86A',signs:'Virgo only',desc:'The universal amplifier element -- it strengthens every element around it. (Virgo is the sign of the Sand element.)'},
-  {n:6,name:'SOUL',type:'METAPHYSICAL',col:'#9B6BF0',signs:'Soul-class members',desc:'The identity element. Soul governs the deep self, the character system, and the genealogy tree.'},
-  {n:7,name:'SPACE',type:'METAPHYSICAL',col:'#00E5FF',signs:'Space-class members',desc:'The expansion element. Space governs prediction, the Oracle agent, and inter-dimensional matrix reach.'},
+  {n:6,name:'SOUL',type:'METAPHYSICAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),signs:'Soul-class members',desc:'The identity element. Soul governs the deep self, the character system, and the genealogy tree.'},
+  {n:7,name:'SPACE',type:'METAPHYSICAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),signs:'Space-class members',desc:'The expansion element. Space governs prediction, the Oracle agent, and inter-dimensional matrix reach.'},
   {n:8,name:'VOID',type:'METAPHYSICAL',col:'#554455',signs:'Void-class members',desc:'The destruction element. Void removes blockages and opens the highest gates by eliminating resistance.'},
-  {n:9,name:'THE NINTH',type:'TRANSCENDENT',col:'#C9A84C',signs:'All sovereign members',desc:'Religion, character, mind, heart, birth, death, life, family, work, and friends. The ultimate element. Active for all at Stage 9.'},
+  {n:9,name:'THE NINTH',type:'TRANSCENDENT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),signs:'All sovereign members',desc:'Religion, character, mind, heart, birth, death, life, family, work, and friends. The ultimate element. Active for all at Stage 9.'},
 ];
 
 const GATES=[
@@ -342,12 +342,12 @@ const GATES=[
   {n:4,name:'THE GATE OF STEEL',auth:5.20,col:'#8B8F9C',desc:'The commitment gate. Mastery axis B must engage fully. The Order tests true intent.'},
   {n:5,name:'THE GATE OF TITANIUM',auth:6.90,col:'#607D8B',desc:'The strength gate. All three axes operating simultaneously at sustained elevation.'},
   {n:6,name:'THE GATE OF CARBON',auth:8.60,col:'#455A64',desc:'The precision gate. Contribution axis C must prove sovereign value generation.'},
-  {n:7,name:'THE GATE OF GOLD',auth:10.40,col:'#C9A84C',desc:'The sovereign gate. Authority passes 10. The Order officially recognises your sovereignty.'},
+  {n:7,name:'THE GATE OF GOLD',auth:10.40,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'The sovereign gate. Authority passes 10. The Order officially recognises your sovereignty.'},
   {n:8,name:'THE GATE OF PLATINUM',auth:12.70,col:'#E8D5B7',desc:'The legacy gate. Heritage vault sealed. Succession documented. Lineage protected.'},
-  {n:9,name:'THE GATE OF DIAMOND',auth:13.90,col:'#9B6BF0',desc:'The apex approach gate. The Crystal-Omega Node becomes visible. The 9.9.9 coordinate nears.'},
-  {n:10,name:'THE GATE OF CRYSTAL',auth:14.40,col:'#00E5FF',desc:'The penultimate gate. All 12 sovereign roles fulfilled. The Omega identity is confirmed.'},
-  {n:11,name:'THE GATE OF REBIRTH',auth:15.00,col:'#3fb27f',desc:'The transformation gate. The sovereign dies to all previous identities and is reborn at the Omega coordinate.'},
-  {n:12,name:'APEX',auth:27.8367,col:'#C9A84C',desc:'The final gate. Coordinate (9,9,9) achieved. All 104,976-nodes activated. OMEGA MASTER status confirmed. Eternal.'},
+  {n:9,name:'THE GATE OF DIAMOND',auth:13.90,col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'The apex approach gate. The Crystal-Omega Node becomes visible. The 9.9.9 coordinate nears.'},
+  {n:10,name:'THE GATE OF CRYSTAL',auth:14.40,col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),desc:'The penultimate gate. All 12 sovereign roles fulfilled. The Omega identity is confirmed.'},
+  {n:11,name:'THE GATE OF REBIRTH',auth:15.00,col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),desc:'The transformation gate. The sovereign dies to all previous identities and is reborn at the Omega coordinate.'},
+  {n:12,name:'APEX',auth:27.8367,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'The final gate. Coordinate (9,9,9) achieved. All 104,976-nodes activated. OMEGA MASTER status confirmed. Eternal.'},
 ];
 
 const PANTHEONS=[
@@ -355,14 +355,14 @@ const PANTHEONS=[
   {name:'APHRODITE',sign:'Taurus',col:'#C7CDD6',domain:'Beauty, Value, Abundance',desc:'Aphrodite governs the economy of value. Her charge: accumulate, beautify, and build permanent worth.'},
   {name:'APOLLO',sign:'Leo',col:'#E86A3A',domain:'Knowledge, Arts, Prophecy',desc:'Apollo illuminates all knowledge simultaneously. His charge: master communication and light up the darkness.'},
   {name:'HERMES',sign:'Gemini',col:'#A9C2D8',domain:'Messages, Family, Travel',desc:'Hermes carries sacred messages across all boundaries. His charge: protect the lineage and carry the code forward.'},
-  {name:'ZEUS',sign:'Sagittarius',col:'#C9A84C',domain:'Authority, Command, Justice',desc:'Zeus commands from the apex. His charge: lead through sovereign authority, not force. The crown is earned.'},
-  {name:'DEMETER',sign:'Scorpio',col:'#8B0000',domain:'Earth, Harvest, Service',desc:'Demeter amplifies all other elements. Her charge: refine, serve, and multiply the sovereignty of others.'},
-  {name:'HEPHAESTUS',sign:'Aquarius',col:'#9B6BF0',domain:'Craft, Fire, Balance',desc:'Hephaestus forges balance from contradictions. His charge: build systems that are both beautiful and just.'},
+  {name:'ZEUS',sign:'Sagittarius',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),domain:'Authority, Command, Justice',desc:'Zeus commands from the apex. His charge: lead through sovereign authority, not force. The crown is earned.'},
+  {name:'DEMETER',sign:'Scorpio',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),domain:'Earth, Harvest, Service',desc:'Demeter amplifies all other elements. Her charge: refine, serve, and multiply the sovereignty of others.'},
+  {name:'HEPHAESTUS',sign:'Aquarius',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),domain:'Craft, Fire, Balance',desc:'Hephaestus forges balance from contradictions. His charge: build systems that are both beautiful and just.'},
   {name:'ARES',sign:'Aries',col:'#E86A3A',domain:'War, Intensity, Transformation',desc:'Ares transforms through intensity. His charge: destroy what blocks the matrix and rebuild stronger.'},
   {name:'ARTEMIS',sign:'Cancer',col:'#34C6E6',domain:'Hunt, Moon, Freedom',desc:'Artemis hunts truth in the unknown. Her charge: expand endlessly, seek what others dare not find.'},
-  {name:'HESTIA',sign:'Capricorn',col:'#E2C86D',domain:'Hearth, Legacy, Time',desc:'Hestia keeps the eternal flame. Her charge: build legacy across decades through patient, consistent discipline.'},
+  {name:'HESTIA',sign:'Capricorn',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),domain:'Hearth, Legacy, Time',desc:'Hestia keeps the eternal flame. Her charge: build legacy across decades through patient, consistent discipline.'},
   {name:'HERA',sign:'Libra',col:'#A9C2D8',domain:'Sovereignty, Revolution, Future',desc:'Hera commands the future of governance. Her charge: build civilizational systems that outlast individuals.'},
-  {name:'POSEIDON',sign:'Pisces',col:'#3fb27f',domain:'Deep Waters, Mystic, Transcendence',desc:'Poseidon rules the deep unconscious. His charge: access dimensions no other sign can map.'},
+  {name:'POSEIDON',sign:'Pisces',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),domain:'Deep Waters, Mystic, Transcendence',desc:'Poseidon rules the deep unconscious. His charge: access dimensions no other sign can map.'},
 ];
 
 let hoveredAgent=-1, selectedAgent=null;
@@ -638,30 +638,30 @@ const SIGNS=[
    motif:'hexagon',desc:'The sovereign architect. Sand is the universal amplifier. Athena&apos;s gift: design every system to its essence, serve the whole, and amplify all other elements around you.'},
   {name:'LIBRA',dates:'SEP 23 - OCT 22',el:'WIND',elCol:'#A9C2D8',deity:'HERA',planet:'Venus',glyph:'\u264E',col:'#A9C2D8',compat:['Gemini','Aquarius','Leo'],
    motif:'scales',desc:'The sovereign diplomat. Wind as justice. Hera holds the balance of union and delivers it through air. Libra resolves contradictions and advances the contribution axis through harmony.'},
-  {name:'SCORPIO',dates:'OCT 23 - NOV 21',el:'WATER',elCol:'#34C6E6',deity:'DEMETER',planet:'Pluto',glyph:'\u264F',col:'#8B0000',compat:['Cancer','Pisces','Virgo'],
+  {name:'SCORPIO',dates:'OCT 23 - NOV 21',el:'WATER',elCol:'#34C6E6',deity:'DEMETER',planet:'Pluto',glyph:'\u264F',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),compat:['Cancer','Pisces','Virgo'],
    motif:'fibonacci',desc:'The sovereign executor. Water in its most powerful, hidden form. Demeter&apos;s mandate: pass through every ending, transform through the dark, and rise reborn from the depths others fear.'},
-  {name:'SAGITTARIUS',dates:'NOV 22 - DEC 21',el:'FIRE',elCol:'#E86A3A',deity:'ZEUS',planet:'Jupiter',glyph:'\u2650',col:'#C9A84C',compat:['Aries','Leo','Aquarius'],
+  {name:'SAGITTARIUS',dates:'NOV 22 - DEC 21',el:'FIRE',elCol:'#E86A3A',deity:'ZEUS',planet:'Jupiter',glyph:'\u2650',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),compat:['Aries','Leo','Aquarius'],
    motif:'arrow',desc:'The sovereign explorer. Fire that expands beyond all borders. Zeus expands authority beyond every border. Sagittarius advances the knowledge axis to horizons no other sign can reach.'},
-  {name:'CAPRICORN',dates:'DEC 22 - JAN 19',el:'METAL',elCol:'#C7CDD6',deity:'HESTIA',planet:'Saturn',glyph:'\u2651',col:'#E2C86D',compat:['Taurus','Virgo','Scorpio'],
+  {name:'CAPRICORN',dates:'DEC 22 - JAN 19',el:'METAL',elCol:'#C7CDD6',deity:'HESTIA',planet:'Saturn',glyph:'\u2651',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),compat:['Taurus','Virgo','Scorpio'],
    motif:'mountain',desc:'The sovereign master. Metal discipline over time. Hestia keeps the eternal flame alive through patience. Capricorn builds empires across decades, reaching the apex through relentless contribution.'},
-  {name:'AQUARIUS',dates:'JAN 20 - FEB 18',el:'WIND',elCol:'#A9C2D8',deity:'HEPHAESTUS',planet:'Uranus',glyph:'\u2652',col:'#9B6BF0',compat:['Gemini','Libra','Sagittarius'],
+  {name:'AQUARIUS',dates:'JAN 20 - FEB 18',el:'WIND',elCol:'#A9C2D8',deity:'HEPHAESTUS',planet:'Uranus',glyph:'\u2652',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),compat:['Gemini','Libra','Sagittarius'],
    motif:'wave',desc:'The sovereign visionary. Wind as revolution. Hephaestus&apos; craft: forge the future of governance. Aquarius sees the matrix as a civilizational tool and advances all axes through humanitarian innovation.'},
-  {name:'PISCES',dates:'FEB 19 - MAR 20',el:'WATER',elCol:'#34C6E6',deity:'POSEIDON',planet:'Neptune',glyph:'\u2653',col:'#3fb27f',compat:['Cancer','Scorpio','Capricorn'],
+  {name:'PISCES',dates:'FEB 19 - MAR 20',el:'WATER',elCol:'#34C6E6',deity:'POSEIDON',planet:'Neptune',glyph:'\u2653',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),compat:['Cancer','Scorpio','Capricorn'],
    motif:'vesica',desc:'The sovereign mystic. Water as transcendence. Poseidon rules the deep unconscious ocean. Pisces accesses dimensions of knowledge no other sign can map, bridging the 9th element to the matrix apex.'},
 ];
 
 const PLANETS=[
-  {name:'SUN',pos:'Leo 4&#x00B0;',col:'#E2C86D'},
+  {name:'SUN',pos:'Leo 4&#x00B0;',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
   {name:'MOON',pos:'Cancer 17&#x00B0;',col:'#A9C2D8'},
-  {name:'MERCURY',pos:'Gemini 22&#x00B0;',col:'#C9A84C'},
-  {name:'VENUS',pos:'Taurus 8&#x00B0;',col:'#3fb27f'},
+  {name:'MERCURY',pos:'Gemini 22&#x00B0;',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {name:'VENUS',pos:'Taurus 8&#x00B0;',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
   {name:'MARS',pos:'Aries 29&#x00B0;',col:'#E86A3A'},
-  {name:'JUPITER',pos:'Sagittarius 11&#x00B0;',col:'#C9A84C'},
+  {name:'JUPITER',pos:'Sagittarius 11&#x00B0;',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
   {name:'SATURN',pos:'Capricorn 3&#x00B0;',col:'#C7CDD6'},
-  {name:'URANUS',pos:'Aquarius 14&#x00B0;',col:'#9B6BF0'},
+  {name:'URANUS',pos:'Aquarius 14&#x00B0;',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
   {name:'NEPTUNE',pos:'Pisces 26&#x00B0;',col:'#34C6E6'},
-  {name:'PLUTO',pos:'Scorpio 9&#x00B0;',col:'#8B0000'},
-  {name:'9.17 Hz',pos:'Resonance Lock',col:'#C9A84C'},
+  {name:'PLUTO',pos:'Scorpio 9&#x00B0;',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000')},
+  {name:'9.17 Hz',pos:'Resonance Lock',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
   {name:'NODE',pos:'Virgo 1&#x00B0;',col:'#D9B86A'},
 ];
 
@@ -913,7 +913,7 @@ function drawHeroWheel(sign){
     ctx.beginPath(); ctx.arc(CX,CY,90,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
     ctx.strokeStyle='rgba(201,168,76,0.3)'; ctx.lineWidth=1; ctx.stroke();
     const activeSign=SIGNS[si];
-    ctx.fillStyle=(activeSign&&activeSign.col||'#C9A84C'); ctx.shadowColor=(activeSign&&activeSign.col||'#C9A84C'); ctx.shadowBlur=20+4*Math.sin(t*2);
+    ctx.fillStyle=(activeSign&&activeSign.col||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')); ctx.shadowColor=(activeSign&&activeSign.col||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')); ctx.shadowBlur=20+4*Math.sin(t*2);
     ctx.font='700 52px serif';
     ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(activeSign.glyph,CX,CY+3);
     ctx.shadowBlur=0;

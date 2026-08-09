@@ -139,7 +139,7 @@
     }
     ctx.font='bold 32px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';
-    ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;
+    ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=10;
     ctx.fillText('Ω',80,80);ctx.shadowBlur=0;
     t++;requestAnimationFrame(f);
   })();

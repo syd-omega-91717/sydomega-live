@@ -238,14 +238,14 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 const TIME_KEY = 'omega_time_log';
 
 const MODES = [
-  {name:'POMODORO',  work:25, break:5,  color:'#C9A84C', desc:'25 min focus'},
+  {name:'POMODORO',  work:25, break:5,  color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'25 min focus'},
   {name:'DEEP WORK', work:90, break:20, color:'#5C8FD6', desc:'90 min session'},
   {name:'SPRINT',    work:50, break:10, color:'#4CAF50', desc:'50 min block'},
   {name:'MICRO',     work:15, break:3,  color:'#9C6FD6', desc:'15 min burst'},
 ];
 
 const CAT_COLORS = {
-  'deep-work':     '#C9A84C',
+  'deep-work':     (getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),
   'learning':      '#5C8FD6',
   'strategy':      '#9C6FD6',
   'creative':      '#FF9800',
@@ -447,7 +447,7 @@ function makeCard(e){
   var d=new Date(e.ts);
   var dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
   var durStr=fmtDur(e.duration);
-  var col=CAT_COLORS[e.category]||'#C9A84C';
+  var col=CAT_COLORS[e.category]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
   var div=document.createElement('div'); div.className='entry-card';
   div.innerHTML='<div class="entry-dot" style="background:'+col+'"></div>'+
     '<div class="entry-body">'+
@@ -518,7 +518,7 @@ function renderAudit(){
   alloc.innerHTML='';
   sorted.forEach(function(e){
     var pct=Math.round((e[1]/totalSecs)*100);
-    var col=CAT_COLORS[e[0]]||'#C9A84C';
+    var col=CAT_COLORS[e[0]]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     var div=document.createElement('div'); div.className='alloc-card';
     div.innerHTML='<div class="alloc-cat" style="color:'+col+'">'+(CAT_LABELS[e[0]]||e[0])+'</div>'+
       '<div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:'+pct+'%;background:'+col+'80"></div></div>'+

@@ -241,8 +241,8 @@ function switchTab(id,btn){
 }
 
 const TIER_LIMITS={inner:5,close:15,tribe:50,network:150,outer:500};
-const TIER_COLORS={inner:'#c9a84c',close:'#3498db',tribe:'#27ae60',network:'#9b59b6',outer:'#888'};
-const CAT_COLORS={business:'#3498db',personal:'#27ae60',mentor:'#c9a84c',investor:'#e67e22',client:'#9b59b6',partner:'#1abc9c',family:'#e74c3c',other:'#888'};
+const TIER_COLORS={inner:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),close:'#3498db',tribe:'#27ae60',network:'#9b59b6',outer:'#888'};
+const CAT_COLORS={business:'#3498db',personal:'#27ae60',mentor:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),investor:'#e67e22',client:'#9b59b6',partner:'#1abc9c',family:'#e74c3c',other:'#888'};
 
 let contacts=JSON.parse(localStorage.getItem('omega_contacts')||'[]');
 let interactions=JSON.parse(localStorage.getItem('omega_contact_ints')||'[]');

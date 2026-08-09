@@ -174,7 +174,7 @@ function switchTab(id,btn){
 
 var holdings=[];
 var typeFilter='all';
-var TYPE_COLORS={equity:'#4CAF50',etf:'#00E5FF',crypto:'#FF9800',bond:'#FFD700','real-estate':'#9B6BF0',other:'#888'};
+var TYPE_COLORS={equity:'#4CAF50',etf:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),crypto:'#FF9800',bond:'#FFD700','real-estate':(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),other:'#888'};
 
 function load(){try{holdings=JSON.parse(localStorage.getItem('omega_investments')||'[]');}catch(e){holdings=[];}}
 function save(){localStorage.setItem('omega_investments',JSON.stringify(holdings));}

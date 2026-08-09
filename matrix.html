@@ -708,27 +708,27 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 
 const SERVICES=[
-  {name:'GATEWAY',type:'API Gateway',uptime:99.99,col:'#C9A84C'},
-  {name:'AUTH',type:'Identity & Security',uptime:100,col:'#3fb27f'},
-  {name:'USER',type:'Profile & Session',uptime:99.97,col:'#00E5FF'},
-  {name:'AI ORCHESTRATOR',type:'Agent Mesh Runtime',uptime:99.91,col:'#9B6BF0'},
+  {name:'GATEWAY',type:'API Gateway',uptime:99.99,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {name:'AUTH',type:'Identity & Security',uptime:100,col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
+  {name:'USER',type:'Profile & Session',uptime:99.97,col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {name:'AI ORCHESTRATOR',type:'Agent Mesh Runtime',uptime:99.91,col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
   {name:'GAMING',type:'Mastery Engine',uptime:99.88,col:'#E86A3A'},
-  {name:'MEDIA',type:'Streaming Layer',uptime:99.94,col:'#8B0000'},
-  {name:'HERITAGE',type:'Lineage & Archive',uptime:99.99,col:'#E2C86D'},
-  {name:'PAYMENT',type:'Economy & Treasury',uptime:100,col:'#C9A84C'},
-  {name:'NFT',type:'Blockchain Bridge',uptime:99.82,col:'#9B6BF0'},
-  {name:'SEARCH',type:'Intelligence Retrieval',uptime:99.96,col:'#00E5FF'},
-  {name:'NOTIFICATION',type:'Dispatch Engine',uptime:99.93,col:'#3fb27f'},
-  {name:'COMMUNICATION',type:'Social & Messaging',uptime:99.88,col:'#00E5FF'},
-  {name:'COMMUNITY',type:'Faction & Feed',uptime:99.85,col:'#E2C86D'},
-  {name:'HOROSCOPE',type:'Celestial Engine',uptime:100,col:'#C9A84C'},
+  {name:'MEDIA',type:'Streaming Layer',uptime:99.94,col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000')},
+  {name:'HERITAGE',type:'Lineage & Archive',uptime:99.99,col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
+  {name:'PAYMENT',type:'Economy & Treasury',uptime:100,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {name:'NFT',type:'Blockchain Bridge',uptime:99.82,col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {name:'SEARCH',type:'Intelligence Retrieval',uptime:99.96,col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {name:'NOTIFICATION',type:'Dispatch Engine',uptime:99.93,col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
+  {name:'COMMUNICATION',type:'Social & Messaging',uptime:99.88,col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {name:'COMMUNITY',type:'Faction & Feed',uptime:99.85,col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
+  {name:'HOROSCOPE',type:'Celestial Engine',uptime:100,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
   {name:'ACADEMY',type:'Knowledge Axis A',uptime:99.97,col:'#34C6E6'},
-  {name:'CONSULTANCY',type:'Expert Booking',uptime:99.89,col:'#C9A84C'},
-  {name:'TREASURY',type:'Vault & Allocation',uptime:100,col:'#C9A84C'},
-  {name:'RESEARCH',type:'Discovery Engine',uptime:99.74,col:'#9B6BF0'},
-  {name:'COMPLIANCE',type:'Legal Shield',uptime:99.99,col:'#E2C86D'},
-  {name:'INFRASTRUCTURE',type:'Grid Orchestration',uptime:100,col:'#00E5FF'},
-  {name:'SOVEREIGN',type:'Master Controller',uptime:100,col:'#C9A84C'},
+  {name:'CONSULTANCY',type:'Expert Booking',uptime:99.89,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {name:'TREASURY',type:'Vault & Allocation',uptime:100,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {name:'RESEARCH',type:'Discovery Engine',uptime:99.74,col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {name:'COMPLIANCE',type:'Legal Shield',uptime:99.99,col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
+  {name:'INFRASTRUCTURE',type:'Grid Orchestration',uptime:100,col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {name:'SOVEREIGN',type:'Master Controller',uptime:100,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
 ];
 
 const LAYERS=[
@@ -749,10 +749,10 @@ const REGIONS=[
 ];
 
 const MEMORY_LAYERS=[
-  {name:'SESSION MEMORY',tech:'Redis',desc:'Live conversation state, sub-ms recall, 24-hour TTL',col:'#00E5FF'},
-  {name:'CONVERSATION',tech:'PostgreSQL',desc:'Full dialogue history, structured retrieval, permanent',col:'#C9A84C'},
-  {name:'SEMANTIC LAYER',tech:'pgvector',desc:'Vector embeddings, meaning-based recall, 768-dim',col:'#9B6BF0'},
-  {name:'KNOWLEDGE GRAPH',tech:'Neo4j',desc:'Entity relationships, causal chains, civilizational links',col:'#E2C86D'},
+  {name:'SESSION MEMORY',tech:'Redis',desc:'Live conversation state, sub-ms recall, 24-hour TTL',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {name:'CONVERSATION',tech:'PostgreSQL',desc:'Full dialogue history, structured retrieval, permanent',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {name:'SEMANTIC LAYER',tech:'pgvector',desc:'Vector embeddings, meaning-based recall, 768-dim',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {name:'KNOWLEDGE GRAPH',tech:'Neo4j',desc:'Entity relationships, causal chains, civilizational links',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
   {name:'IMMUTABLE ARCHIVE',tech:'S3 + Hash-Chain',desc:'Permanent tamper-proof record, hash-verified, eternal',col:'#E86A3A'},
 ];
 
@@ -910,7 +910,7 @@ window.bootGrid = bootGrid;
 
     // hero radar (real axes)
     var hero=document.getElementById('myradar'); hero.style.width='100%';
-    setupCanvas(hero,[a,b,c],ECOL[d.element||meSign[2]]||'#00E5FF',true);
+    setupCanvas(hero,[a,b,c],ECOL[d.element||meSign[2]]||(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),true);
 
     // twelve minis
     var box=document.getElementById('twelve'); box.innerHTML='';
@@ -924,7 +924,7 @@ window.bootGrid = bootGrid;
       // size canvas after in-DOM
       cv.style.width='100%'; cv.style.height='120px';
       var ax = mine ? [a,b,c] : s[4];
-      setupCanvas(cv,ax,ECOL[s[2]]||'#C9A84C',false);
+      setupCanvas(cv,ax,ECOL[s[2]]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),false);
     });
 
     loop();

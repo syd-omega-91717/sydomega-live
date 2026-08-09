@@ -148,7 +148,7 @@ var ELEMENTS={
   soul:  {name:'SOUL',  sigil:'✴',color:'#DA70D6',attrs:{willpower:60,adaptability:75,creativity:80,precision:55,endurance:65,intuition:95,vision:80,discipline:50}},
   space: {name:'SPACE', sigil:'✶',color:'#7B68EE',attrs:{willpower:70,adaptability:70,creativity:85,precision:65,endurance:55,intuition:80,vision:95,discipline:45}},
   void:  {name:'VOID',  sigil:'✷',color:'#708090',attrs:{willpower:85,adaptability:85,creativity:60,precision:75,endurance:90,intuition:90,vision:65,discipline:75}},
-  all:   {name:'THE ALL',sigil:'Ω',color:'#C9A84C',attrs:{willpower:90,adaptability:90,creativity:90,precision:90,endurance:90,intuition:90,vision:90,discipline:90}}
+  all:   {name:'THE ALL',sigil:'Ω',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),attrs:{willpower:90,adaptability:90,creativity:90,precision:90,endurance:90,intuition:90,vision:90,discipline:90}}
 };
 var ARCHETYPES={
   fire_early:{name:'The Igniter',desc:'Raw sovereign force, unstoppable initiation'},
@@ -181,13 +181,13 @@ var ARCHETYPES={
 };
 var DIMENSIONS=[
   {key:'willpower',   label:'SOVEREIGN WILL',      colors:['#FF4500','#FF6633']},
-  {key:'adaptability',label:'FLUID ADAPTATION',    colors:['#00BFFF','#00E5FF']},
+  {key:'adaptability',label:'FLUID ADAPTATION',    colors:['#00BFFF',(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')]},
   {key:'creativity',  label:'CREATIVE FORCE',      colors:['#98E8C1','#00FF88']},
   {key:'precision',   label:'IRON PRECISION',      colors:['#B0C4DE','#C8D8F0']},
   {key:'endurance',   label:'ENDURING FORM',       colors:['#DEB887','#ECC890']},
   {key:'intuition',   label:'DEEP INTUITION',      colors:['#DA70D6','#E890F0']},
   {key:'vision',      label:'INFINITE VISION',     colors:['#7B68EE','#9B88FF']},
-  {key:'discipline',  label:'ABS. DISCIPLINE',     colors:['#C9A84C','#E0C060']}
+  {key:'discipline',  label:'ABS. DISCIPLINE',     colors:[(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),'#E0C060']}
 ];
 var ROMANS=['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 var PHI=1.6180339887,E_=2.7182818285,APEX=27.8367;

@@ -168,7 +168,7 @@ var ELEMENTS=[
   {id:'soul',  name:'SOUL',  sigil:'✴',color:'#DA70D6',glow:'rgba(218,112,214,.2)',principle:'INNER AUTHORITY',  desc:'Intuitive wisdom, emotional sovereignty'},
   {id:'space', name:'SPACE', sigil:'✶',color:'#7B68EE',glow:'rgba(123,104,238,.2)',principle:'INFINITE VISION',  desc:'Expansive strategy, universal perspective'},
   {id:'void',  name:'VOID',  sigil:'✷',color:'#708090',glow:'rgba(112,128,144,.2)',principle:'ABSOLUTE SILENCE', desc:'Mastery through restraint, pure awareness'},
-  {id:'all',   name:'THE ALL',sigil:'Ω',color:'#C9A84C',glow:'rgba(201,168,76,.25)', principle:'SOVEREIGN UNITY', desc:'Complete integration of all nine forces'}
+  {id:'all',   name:'THE ALL',sigil:'Ω',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),glow:'rgba(201,168,76,.25)', principle:'SOVEREIGN UNITY', desc:'Complete integration of all nine forces'}
 ];
 
 var AFFINITY={

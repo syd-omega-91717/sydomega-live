@@ -323,7 +323,7 @@ function renderKPIs(){
   document.getElementById('debtVal').textContent=debt+'h';
   var debtPct=Math.min(100,(debt/7)*100);
   document.getElementById('debtBar').style.width=debtPct+'%';
-  document.getElementById('debtBar').style.background=debt<2?'#9BC53D':debt<4?'#C9A84C':'#E55934';
+  document.getElementById('debtBar').style.background=debt<2?'#9BC53D':debt<4?(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'):'#E55934';
   var last7=sleepLog.slice(-7);
   var cons='—';
   if(last7.length>1){
@@ -371,7 +371,7 @@ function drawTrendChart(){
     var x=pad.l+i*(cW/last30.length)+(cW/last30.length-bW)/2;
     var h=cH*Math.min(1,e.hours/10);
     var y=pad.t+cH-h;
-    ctx.fillStyle=(e.hours>=7.5?'#9BC53D':e.hours>=6?'#C9A84C':'#E55934')+'88';
+    ctx.fillStyle=(e.hours>=7.5?'#9BC53D':e.hours>=6?(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'):'#E55934')+'88';
     ctx.fillRect(x,y,bW,h);
   });
   ctx.strokeStyle='rgba(201,168,76,.7)';ctx.lineWidth=1.5;ctx.lineJoin='round';

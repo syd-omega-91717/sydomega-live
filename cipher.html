@@ -145,7 +145,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     Metal:[0,2,5,7,9],Sand:[0,2,3,7,9],Soul:[0,3,5,6,10,12],
     Space:[0,4,7,10,14],Void:[0,7,12],'The All':[0,2,4,5,7,9,11,12]
   };
-  var ELEM_COLORS={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:'#E2C86D',Sand:'#FFD54F',Soul:'#9B6BF0',Space:'#7C4DFF',Void:'#334466','The All':'#E2C86D'};
+  var ELEM_COLORS={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),Sand:'#FFD54F',Soul:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),Space:'#7C4DFF',Void:'#334466','The All':(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')};
   var ELEM_SIGILS={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
   var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
 
@@ -209,7 +209,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     if(!text)return;
     var scale=SCALES[currentElem]||[0,2,4];
     var grad=ctx.createLinearGradient(0,0,W,0);
-    var col=ELEM_COLORS[currentElem]||'#C9A84C';
+    var col=ELEM_COLORS[currentElem]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     grad.addColorStop(0,col+'33');grad.addColorStop(0.5,col+'bb');grad.addColorStop(1,col+'33');
     ctx.strokeStyle=grad;ctx.lineWidth=1.5;
     ctx.beginPath();

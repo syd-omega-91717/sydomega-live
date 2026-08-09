@@ -196,7 +196,7 @@ function atlasTab(btn,pane){
 </script>
 <script type="module">
 const ATLAS_KEY = 'omega_atlas_v2';
-const CAT_COLOR = {concept:'#C9A84C',person:'#5BC0EB',skill:'#9BC53D',idea:'#E55934',book:'#A663CC',goal:'#F18F01',project:'#20A39E'};
+const CAT_COLOR = {concept:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),person:'#5BC0EB',skill:'#9BC53D',idea:'#E55934',book:'#A663CC',goal:'#F18F01',project:'#20A39E'};
 const CAT_RADIUS = {concept:28,person:26,skill:24,idea:24,book:22,goal:26,project:26};
 
 /* ── State ── */
@@ -323,7 +323,7 @@ function draw(){
   nodes.forEach(n=>{
     const p=worldToScreen(n.x,n.y);
     const r=(CAT_RADIUS[n.cat]||24)*scale;
-    const color=CAT_COLOR[n.cat]||'#C9A84C';
+    const color=CAT_COLOR[n.cat]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     const isSel=n===selected,isHov=n===hovered;
     // Glow
     if(isSel||isHov){

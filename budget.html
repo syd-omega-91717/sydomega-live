@@ -305,7 +305,7 @@ function renderOverview() {
   const exp = totalExpenses(_curMonth);
   const sav = inc - exp;
   const rate = inc>0 ? Math.round((sav/inc)*100) : 0;
-  const rateCol = rate>=25?'#66BB6A':rate>=10?'#C9A84C':'#E57373';
+  const rateCol = rate>=25?'#66BB6A':rate>=10?(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'):'#E57373';
 
   document.getElementById('b-kpis').innerHTML = [
     [fmt(inc), 'INCOME'],
@@ -474,7 +474,7 @@ function drawTrendChart() {
     ctx.fillStyle = 'rgba(229,115,115,.55)';
     ctx.fillRect(x+bw+1, H-4-expH, bw, expH);
     // Month label
-    ctx.fillStyle = m===_curMonth ? '#C9A84C' : 'rgba(138,134,118,.35)';
+    ctx.fillStyle = m===_curMonth ? (getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C') : 'rgba(138,134,118,.35)';
     ctx.font = '7px monospace';
     ctx.textAlign = 'center';
     ctx.fillText(new Date(m+'-15').toLocaleDateString('en-US',{month:'short'}).toUpperCase(), x+bw, H);

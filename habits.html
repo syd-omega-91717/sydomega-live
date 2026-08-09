@@ -88,6 +88,15 @@
     <!-- ALL HABITS -->
     <div class="tab-panel" id="tab-all">
       <div id="all-list"></div>
+      <div class="section-hd" style="margin-top:24px">BACKUP &amp; RESTORE</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.7;margin-bottom:12px">
+        Habits, daily logs, and streak freezes live only in this browser — clearing site
+        data or switching devices loses them permanently. Export a backup periodically.
+      </div>
+      <button class="btn-s" onclick="exportHabitsBackup()">EXPORT BACKUP</button>
+      <button class="btn-c" onclick="document.getElementById('habits-import-file').click()">IMPORT BACKUP</button>
+      <input type="file" id="habits-import-file" accept=".json" style="display:none">
+      <div id="habits-backup-msg" style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-top:8px"></div>
     </div>
 
     <!-- CHAIN TAB: habit chain + heatmap -->
@@ -300,6 +309,41 @@ function getStreak(habit){
   }
   return streak;
 }
+
+function exportHabitsBackup(){
+  const backup={
+    v:1, ts:Date.now(),
+    habits:localStorage.getItem(HABITS_KEY),
+    logs:localStorage.getItem(LOGS_KEY),
+    streakFreeze:localStorage.getItem('omega_streak_freeze_v1')
+  };
+  const blob=new Blob([JSON.stringify(backup)],{type:'application/json'});
+  const a=Object.assign(document.createElement('a'),{
+    href:URL.createObjectURL(blob),
+    download:'sovereign-habits-'+new Date().toISOString().slice(0,10)+'.json'
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+  document.getElementById('habits-backup-msg').textContent='EXPORTED';
+}
+window.exportHabitsBackup=exportHabitsBackup;
+
+async function importHabitsBackup(file){
+  const msg=document.getElementById('habits-backup-msg');
+  try{
+    const data=JSON.parse(await file.text());
+    if(data.v!==1) throw new Error('invalid format');
+    if(!confirm('This replaces your current habits, logs, and streak freezes on this device. Continue?')) return;
+    if(data.habits) localStorage.setItem(HABITS_KEY,data.habits);
+    if(data.logs) localStorage.setItem(LOGS_KEY,data.logs);
+    if(data.streakFreeze) localStorage.setItem('omega_streak_freeze_v1',data.streakFreeze);
+    msg.textContent='IMPORTED';
+    renderAll();
+  }catch(err){ msg.textContent='IMPORT FAILED · '+err.message; }
+}
+document.getElementById('habits-import-file').addEventListener('change',function(){
+  if(this.files[0]) importHabitsBackup(this.files[0]);
+  this.value='';
+});
 
 function reconcileStreakFreezes(){
   if(!window.OmegaStreakFreeze) return;

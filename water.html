@@ -127,6 +127,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- TAB 3: GOALS -->
   <div class="tab-pane" id="t3">
     <div class="sect">
+      <div class="sect-hd">BACKUP &amp; RESTORE</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:var(--dim);line-height:1.7;margin-bottom:12px">
+        Your log, goal, and streak freezes live only in this browser — clearing site data
+        or switching devices loses them permanently. Export a backup periodically.
+      </div>
+      <button style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer" onclick="exportWaterBackup()">EXPORT BACKUP</button>
+      <button style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:var(--dim);background:none;border-radius:2px;cursor:pointer" onclick="document.getElementById('water-import-file').click()">IMPORT BACKUP</button>
+      <input type="file" id="water-import-file" accept=".json" style="display:none">
+      <div id="water-backup-msg" style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--dim);margin-top:8px"></div>
+    </div>
+    <div class="sect">
       <div class="sect-hd">DAILY HYDRATION TARGET</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">
         <div class="sci-card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)">2,500</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">ML / DAY (DEFAULT)</div></div>
@@ -414,6 +425,46 @@ function drawHist(logs){
 /* ─── STORAGE ─── */
 function loadLogs(){try{return JSON.parse(localStorage.getItem(WATER_KEY)||'[]');}catch(e){return[];}}
 function saveLogs(l){localStorage.setItem(WATER_KEY,JSON.stringify(l));}
+
+function exportWaterBackup(){
+  var backup={
+    v:1, ts:Date.now(),
+    log:localStorage.getItem(WATER_KEY),
+    goal:localStorage.getItem(GOAL_KEY),
+    streakFreeze:localStorage.getItem('omega_streak_freeze_v1')
+  };
+  var blob=new Blob([JSON.stringify(backup)],{type:'application/json'});
+  var a=Object.assign(document.createElement('a'),{
+    href:URL.createObjectURL(blob),
+    download:'sovereign-water-'+new Date().toISOString().slice(0,10)+'.json'
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+  document.getElementById('water-backup-msg').textContent='EXPORTED';
+}
+window.exportWaterBackup=exportWaterBackup;
+
+function importWaterBackup(file){
+  var msg=document.getElementById('water-backup-msg');
+  var reader=new FileReader();
+  reader.onload=function(){
+    try{
+      var data=JSON.parse(reader.result);
+      if(data.v!==1) throw new Error('invalid format');
+      if(!confirm('This replaces your current log, goal, and streak freezes on this device. Continue?')) return;
+      if(data.log) localStorage.setItem(WATER_KEY,data.log);
+      if(data.goal) localStorage.setItem(GOAL_KEY,data.goal);
+      if(data.streakFreeze) localStorage.setItem('omega_streak_freeze_v1',data.streakFreeze);
+      msg.textContent='IMPORTED';
+      dailyGoal=parseInt(localStorage.getItem(GOAL_KEY)||'2500');
+      renderHistory();
+    }catch(err){ msg.textContent='IMPORT FAILED · '+err.message; }
+  };
+  reader.readAsText(file);
+}
+document.getElementById('water-import-file').addEventListener('change',function(){
+  if(this.files[0]) importWaterBackup(this.files[0]);
+  this.value='';
+});
 
 /* ─── TAB SWITCH ─── */
 function switchTab(btn,id){

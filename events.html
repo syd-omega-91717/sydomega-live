@@ -153,11 +153,13 @@ function renderEvents(){
       '</div>';
     card.querySelector('.btn-join').addEventListener('click',async function(){
       if(joined.has(key)){
+        var d=await sb.from('event_rsvps').delete().eq('event_ref',key);
+        if(d.error){alert('Could not update registration: '+d.error.message);return;}
         joined.delete(key);
-        await sb.from('event_rsvps').delete().eq('event_ref',key);
       } else {
+        var i=await sb.from('event_rsvps').insert({event_ref:key});
+        if(i.error){alert('Could not register: '+i.error.message);return;}
         joined.add(key);
-        await sb.from('event_rsvps').insert({event_ref:key});
         window.OmegaProgress&&OmegaProgress.record({kind:'events',task:'events:'+Date.now(),axis:'c',title:'Gathering Joined'});
       }
       renderEvents();

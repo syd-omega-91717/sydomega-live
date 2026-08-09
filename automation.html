@@ -346,13 +346,17 @@ async function loadStates(){
 }
 
 async function setState(key,on){
+  var prev=userStates[key];
   userStates[key]=on;
   if(stateRowIds[key]){
-    await sb.from('automation_rules').update({is_on:on}).eq('id',stateRowIds[key]);
+    var upd=await sb.from('automation_rules').update({is_on:on}).eq('id',stateRowIds[key]);
+    if(upd.error){userStates[key]=prev;return false;}
   } else {
-    var ins=(await sb.from('automation_rules').insert({trigger_key:key,action_key:key,is_on:on}).select('id').maybeSingle()).data;
-    if(ins) stateRowIds[key]=ins.id;
+    var ins=await sb.from('automation_rules').insert({trigger_key:key,action_key:key,is_on:on}).select('id').maybeSingle();
+    if(ins.error){userStates[key]=prev;return false;}
+    if(ins.data) stateRowIds[key]=ins.data.id;
   }
+  return true;
 }
 
 function renderRules(uid){
@@ -398,7 +402,8 @@ function renderRules(uid){
     tog.textContent=on?'PAUSE':'ENABLE';
     tog.addEventListener('click',async function(){
       var cur=(key in userStates)?userStates[key]:r.default_on;
-      await setState(key,!cur);
+      var ok=await setState(key,!cur);
+      if(!ok) alert('Could not update this workflow. Try again.');
       renderRules(uid);
     });
 

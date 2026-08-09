@@ -113,7 +113,7 @@ var studyNotes=JSON.parse(localStorage.getItem(SK)||'[]');
 var modelKing=JSON.parse(localStorage.getItem(MK)||'{}');
 
 function renderKings(){
-  document.getElementById('kings-grid').innerHTML=KINGS_DATA.map(function(k){
+  document.getElementById('kings-grid').innerHTML=KINGS_DATA.map(function(k,i){
     return '<div style="border:1px solid var(--line);border-top:2px solid '+k.color+';background:rgba(10,10,15,.5);padding:14px;border-radius:2px">'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
       +'<div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+k.era+'</div>'
@@ -126,9 +126,30 @@ function renderKings(){
       +'<div style="font-family:var(--M);font-size:8px;color:var(--gold);margin-bottom:3px">KEY LESSON</div>'
       +'<div style="font-size:11px;font-style:italic;opacity:.75">'+k.lesson+'</div>'
       +'</div>'
+      +'<div id="king-bio-'+i+'" style="margin-top:10px">'
+      +'<button onclick="loadKingBio('+i+')" style="font-family:var(--M);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--muted);background:none;cursor:pointer">READ REAL BIOGRAPHY (WIKIPEDIA)</button>'
+      +'</div>'
       +'</div>';
   }).join('');
 }
+
+window.loadKingBio=function(i){
+  var k=KINGS_DATA[i];
+  var el=document.getElementById('king-bio-'+i);
+  el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING&hellip;</span>';
+  fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(k.name.replace(/ /g,'_')))
+    .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
+    .then(function(data){
+      var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(k.name.replace(/ /g,'_')));
+      el.innerHTML='<div style="font-size:11px;line-height:1.7;opacity:.8;margin-top:4px">'+extract+'</div>'
+        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
+    })
+    .catch(function(){
+      el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--crim)">Could not reach Wikipedia.</span> '
+        +'<button onclick="loadKingBio('+i+')" style="font-family:var(--M);font-size:7px;color:var(--muted);background:none;border:1px solid rgba(201,168,76,.2);cursor:pointer;padding:2px 6px">RETRY</button>';
+    });
+};
 
 function renderStudyNotes(){
   var el=document.getElementById('study-list');

@@ -167,17 +167,24 @@ function buildPlatforms(){
   });
 }
 
-function connectPlatform(pid,pname){
+async function connectPlatform(pid,pname){
   var username=prompt('Enter your '+pname+' username to link:\n(In production this opens the OAuth window.)');
   if(!username)return;
-  connections[pid]={username:username.replace('@','')};
-  if(sb)sb.from('social_connections').upsert({platform:pid,handle:connections[pid].username}).catch(function(){});
+  var handle=username.replace('@','');
+  if(sb){
+    var r=await sb.from('social_connections').upsert({platform:pid,handle:handle}).catch(function(e){return{error:e};});
+    if(r&&r.error){alert('Could not link '+pname+'. Try again.');return;}
+  }
+  connections[pid]={username:handle};
   buildPlatforms();
 }
 
-function disconnectPlatform(pid){
+async function disconnectPlatform(pid){
+  if(sb){
+    var r=await sb.from('social_connections').delete().eq('platform',pid).catch(function(e){return{error:e};});
+    if(r&&r.error){alert('Could not disconnect. Try again.');return;}
+  }
   delete connections[pid];
-  if(sb)sb.from('social_connections').delete().eq('platform',pid).catch(function(){});
   buildPlatforms();
 }
 

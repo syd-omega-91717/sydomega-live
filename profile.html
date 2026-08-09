@@ -1442,6 +1442,7 @@ function callWhenReady(fnName){
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
 const ACHIEV=[
   {n:1,name:'GENESIS',col:'#D9B86A',sym:'\u03A9'},{n:2,name:'KNOWLEDGE',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},
@@ -1690,10 +1691,10 @@ function buildMemberList(members){
 
     const row=document.createElement('div');row.className='mbr-row';
     row.innerHTML=
-      '<div class="mbr-init" style="border-color:'+col+'44;color:'+col+'">'+init+'</div>'+
+      '<div class="mbr-init" style="border-color:'+col+'44;color:'+col+'">'+esc(init)+'</div>'+
       '<div class="mbr-meta">'+
-        '<div class="mbr-email">'+(m.display_name||'(no name)')+'</div>'+
-        '<div class="mbr-detail">'+(m.email||m.id||'').slice(0,32)+' . Joined: '+(m.created_at?new Date(m.created_at).toLocaleDateString():' -- ')+'</div>'+
+        '<div class="mbr-email">'+esc(m.display_name||'(no name)')+'</div>'+
+        '<div class="mbr-detail">'+esc((m.email||m.id||'').slice(0,32))+' . Joined: '+(m.created_at?new Date(m.created_at).toLocaleDateString():' -- ')+'</div>'+
       '</div>'+
       '<div class="mbr-status">'+
         '<span class="mbr-pill" style="color:'+col+';border-color:'+col+'44">'+statusLabel+'</span>'+

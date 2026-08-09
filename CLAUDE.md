@@ -268,6 +268,48 @@ orphaned file.
   to Supabase Storage/Vercel Blob and migrating to Git LFS remain open,
   non-urgent (see `REPO_AUDIT.md`).
 
+- **Stored XSS in the owner's own admin panels — fixed.** `approvals.html`
+  and `profile.html` (member-list views, the highest-privilege pages in the
+  app) rendered `display_name`/`email` straight into `.innerHTML` with no
+  escaping. `display_name` is self-updatable by any authenticated member
+  (`supabase/omega_profile_fields.sql`), so any pending/approved member
+  could set it to an HTML/script payload via a direct `.update()` call (no
+  UI needed — the anon key is public) and have it execute in the **owner's**
+  browser the next time they opened the approvals/members dashboard. Fixed
+  by adding a per-page `esc()` helper (matching the convention already used
+  elsewhere, e.g. `contracts.html`, `dashboard.html`) and escaping
+  `display_name`/`email`/the avatar initial in both files.
+- **`notifications` table missing from the live schema — action needed.**
+  `omega-notify.js` (injected platform-wide by `bg.js` on every approved
+  page) queries `public.notifications` for the badge/toast/panel widget
+  (`user_id`, `notification_type`, `message`, `content`, `created_at`,
+  `read_at`), but no `CREATE TABLE` for it existed anywhere in
+  `supabase/*.sql` — distinct from `public.dispatches` (the global
+  owner-broadcast channel with no per-user state). Same silent-failure
+  shape as `user_assets`/`extend_trial`: the badge always showed 0 and the
+  panel always showed "NO NOTIFICATIONS" for every member, with no visible
+  error. Added `supabase/omega_notifications_fix.sql` (idempotent, RLS:
+  members read/update only their own rows, owner reads all). Nothing in
+  the codebase currently inserts a notification row — deciding which
+  server-side events should generate one is separate, undone-on-purpose
+  work, same as `user_assets`'s population. **Not yet applied to the live
+  database.**
+- **Authority-history chart queried the wrong table — fixed.**
+  `omega-chart.js`'s `API.auth()` (used by `analytics.html` and
+  `studio.html`'s "Authority History" chart) queried
+  `public.authority_snapshots`, which never existed; the real table with
+  matching `snapshot_date`/`authority`/`user_id` columns is
+  `leaderboard_snapshots` (`supabase/entreprise_schema_v2.sql`). Fixed by
+  pointing the query at the correct table name — no schema change needed.
+- **Silent-failure writes — fixed.** `social.html`'s platform
+  connect/disconnect buttons updated the in-memory `connections` object
+  and re-rendered "CONNECTED" before checking whether the
+  `social_connections` upsert/delete actually succeeded; `family.html`'s
+  heir-toggle/remove buttons gave no feedback at all on a failed write.
+  Both fixed to check `.error` and alert the user on failure, matching the
+  established convention from the `events.html`/`automation.html`/
+  `advertising.html` fixes above.
+
 ## 9. Working in this repo — practical rules
 
 - Don't introduce a build step or framework migration without discussing

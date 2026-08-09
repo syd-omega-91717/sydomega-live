@@ -333,6 +333,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
 
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 var TRIAL_SECS=557; /* 9 minutes 17 seconds — the approval window */
 var allMembers=[];
 var timers={};
@@ -439,10 +440,10 @@ function buildCard(m){
   card.className='mc';
   card.innerHTML=
     '<div class="mc-top">'
-      +'<div class="mc-avatar" style="border-color:'+col+';color:'+col+'">'+init+'</div>'
+      +'<div class="mc-avatar" style="border-color:'+col+';color:'+col+'">'+esc(init)+'</div>'
       +'<div class="mc-info">'
-        +'<div class="mc-name" style="color:'+col+'">'+name.toUpperCase()+'</div>'
-        +'<div class="mc-email">'+(m.email||'--')+'</div>'
+        +'<div class="mc-name" style="color:'+col+'">'+esc(name.toUpperCase())+'</div>'
+        +'<div class="mc-email">'+esc(m.email||'--')+'</div>'
         +'<div class="mc-uid">ID: '+(m.id||'').slice(0,20)+'...</div>'
       +'</div>'
       +'<div class="mc-right">'

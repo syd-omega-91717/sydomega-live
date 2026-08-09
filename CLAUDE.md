@@ -190,6 +190,35 @@ orphaned file.
 
 ## 8. Known debt (see `REPO_AUDIT.md` for detail)
 
+- **`user_assets` table is missing from the live schema — action needed.**
+  `portfolio.html` (SOVEREIGN ASSETS panel) and `vault.html` (NFT grid)
+  both query `public.user_assets`, and portfolio.html's own copy calls it
+  "the user_assets ledger... updated by mission outcomes, trade, and
+  sovereign grants" — but no `CREATE TABLE` for it existed anywhere in
+  `supabase/*.sql`. Supabase's JS client doesn't throw on a missing-table
+  error, it returns `{data:null,error}`, and both pages silently fall back
+  to their empty state — so every member's asset/NFT list has always shown
+  empty, with no visible error. Added `supabase/omega_user_assets_fix.sql`
+  (idempotent, RLS: read-only for `authenticated` on own rows + owner,
+  matching that neither page ever writes to it directly — population is
+  meant to happen server-side). **This session has no live Supabase
+  access, so the file has NOT been run against the database yet** — apply
+  it (`supabase db push` or paste into the SQL editor) before expecting
+  these two pages to show real data.
+- **Finance pages: inconsistent persistence, needs a product decision.**
+  `wealth.html`, `wallet.html`, `treasury.html`, `revenue.html`,
+  `investment.html`, `expenses.html`, and `budget.html` persist entirely
+  to `localStorage` — no Supabase table backs any of it, so account
+  balances, net-worth snapshots, and holdings a member enters don't sync
+  across devices and are lost if browser storage is cleared. This is
+  inconsistent with the rest of the platform's Supabase+RLS model, and
+  with `income.html`/`ledger.html`/`contracts.html`/`portfolio.html`,
+  which already do persist server-side (the last of these confirms a
+  `user_assets`-style table was clearly intended for holdings). Whether
+  the localStorage-only pages are deliberately client-side for privacy or
+  simply an unfinished migration is a product call, not a code question —
+  left undecided and undocumented-as-a-bug on purpose; don't "fix" it by
+  unilaterally building new schema/RLS without that decision first.
 - `supabase/migrations/` now exists (ordered, Supabase-CLI convention,
   content verified to match the current loose files) but is untested
   against a live database and the 47-tables-in-multiple-files redundancy

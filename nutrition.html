@@ -102,6 +102,12 @@
       <!-- Quick add -->
       <div class="log-form">
         <h3>LOG FOOD ITEM</h3>
+        <div class="section-hd" style="padding-top:0;margin-top:0">SEARCH REAL FOOD DATA &middot; OPEN FOOD FACTS</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <input type="text" id="off-search" placeholder="Search a real food or product, e.g. banana, oat milk..." style="flex:1;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;letter-spacing:1px;padding:7px 10px;border-radius:2px;outline:none">
+          <button type="button" class="log-btn" onclick="searchFood()" id="off-btn">SEARCH</button>
+        </div>
+        <div id="off-results" style="margin-bottom:10px"></div>
         <div class="section-hd" style="padding-top:0;margin-top:0">QUICK ADD</div>
         <div class="quick-food" id="quick-food"></div>
         <div class="form-grid">
@@ -245,6 +251,44 @@ function getDayTotals(entries){
     cal:t.cal+(e.cal||0),pro:t.pro+(e.pro||0),carb:t.carb+(e.carb||0),fat:t.fat+(e.fat||0),fiber:t.fiber+(e.fiber||0)
   }),{cal:0,pro:0,carb:0,fat:0,fiber:0});
 }
+
+function escOFF(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function searchFood(){
+  const q=document.getElementById('off-search').value.trim();
+  const resEl=document.getElementById('off-results');
+  const btn=document.getElementById('off-btn');
+  if(!q){resEl.innerHTML='';return;}
+  btn.disabled=true;btn.textContent='...';
+  resEl.innerHTML='<div style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5)">Searching Open Food Facts&hellip;</div>';
+  fetch('https://world.openfoodfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+'&search_simple=1&action=process&json=1&page_size=8')
+    .then(r=>r.json())
+    .then(data=>{
+      const products=(data.products||[]).filter(p=>p.product_name&&p.nutriments&&p.nutriments['energy-kcal_100g']!=null);
+      if(!products.length){resEl.innerHTML='<div style="font-family:var(--M);font-size:8px;color:rgba(138,134,118,.5)">No results for "'+escOFF(q)+'".</div>';return;}
+      resEl.innerHTML=products.map((p,i)=>{
+        const n=p.nutriments;
+        return '<div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:8px 10px;margin-bottom:5px;cursor:pointer" onclick="fillFoodFromOFF('+i+')" id="off-r-'+i+'">'
+          +'<div style="font-family:var(--M);font-size:9px;color:rgba(201,168,76,.8)">'+escOFF(p.product_name)+(p.brands?' — '+escOFF(p.brands):'')+'</div>'
+          +'<div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:3px">per 100g: '+Math.round(n['energy-kcal_100g']||0)+' kcal · P'+Math.round(n.proteins_100g||0)+'g · C'+Math.round(n.carbohydrates_100g||0)+'g · F'+Math.round(n.fat_100g||0)+'g</div>'
+          +'</div>';
+      }).join('');
+      window.__offResults=products;
+    })
+    .catch(()=>{resEl.innerHTML='<div style="font-family:var(--M);font-size:8px;color:rgba(200,60,60,.6)">Could not reach Open Food Facts — check your connection and try again.</div>';})
+    .finally(()=>{btn.disabled=false;btn.textContent='SEARCH';});
+}
+window.fillFoodFromOFF=function(i){
+  const p=(window.__offResults||[])[i];
+  if(!p)return;
+  const n=p.nutriments;
+  document.getElementById('food-name').value=p.product_name+' (per 100g — adjust for your portion)';
+  document.getElementById('food-cal').value=Math.round(n['energy-kcal_100g']||0);
+  document.getElementById('food-pro').value=Math.round(n.proteins_100g||0);
+  document.getElementById('food-carb').value=Math.round(n.carbohydrates_100g||0);
+  document.getElementById('food-fat').value=Math.round(n.fat_100g||0);
+  document.getElementById('food-fiber').value=Math.round(n.fiber_100g||0);
+};
 
 function logFood(){
   const name=document.getElementById('food-name').value.trim();

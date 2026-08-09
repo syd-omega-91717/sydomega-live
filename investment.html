@@ -117,8 +117,14 @@
       </div>
       <div class="form-row">
         <div class="form-group"><label>AVERAGE COST (USD)</label><input type="number" id="h-cost" placeholder="0.00" min="0" step="0.01"></div>
-        <div class="form-group"><label>CURRENT PRICE (USD)</label><input type="number" id="h-price" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="form-group"><label>CURRENT PRICE (USD)</label>
+          <div style="display:flex;gap:6px">
+            <input type="number" id="h-price" placeholder="0.00" min="0" step="0.01" style="flex:1">
+            <button type="button" class="btn-secondary" onclick="fetchLivePrice()" id="live-price-btn" style="white-space:nowrap">LIVE PRICE</button>
+          </div>
+        </div>
       </div>
+      <div id="live-price-msg" style="font-size:10px;color:#666;margin-bottom:10px;font-family:'Courier New',monospace"></div>
       <div class="form-group"><label>NOTES / THESIS (optional)</label><input type="text" id="h-notes" placeholder="Why you hold this..." maxlength="120"></div>
       <div style="display:flex;gap:8px">
         <button class="btn-primary" onclick="saveHolding()">SAVE HOLDING</button>
@@ -234,6 +240,41 @@ function renderHoldings(){
 }
 
 function delHolding(id){if(!confirm('Remove?'))return;holdings=holdings.filter(function(x){return x.id!==id;});save();renderPortfolio();}
+
+function fetchLivePrice(){
+  var ticker=document.getElementById('h-ticker').value.trim();
+  var type=document.getElementById('h-type').value;
+  var msg=document.getElementById('live-price-msg');
+  var btn=document.getElementById('live-price-btn');
+  if(!ticker){alert('Enter a ticker or name first.');return;}
+  if(type!=='crypto'){
+    msg.textContent='Live price lookup currently only covers crypto (via CoinGecko) — no free, keyless real-time stock/ETF price source is wired up, so enter the price manually for this asset type.';
+    return;
+  }
+  btn.disabled=true;btn.textContent='...';msg.textContent='Looking up "'+ticker+'" on CoinGecko...';
+  fetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(ticker))
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var coins=data.coins||[];
+      var match=coins.find(function(c){return c.symbol&&c.symbol.toLowerCase()===ticker.toLowerCase();})||coins[0];
+      if(!match){msg.textContent='No CoinGecko match for "'+ticker+'".';return;}
+      return fetch('https://api.coingecko.com/api/v3/simple/price?ids='+encodeURIComponent(match.id)+'&vs_currencies=usd')
+        .then(function(r){return r.json();})
+        .then(function(priceData){
+          var price=priceData[match.id]&&priceData[match.id].usd;
+          if(price==null){msg.textContent='CoinGecko had no USD price for '+match.name+'.';return;}
+          document.getElementById('h-price').value=price;
+          if(!document.getElementById('h-name').value.trim())document.getElementById('h-name').value=match.name;
+          msg.textContent=match.name+' — live price loaded from CoinGecko: $'+price;
+        });
+    })
+    .catch(function(){
+      msg.textContent='Could not reach CoinGecko — check your connection and try again, or enter the price manually.';
+    })
+    .finally(function(){
+      btn.disabled=false;btn.textContent='LIVE PRICE';
+    });
+}
 
 function saveHolding(){
   var ticker=(document.getElementById('h-ticker').value.trim()||'').toUpperCase();

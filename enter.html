@@ -354,7 +354,7 @@ countdown();
     var headX=(t*.8%1)*W;
     var headY=CY+ecgY(headX,W,t);
     ctx.beginPath(); ctx.arc(headX,headY,3,0,Math.PI*2);
-    ctx.fillStyle='#C9A84C'; ctx.shadowColor='#C9A84C'; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
+    ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'); ctx.shadowColor='#C9A84C'; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
     requestAnimationFrame(frame);
   }
   frame();

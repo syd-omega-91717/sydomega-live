@@ -557,7 +557,7 @@ function drawTrend(logs){
   });
 
   /* legend */
-  ctx.fillStyle='#C9A84C'; ctx.fillRect(W-110,8,14,2);
+  ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'); ctx.fillRect(W-110,8,14,2);
   ctx.fillStyle='rgba(201,168,76,.6)'; ctx.font='7px monospace'; ctx.fillText('VALENCE',W-92,12);
   ctx.fillStyle='#5C8FD6'; ctx.fillRect(W-110,22,14,2);
   ctx.fillStyle='rgba(201,168,76,.6)'; ctx.fillText('ENERGY',W-92,26);

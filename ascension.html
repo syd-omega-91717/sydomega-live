@@ -214,7 +214,7 @@ function drawAuthCanvas(a,b,c,auth){
   var cv=document.getElementById('auth-canvas');if(!cv)return;
   var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#0A0A0F';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
   var vals=[{v:a,c:'#C9A84C',l:'A'},{v:b,c:'#00E5FF',l:'B'},{v:c,c:'#4CAF50',l:'C'},{v:auth,c:'#E2C86D',l:'AUTH'}];
   var bw=60,gap=20,x0=40,yB=H-30;
   vals.forEach(function(d,i){

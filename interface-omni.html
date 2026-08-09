@@ -196,8 +196,8 @@ async function boot(){
   const pr=(await sb.from('profiles').select('is_owner').eq('id',sess.user.id).maybeSingle()).data;
   if(!pr?.is_owner){
     document.getElementById('gate').innerHTML=`
-      <div style="font-size:56px;color:#8B0000">&#937;</div>
-      <div style="font-family:serif;font-size:16px;color:#8B0000;font-weight:700">ACCESS DENIED</div>
+      <div style="font-size:56px;color:var(--crim)">&#937;</div>
+      <div style="font-family:serif;font-size:16px;color:var(--crim);font-weight:700">ACCESS DENIED</div>
       <div style="font-family:monospace;font-size:11px;color:#85837b;line-height:1.7">This section is restricted to the Architect only.<br/>Major Sleiman Youssef Dagher exclusively.</div>
       <a href="/dashboard.html" style="font-family:monospace;font-size:10px;letter-spacing:3px;color:#85837b;margin-top:16px;padding:10px 24px;border:1px solid rgba(201,168,76,.2);text-decoration:none">RETURN TO DASHBOARD</a>`;
     return;

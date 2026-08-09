@@ -430,7 +430,7 @@ function drawTrend(){
     ctx.fillStyle='#555';ctx.font='9px monospace';ctx.textAlign='right';
     ctx.fillText('$'+(maxV/4*j).toFixed(0),pad.l-4,y+3);
   }
-  ctx.strokeStyle='#c9a84c'; ctx.lineWidth=1.5; ctx.beginPath();
+  ctx.strokeStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'); ctx.lineWidth=1.5; ctx.beginPath();
   dayData.forEach(function(v,i){
     var x=pad.l+(i/(days-1))*W2;
     var y=pad.t+H2-(v/maxV)*H2;

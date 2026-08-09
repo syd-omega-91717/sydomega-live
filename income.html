@@ -166,7 +166,7 @@ function buildRevenueChart(){
   ctx.fillStyle=gr;ctx.fill();
   ctx.beginPath();
   data.forEach(function(v,i){var x=padL+i*gW/11,y=padT+gH*(1-v/maxV);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.strokeStyle='#C9A84C';ctx.lineWidth=2;ctx.stroke();
+  ctx.strokeStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.lineWidth=2;ctx.stroke();
   ctx.fillStyle='rgba(133,131,123,.7)';ctx.textAlign='center';
   months.forEach(function(m,i){ctx.fillText(m,padL+i*gW/11,H-8);});
 }

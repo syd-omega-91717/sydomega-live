@@ -666,8 +666,14 @@ function esc(t) {
 function calcStreak() {
   if (!_entries.length) return 0;
   const dates = new Set(_entries.map(e=>e.date));
+  if (window.OmegaStreakFreeze) {
+    window.OmegaStreakFreeze.reconcile('journal', function(k){ return dates.has(k); });
+  }
   let s = 0; const d = new Date();
-  while (dates.has(d.toISOString().slice(0,10))) { s++; d.setDate(d.getDate()-1); }
+  while (dates.has(d.toISOString().slice(0,10)) ||
+         (window.OmegaStreakFreeze && window.OmegaStreakFreeze.isFrozen('journal', d.toISOString().slice(0,10)))) {
+    s++; d.setDate(d.getDate()-1);
+  }
   return s;
 }
 

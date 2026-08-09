@@ -191,6 +191,20 @@
             <div class="cr-val" id="fire-number">—</div>
             <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:6px" id="fire-detail"></div>
           </div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(201,168,76,.12)">
+            <div class="input-row"><label>YEARS TO RETIREMENT</label><input type="number" id="fire-years-to-retire" value="20" oninput="calcFIRE()"></div>
+            <div class="input-row"><label>PART-TIME INCOME AT RETIREMENT ($/yr)</label><input type="number" id="fire-barista-income" value="20000" oninput="calcFIRE()"></div>
+          </div>
+          <div class="calc-result" style="margin-top:10px">
+            <div class="cr-label">COAST FIRE NUMBER</div>
+            <div class="cr-val" id="coast-fire-number">—</div>
+            <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:6px" id="coast-fire-detail"></div>
+          </div>
+          <div class="calc-result" style="margin-top:10px">
+            <div class="cr-label">BARISTA FIRE NUMBER</div>
+            <div class="cr-val" id="barista-fire-number">—</div>
+            <div style="font-family:var(--M);font-size:7.5px;color:rgba(138,134,118,.5);margin-top:6px" id="barista-fire-detail"></div>
+          </div>
         </div>
 
         <!-- Debt Payoff -->
@@ -541,6 +555,32 @@ function calcFIRE(){
   }
   document.getElementById('fire-number').textContent=fmt(fireNum);
   document.getElementById('fire-detail').textContent=years>0?`~${years} years to financial independence`:'Already at FIRE number!';
+
+  // COAST FIRE: the amount that, left untouched, grows to the full FIRE
+  // number by retirement through compounding alone -- reaching it means you
+  // could stop contributing entirely and still retire on time.
+  const yearsToRetire=Math.max(0,parseFloat(document.getElementById('fire-years-to-retire').value)||0);
+  const coastNum=fireNum/Math.pow(1+ret,yearsToRetire);
+  document.getElementById('coast-fire-number').textContent=fmt(coastNum);
+  document.getElementById('coast-fire-detail').textContent = savings>=coastNum
+    ? `Reached — ${fmt(savings-coastNum)} above what's needed to coast`
+    : `${fmt(coastNum-savings)} more needed to stop contributing and still retire on time`;
+
+  // BARISTA FIRE: a smaller portfolio target, since part-time/side income at
+  // retirement covers part of annual expenses -- the withdrawal only needs
+  // to cover the rest.
+  const baristaIncome=Math.max(0,parseFloat(document.getElementById('fire-barista-income').value)||0);
+  const baristaGap=Math.max(0,exp-baristaIncome);
+  const baristaNum=baristaGap/swr;
+  let baristaYears=0;
+  if(savings<baristaNum){
+    const n=Math.log((baristaNum*r+monthly)/(savings*r+monthly))/Math.log(1+r);
+    baristaYears=Math.ceil(n/12);
+  }
+  document.getElementById('barista-fire-number').textContent=fmt(baristaNum);
+  document.getElementById('barista-fire-detail').textContent = baristaIncome>=exp
+    ? 'Part-time income alone covers expenses — Barista FIRE achieved at $0'
+    : (baristaYears>0?`~${baristaYears} years to semi-retirement with part-time income`:'Already at Barista FIRE number!');
 }
 function calcDebt(){
   const D=parseFloat(document.getElementById('debt-amt').value)||0;

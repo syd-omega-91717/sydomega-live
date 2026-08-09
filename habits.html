@@ -294,10 +294,20 @@ function getStreak(habit){
     if(habit.freq==='weekdays'){const dow=d.getDay();if(dow===0||dow===6)continue;}
     if(habit.freq==='weekends'){const dow=d.getDay();if(dow>=1&&dow<=5)continue;}
     const key=habit.freq==='weekly'?weekKey(d):d.toISOString().slice(0,10);
-    if(logs[key]&&logs[key][habit.id]) streak++;
+    const frozen=!!(window.OmegaStreakFreeze&&window.OmegaStreakFreeze.isFrozen(habit.id,key));
+    if((logs[key]&&logs[key][habit.id])||frozen) streak++;
     else break;
   }
   return streak;
+}
+
+function reconcileStreakFreezes(){
+  if(!window.OmegaStreakFreeze) return;
+  const habits=getHabits()||DEFAULTS;
+  const logs=getLogs();
+  habits.forEach(function(h){
+    window.OmegaStreakFreeze.reconcile(h.id, function(key){ return !!(logs[key]&&logs[key][h.id]); });
+  });
 }
 
 function getCompletionRate(habit, days=30){
@@ -323,9 +333,10 @@ function getStreakDots(habit, n=28){
     const d=new Date(today);d.setDate(today.getDate()-i);
     const key=habit.freq==='weekly'?weekKey(d):d.toISOString().slice(0,10);
     const done=!!(logs[key]&&logs[key][habit.id]);
+    const frozen=!done&&!!(window.OmegaStreakFreeze&&window.OmegaStreakFreeze.isFrozen(habit.id,key));
     const skip=habit.freq==='weekdays'&&(d.getDay()===0||d.getDay()===6)||
                habit.freq==='weekends'&&(d.getDay()>=1&&d.getDay()<=5);
-    dots.push({done,skip,isToday:i===0});
+    dots.push({done,frozen,skip,isToday:i===0});
   }
   return dots;
 }
@@ -348,8 +359,9 @@ function renderHabitCard(habit, showAll=false){
       ${showAll?`<button class="del-btn" onclick="event.stopPropagation();deleteHabit('${habit.id}')">✕</button>`:''}
     </div>
     <div class="habit-streak-row">
-      ${dots.map(dot=>`<div class="streak-dot ${dot.isToday?'today':''}" style="background:${dot.skip?'transparent':dot.done?'rgba(201,168,76,.7)':'rgba(201,168,76,.08)'};${dot.skip?'border:none':''}"></div>`).join('')}
+      ${dots.map(dot=>`<div class="streak-dot ${dot.isToday?'today':''}" title="${dot.frozen?'Streak freeze applied':''}" style="background:${dot.skip?'transparent':dot.frozen?'rgba(0,229,255,.55)':dot.done?'rgba(201,168,76,.7)':'rgba(201,168,76,.08)'};${dot.skip?'border:none':dot.frozen?'border:1px solid rgba(0,229,255,.8)':''}"></div>`).join('')}
     </div>
+    ${window.OmegaStreakFreeze?`<div class="hc-freeze-note" style="padding:0 14px 8px;font-family:var(--M);font-size:7px;letter-spacing:1px;color:rgba(0,229,255,.6)">❄ ${window.OmegaStreakFreeze.available(habit.id)} STREAK FREEZE${window.OmegaStreakFreeze.available(habit.id)===1?'':'S'} AVAILABLE</div>`:''}
     <div class="habit-expand">
       <div class="cue-effect-row">
         <div class="cue-box"><div class="cb-label">CUE</div><div class="cb-val">${habit.cue||'—'}</div></div>
@@ -446,12 +458,18 @@ function renderStats(){
 }
 
 function renderAll(){
+  reconcileStreakFreezes();
   renderStats();
   renderTodayList();
   renderAllList();
   renderChain();
   renderHeatmap();
 }
+
+// omega-streak-freeze.js loads deferred via bg.js and may not be ready on
+// first paint; re-render once it lands so frozen days/streaks are correct
+// without waiting for the next user interaction.
+setTimeout(function(){ if(window.OmegaStreakFreeze) renderAll(); }, 900);
 
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));

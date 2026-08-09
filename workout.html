@@ -151,6 +151,7 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="sect-hd">EXERCISES</div>
       <div id="exercises-list"></div>
       <button class="btn-sm" style="width:100%;margin-top:4px;padding:10px" onclick="addExercise()">+ ADD EXERCISE</button>
+      <datalist id="exercise-datalist"></datalist>
     </div>
 
     <div class="form-group">
@@ -238,8 +239,40 @@ let exerCount = 0;
 let restInterval = null;
 let restRemaining = 0;
 
+/* ─── REAL EXERCISE REFERENCE (standard strength-training nomenclature) ─── */
+const EXERCISE_DB = {
+  'Barbell Bench Press':'CHEST','Incline Barbell Bench Press':'CHEST','Decline Bench Press':'CHEST',
+  'Dumbbell Bench Press':'CHEST','Incline Dumbbell Press':'CHEST','Dumbbell Fly':'CHEST',
+  'Cable Crossover':'CHEST','Push-Up':'CHEST','Dip (Chest)':'CHEST','Pec Deck Machine':'CHEST',
+  'Deadlift':'BACK','Conventional Deadlift':'BACK','Romanian Deadlift':'HAMSTRINGS','Sumo Deadlift':'BACK',
+  'Pull-Up':'BACK','Chin-Up':'BACK','Lat Pulldown':'BACK','Barbell Row':'BACK','Pendlay Row':'BACK',
+  'Dumbbell Row':'BACK','T-Bar Row':'BACK','Seated Cable Row':'BACK','Face Pull':'SHOULDERS',
+  'Overhead Press':'SHOULDERS','Barbell Overhead Press':'SHOULDERS','Dumbbell Shoulder Press':'SHOULDERS',
+  'Arnold Press':'SHOULDERS','Lateral Raise':'SHOULDERS','Front Raise':'SHOULDERS','Rear Delt Fly':'SHOULDERS',
+  'Upright Row':'SHOULDERS','Shrug':'SHOULDERS',
+  'Barbell Curl':'BICEPS','Dumbbell Curl':'BICEPS','Hammer Curl':'BICEPS','Preacher Curl':'BICEPS',
+  'Concentration Curl':'BICEPS','Cable Curl':'BICEPS',
+  'Triceps Pushdown':'TRICEPS','Skull Crusher':'TRICEPS','Overhead Triceps Extension':'TRICEPS',
+  'Close-Grip Bench Press':'TRICEPS','Dip (Triceps)':'TRICEPS','Kickback':'TRICEPS',
+  'Back Squat':'QUADS','Front Squat':'QUADS','Goblet Squat':'QUADS','Bulgarian Split Squat':'QUADS',
+  'Leg Press':'QUADS','Leg Extension':'QUADS','Walking Lunge':'QUADS','Hack Squat':'QUADS',
+  'Leg Curl':'HAMSTRINGS','Good Morning':'HAMSTRINGS','Glute-Ham Raise':'HAMSTRINGS','Nordic Curl':'HAMSTRINGS',
+  'Hip Thrust':'GLUTES','Glute Bridge':'GLUTES','Cable Kickback':'GLUTES','Step-Up':'GLUTES',
+  'Plank':'CORE','Hanging Leg Raise':'CORE','Cable Crunch':'CORE','Russian Twist':'CORE',
+  'Ab Wheel Rollout':'CORE','Sit-Up':'CORE','Mountain Climber':'CORE','Dead Bug':'CORE',
+  'Standing Calf Raise':'CALVES','Seated Calf Raise':'CALVES','Donkey Calf Raise':'CALVES'
+};
+
 /* ─── INIT ─── */
-function init(){addExercise();updateMeta();}
+function init(){populateExerciseDatalist();addExercise();updateMeta();}
+
+function populateExerciseDatalist(){
+  var dl=document.getElementById('exercise-datalist');
+  if(!dl||dl.childElementCount) return;
+  Object.keys(EXERCISE_DB).sort().forEach(function(name){
+    var o=document.createElement('option'); o.value=name; dl.appendChild(o);
+  });
+}
 
 /* ─── REST TIMER ─── */
 function startRest(secs){
@@ -265,7 +298,7 @@ function addExercise(){
   var div=document.createElement('div'); div.className='exer-block'; div.id=id;
   div.innerHTML=
     '<div class="exer-top">'+
-      '<div class="exer-name-wrap"><input class="exer-name-input" type="text" placeholder="Exercise name (e.g. Bench Press)"/></div>'+
+      '<div class="exer-name-wrap"><input class="exer-name-input" type="text" list="exercise-datalist" placeholder="Exercise name (e.g. Bench Press)"/></div>'+
       '<select class="exer-muscle">'+MUSCLES.map(function(m){return'<option>'+m+'</option>';}).join('')+'</select>'+
     '</div>'+
     '<table class="sets-table">'+
@@ -279,6 +312,12 @@ function addExercise(){
     '<input class="exer-notes" type="text" placeholder="Notes: form cues, variations, RPE..."/>';
   list.appendChild(div);
   addSet(id); addSet(id); addSet(id);
+  var nameInput=div.querySelector('.exer-name-input');
+  var muscleSelect=div.querySelector('.exer-muscle');
+  nameInput.addEventListener('input',function(){
+    var match=EXERCISE_DB[nameInput.value.trim()];
+    if(match) muscleSelect.value=match;
+  });
 }
 
 function addSet(exId){

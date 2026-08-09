@@ -387,6 +387,9 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* ===== PROGRESSION BRIDGE -- every system advances the matrix the same way ===== */
 (function(){if(!document.querySelector('script[data-omega-progress]')){var s=document.createElement('script');s.src='/omega-progress.js';s.setAttribute('data-omega-progress','1');if(document.body)document.body.appendChild(s);}})();
 
+/* ===== STREAK FREEZE -- grace-day forgiveness for the local streak pages ===== */
+(function(){if(!document.querySelector('script[data-omega-streak-freeze]')){var s=document.createElement('script');s.src='/omega-streak-freeze.js';s.setAttribute('data-omega-streak-freeze','1');if(document.body)document.body.appendChild(s);}})();
+
 /* ===== GEOMETRIC SYSTEM -- one spacing scale + canonical grid widths ===== */
 (function(){if(!document.querySelector('script[data-omega-geometry]')){var s=document.createElement('script');s.src='/omega-geometry.js';s.setAttribute('data-omega-geometry','1');if(document.body)document.body.appendChild(s);}})();
 

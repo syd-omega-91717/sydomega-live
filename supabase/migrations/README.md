@@ -480,3 +480,31 @@ None of these three have been applied to any live database from this
 session — no session in this project's history has held live Supabase
 credentials. Applying them (`supabase db push`, or pasting each file into
 the Supabase SQL editor) is still an owner action.
+
+## `0092`: populate `notifications` on the five member-status RPCs
+
+`0091` added the `public.notifications` table, but nothing anywhere
+inserted a row into it — CLAUDE.md flagged this explicitly as separate,
+undone-on-purpose work ("deciding which server-side events should
+generate one is separate... work"). Added
+`0092_omega_notify_triggers.sql`: `CREATE OR REPLACE` on the five
+existing owner-gated member-status RPCs (`approve_member`,
+`grant_permanent_access`, `reject_member`, `revoke_member`,
+`extend_trial`), each otherwise byte-for-byte unchanged, with one
+`INSERT INTO public.notifications` added before the `RETURN`. No new
+business logic invented — these are the only events in the codebase that
+are both already fully defined and unambiguous about who should be
+notified and why. The `user_assets` population question (mission
+outcomes, trade, sovereign grants) remains intentionally undone, since
+none of those trigger events exist yet in this codebase.
+
+Validated end-to-end against a locally spun-up throwaway PostgreSQL 16
+instance (not the real project): a minimal schema stub
+(`profiles`/`notifications`/`is_platform_owner()`/`trial_length()`/
+`auth.uid()`) confirmed the file applies with zero errors, all five
+functions execute and return their expected `jsonb`, each call inserts
+exactly the intended `notification_type`/`message` row, and the existing
+`is_platform_owner()`-false ("forbidden") short-circuit still returns
+before any insert. Discarded after validation — this did not touch any
+real project data. `supabase/migrations/` now contains **92 files**
+(`0001`–`0092`). Not yet applied to any live database.

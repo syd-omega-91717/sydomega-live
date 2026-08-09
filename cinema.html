@@ -46,6 +46,7 @@
   <button class="tab-btn active" onclick="setTab('films')">ALL FILMS</button>
   <button class="tab-btn" onclick="setTab('olympians')">BY OLYMPIAN</button>
   <button class="tab-btn" onclick="setTab('elements')">BY ELEMENT</button>
+  <button class="tab-btn" onclick="setTab('mythology')">REAL MYTHOLOGY</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
@@ -115,6 +116,12 @@
   </div>
 </div>
 
+<div class="tab-panel" id="tab-mythology">
+  <div class="sechead">THE REAL OLYMPIANS &middot; SOURCED LIVE FROM WIKIPEDIA</div>
+  <div style="font-size:11px;line-height:1.7;color:var(--muted);margin-bottom:14px;max-width:640px">Every film above is fronted by a real Greek god. This tab is the non-fiction companion — genuine mythology, fetched live from Wikipedia (no login, no key), not sovereign-universe lore. Click a name to load its real summary.</div>
+  <div class="olym-grid" id="myth-grid"></div>
+</div>
+
 <div class="tab-panel" id="tab-science">
   <div class="sechead">CINEMA ARCHITECTURE</div>
   <div class="card-grid">
@@ -129,8 +136,59 @@
 
 <script>
 function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['films','olympians','elements','science'][i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['films','olympians','elements','mythology','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  if(name==='mythology')buildMythGrid();
+}
+
+var REAL_OLYMPIANS=[
+  {name:'Ares',epithet:'God of War',col:'#E86A3A',film:'War Sovereign · Film I'},
+  {name:'Aphrodite',epithet:'Goddess of Love',col:'#9B6BF0',film:'Love Sovereign · Film II'},
+  {name:'Hermes',epithet:'Messenger of the Gods',col:'#00E5FF',film:'Messenger Sovereign · Film III'},
+  {name:'Artemis',epithet:'Goddess of the Hunt',col:'#3fb27f',film:'Hunt Sovereign · Film IV'},
+  {name:'Apollo',epithet:'God of Light',col:'#E2C86D',film:'Light Sovereign · Film V'},
+  {name:'Athena',epithet:'Goddess of Wisdom',col:'#C9A84C',film:'Wisdom Sovereign · Film VI'},
+  {name:'Hera',epithet:'Queen of Olympus',col:'#9B6BF0',film:'Queen Sovereign · Film VII'},
+  {name:'Demeter',epithet:'Goddess of Earth',col:'#3fb27f',film:'Earth Sovereign · Film VIII'},
+  {name:'Zeus',epithet:'King of the Gods',col:'#E2C86D',film:'Thunder Sovereign · Film IX'},
+  {name:'Hestia',epithet:'Goddess of the Hearth',col:'#E86A3A',film:'Hearth Sovereign · Film X'},
+  {name:'Hephaestus',epithet:'God of the Forge',col:'#C9A84C',film:'Forge Sovereign · Film XI'},
+  {name:'Poseidon',epithet:'God of the Sea',col:'#00E5FF',film:'Ocean Sovereign · Film XII'}
+];
+var mythGridBuilt=false;
+function buildMythGrid(){
+  if(mythGridBuilt)return;
+  mythGridBuilt=true;
+  var grid=document.getElementById('myth-grid');
+  grid.innerHTML=REAL_OLYMPIANS.map(function(g,i){
+    return '<div class="olym-card" style="--oc:'+g.col+'">'
+      +'<div class="olym-god">'+g.name.toUpperCase()+' &middot; '+g.epithet.toUpperCase()+'</div>'
+      +'<div class="olym-sign">Fronts: '+g.film+'</div>'
+      +'<div id="myth-body-'+i+'" style="margin-top:8px">'
+      +'<button class="film-tag" style="cursor:pointer;background:none" onclick="loadMyth('+i+')">LOAD REAL SUMMARY (WIKIPEDIA)</button>'
+      +'</div></div>';
+  }).join('');
+}
+function loadMyth(i){
+  var g=REAL_OLYMPIANS[i];
+  var el=document.getElementById('myth-body-'+i);
+  el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING&hellip;</span>';
+  fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(g.name)+'_(mythology)')
+    .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
+    .catch(function(){
+      return fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(g.name))
+        .then(function(r){if(!r.ok)throw new Error('not found');return r.json();});
+    })
+    .then(function(data){
+      var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(g.name));
+      el.innerHTML='<div style="font-size:11px;line-height:1.7;color:var(--ink);opacity:.85">'+extract+'</div>'
+        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:8px">READ FULL ARTICLE ON WIKIPEDIA &#x2192;</a>';
+    })
+    .catch(function(){
+      el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--crim)">Could not reach Wikipedia — check your connection and try again.</span>'
+        +'<div style="margin-top:6px"><button class="film-tag" style="cursor:pointer;background:none" onclick="loadMyth('+i+')">RETRY</button></div>';
+    });
 }
 </script>
 <script type="module">

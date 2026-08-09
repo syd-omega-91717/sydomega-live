@@ -90,13 +90,46 @@
       <div class="filter-tag" data-d="science" onclick="setDomFilter('science',this)">SCIENCE</div>
       <div class="filter-tag" data-d="philosophy" onclick="setDomFilter('philosophy',this)">PHILOSOPHY</div>
       <div class="filter-tag" data-d="health" onclick="setDomFilter('health',this)">HEALTH</div>
+      <div class="filter-tag" data-d="trivia" onclick="setDomFilter('trivia',this)">TRIVIA</div>
       <div class="filter-tag" data-d="custom" onclick="setDomFilter('custom',this)">CUSTOM</div>
     </div>
     <div id="questions-list"></div>
   </div>
 
   <div id="tab-add" class="tab-panel">
-    <div class="section-label">ADD QUESTION &amp; ANSWER</div>
+    <div class="section-label">IMPORT REAL TRIVIA &middot; OPEN TRIVIA DB</div>
+    <div style="font-size:11px;color:#888;line-height:1.6;margin-bottom:14px">Pulls real, freely-licensed trivia questions from <a href="https://opentdb.com" target="_blank" rel="noopener" style="color:var(--purple)">Open Trivia DB</a>, a public, community-maintained trivia database (no login, no key). Imported questions are added to your spaced-repetition queue alongside your own.</div>
+    <div class="form-row">
+      <div class="form-group"><label>CATEGORY</label>
+        <select id="triv-cat">
+          <option value="9">General Knowledge</option>
+          <option value="17">Science &amp; Nature</option>
+          <option value="18">Science: Computers</option>
+          <option value="19">Science: Mathematics</option>
+          <option value="20">Mythology</option>
+          <option value="21">Sports</option>
+          <option value="22">Geography</option>
+          <option value="23">History</option>
+          <option value="25">Art</option>
+          <option value="27">Animals</option>
+        </select>
+      </div>
+      <div class="form-group"><label>DIFFICULTY</label>
+        <select id="triv-diff">
+          <option value="">Any</option>
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>NUMBER OF QUESTIONS</label><input id="triv-amount" type="number" min="1" max="50" value="10"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-primary" onclick="importTrivia()" id="triv-btn">FETCH &amp; IMPORT</button>
+    </div>
+    <div id="triv-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0"></div>
+
+    <div class="section-label" style="margin-top:28px">ADD QUESTION &amp; ANSWER</div>
     <div class="form-group"><label>QUESTION</label><textarea id="q-question" placeholder="What is the question?" rows="3"></textarea></div>
     <div class="form-group"><label>ANSWER</label><textarea id="q-answer" placeholder="What is the correct answer?" rows="4"></textarea></div>
     <div class="form-row">
@@ -107,6 +140,7 @@
           <option value="science">Science</option>
           <option value="philosophy">Philosophy</option>
           <option value="health">Health</option>
+          <option value="trivia">Trivia</option>
           <option value="custom">Custom</option>
         </select>
       </div>
@@ -159,7 +193,7 @@ var sessionIdx=0;
 var sessionAnswered=0;
 var sessionCorrect=0;
 var showingAnswer=false;
-var DOMAIN_COLORS={strategy:'#FFD700',finance:'#4CAF50',science:'#00E5FF',philosophy:'#9B6BF0',health:'#FF9800',custom:'#888'};
+var DOMAIN_COLORS={strategy:'#FFD700',finance:'#4CAF50',science:'#00E5FF',philosophy:'#9B6BF0',health:'#FF9800',trivia:'#FF69B4',custom:'#888'};
 var SEEDS=[
   {q:'What is the Rule of 72?',a:'Divide 72 by an annual interest rate to estimate years to double. At 7%: 72÷7 ≈ 10.3 years.',domain:'finance',diff:'easy'},
   {q:'What is the Pareto Principle?',a:'80% of outcomes come from 20% of causes. Apply it to identify the high-leverage 20% of inputs.',domain:'strategy',diff:'easy'},
@@ -310,6 +344,7 @@ function renderQuestions(){
       +'<span>REPS: '+q.repetitions+'</span>'
       +'<span>NEXT: '+q.nextReview+'</span>'
       +(due?'<span style="color:#FF4444">DUE</span>':'')
+      +(q.source?'<span style="color:#666">'+esc(q.source)+'</span>':'')
       +'</div></div>';
   }).join('');
 }
@@ -327,6 +362,45 @@ function addQuestion(){
   document.getElementById('q-question').value='';document.getElementById('q-answer').value='';
   document.getElementById('add-msg').textContent='QUESTION ADDED';
   setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
+}
+
+function decodeEntities(str){
+  var ta=document.createElement('textarea');
+  ta.innerHTML=str;
+  return ta.value;
+}
+
+function importTrivia(){
+  var cat=document.getElementById('triv-cat').value;
+  var diff=document.getElementById('triv-diff').value;
+  var amount=Math.max(1,Math.min(50,parseInt(document.getElementById('triv-amount').value,10)||10));
+  var btn=document.getElementById('triv-btn');
+  var msg=document.getElementById('triv-msg');
+  btn.disabled=true;btn.textContent='FETCHING...';msg.textContent='';
+  var url='https://opentdb.com/api.php?amount='+amount+'&category='+cat+(diff?'&difficulty='+diff:'')+'&type=multiple';
+  fetch(url).then(function(r){return r.json();}).then(function(data){
+    if(data.response_code!==0||!data.results||!data.results.length){
+      msg.textContent='No questions returned — try a different category or fewer questions.';
+      return;
+    }
+    var added=0;
+    data.results.forEach(function(r){
+      var q_text=decodeEntities(r.question);
+      var correct=decodeEntities(r.correct_answer);
+      var incorrect=r.incorrect_answers.map(decodeEntities);
+      var a_text='Correct answer: '+correct+'. (Other options: '+incorrect.join(', ')+')';
+      questions.push({id:uid(),q:q_text,a:a_text,domain:'trivia',diff:r.difficulty||'medium',repetitions:0,interval:1,easiness:2.5,nextReview:today(),source:'Open Trivia DB · '+decodeEntities(r.category)});
+      added++;
+    });
+    save();
+    msg.textContent=added+' REAL TRIVIA QUESTIONS IMPORTED';
+    renderStats();
+    setTimeout(function(){msg.textContent='';},3500);
+  }).catch(function(){
+    msg.textContent='Could not reach Open Trivia DB — check your connection and try again.';
+  }).finally(function(){
+    btn.disabled=false;btn.textContent='FETCH & IMPORT';
+  });
 }
 
 function loadSeedQuestions(){

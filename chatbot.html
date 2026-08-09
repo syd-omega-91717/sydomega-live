@@ -153,10 +153,12 @@ window.sendChatMessage=async function(){
       message:q,
       context:{sign:_profile.sign||'unknown',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4),tier:_profile.subscription_tier||'free',rank:_profile.rank||'—'}
     }});
-    if(r.data&&r.data.reply)reply=r.data.reply;
-  }catch(e){reply='The Concierge is temporarily unavailable. Please try again shortly.';}
+    if(r.error) throw r.error;
+    reply=(r.data&&r.data.reply)||'';
+  }catch(e){}
+  if(!reply) reply='The Concierge is temporarily unavailable. Please try again shortly.';
   if(typingEl)typingEl.remove();
-  if(reply){_history.push({role:'assistant',content:reply});addMsg('ai',reply);}
+  _history.push({role:'assistant',content:reply});addMsg('ai',reply);
 };
 
 (async function(){

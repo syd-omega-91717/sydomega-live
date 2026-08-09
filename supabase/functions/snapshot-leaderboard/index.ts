@@ -52,9 +52,33 @@ Deno.serve(async (req) => {
     return json({ enabled: false, message: "snapshot-leaderboard not configured." }, 200);
   }
 
-  // Require caller to be authenticated (owner or service role)
-  const authHeader = req.headers.get("Authorization");
-  if (!authHeader) return json({ error: "unauthorized" }, 401);
+  // Require caller to be authenticated as the owner, or be the scheduled cron
+  // job calling with the service_role key directly. The previous check only
+  // verified an Authorization header was present -- not that it was valid or
+  // belonged to the owner -- so any authenticated member could trigger this.
+  const authHeader = req.headers.get("Authorization") || "";
+  const bearer = authHeader.replace(/^Bearer\s+/i, "");
+  if (!bearer) return json({ error: "unauthorized" }, 401);
+
+  const isServiceCall = bearer === serviceKey;
+  if (!isServiceCall) {
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+    try {
+      const callerClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: u } = await callerClient.auth.getUser();
+      if (!u?.user) return json({ error: "unauthorized" }, 401);
+      const { data: callerProfile } = await createClient(supabaseUrl, serviceKey)
+        .from("profiles")
+        .select("is_owner")
+        .eq("id", u.user.id)
+        .single();
+      if (!callerProfile?.is_owner) return json({ error: "owner_only" }, 403);
+    } catch {
+      return json({ error: "unauthorized" }, 401);
+    }
+  }
 
   try {
     const sb = createClient(supabaseUrl, serviceKey);

@@ -7,8 +7,20 @@
   if(window.__omegaProtected) return;
   window.__omegaProtected=true;
 
+  /* Form fields are exempt from the blocks below: select-all, right-click
+     (paste/spell-check), and save are legitimate, expected interactions
+     inside an input/textarea/contenteditable, and blocking them there
+     contradicts this file's own "no legitimate user functionality
+     blocked" goal above. */
+  function isEditable(t){
+    if(!t) return false;
+    var tag=t.tagName;
+    return tag==='INPUT'||tag==='TEXTAREA'||t.isContentEditable;
+  }
+
   /* ── Disable right-click context menu ──────────────────────────── */
   document.addEventListener('contextmenu',function(e){
+    if(isEditable(e.target)) return;
     e.preventDefault();
     return false;
   });
@@ -16,9 +28,10 @@
   /* ── Block select-all / view-source shortcuts ───────────────────── */
   document.addEventListener('keydown',function(e){
     var k=e.key||'';
-    /* Block: Ctrl/Cmd + U (view source), Ctrl+A (select all), 
+    /* Block: Ctrl/Cmd + U (view source), Ctrl+A (select all),
               Ctrl+S (save), F12 (devtools), Ctrl+Shift+I/J/C */
     if(e.ctrlKey||e.metaKey){
+      if(['a','A'].indexOf(k)>-1&&isEditable(e.target)) return;
       if(['u','U','s','S','a','A'].indexOf(k)>-1){
         e.preventDefault(); return false;
       }

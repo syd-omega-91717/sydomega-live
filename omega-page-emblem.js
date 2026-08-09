@@ -72,6 +72,13 @@
   triads:[9,'a','\u25B2'],
   universe:[12,'a','\u2609'],
   wallet:[12,'c','\u25C6'],
+  chronicle:[12,'a','\u21BB'],
+  'design-system':[9,'b','\u25EB'],
+  maintenance:[9,'b','\u2699'],
+  roadmap:[12,'a','\u2316'],
+  series:[12,'b','\u25B6'],
+  trailers:[12,'b','\u25B6'],
+  vault:[12,'c','\u25C6'],
 };
   var AXIS_COL = { a:'#00E5FF', b:'#C9A84C', c:'#3fb27f' };
 

@@ -225,18 +225,8 @@ signatures that actually differ across files** (not just whitespace) — most ar
 `grant_permanent_access`/`sync_platform_owner` — a hardening inconsistency worth closing but not
 a functional bug), but three are real:
 
-| Function | Divergence | Consequence if the "wrong" file was applied last |
-|---|---|---|
-| `is_platform_owner()` | 8 files check `EXISTS (SELECT 1 FROM platform_owners WHERE user_id=auth.uid())`; 3 files (`chunk_02a_migrations.sql` ×2, `chunk_04_migrations.sql`, `chunk_07_migrations.sql`) instead check `profiles.is_owner`. **This is the single most security-critical function in the schema** — every RLS policy and every `SECURITY DEFINER` guard fixed in this pass (§0, §1) calls it. If the `profiles.is_owner`-checking version is what's actually live, then owner status is determined by that column rather than the `platform_owners` table, and the two are only guaranteed to agree if `sync_platform_owner()`'s trigger (itself also duplicated, `chunk_02b_migrations.sql`/`chunk_08_migrations.sql`/`migration_runner.sql`/`omega_master_deploy.sql`) is correctly firing on every relevant write. **Already flagged and partially mitigated by a prior session**: `supabase/0003_privilege_lockdown.sql` (see §0) independently found this exact ambiguity ("not yet settled which one is authoritative... D-012") and wrote `omega_is_owner()` as a defensive OR of both checks, but `omega_is_owner()` is only used by the three functions §0 covers — every *other* `SECURITY DEFINER` function and RLS policy in the schema still calls the ambiguous `is_platform_owner()` directly. |
-| `my_matrix()` | `chunk_03_migrations.sql`/`migration_runner.sql` (first def): `RETURNS TABLE(track,sign,element,a,b,c,node,pct)` — no `phase` column, reads `matrix_progress`. `chunk_08_migrations.sql`/`migration_runner.sql` (second def): `RETURNS TABLE(track,phase,sign,element,a,b,c,authority,node,pct)` — has `phase`, reads `profiles.matrix_track`/`matrix_phase` directly. **`matrix.html:609` filters `r.phase===1`** — if the no-`phase` version is what's live, `r.phase` is always `undefined`, the filter always excludes every row, and the Phase 1 panel is permanently empty for every member regardless of real progress. Not fixed client-side: which representation is canonical (per-track vs. per-phase progression) is a data-model decision, not a bug fix — see recommendation below. |
-| `complete_task(...)` | Two versions with the *same* argument types (`text,text,text,text,numeric`) but *different* parameter names — `(p_kind,p_task,p_axis,p_title,p_weight)` vs. `(p_task_name,p_task_type,p_axis_type,p_description,p_points)`. Same type signature means `CREATE OR REPLACE` replaces one with the other in-place (no coexisting overload) — but PostgREST's RPC calls use named JSON parameters, so `publishing.html`'s call (`{p_kind:'contribution',p_task:...}`) only succeeds if the matching-named version is what's live; otherwise it fails silently (already wrapped in try/catch, so the only symptom is the "+0.25 Contribution axis" bonus message never appearing) |
-| `apply_subscription(...)` | One version takes 5 params, another takes 7 (2 extra `DEFAULT NULL`). **Different arity means these are two distinct overloaded functions in Postgres, not a replace-in-place — both can exist simultaneously.** `supabase/functions/stripe-webhook/index.ts` always calls with exactly the 5 mandatory named params. If both overloads exist live, Postgres cannot disambiguate a 5-named-argument call between "the 5-arg function" and "the 7-arg function using its 2 defaults" and raises `42725 function ... is not unique` — every Stripe webhook call (checkout completed, subscription updated/deleted, payment failed) would fail, meaning **a member who successfully paid via Stripe would never have `subscription_status` set to `active`, i.e. paying and getting access could silently decouple.** Both versions correctly check `is_platform_owner()`/`service_role` — this is not a privilege-escalation risk, purely an availability one. Not fixed: cannot tell from source alone whether both overloads coexist live (that requires a `pg_proc` query against the real database), and consolidating requires knowing which of `subscription_period_start`/`p_tier_num` the owner actually wants going forward — a real schema decision, not a client bug. |
-
-**Not fixed** (unlike `trial_access.sql` in §0, these three are not "one file everyone else
-agrees against" — they're genuine, live forks where I cannot determine from source alone which
-side is deployed, and picking one to delete without that knowledge risks breaking whichever
-side turns out to be live). **Owner action, highest priority after applying the pending SQL in
-§2:** run this against the live database to see which side actually won for each:
+**Resolved this session** — the owner ran the `pg_proc` verification query below against the
+live database and pasted the results back:
 
 ```sql
 select proname, pg_get_function_identity_arguments(oid) as args,
@@ -247,10 +237,18 @@ where pronamespace = 'public'::regnamespace
 order by proname, args;
 ```
 
-If `apply_subscription` returns more than one row, that alone confirms the overload-ambiguity
-risk is live and payments are at risk — collapse to one signature immediately. For the other
-three, the query result determines which SQL files are now safe to delete/consolidate as the
-stale duplicate.
+| Function | What's actually live | Outcome |
+|---|---|---|
+| `is_platform_owner()` | Only the `platform_owners`-table-checking version — the 3 files checking `profiles.is_owner` instead (`chunk_02a_migrations.sql` ×2, `chunk_04_migrations.sql`, `chunk_07_migrations.sql`) never won. | **Non-issue, confirmed.** No fix needed. Those 3 files remain a latent risk only if ever re-run standalone (they'd overwrite the correct live version with `CREATE OR REPLACE`) — not urgent since nothing in this repo's normal flow re-runs them, but worth deleting/neutralizing in a future housekeeping pass. |
+| `my_matrix()` | Only the version *with* `phase` (`RETURNS TABLE(track,phase,sign,element,a,b,c,authority,node,pct)`). | **Non-issue, confirmed.** Matches what `matrix.html:609`'s `r.phase===1` filter needs — the Phase 1 panel is not broken. |
+| `complete_task(...)` | Only `(p_task_name,p_task_type,p_axis_type,p_description,p_points)` — but every client call site (`omega-matrix.js`, `omega-workflow.js` ×2, `omega-progress.js`, `publishing.html`) used the other, non-live naming (`p_kind`/`p_task`/`p_axis`/`p_title`/`p_weight`). | **Real, confirmed, fixed.** Reproduced in a scratch PostgreSQL 16 instance using the live function body: the old param names raise `function ... does not exist` — every task completion, axis increment, authority update, and `nodes_earned` count has been silently failing platform-wide (not just publishing.html's bonus message as originally guessed), all 5 call sites swallow the error via try/catch. Fixing the param names alone would have exposed a second, previously-inert bug found in the same pass: the live function has **no deduplication** despite `omega-progress.js`'s own header comment and `publishing.html`'s copy both promising "keyed on (user, task)" / "farm-proof" — reproduced by calling twice with the same `task_name` and getting two separate axis increments. Both fixed together in `supabase/omega_complete_task_dedup_fix.sql` (`migrations/0094`): added the `(user_id, task_name)` dedup check plus a supporting index, and an `applied` boolean in the return so the 3 call sites that already read `d.applied` finally get a real value. Client-side param names fixed in the same commit across all 5 call sites; `omega-matrix.js` also had its own bug reading `d.a`/`d.b`/`d.c` from a return shape that has always been `d.axis_a`/`d.axis_b`/`d.axis_c` — fixed alongside. Re-verified end-to-end against the fixed function in a fresh scratch instance: first call on a task applies, an identical repeat call is a no-op, a different task still applies. |
+| `apply_subscription(...)` | **Both** the 5-arg and 7-arg overloads are live simultaneously. | **Real, confirmed, fixed — was actively breaking every payment.** Reproduced in a scratch instance using both live function bodies verbatim: the exact 5-named-arg call `supabase/functions/stripe-webhook/index.ts` makes on every webhook event raises `function ... is not unique` — meaning every Stripe webhook call has been failing on production right now, so a member who pays never gets `subscription_status` set to `active`. The 7-arg overload turned out to be independently broken too (not just an ambiguity risk): `membership_tier = COALESCE(p_tier_num, membership_tier)` fails with `COALESCE types integer and text cannot be matched`, since `profiles.membership_tier` is `text` but `p_tier_num` is `integer` — a static type error that fires regardless of the runtime value, so simply dropping the 5-arg overload instead would not have fixed anything. Fixed in `supabase/omega_apply_subscription_fix.sql` (`migrations/0093`): dropped the broken 7-arg overload; the 5-arg one was already correct (nothing in the codebase ever called the 7-arg one with its extra params populated) and is re-verified end-to-end in the scratch instance to update the row and return cleanly with the webhook's exact call. |
+
+Both SQL fixes are written, reproduced against a scratch PostgreSQL 16 instance end-to-end
+(not guessed from source), and applied cleanly to a fresh schema — but **not yet applied to
+the live database**. This is now the single highest-priority pending action in this file:
+production payments and all progression tracking are broken until `migrations/0093` and
+`0094` (or the equivalent flat files) are run.
 
 ### 3.2 `enterprise.html` — pricing display with no purchase flow
 
@@ -445,20 +443,25 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 1. **Apply the patched `supabase/trial_access.sql` to the live database** (§0) — closes a full
    owner-approval bypass, higher priority than anything below since it's a live authorization
    hole, not a missing feature.
-2. **Run the `pg_proc` verification query in §3.1** against the live database to determine
-   which side of the `is_platform_owner()`/`my_matrix()`/`complete_task()`/`apply_subscription()`
-   forks is actually deployed, then delete the losing/stale copies from the SQL bag. The
-   `apply_subscription` case in particular risks silently breaking Stripe webhook processing if
-   both overloads coexist — worth checking before the other three.
-3. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database** (the corrected
+2. **Apply `supabase/omega_apply_subscription_fix.sql` and
+   `omega_complete_task_dedup_fix.sql`** (`migrations/0093`–`0094`) **to the live database —
+   confirmed actively breaking production right now**, not a risk: every Stripe webhook call
+   is failing (`apply_subscription` overload ambiguity — a paying member never gets activated)
+   and every task-completion/axis-progression call across the entire platform is failing
+   (`complete_task` parameter-name mismatch). Both reproduced and re-verified end-to-end
+   against a scratch PostgreSQL 16 instance this session — see §3.1.
+3. ~~Run the `pg_proc` verification query in §3.1~~ — **done this session**, results in §3.1.
+   `is_platform_owner()` and `my_matrix()` confirmed correct as deployed, no action needed;
+   `complete_task()` and `apply_subscription()` were the real, now-fixed bugs in item 2 above.
+4. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database** (the corrected
    `0092` — see §2's table for why the first attempt failed and what changed). Owner action —
    activates 6 already-built fixes at once.
-4. Authenticate the Supabase MCP server (`claude` → `/mcp` → approve → OAuth) so future
+5. Authenticate the Supabase MCP server (`claude` → `/mcp` → approve → OAuth) so future
    sessions can verify §2/§3.1 directly instead of inferring from client-code reads.
-5. Decide the finance-pages persistence question (§4.2) — product decision, not code.
-6. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
+6. Decide the finance-pages persistence question (§4.2) — product decision, not code.
+7. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
    legal decision, not code.
-7. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
+8. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency (unlike the function duplicates
    in §3.1, these are safe today).
 8. Continue the page-by-page sweep (§5.1) — eight passes done; all three `.innerHTML`

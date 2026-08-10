@@ -341,6 +341,40 @@ orphaned file.
   established convention from the `events.html`/`automation.html`/
   `advertising.html` fixes above.
 
+- **[Fixed, needs deploy — was actively breaking production] Every Stripe webhook call and
+  every task-completion/axis-progression call has been silently failing.** The owner ran a
+  `pg_proc` introspection query against the live database (see `GAP_ANALYSIS.md` §3.1 for the
+  full trace) confirming two real, live bugs, both reproduced and re-verified end-to-end
+  against a scratch PostgreSQL 16 instance before any fix was written:
+  - `public.apply_subscription()` has two overloads live simultaneously (5-arg and 7-arg).
+    `supabase/functions/stripe-webhook/index.ts` always calls with the 5 shared params, which
+    Postgres cannot resolve unambiguously (`function ... is not unique`) — every webhook event
+    (checkout completed, subscription updated/deleted, payment failed) has been failing, so a
+    member who pays via Stripe never gets `subscription_status` set to `active`. The 7-arg
+    overload was independently broken too (`COALESCE(p_tier_num::integer, membership_tier::text)`
+    — a static type mismatch, `profiles.membership_tier` is `text`), so dropping the 5-arg one
+    instead would not have worked. Fixed by dropping the 7-arg overload
+    (`supabase/omega_apply_subscription_fix.sql`, `migrations/0093`).
+  - `public.complete_task()` — only the `(p_task_name,p_task_type,p_axis_type,p_description,
+    p_points)` signature is live, but all 5 client call sites (`omega-matrix.js`,
+    `omega-workflow.js` ×2, `omega-progress.js`, `publishing.html`) used older, non-matching
+    parameter names (`p_kind`/`p_task`/`p_axis`/`p_title`/`p_weight`) — every task completion,
+    axis increment, authority-score update, and `nodes_earned` count has been silently no-oping
+    platform-wide (habits, publishing, workflows, dedication, gaming, academy, exam,
+    contributions), not just one bonus message as originally suspected. Fixing the param names
+    alone would have exposed a second, previously-inert bug in the same function: no
+    deduplication existed despite `omega-progress.js`'s own header comment and
+    `publishing.html`'s copy both promising "keyed on (user, task)" / "farm-proof" behavior —
+    confirmed by calling the live function body twice with an identical task and getting two
+    separate increments. Both fixed together: `supabase/omega_complete_task_dedup_fix.sql`
+    (`migrations/0094`) adds the `(user_id, task_name)` dedup check, a supporting index, and an
+    `applied` boolean in the return value; the 5 client call sites' parameter names are fixed in
+    the same commit, plus `omega-matrix.js`'s separate bug reading `d.a`/`d.b`/`d.c` from a
+    return shape that has always been `d.axis_a`/`d.axis_b`/`d.axis_c`.
+  **Not yet applied to the live database** — this is the top-priority pending action in
+  `GAP_ANALYSIS.md` §6: production payments and all progression tracking stay broken until
+  `migrations/0093` and `0094` (or the equivalent flat files) are run.
+
 ## 9. Working in this repo — practical rules
 
 - Don't introduce a build step or framework migration without discussing

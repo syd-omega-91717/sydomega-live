@@ -508,3 +508,64 @@ exactly the intended `notification_type`/`message` row, and the existing
 before any insert. Discarded after validation — this did not touch any
 real project data. `supabase/migrations/` now contains **92 files**
 (`0001`–`0092`). Not yet applied to any live database.
+
+## `0093`/`0094`: two live-breaking bugs found and fixed via `pg_proc`
+introspection against the real production database
+
+The owner ran the read-only `pg_proc` query `GAP_ANALYSIS.md` §3.1 had been
+asking for (`is_platform_owner`/`my_matrix`/`complete_task`/
+`apply_subscription` — which side of each duplicated-function fork is
+actually live) and pasted the results back. Findings:
+
+- `is_platform_owner()` and `my_matrix()` — only the *correct* version of
+  each is live (`platform_owners`-table-based owner check; the `phase`-
+  including `my_matrix()` that `matrix.html:609`'s `r.phase===1` filter
+  needs). Both concerns in §3.1 are resolved as non-issues — no fix needed,
+  documented in `GAP_ANALYSIS.md`.
+- `apply_subscription()` — **both** the 5-arg and 7-arg overloads are live
+  simultaneously. `complete_task()` — only the
+  `(p_task_name,p_task_type,p_axis_type,p_description,p_points)` version is
+  live, but every client call site uses older, non-matching parameter names.
+  Both reproduced against a scratch PostgreSQL 16 instance using the exact
+  function bodies returned by the live `pg_proc` query (not guessed):
+  `apply_subscription` errors `function ... is not unique` on the exact 5-
+  named-arg call `supabase/functions/stripe-webhook/index.ts` makes on every
+  webhook event; `complete_task` errors `function ... does not exist` on the
+  exact call shape all 5 client call sites use
+  (`omega-matrix.js`/`omega-workflow.js`×2/`omega-progress.js`/
+  `publishing.html`). Net effect confirmed live right now: **every Stripe
+  webhook call fails** (paying members never get activated) and **every
+  task-completion/axis-progression call fails** (habits, publishing,
+  workflows, dedication, gaming, academy, exam, contributions — the entire
+  matrix-progression system has been silently frozen platform-wide).
+
+  Fixing `complete_task`'s parameter names alone, without more, would have
+  newly exposed a third bug the broken calls had been accidentally masking:
+  the live function has no deduplication despite `omega-progress.js`'s own
+  header comment and `publishing.html`'s user-facing copy both promising
+  "keyed on (user, task)" / "farm-proof" behavior — reproduced by calling
+  twice with an identical `task_name` and observing two separate axis
+  increments and two `task_completions` rows. Fixed in the same file: an
+  `EXISTS` check against `task_completions(user_id, task_name)` plus a
+  supporting index, returning `applied:false` on a repeat call — matching
+  what the 3 call sites that already read `d.applied` were always expecting.
+
+  Added `0093_omega_apply_subscription_fix.sql` (drops the broken 7-arg
+  overload; the 5-arg one was already correct) and
+  `0094_omega_complete_task_dedup_fix.sql` (adds the dedup guard, keeps the
+  same signature via `CREATE OR REPLACE` rather than adding a third
+  overload). Both re-verified end-to-end in the scratch instance after the
+  fix: `apply_subscription` resolves and updates the row cleanly with the
+  webhook's exact call; `complete_task`'s first call on a task applies and
+  returns `applied:true`, an immediate repeat call on the same task_name is
+  a no-op returning `applied:false` with unchanged values, and
+  `task_completions` ends up with exactly one row per task. Client-side
+  param-name fixes for the 5 `complete_task` call sites (and 2 related
+  return-field mismatches: `omega-matrix.js` read `d.a`/`d.b`/`d.c` where
+  the live function has always returned `d.axis_a`/`d.axis_b`/`d.axis_c`)
+  shipped in the same commit as these two migrations.
+
+  `supabase/migrations/` now contains **94 files** (`0001`–`0094`). Neither
+  has been applied to the live database yet — this is the single highest-
+  priority pending action: production payments and all progression tracking
+  are broken until these run.

@@ -253,6 +253,14 @@ In commit order, both repos kept in sync throughout:
     tell from source alone which side of each fork is live; left as a prioritized owner action
     with the exact `pg_proc` verification query to run. See `GAP_ANALYSIS.md` §3.1 for full
     detail and the query.
+    **Follow-up (later session):** owner ran the `pg_proc` query and provided results.
+    `is_platform_owner()`/`my_matrix()` confirmed correct as deployed, no fix needed.
+    `complete_task()`/`apply_subscription()` confirmed real and, worse, already live-breaking
+    (every Stripe webhook call and every task-completion call failing in production, not just
+    "could" break) — both reproduced against a scratch PostgreSQL 16 instance and fixed
+    (`supabase/omega_apply_subscription_fix.sql`, `omega_complete_task_dedup_fix.sql`,
+    `migrations/0093`–`0094`, plus the 5 client call sites). Full detail in `GAP_ANALYSIS.md`
+    §3.1 and `CLAUDE.md` §8. Not yet applied to the live database.
 17. Verified `GAP_ANALYSIS.md` §3's open item ("confirm the 3 `DROP TABLE`-containing files
     aren't wired into anything automatic") rather than leaving it as an assumption. All three
     DROPs target only `public.dispatches`, not distinct tables; `chunk_07_migrations.sql`'s is

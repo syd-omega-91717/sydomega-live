@@ -59,15 +59,16 @@ patched file, and ran four scenarios):
 | Member calls `expire_trial(own-uid)` | Succeeds — self-service path preserved | ✅ `access_approved` becomes `false` |
 
 Database dropped after the test; no live credentials were used or required, since the exploit
-and the fix are both provable against a schema-only scratch instance. **Owner action:** none
-required to close the hole — the fix is in the SQL source file itself, so it takes effect the
-next time `trial_access.sql` (or the whole bag) is applied to the live database, same as any
-other pending SQL in §2. If this file was *ever* applied to the live production database in its
-original unguarded form — worth checking `select * from public.access_grant_audit order by
+and the fix are both provable against a schema-only scratch instance. **Applied to the live
+database and verified this session** — `scripts/verify_fixes.sql` confirmed
+`grant_permanent_access`'s live body now contains the `is_platform_owner()` guard. The hole is
+closed. Whether this file was *ever* applied to production in its original unguarded form
+before this fix — worth checking `select * from public.access_grant_audit order by
 occurred_at desc;` and cross-referencing `select id, display_name, access_approved, is_trial,
 created_at from public.profiles where access_approved=true order by created_at desc;` for any
 approved member the owner doesn't remember approving, per `0003_privilege_lockdown.sql`'s own
-verification section, which applies identically here.
+verification section, which applies identically here — remains open and worth a look, since
+verifying the *current* guard says nothing about what may have happened before it existed.
 
 ## 1. P0 — Security (all fixed in code this session)
 
@@ -182,29 +183,39 @@ eight session-level passes now (this one covering three `.innerHTML`-shape sub-w
 silent-failure checks, and this session's `.concat()`-shape pass plus the extended
 `omega-*.js` module trace) cover a growing subset, not an exhaustive one — see §5.1.
 
-## 2. P0/P1 — Data integrity: fixed in code, not applied to a live database
+## 2. P0/P1 — Data integrity: fixed in code, applied to the live database and verified
+
+The owner applied every file in this section to the live database, then ran
+`scripts/verify_fixes.sql` (added this session) against it, which confirmed each one directly
+via `information_schema`/`pg_proc` — not inferred from "no rows returned." One real gap the
+verification caught: `extend_trial` initially lacked its notification-insert (an older copy of
+the function had won a run-order race against `omega_notify_triggers.sql`); re-running
+`omega_notify_triggers.sql` once more, last, fixed it — confirmed via a follow-up query. That's
+the concrete version of the "whichever file runs last wins" risk this file has warned about —
+worth remembering for any future SQL applied outside a strict, deliberate order.
 
 | Gap | Evidence | Fix location | Live DB status |
 |---|---|---|---|
-| `public.notifications` table missing | `omega-notify.js` (platform-wide via `bg.js`) queries it; no `CREATE TABLE` existed anywhere | `supabase/omega_notifications_fix.sql`, `migrations/0091` | **Not applied** |
-| `public.user_assets` table missing | `portfolio.html`/`vault.html` query it; no `CREATE TABLE` existed anywhere | `supabase/omega_user_assets_fix.sql`, `migrations/0089` | **Not applied** |
-| `extend_trial` RPC missing | `approvals.html`'s extend button calls it; function never existed | `supabase/omega_extend_trial_fix.sql`, `migrations/0090` | **Not applied** |
-| `notifications` table never populated | Table existed (once applied) but nothing inserted a row | `supabase/omega_notify_triggers.sql`, `migrations/0092` (5 RPCs now insert on event) | **Attempted, fixed, not yet re-applied.** First run against the live database hit `42P13: cannot change return type of existing function` on `grant_permanent_access` — the live DB already had a version of that function (from `trial_access.sql`, see §0) returning `void`, not the `jsonb` this file assumed, and `CREATE OR REPLACE FUNCTION` cannot change a return type. Fixed by adding the same dynamic drop-prior-versions block `omega_access_control.sql` already uses for exactly this scenario (looks up each of the 5 functions' actual current signature via `pg_proc` and drops it before redefining). Reproduced the exact production error first in a throwaway local PostgreSQL 16 instance (stubbed a `boolean`-returning `grant_permanent_access`, confirmed the unfixed file hits `42P13` there too), then confirmed the fixed file resolves it cleanly and all 5 functions plus their notification inserts work correctly. Corrected file delivered; not yet re-run against the live database. |
+| `public.notifications` table missing | `omega-notify.js` (platform-wide via `bg.js`) queries it; no `CREATE TABLE` existed anywhere | `supabase/omega_notifications_fix.sql`, `migrations/0091` | **Applied, verified** |
+| `public.user_assets` table missing | `portfolio.html`/`vault.html` query it; no `CREATE TABLE` existed anywhere | `supabase/omega_user_assets_fix.sql`, `migrations/0089` | **Applied, verified** |
+| `extend_trial` RPC missing | `approvals.html`'s extend button calls it; function never existed | `supabase/omega_extend_trial_fix.sql`, `migrations/0090` | **Applied, verified** |
+| `notifications` table never populated | Table existed (once applied) but nothing inserted a row | `supabase/omega_notify_triggers.sql`, `migrations/0092` (5 RPCs now insert on event) | **Applied, verified — required a second run.** First live attempt hit `42P13: cannot change return type of existing function` on `grant_permanent_access` (fixed by adding a dynamic drop-prior-versions block, see prior entry in this file's history). After that fix was applied, `extend_trial` specifically still lacked the notification insert — a per-function check (`pg_get_functiondef(oid) ilike '%insert into public.notifications%'`) showed the other 4 functions had it but `extend_trial` didn't, meaning something else with its own copy of `extend_trial` ran after this file. Re-running `omega_notify_triggers.sql` once more (idempotent, safe) fixed it; re-verified via the same per-function query, now all 5 pass. |
 | Authority History chart queried wrong table | `omega-chart.js` queried nonexistent `authority_snapshots`; real table is `leaderboard_snapshots` | Table name corrected in `omega-chart.js` directly | N/A — no schema change needed, fix is live in code |
-| `consult_requests` missing 3 columns `consultancy.html` sends | Form sends `{domain,contact,preferred_time,brief}`; table only had `domain`/`message`/`urgency`/`commission_rate`/`confidentiality_accepted` — every submission errored, booking flow fully non-functional | `supabase/omega_consult.sql`, `migrations/0013` (non-destructive `ALTER ADD COLUMN`) | **Not applied** |
+| `consult_requests` missing 3 columns `consultancy.html` sends | Form sends `{domain,contact,preferred_time,brief}`; table only had `domain`/`message`/`urgency`/`commission_rate`/`confidentiality_accepted` — every submission errored, booking flow fully non-functional | `supabase/omega_consult.sql`, `migrations/0013` (non-destructive `ALTER ADD COLUMN`) | **Applied, verified** |
 | `access_audit_log` RPC response shape mismatch | Both callers (`approvals.html`, `vault.html`) treated `r.data` as a plain array; the RPC actually returns `{ok, rows:[...]}` (all 3 definitions agree). Result: `vault.html`'s `.slice()` on the object always threw, silently falling back to fabricated demo entries presented as real security log; `approvals.html`'s `!rows.length` on the object always read as empty, showing "NO AUDIT ENTRIES" even when real rows existed. Broken for every caller, including the owner — the RPC's actual intended audience | Both files' client code corrected to read `r.data.rows`; field names remapped to what the RPC actually returns (`action`/`subject`/`actor`, not the imagined `event`/`event_type`/`status`/`user_id`) | N/A — no schema change needed, both fixes are pure client-code, live the moment deployed |
 | `error_summary` RPC — same response-shape bug as `access_audit_log` | Same `{ok,rows:[...]}` wrapper convention (all 3 definitions agree), same wrong assumption in `approvals.html`'s error-monitor panel (`r.data\|\|[]`) — always showed "NO CLIENT ERRORS RECORDED" regardless of real content; also referenced a `row.count` field the RPC doesn't return (real field is `hits`) | Corrected to `r.data.rows`, field name `hits`, and escaped (see §1 — this RPC's data is reachable by unauthenticated `anon` callers via `report_client_error()`) | N/A — pure client-code, live the moment deployed |
 | `my_points_balance` RPC response shape mismatch | Returns `{ok,balance}`; `blockchain.html` did `Number((await sb.rpc(...)).data).toFixed(0)` — `Number()` on an object is `NaN`, so the Ω points balance display always showed "Ω NaN" regardless of the member's real balance | `blockchain.html` corrected to read `.data.balance` | N/A — pure client-code, live the moment deployed |
 
-**Owner action required:** apply `supabase/migrations/0013` and `0089`–`0092` (the corrected
-`0092`, see above) via `supabase db push` or the Supabase SQL editor — this activates six
-already-written, already-validated fixes at once. **Higher priority than all of these: apply
-the patched `supabase/trial_access.sql` (§0)** — unlike the others, this isn't adding something
-missing, it's closing a full owner-approval bypass that may already be live if this file (in
-its original unguarded form) was ever applied to the production database. Not yet added to
-`supabase/migrations/` as a numbered file — fixed in place since the bug is in this specific
-file's own logic, not a missing-schema gap needing a new file, matching how `0003_privilege_lockdown.sql`
-fixed the other 7 copies of these same functions in place.
+**Also applied and verified this session (not previously tracked in this table):**
+`supabase/omega_apply_subscription_fix.sql`/`migrations/0093` and the amended
+`omega_complete_task_dedup_fix.sql`/`migrations/0094` (§3.1) — see there for the full
+verification detail, including the `pg_get_function_identity_arguments()` gotcha (it never
+includes `DEFAULT` clauses, so verifying a function's signature must compare bare names/types).
+`supabase/trial_access.sql`'s owner-approval-bypass guard (§0) — confirmed live via
+`pg_get_functiondef(oid) ilike '%is_platform_owner%'` on `grant_permanent_access`.
+
+Every SQL fix tracked in this file has now been applied to the live database and verified —
+none of the previously-"Not applied" items remain outstanding as of this session.
 
 ### 2.1 Still genuinely missing (not fixed — no code exists yet)
 
@@ -267,11 +278,14 @@ order by proname, args;
 | `complete_task(...)` | Only `(p_task_name,p_task_type,p_axis_type,p_description,p_points)` — but every client call site (`omega-matrix.js`, `omega-workflow.js` ×2, `omega-progress.js`, `publishing.html`) used the other, non-live naming (`p_kind`/`p_task`/`p_axis`/`p_title`/`p_weight`). | **Real, confirmed, fixed — plus a fourth bug found on the owner's first live apply attempt.** Reproduced in a scratch PostgreSQL 16 instance using the live function body: the old param names raise `function ... does not exist` — every task completion, axis increment, authority update, and `nodes_earned` count has been silently failing platform-wide (not just publishing.html's bonus message as originally guessed), all 5 call sites swallow the error via try/catch. Fixing the param names alone would have exposed a second, previously-inert bug found in the same pass: the live function has **no deduplication** despite `omega-progress.js`'s own header comment and `publishing.html`'s copy both promising "keyed on (user, task)" / "farm-proof" — reproduced by calling twice with the same `task_name` and getting two separate axis increments. **Then a third, independent bug surfaced when the owner actually ran the fix**: `CREATE INDEX ... (user_id, task_name)` failed with `column "task_name" does not exist` — the owner's live `public.task_completions` table turns out to have an older, simpler shape (`id bigint, user_id, kind, task, completed_at, axis, increment, created_at` — confirmed via `information_schema.columns`) than what the live `complete_task()` function's own `INSERT` statement targets (`task_name`, `task_type`, `axis_type`, `points_earned`, `axis_a_before`, etc.). Multiple `CREATE TABLE IF NOT EXISTS` definitions for this table exist across the SQL bag with genuinely different shapes (`matrix_engine.sql`'s "rich" version vs. `migration_runner.sql`/`omega_backend_sync.sql`/`omega_master_deploy.sql`'s simpler `task`/`kind`-only version) — whichever ran first on the live database won, and it matches neither exactly. Practical consequence, reproduced against a scratch instance seeded with the real reported column list: **`complete_task()` has never actually committed anything for anyone** — since a plpgsql function with no exception handler rolls back its whole body on an unhandled error, even the `profiles.axis_a/b/c`/`authority`/`nodes_earned` update immediately before the failing `INSERT` was always rolled back too. All three fixed together in `supabase/omega_complete_task_dedup_fix.sql` (`migrations/0094`, amended in place after the owner's failed first attempt rather than added as a new file, since nothing from the original attempt had landed): non-destructive `ALTER TABLE ADD COLUMN IF NOT EXISTS` for the missing columns (old `kind`/`task`/`axis`/`increment` columns and any existing rows left untouched), then the `(user_id, task_name)` dedup check plus supporting index, and an `applied` boolean in the return so the 3 call sites that already read `d.applied` finally get a real value. Client-side param names fixed in the same commit across all 5 call sites; `omega-matrix.js` also had its own bug reading `d.a`/`d.b`/`d.c` from a return shape that has always been `d.axis_a`/`d.axis_b`/`d.axis_c` — fixed alongside. Re-verified end-to-end against a scratch instance seeded with the owner's exact real schema: first call on a task applies, an identical repeat call is a no-op, a different task still applies, `profiles` updates correctly. |
 | `apply_subscription(...)` | **Both** the 5-arg and 7-arg overloads are live simultaneously. | **Real, confirmed, fixed — was actively breaking every payment.** Reproduced in a scratch instance using both live function bodies verbatim: the exact 5-named-arg call `supabase/functions/stripe-webhook/index.ts` makes on every webhook event raises `function ... is not unique` — meaning every Stripe webhook call has been failing on production right now, so a member who pays never gets `subscription_status` set to `active`. The 7-arg overload turned out to be independently broken too (not just an ambiguity risk): `membership_tier = COALESCE(p_tier_num, membership_tier)` fails with `COALESCE types integer and text cannot be matched`, since `profiles.membership_tier` is `text` but `p_tier_num` is `integer` — a static type error that fires regardless of the runtime value, so simply dropping the 5-arg overload instead would not have fixed anything. Fixed in `supabase/omega_apply_subscription_fix.sql` (`migrations/0093`): dropped the broken 7-arg overload; the 5-arg one was already correct (nothing in the codebase ever called the 7-arg one with its extra params populated) and is re-verified end-to-end in the scratch instance to update the row and return cleanly with the webhook's exact call. |
 
-Both SQL fixes are written, reproduced against a scratch PostgreSQL 16 instance end-to-end
-(not guessed from source), and applied cleanly to a fresh schema — but **not yet applied to
-the live database**. This is now the single highest-priority pending action in this file:
-production payments and all progression tracking are broken until `migrations/0093` and
-`0094` (or the equivalent flat files) are run.
+Both SQL fixes were reproduced against a scratch PostgreSQL 16 instance end-to-end (not
+guessed from source), then **applied to the live database and verified** via
+`scripts/verify_fixes.sql`: `apply_subscription` has exactly one live version with the correct
+5-arg signature; `complete_task` has the correct signature (`p_task_name text, p_task_type
+text, p_axis_type text, p_description text, p_points numeric` — note
+`pg_get_function_identity_arguments()` never includes `DEFAULT` clauses, an easy false-FAIL if
+you compare against the full `CREATE FUNCTION` text instead of bare names/types) and its dedup
+guard. Production payments and progression tracking are unblocked.
 
 **This finding is now automated** (`scripts/audit.py` checks 7 and 8, added in a later
 session) — every CI run now re-derives, from source, which client-called RPCs have
@@ -473,24 +487,21 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 
 ## 6. Priority-ordered action list
 
-1. **Apply the patched `supabase/trial_access.sql` to the live database** (§0) — closes a full
-   owner-approval bypass, higher priority than anything below since it's a live authorization
-   hole, not a missing feature.
-2. **Apply `supabase/omega_apply_subscription_fix.sql` and
-   `omega_complete_task_dedup_fix.sql`** (`migrations/0093`–`0094`) **to the live database —
-   confirmed actively breaking production right now**, not a risk: every Stripe webhook call
-   is failing (`apply_subscription` overload ambiguity — a paying member never gets activated)
-   and every task-completion/axis-progression call across the entire platform is failing
-   (`complete_task` parameter-name mismatch). Both reproduced and re-verified end-to-end
-   against a scratch PostgreSQL 16 instance this session — see §3.1.
+1. ~~Apply the patched `supabase/trial_access.sql` to the live database~~ — **done this
+   session, verified** (§0). The owner-approval bypass is closed on the live database.
+2. ~~Apply `supabase/omega_apply_subscription_fix.sql` and
+   `omega_complete_task_dedup_fix.sql`~~ — **done this session, verified** (§3.1). Stripe
+   webhook processing and all task-completion/axis-progression tracking are unblocked.
 3. ~~Run the `pg_proc` verification query in §3.1~~ — **done this session**, results in §3.1.
    `is_platform_owner()` and `my_matrix()` confirmed correct as deployed, no action needed;
    `complete_task()` and `apply_subscription()` were the real, now-fixed bugs in item 2 above.
-4. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database** (the corrected
-   `0092` — see §2's table for why the first attempt failed and what changed). Owner action —
-   activates 6 already-built fixes at once.
+4. ~~Apply `supabase/migrations/0013` and `0089`–`0092` to the live database~~ — **done this
+   session, verified** (§2), including a second run of `omega_notify_triggers.sql` after
+   verification caught `extend_trial` missing its notification insert the first time.
 5. Authenticate the Supabase MCP server (`claude` → `/mcp` → approve → OAuth) so future
-   sessions can verify §2/§3.1 directly instead of inferring from client-code reads.
+   sessions can verify directly instead of via a copy-paste-and-report loop with the owner —
+   `scripts/verify_fixes.sql` closes most of the practical gap this created for now, but a
+   live connection remains more robust for anything not already covered by that script.
 6. Decide the finance-pages persistence question (§4.2) — product decision, not code.
 7. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
    legal decision, not code.

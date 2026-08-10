@@ -243,8 +243,12 @@ orphaned file.
   `revoke_member` (the sibling buttons on the same page) all have real
   RPCs already and are unaffected. Added
   `supabase/omega_extend_trial_fix.sql`, matching this function family's
-  existing convention (`omega_access_control.sql`) exactly. **Not yet
-  applied to the live database** — same caveat as `user_assets` below.
+  existing convention (`omega_access_control.sql`) exactly. **Applied to
+  the live database and verified** — `scripts/verify_fixes.sql` confirmed
+  `extend_trial` exists; a follow-up check confirmed it also carries the
+  notification-insert from `omega_notify_triggers.sql` (see below) after
+  a re-run was needed when an older copy of the function briefly won a
+  run-order race against it.
 - **Cross-referenced every `.from('table')`/`.rpc('fn')` call site against
   the schema; two more misses found, deliberately left undone.**
   `subscriptions.html` queries `public.transactions` (payment history) and
@@ -269,10 +273,9 @@ orphaned file.
   empty, with no visible error. Added `supabase/omega_user_assets_fix.sql`
   (idempotent, RLS: read-only for `authenticated` on own rows + owner,
   matching that neither page ever writes to it directly — population is
-  meant to happen server-side). **This session has no live Supabase
-  access, so the file has NOT been run against the database yet** — apply
-  it (`supabase db push` or paste into the SQL editor) before expecting
-  these two pages to show real data.
+  meant to happen server-side). **Applied to the live database and
+  verified** — `scripts/verify_fixes.sql` confirmed `user_assets` now
+  exists.
 - **Finance pages: inconsistent persistence, needs a product decision.**
   `wealth.html`, `wallet.html`, `treasury.html`, `revenue.html`,
   `investment.html`, `expenses.html`, and `budget.html` persist entirely
@@ -333,8 +336,10 @@ orphaned file.
   members read/update only their own rows, owner reads all). Nothing in
   the codebase currently inserts a notification row — deciding which
   server-side events should generate one is separate, undone-on-purpose
-  work, same as `user_assets`'s population. **Not yet applied to the live
-  database.**
+  work, same as `user_assets`'s population. **Applied to the live
+  database and verified** — `scripts/verify_fixes.sql` confirmed
+  `notifications` now exists, and `omega_notify_triggers.sql` (below)
+  confirms the 5 member-status RPCs populate it.
 - **Authority-history chart queried the wrong table — fixed.**
   `omega-chart.js`'s `API.auth()` (used by `analytics.html` and
   `studio.html`'s "Authority History" chart) queried
@@ -396,9 +401,14 @@ orphaned file.
     supporting index, and an `applied` boolean in the return value; the 5 client call sites'
     parameter names are fixed in the same commit, plus `omega-matrix.js`'s separate bug reading
     `d.a`/`d.b`/`d.c` from a return shape that has always been `d.axis_a`/`d.axis_b`/`d.axis_c`.
-  **Not yet applied to the live database** — this is the top-priority pending action in
-  `GAP_ANALYSIS.md` §6: production payments and all progression tracking stay broken until
-  `migrations/0093` and the amended `0094` (or the equivalent flat files) are run.
+  **Applied to the live database and verified.** The owner ran both fix files, then
+  `scripts/verify_fixes.sql` (added this session) against the live database confirmed:
+  `apply_subscription` has exactly one version live with the correct 5-arg signature;
+  `complete_task` has the correct signature (`p_task_name text, p_task_type text, p_axis_type
+  text, p_description text, p_points numeric` — `pg_get_function_identity_arguments()` never
+  includes `DEFAULT` clauses, so compare against bare names/types, not the full `CREATE
+  FUNCTION` text) and its dedup guard; `task_completions` has the columns the function needs.
+  Production payments and progression tracking are unblocked.
 
 ## 9. Working in this repo — practical rules
 

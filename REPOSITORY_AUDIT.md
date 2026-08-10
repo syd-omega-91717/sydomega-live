@@ -122,9 +122,11 @@ framing is therefore only safe relative to a fresh database, not proven safe as 
 what's actually live** — consolidating to one canonical definition per table needs a live
 `information_schema.columns` check per table, not a bulk sweep (`GAP_ANALYSIS.md` §3/§6 item 8).
 Owner-held live Supabase credentials have since been used this session (the `pg_proc`
-verification query in `GAP_ANALYSIS.md` §3.1, and the `task_completions` schema check above)
-but the SQL fix files themselves — `trial_access.sql`, `migrations/0013`, `0089`–`0094` — have
-still not been applied to the live database.
+verification query in `GAP_ANALYSIS.md` §3.1, and the `task_completions` schema check above),
+and as of this session **every SQL fix file — `trial_access.sql`, `migrations/0013`,
+`0089`–`0094` — has been applied to the live database and verified** via the new
+`scripts/verify_fixes.sql` (see `GAP_ANALYSIS.md` §2/§3.1/§6). The 47-duplicate-table
+consolidation itself (§3, item 8 above) remains the one open item in this section.
 
 **Functions are a separate, higher-risk duplication class** — see `GAP_ANALYSIS.md` §3.1:
 unlike tables, `CREATE OR REPLACE FUNCTION` overwrites unconditionally. Confirmed live via the
@@ -303,7 +305,8 @@ In commit order, both repos kept in sync throughout:
     "could" break) — both reproduced against a scratch PostgreSQL 16 instance and fixed
     (`supabase/omega_apply_subscription_fix.sql`, `omega_complete_task_dedup_fix.sql`,
     `migrations/0093`–`0094`, plus the 5 client call sites). Full detail in `GAP_ANALYSIS.md`
-    §3.1 and `CLAUDE.md` §8. Not yet applied to the live database.
+    §3.1 and `CLAUDE.md` §8. **Applied to the live database and verified** this session via
+    `scripts/verify_fixes.sql`.
 17. Verified `GAP_ANALYSIS.md` §3's open item ("confirm the 3 `DROP TABLE`-containing files
     aren't wired into anything automatic") rather than leaving it as an assumption. All three
     DROPs target only `public.dispatches`, not distinct tables; `chunk_07_migrations.sql`'s is
@@ -410,9 +413,9 @@ above every other pending-SQL item.
 | Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor, dormant activity ticker, external RSS feed, dormant notification panel) | 9 pages/vectors found and fixed across the second through eighth waves (§6.1, §6.11, §6.14, §6.15, §6.16, §6.18, §6.20) — `.innerHTML`-interpolation check exhaustive across all four shapes (template-literal, `+`-concatenation, bare-variable, `.concat()` — 82 files) plus `bg.js`-loaded modules (all 93, including the 16 with both `.innerHTML` and `.from()`/`.rpc()` calls individually traced) and external content sources, plus every RPC-consumer on `approvals.html` checked against its actual response shape |
 | Silent-failure writes | Fixed (5 instances across two waves); established convention now checked repo-wide, no new gaps in the fifth-wave sweep |
 | Wrong-table/wrong-shape query (chart, dispatch log, `access_audit_log`, `error_summary`, `my_points_balance`) | 5 instances found and fixed (§6.2, §6.14, §6.15, §6.16) — same bug class each time: client code assumes a response shape the server doesn't return |
-| Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |
-| `notifications` population | Fixed this session (§6.9); production-tested this session (§6.19) — first attempt failed with `42P13`, corrected file **not yet re-applied** |
-| `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
+| Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **applied live and verified** via `scripts/verify_fixes.sql` |
+| `notifications` population | Fixed this session (§6.9); production-tested this session (§6.19) — first attempt failed with `42P13`, corrected file re-applied and verified; a second gap caught by verification (`extend_trial` missing its insert, an older copy had won a run-order race) fixed by re-running once more |
+| `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **applied live and verified** |
 | `owner_apex_lock.sql` dead `nodes_earned` assignment | Fixed this session (§6.12) — owner-run manual script, not auto-applied |
 | SQL schema organization — tables | Needs work — 47 duplicate table defs; "safe, idempotent" only proven true on a fresh database, not against live (§4, `task_completions` counterexample) |
 | **SQL schema organization — functions** | **Found this session (§6.16)** — 10 functions with diverging (not just cosmetic) duplicate definitions, 3 with real behavioral risk including `is_platform_owner()` itself; unsafe (`CREATE OR REPLACE` overwrites unconditionally), needs a live `pg_proc` check — see `GAP_ANALYSIS.md` §3.1 |

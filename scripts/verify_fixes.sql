@@ -21,11 +21,15 @@ with checks as (
     'checks the surviving version takes exactly the 5 params the webhook sends'
 
   -- 2. complete_task: correct signature + dedup logic present
+  -- NOTE: pg_get_function_identity_arguments() never includes DEFAULT
+  -- clauses (they aren't part of a function's "identity" for overload
+  -- resolution) -- compare against names/types only, not defaults, or
+  -- this will always report FAIL even when the function is correct.
   union all
   select 'complete_task: correct signature',
     case when exists (
       select 1 from pg_proc where proname='complete_task' and pronamespace='public'::regnamespace
-        and pg_get_function_identity_arguments(oid) = 'p_task_name text, p_task_type text DEFAULT ''knowledge''::text, p_axis_type text DEFAULT ''a''::text, p_description text DEFAULT NULL::text, p_points numeric DEFAULT 0.001'
+        and pg_get_function_identity_arguments(oid) = 'p_task_name text, p_task_type text, p_axis_type text, p_description text, p_points numeric'
     ) then 'PASS' else 'FAIL' end,
     'checks the live function matches what every page calls'
 

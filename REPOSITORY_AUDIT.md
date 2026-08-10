@@ -94,8 +94,9 @@ is assigned `'identity'` at line 13, then reassigned `'archive'` at line 38, so
 `/profile.html?...#identity`-style pages that used to want the `identity` section highlighted
 in the sidebar now highlight `archive` instead — not necessarily wrong (both may be defensible
 UX choices), but the first assignment's intent is silently lost and undiscoverable without
-reading the whole object. **Not fixed in this pass** (this document is an audit, not a fix
-commit) — tracked as a gap in `GAP_ANALYSIS.md` §4.4.
+reading the whole object. **Fixed in the same session** (§6.10) — removed the 19 dead first
+assignments, verified programmatically to be exactly behavior-preserving (zero change to any
+key's effective value).
 
 ## 6. This session's fix log (all on branch `claude/syd-omega-agent-architecture-clko5e`)
 
@@ -128,10 +129,23 @@ In commit order, both repos kept in sync throughout:
    `revoke_member`, `extend_trial`) now each insert a `public.notifications` row on their
    respective event. Validated end-to-end against a throwaway local PostgreSQL 16 instance
    (not the real project) before being committed — not just syntax-checked.
+10. `nav.js`: removed the 19 dead/overridden `PS` keys found in §5. Verified
+    programmatically (not by inspection) that the fix is exactly behavior-preserving — parsed
+    the effective key→value mapping before and after and confirmed zero changes.
+11. Second-wave page sweep (§5.1's "not yet performed" caveat) — found and fixed 4 more real
+    bugs: stored XSS in `sovereigns.html` (`profiles.sign`, self-updatable, rendered raw via
+    `innerHTML` for every approved member — wider blast radius than the `approvals.html`/
+    `profile.html` fix, since it's visible to the whole membership, not just the owner);
+    `consultancy.html`'s booking form was completely non-functional (`consult_requests` was
+    missing the `contact`/`preferred_time`/`brief` columns the form actually sends — every
+    submission errored); `settings.html`'s background-color save discarded the sync-to-profile
+    result silently; `travel.html` credited progress XP before confirming the journey save
+    succeeded. All fixed; SQL change (`supabase/omega_consult.sql`, `migrations/0013`)
+    validated the same way as item 9.
 
-**None of the SQL additions (items 4, 7, 9) have been applied to any live database.** That
-remains an owner action requiring real Supabase credentials, which no session in this
-project's history has held.
+**None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
+item 11) have been applied to any live database.** That remains an owner action requiring
+real Supabase credentials, which no session in this project's history has held.
 
 ## 7. Summary
 
@@ -140,16 +154,17 @@ project's history has held.
 | Module graph integrity | Clean — 0 critical, CI-enforced |
 | RLS coverage | Clean — 0 tables missing RLS, CI-enforced |
 | Secrets in tracked code | Clean — CI-enforced |
-| Stored XSS (owner admin panels) | Fixed this session |
-| Silent-failure writes | Fixed this session (2 instances); established convention for future ones |
+| Stored XSS (owner admin panels + public leaderboard) | Fixed this session (2 pages/vectors) |
+| Silent-failure writes | Fixed this session (4 instances); established convention for future ones |
 | Wrong-table query (chart) | Fixed this session |
 | Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |
 | `notifications` population | Fixed this session (§6.9); **not applied live** |
+| `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
 | SQL schema organization | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md` |
-| `nav.js` dead-key data quality | New finding (§5) — not fixed, tracked in `GAP_ANALYSIS.md` |
+| `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |
 | Committed binary size (docx/mp4) | Unchanged, non-urgent (see `REPO_AUDIT.md` §2) |
 
 Nothing here is a critical blocker for the app as deployed today. The highest-leverage next
-step is applying the pending SQL (§6 items 4, 7, 9) to the live database — everything else
+step is applying the pending SQL (§6 items 4, 7, 9, 11) to the live database — everything else
 is either already fixed in code, or genuine hygiene debt with no functional impact.

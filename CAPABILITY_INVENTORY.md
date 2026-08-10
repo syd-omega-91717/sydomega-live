@@ -23,8 +23,9 @@ this session — see `GAP_ANALYSIS.md` §2.1, but not yet applied live), `chatbo
 concierge — see §3 Edge Functions), `matrix.html`, `points.html`, `command.html`.
 
 ### IDENTITY — member profile, verification
-`profile.html`, `passport.html`, `kyc.html`, `settings.html`, `character.html`, `agents.html`
-(12-agent roster display), `factions.html`, `pantheons.html`, `houses.html`.
+`profile.html`, `passport.html`, `kyc.html`, `settings.html` ✅ (background-color sync
+silent-failure fixed this session), `character.html`, `agents.html` (12-agent roster
+display), `factions.html`, `pantheons.html`, `houses.html`.
 
 ### ASCEND — progression, learning
 `honors.html` (ascension map + record), `matrix.html` ("The 729"), `academy.html`,
@@ -58,15 +59,20 @@ migration), not a bug to silently "fix" by adding schema.
 
 ### ORDER — family, governance-flavored social structure
 `family.html` (silent-failure writes fixed this session — `REPOSITORY_AUDIT.md` §6.3),
-`bloodline.html`, `heritage.html`, `hall.html`, `sovereigns.html`, `factions.html`,
+`bloodline.html`, `heritage.html`, `hall.html`, `sovereigns.html` ⚠️✅ (public leaderboard —
+stored XSS on `profiles.sign`, visible to every approved member, fixed this session — the
+widest-blast-radius XSS found so far), `factions.html`,
 `city.html`, `approvals.html` ⚠️✅ (owner's member-approval console — stored-XSS fixed this
 session; its five RPCs now populate `public.notifications` as of this session, not yet
 applied live), `interface-omni.html`.
 
 ### SERVICES — consulting, commissions, wellness, events
-`services.html`, `consultancy.html`, `contracts.html`, `publishing.html`, `studio.html`,
+`services.html`, `consultancy.html` ⚠️ (booking form was completely non-functional — table
+missing 3 columns the form sends; fixed in code this session, not yet applied live),
+`contracts.html`, `publishing.html`, `studio.html`,
 `marketing.html`, `news.html`, `social.html`, `events.html` (RSVP write-result checked per
-earlier session fix), `travel.html`, `health.html`.
+earlier session fix), `travel.html` ✅ (progress-credit ordering bug fixed this session),
+`health.html`.
 
 ### INTEL / ARENA — AI, research, automation, governance
 `research.html`, `prediction.html`, `intelligence.html`, `automation.html` (workflow-toggle

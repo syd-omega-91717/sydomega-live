@@ -14,12 +14,15 @@ project's own established convention (security/data-integrity first).
 | Gap | Evidence | Status |
 |---|---|---|
 | Stored XSS in `approvals.html`/`profile.html` | `display_name`/`email` rendered via raw `.innerHTML`; `display_name` is self-updatable by any member (`omega_profile_fields.sql`) | **Fixed** — `esc()` helper added, both files escaped |
+| Stored XSS in `sovereigns.html` | `profiles.sign` (self-updatable, `chunk_02b_migrations.sql`'s per-column GRANT list) queried for every `access_approved` member and rendered raw via `.innerHTML` in two places (table row, throne card) — no `user_id` filter, so reachable by/visible to the whole membership, not just the owner | **Fixed** — `esc()` helper added, both occurrences escaped |
 
-No other unescaped-user-input-into-`.innerHTML` instances were found in the files touched
-this session (`feed.html`, `news.html`, `leaderboard.html`, `nexus.html`, `tribe.html`
-confirmed already using `textContent`/escaping for other-user data in an earlier session's
-sweep, per `CLAUDE.md` §8). A full re-sweep of all 170 pages was not performed in this pass —
-see §5.1.
+No other unescaped-user-input-into-`.innerHTML` instances were found in the files checked
+across both sweeps this session (`feed.html`, `news.html`, `leaderboard.html`, `nexus.html`,
+`tribe.html`, `graph.html`, `map.html`, `sigma.html`, `oracle.html`, `beacon.html`,
+`observatory.html`, `hall.html` all confirmed clean — `textContent`/escaping already used, or
+data is self-scoped, e.g. `family.html`'s `m.sign`/`m.name` reads a private `user_id`-scoped
+table, not other members' data). A full re-sweep of all 170 pages still has not been
+performed — two passes covering a growing subset, not the whole set — see §5.1.
 
 ## 2. P0/P1 — Data integrity: fixed in code, not applied to a live database
 
@@ -30,10 +33,12 @@ see §5.1.
 | `extend_trial` RPC missing | `approvals.html`'s extend button calls it; function never existed | `supabase/omega_extend_trial_fix.sql`, `migrations/0090` | **Not applied** |
 | `notifications` table never populated | Table existed (once applied) but nothing inserted a row | `supabase/omega_notify_triggers.sql`, `migrations/0092` (5 RPCs now insert on event) | **Not applied** |
 | Authority History chart queried wrong table | `omega-chart.js` queried nonexistent `authority_snapshots`; real table is `leaderboard_snapshots` | Table name corrected in `omega-chart.js` directly | N/A — no schema change needed, fix is live in code |
+| `consult_requests` missing 3 columns `consultancy.html` sends | Form sends `{domain,contact,preferred_time,brief}`; table only had `domain`/`message`/`urgency`/`commission_rate`/`confidentiality_accepted` — every submission errored, booking flow fully non-functional | `supabase/omega_consult.sql`, `migrations/0013` (non-destructive `ALTER ADD COLUMN`) | **Not applied** |
 
-**Owner action required:** apply `supabase/migrations/0089`–`0092` (or the equivalent loose
-files) via `supabase db push` or the Supabase SQL editor. This is the single highest-leverage
-remaining action — it activates four already-written, already-validated fixes at once.
+**Owner action required:** apply `supabase/migrations/0013` and `0089`–`0092` (or the
+equivalent loose files) via `supabase db push` or the Supabase SQL editor. This is the single
+highest-leverage remaining action — it activates five already-written, already-validated
+fixes at once.
 
 ### 2.1 Still genuinely missing (not fixed — no code exists yet)
 
@@ -75,12 +80,16 @@ only), not acted on.
 
 ## 4. P2 — Code/data quality
 
-### 4.1 Silent-failure writes (2 instances, fixed this session)
+### 4.1 Silent-failure writes (4 instances, fixed this session)
 
 `social.html`'s connect/disconnect buttons and `family.html`'s heir-toggle/remove buttons
-updated UI state before/regardless of the actual database write result. Fixed to check
-`.error` and alert the user on failure, matching the convention already established in
-`events.html`/`automation.html`/`advertising.html` from an earlier session.
+updated UI state before/regardless of the actual database write result. `settings.html`'s
+background-color save discarded the profile-sync result in a bare `try/catch` (message said
+"saved" regardless). `travel.html` credited progress XP before confirming the journey-save
+succeeded. All four fixed to check `.error`, matching the convention already established in
+`events.html`/`automation.html`/`advertising.html` from an earlier session — `settings.html`'s
+fix is proportionate to a cosmetic preference (distinguishes "saved locally" from "synced" in
+the message, no `alert()`) rather than blocking the user.
 
 ### 4.2 Finance pages: `localStorage`-only persistence
 
@@ -99,20 +108,22 @@ no action remains.
 
 ### 4.4 `nav.js`: 19 dead/overridden keys in the section-mapping object
 
-New finding this session (`REPOSITORY_AUDIT.md` §5) — the `PS` object literal assigns 19
-page-slug keys twice; the second assignment silently wins in JS, so the first is dead code.
-Confirmed by parsing the object body directly, not a guess. **Not fixed in this pass** — low
-severity (sidebar highlighting only, not a data or security issue), but worth a deliberate
-cleanup pass to either remove the dead first assignments or confirm each duplicate's final
-value is the intended one (some may reflect an accidental second definition rather than a
-considered override).
+Finding from `REPOSITORY_AUDIT.md` §5 — the `PS` object literal assigned 19 page-slug keys
+twice; the second assignment silently won in JS, so the first was dead code. **Fixed the same
+session** — removed the 19 dead first assignments; verified programmatically (parsed the
+effective key→value mapping before/after the edit) that this changed zero runtime behavior.
+
+### 4.5 `consultancy.html` booking flow (see §2)
+
+Distinct from the finance-persistence question in §4.2: this wasn't a design choice, it was a
+genuine schema/client mismatch that made the feature 100% non-functional. Fixed — see §2.
 
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full manual re-audit of all 170 pages for the XSS/silent-failure/missing-table bug
-  classes was not performed this session — only the specific files investigated by the prior
-  triage pass (`REPOSITORY_AUDIT.md` §6) and the ones touched while building these docs.
-  `CAPABILITY_INVENTORY.md`'s unmarked pages are "not individually audited," not "confirmed
+  classes has still not been performed — two passes now (`REPOSITORY_AUDIT.md` §6 items 1-9,
+  then item 11) have each covered a growing subset, not the full set.
+  `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually audited," not "confirmed
   clean."
 - **5.2** Live-database verification of anything in §2 — no session has held credentials.
 - **5.3** Supabase MCP server (`.mcp.json`, added this session) is configured but not
@@ -122,13 +133,16 @@ considered override).
 
 ## 6. Priority-ordered action list
 
-1. **Apply `supabase/migrations/0089`–`0092` to the live database.** (Owner action — highest
-   leverage, activates 4 already-built fixes at once.)
+1. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database.** (Owner action
+   — highest leverage, activates 5 already-built fixes at once.)
 2. Authenticate the Supabase MCP server (`claude` → `/mcp` → approve → OAuth) so future
    sessions can verify §2 directly instead of inferring from client-code reads.
 3. Decide the finance-pages persistence question (§4.2) — product decision, not code.
 4. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
    legal decision, not code.
-5. Clean up `nav.js`'s 19 duplicate keys (§4.4) — low severity, safe to defer.
-6. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
+5. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency.
+6. Continue the page-by-page sweep (§5.1) — two passes done, still not exhaustive across all
+   170 pages.
+
+`nav.js`'s duplicate keys (previously here) — done, see §4.4.

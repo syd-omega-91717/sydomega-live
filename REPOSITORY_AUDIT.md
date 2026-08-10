@@ -159,10 +159,98 @@ In commit order, both repos kept in sync throughout:
     class as `family.html`/`social.html` from the first wave, missed until now. Fixed to check
     `.error` and alert on failure. No other pending SQL this round — this was a pure client-code
     fix, live the moment it's deployed, no database action needed.
+14. Fourth-wave sweep — this time systematic rather than manual: script-cross-referenced every
+    `.from()`/`.rpc()` call site against the schema (no new gaps beyond the already-documented
+    `transactions`/`wallet_balances`), traced the data source of every remaining
+    `.innerHTML`-with-interpolation file (10 files; all either `localStorage`-only or static
+    config arrays except one real finding), and checked every remaining Supabase-write file for
+    unchecked `.error` (23 files; all 9 not already covered by a prior fix check it correctly —
+    no new gap). The one real finding: `queue.html`'s "PLATFORM DISPATCH LOG" panel selected
+    `*` from `public.dispatches` and read `d.type`/`d.action`/`d.payload`/`d.status` — none of
+    which exist in any `dispatches` definition across the 10 files that define it (real columns:
+    `title`/`body`/`category`/`is_published`/`created_at`/`user_id`/`sign`), so every row
+    rendered as placeholder junk (`-`, `{}`, `PENDING`) regardless of content — same
+    wrong-shape-query bug class as item 2. Compounding it: the real columns are member-writable
+    (the `dispatches` `"wire insert"` RLS policy checks only `auth.uid() = user_id`, not column
+    values) and were about to be rendered raw via `.innerHTML` with no escaping — a stored-XSS
+    vector into a page the owner views, same threat model as items 1 and 11's `sovereigns.html`
+    fix. Fixed both at once: corrected the query to the real columns and added escaping,
+    matching `news.html`'s existing `esc()` convention for the same table. See
+    `GAP_ANALYSIS.md` §4.6 for full detail.
+15. Fifth-wave sweep — extended item 14's `.innerHTML` check from template-literal
+    interpolation to the two remaining interpolation shapes: string-concatenation (54
+    candidate files) and bare-variable assignment (`.innerHTML=someVar`, 12 more files found
+    while grepping for the concatenation shape). All 54 concatenation files traced clean
+    (localStorage-only, static config arrays, self-scoped queries, or already-escaped —
+    `marketing.html`/`news.html`/`sovereigns.html`/`hall.html` confirmed to already use `esc()`
+    correctly rather than assumed). Of the 12 bare-variable files, one real finding:
+    `graph.html`'s member-node tooltip attempted to escape `display_name` via
+    `nm.textContent=m.name` then reading `nm.textContent` back — which returns the original
+    unescaped string, since only reading `.innerHTML` back would apply escaping. The
+    "escaping" was a complete no-op; every approved member's `display_name` (self-updatable,
+    queried with no `user_id` filter for the whole membership) rendered raw into a tooltip any
+    other approved member or the owner could trigger by hovering. Fixed with a real `esc()`
+    equivalent. Along the way, also found (not part of the XSS sweep, but same "response shape
+    doesn't match what the client assumes" bug class as item 2/14): `access_audit_log()`
+    (owner-only RPC, `omega_access_audit.sql`) returns `{ok,rows:[...]}`, but both of its only
+    two callers (`approvals.html`, `vault.html`) read `r.data` as if it were the array directly
+    — `vault.html`'s `.slice()` on the object threw on every call, permanently falling back to
+    5 hardcoded fake "demo" audit entries; `approvals.html`'s length-check on the object always
+    read as empty, showing "NO AUDIT ENTRIES". Both have shown zero real access-decision
+    history to anyone, including the owner, since the RPC was added. Fixed both call sites to
+    unwrap `r.data.rows` and use the RPC's actual field names (`action`/`subject`/`actor`, not
+    the assumed `event`/`status`/`user_id`); `subject`/`actor` are resolved `display_name`
+    values (member-controllable) so both are now escaped too. See `GAP_ANALYSIS.md` §4.8-§4.9
+    for full detail on both.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring
-real Supabase credentials, which no session in this project's history has held.
+real Supabase credentials, which no session in this project's history has held. Items 14 and
+15 are pure client-code fixes with no database dependency — live the moment deployed.
+
+16. Sixth-wave sweep — extended beyond the three established bug classes for the first time.
+    **Most significant finding of any session on this branch:** `supabase/trial_access.sql`
+    defined `grant_permanent_access(uuid)`, `grant_trial_access(uuid)`, and `expire_trial(uuid)`
+    — all `SECURITY DEFINER`, all `GRANT`ed to `authenticated` — with **no caller check at
+    all**. Any signed-in member could call `grant_permanent_access` on their own uid from the
+    browser console and instantly self-approve to full platform access, or call `expire_trial`
+    on another member's uid to wipe their progress. `supabase/0003_privilege_lockdown.sql`
+    (already in the repo) documents and fixes this exact vulnerability class for 7 other copies
+    of these same three functions — every one of them already carries the
+    `auth.uid() <> p_uid AND NOT is_platform_owner()` guard. `trial_access.sql` was the one file
+    that never got it, and because each of its functions opens with an unconditional
+    `DROP FUNCTION IF EXISTS`, applying it after any of the 7 guarded copies (the flat SQL bag
+    has no enforced order) would silently reopen the hole on a platform that already believed
+    it was closed. Fixed by adding the identical, already-proven guard used by the other 7
+    copies. **Validated end-to-end against a real, throwaway local PostgreSQL 16 instance**
+    (this environment has `postgresql-16` installed) — 4 scenarios run: attacker
+    self-approve (denied), attacker wiping a victim's trial (denied, victim's row and
+    `task_completions` confirmed untouched), owner granting access (succeeded), member
+    self-expiring their own trial (succeeded). Database dropped after. See `GAP_ANALYSIS.md` §0
+    for the full writeup and the historical-exploitation check the owner should run.
+    Also this pass: cross-referenced every `.rpc()` call's consumed response shape against the
+    actual SQL `RETURNS` clause for all 25 distinct RPCs called from client code (not just the
+    2 already known from item 15) — found `error_summary()` has the identical `{ok,rows}`-vs-
+    assumed-array bug as `access_audit_log()` (fixed, same pattern), and `my_points_balance()`
+    returns `{ok,balance}` but `blockchain.html` ran `Number()` on the whole object, always
+    showing "Ω NaN" (fixed). While investigating `error_summary`'s siblings on the same
+    `approvals.html` page, found `review_contracts()`/`review_reservations()`'s results
+    (`media_reservations.title` — member-writable, no approval gate — and
+    `commission_contracts`) rendered raw via `.innerHTML` with no escaping, unlike every other
+    field on that page; `error_summary`'s underlying data is reachable by **unauthenticated**
+    callers via `report_client_error()` (granted to `anon`), the widest reach of any stored-XSS
+    instance found on this branch. All three escaped to match the page's existing `esc()`.
+    Separately, extended the "47 duplicate tables" schema-hygiene check (§4) to *functions* —
+    tables are safe to duplicate (`CREATE TABLE IF NOT EXISTS`), functions are not
+    (`CREATE OR REPLACE FUNCTION` unconditionally overwrites). Found 10 functions with
+    genuinely diverging (not just whitespace) definitions across files; 3 have real behavioral
+    consequences (`is_platform_owner()` itself checks two different data sources depending on
+    which file ran last; `my_matrix()` and `complete_task()` diverge in ways that could leave
+    client code silently non-functional; `apply_subscription()`'s two different arities could
+    coexist as ambiguous overloads and break every Stripe webhook call). Not fixed — cannot
+    tell from source alone which side of each fork is live; left as a prioritized owner action
+    with the exact `pg_proc` verification query to run. See `GAP_ANALYSIS.md` §3.1 for full
+    detail and the query.
 
 ## 7. Summary
 
@@ -171,18 +259,23 @@ real Supabase credentials, which no session in this project's history has held.
 | Module graph integrity | Clean — 0 critical, CI-enforced |
 | RLS coverage | Clean — 0 tables missing RLS, CI-enforced |
 | Secrets in tracked code | Clean — CI-enforced |
-| Stored XSS (owner admin panels + public leaderboard) | Fixed this session (2 pages/vectors) |
-| Silent-failure writes | Fixed this session (4 instances); established convention for future ones |
-| Wrong-table query (chart) | Fixed this session |
+| **Full owner-approval bypass in `trial_access.sql`** | **Found and fixed this session (§6.16)** — validated against a live local PostgreSQL 16 instance; see `GAP_ANALYSIS.md` §0. The most severe finding on this branch |
+| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor) | 7 pages/vectors found and fixed across the fifth and sixth waves (§6.1, §6.11, §6.14, §6.15, §6.16) — `.innerHTML`-interpolation check exhaustive across all three shapes (76 files), plus every RPC-consumer on `approvals.html` checked against its actual response shape |
+| Silent-failure writes | Fixed (5 instances across two waves); established convention now checked repo-wide, no new gaps in the fifth-wave sweep |
+| Wrong-table/wrong-shape query (chart, dispatch log, `access_audit_log`, `error_summary`, `my_points_balance`) | 5 instances found and fixed (§6.2, §6.14, §6.15, §6.16) — same bug class each time: client code assumes a response shape the server doesn't return |
 | Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |
 | `notifications` population | Fixed this session (§6.9); **not applied live** |
 | `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
 | `owner_apex_lock.sql` dead `nodes_earned` assignment | Fixed this session (§6.12) — owner-run manual script, not auto-applied |
-| SQL schema organization | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md` |
+| SQL schema organization — tables | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md`; safe today (idempotent) |
+| **SQL schema organization — functions** | **Found this session (§6.16)** — 10 functions with diverging (not just cosmetic) duplicate definitions, 3 with real behavioral risk including `is_platform_owner()` itself; unsafe (`CREATE OR REPLACE` overwrites unconditionally), needs a live `pg_proc` check — see `GAP_ANALYSIS.md` §3.1 |
 | `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
+| `queue.html` dispatch log (wrong columns + stored XSS) | Found and fixed this session (§6.14) — pure client-code fix, no database action needed |
+| `access_audit_log`/`error_summary` RPCs never worked for any caller | Found and fixed this session (§6.15, §6.16) — pure client-code fix, no database action needed |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |
 | Committed binary size (docx/mp4) | Unchanged, non-urgent (see `REPO_AUDIT.md` §2) |
 
-Nothing here is a critical blocker for the app as deployed today. The highest-leverage next
+The `trial_access.sql` fix aside — that one is a live-or-was-live security hole, treat as
+urgent — nothing else here is a critical blocker for the app as deployed today. The highest-leverage next
 step is applying the pending SQL (§6 items 4, 7, 9, 11) to the live database — everything else
 is either already fixed in code, or genuine hygiene debt with no functional impact.

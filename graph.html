@@ -162,6 +162,8 @@ function updateVisibility(){
 
 window.resetZoom=function(){if(window._graphZoomFn)window._graphZoomFn();};
 
+function escGraph(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+
 function buildMembersTab(members){
   var list=document.getElementById('members-list');
   list.innerHTML='';
@@ -259,7 +261,7 @@ async function initGraph(d3,members){
     if(m.type==='element')inner='<b style="color:'+d.color+'">'+m.name+' ELEMENT</b>';
     else if(m.type==='god')inner='<b style="color:'+d.color+'">OLYMPIAN · '+m.name.toUpperCase()+'</b>';
     else if(m.type==='sign')inner='<b style="color:'+d.color+'">'+m.sign.toUpperCase()+'</b><br>ELEMENT · '+(m.element||'')+'<br>PATRON · '+(m.god||'');
-    else{var nm=document.createElement('div');nm.textContent=m.name;inner='<b>'+nm.textContent+'</b><br>SIGN · '+(m.sign||'?')+'<br>ELEMENT · '+(m.element||'?')+'<br>AUTH · '+(m.auth||'?')+'<br>GATE '+(m.gate||'?');}
+    else{inner='<b>'+escGraph(m.name)+'</b><br>SIGN · '+(m.sign||'?')+'<br>ELEMENT · '+(m.element||'?')+'<br>AUTH · '+(m.auth||'?')+'<br>GATE '+(m.gate||'?');}
     tip.innerHTML=inner;
   }).on('mouseleave',function(){tip.style.display='none';});
   sim.on('tick',function(){

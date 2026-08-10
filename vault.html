@@ -550,27 +550,29 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
   }
 })();
 
+function escAudit(t){return(t==null?'':String(t)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 window.loadAuditLog=async function(){
   var list=document.getElementById('audit-log-list');
   var cnt=document.getElementById('audit-count');
   if(!list)return;
   try{
     var r=await sb.rpc('access_audit_log');
-    var rows=(r.data||[]).slice(0,60);
+    var rows=((r.data&&r.data.rows)||[]).slice(0,60);
     if(!rows.length)throw new Error('empty');
     if(cnt)cnt.textContent=rows.length;
     list.innerHTML='';
     rows.forEach(function(row){
       var ts=new Date(row.created_at||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).toUpperCase();
-      var evt=String(row.action||row.event||'EVENT').toUpperCase().slice(0,60);
-      var typ=String(row.event_type||'LOG').toUpperCase().slice(0,12);
-      var stat=String(row.status||'RECORDED').toUpperCase();
-      var col=stat==='CONFIRMED'?'var(--green)':stat==='SEALED'?'var(--gold)':stat==='REJECTED'?'var(--crim)':'var(--muted)';
+      var actionRaw=String(row.action||'');
+      var evt=escAudit(actionRaw.replace(/_/g,' ').toUpperCase().slice(0,60)||'EVENT');
+      var subj=escAudit(String(row.subject||'').toUpperCase().slice(0,12));
+      var stat=/granted$/.test(actionRaw)?'GRANTED':/rejected/.test(actionRaw)?'REJECTED':/revoked/.test(actionRaw)?'REVOKED':/expired/.test(actionRaw)?'EXPIRED':'LOGGED';
+      var col=stat==='GRANTED'?'var(--green)':(stat==='REJECTED'||stat==='REVOKED')?'var(--crim)':stat==='EXPIRED'?'var(--gold)':'var(--muted)';
       var r2=document.createElement('div');r2.className='audit-row';
       r2.innerHTML='<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+ts+'</span>'
         +'<span>'+evt+'</span>'
-        +'<span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+typ+'</span>'
-        +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">'+stat.slice(0,10)+'</span>';
+        +'<span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+subj+'</span>'
+        +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">'+stat+'</span>';
       list.appendChild(r2);
     });
   }catch(e){

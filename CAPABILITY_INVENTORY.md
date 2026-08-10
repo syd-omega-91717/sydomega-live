@@ -51,7 +51,9 @@ session but is not yet populated by anything, see `GAP_ANALYSIS.md` §2.2; separ
 Audit Log panel's `access_audit_log()` RPC call read the response in the wrong shape and had
 shown fabricated demo entries as if real for every caller — fixed this session, see
 `GAP_ANALYSIS.md` §4.8), `treasury.html` 💾,
-`wallet.html` 💾, `blockchain.html`, `payments.html`/`subscriptions.html` ✅ (real Stripe
+`wallet.html` 💾, `blockchain.html` ✅ (`my_points_balance()` RPC response-shape bug fixed this
+session — points balance always showed "Ω NaN", see `GAP_ANALYSIS.md` §2),
+`payments.html`/`subscriptions.html` ✅ (real Stripe
 integration, `supabase/functions/checkout` + `stripe-webhook`), `marketplace.html`,
 `portfolio.html` ⚠️ (same `user_assets` gap as `vault.html`), `income.html` ✅ (persists
 server-side per `CLAUDE.md` §8), `ledger.html` ✅ (persists server-side), `investment.html` 💾,
@@ -73,7 +75,11 @@ widest-blast-radius XSS found so far), `factions.html`,
 session; its five RPCs now populate `public.notifications`, not yet applied live; separately,
 its "Audit Log" tab's `access_audit_log()` call misread the RPC's response shape and always
 showed "NO AUDIT ENTRIES" even when real rows existed — fixed this session, see
-`GAP_ANALYSIS.md` §4.8), `interface-omni.html`.
+`GAP_ANALYSIS.md` §4.8; also this session — its error-monitor panel had the identical
+`error_summary()` response-shape bug plus unescaped output reachable by unauthenticated
+callers, and its contracts/reservations review queues rendered `media_reservations.title`
+(member-writable) raw via `.innerHTML` unlike every other field on the page — all fixed, see
+`GAP_ANALYSIS.md` §1/§2), `interface-omni.html`.
 
 ### SERVICES — consulting, commissions, wellness, events
 `services.html`, `consultancy.html` ⚠️ (booking form was completely non-functional — table
@@ -205,5 +211,13 @@ Greek god, and domain:
 - **Auth:** Supabase Auth + `public.is_platform_owner()` for owner-elevated access;
   9.1717-minute sovereign trial mechanic (`trial_length()`, `approve_member`,
   `grant_permanent_access`, `reject_member`, `revoke_member`, `extend_trial`) is real,
-  implemented, and — as of this session — notifies the affected member on every one of those
-  five events (`GRANT`, not yet applied live).
+  implemented, and — as of a prior session — notifies the affected member on every one of those
+  five events (`GRANT`, not yet applied live). **This session found and fixed a critical gap:**
+  `supabase/trial_access.sql`'s copies of `grant_permanent_access`/`grant_trial_access`/
+  `expire_trial` had no caller check at all — a full self-approval / cross-member data-wipe
+  bypass — while 7 other copies of the same functions elsewhere in the SQL bag were already
+  guarded. Fixed and validated against a live local PostgreSQL 16 instance; see
+  `GAP_ANALYSIS.md` §0. Separately, `is_platform_owner()` itself — the function this whole
+  bullet's "owner-elevated access" model rests on — has two genuinely different
+  implementations (checks `platform_owners` table vs. `profiles.is_owner` column) across 11
+  files; not yet resolved which is live, see `GAP_ANALYSIS.md` §3.1.

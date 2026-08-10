@@ -172,9 +172,10 @@ async function boot(){
   }
   buildTokens();
   try{
-    var pts=(await sb.rpc('my_points_balance')).data;
+    var ptsRes=(await sb.rpc('my_points_balance')).data;
+    var bal=ptsRes&&ptsRes.ok?ptsRes.balance:null;
     var pv=document.getElementById('pts-val');
-    if(pv)pv.textContent=pts!=null?('Ω '+Number(pts).toFixed(0)):'—';
+    if(pv)pv.textContent=bal!=null?('Ω '+Number(bal).toFixed(0)):'—';
   }catch(e){console.warn('pts',e);}
 }
 boot();

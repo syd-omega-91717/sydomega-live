@@ -9,6 +9,66 @@ Supabase credentials), a **confirmed, still-open gap**, or a **product decision 
 left undone**. Nothing here is speculative; each cites the evidence. Priority follows this
 project's own established convention (security/data-integrity first).
 
+## 0. P0 — CRITICAL: full owner-approval bypass in `supabase/trial_access.sql` (fixed this session, validated against a live PostgreSQL 16 instance)
+
+**This is the most severe finding across every session on this branch — a complete authentication/approval bypass, not just a data-exposure bug.**
+
+`supabase/trial_access.sql` defines `grant_permanent_access(uuid)`, `grant_trial_access(uuid)`,
+and `expire_trial(uuid)` — all three `SECURITY DEFINER`, all three `GRANT EXECUTE ... TO
+authenticated`, and **none of them checked who was calling**. Any signed-in member could open
+the browser console on any page (the anon/publishable key is public by design) and run:
+
+```js
+await sb.rpc('grant_permanent_access', { p_uid: (await sb.auth.getUser()).data.user.id })
+```
+
+— instantly, permanently self-approving to full platform access, completely bypassing the
+pending queue, the owner review step, and the entire approval system this platform is built
+around. `expire_trial(uuid)` was worse in the other direction: it took *any* uuid with no
+ownership check, so one member could call it against another member's id to revoke their
+access, reset all three of their axes to 1.0, and permanently delete their `task_completions`
+— a griefing/data-destruction vector against arbitrary other members.
+
+**Why this had gone unnoticed:** `supabase/0003_privilege_lockdown.sql` (already in the repo,
+predates this session) documents and fixes this *exact* vulnerability class, and 7 other files
+that also define these same three functions (`chunk_02b_migrations.sql`,
+`chunk_07_migrations.sql`, `migration_runner.sql`, `omega_access_control.sql`,
+`omega_master_deploy.sql`, `omega_notify_triggers.sql`, `trial_fix.sql`) all already carry the
+guard (`IF auth.uid() <> p_uid AND NOT public.is_platform_owner() THEN ... forbidden`). It
+looks, at a glance, like the hole was closed platform-wide. **`trial_access.sql` itself was the
+one copy that was missed** — and critically, each of its three functions opens with an
+unconditional `DROP FUNCTION IF EXISTS ...`, which sidesteps Postgres's own protection against
+silently replacing a function with an incompatible signature (`42P13`). This means applying
+`trial_access.sql` *after* any of the 7 guarded copies — entirely possible, since the flat
+`supabase/*.sql` bag has no enforced application order (`CLAUDE.md` §5) — would silently
+overwrite the guarded, safe functions with these unguarded ones, **reopening the hole on a
+platform that already believed it was fixed**.
+
+**Fixed** by adding the identical, already-proven `IF auth.uid() <> p_uid AND NOT
+public.is_platform_owner()`-style guard used verbatim by the other 7 copies — not a new
+design, the one file that never got the established convention. Then **validated end-to-end
+against a real, throwaway local PostgreSQL 16 instance** (this environment has `postgresql-16`
+installed; spun up a scratch database, stubbed `auth.uid()`/`is_platform_owner()`, applied the
+patched file, and ran four scenarios):
+
+| Scenario | Expected | Result |
+|---|---|---|
+| Attacker calls `grant_permanent_access(own-uid)` | Denied, `access_approved` stays `false` | ✅ Denied |
+| Attacker calls `expire_trial(victim-uid)` | Denied, victim's row and `task_completions` untouched | ✅ Denied, victim's `access_approved` still `true`, 1 task_completion still present |
+| Owner calls `grant_permanent_access(attacker-uid)` | Succeeds — legitimate path preserved | ✅ `access_approved` becomes `true` |
+| Member calls `expire_trial(own-uid)` | Succeeds — self-service path preserved | ✅ `access_approved` becomes `false` |
+
+Database dropped after the test; no live credentials were used or required, since the exploit
+and the fix are both provable against a schema-only scratch instance. **Owner action:** none
+required to close the hole — the fix is in the SQL source file itself, so it takes effect the
+next time `trial_access.sql` (or the whole bag) is applied to the live database, same as any
+other pending SQL in §2. If this file was *ever* applied to the live production database in its
+original unguarded form — worth checking `select * from public.access_grant_audit order by
+occurred_at desc;` and cross-referencing `select id, display_name, access_approved, is_trial,
+created_at from public.profiles where access_approved=true order by created_at desc;` for any
+approved member the owner doesn't remember approving, per `0003_privilege_lockdown.sql`'s own
+verification section, which applies identically here.
+
 ## 1. P0 — Security (all fixed in code this session)
 
 | Gap | Evidence | Status |
@@ -17,6 +77,8 @@ project's own established convention (security/data-integrity first).
 | Stored XSS in `sovereigns.html` | `profiles.sign` (self-updatable, `chunk_02b_migrations.sql`'s per-column GRANT list) queried for every `access_approved` member and rendered raw via `.innerHTML` in two places (table row, throne card) — no `user_id` filter, so reachable by/visible to the whole membership, not just the owner | **Fixed** — `esc()` helper added, both occurrences escaped |
 | Stored XSS in `queue.html`'s dispatch log | `dispatches.category`/`title`/`body` are member-writable (RLS `"wire insert"` policy checks only row ownership, not column values) and were rendered raw via `.innerHTML` in the OPS queue's "PLATFORM DISPATCH LOG" panel, visible to the owner | **Fixed** — see §4.6 (bundled with the same panel's wrong-column-name fix) |
 | Stored XSS in `graph.html`'s constellation-graph tooltip | `profiles.display_name` (self-updatable, every `access_approved` member queried with no `user_id` filter) rendered into the member-node tooltip's `.innerHTML`. The code *attempted* to escape it — `nm.textContent=m.name` then read `nm.textContent` back — but reading `.textContent` returns the original unescaped string (that trick only works if you read `.innerHTML` back instead), so the "escaping" was a no-op. Reachable by hovering any member node; visible to any other approved member or the owner who opens the page | **Fixed** — added a real `escGraph()` helper and used it in place of the broken round-trip |
+| Stored XSS in `approvals.html`'s reservations queue | `review_reservations()` RPC (owner-only) returns `media_reservations` rows verbatim; `title` is a `NOT NULL text` column any authenticated member can set to anything via the `mr_insert` policy (`auth.uid()=user_id`, no content restriction — the same page members use to submit ad reservations). `approvals.html`'s queue rendered `row.title` raw via `.innerHTML`, unlike every other field on the same page. The sibling `review_contracts()` render had the identical unescaped pattern; `commission_contracts` has no `title`/`type` column today so it wasn't exploitable *yet*, but was fixed defensively for the same reason | **Fixed** — both now go through the page's existing `esc()` |
+| Error-monitor free text unescaped, reachable **without authentication** | `report_client_error()` is `GRANT`ed to `anon` *and* `authenticated` (by design — it needs to catch errors from signed-out visitors too) and stores `p_page`/`p_message` with only a length truncation, no sanitization. `error_summary()` (owner-only) aggregates and returns them; `approvals.html`'s error-monitor panel rendered `row.message`/`row.page` raw via `.innerHTML` — reachable by literally anyone on the internet with no login, the widest possible reach of any stored-XSS instance found across this whole audit | **Fixed** — same `esc()`, bundled with the response-shape fix below |
 
 This session ran a systematic, evidence-based sweep for all three established bug classes
 (stored XSS via unescaped `.innerHTML`, silent-failure writes, and queries against
@@ -102,11 +164,18 @@ see §5.1.
 | Authority History chart queried wrong table | `omega-chart.js` queried nonexistent `authority_snapshots`; real table is `leaderboard_snapshots` | Table name corrected in `omega-chart.js` directly | N/A — no schema change needed, fix is live in code |
 | `consult_requests` missing 3 columns `consultancy.html` sends | Form sends `{domain,contact,preferred_time,brief}`; table only had `domain`/`message`/`urgency`/`commission_rate`/`confidentiality_accepted` — every submission errored, booking flow fully non-functional | `supabase/omega_consult.sql`, `migrations/0013` (non-destructive `ALTER ADD COLUMN`) | **Not applied** |
 | `access_audit_log` RPC response shape mismatch | Both callers (`approvals.html`, `vault.html`) treated `r.data` as a plain array; the RPC actually returns `{ok, rows:[...]}` (all 3 definitions agree). Result: `vault.html`'s `.slice()` on the object always threw, silently falling back to fabricated demo entries presented as real security log; `approvals.html`'s `!rows.length` on the object always read as empty, showing "NO AUDIT ENTRIES" even when real rows existed. Broken for every caller, including the owner — the RPC's actual intended audience | Both files' client code corrected to read `r.data.rows`; field names remapped to what the RPC actually returns (`action`/`subject`/`actor`, not the imagined `event`/`event_type`/`status`/`user_id`) | N/A — no schema change needed, both fixes are pure client-code, live the moment deployed |
+| `error_summary` RPC — same response-shape bug as `access_audit_log` | Same `{ok,rows:[...]}` wrapper convention (all 3 definitions agree), same wrong assumption in `approvals.html`'s error-monitor panel (`r.data\|\|[]`) — always showed "NO CLIENT ERRORS RECORDED" regardless of real content; also referenced a `row.count` field the RPC doesn't return (real field is `hits`) | Corrected to `r.data.rows`, field name `hits`, and escaped (see §1 — this RPC's data is reachable by unauthenticated `anon` callers via `report_client_error()`) | N/A — pure client-code, live the moment deployed |
+| `my_points_balance` RPC response shape mismatch | Returns `{ok,balance}`; `blockchain.html` did `Number((await sb.rpc(...)).data).toFixed(0)` — `Number()` on an object is `NaN`, so the Ω points balance display always showed "Ω NaN" regardless of the member's real balance | `blockchain.html` corrected to read `.data.balance` | N/A — pure client-code, live the moment deployed |
 
 **Owner action required:** apply `supabase/migrations/0013` and `0089`–`0092` (or the
-equivalent loose files) via `supabase db push` or the Supabase SQL editor. This is the single
-highest-leverage remaining action — it activates five already-written, already-validated
-fixes at once.
+equivalent loose files) via `supabase db push` or the Supabase SQL editor — this activates five
+already-written, already-validated fixes at once. **Higher priority than all of these: apply
+the patched `supabase/trial_access.sql` (§0)** — unlike the others, this isn't adding something
+missing, it's closing a full owner-approval bypass that may already be live if this file (in
+its original unguarded form) was ever applied to the production database. Not yet added to
+`supabase/migrations/` as a numbered file — fixed in place since the bug is in this specific
+file's own logic, not a missing-schema gap needing a new file, matching how `0003_privilege_lockdown.sql`
+fixed the other 7 copies of these same functions in place.
 
 ### 2.1 Still genuinely missing (not fixed — no code exists yet)
 
@@ -136,6 +205,46 @@ mean inventing business logic that doesn't exist, not just wiring up already-def
 | 3 files contain `DROP TABLE`/`DROP SCHEMA` | `chunk_07_migrations.sql`, `migration_runner.sql`, `omega_dispatch_reset.sql` — `audit.py` warning | Confirm none is wired into anything automatic (none currently are, per `migrations/README.md`'s exclusion list) |
 | `supabase/migrations/` untested against a live database | `migrations/README.md`'s own stated open item | Run against a scratch Supabase project before treating it as canonical |
 | `2` files added to `migrations/` (0087/0088) without a README note | Confirmed by comparing directory listing against README's last dated section, corrected this session | **Fixed** — README updated with a note and corrected file-count claims |
+
+### 3.1 Duplicate `CREATE OR REPLACE FUNCTION` definitions that genuinely diverge — higher risk than the 47 duplicate tables, owner action needed
+
+The 47-duplicate-*tables* finding above is explicitly "not urgent" because `CREATE TABLE IF NOT
+EXISTS` makes re-running any of them a no-op. **Functions are a different risk class entirely:
+`CREATE OR REPLACE FUNCTION` unconditionally overwrites, so when two files define the same
+function differently, whichever was applied *last* silently wins — there is no "IF NOT
+EXISTS" safety net.** A script-assisted pass (parsing every `CREATE [OR REPLACE] FUNCTION
+public.*` signature across all 111 files) found 95 unique function names, of which **10 have
+signatures that actually differ across files** (not just whitespace) — most are harmless
+(missing `SET search_path=public` on some copies of `order_stats`/`approve_member`/
+`grant_permanent_access`/`sync_platform_owner` — a hardening inconsistency worth closing but not
+a functional bug), but three are real:
+
+| Function | Divergence | Consequence if the "wrong" file was applied last |
+|---|---|---|
+| `is_platform_owner()` | 8 files check `EXISTS (SELECT 1 FROM platform_owners WHERE user_id=auth.uid())`; 3 files (`chunk_02a_migrations.sql` ×2, `chunk_04_migrations.sql`, `chunk_07_migrations.sql`) instead check `profiles.is_owner`. **This is the single most security-critical function in the schema** — every RLS policy and every `SECURITY DEFINER` guard fixed in this pass (§0, §1) calls it. If the `profiles.is_owner`-checking version is what's actually live, then owner status is determined by that column rather than the `platform_owners` table, and the two are only guaranteed to agree if `sync_platform_owner()`'s trigger (itself also duplicated, `chunk_02b_migrations.sql`/`chunk_08_migrations.sql`/`migration_runner.sql`/`omega_master_deploy.sql`) is correctly firing on every relevant write. **Already flagged and partially mitigated by a prior session**: `supabase/0003_privilege_lockdown.sql` (see §0) independently found this exact ambiguity ("not yet settled which one is authoritative... D-012") and wrote `omega_is_owner()` as a defensive OR of both checks, but `omega_is_owner()` is only used by the three functions §0 covers — every *other* `SECURITY DEFINER` function and RLS policy in the schema still calls the ambiguous `is_platform_owner()` directly. |
+| `my_matrix()` | `chunk_03_migrations.sql`/`migration_runner.sql` (first def): `RETURNS TABLE(track,sign,element,a,b,c,node,pct)` — no `phase` column, reads `matrix_progress`. `chunk_08_migrations.sql`/`migration_runner.sql` (second def): `RETURNS TABLE(track,phase,sign,element,a,b,c,authority,node,pct)` — has `phase`, reads `profiles.matrix_track`/`matrix_phase` directly. **`matrix.html:609` filters `r.phase===1`** — if the no-`phase` version is what's live, `r.phase` is always `undefined`, the filter always excludes every row, and the Phase 1 panel is permanently empty for every member regardless of real progress. Not fixed client-side: which representation is canonical (per-track vs. per-phase progression) is a data-model decision, not a bug fix — see recommendation below. |
+| `complete_task(...)` | Two versions with the *same* argument types (`text,text,text,text,numeric`) but *different* parameter names — `(p_kind,p_task,p_axis,p_title,p_weight)` vs. `(p_task_name,p_task_type,p_axis_type,p_description,p_points)`. Same type signature means `CREATE OR REPLACE` replaces one with the other in-place (no coexisting overload) — but PostgREST's RPC calls use named JSON parameters, so `publishing.html`'s call (`{p_kind:'contribution',p_task:...}`) only succeeds if the matching-named version is what's live; otherwise it fails silently (already wrapped in try/catch, so the only symptom is the "+0.25 Contribution axis" bonus message never appearing) |
+| `apply_subscription(...)` | One version takes 5 params, another takes 7 (2 extra `DEFAULT NULL`). **Different arity means these are two distinct overloaded functions in Postgres, not a replace-in-place — both can exist simultaneously.** `supabase/functions/stripe-webhook/index.ts` always calls with exactly the 5 mandatory named params. If both overloads exist live, Postgres cannot disambiguate a 5-named-argument call between "the 5-arg function" and "the 7-arg function using its 2 defaults" and raises `42725 function ... is not unique` — every Stripe webhook call (checkout completed, subscription updated/deleted, payment failed) would fail, meaning **a member who successfully paid via Stripe would never have `subscription_status` set to `active`, i.e. paying and getting access could silently decouple.** Both versions correctly check `is_platform_owner()`/`service_role` — this is not a privilege-escalation risk, purely an availability one. Not fixed: cannot tell from source alone whether both overloads coexist live (that requires a `pg_proc` query against the real database), and consolidating requires knowing which of `subscription_period_start`/`p_tier_num` the owner actually wants going forward — a real schema decision, not a client bug. |
+
+**Not fixed** (unlike `trial_access.sql` in §0, these three are not "one file everyone else
+agrees against" — they're genuine, live forks where I cannot determine from source alone which
+side is deployed, and picking one to delete without that knowledge risks breaking whichever
+side turns out to be live). **Owner action, highest priority after applying the pending SQL in
+§2:** run this against the live database to see which side actually won for each:
+
+```sql
+select proname, pg_get_function_identity_arguments(oid) as args,
+       pg_get_functiondef(oid) as body
+from pg_proc
+where pronamespace = 'public'::regnamespace
+  and proname in ('is_platform_owner','my_matrix','complete_task','apply_subscription')
+order by proname, args;
+```
+
+If `apply_subscription` returns more than one row, that alone confirms the overload-ambiguity
+risk is live and payments are at risk — collapse to one signature immediately. For the other
+three, the query result determines which SQL files are now safe to delete/consolidate as the
+stale duplicate.
 
 ### 3.2 `enterprise.html` — pricing display with no purchase flow
 
@@ -278,9 +387,9 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes
-  has still not been performed — five passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
-  items 11, 13, 14, and 15) have each covered a growing subset, not the full set. Items 14-15
-  were script-assisted (cross-referencing every `.from()`/`.rpc()` call site and every
+  has still not been performed — six passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
+  items 11, 13, 14, 15, and 16) have each covered a growing subset, not the full set. Items
+  14-15 were script-assisted (cross-referencing every `.from()`/`.rpc()` call site and every
   write-error-check site programmatically) rather than manual page-by-page reading, which is
   why they could cover all remaining candidate files for those two bug classes in one pass. The
   `.innerHTML`-interpolation check is manual per-file (tracing each variable's data source) but
@@ -288,13 +397,16 @@ escaping `m.name` directly instead of relying on the broken round-trip.
   (`+`), and bare-variable (`.innerHTML=someVar` with the variable built up earlier) —
   10 + 54 + 12 = 76 files, all individually traced (see §1) — and confirmed via grep that no
   file uses `outerHTML=`/`insertAdjacentHTML(`/`document.write(` with any of the three shapes
-  (zero matches). **Not covered:** `.innerHTML` assignments inside a function passed as a
-  callback/argument rather than a direct `var.innerHTML=` statement (e.g. framework-style
-  render props, if any exist), and any bug class entirely outside these three
-  (XSS/silent-failure/missing-table) — e.g. auth/authorization logic bugs, injection via
-  `dangerouslySetInnerHTML`-equivalents in dynamically-`eval`'d strings, or logic errors with no
-  security implication. `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually
-  audited," not "confirmed clean."
+  (zero matches). Item 16 went beyond the original three bug classes for the first time: cross-
+  referenced every client `.rpc()` call's consumed shape against the actual SQL `RETURNS`
+  clause (found the `error_summary`/`my_points_balance` shape bugs and the `approvals.html`
+  contracts/reservations XSS in §1), and separately diffed every duplicated function signature
+  across the SQL bag rather than just duplicated table names (found §0's auth-bypass and §3.1's
+  three divergent-function forks). **Still not covered:** `.innerHTML` built via string
+  concatenation without a literal `+` visible to grep (e.g. `.concat()`), any bug class outside
+  XSS/silent-failure/missing-table/RPC-contract-mismatch/auth-bypass, and a live-database check
+  of which side of each §3.1 fork is actually deployed. `CAPABILITY_INVENTORY.md`'s unmarked
+  pages remain "not individually audited," not "confirmed clean."
 - **5.2** Live-database verification of anything in §2 — no session has held credentials.
 - **5.3** Supabase MCP server (`.mcp.json`, added this session) is configured but not
   authenticated — that requires an interactive `claude` session, which was confirmed
@@ -303,16 +415,25 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 
 ## 6. Priority-ordered action list
 
-1. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database.** (Owner action
-   — highest leverage, activates 5 already-built fixes at once.)
-2. Authenticate the Supabase MCP server (`claude` → `/mcp` → approve → OAuth) so future
-   sessions can verify §2 directly instead of inferring from client-code reads.
-3. Decide the finance-pages persistence question (§4.2) — product decision, not code.
-4. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
+1. **Apply the patched `supabase/trial_access.sql` to the live database** (§0) — closes a full
+   owner-approval bypass, higher priority than anything below since it's a live authorization
+   hole, not a missing feature.
+2. **Run the `pg_proc` verification query in §3.1** against the live database to determine
+   which side of the `is_platform_owner()`/`my_matrix()`/`complete_task()`/`apply_subscription()`
+   forks is actually deployed, then delete the losing/stale copies from the SQL bag. The
+   `apply_subscription` case in particular risks silently breaking Stripe webhook processing if
+   both overloads coexist — worth checking before the other three.
+3. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database.** (Owner action
+   — activates 5 already-built fixes at once.)
+4. Authenticate the Supabase MCP server (`claude` → `/mcp` → approve → OAuth) so future
+   sessions can verify §2/§3.1 directly instead of inferring from client-code reads.
+5. Decide the finance-pages persistence question (§4.2) — product decision, not code.
+6. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
    legal decision, not code.
-5. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
-   source of truth (§3) — housekeeping, no functional urgency.
-6. Continue the page-by-page sweep (§5.1) — five passes done; all three `.innerHTML`
+7. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
+   source of truth (§3) — housekeeping, no functional urgency (unlike the function duplicates
+   in §3.1, these are safe today).
+8. Continue the page-by-page sweep (§5.1) — six passes done; all three `.innerHTML`
    interpolation shapes are now exhaustively traced (76 files, 4 real stored-XSS instances
    found and fixed across the passes). Remaining candidates for a next pass: pages with zero
    `.innerHTML` interpolation at all (not yet checked for other bug shapes — raw string

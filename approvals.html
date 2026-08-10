@@ -567,7 +567,7 @@ async function loadContracts(){
     var r=await sb.rpc('review_contracts');
     var rows=r.data||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO PENDING CONTRACTS</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+(row.id||'').slice(0,12)+'</div><div class="q-lbl">'+String(row.title||row.type||'CONTRACT').toUpperCase()+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.type||'CONTRACT').toUpperCase())+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">CONTRACT RPC NOT AVAILABLE</div>';}
 }
 async function loadReservations(){
@@ -576,7 +576,7 @@ async function loadReservations(){
     var r=await sb.rpc('review_reservations');
     var rows=r.data||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO PENDING RESERVATIONS</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+(row.id||'').slice(0,12)+'</div><div class="q-lbl">'+String(row.title||row.service||'RESERVATION').toUpperCase()+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.service||'RESERVATION').toUpperCase())+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">RESERVATIONS RPC NOT AVAILABLE</div>';}
 }
 async function loadAudit(){
@@ -592,9 +592,9 @@ async function loadErrors(){
   var el=document.getElementById('err-list');if(!el)return;
   try{
     var r=await sb.rpc('error_summary');
-    var rows=r.data||[];
+    var rows=(r.data&&r.data.rows)||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO CLIENT ERRORS RECORDED</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="err-row"><div class="err-msg">'+(row.message||row.error||'ERROR').slice(0,120)+'</div><div class="err-ctx">'+(row.page||row.url||'')+'  '+(row.count?'×'+row.count:'')+'</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="err-row"><div class="err-msg">'+esc((row.message||'ERROR').slice(0,120))+'</div><div class="err-ctx">'+esc(row.page||'')+'  '+(row.hits?'×'+row.hits:'')+'</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">ERROR MONITOR RPC NOT AVAILABLE</div>';}
 }
 async function sendDispatch(){

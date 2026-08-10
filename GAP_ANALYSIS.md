@@ -81,6 +81,7 @@ verification section, which applies identically here.
 | Error-monitor free text unescaped, reachable **without authentication** | `report_client_error()` is `GRANT`ed to `anon` *and* `authenticated` (by design — it needs to catch errors from signed-out visitors too) and stores `p_page`/`p_message` with only a length truncation, no sanitization. `error_summary()` (owner-only) aggregates and returns them; `approvals.html`'s error-monitor panel rendered `row.message`/`row.page` raw via `.innerHTML` — reachable by literally anyone on the internet with no login, the widest possible reach of any stored-XSS instance found across this whole audit | **Fixed** — same `esc()`, bundled with the response-shape fix below |
 | Stored XSS in `omega-live.js`'s ticker (dormant) | `activity_feed.title` rendered raw via `.innerHTML`; RLS lets any member insert their own `is_public=true` row with an arbitrary title. Currently unreachable — no page has a `[data-live-ticker]` element yet — but `bg.js` loads this module on every page and it clearly exists to power one | **Fixed preemptively** — `esc()` added |
 | Reflected XSS in `pulse.html` (external source, not a Supabase table — a different vector than the rest of this sweep) | `item.title` from a Reuters feed proxied via `api.rss2json.com` (plain `fetch()`, no `.from()` call) rendered raw via `.innerHTML` — a compromised/MITM'd feed response would execute script. Missed by the `.from()`-call-centric sweep below since it isn't a database read | **Fixed** — `esc()` added |
+| Stored XSS in `omega-notify.js`'s notification panel (dormant) | `n.message`/`n.content`/`n.notification_type` from `public.notifications` rendered raw via `.innerHTML` in `buildPanel()`. Currently unreachable — no `GRANT INSERT` exists on the table for `authenticated`, so the only writers are the 5 owner-gated `SECURITY DEFINER` trigger functions in `omega_notify_triggers.sql`, each inserting a static string literal — but a future free-text notification event (already flagged in §2.2 as deliberately-undone work) would silently re-open this, same shape as the `omega-live.js` ticker above | **Fixed preemptively** — `esc()` added |
 
 This session ran a systematic, evidence-based sweep for all three established bug classes
 (stored XSS via unescaped `.innerHTML`, silent-failure writes, and queries against
@@ -135,6 +136,23 @@ tables/RPCs absent from the schema) across every page not yet covered by a prior
   above). **`graph.html` was a real finding** — see the table above and §4.9.
 - **omega-live.js pass:** `bg.js`-loaded modules aren't `.html` pages, so weren't covered by
   the per-page sweeps above; checked separately and found the dormant ticker XSS above.
+- **`omega-*.js` module pass, extended (this session):** all 16 `bg.js`-loaded modules that
+  have both `.innerHTML` and `.from()`/`.rpc()` calls traced individually (`omega-notify.js`
+  found above; `omega-chrono.js`, `omega-chronometer.js`, `omega-demo-video.js`,
+  `omega-emblems.js`, `omega-feedback.js`, `omega-gate.js`, `omega-membership.js`,
+  `omega-onboard.js`, `omega-progress.js`, `omega-realtime.js`, `omega-share.js`,
+  `omega-shell.js`, `omega-tier-gate.js`, `omega-user.js` all interpolate static config,
+  numeric-only values, or the *viewing* member's own session-scoped profile row — self-XSS-only
+  at worst, matching the established non-issue category). `omega-realtime.js` is worth noting
+  as a positive control: it reads the same cross-user, member-writable `activity_feed` table as
+  the dormant `omega-live.js` ticker, but renders it via `.textContent`, correctly escaped by
+  construction — no fix needed, confirming the bug class isn't systemic to every ticker.
+- **`.concat()` innerHTML pass (closes the one specific §5.1 gap from the prior session):**
+  8 files build `.innerHTML` via `[].concat(...)` rather than a `+`-visible-to-grep
+  concatenation. All 6 that actually feed `.innerHTML` (`contributions.html`,
+  `governance.html`, `heritage.html`, `notifications.html`, `publications.html`,
+  `treasury.html`) read from `localStorage` only — zero `.from()`/`.rpc()` calls in any of the
+  six — same self-scoped category as §4.2's finance pages. No new findings.
 - **Silent-failure-write sweep:** every `.html` file calling `.insert()`/`.update()`/
   `.upsert()`/`.delete()` against Supabase (23 files) checked for whether the write's
   `.error` gates the success message. `account.html`, `contracts.html`, `health.html`,
@@ -155,9 +173,10 @@ tables/RPCs absent from the schema) across every page not yet covered by a prior
   work. Noted here rather than silently ignored.
 
 A full re-sweep of all 170 pages for every possible bug class still has not been performed —
-seven session-level passes now (this one covering three `.innerHTML`-shape sub-waves, the
-`omega-live.js`/`pulse.html` non-page-scoped pass, plus the missing-table/RPC and
-silent-failure checks) cover a growing subset, not an exhaustive one — see §5.1.
+eight session-level passes now (this one covering three `.innerHTML`-shape sub-waves, the
+`omega-live.js`/`pulse.html` non-page-scoped pass, the missing-table/RPC and
+silent-failure checks, and this session's `.concat()`-shape pass plus the extended
+`omega-*.js` module trace) cover a growing subset, not an exhaustive one — see §5.1.
 
 ## 2. P0/P1 — Data integrity: fixed in code, not applied to a live database
 
@@ -251,6 +270,14 @@ If `apply_subscription` returns more than one row, that alone confirms the overl
 risk is live and payments are at risk — collapse to one signature immediately. For the other
 three, the query result determines which SQL files are now safe to delete/consolidate as the
 stale duplicate.
+
+**This finding is now automated** (`scripts/audit.py` checks 7 and 8, added in a later
+session) — every CI run now re-derives, from source, which client-called RPCs have
+non-identical `supabase/*.sql` definitions, so a future file addition that reintroduces or
+adds to this problem shows up as a build warning instead of needing another manual sweep.
+The live `pg_proc` verification above is still the only way to know which side actually
+deployed — the automated check can't reach the live database — but the source-side half of
+this finding no longer depends on anyone remembering to re-run the script-assisted pass.
 
 ### 3.2 `enterprise.html` — pricing display with no purchase flow
 
@@ -401,9 +428,11 @@ escaping `m.name` directly instead of relying on the broken round-trip.
   `.innerHTML`-interpolation check is manual per-file (tracing each variable's data source) but
   is now exhaustive across three shapes: template-literal (`${...}`), string-concatenation
   (`+`), and bare-variable (`.innerHTML=someVar` with the variable built up earlier) —
-  10 + 54 + 12 = 76 files, all individually traced (see §1) — and confirmed via grep that no
-  file uses `outerHTML=`/`insertAdjacentHTML(`/`document.write(` with any of the three shapes
-  (zero matches). Item 16 went beyond the original three bug classes for the first time: cross-
+  10 + 54 + 12 = 76 files, all individually traced (see §1), plus a fourth shape this session
+  (`.innerHTML=[].concat(...)`, 6 more files, see above, for 82 total) — and confirmed via grep
+  that no file uses
+  `outerHTML=`/`insertAdjacentHTML(`/`document.write(` with any of the four shapes (zero
+  matches). Item 16 went beyond the original three bug classes for the first time: cross-
   referenced every client `.rpc()` call's consumed shape against the actual SQL `RETURNS`
   clause (found the `error_summary`/`my_points_balance` shape bugs and the `approvals.html`
   contracts/reservations XSS in §1), and separately diffed every duplicated function signature
@@ -443,12 +472,14 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 7. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency (unlike the function duplicates
    in §3.1, these are safe today).
-8. Continue the page-by-page sweep (§5.1) — seven passes done; all three `.innerHTML`
-   interpolation shapes are now exhaustively traced (76 files, 6 real stored-XSS instances
-   found and fixed across the passes, plus 2 more via the non-page-scoped pass). Remaining
-   candidates for a next pass: pages with zero `.innerHTML` interpolation at all (not yet
-   checked for other bug shapes — raw string concatenation without `+` syntax visible to a
-   simple grep, or non-XSS logic bugs), and any bug class outside the ones this sweep has
-   focused on.
+8. Continue the page-by-page sweep (§5.1) — eight passes done; all four `.innerHTML`
+   interpolation shapes are now exhaustively traced (82 files across pages, 6 real stored-XSS
+   instances found and fixed among them, plus 3 more via the non-page-scoped `bg.js`-module/
+   external-content pass). All 16 `bg.js`-loaded modules with both `.innerHTML` and
+   `.from()`/`.rpc()` calls are now individually traced too (§1's extended module pass).
+   Remaining candidates for a next pass:
+   pages with zero `.innerHTML` interpolation at all (not yet checked for other bug shapes),
+   and any bug class outside the ones this sweep has focused on (XSS, silent-failure writes,
+   missing-table/RPC, RPC-response-shape mismatches, auth-bypass).
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.

@@ -159,6 +159,17 @@ In commit order, both repos kept in sync throughout:
     class as `family.html`/`social.html` from the first wave, missed until now. Fixed to check
     `.error` and alert on failure. No other pending SQL this round — this was a pure client-code
     fix, live the moment it's deployed, no database action needed.
+14. Verified `GAP_ANALYSIS.md` §3's open item ("confirm the 3 `DROP TABLE`-containing files
+    aren't wired into anything automatic") rather than leaving it as an assumption. All three
+    DROPs target only `public.dispatches`, not distinct tables; `chunk_07_migrations.sql`'s is
+    literally `omega_dispatch_reset.sql` pasted into a legacy bundle file whose own header says
+    "run this ONLY if OMEGA_DISPATCH.sql still errors"; `migration_runner.sql`'s DROP comes
+    after two earlier `CREATE TABLE dispatches` in the same file with no recreation
+    afterward — genuinely destructive if that file were ever run start-to-finish, but grepped
+    `ci.yml`, `scripts/`, every `.html`/`.js` file, and `supabase/functions/`: zero references
+    to any of the three files anywhere. Confirms and adds concrete verification to
+    `migrations/README.md`'s existing "must not be wired into any automated path" analysis.
+    No code change — a verification pass, closing an open question rather than a fix.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring

@@ -1,9 +1,58 @@
 -- ============================================================================
--- 0092_omega_notify_triggers.sql
 -- SYD OMEGA 91717 -- POPULATE public.notifications ON MEMBER-STATUS EVENTS
--- DEPENDS ON public.notifications (0091) already existing.
+-- omega_notifications_fix.sql added the public.notifications table that
+-- omega-notify.js (injected platform-wide by bg.js) reads for the badge/
+-- toast/panel widget, but nothing anywhere inserted a row into it -- CLAUDE.md
+-- flagged this explicitly as separate, undone-on-purpose work: "deciding
+-- which server-side events should generate one is separate... work."
+--
+-- This file closes that gap for the one set of events that's unambiguous and
+-- already fully defined: the five owner-gated member-status RPCs in
+-- omega_access_control.sql and omega_extend_trial_fix.sql
+-- (approve_member, grant_permanent_access, reject_member, revoke_member,
+-- extend_trial) -- every one of them already changes exactly one member's
+-- access state on the owner's explicit action, which is precisely what a
+-- notification should announce. No new business logic invented; no
+-- speculative trigger (e.g. "trade" or "mission outcome" events for
+-- user_assets) added -- those remain intentionally undone, per CLAUDE.md,
+-- pending a product decision on how they'd actually be generated.
+--
+-- Each function's body is otherwise byte-for-byte identical to its current
+-- definition (CREATE OR REPLACE, same signature/return type) -- only a
+-- single INSERT INTO public.notifications was added before the RETURN.
+-- notification_type values match the set omega-notify.js already recognizes
+-- (gate_unlock, access_granted, trial_start, task_complete, system).
+--
+-- DEPENDS ON public.notifications existing -- run AFTER
+-- omega_notifications_fix.sql (loose bag) / 0091_omega_notifications_fix.sql
+-- (supabase/migrations/), same as every other file in this family depends on
+-- omega_access_control.sql having already created the functions being
+-- replaced here.
+--
+-- Idempotent, safe to re-run.
 -- ============================================================================
 BEGIN;
+
+-- drop prior versions of these functions first -- CREATE OR REPLACE cannot
+-- change a return type, and a live database may already have a version of
+-- one of these with a different return type (or a different argument list
+-- than assumed below). Same defensive pattern as omega_access_control.sql,
+-- which originally created these functions for exactly this reason.
+DO $drop$
+DECLARE r record;
+BEGIN
+  FOR r IN
+    SELECT 'DROP FUNCTION IF EXISTS public.' || quote_ident(p.proname)
+           || '(' || pg_get_function_identity_arguments(p.oid) || ');' AS cmd
+    FROM pg_proc p
+    JOIN pg_namespace n ON n.oid = p.pronamespace
+    WHERE n.nspname = 'public'
+      AND p.proname IN ('approve_member','grant_permanent_access',
+                        'reject_member','revoke_member','extend_trial')
+  LOOP
+    EXECUTE r.cmd;
+  END LOOP;
+END $drop$;
 
 CREATE OR REPLACE FUNCTION public.approve_member(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
@@ -83,3 +132,4 @@ GRANT EXECUTE ON FUNCTION public.revoke_member(uuid)          TO authenticated, 
 GRANT EXECUTE ON FUNCTION public.extend_trial(uuid,int)       TO authenticated;
 
 COMMIT;
+-- ===== end omega_notify_triggers.sql =====

@@ -393,8 +393,9 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes
-  has still not been performed — seven passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
-  items 11, 13, 14, 15, 16, and 17) have each covered a growing subset, not the full set. Items
+  has still not been performed — eight passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
+  items 11, 13, 14, 15, 16, 17, and the `.concat()`-innerHTML check noted below) have each
+  covered a growing subset, not the full set. Items
   14-15 were script-assisted (cross-referencing every `.from()`/`.rpc()` call site and every
   write-error-check site programmatically) rather than manual page-by-page reading, which is
   why they could cover all remaining candidate files for those two bug classes in one pass. The
@@ -410,9 +411,16 @@ escaping `m.name` directly instead of relying on the broken round-trip.
   across the SQL bag rather than just duplicated table names (found §0's auth-bypass and §3.1's
   three divergent-function forks). Item 17 covered `bg.js`-loaded modules and external-API
   (non-Supabase) content sources, catching `omega-live.js`'s dormant ticker and `pulse.html`'s
-  RSS-feed XSS — both outside the `.from()`-call-centric scope of items 14-16. **Still not
-  covered:** `.innerHTML` built via string concatenation without a literal `+` visible to grep
-  (e.g. `.concat()`), any bug class outside XSS/silent-failure/missing-table/RPC-contract-
+  RSS-feed XSS — both outside the `.from()`-call-centric scope of items 14-16. An eighth pass,
+  this session, closed the one specific residual named above: every file matching
+  `.innerHTML=...concat(` (`treasury.html`, `publications.html`, `notifications.html`,
+  `kings.html`, `heritage.html`, `governance.html`, `contributions.html`) turned out to use
+  `[].concat(arr)` as an array-clone idiom (to avoid mutating with `.reverse()`), not
+  string-building, and every underlying rendered field is `localStorage`-only (self-scoped,
+  same non-issue category as §4.2) except `kings.html`'s Wikipedia `extract`, which is already
+  escaped at the point of use (line 143) before the `.concat()`-cloned-array render further
+  down the same file. Zero new findings — this gap is now closed, not just narrowed. **Still not
+  covered:** any bug class outside XSS/silent-failure/missing-table/RPC-contract-
   mismatch/auth-bypass, and a live-database check of which side of each §3.1 fork is actually
   deployed. `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually audited," not
   "confirmed clean."

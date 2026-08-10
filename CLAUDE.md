@@ -134,13 +134,23 @@ in `bg.js` rather than defining page-local styles that will drift.
   `supabase/migrations/README.md` for how the order and content were
   derived, what was deliberately excluded (a conditional `DROP TABLE`
   file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
-  only scripts), and the one open item: it has not yet been executed
-  against a live/test database, so run it against a scratch Supabase
-  project before pointing any real deployment at it. The flat
-  `supabase/*.sql` bag at repo root is unchanged and still the source of
-  truth for new schema changes — see `REPO_AUDIT.md` §4 for the still-open
-  duplicate-table-definitions list (47 tables defined in more than one
-  file; not deduplicated by the migrations/ work, only reordered).
+  only scripts). All 94 files now apply cleanly end-to-end against a fresh
+  scratch PostgreSQL 16 instance (`migrations/README.md`'s "Full 94-file
+  sequence validated" entry) — but that only proves the sequence is
+  internally consistent on a **blank** database, not that it matches the
+  owner's actual live schema; `task_completions` is a proven
+  counterexample (live `id bigint` + `axis`/`increment` columns match none
+  of the 3 competing `CREATE TABLE IF NOT EXISTS` definitions in the SQL
+  bag). Do not run the full `migrations/` sequence against the live
+  production database expecting it to safely "catch up" existing state —
+  use it for a scratch/staging project, and use the individually
+  live-verified fix files (`trial_access.sql`, `migrations/0013`,
+  `0089`–`0094`) for production. The flat `supabase/*.sql` bag at repo
+  root is unchanged and still the source of truth for new schema changes
+  — see `REPOSITORY_AUDIT.md` §4 for the still-open duplicate-table-
+  definitions list (47 tables defined in more than one file; not
+  deduplicated by the migrations/ work, only reordered — consolidating
+  needs a per-table live-schema check, not a bulk sweep).
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
   operationally ready should ship dormant behind a flag here, matching
@@ -188,7 +198,7 @@ Anything you add should keep this pipeline green. If you add a new
 injection or a `<script>` tag) — `audit.py` will otherwise flag it as an
 orphaned file.
 
-## 8. Known debt (see `REPO_AUDIT.md` for detail)
+## 8. Known debt (see `REPOSITORY_AUDIT.md`, `GAP_ANALYSIS.md`, `CAPABILITY_INVENTORY.md` for detail)
 
 - **No real client-side threat-detection exists, despite the security
   narrative implying it does — a naming mismatch made this hard to spot.**
@@ -297,7 +307,7 @@ orphaned file.
   the docx is not live-served, but both files still bloat every clone with
   no LFS story. `.gitattributes` now marks them `-diff -text`; moving them
   to Supabase Storage/Vercel Blob and migrating to Git LFS remain open,
-  non-urgent (see `REPO_AUDIT.md`).
+  non-urgent (see `REPOSITORY_AUDIT.md` §4).
 
 - **Stored XSS in the owner's own admin panels — fixed.** `approvals.html`
   and `profile.html` (member-list views, the highest-privilege pages in the

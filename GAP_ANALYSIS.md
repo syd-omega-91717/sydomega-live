@@ -230,7 +230,7 @@ mean inventing business logic that doesn't exist, not just wiring up already-def
 
 | Gap | Evidence | Recommendation |
 |---|---|---|
-| 47 tables defined in >1 SQL file | `scripts/audit.py` output — `platform_settings` in 12 files, `platform_owners`/`dispatches` in 10 each | Not urgent (idempotent `CREATE TABLE IF NOT EXISTS` makes replay safe today); real fix is consolidating to `supabase/migrations/` as sole source of truth |
+| 47 tables defined in >1 SQL file | `scripts/audit.py` output — `platform_settings` in 12 files, `platform_owners`/`dispatches` in 10 each | "Idempotent, safe to replay" is only proven true *relative to each other on a fresh database* — this session validated the full `migrations/0001`–`0094` sequence end-to-end for the first time (see `migrations/README.md`'s "Full 94-file sequence validated" entry) and found a concrete counterexample: none of the 3 competing `task_completions` definitions match what's actually live (different `id` type, an `axis`/`increment` column pair present in *none* of them). Consolidating to one canonical definition per table needs the same per-table live-schema check done for `task_completions`, not a bulk pick-the-most-complete-looking-file sweep — see `migrations/README.md` for detail. |
 | 3 files contain `DROP TABLE`/`DROP SCHEMA` | `chunk_07_migrations.sql`, `migration_runner.sql`, `omega_dispatch_reset.sql` — `audit.py` warning | **Confirmed dead.** All three DROPs target only `public.dispatches` (not 3 different tables); `chunk_07_migrations.sql`'s is literally `omega_dispatch_reset.sql` pasted into a bundle file, whose own header says "run this ONLY if OMEGA_DISPATCH.sql still errors." `migration_runner.sql`'s DROP comes *after* two earlier `CREATE TABLE dispatches` in the same file with no recreation afterward — destructive if that file were ever run start-to-finish, but grepped CI (`ci.yml`), `scripts/`, every `.html`/`.js` page, and `supabase/functions/`: zero references to any of the three files anywhere. Matches `migrations/README.md`'s existing "must not be wired into any automated path" analysis; this adds the concrete grep-based confirmation. |
 | `supabase/migrations/` untested against a live database | `migrations/README.md`'s own stated open item | Run against a scratch Supabase project before treating it as canonical |
 | `2` files added to `migrations/` (0087/0088) without a README note | Confirmed by comparing directory listing against README's last dated section, corrected this session | **Fixed** — README updated with a note and corrected file-count claims |
@@ -495,8 +495,10 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 7. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
    legal decision, not code.
 8. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
-   source of truth (§3) — housekeeping, no functional urgency (unlike the function duplicates
-   in §3.1, these are safe today).
+   source of truth (§3) — no longer pure housekeeping now that `task_completions` proved a
+   fresh-replay definition can silently diverge from the live schema (§3, `migrations/README.md`);
+   do this one table at a time with a live `information_schema.columns` check each, not a bulk
+   sweep.
 9. Continue the page-by-page sweep (§5.1) — nine passes done across two sessions; all four
    `.innerHTML` interpolation shapes are now exhaustively traced (83 files across pages — the
    `.concat()` shape is 7 files/13 instances, not 6, per the correction above — 6 real

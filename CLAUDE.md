@@ -360,3 +360,15 @@ orphaned file.
 - Secrets (`STRIPE_*`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY`) are set via
   `supabase secrets set`, never committed. Run `scripts/check-secrets.sh`
   before deploying Edge Function changes.
+- Keep `REPOSITORY_AUDIT.md`, `CAPABILITY_INVENTORY.md`, and
+  `GAP_ANALYSIS.md` current as part of the same change, not a followup:
+  adding/removing a page, module, table, RPC, or Edge Function; fixing or
+  discovering a gap; or applying pending SQL to a live database all mean
+  one of these three is now stale. Update the specific section that
+  changed rather than rewriting the file. Every claim in these three
+  stays evidence-cited (a file:line, a command's actual output, a query
+  result) — never mark something fixed, applied, or verified unless it
+  actually was in that session; an unmarked/unverified item should stay
+  that way rather than be upgraded on assumption. This is how
+  `REPO_AUDIT.md`'s counts drifted stale before `REPOSITORY_AUDIT.md`
+  replaced them — don't repeat it.

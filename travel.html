@@ -196,8 +196,8 @@ document.getElementById('btn-travel').addEventListener('click',async function(){
   var notes=document.getElementById('tr-notes').value.trim();
   if(!dest)return;
   var {error}=await sb.from('travel_journeys').insert({destination:dest,purpose:purpose,notes:notes});
-  window.OmegaProgress&&OmegaProgress.record({kind:'travel',task:'travel:'+Date.now(),axis:'a',title:'Journey Recorded'});
   if(error){alert('Could not save journey: '+error.message);return;}
+  window.OmegaProgress&&OmegaProgress.record({kind:'travel',task:'travel:'+Date.now(),axis:'a',title:'Journey Recorded'});
   await loadJourneys();
   document.getElementById('tr-dest').value='';
   document.getElementById('tr-notes').value='';

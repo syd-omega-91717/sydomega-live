@@ -1,12 +1,18 @@
 -- ============================================================================
 -- SYD OMEGA 91717 -- CONSULTANCY REQUESTS (real booking backend, M2)
 -- Supersedes BOTH consult_requests.sql and the previous version of this file --
--- neither actually matched consultancy.html's real insert call. That page sends
--- {user_id, domain, message, urgency, commission_rate, confidentiality_accepted,
--- status:'pending'} directly (no RPC, no "subject" field) -- this schema matches
--- that exactly. Delete consult_requests.sql after running this; do not run it,
--- it will fight this schema (different id type, requires a "subject" column
--- this page never sends). Idempotent -- safe to re-run.
+-- neither actually matched consultancy.html's real insert call at the time.
+-- consultancy.html has since changed again: it now sends
+-- {domain, contact, preferred_time, brief} (consultancy.html:157) -- "contact"
+-- and "preferred_time" did not exist in this table, so every submission
+-- errored with "column does not exist" (shown to the user -- not silent, but
+-- the booking flow was completely non-functional). Added both columns below;
+-- kept message/urgency/commission_rate/confidentiality_accepted from the
+-- earlier page version rather than dropping them -- no destructive schema
+-- changes on a table that may already hold rows. Delete consult_requests.sql
+-- after running this; do not run it, it will fight this schema (different id
+-- type, requires a "subject" column this page never sends). Idempotent --
+-- safe to re-run.
 -- ============================================================================
 BEGIN;
 
@@ -14,6 +20,9 @@ CREATE TABLE IF NOT EXISTS public.consult_requests (
   id                       uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id                  uuid NOT NULL DEFAULT auth.uid(),
   domain                   text NOT NULL,
+  contact                  text,
+  preferred_time           text,
+  brief                    text,
   message                  text,
   urgency                  text,
   commission_rate          numeric,
@@ -21,11 +30,14 @@ CREATE TABLE IF NOT EXISTS public.consult_requests (
   status                   text NOT NULL DEFAULT 'pending',  -- pending | reviewing | scheduled | closed
   created_at               timestamptz NOT NULL DEFAULT now()
 );
--- self-heal an older copy of either prior schema up to this one
+-- self-heal an older copy of any prior schema up to this one
 ALTER TABLE public.consult_requests ADD COLUMN IF NOT EXISTS urgency text;
 ALTER TABLE public.consult_requests ADD COLUMN IF NOT EXISTS commission_rate numeric;
 ALTER TABLE public.consult_requests ADD COLUMN IF NOT EXISTS confidentiality_accepted boolean NOT NULL DEFAULT false;
 ALTER TABLE public.consult_requests ADD COLUMN IF NOT EXISTS message text;
+ALTER TABLE public.consult_requests ADD COLUMN IF NOT EXISTS contact text;
+ALTER TABLE public.consult_requests ADD COLUMN IF NOT EXISTS preferred_time text;
+ALTER TABLE public.consult_requests ADD COLUMN IF NOT EXISTS brief text;
 -- if an older run left subject as NOT NULL, relax it -- this page never sends it
 DO $relax$
 BEGIN

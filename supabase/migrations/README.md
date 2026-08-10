@@ -161,7 +161,7 @@ the automatic sequence entirely" further down for the full reasoning.
 ## Not addressed here (explicitly out of scope)
 
 - **Duplicate table/function definitions across files** (the
-  47-tables-in-more-than-one-file issue from `REPO_AUDIT.md` §4) —
+  47-tables-in-more-than-one-file issue, `REPOSITORY_AUDIT.md` §4) —
   unresolved. Nothing here was deduplicated or merged; this
   reorganization establishes order and correct current content, not a
   reduction of redundancy. Expected safe to replay per the idempotent
@@ -612,3 +612,63 @@ with the owner's real reported schema: the amended file applies cleanly,
 
 `supabase/migrations/` still contains **94 files** (`0001`–`0094`) — `0094`
 was amended, not added to. Not yet re-applied to the live database.
+
+## Full 94-file sequence validated end-to-end for the first time — and a critical caveat this surfaced
+
+Every prior "Execution validation" entry above tested a subset (87 files, then incremental
+additions). Ran the complete current sequence (`0001`–`0094`, including `0093`/`0094`) against
+a genuinely fresh PostgreSQL 16 instance, seeded with an improved Supabase-project stand-in
+(the earlier stub's `auth.users` was missing several real Supabase/GoTrue columns —
+`email_confirmed_at`, `last_sign_in_at`, etc. — which `0081_signup_pipeline.sql`'s
+`pending_access_requests` view genuinely depends on; added them, not a repo bug, a stub gap).
+
+**Result: all 94 files apply cleanly, in order, zero manual intervention, on a fresh database.**
+This is the first time this exact file set has been confirmed to work end-to-end.
+
+**Critical finding this run surfaced: a fresh replay of `migrations/` does not reproduce the
+owner's actual live schema — proven concretely with `task_completions`.** Four files define
+this table with `CREATE TABLE IF NOT EXISTS`: `0001_omega_master_deploy.sql` (first in
+sequence — `id uuid`, `task text`, `kind text`, `completed_at`, `created_at`; no `axis`, no
+`increment`), `0058_matrix_engine.sql` (the "rich" `task_name`/`axis_type`/`points_earned`
+shape `complete_task()`'s live body was written against), and `0060_omega_backend_sync.sql`
+(a third, near-identical-to-0001 shape). On a **fresh** database, `0001` always wins —
+`IF NOT EXISTS` makes every later `CREATE TABLE task_completions` a silent no-op — so
+`0058_matrix_engine.sql`'s richer definition is **dead code in the replay sequence**, never
+actually reached. The end state after all 94 files: `id uuid`, a
+`UNIQUE(user_id, task)` index (`0001`, reinforced by `0044`), two triggers (`0005`'s
+`award_points_on_task`, `0069`'s `trig_task_to_feed`), plus `0094`'s added `task_name`/etc.
+columns layered on top.
+
+**None of that matches the owner's real, live `task_completions`**, queried directly via
+`information_schema.columns` while fixing `0094` (see the entry above): `id bigint` (not
+`uuid`), `kind`/`task`/`axis`/`increment`/`completed_at`/`created_at` (an `axis`/`increment`
+pair that appears in *none* of the three `CREATE TABLE` definitions above), no unique index on
+`(user_id, task)`, neither trigger. The live table was evidently created by some path this SQL
+bag doesn't fully capture (possibly a manual/dashboard change, or an even older bootstrap not
+present in any current file) — its exact origin is not reconstructable from source alone, and
+guessing further would not be worth the risk of a wrong conclusion.
+
+**Practical consequence — read this before running anything against production:** "all 94
+files apply cleanly" is true and now verified, but only describes replaying the sequence onto
+a **blank** database. It says nothing about what happens running the same sequence against the
+**existing**, already-populated live database, where `CREATE TABLE IF NOT EXISTS` silently
+skips (the table's already there, in a shape none of these files anticipated) while later
+`ALTER`/trigger/index statements in the same files would still attempt to run against
+whatever's actually live — and, as `task_completions` proves, "what's actually live" can differ
+from every fresh-replay assumption in this SQL bag. **`supabase/migrations/` is now validated
+and trustworthy for spinning up a new/staging/test Supabase project from scratch. It is not
+validated as safe to run wholesale against the owner's existing production database`** — that
+remains exactly the standing caveat CLAUDE.md already states ("run it against a scratch
+Supabase project before pointing any real deployment at it"), now with a concrete, reproduced
+example of why. The safe path for the real production database continues to be the individually
+targeted, individually-verified-against-the-real-schema fix files (`0089`–`0094`, `0013`, and
+`trial_access.sql`) — not a wholesale `supabase db push` of the full historical sequence.
+
+This also means the "47 duplicate tables, safe today because idempotent" framing (`CLAUDE.md`
+§5, `GAP_ANALYSIS.md` §3) needs a caveat: idempotent-and-safe is only guaranteed true relative
+to *each other* on a fresh database. It says nothing about whether any of them match what's
+actually live on a database with real history — as just proven for one specific, high-traffic
+table. Consolidating the 47 duplicates down to one canonical definition per table (`GAP_ANALYSIS.md`
+§6 item 8) should not be done by picking whichever file "looks most complete" — it needs the
+same per-table live-schema check this session did for `task_completions`, one table at a time,
+not a bulk sweep.

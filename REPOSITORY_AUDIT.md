@@ -5,11 +5,13 @@
 fixes applied earlier in this branch's history (see §6 for the session log).
 **Companion documents:** [`CAPABILITY_INVENTORY.md`](./CAPABILITY_INVENTORY.md) (what exists),
 [`GAP_ANALYSIS.md`](./GAP_ANALYSIS.md) (what's missing/broken and what to do about it).
-**Relationship to `REPO_AUDIT.md`:** that file is an earlier, still-valid hygiene/secrets audit
-(2026-08-08). This document supersedes it for current numbers and adds the CI-tool findings,
-the session's fix log, and a fresh code-quality finding (§5); `REPO_AUDIT.md`'s §5
-(token-economy tense fix) and §2/§3 (gitattributes, secrets posture) are not re-litigated here —
-still accurate, not repeated.
+**Relationship to `REPO_AUDIT.md`:** that file (2026-08-08) has been retired — it was never
+one of the three companion documents `CLAUDE.md` §9 designates for upkeep, and by the time it
+was retired this document already superseded it for every current number. Its two still-live
+findings were folded in here first: the `setup.md` PII/project-ref note (§3) and the docx/mp4
+LFS-migration debt (§4's binary-size row). Its §5 (token-economy present-tense language) had
+already been independently fixed and documented in `CLAUDE.md` §8 before retirement, so nothing
+there needed carrying forward.
 
 ---
 
@@ -47,7 +49,7 @@ fully resynced to match this repository exactly, on this same branch — see §6
 SUMMARY                    — critical: 0   warnings: 6   PASSED
 ```
 
-All 6 warnings are pre-existing, understood, and covered in `REPO_AUDIT.md` §2/§4 or
+All 6 warnings are pre-existing and understood — covered in §4 below or
 `GAP_ANALYSIS.md` §2.1/§3.1 — not new findings. The important number is **critical: 0**,
 meaning: every module `bg.js` / `omega-notify.js` / any page requests exists on disk, and
 every table has RLS enabled.
@@ -84,6 +86,12 @@ on all 7 Edge Functions (non-blocking), `sw.js` precache vs. actual files (block
   dedicated scan enforces this on every push. Edge Function secrets
   (`STRIPE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY`, etc.) are documented in
   `scripts/check-secrets.sh` as owner-managed via `supabase secrets set`, never committed.
+  `setup.md` (deployment instructions, not client-shipped code, so outside CI's scan) does
+  contain the owner's real personal email (`s.y.dagher@gmail.com`) and real Supabase
+  project ref (`ydqhzvvoyufiiqvzcjns`) in plain text. Neither is a secret by itself — the
+  project ref is already a public identifier visible in `bg.js`'s client-side Supabase URL —
+  but if this repo is ever made public, that's worth a conscious decision rather than an
+  accidental one (folded in from the now-retired `REPO_AUDIT.md` §3).
 - **Stored XSS — found and fixed this session:** `approvals.html` and `profile.html`
   (the owner's own member-management admin panels — the highest-privilege pages in the app)
   rendered `display_name`/`email` straight into `.innerHTML` with no escaping.
@@ -97,21 +105,32 @@ on all 7 Edge Functions (non-blocking), `sw.js` precache vs. actual files (block
   `expire_trial` with no caller check at all, despite being `GRANT`ed to `authenticated`. See
   §6 item 16 and `GAP_ANALYSIS.md` §0 for the full writeup, exploit, fix, and validation.
 
-## 4. Schema organization (unchanged from `REPO_AUDIT.md` §4, numbers refreshed)
+## 4. Schema organization
 
 `supabase/` holds 111 loose `.sql` files, applied manually/in sequence; only 9 carry a
 numeric prefix. 47 tables are defined in more than one file (`platform_settings`: 12 files,
-`platform_owners`/`dispatches`: 10 each, down to `profiles`: 4) — safe today because most
-statements use `CREATE TABLE IF NOT EXISTS`, but fragile to reason about. `supabase/migrations/`
-(92 files, `0001`–`0092`, Supabase-CLI convention) now exists as an ordered, deduplicated-order
-copy of this same content — see its own `README.md` for the full derivation history and the
-still-open 47-tables-in-multiple-files redundancy (reordered, not deduplicated). **Neither the
-loose bag nor `migrations/` has been applied to a live database from any session in this
-project's history** — no session has held live Supabase credentials.
+`platform_owners`/`dispatches`: 10 each, down to `profiles`: 4) — reordered, not deduplicated,
+in `supabase/migrations/` (94 files, `0001`–`0094`, Supabase-CLI convention). A full
+end-to-end replay of all 94 files against a fresh scratch PostgreSQL 16 instance now succeeds
+with zero manual intervention (first time this exact file set was verified — see
+`migrations/README.md`'s "Full 94-file sequence validated" entry) — but that only proves
+internal consistency on a **blank** database, not that it matches the owner's live schema.
+It provably doesn't in at least one case: `task_completions` on the live database (`id bigint`,
+an `axis`/`increment` column pair) matches none of the 3 competing `CREATE TABLE IF NOT EXISTS`
+definitions for that table in the SQL bag. **The 47-duplicate-tables "safe because idempotent"
+framing is therefore only safe relative to a fresh database, not proven safe as a stand-in for
+what's actually live** — consolidating to one canonical definition per table needs a live
+`information_schema.columns` check per table, not a bulk sweep (`GAP_ANALYSIS.md` §3/§6 item 8).
+Owner-held live Supabase credentials have since been used this session (the `pg_proc`
+verification query in `GAP_ANALYSIS.md` §3.1, and the `task_completions` schema check above)
+but the SQL fix files themselves — `trial_access.sql`, `migrations/0013`, `0089`–`0094` — have
+still not been applied to the live database.
 
 **Functions are a separate, higher-risk duplication class** — see `GAP_ANALYSIS.md` §3.1:
-unlike tables, `CREATE OR REPLACE FUNCTION` overwrites unconditionally, and 10 functions
-(including `is_platform_owner()` itself) have genuinely diverging definitions across files.
+unlike tables, `CREATE OR REPLACE FUNCTION` overwrites unconditionally. Confirmed live via the
+`pg_proc` query: `is_platform_owner()` and `my_matrix()` resolved to their correct definitions
+(no action needed); `complete_task()` and `apply_subscription()` did not — both fixed, see
+`CLAUDE.md` §8 and `GAP_ANALYSIS.md` §3.1 for the full writeup.
 
 ## 5. New finding — `nav.js`'s section-mapping object has 19 dead/overridden keys
 
@@ -395,7 +414,7 @@ above every other pending-SQL item.
 | `notifications` population | Fixed this session (§6.9); production-tested this session (§6.19) — first attempt failed with `42P13`, corrected file **not yet re-applied** |
 | `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
 | `owner_apex_lock.sql` dead `nodes_earned` assignment | Fixed this session (§6.12) — owner-run manual script, not auto-applied |
-| SQL schema organization — tables | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md`; safe today (idempotent) |
+| SQL schema organization — tables | Needs work — 47 duplicate table defs; "safe, idempotent" only proven true on a fresh database, not against live (§4, `task_completions` counterexample) |
 | **SQL schema organization — functions** | **Found this session (§6.16)** — 10 functions with diverging (not just cosmetic) duplicate definitions, 3 with real behavioral risk including `is_platform_owner()` itself; unsafe (`CREATE OR REPLACE` overwrites unconditionally), needs a live `pg_proc` check — see `GAP_ANALYSIS.md` §3.1 |
 | `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
 | `queue.html` dispatch log (wrong columns + stored XSS) | Found and fixed this session (§6.14) — pure client-code fix, no database action needed |
@@ -403,7 +422,7 @@ above every other pending-SQL item.
 | 3 `DROP TABLE`-containing files | **Confirmed dead this session (§6.17)** — zero references anywhere in CI/scripts/pages/functions |
 | `omega-live.js`/`pulse.html` XSS | Found and fixed this session (§6.18) — pure client-code fix, no database action needed |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |
-| Committed binary size (docx/mp4) | Unchanged, non-urgent (see `REPO_AUDIT.md` §2) |
+| Committed binary size (docx/mp4) | Unchanged, non-urgent — `.gitattributes` marks both `-diff -text`; neither is on Git LFS, so both permanently bloat every clone (folded in from the now-retired `REPO_AUDIT.md` §2; see `CLAUDE.md` §8 for the `.vercelignore`-is-the-only-deploy-time-defense detail) |
 
 The `trial_access.sql` fix aside — that one is a live-or-was-live security hole, treat as
 urgent — nothing else here is a critical blocker for the app as deployed today. The

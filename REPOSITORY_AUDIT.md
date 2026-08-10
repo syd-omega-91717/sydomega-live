@@ -379,3 +379,83 @@ highest-leverage next steps: apply the patched `trial_access.sql` first (§0), t
 corrected `migrations/0013` and `0089`–`0092` (item 19's fix) to the live database —
 everything else is either already fixed in code, or genuine hygiene debt with no functional
 impact.
+
+## 8. Cross-repository survey — is there anything in the other 17 repos worth porting in?
+
+This session was asked to analyze every repo in the `syd-omega-91717` account (all 18 were
+already cloned locally, no `add_repo` needed) and pull in anything that would improve
+`sydomega-live`. Full results below — recorded so a future session doesn't have to re-clone and
+re-survey the same ground from scratch.
+
+**7 repos are empty** (`1-18-2026`, `Omega-91717_syd`, `SYD_OMEGA_91717`,
+`SydOmega91717_NoteBook-main`, `syd-omega-91717-hpn8`, `sydomega91717`,
+`sydomega91717_vercel` — zero commits, `git branch -a` returns nothing). Nothing to check.
+
+**`-_V18_SYDOMEGA91717` is a byte-for-byte match of this repo** (`diff -rq`, zero output,
+excluding `.git`) — expected, a prior session (§6 item, "Second repo drift") fully resynced it.
+Still nothing new; keep syncing it after future pushes if that's still wanted.
+
+**The remaining 9 populated repos are earlier, divergent, or abandoned drafts — none had
+content safe or valuable to port in:**
+
+- `sydomega91717-chatgbt` (11 files) — pure aspirational scaffold. Its `bg.js`/`audio.js` are
+  literal directory-tree diagrams (17 and 6 lines), not code; its README describes a
+  Node/Express/PostgreSQL/Docker/Kubernetes "Enterprise Transformation Program" that was never
+  built. Nothing to take.
+- `sydomega91717-Claude` (180 files, last commit 2026-07-12 — a month behind this repo's
+  2026-08-10) — an earlier snapshot of this same static site. 155 of its filenames already
+  match this repo's current files. Checked its few genuinely unique files: `omega-fx.js` (the
+  cosmology canvas animation) is **already merged into this repo's `bg.js` inline** — `bg.js`
+  literally says "No external /omega-fx.js file required. Updating bg.js is enough." at the
+  point it was folded in. `cosmos-canon-fix.js` patches a Virgo→Athena / duplicate-deity bug in
+  `cosmos.html` that **this repo's current `cosmos.html` already has correct** (verified: line
+  317 and 637 both read `deity:'ATHENA'` for Virgo, and the "duplicate" deity count is expected
+  — each of the 12 deities legitimately appears once in the compact `SIGNS` array and once in
+  the fuller compatibility-matrix array, not a real duplicate). `portal.html` is a
+  public-marketing landing page (Twitter/OG cards, "sovereign multi-platform ecosystem" pitch)
+  that contradicts this platform's deliberate non-public posture (`vercel.json` rewrites `/` to
+  `/enter`, the login gate, and ships `X-Robots-Tag: noindex, nofollow` platform-wide) — not
+  ported, on purpose. Net: this repo's useful ideas are already upstream; nothing left to take.
+- `Project_SYD_91717` (101 files, 2 commits), `OMEGA_91717` (672 files, 50 commits),
+  `SYD-OMEGA-91717` (27,353 files incl. `dist/`+`node_modules/`, a Next.js/React/Three.js
+  rebuild), `S.Y.D_Omega_9171` (29 files), `SYD_OMEGA_91717_18-1-2026` (36 files) — all
+  independent, ungrounded "sovereign empire" scaffolds (Solidity contracts never deployed,
+  Python scripts named `.deadman_switch.py`/`.nano_defence.py`/`.self_audit.py`, investor
+  pitch-deck drafts, Next.js/Docker/Kubernetes rebuilds) with near-zero filename overlap with
+  this repo (9/672 for `OMEGA_91717`, lower for the others) and no working deployment. Their
+  existence is exactly what `CLAUDE.md`'s opening paragraph already warns about — mythic
+  "sovereign" framing without concrete engineering behind it. Importing any of their code would
+  mean adopting a build step/framework this repo deliberately avoids (`CLAUDE.md` §9); importing
+  their monetization/blockchain/NFT claims would reintroduce exactly the premature-claims problem
+  `sovereign-covenant.html`'s dormant-token disclaimers were added to fix. Not ported.
+- `SydOmega91717_NoteBook` (367 files, 50 commits) — a pnpm/turbo microservices monorepo
+  (`packages/`, `services/`, `docker/`) — a different, abandoned architectural direction, only 6
+  filenames in common. Its `docs/legal/` folder has draft `PrivacyPolicy.md`/
+  `TermsOfService.md`/`NFT_Disclosure.md`/`corporate-structure.md` — **not imported**: this
+  repo's actual `terms.html` is already a carefully-worded, 11-article page that specifically
+  gates economics/tokens pending legal review (matching the dormant-token convention throughout
+  this codebase); swapping in an unreviewed draft with an `NFT_Disclosure.md` would contradict
+  that discipline and is a legal decision, not a code one — exactly the kind of thing `CLAUDE.md`
+  says needs an explicit decision, not a unilateral import.
+- `sydomega91717_Netifly` (21,536 files, single commit — a Vite/React/Three.js SPA build
+  export, a different rebuild direction, not this repo's architecture) — **the one resource
+  worth flagging for a future session, not acted on now:** `assets/generated/` holds roughly
+  19,600 AI-generated PNGs across 7 categories (medals, certificates, horoscopes, UI, logos,
+  gallery, backgrounds — ~2,800 files / ~12 MB each). This repo currently ships almost no
+  custom art at all (`find . -iname '*.png' -o -iname '*.jpg' -o -iname '*.svg'` → 3 files
+  total, the PWA icons) — real art could genuinely improve pages like `honors.html`/
+  `awards.html`/certificate rendering, which are pure CSS/Unicode today. **Not imported this
+  session**: the files are raw, uncurated batch-generation output (`prompt_XXXX_*.png` naming,
+  no indication of which were selected as final), so pulling any of them in requires a human
+  visually picking a small curated set — bulk-importing is both irresponsible (no way to vet
+  thousands of images programmatically) and would recreate the binary-bloat problem this repo's
+  own `CLAUDE.md` already flags for its two existing committed binaries. If the owner wants to
+  pursue this, the concrete next step is: browse `sydomega91717_Netifly/assets/generated/<category>/`,
+  hand-pick a handful of final images (not the whole batch), and add just those.
+
+**Conclusion:** `sydomega-live` is the mature, actively-developed, canonical repo in this
+account — every other populated repo is either an exact stale mirror (already resynced), a
+superseded earlier draft whose useful fixes are already merged upstream, or a divergent,
+never-completed rebuild attempt. No code or legal content from any of them was safe to bring in
+without contradicting decisions this repo has already deliberately made. The one real asset —
+`sydomega91717_Netifly`'s generated art library — needs human curation before it's actionable.

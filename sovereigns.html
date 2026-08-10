@@ -100,6 +100,7 @@
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
 var MATS=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Diamond','Adamant','Aether','Omega Master'];
 var MAT_COL=['#D9B86A','#A9C2D8','#C7CDD6','#8B8F9C','#78909C','#607D8B','#C9A84C','#E8D5B7','#9B6BF0','#E2C86D','#00E5FF','#C9A84C'];
@@ -129,7 +130,7 @@ function renderLeaderboard(){
     if(r.isMe)tr.style.background='rgba(0,229,255,.04)';
     tr.innerHTML='<td><span class="rank-cell '+rankCls+'">#'+rank+'</span></td>'
       +'<td><span class="'+labelCls+'">'+label+'</span></td>'
-      +'<td><span class="sign-badge">'+r.sign+'</span></td>'
+      +'<td><span class="sign-badge">'+esc(r.sign)+'</span></td>'
       +'<td><span class="auth-val" style="color:'+rankCol+'">'+r.auth.toFixed(2)+'</span><div class="tier-bar"><div class="tier-fill" style="width:'+authPct+'%;background:linear-gradient(90deg,'+matCol+',transparent)"></div></div></td>'
       +'<td><span class="mat-badge" style="color:'+matCol+';border-color:'+matCol+'44">'+MATS[mi]+'</span></td>'
       +'<td style="color:var(--muted)">('+r.a.toFixed(1)+','+r.b.toFixed(1)+','+r.c.toFixed(1)+')</td>';
@@ -148,7 +149,7 @@ function renderThrone(){
     d.innerHTML='<div class="tc-rank" style="color:'+col+'">#'+(i+1)+'</div>'
       +'<div class="tc-label" style="color:'+col+'">'+label+'</div>'
       +'<div class="tc-auth">AUTHORITY '+r.auth.toFixed(2)+'</div>'
-      +'<div class="tc-sign">'+r.sign+'</div>'
+      +'<div class="tc-sign">'+esc(r.sign)+'</div>'
       +'<div style="font-family:var(--M);font-size:9px;color:'+MAT_COL[mi]+';margin-top:6px;letter-spacing:2px">'+MATS[mi]+'</div>';
     tr.appendChild(d);
   });

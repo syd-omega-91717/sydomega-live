@@ -271,6 +271,14 @@ risk is live and payments are at risk — collapse to one signature immediately.
 three, the query result determines which SQL files are now safe to delete/consolidate as the
 stale duplicate.
 
+**This finding is now automated** (`scripts/audit.py` checks 7 and 8, added in a later
+session) — every CI run now re-derives, from source, which client-called RPCs have
+non-identical `supabase/*.sql` definitions, so a future file addition that reintroduces or
+adds to this problem shows up as a build warning instead of needing another manual sweep.
+The live `pg_proc` verification above is still the only way to know which side actually
+deployed — the automated check can't reach the live database — but the source-side half of
+this finding no longer depends on anyone remembering to re-run the script-assisted pass.
+
 ### 3.2 `enterprise.html` — pricing display with no purchase flow
 
 `enterprise.html` shows $199/$999/$4,999/Custom tiers but has **zero Stripe/checkout wiring**

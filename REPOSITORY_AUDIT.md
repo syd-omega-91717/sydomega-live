@@ -40,12 +40,36 @@ fully resynced to match this repository exactly, on this same branch — see §6
                              WARNING — 3 files contain DROP TABLE/SCHEMA (see §4)
 5/6 · DEPLOY HYGIENE       — WARNING — 1 unreachable-but-deployed file (Legal-IP-Brief.docx)
                              WARNING — 1 asset over 1000 KB (demo .mp4, 3.7 MB)
-SUMMARY                    — critical: 0   warnings: 4   PASSED
+7 · CLIENT-REACHABLE SCHEMA REFERENCES — WARNING — 2 .from() tables never CREATE TABLE'd
+                             (transactions, wallet_balances — both already known, §2.1)
+8 · DIVERGING CLIENT-CALLED RPC DEFINITIONS — WARNING — 11 client-called RPCs with
+                             non-identical definitions across supabase/*.sql
+SUMMARY                    — critical: 0   warnings: 6   PASSED
 ```
 
-All 4 warnings are pre-existing, understood, and covered in `REPO_AUDIT.md` §2/§4 — not
-new findings. The important number is **critical: 0**, meaning: every module `bg.js` /
-`omega-notify.js` / any page requests exists on disk, and every table has RLS enabled.
+All 6 warnings are pre-existing, understood, and covered in `REPO_AUDIT.md` §2/§4 or
+`GAP_ANALYSIS.md` §2.1/§3.1 — not new findings. The important number is **critical: 0**,
+meaning: every module `bg.js` / `omega-notify.js` / any page requests exists on disk, and
+every table has RLS enabled.
+
+**Checks 7 and 8 are new this session** — they automate two patterns this project has
+repeatedly had to rediscover by hand across multiple audit sessions: a `.from()`/`.rpc()`
+call site referencing a table/view/function that no `supabase/*.sql` file ever creates
+(GAP_ANALYSIS.md §2.1's `transactions`/`wallet_balances` gap, and the historical
+`user_assets`/`notifications`/`extend_trial` gaps before they were fixed), and a
+client-called RPC whose `supabase/*.sql` definitions genuinely diverge across files —
+argument list or body, not just whitespace (GAP_ANALYSIS.md §3.1's `is_platform_owner`/
+`my_matrix`/`complete_task`/`apply_subscription` finding, discovered by a one-off
+"script-assisted" pass in a prior session). Both are heuristic and source-only (like check
+4's RLS finding, they say "verify against the live DB" rather than assert ground truth), and
+both were validated against this repo's real, already-documented findings before being
+wired in: check 7 correctly reproduces exactly the 2 known-dormant tables and zero false
+positives; check 8's 11-function list includes all 3 of GAP_ANALYSIS §3.1's flagged
+divergences (`my_matrix`, `complete_task`, `apply_subscription` — the last confirmed to
+genuinely have 5-arg vs. 7-arg overloads once `supabase/functions/**/*.ts` was added to the
+scanned call sites) plus 8 more that hadn't been individually named before. Point of both:
+turn a manual sweep that depended on someone remembering to re-run it into something CI
+runs on every push, so this class of bug can't silently regress again.
 
 Other CI checks (`ci.yml`, not reproduced in `audit.py`): `node --check` on every root
 `.js` file (syntax), a `service_role`/`SUPABASE_SERVICE` scan (blocking, 0 hits), `deno check`

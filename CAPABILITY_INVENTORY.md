@@ -1,0 +1,190 @@
+# Capability Inventory — sydomega-live
+
+**Date:** 2026-08-10. **Companion documents:** [`REPOSITORY_AUDIT.md`](./REPOSITORY_AUDIT.md)
+(technical/security state), [`GAP_ANALYSIS.md`](./GAP_ANALYSIS.md) (what's missing).
+
+This is an inventory of what actually exists in the repository today, organized by the site's
+own navigation taxonomy (`nav.js`'s 14 sections) rather than by aspiration. **Status markers**
+are only applied where a specific finding backs them up (cited); an unmarked page has not been
+individually verified in this pass and should be read as "present and reachable," not
+"confirmed working."
+
+- ✅ **Live** — confirmed reading/writing real Supabase tables or RPCs (cited)
+- 💾 **Client-only** — confirmed persisting to `localStorage` only, no server sync (cited)
+- ⚠️ **Known gap** — confirmed broken or incomplete (cited, cross-ref `GAP_ANALYSIS.md`)
+- *(no marker)* — present and reachable from navigation; backend status not individually
+  audited in this pass
+
+## 1. Page inventory, by navigation domain (14 sections, `nav.js`)
+
+### COMMAND — entry point, search, alerts
+`dashboard.html`, `beacon.html`, `search.html`, `notifications.html` ⚠️ (populate path fixed
+this session — see `GAP_ANALYSIS.md` §2.1, but not yet applied live), `chatbot.html` (AI
+concierge — see §3 Edge Functions), `matrix.html`, `points.html`, `command.html`.
+
+### IDENTITY — member profile, verification
+`profile.html`, `passport.html`, `kyc.html`, `settings.html`, `character.html`, `agents.html`
+(12-agent roster display), `factions.html`, `pantheons.html`, `houses.html`.
+
+### ASCEND — progression, learning
+`honors.html` (ascension map + record), `matrix.html` ("The 729"), `academy.html`,
+`gaming.html`, `trophies.html`, `exam.html`, `contributions.html`, `evolution.html`.
+
+### COSMOS — zodiac/element brand system
+`cosmos.html`, `horoscope.html`, `agents.html`, `elements.html`, `pantheons.html`,
+`houses.html`, `matrix.html` (triads), `kings.html`.
+
+### UNIVERSE / MEDIA — content, social feed
+`cinema.html`, `universe.html`, `media.html`, `hall.html`, `city.html`, `series.html`,
+`trailers.html`, `feed.html` (stored-XSS-hardened this session — see
+`REPOSITORY_AUDIT.md` §3), `social.html` ✅ (writes `public.social_connections`, error-checked
+this session — `GAP_ANALYSIS.md` §2.3), `news.html`.
+
+### VAULT / INVEST — finance, holdings, payments
+`vault.html` ⚠️ (NFT grid queries `public.user_assets` — table now exists as of this session
+but is not yet populated by anything; see `GAP_ANALYSIS.md` §2.2), `treasury.html` 💾,
+`wallet.html` 💾, `blockchain.html`, `payments.html`/`subscriptions.html` ✅ (real Stripe
+integration, `supabase/functions/checkout` + `stripe-webhook`), `marketplace.html`,
+`portfolio.html` ⚠️ (same `user_assets` gap as `vault.html`), `income.html` ✅ (persists
+server-side per `CLAUDE.md` §8), `ledger.html` ✅ (persists server-side), `investment.html` 💾,
+`revenue.html` 💾, `expenses.html` 💾, `budget.html` 💾, `wealth.html` 💾, `sigil.html`,
+`sovereign-covenant.html` (token-economy page; dormant-token disclaimers already live, gated
+on `platform_settings.tokens_enabled = false`), `advertising.html` (error-checked ad
+submission per earlier session fix).
+
+The 💾-marked pages are a deliberate, documented split: `CLAUDE.md` §8 records this as a real
+inconsistency needing a product decision (privacy-motivated client-side design vs. unfinished
+migration), not a bug to silently "fix" by adding schema.
+
+### ORDER — family, governance-flavored social structure
+`family.html` (silent-failure writes fixed this session — `REPOSITORY_AUDIT.md` §6.3),
+`bloodline.html`, `heritage.html`, `hall.html`, `sovereigns.html`, `factions.html`,
+`city.html`, `approvals.html` ⚠️✅ (owner's member-approval console — stored-XSS fixed this
+session; its five RPCs now populate `public.notifications` as of this session, not yet
+applied live), `interface-omni.html`.
+
+### SERVICES — consulting, commissions, wellness, events
+`services.html`, `consultancy.html`, `contracts.html`, `publishing.html`, `studio.html`,
+`marketing.html`, `news.html`, `social.html`, `events.html` (RSVP write-result checked per
+earlier session fix), `travel.html`, `health.html`.
+
+### INTEL / ARENA — AI, research, automation, governance
+`research.html`, `prediction.html`, `intelligence.html`, `automation.html` (workflow-toggle
+write-result checked per earlier fix), `compliance.html`, `charter.html`, `governance.html`,
+`observatory.html`, `enterprise.html` ⚠️ (pricing display for $199/$999/$4,999 tiers with
+**zero Stripe/checkout wiring** — confirmed by direct inspection; see `GAP_ANALYSIS.md` §3.2),
+`roadmap.html`, `lab.html`, `design-system.html`, `ecosystem.html`, `knowledge.html`,
+`sovereign-ai.html`, `privacy.html`.
+
+### ACHIEVE / ARCHIVE — gamification records
+`achievements.html`, `leaderboard.html`, `gates.html`, `grades.html`, `levels.html`,
+`phases.html`, `ascension.html`, `kings.html`, `triads.html`, `grid.html`, `credentials.html`,
+`membership.html`, `analytics.html` ✅ (chart now points at the correct
+`leaderboard_snapshots` table as of this session — was querying a nonexistent
+`authority_snapshots` table).
+
+## 2. Backend module inventory (93 `omega-*.js` files on disk, 88 injected by `bg.js`)
+
+Grouped by function, one line each, extracted from each file's own header comment (not
+invented — see `REPOSITORY_AUDIT.md` §1 methodology note):
+
+**Auth / access / identity:** `omega-gate.js` (element/matrix-position locking),
+`omega-tier-gate.js` (companion to `omega-gate`), `omega-guardian.js` (Zero Trust continuous
+auth), `omega-user.js` (loads current user's profile), `omega-onboard.js` (first-time
+zodiac/element selection), `omega-appearance.js` (member view personalization),
+`omega-protect.js` (anti-DevTools/copy protection).
+
+**AI / copilot:** `omega-copilot.js` (context-aware assistant, every page), `omega-ai.js`
+(GraphRAG-inspired), `omega-intelligence.js` (autonomous AI layer), `omega-memory.js`
+(persistent queryable AI memory), `omega-recommend.js` (interest-signal recommendations).
+
+**Notifications / realtime / presence:** `omega-notify.js` (badge/toast/panel — populate path
+fixed this session), `omega-realtime.js` (live Supabase subscriptions), `omega-presence.js`
+(real-time member presence), `omega-event-bus.js` (platform-wide event architecture).
+
+**Charts / visualization / 3D:** `omega-chart.js` (chart rendering — table-name bug fixed this
+session), `omega-lattice.js` / `omega-lattice-3d.js` (sovereign lattice grid), `omega-9d.js`
+(9-pass visual engine), `omega-particles.js` (tsParticles integration), `omega-ring.js`
+(cinematic SVG), `omega-geometry.js`, `omega-genesis.js` (per-element atmosphere),
+`omega-element-motif.js` (9 animated canvas motifs), `omega-backdrop.js`, `omega-ambient.js`
+(Web Audio procedural soundscapes).
+
+**Progress / gamification:** `omega-progress.js`, `omega-streak-freeze.js` (grace-day
+mechanic), `omega-sdt.js` (self-determination-theory-based design), `omega-page-emblem.js`,
+`omega-emblem-panel.js`, `omega-emblems.js` (12 zodiac emblems), `omega-sigil-gen.js`
+(procedural SVG sigil generation).
+
+**Platform infrastructure:** `omega-sovereign-os.js` ("central nervous system"),
+`omega-shell.js` (async region shell), `omega-state.js`, `omega-ui.js` (UI unification),
+`omega-components.js`, `omega-capability.js`, `omega-actions.js`, `omega-live.js`,
+`omega-workers.js` (background consumer fleet), `omega-workflow.js` (multi-step
+orchestration), `omega-policy.js` (business-rule externalization), `omega-experiment.js`
+(A/B testing, feature flags).
+
+**Compliance / privacy / ops:** `omega-export.js` (GDPR Art. 20), `omega-a11y.js` (WCAG AA),
+`omega-legal.js` (copyright badge), `omega-finops.js` (cost measurement), `omega-metrics.js`
+(Core Web Vitals), `omega-telemetry.js`, `omega-threat.js`, `omega-oss.js` (OSS integration
+scouting), `omega-pml.js` (page-maturity checklist).
+
+**Media / UX utilities:** `omega-music.js`, `omega-voice.js` (voice commands + TTS),
+`omega-search.js`, `omega-tooltip.js` (Tippy-based), `omega-tour.js`, `omega-keyboard.js`
+(GitHub/VS Code/Figma-style shortcuts), `omega-menu.js`, `omega-controls.js` (language
+selector), `omega-deemoji.js`, `omega-confetti.js`, `omega-share.js` / `omega-share-card.js`,
+`omega-qr.js`, `omega-passport.js` (jsPDF export), `omega-feedback.js`.
+
+**Canon / content system:** `omega-canon.js` / `omega-canon-badge.js` (lore/content-source
+labeling), `omega-sign-codex.js`, `omega-content.js`, `omega-animated.js`, `omega-cinematic.js`.
+
+**PWA / registration:** `omega-pwa.js`, `omega-sw-register.js`.
+
+**Trial / chrono:** `omega-chrono.js`, `omega-chronometer.js`, `omega-matrix.js`.
+
+**Misc:** `omega-membership.js`, `omega-hero-wire.js`, `omega-demo-video.js`,
+`omega-realm.js`.
+
+## 3. Edge Functions (`supabase/functions/`, Deno/TypeScript, 7 total)
+
+| Function | Purpose |
+|---|---|
+| `checkout` | Stripe checkout session creation — real payment integration |
+| `stripe-webhook` | Stripe webhook handler — real payment integration |
+| `concierge` | Calls the Anthropic API server-side, backs `omega-copilot.js`/`chatbot.html` |
+| `notify-access` | Access/approval notification dispatch |
+| `intel-feed` | News/intelligence feed backend |
+| `rankings` | Leaderboard ranking computation |
+| `snapshot-leaderboard` | Populates `leaderboard_snapshots` (the table `omega-chart.js`'s
+| | Authority History chart reads, per the fix in this session) |
+
+## 4. The 12-agent brand/persona system (`omega-agents.json`)
+
+Per `CLAUDE.md` §6: **this is an information-architecture/UX personality system, not a
+technical multi-agent runtime.** Twelve personas, each mapped to a zodiac sign, element,
+Greek god, and domain:
+
+| Agent | Sign | Domain |
+|---|---|---|
+| Sentinel | Aries | Security Guardian |
+| Merchant | Taurus | Commerce Steward |
+| Scout | Gemini | Discovery Agent |
+| Warden | Cancer | Guardian of the Inner Circle |
+| Sovereign | Leo | Master Control |
+| Auditor | Virgo | Validator of Truth |
+| Proxy | Libra | Diplomat & Executor |
+| Oracle | Scorpio | Seer of What Comes |
+| Beacon | Sagittarius | Herald of the Threshold |
+| Analyst | Capricorn | Intelligence Engine |
+| Tutor | Aquarius | Illuminator of Craft |
+| Historian | Pisces | Keeper of Memory |
+
+## 5. Backend capability summary
+
+- **104 tables**, all RLS-enabled (CI-enforced), 398 policies, across 111 loose SQL files
+  (+ 92 files in the ordered `supabase/migrations/` copy).
+- **Feature flags** (`public.platform_settings`): `tokens_enabled` (false — Ω token economy
+  dormant), `payments_enabled` (flag exists; live Stripe integration code exists
+  independently in `supabase/functions/checkout`/`stripe-webhook`).
+- **Auth:** Supabase Auth + `public.is_platform_owner()` for owner-elevated access;
+  9.1717-minute sovereign trial mechanic (`trial_length()`, `approve_member`,
+  `grant_permanent_access`, `reject_member`, `revoke_member`, `extend_trial`) is real,
+  implemented, and — as of this session — notifies the affected member on every one of those
+  five events (`GRANT`, not yet applied live).

@@ -15,14 +15,36 @@ project's own established convention (security/data-integrity first).
 |---|---|---|
 | Stored XSS in `approvals.html`/`profile.html` | `display_name`/`email` rendered via raw `.innerHTML`; `display_name` is self-updatable by any member (`omega_profile_fields.sql`) | **Fixed** — `esc()` helper added, both files escaped |
 | Stored XSS in `sovereigns.html` | `profiles.sign` (self-updatable, `chunk_02b_migrations.sql`'s per-column GRANT list) queried for every `access_approved` member and rendered raw via `.innerHTML` in two places (table row, throne card) — no `user_id` filter, so reachable by/visible to the whole membership, not just the owner | **Fixed** — `esc()` helper added, both occurrences escaped |
+| Stored XSS in `queue.html`'s dispatch log | `dispatches.category`/`title`/`body` are member-writable (RLS `"wire insert"` policy checks only row ownership, not column values) and were rendered raw via `.innerHTML` in the OPS queue's "PLATFORM DISPATCH LOG" panel, visible to the owner | **Fixed** — see §4.6 (bundled with the same panel's wrong-column-name fix) |
 
-No other unescaped-user-input-into-`.innerHTML` instances were found in the files checked
-across both sweeps this session (`feed.html`, `news.html`, `leaderboard.html`, `nexus.html`,
-`tribe.html`, `graph.html`, `map.html`, `sigma.html`, `oracle.html`, `beacon.html`,
-`observatory.html`, `hall.html` all confirmed clean — `textContent`/escaping already used, or
-data is self-scoped, e.g. `family.html`'s `m.sign`/`m.name` reads a private `user_id`-scoped
-table, not other members' data). A full re-sweep of all 170 pages still has not been
-performed — three passes covering a growing subset, not the whole set — see §5.1.
+This session ran a systematic, evidence-based sweep for all three established bug classes
+(stored XSS via unescaped `.innerHTML`, silent-failure writes, and queries against
+tables/RPCs absent from the schema) across every page not yet covered by a prior pass:
+- **Missing table/RPC check:** cross-referenced every `.from('table')` and `.rpc('fn')` call
+  site across all 170 `.html` files against `CREATE TABLE`/`CREATE FUNCTION` statements in
+  `supabase/*.sql` (script-assisted, not manual). Only the already-documented gaps in §2/§2.1
+  turned up (`transactions`, `wallet_balances`) — `top_pages` initially flagged is a `VIEW`
+  (`omega_telemetry.sql`), a false positive from a `CREATE TABLE`-only grep. No new missing
+  table/RPC gaps found.
+- **innerHTML sweep:** every file with template-literal interpolation into `.innerHTML`
+  (`atlas.html`, `cosmos.html`, `honors.html`, `matrix.html`, `media.html`, `mentors.html`,
+  `mindmap.html`, `queue.html`, `targets.html`, `vocabulary.html`, plus the already-fixed
+  `family.html`/`profile.html`) checked for its data source. `atlas.html`/`mentors.html`/
+  `mindmap.html` read `localStorage` only (self-scoped, not a cross-user vector, same
+  category as the finance-pages client-only design in §4.2). `cosmos.html`/`honors.html`/
+  `matrix.html`/`media.html`/`targets.html`/`vocabulary.html` interpolate static local config
+  arrays (zodiac/agent/phase/system rosters baked into the page), not database content.
+  `queue.html` was the one real finding — see §4.6.
+- **Silent-failure-write sweep:** every `.html` file calling `.insert()`/`.update()`/
+  `.upsert()`/`.delete()` against Supabase (23 files) checked for whether the write's
+  `.error` gates the success message. `account.html`, `contracts.html`, `health.html`,
+  `marketplace.html`, `oath.html`, `publishing.html`, `research.html`, `terms.html`, and
+  `consultancy.html` — the files not already covered by a prior session's fix — all correctly
+  check `.error`/throw-and-catch before reporting success. No new silent-failure-write gaps
+  found.
+
+A full re-sweep of all 170 pages for every possible bug class still has not been performed —
+four passes now cover a growing subset, not an exhaustive one — see §5.1.
 
 ## 2. P0/P1 — Data integrity: fixed in code, not applied to a live database
 
@@ -120,7 +142,26 @@ effective key→value mapping before/after the edit) that this changed zero runt
 Distinct from the finance-persistence question in §4.2: this wasn't a design choice, it was a
 genuine schema/client mismatch that made the feature 100% non-functional. Fixed — see §2.
 
-### 4.6 `owner_apex_lock.sql`: dead `nodes_earned` assignment (fixed this session)
+### 4.6 `queue.html` "PLATFORM DISPATCH LOG" panel queried nonexistent columns (fixed this session)
+
+The OPS queue page's dispatch table selected `*` from `public.dispatches` and rendered
+`d.type`, `d.action`, `d.payload`, `d.status` — none of which exist anywhere in the schema
+(`dispatches` has `title`/`body`/`category`/`is_published`/`created_at`/`user_id`/`sign`
+across its several definitions, confirmed by grep). Every real row rendered as `TYPE: -`,
+`PAYLOAD: {}`, `STATUS: PENDING` regardless of actual content — same "queried the wrong
+shape" bug class as the Authority History chart fix in §2. Separately, the columns that
+*do* exist and that the fix now reads (`title`/`category`/`body`) are member-writable: the
+`dispatches` table's `"wire insert"` RLS policy (`supabase/dispatches.sql`,
+`chunk_06_migrations.sql`) allows any authenticated user to insert a row with
+`auth.uid() = user_id` and no column restriction, so a member could set `category`/`title`/
+`body` to an HTML/script payload via a direct REST call (no UI required, same threat model
+as the `sovereigns.html`/`approvals.html` stored-XSS fixes) and have it render unescaped in
+this page — which the owner views. Fixed by (a) selecting the real columns
+(`title,body,category,is_published,created_at`), and (b) adding an `esc()`-equivalent
+helper and escaping all four rendered fields, matching the convention already used in
+`news.html`'s dispatches/wire rendering (confirmed clean, uses its own `esc()`).
+
+### 4.7 `owner_apex_lock.sql`: dead `nodes_earned` assignment (fixed this session)
 
 A `--` line comment on the `authority` line ran to end-of-line and silently swallowed the
 following `nodes_earned = 104976` assignment as dead text — the script ran without error every
@@ -132,9 +173,21 @@ something any session in this project's history could have applied live either w
 
 ## 5. Explicitly out of scope / not verified in this pass
 
-- **5.1** A full manual re-audit of all 170 pages for the XSS/silent-failure/missing-table bug
-  classes has still not been performed — three passes now (`REPOSITORY_AUDIT.md` §6 items 1-9,
-  then items 11 and 13) have each covered a growing subset, not the full set.
+- **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes
+  has still not been performed — four passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
+  items 11, 13, and 14) have each covered a growing subset, not the full set. Item 14 was the
+  first pass to be script-assisted (cross-referencing every `.from()`/`.rpc()` call site and
+  every write-error-check site programmatically) rather than manual page-by-page reading, which
+  is why it could cover all remaining candidate files for those two bug classes in one pass. The
+  `.innerHTML`-interpolation check is still manual per-file (tracing each variable's data
+  source); it is exhaustive for template-literal interpolation (`${...}` into `.innerHTML=`,
+  10 files, all checked — see §1) and confirmed via grep that no file uses `outerHTML=`/
+  `insertAdjacentHTML(`/`document.write(` with that same pattern (zero matches). **Not
+  covered:** `.innerHTML` built via string concatenation (`+`) rather than template literals —
+  a grep for that shape returns 55 candidate files, not individually traced this pass (most are
+  expected to be static markup with no variable data, matching the pattern seen in every file
+  checked so far, but that is an expectation, not a verified claim for all 55). This is the
+  single largest remaining unverified surface for the stored-XSS bug class.
   `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually audited," not "confirmed
   clean."
 - **5.2** Live-database verification of anything in §2 — no session has held credentials.
@@ -154,7 +207,8 @@ something any session in this project's history could have applied live either w
    legal decision, not code.
 5. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency.
-6. Continue the page-by-page sweep (§5.1) — three passes done, still not exhaustive across all
-   170 pages.
+6. Continue the page-by-page sweep (§5.1) — four passes done; the 55-file
+   concatenation-built-`.innerHTML` surface is the highest-value next slice (potential
+   stored-XSS, same bug class as the three already found).
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.

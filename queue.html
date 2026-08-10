@@ -409,20 +409,21 @@ waitReady(()=>{
   window.addEventListener('resize',()=>{drawTopology();drawThroughput();});
 
   /* ── Dispatches from Supabase ── */
+  function escDispatch(t){return(t==null?'':String(t)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   async function loadDispatches(){
-    const {data}=await sb.from('dispatches').select('*').order('created_at',{ascending:false}).limit(50);
+    const {data}=await sb.from('dispatches').select('title,body,category,is_published,created_at').order('created_at',{ascending:false}).limit(50);
     const tbody=document.getElementById('dispatch-tbl-body');
     if(!data||!data.length){tbody.innerHTML='<tr><td colspan="4" style="color:rgba(138,134,118,.4);padding:12px 8px">No dispatches found.</td></tr>';return;}
     tbody.innerHTML='';
     data.forEach(d=>{
       const row=document.createElement('tr');
-      const status=d.status||'pending';
-      const statusClass=status==='done'?'status-done':status==='failed'?'status-failed':'status-pending';
-      const payload=JSON.stringify(d.payload||{}).slice(0,60);
-      row.innerHTML=`<td style="color:var(--orange)">${d.type||d.action||'-'}</td>`
-        +`<td style="color:var(--muted);font-size:7.5px;word-break:break-all">${payload}${payload.length>=60?'…':''}</td>`
-        +`<td><span class="status-pill ${statusClass}">${status.toUpperCase()}</span></td>`
-        +`<td style="color:rgba(138,134,118,.4);white-space:nowrap">${(d.created_at||'').slice(0,16).replace('T',' ')}</td>`;
+      const published=d.is_published!==false;
+      const statusClass=published?'status-done':'status-pending';
+      const payload=(d.title?d.title+': ':'')+(d.body||'');
+      row.innerHTML=`<td style="color:var(--orange)">${escDispatch(d.category||'DISPATCH')}</td>`
+        +`<td style="color:var(--muted);font-size:7.5px;word-break:break-all">${escDispatch(payload.slice(0,60))}${payload.length>=60?'…':''}</td>`
+        +`<td><span class="status-pill ${statusClass}">${published?'PUBLISHED':'DRAFT'}</span></td>`
+        +`<td style="color:rgba(138,134,118,.4);white-space:nowrap">${escDispatch((d.created_at||'').slice(0,16).replace('T',' '))}</td>`;
       tbody.appendChild(row);
     });
   }

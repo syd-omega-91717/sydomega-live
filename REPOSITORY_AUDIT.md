@@ -159,6 +159,24 @@ In commit order, both repos kept in sync throughout:
     class as `family.html`/`social.html` from the first wave, missed until now. Fixed to check
     `.error` and alert on failure. No other pending SQL this round — this was a pure client-code
     fix, live the moment it's deployed, no database action needed.
+14. Fourth-wave sweep — this time systematic rather than manual: script-cross-referenced every
+    `.from()`/`.rpc()` call site against the schema (no new gaps beyond the already-documented
+    `transactions`/`wallet_balances`), traced the data source of every remaining
+    `.innerHTML`-with-interpolation file (10 files; all either `localStorage`-only or static
+    config arrays except one real finding), and checked every remaining Supabase-write file for
+    unchecked `.error` (23 files; all 9 not already covered by a prior fix check it correctly —
+    no new gap). The one real finding: `queue.html`'s "PLATFORM DISPATCH LOG" panel selected
+    `*` from `public.dispatches` and read `d.type`/`d.action`/`d.payload`/`d.status` — none of
+    which exist in any `dispatches` definition across the 10 files that define it (real columns:
+    `title`/`body`/`category`/`is_published`/`created_at`/`user_id`/`sign`), so every row
+    rendered as placeholder junk (`-`, `{}`, `PENDING`) regardless of content — same
+    wrong-shape-query bug class as item 2. Compounding it: the real columns are member-writable
+    (the `dispatches` `"wire insert"` RLS policy checks only `auth.uid() = user_id`, not column
+    values) and were about to be rendered raw via `.innerHTML` with no escaping — a stored-XSS
+    vector into a page the owner views, same threat model as items 1 and 11's `sovereigns.html`
+    fix. Fixed both at once: corrected the query to the real columns and added escaping,
+    matching `news.html`'s existing `esc()` convention for the same table. See
+    `GAP_ANALYSIS.md` §4.7 for full detail.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring
@@ -180,6 +198,7 @@ real Supabase credentials, which no session in this project's history has held.
 | `owner_apex_lock.sql` dead `nodes_earned` assignment | Fixed this session (§6.12) — owner-run manual script, not auto-applied |
 | SQL schema organization | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md` |
 | `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
+| `queue.html` dispatch log (wrong columns + stored XSS) | Found and fixed this session (§6.14) — pure client-code fix, no database action needed |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |
 | Committed binary size (docx/mp4) | Unchanged, non-urgent (see `REPO_AUDIT.md` §2) |
 

@@ -81,7 +81,10 @@ write-result checked per earlier fix), `compliance.html`, `charter.html`, `gover
 `observatory.html`, `enterprise.html` ⚠️ (pricing display for $199/$999/$4,999 tiers with
 **zero Stripe/checkout wiring** — confirmed by direct inspection; see `GAP_ANALYSIS.md` §3.2),
 `roadmap.html`, `lab.html`, `design-system.html`, `ecosystem.html`, `knowledge.html`,
-`sovereign-ai.html`, `privacy.html`.
+`sovereign-ai.html`, `privacy.html`, `queue.html` ⚠️✅ (linked from `dashboard.html`, not in
+`nav.js`'s `PS` map — the "PLATFORM DISPATCH LOG" panel queried nonexistent columns and
+lacked escaping on the member-writable ones it should have used; both fixed this session,
+see `GAP_ANALYSIS.md` §4.7).
 
 ### ACHIEVE / ARCHIVE — gamification records
 `achievements.html`, `leaderboard.html`, `gates.html`, `grades.html`, `levels.html`,

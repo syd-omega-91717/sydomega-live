@@ -1,0 +1,63 @@
+<svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SYD OMEGA 91717 sovereign sigil">
+  <defs>
+    <radialGradient id="sigilGlow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#0A0A0F" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="sigilBlur" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="4.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <circle cx="110" cy="110" r="106" fill="#020206"/>
+  <circle cx="110" cy="110" r="106" fill="url(#sigilGlow)"/>
+  <circle cx="110" cy="110" r="104" fill="none" stroke="#C9A84C" stroke-opacity="0.18" stroke-width="1"/>
+
+  <!-- static inner ring -->
+  <circle cx="110" cy="110" r="70" fill="none" stroke="#00E5FF" stroke-opacity="0.28" stroke-width="1"/>
+
+  <!-- rotating outer ring: zodiac ticks + cardinal/ordinal markers -->
+  <g transform="translate(110,110)">
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="38s" repeatCount="indefinite"/>
+      <circle r="92" fill="none" stroke="#C9A84C" stroke-opacity="0.8" stroke-width="1.4"/>
+      <g stroke="#C9A84C" stroke-opacity="0.55" stroke-width="1.2">
+        <path d="M0 -92 L0 -84"/>
+        <path d="M0 92 L0 84"/>
+        <path d="M-92 0 L-84 0"/>
+        <path d="M92 0 L84 0"/>
+        <path d="M65.05 -65.05 L59.4 -59.4"/>
+        <path d="M-65.05 -65.05 L-59.4 -59.4"/>
+        <path d="M65.05 65.05 L59.4 59.4"/>
+        <path d="M-65.05 65.05 L-59.4 59.4"/>
+        <path d="M23.8 -89.5 L21.7 -81.7"/>
+        <path d="M-23.8 -89.5 L-21.7 -81.7"/>
+        <path d="M23.8 89.5 L21.7 81.7"/>
+        <path d="M-23.8 89.5 L-21.7 81.7"/>
+        <path d="M89.5 23.8 L81.7 21.7"/>
+        <path d="M89.5 -23.8 L81.7 -21.7"/>
+        <path d="M-89.5 23.8 L-81.7 21.7"/>
+        <path d="M-89.5 -23.8 L-81.7 -21.7"/>
+      </g>
+      <g fill="#C9A84C">
+        <circle cx="92" cy="0" r="2.6"/>
+        <circle cx="-92" cy="0" r="2.6"/>
+        <circle cx="0" cy="92" r="2.6"/>
+        <circle cx="0" cy="-92" r="2.6"/>
+      </g>
+      <g fill="#00E5FF" fill-opacity="0.9">
+        <circle cx="65.05" cy="65.05" r="1.8"/>
+        <circle cx="-65.05" cy="65.05" r="1.8"/>
+        <circle cx="65.05" cy="-65.05" r="1.8"/>
+        <circle cx="-65.05" cy="-65.05" r="1.8"/>
+      </g>
+    </g>
+
+    <!-- core glyph -->
+    <text x="0" y="18" text-anchor="middle" font-family="Cinzel Decorative, Georgia, 'Times New Roman', serif" font-size="52" fill="#E2C86D" filter="url(#sigilBlur)">
+      &#937;
+      <animate attributeName="opacity" values="0.72;1;0.72" dur="4.5s" repeatCount="indefinite"/>
+    </text>
+  </g>
+</svg>

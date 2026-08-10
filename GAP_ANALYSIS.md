@@ -118,6 +118,16 @@ effective key→value mapping before/after the edit) that this changed zero runt
 Distinct from the finance-persistence question in §4.2: this wasn't a design choice, it was a
 genuine schema/client mismatch that made the feature 100% non-functional. Fixed — see §2.
 
+### 4.6 `owner_apex_lock.sql`: dead `nodes_earned` assignment (fixed this session)
+
+A `--` line comment on the `authority` line ran to end-of-line and silently swallowed the
+following `nodes_earned = 104976` assignment as dead text — the script ran without error every
+time it was manually run, it just never actually set `nodes_earned`. Fixed; validated
+end-to-end against a throwaway local PostgreSQL 16 instance (`REPOSITORY_AUDIT.md` §6.12).
+This file is intentionally excluded from `supabase/migrations/` and requires the owner's own
+authenticated session to run correctly (`grant_permanent_access()` checks `auth.uid()`) — not
+something any session in this project's history could have applied live either way.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full manual re-audit of all 170 pages for the XSS/silent-failure/missing-table bug

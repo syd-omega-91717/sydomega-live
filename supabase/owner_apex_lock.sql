@@ -17,7 +17,8 @@ UPDATE public.profiles SET
   axis_a             = 9.000,
   axis_b             = 9.000,
   axis_c             = 9.000,
-  authority          = 27.8367,   -- sqrt(729+729+729)*phi/e  nodes_earned       = 104976,    -- 12x12x9x9x9 complete
+  authority          = 27.8367,   -- sqrt(729+729+729)*phi/e
+  nodes_earned        = 104976,    -- 12x12x9x9x9 complete
 
   -- Achievements: all 12 of each
   certificates_earned = 12,

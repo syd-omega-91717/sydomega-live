@@ -176,11 +176,37 @@ In commit order, both repos kept in sync throughout:
     vector into a page the owner views, same threat model as items 1 and 11's `sovereigns.html`
     fix. Fixed both at once: corrected the query to the real columns and added escaping,
     matching `news.html`'s existing `esc()` convention for the same table. See
-    `GAP_ANALYSIS.md` §4.7 for full detail.
+    `GAP_ANALYSIS.md` §4.6 for full detail.
+15. Fifth-wave sweep — extended item 14's `.innerHTML` check from template-literal
+    interpolation to the two remaining interpolation shapes: string-concatenation (54
+    candidate files) and bare-variable assignment (`.innerHTML=someVar`, 12 more files found
+    while grepping for the concatenation shape). All 54 concatenation files traced clean
+    (localStorage-only, static config arrays, self-scoped queries, or already-escaped —
+    `marketing.html`/`news.html`/`sovereigns.html`/`hall.html` confirmed to already use `esc()`
+    correctly rather than assumed). Of the 12 bare-variable files, one real finding:
+    `graph.html`'s member-node tooltip attempted to escape `display_name` via
+    `nm.textContent=m.name` then reading `nm.textContent` back — which returns the original
+    unescaped string, since only reading `.innerHTML` back would apply escaping. The
+    "escaping" was a complete no-op; every approved member's `display_name` (self-updatable,
+    queried with no `user_id` filter for the whole membership) rendered raw into a tooltip any
+    other approved member or the owner could trigger by hovering. Fixed with a real `esc()`
+    equivalent. Along the way, also found (not part of the XSS sweep, but same "response shape
+    doesn't match what the client assumes" bug class as item 2/14): `access_audit_log()`
+    (owner-only RPC, `omega_access_audit.sql`) returns `{ok,rows:[...]}`, but both of its only
+    two callers (`approvals.html`, `vault.html`) read `r.data` as if it were the array directly
+    — `vault.html`'s `.slice()` on the object threw on every call, permanently falling back to
+    5 hardcoded fake "demo" audit entries; `approvals.html`'s length-check on the object always
+    read as empty, showing "NO AUDIT ENTRIES". Both have shown zero real access-decision
+    history to anyone, including the owner, since the RPC was added. Fixed both call sites to
+    unwrap `r.data.rows` and use the RPC's actual field names (`action`/`subject`/`actor`, not
+    the assumed `event`/`status`/`user_id`); `subject`/`actor` are resolved `display_name`
+    values (member-controllable) so both are now escaped too. See `GAP_ANALYSIS.md` §4.8-§4.9
+    for full detail on both.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring
-real Supabase credentials, which no session in this project's history has held.
+real Supabase credentials, which no session in this project's history has held. Items 14 and
+15 are pure client-code fixes with no database dependency — live the moment deployed.
 
 ## 7. Summary
 
@@ -189,9 +215,9 @@ real Supabase credentials, which no session in this project's history has held.
 | Module graph integrity | Clean — 0 critical, CI-enforced |
 | RLS coverage | Clean — 0 tables missing RLS, CI-enforced |
 | Secrets in tracked code | Clean — CI-enforced |
-| Stored XSS (owner admin panels + public leaderboard) | Fixed this session (2 pages/vectors) |
-| Silent-failure writes | Fixed this session (4 instances); established convention for future ones |
-| Wrong-table query (chart) | Fixed this session |
+| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph) | 4 pages/vectors found and fixed across the fifth-wave sweep (§6.1, §6.11, §6.14, §6.15) — `.innerHTML`-interpolation check now exhaustive across all three shapes (template-literal/concatenation/bare-variable, 76 files traced) |
+| Silent-failure writes | Fixed (5 instances across two waves); established convention now checked repo-wide, no new gaps in the fifth-wave sweep |
+| Wrong-table/wrong-shape query (chart, dispatch log, `access_audit_log`) | 3 instances found and fixed (§6.2, §6.14, §6.15) — same bug class each time: client code assumes a response shape the server doesn't return |
 | Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |
 | `notifications` population | Fixed this session (§6.9); **not applied live** |
 | `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
@@ -199,6 +225,7 @@ real Supabase credentials, which no session in this project's history has held.
 | SQL schema organization | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md` |
 | `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
 | `queue.html` dispatch log (wrong columns + stored XSS) | Found and fixed this session (§6.14) — pure client-code fix, no database action needed |
+| `access_audit_log` RPC never worked for either caller | Found and fixed this session (§6.15) — pure client-code fix, no database action needed |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |
 | Committed binary size (docx/mp4) | Unchanged, non-urgent (see `REPO_AUDIT.md` §2) |
 

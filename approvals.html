@@ -583,9 +583,9 @@ async function loadAudit(){
   var el=document.getElementById('audit-list');if(!el)return;
   try{
     var r=await sb.rpc('access_audit_log');
-    var rows=r.data||[];
+    var rows=(r.data&&r.data.rows)||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO AUDIT ENTRIES</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="audit-row"><div class="aud-time">'+fmtTime(row.created_at||row.logged_at)+'</div><div class="aud-evt">'+(row.action||row.event||'EVENT').toUpperCase()+'</div><div class="aud-uid">'+(row.user_id||'').slice(0,10)+'</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="audit-row"><div class="aud-time">'+fmtTime(row.created_at)+'</div><div class="aud-evt">'+esc((row.action||'EVENT').toUpperCase())+'</div><div class="aud-uid">'+esc((row.subject||'').slice(0,10))+'</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">AUDIT LOG RPC NOT AVAILABLE</div>';}
 }
 async function loadErrors(){

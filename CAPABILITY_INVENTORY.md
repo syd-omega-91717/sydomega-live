@@ -33,7 +33,11 @@ display), `factions.html`, `pantheons.html`, `houses.html`.
 
 ### COSMOS — zodiac/element brand system
 `cosmos.html`, `horoscope.html`, `agents.html`, `elements.html`, `pantheons.html`,
-`houses.html`, `matrix.html` (triads), `kings.html`.
+`houses.html`, `matrix.html` (triads), `kings.html`, `graph.html` ⚠️✅ (linked from
+`dashboard.html`, not in `nav.js`'s `PS` map, same as `queue.html` — D3 constellation graph;
+the member-node tooltip's attempted self-escaping of `display_name` was a no-op due to reading
+the wrong DOM property back, a real stored-XSS reachable by any approved member against any
+other viewer; fixed this session, see `GAP_ANALYSIS.md` §4.9).
 
 ### UNIVERSE / MEDIA — content, social feed
 `cinema.html`, `universe.html`, `media.html`, `hall.html`, `city.html`, `series.html`,
@@ -42,8 +46,11 @@ display), `factions.html`, `pantheons.html`, `houses.html`.
 this session — `GAP_ANALYSIS.md` §2.3), `news.html`.
 
 ### VAULT / INVEST — finance, holdings, payments
-`vault.html` ⚠️ (NFT grid queries `public.user_assets` — table now exists as of this session
-but is not yet populated by anything; see `GAP_ANALYSIS.md` §2.2), `treasury.html` 💾,
+`vault.html` ⚠️✅ (NFT grid queries `public.user_assets` — table now exists as of a prior
+session but is not yet populated by anything, see `GAP_ANALYSIS.md` §2.2; separately, its
+Audit Log panel's `access_audit_log()` RPC call read the response in the wrong shape and had
+shown fabricated demo entries as if real for every caller — fixed this session, see
+`GAP_ANALYSIS.md` §4.8), `treasury.html` 💾,
 `wallet.html` 💾, `blockchain.html`, `payments.html`/`subscriptions.html` ✅ (real Stripe
 integration, `supabase/functions/checkout` + `stripe-webhook`), `marketplace.html`,
 `portfolio.html` ⚠️ (same `user_assets` gap as `vault.html`), `income.html` ✅ (persists
@@ -62,9 +69,11 @@ migration), not a bug to silently "fix" by adding schema.
 `bloodline.html`, `heritage.html`, `hall.html`, `sovereigns.html` ⚠️✅ (public leaderboard —
 stored XSS on `profiles.sign`, visible to every approved member, fixed this session — the
 widest-blast-radius XSS found so far), `factions.html`,
-`city.html`, `approvals.html` ⚠️✅ (owner's member-approval console — stored-XSS fixed this
-session; its five RPCs now populate `public.notifications` as of this session, not yet
-applied live), `interface-omni.html`.
+`city.html`, `approvals.html` ⚠️✅ (owner's member-approval console — stored-XSS fixed a prior
+session; its five RPCs now populate `public.notifications`, not yet applied live; separately,
+its "Audit Log" tab's `access_audit_log()` call misread the RPC's response shape and always
+showed "NO AUDIT ENTRIES" even when real rows existed — fixed this session, see
+`GAP_ANALYSIS.md` §4.8), `interface-omni.html`.
 
 ### SERVICES — consulting, commissions, wellness, events
 `services.html`, `consultancy.html` ⚠️ (booking form was completely non-functional — table

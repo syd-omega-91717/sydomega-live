@@ -182,7 +182,8 @@ async function loadQueue(){
 }
 async function decide(id,status){
   var r=await sb.from('media_reservations').update({status:status}).eq('id',id);
-  if(!r.error){loadQueue();loadList();}
+  if(r.error){alert('Could not '+(status==='approved'?'approve':'reject')+' this campaign. Try again.');return;}
+  loadQueue();loadList();
 }
 
 async function submit(){

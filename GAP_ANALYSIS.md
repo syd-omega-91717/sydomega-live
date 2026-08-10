@@ -22,7 +22,7 @@ across both sweeps this session (`feed.html`, `news.html`, `leaderboard.html`, `
 `observatory.html`, `hall.html` all confirmed clean — `textContent`/escaping already used, or
 data is self-scoped, e.g. `family.html`'s `m.sign`/`m.name` reads a private `user_id`-scoped
 table, not other members' data). A full re-sweep of all 170 pages still has not been
-performed — two passes covering a growing subset, not the whole set — see §5.1.
+performed — three passes covering a growing subset, not the whole set — see §5.1.
 
 ## 2. P0/P1 — Data integrity: fixed in code, not applied to a live database
 
@@ -80,13 +80,15 @@ only), not acted on.
 
 ## 4. P2 — Code/data quality
 
-### 4.1 Silent-failure writes (4 instances, fixed this session)
+### 4.1 Silent-failure writes (5 instances, fixed this session)
 
 `social.html`'s connect/disconnect buttons and `family.html`'s heir-toggle/remove buttons
 updated UI state before/regardless of the actual database write result. `settings.html`'s
 background-color save discarded the profile-sync result in a bare `try/catch` (message said
 "saved" regardless). `travel.html` credited progress XP before confirming the journey-save
-succeeded. All four fixed to check `.error`, matching the convention already established in
+succeeded. `marketing.html`'s campaign APPROVE/REJECT buttons (owner-only moderation queue)
+discarded the update result entirely — a failure left the item in the queue with zero
+feedback. All five fixed to check `.error`, matching the convention already established in
 `events.html`/`automation.html`/`advertising.html` from an earlier session — `settings.html`'s
 fix is proportionate to a cosmetic preference (distinguishes "saved locally" from "synced" in
 the message, no `alert()`) rather than blocking the user.
@@ -131,8 +133,8 @@ something any session in this project's history could have applied live either w
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full manual re-audit of all 170 pages for the XSS/silent-failure/missing-table bug
-  classes has still not been performed — two passes now (`REPOSITORY_AUDIT.md` §6 items 1-9,
-  then item 11) have each covered a growing subset, not the full set.
+  classes has still not been performed — three passes now (`REPOSITORY_AUDIT.md` §6 items 1-9,
+  then items 11 and 13) have each covered a growing subset, not the full set.
   `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually audited," not "confirmed
   clean."
 - **5.2** Live-database verification of anything in §2 — no session has held credentials.
@@ -152,7 +154,7 @@ something any session in this project's history could have applied live either w
    legal decision, not code.
 5. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency.
-6. Continue the page-by-page sweep (§5.1) — two passes done, still not exhaustive across all
+6. Continue the page-by-page sweep (§5.1) — three passes done, still not exhaustive across all
    170 pages.
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.

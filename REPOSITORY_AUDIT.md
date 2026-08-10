@@ -142,6 +142,17 @@ In commit order, both repos kept in sync throughout:
     result silently; `travel.html` credited progress XP before confirming the journey save
     succeeded. All fixed; SQL change (`supabase/omega_consult.sql`, `migrations/0013`)
     validated the same way as item 9.
+12. `supabase/owner_apex_lock.sql` (the owner-authenticated, manual, one-off admin script that
+    sets the owner account to maximum values on every axis — see `migrations/README.md`'s
+    "owner_apex_lock.sql removed from the automatic sequence" section for why it's
+    intentionally not in `migrations/`) had a real bug: a `--` comment on the `authority` line
+    ran to end-of-line and silently swallowed the following `nodes_earned = 104976` assignment
+    as dead text — the script ran without error every time but never actually set
+    `nodes_earned`. Fixed by moving that assignment to its own line. Cross-checked every other
+    column/table the script touches against the real schema (all exist or are already
+    existence-guarded) and validated end-to-end against a throwaway local PostgreSQL 16
+    instance: confirmed `nodes_earned` now lands at 104976 and all 12 trophies/12 medals/12
+    certificates rows are actually inserted.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring
@@ -160,6 +171,7 @@ real Supabase credentials, which no session in this project's history has held.
 | Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |
 | `notifications` population | Fixed this session (§6.9); **not applied live** |
 | `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
+| `owner_apex_lock.sql` dead `nodes_earned` assignment | Fixed this session (§6.12) — owner-run manual script, not auto-applied |
 | SQL schema organization | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md` |
 | `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |

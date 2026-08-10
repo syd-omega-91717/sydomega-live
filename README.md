@@ -3,192 +3,100 @@
 </p>
 
 <h1 align="center">Ω SYD OMEGA 91717</h1>
-<p align="center"><b>A private, membership-gated personal operating platform</b><br>
-Habits &middot; Learning &middot; Finance Tracking &middot; Media &middot; Community</p>
-
-<p align="center">
-  <a href="https://github.com/syd-omega-91717/sydomega-live/actions/workflows/ci.yml"><img src="https://github.com/syd-omega-91717/sydomega-live/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
-  <img src="https://img.shields.io/badge/build-static%20site-informational" alt="Static site, no build step">
-  <img src="https://img.shields.io/badge/backend-Supabase-3ECF8E" alt="Supabase backend">
-  <img src="https://img.shields.io/badge/license-proprietary-lightgrey" alt="Proprietary license">
-</p>
+<p align="center"><b>A private, membership-only personal growth and lifestyle platform</b></p>
 
 ---
 
-## Table of Contents
+## What Is SYD OMEGA 91717
 
-- [Overview](#overview)
-- [What It Provides](#what-it-provides)
-- [How It Works](#how-it-works)
-- [Access Model](#access-model)
-- [Technology Stack](#technology-stack)
-- [Security, Privacy & Compliance](#security-privacy--compliance)
-- [Project Status](#project-status)
-- [Repository Structure](#repository-structure)
-- [Continuous Integration](#continuous-integration)
-- [License & Legal](#license--legal)
-- [Contact](#contact)
+SYD OMEGA 91717 is a private, invitation-based platform where approved
+members track and grow every part of their life in one place — habits and
+personal development, learning, finances, creative media, and community —
+all inside a single, consistently designed experience.
 
-## Overview
+The platform is built around a distinctive theme: each area is named and
+styled after a system of zodiac signs, elements, and mythological figures.
+This isn't decoration for its own sake — it gives every feature a memorable
+identity and makes the platform's twelve guiding "agent" personas (each
+representing a different area of focus, like security, growth, or finance)
+easy to recognize as you move around the app.
 
-**SYD OMEGA 91717** is a single-owner, invite-and-approval-gated personal
-platform that consolidates habit tracking, learning, finance tracking, media,
-and community/social tools into one consistent, themed experience. Access is
-not open to the public: prospective members request access, are placed in a
-pending state, and are individually approved by the platform owner before
-they can use the application.
+Access is limited to approved members. It is not an open, public
+sign-up service — every account is reviewed before it is granted full use
+of the platform.
 
-The platform is organized around a consistent visual and narrative theme —
-a zodiac / elemental / mythological branding system used purely as an
-information-architecture and UX device (see [Feature Domains](#what-it-provides))
-to group related tools under a memorable identity, not as a claim about the
-underlying technology.
+## What You'll Find Inside
 
-## What It Provides
+Once you're a member, the platform is organized into clear areas, each
+reachable from the sidebar:
 
-The platform is organized into distinct functional domains, each grouped
-under a themed navigation section:
+- **Command** — Your personal dashboard: a snapshot of your progress,
+  notifications, quick search, and the in-app AI concierge you can chat
+  with for guidance.
+- **Identity** — Your profile, membership passport, and account settings.
+- **Ascend** — Where you build and track habits, take courses in the
+  Academy, complete challenges, earn achievements and trophies, and sit
+  exams to level up.
+- **Cosmos** — The home of the platform's zodiac and elemental theme:
+  your sign, your element, the AI agent personas, and the lore that ties
+  it all together.
+- **Vault** — Your financial home base: portfolio, wallet, subscription
+  management, and the members' marketplace.
+- **Order** — Community and family tools: manage your household or heirs,
+  and connect with other members through shared halls and groups.
+- **Services** — Bookable and requestable services: consultancy,
+  publishing support, a production studio, marketing help, event
+  planning, travel, and health & wellness resources.
+- **Intel** — Research tools, personal analytics, automation helpers, and
+  transparency/governance information about the platform itself.
+- **Universe / Media** — A media library and creative content hub.
 
-| Domain | What it covers |
-|---|---|
-| **Command** | Dashboard, alerts, search, in-app AI concierge |
-| **Identity** | Member profile, verification, settings |
-| **Ascend** | Habit tracking, academy/learning modules, achievements, exams |
-| **Cosmos** | The platform's branding/persona system (zodiac, elements, agent roster) |
-| **Vault** | Portfolio, ledger, subscriptions, marketplace |
-| **Order** | Family/heir management, community halls, factions |
-| **Services** | Consultancy, publishing, production studio, marketing, events |
-| **Intel** | Research, analytics, automation, governance/compliance tools |
-| **Media / Universe** | Media library, creative content hub |
+Each area shares the same look, feel, and navigation, so once you're
+comfortable in one part of the platform, the rest feels familiar right
+away.
 
-Each domain is delivered as a set of standalone pages sharing one common
-design system, authentication layer, and navigation shell (see
-[How It Works](#how-it-works)).
+## Becoming a Member
 
-## How It Works
+1. **Request access.** Visit the platform and submit an account request
+   with your details.
+2. **Wait for approval.** Every request is personally reviewed. While your
+   request is pending, you'll see a status page confirming it's being
+   processed.
+3. **Get approved.** Once approved, you'll gain full access to your
+   dashboard and every feature area described above.
+4. **Set up your profile.** Complete your identity details so the
+   platform can personalize your experience (your zodiac sign, element,
+   and starting stats).
 
-- **Static frontend, no build step.** Every page is a self-contained HTML
-  document. There is no bundler, framework, or server-side rendering — what
-  is committed to the repository is exactly what is deployed.
-- **Shared platform shell.** A small set of loader scripts (`bg.js`, `nav.js`)
-  are included by every page. They inject the shared design system, render
-  the navigation, and enforce that content only renders once a session is
-  confirmed *and* the member's access has been approved.
-- **Supabase backend.** All data (profiles, progress, finance records,
-  content, community data) is stored in Postgres and accessed directly from
-  the client through the Supabase JS client. Authorization is enforced at
-  the database layer via Postgres Row Level Security (RLS) policies, not by
-  application code — this is the platform's actual security boundary.
-- **Approval-gated onboarding.** New accounts start in a pending state.
-  The platform owner reviews and approves (or rejects) each request before
-  full application access is granted.
-- **Serverless functions.** A small set of Supabase Edge Functions handle
-  payment processing (Stripe checkout and webhooks) and the server-side AI
-  concierge integration, keeping all secret keys off the client entirely.
+Membership can't be purchased or unlocked without approval — it exists to
+keep the platform's community small, trusted, and personal.
 
-## Access Model
+## Using the Platform
 
-This is **not** an open public sign-up product. There is exactly one owner
-account with elevated administrative access across the platform, and all
-other accounts are members who must be individually approved. If you have
-received an invitation, use the account request flow in the application;
-access outside of that process is not available.
+- Start at your **Command** dashboard — it's your home base and shows
+  what matters most at a glance.
+- Use the sidebar to move between areas; each icon corresponds to one of
+  the sections above.
+- Track your habits and progress in **Ascend** to build your standing on
+  the platform over time.
+- Manage your money and holdings in **Vault**.
+- Reach out for help any time through the in-app AI concierge in
+  **Command**, or through the support channels listed in the app.
 
-## Technology Stack
+## Your Privacy
 
-| Layer | Technology |
-|---|---|
-| Frontend | Static HTML / CSS / vanilla JavaScript (no framework) |
-| Hosting | [Vercel](https://vercel.com) (static file serving) |
-| Backend | [Supabase](https://supabase.com) (PostgreSQL, Auth, Storage, Edge Functions) |
-| Authorization | PostgreSQL Row Level Security (RLS) |
-| Payments | [Stripe](https://stripe.com) (via Supabase Edge Functions) |
-| AI | Server-side Anthropic API integration (Supabase Edge Function) |
-| CI | GitHub Actions |
+Your personal data belongs to you. The platform's in-app Privacy Centre
+lets you review what's stored about you, control your consent
+preferences, export your data, and request deletion of your account and
+its data at any time. Full details are available in the app under
+**Privacy** and **Terms**.
 
-## Security, Privacy & Compliance
+## Support & Contact
 
-- **Row Level Security everywhere.** Every table that stores member data is
-  protected by RLS policies; CI fails the build if a table is found without
-  one.
-- **No secrets in client code.** Payment keys, AI provider keys, and other
-  service secrets are stored exclusively as Supabase/Vercel environment
-  secrets and are never committed to the repository or shipped to the
-  browser. CI scans every push for accidental exposure of privileged keys.
-- **Data subject rights.** The in-app Privacy Centre implements consent
-  management and data-subject request handling aligned with:
-  - **GDPR (Regulation (EU) 2016/679)** — Articles 5, 6, 7, 15–22, and 25
-    (lawful basis, consent, right of access, rectification, erasure,
-    portability, and privacy-by-design).
-  - **CCPA/CPRA (California Consumer Privacy Act, as amended)** — right to
-    know, delete, and opt out; no sale of personal information.
-  - Account erasure requests are logged and fulfilled within the
-    disclosed retention window.
-- **Payments.** Stripe integration follows Stripe's own PCI-compliant
-  hosted-checkout model; card data never transits or is stored by this
-  platform directly.
+For access requests, questions, or help using the platform, use the
+contact and support options available inside the app once you've signed
+in, or on the pending-access page while your request is under review.
 
-Full details are published in-app at `/privacy.html` and `/terms.html`.
+---
 
-## Project Status
-
-This platform is under active, ongoing development by its owner. Some
-subsystems are intentionally shipped **dormant** behind feature flags until
-they are legally and operationally ready (for example, the in-app token
-economy, gated by `platform_settings.tokens_enabled`) — user-facing copy for
-any not-yet-active feature is written in the future tense until it is
-switched on. This is a deliberate policy documented in [`CLAUDE.md`](CLAUDE.md),
-which also tracks current known limitations and in-progress work.
-
-## Repository Structure
-
-```
-/                    ~250 standalone .html pages, one per feature/page
-bg.js                Shared design system, auth guard, and module loader
-nav.js                Sidebar/navigation rendering
-omega-*.js           Feature modules (auth, AI copilot, charts, progress, PWA, etc.)
-omega-*.json         Static configuration and content data
-supabase/*.sql       Database schema (tables, functions, RLS policies)
-supabase/functions/  Edge Functions (checkout, Stripe webhook, AI concierge, etc.)
-scripts/             Repository tooling (integrity audit, secret checks)
-.github/workflows/   CI pipeline
-```
-
-See [`CLAUDE.md`](CLAUDE.md) for a complete engineering orientation,
-[`REPOSITORY_AUDIT.md`](REPOSITORY_AUDIT.md) for a structural audit, and
-[`CAPABILITY_INVENTORY.md`](CAPABILITY_INVENTORY.md) /
-[`GAP_ANALYSIS.md`](GAP_ANALYSIS.md) for what is fully implemented versus
-still in progress.
-
-## Continuous Integration
-
-Every push and pull request to `main` runs an automated pipeline that:
-
-1. Syntax-checks every JavaScript file.
-2. Runs a repository integrity audit (module graph, RLS coverage,
-   duplicate-definition checks).
-3. Verifies every local asset reference resolves to an existing file.
-4. Scans for accidental exposure of privileged service credentials.
-5. Type-checks all Edge Functions.
-6. Validates the PWA manifest and service-worker asset lists.
-
-A pull request is not mergeable unless this pipeline passes.
-
-## License & Legal
-
-This repository and the SYD OMEGA 91717 name, marks, cosmology, design
-system, and codebase are the proprietary property of the platform owner.
-No license is granted to copy, redistribute, or create derivative platforms
-from this code. Membership in the deployed application grants a limited
-license to use the platform under its published Terms & Conditions
-(`/terms.html`) — it does not grant any rights to this source repository.
-
-All rights reserved. See `/terms.html` and `/privacy.html` in the deployed
-application for the full legal terms, including the platform's DMCA-style
-notice-and-takedown process for copyright claims.
-
-## Contact
-
-For access requests, support, or legal inquiries, use the contact channels
-published in the deployed application (`/terms.html`, `/privacy.html`).
-This repository does not accept external pull requests or issues.
+<p align="center"><sub>© SYD OMEGA 91717. All rights reserved. See the in-app Terms &amp; Privacy pages for full legal terms.</sub></p>

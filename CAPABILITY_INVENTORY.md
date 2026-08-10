@@ -70,7 +70,8 @@ applied live), `interface-omni.html`.
 `services.html`, `consultancy.html` ⚠️ (booking form was completely non-functional — table
 missing 3 columns the form sends; fixed in code this session, not yet applied live),
 `contracts.html`, `publishing.html`, `studio.html`,
-`marketing.html`, `news.html`, `social.html`, `events.html` (RSVP write-result checked per
+`marketing.html` ✅ (owner campaign-approval silent-failure write fixed this session),
+`news.html`, `social.html`, `events.html` (RSVP write-result checked per
 earlier session fix), `travel.html` ✅ (progress-credit ordering bug fixed this session),
 `health.html`.
 

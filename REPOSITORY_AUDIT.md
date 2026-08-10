@@ -153,6 +153,12 @@ In commit order, both repos kept in sync throughout:
     existence-guarded) and validated end-to-end against a throwaway local PostgreSQL 16
     instance: confirmed `nodes_earned` now lands at 104976 and all 12 trophies/12 medals/12
     certificates rows are actually inserted.
+13. Third-wave page sweep — `marketing.html`'s `decide()` (backs the owner-only campaign
+    APPROVE/REJECT buttons on `public.media_reservations`) discarded the update's `.error`
+    entirely: on failure the item silently stayed in the queue with no feedback, same bug
+    class as `family.html`/`social.html` from the first wave, missed until now. Fixed to check
+    `.error` and alert on failure. No other pending SQL this round — this was a pure client-code
+    fix, live the moment it's deployed, no database action needed.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring

@@ -366,14 +366,29 @@ orphaned file.
     deduplication existed despite `omega-progress.js`'s own header comment and
     `publishing.html`'s copy both promising "keyed on (user, task)" / "farm-proof" behavior —
     confirmed by calling the live function body twice with an identical task and getting two
-    separate increments. Both fixed together: `supabase/omega_complete_task_dedup_fix.sql`
-    (`migrations/0094`) adds the `(user_id, task_name)` dedup check, a supporting index, and an
-    `applied` boolean in the return value; the 5 client call sites' parameter names are fixed in
-    the same commit, plus `omega-matrix.js`'s separate bug reading `d.a`/`d.b`/`d.c` from a
-    return shape that has always been `d.axis_a`/`d.axis_b`/`d.axis_c`.
+    separate increments. **A fourth, independent bug then surfaced when the owner actually ran
+    the fix**: `CREATE INDEX ... (user_id, task_name)` failed with `column "task_name" does not
+    exist` — the owner's live `public.task_completions` has an older, simpler shape (`id
+    bigint, user_id, kind, task, completed_at, axis, increment, created_at`, confirmed via
+    `information_schema.columns`) than what the live `complete_task()` function's own `INSERT`
+    targets. Multiple `CREATE TABLE IF NOT EXISTS` definitions for this table exist across the
+    SQL bag with genuinely different shapes; whichever ran first on the live database won, and
+    it matches none of them exactly. Reproduced against a scratch instance seeded with the real
+    reported columns: since a plpgsql function with no exception handler rolls back its entire
+    body on any unhandled error, **`complete_task()` has never actually committed anything for
+    anyone** — even the `profiles` axis/authority/`nodes_earned` update immediately before the
+    failing `INSERT` was always rolled back too. Fixed by amending `migrations/0094` in place
+    (nothing from the owner's failed first attempt had landed, since Postgres rolled back that
+    whole transaction) to add a non-destructive `ALTER TABLE ADD COLUMN IF NOT EXISTS` for the
+    missing columns before the index/function statements — old columns and any existing rows
+    untouched. All three bugs fixed together: `supabase/omega_complete_task_dedup_fix.sql`
+    (`migrations/0094`) adds the missing columns, the `(user_id, task_name)` dedup check, a
+    supporting index, and an `applied` boolean in the return value; the 5 client call sites'
+    parameter names are fixed in the same commit, plus `omega-matrix.js`'s separate bug reading
+    `d.a`/`d.b`/`d.c` from a return shape that has always been `d.axis_a`/`d.axis_b`/`d.axis_c`.
   **Not yet applied to the live database** — this is the top-priority pending action in
   `GAP_ANALYSIS.md` §6: production payments and all progression tracking stay broken until
-  `migrations/0093` and `0094` (or the equivalent flat files) are run.
+  `migrations/0093` and the amended `0094` (or the equivalent flat files) are run.
 
 ## 9. Working in this repo — practical rules
 

@@ -1,7 +1,49 @@
 -- ============================================================================
--- SYD OMEGA 91717 -- COMPLETE_TASK: PARAM RENAME BREAKAGE + MISSING DEDUP (CRITICAL)
+-- SYD OMEGA 91717 -- COMPLETE_TASK: PARAM RENAME BREAKAGE + MISSING DEDUP +
+-- TABLE/FUNCTION SCHEMA MISMATCH (CRITICAL)
 --
--- Two independently confirmed bugs in the one live public.complete_task().
+-- UPDATE (owner's first live apply attempt): running this file as originally
+-- written failed on its very first statement --
+--   ERROR: column "task_name" does not exist (42703)
+--   at: CREATE INDEX ... ON public.task_completions (user_id, task_name)
+-- -- because the live public.task_completions table does not have the columns
+-- this function's own body (confirmed live via pg_get_functiondef()) inserts
+-- into. Queried the owner's actual live schema
+-- (information_schema.columns): id bigint, user_id uuid, kind text, task
+-- text, completed_at timestamptz, axis text, increment numeric, created_at
+-- timestamptz -- an older, simpler shape (matches the *dead*
+-- p_kind/p_task/p_axis/p_weight client convention, not the currently-live
+-- function's p_task_name/p_task_type/p_axis_type/p_points naming). Multiple
+-- CREATE TABLE IF NOT EXISTS definitions for task_completions exist across
+-- the SQL bag (matrix_engine.sql has the "rich" shape this function expects;
+-- migration_runner.sql/omega_backend_sync.sql/omega_master_deploy.sql have
+-- an even simpler task/kind-only shape) -- whichever ran first on the live
+-- database is a no-op for the others, and the live table matches none of
+-- them exactly (it has axis/increment that the simple trio lack, but not
+-- matrix_engine.sql's task_name/points_earned/axis_a_before etc.).
+--
+-- Reproduced against a scratch instance built with the *exact* reported live
+-- column list: inserting the way this function's live body already does
+-- (`INSERT INTO task_completions(user_id,task_name,task_type,axis_type,
+-- description,points_earned,axis_a_before,...)`) fails with the identical
+-- "column task_name does not exist" error. Since a plpgsql function with no
+-- exception handler rolls back its entire body on any unhandled error, this
+-- means complete_task() has never actually committed anything on the live
+-- database for anyone -- not just the task_completions row, but the
+-- profiles.axis_a/b/c + authority + nodes_earned UPDATE immediately before
+-- it, since that update is still inside the same failed transaction.
+--
+-- Fixed by adding the missing columns to the existing table (non-destructive
+-- ADD COLUMN IF NOT EXISTS -- the old kind/task/axis/increment/id/
+-- completed_at columns are left exactly as they are, so nothing already
+-- relying on them is touched) before the index/function statements below.
+-- Re-verified end-to-end against a scratch instance seeded with the owner's
+-- real reported schema: after the ALTER, the same complete_task() call
+-- succeeds, dedup works (second call on the same task_name is a no-op), and
+-- profiles.axis_c/nodes_earned/authority all update correctly.
+--
+-- Two independently confirmed bugs in the one live public.complete_task()
+-- (in addition to the schema mismatch above).
 --
 -- BUG 1 -- every client call site uses the wrong parameter names, so the RPC
 -- has been failing platform-wide (not just in one page). The live signature
@@ -77,6 +119,25 @@
 -- applied to the live database.
 -- ============================================================================
 BEGIN;
+
+-- Non-destructive: adds only the columns complete_task()'s live body needs.
+-- Existing rows (written under the old kind/task/axis/increment shape, if
+-- any) get NULLs for these -- harmless, and intentionally excluded from the
+-- new dedup check below rather than backfilled, since there's no reliable
+-- way to reconstruct task_name from the old `task`/`kind` free-text columns.
+ALTER TABLE public.task_completions
+  ADD COLUMN IF NOT EXISTS task_name     text,
+  ADD COLUMN IF NOT EXISTS task_type     text,
+  ADD COLUMN IF NOT EXISTS axis_type     text,
+  ADD COLUMN IF NOT EXISTS description   text,
+  ADD COLUMN IF NOT EXISTS points_earned numeric,
+  ADD COLUMN IF NOT EXISTS axis_a_before numeric,
+  ADD COLUMN IF NOT EXISTS axis_b_before numeric,
+  ADD COLUMN IF NOT EXISTS axis_c_before numeric,
+  ADD COLUMN IF NOT EXISTS axis_a_after  numeric,
+  ADD COLUMN IF NOT EXISTS axis_b_after  numeric,
+  ADD COLUMN IF NOT EXISTS axis_c_after  numeric,
+  ADD COLUMN IF NOT EXISTS auth_after    numeric;
 
 CREATE INDEX IF NOT EXISTS idx_task_completions_user_task
   ON public.task_completions (user_id, task_name);

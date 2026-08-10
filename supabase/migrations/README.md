@@ -569,3 +569,46 @@ actually live) and pasted the results back. Findings:
   has been applied to the live database yet — this is the single highest-
   priority pending action: production payments and all progression tracking
   are broken until these run.
+
+## `0094` amended in place: a fourth bug found on the owner's first live apply attempt
+
+The owner tried applying `0094_omega_complete_task_dedup_fix.sql` and hit
+`ERROR: column "task_name" does not exist (42703)` on its first statement
+(the `CREATE INDEX`). Queried `information_schema.columns` for the live
+`public.task_completions`: `id bigint, user_id uuid, kind text, task text,
+completed_at timestamptz, axis text, increment numeric, created_at
+timestamptz` — an older, simpler shape than what the live `complete_task()`
+function's own body (confirmed earlier via `pg_get_functiondef()`) inserts
+into (`task_name`, `task_type`, `axis_type`, `points_earned`,
+`axis_a_before`, etc.). The SQL bag has multiple genuinely different
+`CREATE TABLE IF NOT EXISTS task_completions` definitions
+(`matrix_engine.sql`'s richer shape vs. `migration_runner.sql`/
+`omega_backend_sync.sql`/`omega_master_deploy.sql`'s simpler `task`/`kind`
+shape) — whichever ran first on the live database won, and the real result
+matches neither file exactly (has `axis`/`increment`, lacks `task_name`/
+`points_earned`/the `axis_*_before/after` columns).
+
+Reproduced against a scratch instance seeded with the *exact* reported live
+columns: since a plpgsql function with no exception handler rolls back its
+entire body on any unhandled error, this means `complete_task()` has never
+actually committed anything for anyone on the live database — not just the
+`task_completions` insert, but the `profiles` axis/authority/`nodes_earned`
+update immediately before it in the same function body, since that update
+was always part of the same failed, rolled-back transaction.
+
+Because the owner's failed first attempt aborted on its very first
+statement, nothing from the original `0094` had landed live (Postgres
+rolled back the whole `BEGIN...COMMIT` block) — so `0094` was amended in
+place rather than superseded by a new numbered file, matching this
+project's own precedent for `0092` (first live attempt failed, corrected
+in the same file). Added a non-destructive `ALTER TABLE ... ADD COLUMN IF
+NOT EXISTS` for the missing columns before the index/function statements;
+the old `kind`/`task`/`axis`/`increment` columns and any existing rows are
+left untouched. Re-verified end-to-end in a fresh scratch instance seeded
+with the owner's real reported schema: the amended file applies cleanly,
+`complete_task()`'s first call on a task now applies and returns
+`applied:true`, an identical repeat call is a no-op (`applied:false`), and
+`profiles.axis_c`/`nodes_earned`/`authority` all update correctly.
+
+`supabase/migrations/` still contains **94 files** (`0001`–`0094`) — `0094`
+was amended, not added to. Not yet re-applied to the live database.

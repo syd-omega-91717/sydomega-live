@@ -184,6 +184,23 @@ In commit order, both repos kept in sync throughout:
     news ticker rendered `item.title` from an external Reuters feed (proxied via
     `api.rss2json.com`) raw via `innerHTML` — the only unescaped field on the page. Added
     `esc()`.
+16. **Real-world bug, caught only once the owner actually ran `0092` against the live
+    database:** `supabase/omega_notify_triggers.sql`/`migrations/0092` failed with
+    `42P13: cannot change return type of existing function` on `grant_permanent_access` — the
+    live database already had a version of that function with a different return type than
+    the `jsonb` this file assumed, and `CREATE OR REPLACE FUNCTION` cannot change a return
+    type. `omega_access_control.sql` (the file that originally created these 5 functions)
+    already anticipated exactly this scenario with a dynamic drop-all-prior-versions block,
+    but `0092` didn't reuse that same defensive pattern. Fixed by adding the identical block
+    (drops any existing version of the 5 functions it touches, by whatever signature `pg_proc`
+    actually reports, before redefining them). Validated by reproducing the exact production
+    error first — created a stub `grant_permanent_access` returning `boolean` instead of
+    `jsonb` in a throwaway local PostgreSQL 16 instance, confirmed the unfixed file hit
+    `42P13` there too, then confirmed the fixed file resolves it cleanly and all 5 functions +
+    notification inserts work correctly afterward. This is the first pending-SQL item this
+    session that was actually attempted against a live database, and it surfaced a real gap
+    no local validation could have caught (there was nothing pre-existing to conflict with in
+    any throwaway test database) — worth remembering for any future SQL fix in this family.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring

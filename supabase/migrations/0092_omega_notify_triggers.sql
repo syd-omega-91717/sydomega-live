@@ -33,6 +33,27 @@
 -- ============================================================================
 BEGIN;
 
+-- drop prior versions of these functions first -- CREATE OR REPLACE cannot
+-- change a return type, and a live database may already have a version of
+-- one of these with a different return type (or a different argument list
+-- than assumed below). Same defensive pattern as omega_access_control.sql,
+-- which originally created these functions for exactly this reason.
+DO $drop$
+DECLARE r record;
+BEGIN
+  FOR r IN
+    SELECT 'DROP FUNCTION IF EXISTS public.' || quote_ident(p.proname)
+           || '(' || pg_get_function_identity_arguments(p.oid) || ');' AS cmd
+    FROM pg_proc p
+    JOIN pg_namespace n ON n.oid = p.pronamespace
+    WHERE n.nspname = 'public'
+      AND p.proname IN ('approve_member','grant_permanent_access',
+                        'reject_member','revoke_member','extend_trial')
+  LOOP
+    EXECUTE r.cmd;
+  END LOOP;
+END $drop$;
+
 CREATE OR REPLACE FUNCTION public.approve_member(p_uid uuid)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER AS $$
 DECLARE exp timestamptz;

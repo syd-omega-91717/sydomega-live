@@ -410,12 +410,30 @@ escaping `m.name` directly instead of relying on the broken round-trip.
   across the SQL bag rather than just duplicated table names (found §0's auth-bypass and §3.1's
   three divergent-function forks). Item 17 covered `bg.js`-loaded modules and external-API
   (non-Supabase) content sources, catching `omega-live.js`'s dormant ticker and `pulse.html`'s
-  RSS-feed XSS — both outside the `.from()`-call-centric scope of items 14-16. **Still not
-  covered:** `.innerHTML` built via string concatenation without a literal `+` visible to grep
-  (e.g. `.concat()`), any bug class outside XSS/silent-failure/missing-table/RPC-contract-
-  mismatch/auth-bypass, and a live-database check of which side of each §3.1 fork is actually
-  deployed. `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually audited," not
-  "confirmed clean."
+  RSS-feed XSS — both outside the `.from()`-call-centric scope of items 14-16. An eighth pass
+  (this session) closed the `.concat()` gap specifically: grepped every `.html`/`.js` file for
+  `.concat(`, found 24 matches, and traced the 13 that feed an `.innerHTML=` assignment across
+  7 files (`publications.html:162`, `contributions.html:172,199`, `heritage.html:154,169`,
+  `treasury.html:250,290`, `notifications.html:164,181`, `governance.html:209,229,245`,
+  `kings.html:158`). All 13 interpolate unescaped fields (titles, notes, story bodies, etc.)
+  straight into the markup — but every one of the underlying arrays (`pubs`, `contribs`,
+  `gifts`, `ancestors`, `stories`, `assets`, `flows`, `notifs`, `reminders`, `risks`,
+  `policies`, `decisions`, `studyNotes`) is read from and written to `localStorage` only (no
+  Supabase table), confirmed per-file (`JSON.parse(localStorage.getItem(...))` /
+  `localStorage.setItem(...)`, no matching `.from('<table>')` calls for any of those variable
+  names). That makes this self-XSS at most — a member could only inject a payload into their
+  own browser's own storage, with no path for it to render in another session (unlike the
+  `display_name`/`approvals.html` class of bug, which crossed from a member's write into the
+  owner's browser) — so left unfixed as out-of-scope-by-design rather than "fixed." One
+  adjacent false lead ruled out: `publications.html`'s `pubs` shares a name with the *different*,
+  genuinely cross-user `public.publications` Supabase table (`feed.html`'s public post feed,
+  written by `publishing.html`), but `publications.html` itself never touches that table — it's
+  an unrelated localStorage reading-list feature that happens to share a name; `feed.html`'s
+  own rendering of the real table already escapes (`.replace(/</g,'&lt;')`, confirmed at
+  `feed.html:162-166`). **Still not covered:** any bug class outside XSS/silent-failure/
+  missing-table/RPC-contract-mismatch/auth-bypass, and a live-database check of which side of
+  each §3.1 fork is actually deployed. `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not
+  individually audited," not "confirmed clean."
 - **5.2** Live-database verification of anything in §2 — no session has held credentials.
 - **5.3** Supabase MCP server (`.mcp.json`, added this session) is configured but not
   authenticated — that requires an interactive `claude` session, which was confirmed
@@ -443,12 +461,13 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 7. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency (unlike the function duplicates
    in §3.1, these are safe today).
-8. Continue the page-by-page sweep (§5.1) — seven passes done; all three `.innerHTML`
+8. Continue the page-by-page sweep (§5.1) — eight passes done; all three `.innerHTML`
    interpolation shapes are now exhaustively traced (76 files, 6 real stored-XSS instances
-   found and fixed across the passes, plus 2 more via the non-page-scoped pass). Remaining
-   candidates for a next pass: pages with zero `.innerHTML` interpolation at all (not yet
-   checked for other bug shapes — raw string concatenation without `+` syntax visible to a
-   simple grep, or non-XSS logic bugs), and any bug class outside the ones this sweep has
+   found and fixed across the passes, plus 2 more via the non-page-scoped pass), and the
+   `.concat()` sub-shape is now also checked (13 instances across 7 files, all confirmed
+   self-XSS-only via localStorage, no fix needed). Remaining candidates for a next pass: pages
+   with zero `.innerHTML` interpolation at all (not yet checked for other bug shapes — non-XSS
+   logic bugs), and any bug class outside the ones this sweep has
    focused on.
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.

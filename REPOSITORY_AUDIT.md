@@ -295,6 +295,50 @@ In commit order, both repos kept in sync throughout:
     throwaway test database) — worth remembering for any future SQL fix in this family, and a
     concrete illustration of why item 16's `pg_proc`-divergence findings matter in practice.
 
+20. **Eighth-wave sweep, this session — continued item 8 of `GAP_ANALYSIS.md`'s priority list
+    (no live DB credentials held, so the DB-dependent action items 1-4 there aren't actionable;
+    picked up the remaining code-only sweep instead).** Two parts:
+    - Closed the one specific gap `GAP_ANALYSIS.md` §5.1 flagged as still not covered:
+      `.innerHTML` built via string concatenation using `.concat()` rather than a literal `+`
+      (invisible to the prior passes' `+`-grep). Found 8 files with `.innerHTML=[].concat(...)`
+      (`contributions.html`, `governance.html`, `heritage.html`, `notifications.html`,
+      `publications.html`, `treasury.html`, plus 2 more using `.concat()` for non-`innerHTML`
+      array math). Traced every one: all six `.innerHTML=[].concat(...)` call sites read from
+      `localStorage` only (`JSON.parse(localStorage.getItem(...))`), no `.from()`/`.rpc()` call
+      anywhere in any of the six files — same self-scoped, non-cross-user category already
+      established as safe for the finance/journal pages in `GAP_ANALYSIS.md` §4.2. Zero new
+      findings from this half of the sweep, but it closes the specific open item.
+    - Extended the `bg.js`-loaded-module check (item 18's category) to the 16 `omega-*.js`
+      modules with both `.innerHTML` and `.from()`/`.rpc()` calls that item 18 hadn't
+      individually traced yet. Found one real (if currently dormant) gap:
+      **`omega-notify.js`'s notification panel** (`buildPanel()`, the widget `bg.js` injects
+      platform-wide for the badge/toast/panel UI added in items 6/9/19) rendered
+      `n.message`/`n.content`/`n.notification_type` from `public.notifications` rows straight
+      into `.innerHTML` with no escaping — same unescaped-DB-field shape as every other
+      stored-XSS instance in this log. Checked whether it's currently reachable: confirmed via
+      `omega_notify_triggers.sql`'s `GRANT EXECUTE` list and `omega_notifications_fix.sql`'s
+      `GRANT SELECT, UPDATE ON public.notifications TO authenticated` (no `INSERT` grant
+      anywhere in any SQL file) that the only rows ever written are the five owner-gated
+      `SECURITY DEFINER` trigger functions from item 19, each inserting a static string
+      literal — so `message`/`content` are not attacker-controlled today. Same category as the
+      `activity_feed` ticker in item 18: **fixed preemptively anyway**, since a future
+      notification-generating event with free-text content (already flagged in
+      `GAP_ANALYSIS.md` §2.2 as deliberately-undone future work) would silently re-open this
+      exact hole otherwise. Added an `esc()` helper to `omega-notify.js` and applied it to all
+      three fields. Also traced the same 16-module list's other `.innerHTML` sites
+      (`omega-membership.js`, `omega-tier-gate.js`, `omega-user.js`, `omega-onboard.js`,
+      `omega-chronometer.js`, `omega-demo-video.js`, `omega-realtime.js`, others) — all either
+      interpolate static config (`omega-canon.json` tier/label data), numeric-only values, or
+      the viewer's own session-scoped profile row (`omega-user.js`'s `hero-badges`, which does
+      render the member-self-updatable `sign` field per the `sovereigns.html` finding in item
+      1, but only ever the *viewing* member's own profile — every call site fetches via
+      `.eq('id', session.user.id)` — so it's self-XSS-only, not a cross-user vector, matching
+      the established non-issue category). One exception worth recording as a **positive**
+      finding rather than a gap: `omega-realtime.js`'s live ticker also reads
+      `activity_feed.title`/`member_name` (the same cross-user, member-writable table as item
+      18's dormant ticker) but renders it via `.textContent`, not `.innerHTML` — correctly
+      escaped by construction, no fix needed.
+
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database**, except `0092`, whose first live attempt
 surfaced the bug fixed in item 19 above — the corrected file has not yet been re-run. That
@@ -312,7 +356,7 @@ above every other pending-SQL item.
 | RLS coverage | Clean — 0 tables missing RLS, CI-enforced |
 | Secrets in tracked code | Clean — CI-enforced |
 | **Full owner-approval bypass in `trial_access.sql`** | **Found and fixed this session (§6.16)** — validated against a live local PostgreSQL 16 instance; see `GAP_ANALYSIS.md` §0. The most severe finding on this branch |
-| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor, dormant activity ticker, external RSS feed) | 9 pages/vectors found and fixed across the second through seventh waves (§6.1, §6.11, §6.14, §6.15, §6.16, §6.18) — `.innerHTML`-interpolation check exhaustive across all three shapes (76 files) plus `bg.js`-loaded modules and external content sources, plus every RPC-consumer on `approvals.html` checked against its actual response shape |
+| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor, dormant activity ticker, external RSS feed, dormant notification panel) | 9 pages/vectors found and fixed across the second through eighth waves (§6.1, §6.11, §6.14, §6.15, §6.16, §6.18, §6.20) — `.innerHTML`-interpolation check exhaustive across all four shapes (template-literal, `+`-concatenation, bare-variable, `.concat()` — 82 files) plus `bg.js`-loaded modules (all 93, including the 16 with both `.innerHTML` and `.from()`/`.rpc()` calls individually traced) and external content sources, plus every RPC-consumer on `approvals.html` checked against its actual response shape |
 | Silent-failure writes | Fixed (5 instances across two waves); established convention now checked repo-wide, no new gaps in the fifth-wave sweep |
 | Wrong-table/wrong-shape query (chart, dispatch log, `access_audit_log`, `error_summary`, `my_points_balance`) | 5 instances found and fixed (§6.2, §6.14, §6.15, §6.16) — same bug class each time: client code assumes a response shape the server doesn't return |
 | Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |

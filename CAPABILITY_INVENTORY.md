@@ -62,9 +62,13 @@ server-side per `CLAUDE.md` §8), `ledger.html` ✅ (persists server-side), `inv
 on `platform_settings.tokens_enabled = false`), `advertising.html` (error-checked ad
 submission per earlier session fix).
 
-The 💾-marked pages are a deliberate, documented split: `CLAUDE.md` §8 records this as a real
-inconsistency needing a product decision (privacy-motivated client-side design vs. unfinished
-migration), not a bug to silently "fix" by adding schema.
+The 💾-marked pages are a deliberate, documented split: `CLAUDE.md` §8 records the decision
+(made this session) to keep them client-side-only rather than migrate to server schema, given
+the sensitivity of financial data and this repo's own history of real RLS bugs. All 7 now load
+`omega-local-backup.js` (new this session — dependency-free, no network calls, export/import
+of the page's own `localStorage` keys to/from a JSON file) with an "EXPORT BACKUP"/"IMPORT
+BACKUP" control, mitigating the main downside (data loss on cleared storage or device switch)
+without taking on server-side storage of sensitive data.
 
 ### ORDER — family, governance-flavored social structure
 `family.html` (silent-failure writes fixed this session — `REPOSITORY_AUDIT.md` §6.3),

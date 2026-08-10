@@ -57,6 +57,12 @@
 <div class="topbar"><div class="t">SOVEREIGN WALLET<small>ASSETS · ALLOCATION · NET WORTH · SOVEREIGNTY · SYD OMEGA 91717</small></div></div>
 <div style="padding:20px var(--pad,20px)">
 
+<div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+  <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+  <button onclick="OmegaLocalBackup.exportKeys(['omega_wallet','omega_wallet_targets'],'omega-wallet-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+  <button onclick="OmegaLocalBackup.importKeys(['omega_wallet','omega_wallet_targets'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+</div>
+
 <div class="tab-row">
   <button class="tab-btn act" data-tab="overview" onclick="switchTab('overview',this)">&#9670; OVERVIEW</button>
   <button class="tab-btn" data-tab="accounts" onclick="switchTab('accounts',this)">&#9670; ACCOUNTS</button>
@@ -407,6 +413,7 @@ function resetTargets(){targets={checking:10,savings:15,investment:40,retirement
 load();
 renderOverview();
 </script>
+<script src="/omega-local-backup.js"></script>
 <script src="/bg.js"></script>
 </body>
 </html>

@@ -28,6 +28,12 @@
       <button class="tab" data-tab="science" role="tab">SCIENCE</button>
     </div>
 
+    <div class="pad" style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin:12px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],'omega-treasury-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+    </div>
+
     <!-- OVERVIEW TAB -->
     <div class="tab-panel active pad" id="tab-overview">
       <div class="kpi-row">
@@ -344,6 +350,7 @@ window.addFlow=function(){
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
+<script src="/omega-local-backup.js"></script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>
 </html>

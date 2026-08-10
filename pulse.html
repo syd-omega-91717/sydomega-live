@@ -239,6 +239,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 /* ── Data cache ── */
 var cache={crypto:{},forex:{},weather:{},fng:null,lastFetch:0};
 var REFRESH_MS=60000;
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
 /* ── Tab switching ── */
 document.querySelectorAll('.tab').forEach(function(t){
@@ -612,7 +613,7 @@ async function fetchNews(){
       var ago=Math.round((Date.now()-new Date(item.pubDate))/60000);
       var agoStr=ago<60?ago+'m ago':Math.round(ago/60)+'h ago';
       return '<div class="news-item">'
-        +'<div class="news-title">'+item.title+'</div>'
+        +'<div class="news-title">'+esc(item.title)+'</div>'
         +'<div class="news-meta"><span class="news-src">REUTERS</span><span>'+agoStr+'</span></div>'
         +'</div>';
     }).join('');

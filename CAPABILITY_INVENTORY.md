@@ -141,7 +141,8 @@ mechanic), `omega-sdt.js` (self-determination-theory-based design), `omega-page-
 
 **Platform infrastructure:** `omega-sovereign-os.js` ("central nervous system"),
 `omega-shell.js` (async region shell), `omega-state.js`, `omega-ui.js` (UI unification),
-`omega-components.js`, `omega-capability.js`, `omega-actions.js`, `omega-live.js`,
+`omega-components.js`, `omega-capability.js`, `omega-actions.js`, `omega-live.js` ✅
+(dormant stored-XSS in its activity-feed ticker fixed this session),
 `omega-workers.js` (background consumer fleet), `omega-workflow.js` (multi-step
 orchestration), `omega-policy.js` (business-rule externalization), `omega-experiment.js`
 (A/B testing, feature flags).

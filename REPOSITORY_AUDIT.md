@@ -68,6 +68,10 @@ on all 7 Edge Functions (non-blocking), `sw.js` precache vs. actual files (block
   browser. Fixed by adding a per-page `esc()` helper matching the convention already used
   elsewhere in the codebase (`contracts.html`, `dashboard.html`, `family.html`) and escaping
   every field sourced from another user's profile.
+- **Full owner-approval bypass — the most severe finding on this branch, found and fixed this
+  session:** `supabase/trial_access.sql` defined `grant_permanent_access`/`grant_trial_access`/
+  `expire_trial` with no caller check at all, despite being `GRANT`ed to `authenticated`. See
+  §6 item 16 and `GAP_ANALYSIS.md` §0 for the full writeup, exploit, fix, and validation.
 
 ## 4. Schema organization (unchanged from `REPO_AUDIT.md` §4, numbers refreshed)
 
@@ -80,6 +84,10 @@ copy of this same content — see its own `README.md` for the full derivation hi
 still-open 47-tables-in-multiple-files redundancy (reordered, not deduplicated). **Neither the
 loose bag nor `migrations/` has been applied to a live database from any session in this
 project's history** — no session has held live Supabase credentials.
+
+**Functions are a separate, higher-risk duplication class** — see `GAP_ANALYSIS.md` §3.1:
+unlike tables, `CREATE OR REPLACE FUNCTION` overwrites unconditionally, and 10 functions
+(including `is_platform_owner()` itself) have genuinely diverging definitions across files.
 
 ## 5. New finding — `nav.js`'s section-mapping object has 19 dead/overridden keys
 
@@ -202,12 +210,6 @@ In commit order, both repos kept in sync throughout:
     the assumed `event`/`status`/`user_id`); `subject`/`actor` are resolved `display_name`
     values (member-controllable) so both are now escaped too. See `GAP_ANALYSIS.md` §4.8-§4.9
     for full detail on both.
-
-**None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
-item 11) have been applied to any live database.** That remains an owner action requiring
-real Supabase credentials, which no session in this project's history has held. Items 14 and
-15 are pure client-code fixes with no database dependency — live the moment deployed.
-
 16. Sixth-wave sweep — extended beyond the three established bug classes for the first time.
     **Most significant finding of any session on this branch:** `supabase/trial_access.sql`
     defined `grant_permanent_access(uuid)`, `grant_trial_access(uuid)`, and `expire_trial(uuid)`
@@ -251,6 +253,56 @@ real Supabase credentials, which no session in this project's history has held. 
     tell from source alone which side of each fork is live; left as a prioritized owner action
     with the exact `pg_proc` verification query to run. See `GAP_ANALYSIS.md` §3.1 for full
     detail and the query.
+17. Verified `GAP_ANALYSIS.md` §3's open item ("confirm the 3 `DROP TABLE`-containing files
+    aren't wired into anything automatic") rather than leaving it as an assumption. All three
+    DROPs target only `public.dispatches`, not distinct tables; `chunk_07_migrations.sql`'s is
+    literally `omega_dispatch_reset.sql` pasted into a legacy bundle file whose own header says
+    "run this ONLY if OMEGA_DISPATCH.sql still errors"; `migration_runner.sql`'s DROP comes
+    after two earlier `CREATE TABLE dispatches` in the same file with no recreation
+    afterward — genuinely destructive if that file were ever run start-to-finish, but grepped
+    `ci.yml`, `scripts/`, every `.html`/`.js` file, and `supabase/functions/`: zero references
+    to any of the three files anywhere. Confirms and adds concrete verification to
+    `migrations/README.md`'s existing "must not be wired into any automated path" analysis.
+    No code change — a verification pass, closing an open question rather than a fix.
+18. Seventh-wave sweep — extended beyond `.html` pages and `.from()`-call-centric checks for
+    the first time: `bg.js`-loaded modules and external (non-Supabase) content sources.
+    `omega-live.js`'s activity-feed ticker (`startTicker()`, loaded by `bg.js` on every page)
+    rendered `activity_feed.title` raw via `innerHTML` — `activity_feed`'s RLS lets any
+    authenticated member insert their own `is_public=true` row with an arbitrary title, same
+    stored-XSS shape as `sovereigns.html`. Currently dormant (no shipped page has a
+    `[data-live-ticker]` element yet) but fixed preemptively since the module clearly exists to
+    power one. `pulse.html`'s news ticker rendered `item.title` from an external Reuters feed
+    (proxied via `api.rss2json.com`, a plain `fetch()` call — not a `.from()` call, which is
+    why prior `.from()`-centric sweeps didn't catch it) raw via `innerHTML` — the only
+    unescaped field on the page. Added `esc()` to both.
+19. **Real-world bug, caught only once the owner actually ran `0092` against the live
+    database:** `supabase/omega_notify_triggers.sql`/`migrations/0092` failed with
+    `42P13: cannot change return type of existing function` on `grant_permanent_access` — the
+    live database already had a version of that function with a different return type than
+    the `jsonb` this file assumed (from `trial_access.sql`, item 16 — its pre-fix version
+    `RETURNS void`), and `CREATE OR REPLACE FUNCTION` cannot change a return type.
+    `omega_access_control.sql` (the file that originally created these 5 functions) already
+    anticipated exactly this scenario with a dynamic drop-all-prior-versions block, but `0092`
+    didn't reuse that same defensive pattern. Fixed by adding the identical block (drops any
+    existing version of the 5 functions it touches, by whatever signature `pg_proc` actually
+    reports, before redefining them). Validated by reproducing the exact production error
+    first — created a stub `grant_permanent_access` returning `boolean` instead of `jsonb` in
+    a throwaway local PostgreSQL 16 instance, confirmed the unfixed file hit `42P13` there too,
+    then confirmed the fixed file resolves it cleanly and all 5 functions + notification
+    inserts work correctly afterward. This is the first pending-SQL item on this branch that
+    was actually attempted against a live database, and it surfaced a real gap no local
+    validation could have caught (there was nothing pre-existing to conflict with in any
+    throwaway test database) — worth remembering for any future SQL fix in this family, and a
+    concrete illustration of why item 16's `pg_proc`-divergence findings matter in practice.
+
+**None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
+item 11) have been applied to any live database**, except `0092`, whose first live attempt
+surfaced the bug fixed in item 19 above — the corrected file has not yet been re-run. That
+remains an owner action requiring real Supabase credentials, which no session in this
+project's history has held generally, though item 19 shows this owner does have live access
+and has begun applying the pending SQL. **Highest priority of all: apply the patched
+`supabase/trial_access.sql` from item 16** — see `GAP_ANALYSIS.md` §0/§6 for why this ranks
+above every other pending-SQL item.
 
 ## 7. Summary
 
@@ -260,11 +312,11 @@ real Supabase credentials, which no session in this project's history has held. 
 | RLS coverage | Clean — 0 tables missing RLS, CI-enforced |
 | Secrets in tracked code | Clean — CI-enforced |
 | **Full owner-approval bypass in `trial_access.sql`** | **Found and fixed this session (§6.16)** — validated against a live local PostgreSQL 16 instance; see `GAP_ANALYSIS.md` §0. The most severe finding on this branch |
-| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor) | 7 pages/vectors found and fixed across the fifth and sixth waves (§6.1, §6.11, §6.14, §6.15, §6.16) — `.innerHTML`-interpolation check exhaustive across all three shapes (76 files), plus every RPC-consumer on `approvals.html` checked against its actual response shape |
+| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor, dormant activity ticker, external RSS feed) | 9 pages/vectors found and fixed across the second through seventh waves (§6.1, §6.11, §6.14, §6.15, §6.16, §6.18) — `.innerHTML`-interpolation check exhaustive across all three shapes (76 files) plus `bg.js`-loaded modules and external content sources, plus every RPC-consumer on `approvals.html` checked against its actual response shape |
 | Silent-failure writes | Fixed (5 instances across two waves); established convention now checked repo-wide, no new gaps in the fifth-wave sweep |
 | Wrong-table/wrong-shape query (chart, dispatch log, `access_audit_log`, `error_summary`, `my_points_balance`) | 5 instances found and fixed (§6.2, §6.14, §6.15, §6.16) — same bug class each time: client code assumes a response shape the server doesn't return |
 | Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |
-| `notifications` population | Fixed this session (§6.9); **not applied live** |
+| `notifications` population | Fixed this session (§6.9); production-tested this session (§6.19) — first attempt failed with `42P13`, corrected file **not yet re-applied** |
 | `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
 | `owner_apex_lock.sql` dead `nodes_earned` assignment | Fixed this session (§6.12) — owner-run manual script, not auto-applied |
 | SQL schema organization — tables | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md`; safe today (idempotent) |
@@ -272,10 +324,14 @@ real Supabase credentials, which no session in this project's history has held. 
 | `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
 | `queue.html` dispatch log (wrong columns + stored XSS) | Found and fixed this session (§6.14) — pure client-code fix, no database action needed |
 | `access_audit_log`/`error_summary` RPCs never worked for any caller | Found and fixed this session (§6.15, §6.16) — pure client-code fix, no database action needed |
+| 3 `DROP TABLE`-containing files | **Confirmed dead this session (§6.17)** — zero references anywhere in CI/scripts/pages/functions |
+| `omega-live.js`/`pulse.html` XSS | Found and fixed this session (§6.18) — pure client-code fix, no database action needed |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |
 | Committed binary size (docx/mp4) | Unchanged, non-urgent (see `REPO_AUDIT.md` §2) |
 
 The `trial_access.sql` fix aside — that one is a live-or-was-live security hole, treat as
-urgent — nothing else here is a critical blocker for the app as deployed today. The highest-leverage next
-step is applying the pending SQL (§6 items 4, 7, 9, 11) to the live database — everything else
-is either already fixed in code, or genuine hygiene debt with no functional impact.
+urgent — nothing else here is a critical blocker for the app as deployed today. The
+highest-leverage next steps: apply the patched `trial_access.sql` first (§0), then the
+corrected `migrations/0013` and `0089`–`0092` (item 19's fix) to the live database —
+everything else is either already fixed in code, or genuine hygiene debt with no functional
+impact.

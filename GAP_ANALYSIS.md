@@ -79,6 +79,8 @@ verification section, which applies identically here.
 | Stored XSS in `graph.html`'s constellation-graph tooltip | `profiles.display_name` (self-updatable, every `access_approved` member queried with no `user_id` filter) rendered into the member-node tooltip's `.innerHTML`. The code *attempted* to escape it — `nm.textContent=m.name` then read `nm.textContent` back — but reading `.textContent` returns the original unescaped string (that trick only works if you read `.innerHTML` back instead), so the "escaping" was a no-op. Reachable by hovering any member node; visible to any other approved member or the owner who opens the page | **Fixed** — added a real `escGraph()` helper and used it in place of the broken round-trip |
 | Stored XSS in `approvals.html`'s reservations queue | `review_reservations()` RPC (owner-only) returns `media_reservations` rows verbatim; `title` is a `NOT NULL text` column any authenticated member can set to anything via the `mr_insert` policy (`auth.uid()=user_id`, no content restriction — the same page members use to submit ad reservations). `approvals.html`'s queue rendered `row.title` raw via `.innerHTML`, unlike every other field on the same page. The sibling `review_contracts()` render had the identical unescaped pattern; `commission_contracts` has no `title`/`type` column today so it wasn't exploitable *yet*, but was fixed defensively for the same reason | **Fixed** — both now go through the page's existing `esc()` |
 | Error-monitor free text unescaped, reachable **without authentication** | `report_client_error()` is `GRANT`ed to `anon` *and* `authenticated` (by design — it needs to catch errors from signed-out visitors too) and stores `p_page`/`p_message` with only a length truncation, no sanitization. `error_summary()` (owner-only) aggregates and returns them; `approvals.html`'s error-monitor panel rendered `row.message`/`row.page` raw via `.innerHTML` — reachable by literally anyone on the internet with no login, the widest possible reach of any stored-XSS instance found across this whole audit | **Fixed** — same `esc()`, bundled with the response-shape fix below |
+| Stored XSS in `omega-live.js`'s ticker (dormant) | `activity_feed.title` rendered raw via `.innerHTML`; RLS lets any member insert their own `is_public=true` row with an arbitrary title. Currently unreachable — no page has a `[data-live-ticker]` element yet — but `bg.js` loads this module on every page and it clearly exists to power one | **Fixed preemptively** — `esc()` added |
+| Reflected XSS in `pulse.html` (external source, not a Supabase table — a different vector than the rest of this sweep) | `item.title` from a Reuters feed proxied via `api.rss2json.com` (plain `fetch()`, no `.from()` call) rendered raw via `.innerHTML` — a compromised/MITM'd feed response would execute script. Missed by the `.from()`-call-centric sweep below since it isn't a database read | **Fixed** — `esc()` added |
 
 This session ran a systematic, evidence-based sweep for all three established bug classes
 (stored XSS via unescaped `.innerHTML`, silent-failure writes, and queries against
@@ -104,7 +106,9 @@ tables/RPCs absent from the schema) across every page not yet covered by a prior
   `architect.html`, `body.html`, `breath.html`, `budget.html`, `exam.html`, `fasting.html`,
   `mood.html`, `nutrition.html`, `ops.html`, `passport.html`, `projects.html`, `pulse.html`,
   `quotes.html`, `reading.html`, `skills.html`, `time.html`, `water.html`, `weekly.html`,
-  `workout.html` — safe by construction). Of the remaining 34: `marketing.html`/`news.html`/
+  `workout.html` — safe from a *Supabase-XSS* perspective, though `pulse.html` turned out to
+  have the separate external-feed XSS above, since that sweep was scoped to `.from()` calls
+  specifically). Of the remaining 34: `marketing.html`/`news.html`/
   `sovereigns.html`/`hall.html` already use their own `esc()` on the one field that needed it
   (confirmed, not just assumed); `kings.html`/`cinema.html`/`travel.html` already escape their
   Wikipedia-API `extract` field; `tribe.html`'s one member-sourced field (`display_name`) goes
@@ -129,6 +133,8 @@ tables/RPCs absent from the schema) across every page not yet covered by a prior
   the DB rows they're joined against; `habits.html` is `localStorage`-only; `gates.html`/
   `marketing.html`/`profile.html`/`realm.html` are self-scoped or already-escaped (confirmed
   above). **`graph.html` was a real finding** — see the table above and §4.9.
+- **omega-live.js pass:** `bg.js`-loaded modules aren't `.html` pages, so weren't covered by
+  the per-page sweeps above; checked separately and found the dormant ticker XSS above.
 - **Silent-failure-write sweep:** every `.html` file calling `.insert()`/`.update()`/
   `.upsert()`/`.delete()` against Supabase (23 files) checked for whether the write's
   `.error` gates the success message. `account.html`, `contracts.html`, `health.html`,
@@ -149,9 +155,9 @@ tables/RPCs absent from the schema) across every page not yet covered by a prior
   work. Noted here rather than silently ignored.
 
 A full re-sweep of all 170 pages for every possible bug class still has not been performed —
-five session-level passes now (this one covering three `.innerHTML`-shape sub-waves plus the
-missing-table/RPC and silent-failure checks) cover a growing subset, not an exhaustive one —
-see §5.1.
+seven session-level passes now (this one covering three `.innerHTML`-shape sub-waves, the
+`omega-live.js`/`pulse.html` non-page-scoped pass, plus the missing-table/RPC and
+silent-failure checks) cover a growing subset, not an exhaustive one — see §5.1.
 
 ## 2. P0/P1 — Data integrity: fixed in code, not applied to a live database
 
@@ -160,15 +166,15 @@ see §5.1.
 | `public.notifications` table missing | `omega-notify.js` (platform-wide via `bg.js`) queries it; no `CREATE TABLE` existed anywhere | `supabase/omega_notifications_fix.sql`, `migrations/0091` | **Not applied** |
 | `public.user_assets` table missing | `portfolio.html`/`vault.html` query it; no `CREATE TABLE` existed anywhere | `supabase/omega_user_assets_fix.sql`, `migrations/0089` | **Not applied** |
 | `extend_trial` RPC missing | `approvals.html`'s extend button calls it; function never existed | `supabase/omega_extend_trial_fix.sql`, `migrations/0090` | **Not applied** |
-| `notifications` table never populated | Table existed (once applied) but nothing inserted a row | `supabase/omega_notify_triggers.sql`, `migrations/0092` (5 RPCs now insert on event) | **Not applied** |
+| `notifications` table never populated | Table existed (once applied) but nothing inserted a row | `supabase/omega_notify_triggers.sql`, `migrations/0092` (5 RPCs now insert on event) | **Attempted, fixed, not yet re-applied.** First run against the live database hit `42P13: cannot change return type of existing function` on `grant_permanent_access` — the live DB already had a version of that function (from `trial_access.sql`, see §0) returning `void`, not the `jsonb` this file assumed, and `CREATE OR REPLACE FUNCTION` cannot change a return type. Fixed by adding the same dynamic drop-prior-versions block `omega_access_control.sql` already uses for exactly this scenario (looks up each of the 5 functions' actual current signature via `pg_proc` and drops it before redefining). Reproduced the exact production error first in a throwaway local PostgreSQL 16 instance (stubbed a `boolean`-returning `grant_permanent_access`, confirmed the unfixed file hits `42P13` there too), then confirmed the fixed file resolves it cleanly and all 5 functions plus their notification inserts work correctly. Corrected file delivered; not yet re-run against the live database. |
 | Authority History chart queried wrong table | `omega-chart.js` queried nonexistent `authority_snapshots`; real table is `leaderboard_snapshots` | Table name corrected in `omega-chart.js` directly | N/A — no schema change needed, fix is live in code |
 | `consult_requests` missing 3 columns `consultancy.html` sends | Form sends `{domain,contact,preferred_time,brief}`; table only had `domain`/`message`/`urgency`/`commission_rate`/`confidentiality_accepted` — every submission errored, booking flow fully non-functional | `supabase/omega_consult.sql`, `migrations/0013` (non-destructive `ALTER ADD COLUMN`) | **Not applied** |
 | `access_audit_log` RPC response shape mismatch | Both callers (`approvals.html`, `vault.html`) treated `r.data` as a plain array; the RPC actually returns `{ok, rows:[...]}` (all 3 definitions agree). Result: `vault.html`'s `.slice()` on the object always threw, silently falling back to fabricated demo entries presented as real security log; `approvals.html`'s `!rows.length` on the object always read as empty, showing "NO AUDIT ENTRIES" even when real rows existed. Broken for every caller, including the owner — the RPC's actual intended audience | Both files' client code corrected to read `r.data.rows`; field names remapped to what the RPC actually returns (`action`/`subject`/`actor`, not the imagined `event`/`event_type`/`status`/`user_id`) | N/A — no schema change needed, both fixes are pure client-code, live the moment deployed |
 | `error_summary` RPC — same response-shape bug as `access_audit_log` | Same `{ok,rows:[...]}` wrapper convention (all 3 definitions agree), same wrong assumption in `approvals.html`'s error-monitor panel (`r.data\|\|[]`) — always showed "NO CLIENT ERRORS RECORDED" regardless of real content; also referenced a `row.count` field the RPC doesn't return (real field is `hits`) | Corrected to `r.data.rows`, field name `hits`, and escaped (see §1 — this RPC's data is reachable by unauthenticated `anon` callers via `report_client_error()`) | N/A — pure client-code, live the moment deployed |
 | `my_points_balance` RPC response shape mismatch | Returns `{ok,balance}`; `blockchain.html` did `Number((await sb.rpc(...)).data).toFixed(0)` — `Number()` on an object is `NaN`, so the Ω points balance display always showed "Ω NaN" regardless of the member's real balance | `blockchain.html` corrected to read `.data.balance` | N/A — pure client-code, live the moment deployed |
 
-**Owner action required:** apply `supabase/migrations/0013` and `0089`–`0092` (or the
-equivalent loose files) via `supabase db push` or the Supabase SQL editor — this activates five
+**Owner action required:** apply `supabase/migrations/0013` and `0089`–`0092` (the corrected
+`0092`, see above) via `supabase db push` or the Supabase SQL editor — this activates six
 already-written, already-validated fixes at once. **Higher priority than all of these: apply
 the patched `supabase/trial_access.sql` (§0)** — unlike the others, this isn't adding something
 missing, it's closing a full owner-approval bypass that may already be live if this file (in
@@ -202,7 +208,7 @@ mean inventing business logic that doesn't exist, not just wiring up already-def
 | Gap | Evidence | Recommendation |
 |---|---|---|
 | 47 tables defined in >1 SQL file | `scripts/audit.py` output — `platform_settings` in 12 files, `platform_owners`/`dispatches` in 10 each | Not urgent (idempotent `CREATE TABLE IF NOT EXISTS` makes replay safe today); real fix is consolidating to `supabase/migrations/` as sole source of truth |
-| 3 files contain `DROP TABLE`/`DROP SCHEMA` | `chunk_07_migrations.sql`, `migration_runner.sql`, `omega_dispatch_reset.sql` — `audit.py` warning | Confirm none is wired into anything automatic (none currently are, per `migrations/README.md`'s exclusion list) |
+| 3 files contain `DROP TABLE`/`DROP SCHEMA` | `chunk_07_migrations.sql`, `migration_runner.sql`, `omega_dispatch_reset.sql` — `audit.py` warning | **Confirmed dead.** All three DROPs target only `public.dispatches` (not 3 different tables); `chunk_07_migrations.sql`'s is literally `omega_dispatch_reset.sql` pasted into a bundle file, whose own header says "run this ONLY if OMEGA_DISPATCH.sql still errors." `migration_runner.sql`'s DROP comes *after* two earlier `CREATE TABLE dispatches` in the same file with no recreation afterward — destructive if that file were ever run start-to-finish, but grepped CI (`ci.yml`), `scripts/`, every `.html`/`.js` page, and `supabase/functions/`: zero references to any of the three files anywhere. Matches `migrations/README.md`'s existing "must not be wired into any automated path" analysis; this adds the concrete grep-based confirmation. |
 | `supabase/migrations/` untested against a live database | `migrations/README.md`'s own stated open item | Run against a scratch Supabase project before treating it as canonical |
 | `2` files added to `migrations/` (0087/0088) without a README note | Confirmed by comparing directory listing against README's last dated section, corrected this session | **Fixed** — README updated with a note and corrected file-count claims |
 
@@ -387,8 +393,8 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes
-  has still not been performed — six passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
-  items 11, 13, 14, 15, and 16) have each covered a growing subset, not the full set. Items
+  has still not been performed — seven passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
+  items 11, 13, 14, 15, 16, and 17) have each covered a growing subset, not the full set. Items
   14-15 were script-assisted (cross-referencing every `.from()`/`.rpc()` call site and every
   write-error-check site programmatically) rather than manual page-by-page reading, which is
   why they could cover all remaining candidate files for those two bug classes in one pass. The
@@ -402,11 +408,14 @@ escaping `m.name` directly instead of relying on the broken round-trip.
   clause (found the `error_summary`/`my_points_balance` shape bugs and the `approvals.html`
   contracts/reservations XSS in §1), and separately diffed every duplicated function signature
   across the SQL bag rather than just duplicated table names (found §0's auth-bypass and §3.1's
-  three divergent-function forks). **Still not covered:** `.innerHTML` built via string
-  concatenation without a literal `+` visible to grep (e.g. `.concat()`), any bug class outside
-  XSS/silent-failure/missing-table/RPC-contract-mismatch/auth-bypass, and a live-database check
-  of which side of each §3.1 fork is actually deployed. `CAPABILITY_INVENTORY.md`'s unmarked
-  pages remain "not individually audited," not "confirmed clean."
+  three divergent-function forks). Item 17 covered `bg.js`-loaded modules and external-API
+  (non-Supabase) content sources, catching `omega-live.js`'s dormant ticker and `pulse.html`'s
+  RSS-feed XSS — both outside the `.from()`-call-centric scope of items 14-16. **Still not
+  covered:** `.innerHTML` built via string concatenation without a literal `+` visible to grep
+  (e.g. `.concat()`), any bug class outside XSS/silent-failure/missing-table/RPC-contract-
+  mismatch/auth-bypass, and a live-database check of which side of each §3.1 fork is actually
+  deployed. `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually audited," not
+  "confirmed clean."
 - **5.2** Live-database verification of anything in §2 — no session has held credentials.
 - **5.3** Supabase MCP server (`.mcp.json`, added this session) is configured but not
   authenticated — that requires an interactive `claude` session, which was confirmed
@@ -423,8 +432,9 @@ escaping `m.name` directly instead of relying on the broken round-trip.
    forks is actually deployed, then delete the losing/stale copies from the SQL bag. The
    `apply_subscription` case in particular risks silently breaking Stripe webhook processing if
    both overloads coexist — worth checking before the other three.
-3. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database.** (Owner action
-   — activates 5 already-built fixes at once.)
+3. **Apply `supabase/migrations/0013` and `0089`–`0092` to the live database** (the corrected
+   `0092` — see §2's table for why the first attempt failed and what changed). Owner action —
+   activates 6 already-built fixes at once.
 4. Authenticate the Supabase MCP server (`claude` → `/mcp` → approve → OAuth) so future
    sessions can verify §2/§3.1 directly instead of inferring from client-code reads.
 5. Decide the finance-pages persistence question (§4.2) — product decision, not code.
@@ -433,11 +443,12 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 7. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency (unlike the function duplicates
    in §3.1, these are safe today).
-8. Continue the page-by-page sweep (§5.1) — six passes done; all three `.innerHTML`
-   interpolation shapes are now exhaustively traced (76 files, 4 real stored-XSS instances
-   found and fixed across the passes). Remaining candidates for a next pass: pages with zero
-   `.innerHTML` interpolation at all (not yet checked for other bug shapes — raw string
-   concatenation without `+` syntax visible to a simple grep, or non-XSS logic bugs), and any
-   bug class outside the three this sweep has focused on.
+8. Continue the page-by-page sweep (§5.1) — seven passes done; all three `.innerHTML`
+   interpolation shapes are now exhaustively traced (76 files, 6 real stored-XSS instances
+   found and fixed across the passes, plus 2 more via the non-page-scoped pass). Remaining
+   candidates for a next pass: pages with zero `.innerHTML` interpolation at all (not yet
+   checked for other bug shapes — raw string concatenation without `+` syntax visible to a
+   simple grep, or non-XSS logic bugs), and any bug class outside the ones this sweep has
+   focused on.
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.

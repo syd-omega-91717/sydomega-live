@@ -199,6 +199,7 @@ const SUPABASE_KEY='sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
 
 const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2');
 const sb=window.__omegaSb||createClient(SUPABASE_URL,SUPABASE_KEY);
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 const {data:{session}}=await sb.auth.getSession();
 if(!session){location.href='/account.html';throw 0;}
 const {data:pr}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
@@ -416,12 +417,12 @@ waitReady(()=>{
     tbody.innerHTML='';
     data.forEach(d=>{
       const row=document.createElement('tr');
-      const status=d.status||'pending';
-      const statusClass=status==='done'?'status-done':status==='failed'?'status-failed':'status-pending';
-      const payload=JSON.stringify(d.payload||{}).slice(0,60);
-      row.innerHTML=`<td style="color:var(--orange)">${d.type||d.action||'-'}</td>`
-        +`<td style="color:var(--muted);font-size:7.5px;word-break:break-all">${payload}${payload.length>=60?'…':''}</td>`
-        +`<td><span class="status-pill ${statusClass}">${status.toUpperCase()}</span></td>`
+      const isPub=d.is_published!==false;
+      const statusClass=isPub?'status-done':'status-pending';
+      const body=String(d.body||'').slice(0,60);
+      row.innerHTML=`<td style="color:var(--orange)">${esc(d.category||'-')}</td>`
+        +`<td style="color:var(--muted);font-size:7.5px;word-break:break-all">${esc(body)}${body.length>=60?'…':''}</td>`
+        +`<td><span class="status-pill ${statusClass}">${isPub?'PUBLISHED':'DRAFT'}</span></td>`
         +`<td style="color:rgba(138,134,118,.4);white-space:nowrap">${(d.created_at||'').slice(0,16).replace('T',' ')}</td>`;
       tbody.appendChild(row);
     });

@@ -170,6 +170,20 @@ In commit order, both repos kept in sync throughout:
     to any of the three files anywhere. Confirms and adds concrete verification to
     `migrations/README.md`'s existing "must not be wired into any automated path" analysis.
     No code change — a verification pass, closing an open question rather than a fix.
+15. Fourth-wave page sweep — three more real bugs, all pure client-code fixes (no database
+    action needed): `omega-live.js`'s activity-feed ticker (`startTicker()`, loaded by `bg.js`
+    on every page) rendered `activity_feed.title` raw via `innerHTML` — `activity_feed`'s RLS
+    lets any authenticated member insert their own `is_public=true` row with an arbitrary
+    title, same stored-XSS shape as `sovereigns.html`. Currently dormant (no shipped page has
+    a `[data-live-ticker]` element yet) but fixed preemptively since the module clearly exists
+    to power one. `queue.html`'s "RECENT DISPATCHES" panel read `d.type`/`d.action`/
+    `d.payload`/`d.status` — none of which exist on `public.dispatches` (real columns:
+    `title`/`body`/`category`/`is_published`) — so every row always showed type `-`, payload
+    `{}`, status `PENDING`, regardless of actual content. Remapped to the real columns
+    (`category`, `body`, `is_published`→PUBLISHED/DRAFT) and added `esc()`. `pulse.html`'s
+    news ticker rendered `item.title` from an external Reuters feed (proxied via
+    `api.rss2json.com`) raw via `innerHTML` — the only unescaped field on the page. Added
+    `esc()`.
 
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database.** That remains an owner action requiring

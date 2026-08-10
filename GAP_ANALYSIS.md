@@ -15,14 +15,17 @@ project's own established convention (security/data-integrity first).
 |---|---|---|
 | Stored XSS in `approvals.html`/`profile.html` | `display_name`/`email` rendered via raw `.innerHTML`; `display_name` is self-updatable by any member (`omega_profile_fields.sql`) | **Fixed** — `esc()` helper added, both files escaped |
 | Stored XSS in `sovereigns.html` | `profiles.sign` (self-updatable, `chunk_02b_migrations.sql`'s per-column GRANT list) queried for every `access_approved` member and rendered raw via `.innerHTML` in two places (table row, throne card) — no `user_id` filter, so reachable by/visible to the whole membership, not just the owner | **Fixed** — `esc()` helper added, both occurrences escaped |
+| Stored XSS in `omega-live.js`'s ticker (dormant) | `activity_feed.title` rendered raw via `.innerHTML`; RLS lets any member insert their own `is_public=true` row with an arbitrary title. Currently unreachable — no page has a `[data-live-ticker]` element yet — but `bg.js` loads this module on every page and it clearly exists to power one | **Fixed preemptively** — `esc()` added |
+| Reflected XSS in `pulse.html` (external source) | `item.title` from a Reuters feed proxied via `api.rss2json.com` rendered raw via `.innerHTML` — a compromised/MITM'd feed response would execute script | **Fixed** — `esc()` added |
 
 No other unescaped-user-input-into-`.innerHTML` instances were found in the files checked
-across both sweeps this session (`feed.html`, `news.html`, `leaderboard.html`, `nexus.html`,
+across all sweeps this session (`feed.html`, `news.html`, `leaderboard.html`, `nexus.html`,
 `tribe.html`, `graph.html`, `map.html`, `sigma.html`, `oracle.html`, `beacon.html`,
-`observatory.html`, `hall.html` all confirmed clean — `textContent`/escaping already used, or
-data is self-scoped, e.g. `family.html`'s `m.sign`/`m.name` reads a private `user_id`-scoped
-table, not other members' data). A full re-sweep of all 170 pages still has not been
-performed — three passes covering a growing subset, not the whole set — see §5.1.
+`observatory.html`, `hall.html`, `codex.html`, `chatbot.html` all confirmed clean —
+`textContent`/escaping already used, or data is self-scoped, e.g. `family.html`'s
+`m.sign`/`m.name` reads a private `user_id`-scoped table, not other members' data). A full
+re-sweep of all 170 pages still has not been performed — four passes covering a growing
+subset, not the whole set — see §5.1.
 
 ## 2. P0/P1 — Data integrity: fixed in code, not applied to a live database
 
@@ -130,11 +133,19 @@ This file is intentionally excluded from `supabase/migrations/` and requires the
 authenticated session to run correctly (`grant_permanent_access()` checks `auth.uid()`) — not
 something any session in this project's history could have applied live either way.
 
+### 4.7 `queue.html`: "RECENT DISPATCHES" panel read columns that don't exist (fixed this session)
+
+Read `d.type`/`d.action`/`d.payload`/`d.status` from `public.dispatches`, none of which exist
+(real columns: `title`/`body`/`category`/`is_published`). No error was thrown (`select('*')`
+succeeds regardless), so every row silently showed type `-`, payload `{}`, status `PENDING`
+— same bug class as the already-fixed `consultancy.html` missing-columns issue, but a display
+mismatch rather than a write failure. Remapped to the real columns and added `esc()`.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full manual re-audit of all 170 pages for the XSS/silent-failure/missing-table bug
-  classes has still not been performed — three passes now (`REPOSITORY_AUDIT.md` §6 items 1-9,
-  then items 11 and 13) have each covered a growing subset, not the full set.
+  classes has still not been performed — four passes now (`REPOSITORY_AUDIT.md` §6 items 1-9,
+  then items 11, 13, and 15) have each covered a growing subset, not the full set.
   `CAPABILITY_INVENTORY.md`'s unmarked pages remain "not individually audited," not "confirmed
   clean."
 - **5.2** Live-database verification of anything in §2 — no session has held credentials.
@@ -154,7 +165,7 @@ something any session in this project's history could have applied live either w
    legal decision, not code.
 5. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — housekeeping, no functional urgency.
-6. Continue the page-by-page sweep (§5.1) — three passes done, still not exhaustive across all
+6. Continue the page-by-page sweep (§5.1) — four passes done, still not exhaustive across all
    170 pages.
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.

@@ -1,102 +1,116 @@
 <p align="center">
-  <img src="icon-512.png" alt="SYD OMEGA 91717 logo" width="140" height="140">
+  <img src="assets/omega-sigil.svg" width="190" height="190" alt="SYD OMEGA 91717 — rotating sovereign sigil">
 </p>
 
-<h1 align="center">Ω SYD OMEGA 91717</h1>
-<p align="center"><b>A private, membership-only personal growth and lifestyle platform</b></p>
+<p align="center">
+  <img src="assets/omega-banner.svg" width="100%" alt="Ω SYD OMEGA 91717 — Sovereign Personal Platform · Invitation Only">
+</p>
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/ACCESS-INVITATION_ONLY-C9A84C?style=for-the-badge&labelColor=0A0A0F" alt="Access: invitation only">
+  <img src="https://img.shields.io/badge/REALM-SOVEREIGN-00E5FF?style=for-the-badge&labelColor=0A0A0F" alt="Realm: sovereign">
+  <img src="https://img.shields.io/badge/STATUS-ACTIVE-E2C86D?style=for-the-badge&labelColor=0A0A0F" alt="Status: active">
+</p>
 
-## What Is SYD OMEGA 91717
+<p align="center">⟡ ────────────────────────────────────────────── ⟡</p>
 
-SYD OMEGA 91717 is a private, invitation-based platform where approved
-members track and grow every part of their life in one place — habits and
-personal development, learning, finances, creative media, and community —
-all inside a single, consistently designed experience.
+## ⌖ The Concept
 
-The platform is built around a distinctive theme: each area is named and
-styled after a system of zodiac signs, elements, and mythological figures.
-This isn't decoration for its own sake — it gives every feature a memorable
-identity and makes the platform's twelve guiding "agent" personas (each
-representing a different area of focus, like security, growth, or finance)
-easy to recognize as you move around the app.
+SYD OMEGA 91717 is a private, sovereign command center for one life,
+built for exactly one community of approved members. Where most tools
+scatter your habits, learning, finances, media, and social world across a
+dozen disconnected apps, SYD OMEGA 91717 brings them into a single realm —
+consistent, cinematic, and entirely yours.
 
-Access is limited to approved members. It is not an open, public
-sign-up service — every account is reviewed before it is granted full use
-of the platform.
+Every corner of the platform is woven into one cohesive mythology: signs,
+elements, and guiding personas that turn a personal dashboard into a
+living world you actually want to return to. It isn't decoration for its
+own sake — the theme is the map. Once you know your sign and your element,
+you already know your way around.
 
-## What You'll Find Inside
+This is not an open, public sign-up product. Entry is by invitation and
+approval only, and the realm stays deliberately small.
 
-Once you're a member, the platform is organized into clear areas, each
-reachable from the sidebar:
+<p align="center">⟡ ────────────────────────────────────────────── ⟡</p>
 
-- **Command** — Your personal dashboard: a snapshot of your progress,
-  notifications, quick search, and the in-app AI concierge you can chat
-  with for guidance.
-- **Identity** — Your profile, membership passport, and account settings.
-- **Ascend** — Where you build and track habits, take courses in the
-  Academy, complete challenges, earn achievements and trophies, and sit
-  exams to level up.
-- **Cosmos** — The home of the platform's zodiac and elemental theme:
-  your sign, your element, the AI agent personas, and the lore that ties
-  it all together.
-- **Vault** — Your financial home base: portfolio, wallet, subscription
-  management, and the members' marketplace.
-- **Order** — Community and family tools: manage your household or heirs,
-  and connect with other members through shared halls and groups.
-- **Services** — Bookable and requestable services: consultancy,
-  publishing support, a production studio, marketing help, event
-  planning, travel, and health & wellness resources.
-- **Intel** — Research tools, personal analytics, automation helpers, and
-  transparency/governance information about the platform itself.
-- **Universe / Media** — A media library and creative content hub.
+## ◈ Explore The Realms
 
-Each area shares the same look, feel, and navigation, so once you're
-comfortable in one part of the platform, the rest feels familiar right
-away.
+Once inside, the platform unfolds into nine realms, each reachable from
+the sidebar and each carrying its own identity, icon, and purpose:
 
-## Becoming a Member
+| | Realm | What You'll Find |
+|---|---|---|
+| ⌖ | **Command** | Your dashboard — a live snapshot of your progress, alerts, quick search, and the in-app AI concierge |
+| ◈ | **Identity** | Your profile, membership passport, and account settings |
+| ▲ | **Ascend** | Habit tracking, the Academy, challenges, achievements, trophies, and exams |
+| ☉ | **Cosmos** | Your sign, your element, the AI agent personas, and the platform's lore |
+| Ω | **Vault** | Portfolio, wallet, subscriptions, and the members' marketplace |
+| ⋔ | **Order** | Family and household tools, shared halls, and community groups |
+| ✦ | **Services** | Consultancy, publishing, a production studio, marketing, events, travel, and wellness |
+| ● | **Intel** | Research, personal analytics, automation, and platform governance |
+| ► | **Universe** | The media library and creative content hub |
 
-1. **Request access.** Visit the platform and submit an account request
-   with your details.
-2. **Wait for approval.** Every request is personally reviewed. While your
-   request is pending, you'll see a status page confirming it's being
-   processed.
-3. **Get approved.** Once approved, you'll gain full access to your
-   dashboard and every feature area described above.
-4. **Set up your profile.** Complete your identity details so the
-   platform can personalize your experience (your zodiac sign, element,
-   and starting stats).
+Every realm shares the same design language, so the moment you're
+comfortable in one, the rest already feels familiar.
 
-Membership can't be purchased or unlocked without approval — it exists to
-keep the platform's community small, trusted, and personal.
+<p align="center">⟡ ────────────────────────────────────────────── ⟡</p>
 
-## Using the Platform
+## ▲ The Path to Membership
 
-- Start at your **Command** dashboard — it's your home base and shows
-  what matters most at a glance.
-- Use the sidebar to move between areas; each icon corresponds to one of
-  the sections above.
-- Track your habits and progress in **Ascend** to build your standing on
-  the platform over time.
-- Manage your money and holdings in **Vault**.
-- Reach out for help any time through the in-app AI concierge in
-  **Command**, or through the support channels listed in the app.
+```
+  I. REQUEST         II. REVIEW         III. APPROVAL        IV. ASCEND
+  Submit your    ──▶  Every request ──▶  Full access    ──▶  Set your
+  access request      is personally      to your realm       identity —
+  through the app     reviewed                                sign, element,
+                                                                and rank
+```
 
-## Your Privacy
+1. **Request access** — submit an account request through the platform.
+2. **Await review** — every request is reviewed personally; while pending,
+   you'll see a live status page confirming where things stand.
+3. **Gain entry** — once approved, your dashboard and every realm above
+   unlock.
+4. **Claim your identity** — complete your profile to set your sign,
+   element, and starting stats.
 
-Your personal data belongs to you. The platform's in-app Privacy Centre
-lets you review what's stored about you, control your consent
-preferences, export your data, and request deletion of your account and
-its data at any time. Full details are available in the app under
-**Privacy** and **Terms**.
+Membership is never purchased or auto-unlocked. It is earned through
+approval, by design — that's what keeps the realm trusted and personal.
 
-## Support & Contact
+<p align="center">⟡ ────────────────────────────────────────────── ⟡</p>
 
-For access requests, questions, or help using the platform, use the
-contact and support options available inside the app once you've signed
-in, or on the pending-access page while your request is under review.
+## ☉ Using the Platform
 
----
+- **Command** is home base — start every session there for a snapshot of
+  what matters most.
+- The sidebar is your compass — each icon maps directly to a realm above.
+- Build momentum in **Ascend** — habits and challenges compound into your
+  standing over time.
+- Manage your holdings in **Vault**.
+- Whenever you need guidance, the AI concierge in **Command** is always
+  one click away.
 
-<p align="center"><sub>© SYD OMEGA 91717. All rights reserved. See the in-app Terms &amp; Privacy pages for full legal terms.</sub></p>
+<p align="center">⟡ ────────────────────────────────────────────── ⟡</p>
+
+## Ω Your Privacy, Your Sovereignty
+
+Your data belongs to you — that's the point of "sovereign." The in-app
+Privacy Centre lets you see exactly what's stored, control your consent
+preferences, export your data, and request permanent deletion of your
+account at any time. Full terms live in-app under **Privacy** and
+**Terms**.
+
+<p align="center">⟡ ────────────────────────────────────────────── ⟡</p>
+
+## ✦ Support & Contact
+
+For access requests, questions, or help finding your way, use the contact
+options inside the app once signed in — or on the pending-access page
+while your request is under review.
+
+<p align="center">⟡ ────────────────────────────────────────────── ⟡</p>
+
+<p align="center">
+  <img src="assets/omega-sigil.svg" width="72" height="72" alt="SYD OMEGA 91717 sigil">
+</p>
+
+<p align="center"><sub>© SYD OMEGA 91717 &middot; All rights reserved &middot; See the in-app Terms &amp; Privacy pages for full legal terms</sub></p>

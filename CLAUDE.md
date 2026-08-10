@@ -276,20 +276,28 @@ orphaned file.
   meant to happen server-side). **Applied to the live database and
   verified** — `scripts/verify_fixes.sql` confirmed `user_assets` now
   exists.
-- **Finance pages: inconsistent persistence, needs a product decision.**
-  `wealth.html`, `wallet.html`, `treasury.html`, `revenue.html`,
-  `investment.html`, `expenses.html`, and `budget.html` persist entirely
-  to `localStorage` — no Supabase table backs any of it, so account
-  balances, net-worth snapshots, and holdings a member enters don't sync
-  across devices and are lost if browser storage is cleared. This is
-  inconsistent with the rest of the platform's Supabase+RLS model, and
-  with `income.html`/`ledger.html`/`contracts.html`/`portfolio.html`,
-  which already do persist server-side (the last of these confirms a
-  `user_assets`-style table was clearly intended for holdings). Whether
-  the localStorage-only pages are deliberately client-side for privacy or
-  simply an unfinished migration is a product call, not a code question —
-  left undecided and undocumented-as-a-bug on purpose; don't "fix" it by
-  unilaterally building new schema/RLS without that decision first.
+- **Finance pages: localStorage-only persistence — decided this session, stays
+  client-side.** `wealth.html`, `wallet.html`, `treasury.html`, `revenue.html`,
+  `investment.html`, `expenses.html`, and `budget.html` persist entirely to
+  `localStorage` — no Supabase table backs any of it, so balances/holdings
+  don't sync across devices and are lost if browser storage is cleared. This
+  is inconsistent with the rest of the platform's Supabase+RLS model, and
+  with `income.html`/`ledger.html`/`contracts.html`/`portfolio.html`, which
+  already persist server-side. Previously left as an open product question;
+  decided this session in favor of keeping it client-side, deliberately, not
+  by default: this is unusually sensitive data (net worth, income, holdings),
+  converting it to server storage is a real schema-design commitment across
+  7 pages that's hard to walk back once member data lives there, and this
+  repo's own history this session includes multiple real RLS/security bugs
+  found and fixed — "RLS protects it" isn't a settled guarantee here yet.
+  Keeping data local-only is the safer default absent a specific reason to
+  take on that exposure. The real downside (data loss on cleared storage or
+  a new device) is mitigated instead of ignored: added `omega-local-backup.js`
+  (a small, dependency-free, network-free export/import helper — writes a
+  JSON file the member saves themselves, reads one back) and wired an
+  "EXPORT BACKUP"/"IMPORT BACKUP" control plus a plain-language disclosure
+  into all 7 pages. If server sync is wanted later, that's still a clean,
+  additive, backward-compatible change — nothing here forecloses it.
 - `supabase/migrations/` now exists (ordered, Supabase-CLI convention,
   content verified to match the current loose files) but is untested
   against a live database and the 47-tables-in-multiple-files redundancy

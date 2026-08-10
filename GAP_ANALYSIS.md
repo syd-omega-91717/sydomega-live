@@ -295,14 +295,25 @@ The live `pg_proc` verification above is still the only way to know which side a
 deployed — the automated check can't reach the live database — but the source-side half of
 this finding no longer depends on anyone remembering to re-run the script-assisted pass.
 
-### 3.2 `enterprise.html` — pricing display with no purchase flow
+### 3.2 `enterprise.html` — pricing display with no purchase flow (re-scoped: not customer-facing)
 
-`enterprise.html` shows $199/$999/$4,999/Custom tiers but has **zero Stripe/checkout wiring**
-behind any of them (confirmed by direct grep — no `stripe`/`checkout`/`subscribe` reference
-in the file at all). This is not a bug to fix casually: per `CLAUDE.md`, shipping a new
-monetizable feature "live" requires gating + legal sign-off first. Tracked here as a real gap
-between what the page implies (pricing = purchasable) and what exists (pricing = display
-only), not acted on.
+**Corrected this session — the original framing overstated the risk.** `enterprise.html` shows
+$199/$999/$4,999/Custom tiers with **zero Stripe/checkout wiring** behind any of them (still
+true — no `stripe`/`checkout`/`subscribe` reference in the file), but the page itself is
+**owner-only**: `if(!pr.is_owner){location.replace('/dashboard.html');return;}` (confirmed by
+direct read, not assumed). No member, prospect, or member of the public can ever reach this
+page — it's an internal dashboard for the owner previewing enterprise-sales tiers/MRR/accounts,
+not a public storefront. The 4 tier CTA buttons ("REQUEST DEMO"/"CONTACT FOUNDER"/"REQUEST
+PROPOSAL") also have no `onclick` handler at all — genuinely dead — but since only the owner
+ever sees them, wiring them to anything (a `mailto:`, a lead-capture form) would mean the owner
+"requesting a demo" from themselves. Considered and rejected: building that wiring would be
+solving a problem that doesn't exist, the opposite of the original finding's implied urgency.
+**No action taken, and none needed** — this was miscategorized as a customer-facing gap when
+investigated at the level GAP_ANALYSIS.md's own convention requires (read the actual gating
+logic, don't infer from page content alone). If this page is ever meant to become
+customer-facing (a real public pricing/signup page), that's a genuine new feature — build the
+gating removal, the real Stripe wiring, and the legal sign-off together as one deliberate
+decision, not by incrementally patching the current internal mockup.
 
 ## 4. P2 — Code/data quality
 
@@ -319,14 +330,25 @@ feedback. All five fixed to check `.error`, matching the convention already esta
 fix is proportionate to a cosmetic preference (distinguishes "saved locally" from "synced" in
 the message, no `alert()`) rather than blocking the user.
 
-### 4.2 Finance pages: `localStorage`-only persistence
+### 4.2 Finance pages: `localStorage`-only persistence — decided this session
 
 `wealth.html`, `wallet.html`, `treasury.html`, `revenue.html`, `investment.html`,
 `expenses.html`, `budget.html` persist entirely client-side — no cross-device sync, lost on
 storage clear. Inconsistent with `income.html`/`ledger.html`/`portfolio.html`, which do
-persist server-side. **Explicitly left as a product decision, not a bug** — `CLAUDE.md` §8
-is direct about this: could be deliberate (privacy) or an unfinished migration, and
-unilaterally building schema/RLS for it without that decision is the wrong move.
+persist server-side. Previously left as an open product decision. **Decided this session:
+stays client-side, deliberately** — this is unusually sensitive data (net worth, income,
+holdings), moving it server-side is a real schema-design commitment across 7 pages that's
+hard to walk back once member data lives there, and this repo's own session history includes
+multiple real RLS/security bugs found and fixed (§1, §0) — "RLS protects it" isn't a settled
+guarantee here. Local-only is the safer default absent a specific reason to take on that
+exposure, and it's a reversible choice: sync can be added later as a clean, additive change.
+The real cost of local-only (data loss on cleared storage or a new device) is mitigated rather
+than left as a silent risk: added `omega-local-backup.js` (dependency-free, makes no network
+request — writes a JSON file the member saves themselves, reads one back) and an "EXPORT
+BACKUP"/"IMPORT BACKUP" control plus a plain-language disclosure on all 7 pages. Verified:
+all 14 new `onclick` handlers syntax-checked individually via `node --check`; the
+broken-asset-reference CI check (`ci.yml`'s exact grep logic) re-run locally, 0 missing;
+`scripts/audit.py` still 0 critical.
 
 ### 4.3 `sovereign-covenant.html` / `system_manifest.json` token-economy language
 
@@ -502,9 +524,12 @@ escaping `m.name` directly instead of relying on the broken round-trip.
    sessions can verify directly instead of via a copy-paste-and-report loop with the owner —
    `scripts/verify_fixes.sql` closes most of the practical gap this created for now, but a
    live connection remains more robust for anything not already covered by that script.
-6. Decide the finance-pages persistence question (§4.2) — product decision, not code.
-7. Decide whether/how to build real payment wiring for `enterprise.html` (§3.2) — business +
-   legal decision, not code.
+6. ~~Decide the finance-pages persistence question~~ — **decided this session** (§4.2):
+   stays `localStorage`-only, deliberately, with export/import added to mitigate the data-loss
+   downside.
+7. ~~Decide whether/how to build real payment wiring for `enterprise.html`~~ — **resolved this
+   session, no action needed** (§3.2): the page is owner-only, never customer-facing, so the
+   "pricing display with no purchase flow" framing didn't describe a real gap.
 8. Consolidate the 47 duplicate table definitions toward `supabase/migrations/` as sole
    source of truth (§3) — no longer pure housekeeping now that `task_completions` proved a
    fresh-replay definition can silently diverge from the live schema (§3, `migrations/README.md`);

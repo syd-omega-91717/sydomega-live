@@ -33,7 +33,11 @@ display), `factions.html`, `pantheons.html`, `houses.html`.
 
 ### COSMOS — zodiac/element brand system
 `cosmos.html`, `horoscope.html`, `agents.html`, `elements.html`, `pantheons.html`,
-`houses.html`, `matrix.html` (triads), `kings.html`.
+`houses.html`, `matrix.html` (triads), `kings.html`, `graph.html` ⚠️✅ (linked from
+`dashboard.html`, not in `nav.js`'s `PS` map, same as `queue.html` — D3 constellation graph;
+the member-node tooltip's attempted self-escaping of `display_name` was a no-op due to reading
+the wrong DOM property back, a real stored-XSS reachable by any approved member against any
+other viewer; fixed this session, see `GAP_ANALYSIS.md` §4.9).
 
 ### UNIVERSE / MEDIA — content, social feed
 `cinema.html`, `universe.html`, `media.html`, `hall.html`, `city.html`, `series.html`,
@@ -42,9 +46,14 @@ display), `factions.html`, `pantheons.html`, `houses.html`.
 this session — `GAP_ANALYSIS.md` §2.3), `news.html`.
 
 ### VAULT / INVEST — finance, holdings, payments
-`vault.html` ⚠️ (NFT grid queries `public.user_assets` — table now exists as of this session
-but is not yet populated by anything; see `GAP_ANALYSIS.md` §2.2), `treasury.html` 💾,
-`wallet.html` 💾, `blockchain.html`, `payments.html`/`subscriptions.html` ✅ (real Stripe
+`vault.html` ⚠️✅ (NFT grid queries `public.user_assets` — table now exists as of a prior
+session but is not yet populated by anything, see `GAP_ANALYSIS.md` §2.2; separately, its
+Audit Log panel's `access_audit_log()` RPC call read the response in the wrong shape and had
+shown fabricated demo entries as if real for every caller — fixed this session, see
+`GAP_ANALYSIS.md` §4.8), `treasury.html` 💾,
+`wallet.html` 💾, `blockchain.html` ✅ (`my_points_balance()` RPC response-shape bug fixed this
+session — points balance always showed "Ω NaN", see `GAP_ANALYSIS.md` §2),
+`payments.html`/`subscriptions.html` ✅ (real Stripe
 integration, `supabase/functions/checkout` + `stripe-webhook`), `marketplace.html`,
 `portfolio.html` ⚠️ (same `user_assets` gap as `vault.html`), `income.html` ✅ (persists
 server-side per `CLAUDE.md` §8), `ledger.html` ✅ (persists server-side), `investment.html` 💾,
@@ -62,9 +71,15 @@ migration), not a bug to silently "fix" by adding schema.
 `bloodline.html`, `heritage.html`, `hall.html`, `sovereigns.html` ⚠️✅ (public leaderboard —
 stored XSS on `profiles.sign`, visible to every approved member, fixed this session — the
 widest-blast-radius XSS found so far), `factions.html`,
-`city.html`, `approvals.html` ⚠️✅ (owner's member-approval console — stored-XSS fixed this
-session; its five RPCs now populate `public.notifications` as of this session, not yet
-applied live), `interface-omni.html`.
+`city.html`, `approvals.html` ⚠️✅ (owner's member-approval console — stored-XSS fixed a prior
+session; its five RPCs now populate `public.notifications`, not yet applied live; separately,
+its "Audit Log" tab's `access_audit_log()` call misread the RPC's response shape and always
+showed "NO AUDIT ENTRIES" even when real rows existed — fixed this session, see
+`GAP_ANALYSIS.md` §4.8; also this session — its error-monitor panel had the identical
+`error_summary()` response-shape bug plus unescaped output reachable by unauthenticated
+callers, and its contracts/reservations review queues rendered `media_reservations.title`
+(member-writable) raw via `.innerHTML` unlike every other field on the page — all fixed, see
+`GAP_ANALYSIS.md` §1/§2), `interface-omni.html`.
 
 ### SERVICES — consulting, commissions, wellness, events
 `services.html`, `consultancy.html` ⚠️ (booking form was completely non-functional — table
@@ -81,7 +96,10 @@ write-result checked per earlier fix), `compliance.html`, `charter.html`, `gover
 `observatory.html`, `enterprise.html` ⚠️ (pricing display for $199/$999/$4,999 tiers with
 **zero Stripe/checkout wiring** — confirmed by direct inspection; see `GAP_ANALYSIS.md` §3.2),
 `roadmap.html`, `lab.html`, `design-system.html`, `ecosystem.html`, `knowledge.html`,
-`sovereign-ai.html`, `privacy.html`.
+`sovereign-ai.html`, `privacy.html`, `queue.html` ⚠️✅ (linked from `dashboard.html`, not in
+`nav.js`'s `PS` map — the "PLATFORM DISPATCH LOG" panel queried nonexistent columns and
+lacked escaping on the member-writable ones it should have used; both fixed this session,
+see `GAP_ANALYSIS.md` §4.7).
 
 ### ACHIEVE / ARCHIVE — gamification records
 `achievements.html`, `leaderboard.html`, `gates.html`, `grades.html`, `levels.html`,
@@ -194,5 +212,13 @@ Greek god, and domain:
 - **Auth:** Supabase Auth + `public.is_platform_owner()` for owner-elevated access;
   9.1717-minute sovereign trial mechanic (`trial_length()`, `approve_member`,
   `grant_permanent_access`, `reject_member`, `revoke_member`, `extend_trial`) is real,
-  implemented, and — as of this session — notifies the affected member on every one of those
-  five events (`GRANT`, not yet applied live).
+  implemented, and — as of a prior session — notifies the affected member on every one of those
+  five events (`GRANT`, not yet applied live). **This session found and fixed a critical gap:**
+  `supabase/trial_access.sql`'s copies of `grant_permanent_access`/`grant_trial_access`/
+  `expire_trial` had no caller check at all — a full self-approval / cross-member data-wipe
+  bypass — while 7 other copies of the same functions elsewhere in the SQL bag were already
+  guarded. Fixed and validated against a live local PostgreSQL 16 instance; see
+  `GAP_ANALYSIS.md` §0. Separately, `is_platform_owner()` itself — the function this whole
+  bullet's "owner-elevated access" model rests on — has two genuinely different
+  implementations (checks `platform_owners` table vs. `profiles.is_owner` column) across 11
+  files; not yet resolved which is live, see `GAP_ANALYSIS.md` §3.1.

@@ -56,11 +56,11 @@ window.omegaCompleteTask = async function(taskName, taskType, description, optio
   var axis=AXIS_MAP[taskType]||'a';
   try{
     var r=await window.__omegaSb.rpc('complete_task',{
-      p_kind: taskType||'knowledge',
-      p_task: taskName,
-      p_axis: axis,
-      p_title: description||taskName,
-      p_weight: STEP,
+      p_task_type: taskType||'knowledge',
+      p_task_name: taskName,
+      p_axis_type: axis,
+      p_description: description||taskName,
+      p_points: STEP,
     });
     if(r.error) throw r.error;
     var d=r.data||{};
@@ -68,10 +68,10 @@ window.omegaCompleteTask = async function(taskName, taskType, description, optio
     if(window.__omegaPopulate && d.new_profile){
       window.__omegaPopulate(d.new_profile, window.__omegaUser);
     }
-    /* Emit event (server returns a/b/c, authority) */
+    /* Emit event (server returns axis_a/axis_b/axis_c, authority) */
     document.dispatchEvent(new CustomEvent('omega:task',{detail:{
       task:taskName, axis:axis, points:STEP,
-      new_a:d.a, new_b:d.b, new_c:d.c, auth:d.authority
+      new_a:d.axis_a, new_b:d.axis_b, new_c:d.axis_c, auth:d.authority
     }}));
     return {ok:true, data:d};
   }catch(e){

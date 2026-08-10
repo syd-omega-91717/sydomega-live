@@ -123,7 +123,7 @@
       var weight=Number(ctx.weight||0.12);
       try{
         var r=await window.__omegaSb.rpc('complete_task',{
-          p_kind:kind, p_task:task, p_axis:axis, p_title:title, p_weight:weight
+          p_task_type:kind, p_task_name:task, p_axis_type:axis, p_description:title, p_points:weight
         });
         if(r.error) throw r.error;
         return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};
@@ -213,11 +213,11 @@
       var today=new Date().toISOString().slice(0,10);
       try{
         var r=await window.__omegaSb.rpc('complete_task',{
-          p_kind:'dedication',
-          p_task:'dedication:daily:'+today,
-          p_axis:'c',
-          p_title:'Daily Dedication Target Reached',
-          p_weight:0.09
+          p_task_type:'dedication',
+          p_task_name:'dedication:daily:'+today,
+          p_axis_type:'c',
+          p_description:'Daily Dedication Target Reached',
+          p_points:0.09
         });
         if(r.error) throw r.error;
         return {ok:true,applied:!!(r.data&&r.data.applied),axis_result:r.data||{}};

@@ -21,6 +21,13 @@ individually verified in this pass and should be read as "present and reachable,
 `dashboard.html`, `beacon.html`, `search.html`, `notifications.html` ⚠️ (populate path fixed
 this session — see `GAP_ANALYSIS.md` §2.1, but not yet applied live), `chatbot.html` (AI
 concierge — see §3 Edge Functions), `matrix.html`, `points.html`, `command.html`.
+`dashboard.html`'s `#l-personal` tab now also renders a 90-day contribution heatmap
+(`renderContributionHeatmap()`, added this session per `FEATURE_IDEAS.md` #7) reading
+`public.task_completions` scoped to the signed-in member's own rows (`eq('user_id', s.user.id)`)
+— read-only, no new table/RPC/`platform_settings` flag, no `nav.js` change (page already
+reachable). Committed to the branch; not yet clicked through in a live browser session (no
+authenticated Supabase session available in this environment) — verified by `node --check` on
+the extracted inline scripts and `scripts/audit.py` (0 critical) only.
 
 ### IDENTITY — member profile, verification
 `profile.html`, `passport.html`, `kyc.html`, `settings.html` ✅ (background-color sync

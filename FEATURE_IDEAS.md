@@ -132,6 +132,77 @@ pale cell instead of a reset-to-zero shock:
 - [Habit Tracker Widget: 7 Best Home Screen Apps (2026) — HabitBox Blog](https://habitbox.app/blog/habit-tracker-widget)
 - [habit-tracker · GitHub Topics](https://github.com/topics/habit-tracker)
 
+### Blueprint (feature-architect)
+
+**Re-verified before designing:** `dashboard.html:751,753` still show only the two aggregate
+counters; `habits.html`'s heatmap is still `localStorage`-only; `task_completions` RLS confirmed
+directly this pass — `supabase/matrix_engine.sql:47-51` (`CREATE POLICY "members see own tasks"
+ON public.task_completions FOR SELECT USING (user_id=auth.uid())`) and
+`chunk_05_migrations.sql:189-196` both grant members read access to their own rows only, no
+`is_platform_owner()` elevation needed for this read.
+
+**Page plan — extend `dashboard.html`, no new page, no `nav.js` change.** It's already reachable
+and already has the right tab: the `#l-personal` layer-panel ("PERSONAL OS · SOVEREIGN
+SELF-SYSTEM", `dashboard.html:167`) is exactly where a member's own historical activity belongs,
+next to the existing `personal-kpis` row and Life Wheel — not `#l-overview`, whose `k-tasks` KPI
+is a platform-wide "today" count, not a personal one. Insert a new section between the two-col
+Life-Wheel/Quick-Actions block (closes `dashboard.html:201`) and the "PERSONAL TOOL GRID"
+`sechead` (`dashboard.html:204`):
+
+```html
+<div class="sechead" style="margin-top:16px">SOVEREIGN ACTIVITY &middot; 90-DAY CONTRIBUTION HEATMAP</div>
+<div class="heatmap-wrap"><div id="contribution-heatmap"></div></div>
+```
+
+**CSS plan — page-local, matching the existing per-page convention, not a bg.js addition.**
+`habits.html`, `missions.html`, and `ops.html` each already define their *own* page-local
+`.heatmap*` CSS independently (confirmed by grep — no shared heatmap component exists in bg.js's
+stylesheet today). Adding a fourth page-local copy to `dashboard.html`'s existing inline
+`<style>` block matches that established pattern exactly; promoting it into bg.js's shared block
+now would be a bigger, unrelated change (redesigning 3 other pages' already-working heatmaps to
+match) that's out of scope for this feature. Copy `habits.html`'s exact cell size (9px), 4-stop
+gold intensity scale, and `.heatmap-legend`/`.heatmap-legend-dot` class shapes verbatim for
+visual consistency across the platform.
+
+**Script plan — inline in `dashboard.html`, no new `omega-*.js` module.** The logic is
+~25 lines, single-page, and CLAUDE.md §3 already notes this repo's default is inline `<script>`
+per page (no shared component system) — a module is only warranted for cross-page/deferred-load
+logic, which this isn't. Add, inside the existing top-level `async` IIFE, immediately after the
+existing "Live counts" `task_completions` try/catch (`dashboard.html:~751-756`, same IIFE that
+already has `s.user.id` and `pr` in scope):
+
+```js
+try{
+  var ninetyAgo=new Date(Date.now()-90*864e5).toISOString();
+  var hm=await sb.from('task_completions').select('completed_at').eq('user_id',s.user.id).gte('completed_at',ninetyAgo);
+  renderContributionHeatmap(hm.data||[]);
+}catch(e){}
+```
+
+...and a new top-level function `renderContributionHeatmap(rows)`: bucket `rows` by
+`completed_at.slice(0,10)` into a day&rarr;count map, build 90 cells oldest&rarr;newest (reusing
+`habits.html`'s exact 4-stop intensity thresholds), append the legend, inject into
+`#contribution-heatmap`. `completed_at` is a server-set timestamp, not member-writable text, so
+no `esc()`/escaping concern — nothing here renders member-controlled string content.
+
+**Data plan:** none. No new table, RPC, or `platform_settings` flag — read-only, scoped
+`eq('user_id', s.user.id)`, against the already-RLS'd table. Not monetizable, not
+legally-sensitive; no gating decision needed.
+
+**Verification plan:**
+- `python3 scripts/audit.py` — must show 0 new CRITICAL (no new page/module/table, so none
+  expected).
+- No new standalone `.js` file exists to run `node --check` against — the new code is an inline
+  `<script>` addition to an existing page, which is outside the syntax check's file selection
+  (root `.js` files only) and CI check 1's scope. As a substitute, extract the new script body to
+  a scratch `.js` file and run `node --check` on that copy before/after insertion as a manual
+  syntax sanity check.
+- No new `src=`/`href=` added — broken-asset check is unaffected.
+- Full interactive verification (real login, click PERSONAL tab, confirm the heatmap renders
+  against live data) requires an authenticated Supabase session this environment doesn't have —
+  state that limitation plainly rather than claim it was clicked through, per `CLAUDE.md` §9's
+  evidence-cited-claims rule.
+
 ## Explicitly not proposed here
 
 Anything involving the Ω token economy, `wallet_balances`, or `transactions` — both are already

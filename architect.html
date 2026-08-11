@@ -107,12 +107,12 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
       <div class="nd-tags" id="nd-tags"></div>
     </div>
     <div class="metrics-row">
-      <div class="metric-card"><div class="mc-label">SERVICES</div><div class="mc-value">14<span class="mc-unit">nodes</span></div></div>
-      <div class="metric-card"><div class="mc-label">EVENT TYPES</div><div class="mc-value">15<span class="mc-unit">domain</span></div></div>
-      <div class="metric-card"><div class="mc-label">WORKERS</div><div class="mc-value">6<span class="mc-unit">consumers</span></div></div>
-      <div class="metric-card"><div class="mc-label">STORES</div><div class="mc-value">4<span class="mc-unit">idb+ls+rlt+sb</span></div></div>
-      <div class="metric-card"><div class="mc-label">PATTERN</div><div class="mc-value" style="font-size:11px">EDA</div></div>
-      <div class="metric-card"><div class="mc-label">DELIVERY</div><div class="mc-value" style="font-size:11px">AT-LEAST</div></div>
+      <div class="metric-card card"><div class="mc-label">SERVICES</div><div class="mc-value">14<span class="mc-unit">nodes</span></div></div>
+      <div class="metric-card card"><div class="mc-label">EVENT TYPES</div><div class="mc-value">15<span class="mc-unit">domain</span></div></div>
+      <div class="metric-card card"><div class="mc-label">WORKERS</div><div class="mc-value">6<span class="mc-unit">consumers</span></div></div>
+      <div class="metric-card card"><div class="mc-label">STORES</div><div class="mc-value">4<span class="mc-unit">idb+ls+rlt+sb</span></div></div>
+      <div class="metric-card card"><div class="mc-label">PATTERN</div><div class="mc-value" style="font-size:11px">EDA</div></div>
+      <div class="metric-card card"><div class="mc-label">DELIVERY</div><div class="mc-value" style="font-size:11px">AT-LEAST</div></div>
     </div>
   </div>
 
@@ -201,16 +201,16 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
   <!-- ADR TAB -->
   <div class="panel" id="tab-decisions">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">EDA</div><div class="stat-lbl">EVENT-DRIVEN ARCH</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">SYSTEM RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">15</div><div class="stat-lbl">EVENT TYPES</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">EDA</div><div class="stat-lbl">EVENT-DRIVEN ARCH</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">SYSTEM RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">15</div><div class="stat-lbl">EVENT TYPES</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">AES-256</div><div class="stat-lbl">DATA SECURITY</div></div>
-      <div class="stat-card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">AES-256</div><div class="stat-lbl">DATA SECURITY</div></div>
+      <div class="stat-card card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <table class="decisions-table" id="adr-table">
       <thead>
@@ -257,7 +257,7 @@ var PATTERNS=[
 var grid=document.getElementById('pattern-grid');
 PATTERNS.forEach(function(p){
   var c=document.createElement('div');
-  c.className='pattern-card';
+  c.className='pattern-card card';
   c.innerHTML='<div class="pc-icon">'+p.icon+'</div>'
     +'<div class="pc-name">'+p.name+'</div>'
     +'<div class="pc-desc">'+p.desc+'</div>'

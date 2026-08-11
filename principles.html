@@ -296,7 +296,7 @@ function renderLibrary(){
   else if(DOMAINS[libFilter]) data=data.filter(function(p){return p.domain===libFilter;});
   if(!data.length){list.innerHTML='<div class="empty">NO PRINCIPLES IN THIS VIEW</div>';return;}
   list.innerHTML=data.map(function(p){
-    return '<div class="principle-card '+(p.pinned?'pinned':'')+'">'
+    return '<div class="principle-card card '+(p.pinned?'pinned':'')+'">'
       +'<div class="principle-num">PRINCIPLE #'+p.num+' &middot; <span class="principle-domain dom-'+p.domain+'">'+(DOMAINS[p.domain]||p.domain)+'</span></div>'
       +'<div class="principle-title">'+p.title+'</div>'
       +'<div class="principle-body">'+p.body+'</div>'

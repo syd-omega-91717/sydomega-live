@@ -141,7 +141,7 @@ var LVLS=[
 function build(){
   var grid=document.getElementById('level-grid');
   if(grid){grid.innerHTML=LVLS.map(function(l){
-    return '<div class="lv-card" id="lvc-'+l.n+'" style="--lvc:'+l.col+'">'
+    return '<div class="lv-card card" id="lvc-'+l.n+'" style="--lvc:'+l.col+'">'
       +'<div style="font-family:var(--D);font-size:28px;color:'+l.col+'">'+l.n+'</div>'
       +'<div style="font-family:var(--D);font-size:11px;color:var(--ink);margin:4px 0">'+l.name+'</div>'
       +'<div style="font-family:var(--M);font-size:7.5px;color:var(--muted);margin-bottom:6px">AUTH &ge; '+l.thr+'</div>'

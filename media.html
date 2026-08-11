@@ -821,7 +821,7 @@ function buildSeriesGrid(){
   const g=document.getElementById('series-grid');g.innerHTML='';
   FILMS.forEach((film,fi)=>{
     for(let si=1;si<=12;si++){
-      const c=document.createElement('div');c.className='sg-card';c.setAttribute('data-require','grade>='+(fi+1));
+      const c=document.createElement('div');c.className='sg-card card';c.setAttribute('data-require','grade>='+(fi+1));
       const col=[(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),'#E86A3A',(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),'#D9B86A','#C7CDD6',(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),'#34C6E6','#A9C2D8',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')][fi];
       c.style.borderLeftColor=col+'55';c.style.borderLeft='3px solid '+col+'55';
       c.innerHTML=`<div class="sg-num" style="color:${col}">${fi+1}.${si}</div><div class="sg-title">${film}: EPISODE ${si}</div><div class="sg-film" style="color:${col}aa">FROM ${film}</div>`;
@@ -834,7 +834,7 @@ function buildGamesGrid(){
   const g=document.getElementById('games-grid');g.innerHTML='';
   GAMES.forEach((game,gi)=>{
     for(let si=1;si<=12;si++){
-      const c=document.createElement('div');c.className='sg-card';c.setAttribute('data-require','grade>='+(gi+1));
+      const c=document.createElement('div');c.className='sg-card card';c.setAttribute('data-require','grade>='+(gi+1));
       const col=['#E86A3A',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),'#D9B86A','#C7CDD6',(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')][gi];
       c.style.borderLeft='3px solid '+col+'44';
       c.innerHTML=`<div class="sg-num" style="color:${col}">${gi+1}.${si}</div><div class="sg-title">${game.replace('&#x03A9;','&#937;')}: WORLD ${si}</div><div class="sg-film" style="color:${col}88">SUB-GAME ${si} OF 12</div>`;
@@ -1040,7 +1040,7 @@ function renderGames(){
   grid.innerHTML='';
   GAMES.forEach(function(g){
     var card=document.createElement('div');
-    card.className='game-card';
+    card.className='game-card card';
     card.style.setProperty('--col',g.col);
     card.querySelector && null;
     card.innerHTML=

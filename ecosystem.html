@@ -114,7 +114,7 @@ function buildModGrid(){
   grid.innerHTML='';
   MODULES.forEach(function(m){
     var div=document.createElement('div');
-    div.className='mod-card';
+    div.className='mod-card card';
     div.style.setProperty('--mc',m.color);
     div.innerHTML='<div class="mod-id">'+m.id+'</div><div class="mod-name">'+m.name+'</div><div class="mod-desc">'+m.desc+'</div><div class="mod-pages">'+m.pages.map(function(p){return '<a href="/'+p+'.html">'+p+'</a>';}).join('')+'</div>';
     grid.appendChild(div);

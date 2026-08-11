@@ -261,7 +261,7 @@ a{color:inherit;text-decoration:none}
     <div class="sechead" data-reveal="fade-up">FAMILY ROLES -- SOVEREIGN CONSTITUTION <span data-canon-lattice="nine"></span></div>
     <div class="family-roles">
       <!-- FOUNDER -->
-      <div class="fr-card founder">
+      <div class="fr-card card founder">
         <div class="frc-role">FOUNDER & ARCHITECT</div>
         <div class="frc-name" style="color:var(--gold)"><span id="family-founder-name" style="display:none">MAJOR SLEIMAN YOUSSEF DAGHER</span></div>
         <div class="frc-status">Sovereign Founder . Lebanese Engineer #30875 . Architecture<br/>Born: 19 April 1982, Tripoli, Lebanon</div>
@@ -269,7 +269,7 @@ a{color:inherit;text-decoration:none}
         <span class="frc-badge" style="color:var(--gold);border-color:rgba(201,168,76,.4)">RANK 9.9.9 -- ALL-TIME ACCESS</span>
       </div>
       <!-- WIFE - CHAIRPERSON (Image 6 inspired) -->
-      <div class="fr-card chairperson">
+      <div class="fr-card card chairperson">
         <div class="frc-role">WIFE -- CHAIRPERSON</div>
         <div class="frc-name" style="color:var(--purple)" id="wife-name">DAGHER FAMILY CHAIRPERSON</div>
         <div class="frc-status" id="wife-status">Designated successor . Sovereign trustee . Family vault access</div>
@@ -281,7 +281,7 @@ a{color:inherit;text-decoration:none}
         <span class="frc-badge" style="color:var(--purple);border-color:rgba(155,107,240,.4)">CHAIRPERSON -- FULL TRUST ACCESS</span>
       </div>
       <!-- CHILDREN - HEIRS (Image 6 inspired) -->
-      <div class="fr-card heir" style="grid-column:1/-1">
+      <div class="fr-card card heir" style="grid-column:1/-1">
         <div class="frc-role">CHILDREN -- DESIGNATED HEIRS</div>
         <div class="frc-name" style="color:var(--cyan)">DAGHER LINEAGE HEIRS</div>
         <div class="frc-status">Sovereign succession protocol active. Children's Trust locked until maturity. Multi-sig inheritance vault.</div>
@@ -600,7 +600,7 @@ async function loadNodes(){
     g.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted);padding:14px">No nodes sealed yet. Register your bloodline above.</div>';
   } else {
     stored.forEach(n=>{
-      const c=document.createElement('div'); c.className='node-card';
+      const c=document.createElement('div'); c.className='node-card card';
       c.innerHTML=`<div class="nc-rel">${n.rel}</div><div class="nc-name">${n.name}</div><div class="nc-dates">${n.birth?new Date(n.birth).getFullYear():''}</div><div class="nc-notes">${n.notes||''}</div><span class="nc-badge">SEALED &#x2713;</span>`;
       g.appendChild(c);
     });
@@ -730,7 +730,7 @@ async function buildTimeline(){
     node.className='tl-node'+(records.length?'':' ');
     if(era.key==='present') node.className+=' active-node';
     node.innerHTML=
-      '<div class="tl-card">'+
+      '<div class="tl-card card">'+
       '<div class="tl-era" style="color:'+era.color+'">'+era.glyph+' &nbsp;'+era.label+'</div>'+
       '<div class="tl-title">'+(records.length?records[records.length-1].title:'No records yet for this era')+'</div>'+
       '<div class="tl-body">'+(records.length?esc(records[records.length-1].body):'Add your first record for this period below.')+'</div>'+
@@ -760,7 +760,7 @@ function buildArchives(){
   grid.innerHTML='';
   ARCHIVES.forEach(function(a){
     var card=document.createElement('div');
-    card.className='arch-card';
+    card.className='arch-card card';
     card.innerHTML=
       '<div class="arch-icon">'+a.icon+'</div>'+
       '<div class="arch-title">'+a.title+'</div>'+

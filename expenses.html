@@ -404,12 +404,12 @@ function renderInsights(){
   var avgDaily=exp>0?(exp/now.getDate()).toFixed(2):0;
   var largestExp=me.filter(function(e){return e.type==='expense';}).sort(function(a,b){return b.amount-a.amount;})[0];
   document.getElementById('insight-grid').innerHTML=
-    '<div class="insight-card"><div class="insight-val">$'+exp.toFixed(0)+(expChg!==null?' <span class="trend-chip '+(expChg>0?'trend-up':'trend-dn')+'">'+(expChg>0?'+':'')+expChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH EXPENSES</div></div>'
-    +'<div class="insight-card"><div class="insight-val">$'+inc.toFixed(0)+(incChg!==null?' <span class="trend-chip '+(incChg>0?'trend-dn':'trend-up')+'">'+(incChg>0?'+':'')+incChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH INCOME</div></div>'
-    +'<div class="insight-card"><div class="insight-val" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+(net>=0?'+':'')+'$'+Math.abs(net).toFixed(0)+'</div><div class="insight-lbl">NET FLOW</div></div>'
-    +'<div class="insight-card"><div class="insight-val" style="color:'+(rate>=20?'var(--green)':rate>=10?'var(--gold)':'var(--red)')+'">'+rate+'%</div><div class="insight-lbl">SAVINGS RATE</div></div>'
-    +'<div class="insight-card"><div class="insight-val">$'+avgDaily+'</div><div class="insight-lbl">AVG DAILY SPEND</div></div>'
-    +'<div class="insight-card"><div class="insight-val" style="font-size:.85rem">'+(largestExp?largestExp.desc+' $'+largestExp.amount.toFixed(0):'—')+'</div><div class="insight-lbl">LARGEST EXPENSE</div></div>';
+    '<div class="insight-card card"><div class="insight-val">$'+exp.toFixed(0)+(expChg!==null?' <span class="trend-chip '+(expChg>0?'trend-up':'trend-dn')+'">'+(expChg>0?'+':'')+expChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH EXPENSES</div></div>'
+    +'<div class="insight-card card"><div class="insight-val">$'+inc.toFixed(0)+(incChg!==null?' <span class="trend-chip '+(incChg>0?'trend-dn':'trend-up')+'">'+(incChg>0?'+':'')+incChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH INCOME</div></div>'
+    +'<div class="insight-card card"><div class="insight-val" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+(net>=0?'+':'')+'$'+Math.abs(net).toFixed(0)+'</div><div class="insight-lbl">NET FLOW</div></div>'
+    +'<div class="insight-card card"><div class="insight-val" style="color:'+(rate>=20?'var(--green)':rate>=10?'var(--gold)':'var(--red)')+'">'+rate+'%</div><div class="insight-lbl">SAVINGS RATE</div></div>'
+    +'<div class="insight-card card"><div class="insight-val">$'+avgDaily+'</div><div class="insight-lbl">AVG DAILY SPEND</div></div>'
+    +'<div class="insight-card card"><div class="insight-val" style="font-size:.85rem">'+(largestExp?largestExp.desc+' $'+largestExp.amount.toFixed(0):'—')+'</div><div class="insight-lbl">LARGEST EXPENSE</div></div>';
   drawTrend();
   drawCatBreakdown();
   drawMonthly();

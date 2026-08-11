@@ -308,7 +308,7 @@ function deleteMentor(id){
 function renderBoard(){
   const board=document.getElementById('mentor-board');
   if(!mentors.length){board.innerHTML='<div class="empty">YOUR BOARD IS EMPTY — ADD YOUR FIRST MENTOR</div>';return;}
-  board.innerHTML=mentors.map(m=>`<div class="mentor-card ${m.type}">
+  board.innerHTML=mentors.map(m=>`<div class="mentor-card card ${m.type}">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div class="mentor-initials" style="background:${m.color}22;color:${m.color};border:1px solid ${m.color}44">${initials(m.name)}</div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">

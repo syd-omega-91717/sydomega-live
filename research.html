@@ -167,7 +167,7 @@ function renderLabs(){
     var bk=l.status==='active'?'lb-active':l.status==='quantum'?'lb-quantum':l.status==='dev'?'lb-dev':'lb-concept';
     var bl=l.status==='active'?'ACTIVE':l.status==='quantum'?'QUANTUM OPS':l.status==='dev'?'DEVELOPMENT':'CONCEPT';
     var pct=labProgress(l);
-    return'<div class="lab-card" style="--lc:'+l.col+'">'
+    return'<div class="lab-card card" style="--lc:'+l.col+'">'
       +'<div class="lc-num">'+l.n+'</div>'
       +'<div class="lc-title">'+l.title+'</div>'
       +'<div class="lc-domain">'+l.domain+'</div>'

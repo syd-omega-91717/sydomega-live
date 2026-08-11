@@ -165,6 +165,62 @@ through this one file with no per-page markup changes:
   and that conflict isn't fixable by hover-gating since it's about the
   achievement badges' permanent resting-state appearance, not a hover
   effect — left on its own local styling instead.
+- **Platform-wide `.card` sweep, done with a scanner, not by hand.** A
+  repo-wide grep found ~230 page-local `*-card` classes across ~150
+  pages (far beyond the dozen or so pages checked individually above),
+  making one-by-one manual verification impractical. Wrote a scanner
+  (used, not committed to the repo — logic summarized here) that
+  detects the two real failure modes found by hand above:
+  1. a page-local `::before`/`::after` rule on the class (would be
+     silently replaced by `.card`'s own `::before`, not merged), and
+  2. a per-instance border set directly on the card element itself —
+     either inline (`style="border..."` on the same tag, or JS
+     `el.style.border`/`el.style.cssText+=` right after the class is
+     assigned) or via a same-element modifier class combo like
+     `.mc.heir{border-left:...}`.
+  Classes matching either were left untouched (45 classes across 44
+  pages — see below). A third category — modifier classes like
+  `.sel`/`.active`/`.mine`/`.unlocked`/`.vip` that set border-color as a
+  persistent *state* indicator — were included rather than excluded:
+  since `.card`'s border-image is hover-only (see above), a state
+  modifier's border stays fully visible at rest and is only ever
+  masked while *simultaneously* hovering that same element, a narrow,
+  low-consequence interaction rather than a permanent loss. 187 class
+  additions across 117 files were applied this way, each verified by
+  regex round-trip (confirming the inserted `card` landed as a whole
+  word with the rest of the string, including significant trailing
+  spaces in JS concatenation like `'rule-card '+(on?'active':'paused')`,
+  preserved byte-for-byte) and a full-repo `querySelector`/
+  `getElementsByClassName` scan (7 exact-class-selector hits found, all
+  `querySelectorAll(...).forEach(...classList...)` patterns unaffected
+  by an added class). Spot-verified visually (`account.html`'s
+  `.sign-card`, in addition to the pages already covered above) before
+  shipping.
+  **Left for manual review** (the same failure modes as `.honor-card`,
+  needing individual judgment, not a mechanical fix): `academy.html`
+  `.exam-card`, `achievements.html` `.ach-card`, `advertising.html`
+  `.tier-card`, `agents.html`/`sovereign-ai.html`/`sovereign.html`
+  `.agent-card`, `analytics.html` `.algo-card`, `chronicle.html`
+  `.future-card`/`.event-card`, `city.html` `.district-card`,
+  `cosmos.html`/`elements.html` `.el-card`, `dna.html` `.dna-card`,
+  `evolution.html` `.gate-card`, `exam.html` `.q-card`/`.exam-card`,
+  `family.html` `.sg-card`, `feed.html` `.post-card`, `gaming.html`
+  `.g-card`/`.e-card`, `honors.html` `.phase-card` (in addition to
+  `.honor-card`), `intelligence.html` `.log-card`, `investment.html`
+  `.holding-card`, `lab.html` `.tech-card`, `map.html` `.stat-card`,
+  `notes.html` `.note-card`, `oracle.html` `.reading-card`,
+  `prediction.html` `.pred-card`, `projects.html` `.proj-card`,
+  `publications.html` `.rec-card`, `queue.html` `.worker-card`,
+  `revenue.html` `.stream-card`, `series.html` `.ser-card`,
+  `social.html` `.plat-card`, `sovereign-covenant.html` `.article-card`,
+  `studio.html` `.axis-card`/`.create-card`, `triads.html`
+  `.triad-card`, `tribe.html` `.elem-card`/`.tribe-rank-card`,
+  `trophies.html` `.medal-card`, `wallet.html` `.account-card`,
+  `wealth.html` `.asset-class-card`. (`vault.html`'s `.article-card` was
+  already reviewed and added earlier — its `::before` turned out to be
+  an exact duplicate of `.card`'s, not a real conflict — so it
+  re-appears in the scanner's conservative flag list but needed no
+  further action.)
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row

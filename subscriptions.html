@@ -84,7 +84,7 @@
     <div class="trial-countdown" id="plan-countdown">--:--</div>
     <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">TIME REMAINING &middot; 9.1717-MINUTE SOVEREIGN SESSION</div>
   </div>
-  <div class="plan-card" id="plan-card">
+  <div class="plan-card card" id="plan-card">
     <div class="plan-row"><span class="plan-key">MEMBER ID</span><span class="plan-val" id="plan-uid">--</span></div>
     <div class="plan-row"><span class="plan-key">TIER</span><span class="plan-val" id="plan-tier">--</span></div>
     <div class="plan-row"><span class="plan-key">ACCESS TYPE</span><span class="plan-val" id="plan-access-type">--</span></div>
@@ -141,7 +141,7 @@ var TIERS=[
 ];
 var tg=document.getElementById('tiers-grid');
 TIERS.forEach(function(t){
-  var card=document.createElement('div');card.className='tier-card';card.style.setProperty('--tc',t.color);
+  var card=document.createElement('div');card.className='tier-card card';card.style.setProperty('--tc',t.color);
   var ul='<ul class="tier-perks">'+t.perks.map(function(p){return '<li>'+p+'</li>';}).join('')+'</ul>';
   card.innerHTML='<div class="tier-n">TIER '+t.n+'</div>'
     +'<div class="tier-name" style="color:'+t.color+'">'+t.name+'</div>'

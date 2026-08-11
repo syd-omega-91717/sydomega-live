@@ -178,7 +178,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
       var earned=tnums.indexOf(td.n)>=0;
       var eRow=earned&&!isOwner?earned_t.find(function(t){return t.trophy_num===td.n;}):null;
       var eDate=eRow?eRow.earned_at:null;
-      var card=document.createElement('div');card.className='trophy-card'+(earned?' earned':'');card.style.setProperty('--tc',earned?td.col:'var(--muted)');
+      var card=document.createElement('div');card.className='trophy-card card'+(earned?' earned':'');card.style.setProperty('--tc',earned?td.col:'var(--muted)');
       var cv=document.createElement('canvas');cv.className='tc-canvas';card.appendChild(cv);
       var numEl=document.createElement('div');numEl.className='tc-num';numEl.textContent='TROPHY '+td.n+' OF 12';card.appendChild(numEl);
       var nameEl=document.createElement('div');nameEl.className='tc-name';nameEl.style.color=earned?td.col:'var(--muted)';nameEl.textContent=td.name;card.appendChild(nameEl);

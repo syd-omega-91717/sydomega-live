@@ -68,6 +68,10 @@ these two features intentionally bypass) that `omega-sigil-gen.js`'s own handler
 `element`) — the direct-call implementation here uses the correct column. ✅ Rendered end-to-end
 in headless Chromium: sigil mounts as a real SVG (screenshotted), passport button click completes
 a full mocked-jsPDF generation with no errors. No new table/RPC/`platform_settings` flag.
+`profile.html`'s AUTHORITY INDEX label also now carries a `data-canon="mechanic"` badge
+(`FEATURE_IDEAS.md` #13, same `omega-canon-badge.js` system as `agents.html`'s `lore` badge
+under COSMOS above) — unambiguous since the index is a real computed value that gates real
+standing. ✅ Verified in headless Chromium alongside the `agents.html` check.
 
 ### ASCEND — progression, learning
 `honors.html` (ascension map + record), `matrix.html` ("The 729"), `academy.html`,
@@ -104,6 +108,13 @@ No new table/RPC/`platform_settings` flag.
 the member-node tooltip's attempted self-escaping of `display_name` was a no-op due to reading
 the wrong DOM property back, a real stored-XSS reachable by any approved member against any
 other viewer; fixed this session, see `GAP_ANALYSIS.md` §4.9).
+`agents.html`'s "SOVEREIGN AGENTS" heading now carries a `data-canon="lore"` label
+(`FEATURE_IDEAS.md` #13), rendered by `omega-canon-badge.js` — a platform-wide-loaded,
+already-auto-mounting honesty-label system (`[data-canon]` scan on `DOMContentLoaded` + two
+retries, zero wiring needed) that had zero `data-canon=` usage anywhere before this. Classification
+cites `CLAUDE.md` §6 directly ("UI/UX personality system... not a technical multi-agent runtime")
+rather than a fresh content judgment call. ✅ Verified in headless Chromium: badge mounts with the
+correct label/title text, no errors.
 
 ### UNIVERSE / MEDIA — content, social feed
 `cinema.html`, `universe.html`, `media.html`, `hall.html`, `city.html`, `series.html`,

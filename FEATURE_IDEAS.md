@@ -203,6 +203,48 @@ legally-sensitive; no gating decision needed.
   state that limitation plainly rather than claim it was clicked through, per `CLAUDE.md` §9's
   evidence-cited-claims rule.
 
+## 8. Expose the already-built share-card engine on achievement pages (ASCEND / ACHIEVE)
+
+**Grounded in:** `omega-share-card.js` (loaded platform-wide by `bg.js:1524-1525`, every page,
+via the standard `data-omega-sharecard` guard) is a fully built, working canvas card generator —
+`OmegaShareCard.render()`/`.download()`/`.share()`/`.createCard()`/`.showModal(profile)`, a
+1200×630 PNG with authority index, axis values, tier, and gate, downloadable and Web-Share-API
+shareable (`omega-share-card.js:1-19`). A repo-wide grep confirms it is wired to exactly **one**
+of ~250 pages: `profile.html:430,2349` (`ph-share-card-btn` &rarr;
+`window.OmegaShareCard.showModal(pr)`). `trophies.html:152` already fetches the exact object
+shape the engine needs (`sb.from('profiles').select('*').eq('id',uid).maybeSingle()`) for its own
+header — same for `honors.html:859` (`select('axis_a,axis_b,axis_c,is_owner')`, the specific
+subset `OmegaShareCard`'s `calcAuth()` actually reads). Neither page uses the engine that's
+already loaded on them and already has the data in scope.
+
+**Idea:** add the same "&#8679; SHARE CARD" button `profile.html` already has to `trophies.html`
+and `honors.html`, calling `OmegaShareCard.showModal(pr)` with the profile object each page
+already fetches — no new fetch, no new engine code, copy-paste of an existing, working, one-page
+pattern onto two more. `achievements.html` is a plausible third candidate but wasn't confirmed
+grounded this pass (no `sb.from('profiles')` call found there in a first grep — would need
+checking what profile data, if any, that page already has in scope before including it in a
+blueprint).
+
+**User benefit:** every approved member gets a "share your progress" moment on the pages where
+that progress is actually being celebrated (trophy vault, honors/ascension record) instead of
+only on their static profile page — the natural place someone would want to post a card is right
+after seeing a new trophy or gate, not on a separate settings-adjacent page. No `membership_tier`
+gating needed — matches `profile.html`'s existing button, which isn't tier-gated either.
+
+**Nav placement:** no new nav entry — both target pages already exist and are reachable
+(`ascend`/`achieve` per `nav.js`'s existing `PS` map for `trophies`/`honors`).
+
+**Data needs:** none. No new table, RPC, or `platform_settings` flag — reuses an existing
+platform-wide-loaded module and each page's own existing profile fetch.
+
+**Source inspiration:** shareable achievement/milestone cards are a well-established 2026
+gamification pattern specifically *because* the moment of achievement (not a static profile) is
+when sharing motivation is highest — loss-aversion/streak research shows achievement visibility
+and social sharing compound with milestone mechanics rather than substituting for them:
+- [Streaks & Milestones: Habit-Forming Gamification (2026) — AppStorys](https://appstorys.com/blog-Streaks-Milestones-Habit-Gamification)
+- [Apps That Use Streaks: 10 Real Examples Analysed (2026) — Trophy.so](https://trophy.so/blog/streaks-feature-gamification-examples)
+- [Streaks and Milestones for Gamification in Mobile Apps — Plotline](https://www.plotline.so/blog/streaks-for-gamification-in-mobile-apps)
+
 ## Explicitly not proposed here
 
 Anything involving the Ω token economy, `wallet_balances`, or `transactions` — both are already

@@ -20,7 +20,7 @@
 .elem-pct{font-family:var(--M);font-size:7px;color:var(--muted)}
 /* Percentile bar */
 .pctile-track{height:12px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;position:relative;margin:8px 0}
-.pctile-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple,#9B6BF0),var(--cyan),var(--solar));transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+.pctile-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple,var(--purple)),var(--cyan),var(--solar));transition:width 1.5s cubic-bezier(.4,0,.2,1)}
 .pctile-mark{position:absolute;top:0;bottom:0;width:2px;background:var(--gold);border-radius:2px;transition:left 1.5s cubic-bezier(.4,0,.2,1)}
 /* Signal strength */
 .signal-bars{display:flex;align-items:flex-end;gap:3px;height:24px}
@@ -214,6 +214,7 @@
   </div>
 </div>
 
+<div data-page-emblem="sigma" style="margin:20px auto 0"></div>
 </div><!-- /page-shell -->
 
 <script>
@@ -232,7 +233,7 @@ const PHI=1.6180339887,EU=2.7182818285;
 const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
 const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
 const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
-const ELEM_INFO={Fire:{sigil:'☲',color:'#FF6B35'},Water:{sigil:'☰',color:'#00B4D8'},Wind:{sigil:'☱',color:'#B0BEC5'},Metal:{sigil:'☳',color:'#E2C86D'},Sand:{sigil:'★',color:'#FFD54F'},Soul:{sigil:'✴',color:'#9B6BF0'},Space:{sigil:'✶',color:'#7C4DFF'},Void:{sigil:'✷',color:'#334466'},'The All':{sigil:'Ω',color:'#E2C86D'}};
+const ELEM_INFO={Fire:{sigil:'☲',color:'#FF6B35'},Water:{sigil:'☰',color:'#00B4D8'},Wind:{sigil:'☱',color:'#B0BEC5'},Metal:{sigil:'☳',color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},Sand:{sigil:'★',color:'#FFD54F'},Soul:{sigil:'✴',color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},Space:{sigil:'✶',color:'#7C4DFF'},Void:{sigil:'✷',color:'#334466'},'The All':{sigil:'Ω',color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')}};
 
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
 function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return{num:g+1,name:GATE_NAMES[g]};}
@@ -501,7 +502,7 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
       var x=40+(a/10)*(W-50);
       var y=H-30-(auth/30)*(H-40);
       var elem=SIGN_ELEM[p.zodiac_sign]||'Void';
-      var clr=(ELEM_INFO[elem]?.color)||'#8a8676';
+      var clr=(ELEM_INFO[elem]?.color)||(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676');
       ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
       ctx.fillStyle=clr+'99';ctx.fill();
     });

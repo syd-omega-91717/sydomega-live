@@ -73,6 +73,7 @@
     <div class="card"><div class="card-title">SUGGESTION CHIPS</div><div class="card-body">Five pre-built suggestion chips appear below the chat log. They cover the most common Concierge queries: authority score, axis progression, the 12 gates, the next gate threshold, and lattice structure. Clicking a chip pre-fills and sends the query immediately.</div></div>
   </div>
 </div>
+<div data-page-emblem="chatbot" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -97,7 +98,7 @@ function setTab(name){
 }
 var g=document.getElementById('agent-grid');
 AGENTS.forEach(function(a){
-  var d=document.createElement('div');d.className='agent-card';d.style.setProperty('--ac',a.col);
+  var d=document.createElement('div');d.className='agent-card card';d.style.setProperty('--ac',a.col);
   d.innerHTML='<div class="agent-sign">'+a.sign.toUpperCase()+'</div><div class="agent-name">'+a.name+'</div><div class="agent-domain">'+a.domain+'</div>';
   g.appendChild(d);
 });
@@ -152,10 +153,12 @@ window.sendChatMessage=async function(){
       message:q,
       context:{sign:_profile.sign||'unknown',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4),tier:_profile.subscription_tier||'free',rank:_profile.rank||'—'}
     }});
-    if(r.data&&r.data.reply)reply=r.data.reply;
-  }catch(e){reply='The Concierge is temporarily unavailable. Please try again shortly.';}
+    if(r.error) throw r.error;
+    reply=(r.data&&r.data.reply)||'';
+  }catch(e){}
+  if(!reply) reply='The Concierge is temporarily unavailable. Please try again shortly.';
   if(typingEl)typingEl.remove();
-  if(reply){_history.push({role:'assistant',content:reply});addMsg('ai',reply);}
+  _history.push({role:'assistant',content:reply});addMsg('ai',reply);
 };
 
 (async function(){

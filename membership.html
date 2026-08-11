@@ -51,7 +51,7 @@
 
 <div class="tab-panel active" id="tab-mytier">
   <div class="sechead">YOUR MEMBERSHIP STATUS</div>
-  <div class="status-card">
+  <div class="status-card card">
     <div class="status-grid">
       <div><div class="status-item-label">CURRENT TIER</div><div class="status-item-val" id="mb-tier">--</div></div>
       <div><div class="status-item-label">STATUS</div><div class="status-item-val" id="mb-status">--</div></div>
@@ -105,6 +105,7 @@
     <div class="card"><div class="card-title">TRIAL PERIOD</div><div class="card-body">Prospective members enter a 7-day trial. Trial accounts see the dashboard and character profile but cannot access gates II–XII, cinema, or the marketplace. When the trial expires, the member is redirected to the pending page. Full access requires approval by the platform owner via the Approvals module.</div></div>
   </div>
 </div>
+<div data-page-emblem="membership" style="margin:20px auto 0"></div>
 </div>
 
 <script type="module">
@@ -132,7 +133,7 @@ function buildTiers(activeTier){
   var g=document.getElementById('tier-grid');g.innerHTML='';
   TIERS.forEach(function(t){
     var c=document.createElement('div');
-    c.className='tier-card'+(t.badge===activeTier?' active-tier':'');
+    c.className='tier-card card'+(t.badge===activeTier?' active-tier':'');
     c.style.setProperty('--tc',t.col);
     c.innerHTML='<div class="tier-badge">'+t.badge+'</div>'
       +'<div class="tier-name">'+t.name+'</div>'

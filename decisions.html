@@ -180,7 +180,7 @@
 
   <!-- FRAMEWORKS REFERENCE -->
   <div class="tab-pane" id="tab-frameworks">
-    <div class="ref-card">
+    <div class="ref-card card">
       <div class="ref-title">PROS &amp; CONS — WEIGHTED</div>
       <div class="ref-body">
         List positives and negatives for your chosen option. Rate the importance of each (1-5).
@@ -188,7 +188,7 @@
         <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> You have a single option to evaluate against the status quo.
       </div>
     </div>
-    <div class="ref-card">
+    <div class="ref-card card">
       <div class="ref-title">10 / 10 / 10</div>
       <div class="ref-body">
         Ask: How will I feel about this decision in 10 minutes? 10 months? 10 years?
@@ -196,7 +196,7 @@
         <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Emotional decisions where short-term fear conflicts with long-term values.
       </div>
     </div>
-    <div class="ref-card">
+    <div class="ref-card card">
       <div class="ref-title">REGRET MINIMIZATION (BEZOS)</div>
       <div class="ref-body">
         Project yourself to age 80 looking back. Will you regret NOT taking this action?
@@ -204,7 +204,7 @@
         <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Major life decisions where comfort bias pulls toward inaction.
       </div>
     </div>
-    <div class="ref-card">
+    <div class="ref-card card">
       <div class="ref-title">PRE-MORTEM</div>
       <div class="ref-body">
         Imagine it's 1 year from now. Your decision turned out to be a failure.
@@ -213,7 +213,7 @@
         <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> High-stakes, irreversible, or overconfident scenarios.
       </div>
     </div>
-    <div class="ref-card">
+    <div class="ref-card card">
       <div class="ref-title">EISENHOWER MATRIX (URGENCY × IMPORTANCE)</div>
       <div class="ref-body">
         Is this decision URGENT (must act soon) and IMPORTANT (high impact)?<br>
@@ -224,7 +224,7 @@
         <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Prioritizing which decisions deserve deep analysis.
       </div>
     </div>
-    <div class="ref-card">
+    <div class="ref-card card">
       <div class="ref-title">INVERSION (CHARLIE MUNGER)</div>
       <div class="ref-body">
         Instead of asking "How do I succeed?", ask "What would guarantee failure?"
@@ -238,20 +238,21 @@
   <!-- SCIENCE -->
   <div class="tab-pane" id="tab-science">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">10/10</div><div class="stat-lbl">REGRET HORIZON</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">DECISION RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">95%</div><div class="stat-lbl">PRE-MORTEM ACCURACY</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">10/10</div><div class="stat-lbl">REGRET HORIZON</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">DECISION RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">95%</div><div class="stat-lbl">PRE-MORTEM ACCURACY</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">Q2</div><div class="stat-lbl">EISENHOWER QUADRANT</div></div>
-      <div class="stat-card"><div class="stat-val">6</div><div class="stat-lbl">BIAS PATTERNS</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">Q2</div><div class="stat-lbl">EISENHOWER QUADRANT</div></div>
+      <div class="stat-card card"><div class="stat-val">6</div><div class="stat-lbl">BIAS PATTERNS</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
   </div>
 
 </div>
+<div data-page-emblem="decisions" style="margin:20px auto 0"></div>
 <div class="lf"><span>&#937; DECISIONS &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
@@ -313,7 +314,7 @@ function updateTopMeta() {
 function initForm() {
   // Framework selector
   document.getElementById('d-fw-grid').innerHTML = FRAMEWORKS.map(f =>
-    `<div class="fw-card ${_fw===f.id?'on':''}" onclick="selectFW('${f.id}')">
+    `<div class="fw-card card ${_fw===f.id?'on':''}" onclick="selectFW('${f.id}')">
       <div class="fw-name">${f.name}</div>
       <div class="fw-desc">${f.desc}</div>
     </div>`
@@ -558,7 +559,7 @@ function renderJournal() {
   }
   el.innerHTML = list.map(d => {
     const col = statusColors[d.status]||statusColors.draft;
-    return `<div class="dec-card">
+    return `<div class="dec-card card">
       <div class="dec-hd">
         <span class="dec-title">${esc(d.title)}</span>
         <span class="dec-status" style="color:${col};border-color:${col}">${(d.status||'DRAFT').toUpperCase()}</span>

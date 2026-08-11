@@ -1,6 +1,12 @@
 /* ==========================================================================
-   Ω SYD OMEGA 91717 — DIGITAL THREAD ENGINE (omega-thread.js)
-   
+   Ω SYD OMEGA 91717 — DIGITAL THREAD ENGINE
+   NOTE: this file is named omega-threat.js on disk (loaded by bg.js under
+   that name) but its actual content and window.OmegaThread export are the
+   requirements/telemetry "digital thread" traceability engine described
+   below -- unrelated to security threat detection despite the filename. No
+   real threat-detection module exists anywhere in this codebase; see
+   CLAUDE.md's Known Debt for the omega-guardian.js implication.
+
    Connects requirements → architecture → code → tests → deployments →
    telemetry → incidents → improvements.
    

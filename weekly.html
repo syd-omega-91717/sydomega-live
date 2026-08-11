@@ -153,6 +153,8 @@ textarea.q-area.sm{min-height:54px}
     </div>
 
     <button class="btn-save" onclick="saveWeek()">&#9670; COMPLETE WEEKLY REVIEW</button>
+    <button class="btn-save" style="background:none;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);margin-left:8px" onclick="generateAIReflection()" id="ai-reflect-btn">&#9670; AI REFLECTION</button>
+    <div id="ai-reflect-out" style="display:none;margin-top:14px;padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.04);font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.85);line-height:1.8"></div>
   </div>
 
   <!-- TAB 2: ARCHIVE -->
@@ -186,22 +188,23 @@ textarea.q-area.sm{min-height:54px}
       <div class="stat-box"><div class="stat-val">GTD</div><div class="stat-lbl">REVIEW SYSTEM</div></div>
       <div class="stat-box"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">THE WEEKLY REVIEW — DAVID ALLEN</div>
       <div class="sci-body" style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">David Allen's GTD system identifies the weekly review as the cornerstone of the entire productivity system. Without a consistent review practice, your mind cannot trust the system — it starts re-processing commitments, creating anxiety and cognitive overhead. The weekly review clears the mental inbox, updates project lists, and closes open loops that otherwise drain attention continuously.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">REFLECTION & DELIBERATE PRACTICE</div>
       <div class="sci-body" style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">K. Anders Ericsson's deliberate practice research shows that experts consistently outperform others not because of more practice, but because of more structured feedback and reflection. A weekly review creates a feedback loop: what worked, what failed, and why. Without systematic reflection, improvement is random rather than directed. Sovereign growth requires knowing not just what you did, but what it cost and what it produced.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">THE OMEGA REVIEW PROTOCOL</div>
       <div class="sci-body" style="font-family:var(--M);font-size:9px;letter-spacing:.5px;color:rgba(200,196,176,.7);line-height:1.8">AUTH = √(A³+B³+C³) × φ/e where A=wins, B=lessons, C=intentions. The sovereign review scores six life domains (health, mindset, deep work, finance, relations, growth) on a 10-point scale. Weekly domain scores compound into quarterly trajectories. Trend analysis reveals which domains are growing versus stagnating — the asymmetry of sovereign attention.</div>
     </div>
   </div>
 
   </div>
-  <div class="lf"><span>&#937; WEEKLY REVIEW &middot; SYD OMEGA 91717</span></div>
+  <div data-page-emblem="weekly" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; WEEKLY REVIEW &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
 
@@ -395,6 +398,68 @@ function saveWeek(){
   alert('Weekly review saved. Sovereign.');
 }
 
+/* ─── AI REFLECTION ───
+   Synthesizes what was actually written into this week's review via the
+   concierge Edge Function (supabase/functions/concierge -- dormant unless
+   ANTHROPIC_API_KEY is configured; the "not enabled yet" branch below is the
+   expected response on a deployment where it isn't). Nothing here is saved
+   automatically -- purely a read-back reflection, matching this page's
+   existing local-only data model. */
+function generateAIReflection(){
+  var btn=document.getElementById('ai-reflect-btn');
+  var out=document.getElementById('ai-reflect-out');
+  var wins=getWins(), scores=getScores();
+  var highlight=document.getElementById('q-highlight').value.trim();
+  var learning=document.getElementById('q-learning').value.trim();
+  var improve=document.getElementById('q-improve').value.trim();
+  var gratitude=document.getElementById('q-gratitude').value.trim();
+  var intention=document.getElementById('q-intention').value.trim();
+  if(!wins.length && !highlight && !learning){
+    alert('Add at least one win or fill in a reflection field before generating an AI summary.');
+    return;
+  }
+  btn.disabled=true; btn.textContent='◆ REFLECTING…';
+  out.style.display='none';
+
+  var lines=[];
+  if(wins.length) lines.push('Wins this week: '+wins.join('; '));
+  var domainLines=Object.keys(scores).map(function(k){
+    var d=DOMAINS.find(function(x){return x.key===k;});
+    return (d?d.label:k)+': '+scores[k]+'/10';
+  });
+  if(domainLines.length) lines.push('Domain scores: '+domainLines.join(', '));
+  if(highlight) lines.push('Biggest win: '+highlight);
+  if(learning) lines.push('What I learned: '+learning);
+  if(improve) lines.push('What I would do differently: '+improve);
+  if(gratitude) lines.push('Grateful for: '+gratitude);
+  if(intention) lines.push('Intention for next week: '+intention);
+  var message='Here is my weekly review:\n'+lines.join('\n');
+
+  var persona='You are a warm, direct reflection coach helping a member process their weekly '+
+    'review. Read what they wrote, then respond with: one sentence naming the clearest pattern '+
+    'or throughline across their wins, scores, and reflections; one honest observation about '+
+    'what might be holding them back, only if something genuinely stands out; and one specific, '+
+    'concrete suggestion for the coming week grounded in what they actually wrote. 4-6 sentences '+
+    'total. Do not invent facts about their life beyond what they wrote. You are not a therapist '+
+    'and must not act like one.';
+
+  function done(text){
+    btn.disabled=false; btn.textContent='◆ AI REFLECTION';
+    out.textContent=text;
+    out.style.display='block';
+  }
+  (window.OmegaSB?window.OmegaSB.get():Promise.reject(new Error('unavailable'))).then(function(sb){
+    return sb.functions.invoke('concierge',{body:{message:message,context:{},system_override:persona}});
+  }).then(function(r){
+    if(r.data&&r.data.reply) done(r.data.reply);
+    else if(r.data&&r.data.enabled===false) done('AI reflection is not enabled on this platform yet.');
+    else done('Could not generate a reflection right now. Please try again later.');
+  }).catch(function(){
+    done('Could not generate a reflection right now. Please try again later.');
+  });
+}
+window.generateAIReflection=generateAIReflection;
+
 /* ─── ARCHIVE ─── */
 function renderArchive(){
   var reviews=loadReviews();
@@ -404,7 +469,7 @@ function renderArchive(){
     var d=new Date(r.weekKey);
     var sun=new Date(d); sun.setDate(d.getDate()+6);
     var fmt=function(dt){return dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});};
-    var card=document.createElement('div'); card.className='arc-card';
+    var card=document.createElement('div'); card.className='arc-card card';
     card.innerHTML='<div class="arc-top"><span class="arc-week">'+fmt(d)+' — '+fmt(sun)+'</span>'+
       (r.avg?'<span class="arc-score">'+r.avg+'/10</span>':'')+'</div>'+
       (r.wins&&r.wins.length?'<div class="arc-wins">'+r.wins.slice(0,3).map(function(w){return'✓ '+w;}).join('<br>')+'</div>':'');
@@ -505,7 +570,7 @@ function drawTrend(reviews){
   pts.forEach(function(p,i){
     if(p.y===null) return;
     ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);
-    ctx.fillStyle='#C9A84C';ctx.fill();
+    ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.fill();
     ctx.fillStyle='rgba(201,168,76,.5)';ctx.font='7px monospace';
     var label=last8[i].weekKey.slice(5).replace('-','/');
     ctx.fillText(label,p.x-10,H-4);

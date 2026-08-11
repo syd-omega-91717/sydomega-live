@@ -4,19 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Contacts · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega-ui.css">
-<script src="omega-ui.js" defer></script>
+<link rel="manifest" href="/manifest.json">
 <style>
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
 :root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--t:#fff;--d:#888;--gold:#c9a84c;--blue:#3498db;--green:#27ae60;--red:#e74c3c;--purple:#9b59b6;--orange:#e67e22}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--g);color:var(--t);font-family:'Courier New',monospace;min-height:100vh}
-.main{max-width:1000px;margin:0 auto;padding:24px 16px 100px}
-h1{font-size:1.1rem;letter-spacing:.15em;color:var(--gold);margin-bottom:4px}
-.sub{font-size:.7rem;color:var(--d);letter-spacing:.1em;margin-bottom:24px}
-.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid #222;flex-wrap:wrap}
-.tab{padding:8px 14px;font-size:.7rem;letter-spacing:.1em;cursor:pointer;color:var(--d);border:none;background:none;transition:color .2s}
-.tab.active{color:var(--gold);border-bottom:2px solid var(--gold)}
-.panel{display:none}.panel.active{display:block}
 .card{background:var(--b);border:1px solid #222;border-radius:4px;padding:16px;margin-bottom:16px}
 .card-title{font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
 label{font-size:.6rem;color:var(--d);letter-spacing:.08em;display:block;margin-bottom:4px}
@@ -30,7 +24,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
 .btn-red{background:var(--red);color:#fff;font-size:.6rem;padding:4px 10px;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
 .btn-sm{padding:5px 12px;font-size:.6rem}
-/* contact cards */
 .contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 .contact-card{background:var(--p);border:1px solid #1a1a1a;border-radius:6px;padding:16px;position:relative;transition:border-color .2s;cursor:pointer}
 .contact-card:hover{border-color:#333}
@@ -44,25 +37,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .contact-meta{font-size:.6rem;color:var(--d);display:flex;flex-direction:column;gap:3px}
 .contact-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
 .due-badge{font-size:.55rem;padding:2px 8px;border-radius:10px}
-.due-ok{background:rgba(39,174,96,.15);color:var(--green)}
-.due-soon{background:rgba(201,168,76,.15);color:var(--gold)}
 .due-over{background:rgba(231,76,60,.15);color:var(--red)}
-/* stats */
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .stat{background:var(--b);border:1px solid #222;border-radius:4px;padding:14px;text-align:center}
 .stat-val{font-size:1.4rem;color:var(--gold);font-weight:bold;margin-bottom:4px}
 .stat-lbl{font-size:.55rem;color:var(--d);letter-spacing:.1em}
-/* circle */
 .circle-ring{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .circle-tier{background:var(--p);border:1px solid #1a1a1a;border-radius:4px;padding:14px}
 .tier-name{font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:4px}
 .tier-desc{font-size:.6rem;color:var(--d);margin-bottom:8px;line-height:1.4}
 .tier-count{font-size:1.1rem;color:var(--t);font-weight:bold}
-/* interaction log */
-.interaction-item{background:var(--p);border:1px solid #1a1a1a;padding:10px 14px;border-radius:3px;margin-bottom:6px}
-.int-contact{font-size:.65rem;color:var(--gold);margin-bottom:4px}
-.int-note{font-size:.7rem;color:#aaa;line-height:1.5;margin-bottom:4px}
-.int-meta{font-size:.55rem;color:var(--d)}
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .filter-btn{padding:4px 12px;font-size:.6rem;letter-spacing:.08em;border:1px solid #333;background:none;color:var(--d);cursor:pointer;border-radius:2px;transition:all .2s}
 .filter-btn.active{border-color:var(--gold);color:var(--gold)}
@@ -75,243 +59,219 @@ canvas{display:block;width:100%;max-width:500px;margin:0 auto}
 </style>
 </head>
 <body>
-<div class="main">
-  <h1>SOVEREIGN CONTACTS</h1>
-  <p class="sub">RELATIONSHIP INTELLIGENCE · DUNBAR CIRCLES · STRATEGIC NETWORK MANAGEMENT</p>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="contacts"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">CONTACTS<small>RELATIONSHIP INTELLIGENCE · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-  <div class="stat-grid">
-    <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL CONTACTS</div></div>
-    <div class="stat"><div class="stat-val" id="st-vip">0</div><div class="stat-lbl">VIP / CLOSE</div></div>
-    <div class="stat"><div class="stat-val" id="st-overdue" style="color:var(--red)">0</div><div class="stat-lbl">OVERDUE TOUCHES</div></div>
-    <div class="stat"><div class="stat-val" id="st-this-month">0</div><div class="stat-lbl">CONTACTED THIS MONTH</div></div>
-  </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL CONTACTS</div></div>
+      <div class="stat"><div class="stat-val" id="st-vip">0</div><div class="stat-lbl">VIP / CLOSE</div></div>
+      <div class="stat"><div class="stat-val" id="st-overdue" style="color:var(--red)">0</div><div class="stat-lbl">OVERDUE TOUCHES</div></div>
+      <div class="stat"><div class="stat-val" id="st-this-month">0</div><div class="stat-lbl">CONTACTED THIS MONTH</div></div>
+    </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('contacts')">CONTACTS</button>
-    <button class="tab" onclick="switchTab('add')">ADD CONTACT</button>
-    <button class="tab" onclick="switchTab('circles')">DUNBAR CIRCLES</button>
-    <button class="tab" onclick="switchTab('interactions')">INTERACTIONS</button>
-    <button class="tab" onclick="switchTab('science')">SCIENCE</button>
-  </div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="contacts" onclick="switchTab('contacts',this)">&#9670; CONTACTS</button>
+      <button class="tab-btn" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD CONTACT</button>
+      <button class="tab-btn" data-tab="circles" onclick="switchTab('circles',this)">&#9670; DUNBAR CIRCLES</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+    </div>
 
-  <!-- CONTACTS -->
-  <div id="tab-contacts" class="panel active">
-    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-      <input type="text" id="search-input" placeholder="Search name, role, tag..." oninput="renderContacts()" style="max-width:280px">
+    <!-- CONTACTS -->
+    <div id="tab-contacts" class="tab-panel act">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <input type="text" id="search-input" placeholder="Search name, role, tag..." oninput="renderContacts()" style="max-width:280px">
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all',this)">ALL</button>
+        <button class="filter-btn" onclick="setFilter('vip',this)">VIP</button>
+        <button class="filter-btn" onclick="setFilter('overdue',this)">OVERDUE</button>
+        <button class="filter-btn" onclick="setFilter('business',this)">BUSINESS</button>
+        <button class="filter-btn" onclick="setFilter('personal',this)">PERSONAL</button>
+        <button class="filter-btn" onclick="setFilter('mentor',this)">MENTOR</button>
+      </div>
+      <div id="contact-grid" class="contact-grid">
+        <div class="empty">NO CONTACTS YET</div>
+      </div>
     </div>
-    <div class="filter-bar">
-      <button class="filter-btn active" onclick="setFilter('all',this)">ALL</button>
-      <button class="filter-btn" onclick="setFilter('vip',this)">VIP</button>
-      <button class="filter-btn" onclick="setFilter('overdue',this)">OVERDUE</button>
-      <button class="filter-btn" onclick="setFilter('business',this)">BUSINESS</button>
-      <button class="filter-btn" onclick="setFilter('personal',this)">PERSONAL</button>
-      <button class="filter-btn" onclick="setFilter('mentor',this)">MENTOR</button>
-    </div>
-    <div id="contact-grid" class="contact-grid">
-      <div class="empty">NO CONTACTS YET</div>
-    </div>
-  </div>
 
-  <!-- ADD CONTACT -->
-  <div id="tab-add" class="panel">
-    <div class="card">
-      <div class="card-title">ADD CONTACT</div>
-      <div class="form-row">
-        <div><label>FULL NAME</label><input id="c-name" type="text" placeholder="Name..."></div>
-        <div><label>ROLE / TITLE</label><input id="c-role" type="text" placeholder="CEO, Designer, Friend..."></div>
-      </div>
-      <div class="form-row trio">
-        <div><label>COMPANY / ORG</label><input id="c-company" type="text" placeholder="Optional"></div>
-        <div><label>EMAIL</label><input id="c-email" type="email" placeholder="Optional"></div>
-        <div><label>PHONE</label><input id="c-phone" type="tel" placeholder="Optional"></div>
-      </div>
-      <div class="form-row">
-        <div>
-          <label>CIRCLE TIER</label>
-          <select id="c-tier">
-            <option value="inner">INNER CIRCLE (5)</option>
-            <option value="close">CLOSE FRIENDS (15)</option>
-            <option value="tribe">TRIBE (50)</option>
-            <option value="network">NETWORK (150)</option>
-            <option value="outer">OUTER (500+)</option>
-          </select>
+    <!-- ADD CONTACT -->
+    <div id="tab-add" class="tab-panel">
+      <div class="card">
+        <div class="card-title">ADD CONTACT</div>
+        <div class="form-row">
+          <div><label>FULL NAME</label><input id="c-name" type="text" placeholder="Name..."></div>
+          <div><label>ROLE / TITLE</label><input id="c-role" type="text" placeholder="CEO, Designer, Friend..."></div>
         </div>
-        <div>
-          <label>CATEGORY</label>
-          <select id="c-cat">
-            <option value="business">BUSINESS</option>
-            <option value="personal">PERSONAL</option>
-            <option value="mentor">MENTOR</option>
-            <option value="investor">INVESTOR</option>
-            <option value="client">CLIENT</option>
-            <option value="partner">PARTNER</option>
-            <option value="family">FAMILY</option>
-            <option value="other">OTHER</option>
-          </select>
+        <div class="form-row trio">
+          <div><label>COMPANY / ORG</label><input id="c-company" type="text" placeholder="Optional"></div>
+          <div><label>EMAIL</label><input id="c-email" type="email" placeholder="Optional"></div>
+          <div><label>PHONE</label><input id="c-phone" type="tel" placeholder="Optional"></div>
         </div>
-      </div>
-      <div class="form-row">
-        <div>
-          <label>TOUCH FREQUENCY (days)</label>
-          <input id="c-freq" type="number" min="1" max="365" value="30" placeholder="30 = monthly">
+        <div class="form-row">
+          <div>
+            <label>CIRCLE TIER</label>
+            <select id="c-tier">
+              <option value="inner">INNER CIRCLE (5)</option>
+              <option value="close">CLOSE FRIENDS (15)</option>
+              <option value="tribe">TRIBE (50)</option>
+              <option value="network">NETWORK (150)</option>
+              <option value="outer">OUTER (500+)</option>
+            </select>
+          </div>
+          <div>
+            <label>CATEGORY</label>
+            <select id="c-cat">
+              <option value="business">BUSINESS</option>
+              <option value="personal">PERSONAL</option>
+              <option value="mentor">MENTOR</option>
+              <option value="investor">INVESTOR</option>
+              <option value="client">CLIENT</option>
+              <option value="partner">PARTNER</option>
+              <option value="family">FAMILY</option>
+              <option value="other">OTHER</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label>TAGS (comma-separated)</label>
-          <input id="c-tags" type="text" placeholder="e.g. investor, crypto, london">
+        <div class="form-row">
+          <div>
+            <label>TOUCH FREQUENCY (days)</label>
+            <input id="c-freq" type="number" min="1" max="365" value="30" placeholder="30 = monthly">
+          </div>
+          <div>
+            <label>TAGS (comma-separated)</label>
+            <input id="c-tags" type="text" placeholder="e.g. investor, crypto, london">
+          </div>
         </div>
+        <div style="margin-bottom:12px">
+          <label>NOTES</label>
+          <textarea id="c-notes" rows="3" placeholder="Key facts, context, how you met..."></textarea>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <input type="checkbox" id="c-vip" style="width:auto">
+          <label for="c-vip" style="display:inline;font-size:.65rem;color:var(--gold)">VIP / HIGH PRIORITY CONTACT</label>
+        </div>
+        <button class="btn btn-gold" onclick="addContact()">+ ADD CONTACT</button>
       </div>
-      <div style="margin-bottom:12px">
-        <label>NOTES</label>
-        <textarea id="c-notes" rows="3" placeholder="Key facts, context, how you met..."></textarea>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <input type="checkbox" id="c-vip" style="width:auto">
-        <label for="c-vip" style="display:inline;font-size:.65rem;color:var(--gold)">VIP / HIGH PRIORITY CONTACT</label>
-      </div>
-      <button class="btn btn-gold" onclick="addContact()">+ ADD CONTACT</button>
     </div>
-  </div>
 
-  <!-- CIRCLES -->
-  <div id="tab-circles" class="panel">
-    <div class="card">
-      <div class="card-title">DUNBAR'S NUMBER — SOCIAL CIRCLE STRUCTURE</div>
-      <p style="font-size:.65rem;color:var(--d);line-height:1.6;margin-bottom:16px">Robin Dunbar (1992) identified cognitive limits on stable social group sizes, rooted in neocortical processing capacity. Manage your network intentionally within these tiers for maximum relationship quality.</p>
-      <div class="circle-ring">
-        <div class="circle-tier">
-          <div class="tier-name">INNER CIRCLE — 5</div>
-          <div class="tier-desc">Your closest allies. Deep trust, mutual vulnerability. Maximum investment of time and energy.</div>
-          <div class="tier-count" id="tier-inner">0 / 5</div>
-        </div>
-        <div class="circle-tier">
-          <div class="tier-name">CLOSE FRIENDS — 15</div>
-          <div class="tier-desc">Strong bonds, reliable support. Touch at least monthly. Know your full context.</div>
-          <div class="tier-count" id="tier-close">0 / 15</div>
-        </div>
-        <div class="circle-tier">
-          <div class="tier-name">TRIBE — 50</div>
-          <div class="tier-desc">Regular meaningful contact. Shared identity or domain. Touch quarterly minimum.</div>
-          <div class="tier-count" id="tier-tribe">0 / 50</div>
-        </div>
-        <div class="circle-tier">
-          <div class="tier-name">NETWORK — 150 (Dunbar's Number)</div>
-          <div class="tier-desc">Stable social network. Know enough context to maintain trust and reputation. Annual contact minimum.</div>
-          <div class="tier-count" id="tier-network">0 / 150</div>
+    <!-- DUNBAR CIRCLES -->
+    <div id="tab-circles" class="tab-panel">
+      <div class="card">
+        <div class="card-title">DUNBAR'S NUMBER — SOCIAL CIRCLE STRUCTURE</div>
+        <p style="font-size:.65rem;color:var(--d);line-height:1.6;margin-bottom:16px">Robin Dunbar (1992) identified cognitive limits on stable social group sizes, rooted in neocortical processing capacity. Manage your network intentionally within these tiers for maximum relationship quality.</p>
+        <div class="circle-ring">
+          <div class="circle-tier">
+            <div class="tier-name">INNER CIRCLE — 5</div>
+            <div class="tier-desc">Your closest allies. Deep trust, mutual vulnerability. Maximum investment of time and energy.</div>
+            <div class="tier-count" id="tier-inner">0 / 5</div>
+          </div>
+          <div class="circle-tier">
+            <div class="tier-name">CLOSE FRIENDS — 15</div>
+            <div class="tier-desc">Strong bonds, reliable support. Touch at least monthly. Know your full context.</div>
+            <div class="tier-count" id="tier-close">0 / 15</div>
+          </div>
+          <div class="circle-tier">
+            <div class="tier-name">TRIBE — 50</div>
+            <div class="tier-desc">Regular meaningful contact. Shared identity or domain. Touch quarterly minimum.</div>
+            <div class="tier-count" id="tier-tribe">0 / 50</div>
+          </div>
+          <div class="circle-tier">
+            <div class="tier-name">NETWORK — 150 (Dunbar's Number)</div>
+            <div class="tier-desc">Stable social network. Know enough context to maintain trust and reputation. Annual contact minimum.</div>
+            <div class="tier-count" id="tier-network">0 / 150</div>
+          </div>
         </div>
       </div>
+      <div class="card">
+        <div class="card-title">NETWORK COMPOSITION</div>
+        <canvas id="net-canvas" height="180"></canvas>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title">NETWORK COMPOSITION</div>
-      <canvas id="net-canvas" height="180"></canvas>
-    </div>
-  </div>
 
-  <!-- INTERACTIONS -->
-  <div id="tab-interactions" class="panel">
-    <div class="card">
-      <div class="card-title">LOG INTERACTION</div>
-      <div class="form-row">
-        <div>
-          <label>CONTACT</label>
-          <select id="i-contact"></select>
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">RELATIONSHIP INTELLIGENCE — SCIENCE</div>
+        <div class="ref-block">
+          <div class="ref-title">DUNBAR'S NUMBER — Robin Dunbar (1992) Journal of Human Evolution</div>
+          <div class="ref-body">Dunbar's research on primate neocortex size and social group size established cognitive limits on stable social relationships: ~5 (intimate), ~15 (close friends), ~50 (tribe), ~150 (stable network), ~500 (acquaintances), ~1500 (recognizable faces). These limits are neurological, not cultural. Managing your network intentionally within these tiers — giving most energy to your inner 15 — produces stronger relationship quality than diffuse investment across hundreds.</div>
         </div>
-        <div>
-          <label>DATE</label>
-          <input id="i-date" type="date">
+        <div class="ref-block">
+          <div class="ref-title">WEAK TIES &amp; OPPORTUNITY — Mark Granovetter (1973) American Journal of Sociology</div>
+          <div class="ref-body">Granovetter's landmark "Strength of Weak Ties" study found that job opportunities and novel information flow through weak ties (acquaintances) more than strong ties (close friends), who share your existing knowledge graph. A balanced sovereign network maintains depth in the inner circles AND breadth in the outer rings — the outer rings provide serendipitous exposure to new domains, markets, and people.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">RECIPROCITY PRINCIPLE — Robert Cialdini (1984) Influence</div>
+          <div class="ref-body">Reciprocity is among the most powerful and universal social norms across cultures. Giving first — without transactional intent — creates asymmetric goodwill that compounds over time. Adam Grant (Give and Take, 2013) found that "Givers" reach the top of success distributions across professions: they build larger, more diverse networks because people want to help those who helped them. Sovereign relationship management means giving first and tracking, not reciprocity-accounting.</div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-title">RELATIONSHIP MAINTENANCE — Duck (1994) Meaningful Relationships</div>
+          <div class="ref-body">Duck's relational maintenance research established that relationships decay without regular contact — not through conflict, but simply through neglect. The "proximity" and "frequency" factors of social bonding (Festinger et al. 1950) show that relationships that aren't actively maintained regress from close→tribe→network tier automatically. Proactive touch scheduling reverses this entropy.</div>
         </div>
       </div>
-      <div class="form-row">
-        <div>
-          <label>CHANNEL</label>
-          <select id="i-channel">
-            <option value="in-person">IN-PERSON</option>
-            <option value="call">CALL</option>
-            <option value="message">MESSAGE</option>
-            <option value="email">EMAIL</option>
-            <option value="video">VIDEO CALL</option>
-            <option value="event">EVENT</option>
-          </select>
-        </div>
-        <div>
-          <label>QUALITY (1-5)</label>
-          <select id="i-quality">
-            <option value="5">5 — EXCEPTIONAL</option>
-            <option value="4">4 — GREAT</option>
-            <option value="3" selected>3 — SOLID</option>
-            <option value="2">2 — BRIEF</option>
-            <option value="1">1 — TRANSACTIONAL</option>
-          </select>
-        </div>
-      </div>
-      <div style="margin-bottom:10px">
-        <label>NOTE / SUMMARY</label>
-        <textarea id="i-note" rows="2" placeholder="What was discussed? Any follow-up needed?"></textarea>
-      </div>
-      <button class="btn btn-gold btn-sm" onclick="addInteraction()">+ LOG INTERACTION</button>
     </div>
-    <div id="interaction-list">
-      <div class="empty">NO INTERACTIONS LOGGED</div>
-    </div>
-  </div>
 
-  <!-- SCIENCE -->
-  <div id="tab-science" class="panel">
-    <div class="card">
-      <div class="card-title">RELATIONSHIP INTELLIGENCE — SCIENCE</div>
-      <div class="ref-block">
-        <div class="ref-title">DUNBAR'S NUMBER — Robin Dunbar (1992) Journal of Human Evolution</div>
-        <div class="ref-body">Dunbar's research on primate neocortex size and social group size established cognitive limits on stable social relationships: ~5 (intimate), ~15 (close friends), ~50 (tribe), ~150 (stable network), ~500 (acquaintances), ~1500 (recognizable faces). These limits are neurological, not cultural. Managing your network intentionally within these tiers — giving most energy to your inner 15 — produces stronger relationship quality than diffuse investment across hundreds.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">WEAK TIES &amp; OPPORTUNITY — Mark Granovetter (1973) American Journal of Sociology</div>
-        <div class="ref-body">Granovetter's landmark "Strength of Weak Ties" study found that job opportunities and novel information flow through weak ties (acquaintances) more than strong ties (close friends), who share your existing knowledge graph. A balanced sovereign network maintains depth in the inner circles AND breadth in the outer rings — the outer rings provide serendipitous exposure to new domains, markets, and people.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">RECIPROCITY PRINCIPLE — Robert Cialdini (1984) Influence</div>
-        <div class="ref-body">Reciprocity is among the most powerful and universal social norms across cultures. Giving first — without transactional intent — creates asymmetric goodwill that compounds over time. Adam Grant (Give and Take, 2013) found that "Givers" reach the top of success distributions across professions: they build larger, more diverse networks because people want to help those who helped them. Sovereign relationship management means giving first and tracking, not reciprocity-accounting.</div>
-      </div>
-      <div class="ref-block">
-        <div class="ref-title">RELATIONSHIP MAINTENANCE — Duck (1994) Meaningful Relationships</div>
-        <div class="ref-body">Duck's relational maintenance research established that relationships decay without regular contact — not through conflict, but simply through neglect. The "proximity" and "frequency" factors of social bonding (Festinger et al. 1950) show that relationships that aren't actively maintained regress from close→tribe→network tier automatically. Proactive touch scheduling reverses this entropy.</div>
-      </div>
-    </div>
   </div>
+</main>
+<div data-page-emblem="contacts" style="margin:20px auto 0"></div>
 </div>
-
 <script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='circles') renderCircles();
+}
+
 const TIER_LIMITS={inner:5,close:15,tribe:50,network:150,outer:500};
-const TIER_COLORS={inner:'#c9a84c',close:'#3498db',tribe:'#27ae60',network:'#9b59b6',outer:'#888'};
-const CAT_COLORS={business:'#3498db',personal:'#27ae60',mentor:'#c9a84c',investor:'#e67e22',client:'#9b59b6',partner:'#1abc9c',family:'#e74c3c',other:'#888'};
+const TIER_COLORS={inner:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),close:'#3498db',tribe:'#27ae60',network:'#9b59b6',outer:'#888'};
+const CAT_COLORS={business:'#3498db',personal:'#27ae60',mentor:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),investor:'#e67e22',client:'#9b59b6',partner:'#1abc9c',family:'#e74c3c',other:'#888'};
 
 let contacts=JSON.parse(localStorage.getItem('omega_contacts')||'[]');
 let interactions=JSON.parse(localStorage.getItem('omega_contact_ints')||'[]');
 let libFilter='all';
 
 function save(){localStorage.setItem('omega_contacts',JSON.stringify(contacts));}
-function saveInts(){localStorage.setItem('omega_contact_ints',JSON.stringify(interactions));}
 
-function initials(name){return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+function initials(name){return name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();}
 
 function isDue(c){
   if(!c.freq) return false;
-  const last=interactions.filter(i=>i.contactId===c.id).sort((a,b)=>b.date.localeCompare(a.date))[0];
+  var last=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
   if(!last) return true;
-  const daysAgo=(Date.now()-new Date(last.date).getTime())/(86400000);
+  var daysAgo=(Date.now()-new Date(last.date).getTime())/(86400000);
   return daysAgo>=c.freq;
 }
 
 function addContact(){
-  const name=document.getElementById('c-name').value.trim();
+  var name=document.getElementById('c-name').value.trim();
   if(!name){alert('Name required.');return;}
   contacts.unshift({
-    id:Date.now(),name,role:document.getElementById('c-role').value.trim(),
+    id:Date.now(),name:name,role:document.getElementById('c-role').value.trim(),
     company:document.getElementById('c-company').value.trim(),
     email:document.getElementById('c-email').value.trim(),
     phone:document.getElementById('c-phone').value.trim(),
     tier:document.getElementById('c-tier').value,
     cat:document.getElementById('c-cat').value,
     freq:parseInt(document.getElementById('c-freq').value)||30,
-    tags:document.getElementById('c-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    tags:document.getElementById('c-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean),
     notes:document.getElementById('c-notes').value.trim(),
     vip:document.getElementById('c-vip').checked,
     added:new Date().toISOString().slice(0,10),
@@ -322,124 +282,93 @@ function addContact(){
   document.getElementById('c-company').value='';document.getElementById('c-email').value='';
   document.getElementById('c-tags').value='';document.getElementById('c-notes').value='';
   document.getElementById('c-vip').checked=false;
-  updateStats();renderContacts();renderInteractionSelect();
-  alert(`${name} added.`);
+  updateStats();renderContacts();
+  alert(name+' added.');
 }
 
 function deleteContact(id){
   if(!confirm('Remove contact?')) return;
-  contacts=contacts.filter(c=>c.id!==id);
-  save();updateStats();renderContacts();renderInteractionSelect();
+  contacts=contacts.filter(function(c){return c.id!==id;});
+  save();updateStats();renderContacts();
 }
 
 function setFilter(f,btn){
   libFilter=f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   renderContacts();
 }
 
 function renderContacts(){
-  const grid=document.getElementById('contact-grid');
-  const q=(document.getElementById('search-input').value||'').toLowerCase();
-  let data=[...contacts];
-  const today=new Date().toISOString().slice(0,10);
-  if(libFilter==='vip') data=data.filter(c=>c.vip);
-  else if(libFilter==='overdue') data=data.filter(c=>isDue(c));
-  else if(['business','personal','mentor','investor','client','partner'].includes(libFilter))
-    data=data.filter(c=>c.cat===libFilter);
-  if(q) data=data.filter(c=>c.name.toLowerCase().includes(q)||c.role.toLowerCase().includes(q)||(c.tags||[]).join(' ').toLowerCase().includes(q));
+  var grid=document.getElementById('contact-grid');
+  var q=(document.getElementById('search-input').value||'').toLowerCase();
+  var data=contacts.slice();
+  if(libFilter==='vip') data=data.filter(function(c){return c.vip;});
+  else if(libFilter==='overdue') data=data.filter(function(c){return isDue(c);});
+  else if(['business','personal','mentor','investor','client','partner'].indexOf(libFilter)>=0)
+    data=data.filter(function(c){return c.cat===libFilter;});
+  if(q) data=data.filter(function(c){return c.name.toLowerCase().indexOf(q)>=0||c.role.toLowerCase().indexOf(q)>=0||(c.tags||[]).join(' ').toLowerCase().indexOf(q)>=0;});
   if(!data.length){grid.innerHTML='<div class="empty">NO CONTACTS MATCH</div>';return;}
-  grid.innerHTML=data.map(c=>{
-    const due=isDue(c);
-    const lastInt=interactions.filter(i=>i.contactId===c.id).sort((a,b)=>b.date.localeCompare(a.date))[0];
-    return `<div class="contact-card ${c.vip?'vip':''} ${due?'overdue':''}">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div class="contact-avatar" style="background:${c.color}22;color:${c.color};border:1px solid ${c.color}44">${initials(c.name)}</div>
-        <button class="btn-red" onclick="deleteContact(${c.id})" style="font-size:.5rem;padding:2px 6px">✕</button>
-      </div>
-      <div class="contact-name">${c.name}${c.vip?' ⭐':''}</div>
-      <div class="contact-role">${c.role||''}${c.company?' · '+c.company:''}</div>
-      <div class="contact-tags">
-        <span class="tag" style="color:${TIER_COLORS[c.tier]||'#888'}">${c.tier.toUpperCase()}</span>
-        <span class="tag" style="color:${CAT_COLORS[c.cat]||'#888'}">${c.cat.toUpperCase()}</span>
-        ${(c.tags||[]).slice(0,2).map(t=>`<span class="tag">${t}</span>`).join('')}
-      </div>
-      <div class="contact-meta">
-        ${lastInt?`<span>LAST: ${lastInt.date}</span>`:'<span>NEVER CONTACTED</span>'}
-        <span>TOUCH EVERY: ${c.freq} DAYS</span>
-      </div>
-      ${due?`<div class="due-badge due-over" style="margin-top:6px">TOUCH OVERDUE</div>`:''}
-      <div class="contact-actions">
-        <button class="btn-ghost btn-sm" onclick="quickLog(${c.id})" style="font-size:.55rem">+ LOG TOUCH</button>
-      </div>
-    </div>`;
+  grid.innerHTML=data.map(function(c){
+    var due=isDue(c);
+    var lastInt=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
+    return '<div class="contact-card card '+(c.vip?'vip':'')+' '+(due?'overdue':'')+'">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+      +'<div class="contact-avatar" style="background:'+c.color+'22;color:'+c.color+';border:1px solid '+c.color+'44">'+initials(c.name)+'</div>'
+      +'<button class="btn-red" onclick="deleteContact('+c.id+')" style="font-size:.5rem;padding:2px 6px">&#x2715;</button>'
+      +'</div>'
+      +'<div class="contact-name">'+c.name+(c.vip?' &#11088;':'')+'</div>'
+      +'<div class="contact-role">'+(c.role||'')+(c.company?' &middot; '+c.company:'')+'</div>'
+      +'<div class="contact-tags">'
+      +'<span class="tag" style="color:'+(TIER_COLORS[c.tier]||'#888')+'">'+c.tier.toUpperCase()+'</span>'
+      +'<span class="tag" style="color:'+(CAT_COLORS[c.cat]||'#888')+'">'+c.cat.toUpperCase()+'</span>'
+      +(c.tags||[]).slice(0,2).map(function(t){return '<span class="tag">'+t+'</span>';}).join('')
+      +'</div>'
+      +'<div class="contact-meta">'
+      +(lastInt?'<span>LAST: '+lastInt.date+'</span>':'<span>NEVER CONTACTED</span>')
+      +'<span>TOUCH EVERY: '+c.freq+' DAYS</span>'
+      +'</div>'
+      +(due?'<div class="due-badge due-over" style="margin-top:6px">TOUCH OVERDUE</div>':'')
+      +'<div class="contact-actions">'
+      +'<button class="btn-ghost btn-sm" onclick="quickLog('+c.id+')" style="font-size:.55rem">+ LOG TOUCH</button>'
+      +'</div>'
+      +'</div>';
   }).join('');
 }
 
 function quickLog(id){
-  const c=contacts.find(c=>c.id===id);
+  var c=contacts.find(function(c){return c.id===id;});
   if(!c) return;
   interactions.unshift({id:Date.now(),contactId:id,contactName:c.name,date:new Date().toISOString().slice(0,10),channel:'in-person',quality:3,note:''});
-  saveInts();updateStats();renderContacts();
-  alert(`Interaction logged with ${c.name}`);
-}
-
-function renderInteractionSelect(){
-  const sel=document.getElementById('i-contact');
-  sel.innerHTML=contacts.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-}
-
-function addInteraction(){
-  const id=parseInt(document.getElementById('i-contact').value);
-  const date=document.getElementById('i-date').value;
-  if(!id||!date){alert('Contact and date required.');return;}
-  const c=contacts.find(c=>c.id===id);
-  interactions.unshift({
-    id:Date.now(),contactId:id,contactName:c?c.name:'Unknown',
-    date,channel:document.getElementById('i-channel').value,
-    quality:parseInt(document.getElementById('i-quality').value)||3,
-    note:document.getElementById('i-note').value.trim()
-  });
-  saveInts();
-  document.getElementById('i-note').value='';
-  updateStats();renderInteractionList();renderContacts();
-}
-
-function renderInteractionList(){
-  const list=document.getElementById('interaction-list');
-  if(!interactions.length){list.innerHTML='<div class="empty">NO INTERACTIONS LOGGED</div>';return;}
-  list.innerHTML=interactions.slice(0,30).map(i=>`<div class="interaction-item">
-    <div class="int-contact">${i.contactName} · ${i.date} · ${i.channel.toUpperCase()} · ★${i.quality}</div>
-    ${i.note?`<div class="int-note">${i.note}</div>`:''}
-  </div>`).join('');
+  localStorage.setItem('omega_contact_ints',JSON.stringify(interactions));
+  updateStats();renderContacts();
+  alert('Interaction logged with '+c.name);
 }
 
 function renderCircles(){
-  Object.keys(TIER_LIMITS).forEach(tier=>{
-    const count=contacts.filter(c=>c.tier===tier).length;
-    const el=document.getElementById('tier-'+tier);
-    if(el) el.textContent=`${count} / ${TIER_LIMITS[tier]}`;
+  Object.keys(TIER_LIMITS).forEach(function(tier){
+    var count=contacts.filter(function(c){return c.tier===tier;}).length;
+    var el=document.getElementById('tier-'+tier);
+    if(el) el.textContent=count+' / '+TIER_LIMITS[tier];
   });
   drawNetChart();
 }
 
 function drawNetChart(){
-  const canvas=document.getElementById('net-canvas');
-  const W=canvas.offsetWidth||500; canvas.width=W; canvas.height=180;
-  const ctx=canvas.getContext('2d');
+  var canvas=document.getElementById('net-canvas');
+  var W=canvas.offsetWidth||500; canvas.width=W; canvas.height=180;
+  var ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,180);
-  const cats=Object.keys(CAT_COLORS);
-  const data=cats.map(k=>({k,v:contacts.filter(c=>c.cat===k).length})).filter(d=>d.v>0);
+  var cats=Object.keys(CAT_COLORS);
+  var data=cats.map(function(k){return {k:k,v:contacts.filter(function(c){return c.cat===k;}).length};}).filter(function(d){return d.v>0;});
   if(!data.length){ctx.fillStyle='#555';ctx.font='12px monospace';ctx.textAlign='center';ctx.fillText('NO CONTACTS',W/2,90);return;}
-  const total=data.reduce((s,d)=>s+d.v,0);
-  const pad={l:10,r:10,t:10,b:30}; const W2=W-pad.l-pad.r; const H2=150-pad.t-pad.b;
-  const bw=Math.floor(W2/data.length)-4;
-  const maxV=Math.max(...data.map(d=>d.v),1);
-  data.forEach((d,i)=>{
-    const x=pad.l+i*(bw+4);
-    const h=(d.v/maxV)*H2;
-    const y=pad.t+H2-h;
+  var pad={l:10,r:10,t:10,b:30}; var W2=W-pad.l-pad.r; var H2=150-pad.t-pad.b;
+  var bw=Math.floor(W2/data.length)-4;
+  var maxV=Math.max.apply(null,data.map(function(d){return d.v;}).concat([1]));
+  data.forEach(function(d,i){
+    var x=pad.l+i*(bw+4);
+    var h=(d.v/maxV)*H2;
+    var y=pad.t+H2-h;
     ctx.fillStyle=CAT_COLORS[d.k]||'#888';
     ctx.fillRect(x,y,bw,h);
     ctx.fillStyle='#888';ctx.font='8px monospace';ctx.textAlign='center';
@@ -451,27 +380,15 @@ function drawNetChart(){
 
 function updateStats(){
   document.getElementById('st-total').textContent=contacts.length;
-  document.getElementById('st-vip').textContent=contacts.filter(c=>c.vip).length;
-  document.getElementById('st-overdue').textContent=contacts.filter(c=>isDue(c)).length;
-  const mo=new Date().toISOString().slice(0,7);
-  document.getElementById('st-this-month').textContent=new Set(interactions.filter(i=>i.date.startsWith(mo)).map(i=>i.contactId)).size;
+  document.getElementById('st-vip').textContent=contacts.filter(function(c){return c.vip;}).length;
+  document.getElementById('st-overdue').textContent=contacts.filter(function(c){return isDue(c);}).length;
+  var mo=new Date().toISOString().slice(0,7);
+  document.getElementById('st-this-month').textContent=new Set(interactions.filter(function(i){return i.date.startsWith(mo);}).map(function(i){return i.contactId;})).size;
 }
 
-function switchTab(t){
-  document.querySelectorAll('.tab').forEach((b,i)=>{
-    const names=['contacts','add','circles','interactions','science'];
-    b.classList.toggle('active',names[i]===t);
-  });
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  if(t==='circles') renderCircles();
-  if(t==='interactions'){renderInteractionSelect();renderInteractionList();}
-}
-
-// init
-document.getElementById('i-date').value=new Date().toISOString().slice(0,10);
 updateStats();
 renderContacts();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

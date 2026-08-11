@@ -6,17 +6,17 @@
 <title>TARGETS — Sovereign OKR System · SYD OMEGA 91717</title>
 
 <style>
-.quarter-badge{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,#C9A84C);padding:8px 18px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.05)}
+.quarter-badge{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,var(--gold));padding:8px 18px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.05)}
 .okr-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 @media(max-width:640px){.okr-hero{grid-template-columns:1fr 1fr}}
 .okr-stat{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
-.okr-stat .sv{font-family:var(--M);font-size:24px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.okr-stat .sv{font-family:var(--M);font-size:24px;letter-spacing:2px;color:var(--gold,var(--gold))}
 .okr-stat .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
 .objective-card{border:1px solid rgba(201,168,76,.12);border-radius:2px;margin-bottom:16px;overflow:hidden}
 .obj-header{padding:16px 18px;border-bottom:1px solid rgba(201,168,76,.08);display:flex;align-items:flex-start;gap:12px}
 .obj-num{font-family:var(--M);font-size:20px;letter-spacing:2px;color:rgba(201,168,76,.2);flex-shrink:0;min-width:32px}
 .obj-body{flex:1;min-width:0}
-.obj-title{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;color:var(--gold,#C9A84C);margin-bottom:4px}
+.obj-title{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;color:var(--gold,var(--gold));margin-bottom:4px}
 .obj-desc{font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.6}
 .obj-meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
 .obj-tag{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:3px 10px;border:1px solid rgba(201,168,76,.15);border-radius:10px;color:rgba(138,134,118,.5)}
@@ -38,19 +38,19 @@
 .section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
 .tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
-.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-btn.act{color:var(--gold,var(--gold));border-bottom-color:var(--gold,var(--gold))}
 .tab-panel{display:none}.tab-panel.act{display:block}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal-box{background:var(--bg,#0a0a08);border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;width:min(520px,90vw);max-height:85vh;overflow-y:auto}
-.modal-box h3{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,#C9A84C);margin:0 0 20px}
+.modal-box h3{font-family:var(--M);font-size:10px;letter-spacing:3px;color:var(--gold,var(--gold));margin:0 0 20px}
 .fg{margin-bottom:14px}
 .fg label{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(138,134,118,.7);display:block;margin-bottom:5px}
 .fg input,.fg select,.fg textarea{width:100%;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.8);font-family:var(--M);font-size:9px;letter-spacing:1px;padding:9px 12px;border-radius:2px;outline:none;box-sizing:border-box}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(201,168,76,.4)}
 .fg select option{background:#0a0a08}
 .ma{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
-.btn-s{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
+.btn-s{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold,var(--gold));background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer}
 .btn-c{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,74,.15);color:rgba(138,134,118,.6);background:none;border-radius:2px;cursor:pointer}
 .add-btn{font-family:var(--M);font-size:8.5px;letter-spacing:2px;padding:9px 18px;border:1px solid rgba(201,168,76,.22);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.12s}
 .add-btn:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.4)}
@@ -60,7 +60,7 @@
 .q-nav button{font-family:var(--M);font-size:10px;padding:4px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer}
 .q-nav button:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .review-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;margin-bottom:10px}
-.review-card h4{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,#C9A84C);margin:0 0 10px}
+.review-card h4{font-family:var(--M);font-size:8.5px;letter-spacing:2px;color:var(--gold,var(--gold));margin:0 0 10px}
 .review-card textarea{width:100%;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.12);color:rgba(201,168,76,.7);font-family:var(--M);font-size:8.5px;padding:10px;border-radius:2px;outline:none;min-height:80px;box-sizing:border-box;resize:vertical;line-height:1.6}
 .review-card textarea:focus{border-color:rgba(201,168,76,.35)}
 .score-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-family:var(--M);font-size:7.5px;letter-spacing:1px}
@@ -109,19 +109,19 @@
       <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);margin-bottom:16px">
         The weekly review is the engine of OKR success. 15 minutes of reflection prevents months of drift.
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>WHAT MOVED FORWARD THIS WEEK?</h4>
         <textarea id="rev-wins" placeholder="List key results or objectives that progressed..."></textarea>
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>WHAT BLOCKED OR SLOWED PROGRESS?</h4>
         <textarea id="rev-blocks" placeholder="Identify constraints, distractions, or resource gaps..."></textarea>
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>WHAT NEEDS TO HAPPEN NEXT WEEK?</h4>
         <textarea id="rev-next" placeholder="Define 1-3 critical moves for the coming week..."></textarea>
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>SOVEREIGN INSIGHT (WHAT DID YOU LEARN?)</h4>
         <textarea id="rev-insight" placeholder="Strategic realizations, pattern recognition, course corrections..."></textarea>
       </div>
@@ -233,7 +233,8 @@
     </div>
   </div>
 
-  <div class="lf">
+  <div data-page-emblem="targets" style="margin:20px auto 0"></div>
+<div class="lf">
     <span>&#937; TARGETS &middot; SYD OMEGA 91717</span>
     <span>IDEAS ARE EASY &middot; EXECUTION IS EVERYTHING</span>
   </div>
@@ -342,7 +343,7 @@ function renderOKRs(){
     });
     const avgKR=krScores.length?Math.round(krScores.reduce((a,b)=>a+b,0)/krScores.length):0;
     const color=CAT_COLORS[obj.cat]||'rgba(201,168,76,.7)';
-    return `<div class="objective-card">
+    return `<div class="objective-card card">
       <div class="obj-progress" style="background:rgba(201,168,76,.04)"><div class="obj-progress-fill" style="width:${avgKR}%;background:${getKRColor(avgKR)}"></div></div>
       <div class="obj-header">
         <div class="obj-num">O${oi+1}</div>

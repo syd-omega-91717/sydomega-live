@@ -25,7 +25,7 @@
 <meta name="twitter:site" content="@SYDOMEGA_AI"/>
 
 <style>
-  :root{ --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:#8B0000; --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:serif; --body:sans-serif; --mono:monospace; }
+  :root{ --void:#0A0A0F; --panel:#0d0d15; --panel-2:#11111c; --gold:#C9A84C; --solar:#E2C86D; --cyan:#00E5FF; --crimson:var(--crim); --green:#3fb27f; --ink:#e9e6dc; --muted:#85837b; --line:rgba(201,168,76,0.16); --display:serif; --body:sans-serif; --mono:monospace; }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--void);color:var(--ink);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
   body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.10),transparent 46%)}
@@ -48,14 +48,15 @@
   .back:hover{color:var(--gold)}
   .hidden{display:none}
   .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.6);overflow-x:auto;scrollbar-width:none;margin:14px -30px 0;width:calc(100% + 60px)}.tab-bar::-webkit-scrollbar{display:none}
-  .tab-btn{font-family:var(--mono);font-size:7.5px;letter-spacing:2px;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
-  .tab-panel{display:none;padding-top:18px}.tab-panel.active{display:block}
+  .tab-btn{font-family:var(--mono);font-size:7.5px;letter-spacing:2px;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.act{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+  .tab-panel{display:none;padding-top:18px}.tab-panel.act{display:block}
   .kpi-r{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
   .kpi-c{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:12px;border-top:2px solid var(--gold);text-align:left}
   .kpi-c .n{font-family:var(--display);font-size:15px;color:var(--gold);line-height:1}.kpi-c .l{font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
 </style>
 </head>
 <body>
+<aside class="side" id="omega-side" data-page="reset" style="display:none"></aside>
 <div class="wrap">
   <div class="panel">
     <div class="g">&#937;</div>
@@ -63,13 +64,13 @@
     <div class="sub">SYD OMEGA 91717</div>
 
     <div class="tab-bar" role="tablist">
-      <button class="tab-btn active" data-rtab="recovery">&#9670; RECOVERY</button>
-      <button class="tab-btn" data-rtab="access">&#9670; ACCESS</button>
-      <button class="tab-btn" data-rtab="lattice">&#9670; LATTICE</button>
-      <button class="tab-btn" data-rtab="science">&#9670; SCIENCE</button>
+      <button class="tab-btn act" onclick="switchTab('recovery',this)">&#9670; RECOVERY</button>
+      <button class="tab-btn" onclick="switchTab('access',this)">&#9670; ACCESS</button>
+      <button class="tab-btn" onclick="switchTab('lattice',this)">&#9670; LATTICE</button>
+      <button class="tab-btn" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
-    <div id="rtab-recovery" class="tab-panel active">
+    <div id="tab-recovery" class="tab-panel act">
       <div id="view-request">
         <p class="lead">Enter the email bound to your account. The Order will send a secure link to restore your access.</p>
         <label for="r-email">EMAIL</label>
@@ -90,8 +91,8 @@
       </div>
     </div>
 
-    <div id="rtab-access" class="tab-panel">
-      <p class="lead" style="margin-bottom:14px">The Order operates a sovereign access system. Every account is personally approved by the Architect. Your identity is bound to your sovereign frequency — 9.1717 Hz.</p>
+    <div id="tab-access" class="tab-panel">
+      <p class="lead" style="margin-bottom:14px">The Order operates a sovereign access system. Every account is personally approved by the Architect. Your identity is bound to your sovereign frequency &mdash; 9.1717 Hz.</p>
       <div class="kpi-r">
         <div class="kpi-c"><div class="n">SOVEREIGN</div><div class="l">ACCESS TIER</div></div>
         <div class="kpi-c"><div class="n">9.1717 Hz</div><div class="l">IDENTITY FREQ</div></div>
@@ -99,16 +100,16 @@
       <a class="back" href="/account.html">&larr; BACK TO MEMBER ACCESS</a>
     </div>
 
-    <div id="rtab-lattice" class="tab-panel">
+    <div id="tab-lattice" class="tab-panel">
       <div class="kpi-r">
         <div class="kpi-c"><div class="n">104,976</div><div class="l">LATTICE NODES</div></div>
-        <div class="kpi-c"><div class="n">729</div><div class="l">9×9×9 INNER</div></div>
+        <div class="kpi-c"><div class="n">729</div><div class="l">9&times;9&times;9 INNER</div></div>
         <div class="kpi-c"><div class="n">12</div><div class="l">OLYMPIAN GATES</div></div>
         <div class="kpi-c"><div class="n">9</div><div class="l">ELEMENTS</div></div>
       </div>
     </div>
 
-    <div id="rtab-science" class="tab-panel">
+    <div id="tab-science" class="tab-panel">
       <div class="kpi-r">
         <div class="kpi-c"><div class="n">27.8367</div><div class="l">APEX AUTH</div></div>
         <div class="kpi-c"><div class="n">1.6180</div><div class="l">PHI &phi;</div></div>
@@ -126,17 +127,12 @@
 </div>
 
 <script>
-(function(){
-  document.querySelectorAll('.tab-btn[data-rtab]').forEach(function(b){
-    b.addEventListener('click',function(){
-      document.querySelectorAll('.tab-btn[data-rtab]').forEach(function(x){x.classList.remove('active');});
-      b.classList.add('active');
-      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-      var p=document.getElementById('rtab-'+b.dataset.rtab);
-      if(p)p.classList.add('active');
-    });
-  });
-})();
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  document.getElementById('tab-'+id).classList.add('act');
+}
 </script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -152,7 +148,6 @@
   supabase.auth.onAuthStateChange(function(event){
     if(event==='PASSWORD_RECOVERY'){ inRecovery=true; show('reset'); }
   });
-  // also detect from the link hash directly
   if(location.hash.indexOf('type=recovery')!==-1){ inRecovery=true; show('reset'); } else { show('request'); }
 
   async function sendLink(){

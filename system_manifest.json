@@ -12,6 +12,7 @@
     "legal_compliance": "Autonomous Global Regulation Auto-Update System"
   },
   "monetary_policy": {
+    "status": "PLANNED — NOT YET ACTIVE. Token issuance and reserve mechanisms are dormant, gated behind platform_settings.tokens_enabled (default false), pending licensed legal sign-off. See supabase/omega_tokens.sql. No tokens are currently issued, held, or backed by any reserve asset.",
     "currency_name": "S.Y.D OMEGA 91717 Token",
     "ticker": "ΩSYD",
     "total_supply": 10000000000,

@@ -50,7 +50,7 @@
 <div class="tab-panel active" id="tab-tiers">
   <div class="sechead">SOVEREIGN ENTERPRISE TIERS &middot; GLOBAL LICENSING</div>
   <div class="tier-grid">
-    <div class="tier-card" style="--tc:var(--cyan)">
+    <div class="tier-card card" style="--tc:var(--cyan)">
       <div class="tier-name">STARTER</div>
       <div class="tier-price">$199</div><div class="tier-period">PER MONTH &middot; UP TO 25 SEATS</div>
       <ul class="tier-features">
@@ -59,7 +59,7 @@
       </ul>
       <button class="tier-cta">REQUEST DEMO</button>
     </div>
-    <div class="tier-card" style="--tc:var(--gold)">
+    <div class="tier-card card" style="--tc:var(--gold)">
       <div class="popular-badge">POPULAR</div>
       <div class="tier-name">PROFESSIONAL</div>
       <div class="tier-price">$999</div><div class="tier-period">PER MONTH &middot; UP TO 100 SEATS</div>
@@ -70,7 +70,7 @@
       </ul>
       <button class="tier-cta">REQUEST DEMO</button>
     </div>
-    <div class="tier-card" style="--tc:var(--solar)">
+    <div class="tier-card card" style="--tc:var(--solar)">
       <div class="tier-name">ENTERPRISE</div>
       <div class="tier-price">$4,999</div><div class="tier-period">PER MONTH &middot; UNLIMITED SEATS</div>
       <ul class="tier-features">
@@ -80,7 +80,7 @@
       </ul>
       <button class="tier-cta">CONTACT FOUNDER</button>
     </div>
-    <div class="tier-card" style="--tc:var(--purple)">
+    <div class="tier-card card" style="--tc:var(--purple)">
       <div class="tier-name">GOVERNMENT</div>
       <div class="tier-price">CUSTOM</div><div class="tier-period">NATIONAL DEPLOYMENT</div>
       <ul class="tier-features">
@@ -132,6 +132,7 @@
     <div class="card"><div class="card-title">REVENUE INTELLIGENCE</div><div class="card-body">The revenue dashboard reads from the enterprise_accounts table via a get_enterprise_summary RPC that aggregates MRR, active accounts, total seats, and government account count. It is owner-only: the RLS policy on enterprise_accounts restricts all rows to platform_owners. No member can access another member's enterprise data.</div></div>
   </div>
 </div>
+<div data-page-emblem="enterprise" style="margin:20px auto 0"></div>
 </div>
 
 <script type="module">
@@ -177,7 +178,7 @@ function setTab(name){
         if(rows){rows.innerHTML=accs.data.map(function(a){
           var col={active:'var(--green)',pending:'var(--solar)',suspended:'var(--crim)',expired:'var(--muted)'}[a.status]||'var(--muted)';
           return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
-            +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'')+'</div></div>'
+            +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:7.5px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'').replace(/</g,'&lt;')+'</div></div>'
             +'<div style="font-family:var(--M);font-size:8px">'+String(a.license_type||'').toUpperCase()+'</div>'
             +'<div style="font-family:var(--M);font-size:8px;color:'+col+'">'+String(a.status||'').toUpperCase()+'</div>'
             +'<div style="font-family:var(--D);font-size:13px;color:var(--gold)">'+(a.monthly_value?'$'+Math.round(a.monthly_value):'--')+'</div>'

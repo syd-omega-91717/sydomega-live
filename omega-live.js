@@ -21,6 +21,7 @@
   var _uid = null;
   var _profile = null;
   var _retries = {};
+  function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
   /* ── A. DECLARATIVE DATA BINDING ──────────────────────────────── */
   /* Usage: <span data-live="profile:axis_a" data-live-format="fixed:3"></span> */
@@ -134,7 +135,7 @@
             requestAnimationFrame(function(){
               ticker.style.animation='oa-fade-in .4s ease';
               ticker.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:8px;letter-spacing:1.5px;color:rgba(201,168,76,.6)">'
-                +'&#9670; '+item.title.slice(0,60)+'</span>';
+                +'&#9670; '+esc(String(item.title||'').slice(0,60))+'</span>';
             });
           }
           next();setInterval(next,4000);

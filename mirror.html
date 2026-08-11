@@ -81,7 +81,7 @@ canvas.pattern-canvas{width:100%;display:block}
     <div class="kpi-card"><div class="kpi-val" id="avgFocus">&mdash;</div><div class="kpi-label">AVG FOCUS</div></div>
     <div class="kpi-card"><div class="kpi-val" id="avgClarity">&mdash;</div><div class="kpi-label">AVG CLARITY</div></div>
   </div>
-  <div class="checkin-card" id="checkinCard">
+  <div class="checkin-card card" id="checkinCard">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div class="ci-label">&#9685; TODAY&rsquo;S CHECK-IN</div>
       <div style="font-family:var(--M);font-size:11px;color:var(--gold)" id="ciDateLabel"></div>
@@ -138,10 +138,10 @@ canvas.pattern-canvas{width:100%;display:block}
 <div class="tab-panel" id="tab-patterns">
   <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-bottom:12px">&#9670; 30-DAY ENERGY &amp; FOCUS PATTERNS</div>
   <div class="pattern-grid">
-    <div class="pattern-card"><div class="pc-title">ENERGY TREND</div><canvas class="pattern-canvas" id="energyChart" height="120"></canvas></div>
-    <div class="pattern-card"><div class="pc-title">FOCUS TREND</div><canvas class="pattern-canvas" id="focusChart" height="120"></canvas></div>
-    <div class="pattern-card"><div class="pc-title">CLARITY TREND</div><canvas class="pattern-canvas" id="clarityChart" height="120"></canvas></div>
-    <div class="pattern-card"><div class="pc-title">MOOD DISTRIBUTION</div><canvas class="pattern-canvas" id="moodChart" height="120"></canvas></div>
+    <div class="pattern-card card"><div class="pc-title">ENERGY TREND</div><canvas class="pattern-canvas" id="energyChart" height="120"></canvas></div>
+    <div class="pattern-card card"><div class="pc-title">FOCUS TREND</div><canvas class="pattern-canvas" id="focusChart" height="120"></canvas></div>
+    <div class="pattern-card card"><div class="pc-title">CLARITY TREND</div><canvas class="pattern-canvas" id="clarityChart" height="120"></canvas></div>
+    <div class="pattern-card card"><div class="pc-title">MOOD DISTRIBUTION</div><canvas class="pattern-canvas" id="moodChart" height="120"></canvas></div>
   </div>
 </div>
 
@@ -201,7 +201,8 @@ canvas.pattern-canvas{width:100%;display:block}
 </div>
 
 </div><!-- end page-shell -->
-<div id="mir-toast"></div>
+<div id="mir-toast"><div data-page-emblem="mirror" style="margin:20px auto 0"></div>
+</div>
 
 <script>
 function setTab(name){

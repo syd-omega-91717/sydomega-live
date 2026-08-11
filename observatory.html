@@ -83,31 +83,31 @@
 <div class="tab-panel" id="tab-slo">
   <div class="sechead">SLO MONITORING &middot; 99.9% TARGET &middot; ERROR BUDGET POLICY ACTIVE</div>
   <div class="slo-grid">
-    <div class="slo-card" data-surface="auth_service">
+    <div class="slo-card card" data-surface="auth_service">
       <div class="slo-name">AUTH SERVICE</div>
       <div class="slo-val" style="color:var(--green)">99.9%</div>
       <div class="slo-target">SLO TARGET: 99.9% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
       <div class="slo-bar"><div class="slo-fill" style="width:99.9%;background:var(--green)"></div></div>
     </div>
-    <div class="slo-card" data-surface="matrix_engine">
+    <div class="slo-card card" data-surface="matrix_engine">
       <div class="slo-name">MATRIX ENGINE</div>
       <div class="slo-val" style="color:var(--green)">99.9%</div>
       <div class="slo-target">SLO TARGET: 99.9% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
       <div class="slo-bar"><div class="slo-fill" style="width:99.9%;background:var(--green)"></div></div>
     </div>
-    <div class="slo-card" data-surface="vault_service">
+    <div class="slo-card card" data-surface="vault_service">
       <div class="slo-name">VAULT SERVICE</div>
       <div class="slo-val" style="color:var(--green)">99.5%</div>
       <div class="slo-target">SLO TARGET: 99.5% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
       <div class="slo-bar"><div class="slo-fill" style="width:99.5%;background:var(--green)"></div></div>
     </div>
-    <div class="slo-card" data-surface="chatbot_service">
+    <div class="slo-card card" data-surface="chatbot_service">
       <div class="slo-name">CHATBOT / AI</div>
       <div class="slo-val" style="color:var(--green)">99.0%</div>
       <div class="slo-target">SLO TARGET: 99.0% &middot; STATUS: <span style="color:var(--green)">GREEN</span></div>
       <div class="slo-bar"><div class="slo-fill" style="width:99%;background:var(--green)"></div></div>
     </div>
-    <div class="slo-card" data-surface="payment_service">
+    <div class="slo-card card" data-surface="payment_service">
       <div class="slo-name">PAYMENT (DORMANT)</div>
       <div class="slo-val" style="color:var(--muted)">N/A</div>
       <div class="slo-target">SLO TARGET: 99.99% &middot; DORMANT (PHASE II)</div>
@@ -140,6 +140,7 @@
     <div class="card"><div class="card-title">INCIDENT POSTMORTEM</div><div class="card-body">All incidents are logged to the incidents table with severity (P0–P4), title, status (open/resolved), and TTR (time to resolve in minutes). Incidents are filed immediately, postmortems are written within 48 hours of resolution. The goal is zero open incidents.</div></div>
   </div>
 </div>
+<div data-page-emblem="observatory" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -213,7 +214,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var SEV={P0:'#8B0000',P1:'#8B0000',P2:'#C9A84C',P3:'#3fb27f',P4:'#8a8676'};
         document.getElementById('inc-rows').innerHTML=inc.data.map(function(i){
           var col=SEV[i.severity]||'#8a8676';
-          return '<div class="inc-row"><div class="sev" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+i.severity+'</div><div>'+String(i.title||'').slice(0,50)+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+String(i.status||'').toUpperCase()+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+((i.ttr_minutes||'?')+'m')+'</div></div>';
+          return '<div class="inc-row"><div class="sev" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+String(i.severity||'').replace(/</g,'&lt;')+'</div><div>'+String(i.title||'').slice(0,50).replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+String(i.status||'').toUpperCase()+'</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">'+((i.ttr_minutes||'?')+'m')+'</div></div>';
         }).join('');
       }
     }catch(e){}

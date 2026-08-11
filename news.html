@@ -85,6 +85,7 @@
     <div class="card"><div class="card-title">COMMUNICATION PROTOCOL</div><div class="card-body">All dispatches pass through XSS-safe rendering. Posts are character-limited to 600. The Wire shows the latest 60 posts ordered by recency. Sovereign Dispatches show the latest 30 official communications.</div></div>
   </div>
 </div>
+<div data-page-emblem="news" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -107,7 +108,7 @@ function renderDispatches(items){
     return'<div class="dispatch">'
       +'<div class="dispatch-head"><span class="dispatch-tag">'+esc(d.tag||d.category||'DISPATCH')+'</span><span class="dispatch-date">'+esc(d.date||d.created_at||'')+'</span></div>'
       +'<div class="dispatch-title">'+esc(d.ti||d.title||'')+'</div>'
-      +'<div class="dispatch-body">'+(d.bd||d.body||'')+'</div>'
+      +'<div class="dispatch-body">'+esc(d.bd||d.body||'')+'</div>'
       +'</div>';
   }).join('');
 }

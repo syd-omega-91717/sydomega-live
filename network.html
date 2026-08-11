@@ -223,16 +223,16 @@
   <!-- SCIENCE -->
   <div class="tab-pane" id="tab-science">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">150</div><div class="stat-lbl">DUNBAR NUMBER</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">CONNECTION RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">5</div><div class="stat-lbl">CLOSEST CIRCLE</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">150</div><div class="stat-lbl">DUNBAR NUMBER</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">CONNECTION RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">5</div><div class="stat-lbl">CLOSEST CIRCLE</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">90</div><div class="stat-lbl">TOUCH INTERVAL MAX</div></div>
-      <div class="stat-card"><div class="stat-val">7×</div><div class="stat-lbl">TOUCH POINTS/YEAR</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">90</div><div class="stat-lbl">TOUCH INTERVAL MAX</div></div>
+      <div class="stat-card card"><div class="stat-val">7×</div><div class="stat-lbl">TOUCH POINTS/YEAR</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="kpi-row" id="n-kpis"></div>
     <div style="margin-bottom:20px">
@@ -246,6 +246,7 @@
   </div>
 
 </div>
+<div data-page-emblem="network" style="margin:20px auto 0"></div>
 <div class="lf"><span>&#937; NETWORK &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
@@ -262,7 +263,7 @@ const CONTACTS_KEY     = 'omega_network_contacts';
 const INTERACTIONS_KEY = 'omega_network_interactions';
 
 const CIRCLES = [
-  {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:'#C9A84C', limit:5,  freq:7},
+  {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), limit:5,  freq:7},
   {id:'TRIBE',        label:'TRIBE',        color:'#5C8FD6', limit:15, freq:14},
   {id:'ALLIES',       label:'ALLIES',       color:'#4CAF50', limit:50, freq:30},
   {id:'NETWORK',      label:'NETWORK',      color:'#90A4AE', limit:150,freq:90},
@@ -454,7 +455,7 @@ function renderDue() {
     const circ = circleOf(c.category);
     const due  = daysUntilDue(c);
     const od   = due < 0;
-    return `<div class="due-card ${od?'':'warn'}">
+    return `<div class="due-card card ${od?'':'warn'}">
       <div class="due-name" style="color:${circ.color}">${esc(c.name)}</div>
       <div class="due-meta">${circ.label}  ·  EVERY ${c.frequency||30} DAYS  ·  LAST: ${c.lastContact||'NEVER'}</div>
       <div class="due-overdue" style="color:${od?'#c0392b':'#FF9800'}">
@@ -529,8 +530,8 @@ function drawOrbit() {
   // Center node (self)
   ctx.beginPath(); ctx.arc(cx,cy,10,0,Math.PI*2);
   ctx.fillStyle = 'rgba(201,168,76,.3)'; ctx.fill();
-  ctx.strokeStyle = '#C9A84C'; ctx.lineWidth = 2; ctx.stroke();
-  ctx.fillStyle = '#C9A84C'; ctx.font = 'bold 9px monospace';
+  ctx.strokeStyle = (getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'); ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = (getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'); ctx.font = 'bold 9px monospace';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('Ω', cx, cy);
 

@@ -94,6 +94,7 @@
     </div>
   </div>
 </div>
+<div data-page-emblem="social" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -166,17 +167,24 @@ function buildPlatforms(){
   });
 }
 
-function connectPlatform(pid,pname){
+async function connectPlatform(pid,pname){
   var username=prompt('Enter your '+pname+' username to link:\n(In production this opens the OAuth window.)');
   if(!username)return;
-  connections[pid]={username:username.replace('@','')};
-  if(sb)sb.from('social_connections').upsert({platform:pid,handle:connections[pid].username}).catch(function(){});
+  var handle=username.replace('@','');
+  if(sb){
+    var r=await sb.from('social_connections').upsert({platform:pid,handle:handle}).catch(function(e){return{error:e};});
+    if(r&&r.error){alert('Could not link '+pname+'. Try again.');return;}
+  }
+  connections[pid]={username:handle};
   buildPlatforms();
 }
 
-function disconnectPlatform(pid){
+async function disconnectPlatform(pid){
+  if(sb){
+    var r=await sb.from('social_connections').delete().eq('platform',pid).catch(function(e){return{error:e};});
+    if(r&&r.error){alert('Could not disconnect. Try again.');return;}
+  }
   delete connections[pid];
-  if(sb)sb.from('social_connections').delete().eq('platform',pid).catch(function(){});
   buildPlatforms();
 }
 
@@ -244,7 +252,7 @@ window.transmit=async function(){
     ctx.font='bold 18px serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';
-    ctx.shadowColor='#C9A84C';ctx.shadowBlur=8+4*Math.sin(t*.04);
+    ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=8+4*Math.sin(t*.04);
     ctx.fillText('Ω',40,40);ctx.shadowBlur=0;
     t++;requestAnimationFrame(frame);
   }

@@ -234,6 +234,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
   </div>
 </div>
 
+<div data-page-emblem="automation" style="margin:20px auto 0"></div>
 </div><!-- end page-shell -->
 
 <script>
@@ -260,7 +261,7 @@ function setTab(name){
     ctx.font='bold 22px serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';
-    ctx.shadowColor='#C9A84C';ctx.shadowBlur=10+5*Math.sin(t*.04);
+    ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=10+5*Math.sin(t*.04);
     ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
     t++;requestAnimationFrame(frame);
   }
@@ -345,13 +346,17 @@ async function loadStates(){
 }
 
 async function setState(key,on){
+  var prev=userStates[key];
   userStates[key]=on;
   if(stateRowIds[key]){
-    await sb.from('automation_rules').update({is_on:on}).eq('id',stateRowIds[key]);
+    var upd=await sb.from('automation_rules').update({is_on:on}).eq('id',stateRowIds[key]);
+    if(upd.error){userStates[key]=prev;return false;}
   } else {
-    var ins=(await sb.from('automation_rules').insert({trigger_key:key,action_key:key,is_on:on}).select('id').maybeSingle()).data;
-    if(ins) stateRowIds[key]=ins.id;
+    var ins=await sb.from('automation_rules').insert({trigger_key:key,action_key:key,is_on:on}).select('id').maybeSingle();
+    if(ins.error){userStates[key]=prev;return false;}
+    if(ins.data) stateRowIds[key]=ins.data.id;
   }
+  return true;
 }
 
 function renderRules(uid){
@@ -366,7 +371,7 @@ function renderRules(uid){
     if(r.kind==='sys') sysCount++; else userCount++;
 
     var card=document.createElement('div');
-    card.className='rule-card '+(on?'active':'paused');
+    card.className='rule-card card '+(on?'active':'paused');
 
     var icon=document.createElement('div');
     icon.className='r-icon';
@@ -397,7 +402,8 @@ function renderRules(uid){
     tog.textContent=on?'PAUSE':'ENABLE';
     tog.addEventListener('click',async function(){
       var cur=(key in userStates)?userStates[key]:r.default_on;
-      await setState(key,!cur);
+      var ok=await setState(key,!cur);
+      if(!ok) alert('Could not update this workflow. Try again.');
       renderRules(uid);
     });
 

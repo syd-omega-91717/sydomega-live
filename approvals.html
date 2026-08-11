@@ -245,7 +245,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
         </div>
       </div>
-      <script>(function(){var cv=document.getElementById('cv-audit');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
+      <script>(function(){var cv=document.getElementById('cv-audit');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
       <div id="audit-list"><div class="empty">LOADING AUDIT LOG...</div></div>
       <div class="sechead" style="margin-top:28px">CLIENT ERROR MONITOR<button class="q-btn" style="font-size:8px" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button></div>
       <div id="err-list"><div class="empty">LOADING...</div></div>
@@ -299,7 +299,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 /* Topbar mini ring */
 (function(){var cv=document.getElementById('tb-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,50,50);for(var i=0;i<4;i++){ctx.beginPath();ctx.arc(25,25,7+i*4+2*Math.sin(t*.04+i),t*.015*((i%2)?1:-1),t*.015*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.03+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.12*(4-i)/4)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 9px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.fillText('Ω',25,25);t++;requestAnimationFrame(f);})();})();
 /* Hero ring */
-(function(){var cv=document.getElementById('hero-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function g(){ctx.clearRect(0,0,90,90);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(45,45,10+i*4+3*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.07+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 16px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=9;ctx.fillText('Ω',45,45);ctx.shadowBlur=0;t++;requestAnimationFrame(g);})();})();
+(function(){var cv=document.getElementById('hero-cv');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function g(){ctx.clearRect(0,0,90,90);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(45,45,10+i*4+3*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.07+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font='bold 16px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=9;ctx.fillText('Ω',45,45);ctx.shadowBlur=0;t++;requestAnimationFrame(g);})();})();
 /* Tab switching */
 function setTab(name){
   var tabs=['members','operations','audit','science'];
@@ -333,6 +333,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
 
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 var TRIAL_SECS=557; /* 9 minutes 17 seconds — the approval window */
 var allMembers=[];
 var timers={};
@@ -436,13 +437,13 @@ function buildCard(m){
   }
 
   var card=document.createElement('div');
-  card.className='mc';
+  card.className='mc card';
   card.innerHTML=
     '<div class="mc-top">'
-      +'<div class="mc-avatar" style="border-color:'+col+';color:'+col+'">'+init+'</div>'
+      +'<div class="mc-avatar" style="border-color:'+col+';color:'+col+'">'+esc(init)+'</div>'
       +'<div class="mc-info">'
-        +'<div class="mc-name" style="color:'+col+'">'+name.toUpperCase()+'</div>'
-        +'<div class="mc-email">'+(m.email||'--')+'</div>'
+        +'<div class="mc-name" style="color:'+col+'">'+esc(name.toUpperCase())+'</div>'
+        +'<div class="mc-email">'+esc(m.email||'--')+'</div>'
         +'<div class="mc-uid">ID: '+(m.id||'').slice(0,20)+'...</div>'
       +'</div>'
       +'<div class="mc-right">'
@@ -511,9 +512,13 @@ async function load(){
 }
 
 /* ── ACTIONS ── */
+async function rpcOk(name,args){
+  try{ var r=await sb.rpc(name,args); return !!(r&&r.data&&r.data.ok); }
+  catch(e){ return false; }
+}
 async function approve(uid){
   var exp=new Date(Date.now()+557*1000).toISOString();
-  try{await sb.rpc('approve_member',{p_uid:uid});}catch(e){
+  if(!(await rpcOk('approve_member',{p_uid:uid}))){
     await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
   }
   toast('✓ TRIAL GRANTED — 9 MINUTES 17 SECONDS','var(--green)');
@@ -521,7 +526,7 @@ async function approve(uid){
 }
 async function grantPermanent(uid){
   if(!confirm('Grant PERMANENT lifetime access to this member?'))return;
-  try{await sb.rpc('grant_permanent_access',{p_uid:uid});}catch(e){
+  if(!(await rpcOk('grant_permanent_access',{p_uid:uid}))){
     await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
   }
   toast('∞ PERMANENT ACCESS GRANTED','var(--gold)');
@@ -532,7 +537,7 @@ async function extend(uid){
   var m=allMembers.find(function(x){return x.id===uid;});
   var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
   var exp=new Date(base+557*1000).toISOString();
-  try{await sb.rpc('extend_trial',{p_uid:uid,p_seconds:557});}catch(e){
+  if(!(await rpcOk('extend_trial',{p_uid:uid,p_seconds:557}))){
     await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
   }
   toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');
@@ -540,7 +545,7 @@ async function extend(uid){
 }
 async function reject(uid){
   if(!confirm('Reject this access request?'))return;
-  try{await sb.rpc('reject_member',{p_uid:uid});}catch(e){
+  if(!(await rpcOk('reject_member',{p_uid:uid}))){
     await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null,is_rejected:true}).eq('id',uid);
   }
   toast('✕ REQUEST REJECTED','var(--crim)');
@@ -548,7 +553,7 @@ async function reject(uid){
 }
 async function revoke(uid){
   if(!confirm('Immediately revoke access for this member?'))return;
-  try{await sb.rpc('revoke_member',{p_uid:uid});}catch(e){
+  if(!(await rpcOk('revoke_member',{p_uid:uid}))){
     await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
   }
   toast('■ ACCESS REVOKED','var(--crim)');
@@ -562,7 +567,7 @@ async function loadContracts(){
     var r=await sb.rpc('review_contracts');
     var rows=r.data||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO PENDING CONTRACTS</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+(row.id||'').slice(0,12)+'</div><div class="q-lbl">'+String(row.title||row.type||'CONTRACT').toUpperCase()+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.type||'CONTRACT').toUpperCase())+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">CONTRACT RPC NOT AVAILABLE</div>';}
 }
 async function loadReservations(){
@@ -571,25 +576,25 @@ async function loadReservations(){
     var r=await sb.rpc('review_reservations');
     var rows=r.data||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO PENDING RESERVATIONS</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+(row.id||'').slice(0,12)+'</div><div class="q-lbl">'+String(row.title||row.service||'RESERVATION').toUpperCase()+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.service||'RESERVATION').toUpperCase())+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">RESERVATIONS RPC NOT AVAILABLE</div>';}
 }
 async function loadAudit(){
   var el=document.getElementById('audit-list');if(!el)return;
   try{
     var r=await sb.rpc('access_audit_log');
-    var rows=r.data||[];
+    var rows=(r.data&&r.data.rows)||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO AUDIT ENTRIES</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="audit-row"><div class="aud-time">'+fmtTime(row.created_at||row.logged_at)+'</div><div class="aud-evt">'+(row.action||row.event||'EVENT').toUpperCase()+'</div><div class="aud-uid">'+(row.user_id||'').slice(0,10)+'</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="audit-row"><div class="aud-time">'+fmtTime(row.created_at)+'</div><div class="aud-evt">'+esc((row.action||'EVENT').toUpperCase())+'</div><div class="aud-uid">'+esc((row.subject||'').slice(0,10))+'</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">AUDIT LOG RPC NOT AVAILABLE</div>';}
 }
 async function loadErrors(){
   var el=document.getElementById('err-list');if(!el)return;
   try{
     var r=await sb.rpc('error_summary');
-    var rows=r.data||[];
+    var rows=(r.data&&r.data.rows)||[];
     if(!rows.length){el.innerHTML='<div class="empty">NO CLIENT ERRORS RECORDED</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="err-row"><div class="err-msg">'+(row.message||row.error||'ERROR').slice(0,120)+'</div><div class="err-ctx">'+(row.page||row.url||'')+'  '+(row.count?'×'+row.count:'')+'</div></div>';}).join('');
+    el.innerHTML=rows.map(function(row){return '<div class="err-row"><div class="err-msg">'+esc((row.message||'ERROR').slice(0,120))+'</div><div class="err-ctx">'+esc(row.page||'')+'  '+(row.hits?'×'+row.hits:'')+'</div></div>';}).join('');
   }catch(e){el.innerHTML='<div class="empty">ERROR MONITOR RPC NOT AVAILABLE</div>';}
 }
 async function sendDispatch(){
@@ -597,11 +602,10 @@ async function sendDispatch(){
   var cat=document.getElementById('disp-category');
   var body=document.getElementById('disp-body');
   if(!title||!body||!title.value.trim()||!body.value.trim()){toast('FILL TITLE AND BODY','var(--crim)');return;}
-  try{
-    await sb.rpc('post_dispatch',{p_title:title.value.trim(),p_category:cat?cat.value:'',p_body:body.value.trim()});
+  if(await rpcOk('post_dispatch',{p_title:title.value.trim(),p_category:cat?cat.value:'',p_body:body.value.trim()})){
     title.value='';body.value='';if(cat)cat.value='';
     toast('✓ DISPATCH TRANSMITTED','var(--gold)');
-  }catch(e){
+  }else{
     await sb.from('dispatches').insert({title:title.value.trim(),category:cat?cat.value:'',body:body.value.trim(),sent_by:ownerUid,sent_at:new Date().toISOString()});
     title.value='';body.value='';if(cat)cat.value='';
     toast('✓ DISPATCH RECORDED','var(--solar)');

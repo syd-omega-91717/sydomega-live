@@ -12,6 +12,20 @@ Checks:
   4. Tables with no ENABLE ROW LEVEL SECURITY anywhere             (CRITICAL)
   5. Files that vercel.json redirects away but still ship          (warning)
   6. Oversized assets in the deploy root                           (warning)
+  7. .from()/.rpc() calls (pages + Edge Functions) referencing a   (warning)
+     table/view/function absent from every supabase/*.sql file
+  8. Client-called RPC functions whose supabase/*.sql definitions  (warning)
+     diverge (argument list or body) across files -- CREATE OR
+     REPLACE silently lets whichever file applied last win, so a
+     divergence here is a live-behavior risk, not just duplication
+
+Checks 7 and 8 automate a pattern this project has repeatedly found by
+hand across several audit sessions (see GAP_ANALYSIS.md sections 2.1 and
+3.1) -- missing tables/RPCs and diverging duplicate function bodies. They
+are heuristic, regex-based, and source-only (no live DB access), so like
+check 4's RLS finding, treat them as indicative and verify against the
+live schema before acting -- but they turn a manual, easy-to-forget sweep
+into a permanent, automatic one.
 """
 
 import os
@@ -105,11 +119,23 @@ if unloaded:
 # ---------------------------------------------------------------- 3 & 4
 head("3/4 · SQL SCHEMA INTEGRITY")
 
+# Function bodies use Postgres dollar-quoting ($$ ... $$, $tag$ ... $tag$);
+# \3 backreferences whichever tag opened the body so mismatched tags across
+# different functions in the same file don't cross-match.
+FUNC_RE = re.compile(
+    r"""create\s+(?:or\s+replace\s+)?function\s+(?:public\.)?(\w+)\s*"""
+    r"""\(([^)]*)\).*?\$(\w*)\$(.*?)\$\3\$""",
+    re.I | re.S,
+)
+
 if not os.path.isdir(SQL_DIR):
     print(f"  {SQL_DIR}/ not found — skipping (expected after Session 2).")
+    creates, views, funcs = {}, set(), {}
 else:
     sql_files = sorted(f for f in os.listdir(SQL_DIR) if f.endswith(".sql"))
     creates = collections.defaultdict(list)
+    views = set()
+    funcs = collections.defaultdict(list)  # name.lower() -> [(file, args_norm, body_norm)]
     rls_on = set()
     policies = 0
     destructive = []
@@ -127,12 +153,22 @@ else:
                 continue
             creates[clean].append(name)
         for t in re.findall(
+            r"""create\s+(?:or\s+replace\s+)?view\s+([`"\w\.]+)""", src, re.I
+        ):
+            views.add(t.replace("public.", "").strip('"`').lower())
+        for t in re.findall(
             r"""alter\s+table\s+([`"\w\.]+)\s+enable\s+row\s+level""", src, re.I
         ):
             rls_on.add(t.replace("public.", "").strip('"`'))
         policies += len(re.findall(r"create\s+policy", src, re.I))
         if re.search(r"drop\s+(table|schema)", src, re.I):
             destructive.append(name)
+        for fname, args, _tag, body in FUNC_RE.findall(src):
+            funcs[fname.lower()].append((
+                name,
+                re.sub(r"\s+", " ", args).strip().lower(),
+                re.sub(r"\s+", " ", body).strip(),
+            ))
 
     dupes = {t: v for t, v in creates.items() if len(v) > 1}
     no_rls = sorted(set(creates) - rls_on)
@@ -184,6 +220,80 @@ if big:
 if os.path.isdir("__pycache__"):
     warnings += 1
     print("\n  WARNING — __pycache__/ is committed; extend .gitignore")
+
+# ---------------------------------------------------------------- 7
+head("7 · CLIENT-REACHABLE SCHEMA REFERENCES")
+
+CALL_RE = re.compile(r"""\.(from|rpc)\(\s*['"]([a-zA-Z_][a-zA-Z0-9_]*)['"]""")
+
+call_sites = [f for f in os.listdir(".") if f.endswith(".html") or f.endswith(".js")]
+for dirpath, _dirs, files in os.walk(os.path.join(SQL_DIR, "functions")):
+    call_sites += [os.path.join(dirpath, f) for f in files if f.endswith(".ts")]
+
+from_calls = collections.defaultdict(list)
+rpc_calls = collections.defaultdict(list)
+for path in call_sites:
+    for kind, name in CALL_RE.findall(read(path)):
+        (from_calls if kind == "from" else rpc_calls)[name].append(path)
+
+known_tables = {t.lower() for t in creates} | views
+missing_tables = sorted(t for t in from_calls if t.lower() not in known_tables)
+missing_funcs = sorted(f for f in rpc_calls if f.lower() not in funcs)
+
+print(f"  .from() tables/views referenced: {len(from_calls)}   "
+      f".rpc() functions referenced: {len(rpc_calls)}")
+
+if missing_tables:
+    warnings += 1
+    print(f"\n  WARNING — .from() table/view never CREATE TABLE'd/VIEW'd "
+          f"anywhere in {SQL_DIR}/ ({len(missing_tables)}):")
+    for t in missing_tables:
+        callers = ", ".join(sorted(set(from_calls[t]))[:3])
+        print(f"    - {t}  (queried in: {callers})")
+    print("    Supabase resolves this to {data:null,error}, not a thrown "
+          "error — a silent empty-state, not a crash. Verify against the "
+          "live DB; may be a deliberately dormant feature (see GAP_ANALYSIS.md §2.1).")
+
+if missing_funcs:
+    warnings += 1
+    print(f"\n  WARNING — .rpc() function never CREATE FUNCTION'd "
+          f"anywhere in {SQL_DIR}/ ({len(missing_funcs)}):")
+    for f in missing_funcs:
+        callers = ", ".join(sorted(set(rpc_calls[f]))[:3])
+        print(f"    - {f}  (called in: {callers})")
+
+# ---------------------------------------------------------------- 8
+head("8 · DIVERGING CLIENT-CALLED RPC DEFINITIONS")
+
+diverging = []
+for name in rpc_calls:
+    defs = funcs.get(name.lower())
+    if not defs or len(defs) < 2:
+        continue
+    arg_variants = {a for _f, a, _b in defs}
+    body_variants = {b for _f, _a, b in defs}
+    if len(arg_variants) > 1 or len(body_variants) > 1:
+        diverging.append((name, defs, arg_variants, body_variants))
+
+if diverging:
+    warnings += 1
+    print(f"  WARNING — client-called RPCs with non-identical definitions "
+          f"across {SQL_DIR}/*.sql ({len(diverging)}):")
+    print("  CREATE OR REPLACE FUNCTION has no \"IF NOT EXISTS\" safety net — "
+          "whichever file applied to the live DB last silently wins.")
+    for name, defs, arg_variants, body_variants in sorted(diverging):
+        files = sorted({f for f, _a, _b in defs})
+        shape = []
+        if len(arg_variants) > 1:
+            shape.append(f"{len(arg_variants)} distinct argument lists")
+        if len(body_variants) > 1:
+            shape.append(f"{len(body_variants)} distinct bodies")
+        print(f"    - {name}: {', '.join(shape)} across {len(files)} files "
+              f"({', '.join(files[:4])}{', …' if len(files) > 4 else ''})")
+    print("    Source analysis only — confirm which version is actually live "
+          "with a pg_proc query before deleting any file (see GAP_ANALYSIS.md §3.1).")
+else:
+    print("  OK — every client-called RPC has one consistent definition.")
 
 # ---------------------------------------------------------------- summary
 head("SUMMARY")

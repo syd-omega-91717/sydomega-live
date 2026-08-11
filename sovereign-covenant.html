@@ -40,6 +40,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .tab-btn{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
 .tab-panel{display:none}.tab-panel.active{display:block}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold)}.kpi-n{font-family:var(--D);font-size:20px;color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.sc-notice{margin:0 clamp(14px,3vw,36px);padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:9.5px;letter-spacing:.6px;line-height:1.7;color:var(--ink)}
+.sc-notice b{color:#E2967A}
+.sc-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--M);font-size:7px;letter-spacing:1.5px;color:#E2967A;border:1px solid rgba(139,0,0,.4);border-radius:2px;padding:2px 7px;margin-top:8px}
+.sc-tag i{width:4px;height:4px;border-radius:50%;background:#E2967A;display:inline-block;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -54,6 +58,14 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="hero-sub">ESTABLISHED 22 DECEMBER 2025 &middot; DOMAIN: SYDOMEGA.COM &middot; OMNI-RESONANCE LOCKED</div>
         <div class="hero-founder">SOVEREIGN FOUNDER: MAJOR SLEIMAN YOUSSEF DAGHER &middot; LEBANESE ORDER OF ENGINEERS NO. 30875</div>
       </div>
+    </div>
+    <div class="sc-notice">
+      <b>&#9888; TOKEN ECONOMY STATUS: DORMANT.</b> Articles II, VIII and IX below describe the
+      planned Ω token allocation, reserve-backing and reinvestment design. This design is real and
+      documented, but issuance is not live &mdash; it stays behind <code>platform_settings.tokens_enabled</code>
+      (currently <code>false</code>) pending licensed legal review, per <code>supabase/omega_tokens.sql</code>.
+      No Ω tokens are currently issued, held, or backed by any reserve asset. Read the marked articles as
+      roadmap, not present-tense fact.
     </div>
     <div class="tab-bar" role="tablist">
       <button class="tab-btn active" onclick="switchTabSC(this,'tp-articles')">&#9670; ARTICLES</button>
@@ -134,13 +146,18 @@ var ARTICLES=[
   {n:"X",title:"JURISDICTION SOVEREIGNTY",text:"Automatic re-domicile protocol activates under hostile jurisdiction. The Order is beyond any single state or authority."},
   {n:"XI",title:"THE OMEGA POINT",text:"Node 999 confirms absolute completion. The Omega Point is the terminal state — total system sovereignty achieved and sealed."},
 ];
+var DORMANT_ARTICLES=["II","VIII","IX"];
 var grid=document.getElementById("articles-grid");
 if(grid){
   grid.innerHTML=ARTICLES.map(function(a){
+    var dormantTag=DORMANT_ARTICLES.indexOf(a.n)>-1
+      ?"<div class='sc-tag' title='Planned design, not yet active. Gated behind platform_settings.tokens_enabled pending legal sign-off.'><i></i>PLANNED &middot; NOT YET ACTIVE</div>"
+      :"";
     return "<div class='article-card'>"
       +"<div class='art-n'>ARTICLE "+a.n+"</div>"
       +"<div class='art-title'>"+a.title+"</div>"
       +"<div class='art-text'>"+a.text+"</div>"
+      +dormantTag
       +"</div>";
   }).join("");
 }

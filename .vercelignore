@@ -1,9 +1,10 @@
 # SYD OMEGA 91717 -- backend exclusion for the public static deployment.
 # The site is a static HTML/JS/CSS site (outputDirectory: "." in vercel.json).
-# Everything below must never reach the public deployment. This is the
-# primary defense; the extension-based redirects in vercel.json (.sql, .ts,
-# .py, .sol, .docx -> dashboard.html) are a secondary safety net only, in
-# case any of these are ever accidentally left in the deploy.
+# Everything below must never reach the public deployment. This file is the
+# ONLY defense -- an earlier extension-based redirect safety net in
+# vercel.json (.sql, .ts, .py, .sol, .docx -> dashboard.html) was removed for
+# using invalid Vercel route-source syntax and was never restored. Do not
+# assume vercel.json backs this up; keep every pattern below accurate.
 
 # All Supabase backend -- SQL migrations, RLS policies, and Edge Function
 # source. Deployed separately via the Supabase CLI/dashboard, never via Vercel.

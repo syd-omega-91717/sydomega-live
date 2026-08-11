@@ -193,7 +193,8 @@
     <div style="font-family:var(--M);font-size:7px;color:rgba(0,255,136,.4);margin-top:6px" id="modalVerify"></div>
   </div>
 </div>
-<div id="oth-toast"></div>
+<div id="oth-toast"><div data-page-emblem="oath" style="margin:20px auto 0"></div>
+</div>
 
 <script>
 function setTab(name){
@@ -331,7 +332,7 @@ function renderList(){
   allOaths.forEach(function(o){
     var isOwn=currentUser&&o.user_id===currentUser.id;
     var card=document.createElement('div');
-    card.className='oath-card '+(isOwn?'personal':'verified');
+    card.className='oath-card card '+(isOwn?'personal':'verified');
     var meta=document.createElement('div');meta.className='oc-meta';
     var cat=document.createElement('span');cat.className='oc-cat';cat.textContent=o.category||'OATH';
     var auth=document.createElement('span');auth.className='oc-author';auth.textContent=isOwn?'YOU':'USER·'+((o.user_id||'').slice(-4)||'?');
@@ -353,7 +354,7 @@ function renderLocalArchive(){
   if(!local.length){list.innerHTML='<div class="empty">NO LOCAL ARCHIVE ENTRIES</div>';return;}
   list.innerHTML='';
   local.forEach(function(o){
-    var item=document.createElement('div');item.className='oath-card personal';
+    var item=document.createElement('div');item.className='oath-card card personal';
     var meta=document.createElement('div');meta.className='oc-meta';
     var cat=document.createElement('span');cat.className='oc-cat';cat.textContent=o.category||'OATH';
     var ts=document.createElement('span');ts.className='oc-ts';ts.textContent=timeAgo(o.sworn_at);

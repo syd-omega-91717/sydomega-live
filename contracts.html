@@ -120,6 +120,7 @@
     <div class="card"><div class="card-title">COUNTERPARTY RECORD</div><div class="card-body">Counterparty names and scope descriptions are stored in commission_contracts, linked to your sovereign profile. All records are private by default — accessible only to you and designated co-signatories.</div></div>
   </div>
 </div>
+<div data-page-emblem="contracts" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -128,6 +129,7 @@ function setTab(name){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
 function fmt(n){return'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 function updateCalc(){
   var deal=parseFloat(document.getElementById('f-deal').value)||0;
   var rate=parseFloat(document.getElementById('f-rate').value)||9.17;
@@ -163,14 +165,14 @@ function renderContracts(list){
     var comm=(c.deal_value||0)*(c.commission_rate||9.17)/100;
     return'<div class="contract-row" onclick="this.classList.toggle(\'open\')">'
       +'<div class="cr-header">'
-      +'<div class="cr-ref">'+c.reference+'</div>'
-      +'<div class="cr-status '+(c.status||'pending')+'">'+String(c.status||'PENDING').toUpperCase()+'</div>'
+      +'<div class="cr-ref">'+esc(c.reference)+'</div>'
+      +'<div class="cr-status '+esc(c.status||'pending')+'">'+esc(String(c.status||'PENDING').toUpperCase())+'</div>'
       +'</div>'
-      +'<div class="cr-party">'+c.counterparty+'</div>'
+      +'<div class="cr-party">'+esc(c.counterparty)+'</div>'
       +'<div class="cr-val">Deal: '+fmt(c.deal_value)+' &middot; &#937; Commission: '+fmt(comm)+'</div>'
       +'<div class="cr-body">'
-      +'<strong style="color:var(--ink)">Scope:</strong> '+(c.scope||'—')+'<br>'
-      +'<strong style="color:var(--ink)">Terms:</strong> '+(c.terms||'—')
+      +'<strong style="color:var(--ink)">Scope:</strong> '+esc(c.scope||'—')+'<br>'
+      +'<strong style="color:var(--ink)">Terms:</strong> '+esc(c.terms||'—')
       +'</div>'
       +'</div>';
   }).join('');

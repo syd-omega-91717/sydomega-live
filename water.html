@@ -127,11 +127,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- TAB 3: GOALS -->
   <div class="tab-pane" id="t3">
     <div class="sect">
+      <div class="sect-hd">BACKUP &amp; RESTORE</div>
+      <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:var(--dim);line-height:1.7;margin-bottom:12px">
+        Your log, goal, and streak freezes live only in this browser — clearing site data
+        or switching devices loses them permanently. Export a backup periodically.
+      </div>
+      <button style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer" onclick="exportWaterBackup()">EXPORT BACKUP</button>
+      <button style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:var(--dim);background:none;border-radius:2px;cursor:pointer" onclick="document.getElementById('water-import-file').click()">IMPORT BACKUP</button>
+      <input type="file" id="water-import-file" accept=".json" style="display:none">
+      <div id="water-backup-msg" style="font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:var(--dim);margin-top:8px"></div>
+    </div>
+    <div class="sect">
       <div class="sect-hd">DAILY HYDRATION TARGET</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">
-        <div class="sci-card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)">2,500</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">ML / DAY (DEFAULT)</div></div>
-        <div class="sci-card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)">3,700</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">ML / DAY (ACTIVE)</div></div>
-        <div class="sci-card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--teal,#26C6DA)">8</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">CUPS MINIMUM</div></div>
+        <div class="sci-card card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)">2,500</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">ML / DAY (DEFAULT)</div></div>
+        <div class="sci-card card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--gold)">3,700</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">ML / DAY (ACTIVE)</div></div>
+        <div class="sci-card card" style="text-align:center"><div style="font-family:var(--M);font-size:28px;letter-spacing:2px;color:var(--teal,#26C6DA)">8</div><div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:6px">CUPS MINIMUM</div></div>
       </div>
       <div class="sect-hd">SOVEREIGN HYDRATION RULES</div>
       <div style="font-family:var(--M);font-size:9px;letter-spacing:.8px;color:rgba(200,196,176,.7);line-height:2">
@@ -147,33 +158,33 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">2.5L</div><div class="stat-lbl">DAILY TARGET</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">HYDRATION RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">75%</div><div class="stat-lbl">BRAIN WATER</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">2.5L</div><div class="stat-lbl">DAILY TARGET</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">HYDRATION RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">75%</div><div class="stat-lbl">BRAIN WATER</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">1-2%</div><div class="stat-lbl">DEHYDRATION IMPAIRS</div></div>
-      <div class="stat-card"><div class="stat-val">0.8L</div><div class="stat-lbl">KIDNEY MAX/HR</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">1-2%</div><div class="stat-lbl">DEHYDRATION IMPAIRS</div></div>
+      <div class="stat-card card"><div class="stat-val">0.8L</div><div class="stat-lbl">KIDNEY MAX/HR</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">HYDRATION & COGNITIVE PERFORMANCE</div>
       <div class="sci-cite">Ganio, M.S. et al. (2011) — Mild dehydration impairs cognitive performance. British Journal of Nutrition, 106(10)</div>
       <div class="sci-body">Even mild dehydration (1-2% body weight loss) significantly impairs cognitive performance: reaction time slows, short-term memory degrades, attention wanders, and fatigue perception increases. The brain is approximately 75% water — even small deficits affect the electrochemical processes underlying concentration and decision-making. Sovereign performers do not allow dehydration to be an unexamined drag on their cognitive output.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">OPTIMAL DAILY INTAKE</div>
       <div class="sci-cite">Institute of Medicine (2004) — Dietary Reference Intakes: Water, Potassium, Sodium, Chloride, and Sulfate. National Academies Press</div>
       <div class="sci-body">The US Institute of Medicine's DRI established 3.7 L/day for men and 2.7 L/day for women as adequate total water intake (including food-derived water). The commonly cited "8×8" rule (8 cups × 8oz) has no scientific basis, but the principle of regular, proactive hydration throughout the day — rather than reactive drinking when thirsty — is well-supported by exercise physiology research. Thirst is already a lag indicator; you are already mildly dehydrated when it activates.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">HYDRATION & EXERCISE PERFORMANCE</div>
       <div class="sci-cite">Armstrong, L.E. et al. (2012) — Mild dehydration affects mood in healthy young women. Journal of Nutrition, 142(2)</div>
       <div class="sci-body">Even 1.36% dehydration (roughly 750ml deficit for a 55kg person) measurably increased task difficulty ratings, reduced concentration, and elevated perceived headache and fatigue in controlled studies — even without physical exertion. Exercise amplifies these effects dramatically: a 2% water loss reduces endurance performance by up to 10%, and a 3% loss can cause heat exhaustion risk in warm environments. Hydration is a performance variable, not a comfort one.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">HYDRATION TIMING & CELLULAR FUNCTION</div>
       <div class="sci-cite">Popkin, B.M. et al. (2010) — Water, hydration and health. Nutrition Reviews, 68(8)</div>
       <div class="sci-body">Barry Popkin's comprehensive review found that optimal cellular hydration supports: kidney function and toxin clearance, cardiovascular efficiency (blood volume and viscosity), joint lubrication, thermoregulation, nutrient transport, and skin barrier integrity. The kidneys can process roughly 0.8-1L per hour maximum — spread water intake evenly rather than consuming large amounts at once, which exceeds renal clearance capacity and dilutes electrolytes.</div>
@@ -181,7 +192,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
 
   </div>
-  <div class="lf"><span>&#937; HYDRATION &middot; SYD OMEGA 91717</span></div>
+  <div data-page-emblem="water" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; HYDRATION &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
 
@@ -327,11 +339,15 @@ function renderHistory(){
   var todayMl=logs.filter(function(l){return l.ts.slice(0,10)===today;}).reduce(function(a,l){return a+l.ml;},0);
 
   /* streak */
+  function dayTotal(k){return logs.filter(function(l){return l.ts.slice(0,10)===k;}).reduce(function(a,l){return a+l.ml;},0);}
+  if(window.OmegaStreakFreeze){
+    window.OmegaStreakFreeze.reconcile('water', function(k){return dayTotal(k)>=dailyGoal;});
+  }
   var streak=0,d=new Date();
   while(true){
     var k=d.toISOString().slice(0,10);
-    var dayMl=logs.filter(function(l){return l.ts.slice(0,10)===k;}).reduce(function(a,l){return a+l.ml;},0);
-    if(dayMl>=dailyGoal){streak++;d.setDate(d.getDate()-1);}else break;
+    var frozen=window.OmegaStreakFreeze&&window.OmegaStreakFreeze.isFrozen('water',k);
+    if(dayTotal(k)>=dailyGoal||frozen){streak++;d.setDate(d.getDate()-1);}else break;
   }
 
   sg.innerHTML=[
@@ -347,11 +363,18 @@ function renderHistory(){
   for(var i=29;i>=0;i--){
     var dd=new Date(); dd.setDate(dd.getDate()-i);
     var key=dd.toISOString().slice(0,10);
-    var ml=logs.filter(function(l){return l.ts.slice(0,10)===key;}).reduce(function(a,l){return a+l.ml;},0);
+    var ml=dayTotal(key);
     var dot=document.createElement('div'); dot.className='s-dot';
-    var pct2=Math.min(1,ml/dailyGoal);
-    dot.style.background='rgba(38,198,218,'+(pct2*0.8+0.05)+')';
-    dot.title=key+' — '+ml+'ml';
+    var wasFrozen=ml<dailyGoal&&window.OmegaStreakFreeze&&window.OmegaStreakFreeze.isFrozen('water',key);
+    if(wasFrozen){
+      dot.style.background='rgba(0,229,255,.55)';
+      dot.style.border='1px solid rgba(0,229,255,.8)';
+      dot.title=key+' — streak freeze applied';
+    }else{
+      var pct2=Math.min(1,ml/dailyGoal);
+      dot.style.background='rgba(38,198,218,'+(pct2*0.8+0.05)+')';
+      dot.title=key+' — '+ml+'ml';
+    }
     sd.appendChild(dot);
   }
 
@@ -403,6 +426,46 @@ function drawHist(logs){
 /* ─── STORAGE ─── */
 function loadLogs(){try{return JSON.parse(localStorage.getItem(WATER_KEY)||'[]');}catch(e){return[];}}
 function saveLogs(l){localStorage.setItem(WATER_KEY,JSON.stringify(l));}
+
+function exportWaterBackup(){
+  var backup={
+    v:1, ts:Date.now(),
+    log:localStorage.getItem(WATER_KEY),
+    goal:localStorage.getItem(GOAL_KEY),
+    streakFreeze:localStorage.getItem('omega_streak_freeze_v1')
+  };
+  var blob=new Blob([JSON.stringify(backup)],{type:'application/json'});
+  var a=Object.assign(document.createElement('a'),{
+    href:URL.createObjectURL(blob),
+    download:'sovereign-water-'+new Date().toISOString().slice(0,10)+'.json'
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+  document.getElementById('water-backup-msg').textContent='EXPORTED';
+}
+window.exportWaterBackup=exportWaterBackup;
+
+function importWaterBackup(file){
+  var msg=document.getElementById('water-backup-msg');
+  var reader=new FileReader();
+  reader.onload=function(){
+    try{
+      var data=JSON.parse(reader.result);
+      if(data.v!==1) throw new Error('invalid format');
+      if(!confirm('This replaces your current log, goal, and streak freezes on this device. Continue?')) return;
+      if(data.log) localStorage.setItem(WATER_KEY,data.log);
+      if(data.goal) localStorage.setItem(GOAL_KEY,data.goal);
+      if(data.streakFreeze) localStorage.setItem('omega_streak_freeze_v1',data.streakFreeze);
+      msg.textContent='IMPORTED';
+      dailyGoal=parseInt(localStorage.getItem(GOAL_KEY)||'2500');
+      renderHistory();
+    }catch(err){ msg.textContent='IMPORT FAILED · '+err.message; }
+  };
+  reader.readAsText(file);
+}
+document.getElementById('water-import-file').addEventListener('change',function(){
+  if(this.files[0]) importWaterBackup(this.files[0]);
+  this.value='';
+});
 
 /* ─── TAB SWITCH ─── */
 function switchTab(btn,id){

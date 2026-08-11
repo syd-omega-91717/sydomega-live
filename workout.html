@@ -151,6 +151,7 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="sect-hd">EXERCISES</div>
       <div id="exercises-list"></div>
       <button class="btn-sm" style="width:100%;margin-top:4px;padding:10px" onclick="addExercise()">+ ADD EXERCISE</button>
+      <datalist id="exercise-datalist"></datalist>
     </div>
 
     <div class="form-group">
@@ -196,27 +197,27 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="stat-card"><div class="stat-val">1RM</div><div class="stat-lbl">STRENGTH METRIC</div></div>
       <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">PROGRESSIVE OVERLOAD</div>
       <div class="sci-cite">Kraemer, W.J. & Ratamess, N.A. (2004) — Fundamentals of resistance training. Medicine & Science in Sports & Exercise, 36(4)</div>
       <div class="sci-body">Progressive overload — the systematic increase of training stress over time — is the foundational mechanism of all strength and hypertrophy adaptation. The body adapts to the demands placed upon it; without increasing those demands (more weight, reps, sets, or reduced rest), adaptation plateaus. Logging sets, reps, and loads creates the data needed to identify stagnation and apply progressive overload with precision rather than guesswork.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">VOLUME, FREQUENCY & MUSCLE PROTEIN SYNTHESIS</div>
       <div class="sci-cite">Schoenfeld, B.J. et al. (2017) — Dose-response relationship between weekly resistance training volume and increases in muscle mass. Journal of Sports Sciences, 35(11)</div>
       <div class="sci-body">Brad Schoenfeld's meta-analysis found a dose-response relationship between weekly training volume (sets per muscle group) and hypertrophy, with higher volumes (10+ sets/week per muscle) generally producing greater gains. Muscle protein synthesis (MPS) remains elevated for ~48 hours post-training, making twice-weekly frequency per muscle group more effective than once-weekly for growth. Tracking muscle frequency helps ensure each group receives adequate stimulus.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">REST INTERVALS & HORMONAL RESPONSE</div>
       <div class="sci-cite">Ahtiainen, J.P. et al. (2005) — Short vs. long rest period between sets. European Journal of Applied Physiology, 93(1-2)</div>
       <div class="sci-body">Rest interval length is not merely comfort preference — it directly affects the training stimulus. Short rests (60-90s) produce greater growth hormone spikes and metabolic stress, beneficial for hypertrophy. Longer rests (3-5 minutes) allow greater force production per subsequent set, optimal for maximal strength development. The 2-minute rest timer covers both modalities; the sovereign discipline is matching rest interval strategy to training goal.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">STRENGTH TRAINING & COGNITIVE PERFORMANCE</div>
       <div class="sci-cite">Liu-Ambrose, T. et al. (2010) — Resistance training and executive functions. JAMA Internal Medicine (formerly Archives of Internal Medicine), 170(2)</div>
       <div class="sci-body">A randomized controlled trial demonstrated that resistance training significantly improved executive cognitive functions — including selective attention, conflict resolution, and associative memory — compared to balance and tone training. The mechanism involves BDNF (brain-derived neurotrophic factor) upregulation: resistance training is a potent BDNF stimulus, promoting neuroplasticity and new synapse formation. Physical training is cognitive training.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">TRAINING CONSISTENCY OVER INTENSITY</div>
       <div class="sci-cite">Steele, J. et al. (2017) — Resistance training to momentary muscular failure improves cardiovascular fitness. Journal of Human Kinetics, 56</div>
       <div class="sci-body">Long-term training data consistently shows that consistency of training frequency predicts outcomes better than any single session's intensity. Missing sessions compounds: a 2-week detraining period can lose 10-15% of strength gains. The sovereign approach is to never miss a session by making sessions flexible — a 20-minute mobility session on a low-energy day is infinitely superior to zero. Logging every session, regardless of intensity, reinforces the identity of someone who trains.</div>
@@ -224,7 +225,8 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
   </div>
 
   </div>
-  <div class="lf"><span>&#937; WORKOUT &middot; SYD OMEGA 91717</span></div>
+  <div data-page-emblem="workout" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; WORKOUT &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
 
@@ -237,8 +239,40 @@ let exerCount = 0;
 let restInterval = null;
 let restRemaining = 0;
 
+/* ─── REAL EXERCISE REFERENCE (standard strength-training nomenclature) ─── */
+const EXERCISE_DB = {
+  'Barbell Bench Press':'CHEST','Incline Barbell Bench Press':'CHEST','Decline Bench Press':'CHEST',
+  'Dumbbell Bench Press':'CHEST','Incline Dumbbell Press':'CHEST','Dumbbell Fly':'CHEST',
+  'Cable Crossover':'CHEST','Push-Up':'CHEST','Dip (Chest)':'CHEST','Pec Deck Machine':'CHEST',
+  'Deadlift':'BACK','Conventional Deadlift':'BACK','Romanian Deadlift':'HAMSTRINGS','Sumo Deadlift':'BACK',
+  'Pull-Up':'BACK','Chin-Up':'BACK','Lat Pulldown':'BACK','Barbell Row':'BACK','Pendlay Row':'BACK',
+  'Dumbbell Row':'BACK','T-Bar Row':'BACK','Seated Cable Row':'BACK','Face Pull':'SHOULDERS',
+  'Overhead Press':'SHOULDERS','Barbell Overhead Press':'SHOULDERS','Dumbbell Shoulder Press':'SHOULDERS',
+  'Arnold Press':'SHOULDERS','Lateral Raise':'SHOULDERS','Front Raise':'SHOULDERS','Rear Delt Fly':'SHOULDERS',
+  'Upright Row':'SHOULDERS','Shrug':'SHOULDERS',
+  'Barbell Curl':'BICEPS','Dumbbell Curl':'BICEPS','Hammer Curl':'BICEPS','Preacher Curl':'BICEPS',
+  'Concentration Curl':'BICEPS','Cable Curl':'BICEPS',
+  'Triceps Pushdown':'TRICEPS','Skull Crusher':'TRICEPS','Overhead Triceps Extension':'TRICEPS',
+  'Close-Grip Bench Press':'TRICEPS','Dip (Triceps)':'TRICEPS','Kickback':'TRICEPS',
+  'Back Squat':'QUADS','Front Squat':'QUADS','Goblet Squat':'QUADS','Bulgarian Split Squat':'QUADS',
+  'Leg Press':'QUADS','Leg Extension':'QUADS','Walking Lunge':'QUADS','Hack Squat':'QUADS',
+  'Leg Curl':'HAMSTRINGS','Good Morning':'HAMSTRINGS','Glute-Ham Raise':'HAMSTRINGS','Nordic Curl':'HAMSTRINGS',
+  'Hip Thrust':'GLUTES','Glute Bridge':'GLUTES','Cable Kickback':'GLUTES','Step-Up':'GLUTES',
+  'Plank':'CORE','Hanging Leg Raise':'CORE','Cable Crunch':'CORE','Russian Twist':'CORE',
+  'Ab Wheel Rollout':'CORE','Sit-Up':'CORE','Mountain Climber':'CORE','Dead Bug':'CORE',
+  'Standing Calf Raise':'CALVES','Seated Calf Raise':'CALVES','Donkey Calf Raise':'CALVES'
+};
+
 /* ─── INIT ─── */
-function init(){addExercise();updateMeta();}
+function init(){populateExerciseDatalist();addExercise();updateMeta();}
+
+function populateExerciseDatalist(){
+  var dl=document.getElementById('exercise-datalist');
+  if(!dl||dl.childElementCount) return;
+  Object.keys(EXERCISE_DB).sort().forEach(function(name){
+    var o=document.createElement('option'); o.value=name; dl.appendChild(o);
+  });
+}
 
 /* ─── REST TIMER ─── */
 function startRest(secs){
@@ -264,7 +298,7 @@ function addExercise(){
   var div=document.createElement('div'); div.className='exer-block'; div.id=id;
   div.innerHTML=
     '<div class="exer-top">'+
-      '<div class="exer-name-wrap"><input class="exer-name-input" type="text" placeholder="Exercise name (e.g. Bench Press)"/></div>'+
+      '<div class="exer-name-wrap"><input class="exer-name-input" type="text" list="exercise-datalist" placeholder="Exercise name (e.g. Bench Press)"/></div>'+
       '<select class="exer-muscle">'+MUSCLES.map(function(m){return'<option>'+m+'</option>';}).join('')+'</select>'+
     '</div>'+
     '<table class="sets-table">'+
@@ -278,6 +312,12 @@ function addExercise(){
     '<input class="exer-notes" type="text" placeholder="Notes: form cues, variations, RPE..."/>';
   list.appendChild(div);
   addSet(id); addSet(id); addSet(id);
+  var nameInput=div.querySelector('.exer-name-input');
+  var muscleSelect=div.querySelector('.exer-muscle');
+  nameInput.addEventListener('input',function(){
+    var match=EXERCISE_DB[nameInput.value.trim()];
+    if(match) muscleSelect.value=match;
+  });
 }
 
 function addSet(exId){
@@ -342,7 +382,7 @@ function renderHistory(){
     var d=new Date(s.ts);
     var dateStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
     var totalSets=s.exercises.reduce(function(a,e){return a+e.sets.length;},0);
-    var card=document.createElement('div'); card.className='wk-card';
+    var card=document.createElement('div'); card.className='wk-card card';
     card.innerHTML='<div class="wk-top">'+
       '<span class="wk-name">'+s.name+'</span>'+
       '<span style="display:flex;gap:6px;align-items:center">'+
@@ -390,7 +430,7 @@ function renderProgress(){
   MUSCLES.forEach(function(m){
     var cnt=mFreq[m]||0;
     var pct=Math.round((cnt/maxFreq)*100);
-    var div=document.createElement('div'); div.className='muscle-card';
+    var div=document.createElement('div'); div.className='muscle-card card';
     div.innerHTML='<div class="muscle-name">'+m+'</div>'+
       '<div class="muscle-bar-track"><div class="muscle-bar-fill" style="width:'+pct+'%;background:rgba(201,168,76,'+(cnt?0.6:0.08)+')"></div></div>'+
       '<div class="muscle-count">'+cnt+' sets</div>';

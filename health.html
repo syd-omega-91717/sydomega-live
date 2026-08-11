@@ -54,42 +54,42 @@
   <div class="sechead">WELLNESS COMMAND &mdash; LIVE STATUS</div>
   <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px">A sovereign body is a sovereign platform. Health is not separate from the matrix — it is the living engine that drives all three axes. Log your state daily to keep your Mastery axis active.</div>
   <div class="wellness-grid">
-    <div class="w-card">
+    <div class="w-card card">
       <div class="w-icon">&#9675;</div>
       <div class="w-label">MIND STATE</div>
       <div class="w-score" id="ws-mind">--</div>
       <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-mind" style="width:0%"></div></div>
       <div class="w-caption">Mental clarity</div>
     </div>
-    <div class="w-card">
+    <div class="w-card card">
       <div class="w-icon">&#10084;</div>
       <div class="w-label">HEART VITALITY</div>
       <div class="w-score" id="ws-heart">--</div>
       <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-heart" style="width:0%"></div></div>
       <div class="w-caption">Emotional &amp; physical heart</div>
     </div>
-    <div class="w-card">
+    <div class="w-card card">
       <div class="w-icon">&#9889;</div>
       <div class="w-label">ENERGY LEVEL</div>
       <div class="w-score" id="ws-energy">--</div>
       <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-energy" style="width:0%"></div></div>
       <div class="w-caption">Daily vitality</div>
     </div>
-    <div class="w-card">
+    <div class="w-card card">
       <div class="w-icon">&#9733;</div>
       <div class="w-label">SOUL ALIGNMENT</div>
       <div class="w-score" id="ws-soul" style="color:#9B6BF0">--</div>
       <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-soul" style="width:0%;background:linear-gradient(90deg,#9B6BF0,#00E5FF)"></div></div>
       <div class="w-caption">Sixth element resonance</div>
     </div>
-    <div class="w-card">
+    <div class="w-card card">
       <div class="w-icon">&#9651;</div>
       <div class="w-label">PHYSICAL BODY</div>
       <div class="w-score" id="ws-body">--</div>
       <div class="w-bar-wrap"><div class="w-bar-fill" id="wb-body" style="width:0%"></div></div>
       <div class="w-caption">Strength &amp; movement</div>
     </div>
-    <div class="w-card">
+    <div class="w-card card">
       <div class="w-icon">&#937;</div>
       <div class="w-label">SOVEREIGN SCORE</div>
       <div class="w-score" id="ws-total" style="color:var(--gold)">--</div>
@@ -157,6 +157,7 @@
     <div class="card"><div class="card-title">DATA SOVEREIGNTY</div><div class="card-body">All health logs are stored in the Supabase health_logs table, protected by Row Level Security. Only the authenticated member can read their own logs. No health data is shared, aggregated, or used for any purpose outside the member's personal wellness dashboard.</div></div>
   </div>
 </div>
+<div data-page-emblem="health" style="margin:20px auto 0"></div>
 </div>
 
 <script>

@@ -84,7 +84,7 @@
     <div class="trial-countdown" id="plan-countdown">--:--</div>
     <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">TIME REMAINING &middot; 9.1717-MINUTE SOVEREIGN SESSION</div>
   </div>
-  <div class="plan-card" id="plan-card">
+  <div class="plan-card card" id="plan-card">
     <div class="plan-row"><span class="plan-key">MEMBER ID</span><span class="plan-val" id="plan-uid">--</span></div>
     <div class="plan-row"><span class="plan-key">TIER</span><span class="plan-val" id="plan-tier">--</span></div>
     <div class="plan-row"><span class="plan-key">ACCESS TYPE</span><span class="plan-val" id="plan-access-type">--</span></div>
@@ -123,6 +123,7 @@
     <div class="card"><div class="card-title">PAYMENT PIPELINE</div><div class="card-body">Payment history queries the transactions table in real time. All amounts in USD. The 9.17% Arbiter commission applies to all marketplace transactions. Payment activation requires KYC/AML compliance — all financial flows are governed by the Arbiter agent (Taurus, Marketplace &amp; Commerce).</div></div>
   </div>
 </div>
+<div data-page-emblem="subscriptions" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -140,7 +141,7 @@ var TIERS=[
 ];
 var tg=document.getElementById('tiers-grid');
 TIERS.forEach(function(t){
-  var card=document.createElement('div');card.className='tier-card';card.style.setProperty('--tc',t.color);
+  var card=document.createElement('div');card.className='tier-card card';card.style.setProperty('--tc',t.color);
   var ul='<ul class="tier-perks">'+t.perks.map(function(p){return '<li>'+p+'</li>';}).join('')+'</ul>';
   card.innerHTML='<div class="tier-n">TIER '+t.n+'</div>'
     +'<div class="tier-name" style="color:'+t.color+'">'+t.name+'</div>'
@@ -157,7 +158,7 @@ TIERS.forEach(function(t){
   function frame(){
     ctx.clearRect(0,0,120,120);
     for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(60,60,16+i*5+3*Math.sin(t*.03+i),t*.008,t*.008+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}
-    ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
+    ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=10;ctx.fillText('Ω',60,60);ctx.shadowBlur=0;
     t++;requestAnimationFrame(frame);
   }frame();
 })();

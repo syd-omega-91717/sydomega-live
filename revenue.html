@@ -5,160 +5,189 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Revenue Engine · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#00E5FF;color:#000;border-color:#00E5FF;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
 .rev-banner{background:linear-gradient(135deg,#0d0d0d,#0a0a14);border:1px solid #1a1a1a;padding:24px;margin-bottom:20px;position:relative;}
-.rev-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00E5FF,#4CAF50,#00E5FF);}
-.rev-num{font-family:'Courier New',monospace;font-size:32px;color:#00E5FF;font-weight:700;}
+.rev-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),#4CAF50,var(--cyan));}
+.rev-num{font-family:'Courier New',monospace;font-size:32px;color:var(--cyan);font-weight:700;}
 .rev-lbl{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:2px;margin-bottom:4px;}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
 .stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
-.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#00E5FF;font-weight:700;}
+.stat-num{font-family:'Courier New',monospace;font-size:18px;color:var(--cyan);font-weight:700;}
 .stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
-.stream-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:4px solid #00E5FF;padding:16px;margin-bottom:10px;position:relative;}
+.stream-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:4px solid var(--cyan);padding:16px;margin-bottom:10px;position:relative;}
 .stream-name{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;}
 .stream-type{font-family:'Courier New',monospace;font-size:9px;letter-spacing:1px;margin-top:2px;}
-.stream-amount{font-family:'Courier New',monospace;font-size:20px;color:#00E5FF;font-weight:700;margin:8px 0;}
+.stream-amount{font-family:'Courier New',monospace;font-size:20px;color:var(--cyan);font-weight:700;margin:8px 0;}
 .stream-meta{display:flex;gap:10px;font-family:'Courier New',monospace;font-size:9px;color:#555;flex-wrap:wrap;}
 .del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:10px;}
 .del-btn:hover{color:#FF4444;}
 .form-group{margin-bottom:14px;}
 .form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
 .form-group input,.form-group select,.form-group textarea{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#00E5FF;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--cyan);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.btn-primary{padding:10px 24px;background:#00E5FF;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
+.btn-primary{padding:10px 24px;background:var(--cyan);border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
 .btn-primary:hover{background:#00b8cc;}
 .btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
 .section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
 .filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
-.filter-tag.active{background:#0a1a1a;border-color:#00E5FF;color:#00E5FF;}
+.filter-tag.active{background:#0a1a1a;border-color:var(--cyan);color:var(--cyan);}
 .active-badge{display:inline-block;padding:2px 8px;border:1px solid #4CAF50;color:#4CAF50;font-family:'Courier New',monospace;font-size:9px;}
 .paused-badge{display:inline-block;padding:2px 8px;border:1px solid #555;color:#555;font-family:'Courier New',monospace;font-size:9px;}
 .canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:16px;}
 .canvas-wrap canvas{display:block;width:100%;}
 .science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:16px;}
-.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;letter-spacing:1px;margin-bottom:8px;}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--cyan);padding:16px;}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:8px;}
 .sci-body{font-size:11px;color:#888;line-height:1.65;}
 .sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
 .progress-bar{background:#1a1a1a;height:4px;border-radius:2px;overflow:hidden;margin-top:6px;}
-.progress-fill{height:100%;background:#00E5FF;}
+.progress-fill{height:100%;background:var(--cyan);}
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">REVENUE ENGINE</div>
-  <div class="page-subtitle">INCOME STREAMS &middot; PASSIVE &middot; ACTIVE &middot; DIVERSIFY</div>
-</div>
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('streams')">STREAMS</button>
-  <button class="tab-btn" onclick="switchTab('add')">ADD STREAM</button>
-  <button class="tab-btn" onclick="switchTab('chart')">CHART</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
-</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="revenue"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">REVENUE ENGINE<small>INCOME STREAMS &middot; PASSIVE &middot; ACTIVE &middot; SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="streams" onclick="switchTab('streams',this)">&#9670; STREAMS</button>
+      <button class="tab-btn" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD STREAM</button>
+      <button class="tab-btn" data-tab="chart" onclick="switchTab('chart',this)">&#9670; CHART</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+    </div>
 
-<div id="tab-streams" class="tab-pane active">
-  <div class="rev-banner">
-    <div style="display:flex;gap:32px;flex-wrap:wrap;">
-      <div><div class="rev-lbl">MONTHLY REVENUE</div><div class="rev-num" id="rev-monthly">$0</div></div>
-      <div><div class="rev-lbl">ANNUAL RUN RATE</div><div class="rev-num" style="font-size:20px;color:#4CAF50;" id="rev-annual">$0</div></div>
-      <div><div class="rev-lbl">PASSIVE %</div><div class="rev-num" style="font-size:20px;color:#FFD700;" id="rev-passive">0%</div></div>
+    <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_rev_goal','omega_revenue'],'omega-revenue-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_rev_goal','omega_revenue'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+    </div>
+
+    <div id="tab-streams" class="tab-panel act">
+      <div class="rev-banner">
+        <div style="display:flex;gap:32px;flex-wrap:wrap;">
+          <div><div class="rev-lbl">MONTHLY REVENUE</div><div class="rev-num" id="rev-monthly">$0</div></div>
+          <div><div class="rev-lbl">ANNUAL RUN RATE</div><div class="rev-num" style="font-size:20px;color:#4CAF50;" id="rev-annual">$0</div></div>
+          <div><div class="rev-lbl">PASSIVE %</div><div class="rev-num" style="font-size:20px;color:#FFD700;" id="rev-passive">0%</div></div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num" id="stat-streams">0</div><div class="stat-lbl">STREAMS</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-active-s">0</div><div class="stat-lbl">ACTIVE</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-passive-s">0</div><div class="stat-lbl">PASSIVE</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-goal-pct">0%</div><div class="stat-lbl">GOAL %</div></div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-tag active" data-f="all" onclick="setFilter('all',this)">ALL</div>
+        <div class="filter-tag" data-f="active-income" onclick="setFilter('active-income',this)">ACTIVE</div>
+        <div class="filter-tag" data-f="passive" onclick="setFilter('passive',this)">PASSIVE</div>
+        <div class="filter-tag" data-f="business" onclick="setFilter('business',this)">BUSINESS</div>
+        <div class="filter-tag" data-f="investment" onclick="setFilter('investment',this)">INVESTMENT</div>
+      </div>
+      <div id="streams-list"></div>
+    </div>
+
+    <div id="tab-add" class="tab-panel">
+      <div class="section-label">ADD INCOME STREAM</div>
+      <div class="form-group"><label>STREAM NAME</label><input type="text" id="s-name" placeholder="e.g. Consulting, Dividends, SaaS Product..." maxlength="80"></div>
+      <div class="form-row">
+        <div class="form-group"><label>TYPE</label>
+          <select id="s-type">
+            <option value="active-income">Active Income (trading time)</option>
+            <option value="passive">Passive (no active time required)</option>
+            <option value="business">Business (scalable, team-optional)</option>
+            <option value="investment">Investment Returns (dividends, interest)</option>
+            <option value="royalty">Royalties (content, IP)</option>
+            <option value="rental">Rental Income</option>
+          </select>
+        </div>
+        <div class="form-group"><label>STATUS</label>
+          <select id="s-status">
+            <option value="active">Active</option>
+            <option value="building">Building</option>
+            <option value="paused">Paused</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>MONTHLY AMOUNT (USD)</label><input type="number" id="s-monthly" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="form-group"><label>FREQUENCY</label>
+          <select id="s-freq">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly (x4.33)</option>
+            <option value="quarterly">Quarterly (÷3)</option>
+            <option value="annual">Annual (÷12)</option>
+            <option value="irregular">Irregular</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>NOTES</label><input type="text" id="s-notes" placeholder="Details about this stream..." maxlength="120"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-primary" onclick="saveStream()">SAVE STREAM</button>
+        <button class="btn-secondary" onclick="clearStreamForm()">CLEAR</button>
+      </div>
+      <div class="section-label" style="margin-top:24px;">INCOME GOAL</div>
+      <div class="form-row">
+        <div class="form-group"><label>MONTHLY INCOME GOAL (USD)</label><input type="number" id="goal-input" placeholder="10000" min="0"></div>
+        <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn-secondary" onclick="saveGoal()" style="width:100%;">SET GOAL</button></div>
+      </div>
+      <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;"></div>
+    </div>
+
+    <div id="tab-chart" class="tab-panel">
+      <div class="canvas-wrap"><canvas id="rev-canvas" height="200"></canvas></div>
+      <div id="chart-detail"></div>
+    </div>
+
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="science-grid">
+        <div class="sci-card card"><div class="sci-title">MULTIPLE INCOME STREAMS</div><div class="sci-body">IRS data (2019): the average millionaire has 7 income streams. These span: earned income, profit income, interest income, dividend income, rental income, capital gains, and royalty income. Each stream diversifies income risk — losing one stream doesn't eliminate income, just reduces it.</div><div class="sci-ref">IRS Statistics of Income Division (2019)</div></div>
+        <div class="sci-card card"><div class="sci-title">PASSIVE INCOME LEVERAGE</div><div class="sci-body">Kiyosaki (1997, Rich Dad Poor Dad): the rich buy assets that generate passive income; the poor trade time for money. Each passive dollar is worth more than an active dollar because it doesn't consume hours. The ratio of passive to active income is a proxy for financial sovereignty.</div><div class="sci-ref">Kiyosaki, R. (1997). Rich Dad Poor Dad</div></div>
+        <div class="sci-card card"><div class="sci-title">RECURRING REVENUE VALUATION</div><div class="sci-body">SaaS and subscription businesses are valued at 5–15× ARR vs. 1–3× revenue for one-time businesses. Predictable, recurring revenue earns a valuation premium because it reduces investor risk. Building subscription income streams vs. project-based income fundamentally changes your asset's terminal value.</div><div class="sci-ref">Bessemer Venture Partners (2020). State of the Cloud Report</div></div>
+        <div class="sci-card card"><div class="sci-title">INCOME DIVERSIFICATION THEORY</div><div class="sci-body">Markowitz's diversification principle (1952) applies to income just as to investments. Uncorrelated income streams — a tech salary (correlated with tech sector), dividends (market), rental income (real estate cycle), consulting (personal reputation) — reduce the variance of total income under economic shocks.</div><div class="sci-ref">Markowitz, H. (1952). Journal of Finance</div></div>
+        <div class="sci-card card"><div class="sci-title">INCOME CEILING VS. INCOME LEVERAGE</div><div class="sci-body">Taussig &amp; Baker (2018): income ceilings exist for all active-income roles — you can only work so many hours. Income leverage breaks this ceiling by decoupling income from time. Digital products, IP, equity, and capital are all forms of income leverage — they scale without proportional time input.</div><div class="sci-ref">Taussig &amp; Baker (2018). Harvard Business Review</div></div>
+        <div class="sci-card card"><div class="sci-title">THE SOVEREIGNTY THRESHOLD</div><div class="sci-body">The financial independence number (Bengen 1994, Trinity Study 1998): passive income exceeding expenses at a 4% safe withdrawal rate creates financial sovereignty — capital works harder than you do. Every passive income stream moves you closer. Track the ratio: passive income / total expenses.</div><div class="sci-ref">Bengen (1994) &middot; Cooley et al. (1998)</div></div>
+      </div>
     </div>
   </div>
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num" id="stat-streams">0</div><div class="stat-lbl">STREAMS</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-active-s">0</div><div class="stat-lbl">ACTIVE</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-passive-s">0</div><div class="stat-lbl">PASSIVE</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-goal-pct">0%</div><div class="stat-lbl">GOAL %</div></div>
-  </div>
-  <div class="filter-row">
-    <div class="filter-tag active" data-f="all" onclick="setFilter('all',this)">ALL</div>
-    <div class="filter-tag" data-f="active-income" onclick="setFilter('active-income',this)">ACTIVE</div>
-    <div class="filter-tag" data-f="passive" onclick="setFilter('passive',this)">PASSIVE</div>
-    <div class="filter-tag" data-f="business" onclick="setFilter('business',this)">BUSINESS</div>
-    <div class="filter-tag" data-f="investment" onclick="setFilter('investment',this)">INVESTMENT</div>
-  </div>
-  <div id="streams-list"></div>
-</div>
-
-<div id="tab-add" class="tab-pane">
-  <div class="section-label">ADD INCOME STREAM</div>
-  <div class="form-group"><label>STREAM NAME</label><input type="text" id="s-name" placeholder="e.g. Consulting, Dividends, SaaS Product..." maxlength="80"></div>
-  <div class="form-row">
-    <div class="form-group"><label>TYPE</label>
-      <select id="s-type">
-        <option value="active-income">Active Income (trading time)</option>
-        <option value="passive">Passive (no active time required)</option>
-        <option value="business">Business (scalable, team-optional)</option>
-        <option value="investment">Investment Returns (dividends, interest)</option>
-        <option value="royalty">Royalties (content, IP)</option>
-        <option value="rental">Rental Income</option>
-      </select>
-    </div>
-    <div class="form-group"><label>STATUS</label>
-      <select id="s-status">
-        <option value="active">Active</option>
-        <option value="building">Building</option>
-        <option value="paused">Paused</option>
-        <option value="closed">Closed</option>
-      </select>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>MONTHLY AMOUNT (USD)</label><input type="number" id="s-monthly" placeholder="0.00" min="0" step="0.01"></div>
-    <div class="form-group"><label>FREQUENCY</label>
-      <select id="s-freq">
-        <option value="monthly">Monthly</option>
-        <option value="weekly">Weekly (x4.33)</option>
-        <option value="quarterly">Quarterly (÷3)</option>
-        <option value="annual">Annual (÷12)</option>
-        <option value="irregular">Irregular</option>
-      </select>
-    </div>
-  </div>
-  <div class="form-group"><label>NOTES</label><input type="text" id="s-notes" placeholder="Details about this stream..." maxlength="120"></div>
-  <div style="display:flex;gap:8px;">
-    <button class="btn-primary" onclick="saveStream()">SAVE STREAM</button>
-    <button class="btn-secondary" onclick="clearStreamForm()">CLEAR</button>
-  </div>
-  <div class="section-label" style="margin-top:24px;">INCOME GOAL</div>
-  <div class="form-row">
-    <div class="form-group"><label>MONTHLY INCOME GOAL (USD)</label><input type="number" id="goal-input" placeholder="10000" min="0"></div>
-    <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn-secondary" onclick="saveGoal()" style="width:100%;">SET GOAL</button></div>
-  </div>
-  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;"></div>
-</div>
-
-<div id="tab-chart" class="tab-pane">
-  <div class="canvas-wrap"><canvas id="rev-canvas" height="200"></canvas></div>
-  <div id="chart-detail"></div>
-</div>
-
-<div id="tab-science" class="tab-pane">
-  <div class="science-grid">
-    <div class="sci-card"><div class="sci-title">MULTIPLE INCOME STREAMS</div><div class="sci-body">IRS data (2019): the average millionaire has 7 income streams. These span: earned income, profit income, interest income, dividend income, rental income, capital gains, and royalty income. Each stream diversifies income risk — losing one stream doesn't eliminate income, just reduces it.</div><div class="sci-ref">IRS Statistics of Income Division (2019)</div></div>
-    <div class="sci-card"><div class="sci-title">PASSIVE INCOME LEVERAGE</div><div class="sci-body">Kiyosaki (1997, Rich Dad Poor Dad): the rich buy assets that generate passive income; the poor trade time for money. Each passive dollar is worth more than an active dollar because it doesn't consume hours. The ratio of passive to active income is a proxy for financial sovereignty.</div><div class="sci-ref">Kiyosaki, R. (1997). Rich Dad Poor Dad</div></div>
-    <div class="sci-card"><div class="sci-title">RECURRING REVENUE VALUATION</div><div class="sci-body">SaaS and subscription businesses are valued at 5–15× ARR vs. 1–3× revenue for one-time businesses. Predictable, recurring revenue earns a valuation premium because it reduces investor risk. Building subscription income streams vs. project-based income fundamentally changes your asset's terminal value.</div><div class="sci-ref">Bessemer Venture Partners (2020). State of the Cloud Report</div></div>
-    <div class="sci-card"><div class="sci-title">INCOME DIVERSIFICATION THEORY</div><div class="sci-body">Markowitz's diversification principle (1952) applies to income just as to investments. Uncorrelated income streams — a tech salary (correlated with tech sector), dividends (market), rental income (real estate cycle), consulting (personal reputation) — reduce the variance of total income under economic shocks.</div><div class="sci-ref">Markowitz, H. (1952). Journal of Finance</div></div>
-    <div class="sci-card"><div class="sci-title">INCOME CEILING VS. INCOME LEVERAGE</div><div class="sci-body">Taussig & Baker (2018): income ceilings exist for all active-income roles — you can only work so many hours. Income leverage breaks this ceiling by decoupling income from time. Digital products, IP, equity, and capital are all forms of income leverage — they scale without proportional time input.</div><div class="sci-ref">Taussig & Baker (2018). Harvard Business Review</div></div>
-    <div class="sci-card"><div class="sci-title">THE SOVEREIGNTY THRESHOLD</div><div class="sci-body">The financial independence number (Bengen 1994, Trinity Study 1998): passive income exceeding expenses at a 4% safe withdrawal rate creates financial sovereignty — capital works harder than you do. Every passive income stream moves you closer. Track the ratio: passive income / total expenses.</div><div class="sci-ref">Bengen (1994) · Cooley et al. (1998)</div></div>
-  </div>
-</div>
 </main>
-<script src="/omega-ui.js"></script>
+<div data-page-emblem="revenue" style="margin:20px auto 0"></div>
+</div>
+<script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='streams')renderStreams();
+  if(id==='chart')renderChart();
+}
+</script>
 <script>
 var streams=[];
 var goal=10000;
 var streamFilter='all';
-var TYPE_COLORS={'active-income':'#00E5FF',passive:'#4CAF50',business:'#FFD700',investment:'#9B6BF0',royalty:'#FF9800',rental:'#FF4444'};
+var TYPE_COLORS={'active-income':(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),passive:'#4CAF50',business:'#FFD700',investment:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),royalty:'#FF9800',rental:'#FF4444'};
 
 function load(){
   try{streams=JSON.parse(localStorage.getItem('omega_revenue')||'[]');}catch(e){streams=[];}
@@ -174,16 +203,6 @@ function toMonthly(amount,freq){
   if(freq==='quarterly')return amount/3;
   if(freq==='annual')return amount/12;
   return amount;
-}
-
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById('tab-'+t).classList.add('active');
-  var labels={streams:'STREAMS',add:'ADD STREAM',chart:'CHART',science:'SCIENCE'};
-  document.querySelectorAll('.tab-btn').forEach(function(b){if(b.textContent===labels[t])b.classList.add('active');});
-  if(t==='streams')renderStreams();
-  if(t==='chart')renderChart();
 }
 
 function setFilter(f,el){
@@ -276,7 +295,8 @@ function renderChart(){
   var total=Object.values(types).reduce(function(s,v){return s+v;},0)||1;
   var cx=110,cy=100,r=85;
   var angle=-Math.PI/2;
-  Object.entries(types).forEach(function([t,v]){
+  Object.entries(types).forEach(function(entry){
+    var t=entry[0],v=entry[1];
     var slice=v/total*Math.PI*2;
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,angle,angle+slice);
     ctx.closePath();ctx.fillStyle=TYPE_COLORS[t]||'#888';ctx.fill();
@@ -284,9 +304,10 @@ function renderChart(){
     angle+=slice;
   });
   ctx.beginPath();ctx.arc(cx,cy,38,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill();
-  ctx.fillStyle='#00E5FF';ctx.font='bold 10px Courier New';ctx.textAlign='center';ctx.fillText('INCOME',cx,cy+4);
+  ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF');ctx.font='bold 10px Courier New';ctx.textAlign='center';ctx.fillText('INCOME',cx,cy+4);
   var lx=230,ly=20;
-  Object.entries(types).forEach(function([t,v]){
+  Object.entries(types).forEach(function(entry){
+    var t=entry[0],v=entry[1];
     ctx.fillStyle=TYPE_COLORS[t]||'#888';ctx.fillRect(lx,ly,10,10);
     ctx.fillStyle='#888';ctx.font='10px Courier New';ctx.textAlign='left';
     ctx.fillText(t.toUpperCase().replace('-',' ')+' '+Math.round(v/total*100)+'%',lx+14,ly+9);ly+=18;
@@ -300,5 +321,7 @@ function renderChart(){
 
 load();renderStreams();
 </script>
+<script src="/omega-local-backup.js"></script>
+<script src="/bg.js"></script>
 </body>
 </html>

@@ -66,7 +66,7 @@
 .si-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .si-dot.green{background:#4ade80;box-shadow:0 0 6px #4ade80;animation:dot-pulse 2s ease-in-out infinite}
 .si-dot.gold{background:var(--gold);box-shadow:0 0 6px var(--gold);animation:dot-pulse 2.5s ease-in-out infinite}
-.si-dot.cyan{background:#00E5FF;box-shadow:0 0 6px #00E5FF;animation:dot-pulse 1.8s ease-in-out infinite}
+.si-dot.cyan{background:var(--cyan);box-shadow:0 0 6px var(--cyan);animation:dot-pulse 1.8s ease-in-out infinite}
 @keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .si-label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(200,190,160,.7)}
 /* Protocol items */
@@ -151,32 +151,32 @@
     <!-- TAB 3: PROTOCOL -->
     <div class="tab-pane" id="tab-protocol">
       <div class="proto-grid">
-        <div class="proto-card">
+        <div class="proto-card card">
           <div class="proto-title">RESONANCE FREQUENCY</div>
           <div class="proto-val">9.17 Hz</div>
           <div class="proto-sub">SOVEREIGN LOCK FREQUENCY</div>
         </div>
-        <div class="proto-card">
+        <div class="proto-card card">
           <div class="proto-title">NODE MATRIX</div>
           <div class="proto-val">104,976</div>
           <div class="proto-sub">ACTIVE NODES (12 × 8,748)</div>
         </div>
-        <div class="proto-card">
+        <div class="proto-card card">
           <div class="proto-title">PQC STANDARD</div>
           <div class="proto-val">FIPS 208</div>
           <div class="proto-sub">POST-QUANTUM CRYPTOGRAPHY</div>
         </div>
-        <div class="proto-card">
+        <div class="proto-card card">
           <div class="proto-title">RESERVE LOCK</div>
           <div class="proto-val">51%</div>
           <div class="proto-sub">SOVEREIGN GOVERNANCE THRESHOLD</div>
         </div>
-        <div class="proto-card">
+        <div class="proto-card card">
           <div class="proto-title">ENCRYPTION</div>
           <div class="proto-val">AES-256</div>
           <div class="proto-sub">MILITARY-GRADE DATA SECURITY</div>
         </div>
-        <div class="proto-card">
+        <div class="proto-card card">
           <div class="proto-title">BIOMETRIC</div>
           <div class="proto-val">ACTIVE</div>
           <div class="proto-sub">IDENTITY VERIFICATION LAYER</div>
@@ -190,16 +190,16 @@
     <!-- TAB 4: SCIENCE -->
     <div class="tab-pane" id="tab-science">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-        <div class="stat-card"><div class="stat-val">9.17Hz</div><div class="stat-lbl">RESONANCE LOCK</div></div>
-        <div class="stat-card"><div class="stat-val">&phi;/e</div><div class="stat-lbl">ACCESS RATIO</div></div>
-        <div class="stat-card"><div class="stat-val">104,976</div><div class="stat-lbl">NODE MATRIX</div></div>
+        <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+        <div class="stat-card card"><div class="stat-val">9.17Hz</div><div class="stat-lbl">RESONANCE LOCK</div></div>
+        <div class="stat-card card"><div class="stat-val">&phi;/e</div><div class="stat-lbl">ACCESS RATIO</div></div>
+        <div class="stat-card card"><div class="stat-val">104,976</div><div class="stat-lbl">NODE MATRIX</div></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
-        <div class="stat-card"><div class="stat-val">AES-256</div><div class="stat-lbl">PQC SHIELD</div></div>
-        <div class="stat-card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
-        <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
+        <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
+        <div class="stat-card card"><div class="stat-val">AES-256</div><div class="stat-lbl">PQC SHIELD</div></div>
+        <div class="stat-card card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
+        <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
       </div>
     </div>
 
@@ -354,7 +354,7 @@ countdown();
     var headX=(t*.8%1)*W;
     var headY=CY+ecgY(headX,W,t);
     ctx.beginPath(); ctx.arc(headX,headY,3,0,Math.PI*2);
-    ctx.fillStyle='#C9A84C'; ctx.shadowColor='#C9A84C'; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
+    ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'); ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'); ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
     requestAnimationFrame(frame);
   }
   frame();

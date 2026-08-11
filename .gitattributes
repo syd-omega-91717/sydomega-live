@@ -1,0 +1,4 @@
+# Binary assets committed directly to git (no LFS yet — see
+# REPOSITORY_AUDIT.md §4). Mark them binary so they're never diffed/merged as text.
+*.mp4 -diff -text
+*.docx -diff -text

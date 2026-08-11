@@ -87,6 +87,7 @@
     <div class="howit-step"><div class="howit-num">04</div><div class="howit-body"><div class="ht">EARN ON SALE</div><p>When a buyer completes a transaction, you receive 83% (the platform keeps 17%). You also earn Contribution XP for each completed sale.</p></div></div>
   </div>
 </div>
+<div data-page-emblem="marketplace" style="margin:20px auto 0"></div>
 </div>
 
 <script type="module">
@@ -102,7 +103,7 @@ function esc(s){return(s||'').replace(/[<>&]/g,function(ch){return{'<':'&lt;','>
 function fmt(n){return Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});}
 
 function cardHtml(it,mine){
-  return '<div class="mkt-card">'
+  return '<div class="mkt-card card">'
     +(mine?'<div class="mkt-mine">MINE</div>':'')
     +'<div class="mkt-kind">'+esc(it.kind||'OTHER')+'</div>'
     +'<div class="mkt-title">'+esc(it.title)+'</div>'

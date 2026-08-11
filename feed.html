@@ -87,6 +87,7 @@
     <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--green)">AXIS C</span><span>GREEN</span><span>Contribution tasks: events, missions, publishing</span></div>
   </div>
 </div>
+<div data-page-emblem="feed" style="margin:20px auto 0"></div>
 </div>
 
 <script type="module">
@@ -163,7 +164,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
         if(!rows.length){pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">NO PUBLICATIONS YET &mdash; BE THE FIRST TO PUBLISH IN THE SOVEREIGN NETWORK</div>';return;}
         pl.innerHTML=rows.map(function(r){
           return '<div class="post-card"><div class="post-title">'+String(r.title||'Untitled').replace(/</g,'&lt;').substr(0,80)+'</div>'
-            +'<div class="post-meta">'+String(r.author_name||'ANONYMOUS').toUpperCase()+' &middot; '+(r.kind||'ESSAY').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div>';
+            +'<div class="post-meta">'+String(r.author_name||'ANONYMOUS').replace(/</g,'&lt;').toUpperCase()+' &middot; '+String(r.kind||'ESSAY').replace(/</g,'&lt;').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div>';
         }).join('');
       }catch(e){var pl=document.getElementById('posts-list');if(pl)pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">PUBLICATIONS UNAVAILABLE</div>';}
     })();

@@ -7,10 +7,10 @@
 
 <style>
 .med-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:24px}
-.med-hero h2{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--gold,#C9A84C);margin:0 0 6px}
+.med-hero h2{font-family:var(--M);font-size:10px;letter-spacing:4px;color:var(--gold,var(--gold));margin:0 0 6px}
 .med-hero p{font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:rgba(138,134,118,.5);margin:0}
-.breath-stage{font-family:var(--M);font-size:13px;letter-spacing:6px;color:var(--gold,#C9A84C);min-height:28px;margin-bottom:8px;text-align:center}
-.breath-count{font-family:var(--M);font-size:48px;letter-spacing:2px;color:var(--gold,#C9A84C);min-width:60px;text-align:center}
+.breath-stage{font-family:var(--M);font-size:13px;letter-spacing:6px;color:var(--gold,var(--gold));min-height:28px;margin-bottom:8px;text-align:center}
+.breath-count{font-family:var(--M);font-size:48px;letter-spacing:2px;color:var(--gold,var(--gold));min-width:60px;text-align:center}
 .session-progress{font-family:var(--M);font-size:8px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:8px}
 .ring-wrap{position:relative;width:260px;height:260px;margin:0 auto 24px}
 #breath-ring{position:absolute;inset:0}
@@ -19,20 +19,20 @@
 .tech-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;cursor:pointer;transition:.15s}
 .tech-card:hover{background:rgba(201,168,76,.04);border-color:rgba(201,168,76,.25)}
 .tech-card.active{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.07)}
-.tc-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold,#C9A84C);margin-bottom:4px}
+.tc-name{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold,var(--gold));margin-bottom:4px}
 .tc-pattern{font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-bottom:6px}
 .tc-desc{font-family:var(--M);font-size:7px;letter-spacing:.8px;color:rgba(138,134,118,.4);line-height:1.6}
 .med-controls{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;justify-content:center}
 .med-btn{font-family:var(--M);font-size:9px;letter-spacing:2px;padding:11px 24px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
-.med-btn:hover,.med-btn.primary{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.5);color:var(--gold,#C9A84C)}
+.med-btn:hover,.med-btn.primary{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.5);color:var(--gold,var(--gold))}
 .session-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .session-stat{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
-.session-stat .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.session-stat .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,var(--gold))}
 .session-stat .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
 .section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
 .tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
-.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-btn.act{color:var(--gold,var(--gold));border-bottom-color:var(--gold,var(--gold))}
 .tab-panel{display:none}.tab-panel.act{display:block}
 .log-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid rgba(201,168,76,.07);border-radius:2px;margin-bottom:6px;font-family:var(--M);font-size:8.5px}
 .log-item .li-name{color:rgba(201,168,76,.7)}
@@ -40,7 +40,7 @@
 .log-item .li-date{color:rgba(138,134,118,.4);font-size:7.5px}
 .duration-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;justify-content:center}
 .dur-chip{font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:6px 14px;border:1px solid rgba(201,168,76,.15);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;transition:.12s}
-.dur-chip.sel,.dur-chip:hover{border-color:rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:rgba(201,168,76,.06)}
+.dur-chip.sel,.dur-chip:hover{border-color:rgba(201,168,76,.4);color:var(--gold,var(--gold));background:rgba(201,168,76,.06)}
 .affirmation{font-family:var(--M);font-size:9.5px;letter-spacing:1.5px;color:rgba(201,168,76,.5);text-align:center;font-style:italic;padding:12px 0;border-top:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);margin:12px 0}
 </style>
 </head>
@@ -209,7 +209,8 @@
 
   </div>
 
-  <div class="lf">
+  <div data-page-emblem="meditate" style="margin:20px auto 0"></div>
+<div class="lf">
     <span>&#937; MEDITATE &middot; SYD OMEGA 91717</span>
     <span>THE BREATH IS THE REMOTE CONTROL OF THE MIND</span>
   </div>
@@ -252,7 +253,7 @@ let ringPct = 0, ringTarget = 0;
 
 function renderTechniques(){
   document.getElementById('technique-grid').innerHTML = TECHNIQUES.map(t=>`
-    <div class="tech-card ${t.id===selectedTech.id?'active':''}" onclick="selectTech('${t.id}')">
+    <div class="tech-card card ${t.id===selectedTech.id?'active':''}" onclick="selectTech('${t.id}')">
       <div class="tc-name">${t.name}</div>
       <div class="tc-pattern">${t.pattern}</div>
       <div class="tc-desc">${t.desc}</div>

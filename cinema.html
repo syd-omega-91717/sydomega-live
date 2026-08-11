@@ -46,42 +46,43 @@
   <button class="tab-btn active" onclick="setTab('films')">ALL FILMS</button>
   <button class="tab-btn" onclick="setTab('olympians')">BY OLYMPIAN</button>
   <button class="tab-btn" onclick="setTab('elements')">BY ELEMENT</button>
+  <button class="tab-btn" onclick="setTab('mythology')">REAL MYTHOLOGY</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
 <div class="tab-panel active" id="tab-films">
   <div class="sechead">12 SOVEREIGN FILMS &middot; ONE PER OLYMPIAN</div>
   <div class="film-grid">
-    <div class="film-card" style="--fc:#E86A3A"><div class="film-num">FILM I</div><div class="film-god">ARES &middot; ARIES</div><div class="film-title">WAR SOVEREIGN</div><div class="film-desc">The first sovereign rises through battle. A war epic spanning 9 fronts across the elemental lattice.</div><div class="film-meta"><span class="film-tag">ACTION</span><span class="film-tag">GATE I+</span><span class="film-tag">FIRE</span></div></div>
-    <div class="film-card" style="--fc:#9B6BF0"><div class="film-num">FILM II</div><div class="film-god">APHRODITE &middot; TAURUS</div><div class="film-title">LOVE SOVEREIGN</div><div class="film-desc">Sovereign bonds forged across element lines. The most decorated film in the Omega canon.</div><div class="film-meta"><span class="film-tag">DRAMA</span><span class="film-tag">GATE II+</span><span class="film-tag">WATER</span></div></div>
-    <div class="film-card" style="--fc:#00E5FF"><div class="film-num">FILM III</div><div class="film-god">HERMES &middot; GEMINI</div><div class="film-title">MESSENGER SOVEREIGN</div><div class="film-desc">The fastest sovereign on the lattice carries a message that will reshape 12 houses.</div><div class="film-meta"><span class="film-tag">THRILLER</span><span class="film-tag">GATE III+</span><span class="film-tag">WIND</span></div></div>
-    <div class="film-card" style="--fc:#3fb27f"><div class="film-num">FILM IV</div><div class="film-god">ARTEMIS &middot; CANCER</div><div class="film-title">HUNT SOVEREIGN</div><div class="film-desc">Under the silver light of the lattice moon, one sovereign hunts the rogue element that threatens the nine.</div><div class="film-meta"><span class="film-tag">ADVENTURE</span><span class="film-tag">GATE IV+</span><span class="film-tag">SAND</span></div></div>
-    <div class="film-card" style="--fc:#E2C86D"><div class="film-num">FILM V</div><div class="film-god">APOLLO &middot; LEO</div><div class="film-title">LIGHT SOVEREIGN</div><div class="film-desc">A musical sovereign epic. The bearer of the solar element composes the frequency that unlocks Gate X.</div><div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE V+</span><span class="film-tag">SOUL</span></div></div>
-    <div class="film-card" style="--fc:#C9A84C"><div class="film-num">FILM VI</div><div class="film-god">ATHENA &middot; VIRGO</div><div class="film-title">WISDOM SOVEREIGN</div><div class="film-desc">The architect of the lattice reveals the 9-fold formula. A cerebral thriller for the sovereign mind.</div><div class="film-meta"><span class="film-tag">STRATEGY</span><span class="film-tag">GATE VI+</span><span class="film-tag">METAL</span></div></div>
-    <div class="film-card" style="--fc:#9B6BF0"><div class="film-num">FILM VII</div><div class="film-god">HERA &middot; LIBRA</div><div class="film-title">QUEEN SOVEREIGN</div><div class="film-desc">The sovereign court of 12 houses must reach balance. A political epic at the height of the lattice.</div><div class="film-meta"><span class="film-tag">POLITICAL</span><span class="film-tag">GATE VII+</span><span class="film-tag">SPACE</span></div></div>
-    <div class="film-card" style="--fc:#3fb27f"><div class="film-num">FILM VIII</div><div class="film-god">DEMETER &middot; SCORPIO</div><div class="film-title">EARTH SOVEREIGN</div><div class="film-desc">The lattice root system awakens. A sovereign must descend to the void to reclaim the ninth element.</div><div class="film-meta"><span class="film-tag">MYSTERY</span><span class="film-tag">GATE VIII+</span><span class="film-tag">VOID</span></div></div>
-    <div class="film-card" style="--fc:#E2C86D"><div class="film-num">FILM IX</div><div class="film-god">ZEUS &middot; SAGITTARIUS</div><div class="film-title">THUNDER SOVEREIGN</div><div class="film-desc">Authority at its apex. Zeus calls the 12 sovereigns to the summit. The lattice balance will be decided.</div><div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE IX+</span><span class="film-tag">THE ALL</span></div></div>
-    <div class="film-card" style="--fc:#E86A3A"><div class="film-num">FILM X</div><div class="film-god">HESTIA &middot; CAPRICORN</div><div class="film-title">HEARTH SOVEREIGN</div><div class="film-desc">Where the first flame was lit, the sovereign origin is revealed. A prequel spanning the initial lattice age.</div><div class="film-meta"><span class="film-tag">ORIGIN</span><span class="film-tag">GATE X+</span><span class="film-tag">FIRE</span></div></div>
-    <div class="film-card" style="--fc:#C9A84C"><div class="film-num">FILM XI</div><div class="film-god">HEPHAESTUS &middot; AQUARIUS</div><div class="film-title">FORGE SOVEREIGN</div><div class="film-desc">The architect sovereign builds the final lattice gate. A techno-mythic epic of creation and sacrifice.</div><div class="film-meta"><span class="film-tag">CRAFT</span><span class="film-tag">GATE XI+</span><span class="film-tag">METAL</span></div></div>
-    <div class="film-card" style="--fc:#00E5FF"><div class="film-num">FILM XII &middot; APEX</div><div class="film-god">POSEIDON &middot; PISCES</div><div class="film-title">OCEAN SOVEREIGN</div><div class="film-desc">The final sovereign film. The depths of the lattice hold the Omega key. AUTH = 27.8367 required.</div><div class="film-meta"><span class="film-tag">APEX</span><span class="film-tag">GATE XII</span><span class="film-tag">WATER</span></div></div>
+    <div class="film-card card" style="--fc:#E86A3A"><div class="film-num">FILM I</div><div class="film-god">ARES &middot; ARIES</div><div class="film-title">WAR SOVEREIGN</div><div class="film-desc">The first sovereign rises through battle. A war epic spanning 9 fronts across the elemental lattice.</div><div class="film-meta"><span class="film-tag">ACTION</span><span class="film-tag">GATE I+</span><span class="film-tag">FIRE</span></div></div>
+    <div class="film-card card" style="--fc:#9B6BF0"><div class="film-num">FILM II</div><div class="film-god">APHRODITE &middot; TAURUS</div><div class="film-title">LOVE SOVEREIGN</div><div class="film-desc">Sovereign bonds forged across element lines. The most decorated film in the Omega canon.</div><div class="film-meta"><span class="film-tag">DRAMA</span><span class="film-tag">GATE II+</span><span class="film-tag">WATER</span></div></div>
+    <div class="film-card card" style="--fc:#00E5FF"><div class="film-num">FILM III</div><div class="film-god">HERMES &middot; GEMINI</div><div class="film-title">MESSENGER SOVEREIGN</div><div class="film-desc">The fastest sovereign on the lattice carries a message that will reshape 12 houses.</div><div class="film-meta"><span class="film-tag">THRILLER</span><span class="film-tag">GATE III+</span><span class="film-tag">WIND</span></div></div>
+    <div class="film-card card" style="--fc:#3fb27f"><div class="film-num">FILM IV</div><div class="film-god">ARTEMIS &middot; CANCER</div><div class="film-title">HUNT SOVEREIGN</div><div class="film-desc">Under the silver light of the lattice moon, one sovereign hunts the rogue element that threatens the nine.</div><div class="film-meta"><span class="film-tag">ADVENTURE</span><span class="film-tag">GATE IV+</span><span class="film-tag">SAND</span></div></div>
+    <div class="film-card card" style="--fc:#E2C86D"><div class="film-num">FILM V</div><div class="film-god">APOLLO &middot; LEO</div><div class="film-title">LIGHT SOVEREIGN</div><div class="film-desc">A musical sovereign epic. The bearer of the solar element composes the frequency that unlocks Gate X.</div><div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE V+</span><span class="film-tag">SOUL</span></div></div>
+    <div class="film-card card" style="--fc:#C9A84C"><div class="film-num">FILM VI</div><div class="film-god">ATHENA &middot; VIRGO</div><div class="film-title">WISDOM SOVEREIGN</div><div class="film-desc">The architect of the lattice reveals the 9-fold formula. A cerebral thriller for the sovereign mind.</div><div class="film-meta"><span class="film-tag">STRATEGY</span><span class="film-tag">GATE VI+</span><span class="film-tag">METAL</span></div></div>
+    <div class="film-card card" style="--fc:#9B6BF0"><div class="film-num">FILM VII</div><div class="film-god">HERA &middot; LIBRA</div><div class="film-title">QUEEN SOVEREIGN</div><div class="film-desc">The sovereign court of 12 houses must reach balance. A political epic at the height of the lattice.</div><div class="film-meta"><span class="film-tag">POLITICAL</span><span class="film-tag">GATE VII+</span><span class="film-tag">SPACE</span></div></div>
+    <div class="film-card card" style="--fc:#3fb27f"><div class="film-num">FILM VIII</div><div class="film-god">DEMETER &middot; SCORPIO</div><div class="film-title">EARTH SOVEREIGN</div><div class="film-desc">The lattice root system awakens. A sovereign must descend to the void to reclaim the ninth element.</div><div class="film-meta"><span class="film-tag">MYSTERY</span><span class="film-tag">GATE VIII+</span><span class="film-tag">VOID</span></div></div>
+    <div class="film-card card" style="--fc:#E2C86D"><div class="film-num">FILM IX</div><div class="film-god">ZEUS &middot; SAGITTARIUS</div><div class="film-title">THUNDER SOVEREIGN</div><div class="film-desc">Authority at its apex. Zeus calls the 12 sovereigns to the summit. The lattice balance will be decided.</div><div class="film-meta"><span class="film-tag">EPIC</span><span class="film-tag">GATE IX+</span><span class="film-tag">THE ALL</span></div></div>
+    <div class="film-card card" style="--fc:#E86A3A"><div class="film-num">FILM X</div><div class="film-god">HESTIA &middot; CAPRICORN</div><div class="film-title">HEARTH SOVEREIGN</div><div class="film-desc">Where the first flame was lit, the sovereign origin is revealed. A prequel spanning the initial lattice age.</div><div class="film-meta"><span class="film-tag">ORIGIN</span><span class="film-tag">GATE X+</span><span class="film-tag">FIRE</span></div></div>
+    <div class="film-card card" style="--fc:#C9A84C"><div class="film-num">FILM XI</div><div class="film-god">HEPHAESTUS &middot; AQUARIUS</div><div class="film-title">FORGE SOVEREIGN</div><div class="film-desc">The architect sovereign builds the final lattice gate. A techno-mythic epic of creation and sacrifice.</div><div class="film-meta"><span class="film-tag">CRAFT</span><span class="film-tag">GATE XI+</span><span class="film-tag">METAL</span></div></div>
+    <div class="film-card card" style="--fc:#00E5FF"><div class="film-num">FILM XII &middot; APEX</div><div class="film-god">POSEIDON &middot; PISCES</div><div class="film-title">OCEAN SOVEREIGN</div><div class="film-desc">The final sovereign film. The depths of the lattice hold the Omega key. AUTH = 27.8367 required.</div><div class="film-meta"><span class="film-tag">APEX</span><span class="film-tag">GATE XII</span><span class="film-tag">WATER</span></div></div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-olympians">
   <div class="sechead">12 OLYMPIAN DIRECTORS &middot; ONE FILM EACH</div>
   <div class="olym-grid">
-    <div class="olym-card" style="--oc:#E86A3A"><div class="olym-god">ARES &middot; GOD OF WAR</div><div class="olym-film">War Sovereign &middot; Film I</div><div class="olym-sign">Aries &middot; Fire &middot; Gate I</div></div>
-    <div class="olym-card" style="--oc:#9B6BF0"><div class="olym-god">APHRODITE &middot; GODDESS OF LOVE</div><div class="olym-film">Love Sovereign &middot; Film II</div><div class="olym-sign">Taurus &middot; Water &middot; Gate II</div></div>
-    <div class="olym-card" style="--oc:#00E5FF"><div class="olym-god">HERMES &middot; MESSENGER OF GODS</div><div class="olym-film">Messenger Sovereign &middot; Film III</div><div class="olym-sign">Gemini &middot; Wind &middot; Gate III</div></div>
-    <div class="olym-card" style="--oc:#3fb27f"><div class="olym-god">ARTEMIS &middot; GODDESS OF THE HUNT</div><div class="olym-film">Hunt Sovereign &middot; Film IV</div><div class="olym-sign">Cancer &middot; Sand &middot; Gate IV</div></div>
-    <div class="olym-card" style="--oc:#E2C86D"><div class="olym-god">APOLLO &middot; GOD OF LIGHT</div><div class="olym-film">Light Sovereign &middot; Film V</div><div class="olym-sign">Leo &middot; Soul &middot; Gate V</div></div>
-    <div class="olym-card" style="--oc:#C9A84C"><div class="olym-god">ATHENA &middot; GODDESS OF WISDOM</div><div class="olym-film">Wisdom Sovereign &middot; Film VI</div><div class="olym-sign">Virgo &middot; Metal &middot; Gate VI</div></div>
-    <div class="olym-card" style="--oc:#9B6BF0"><div class="olym-god">HERA &middot; QUEEN OF OLYMPUS</div><div class="olym-film">Queen Sovereign &middot; Film VII</div><div class="olym-sign">Libra &middot; Space &middot; Gate VII</div></div>
-    <div class="olym-card" style="--oc:#3fb27f"><div class="olym-god">DEMETER &middot; GODDESS OF EARTH</div><div class="olym-film">Earth Sovereign &middot; Film VIII</div><div class="olym-sign">Scorpio &middot; Void &middot; Gate VIII</div></div>
-    <div class="olym-card" style="--oc:#E2C86D"><div class="olym-god">ZEUS &middot; KING OF GODS</div><div class="olym-film">Thunder Sovereign &middot; Film IX</div><div class="olym-sign">Sagittarius &middot; The All &middot; Gate IX</div></div>
-    <div class="olym-card" style="--oc:#E86A3A"><div class="olym-god">HESTIA &middot; GODDESS OF HEARTH</div><div class="olym-film">Hearth Sovereign &middot; Film X</div><div class="olym-sign">Capricorn &middot; Fire &middot; Gate X</div></div>
-    <div class="olym-card" style="--oc:#C9A84C"><div class="olym-god">HEPHAESTUS &middot; GOD OF FORGE</div><div class="olym-film">Forge Sovereign &middot; Film XI</div><div class="olym-sign">Aquarius &middot; Metal &middot; Gate XI</div></div>
-    <div class="olym-card" style="--oc:#00E5FF"><div class="olym-god">POSEIDON &middot; GOD OF THE SEA</div><div class="olym-film">Ocean Sovereign &middot; Film XII</div><div class="olym-sign">Pisces &middot; Water &middot; Gate XII &middot; APEX</div></div>
+    <div class="olym-card card" style="--oc:#E86A3A"><div class="olym-god">ARES &middot; GOD OF WAR</div><div class="olym-film">War Sovereign &middot; Film I</div><div class="olym-sign">Aries &middot; Fire &middot; Gate I</div></div>
+    <div class="olym-card card" style="--oc:#9B6BF0"><div class="olym-god">APHRODITE &middot; GODDESS OF LOVE</div><div class="olym-film">Love Sovereign &middot; Film II</div><div class="olym-sign">Taurus &middot; Water &middot; Gate II</div></div>
+    <div class="olym-card card" style="--oc:#00E5FF"><div class="olym-god">HERMES &middot; MESSENGER OF GODS</div><div class="olym-film">Messenger Sovereign &middot; Film III</div><div class="olym-sign">Gemini &middot; Wind &middot; Gate III</div></div>
+    <div class="olym-card card" style="--oc:#3fb27f"><div class="olym-god">ARTEMIS &middot; GODDESS OF THE HUNT</div><div class="olym-film">Hunt Sovereign &middot; Film IV</div><div class="olym-sign">Cancer &middot; Sand &middot; Gate IV</div></div>
+    <div class="olym-card card" style="--oc:#E2C86D"><div class="olym-god">APOLLO &middot; GOD OF LIGHT</div><div class="olym-film">Light Sovereign &middot; Film V</div><div class="olym-sign">Leo &middot; Soul &middot; Gate V</div></div>
+    <div class="olym-card card" style="--oc:#C9A84C"><div class="olym-god">ATHENA &middot; GODDESS OF WISDOM</div><div class="olym-film">Wisdom Sovereign &middot; Film VI</div><div class="olym-sign">Virgo &middot; Metal &middot; Gate VI</div></div>
+    <div class="olym-card card" style="--oc:#9B6BF0"><div class="olym-god">HERA &middot; QUEEN OF OLYMPUS</div><div class="olym-film">Queen Sovereign &middot; Film VII</div><div class="olym-sign">Libra &middot; Space &middot; Gate VII</div></div>
+    <div class="olym-card card" style="--oc:#3fb27f"><div class="olym-god">DEMETER &middot; GODDESS OF EARTH</div><div class="olym-film">Earth Sovereign &middot; Film VIII</div><div class="olym-sign">Scorpio &middot; Void &middot; Gate VIII</div></div>
+    <div class="olym-card card" style="--oc:#E2C86D"><div class="olym-god">ZEUS &middot; KING OF GODS</div><div class="olym-film">Thunder Sovereign &middot; Film IX</div><div class="olym-sign">Sagittarius &middot; The All &middot; Gate IX</div></div>
+    <div class="olym-card card" style="--oc:#E86A3A"><div class="olym-god">HESTIA &middot; GODDESS OF HEARTH</div><div class="olym-film">Hearth Sovereign &middot; Film X</div><div class="olym-sign">Capricorn &middot; Fire &middot; Gate X</div></div>
+    <div class="olym-card card" style="--oc:#C9A84C"><div class="olym-god">HEPHAESTUS &middot; GOD OF FORGE</div><div class="olym-film">Forge Sovereign &middot; Film XI</div><div class="olym-sign">Aquarius &middot; Metal &middot; Gate XI</div></div>
+    <div class="olym-card card" style="--oc:#00E5FF"><div class="olym-god">POSEIDON &middot; GOD OF THE SEA</div><div class="olym-film">Ocean Sovereign &middot; Film XII</div><div class="olym-sign">Pisces &middot; Water &middot; Gate XII &middot; APEX</div></div>
   </div>
 </div>
 
@@ -115,6 +116,12 @@
   </div>
 </div>
 
+<div class="tab-panel" id="tab-mythology">
+  <div class="sechead">THE REAL OLYMPIANS &middot; SOURCED LIVE FROM WIKIPEDIA</div>
+  <div style="font-size:11px;line-height:1.7;color:var(--muted);margin-bottom:14px;max-width:640px">Every film above is fronted by a real Greek god. This tab is the non-fiction companion — genuine mythology, fetched live from Wikipedia (no login, no key), not sovereign-universe lore. Click a name to load its real summary.</div>
+  <div class="olym-grid" id="myth-grid"></div>
+</div>
+
 <div class="tab-panel" id="tab-science">
   <div class="sechead">CINEMA ARCHITECTURE</div>
   <div class="card-grid">
@@ -124,12 +131,64 @@
     <div class="card"><div class="card-title">SERIES EXPANSION</div><div class="card-body">Each film spawns 12 series episodes, giving 144 total series entries. Series are extended universe content exploring the film's characters, elements, and lattice mechanics in greater depth. Gate-locked individually.</div></div>
   </div>
 </div>
+<div data-page-emblem="cinema" style="margin:20px auto 0"></div>
 </div>
 
 <script>
 function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['films','olympians','elements','science'][i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['films','olympians','elements','mythology','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  if(name==='mythology')buildMythGrid();
+}
+
+var REAL_OLYMPIANS=[
+  {name:'Ares',epithet:'God of War',col:'#E86A3A',film:'War Sovereign · Film I'},
+  {name:'Aphrodite',epithet:'Goddess of Love',col:'#9B6BF0',film:'Love Sovereign · Film II'},
+  {name:'Hermes',epithet:'Messenger of the Gods',col:'#00E5FF',film:'Messenger Sovereign · Film III'},
+  {name:'Artemis',epithet:'Goddess of the Hunt',col:'#3fb27f',film:'Hunt Sovereign · Film IV'},
+  {name:'Apollo',epithet:'God of Light',col:'#E2C86D',film:'Light Sovereign · Film V'},
+  {name:'Athena',epithet:'Goddess of Wisdom',col:'#C9A84C',film:'Wisdom Sovereign · Film VI'},
+  {name:'Hera',epithet:'Queen of Olympus',col:'#9B6BF0',film:'Queen Sovereign · Film VII'},
+  {name:'Demeter',epithet:'Goddess of Earth',col:'#3fb27f',film:'Earth Sovereign · Film VIII'},
+  {name:'Zeus',epithet:'King of the Gods',col:'#E2C86D',film:'Thunder Sovereign · Film IX'},
+  {name:'Hestia',epithet:'Goddess of the Hearth',col:'#E86A3A',film:'Hearth Sovereign · Film X'},
+  {name:'Hephaestus',epithet:'God of the Forge',col:'#C9A84C',film:'Forge Sovereign · Film XI'},
+  {name:'Poseidon',epithet:'God of the Sea',col:'#00E5FF',film:'Ocean Sovereign · Film XII'}
+];
+var mythGridBuilt=false;
+function buildMythGrid(){
+  if(mythGridBuilt)return;
+  mythGridBuilt=true;
+  var grid=document.getElementById('myth-grid');
+  grid.innerHTML=REAL_OLYMPIANS.map(function(g,i){
+    return '<div class="olym-card card" style="--oc:'+g.col+'">'
+      +'<div class="olym-god">'+g.name.toUpperCase()+' &middot; '+g.epithet.toUpperCase()+'</div>'
+      +'<div class="olym-sign">Fronts: '+g.film+'</div>'
+      +'<div id="myth-body-'+i+'" style="margin-top:8px">'
+      +'<button class="film-tag" style="cursor:pointer;background:none" onclick="loadMyth('+i+')">LOAD REAL SUMMARY (WIKIPEDIA)</button>'
+      +'</div></div>';
+  }).join('');
+}
+function loadMyth(i){
+  var g=REAL_OLYMPIANS[i];
+  var el=document.getElementById('myth-body-'+i);
+  el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING&hellip;</span>';
+  fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(g.name)+'_(mythology)')
+    .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
+    .catch(function(){
+      return fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(g.name))
+        .then(function(r){if(!r.ok)throw new Error('not found');return r.json();});
+    })
+    .then(function(data){
+      var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(g.name));
+      el.innerHTML='<div style="font-size:11px;line-height:1.7;color:var(--ink);opacity:.85">'+extract+'</div>'
+        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:8px">READ FULL ARTICLE ON WIKIPEDIA &#x2192;</a>';
+    })
+    .catch(function(){
+      el.innerHTML='<span style="font-family:var(--M);font-size:9px;color:var(--crim)">Could not reach Wikipedia — check your connection and try again.</span>'
+        +'<div style="margin-top:6px"><button class="film-tag" style="cursor:pointer;background:none" onclick="loadMyth('+i+')">RETRY</button></div>';
+    });
 }
 </script>
 <script type="module">

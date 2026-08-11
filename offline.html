@@ -19,7 +19,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .headline{font-family:var(--D);font-size:clamp(20px,5vw,32px);color:var(--gold);letter-spacing:3px;margin-bottom:12px;text-align:center}
 .sub{font-family:var(--M);font-size:11px;color:var(--dim);letter-spacing:1px;max-width:50ch;line-height:1.85;margin:0 auto 24px;text-align:center}
 .status-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:24px}
-.status-dot{width:8px;height:8px;border-radius:50%;background:#8B0000;animation:blink 1.8s ease-in-out infinite}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--crim);animation:blink 1.8s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .status-text{font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--dim)}
 .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
@@ -150,16 +150,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <!-- TAB 4: SCIENCE -->
     <div class="tab-pane" id="tab-science">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-        <div class="stat-card"><div class="stat-val">v7</div><div class="stat-lbl">SW VERSION</div></div>
-        <div class="stat-card"><div class="stat-val">&phi;/e</div><div class="stat-lbl">RESILIENCE RATIO</div></div>
-        <div class="stat-card"><div class="stat-val">&infin;</div><div class="stat-lbl">CACHED ASSETS</div></div>
+        <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+        <div class="stat-card card"><div class="stat-val">v7</div><div class="stat-lbl">SW VERSION</div></div>
+        <div class="stat-card card"><div class="stat-val">&phi;/e</div><div class="stat-lbl">RESILIENCE RATIO</div></div>
+        <div class="stat-card card"><div class="stat-val">&infin;</div><div class="stat-lbl">CACHED ASSETS</div></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
-        <div class="stat-card"><div class="stat-val">9.17Hz</div><div class="stat-lbl">RESONANCE LOCK</div></div>
-        <div class="stat-card"><div class="stat-val">100%</div><div class="stat-lbl">DATA PRESERVED</div></div>
-        <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
+        <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">FIBONACCI SCALE</div></div>
+        <div class="stat-card card"><div class="stat-val">9.17Hz</div><div class="stat-lbl">RESONANCE LOCK</div></div>
+        <div class="stat-card card"><div class="stat-val">100%</div><div class="stat-lbl">DATA PRESERVED</div></div>
+        <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER CONSTANT</div></div>
       </div>
     </div>
 
@@ -211,7 +211,7 @@ document.querySelectorAll('.lt').forEach(function(b){
   var dot=document.getElementById('dot');
   var txt=document.getElementById('status-text');
   function check(){
-    if(navigator.onLine){dot.style.background='#3fb27f';txt.textContent='NETWORK RESTORED — REDIRECTING';setTimeout(function(){window.location.reload();},1200);}
+    if(navigator.onLine){dot.style.background=(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f');txt.textContent='NETWORK RESTORED — REDIRECTING';setTimeout(function(){window.location.reload();},1200);}
   }
   window.addEventListener('online',check);
   setInterval(check,4000);

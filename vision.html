@@ -153,22 +153,23 @@ input[type=range].area-sl::-webkit-slider-thumb{-webkit-appearance:none;width:12
   <!-- SCIENCE -->
   <div class="tab-pane" id="tab-science">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">8</div><div class="stat-lbl">LIFE DOMAINS</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">VISION RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">90</div><div class="stat-lbl">DAY SPRINT CYCLE</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">8</div><div class="stat-lbl">LIFE DOMAINS</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">VISION RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">90</div><div class="stat-lbl">DAY SPRINT CYCLE</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">10/10</div><div class="stat-lbl">LIFE WHEEL TARGET</div></div>
-      <div class="stat-card"><div class="stat-val">3×</div><div class="stat-lbl">ANNUAL REVIEWS</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">10/10</div><div class="stat-lbl">LIFE WHEEL TARGET</div></div>
+      <div class="stat-card card"><div class="stat-val">3×</div><div class="stat-lbl">ANNUAL REVIEWS</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="goals-filter" id="v-goals-filter"></div>
     <div id="v-goals-list"></div>
   </div>
 
 </div>
+<div data-page-emblem="vision" style="margin:20px auto 0"></div>
 <div class="lf"><span>&#937; VISION &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
@@ -185,7 +186,7 @@ const AREAS_KEY  = 'omega_vision_areas';
 const MF_KEY     = 'omega_vision_manifest';
 
 const AREAS = [
-  {id:'wealth',  label:'WEALTH',       icon:'💰', color:'#C9A84C', desc:'Financial sovereignty & abundance'},
+  {id:'wealth',  label:'WEALTH',       icon:'💰', color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'Financial sovereignty & abundance'},
   {id:'health',  label:'HEALTH',       icon:'💪', color:'#4CAF50', desc:'Physical vitality & longevity'},
   {id:'mind',    label:'MIND',         icon:'🧠', color:'#5C8FD6', desc:'Knowledge, clarity & growth'},
   {id:'bonds',   label:'BONDS',        icon:'❤️', color:'#E57373', desc:'Relationships & love'},
@@ -229,7 +230,7 @@ function renderBoard() {
     const goals = (d.goals||[]);
     const doneCount = goals.filter(g=>g.done).length;
     return `
-    <div class="area-card" id="ac-${a.id}">
+    <div class="area-card card" id="ac-${a.id}">
       <div class="area-hd">
         <span class="area-icon">${a.icon}</span>
         <span class="area-name" style="color:${a.color}">${a.label}</span>

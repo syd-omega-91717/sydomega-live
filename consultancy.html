@@ -95,6 +95,7 @@
     </div>
   </div>
 </div>
+<div data-page-emblem="consultancy" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -122,7 +123,7 @@ function buildDomains(){
   var sel=document.getElementById('bk-domain');
   DOMAINS.forEach(function(d){
     var card=document.createElement('div');
-    card.className='domain-card';
+    card.className='domain-card card';
     var icon=document.createElement('div');icon.className='domain-icon';icon.textContent=d.icon;
     var name=document.createElement('div');name.className='domain-name';name.textContent=d.name;
     var desc=document.createElement('div');desc.className='domain-desc';desc.textContent=d.desc;

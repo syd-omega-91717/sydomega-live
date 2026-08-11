@@ -162,7 +162,8 @@
 
 </div><!-- end page-shell -->
 <div id="msn-toast"></div>
-<div class="xp-popup" id="xpPopup"></div>
+<div class="xp-popup" id="xpPopup"><div data-page-emblem="missions" style="margin:20px auto 0"></div>
+</div>
 
 <script>
 function setTab(name){
@@ -273,7 +274,7 @@ function renderMissions(missions,containerId,stateKey){
   missions.forEach(function(m){
     var done=stateKey==='daily'?!!state.daily[m.id]:!!state.weekly[m.id];
     var card=document.createElement('div');
-    card.className='mission-card'+(done?' completed':'')+(m.tier==='legendary'?' legendary-card':'');
+    card.className='mission-card card'+(done?' completed':'')+(m.tier==='legendary'?' legendary-card':'');
     var icon=document.createElement('div');icon.className='mc-icon';icon.textContent=m.icon;
     var body=document.createElement('div');body.className='mc-body';
     var hdr=document.createElement('div');hdr.className='mc-header';
@@ -325,8 +326,8 @@ function complete(id,src,xp){
   showXP(xp);
   toast('MISSION COMPLETE: +'+xp+' XP','var(--green)');
   renderAll();
-  if(sb&&window.__omegaUser){
-    sb.from('mission_completions').upsert({user_id:window.__omegaUser.id,mission_id:id,xp_earned:xp,completed_at:new Date().toISOString(),mission_date:today}).catch(function(){});
+  if(window.__omegaUser){
+    window.OmegaProgress&&OmegaProgress.record({kind:'mission',task:'mission:'+src+':'+id+':'+today,axis:'a',title:m?m.title:'Mission Complete',silent:true});
   }
 }
 

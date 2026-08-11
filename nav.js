@@ -9,25 +9,24 @@
   /* Map every page to a section */
   var PS={
     dashboard:'command',beacon:'command',notifications:'command',search:'command',
-    profile:'identity',passport:'identity',kyc:'identity',settings:'identity',
-    character:'identity',
+    command:'command',
+    profile:'identity',settings:'identity',
     ascension:'ascend',matrix:'ascend',academy:'ascend',gaming:'ascend',
     honors:'ascend',trophies:'ascend',exam:'ascend',contributions:'ascend',
-    agents:'cosmos',horoscope:'cosmos',pantheons:'cosmos',elements:'cosmos',
-    gates:'cosmos',triads:'cosmos',kings:'cosmos',chatbot:'cosmos',
-    cinema:'universe',universe:'universe',media:'universe',
-    treasury:'vault',wallet:'vault',blockchain:'vault',payments:'vault',
-    membership:'vault',marketplace:'vault',income:'vault',portfolio:'vault',
-    family:'order',bloodline:'order',heritage:'order',hall:'order',
+    agents:'cosmos',pantheons:'cosmos',elements:'cosmos',chatbot:'cosmos',
+    media:'universe',
+    blockchain:'vault',marketplace:'vault',income:'vault',
+    family:'order',hall:'order',
     sovereigns:'order',factions:'order',city:'order',
     services:'services',consultancy:'services',contracts:'services',publishing:'services',
     studio:'services',marketing:'services',health:'services',events:'services',travel:'services',
     news:'services',social:'services',
     research:'intel',prediction:'intel',intelligence:'intel',
-    automation:'intel',compliance:'intel',charter:'intel',approvals:'intel',
-    grid:'intel',
-    identity:'identity',vault:'vault',sigil:'vault',cosmos:'cosmos',
-    /* New pages — complete mapping */
+    automation:'intel',compliance:'intel',approvals:'intel',
+    vault:'vault',sigil:'vault',cosmos:'cosmos',
+    /* Below: each key's final/effective value — earlier duplicate keys with a
+       different value that this silently overrode have been removed (JS object
+       literals keep only the last assignment); see REPOSITORY_AUDIT.md §5. */
     analytics:'intel',achievements:'achieve',leaderboard:'achieve',
     bloodline:'archive',character:'archive',charter:'archive',
     cinema:'media',credentials:'archive',design_system:'govern',
@@ -49,7 +48,8 @@
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
      sub:[['dashboard','DASHBOARD','/dashboard.html'],['beacon','BEACON','/beacon.html'],
           ['search','SEARCH','/search.html'],['notifications','ALERTS','/notifications.html'],
-          ['chatbot','CONCIERGE AI','/chatbot.html'],['matrix','THE MATRIX','/matrix.html'],['points','SOVEREIGN POINTS','/points.html']]},
+          ['chatbot','CONCIERGE AI','/chatbot.html'],['matrix','THE MATRIX','/matrix.html'],['points','SOVEREIGN POINTS','/points.html'],
+          ['command','COMMAND BRIEF','/command.html']]},
     {key:'identity',icon:'\u25C8', label:'IDENTITY', href:'/profile.html', col:'#00E5FF',
      sub:[['identity','IDENTITY HUB','/profile.html#identity'],['profile','PROFILE','/profile.html'],
           ['passport','PASSPORT','/profile.html#passport'],['kyc','KYC VERIFY','/profile.html#kyc'],
@@ -326,7 +326,7 @@
     /* DRAWER -- ALL 9 SECTIONS */
     var DRAWER_SECTIONS=[
       {icon:'\u2316',label:'COMMAND',col:'#C9A84C',href:'/dashboard.html',key:'command',
-       links:[['DASHBOARD','/dashboard.html'],['BEACON','/beacon.html'],['SEARCH','/search.html'],['ALERTS','/notifications.html'],['AI CONCIERGE','/chatbot.html']]},
+       links:[['DASHBOARD','/dashboard.html'],['BEACON','/beacon.html'],['SEARCH','/search.html'],['ALERTS','/notifications.html'],['AI CONCIERGE','/chatbot.html'],['COMMAND BRIEF','/command.html']]},
       {icon:'\u25C8',label:'IDENTITY',col:'#00E5FF',href:'/profile.html',key:'identity',
        links:[['IDENTITY HUB','/profile.html'],['PROFILE','/profile.html'],['PASSPORT','/profile.html#passport'],['KYC','/profile.html#kyc'],['SETTINGS','/profile.html#settings']]},
       {icon:'\u25B2',label:'ASCEND',col:'#E86A3A',href:'/honors.html#ascension',key:'ascend',

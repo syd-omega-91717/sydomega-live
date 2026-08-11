@@ -199,27 +199,27 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="stat-card"><div class="stat-val">52/17</div><div class="stat-lbl">WORK/BREAK SPLIT</div></div>
       <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">DEEP WORK & DELIBERATE PRACTICE</div>
       <div class="sci-cite">Newport, C. (2016) — Deep Work: Rules for Focused Success in a Distracted World. Grand Central Publishing</div>
       <div class="sci-body">Cal Newport defines Deep Work as professional activities performed in a state of distraction-free concentration that push cognitive capabilities to their limit. These are the sessions that create new value, improve skill, and are hard to replicate. The Sovereign Time system tracks deep work separately from shallow work, helping you understand the ratio of value-creating vs. administrative time in your sovereign schedule.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">POMODORO TECHNIQUE & ATTENTION CYCLES</div>
       <div class="sci-cite">Cirillo, F. (1992) — The Pomodoro Technique. Originally in: La Tecnica del Pomodoro. Re-published 2006</div>
       <div class="sci-body">Francesco Cirillo's Pomodoro Technique uses 25-minute focused sprints followed by 5-minute breaks, with a longer 20-30 minute break every four cycles. This rhythm aligns with natural ultradian cycles of alertness and recovery. Research on attention confirms that performance on sustained attention tasks degrades without brief breaks — the Pomodoro structure is a protocol for maintaining cognitive freshness across long work sessions.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">TIME AUDIT & PARKINSON'S LAW</div>
       <div class="sci-cite">Parkinson, C.N. (1955) — Parkinson's Law. The Economist. November 19, 1955</div>
       <div class="sci-body">Cyril Northcote Parkinson observed that "work expands to fill the time available for its completion." Time auditing reveals where your calendar and your values diverge — most people discover their highest-value activities receive disproportionately less time than low-value admin. The sovereign discipline of recording every block creates the data needed to challenge self-perception and redesign your time architecture around actual priorities.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">FLOW STATE & OPTIMAL CHALLENGE</div>
       <div class="sci-cite">Csikszentmihalyi, M. (1990) — Flow: The Psychology of Optimal Experience. Harper & Row</div>
       <div class="sci-body">Mihaly Csikszentmihalyi's research on peak experience found that flow states emerge when skill level and challenge level are both high and matched. Flow requires: clear goals, immediate feedback, and concentration on the task. The Sovereign Time system's task labeling and category tracking creates the clarity layer that makes flow more likely — you can't enter flow on an undefined task.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">ULTRADIAN RHYTHMS & PERFORMANCE WINDOWS</div>
       <div class="sci-cite">Peretz Lavie (1982) — Ultrashort Sleep-Waking Schedule. Psychophysiology, 19(5) + Kleitman, N. (1963) — Sleep and Wakefulness</div>
       <div class="sci-body">Nathaniel Kleitman (who discovered REM sleep) also described the Basic Rest-Activity Cycle (BRAC) — approximately 90-minute cycles of higher and lower alertness that continue during waking hours. Peak performance windows occur in the first half of each ultradian cycle; the second half is a natural recovery window. Structuring work sessions to align with these 90-minute natural rhythms can dramatically increase productivity without increasing total hours worked.</div>
@@ -227,7 +227,8 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
   </div>
 
   </div>
-  <div class="lf"><span>&#937; TIME &middot; SYD OMEGA 91717</span></div>
+  <div data-page-emblem="time" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; TIME &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
 
@@ -237,14 +238,14 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 const TIME_KEY = 'omega_time_log';
 
 const MODES = [
-  {name:'POMODORO',  work:25, break:5,  color:'#C9A84C', desc:'25 min focus'},
+  {name:'POMODORO',  work:25, break:5,  color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'25 min focus'},
   {name:'DEEP WORK', work:90, break:20, color:'#5C8FD6', desc:'90 min session'},
   {name:'SPRINT',    work:50, break:10, color:'#4CAF50', desc:'50 min block'},
   {name:'MICRO',     work:15, break:3,  color:'#9C6FD6', desc:'15 min burst'},
 ];
 
 const CAT_COLORS = {
-  'deep-work':     '#C9A84C',
+  'deep-work':     (getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),
   'learning':      '#5C8FD6',
   'strategy':      '#9C6FD6',
   'creative':      '#FF9800',
@@ -281,7 +282,7 @@ function renderModes(){
   g.innerHTML='';
   MODES.forEach(function(m){
     var d=document.createElement('div');
-    d.className='mode-card'+(m===selectedMode?' sel':'');
+    d.className='mode-card card'+(m===selectedMode?' sel':'');
     d.innerHTML='<div class="mode-name" style="color:'+m.color+'">'+m.name+'</div><div class="mode-time">'+m.desc+'</div>';
     d.onclick=function(){
       selectedMode=m;
@@ -446,8 +447,8 @@ function makeCard(e){
   var d=new Date(e.ts);
   var dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
   var durStr=fmtDur(e.duration);
-  var col=CAT_COLORS[e.category]||'#C9A84C';
-  var div=document.createElement('div'); div.className='entry-card';
+  var col=CAT_COLORS[e.category]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
+  var div=document.createElement('div'); div.className='entry-card card';
   div.innerHTML='<div class="entry-dot" style="background:'+col+'"></div>'+
     '<div class="entry-body">'+
       '<div class="entry-top">'+
@@ -517,8 +518,8 @@ function renderAudit(){
   alloc.innerHTML='';
   sorted.forEach(function(e){
     var pct=Math.round((e[1]/totalSecs)*100);
-    var col=CAT_COLORS[e[0]]||'#C9A84C';
-    var div=document.createElement('div'); div.className='alloc-card';
+    var col=CAT_COLORS[e[0]]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
+    var div=document.createElement('div'); div.className='alloc-card card';
     div.innerHTML='<div class="alloc-cat" style="color:'+col+'">'+(CAT_LABELS[e[0]]||e[0])+'</div>'+
       '<div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:'+pct+'%;background:'+col+'80"></div></div>'+
       '<div class="alloc-pct">'+pct+'% · '+fmtDur(e[1])+'</div>';

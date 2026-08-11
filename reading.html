@@ -180,27 +180,27 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
       <div class="stat-box"><div class="stat-val">30</div><div class="stat-lbl">MIN DAILY TARGET</div></div>
       <div class="stat-box"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">READING & VOCABULARY / FLUID INTELLIGENCE</div>
       <div class="sci-cite">Cunningham, A.E. & Stanovich, K.E. (1998) — What reading does for the mind. American Educator, 22(1-2)</div>
       <div class="sci-body">Anne Cunningham and Keith Stanovich's longitudinal research demonstrated that reading volume is the single strongest predictor of vocabulary growth, crystallized intelligence, and general knowledge — even controlling for aptitude. The Matthew Effect ("the rich get richer") applies directly to reading: those who read consistently develop cognitive resources that accelerate further learning. Reading is not leisure; it is compound cognitive investment.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">DEEP READING & THEORY OF MIND</div>
       <div class="sci-cite">Mar, R.A. et al. (2006) — Bookworms versus nerds. Journal of Research in Personality, 40(5) / Kidd & Castano (2013) — Science, 342(6156)</div>
       <div class="sci-body">Fiction reading significantly improves Theory of Mind — the ability to understand others' mental states and emotions. David Kidd and Emanuele Castano's Science study showed that even brief exposure to literary fiction improved empathic accuracy on a validated test. Exposure to complex characters requires the reader to simulate multiple perspectives, building the same neural circuits used in real social cognition. Reading is social intelligence training.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">ACTIVE READING & RETENTION</div>
       <div class="sci-cite">Roediger, H.L. & Karpicke, J.D. (2006) — Test-enhanced learning. Psychological Science, 17(3)</div>
       <div class="sci-body">The Testing Effect shows that self-testing after reading improves long-term retention dramatically more than re-reading does. Annotation, highlighting with context, and writing summaries after chapters are all active retrieval practices that produce durable memory encoding. Passive re-reading creates an illusion of knowing — you recognize the content but cannot recall or apply it. The Sovereign Reading system's highlight capture encourages active extraction, not passive absorption.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">READING SPEED & COMPREHENSION TRADE-OFF</div>
       <div class="sci-cite">Rayner, K. et al. (2016) — So much to read, so little time. Psychological Science in the Public Interest, 17(1)</div>
       <div class="sci-body">A major meta-analysis by Keith Rayner concluded that speed reading techniques marketed as achieving 1,000+ wpm result in decreased comprehension to chance levels — reading faster than approximately 400 wpm requires skimming, which prevents syntactic processing. The optimal sovereign reading strategy is not speed, but prioritization: read fewer books deeply, extract and synthesize more per book, and let comprehension set the pace — not a word-per-minute goal.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">READING BEFORE BED & SLEEP QUALITY</div>
       <div class="sci-cite">Lewis, D. (2009) — Reading reduces stress by 68%. University of Sussex study / Chang, A.M. et al. (2014) — PNAS, 112(4)</div>
       <div class="sci-body">University of Sussex research found that reading for as little as 6 minutes reduced physiological stress markers (heart rate, muscle tension) by 68% — outperforming listening to music, taking a walk, or playing video games. However, the Chang 2014 PNAS study showed that e-readers with blue light suppress melatonin and shift circadian phase, delaying sleep onset by ~90 minutes. The sovereign protocol: print or e-ink for evening reading; backlit screens at least 2 hours before sleep.</div>
@@ -208,7 +208,8 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
   </div>
 
   </div>
-  <div class="lf"><span>&#937; READING &middot; SYD OMEGA 91717</span></div>
+  <div data-page-emblem="reading" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; READING &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
 
@@ -218,7 +219,7 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 const READ_KEY = 'omega_reading';
 
 const GENRE_COLORS = {
-  philosophy:'#9C6FD6', strategy:'#C9A84C', science:'#5C8FD6',
+  philosophy:'#9C6FD6', strategy:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), science:'#5C8FD6',
   biography:'#FF9800', history:'#4CAF50', psychology:'#26C6DA',
   finance:'#E57373', technology:'#80DEEA', fiction:'#CE93D8', other:'#90A4AE',
 };
@@ -227,7 +228,7 @@ const GENRE_LABELS = {
   biography:'BIOGRAPHY', history:'HISTORY', psychology:'PSYCHOLOGY',
   finance:'FINANCE', technology:'TECH', fiction:'FICTION', other:'OTHER',
 };
-const STATUS_COLORS = {reading:'#C9A84C', queued:'rgba(138,134,118,.4)', completed:'#4CAF50'};
+const STATUS_COLORS = {reading:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), queued:'rgba(138,134,118,.4)', completed:'#4CAF50'};
 const STATUS_LABELS = {reading:'READING', queued:'QUEUED', completed:'DONE'};
 
 let statusFilter = 'all';
@@ -287,10 +288,10 @@ function renderLibrary(){
 }
 
 function makeBookCard(b){
-  var col=GENRE_COLORS[b.genre]||'#C9A84C';
+  var col=GENRE_COLORS[b.genre]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
   var stCol=STATUS_COLORS[b.status]||'var(--dim)';
   var pct=b.pages>0?Math.min(100,Math.round((b.progress/b.pages)*100)):0;
-  var div=document.createElement('div'); div.className='book-card'; div.id='book-'+b.id;
+  var div=document.createElement('div'); div.className='book-card card'; div.id='book-'+b.id;
   div.innerHTML=
     '<div class="book-top">'+
       '<div class="book-spine" style="background:'+col+'66"></div>'+
@@ -435,7 +436,7 @@ function drawGenre(books){
   entries.forEach(function(e,i){
     var x=pad+i*(bw+gap);
     var bh=(e[1]/max)*ph;
-    var col=GENRE_COLORS[e[0]]||'#C9A84C';
+    var col=GENRE_COLORS[e[0]]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     ctx.fillStyle=col+'55';
     ctx.fillRect(x,pad+ph-bh,bw,bh);
     ctx.fillStyle=col+'88'; ctx.font='7px monospace';

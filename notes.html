@@ -5,95 +5,93 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sovereign Notes · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-:root{--card-bg:#111;--card-border:#222;--tag-bg:#1a1a2e;--tag-active:#00E5FF;}
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#00E5FF;color:#000;border-color:#00E5FF;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
-.note-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #00E5FF;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative;}
-.note-card:hover{border-color:#00E5FF;background:#111;}
-.note-card.pinned{border-left-color:#FFD700;}
-.note-title{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:6px;}
-.note-preview{font-size:11px;color:#666;line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden;}
-.note-meta{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;}
-.note-date{font-size:10px;color:#444;font-family:'Courier New',monospace;}
-.tag-chip{display:inline-block;padding:2px 8px;background:#1a1a2e;border:1px solid #333;color:#00E5FF;font-size:9px;font-family:'Courier New',monospace;letter-spacing:1px;border-radius:2px;}
-.tag-chip.active,.tag-chip:hover{background:#00E5FF;color:#000;cursor:pointer;}
-.pin-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:14px;}
-.pin-btn.pinned{color:#FFD700;}
-.del-btn{position:absolute;top:10px;right:34px;background:none;border:none;color:#333;cursor:pointer;font-size:11px;letter-spacing:1px;}
-.del-btn:hover{color:#FF4444;}
-.form-group{margin-bottom:14px;}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
-.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
-.form-group textarea{min-height:220px;resize:vertical;line-height:1.6;}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#00E5FF;}
-.tags-input-row{display:flex;gap:8px;}
-.tags-input-row input{flex:1;}
-.tag-add-btn{padding:10px 16px;background:#1a1a2e;border:1px solid #00E5FF;color:#00E5FF;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;}
-.tag-add-btn:hover{background:#00E5FF;color:#000;}
-.active-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.active-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#1a1a2e;border:1px solid #00E5FF;color:#00E5FF;font-size:10px;font-family:'Courier New',monospace;}
-.active-tag .rm{cursor:pointer;color:#FF4444;font-size:12px;line-height:1;}
-.btn-primary{padding:10px 24px;background:#00E5FF;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
-.btn-primary:hover{background:#00b8cc;}
-.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
-.btn-secondary:hover{border-color:#666;color:#e0e0e0;}
-.toolbar{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;}
-.toolbar button{padding:5px 10px;background:#1a1a1a;border:1px solid #222;color:#888;cursor:pointer;font-family:'Courier New',monospace;font-size:10px;}
-.toolbar button:hover{background:#222;color:#00E5FF;}
-.search-bar{display:flex;gap:8px;margin-bottom:16px;}
-.search-bar input{flex:1;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;}
-.search-bar input:focus{outline:none;border-color:#00E5FF;}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
-.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s;}
-.filter-tag.active{background:#1a1a2e;border-color:#00E5FF;color:#00E5FF;}
-.empty-state{text-align:center;padding:60px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;}
-.note-view{background:#0d0d0d;border:1px solid #222;padding:24px;margin-bottom:16px;}
-.note-view-title{font-family:'Courier New',monospace;font-size:16px;color:#00E5FF;margin-bottom:4px;}
-.note-view-body{font-size:13px;color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px;}
-.note-view-body code{background:#1a1a1a;border:1px solid #333;padding:2px 6px;font-family:'Courier New',monospace;color:#FFD700;font-size:11px;}
-.note-view-body strong{color:#fff;}
-.note-view-body em{color:#aaa;font-style:italic;}
-.note-view-body h1,.note-view-body h2,.note-view-body h3{color:#00E5FF;font-family:'Courier New',monospace;margin:12px 0 6px;}
-.note-view-body h1{font-size:15px;border-bottom:1px solid #222;padding-bottom:6px;}
-.note-view-body h2{font-size:13px;}
-.note-view-body h3{font-size:12px;}
-.note-view-body ul,.note-view-body ol{padding-left:20px;margin:8px 0;}
-.note-view-body li{margin-bottom:4px;}
-.note-view-body blockquote{border-left:3px solid #00E5FF;padding-left:12px;color:#888;margin:8px 0;}
-.note-view-actions{display:flex;gap:8px;margin-top:16px;}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
-.stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
-.stat-num{font-family:'Courier New',monospace;font-size:22px;color:#00E5FF;font-weight:700;}
-.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
-.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #9B6BF0;padding:16px;}
-.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;letter-spacing:1px;margin-bottom:8px;}
-.sci-body{font-size:11px;color:#888;line-height:1.65;}
-.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
-.all-tags-cloud{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+:root{--card-bg:#111;--card-border:#222;--tag-bg:#1a1a2e;--tag-active:var(--cyan)}
+.note-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--cyan);padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
+.note-card:hover{border-color:var(--cyan);background:#111}
+.note-card.pinned{border-left-color:#FFD700}
+.note-title{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:6px}
+.note-preview{font-size:11px;color:#666;line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden}
+.note-meta{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.note-date{font-size:10px;color:#444;font-family:'Courier New',monospace}
+.tag-chip{display:inline-block;padding:2px 8px;background:#1a1a2e;border:1px solid #333;color:var(--cyan);font-size:9px;font-family:'Courier New',monospace;letter-spacing:1px;border-radius:2px}
+.tag-chip.active,.tag-chip:hover{background:var(--cyan);color:#000;cursor:pointer}
+.pin-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:14px}
+.pin-btn.pinned{color:#FFD700}
+.del-btn{position:absolute;top:10px;right:34px;background:none;border:none;color:#333;cursor:pointer;font-size:11px;letter-spacing:1px}
+.del-btn:hover{color:#FF4444}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
+.form-group textarea{min-height:220px;resize:vertical;line-height:1.6}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--cyan)}
+.tags-input-row{display:flex;gap:8px}
+.tags-input-row input{flex:1}
+.tag-add-btn{padding:10px 16px;background:#1a1a2e;border:1px solid var(--cyan);color:var(--cyan);cursor:pointer;font-family:'Courier New',monospace;font-size:11px}
+.tag-add-btn:hover{background:var(--cyan);color:#000}
+.active-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.active-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#1a1a2e;border:1px solid var(--cyan);color:var(--cyan);font-size:10px;font-family:'Courier New',monospace}
+.active-tag .rm{cursor:pointer;color:#FF4444;font-size:12px;line-height:1}
+.btn-primary{padding:10px 24px;background:var(--cyan);border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
+.btn-primary:hover{background:#00b8cc}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer}
+.btn-secondary:hover{border-color:#666;color:#e0e0e0}
+.toolbar{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.toolbar button{padding:5px 10px;background:#1a1a1a;border:1px solid #222;color:#888;cursor:pointer;font-family:'Courier New',monospace;font-size:10px}
+.toolbar button:hover{background:#222;color:var(--cyan)}
+.search-bar{display:flex;gap:8px;margin-bottom:16px}
+.search-bar input{flex:1;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px}
+.search-bar input:focus{outline:none;border-color:var(--cyan)}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:#666;font-size:10px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.filter-tag.active{background:#1a1a2e;border-color:var(--cyan);color:var(--cyan)}
+.empty-state{text-align:center;padding:60px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px}
+.note-view{background:#0d0d0d;border:1px solid #222;padding:24px;margin-bottom:16px}
+.note-view-title{font-family:'Courier New',monospace;font-size:16px;color:var(--cyan);margin-bottom:4px}
+.note-view-body{font-size:13px;color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px}
+.note-view-body code{background:#1a1a1a;border:1px solid #333;padding:2px 6px;font-family:'Courier New',monospace;color:#FFD700;font-size:11px}
+.note-view-body strong{color:#fff}
+.note-view-body em{color:#aaa;font-style:italic}
+.note-view-body h1,.note-view-body h2,.note-view-body h3{color:var(--cyan);font-family:'Courier New',monospace;margin:12px 0 6px}
+.note-view-body h1{font-size:15px;border-bottom:1px solid #222;padding-bottom:6px}
+.note-view-body h2{font-size:13px}
+.note-view-body h3{font-size:12px}
+.note-view-body ul,.note-view-body ol{padding-left:20px;margin:8px 0}
+.note-view-body li{margin-bottom:4px}
+.note-view-body blockquote{border-left:3px solid var(--cyan);padding-left:12px;color:#888;margin:8px 0}
+.note-view-actions{display:flex;gap:8px;margin-top:16px}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
+.stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--cyan);font-weight:700}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--purple);padding:16px}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:var(--purple);letter-spacing:1px;margin-bottom:8px}
+.sci-body{font-size:11px;color:#888;line-height:1.65}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
+.all-tags-cloud{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">SOVEREIGN NOTES</div>
-  <div class="page-subtitle">CAPTURE · LINK · RETRIEVE · SYNTHESIZE</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="notes"></aside>
+<main class="main">
+<div class="topbar"><div class="t">SOVEREIGN NOTES<small>CAPTURE · LINK · RETRIEVE · SYNTHESIZE · SYD OMEGA 91717</small></div></div>
+<div style="padding:20px var(--pad,20px)">
+
+<div class="tab-row">
+  <button class="tab-btn act" data-tab="notes" onclick="switchTab('notes',this)">&#9670; NOTES</button>
+  <button class="tab-btn" data-tab="write" onclick="switchTab('write',this)">&#9670; WRITE</button>
+  <button class="tab-btn" data-tab="search" onclick="switchTab('search',this)">&#9670; SEARCH</button>
+  <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
 </div>
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('notes')">NOTES</button>
-  <button class="tab-btn" onclick="switchTab('write')">WRITE</button>
-  <button class="tab-btn" onclick="switchTab('search')">SEARCH</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
-</div>
-
-<!-- NOTES TAB -->
-<div id="tab-notes" class="tab-pane active">
+<!-- NOTES -->
+<div id="tab-notes" class="tab-panel act">
   <div class="stats-row">
     <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL NOTES</div></div>
     <div class="stat-box"><div class="stat-num" id="stat-pinned">0</div><div class="stat-lbl">PINNED</div></div>
@@ -105,14 +103,14 @@
   <div id="notes-list"></div>
 </div>
 
-<!-- WRITE TAB -->
-<div id="tab-write" class="tab-pane">
+<!-- WRITE -->
+<div id="tab-write" class="tab-panel">
   <div class="form-group">
     <label>TITLE</label>
     <input type="text" id="note-title" placeholder="Note title..." maxlength="120">
   </div>
   <div class="form-group">
-    <label>CONTENT — markdown supported: **bold** *italic* `code` # Heading --- blockquote</label>
+    <label>CONTENT — markdown supported: **bold** *italic* `code` # Heading &gt; blockquote</label>
     <div class="toolbar">
       <button onclick="ins('**','**')">B</button>
       <button onclick="ins('*','*')"><em>I</em></button>
@@ -120,7 +118,7 @@
       <button onclick="ins('# ','')">H1</button>
       <button onclick="ins('## ','')">H2</button>
       <button onclick="ins('### ','')">H3</button>
-      <button onclick="ins('> ','')">QUOTE</button>
+      <button onclick="ins('&gt; ','')">QUOTE</button>
       <button onclick="ins('- ','')">LIST</button>
       <button onclick="ins('\n---\n','')">HR</button>
     </div>
@@ -149,15 +147,15 @@
     </div>
     <div class="active-tags" id="active-tags"></div>
   </div>
-  <div style="display:flex;gap:8px;margin-top:8px;">
+  <div style="display:flex;gap:8px;margin-top:8px">
     <button class="btn-primary" onclick="saveNote()">SAVE NOTE</button>
     <button class="btn-secondary" onclick="clearForm()">CLEAR</button>
   </div>
-  <div id="write-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF;"></div>
+  <div id="write-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#00E5FF"></div>
 </div>
 
-<!-- SEARCH TAB -->
-<div id="tab-search" class="tab-pane">
+<!-- SEARCH -->
+<div id="tab-search" class="tab-panel">
   <div class="search-bar">
     <input type="text" id="search-q" placeholder="Search notes..." oninput="runSearch()">
   </div>
@@ -176,66 +174,81 @@
   <div id="search-results"></div>
 </div>
 
-<!-- SCIENCE TAB -->
-<div id="tab-science" class="tab-pane">
+<!-- SCIENCE -->
+<div id="tab-science" class="tab-panel">
+  <div class="kpi-row">
+    <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+    <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+    <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+    <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+    <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+    <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+    <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+  </div>
   <div class="science-grid">
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">FORGETTING CURVE</div>
       <div class="sci-body">Ebbinghaus (1885) showed memory decays exponentially without reinforcement. Within 24h, ~50% is forgotten; within a week, ~70%. Regular review (spaced repetition) anchors memories in long-term storage by exploiting the spacing effect.</div>
       <div class="sci-ref">Ebbinghaus, H. (1885). Über das Gedächtnis</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">GENERATION EFFECT</div>
-      <div class="sci-body">Slamecka & Graf (1978): material that you generate yourself (write, elaborate, explain) is remembered significantly better than passively read material. Writing notes forces generative encoding — the act of capturing knowledge deepens it.</div>
-      <div class="sci-ref">Slamecka & Graf (1978). Journal of Experimental Psychology</div>
+      <div class="sci-body">Slamecka &amp; Graf (1978): material that you generate yourself (write, elaborate, explain) is remembered significantly better than passively read material. Writing notes forces generative encoding — the act of capturing knowledge deepens it.</div>
+      <div class="sci-ref">Slamecka &amp; Graf (1978). Journal of Experimental Psychology</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">ELABORATIVE INTERROGATION</div>
-      <div class="sci-body">Asking "why?" and "how?" while note-taking forces deeper semantic processing (Craik & Lockhart, 1972, levels of processing). Notes that include explanations, examples, and connections are recalled 40–50% better than verbatim copies.</div>
-      <div class="sci-ref">Craik & Lockhart (1972). Journal of Verbal Learning</div>
+      <div class="sci-body">Asking "why?" and "how?" while note-taking forces deeper semantic processing (Craik &amp; Lockhart, 1972, levels of processing). Notes that include explanations, examples, and connections are recalled 40–50% better than verbatim copies.</div>
+      <div class="sci-ref">Craik &amp; Lockhart (1972). Journal of Verbal Learning</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">ZETTELKASTEN METHOD</div>
       <div class="sci-body">Luhmann's slip-box system (1960s–2000s): notes linked by ideas, not folder hierarchy, build an external scaffold for thought. Over 30 years, Luhmann produced 90,000 linked notes and 58 books. Tags and bidirectional links simulate this for digital PKM.</div>
       <div class="sci-ref">Luhmann, N. (1992). Zettelkasten — Kommunikation mit dem Zettelkasten</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">WORKING MEMORY OFFLOADING</div>
       <div class="sci-body">Cognitive load theory (Sweller, 1988): working memory holds ~4 chunks simultaneously. Externalizing notes frees working memory for higher-order reasoning. GTD (Allen, 2001) systematizes this: capture everything external so the mind can think, not hold.</div>
       <div class="sci-ref">Sweller (1988) · Allen (2001). Getting Things Done</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">PROGRESSIVE SUMMARIZATION</div>
       <div class="sci-body">Forte (2017) proposes layering highlights: original → bold → highlight → summary. Each pass forces you to identify signal vs. noise. The final distillate is highly actionable. The key is that each layer is built incrementally, not in a single session.</div>
       <div class="sci-ref">Forte, T. (2017). Progressive Summarization, Praxis Blog</div>
     </div>
   </div>
 </div>
-</main>
 
-<script src="/omega-ui.js"></script>
+</div>
+</main>
+<div data-page-emblem="notes" style="margin:20px auto 0"></div>
+</div>
+
 <script>
-var notes = [];
-var editingId = null;
-var currentTags = [];
-var activeTagFilter = null;
-var activeCatFilter = 'all';
-var CAT_COLORS = {insight:'#00E5FF',idea:'#9B6BF0',reference:'#FFD700',strategy:'#FF4444',
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='notes'){renderNotes();}
+  if(id==='search'){runSearch();}
+}
+
+var notes=[];
+var editingId=null;
+var currentTags=[];
+var activeTagFilter=null;
+var activeCatFilter='all';
+var CAT_COLORS={insight:'#00E5FF',idea:'#9B6BF0',reference:'#FFD700',strategy:'#FF4444',
   reflection:'#4CAF50',summary:'#FF9800',quote:'#E91E63',system:'#00BCD4',research:'#8BC34A',other:'#666'};
 
 function load(){try{notes=JSON.parse(localStorage.getItem('omega_notes')||'[]');}catch(e){notes=[];}}
 function save(){localStorage.setItem('omega_notes',JSON.stringify(notes));}
-
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===t.toUpperCase())b.classList.add('active');});
-  if(t==='notes'){renderNotes();}
-  if(t==='search'){runSearch();}
-}
 
 function addTag(){
   var v=document.getElementById('tag-input').value.trim().toLowerCase().replace(/\s+/g,'-');
@@ -244,10 +257,10 @@ function addTag(){
   document.getElementById('tag-input').value='';
   renderCurrentTags();
 }
-function removeTag(t){currentTags=currentTags.filter(x=>x!==t);renderCurrentTags();}
+function removeTag(t){currentTags=currentTags.filter(function(x){return x!==t;});renderCurrentTags();}
 function renderCurrentTags(){
   var el=document.getElementById('active-tags');
-  el.innerHTML=currentTags.map(t=>'<div class="active-tag">'+t+' <span class="rm" onclick="removeTag(\''+t+'\')">×</span></div>').join('');
+  el.innerHTML=currentTags.map(function(t){return '<div class="active-tag">'+t+' <span class="rm" onclick="removeTag(\''+t+'\')">×</span></div>';}).join('');
 }
 
 function ins(before,after){
@@ -265,16 +278,16 @@ function saveNote(){
   if(!title){alert('Add a title.');return;}
   if(!body){alert('Write something.');return;}
   if(editingId){
-    var n=notes.find(x=>x.id===editingId);
+    var n=notes.find(function(x){return x.id===editingId;});
     if(n){n.title=title;n.body=body;n.cat=cat;n.tags=[...currentTags];n.updated=new Date().toISOString();}
     editingId=null;
   } else {
-    notes.unshift({id:uid(),title,body,cat,tags:[...currentTags],pinned:false,
+    notes.unshift({id:uid(),title:title,body:body,cat:cat,tags:[...currentTags],pinned:false,
       created:new Date().toISOString(),updated:new Date().toISOString()});
   }
   save();clearForm();
   document.getElementById('write-msg').textContent='NOTE SAVED · '+new Date().toLocaleTimeString();
-  setTimeout(()=>{document.getElementById('write-msg').textContent='';},2500);
+  setTimeout(function(){document.getElementById('write-msg').textContent='';},2500);
 }
 
 function clearForm(){
@@ -288,9 +301,9 @@ function wordCount(t){return t.trim().split(/\s+/).filter(Boolean).length;}
 
 function renderStats(){
   load();
-  var pinned=notes.filter(n=>n.pinned).length;
-  var allTags=new Set(notes.flatMap(n=>n.tags));
-  var words=notes.reduce((s,n)=>s+wordCount(n.body),0);
+  var pinned=notes.filter(function(n){return n.pinned;}).length;
+  var allTags=new Set(notes.flatMap(function(n){return n.tags;}));
+  var words=notes.reduce(function(s,n){return s+wordCount(n.body);},0);
   document.getElementById('stat-total').textContent=notes.length;
   document.getElementById('stat-pinned').textContent=pinned;
   document.getElementById('stat-tags').textContent=allTags.size;
@@ -299,11 +312,13 @@ function renderStats(){
 
 function renderTagCloud(){
   var counts={};
-  notes.forEach(n=>n.tags.forEach(t=>{counts[t]=(counts[t]||0)+1;}));
+  notes.forEach(function(n){n.tags.forEach(function(t){counts[t]=(counts[t]||0)+1;});});
   var cloud=document.getElementById('tags-cloud');
-  var tags=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,20);
+  var tags=Object.entries(counts).sort(function(a,b){return b[1]-a[1];}).slice(0,20);
   if(!tags.length){cloud.innerHTML='';return;}
-  cloud.innerHTML=tags.map(([t,c])=>'<div class="filter-tag'+(activeTagFilter===t?' active':'')+'" onclick="filterByTag(\''+t+'\')" title="'+c+' notes">'+t+' <small>'+c+'</small></div>').join('');
+  cloud.innerHTML=tags.map(function(e){var t=e[0],c=e[1];
+    return '<div class="filter-tag'+(activeTagFilter===t?' active':'')+'" onclick="filterByTag(\''+t+'\')" title="'+c+' notes">'+t+' <small>'+c+'</small></div>';
+  }).join('');
 }
 
 function filterByTag(t){
@@ -314,15 +329,15 @@ function filterByTag(t){
 function renderNotes(){
   renderStats();renderTagCloud();
   var list=document.getElementById('notes-list');
-  var pinned=notes.filter(n=>n.pinned);
-  var unpinned=notes.filter(n=>!n.pinned);
+  var pinned=notes.filter(function(n){return n.pinned;});
+  var unpinned=notes.filter(function(n){return !n.pinned;});
   var sorted=[...pinned,...unpinned];
-  if(activeTagFilter)sorted=sorted.filter(n=>n.tags.includes(activeTagFilter));
+  if(activeTagFilter)sorted=sorted.filter(function(n){return n.tags.includes(activeTagFilter);});
   if(!sorted.length){
     list.innerHTML='<div class="empty-state">NO NOTES YET — GO TO WRITE TAB<br><small>Your thoughts, linked and sovereign</small></div>';
     return;
   }
-  list.innerHTML=sorted.map(n=>noteCard(n)).join('');
+  list.innerHTML=sorted.map(function(n){return noteCard(n);}).join('');
 }
 
 function noteCard(n){
@@ -336,15 +351,15 @@ function noteCard(n){
     +'<div class="note-meta">'
     +'<span class="note-date">'+new Date(n.updated||n.created).toLocaleDateString()+'</span>'
     +'<span class="tag-chip" style="border-color:'+col+';color:'+col+'">'+n.cat.toUpperCase()+'</span>'
-    +n.tags.map(t=>'<span class="tag-chip">'+esc(t)+'</span>').join('')
+    +n.tags.map(function(t){return '<span class="tag-chip">'+esc(t)+'</span>';}).join('')
     +'</div></div>';
 }
 
-function togglePin(e,id){e.stopPropagation();var n=notes.find(x=>x.id===id);if(n){n.pinned=!n.pinned;save();renderNotes();}}
-function delNote(e,id){e.stopPropagation();if(!confirm('Delete this note?'))return;notes=notes.filter(x=>x.id!==id);save();renderNotes();document.getElementById('view-area').innerHTML='';}
+function togglePin(e,id){e.stopPropagation();var n=notes.find(function(x){return x.id===id;});if(n){n.pinned=!n.pinned;save();renderNotes();}}
+function delNote(e,id){e.stopPropagation();if(!confirm('Delete this note?'))return;notes=notes.filter(function(x){return x.id!==id;});save();renderNotes();document.getElementById('view-area').innerHTML='';}
 
 function viewNote(id){
-  var n=notes.find(x=>x.id===id);if(!n)return;
+  var n=notes.find(function(x){return x.id===id;});if(!n)return;
   var col=CAT_COLORS[n.cat]||'#00E5FF';
   var html=mdRender(n.body);
   document.getElementById('view-area').innerHTML=
@@ -352,7 +367,7 @@ function viewNote(id){
     +'<div class="note-view-title" style="color:'+col+'">'+esc(n.title)+'</div>'
     +'<div style="font-size:10px;color:#444;font-family:\'Courier New\',monospace;">'
     +new Date(n.created).toLocaleString()+' · '+wordCount(n.body)+' words · '+n.cat.toUpperCase()
-    +n.tags.map(t=>' · <span class="tag-chip">'+esc(t)+'</span>').join('')+'</div>'
+    +n.tags.map(function(t){return ' · <span class="tag-chip">'+esc(t)+'</span>';}).join('')+'</div>'
     +'<div class="note-view-body">'+html+'</div>'
     +'<div class="note-view-actions">'
     +'<button class="btn-secondary" onclick="editNote(\''+id+'\')">EDIT</button>'
@@ -362,9 +377,9 @@ function viewNote(id){
 }
 
 function editNote(id){
-  var n=notes.find(x=>x.id===id);if(!n)return;
+  var n=notes.find(function(x){return x.id===id;});if(!n)return;
   switchTab('write');
-  setTimeout(()=>{
+  setTimeout(function(){
     document.getElementById('note-title').value=n.title;
     document.getElementById('note-body').value=n.body;
     document.getElementById('note-cat').value=n.cat;
@@ -376,20 +391,18 @@ function editNote(id){
 function runSearch(){
   var q=(document.getElementById('search-q').value||'').toLowerCase();
   var res=document.getElementById('search-results');
-  var filtered=notes.filter(n=>{
+  var filtered=notes.filter(function(n){
     if(activeCatFilter!=='all'&&n.cat!==activeCatFilter)return false;
     if(!q)return true;
-    return n.title.toLowerCase().includes(q)||n.body.toLowerCase().includes(q)||n.tags.some(t=>t.includes(q));
+    return n.title.toLowerCase().includes(q)||n.body.toLowerCase().includes(q)||n.tags.some(function(t){return t.includes(q);});
   });
-  if(!filtered.length){
-    res.innerHTML='<div class="empty-state">NO RESULTS</div>';return;
-  }
-  res.innerHTML=filtered.map(n=>noteCard(n)).join('');
+  if(!filtered.length){res.innerHTML='<div class="empty-state">NO RESULTS</div>';return;}
+  res.innerHTML=filtered.map(function(n){return noteCard(n);}).join('');
 }
 
 function setCatFilter(cat,el){
   activeCatFilter=cat;
-  document.querySelectorAll('#cat-filter .filter-tag').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('#cat-filter .filter-tag').forEach(function(x){x.classList.remove('active');});
   el.classList.add('active');
   runSearch();
 }
@@ -411,7 +424,6 @@ function mdRender(md){
     if(l===''){out+='<br>';continue;}
     out+='<p>'+inline(l)+'</p>';
   }
-  // merge consecutive ul/ol
   out=out.replace(/<\/ul><ul>/g,'').replace(/<\/ol><ol>/g,'');
   return out;
 }
@@ -427,5 +439,6 @@ function inline(s){
 load();
 renderNotes();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

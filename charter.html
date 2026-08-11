@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sovereign Charter · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#FFD700;color:#000;border-color:#FFD700;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
 .charter-doc{background:#0d0d0d;border:1px solid #222;max-width:680px;margin:0 auto 24px;position:relative;overflow:hidden;}
 .charter-doc::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#FFD700,#FF9800,#FFD700);}
 .charter-masthead{padding:28px 32px;border-bottom:1px solid #1a1a1a;text-align:center;}
@@ -46,75 +45,105 @@
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">SOVEREIGN CHARTER</div>
-  <div class="page-subtitle">CONSTITUTION · ARTICLES · COMMITMENTS</div>
-</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="charter"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">SOVEREIGN CHARTER<small>CONSTITUTION · ARTICLES · COMMITMENTS · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('view')">CHARTER</button>
-  <button class="tab-btn" onclick="switchTab('articles')">ARTICLES</button>
-  <button class="tab-btn" onclick="switchTab('history')">HISTORY</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
-</div>
-
-<div id="tab-view" class="tab-pane active">
-  <div class="charter-doc">
-    <div class="charter-masthead">
-      <div class="charter-omega">&#10303;</div>
-      <div class="charter-title">SOVEREIGN CHARTER</div>
-      <div class="charter-subtitle">SYD OMEGA 91717 &middot; PERSONAL CONSTITUTION</div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="view" onclick="switchTab('view',this)">&#9670; CHARTER</button>
+      <button class="tab-btn" data-tab="articles" onclick="switchTab('articles',this)">&#9670; ARTICLES</button>
+      <button class="tab-btn" data-tab="history" onclick="switchTab('history',this)">&#9670; HISTORY</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
-    <div class="charter-body" id="charter-body"></div>
-    <div class="charter-seal">
-      <div><div class="seal-line">ISSUED BY</div><div class="seal-sig" id="seal-name">SOVEREIGN</div></div>
-      <div style="text-align:center;"><div style="font-size:28px;">&#10303;</div><div class="seal-line" style="margin-top:4px;">OMEGA SEAL</div></div>
-      <div style="text-align:right;"><div class="seal-line">RATIFIED</div><div class="seal-sig" id="seal-date">&mdash;</div></div>
+
+    <!-- CHARTER VIEW -->
+    <div id="tab-view" class="tab-panel act">
+      <div class="charter-doc">
+        <div class="charter-masthead">
+          <div class="charter-omega">&#10303;</div>
+          <div class="charter-title">SOVEREIGN CHARTER</div>
+          <div class="charter-subtitle">SYD OMEGA 91717 &middot; PERSONAL CONSTITUTION</div>
+        </div>
+        <div class="charter-body" id="charter-body"></div>
+        <div class="charter-seal">
+          <div><div class="seal-line">ISSUED BY</div><div class="seal-sig" id="seal-name">SOVEREIGN</div></div>
+          <div style="text-align:center;"><div style="font-size:28px;">&#10303;</div><div class="seal-line" style="margin-top:4px;">OMEGA SEAL</div></div>
+          <div style="text-align:right;"><div class="seal-line">RATIFIED</div><div class="seal-sig" id="seal-date">&mdash;</div></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;">
+        <button class="btn-secondary" onclick="switchTab('articles')">EDIT ARTICLES</button>
+        <button class="btn-secondary" onclick="window.print()">PRINT</button>
+      </div>
     </div>
-  </div>
-  <div style="display:flex;gap:8px;justify-content:center;">
-    <button class="btn-secondary" onclick="switchTab('articles')">EDIT ARTICLES</button>
-    <button class="btn-secondary" onclick="window.print()">PRINT</button>
-  </div>
-</div>
 
-<div id="tab-articles" class="tab-pane">
-  <div class="section-label">CHARTER METADATA</div>
-  <div class="form-group"><label>SOVEREIGN NAME</label><input type="text" id="m-name" placeholder="Your sovereign name..." maxlength="60"></div>
-  <div class="form-group"><label>RATIFICATION DATE</label><input type="date" id="m-date"></div>
-  <div class="form-group"><label>PREAMBLE</label><textarea id="m-preamble" rows="4" placeholder="I, [name], declare the following sovereign charter..."></textarea></div>
-  <button class="btn-primary" onclick="saveMeta()" style="margin-bottom:24px;">SAVE META</button>
-  <div class="section-label">ADD ARTICLE</div>
-  <div class="form-group"><label>ARTICLE TITLE</label><input type="text" id="a-title" placeholder="e.g. Article I — On Mastery" maxlength="80"></div>
-  <div class="form-group"><label>ARTICLE BODY</label><textarea id="a-body" rows="5" placeholder="The sovereign commits to..."></textarea></div>
-  <div style="display:flex;gap:8px;margin-bottom:24px;">
-    <button class="btn-primary" onclick="addArticle()">ADD ARTICLE</button>
-    <button class="btn-secondary" onclick="loadDefaults()">LOAD DEFAULTS</button>
-  </div>
-  <div class="section-label">CURRENT ARTICLES</div>
-  <div id="articles-list"></div>
-</div>
+    <!-- ARTICLES -->
+    <div id="tab-articles" class="tab-panel">
+      <div class="section-label">CHARTER METADATA</div>
+      <div class="form-group"><label>SOVEREIGN NAME</label><input type="text" id="m-name" placeholder="Your sovereign name..." maxlength="60"></div>
+      <div class="form-group"><label>RATIFICATION DATE</label><input type="date" id="m-date"></div>
+      <div class="form-group"><label>PREAMBLE</label><textarea id="m-preamble" rows="4" placeholder="I, [name], declare the following sovereign charter..."></textarea></div>
+      <button class="btn-primary" onclick="saveMeta()" style="margin-bottom:24px;">SAVE META</button>
+      <div class="section-label">ADD ARTICLE</div>
+      <div class="form-group"><label>ARTICLE TITLE</label><input type="text" id="a-title" placeholder="e.g. Article I &mdash; On Mastery" maxlength="80"></div>
+      <div class="form-group"><label>ARTICLE BODY</label><textarea id="a-body" rows="5" placeholder="The sovereign commits to..."></textarea></div>
+      <div style="display:flex;gap:8px;margin-bottom:24px;">
+        <button class="btn-primary" onclick="addArticle()">ADD ARTICLE</button>
+        <button class="btn-secondary" onclick="loadDefaults()">LOAD DEFAULTS</button>
+      </div>
+      <div class="section-label">CURRENT ARTICLES</div>
+      <div id="articles-list"></div>
+    </div>
 
-<div id="tab-history" class="tab-pane">
-  <div class="section-label">AMENDMENT HISTORY</div>
-  <div id="history-list"></div>
-</div>
+    <!-- HISTORY -->
+    <div id="tab-history" class="tab-panel">
+      <div class="section-label">AMENDMENT HISTORY</div>
+      <div id="history-list"></div>
+    </div>
 
-<div id="tab-science" class="tab-pane">
-  <div class="science-grid">
-    <div class="sci-card"><div class="sci-title">PERSONAL CONSTITUTION</div><div class="sci-body">Covey (1989) recommends a personal mission statement as the cornerstone of effective living. A personal constitution goes further: it codifies values, commitments, and operating principles into a binding governance document for the self — reviewed quarterly to maintain alignment.</div><div class="sci-ref">Covey, S.R. (1989). The 7 Habits of Highly Effective People</div></div>
-    <div class="sci-card"><div class="sci-title">ULYSSES CONTRACTS</div><div class="sci-body">Elster (1979): a Ulysses contract is a pre-commitment device — you bind your future self to a course of action when your future state may be compromised by weakness or altered preferences. Written charters function as Ulysses contracts at the identity level, surviving momentary lapses.</div><div class="sci-ref">Elster, J. (1979). Ulysses and the Sirens</div></div>
-    <div class="sci-card"><div class="sci-title">VALUES CLARIFICATION</div><div class="sci-body">Schwartz (1992) identified 10 universal values organized around self-enhancement vs. self-transcendence. Explicit values clarification activates identity-protective cognition and reduces cognitive dissonance under pressure. You make better decisions when your values are externalized and visible.</div><div class="sci-ref">Schwartz, S.H. (1992). Advances in Experimental Social Psychology</div></div>
-    <div class="sci-card"><div class="sci-title">SELF-AFFIRMATION THEORY</div><div class="sci-body">Steele (1988): reflecting on core values buffers the self-system against threat and improves decision quality under stress. Re-reading your charter is a formal self-affirmation ritual — it re-activates your value hierarchy and reduces ego depletion before high-stakes decisions.</div><div class="sci-ref">Steele, C.M. (1988). Advances in Experimental Social Psychology</div></div>
-    <div class="sci-card"><div class="sci-title">CONSTITUTIONAL GOVERNANCE</div><div class="sci-body">Madison (1787, Federalist 51): constitutions work because they are harder to change than ordinary decisions. The amendment process creates friction that prevents temporary preferences from overriding fundamental commitments. Personal constitutions gain their power from the same mechanism.</div><div class="sci-ref">Madison, J. (1787). Federalist No. 51</div></div>
-    <div class="sci-card"><div class="sci-title">COMMITMENT AND CONSISTENCY</div><div class="sci-body">Cialdini (1984): once committed in writing, people are strongly motivated to behave consistently with that commitment. Written charters are 3-4x more powerful than private intentions because they engage both internal consistency pressure and social accountability when shared.</div><div class="sci-ref">Cialdini, R. (1984). Influence: The Psychology of Persuasion</div></div>
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="science-grid">
+        <div class="sci-card card"><div class="sci-title">PERSONAL CONSTITUTION</div><div class="sci-body">Covey (1989) recommends a personal mission statement as the cornerstone of effective living. A personal constitution goes further: it codifies values, commitments, and operating principles into a binding governance document for the self &mdash; reviewed quarterly to maintain alignment.</div><div class="sci-ref">Covey, S.R. (1989). The 7 Habits of Highly Effective People</div></div>
+        <div class="sci-card card"><div class="sci-title">ULYSSES CONTRACTS</div><div class="sci-body">Elster (1979): a Ulysses contract is a pre-commitment device &mdash; you bind your future self to a course of action when your future state may be compromised by weakness or altered preferences. Written charters function as Ulysses contracts at the identity level, surviving momentary lapses.</div><div class="sci-ref">Elster, J. (1979). Ulysses and the Sirens</div></div>
+        <div class="sci-card card"><div class="sci-title">VALUES CLARIFICATION</div><div class="sci-body">Schwartz (1992) identified 10 universal values organized around self-enhancement vs. self-transcendence. Explicit values clarification activates identity-protective cognition and reduces cognitive dissonance under pressure. You make better decisions when your values are externalized and visible.</div><div class="sci-ref">Schwartz, S.H. (1992). Advances in Experimental Social Psychology</div></div>
+        <div class="sci-card card"><div class="sci-title">SELF-AFFIRMATION THEORY</div><div class="sci-body">Steele (1988): reflecting on core values buffers the self-system against threat and improves decision quality under stress. Re-reading your charter is a formal self-affirmation ritual &mdash; it re-activates your value hierarchy and reduces ego depletion before high-stakes decisions.</div><div class="sci-ref">Steele, C.M. (1988). Advances in Experimental Social Psychology</div></div>
+        <div class="sci-card card"><div class="sci-title">CONSTITUTIONAL GOVERNANCE</div><div class="sci-body">Madison (1787, Federalist 51): constitutions work because they are harder to change than ordinary decisions. The amendment process creates friction that prevents temporary preferences from overriding fundamental commitments. Personal constitutions gain their power from the same mechanism.</div><div class="sci-ref">Madison, J. (1787). Federalist No. 51</div></div>
+        <div class="sci-card card"><div class="sci-title">COMMITMENT AND CONSISTENCY</div><div class="sci-body">Cialdini (1984): once committed in writing, people are strongly motivated to behave consistently with that commitment. Written charters are 3-4x more powerful than private intentions because they engage both internal consistency pressure and social accountability when shared.</div><div class="sci-ref">Cialdini, R. (1984). Influence: The Psychology of Persuasion</div></div>
+      </div>
+    </div>
+
   </div>
-</div>
 </main>
-<script src="/omega-ui.js"></script>
+<div data-page-emblem="charter" style="margin:20px auto 0"></div>
+</div>
+
 <script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='view')renderCharter();
+  if(id==='articles'){renderArticlesList();loadMetaForm();}
+  if(id==='history')renderHistory();
+}
+
 var meta={name:'SOVEREIGN',date:'',preamble:''};
 var articles=[];
 var history=[];
@@ -135,16 +164,6 @@ function load(){
 function save(){localStorage.setItem('omega_charter_meta',JSON.stringify(meta));localStorage.setItem('omega_charter_articles',JSON.stringify(articles));localStorage.setItem('omega_charter_history',JSON.stringify(history));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById('tab-'+t).classList.add('active');
-  var labels={view:'CHARTER',articles:'ARTICLES',history:'HISTORY',science:'SCIENCE'};
-  document.querySelectorAll('.tab-btn').forEach(function(b){if(b.textContent===labels[t])b.classList.add('active');});
-  if(t==='view')renderCharter();
-  if(t==='articles'){renderArticlesList();loadMetaForm();}
-  if(t==='history')renderHistory();
-}
 function renderCharter(){
   var html='';
   if(meta.preamble)html+='<div class="charter-article"><div class="article-num">PREAMBLE</div><div class="article-text">'+esc(meta.preamble)+'</div></div>';
@@ -200,7 +219,7 @@ function renderArticlesList(){
   var el=document.getElementById('articles-list');
   if(!articles.length){el.innerHTML='<div style="color:#333;font-family:\'Courier New\',monospace;padding:20px;">NO ARTICLES YET</div>';return;}
   el.innerHTML=articles.map(function(a,i){
-    return '<div class="article-card">'
+    return '<div class="article-card card">'
       +'<button class="article-del" onclick="deleteArticle(\''+a.id+'\')">DEL</button>'
       +'<div class="article-num">'+esc(a.title)+'</div>'
       +'<div class="article-text" style="margin-top:6px;">'+esc(a.body.slice(0,150))+(a.body.length>150?'...':'')+'</div>'
@@ -217,5 +236,6 @@ function renderHistory(){
 }
 load();renderCharter();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

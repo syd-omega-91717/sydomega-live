@@ -261,7 +261,7 @@ a{color:inherit;text-decoration:none}
     <div class="sechead" data-reveal="fade-up">FAMILY ROLES -- SOVEREIGN CONSTITUTION <span data-canon-lattice="nine"></span></div>
     <div class="family-roles">
       <!-- FOUNDER -->
-      <div class="fr-card founder">
+      <div class="fr-card card founder">
         <div class="frc-role">FOUNDER & ARCHITECT</div>
         <div class="frc-name" style="color:var(--gold)"><span id="family-founder-name" style="display:none">MAJOR SLEIMAN YOUSSEF DAGHER</span></div>
         <div class="frc-status">Sovereign Founder . Lebanese Engineer #30875 . Architecture<br/>Born: 19 April 1982, Tripoli, Lebanon</div>
@@ -269,7 +269,7 @@ a{color:inherit;text-decoration:none}
         <span class="frc-badge" style="color:var(--gold);border-color:rgba(201,168,76,.4)">RANK 9.9.9 -- ALL-TIME ACCESS</span>
       </div>
       <!-- WIFE - CHAIRPERSON (Image 6 inspired) -->
-      <div class="fr-card chairperson">
+      <div class="fr-card card chairperson">
         <div class="frc-role">WIFE -- CHAIRPERSON</div>
         <div class="frc-name" style="color:var(--purple)" id="wife-name">DAGHER FAMILY CHAIRPERSON</div>
         <div class="frc-status" id="wife-status">Designated successor . Sovereign trustee . Family vault access</div>
@@ -281,7 +281,7 @@ a{color:inherit;text-decoration:none}
         <span class="frc-badge" style="color:var(--purple);border-color:rgba(155,107,240,.4)">CHAIRPERSON -- FULL TRUST ACCESS</span>
       </div>
       <!-- CHILDREN - HEIRS (Image 6 inspired) -->
-      <div class="fr-card heir" style="grid-column:1/-1">
+      <div class="fr-card card heir" style="grid-column:1/-1">
         <div class="frc-role">CHILDREN -- DESIGNATED HEIRS</div>
         <div class="frc-name" style="color:var(--cyan)">DAGHER LINEAGE HEIRS</div>
         <div class="frc-status">Sovereign succession protocol active. Children's Trust locked until maturity. Multi-sig inheritance vault.</div>
@@ -346,10 +346,11 @@ a{color:inherit;text-decoration:none}
 .phb-left{padding:18px clamp(14px,2.5vw,28px);border-right:1px solid rgba(201,168,76,.15)}
 .phb-right{padding:18px clamp(14px,2.5vw,28px);border-left:1px solid rgba(201,168,76,.15);text-align:right}
 .phb-center{display:flex;align-items:center;justify-content:center;padding:0 20px}
-.phb-stat{font-family:"Cinzel Decorative",serif;font-size:clamp(13px,2vw,18px);color:#C9A84C;line-height:1}
-.phb-lbl{font-family:"Courier Prime",monospace;font-size:7.5px;letter-spacing:2.5px;color:#8a8676;margin-top:4px}
+.phb-stat{font-family:"Cinzel Decorative",serif;font-size:clamp(13px,2vw,18px);color:var(--gold);line-height:1}
+.phb-lbl{font-family:"Courier Prime",monospace;font-size:7.5px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
 @media(max-width:660px){.pg-hero-band{grid-template-columns:1fr}.phb-center{display:none}.phb-left{border-right:none;border-bottom:1px solid rgba(201,168,76,.15)}.phb-right{border-left:none;text-align:left}}
-</style><div class="pg-hero-band"><div class="phb-left"><div class="phb-stat" id="phb-l-family">--</div><div class="phb-lbl">FAMILY STATUS</div></div><div class="phb-center"><canvas id="phb-cv-family" width="100" height="100" style="width:50px;height:50px;display:block"></canvas></div><div class="phb-right"><div class="phb-stat" id="phb-r-family">--</div><div class="phb-lbl">AUTHORITY</div></div></div><script>(function(){var cv=document.getElementById("phb-cv-family");if(!cv||!cv.getContext)return;var ctx=cv.getContext("2d"),t=0;function frame(){ctx.clearRect(0,0,100,100);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(50,50,14+i*4+2*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle="rgba(201,168,76,"+(0.08+0.1*(8-i)/8)+")";ctx.lineWidth=.8;ctx.stroke();}ctx.font="bold 18px \"Cinzel Decorative\",serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(201,168,76,"+(0.7+0.3*Math.sin(t*.04))+")";ctx.shadowColor="#C9A84C";ctx.shadowBlur=9;ctx.fillText("\u03A9",50,50);ctx.shadowBlur=0;t++;requestAnimationFrame(frame);}frame();})();</script>    </div>
+</style><div class="pg-hero-band"><div class="phb-left"><div class="phb-stat" id="phb-l-family">--</div><div class="phb-lbl">FAMILY STATUS</div></div><div class="phb-center"><canvas id="phb-cv-family" width="100" height="100" style="width:50px;height:50px;display:block"></canvas></div><div class="phb-right"><div class="phb-stat" id="phb-r-family">--</div><div class="phb-lbl">AUTHORITY</div></div><div data-page-emblem="family" style="margin:20px auto 0"></div>
+</div><script>(function(){var cv=document.getElementById("phb-cv-family");if(!cv||!cv.getContext)return;var ctx=cv.getContext("2d"),t=0;function frame(){ctx.clearRect(0,0,100,100);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(50,50,14+i*4+2*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle="rgba(201,168,76,"+(0.08+0.1*(8-i)/8)+")";ctx.lineWidth=.8;ctx.stroke();}ctx.font="bold 18px \"Cinzel Decorative\",serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(201,168,76,"+(0.7+0.3*Math.sin(t*.04))+")";ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=9;ctx.fillText("\u03A9",50,50);ctx.shadowBlur=0;t++;requestAnimationFrame(frame);}frame();})();</script>    </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:20px">The Bloodline Vault is the eternal succession engine of the Order. Every sovereign node &mdash; living or passed &mdash; is recorded here. Assets, matrix coordinates, and sovereign rights pass through the bloodline according to the succession protocol. The Vault cannot be altered by any force except the Architect and legitimate heirs with multi-sig confirmation. What is built here lasts beyond a single life.</p>
 
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px">
@@ -387,7 +388,7 @@ a{color:inherit;text-decoration:none}
   
     </div>
 
-    <div class="mtab-panel" <div class="topbar"></div>
+    <div class="mtab-panel" id="mtab-heritage" style="display:none">
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:15px;line-height:1.75;margin-bottom:24px">The Heritage Archive is the living memory of your sovereign lineage. Where you came from determines the weight of where you are going. Every root recorded here is woven into your matrix identity and passed forward through the Order.</p>
 
     <div class="sechead" data-reveal="fade-up">YOUR LINEAGE TIMELINE <span data-canon-lattice="nine"></span></div>
@@ -478,7 +479,7 @@ updateTrustTimer();setInterval(updateTrustTimer,60000);
     data.forEach((d,i)=>{
       const x=i*step,y=H-(d/100)*H*.85;
       ctx.beginPath();ctx.arc(x,y+(1.5*Math.sin(t+i)),3,0,Math.PI*2);
-      ctx.fillStyle='#3fb27f';ctx.shadowColor='#3fb27f';ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
+      ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f');ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f');ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
     });
     requestAnimationFrame(f);}f();
 })();
@@ -490,16 +491,16 @@ function drawConstellation(mems){
   cv.width=W*2;cv.height=H*2;cv.style.width=W+'px';cv.style.height=H+'px';
   const ctx=cv.getContext('2d');ctx.scale(2,2);let t=0;
   const CX=W/2,CY=H/2;
-  const center={x:CX,y:CY,name:'SLEIMAN',role:'ARCHITECT',col:'#C9A84C',isRoot:true};
-  const COLS={Wife:'#9B6BF0',Son:'#00E5FF',Daughter:'#3fb27f',Mother:'#D9B86A',Father:'#D9B86A',Brother:'#C7CDD6',Sister:'#A9C2D8'};
+  const center={x:CX,y:CY,name:'SLEIMAN',role:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),isRoot:true};
+  const COLS={Wife:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),Son:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),Daughter:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),Mother:'#D9B86A',Father:'#D9B86A',Brother:'#C7CDD6',Sister:'#A9C2D8'};
   /* GENEALOGY TIERS: ancestors above, peers beside, descendants below */
   const TIER={Grandfather:-2,Grandmother:-2,Father:-1,Mother:-1,Wife:0,Husband:0,Brother:0,Sister:0,Son:1,Daughter:1,Grandson:2,Granddaughter:2};
   const ROWY={'-2':CY-96,'-1':CY-58,'0':CY,'1':CY+62,'2':CY+118};
   const tiers={}; mems.forEach(m=>{const tk=(TIER[m.relation]!=null?TIER[m.relation]:1);(tiers[tk]=tiers[tk]||[]).push(m);});
   const nodes=[center];
   Object.keys(tiers).forEach(tk=>{const arr=tiers[tk];const ty=(ROWY[tk]!=null?ROWY[tk]:CY+62);
-    if(tk==='0'){ arr.forEach((m,i)=>{const side=i%2?1:-1;const rank=Math.floor(i/2)+1;nodes.push({x:CX+side*rank*(W*0.17),y:CY,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||'#C9A84C',isHeir:m.is_heir});}); }
-    else { const n=arr.length; arr.forEach((m,i)=>{const x=(n===1?CX:(W*0.14+(W*0.72)*(i/(n-1))));nodes.push({x:x,y:ty,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||'#C9A84C',isHeir:m.is_heir});}); }
+    if(tk==='0'){ arr.forEach((m,i)=>{const side=i%2?1:-1;const rank=Math.floor(i/2)+1;nodes.push({x:CX+side*rank*(W*0.17),y:CY,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),isHeir:m.is_heir});}); }
+    else { const n=arr.length; arr.forEach((m,i)=>{const x=(n===1?CX:(W*0.14+(W*0.72)*(i/(n-1))));nodes.push({x:x,y:ty,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),isHeir:m.is_heir});}); }
   });
   function frame(){
     t+=.01;ctx.clearRect(0,0,W,H);
@@ -528,21 +529,10 @@ function buildMemberCards(rows){
   const g=document.getElementById('member-grid');g.innerHTML='';
   if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:11px;color:var(--muted)">No family nodes registered yet. Add your first bloodline node below.</div>';return;}
   rows.forEach(m=>{
-    const c=document.createElement('div');c.className='mc'+(m.is_heir?' heir':'');
+    const c=document.createElement('div');c.className='mc card'+(m.is_heir?' heir':'');
     c.innerHTML=`<div class="mc-rel">${m.relation?.toUpperCase()||'FAMILY'}</div><div class="mc-name">${m.name}</div><div class="mc-sign">${m.sign||'SIGN NOT SET'}</div><div class="mc-actions"><button class="mc-btn mc-heir-btn" data-id="${m.id}" data-heir="${m.is_heir?1:0}">${m.is_heir?'REVOKE HEIR':'SET HEIR'}</button><button class="mc-btn mc-del" data-id="${m.id}">REMOVE</button></div>`;
-    c.querySelector('.mc-heir-btn').addEventListener('click',async e=>{const id=e.target.dataset.id;const h=e.target.dataset.heir==='1';if(!h){/* FAMILY PAGE BOOT */
-  var s=(await sb.auth.getSession()).data.session;
-  if(!s){location.replace('/account.html');return;}
-  var uid=s.user.id;
-  var pr=(await sb.from('profiles').select('*').eq('id',uid).maybeSingle()).data||{};
-  if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-  if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
-  document.getElementById('app').style.display='flex';
-  var name=(pr.display_name||s.user.email||'SOVEREIGN MEMBER').toUpperCase();
-  ['user-name','ft-title'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=name;});
-  if(pr.is_owner){var fn=document.getElementById('family-founder-name');if(fn)fn.style.display='inline';}
-  await sb.from('family_nodes').update({is_heir:false}).eq('user_id',uid);await sb.from('family_nodes').update({is_heir:true}).eq('id',id).eq('user_id',uid);}else{await sb.from('family_nodes').update({is_heir:false}).eq('id',id).eq('user_id',uid);}boot();});
-    c.querySelector('.mc-del').addEventListener('click',async e=>{if(confirm('Remove node?')){await sb.from('family_nodes').delete().eq('id',e.target.dataset.id).eq('user_id',uid);boot();}});
+    c.querySelector('.mc-heir-btn').addEventListener('click',async e=>{const id=e.target.dataset.id;const h=e.target.dataset.heir==='1';let err=null;if(!h){err=(await sb.from('family_nodes').update({is_heir:false}).eq('user_id',uid)).error;if(!err)err=(await sb.from('family_nodes').update({is_heir:true}).eq('id',id).eq('user_id',uid)).error;}else{err=(await sb.from('family_nodes').update({is_heir:false}).eq('id',id).eq('user_id',uid)).error;}if(err)alert('Could not update heir status. Try again.');boot();});
+    c.querySelector('.mc-del').addEventListener('click',async e=>{if(confirm('Remove node?')){const{error}=await sb.from('family_nodes').delete().eq('id',e.target.dataset.id).eq('user_id',uid);if(error)alert('Could not remove node. Try again.');boot();}});
     g.appendChild(c);
   });
 }
@@ -567,7 +557,7 @@ async function boot(){
     document.getElementById('ft-title').textContent='WELCOME, DAGHER FAMILY';
     document.getElementById('owner-only-family').style.display='block';
     document.getElementById('nodes-sechead').textContent='FAMILY NODES -- BLOODLINE REGISTRY';
-    fillRing(document.querySelector('.sov-ring'), '&#937;', '#9B6BF0', false);
+    fillRing(document.querySelector('.sov-ring'), '&#937;', (getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'), false);
   } else {
     document.getElementById('ft-title').textContent=name?('WELCOME, '+name.toUpperCase()):'WELCOME';
   }
@@ -610,7 +600,7 @@ async function loadNodes(){
     g.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted);padding:14px">No nodes sealed yet. Register your bloodline above.</div>';
   } else {
     stored.forEach(n=>{
-      const c=document.createElement('div'); c.className='node-card';
+      const c=document.createElement('div'); c.className='node-card card';
       c.innerHTML=`<div class="nc-rel">${n.rel}</div><div class="nc-name">${n.name}</div><div class="nc-dates">${n.birth?new Date(n.birth).getFullYear():''}</div><div class="nc-notes">${n.notes||''}</div><span class="nc-badge">SEALED &#x2713;</span>`;
       g.appendChild(c);
     });
@@ -740,7 +730,7 @@ async function buildTimeline(){
     node.className='tl-node'+(records.length?'':' ');
     if(era.key==='present') node.className+=' active-node';
     node.innerHTML=
-      '<div class="tl-card">'+
+      '<div class="tl-card card">'+
       '<div class="tl-era" style="color:'+era.color+'">'+era.glyph+' &nbsp;'+era.label+'</div>'+
       '<div class="tl-title">'+(records.length?records[records.length-1].title:'No records yet for this era')+'</div>'+
       '<div class="tl-body">'+(records.length?esc(records[records.length-1].body):'Add your first record for this period below.')+'</div>'+
@@ -770,7 +760,7 @@ function buildArchives(){
   grid.innerHTML='';
   ARCHIVES.forEach(function(a){
     var card=document.createElement('div');
-    card.className='arch-card';
+    card.className='arch-card card';
     card.innerHTML=
       '<div class="arch-icon">'+a.icon+'</div>'+
       '<div class="arch-title">'+a.title+'</div>'+

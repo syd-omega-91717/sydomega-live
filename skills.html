@@ -311,6 +311,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     </div>
   </div>
 </div>
+<div data-page-emblem="skills" style="margin:20px auto 0"></div>
 
 <script>
 var SKILLS_KEY   = 'omega_skills';
@@ -318,7 +319,7 @@ var SESSIONS_KEY = 'omega_skill_sessions';
 
 var DOMAINS = {
   technology: {label:'TECHNOLOGY', color:'#5C8FD6', icon:'&#9881;'},
-  business:   {label:'BUSINESS',   color:'#C9A84C', icon:'&#9670;'},
+  business:   {label:'BUSINESS',   color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), icon:'&#9670;'},
   creative:   {label:'CREATIVE',   color:'#9C6FD6', icon:'&#9728;'},
   physical:   {label:'PHYSICAL',   color:'#4CAF50', icon:'&#9878;'},
   social:     {label:'SOCIAL',     color:'#26C6DA', icon:'&#9678;'},
@@ -390,7 +391,7 @@ function renderSkillBar(s, d, actions){
   var pct=((s.current||1)/10)*100;
   var tpct=((s.target||8)/10)*100;
   var label=LEVEL_LABELS[Math.round(s.current)]||'';
-  return '<div class="skill-card" style="--sc:'+d.color+'">'
+  return '<div class="skill-card card" style="--sc:'+d.color+'">'
     +'<div class="sk-top">'
     +'<div><div class="sk-name">'+escH(s.name)+'</div><div class="sk-domain">'+d.label+(s.desc?' &middot; '+escH(s.desc.slice(0,40)):'')+'</div></div>'
     +(actions?'<div class="sk-actions"><button class="btn-sm" onclick="logSessionForSkill(\''+s.id+'\')">+ SESSION</button><button class="btn-sm" onclick="editSkill(\''+s.id+'\')">EDIT</button><button class="btn-sm" onclick="deleteSkill(\''+s.id+'\')" style="color:var(--crim)">&#10005;</button></div>':'')
@@ -503,7 +504,7 @@ function renderDomains(){
     var d=DOMAINS[dk];
     var count=skills.filter(function(s){return s.domain===dk;}).length;
     var avg=count?skills.filter(function(s){return s.domain===dk;}).reduce(function(s,sk){return s+sk.current;},0)/count:0;
-    return '<div class="domain-card" onclick="applyDomainFilter(\''+dk+'\')">'
+    return '<div class="domain-card card" onclick="applyDomainFilter(\''+dk+'\')">'
       +'<div class="domain-icon" style="color:'+d.color+'">'+d.icon+'</div>'
       +'<div class="domain-name" style="color:'+d.color+'">'+d.label+'</div>'
       +'<div class="domain-count">'+count+' skill'+(count!==1?'s':'')+' &middot; avg '+avg.toFixed(1)+'/10</div>'

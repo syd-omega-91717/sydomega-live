@@ -73,6 +73,7 @@
     <div class="card"><div class="card-title">THE SOVEREIGN CREED</div><div class="card-body">Each Faction has a Creed — a single sovereign principle that defines how that house approaches power, knowledge, and contribution. The Creed is a compass, not a rule. It calibrates how members of that sign are expected to operate within the 9×9×9 Matrix.</div></div>
   </div>
 </div>
+<div data-page-emblem="factions" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -118,7 +119,7 @@ function renderMyFaction(sign){
     +'<div class="mb-meta">'+f[1]+' '+f[0].toUpperCase()+' &middot; ELEMENT '+f[3].toUpperCase()+' &middot; OLYMPIAN '+f[4].toUpperCase()+'</div>'
     +'<div class="mb-creed">&ldquo;'+f[5]+'&rdquo;</div>'
     +'</div>';
-  knightPanel.innerHTML='<div class="knight-card" style="--kc:'+col+'">'
+  knightPanel.innerHTML='<div class="knight-card card" style="--kc:'+col+'">'
     +'<div class="kn-name">'+f[6]+'</div>'
     +'<div class="kn-faction">'+f[2].toUpperCase()+' &middot; '+f[0].toUpperCase()+'</div>'
     +'<div class="kn-role">'+f[7]+'</div>'
@@ -132,7 +133,7 @@ function renderAllFactions(mySign){
     var col=EC[f[3]]||'#C9A84C';
     var isMe=f[0]===mySign;
     var card=document.createElement('div');
-    card.className='faction-card'+(isMe?' mine':'');
+    card.className='faction-card card'+(isMe?' mine':'');
     card.style.setProperty('--fc',col);
     card.innerHTML=(isMe?'<div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">YOUR FACTION</div>':'')
       +'<div style="font-size:20px;margin-bottom:6px">'+f[1]+'</div>'
@@ -150,7 +151,7 @@ function renderKnights(){
   F.forEach(function(f){
     var col=EC[f[3]]||'#C9A84C';
     var card=document.createElement('div');
-    card.className='knight-card';
+    card.className='knight-card card';
     card.style.setProperty('--kc',col);
     card.innerHTML='<div class="kn-name">'+f[6]+'</div>'
       +'<div class="kn-faction">'+f[1]+' '+f[2].toUpperCase()+' &middot; '+f[0].toUpperCase()+'</div>'

@@ -95,6 +95,7 @@
     <div class="tbl-row" style="grid-template-columns:2fr 1fr 1fr"><span>Find Cosmological Place</span><span>COSMOS</span><span>Faction Mapped</span></div>
   </div>
 </div>
+<div data-page-emblem="beacon" style="margin:20px auto 0"></div>
 </div>
 
 <script type="module">
@@ -105,9 +106,9 @@ var GLY={Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍
 var SIGN_GOD={Aries:'ARES',Taurus:'APHRODITE',Gemini:'HERMES',Cancer:'ARTEMIS',Leo:'APOLLO',Virgo:'DEMETER',Libra:'HEPHAESTUS',Scorpio:'HADES',Sagittarius:'ZEUS',Capricorn:'HESTIA',Aquarius:'POSEIDON',Pisces:'DIONYSUS'};
 
 var MAP=[
-  ['Ascend','#00E5FF','Rise through the 729 on three axes.',[['Dashboard','/dashboard.html'],['Triads','/triads.html'],['Gates','/gates.html'],['Ascension','/ascension.html']]],
-  ['Learn & Prove','#C9A84C','Raise your three axes.',[['Academy','/academy.html'],['Games','/gaming.html'],['Contributions','/contributions.html']]],
-  ['Your Cosmos','#E2C86D','Who you are in the Order.',[['Horoscope','/horoscope.html'],['Pantheons','/pantheons.html'],['Factions','/factions.html'],['Kings','/kings.html']]],
+  ['Ascend',(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),'Rise through the 729 on three axes.',[['Dashboard','/dashboard.html'],['Triads','/triads.html'],['Gates','/gates.html'],['Ascension','/ascension.html']]],
+  ['Learn & Prove',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),'Raise your three axes.',[['Academy','/academy.html'],['Games','/gaming.html'],['Contributions','/contributions.html']]],
+  ['Your Cosmos',(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),'Who you are in the Order.',[['Horoscope','/horoscope.html'],['Pantheons','/pantheons.html'],['Factions','/factions.html'],['Kings','/kings.html']]],
   ['Create & Trade','#A9C2D8','Works, counsel, economy.',[['Publishing','/publishing.html'],['Consultancy','/consultancy.html'],['Wallet','/wallet.html'],['Marketplace','/marketplace.html']]],
   ['The Order','#34C6E6','Community and standing.',[['Sovereigns','/sovereigns.html'],['Social','/social.html'],['Family','/family.html'],['Charter','/charter.html']]],
   ['You','#D9B86A','Your identity and controls.',[['Passport','/passport.html'],['Profile','/profile.html'],['Membership','/subscriptions.html'],['Settings','/settings.html']]]
@@ -127,7 +128,7 @@ function drawRing(pct){
     if(Math.abs(pct-cur)<0.003)cur=pct;
     x.clearRect(0,0,w,w);x.lineWidth=10;x.lineCap='round';
     x.beginPath();x.arc(cx,cy,r,-Math.PI/2,1.5*Math.PI);x.strokeStyle='#15151f';x.stroke();
-    x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+cur*2*Math.PI);x.strokeStyle='#00E5FF';x.shadowColor='rgba(0,229,255,.5)';x.shadowBlur=12;x.stroke();x.shadowBlur=0;
+    x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+cur*2*Math.PI);x.strokeStyle=(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF');x.shadowColor='rgba(0,229,255,.5)';x.shadowBlur=12;x.stroke();x.shadowBlur=0;
     if(cur!==pct&&!reduce)requestAnimationFrame(step);
   }
   step();

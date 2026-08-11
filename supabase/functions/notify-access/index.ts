@@ -28,6 +28,10 @@ const FROM = "SYD OMEGA 91717 <onboarding@resend.dev>";
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { "Content-Type": "application/json" } });
 
+function escHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 function shouldNotify(payload: { type: string; record: any; old_record: any }): boolean {
   if (payload.type === "INSERT") return true;
   if (payload.type === "UPDATE") {
@@ -52,9 +56,9 @@ Deno.serve(async (req) => {
     if (!shouldNotify(payload)) return json({ sent: false, reason: "not_a_new_request" });
 
     const p = payload.record;
-    const name = p.display_name || "(no name set)";
-    const sign = p.sign || "unknown sign";
-    const submitted = p.created_at || p.updated_at || new Date().toISOString();
+    const name = escHtml(String(p.display_name || "(no name set)"));
+    const sign = escHtml(String(p.sign || "unknown sign"));
+    const submitted = escHtml(String(p.created_at || p.updated_at || new Date().toISOString()));
 
     const res = await fetch(RESEND_ENDPOINT, {
       method: "POST",

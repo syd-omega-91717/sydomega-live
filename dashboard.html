@@ -77,6 +77,12 @@
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap;margin-bottom:28px}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* CONTRIBUTION HEATMAP (cell size/intensity scale/legend match habits.html's convention) */
+.heatmap-wrap{overflow-x:auto;padding-bottom:4px}
+.heatmap-row{display:flex;flex-wrap:wrap;gap:3px;max-width:100%}
+.heatmap-cell{width:9px;height:9px;border-radius:1px;flex-shrink:0}
+.heatmap-legend{display:flex;gap:4px;align-items:center;font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:8px}
+.heatmap-legend-dot{width:10px;height:10px;border-radius:1px}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.two-col{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.mission-bar{flex-wrap:wrap;height:auto;padding:8px var(--pad)}}
 </style>
 </head>
@@ -104,7 +110,7 @@
       <div class="ss-item"><div class="ss-label">AUTH APEX</div><div class="ss-val" style="--vc:var(--gold)">27.8367</div></div>
       <div class="ss-item"><div class="ss-label">LATTICE NODES</div><div class="ss-val" style="--vc:var(--cyan)">104,976</div></div>
       <div class="ss-item"><div class="ss-label">JS ENGINES</div><div class="ss-val" style="--vc:var(--purple)">92</div></div>
-      <div class="ss-item"><div class="ss-label">PAGES</div><div class="ss-val" style="--vc:var(--green)">158</div></div>
+      <div class="ss-item"><div class="ss-label">PAGES</div><div class="ss-val" style="--vc:var(--green)">170</div></div>
       <div class="ss-item"><div class="ss-label">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">105</div></div>
       <div class="ss-item"><div class="ss-label">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
       <div class="ss-item"><div class="ss-label">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
@@ -150,7 +156,7 @@
         <!-- ACTION CENTER (merged alerts + recommendations) -->
         <div class="sechead" data-reveal="fade-up">ACTION CENTRE &middot; PRIORITY ITEMS <span class="sechead-action" onclick="location.href='/observatory.html'">OBSERVATORY &#8594;</span></div>
         <div class="alert-list" id="alert-list" style="margin-bottom:16px">
-          <div class="alert-item" style="--ac:var(--crim)"><div class="alert-icon">&#9650;</div><div><div class="alert-text">Run SQL migrations in RUN_ORDER.md to activate all 105 SQL files and 64 RPCs.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP</div></div></div>
+          <div class="alert-item" style="--ac:var(--crim)"><div class="alert-icon">&#9650;</div><div><div class="alert-text">Run the SQL migrations in supabase/migrations/ (see its README.md) or the flat supabase/*.sql files against the live database.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP</div></div></div>
           <div class="alert-item" style="--ac:var(--solar)"><div class="alert-icon">&#9888;</div><div><div class="alert-text">Set ANTHROPIC_API_KEY in Supabase secrets to activate AI concierge edge functions.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH &middot; AI MODULE</div></div></div>
           <div class="alert-item" style="--ac:var(--cyan)"><div class="alert-icon">&#9670;</div><div><div class="alert-text">Enable pgvector extension in Supabase dashboard to activate semantic AI memory.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH &middot; VECTOR SEARCH</div></div></div>
           <div class="alert-item" style="--ac:var(--green)"><div class="alert-icon">&#9654;</div><div><div class="alert-text">Launch founding member recruitment. First 100 members validate gate thresholds and generate real progression data.</div><div class="alert-meta">STRATEGIC &middot; DOMAIN: GROWTH &middot; HIGH LEVERAGE</div></div></div>
@@ -200,17 +206,21 @@
           </div>
         </div>
 
+        <!-- SOVEREIGN ACTIVITY HEATMAP (reads public.task_completions, own rows only) -->
+        <div class="sechead" style="margin-top:16px">SOVEREIGN ACTIVITY &middot; 90-DAY CONTRIBUTION HEATMAP</div>
+        <div class="heatmap-wrap"><div id="contribution-heatmap"></div></div>
+
         <!-- PERSONAL TOOL GRID -->
         <div class="sechead" style="margin-top:16px">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px">
-          <div class="cmd-card" style="--cc:var(--purple)" onclick="location.href='/journal.html'"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
-          <div class="cmd-card" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
-          <div class="cmd-card" style="--cc:var(--green)"  onclick="location.href='/body.html'"><div class="cc-icon" style="color:var(--green)">&#9878;</div><div class="cc-name">BODY COMPOSITION</div><div class="cc-desc">Navy BF%, BMI, lean mass, measurement trends.</div></div>
-          <div class="cmd-card" style="--cc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="cc-icon" style="color:var(--gold)">&#10024;</div><div class="cc-name">GRATITUDE</div><div class="cc-desc">3-good-things, 30-day streak, gratitude jar.</div></div>
-          <div class="cmd-card" style="--cc:var(--solar)"  onclick="location.href='/budget.html'"><div class="cc-icon" style="color:var(--solar)">&#9874;</div><div class="cc-name">SOVEREIGN BUDGET</div><div class="cc-desc">Monthly P&amp;L, 50/30/20 rule, 12-month trends.</div></div>
-          <div class="cmd-card" style="--cc:var(--cyan)"   onclick="location.href='/network.html'"><div class="cc-icon" style="color:var(--cyan)">&#9678;</div><div class="cc-name">NETWORK INTEL</div><div class="cc-desc">Dunbar circles, relationship orbit, due touchpoints.</div></div>
-          <div class="cmd-card" style="--cc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="cc-icon" style="color:var(--cyan)">&#128278;</div><div class="cc-name">FLASHCARDS</div><div class="cc-desc">SM-2 spaced repetition, Ebbinghaus science.</div></div>
-          <div class="cmd-card" style="--cc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="cc-icon" style="color:rgba(201,168,76,.7)">&#9878;</div><div class="cc-name">DECISION JOURNAL</div><div class="cc-desc">5 frameworks, 9 bias guards, outcome tracker.</div></div>
+          <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/journal.html'"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
+          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
+          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/body.html'"><div class="cc-icon" style="color:var(--green)">&#9878;</div><div class="cc-name">BODY COMPOSITION</div><div class="cc-desc">Navy BF%, BMI, lean mass, measurement trends.</div></div>
+          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="cc-icon" style="color:var(--gold)">&#10024;</div><div class="cc-name">GRATITUDE</div><div class="cc-desc">3-good-things, 30-day streak, gratitude jar.</div></div>
+          <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/budget.html'"><div class="cc-icon" style="color:var(--solar)">&#9874;</div><div class="cc-name">SOVEREIGN BUDGET</div><div class="cc-desc">Monthly P&amp;L, 50/30/20 rule, 12-month trends.</div></div>
+          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/network.html'"><div class="cc-icon" style="color:var(--cyan)">&#9678;</div><div class="cc-name">NETWORK INTEL</div><div class="cc-desc">Dunbar circles, relationship orbit, due touchpoints.</div></div>
+          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="cc-icon" style="color:var(--cyan)">&#128278;</div><div class="cc-name">FLASHCARDS</div><div class="cc-desc">SM-2 spaced repetition, Ebbinghaus science.</div></div>
+          <div class="cmd-card card" style="--cc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="cc-icon" style="color:rgba(201,168,76,.7)">&#9878;</div><div class="cc-name">DECISION JOURNAL</div><div class="cc-desc">5 frameworks, 9 bias guards, outcome tracker.</div></div>
         </div>
       </div>
     </div>
@@ -218,7 +228,7 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead">PLATFORM COMMAND INDEX &middot; ALL 169 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead">PLATFORM COMMAND INDEX &middot; ALL 170 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'">ECOSYSTEM MAP &#8594;</span></div>
         <div id="platform-sections"></div>
         <div class="sechead" style="margin-top:24px">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
@@ -264,11 +274,11 @@
         </div>
         <div class="sechead">ACTIVE WORKFLOWS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
-          <div class="cmd-card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
-          <div class="cmd-card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
-          <div class="cmd-card" style="--cc:var(--cyan)"   onclick="location.href='/gaming.html'"><div class="cc-name">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate &rarr; increment axis &rarr; recompute &rarr; gate check</div></div>
-          <div class="cmd-card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
-          <div class="cmd-card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
+          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
+          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
+          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/gaming.html'"><div class="cc-name">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate &rarr; increment axis &rarr; recompute &rarr; gate check</div></div>
+          <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
+          <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
         <div class="sechead">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
         <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
@@ -300,8 +310,8 @@
             <span style="color:var(--muted)">AUTHORITY APEX</span><span style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
             <span style="color:var(--muted)">TRIAL WINDOW</span><span>557 SECONDS (9 MIN 17 SEC)</span>
             <span style="color:var(--muted)">LATTICE</span><span>12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</span>
-            <span style="color:var(--muted)">PLATFORM PAGES</span><span>169 HTML &middot; 92 JS ENGINES</span>
-            <span style="color:var(--muted)">SQL FILES</span><span>105 MIGRATIONS &middot; 64 RPCS</span>
+            <span style="color:var(--muted)">PLATFORM PAGES</span><span>170 HTML &middot; 85 JS ENGINES</span>
+            <span style="color:var(--muted)">SQL FILES</span><span>109 MIGRATIONS &middot; 95 FUNCTIONS</span>
           </div>
         </div>
         <div class="sechead">GATE THRESHOLDS &middot; 12 SOVEREIGN LEVELS</div>
@@ -329,11 +339,13 @@
         <div class="tl-item"><div class="tl-dot" style="--td:var(--muted)"></div><div class="tl-content"><div class="tl-title" style="color:var(--muted)">Loading timeline&hellip;</div></div></div>
       </div>
     </div>
-    <div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 169 PAGES &middot; 92 ENGINES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+    <div data-page-emblem="dashboard" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 170 PAGES &middot; 85 ENGINES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 
 <script>
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 /* ── TAB SWITCHER ────────────────────────────────────────────── */
 function setTab(name){
   var tabs=['overview','personal','platform','science'];
@@ -348,16 +360,16 @@ function setTab(name){
   var cv=document.getElementById('galaxy-canvas');if(!cv) return;
   var ctx=cv.getContext('2d');var W,H,t=0;
   var MODULES=[
-    {name:'CORE',col:'#C9A84C',href:'/dashboard.html',r:0},
-    {name:'IDENTITY',col:'#00E5FF',href:'/profile.html',r:1},{name:'MASTERY',col:'#9B6BF0',href:'/gaming.html',r:1},
-    {name:'TREASURY',col:'#E2C86D',href:'/vault.html',r:1},{name:'AI',col:'#3fb27f',href:'/sovereign-ai.html',r:1},
-    {name:'MEDIA',col:'#9B6BF0',href:'/cinema.html',r:1},{name:'HERITAGE',col:'#3fb27f',href:'/heritage.html',r:1},
-    {name:'GOVERN',col:'#C9A84C',href:'/governance.html',r:2},{name:'INVEST',col:'#E2C86D',href:'/investment.html',r:2},
-    {name:'SOCIAL',col:'#00E5FF',href:'/feed.html',r:2},{name:'COSMOS',col:'#9B6BF0',href:'/cosmos.html',r:2},
-    {name:'NEWS',col:'#00E5FF',href:'/news.html',r:2},{name:'ENTERPRISE',col:'#C9A84C',href:'/enterprise.html',r:2},
-    {name:'RESEARCH',col:'#3fb27f',href:'/lab.html',r:2},{name:'LATTICE',col:'#C9A84C',href:'/matrix.html',r:2},
-    {name:'LEGAL',col:'#E2C86D',href:'/compliance.html',r:2},{name:'FAMILY',col:'#3fb27f',href:'/family.html',r:2},
-    {name:'HEALTH',col:'#3fb27f',href:'/observatory.html',r:2},
+    {name:'CORE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/dashboard.html',r:0},
+    {name:'IDENTITY',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),href:'/profile.html',r:1},{name:'MASTERY',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),href:'/gaming.html',r:1},
+    {name:'TREASURY',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),href:'/vault.html',r:1},{name:'AI',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/sovereign-ai.html',r:1},
+    {name:'MEDIA',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),href:'/cinema.html',r:1},{name:'HERITAGE',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/heritage.html',r:1},
+    {name:'GOVERN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/governance.html',r:2},{name:'INVEST',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),href:'/investment.html',r:2},
+    {name:'SOCIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),href:'/feed.html',r:2},{name:'COSMOS',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),href:'/cosmos.html',r:2},
+    {name:'NEWS',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),href:'/news.html',r:2},{name:'ENTERPRISE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/enterprise.html',r:2},
+    {name:'RESEARCH',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/lab.html',r:2},{name:'LATTICE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/matrix.html',r:2},
+    {name:'LEGAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),href:'/compliance.html',r:2},{name:'FAMILY',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/family.html',r:2},
+    {name:'HEALTH',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/observatory.html',r:2},
   ];
   var nodes=[];
   function resize(){W=cv.offsetWidth;H=cv.offsetHeight||360;cv.width=W;cv.height=H;}
@@ -464,7 +476,7 @@ function renderCommandGrid(){
   var grid=document.getElementById('cmd-grid');if(!grid) return;
   grid.innerHTML=CMD_MODULES.map(function(m){
     var clickFn=m.onclick?m.onclick:'location.href=\''+m.href+'\'';
-    return '<div class="cmd-card" style="--cc:'+m.col+'" onclick="'+clickFn+'" tabindex="0" role="link" aria-label="'+m.name+'" onkeydown="if(event.key===\'Enter\')('+clickFn+')">'
+    return '<div class="cmd-card card" style="--cc:'+m.col+'" onclick="'+clickFn+'" tabindex="0" role="link" aria-label="'+m.name+'" onkeydown="if(event.key===\'Enter\')('+clickFn+')">'
       +'<div class="cc-icon" style="color:'+m.col+'">'+m.icon+'</div>'
       +'<div class="cc-name">'+m.name+'</div>'
       +'<div class="cc-desc">'+m.desc+'</div>'
@@ -507,9 +519,9 @@ function loadAILayer(){
   qg.dataset.loaded='1';
   fetch('/omega-agents.json').then(function(r){return r.json();}).then(function(data){
     var agents=data.agents||[];
-    var EL={'fire':'#E25800','water':'#0088FF','wind':'#00E5FF','metal':'#8a8676','sand':'#E2C86D'};
+    var EL={'fire':'#E25800','water':'#0088FF','wind':(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),'metal':(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676'),'sand':(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')};
     qg.innerHTML=agents.map(function(ag){
-      var col=EL[(ag.element||'fire').toLowerCase()]||'#C9A84C';
+      var col=EL[(ag.element||'fire').toLowerCase()]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
       return '<div style="border:1px solid rgba(201,168,76,.15);padding:10px;border-radius:2px;cursor:pointer;border-left:2px solid '+col+';transition:.15s" onclick="location.href=\'/agents.html\'" onmouseover="this.style.background=\'rgba(201,168,76,.04)\'" onmouseout="this.style.background=\'none\'">'
         +'<div style="font-family:var(--D);font-size:10px;color:'+col+'">'+ag.name+'</div>'
         +'<div style="font-family:var(--M);font-size:7px;letter-spacing:1px;color:var(--muted);margin-top:3px">'+ag.sign.toUpperCase()+' &middot; '+ag.role+'</div>'
@@ -583,7 +595,7 @@ function renderPersonalOS(){
 function drawPersonalWheel(areas){
   var cv=document.getElementById('personal-wheel');if(!cv) return;
   var DEFAULTS=[
-    {id:'wealth',label:'WEALTH',color:'#C9A84C'},{id:'health',label:'HEALTH',color:'#4CAF50'},
+    {id:'wealth',label:'WEALTH',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},{id:'health',label:'HEALTH',color:'#4CAF50'},
     {id:'mind',label:'MIND',color:'#5C8FD6'},{id:'bonds',label:'BONDS',color:'#E57373'},
     {id:'spirit',label:'SPIRIT',color:'#9C6FD6'},{id:'craft',label:'CRAFT',color:'#FF9800'},
     {id:'legacy',label:'LEGACY',color:'#90A4AE'},{id:'freedom',label:'FREEDOM',color:'#26C6DA'},
@@ -619,12 +631,37 @@ function drawPersonalWheel(areas){
   data.forEach(function(d,i){
     var a=((i/N)*Math.PI*2)-Math.PI/2,r=((d.current||0)/10)*maxR;
     ctx.beginPath();ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2);
-    ctx.fillStyle=d.color||'#C9A84C';ctx.fill();
+    ctx.fillStyle=d.color||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.fill();
     /* Labels */
     var lr=(maxR+12);
     ctx.font='5px monospace';ctx.fillStyle='rgba(201,168,76,.5)';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText((d.label||'').slice(0,6),cx+Math.cos(a)*lr,cy+Math.sin(a)*lr);
   });
+}
+
+/* ── CONTRIBUTION HEATMAP (public.task_completions, own rows only) ── */
+function renderContributionHeatmap(rows){
+  var el=document.getElementById('contribution-heatmap');if(!el) return;
+  var days=90,today=new Date();today.setHours(0,0,0,0);
+  var byDay={};
+  (rows||[]).forEach(function(r){
+    if(!r||!r.completed_at) return;
+    var key=String(r.completed_at).slice(0,10);
+    byDay[key]=(byDay[key]||0)+1;
+  });
+  var cellsHtml=Array.from({length:days},function(_,i){
+    var d=new Date(today);d.setDate(today.getDate()-(days-1-i));
+    var key=d.toISOString().slice(0,10);
+    var n=byDay[key]||0;
+    var alpha=n<=0?.06:(n===1?.25:(n===2?.5:.7));
+    var isToday=i===days-1;
+    return '<div class="heatmap-cell" title="'+key+' &middot; '+n+' contribution'+(n===1?'':'s')+'" style="background:rgba(201,168,76,'+alpha+');'+(isToday?'outline:1px solid rgba(201,168,76,.4)':'')+'"></div>';
+  }).join('');
+  el.innerHTML='<div class="heatmap-row">'+cellsHtml+'</div>';
+  var legend=document.createElement('div');
+  legend.className='heatmap-legend';
+  legend.innerHTML='LESS <div class="heatmap-legend-dot" style="background:rgba(201,168,76,.06)"></div><div class="heatmap-legend-dot" style="background:rgba(201,168,76,.25)"></div><div class="heatmap-legend-dot" style="background:rgba(201,168,76,.5)"></div><div class="heatmap-legend-dot" style="background:rgba(201,168,76,.7)"></div> MORE';
+  el.appendChild(legend);
 }
 
 /* ── PLATFORM SECTIONS RENDERER ─────────────────────────────── */
@@ -659,7 +696,7 @@ function renderPlatformSections(){
       {n:'Vision',u:'/vision.html'},{n:'Decisions',u:'/decisions.html'},{n:'Command Brief',u:'/command.html'},
       {n:'Targets',u:'/targets.html'},{n:'Roadmap',u:'/roadmap.html'},{n:'Ecosystem',u:'/ecosystem.html'},
       {n:'Weekly Review',u:'/weekly.html'},{n:'Projects',u:'/projects.html'}]},
-    {name:'INTELLIGENCE',col:'#9B6BF0',pages:[
+    {name:'INTELLIGENCE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),pages:[
       {n:'Analytics',u:'/analytics.html'},{n:'Intelligence',u:'/intelligence.html'},{n:'Sigma',u:'/sigma.html'},
       {n:'Nexus',u:'/nexus.html'},{n:'Cipher',u:'/cipher.html'},{n:'Pulse',u:'/pulse.html'},
       {n:'Signal',u:'/signal.html'},{n:'Codex',u:'/codex.html'},{n:'Atlas',u:'/atlas.html'},{n:'Network',u:'/network.html'},{n:'Mind Map',u:'/mindmap.html'}]},
@@ -683,7 +720,7 @@ function renderPlatformSections(){
     {name:'GOVERNANCE',col:'var(--gold)',pages:[
       {n:'Governance',u:'/governance.html'},{n:'Observatory',u:'/observatory.html'},{n:'Enterprise',u:'/enterprise.html'},
       {n:'Compliance',u:'/compliance.html'},{n:'Privacy',u:'/privacy.html'}]},
-    {name:'MEDIA',col:'#8B0000',pages:[
+    {name:'MEDIA',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),pages:[
       {n:'Cinema',u:'/cinema.html'},{n:'Series',u:'/series.html'},{n:'Trailers',u:'/trailers.html'},
       {n:'Universe',u:'/universe.html'},{n:'Feed',u:'/feed.html'},{n:'Social',u:'/social.html'}]},
     {name:'OPERATIONS',col:'var(--purple)',pages:[
@@ -752,6 +789,11 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
       sid('ops-tasks',tw.count||0);
     }catch(e){}
     try{
+      var ninetyAgo=new Date(Date.now()-90*864e5).toISOString();
+      var hm=await sb.from('task_completions').select('completed_at').eq('user_id',s.user.id).gte('completed_at',ninetyAgo);
+      renderContributionHeatmap(hm.data||[]);
+    }catch(e){}
+    try{
       var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',new Date().toISOString().slice(0,10));
       sid('k-events',pe.count||0);
     }catch(e){}
@@ -805,7 +847,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
             var dt=new Date(e.created_at);
             var ago=Math.round((Date.now()-dt)/1000);
             var agoStr=ago<60?ago+'s ago':ago<3600?Math.round(ago/60)+'m ago':ago<86400?Math.round(ago/3600)+'h ago':Math.round(ago/86400)+'d ago';
-            return '<div class="tl-item"><div class="tl-dot" style="--td:'+col+'"></div><div class="tl-content"><div class="tl-title">'+e.title+'</div><div class="tl-time">'+agoStr+'</div></div></div>';
+            return '<div class="tl-item"><div class="tl-dot" style="--td:'+col+'"></div><div class="tl-content"><div class="tl-title">'+esc(e.title)+'</div><div class="tl-time">'+agoStr+'</div></div></div>';
           }).join('');
         }else{
           tlEl.innerHTML='<div class="tl-item"><div class="tl-dot" style="--td:var(--muted)"></div><div class="tl-content"><div class="tl-title" style="color:var(--muted)">No events yet. Complete tasks to begin your sovereign record.</div></div></div>';

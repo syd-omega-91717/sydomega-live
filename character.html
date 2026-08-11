@@ -14,7 +14,7 @@
 .id-value{font-family:var(--M);font-size:13px;color:var(--cyan)}
 .id-value.gold{color:var(--gold)}
 .id-value.green{color:var(--green)}
-.id-value.purple{color:#9B6BF0}
+.id-value.purple{color:var(--purple)}
 .id-value.solar{color:var(--solar)}
 .element-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
 .elem-card{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:12px;text-align:center;transition:border-color .18s,background .18s}
@@ -68,7 +68,7 @@
       <div class="kpi-card"><div class="kpi-val" id="stat-c" style="color:var(--cyan)">--</div><div class="kpi-label">AXIS C · CONTRIBUTION</div></div>
     </div>
     <p class="sechead">SOVEREIGN IDENTITY CARD</p>
-    <div class="id-card">
+    <div class="id-card card">
       <div class="id-card-left">
         <div class="id-header">SYD OMEGA 91717 · CHARACTER PROFILE</div>
         <div class="id-name" id="chr-display-name">--</div>
@@ -105,15 +105,15 @@
   <div style="padding:1.25rem">
     <p class="sechead">THE 9 ELEMENTS OF THE SOVEREIGN LATTICE</p>
     <div class="element-grid">
-      <div class="elem-card" id="el-fire"><div class="elem-glyph">☲</div><div class="elem-name">FIRE</div><div class="elem-role">Primal · Track 1</div></div>
-      <div class="elem-card" id="el-water"><div class="elem-glyph">☰</div><div class="elem-name">WATER</div><div class="elem-role">Primal · Track 4</div></div>
-      <div class="elem-card" id="el-wind"><div class="elem-glyph">☱</div><div class="elem-name">WIND</div><div class="elem-role">Primal · Track 3</div></div>
-      <div class="elem-card" id="el-metal"><div class="elem-glyph">☳</div><div class="elem-name">METAL</div><div class="elem-role">Middle · Track 6</div></div>
-      <div class="elem-card" id="el-sand"><div class="elem-glyph">★</div><div class="elem-name">SAND</div><div class="elem-role">Middle · Amplifier</div></div>
-      <div class="elem-card" id="el-soul"><div class="elem-glyph">✴</div><div class="elem-name">SOUL</div><div class="elem-role">Middle · Track 5</div></div>
-      <div class="elem-card" id="el-space"><div class="elem-glyph">✶</div><div class="elem-name">SPACE</div><div class="elem-role">Supreme · Track 7</div></div>
-      <div class="elem-card" id="el-void"><div class="elem-glyph">✷</div><div class="elem-name">VOID</div><div class="elem-role">Supreme · Track 8</div></div>
-      <div class="elem-card" id="el-all"><div class="elem-glyph">Ω</div><div class="elem-name">THE ALL</div><div class="elem-role">Supreme · Apex</div></div>
+      <div class="elem-card card" id="el-fire"><div class="elem-glyph">☲</div><div class="elem-name">FIRE</div><div class="elem-role">Primal · Track 1</div></div>
+      <div class="elem-card card" id="el-water"><div class="elem-glyph">☰</div><div class="elem-name">WATER</div><div class="elem-role">Primal · Track 4</div></div>
+      <div class="elem-card card" id="el-wind"><div class="elem-glyph">☱</div><div class="elem-name">WIND</div><div class="elem-role">Primal · Track 3</div></div>
+      <div class="elem-card card" id="el-metal"><div class="elem-glyph">☳</div><div class="elem-name">METAL</div><div class="elem-role">Middle · Track 6</div></div>
+      <div class="elem-card card" id="el-sand"><div class="elem-glyph">★</div><div class="elem-name">SAND</div><div class="elem-role">Middle · Amplifier</div></div>
+      <div class="elem-card card" id="el-soul"><div class="elem-glyph">✴</div><div class="elem-name">SOUL</div><div class="elem-role">Middle · Track 5</div></div>
+      <div class="elem-card card" id="el-space"><div class="elem-glyph">✶</div><div class="elem-name">SPACE</div><div class="elem-role">Supreme · Track 7</div></div>
+      <div class="elem-card card" id="el-void"><div class="elem-glyph">✷</div><div class="elem-name">VOID</div><div class="elem-role">Supreme · Track 8</div></div>
+      <div class="elem-card card" id="el-all"><div class="elem-glyph">Ω</div><div class="elem-name">THE ALL</div><div class="elem-role">Supreme · Apex</div></div>
     </div>
     <div class="glass" style="margin-bottom:1rem">
       <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">YOUR ELEMENT AFFINITY</div>
@@ -163,15 +163,15 @@
     </div>
     <p class="sechead">SOVEREIGN TOKENS · 9-ELEMENT ECONOMY</p>
     <div class="token-row">
-      <div class="token-card" style="--tc:#E86A3A"><div class="token-sym">☲</div><div class="token-name">FIRE TOKEN</div><div class="token-type">Primal · Track 1</div></div>
-      <div class="token-card" style="--tc:#00E5FF"><div class="token-sym">☰</div><div class="token-name">WATER TOKEN</div><div class="token-type">Primal · Track 4</div></div>
-      <div class="token-card" style="--tc:#3fb27f"><div class="token-sym">☱</div><div class="token-name">WIND TOKEN</div><div class="token-type">Primal · Track 3</div></div>
-      <div class="token-card" style="--tc:#C9A84C"><div class="token-sym">☳</div><div class="token-name">METAL TOKEN</div><div class="token-type">Middle · Track 6</div></div>
-      <div class="token-card" style="--tc:#E2C86D"><div class="token-sym">★</div><div class="token-name">SAND TOKEN</div><div class="token-type">Amplifier · All</div></div>
-      <div class="token-card" style="--tc:#9B6BF0"><div class="token-sym">✴</div><div class="token-name">SOUL TOKEN</div><div class="token-type">Middle · Track 5</div></div>
-      <div class="token-card" style="--tc:#9B6BF0"><div class="token-sym">✶</div><div class="token-name">SPACE TOKEN</div><div class="token-type">Supreme · Track 7</div></div>
-      <div class="token-card" style="--tc:#8a8676"><div class="token-sym">✷</div><div class="token-name">VOID TOKEN</div><div class="token-type">Supreme · Track 8</div></div>
-      <div class="token-card" style="--tc:#E2C86D"><div class="token-sym">Ω</div><div class="token-name">OMEGA TOKEN</div><div class="token-type">The All · Apex</div></div>
+      <div class="token-card card" style="--tc:#E86A3A"><div class="token-sym">☲</div><div class="token-name">FIRE TOKEN</div><div class="token-type">Primal · Track 1</div></div>
+      <div class="token-card card" style="--tc:#00E5FF"><div class="token-sym">☰</div><div class="token-name">WATER TOKEN</div><div class="token-type">Primal · Track 4</div></div>
+      <div class="token-card card" style="--tc:#3fb27f"><div class="token-sym">☱</div><div class="token-name">WIND TOKEN</div><div class="token-type">Primal · Track 3</div></div>
+      <div class="token-card card" style="--tc:#C9A84C"><div class="token-sym">☳</div><div class="token-name">METAL TOKEN</div><div class="token-type">Middle · Track 6</div></div>
+      <div class="token-card card" style="--tc:#E2C86D"><div class="token-sym">★</div><div class="token-name">SAND TOKEN</div><div class="token-type">Amplifier · All</div></div>
+      <div class="token-card card" style="--tc:#9B6BF0"><div class="token-sym">✴</div><div class="token-name">SOUL TOKEN</div><div class="token-type">Middle · Track 5</div></div>
+      <div class="token-card card" style="--tc:#9B6BF0"><div class="token-sym">✶</div><div class="token-name">SPACE TOKEN</div><div class="token-type">Supreme · Track 7</div></div>
+      <div class="token-card card" style="--tc:#8a8676"><div class="token-sym">✷</div><div class="token-name">VOID TOKEN</div><div class="token-type">Supreme · Track 8</div></div>
+      <div class="token-card card" style="--tc:#E2C86D"><div class="token-sym">Ω</div><div class="token-name">OMEGA TOKEN</div><div class="token-type">The All · Apex</div></div>
     </div>
     <div class="glass">
       <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">YOUR SOVEREIGN TOKEN</div>
@@ -213,6 +213,7 @@
     </div>
   </div>
 </div>
+<div data-page-emblem="character" style="margin:20px auto 0"></div>
 </div>
 
 <script>

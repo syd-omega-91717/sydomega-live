@@ -88,6 +88,7 @@
     <div class="card"><div class="card-title">LATTICE ECONOMY</div><div class="card-body">The full token economy maps across the 12×12×9×9×9 lattice (104,976 nodes). Each node is a potential anchor point for sovereign assets. Token and NFT values are anchored to authority score and lattice position.</div></div>
   </div>
 </div>
+<div data-page-emblem="blockchain" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -131,7 +132,7 @@ function buildTokens(){
     var col=EC[t[1]]||'#C9A84C';
     var mine=_mySign===t[0];
     var pct=Math.round((t[5]/9)*100);
-    return'<div class="token-card'+(mine?' mine':'')+'" style="--tc:'+col+'">'
+    return'<div class="token-card card'+(mine?' mine':'')+'" style="--tc:'+col+'">'
       +(mine?'<div class="mine-badge">YOUR TOKEN</div>':'')
       +'<div class="tc-sign">'+t[0].toUpperCase()+' &middot; '+t[1].toUpperCase()+'</div>'
       +'<div class="tc-name" style="color:'+col+'">'+t[2]+'</div>'
@@ -144,7 +145,7 @@ function buildTokens(){
 function buildNFTs(){
   var grid=document.getElementById('nft-grid');if(!grid)return;
   grid.innerHTML=NFTS.map(function(n){
-    return'<div class="nft-card">'
+    return'<div class="nft-card card">'
       +'<div class="nft-phase">PHASE '+n[0]+'</div>'
       +'<div class="nft-name">'+n[1].toUpperCase()+'</div>'
       +'<div class="nft-desc">'+n[2]+'</div>'
@@ -171,9 +172,10 @@ async function boot(){
   }
   buildTokens();
   try{
-    var pts=(await sb.rpc('my_points_balance')).data;
+    var ptsRes=(await sb.rpc('my_points_balance')).data;
+    var bal=ptsRes&&ptsRes.ok?ptsRes.balance:null;
     var pv=document.getElementById('pts-val');
-    if(pv)pv.textContent=pts!=null?('Ω '+Number(pts).toFixed(0)):'—';
+    if(pv)pv.textContent=bal!=null?('Ω '+Number(bal).toFixed(0)):'—';
   }catch(e){console.warn('pts',e);}
 }
 boot();

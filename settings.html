@@ -145,6 +145,7 @@ select.omega-select{font-family:var(--M);font-size:11px;color:var(--ink);backgro
     <div class="card"><div class="card-title">ACCOUNT OPERATIONS</div><div class="card-body">Deactivate calls the deactivate_account() RPC which suspends access_approved without deleting data. Delete calls delete_account() which triggers GDPR erasure — all profile data, achievements, task records, and the auth user are permanently removed. Neither operation can be performed with a privileged backend key from client code.</div></div>
   </div>
 </div>
+<div data-page-emblem="settings" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -187,15 +188,21 @@ var _user=null;
 async function saveBg(color){
   try{localStorage.setItem('omega_bg',color);}catch(e){}
   applyBg(color);markSwatch(color);
-  var msg=document.getElementById('s-msg');if(msg)msg.textContent='Background saved.';
-  if(_user){try{await sb.from('profiles').update({bg_color:color}).eq('id',_user.id);}catch(e){}}
+  var msg=document.getElementById('s-msg');
+  if(_user){
+    var r=await sb.from('profiles').update({bg_color:color}).eq('id',_user.id).catch(function(e){return{error:e};});
+    if(msg)msg.textContent=(r&&r.error)?'Background saved on this device. Sync to your account failed.':'Background saved.';
+  } else if(msg){msg.textContent='Background saved.';}
 }
 window.saveBg=saveBg;
 async function resetBg(){
   try{localStorage.removeItem('omega_bg');}catch(e){}
   applyBg(DEFAULT_BG);markSwatch(DEFAULT_BG);document.getElementById('cpick').value=DEFAULT_BG;
-  var msg=document.getElementById('s-msg');if(msg)msg.textContent='Reset to the Void.';
-  if(_user){try{await sb.from('profiles').update({bg_color:null}).eq('id',_user.id);}catch(e){}}
+  var msg=document.getElementById('s-msg');
+  if(_user){
+    var r=await sb.from('profiles').update({bg_color:null}).eq('id',_user.id).catch(function(e){return{error:e};});
+    if(msg)msg.textContent=(r&&r.error)?'Reset on this device. Sync to your account failed.':'Reset to the Void.';
+  } else if(msg){msg.textContent='Reset to the Void.';}
 }
 document.getElementById('apply-custom').addEventListener('click',function(){saveBg(document.getElementById('cpick').value);});
 document.getElementById('btn-reset').addEventListener('click',resetBg);

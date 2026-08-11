@@ -144,6 +144,7 @@
     <div class="card"><div class="card-title">PHASE II GATE</div><div class="card-body">Live rendering and payment processing are sealed until Phase II legal clearance. Campaigns can be submitted and approved now; they queue for activation. The subscriber hide-toggle is available to verified subscribers to opt out of advertising.</div></div>
   </div>
 </div>
+<div data-page-emblem="advertising" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -172,7 +173,7 @@ async function loadLiveAds(){
     if(!ads.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO ACTIVE PLACEMENTS AT THIS TIME</div>';return;}
     el.innerHTML='';
     ads.forEach(function(a){
-      var d=document.createElement('div');d.className='ad-card';
+      var d=document.createElement('div');d.className='ad-card card';
       if(a.destination_url)d.style.cursor='pointer';
       var type=document.createElement('div');type.className='ad-type';type.textContent=(a.category||'').toUpperCase()+' · '+(a.tier||'').toUpperCase();
       var title=document.createElement('div');title.className='ad-title';title.textContent=(a.headline||'').toUpperCase();
@@ -200,7 +201,8 @@ async function submitAd(){
   btn.disabled=true;fb.style.color='var(--cyan)';fb.textContent='Submitting...';
   try{
     var s=(await sb.auth.getSession()).data.session;
-    await sb.from('advertisements').insert({company_name:company,contact_email:email,headline:headline,body:body,tier:tier,category:cat,destination_url:url,timeline_period:timeline,status:'pending',submitted_by:s?s.user.id:null,submitted_at:new Date().toISOString()});
+    var ins=await sb.from('advertisements').insert({company_name:company,contact_email:email,headline:headline,body:body,tier:tier,category:cat,destination_url:url,timeline_period:timeline,status:'pending',submitted_by:s?s.user.id:null,submitted_at:new Date().toISOString()});
+    if(ins.error) throw ins.error;
     fb.style.color='var(--green)';fb.textContent='SUBMISSION RECEIVED. THE ARCHITECT WILL REVIEW WITHIN 48 HOURS.';
     ['adv-company','adv-email','adv-headline','adv-body','adv-url'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   }catch(e){fb.style.color='var(--solar)';fb.textContent='SUBMISSION NOTED. CONTACT THE ORDER DIRECTLY TO PROCEED.';}

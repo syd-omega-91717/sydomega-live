@@ -106,6 +106,7 @@
     <div class="card"><div class="card-title">PHASE II GATE</div><div class="card-body">Live rendering and payment processing are sealed until Phase II legal clearance — covering classification, KYC/AML, and payment terms. Campaigns can be submitted and approved now; they queue for activation on Phase II unlock.</div></div>
   </div>
 </div>
+<div data-page-emblem="marketing" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -181,7 +182,8 @@ async function loadQueue(){
 }
 async function decide(id,status){
   var r=await sb.from('media_reservations').update({status:status}).eq('id',id);
-  if(!r.error){loadQueue();loadList();}
+  if(r.error){alert('Could not '+(status==='approved'?'approve':'reject')+' this campaign. Try again.');return;}
+  loadQueue();loadList();
 }
 
 async function submit(){

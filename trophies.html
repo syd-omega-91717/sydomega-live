@@ -86,6 +86,7 @@
     <div class="card"><div class="card-title">ACHIEVEMENT ENGINE</div><div class="card-body">Achievements are stored in three Supabase tables: trophies, medals, and certificates — each linked by user_id. Platform owners hold all 36 achievements by definition. Member achievements are earned through axis progression, task completion, and sovereign domain mastery. The Omega Sovereign achievement requires all axes at maximum.</div></div>
   </div>
 </div>
+<div data-page-emblem="trophies" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -94,34 +95,34 @@ function setTab(name){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
 var TROPHY_DATA=[
-  {n:1,name:'THE GENESIS MARK',el:'SAND',col:'#D9B86A'},{n:2,name:'KNOWLEDGE CROWN',el:'WIND',col:'#00E5FF'},
-  {n:3,name:'MASTERY SEAL',el:'FIRE',col:'#E86A3A'},{n:4,name:'CONTRIBUTION SIGIL',el:'WATER',col:'#3fb27f'},
-  {n:5,name:'ELEMENTAL BADGE',el:'SAND',col:'#D9B86A'},{n:6,name:'CELESTIAL MARK',el:'WIND',col:'#9B6BF0'},
-  {n:7,name:'SOVEREIGN CREST',el:'SAND',col:'#C9A84C'},{n:8,name:'BLOODLINE TROPHY',el:'METAL',col:'#C7CDD6'},
-  {n:9,name:'ECONOMIC SEAL',el:'FIRE',col:'#E2C86D'},{n:10,name:'ORACLE CROWN',el:'WATER',col:'#9B6BF0'},
-  {n:11,name:'OMEGA GUARDIAN',el:'FIRE',col:'#C9A84C'},{n:12,name:'ABSOLUTE APEX',el:'SAND',col:'#C9A84C'},
+  {n:1,name:'THE GENESIS MARK',el:'SAND',col:'#D9B86A'},{n:2,name:'KNOWLEDGE CROWN',el:'WIND',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {n:3,name:'MASTERY SEAL',el:'FIRE',col:'#E86A3A'},{n:4,name:'CONTRIBUTION SIGIL',el:'WATER',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
+  {n:5,name:'ELEMENTAL BADGE',el:'SAND',col:'#D9B86A'},{n:6,name:'CELESTIAL MARK',el:'WIND',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {n:7,name:'SOVEREIGN CREST',el:'SAND',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},{n:8,name:'BLOODLINE TROPHY',el:'METAL',col:'#C7CDD6'},
+  {n:9,name:'ECONOMIC SEAL',el:'FIRE',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},{n:10,name:'ORACLE CROWN',el:'WATER',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {n:11,name:'OMEGA GUARDIAN',el:'FIRE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},{n:12,name:'ABSOLUTE APEX',el:'SAND',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
 ];
 var MEDAL_DATA=[
-  {n:1,name:'FIRST LIGHT',cat:'GENESIS',col:'#D9B86A'},{n:2,name:'KNOWLEDGE PIONEER',cat:'ACADEMY',col:'#00E5FF'},
-  {n:3,name:'MASTER OF CRAFT',cat:'MASTERY',col:'#E86A3A'},{n:4,name:'ECONOMIC BUILDER',cat:'ECONOMY',col:'#C9A84C'},
-  {n:5,name:'CELESTIAL NAVIGATOR',cat:'COSMOS',col:'#9B6BF0'},{n:6,name:'ORDER ARCHITECT',cat:'PLATFORM',col:'#C9A84C'},
-  {n:7,name:'FAMILY GUARDIAN',cat:'LINEAGE',col:'#D9B86A'},{n:8,name:'CONSULTATION MASTER',cat:'SERVICES',col:'#3fb27f'},
-  {n:9,name:'RESEARCH PIONEER',cat:'INTEL',col:'#9B6BF0'},{n:10,name:'PREDICTION ORACLE',cat:'FORECAST',col:'#9B6BF0'},
-  {n:11,name:'HERITAGE KEEPER',cat:'HISTORY',col:'#D9B86A'},{n:12,name:'OMEGA SOVEREIGN',cat:'APEX',col:'#C9A84C'},
+  {n:1,name:'FIRST LIGHT',cat:'GENESIS',col:'#D9B86A'},{n:2,name:'KNOWLEDGE PIONEER',cat:'ACADEMY',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {n:3,name:'MASTER OF CRAFT',cat:'MASTERY',col:'#E86A3A'},{n:4,name:'ECONOMIC BUILDER',cat:'ECONOMY',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {n:5,name:'CELESTIAL NAVIGATOR',cat:'COSMOS',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},{n:6,name:'ORDER ARCHITECT',cat:'PLATFORM',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {n:7,name:'FAMILY GUARDIAN',cat:'LINEAGE',col:'#D9B86A'},{n:8,name:'CONSULTATION MASTER',cat:'SERVICES',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
+  {n:9,name:'RESEARCH PIONEER',cat:'INTEL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},{n:10,name:'PREDICTION ORACLE',cat:'FORECAST',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {n:11,name:'HERITAGE KEEPER',cat:'HISTORY',col:'#D9B86A'},{n:12,name:'OMEGA SOVEREIGN',cat:'APEX',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
 ];
 var CERT_DATA=[
   {n:1,name:'GENESIS CERTIFICATE',domain:'PLATFORM FOUNDATION',col:'#D9B86A'},
-  {n:2,name:'KNOWLEDGE FOUNDATION',domain:'ACADEMY — GRADE 1',col:'#00E5FF'},
+  {n:2,name:'KNOWLEDGE FOUNDATION',domain:'ACADEMY — GRADE 1',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
   {n:3,name:'MASTERY LEVEL I',domain:'GAMING & PERFORMANCE',col:'#E86A3A'},
-  {n:4,name:'MASTERY LEVEL II',domain:'ADVANCED PERFORMANCE',col:'#E2C86D'},
-  {n:5,name:'ECONOMIC ANALYST',domain:'ECONOMY & FINANCE',col:'#C9A84C'},
-  {n:6,name:'CELESTIAL NAVIGATOR',domain:'COSMOS & HOROSCOPE',col:'#9B6BF0'},
-  {n:7,name:'SOVEREIGN ARCHITECT',domain:'PLATFORM DESIGN',col:'#C9A84C'},
+  {n:4,name:'MASTERY LEVEL II',domain:'ADVANCED PERFORMANCE',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
+  {n:5,name:'ECONOMIC ANALYST',domain:'ECONOMY & FINANCE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {n:6,name:'CELESTIAL NAVIGATOR',domain:'COSMOS & HOROSCOPE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {n:7,name:'SOVEREIGN ARCHITECT',domain:'PLATFORM DESIGN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
   {n:8,name:'HERITAGE SCHOLAR',domain:'FAMILY & LINEAGE',col:'#D9B86A'},
-  {n:9,name:'ORACLE PROPHET',domain:'PREDICTION & FORECAST',col:'#9B6BF0'},
-  {n:10,name:'ORDER CONSULTANT',domain:'CONSULTANCY MASTERY',col:'#3fb27f'},
-  {n:11,name:'PLATFORM MASTER',domain:'FULL PLATFORM COMMAND',col:'#C9A84C'},
-  {n:12,name:'OMEGA SOVEREIGN',domain:'ABSOLUTE APEX — ALL DOMAINS',col:'#C9A84C'},
+  {n:9,name:'ORACLE PROPHET',domain:'PREDICTION & FORECAST',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {n:10,name:'ORDER CONSULTANT',domain:'CONSULTANCY MASTERY',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
+  {n:11,name:'PLATFORM MASTER',domain:'FULL PLATFORM COMMAND',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {n:12,name:'OMEGA SOVEREIGN',domain:'ABSOLUTE APEX — ALL DOMAINS',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
 ];
 
 function drawTrophyIcon(cv,col,earned){
@@ -177,7 +178,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
       var earned=tnums.indexOf(td.n)>=0;
       var eRow=earned&&!isOwner?earned_t.find(function(t){return t.trophy_num===td.n;}):null;
       var eDate=eRow?eRow.earned_at:null;
-      var card=document.createElement('div');card.className='trophy-card'+(earned?' earned':'');card.style.setProperty('--tc',earned?td.col:'var(--muted)');
+      var card=document.createElement('div');card.className='trophy-card card'+(earned?' earned':'');card.style.setProperty('--tc',earned?td.col:'var(--muted)');
       var cv=document.createElement('canvas');cv.className='tc-canvas';card.appendChild(cv);
       var numEl=document.createElement('div');numEl.className='tc-num';numEl.textContent='TROPHY '+td.n+' OF 12';card.appendChild(numEl);
       var nameEl=document.createElement('div');nameEl.className='tc-name';nameEl.style.color=earned?td.col:'var(--muted)';nameEl.textContent=td.name;card.appendChild(nameEl);

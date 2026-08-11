@@ -4,307 +4,319 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Vocabulary · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega-ui.css">
-<script src="omega-ui.js" defer></script>
+<link rel="manifest" href="/manifest.json">
 <style>
-:root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--c:#222;--t:#fff;--d:#888;--gold:#c9a84c;--acc:#c9a84c;--blue:#3498db;--green:#27ae60;--red:#e74c3c;--purple:#9b59b6}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--g);color:var(--t);font-family:'Courier New',monospace;min-height:100vh}
-.main{max-width:960px;margin:0 auto;padding:24px 16px 100px}
-h1{font-size:1.1rem;letter-spacing:.15em;color:var(--gold);margin-bottom:4px}
-.sub{font-size:.7rem;color:var(--d);letter-spacing:.1em;margin-bottom:24px}
-.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid #222;flex-wrap:wrap}
-.tab{padding:8px 14px;font-size:.7rem;letter-spacing:.1em;cursor:pointer;color:var(--d);border:none;background:none;transition:color .2s}
-.tab.active{color:var(--gold);border-bottom:2px solid var(--gold)}
-.panel{display:none}.panel.active{display:block}
-.card{background:var(--b);border:1px solid #222;border-radius:4px;padding:16px;margin-bottom:16px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.card{background:var(--surface,#1a1a1a);border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:16px}
 .card-title{font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
-.stat{background:var(--b);border:1px solid #222;border-radius:4px;padding:14px;text-align:center}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:rgba(10,10,15,.55);border:1px solid rgba(201,168,76,.15);padding:14px;text-align:center}
 .stat-val{font-size:1.4rem;color:var(--gold);font-weight:bold;margin-bottom:4px}
-.stat-lbl{font-size:.55rem;color:var(--d);letter-spacing:.1em}
-label{font-size:.6rem;color:var(--d);letter-spacing:.08em;display:block;margin-bottom:4px}
-input,select,textarea{width:100%;background:#111;border:1px solid #333;color:var(--t);padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px}
+.stat-lbl{font-size:.55rem;color:#888;letter-spacing:.1em}
+label{font-size:.6rem;color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
+input,select,textarea{width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .form-row.trio{grid-template-columns:1fr 1fr 1fr}
 .btn{padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit;transition:all .2s}
-.btn-gold{background:var(--gold);color:#000}
-.btn-gold:hover{background:#e0b85c}
+.btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:#e0b85c}
 .btn-sm{padding:5px 12px;font-size:.6rem}
-.btn-ghost{background:none;border:1px solid #333;color:var(--d);padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px;transition:all .2s}
+.btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px;transition:all .2s}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.btn-red{background:var(--red);color:#fff;font-size:.6rem;padding:4px 10px}
-/* word cards */
+.btn-red{background:#e74c3c;color:#fff;font-size:.6rem;padding:4px 10px;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
 .word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.word-card{background:var(--p);border:1px solid #1a1a1a;border-radius:4px;padding:14px;position:relative;transition:border-color .2s}
+.word-card{background:#111;border:1px solid #1a1a1a;border-radius:4px;padding:14px;position:relative;transition:border-color .2s}
 .word-card:hover{border-color:#333}
-.word-card.mastered{border-left:3px solid var(--green)}
+.word-card.mastered{border-left:3px solid #27ae60}
 .word-card.learning{border-left:3px solid var(--gold)}
-.word-card.new{border-left:3px solid var(--blue)}
+.word-card.new{border-left:3px solid #3498db}
 .word-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
-.word-term{font-size:1rem;color:var(--t);letter-spacing:.05em}
+.word-term{font-size:1rem;color:#fff;letter-spacing:.05em}
 .word-pos{font-size:.55rem;color:var(--gold);letter-spacing:.08em;background:#1a1a1a;padding:2px 6px;border-radius:2px}
 .word-def{font-size:.7rem;color:#aaa;line-height:1.5;margin-bottom:8px}
 .word-example{font-size:.65rem;color:#666;font-style:italic;line-height:1.4;margin-bottom:8px}
-.word-meta{display:flex;gap:8px;align-items:center;font-size:.55rem;color:var(--d)}
+.word-meta{display:flex;gap:8px;align-items:center;font-size:.55rem;color:#888}
 .word-actions{display:flex;gap:4px;margin-top:10px}
 .badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.55rem;letter-spacing:.06em}
-.badge-new{background:rgba(52,152,219,.15);color:var(--blue)}
+.badge-new{background:rgba(52,152,219,.15);color:#3498db}
 .badge-learning{background:rgba(201,168,76,.15);color:var(--gold)}
-.badge-mastered{background:rgba(39,174,96,.15);color:var(--green)}
-/* drill / flashcard */
+.badge-mastered{background:rgba(39,174,96,.15);color:#27ae60}
 .drill-card{max-width:500px;margin:0 auto;text-align:center}
-.drill-front{background:var(--p);border:2px solid var(--gold);border-radius:8px;padding:48px 24px;margin-bottom:16px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .3s}
-.drill-word{font-size:2rem;letter-spacing:.1em;color:var(--t);margin-bottom:8px}
-.drill-hint{font-size:.65rem;color:var(--d);margin-top:8px}
+.drill-front{background:#111;border:2px solid var(--gold);border-radius:8px;padding:48px 24px;margin-bottom:16px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .3s}
+.drill-word{font-size:2rem;letter-spacing:.1em;color:#fff;margin-bottom:8px}
+.drill-hint{font-size:.65rem;color:#888;margin-top:8px}
 .drill-back{display:none;margin-bottom:16px}
 .drill-back.visible{display:block}
-.drill-def{font-size:.85rem;color:#aaa;line-height:1.6;margin-bottom:12px;padding:16px;background:var(--p);border-radius:4px}
-.drill-ex{font-size:.75rem;color:#666;font-style:italic;padding:10px;background:#111;border-radius:4px;margin-bottom:12px}
+.drill-def{font-size:.85rem;color:#aaa;line-height:1.6;margin-bottom:12px;padding:16px;background:#111;border-radius:4px}
+.drill-ex{font-size:.75rem;color:#666;font-style:italic;padding:10px;background:#0a0a0a;border-radius:4px;margin-bottom:12px}
 .drill-btns{display:flex;gap:10px;justify-content:center}
 .drill-btn{padding:12px 24px;font-size:.7rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:4px;font-family:inherit}
-.drill-easy{background:var(--green);color:#fff}
+.drill-easy{background:#27ae60;color:#fff}
 .drill-hard{background:var(--gold);color:#000}
-.drill-fail{background:var(--red);color:#fff}
+.drill-fail{background:#e74c3c;color:#fff}
 .drill-progress{display:flex;justify-content:center;gap:4px;margin-bottom:20px}
 .drill-dot{width:8px;height:8px;border-radius:50%;background:#222;transition:background .3s}
-.drill-dot.done{background:var(--green)}
+.drill-dot.done{background:#27ae60}
 .drill-dot.current{background:var(--gold)}
-.drill-dot.fail{background:var(--red)}
-/* search / filter */
+.drill-dot.fail{background:#e74c3c}
 .filter-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.filter-btn{padding:4px 12px;font-size:.6rem;letter-spacing:.08em;border:1px solid #333;background:none;color:var(--d);cursor:pointer;border-radius:2px;transition:all .2s}
+.filter-btn{padding:4px 12px;font-size:.6rem;letter-spacing:.08em;border:1px solid #333;background:none;color:#888;cursor:pointer;border-radius:2px;transition:all .2s}
 .filter-btn.active{border-color:var(--gold);color:var(--gold)}
-/* streak */
-.streak-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px}
-.streak-cell{aspect-ratio:1;border-radius:2px;background:#111}
-.streak-cell.done{background:var(--gold)}
-.streak-cell.partial{background:rgba(201,168,76,.3)}
-/* sources */
 .source-block{border-left:2px solid var(--gold);padding:8px 14px;margin-bottom:12px;background:#111}
-.source-title{font-size:.7rem;color:var(--t);margin-bottom:4px}
-.source-detail{font-size:.6rem;color:var(--d);line-height:1.5}
-canvas{display:block;width:100%;max-width:500px;margin:0 auto}
-.empty{text-align:center;color:var(--d);font-size:.7rem;padding:40px 0;letter-spacing:.1em}
+.source-title{font-size:.7rem;color:#fff;margin-bottom:4px}
+.source-detail{font-size:.6rem;color:#888;line-height:1.5}
+.empty{text-align:center;color:#888;font-size:.7rem;padding:40px 0;letter-spacing:.1em}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}.form-row.trio{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="main">
-  <h1>SOVEREIGN VOCABULARY</h1>
-  <p class="sub">LEXICAL MASTERY · SPACED REPETITION · SOVEREIGN COMMAND OF LANGUAGE</p>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="vocabulary"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">SOVEREIGN VOCABULARY<small>LEXICAL MASTERY · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-  <div class="stat-grid">
-    <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL WORDS</div></div>
-    <div class="stat"><div class="stat-val" id="st-mastered" style="color:var(--green)">0</div><div class="stat-lbl">MASTERED</div></div>
-    <div class="stat"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">DAY STREAK</div></div>
-    <div class="stat"><div class="stat-val" id="st-reviewed">0</div><div class="stat-lbl">TODAY'S REVIEWS</div></div>
-  </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">TOTAL WORDS</div></div>
+      <div class="stat"><div class="stat-val" id="st-mastered" style="color:#27ae60">0</div><div class="stat-lbl">MASTERED</div></div>
+      <div class="stat"><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">DAY STREAK</div></div>
+      <div class="stat"><div class="stat-val" id="st-reviewed">0</div><div class="stat-lbl">TODAY'S REVIEWS</div></div>
+    </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('add')">ADD WORD</button>
-    <button class="tab" onclick="switchTab('library')">LIBRARY</button>
-    <button class="tab" onclick="switchTab('drill')">DRILL</button>
-    <button class="tab" onclick="switchTab('progress')">PROGRESS</button>
-    <button class="tab" onclick="switchTab('science')">SCIENCE</button>
-  </div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD WORD</button>
+      <button class="tab-btn" data-tab="library" onclick="switchTab('library',this)">&#9670; LIBRARY</button>
+      <button class="tab-btn" data-tab="drill" onclick="switchTab('drill',this)">&#9670; DRILL</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+    </div>
 
-  <!-- ADD WORD -->
-  <div id="tab-add" class="panel active">
-    <div class="card">
-      <div class="card-title">ADD NEW WORD</div>
-      <div class="form-row">
-        <div>
-          <label>WORD / PHRASE</label>
-          <input id="w-term" type="text" placeholder="e.g. Sanguine, Ephemeral, Paradigm...">
+    <!-- ADD WORD -->
+    <div id="tab-add" class="tab-panel act">
+      <div class="card">
+        <div class="card-title">ADD NEW WORD</div>
+        <div class="form-row">
+          <div>
+            <label>WORD / PHRASE</label>
+            <div style="display:flex;gap:6px">
+              <input id="w-term" type="text" placeholder="e.g. Sanguine, Ephemeral, Paradigm..." style="flex:1">
+              <button type="button" class="btn-ghost" onclick="lookupWord()" id="lookup-btn" style="white-space:nowrap">LOOKUP</button>
+            </div>
+            <div id="lookup-msg" style="font-size:.55rem;color:#888;margin-top:4px"></div>
+          </div>
+          <div>
+            <label>PART OF SPEECH</label>
+            <select id="w-pos">
+              <option value="noun">NOUN</option>
+              <option value="verb">VERB</option>
+              <option value="adjective">ADJECTIVE</option>
+              <option value="adverb">ADVERB</option>
+              <option value="phrase">PHRASE</option>
+              <option value="idiom">IDIOM</option>
+              <option value="other">OTHER</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label>PART OF SPEECH</label>
-          <select id="w-pos">
-            <option value="noun">NOUN</option>
-            <option value="verb">VERB</option>
-            <option value="adjective">ADJECTIVE</option>
-            <option value="adverb">ADVERB</option>
-            <option value="phrase">PHRASE</option>
-            <option value="idiom">IDIOM</option>
-            <option value="other">OTHER</option>
-          </select>
+        <div style="margin-bottom:10px">
+          <label>DEFINITION</label>
+          <textarea id="w-def" rows="3" placeholder="Clear, concise definition..."></textarea>
         </div>
+        <div style="margin-bottom:10px">
+          <label>EXAMPLE SENTENCE</label>
+          <textarea id="w-ex" rows="2" placeholder="Use the word naturally in context..."></textarea>
+        </div>
+        <div class="form-row trio">
+          <div>
+            <label>DOMAIN / TAG</label>
+            <select id="w-domain">
+              <option value="general">GENERAL</option>
+              <option value="philosophy">PHILOSOPHY</option>
+              <option value="science">SCIENCE</option>
+              <option value="business">BUSINESS</option>
+              <option value="literature">LITERATURE</option>
+              <option value="psychology">PSYCHOLOGY</option>
+              <option value="law">LAW</option>
+              <option value="politics">POLITICS</option>
+              <option value="art">ART &amp; CULTURE</option>
+              <option value="tech">TECHNOLOGY</option>
+              <option value="finance">FINANCE</option>
+              <option value="medicine">MEDICINE</option>
+            </select>
+          </div>
+          <div>
+            <label>ETYMOLOGY (optional)</label>
+            <input id="w-etym" type="text" placeholder="e.g. Latin: sanguis = blood">
+          </div>
+          <div>
+            <label>SYNONYMS (optional)</label>
+            <input id="w-syn" type="text" placeholder="comma-separated">
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="addWord()">+ ADD WORD</button>
       </div>
-      <div style="margin-bottom:10px">
-        <label>DEFINITION</label>
-        <textarea id="w-def" rows="3" placeholder="Clear, concise definition..."></textarea>
+      <div class="card">
+        <div class="card-title">WORD OF THE DAY</div>
+        <div id="wotd-display"></div>
       </div>
-      <div style="margin-bottom:10px">
-        <label>EXAMPLE SENTENCE</label>
-        <textarea id="w-ex" rows="2" placeholder="Use the word naturally in context..."></textarea>
+      <div class="card">
+        <div class="card-title">SEED VOCABULARY — SOVEREIGN LEXICON</div>
+        <p style="font-size:.65rem;color:#888;margin-bottom:12px">15 HIGH-VALUE WORDS PRELOADED. ADD YOUR OWN TO EXPAND YOUR LEXICON.</p>
+        <button class="btn btn-ghost" onclick="loadSeeds()" id="seed-btn">LOAD SEED VOCABULARY</button>
       </div>
-      <div class="form-row trio">
-        <div>
-          <label>DOMAIN / TAG</label>
-          <select id="w-domain">
-            <option value="general">GENERAL</option>
-            <option value="philosophy">PHILOSOPHY</option>
-            <option value="science">SCIENCE</option>
-            <option value="business">BUSINESS</option>
-            <option value="literature">LITERATURE</option>
-            <option value="psychology">PSYCHOLOGY</option>
-            <option value="law">LAW</option>
-            <option value="politics">POLITICS</option>
-            <option value="art">ART & CULTURE</option>
-            <option value="tech">TECHNOLOGY</option>
-            <option value="finance">FINANCE</option>
-            <option value="medicine">MEDICINE</option>
-          </select>
-        </div>
-        <div>
-          <label>ETYMOLOGY (optional)</label>
-          <input id="w-etym" type="text" placeholder="e.g. Latin: sanguis = blood">
-        </div>
-        <div>
-          <label>SYNONYMS (optional)</label>
-          <input id="w-syn" type="text" placeholder="comma-separated">
-        </div>
-      </div>
-      <button class="btn btn-gold" onclick="addWord()">+ ADD WORD</button>
     </div>
-    <div class="card">
-      <div class="card-title">WORD OF THE DAY</div>
-      <div id="wotd-display">
-        <!-- generated -->
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">SEED VOCABULARY — SOVEREIGN LEXICON</div>
-      <p style="font-size:.65rem;color:var(--d);margin-bottom:12px">15 HIGH-VALUE WORDS PRELOADED. ADD YOUR OWN TO EXPAND YOUR LEXICON.</p>
-      <button class="btn btn-ghost" onclick="loadSeeds()" id="seed-btn">LOAD SEED VOCABULARY</button>
-    </div>
-  </div>
 
-  <!-- LIBRARY -->
-  <div id="tab-library" class="panel">
-    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
-      <input type="text" id="lib-search" placeholder="Search words..." oninput="renderLibrary()" style="max-width:260px">
+    <!-- LIBRARY -->
+    <div id="tab-library" class="tab-panel">
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <input type="text" id="lib-search" placeholder="Search words..." oninput="renderLibrary()" style="max-width:260px">
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setLibFilter('all',this)">ALL</button>
+        <button class="filter-btn" onclick="setLibFilter('new',this)">NEW</button>
+        <button class="filter-btn" onclick="setLibFilter('learning',this)">LEARNING</button>
+        <button class="filter-btn" onclick="setLibFilter('mastered',this)">MASTERED</button>
+        <button class="filter-btn" onclick="setLibFilter('due',this)">DUE TODAY</button>
+      </div>
+      <div id="word-grid" class="word-grid">
+        <div class="empty">NO WORDS YET</div>
+      </div>
     </div>
-    <div class="filter-bar">
-      <button class="filter-btn active" onclick="setLibFilter('all',this)">ALL</button>
-      <button class="filter-btn" onclick="setLibFilter('new',this)">NEW</button>
-      <button class="filter-btn" onclick="setLibFilter('learning',this)">LEARNING</button>
-      <button class="filter-btn" onclick="setLibFilter('mastered',this)">MASTERED</button>
-      <button class="filter-btn" onclick="setLibFilter('due',this)">DUE TODAY</button>
-    </div>
-    <div id="word-grid" class="word-grid">
-      <div class="empty">NO WORDS YET</div>
-    </div>
-  </div>
 
-  <!-- DRILL -->
-  <div id="tab-drill" class="panel">
-    <div class="drill-card">
-      <div id="drill-progress-bar" class="drill-progress"></div>
-      <div id="drill-status" style="text-align:center;font-size:.65rem;color:var(--d);margin-bottom:16px"></div>
-      <div id="drill-area">
-        <div style="text-align:center;padding:40px 0">
-          <p style="font-size:.75rem;color:var(--d);margin-bottom:16px">SELECT A DRILL MODE BELOW</p>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-gold" onclick="startDrill('due')">DRILL DUE WORDS</button>
-            <button class="btn btn-ghost" onclick="startDrill('all')">DRILL ALL WORDS</button>
-            <button class="btn btn-ghost" onclick="startDrill('new')">NEW WORDS ONLY</button>
+    <!-- DRILL -->
+    <div id="tab-drill" class="tab-panel">
+      <div class="drill-card card">
+        <div id="drill-progress-bar" class="drill-progress"></div>
+        <div id="drill-status" style="text-align:center;font-size:.65rem;color:#888;margin-bottom:16px"></div>
+        <div id="drill-area">
+          <div style="text-align:center;padding:40px 0">
+            <p style="font-size:.75rem;color:#888;margin-bottom:16px">SELECT A DRILL MODE BELOW</p>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+              <button class="btn btn-gold" onclick="startDrill('due')">DRILL DUE WORDS</button>
+              <button class="btn btn-ghost" onclick="startDrill('all')">DRILL ALL WORDS</button>
+              <button class="btn btn-ghost" onclick="startDrill('new')">NEW WORDS ONLY</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">THE SCIENCE OF VOCABULARY ACQUISITION</div>
+        <p style="font-size:.7rem;color:#aaa;line-height:1.7;margin-bottom:16px">Language is the operating system of thought. Expanding your lexicon expands the resolution of your mind — enabling you to perceive, articulate, and act on distinctions invisible to those with smaller vocabularies.</p>
+        <div class="source-block">
+          <div class="source-title">SPACED REPETITION SYSTEM — Ebbinghaus (1885) &amp; Leitner (1970)</div>
+          <div class="source-detail">Ebbinghaus's Forgetting Curve: memory retention decays exponentially without review. Spaced repetition exploits the Spacing Effect — reviewing material at increasing intervals (1→4→8→14→30 days) achieves 2-3× better retention with the same study time. The SM-2 algorithm (Supermemo, 1987) formalizes optimal review intervals based on recall quality. This system uses SM-2 intervals.</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title">VOCABULARY SIZE &amp; COMPREHENSION — Nation (2001) &amp; Coxhead (2000)</div>
+          <div class="source-detail">Nation's research establishes that a 2,000-word vocabulary enables ~90% coverage of everyday speech. The Academic Word List (AWL) by Coxhead identifies 570 high-value academic words that appear across disciplines. Mastering the top 5,000-10,000 words yields near-native comprehension. Sovereign vocabulary focuses on precision, rarity, and domain depth over breadth.</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title">CONTEXTUAL LEARNING — Krashen (1985) &amp; Nation (2001)</div>
+          <div class="source-detail">The comprehensible input hypothesis (Krashen 1985) shows words are best learned in meaningful context, not isolation. Reading words in example sentences activates deeper encoding than definition memorization alone. Deliberate vocabulary study (Nation 2001) — engaging with form, meaning, and use simultaneously — produces faster, more durable learning.</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title">RETRIEVAL PRACTICE — Roediger &amp; Karpicke (2006)</div>
+          <div class="source-detail">The Testing Effect: actively recalling information (not just re-reading) strengthens memory traces significantly more than passive review. A single retrieval attempt after initial study improves long-term retention by 40-60% vs re-study. Flashcard drilling in this system leverages retrieval practice as the primary encoding mechanism.</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title">LEXICAL SOPHISTICATION &amp; INTELLIGENCE — Vocabulary.com / Sadoski &amp; Paivio (2001)</div>
+          <div class="source-detail">Dual Coding Theory (Paivio 1971, updated 2001): encoding words alongside imagery and context creates stronger, more accessible memory traces. Etymology (word roots) enables vocabulary generalization — knowing the Latin radix allows inference of radiate, radiation, radical, eradicate. Semantic mapping clusters related words for more efficient long-term storage.</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title">SOVEREIGN APPLICATION — Adams (2013) Skill Stacking</div>
+          <div class="source-detail">Scott Adams argues that being in the top 25% of two or more skills multiplies your value and uniqueness. Language precision is a multiplier across all domains — the leader who speaks with precision, the engineer who writes clearly, the sovereign who reasons in exact terms. Vocabulary is not decoration; it is operational leverage.</div>
+        </div>
+      </div>
+    </div>
+
   </div>
-
-  <!-- PROGRESS -->
-  <div id="tab-progress" class="panel">
-    <div class="card">
-      <div class="card-title">30-DAY REVIEW STREAK</div>
-      <div class="streak-grid" id="streak-grid"></div>
-      <p style="font-size:.6rem;color:var(--d);margin-top:6px"><span style="background:var(--gold);padding:0 6px">&nbsp;</span> REVIEW SESSION · <span style="background:#111;border:1px solid #333;padding:0 6px">&nbsp;</span> NO REVIEW</p>
-    </div>
-    <div class="card">
-      <div class="card-title">WORDS ADDED OVER TIME</div>
-      <canvas id="growth-canvas" height="160"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">MASTERY DISTRIBUTION</div>
-      <canvas id="mastery-canvas" height="120"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">DOMAIN BREAKDOWN</div>
-      <canvas id="domain-canvas" height="160"></canvas>
-    </div>
-  </div>
-
-  <!-- SCIENCE -->
-  <div id="tab-science" class="panel">
-    <div class="card">
-      <div class="card-title">THE SCIENCE OF VOCABULARY ACQUISITION</div>
-      <p style="font-size:.7rem;color:#aaa;line-height:1.7;margin-bottom:16px">Language is the operating system of thought. Expanding your lexicon expands the resolution of your mind — enabling you to perceive, articulate, and act on distinctions invisible to those with smaller vocabularies.</p>
-
-      <div class="source-block">
-        <div class="source-title">SPACED REPETITION SYSTEM — Ebbinghaus (1885) &amp; Leitner (1970)</div>
-        <div class="source-detail">Ebbinghaus's Forgetting Curve: memory retention decays exponentially without review. Spaced repetition exploits the Spacing Effect — reviewing material at increasing intervals (1→4→8→14→30 days) achieves 2-3× better retention with the same study time. The SM-2 algorithm (Supermemo, 1987) formalizes optimal review intervals based on recall quality. This system uses SM-2 intervals.</div>
-      </div>
-
-      <div class="source-block">
-        <div class="source-title">VOCABULARY SIZE &amp; COMPREHENSION — Nation (2001) &amp; Coxhead (2000)</div>
-        <div class="source-detail">Nation's research establishes that a 2,000-word vocabulary enables ~90% coverage of everyday speech. The Academic Word List (AWL) by Coxhead identifies 570 high-value academic words that appear across disciplines. Mastering the top 5,000-10,000 words yields near-native comprehension. Sovereign vocabulary focuses on precision, rarity, and domain depth over breadth.</div>
-      </div>
-
-      <div class="source-block">
-        <div class="source-title">CONTEXTUAL LEARNING — Krashen (1985) &amp; Nation (2001)</div>
-        <div class="source-detail">The comprehensible input hypothesis (Krashen 1985) shows words are best learned in meaningful context, not isolation. Reading words in example sentences activates deeper encoding than definition memorization alone. Deliberate vocabulary study (Nation 2001) — engaging with form, meaning, and use simultaneously — produces faster, more durable learning.</div>
-      </div>
-
-      <div class="source-block">
-        <div class="source-title">RETRIEVAL PRACTICE — Roediger &amp; Karpicke (2006)</div>
-        <div class="source-detail">The Testing Effect: actively recalling information (not just re-reading) strengthens memory traces significantly more than passive review. A single retrieval attempt after initial study improves long-term retention by 40-60% vs re-study. Flashcard drilling in this system leverages retrieval practice as the primary encoding mechanism.</div>
-      </div>
-
-      <div class="source-block">
-        <div class="source-title">LEXICAL SOPHISTICATION &amp; INTELLIGENCE — Vocabulary.com / Sadoski &amp; Paivio (2001)</div>
-        <div class="source-detail">Dual Coding Theory (Paivio 1971, updated 2001): encoding words alongside imagery and context creates stronger, more accessible memory traces. Etymology (word roots) enables vocabulary generalization — knowing the Latin radix allows inference of radiate, radiation, radical, eradicate. Semantic mapping clusters related words for more efficient long-term storage.</div>
-      </div>
-
-      <div class="source-block">
-        <div class="source-title">SOVEREIGN APPLICATION — Adams (2013) Skill Stacking</div>
-        <div class="source-detail">Scott Adams argues that being in the top 25% of two or more skills multiplies your value and uniqueness. Language precision is a multiplier across all domains — the leader who speaks with precision, the engineer who writes clearly, the sovereign who reasons in exact terms. Vocabulary is not decoration; it is operational leverage.</div>
-      </div>
-    </div>
-  </div>
+</main>
+<div data-page-emblem="vocabulary" style="margin:20px auto 0"></div>
 </div>
-
 <script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else{var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='library') renderLibrary();
+}
+
 const DOMAIN_COLORS={general:'#888',philosophy:'#c9a84c',science:'#3498db',business:'#27ae60',literature:'#9b59b6',psychology:'#e67e22',law:'#e74c3c',politics:'#1abc9c',art:'#e91e63',tech:'#2980b9',finance:'#4caf50',medicine:'#ff9800'};
 const POS_LABELS={noun:'n.',verb:'v.',adjective:'adj.',adverb:'adv.',phrase:'phr.',idiom:'idm.',other:''};
+const DOMAIN_LABELS={general:'GENERAL',philosophy:'PHILOS',science:'SCIENCE',business:'BUSINESS',literature:'LIT',psychology:'PSYCH',law:'LAW',politics:'POL',art:'ART',tech:'TECH',finance:'FINANCE',medicine:'MED'};
 
 let words=JSON.parse(localStorage.getItem('omega_vocab')||'[]');
 let reviewLog=JSON.parse(localStorage.getItem('omega_vocab_log')||'[]');
 let libFilter='all';
 let drillQueue=[];
 let drillIndex=0;
-let drillShowing=false;
 
 const SEEDS=[
   {term:'Sanguine',pos:'adjective',def:'Optimistic or positive, especially in a difficult situation.',example:'He remained sanguine despite the mounting obstacles before him.',domain:'general',etym:'Latin: sanguis = blood (optimism linked to blood temperament)',synonyms:'optimistic, confident, hopeful'},
   {term:'Ephemeral',pos:'adjective',def:'Lasting for a very short time; transitory.',example:'The ephemeral beauty of cherry blossoms makes each viewing precious.',domain:'philosophy',etym:'Greek: ephemeros = lasting a day (epi + hemera)',synonyms:'fleeting, transient, momentary'},
   {term:'Perspicacious',pos:'adjective',def:'Having a ready insight into things; shrewdly perceptive.',example:'The perspicacious analyst identified the flaw others had missed for months.',domain:'psychology',etym:'Latin: perspicax = sharp-sighted',synonyms:'perceptive, astute, shrewd'},
   {term:'Equanimity',pos:'noun',def:'Mental calmness and composure, especially in difficult situations.',example:'The stoic faced adversity with equanimity, neither elated by success nor crushed by failure.',domain:'philosophy',etym:'Latin: aequanimitas = equal mind',synonyms:'composure, serenity, imperturbability'},
-  {term:'Apotheosis',pos:'noun',def:'The highest point in the development of something; a perfect example; elevation to divine status.',example:'The speech was the apotheosis of his career — nothing would equal it.',domain:'literature',etym:'Greek: apotheoun = make a god (apo + theos)',synonyms:'pinnacle, zenith, culmination'},
+  {term:'Apotheosis',pos:'noun',def:'The highest point in the development of something; elevation to divine status.',example:'The speech was the apotheosis of his career — nothing would equal it.',domain:'literature',etym:'Greek: apotheoun = make a god (apo + theos)',synonyms:'pinnacle, zenith, culmination'},
   {term:'Specious',pos:'adjective',def:'Superficially plausible, but actually wrong; misleading in appearance.',example:'The argument sounded compelling but was ultimately specious, collapsing under scrutiny.',domain:'law',etym:'Latin: speciosus = good-looking (species = appearance)',synonyms:'misleading, deceptive, fallacious'},
   {term:'Liminal',pos:'adjective',def:'Relating to a transitional or initial stage of a process; occupying a position at a boundary.',example:'Graduation is a liminal moment — neither student nor professional.',domain:'psychology',etym:'Latin: limen = threshold',synonyms:'transitional, threshold, in-between'},
-  {term:'Heuristic',pos:'noun',def:'A practical problem-solving approach that uses a rule of thumb, not guaranteed to be optimal.',example:'The investor applied the 10× heuristic: only invest if the upside is at least ten times the risk.',domain:'science',etym:'Greek: heuriskein = to find (same root as Eureka)',synonyms:'rule of thumb, shortcut, approximation'},
+  {term:'Heuristic',pos:'noun',def:'A practical problem-solving approach that uses a rule of thumb, not guaranteed to be optimal.',example:'The investor applied the 10x heuristic: only invest if the upside is at least ten times the risk.',domain:'science',etym:'Greek: heuriskein = to find (same root as Eureka)',synonyms:'rule of thumb, shortcut, approximation'},
   {term:'Laconic',pos:'adjective',def:'Using very few words; brief and concise in speech or expression.',example:'His laconic reply — "No." — ended the negotiation.',domain:'general',etym:'Greek: Lakon = Spartan (Spartans were famously brief in speech)',synonyms:'terse, pithy, concise'},
-  {term:'Paradigm',pos:'noun',def:'A typical example or pattern; a world-view underlying theories and practices of a scientific subject.',example:'The discovery of DNA caused a paradigm shift in biology.',domain:'science',etym:'Greek: paradeigma = pattern (para + deiknunai = show beside)',synonyms:'model, framework, template'},
+  {term:'Paradigm',pos:'noun',def:'A typical example or pattern; a world-view underlying the theories and practices of a scientific subject.',example:'The discovery of DNA caused a paradigm shift in biology.',domain:'science',etym:'Greek: paradeigma = pattern (para + deiknunai = show beside)',synonyms:'model, framework, template'},
   {term:'Verisimilitude',pos:'noun',def:'The appearance of being true or real; believability.',example:'The historical novel achieved remarkable verisimilitude through meticulous research.',domain:'literature',etym:'Latin: verisimilis = probable (verus = true + similis = like)',synonyms:'plausibility, authenticity, credibility'},
-  {term:'Obfuscate',pos:'verb',def:'To make unclear, confusing, or unintelligible; to obscure.',example:'The legal documents were deliberately obfuscated to discourage challenge.',domain:'law',etym:'Latin: obfuscare = to darken (ob + fuscare = to darken)',synonyms:'confuse, cloud, muddy'},
+  {term:'Obfuscate',pos:'verb',def:'To make unclear, confusing, or unintelligible; to obscure.',example:'The legal documents were deliberately obfuscated to discourage challenge.',domain:'law',etym:'Latin: obfuscare = to darken (ob + fuscare)',synonyms:'confuse, cloud, muddy'},
   {term:'Recondite',pos:'adjective',def:'Not known by many people; obscure or abstruse.',example:'His mastery of recondite mathematical proofs set him apart from ordinary graduates.',domain:'science',etym:'Latin: reconditus = hidden away (re + condere = put away)',synonyms:'obscure, esoteric, arcane'},
   {term:'Solipsism',pos:'noun',def:'The view that the self is all that can be known to exist; extreme preoccupation with oneself.',example:'His solipsism prevented him from understanding why others found his arguments unpersuasive.',domain:'philosophy',etym:'Latin: solus = alone + ipse = self',synonyms:'self-absorption, egocentrism'},
   {term:'Fungible',pos:'adjective',def:'Interchangeable; able to replace or be replaced by another identical item.',example:'Oil is fungible — a barrel from Texas and a barrel from Saudi Arabia are economically equivalent.',domain:'finance',etym:'Latin: fungi = to perform (Medieval: fungor = discharge a duty)',synonyms:'interchangeable, substitutable, exchangeable'},
 ];
+
+const DICT_POS_MAP={noun:'noun',verb:'verb',adjective:'adjective',adverb:'adverb',phrase:'phrase',idiom:'idiom'};
+
+function lookupWord(){
+  const term=document.getElementById('w-term').value.trim();
+  if(!term){alert('Enter a word first.');return;}
+  const btn=document.getElementById('lookup-btn');
+  const msg=document.getElementById('lookup-msg');
+  btn.disabled=true;btn.textContent='...';msg.textContent='Looking up "'+term+'" via Free Dictionary API...';
+  fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(term))
+    .then(function(r){if(!r.ok)throw new Error('not found');return r.json();})
+    .then(function(data){
+      const entry=data[0];
+      const meaning=(entry.meanings||[])[0];
+      if(!meaning){msg.textContent='No definitions found for "'+term+'".';return;}
+      const def=(meaning.definitions||[])[0]||{};
+      document.getElementById('w-pos').value=DICT_POS_MAP[meaning.partOfSpeech]||'other';
+      if(def.definition)document.getElementById('w-def').value=def.definition;
+      if(def.example)document.getElementById('w-ex').value=def.example;
+      const syns=(def.synonyms&&def.synonyms.length?def.synonyms:meaning.synonyms)||[];
+      if(syns.length)document.getElementById('w-syn').value=syns.slice(0,6).join(', ');
+      msg.textContent='Loaded from dictionaryapi.dev — review and edit before adding (etymology not provided by this source).';
+    })
+    .catch(function(){
+      msg.textContent='No entry found for "'+term+'" — try a different spelling, or enter the definition manually.';
+    })
+    .finally(function(){
+      btn.disabled=false;btn.textContent='LOOKUP';
+    });
+}
 
 function save(){localStorage.setItem('omega_vocab',JSON.stringify(words));}
 function saveLog(){localStorage.setItem('omega_vocab_log',JSON.stringify(reviewLog));}
@@ -315,22 +327,19 @@ function addWord(){
   if(!term||!def){alert('Word and definition are required.');return;}
   if(words.find(w=>w.term.toLowerCase()===term.toLowerCase())){alert('Word already exists.');return;}
   words.unshift({
-    id:Date.now(),
-    term,pos:document.getElementById('w-pos').value,
-    def,
-    example:document.getElementById('w-ex').value.trim(),
+    id:Date.now(),term,pos:document.getElementById('w-pos').value,
+    def,example:document.getElementById('w-ex').value.trim(),
     domain:document.getElementById('w-domain').value,
     etym:document.getElementById('w-etym').value.trim(),
     synonyms:document.getElementById('w-syn').value.trim(),
     added:new Date().toISOString().slice(0,10),
-    status:'new',
-    interval:1,easiness:2.5,repetitions:0,nextReview:new Date().toISOString().slice(0,10)
+    status:'new',interval:1,easiness:2.5,repetitions:0,
+    nextReview:new Date().toISOString().slice(0,10)
   });
   save();
   document.getElementById('w-term').value='';document.getElementById('w-def').value='';
   document.getElementById('w-ex').value='';document.getElementById('w-etym').value='';document.getElementById('w-syn').value='';
-  updateStats();
-  renderWOTD();
+  updateStats();renderWOTD();
   alert('WORD ADDED: '+term);
 }
 
@@ -338,15 +347,15 @@ function loadSeeds(){
   let added=0;
   SEEDS.forEach(s=>{
     if(!words.find(w=>w.term.toLowerCase()===s.term.toLowerCase())){
-      words.push({...s,id:Date.now()+Math.random(),added:new Date().toISOString().slice(0,10),status:'new',interval:1,easiness:2.5,repetitions:0,nextReview:new Date().toISOString().slice(0,10)});
+      words.push({...s,id:Date.now()+Math.random(),added:new Date().toISOString().slice(0,10),
+        status:'new',interval:1,easiness:2.5,repetitions:0,nextReview:new Date().toISOString().slice(0,10)});
       added++;
     }
   });
   save();
   document.getElementById('seed-btn').textContent=added+' WORDS LOADED';
   document.getElementById('seed-btn').disabled=true;
-  updateStats();
-  renderWOTD();
+  updateStats();renderWOTD();
 }
 
 function deleteWord(id){
@@ -378,23 +387,21 @@ function renderLibrary(){
   else if(libFilter==='due') data=data.filter(w=>w.nextReview<=today&&w.status!=='mastered');
   if(q) data=data.filter(w=>w.term.toLowerCase().includes(q)||w.def.toLowerCase().includes(q)||(w.synonyms||'').toLowerCase().includes(q));
   if(!data.length){grid.innerHTML='<div class="empty">NO WORDS MATCH</div>';return;}
-  grid.innerHTML=data.map(w=>`<div class="word-card ${w.status}">
+  grid.innerHTML=data.map(w=>`<div class="word-card card ${w.status}">
     <div class="word-head"><span class="word-term">${w.term}</span><span class="word-pos">${POS_LABELS[w.pos]||''} ${(DOMAIN_LABELS[w.domain]||w.domain).slice(0,8)}</span></div>
     <div class="word-def">${w.def}</div>
     ${w.example?`<div class="word-example">"${w.example}"</div>`:''}
     <div class="word-meta">
       <span class="badge badge-${w.status}">${w.status.toUpperCase()}</span>
-      ${w.etym?`<span title="${w.etym}">⟨etym⟩</span>`:''}
-      ${w.synonyms?`<span>≈ ${w.synonyms.split(',').slice(0,2).join(', ')}</span>`:''}
+      ${w.etym?`<span title="${w.etym}">[etym]</span>`:''}
+      ${w.synonyms?`<span>~ ${w.synonyms.split(',').slice(0,2).join(', ')}</span>`:''}
     </div>
     <div class="word-actions">
-      ${w.status!=='mastered'?`<button class="btn btn-ghost" style="font-size:.55rem;padding:3px 8px" onclick="markMastered(${w.id})">✓ MASTERED</button>`:''}
-      <button class="btn btn-red" onclick="deleteWord(${w.id})">✕</button>
+      ${w.status!=='mastered'?`<button class="btn btn-ghost" style="font-size:.55rem;padding:3px 8px" onclick="markMastered(${w.id})">MASTERED</button>`:''}
+      <button class="btn btn-red" onclick="deleteWord(${w.id})">X</button>
     </div>
   </div>`).join('');
 }
-
-const DOMAIN_LABELS={general:'GENERAL',philosophy:'PHILOS',science:'SCIENCE',business:'BUSINESS',literature:'LIT',psychology:'PSYCH',law:'LAW',politics:'POL',art:'ART',tech:'TECH',finance:'FINANCE',medicine:'MED'};
 
 function startDrill(mode){
   const today=new Date().toISOString().slice(0,10);
@@ -404,7 +411,7 @@ function startDrill(mode){
   else pool=words.filter(w=>w.status!=='mastered');
   pool=shuffle(pool).slice(0,20);
   if(!pool.length){document.getElementById('drill-area').innerHTML='<div class="empty">NO WORDS MATCH THIS DRILL MODE</div>';return;}
-  drillQueue=pool;drillIndex=0;drillShowing=false;
+  drillQueue=pool;drillIndex=0;
   renderDrillCard();
 }
 
@@ -414,17 +421,15 @@ function renderDrillCard(){
   if(drillIndex>=drillQueue.length){
     document.getElementById('drill-area').innerHTML=`<div style="text-align:center;padding:40px 0">
       <div style="font-size:2rem;color:var(--gold);margin-bottom:12px">SESSION COMPLETE</div>
-      <div style="font-size:.75rem;color:var(--d);margin-bottom:20px">${drillQueue.length} WORDS REVIEWED</div>
+      <div style="font-size:.75rem;color:#888;margin-bottom:20px">${drillQueue.length} WORDS REVIEWED</div>
       <button class="btn btn-gold" onclick="startDrill('due')">DRILL AGAIN</button>
     </div>`;
     document.getElementById('drill-progress-bar').innerHTML='';
-    logReview();
-    return;
+    logReview();return;
   }
   const w=drillQueue[drillIndex];
   document.getElementById('drill-status').textContent=`${drillIndex+1} / ${drillQueue.length} · ${w.domain.toUpperCase()}`;
   document.getElementById('drill-progress-bar').innerHTML=drillQueue.map((_,i)=>`<div class="drill-dot ${i<drillIndex?'done':i===drillIndex?'current':''}"></div>`).join('');
-
   document.getElementById('drill-area').innerHTML=`
     <div class="drill-front" onclick="revealDrill()">
       <div class="drill-word">${w.term}</div>
@@ -434,8 +439,8 @@ function renderDrillCard(){
     <div id="drill-back" class="drill-back">
       <div class="drill-def">${w.def}</div>
       ${w.example?`<div class="drill-ex">"${w.example}"</div>`:''}
-      ${w.etym?`<div style="font-size:.6rem;color:var(--d);margin-bottom:8px">ETYMOLOGY: ${w.etym}</div>`:''}
-      ${w.synonyms?`<div style="font-size:.6rem;color:var(--d);margin-bottom:12px">SYNONYMS: ${w.synonyms}</div>`:''}
+      ${w.etym?`<div style="font-size:.6rem;color:#888;margin-bottom:8px">ETYMOLOGY: ${w.etym}</div>`:''}
+      ${w.synonyms?`<div style="font-size:.6rem;color:#888;margin-bottom:12px">SYNONYMS: ${w.synonyms}</div>`:''}
       <div class="drill-btns">
         <button class="drill-btn drill-fail" onclick="gradeWord(1)">MISS</button>
         <button class="drill-btn drill-hard" onclick="gradeWord(3)">HARD</button>
@@ -445,14 +450,14 @@ function renderDrillCard(){
 }
 
 function revealDrill(){
-  document.getElementById('drill-back').classList.add('visible');
+  var b=document.getElementById('drill-back');
+  if(b) b.classList.add('visible');
 }
 
 function gradeWord(q){
   const w=drillQueue[drillIndex];
   const word=words.find(x=>x.id===w.id);
   if(word){
-    // SM-2 algorithm
     if(q>=3){
       word.easiness=Math.max(1.3,word.easiness+(0.1-(5-q)*(0.08+(5-q)*0.02)));
       if(word.repetitions===0) word.interval=1;
@@ -473,14 +478,10 @@ function gradeWord(q){
 
 function logReview(){
   const today=new Date().toISOString().slice(0,10);
-  if(!reviewLog.find(r=>r.date===today)){
-    reviewLog.push({date:today,count:drillQueue.length});
-    saveLog();
-  } else {
-    const r=reviewLog.find(r=>r.date===today);
-    r.count+=drillQueue.length;
-    saveLog();
-  }
+  const r=reviewLog.find(r=>r.date===today);
+  if(!r) reviewLog.push({date:today,count:drillQueue.length});
+  else r.count+=drillQueue.length;
+  saveLog();
   updateStats();
 }
 
@@ -490,12 +491,11 @@ function updateStats(){
   const today=new Date().toISOString().slice(0,10);
   const todayLog=reviewLog.find(r=>r.date===today);
   document.getElementById('st-reviewed').textContent=todayLog?todayLog.count:0;
-  // streak
   let streak=0;
   const d=new Date();
   while(true){
     const key=d.toISOString().slice(0,10);
-    if(reviewLog.find(r=>r.date===key)) {streak++;d.setDate(d.getDate()-1);}
+    if(reviewLog.find(r=>r.date===key)){streak++;d.setDate(d.getDate()-1);}
     else break;
   }
   document.getElementById('st-streak').textContent=streak;
@@ -509,112 +509,17 @@ function renderWOTD(){
   const idx=parseInt(seed)%words.length;
   const w=words[idx];
   container.innerHTML=`<div style="text-align:center;padding:16px">
-    <div style="font-size:1.6rem;color:var(--t);letter-spacing:.1em;margin-bottom:6px">${w.term}</div>
+    <div style="font-size:1.6rem;color:#fff;letter-spacing:.1em;margin-bottom:6px">${w.term}</div>
     <div style="font-size:.65rem;color:var(--gold);margin-bottom:12px">${POS_LABELS[w.pos]||''} · ${(DOMAIN_LABELS[w.domain]||w.domain).toUpperCase()}</div>
     <div style="font-size:.8rem;color:#aaa;line-height:1.6;max-width:400px;margin:0 auto 12px">${w.def}</div>
     ${w.example?`<div style="font-size:.7rem;color:#666;font-style:italic;max-width:400px;margin:0 auto">"${w.example}"</div>`:''}
-    ${w.etym?`<div style="font-size:.6rem;color:var(--d);margin-top:10px">ETYMOLOGY: ${w.etym}</div>`:''}
+    ${w.etym?`<div style="font-size:.6rem;color:#888;margin-top:10px">ETYMOLOGY: ${w.etym}</div>`:''}
   </div>`;
 }
 
-function renderStreak(){
-  const grid=document.getElementById('streak-grid');
-  const days=30;
-  const cells=[];
-  for(let i=days-1;i>=0;i--){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const key=d.toISOString().slice(0,10);
-    const done=reviewLog.some(r=>r.date===key);
-    cells.push(`<div class="streak-cell ${done?'done':''}" title="${key}"></div>`);
-  }
-  grid.innerHTML=cells.join('');
-}
-
-function renderGrowth(){
-  const canvas=document.getElementById('growth-canvas');
-  const W=canvas.offsetWidth||500; canvas.width=W; canvas.height=160;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,W,160);
-  if(!words.length){ctx.fillStyle='#555';ctx.font='12px monospace';ctx.textAlign='center';ctx.fillText('NO DATA',W/2,80);return;}
-  const days=30; const today=new Date();
-  const counts=[];
-  for(let i=days-1;i>=0;i--){
-    const d=new Date(today); d.setDate(d.getDate()-i);
-    const key=d.toISOString().slice(0,10);
-    counts.push(words.filter(w=>w.added<=key).length);
-  }
-  const maxV=Math.max(...counts,1);
-  const pad={l:40,r:10,t:10,b:30}; const W2=W-pad.l-pad.r; const H2=140-pad.t-pad.b;
-  ctx.strokeStyle='#1a1a1a';ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){const y=pad.t+H2-(H2/4*i);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+W2,y);ctx.stroke();ctx.fillStyle='#555';ctx.font='9px monospace';ctx.textAlign='right';ctx.fillText(Math.round(maxV/4*i),pad.l-4,y+3);}
-  ctx.strokeStyle='var(--gold)';ctx.lineWidth=1.5;ctx.beginPath();
-  counts.forEach((v,i)=>{const x=pad.l+(i/(days-1))*W2;const y=pad.t+H2-(v/maxV)*H2;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.stroke();
-  ctx.lineTo(pad.l+W2,pad.t+H2);ctx.lineTo(pad.l,pad.t+H2);ctx.closePath();ctx.fillStyle='rgba(201,168,76,.08)';ctx.fill();
-}
-
-function renderMastery(){
-  const canvas=document.getElementById('mastery-canvas');
-  const W=canvas.offsetWidth||500; canvas.width=W; canvas.height=120;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,W,120);
-  const ns=words.filter(w=>w.status==='new').length;
-  const ls=words.filter(w=>w.status==='learning').length;
-  const ms=words.filter(w=>w.status==='mastered').length;
-  const total=words.length||1;
-  const bars=[{label:'NEW',val:ns,color:'#3498db'},{label:'LEARNING',val:ls,color:'var(--gold)'},{label:'MASTERED',val:ms,color:'var(--green)'}];
-  const pad={l:70,r:10,t:10,b:10}; const W2=W-pad.l-pad.r; const bh=24; const gap=14;
-  bars.forEach((b,i)=>{
-    const y=pad.t+i*(bh+gap);
-    const barW=(b.val/total)*W2;
-    ctx.fillStyle='#1a1a1a';ctx.fillRect(pad.l,y,W2,bh);
-    ctx.fillStyle=b.color;ctx.fillRect(pad.l,y,barW,bh);
-    ctx.fillStyle='#aaa';ctx.font='9px monospace';ctx.textAlign='right';ctx.fillText(b.label,pad.l-4,y+15);
-    ctx.fillStyle='#fff';ctx.font='9px monospace';ctx.textAlign='left';
-    if(barW>30) ctx.fillText(b.val,pad.l+barW-25,y+15);
-    else {ctx.fillStyle='#666';ctx.fillText(b.val,pad.l+barW+4,y+15);}
-  });
-}
-
-function renderDomainChart(){
-  const canvas=document.getElementById('domain-canvas');
-  const W=canvas.offsetWidth||500; canvas.width=W; canvas.height=160;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,W,160);
-  const dc={};
-  words.forEach(w=>{dc[w.domain]=(dc[w.domain]||0)+1;});
-  const sorted=Object.entries(dc).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  if(!sorted.length) return;
-  const maxV=Math.max(...sorted.map(([,v])=>v),1);
-  const pad={l:10,r:10,t:10,b:30}; const W2=W-pad.l-pad.r; const H2=130-pad.t-pad.b;
-  const bw=Math.floor(W2/sorted.length)-4;
-  sorted.forEach(([k,v],i)=>{
-    const x=pad.l+i*(bw+4);
-    const h=(v/maxV)*H2;
-    const y=pad.t+H2-h;
-    ctx.fillStyle=DOMAIN_COLORS[k]||'#888';
-    ctx.fillRect(x,y,bw,h);
-    ctx.fillStyle='#888';ctx.font='8px monospace';ctx.textAlign='center';
-    ctx.fillText((DOMAIN_LABELS[k]||k).slice(0,6),x+bw/2,pad.t+H2+14);
-    ctx.fillStyle='#fff';ctx.font='9px monospace';
-    if(h>14) ctx.fillText(v,x+bw/2,y+12);
-  });
-}
-
-function switchTab(t){
-  document.querySelectorAll('.tab').forEach((b,i)=>{
-    const names=['add','library','drill','progress','science'];
-    b.classList.toggle('active',names[i]===t);
-  });
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  if(t==='library') renderLibrary();
-  if(t==='progress'){renderStreak();renderGrowth();renderMastery();renderDomainChart();}
-}
-
-// init
 updateStats();
 renderWOTD();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

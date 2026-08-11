@@ -28,6 +28,12 @@
       <button class="tab" data-tab="science" role="tab">SCIENCE</button>
     </div>
 
+    <div class="pad" style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin:12px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],'omega-treasury-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_treasury_assets','omega_treasury_reserves','omega_treasury_flows'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+    </div>
+
     <!-- OVERVIEW TAB -->
     <div class="tab-panel active pad" id="tab-overview">
       <div class="kpi-row">
@@ -169,19 +175,20 @@
     <div class="tab-panel pad" id="tab-science" style="display:none">
       <div class="sechead">TREASURY SCIENCE</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
-        <div class="sci-card"><div class="sci-num">01</div><div class="sci-title">SOVEREIGN WEALTH DOCTRINE</div><div class="sci-body">Sovereign wealth funds (Norway, Singapore, UAE) hold assets in perpetuity across generations. The personal sovereign applies the same principle: categorize wealth by time horizon — consumption, generation, legacy.</div></div>
-        <div class="sci-card"><div class="sci-num">02</div><div class="sci-title">RESERVE RATIOS</div><div class="sci-body">Classic personal finance recommends 3-6 months of expenses in liquid reserves. The sovereign standard is 12 months emergency + 10-20% of net worth in opportunity capital. Liquidity is optionality.</div></div>
-        <div class="sci-card"><div class="sci-num">03</div><div class="sci-title">WEALTH TRILEMMA</div><div class="sci-body">All wealth faces a trilemma: liquidity, return, safety — pick two. Cash is liquid and safe but low-return. Real estate is illiquid, safe, moderate-return. Crypto is liquid, high-return, high-risk.</div></div>
-        <div class="sci-card"><div class="sci-num">04</div><div class="sci-title">CASH FLOW SOVEREIGNTY</div><div class="sci-body">Kiyosaki's framework: assets produce income, liabilities consume it. The treasury goal is a system where passive cash flows exceed expenses — complete operational sovereignty without active labor income.</div></div>
-        <div class="sci-card"><div class="sci-num">05</div><div class="sci-title">DEPRECIATION AWARENESS</div><div class="sci-body">All assets depreciate except those that compound: equity stakes, intellectual property, skilled human capital. Track cost basis against current value to identify wealth creation vs. wealth preservation assets.</div></div>
-        <div class="sci-card"><div class="sci-num">06</div><div class="sci-title">THE WEALTH EQUATION</div><div class="sci-body">Net Worth = Assets − Liabilities. But sovereign wealth adds time-adjusted present value: what is each asset's real worth discounted for illiquidity, tax drag, and concentration risk? True wealth is net of friction.</div></div>
+        <div class="sci-card card"><div class="sci-num">01</div><div class="sci-title">SOVEREIGN WEALTH DOCTRINE</div><div class="sci-body">Sovereign wealth funds (Norway, Singapore, UAE) hold assets in perpetuity across generations. The personal sovereign applies the same principle: categorize wealth by time horizon — consumption, generation, legacy.</div></div>
+        <div class="sci-card card"><div class="sci-num">02</div><div class="sci-title">RESERVE RATIOS</div><div class="sci-body">Classic personal finance recommends 3-6 months of expenses in liquid reserves. The sovereign standard is 12 months emergency + 10-20% of net worth in opportunity capital. Liquidity is optionality.</div></div>
+        <div class="sci-card card"><div class="sci-num">03</div><div class="sci-title">WEALTH TRILEMMA</div><div class="sci-body">All wealth faces a trilemma: liquidity, return, safety — pick two. Cash is liquid and safe but low-return. Real estate is illiquid, safe, moderate-return. Crypto is liquid, high-return, high-risk.</div></div>
+        <div class="sci-card card"><div class="sci-num">04</div><div class="sci-title">CASH FLOW SOVEREIGNTY</div><div class="sci-body">Kiyosaki's framework: assets produce income, liabilities consume it. The treasury goal is a system where passive cash flows exceed expenses — complete operational sovereignty without active labor income.</div></div>
+        <div class="sci-card card"><div class="sci-num">05</div><div class="sci-title">DEPRECIATION AWARENESS</div><div class="sci-body">All assets depreciate except those that compound: equity stakes, intellectual property, skilled human capital. Track cost basis against current value to identify wealth creation vs. wealth preservation assets.</div></div>
+        <div class="sci-card card"><div class="sci-num">06</div><div class="sci-title">THE WEALTH EQUATION</div><div class="sci-body">Net Worth = Assets − Liabilities. But sovereign wealth adds time-adjusted present value: what is each asset's real worth discounted for illiquidity, tax drag, and concentration risk? True wealth is net of friction.</div></div>
       </div>
     </div>
 
-    <div class="lf"><span>&#937; TREASURY &middot; SYD OMEGA 91717</span><span>ASSETS &middot; RESERVES &middot; CASH FLOWS</span></div>
+    <div data-page-emblem="treasury" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; TREASURY &middot; SYD OMEGA 91717</span><span>ASSETS &middot; RESERVES &middot; CASH FLOWS</span></div>
   </main>
 </div>
-<style>
+<style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
 .sci-num{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .sci-title{font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
@@ -198,7 +205,7 @@ var flows=JSON.parse(localStorage.getItem(FK)||'[]');
 
 function save(){localStorage.setItem(AK,JSON.stringify(assets));localStorage.setItem(RK,JSON.stringify(reserves));localStorage.setItem(FK,JSON.stringify(flows));}
 
-var TYPE_COL={liquid:'#00E5FF',equity:'#4CAF50',crypto:'#FF9800','real-estate':'#9B6BF0',business:'#C9A84C',intellectual:'#E2C86D',other:'#888'};
+var TYPE_COL={liquid:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),equity:'#4CAF50',crypto:'#FF9800','real-estate':(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),business:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),intellectual:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),other:'#888'};
 function fmt(v){return '$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 
 function calcTotals(){
@@ -214,12 +221,12 @@ function drawCanvas(){
   var cv=document.getElementById('treasury-canvas');if(!cv)return;
   var t=calcTotals();
   var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
-  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A0A0F';ctx.fillRect(0,0,W,H);
+  ctx.clearRect(0,0,W,H);ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
   if(!t.total){
     ctx.font='11px monospace';ctx.fillStyle='rgba(138,134,118,.5)';ctx.textAlign='center';
     ctx.fillText('NO ASSETS RECORDED',W/2,H/2);return;
   }
-  var bars=[{l:'LIQUID',v:t.liquid,c:'#00E5FF'},{l:'ILLIQUID',v:t.illiquid,c:'#9B6BF0'},{l:'RESERVES',v:Number(reserves.emerg||0)+Number(reserves.opp||0)+Number(reserves.legacy||0),c:'#C9A84C'}];
+  var bars=[{l:'LIQUID',v:t.liquid,c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},{l:'ILLIQUID',v:t.illiquid,c:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},{l:'RESERVES',v:Number(reserves.emerg||0)+Number(reserves.opp||0)+Number(reserves.legacy||0),c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')}];
   var maxV=Math.max.apply(null,bars.map(function(b){return b.v;}));
   var bw=80,gap=40,x0=60,yB=H-30;
   bars.forEach(function(b,i){
@@ -343,6 +350,7 @@ window.addFlow=function(){
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
+<script src="/omega-local-backup.js"></script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
 </body>
 </html>

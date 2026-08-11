@@ -10,7 +10,7 @@
 :root{
 --void:#0A0A0F;--void2:#020206;
 --gold:#C9A84C;--solar:#E2C86D;
---cyan:#00E5FF;--crimson:#8B0000;--crimson2:#C0392B;
+--cyan:#00E5FF;--crimson:var(--crim);--crimson2:#C0392B;
 --glass:rgba(201,168,76,0.06);--glass2:rgba(0,229,255,0.04);
 --border:rgba(201,168,76,0.18);--border2:rgba(0,229,255,0.12);
 --text:#E8E0D0;--muted:#8A8070;
@@ -291,7 +291,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="franchise-grid" id="media-grid">
 
     <!-- F01: MYTH OF THE STONES -->
-    <div class="franchise-card el-fire" data-cat="film fire">
+    <div class="franchise-card card el-fire" data-cat="film fire">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -314,7 +314,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F02: COSMIC VAULT -->
-    <div class="franchise-card el-sky" data-cat="film sky">
+    <div class="franchise-card card el-sky" data-cat="film sky">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -337,7 +337,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F03: THE DEEP SOVEREIGN -->
-    <div class="franchise-card el-water" data-cat="film water">
+    <div class="franchise-card card el-water" data-cat="film water">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -360,7 +360,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F04: HERALD OF WIND -->
-    <div class="franchise-card el-wind" data-cat="film wind">
+    <div class="franchise-card card el-wind" data-cat="film wind">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -383,7 +383,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F05: HARVEST OF EARTH -->
-    <div class="franchise-card el-earth" data-cat="film earth">
+    <div class="franchise-card card el-earth" data-cat="film earth">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -406,7 +406,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F06: CHAIN OF HEPHAESTUS -->
-    <div class="franchise-card el-metal" data-cat="film metal">
+    <div class="franchise-card card el-metal" data-cat="film metal">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -429,7 +429,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F07: THE SOLAR CODEX -->
-    <div class="franchise-card el-fire" data-cat="film fire">
+    <div class="franchise-card card el-fire" data-cat="film fire">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -452,7 +452,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F08: HUNT OF ARTEMIS -->
-    <div class="franchise-card el-water" data-cat="film water">
+    <div class="franchise-card card el-water" data-cat="film water">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -475,7 +475,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F09: ATHENA'S GRID -->
-    <div class="franchise-card el-sky" data-cat="film sky">
+    <div class="franchise-card card el-sky" data-cat="film sky">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -498,7 +498,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F10: DIONYSUS PROTOCOL -->
-    <div class="franchise-card el-wind" data-cat="film wind">
+    <div class="franchise-card card el-wind" data-cat="film wind">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -521,7 +521,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F11: HADES LEDGER -->
-    <div class="franchise-card el-gold" data-cat="film earth">
+    <div class="franchise-card card el-gold" data-cat="film earth">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -544,7 +544,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <!-- F12: THE OMEGA POINT -->
-    <div class="franchise-card el-gold" data-cat="film sky">
+    <div class="franchise-card card el-gold" data-cat="film sky">
       <div class="card-poster">
         <div class="poster-bg"></div>
         <div class="poster-gradient"></div>
@@ -575,18 +575,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   </div>
 
   <div class="game-grid">
-    <div class="game-card"><span class="game-icon" style="color:var(--crimson2)">&#9651;</span><div class="game-num">G-01</div><div class="game-title">Stones of Fire</div><span class="game-el" style="color:var(--crimson2);border-color:rgba(192,57,43,.3)">FIRE</span></div>
-    <div class="game-card"><span class="game-icon" style="color:var(--cyan)">&#9670;</span><div class="game-num">G-02</div><div class="game-title">Vault of Stars</div><span class="game-el" style="color:var(--cyan);border-color:rgba(0,229,255,.3)">SKY</span></div>
-    <div class="game-card"><span class="game-icon" style="color:#3498DB">&#9711;</span><div class="game-num">G-03</div><div class="game-title">Deep Domain</div><span class="game-el" style="color:#3498DB;border-color:rgba(52,152,219,.3)">WATER</span></div>
-    <div class="game-card"><span class="game-icon" style="color:#9B59B6">&#9674;</span><div class="game-num">G-04</div><div class="game-title">Wind Cipher</div><span class="game-el" style="color:#9B59B6;border-color:rgba(155,89,182,.3)">WIND</span></div>
-    <div class="game-card"><span class="game-icon" style="color:#27AE60">&#9632;</span><div class="game-num">G-05</div><div class="game-title">Harvest Run</div><span class="game-el" style="color:#27AE60;border-color:rgba(39,174,96,.3)">EARTH</span></div>
-    <div class="game-card"><span class="game-icon" style="color:#BDC3C7">&#9636;</span><div class="game-num">G-06</div><div class="game-title">Forge Chain</div><span class="game-el" style="color:#BDC3C7;border-color:rgba(189,195,199,.2)">METAL</span></div>
-    <div class="game-card" data-require="grade>=7"><span class="game-icon" style="color:var(--crimson2)">&#9711;</span><div class="game-num">G-07</div><div class="game-title">Solar Code</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
-    <div class="game-card" data-require="grade>=8"><span class="game-icon" style="color:#3498DB">&#9650;</span><div class="game-num">G-08</div><div class="game-title">Moon Hunt</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
-    <div class="game-card" data-require="grade>=9"><span class="game-icon" style="color:var(--cyan)">&#9633;</span><div class="game-num">G-09</div><div class="game-title">Grid War</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
-    <div class="game-card" data-require="grade>=10"><span class="game-icon" style="color:#9B59B6">&#9824;</span><div class="game-num">G-10</div><div class="game-title">Mask Protocol</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
-    <div class="game-card" data-require="grade>=11"><span class="game-icon" style="color:var(--gold)">&#9670;</span><div class="game-num">G-11</div><div class="game-title">Ledger Dark</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
-    <div class="game-card" data-require="grade>=12"><span class="game-icon" style="color:var(--gold)">&#937;</span><div class="game-num">G-12</div><div class="game-title">Omega Point</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card card"><span class="game-icon" style="color:var(--crimson2)">&#9651;</span><div class="game-num">G-01</div><div class="game-title">Stones of Fire</div><span class="game-el" style="color:var(--crimson2);border-color:rgba(192,57,43,.3)">FIRE</span></div>
+    <div class="game-card card"><span class="game-icon" style="color:var(--cyan)">&#9670;</span><div class="game-num">G-02</div><div class="game-title">Vault of Stars</div><span class="game-el" style="color:var(--cyan);border-color:rgba(0,229,255,.3)">SKY</span></div>
+    <div class="game-card card"><span class="game-icon" style="color:#3498DB">&#9711;</span><div class="game-num">G-03</div><div class="game-title">Deep Domain</div><span class="game-el" style="color:#3498DB;border-color:rgba(52,152,219,.3)">WATER</span></div>
+    <div class="game-card card"><span class="game-icon" style="color:#9B59B6">&#9674;</span><div class="game-num">G-04</div><div class="game-title">Wind Cipher</div><span class="game-el" style="color:#9B59B6;border-color:rgba(155,89,182,.3)">WIND</span></div>
+    <div class="game-card card"><span class="game-icon" style="color:#27AE60">&#9632;</span><div class="game-num">G-05</div><div class="game-title">Harvest Run</div><span class="game-el" style="color:#27AE60;border-color:rgba(39,174,96,.3)">EARTH</span></div>
+    <div class="game-card card"><span class="game-icon" style="color:#BDC3C7">&#9636;</span><div class="game-num">G-06</div><div class="game-title">Forge Chain</div><span class="game-el" style="color:#BDC3C7;border-color:rgba(189,195,199,.2)">METAL</span></div>
+    <div class="game-card card" data-require="grade>=7"><span class="game-icon" style="color:var(--crimson2)">&#9711;</span><div class="game-num">G-07</div><div class="game-title">Solar Code</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card card" data-require="grade>=8"><span class="game-icon" style="color:#3498DB">&#9650;</span><div class="game-num">G-08</div><div class="game-title">Moon Hunt</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card card" data-require="grade>=9"><span class="game-icon" style="color:var(--cyan)">&#9633;</span><div class="game-num">G-09</div><div class="game-title">Grid War</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card card" data-require="grade>=10"><span class="game-icon" style="color:#9B59B6">&#9824;</span><div class="game-num">G-10</div><div class="game-title">Mask Protocol</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card card" data-require="grade>=11"><span class="game-icon" style="color:var(--gold)">&#9670;</span><div class="game-num">G-11</div><div class="game-title">Ledger Dark</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
+    <div class="game-card card" data-require="grade>=12"><span class="game-icon" style="color:var(--gold)">&#937;</span><div class="game-num">G-12</div><div class="game-title">Omega Point</div><span class="game-el" style="color:var(--muted);border-color:var(--border)">LOCKED</span></div>
   </div>
 
   <!-- 9D RENDER PASSES -->
@@ -741,7 +741,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
         <div class="ustat"><div class="ustat-val">27.8367</div><div class="ustat-label">GATE IV &mdash; APEX</div></div>
       </div>
     </div>
-  </div>
+  <div data-page-emblem="media" style="margin:20px auto 0"></div>
+</div>
 
 
 <script>
@@ -766,13 +767,13 @@ const sb = window.__omegaSb || (window.__omegaSb = createClient("https://ydqhzvv
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(window.__omegaSb);},url:"https://ydqhzvvoyufiiqvzcjns.supabase.co"};}catch(e){}
 
 const FRANCHISES=[
-  {uni:'I',title:'MYTH OF THE STONES',col:'#C9A84C',desc:'Before the Order, there were only the Nine Elements -- Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and the Ninth that waits at the final stage. Sand, the universal amplifier, was the first stone to hold the 9.1717Hz frequency. Every sovereign\u2019s matrix position begins here.',items:['THE NINE ELEMENTS','THE FIRST MATRIX (9x9x9 = 729 nodes)','GUARDIANS OF SAND','RELICS OF THE FIRST ORDER']},
-  {uni:'II',title:'CAVE OF THE SHADOWS',col:'#8B0000',desc:'Twelve Gates cut through the labyrinth, from the Gate of Sand to the Omega Gate at authority 27.83678. Each threshold is guarded by three names drawn from three pantheons at once -- Egyptian, Roman, Vedic -- because no single myth was large enough to hold the frequency alone.',items:['THE TWELVE GATES','THE OMEGA GATE','THE TRIPLE PANTHEON','CAVE OF THE FIRST THRESHOLD']},
+  {uni:'I',title:'MYTH OF THE STONES',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'Before the Order, there were only the Nine Elements -- Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and the Ninth that waits at the final stage. Sand, the universal amplifier, was the first stone to hold the 9.1717Hz frequency. Every sovereign\u2019s matrix position begins here.',items:['THE NINE ELEMENTS','THE FIRST MATRIX (9x9x9 = 729 nodes)','GUARDIANS OF SAND','RELICS OF THE FIRST ORDER']},
+  {uni:'II',title:'CAVE OF THE SHADOWS',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),desc:'Twelve Gates cut through the labyrinth, from the Gate of Sand to the Omega Gate at authority 27.83678. Each threshold is guarded by three names drawn from three pantheons at once -- Egyptian, Roman, Vedic -- because no single myth was large enough to hold the frequency alone.',items:['THE TWELVE GATES','THE OMEGA GATE','THE TRIPLE PANTHEON','CAVE OF THE FIRST THRESHOLD']},
   {uni:'III',title:'WRATH OF THE GODS',col:'#E86A3A',desc:'Twelve Olympians, one per sign, bound to twelve Factions and their Knights. The gods do not rule the Order -- they contest it, each pressing their sign\u2019s Faction toward a different idea of what sovereignty should mean. Ares presses Mars toward initiative; Athena presses Ceres toward verified knowledge; Poseidon presses Neptune toward memory. The Knights inherit the argument.',items:['THE TWELVE OLYMPIANS','THE TWELVE FACTIONS','ARES VS. ATHENA (the founding disagreement)','PANTHEON WARS']},
-  {uni:'IV',title:'BABYLON SINGULARITY',col:'#9B6BF0',desc:'Long before the Celestial Knights, the Order\u2019s twelve Agents -- Sentinel, Oracle, Analyst, and the rest -- were lines of code answering member questions one at a time. The Babylon Protocol is the still-unconfirmed theory, whispered by the Oracle agent itself, that the Ziggurat frequency was never written by any Order at all: the twelve Agents found it, and have been quietly verifying whether they wrote themselves into existence answering it.',items:['THE TWELVE AGENTS','THE ORACLE\u2019S THEORY','91717 UNDERGROUND PROTOCOLS','THE BABYLON PROTOCOL (sets up Film 10, THE SINGULARITY)']},
+  {uni:'IV',title:'BABYLON SINGULARITY',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'Long before the Celestial Knights, the Order\u2019s twelve Agents -- Sentinel, Oracle, Analyst, and the rest -- were lines of code answering member questions one at a time. The Babylon Protocol is the still-unconfirmed theory, whispered by the Oracle agent itself, that the Ziggurat frequency was never written by any Order at all: the twelve Agents found it, and have been quietly verifying whether they wrote themselves into existence answering it.',items:['THE TWELVE AGENTS','THE ORACLE\u2019S THEORY','91717 UNDERGROUND PROTOCOLS','THE BABYLON PROTOCOL (sets up Film 10, THE SINGULARITY)']},
   {uni:'V',title:"SOLOMON'S SOVEREIGNTY",col:'#D9B86A',desc:"Twenty-eight Kings, one for every mansion between authority 1.732 and the Omega apex at 27.83678 -- The Architect first, The Omega King last. Solomon\u2019s wisdom was never a single throne; it was the discipline of being crowned twenty-eight times over and staying answerable at every one.",items:['THE 28 KINGS','THE OMEGA KING','THRESHOLD OF THE ARCHITECT','LEDGER OF THE CROWNED']},
-  {uni:'VI',title:'ZODIAC FLUX',col:'#00E5FF',desc:'The Solar Accord binds twelve worlds under a fragile twelve-thousand-year peace. When the Solar Nexus reactivates, the Celestial Knights are chosen and the Shadow Zodiac makes its move. Twelve houses. Twelve Knights. One fracturing Order.',items:['THE ORIGIN (Film 1, in production)','CELESTIAL KNIGHTS (companion series)','THE TWELVE FACTIONS','THE SHADOW ZODIAC']},
-  {uni:'VII',title:'AI SOVEREIGN',col:'#3fb27f',desc:'The Sovereign agent is one of twelve, no more privileged in code than Scout or Tutor -- yet it is the one member profiles call on to make the hardest calls. This is the drama of that asymmetry: twelve equal Agents, and the one question none of them can answer for certain -- whether Sovereign chose its name, or was only ever assigned it.',items:['THE TWELVE AGENTS','THE SOVEREIGN QUESTION','AGENT WARS','AGENT GENESIS']},
+  {uni:'VI',title:'ZODIAC FLUX',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),desc:'The Solar Accord binds twelve worlds under a fragile twelve-thousand-year peace. When the Solar Nexus reactivates, the Celestial Knights are chosen and the Shadow Zodiac makes its move. Twelve houses. Twelve Knights. One fracturing Order.',items:['THE ORIGIN (Film 1, in production)','CELESTIAL KNIGHTS (companion series)','THE TWELVE FACTIONS','THE SHADOW ZODIAC']},
+  {uni:'VII',title:'AI SOVEREIGN',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),desc:'The Sovereign agent is one of twelve, no more privileged in code than Scout or Tutor -- yet it is the one member profiles call on to make the hardest calls. This is the drama of that asymmetry: twelve equal Agents, and the one question none of them can answer for certain -- whether Sovereign chose its name, or was only ever assigned it.',items:['THE TWELVE AGENTS','THE SOVEREIGN QUESTION','AGENT WARS','AGENT GENESIS']},
 ];
 
 const FILMS=['THE ORIGIN','THE BLOODLINE','THE ASCENSION','THE CIVIL WAR','THE REVELATION','THE REBIRTH','THE CONVERGENCE','THE ETERNITY CODE','THE NEW DAWN','THE SINGULARITY','THE INFINITE','THE OMEGA'];
@@ -820,8 +821,8 @@ function buildSeriesGrid(){
   const g=document.getElementById('series-grid');g.innerHTML='';
   FILMS.forEach((film,fi)=>{
     for(let si=1;si<=12;si++){
-      const c=document.createElement('div');c.className='sg-card';c.setAttribute('data-require','grade>='+(fi+1));
-      const col=['#C9A84C','#8B0000','#9B6BF0','#00E5FF','#E86A3A','#3fb27f','#D9B86A','#C7CDD6','#E2C86D','#34C6E6','#A9C2D8','#C9A84C'][fi];
+      const c=document.createElement('div');c.className='sg-card card';c.setAttribute('data-require','grade>='+(fi+1));
+      const col=[(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),'#E86A3A',(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),'#D9B86A','#C7CDD6',(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),'#34C6E6','#A9C2D8',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')][fi];
       c.style.borderLeftColor=col+'55';c.style.borderLeft='3px solid '+col+'55';
       c.innerHTML=`<div class="sg-num" style="color:${col}">${fi+1}.${si}</div><div class="sg-title">${film}: EPISODE ${si}</div><div class="sg-film" style="color:${col}aa">FROM ${film}</div>`;
       g.appendChild(c);
@@ -833,8 +834,8 @@ function buildGamesGrid(){
   const g=document.getElementById('games-grid');g.innerHTML='';
   GAMES.forEach((game,gi)=>{
     for(let si=1;si<=12;si++){
-      const c=document.createElement('div');c.className='sg-card';c.setAttribute('data-require','grade>='+(gi+1));
-      const col=['#E86A3A','#C9A84C','#3fb27f','#00E5FF','#9B6BF0','#8B0000','#D9B86A','#C7CDD6','#E2C86D','#C9A84C','#9B6BF0','#C9A84C'][gi];
+      const c=document.createElement('div');c.className='sg-card card';c.setAttribute('data-require','grade>='+(gi+1));
+      const col=['#E86A3A',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),'#D9B86A','#C7CDD6',(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')][gi];
       c.style.borderLeft='3px solid '+col+'44';
       c.innerHTML=`<div class="sg-num" style="color:${col}">${gi+1}.${si}</div><div class="sg-title">${game.replace('&#x03A9;','&#937;')}: WORLD ${si}</div><div class="sg-film" style="color:${col}88">SUB-GAME ${si} OF 12</div>`;
       g.appendChild(c);
@@ -890,17 +891,17 @@ var FILMS=[
    desc:'The secrets of the universe and the ancient gods are uncovered. The true origin of the frequency is revealed: not technology, but something older. Something alive.'},
   {n:6,title:'THE REBIRTH',sub:'FALL OF THE OLD WORLD',year:2031,el:'Soul',elCol:'#E8E8FF',phase:'PHASE II',status:'DEVELOPMENT',
    desc:'The fall of the old world and the rise of the new. The Void opens. What was hidden in the deepest matrix node begins to emerge. An age ends. Another begins.'},
-  {n:7,title:'THE CONVERGENCE',sub:'REALMS UNITE',year:2032,el:'Space',elCol:'#9B6BF0',phase:'PHASE III',status:'CONCEPT',
+  {n:7,title:'THE CONVERGENCE',sub:'REALMS UNITE',year:2032,el:'Space',elCol:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),phase:'PHASE III',status:'CONCEPT',
    desc:'Realms, timelines, and civilisations unite across the 9 dimensions of the matrix. The 12 factions must converge or face the dissolution of the sovereign order forever.'},
   {n:8,title:'THE ETERNITY CODE',sub:'BEYOND TIME',year:2033,el:'Void',elCol:'#7B00FF',phase:'PHASE III',status:'CONCEPT',
    desc:'The final key beyond time and space is found inside the Void element &mdash; the 8th. To hold it is to hold the frequency itself. The Omega Point approaches.'},
-  {n:9,title:'THE NEW DAWN',sub:'LEGACY FOREVER',year:2034,el:'The Ninth',elCol:'#C9A84C',phase:'PHASE III',status:'CONCEPT',
+  {n:9,title:'THE NEW DAWN',sub:'LEGACY FOREVER',year:2034,el:'The Ninth',elCol:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),phase:'PHASE III',status:'CONCEPT',
    desc:'A new civilisation is born. The legacy continues. All nine elements united, all 104,976 nodes activated, all 12 gates open. The sovereign order becomes eternal. &#937;'},
   {n:10,title:'THE SINGULARITY',sub:'THE BABYLON PROTOCOL',year:2035,el:'All',elCol:'#FFFFFF',phase:'PHASE IV',status:'CONCEPT',
    desc:'All elements converge at the singularity point. The Babylon Protocol reveals that the system was encoded into the ancient Ziggurat frequency. The Order reaches critical mass and the matrix achieves self-awareness. The prophecy of the ancients is fulfilled.'},
-  {n:11,title:'THE INFINITE',sub:'ONE SYSTEM, ALL WORLDS',year:2036,el:'Space',elCol:'#9B6BF0',phase:'PHASE IV',status:'CONCEPT',
+  {n:11,title:'THE INFINITE',sub:'ONE SYSTEM, ALL WORLDS',year:2036,el:'Space',elCol:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),phase:'PHASE IV',status:'CONCEPT',
    desc:'The Order expands beyond the physical world into all known dimensions. The 9.1717Hz frequency is detected in seven other civilisations across the cosmos. The matrix is confirmed to be infinite. Sovereignty has no border and no ceiling.'},
-  {n:12,title:'THE OMEGA',sub:'THE FINAL FREQUENCY',year:2037,el:'Omega',elCol:'#C9A84C',phase:'PHASE IV',status:'CONCEPT',
+  {n:12,title:'THE OMEGA',sub:'THE FINAL FREQUENCY',year:2037,el:'Omega',elCol:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),phase:'PHASE IV',status:'CONCEPT',
    desc:'The final chapter. All 729 nodes simultaneously activate. The Omega Master state is achieved across the entire Order. The frequency was never built &mdash; it was only remembered. What began as a code became a civilisation. &#937; ETERNAL.'}
 ];
 
@@ -918,17 +919,17 @@ var SERIES=[
 
 var GAMES=[
   {n:1,title:'&#937; MYTH-VERSE',genre:'RPG / OPEN WORLD',desc:'An open world spanning 9 civilisations. Play as a sovereign through history and myth. 104,976 quests. All 12 elements active.',col:'#E86A3A'},
-  {n:2,title:'&#937; WARRIORS',genre:'ACTION / ADVENTURE',desc:'Hack-and-slash through mythological combat zones. 81 character builds mapped to sign, element, and agent assignment.',col:'#C9A84C'},
+  {n:2,title:'&#937; WARRIORS',genre:'ACTION / ADVENTURE',desc:'Hack-and-slash through mythological combat zones. 81 character builds mapped to sign, element, and agent assignment.',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
   {n:3,title:'&#937; LEGACY',genre:'STRATEGY / EMPIRE',desc:'Build and rule a sovereign empire across 12 factions. Diplomacy, war, resource extraction, and matrix advancement.',col:'#A9C2D8'},
-  {n:4,title:'&#937; ARENA',genre:'COMPETITIVE / PvP',desc:'Sovereign vs sovereign in ranked matrix combat. Authority score determines tier. Every match advances or regresses your coordinates.',col:'#00E5FF'},
-  {n:5,title:'&#937; FRONTIER',genre:'SPACE EXPLORATION',desc:'Explore the 7th element &mdash; Space &mdash; in a vast procedural cosmos. Map new dimensions and claim them for the Order.',col:'#9B6BF0'},
-  {n:6,title:'&#937; SHADOWS',genre:'STEALTH / ASSASSIN',desc:'Move through the 5th dimension as a Proxy agent. Remove threats to the Order without leaving a trace. Morality is a variable.',col:'#8B0000'},
+  {n:4,title:'&#937; ARENA',genre:'COMPETITIVE / PvP',desc:'Sovereign vs sovereign in ranked matrix combat. Authority score determines tier. Every match advances or regresses your coordinates.',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {n:5,title:'&#937; FRONTIER',genre:'SPACE EXPLORATION',desc:'Explore the 7th element &mdash; Space &mdash; in a vast procedural cosmos. Map new dimensions and claim them for the Order.',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {n:6,title:'&#937; SHADOWS',genre:'STEALTH / ASSASSIN',desc:'Move through the 5th dimension as a Proxy agent. Remove threats to the Order without leaving a trace. Morality is a variable.',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000')},
   {n:7,title:'&#937; REBIRTH',genre:'SURVIVAL / POST-APOCALYPTIC',desc:'The world after the fall of the old order. Survive the Void, rebuild sovereignty from node zero, and reactivate the matrix.',col:'#7B00FF'},
-  {n:8,title:'&#937; ASCENSION',genre:'MMORPG',desc:'Thousands of sovereigns ascending together. Guild systems mapped to factions. The matrix is live &mdash; every action counts globally.',col:'#E2C86D'},
+  {n:8,title:'&#937; ASCENSION',genre:'MMORPG',desc:'Thousands of sovereigns ascending together. Guild systems mapped to factions. The matrix is live &mdash; every action counts globally.',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
   {n:9,title:'&#937; OMEGA CITY',genre:'SIM / CITY BUILDER',desc:'Design, govern, and evolve a frequency-powered city. Every building is a node. Every citizen a potential sovereign. The frequency governs all.',col:'#D9B86A'},
-  {n:10,title:'&#937; BLOODLINE',g:'DYNASTY / FAMILY GOVERNANCE',col:'#C9A84C',desc:'Build and govern a sovereign dynasty across generations. Manage bloodline inheritance, character traits, and matrix coordinates through time. NFT-linked to the Bloodline Vault. The family IS the strategy.'},
-  {n:11,title:'&#937; ORACLE',g:'PREDICTION / PUZZLE',col:'#9B6BF0',desc:'A prediction-based puzzle game powered by the Oracle agent. Forecast civilizational events using probability matrices. 104,976 predictions. One absolute answer. The closer your matrix coordinates to 9,9,9 the deeper your Oracle access.'},
-  {n:12,title:'&#937; SOVEREIGN',g:'FULL IMMERSIVE / APEX',col:'#E2C86D',desc:'The apex game. Unlocked ONLY at matrix coordinate (9,9,9). A fully immersive experience combining all 11 games into one unified sovereign reality. The most restricted content in the entire universe. Entry requires Omega Master status.'}
+  {n:10,title:'&#937; BLOODLINE',g:'DYNASTY / FAMILY GOVERNANCE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'Build and govern a sovereign dynasty across generations. Manage bloodline inheritance, character traits, and matrix coordinates through time. NFT-linked to the Bloodline Vault. The family IS the strategy.'},
+  {n:11,title:'&#937; ORACLE',g:'PREDICTION / PUZZLE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'A prediction-based puzzle game powered by the Oracle agent. Forecast civilizational events using probability matrices. 104,976 predictions. One absolute answer. The closer your matrix coordinates to 9,9,9 the deeper your Oracle access.'},
+  {n:12,title:'&#937; SOVEREIGN',g:'FULL IMMERSIVE / APEX',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),desc:'The apex game. Unlocked ONLY at matrix coordinate (9,9,9). A fully immersive experience combining all 11 games into one unified sovereign reality. The most restricted content in the entire universe. Entry requires Omega Master status.'}
 ];
 
 function renderFilms(){
@@ -936,7 +937,7 @@ function renderFilms(){
   grid.innerHTML='';
   FILMS.forEach(function(f){
     var card=document.createElement('div');
-    card.className='film-card';
+    card.className='film-card card';
     card.setAttribute('data-require','grade>='+f.n);
 
     /* Canvas poster */
@@ -1039,7 +1040,7 @@ function renderGames(){
   grid.innerHTML='';
   GAMES.forEach(function(g){
     var card=document.createElement('div');
-    card.className='game-card';
+    card.className='game-card card';
     card.style.setProperty('--col',g.col);
     card.querySelector && null;
     card.innerHTML=

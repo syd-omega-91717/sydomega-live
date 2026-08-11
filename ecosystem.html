@@ -76,6 +76,7 @@
     <div class="tbl-row" style="grid-template-columns:60px 1fr 2fr"><span style="color:var(--cyan)">M17</span><span>INTELLIGENCE LAYER</span><span>All axes — 12 AI agents</span></div>
   </div>
 </div>
+<div data-page-emblem="ecosystem" style="margin:20px auto 0"></div>
 </div>
 
 <script type="module">
@@ -83,24 +84,24 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var MODULES=[
-  {id:'M1', name:'PLATFORM CORE',     color:'#C9A84C',desc:'Identity, auth, profile, search, subscriptions, KYC, payments.',pages:['dashboard','profile','account','search','payments']},
-  {id:'M2', name:'CONSULTANCY HUB',   color:'#E2C86D',desc:'Expert services — medical, legal, engineering, business.',pages:['consultancy','services','contracts']},
-  {id:'M3', name:'GAMING LAYER',      color:'#9B6BF0',desc:'144 games, 9 stages, ascension, rewards, NFT minting, economy.',pages:['gaming','achievements','honors','hall']},
-  {id:'M4', name:'ACHIEVEMENT SYSTEM',color:'#C9A84C',desc:'12 trophies, 12 medals, 12 certificates. Four states: Bronze→Silver→Gold→Omega.',pages:['achievements','honors']},
-  {id:'M5', name:'FAMILY SYSTEM',     color:'#3fb27f',desc:'Family tree, genealogy, shared assets, privacy tiers, inheritance.',pages:['family','bloodline','heritage']},
-  {id:'M6', name:'MEDIA UNIVERSE',    color:'#9B6BF0',desc:'12 movies × 12 series = 144 total. Games synchronized. NFT links.',pages:['cinema','media','series','trailers']},
-  {id:'M7', name:'BLOCKCHAIN LAYER',  color:'#E2C86D',desc:'NFT engine, wallet, asset tracking, marketplace, treasury vault, ΩSYD token.',pages:['vault','blockchain','treasury']},
-  {id:'M8', name:'COMMUNICATION',     color:'#00E5FF',desc:'AI chat, social feed, messaging, notifications, scheduling.',pages:['social','notifications','feed','events']},
-  {id:'M9', name:'HOROSCOPE+SYMBOLIC',color:'#9B6BF0',desc:'Birth charts, planets, elements, profiles, 12 Olympians.',pages:['horoscope','cosmos','elements','houses']},
-  {id:'M10',name:'NEWS INTELLIGENCE', color:'#00E5FF',desc:'News aggregation, AI summaries, video integration, trend tracking.',pages:['news']},
-  {id:'M11',name:'HERITAGE SYSTEM',   color:'#3fb27f',desc:'Lineage, historical archives, culture, family memory, audit logs.',pages:['heritage','bloodline','character']},
-  {id:'M12',name:'PROGRESS ENGINE',   color:'#C9A84C',desc:'XP, radar charts, learning path, time tracking, lattice position.',pages:['matrix','ascension','gates','grades','levels','phases','grid']},
-  {id:'M13',name:'CREDENTIALS',       color:'#00E5FF',desc:'Digital passport, identity card, crypto card, KYC, verification.',pages:['credentials','kyc','passport','identity','sigil']},
-  {id:'M14',name:'LEGAL LAYER',       color:'#E2C86D',desc:'Contracts, copyright, terms, ownership, licenses, report protection.',pages:['contracts','compliance','terms','charter']},
+  {id:'M1', name:'PLATFORM CORE',     color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'Identity, auth, profile, search, subscriptions, KYC, payments.',pages:['dashboard','profile','account','search','payments']},
+  {id:'M2', name:'CONSULTANCY HUB',   color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),desc:'Expert services — medical, legal, engineering, business.',pages:['consultancy','services','contracts']},
+  {id:'M3', name:'GAMING LAYER',      color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'144 games, 9 stages, ascension, rewards, NFT minting, economy.',pages:['gaming','achievements','honors','hall']},
+  {id:'M4', name:'ACHIEVEMENT SYSTEM',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'12 trophies, 12 medals, 12 certificates. Four states: Bronze→Silver→Gold→Omega.',pages:['achievements','honors']},
+  {id:'M5', name:'FAMILY SYSTEM',     color:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),desc:'Family tree, genealogy, shared assets, privacy tiers, inheritance.',pages:['family','bloodline','heritage']},
+  {id:'M6', name:'MEDIA UNIVERSE',    color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'12 movies × 12 series = 144 total. Games synchronized. NFT links.',pages:['cinema','media','series','trailers']},
+  {id:'M7', name:'BLOCKCHAIN LAYER',  color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),desc:'NFT engine, wallet, asset tracking, marketplace, treasury vault, ΩSYD token.',pages:['vault','blockchain','treasury']},
+  {id:'M8', name:'COMMUNICATION',     color:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),desc:'AI chat, social feed, messaging, notifications, scheduling.',pages:['social','notifications','feed','events']},
+  {id:'M9', name:'HOROSCOPE+SYMBOLIC',color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'Birth charts, planets, elements, profiles, 12 Olympians.',pages:['horoscope','cosmos','elements','houses']},
+  {id:'M10',name:'NEWS INTELLIGENCE', color:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),desc:'News aggregation, AI summaries, video integration, trend tracking.',pages:['news']},
+  {id:'M11',name:'HERITAGE SYSTEM',   color:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),desc:'Lineage, historical archives, culture, family memory, audit logs.',pages:['heritage','bloodline','character']},
+  {id:'M12',name:'PROGRESS ENGINE',   color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'XP, radar charts, learning path, time tracking, lattice position.',pages:['matrix','ascension','gates','grades','levels','phases','grid']},
+  {id:'M13',name:'CREDENTIALS',       color:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),desc:'Digital passport, identity card, crypto card, KYC, verification.',pages:['credentials','kyc','passport','identity','sigil']},
+  {id:'M14',name:'LEGAL LAYER',       color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),desc:'Contracts, copyright, terms, ownership, licenses, report protection.',pages:['contracts','compliance','terms','charter']},
   {id:'M15',name:'ELEMENTAL SYSTEM',  color:'#E25800',desc:'9 elements: Fire/Water/Wind/Metal/Sand/Soul/Space/Void/The Ninth.',pages:['elements','cosmos']},
-  {id:'M16',name:'INVESTMENT LAYER',  color:'#E2C86D',desc:'Portfolio tracking, crypto view, investment reports, wallets.',pages:['investment','portfolio','revenue']},
-  {id:'M17',name:'INTELLIGENCE LAYER',color:'#9B6BF0',desc:'AI logs, 12 agents, knowledge graph, reasoning models, analytics.',pages:['sovereign-ai','intelligence','analytics','automation']},
-  {id:'M18',name:'HIERARCHY SYSTEM',  color:'#C9A84C',desc:'Guest→Subscriber→Verified→Owner. 1-9 stages. 9.9.9 master state.',pages:['approvals','sovereigns','enterprise']},
+  {id:'M16',name:'INVESTMENT LAYER',  color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),desc:'Portfolio tracking, crypto view, investment reports, wallets.',pages:['investment','portfolio','revenue']},
+  {id:'M17',name:'INTELLIGENCE LAYER',color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'AI logs, 12 agents, knowledge graph, reasoning models, analytics.',pages:['sovereign-ai','intelligence','analytics','automation']},
+  {id:'M18',name:'HIERARCHY SYSTEM',  color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'Guest→Subscriber→Verified→Owner. 1-9 stages. 9.9.9 master state.',pages:['approvals','sovereigns','enterprise']},
 ];
 
 function setTab(name){
@@ -113,7 +114,7 @@ function buildModGrid(){
   grid.innerHTML='';
   MODULES.forEach(function(m){
     var div=document.createElement('div');
-    div.className='mod-card';
+    div.className='mod-card card';
     div.style.setProperty('--mc',m.color);
     div.innerHTML='<div class="mod-id">'+m.id+'</div><div class="mod-name">'+m.name+'</div><div class="mod-desc">'+m.desc+'</div><div class="mod-pages">'+m.pages.map(function(p){return '<a href="/'+p+'.html">'+p+'</a>';}).join('')+'</div>';
     grid.appendChild(div);
@@ -152,7 +153,7 @@ function buildNavGrid(){
     nodes=[];
     var cx=W/2,cy=H/2;
     var radii=[Math.min(W,H)*.14,Math.min(W,H)*.28,Math.min(W,H)*.42];
-    nodes.push({x:cx,y:cy,center:true,r:0,m:{id:'Ω',name:'SOVEREIGN CORE',color:'#C9A84C',desc:'The living heart of the Order — all 18 modules orbit this point.',pages:[]}});
+    nodes.push({x:cx,y:cy,center:true,r:0,m:{id:'Ω',name:'SOVEREIGN CORE',color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'The living heart of the Order — all 18 modules orbit this point.',pages:[]}});
     RINGS.forEach(function(ring,ri){
       ring.forEach(function(m,i){
         var angle=-Math.PI/2+i*(2*Math.PI/ring.length);
@@ -178,7 +179,7 @@ function buildNavGrid(){
     nodes.forEach(function(n){
       var isH=hovered===n,isS=selected===n;
       var r=n.center?20:(isH||isS)?13:9;
-      var col=n.m.color||'#C9A84C';
+      var col=n.m.color||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
       if(isH||isS){ctx.shadowColor=col;ctx.shadowBlur=14;}
       ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
       ctx.fillStyle=isS?col:isH?col+'66':'rgba(13,13,21,0.9)';

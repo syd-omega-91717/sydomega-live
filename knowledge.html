@@ -82,35 +82,36 @@
     <div class="card"><div class="card-title">KNOWLEDGE AXIS A</div><div class="card-body">Engaging with the Knowledge Graph contributes to your Axis A (Knowledge) score. Academy modules, lore study, and research submissions are tracked as knowledge events that advance your sovereign progression.</div></div>
   </div>
 </div>
+<div data-page-emblem="knowledge" style="margin:20px auto 0"></div>
 </div>
 
 <script>
 var KG_NODES=[
-  {k:'track_1',t:'track',l:'GENESIS',d:'The origin. First sovereign knowledge track.',c:'#C9A84C'},
-  {k:'track_2',t:'track',l:'FOUNDATION',d:'Core structure. Second knowledge track.',c:'#C9A84C'},
-  {k:'track_3',t:'track',l:'ASCENSION',d:'The rise begins. Third knowledge track.',c:'#C9A84C'},
-  {k:'track_4',t:'track',l:'SOVEREIGNTY',d:'Personal power. Fourth knowledge track.',c:'#C9A84C'},
-  {k:'track_5',t:'track',l:'HERITAGE',d:'Legacy and lineage. Fifth track.',c:'#C9A84C'},
-  {k:'track_6',t:'track',l:'MASTERY',d:'Deep expertise. Sixth track.',c:'#C9A84C'},
-  {k:'track_7',t:'track',l:'CREATION',d:'Building worlds. Seventh track.',c:'#C9A84C'},
-  {k:'track_8',t:'track',l:'ECONOMY',d:'Value and exchange. Eighth track.',c:'#C9A84C'},
-  {k:'track_9',t:'track',l:'INTELLIGENCE',d:'AI and mind. Ninth track.',c:'#C9A84C'},
-  {k:'track_10',t:'track',l:'COVENANT',d:'Law and order. Tenth track.',c:'#C9A84C'},
-  {k:'track_11',t:'track',l:'LEGACY',d:'The permanent record. Eleventh track.',c:'#C9A84C'},
-  {k:'track_12',t:'track',l:'OMEGA',d:'The apex. Twelfth sovereign track.',c:'#E2C86D'},
+  {k:'track_1',t:'track',l:'GENESIS',d:'The origin. First sovereign knowledge track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_2',t:'track',l:'FOUNDATION',d:'Core structure. Second knowledge track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_3',t:'track',l:'ASCENSION',d:'The rise begins. Third knowledge track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_4',t:'track',l:'SOVEREIGNTY',d:'Personal power. Fourth knowledge track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_5',t:'track',l:'HERITAGE',d:'Legacy and lineage. Fifth track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_6',t:'track',l:'MASTERY',d:'Deep expertise. Sixth track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_7',t:'track',l:'CREATION',d:'Building worlds. Seventh track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_8',t:'track',l:'ECONOMY',d:'Value and exchange. Eighth track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_9',t:'track',l:'INTELLIGENCE',d:'AI and mind. Ninth track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_10',t:'track',l:'COVENANT',d:'Law and order. Tenth track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_11',t:'track',l:'LEGACY',d:'The permanent record. Eleventh track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'track_12',t:'track',l:'OMEGA',d:'The apex. Twelfth sovereign track.',c:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
   {k:'elem_fire',t:'element',l:'FIRE',d:'Aries, Leo, Sagittarius. Drive and ambition.',c:'#E25800'},
   {k:'elem_water',t:'element',l:'WATER',d:'Cancer, Scorpio, Pisces. Depth and intuition.',c:'#0088FF'},
-  {k:'elem_wind',t:'element',l:'WIND',d:'Gemini, Libra, Aquarius. Intellect and connection.',c:'#00E5FF'},
-  {k:'elem_metal',t:'element',l:'METAL',d:'Taurus, Virgo, Capricorn. Structure and will.',c:'#8a8676'},
-  {k:'elem_sand',t:'element',l:'SAND',d:'Boundary element. Transition between physical elements.',c:'#E2C86D'},
-  {k:'elem_soul',t:'element',l:'SOUL',d:'Metaphysical — inner dimension.',c:'#9B6BF0'},
-  {k:'elem_space',t:'element',l:'SPACE',d:'Metaphysical — outer dimension.',c:'#00E5FF'},
-  {k:'elem_void',t:'element',l:'VOID',d:'Metaphysical — the absence that contains all.',c:'#3fb27f'},
-  {k:'elem_ninth',t:'element',l:'THE NINTH',d:'Transcendent. Activates at Stage 9 for all sovereign members.',c:'#C9A84C'},
-  {k:'gate_1',t:'gate',l:'INITIATE 2.32',d:'First authority gate. AUTH >= 2.32.',c:'#3fb27f'},
-  {k:'gate_12',t:'gate',l:'APEX 27.8367',d:'Twelfth authority gate. sqrt(A^3+B^3+C^3)*phi/e = 27.8367.',c:'#E2C86D'},
-  {k:'formula',t:'concept',l:'AUTH FORMULA',d:'sqrt(A^3+B^3+C^3)*phi/e. phi=1.618, e=2.718. Apex=27.8367.',c:'#C9A84C'},
-  {k:'lattice',t:'concept',l:'CANONICAL LATTICE',d:'12x12x9^3 = 104,976 nodes. Primary progression system.',c:'#00E5FF'}
+  {k:'elem_wind',t:'element',l:'WIND',d:'Gemini, Libra, Aquarius. Intellect and connection.',c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {k:'elem_metal',t:'element',l:'METAL',d:'Taurus, Virgo, Capricorn. Structure and will.',c:(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676')},
+  {k:'elem_sand',t:'element',l:'SAND',d:'Boundary element. Transition between physical elements.',c:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
+  {k:'elem_soul',t:'element',l:'SOUL',d:'Metaphysical — inner dimension.',c:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},
+  {k:'elem_space',t:'element',l:'SPACE',d:'Metaphysical — outer dimension.',c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},
+  {k:'elem_void',t:'element',l:'VOID',d:'Metaphysical — the absence that contains all.',c:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
+  {k:'elem_ninth',t:'element',l:'THE NINTH',d:'Transcendent. Activates at Stage 9 for all sovereign members.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'gate_1',t:'gate',l:'INITIATE 2.32',d:'First authority gate. AUTH >= 2.32.',c:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')},
+  {k:'gate_12',t:'gate',l:'APEX 27.8367',d:'Twelfth authority gate. sqrt(A^3+B^3+C^3)*phi/e = 27.8367.',c:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},
+  {k:'formula',t:'concept',l:'AUTH FORMULA',d:'sqrt(A^3+B^3+C^3)*phi/e. phi=1.618, e=2.718. Apex=27.8367.',c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')},
+  {k:'lattice',t:'concept',l:'CANONICAL LATTICE',d:'12x12x9^3 = 104,976 nodes. Primary progression system.',c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')}
 ];
 var KG_EDGES=[
   {from:'track_12',to:'formula',type:'governed_by'},
@@ -121,7 +122,7 @@ var KG_EDGES=[
   {from:'lattice',to:'track_12',type:'reaches'},
   {from:'elem_ninth',to:'gate_12',type:'unlocks'}
 ];
-var TYPE_COLORS={track:'#C9A84C',element:'#9B6BF0',gate:'#3fb27f',concept:'#00E5FF'};
+var TYPE_COLORS={track:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),element:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),gate:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),concept:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')};
 var selectedNode=null,hoveredNode=null;
 var _W=0,_H=0;
 
@@ -167,7 +168,7 @@ function drawGraph(){
     var selected=selectedNode&&selectedNode.k===n.k;
     var hovered=hoveredNode&&hoveredNode.k===n.k;
     var r=selected?20:hovered?16:12;
-    var col=TYPE_COLORS[n.t]||'#C9A84C';
+    var col=TYPE_COLORS[n.t]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
     if(selected){ctx.fillStyle=col+'33';ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.stroke();}
     else if(hovered){ctx.fillStyle=col+'22';ctx.fill();ctx.strokeStyle=col+'88';ctx.lineWidth=1.5;ctx.stroke();}
@@ -221,8 +222,8 @@ function buildNodeGrid(){
   if(cnt)cnt.textContent=KG_NODES.length;
   if(!grid)return;
   grid.innerHTML=KG_NODES.map(function(n){
-    var col=TYPE_COLORS[n.t]||'#C9A84C';
-    return'<div class="node-card" onclick="selectNode(\''+n.k+'\')">'
+    var col=TYPE_COLORS[n.t]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
+    return'<div class="node-card card" onclick="selectNode(\''+n.k+'\')">'
       +'<div class="nc-type" style="color:'+col+'">'+n.t.toUpperCase()+'</div>'
       +'<div class="nc-name">'+n.l+'</div>'
       +'<div class="nc-desc">'+n.d.slice(0,70)+(n.d.length>70?'...':'')+'</div>'

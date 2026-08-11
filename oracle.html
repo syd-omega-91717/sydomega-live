@@ -22,7 +22,7 @@
 .planet-sign{font-family:var(--M);font-size:9px;color:var(--ink)}
 .planet-deg{font-family:var(--M);font-size:8px;color:var(--muted)}
 .planet-status{font-family:var(--M);font-size:7px;letter-spacing:1.5px;padding:2px 6px;border-radius:10px;text-align:center}
-.planet-status.direct{color:#3fb27f;border:1px solid rgba(63,178,127,.3)}
+.planet-status.direct{color:var(--green);border:1px solid rgba(63,178,127,.3)}
 .planet-status.retro{color:#FF6B35;border:1px solid rgba(255,107,53,.3)}
 .forecast-bar{margin-bottom:14px}
 .forecast-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -159,6 +159,7 @@
   </div>
 </div>
 
+<div data-page-emblem="oracle" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -309,7 +310,7 @@ document.getElementById('reading-cards').innerHTML=
     '<div class="reading-attribution">— GATE '+gate.num+' · '+gate.name+' · AUTH '+auth.toFixed(4)+'</div>'+
   '</div>'+
   '<div class="reading-card" style="border-color:rgba(155,107,240,.2)">'+
-    '<div class="reading-label" style="color:#9B6BF0">OLYMPIAN COUNSEL · '+god+'</div>'+
+    '<div class="reading-label" style="color:var(--purple)">OLYMPIAN COUNSEL · '+god+'</div>'+
     '<div class="reading-text">'+(gate.num>=7?'Your authority has reached a self-sustaining resonance — the Olympians no longer guide you; they observe you as a peer.':'You carry the divine charge of '+god+'. Every axis increase is a votive offering to the celestial force that governs your ascent.')+'</div>'+
     '<div class="reading-attribution">— '+sign.toUpperCase()+' · '+moonPhase+'</div>'+
   '</div>';

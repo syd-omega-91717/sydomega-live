@@ -186,10 +186,10 @@
 
   /* ── LIVE CHARTS (Supabase-backed) ────────────────────────────────── */
   API.auth = function(canvas, uid){
-    /* Fetch authority_snapshots for the user and render a line chart */
+    /* Fetch leaderboard_snapshots for the user and render a line chart */
     if(!window.OmegaSB){ console.warn('[OmegaChart] OmegaSB unavailable'); return; }
     window.OmegaSB.get().then(function(sb){
-      return sb.from('authority_snapshots')
+      return sb.from('leaderboard_snapshots')
                .select('snapshot_date,authority')
                .eq('user_id', uid || '')
                .order('snapshot_date', {ascending:true})

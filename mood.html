@@ -183,38 +183,38 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">2D</div><div class="stat-lbl">CIRCUMPLEX AXES</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">AFFECT RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">27</div><div class="stat-lbl">MOOD STATES</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">2D</div><div class="stat-lbl">CIRCUMPLEX AXES</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">AFFECT RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">27</div><div class="stat-lbl">MOOD STATES</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">90s</div><div class="stat-lbl">EMOTION HALF-LIFE</div></div>
-      <div class="stat-card"><div class="stat-val">3×</div><div class="stat-lbl">POSITIVITY RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">90s</div><div class="stat-lbl">EMOTION HALF-LIFE</div></div>
+      <div class="stat-card card"><div class="stat-val">3×</div><div class="stat-lbl">POSITIVITY RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">CIRCUMPLEX MODEL OF AFFECT</div>
       <div class="sci-cite">Russell, J.A. (1980) — A Circumplex Model of Affect. Journal of Personality and Social Psychology, 39(6)</div>
       <div class="sci-body">James Russell proposed that all emotions can be plotted on two fundamental dimensions: valence (pleasure-displeasure) and arousal (activation-deactivation). This two-dimensional space explains how emotions that feel similar are close together, while opposites are far apart. The circumplex model is foundational to affective science and forms the basis of most modern mood-tracking systems.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">BROADEN-AND-BUILD THEORY</div>
       <div class="sci-cite">Fredrickson, B.L. (2001) — The Role of Positive Emotions in Positive Psychology. American Psychologist, 56(3)</div>
       <div class="sci-body">Barbara Fredrickson's Broaden-and-Build theory states that positive emotions broaden one's awareness and encourage novel, varied, and exploratory thoughts and actions. Over time, this broadened behavioral repertoire builds lasting personal resources — social bonds, knowledge, physical vitality. Tracking and cultivating positive states is not indulgence but a strategic compound investment in long-term capability.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">EMOTIONAL GRANULARITY</div>
       <div class="sci-cite">Barrett, L.F. (2017) — How Emotions Are Made. Houghton Mifflin Harcourt</div>
       <div class="sci-body">Lisa Feldman Barrett's research shows that people who can precisely distinguish between emotional states ("emotional granularity") experience less reactivity, drink less alcohol under stress, regulate emotion more effectively, and have better mental health. The sovereign practice of naming exact emotions — not just "bad" but "anxious," "frustrated," "melancholic" — is itself a regulatory intervention.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">AFFECT LABELING</div>
       <div class="sci-cite">Lieberman, M.D. et al. (2007) — Putting Feelings into Words. Psychological Science, 18(5)</div>
       <div class="sci-body">Labeling emotional experiences ("affect labeling") decreases amygdala activation and increases prefrontal regulatory control. This is the neuroscience of why journaling and mood logging work: the act of naming reduces the intensity of negative states. Putting emotions into words is a direct neurological intervention, not merely a soft-skill exercise.</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">MOOD FORECASTING & CALIBRATION</div>
       <div class="sci-cite">Wilson, T.D. & Gilbert, D.T. (2003) — Affective Forecasting. Advances in Experimental Social Psychology, 35</div>
       <div class="sci-body">Humans systematically misjudge how long and intensely future events will affect their mood — a phenomenon called "impact bias." Longitudinal mood tracking creates a calibration database: by reviewing how predicted events actually affected your state, you develop more accurate affective forecasting, leading to better decisions about time, relationships, and effort allocation.</div>
@@ -222,7 +222,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
 
   </div>
-  <div class="lf"><span>&#937; MOOD MATRIX &middot; SYD OMEGA 91717</span></div>
+  <div data-page-emblem="mood" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; MOOD MATRIX &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
 
@@ -234,7 +235,7 @@ const MOOD_KEY = 'omega_mood_log';
 /* ─── MOOD STATE DEFINITIONS (Russell Circumplex Model) ─── */
 const STATES = [
   /* High valence, high arousal */
-  {name:'ECSTATIC',    v:9,a:9, color:'#C9A84C', desc:'Peak elation, overwhelming joy and excitement'},
+  {name:'ECSTATIC',    v:9,a:9, color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'Peak elation, overwhelming joy and excitement'},
   {name:'EXCITED',     v:8,a:8, color:'#FF9800', desc:'Energized enthusiasm, eager anticipation'},
   {name:'ENTHUSIASTIC',v:8,a:7, color:'#FFB74D', desc:'Strong motivation, fired up and ready'},
   {name:'JOYFUL',      v:8,a:6, color:'#4CAF50', desc:'Bright happiness, light and free feeling'},
@@ -465,7 +466,7 @@ function renderHistory(){
   logs.slice(0,30).forEach(function(e){
     var d=new Date(e.ts);
     var dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-    var card=document.createElement('div');card.className='log-card';
+    var card=document.createElement('div');card.className='log-card card';
     card.innerHTML='<div class="log-dot" style="background:'+e.color+'"></div>'+
       '<div class="log-body">'+
         '<div class="log-top"><span class="log-state">'+e.state+'</span>'+
@@ -541,7 +542,7 @@ function drawTrend(logs){
     });
   }
 
-  drawLine('valence','#C9A84C');
+  drawLine('valence',(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'));
   drawLine('energy','#5C8FD6');
 
   /* day labels */
@@ -556,7 +557,7 @@ function drawTrend(logs){
   });
 
   /* legend */
-  ctx.fillStyle='#C9A84C'; ctx.fillRect(W-110,8,14,2);
+  ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'); ctx.fillRect(W-110,8,14,2);
   ctx.fillStyle='rgba(201,168,76,.6)'; ctx.font='7px monospace'; ctx.fillText('VALENCE',W-92,12);
   ctx.fillStyle='#5C8FD6'; ctx.fillRect(W-110,22,14,2);
   ctx.fillStyle='rgba(201,168,76,.6)'; ctx.fillText('ENERGY',W-92,26);
@@ -593,7 +594,7 @@ function renderPatterns(){
     {v:avgS,l:'AVG STRESS'},
     {v:posRate+'%',l:'POSITIVE RATE'},
     {v:streak,l:'DAY STREAK'},
-  ].map(function(x){return'<div class="stat-card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+  ].map(function(x){return'<div class="stat-card card"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
 
   /* insights */
   var insights=[];
@@ -644,7 +645,7 @@ function drawFreq(freq){
     var x=xStart+i*(barW+gap);
     var bh=Math.max(4,(e[1]/max)*(H-40));
     var state=STATES.find(function(s){return s.name===e[0];});
-    var col=state?state.color:'#C9A84C';
+    var col=state?state.color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
     ctx.fillStyle=col+'99';
     ctx.fillRect(x,H-bh-20,barW,bh);
     ctx.fillStyle='rgba(201,168,76,.5)'; ctx.font='7px monospace';

@@ -40,7 +40,7 @@
 </head>
 <body>
 <aside id="omega-side" data-page="events"></aside>
-<div class="page-shell">
+<div class="page-shell" id="app" style="display:none">
 <header class="topbar">
   <div class="topbar-title">EVENTS &amp; CONFERENCES<span class="topbar-sub">SOVEREIGN GATHERINGS &middot; LIVING CALENDAR</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
@@ -107,6 +107,7 @@
     <div class="tbl-row" style="grid-template-columns:2fr 1fr 1fr 1fr"><span>Matrix Milestone</span><span style="color:var(--solar)">ALL AXES</span><span>+172 XP</span><span>Threshold</span></div>
   </div>
 </div>
+<div data-page-emblem="events" style="margin:20px auto 0"></div>
 </div>
 
 <script type="module">
@@ -136,7 +137,7 @@ function renderEvents(){
     var key=ev.title;
     var isJ=joined.has(key);
     var card=document.createElement('div');
-    card.className='event-card';
+    card.className='event-card card';
     card.innerHTML=
       '<div class="date-block"><div class="month">'+ev.month+'</div><div class="day">'+ev.day+'</div><div class="year">'+ev.year+'</div></div>'+
       '<div class="ev-body">'+
@@ -152,11 +153,13 @@ function renderEvents(){
       '</div>';
     card.querySelector('.btn-join').addEventListener('click',async function(){
       if(joined.has(key)){
+        var d=await sb.from('event_rsvps').delete().eq('event_ref',key);
+        if(d.error){alert('Could not update registration: '+d.error.message);return;}
         joined.delete(key);
-        await sb.from('event_rsvps').delete().eq('event_ref',key);
       } else {
+        var i=await sb.from('event_rsvps').insert({event_ref:key});
+        if(i.error){alert('Could not register: '+i.error.message);return;}
         joined.add(key);
-        await sb.from('event_rsvps').insert({event_ref:key});
         window.OmegaProgress&&OmegaProgress.record({kind:'events',task:'events:'+Date.now(),axis:'c',title:'Gathering Joined'});
       }
       renderEvents();
@@ -204,6 +207,9 @@ document.getElementById('btn-ev').addEventListener('click',async function(){
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
+  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
+  document.getElementById('app').style.display='flex';
   var res=await sb.from('event_rsvps').select('event_ref');
   joined=new Set((res.data||[]).map(function(r){return r.event_ref;}));
   renderEvents();

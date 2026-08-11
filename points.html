@@ -110,6 +110,7 @@
     <div class="card"><div class="card-title">LATTICE POSITION</div><div class="card-body">The 104,976-node lattice (12&#215;12&#215;9&#215;9&#215;9) encodes every possible sovereign coordinate. Your node position is computed from matrix_track, matrix_phase, and ceiling values of axes A, B, and C. The radar diagram shows your triadic position on a normalized A/B/C triangle.</div></div>
   </div>
 </div>
+<div data-page-emblem="points" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -140,8 +141,8 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var cols=['rgba(201,168,76,.6)','rgba(0,229,255,.6)','rgba(63,178,127,.6)'];
     for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2,r=maxR*vals[j];ctx.beginPath();ctx.arc(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r,4+2*Math.sin(t*.04+j),0,Math.PI*2);ctx.fillStyle=cols[j];ctx.fill();}
     ctx.font='bold 20px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';ctx.shadowColor='#C9A84C';ctx.shadowBlur=10;ctx.fillText('Ω',cx,cy);ctx.shadowBlur=0;
-    var lbls=['A: KNOWLEDGE','B: MASTERY','C: CONTRIBUTION'],lcols=['#C9A84C','#00E5FF','#3fb27f'];
+    ctx.fillStyle='rgba(201,168,76,'+(0.5+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=10;ctx.fillText('Ω',cx,cy);ctx.shadowBlur=0;
+    var lbls=['A: KNOWLEDGE','B: MASTERY','C: CONTRIBUTION'],lcols=[(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f')];
     ctx.font='bold 8px monospace';ctx.shadowBlur=0;
     for(var j=0;j<3;j++){var ang=j/3*Math.PI*2-Math.PI/2,r=maxR+18;ctx.fillStyle=lcols[j];ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(lbls[j],cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);}
     t++;requestAnimationFrame(frame);

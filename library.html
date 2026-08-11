@@ -28,7 +28,7 @@
 .section-hd{font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding:16px 0 10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:16px}
 .tab-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.12);margin-bottom:20px}
 .tab-btn{font-family:var(--M);font-size:8px;letter-spacing:2px;padding:10px 18px;border:none;background:none;color:rgba(138,134,118,.5);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s}
-.tab-btn.act{color:var(--gold,#C9A84C);border-bottom-color:var(--gold,#C9A84C)}
+.tab-btn.act{color:var(--gold,var(--gold));border-bottom-color:var(--gold,var(--gold))}
 .tab-panel{display:none}.tab-panel.act{display:block}
 .shelf-item{display:grid;grid-template-columns:52px 1fr auto;gap:14px;padding:12px 14px;border:1px solid rgba(201,168,76,.08);border-radius:2px;margin-bottom:6px;align-items:center}
 .shelf-cover{width:52px;height:70px;background:rgba(201,168,76,.06);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
@@ -51,7 +51,7 @@
 .notes-input:focus{border-color:rgba(201,168,76,.3)}
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .stat-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
-.stat-box .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,#C9A84C)}
+.stat-box .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,var(--gold))}
 .stat-box .sk{font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
 .filter-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
 .filter-chip{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;padding:5px 12px;border:1px solid rgba(201,168,76,.12);color:rgba(138,134,118,.5);background:none;border-radius:2px;cursor:pointer;transition:.12s}
@@ -133,7 +133,8 @@
     </div>
 
   </div>
-  <div class="lf"><span>&#937; LIBRARY &middot; SYD OMEGA 91717</span></div>
+  <div data-page-emblem="library" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; LIBRARY &middot; SYD OMEGA 91717</span></div>
 </main>
 </div>
 
@@ -219,7 +220,7 @@ async function searchBooks(){
       const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:'';
       const shelfBook={key,title,author,year,cover,source:'openlibrary'};
       const added=inShelf(key);
-      return `<div class="book-card" onclick="showBookDetail(${JSON.stringify(shelfBook).replace(/'/g,'&#39;').replace(/"/g,'&quot;')})">
+      return `<div class="book-card card" onclick="showBookDetail(${JSON.stringify(shelfBook).replace(/'/g,'&#39;').replace(/"/g,'&quot;')})">
         ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
           :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span><span>${title.slice(0,30)}</span></div>`}
         <div class="book-info">
@@ -265,7 +266,7 @@ async function loadFeatured(){
           const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:'';
           const shelfBook={key,title,author,year,cover,source:'openlibrary'};
           const added=inShelf(key);
-          return `<div class="book-card">
+          return `<div class="book-card card">
             ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
               :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span></div>`}
             <div class="book-info">

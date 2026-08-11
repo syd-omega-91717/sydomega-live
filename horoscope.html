@@ -7,16 +7,16 @@
 <meta name="description" content="Sovereign horoscope — your zodiac sign, 12 sign oracle profiles, and the 9 celestial planets."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
-.my-sign-panel{border:1px solid var(--line);border-top:3px solid #9B6BF0;background:var(--surface);padding:24px;margin-bottom:16px}
-.msp-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:#9B6BF0;margin-bottom:10px}
+.my-sign-panel{border:1px solid var(--line);border-top:3px solid var(--purple);background:var(--surface);padding:24px;margin-bottom:16px}
+.msp-label{font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--purple);margin-bottom:10px}
 .msp-name{font-family:var(--D);font-size:clamp(20px,4vw,30px);color:var(--ink);margin-bottom:8px}
 .msp-oracle{font-size:13px;line-height:1.9;color:var(--ink);opacity:.8;margin-bottom:14px}
 .msp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 .msp-field{text-overflow:ellipsis;overflow:hidden}
 .mf-lbl{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
-.mf-val{font-family:var(--D);font-size:14px;color:#9B6BF0}
+.mf-val{font-family:var(--D);font-size:14px;color:var(--purple)}
 .sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
-.sign-card{border:1px solid var(--line);border-top:2px solid var(--sc,#9B6BF0);background:var(--surface);padding:14px;transition:.14s}
+.sign-card{border:1px solid var(--line);border-top:2px solid var(--sc,var(--purple));background:var(--surface);padding:14px;transition:.14s}
 .sign-card:hover{transform:translateY(-2px)}
 .sign-sym{font-size:24px;margin-bottom:6px}
 .sign-name{font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:3px}
@@ -65,38 +65,48 @@
       <div class="msp-field"><div class="mf-lbl">MODALITY</div><div class="mf-val" style="color:var(--cyan)" id="hr-mode">—</div></div>
     </div>
   </div>
+  <div class="my-sign-panel" style="border-top-color:var(--cyan)">
+    <div class="msp-label" style="color:var(--cyan)">TONIGHT'S SKY &middot; REAL ASTRONOMY</div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div style="font-size:40px" id="moon-emoji">&#127761;</div>
+      <div>
+        <div class="msp-name" style="font-size:16px" id="moon-name">Calculating&hellip;</div>
+        <div style="font-size:11px;color:var(--muted)" id="moon-detail">Actual lunar phase for today, computed astronomically — not part of the sovereign lore above.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="tab-panel" id="tab-all">
   <div class="sechead">12 ZODIAC SIGNS &mdash; SOVEREIGN PROFILES</div>
   <div class="sign-grid">
-    <div class="sign-card" style="--sc:#E86A3A"><div class="sign-sym">&#9800;</div><div class="sign-name">Aries</div><div class="sign-date">Mar 21&ndash;Apr 19</div><div class="sign-attrs"><span class="sign-tag">Ares</span><span class="sign-tag">Fire &#9906;</span><span class="sign-tag">Gate I</span></div><div class="sign-oracle">The sovereign pioneer. Bold, direct, first through the lattice gate. Under Ares, the Aries sovereign ignites the chain that leads 11 others forward.</div></div>
-    <div class="sign-card" style="--sc:#3fb27f"><div class="sign-sym">&#9801;</div><div class="sign-name">Taurus</div><div class="sign-date">Apr 20&ndash;May 20</div><div class="sign-attrs"><span class="sign-tag">Aphrodite</span><span class="sign-tag">Water &#9728;</span><span class="sign-tag">Gate II</span></div><div class="sign-oracle">The sovereign builder. Patient, enduring, crafted by beauty and time. Aphrodite grants the Taurus sovereign the gift of lasting bonds.</div></div>
-    <div class="sign-card" style="--sc:#00E5FF"><div class="sign-sym">&#9802;</div><div class="sign-name">Gemini</div><div class="sign-date">May 21&ndash;Jun 20</div><div class="sign-attrs"><span class="sign-tag">Hermes</span><span class="sign-tag">Wind &#9841;</span><span class="sign-tag">Gate III</span></div><div class="sign-oracle">The sovereign messenger. Quick, dual, carrier of truths. Hermes moves through Gemini at the speed of thought, connecting all twelve houses.</div></div>
-    <div class="sign-card" style="--sc:#9B6BF0"><div class="sign-sym">&#9803;</div><div class="sign-name">Cancer</div><div class="sign-date">Jun 21&ndash;Jul 22</div><div class="sign-attrs"><span class="sign-tag">Artemis</span><span class="sign-tag">Sand &#9733;</span><span class="sign-tag">Gate IV</span></div><div class="sign-oracle">The sovereign keeper. Intuitive, protective, amplified by sand. Artemis guides Cancer through the threshold of the fourth gate.</div></div>
-    <div class="sign-card" style="--sc:#E2C86D"><div class="sign-sym">&#9804;</div><div class="sign-name">Leo</div><div class="sign-date">Jul 23&ndash;Aug 22</div><div class="sign-attrs"><span class="sign-tag">Apollo</span><span class="sign-tag">Soul &#10036;</span><span class="sign-tag">Gate V</span></div><div class="sign-oracle">The sovereign radiant. Luminous, commanding, bearer of the soul element. Apollo's light flows through Leo, drawing others into alignment.</div></div>
-    <div class="sign-card" style="--sc:#C9A84C"><div class="sign-sym">&#9805;</div><div class="sign-name">Virgo</div><div class="sign-date">Aug 23&ndash;Sep 22</div><div class="sign-attrs"><span class="sign-tag">Athena</span><span class="sign-tag">Metal &#9843;</span><span class="sign-tag">Gate VI</span></div><div class="sign-oracle">The sovereign architect. Precise, analytical, structurally perfect. Athena lends Virgo the lattice blueprint and the patience to execute it.</div></div>
-    <div class="sign-card" style="--sc:#9B6BF0"><div class="sign-sym">&#9806;</div><div class="sign-name">Libra</div><div class="sign-date">Sep 23&ndash;Oct 22</div><div class="sign-attrs"><span class="sign-tag">Hera</span><span class="sign-tag">Space &#10038;</span><span class="sign-tag">Gate VII</span></div><div class="sign-oracle">The sovereign diplomat. Balanced, elegant, keeper of space between forces. Hera's sovereign domain is the negotiation of all twelve houses.</div></div>
-    <div class="sign-card" style="--sc:#8B0000"><div class="sign-sym">&#9807;</div><div class="sign-name">Scorpio</div><div class="sign-date">Oct 23&ndash;Nov 21</div><div class="sign-attrs"><span class="sign-tag">Demeter</span><span class="sign-tag">Void &#10039;</span><span class="sign-tag">Gate VIII</span></div><div class="sign-oracle">The sovereign transformer. Deep, intense, at home in the void. Demeter guides Scorpio through the undergate where power is forged.</div></div>
-    <div class="sign-card" style="--sc:#E2C86D"><div class="sign-sym">&#9808;</div><div class="sign-name">Sagittarius</div><div class="sign-date">Nov 22&ndash;Dec 21</div><div class="sign-attrs"><span class="sign-tag">Zeus</span><span class="sign-tag">The All &#937;</span><span class="sign-tag">Gate IX</span></div><div class="sign-oracle">The sovereign visionary. Expansive, free, marked by The All element. Zeus sets Sagittarius at the apex of the nine-fold horizon.</div></div>
-    <div class="sign-card" style="--sc:#C9A84C"><div class="sign-sym">&#9809;</div><div class="sign-name">Capricorn</div><div class="sign-date">Dec 22&ndash;Jan 19</div><div class="sign-attrs"><span class="sign-tag">Hestia</span><span class="sign-tag">Fire &#9906;</span><span class="sign-tag">Gate X</span></div><div class="sign-oracle">The sovereign elder. Disciplined, long-burning, keeper of the first flame. Hestia grants Capricorn the hearth that outlasts every gate.</div></div>
-    <div class="sign-card" style="--sc:#00E5FF"><div class="sign-sym">&#9810;</div><div class="sign-name">Aquarius</div><div class="sign-date">Jan 20&ndash;Feb 18</div><div class="sign-attrs"><span class="sign-tag">Hephaestus</span><span class="sign-tag">Metal &#9843;</span><span class="sign-tag">Gate XI</span></div><div class="sign-oracle">The sovereign innovator. Original, structural, forger of the final gate. Hephaestus builds the lattice upgrade through the Aquarius sovereign.</div></div>
-    <div class="sign-card" style="--sc:#9B6BF0"><div class="sign-sym">&#9811;</div><div class="sign-name">Pisces</div><div class="sign-date">Feb 19&ndash;Mar 20</div><div class="sign-attrs"><span class="sign-tag">Poseidon</span><span class="sign-tag">Water &#9728;</span><span class="sign-tag">Gate XII</span></div><div class="sign-oracle">The sovereign apex. Boundless, oceanic, carrier of Gate XII. Poseidon holds the lattice's oldest memory and its final key: AUTH = 27.8367.</div></div>
+    <div class="sign-card card" style="--sc:#E86A3A"><div class="sign-sym">&#9800;</div><div class="sign-name">Aries</div><div class="sign-date">Mar 21&ndash;Apr 19</div><div class="sign-attrs"><span class="sign-tag">Ares</span><span class="sign-tag">Fire &#9906;</span><span class="sign-tag">Gate I</span></div><div class="sign-oracle">The sovereign pioneer. Bold, direct, first through the lattice gate. Under Ares, the Aries sovereign ignites the chain that leads 11 others forward.</div></div>
+    <div class="sign-card card" style="--sc:#3fb27f"><div class="sign-sym">&#9801;</div><div class="sign-name">Taurus</div><div class="sign-date">Apr 20&ndash;May 20</div><div class="sign-attrs"><span class="sign-tag">Aphrodite</span><span class="sign-tag">Water &#9728;</span><span class="sign-tag">Gate II</span></div><div class="sign-oracle">The sovereign builder. Patient, enduring, crafted by beauty and time. Aphrodite grants the Taurus sovereign the gift of lasting bonds.</div></div>
+    <div class="sign-card card" style="--sc:#00E5FF"><div class="sign-sym">&#9802;</div><div class="sign-name">Gemini</div><div class="sign-date">May 21&ndash;Jun 20</div><div class="sign-attrs"><span class="sign-tag">Hermes</span><span class="sign-tag">Wind &#9841;</span><span class="sign-tag">Gate III</span></div><div class="sign-oracle">The sovereign messenger. Quick, dual, carrier of truths. Hermes moves through Gemini at the speed of thought, connecting all twelve houses.</div></div>
+    <div class="sign-card card" style="--sc:#9B6BF0"><div class="sign-sym">&#9803;</div><div class="sign-name">Cancer</div><div class="sign-date">Jun 21&ndash;Jul 22</div><div class="sign-attrs"><span class="sign-tag">Artemis</span><span class="sign-tag">Sand &#9733;</span><span class="sign-tag">Gate IV</span></div><div class="sign-oracle">The sovereign keeper. Intuitive, protective, amplified by sand. Artemis guides Cancer through the threshold of the fourth gate.</div></div>
+    <div class="sign-card card" style="--sc:#E2C86D"><div class="sign-sym">&#9804;</div><div class="sign-name">Leo</div><div class="sign-date">Jul 23&ndash;Aug 22</div><div class="sign-attrs"><span class="sign-tag">Apollo</span><span class="sign-tag">Soul &#10036;</span><span class="sign-tag">Gate V</span></div><div class="sign-oracle">The sovereign radiant. Luminous, commanding, bearer of the soul element. Apollo's light flows through Leo, drawing others into alignment.</div></div>
+    <div class="sign-card card" style="--sc:#C9A84C"><div class="sign-sym">&#9805;</div><div class="sign-name">Virgo</div><div class="sign-date">Aug 23&ndash;Sep 22</div><div class="sign-attrs"><span class="sign-tag">Athena</span><span class="sign-tag">Metal &#9843;</span><span class="sign-tag">Gate VI</span></div><div class="sign-oracle">The sovereign architect. Precise, analytical, structurally perfect. Athena lends Virgo the lattice blueprint and the patience to execute it.</div></div>
+    <div class="sign-card card" style="--sc:#9B6BF0"><div class="sign-sym">&#9806;</div><div class="sign-name">Libra</div><div class="sign-date">Sep 23&ndash;Oct 22</div><div class="sign-attrs"><span class="sign-tag">Hera</span><span class="sign-tag">Space &#10038;</span><span class="sign-tag">Gate VII</span></div><div class="sign-oracle">The sovereign diplomat. Balanced, elegant, keeper of space between forces. Hera's sovereign domain is the negotiation of all twelve houses.</div></div>
+    <div class="sign-card card" style="--sc:#8B0000"><div class="sign-sym">&#9807;</div><div class="sign-name">Scorpio</div><div class="sign-date">Oct 23&ndash;Nov 21</div><div class="sign-attrs"><span class="sign-tag">Demeter</span><span class="sign-tag">Void &#10039;</span><span class="sign-tag">Gate VIII</span></div><div class="sign-oracle">The sovereign transformer. Deep, intense, at home in the void. Demeter guides Scorpio through the undergate where power is forged.</div></div>
+    <div class="sign-card card" style="--sc:#E2C86D"><div class="sign-sym">&#9808;</div><div class="sign-name">Sagittarius</div><div class="sign-date">Nov 22&ndash;Dec 21</div><div class="sign-attrs"><span class="sign-tag">Zeus</span><span class="sign-tag">The All &#937;</span><span class="sign-tag">Gate IX</span></div><div class="sign-oracle">The sovereign visionary. Expansive, free, marked by The All element. Zeus sets Sagittarius at the apex of the nine-fold horizon.</div></div>
+    <div class="sign-card card" style="--sc:#C9A84C"><div class="sign-sym">&#9809;</div><div class="sign-name">Capricorn</div><div class="sign-date">Dec 22&ndash;Jan 19</div><div class="sign-attrs"><span class="sign-tag">Hestia</span><span class="sign-tag">Fire &#9906;</span><span class="sign-tag">Gate X</span></div><div class="sign-oracle">The sovereign elder. Disciplined, long-burning, keeper of the first flame. Hestia grants Capricorn the hearth that outlasts every gate.</div></div>
+    <div class="sign-card card" style="--sc:#00E5FF"><div class="sign-sym">&#9810;</div><div class="sign-name">Aquarius</div><div class="sign-date">Jan 20&ndash;Feb 18</div><div class="sign-attrs"><span class="sign-tag">Hephaestus</span><span class="sign-tag">Metal &#9843;</span><span class="sign-tag">Gate XI</span></div><div class="sign-oracle">The sovereign innovator. Original, structural, forger of the final gate. Hephaestus builds the lattice upgrade through the Aquarius sovereign.</div></div>
+    <div class="sign-card card" style="--sc:#9B6BF0"><div class="sign-sym">&#9811;</div><div class="sign-name">Pisces</div><div class="sign-date">Feb 19&ndash;Mar 20</div><div class="sign-attrs"><span class="sign-tag">Poseidon</span><span class="sign-tag">Water &#9728;</span><span class="sign-tag">Gate XII</span></div><div class="sign-oracle">The sovereign apex. Boundless, oceanic, carrier of Gate XII. Poseidon holds the lattice's oldest memory and its final key: AUTH = 27.8367.</div></div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-planets">
   <div class="sechead">9 SOVEREIGN PLANETS &mdash; CELESTIAL LATTICE</div>
   <div class="planet-grid">
-    <div class="planet-card"><div class="planet-sym">&#9737;</div><div class="planet-name">Sun</div><div class="planet-sign">Leo</div><div class="planet-role">The sovereign self &mdash; your authority axis</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9789;</div><div class="planet-name">Moon</div><div class="planet-sign">Cancer</div><div class="planet-role">The sovereign feeling &mdash; your intuition layer</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9791;</div><div class="planet-name">Mercury</div><div class="planet-sign">Gemini</div><div class="planet-role">The sovereign mind &mdash; your communication channel</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9792;</div><div class="planet-name">Venus</div><div class="planet-sign">Taurus</div><div class="planet-role">The sovereign bond &mdash; your element affinity</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9794;</div><div class="planet-name">Mars</div><div class="planet-sign">Aries</div><div class="planet-role">The sovereign drive &mdash; your gate push</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9795;</div><div class="planet-name">Jupiter</div><div class="planet-sign">Sagittarius</div><div class="planet-role">The sovereign expansion &mdash; your lattice reach</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9796;</div><div class="planet-name">Saturn</div><div class="planet-sign">Capricorn</div><div class="planet-role">The sovereign discipline &mdash; your gate threshold</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9797;</div><div class="planet-name">Uranus</div><div class="planet-sign">Aquarius</div><div class="planet-role">The sovereign innovation &mdash; your lattice forge</div></div>
-    <div class="planet-card"><div class="planet-sym">&#9798;</div><div class="planet-name">Neptune</div><div class="planet-sign">Pisces</div><div class="planet-role">The sovereign depth &mdash; your omega key</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9737;</div><div class="planet-name">Sun</div><div class="planet-sign">Leo</div><div class="planet-role">The sovereign self &mdash; your authority axis</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9789;</div><div class="planet-name">Moon</div><div class="planet-sign">Cancer</div><div class="planet-role">The sovereign feeling &mdash; your intuition layer</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9791;</div><div class="planet-name">Mercury</div><div class="planet-sign">Gemini</div><div class="planet-role">The sovereign mind &mdash; your communication channel</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9792;</div><div class="planet-name">Venus</div><div class="planet-sign">Taurus</div><div class="planet-role">The sovereign bond &mdash; your element affinity</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9794;</div><div class="planet-name">Mars</div><div class="planet-sign">Aries</div><div class="planet-role">The sovereign drive &mdash; your gate push</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9795;</div><div class="planet-name">Jupiter</div><div class="planet-sign">Sagittarius</div><div class="planet-role">The sovereign expansion &mdash; your lattice reach</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9796;</div><div class="planet-name">Saturn</div><div class="planet-sign">Capricorn</div><div class="planet-role">The sovereign discipline &mdash; your gate threshold</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9797;</div><div class="planet-name">Uranus</div><div class="planet-sign">Aquarius</div><div class="planet-role">The sovereign innovation &mdash; your lattice forge</div></div>
+    <div class="planet-card card"><div class="planet-sym">&#9798;</div><div class="planet-name">Neptune</div><div class="planet-sign">Pisces</div><div class="planet-role">The sovereign depth &mdash; your omega key</div></div>
   </div>
 </div>
 
@@ -109,6 +119,7 @@
     <div class="card"><div class="card-title">ORACLE PROFILES</div><div class="card-body">Each sign's oracle text is a sovereign interpretation of the classical astrological profile. Oracles describe how each sign's nature manifests within the SYD OMEGA platform — their gate affinity, Olympian patronage, and lattice role.</div></div>
   </div>
 </div>
+<div data-page-emblem="horoscope" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -125,6 +136,41 @@ function setTab(name){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
 function sid(id,v){var el=document.getElementById(id);if(el)el.innerHTML=String(v==null?'—':v);}
+
+/* Real lunar phase — synodic month calculation from a known new-moon epoch
+   (Jan 6 2000, 18:14 UTC), accurate to within about a day. No external API
+   needed: this is deterministic astronomy, not sovereign lore. */
+function moonPhase(date){
+  var synodic=29.530588853;
+  var knownNewMoon=Date.UTC(2000,0,6,18,14,0)/1000;
+  var days=(date.getTime()/1000-knownNewMoon)/86400;
+  var phase=(days%synodic)/synodic;
+  if(phase<0)phase+=1;
+  return phase;
+}
+function renderMoonPhase(){
+  var phase=moonPhase(new Date());
+  var stages=[
+    {max:0.02,name:'New Moon',emoji:'\u{1F311}'},
+    {max:0.24,name:'Waxing Crescent',emoji:'\u{1F312}'},
+    {max:0.26,name:'First Quarter',emoji:'\u{1F313}'},
+    {max:0.49,name:'Waxing Gibbous',emoji:'\u{1F314}'},
+    {max:0.51,name:'Full Moon',emoji:'\u{1F315}'},
+    {max:0.74,name:'Waning Gibbous',emoji:'\u{1F316}'},
+    {max:0.76,name:'Last Quarter',emoji:'\u{1F317}'},
+    {max:0.99,name:'Waning Crescent',emoji:'\u{1F318}'},
+    {max:1.01,name:'New Moon',emoji:'\u{1F311}'}
+  ];
+  var stage=stages.find(function(s){return phase<=s.max;})||stages[0];
+  var illum=Math.round((1-Math.cos(phase*2*Math.PI))/2*100);
+  var el=document.getElementById('moon-name');
+  var em=document.getElementById('moon-emoji');
+  var dt=document.getElementById('moon-detail');
+  if(el)el.textContent=stage.name;
+  if(em)em.textContent=stage.emoji;
+  if(dt)dt.textContent=illum+'% illuminated · computed from today’s date, not part of the sovereign lore above.';
+}
+renderMoonPhase();
 </script>
 <script type="module">
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';

@@ -4,123 +4,183 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mind Map · SYD OMEGA 91717</title>
-<link rel="stylesheet" href="omega-ui.css">
-<script src="omega-ui.js" defer></script>
+<link rel="manifest" href="/manifest.json">
 <style>
-:root{--g:#0a0a0a;--p:#111;--b:#1a1a1a;--t:#fff;--d:#888;--gold:#c9a84c;--blue:#3498db;--green:#27ae60;--red:#e74c3c;--purple:#9b59b6}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--g);color:var(--t);font-family:'Courier New',monospace;min-height:100vh}
-.main{max-width:1200px;margin:0 auto;padding:16px 16px 60px}
-h1{font-size:1rem;letter-spacing:.15em;color:var(--gold);margin-bottom:2px}
-.sub{font-size:.65rem;color:var(--d);letter-spacing:.1em;margin-bottom:16px}
-.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center;background:var(--b);border:1px solid #222;padding:10px;border-radius:4px}
-.tool-btn{padding:5px 12px;font-size:.6rem;letter-spacing:.08em;cursor:pointer;border:1px solid #333;background:none;color:var(--d);border-radius:2px;transition:all .2s;font-family:inherit}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.card{background:var(--surface,#1a1a1a);border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:16px}
+.card-title{font-size:.65rem;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center;background:#1a1a1a;border:1px solid #222;padding:10px;border-radius:4px}
+.tool-btn{padding:5px 12px;font-size:.6rem;letter-spacing:.08em;cursor:pointer;border:1px solid #333;background:none;color:#888;border-radius:2px;transition:all .2s;font-family:inherit}
 .tool-btn:hover{border-color:var(--gold);color:var(--gold)}
 .tool-btn.active{border-color:var(--gold);color:var(--gold);background:#1a1600}
 .sep{width:1px;height:24px;background:#222;flex-shrink:0}
-.map-container{position:relative;width:100%;height:70vh;min-height:500px;background:var(--p);border:1px solid #222;border-radius:4px;overflow:hidden;cursor:grab}
+.map-container{position:relative;width:100%;height:60vh;min-height:420px;background:#111;border:1px solid #222;border-radius:4px;overflow:hidden;cursor:grab}
 .map-container.panning{cursor:grabbing}
 #map-canvas{position:absolute;top:0;left:0}
-/* node editor */
-.node-editor{position:absolute;right:16px;top:16px;background:var(--b);border:1px solid var(--gold);border-radius:6px;padding:16px;width:230px;z-index:100;display:none}
+.node-editor{position:absolute;right:16px;top:16px;background:#1a1a1a;border:1px solid var(--gold);border-radius:6px;padding:16px;width:220px;z-index:100;display:none}
 .node-editor.open{display:block}
 .ne-title{font-size:.6rem;color:var(--gold);letter-spacing:.1em;margin-bottom:10px}
-.ne-input{width:100%;background:#111;border:1px solid #333;color:var(--t);padding:6px;font-family:inherit;font-size:.7rem;border-radius:2px;margin-bottom:8px}
+.ne-input{width:100%;background:#111;border:1px solid #333;color:#fff;padding:6px;font-family:inherit;font-size:.7rem;border-radius:2px;margin-bottom:8px}
 .ne-input:focus{outline:none;border-color:var(--gold)}
 .color-row{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
 .color-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .2s}
 .color-dot.selected{border-color:#fff}
 .ne-btn{padding:5px 12px;font-size:.6rem;cursor:pointer;border:none;border-radius:2px;font-family:inherit;margin-right:4px}
 .ne-save{background:var(--gold);color:#000}
-.ne-delete{background:var(--red);color:#fff}
-/* maps list */
-.maps-list{margin-bottom:16px}
-.map-item{display:flex;justify-content:space-between;align-items:center;background:var(--p);border:1px solid #1a1a1a;padding:8px 12px;border-radius:3px;margin-bottom:4px;cursor:pointer;transition:border-color .2s}
+.ne-delete{background:#e74c3c;color:#fff}
+.map-item{display:flex;justify-content:space-between;align-items:center;background:#111;border:1px solid #1a1a1a;padding:10px 14px;border-radius:3px;margin-bottom:6px;transition:border-color .2s}
 .map-item:hover{border-color:var(--gold)}
-.map-item.active{border-color:var(--gold);background:#1a1600}
-.map-name{font-size:.75rem;color:var(--t)}
-.map-meta{font-size:.55rem;color:var(--d)}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center}
-.modal.open{display:flex}
-.modal-box{background:var(--b);border:1px solid var(--gold);border-radius:6px;padding:24px;width:340px;max-width:90vw}
-.modal-title{font-size:.7rem;color:var(--gold);letter-spacing:.1em;margin-bottom:14px}
-input.modal-input{width:100%;background:#111;border:1px solid #333;color:var(--t);padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px;margin-bottom:12px}
-input.modal-input:focus{outline:none;border-color:var(--gold)}
-.modal-btns{display:flex;gap:8px}
-.btn-gold{background:var(--gold);color:#000;padding:7px 16px;font-size:.65rem;letter-spacing:.08em;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
-.btn-ghost{background:none;border:1px solid #333;color:var(--d);padding:7px 16px;font-size:.65rem;font-family:inherit;cursor:pointer;border-radius:2px}
-.help-text{font-size:.6rem;color:var(--d);letter-spacing:.06em}
+.map-item.active-map{border-color:var(--gold);background:#1a1600}
+.map-name{font-size:.75rem;color:#fff}
+.map-meta{font-size:.55rem;color:#888}
+.sci-block{border-left:2px solid var(--gold);padding:8px 14px;margin-bottom:12px;background:#111}
+.sci-title{font-size:.7rem;color:#fff;margin-bottom:4px}
+.sci-body{font-size:.6rem;color:#888;line-height:1.5}
+label{font-size:.6rem;color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
+input,select{width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px;box-sizing:border-box}
+input:focus,select:focus{outline:none;border-color:var(--gold)}
+.btn-gold{background:var(--gold);color:#000;padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
+.btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.empty{text-align:center;color:#888;font-size:.7rem;padding:40px 0;letter-spacing:.1em}
+.help-text{font-size:.55rem;color:#666;letter-spacing:.06em}
 </style>
 </head>
 <body>
-<div class="main">
-  <h1>SOVEREIGN MIND MAP</h1>
-  <p class="sub">VISUAL THINKING · CONNECT IDEAS · MAP YOUR SOVEREIGN INTELLIGENCE</p>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="mindmap"></aside>
+<main class="main">
+  <div class="topbar"><div class="t">SOVEREIGN MIND MAP<small>VISUAL THINKING · CONNECT IDEAS · SYD OMEGA 91717</small></div></div>
+  <div style="padding:20px var(--pad,20px)">
 
-  <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-    <select id="map-select" style="background:#111;border:1px solid #333;color:var(--t);padding:6px 10px;font-family:inherit;font-size:.65rem;border-radius:2px" onchange="loadMap(this.value)">
-      <option value="">— SELECT MAP —</option>
-    </select>
-    <button class="tool-btn" onclick="openNewMap()">+ NEW MAP</button>
-    <button class="tool-btn" onclick="deleteCurrentMap()">DELETE MAP</button>
-    <div style="flex:1"></div>
-    <span class="help-text">DOUBLE-CLICK canvas to add node · CLICK node to select · DRAG node to move · CTRL+CLICK to connect</span>
-  </div>
+    <div class="tab-row">
+      <button class="tab-btn act" data-tab="map" onclick="switchTab('map',this)">&#9670; MAP</button>
+      <button class="tab-btn" data-tab="create" onclick="switchTab('create',this)">&#9670; CREATE</button>
+      <button class="tab-btn" data-tab="maps" onclick="switchTab('maps',this)">&#9670; MY MAPS</button>
+      <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+    </div>
 
-  <div class="toolbar">
-    <button class="tool-btn active" id="tool-select" onclick="setTool('select')">SELECT</button>
-    <button class="tool-btn" id="tool-add" onclick="setTool('add')">ADD NODE</button>
-    <button class="tool-btn" id="tool-connect" onclick="setTool('connect')">CONNECT</button>
-    <button class="tool-btn" id="tool-delete" onclick="setTool('delete')">DELETE</button>
-    <div class="sep"></div>
-    <button class="tool-btn" onclick="zoomIn()">ZOOM +</button>
-    <button class="tool-btn" onclick="zoomOut()">ZOOM −</button>
-    <button class="tool-btn" onclick="fitView()">FIT VIEW</button>
-    <div class="sep"></div>
-    <button class="tool-btn" onclick="saveCurrentMap()">SAVE</button>
-    <button class="tool-btn" onclick="exportMap()">EXPORT TEXT</button>
-  </div>
-
-  <div class="map-container" id="map-container">
-    <canvas id="map-canvas"></canvas>
-    <div class="node-editor" id="node-editor">
-      <div class="ne-title">EDIT NODE</div>
-      <input class="ne-input" id="ne-text" type="text" placeholder="Node label...">
-      <div class="color-row" id="color-row"></div>
-      <div style="display:flex;gap:4px;margin-bottom:8px">
-        <select id="ne-shape" style="background:#111;border:1px solid #333;color:var(--t);padding:5px;font-family:inherit;font-size:.6rem;border-radius:2px;flex:1">
-          <option value="rect">RECT</option>
-          <option value="round">ROUND RECT</option>
-          <option value="ellipse">ELLIPSE</option>
-          <option value="diamond">DIAMOND</option>
+    <!-- MAP -->
+    <div id="tab-map" class="tab-panel act">
+      <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
+        <select id="map-select" style="max-width:260px;padding:6px 10px;font-size:.65rem" onchange="loadMap(this.value)">
+          <option value="">— SELECT MAP —</option>
         </select>
+        <button class="tool-btn" onclick="switchTab('create',document.querySelector('.tab-btn[data-tab=create]'))">+ NEW MAP</button>
+        <button class="tool-btn" onclick="deleteCurrentMap()">DELETE MAP</button>
+        <span class="help-text" style="margin-left:auto">DBL-CLICK canvas to add node · CLICK to select · DRAG to move · CONNECT tool to link</span>
       </div>
-      <div>
-        <button class="ne-btn ne-save" onclick="applyNodeEdit()">SAVE</button>
-        <button class="ne-btn ne-delete" onclick="deleteSelectedNode()">DELETE</button>
-        <button class="ne-btn" style="background:#333;color:#aaa" onclick="closeEditor()">CLOSE</button>
+      <div class="toolbar">
+        <button class="tool-btn active" id="tool-select" onclick="setTool('select')">SELECT</button>
+        <button class="tool-btn" id="tool-add" onclick="setTool('add')">ADD NODE</button>
+        <button class="tool-btn" id="tool-connect" onclick="setTool('connect')">CONNECT</button>
+        <button class="tool-btn" id="tool-delete" onclick="setTool('delete')">DELETE</button>
+        <div class="sep"></div>
+        <button class="tool-btn" onclick="zoomIn()">ZOOM +</button>
+        <button class="tool-btn" onclick="zoomOut()">ZOOM −</button>
+        <button class="tool-btn" onclick="fitView()">FIT VIEW</button>
+        <div class="sep"></div>
+        <button class="tool-btn" onclick="saveCurrentMap()">SAVE</button>
+        <button class="tool-btn" onclick="exportMap()">EXPORT TEXT</button>
+      </div>
+      <div class="map-container" id="map-container">
+        <canvas id="map-canvas"></canvas>
+        <div class="node-editor" id="node-editor">
+          <div class="ne-title">EDIT NODE</div>
+          <input class="ne-input" id="ne-text" type="text" placeholder="Node label...">
+          <div class="color-row" id="color-row"></div>
+          <div style="margin-bottom:8px">
+            <select id="ne-shape" style="padding:5px;font-size:.6rem">
+              <option value="rect">RECT</option>
+              <option value="round">ROUND RECT</option>
+              <option value="ellipse">ELLIPSE</option>
+              <option value="diamond">DIAMOND</option>
+            </select>
+          </div>
+          <div>
+            <button class="ne-btn ne-save" onclick="applyNodeEdit()">SAVE</button>
+            <button class="ne-btn ne-delete" onclick="deleteSelectedNode()">DELETE</button>
+            <button class="ne-btn" style="background:#333;color:#aaa" onclick="closeEditor()">CLOSE</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- NEW MAP MODAL -->
-<div class="modal" id="new-map-modal">
-  <div class="modal-box">
-    <div class="modal-title">CREATE NEW MIND MAP</div>
-    <label style="font-size:.6rem;color:var(--d);margin-bottom:4px;display:block">MAP NAME</label>
-    <input class="modal-input" id="new-map-name" type="text" placeholder="e.g. Q4 Strategy, Business Plan, Ideas...">
-    <label style="font-size:.6rem;color:var(--d);margin-bottom:4px;display:block">CENTRAL TOPIC</label>
-    <input class="modal-input" id="new-map-central" type="text" placeholder="e.g. SOVEREIGN MISSION">
-    <div class="modal-btns">
-      <button class="btn-gold" onclick="createMap()">CREATE</button>
-      <button class="btn-ghost" onclick="closeModal()">CANCEL</button>
+    <!-- CREATE -->
+    <div id="tab-create" class="tab-panel">
+      <div class="card">
+        <div class="card-title">CREATE NEW MIND MAP</div>
+        <div style="margin-bottom:10px">
+          <label>MAP NAME</label>
+          <input id="create-name" type="text" placeholder="e.g. Q4 Strategy, Business Plan, Ideas...">
+        </div>
+        <div style="margin-bottom:16px">
+          <label>CENTRAL TOPIC</label>
+          <input id="create-central" type="text" placeholder="e.g. SOVEREIGN MISSION">
+        </div>
+        <button class="btn-gold" onclick="createMapFromTab()">CREATE MAP</button>
+      </div>
     </div>
-  </div>
-</div>
 
+    <!-- MY MAPS -->
+    <div id="tab-maps" class="tab-panel">
+      <div id="maps-list"><div class="empty">NO MAPS YET — CREATE YOUR FIRST MAP</div></div>
+    </div>
+
+    <!-- SCIENCE -->
+    <div id="tab-science" class="tab-panel">
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+        <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+        <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+        <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+        <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+        <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+        <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">THE SCIENCE OF VISUAL THINKING</div>
+        <div class="sci-block">
+          <div class="sci-title">MIND MAPPING — Tony Buzan (1974)</div>
+          <div class="sci-body">Buzan established radial, non-linear organization as superior to sequential note-taking for memory encoding and creative generation. Mind maps activate both cerebral hemispheres simultaneously — spatial layout (right) and language (left) — creating richer, more interconnected memory traces. Buzan's research showed a 10-15% improvement in recall over linear notes under controlled conditions.</div>
+        </div>
+        <div class="sci-block">
+          <div class="sci-title">CONCEPT MAPPING — Joseph Novak (1972)</div>
+          <div class="sci-body">Novak developed concept mapping at Cornell as a tool for meaningful learning vs. rote memorization. Key principle: nodes represent concepts; labeled edges represent propositions. Well-formed concept maps externalize schema structure, revealing gaps in understanding and false assumptions. Novak's studies showed concept-mapped students retained information 3× longer than linear-note peers.</div>
+        </div>
+        <div class="sci-block">
+          <div class="sci-title">VISUOSPATIAL WORKING MEMORY — Baddeley (1986)</div>
+          <div class="sci-body">Baddeley's model of working memory identifies the visuospatial sketchpad as a dedicated system for spatial and visual information — separate from the phonological loop (verbal). Mind maps leverage this specialized channel, creating a dual-coding effect (Paivio, 1971) where verbal and spatial encoding compound recall. Information encoded in both channels is 40% more retrievable than single-channel encoding.</div>
+        </div>
+        <div class="sci-block">
+          <div class="sci-title">KNOWLEDGE EXTERNALIZATION — Nonaka &amp; Takeuchi (1995)</div>
+          <div class="sci-body">Tacit knowledge — instinct, experience, and mental models — becomes actionable only when externalized into explicit representations. Mind maps are externalization engines: they convert fluid mental structures into shareable, refinable artifacts. Nonaka and Takeuchi's SECI model positions externalization as the highest-value knowledge creation activity. Organizations that systematically externalize tacit knowledge innovate faster and make better decisions.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+<div data-page-emblem="mindmap" style="margin:20px auto 0"></div>
+</div>
 <script>
-const NODE_COLORS=['#c9a84c','#3498db','#27ae60','#e74c3c','#9b59b6','#e67e22','#1abc9c','#f39c12','#e91e63','#95a5a6'];
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else{var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='map') setTimeout(resize,50);
+  if(id==='maps') renderMapsList();
+}
+
+const NODE_COLORS=[(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),'#3498db','#27ae60','#e74c3c','#9b59b6','#e67e22','#1abc9c','#f39c12','#e91e63','#95a5a6'];
 
 let maps=JSON.parse(localStorage.getItem('omega_mindmaps')||'[]');
 let currentMapId=null;
@@ -144,11 +204,9 @@ function resize(){
   canvas.height=container.clientHeight;
   render();
 }
-
 window.addEventListener('resize',resize);
 resize();
 
-// COLOR SWATCHES
 document.getElementById('color-row').innerHTML=NODE_COLORS.map((c,i)=>`<div class="color-dot ${i===0?'selected':''}" style="background:${c}" data-c="${c}" onclick="selectColor(this)"></div>`).join('');
 
 function selectColor(el){
@@ -159,12 +217,12 @@ function selectColor(el){
 function setTool(t){
   tool=t;
   document.querySelectorAll('.tool-btn[id^="tool-"]').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tool-'+t).classList.add('active');
+  var el=document.getElementById('tool-'+t);
+  if(el) el.classList.add('active');
   if(t!=='select'){selectedNode=null;closeEditor();}
   connectSource=null;
 }
 
-// ── CANVAS EVENTS ───────────────────────────────────────────
 canvas.addEventListener('dblclick',e=>{
   if(tool!=='select'&&tool!=='add') return;
   const pos=toWorld(e.offsetX,e.offsetY);
@@ -182,7 +240,12 @@ canvas.addEventListener('mousedown',e=>{
     }
     if(tool==='connect'){
       if(!connectSource){connectSource=hit.id;}
-      else{if(connectSource!==hit.id&&!edges.find(ed=>ed.from===connectSource&&ed.to===hit.id)){edges.push({id:Date.now(),from:connectSource,to:hit.id});}connectSource=null;}
+      else{
+        if(connectSource!==hit.id&&!edges.find(ed=>ed.from===connectSource&&ed.to===hit.id)){
+          edges.push({id:Date.now(),from:connectSource,to:hit.id});
+        }
+        connectSource=null;
+      }
       render();return;
     }
     selectedNode=hit;
@@ -206,9 +269,8 @@ canvas.addEventListener('mousemove',e=>{
     dragging.y=pos.y-dragOffset.y;
     render();
   } else if(isPanning){
-    const dx=e.clientX-lastMouse.x;
-    const dy=e.clientY-lastMouse.y;
-    pan.x+=dx;pan.y+=dy;
+    pan.x+=e.clientX-lastMouse.x;
+    pan.y+=e.clientY-lastMouse.y;
     lastMouse={x:e.clientX,y:e.clientY};
     render();
   }
@@ -221,44 +283,33 @@ canvas.addEventListener('mouseup',()=>{
 
 canvas.addEventListener('wheel',e=>{
   e.preventDefault();
-  const factor=e.deltaY>0?0.9:1.1;
-  zoom=Math.max(.2,Math.min(4,zoom*factor));
+  zoom=Math.max(.2,Math.min(4,zoom*(e.deltaY>0?0.9:1.1)));
   render();
 },{passive:false});
 
 function toWorld(sx,sy){return{x:(sx-pan.x)/zoom,y:(sy-pan.y)/zoom};}
-function toScreen(wx,wy){return{x:wx*zoom+pan.x,y:wy*zoom+pan.y};}
 
 function hitTest(pos){
-  return nodes.slice().reverse().find(n=>{
-    const dx=pos.x-n.x,dy=pos.y-n.y;
-    return Math.abs(dx)<n.w/2+4&&Math.abs(dy)<n.h/2+4;
-  });
+  return nodes.slice().reverse().find(n=>Math.abs(pos.x-n.x)<n.w/2+4&&Math.abs(pos.y-n.y)<n.h/2+4);
 }
 
 function addNode(x,y,text,color){
   const n={id:Date.now()+Math.random(),x,y,text,color:color||NODE_COLORS[0],shape:'rect',w:120,h:40};
-  nodes.push(n);
-  selectedNode=n;
-  openEditor(n);
-  render();
+  nodes.push(n);selectedNode=n;openEditor(n);render();
 }
 
-// ── RENDER ───────────────────────────────────────────────────
 function render(){
   const W=canvas.width,H=canvas.height;
   ctx.clearRect(0,0,W,H);
   ctx.save();
   ctx.translate(pan.x,pan.y);
   ctx.scale(zoom,zoom);
-
   // grid dots
-  const step=40; const ox=(-pan.x/zoom)%step; const oy=(-pan.y/zoom)%step;
+  const step=40;const ox=(-pan.x/zoom)%step;const oy=(-pan.y/zoom)%step;
   ctx.fillStyle='#1a1a1a';
   for(let gx=ox-step;gx<W/zoom+step;gx+=step)
     for(let gy=oy-step;gy<H/zoom+step;gy+=step)
       {ctx.beginPath();ctx.arc(gx,gy,1,0,Math.PI*2);ctx.fill();}
-
   // edges
   edges.forEach(ed=>{
     const fn=nodes.find(n=>n.id===ed.from);
@@ -266,7 +317,6 @@ function render(){
     if(!fn||!tn) return;
     ctx.strokeStyle='#444';ctx.lineWidth=1.5/zoom;
     ctx.beginPath();ctx.moveTo(fn.x,fn.y);ctx.lineTo(tn.x,tn.y);ctx.stroke();
-    // arrow
     const ang=Math.atan2(tn.y-fn.y,tn.x-fn.x);
     const ax=tn.x-Math.cos(ang)*22,ay=tn.y-Math.sin(ang)*22;
     ctx.fillStyle='#444';ctx.beginPath();
@@ -275,42 +325,26 @@ function render(){
     ctx.lineTo(ax-8*Math.cos(ang+0.4),ay-8*Math.sin(ang+0.4));
     ctx.closePath();ctx.fill();
   });
-
-  // connect preview
-  if(connectSource){
-    const sn=nodes.find(n=>n.id===connectSource);
-    if(sn){ctx.strokeStyle='var(--gold)';ctx.lineWidth=1.5/zoom;ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(sn.x,sn.y);ctx.lineTo(sn.x+50,sn.y-30);ctx.stroke();ctx.setLineDash([]);}
-  }
-
   // nodes
   nodes.forEach(n=>{
     const sel=selectedNode&&selectedNode.id===n.id;
-    const conSrc=connectSource===n.id;
     ctx.save();ctx.translate(n.x,n.y);
-    // measure text
-    ctx.font=`bold ${Math.max(10,12/zoom>16?16:12)}px 'Courier New'`;
+    ctx.font=`bold 12px 'Courier New'`;
     const tw=ctx.measureText(n.text).width;
-    n.w=Math.max(80,tw+24); n.h=Math.max(36,24);
-
-    // shadow
+    n.w=Math.max(80,tw+24);n.h=36;
     if(sel){ctx.shadowColor=n.color;ctx.shadowBlur=12/zoom;}
-
-    // shape fill
     ctx.fillStyle=n.color+'22';
-    ctx.strokeStyle=sel?n.color:(conSrc?'#fff':'#333');
+    ctx.strokeStyle=sel?n.color:'#333';
     ctx.lineWidth=(sel?2:1)/zoom;
     drawShape(ctx,n.shape,n.w,n.h);
     ctx.fill();ctx.stroke();
     ctx.shadowBlur=0;
-
-    // text
     ctx.fillStyle=sel?'#fff':'#ccc';
-    ctx.font=`${sel?'bold ':''} ${Math.max(10,12)}px 'Courier New'`;
+    ctx.font=`${sel?'bold ':''} 12px 'Courier New'`;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(n.text.length>20?n.text.slice(0,18)+'…':n.text,0,0);
+    ctx.fillText(n.text.length>20?n.text.slice(0,18)+'...':n.text,0,0);
     ctx.restore();
   });
-
   ctx.restore();
 }
 
@@ -323,14 +357,11 @@ function drawShape(ctx,shape,w,h){
   else if(shape==='diamond'){ctx.moveTo(0,-hh*1.2);ctx.lineTo(hw*1.2,0);ctx.lineTo(0,hh*1.2);ctx.lineTo(-hw*1.2,0);ctx.closePath();}
 }
 
-// ── NODE EDITOR ──────────────────────────────────────────────
 function openEditor(n){
   document.getElementById('node-editor').classList.add('open');
   document.getElementById('ne-text').value=n.text;
   document.getElementById('ne-shape').value=n.shape||'rect';
-  document.querySelectorAll('.color-dot').forEach(d=>{
-    d.classList.toggle('selected',d.dataset.c===n.color);
-  });
+  document.querySelectorAll('.color-dot').forEach(d=>{d.classList.toggle('selected',d.dataset.c===n.color);});
 }
 function closeEditor(){document.getElementById('node-editor').classList.remove('open');}
 function applyNodeEdit(){
@@ -348,7 +379,6 @@ function deleteSelectedNode(){
   selectedNode=null;closeEditor();render();
 }
 
-// ── ZOOM ─────────────────────────────────────────────────────
 function zoomIn(){zoom=Math.min(4,zoom*1.2);render();}
 function zoomOut(){zoom=Math.max(.2,zoom/1.2);render();}
 function fitView(){
@@ -363,7 +393,6 @@ function fitView(){
   render();
 }
 
-// ── MAPS MANAGEMENT ──────────────────────────────────────────
 function saveMaps(){localStorage.setItem('omega_mindmaps',JSON.stringify(maps));}
 
 function saveCurrentMap(){
@@ -384,55 +413,76 @@ function loadMap(id){
   fitView();
 }
 
-function openNewMap(){document.getElementById('new-map-modal').classList.add('open');setTimeout(()=>document.getElementById('new-map-name').focus(),100);}
-function closeModal(){document.getElementById('new-map-modal').classList.remove('open');}
-
-function createMap(){
-  const name=document.getElementById('new-map-name').value.trim()||'UNTITLED MAP';
-  const central=document.getElementById('new-map-central').value.trim()||name.toUpperCase();
+function createMapFromTab(){
+  const name=document.getElementById('create-name').value.trim()||'UNTITLED MAP';
+  const central=document.getElementById('create-central').value.trim()||name.toUpperCase();
   const id=Date.now().toString();
-  const centerX=800,centerY=400;
-  const rootNode={id:Date.now()+1,x:centerX,y:centerY,text:central,color:NODE_COLORS[0],shape:'ellipse',w:140,h:50};
-  const newMap={id,name,created:new Date().toISOString().slice(0,10),updated:new Date().toISOString().slice(0,10),nodes:[rootNode],edges:[]};
-  maps.push(newMap);
+  const rootNode={id:Date.now()+1,x:600,y:300,text:central,color:NODE_COLORS[0],shape:'ellipse',w:140,h:50};
+  maps.push({id,name,created:new Date().toISOString().slice(0,10),updated:new Date().toISOString().slice(0,10),nodes:[rootNode],edges:[]});
   saveMaps();
-  closeModal();
+  document.getElementById('create-name').value='';
+  document.getElementById('create-central').value='';
   updateMapSelect();
-  document.getElementById('map-select').value=id;
   loadMap(id);
+  document.getElementById('map-select').value=id;
+  switchTab('map',document.querySelector('.tab-btn[data-tab="map"]'));
 }
 
 function deleteCurrentMap(){
   if(!currentMapId) return;
   if(!confirm('Delete this map?')) return;
   maps=maps.filter(m=>m.id!==currentMapId);
-  saveMaps();
-  currentMapId=null;nodes=[];edges=[];
-  updateMapSelect();
-  render();
+  saveMaps();currentMapId=null;nodes=[];edges=[];
+  updateMapSelect();render();
 }
 
 function updateMapSelect(){
   const sel=document.getElementById('map-select');
-  const cur=sel.value;
   sel.innerHTML='<option value="">— SELECT MAP —</option>'+maps.map(m=>`<option value="${m.id}">${m.name} (${m.updated})</option>`).join('');
   if(currentMapId) sel.value=currentMapId;
 }
 
+function renderMapsList(){
+  const list=document.getElementById('maps-list');
+  if(!maps.length){list.innerHTML='<div class="empty">NO MAPS YET — GO TO CREATE TAB</div>';return;}
+  list.innerHTML=maps.map(m=>`<div class="map-item ${currentMapId===m.id?'active-map':''}">
+    <div>
+      <div class="map-name">${m.name}</div>
+      <div class="map-meta">${(m.nodes||[]).length} NODES · UPDATED ${m.updated}</div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="tool-btn" onclick="loadMapAndSwitch('${m.id}')">LOAD</button>
+      <button class="tool-btn" style="border-color:#e74c3c;color:#e74c3c" onclick="deleteMapById('${m.id}')">DEL</button>
+    </div>
+  </div>`).join('');
+}
+
+function loadMapAndSwitch(id){
+  loadMap(id);
+  document.getElementById('map-select').value=id;
+  switchTab('map',document.querySelector('.tab-btn[data-tab="map"]'));
+}
+
+function deleteMapById(id){
+  if(!confirm('Delete this map?')) return;
+  maps=maps.filter(m=>m.id!==id);
+  saveMaps();
+  if(currentMapId===id){currentMapId=null;nodes=[];edges=[];render();}
+  updateMapSelect();renderMapsList();
+}
+
 function exportMap(){
   if(!nodes.length) return alert('No nodes to export.');
-  const lines=[`MIND MAP EXPORT — ${new Date().toLocaleString()}`,`NODES: ${nodes.length} | EDGES: ${edges.length}`,'',...nodes.map(n=>`• ${n.text}`),'',`CONNECTIONS:`,...edges.map(ed=>{const f=nodes.find(n=>n.id===ed.from);const t=nodes.find(n=>n.id===ed.to);return`  ${f?f.text:'?'} → ${t?t.text:'?'}`;})];
-  const text=lines.join('\n');
-  const blob=new Blob([text],{type:'text/plain'});
+  const lines=[`MIND MAP EXPORT — ${new Date().toLocaleString()}`,`NODES: ${nodes.length} | EDGES: ${edges.length}`,'',...nodes.map(n=>`· ${n.text}`),'','CONNECTIONS:',...edges.map(ed=>{const f=nodes.find(n=>n.id===ed.from);const t=nodes.find(n=>n.id===ed.to);return`  ${f?f.text:'?'} → ${t?t.text:'?'}`;})];
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='mindmap-export.txt';a.click();
+  const a=document.createElement('a');a.href=url;a.download='mindmap-export.txt';a.click();
   URL.revokeObjectURL(url);
 }
 
-// init
 updateMapSelect();
 render();
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>

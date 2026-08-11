@@ -1,0 +1,131 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SYD OMEGA 91717 — Sovereign Personal Platform, invitation only">
+  <defs>
+    <linearGradient id="voidGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#06060a"/>
+      <stop offset="100%" stop-color="#020206"/>
+    </linearGradient>
+    <radialGradient id="glowGold" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.16"/>
+      <stop offset="60%" stop-color="#0A0A0F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowPurple" cx="14%" cy="85%" r="45%">
+      <stop offset="0%" stop-color="#9B6BF0" stop-opacity="0.10"/>
+      <stop offset="70%" stop-color="#0A0A0F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowCyan" cx="88%" cy="80%" r="45%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.09"/>
+      <stop offset="70%" stop-color="#0A0A0F" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldText" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#E2C86D"/>
+      <stop offset="50%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#E2C86D"/>
+    </linearGradient>
+    <linearGradient id="scan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#00E5FF" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glowSoft" x="-40%" y="-120%" width="180%" height="340%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+    </filter>
+    <filter id="glowStrong" x="-40%" y="-160%" width="180%" height="420%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#00E5FF" stroke-opacity="0.04"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="300" fill="url(#voidGrad)"/>
+  <rect width="1200" height="300" fill="url(#grid)"/>
+  <rect width="1200" height="300" fill="url(#glowPurple)"/>
+  <rect width="1200" height="300" fill="url(#glowCyan)"/>
+  <rect width="1200" height="300" fill="url(#glowGold)"/>
+
+  <g opacity="0.9">
+    <circle cx="1063.0" cy="64.9" r="1.11" fill="#e9e6dc" fill-opacity="0.19"/>
+    <circle cx="671.4" cy="228.0" r="1.4" fill="#e9e6dc" fill-opacity="0.16"/>
+    <circle cx="946.9" cy="143.4" r="0.75" fill="#e9e6dc" fill-opacity="0.09"/>
+    <circle cx="626.6" cy="103.1" r="0.73" fill="#e9e6dc" fill-opacity="0.29"/>
+    <circle cx="995.3" cy="71.3" r="0.57" fill="#e9e6dc" fill-opacity="0.22"/>
+    <circle cx="745.0" cy="164.6" r="0.54" fill="#e9e6dc" fill-opacity="0.22"/>
+    <circle cx="1042.8" cy="19.2" r="0.53" fill="#e9e6dc" fill-opacity="0.12"/>
+    <circle cx="443.7" cy="112.4" r="1.11" fill="#e9e6dc" fill-opacity="0.22"/>
+    <circle cx="1074.1" cy="40.6" r="0.97" fill="#e9e6dc" fill-opacity="0.23"/>
+    <circle cx="497.0" cy="39.2" r="0.66" fill="#e9e6dc" fill-opacity="0.24"/>
+    <circle cx="1068.2" cy="191.6" r="0.77" fill="#e9e6dc" fill-opacity="0.28"/>
+    <circle cx="322.3" cy="85.7" r="1.39" fill="#e9e6dc" fill-opacity="0.11"/>
+    <circle cx="528.9" cy="51.9" r="1.26" fill="#e9e6dc" fill-opacity="0.12"/>
+    <circle cx="797.4" cy="60.0" r="1.06" fill="#e9e6dc" fill-opacity="0.3"/>
+    <circle cx="1175.0" cy="86.3" r="1.05" fill="#e9e6dc" fill-opacity="0.09"/>
+    <circle cx="126.5" cy="35.1" r="1.38" fill="#e9e6dc" fill-opacity="0.28"/>
+    <circle cx="336.2" cy="181.3" r="1.07" fill="#e9e6dc" fill-opacity="0.15"/>
+    <circle cx="48.9" cy="201.3" r="1.32" fill="#e9e6dc" fill-opacity="0.18"/>
+    <circle cx="1170.0" cy="194.6" r="0.73" fill="#e9e6dc" fill-opacity="0.24"/>
+    <circle cx="886.1" cy="173.9" r="0.61" fill="#e9e6dc" fill-opacity="0.35"/>
+    <circle cx="1109.1" cy="196.1" r="1.32" fill="#e9e6dc" fill-opacity="0.13"/>
+    <circle cx="23.2" cy="251.8" r="0.9" fill="#e9e6dc" fill-opacity="0.34"/>
+    <circle cx="622.1" cy="220.9" r="0.71" fill="#e9e6dc" fill-opacity="0.1"/>
+    <circle cx="564.8" cy="256.2" r="1.15" fill="#e9e6dc" fill-opacity="0.15"/>
+    <circle cx="474.7" cy="89.5" r="0.63" fill="#e9e6dc" fill-opacity="0.29"/>
+    <circle cx="1037.8" cy="247.7" r="0.5" fill="#e9e6dc" fill-opacity="0.11"/>
+    <circle cx="685.6" cy="60.6" r="0.7" fill="#e9e6dc" fill-opacity="0.25"/>
+    <circle cx="1150.7" cy="77.3" r="1.0" fill="#e9e6dc" fill-opacity="0.32"/>
+    <circle cx="255.2" cy="38.6" r="1.0" fill="#e9e6dc" fill-opacity="0.3"/>
+    <circle cx="228.1" cy="15.1" r="1.03" fill="#e9e6dc" fill-opacity="0.24"/>
+    <circle cx="61.4" cy="122.9" r="1.36" fill="#e9e6dc" fill-opacity="0.24"/>
+    <circle cx="1014.8" cy="236.4" r="0.65" fill="#e9e6dc" fill-opacity="0.22"/>
+    <circle cx="1176.1" cy="102.2" r="1.23" fill="#e9e6dc" fill-opacity="0.13"/>
+    <circle cx="152.2" cy="63.7" r="0.92" fill="#e9e6dc" fill-opacity="0.19"/>
+    <circle cx="324.0" cy="232.5" r="0.68" fill="#e9e6dc" fill-opacity="0.26"/>
+    <circle cx="892.6" cy="158.4" r="0.86" fill="#e9e6dc" fill-opacity="0.12"/>
+    <circle cx="155.2" cy="110.8" r="0.72" fill="#e9e6dc" fill-opacity="0.3"/>
+    <circle cx="205.5" cy="261.2" r="1.37" fill="#e9e6dc" fill-opacity="0.13"/>
+    <circle cx="864.8" cy="186.6" r="1.0" fill="#e9e6dc" fill-opacity="0.18"/>
+    <circle cx="404.3" cy="86.9" r="0.57" fill="#e9e6dc" fill-opacity="0.32"/>
+    <circle cx="685.5" cy="178.5" r="0.73" fill="#e9e6dc" fill-opacity="0.34"/>
+    <circle cx="80.8" cy="197.2" r="0.72" fill="#e9e6dc" fill-opacity="0.32"/>
+    <circle cx="809.3" cy="17.3" r="1.21" fill="#e9e6dc" fill-opacity="0.29"/>
+    <circle cx="509.5" cy="213.7" r="0.57" fill="#e9e6dc" fill-opacity="0.31"/>
+    <circle cx="145.2" cy="76.6" r="0.53" fill="#e9e6dc" fill-opacity="0.27"/>
+    <circle cx="1124.8" cy="135.5" r="1.01" fill="#e9e6dc" fill-opacity="0.18"/>
+    <circle cx="910.0" cy="194.8" r="1.29" fill="#e9e6dc" fill-opacity="0.12"/>
+    <circle cx="161.7" cy="178.0" r="0.97" fill="#e9e6dc" fill-opacity="0.24"/>
+    <circle cx="285.8" cy="221.1" r="1.01" fill="#e9e6dc" fill-opacity="0.28"/>
+    <circle cx="952.6" cy="166.4" r="0.91" fill="#e9e6dc" fill-opacity="0.15"/>
+    <circle cx="371.2" cy="232.3" r="0.59" fill="#e9e6dc" fill-opacity="0.21"/>
+    <circle cx="1002.9" cy="165.8" r="0.97" fill="#e9e6dc" fill-opacity="0.09"/>
+    <circle cx="141.6" cy="254.8" r="1.31" fill="#e9e6dc" fill-opacity="0.11"/>
+    <circle cx="880.7" cy="59.5" r="1.37" fill="#e9e6dc" fill-opacity="0.15"/>
+    <circle cx="1098.6" cy="120.8" r="1.09" fill="#e9e6dc" fill-opacity="0.29"/>
+    <circle cx="948.1" cy="214.9" r="1.32" fill="#e9e6dc" fill-opacity="0.33"/>
+    <circle cx="893.1" cy="50.6" r="1.18" fill="#e9e6dc" fill-opacity="0.28"/>
+    <circle cx="367.0" cy="234.5" r="1.09" fill="#e9e6dc" fill-opacity="0.14"/>
+    <circle cx="871.3" cy="173.5" r="0.82" fill="#e9e6dc" fill-opacity="0.32"/>
+  </g>
+
+  <g stroke="#C9A84C" stroke-opacity="0.55" stroke-width="1.5" fill="none">
+    <path d="M16 40 V16 H40"/>
+    <path d="M1160 16 H1184 V40"/>
+    <path d="M1184 260 V284 H1160"/>
+    <path d="M40 284 H16 V260"/>
+  </g>
+  <g stroke="#C9A84C" stroke-opacity="0.25" stroke-width="1">
+    <path d="M0 150 H14"/><path d="M1186 150 H1200"/>
+  </g>
+
+  <!-- wordmark: blurred halo + crisp gradient layer -->
+  <text x="600" y="132" text-anchor="middle" font-family="Cinzel Decorative, Georgia, 'Times New Roman', serif" font-size="54" letter-spacing="8" fill="#C9A84C" filter="url(#glowStrong)" opacity="0.5">SYD&#160;&#160;OMEGA&#160;&#160;91717</text>
+  <text x="600" y="132" text-anchor="middle" font-family="Cinzel Decorative, Georgia, 'Times New Roman', serif" font-size="54" letter-spacing="8" fill="url(#goldText)" filter="url(#glowSoft)">SYD&#160;&#160;OMEGA&#160;&#160;91717</text>
+
+  <path d="M470 160 H730" stroke="#C9A84C" stroke-opacity="0.35" stroke-width="1"/>
+  <rect x="596" y="156" width="8" height="8" fill="#00E5FF" fill-opacity="0.6" transform="rotate(45 600 160)"/>
+
+  <text x="600" y="192" text-anchor="middle" font-family="'Courier New', monospace" font-size="14" letter-spacing="5" fill="#00E5FF" fill-opacity="0.9">SOVEREIGN PERSONAL PLATFORM</text>
+  <text x="600" y="222" text-anchor="middle" font-family="'Courier New', monospace" font-size="11.5" letter-spacing="4" fill="#8a8676">INVITATION ONLY &#9670; NINE REALMS &#9670; ONE ARCHITECT</text>
+
+  <rect x="0" y="0" width="1200" height="2" fill="url(#scan)">
+    <animate attributeName="y" values="0;300;0" dur="10s" repeatCount="indefinite"/>
+  </rect>
+</svg>

@@ -144,6 +144,7 @@
     <div class="card"><div class="card-title">REALM ENGINE</div><div class="card-body">OmegaRealm.mount(canvas, element) initialises the Three.js scene. OmegaRealm.setElement(elem) shifts focus to any of the nine elements. OmegaAmbient plays elemental audio resonance when an element is selected. All rendering is client-side — no server round-trips after initial load.</div></div>
   </div>
 </div>
+<div data-page-emblem="realm" style="margin:20px auto 0"></div>
 </div>
 
 <script>
@@ -192,7 +193,7 @@ window.switchElem=function(elem){
 var ec=document.getElementById('elem-cards');
 Object.keys(ELEM_INFO).forEach(function(key){
   var info=ELEM_INFO[key];
-  var d=document.createElement('div');d.className='elem-card';d.style.setProperty('--ec',info.color);
+  var d=document.createElement('div');d.className='elem-card card';d.style.setProperty('--ec',info.color);
   d.innerHTML='<div class="elem-sigil-big">'+info.sigil+'</div>'
     +'<div class="elem-card-name">'+key.toUpperCase()+'</div>'
     +'<div class="elem-card-desc">'+info.desc+'</div>';

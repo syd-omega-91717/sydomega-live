@@ -204,7 +204,8 @@
   </div>
 </div>
 
-<div id="cdx-toast"></div>
+<div id="cdx-toast"><div data-page-emblem="codex" style="margin:20px auto 0"></div>
+</div>
 
 <script>
 function setTab(name){
@@ -356,7 +357,7 @@ function renderResults(items,grid){
     var srcClass=item.source==='wikipedia'?'wiki':item.source==='arxiv'?'arxiv':'ol';
     var srcLabel=item.source==='wikipedia'?'WIKIPEDIA':item.source==='arxiv'?'ARXIV':'OPEN LIBRARY';
     var isBm=bookmarks.find(function(b){return b.url===item.url;});
-    return '<div class="art-card" data-idx="'+i+'" data-src="'+item.source+'">'+
+    return '<div class="art-card card" data-idx="'+i+'" data-src="'+item.source+'">'+
       '<span class="ac-source '+srcClass+'">'+srcLabel+'</span>'+
       '<div class="ac-title">'+esc(item.title)+'</div>'+
       (item.excerpt?'<div class="ac-excerpt">'+esc(item.excerpt.slice(0,150)+(item.excerpt.length>150?'...':''))+'</div>':'')+

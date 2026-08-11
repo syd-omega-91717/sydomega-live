@@ -5,76 +5,73 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sovereign Wallet · SYD OMEGA 91717</title>
 <link rel="manifest" href="/manifest.json">
-
 <style>
-.tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;background:#111;border:1px solid #222;color:#666;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
-.tab-btn.active{background:#FFD700;color:#000;border-color:#FFD700;}
-.tab-pane{display:none;}.tab-pane.active{display:block;}
-.net-worth{background:linear-gradient(135deg,#0d0d0d,#111);border:1px solid #222;padding:28px;text-align:center;margin-bottom:20px;position:relative;overflow:hidden;}
-.net-worth::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FFD700,#FF9800,#FFD700);}
-.nw-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:3px;margin-bottom:8px;}
-.nw-value{font-family:'Courier New',monospace;font-size:36px;color:#FFD700;font-weight:700;}
-.nw-sub{font-family:'Courier New',monospace;font-size:11px;color:#555;margin-top:6px;}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
-.stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
-.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#FFD700;font-weight:700;}
-.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px;}
-.accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:20px;}
-.account-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:18px;position:relative;}
-.account-card-type{font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;margin-bottom:6px;}
-.account-card-name{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:4px;}
-.account-card-bal{font-family:'Courier New',monospace;font-size:22px;font-weight:700;margin:8px 0;}
-.account-card-note{font-size:10px;color:#555;}
-.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:10px;}
-.del-btn:hover{color:#FF4444;}
-.form-group{margin-bottom:14px;}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px;}
-.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box;}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#FFD700;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.btn-primary{padding:10px 24px;background:#FFD700;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;}
-.btn-primary:hover{background:#e5b800;}
-.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
-.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px;}
-.asset-row{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #111;}
-.asset-name{flex:1;font-family:'Courier New',monospace;font-size:11px;color:#ccc;}
-.asset-type{font-family:'Courier New',monospace;font-size:9px;color:#555;letter-spacing:1px;}
-.asset-val{font-family:'Courier New',monospace;font-size:13px;font-weight:700;}
-.asset-del{background:none;border:none;color:#333;cursor:pointer;font-size:11px;}
-.asset-del:hover{color:#FF4444;}
-.progress-bar{background:#1a1a1a;height:6px;border-radius:3px;overflow:hidden;margin-top:8px;}
-.progress-fill{height:100%;background:#FFD700;transition:width .4s;}
-.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:16px;}
-.canvas-wrap canvas{display:block;width:100%;}
-.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #FFD700;padding:16px;}
-.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#FFD700;letter-spacing:1px;margin-bottom:8px;}
-.sci-body{font-size:11px;color:#888;line-height:1.65;}
-.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace;}
-.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px;}
-.alloc-bar{margin-bottom:10px;}
-.alloc-label{display:flex;justify-content:space-between;font-family:'Courier New',monospace;font-size:10px;color:#888;margin-bottom:4px;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
+.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
+.kpi-c .kpi-l{font-family:monospace;font-size:7px;letter-spacing:2px;color:#85837b;margin-top:3px}
+.net-worth{background:linear-gradient(135deg,#0d0d0d,#111);border:1px solid #222;padding:28px;text-align:center;margin-bottom:20px;position:relative;overflow:hidden}
+.net-worth::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FFD700,#FF9800,#FFD700)}
+.nw-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:3px;margin-bottom:8px}
+.nw-value{font-family:'Courier New',monospace;font-size:36px;color:#FFD700;font-weight:700}
+.nw-sub{font-family:'Courier New',monospace;font-size:11px;color:#555;margin-top:6px}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
+.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#FFD700;font-weight:700}
+.stat-lbl{font-family:'Courier New',monospace;font-size:9px;color:#666;letter-spacing:1px;margin-top:4px}
+.accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:20px}
+.account-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:18px;position:relative}
+.account-card-type{font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;margin-bottom:6px}
+.account-card-name{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:4px}
+.account-card-bal{font-family:'Courier New',monospace;font-size:22px;font-weight:700;margin:8px 0}
+.account-card-note{font-size:10px;color:#555}
+.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#333;cursor:pointer;font-size:10px}
+.del-btn:hover{color:#FF4444}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:1px;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:#FFD700}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-primary{padding:10px 24px;background:#FFD700;border:none;color:#000;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
+.btn-primary:hover{background:#e5b800}
+.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer}
+.section-label{font-family:'Courier New',monospace;font-size:10px;color:#666;letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px}
+.progress-bar{background:#1a1a1a;height:6px;border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:#FFD700;transition:width .4s}
+.canvas-wrap{background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;margin-bottom:16px}
+.canvas-wrap canvas{display:block;width:100%}
+.science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid #FFD700;padding:16px}
+.sci-title{font-family:'Courier New',monospace;font-size:11px;color:#FFD700;letter-spacing:1px;margin-bottom:8px}
+.sci-body{font-size:11px;color:#888;line-height:1.65}
+.sci-ref{font-size:9px;color:#444;margin-top:8px;font-family:'Courier New',monospace}
+.empty-state{text-align:center;padding:40px 20px;color:#333;font-family:'Courier New',monospace;font-size:12px}
+.alloc-bar{margin-bottom:10px}
+.alloc-label{display:flex;justify-content:space-between;font-family:'Courier New',monospace;font-size:10px;color:#888;margin-bottom:4px}
 </style>
 </head>
 <body>
-<div id="omega-nav"></div>
-<main class="page-content">
-<div class="page-header">
-  <div class="page-title">SOVEREIGN WALLET</div>
-  <div class="page-subtitle">ASSETS · ALLOCATION · NET WORTH · SOVEREIGNTY</div>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="wallet"></aside>
+<main class="main">
+<div class="topbar"><div class="t">SOVEREIGN WALLET<small>ASSETS · ALLOCATION · NET WORTH · SOVEREIGNTY · SYD OMEGA 91717</small></div></div>
+<div style="padding:20px var(--pad,20px)">
+
+<div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+  <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+  <button onclick="OmegaLocalBackup.exportKeys(['omega_wallet','omega_wallet_targets'],'omega-wallet-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+  <button onclick="OmegaLocalBackup.importKeys(['omega_wallet','omega_wallet_targets'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
 </div>
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('overview')">OVERVIEW</button>
-  <button class="tab-btn" onclick="switchTab('accounts')">ACCOUNTS</button>
-  <button class="tab-btn" onclick="switchTab('add')">ADD ACCOUNT</button>
-  <button class="tab-btn" onclick="switchTab('allocation')">ALLOCATION</button>
-  <button class="tab-btn" onclick="switchTab('science')">SCIENCE</button>
+<div class="tab-row">
+  <button class="tab-btn act" data-tab="overview" onclick="switchTab('overview',this)">&#9670; OVERVIEW</button>
+  <button class="tab-btn" data-tab="accounts" onclick="switchTab('accounts',this)">&#9670; ACCOUNTS</button>
+  <button class="tab-btn" data-tab="allocation" onclick="switchTab('allocation',this)">&#9670; ALLOCATION</button>
+  <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
 </div>
 
 <!-- OVERVIEW -->
-<div id="tab-overview" class="tab-pane active">
+<div id="tab-overview" class="tab-panel act">
   <div class="net-worth">
     <div class="nw-label">SOVEREIGN NET WORTH</div>
     <div class="nw-value" id="nw-value">$0</div>
@@ -93,14 +90,10 @@
 </div>
 
 <!-- ACCOUNTS -->
-<div id="tab-accounts" class="tab-pane">
+<div id="tab-accounts" class="tab-panel">
   <div class="section-label">ALL ACCOUNTS</div>
   <div class="accounts-grid" id="accounts-grid"></div>
-</div>
-
-<!-- ADD ACCOUNT -->
-<div id="tab-add" class="tab-pane">
-  <div class="section-label">ADD / UPDATE ACCOUNT</div>
+  <div class="section-label" style="margin-top:24px">ADD / UPDATE ACCOUNT</div>
   <div class="form-group">
     <label>ACCOUNT NAME</label>
     <input type="text" id="a-name" placeholder="e.g. Chase Checking, Robinhood, Bitcoin Wallet..." maxlength="80">
@@ -124,10 +117,10 @@
       <label>CURRENCY</label>
       <select id="a-currency">
         <option value="USD">USD $</option>
-        <option value="EUR">EUR €</option>
-        <option value="GBP">GBP £</option>
-        <option value="BTC">BTC ₿</option>
-        <option value="ETH">ETH Ξ</option>
+        <option value="EUR">EUR &euro;</option>
+        <option value="GBP">GBP &pound;</option>
+        <option value="BTC">BTC &#8383;</option>
+        <option value="ETH">ETH &Xi;</option>
         <option value="CAD">CAD $</option>
         <option value="AUD">AUD $</option>
         <option value="other">Other</option>
@@ -151,68 +144,94 @@
     <label>NOTES (optional)</label>
     <input type="text" id="a-notes" placeholder="Institution name, account type, notes..." maxlength="120">
   </div>
-  <div style="display:flex;gap:8px;">
+  <div style="display:flex;gap:8px">
     <button class="btn-primary" onclick="saveAccount()">SAVE ACCOUNT</button>
     <button class="btn-secondary" onclick="clearAccountForm()">CLEAR</button>
   </div>
-  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#FFD700;"></div>
+  <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:11px;color:#FFD700"></div>
 </div>
 
 <!-- ALLOCATION -->
-<div id="tab-allocation" class="tab-pane">
+<div id="tab-allocation" class="tab-panel">
   <div class="section-label">ASSET ALLOCATION</div>
   <div id="allocation-view"></div>
-  <div class="section-label" style="margin-top:24px;">SOVEREIGN TARGET ALLOCATION</div>
+  <div class="section-label" style="margin-top:24px">SOVEREIGN TARGET ALLOCATION</div>
   <div id="target-form"></div>
-  <div style="margin-top:14px;">
+  <div style="margin-top:14px">
     <button class="btn-secondary" onclick="resetTargets()">RESET TARGETS</button>
   </div>
 </div>
 
 <!-- SCIENCE -->
-<div id="tab-science" class="tab-pane">
+<div id="tab-science" class="tab-panel">
+  <div class="kpi-row">
+    <div class="kpi-c"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
+    <div class="kpi-c"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
+    <div class="kpi-c"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
+    <div class="kpi-c"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi-c"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
+    <div class="kpi-c"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
+    <div class="kpi-c"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
+    <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
+  </div>
   <div class="science-grid">
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">NET WORTH TRACKING</div>
-      <div class="sci-body">Stanley & Danko (1996, The Millionaire Next Door) defined wealth as: Net Worth = Assets − Liabilities. Their formula for "expected" net worth: (Age × Pre-tax Income) / 10. Prodigious accumulators of wealth (PAW) accumulate 2× expected; under-accumulators 0.5×. Tracking drives accountability.</div>
-      <div class="sci-ref">Stanley & Danko (1996). The Millionaire Next Door</div>
+      <div class="sci-body">Stanley &amp; Danko (1996, The Millionaire Next Door) defined wealth as: Net Worth = Assets − Liabilities. Their formula for "expected" net worth: (Age × Pre-tax Income) / 10. Prodigious accumulators of wealth (PAW) accumulate 2× expected; under-accumulators 0.5×. Tracking drives accountability.</div>
+      <div class="sci-ref">Stanley &amp; Danko (1996). The Millionaire Next Door</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">ASSET ALLOCATION</div>
-      <div class="sci-body">Brinson, Hood & Beebower (1986): asset allocation determines 93.6% of portfolio return variation — not stock selection or market timing. A sovereign allocation across uncorrelated asset classes (equities, bonds, real estate, alternatives) is the primary wealth-building decision.</div>
-      <div class="sci-ref">Brinson, Hood & Beebower (1986). Financial Analysts Journal</div>
+      <div class="sci-body">Brinson, Hood &amp; Beebower (1986): asset allocation determines 93.6% of portfolio return variation — not stock selection or market timing. A sovereign allocation across uncorrelated asset classes (equities, bonds, real estate, alternatives) is the primary wealth-building decision.</div>
+      <div class="sci-ref">Brinson, Hood &amp; Beebower (1986). Financial Analysts Journal</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">LIQUIDITY HIERARCHY</div>
       <div class="sci-body">Emergency fund theory (Blanchett, 2013): hold 3–6 months of expenses in liquid accounts before investing. Illiquidity premium — locking up capital in real estate, private equity, crypto — yields 2–5% additional return per year, but requires liquidity buffer first.</div>
       <div class="sci-ref">Blanchett (2013). Journal of Financial Planning</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">WEALTH IDENTITY</div>
-      <div class="sci-body">Klontz & Klontz (2009) identified four "money scripts" that govern financial behavior: money avoidance, money worship, money status, and money vigilance. Only vigilance correlates with wealth accumulation. Tracking net worth explicitly builds vigilance and detaches wealth from identity threat.</div>
-      <div class="sci-ref">Klontz & Klontz (2009). Journal of Financial Therapy</div>
+      <div class="sci-body">Klontz &amp; Klontz (2009) identified four "money scripts" that govern financial behavior: money avoidance, money worship, money status, and money vigilance. Only vigilance correlates with wealth accumulation. Tracking net worth explicitly builds vigilance and detaches wealth from identity threat.</div>
+      <div class="sci-ref">Klontz &amp; Klontz (2009). Journal of Financial Therapy</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">COMPOUND INTEREST</div>
-      <div class="sci-body">Einstein (apocryphally) called compound interest the "eighth wonder of the world." The Rule of 72: 72 ÷ interest rate = years to double. At 7% (S&P historical average): doubles in ~10.3 years. At 10%: 7.2 years. The earlier you track and invest, the more doublings you get.</div>
+      <div class="sci-body">Einstein (apocryphally) called compound interest the "eighth wonder of the world." The Rule of 72: 72 ÷ interest rate = years to double. At 7% (S&amp;P historical average): doubles in ~10.3 years. At 10%: 7.2 years. The earlier you track and invest, the more doublings you get.</div>
       <div class="sci-ref">Graham, B. (1949). The Intelligent Investor</div>
     </div>
-    <div class="sci-card">
+    <div class="sci-card card">
       <div class="sci-title">SOVEREIGN FINANCIAL INDEPENDENCE</div>
       <div class="sci-body">The 4% rule (Bengen, 1994; Trinity Study, 1998): a portfolio can sustain withdrawals of 4% annually for 30+ years. FI number = Annual Expenses × 25. This is the threshold at which capital works harder than you do — the mathematical definition of financial sovereignty.</div>
       <div class="sci-ref">Bengen (1994) · Cooley et al. (1998). Journal of Financial Planning</div>
     </div>
   </div>
 </div>
-</main>
 
-<script src="/omega-ui.js"></script>
+</div>
+</main>
+<div data-page-emblem="wallet" style="margin:20px auto 0"></div>
+</div>
+
 <script>
-var accounts = [];
-var targets = {checking:10,savings:15,investment:40,retirement:15,crypto:10,'real-estate':0,business:5,debt:0,other:5};
-var TYPE_COLORS = {checking:'#00E5FF',savings:'#4CAF50',investment:'#FFD700',retirement:'#9B6BF0',
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
+  if(btn) btn.classList.add('act');
+  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
+  document.getElementById('tab-'+id).classList.add('act');
+  if(id==='overview'){renderOverview();}
+  if(id==='accounts'){renderAccounts();}
+  if(id==='allocation'){renderAllocation();}
+}
+
+var accounts=[];
+var targets={checking:10,savings:15,investment:40,retirement:15,crypto:10,'real-estate':0,business:5,debt:0,other:5};
+var TYPE_COLORS={checking:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),savings:'#4CAF50',investment:'#FFD700',retirement:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),
   crypto:'#FF9800','real-estate':'#FF4444',business:'#00BCD4',debt:'#555',other:'#888'};
-var TYPE_LABELS = {checking:'CHECKING',savings:'SAVINGS',investment:'INVESTMENT',retirement:'RETIREMENT',
+var TYPE_LABELS={checking:'CHECKING',savings:'SAVINGS',investment:'INVESTMENT',retirement:'RETIREMENT',
   crypto:'CRYPTO','real-estate':'REAL ESTATE',business:'BUSINESS',debt:'DEBT',other:'OTHER'};
 
 function load(){
@@ -227,22 +246,11 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(v){return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 
-function switchTab(t){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  var labels={overview:'OVERVIEW',accounts:'ACCOUNTS',add:'ADD ACCOUNT',allocation:'ALLOCATION',science:'SCIENCE'};
-  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent===labels[t])b.classList.add('active');});
-  if(t==='overview'){renderOverview();}
-  if(t==='accounts'){renderAccounts();}
-  if(t==='allocation'){renderAllocation();}
-}
-
 function calcTotals(){
-  var assets=accounts.filter(a=>a.type!=='debt').reduce((s,a)=>s+a.balance,0);
-  var liab=accounts.filter(a=>a.type==='debt').reduce((s,a)=>s+a.balance,0);
-  var liquid=accounts.filter(a=>a.type!=='debt'&&a.liquid==='yes').reduce((s,a)=>s+a.balance,0);
-  return {assets,liab,liquid,net:assets-liab};
+  var assets=accounts.filter(function(a){return a.type!=='debt';}).reduce(function(s,a){return s+a.balance;},0);
+  var liab=accounts.filter(function(a){return a.type==='debt';}).reduce(function(s,a){return s+a.balance;},0);
+  var liquid=accounts.filter(function(a){return a.type!=='debt'&&a.liquid==='yes';}).reduce(function(s,a){return s+a.balance;},0);
+  return {assets:assets,liab:liab,liquid:liquid,net:assets-liab};
 }
 
 function renderOverview(){
@@ -264,16 +272,17 @@ function renderAllocBars(){
   var el=document.getElementById('alloc-bars');
   if(!accounts.length){el.innerHTML='';return;}
   var types={};
-  accounts.forEach(a=>{
+  accounts.forEach(function(a){
     if(!types[a.type])types[a.type]=0;
     types[a.type]+=a.type==='debt'?-a.balance:a.balance;
   });
   var total=t.assets||1;
-  el.innerHTML=Object.entries(types).map(([type,val])=>{
+  el.innerHTML=Object.entries(types).map(function(e){
+    var type=e[0],val=e[1];
     var pct=Math.max(0,val/total*100);
     var col=TYPE_COLORS[type]||'#888';
     return '<div class="alloc-bar">'
-      +'<div class="alloc-label"><span style="color:'+col+'">'+TYPE_LABELS[type]+'</span><span>'+fmt(val)+' · '+pct.toFixed(1)+'%</span></div>'
+      +'<div class="alloc-label"><span style="color:'+col+'">'+(TYPE_LABELS[type]||type)+'</span><span>'+fmt(val)+' · '+pct.toFixed(1)+'%</span></div>'
       +'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'
       +'</div>';
   }).join('');
@@ -291,15 +300,16 @@ function drawAllocCanvas(){
     return;
   }
   var types={};
-  accounts.forEach(a=>{
+  accounts.forEach(function(a){
     if(a.type==='debt')return;
     if(!types[a.type])types[a.type]=0;
     types[a.type]+=a.balance;
   });
-  var total=Object.values(types).reduce((s,v)=>s+v,0)||1;
+  var total=Object.values(types).reduce(function(s,v){return s+v;},0)||1;
   var cx=100,cy=100,r=85;
   var startAngle=-Math.PI/2;
-  Object.entries(types).forEach(([type,val])=>{
+  Object.entries(types).forEach(function(e){
+    var type=e[0],val=e[1];
     var slice=val/total*Math.PI*2;
     ctx.beginPath();ctx.moveTo(cx,cy);
     ctx.arc(cx,cy,r,startAngle,startAngle+slice);
@@ -311,27 +321,27 @@ function drawAllocCanvas(){
   ctx.beginPath();ctx.arc(cx,cy,40,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill();
   ctx.fillStyle='#FFD700';ctx.font='bold 11px Courier New';ctx.textAlign='center';
   ctx.fillText('NET',cx,cy-4);ctx.fillText('WORTH',cx,cy+10);
-  // legend
   var lx=220,ly=20;
-  Object.entries(types).forEach(([type,val])=>{
+  Object.entries(types).forEach(function(e){
+    var type=e[0],val=e[1];
     var col=TYPE_COLORS[type]||'#888';
     ctx.fillStyle=col;ctx.fillRect(lx,ly,10,10);
     ctx.fillStyle='#888';ctx.font='10px Courier New';ctx.textAlign='left';
-    ctx.fillText(TYPE_LABELS[type]+' '+Math.round(val/total*100)+'%',lx+14,ly+9);
+    ctx.fillText((TYPE_LABELS[type]||type)+' '+Math.round(val/total*100)+'%',lx+14,ly+9);
     ly+=18;if(ly>180){ly=20;lx+=160;}
   });
 }
 
 function renderAccounts(){
   var grid=document.getElementById('accounts-grid');
-  if(!accounts.length){grid.innerHTML='<div class="empty-state">NO ACCOUNTS YET<br><small>Go to ADD ACCOUNT to get started</small></div>';return;}
-  var sorted=[...accounts].sort((a,b)=>b.balance-a.balance);
-  grid.innerHTML=sorted.map(a=>{
+  if(!accounts.length){grid.innerHTML='<div class="empty-state">NO ACCOUNTS YET<br><small>Use the form below to get started</small></div>';return;}
+  var sorted=[...accounts].sort(function(a,b){return b.balance-a.balance;});
+  grid.innerHTML=sorted.map(function(a){
     var col=TYPE_COLORS[a.type]||'#888';
     var isDebt=a.type==='debt';
     return '<div class="account-card" style="border-top:2px solid '+col+'">'
       +'<button class="del-btn" onclick="delAccount(\''+a.id+'\')">DEL</button>'
-      +'<div class="account-card-type" style="color:'+col+'">'+TYPE_LABELS[a.type]+(a.liquid==='yes'?' · LIQUID':'')+'</div>'
+      +'<div class="account-card-type" style="color:'+col+'">'+(TYPE_LABELS[a.type]||a.type)+(a.liquid==='yes'?' · LIQUID':'')+'</div>'
       +'<div class="account-card-name">'+esc(a.name)+'</div>'
       +'<div class="account-card-bal" style="color:'+(isDebt?'#FF4444':col)+'">'
       +(isDebt?'-':'')+fmt(a.balance)
@@ -342,7 +352,7 @@ function renderAccounts(){
   }).join('');
 }
 
-function delAccount(id){if(!confirm('Remove account?'))return;accounts=accounts.filter(x=>x.id!==id);save();renderAccounts();}
+function delAccount(id){if(!confirm('Remove account?'))return;accounts=accounts.filter(function(x){return x.id!==id;});save();renderAccounts();}
 
 function saveAccount(){
   var name=document.getElementById('a-name').value.trim();
@@ -352,13 +362,13 @@ function saveAccount(){
   var liquid=document.getElementById('a-liquid').value;
   var notes=document.getElementById('a-notes').value.trim();
   if(!name){alert('Name required.');return;}
-  // update existing or add
-  var existing=accounts.find(a=>a.name.toLowerCase()===name.toLowerCase());
+  var existing=accounts.find(function(a){return a.name.toLowerCase()===name.toLowerCase();});
   if(existing){existing.balance=balance;existing.type=type;existing.currency=currency;existing.liquid=liquid;existing.notes=notes;}
-  else{accounts.push({id:uid(),name,balance,type,currency,liquid,notes,added:new Date().toISOString()});}
+  else{accounts.push({id:uid(),name:name,balance:balance,type:type,currency:currency,liquid:liquid,notes:notes,added:new Date().toISOString()});}
   save();clearAccountForm();
   document.getElementById('add-msg').textContent='ACCOUNT SAVED · '+name.toUpperCase();
-  setTimeout(()=>{document.getElementById('add-msg').textContent='';},2500);
+  setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
+  renderAccounts();
 }
 
 function clearAccountForm(){
@@ -372,12 +382,11 @@ function clearAccountForm(){
 
 function renderAllocation(){
   var t=calcTotals();
-  var el=document.getElementById('allocation-view');
   var types={};
-  accounts.forEach(a=>{if(a.type==='debt')return;if(!types[a.type])types[a.type]=0;types[a.type]+=a.balance;});
+  accounts.forEach(function(a){if(a.type==='debt')return;if(!types[a.type])types[a.type]=0;types[a.type]+=a.balance;});
   var total=t.assets||1;
   var tf=document.getElementById('target-form');
-  tf.innerHTML=Object.keys(TYPE_LABELS).filter(k=>k!=='debt').map(k=>{
+  tf.innerHTML=Object.keys(TYPE_LABELS).filter(function(k){return k!=='debt';}).map(function(k){
     var actual=((types[k]||0)/total*100).toFixed(1);
     var target=targets[k]||0;
     var diff=parseFloat(actual)-target;
@@ -393,7 +402,9 @@ function renderAllocation(){
       +'<div class="progress-bar"><div class="progress-fill" style="width:'+Math.min(100,parseFloat(actual))+'%;background:'+(TYPE_COLORS[k]||'#888')+';opacity:.6"></div></div>'
       +'</div>';
   }).join('');
-  if(!accounts.filter(a=>a.type!=='debt').length)el.innerHTML='<div class="empty-state">ADD NON-DEBT ACCOUNTS TO SEE ALLOCATION</div>';
+  var el=document.getElementById('allocation-view');
+  if(!accounts.filter(function(a){return a.type!=='debt';}).length)el.innerHTML='<div class="empty-state">ADD NON-DEBT ACCOUNTS TO SEE ALLOCATION</div>';
+  else el.innerHTML='';
 }
 
 function setTarget(type,val){targets[type]=parseFloat(val)||0;save();}
@@ -402,5 +413,7 @@ function resetTargets(){targets={checking:10,savings:15,investment:40,retirement
 load();
 renderOverview();
 </script>
+<script src="/omega-local-backup.js"></script>
+<script src="/bg.js"></script>
 </body>
 </html>

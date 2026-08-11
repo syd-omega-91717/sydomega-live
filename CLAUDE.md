@@ -599,3 +599,31 @@ orphaned file.
   that way rather than be upgraded on assumption. This is how
   `REPO_AUDIT.md`'s counts drifted stale before `REPOSITORY_AUDIT.md`
   replaced them — don't repeat it.
+
+## 10. Autonomous feature-proposal pipeline (`.claude/skills/`)
+
+Four skills exist for turning outside research into shipped-but-dormant
+features on this actual static-HTML/Supabase stack — no framework, no
+build step, adapted to the real architecture in §§1–6, not the generic
+Next.js/Prisma/monorepo shape a build tool might default to:
+
+- `web-trend-scout` — research only, writes a grounded proposal into
+  `FEATURE_IDEAS.md`. No code.
+- `feature-architect` — planning only, turns one proposal into an exact
+  file-by-file blueprint (page, `nav.js` wiring, `supabase/*.sql`,
+  `platform_settings` flag). No code.
+- `autonomous-coder` — implements the blueprint for real, verifies with
+  `scripts/audit.py`/`node --check`, commits to the current branch. Never
+  flips a `platform_settings` flag to `true`, never merges to `main`,
+  never edits CI or touches secrets.
+- `subscriber-portal` — exposure. Only wires a feature into real
+  subscriber-facing pages (using the real `membership_tier`/
+  `OmegaCanon.tierUnlocks()` system, not an invented one) once a human has
+  already turned its flag on.
+
+See `.claude/skills/README.md` for the full pipeline and why it
+deliberately stops at "reviewable, dormant-by-default code on a branch"
+rather than auto-deploying to subscribers — this matches §9's rule against
+shipping monetizable/legally-sensitive features live without an explicit
+gating decision, and this repo's own history of serious bugs that shipped
+silently (§8) is the reason that rule exists.

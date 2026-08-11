@@ -48,6 +48,18 @@ display), `factions.html`, `pantheons.html`, `houses.html`.
 ### ASCEND — progression, learning
 `honors.html` (ascension map + record), `matrix.html` ("The 729"), `academy.html`,
 `gaming.html`, `trophies.html`, `exam.html`, `contributions.html`, `evolution.html`.
+`trophies.html` and `honors.html` now also have a "SHARE CARD" button
+(`tr-share-card-btn`/`hn-share-card-btn`, added this session per `FEATURE_IDEAS.md` #8) wired to
+the same platform-wide `omega-share-card.js` engine `profile.html` already used — previously
+loaded on every page but only ever invoked from `profile.html`. `honors.html`'s own profile query
+was widened from a 4-field select (`axis_a,axis_b,axis_c,is_owner`) to `select('*')` so the card
+has the full field set (`display_name`, `element`, `sign`, `god`, `agent`, `trophies_earned`,
+etc.) the engine actually reads — `trophies.html` already fetched `select('*')` for its own
+header, so no change needed there. ✅ Rendered end-to-end in headless Chromium (same harness
+approach as the contribution heatmap above — the blocked `esm.sh` import intercepted with a
+local stand-in, everything else real/unmodified): both buttons render, both click handlers fire
+`OmegaShareCard.showModal(pr)` with the full profile object, no page errors. No new
+table/RPC/`platform_settings` flag, no `nav.js` change (both pages already reachable).
 
 ### COSMOS — zodiac/element brand system
 `cosmos.html`, `horoscope.html`, `agents.html`, `elements.html`, `pantheons.html`,

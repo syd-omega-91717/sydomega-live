@@ -596,7 +596,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
   <div class="mtab-panel" id="mtab-record" style="display:none">
     
-    <div class="topbar"><div class="t">THE ACHIEVEMENTS &middot; 12×12×9×9×9 = 104,976 <span data-canon-lattice="twelve"></span></div><small>YOUR SOVEREIGN RECORD &middot; GRADE &middot; LEVEL &middot; PHASE &middot; HONORS <span data-canon-lattice="nine"></span></small></div>
+    <div class="topbar"><div class="t">THE ACHIEVEMENTS &middot; 12×12×9×9×9 = 104,976 <span data-canon-lattice="twelve"></span></div><small>YOUR SOVEREIGN RECORD &middot; GRADE &middot; LEVEL &middot; PHASE &middot; HONORS <span data-canon-lattice="nine"></span></small><button id="hn-share-card-btn" style="margin-left:8px;font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='transparent'" aria-label="Show sovereign identity card">&#8679; SHARE CARD</button></div>
     <div class="hero">
       <div class="stats3">
         <div class="stat3"><div class="v" id="h-grade">--</div><div class="l">GRADE</div></div>
@@ -856,11 +856,16 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
     const sess = (await sb.auth.getSession()).data.session;
     if(!sess) return;
-    const pr = await sb.from('profiles').select('axis_a,axis_b,axis_c,is_owner').eq('id',sess.user.id).maybeSingle();
+    const pr = await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle();
     const d = pr.data || {};
     const a=Number(d.axis_a||0), b=Number(d.axis_b||0), c=Number(d.axis_c||0);
     const auth = Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*1.6180339887/2.7182818285;
     const grade = Math.max(1, Math.min(12, Math.ceil(auth/27.8367*12)));
+    const _hnScBtn=document.getElementById('hn-share-card-btn');
+    if(_hnScBtn){_hnScBtn.addEventListener('click',function(){
+      if(window.OmegaShareCard){window.OmegaShareCard.showModal(d);}
+      else if(window.OmegaNotify&&window.OmegaNotify.showToast){window.OmegaNotify.showToast('Share card loading…','info');}
+    });}
 
     const [certs, trophies, medals] = await Promise.all([
       sb.from('certificates').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id),

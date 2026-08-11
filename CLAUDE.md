@@ -568,6 +568,38 @@ orphaned file.
   FUNCTION` text) and its dedup guard; `task_completions` has the columns the function needs.
   Production payments and progression tracking are unblocked.
 
+- **[Fixed, needs deploy] `member_presence` writes have been silently failing on every page,
+  every 30 seconds, for every member — same bug class as `extend_trial`/`complete_task` above.**
+  Found while auditing `omega-*.js` modules loaded platform-wide by `bg.js` with zero call sites
+  anywhere, looking for genuine wiring gaps (`FEATURE_IDEAS.md` #7–#13's pattern). Most turned out
+  to be either already-working self-contained systems (`omega-legal.js`'s GDPR consent banner
+  boots itself on `DOMContentLoaded`, confirmed correctly gated — nothing to fix) or genuinely
+  dormant UI wiring gaps (already fixed as #10–#13). `omega-presence.js` was neither: it's fully
+  self-activating (`setTimeout(startSync, 2000)`, no wiring needed) and has been calling
+  `sb.from('member_presence').upsert({...})` on every page load and every 30-second sync since it
+  was written — but two of its payload keys never matched the live schema
+  (`supabase/entreprise_schema_v2.sql:47-52`): it sent `session_started` where the real column is
+  `session_started_at`, and `dedication_today`, which doesn't exist as a column anywhere in the
+  SQL bag (confirmed via a full-repo grep, not assumed). Supabase's REST layer (PostgREST) rejects
+  writes referencing unknown columns, and the call is wrapped in `.catch(function(){})` — so like
+  `complete_task()` before its fix, this has silently never committed a single row. Fixed by
+  renaming `session_started`→`session_started_at` and dropping `dedication_today` (no such column
+  exists to write to; adding one would be new schema, not this bug fix) in `omega-presence.js`.
+  Verified with a schema-validating test harness that emulates PostgREST's actual
+  unknown-column-rejection behavior (not just "doesn't throw") — confirmed the old code fails this
+  check with exactly the two bad keys above, and the fixed code passes with all six keys matching
+  the live schema exactly. **Not yet applied to the live database** — this fixes the client-side
+  write shape only; no SQL changes were needed since the table already existed correctly, only the
+  JS was wrong.
+  Since `member_presence`'s own RLS already grants every authenticated member `SELECT` access
+  (`"members see presence" ON public.member_presence FOR SELECT USING(true)`,
+  `entreprise_schema_v2.sql:56-57` — matching the module's own header comment, "Inspired by
+  Discord's presence system," an intentional design choice already baked into the schema, not a
+  new privacy decision made here) and nothing anywhere displayed this data, added a minimal
+  "ONLINE NOW" KPI card to `dashboard.html`'s main overview row, reading
+  `member_presence` filtered to `is_online=true` within a 90-second recency window (covers one
+  missed 30s sync before a member reads as offline). No new table/RPC/`platform_settings` flag.
+
 ## 9. Working in this repo — practical rules
 
 - Don't introduce a build step or framework migration without discussing

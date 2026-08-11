@@ -51,6 +51,15 @@ header comment. ✅ Verified in headless Chromium with both an owner and non-own
 non-owner leaves the card at its `--` placeholder (gating confirmed, not just present), owner gets
 a real `$X.XXXX` value from the live module. No new table/RPC/`platform_settings` flag — reads an
 already-running module's in-memory summary, no new query.
+`#l-overview`'s main KPI row also now has an "ONLINE NOW" card reading `public.member_presence`
+(`is_online=true`, 90s recency window) — see `CLAUDE.md` §8 for the real bug this depended on:
+`omega-presence.js`'s writes to this table had two column-name mismatches
+(`session_started`/`dedication_today` vs. the live schema's `session_started_at`/no such column)
+and had never once succeeded. Fixed the writer, then added this reader since the table's own RLS
+already grants every member `SELECT` (by design — "Inspired by Discord's presence system," the
+module's own header comment). ✅ Verified with a schema-validating mock that emulates PostgREST's
+real unknown-column rejection (not just "didn't throw") — confirmed the pre-fix code fails this
+check with exactly the two bad keys, the post-fix code passes with all six keys matching.
 
 ### IDENTITY — member profile, verification
 `profile.html`, `passport.html`, `kyc.html`, `settings.html` ✅ (background-color sync

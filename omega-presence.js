@@ -16,14 +16,12 @@
     window.__omegaSb.auth.getSession().then(function(r){
       var s=r.data&&r.data.session;
       if(!s) return;
-      var ded=window.OmegaChrono?window.OmegaChrono.getDedSec():0;
       window.__omegaSb.from('member_presence').upsert({
         user_id:s.user.id,
         is_online:online,
         current_page:online?PAGE:null,
         last_seen:new Date().toISOString(),
-        session_started:online?session_started:null,
-        dedication_today:ded,
+        session_started_at:online?session_started:null,
         client_info:{ua:navigator.userAgent.slice(0,60),tz:Intl.DateTimeFormat().resolvedOptions().timeZone}
       }).catch(function(){});
     }).catch(function(){});

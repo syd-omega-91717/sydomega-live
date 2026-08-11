@@ -39,11 +39,35 @@ the Life Wheel/Quick Actions block and the Personal Tools grid) — screenshotte
 Test harness is scratch tooling, not committed to the repo. Still open: verification against the
 *real* production Supabase project/schema and a real authenticated login, which this environment
 cannot do.
+The `#l-platform` owner-admin KPI row (`adm-pending`/`adm-accounts`/`adm-threats`) now also has a
+"SESSION COST (EST.)" card (`FEATURE_IDEAS.md` #12) showing `OmegaFinOps.summary().total_usd` —
+`omega-finops.js` turned out to already be actively running platform-wide (intercepting Supabase
+queries, estimating AI/DB/edge cost, writing real rows to `public.platform_metrics` on
+`beforeunload` when a session's estimate exceeds $0.001), just with no UI anywhere. Population is
+inside the same `if(pr.is_owner)` block as the other admin counts (matches
+`platform_metrics`'s own RLS, which already restricts `SELECT` to the owner) and the card's own
+tooltip states explicitly that this is an estimate, not real billing, matching the module's own
+header comment. ✅ Verified in headless Chromium with both an owner and non-owner fake profile:
+non-owner leaves the card at its `--` placeholder (gating confirmed, not just present), owner gets
+a real `$X.XXXX` value from the live module. No new table/RPC/`platform_settings` flag — reads an
+already-running module's in-memory summary, no new query.
 
 ### IDENTITY — member profile, verification
 `profile.html`, `passport.html`, `kyc.html`, `settings.html` ✅ (background-color sync
 silent-failure fixed this session), `character.html`, `agents.html` (12-agent roster
 display), `factions.html`, `pantheons.html`, `houses.html`.
+`profile.html` now also mounts the platform-wide-loaded-but-previously-unused
+`omega-sigil-gen.js` (`FEATURE_IDEAS.md` #10 — a `#ph-sigil` div, `window.OmegaSigil.mount()`
+called directly rather than via the shared `omega:user-loaded` event; see the "Flagged, not
+proposed" note in `FEATURE_IDEAS.md` for why that event's platform-wide activation was
+deliberately avoided) and a "PASSPORT PDF" download button wired to `omega-passport.js`
+(`FEATURE_IDEAS.md` #11 — no JS needed, the module's click listener + `window.__omegaProfile`
+were already there). In the process, found (not fixed, since it's in the dormant auto-mount path
+these two features intentionally bypass) that `omega-sigil-gen.js`'s own handler reads
+`profile.zodiac_sign`, a column that doesn't exist on `public.profiles` (the real column is
+`element`) — the direct-call implementation here uses the correct column. ✅ Rendered end-to-end
+in headless Chromium: sigil mounts as a real SVG (screenshotted), passport button click completes
+a full mocked-jsPDF generation with no errors. No new table/RPC/`platform_settings` flag.
 
 ### ASCEND — progression, learning
 `honors.html` (ascension map + record), `matrix.html` ("The 729"), `academy.html`,

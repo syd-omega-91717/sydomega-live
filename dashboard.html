@@ -271,6 +271,7 @@
           <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/enterprise.html'"><div class="kpi-n" id="adm-accounts">--</div><div class="kpi-l">ENTERPRISE ACCOUNTS</div></div>
           <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
           <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--solar)" data-tooltip="Estimated cost of this browser session only (AI tokens, DB reads, edge calls) -- not real billing data. See omega-finops.js." data-tooltip-placement="bottom"><div class="kpi-n" id="adm-finops-cost">--</div><div class="kpi-l">SESSION COST (EST.)</div></div>
         </div>
         <div class="sechead">ACTIVE WORKFLOWS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
@@ -834,6 +835,18 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
         var wf=await sb.from('workflow_executions').select('id',{count:'exact',head:true}).eq('status','completed');
         sid('ai-workflows',wf.count||0);
       }catch(e){}
+      /* FinOps: this session's own running cost estimate (omega-finops.js,
+         loaded platform-wide, already recording -- no query, no new data).
+         Estimate only, never real billing -- see the card's own tooltip.
+         omega-finops.js loads deferred like every other omega-*.js module,
+         so poll briefly rather than assume it's ready on first check. */
+      (function tryFinOps(tries){
+        if(window.OmegaFinOps){
+          try{sid('adm-finops-cost','$'+window.OmegaFinOps.summary().total_usd.toFixed(4));}catch(e){}
+          return;
+        }
+        if((tries||0)<15) setTimeout(function(){tryFinOps((tries||0)+1);},300);
+      })();
     }
     /* Timeline */
     try{

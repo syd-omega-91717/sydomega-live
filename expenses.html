@@ -66,6 +66,12 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
   <div class="topbar"><div class="t">EXPENSES<small>FINANCIAL CLARITY · TRACK · BUDGET · OPTIMIZE · SYD OMEGA 91717</small></div></div>
   <div style="padding:20px var(--pad,20px)">
 
+    <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_budgets','omega_expenses'],'omega-expenses-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_budgets','omega_expenses'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+    </div>
+
     <div class="stat-grid">
       <div class="stat"><div class="stat-val" id="st-month-exp">$0</div><div class="stat-lbl">THIS MONTH</div></div>
       <div class="stat"><div class="stat-val" id="st-month-inc" style="color:var(--green)">$0</div><div class="stat-lbl">INCOME</div></div>
@@ -398,12 +404,12 @@ function renderInsights(){
   var avgDaily=exp>0?(exp/now.getDate()).toFixed(2):0;
   var largestExp=me.filter(function(e){return e.type==='expense';}).sort(function(a,b){return b.amount-a.amount;})[0];
   document.getElementById('insight-grid').innerHTML=
-    '<div class="insight-card"><div class="insight-val">$'+exp.toFixed(0)+(expChg!==null?' <span class="trend-chip '+(expChg>0?'trend-up':'trend-dn')+'">'+(expChg>0?'+':'')+expChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH EXPENSES</div></div>'
-    +'<div class="insight-card"><div class="insight-val">$'+inc.toFixed(0)+(incChg!==null?' <span class="trend-chip '+(incChg>0?'trend-dn':'trend-up')+'">'+(incChg>0?'+':'')+incChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH INCOME</div></div>'
-    +'<div class="insight-card"><div class="insight-val" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+(net>=0?'+':'')+'$'+Math.abs(net).toFixed(0)+'</div><div class="insight-lbl">NET FLOW</div></div>'
-    +'<div class="insight-card"><div class="insight-val" style="color:'+(rate>=20?'var(--green)':rate>=10?'var(--gold)':'var(--red)')+'">'+rate+'%</div><div class="insight-lbl">SAVINGS RATE</div></div>'
-    +'<div class="insight-card"><div class="insight-val">$'+avgDaily+'</div><div class="insight-lbl">AVG DAILY SPEND</div></div>'
-    +'<div class="insight-card"><div class="insight-val" style="font-size:.85rem">'+(largestExp?largestExp.desc+' $'+largestExp.amount.toFixed(0):'—')+'</div><div class="insight-lbl">LARGEST EXPENSE</div></div>';
+    '<div class="insight-card card"><div class="insight-val">$'+exp.toFixed(0)+(expChg!==null?' <span class="trend-chip '+(expChg>0?'trend-up':'trend-dn')+'">'+(expChg>0?'+':'')+expChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH EXPENSES</div></div>'
+    +'<div class="insight-card card"><div class="insight-val">$'+inc.toFixed(0)+(incChg!==null?' <span class="trend-chip '+(incChg>0?'trend-dn':'trend-up')+'">'+(incChg>0?'+':'')+incChg+'%</span>':'')+'</div><div class="insight-lbl">MONTH INCOME</div></div>'
+    +'<div class="insight-card card"><div class="insight-val" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+(net>=0?'+':'')+'$'+Math.abs(net).toFixed(0)+'</div><div class="insight-lbl">NET FLOW</div></div>'
+    +'<div class="insight-card card"><div class="insight-val" style="color:'+(rate>=20?'var(--green)':rate>=10?'var(--gold)':'var(--red)')+'">'+rate+'%</div><div class="insight-lbl">SAVINGS RATE</div></div>'
+    +'<div class="insight-card card"><div class="insight-val">$'+avgDaily+'</div><div class="insight-lbl">AVG DAILY SPEND</div></div>'
+    +'<div class="insight-card card"><div class="insight-val" style="font-size:.85rem">'+(largestExp?largestExp.desc+' $'+largestExp.amount.toFixed(0):'—')+'</div><div class="insight-lbl">LARGEST EXPENSE</div></div>';
   drawTrend();
   drawCatBreakdown();
   drawMonthly();
@@ -515,6 +521,7 @@ function updateAll(){
 document.getElementById('e-date').value=new Date().toISOString().slice(0,10);
 updateAll();
 </script>
+<script src="/omega-local-backup.js"></script>
 <script src="/bg.js"></script>
 </body>
 </html>

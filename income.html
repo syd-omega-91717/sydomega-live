@@ -136,7 +136,7 @@ function buildAllocBars(){
 function buildInvestGrid(){
   var g=document.getElementById('invest-grid');g.innerHTML='';
   INVESTMENTS.forEach(function(inv){
-    var div=document.createElement('div');div.className='invest-card';
+    var div=document.createElement('div');div.className='invest-card card';
     div.innerHTML='<div class="inv-num">'+inv.num+'</div><div class="inv-name">'+inv.name+'</div><div class="inv-desc">'+inv.desc+'</div><div class="inv-pct">'+inv.pct+' ALLOCATION</div>';
     g.appendChild(div);
   });

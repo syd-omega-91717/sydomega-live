@@ -77,6 +77,12 @@
 
   <div style="padding:20px var(--pad,20px)">
 
+    <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_wealth_assets','omega_wealth_snapshots'],'omega-wealth-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_wealth_assets','omega_wealth_snapshots'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+    </div>
+
     <!-- Net Worth -->
     <div class="wealth-hero">
       <div class="net-worth-box">
@@ -98,7 +104,7 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
 
         <!-- Cash & Liquid -->
-        <div class="asset-class-card">
+        <div class="asset-class-card card">
           <div class="acc-header">
             <span class="acc-title">💵 CASH & LIQUID</span>
             <span class="acc-total" id="tot-cash">$0</span>
@@ -108,7 +114,7 @@
         </div>
 
         <!-- Investments -->
-        <div class="asset-class-card">
+        <div class="asset-class-card card">
           <div class="acc-header">
             <span class="acc-title">📈 INVESTMENTS</span>
             <span class="acc-total" id="tot-invest">$0</span>
@@ -118,7 +124,7 @@
         </div>
 
         <!-- Crypto -->
-        <div class="asset-class-card">
+        <div class="asset-class-card card">
           <div class="acc-header">
             <span class="acc-title">₿ CRYPTO</span>
             <span class="acc-total" id="tot-crypto">$0</span>
@@ -128,7 +134,7 @@
         </div>
 
         <!-- Real Estate -->
-        <div class="asset-class-card">
+        <div class="asset-class-card card">
           <div class="acc-header">
             <span class="acc-title">🏛 REAL ESTATE</span>
             <span class="acc-total" id="tot-realestate">$0</span>
@@ -138,7 +144,7 @@
         </div>
 
         <!-- Business -->
-        <div class="asset-class-card">
+        <div class="asset-class-card card">
           <div class="acc-header">
             <span class="acc-title">⚡ BUSINESS EQUITY</span>
             <span class="acc-total" id="tot-business">$0</span>
@@ -148,7 +154,7 @@
         </div>
 
         <!-- Liabilities -->
-        <div class="asset-class-card" style="border-color:rgba(139,0,0,.15)">
+        <div class="asset-class-card card" style="border-color:rgba(139,0,0,.15)">
           <div class="acc-header">
             <span class="acc-title" style="color:rgba(200,60,60,.7)">⚠ LIABILITIES</span>
             <span class="acc-total" style="color:rgba(200,60,60,.8)" id="tot-liabilities">-$0</span>
@@ -165,7 +171,7 @@
       <div class="calc-grid">
 
         <!-- Compound Interest -->
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">COMPOUND INTEREST PROJECTOR</div>
           <div class="input-row"><label>PRINCIPAL ($)</label><input type="number" id="ci-principal" value="10000" oninput="calcCompound()"></div>
           <div class="input-row"><label>MONTHLY ADDITION ($)</label><input type="number" id="ci-monthly" value="500" oninput="calcCompound()"></div>
@@ -179,7 +185,7 @@
         </div>
 
         <!-- FIRE Calculator -->
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">FIRE NUMBER CALCULATOR</div>
           <div class="input-row"><label>ANNUAL EXPENSES ($)</label><input type="number" id="fire-exp" value="60000" oninput="calcFIRE()"></div>
           <div class="input-row"><label>SAFE WITHDRAWAL (%)</label><input type="number" id="fire-swr" value="4" step="0.1" oninput="calcFIRE()"></div>
@@ -208,7 +214,7 @@
         </div>
 
         <!-- Debt Payoff -->
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">DEBT ELIMINATION CALCULATOR</div>
           <div class="input-row"><label>DEBT AMOUNT ($)</label><input type="number" id="debt-amt" value="20000" oninput="calcDebt()"></div>
           <div class="input-row"><label>INTEREST RATE (%)</label><input type="number" id="debt-rate" value="18" step="0.1" oninput="calcDebt()"></div>
@@ -221,7 +227,7 @@
         </div>
 
         <!-- Net Worth Projection -->
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">NET WORTH TRAJECTORY</div>
           <div class="input-row"><label>CURRENT NET WORTH ($)</label><input type="number" id="nwp-current" value="0" oninput="calcNWP()"></div>
           <div class="input-row"><label>MONTHLY SAVINGS ($)</label><input type="number" id="nwp-save" value="2000" oninput="calcNWP()"></div>
@@ -269,61 +275,61 @@
     <!-- SCIENCE TAB -->
     <div class="tab-panel" id="tab-science">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">27.8367</div>
           <div class="cr-label" style="margin-top:6px">APEX AUTH</div>
         </div>
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">φ/e</div>
           <div class="cr-label" style="margin-top:6px">WEALTH RATIO</div>
         </div>
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">4%</div>
           <div class="cr-label" style="margin-top:6px">SWR RULE</div>
         </div>
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">72</div>
           <div class="cr-label" style="margin-top:6px">RULE OF 72</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">1.618</div>
           <div class="cr-label" style="margin-top:6px">GOLDEN RATIO φ</div>
         </div>
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">10×</div>
           <div class="cr-label" style="margin-top:6px">GROWTH TARGET</div>
         </div>
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">25×</div>
           <div class="cr-label" style="margin-top:6px">FIRE MULTIPLE</div>
         </div>
-        <div class="calc-card" style="text-align:center;padding:16px">
+        <div class="calc-card card" style="text-align:center;padding:16px">
           <div class="cr-val" style="font-size:20px">2.718</div>
           <div class="cr-label" style="margin-top:6px">EULER'S e</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">COMPOUND INTEREST LAW</div>
           <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
             The eighth wonder of the world — money that earns money. A = P(1+r/n)^nt. Starting early multiplies wealth exponentially. Every dollar invested today is worth e^(r×t) in continuous compounding. The Rule of 72: divide 72 by your interest rate to find doubling time.
           </div>
         </div>
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">FIRE MOVEMENT</div>
           <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
             Financial Independence / Retire Early. Build a portfolio 25× your annual expenses. The 4% safe withdrawal rate sustains 30+ year retirements. LEAN FIRE: minimal expenses. FAT FIRE: lifestyle maintained. BARISTA FIRE: semi-retirement with part-time income.
           </div>
         </div>
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">WEALTH CONSCIOUSNESS</div>
           <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
             Sovereign wealth is not about accumulation alone — it is about freedom, options, and anti-fragility. The OMEGA model: ASSETS > LIABILITIES. Cash flow > net worth. Time freedom > monetary freedom. Every asset must either appreciate, generate income, or both.
           </div>
         </div>
-        <div class="calc-card">
+        <div class="calc-card card">
           <div class="calc-title">SOVEREIGN ALLOCATION MODEL</div>
           <div style="font-family:var(--M);font-size:8.5px;letter-spacing:.8px;color:rgba(138,134,118,.6);line-height:1.9">
             Ray Dalio All Weather blend: 30% stocks, 15% bonds, 20% real estate, 10% cash, 10% crypto, 10% business equity, 5% alternatives. Rebalance quarterly. Never hold more than 30% in any single class. Diversification is the only free lunch in finance.
@@ -649,5 +655,6 @@ renderAssets();
 renderHistory();
 calcCompound();calcFIRE();calcDebt();calcNWP();
 </script>
+<script src="omega-local-backup.js"></script>
 </body>
 </html>

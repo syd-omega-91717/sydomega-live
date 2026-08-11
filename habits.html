@@ -393,7 +393,7 @@ function renderHabitCard(habit, showAll=false){
   const dots=getStreakDots(habit);
   const icon=CAT_ICONS[habit.cat]||'●';
   const shouldDo=shouldDoToday(habit);
-  return `<div class="habit-card ${done?'done-today':''}" id="hc-${habit.id}">
+  return `<div class="habit-card card ${done?'done-today':''}" id="hc-${habit.id}">
     <div class="habit-card-header" onclick="toggleHabit('${habit.id}')">
       <div class="hc-check">${done?'✓':''}</div>
       <div class="hc-info">

@@ -109,19 +109,19 @@
       <div style="font-family:var(--M);font-size:8px;letter-spacing:.8px;color:rgba(138,134,118,.6);margin-bottom:16px">
         The weekly review is the engine of OKR success. 15 minutes of reflection prevents months of drift.
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>WHAT MOVED FORWARD THIS WEEK?</h4>
         <textarea id="rev-wins" placeholder="List key results or objectives that progressed..."></textarea>
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>WHAT BLOCKED OR SLOWED PROGRESS?</h4>
         <textarea id="rev-blocks" placeholder="Identify constraints, distractions, or resource gaps..."></textarea>
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>WHAT NEEDS TO HAPPEN NEXT WEEK?</h4>
         <textarea id="rev-next" placeholder="Define 1-3 critical moves for the coming week..."></textarea>
       </div>
-      <div class="review-card">
+      <div class="review-card card">
         <h4>SOVEREIGN INSIGHT (WHAT DID YOU LEARN?)</h4>
         <textarea id="rev-insight" placeholder="Strategic realizations, pattern recognition, course corrections..."></textarea>
       </div>
@@ -343,7 +343,7 @@ function renderOKRs(){
     });
     const avgKR=krScores.length?Math.round(krScores.reduce((a,b)=>a+b,0)/krScores.length):0;
     const color=CAT_COLORS[obj.cat]||'rgba(201,168,76,.7)';
-    return `<div class="objective-card">
+    return `<div class="objective-card card">
       <div class="obj-progress" style="background:rgba(201,168,76,.04)"><div class="obj-progress-fill" style="width:${avgKR}%;background:${getKRColor(avgKR)}"></div></div>
       <div class="obj-header">
         <div class="obj-num">O${oi+1}</div>

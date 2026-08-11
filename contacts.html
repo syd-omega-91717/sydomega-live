@@ -312,7 +312,7 @@ function renderContacts(){
   grid.innerHTML=data.map(function(c){
     var due=isDue(c);
     var lastInt=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
-    return '<div class="contact-card '+(c.vip?'vip':'')+' '+(due?'overdue':'')+'">'
+    return '<div class="contact-card card '+(c.vip?'vip':'')+' '+(due?'overdue':'')+'">'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
       +'<div class="contact-avatar" style="background:'+c.color+'22;color:'+c.color+';border:1px solid '+c.color+'44">'+initials(c.name)+'</div>'
       +'<button class="btn-red" onclick="deleteContact('+c.id+')" style="font-size:.5rem;padding:2px 6px">&#x2715;</button>'

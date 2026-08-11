@@ -274,7 +274,7 @@ function renderMissions(missions,containerId,stateKey){
   missions.forEach(function(m){
     var done=stateKey==='daily'?!!state.daily[m.id]:!!state.weekly[m.id];
     var card=document.createElement('div');
-    card.className='mission-card'+(done?' completed':'')+(m.tier==='legendary'?' legendary-card':'');
+    card.className='mission-card card'+(done?' completed':'')+(m.tier==='legendary'?' legendary-card':'');
     var icon=document.createElement('div');icon.className='mc-icon';icon.textContent=m.icon;
     var body=document.createElement('div');body.className='mc-body';
     var hdr=document.createElement('div');hdr.className='mc-header';

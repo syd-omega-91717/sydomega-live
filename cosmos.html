@@ -243,18 +243,18 @@ a{color:inherit;text-decoration:none}
     <div class="tab-panel" id="tab-science">
       <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
       <div class="gates-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px">
-        <div class="gate-card"><div class="gc-n" style="color:var(--gold);font-size:1rem">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div><div class="gc-auth">AUTHORITY FORMULA</div></div>
-        <div class="gate-card"><div class="gc-n">27.8367</div><div class="gc-auth">APEX (OWNER AUTHORITY)</div></div>
-        <div class="gate-card"><div class="gc-n">1.6180339887</div><div class="gc-auth">&phi; &mdash; GOLDEN RATIO</div></div>
-        <div class="gate-card"><div class="gc-n">2.7182818285</div><div class="gc-auth">e &mdash; EULER'S NUMBER</div></div>
+        <div class="gate-card card"><div class="gc-n" style="color:var(--gold);font-size:1rem">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div><div class="gc-auth">AUTHORITY FORMULA</div></div>
+        <div class="gate-card card"><div class="gc-n">27.8367</div><div class="gc-auth">APEX (OWNER AUTHORITY)</div></div>
+        <div class="gate-card card"><div class="gc-n">1.6180339887</div><div class="gc-auth">&phi; &mdash; GOLDEN RATIO</div></div>
+        <div class="gate-card card"><div class="gc-n">2.7182818285</div><div class="gc-auth">e &mdash; EULER'S NUMBER</div></div>
       </div>
       <div class="sechead">GATE THRESHOLDS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
-        <div class="gate-card"><div class="gc-n">0.001</div><div class="gc-auth">AXIS FLOOR</div></div>
-        <div class="gate-card gate-card--unlocked"><div class="gc-n">1.618</div><div class="gc-auth">GATE I &mdash; &phi;</div></div>
-        <div class="gate-card gate-card--unlocked"><div class="gc-n">2.718</div><div class="gc-auth">GATE II &mdash; e</div></div>
-        <div class="gate-card gate-card--unlocked"><div class="gc-n">9.000</div><div class="gc-auth">GATE III &mdash; SOVEREIGN</div></div>
-        <div class="gate-card gate-card--unlocked"><div class="gc-n">27.8367</div><div class="gc-auth">GATE IV &mdash; APEX</div></div>
+        <div class="gate-card card"><div class="gc-n">0.001</div><div class="gc-auth">AXIS FLOOR</div></div>
+        <div class="gate-card card gate-card--unlocked"><div class="gc-n">1.618</div><div class="gc-auth">GATE I &mdash; &phi;</div></div>
+        <div class="gate-card card gate-card--unlocked"><div class="gc-n">2.718</div><div class="gc-auth">GATE II &mdash; e</div></div>
+        <div class="gate-card card gate-card--unlocked"><div class="gc-n">9.000</div><div class="gc-auth">GATE III &mdash; SOVEREIGN</div></div>
+        <div class="gate-card card gate-card--unlocked"><div class="gc-n">27.8367</div><div class="gc-auth">GATE IV &mdash; APEX</div></div>
       </div>
     </div>
   </main>
@@ -456,7 +456,7 @@ function selectAgent(ag){
 function buildAgentsGrid(){
   const g=document.getElementById('agents-grid');g.innerHTML='';
   AGENTS.forEach((ag,i)=>{
-    const c=document.createElement('div');c.className='ag-card';
+    const c=document.createElement('div');c.className='ag-card card';
     c.innerHTML=`<div class="ac-n">AGENT ${String(ag.n).padStart(2,'0')}</div><div class="ac-nm" style="color:${ag.col}">${ag.name}</div><div class="ac-rl">${ag.role}</div><div class="ac-st"><div class="ac-dot" style="background:var(--green)"></div><span style="color:var(--green);font-family:var(--M);font-size:8px">ACTIVE</span></div>`;
     c.addEventListener('click',()=>selectAgent(ag));
     g.appendChild(c);
@@ -498,7 +498,7 @@ function drawSignCanvas(cv,sign,size){
 function buildElements(){
   const g=document.getElementById('element-grid');g.innerHTML='';
   ELEMENTS.forEach(e=>{
-    const c=document.createElement('div');c.className='el-card';
+    const c=document.createElement('div');c.className='el-card card';
     c.style.setProperty('--col',e.col);
     c.style.cssText+=`border-left:3px solid ${e.col}77`;
     c.innerHTML=`<canvas class="el-canvas" width="200" height="90" style="width:100%;height:90px;display:block;margin-bottom:8px"></canvas><div class="el-name" style="color:${e.col}">${e.name}</div><div class="el-type" style="color:${e.col}88">${e.type}</div><div class="el-desc">${e.desc}</div><div class="el-signs"><span style="font-family:var(--M);font-size:7px;color:var(--muted)">${e.signs}</span></div>`;
@@ -533,7 +533,7 @@ function buildGates(auth){
   const g=document.getElementById('gates-grid');g.innerHTML='';
   GATES.forEach(gate=>{
     const unlocked=auth>=gate.auth;
-    const c=document.createElement('div');c.className='gate-card'+(unlocked?' unlocked':' locked');
+    const c=document.createElement('div');c.className='gate-card card'+(unlocked?' unlocked':' locked');
     c.style.cursor='pointer';
     c.innerHTML=`<span class="gc-ring" style="display:inline-block;width:40px;height:40px;margin-bottom:6px"></span><div class="gc-name" style="color:${unlocked?gate.col:'rgba(233,230,220,0.3)'}">${gate.name}</div><span class="gc-status" style="${unlocked?'color:var(--green);border-color:rgba(63,178,127,.5)':'color:var(--muted);border-color:rgba(133,131,123,.3)'}">${unlocked?'OPEN':'LOCKED'}</span>`;
     c.addEventListener('click',()=>openGatePanel(gate,unlocked));
@@ -558,7 +558,7 @@ function openGatePanel(gate,unlocked){
 function buildPantheons(){
   const g=document.getElementById('pantheons-grid');g.innerHTML='';
   PANTHEONS.forEach(p=>{
-    const c=document.createElement('div');c.className='ag-card';c.style.cursor='pointer';
+    const c=document.createElement('div');c.className='ag-card card';c.style.cursor='pointer';
     c.innerHTML=`<span class="pc-ring" data-sign="${p.sign}" style="display:inline-block;width:40px;height:40px;margin-bottom:6px"></span><div class="ac-nm" style="color:${p.col}">${p.name}</div><div class="ac-rl">${p.sign.toUpperCase()} . ${p.domain}</div>`;
     c.addEventListener('click',()=>openPantheonPanel(p));
     g.appendChild(c);
@@ -997,7 +997,7 @@ async function getOracleReading(sign, energy, axis, gate){
 function buildMandalaGrid(memberSign){
   const g=document.getElementById('mandala-grid'); g.innerHTML='';
   SIGNS.forEach(function(s){
-    const card=document.createElement('div'); card.className='mandala-card';
+    const card=document.createElement('div'); card.className='mandala-card card';
     if(s.name.toLowerCase()===memberSign.toLowerCase()) card.classList.add('active-sign');
     const cv=document.createElement('canvas'); cv.className='mc-canvas';
     card.innerHTML='<div class="mc-name" style="color:'+s.col+'">'+s.name+'</div><div class="mc-dates">'+s.dates+'</div><span class="mc-el" style="color:'+s.elCol+';border-color:'+s.elCol+'44">'+s.el+'</span><div class="mc-deity">'+s.deity+'</div>';

@@ -186,7 +186,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 
     <!-- DRILL -->
     <div id="tab-drill" class="tab-panel">
-      <div class="drill-card">
+      <div class="drill-card card">
         <div id="drill-progress-bar" class="drill-progress"></div>
         <div id="drill-status" style="text-align:center;font-size:.65rem;color:#888;margin-bottom:16px"></div>
         <div id="drill-area">
@@ -387,7 +387,7 @@ function renderLibrary(){
   else if(libFilter==='due') data=data.filter(w=>w.nextReview<=today&&w.status!=='mastered');
   if(q) data=data.filter(w=>w.term.toLowerCase().includes(q)||w.def.toLowerCase().includes(q)||(w.synonyms||'').toLowerCase().includes(q));
   if(!data.length){grid.innerHTML='<div class="empty">NO WORDS MATCH</div>';return;}
-  grid.innerHTML=data.map(w=>`<div class="word-card ${w.status}">
+  grid.innerHTML=data.map(w=>`<div class="word-card card ${w.status}">
     <div class="word-head"><span class="word-term">${w.term}</span><span class="word-pos">${POS_LABELS[w.pos]||''} ${(DOMAIN_LABELS[w.domain]||w.domain).slice(0,8)}</span></div>
     <div class="word-def">${w.def}</div>
     ${w.example?`<div class="word-example">"${w.example}"</div>`:''}

@@ -161,7 +161,7 @@ the automatic sequence entirely" further down for the full reasoning.
 ## Not addressed here (explicitly out of scope)
 
 - **Duplicate table/function definitions across files** (the
-  47-tables-in-more-than-one-file issue from `REPO_AUDIT.md` §4) —
+  47-tables-in-more-than-one-file issue, `REPOSITORY_AUDIT.md` §4) —
   unresolved. Nothing here was deduplicated or merged; this
   reorganization establishes order and correct current content, not a
   reduction of redundancy. Expected safe to replay per the idempotent
@@ -508,3 +508,167 @@ exactly the intended `notification_type`/`message` row, and the existing
 before any insert. Discarded after validation — this did not touch any
 real project data. `supabase/migrations/` now contains **92 files**
 (`0001`–`0092`). Not yet applied to any live database.
+
+## `0093`/`0094`: two live-breaking bugs found and fixed via `pg_proc`
+introspection against the real production database
+
+The owner ran the read-only `pg_proc` query `GAP_ANALYSIS.md` §3.1 had been
+asking for (`is_platform_owner`/`my_matrix`/`complete_task`/
+`apply_subscription` — which side of each duplicated-function fork is
+actually live) and pasted the results back. Findings:
+
+- `is_platform_owner()` and `my_matrix()` — only the *correct* version of
+  each is live (`platform_owners`-table-based owner check; the `phase`-
+  including `my_matrix()` that `matrix.html:609`'s `r.phase===1` filter
+  needs). Both concerns in §3.1 are resolved as non-issues — no fix needed,
+  documented in `GAP_ANALYSIS.md`.
+- `apply_subscription()` — **both** the 5-arg and 7-arg overloads are live
+  simultaneously. `complete_task()` — only the
+  `(p_task_name,p_task_type,p_axis_type,p_description,p_points)` version is
+  live, but every client call site uses older, non-matching parameter names.
+  Both reproduced against a scratch PostgreSQL 16 instance using the exact
+  function bodies returned by the live `pg_proc` query (not guessed):
+  `apply_subscription` errors `function ... is not unique` on the exact 5-
+  named-arg call `supabase/functions/stripe-webhook/index.ts` makes on every
+  webhook event; `complete_task` errors `function ... does not exist` on the
+  exact call shape all 5 client call sites use
+  (`omega-matrix.js`/`omega-workflow.js`×2/`omega-progress.js`/
+  `publishing.html`). Net effect confirmed live right now: **every Stripe
+  webhook call fails** (paying members never get activated) and **every
+  task-completion/axis-progression call fails** (habits, publishing,
+  workflows, dedication, gaming, academy, exam, contributions — the entire
+  matrix-progression system has been silently frozen platform-wide).
+
+  Fixing `complete_task`'s parameter names alone, without more, would have
+  newly exposed a third bug the broken calls had been accidentally masking:
+  the live function has no deduplication despite `omega-progress.js`'s own
+  header comment and `publishing.html`'s user-facing copy both promising
+  "keyed on (user, task)" / "farm-proof" behavior — reproduced by calling
+  twice with an identical `task_name` and observing two separate axis
+  increments and two `task_completions` rows. Fixed in the same file: an
+  `EXISTS` check against `task_completions(user_id, task_name)` plus a
+  supporting index, returning `applied:false` on a repeat call — matching
+  what the 3 call sites that already read `d.applied` were always expecting.
+
+  Added `0093_omega_apply_subscription_fix.sql` (drops the broken 7-arg
+  overload; the 5-arg one was already correct) and
+  `0094_omega_complete_task_dedup_fix.sql` (adds the dedup guard, keeps the
+  same signature via `CREATE OR REPLACE` rather than adding a third
+  overload). Both re-verified end-to-end in the scratch instance after the
+  fix: `apply_subscription` resolves and updates the row cleanly with the
+  webhook's exact call; `complete_task`'s first call on a task applies and
+  returns `applied:true`, an immediate repeat call on the same task_name is
+  a no-op returning `applied:false` with unchanged values, and
+  `task_completions` ends up with exactly one row per task. Client-side
+  param-name fixes for the 5 `complete_task` call sites (and 2 related
+  return-field mismatches: `omega-matrix.js` read `d.a`/`d.b`/`d.c` where
+  the live function has always returned `d.axis_a`/`d.axis_b`/`d.axis_c`)
+  shipped in the same commit as these two migrations.
+
+  `supabase/migrations/` now contains **94 files** (`0001`–`0094`). Neither
+  has been applied to the live database yet — this is the single highest-
+  priority pending action: production payments and all progression tracking
+  are broken until these run.
+
+## `0094` amended in place: a fourth bug found on the owner's first live apply attempt
+
+The owner tried applying `0094_omega_complete_task_dedup_fix.sql` and hit
+`ERROR: column "task_name" does not exist (42703)` on its first statement
+(the `CREATE INDEX`). Queried `information_schema.columns` for the live
+`public.task_completions`: `id bigint, user_id uuid, kind text, task text,
+completed_at timestamptz, axis text, increment numeric, created_at
+timestamptz` — an older, simpler shape than what the live `complete_task()`
+function's own body (confirmed earlier via `pg_get_functiondef()`) inserts
+into (`task_name`, `task_type`, `axis_type`, `points_earned`,
+`axis_a_before`, etc.). The SQL bag has multiple genuinely different
+`CREATE TABLE IF NOT EXISTS task_completions` definitions
+(`matrix_engine.sql`'s richer shape vs. `migration_runner.sql`/
+`omega_backend_sync.sql`/`omega_master_deploy.sql`'s simpler `task`/`kind`
+shape) — whichever ran first on the live database won, and the real result
+matches neither file exactly (has `axis`/`increment`, lacks `task_name`/
+`points_earned`/the `axis_*_before/after` columns).
+
+Reproduced against a scratch instance seeded with the *exact* reported live
+columns: since a plpgsql function with no exception handler rolls back its
+entire body on any unhandled error, this means `complete_task()` has never
+actually committed anything for anyone on the live database — not just the
+`task_completions` insert, but the `profiles` axis/authority/`nodes_earned`
+update immediately before it in the same function body, since that update
+was always part of the same failed, rolled-back transaction.
+
+Because the owner's failed first attempt aborted on its very first
+statement, nothing from the original `0094` had landed live (Postgres
+rolled back the whole `BEGIN...COMMIT` block) — so `0094` was amended in
+place rather than superseded by a new numbered file, matching this
+project's own precedent for `0092` (first live attempt failed, corrected
+in the same file). Added a non-destructive `ALTER TABLE ... ADD COLUMN IF
+NOT EXISTS` for the missing columns before the index/function statements;
+the old `kind`/`task`/`axis`/`increment` columns and any existing rows are
+left untouched. Re-verified end-to-end in a fresh scratch instance seeded
+with the owner's real reported schema: the amended file applies cleanly,
+`complete_task()`'s first call on a task now applies and returns
+`applied:true`, an identical repeat call is a no-op (`applied:false`), and
+`profiles.axis_c`/`nodes_earned`/`authority` all update correctly.
+
+`supabase/migrations/` still contains **94 files** (`0001`–`0094`) — `0094`
+was amended, not added to. Not yet re-applied to the live database.
+
+## Full 94-file sequence validated end-to-end for the first time — and a critical caveat this surfaced
+
+Every prior "Execution validation" entry above tested a subset (87 files, then incremental
+additions). Ran the complete current sequence (`0001`–`0094`, including `0093`/`0094`) against
+a genuinely fresh PostgreSQL 16 instance, seeded with an improved Supabase-project stand-in
+(the earlier stub's `auth.users` was missing several real Supabase/GoTrue columns —
+`email_confirmed_at`, `last_sign_in_at`, etc. — which `0081_signup_pipeline.sql`'s
+`pending_access_requests` view genuinely depends on; added them, not a repo bug, a stub gap).
+
+**Result: all 94 files apply cleanly, in order, zero manual intervention, on a fresh database.**
+This is the first time this exact file set has been confirmed to work end-to-end.
+
+**Critical finding this run surfaced: a fresh replay of `migrations/` does not reproduce the
+owner's actual live schema — proven concretely with `task_completions`.** Four files define
+this table with `CREATE TABLE IF NOT EXISTS`: `0001_omega_master_deploy.sql` (first in
+sequence — `id uuid`, `task text`, `kind text`, `completed_at`, `created_at`; no `axis`, no
+`increment`), `0058_matrix_engine.sql` (the "rich" `task_name`/`axis_type`/`points_earned`
+shape `complete_task()`'s live body was written against), and `0060_omega_backend_sync.sql`
+(a third, near-identical-to-0001 shape). On a **fresh** database, `0001` always wins —
+`IF NOT EXISTS` makes every later `CREATE TABLE task_completions` a silent no-op — so
+`0058_matrix_engine.sql`'s richer definition is **dead code in the replay sequence**, never
+actually reached. The end state after all 94 files: `id uuid`, a
+`UNIQUE(user_id, task)` index (`0001`, reinforced by `0044`), two triggers (`0005`'s
+`award_points_on_task`, `0069`'s `trig_task_to_feed`), plus `0094`'s added `task_name`/etc.
+columns layered on top.
+
+**None of that matches the owner's real, live `task_completions`**, queried directly via
+`information_schema.columns` while fixing `0094` (see the entry above): `id bigint` (not
+`uuid`), `kind`/`task`/`axis`/`increment`/`completed_at`/`created_at` (an `axis`/`increment`
+pair that appears in *none* of the three `CREATE TABLE` definitions above), no unique index on
+`(user_id, task)`, neither trigger. The live table was evidently created by some path this SQL
+bag doesn't fully capture (possibly a manual/dashboard change, or an even older bootstrap not
+present in any current file) — its exact origin is not reconstructable from source alone, and
+guessing further would not be worth the risk of a wrong conclusion.
+
+**Practical consequence — read this before running anything against production:** "all 94
+files apply cleanly" is true and now verified, but only describes replaying the sequence onto
+a **blank** database. It says nothing about what happens running the same sequence against the
+**existing**, already-populated live database, where `CREATE TABLE IF NOT EXISTS` silently
+skips (the table's already there, in a shape none of these files anticipated) while later
+`ALTER`/trigger/index statements in the same files would still attempt to run against
+whatever's actually live — and, as `task_completions` proves, "what's actually live" can differ
+from every fresh-replay assumption in this SQL bag. **`supabase/migrations/` is now validated
+and trustworthy for spinning up a new/staging/test Supabase project from scratch. It is not
+validated as safe to run wholesale against the owner's existing production database`** — that
+remains exactly the standing caveat CLAUDE.md already states ("run it against a scratch
+Supabase project before pointing any real deployment at it"), now with a concrete, reproduced
+example of why. The safe path for the real production database continues to be the individually
+targeted, individually-verified-against-the-real-schema fix files (`0089`–`0094`, `0013`, and
+`trial_access.sql`) — not a wholesale `supabase db push` of the full historical sequence.
+
+This also means the "47 duplicate tables, safe today because idempotent" framing (`CLAUDE.md`
+§5, `GAP_ANALYSIS.md` §3) needs a caveat: idempotent-and-safe is only guaranteed true relative
+to *each other* on a fresh database. It says nothing about whether any of them match what's
+actually live on a database with real history — as just proven for one specific, high-traffic
+table. Consolidating the 47 duplicates down to one canonical definition per table (`GAP_ANALYSIS.md`
+§6 item 8) should not be done by picking whichever file "looks most complete" — it needs the
+same per-table live-schema check this session did for `task_completions`, one table at a time,
+not a bulk sweep.

@@ -103,7 +103,7 @@ function esc(s){return(s||'').replace(/[<>&]/g,function(ch){return{'<':'&lt;','>
 function fmt(n){return Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});}
 
 function cardHtml(it,mine){
-  return '<div class="mkt-card">'
+  return '<div class="mkt-card card">'
     +(mine?'<div class="mkt-mine">MINE</div>':'')
     +'<div class="mkt-kind">'+esc(it.kind||'OTHER')+'</div>'
     +'<div class="mkt-title">'+esc(it.title)+'</div>'

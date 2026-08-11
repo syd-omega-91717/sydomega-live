@@ -238,22 +238,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
   <!-- AXIS STATS -->
   <div class="axis-stats" data-reveal="fade-up" data-stagger="100">
-    <div class="astat">
+    <div class="astat card">
       <div class="astat-label">Axis A &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-a">--</div>
       <div class="astat-sub" id="stat-a-sub">Loading your standing...</div>
     </div>
-    <div class="astat">
+    <div class="astat card">
       <div class="astat-label">Axis B &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-b">--</div>
       <div class="astat-sub" id="stat-b-sub">Loading your standing...</div>
     </div>
-    <div class="astat">
+    <div class="astat card">
       <div class="astat-label">Axis C &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-c">--</div>
       <div class="astat-sub" id="stat-c-sub">Loading your standing...</div>
     </div>
-    <div class="astat" style="border-color:rgba(0,229,255,0.3)">
+    <div class="astat card" style="border-color:rgba(0,229,255,0.3)">
       <div class="astat-label" style="color:var(--cyan)">Authority Score</div>
       <div class="astat-val" style="color:var(--cyan)" id="stat-auth">--</div>
       <div class="astat-sub" id="stat-auth-sub">Computing...</div>
@@ -263,7 +263,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <!-- MAIN LAYOUT -->
   <div class="matrix-layout" data-reveal="fade-up">
     <!-- Canvas -->
-    <div class="matrix-canvas-panel">
+    <div class="matrix-canvas-panel card">
       <div class="matrix-canvas-header">
         <span class="matrix-canvas-title">3D Matrix Projection</span>
         <span class="matrix-badge">9×9×9 = 729 inner nodes</span>
@@ -366,7 +366,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <!-- NESTED MATRIX -->
   <div class="nested-note">
     <div style="font-family:serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em;margin-bottom:1rem">Nested Matrix Architecture</div>
-    <div class="nested-card">
+    <div class="nested-card card">
       <div class="nested-item"><div class="nested-val">12</div><div class="nested-label">Outer Layers</div></div>
       <div class="nested-item"><div class="nested-val">729</div><div class="nested-label">Inner Cube (9x9x9)</div></div>
       <div class="nested-item"><div class="nested-val">12</div><div class="nested-label">Phases per Track</div></div>
@@ -452,13 +452,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 <div class="wrap">
   <div class="sectit">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
-  <div class="nested-card" style="margin-bottom:1.5rem">
+  <div class="nested-card card" style="margin-bottom:1.5rem">
     <div class="nested-item"><div class="nested-val" style="font-size:1rem">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div><div class="nested-label">AUTHORITY FORMULA</div></div>
     <div class="nested-item"><div class="nested-val">27.8367</div><div class="nested-label">APEX</div></div>
     <div class="nested-item"><div class="nested-val">1.6180339887</div><div class="nested-label">&phi; GOLDEN RATIO</div></div>
     <div class="nested-item"><div class="nested-val">2.7182818285</div><div class="nested-label">e EULER</div></div>
   </div>
-  <div class="nested-card" style="margin-bottom:2rem">
+  <div class="nested-card card" style="margin-bottom:2rem">
     <div class="nested-item"><div class="nested-val">0.001</div><div class="nested-label">AXIS FLOOR</div></div>
     <div class="nested-item"><div class="nested-val">1.618</div><div class="nested-label">GATE I &mdash; &phi;</div></div>
     <div class="nested-item"><div class="nested-val">2.718</div><div class="nested-label">GATE II &mdash; e</div></div>
@@ -760,7 +760,7 @@ const MEMORY_LAYERS=[
 function renderServices(){
   const g=document.getElementById('service-grid'); g.innerHTML='';
   SERVICES.forEach(s=>{
-    const c=document.createElement('div'); c.className='svc-card';
+    const c=document.createElement('div'); c.className='svc-card card';
     c.innerHTML=`<div class="s-name">${s.name}</div><div class="s-type">${s.type}</div><div class="s-status"><div class="s-dot" style="background:var(--green);box-shadow:0 0 6px var(--green)"></div><span style="color:var(--green)">${s.uptime}% UPTIME</span></div><div class="s-bar"><div class="s-fill" style="width:0%;background:linear-gradient(90deg,${s.col},transparent)"></div></div>`;
     g.appendChild(c);
     setTimeout(()=>c.querySelector('.s-fill').style.width=s.uptime+'%',300);
@@ -770,7 +770,7 @@ function renderServices(){
 function renderLayers(){
   const c=document.getElementById('layer-cards'); c.innerHTML='';
   LAYERS.forEach(l=>{
-    const d=document.createElement('div'); d.className='layer-card';
+    const d=document.createElement('div'); d.className='layer-card card';
     d.innerHTML=`<div class="l-num">${l.n}</div><div class="l-body"><div class="l-title">${l.title}</div><div class="l-desc">${l.desc}</div><div class="l-tech">TECH: ${l.tech}</div></div>`;
     c.appendChild(d);
   });
@@ -779,7 +779,7 @@ function renderLayers(){
 function renderRegions(){
   const g=document.getElementById('region-grid'); g.innerHTML='';
   REGIONS.forEach(r=>{
-    const c=document.createElement('div'); c.className='region-card';
+    const c=document.createElement('div'); c.className='region-card card';
     const sc=r.status==='PRIMARY'?'color:var(--gold);border-color:rgba(201,168,76,.5)':r.status==='ACTIVE'?'color:var(--green);border-color:rgba(63,178,127,.4)':'color:var(--muted);border-color:rgba(133,131,123,.3)';
     c.innerHTML=`<div class="r-name">${r.name}</div><div class="r-status" style="${sc}">${r.status}</div><div class="r-latency">${r.lat}</div><div class="r-label">LATENCY</div>`;
     g.appendChild(c);

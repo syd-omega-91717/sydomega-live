@@ -156,7 +156,7 @@ document.getElementById('p-go').addEventListener('click',async function(){
   var ins=await sb.from('publications').insert({user_id:userId,kind:kind,title:title,body:body,file_path:filePath});
   if(ins.error){btn.disabled=false;showMsg(false,'Could not commit ('+(ins.error.code||ins.error.message||'')+').');return;}
   var axisMsg='';
-  try{var rpc=await sb.rpc('complete_task',{p_kind:'contribution',p_task:'first-publication',p_axis:'c',p_title:'First Publication'});if(rpc.data&&rpc.data.applied)axisMsg=' Your Contribution axis advanced +0.25.';}catch(e){}
+  try{var rpc=await sb.rpc('complete_task',{p_task_name:'first-publication',p_task_type:'contribution',p_axis_type:'c',p_description:'First Publication',p_points:0.25});if(rpc.data&&rpc.data.applied)axisMsg=' Your Contribution axis advanced +0.25.';}catch(e){}
   btn.disabled=false;showMsg(true,'Committed to your archive.'+axisMsg);
   document.getElementById('p-title').value='';document.getElementById('p-body').value='';if(fEl)fEl.value='';
   await loadArchive();setTab('archive');

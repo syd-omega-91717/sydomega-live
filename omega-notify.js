@@ -10,6 +10,21 @@
   var _count=0;
   var _notifPanel=null;
 
+  /* No direct INSERT grant exists on public.notifications today -- only the
+     five owner-gated SECURITY DEFINER trigger functions in
+     omega_notify_triggers.sql write rows, and every message they insert is a
+     static literal. So message/content aren't attacker-controlled yet, same
+     as omega-live.js's activity_feed ticker before it was fixed. Escaped
+     defensively for the same reason: this widget is loaded by bg.js on
+     every page, and a future write path (a member-triggered event, a richer
+     notification body) would otherwise re-open the same stored-XSS shape
+     already fixed elsewhere (approvals.html, sovereigns.html, graph.html). */
+  function esc(s){
+    return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
   /* ── BADGE (injected into side nav) ─────────────────────────── */
   function updateBadge(n){
     var badge=document.getElementById('omega-notif-badge');
@@ -56,10 +71,10 @@
       return '<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.05);'+(n.read_at?'opacity:.55':'')+'transition:.12s" onmouseenter="this.style.background=\'rgba(201,168,76,.03)\'" onmouseleave="this.style.background=\'\'">'
         +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
           +(n.read_at?'':'<span style="width:6px;height:6px;border-radius:50%;background:'+col+';flex-shrink:0"></span>')
-          +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1.5px;color:'+col+'">'+String(n.notification_type||'').toUpperCase().replace(/_/g,' ')+'</span>'
-          +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;color:rgba(138,134,118,.5);margin-left:auto">'+ts+'</span>'
+          +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1.5px;color:'+col+'">'+esc(String(n.notification_type||'').toUpperCase().replace(/_/g,' '))+'</span>'
+          +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;color:rgba(138,134,118,.5);margin-left:auto">'+esc(ts)+'</span>'
         +'</div>'
-        +'<div style="font-size:11px;line-height:1.6;color:#e9e6dc">'+String(n.message||n.content||'').slice(0,120)+'</div>'
+        +'<div style="font-size:11px;line-height:1.6;color:#e9e6dc">'+esc(String(n.message||n.content||'').slice(0,120))+'</div>'
         +'</div>';
     }).join(''))
     +'</div>'

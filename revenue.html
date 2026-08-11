@@ -63,6 +63,12 @@
       <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
+    <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px;font-family:var(--M);font-size:8px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_rev_goal','omega_revenue'],'omega-revenue-backup.json')" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_rev_goal','omega_revenue'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+    </div>
+
     <div id="tab-streams" class="tab-panel act">
       <div class="rev-banner">
         <div style="display:flex;gap:32px;flex-wrap:wrap;">
@@ -154,12 +160,12 @@
         <div class="kpi-c"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
       </div>
       <div class="science-grid">
-        <div class="sci-card"><div class="sci-title">MULTIPLE INCOME STREAMS</div><div class="sci-body">IRS data (2019): the average millionaire has 7 income streams. These span: earned income, profit income, interest income, dividend income, rental income, capital gains, and royalty income. Each stream diversifies income risk — losing one stream doesn't eliminate income, just reduces it.</div><div class="sci-ref">IRS Statistics of Income Division (2019)</div></div>
-        <div class="sci-card"><div class="sci-title">PASSIVE INCOME LEVERAGE</div><div class="sci-body">Kiyosaki (1997, Rich Dad Poor Dad): the rich buy assets that generate passive income; the poor trade time for money. Each passive dollar is worth more than an active dollar because it doesn't consume hours. The ratio of passive to active income is a proxy for financial sovereignty.</div><div class="sci-ref">Kiyosaki, R. (1997). Rich Dad Poor Dad</div></div>
-        <div class="sci-card"><div class="sci-title">RECURRING REVENUE VALUATION</div><div class="sci-body">SaaS and subscription businesses are valued at 5–15× ARR vs. 1–3× revenue for one-time businesses. Predictable, recurring revenue earns a valuation premium because it reduces investor risk. Building subscription income streams vs. project-based income fundamentally changes your asset's terminal value.</div><div class="sci-ref">Bessemer Venture Partners (2020). State of the Cloud Report</div></div>
-        <div class="sci-card"><div class="sci-title">INCOME DIVERSIFICATION THEORY</div><div class="sci-body">Markowitz's diversification principle (1952) applies to income just as to investments. Uncorrelated income streams — a tech salary (correlated with tech sector), dividends (market), rental income (real estate cycle), consulting (personal reputation) — reduce the variance of total income under economic shocks.</div><div class="sci-ref">Markowitz, H. (1952). Journal of Finance</div></div>
-        <div class="sci-card"><div class="sci-title">INCOME CEILING VS. INCOME LEVERAGE</div><div class="sci-body">Taussig &amp; Baker (2018): income ceilings exist for all active-income roles — you can only work so many hours. Income leverage breaks this ceiling by decoupling income from time. Digital products, IP, equity, and capital are all forms of income leverage — they scale without proportional time input.</div><div class="sci-ref">Taussig &amp; Baker (2018). Harvard Business Review</div></div>
-        <div class="sci-card"><div class="sci-title">THE SOVEREIGNTY THRESHOLD</div><div class="sci-body">The financial independence number (Bengen 1994, Trinity Study 1998): passive income exceeding expenses at a 4% safe withdrawal rate creates financial sovereignty — capital works harder than you do. Every passive income stream moves you closer. Track the ratio: passive income / total expenses.</div><div class="sci-ref">Bengen (1994) &middot; Cooley et al. (1998)</div></div>
+        <div class="sci-card card"><div class="sci-title">MULTIPLE INCOME STREAMS</div><div class="sci-body">IRS data (2019): the average millionaire has 7 income streams. These span: earned income, profit income, interest income, dividend income, rental income, capital gains, and royalty income. Each stream diversifies income risk — losing one stream doesn't eliminate income, just reduces it.</div><div class="sci-ref">IRS Statistics of Income Division (2019)</div></div>
+        <div class="sci-card card"><div class="sci-title">PASSIVE INCOME LEVERAGE</div><div class="sci-body">Kiyosaki (1997, Rich Dad Poor Dad): the rich buy assets that generate passive income; the poor trade time for money. Each passive dollar is worth more than an active dollar because it doesn't consume hours. The ratio of passive to active income is a proxy for financial sovereignty.</div><div class="sci-ref">Kiyosaki, R. (1997). Rich Dad Poor Dad</div></div>
+        <div class="sci-card card"><div class="sci-title">RECURRING REVENUE VALUATION</div><div class="sci-body">SaaS and subscription businesses are valued at 5–15× ARR vs. 1–3× revenue for one-time businesses. Predictable, recurring revenue earns a valuation premium because it reduces investor risk. Building subscription income streams vs. project-based income fundamentally changes your asset's terminal value.</div><div class="sci-ref">Bessemer Venture Partners (2020). State of the Cloud Report</div></div>
+        <div class="sci-card card"><div class="sci-title">INCOME DIVERSIFICATION THEORY</div><div class="sci-body">Markowitz's diversification principle (1952) applies to income just as to investments. Uncorrelated income streams — a tech salary (correlated with tech sector), dividends (market), rental income (real estate cycle), consulting (personal reputation) — reduce the variance of total income under economic shocks.</div><div class="sci-ref">Markowitz, H. (1952). Journal of Finance</div></div>
+        <div class="sci-card card"><div class="sci-title">INCOME CEILING VS. INCOME LEVERAGE</div><div class="sci-body">Taussig &amp; Baker (2018): income ceilings exist for all active-income roles — you can only work so many hours. Income leverage breaks this ceiling by decoupling income from time. Digital products, IP, equity, and capital are all forms of income leverage — they scale without proportional time input.</div><div class="sci-ref">Taussig &amp; Baker (2018). Harvard Business Review</div></div>
+        <div class="sci-card card"><div class="sci-title">THE SOVEREIGNTY THRESHOLD</div><div class="sci-body">The financial independence number (Bengen 1994, Trinity Study 1998): passive income exceeding expenses at a 4% safe withdrawal rate creates financial sovereignty — capital works harder than you do. Every passive income stream moves you closer. Track the ratio: passive income / total expenses.</div><div class="sci-ref">Bengen (1994) &middot; Cooley et al. (1998)</div></div>
       </div>
     </div>
   </div>
@@ -315,6 +321,7 @@ function renderChart(){
 
 load();renderStreams();
 </script>
+<script src="/omega-local-backup.js"></script>
 <script src="/bg.js"></script>
 </body>
 </html>

@@ -112,11 +112,11 @@
       return sb.auth.getSession().then(function (r) {
         if (!r || !r.data || !r.data.session) return { applied: false, error: 'signed out' };
         return sb.rpc('complete_task', {
-          p_kind:  String(opts.kind),
-          p_task:  String(opts.task),
-          p_axis:  axis,
-          p_title: opts.title || null,
-          p_weight: weight
+          p_task_type:  String(opts.kind),
+          p_task_name:  String(opts.task),
+          p_axis_type:  axis,
+          p_description: opts.title || null,
+          p_points: weight
         }).then(function (res) {
           if (res.error) throw res.error;
           var d = res.data || {};

@@ -193,7 +193,7 @@ window.switchElem=function(elem){
 var ec=document.getElementById('elem-cards');
 Object.keys(ELEM_INFO).forEach(function(key){
   var info=ELEM_INFO[key];
-  var d=document.createElement('div');d.className='elem-card';d.style.setProperty('--ec',info.color);
+  var d=document.createElement('div');d.className='elem-card card';d.style.setProperty('--ec',info.color);
   d.innerHTML='<div class="elem-sigil-big">'+info.sigil+'</div>'
     +'<div class="elem-card-name">'+key.toUpperCase()+'</div>'
     +'<div class="elem-card-desc">'+info.desc+'</div>';

@@ -68,10 +68,10 @@
 <!-- SIGNALS TAB -->
 <div class="tab-panel active" id="tab-signals">
   <div class="sig-kpi">
-    <div class="kpi-card"><div class="kpi-val" id="totalSignals">&mdash;</div><div class="kpi-label">TOTAL SIGNALS</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="topScore">&mdash;</div><div class="kpi-label">TOP SCORE</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="hnCount">&mdash;</div><div class="kpi-label">HN STORIES</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="repoStars">&mdash;</div><div class="kpi-label">TOP REPO &#9733;</div></div>
+    <div class="kpi-card card"><div class="kpi-val" id="totalSignals">&mdash;</div><div class="kpi-label">TOTAL SIGNALS</div></div>
+    <div class="kpi-card card"><div class="kpi-val" id="topScore">&mdash;</div><div class="kpi-label">TOP SCORE</div></div>
+    <div class="kpi-card card"><div class="kpi-val" id="hnCount">&mdash;</div><div class="kpi-label">HN STORIES</div></div>
+    <div class="kpi-card card"><div class="kpi-val" id="repoStars">&mdash;</div><div class="kpi-label">TOP REPO &#9733;</div></div>
   </div>
   <div class="refresh-bar">
     <button class="refresh-btn" id="refreshHN">&#8635; REFRESH HN</button>
@@ -104,10 +104,10 @@
 <div class="tab-panel" id="tab-science">
   <div class="sechead">SIGNAL SCIENCE</div>
   <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val">3</div><div class="kpi-label">DATA SOURCES</div></div>
-    <div class="kpi-card"><div class="kpi-val">5 MIN</div><div class="kpi-label">REFRESH CYCLE</div></div>
-    <div class="kpi-card"><div class="kpi-val">72</div><div class="kpi-label">MAX SIGNALS</div></div>
-    <div class="kpi-card"><div class="kpi-val">LIVE</div><div class="kpi-label">FEED STATUS</div></div>
+    <div class="kpi-card card"><div class="kpi-val">3</div><div class="kpi-label">DATA SOURCES</div></div>
+    <div class="kpi-card card"><div class="kpi-val">5 MIN</div><div class="kpi-label">REFRESH CYCLE</div></div>
+    <div class="kpi-card card"><div class="kpi-val">72</div><div class="kpi-label">MAX SIGNALS</div></div>
+    <div class="kpi-card card"><div class="kpi-val">LIVE</div><div class="kpi-label">FEED STATUS</div></div>
   </div>
   <div class="card-grid" style="margin-top:16px">
     <div class="card">
@@ -228,7 +228,7 @@ function renderHN(items){
   if(!items.length){grid.innerHTML='<div class="empty">NO SIGNALS</div>';return;}
   grid.innerHTML=items.map(function(h){
     var url=esc(h.url||'https://news.ycombinator.com/item?id='+h.objectID);
-    return '<div class="sig-card" onclick="window.open(\''+url+'\',\'_blank\')">'
+    return '<div class="sig-card card" onclick="window.open(\''+url+'\',\'_blank\')">'
       +'<div class="sc-source"><span class="sc-badge hn">HACKER NEWS</span><span class="sc-time">'+timeAgo(h.created_at)+'</span></div>'
       +'<div class="sc-title">'+esc(h.title)+'</div>'
       +'<div class="sc-meta"><span class="sc-points">&#9650; '+fmtNum(h.points||0)+' pts</span><span class="sc-comments">&#9678; '+( h.num_comments||0)+' comments</span></div>'
@@ -265,7 +265,7 @@ function renderGH(repos){
   grid.innerHTML=repos.map(function(repo){
     var topics=repo.topics&&repo.topics.length?'<div class="sc-tags">'+repo.topics.slice(0,4).map(function(t){return '<span class="sc-tag">'+esc(t)+'</span>';}).join('')+'</div>':'';
     var desc=repo.description?'<div class="rc-desc">'+esc(repo.description.slice(0,120)+(repo.description.length>120?'...':''))+'</div>':'';
-    return '<div class="repo-card" onclick="window.open(\''+esc(repo.html_url)+'\',\'_blank\')">'
+    return '<div class="repo-card card" onclick="window.open(\''+esc(repo.html_url)+'\',\'_blank\')">'
       +'<div class="rc-name">'+esc(repo.full_name)+'</div>'
       +desc
       +'<div class="rc-meta"><span class="rc-stars">&#9733; '+fmtNum(repo.stargazers_count)+'</span>'
@@ -298,7 +298,7 @@ function renderDev(articles){
   if(!articles.length){grid.innerHTML='<div class="empty">NO ARTICLES</div>';return;}
   grid.innerHTML=articles.map(function(a){
     var tags=a.tag_list&&a.tag_list.length?'<div class="sc-tags">'+a.tag_list.slice(0,4).map(function(t){return '<span class="sc-tag">'+esc(t)+'</span>';}).join('')+'</div>':'';
-    return '<div class="sig-card" onclick="window.open(\''+esc(a.url)+'\',\'_blank\')">'
+    return '<div class="sig-card card" onclick="window.open(\''+esc(a.url)+'\',\'_blank\')">'
       +'<div class="sc-source"><span class="sc-badge dev">DEV.TO</span><span class="sc-time">'+timeAgo(a.published_at)+'</span></div>'
       +'<div class="sc-title">'+esc(a.title)+'</div>'
       +tags
@@ -323,7 +323,7 @@ function buildFeed(){
     var cls=s._src==='hn'?'hn':s._src==='gh'?'gh':'dev';
     var lbl=s._src==='hn'?'HACKER NEWS':s._src==='gh'?'GITHUB':'DEV.TO';
     var url=esc(s.url||'#');
-    return '<div class="sig-card" onclick="window.open(\''+url+'\',\'_blank\')">'
+    return '<div class="sig-card card" onclick="window.open(\''+url+'\',\'_blank\')">'
       +'<div class="sc-source"><span class="sc-badge '+cls+'">'+lbl+'</span><span class="sc-time">'+timeAgo(new Date(s._ts))+'</span></div>'
       +'<div class="sc-title">'+esc(s.title)+'</div>'
       +'<div class="sc-meta"><span class="sc-points">&#9650; '+fmtNum(s.points||0)+'</span><span class="sc-comments">&#9678; '+(s.num_comments||0)+'</span></div>'

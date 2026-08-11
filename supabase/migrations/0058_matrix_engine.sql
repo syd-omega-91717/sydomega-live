@@ -3,6 +3,26 @@
 -- Dijkstra: optimal path 0.001→9.000 across 104,976 nodes per axis
 -- Loop Engineering: every verified action fires complete_task()
 -- Data Science: A=Knowledge B=Mastery C=Contribution → AUTH=sqrt(ΣCube³)×φ/e
+--
+-- RESTORED (this session): a direct GitHub-web-editor commit on `main`
+-- (2deeae7, "Refactor task_completions table and complete_task function")
+-- replaced this file's entire real content with a two-CREATE-TABLE
+-- illustrative comparison snippet that had appeared in a chat explanation
+-- of the task_completions schema mismatch — never intended as file
+-- content, only as a side-by-side comparison for a person to read. That
+-- commit deleted this file's RLS policies, the complete_task() function,
+-- get_my_task_log(), and the profiles column ALTERs entirely. Restored
+-- from this branch's copy (untouched since before the corruption; blob
+-- cf194a1, confirmed byte-identical to the pre-corruption diff base) —
+-- with one deliberate change from a byte-for-byte revert: complete_task()
+-- below is the dedup-aware version from omega_complete_task_dedup_fix.sql
+-- / migrations/0094, not the original's dedup-free body. The original
+-- body here would only actually run first in a from-scratch install
+-- (0094 runs later in the migrations/ sequence and would CREATE OR
+-- REPLACE over it either way) — but restoring the known-buggy version
+-- here would let it be reintroduced by anyone who pastes only this file,
+-- matching the same file-by-file manual-apply workflow that caused this
+-- corruption in the first place.
 -- ============================================================================
 
 /* ── task_completions table ──────────────────────────────────────────────── */
@@ -32,7 +52,7 @@ CREATE POLICY "members see own tasks"   ON public.task_completions FOR SELECT US
 CREATE POLICY "members insert own tasks" ON public.task_completions FOR INSERT WITH CHECK (user_id=auth.uid());
 CREATE POLICY "owner sees all tasks"    ON public.task_completions FOR SELECT USING (public.is_platform_owner());
 
-/* ── complete_task RPC ──────────────────────────────────────────────────── */
+/* ── complete_task RPC (dedup-aware; matches migrations/0094) ────────────── */
 DROP FUNCTION IF EXISTS public.complete_task(text,text,text,text,numeric) CASCADE;
 CREATE OR REPLACE FUNCTION public.complete_task(
   p_task_name   text,
@@ -50,9 +70,23 @@ DECLARE
   new_a   numeric; new_b numeric; new_c numeric; auth_score numeric;
 BEGIN
   SELECT * INTO pr FROM public.profiles WHERE id=uid;
-  IF NOT FOUND THEN RETURN jsonb_build_object('ok',false,'error','profile_not_found'); END IF;
+  IF NOT FOUND THEN RETURN jsonb_build_object('ok',false,'applied',false,'error','profile_not_found'); END IF;
   IF NOT pr.access_approved AND NOT pr.is_owner THEN
-    RETURN jsonb_build_object('ok',false,'error','access_denied');
+    RETURN jsonb_build_object('ok',false,'applied',false,'error','access_denied');
+  END IF;
+
+  -- (user, task_name) dedup -- see omega_complete_task_dedup_fix.sql for the
+  -- full writeup of why this exists.
+  IF EXISTS (
+    SELECT 1 FROM public.task_completions
+    WHERE user_id=uid AND task_name=p_task_name
+  ) THEN
+    RETURN jsonb_build_object(
+      'ok',true,'applied',false,'axis_type',p_axis_type,
+      'axis_a',pr.axis_a,'axis_b',pr.axis_b,'axis_c',pr.axis_c,
+      'authority',pr.authority,
+      'new_profile',row_to_json(pr)::jsonb
+    );
   END IF;
 
   new_a := LEAST(APEX, COALESCE(pr.axis_a,0.001));
@@ -82,7 +116,7 @@ BEGIN
   );
 
   RETURN jsonb_build_object(
-    'ok',true,'axis_type',p_axis_type,
+    'ok',true,'applied',true,'axis_type',p_axis_type,
     'axis_a',new_a,'axis_b',new_b,'axis_c',new_c,
     'authority',auth_score,'points',p_points,
     'new_profile',row_to_json(pr)::jsonb || jsonb_build_object(

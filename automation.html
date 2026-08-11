@@ -371,7 +371,7 @@ function renderRules(uid){
     if(r.kind==='sys') sysCount++; else userCount++;
 
     var card=document.createElement('div');
-    card.className='rule-card '+(on?'active':'paused');
+    card.className='rule-card card '+(on?'active':'paused');
 
     var icon=document.createElement('div');
     icon.className='r-icon';

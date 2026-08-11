@@ -144,7 +144,7 @@ function build(){
   var board=document.getElementById('status-board');
   if(grid){
     grid.innerHTML=SVCS.map(function(s,i){
-      return '<div class="svc-card" style="--sc:'+COL[s.s]+'">'
+      return '<div class="svc-card card" style="--sc:'+COL[s.s]+'">'
         +'<div class="svc-num">SERVICE '+ROM[i]+' &middot; 21&#215;21&#215;9&#215;9&#215;9</div>'
         +'<div class="svc-name">'+s.n+'</div>'
         +'<div class="svc-desc">'+s.d+'</div>'

@@ -182,7 +182,7 @@ function renderExGrid(){
   var grid=document.getElementById('exGrid');if(!grid) return;
   grid.innerHTML=EXERCISES.map(function(ex){
     var best=scores[ex.id]&&scores[ex.id].best;
-    return '<div class="ex-card" data-id="'+ex.id+'">'+
+    return '<div class="ex-card card" data-id="'+ex.id+'">'+
       '<div class="ex-icon">'+ex.icon+'</div>'+
       '<div class="ex-title">'+ex.title+'</div>'+
       '<div class="ex-desc">'+ex.desc+'</div>'+

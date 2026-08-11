@@ -193,7 +193,7 @@ function renderCouncil(){
   if(!grid)return;
   grid.innerHTML='';
   COUNCILS.forEach(function(c){
-    var card=document.createElement('div');card.className='council-card';
+    var card=document.createElement('div');card.className='council-card card';
     var nm=document.createElement('div');nm.className='council-name';nm.style.color=c.col;nm.textContent=c.name;
     var desc=document.createElement('div');desc.className='council-desc';desc.textContent=c.desc;
     card.appendChild(nm);card.appendChild(desc);

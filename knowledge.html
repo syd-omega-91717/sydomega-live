@@ -223,7 +223,7 @@ function buildNodeGrid(){
   if(!grid)return;
   grid.innerHTML=KG_NODES.map(function(n){
     var col=TYPE_COLORS[n.t]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
-    return'<div class="node-card" onclick="selectNode(\''+n.k+'\')">'
+    return'<div class="node-card card" onclick="selectNode(\''+n.k+'\')">'
       +'<div class="nc-type" style="color:'+col+'">'+n.t.toUpperCase()+'</div>'
       +'<div class="nc-name">'+n.l+'</div>'
       +'<div class="nc-desc">'+n.d.slice(0,70)+(n.d.length>70?'...':'')+'</div>'

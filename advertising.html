@@ -173,7 +173,7 @@ async function loadLiveAds(){
     if(!ads.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO ACTIVE PLACEMENTS AT THIS TIME</div>';return;}
     el.innerHTML='';
     ads.forEach(function(a){
-      var d=document.createElement('div');d.className='ad-card';
+      var d=document.createElement('div');d.className='ad-card card';
       if(a.destination_url)d.style.cursor='pointer';
       var type=document.createElement('div');type.className='ad-type';type.textContent=(a.category||'').toUpperCase()+' · '+(a.tier||'').toUpperCase();
       var title=document.createElement('div');title.className='ad-title';title.textContent=(a.headline||'').toUpperCase();

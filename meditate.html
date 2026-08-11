@@ -253,7 +253,7 @@ let ringPct = 0, ringTarget = 0;
 
 function renderTechniques(){
   document.getElementById('technique-grid').innerHTML = TECHNIQUES.map(t=>`
-    <div class="tech-card ${t.id===selectedTech.id?'active':''}" onclick="selectTech('${t.id}')">
+    <div class="tech-card card ${t.id===selectedTech.id?'active':''}" onclick="selectTech('${t.id}')">
       <div class="tc-name">${t.name}</div>
       <div class="tc-pattern">${t.pattern}</div>
       <div class="tc-desc">${t.desc}</div>

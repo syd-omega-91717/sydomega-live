@@ -5,11 +5,13 @@
 fixes applied earlier in this branch's history (see §6 for the session log).
 **Companion documents:** [`CAPABILITY_INVENTORY.md`](./CAPABILITY_INVENTORY.md) (what exists),
 [`GAP_ANALYSIS.md`](./GAP_ANALYSIS.md) (what's missing/broken and what to do about it).
-**Relationship to `REPO_AUDIT.md`:** that file is an earlier, still-valid hygiene/secrets audit
-(2026-08-08). This document supersedes it for current numbers and adds the CI-tool findings,
-the session's fix log, and a fresh code-quality finding (§5); `REPO_AUDIT.md`'s §5
-(token-economy tense fix) and §2/§3 (gitattributes, secrets posture) are not re-litigated here —
-still accurate, not repeated.
+**Relationship to `REPO_AUDIT.md`:** that file (2026-08-08) has been retired — it was never
+one of the three companion documents `CLAUDE.md` §9 designates for upkeep, and by the time it
+was retired this document already superseded it for every current number. Its two still-live
+findings were folded in here first: the `setup.md` PII/project-ref note (§3) and the docx/mp4
+LFS-migration debt (§4's binary-size row). Its §5 (token-economy present-tense language) had
+already been independently fixed and documented in `CLAUDE.md` §8 before retirement, so nothing
+there needed carrying forward.
 
 ---
 
@@ -40,12 +42,36 @@ fully resynced to match this repository exactly, on this same branch — see §6
                              WARNING — 3 files contain DROP TABLE/SCHEMA (see §4)
 5/6 · DEPLOY HYGIENE       — WARNING — 1 unreachable-but-deployed file (Legal-IP-Brief.docx)
                              WARNING — 1 asset over 1000 KB (demo .mp4, 3.7 MB)
-SUMMARY                    — critical: 0   warnings: 4   PASSED
+7 · CLIENT-REACHABLE SCHEMA REFERENCES — WARNING — 2 .from() tables never CREATE TABLE'd
+                             (transactions, wallet_balances — both already known, §2.1)
+8 · DIVERGING CLIENT-CALLED RPC DEFINITIONS — WARNING — 11 client-called RPCs with
+                             non-identical definitions across supabase/*.sql
+SUMMARY                    — critical: 0   warnings: 6   PASSED
 ```
 
-All 4 warnings are pre-existing, understood, and covered in `REPO_AUDIT.md` §2/§4 — not
-new findings. The important number is **critical: 0**, meaning: every module `bg.js` /
-`omega-notify.js` / any page requests exists on disk, and every table has RLS enabled.
+All 6 warnings are pre-existing and understood — covered in §4 below or
+`GAP_ANALYSIS.md` §2.1/§3.1 — not new findings. The important number is **critical: 0**,
+meaning: every module `bg.js` / `omega-notify.js` / any page requests exists on disk, and
+every table has RLS enabled.
+
+**Checks 7 and 8 are new this session** — they automate two patterns this project has
+repeatedly had to rediscover by hand across multiple audit sessions: a `.from()`/`.rpc()`
+call site referencing a table/view/function that no `supabase/*.sql` file ever creates
+(GAP_ANALYSIS.md §2.1's `transactions`/`wallet_balances` gap, and the historical
+`user_assets`/`notifications`/`extend_trial` gaps before they were fixed), and a
+client-called RPC whose `supabase/*.sql` definitions genuinely diverge across files —
+argument list or body, not just whitespace (GAP_ANALYSIS.md §3.1's `is_platform_owner`/
+`my_matrix`/`complete_task`/`apply_subscription` finding, discovered by a one-off
+"script-assisted" pass in a prior session). Both are heuristic and source-only (like check
+4's RLS finding, they say "verify against the live DB" rather than assert ground truth), and
+both were validated against this repo's real, already-documented findings before being
+wired in: check 7 correctly reproduces exactly the 2 known-dormant tables and zero false
+positives; check 8's 11-function list includes all 3 of GAP_ANALYSIS §3.1's flagged
+divergences (`my_matrix`, `complete_task`, `apply_subscription` — the last confirmed to
+genuinely have 5-arg vs. 7-arg overloads once `supabase/functions/**/*.ts` was added to the
+scanned call sites) plus 8 more that hadn't been individually named before. Point of both:
+turn a manual sweep that depended on someone remembering to re-run it into something CI
+runs on every push, so this class of bug can't silently regress again.
 
 Other CI checks (`ci.yml`, not reproduced in `audit.py`): `node --check` on every root
 `.js` file (syntax), a `service_role`/`SUPABASE_SERVICE` scan (blocking, 0 hits), `deno check`
@@ -60,6 +86,12 @@ on all 7 Edge Functions (non-blocking), `sw.js` precache vs. actual files (block
   dedicated scan enforces this on every push. Edge Function secrets
   (`STRIPE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY`, etc.) are documented in
   `scripts/check-secrets.sh` as owner-managed via `supabase secrets set`, never committed.
+  `setup.md` (deployment instructions, not client-shipped code, so outside CI's scan) does
+  contain the owner's real personal email (`s.y.dagher@gmail.com`) and real Supabase
+  project ref (`ydqhzvvoyufiiqvzcjns`) in plain text. Neither is a secret by itself — the
+  project ref is already a public identifier visible in `bg.js`'s client-side Supabase URL —
+  but if this repo is ever made public, that's worth a conscious decision rather than an
+  accidental one (folded in from the now-retired `REPO_AUDIT.md` §3).
 - **Stored XSS — found and fixed this session:** `approvals.html` and `profile.html`
   (the owner's own member-management admin panels — the highest-privilege pages in the app)
   rendered `display_name`/`email` straight into `.innerHTML` with no escaping.
@@ -73,21 +105,34 @@ on all 7 Edge Functions (non-blocking), `sw.js` precache vs. actual files (block
   `expire_trial` with no caller check at all, despite being `GRANT`ed to `authenticated`. See
   §6 item 16 and `GAP_ANALYSIS.md` §0 for the full writeup, exploit, fix, and validation.
 
-## 4. Schema organization (unchanged from `REPO_AUDIT.md` §4, numbers refreshed)
+## 4. Schema organization
 
 `supabase/` holds 111 loose `.sql` files, applied manually/in sequence; only 9 carry a
 numeric prefix. 47 tables are defined in more than one file (`platform_settings`: 12 files,
-`platform_owners`/`dispatches`: 10 each, down to `profiles`: 4) — safe today because most
-statements use `CREATE TABLE IF NOT EXISTS`, but fragile to reason about. `supabase/migrations/`
-(92 files, `0001`–`0092`, Supabase-CLI convention) now exists as an ordered, deduplicated-order
-copy of this same content — see its own `README.md` for the full derivation history and the
-still-open 47-tables-in-multiple-files redundancy (reordered, not deduplicated). **Neither the
-loose bag nor `migrations/` has been applied to a live database from any session in this
-project's history** — no session has held live Supabase credentials.
+`platform_owners`/`dispatches`: 10 each, down to `profiles`: 4) — reordered, not deduplicated,
+in `supabase/migrations/` (94 files, `0001`–`0094`, Supabase-CLI convention). A full
+end-to-end replay of all 94 files against a fresh scratch PostgreSQL 16 instance now succeeds
+with zero manual intervention (first time this exact file set was verified — see
+`migrations/README.md`'s "Full 94-file sequence validated" entry) — but that only proves
+internal consistency on a **blank** database, not that it matches the owner's live schema.
+It provably doesn't in at least one case: `task_completions` on the live database (`id bigint`,
+an `axis`/`increment` column pair) matches none of the 3 competing `CREATE TABLE IF NOT EXISTS`
+definitions for that table in the SQL bag. **The 47-duplicate-tables "safe because idempotent"
+framing is therefore only safe relative to a fresh database, not proven safe as a stand-in for
+what's actually live** — consolidating to one canonical definition per table needs a live
+`information_schema.columns` check per table, not a bulk sweep (`GAP_ANALYSIS.md` §3/§6 item 8).
+Owner-held live Supabase credentials have since been used this session (the `pg_proc`
+verification query in `GAP_ANALYSIS.md` §3.1, and the `task_completions` schema check above),
+and as of this session **every SQL fix file — `trial_access.sql`, `migrations/0013`,
+`0089`–`0094` — has been applied to the live database and verified** via the new
+`scripts/verify_fixes.sql` (see `GAP_ANALYSIS.md` §2/§3.1/§6). The 47-duplicate-table
+consolidation itself (§3, item 8 above) remains the one open item in this section.
 
 **Functions are a separate, higher-risk duplication class** — see `GAP_ANALYSIS.md` §3.1:
-unlike tables, `CREATE OR REPLACE FUNCTION` overwrites unconditionally, and 10 functions
-(including `is_platform_owner()` itself) have genuinely diverging definitions across files.
+unlike tables, `CREATE OR REPLACE FUNCTION` overwrites unconditionally. Confirmed live via the
+`pg_proc` query: `is_platform_owner()` and `my_matrix()` resolved to their correct definitions
+(no action needed); `complete_task()` and `apply_subscription()` did not — both fixed, see
+`CLAUDE.md` §8 and `GAP_ANALYSIS.md` §3.1 for the full writeup.
 
 ## 5. New finding — `nav.js`'s section-mapping object has 19 dead/overridden keys
 
@@ -253,6 +298,15 @@ In commit order, both repos kept in sync throughout:
     tell from source alone which side of each fork is live; left as a prioritized owner action
     with the exact `pg_proc` verification query to run. See `GAP_ANALYSIS.md` §3.1 for full
     detail and the query.
+    **Follow-up (later session):** owner ran the `pg_proc` query and provided results.
+    `is_platform_owner()`/`my_matrix()` confirmed correct as deployed, no fix needed.
+    `complete_task()`/`apply_subscription()` confirmed real and, worse, already live-breaking
+    (every Stripe webhook call and every task-completion call failing in production, not just
+    "could" break) — both reproduced against a scratch PostgreSQL 16 instance and fixed
+    (`supabase/omega_apply_subscription_fix.sql`, `omega_complete_task_dedup_fix.sql`,
+    `migrations/0093`–`0094`, plus the 5 client call sites). Full detail in `GAP_ANALYSIS.md`
+    §3.1 and `CLAUDE.md` §8. **Applied to the live database and verified** this session via
+    `scripts/verify_fixes.sql`.
 17. Verified `GAP_ANALYSIS.md` §3's open item ("confirm the 3 `DROP TABLE`-containing files
     aren't wired into anything automatic") rather than leaving it as an assumption. All three
     DROPs target only `public.dispatches`, not distinct tables; `chunk_07_migrations.sql`'s is
@@ -295,6 +349,50 @@ In commit order, both repos kept in sync throughout:
     throwaway test database) — worth remembering for any future SQL fix in this family, and a
     concrete illustration of why item 16's `pg_proc`-divergence findings matter in practice.
 
+20. **Eighth-wave sweep, this session — continued item 8 of `GAP_ANALYSIS.md`'s priority list
+    (no live DB credentials held, so the DB-dependent action items 1-4 there aren't actionable;
+    picked up the remaining code-only sweep instead).** Two parts:
+    - Closed the one specific gap `GAP_ANALYSIS.md` §5.1 flagged as still not covered:
+      `.innerHTML` built via string concatenation using `.concat()` rather than a literal `+`
+      (invisible to the prior passes' `+`-grep). Found 8 files with `.innerHTML=[].concat(...)`
+      (`contributions.html`, `governance.html`, `heritage.html`, `notifications.html`,
+      `publications.html`, `treasury.html`, plus 2 more using `.concat()` for non-`innerHTML`
+      array math). Traced every one: all six `.innerHTML=[].concat(...)` call sites read from
+      `localStorage` only (`JSON.parse(localStorage.getItem(...))`), no `.from()`/`.rpc()` call
+      anywhere in any of the six files — same self-scoped, non-cross-user category already
+      established as safe for the finance/journal pages in `GAP_ANALYSIS.md` §4.2. Zero new
+      findings from this half of the sweep, but it closes the specific open item.
+    - Extended the `bg.js`-loaded-module check (item 18's category) to the 16 `omega-*.js`
+      modules with both `.innerHTML` and `.from()`/`.rpc()` calls that item 18 hadn't
+      individually traced yet. Found one real (if currently dormant) gap:
+      **`omega-notify.js`'s notification panel** (`buildPanel()`, the widget `bg.js` injects
+      platform-wide for the badge/toast/panel UI added in items 6/9/19) rendered
+      `n.message`/`n.content`/`n.notification_type` from `public.notifications` rows straight
+      into `.innerHTML` with no escaping — same unescaped-DB-field shape as every other
+      stored-XSS instance in this log. Checked whether it's currently reachable: confirmed via
+      `omega_notify_triggers.sql`'s `GRANT EXECUTE` list and `omega_notifications_fix.sql`'s
+      `GRANT SELECT, UPDATE ON public.notifications TO authenticated` (no `INSERT` grant
+      anywhere in any SQL file) that the only rows ever written are the five owner-gated
+      `SECURITY DEFINER` trigger functions from item 19, each inserting a static string
+      literal — so `message`/`content` are not attacker-controlled today. Same category as the
+      `activity_feed` ticker in item 18: **fixed preemptively anyway**, since a future
+      notification-generating event with free-text content (already flagged in
+      `GAP_ANALYSIS.md` §2.2 as deliberately-undone future work) would silently re-open this
+      exact hole otherwise. Added an `esc()` helper to `omega-notify.js` and applied it to all
+      three fields. Also traced the same 16-module list's other `.innerHTML` sites
+      (`omega-membership.js`, `omega-tier-gate.js`, `omega-user.js`, `omega-onboard.js`,
+      `omega-chronometer.js`, `omega-demo-video.js`, `omega-realtime.js`, others) — all either
+      interpolate static config (`omega-canon.json` tier/label data), numeric-only values, or
+      the viewer's own session-scoped profile row (`omega-user.js`'s `hero-badges`, which does
+      render the member-self-updatable `sign` field per the `sovereigns.html` finding in item
+      1, but only ever the *viewing* member's own profile — every call site fetches via
+      `.eq('id', session.user.id)` — so it's self-XSS-only, not a cross-user vector, matching
+      the established non-issue category). One exception worth recording as a **positive**
+      finding rather than a gap: `omega-realtime.js`'s live ticker also reads
+      `activity_feed.title`/`member_name` (the same cross-user, member-writable table as item
+      18's dormant ticker) but renders it via `.textContent`, not `.innerHTML` — correctly
+      escaped by construction, no fix needed.
+
 **None of the SQL additions (items 4, 7, 9, and the `consult_requests` column additions in
 item 11) have been applied to any live database**, except `0092`, whose first live attempt
 surfaced the bug fixed in item 19 above — the corrected file has not yet been re-run. That
@@ -312,14 +410,14 @@ above every other pending-SQL item.
 | RLS coverage | Clean — 0 tables missing RLS, CI-enforced |
 | Secrets in tracked code | Clean — CI-enforced |
 | **Full owner-approval bypass in `trial_access.sql`** | **Found and fixed this session (§6.16)** — validated against a live local PostgreSQL 16 instance; see `GAP_ANALYSIS.md` §0. The most severe finding on this branch |
-| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor, dormant activity ticker, external RSS feed) | 9 pages/vectors found and fixed across the second through seventh waves (§6.1, §6.11, §6.14, §6.15, §6.16, §6.18) — `.innerHTML`-interpolation check exhaustive across all three shapes (76 files) plus `bg.js`-loaded modules and external content sources, plus every RPC-consumer on `approvals.html` checked against its actual response shape |
+| Stored XSS (owner admin panels, public leaderboard, dispatch log, constellation graph, contracts/reservations queue, error monitor, dormant activity ticker, external RSS feed, dormant notification panel) | 9 pages/vectors found and fixed across the second through eighth waves (§6.1, §6.11, §6.14, §6.15, §6.16, §6.18, §6.20) — `.innerHTML`-interpolation check exhaustive across all four shapes (template-literal, `+`-concatenation, bare-variable, `.concat()` — 82 files) plus `bg.js`-loaded modules (all 93, including the 16 with both `.innerHTML` and `.from()`/`.rpc()` calls individually traced) and external content sources, plus every RPC-consumer on `approvals.html` checked against its actual response shape |
 | Silent-failure writes | Fixed (5 instances across two waves); established convention now checked repo-wide, no new gaps in the fifth-wave sweep |
 | Wrong-table/wrong-shape query (chart, dispatch log, `access_audit_log`, `error_summary`, `my_points_balance`) | 5 instances found and fixed (§6.2, §6.14, §6.15, §6.16) — same bug class each time: client code assumes a response shape the server doesn't return |
-| Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **not applied live** |
-| `notifications` population | Fixed this session (§6.9); production-tested this session (§6.19) — first attempt failed with `42P13`, corrected file **not yet re-applied** |
-| `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **not applied live** |
+| Missing tables (`notifications`, `user_assets`) | Fixed in code (§6.4, §6.7); **applied live and verified** via `scripts/verify_fixes.sql` |
+| `notifications` population | Fixed this session (§6.9); production-tested this session (§6.19) — first attempt failed with `42P13`, corrected file re-applied and verified; a second gap caught by verification (`extend_trial` missing its insert, an older copy had won a run-order race) fixed by re-running once more |
+| `consultancy.html` booking flow (missing columns) | Fixed this session (§6.11); **applied live and verified** |
 | `owner_apex_lock.sql` dead `nodes_earned` assignment | Fixed this session (§6.12) — owner-run manual script, not auto-applied |
-| SQL schema organization — tables | Needs work — 47 duplicate table defs, unchanged from `REPO_AUDIT.md`; safe today (idempotent) |
+| SQL schema organization — tables | Needs work — 47 duplicate table defs; "safe, idempotent" only proven true on a fresh database, not against live (§4, `task_completions` counterexample) |
 | **SQL schema organization — functions** | **Found this session (§6.16)** — 10 functions with diverging (not just cosmetic) duplicate definitions, 3 with real behavioral risk including `is_platform_owner()` itself; unsafe (`CREATE OR REPLACE` overwrites unconditionally), needs a live `pg_proc` check — see `GAP_ANALYSIS.md` §3.1 |
 | `nav.js` dead-key data quality | Found and fixed this session (§6.10) |
 | `queue.html` dispatch log (wrong columns + stored XSS) | Found and fixed this session (§6.14) — pure client-code fix, no database action needed |
@@ -327,7 +425,7 @@ above every other pending-SQL item.
 | 3 `DROP TABLE`-containing files | **Confirmed dead this session (§6.17)** — zero references anywhere in CI/scripts/pages/functions |
 | `omega-live.js`/`pulse.html` XSS | Found and fixed this session (§6.18) — pure client-code fix, no database action needed |
 | Second repo (`V18`) drift | Resolved this session — fully resynced |
-| Committed binary size (docx/mp4) | Unchanged, non-urgent (see `REPO_AUDIT.md` §2) |
+| Committed binary size (docx/mp4) | Unchanged, non-urgent — `.gitattributes` marks both `-diff -text`; neither is on Git LFS, so both permanently bloat every clone (folded in from the now-retired `REPO_AUDIT.md` §2; see `CLAUDE.md` §8 for the `.vercelignore`-is-the-only-deploy-time-defense detail) |
 
 The `trial_access.sql` fix aside — that one is a live-or-was-live security hole, treat as
 urgent — nothing else here is a critical blocker for the app as deployed today. The
@@ -335,3 +433,83 @@ highest-leverage next steps: apply the patched `trial_access.sql` first (§0), t
 corrected `migrations/0013` and `0089`–`0092` (item 19's fix) to the live database —
 everything else is either already fixed in code, or genuine hygiene debt with no functional
 impact.
+
+## 8. Cross-repository survey — is there anything in the other 17 repos worth porting in?
+
+This session was asked to analyze every repo in the `syd-omega-91717` account (all 18 were
+already cloned locally, no `add_repo` needed) and pull in anything that would improve
+`sydomega-live`. Full results below — recorded so a future session doesn't have to re-clone and
+re-survey the same ground from scratch.
+
+**7 repos are empty** (`1-18-2026`, `Omega-91717_syd`, `SYD_OMEGA_91717`,
+`SydOmega91717_NoteBook-main`, `syd-omega-91717-hpn8`, `sydomega91717`,
+`sydomega91717_vercel` — zero commits, `git branch -a` returns nothing). Nothing to check.
+
+**`-_V18_SYDOMEGA91717` is a byte-for-byte match of this repo** (`diff -rq`, zero output,
+excluding `.git`) — expected, a prior session (§6 item, "Second repo drift") fully resynced it.
+Still nothing new; keep syncing it after future pushes if that's still wanted.
+
+**The remaining 9 populated repos are earlier, divergent, or abandoned drafts — none had
+content safe or valuable to port in:**
+
+- `sydomega91717-chatgbt` (11 files) — pure aspirational scaffold. Its `bg.js`/`audio.js` are
+  literal directory-tree diagrams (17 and 6 lines), not code; its README describes a
+  Node/Express/PostgreSQL/Docker/Kubernetes "Enterprise Transformation Program" that was never
+  built. Nothing to take.
+- `sydomega91717-Claude` (180 files, last commit 2026-07-12 — a month behind this repo's
+  2026-08-10) — an earlier snapshot of this same static site. 155 of its filenames already
+  match this repo's current files. Checked its few genuinely unique files: `omega-fx.js` (the
+  cosmology canvas animation) is **already merged into this repo's `bg.js` inline** — `bg.js`
+  literally says "No external /omega-fx.js file required. Updating bg.js is enough." at the
+  point it was folded in. `cosmos-canon-fix.js` patches a Virgo→Athena / duplicate-deity bug in
+  `cosmos.html` that **this repo's current `cosmos.html` already has correct** (verified: line
+  317 and 637 both read `deity:'ATHENA'` for Virgo, and the "duplicate" deity count is expected
+  — each of the 12 deities legitimately appears once in the compact `SIGNS` array and once in
+  the fuller compatibility-matrix array, not a real duplicate). `portal.html` is a
+  public-marketing landing page (Twitter/OG cards, "sovereign multi-platform ecosystem" pitch)
+  that contradicts this platform's deliberate non-public posture (`vercel.json` rewrites `/` to
+  `/enter`, the login gate, and ships `X-Robots-Tag: noindex, nofollow` platform-wide) — not
+  ported, on purpose. Net: this repo's useful ideas are already upstream; nothing left to take.
+- `Project_SYD_91717` (101 files, 2 commits), `OMEGA_91717` (672 files, 50 commits),
+  `SYD-OMEGA-91717` (27,353 files incl. `dist/`+`node_modules/`, a Next.js/React/Three.js
+  rebuild), `S.Y.D_Omega_9171` (29 files), `SYD_OMEGA_91717_18-1-2026` (36 files) — all
+  independent, ungrounded "sovereign empire" scaffolds (Solidity contracts never deployed,
+  Python scripts named `.deadman_switch.py`/`.nano_defence.py`/`.self_audit.py`, investor
+  pitch-deck drafts, Next.js/Docker/Kubernetes rebuilds) with near-zero filename overlap with
+  this repo (9/672 for `OMEGA_91717`, lower for the others) and no working deployment. Their
+  existence is exactly what `CLAUDE.md`'s opening paragraph already warns about — mythic
+  "sovereign" framing without concrete engineering behind it. Importing any of their code would
+  mean adopting a build step/framework this repo deliberately avoids (`CLAUDE.md` §9); importing
+  their monetization/blockchain/NFT claims would reintroduce exactly the premature-claims problem
+  `sovereign-covenant.html`'s dormant-token disclaimers were added to fix. Not ported.
+- `SydOmega91717_NoteBook` (367 files, 50 commits) — a pnpm/turbo microservices monorepo
+  (`packages/`, `services/`, `docker/`) — a different, abandoned architectural direction, only 6
+  filenames in common. Its `docs/legal/` folder has draft `PrivacyPolicy.md`/
+  `TermsOfService.md`/`NFT_Disclosure.md`/`corporate-structure.md` — **not imported**: this
+  repo's actual `terms.html` is already a carefully-worded, 11-article page that specifically
+  gates economics/tokens pending legal review (matching the dormant-token convention throughout
+  this codebase); swapping in an unreviewed draft with an `NFT_Disclosure.md` would contradict
+  that discipline and is a legal decision, not a code one — exactly the kind of thing `CLAUDE.md`
+  says needs an explicit decision, not a unilateral import.
+- `sydomega91717_Netifly` (21,536 files, single commit — a Vite/React/Three.js SPA build
+  export, a different rebuild direction, not this repo's architecture) — **the one resource
+  worth flagging for a future session, not acted on now:** `assets/generated/` holds roughly
+  19,600 AI-generated PNGs across 7 categories (medals, certificates, horoscopes, UI, logos,
+  gallery, backgrounds — ~2,800 files / ~12 MB each). This repo currently ships almost no
+  custom art at all (`find . -iname '*.png' -o -iname '*.jpg' -o -iname '*.svg'` → 3 files
+  total, the PWA icons) — real art could genuinely improve pages like `honors.html`/
+  `awards.html`/certificate rendering, which are pure CSS/Unicode today. **Not imported this
+  session**: the files are raw, uncurated batch-generation output (`prompt_XXXX_*.png` naming,
+  no indication of which were selected as final), so pulling any of them in requires a human
+  visually picking a small curated set — bulk-importing is both irresponsible (no way to vet
+  thousands of images programmatically) and would recreate the binary-bloat problem this repo's
+  own `CLAUDE.md` already flags for its two existing committed binaries. If the owner wants to
+  pursue this, the concrete next step is: browse `sydomega91717_Netifly/assets/generated/<category>/`,
+  hand-pick a handful of final images (not the whole batch), and add just those.
+
+**Conclusion:** `sydomega-live` is the mature, actively-developed, canonical repo in this
+account — every other populated repo is either an exact stale mirror (already resynced), a
+superseded earlier draft whose useful fixes are already merged upstream, or a divergent,
+never-completed rebuild attempt. No code or legal content from any of them was safe to bring in
+without contradicting decisions this repo has already deliberately made. The one real asset —
+`sydomega91717_Netifly`'s generated art library — needs human curation before it's actionable.

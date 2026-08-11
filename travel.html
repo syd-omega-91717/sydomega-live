@@ -150,7 +150,7 @@ function renderDests(){
   grid.innerHTML='';
   DESTS.forEach(function(d,i){
     var card=document.createElement('div');
-    card.className='dest-card';
+    card.className='dest-card card';
     card.style.setProperty('--dc',d.col);
     card.innerHTML=
       (d.heritage?'<div class="hrt-badge">YOUR HERITAGE</div>':'')+
@@ -169,7 +169,7 @@ function renderExps(){
   grid.innerHTML='';
   EXPS.forEach(function(e){
     var card=document.createElement('div');
-    card.className='exp-card';
+    card.className='exp-card card';
     card.innerHTML='<div class="e-icon">'+e.icon+'</div><div class="e-title">'+e.title+'</div><div class="e-desc">'+e.desc+'</div><div class="e-xp">'+e.xp+'</div>';
     grid.appendChild(card);
   });

@@ -117,6 +117,156 @@ design system; there is no separate token file to keep in sync.
 If a new page needs a component not covered here, extend the shared block
 in `bg.js` rather than defining page-local styles that will drift.
 
+### 4.1 Ω-GVP extension layer
+
+`bg.js`'s injected stylesheet has a second section below the v3 tokens
+above: an additive "Glass-Vector Platform" layer (search `Ω-GVP` in
+`bg.js`) that upgrades the existing shared classes rather than
+replacing them — every rule targets `.card`/`.kpi`/`.kpi-card`/`.glass`/
+`.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all ~250 pages
+through this one file with no per-page markup changes:
+
+- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass`
+  panels get a hover shimmer sweep and a soft radial highlight that
+  follows the pointer (`--mx`/`--my` custom properties, set by a single
+  passive, `requestAnimationFrame`-throttled `pointermove` listener in
+  bg.js — one `getBoundingClientRect()` per frame, only while hovering a
+  matched element; GPU-cheap, no layout thrash).
+- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
+  + box-shadow glow, both **hover-only**, not static). Deliberately not
+  applied to `.kpi` itself, since `.kpi` already uses a per-instance
+  `--kc` custom property for its top-accent color (e.g.
+  `style="--kc:var(--cyan)"`) — `.kpi` gets a matching hover glow in
+  that same color instead, so the existing color-coding isn't
+  overridden. The hover-only gating was a correction, not the original
+  design: `border-image` always wins the border paint regardless of
+  selector specificity, so a *static* version silently discarded any
+  page's own per-instance border customization the moment `.card` was
+  added to its markup — found while extending `.card` to more pages
+  (`profile.html`, `cosmos.html`, `matrix.html`, `family.html`,
+  `journal.html`) and testing each one for real, not just in the
+  isolated harness: `matrix.html`'s Authority Score `.astat` sets
+  `style="border-color:rgba(0,229,255,.3)"` inline to distinguish it
+  from the other 3 axis cards; `family.html`'s
+  `.mc.heir{border-left:3px solid var(--gold)}` marks succession heirs;
+  `cosmos.html`'s `.el-card` sets a per-element colored left border via
+  `c.style.cssText+=` in JS (fire/water/earth/etc.) — all three would
+  have been silently overridden by a static `border-image`. Fixed by
+  moving `border-image` into the existing `:hover` rule so every page's
+  resting-state border stays exactly as that page intended, and the
+  gradient border is a hover reward, not a default override — this also
+  retroactively protects every pre-existing `.card` usage platform-wide
+  (`vault.html`, `media.html`, etc.) that this session never even
+  touched. `honors.html`'s `.honor-card` was never given the `.card`
+  class at all — its own `::before` rule does 5-way tier color-coding
+  (omega/gold/silver/bronze/cyan) which `.card`'s pre-existing v3
+  `::before` top-accent bar would fully replace (`::before` can only
+  render one rule's declarations, last-in-cascade wins, never merges),
+  and that conflict isn't fixable by hover-gating since it's about the
+  achievement badges' permanent resting-state appearance, not a hover
+  effect — left on its own local styling instead.
+- **Platform-wide `.card` sweep, done with a scanner, not by hand.** A
+  repo-wide grep found ~230 page-local `*-card` classes across ~150
+  pages (far beyond the dozen or so pages checked individually above),
+  making one-by-one manual verification impractical. Wrote a scanner
+  (used, not committed to the repo — logic summarized here) that
+  detects the two real failure modes found by hand above:
+  1. a page-local `::before`/`::after` rule on the class (would be
+     silently replaced by `.card`'s own `::before`, not merged), and
+  2. a per-instance border set directly on the card element itself —
+     either inline (`style="border..."` on the same tag, or JS
+     `el.style.border`/`el.style.cssText+=` right after the class is
+     assigned) or via a same-element modifier class combo like
+     `.mc.heir{border-left:...}`.
+  Classes matching either were left untouched (45 classes across 44
+  pages — see below). A third category — modifier classes like
+  `.sel`/`.active`/`.mine`/`.unlocked`/`.vip` that set border-color as a
+  persistent *state* indicator — were included rather than excluded:
+  since `.card`'s border-image is hover-only (see above), a state
+  modifier's border stays fully visible at rest and is only ever
+  masked while *simultaneously* hovering that same element, a narrow,
+  low-consequence interaction rather than a permanent loss. 187 class
+  additions across 117 files were applied this way, each verified by
+  regex round-trip (confirming the inserted `card` landed as a whole
+  word with the rest of the string, including significant trailing
+  spaces in JS concatenation like `'rule-card '+(on?'active':'paused')`,
+  preserved byte-for-byte) and a full-repo `querySelector`/
+  `getElementsByClassName` scan (7 exact-class-selector hits found, all
+  `querySelectorAll(...).forEach(...classList...)` patterns unaffected
+  by an added class). Spot-verified visually (`account.html`'s
+  `.sign-card`, in addition to the pages already covered above) before
+  shipping.
+  **Left for manual review** (the same failure modes as `.honor-card`,
+  needing individual judgment, not a mechanical fix): `academy.html`
+  `.exam-card`, `achievements.html` `.ach-card`, `advertising.html`
+  `.tier-card`, `agents.html`/`sovereign-ai.html`/`sovereign.html`
+  `.agent-card`, `analytics.html` `.algo-card`, `chronicle.html`
+  `.future-card`/`.event-card`, `city.html` `.district-card`,
+  `cosmos.html`/`elements.html` `.el-card`, `dna.html` `.dna-card`,
+  `evolution.html` `.gate-card`, `exam.html` `.q-card`/`.exam-card`,
+  `family.html` `.sg-card`, `feed.html` `.post-card`, `gaming.html`
+  `.g-card`/`.e-card`, `honors.html` `.phase-card` (in addition to
+  `.honor-card`), `intelligence.html` `.log-card`, `investment.html`
+  `.holding-card`, `lab.html` `.tech-card`, `map.html` `.stat-card`,
+  `notes.html` `.note-card`, `oracle.html` `.reading-card`,
+  `prediction.html` `.pred-card`, `projects.html` `.proj-card`,
+  `publications.html` `.rec-card`, `queue.html` `.worker-card`,
+  `revenue.html` `.stream-card`, `series.html` `.ser-card`,
+  `social.html` `.plat-card`, `sovereign-covenant.html` `.article-card`,
+  `studio.html` `.axis-card`/`.create-card`, `triads.html`
+  `.triad-card`, `tribe.html` `.elem-card`/`.tribe-rank-card`,
+  `trophies.html` `.medal-card`, `wallet.html` `.account-card`,
+  `wealth.html` `.asset-class-card`. (`vault.html`'s `.article-card` was
+  already reviewed and added earlier — its `::before` turned out to be
+  an exact duplicate of `.card`'s, not a real conflict — so it
+  re-appears in the scanner's conservative flag list but needed no
+  further action.)
+- **Telemetry table utilities** (opt-in, not yet used by any page):
+  `.trend.up`/`.trend.down` badges (colored, glowing, with a
+  `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
+  zebra striping, `.sparkline` (stroke/glow styling for an inline SVG
+  polyline a page renders itself). `.trend` sets `justify-self:start`
+  deliberately — `.tbl-row` is `display:grid`, and without that, a
+  `.trend` child stretches to fill the implicit grid track by default
+  (confirmed by rendering a test harness before shipping).
+- **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
+  `.field` + `.field label` gives an opt-in floating-label pattern.
+- **Fallback skin for genuinely bare elements**: `input:not([class])`,
+  `textarea:not([class])`, `select:not([class])`, and
+  `button:not([class])` get the same glass treatment as `.inp`/`.btn`,
+  scoped strictly to elements with *no* `class` attribute at all, so any
+  element with its own page-local class or inline `style=` (inline
+  always wins the cascade regardless) is left untouched. This was
+  chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
+  raw `<button>`s with no shared class — hand-editing every occurrence
+  across ~250 pages wasn't attempted; this reaches them all from one
+  file instead. 27 pages still use native `<table>` markup with
+  page-local classes instead of the `.tbl-wrap`/`.tbl-row` system —
+  *not* addressed by the fallback skin (they already have their own
+  classes, so `:not([class])` correctly skips them) and still open,
+  page-by-page, structural work — not a quick CSS fix.
+- **Brand webfonts now actually load.** `--D`/`--R`/`--M` reference
+  Cinzel Decorative / Rajdhani / Courier Prime, but no page, stylesheet,
+  or asset in this repo ever loaded them — zero `@font-face` rules, zero
+  font files, zero Google Fonts links existed anywhere (confirmed by a
+  repo-wide grep before writing the fix), so every page has silently
+  rendered in the browser's default serif/sans-serif/monospace the
+  entire time. `bg.js` now injects a Google Fonts `<link>` (plus
+  `preconnect`) once per page, guarded by `#omega-fonts` so it never
+  double-injects.
+- **Ambient noise overlay**: a fixed, `pointer-events:none`,
+  `opacity:.035` `<div id="omega-noise-overlay">`, injected by bg.js —
+  deliberately a real DOM element rather than a `body::before`
+  pseudo-element, since 5 pages (`cosmos.html`, `family.html`,
+  `offline.html`, `reset.html`, `terms.html`) already define their own
+  `body::before` and a bare-selector CSS rule would have collided with
+  those.
+- Motion respects `prefers-reduced-motion`.
+
+Every change here was verified before shipping by rendering an isolated
+test harness (all the shared classes, plus raw unclassed elements) through
+headless Chromium — not just `node --check` on the syntax.
+
 ## 5. Backend / data model
 
 - **Auth & authorization:** Supabase Auth for identity; RLS policies on
@@ -134,13 +284,23 @@ in `bg.js` rather than defining page-local styles that will drift.
   `supabase/migrations/README.md` for how the order and content were
   derived, what was deliberately excluded (a conditional `DROP TABLE`
   file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
-  only scripts), and the one open item: it has not yet been executed
-  against a live/test database, so run it against a scratch Supabase
-  project before pointing any real deployment at it. The flat
-  `supabase/*.sql` bag at repo root is unchanged and still the source of
-  truth for new schema changes — see `REPO_AUDIT.md` §4 for the still-open
-  duplicate-table-definitions list (47 tables defined in more than one
-  file; not deduplicated by the migrations/ work, only reordered).
+  only scripts). All 94 files now apply cleanly end-to-end against a fresh
+  scratch PostgreSQL 16 instance (`migrations/README.md`'s "Full 94-file
+  sequence validated" entry) — but that only proves the sequence is
+  internally consistent on a **blank** database, not that it matches the
+  owner's actual live schema; `task_completions` is a proven
+  counterexample (live `id bigint` + `axis`/`increment` columns match none
+  of the 3 competing `CREATE TABLE IF NOT EXISTS` definitions in the SQL
+  bag). Do not run the full `migrations/` sequence against the live
+  production database expecting it to safely "catch up" existing state —
+  use it for a scratch/staging project, and use the individually
+  live-verified fix files (`trial_access.sql`, `migrations/0013`,
+  `0089`–`0094`) for production. The flat `supabase/*.sql` bag at repo
+  root is unchanged and still the source of truth for new schema changes
+  — see `REPOSITORY_AUDIT.md` §4 for the still-open duplicate-table-
+  definitions list (47 tables defined in more than one file; not
+  deduplicated by the migrations/ work, only reordered — consolidating
+  needs a per-table live-schema check, not a bulk sweep).
 - **Feature flags:** `public.platform_settings` is the flag store (e.g.
   `tokens_enabled`, currently `false`). Anything not yet legally/
   operationally ready should ship dormant behind a flag here, matching
@@ -188,7 +348,7 @@ Anything you add should keep this pipeline green. If you add a new
 injection or a `<script>` tag) — `audit.py` will otherwise flag it as an
 orphaned file.
 
-## 8. Known debt (see `REPO_AUDIT.md` for detail)
+## 8. Known debt (see `REPOSITORY_AUDIT.md`, `GAP_ANALYSIS.md`, `CAPABILITY_INVENTORY.md` for detail)
 
 - **No real client-side threat-detection exists, despite the security
   narrative implying it does — a naming mismatch made this hard to spot.**
@@ -233,8 +393,12 @@ orphaned file.
   `revoke_member` (the sibling buttons on the same page) all have real
   RPCs already and are unaffected. Added
   `supabase/omega_extend_trial_fix.sql`, matching this function family's
-  existing convention (`omega_access_control.sql`) exactly. **Not yet
-  applied to the live database** — same caveat as `user_assets` below.
+  existing convention (`omega_access_control.sql`) exactly. **Applied to
+  the live database and verified** — `scripts/verify_fixes.sql` confirmed
+  `extend_trial` exists; a follow-up check confirmed it also carries the
+  notification-insert from `omega_notify_triggers.sql` (see below) after
+  a re-run was needed when an older copy of the function briefly won a
+  run-order race against it.
 - **Cross-referenced every `.from('table')`/`.rpc('fn')` call site against
   the schema; two more misses found, deliberately left undone.**
   `subscriptions.html` queries `public.transactions` (payment history) and
@@ -259,24 +423,31 @@ orphaned file.
   empty, with no visible error. Added `supabase/omega_user_assets_fix.sql`
   (idempotent, RLS: read-only for `authenticated` on own rows + owner,
   matching that neither page ever writes to it directly — population is
-  meant to happen server-side). **This session has no live Supabase
-  access, so the file has NOT been run against the database yet** — apply
-  it (`supabase db push` or paste into the SQL editor) before expecting
-  these two pages to show real data.
-- **Finance pages: inconsistent persistence, needs a product decision.**
-  `wealth.html`, `wallet.html`, `treasury.html`, `revenue.html`,
-  `investment.html`, `expenses.html`, and `budget.html` persist entirely
-  to `localStorage` — no Supabase table backs any of it, so account
-  balances, net-worth snapshots, and holdings a member enters don't sync
-  across devices and are lost if browser storage is cleared. This is
-  inconsistent with the rest of the platform's Supabase+RLS model, and
-  with `income.html`/`ledger.html`/`contracts.html`/`portfolio.html`,
-  which already do persist server-side (the last of these confirms a
-  `user_assets`-style table was clearly intended for holdings). Whether
-  the localStorage-only pages are deliberately client-side for privacy or
-  simply an unfinished migration is a product call, not a code question —
-  left undecided and undocumented-as-a-bug on purpose; don't "fix" it by
-  unilaterally building new schema/RLS without that decision first.
+  meant to happen server-side). **Applied to the live database and
+  verified** — `scripts/verify_fixes.sql` confirmed `user_assets` now
+  exists.
+- **Finance pages: localStorage-only persistence — decided this session, stays
+  client-side.** `wealth.html`, `wallet.html`, `treasury.html`, `revenue.html`,
+  `investment.html`, `expenses.html`, and `budget.html` persist entirely to
+  `localStorage` — no Supabase table backs any of it, so balances/holdings
+  don't sync across devices and are lost if browser storage is cleared. This
+  is inconsistent with the rest of the platform's Supabase+RLS model, and
+  with `income.html`/`ledger.html`/`contracts.html`/`portfolio.html`, which
+  already persist server-side. Previously left as an open product question;
+  decided this session in favor of keeping it client-side, deliberately, not
+  by default: this is unusually sensitive data (net worth, income, holdings),
+  converting it to server storage is a real schema-design commitment across
+  7 pages that's hard to walk back once member data lives there, and this
+  repo's own history this session includes multiple real RLS/security bugs
+  found and fixed — "RLS protects it" isn't a settled guarantee here yet.
+  Keeping data local-only is the safer default absent a specific reason to
+  take on that exposure. The real downside (data loss on cleared storage or
+  a new device) is mitigated instead of ignored: added `omega-local-backup.js`
+  (a small, dependency-free, network-free export/import helper — writes a
+  JSON file the member saves themselves, reads one back) and wired an
+  "EXPORT BACKUP"/"IMPORT BACKUP" control plus a plain-language disclosure
+  into all 7 pages. If server sync is wanted later, that's still a clean,
+  additive, backward-compatible change — nothing here forecloses it.
 - `supabase/migrations/` now exists (ordered, Supabase-CLI convention,
   content verified to match the current loose files) but is untested
   against a live database and the 47-tables-in-multiple-files redundancy
@@ -297,7 +468,7 @@ orphaned file.
   the docx is not live-served, but both files still bloat every clone with
   no LFS story. `.gitattributes` now marks them `-diff -text`; moving them
   to Supabase Storage/Vercel Blob and migrating to Git LFS remain open,
-  non-urgent (see `REPO_AUDIT.md`).
+  non-urgent (see `REPOSITORY_AUDIT.md` §4).
 
 - **Stored XSS in the owner's own admin panels — fixed.** `approvals.html`
   and `profile.html` (member-list views, the highest-privilege pages in the
@@ -323,8 +494,10 @@ orphaned file.
   members read/update only their own rows, owner reads all). Nothing in
   the codebase currently inserts a notification row — deciding which
   server-side events should generate one is separate, undone-on-purpose
-  work, same as `user_assets`'s population. **Not yet applied to the live
-  database.**
+  work, same as `user_assets`'s population. **Applied to the live
+  database and verified** — `scripts/verify_fixes.sql` confirmed
+  `notifications` now exists, and `omega_notify_triggers.sql` (below)
+  confirms the 5 member-status RPCs populate it.
 - **Authority-history chart queried the wrong table — fixed.**
   `omega-chart.js`'s `API.auth()` (used by `analytics.html` and
   `studio.html`'s "Authority History" chart) queried
@@ -340,6 +513,60 @@ orphaned file.
   Both fixed to check `.error` and alert the user on failure, matching the
   established convention from the `events.html`/`automation.html`/
   `advertising.html` fixes above.
+
+- **[Fixed, needs deploy — was actively breaking production] Every Stripe webhook call and
+  every task-completion/axis-progression call has been silently failing.** The owner ran a
+  `pg_proc` introspection query against the live database (see `GAP_ANALYSIS.md` §3.1 for the
+  full trace) confirming two real, live bugs, both reproduced and re-verified end-to-end
+  against a scratch PostgreSQL 16 instance before any fix was written:
+  - `public.apply_subscription()` has two overloads live simultaneously (5-arg and 7-arg).
+    `supabase/functions/stripe-webhook/index.ts` always calls with the 5 shared params, which
+    Postgres cannot resolve unambiguously (`function ... is not unique`) — every webhook event
+    (checkout completed, subscription updated/deleted, payment failed) has been failing, so a
+    member who pays via Stripe never gets `subscription_status` set to `active`. The 7-arg
+    overload was independently broken too (`COALESCE(p_tier_num::integer, membership_tier::text)`
+    — a static type mismatch, `profiles.membership_tier` is `text`), so dropping the 5-arg one
+    instead would not have worked. Fixed by dropping the 7-arg overload
+    (`supabase/omega_apply_subscription_fix.sql`, `migrations/0093`).
+  - `public.complete_task()` — only the `(p_task_name,p_task_type,p_axis_type,p_description,
+    p_points)` signature is live, but all 5 client call sites (`omega-matrix.js`,
+    `omega-workflow.js` ×2, `omega-progress.js`, `publishing.html`) used older, non-matching
+    parameter names (`p_kind`/`p_task`/`p_axis`/`p_title`/`p_weight`) — every task completion,
+    axis increment, authority-score update, and `nodes_earned` count has been silently no-oping
+    platform-wide (habits, publishing, workflows, dedication, gaming, academy, exam,
+    contributions), not just one bonus message as originally suspected. Fixing the param names
+    alone would have exposed a second, previously-inert bug in the same function: no
+    deduplication existed despite `omega-progress.js`'s own header comment and
+    `publishing.html`'s copy both promising "keyed on (user, task)" / "farm-proof" behavior —
+    confirmed by calling the live function body twice with an identical task and getting two
+    separate increments. **A fourth, independent bug then surfaced when the owner actually ran
+    the fix**: `CREATE INDEX ... (user_id, task_name)` failed with `column "task_name" does not
+    exist` — the owner's live `public.task_completions` has an older, simpler shape (`id
+    bigint, user_id, kind, task, completed_at, axis, increment, created_at`, confirmed via
+    `information_schema.columns`) than what the live `complete_task()` function's own `INSERT`
+    targets. Multiple `CREATE TABLE IF NOT EXISTS` definitions for this table exist across the
+    SQL bag with genuinely different shapes; whichever ran first on the live database won, and
+    it matches none of them exactly. Reproduced against a scratch instance seeded with the real
+    reported columns: since a plpgsql function with no exception handler rolls back its entire
+    body on any unhandled error, **`complete_task()` has never actually committed anything for
+    anyone** — even the `profiles` axis/authority/`nodes_earned` update immediately before the
+    failing `INSERT` was always rolled back too. Fixed by amending `migrations/0094` in place
+    (nothing from the owner's failed first attempt had landed, since Postgres rolled back that
+    whole transaction) to add a non-destructive `ALTER TABLE ADD COLUMN IF NOT EXISTS` for the
+    missing columns before the index/function statements — old columns and any existing rows
+    untouched. All three bugs fixed together: `supabase/omega_complete_task_dedup_fix.sql`
+    (`migrations/0094`) adds the missing columns, the `(user_id, task_name)` dedup check, a
+    supporting index, and an `applied` boolean in the return value; the 5 client call sites'
+    parameter names are fixed in the same commit, plus `omega-matrix.js`'s separate bug reading
+    `d.a`/`d.b`/`d.c` from a return shape that has always been `d.axis_a`/`d.axis_b`/`d.axis_c`.
+  **Applied to the live database and verified.** The owner ran both fix files, then
+  `scripts/verify_fixes.sql` (added this session) against the live database confirmed:
+  `apply_subscription` has exactly one version live with the correct 5-arg signature;
+  `complete_task` has the correct signature (`p_task_name text, p_task_type text, p_axis_type
+  text, p_description text, p_points numeric` — `pg_get_function_identity_arguments()` never
+  includes `DEFAULT` clauses, so compare against bare names/types, not the full `CREATE
+  FUNCTION` text) and its dedup guard; `task_completions` has the columns the function needs.
+  Production payments and progression tracking are unblocked.
 
 ## 9. Working in this repo — practical rules
 
@@ -372,3 +599,31 @@ orphaned file.
   that way rather than be upgraded on assumption. This is how
   `REPO_AUDIT.md`'s counts drifted stale before `REPOSITORY_AUDIT.md`
   replaced them — don't repeat it.
+
+## 10. Autonomous feature-proposal pipeline (`.claude/skills/`)
+
+Four skills exist for turning outside research into shipped-but-dormant
+features on this actual static-HTML/Supabase stack — no framework, no
+build step, adapted to the real architecture in §§1–6, not the generic
+Next.js/Prisma/monorepo shape a build tool might default to:
+
+- `web-trend-scout` — research only, writes a grounded proposal into
+  `FEATURE_IDEAS.md`. No code.
+- `feature-architect` — planning only, turns one proposal into an exact
+  file-by-file blueprint (page, `nav.js` wiring, `supabase/*.sql`,
+  `platform_settings` flag). No code.
+- `autonomous-coder` — implements the blueprint for real, verifies with
+  `scripts/audit.py`/`node --check`, commits to the current branch. Never
+  flips a `platform_settings` flag to `true`, never merges to `main`,
+  never edits CI or touches secrets.
+- `subscriber-portal` — exposure. Only wires a feature into real
+  subscriber-facing pages (using the real `membership_tier`/
+  `OmegaCanon.tierUnlocks()` system, not an invented one) once a human has
+  already turned its flag on.
+
+See `.claude/skills/README.md` for the full pipeline and why it
+deliberately stops at "reviewable, dormant-by-default code on a branch"
+rather than auto-deploying to subscribers — this matches §9's rule against
+shipping monetizable/legally-sensitive features live without an explicit
+gating decision, and this repo's own history of serious bugs that shipped
+silently (§8) is the reason that rule exists.

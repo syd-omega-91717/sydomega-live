@@ -476,7 +476,7 @@ function renderBrowse() {
     return;
   }
   el.innerHTML = _entries.slice(0,60).map((e,i) => `
-    <div class="j-entry-card">
+    <div class="j-entry-card card">
       <div class="j-entry-hd">
         <span class="j-entry-dt">${e.date}</span>
         <span class="j-entry-moodico">${MOODS[e.mood]||'😐'}</span>

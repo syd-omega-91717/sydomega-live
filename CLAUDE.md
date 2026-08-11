@@ -133,11 +133,38 @@ through this one file with no per-page markup changes:
   bg.js — one `getBoundingClientRect()` per frame, only while hovering a
   matched element; GPU-cheap, no layout thrash).
 - **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
-  + hover box-shadow glow). Deliberately *not* applied to `.kpi` itself,
-  since `.kpi` already uses a per-instance `--kc` custom property for
-  its top-accent color (e.g. `style="--kc:var(--cyan)"`) — `.kpi` gets a
-  matching hover glow in that same color instead, so the existing
-  color-coding isn't overridden.
+  + box-shadow glow, both **hover-only**, not static). Deliberately not
+  applied to `.kpi` itself, since `.kpi` already uses a per-instance
+  `--kc` custom property for its top-accent color (e.g.
+  `style="--kc:var(--cyan)"`) — `.kpi` gets a matching hover glow in
+  that same color instead, so the existing color-coding isn't
+  overridden. The hover-only gating was a correction, not the original
+  design: `border-image` always wins the border paint regardless of
+  selector specificity, so a *static* version silently discarded any
+  page's own per-instance border customization the moment `.card` was
+  added to its markup — found while extending `.card` to more pages
+  (`profile.html`, `cosmos.html`, `matrix.html`, `family.html`,
+  `journal.html`) and testing each one for real, not just in the
+  isolated harness: `matrix.html`'s Authority Score `.astat` sets
+  `style="border-color:rgba(0,229,255,.3)"` inline to distinguish it
+  from the other 3 axis cards; `family.html`'s
+  `.mc.heir{border-left:3px solid var(--gold)}` marks succession heirs;
+  `cosmos.html`'s `.el-card` sets a per-element colored left border via
+  `c.style.cssText+=` in JS (fire/water/earth/etc.) — all three would
+  have been silently overridden by a static `border-image`. Fixed by
+  moving `border-image` into the existing `:hover` rule so every page's
+  resting-state border stays exactly as that page intended, and the
+  gradient border is a hover reward, not a default override — this also
+  retroactively protects every pre-existing `.card` usage platform-wide
+  (`vault.html`, `media.html`, etc.) that this session never even
+  touched. `honors.html`'s `.honor-card` was never given the `.card`
+  class at all — its own `::before` rule does 5-way tier color-coding
+  (omega/gold/silver/bronze/cyan) which `.card`'s pre-existing v3
+  `::before` top-accent bar would fully replace (`::before` can only
+  render one rule's declarations, last-in-cascade wins, never merges),
+  and that conflict isn't fixable by hover-gating since it's about the
+  achievement badges' permanent resting-state appearance, not a hover
+  effect — left on its own local styling instead.
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row

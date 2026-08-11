@@ -38,6 +38,14 @@ jobs:
           done
           exit $fail
 
+      # ---- 1b. Inline <script> syntax. Each of the ~250 pages carries its
+      #         own inline JS (no build step, no bundler) — step 1 above never
+      #         looks inside those blocks, so a broken template string or an
+      #         unescaped quote in page-embedded JS can ship silently and only
+      #         surface when a member loads that exact page in a browser.
+      - name: Inline script syntax
+        run: python3 scripts/check-inline-js.py
+
       # ---- 2. Repository integrity: missing modules, RLS gaps, dead files.
       - name: Repository audit
         run: python3 scripts/audit.py

@@ -75,14 +75,38 @@ scaffold. If no blueprint exists yet for what's being asked, run
    applied" — say exactly that, matching the existing convention in those
    files for prior fixes.
 
-8. **Commit only — no push to main, no merge, no CI/workflow edits.**
-   Commit the change to the branch already checked out for this session's
-   work. Never edit `.github/workflows/`, never touch Supabase secrets,
-   never open or merge a PR unless the user explicitly asks for one (this
-   matches the platform-wide instruction already governing this session).
-   Leave the flag flip and any production SQL apply as an explicit,
-   separate human step — this skill's job ends at "reviewable, working,
-   dormant-by-default code on a branch."
+8. **Sync with `main` before finishing.** `git fetch origin main`, then
+   merge (`git merge origin/main`) into the branch this session is
+   working on — before the final commit if that lands cleanly, or as its
+   own merge commit immediately after if new commits landed on `main`
+   mid-session. Branches from this pipeline are often long-lived (open as
+   a PR, not immediately merged) while other sessions keep landing
+   unrelated changes on `main`; skipping this step is exactly how a
+   PR that was clean when opened silently drifts into
+   `mergeable_state: dirty` days later, needing a manual conflict-
+   resolution pass to unstick (see the two-PR pileup this step was added
+   to prevent — resolved by hand, not something to repeat). If the merge
+   produces conflicts, resolve them using the same judgment this skill
+   already applies elsewhere (e.g. prefer the more complete/accurate
+   side, verify with `scripts/audit.py` after) rather than aborting and
+   leaving the branch stale. Re-run step 6's verification after any
+   merge, since it can touch files beyond what this session itself
+   edited.
+
+9. **Commit only — no push to main, no merge-to-main, no CI/workflow
+   edits.** Commit the change to the branch already checked out for this
+   session's work, and push it (`git push -u origin <branch>`) so the
+   remote branch reflects the merge from step 8 — an unpushed local sync
+   doesn't help a PR that's already open and being checked by CI/GitHub's
+   own mergeability check. Never edit `.github/workflows/`, never touch
+   Supabase secrets, never open or merge a PR into `main` unless the user
+   explicitly asks for one (this matches the platform-wide instruction
+   already governing this session — merging *`main` into* the working
+   branch, per step 8, is different from merging the working branch
+   *into* `main`, which stays off-limits here). Leave the flag flip and
+   any production SQL apply as an explicit, separate human step — this
+   skill's job ends at "reviewable, working, dormant-by-default code on a
+   branch that GitHub reports as cleanly mergeable."
 
 ## Guardrails
 

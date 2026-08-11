@@ -372,6 +372,47 @@ existing RLS boundary exactly, not a new judgment call.
 session, doesn't query `platform_metrics` historically (that would be a separate, bigger
 aggregation feature).
 
+## 13. Seed the already-built (and already auto-mounting) honesty-label system (platform-wide)
+
+**Grounded in:** `omega-canon-badge.js` (loaded platform-wide) is a small, fully self-contained
+system that auto-mounts on every page (`DOMContentLoaded` + two retry timers, no event/wiring
+needed at all) and scans for `[data-canon="mechanic|lore|fiction"]` elements, replacing them with
+a styled, honest label distinguishing three real content categories — its own header comment
+defines them precisely: `mechanic` = "computed from your real account data, actually affects your
+standing"; `lore` = "real, consistent content... but decorative, does not gate or compute
+anything"; `fiction` = "narrative worldbuilding... not a representation of your account, the
+future, or anything factual." A repo-wide grep for `data-canon=` returns zero matches — nobody
+has ever given this system anything to label, despite it being ready and auto-mounting on every
+page today.
+
+**Idea (scoped to two unambiguous placements, not a platform-wide sweep):**
+- `profile.html`'s AUTHORITY INDEX label &rarr; `data-canon="mechanic"`. Unambiguous: it's
+  `√(A³+B³+C³)×φ/e` computed directly from `axis_a/b/c`, and it gates real things (subject to
+  `CLAUDE.md` §5's `is_platform_owner()`/RLS model, not decorative in any sense).
+- `agents.html`'s "SOVEREIGN AGENTS · 12 AGENTS" heading &rarr; `data-canon="lore"`. Also
+  unambiguous — `CLAUDE.md` §6 already states this exact classification as established fact:
+  "the platform's UI/UX personality system... not a technical multi-agent runtime." This isn't my
+  own content judgment call, it's citing the repo's own canonical documentation.
+
+**Deliberately not included this pass:** a `fiction` example. `chronicle.html` has real
+candidates (e.g. its "APEX AGE" section's forward-looking milestone/cinema entries, clearly
+speculative future narrative per the module's own definition) — but that page mixes origin-myth
+content (past, closer to `lore`) with speculative-future content (closer to `fiction`) across
+what looks like many timeline entries, and tagging one card while leaving visually-identical
+neighboring cards untagged would read as more arbitrary than helpful. Classifying the *whole*
+timeline properly is a real, well-scoped follow-up (see idea #14 candidate below) — not something
+to guess at card-by-card in this pass.
+
+**Data needs:** none. Pure presentational HTML attribute + the module's own existing auto-mount.
+No JS to write, no `nav.js` change, no schema/RPC/flag.
+
+## 14. (Follow-up candidate, not yet proposed) Classify chronicle.html's full timeline for canon-badge
+
+Once #13 ships, `chronicle.html`'s timeline is the natural next target for the same system — but
+it needs an actual read-through of every era/entry to classify past-myth (`lore`) vs
+future-speculation (`fiction`) correctly, not a guess. Listed here as a marker for next time
+rather than proposed now.
+
 ## Flagged, not proposed — need explicit scoping/sign-off before any code
 
 - **`omega-recommend.js`'s "surfacing" half doesn't exist in code at all.** The signal-*recording*

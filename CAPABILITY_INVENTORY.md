@@ -25,9 +25,20 @@ concierge — see §3 Edge Functions), `matrix.html`, `points.html`, `command.ht
 (`renderContributionHeatmap()`, added this session per `FEATURE_IDEAS.md` #7) reading
 `public.task_completions` scoped to the signed-in member's own rows (`eq('user_id', s.user.id)`)
 — read-only, no new table/RPC/`platform_settings` flag, no `nav.js` change (page already
-reachable). Committed to the branch; not yet clicked through in a live browser session (no
-authenticated Supabase session available in this environment) — verified by `node --check` on
-the extracted inline scripts and `scripts/audit.py` (0 critical) only.
+reachable). ✅ Rendered end-to-end in headless Chromium against the actual committed
+`dashboard.html` (no modified copy) — this environment cannot reach either the real Supabase
+project or the `esm.sh` CDN the page imports `@supabase/supabase-js` from (outbound proxy
+returns 403 on both), so the harness intercepts that one import and answers with a small local
+stand-in implementing just the client surface bg.js/dashboard.html's own unmodified auth-guard
+and query code already call — no real project, credentials, or member data involved. Confirmed:
+the approval guard lifts, the PERSONAL tab's own `setTab('personal')` renders the panel, all 90
+day-cells render with the correct 4-stop intensity legend and correct per-day bucketing against
+fabricated `task_completions` rows (verified against exact expected date keys, not just "didn't
+crash"), and the section is visually positioned exactly where the blueprint specified (between
+the Life Wheel/Quick Actions block and the Personal Tools grid) — screenshotted for confirmation.
+Test harness is scratch tooling, not committed to the repo. Still open: verification against the
+*real* production Supabase project/schema and a real authenticated login, which this environment
+cannot do.
 
 ### IDENTITY — member profile, verification
 `profile.html`, `passport.html`, `kyc.html`, `settings.html` ✅ (background-color sync

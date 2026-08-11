@@ -245,6 +245,61 @@ and social sharing compound with milestone mechanics rather than substituting fo
 - [Apps That Use Streaks: 10 Real Examples Analysed (2026) — Trophy.so](https://trophy.so/blog/streaks-feature-gamification-examples)
 - [Streaks and Milestones for Gamification in Mobile Apps — Plotline](https://www.plotline.so/blog/streaks-for-gamification-in-mobile-apps)
 
+## 9. Wire the already-built (and already-listening) celebration engine to real new-trophy data (ASCEND)
+
+**Grounded in:** `omega-confetti.js` (loaded platform-wide by `bg.js`, every page, via the
+standard `data-omega-confetti` guard) is a fully built canvas celebration engine —
+`OmegaCelebration.burst()`/`.gate()`/`.milestone()`/`.apex()` — that also **auto-triggers itself**
+by listening for three custom DOM events: `omega:gate-unlock`, `omega:achievement`,
+`omega:apex` (`omega-confetti.js:1-14`, its own header comment documents this explicitly). A
+repo-wide grep for those three event names across every `.js` and `.html` file returns **zero**
+matches outside the listener itself — nothing anywhere in the codebase ever dispatches them, and
+no page calls the direct API either. This is the same class of gap `CLAUDE.md` §8 already
+documents for `OmegaGuardian.gate()` ("defined but never called by any page or module") — except
+here the fix is a pure cosmetic wiring job with no security/architecture decision attached, since
+nothing is being gated, only celebrated.
+
+`trophies.html` already fetches real, RLS-scoped, per-member earned-trophy data every page load
+(`trophies.html:157-159`: `sb.from('trophies').select('trophy_num,earned_at').eq('user_id',uid)`,
+same for `medals`/`certificates`) and already has a name lookup table for each
+(`TROPHY_DATA`/`MEDAL_DATA`/`CERT_DATA`, `trophies.html:98-116`, e.g. `{n:1,name:'THE GENESIS
+MARK',...}`). Nothing currently compares this against what the member saw on their *previous*
+visit, so a newly earned trophy looks identical to one earned months ago — no celebratory moment
+at all, despite the engine for exactly that moment already sitting loaded on the page.
+
+**Idea:** on `trophies.html`, after the existing trophy/medal/cert fetch, compare the current
+earned count against a single `localStorage` key holding the last-seen count (same "compare
+against last-seen state" pattern this repo already uses elsewhere, e.g.
+`omega_demo_watched_at`/`habits.html`'s streak-freeze reconciliation) — if it increased, look up
+the newly-earned item's name from the existing `TROPHY_DATA`/`MEDAL_DATA`/`CERT_DATA` arrays and
+`dispatchEvent(new CustomEvent('omega:achievement',{detail:{title:name}}))`. Zero new engine
+code — the celebration engine already handles the event, already respects
+`prefers-reduced-motion` (`omega-confetti.js`'s own header comment), already has its canvas layer
+built. This is purely: detect the moment, fire the event that already does something.
+
+**User benefit:** every approved member gets an actual celebratory moment (confetti burst +
+banner) the first time they see a newly earned trophy/medal/certificate, instead of a page that
+looks the same whether they just unlocked something or not — directly matches this repo's own
+"Sovereign celebration engine" framing for the feature it already built but never turned on. No
+`membership_tier` gating needed.
+
+**Nav placement:** no new nav entry — `trophies.html` already exists and is reachable
+(`ascend`/`achieve` per `nav.js`'s existing `PS` map).
+
+**Data needs:** none. No new table, RPC, or `platform_settings` flag — reads the same
+already-fetched `trophies`/`medals`/`certificates` rows the page already queries every load, adds
+one `localStorage` comparison, dispatches an event the platform-wide engine is already listening
+for.
+
+**Source inspiration:** celebratory micro-interactions on real achievement moments (not trivial
+actions) are a well-established, low-risk UX pattern precisely because they're selective and
+short — the same principle `omega-confetti.js`'s own design already follows
+(`prefers-reduced-motion` respect, distinct `.milestone()` vs `.apex()` intensity tiers for
+different achievement sizes):
+- [Juicy UI: Why the Smallest Interactions Make the Biggest Difference](https://medium.com/@mezoistvan/juicy-ui-why-the-smallest-interactions-make-the-biggest-difference-5cb5a5ffc752)
+- [The Best Gamification UI Libraries (2026) — Trophy.so](https://trophy.so/blog/gamification-ui-libraries)
+- [Microinteractions UI Best Practices: A 2026 Guide](https://createbytes.com/insights/microinteractions-ui-best-practices)
+
 ## Explicitly not proposed here
 
 Anything involving the Ω token economy, `wallet_balances`, or `transactions` — both are already

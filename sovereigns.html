@@ -145,7 +145,7 @@ function renderThrone(){
     var cn=['t1','t2','t3'][i];var col=['#C9A84C','#C7CDD6','#D9B86A'][i];
     var label=r.isMe?'YOU':'SOVEREIGN #'+(i+1);
     var mi=matIdx(r);
-    var d=document.createElement('div');d.className='throne-card '+cn;
+    var d=document.createElement('div');d.className='throne-card card '+cn;
     d.innerHTML='<div class="tc-rank" style="color:'+col+'">#'+(i+1)+'</div>'
       +'<div class="tc-label" style="color:'+col+'">'+label+'</div>'
       +'<div class="tc-auth">AUTHORITY '+r.auth.toFixed(2)+'</div>'

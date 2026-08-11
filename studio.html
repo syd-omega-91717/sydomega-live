@@ -309,7 +309,7 @@ function populatePipeline(works){
     if(!list.length){col.innerHTML='<div class="pipe-empty">Empty</div>';return;}
     col.innerHTML=list.slice(0,8).map(function(w){
       var dt=w.created_at?new Date(w.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';
-      return '<div class="pipe-card"><div class="pipe-card-title">'+String(w.title||'Untitled')+'</div><div class="pipe-card-meta">'+String(w.kind||'')+'&nbsp;&middot;&nbsp;'+dt+'</div></div>';
+      return '<div class="pipe-card card"><div class="pipe-card-title">'+String(w.title||'Untitled')+'</div><div class="pipe-card-meta">'+String(w.kind||'')+'&nbsp;&middot;&nbsp;'+dt+'</div></div>';
     }).join('');
   }
   renderPipe('pipe-draft','count-draft',stages.private);

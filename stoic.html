@@ -62,7 +62,7 @@
   <div style="padding:20px var(--pad,20px)">
 
     <div class="stoic-hero">
-      <div class="memento-card">
+      <div class="memento-card card">
         <div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:8px">MEMENTO MORI</div>
         <canvas id="mementoCanvas" width="120" height="120"></canvas>
         <div style="font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:2px;margin:8px 0" id="mementoClock">—</div>
@@ -115,10 +115,10 @@
         <canvas id="virtueRadar" width="260" height="260"></canvas>
       </div>
       <div class="virtue-grid">
-        <div class="virtue-card"><div class="vc-name">WISDOM</div><div class="vc-greek">SOPHIA / PHRONESIS</div><div class="vc-desc">The root virtue — knowing what is good, harmful, or indifferent. All other virtues require wisdom to apply correctly.</div><div class="vc-score"><input type="range" id="vWisdom" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vWisdomVal">5/10</div></div></div>
-        <div class="virtue-card"><div class="vc-name">COURAGE</div><div class="vc-greek">ANDREIA</div><div class="vc-desc">Right action in the face of fear. Includes moral courage — speaking truth, holding position under pressure, enduring hardship with dignity.</div><div class="vc-score"><input type="range" id="vCourage" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vCourageVal">5/10</div></div></div>
-        <div class="virtue-card"><div class="vc-name">JUSTICE</div><div class="vc-greek">DIKAIOSYNĒ</div><div class="vc-desc">Treating others fairly. The social virtue — governing how we interact with others, fulfill our roles, and contribute to the common good.</div><div class="vc-score"><input type="range" id="vJustice" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vJusticeVal">5/10</div></div></div>
-        <div class="virtue-card"><div class="vc-name">TEMPERANCE</div><div class="vc-greek">SŌPHROSYNĒ</div><div class="vc-desc">Self-discipline and moderation. Knowing when enough is enough. Mastery of desire and appetite — the foundation of freedom.</div><div class="vc-score"><input type="range" id="vTemperance" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vTemperanceVal">5/10</div></div></div>
+        <div class="virtue-card card"><div class="vc-name">WISDOM</div><div class="vc-greek">SOPHIA / PHRONESIS</div><div class="vc-desc">The root virtue — knowing what is good, harmful, or indifferent. All other virtues require wisdom to apply correctly.</div><div class="vc-score"><input type="range" id="vWisdom" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vWisdomVal">5/10</div></div></div>
+        <div class="virtue-card card"><div class="vc-name">COURAGE</div><div class="vc-greek">ANDREIA</div><div class="vc-desc">Right action in the face of fear. Includes moral courage — speaking truth, holding position under pressure, enduring hardship with dignity.</div><div class="vc-score"><input type="range" id="vCourage" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vCourageVal">5/10</div></div></div>
+        <div class="virtue-card card"><div class="vc-name">JUSTICE</div><div class="vc-greek">DIKAIOSYNĒ</div><div class="vc-desc">Treating others fairly. The social virtue — governing how we interact with others, fulfill our roles, and contribute to the common good.</div><div class="vc-score"><input type="range" id="vJustice" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vJusticeVal">5/10</div></div></div>
+        <div class="virtue-card card"><div class="vc-name">TEMPERANCE</div><div class="vc-greek">SŌPHROSYNĒ</div><div class="vc-desc">Self-discipline and moderation. Knowing when enough is enough. Mastery of desire and appetite — the foundation of freedom.</div><div class="vc-score"><input type="range" id="vTemperance" min="1" max="10" value="5" oninput="updateVirtues()"><div class="vc-score-val" id="vTemperanceVal">5/10</div></div></div>
       </div>
       <div style="text-align:center"><button class="btn-gold" onclick="saveVirtues()">SAVE VIRTUE ASSESSMENT</button></div>
       <div style="border-top:1px solid var(--dim);margin-top:24px;padding-top:16px">
@@ -163,25 +163,25 @@
       </div>
       <div style="border-top:1px solid var(--dim);margin-top:24px;padding-top:16px">
         <div style="font-family:var(--M);font-size:8px;letter-spacing:3px;color:rgba(201,168,76,.5);padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,.08);margin-bottom:14px">STOIC PHILOSOPHERS</div>
-        <div class="phil-card">
+        <div class="phil-card card">
           <div class="phil-name">MARCUS AURELIUS</div><div class="phil-dates">121 – 180 CE · Roman Emperor · Philosopher</div>
           <div class="phil-bio">The philosopher-king. Practiced Stoicism under conditions of absolute power, pandemic, war, personal tragedy, and betrayal. Meditations written only for himself — never intended for publication.</div>
           <div class="pq">"You have power over your mind — not outside events. Realize this, and you will find strength."</div>
           <div class="pq">"The impediment to action advances action. What stands in the way becomes the way."</div>
         </div>
-        <div class="phil-card">
+        <div class="phil-card card">
           <div class="phil-name">EPICTETUS</div><div class="phil-dates">50 – 135 CE · Former Slave · Philosopher</div>
           <div class="phil-bio">Born into slavery, Epictetus developed the most rigorous Stoic discipline — because freedom, for him, was never external, only internal. What happens to you is irrelevant; only your response determines your character.</div>
           <div class="pq">"We cannot choose our external circumstances, but we can always choose how we respond to them."</div>
           <div class="pq">"No man is free who is not master of himself."</div>
         </div>
-        <div class="phil-card">
+        <div class="phil-card card">
           <div class="phil-name">SENECA</div><div class="phil-dates">4 BCE – 65 CE · Statesman · Author</div>
           <div class="phil-bio">The most prolific Stoic writer. On the Shortness of Life, On Anger, Letters to Lucilius — some of the most readable philosophy ever written. Wealth and power are not evil, only the attachment to them.</div>
           <div class="pq">"The whole future lies in uncertainty: live immediately."</div>
           <div class="pq">"Begin at once to live, and count each separate day as a separate life."</div>
         </div>
-        <div class="phil-card">
+        <div class="phil-card card">
           <div class="phil-name">ZENO OF CITIUM</div><div class="phil-dates">334 – 262 BCE · Founder of Stoicism</div>
           <div class="phil-bio">After being shipwrecked and losing his fortune, Zeno founded his school — teaching in the Stoa Poikilē (painted porch), giving Stoicism its name. Logic, physics, and ethics unified around living according to nature.</div>
           <div class="pq">"Man conquers the world by conquering himself."</div>
@@ -205,19 +205,19 @@
         <div style="border:1px solid var(--dim);border-radius:2px;padding:12px;text-align:center"><div style="font-family:var(--M);font-size:20px;color:var(--gold)">CBT</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px">BUILT ON STOICISM</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="virtue-card">
+        <div class="virtue-card card">
           <div class="vc-name">STOICISM &amp; MODERN NEUROSCIENCE</div>
           <div class="vc-desc">The Stoics discovered through philosophy what neuroscience confirmed: the amygdala fires before the prefrontal cortex. The 90-second rule (Jill Bolte Taylor) — any emotion lasts 90 seconds neurologically. Beyond that, you are choosing to stay in it. The Stoic pause is neurological recalibration.</div>
         </div>
-        <div class="virtue-card">
+        <div class="virtue-card card">
           <div class="vc-name">COGNITIVE BEHAVIOURAL THERAPY</div>
           <div class="vc-desc">CBT, the world's most evidence-backed psychotherapy, is Stoicism formalized. Aaron Beck and Albert Ellis directly cited Epictetus: "Men are disturbed not by events, but by their opinions about events." Reframing, thought records, and behavioural activation all derive from Stoic practice.</div>
         </div>
-        <div class="virtue-card">
+        <div class="virtue-card card">
           <div class="vc-name">NEGATIVE VISUALIZATION</div>
           <div class="vc-desc">Modern research on hedonic adaptation confirms the Stoic technique of premeditatio malorum. Visualizing loss increases gratitude (positive psychology) and reduces anxiety through exposure desensitization. Athletes use this as "stress inoculation training" — pre-experiencing adversity to remove its sting.</div>
         </div>
-        <div class="virtue-card">
+        <div class="virtue-card card">
           <div class="vc-name">THE SOVEREIGN PHILOSOPHY</div>
           <div class="vc-desc">Stoicism is not emotional suppression — it is emotional sovereignty. The Stoic feels fully, then chooses their response. Viktor Frankl in the concentration camps discovered what Marcus Aurelius built an empire on: between stimulus and response lies freedom. That gap is where sovereignty lives.</div>
         </div>

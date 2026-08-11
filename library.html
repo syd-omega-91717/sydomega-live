@@ -220,7 +220,7 @@ async function searchBooks(){
       const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:'';
       const shelfBook={key,title,author,year,cover,source:'openlibrary'};
       const added=inShelf(key);
-      return `<div class="book-card" onclick="showBookDetail(${JSON.stringify(shelfBook).replace(/'/g,'&#39;').replace(/"/g,'&quot;')})">
+      return `<div class="book-card card" onclick="showBookDetail(${JSON.stringify(shelfBook).replace(/'/g,'&#39;').replace(/"/g,'&quot;')})">
         ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
           :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span><span>${title.slice(0,30)}</span></div>`}
         <div class="book-info">
@@ -266,7 +266,7 @@ async function loadFeatured(){
           const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:'';
           const shelfBook={key,title,author,year,cover,source:'openlibrary'};
           const added=inShelf(key);
-          return `<div class="book-card">
+          return `<div class="book-card card">
             ${cover?`<img src="${cover}" alt="${title}" class="book-cover" loading="lazy">`
               :`<div class="book-cover-placeholder"><span style="font-size:28px">📚</span></div>`}
             <div class="book-info">

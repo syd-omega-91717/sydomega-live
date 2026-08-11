@@ -208,16 +208,16 @@
   <!-- SCIENCE -->
   <div class="tab-pane" id="tab-science">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">SM-2</div><div class="stat-lbl">ALGORITHM</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">RETENTION RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">90%</div><div class="stat-lbl">LONG-TERM RECALL</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">SM-2</div><div class="stat-lbl">ALGORITHM</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">RETENTION RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">90%</div><div class="stat-lbl">LONG-TERM RECALL</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">2.5</div><div class="stat-lbl">DEFAULT EF FACTOR</div></div>
-      <div class="stat-card"><div class="stat-val">20min</div><div class="stat-lbl">OPTIMAL SESSION</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">2.5</div><div class="stat-lbl">DEFAULT EF FACTOR</div></div>
+      <div class="stat-card card"><div class="stat-val">20min</div><div class="stat-lbl">OPTIMAL SESSION</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
   </div>
 
@@ -371,7 +371,7 @@ function renderStudyCard() {
 
   area.innerHTML = `
     <div class="fc-card-wrap">
-      <div class="fc-card" id="fc-flip-card" onclick="flipCard()">
+      <div class="fc-card card" id="fc-flip-card" onclick="flipCard()">
         <div class="fc-face">
           <div class="fc-card-label">QUESTION — CLICK TO REVEAL</div>
           <div class="fc-card-text">${esc(card.front)}</div>
@@ -441,7 +441,7 @@ function renderDeckList() {
   el.innerHTML = _decks.map(d => {
     const total = _cards.filter(c=>c.deckId===d.id).length;
     const due = dueCount(d.id);
-    return `<div class="deck-card ${_activeDeckId===d.id?'selected':''}" onclick="selectDeck('${d.id}')">
+    return `<div class="deck-card card ${_activeDeckId===d.id?'selected':''}" onclick="selectDeck('${d.id}')">
       <div class="deck-hd">
         <span class="deck-name">${esc(d.name)}</span>
         <span class="deck-count">${total} CARDS</span>

@@ -483,7 +483,7 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
         if(tg){
           tg.innerHTML='';
           wallets.forEach(function(w){
-            var card=document.createElement('div');card.className='token-card';
+            var card=document.createElement('div');card.className='token-card card';
             var sym=document.createElement('div');sym.className='tk-sym';sym.textContent=String(w.token_symbol||'?').toUpperCase();
             var bal=document.createElement('div');bal.className='tk-bal';bal.textContent=Number(w.balance||0).toFixed(3);
             var nm=document.createElement('div');nm.className='tk-name';nm.textContent=String(w.token_name||'SOVEREIGN TOKEN');
@@ -503,7 +503,7 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
         if(ng){
           ng.innerHTML='';
           nfts.forEach(function(n){
-            var card=document.createElement('div');card.className='nft-card';
+            var card=document.createElement('div');card.className='nft-card card';
             var line=document.createElement('div');line.className='nft-line';line.textContent=String(n.track_name||'SOVEREIGN').toUpperCase()+' LINE';
             var name=document.createElement('div');name.className='nft-name';name.textContent=String(n.name||'SOVEREIGN NFT').toUpperCase();
             var meta=document.createElement('div');meta.className='nft-meta';meta.textContent=fmt(n.created_at);

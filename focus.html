@@ -424,7 +424,7 @@ function renderSessions(){
       const dur=`${Math.floor(s.duration/60)}m ${s.duration%60}s`;
       const comp=Math.round(s.duration/s.target*100);
       const dt=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-      return `<div class="session-card">
+      return `<div class="session-card card">
         <div class="s-task">${s.task}</div>
         <div class="s-dur">${dur} · ${comp}%</div>
         <div class="s-mode">${s.mode}</div>

@@ -139,16 +139,16 @@ textarea.form-input{min-height:80px;resize:none;line-height:1.75}
   <!-- TAB 4: SCIENCE -->
   <div class="tab-pane" id="t4">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
-      <div class="stat-card"><div class="stat-val">10K+</div><div class="stat-lbl">HOURS TO MASTERY</div></div>
-      <div class="stat-card"><div class="stat-val">φ/e</div><div class="stat-lbl">WISDOM RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">3×</div><div class="stat-lbl">DAILY REVIEW TARGET</div></div>
+      <div class="stat-card card"><div class="stat-val">27.8367</div><div class="stat-lbl">APEX AUTH</div></div>
+      <div class="stat-card card"><div class="stat-val">10K+</div><div class="stat-lbl">HOURS TO MASTERY</div></div>
+      <div class="stat-card card"><div class="stat-val">φ/e</div><div class="stat-lbl">WISDOM RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">3×</div><div class="stat-lbl">DAILY REVIEW TARGET</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
-      <div class="stat-card"><div class="stat-val">21</div><div class="stat-lbl">DAYS TO HABIT</div></div>
-      <div class="stat-card"><div class="stat-val">90%</div><div class="stat-lbl">SPACED REPETITION</div></div>
-      <div class="stat-card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
+      <div class="stat-card card"><div class="stat-val">1.618</div><div class="stat-lbl">GOLDEN RATIO</div></div>
+      <div class="stat-card card"><div class="stat-val">21</div><div class="stat-lbl">DAYS TO HABIT</div></div>
+      <div class="stat-card card"><div class="stat-val">90%</div><div class="stat-lbl">SPACED REPETITION</div></div>
+      <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
     <div class="sect">
       <div class="sect-hd">AUTHORS IN YOUR LIBRARY</div>
@@ -267,7 +267,7 @@ function renderLibrary(){
 }
 
 function makeQCard(q){
-  var d=document.createElement('div'); d.className='q-card';
+  var d=document.createElement('div'); d.className='q-card card';
   d.innerHTML='<div class="q-text">"'+q.text+'"</div>'+
     '<div class="q-meta">'+
       '<div class="q-attr">— '+(q.author||'Unknown')+'</div>'+
@@ -337,7 +337,7 @@ function renderAuthors(){
   var g=document.getElementById('author-grid'); g.innerHTML='';
   if(!sorted.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1">ADD QUOTES TO SEE AUTHORS.</div>';return;}
   sorted.forEach(function(e){
-    var d=document.createElement('div'); d.className='author-card';
+    var d=document.createElement('div'); d.className='author-card card';
     d.innerHTML='<div class="author-name">'+e[0]+'</div><div class="author-count">'+e[1]+' quote'+(e[1]>1?'s':'')+'</div>';
     d.onclick=function(){
       libFilter='all';

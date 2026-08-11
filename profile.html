@@ -765,25 +765,25 @@ function frame(){ctx.clearRect(0,0,120,120);
 
   <!-- STAT ROW -->
   <div class="stat-row">
-    <div class="stat-card">
+    <div class="stat-card card">
       <div class="stat-label">Total Portfolio Value</div>
       <div class="stat-value" id="total-val">N/A</div>
       <div class="stat-sub">Personal tracking dormant</div>
       <div class="stat-delta up">&#9650; Token economy not yet live</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card card">
       <div class="stat-label">&#937; Token Supply</div>
       <div class="stat-value">917.4B</div>
       <div class="stat-sub">Total Omega tokens (reference)</div>
       <div class="stat-delta up">&#9650; 51% Master Vault reserved</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card card">
       <div class="stat-label">Physical Reserves</div>
       <div class="stat-value">3-Tier</div>
       <div class="stat-sub">Gold / Rhodium / Silver</div>
       <div class="stat-delta up">&#9650; Reserve model (dormant)</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card card">
       <div class="stat-label">Matrix Coordinate</div>
       <div class="stat-value" id="port-coord">(--, --, --)</div>
       <div class="stat-sub">Axis A / B / C</div>
@@ -932,25 +932,25 @@ function frame(){ctx.clearRect(0,0,120,120);
         </div>
         <div class="panel-body">
           <div class="reserves-grid">
-            <div class="reserve-card gold-res">
+            <div class="reserve-card card gold-res">
               <div class="reserve-symbol">Au</div>
               <div class="reserve-label">Gold</div>
               <div class="reserve-amount">412,300g</div>
               <div class="reserve-val">XAU | Auto-sweep</div>
             </div>
-            <div class="reserve-card silver-res">
+            <div class="reserve-card card silver-res">
               <div class="reserve-symbol">Ag</div>
               <div class="reserve-label">Silver</div>
               <div class="reserve-amount">890,000g</div>
               <div class="reserve-val">XAG | Auto-sweep</div>
             </div>
-            <div class="reserve-card rhodium-res">
+            <div class="reserve-card card rhodium-res">
               <div class="reserve-symbol">Rh</div>
               <div class="reserve-label">Rhodium</div>
               <div class="reserve-amount">125,000g</div>
               <div class="reserve-val">XRH | Flash guard</div>
             </div>
-            <div class="reserve-card crypto-res">
+            <div class="reserve-card card crypto-res">
               <div class="reserve-symbol">&#937;</div>
               <div class="reserve-label">Omega</div>
               <div class="reserve-amount">467.8B</div>
@@ -1770,7 +1770,7 @@ function makeToggle(on){
 function buildSettings(){
   const g=document.getElementById('settings-grid');g.innerHTML='';
   SETTINGS_DATA.forEach(sec=>{
-    const c=document.createElement('div');c.className='sg-card';
+    const c=document.createElement('div');c.className='sg-card card';
     c.innerHTML=`<div class="sgc-title">${sec.title}</div>`;
     sec.items.forEach(item=>{
       const row=document.createElement('div');row.className='toggle-row';
@@ -1913,7 +1913,7 @@ function drawCharPortrait(sign, col){
 function buildArchetypes(memberSign){
   const g=document.getElementById('arch-grid'); g.innerHTML='';
   ARCHETYPES.forEach(a=>{
-    const c=document.createElement('div'); c.className='arch-card';
+    const c=document.createElement('div'); c.className='arch-card card';
     const isOwn=a.type.includes(memberSign||'');
     if(isOwn) c.classList.add('active');
     c.innerHTML=`<div class="ac-icon">${a.icon}</div><div class="ac-name" style="${isOwn?'color:var(--gold)':''}">${a.name}</div><div class="ac-type" style="color:var(--cyan)">${a.type}</div><div class="ac-desc">${a.desc}</div><div class="ac-traits">${a.traits.map(t=>`<span class="ac-trait">${t}</span>`).join('')}</div>`;
@@ -2258,7 +2258,7 @@ function buildSteps(kycStatus){
 function buildDocs(){
   const g=document.getElementById('doc-grid'); g.innerHTML='';
   DOCS.forEach(d=>{
-    const c=document.createElement('div'); c.className='doc-card';
+    const c=document.createElement('div'); c.className='doc-card card';
     const st=d.status==='verified'?'color:var(--green);border-color:rgba(63,178,127,.5)':'color:var(--muted);border-color:rgba(133,131,123,.3)';
     const sl=d.status==='verified'?'VERIFIED [*]':'PENDING SUBMISSION';
     c.innerHTML=`<div class="dc-badge">READY TO ACTIVATE</div><div class="dc-icon">${d.icon}</div><div class="dc-title">${d.title}</div><div class="dc-desc">${d.desc}</div><span class="dc-status" style="${st}">${sl}</span>`;

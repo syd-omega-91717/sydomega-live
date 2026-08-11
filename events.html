@@ -137,7 +137,7 @@ function renderEvents(){
     var key=ev.title;
     var isJ=joined.has(key);
     var card=document.createElement('div');
-    card.className='event-card';
+    card.className='event-card card';
     card.innerHTML=
       '<div class="date-block"><div class="month">'+ev.month+'</div><div class="day">'+ev.day+'</div><div class="year">'+ev.year+'</div></div>'+
       '<div class="ev-body">'+

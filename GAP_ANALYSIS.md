@@ -458,8 +458,9 @@ escaping `m.name` directly instead of relying on the broken round-trip.
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes
-  has still not been performed — seven passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
-  items 11, 13, 14, 15, 16, and 17) have each covered a growing subset, not the full set. Items
+  has still not been performed — eight passes now (`REPOSITORY_AUDIT.md` §6 items 1-9, then
+  items 11, 13, 14, 15, 16, 17, and the `.concat()`-innerHTML check noted below) have each
+  covered a growing subset, not the full set. Items
   14-15 were script-assisted (cross-referencing every `.from()`/`.rpc()` call site and every
   write-error-check site programmatically) rather than manual page-by-page reading, which is
   why they could cover all remaining candidate files for those two bug classes in one pass. The

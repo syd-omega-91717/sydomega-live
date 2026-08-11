@@ -117,6 +117,73 @@ design system; there is no separate token file to keep in sync.
 If a new page needs a component not covered here, extend the shared block
 in `bg.js` rather than defining page-local styles that will drift.
 
+### 4.1 Ω-GVP extension layer
+
+`bg.js`'s injected stylesheet has a second section below the v3 tokens
+above: an additive "Glass-Vector Platform" layer (search `Ω-GVP` in
+`bg.js`) that upgrades the existing shared classes rather than
+replacing them — every rule targets `.card`/`.kpi`/`.kpi-card`/`.glass`/
+`.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all ~250 pages
+through this one file with no per-page markup changes:
+
+- **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass`
+  panels get a hover shimmer sweep and a soft radial highlight that
+  follows the pointer (`--mx`/`--my` custom properties, set by a single
+  passive, `requestAnimationFrame`-throttled `pointermove` listener in
+  bg.js — one `getBoundingClientRect()` per frame, only while hovering a
+  matched element; GPU-cheap, no layout thrash).
+- **Glow-edge borders** on `.card`/`.kpi-card` (gradient `border-image`
+  + hover box-shadow glow). Deliberately *not* applied to `.kpi` itself,
+  since `.kpi` already uses a per-instance `--kc` custom property for
+  its top-accent color (e.g. `style="--kc:var(--cyan)"`) — `.kpi` gets a
+  matching hover glow in that same color instead, so the existing
+  color-coding isn't overridden.
+- **Telemetry table utilities** (opt-in, not yet used by any page):
+  `.trend.up`/`.trend.down` badges (colored, glowing, with a
+  `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row
+  zebra striping, `.sparkline` (stroke/glow styling for an inline SVG
+  polyline a page renders itself). `.trend` sets `justify-self:start`
+  deliberately — `.tbl-row` is `display:grid`, and without that, a
+  `.trend` child stretches to fill the implicit grid track by default
+  (confirmed by rendering a test harness before shipping).
+- **Glass form controls**: `.inp` gets deeper blur + a focus glow ring;
+  `.field` + `.field label` gives an opt-in floating-label pattern.
+- **Fallback skin for genuinely bare elements**: `input:not([class])`,
+  `textarea:not([class])`, `select:not([class])`, and
+  `button:not([class])` get the same glass treatment as `.inp`/`.btn`,
+  scoped strictly to elements with *no* `class` attribute at all, so any
+  element with its own page-local class or inline `style=` (inline
+  always wins the cascade regardless) is left untouched. This was
+  chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
+  raw `<button>`s with no shared class — hand-editing every occurrence
+  across ~250 pages wasn't attempted; this reaches them all from one
+  file instead. 27 pages still use native `<table>` markup with
+  page-local classes instead of the `.tbl-wrap`/`.tbl-row` system —
+  *not* addressed by the fallback skin (they already have their own
+  classes, so `:not([class])` correctly skips them) and still open,
+  page-by-page, structural work — not a quick CSS fix.
+- **Brand webfonts now actually load.** `--D`/`--R`/`--M` reference
+  Cinzel Decorative / Rajdhani / Courier Prime, but no page, stylesheet,
+  or asset in this repo ever loaded them — zero `@font-face` rules, zero
+  font files, zero Google Fonts links existed anywhere (confirmed by a
+  repo-wide grep before writing the fix), so every page has silently
+  rendered in the browser's default serif/sans-serif/monospace the
+  entire time. `bg.js` now injects a Google Fonts `<link>` (plus
+  `preconnect`) once per page, guarded by `#omega-fonts` so it never
+  double-injects.
+- **Ambient noise overlay**: a fixed, `pointer-events:none`,
+  `opacity:.035` `<div id="omega-noise-overlay">`, injected by bg.js —
+  deliberately a real DOM element rather than a `body::before`
+  pseudo-element, since 5 pages (`cosmos.html`, `family.html`,
+  `offline.html`, `reset.html`, `terms.html`) already define their own
+  `body::before` and a bare-selector CSS rule would have collided with
+  those.
+- Motion respects `prefers-reduced-motion`.
+
+Every change here was verified before shipping by rendering an isolated
+test harness (all the shared classes, plus raw unclassed elements) through
+headless Chromium — not just `node --check` on the syntax.
+
 ## 5. Backend / data model
 
 - **Auth & authorization:** Supabase Auth for identity; RLS policies on

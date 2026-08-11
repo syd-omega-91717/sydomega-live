@@ -60,6 +60,18 @@ approach as the contribution heatmap above — the blocked `esm.sh` import inter
 local stand-in, everything else real/unmodified): both buttons render, both click handlers fire
 `OmegaShareCard.showModal(pr)` with the full profile object, no page errors. No new
 table/RPC/`platform_settings` flag, no `nav.js` change (both pages already reachable).
+`trophies.html` also now dispatches the real `omega:achievement` window event
+(`FEATURE_IDEAS.md` #9) when a member's earned trophy/medal/certificate count increases since
+their last visit (tracked via a new `omega_trophy_celebrate_seen_v1` localStorage key, member's
+own device only — not a new table) — `omega-confetti.js` has listened for this event
+platform-wide since it was written, but nothing ever dispatched it before this. First-ever visit
+only seeds the baseline silently (no confetti wall for pre-existing unlocks); the platform owner
+is excluded (every item always shows "earned" for them, so there's no meaningful "new" moment).
+✅ Verified end-to-end in headless Chromium across two simulated visits: visit 1 (fresh device)
+fires zero events and correctly seeds state; visit 2 (one new trophy) fires exactly one real
+`omega:achievement` event with the correct name looked up from the page's own `TROPHY_DATA` array
+— confirmed by listening for the actual dispatched event, not by stubbing the confetti engine.
+No new table/RPC/`platform_settings` flag.
 
 ### COSMOS — zodiac/element brand system
 `cosmos.html`, `horoscope.html`, `agents.html`, `elements.html`, `pantheons.html`,

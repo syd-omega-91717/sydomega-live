@@ -171,6 +171,34 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     var tnums=isOwner?TROPHY_DATA.map(function(t){return t.n;}):earned_t.map(function(t){return t.trophy_num;});
     var mnums=isOwner?MEDAL_DATA.map(function(m){return m.n;}):earned_m.map(function(m){return m.medal_num;});
     var cnums=isOwner?CERT_DATA.map(function(c){return c.n;}):earned_c.map(function(c){return c.cert_num;});
+    /* Celebrate newly-earned trophies/medals/certs since the member's last visit --
+       fires the 'omega:achievement' event omega-confetti.js has always listened for
+       (loaded platform-wide by bg.js) but nothing in the codebase ever dispatched.
+       First-ever visit only seeds the baseline (no confetti wall for old unlocks);
+       owner is excluded since every item always shows as "earned" for them. */
+    if(!isOwner){
+      try{
+        var CELEBRATE_KEY='omega_trophy_celebrate_seen_v1';
+        var hadSeenBefore=localStorage.getItem(CELEBRATE_KEY)!==null;
+        var seen={};try{seen=JSON.parse(localStorage.getItem(CELEBRATE_KEY)||'{}');}catch(e){seen={};}
+        var seenT=seen.t||[],seenM=seen.m||[],seenC=seen.c||[];
+        if(hadSeenBefore){
+          tnums.filter(function(n){return seenT.indexOf(n)===-1;}).forEach(function(n){
+            var t=TROPHY_DATA.filter(function(x){return x.n===n;})[0];
+            if(t)window.dispatchEvent(new CustomEvent('omega:achievement',{detail:{title:t.name}}));
+          });
+          mnums.filter(function(n){return seenM.indexOf(n)===-1;}).forEach(function(n){
+            var m=MEDAL_DATA.filter(function(x){return x.n===n;})[0];
+            if(m)window.dispatchEvent(new CustomEvent('omega:achievement',{detail:{title:m.name}}));
+          });
+          cnums.filter(function(n){return seenC.indexOf(n)===-1;}).forEach(function(n){
+            var c=CERT_DATA.filter(function(x){return x.n===n;})[0];
+            if(c)window.dispatchEvent(new CustomEvent('omega:achievement',{detail:{title:c.name}}));
+          });
+        }
+        localStorage.setItem(CELEBRATE_KEY,JSON.stringify({t:tnums,m:mnums,c:cnums}));
+      }catch(e){}
+    }
     document.getElementById('t-count').textContent=tnums.length+'/12';
     document.getElementById('m-count').textContent=mnums.length+'/12';
     document.getElementById('c-count').textContent=cnums.length+'/12';

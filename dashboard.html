@@ -135,6 +135,7 @@
         <div class="kpi-row" data-reveal="fade-up">
           <div class="kpi" id="kpi-auth" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div>
           <div class="kpi" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." onclick="location.href='/approvals.html'" style="--kc:var(--cyan)"><div class="kpi-n" id="k-members" data-live-members>--</div><div class="kpi-l">ACTIVE MEMBERS</div><div class="kpi-sub">ACCESS APPROVED</div></div>
+          <div class="kpi" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div class="kpi-n" id="k-online">--</div><div class="kpi-l">ONLINE NOW</div><div class="kpi-sub">LIVE PRESENCE</div></div>
           <div class="kpi" data-living="tasks-today" data-tooltip="Tasks completed today across all members. Each task increments one axis by 0.001–0.25." onclick="location.href='/gaming.html'" style="--kc:var(--green)"><div class="kpi-n" id="k-tasks">--</div><div class="kpi-l">TASKS TODAY</div><div class="kpi-sub">AXIS INCREMENTS</div></div>
           <div class="kpi" data-tooltip="Platform Meaning Index (0–100) · Measures operational discipline, system integration depth, and sovereign coherence." onclick="location.href='/observatory.html'" style="--kc:var(--purple)"><div class="kpi-n">87</div><div class="kpi-l">PLATFORM PMI</div><div class="kpi-sub">MEANING INDEX</div></div>
           <div class="kpi" data-living="platform-health" data-tooltip="Service Level Objective · 30-day platform uptime target is 99.9% (8.7h allowed downtime per year)." onclick="location.href='/observatory.html'" style="--kc:var(--solar)"><div class="kpi-n">99.9%</div><div class="kpi-l">SLO UPTIME</div><div class="kpi-sub">30-DAY</div></div>
@@ -271,6 +272,7 @@
           <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/enterprise.html'"><div class="kpi-n" id="adm-accounts">--</div><div class="kpi-l">ENTERPRISE ACCOUNTS</div></div>
           <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
           <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--solar)" data-tooltip="Estimated cost of this browser session only (AI tokens, DB reads, edge calls) -- not real billing data. See omega-finops.js." data-tooltip-placement="bottom"><div class="kpi-n" id="adm-finops-cost">--</div><div class="kpi-l">SESSION COST (EST.)</div></div>
         </div>
         <div class="sechead">ACTIVE WORKFLOWS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
@@ -782,6 +784,15 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
       sid('k-members',mc.count||0);
     }catch(e){}
     try{
+      /* "Online now" -- omega-presence.js (loaded platform-wide) syncs every
+         30s; a 90s recency window covers one missed sync before a member
+         reads as offline. RLS already grants every member SELECT on this
+         table (public.member_presence, "members see presence" policy). */
+      var onlineAgo=new Date(Date.now()-90*1000).toISOString();
+      var on=await sb.from('member_presence').select('user_id',{count:'exact',head:true}).eq('is_online',true).gte('last_seen',onlineAgo);
+      sid('k-online',on.count||0);
+    }catch(e){}
+    try{
       var today=new Date().toISOString().slice(0,10);
       var tc=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',today);
       sid('k-tasks',tc.count||0);
@@ -834,6 +845,18 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
         var wf=await sb.from('workflow_executions').select('id',{count:'exact',head:true}).eq('status','completed');
         sid('ai-workflows',wf.count||0);
       }catch(e){}
+      /* FinOps: this session's own running cost estimate (omega-finops.js,
+         loaded platform-wide, already recording -- no query, no new data).
+         Estimate only, never real billing -- see the card's own tooltip.
+         omega-finops.js loads deferred like every other omega-*.js module,
+         so poll briefly rather than assume it's ready on first check. */
+      (function tryFinOps(tries){
+        if(window.OmegaFinOps){
+          try{sid('adm-finops-cost','$'+window.OmegaFinOps.summary().total_usd.toFixed(4));}catch(e){}
+          return;
+        }
+        if((tries||0)<15) setTimeout(function(){tryFinOps((tries||0)+1);},300);
+      })();
     }
     /* Timeline */
     try{

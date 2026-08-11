@@ -39,15 +39,85 @@ the Life Wheel/Quick Actions block and the Personal Tools grid) — screenshotte
 Test harness is scratch tooling, not committed to the repo. Still open: verification against the
 *real* production Supabase project/schema and a real authenticated login, which this environment
 cannot do.
+The `#l-platform` owner-admin KPI row (`adm-pending`/`adm-accounts`/`adm-threats`) now also has a
+"SESSION COST (EST.)" card (`FEATURE_IDEAS.md` #12) showing `OmegaFinOps.summary().total_usd` —
+`omega-finops.js` turned out to already be actively running platform-wide (intercepting Supabase
+queries, estimating AI/DB/edge cost, writing real rows to `public.platform_metrics` on
+`beforeunload` when a session's estimate exceeds $0.001), just with no UI anywhere. Population is
+inside the same `if(pr.is_owner)` block as the other admin counts (matches
+`platform_metrics`'s own RLS, which already restricts `SELECT` to the owner) and the card's own
+tooltip states explicitly that this is an estimate, not real billing, matching the module's own
+header comment. ✅ Verified in headless Chromium with both an owner and non-owner fake profile:
+non-owner leaves the card at its `--` placeholder (gating confirmed, not just present), owner gets
+a real `$X.XXXX` value from the live module. No new table/RPC/`platform_settings` flag — reads an
+already-running module's in-memory summary, no new query.
+`#l-overview`'s main KPI row also now has an "ONLINE NOW" card reading `public.member_presence`
+(`is_online=true`, 90s recency window) — see `CLAUDE.md` §8 for the real bug this depended on:
+`omega-presence.js`'s writes to this table had two column-name mismatches
+(`session_started`/`dedication_today` vs. the live schema's `session_started_at`/no such column)
+and had never once succeeded. Fixed the writer, then added this reader since the table's own RLS
+already grants every member `SELECT` (by design — "Inspired by Discord's presence system," the
+module's own header comment). ✅ Verified with a schema-validating mock that emulates PostgREST's
+real unknown-column rejection (not just "didn't throw") — confirmed the pre-fix code fails this
+check with exactly the two bad keys, the post-fix code passes with all six keys matching.
+`omega-onboard.js` (the "SELECT YOUR ZODIAC SIGN" first-visit overlay, platform-wide, appears on
+any page a new member's `omega:populated` fires on) had the same bug class one level worse — see
+`CLAUDE.md` §8: three of its four `profiles.update()` field names (`olympian`/`agent_name`/
+`token_affinity`) didn't match the real columns (`god`/`agent`/`token`), so the update always
+failed and the overlay re-appeared on every visit, while the confirm handler showed a false
+success toast regardless (no `.error` check — now added). Fixed both the field names and the
+missing error check. ✅ Verified by actually clicking through the onboarding UI in headless
+Chromium against the schema-validating mock: pre-fix code produces the four wrong keys, post-fix
+code produces the five correct ones with the right values (cross-checked against `ZODIAC_MAP`).
 
 ### IDENTITY — member profile, verification
 `profile.html`, `passport.html`, `kyc.html`, `settings.html` ✅ (background-color sync
 silent-failure fixed this session), `character.html`, `agents.html` (12-agent roster
 display), `factions.html`, `pantheons.html`, `houses.html`.
+`profile.html` now also mounts the platform-wide-loaded-but-previously-unused
+`omega-sigil-gen.js` (`FEATURE_IDEAS.md` #10 — a `#ph-sigil` div, `window.OmegaSigil.mount()`
+called directly rather than via the shared `omega:user-loaded` event; see the "Flagged, not
+proposed" note in `FEATURE_IDEAS.md` for why that event's platform-wide activation was
+deliberately avoided) and a "PASSPORT PDF" download button wired to `omega-passport.js`
+(`FEATURE_IDEAS.md` #11 — no JS needed, the module's click listener + `window.__omegaProfile`
+were already there). In the process, found (not fixed, since it's in the dormant auto-mount path
+these two features intentionally bypass) that `omega-sigil-gen.js`'s own handler reads
+`profile.zodiac_sign`, a column that doesn't exist on `public.profiles` (the real column is
+`element`) — the direct-call implementation here uses the correct column. ✅ Rendered end-to-end
+in headless Chromium: sigil mounts as a real SVG (screenshotted), passport button click completes
+a full mocked-jsPDF generation with no errors. No new table/RPC/`platform_settings` flag.
+`profile.html`'s AUTHORITY INDEX label also now carries a `data-canon="mechanic"` badge
+(`FEATURE_IDEAS.md` #13, same `omega-canon-badge.js` system as `agents.html`'s `lore` badge
+under COSMOS above) — unambiguous since the index is a real computed value that gates real
+standing. ✅ Verified in headless Chromium alongside the `agents.html` check.
 
 ### ASCEND — progression, learning
 `honors.html` (ascension map + record), `matrix.html` ("The 729"), `academy.html`,
 `gaming.html`, `trophies.html`, `exam.html`, `contributions.html`, `evolution.html`.
+`trophies.html` and `honors.html` now also have a "SHARE CARD" button
+(`tr-share-card-btn`/`hn-share-card-btn`, added this session per `FEATURE_IDEAS.md` #8) wired to
+the same platform-wide `omega-share-card.js` engine `profile.html` already used — previously
+loaded on every page but only ever invoked from `profile.html`. `honors.html`'s own profile query
+was widened from a 4-field select (`axis_a,axis_b,axis_c,is_owner`) to `select('*')` so the card
+has the full field set (`display_name`, `element`, `sign`, `god`, `agent`, `trophies_earned`,
+etc.) the engine actually reads — `trophies.html` already fetched `select('*')` for its own
+header, so no change needed there. ✅ Rendered end-to-end in headless Chromium (same harness
+approach as the contribution heatmap above — the blocked `esm.sh` import intercepted with a
+local stand-in, everything else real/unmodified): both buttons render, both click handlers fire
+`OmegaShareCard.showModal(pr)` with the full profile object, no page errors. No new
+table/RPC/`platform_settings` flag, no `nav.js` change (both pages already reachable).
+`trophies.html` also now dispatches the real `omega:achievement` window event
+(`FEATURE_IDEAS.md` #9) when a member's earned trophy/medal/certificate count increases since
+their last visit (tracked via a new `omega_trophy_celebrate_seen_v1` localStorage key, member's
+own device only — not a new table) — `omega-confetti.js` has listened for this event
+platform-wide since it was written, but nothing ever dispatched it before this. First-ever visit
+only seeds the baseline silently (no confetti wall for pre-existing unlocks); the platform owner
+is excluded (every item always shows "earned" for them, so there's no meaningful "new" moment).
+✅ Verified end-to-end in headless Chromium across two simulated visits: visit 1 (fresh device)
+fires zero events and correctly seeds state; visit 2 (one new trophy) fires exactly one real
+`omega:achievement` event with the correct name looked up from the page's own `TROPHY_DATA` array
+— confirmed by listening for the actual dispatched event, not by stubbing the confetti engine.
+No new table/RPC/`platform_settings` flag.
 
 ### COSMOS — zodiac/element brand system
 `cosmos.html`, `horoscope.html`, `agents.html`, `elements.html`, `pantheons.html`,
@@ -56,6 +126,13 @@ display), `factions.html`, `pantheons.html`, `houses.html`.
 the member-node tooltip's attempted self-escaping of `display_name` was a no-op due to reading
 the wrong DOM property back, a real stored-XSS reachable by any approved member against any
 other viewer; fixed this session, see `GAP_ANALYSIS.md` §4.9).
+`agents.html`'s "SOVEREIGN AGENTS" heading now carries a `data-canon="lore"` label
+(`FEATURE_IDEAS.md` #13), rendered by `omega-canon-badge.js` — a platform-wide-loaded,
+already-auto-mounting honesty-label system (`[data-canon]` scan on `DOMContentLoaded` + two
+retries, zero wiring needed) that had zero `data-canon=` usage anywhere before this. Classification
+cites `CLAUDE.md` §6 directly ("UI/UX personality system... not a technical multi-agent runtime")
+rather than a fresh content judgment call. ✅ Verified in headless Chromium: badge mounts with the
+correct label/title text, no errors.
 
 ### UNIVERSE / MEDIA — content, social feed
 `cinema.html`, `universe.html`, `media.html`, `hall.html`, `city.html`, `series.html`,

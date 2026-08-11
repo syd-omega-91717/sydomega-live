@@ -203,6 +203,235 @@ legally-sensitive; no gating decision needed.
   state that limitation plainly rather than claim it was clicked through, per `CLAUDE.md` §9's
   evidence-cited-claims rule.
 
+## 8. Expose the already-built share-card engine on achievement pages (ASCEND / ACHIEVE)
+
+**Grounded in:** `omega-share-card.js` (loaded platform-wide by `bg.js:1524-1525`, every page,
+via the standard `data-omega-sharecard` guard) is a fully built, working canvas card generator —
+`OmegaShareCard.render()`/`.download()`/`.share()`/`.createCard()`/`.showModal(profile)`, a
+1200×630 PNG with authority index, axis values, tier, and gate, downloadable and Web-Share-API
+shareable (`omega-share-card.js:1-19`). A repo-wide grep confirms it is wired to exactly **one**
+of ~250 pages: `profile.html:430,2349` (`ph-share-card-btn` &rarr;
+`window.OmegaShareCard.showModal(pr)`). `trophies.html:152` already fetches the exact object
+shape the engine needs (`sb.from('profiles').select('*').eq('id',uid).maybeSingle()`) for its own
+header — same for `honors.html:859` (`select('axis_a,axis_b,axis_c,is_owner')`, the specific
+subset `OmegaShareCard`'s `calcAuth()` actually reads). Neither page uses the engine that's
+already loaded on them and already has the data in scope.
+
+**Idea:** add the same "&#8679; SHARE CARD" button `profile.html` already has to `trophies.html`
+and `honors.html`, calling `OmegaShareCard.showModal(pr)` with the profile object each page
+already fetches — no new fetch, no new engine code, copy-paste of an existing, working, one-page
+pattern onto two more. `achievements.html` is a plausible third candidate but wasn't confirmed
+grounded this pass (no `sb.from('profiles')` call found there in a first grep — would need
+checking what profile data, if any, that page already has in scope before including it in a
+blueprint).
+
+**User benefit:** every approved member gets a "share your progress" moment on the pages where
+that progress is actually being celebrated (trophy vault, honors/ascension record) instead of
+only on their static profile page — the natural place someone would want to post a card is right
+after seeing a new trophy or gate, not on a separate settings-adjacent page. No `membership_tier`
+gating needed — matches `profile.html`'s existing button, which isn't tier-gated either.
+
+**Nav placement:** no new nav entry — both target pages already exist and are reachable
+(`ascend`/`achieve` per `nav.js`'s existing `PS` map for `trophies`/`honors`).
+
+**Data needs:** none. No new table, RPC, or `platform_settings` flag — reuses an existing
+platform-wide-loaded module and each page's own existing profile fetch.
+
+**Source inspiration:** shareable achievement/milestone cards are a well-established 2026
+gamification pattern specifically *because* the moment of achievement (not a static profile) is
+when sharing motivation is highest — loss-aversion/streak research shows achievement visibility
+and social sharing compound with milestone mechanics rather than substituting for them:
+- [Streaks & Milestones: Habit-Forming Gamification (2026) — AppStorys](https://appstorys.com/blog-Streaks-Milestones-Habit-Gamification)
+- [Apps That Use Streaks: 10 Real Examples Analysed (2026) — Trophy.so](https://trophy.so/blog/streaks-feature-gamification-examples)
+- [Streaks and Milestones for Gamification in Mobile Apps — Plotline](https://www.plotline.so/blog/streaks-for-gamification-in-mobile-apps)
+
+## 9. Wire the already-built (and already-listening) celebration engine to real new-trophy data (ASCEND)
+
+**Grounded in:** `omega-confetti.js` (loaded platform-wide by `bg.js`, every page, via the
+standard `data-omega-confetti` guard) is a fully built canvas celebration engine —
+`OmegaCelebration.burst()`/`.gate()`/`.milestone()`/`.apex()` — that also **auto-triggers itself**
+by listening for three custom DOM events: `omega:gate-unlock`, `omega:achievement`,
+`omega:apex` (`omega-confetti.js:1-14`, its own header comment documents this explicitly). A
+repo-wide grep for those three event names across every `.js` and `.html` file returns **zero**
+matches outside the listener itself — nothing anywhere in the codebase ever dispatches them, and
+no page calls the direct API either. This is the same class of gap `CLAUDE.md` §8 already
+documents for `OmegaGuardian.gate()` ("defined but never called by any page or module") — except
+here the fix is a pure cosmetic wiring job with no security/architecture decision attached, since
+nothing is being gated, only celebrated.
+
+`trophies.html` already fetches real, RLS-scoped, per-member earned-trophy data every page load
+(`trophies.html:157-159`: `sb.from('trophies').select('trophy_num,earned_at').eq('user_id',uid)`,
+same for `medals`/`certificates`) and already has a name lookup table for each
+(`TROPHY_DATA`/`MEDAL_DATA`/`CERT_DATA`, `trophies.html:98-116`, e.g. `{n:1,name:'THE GENESIS
+MARK',...}`). Nothing currently compares this against what the member saw on their *previous*
+visit, so a newly earned trophy looks identical to one earned months ago — no celebratory moment
+at all, despite the engine for exactly that moment already sitting loaded on the page.
+
+**Idea:** on `trophies.html`, after the existing trophy/medal/cert fetch, compare the current
+earned count against a single `localStorage` key holding the last-seen count (same "compare
+against last-seen state" pattern this repo already uses elsewhere, e.g.
+`omega_demo_watched_at`/`habits.html`'s streak-freeze reconciliation) — if it increased, look up
+the newly-earned item's name from the existing `TROPHY_DATA`/`MEDAL_DATA`/`CERT_DATA` arrays and
+`dispatchEvent(new CustomEvent('omega:achievement',{detail:{title:name}}))`. Zero new engine
+code — the celebration engine already handles the event, already respects
+`prefers-reduced-motion` (`omega-confetti.js`'s own header comment), already has its canvas layer
+built. This is purely: detect the moment, fire the event that already does something.
+
+**User benefit:** every approved member gets an actual celebratory moment (confetti burst +
+banner) the first time they see a newly earned trophy/medal/certificate, instead of a page that
+looks the same whether they just unlocked something or not — directly matches this repo's own
+"Sovereign celebration engine" framing for the feature it already built but never turned on. No
+`membership_tier` gating needed.
+
+**Nav placement:** no new nav entry — `trophies.html` already exists and is reachable
+(`ascend`/`achieve` per `nav.js`'s existing `PS` map).
+
+**Data needs:** none. No new table, RPC, or `platform_settings` flag — reads the same
+already-fetched `trophies`/`medals`/`certificates` rows the page already queries every load, adds
+one `localStorage` comparison, dispatches an event the platform-wide engine is already listening
+for.
+
+**Source inspiration:** celebratory micro-interactions on real achievement moments (not trivial
+actions) are a well-established, low-risk UX pattern precisely because they're selective and
+short — the same principle `omega-confetti.js`'s own design already follows
+(`prefers-reduced-motion` respect, distinct `.milestone()` vs `.apex()` intensity tiers for
+different achievement sizes):
+- [Juicy UI: Why the Smallest Interactions Make the Biggest Difference](https://medium.com/@mezoistvan/juicy-ui-why-the-smallest-interactions-make-the-biggest-difference-5cb5a5ffc752)
+- [The Best Gamification UI Libraries (2026) — Trophy.so](https://trophy.so/blog/gamification-ui-libraries)
+- [Microinteractions UI Best Practices: A 2026 Guide](https://createbytes.com/insights/microinteractions-ui-best-practices)
+
+## 10. Mount the already-built sigil generator on profile.html (IDENTITY)
+
+**Grounded in:** `omega-sigil-gen.js` (loaded platform-wide, `window.OmegaSigil.generate/mount/download`)
+is a working, deterministic, purely-client-side procedural SVG generator from a member's own
+element/axis/gate data — confirmed zero `OmegaSigil.` call sites anywhere. Its own auto-mount
+handler (`omega-sigil-gen.js:189-205`) only fires on the `omega:user-loaded` custom event, which
+a repo-wide grep confirms is dispatched from exactly **one** page (`chronicle.html:439`) despite
+eight modules platform-wide listening for it.
+
+**Idea (scoped narrower than "just fire the missing event"):** call
+`window.OmegaSigil.mount(el, opts)` directly from `profile.html`'s own existing profile-fetch
+flow, computing `opts` the same way the module's own dormant handler already would — bypassing
+the shared `omega:user-loaded` event entirely. **Deliberately not** proposing to dispatch that
+event platform-wide or even on this one page: investigating the other seven listeners found that
+`omega-ambient.js` and `omega-realm.js` both have independent `window.__omegaProfile` polling
+fallbacks that self-activate regardless of the event (meaning ambient audio autoplay is likely
+already silently attempted on every page today via that path, separately from this event), while
+others (`omega-music.js`'s topbar button injection, `omega-workers.js`'s worker bus) are
+purely event-dependent and untested in combination. Firing the event to fix one module would also
+activate six unrelated, only-partially-audited subsystems at once, on the file CI already flags
+as this platform's single point of failure if it breaks. That's a real, separate, larger
+question — see the "Flagged, not proposed" note below — this idea intentionally avoids it.
+
+**Data needs:** none. Reads `pr` (already fetched), zero new calls.
+
+**Security check performed:** `generateSigil()`'s only use of member-writable text
+(`display_name`) is `.charAt(0)` (exactly one character) placed in an SVG `<text>` node — not an
+attribute-injection context, and sigils only ever render the viewer's own profile, never another
+member's. Not exploitable; no fix needed.
+
+## 11. Wire the already-built passport PDF download on profile.html (IDENTITY)
+
+**Grounded in:** `omega-passport.js` (loaded platform-wide, jsPDF via esm.sh, MIT) generates a
+downloadable PDF from `window.__omegaProfile` on any click of `[data-passport-download]` — that
+click listener is registered unconditionally at module load (`omega-passport.js:150-152`), not
+gated behind any event. A repo-wide grep for `data-passport-download` returns zero matches — the
+button was never placed on any page. The module's own auto-inject logic
+(`omega-passport.js:154-165`) specifically targets `#char-my-name`/`[data-identity-card]`
+(clearly built for `character.html`), but `character.html` has neither element and never
+dispatches `omega:user-loaded` either — so even its intended page has never actually shown this
+button.
+
+**Idea:** add one `<button data-passport-download>` to `profile.html`, next to the share-card
+button. No JS to write — the module's existing global click listener + `window.__omegaProfile`
+(already populated platform-wide by `omega-user.js`) do the rest.
+
+**Data needs:** none.
+
+## 12. Owner-only FinOps cost summary on dashboard.html (COMMAND, owner-gated)
+
+**Grounded in:** `omega-finops.js` is not dormant — it is **already actively running** on every
+page for every member: it patches `window.__omegaSb.from().select()` to count DB reads, estimates
+AI token costs from concierge calls, and on `beforeunload` **writes a real row** to
+`public.platform_metrics` if the session's estimated cost exceeds $0.001
+(`omega-finops.js:140-148`). Confirmed `platform_metrics` exists (`supabase/omega_telemetry.sql`)
+with RLS already correctly scoped: any authenticated member can INSERT their own session's
+estimate, but only the owner can SELECT (`"owner reads metrics"` policy,
+`omega_telemetry.sql:74-75`) — so this data has been silently accumulating, owner-readable-only,
+with zero UI anywhere to see it (`OmegaFinOps.` has zero call sites outside the module itself).
+
+**Idea:** add a small card to `dashboard.html`'s existing `if(pr.is_owner)` admin block (the same
+one already populating `adm-pending`/`adm-accounts`/`adm-threats`, `dashboard.html:~789-810`)
+showing `OmegaFinOps.summary()` — total estimated session cost, top cost driver, and the module's
+own built-in recommendations. Must be labeled clearly as an **estimate** (the module's own header
+comment says so explicitly: "Cost Model (estimated, adjust with real billing data)") — never
+presented as real billing, to avoid misleading the owner. Owner-only placement matches the
+existing RLS boundary exactly, not a new judgment call.
+
+**Data needs:** none — reads the already-running module's in-memory summary for the current
+session, doesn't query `platform_metrics` historically (that would be a separate, bigger
+aggregation feature).
+
+## 13. Seed the already-built (and already auto-mounting) honesty-label system (platform-wide)
+
+**Grounded in:** `omega-canon-badge.js` (loaded platform-wide) is a small, fully self-contained
+system that auto-mounts on every page (`DOMContentLoaded` + two retry timers, no event/wiring
+needed at all) and scans for `[data-canon="mechanic|lore|fiction"]` elements, replacing them with
+a styled, honest label distinguishing three real content categories — its own header comment
+defines them precisely: `mechanic` = "computed from your real account data, actually affects your
+standing"; `lore` = "real, consistent content... but decorative, does not gate or compute
+anything"; `fiction` = "narrative worldbuilding... not a representation of your account, the
+future, or anything factual." A repo-wide grep for `data-canon=` returns zero matches — nobody
+has ever given this system anything to label, despite it being ready and auto-mounting on every
+page today.
+
+**Idea (scoped to two unambiguous placements, not a platform-wide sweep):**
+- `profile.html`'s AUTHORITY INDEX label &rarr; `data-canon="mechanic"`. Unambiguous: it's
+  `√(A³+B³+C³)×φ/e` computed directly from `axis_a/b/c`, and it gates real things (subject to
+  `CLAUDE.md` §5's `is_platform_owner()`/RLS model, not decorative in any sense).
+- `agents.html`'s "SOVEREIGN AGENTS · 12 AGENTS" heading &rarr; `data-canon="lore"`. Also
+  unambiguous — `CLAUDE.md` §6 already states this exact classification as established fact:
+  "the platform's UI/UX personality system... not a technical multi-agent runtime." This isn't my
+  own content judgment call, it's citing the repo's own canonical documentation.
+
+**Deliberately not included this pass:** a `fiction` example. `chronicle.html` has real
+candidates (e.g. its "APEX AGE" section's forward-looking milestone/cinema entries, clearly
+speculative future narrative per the module's own definition) — but that page mixes origin-myth
+content (past, closer to `lore`) with speculative-future content (closer to `fiction`) across
+what looks like many timeline entries, and tagging one card while leaving visually-identical
+neighboring cards untagged would read as more arbitrary than helpful. Classifying the *whole*
+timeline properly is a real, well-scoped follow-up (see idea #14 candidate below) — not something
+to guess at card-by-card in this pass.
+
+**Data needs:** none. Pure presentational HTML attribute + the module's own existing auto-mount.
+No JS to write, no `nav.js` change, no schema/RPC/flag.
+
+## 14. (Follow-up candidate, not yet proposed) Classify chronicle.html's full timeline for canon-badge
+
+Once #13 ships, `chronicle.html`'s timeline is the natural next target for the same system — but
+it needs an actual read-through of every era/entry to classify past-myth (`lore`) vs
+future-speculation (`fiction`) correctly, not a guess. Listed here as a marker for next time
+rather than proposed now.
+
+## Flagged, not proposed — need explicit scoping/sign-off before any code
+
+- **`omega-recommend.js`'s "surfacing" half doesn't exist in code at all.** The signal-*recording*
+  half genuinely works (`record_interest_signal`'s live signature matches exactly what the module
+  calls — verified, not assumed) and has been silently collecting real interest-graph data this
+  whole time. But there is no function anywhere that *reads* `interest_signals` back or renders
+  "recommended content" — building that is a real, unscoped product feature (where does it show?
+  what does "related content" mean for this platform's page taxonomy?), not a wiring fix.
+- **Dispatching `omega:user-loaded` platform-wide from `bg.js`** would retroactively activate
+  seven previously near-dormant modules at once (ambient audio, particle backgrounds, a topbar
+  music-toggle injector, an event bus, a "realm" auto-mount, a worker-bus boot, and the sigil
+  mount above) across all ~250 pages simultaneously, in `bg.js` — the file this repo's own CI
+  comments already call the platform's single point of failure. Two of the seven already
+  self-activate via independent `__omegaProfile` polling regardless of the event (so are likely
+  already partially live today); the rest are genuinely dormant and untested in combination. This
+  is a real, valuable, well-grounded finding — but activating six audited-only-in-isolation
+  subsystems at once on the highest-blast-radius file in the repo is an explicit product/ops
+  decision, not something to do as a quiet wiring fix.
+
 ## Explicitly not proposed here
 
 Anything involving the Ω token economy, `wallet_balances`, or `transactions` — both are already

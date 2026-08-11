@@ -90,14 +90,18 @@
       try{
         var s=(await window.__omegaSb.auth.getSession()).data.session;
         if(!s)return;
-        await window.__omegaSb.from('profiles').update({
+        var upd=await window.__omegaSb.from('profiles').update({
           sign:selected.sign,
           element:selected.el,
-          olympian:selected.god,
-          agent_name:selected.agent,
-          token_affinity:selected.token,
-          onboarded_at:new Date().toISOString()
+          god:selected.god,
+          agent:selected.agent,
+          token:selected.token
         }).eq('id',s.user.id);
+        if(upd.error){
+          if(btn){btn.textContent='Ω CONFIRM SOVEREIGN IDENTITY';btn.disabled=false;}
+          if(window.OmegaNotify)window.OmegaNotify.showToast('Could not save your sovereign identity -- please try again.','error');
+          return;
+        }
         /* Record onboarding event */
         await window.__omegaSb.rpc('record_sovereign_event',{
           p_event_type:'member.onboarded',

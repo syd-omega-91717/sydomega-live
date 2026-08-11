@@ -77,6 +77,12 @@
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap;margin-bottom:28px}
 .lf span{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* CONTRIBUTION HEATMAP (cell size/intensity scale/legend match habits.html's convention) */
+.heatmap-wrap{overflow-x:auto;padding-bottom:4px}
+.heatmap-row{display:flex;flex-wrap:wrap;gap:3px;max-width:100%}
+.heatmap-cell{width:9px;height:9px;border-radius:1px;flex-shrink:0}
+.heatmap-legend{display:flex;gap:4px;align-items:center;font-family:var(--M);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:8px}
+.heatmap-legend-dot{width:10px;height:10px;border-radius:1px}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.two-col{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.mission-bar{flex-wrap:wrap;height:auto;padding:8px var(--pad)}}
 </style>
 </head>
@@ -199,6 +205,10 @@
             </div>
           </div>
         </div>
+
+        <!-- SOVEREIGN ACTIVITY HEATMAP (reads public.task_completions, own rows only) -->
+        <div class="sechead" style="margin-top:16px">SOVEREIGN ACTIVITY &middot; 90-DAY CONTRIBUTION HEATMAP</div>
+        <div class="heatmap-wrap"><div id="contribution-heatmap"></div></div>
 
         <!-- PERSONAL TOOL GRID -->
         <div class="sechead" style="margin-top:16px">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
@@ -629,6 +639,31 @@ function drawPersonalWheel(areas){
   });
 }
 
+/* ── CONTRIBUTION HEATMAP (public.task_completions, own rows only) ── */
+function renderContributionHeatmap(rows){
+  var el=document.getElementById('contribution-heatmap');if(!el) return;
+  var days=90,today=new Date();today.setHours(0,0,0,0);
+  var byDay={};
+  (rows||[]).forEach(function(r){
+    if(!r||!r.completed_at) return;
+    var key=String(r.completed_at).slice(0,10);
+    byDay[key]=(byDay[key]||0)+1;
+  });
+  var cellsHtml=Array.from({length:days},function(_,i){
+    var d=new Date(today);d.setDate(today.getDate()-(days-1-i));
+    var key=d.toISOString().slice(0,10);
+    var n=byDay[key]||0;
+    var alpha=n<=0?.06:(n===1?.25:(n===2?.5:.7));
+    var isToday=i===days-1;
+    return '<div class="heatmap-cell" title="'+key+' &middot; '+n+' contribution'+(n===1?'':'s')+'" style="background:rgba(201,168,76,'+alpha+');'+(isToday?'outline:1px solid rgba(201,168,76,.4)':'')+'"></div>';
+  }).join('');
+  el.innerHTML='<div class="heatmap-row">'+cellsHtml+'</div>';
+  var legend=document.createElement('div');
+  legend.className='heatmap-legend';
+  legend.innerHTML='LESS <div class="heatmap-legend-dot" style="background:rgba(201,168,76,.06)"></div><div class="heatmap-legend-dot" style="background:rgba(201,168,76,.25)"></div><div class="heatmap-legend-dot" style="background:rgba(201,168,76,.5)"></div><div class="heatmap-legend-dot" style="background:rgba(201,168,76,.7)"></div> MORE';
+  el.appendChild(legend);
+}
+
 /* ── PLATFORM SECTIONS RENDERER ─────────────────────────────── */
 function renderPlatformSections(){
   var el=document.getElementById('platform-sections');if(!el||el.dataset.loaded) return;
@@ -752,6 +787,11 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
       sid('k-tasks',tc.count||0);
       var tw=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',new Date(Date.now()-7*864e5).toISOString());
       sid('ops-tasks',tw.count||0);
+    }catch(e){}
+    try{
+      var ninetyAgo=new Date(Date.now()-90*864e5).toISOString();
+      var hm=await sb.from('task_completions').select('completed_at').eq('user_id',s.user.id).gte('completed_at',ninetyAgo);
+      renderContributionHeatmap(hm.data||[]);
     }catch(e){}
     try{
       var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',new Date().toISOString().slice(0,10));

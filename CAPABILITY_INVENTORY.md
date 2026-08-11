@@ -60,6 +60,15 @@ already grants every member `SELECT` (by design — "Inspired by Discord's prese
 module's own header comment). ✅ Verified with a schema-validating mock that emulates PostgREST's
 real unknown-column rejection (not just "didn't throw") — confirmed the pre-fix code fails this
 check with exactly the two bad keys, the post-fix code passes with all six keys matching.
+`omega-onboard.js` (the "SELECT YOUR ZODIAC SIGN" first-visit overlay, platform-wide, appears on
+any page a new member's `omega:populated` fires on) had the same bug class one level worse — see
+`CLAUDE.md` §8: three of its four `profiles.update()` field names (`olympian`/`agent_name`/
+`token_affinity`) didn't match the real columns (`god`/`agent`/`token`), so the update always
+failed and the overlay re-appeared on every visit, while the confirm handler showed a false
+success toast regardless (no `.error` check — now added). Fixed both the field names and the
+missing error check. ✅ Verified by actually clicking through the onboarding UI in headless
+Chromium against the schema-validating mock: pre-fix code produces the four wrong keys, post-fix
+code produces the five correct ones with the right values (cross-checked against `ZODIAC_MAP`).
 
 ### IDENTITY — member profile, verification
 `profile.html`, `passport.html`, `kyc.html`, `settings.html` ✅ (background-color sync

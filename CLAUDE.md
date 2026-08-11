@@ -600,6 +600,36 @@ orphaned file.
   `member_presence` filtered to `is_online=true` within a 90-second recency window (covers one
   missed 30s sync before a member reads as offline). No new table/RPC/`platform_settings` flag.
 
+- **[Fixed, needs deploy — likely the highest-impact bug found this session] New-member onboarding
+  has never actually saved a member's chosen sign/element/god/agent/token — every visit re-showed
+  the "SELECT YOUR ZODIAC SIGN" overlay, and every confirm silently failed while still showing a
+  false "Welcome, Sovereign!" success toast.** `omega-onboard.js` is fully self-activating
+  (fires on the real, reliably-dispatched `omega:populated` event — confirmed dispatched from
+  `window.__omegaPopulate()`, the same population function 92+ pages already call, unlike the
+  separate, rarely-fired `omega:user-loaded` event discussed above) and its own trigger condition
+  is exactly `!pr.sign && !pr.element && !pr.is_owner` — so this reproduces for every new member,
+  every time, until the fields actually save. They never did: the confirm handler's
+  `profiles.update()` call sent `olympian`, `agent_name`, and `token_affinity` — none of which
+  are real column names. A repo-wide grep confirms the real columns are `god`, `agent`, and
+  `token` (all three already correctly read elsewhere, e.g. `omega-share-card.js`'s `pr.god`/
+  `pr.agent`/`pr.token`) — this was a naming mismatch against columns that already exist, not
+  missing schema. A fourth field, `onboarded_at`, has no equivalent column anywhere in the SQL
+  bag; dropped rather than added, since `needsOnboarding()`'s own check (`!pr.sign && !pr.element`)
+  already serves as the "has onboarded" signal once `sign`/`element` correctly save — adding a
+  redundant timestamp column would be new schema, not this bug fix. PostgREST rejects the whole
+  update when any field is unrecognized, so `sign`/`element` never saved either, even though
+  those two were spelled correctly. The update result was never checked for `.error` (same
+  silent-failure shape as every fix above), so the flow always proceeded to show success. Fixed
+  both: corrected the three field names, and added an explicit `.error` check that now shows a
+  real "could not save" error and re-enables the button on failure instead of a false success.
+  Verified with the same schema-validating mock as the `member_presence` fix above, driven
+  through an actual click-through of the onboarding UI (select a sign, click confirm) rather than
+  just inspecting the code: confirmed the pre-fix code produces exactly the four wrong keys and
+  the post-fix code produces exactly `sign`/`element`/`god`/`agent`/`token` matching the live
+  schema, with the correct values for each (cross-checked against `ZODIAC_MAP`'s own data, e.g.
+  Aries → Ares/Sentinel/ARENITE). **Not yet applied to the live database** — no SQL changes
+  needed, this is a client-side field-name and error-handling fix only.
+
 ## 9. Working in this repo — practical rules
 
 - Don't introduce a build step or framework migration without discussing

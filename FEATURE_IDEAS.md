@@ -300,6 +300,97 @@ different achievement sizes):
 - [The Best Gamification UI Libraries (2026) — Trophy.so](https://trophy.so/blog/gamification-ui-libraries)
 - [Microinteractions UI Best Practices: A 2026 Guide](https://createbytes.com/insights/microinteractions-ui-best-practices)
 
+## 10. Mount the already-built sigil generator on profile.html (IDENTITY)
+
+**Grounded in:** `omega-sigil-gen.js` (loaded platform-wide, `window.OmegaSigil.generate/mount/download`)
+is a working, deterministic, purely-client-side procedural SVG generator from a member's own
+element/axis/gate data — confirmed zero `OmegaSigil.` call sites anywhere. Its own auto-mount
+handler (`omega-sigil-gen.js:189-205`) only fires on the `omega:user-loaded` custom event, which
+a repo-wide grep confirms is dispatched from exactly **one** page (`chronicle.html:439`) despite
+eight modules platform-wide listening for it.
+
+**Idea (scoped narrower than "just fire the missing event"):** call
+`window.OmegaSigil.mount(el, opts)` directly from `profile.html`'s own existing profile-fetch
+flow, computing `opts` the same way the module's own dormant handler already would — bypassing
+the shared `omega:user-loaded` event entirely. **Deliberately not** proposing to dispatch that
+event platform-wide or even on this one page: investigating the other seven listeners found that
+`omega-ambient.js` and `omega-realm.js` both have independent `window.__omegaProfile` polling
+fallbacks that self-activate regardless of the event (meaning ambient audio autoplay is likely
+already silently attempted on every page today via that path, separately from this event), while
+others (`omega-music.js`'s topbar button injection, `omega-workers.js`'s worker bus) are
+purely event-dependent and untested in combination. Firing the event to fix one module would also
+activate six unrelated, only-partially-audited subsystems at once, on the file CI already flags
+as this platform's single point of failure if it breaks. That's a real, separate, larger
+question — see the "Flagged, not proposed" note below — this idea intentionally avoids it.
+
+**Data needs:** none. Reads `pr` (already fetched), zero new calls.
+
+**Security check performed:** `generateSigil()`'s only use of member-writable text
+(`display_name`) is `.charAt(0)` (exactly one character) placed in an SVG `<text>` node — not an
+attribute-injection context, and sigils only ever render the viewer's own profile, never another
+member's. Not exploitable; no fix needed.
+
+## 11. Wire the already-built passport PDF download on profile.html (IDENTITY)
+
+**Grounded in:** `omega-passport.js` (loaded platform-wide, jsPDF via esm.sh, MIT) generates a
+downloadable PDF from `window.__omegaProfile` on any click of `[data-passport-download]` — that
+click listener is registered unconditionally at module load (`omega-passport.js:150-152`), not
+gated behind any event. A repo-wide grep for `data-passport-download` returns zero matches — the
+button was never placed on any page. The module's own auto-inject logic
+(`omega-passport.js:154-165`) specifically targets `#char-my-name`/`[data-identity-card]`
+(clearly built for `character.html`), but `character.html` has neither element and never
+dispatches `omega:user-loaded` either — so even its intended page has never actually shown this
+button.
+
+**Idea:** add one `<button data-passport-download>` to `profile.html`, next to the share-card
+button. No JS to write — the module's existing global click listener + `window.__omegaProfile`
+(already populated platform-wide by `omega-user.js`) do the rest.
+
+**Data needs:** none.
+
+## 12. Owner-only FinOps cost summary on dashboard.html (COMMAND, owner-gated)
+
+**Grounded in:** `omega-finops.js` is not dormant — it is **already actively running** on every
+page for every member: it patches `window.__omegaSb.from().select()` to count DB reads, estimates
+AI token costs from concierge calls, and on `beforeunload` **writes a real row** to
+`public.platform_metrics` if the session's estimated cost exceeds $0.001
+(`omega-finops.js:140-148`). Confirmed `platform_metrics` exists (`supabase/omega_telemetry.sql`)
+with RLS already correctly scoped: any authenticated member can INSERT their own session's
+estimate, but only the owner can SELECT (`"owner reads metrics"` policy,
+`omega_telemetry.sql:74-75`) — so this data has been silently accumulating, owner-readable-only,
+with zero UI anywhere to see it (`OmegaFinOps.` has zero call sites outside the module itself).
+
+**Idea:** add a small card to `dashboard.html`'s existing `if(pr.is_owner)` admin block (the same
+one already populating `adm-pending`/`adm-accounts`/`adm-threats`, `dashboard.html:~789-810`)
+showing `OmegaFinOps.summary()` — total estimated session cost, top cost driver, and the module's
+own built-in recommendations. Must be labeled clearly as an **estimate** (the module's own header
+comment says so explicitly: "Cost Model (estimated, adjust with real billing data)") — never
+presented as real billing, to avoid misleading the owner. Owner-only placement matches the
+existing RLS boundary exactly, not a new judgment call.
+
+**Data needs:** none — reads the already-running module's in-memory summary for the current
+session, doesn't query `platform_metrics` historically (that would be a separate, bigger
+aggregation feature).
+
+## Flagged, not proposed — need explicit scoping/sign-off before any code
+
+- **`omega-recommend.js`'s "surfacing" half doesn't exist in code at all.** The signal-*recording*
+  half genuinely works (`record_interest_signal`'s live signature matches exactly what the module
+  calls — verified, not assumed) and has been silently collecting real interest-graph data this
+  whole time. But there is no function anywhere that *reads* `interest_signals` back or renders
+  "recommended content" — building that is a real, unscoped product feature (where does it show?
+  what does "related content" mean for this platform's page taxonomy?), not a wiring fix.
+- **Dispatching `omega:user-loaded` platform-wide from `bg.js`** would retroactively activate
+  seven previously near-dormant modules at once (ambient audio, particle backgrounds, a topbar
+  music-toggle injector, an event bus, a "realm" auto-mount, a worker-bus boot, and the sigil
+  mount above) across all ~250 pages simultaneously, in `bg.js` — the file this repo's own CI
+  comments already call the platform's single point of failure. Two of the seven already
+  self-activate via independent `__omegaProfile` polling regardless of the event (so are likely
+  already partially live today); the rest are genuinely dormant and untested in combination. This
+  is a real, valuable, well-grounded finding — but activating six audited-only-in-isolation
+  subsystems at once on the highest-blast-radius file in the repo is an explicit product/ops
+  decision, not something to do as a quiet wiring fix.
+
 ## Explicitly not proposed here
 
 Anything involving the Ω token economy, `wallet_balances`, or `transactions` — both are already

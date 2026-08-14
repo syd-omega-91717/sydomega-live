@@ -690,6 +690,24 @@ orphaned file.
   all of them, and the post-fix package correctly contains all 6 datasets with their seeded rows.
   No regressions across the other 4 verification tests. **Not yet applied to the live database**
   — no SQL changes needed, this is a client-side column-name fix only.
+- **The bottom-bar live activity ticker (`omega-realtime.js`, every page) has always stayed
+  stuck on "LOADING LIVE FEED…" — fixed.** Completing the sweep of every remaining `omega-*.js`
+  module with a `.from()`/`.rpc()` call (30 modules audited this session in total; see
+  `CAPABILITY_INVENTORY.md` §2 for the full list), `pollActivityFeed()` selected
+  `activity_type,title,member_name,created_at` from `public.activity_feed` — but that table has
+  no `member_name` column at all (`platform_expansion.sql:9-19`: `id, user_id, activity_type,
+  title, body, metadata, is_public, likes_count, created_at`; confirmed via grep, not assumed).
+  PostgREST rejects the whole select on the unknown column, the call is wrapped in try/catch, so
+  `_tickerItems`/`_eventFeed` have never once been populated — every member on every page has
+  always seen the ticker's static placeholder text, never real content, with no visible error.
+  Fixed by dropping `member_name` from both the select and the template string (no join to
+  `profiles` added — that's a bigger change than this bug fix, and `title` alone reads fine,
+  e.g. "Completed Habit Streak · 1s ago"). Verified with the schema-validating Playwright mock,
+  driven through `OmegaRealtime.refresh()` on a live page: confirmed the pre-fix code leaves the
+  ticker on its placeholder text with `feed()` returning 0 rows despite 2 seeded activity_feed
+  rows, and the post-fix code populates both correctly. No regressions across the other 5
+  verification tests. **Not yet applied to the live database** — no SQL changes needed, this is
+  a client-side column-name fix only.
 
 ## 9. Working in this repo — practical rules
 

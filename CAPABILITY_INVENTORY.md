@@ -220,7 +220,25 @@ see `GAP_ANALYSIS.md` §4.7).
 ## 2. Backend module inventory (93 `omega-*.js` files on disk, 88 injected by `bg.js`)
 
 Grouped by function, one line each, extracted from each file's own header comment (not
-invented — see `REPOSITORY_AUDIT.md` §1 methodology note):
+invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
+
+**Backend-call audit status:** every `omega-*.js` module containing a `.from()`/`.rpc()` call
+has now been checked column-by-column against the live schema across this session and the one
+before it (grep for `.from\('[a-z_]+'\)\|.rpc\('[a-z_]+'` to re-enumerate the list if new
+modules are added). 5 real bugs found and fixed this way: `omega-presence.js`, `omega-onboard.js`
+(prior round), `omega-workflow.js`, `omega-export.js`, `omega-realtime.js` (this round) — all
+✅-marked below with a `CLAUDE.md` §8 pointer. Every other backend-calling module
+(`omega-capability`, `omega-experiment`, `omega-intelligence`, `omega-memory`, `omega-user`,
+`omega-telemetry`, `omega-sovereign-os`, `omega-chrono`, `omega-tier-gate`, `omega-shell`,
+`omega-share`, `omega-policy`, `omega-metrics`, `omega-membership`, `omega-hero-wire`,
+`omega-gate`, `omega-finops`, `omega-feedback`, `omega-emblems`, `omega-backdrop`,
+`omega-genesis`, plus `omega-matrix`/`omega-progress`/`omega-recommend`/`omega-chart`/
+`omega-live`/`omega-notify` from the prior round) was checked and found to already match the
+live schema exactly — not re-verified below, individually, to avoid this file ballooning, but
+confirmed via the same grep-every-column-against-`supabase/*.sql` method as the ones that were
+broken. Modules with zero `.from()`/`.rpc()` calls (pure UI/visual/utility — particles,
+geometry, tooltip, confetti, keyboard shortcuts, etc.) are out of scope for this bug class
+entirely, since they have no schema to drift against.
 
 **Auth / access / identity:** `omega-gate.js` (element/matrix-position locking),
 `omega-tier-gate.js` (companion to `omega-gate`), `omega-guardian.js` (Zero Trust continuous
@@ -233,7 +251,9 @@ zodiac/element selection), `omega-appearance.js` (member view personalization),
 (persistent queryable AI memory), `omega-recommend.js` (interest-signal recommendations).
 
 **Notifications / realtime / presence:** `omega-notify.js` (badge/toast/panel — populate path
-fixed this session), `omega-realtime.js` (live Supabase subscriptions), `omega-presence.js`
+fixed this session), `omega-realtime.js` ✅ (live Supabase subscriptions — the bottom-bar live
+ticker's `activity_feed.member_name` select referenced a nonexistent column and has always
+stayed on its placeholder text, fixed this session, `CLAUDE.md` §8), `omega-presence.js`
 (real-time member presence), `omega-event-bus.js` (platform-wide event architecture).
 
 **Charts / visualization / 3D:** `omega-chart.js` (chart rendering — table-name bug fixed this

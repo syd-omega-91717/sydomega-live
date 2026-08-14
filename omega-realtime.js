@@ -58,11 +58,11 @@
   async function pollActivityFeed(){
     if(!window.__omegaSb) return;
     try{
-      var r=await window.__omegaSb.from('activity_feed').select('activity_type,title,member_name,created_at').eq('is_public',true).order('created_at',{ascending:false}).limit(10);
+      var r=await window.__omegaSb.from('activity_feed').select('activity_type,title,created_at').eq('is_public',true).order('created_at',{ascending:false}).limit(10);
       if(r.data&&r.data.length){
         _tickerItems=r.data.map(function(e){
           var ago=timeAgo(new Date(e.created_at));
-          return (e.member_name?e.member_name+': ':'')+e.title+' \u00b7 '+ago;
+          return e.title+' \u00b7 '+ago;
         });
         _eventFeed=r.data;
         /* Emit */

@@ -252,9 +252,11 @@ mechanic), `omega-sdt.js` (self-determination-theory-based design), `omega-page-
 `omega-shell.js` (async region shell), `omega-state.js`, `omega-ui.js` (UI unification),
 `omega-components.js`, `omega-capability.js`, `omega-actions.js`, `omega-live.js` ✅
 (dormant stored-XSS in its activity-feed ticker fixed this session),
-`omega-workers.js` (background consumer fleet), `omega-workflow.js` (multi-step
-orchestration), `omega-policy.js` (business-rule externalization), `omega-experiment.js`
-(A/B testing, feature flags).
+`omega-workers.js` (background consumer fleet), `omega-workflow.js` ✅ (multi-step
+orchestration — a `sovereign_events.created_at` column bug in its `report_generate` workflow
+fixed this session, `CLAUDE.md` §8; the whole 8-workflow engine has no external caller anywhere
+in the repo today, flagged not fixed — `FEATURE_IDEAS.md`), `omega-policy.js` (business-rule
+externalization), `omega-experiment.js` (A/B testing, feature flags).
 
 **Compliance / privacy / ops:** `omega-export.js` (GDPR Art. 20), `omega-a11y.js` (WCAG AA),
 `omega-legal.js` (copyright badge), `omega-finops.js` (cost measurement), `omega-metrics.js`

@@ -471,6 +471,26 @@ assets) on both repos after sync. Byte-identical diff confirmed between
   is a real, valuable, well-grounded finding — but activating six audited-only-in-isolation
   subsystems at once on the highest-blast-radius file in the repo is an explicit product/ops
   decision, not something to do as a quiet wiring fix.
+- **`omega-workflow.js`'s entire 8-workflow orchestration engine has no external caller anywhere
+  in the codebase — confirmed by grep, not assumed.** `window.OmegaWorkflow.run(...)` is called
+  exactly once in the whole repo: internally, by `omega-workflow.js` itself, from the
+  `task_complete` workflow's own `check_gate` step (to chain into `gate_unlock` on a threshold
+  cross). But nothing anywhere ever calls `run('task_complete', ...)` or `run('onboarding', ...)`
+  or `run('dedication_award', ...)` or `run('report_generate', ...)`, and the only thing that
+  dispatches the `omega:task_complete` DOM event (which would trigger the `task_complete`
+  workflow) is the workflow's own `emit_events` step — i.e. the trigger for the chain is only
+  ever emitted *by* the chain, after it's already run. Net effect: every one of this module's 8
+  named workflows (`ONBOARDING`, `GATE_UNLOCK`, `TRIAL_GRANT`, `TASK_COMPLETE`,
+  `APPROVAL_FLOW`, `DEDICATION_AWARD`, `DATA_EXPORT`, `REPORT_GENERATE` per the file's own header
+  — only 5 are actually implemented as step chains) is currently unreachable in production. This
+  isn't a wiring bug to quietly fix — real task completion, onboarding, and dedication-award
+  paths already exist and work through other call sites (`omega-matrix.js`, `omega-progress.js`,
+  `publishing.html`, `omega-onboard.js` — all separately audited/fixed this session and prior
+  sessions); deciding whether `omega-workflow.js` should *replace* those call sites, run
+  *alongside* them, or stay purely available-but-unused as an API surface for future features is
+  an architecture decision, not something to force through by wiring up a `dispatchEvent` call
+  somewhere. (One real, narrow bug found and fixed inside this dormant module regardless — see
+  `CLAUDE.md` §8 — since it needs to be correct whenever it does get wired up.)
 
 ## Explicitly not proposed here
 

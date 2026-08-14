@@ -168,19 +168,19 @@ var _user=null;
 async function loadLiveAds(){
   var el=document.getElementById('ads-list');if(!el)return;
   try{
-    var r=await sb.from('advertisements').select('headline,body,category,tier,company_name,destination_url').eq('status','active').order('created_at',{ascending:false}).limit(20);
+    var r=await sb.from('advertisements').select('title,description,category,rate_tier,company,url').eq('status','active').order('created_at',{ascending:false}).limit(20);
     var ads=r.data||[];
     if(!ads.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO ACTIVE PLACEMENTS AT THIS TIME</div>';return;}
     el.innerHTML='';
     ads.forEach(function(a){
       var d=document.createElement('div');d.className='ad-card card';
-      if(a.destination_url)d.style.cursor='pointer';
-      var type=document.createElement('div');type.className='ad-type';type.textContent=(a.category||'').toUpperCase()+' · '+(a.tier||'').toUpperCase();
-      var title=document.createElement('div');title.className='ad-title';title.textContent=(a.headline||'').toUpperCase();
-      var body=document.createElement('div');body.className='ad-body';body.textContent=a.body||'';
-      var meta=document.createElement('div');meta.className='ad-meta';meta.textContent=a.company_name||'';
+      if(a.url)d.style.cursor='pointer';
+      var type=document.createElement('div');type.className='ad-type';type.textContent=(a.category||'').toUpperCase()+' · '+(a.rate_tier||'').toUpperCase();
+      var title=document.createElement('div');title.className='ad-title';title.textContent=(a.title||'').toUpperCase();
+      var body=document.createElement('div');body.className='ad-body';body.textContent=a.description||'';
+      var meta=document.createElement('div');meta.className='ad-meta';meta.textContent=a.company||'';
       d.appendChild(type);d.appendChild(title);d.appendChild(body);d.appendChild(meta);
-      if(a.destination_url){d.addEventListener('click',function(){window.open(a.destination_url,'_blank','noopener,noreferrer');});}
+      if(a.url){d.addEventListener('click',function(){window.open(a.url,'_blank','noopener,noreferrer');});}
       el.appendChild(d);
     });
   }catch(e){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">PLACEMENTS UNAVAILABLE</div>';}
@@ -201,7 +201,8 @@ async function submitAd(){
   btn.disabled=true;fb.style.color='var(--cyan)';fb.textContent='Submitting...';
   try{
     var s=(await sb.auth.getSession()).data.session;
-    var ins=await sb.from('advertisements').insert({company_name:company,contact_email:email,headline:headline,body:body,tier:tier,category:cat,destination_url:url,timeline_period:timeline,status:'pending',submitted_by:s?s.user.id:null,submitted_at:new Date().toISOString()});
+    // timeline has no matching column in public.advertisements yet -- not persisted, see GAP_ANALYSIS.md
+    var ins=await sb.from('advertisements').insert({company:company,contact_email:email,title:headline,description:body,rate_tier:tier,category:cat,url:url,status:'pending',submitted_by:s?s.user.id:null});
     if(ins.error) throw ins.error;
     fb.style.color='var(--green)';fb.textContent='SUBMISSION RECEIVED. THE ARCHITECT WILL REVIEW WITHIN 48 HOURS.';
     ['adv-company','adv-email','adv-headline','adv-body','adv-url'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});

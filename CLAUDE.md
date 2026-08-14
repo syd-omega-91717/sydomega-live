@@ -766,6 +766,50 @@ orphaned file.
   pre-existing warnings (file/policy counts increased by exactly 1 file / 5 policies, matching
   the new fix file, no new duplicate-table or RLS-missing warnings introduced). **Not yet applied
   to the live database.**
+- **Edge Function audit (all 7 functions read in full): 2 real findings — a daily cron job that
+  has never written a single row, and a fully orphaned duplicate file.**
+  - **`snapshot-leaderboard`'s upsert has always silently failed — fixed.** This function (meant
+    to run on a daily Supabase cron at 00:05 UTC per its own header comment, also callable
+    on-demand by the owner from `leaderboard.html`) upserts
+    `user_id, snapshot_date, authority, axis_a, axis_b, axis_c, rank_global, display_name,
+    element, sign, tier, is_owner` into `public.leaderboard_snapshots` — but the table's only
+    `CREATE TABLE` (`entreprise_schema_v2.sql:126-140`; confirmed via grep, no other file
+    ALTERs it) has no `display_name`, `sign`, `tier`, or `is_owner` columns at all. PostgREST
+    rejects the entire upsert on any unknown payload key, so this cron job has never written a
+    single row — and its own per-batch error handling still returns `{ok:true, rows_written:0}`,
+    a false success with no visible failure. This directly explains why `leaderboard_snapshots`
+    read empty everywhere else it was touched this session (the `omega-export.js` GDPR-export
+    fix earlier needed seeded test data specifically because the real table has likely never
+    held a row). Fixed by adding the 4 missing columns
+    (`supabase/omega_leaderboard_snapshots_columns_fix.sql`) rather than stripping them from the
+    edge function's payload, since `leaderboard.html`'s own `renderPodium()`/`renderTable()` (the
+    documented tier-2 fallback reader for this exact table) already read `r.display_name` and
+    `r.sign` from snapshot rows — the writer and reader already agree on this shape; only the
+    table was missing it. **Verified against a real scratch PostgreSQL 16 instance**: loaded the
+    actual `entreprise_schema_v2.sql`, reproduced the exact failure with the edge function's
+    literal upsert payload (`column "display_name" of relation "leaderboard_snapshots" does not
+    exist`), applied the fix, confirmed the same payload now succeeds and reads back exactly the
+    shape the client expects, and confirmed the fix file is idempotent (clean second run). Not
+    yet applied to the live database.
+  - **`checkout/stripe-webhook/index.ts` — a fully orphaned duplicate, removed.** A second,
+    45-line Stripe-webhook implementation existed nested inside the `checkout` function's own
+    directory (`supabase/functions/checkout/stripe-webhook/index.ts`), structurally distinct from
+    (and much less complete than) the real, comprehensively-documented top-level
+    `supabase/functions/stripe-webhook/index.ts` (272 lines — Web Crypto signature verification,
+    4 event types, deploy instructions). Confirmed genuinely dead, not "which one is live"
+    ambiguity like the SQL duplicate-function situation elsewhere in this repo: Supabase Edge
+    Functions only recognize top-level `supabase/functions/<name>/index.ts` directories as
+    deployable — a subdirectory nested inside another function's own folder was never a valid
+    deployment target under any standard Supabase workflow. `checkout/index.ts` itself never
+    references it, and a full-repo grep for "stripe-webhook" found every other reference in the
+    codebase (`CLAUDE.md`, `GAP_ANALYSIS.md`, `CAPABILITY_INVENTORY.md`,
+    `scripts/check-secrets.sh`, `supabase/migrations/README.md`) pointing exclusively at the
+    top-level file. Removed the nested `checkout/stripe-webhook/` directory entirely.
+  - All 5 other functions (`checkout`, `concierge`, `intel-feed`, `notify-access`, `rankings`,
+    and the top-level `stripe-webhook`) were read in full and checked column-by-column /
+    param-by-param against the live schema — all correct, no bugs found. (`rankings` and
+    `snapshot-leaderboard` share near-identical AUTH-computation logic; `rankings` is read-only
+    and unaffected by the column bug above.)
 
 ## 9. Working in this repo — practical rules
 

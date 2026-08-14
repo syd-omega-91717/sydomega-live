@@ -301,18 +301,18 @@ labeling), `omega-sign-codex.js`, `omega-content.js`, `omega-animated.js`, `omeg
 **Misc:** `omega-membership.js`, `omega-hero-wire.js`, `omega-demo-video.js`,
 `omega-realm.js`.
 
-## 3. Edge Functions (`supabase/functions/`, Deno/TypeScript, 7 total)
+## 3. Edge Functions (`supabase/functions/`, Deno/TypeScript, 7 total — all read in full
+and audited this session; see `CLAUDE.md` §8 for the 2 findings)
 
 | Function | Purpose |
 |---|---|
-| `checkout` | Stripe checkout session creation — real payment integration |
-| `stripe-webhook` | Stripe webhook handler — real payment integration |
-| `concierge` | Calls the Anthropic API server-side, backs `omega-copilot.js`/`chatbot.html` |
-| `notify-access` | Access/approval notification dispatch |
-| `intel-feed` | News/intelligence feed backend |
-| `rankings` | Leaderboard ranking computation |
-| `snapshot-leaderboard` | Populates `leaderboard_snapshots` (the table `omega-chart.js`'s
-| | Authority History chart reads, per the fix in this session) |
+| `checkout` | Stripe checkout session creation — real payment integration. ✅ Audited, clean. A fully orphaned duplicate `checkout/stripe-webhook/index.ts` (nested inside this function's own directory, not a valid deploy target, zero references anywhere else in the repo) was found and removed this session. |
+| `stripe-webhook` | Stripe webhook handler — real payment integration. ✅ Audited, clean — `apply_subscription` call matches the live 5-arg signature exactly. |
+| `concierge` | Calls the Anthropic API server-side, backs `omega-copilot.js`/`chatbot.html`. ✅ Audited, clean — `ai_memory` insert and `recall_ai_context` RPC call both match the live schema. |
+| `notify-access` | Access/approval notification dispatch. ✅ Audited, clean — no DB calls, pure webhook-payload → email. |
+| `intel-feed` | News/intelligence feed backend (real usage confirmed: `news.html`). ✅ Audited, clean — no DB calls, pure external API fetch (Hacker News). |
+| `rankings` | Leaderboard ranking computation (real usage confirmed: `leaderboard.html` tier 1). ✅ Audited, clean — profile select matches live schema. |
+| `snapshot-leaderboard` | Daily cron job populating `leaderboard_snapshots` (`leaderboard.html` tier-2 fallback; also the table `omega-chart.js`'s Authority History chart reads, per the fix in a prior session). ⚠️✅ Its upsert payload referenced 4 columns (`display_name`, `sign`, `tier`, `is_owner`) that didn't exist on the table — the cron has silently written 0 rows on every run since deployment, with `{ok:true}` masking the failure. Fixed this session by adding the missing columns (`supabase/omega_leaderboard_snapshots_columns_fix.sql`), verified against a real scratch PostgreSQL 16 instance. Not yet applied live. |
 
 ## 4. The 12-agent brand/persona system (`omega-agents.json`)
 

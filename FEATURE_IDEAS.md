@@ -91,7 +91,16 @@ exists — run a `pg_proc` verification query against the live database to find 
 divergent function definitions actually won, delete the stale copies, and extend
 `scripts/audit.py` to flag divergent (not just duplicate) function definitions going forward.
 
-## 7. Cross-device contribution heatmap for `task_completions` (COMMAND / ASCEND)
+## 7. Cross-device contribution heatmap for `task_completions` (COMMAND / ASCEND) — SHIPPED
+
+**Shipped** (commit `af48efb`, "Add 90-day contribution heatmap to dashboard.html") — the
+blueprint below was fully implemented as designed: `dashboard.html`'s `#l-personal` panel now has
+a `.heatmap-wrap`/`#contribution-heatmap` section, `renderContributionHeatmap(rows)` buckets
+`task_completions.completed_at` by day with the 4-stop gold intensity scale, and the fetch/render
+call sits in the existing top-level IIFE next to the two aggregate counters, exactly as planned.
+Confirmed directly in code (`dashboard.html:210-212,644-667,804`) — this entry was left
+unmarked in a prior session; flagged and corrected here per `CLAUDE.md` §9's rule against letting
+these tracking docs drift stale.
 
 **Grounded in:** `dashboard.html:751,753` only ever shows two aggregate counts from
 `public.task_completions` (`.select('id',{count:'exact',head:true})` for "today" and "this
@@ -211,7 +220,13 @@ legally-sensitive; no gating decision needed.
   state that limitation plainly rather than claim it was clicked through, per `CLAUDE.md` §9's
   evidence-cited-claims rule.
 
-## 8. Expose the already-built share-card engine on achievement pages (ASCEND / ACHIEVE)
+## 8. Expose the already-built share-card engine on achievement pages (ASCEND / ACHIEVE) — SHIPPED
+
+**Shipped** (commit `0e63010`, "Expose share-card engine on trophies.html and honors.html") —
+both target pages now have the "&#8679; SHARE CARD" button calling `OmegaShareCard.showModal()`
+with the profile object each page already fetches, exactly as proposed (`trophies.html:51,159`,
+`honors.html:599,866`). Confirmed directly in code; flagged and corrected here for the same
+reason as #7 above.
 
 **Grounded in:** `omega-share-card.js` (loaded platform-wide by `bg.js:1524-1525`, every page,
 via the standard `data-omega-sharecard` guard) is a fully built, working canvas card generator —
@@ -253,7 +268,13 @@ and social sharing compound with milestone mechanics rather than substituting fo
 - [Apps That Use Streaks: 10 Real Examples Analysed (2026) — Trophy.so](https://trophy.so/blog/streaks-feature-gamification-examples)
 - [Streaks and Milestones for Gamification in Mobile Apps — Plotline](https://www.plotline.so/blog/streaks-for-gamification-in-mobile-apps)
 
-## 9. Wire the already-built (and already-listening) celebration engine to real new-trophy data (ASCEND)
+## 9. Wire the already-built (and already-listening) celebration engine to real new-trophy data (ASCEND) — SHIPPED
+
+**Shipped** (commit `2377b69`, "Wire omega:achievement celebration event to real trophy data") —
+`trophies.html` now compares the current earned trophy/medal/cert count against a `localStorage`
+last-seen count and dispatches `omega:achievement` with the newly-earned item's real name
+(`trophies.html:175,188,192,196`), exactly as proposed. Confirmed directly in code; flagged and
+corrected here for the same reason as #7 above.
 
 **Grounded in:** `omega-confetti.js` (loaded platform-wide by `bg.js`, every page, via the
 standard `data-omega-confetti` guard) is a fully built canvas celebration engine —

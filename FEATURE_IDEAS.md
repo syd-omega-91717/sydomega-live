@@ -10,18 +10,26 @@ Each idea below is grounded in something already true about this repo (verified 
 this session, not assumed from the sibling `-_V18_SYDOMEGA91717` repo) rather than invented from
 nothing — see the "Grounded in" line on each.
 
-## 1. `member_events` read view (COMMAND / ORDER)
+## 1. `member_events` read view (COMMAND / ORDER) — SHIPPED
 
 **Grounded in:** `events.html:199` inserts into `public.member_events` (`sb.from('member_events')
-.insert(payload)`, confirmed in this repo), but no page anywhere selects from it — same
-write-only gap documented in the sibling repo's gap analysis. The table, RLS policy, and writer
-already exist; only the display side is missing.
+.insert(payload)`, confirmed in this repo), but no page anywhere selected from it — same
+write-only gap documented in the sibling repo's gap analysis and in `GAP_ANALYSIS.md`'s
+silent-failure-write sweep. The table, RLS policy, and writer already existed; only the display
+side was missing.
 
-**Idea:** a simple activity feed panel — "recent platform events" — reading
-`member_events` ordered by `created_at`, rendered on `dashboard.html` or as its own tab on
-`events.html`. Read-only, no new schema, no new RLS. Smallest possible scope: one
-`.from('member_events').select(...).order(...).limit(20)` call plus a card list, following the
-existing `esc()`-escaping convention since event content is member-writable text.
+**Shipped:** the smallest possible scope — a read-only "RECENT MEMBER SUBMISSIONS" feed added
+directly below the existing submission form on `events.html`'s SUBMIT tab (its own tab section,
+not a new page or a `dashboard.html` addition, since the writer already lives here). One
+`.from('member_events').select('title,event_date,format,event_type,description,created_at')
+.order('created_at',{ascending:false}).limit(20)` call, rendered via a new `esc()` helper
+matching the existing convention (`contracts.html`/`dashboard.html`/`approvals.html`/
+`profile.html`) since `title`/`description`/`event_type`/`format` are member-writable text.
+Refreshes after a successful submission and on page load. No new schema, no new RLS, no `nav.js`
+change. Verified with a Node harness exercising the render function against real-shaped data
+(including an XSS payload in `title`/`description`), an empty result, and a Supabase `.error`
+result — escaping, empty-state copy, and error-state copy all confirmed correct;
+`scripts/audit.py` reconfirmed 0 critical / 6 pre-existing unrelated warnings after the change.
 
 ## 2. Notification-triggering coverage audit → "what should notify" decision
 

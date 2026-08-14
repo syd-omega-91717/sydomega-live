@@ -652,6 +652,44 @@ orphaned file.
   would ever execute) has no external caller anywhere in the repo today. See `FEATURE_IDEAS.md`'s
   "Flagged, not proposed" section for why wiring the workflow engine up to something is a
   scoping decision left undone, not a bug.
+- **[Fixed, needs deploy — legally-sensitive] The GDPR Article 20 data-export button
+  (`privacy.html`, `omega-export.js`) has always exported a mostly-empty package — 4 of its 6
+  datasets silently failed on every single request.** Continuing the module audit, checked every
+  `.select()` in `omega-export.js`'s `gather()` against the live schema, column by column, rather
+  than assuming the file's own comments ("Exported datasets: 1. Profile & identity... 2. Task
+  completions...") reflected reality. They didn't, in 4 of 6 cases — the same
+  guessed-column-name silent-failure shape as `complete_task`/`member_presence`/
+  `omega-onboard.js`/`omega-workflow.js` above, just never audited until now because nothing
+  about a GDPR export *looks* broken from the outside (no error, no empty-state UI — the button
+  always shows a "Export ready" success toast and downloads a real file, it's just missing most
+  of its content):
+  - `profiles` select used `agent_name` (real column: `agent` — same mismatch already fixed in
+    `omega-onboard.js`) and `onboarded_at` (no such column anywhere in the SQL bag, same as the
+    `omega-onboard.js` finding). PostgREST rejects the whole select on any unknown column, so the
+    exported "profile" dataset has never contained more than a client-computed
+    `_computed_authority` value — no `display_name`, `email`, `sign`, `element`, `god`, `agent`,
+    `token`, etc., ever.
+  - `task_completions` select used `weight_applied` — no such column exists anywhere (the real
+    column, added by `migrations/0094`/`omega_complete_task_dedup_fix.sql`, is `points_earned`).
+    Exported task-completion history has always been empty.
+  - `sovereign_events` select and order used `created_at` — same wrong-column bug as
+    `omega-workflow.js` above (real column: `occurred_at`). Exported event history has always
+    been empty.
+  - `leaderboard_snapshots` select used `tier` — no such column exists on this table
+    (`entreprise_schema_v2.sql:126-140`; confirmed via grep, not assumed). Exported ranking
+    history has always been empty. Changed to `element` (a real column already selected
+    elsewhere in this same file for other tables, and meaningful ranking context) rather than
+    dropped outright.
+  - `interest_signals` and `activity_feed` selects were already correct — both actually worked.
+  Fixed all four by correcting column names to match the live schema (`agent`, dropped
+  `onboarded_at`, `points_earned`, `occurred_at`, `element`). Verified with the schema-validating
+  Playwright mock, driven through an actual click on the export flow (not just code inspection):
+  captured the real downloaded JSON blob via a `URL.createObjectURL` interception, confirmed the
+  pre-fix package has an empty/near-empty profile (missing `display_name`) and zero rows across
+  `task_completions`/`sovereign_events`/`leaderboard_snapshots` despite seeded data existing for
+  all of them, and the post-fix package correctly contains all 6 datasets with their seeded rows.
+  No regressions across the other 4 verification tests. **Not yet applied to the live database**
+  — no SQL changes needed, this is a client-side column-name fix only.
 
 ## 9. Working in this repo — practical rules
 

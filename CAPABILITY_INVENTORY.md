@@ -258,7 +258,9 @@ fixed this session, `CLAUDE.md` §8; the whole 8-workflow engine has no external
 in the repo today, flagged not fixed — `FEATURE_IDEAS.md`), `omega-policy.js` (business-rule
 externalization), `omega-experiment.js` (A/B testing, feature flags).
 
-**Compliance / privacy / ops:** `omega-export.js` (GDPR Art. 20), `omega-a11y.js` (WCAG AA),
+**Compliance / privacy / ops:** `omega-export.js` ✅ (GDPR Art. 20 — 4 of its 6 exported
+datasets referenced nonexistent columns and have always exported empty, fixed this session,
+`CLAUDE.md` §8), `omega-a11y.js` (WCAG AA),
 `omega-legal.js` (copyright badge), `omega-finops.js` (cost measurement), `omega-metrics.js`
 (Core Web Vitals), `omega-telemetry.js`, `omega-threat.js`, `omega-oss.js` (OSS integration
 scouting), `omega-pml.js` (page-maturity checklist).

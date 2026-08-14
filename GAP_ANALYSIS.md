@@ -167,15 +167,19 @@ tables/RPCs absent from the schema) across every page not yet covered by a prior
   found.
 - **Incidental finding, not XSS but turned up by the same sweep — `access_audit_log` RPC
   response-shape mismatch, fixed:** see §2 (new row) and §4.8.
-- **Incidental finding, not fixed — `member_events` is a dead write.** `events.html:199`
+- **`member_events` dead-write gap — fixed (`FEATURE_IDEAS.md` #1).** `events.html:199`
   inserts into `public.member_events` (RLS: `"events are visible to all members"`, public
-  SELECT), but grep confirms **no page anywhere in the repo ever selects from it** — the
-  table has been write-only since whatever session added the insert. Not a security issue
-  (nothing renders the data, so no XSS surface exists despite the permissive read policy),
-  but a real completeness gap: building the missing read/display view is a feature decision
-  (what does a "member events" UI look like — a calendar? a feed panel on `events.html`
-  itself?), not a bug fix, so left undone per this file's own convention for undone-on-purpose
-  work. Noted here rather than silently ignored.
+  SELECT), but grep had confirmed **no page anywhere in the repo ever selected from it** — the
+  table had been write-only since whatever session added the insert. Not a security issue
+  (nothing rendered the data, so no XSS surface existed despite the permissive read policy),
+  but a real completeness gap. Smallest-scope fix per `FEATURE_IDEAS.md` #1: a read-only
+  "RECENT MEMBER SUBMISSIONS" feed added to `events.html`'s existing SUBMIT tab
+  (`.from('member_events').select(...).order('created_at',{ascending:false}).limit(20)`), using
+  the same `esc()`-escaping convention as `contracts.html`/`dashboard.html`/`approvals.html`/
+  `profile.html` since `title`/`description`/`event_type`/`format` are member-writable text. No
+  schema/RLS change. Verified with a Node harness feeding the render function real data
+  (including an XSS payload in `title`/`description`) plus empty and `.error` cases — escaping,
+  empty-state, and error-state all confirmed correct.
 
 A full re-sweep of all 170 pages for every possible bug class still has not been performed —
 eight session-level passes now (this one covering three `.innerHTML`-shape sub-waves, the

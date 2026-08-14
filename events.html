@@ -36,6 +36,11 @@
 .form-input{width:100%;font-family:var(--M);font-size:11px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
 .form-input:focus{border-color:rgba(0,229,255,.4)}
 @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.me-item{border:1px solid var(--line);background:var(--surface);padding:12px 14px;border-radius:2px;margin-bottom:8px}
+.me-type{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:4px}
+.me-title{font-family:var(--D);font-size:13px;color:var(--solar);font-weight:700;margin-bottom:4px}
+.me-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:6px}
+.me-meta{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -87,6 +92,9 @@
     <button id="btn-ev" class="btn-gold">SUBMIT FOR APPROVAL</button>
     <div id="ev-saved" style="font-family:var(--M);font-size:11px;color:var(--green);margin-top:10px;display:none">&#x2713; SUBMITTED &mdash; Your event is queued for review by the Architect.</div>
   </div>
+  <div class="sechead" style="margin-top:24px">RECENT MEMBER SUBMISSIONS</div>
+  <p style="color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:14px">A live feed of events submitted by members, most recent first.</p>
+  <div id="member-events-feed"></div>
 </div>
 
 <div class="tab-panel" id="tab-science">
@@ -124,6 +132,24 @@ var EVENTS=[
 ];
 
 var joined=new Set();
+
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+
+async function renderMemberEvents(){
+  var feed=document.getElementById('member-events-feed');
+  var res=await sb.from('member_events').select('title,event_date,format,event_type,description,created_at').order('created_at',{ascending:false}).limit(20);
+  if(res.error){feed.innerHTML='<p style="color:var(--muted);font-size:12px">Could not load submissions.</p>';return;}
+  var rows=res.data||[];
+  if(!rows.length){feed.innerHTML='<p style="color:var(--muted);font-size:12px">No member-submitted events yet.</p>';return;}
+  feed.innerHTML=rows.map(function(r){
+    return '<div class="me-item">'+
+      '<div class="me-type">'+esc(r.event_type||'EVENT')+'</div>'+
+      '<div class="me-title">'+esc(r.title)+'</div>'+
+      (r.description?'<div class="me-desc">'+esc(r.description)+'</div>':'')+
+      '<div class="me-meta">'+(r.event_date?esc(r.event_date)+' &middot; ':'')+esc(r.format||'')+'</div>'+
+    '</div>';
+  }).join('');
+}
 
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['upcoming','calendar','submit','science'][i]===name);});
@@ -202,6 +228,7 @@ document.getElementById('btn-ev').addEventListener('click',async function(){
   document.getElementById('ev-desc').value='';
   var s=document.getElementById('ev-saved');s.style.display='block';
   setTimeout(function(){s.style.display='none';},3000);
+  renderMemberEvents();
 });
 
 async function boot(){
@@ -214,6 +241,7 @@ async function boot(){
   joined=new Set((res.data||[]).map(function(r){return r.event_ref;}));
   renderEvents();
   buildCalendar();
+  renderMemberEvents();
 }
 boot();
 </script>

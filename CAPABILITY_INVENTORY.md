@@ -133,6 +133,16 @@ retries, zero wiring needed) that had zero `data-canon=` usage anywhere before t
 cites `CLAUDE.md` §6 directly ("UI/UX personality system... not a technical multi-agent runtime")
 rather than a fresh content judgment call. ✅ Verified in headless Chromium: badge mounts with the
 correct label/title text, no errors.
+`chronicle.html`'s full 7-era timeline (`FEATURE_IDEAS.md` #14) now carries the same
+`data-canon` labels, one per era, after an actual read-through of all 445 lines rather than a
+guess: Eras I–V (`void-age` through `emergence-age`) → `lore`; Era VI "APEX AGE · NOW" and the
+"Beyond Apex" future grid → `fiction` (both describe unachieved aspirational milestones despite
+the "NOW" framing). Era V's token-minting event card was flagged, not fixed — same present-tense
+overclaim category already given "PLANNED · NOT YET ACTIVE" treatment on
+`sovereign-covenant.html`/`system_manifest.json`, left for a dedicated follow-up rather than
+force-fit into a `lore`/`fiction` badge that doesn't actually address the overclaim. ✅ Verified
+in headless Chromium with a dedicated test (`verify_chronicle_canon.js`): all 7 spans mount into
+real `.ocb` badges with the exact expected kind/label, zero page errors.
 
 ### UNIVERSE / MEDIA — content, social feed
 `cinema.html`, `universe.html`, `media.html`, `hall.html`, `city.html`, `series.html`,
@@ -242,9 +252,11 @@ mechanic), `omega-sdt.js` (self-determination-theory-based design), `omega-page-
 `omega-shell.js` (async region shell), `omega-state.js`, `omega-ui.js` (UI unification),
 `omega-components.js`, `omega-capability.js`, `omega-actions.js`, `omega-live.js` ✅
 (dormant stored-XSS in its activity-feed ticker fixed this session),
-`omega-workers.js` (background consumer fleet), `omega-workflow.js` (multi-step
-orchestration), `omega-policy.js` (business-rule externalization), `omega-experiment.js`
-(A/B testing, feature flags).
+`omega-workers.js` (background consumer fleet), `omega-workflow.js` ✅ (multi-step
+orchestration — a `sovereign_events.created_at` column bug in its `report_generate` workflow
+fixed this session, `CLAUDE.md` §8; the whole 8-workflow engine has no external caller anywhere
+in the repo today, flagged not fixed — `FEATURE_IDEAS.md`), `omega-policy.js` (business-rule
+externalization), `omega-experiment.js` (A/B testing, feature flags).
 
 **Compliance / privacy / ops:** `omega-export.js` (GDPR Art. 20), `omega-a11y.js` (WCAG AA),
 `omega-legal.js` (copyright badge), `omega-finops.js` (cost measurement), `omega-metrics.js`

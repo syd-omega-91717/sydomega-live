@@ -629,6 +629,29 @@ orphaned file.
   schema, with the correct values for each (cross-checked against `ZODIAC_MAP`'s own data, e.g.
   Aries → Ares/Sentinel/ARENITE). **Not yet applied to the live database** — no SQL changes
   needed, this is a client-side field-name and error-handling fix only.
+- **`omega-workflow.js`'s `query_dedications` step queried a column that doesn't exist — fixed;
+  found while auditing whether the module is even reachable in the first place.** Auditing the
+  remaining unexplored `omega-*.js` modules (`omega-capability.js`, `omega-page-emblem.js`,
+  `omega-workflow.js`, `omega-experiment.js`, `omega-intelligence.js`, `omega-memory.js` —
+  continuing the `FEATURE_IDEAS.md` #7–#14 pattern) found that `omega-workflow.js`'s
+  `report_generate` workflow's `query_dedications` step selected and ordered by
+  `sovereign_events.created_at`, but the live table (`entreprise_schema_v2.sql:65-76`) has no
+  `created_at` column at all — only `occurred_at` (confirmed via a full-repo grep, not assumed;
+  `record_sovereign_event()` and every other real writer of this table already use
+  `occurred_at` correctly). Same silent-failure shape as every bug above: PostgREST rejects a
+  `select`/`order` referencing an unknown column, the call is wrapped in try/catch, so this step
+  has always silently returned an empty dedications array instead of erroring visibly. Fixed by
+  correcting both the `select()` and `order()` calls to `occurred_at`. Verified with an extended
+  version of the schema-validating mock (added read-side column validation alongside the
+  existing write-side check, since this is the first bug this session found in a *read* rather
+  than a *write*) — confirmed the pre-fix code returns 0 dedications against 2 seeded rows, the
+  post-fix code returns both, no regressions across the other 8 existing verification tests after
+  extending the mock. **Not yet applied to the live database** — no SQL changes needed, this is a
+  client-side column-name fix only. Separately, but discovered in the same audit: this bug was
+  latent in effectively dead code — `OmegaWorkflow.run(...)` (which is how `query_dedications`
+  would ever execute) has no external caller anywhere in the repo today. See `FEATURE_IDEAS.md`'s
+  "Flagged, not proposed" section for why wiring the workflow engine up to something is a
+  scoping decision left undone, not a bug.
 
 ## 9. Working in this repo — practical rules
 

@@ -261,7 +261,7 @@
       var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
       if(!uid) return {ok:true,_dedications:[]};
       try{
-        var r=await window.__omegaSb.from('sovereign_events').select('event_data,created_at').eq('user_id',uid).eq('event_type','dedication.completed').order('created_at',{ascending:false}).limit(30);
+        var r=await window.__omegaSb.from('sovereign_events').select('event_data,occurred_at').eq('user_id',uid).eq('event_type','dedication.completed').order('occurred_at',{ascending:false}).limit(30);
         return {ok:true,_dedications:r.data||[]};
       }catch(e){return {ok:true,_dedications:[]};}
     },

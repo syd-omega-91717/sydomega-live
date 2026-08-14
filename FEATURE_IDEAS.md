@@ -406,12 +406,52 @@ to guess at card-by-card in this pass.
 **Data needs:** none. Pure presentational HTML attribute + the module's own existing auto-mount.
 No JS to write, no `nav.js` change, no schema/RPC/flag.
 
-## 14. (Follow-up candidate, not yet proposed) Classify chronicle.html's full timeline for canon-badge
+## 14. Classify chronicle.html's full timeline for canon-badge — SHIPPED
 
-Once #13 ships, `chronicle.html`'s timeline is the natural next target for the same system — but
-it needs an actual read-through of every era/entry to classify past-myth (`lore`) vs
-future-speculation (`fiction`) correctly, not a guess. Listed here as a marker for next time
-rather than proposed now.
+Extended #13's honesty-label seeding to `chronicle.html`'s 7-era timeline, after an actual
+read-through of all 6 named eras plus the "Beyond Apex" future grid (445 lines total), not a
+guess:
+
+- **`void-age`, `primal-age`, `sovereign-age`, `olympian-age`, `emergence-age`** (Eras I–V) →
+  `data-canon="lore"`. All five are mythic/historical narrative framing — cosmogenesis, the first
+  sovereign beings, the AUTH-formula "discovery" myth, the Olympian patrons, and the platform's
+  own 2024 launch — none of it is live-computed by the chronicle page itself (matching
+  `omega-canon-badge.js`'s own `lore` definition: "real, consistent content... but decorative,"
+  not "does this describe something real" — Era III's AUTH formula and gate thresholds ARE real
+  platform mechanics, but they're computed and already tagged `mechanic` elsewhere
+  (`profile.html`'s AUTHORITY INDEX, seeded in #13) — this page is the origin myth *of* that
+  mechanic, not the mechanic itself, so `lore` is correct here, not `mechanic`).
+- **`apex-age`** (Era VI, "2025–2026 · NOW") → `data-canon="fiction"`. Despite the "NOW" label,
+  both events in this era are unachieved aspirational milestones (Sovereign Cinema entering
+  production, the platform "reaching 91,717 active members") — matches `fiction`'s own definition
+  ("not a representation of your account, your future, or anything factual... predictive") more
+  than `lore`'s "real, consistent content."
+  **future** (`"BEYOND APEX · FORTHCOMING"`, 2027+) → `data-canon="fiction"`, unambiguous — the
+  section's own CSS already renders a "COMING" ribbon on every card.
+
+**Flagged but deliberately not fixed here** (out of scope for a badge-classification pass, same
+"flag rather than force" discipline as the rest of this file): Era V's "The Sovereign Token
+(OMGX) Is Minted" event card (`chronicle.html`, 2024 · EMERGENCE PHASE II) states in the past
+tense that OMC/OMGX tokens "launch" with fixed supplies — but `CLAUDE.md` §8 already documents
+the token economy as explicitly dormant (`platform_settings.tokens_enabled=false`, no tokens ever
+issued), and `sovereign-covenant.html`/`system_manifest.json` already received explicit
+"PLANNED · NOT YET ACTIVE" disclaimer treatment for the identical overclaim. This one card is the
+same category of issue and deserves the same disclaimer treatment in a future session — a
+`data-canon` badge alone doesn't fit (it's not future-speculation like `fiction`, and calling it
+`lore` doesn't flag the factual overclaim), so it was left as `lore` along with the rest of its
+era rather than mislabeled to force a fit.
+
+**Verification:** one span per era (`<span data-canon="...">` next to each `.era-badge`/
+`.era-period` pair, matching the existing per-page pattern from #13), no JS written — the
+pre-existing `omega-canon-badge.js` auto-mount (already loaded platform-wide via `bg.js`) picks
+these up automatically. Confirmed via a dedicated Playwright test
+(`verify_chronicle_canon.js`, scratch/not committed) asserting all 7 `[data-canon]` spans under
+their respective `#<era-id>` mount into a real `.ocb` badge with the exact expected `lore`/
+`fiction` kind and label text, zero page errors — PASS. `node --check bg.js`/`omega-canon-badge.js`
+clean; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings (all unrelated —
+`transactions`/`wallet_balances` missing tables, diverging RPC bodies, oversized committed
+assets) on both repos after sync. Byte-identical diff confirmed between
+`-_V18_SYDOMEGA91717/chronicle.html` and `sydomega-live/chronicle.html`.
 
 ## Flagged, not proposed — need explicit scoping/sign-off before any code
 

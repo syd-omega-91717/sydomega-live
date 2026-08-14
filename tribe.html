@@ -159,6 +159,11 @@ function setTab(name){
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
+var PHI=1.6180339887,EU=2.7182818285;
+var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
+function getGateNum(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return g+1;}
+
 var ELEMENTS=[
   {id:'fire',  name:'FIRE',  sigil:'☲',color:'#FF4500',glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
   {id:'water', name:'WATER', sigil:'☰',color:'#00BFFF',glow:'rgba(0,191,255,.25)', principle:'ADAPTIVE FLOW',    desc:'Strategic patience, fluid intelligence'},
@@ -349,8 +354,11 @@ window.addEventListener('resize',drawDominanceChart);
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 
   try{
-    var d=(await sb.from('profiles').select('id,display_name,element,authority_score,gate_level,access_approved,created_at').eq('access_approved',true).order('authority_score',{ascending:false}).limit(200)).data||[];
-    profiles=d;
+    var d=(await sb.from('profiles').select('id,display_name,element,axis_a,axis_b,axis_c,is_owner,access_approved,created_at').eq('access_approved',true).limit(200)).data||[];
+    profiles=d.map(function(p){
+      var auth=p.is_owner?27.8367:calcAuth(Number(p.axis_a||0.001),Number(p.axis_b||0.001),Number(p.axis_c||0.001));
+      return Object.assign({},p,{authority_score:auth,gate_level:getGateNum(auth)});
+    }).sort(function(a,b){return b.authority_score-a.authority_score;});
   }catch(e){profiles=generateDemoProfiles();}
 
   tribeData=groupByElement(profiles);

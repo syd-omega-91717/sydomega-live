@@ -606,9 +606,11 @@ async function sendDispatch(){
     title.value='';body.value='';if(cat)cat.value='';
     toast('✓ DISPATCH TRANSMITTED','var(--gold)');
   }else{
-    await sb.from('dispatches').insert({title:title.value.trim(),category:cat?cat.value:'',body:body.value.trim(),sent_by:ownerUid,sent_at:new Date().toISOString()});
-    title.value='';body.value='';if(cat)cat.value='';
-    toast('✓ DISPATCH RECORDED','var(--solar)');
+    /* No raw-insert fallback: public.dispatches has no INSERT policy for
+       anyone (only post_dispatch(), SECURITY DEFINER, can write to it), so
+       a direct .insert() here can never succeed regardless of column names
+       -- surface the real failure instead of a false "recorded" success. */
+    toast('DISPATCH FAILED — post_dispatch RPC unavailable. Try again shortly.','var(--crim)');
   }
 }
 

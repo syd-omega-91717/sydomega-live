@@ -491,6 +491,28 @@ assets) on both repos after sync. Byte-identical diff confirmed between
   an architecture decision, not something to force through by wiring up a `dispatchEvent` call
   somewhere. (One real, narrow bug found and fixed inside this dormant module regardless — see
   `CLAUDE.md` §8 — since it needs to be correct whenever it does get wired up.)
+- **`map.html`'s member world map has no location data to plot — building it is a privacy
+  decision, not a bug fix.** `initMap()` requires `profiles.lat`/`lon`/`country`/`gate`, none of
+  which exist anywhere in the schema (confirmed via a full schema-dictionary scan built from
+  every `CREATE TABLE`/`ALTER TABLE` in `supabase/*.sql`, `CLAUDE.md` §8) — not a naming
+  mismatch like the other bugs found this session, there is no member-location data collected
+  anywhere on this platform at all. The page currently only ever plots 5 hardcoded city markers
+  (London/NY/Tokyo/Dubai/Sydney) and silently skips every real member. Building this needs an
+  explicit product decision on collection method (member-entered city/country field vs.
+  IP-geolocation), consent flow, and whether `is_public` already gates it or a new opt-in is
+  needed — left undone, matching this file's own rule against inventing new data collection.
+- **`publications` has no path from `status='draft'` to any other value — publishing.html's
+  own "commit" flow never sets `status`, so it always defaults to `'draft'`, and there is no
+  owner-review UI anywhere in the codebase to change it.** Confirmed via grep: only 3 pages
+  touch `publications` (`feed.html`, `publishing.html`, `studio.html`), and none of them ever
+  write or update `status`. `feed.html`'s platform-wide "recent publications" feed was fixed
+  this session for its column-name bug (`CLAUDE.md` §8), but even with that fixed, `publications`
+  also has no RLS policy letting a member read anyone else's rows at all (only "own rows" and
+  "owner reads all" policies exist) — so a genuine cross-member publications feed needs both an
+  RLS policy addition (e.g. `status = 'published' OR user_id = auth.uid()`) *and* a real
+  publish/review workflow that doesn't exist yet. Left undone — deciding what "published" means
+  here (self-publish vs. owner-reviewed, matching the `dispatches`/`advertisements` approval
+  patterns elsewhere in this schema) is a product decision, not a column-name fix.
 
 ## Explicitly not proposed here
 

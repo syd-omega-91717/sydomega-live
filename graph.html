@@ -107,7 +107,7 @@
     <div class="card-grid">
       <div class="card"><div class="card-title">D3 FORCE ENGINE</div><div class="card-body">The constellation graph renders via D3 v7 force simulation, loaded dynamically from esm.sh. Five force types: link (distance by type), charge (repulsion by node type), center (gravity), collision (size-aware). Draggable nodes.</div></div>
       <div class="card"><div class="card-title">NODE HIERARCHY</div><div class="card-body">Four node types: ELEMENT (largest, 28px, glowing), GOD (22px, glowing), SIGN (14px, element-coloured), MEMBER (6–17px, authority-scaled). Links: sign→element, sign→god, member→sign.</div></div>
-      <div class="card"><div class="card-title">MEMBER DATA</div><div class="card-body">Member nodes are sourced from <code>profiles</code> where <code>access_approved=true</code>. Node size scales with gate number (auth → gate → radius). Only public profile fields are used (display_name, zodiac_sign, axis_a/b/c).</div></div>
+      <div class="card"><div class="card-title">MEMBER DATA</div><div class="card-body">Member nodes are sourced from <code>profiles</code> where <code>access_approved=true</code>. Node size scales with gate number (auth → gate → radius). Only public profile fields are used (display_name, sign, axis_a/b/c).</div></div>
       <div class="card"><div class="card-title">SVG RENDERING</div><div class="card-body">Graph renders as inline SVG inside the page. Zoom: D3 zoom (scale 0.2–4×). Pan: drag anywhere on SVG canvas. Glow filter applied to element and god nodes via SVG feGaussianBlur. All labels are SVG text elements.</div></div>
     </div>
   </div>
@@ -169,7 +169,7 @@ function buildMembersTab(members){
   list.innerHTML='';
   if(!members||!members.length){var em=document.createElement('div');em.className='members-empty';em.textContent='No members found.';list.appendChild(em);return;}
   members.forEach(function(m){
-    var sign=m.zodiac_sign||'';
+    var sign=m.sign||'';
     if(!sign)return;
     var a=Number(m.axis_a||0),b=Number(m.axis_b||0),c=Number(m.axis_c||0);
     var auth=m.is_owner?27.8367:calcAuth(a,b,c);
@@ -209,7 +209,7 @@ async function initGraph(d3,members){
     links.push({source:'sign:'+sign,target:'god:'+god,type:'sign-god'});
   });
   members.forEach(function(m){
-    var sign=m.zodiac_sign;
+    var sign=m.sign;
     if(!sign||!SE[sign])return;
     var a=Number(m.axis_a||0),b=Number(m.axis_b||0),c=Number(m.axis_c||0);
     var auth=m.is_owner?27.8367:calcAuth(a,b,c);
@@ -217,7 +217,7 @@ async function initGraph(d3,members){
     var elem=SE[sign];
     var col=(EC[elem]||'#D4AF37')+'60';
     var sz=6+gate.num*0.8;
-    addNode('member:'+m.id,(m.display_name||m.full_name||'Sovereign'),'member',col,sz,{type:'member',name:m.display_name||'Sovereign',sign:sign,element:elem,auth:auth.toFixed(4),gate:gate.num+' · '+gate.name});
+    addNode('member:'+m.id,(m.display_name||'Sovereign'),'member',col,sz,{type:'member',name:m.display_name||'Sovereign',sign:sign,element:elem,auth:auth.toFixed(4),gate:gate.num+' · '+gate.name});
     links.push({source:'member:'+m.id,target:'sign:'+sign,type:'member-sign'});
   });
   var svg=d3.select('#graph-svg').attr('viewBox',[0,0,W,H]);
@@ -281,7 +281,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
-  var membersRes=await sb.from('profiles').select('id,display_name,full_name,zodiac_sign,axis_a,axis_b,axis_c,is_owner').eq('access_approved',true);
+  var membersRes=await sb.from('profiles').select('id,display_name,sign,axis_a,axis_b,axis_c,is_owner').eq('access_approved',true);
   var members=membersRes.data||[];
   buildMembersTab(members);
   var d3=await import('https://esm.sh/d3@7');

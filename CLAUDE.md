@@ -810,6 +810,116 @@ orphaned file.
     param-by-param against the live schema — all correct, no bugs found. (`rankings` and
     `snapshot-leaderboard` share near-identical AUTH-computation logic; `rankings` is read-only
     and unaffected by the column bug above.)
+- **HTML-page audit (built a repo-wide schema dictionary and scanned every `.html` page's
+  inline JS against it — the first automated, not manual, pass this session): 8 more
+  column-name silent failures, plus a systemic 26-instance bug class affecting 24 pages'
+  clickable UI.** Method: parsed every `CREATE TABLE`/`ALTER TABLE ADD COLUMN` in
+  `supabase/*.sql` into a table→known-columns dictionary (had to fix a real bug in the
+  parser itself first — a SQL line comment containing a comma, e.g.
+  `-- 'task_complete','gate_unlock',...`, was corrupting the column split and produced a
+  false positive on `activity_feed.title`; also had to manually add `task_completions`'
+  `kind`/`task`/`axis`/`increment` columns, which are confirmed live per this file's own
+  `complete_task()` entry above but never appear in any `CREATE TABLE` in the SQL bag at
+  all, having been created out-of-band), then scanned every `.from('table').select()/
+  .insert()/.update()/.upsert()` call across all 169 `.html` pages for column names absent
+  from that table's known set. Every finding below was independently confirmed by hand
+  (reading the real `CREATE TABLE`, the real RLS policies, and the actual downstream code)
+  before fixing — the automated pass finds *candidates*, not verdicts.
+  - **`feed.html`** — `publications` select referenced `author_name` (doesn't exist; the
+    column is `user_id`, no display-name join was ever built). The platform-wide "recent
+    publications" feed has always shown "PUBLICATIONS UNAVAILABLE." Fixed by dropping the
+    field (matches the existing `||'ANONYMOUS'` fallback already in the render code, same
+    minimal-fix precedent as `omega-realtime.js`'s `member_name` fix earlier this session).
+  - **`graph.html`, `nexus.html`, `sigma.html`** — all three select `zodiac_sign`/`full_name`
+    from `profiles` (real columns: `sign`/`display_name`). Same copy-pasted wrong names
+    across all three — the member constellation graph, the nexus visualization, and the
+    element-breakdown leaderboard have never rendered a single real member, silently
+    degrading to empty (`||[]` fallbacks swallow the query error with no visible failure).
+    Fixed by renaming `zodiac_sign`→`sign` everywhere (including downstream `SIGN_ELEM[...]`
+    lookups) and dropping `full_name` (the existing `display_name||full_name||'Sovereign'`
+    fallback chains already degrade gracefully once the nonexistent field is removed).
+  - **`tribe.html`** — selected `authority_score`/`gate_level`, neither a real column
+    (`profiles.authority` exists but is never written by anything — confirmed via grep, a
+    dormant column, not a usable substitute), and ordered by the nonexistent
+    `authority_score`. The tribes/rankings page has always shown 0 real members (its
+    `try/catch` around the query never actually triggers, since a PostgREST schema error
+    resolves rather than throws — the page silently shows an empty tribe, not the
+    `generateDemoProfiles()` fallback some might expect from reading the code without
+    testing it). Fixed by selecting `axis_a/axis_b/axis_c/is_owner` instead and computing
+    `authority_score`/`gate_level` client-side with the same `calcAuth()`/gate-threshold
+    pattern already used identically on `sigma.html` and several other pages, sorting
+    client-side since a computed value can't be used in a server-side `.order()`.
+  - **`advertising.html`** — both `loadLiveAds()`'s select and `submitAd()`'s insert used a
+    completely different, wrong set of column names (`headline`/`body`/`tier`/
+    `company_name`/`destination_url`/`timeline_period`/`submitted_at` vs. the real
+    `title`/`description`/`rate_tier`/`company`/`url`/no-timeline-column/`created_at`
+    auto-default) — the ad marketplace has never displayed a real ad or successfully
+    recorded a submission. A second, independent bug in the same page: `loadLiveAds()` and
+    the KPI counter in `boot()` both filtered `status='active'`, a value nothing in the
+    codebase ever assigns (the schema comment documents only `pending`/`approved`/
+    `rejected`, and the RLS read policy checks `status = 'approved'`) — fixed to match. A
+    third, independent bug found only by testing the fix in a real browser, not by reading
+    the code: `loadLiveAds()` is declared inside the page's `<script type="module">` block,
+    but is called from `setTab()` in a separate, non-module `<script>` via
+    `onclick="setTab('live')"` — module top-level declarations aren't global, so clicking
+    the "LIVE ADS" tab has always thrown `loadLiveAds is not defined` in the real browser
+    console (silently, since inline `onclick=` errors don't surface to the user), meaning
+    the ad grid never populated even after this session's column-name fix, until this was
+    separately corrected by exposing `window.loadLiveAds=loadLiveAds`. Also added the
+    missing RLS `INSERT` policy (`supabase/omega_advertisements_insert_fix.sql`) — see
+    below, `submitAd()` was RLS-blocked independent of the column names.
+  - **`approvals.html`** — `sendDispatch()`'s fallback path (used when the real
+    `post_dispatch()` RPC call fails) inserted directly into `dispatches` with 2 wrong
+    column names (`sent_by`/`sent_at`, neither exists) *and* `dispatches` has no INSERT
+    policy for anyone except via that RPC's `SECURITY DEFINER` bypass — so the fallback was
+    doubly non-functional, yet the code never checked the insert's result and always showed
+    "✓ DISPATCH RECORDED" regardless. Fixed by removing the non-functional fallback insert
+    entirely (a raw write that bypasses `post_dispatch()`'s own input sanitization would be
+    a worse fix than making the real failure visible) and showing an honest failure toast
+    when the RPC itself fails.
+  - **`map.html`** — flagged, not fixed: selects `lat`/`lon`/`country`/`gate` from
+    `profiles`, none of which exist anywhere in the schema — this isn't a naming mismatch
+    like the others, there is no member-location data anywhere in this platform at all.
+    Building real geolocation collection is a genuine new feature (consent flow, collection
+    method, privacy-policy implications), not a bug fix — see `FEATURE_IDEAS.md`.
+  - **A systemic module-boundary bug, found only by testing a fix in a real browser and
+    then deliberately searching for the same pattern elsewhere: 26 instances across 24
+    pages, the single highest-count bug class found this session.** Many pages split their
+    inline JS into a plain `<script>` (usually just a `setTab()`/`switchTab()`-style
+    function, called from `onclick=` attributes in the markup) and a separate
+    `<script type="module">` (the Supabase logic). Inline event-handler attributes always
+    execute in global scope, but a function declared at the top level of a
+    `<script type="module">` is scoped to that module, not global — so whenever the
+    tab/action function itself was accidentally written *inside* the module script instead
+    of the plain one, every click on that control has thrown `ReferenceError` in the
+    browser console, silently, with the click doing nothing. Found by writing a script that
+    parses every page's script tags, determines which top-level functions are
+    module-scoped-only (never `window.`-exposed), and cross-references every inline
+    `onclick=`/`onchange=`/etc. attribute against that set. Confirmed by hand on a sample
+    across the list (`awards.html`, `network.html`, `nutrition.html`, `maintenance.html`
+    each individually verified with a real declaration read, not just trusted from the
+    scan) before batch-fixing all 26 by inserting `window.<fn>=<fn>;` immediately before
+    each affected declaration (function declarations hoist, so placement is safe regardless
+    of call order) — 22 are `setTab(name)`/`switchTab(...)` tab-switchers (`awards.html`,
+    `beacon.html`, `ecosystem.html`, `enterprise.html`, `events.html`, `factions.html`,
+    `feed.html`, `health.html`, `maintenance.html`, `marketplace.html`, `membership.html`,
+    `prediction.html`, `privacy.html`, `publishing.html`, `search.html`, `series.html`,
+    `sovereign-ai.html`, `sovereigns.html`, `trailers.html`, `travel.html`), the remaining 4
+    are page-specific actions (`decisions.html`'s `renderChoiceButtons()`, `network.html`'s
+    `editContact()`/`deleteContact()`/`openLog()`, `nutrition.html`'s `searchFood()`,
+    `publications.html`'s `renderCatalog()`). Verified with a dedicated Playwright test
+    clicking the real inline `onclick=` handler (not calling the function directly) on a
+    sample of the fixed pages — tab panels now actually switch, zero page errors — plus a
+    re-run of the automated scanner confirming 0 remaining instances across all 169 pages.
+  All fixes verified: the column-name fixes with a schema-validating Playwright mock seeded
+  with real-shaped data (confirming the previously-broken queries now return it); the RLS
+  fix with a real scratch PostgreSQL 16 instance (member submits own ad → succeeds; member
+  spoofs another member's `submitted_by` → rejected; a different member reads the approved
+  ad afterward → succeeds); the module-boundary fixes with real inline-attribute clicks in
+  headless Chromium. `node --check`-equivalent syntax validation on every touched page's
+  inline `<script>` blocks, and `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+  warnings throughout. Not yet applied to the live database (the one SQL change,
+  `omega_advertisements_insert_fix.sql`) — everything else is client-side only.
 
 ## 9. Working in this repo — practical rules
 

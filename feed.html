@@ -95,6 +95,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['feed','posts','mine','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
@@ -159,12 +160,12 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
     (async function loadPosts(){
       try{
         var pl=document.getElementById('posts-list');
-        var res=await sb.from('publications').select('title,author_name,created_at,kind').order('created_at',{ascending:false}).limit(12);
+        var res=await sb.from('publications').select('title,created_at,kind').order('created_at',{ascending:false}).limit(12);
         var rows=res.data||[];
         if(!rows.length){pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">NO PUBLICATIONS YET &mdash; BE THE FIRST TO PUBLISH IN THE SOVEREIGN NETWORK</div>';return;}
         pl.innerHTML=rows.map(function(r){
           return '<div class="post-card"><div class="post-title">'+String(r.title||'Untitled').replace(/</g,'&lt;').substr(0,80)+'</div>'
-            +'<div class="post-meta">'+String(r.author_name||'ANONYMOUS').replace(/</g,'&lt;').toUpperCase()+' &middot; '+String(r.kind||'ESSAY').replace(/</g,'&lt;').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div>';
+            +'<div class="post-meta">'+String(r.kind||'ESSAY').replace(/</g,'&lt;').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div>';
         }).join('');
       }catch(e){var pl=document.getElementById('posts-list');if(pl)pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">PUBLICATIONS UNAVAILABLE</div>';}
     })();

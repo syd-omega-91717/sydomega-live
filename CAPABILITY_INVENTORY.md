@@ -366,3 +366,44 @@ Greek god, and domain:
   bullet's "owner-elevated access" model rests on — has two genuinely different
   implementations (checks `platform_owners` table vs. `profiles.is_owner` column) across 11
   files; not yet resolved which is live, see `GAP_ANALYSIS.md` §3.1.
+
+## 6. HTML-page audit (this session — first automated pass across all 169 `.html` pages)
+
+Built a table→known-columns dictionary from every `CREATE TABLE`/`ALTER TABLE ADD COLUMN` in
+`supabase/*.sql`, then scanned every page's inline `.from().select()/.insert()/.update()/
+.upsert()` call for column names absent from that table's known set; separately scanned every
+inline `onclick=`/`onchange=`/etc. attribute for calls into functions declared only inside a
+`<script type="module">` block (module top-level declarations aren't global, so an inline
+handler calling one throws `ReferenceError` silently). Every automated finding was independently
+confirmed by hand before fixing — see `CLAUDE.md` §8 for full evidence per finding.
+
+- **8 column-name silent failures fixed:** `feed.html` (publications feed always showed
+  "UNAVAILABLE"), `graph.html`/`nexus.html`/`sigma.html` (identical `zodiac_sign`/`full_name`
+  typo across all three — member graph/nexus/leaderboard never rendered a real member),
+  `tribe.html` (tribes/rankings page always showed 0 real members — `authority_score`/
+  `gate_level` don't exist; now computed client-side from `axis_a/b/c`), `advertising.html` (ad
+  marketplace never displayed or recorded a real ad — wrong column names *and* a wrong `status`
+  filter value *and* a missing RLS INSERT policy, all three fixed), `approvals.html` (dispatch
+  fallback always claimed false success on a write that could never succeed).
+- **`map.html` flagged, not fixed** — needs real geolocation collection (privacy/consent
+  decision), not a rename; see `FEATURE_IDEAS.md`.
+- **A systemic module-boundary bug — 26 instances across 24 pages, the single highest-count
+  bug class found this session.** Tab-switcher and action functions accidentally declared
+  inside `<script type="module">` instead of the page's plain `<script>`, called from inline
+  `onclick=` in the markup — every click threw `ReferenceError` silently, doing nothing. Fixed
+  by exposing each via `window.<fn>=<fn>`. Affects `awards.html`, `beacon.html`,
+  `decisions.html`, `ecosystem.html`, `enterprise.html`, `events.html`, `factions.html`,
+  `feed.html`, `health.html`, `maintenance.html`, `marketplace.html`, `membership.html`,
+  `network.html`, `nutrition.html`, `prediction.html`, `privacy.html`, `publications.html`,
+  `publishing.html`, `search.html`, `series.html`, `sovereign-ai.html`, `sovereigns.html`,
+  `trailers.html`, `travel.html`.
+- **`publications`' draft→published workflow doesn't exist** — flagged, not fixed; see
+  `FEATURE_IDEAS.md`.
+
+All fixes verified: column-name fixes against a schema-validating Playwright mock seeded with
+real-shaped data; the new `advertisements` RLS policy against a real scratch PostgreSQL 16
+instance (impersonation rejected, legitimate self-scoped submission + cross-member read of an
+approved ad both succeed); module-boundary fixes with real inline-attribute clicks in headless
+Chromium, confirming tab panels now actually switch. `scripts/audit.py` clean throughout (0
+critical, 6 pre-existing warnings). Not yet applied to the live database (the one SQL change is
+`supabase/omega_advertisements_insert_fix.sql` — everything else is client-side only).

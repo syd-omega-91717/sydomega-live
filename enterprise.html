@@ -141,6 +141,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 function fmt(n){return n!=null?'$'+(Math.round(n)).toLocaleString():'$0';}
+window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['tiers','accounts','revenue','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});

@@ -476,6 +476,7 @@ window.toggleBias = id => {
 
 /* ── CHOICE BUTTONS ──────────────────────────────────────────────────── */
 
+window.renderChoiceButtons=renderChoiceButtons;
 function renderChoiceButtons() {
   const opts = _options.filter(o=>o.trim());
   document.getElementById('d-choice-btns').innerHTML = opts.map(o =>

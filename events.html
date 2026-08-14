@@ -125,6 +125,7 @@ var EVENTS=[
 
 var joined=new Set();
 
+window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['upcoming','calendar','submit','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});

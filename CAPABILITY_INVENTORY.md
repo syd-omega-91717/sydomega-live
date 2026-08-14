@@ -337,8 +337,19 @@ Greek god, and domain:
 
 ## 5. Backend capability summary
 
-- **104 tables**, all RLS-enabled (CI-enforced), 398 policies, across 111 loose SQL files
-  (+ 92 files in the ordered `supabase/migrations/` copy).
+- **104 tables**, all RLS-enabled (CI-enforced), 403 policies (398 + 5 from this session's RLS
+  scoping fix), across 114 loose SQL files (+ 92 files in the ordered `supabase/migrations/`
+  copy).
+- **RLS policy-correctness audit (this session):** every `FOR INSERT`/`UPDATE`/`ALL` policy
+  checked against whether its table has a user-identity column that should scope it — CI's RLS
+  check only confirms presence, not correctness. 5 gaps found and fixed
+  (`supabase/omega_rls_scoping_fix.sql`, `CLAUDE.md` §8): `capability_kpi_log`/`policy_eval_log`
+  (owner-only-read tables with wide-open unscoped INSERT), `threat_events`/`telemetry_events`
+  (INSERT allowed impersonating another member's `user_id`), and the `storage.objects` "uploads"
+  bucket read policy (no owner-bypass, silently blocking a KYC-review feature that was never
+  built). Verified against a real scratch PostgreSQL 16 instance with 7 functional tests
+  simulating member/owner sessions (impersonation blocked, legitimate self-scoped writes still
+  work, owner can now read KYC uploads) — not just read by eye. Not yet applied live.
 - **Feature flags** (`public.platform_settings`): `tokens_enabled` (false — Ω token economy
   dormant), `payments_enabled` (flag exists; live Stripe integration code exists
   independently in `supabase/functions/checkout`/`stripe-webhook`).

@@ -708,6 +708,64 @@ orphaned file.
   rows, and the post-fix code populates both correctly. No regressions across the other 5
   verification tests. **Not yet applied to the live database** — no SQL changes needed, this is
   a client-side column-name fix only.
+- **RLS policy audit (first full pass): every FOR INSERT/UPDATE/ALL policy's WITH CHECK clause
+  cross-referenced against whether its table has a user-identity column that should be scoping
+  it — 4 real gaps found and fixed, plus 1 storage-policy gap, all in
+  `supabase/omega_rls_scoping_fix.sql`.** `scripts/audit.py` check 4 only confirms every table
+  has RLS *enabled* (0 tables missing it, confirmed clean) — this pass checked policy
+  *correctness*, which that check doesn't cover. All five gaps share the same shape: `WITH
+  CHECK(true)` (or, for storage, no owner-bypass) lets any authenticated account — including one
+  still pending approval — write or read rows it shouldn't, via a direct REST call to the
+  anon/publishable key, not through the app UI (RLS is the actual authorization boundary here,
+  §5, not application code). Each was confirmed to have zero legitimate client writer that the
+  fix would break, by grepping every `.js`/`.html`/edge-function file for the table name before
+  touching its policy:
+  - `capability_kpi_log` — `FOR SELECT` is owner-only (`omega_capability_registry.sql`), but
+    `FOR INSERT` was `WITH CHECK(true)`: any signed-up account could inject fake KPI rows into a
+    table only the owner is meant to see. Zero client writers anywhere in the repo. Fixed by
+    restricting INSERT to the owner too, matching SELECT.
+  - `policy_eval_log` — identical shape and fix (`omega_policy_engine.sql`'s SELECT is
+    owner-only; INSERT was wide open; zero client writers).
+  - `threat_events` — `FOR INSERT` was `WITH CHECK(true)` with **no scoping to the table's own
+    `user_id` column** — worse than the two above, since a malicious signed-up account could
+    insert a row attributing `threat_type` values like `'brute_force'` or
+    `'privilege_escalation'` to a *different* member's `user_id`, framing them on the owner's SOC
+    dashboard (`dashboard.html`/`observatory.html` both show a threat count read from this
+    table). Zero client writers exist today — only reads, for the dashboard counts. Fixed with
+    `auth.uid() = user_id` rather than owner-only, since the table having a `user_id` column at
+    all implies the intended design is eventual self-reported client telemetry, not owner-only
+    writes.
+  - `telemetry_events` — has a real, currently-working client writer (`omega-telemetry.js`,
+    audited earlier this session and found correct) that already always sets `user_id` to the
+    caller's own profile id before any insert fires (`_uid` is only ever set from the
+    `omega:populated` event's own profile, and `flush()` requires `_uid` set first) — so
+    tightening `WITH CHECK` to `auth.uid() = user_id` closes the same spoofing gap as
+    `threat_events` without touching the real write path. `platform_metrics` and
+    `platform_events` were checked too and deliberately left alone: `platform_metrics` has no
+    `user_id` column at all (a platform-level aggregate, not per-member — `WITH CHECK(true)` is
+    correct there), and `platform_events`'s real writer (`omega-sovereign-os.js`) never sets
+    `user_id` by design for anonymous-until-populated beacons, so scoping it would break the real
+    write path instead of closing a gap.
+  - `storage.objects` **"uploads" bucket read policy** (`storage.sql`) — a member can submit a
+    KYC document (`profile.html`'s upload flow writes into `uploads/<their-uid>/...` and sets
+    `profiles.kyc_doc_path`), but the bucket's read policy only ever let a member read their own
+    folder — no owner-bypass, unlike every other owner-elevated policy in this schema. Confirmed
+    via grep that `approvals.html` has zero KYC references (the review UI itself was never
+    built), so this isn't exploited today, but it silently blocks the review half of a
+    half-built feature. Fixed by adding the same `is_platform_owner()` OR-clause used everywhere
+    else in this schema.
+  **Verified against a real scratch PostgreSQL 16 instance**, not just read by eye: loaded the
+  real source files that create all 4 tables plus `storage.sql`, applied the fix file (clean,
+  idempotent — confirmed safe to re-run twice), then ran 7 functional tests simulating two
+  member sessions and an owner session via a configurable `auth.uid()` stub: (1) member A
+  attributing a fake threat to member B → rejected, (2) member A self-reporting → accepted, (3)
+  member A injecting fake KPI data → rejected, (4) member A spoofing telemetry under member B's
+  uid → rejected, (5) member A's own telemetry → accepted, (6) member A reading member B's
+  uploads folder → 0 rows, (7) the owner reading the same folder → the row is visible (the actual
+  new capability). All 7 passed. `python3 scripts/audit.py` reconfirmed 0 critical / 6
+  pre-existing warnings (file/policy counts increased by exactly 1 file / 5 policies, matching
+  the new fix file, no new duplicate-table or RLS-missing warnings introduced). **Not yet applied
+  to the live database.**
 
 ## 9. Working in this repo — practical rules
 

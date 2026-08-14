@@ -191,6 +191,13 @@ var DIMENSIONS=[
 ];
 var ROMANS=['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 var PHI=1.6180339887,E_=2.7182818285,APEX=27.8367;
+// same GATES threshold table used platform-wide (e.g. omega-copilot.js) --
+// gate is always computed client-side, there is no gate_level column
+var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
+function gateForAuthority(auth){
+  for(var i=0;i<GATES.length;i++){ if((auth||0)<GATES[i]) return i+1; }
+  return 12;
+}
 
 function setTab(name){
   var tabs=['dna','attributes','helix','science'];
@@ -204,8 +211,8 @@ function render(pr,u){
   pr=pr||{};
   var elem=(pr.element||'void').toLowerCase().replace(/\s+/g,'').replace('theall','all');
   var elemDef=ELEMENTS[elem]||ELEMENTS.void;
-  var gate=Math.min(12,Math.max(1,parseInt(pr.gate_level)||1));
-  var auth=Math.min(APEX,Math.max(0,parseFloat(pr.authority_score)||3.14));
+  var auth=Math.min(APEX,Math.max(0,parseFloat(pr.authority)||3.14));
+  var gate=gateForAuthority(auth);
   var gateCluster=gate<=4?'early':gate<=9?'mid':'apex';
   var archetype=ARCHETYPES[elem+'_'+gateCluster]||ARCHETYPES.void_early;
   var memberSince=u&&u.created_at?u.created_at:pr.created_at||new Date().toISOString();

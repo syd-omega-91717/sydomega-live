@@ -125,15 +125,15 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
   function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return{num:g+1,name:GATE_NAMES[g]};}
 
-  var {data:all}=await sb.from('profiles').select('id,display_name,full_name,axis_a,axis_b,axis_c,is_owner,zodiac_sign,access_approved').eq('access_approved',true);
+  var {data:all}=await sb.from('profiles').select('id,display_name,axis_a,axis_b,axis_c,is_owner,sign,access_approved').eq('access_approved',true);
   var members=all||[];
 
   var nodes=members.map(function(p){
     var a=Number(p.axis_a||0),b=Number(p.axis_b||0),c=Number(p.axis_c||0);
     var auth=p.is_owner?27.8367:calcAuth(a,b,c);
-    var elem=SIGN_ELEM[p.zodiac_sign]||'Void';
+    var elem=SIGN_ELEM[p.sign]||'Void';
     var gate=getGate(auth);
-    return{id:p.id,name:p.display_name||p.full_name||'Sovereign',auth,elem,gate};
+    return{id:p.id,name:p.display_name||'Sovereign',auth,elem,gate};
   });
 
   var edges=[];

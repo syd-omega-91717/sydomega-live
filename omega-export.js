@@ -27,7 +27,7 @@
 
     /* 1. Profile */
     var pf=await sb.from('profiles')
-      .select('id,display_name,email,sign,element,agent_name,is_owner,subscription_tier,axis_a,axis_b,axis_c,created_at,onboarded_at,access_approved')
+      .select('id,display_name,email,sign,element,agent,is_owner,subscription_tier,axis_a,axis_b,axis_c,created_at,access_approved')
       .eq('id',userId).maybeSingle();
     fetched.profile=pf.data||{};
 
@@ -39,7 +39,7 @@
 
     /* 2. Task completions */
     var tc=await sb.from('task_completions')
-      .select('id,task_name,task_type,axis,weight_applied,completed_at')
+      .select('id,task_name,task_type,axis,points_earned,completed_at')
       .eq('user_id',userId).order('completed_at',{ascending:false}).limit(2000);
     fetched.task_completions=tc.data||[];
 
@@ -63,7 +63,7 @@
 
     /* 6. Leaderboard snapshots */
     var lb=await sb.from('leaderboard_snapshots')
-      .select('snapshot_date,authority,axis_a,axis_b,axis_c,rank_global,tier')
+      .select('snapshot_date,authority,axis_a,axis_b,axis_c,rank_global')
       .eq('user_id',userId).order('snapshot_date',{ascending:false}).limit(365);
     fetched.leaderboard_snapshots=lb.data||[];
 

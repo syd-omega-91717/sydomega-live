@@ -164,7 +164,17 @@ tables/RPCs absent from the schema) across every page not yet covered by a prior
   `marketplace.html`, `oath.html`, `publishing.html`, `research.html`, `terms.html`, and
   `consultancy.html` — the files not already covered by a prior session's fix — all correctly
   check `.error`/throw-and-catch before reporting success. No new silent-failure-write gaps
-  found.
+  found in that pass — but that pass checked `.error`-gating, not whether the written column
+  names actually match the live schema, which is a different failure mode (PostgREST rejects the
+  whole write before `.error` even becomes "did we handle it correctly"). A later, broader sweep
+  (see `CLAUDE.md` §8) diffed every page's `.insert()`/`.update()`/`.upsert()` payload keys
+  against the real `CREATE TABLE` column lists and found two more this way:
+  `advertising.html`'s entire Live Ads/Submit feature (near-total column-name mismatch against
+  `public.advertisements`) and `approvals.html`'s dispatch-send fallback path (wrote
+  `sent_by`/`sent_at`, columns that exist in neither divergent `dispatches` shape, with no
+  `.error` check at all — the false-success-toast variant this section was originally looking
+  for, just missed because the column-mismatch masked it). Both fixed; see `CLAUDE.md` §8 for
+  full detail.
 - **Incidental finding, not XSS but turned up by the same sweep — `access_audit_log` RPC
   response-shape mismatch, fixed:** see §2 (new row) and §4.8.
 - **`member_events` dead-write gap — fixed (`FEATURE_IDEAS.md` #1).** `events.html:199`

@@ -200,10 +200,18 @@ function toast(msg,col){
 
 var profiles=[],tribeData={};
 
+// same GATES threshold table used platform-wide (e.g. omega-copilot.js) --
+// gate is always computed client-side, there is no gate_level column
+var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
+function gateForAuthority(auth){
+  for(var i=0;i<GATES.length;i++){ if((auth||0)<GATES[i]) return i+1; }
+  return 12;
+}
+
 function generateDemoProfiles(){
   var names=['CORVUS','LYSANDER','MIRA','THERON','OPHELIA','CASPIAN','SELENE','DORIAN','ARIA','SAGE','ORION','NOVA','PHOENIX','ATLAS','LUNA'];
   var elements=['fire','water','wind','metal','sand','soul','space','void','all'];
-  return names.map(function(n,i){return{id:'demo_'+i,display_name:n,element:elements[i%elements.length],authority_score:(Math.random()*25+3).toFixed(2)*1,gate_level:Math.floor(Math.random()*12)+1,access_approved:true,created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()};});
+  return names.map(function(n,i){return{id:'demo_'+i,display_name:n,element:elements[i%elements.length],authority:(Math.random()*25+3).toFixed(2)*1,access_approved:true,created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()};});
 }
 
 function groupByElement(ps){
@@ -222,8 +230,8 @@ function renderGlobalStats(){
   document.getElementById('sActiveTribes').textContent=activeTribes;
   var dominant=ELEMENTS.reduce(function(best,el){return(tribeData[el.id]||[]).length>(tribeData[best.id]||[]).length?el:best;},ELEMENTS[0]);
   document.getElementById('sDominantTribe').textContent=dominant.sigil;
-  var top=profiles.reduce(function(best,p){return(p.authority_score||0)>(best.authority_score||0)?p:best;},profiles[0]||{});
-  document.getElementById('sTopAuthority').textContent=top.authority_score?top.authority_score.toFixed(1):'—';
+  var top=profiles.reduce(function(best,p){return(p.authority||0)>(best.authority||0)?p:best;},profiles[0]||{});
+  document.getElementById('sTopAuthority').textContent=top.authority?top.authority.toFixed(1):'—';
 }
 
 function renderElementGrid(){
@@ -234,7 +242,7 @@ function renderElementGrid(){
   ELEMENTS.forEach(function(el){
     var members=tribeData[el.id]||[];
     var pct=(members.length/maxCount*100).toFixed(1);
-    var avgAuth=members.length?(members.reduce(function(s,m){return s+(m.authority_score||0);},0)/members.length).toFixed(2):'—';
+    var avgAuth=members.length?(members.reduce(function(s,m){return s+(m.authority||0);},0)/members.length).toFixed(2):'—';
     var card=document.createElement('div');
     card.className='elem-card';
     card.style.background=el.glow;card.style.borderColor=el.color+'22';
@@ -275,8 +283,8 @@ function renderRankings(){
         var rk=document.createElement('div');rk.className='mr-rank '+(i===0?'gold-r':i===1?'silver-r':i===2?'bronze-r':'');rk.textContent=i+1;
         var name=document.createElement('div');name.className='mr-name';name.textContent=(m.display_name||'MEMBER·'+(m.id||'').slice(-4)).toUpperCase();
         var info=document.createElement('div');
-        var auth=document.createElement('div');auth.className='mr-auth';auth.textContent=(m.authority_score||0).toFixed(2)+' AUTH';
-        var gate=document.createElement('div');gate.className='mr-gate';gate.textContent='GATE '+(m.gate_level||'—');
+        var auth=document.createElement('div');auth.className='mr-auth';auth.textContent=(m.authority||0).toFixed(2)+' AUTH';
+        var gate=document.createElement('div');gate.className='mr-gate';gate.textContent='GATE '+gateForAuthority(m.authority);
         info.appendChild(auth);info.appendChild(gate);
         row.appendChild(rk);row.appendChild(name);row.appendChild(info);
         card.appendChild(row);
@@ -349,8 +357,9 @@ window.addEventListener('resize',drawDominanceChart);
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 
   try{
-    var d=(await sb.from('profiles').select('id,display_name,element,authority_score,gate_level,access_approved,created_at').eq('access_approved',true).order('authority_score',{ascending:false}).limit(200)).data||[];
-    profiles=d;
+    var r=await sb.from('profiles').select('id,display_name,element,authority,access_approved,created_at').eq('access_approved',true).order('authority',{ascending:false}).limit(200);
+    if(r.error) throw r.error;
+    profiles=r.data||[];
   }catch(e){profiles=generateDemoProfiles();}
 
   tribeData=groupByElement(profiles);

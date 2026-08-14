@@ -652,6 +652,101 @@ orphaned file.
   would ever execute) has no external caller anywhere in the repo today. See `FEATURE_IDEAS.md`'s
   "Flagged, not proposed" section for why wiring the workflow engine up to something is a
   scoping decision left undone, not a bug.
+- **`advertising.html`'s entire Live Ads / Submit feature was completely broken, both read and
+  write — fixed.** Found by scanning every `.insert()`/`.update()`/`.upsert()` payload across all
+  ~250 pages against the actual `CREATE TABLE` column lists in `supabase/*.sql` (a broader sweep
+  than any prior session's — earlier passes covered `omega-*.js` modules and silent-failure-write
+  checks, but not a column-level check across every page). `public.advertisements`
+  (`chunk_06_migrations.sql:469-484`) has columns `company`/`title`/`description`/`url`/
+  `rate_tier`; `advertising.html` wrote and read `company_name`/`headline`/`body`/
+  `destination_url`/`tier` instead — a near-total naming mismatch, not one or two fields. Same
+  silent-failure shape as every bug in this section: PostgREST rejects the whole
+  `select()`/`insert()` when any referenced column doesn't exist, so `loadLiveAds()` always fell
+  into its catch block ("PLACEMENTS UNAVAILABLE" for every visitor, always) and `submitAd()`'s
+  insert always failed too — though its catch block already showed an honest non-success message
+  ("SUBMISSION NOTED. CONTACT THE ORDER DIRECTLY TO PROCEED."), so this wasn't a false-success
+  toast, just a feature that has never once worked since it shipped. Also included
+  `timeline_period`/`submitted_at` keys with no matching column anywhere — `submitted_at` is
+  dropped (the table's `created_at DEFAULT now()` already covers it); `timeline_period` has no
+  equivalent column at all and is now simply not persisted (the form field is left in place, but
+  the value isn't saved) — flagged as a known, deliberately undone gap rather than inventing a new
+  column unprompted, matching this file's own rule against guessing at schema decisions. Fixed all
+  field names in both the `select()` and the `insert()` to match the live schema exactly.
+  **Not yet applied to the live database** — no SQL changes needed, this is a client-side
+  field-name fix only.
+- **`approvals.html`'s dispatch-send fallback path showed a false "✓ DISPATCH RECORDED" success
+  toast on a write that would always fail — fixed.** `sendDispatch()` tries the `post_dispatch`
+  RPC first (which correctly inserts `title`/`body`/`category` into `public.dispatches`, per its
+  own definition in `supabase/omega_dispatch.sql`); only if that RPC throws or returns
+  `{ok:false}` does it fall back to a direct `.insert()` — and that fallback wrote
+  `sent_by`/`sent_at`, columns that exist in **neither** of the two genuinely divergent
+  `dispatches` table shapes in the SQL bag (the newer `title`/`body`/`category` shape the RPC
+  itself uses, or the older `user_id`/`sign`/`body` shape some other files still define — see
+  `GAP_ANALYSIS.md` §3.1's broader note on divergent definitions). The fallback's `.error` was
+  never checked, so on the rare path where it's actually reached (the RPC missing or erroring),
+  the owner would see a false success toast while nothing saved. Fixed by matching the fallback's
+  `INSERT` shape to exactly what `post_dispatch` itself writes (`title`/`body`/`category` — the
+  table has no sender-tracking column at all, so `sent_by`/`sent_at` were never accurate names for
+  anything that exists) and adding a real `.error` check. **Not yet applied to the live
+  database** — no SQL changes needed, this is a client-side fix only.
+- **Six more pages with the same column-name-mismatch bug, found by extending the scan to
+  `select()` calls (read side) across every page, not just writes.** Cross-referenced every
+  `.from(table).select('cols')` call in every `.html`/`omega-*.js` file against the real
+  `CREATE TABLE`/`ALTER TABLE ADD COLUMN` definitions in `supabase/*.sql`, catching cases where
+  PostgREST would reject the whole query (same failure shape as every write-side bug above, just
+  on reads). `profiles` and `task_completions` both have multiple divergent definitions across
+  the SQL bag, so each candidate was checked against the full column union, not a single file, to
+  avoid false positives (several did turn out to be false positives — `kind`/`task`/`axis` on
+  `task_completions` and `note` on `evolution_events` are all genuinely real legacy columns the
+  scan's regex initially missed due to multi-column `ALTER TABLE` statements and single-line
+  `CREATE TABLE` bodies respectively; verified directly before touching anything).
+  - **`tribe.html` and `dna.html`** selected/ordered by `profiles.authority_score` and
+    `profiles.gate_level` — neither exists. The real stored value is `profiles.authority`
+    (numeric column); `authority_score()` is a *function*, not a column, and gate number has
+    never been a stored column anywhere — it's always computed client-side from authority against
+    a fixed threshold table, the exact pattern already used identically in 8+ other
+    `omega-*.js` modules (`omega-copilot.js`'s `GATES`/`nearestGate`, `omega-passport.js`'s
+    `getGate`, etc.). `tribe.html`'s Sovereign Tribes rankings showed zero members for every
+    visitor since it shipped (the query's `.order('authority_score',...)` made the whole request
+    fail, silently falling through to an always-empty array — the page's own
+    `generateDemoProfiles()` fallback, which fabricates random `authority_score`/`gate_level`
+    values, turned out to be unreachable dead code too, since a PostgREST column error resolves
+    to `{data:null,error}` rather than throwing, so the `try/catch` around it never fired).
+    `dna.html`'s personalization showed the same generic default (`gate 1`, `auth 3.14`) to every
+    member regardless of real progress. Fixed both to read `authority` and compute gate via the
+    same `GATES` threshold array used platform-wide; also added a real `.error` check in
+    `tribe.html` so its demo-data fallback is now actually reachable on a genuine failure instead
+    of being permanently dead code.
+  - **`graph.html`, `nexus.html`, `sigma.html`** (three separate member-visualization pages —
+    constellation graph, network graph, and leaderboard) all selected `profiles.zodiac_sign` and
+    `profiles.full_name`, neither of which exists — the real columns are `sign` (already
+    established as correct elsewhere, e.g. the onboarding fix earlier in this section) and
+    `display_name` only (`full_name` has never existed anywhere in the SQL bag). All three pages
+    defensively guard the failed query result with `||[]`, so they didn't crash — they just
+    silently showed zero members, forever, on every page load, for every visitor. Fixed all three
+    call sites and every downstream `.zodiac_sign`/`.full_name` reference.
+  - **`omega-export.js`** (the GDPR Article 20 data-portability export — legally the
+    highest-stakes module this pass touched) selected `profiles.agent_name` (real column is
+    `agent`, matching the onboarding fix above), `profiles.onboarded_at` (confirmed not to exist
+    anywhere, same as the onboarding fix — dropped, not invented), `task_completions
+    .weight_applied` (real column is `points_earned`, added by the `complete_task` dedup fix),
+    and `leaderboard_snapshots.tier` (no such column or equivalent exists on this table at all —
+    dropped). The profile and task-completion sections of every member's GDPR export have been
+    silently failing (empty `{}`/`[]` in the downloaded archive, no visible error) since this
+    module shipped.
+  - **`feed.html`** selected `publications.author_name` (no such column — the table only stores
+    `user_id`, no display-name join is wired) and **`omega-realtime.js`** selected
+    `activity_feed.member_name` (same — doesn't exist). Both had already-correct fallback
+    rendering (`r.author_name||'ANONYMOUS'`, `e.member_name?...`) that never got a chance to run
+    because the whole query failed first — `feed.html`'s publications feed showed zero posts,
+    and the platform-wide live-activity ticker (`omega-realtime.js`, loaded via `bg.js`) never
+    populated its initial 10-item backlog. Fixed by dropping the two nonexistent columns from
+    their `select()` calls; no render-code changes needed since the fallbacks were already
+    correct once real rows come back.
+  **None of the fixes in this entry needed any SQL/schema change** — every real bug was a
+  client-side column-name mismatch against columns that already exist; not yet applied to the
+  live database only in the sense that these are static files redeployed on push, not a database
+  migration to run.
 
 ## 9. Working in this repo — practical rules
 

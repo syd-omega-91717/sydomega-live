@@ -252,7 +252,7 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
   var myGate=getGate(myAuth);
 
   /* Load approved profiles */
-  var res=await sb.from('profiles').select('display_name,full_name,axis_a,axis_b,axis_c,is_owner,zodiac_sign,access_approved').eq('access_approved',true).order('axis_a',{ascending:false});
+  var res=await sb.from('profiles').select('display_name,axis_a,axis_b,axis_c,is_owner,sign,access_approved').eq('access_approved',true).order('axis_a',{ascending:false});
   var approved=(res.data||[]);
   var auths=approved.map(function(p){return p.is_owner?27.8367:calcAuth(Number(p.axis_a||0),Number(p.axis_b||0),Number(p.axis_c||0));});
   var totalN=auths.length;
@@ -276,7 +276,7 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
   document.getElementById('pctile-label').textContent=myPctile+'th PERCENTILE';
 
   /* Top list */
-  var topAuth=approved.map(function(p){return{name:p.display_name||p.full_name||'Sovereign',auth:p.is_owner?27.8367:calcAuth(Number(p.axis_a||0),Number(p.axis_b||0),Number(p.axis_c||0))};}).sort(function(a,b){return b.auth-a.auth;}).slice(0,10);
+  var topAuth=approved.map(function(p){return{name:p.display_name||'Sovereign',auth:p.is_owner?27.8367:calcAuth(Number(p.axis_a||0),Number(p.axis_b||0),Number(p.axis_c||0))};}).sort(function(a,b){return b.auth-a.auth;}).slice(0,10);
   var topEl=document.getElementById('top-list');
   if(topAuth.length===0){topEl.textContent='No data.';}
   else{
@@ -285,7 +285,7 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
       var gate=getGate(m.auth);
       var row=document.createElement('div');
       row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(201,168,76,.06)';
-      var isMe=m.name===(pr.display_name||pr.full_name||'Sovereign');
+      var isMe=m.name===(pr.display_name||'Sovereign');
       var numSpan=document.createElement('span');
       numSpan.style.cssText='font-family:var(--D);font-size:10px;color:var(--muted);margin-right:10px';
       numSpan.textContent=String(i+1).padStart(2,'0');
@@ -415,7 +415,7 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
 
   /* ── ELEMENTS TAB ── */
   var elemCounts={};
-  approved.forEach(function(p){var elem=SIGN_ELEM[p.zodiac_sign]||'Void';elemCounts[elem]=(elemCounts[elem]||0)+1;});
+  approved.forEach(function(p){var elem=SIGN_ELEM[p.sign]||'Void';elemCounts[elem]=(elemCounts[elem]||0)+1;});
   var elemGrid=document.getElementById('elem-grid');
   Object.entries(ELEM_INFO).forEach(function(entry){
     var name=entry[0],info=entry[1];
@@ -501,7 +501,7 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
       var auth=p.is_owner?27.8367:calcAuth(a,Number(p.axis_b||0),Number(p.axis_c||0));
       var x=40+(a/10)*(W-50);
       var y=H-30-(auth/30)*(H-40);
-      var elem=SIGN_ELEM[p.zodiac_sign]||'Void';
+      var elem=SIGN_ELEM[p.sign]||'Void';
       var clr=(ELEM_INFO[elem]?.color)||(getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#8a8676');
       ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
       ctx.fillStyle=clr+'99';ctx.fill();

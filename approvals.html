@@ -606,7 +606,10 @@ async function sendDispatch(){
     title.value='';body.value='';if(cat)cat.value='';
     toast('✓ DISPATCH TRANSMITTED','var(--gold)');
   }else{
-    await sb.from('dispatches').insert({title:title.value.trim(),category:cat?cat.value:'',body:body.value.trim(),sent_by:ownerUid,sent_at:new Date().toISOString()});
+    // fallback mirrors post_dispatch's own INSERT shape (supabase/omega_dispatch.sql) --
+    // dispatches has no sender-tracking column, so there's no sent_by/sent_at to write
+    var d=await sb.from('dispatches').insert({title:title.value.trim(),category:cat?cat.value:'',body:body.value.trim()});
+    if(d.error){toast('COULD NOT SEND DISPATCH: '+d.error.message,'var(--crim)');return;}
     title.value='';body.value='';if(cat)cat.value='';
     toast('✓ DISPATCH RECORDED','var(--solar)');
   }

@@ -1337,16 +1337,19 @@ orphaned file.
     import`, which rewrites every historical commit touching the file and requires a
     force-push to publish. That combination (history rewrite + force-push) needs explicit user
     confirmation before being attempted at all, regardless of how broadly it's requested in
-    aggregate — asked below, not assumed. `git-lfs` also isn't installed in this session's
-    environment, so even with confirmation the migration would need to run somewhere that has
-    it.
+    aggregate. **Asked directly; user chose to leave it** — the file is already excluded from
+    the live Vercel deploy via `.vercelignore` (confirmed earlier in this file), so this is
+    hygiene debt only, not a functional bug, and the destructive rewrite isn't worth it for
+    that. No change made; the warning stays open by design, not by oversight.
   - **Warning 5 (`transactions`/`wallet_balances` tables missing)** isn't a bug — it's a
     deliberate, already-recorded decision (this same section, above) to keep payment/token
     infrastructure dormant pending legal review, which is §9's rule against shipping
     monetizable features live without an explicit gating decision working exactly as intended.
     "Solving" this warning means reversing that decision and building live payment/token-balance
-    tables — a product/legal call, not an engineering one, so it's asked below rather than
-    assumed on the platform owner's behalf.
+    tables — a product/legal call, not an engineering one. **Asked directly; user chose to keep
+    it dormant** — the original reasoning (unusually sensitive data, real schema-design
+    commitment that's hard to walk back once member data lives there, this repo's own history of
+    real RLS bugs) stands. No change made; the warning stays open by design.
   - **Warnings 2 (guarded `DROP TABLE`) and 3 (`.docx` excluded via `.vercelignore`)** need no
     further action — both were already fully investigated and correctly categorized as
     low-risk/documented-only in the entry above. They still count toward `scripts/audit.py`'s

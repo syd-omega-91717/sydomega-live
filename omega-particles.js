@@ -24,13 +24,13 @@ var ELEM_CONFIGS = {
 
 /* Map sign to element (matches canon in character.html) */
 var SIGN_ELEM = {
-  Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',
-  Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',
-  Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'
+  Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',
+  Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',
+  Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'
 };
 
 function resolveElement(pr){
-  if(pr&&pr.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign]) return SIGN_ELEM[pr.zodiac_sign];
+  if(pr&&pr.sign&&SIGN_ELEM[pr.sign]) return SIGN_ELEM[pr.sign];
   return 'Void';
 }
 

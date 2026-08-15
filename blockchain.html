@@ -165,7 +165,7 @@ async function boot(){
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
-  _mySign=pr.zodiac_sign||'';
+  _mySign=pr.sign||'';
   if(!_mySign){
     var notice=document.getElementById('sign-notice');
     if(notice)notice.innerHTML='<div class="gate-notice">Complete your profile (Axis Setup) to unlock your sovereign element token assignment.</div>';

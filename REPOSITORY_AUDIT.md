@@ -21,9 +21,13 @@ A framework-free static site — 170 standalone `.html` pages, 93 root-level `om
 modules — deployed to Vercel with no build step (`vercel.json`: `installCommand`/`buildCommand`
 are both no-ops, `echo skip-install` / `echo static-no-build`). Backend is Supabase (Postgres +
 Row Level Security + Edge Functions + Storage). There is no `src/`, no bundler, no framework;
-every page loads `bg.js` (module loader / design-system injector / approval guard) and `nav.js`
-(sidebar) via plain `<script>` tags. `package.json` declares zero dependencies — it exists only
-to document Node/npm version constraints for tooling scripts, not for a build.
+every page loads `bg.js` (module loader / design-system injector / approval guard) via a plain
+`<script>` tag. `nav.js` (sidebar) is auto-injected by `bg.js` — **this claim was false until
+fixed this session** (see `CLAUDE.md` §8): `bg.js` loaded ~90 other modules but never actually
+requested `/nav.js`, so the sidebar was empty on the ~160 pages without their own legacy
+`<script src="/nav.js">` tag, confirmed with a real headless-Chromium render, not just a grep of
+this claim. `package.json` declares zero dependencies — it exists only to document Node/npm
+version constraints for tooling scripts, not for a build.
 
 A second repository, `syd-omega-91717/-_V18_SYDOMEGA91717`, exists on GitHub under the same
 account. It was found this session to be a stale, incomplete snapshot (16 "Add files via

@@ -9,7 +9,7 @@
 
 var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
 var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
-var SIGN_ELEM={Aries:'Fire ☲',Taurus:'Water ☰',Gemini:'Wind ☱',Cancer:'Water ☰',Leo:'Fire ☲',Virgo:'Sand ★',Libra:'Wind ☱',Scorpio:'Soul ✴',Sagittarius:'Fire ☲',Capricorn:'Metal ☳',Aquarius:'Metal ☳',Pisces:'Water ☰'};
+var SIGN_ELEM={Aries:'Fire ☲',Taurus:'Metal ☳',Gemini:'Wind ☱',Cancer:'Water ☰',Leo:'Fire ☲',Virgo:'Sand ★',Libra:'Wind ☱',Scorpio:'Water ☰',Sagittarius:'Fire ☲',Capricorn:'Metal ☳',Aquarius:'Wind ☱',Pisces:'Water ☰'};
 var SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
 
 function getGate(auth){
@@ -25,10 +25,10 @@ function drawPassport(pdf, pr, user){
   var c=Number(pr.is_owner?9:pr.axis_c||0.001);
   var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
   var gate=getGate(auth);
-  var sign=pr.zodiac_sign||'—';
+  var sign=pr.sign||'—';
   var elem=SIGN_ELEM[sign]||'—';
   var god=SIGN_GOD[sign]||'—';
-  var name=pr.display_name||pr.full_name||(user&&user.email?user.email.split('@')[0]:'Sovereign');
+  var name=pr.display_name||(user&&user.email?user.email.split('@')[0]:'Sovereign');
   var issued=new Date().toISOString().split('T')[0];
 
   var W=105,H=148; /* A6 size in mm */

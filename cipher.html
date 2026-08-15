@@ -147,9 +147,9 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   };
   var ELEM_COLORS={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),Sand:'#FFD54F',Soul:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),Space:'#7C4DFF',Void:'#334466','The All':(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')};
   var ELEM_SIGILS={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
-  var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+  var SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
 
-  var defaultElem=(pr.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign])||'Fire';
+  var defaultElem=(pr.sign&&SIGN_ELEM[pr.sign])||'Fire';
   var currentElem=defaultElem;
   var cipherMode='encode';
   var history=[];

@@ -334,6 +334,13 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
 
 (function(){if(!document.querySelector('script[data-omega-emblem]')){var s=document.createElement('script');s.src='/emblem.js';s.setAttribute('data-omega-emblem','1');(document.body||document.documentElement).appendChild(s);}})();
 
+/* Sidebar navigation -- renders into <aside id="omega-side">. A handful of
+   pages still carry their own explicit <script src="/nav.js"> tag (no
+   data-omega-nav marker) from before this injection existed; nav.js itself
+   has no double-run guard, so this checks for either form to avoid
+   rendering the sidebar twice on those pages. */
+(function(){if(!document.querySelector('script[data-omega-nav],script[src="/nav.js"]')){var s=document.createElement('script');s.src='/nav.js';s.setAttribute('data-omega-nav','1');(document.body||document.documentElement).appendChild(s);}})();
+
 /* Audio engine (Web Audio oscillators). Its own visible button is disabled --
    omega-controls.js's unified dock is the one on-screen SOUND control. */
 (function(){if(!document.querySelector('script[data-omega-audio]')){var s=document.createElement('script');s.src='/audio.js';s.setAttribute('data-omega-audio','1');if(document.body)document.body.appendChild(s);}})();

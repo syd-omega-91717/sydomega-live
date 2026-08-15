@@ -152,7 +152,7 @@
         member:pr.display_name,
         auth:auth.toFixed(4),
         axis:{a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3)},
-        element:pr.element,sign:pr.sign,agent:pr.agent_name,
+        element:pr.element,sign:pr.sign,agent:pr.agent,
         tier:pr.subscription_tier,
         formula:'sqrt(A³+B³+C³)×φ/e',
         tasks_completed:ctx._tasks_count||0,

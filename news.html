@@ -184,7 +184,7 @@ async function boot(){
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,_user);
-  _mySign=pr.zodiac_sign||pr.sign||'';
+  _mySign=pr.sign||'';
   document.getElementById('w-go').addEventListener('click',send);
   loadDispatches();loadWire();loadIntel();
 }

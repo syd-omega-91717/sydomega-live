@@ -55,7 +55,11 @@
     snd.style.cssText='font-family:"Courier Prime",monospace;font-size:8.5px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s';
     snd.textContent=_soundOn?'\u266a ON':'\u266a OFF';
     snd.onclick=function(){
-      _soundOn=!_soundOn;
+      // audio.js exposes __omegaAudioToggle specifically for this dock to
+      // call (see its own header comment) -- previously this button only
+      // toggled its own label/localStorage and never actually reached the
+      // audio engine
+      _soundOn=window.__omegaAudioToggle?window.__omegaAudioToggle():!_soundOn;
       localStorage.setItem('omega_sound',_soundOn?'on':'off');
       snd.textContent=_soundOn?'\u266a ON':'\u266a OFF';
       snd.style.color=_soundOn?'#00E5FF':'#8a8676';

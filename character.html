@@ -197,16 +197,16 @@
         <thead><tr><th>SIGN</th><th>OLYMPIAN</th><th>ELEMENT</th><th>GATE</th></tr></thead>
         <tbody id="ref-tbody">
           <tr><td>Aries</td><td>Ares</td><td>Fire ☲</td><td>I</td></tr>
-          <tr><td>Taurus</td><td>Aphrodite</td><td>Water ☰</td><td>II</td></tr>
+          <tr><td>Taurus</td><td>Aphrodite</td><td>Metal ☳</td><td>II</td></tr>
           <tr><td>Gemini</td><td>Hermes</td><td>Wind ☱</td><td>III</td></tr>
-          <tr><td>Cancer</td><td>Artemis</td><td>Sand ★</td><td>IV</td></tr>
-          <tr><td>Leo</td><td>Apollo</td><td>Soul ✴</td><td>V</td></tr>
-          <tr><td>Virgo</td><td>Athena</td><td>Metal ☳</td><td>VI</td></tr>
-          <tr><td>Libra</td><td>Hera</td><td>Space ✶</td><td>VII</td></tr>
-          <tr><td>Scorpio</td><td>Demeter</td><td>Void ✷</td><td>VIII</td></tr>
-          <tr><td>Sagittarius</td><td>Zeus</td><td>The All Ω</td><td>IX</td></tr>
-          <tr><td>Capricorn</td><td>Hestia</td><td>Fire ☲</td><td>X</td></tr>
-          <tr><td>Aquarius</td><td>Hephaestus</td><td>Metal ☳</td><td>XI</td></tr>
+          <tr><td>Cancer</td><td>Artemis</td><td>Water ☰</td><td>IV</td></tr>
+          <tr><td>Leo</td><td>Apollo</td><td>Fire ☲</td><td>V</td></tr>
+          <tr><td>Virgo</td><td>Athena</td><td>Sand ★</td><td>VI</td></tr>
+          <tr><td>Libra</td><td>Hera</td><td>Wind ☱</td><td>VII</td></tr>
+          <tr><td>Scorpio</td><td>Demeter</td><td>Water ☰</td><td>VIII</td></tr>
+          <tr><td>Sagittarius</td><td>Zeus</td><td>Fire ☲</td><td>IX</td></tr>
+          <tr><td>Capricorn</td><td>Hestia</td><td>Metal ☳</td><td>X</td></tr>
+          <tr><td>Aquarius</td><td>Hephaestus</td><td>Wind ☱</td><td>XI</td></tr>
           <tr><td>Pisces</td><td>Poseidon</td><td>Water ☰</td><td>XII</td></tr>
         </tbody>
       </table>
@@ -242,27 +242,27 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 
   var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
   var GODS=['Ares','Aphrodite','Hermes','Artemis','Apollo','Athena','Hera','Demeter','Zeus','Hestia','Hephaestus','Poseidon'];
-  var ELEMS=['Fire ☲','Water ☰','Wind ☱','Sand ★','Soul ✴','Metal ☳','Space ✶','Void ✷','The All Ω','Fire ☲','Metal ☳','Water ☰'];
-  var ELEM_IDS=['fire','water','wind','sand','soul','metal','space','void','all','fire','metal','water'];
+  var ELEMS=['Fire ☲','Metal ☳','Wind ☱','Water ☰','Fire ☲','Sand ★','Wind ☱','Water ☰','Fire ☲','Metal ☳','Wind ☱','Water ☰'];
+  var ELEM_IDS=['fire','metal','wind','water','fire','sand','wind','water','fire','metal','wind','water'];
   var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
   var THRESHOLDS=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
   var LORE_MAP={
     Aries:'Aries — the first sovereign of the lattice. Ruled by Ares, the war god, the Aries character embodies decisive force and primordial fire. Their journey begins at the Gate of the Initiate, igniting the chain that leads to the Apex.',
-    Taurus:'Taurus — the sovereign of beauty and endurance. Guided by Aphrodite through the waters of the second gate, the Taurus character builds slowly and resolutely, crafting bonds across element lines that outlast empires.',
+    Taurus:'Taurus — the sovereign of beauty and endurance. Guided by Aphrodite through the metal of the second gate, the Taurus character builds slowly and resolutely, forging bonds across element lines that outlast empires.',
     Gemini:'Gemini — the twin sovereign, bearer of messages between worlds. Under Hermes, the Gemini character navigates the wind element, carrying truth between the twelve houses at the speed of thought.',
-    Cancer:'Cancer — the guardian of thresholds. Artemis, goddess of the hunt, guides Cancer through the sand element — the amplifier of all. The Cancer sovereign feels the lattice\'s pulse before it is spoken.',
-    Leo:'Leo — the radiant sovereign. Apollo\'s heir, the Leo character carries the soul element, the fifth frequency that unlocks inner gates. Their presence illuminates the lattice and draws other sovereigns toward the light.',
-    Virgo:'Virgo — the architect sovereign. Athena\'s wisdom runs through the Virgo character like metal through stone — precise, structural, eternal. They hold the blueprint of the 104,976-node lattice in their mind.',
-    Libra:'Libra — the sovereign of balance. Hera, queen of Olympus, entrusts the space element to Libra. They are the diplomats of the twelve houses, the ones who weigh authority and keep the lattice from collapse.',
-    Scorpio:'Scorpio — the sovereign of depths. Demeter guides Scorpio into the void element — the most primal of the supreme triad. What others fear, the Scorpio character transforms into sovereign power.',
-    Sagittarius:'Sagittarius — the sovereign of all things. Zeus himself marks this sign with The All element, the ninth and final frequency. The Sagittarius character holds the widest view of the lattice and points always toward the apex.',
-    Capricorn:'Capricorn — the hearth sovereign. Hestia, keeper of the first flame, guides Capricorn through Gate X. Patient and enduring, the Capricorn character tends the lattice fire across generations.',
-    Aquarius:'Aquarius — the forge sovereign. Hephaestus gifts the metal element to Aquarius, the builder of the final gate. Their innovations re-shape the lattice and bring Gate XI within reach of the lattice as a whole.',
+    Cancer:'Cancer — the guardian of thresholds. Artemis, goddess of the hunt, guides Cancer through the deep waters of the fourth gate. The Cancer sovereign feels the lattice\'s pulse before it is spoken.',
+    Leo:'Leo — the radiant sovereign. Apollo\'s heir, the Leo character carries the fire element, the first frequency reignited at the fifth gate. Their presence illuminates the lattice and draws other sovereigns toward the light.',
+    Virgo:'Virgo — the architect sovereign. Athena\'s wisdom runs through the Virgo character like sand through an hourglass — the universal amplifier, strengthening every element it touches. They hold the blueprint of the 104,976-node lattice in their mind.',
+    Libra:'Libra — the sovereign of balance. Hera, queen of Olympus, entrusts the wind element to Libra. They are the diplomats of the twelve houses, the ones who weigh authority and keep the lattice from collapse.',
+    Scorpio:'Scorpio — the sovereign of depths. Demeter guides Scorpio into the water element at its most undertow — transformation forged in the deep. What others fear, the Scorpio character turns into sovereign power.',
+    Sagittarius:'Sagittarius — the sovereign of vision. Zeus himself marks this sign with the fire element at its widest reach. The Sagittarius character holds the widest view of the lattice and points always toward the apex.',
+    Capricorn:'Capricorn — the hearth sovereign. Hestia, keeper of the forge, guides Capricorn through Gate X with the metal element\'s enduring strength. Patient and unbending, the Capricorn character tempers the lattice across generations.',
+    Aquarius:'Aquarius — the forge sovereign. Hephaestus carries the wind element to Aquarius, the builder of the final gate. Their innovations re-shape the lattice and bring Gate XI within reach of the lattice as a whole.',
     Pisces:'Pisces — the ocean sovereign. Poseidon marks Pisces with the water element at its deepest expression — Gate XII, the Apex. The Pisces character holds the lattice\'s oldest memory and its final destination.'
   };
   var TRIAD_NAMES=['Primal','Primal','Primal','Middle','Middle','Middle','Supreme','Supreme','Supreme','Primal','Middle','Supreme'];
 
-  var sign=pr.zodiac_sign||SIGNS[Math.floor(new Date().getMonth()%12)];
+  var sign=pr.sign||SIGNS[Math.floor(new Date().getMonth()%12)];
   var signIdx=SIGNS.indexOf(sign);if(signIdx<0)signIdx=0;
   var god=GODS[signIdx],elem=ELEMS[signIdx],elemId=ELEM_IDS[signIdx];
   var gateIdx=THRESHOLDS.findIndex(function(t){return auth<t;});
@@ -270,7 +270,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   THRESHOLDS.forEach(function(t,i){if(auth>=t)highGrade=GNAMES[i];});
 
   sid('stat-auth',auth.toFixed(4));sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-  sid('chr-display-name',(pr.full_name||s.user.email||'--').toUpperCase());
+  sid('chr-display-name',(pr.display_name||s.user.email||'--').toUpperCase());
   sid('chr-uid-short','UID '+s.user.id.substr(0,8).toUpperCase());
   sid('chr-sign',sign||'--');sid('chr-element',elem);sid('chr-olympian',god);
   sid('chr-gate',gateIdx>0?(GNAMES[gateIdx-1]+' · GATE '+(gateIdx)):'INITIATE · GATE I');

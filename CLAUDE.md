@@ -91,11 +91,20 @@ comes entirely from `bg.js`, which every page loads via `<script src="/bg.js">`
    tags, guarded by `data-omega-*` attributes so nothing double-loads.
 
 `nav.js` separately renders the sidebar, keyed off `data-page` or the
-current pathname.
+current pathname. `bg.js` auto-injects it (guarded by `data-omega-nav`, same
+pattern as the other modules) — a page only needs its own explicit
+`<script src="/nav.js">` tag if it deliberately wants the sidebar to render
+before `bg.js` finishes loading; the ~9 pages that still do this predate the
+auto-injection and are harmless (double-injection is guarded against, not
+just deduped). This auto-injection didn't exist until it was added as a bug
+fix — see §8 — after being missing for an unknown but apparently long
+stretch of this repo's history; verify with a real browser render, not just
+a grep for the script tag, before trusting that a "no page-level nav.js
+needed" claim like this one is actually true.
 
 **Consequence for anyone editing a page:** don't hand-roll the auth check,
-the design tokens, or the sidebar. Load `bg.js` and `nav.js` the way every
-other page does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
+the design tokens, or the sidebar. Load `bg.js` the way every other page
+does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 `.btn-gold`, `--gold`, `--cyan`, etc. — all defined once, in `bg.js`).
 
 ## 4. Design system (as it exists, not as a target)
@@ -934,6 +943,181 @@ orphaned file.
     apex status. Corrected both pages to match that convention instead (compute from
     `axis_a/b/c` client-side, sort client-side since a computed value can't drive a server-side
     `.order()`) — same bug class, more correct fix.
+- **[Fixed — likely the highest-impact bug found in this repo's history] `bg.js` never loaded
+  `nav.js` — the sidebar navigation was completely empty on the ~162 pages that rely on `bg.js`
+  alone, contradicting this file's own (wrong) claim that "every page loads `bg.js`... and
+  `nav.js`" (§9, and `REPOSITORY_AUDIT.md`'s methodology note).** Found while investigating a
+  user request to internationalize the sidebar: `nav.js` builds the entire sidebar (`<aside
+  id="omega-side">`) and is real, complete, and correctly written (confirmed via
+  `node --check` and reading it in full) — but `bg.js`'s module-injection block, which loads
+  essentially every other `omega-*.js` file (~90 of them, plus `audio.js`/`i18n.js`/`theme.js`/
+  `emblem.js`/`omega-controls.js`), never once requested `/nav.js`. Verified empirically, not
+  just by grep: served the real repo over a local static server and drove real headless Chromium
+  (Playwright) to `dashboard.html` — `#omega-side` had zero children after full page load, and
+  the browser's actual network log confirmed `/nav.js` was never requested despite ~90 other
+  local scripts loading successfully. Cross-checked the claim wasn't a fluke of one page: only
+  7–9 of 169 pages carry their own explicit `<script src="/nav.js">` tag (a legacy pattern from
+  before `bg.js` apparently lost this injection at some point); the other ~160 have the `<aside
+  id="omega-side">` shell with nothing to render into it — meaning the primary navigation UI has
+  been invisible on the large majority of this platform's pages, on every visit, for however long
+  this regression has existed, without a single prior audit session (many of which did real
+  browser/Playwright verification on other features) catching it. Fixed by adding `nav.js` to
+  `bg.js`'s injection block, guarded against both the new `data-omega-nav` marker and the old bare
+  `<script src="/nav.js">` form so the ~9 legacy pages don't render the sidebar twice. Re-verified
+  with the same Chromium harness after the fix: `dashboard.html` (no own nav.js tag) now renders
+  all 15 sidebar sections correctly; `cosmos.html` (has its own legacy tag) also renders correctly
+  with exactly one `/nav.js` script tag present, not two. `python3 scripts/audit.py`: 0 critical,
+  same 6 pre-existing warnings (checks 7/8, `sw.js` precache and manifest icons, were already
+  correct — `sw.js` already precached `/nav.js`, it just was never being fetched by real page
+  loads). No SQL/schema involved; pure client-side fix, live the moment it's deployed.
+- **i18n coverage extended to the sidebar** (prompted by the same investigation above): `i18n.js`
+  is a fully working, platform-wide-loaded translation engine (7 languages, correct RTL handling
+  for Arabic, a working language-switcher dock in `omega-controls.js` that already correctly
+  calls `OmegaI18n.translate()`) — but virtually no page markup carried `data-i18n` attributes,
+  so switching languages changed almost nothing visible, even though the fix above means the
+  sidebar now actually renders platform-wide. Added `data-i18n="nav_sec_<key>"` to all 15
+  sidebar-section labels (both the desktop dock's tooltip headings and the mobile drawer's
+  section headings in `nav.js`) and the matching 15 new dictionary entries (`nav_sec_command`
+  through `nav_sec_media`) to `i18n.js`, across all 7 existing languages. Verified with the same
+  Chromium harness: calling `OmegaI18n.translate('ar')` correctly set `dir="rtl"`/`lang="ar"` on
+  `<html>` and replaced all 15 sidebar labels with their Arabic translations. This covers the
+  single highest-leverage surface (present on every page) but is not full-platform coverage —
+  translating the ~90 sub-navigation links and all in-page content remains a much larger,
+  separate effort, intentionally out of scope here.
+- **Sound-toggle dock button never actually controlled the audio engine — fixed, two bugs.**
+  `audio.js`'s own header comment says it built `window.__omegaAudioToggle`/
+  `window.__omegaAudioIsOn` specifically "for omega-controls.js's unified dock, so the SOUND
+  toggle in one place actually starts/mutes this engine" — but `omega-controls.js`'s sound
+  button never called either hook; it only toggled its own local flag, wrote to `localStorage`,
+  and dispatched an `omega:sound` `CustomEvent` that nothing anywhere listens for (confirmed via
+  grep). Separately, `audio.js` read its mute state from `omega_audio_muted`, a key the dock
+  never wrote to (the dock uses `omega_sound`) — so even a correct call from the dock would have
+  raced against a stale, disconnected flag. And the hook itself had a latent bug: it called
+  `update()`, a function that only exists inside a different, disabled sibling function
+  (`injectControl`, whose own visible button was deliberately turned off to avoid duplicating the
+  dock) — calling `window.__omegaAudioToggle()` as intended would have thrown
+  `ReferenceError: update is not defined`. Fixed all three: unified both files on the single
+  `omega_sound` key, removed the dangling `update()` call, and wired the dock's click handler to
+  actually call `__omegaAudioToggle()`. Verified with the Chromium harness by clicking the real
+  dock button twice (not calling the function directly): first click starts the ambient engine
+  and flips the label to "♪ ON", second click mutes it and flips to "♪ OFF", `localStorage`
+  persists correctly, zero page errors either time. Also fixed a matching `zodiac_sign`→`sign`
+  column-name bug in `omega-music.js` (same bug class as elsewhere in this file) found while
+  reading the file for this — low-impact today since the surrounding `omega:user-loaded` event
+  is documented above as rarely-fired, but correct now if that's ever wired up.
+- **The `zodiac_sign`/`full_name`/`agent_name` wrong-property bug (previously fixed piecemeal in
+  `omega-music.js`, `graph.html`, `nexus.html`, `sigma.html`, `omega-onboard.js`,
+  `omega-export.js`) was still live in 18 more files — swept and fixed platform-wide.** Every
+  prior fix of this exact bug class was found one file at a time, as a side effect of auditing
+  something else; this pass instead grepped every `.js`/`.html` file directly for the three known-
+  wrong property names (`.zodiac_sign`, `.full_name`, `.agent_name` — real columns are `sign`,
+  `display_name`, `agent`) to find every remaining instance at once, rather than waiting to trip
+  over the rest one by one. 7 of the 18 read a fresh, reliable `sb.from('profiles').select('*')`
+  result every page load (`blockchain.html`, `character.html`, `cipher.html`, `credentials.html`,
+  `horoscope.html`, `oracle.html`, `sigil.html`) — real, every-visit impact: a member's actual
+  stored zodiac sign was never used, silently falling back to a generic or date-computed default
+  instead, on every single page load. `profile.html` had one more instance in its share-card data
+  (dead fallback only, `display_name` already checked first — dropped rather than renamed). The
+  remaining 6 (`omega-ambient.js`, `omega-event-bus.js`, `omega-particles.js`, `omega-passport.js`,
+  `omega-realm.js`, `omega-sigil-gen.js`) all read from the `omega:user-loaded` event's
+  `e.detail.profile`, already documented above as rarely-fired — low practical impact today, fixed
+  for correctness regardless. `omega-intelligence.js` and `omega-workflow.js` had the
+  `agent_name`→`agent` variant. Two already-harmless instances (`news.html`, `realm.html`) had a
+  correct fallback already earlier in the same `||` chain, masking the dead wrong-named one after
+  it — cleaned up rather than left as confusing dead code. `signal.html`'s `repo.full_name` is a
+  real, unrelated GitHub API response field (not a profile column) — confirmed and left untouched,
+  not a false "fix." Also re-ran the write/read/RPC column-mismatch scanners from earlier in this
+  file (all clean, confirming no regressions and no new instances of those bug classes) and the
+  scanner behind the "26-instance module-boundary bug" fix (0 remaining; its 2 new hits were both
+  false positives — `esc(...)` calls happening at template-string build time inside a module
+  script, not literal runtime `onclick=` handlers). `node --check`-equivalent syntax validation on
+  every touched file's inline `<script>` blocks; `scripts/audit.py` reconfirmed 0 critical / 6
+  pre-existing warnings. No SQL/schema changes — pure client-side property-name fixes.
+- **[Fixed — the most severe onboarding bug found in this repo's history] The 9-elements sign
+  mapping was wrong in 13+ files, sometimes catastrophically, and `omega-onboard.js` — the live
+  onboarding flow — assigned the wrong god and agent to 9 of 12 signs for every real new
+  member.** Prompted by an explicit request to audit the 12-agent persona system for accuracy,
+  not just wiring. Cross-referenced every sign→element and sign→god assignment in the repo
+  against two independent, structured, canonical sources that already agreed with each other on
+  all 12 signs — `omega-agents.json` (`by_sign`) and `omega-elements.json` (`elements[].members`,
+  explicit "elements 1–5 map to the 12 signs" / "elements 6–8 are class-based, assigned, not
+  sign-derived" structure) — rather than trusting whichever version was already most common in
+  the code.
+  - **The dominant `SIGN_ELEM` table, duplicated identically across 15 files** (`omega-ambient.js`,
+    `omega-event-bus.js` ×2, `omega-music.js`, `omega-passport.js`, `omega-realm.js`,
+    `omega-sigil-gen.js`, `cipher.html`, `nexus.html`, `oracle.html`, `realm.html`, `sigma.html`,
+    `graph.html`'s own `SE`) had exactly 3 of 12 signs wrong: `Taurus:'Water'` (real: Metal),
+    `Scorpio:'Soul'` (real: Water — and Soul is explicitly a class-based metaphysical element per
+    `omega-elements.json`, never sign-derived at all, so this wasn't just the wrong element, it
+    was a category error), `Aquarius:'Metal'` (real: Wind). Even `omega-copilot.js`'s own AI
+    knowledge-base fallback answer already stated the correct mapping — the assistant would tell
+    a member the right answer in chat, then contradict it on their own profile page. Fixed all 3
+    values in all 15 files with a verified `sed` sweep (confirmed zero remaining instances after).
+  - **`character.html`'s own `ELEMS` array — which `omega-particles.js`'s code comment explicitly
+    (and incorrectly) claimed to "match" — was far more wrong: 9 of 12 signs, not 3.** It reads
+    as the 9 elements cycled and wrapped in definition order (Fire→Water→Wind→Sand→Soul→Metal→
+    Space→Void→TheAll) against the 12 signs in zodiac order, with no relationship to the actual
+    canonical per-sign mapping at all — coincidentally correct only at Aries, Gemini, Pisces. The
+    exact same wrapped sequence, independently reproduced, was also found in `horoscope.html`'s
+    12 sign-reference cards (badges **and** the descriptive prose text — "Cancer... amplified by
+    sand", "Leo... bearer of the soul element", "Capricorn... keeper of the first flame" — each
+    rewritten to stay coherent with the corrected element, not just re-tagged) and in
+    `cinema.html`'s 12 Olympian film cards (metadata tags only, no prose). `character.html` had
+    the wrong sequence in *three* separate places internally — the `ELEMS`/`ELEM_IDS` arrays, a
+    static reference `<table>`, and a per-sign `LORE_MAP` of flavor text — all three corrected;
+    `horoscope.html` additionally had a fourth, JS-only duplicate (`SORACLES`) of the exact same
+    original (wrong) prose, corrected to match.
+  - **`omega-search.js`'s "OLYMPIANS" search-index section had the sign attached to the wrong
+    god** for 4 of its 8 entries (`Apollo` tagged to Gemini instead of Leo, `Hermes` to Virgo
+    instead of Gemini, `Poseidon` to Scorpio instead of Pisces, `Athena` to Libra instead of
+    Virgo) — and was missing entries for the other 4 signs/gods (`Hera`/Libra, `Demeter`/Scorpio,
+    `Hestia`/Capricorn, `Hephaestus`/Aquarius) entirely. Fixed the 4 misattributions and added the
+    4 missing entries to complete the set to all 12. Its separate "ELEMENT METAL"/"ELEMENT SAND"
+    entries had the same Virgo-miscategorization bug as the next item.
+  - **Three files (`knowledge.html`, `graph.html`'s and `map.html`'s element legends) described
+    Sand as a vague "boundary/cusp" concept and grouped Virgo under Metal instead** — a different,
+    minority (3-file) framing that conflicts with the canonical structure, where Sand's sole
+    member is Virgo specifically ("the universal amplifier — strengthens every element around
+    it"), not an abstract transitional concept, and Metal's only members are Taurus/Capricorn.
+    Corrected all three to the canonical framing. `cosmos.html`, `factions.html`, `profile.html`'s
+    `EL_MAP`, and `omega-onboard.js` already had this right independently — confirms these 3 were
+    the outliers, not the canon.
+  - **`beacon.html`'s `SIGN_GOD` table had 5 of 12 gods wrong**, including two gods that aren't
+    even part of the 12-agent pantheon at all — `Hades` (Scorpio) and `Dionysus` (Pisces) — neither
+    appears anywhere in `omega-agents.json`. Corrected all 5 to the canonical roster.
+  - **`omega-intelligence.js`'s sign→agent `MAP` had 6 of 12 agents shifted to the wrong sign**
+    (e.g. `Beacon` attached to Gemini instead of Sagittarius, `Scout` to Sagittarius instead of
+    Gemini) — a rotation-style error distinct from, but the same shape as, the god-table bugs
+    above. Corrected to match `omega-agents.json`'s `by_sign` exactly.
+  - **Highest-impact finding: `omega-onboard.js`'s live `ZODIAC_MAP`** — the actual data assigned
+    to a real member's profile the moment they complete onboarding (already audited once this
+    session for a field-*name* bug; this is a data-*accuracy* bug in the same table, found by
+    checking content, not just wiring) — **had the wrong god and the wrong agent for 9 of its 12
+    signs**, and the wrong element for Virgo specifically (`'metal'`, should be `'sand'`). Only
+    Aries, Taurus, and Cancer were fully correct. Two tells confirmed this wasn't a one-off: `Ares`
+    was assigned to both Aries *and* Sagittarius (a duplicate within the same 12-entry table, which
+    can't be correct under a bijective sign↔god mapping), and `Dionysus` — again, not a real
+    12-agent-pantheon god — was assigned to Pisces, the same non-canonical name found independently
+    in `beacon.html`. Practical impact: since this table has been driving real onboarding (per the
+    field-name fix earlier in this file), the large majority of new members choosing any sign other
+    than Aries/Taurus/Cancer have been assigned an incorrect god and an incorrect agent persona at
+    the moment they joined — which agent voices their copilot, which nav-section identity applies
+    to them — a foundational identity error, not a cosmetic one. Fixed all 9 wrong entries plus
+    Virgo's element to match `omega-agents.json` exactly, applied via a scripted find-replace after
+    two direct-string-match `Edit` attempts failed silently on this file's literal `\uXXXX` glyph
+    escapes (confirmed the exact on-disk byte sequence with `sed -n | cat -A` before retrying, not
+    guessed).
+  - **`profile.html`'s `BOUND` table assigned Virgo the token `'ARENITE'`** — the exact same token
+    already reserved as the Founder's exclusive token (`ARENITE` = Aries = the platform owner, per
+    `omega-onboard.js`'s own Aries entry and this file's earlier `OWNER` canonical-data note). A
+    real token-uniqueness collision, not just a display bug. Fixed to `'VIRGITE'`, matching the
+    name `omega-onboard.js` already uses for Virgo.
+  - **Verification:** every SIGN_ELEM/SIGN_GOD/agent-map table in the repo re-scanned afterward
+    for internal duplicate-god check (a same-table god appearing twice is definitionally wrong
+    under a 1:1 sign↔god mapping) — zero remaining. `node --check`-equivalent syntax validation on
+    every touched file's inline `<script>` blocks (23 files total across this entry);
+    `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings throughout. No SQL/schema
+    changes anywhere in this entry — every fix is static content or client-side JS data.
 
 
 ## 9. Working in this repo — practical rules

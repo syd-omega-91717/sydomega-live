@@ -1285,6 +1285,33 @@ orphaned file.
   token scale (`--fs-*` custom properties instead of hardcoded per-selector px values), the
   dozens of one-off inline `font-size:7-9px` styles elsewhere in `bg.js` (trial-timer/genesis
   screen/toast), and the page-local duplicate sweep just described.
+- **The page-local `.tab-btn`/`.card-title` sweep flagged above: done.** Grepped every `.html`
+  page for a local `.tab-btn{...}` or `.card-title{...}` rule (36 and 12 pages respectively) and
+  found every single one was under the new shared-floor values — `.tab-btn` ranged 6.5–9px
+  across the 36 pages, `.card-title` was `.65rem` (≈10.4px) on 9 of the 12 and a bare `8px` on
+  the other 2 (`ops.html`, `pulse.html`; `media.html`'s `.85rem`/13.6px was already above the
+  floor and left untouched). Unlike the `.card` sweep in §4.1, none of these were byte-identical
+  duplicates safe to delete outright — every page's local rule carries its own padding/border/
+  color choices (icon-tab layouts in `cosmos.html`/`vault.html`, purple-accented tabs in
+  `series.html`/`trailers.html`, a vertical `flex:1` tab bar in `profile.html`, a notification
+  `.tab-btn .badge` counter in `approvals.html`) — deleting the rule would have thrown all of
+  that away, not just the font-size. Fixed narrowly instead: bumped only the `font-size` (and
+  nudged `letter-spacing` down slightly where it was 2px, so the larger glyphs don't crowd) in
+  each page's own rule, to the same 10.5px `.tab-btn` / 11px `.card-title` floor the shared
+  `bg.js` values now use — everything else about each page's local styling (padding, borders,
+  colors, layout) is untouched. Two sub-selectors needed separate handling for the same reason
+  they're the actual visible text: `cosmos.html`'s `.tab-btn .tb-label` (8px→10.5px, the real
+  label on its icon+label vertical tabs) and `approvals.html`'s `.tab-btn .badge` (6px→8.5px, a
+  numeric pending-count badge — bumped less than the main floor since it's a 1–2 digit counter,
+  not prose, matching this file's own precedent of treating badges/dots as a distinct, smaller
+  tier). 47 files touched, 48 replacements (one page, `vault.html`, only needed the base rule).
+  Every replacement was applied via the same exact-string-match-with-count-check method as the
+  original `bg.js` fix (abort on any mismatch — none occurred). Verified: `node --check`-equivalent
+  syntax validation on every touched page's inline non-module `<script>` blocks (0 failures);
+  `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged); headless Chromium
+  spot-check on 6 of the 47 pages, including `design-system.html` specifically (the page called
+  out above as still showing the old value) — `getComputedStyle` now reads 10.5px/11px on all 6,
+  zero page errors. No SQL/schema changes.
 
 
 ## 9. Working in this repo — practical rules

@@ -128,17 +128,37 @@ FUNC_RE = re.compile(
     re.I | re.S,
 )
 
+# Captures the full column-list body of a CREATE TABLE statement (up to the
+# first ");" — naive w.r.t. nested parens in constraints, but good enough to
+# tell "byte-identical copy-paste across files" (zero live-behavior risk)
+# apart from "genuinely different column lists" (a real conflict) without a
+# live DB round-trip. Heuristic, like the rest of this file.
+TABLE_BODY_RE = re.compile(
+    r"""create\s+table\s+(?:if\s+not\s+exists\s+)?([`"\w\.]+)\s*\((.*?)\)\s*;""",
+    re.I | re.S,
+)
+
+# A file is a "canonical fix" for a given RPC's divergence if it follows this
+# repo's own established naming convention for a verified, applied
+# correction (see CLAUDE.md §8 — omega_*_fix.sql, trial_fix.sql, or a
+# numbered supabase/migrations/NNNN_*.sql file). Not proof by itself — still
+# needs a live pg_proc check per function — but it turns "11 undifferentiated
+# names" into "here's where to look first" for anyone triaging the warning.
+FIX_FILE_RE = re.compile(r"(_fix\.sql$|^\d{4}_)", re.I)
+
 if not os.path.isdir(SQL_DIR):
     print(f"  {SQL_DIR}/ not found — skipping (expected after Session 2).")
     creates, views, funcs = {}, set(), {}
 else:
     sql_files = sorted(f for f in os.listdir(SQL_DIR) if f.endswith(".sql"))
     creates = collections.defaultdict(list)
+    table_bodies = collections.defaultdict(list)  # table -> [(file, body_norm)]
     views = set()
     funcs = collections.defaultdict(list)  # name.lower() -> [(file, args_norm, body_norm)]
     rls_on = set()
     policies = 0
     destructive = []
+    destructive_guarded = []
 
     for name in sql_files:
         raw = read(os.path.join(SQL_DIR, name))
@@ -152,6 +172,11 @@ else:
             if clean.lower() in NOT_A_TABLE:
                 continue
             creates[clean].append(name)
+        for t, body in TABLE_BODY_RE.findall(src):
+            clean = t.replace("public.", "").strip('"`')
+            if clean.lower() in NOT_A_TABLE:
+                continue
+            table_bodies[clean].append((name, re.sub(r"\s+", " ", body).strip().lower()))
         for t in re.findall(
             r"""create\s+(?:or\s+replace\s+)?view\s+([`"\w\.]+)""", src, re.I
         ):
@@ -161,8 +186,14 @@ else:
         ):
             rls_on.add(t.replace("public.", "").strip('"`'))
         policies += len(re.findall(r"create\s+policy", src, re.I))
-        if re.search(r"drop\s+(table|schema)", src, re.I):
-            destructive.append(name)
+        # Raw (unstripped) source, so a DROP that immediately follows an
+        # "OPTIONAL"/"ONLY IF" guard comment can still be seen alongside it.
+        for m in re.finditer(r"drop\s+(?:table|schema)", raw, re.I):
+            window = raw[max(0, m.start() - 400):m.start()]
+            if re.search(r"optional|only\s+if|manual|not\s+run\s+automatically", window, re.I):
+                destructive_guarded.append(name)
+            else:
+                destructive.append(name)
         for fname, args, _tag, body in FUNC_RE.findall(src):
             funcs[fname.lower()].append((
                 name,
@@ -170,6 +201,8 @@ else:
                 re.sub(r"\s+", " ", body).strip(),
             ))
 
+    destructive = sorted(set(destructive))
+    destructive_guarded = sorted(set(destructive_guarded) - set(destructive))
     dupes = {t: v for t, v in creates.items() if len(v) > 1}
     no_rls = sorted(set(creates) - rls_on)
 
@@ -186,26 +219,83 @@ else:
         print("    Verify against the live DB — file analysis is indicative only.")
 
     if dupes:
+        # Split by whether every CREATE TABLE body for this name normalizes
+        # identically (harmless copy-paste, zero live-behavior risk since
+        # CREATE TABLE IF NOT EXISTS makes re-running a no-op) vs genuinely
+        # differing column lists (a real risk — whichever file happened to
+        # run first on the live DB silently wins, and the others are dead
+        # weight that could mislead a future reader into thinking they're
+        # live).
+        conflicting = {}
+        identical = {}
+        for t in dupes:
+            bodies = {b for _f, b in table_bodies.get(t, [])}
+            if len(bodies) <= 1:
+                identical[t] = dupes[t]
+            else:
+                conflicting[t] = dupes[t]
         warnings += 1
-        print(f"\n  WARNING — tables created in multiple files ({len(dupes)}):")
-        for t, v in sorted(dupes.items(), key=lambda kv: -len(kv[1]))[:12]:
-            print(f"    - {t}: {len(v)} files")
+        print(f"\n  WARNING — tables created in multiple files ({len(dupes)}: "
+              f"{len(conflicting)} with conflicting column lists, "
+              f"{len(identical)} byte-identical copy-paste, zero live-behavior risk):")
+        if conflicting:
+            print(f"    CONFLICTING ({len(conflicting)}) — needs a live-schema check "
+                  f"per table before consolidating, see CLAUDE.md §5:")
+            for t, v in sorted(conflicting.items(), key=lambda kv: -len(kv[1])):
+                print(f"      - {t}: {len(v)} files, {len(table_bodies[t])} "
+                      f"distinct definitions — {', '.join(sorted(set(v))[:4])}"
+                      f"{', …' if len(set(v)) > 4 else ''}")
+        if identical:
+            print(f"    identical ({len(identical)}, no action needed): "
+                  + ", ".join(sorted(identical)))
 
     if destructive:
         warnings += 1
-        print(f"\n  WARNING — contains DROP TABLE/SCHEMA: {', '.join(destructive)}")
+        print(f"\n  WARNING — contains DROP TABLE/SCHEMA with no visible "
+              f"guard comment: {', '.join(destructive)}")
+    if destructive_guarded:
+        print(f"\n  note — contains DROP TABLE/SCHEMA, but guarded by an "
+              f"'OPTIONAL'/'ONLY IF' comment documenting it as a manual, "
+              f"conditional utility, not part of any automatic apply path: "
+              f"{', '.join(destructive_guarded)}")
 
 # ---------------------------------------------------------------- 5 & 6
 head("5/6 · DEPLOY HYGIENE")
+
+import fnmatch
+
+vercelignore_patterns = []
+if os.path.isfile(".vercelignore"):
+    for line in read(".vercelignore").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            vercelignore_patterns.append(line.rstrip("/"))
+
+
+def ignored_by_vercel(fname):
+    return any(
+        fnmatch.fnmatch(fname, pat) or fnmatch.fnmatch(fname, "*/" + pat)
+        for pat in vercelignore_patterns
+    )
+
 
 shipped = [
     f for f in os.listdir(".")
     if f.endswith(REDIRECTED_EXT) and os.path.isfile(f)
 ]
 if shipped:
+    excluded = sorted(f for f in shipped if ignored_by_vercel(f))
+    not_excluded = sorted(f for f in shipped if f not in excluded)
     warnings += 1
     print(f"  WARNING — unreachable but deployed ({len(shipped)}):")
     print("    " + ", ".join(sorted(shipped)))
+    if excluded:
+        print(f"    of which already excluded from the actual Vercel deploy "
+              f"via .vercelignore (committed to git, but never publicly "
+              f"served): {', '.join(excluded)}")
+    if not_excluded:
+        print(f"    NOT covered by any .vercelignore pattern — these are "
+              f"actually reachable on the live site: {', '.join(not_excluded)}")
 
 big = [
     (f, os.path.getsize(f)) for f in os.listdir(".")
@@ -288,8 +378,16 @@ if diverging:
             shape.append(f"{len(arg_variants)} distinct argument lists")
         if len(body_variants) > 1:
             shape.append(f"{len(body_variants)} distinct bodies")
+        canon = sorted(f for f in files if FIX_FILE_RE.search(f))
+        canon_note = (
+            f" — likely-canonical per this repo's own fix-file naming "
+            f"convention: {', '.join(canon)} (still confirm live before "
+            f"touching the others)"
+            if canon else ""
+        )
         print(f"    - {name}: {', '.join(shape)} across {len(files)} files "
-              f"({', '.join(files[:4])}{', …' if len(files) > 4 else ''})")
+              f"({', '.join(files[:4])}{', …' if len(files) > 4 else ''})"
+              f"{canon_note}")
     print("    Source analysis only — confirm which version is actually live "
           "with a pg_proc query before deleting any file (see GAP_ANALYSIS.md §3.1).")
 else:

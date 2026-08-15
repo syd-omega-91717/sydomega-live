@@ -170,10 +170,13 @@ In commit order, both repos kept in sync throughout:
    own rows, owner reads all).
 5. `-_V18_SYDOMEGA91717` found to be a stale, incomplete mirror (see §1) — fully resynced
    to this repository's state on this branch.
-6. `roadmap.html`: fixed a broken reference to a `RUN_ORDER.md` file that has never existed
-   in either repo (same bug already fixed once in `dashboard.html`, still present here), and
-   corrected stale decorative counts (Edge Function count, page/engine/SQL-file counts) to
-   measured values.
+6. `roadmap.html`: fixed a broken reference to a `RUN_ORDER.md` file that had never existed
+   in either repo (same bug already fixed once in `dashboard.html`, still present here at the
+   time), and corrected stale decorative counts (Edge Function count, page/engine/SQL-file counts) to
+   measured values. (Update, later session: that only fixed the dead link, not the underlying
+   gap — `supabase/RUN_ORDER.md` itself still didn't exist, despite six other `.sql` files in
+   `supabase/` depending on it by name for real ordering guidance. Created it; see root
+   `CLAUDE.md` §8's "6 pre-existing audit.py warnings" entry.)
 7. Added `supabase/migrations/0089`–`0091` — the three pending schema-fix files
    (`omega_user_assets_fix.sql`, `omega_extend_trial_fix.sql`, `omega_notifications_fix.sql`)
    existed as loose files but had never been copied into the ordered `migrations/` directory.

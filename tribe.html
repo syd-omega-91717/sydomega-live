@@ -160,9 +160,7 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var PHI=1.6180339887,EU=2.7182818285;
-var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}
-function getGateNum(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return g+1;}
 
 var ELEMENTS=[
   {id:'fire',  name:'FIRE',  sigil:'☲',color:'#FF4500',glow:'rgba(255,69,0,.25)',  principle:'SOVEREIGN WILL',   desc:'Unstoppable initiative, transformative power'},
@@ -205,10 +203,18 @@ function toast(msg,col){
 
 var profiles=[],tribeData={};
 
+// same GATES threshold table used platform-wide (e.g. omega-copilot.js) --
+// gate is always computed client-side, there is no gate_level column
+var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
+function gateForAuthority(auth){
+  for(var i=0;i<GATES.length;i++){ if((auth||0)<GATES[i]) return i+1; }
+  return 12;
+}
+
 function generateDemoProfiles(){
   var names=['CORVUS','LYSANDER','MIRA','THERON','OPHELIA','CASPIAN','SELENE','DORIAN','ARIA','SAGE','ORION','NOVA','PHOENIX','ATLAS','LUNA'];
   var elements=['fire','water','wind','metal','sand','soul','space','void','all'];
-  return names.map(function(n,i){return{id:'demo_'+i,display_name:n,element:elements[i%elements.length],authority_score:(Math.random()*25+3).toFixed(2)*1,gate_level:Math.floor(Math.random()*12)+1,access_approved:true,created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()};});
+  return names.map(function(n,i){return{id:'demo_'+i,display_name:n,element:elements[i%elements.length],authority:(Math.random()*25+3).toFixed(2)*1,access_approved:true,created_at:new Date(Date.now()-Math.random()*30*86400000).toISOString()};});
 }
 
 function groupByElement(ps){
@@ -227,8 +233,8 @@ function renderGlobalStats(){
   document.getElementById('sActiveTribes').textContent=activeTribes;
   var dominant=ELEMENTS.reduce(function(best,el){return(tribeData[el.id]||[]).length>(tribeData[best.id]||[]).length?el:best;},ELEMENTS[0]);
   document.getElementById('sDominantTribe').textContent=dominant.sigil;
-  var top=profiles.reduce(function(best,p){return(p.authority_score||0)>(best.authority_score||0)?p:best;},profiles[0]||{});
-  document.getElementById('sTopAuthority').textContent=top.authority_score?top.authority_score.toFixed(1):'—';
+  var top=profiles.reduce(function(best,p){return(p.authority||0)>(best.authority||0)?p:best;},profiles[0]||{});
+  document.getElementById('sTopAuthority').textContent=top.authority?top.authority.toFixed(1):'—';
 }
 
 function renderElementGrid(){
@@ -239,7 +245,7 @@ function renderElementGrid(){
   ELEMENTS.forEach(function(el){
     var members=tribeData[el.id]||[];
     var pct=(members.length/maxCount*100).toFixed(1);
-    var avgAuth=members.length?(members.reduce(function(s,m){return s+(m.authority_score||0);},0)/members.length).toFixed(2):'—';
+    var avgAuth=members.length?(members.reduce(function(s,m){return s+(m.authority||0);},0)/members.length).toFixed(2):'—';
     var card=document.createElement('div');
     card.className='elem-card';
     card.style.background=el.glow;card.style.borderColor=el.color+'22';
@@ -280,8 +286,8 @@ function renderRankings(){
         var rk=document.createElement('div');rk.className='mr-rank '+(i===0?'gold-r':i===1?'silver-r':i===2?'bronze-r':'');rk.textContent=i+1;
         var name=document.createElement('div');name.className='mr-name';name.textContent=(m.display_name||'MEMBER·'+(m.id||'').slice(-4)).toUpperCase();
         var info=document.createElement('div');
-        var auth=document.createElement('div');auth.className='mr-auth';auth.textContent=(m.authority_score||0).toFixed(2)+' AUTH';
-        var gate=document.createElement('div');gate.className='mr-gate';gate.textContent='GATE '+(m.gate_level||'—');
+        var auth=document.createElement('div');auth.className='mr-auth';auth.textContent=(m.authority||0).toFixed(2)+' AUTH';
+        var gate=document.createElement('div');gate.className='mr-gate';gate.textContent='GATE '+gateForAuthority(m.authority);
         info.appendChild(auth);info.appendChild(gate);
         row.appendChild(rk);row.appendChild(name);row.appendChild(info);
         card.appendChild(row);
@@ -354,11 +360,16 @@ window.addEventListener('resize',drawDominanceChart);
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 
   try{
-    var d=(await sb.from('profiles').select('id,display_name,element,axis_a,axis_b,axis_c,is_owner,access_approved,created_at').eq('access_approved',true).limit(200)).data||[];
-    profiles=d.map(function(p){
+    // authority is always computed client-side from axis_a/b/c (with an owner
+    // apex special-case), matching the convention used platform-wide
+    // (nexus.html, sigma.html, omega-export.js, etc.) rather than trusting a
+    // stored column, which may not reflect the owner's apex status
+    var r=await sb.from('profiles').select('id,display_name,element,axis_a,axis_b,axis_c,is_owner,access_approved,created_at').eq('access_approved',true).limit(200);
+    if(r.error) throw r.error;
+    profiles=(r.data||[]).map(function(p){
       var auth=p.is_owner?27.8367:calcAuth(Number(p.axis_a||0.001),Number(p.axis_b||0.001),Number(p.axis_c||0.001));
-      return Object.assign({},p,{authority_score:auth,gate_level:getGateNum(auth)});
-    }).sort(function(a,b){return b.authority_score-a.authority_score;});
+      return Object.assign({},p,{authority:auth});
+    }).sort(function(a,b){return b.authority-a.authority;});
   }catch(e){profiles=generateDemoProfiles();}
 
   tribeData=groupByElement(profiles);

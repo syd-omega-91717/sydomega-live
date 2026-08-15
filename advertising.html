@@ -202,6 +202,7 @@ async function submitAd(){
   btn.disabled=true;fb.style.color='var(--cyan)';fb.textContent='Submitting...';
   try{
     var s=(await sb.auth.getSession()).data.session;
+    // timeline has no matching column in public.advertisements yet -- not persisted, see GAP_ANALYSIS.md
     var ins=await sb.from('advertisements').insert({company:company,contact_email:email,title:headline,description:body,rate_tier:tier,category:cat,url:url,status:'pending',submitted_by:s?s.user.id:null});
     if(ins.error) throw ins.error;
     fb.style.color='var(--green)';fb.textContent='SUBMISSION RECEIVED. THE ARCHITECT WILL REVIEW WITHIN 48 HOURS.';

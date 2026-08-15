@@ -920,6 +920,21 @@ orphaned file.
   inline `<script>` blocks, and `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
   warnings throughout. Not yet applied to the live database (the one SQL change,
   `omega_advertisements_insert_fix.sql`) — everything else is client-side only.
+  - **`dna.html` had the identical `tribe.html`-class bug, found and fixed separately**: its
+    personalization panel read `pr.authority_score`/`pr.gate_level`, neither of which exists,
+    so every member saw the same generic default (`gate 1`, `auth 3.14`) regardless of real
+    progress. Fixed the same way as `tribe.html` below.
+  - **Reconciliation correction, found merging two independent sessions' overlapping fixes for
+    this exact bug class:** the fix above for `tribe.html`/`dna.html` initially read the stored
+    `profiles.authority` column directly. That column is real, but trusting it is inconsistent
+    with the platform-wide convention every other authority-displaying page already
+    uses — `nexus.html`, `sigma.html`, `omega-export.js`, etc. all compute authority
+    **client-side** from `axis_a/b/c` with an explicit `is_owner ? 27.8367 : calcAuth(...)`
+    special case, specifically because the stored column isn't guaranteed to reflect the owner's
+    apex status. Corrected both pages to match that convention instead (compute from
+    `axis_a/b/c` client-side, sort client-side since a computed value can't drive a server-side
+    `.order()`) — same bug class, more correct fix.
+
 
 ## 9. Working in this repo — practical rules
 

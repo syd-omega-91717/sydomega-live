@@ -482,6 +482,166 @@ clean; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings (all 
 assets) on both repos after sync. Byte-identical diff confirmed between
 `-_V18_SYDOMEGA91717/chronicle.html` and `sydomega-live/chronicle.html`.
 
+## 15. Surface the already-built `member_posts` table on `feed.html`'s mislabeled "POSTS" tab (MEDIA)
+
+**Grounded in:** `supabase/platform_expansion.sql:99-122` defines `public.member_posts` — a fully
+built, RLS'd table for structured member updates (`post_type` CHECK-constrained to
+`'text','achievement','milestone','question','insight','announcement'`, plus `title`, `body`,
+`tags text[]`, `track_id`, `likes_count`, `comments_count`, `is_pinned`, `status`). RLS is already
+correct: `FOR SELECT USING(status='published' OR user_id=auth.uid())`,
+`FOR ALL USING(user_id=auth.uid())` for the owner-of-row write policy. A repo-wide grep for
+`member_posts` across every `.html`/`.js` file returns **zero matches outside the SQL file that
+defines it** — no page reads it, no page writes to it. It is a completely unused table, same
+"built but never surfaced" shape as `omega-sigil-gen.js`/`omega-passport.js` (#10, #11 above), just
+schema instead of a JS module.
+
+`feed.html` already has a tab literally named for this: `<button onclick="setTab('posts')">POSTS`
+(`feed.html:44`) and `<div class="sechead">SOVEREIGN POSTS &middot; MEMBER PUBLICATIONS</div>`
+(`feed.html:60`) — but its `loadPosts()` function (`feed.html:160-172`) queries
+`sb.from('publications').select('title,created_at,kind')`, a different, real table (the
+write-up/report catalog covered by the `feed.html` `author_name` bug fix in `CLAUDE.md` §8). The
+tab has never shown a `member_posts` row — the table it's actually named after has no path in.
+
+**Idea:** point a *new* section (or a genuinely new sub-tab, to avoid conflating with
+`publications`, which already has a real, separate consumer) at `member_posts`: a simple
+`sb.from('member_posts').select('post_type,title,body,tags,likes_count,comments_count,created_at')
+.eq('status','published').order('created_at',{ascending:false}).limit(20)` read, plus a minimal
+compose form (`title`/`body`/`post_type` dropdown limited to the table's own CHECK values,
+`.insert({...,user_id:s.user.id})`). `feed.html`'s own copy (`feed.html:78`) already states this
+platform's explicit design philosophy — "The activity feed is not social media... Activity is the
+proof of sovereignty, not the performance of it" — which is exactly why `member_posts`' `post_type`
+values (`achievement`/`milestone`/`insight`/`question`, not free-form chat) are the right fit here,
+not a generic social wall: a member posting "just crossed Gate 4" or "here's what worked for Axis
+B this month" *is* proof-of-sovereignty content, matching the page's own stated intent, unlike an
+open-ended status-update feed.
+
+**User benefit:** every approved member gets a real, first-party (not scraped/embedded)
+outlet for milestone/achievement/insight posts, on a page and tab that already promise this exact
+thing but currently deliver something else. No `membership_tier` gating — same access level as
+the rest of `feed.html`, which isn't tier-gated today.
+
+**Nav placement:** none new — `feed.html` is already reachable (`nav.js`'s `PS` map already routes
+`feed:'media'`, and the `media` section already lists `['feed','ACTIVITY FEED','/feed.html']`).
+
+**Data needs:** none. `member_posts` table + RLS already exist and are already correct; this is
+purely the missing read/write UI on an existing, unused table. Reactions (`likes_count`) would
+need a small increment RPC (`SECURITY DEFINER`, same pattern as the rest of this schema) if
+"like a post" is wanted beyond just displaying the count — not included in this pass; flag as a
+small follow-up, not a blocker.
+
+**Source inspiration:** structured milestone/achievement posting (vs. free-form chat) as the
+higher-signal pattern for small, private, non-anonymous communities — Circle and Mighty Networks
+both center their 2026 product positioning on a central activity feed of member-authored updates
+with reactions, distinct from an open social wall:
+- [14 Best Community Platforms Compared (2026 Guide) — Circle Blog](https://circle.so/blog/best-community-platforms)
+- [12 Best Online Community Platforms in 2026 (Pros and Cons)](https://www.positioniseverything.net/12-best-online-community-platforms-in-2026-pros-and-cons/)
+- [Circle vs Mighty Networks: Which Community Platform Is Better? (2026) — Ruzuku](https://www.ruzuku.com/learn/articles/circle-vs-mighty-networks/)
+
+## 16. Weekly activity digest — in-app notification + email (COMMAND, needs an explicit opt-in decision)
+
+**Grounded in:** three separate, already-working pieces of infrastructure this platform has, none
+of which are currently combined into a proactive recap:
+- `public.notifications` is now a real table with correct RLS (`supabase/omega_notifications_fix.sql`,
+  applied and verified live per `CLAUDE.md` §8) — but "nothing in the codebase currently inserts a
+  notification row," per that same fix file's own comment. It's ready to receive one.
+- `RESEND_API_KEY` is a live, working Supabase secret already sending real email from an Edge
+  Function today: `supabase/functions/notify-access/index.ts` emails the owner on every new access
+  request via `https://api.resend.com/emails` — a real, working, copy-pasteable pattern for a
+  second transactional email, not a new integration.
+- `supabase/functions/snapshot-leaderboard/index.ts:5` ("Meant to run on a daily schedule (e.g.
+  Supabase cron at 00:05 UTC)") establishes pg_cron-triggered Edge Functions as an existing pattern
+  on this platform, and `supabase/functions/concierge/index.ts:117` already calls the Anthropic API
+  server-side (`model: "claude-haiku-4-5-20251001"`, key from `ANTHROPIC_API_KEY`) — reusable for a
+  short natural-language summary instead of a template-only email.
+- `public.task_completions` (dedup-fixed and confirmed committing per `CLAUDE.md` §8) has real,
+  per-member, per-week activity data ready to summarize — no new tracking needed.
+
+**Idea:** a new, cron-scheduled Edge Function (e.g. `weekly-digest`, mirroring
+`snapshot-leaderboard`'s cron pattern) that, once a week, for each opted-in member: queries their
+`task_completions` rows from the past 7 days, optionally calls the same Anthropic model
+`concierge` already uses for a 1-2 sentence natural-language recap ("You advanced Axis B three
+times this week, mostly through Academy — Gate 5 is 2 tasks away"), inserts one
+`public.notifications` row (in-app, using the columns `omega_notifications_fix.sql` already
+defines: `user_id, notification_type, message, content`), and sends the same recap via Resend
+using `notify-access`'s existing `from`/`escHtml` pattern.
+
+**User benefit:** every opted-in approved member gets a proactive, personalized "here's what you
+did this week" recap instead of having to visit the dashboard to reconstruct it themselves —
+matches the 2026 proactive-AI-assistant pattern (recaps/digests generated *for* the user, not
+just answering when asked) already shaping products like Reclaim.ai, Lindy, and Motion. No
+`membership_tier` gating — a benefit already available to every approved member, not a paid tier
+distinction.
+
+**Nav placement:** no new page. Surfaces through the existing `notifications`/`omega-notify.js`
+badge-and-panel widget (already loaded platform-wide) and email — `command` section, next to
+`beacon`/`notifications` (`nav.js`'s existing `command` section already lists both).
+
+**Data needs — flag before any code, per `CLAUDE.md` §9:** this is the one idea in this file that
+touches new personal-data handling (sending a member's own activity summary to their own email
+via a third party, Resend) — it doesn't touch money or tokens, but per this file's own standing
+rule, needs an explicit default-off opt-in, not an assumed-on rollout. Concretely: add a
+`profiles.digest_opt_in boolean DEFAULT false` column (new schema, additive, matches this schema's
+existing idempotent-migration convention) and only email/notify members who have explicitly
+enabled it from `settings.html`/`profile.html`. Until that decision is made, this stays exactly
+where idea #2 in this file already sits ("decide which server-side events should insert a
+notification row") — this is a concrete instance of that same open decision, not a bypass of it.
+
+**Source inspiration:** proactive, digest-generating AI assistant UX as a defined 2026 product
+category, distinct from purely reactive chat assistants:
+- [Proactive AI Assistants: ChatGPT Schedules Reminders, Recurring Tasks, and Web Monitoring — Trend Hunter](https://www.trendhunter.com/trends/proactive-ai-assistants)
+- [Best Proactive AI Assistants in 2026 — Lifestack](https://lifestack.ai/blog/proactive-ai-assistant)
+- [20 Best AI Assistant Apps for 2026 — Reclaim](https://reclaim.ai/blog/ai-assistant-apps)
+
+## 17. Extend the already-built skeleton-shimmer loading system's reach via `data-loading` (design system, platform-wide)
+
+**Grounded in:** `bg.js` already ships a complete, platform-wide skeleton-loading system (search
+`OMEGA LOADING` in `bg.js`) — a `.omega-skel` class with a gold shimmer sweep
+(`@keyframes omega-shimmer`), auto-applied by a `MutationObserver`-driven scanner that watches a
+specific selector list and removes the skeleton state the moment real content lands (or after a
+4-second cap): `var sel='#asset-tbody,#agent-log,#franchise-grid,[data-loading],.kpi-val';`. This
+is real, already loaded on every page, and already respects `prefers-reduced-motion` — not a
+proposal to build a new mechanism, only to widen what it reaches.
+
+Its reach today is narrow: 3 hardcoded IDs, a `.kpi-val` class, and anything explicitly marked
+`[data-loading]`. A repo-wide check found **38 pages** contain a plain-text "LOADING…" placeholder
+(e.g. `feed.html:52` — `<div style="...">LOADING ACTIVITY&hellip;</div>`, inside
+`#feed-list`; `agents.html:89` — `<div style="...">LOADING AGENTS&hellip;</div>`) with **zero**
+`data-loading` attribute anywhere in the file — confirmed by grepping every `.html` page for both
+strings and diffing the two sets (pages containing "LOADING" text vs. pages containing
+`data-loading` at all: 38 pages have the former with none of the latter). Every one of these
+placeholders renders as static text for however long the fetch takes, invisible to a system this
+platform already built and is already paying the (small, `MutationObserver`-based) runtime cost
+for platform-wide, on every page, whether or not any element on that page opts in.
+
+**Idea:** add the `data-loading` attribute to these existing placeholder containers (e.g.
+`feed.html:51`'s `<div class="glass" id="feed-list">` and `feed.html:60`'s `<div id="posts-list">`,
+`agents.html`'s equivalent container, and the other 36 pages' matching containers) so the
+already-built shimmer treatment reaches them, replacing static "LOADING X…" text with the same
+gold shimmer sweep the platform already uses in the 4 places that already carry the attribute or
+match the hardcoded IDs. Purely additive markup — the JS scanner, the CSS, and the
+`prefers-reduced-motion` handling are all already correct and already shipped; nothing about the
+mechanism itself needs to change.
+
+**User benefit:** every visitor sees the platform's own already-designed loading treatment
+consistently, instead of 38 pages quietly falling back to plain text — visual consistency, not a
+new capability. No `membership_tier` gating — applies identically regardless of tier.
+
+**Nav placement:** none — a design-system consistency fix across existing pages' existing
+elements, not a new page or nav entry.
+
+**Data needs:** none. Zero JS/CSS/SQL changes — the shimmer engine, its styles, and its
+reduced-motion handling already exist in `bg.js` and are already loaded on every page; this is
+purely adding one HTML attribute to existing elements on 38 already-existing pages.
+
+**Source inspiration:** skeleton screens (structured shimmer placeholders that preview a UI's
+shape) over spinners or plain loading text remain the established, still-current 2026 pattern
+specifically for dashboard/list loading states because they eliminate layout shift and reduce
+perceived wait time — the same rationale `bg.js`'s own `.omega-skel` implementation already
+follows, just not applied everywhere it could be:
+- [Skeleton loading screen design — How to improve perceived performance — LogRocket](https://blog.logrocket.com/ux-design/skeleton-loading-screen-design/)
+- [Skeleton Screens vs Loading Spinners: Which Improves Perceived Performance? — The Hangline](https://www.thehangline.com/skeleton-screens-vs-loading-spinners-which-improves-perceived-performance/)
+- [Dashboard Design Patterns for Modern Web Apps 2026](https://artofstyleframe.com/blog/dashboard-design-patterns-web-apps/) — notes skeleton loading states as one of the recurring "unglamorous decisions" shared by 2026's best dashboard designs (Linear, Stripe, Grafana, Vercel), alongside shipping both color themes from day one, matching this platform's own dark-first, glassmorphism design system.
+
 ## Flagged, not proposed — need explicit scoping/sign-off before any code
 
 - **`omega-recommend.js`'s "surfacing" half doesn't exist in code at all.** The signal-*recording*

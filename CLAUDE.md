@@ -1247,6 +1247,78 @@ orphaned file.
   (`RUN_ORDER.md`) is closed. `python3 -m py_compile scripts/audit.py` and a full re-run
   (0 critical / 6 warnings, same as baseline, output verified more precise not just longer) both
   confirmed clean.
+- **`bg.js`'s skeleton-shimmer engine forced a 40px height on every `[data-loading]`/`.kpi-val`
+  element, unconditionally, regardless of the element's real size — fixed.** Found while finishing
+  the `data-loading` rollout from `FEATURE_IDEAS.md` #17: `applySkel()`'s
+  `if(el.offsetHeight<8)el.style.minHeight='40px'` check runs at `DOMContentLoaded`, which is
+  always *before* the approval guard reveals `#app`/`.shell`/`main.main` (§3) — so every candidate
+  element reads `offsetHeight:0` at check time no matter how it's actually styled, and the 40px
+  fallback fires on all of them, always, not just genuinely undersized ones. Harmless for the 36
+  content-block containers fixed first (40px is a reasonable skeleton height for a list/table
+  block), but would have been a guaranteed defect — not a risk, a certainty — for the platform's
+  smaller status labels and badges (e.g. `matrix.html`'s `#badge-status`, `profile.html`'s
+  `#sg-*-sub` fields): each would have rendered as an oversized 40px bar in place of a 9–15px
+  label, no matter what size the page itself intended. Confirmed by direct measurement in headless
+  Chromium before and after (an inline `min-height` set on the element had zero effect pre-fix,
+  since the forced assignment always ran regardless), not assumed from reading the code. Fixed by
+  changing the check to `if(!el.style.minHeight&&el.offsetHeight<8)el.style.minHeight='40px'` — an
+  element that already declares its own inline `min-height` keeps it; the 40px fallback now only
+  applies when nothing more specific was set, which is exactly the original 36 containers'
+  behavior, unchanged (re-verified: `feed.html #feed-list` still resolves to `min-height:40px`
+  after the fix). This is a platform-wide fix, live the moment `bg.js` deploys — not specific to
+  the 20 label elements that prompted finding it. See `FEATURE_IDEAS.md` #17 for the full
+  before/after measurements and the per-element sizing decisions this fix unblocked.
+- **Stored-XSS sweep, round 2: one more real instance found and fixed (`beacon.html`), the rest of
+  the self-editable-field surface confirmed already safe.** Continuing from the `approvals.html`/
+  `profile.html` fix above, checked every other self-updatable `profiles` column
+  (`display_name`, `sign`, `nationality`, `profession`, `bio`, `avatar_url` — the full list from
+  `omega_profile_fields.sql`'s self-update column allowlist) against every place it's rendered:
+  - `beacon.html` — `pr.display_name`/`pr.sign`/`pr.element` were concatenated straight into
+    `#h-sub`'s `.innerHTML` with no escaping. Lower severity than the `approvals.html` case (`pr`
+    here is always the *viewer's own* profile — `.eq('id',sess.user.id)` — so this is self-XSS, a
+    member can only inject into their own browser, not the owner's or another member's), but
+    still a real bug worth fixing on its own terms, and for consistency with the established
+    `esc()` convention. Fixed by adding the same `esc()` helper already used identically in
+    `contracts.html`/`dashboard.html`/`approvals.html` and wrapping the three rendered fields —
+    `sign` is escaped only where it's *displayed* (`<b>`+esc(sign)+`</b>`), not where it's used as
+    an object key (`GLY[sign]`), since escaping a lookup key would silently break the glyph lookup
+    for signs containing `<>&` (none do today, but the lookup and the display use are different
+    operations and only one of them is a rendering sink).
+  - `nationality`/`profession` — confirmed via repo-wide grep that neither is read/rendered
+    anywhere at all, on any page. Self-updatable but currently invisible; no XSS surface exists
+    for either today. Left alone — nothing to fix, and adding display UI for them is a feature
+    decision, not a bug fix.
+  - `avatar_url` — only consumer is `profile.html:2170`,
+    `ph.style.backgroundImage='url('+d.avatar_url+')'`. This goes through the CSSOM property
+    setter (`element.style.backgroundImage=`), not string-based `innerHTML`/`style=` attribute
+    injection — modern browsers parse this as a single CSS `<image>` value and don't execute
+    `javascript:` URIs or arbitrary markup through it (that was a legacy IE-only vector). Not a
+    script-injection risk; left as-is.
+  - `display_name`/`email` elsewhere: every other file that renders `display_name` (`credentials.html`,
+    `graph.html`, `identity.html`, `leaderboard.html`, `matrix.html`, `nexus.html`, `oracle.html`,
+    `rune.html`, `sigma.html`, `tribe.html`, `omega-user.js`) does so via `.textContent`/
+    `.createTextNode` (browser-auto-escaped, safe by construction) rather than `.innerHTML`, or
+    only ever reads the *viewer's own* profile for a non-DOM purpose (a Canvas `fillText()` call in
+    `omega-share-card.js`, which draws pixels and cannot execute markup, and an AI-prompt string in
+    `omega-copilot.js`). `chatbot.html`'s `a.name` looked like a hit but is a different, static
+    field entirely — the `omega-agents.json` persona roster, not member data.
+  - **Also checked the widest-reach public surface on the platform** — `public.activity_feed`,
+    read by the platform-wide ticker (`omega-live.js`'s `[data-live-ticker]`, loaded on every page)
+    and `dashboard.html`'s timeline, both fed from a table where `"member manages own feed" ON
+    public.activity_feed FOR ALL USING(user_id=auth.uid())` lets any member insert an arbitrary
+    `title`/`body` visible to literally every member and the owner (`is_public=true` rows are
+    world-readable). This is the single highest-value target checked in this sweep — an unescaped
+    render here would reach every user's browser, not just the owner's or the poster's own. Both
+    real consumers already call `esc()` before inserting into `.innerHTML`
+    (`dashboard.html:871`, `omega-live.js`'s ticker) or use `.textContent`
+    (`omega-realtime.js`'s ticker) — already safe, nothing to fix. A third reader
+    (`omega-intelligence.js`'s `get_recent_activity` AI-tool handler) passes the raw title into a
+    Claude prompt as tool-result context rather than rendering it directly; tracing whether a
+    malicious title could survive being echoed back through an LLM response and then land
+    unescaped in the chat UI is a multi-hop, low-probability chain, not a direct rendering sink —
+    noted, not chased further in this pass.
+  Verified: `node --check` on `beacon.html`'s script block; `scripts/audit.py` reconfirmed
+  0 critical / 6 pre-existing warnings.
 
 
 ## 9. Working in this repo — practical rules

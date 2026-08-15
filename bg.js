@@ -1396,7 +1396,15 @@ setTimeout(function(){
       [].slice.call(document.querySelectorAll(sel)).forEach(function(el){
         if(el.__skel||el.children.length||(el.textContent||'').trim())return;
         el.classList.add('omega-skel');el.__skel=1;
-        if(el.offsetHeight<8)el.style.minHeight='40px';
+        /* Respect a page-authored min-height (e.g. a small inline label sized
+           to its own content) instead of always forcing the 40px content-
+           block default -- this check runs at DOMContentLoaded, before the
+           approval guard reveals #app/.shell/main.main, so offsetHeight
+           reads 0 for every candidate regardless of its real layout size;
+           without this guard the 40px fallback fired unconditionally on
+           every [data-loading] element, distorting small labels into
+           oversized bars. */
+        if(!el.style.minHeight&&el.offsetHeight<8)el.style.minHeight='40px';
         var obs=new MutationObserver(function(){
           if(el.children.length||(el.textContent||'').trim()){el.classList.remove('omega-skel');el.style.minHeight='';obs.disconnect();}
         });

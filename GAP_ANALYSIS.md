@@ -545,6 +545,33 @@ pass, flagged as unfinished in §5 below rather than assumed clean.
 reconfirmed 0 critical / 6 pre-existing warnings, unchanged. No SQL/schema changes — both fixes
 are static content/client-side JS data corrections.
 
+### 4.12 `horoscope.html`: added a real "UPCOMING SKY EVENTS" panel (next full/new moon,
+next equinox/solstice) — new capability, not a bug fix
+
+Following up on §4.11's real-astronomy fixes to the same page: the existing "TONIGHT'S SKY ·
+REAL ASTRONOMY" panel only ever showed today's moon phase, with no forward-looking astronomical
+content anywhere in the Cosmos realm despite the platform's own concept doc naming this as an
+opportunity. Added a second panel, same page, same "real astronomy, not sovereign lore"
+framing already established:
+
+- **Next full/new moon** — derived directly from the synodic-month calculation already in this
+  file (`moonPhase()`), no new dependency: computes days remaining to the next phase=0
+  (new) or phase=0.5 (full) crossing.
+- **Next equinox/solstice** — new: Meeus's low-precision mean-equinox formula (public-domain,
+  valid 2000-2100, the same class of deterministic-astronomy approach as the moon-phase
+  calculation, i.e. no external API and no member data involved), converted from Julian
+  Ephemeris Day to a Gregorian calendar date via the standard JD-to-calendar algorithm.
+
+Verified by running the extracted functions directly (not just `node --check`) against 16
+known real equinox/solstice timestamps spanning 2023-2026 (public astronomical record) — every
+computed value landed within about an hour of the real timestamp, well inside the "accurate to
+within about a day" precision the UI copy claims (matching the existing moon-phase panel's own
+honesty convention about its precision). Next-full-moon output for today's date was also
+cross-checked against the public 2026 lunar almanac and matched. `node --check`-equivalent
+syntax validation on the page's inline script; `scripts/audit.py` reconfirmed 0 critical / 6
+pre-existing warnings. No SQL/schema changes, no new page, no `nav.js` change needed — this
+extends a page already in the sidebar.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

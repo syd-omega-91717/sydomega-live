@@ -469,6 +469,33 @@ tables), not raw member input, and the separate members-list tab (`buildMembersT
 adding a real `escGraph()` helper (matching the `esc()` convention used elsewhere) and
 escaping `m.name` directly instead of relying on the broken round-trip.
 
+### 4.10 `services.html`'s status board claimed `PAYMENT` is `'live'`, contradicting the
+platform's own established position elsewhere (fixed this session)
+
+`services.html`'s "21 Sovereign Microservices" status board is a hardcoded array (`SVCS`, no
+`sb.from`/`sb.rpc` — purely presentational) marking each claimed microservice `live`/`pending`/
+`planned`. `PAYMENT` (`'Stripe/fiat subscription and transaction processing'`) was marked
+`'live'` — but this directly contradicts copy already shipped on three other pages:
+`subscriptions.html:108` ("Payment processing activates after legal review... Until then,
+access is granted by the Sovereign Architect"), `subscriptions.html:226` ("PAYMENT ACTIVATION
+PENDING LEGAL REVIEW"), and `terms.html:86` ("Marketplace, token purchase, payments, and KYC
+activate only under completed legal review. Until then, no funds move..."). This is exactly
+the overclaim `CLAUDE.md` §9 warns against — the real Stripe integration code exists and works
+(`supabase/functions/checkout`/`stripe-webhook`, audited clean elsewhere in this file), but
+real fund movement isn't actually authorized yet, so a public status board calling it "LIVE" is
+a legally-relevant misstatement, not just a UI nit. Fixed by changing its status to `'pending'`
+(matching `KYC`'s existing label for "built, not yet activated") and updating its description to
+point at `subscriptions.html` for the real status. Cross-checked every other `'live'`/`'pending'`/
+`'planned'` claim on the board against the corresponding real page/table before touching only
+this one: `ANALYTICS` is marked `'planned'` despite a real, working `analytics.html` existing,
+but its description ("AI logs, dimension viewer, reasoning") matches the unwired
+`intelligence.html` (zero `sb.from`/`sb.rpc` calls, confirmed via grep) more closely than
+`analytics.html`'s actual chart-rendering feature set — genuinely ambiguous, not a clear
+misstatement like `PAYMENT`, so left alone rather than force a subjective call.
+`node --check`-equivalent syntax validation on all three of the page's inline script blocks;
+`scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema change —
+pure content/status-label correction.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

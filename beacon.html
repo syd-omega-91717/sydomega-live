@@ -111,6 +111,7 @@ var MAP=[
 ];
 
 window.setTab=setTab;
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['guide','map','cosmos','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
@@ -152,8 +153,8 @@ async function boot(){
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
 
   var sign=pr.sign||'Unknown';
-  var name=pr.display_name||'Sovereign';
-  document.getElementById('h-sub').innerHTML='Welcome, <b>'+name+'</b>. You are '+(GLY[sign]||'')+'&nbsp;<b>'+sign+'</b>, of the <b>'+(pr.element||'Unknown')+'</b> element. The path is simple: raise three axes &mdash; Knowledge, Mastery, Contribution &mdash; and the gates, ranks, and honours open as you climb.';
+  var name=esc(pr.display_name||'Sovereign');
+  document.getElementById('h-sub').innerHTML='Welcome, <b>'+name+'</b>. You are '+(GLY[sign]||'')+'&nbsp;<b>'+esc(sign)+'</b>, of the <b>'+esc(pr.element||'Unknown')+'</b> element. The path is simple: raise three axes &mdash; Knowledge, Mastery, Contribution &mdash; and the gates, ranks, and honours open as you climb.';
 
   var kinds={academy:false,gaming:false,contribution:false};
   try{var tc=await sb.from('task_completions').select('kind').eq('user_id',sess.user.id);(tc.data||[]).forEach(function(r){if(r.kind in kinds)kinds[r.kind]=true;});}catch(e){}

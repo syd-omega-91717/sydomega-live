@@ -122,7 +122,7 @@ function renderGates(auth){
   document.getElementById('gate-grid').innerHTML=THRESHOLDS.map(function(t,i){
     var reached=auth>=t;
     var current=i===gIdx-1||(gIdx===0&&i===0)||(gIdx===12&&i===11);
-    var cls='gate-card'+(reached?' reached':'')+(current?' current':'')+(!reached&&!current?' locked':'');
+    var cls='gate-card card'+(reached?' reached':'')+(current?' current':'')+(!reached&&!current?' locked':'');
     return'<div class="'+cls+'">'
       +(current?'<div class="gate-badge">&#9654;</div>':'')
       +'<div class="gate-num">'+(i+1)+'</div>'

@@ -205,31 +205,88 @@ through this one file with no per-page markup changes:
   by an added class). Spot-verified visually (`account.html`'s
   `.sign-card`, in addition to the pages already covered above) before
   shipping.
-  **Left for manual review** (the same failure modes as `.honor-card`,
-  needing individual judgment, not a mechanical fix): `academy.html`
-  `.exam-card`, `achievements.html` `.ach-card`, `advertising.html`
-  `.tier-card`, `agents.html`/`sovereign-ai.html`/`sovereign.html`
-  `.agent-card`, `analytics.html` `.algo-card`, `chronicle.html`
-  `.future-card`/`.event-card`, `city.html` `.district-card`,
-  `cosmos.html`/`elements.html` `.el-card`, `dna.html` `.dna-card`,
-  `evolution.html` `.gate-card`, `exam.html` `.q-card`/`.exam-card`,
-  `family.html` `.sg-card`, `feed.html` `.post-card`, `gaming.html`
-  `.g-card`/`.e-card`, `honors.html` `.phase-card` (in addition to
-  `.honor-card`), `intelligence.html` `.log-card`, `investment.html`
-  `.holding-card`, `lab.html` `.tech-card`, `map.html` `.stat-card`,
-  `notes.html` `.note-card`, `oracle.html` `.reading-card`,
-  `prediction.html` `.pred-card`, `projects.html` `.proj-card`,
-  `publications.html` `.rec-card`, `queue.html` `.worker-card`,
-  `revenue.html` `.stream-card`, `series.html` `.ser-card`,
-  `social.html` `.plat-card`, `sovereign-covenant.html` `.article-card`,
-  `studio.html` `.axis-card`/`.create-card`, `triads.html`
-  `.triad-card`, `tribe.html` `.elem-card`/`.tribe-rank-card`,
-  `trophies.html` `.medal-card`, `wallet.html` `.account-card`,
-  `wealth.html` `.asset-class-card`. (`vault.html`'s `.article-card` was
-  already reviewed and added earlier — its `::before` turned out to be
-  an exact duplicate of `.card`'s, not a real conflict — so it
-  re-appears in the scanner's conservative flag list but needed no
-  further action.)
+  **Manual-review pass completed** (a later session worked through the
+  full flagged list below, class by class, checking each against the
+  same two failure modes — a page-local `::before`/`::after` rule, or a
+  per-instance border via inline `style=` / JS `.style.border*`/
+  `.style.setProperty('--x',...)`/`.style.cssText+=` on the card element
+  itself). Verified with `node --check` on every touched page's inline
+  scripts, a headless-Chromium resting-state computed-style check
+  confirming `.card`'s hover-only `border-image` doesn't mask any
+  page's own resting border color, and `scripts/audit.py` reconfirming
+  0 critical / 6 pre-existing warnings.
+  - **Safe, `.card` added** (3): `evolution.html` `.gate-card` (only
+    modifier-class border-color rules — `.reached`/`.current`/`.locked`
+    — the same "persistent state indicator" category already established
+    as safe to include, since `.card`'s border-image only ever masks it
+    during a simultaneous hover); `trophies.html` `.medal-card` (same
+    shape — `.earned`'s `border-left` keyed off a JS-set `--mc` custom
+    property is a state indicator, not a bare per-instance override).
+    Both confirmed by injecting a real element with the exact class
+    string used by that page's own render code and reading
+    `getComputedStyle` at rest: border-image is `none`, and the page's
+    own border colors render unmasked.
+  - **Already done, no action needed** (1): `wealth.html`
+    `.asset-class-card` — all 4 usages already carry `class="asset-class-card
+    card"` in the markup; this session's list was stale on this one
+    entry specifically.
+  - **Dead CSS, nothing to sweep** (1): `map.html` `.stat-card` — the
+    class has exactly one occurrence repo-wide (its own `CREATE`... no,
+    its own CSS rule) and is never applied to any element in the page's
+    markup or JS. Adding `.card` to a selector nothing uses would be a
+    no-op; left as-is rather than invented a usage.
+  - **Confirmed real conflicts, left alone** (remaining ~34, same two
+    failure modes as before): `academy.html` `.exam-card` (`::before` +
+    a `--ec` custom-property top-accent, same `.kpi`-pattern exclusion
+    reason below); `achievements.html` `.ach-card` (inline
+    `style="border-color:..."` per instance); `advertising.html`
+    `.tier-card` (`::before`); `agents.html` `.agent-card` (JS
+    `card.style.borderLeftColor=...` on the card itself — `sovereign.html`
+    doesn't exist in this repo, `sovereigns.html` does and has no
+    `.agent-card` at all, so that part of the original list was stale);
+    `sovereign-ai.html` `.agent-card` (its base rule itself reads
+    `border-top:2px solid var(--ac,var(--gold))`, a per-instance custom
+    property on every card, not a modifier — structurally the same
+    pattern that got `.kpi` excluded from the glow-edge treatment
+    entirely, so excluded here too rather than hover-mask it);
+    `analytics.html` `.algo-card` (inline `border-top-color`, 10
+    instances); `chronicle.html` `.future-card` (`::before`) and
+    `.event-card` (`::before` + inline border, 17 instances);
+    `city.html` `.district-card` (JS `card.style.borderLeftColor`);
+    `cosmos.html` `.el-card` (the exact conflict already documented
+    above — JS `cssText+=` per-element border) and `elements.html`
+    `.el-card` (separately, JS `card.style.borderColor`); `dna.html`
+    `.dna-card` (`::before`); `exam.html` `.q-card` (inline
+    `border-left-color`) and `.exam-card` (`::before`); `family.html`
+    `.sg-card` (`::before` + inline border); `feed.html` `.post-card`
+    (`::before`); `gaming.html` `.g-card`/`.e-card` (both `::before`);
+    `honors.html` `.phase-card` (JS `c.style.borderTopColor`);
+    `intelligence.html` `.log-card` (inline `border-left-color` per
+    instance, on top of its own already-safe `.type-*` modifiers);
+    `investment.html` `.holding-card` (inline `border-left`); `lab.html`
+    `.tech-card` (inline `border-top`); `notes.html` `.note-card`
+    (inline `border-left-color`, on top of its own already-safe
+    `.pinned` modifier); `oracle.html` `.reading-card` (`::before` +
+    inline border); `prediction.html` `.pred-card` (JS
+    `c.style.borderTopColor` + `--pc`); `projects.html` `.proj-card`
+    (inline `border-left-color`, on top of its own already-safe
+    `.status-*` modifiers); `publications.html` `.rec-card` (inline
+    `border-top-color`, 6 instances); `queue.html` `.worker-card`
+    (`::before`); `revenue.html` `.stream-card` (inline
+    `border-left-color`); `series.html` `.ser-card` (`::before`);
+    `social.html` `.plat-card` (JS `card.style.borderTopColor`, on top
+    of its own already-safe `.connected` modifier); `sovereign-covenant.html`
+    `.article-card` (`::before` — checked against `vault.html`'s
+    already-merged `.article-card` specifically, since that one turned
+    out to be an exact duplicate; this one isn't — it adds
+    `opacity`/`transition`/a gradient background and is hover-revealed,
+    a materially different rule, so it stays a real conflict, not a
+    second free pass); `studio.html` `.axis-card`/`.create-card` (both
+    `::before`); `triads.html` `.triad-card` (`::after`); `tribe.html`
+    `.elem-card` (JS `card.style.borderColor`) and `.tribe-rank-card`
+    (JS `card.style.borderTop`); `wallet.html` `.account-card` (inline
+    `border-top`). (`vault.html`'s `.article-card` remains already
+    reviewed and added from the earlier pass — no change here.)
 - **Telemetry table utilities** (opt-in, not yet used by any page):
   `.trend.up`/`.trend.down` badges (colored, glowing, with a
   `▲`/`▼` marker), `.tbl-row.up`/`.tbl-row.down` row coloring, even-row

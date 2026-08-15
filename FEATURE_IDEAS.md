@@ -592,7 +592,40 @@ category, distinct from purely reactive chat assistants:
 - [Best Proactive AI Assistants in 2026 — Lifestack](https://lifestack.ai/blog/proactive-ai-assistant)
 - [20 Best AI Assistant Apps for 2026 — Reclaim](https://reclaim.ai/blog/ai-assistant-apps)
 
-## 17. Extend the already-built skeleton-shimmer loading system's reach via `data-loading` (design system, platform-wide)
+## 17. Extend the already-built skeleton-shimmer loading system's reach via `data-loading` (design system, platform-wide) — SHIPPED
+
+**Implementation note:** built directly rather than routed through `feature-architect`/
+`autonomous-coder`, since it's a bounded, zero-risk markup-only change (no JS/SQL/nav changes) —
+same category of work as the `.card` design-system sweep in `CLAUDE.md` §4.1, not a new feature
+needing a blueprint. Applied to 36 confirmed-safe containers across 25 pages: for each, verified
+via grep (not assumed) that the exact same element id is reassigned via `.innerHTML=`/
+`.textContent=` elsewhere in that page's own JS (directly or through a `var x=getElementById(...)`
+alias) before touching it — `bg.js`'s `applySkel()` only arms the shimmer on an element with **zero**
+existing children/text, so simply adding `data-loading` next to the static "LOADING X…" placeholder
+text (the literal reading of the original proposal above) would have been a no-op: the check
+`el.children.length||(el.textContent||'').trim()` would still see the placeholder text and skip it.
+Caught this before shipping by re-reading `bg.js`'s actual guard clause, not just assuming the
+attribute alone was sufficient. Fixed by adding `data-loading` to the outer container **and**
+removing its static placeholder text, so it starts empty (satisfying the guard) and gets filled by
+the page's own existing fetch/render logic exactly as before — visually, "LOADING X…" text is
+replaced by the gold shimmer sweep instead.
+
+A second, narrower category — 22 more instances where the `LOADING` text sits directly on the id'd
+element itself (small inline labels, e.g. `matrix.html`'s `#stat-a-sub`, `profile.html`'s several
+`#sg-*-sub` fields) rather than wrapping a dedicated container — was deliberately **not** touched
+in this pass: `applySkel()` forces `min-height:40px` on any element under 8px tall so the shimmer
+bar is visible, which is correct for a content block but would visibly distort a small inline text
+label into an oversized empty bar. Doing those safely needs a per-element visual check (would a
+40px-tall shimmer look right in that specific badge/label spot, or does it need a narrower custom
+treatment) that a blind text-removal pass can't verify — left for a follow-up pass with real
+visual review, not blocked on anything structural.
+
+Verified: `node --check`-equivalent syntax validation on all 21 touched files' inline `<script>`
+blocks (0 failures); `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings (asset/
+link-integrity check unaffected, since no `src=`/`href=` was touched); a real headless-Chromium
+run against `feed.html` confirmed `#feed-list` actually gains the `omega-skel` class and
+`min-height:40px` ~500ms after `DOMContentLoaded` — not just inspected in source, the shimmer
+mechanism was confirmed to actually arm.
 
 **Grounded in:** `bg.js` already ships a complete, platform-wide skeleton-loading system (search
 `OMEGA LOADING` in `bg.js`) — a `.omega-skel` class with a gold shimmer sweep

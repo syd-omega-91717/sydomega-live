@@ -143,9 +143,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 
   <!-- CRYPTO TAB -->
   <div class="panel active" id="tab-crypto">
-    <div class="grid4" id="crypto-grid">
-      <div class="loading">LOADING MARKET DATA</div>
-    </div>
+    <div class="grid4" id="crypto-grid" data-loading></div>
     <div class="grid2">
       <div class="card">
         <div class="card-title">&#9679; BTC / ETH DOMINANCE</div>
@@ -153,7 +151,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
       </div>
       <div class="card">
         <div class="card-title">&#9679; MARKET CAP LEADERS</div>
-        <div id="cap-list"><div class="loading">LOADING</div></div>
+        <div id="cap-list" data-loading></div>
       </div>
     </div>
   </div>
@@ -208,15 +206,13 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
       <div class="stat-card card"><div class="stat-val">60s</div><div class="stat-lbl">REFRESH INTERVAL</div></div>
       <div class="stat-card card"><div class="stat-val">&#8734;</div><div class="stat-lbl">SIGNAL SOURCES</div></div>
     </div>
-    <div class="grid3" id="weather-grid">
-      <div class="loading">LOADING WEATHER DATA</div>
-    </div>
+    <div class="grid3" id="weather-grid" data-loading></div>
     <div class="grid2">
       <div class="card">
         <div class="card-title">&#9679; CRYPTO FEAR &amp; GREED INDEX</div>
         <div class="fng-gauge">
           <div class="fng-val" id="fng-val">--</div>
-          <div class="fng-lbl" id="fng-lbl" style="color:var(--dim)">LOADING</div>
+          <div class="fng-lbl" id="fng-lbl" style="min-height:11px;color:var(--dim)" data-loading></div>
         </div>
         <div class="fng-bar"><div class="fng-marker" id="fng-marker" style="left:50%"></div></div>
         <div style="display:flex;justify-content:space-between;font-size:7px;letter-spacing:1px;color:var(--dim)">
@@ -230,7 +226,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
     </div>
     <div class="card">
       <div class="card-title">&#9679; GLOBAL CRYPTO NEWS</div>
-      <div id="news-list"><div class="loading">LOADING NEWS</div></div>
+      <div id="news-list" data-loading></div>
     </div>
   </div>
 </div>

@@ -241,17 +241,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="astat card">
       <div class="astat-label">Axis A &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-a">--</div>
-      <div class="astat-sub" id="stat-a-sub">Loading your standing...</div>
+      <div class="astat-sub" id="stat-a-sub" style="min-height:12px" data-loading></div>
     </div>
     <div class="astat card">
       <div class="astat-label">Axis B &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-b">--</div>
-      <div class="astat-sub" id="stat-b-sub">Loading your standing...</div>
+      <div class="astat-sub" id="stat-b-sub" style="min-height:12px" data-loading></div>
     </div>
     <div class="astat card">
       <div class="astat-label">Axis C &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-c">--</div>
-      <div class="astat-sub" id="stat-c-sub">Loading your standing...</div>
+      <div class="astat-sub" id="stat-c-sub" style="min-height:12px" data-loading></div>
     </div>
     <div class="astat card" style="border-color:rgba(0,229,255,0.3)">
       <div class="astat-label" style="color:var(--cyan)">Authority Score</div>
@@ -292,7 +292,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="right-panels">
       <!-- Axis Detail -->
       <div class="panel">
-        <div class="panel-header"><span class="panel-title">Axis Progression</span><span class="panel-badge" id="badge-status">LOADING</span></div>
+        <div class="panel-header"><span class="panel-title">Axis Progression</span><span class="panel-badge" id="badge-status" style="display:inline-block;min-height:14px" data-loading></span></div>
         <div class="panel-body">
           <div class="axis-tracks">
             <div class="axis-track-item">
@@ -382,9 +382,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
     <div style="margin-top:2rem;font-family:serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">Your 12 Tracks -- Real Standing Per Sign</div>
     <div style="font-family:monospace;font-size:.62rem;color:var(--muted);margin:.4rem 0 1rem">Aggregated to Phase 1 of 12 for this view. Each track carries its own full 9x9x9 across all 12 phases.</div>
-    <div id="track-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem">
-      <div style="grid-column:1/-1;font-family:monospace;font-size:11px;color:var(--muted)">Loading your 12 tracks...</div>
-    </div>
+    <div id="track-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem" data-loading></div>
   </div>
 </div>
 

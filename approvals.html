@@ -206,15 +206,15 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- TAB: MEMBERS -->
     <div class="tab-panel active" id="tab-members">
       <div class="sechead">ACCESS CONTROL &mdash; MEMBER ROSTER</div>
-      <div id="member-list"><div class="empty">LOADING MEMBERS...</div></div>
+      <div id="member-list" data-loading></div>
     </div>
 
     <!-- TAB: OPERATIONS (contracts + reservations + dispatch) -->
     <div class="tab-panel" id="tab-operations">
       <div class="sechead">CONTRACT QUEUE<button class="q-btn" style="font-size:8px" onclick="loadContracts()">&#8635; REFRESH</button></div>
-      <div id="contracts-queue"><div class="empty">LOADING...</div></div>
+      <div id="contracts-queue" data-loading></div>
       <div class="sechead" style="margin-top:28px">RESERVATION QUEUE<button class="q-btn" style="font-size:8px" onclick="loadReservations()">&#8635; REFRESH</button></div>
-      <div id="reservations-queue"><div class="empty">LOADING...</div></div>
+      <div id="reservations-queue" data-loading></div>
       <div class="sechead" style="margin-top:28px">SOVEREIGN DISPATCH</div>
       <div class="d-form">
         <input id="disp-title" type="text" placeholder="DISPATCH TITLE" autocomplete="off">
@@ -246,9 +246,9 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
       </div>
       <script>(function(){var cv=document.getElementById('cv-audit');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
-      <div id="audit-list"><div class="empty">LOADING AUDIT LOG...</div></div>
+      <div id="audit-list" data-loading></div>
       <div class="sechead" style="margin-top:28px">CLIENT ERROR MONITOR<button class="q-btn" style="font-size:8px" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button></div>
-      <div id="err-list"><div class="empty">LOADING...</div></div>
+      <div id="err-list" data-loading></div>
     </div>
 
     <!-- TAB: SCIENCE -->

@@ -1005,6 +1005,34 @@ orphaned file.
   column-name bug in `omega-music.js` (same bug class as elsewhere in this file) found while
   reading the file for this — low-impact today since the surrounding `omega:user-loaded` event
   is documented above as rarely-fired, but correct now if that's ever wired up.
+- **The `zodiac_sign`/`full_name`/`agent_name` wrong-property bug (previously fixed piecemeal in
+  `omega-music.js`, `graph.html`, `nexus.html`, `sigma.html`, `omega-onboard.js`,
+  `omega-export.js`) was still live in 18 more files — swept and fixed platform-wide.** Every
+  prior fix of this exact bug class was found one file at a time, as a side effect of auditing
+  something else; this pass instead grepped every `.js`/`.html` file directly for the three known-
+  wrong property names (`.zodiac_sign`, `.full_name`, `.agent_name` — real columns are `sign`,
+  `display_name`, `agent`) to find every remaining instance at once, rather than waiting to trip
+  over the rest one by one. 7 of the 18 read a fresh, reliable `sb.from('profiles').select('*')`
+  result every page load (`blockchain.html`, `character.html`, `cipher.html`, `credentials.html`,
+  `horoscope.html`, `oracle.html`, `sigil.html`) — real, every-visit impact: a member's actual
+  stored zodiac sign was never used, silently falling back to a generic or date-computed default
+  instead, on every single page load. `profile.html` had one more instance in its share-card data
+  (dead fallback only, `display_name` already checked first — dropped rather than renamed). The
+  remaining 6 (`omega-ambient.js`, `omega-event-bus.js`, `omega-particles.js`, `omega-passport.js`,
+  `omega-realm.js`, `omega-sigil-gen.js`) all read from the `omega:user-loaded` event's
+  `e.detail.profile`, already documented above as rarely-fired — low practical impact today, fixed
+  for correctness regardless. `omega-intelligence.js` and `omega-workflow.js` had the
+  `agent_name`→`agent` variant. Two already-harmless instances (`news.html`, `realm.html`) had a
+  correct fallback already earlier in the same `||` chain, masking the dead wrong-named one after
+  it — cleaned up rather than left as confusing dead code. `signal.html`'s `repo.full_name` is a
+  real, unrelated GitHub API response field (not a profile column) — confirmed and left untouched,
+  not a false "fix." Also re-ran the write/read/RPC column-mismatch scanners from earlier in this
+  file (all clean, confirming no regressions and no new instances of those bug classes) and the
+  scanner behind the "26-instance module-boundary bug" fix (0 remaining; its 2 new hits were both
+  false positives — `esc(...)` calls happening at template-string build time inside a module
+  script, not literal runtime `onclick=` handlers). `node --check`-equivalent syntax validation on
+  every touched file's inline `<script>` blocks; `scripts/audit.py` reconfirmed 0 critical / 6
+  pre-existing warnings. No SQL/schema changes — pure client-side property-name fixes.
 
 
 ## 9. Working in this repo — practical rules

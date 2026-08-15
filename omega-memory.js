@@ -96,7 +96,7 @@
     await store('member:name', profile.display_name||'Sovereign', 'semantic');
     await store('member:element', profile.element||'?', 'semantic');
     await store('member:sign', profile.sign||'?', 'semantic');
-    await store('member:agent', profile.agent_name||'?', 'semantic');
+    await store('member:agent', profile.agent||'?', 'semantic');
     await store('member:auth', auth.toFixed(4), 'semantic');
     await store('member:tier', profile.subscription_tier||'FREE', 'semantic');
     await store('session:page', location.pathname, 'episodic');

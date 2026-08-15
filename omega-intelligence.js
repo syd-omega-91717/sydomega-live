@@ -43,7 +43,7 @@
         var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
         var gi=GATES.findIndex(function(g){return auth<g;});
         return {auth:auth.toFixed(4),axis_a:a.toFixed(3),axis_b:b.toFixed(3),axis_c:c.toFixed(3),
-          element:pr.element,sign:pr.sign,agent:pr.agent_name,
+          element:pr.element,sign:pr.sign,agent:pr.agent,
           gate_next:gi>=0?gi+1:12,gate_name:gi>=0?GNAMES[gi]:'APEX',
           gate_delta:gi>=0?(GATES[gi]-auth).toFixed(4):'0.0000'};
       }

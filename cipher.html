@@ -149,7 +149,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   var ELEM_SIGILS={Fire:'☲',Water:'☰',Wind:'☱',Metal:'☳',Sand:'★',Soul:'✴',Space:'✶',Void:'✷','The All':'Ω'};
   var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
 
-  var defaultElem=(pr.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign])||'Fire';
+  var defaultElem=(pr.sign&&SIGN_ELEM[pr.sign])||'Fire';
   var currentElem=defaultElem;
   var cipherMode='encode';
   var history=[];

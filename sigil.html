@@ -179,7 +179,7 @@ async function boot(){
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
   var a=Number(pr.is_owner?9:pr.axis_a||0),b=Number(pr.is_owner?9:pr.axis_b||0),c=Number(pr.is_owner?9:pr.axis_c||0);
   var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-  var sign=pr.zodiac_sign||SIGNS[0];
+  var sign=pr.sign||SIGNS[0];
   var si=SIGNS.indexOf(sign);if(si<0)si=0;
   var sym=SYMS[si];
   var gIdx=GTHR.findIndex(function(t){return auth<t;});if(gIdx<0)gIdx=11;

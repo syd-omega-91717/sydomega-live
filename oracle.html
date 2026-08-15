@@ -274,7 +274,7 @@ setInterval(updateCountdown,1000);updateCountdown();
 
 /* ── compute ── */
 var now=new Date();
-var sign=pr&&pr.zodiac_sign?pr.zodiac_sign:getSunSign(now);
+var sign=pr&&pr.sign?pr.sign:getSunSign(now);
 var elem=SIGN_ELEM[sign]||'Void';
 var a=Number(pr&&pr.axis_a||0),b=Number(pr&&pr.axis_b||0),c=Number(pr&&pr.axis_c||0);
 var auth=pr&&pr.is_owner?27.8367:calcAuth(a,b,c);
@@ -286,7 +286,7 @@ var power=dailyPower(auth,now);
 /* ── header ── */
 document.getElementById('oracle-sigil').textContent=ELEM_SIGIL[elem]||'Ω';
 document.getElementById('oracle-date-lbl').textContent=now.toUTCString().split(' ').slice(0,4).join(' ').toUpperCase();
-document.getElementById('oracle-title').textContent='ORACLE FOR '+((pr&&(pr.display_name||pr.full_name))||'SOVEREIGN').toUpperCase();
+document.getElementById('oracle-title').textContent='ORACLE FOR '+((pr&&pr.display_name)||'SOVEREIGN').toUpperCase();
 document.getElementById('kpi-moon').textContent=moonPhase;
 document.getElementById('kpi-sun').textContent=sunSign.toUpperCase();
 document.getElementById('kpi-elem').textContent=elem.toUpperCase();

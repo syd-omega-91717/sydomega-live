@@ -262,7 +262,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   };
   var TRIAD_NAMES=['Primal','Primal','Primal','Middle','Middle','Middle','Supreme','Supreme','Supreme','Primal','Middle','Supreme'];
 
-  var sign=pr.zodiac_sign||SIGNS[Math.floor(new Date().getMonth()%12)];
+  var sign=pr.sign||SIGNS[Math.floor(new Date().getMonth()%12)];
   var signIdx=SIGNS.indexOf(sign);if(signIdx<0)signIdx=0;
   var god=GODS[signIdx],elem=ELEMS[signIdx],elemId=ELEM_IDS[signIdx];
   var gateIdx=THRESHOLDS.findIndex(function(t){return auth<t;});
@@ -270,7 +270,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   THRESHOLDS.forEach(function(t,i){if(auth>=t)highGrade=GNAMES[i];});
 
   sid('stat-auth',auth.toFixed(4));sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-  sid('chr-display-name',(pr.full_name||s.user.email||'--').toUpperCase());
+  sid('chr-display-name',(pr.display_name||s.user.email||'--').toUpperCase());
   sid('chr-uid-short','UID '+s.user.id.substr(0,8).toUpperCase());
   sid('chr-sign',sign||'--');sid('chr-element',elem);sid('chr-olympian',god);
   sid('chr-gate',gateIdx>0?(GNAMES[gateIdx-1]+' · GATE '+(gateIdx)):'INITIATE · GATE I');

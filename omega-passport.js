@@ -25,10 +25,10 @@ function drawPassport(pdf, pr, user){
   var c=Number(pr.is_owner?9:pr.axis_c||0.001);
   var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
   var gate=getGate(auth);
-  var sign=pr.zodiac_sign||'—';
+  var sign=pr.sign||'—';
   var elem=SIGN_ELEM[sign]||'—';
   var god=SIGN_GOD[sign]||'—';
-  var name=pr.display_name||pr.full_name||(user&&user.email?user.email.split('@')[0]:'Sovereign');
+  var name=pr.display_name||(user&&user.email?user.email.split('@')[0]:'Sovereign');
   var issued=new Date().toISOString().split('T')[0];
 
   var W=105,H=148; /* A6 size in mm */

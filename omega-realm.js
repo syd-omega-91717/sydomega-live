@@ -216,7 +216,7 @@ window.OmegaRealm={
 var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
 
 function handleProfile(pr){
-  var elem=(pr&&pr.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign])||'Void';
+  var elem=(pr&&pr.sign&&SIGN_ELEM[pr.sign])||'Void';
   _currentElem=elem;
   autoMount(elem);
 }

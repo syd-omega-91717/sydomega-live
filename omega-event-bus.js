@@ -190,7 +190,7 @@ window.addEventListener('omega:user-loaded',function(e){
   var a=Number(profile.axis_a||0),b=Number(profile.axis_b||0),c=Number(profile.axis_c||0);
   var auth=profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
   var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
-  var elem=SIGN_ELEM[profile.zodiac_sign]||'Void';
+  var elem=SIGN_ELEM[profile.sign]||'Void';
 
   /* Emit session start event */
   emit('sovereign.realm.visited',{memberId:user.id,elem:elem,duration:0},{id:'session-'+user.id+'-'+Date.now().toString(36)});
@@ -207,7 +207,7 @@ window.addEventListener('omega:music-stopped',function(e){
     var dur=Date.now()-_musicStart;
     var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
     var profile=window.__omegaProfile||{};
-    emit('sovereign.music.played',{memberId:window.__omegaUser.id,elem:SIGN_ELEM[profile.zodiac_sign]||'Void',duration:dur});
+    emit('sovereign.music.played',{memberId:window.__omegaUser.id,elem:SIGN_ELEM[profile.sign]||'Void',duration:dur});
     _musicStart=null;
   }
 });

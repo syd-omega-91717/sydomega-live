@@ -30,7 +30,7 @@ var SIGN_ELEM = {
 };
 
 function resolveElement(pr){
-  if(pr&&pr.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign]) return SIGN_ELEM[pr.zodiac_sign];
+  if(pr&&pr.sign&&SIGN_ELEM[pr.sign]) return SIGN_ELEM[pr.sign];
   return 'Void';
 }
 

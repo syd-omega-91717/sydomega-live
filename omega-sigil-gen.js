@@ -195,8 +195,8 @@ window.addEventListener('omega:user-loaded',function(e){
   var auth=profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
   var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
   var gate=1;GATE_THRESH.forEach(function(t,i){if(auth>=t)gate=i+1;});
-  var elem=SIGN_ELEM[profile.zodiac_sign]||'Void';
-  var name=profile.display_name||profile.full_name||'Sovereign';
+  var elem=SIGN_ELEM[profile.sign]||'Void';
+  var name=profile.display_name||'Sovereign';
   var opts={auth:auth,elem:elem,axisA:a,axisB:b,axisC:c,gate:gate,name:name,size:280};
   document.querySelectorAll('[data-sigil]').forEach(function(el){
     var customSize=parseInt(el.getAttribute('data-sigil-size')||'280');

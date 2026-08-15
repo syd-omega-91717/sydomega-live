@@ -176,7 +176,7 @@ document.addEventListener('click',function(e){
 
 /* Listen for profile */
 function handleProfile(pr){
-  var elem=(pr&&pr.zodiac_sign&&SIGN_ELEM[pr.zodiac_sign])||'Void';
+  var elem=(pr&&pr.sign&&SIGN_ELEM[pr.sign])||'Void';
   if(initAudio()) playElement(elem);
 }
 window.addEventListener('omega:user-loaded',function(e){

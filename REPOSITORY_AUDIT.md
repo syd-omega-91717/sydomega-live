@@ -609,3 +609,40 @@ asked for):**
 This is real surface-area work across a file every page loads (`nav.js`) — sized similarly to
 the `.card`/`.tab-btn` sweeps already done this session, but touching navigation structure
 rather than typography, so flagged for an explicit go-ahead rather than started unprompted.
+
+### 9.1 Addendum — implemented, per go-ahead given in response to `UX_REDESIGN_BRIEF.md`
+
+All three remediation items above were implemented as scripted, anchor-verified string edits
+(each insertion point checked for uniqueness before writing, so nothing could silently land in
+the wrong place):
+
+- **All 64 orphaned pages folded into `nav.js`'s `PS` map and the matching `SECTIONS[].sub`
+  array**, grouped by theme into existing sections rather than inventing new top-level ones:
+  wellness/habit-tracking + `body`/`physiology` → `services` (alongside the existing
+  `health.html` anchor, 19 pages); `budget`/`expenses`/`wealth` → `invest` (3); personal-
+  productivity (`contacts`, `decisions`, `missions`, `network`, `notes`, `projects`, `quotes`,
+  `time`, `vision`) → `command` (9); lore/cosmos (`chronicle`, `dna`, `graph`, `map`, `mirror`,
+  `oracle`, `realm`, `rune`, `tribe`) → `cosmos` (9); the `dashboard.html`/`intelligence.html`-
+  only "intel modules" (`atlas`, `cipher`, `codex`, `mindmap`, `nexus`, `pulse`, `sigma`,
+  `signal`) → `intel` (8, confirmed by reading each page's own `<title>` rather than assumed);
+  study/reference (`architect`, `clarity`, `flashcard`, `focus`, `forge`, `library`, `mentors`,
+  `principles`, `reading`, `skills`, `vocabulary`) → `ascend` (11); `maintenance`/`ops` →
+  `govern` (2); `queue` → `arena` (1, its own title reads "SOVEREIGN QUEUE" — an
+  automation/task-execution fit); `awards` → `achieve` (1); `publications` → `media` (1).
+  `maintenance.html` — the one page with zero discovery path anywhere on the platform — now has
+  one, via `govern`.
+- **`DRAWER_SECTIONS` (mobile) synced from 9 to all 15 desktop sections** — added `arena`,
+  `govern`, `invest`, `achieve`, `archive`, `media` with the same icon/color/href as their
+  `SECTIONS` array entry and a curated links list matching the existing drawer entries' density.
+- **Verified, not just written**: a scripted re-run of the same gap-detection method used to
+  find the original 64 confirms 0 pages now missing from the sidebar; `node --check nav.js`
+  passes; `scripts/audit.py` reconfirms 0 critical / 6 pre-existing warnings (unchanged, no
+  regressions); no duplicate `PS` keys were introduced (155 keys, 0 duplicates — the exact bug
+  class `nav.js`'s own comments already warn about, §5); headless Chromium confirms all 64 new
+  hrefs resolve to real pages (HTTP 200) and the desktop sidebar renders exactly 15 icon glyphs
+  (one per section, matching `SECTIONS.length`) with the correct mobile drawer section count.
+  Full authenticated-session hover/click interaction wasn't practical to verify in this
+  environment (`bg.js`'s approval guard hides the shell for an unauthenticated test session) —
+  worth a manual check post-deploy. Not a new issue: the same nested-tooltip-inside-anchor HTML
+  pattern this uses was already present, unchanged, in every pre-existing section before this
+  edit.

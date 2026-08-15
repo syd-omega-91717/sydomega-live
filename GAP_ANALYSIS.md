@@ -587,11 +587,8 @@ pure content/status-label correction.
    yet checked for other bug shapes), and any bug class outside the ones this sweep has focused
    on (XSS, silent-failure writes, missing-table/RPC, RPC-response-shape mismatches,
    auth-bypass).
-10. Wire `nav.js` for the 64-page navigation gap found this session (`REPOSITORY_AUDIT.md` §9) —
-    61 pages currently reachable only via `dashboard.html`'s/`intelligence.html`'s own separate
-    quick-link grids, 3 with no link anywhere (1 of those, `maintenance.html`, not even in the
-    Ctrl+K search index), and the mobile drawer missing 6 of 15 desktop sections (54 sub-pages
-    invisible on mobile specifically). Planning/audit only this session, by request — a proposed
-    remediation is in `REPOSITORY_AUDIT.md` §9, not yet implemented pending go-ahead.
+10. ~~Wire `nav.js` for the 64-page navigation gap found this session~~ — done, see
+    `REPOSITORY_AUDIT.md` §9 addendum. Prompted directly by friend/early-tester feedback
+    ("navigation friction") in `UX_REDESIGN_BRIEF.md`; the go-ahead this item was waiting on.
 
 `nav.js`'s duplicate keys (previously here) — done, see §4.4.

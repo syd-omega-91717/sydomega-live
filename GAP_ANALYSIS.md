@@ -651,6 +651,44 @@ directly against `omega-workers.js` instead of hunting for a service that doesn'
 critical / 6 pre-existing warnings. No SQL/schema changes — pure client-side wiring to data
 structures that already existed and were already correctly used elsewhere on the same page.
 
+### 4.15 `pulse.html`'s commodities/indices — one real rendering bug fixed, indices upgraded to
+attempt real quotes now that `market-price` exists; metals/energy correctly left as-is (already
+honestly labelled, not a bug)
+
+Followed the same audit pattern as §4.13/§4.14 (grep for `Math.random()*var`-shaped fabricated
+data) into `pulse.html`'s COMMODITIES tab, which sits right next to this same page's genuinely
+real exchange-rate and Fear & Greed Index data. Initially looked like the same undisclosed-fake-
+data issue as `ops.html`/`queue.html`, but reading the surrounding markup first (not just the
+JS) showed the page's own author had already handled this honestly: the METALS, ENERGY, and
+INDICES card titles already carry visible `(SIMULATED)` / `(SIMULATED — NO FREE LIVE SOURCE)`
+labels. Correcting course before making an unnecessary change: metals and energy commodities
+have no verified free/keyless source anywhere in this codebase (checked; the `fetchCommodities()`
+comment claiming "using exchangerate for XAU/XAG" was itself aspirational — no such call exists
+in the function body) and inventing one blind, unable to test outbound network calls from this
+session's environment, would risk exactly the guessed-API-shape silent-failure pattern this
+file's own history extensively warns against. Left untouched — already correctly disclosed, not
+a bug.
+
+Two things were genuinely fixed:
+- **A real, separate, visible rendering bug**: the shared `row()` renderer appends `item.unit`
+  unconditionally, but the `INDICES` array (unlike `METALS`/`ENERGY`) never defined a `unit`
+  field — so every index price literally rendered with the string `"undefined"` appended (e.g.
+  `"5,412.34undefined"`). Fixed by giving `INDICES` entries an explicit empty `unit` and
+  defaulting to `''` in the renderer.
+- **Indices now attempt a real quote** via the `market-price` Edge Function added this session
+  for `investment.html` (same dormant-until-`TWELVE_DATA_API_KEY`-is-set infra, no new secret
+  or endpoint needed) before falling back to the existing simulated value — strictly additive,
+  since any failure (unresolved symbol, key not configured, network error) falls through to
+  unchanged existing behavior. Live rows get a small `LIVE` tag; the section's own disclosure
+  label updates dynamically between "(SIMULATED — set TWELVE_DATA_API_KEY for live quotes)" and
+  "(LIVE WHERE CONFIGURED, SIMULATED OTHERWISE)" depending on whether any index actually
+  resolved, so the page never claims more than what's actually happening. Metals/energy
+  deliberately not extended the same way — no equivalent free-tier-friendly source identified
+  for spot commodity prices in this pass.
+
+`node --check` on both the plain and `type="module"` script blocks; `scripts/audit.py`
+reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

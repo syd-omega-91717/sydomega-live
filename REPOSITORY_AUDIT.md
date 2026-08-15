@@ -79,7 +79,8 @@ runs on every push, so this class of bug can't silently regress again.
 
 Other CI checks (`ci.yml`, not reproduced in `audit.py`): `node --check` on every root
 `.js` file (syntax), a `service_role`/`SUPABASE_SERVICE` scan (blocking, 0 hits), `deno check`
-on all 7 Edge Functions (non-blocking), `sw.js` precache vs. actual files (blocking),
+on all 8 Edge Functions (non-blocking; `market-price`, added this session, not yet deployed —
+see `CAPABILITY_INVENTORY.md` §3), `sw.js` precache vs. actual files (blocking),
 `manifest.json` icon paths vs. actual files (blocking). All currently pass.
 
 ## 3. Security posture

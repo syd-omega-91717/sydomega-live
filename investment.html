@@ -253,8 +253,22 @@ function fetchLivePrice(){
   var msg=document.getElementById('live-price-msg');
   var btn=document.getElementById('live-price-btn');
   if(!ticker){alert('Enter a ticker or name first.');return;}
+  if(type==='equity'||type==='etf'){
+    btn.disabled=true;btn.textContent='...';msg.textContent='Looking up "'+ticker+'" quote...';
+    fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/market-price?symbol='+encodeURIComponent(ticker))
+      .then(function(r){return r.json();})
+      .then(function(data){
+        if(data.configured===false){msg.textContent='Stock/ETF live price lookup is not configured on this platform yet — enter the price manually.';return;}
+        if(data.error||data.price==null){msg.textContent='No quote found for "'+ticker+'" — enter the price manually.';return;}
+        document.getElementById('h-price').value=data.price;
+        msg.textContent=data.symbol+' — live price loaded: $'+data.price;
+      })
+      .catch(function(){msg.textContent='Could not reach the price service — check your connection and try again, or enter the price manually.';})
+      .finally(function(){btn.disabled=false;btn.textContent='LIVE PRICE';});
+    return;
+  }
   if(type!=='crypto'){
-    msg.textContent='Live price lookup currently only covers crypto (via CoinGecko) — no free, keyless real-time stock/ETF price source is wired up, so enter the price manually for this asset type.';
+    msg.textContent='Live price lookup covers crypto and equities/ETFs only — enter the price manually for this asset type.';
     return;
   }
   btn.disabled=true;btn.textContent='...';msg.textContent='Looking up "'+ticker+'" on CoinGecko...';

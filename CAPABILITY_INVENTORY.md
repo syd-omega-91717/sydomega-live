@@ -220,7 +220,25 @@ see `GAP_ANALYSIS.md` §4.7).
 ## 2. Backend module inventory (93 `omega-*.js` files on disk, 88 injected by `bg.js`)
 
 Grouped by function, one line each, extracted from each file's own header comment (not
-invented — see `REPOSITORY_AUDIT.md` §1 methodology note):
+invented — see `REPOSITORY_AUDIT.md` §1 methodology note).
+
+**Backend-call audit status:** every `omega-*.js` module containing a `.from()`/`.rpc()` call
+has now been checked column-by-column against the live schema across this session and the one
+before it (grep for `.from\('[a-z_]+'\)\|.rpc\('[a-z_]+'` to re-enumerate the list if new
+modules are added). 5 real bugs found and fixed this way: `omega-presence.js`, `omega-onboard.js`
+(prior round), `omega-workflow.js`, `omega-export.js`, `omega-realtime.js` (this round) — all
+✅-marked below with a `CLAUDE.md` §8 pointer. Every other backend-calling module
+(`omega-capability`, `omega-experiment`, `omega-intelligence`, `omega-memory`, `omega-user`,
+`omega-telemetry`, `omega-sovereign-os`, `omega-chrono`, `omega-tier-gate`, `omega-shell`,
+`omega-share`, `omega-policy`, `omega-metrics`, `omega-membership`, `omega-hero-wire`,
+`omega-gate`, `omega-finops`, `omega-feedback`, `omega-emblems`, `omega-backdrop`,
+`omega-genesis`, plus `omega-matrix`/`omega-progress`/`omega-recommend`/`omega-chart`/
+`omega-live`/`omega-notify` from the prior round) was checked and found to already match the
+live schema exactly — not re-verified below, individually, to avoid this file ballooning, but
+confirmed via the same grep-every-column-against-`supabase/*.sql` method as the ones that were
+broken. Modules with zero `.from()`/`.rpc()` calls (pure UI/visual/utility — particles,
+geometry, tooltip, confetti, keyboard shortcuts, etc.) are out of scope for this bug class
+entirely, since they have no schema to drift against.
 
 **Auth / access / identity:** `omega-gate.js` (element/matrix-position locking),
 `omega-tier-gate.js` (companion to `omega-gate`), `omega-guardian.js` (Zero Trust continuous
@@ -233,7 +251,9 @@ zodiac/element selection), `omega-appearance.js` (member view personalization),
 (persistent queryable AI memory), `omega-recommend.js` (interest-signal recommendations).
 
 **Notifications / realtime / presence:** `omega-notify.js` (badge/toast/panel — populate path
-fixed this session), `omega-realtime.js` (live Supabase subscriptions), `omega-presence.js`
+fixed this session), `omega-realtime.js` ✅ (live Supabase subscriptions — the bottom-bar live
+ticker's `activity_feed.member_name` select referenced a nonexistent column and has always
+stayed on its placeholder text, fixed this session, `CLAUDE.md` §8), `omega-presence.js`
 (real-time member presence), `omega-event-bus.js` (platform-wide event architecture).
 
 **Charts / visualization / 3D:** `omega-chart.js` (chart rendering — table-name bug fixed this
@@ -258,7 +278,9 @@ fixed this session, `CLAUDE.md` §8; the whole 8-workflow engine has no external
 in the repo today, flagged not fixed — `FEATURE_IDEAS.md`), `omega-policy.js` (business-rule
 externalization), `omega-experiment.js` (A/B testing, feature flags).
 
-**Compliance / privacy / ops:** `omega-export.js` (GDPR Art. 20), `omega-a11y.js` (WCAG AA),
+**Compliance / privacy / ops:** `omega-export.js` ✅ (GDPR Art. 20 — 4 of its 6 exported
+datasets referenced nonexistent columns and have always exported empty, fixed this session,
+`CLAUDE.md` §8), `omega-a11y.js` (WCAG AA),
 `omega-legal.js` (copyright badge), `omega-finops.js` (cost measurement), `omega-metrics.js`
 (Core Web Vitals), `omega-telemetry.js`, `omega-threat.js`, `omega-oss.js` (OSS integration
 scouting), `omega-pml.js` (page-maturity checklist).
@@ -279,18 +301,18 @@ labeling), `omega-sign-codex.js`, `omega-content.js`, `omega-animated.js`, `omeg
 **Misc:** `omega-membership.js`, `omega-hero-wire.js`, `omega-demo-video.js`,
 `omega-realm.js`.
 
-## 3. Edge Functions (`supabase/functions/`, Deno/TypeScript, 7 total)
+## 3. Edge Functions (`supabase/functions/`, Deno/TypeScript, 7 total — all read in full
+and audited this session; see `CLAUDE.md` §8 for the 2 findings)
 
 | Function | Purpose |
 |---|---|
-| `checkout` | Stripe checkout session creation — real payment integration |
-| `stripe-webhook` | Stripe webhook handler — real payment integration |
-| `concierge` | Calls the Anthropic API server-side, backs `omega-copilot.js`/`chatbot.html` |
-| `notify-access` | Access/approval notification dispatch |
-| `intel-feed` | News/intelligence feed backend |
-| `rankings` | Leaderboard ranking computation |
-| `snapshot-leaderboard` | Populates `leaderboard_snapshots` (the table `omega-chart.js`'s
-| | Authority History chart reads, per the fix in this session) |
+| `checkout` | Stripe checkout session creation — real payment integration. ✅ Audited, clean. A fully orphaned duplicate `checkout/stripe-webhook/index.ts` (nested inside this function's own directory, not a valid deploy target, zero references anywhere else in the repo) was found and removed this session. |
+| `stripe-webhook` | Stripe webhook handler — real payment integration. ✅ Audited, clean — `apply_subscription` call matches the live 5-arg signature exactly. |
+| `concierge` | Calls the Anthropic API server-side, backs `omega-copilot.js`/`chatbot.html`. ✅ Audited, clean — `ai_memory` insert and `recall_ai_context` RPC call both match the live schema. |
+| `notify-access` | Access/approval notification dispatch. ✅ Audited, clean — no DB calls, pure webhook-payload → email. |
+| `intel-feed` | News/intelligence feed backend (real usage confirmed: `news.html`). ✅ Audited, clean — no DB calls, pure external API fetch (Hacker News). |
+| `rankings` | Leaderboard ranking computation (real usage confirmed: `leaderboard.html` tier 1). ✅ Audited, clean — profile select matches live schema. |
+| `snapshot-leaderboard` | Daily cron job populating `leaderboard_snapshots` (`leaderboard.html` tier-2 fallback; also the table `omega-chart.js`'s Authority History chart reads, per the fix in a prior session). ⚠️✅ Its upsert payload referenced 4 columns (`display_name`, `sign`, `tier`, `is_owner`) that didn't exist on the table — the cron has silently written 0 rows on every run since deployment, with `{ok:true}` masking the failure. Fixed this session by adding the missing columns (`supabase/omega_leaderboard_snapshots_columns_fix.sql`), verified against a real scratch PostgreSQL 16 instance. Not yet applied live. |
 
 ## 4. The 12-agent brand/persona system (`omega-agents.json`)
 
@@ -315,8 +337,19 @@ Greek god, and domain:
 
 ## 5. Backend capability summary
 
-- **104 tables**, all RLS-enabled (CI-enforced), 398 policies, across 111 loose SQL files
-  (+ 92 files in the ordered `supabase/migrations/` copy).
+- **104 tables**, all RLS-enabled (CI-enforced), 403 policies (398 + 5 from this session's RLS
+  scoping fix), across 114 loose SQL files (+ 92 files in the ordered `supabase/migrations/`
+  copy).
+- **RLS policy-correctness audit (this session):** every `FOR INSERT`/`UPDATE`/`ALL` policy
+  checked against whether its table has a user-identity column that should scope it — CI's RLS
+  check only confirms presence, not correctness. 5 gaps found and fixed
+  (`supabase/omega_rls_scoping_fix.sql`, `CLAUDE.md` §8): `capability_kpi_log`/`policy_eval_log`
+  (owner-only-read tables with wide-open unscoped INSERT), `threat_events`/`telemetry_events`
+  (INSERT allowed impersonating another member's `user_id`), and the `storage.objects` "uploads"
+  bucket read policy (no owner-bypass, silently blocking a KYC-review feature that was never
+  built). Verified against a real scratch PostgreSQL 16 instance with 7 functional tests
+  simulating member/owner sessions (impersonation blocked, legitimate self-scoped writes still
+  work, owner can now read KYC uploads) — not just read by eye. Not yet applied live.
 - **Feature flags** (`public.platform_settings`): `tokens_enabled` (false — Ω token economy
   dormant), `payments_enabled` (flag exists; live Stripe integration code exists
   independently in `supabase/functions/checkout`/`stripe-webhook`).
@@ -333,3 +366,44 @@ Greek god, and domain:
   bullet's "owner-elevated access" model rests on — has two genuinely different
   implementations (checks `platform_owners` table vs. `profiles.is_owner` column) across 11
   files; not yet resolved which is live, see `GAP_ANALYSIS.md` §3.1.
+
+## 6. HTML-page audit (this session — first automated pass across all 169 `.html` pages)
+
+Built a table→known-columns dictionary from every `CREATE TABLE`/`ALTER TABLE ADD COLUMN` in
+`supabase/*.sql`, then scanned every page's inline `.from().select()/.insert()/.update()/
+.upsert()` call for column names absent from that table's known set; separately scanned every
+inline `onclick=`/`onchange=`/etc. attribute for calls into functions declared only inside a
+`<script type="module">` block (module top-level declarations aren't global, so an inline
+handler calling one throws `ReferenceError` silently). Every automated finding was independently
+confirmed by hand before fixing — see `CLAUDE.md` §8 for full evidence per finding.
+
+- **8 column-name silent failures fixed:** `feed.html` (publications feed always showed
+  "UNAVAILABLE"), `graph.html`/`nexus.html`/`sigma.html` (identical `zodiac_sign`/`full_name`
+  typo across all three — member graph/nexus/leaderboard never rendered a real member),
+  `tribe.html` (tribes/rankings page always showed 0 real members — `authority_score`/
+  `gate_level` don't exist; now computed client-side from `axis_a/b/c`), `advertising.html` (ad
+  marketplace never displayed or recorded a real ad — wrong column names *and* a wrong `status`
+  filter value *and* a missing RLS INSERT policy, all three fixed), `approvals.html` (dispatch
+  fallback always claimed false success on a write that could never succeed).
+- **`map.html` flagged, not fixed** — needs real geolocation collection (privacy/consent
+  decision), not a rename; see `FEATURE_IDEAS.md`.
+- **A systemic module-boundary bug — 26 instances across 24 pages, the single highest-count
+  bug class found this session.** Tab-switcher and action functions accidentally declared
+  inside `<script type="module">` instead of the page's plain `<script>`, called from inline
+  `onclick=` in the markup — every click threw `ReferenceError` silently, doing nothing. Fixed
+  by exposing each via `window.<fn>=<fn>`. Affects `awards.html`, `beacon.html`,
+  `decisions.html`, `ecosystem.html`, `enterprise.html`, `events.html`, `factions.html`,
+  `feed.html`, `health.html`, `maintenance.html`, `marketplace.html`, `membership.html`,
+  `network.html`, `nutrition.html`, `prediction.html`, `privacy.html`, `publications.html`,
+  `publishing.html`, `search.html`, `series.html`, `sovereign-ai.html`, `sovereigns.html`,
+  `trailers.html`, `travel.html`.
+- **`publications`' draft→published workflow doesn't exist** — flagged, not fixed; see
+  `FEATURE_IDEAS.md`.
+
+All fixes verified: column-name fixes against a schema-validating Playwright mock seeded with
+real-shaped data; the new `advertisements` RLS policy against a real scratch PostgreSQL 16
+instance (impersonation rejected, legitimate self-scoped submission + cross-member read of an
+approved ad both succeed); module-boundary fixes with real inline-attribute clicks in headless
+Chromium, confirming tab panels now actually switch. `scripts/audit.py` clean throughout (0
+critical, 6 pre-existing warnings). Not yet applied to the live database (the one SQL change is
+`supabase/omega_advertisements_insert_fix.sql` — everything else is client-side only).

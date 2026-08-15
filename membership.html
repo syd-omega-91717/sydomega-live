@@ -122,6 +122,7 @@ var TIERS=[
   {name:'APEX SOVEREIGN',sub:'GATE XII · AUTH = 27.8367',col:'#E2C86D',badge:'APEX',feats:['Everything in Prime','Apex sovereign seal','Lattice governance vote','Revenue participation','Apex confetti ceremony','Codex of Omega']},
 ];
 
+window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['mytier','tiers','benefits','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});

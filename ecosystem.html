@@ -104,6 +104,7 @@ var MODULES=[
   {id:'M18',name:'HIERARCHY SYSTEM',  color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'Guest→Subscriber→Verified→Owner. 1-9 stages. 9.9.9 master state.',pages:['approvals','sovereigns','enterprise']},
 ];
 
+window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['map','modules','navigate','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});

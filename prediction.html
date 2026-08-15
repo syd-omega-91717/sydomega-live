@@ -95,6 +95,7 @@ var TIMELINE=[
   {date:'2030+',col:'#C9A84C',msg:'<b>&#937; CITY PHASE 1</b> &mdash; 9,999 sovereigns achieved. City planning commission formed. The Order becomes physical.'},
 ];
 
+window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['forecasts','oracle','timeline','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});

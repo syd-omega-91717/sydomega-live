@@ -133,6 +133,8 @@ var EVENTS=[
 
 var joined=new Set();
 
+window.setTab=setTab;
+
 function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
 async function renderMemberEvents(){

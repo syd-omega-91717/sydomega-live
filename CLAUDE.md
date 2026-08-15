@@ -652,101 +652,289 @@ orphaned file.
   would ever execute) has no external caller anywhere in the repo today. See `FEATURE_IDEAS.md`'s
   "Flagged, not proposed" section for why wiring the workflow engine up to something is a
   scoping decision left undone, not a bug.
-- **`advertising.html`'s entire Live Ads / Submit feature was completely broken, both read and
-  write — fixed.** Found by scanning every `.insert()`/`.update()`/`.upsert()` payload across all
-  ~250 pages against the actual `CREATE TABLE` column lists in `supabase/*.sql` (a broader sweep
-  than any prior session's — earlier passes covered `omega-*.js` modules and silent-failure-write
-  checks, but not a column-level check across every page). `public.advertisements`
-  (`chunk_06_migrations.sql:469-484`) has columns `company`/`title`/`description`/`url`/
-  `rate_tier`; `advertising.html` wrote and read `company_name`/`headline`/`body`/
-  `destination_url`/`tier` instead — a near-total naming mismatch, not one or two fields. Same
-  silent-failure shape as every bug in this section: PostgREST rejects the whole
-  `select()`/`insert()` when any referenced column doesn't exist, so `loadLiveAds()` always fell
-  into its catch block ("PLACEMENTS UNAVAILABLE" for every visitor, always) and `submitAd()`'s
-  insert always failed too — though its catch block already showed an honest non-success message
-  ("SUBMISSION NOTED. CONTACT THE ORDER DIRECTLY TO PROCEED."), so this wasn't a false-success
-  toast, just a feature that has never once worked since it shipped. Also included
-  `timeline_period`/`submitted_at` keys with no matching column anywhere — `submitted_at` is
-  dropped (the table's `created_at DEFAULT now()` already covers it); `timeline_period` has no
-  equivalent column at all and is now simply not persisted (the form field is left in place, but
-  the value isn't saved) — flagged as a known, deliberately undone gap rather than inventing a new
-  column unprompted, matching this file's own rule against guessing at schema decisions. Fixed all
-  field names in both the `select()` and the `insert()` to match the live schema exactly.
-  **Not yet applied to the live database** — no SQL changes needed, this is a client-side
-  field-name fix only.
-- **`approvals.html`'s dispatch-send fallback path showed a false "✓ DISPATCH RECORDED" success
-  toast on a write that would always fail — fixed.** `sendDispatch()` tries the `post_dispatch`
-  RPC first (which correctly inserts `title`/`body`/`category` into `public.dispatches`, per its
-  own definition in `supabase/omega_dispatch.sql`); only if that RPC throws or returns
-  `{ok:false}` does it fall back to a direct `.insert()` — and that fallback wrote
-  `sent_by`/`sent_at`, columns that exist in **neither** of the two genuinely divergent
-  `dispatches` table shapes in the SQL bag (the newer `title`/`body`/`category` shape the RPC
-  itself uses, or the older `user_id`/`sign`/`body` shape some other files still define — see
-  `GAP_ANALYSIS.md` §3.1's broader note on divergent definitions). The fallback's `.error` was
-  never checked, so on the rare path where it's actually reached (the RPC missing or erroring),
-  the owner would see a false success toast while nothing saved. Fixed by matching the fallback's
-  `INSERT` shape to exactly what `post_dispatch` itself writes (`title`/`body`/`category` — the
-  table has no sender-tracking column at all, so `sent_by`/`sent_at` were never accurate names for
-  anything that exists) and adding a real `.error` check. **Not yet applied to the live
-  database** — no SQL changes needed, this is a client-side fix only.
-- **Six more pages with the same column-name-mismatch bug, found by extending the scan to
-  `select()` calls (read side) across every page, not just writes.** Cross-referenced every
-  `.from(table).select('cols')` call in every `.html`/`omega-*.js` file against the real
-  `CREATE TABLE`/`ALTER TABLE ADD COLUMN` definitions in `supabase/*.sql`, catching cases where
-  PostgREST would reject the whole query (same failure shape as every write-side bug above, just
-  on reads). `profiles` and `task_completions` both have multiple divergent definitions across
-  the SQL bag, so each candidate was checked against the full column union, not a single file, to
-  avoid false positives (several did turn out to be false positives — `kind`/`task`/`axis` on
-  `task_completions` and `note` on `evolution_events` are all genuinely real legacy columns the
-  scan's regex initially missed due to multi-column `ALTER TABLE` statements and single-line
-  `CREATE TABLE` bodies respectively; verified directly before touching anything).
-  - **`tribe.html` and `dna.html`** selected/ordered by `profiles.authority_score` and
-    `profiles.gate_level` — neither exists. The real stored value is `profiles.authority`
-    (numeric column); `authority_score()` is a *function*, not a column, and gate number has
-    never been a stored column anywhere — it's always computed client-side from authority against
-    a fixed threshold table, the exact pattern already used identically in 8+ other
-    `omega-*.js` modules (`omega-copilot.js`'s `GATES`/`nearestGate`, `omega-passport.js`'s
-    `getGate`, etc.). `tribe.html`'s Sovereign Tribes rankings showed zero members for every
-    visitor since it shipped (the query's `.order('authority_score',...)` made the whole request
-    fail, silently falling through to an always-empty array — the page's own
-    `generateDemoProfiles()` fallback, which fabricates random `authority_score`/`gate_level`
-    values, turned out to be unreachable dead code too, since a PostgREST column error resolves
-    to `{data:null,error}` rather than throwing, so the `try/catch` around it never fired).
-    `dna.html`'s personalization showed the same generic default (`gate 1`, `auth 3.14`) to every
-    member regardless of real progress. Fixed both to read `authority` and compute gate via the
-    same `GATES` threshold array used platform-wide; also added a real `.error` check in
-    `tribe.html` so its demo-data fallback is now actually reachable on a genuine failure instead
-    of being permanently dead code.
-  - **`graph.html`, `nexus.html`, `sigma.html`** (three separate member-visualization pages —
-    constellation graph, network graph, and leaderboard) all selected `profiles.zodiac_sign` and
-    `profiles.full_name`, neither of which exists — the real columns are `sign` (already
-    established as correct elsewhere, e.g. the onboarding fix earlier in this section) and
-    `display_name` only (`full_name` has never existed anywhere in the SQL bag). All three pages
-    defensively guard the failed query result with `||[]`, so they didn't crash — they just
-    silently showed zero members, forever, on every page load, for every visitor. Fixed all three
-    call sites and every downstream `.zodiac_sign`/`.full_name` reference.
-  - **`omega-export.js`** (the GDPR Article 20 data-portability export — legally the
-    highest-stakes module this pass touched) selected `profiles.agent_name` (real column is
-    `agent`, matching the onboarding fix above), `profiles.onboarded_at` (confirmed not to exist
-    anywhere, same as the onboarding fix — dropped, not invented), `task_completions
-    .weight_applied` (real column is `points_earned`, added by the `complete_task` dedup fix),
-    and `leaderboard_snapshots.tier` (no such column or equivalent exists on this table at all —
-    dropped). The profile and task-completion sections of every member's GDPR export have been
-    silently failing (empty `{}`/`[]` in the downloaded archive, no visible error) since this
-    module shipped.
-  - **`feed.html`** selected `publications.author_name` (no such column — the table only stores
-    `user_id`, no display-name join is wired) and **`omega-realtime.js`** selected
-    `activity_feed.member_name` (same — doesn't exist). Both had already-correct fallback
-    rendering (`r.author_name||'ANONYMOUS'`, `e.member_name?...`) that never got a chance to run
-    because the whole query failed first — `feed.html`'s publications feed showed zero posts,
-    and the platform-wide live-activity ticker (`omega-realtime.js`, loaded via `bg.js`) never
-    populated its initial 10-item backlog. Fixed by dropping the two nonexistent columns from
-    their `select()` calls; no render-code changes needed since the fallbacks were already
-    correct once real rows come back.
-  **None of the fixes in this entry needed any SQL/schema change** — every real bug was a
-  client-side column-name mismatch against columns that already exist; not yet applied to the
-  live database only in the sense that these are static files redeployed on push, not a database
-  migration to run.
+- **[Fixed, needs deploy — legally-sensitive] The GDPR Article 20 data-export button
+  (`privacy.html`, `omega-export.js`) has always exported a mostly-empty package — 4 of its 6
+  datasets silently failed on every single request.** Continuing the module audit, checked every
+  `.select()` in `omega-export.js`'s `gather()` against the live schema, column by column, rather
+  than assuming the file's own comments ("Exported datasets: 1. Profile & identity... 2. Task
+  completions...") reflected reality. They didn't, in 4 of 6 cases — the same
+  guessed-column-name silent-failure shape as `complete_task`/`member_presence`/
+  `omega-onboard.js`/`omega-workflow.js` above, just never audited until now because nothing
+  about a GDPR export *looks* broken from the outside (no error, no empty-state UI — the button
+  always shows a "Export ready" success toast and downloads a real file, it's just missing most
+  of its content):
+  - `profiles` select used `agent_name` (real column: `agent` — same mismatch already fixed in
+    `omega-onboard.js`) and `onboarded_at` (no such column anywhere in the SQL bag, same as the
+    `omega-onboard.js` finding). PostgREST rejects the whole select on any unknown column, so the
+    exported "profile" dataset has never contained more than a client-computed
+    `_computed_authority` value — no `display_name`, `email`, `sign`, `element`, `god`, `agent`,
+    `token`, etc., ever.
+  - `task_completions` select used `weight_applied` — no such column exists anywhere (the real
+    column, added by `migrations/0094`/`omega_complete_task_dedup_fix.sql`, is `points_earned`).
+    Exported task-completion history has always been empty.
+  - `sovereign_events` select and order used `created_at` — same wrong-column bug as
+    `omega-workflow.js` above (real column: `occurred_at`). Exported event history has always
+    been empty.
+  - `leaderboard_snapshots` select used `tier` — no such column exists on this table
+    (`entreprise_schema_v2.sql:126-140`; confirmed via grep, not assumed). Exported ranking
+    history has always been empty. Changed to `element` (a real column already selected
+    elsewhere in this same file for other tables, and meaningful ranking context) rather than
+    dropped outright.
+  - `interest_signals` and `activity_feed` selects were already correct — both actually worked.
+  Fixed all four by correcting column names to match the live schema (`agent`, dropped
+  `onboarded_at`, `points_earned`, `occurred_at`, `element`). Verified with the schema-validating
+  Playwright mock, driven through an actual click on the export flow (not just code inspection):
+  captured the real downloaded JSON blob via a `URL.createObjectURL` interception, confirmed the
+  pre-fix package has an empty/near-empty profile (missing `display_name`) and zero rows across
+  `task_completions`/`sovereign_events`/`leaderboard_snapshots` despite seeded data existing for
+  all of them, and the post-fix package correctly contains all 6 datasets with their seeded rows.
+  No regressions across the other 4 verification tests. **Not yet applied to the live database**
+  — no SQL changes needed, this is a client-side column-name fix only.
+- **The bottom-bar live activity ticker (`omega-realtime.js`, every page) has always stayed
+  stuck on "LOADING LIVE FEED…" — fixed.** Completing the sweep of every remaining `omega-*.js`
+  module with a `.from()`/`.rpc()` call (30 modules audited this session in total; see
+  `CAPABILITY_INVENTORY.md` §2 for the full list), `pollActivityFeed()` selected
+  `activity_type,title,member_name,created_at` from `public.activity_feed` — but that table has
+  no `member_name` column at all (`platform_expansion.sql:9-19`: `id, user_id, activity_type,
+  title, body, metadata, is_public, likes_count, created_at`; confirmed via grep, not assumed).
+  PostgREST rejects the whole select on the unknown column, the call is wrapped in try/catch, so
+  `_tickerItems`/`_eventFeed` have never once been populated — every member on every page has
+  always seen the ticker's static placeholder text, never real content, with no visible error.
+  Fixed by dropping `member_name` from both the select and the template string (no join to
+  `profiles` added — that's a bigger change than this bug fix, and `title` alone reads fine,
+  e.g. "Completed Habit Streak · 1s ago"). Verified with the schema-validating Playwright mock,
+  driven through `OmegaRealtime.refresh()` on a live page: confirmed the pre-fix code leaves the
+  ticker on its placeholder text with `feed()` returning 0 rows despite 2 seeded activity_feed
+  rows, and the post-fix code populates both correctly. No regressions across the other 5
+  verification tests. **Not yet applied to the live database** — no SQL changes needed, this is
+  a client-side column-name fix only.
+- **RLS policy audit (first full pass): every FOR INSERT/UPDATE/ALL policy's WITH CHECK clause
+  cross-referenced against whether its table has a user-identity column that should be scoping
+  it — 4 real gaps found and fixed, plus 1 storage-policy gap, all in
+  `supabase/omega_rls_scoping_fix.sql`.** `scripts/audit.py` check 4 only confirms every table
+  has RLS *enabled* (0 tables missing it, confirmed clean) — this pass checked policy
+  *correctness*, which that check doesn't cover. All five gaps share the same shape: `WITH
+  CHECK(true)` (or, for storage, no owner-bypass) lets any authenticated account — including one
+  still pending approval — write or read rows it shouldn't, via a direct REST call to the
+  anon/publishable key, not through the app UI (RLS is the actual authorization boundary here,
+  §5, not application code). Each was confirmed to have zero legitimate client writer that the
+  fix would break, by grepping every `.js`/`.html`/edge-function file for the table name before
+  touching its policy:
+  - `capability_kpi_log` — `FOR SELECT` is owner-only (`omega_capability_registry.sql`), but
+    `FOR INSERT` was `WITH CHECK(true)`: any signed-up account could inject fake KPI rows into a
+    table only the owner is meant to see. Zero client writers anywhere in the repo. Fixed by
+    restricting INSERT to the owner too, matching SELECT.
+  - `policy_eval_log` — identical shape and fix (`omega_policy_engine.sql`'s SELECT is
+    owner-only; INSERT was wide open; zero client writers).
+  - `threat_events` — `FOR INSERT` was `WITH CHECK(true)` with **no scoping to the table's own
+    `user_id` column** — worse than the two above, since a malicious signed-up account could
+    insert a row attributing `threat_type` values like `'brute_force'` or
+    `'privilege_escalation'` to a *different* member's `user_id`, framing them on the owner's SOC
+    dashboard (`dashboard.html`/`observatory.html` both show a threat count read from this
+    table). Zero client writers exist today — only reads, for the dashboard counts. Fixed with
+    `auth.uid() = user_id` rather than owner-only, since the table having a `user_id` column at
+    all implies the intended design is eventual self-reported client telemetry, not owner-only
+    writes.
+  - `telemetry_events` — has a real, currently-working client writer (`omega-telemetry.js`,
+    audited earlier this session and found correct) that already always sets `user_id` to the
+    caller's own profile id before any insert fires (`_uid` is only ever set from the
+    `omega:populated` event's own profile, and `flush()` requires `_uid` set first) — so
+    tightening `WITH CHECK` to `auth.uid() = user_id` closes the same spoofing gap as
+    `threat_events` without touching the real write path. `platform_metrics` and
+    `platform_events` were checked too and deliberately left alone: `platform_metrics` has no
+    `user_id` column at all (a platform-level aggregate, not per-member — `WITH CHECK(true)` is
+    correct there), and `platform_events`'s real writer (`omega-sovereign-os.js`) never sets
+    `user_id` by design for anonymous-until-populated beacons, so scoping it would break the real
+    write path instead of closing a gap.
+  - `storage.objects` **"uploads" bucket read policy** (`storage.sql`) — a member can submit a
+    KYC document (`profile.html`'s upload flow writes into `uploads/<their-uid>/...` and sets
+    `profiles.kyc_doc_path`), but the bucket's read policy only ever let a member read their own
+    folder — no owner-bypass, unlike every other owner-elevated policy in this schema. Confirmed
+    via grep that `approvals.html` has zero KYC references (the review UI itself was never
+    built), so this isn't exploited today, but it silently blocks the review half of a
+    half-built feature. Fixed by adding the same `is_platform_owner()` OR-clause used everywhere
+    else in this schema.
+  **Verified against a real scratch PostgreSQL 16 instance**, not just read by eye: loaded the
+  real source files that create all 4 tables plus `storage.sql`, applied the fix file (clean,
+  idempotent — confirmed safe to re-run twice), then ran 7 functional tests simulating two
+  member sessions and an owner session via a configurable `auth.uid()` stub: (1) member A
+  attributing a fake threat to member B → rejected, (2) member A self-reporting → accepted, (3)
+  member A injecting fake KPI data → rejected, (4) member A spoofing telemetry under member B's
+  uid → rejected, (5) member A's own telemetry → accepted, (6) member A reading member B's
+  uploads folder → 0 rows, (7) the owner reading the same folder → the row is visible (the actual
+  new capability). All 7 passed. `python3 scripts/audit.py` reconfirmed 0 critical / 6
+  pre-existing warnings (file/policy counts increased by exactly 1 file / 5 policies, matching
+  the new fix file, no new duplicate-table or RLS-missing warnings introduced). **Not yet applied
+  to the live database.**
+- **Edge Function audit (all 7 functions read in full): 2 real findings — a daily cron job that
+  has never written a single row, and a fully orphaned duplicate file.**
+  - **`snapshot-leaderboard`'s upsert has always silently failed — fixed.** This function (meant
+    to run on a daily Supabase cron at 00:05 UTC per its own header comment, also callable
+    on-demand by the owner from `leaderboard.html`) upserts
+    `user_id, snapshot_date, authority, axis_a, axis_b, axis_c, rank_global, display_name,
+    element, sign, tier, is_owner` into `public.leaderboard_snapshots` — but the table's only
+    `CREATE TABLE` (`entreprise_schema_v2.sql:126-140`; confirmed via grep, no other file
+    ALTERs it) has no `display_name`, `sign`, `tier`, or `is_owner` columns at all. PostgREST
+    rejects the entire upsert on any unknown payload key, so this cron job has never written a
+    single row — and its own per-batch error handling still returns `{ok:true, rows_written:0}`,
+    a false success with no visible failure. This directly explains why `leaderboard_snapshots`
+    read empty everywhere else it was touched this session (the `omega-export.js` GDPR-export
+    fix earlier needed seeded test data specifically because the real table has likely never
+    held a row). Fixed by adding the 4 missing columns
+    (`supabase/omega_leaderboard_snapshots_columns_fix.sql`) rather than stripping them from the
+    edge function's payload, since `leaderboard.html`'s own `renderPodium()`/`renderTable()` (the
+    documented tier-2 fallback reader for this exact table) already read `r.display_name` and
+    `r.sign` from snapshot rows — the writer and reader already agree on this shape; only the
+    table was missing it. **Verified against a real scratch PostgreSQL 16 instance**: loaded the
+    actual `entreprise_schema_v2.sql`, reproduced the exact failure with the edge function's
+    literal upsert payload (`column "display_name" of relation "leaderboard_snapshots" does not
+    exist`), applied the fix, confirmed the same payload now succeeds and reads back exactly the
+    shape the client expects, and confirmed the fix file is idempotent (clean second run). Not
+    yet applied to the live database.
+  - **`checkout/stripe-webhook/index.ts` — a fully orphaned duplicate, removed.** A second,
+    45-line Stripe-webhook implementation existed nested inside the `checkout` function's own
+    directory (`supabase/functions/checkout/stripe-webhook/index.ts`), structurally distinct from
+    (and much less complete than) the real, comprehensively-documented top-level
+    `supabase/functions/stripe-webhook/index.ts` (272 lines — Web Crypto signature verification,
+    4 event types, deploy instructions). Confirmed genuinely dead, not "which one is live"
+    ambiguity like the SQL duplicate-function situation elsewhere in this repo: Supabase Edge
+    Functions only recognize top-level `supabase/functions/<name>/index.ts` directories as
+    deployable — a subdirectory nested inside another function's own folder was never a valid
+    deployment target under any standard Supabase workflow. `checkout/index.ts` itself never
+    references it, and a full-repo grep for "stripe-webhook" found every other reference in the
+    codebase (`CLAUDE.md`, `GAP_ANALYSIS.md`, `CAPABILITY_INVENTORY.md`,
+    `scripts/check-secrets.sh`, `supabase/migrations/README.md`) pointing exclusively at the
+    top-level file. Removed the nested `checkout/stripe-webhook/` directory entirely.
+  - All 5 other functions (`checkout`, `concierge`, `intel-feed`, `notify-access`, `rankings`,
+    and the top-level `stripe-webhook`) were read in full and checked column-by-column /
+    param-by-param against the live schema — all correct, no bugs found. (`rankings` and
+    `snapshot-leaderboard` share near-identical AUTH-computation logic; `rankings` is read-only
+    and unaffected by the column bug above.)
+- **HTML-page audit (built a repo-wide schema dictionary and scanned every `.html` page's
+  inline JS against it — the first automated, not manual, pass this session): 8 more
+  column-name silent failures, plus a systemic 26-instance bug class affecting 24 pages'
+  clickable UI.** Method: parsed every `CREATE TABLE`/`ALTER TABLE ADD COLUMN` in
+  `supabase/*.sql` into a table→known-columns dictionary (had to fix a real bug in the
+  parser itself first — a SQL line comment containing a comma, e.g.
+  `-- 'task_complete','gate_unlock',...`, was corrupting the column split and produced a
+  false positive on `activity_feed.title`; also had to manually add `task_completions`'
+  `kind`/`task`/`axis`/`increment` columns, which are confirmed live per this file's own
+  `complete_task()` entry above but never appear in any `CREATE TABLE` in the SQL bag at
+  all, having been created out-of-band), then scanned every `.from('table').select()/
+  .insert()/.update()/.upsert()` call across all 169 `.html` pages for column names absent
+  from that table's known set. Every finding below was independently confirmed by hand
+  (reading the real `CREATE TABLE`, the real RLS policies, and the actual downstream code)
+  before fixing — the automated pass finds *candidates*, not verdicts.
+  - **`feed.html`** — `publications` select referenced `author_name` (doesn't exist; the
+    column is `user_id`, no display-name join was ever built). The platform-wide "recent
+    publications" feed has always shown "PUBLICATIONS UNAVAILABLE." Fixed by dropping the
+    field (matches the existing `||'ANONYMOUS'` fallback already in the render code, same
+    minimal-fix precedent as `omega-realtime.js`'s `member_name` fix earlier this session).
+  - **`graph.html`, `nexus.html`, `sigma.html`** — all three select `zodiac_sign`/`full_name`
+    from `profiles` (real columns: `sign`/`display_name`). Same copy-pasted wrong names
+    across all three — the member constellation graph, the nexus visualization, and the
+    element-breakdown leaderboard have never rendered a single real member, silently
+    degrading to empty (`||[]` fallbacks swallow the query error with no visible failure).
+    Fixed by renaming `zodiac_sign`→`sign` everywhere (including downstream `SIGN_ELEM[...]`
+    lookups) and dropping `full_name` (the existing `display_name||full_name||'Sovereign'`
+    fallback chains already degrade gracefully once the nonexistent field is removed).
+  - **`tribe.html`** — selected `authority_score`/`gate_level`, neither a real column
+    (`profiles.authority` exists but is never written by anything — confirmed via grep, a
+    dormant column, not a usable substitute), and ordered by the nonexistent
+    `authority_score`. The tribes/rankings page has always shown 0 real members (its
+    `try/catch` around the query never actually triggers, since a PostgREST schema error
+    resolves rather than throws — the page silently shows an empty tribe, not the
+    `generateDemoProfiles()` fallback some might expect from reading the code without
+    testing it). Fixed by selecting `axis_a/axis_b/axis_c/is_owner` instead and computing
+    `authority_score`/`gate_level` client-side with the same `calcAuth()`/gate-threshold
+    pattern already used identically on `sigma.html` and several other pages, sorting
+    client-side since a computed value can't be used in a server-side `.order()`.
+  - **`advertising.html`** — both `loadLiveAds()`'s select and `submitAd()`'s insert used a
+    completely different, wrong set of column names (`headline`/`body`/`tier`/
+    `company_name`/`destination_url`/`timeline_period`/`submitted_at` vs. the real
+    `title`/`description`/`rate_tier`/`company`/`url`/no-timeline-column/`created_at`
+    auto-default) — the ad marketplace has never displayed a real ad or successfully
+    recorded a submission. A second, independent bug in the same page: `loadLiveAds()` and
+    the KPI counter in `boot()` both filtered `status='active'`, a value nothing in the
+    codebase ever assigns (the schema comment documents only `pending`/`approved`/
+    `rejected`, and the RLS read policy checks `status = 'approved'`) — fixed to match. A
+    third, independent bug found only by testing the fix in a real browser, not by reading
+    the code: `loadLiveAds()` is declared inside the page's `<script type="module">` block,
+    but is called from `setTab()` in a separate, non-module `<script>` via
+    `onclick="setTab('live')"` — module top-level declarations aren't global, so clicking
+    the "LIVE ADS" tab has always thrown `loadLiveAds is not defined` in the real browser
+    console (silently, since inline `onclick=` errors don't surface to the user), meaning
+    the ad grid never populated even after this session's column-name fix, until this was
+    separately corrected by exposing `window.loadLiveAds=loadLiveAds`. Also added the
+    missing RLS `INSERT` policy (`supabase/omega_advertisements_insert_fix.sql`) — see
+    below, `submitAd()` was RLS-blocked independent of the column names.
+  - **`approvals.html`** — `sendDispatch()`'s fallback path (used when the real
+    `post_dispatch()` RPC call fails) inserted directly into `dispatches` with 2 wrong
+    column names (`sent_by`/`sent_at`, neither exists) *and* `dispatches` has no INSERT
+    policy for anyone except via that RPC's `SECURITY DEFINER` bypass — so the fallback was
+    doubly non-functional, yet the code never checked the insert's result and always showed
+    "✓ DISPATCH RECORDED" regardless. Fixed by removing the non-functional fallback insert
+    entirely (a raw write that bypasses `post_dispatch()`'s own input sanitization would be
+    a worse fix than making the real failure visible) and showing an honest failure toast
+    when the RPC itself fails.
+  - **`map.html`** — flagged, not fixed: selects `lat`/`lon`/`country`/`gate` from
+    `profiles`, none of which exist anywhere in the schema — this isn't a naming mismatch
+    like the others, there is no member-location data anywhere in this platform at all.
+    Building real geolocation collection is a genuine new feature (consent flow, collection
+    method, privacy-policy implications), not a bug fix — see `FEATURE_IDEAS.md`.
+  - **A systemic module-boundary bug, found only by testing a fix in a real browser and
+    then deliberately searching for the same pattern elsewhere: 26 instances across 24
+    pages, the single highest-count bug class found this session.** Many pages split their
+    inline JS into a plain `<script>` (usually just a `setTab()`/`switchTab()`-style
+    function, called from `onclick=` attributes in the markup) and a separate
+    `<script type="module">` (the Supabase logic). Inline event-handler attributes always
+    execute in global scope, but a function declared at the top level of a
+    `<script type="module">` is scoped to that module, not global — so whenever the
+    tab/action function itself was accidentally written *inside* the module script instead
+    of the plain one, every click on that control has thrown `ReferenceError` in the
+    browser console, silently, with the click doing nothing. Found by writing a script that
+    parses every page's script tags, determines which top-level functions are
+    module-scoped-only (never `window.`-exposed), and cross-references every inline
+    `onclick=`/`onchange=`/etc. attribute against that set. Confirmed by hand on a sample
+    across the list (`awards.html`, `network.html`, `nutrition.html`, `maintenance.html`
+    each individually verified with a real declaration read, not just trusted from the
+    scan) before batch-fixing all 26 by inserting `window.<fn>=<fn>;` immediately before
+    each affected declaration (function declarations hoist, so placement is safe regardless
+    of call order) — 22 are `setTab(name)`/`switchTab(...)` tab-switchers (`awards.html`,
+    `beacon.html`, `ecosystem.html`, `enterprise.html`, `events.html`, `factions.html`,
+    `feed.html`, `health.html`, `maintenance.html`, `marketplace.html`, `membership.html`,
+    `prediction.html`, `privacy.html`, `publishing.html`, `search.html`, `series.html`,
+    `sovereign-ai.html`, `sovereigns.html`, `trailers.html`, `travel.html`), the remaining 4
+    are page-specific actions (`decisions.html`'s `renderChoiceButtons()`, `network.html`'s
+    `editContact()`/`deleteContact()`/`openLog()`, `nutrition.html`'s `searchFood()`,
+    `publications.html`'s `renderCatalog()`). Verified with a dedicated Playwright test
+    clicking the real inline `onclick=` handler (not calling the function directly) on a
+    sample of the fixed pages — tab panels now actually switch, zero page errors — plus a
+    re-run of the automated scanner confirming 0 remaining instances across all 169 pages.
+  All fixes verified: the column-name fixes with a schema-validating Playwright mock seeded
+  with real-shaped data (confirming the previously-broken queries now return it); the RLS
+  fix with a real scratch PostgreSQL 16 instance (member submits own ad → succeeds; member
+  spoofs another member's `submitted_by` → rejected; a different member reads the approved
+  ad afterward → succeeds); the module-boundary fixes with real inline-attribute clicks in
+  headless Chromium. `node --check`-equivalent syntax validation on every touched page's
+  inline `<script>` blocks, and `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+  warnings throughout. Not yet applied to the live database (the one SQL change,
+  `omega_advertisements_insert_fix.sql`) — everything else is client-side only.
+  - **`dna.html` had the identical `tribe.html`-class bug, found and fixed separately**: its
+    personalization panel read `pr.authority_score`/`pr.gate_level`, neither of which exists,
+    so every member saw the same generic default (`gate 1`, `auth 3.14`) regardless of real
+    progress. Fixed the same way as `tribe.html` below.
+  - **Reconciliation correction, found merging two independent sessions' overlapping fixes for
+    this exact bug class:** the fix above for `tribe.html`/`dna.html` initially read the stored
+    `profiles.authority` column directly. That column is real, but trusting it is inconsistent
+    with the platform-wide convention every other authority-displaying page already
+    uses — `nexus.html`, `sigma.html`, `omega-export.js`, etc. all compute authority
+    **client-side** from `axis_a/b/c` with an explicit `is_owner ? 27.8367 : calcAuth(...)`
+    special case, specifically because the stored column isn't guaranteed to reflect the owner's
+    apex status. Corrected both pages to match that convention instead (compute from
+    `axis_a/b/c` client-side, sort client-side since a computed value can't drive a server-side
+    `.order()`) — same bug class, more correct fix.
+
 
 ## 9. Working in this repo — practical rules
 

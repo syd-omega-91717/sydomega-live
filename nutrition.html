@@ -254,6 +254,7 @@ function getDayTotals(entries){
 
 function escOFF(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+window.searchFood=searchFood;
 function searchFood(){
   const q=document.getElementById('off-search').value.trim();
   const resEl=document.getElementById('off-results');

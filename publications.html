@@ -146,6 +146,7 @@ function calcKPIs(){
   document.getElementById('k-queue').textContent=pubs.filter(function(p){return p.status==='queue';}).length;
 }
 
+window.renderCatalog=renderCatalog;
 function renderCatalog(){
   var el=document.getElementById('catalog-list');
   var ft=document.getElementById('filter-type').value;

@@ -62,7 +62,7 @@
       if(r.data&&r.data.length){
         _tickerItems=r.data.map(function(e){
           var ago=timeAgo(new Date(e.created_at));
-          return (e.member_name?e.member_name+': ':'')+e.title+' \u00b7 '+ago;
+          return e.title+' \u00b7 '+ago;
         });
         _eventFeed=r.data;
         /* Emit */

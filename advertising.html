@@ -165,10 +165,11 @@ import{createClient}from'https://esm.sh/@supabase/supabase-js@2';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 var _user=null;
 
+window.loadLiveAds=loadLiveAds;
 async function loadLiveAds(){
   var el=document.getElementById('ads-list');if(!el)return;
   try{
-    var r=await sb.from('advertisements').select('title,description,category,rate_tier,company,url').eq('status','active').order('created_at',{ascending:false}).limit(20);
+    var r=await sb.from('advertisements').select('title,description,category,rate_tier,company,url').eq('status','approved').order('created_at',{ascending:false}).limit(20);
     var ads=r.data||[];
     if(!ads.length){el.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);padding:12px">NO ACTIVE PLACEMENTS AT THIS TIME</div>';return;}
     el.innerHTML='';
@@ -218,7 +219,7 @@ async function boot(){
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
-  var r=await sb.from('advertisements').select('id',{count:'exact',head:true}).eq('status','active');
+  var r=await sb.from('advertisements').select('id',{count:'exact',head:true}).eq('status','approved');
   var el=document.getElementById('adv-live');if(el)el.textContent=(r.count||0)+' ACTIVE';
   document.getElementById('adv-go').addEventListener('click',submitAd);
 }

@@ -27,7 +27,7 @@
 
     /* 1. Profile */
     var pf=await sb.from('profiles')
-      .select('id,display_name,email,sign,element,agent,is_owner,subscription_tier,axis_a,axis_b,axis_c,created_at,access_approved')
+      .select('id,display_name,email,sign,element,agent,god,token,is_owner,subscription_tier,axis_a,axis_b,axis_c,created_at,access_approved')
       .eq('id',userId).maybeSingle();
     fetched.profile=pf.data||{};
 
@@ -45,8 +45,8 @@
 
     /* 3. Sovereign events */
     var ev=await sb.from('sovereign_events')
-      .select('id,event_type,event_data,axis_delta,auth_before,auth_after,created_at')
-      .eq('user_id',userId).order('created_at',{ascending:false}).limit(500);
+      .select('id,event_type,event_data,axis_delta,auth_before,auth_after,occurred_at')
+      .eq('user_id',userId).order('occurred_at',{ascending:false}).limit(500);
     fetched.sovereign_events=ev.data||[];
 
     /* 4. Interest signals */
@@ -63,7 +63,7 @@
 
     /* 6. Leaderboard snapshots */
     var lb=await sb.from('leaderboard_snapshots')
-      .select('snapshot_date,authority,axis_a,axis_b,axis_c,rank_global')
+      .select('snapshot_date,authority,axis_a,axis_b,axis_c,rank_global,element')
       .eq('user_id',userId).order('snapshot_date',{ascending:false}).limit(365);
     fetched.leaderboard_snapshots=lb.data||[];
 

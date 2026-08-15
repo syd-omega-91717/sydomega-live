@@ -20,6 +20,7 @@ REQUIRED["concierge"]="ANTHROPIC_API_KEY"
 REQUIRED["checkout"]="STRIPE_SECRET_KEY STRIPE_PRICE_MAP SITE_URL"
 REQUIRED["stripe-webhook"]="STRIPE_WEBHOOK_SECRET STRIPE_SECRET_KEY"
 REQUIRED["notify-access"]="RESEND_API_KEY"
+REQUIRED["market-price"]="TWELVE_DATA_API_KEY"
 # intel-feed uses only Hacker News public API — no secrets required
 
 echo "=============================================================="

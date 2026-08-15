@@ -288,16 +288,22 @@ waitReady(()=>{
     document.getElementById('kq-dlq').textContent=totalDLQ;
     document.getElementById('kq-cb-open').textContent=openCBs;
 
-    /* Queue depths */
+    /* Queue depths -- real per-worker activity (processed) and backlog (dlqDepth) from
+       OmegaWorkers, not the randomized placeholder this used to show under fictional
+       queue names. These 6 are the actual registered workers in omega-workers.js; using
+       their real names instead of invented dotted-namespace labels (e.g. the fictional
+       "notifications.email") so this matches what's really running. */
+    function findWorker(name){return workers.find(w=>w.name===name)||{processed:0,dlqDepth:0};}
     const depthList=document.getElementById('q-depth-list');
     depthList.innerHTML='';
     const QUEUES=[
       {name:'sovereign.domain.events (FIFO)',depth:Math.max(0,parseInt(document.getElementById('kq-events').textContent)),dlq:totalDLQ,color:'var(--orange)'},
-      {name:'notifications.email (priority)',depth:Math.floor(Math.random()*8),dlq:0,color:'var(--cyan)'},
-      {name:'analytics.aggregator (stream)',depth:Math.floor(Math.random()*20),dlq:0,color:'var(--purple)'},
-      {name:'achievements.unlock (FIFO)',depth:Math.floor(Math.random()*5),dlq:0,color:'var(--gold)'},
-      {name:'audit.log (append-only)',depth:Math.floor(Math.random()*30),dlq:0,color:'var(--green)'},
-      {name:'recommendations.engine (delay)',depth:Math.floor(Math.random()*12),dlq:0,color:'var(--solar)'},
+      {name:'notification-worker (priority)',depth:findWorker('notification-worker').processed,dlq:findWorker('notification-worker').dlqDepth,color:'var(--cyan)'},
+      {name:'analytics-worker (stream)',depth:findWorker('analytics-worker').processed,dlq:findWorker('analytics-worker').dlqDepth,color:'var(--purple)'},
+      {name:'achievement-worker (FIFO)',depth:findWorker('achievement-worker').processed,dlq:findWorker('achievement-worker').dlqDepth,color:'var(--gold)'},
+      {name:'audit-worker (append-only)',depth:findWorker('audit-worker').processed,dlq:findWorker('audit-worker').dlqDepth,color:'var(--green)'},
+      {name:'recommendation-worker (delay)',depth:findWorker('recommendation-worker').processed,dlq:findWorker('recommendation-worker').dlqDepth,color:'var(--solar)'},
+      {name:'gate-monitor (FIFO)',depth:findWorker('gate-monitor').processed,dlq:findWorker('gate-monitor').dlqDepth,color:'var(--crim)'},
     ];
     const maxD=Math.max(...QUEUES.map(q=>q.depth),1);
     QUEUES.forEach(q=>{

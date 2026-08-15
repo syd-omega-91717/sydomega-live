@@ -615,6 +615,42 @@ a misleading invented number), flagged here rather than fixed blind.
 pure client-side computation corrections, using data structures that already existed and were
 already correctly used elsewhere on the same page.
 
+### 4.14 `queue.html`'s "QUEUE DEPTHS" panel showed 5 entirely fictional queues with
+randomized numbers — real backing workers already existed, just weren't wired in (fixed
+this session)
+
+Same audit pass as §4.13, same page family (ARENA's "SOVEREIGN QUEUE" page — real, genuine
+`OmegaWorkers`/`OmegaBus` telemetry everywhere else on the page: `ACTIVE WORKERS`, `MSGS
+PROCESSED`, `EVENTS EMITTED`, `DLQ DEPTH`, `OPEN CIRCUITS`, and the worker-grid are all
+correctly computed from real data). One section wasn't: the `QUEUES` array backing the "QUEUE
+DEPTHS" bar list had one real entry (`sovereign.domain.events`, pulled from the real events-
+emitted counter) followed by 5 entries under invented dotted-namespace names —
+`notifications.email`, `analytics.aggregator`, `achievements.unlock`, `audit.log`,
+`recommendations.engine` — with `depth:Math.floor(Math.random()*N)` and a hardcoded `dlq:0`,
+regenerated every refresh. These aren't placeholder telemetry for a real system that just
+isn't instrumented yet — `omega-workers.js` (confirmed by reading it in full) really does
+register 6 real workers with genuine `processed`/`dlqDepth`/`state` stats already exposed via
+`OmegaWorkers.status()` and already used correctly a few lines earlier on the same page for the
+worker-grid: `analytics-worker`, `notification-worker`, `achievement-worker`,
+`recommendation-worker`, `audit-worker`, and `gate-monitor` (the 6th, previously absent from
+this panel entirely). The fictional names roughly rhyme with the real worker names but aren't
+what's actually running — showing them as if they were real queues, with random depths, is
+exactly the class of misleading-owner-dashboard issue as §4.13, on the same page family.
+
+Fixed by wiring the panel to the real `workers` array (already in scope in the same function)
+via each worker's real registered name, using `processed` for the bar's "depth" (matching the
+first entry's own activity-volume semantic — real events-emitted count, not a backlog) and
+`dlqDepth` for the `dlq` badge (the genuine stuck-item backlog, the only concept these
+event-reactive workers actually have that resembles "queue depth" — they process synchronously
+on receipt, so there's no real pending-backlog number distinct from `processed`/`dlqDepth`,
+confirmed by reading `Worker.prototype._receive`/`status()` in full). Renamed the display labels
+from the invented dotted-namespace names to the real worker names so a reader can cross-reference
+directly against `omega-workers.js` instead of hunting for a service that doesn't exist.
+
+`node --check` on the extracted `type="module"` script; `scripts/audit.py` reconfirmed 0
+critical / 6 pre-existing warnings. No SQL/schema changes — pure client-side wiring to data
+structures that already existed and were already correctly used elsewhere on the same page.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

@@ -1247,6 +1247,44 @@ orphaned file.
   (`RUN_ORDER.md`) is closed. `python3 -m py_compile scripts/audit.py` and a full re-run
   (0 critical / 6 warnings, same as baseline, output verified more precise not just longer) both
   confirmed clean.
+- **First pass on the "text is too small" feedback: 22 shared UI-chrome font-sizes bumped in
+  `bg.js`'s v3/GVP design-system block, since that one file is what reaches every page.** Prompted
+  by external usability feedback that the platform is "beautiful but difficult to read." Grepped
+  every `font-size:` declaration in `bg.js` (the reusable class layer, not one-off inline styles
+  elsewhere in the same file, which are a larger, separate sweep left undone) and found the
+  monospace "label" tier — `.kpi-l`/`:where(.kpi-label)`/`.tbl-hcell` — set as low as 7px, and
+  `.bar-lbl`/`.chip`/`.tab-btn`/`.lf span` at 7.5px, well under any reasonable UI-text floor.
+  Bumped the label tier to 10px, the secondary-label tier to 10.5px, and the
+  component-header/body tier (`.card-title`, `:where(.card-title)`, `.sechead`, `.btn`,
+  `.loading-msg`, `.trend`, `.skip-link`, `button:not([class])`) to 11px — narrowed
+  `.sechead`/`.btn`'s letter-spacing slightly (4px→3px, 2px→1.5px) so the larger glyphs don't
+  visually crowd at the same tracking. `.tbl-row`/`:where(.card-body)`/`.bar-val` (11px body/data
+  text) bumped to 12–13px. Two additional, distinct bugs found in the same sweep: (1) `.inp` (the
+  v3 fallback and the GVP glass-form-control layer, which also skins every genuinely unclassed
+  `input`/`textarea`/`select`) was 11px — below the 16px threshold at which iOS Safari
+  auto-zooms the viewport on focus, a real, previously-undocumented mobile-usability bug, not
+  just a size preference; fixed to 16px. (2) the mobile breakpoint's `.tab-btn` was 7px — smaller
+  than the 7.5px desktop base, a regression on the exact devices where tap targets and legibility
+  matter most; fixed to 10.5px alongside the desktop value. Every replacement was applied via an
+  exact-string-match script that aborted on any count mismatch (none occurred — all 22 landed
+  cleanly, single-line minified string, verified before writing). `node --check bg.js` and
+  `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged) both clean.
+  Verified live in headless Chromium (not just read from source): rendered `dashboard.html` and
+  confirmed `getComputedStyle` on `.kpi-l`/`.lf span`/`.sechead` reflects the new values;
+  rendered `exam.html` (a page with no page-local `.tab-btn` override) and confirmed `.tab-btn`
+  computes to 10.5px, proving the shared-file fix actually reaches a real page. **Found but
+  deliberately not fixed in this pass**: `design-system.html` (and others, e.g. `academy.html`,
+  `gaming.html`) still shows `.tab-btn` at the old 7.5px because the page defines its own
+  page-local `.tab-btn{font-size:7.5px...}` rule that shadows the shared one — the same
+  page-local-class-drift pattern already documented at length in §4.1's Ω-GVP `.card` sweep
+  (230+ page-local classes found there). Sweeping every page-local duplicate of these specific
+  selectors is a much larger, separate effort (that section's sweep alone took a dedicated
+  scanner pass) and out of scope here; this entry only fixes the single shared source of truth.
+  No SQL/schema changes — pure client-side CSS, live the moment `bg.js` deploys. Still open,
+  larger readability work per the original feedback (not attempted this pass): a real typography
+  token scale (`--fs-*` custom properties instead of hardcoded per-selector px values), the
+  dozens of one-off inline `font-size:7-9px` styles elsewhere in `bg.js` (trial-timer/genesis
+  screen/toast), and the page-local duplicate sweep just described.
 
 
 ## 9. Working in this repo — practical rules

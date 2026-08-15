@@ -520,3 +520,92 @@ superseded earlier draft whose useful fixes are already merged upstream, or a di
 never-completed rebuild attempt. No code or legal content from any of them was safe to bring in
 without contradicting decisions this repo has already deliberately made. The one real asset —
 `sydomega91717_Netifly`'s generated art library — needs human curation before it's actionable.
+
+## 9. Navigation/IA audit — 64 of 169 pages (38%) have no entry in the persistent sidebar
+
+Prompted directly by external usability feedback ("beautiful but hard to navigate"). This is a
+research/planning pass, not a rebuild — findings and a proposed remediation, no `nav.js` changes
+made yet (see the action item added to `GAP_ANALYSIS.md` §6).
+
+**Method.** Parsed `nav.js`'s `PS` object (91 unique page-slug→section keys, after the
+already-fixed dead-key cleanup, §5 above) and its `SECTIONS` array (15 desktop sections, 96
+tooltip sub-links covering the same slug set) against the actual 169 `.html` files on disk.
+Cross-referenced every page absent from both against every other page's raw content for any
+`href=`/`location.href=` reference to it (not just `<a>` tags — `onclick="location.href=..."`
+card patterns are common in this codebase, e.g. `intelligence.html`'s `.intel-card` grid), and
+separately against `omega-search.js`'s Ctrl+K search index. Every number below is a direct count
+from that parse, not an estimate.
+
+- **64 of 169 pages have zero presence in `nav.js`'s sidebar** (not in `PS`, not in any
+  `SECTIONS[].sub` tooltip link) — after excluding the 8 pages correctly exempted for being the
+  pre-auth/system funnel itself (`account`, `enter`, `reset`, `terms`, `pending`, `404`,
+  `offline`, `demo-check` — the same list `bg.js`'s own `PUBLIC` array already exempts from the
+  approval guard, so this exclusion isn't a guess, it matches an existing, deliberate platform
+  boundary).
+- **61 of those 64 are reachable, but only through `dashboard.html`'s own separate "quick
+  actions" link grid** — a parallel, informal navigation system with no connection to `nav.js`
+  at all. 8 of the 61 (`atlas`, `cipher`, `codex`, `mindmap`, `nexus`, `pulse`, `sigma`,
+  `signal`) are *also* independently linked from `intelligence.html`'s own separate
+  `.intel-card` grid — a second, different informal hub with its own curated subset. Practical
+  effect: a member on, say, `sleep.html` (reachable only via the dashboard grid) has no sidebar
+  path to `budget.html` (same situation) — they'd have to navigate back to `dashboard.html`
+  first and find the right tile again, because the one navigation surface that's present on
+  every page (`nav.js`'s sidebar) doesn't know either page exists. These 61 pages span coherent,
+  substantial domains that read as fully-built feature sets, not stragglers — averaging 438
+  lines each, smallest is 114 (`maintenance.html`): a wellness/habit-tracking suite
+  (`affirmations`, `breath`, `fasting`, `gratitude`, `habits`, `journal`, `meditate`, `mood`,
+  `nutrition`, `oath`, `rituals`, `sleep`, `stoic`, `targets`, `water`, `weekly`, `workout`), 3
+  of the 7 pages in the documented `localStorage`-only finance suite (`budget`, `expenses`,
+  `wealth` — `wallet`/`treasury`/`revenue`/`investment`, the other 4, *are* in `nav.js`, so this
+  specific suite is split half-navigable, half-not), a personal-productivity set (`contacts`,
+  `decisions`, `missions`, `network`, `notes`, `projects`, `quotes`, `time`, `vision`), a
+  lore/cosmos set (`chronicle`, `dna`, `graph`, `map`, `mirror`, `oracle`, `realm`, `rune`,
+  `tribe`), the 8 `intelligence.html`-only "intel modules" above, and a study/reference set
+  (`architect`, `clarity`, `codex`, `flashcard`, `focus`, `forge`, `library`, `mentors`,
+  `ops`, `physiology`, `principles`, `reading`, `skills`, `vocabulary`).
+- **3 pages have no page-to-page link anywhere in the repository at all**: `awards.html`,
+  `maintenance.html`, `publications.html`. Checked a third discovery path for these
+  specifically — the Ctrl+K search index (`omega-search.js`) — since a page could still be
+  findable there even with zero direct links. `awards` and `publications` are indexed there
+  (`{t:'AWARDS',...,u:'/awards.html'}`, `{t:'PUBLICATIONS',...,u:'/publications.html'}`), so a
+  member who thinks to search for them can still find them. **`maintenance.html` is not in the
+  search index either** — confirmed via direct grep, not assumed — meaning it has *no* discovery
+  path anywhere on the platform: not the sidebar, not any other page's content, not search. The
+  only way to reach it is knowing the exact URL. It's a real, substantial page (114 lines, a
+  working feature), not a stub.
+- **Mobile navigation covers even less than desktop.** `nav.js`'s `DRAWER_SECTIONS` (the
+  hamburger-menu drawer that's the *only* way to reach anything beyond the 4 fixed bottom-bar
+  icons — `command`/`ascend`/`vault`/`cosmos` — on a phone) lists 9 of the 15 desktop
+  `SECTIONS` keys. The missing 6 — `arena`, `govern`, `invest`, `achieve`, `archive`, `media` —
+  cover 54 distinct sub-pages between them (AI/analytics/automation/research, governance/
+  compliance/privacy/roadmap, portfolio/wallet/revenue/treasury/blockchain, the entire
+  achievements/leaderboard/gates/levels/ascension gamification track, identity documents/
+  passport/KYC/credentials, and cinema/series/social/news/events). These pages *are* in the
+  desktop sidebar and fully functional — this is purely a mobile-drawer omission, distinct from
+  the 64-page gap above (some overlap: e.g. `wallet`/`portfolio` are desktop-navigable but
+  mobile-invisible). Given how much of this repo's own history is already mobile-focused
+  (`bg.js`'s "MOBILE GLOBAL FIXES" block, touch-target sizing, WCAG passes), this specific gap —
+  40% of top-level sections simply absent from the one mobile navigation surface that exists —
+  reads as an oversight from when `DRAWER_SECTIONS` was written against an earlier, smaller
+  `SECTIONS` list and never kept in sync as the desktop nav grew to 15, not a deliberate
+  trim.
+
+**Proposed remediation (not implemented this pass — planning only, per the scope this audit was
+asked for):**
+1. Fold the 61 dashboard/intelligence-only pages into `nav.js`'s `PS` map and the relevant
+   existing `SECTIONS[].sub` array (most map cleanly onto an existing section by theme — e.g.
+   the wellness suite under a new or existing personal-tracking section, `budget`/`expenses`
+   into the existing `invest` section alongside `wealth`) rather than inventing new top-level
+   sections for all of them — 15 is already a lot of icons in a fixed-width dock.
+2. Add a 16th `maintenance` entry somewhere reachable (even a single `govern` sub-link would
+   take it from zero discovery paths to one) — the smallest, cheapest fix in this whole finding.
+3. Sync `DRAWER_SECTIONS` to the full 15-section list, or at minimum add the 6 missing sections
+   — this is a self-contained `nav.js` change with no page-content risk, the most isolated fix
+   here.
+4. Leave `dashboard.html`'s and `intelligence.html`'s own quick-action grids in place — they're
+   a reasonable "featured shortcuts" pattern for a subset of pages, not the bug; the bug is that
+   they're currently the *only* path for 61 pages instead of a convenience alongside a sidebar
+   entry that also exists.
+This is real surface-area work across a file every page loads (`nav.js`) — sized similarly to
+the `.card`/`.tab-btn` sweeps already done this session, but touching navigation structure
+rather than typography, so flagged for an explicit go-ahead rather than started unprompted.

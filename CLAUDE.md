@@ -1319,6 +1319,119 @@ orphaned file.
     noted, not chased further in this pass.
   Verified: `node --check` on `beacon.html`'s script block; `scripts/audit.py` reconfirmed
   0 critical / 6 pre-existing warnings.
+- **First pass on the "text is too small" feedback: 22 shared UI-chrome font-sizes bumped in
+  `bg.js`'s v3/GVP design-system block, since that one file is what reaches every page.** Prompted
+  by external usability feedback that the platform is "beautiful but difficult to read." Grepped
+  every `font-size:` declaration in `bg.js` (the reusable class layer, not one-off inline styles
+  elsewhere in the same file, which are a larger, separate sweep left undone) and found the
+  monospace "label" tier — `.kpi-l`/`:where(.kpi-label)`/`.tbl-hcell` — set as low as 7px, and
+  `.bar-lbl`/`.chip`/`.tab-btn`/`.lf span` at 7.5px, well under any reasonable UI-text floor.
+  Bumped the label tier to 10px, the secondary-label tier to 10.5px, and the
+  component-header/body tier (`.card-title`, `:where(.card-title)`, `.sechead`, `.btn`,
+  `.loading-msg`, `.trend`, `.skip-link`, `button:not([class])`) to 11px — narrowed
+  `.sechead`/`.btn`'s letter-spacing slightly (4px→3px, 2px→1.5px) so the larger glyphs don't
+  visually crowd at the same tracking. `.tbl-row`/`:where(.card-body)`/`.bar-val` (11px body/data
+  text) bumped to 12–13px. Two additional, distinct bugs found in the same sweep: (1) `.inp` (the
+  v3 fallback and the GVP glass-form-control layer, which also skins every genuinely unclassed
+  `input`/`textarea`/`select`) was 11px — below the 16px threshold at which iOS Safari
+  auto-zooms the viewport on focus, a real, previously-undocumented mobile-usability bug, not
+  just a size preference; fixed to 16px. (2) the mobile breakpoint's `.tab-btn` was 7px — smaller
+  than the 7.5px desktop base, a regression on the exact devices where tap targets and legibility
+  matter most; fixed to 10.5px alongside the desktop value. Every replacement was applied via an
+  exact-string-match script that aborted on any count mismatch (none occurred — all 22 landed
+  cleanly, single-line minified string, verified before writing). `node --check bg.js` and
+  `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged) both clean.
+  Verified live in headless Chromium (not just read from source): rendered `dashboard.html` and
+  confirmed `getComputedStyle` on `.kpi-l`/`.lf span`/`.sechead` reflects the new values;
+  rendered `exam.html` (a page with no page-local `.tab-btn` override) and confirmed `.tab-btn`
+  computes to 10.5px, proving the shared-file fix actually reaches a real page. **Found but
+  deliberately not fixed in this pass**: `design-system.html` (and others, e.g. `academy.html`,
+  `gaming.html`) still shows `.tab-btn` at the old 7.5px because the page defines its own
+  page-local `.tab-btn{font-size:7.5px...}` rule that shadows the shared one — the same
+  page-local-class-drift pattern already documented at length in §4.1's Ω-GVP `.card` sweep
+  (230+ page-local classes found there). Sweeping every page-local duplicate of these specific
+  selectors is a much larger, separate effort (that section's sweep alone took a dedicated
+  scanner pass) and out of scope here; this entry only fixes the single shared source of truth.
+  No SQL/schema changes — pure client-side CSS, live the moment `bg.js` deploys. Still open,
+  larger readability work per the original feedback (not attempted this pass): a real typography
+  token scale (`--fs-*` custom properties instead of hardcoded per-selector px values), the
+  dozens of one-off inline `font-size:7-9px` styles elsewhere in `bg.js` (trial-timer/genesis
+  screen/toast), and the page-local duplicate sweep just described.
+- **The page-local `.tab-btn`/`.card-title` sweep flagged above: done.** Grepped every `.html`
+  page for a local `.tab-btn{...}` or `.card-title{...}` rule (36 and 12 pages respectively) and
+  found every single one was under the new shared-floor values — `.tab-btn` ranged 6.5–9px
+  across the 36 pages, `.card-title` was `.65rem` (≈10.4px) on 9 of the 12 and a bare `8px` on
+  the other 2 (`ops.html`, `pulse.html`; `media.html`'s `.85rem`/13.6px was already above the
+  floor and left untouched). Unlike the `.card` sweep in §4.1, none of these were byte-identical
+  duplicates safe to delete outright — every page's local rule carries its own padding/border/
+  color choices (icon-tab layouts in `cosmos.html`/`vault.html`, purple-accented tabs in
+  `series.html`/`trailers.html`, a vertical `flex:1` tab bar in `profile.html`, a notification
+  `.tab-btn .badge` counter in `approvals.html`) — deleting the rule would have thrown all of
+  that away, not just the font-size. Fixed narrowly instead: bumped only the `font-size` (and
+  nudged `letter-spacing` down slightly where it was 2px, so the larger glyphs don't crowd) in
+  each page's own rule, to the same 10.5px `.tab-btn` / 11px `.card-title` floor the shared
+  `bg.js` values now use — everything else about each page's local styling (padding, borders,
+  colors, layout) is untouched. Two sub-selectors needed separate handling for the same reason
+  they're the actual visible text: `cosmos.html`'s `.tab-btn .tb-label` (8px→10.5px, the real
+  label on its icon+label vertical tabs) and `approvals.html`'s `.tab-btn .badge` (6px→8.5px, a
+  numeric pending-count badge — bumped less than the main floor since it's a 1–2 digit counter,
+  not prose, matching this file's own precedent of treating badges/dots as a distinct, smaller
+  tier). 47 files touched, 48 replacements (one page, `vault.html`, only needed the base rule).
+  Every replacement was applied via the same exact-string-match-with-count-check method as the
+  original `bg.js` fix (abort on any mismatch — none occurred). Verified: `node --check`-equivalent
+  syntax validation on every touched page's inline non-module `<script>` blocks (0 failures);
+  `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged); headless Chromium
+  spot-check on 6 of the 47 pages, including `design-system.html` specifically (the page called
+  out above as still showing the old value) — `getComputedStyle` now reads 10.5px/11px on all 6,
+  zero page errors. No SQL/schema changes.
+- **Asked directly to close the remaining 6 `scripts/audit.py` warnings this session — still
+  open. Each is blocked on something only the user can provide, not on more analysis, and
+  forcing any of them through anyway would repeat the exact mistake this file's own history
+  (§8, throughout) exists to warn against: guessing at live state instead of checking it.**
+  Re-examined the per-warning breakdown above against what this specific session can actually
+  do:
+  - **Warning 1 (47 duplicate table definitions, 10 genuinely conflicting)** and **warning 6
+    (11 diverging RPC definitions)** both need a live `pg_proc`/`information_schema` query
+    against the real production database before touching any file, per §5's own standing rule —
+    this is the identical class of mistake behind the `apply_subscription`/`complete_task`/
+    `task_completions` incidents already documented in this file, all caused by trusting which
+    SQL-bag definition *looked* canonical instead of checking what was actually live. The
+    Supabase MCP connector exists in this environment but is flagged as requiring authorization
+    this session doesn't have — it's a non-interactive session, so it cannot complete an OAuth
+    flow itself; the user needs to authorize it via `claude mcp` or `/mcp` in an interactive
+    session first. Consolidating even the 37 byte-identical duplicates without that check was
+    considered and declined: this repo's chunk files are applied "manually/in sequence" (§2),
+    and deleting a redundant `CREATE TABLE IF NOT EXISTS` from one file is only actually
+    risk-free if every real-world run order still creates that table before any file that
+    depends on it runs — not something verifiable from source alone, matching the previous
+    session's identical call on the same question.
+  - **Warning 4 (3.7MB `.mp4` committed to git, no LFS)** — a real fix means `git lfs migrate
+    import`, which rewrites every historical commit touching the file and requires a
+    force-push to publish. That combination (history rewrite + force-push) needs explicit user
+    confirmation before being attempted at all, regardless of how broadly it's requested in
+    aggregate. **Asked directly; user chose to leave it** — the file is already excluded from
+    the live Vercel deploy via `.vercelignore` (confirmed earlier in this file), so this is
+    hygiene debt only, not a functional bug, and the destructive rewrite isn't worth it for
+    that. No change made; the warning stays open by design, not by oversight.
+  - **Warning 5 (`transactions`/`wallet_balances` tables missing)** isn't a bug — it's a
+    deliberate, already-recorded decision (this same section, above) to keep payment/token
+    infrastructure dormant pending legal review, which is §9's rule against shipping
+    monetizable features live without an explicit gating decision working exactly as intended.
+    "Solving" this warning means reversing that decision and building live payment/token-balance
+    tables — a product/legal call, not an engineering one. **Asked directly; user chose to keep
+    it dormant** — the original reasoning (unusually sensitive data, real schema-design
+    commitment that's hard to walk back once member data lives there, this repo's own history of
+    real RLS bugs) stands. No change made; the warning stays open by design.
+  - **Warnings 2 (guarded `DROP TABLE`) and 3 (`.docx` excluded via `.vercelignore`)** need no
+    further action — both were already fully investigated and correctly categorized as
+    low-risk/documented-only in the entry above. They still count toward `scripts/audit.py`'s
+    warning total by design (the check reports "not tracked automatically," not "unsafe"), which
+    is why the total is unchanged — not because anything about them is actually unresolved.
+  No files were touched for this entry beyond this note. Editing schema files or rewriting git
+  history on a guess, just to make the warning count read 0, would trade a real (if
+  low-severity) known-unknown for an unverified claim of "fixed" — exactly the kind of claim
+  this file's own rule (§9, "never mark something fixed... unless it actually was") exists to
+  prevent.
 
 
 ## 9. Working in this repo — practical rules

@@ -232,7 +232,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 const PHI=1.6180339887,EU=2.7182818285;
 const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
 const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-const SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+const SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
 const ELEM_INFO={Fire:{sigil:'☲',color:'#FF6B35'},Water:{sigil:'☰',color:'#00B4D8'},Wind:{sigil:'☱',color:'#B0BEC5'},Metal:{sigil:'☳',color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},Sand:{sigil:'★',color:'#FFD54F'},Soul:{sigil:'✴',color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},Space:{sigil:'✶',color:'#7C4DFF'},Void:{sigil:'✷',color:'#334466'},'The All':{sigil:'Ω',color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')}};
 
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;}

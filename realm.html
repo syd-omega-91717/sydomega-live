@@ -140,7 +140,7 @@
   <div class="card-grid">
     <div class="card"><div class="card-title">THE SOVEREIGN REALM</div><div class="card-body">The Sovereign Realm is a 3-D interactive element sphere rendered on a WebGL canvas via Three.js (OmegaRealm). Drag to rotate, scroll to zoom. Each of the nine elements occupies a sovereign position on the sphere, glowing with its spectral color. Your zodiac sign determines your native element at initialization.</div></div>
     <div class="card"><div class="card-title">NINE ELEMENTS</div><div class="card-body">Fire, Water, Wind, Metal, Sand, Soul, Space, Void, and The All — nine sovereign elements that form the triad system. Three per triad: Primal (Fire/Water/Wind), Middle (Metal/Sand/Soul), Supreme (Space/Void/The All). The apex element — The All — integrates all nine at Gate XII.</div></div>
-    <div class="card"><div class="card-title">ELEMENT AFFINITY</div><div class="card-body">Your zodiac sign assigns your native element at onboarding. Aries/Leo/Sagittarius map to Fire. Taurus/Cancer/Pisces to Water. Gemini/Libra to Wind. Capricorn/Aquarius to Metal. Virgo to Sand. Scorpio to Soul. The sphere initialises centred on your element, glowing at maximum intensity.</div></div>
+    <div class="card"><div class="card-title">ELEMENT AFFINITY</div><div class="card-body">Your zodiac sign assigns your native element at onboarding. Aries/Leo/Sagittarius map to Fire. Cancer/Scorpio/Pisces to Water. Gemini/Libra/Aquarius to Wind. Taurus/Capricorn to Metal. Virgo to Sand. The sphere initialises centred on your element, glowing at maximum intensity.</div></div>
     <div class="card"><div class="card-title">REALM ENGINE</div><div class="card-body">OmegaRealm.mount(canvas, element) initialises the Three.js scene. OmegaRealm.setElement(elem) shifts focus to any of the nine elements. OmegaAmbient plays elemental audio resonance when an element is selected. All rendering is client-side — no server round-trips after initial load.</div></div>
   </div>
 </div>
@@ -154,12 +154,12 @@ var ELEM_INFO={
   Wind:  {sigil:'&#9671;',color:'#B0BEC5',desc:"Mercury's swift transmission. Ideas that travel without resistance. Authority through communication and movement."},
   Metal: {sigil:'&#9632;',color:'#E2C86D',desc:"Saturn's crystallised permanence. The element of discipline and long-term structural authority. Hestia's endurance made manifest."},
   Sand:  {sigil:'&#9733;',color:'#FFD54F',desc:"Athena's granular wisdom. Every detail counts. Precision as the highest form of sovereign power."},
-  Soul:  {sigil:'&#10036;',color:'#9B6BF0',desc:"Scorpio's transformative depth. The element that destroys to regenerate. Demeter's sacred cycle of death and rebirth."},
+  Soul:  {sigil:'&#10036;',color:'#9B6BF0',desc:"Metaphysical, class-based — assigned, not sign-derived. The element that destroys to regenerate."},
   Space: {sigil:'&#10038;',color:'#7C4DFF',desc:'The void between all things. Where pure potential resides. Neither empty nor full — the sovereign medium of all possibility.'},
   Void:  {sigil:'&#10039;',color:'#334466',desc:'The absolute dark that contains all light. The pre-sovereign state from which all authority emerges and to which it returns.'},
   'The All':{sigil:'&#937;',color:'#E2C86D',desc:'The Apex element. The complete sovereign resonance of all nine elements unified. The state of APEX SOVEREIGN.'}
 };
-var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+var SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
 var SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
 var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
 var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];

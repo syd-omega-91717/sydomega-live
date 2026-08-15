@@ -189,7 +189,7 @@ window.addEventListener('omega:user-loaded',function(e){
   var PHI=1.6180339887,EU=2.7182818285;
   var a=Number(profile.axis_a||0),b=Number(profile.axis_b||0),c=Number(profile.axis_c||0);
   var auth=profile.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-  var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+  var SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
   var elem=SIGN_ELEM[profile.sign]||'Void';
 
   /* Emit session start event */
@@ -205,7 +205,7 @@ window.addEventListener('omega:music-started',function(e){_musicStart=Date.now()
 window.addEventListener('omega:music-stopped',function(e){
   if(_musicStart&&window.__omegaUser){
     var dur=Date.now()-_musicStart;
-    var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
+    var SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
     var profile=window.__omegaProfile||{};
     emit('sovereign.music.played',{memberId:window.__omegaUser.id,elem:SIGN_ELEM[profile.sign]||'Void',duration:dur});
     _musicStart=null;

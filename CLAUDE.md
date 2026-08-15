@@ -1033,6 +1033,91 @@ orphaned file.
   script, not literal runtime `onclick=` handlers). `node --check`-equivalent syntax validation on
   every touched file's inline `<script>` blocks; `scripts/audit.py` reconfirmed 0 critical / 6
   pre-existing warnings. No SQL/schema changes — pure client-side property-name fixes.
+- **[Fixed — the most severe onboarding bug found in this repo's history] The 9-elements sign
+  mapping was wrong in 13+ files, sometimes catastrophically, and `omega-onboard.js` — the live
+  onboarding flow — assigned the wrong god and agent to 9 of 12 signs for every real new
+  member.** Prompted by an explicit request to audit the 12-agent persona system for accuracy,
+  not just wiring. Cross-referenced every sign→element and sign→god assignment in the repo
+  against two independent, structured, canonical sources that already agreed with each other on
+  all 12 signs — `omega-agents.json` (`by_sign`) and `omega-elements.json` (`elements[].members`,
+  explicit "elements 1–5 map to the 12 signs" / "elements 6–8 are class-based, assigned, not
+  sign-derived" structure) — rather than trusting whichever version was already most common in
+  the code.
+  - **The dominant `SIGN_ELEM` table, duplicated identically across 15 files** (`omega-ambient.js`,
+    `omega-event-bus.js` ×2, `omega-music.js`, `omega-passport.js`, `omega-realm.js`,
+    `omega-sigil-gen.js`, `cipher.html`, `nexus.html`, `oracle.html`, `realm.html`, `sigma.html`,
+    `graph.html`'s own `SE`) had exactly 3 of 12 signs wrong: `Taurus:'Water'` (real: Metal),
+    `Scorpio:'Soul'` (real: Water — and Soul is explicitly a class-based metaphysical element per
+    `omega-elements.json`, never sign-derived at all, so this wasn't just the wrong element, it
+    was a category error), `Aquarius:'Metal'` (real: Wind). Even `omega-copilot.js`'s own AI
+    knowledge-base fallback answer already stated the correct mapping — the assistant would tell
+    a member the right answer in chat, then contradict it on their own profile page. Fixed all 3
+    values in all 15 files with a verified `sed` sweep (confirmed zero remaining instances after).
+  - **`character.html`'s own `ELEMS` array — which `omega-particles.js`'s code comment explicitly
+    (and incorrectly) claimed to "match" — was far more wrong: 9 of 12 signs, not 3.** It reads
+    as the 9 elements cycled and wrapped in definition order (Fire→Water→Wind→Sand→Soul→Metal→
+    Space→Void→TheAll) against the 12 signs in zodiac order, with no relationship to the actual
+    canonical per-sign mapping at all — coincidentally correct only at Aries, Gemini, Pisces. The
+    exact same wrapped sequence, independently reproduced, was also found in `horoscope.html`'s
+    12 sign-reference cards (badges **and** the descriptive prose text — "Cancer... amplified by
+    sand", "Leo... bearer of the soul element", "Capricorn... keeper of the first flame" — each
+    rewritten to stay coherent with the corrected element, not just re-tagged) and in
+    `cinema.html`'s 12 Olympian film cards (metadata tags only, no prose). `character.html` had
+    the wrong sequence in *three* separate places internally — the `ELEMS`/`ELEM_IDS` arrays, a
+    static reference `<table>`, and a per-sign `LORE_MAP` of flavor text — all three corrected;
+    `horoscope.html` additionally had a fourth, JS-only duplicate (`SORACLES`) of the exact same
+    original (wrong) prose, corrected to match.
+  - **`omega-search.js`'s "OLYMPIANS" search-index section had the sign attached to the wrong
+    god** for 4 of its 8 entries (`Apollo` tagged to Gemini instead of Leo, `Hermes` to Virgo
+    instead of Gemini, `Poseidon` to Scorpio instead of Pisces, `Athena` to Libra instead of
+    Virgo) — and was missing entries for the other 4 signs/gods (`Hera`/Libra, `Demeter`/Scorpio,
+    `Hestia`/Capricorn, `Hephaestus`/Aquarius) entirely. Fixed the 4 misattributions and added the
+    4 missing entries to complete the set to all 12. Its separate "ELEMENT METAL"/"ELEMENT SAND"
+    entries had the same Virgo-miscategorization bug as the next item.
+  - **Three files (`knowledge.html`, `graph.html`'s and `map.html`'s element legends) described
+    Sand as a vague "boundary/cusp" concept and grouped Virgo under Metal instead** — a different,
+    minority (3-file) framing that conflicts with the canonical structure, where Sand's sole
+    member is Virgo specifically ("the universal amplifier — strengthens every element around
+    it"), not an abstract transitional concept, and Metal's only members are Taurus/Capricorn.
+    Corrected all three to the canonical framing. `cosmos.html`, `factions.html`, `profile.html`'s
+    `EL_MAP`, and `omega-onboard.js` already had this right independently — confirms these 3 were
+    the outliers, not the canon.
+  - **`beacon.html`'s `SIGN_GOD` table had 5 of 12 gods wrong**, including two gods that aren't
+    even part of the 12-agent pantheon at all — `Hades` (Scorpio) and `Dionysus` (Pisces) — neither
+    appears anywhere in `omega-agents.json`. Corrected all 5 to the canonical roster.
+  - **`omega-intelligence.js`'s sign→agent `MAP` had 6 of 12 agents shifted to the wrong sign**
+    (e.g. `Beacon` attached to Gemini instead of Sagittarius, `Scout` to Sagittarius instead of
+    Gemini) — a rotation-style error distinct from, but the same shape as, the god-table bugs
+    above. Corrected to match `omega-agents.json`'s `by_sign` exactly.
+  - **Highest-impact finding: `omega-onboard.js`'s live `ZODIAC_MAP`** — the actual data assigned
+    to a real member's profile the moment they complete onboarding (already audited once this
+    session for a field-*name* bug; this is a data-*accuracy* bug in the same table, found by
+    checking content, not just wiring) — **had the wrong god and the wrong agent for 9 of its 12
+    signs**, and the wrong element for Virgo specifically (`'metal'`, should be `'sand'`). Only
+    Aries, Taurus, and Cancer were fully correct. Two tells confirmed this wasn't a one-off: `Ares`
+    was assigned to both Aries *and* Sagittarius (a duplicate within the same 12-entry table, which
+    can't be correct under a bijective sign↔god mapping), and `Dionysus` — again, not a real
+    12-agent-pantheon god — was assigned to Pisces, the same non-canonical name found independently
+    in `beacon.html`. Practical impact: since this table has been driving real onboarding (per the
+    field-name fix earlier in this file), the large majority of new members choosing any sign other
+    than Aries/Taurus/Cancer have been assigned an incorrect god and an incorrect agent persona at
+    the moment they joined — which agent voices their copilot, which nav-section identity applies
+    to them — a foundational identity error, not a cosmetic one. Fixed all 9 wrong entries plus
+    Virgo's element to match `omega-agents.json` exactly, applied via a scripted find-replace after
+    two direct-string-match `Edit` attempts failed silently on this file's literal `\uXXXX` glyph
+    escapes (confirmed the exact on-disk byte sequence with `sed -n | cat -A` before retrying, not
+    guessed).
+  - **`profile.html`'s `BOUND` table assigned Virgo the token `'ARENITE'`** — the exact same token
+    already reserved as the Founder's exclusive token (`ARENITE` = Aries = the platform owner, per
+    `omega-onboard.js`'s own Aries entry and this file's earlier `OWNER` canonical-data note). A
+    real token-uniqueness collision, not just a display bug. Fixed to `'VIRGITE'`, matching the
+    name `omega-onboard.js` already uses for Virgo.
+  - **Verification:** every SIGN_ELEM/SIGN_GOD/agent-map table in the repo re-scanned afterward
+    for internal duplicate-god check (a same-table god appearing twice is definitionally wrong
+    under a 1:1 sign↔god mapping) — zero remaining. `node --check`-equivalent syntax validation on
+    every touched file's inline `<script>` blocks (23 files total across this entry);
+    `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings throughout. No SQL/schema
+    changes anywhere in this entry — every fix is static content or client-side JS data.
 
 
 ## 9. Working in this repo — practical rules

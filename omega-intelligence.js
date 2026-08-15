@@ -83,7 +83,7 @@
       name: 'get_agent_for_sign',
       desc: 'Get the sovereign agent assigned to a zodiac sign',
       execute: async function(args){
-        var MAP={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Beacon',Cancer:'Warden',Leo:'Sovereign',Virgo:'Analyst',Libra:'Auditor',Scorpio:'Oracle',Sagittarius:'Scout',Capricorn:'Proxy',Aquarius:'Historian',Pisces:'Tutor'};
+        var MAP={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};
         var sign=args.sign||'';
         return {agent:MAP[sign]||'Unknown',sign:sign,platform:'SYD OMEGA 91717'};
       }

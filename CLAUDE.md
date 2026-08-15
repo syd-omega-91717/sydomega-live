@@ -1312,6 +1312,51 @@ orphaned file.
   spot-check on 6 of the 47 pages, including `design-system.html` specifically (the page called
   out above as still showing the old value) — `getComputedStyle` now reads 10.5px/11px on all 6,
   zero page errors. No SQL/schema changes.
+- **Asked directly to close the remaining 6 `scripts/audit.py` warnings this session — still
+  open. Each is blocked on something only the user can provide, not on more analysis, and
+  forcing any of them through anyway would repeat the exact mistake this file's own history
+  (§8, throughout) exists to warn against: guessing at live state instead of checking it.**
+  Re-examined the per-warning breakdown above against what this specific session can actually
+  do:
+  - **Warning 1 (47 duplicate table definitions, 10 genuinely conflicting)** and **warning 6
+    (11 diverging RPC definitions)** both need a live `pg_proc`/`information_schema` query
+    against the real production database before touching any file, per §5's own standing rule —
+    this is the identical class of mistake behind the `apply_subscription`/`complete_task`/
+    `task_completions` incidents already documented in this file, all caused by trusting which
+    SQL-bag definition *looked* canonical instead of checking what was actually live. The
+    Supabase MCP connector exists in this environment but is flagged as requiring authorization
+    this session doesn't have — it's a non-interactive session, so it cannot complete an OAuth
+    flow itself; the user needs to authorize it via `claude mcp` or `/mcp` in an interactive
+    session first. Consolidating even the 37 byte-identical duplicates without that check was
+    considered and declined: this repo's chunk files are applied "manually/in sequence" (§2),
+    and deleting a redundant `CREATE TABLE IF NOT EXISTS` from one file is only actually
+    risk-free if every real-world run order still creates that table before any file that
+    depends on it runs — not something verifiable from source alone, matching the previous
+    session's identical call on the same question.
+  - **Warning 4 (3.7MB `.mp4` committed to git, no LFS)** — a real fix means `git lfs migrate
+    import`, which rewrites every historical commit touching the file and requires a
+    force-push to publish. That combination (history rewrite + force-push) needs explicit user
+    confirmation before being attempted at all, regardless of how broadly it's requested in
+    aggregate — asked below, not assumed. `git-lfs` also isn't installed in this session's
+    environment, so even with confirmation the migration would need to run somewhere that has
+    it.
+  - **Warning 5 (`transactions`/`wallet_balances` tables missing)** isn't a bug — it's a
+    deliberate, already-recorded decision (this same section, above) to keep payment/token
+    infrastructure dormant pending legal review, which is §9's rule against shipping
+    monetizable features live without an explicit gating decision working exactly as intended.
+    "Solving" this warning means reversing that decision and building live payment/token-balance
+    tables — a product/legal call, not an engineering one, so it's asked below rather than
+    assumed on the platform owner's behalf.
+  - **Warnings 2 (guarded `DROP TABLE`) and 3 (`.docx` excluded via `.vercelignore`)** need no
+    further action — both were already fully investigated and correctly categorized as
+    low-risk/documented-only in the entry above. They still count toward `scripts/audit.py`'s
+    warning total by design (the check reports "not tracked automatically," not "unsafe"), which
+    is why the total is unchanged — not because anything about them is actually unresolved.
+  No files were touched for this entry beyond this note. Editing schema files or rewriting git
+  history on a guess, just to make the warning count read 0, would trade a real (if
+  low-severity) known-unknown for an unverified claim of "fixed" — exactly the kind of claim
+  this file's own rule (§9, "never mark something fixed... unless it actually was") exists to
+  prevent.
 
 
 ## 9. Working in this repo — practical rules

@@ -496,6 +496,55 @@ misstatement like `PAYMENT`, so left alone rather than force a subjective call.
 `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema change —
 pure content/status-label correction.
 
+### 4.11 `pantheons.html` and `horoscope.html`: two more instances of the sign/element/god
+mapping bug class documented in `CLAUDE.md` §8 — missed by the prior sweeps because they used a
+different data shape (fixed this session)
+
+`CLAUDE.md` §8 already documents a large sweep for wrong sign→element/god assignments across the
+repo, but that pass targeted specific known-wrong variable/property shapes (`SIGN_ELEM` object
+literals, `.zodiac_sign`/`.full_name`/`.agent_name` property misreads). Two more instances
+survived because they don't match either shape:
+
+- **`pantheons.html`'s 12-Olympian `GODS` array** (the OLYMPIANS tab, the platform's main
+  mythology-reference grid) had Athena on Capricorn instead of Virgo (element `Air` instead of
+  `Sand`), Hephaestus on Virgo instead of Aquarius (element `Fire` instead of `Wind`), Hermes's
+  element listed as `Air` instead of the platform's own `Wind`, and Aphrodite's as `Earth`
+  instead of `Metal` — and, more seriously, included **Dionysus** and **Hades**, neither of whom
+  is one of the platform's 12 canonical agent-pantheon gods (`omega-agents.json`'s `by_sign` has
+  no entry for either), while omitting **Hera** (Libra) and **Hestia** (Capricorn) entirely.
+  Cross-checked every field against `omega-agents.json` and `omega-elements.json`'s
+  `sign_element` map (the two canonical sources already used to fix this bug class elsewhere) before
+  touching anything. Fixed by correcting the 4 wrong sign/element pairs and replacing the
+  Dionysus/Hades entries with real Hera/Hestia entries (Roman names Juno/Vesta, new
+  domain/archetype/shadow/gift/desc fields written in the same voice as the other 10, correct
+  sign/element per canon) — 12 entries, matching `omega-agents.json`'s roster exactly, zero
+  duplicate signs.
+- **`horoscope.html`'s `SELEMS` array** (populates the personalized "YOUR SIGN" panel's ELEMENT
+  field — a live per-member render, not just reference content) was the wrapped 9-element-list
+  sequence (`Fire,Water,Wind,Sand,Soul,Metal,Space,Void,The All,Fire,Metal,Water`) applied
+  positionally against the 12 signs — the exact bug shape `CLAUDE.md` §8 already documents for
+  `character.html`/`horoscope.html`'s *static reference cards*, but this is a separate JS array
+  driving a different UI element that the earlier fix didn't touch. The static 12-sign reference
+  grid on the same page (`ALL SIGNS` tab) already has the correct element per sign — only this
+  positional array, used for the signed-in member's own profile summary, was wrong. 8 of 12
+  signs were affected (only Aries, Gemini, and Pisces coincidentally matched). Fixed to the
+  correct per-sign sequence from `omega-elements.json`'s `sign_element` map, using the same
+  symbol entities the static cards already use for consistency. `horoscope.html`'s `SMODES`
+  array (real classical-astrology Cardinal/Fixed/Mutable × Fire/Earth/Air/Water modality data)
+  was checked against the same suspicion and found already fully correct — not touched.
+
+A targeted repo-wide grep for the same wrapped-sequence signature (`Sand...Soul` co-occurring)
+found no further instances of this specific positional-array shape; the other 20 files matching
+a looser "Soul/Space/Void" grep are all either descriptive prose about the 9-element system in
+general or maps keyed by element *name* (colors, sigils, particle counts) rather than positional
+per-sign arrays, so they aren't the same bug — not exhaustively re-verified sign-by-sign in this
+pass, flagged as unfinished in §5 below rather than assumed clean.
+`node --check`-equivalent syntax validation on both files' inline scripts (`pantheons.html`'s
+`type="module"` block checked with `node --check` on the extracted module source;
+`horoscope.html`'s plain script checked via `new Function()`); `python3 scripts/audit.py`
+reconfirmed 0 critical / 6 pre-existing warnings, unchanged. No SQL/schema changes — both fixes
+are static content/client-side JS data corrections.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes
@@ -548,6 +597,12 @@ pure content/status-label correction.
   authenticated — that requires an interactive `claude` session, which was confirmed
   un-completable headlessly. Once authenticated, §2's "not applied" items become directly
   actionable from a Claude Code session instead of requiring a manual SQL-editor paste.
+- **5.4** §4.11's sign/element/god mapping fix was scoped to the two confirmed instances
+  (`pantheons.html`, `horoscope.html`'s `SELEMS`) plus one targeted grep for the same
+  wrapped-sequence signature — not a full re-verification of every one of the ~23 files that
+  reference the 9 elements by name. Most of those are almost certainly fine (element-name-keyed
+  color/sigil maps can't have a sign-mismatch bug by construction), but they weren't individually
+  confirmed sign-by-sign in this pass the way `pantheons.html`/`horoscope.html` were.
 
 ## 6. Priority-ordered action list
 

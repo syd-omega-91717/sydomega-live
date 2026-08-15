@@ -572,6 +572,49 @@ syntax validation on the page's inline script; `scripts/audit.py` reconfirmed 0 
 pre-existing warnings. No SQL/schema changes, no new page, no `nav.js` change needed — this
 extends a page already in the sidebar.
 
+### 4.13 `ops.html`'s "SRE Operations dashboard" showed fabricated health/latency numbers on the
+owner's own monitoring page (fixed this session)
+
+Auditing the ORDER/GOVERN realms for the same class of issue found in the Cosmos/Vault passes
+(§4.11/§4.12) — placeholder or fabricated data presented as if real — found a genuine instance
+in `ops.html`, the page whose own `<meta name="description">` calls it an "SRE Operations
+dashboard — health probes, worker metrics, circuit breakers, latency percentiles." Two distinct
+findings, both real numbers being displayed where the underlying computation wasn't actually
+measuring what the label claimed:
+
+- **`EVENT BUS` / `DATABASE` / `REALTIME` signal-strength gauges** were hardcoded constants —
+  `busHealth=window.OmegaBus?80:0`, `dbHealth=window.__omegaProfile?95:40`, and
+  `REALTIME=window.__omegaUser?85:30` — three booleans dressed up as precise-looking graduated
+  percentages. `WORKER FLEET`'s gauge on the same row is genuinely computed (real circuit-breaker
+  state ratio from `OmegaWorkers.status()`), so the other three read as equally measured but
+  weren't. Fixed `EVENT BUS` with a real computation: `OmegaBus.metrics()` already tracks real
+  per-event-type `emitted`/`errors` counts (used correctly elsewhere on the same page for the
+  event-metrics table and latency percentiles) — now aggregated into a genuine
+  errors-vs-emitted health percentage. `DATABASE`/`REALTIME` have no graduated signal available
+  anywhere in the codebase (no per-call Supabase success/failure telemetry exists yet — a bigger,
+  separate feature, not fixed here) — changed to honestly show 100/0 for their real
+  connected/not-connected boolean fact instead of an invented specific-looking number, matching
+  the same "don't overclaim precision" principle already established in this file (§4.10's
+  `PAYMENT 'live'` fix) and in `CLAUDE.md` §8 (the moon-phase panel's own honest "accurate to
+  within about a day" framing).
+- **The "LATENCY HEATMAP (WORKERS)" panel** pushed `Math.random()*totalErrors+totalProcessed*0.1`
+  into its 24-slot history every refresh — a formula that measures neither latency nor errors
+  cleanly, just a randomized blend, under a label promising real latency data. Real latency data
+  already exists in the same `OmegaBus.metrics()` object (`avgLatencyMs` per event type, already
+  used correctly for the page's own p50/p95/p99 calculation a few hundred lines earlier). Fixed
+  to push the genuine average latency across tracked event types instead.
+
+Deliberately not chased further in this pass: `omega-event-bus.js`'s own `platform.health.probe`
+emission hardcodes `latencyMs:0` at the point it's raised (`omega:user-loaded` handler) — real
+latency instrumentation would mean timing the actual Supabase auth call at its call site, a
+change spanning modules, not a quick fix. Low practical impact today (a static 0ms display, not
+a misleading invented number), flagged here rather than fixed blind.
+
+`node --check`-equivalent syntax validation on `ops.html`'s inline script;
+`scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes —
+pure client-side computation corrections, using data structures that already existed and were
+already correctly used elsewhere on the same page.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

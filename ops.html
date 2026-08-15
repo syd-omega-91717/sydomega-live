@@ -551,13 +551,25 @@ function refresh(){
   var sigList=document.getElementById('signal-list');
   if(sigList){
     var workerHealth=workers.length>0?Math.round((workers.filter(function(w){return w.state==='CLOSED';}).length/workers.length)*100):0;
-    var busHealth=window.OmegaBus?80:0;
-    var dbHealth=window.__omegaProfile?95:40;
+    var busHealth=0;
+    if(window.OmegaBus){
+      var busMetrics=window.OmegaBus.metrics();
+      var busEmitted=0,busErrors=0;
+      Object.keys(busMetrics).forEach(function(k){busEmitted+=busMetrics[k].emitted;busErrors+=busMetrics[k].errors;});
+      busHealth=busEmitted>0?Math.round(Math.max(0,(1-busErrors/busEmitted)*100)):100;
+    }
+    /* DATABASE/REALTIME have no graduated real signal available (no per-call success/
+       failure telemetry exists for Supabase reads/realtime yet) -- only a boolean
+       connected/not-connected fact. Showing that as 100/0 rather than an invented
+       precise-looking number (e.g. 95/40) avoids implying a measured degree of health
+       that isn't actually being measured. */
+    var dbHealth=window.__omegaProfile?100:0;
+    var realtimeHealth=window.__omegaUser?100:0;
     sigList.innerHTML=[
       makeSignalEl('WORKER FLEET',workerHealth,'%'),
       makeSignalEl('EVENT BUS',busHealth,'%'),
       makeSignalEl('DATABASE',dbHealth,'%'),
-      makeSignalEl('REALTIME',window.__omegaUser?85:30,'%'),
+      makeSignalEl('REALTIME',realtimeHealth,'%'),
     ].join('');
   }
 
@@ -567,8 +579,16 @@ function refresh(){
   drawSparkline('spark-canvas',throughputHistory,'rgba(96,165,250,.6)');
   drawSparkline('live-spark',throughputHistory.slice(-20),'rgba(201,168,76,.7)');
 
-  /* Heatmap update */
-  heatmapSlots.push(Math.random()*totalErrors+totalProcessed*0.1);
+  /* Heatmap update -- genuine average latency across tracked bus events, not the
+     randomized error/processed mix this used to push (mislabeled as "LATENCY
+     HEATMAP" while measuring neither errors nor latency). */
+  var hmAvgLat=0;
+  if(window.OmegaBus){
+    var hmMetrics=window.OmegaBus.metrics();
+    var hmLatVals=Object.keys(hmMetrics).map(function(k){return hmMetrics[k].avgLatencyMs||0;}).filter(function(v){return v>0;});
+    hmAvgLat=hmLatVals.length?hmLatVals.reduce(function(a,b){return a+b;},0)/hmLatVals.length:0;
+  }
+  heatmapSlots.push(hmAvgLat);
   if(heatmapSlots.length>24)heatmapSlots.shift();
   var maxHm=Math.max.apply(null,heatmapSlots)||1;
   heatmapSlots.forEach(function(v,i){

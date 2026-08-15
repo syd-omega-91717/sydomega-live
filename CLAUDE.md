@@ -1247,6 +1247,27 @@ orphaned file.
   (`RUN_ORDER.md`) is closed. `python3 -m py_compile scripts/audit.py` and a full re-run
   (0 critical / 6 warnings, same as baseline, output verified more precise not just longer) both
   confirmed clean.
+- **`bg.js`'s skeleton-shimmer engine forced a 40px height on every `[data-loading]`/`.kpi-val`
+  element, unconditionally, regardless of the element's real size — fixed.** Found while finishing
+  the `data-loading` rollout from `FEATURE_IDEAS.md` #17: `applySkel()`'s
+  `if(el.offsetHeight<8)el.style.minHeight='40px'` check runs at `DOMContentLoaded`, which is
+  always *before* the approval guard reveals `#app`/`.shell`/`main.main` (§3) — so every candidate
+  element reads `offsetHeight:0` at check time no matter how it's actually styled, and the 40px
+  fallback fires on all of them, always, not just genuinely undersized ones. Harmless for the 36
+  content-block containers fixed first (40px is a reasonable skeleton height for a list/table
+  block), but would have been a guaranteed defect — not a risk, a certainty — for the platform's
+  smaller status labels and badges (e.g. `matrix.html`'s `#badge-status`, `profile.html`'s
+  `#sg-*-sub` fields): each would have rendered as an oversized 40px bar in place of a 9–15px
+  label, no matter what size the page itself intended. Confirmed by direct measurement in headless
+  Chromium before and after (an inline `min-height` set on the element had zero effect pre-fix,
+  since the forced assignment always ran regardless), not assumed from reading the code. Fixed by
+  changing the check to `if(!el.style.minHeight&&el.offsetHeight<8)el.style.minHeight='40px'` — an
+  element that already declares its own inline `min-height` keeps it; the 40px fallback now only
+  applies when nothing more specific was set, which is exactly the original 36 containers'
+  behavior, unchanged (re-verified: `feed.html #feed-list` still resolves to `min-height:40px`
+  after the fix). This is a platform-wide fix, live the moment `bg.js` deploys — not specific to
+  the 20 label elements that prompted finding it. See `FEATURE_IDEAS.md` #17 for the full
+  before/after measurements and the per-element sizing decisions this fix unblocked.
 
 
 ## 9. Working in this repo — practical rules

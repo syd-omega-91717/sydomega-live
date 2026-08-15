@@ -610,15 +610,56 @@ removing its static placeholder text, so it starts empty (satisfying the guard) 
 the page's own existing fetch/render logic exactly as before — visually, "LOADING X…" text is
 replaced by the gold shimmer sweep instead.
 
-A second, narrower category — 22 more instances where the `LOADING` text sits directly on the id'd
-element itself (small inline labels, e.g. `matrix.html`'s `#stat-a-sub`, `profile.html`'s several
-`#sg-*-sub` fields) rather than wrapping a dedicated container — was deliberately **not** touched
-in this pass: `applySkel()` forces `min-height:40px` on any element under 8px tall so the shimmer
-bar is visible, which is correct for a content block but would visibly distort a small inline text
-label into an oversized empty bar. Doing those safely needs a per-element visual check (would a
-40px-tall shimmer look right in that specific badge/label spot, or does it need a narrower custom
-treatment) that a blind text-removal pass can't verify — left for a follow-up pass with real
-visual review, not blocked on anything structural.
+**Follow-up (same session): the remaining 22 small-label instances, done.** These sit directly on
+the id'd element itself (e.g. `matrix.html`'s `#stat-a-sub`, `profile.html`'s several `#sg-*-sub`
+fields) rather than wrapping a dedicated container, and were initially left alone because
+`applySkel()` forces `min-height:40px` on anything under 8px tall — correct for a content block,
+wrong for a small text label. Measured real layout in headless Chromium (forcing `body.omega-approved`
+and, where needed, `#app.style.display` — several pages use the "page-shell" pattern from
+`CLAUDE.md` §3, where `#app`'s `display:none` is set by the page's own inline style/boot JS, not
+just the injected CSS guard, so unlocking one doesn't unlock the other) before touching anything,
+rather than guessing from markup alone.
+
+That measurement caught a real bug in `bg.js` itself: `applySkel()`'s `offsetHeight<8` check always
+runs at `DOMContentLoaded`, which is *before* the approval guard ever reveals `#app`/`.shell`/
+`main.main` — so every `[data-loading]` element reads `offsetHeight:0` at check time regardless of
+its real size, and the `40px` fallback fires unconditionally, every time, for every element, not
+just short ones. This was already true for the 36 containers in the first pass (harmless there,
+since 40px is a reasonable size for a content block) but would have been a real, guaranteed defect
+for small labels — not a "maybe," confirmed by direct measurement before and after. Fixed the root
+cause in `bg.js` (`if(!el.style.minHeight&&el.offsetHeight<8)el.style.minHeight='40px'`) so an
+element that already specifies its own `min-height` inline keeps it; only elements with no
+declared size fall back to the 40px default — exactly the original 36 containers' behavior,
+unchanged.
+
+Applied to all 20 elements where the id sits directly on the text (not a wrapper): 6 keep the
+default no-override treatment (confirmed via measurement or real inline padding that they clear a
+reasonable size on their own — `analytics.html #task-rows`, `beacon.html #h-sub`,
+`profile.html #ph-name`/`#membership-card`/`#membership-card-portfolio`); 14 get an explicit
+`min-height` sized to their own font-size/original content height (9–15px) so they render as a
+compact label-sized shimmer instead of a 40px bar — `command.html #wxDesc`; `matrix.html`
+`#stat-a/b/c-sub`; `profile.html` `#sg-auth/coord/tier/grade/member-sub`, `#cm-sign`, `#cm-role`,
+`#port-auth`; `pulse.html #fng-lbl`; `rune.html #sigil-user-label`. One of those 14,
+`matrix.html #badge-status`, needed an extra fix beyond the height override: it's a `<span>`
+(inline by default), and `min-height` has no effect on non-replaced inline elements per the CSS
+spec — confirmed by testing the override alone and seeing it silently ignored, not assumed. Added
+`display:inline-block` alongside the `min-height` so the override actually applies.
+
+**Left alone, confirmed unsuitable, not a compromise:** `budget.html #b-tb-meta` and
+`offline.html #cache-count` — both are `<span>`s embedded mid-sentence in running text (e.g.
+"CACHED_PAGES: [LABEL]"), with no padding and no block context. Measured directly: emptied, both
+collapse to `width:0` as well as `height:0` — a shimmer needs a real box to sweep across, and an
+inline run with zero width has none regardless of any height fix. A skeleton box appearing
+mid-sentence would look stranger than the plain text swap these already do; left as-is.
+
+Verified: measured real rendered dimensions in headless Chromium for every element before deciding
+its treatment (not inferred from markup), confirmed the `bg.js` fix produces the intended sizes for
+every element that could be fully rendered in this sandbox (11 of 20 — the rest sit behind inactive
+tabs or page-specific init unrelated to this fix, same structural pattern as the ones that did
+render, so high confidence without full sandbox coverage), confirmed the original 36-container fix
+is unaffected (`feed.html #feed-list` still resolves to `min-height:40px`), `node --check` on every
+touched file including `bg.js`, and `scripts/audit.py` (0 critical / 6 pre-existing warnings, no
+regressions).
 
 Verified: `node --check`-equivalent syntax validation on all 21 touched files' inline `<script>`
 blocks (0 failures); `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings (asset/

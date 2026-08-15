@@ -55,7 +55,9 @@
   };
 
   var ctx=null, masterGain=null, oscillators=[], started=false;
-  var muted=localStorage.getItem('omega_audio_muted')==='true';
+  // shares omega_sound with omega-controls.js's unified dock -- was
+  // previously a separate, disconnected omega_audio_muted key
+  var muted=localStorage.getItem('omega_sound')==='off';
 
   function buildGraph(profile){
     if(!ctx) return;
@@ -117,7 +119,7 @@
   }
 
   function setMuted(m){
-    muted=m; localStorage.setItem('omega_audio_muted',m?'true':'false');
+    muted=m; localStorage.setItem('omega_sound',m?'off':'on');
     if(masterGain) masterGain.gain.setTargetAtTime(m?0:0.06,ctx?ctx.currentTime:0,0.3);
   }
 
@@ -126,7 +128,6 @@
      second, disconnected button drawn on top of it. */
   window.__omegaAudioToggle = function(){
     if(!started){ start(); setMuted(false); } else { setMuted(!muted); }
-    update();
     return !muted;
   };
   window.__omegaAudioIsOn = function(){ return started && !muted; };

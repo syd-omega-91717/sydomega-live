@@ -221,7 +221,7 @@ document.addEventListener('click',function(e){
 var SIGN_ELEM={Aries:'Fire',Taurus:'Water',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Soul',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Metal',Pisces:'Water'};
 window.addEventListener('omega:user-loaded',function(e){
   if(e&&e.detail&&e.detail.profile){
-    var elem=(e.detail.profile.zodiac_sign&&SIGN_ELEM[e.detail.profile.zodiac_sign])||'Void';
+    var elem=(e.detail.profile.sign&&SIGN_ELEM[e.detail.profile.sign])||'Void';
     _currentElem=elem;
   }
 });

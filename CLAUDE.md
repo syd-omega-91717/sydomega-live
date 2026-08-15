@@ -91,11 +91,20 @@ comes entirely from `bg.js`, which every page loads via `<script src="/bg.js">`
    tags, guarded by `data-omega-*` attributes so nothing double-loads.
 
 `nav.js` separately renders the sidebar, keyed off `data-page` or the
-current pathname.
+current pathname. `bg.js` auto-injects it (guarded by `data-omega-nav`, same
+pattern as the other modules) — a page only needs its own explicit
+`<script src="/nav.js">` tag if it deliberately wants the sidebar to render
+before `bg.js` finishes loading; the ~9 pages that still do this predate the
+auto-injection and are harmless (double-injection is guarded against, not
+just deduped). This auto-injection didn't exist until it was added as a bug
+fix — see §8 — after being missing for an unknown but apparently long
+stretch of this repo's history; verify with a real browser render, not just
+a grep for the script tag, before trusting that a "no page-level nav.js
+needed" claim like this one is actually true.
 
 **Consequence for anyone editing a page:** don't hand-roll the auth check,
-the design tokens, or the sidebar. Load `bg.js` and `nav.js` the way every
-other page does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
+the design tokens, or the sidebar. Load `bg.js` the way every other page
+does, and use the existing CSS classes/tokens (`.card`, `.kpi`,
 `.btn-gold`, `--gold`, `--cyan`, etc. — all defined once, in `bg.js`).
 
 ## 4. Design system (as it exists, not as a target)
@@ -934,6 +943,68 @@ orphaned file.
     apex status. Corrected both pages to match that convention instead (compute from
     `axis_a/b/c` client-side, sort client-side since a computed value can't drive a server-side
     `.order()`) — same bug class, more correct fix.
+- **[Fixed — likely the highest-impact bug found in this repo's history] `bg.js` never loaded
+  `nav.js` — the sidebar navigation was completely empty on the ~162 pages that rely on `bg.js`
+  alone, contradicting this file's own (wrong) claim that "every page loads `bg.js`... and
+  `nav.js`" (§9, and `REPOSITORY_AUDIT.md`'s methodology note).** Found while investigating a
+  user request to internationalize the sidebar: `nav.js` builds the entire sidebar (`<aside
+  id="omega-side">`) and is real, complete, and correctly written (confirmed via
+  `node --check` and reading it in full) — but `bg.js`'s module-injection block, which loads
+  essentially every other `omega-*.js` file (~90 of them, plus `audio.js`/`i18n.js`/`theme.js`/
+  `emblem.js`/`omega-controls.js`), never once requested `/nav.js`. Verified empirically, not
+  just by grep: served the real repo over a local static server and drove real headless Chromium
+  (Playwright) to `dashboard.html` — `#omega-side` had zero children after full page load, and
+  the browser's actual network log confirmed `/nav.js` was never requested despite ~90 other
+  local scripts loading successfully. Cross-checked the claim wasn't a fluke of one page: only
+  7–9 of 169 pages carry their own explicit `<script src="/nav.js">` tag (a legacy pattern from
+  before `bg.js` apparently lost this injection at some point); the other ~160 have the `<aside
+  id="omega-side">` shell with nothing to render into it — meaning the primary navigation UI has
+  been invisible on the large majority of this platform's pages, on every visit, for however long
+  this regression has existed, without a single prior audit session (many of which did real
+  browser/Playwright verification on other features) catching it. Fixed by adding `nav.js` to
+  `bg.js`'s injection block, guarded against both the new `data-omega-nav` marker and the old bare
+  `<script src="/nav.js">` form so the ~9 legacy pages don't render the sidebar twice. Re-verified
+  with the same Chromium harness after the fix: `dashboard.html` (no own nav.js tag) now renders
+  all 15 sidebar sections correctly; `cosmos.html` (has its own legacy tag) also renders correctly
+  with exactly one `/nav.js` script tag present, not two. `python3 scripts/audit.py`: 0 critical,
+  same 6 pre-existing warnings (checks 7/8, `sw.js` precache and manifest icons, were already
+  correct — `sw.js` already precached `/nav.js`, it just was never being fetched by real page
+  loads). No SQL/schema involved; pure client-side fix, live the moment it's deployed.
+- **i18n coverage extended to the sidebar** (prompted by the same investigation above): `i18n.js`
+  is a fully working, platform-wide-loaded translation engine (7 languages, correct RTL handling
+  for Arabic, a working language-switcher dock in `omega-controls.js` that already correctly
+  calls `OmegaI18n.translate()`) — but virtually no page markup carried `data-i18n` attributes,
+  so switching languages changed almost nothing visible, even though the fix above means the
+  sidebar now actually renders platform-wide. Added `data-i18n="nav_sec_<key>"` to all 15
+  sidebar-section labels (both the desktop dock's tooltip headings and the mobile drawer's
+  section headings in `nav.js`) and the matching 15 new dictionary entries (`nav_sec_command`
+  through `nav_sec_media`) to `i18n.js`, across all 7 existing languages. Verified with the same
+  Chromium harness: calling `OmegaI18n.translate('ar')` correctly set `dir="rtl"`/`lang="ar"` on
+  `<html>` and replaced all 15 sidebar labels with their Arabic translations. This covers the
+  single highest-leverage surface (present on every page) but is not full-platform coverage —
+  translating the ~90 sub-navigation links and all in-page content remains a much larger,
+  separate effort, intentionally out of scope here.
+- **Sound-toggle dock button never actually controlled the audio engine — fixed, two bugs.**
+  `audio.js`'s own header comment says it built `window.__omegaAudioToggle`/
+  `window.__omegaAudioIsOn` specifically "for omega-controls.js's unified dock, so the SOUND
+  toggle in one place actually starts/mutes this engine" — but `omega-controls.js`'s sound
+  button never called either hook; it only toggled its own local flag, wrote to `localStorage`,
+  and dispatched an `omega:sound` `CustomEvent` that nothing anywhere listens for (confirmed via
+  grep). Separately, `audio.js` read its mute state from `omega_audio_muted`, a key the dock
+  never wrote to (the dock uses `omega_sound`) — so even a correct call from the dock would have
+  raced against a stale, disconnected flag. And the hook itself had a latent bug: it called
+  `update()`, a function that only exists inside a different, disabled sibling function
+  (`injectControl`, whose own visible button was deliberately turned off to avoid duplicating the
+  dock) — calling `window.__omegaAudioToggle()` as intended would have thrown
+  `ReferenceError: update is not defined`. Fixed all three: unified both files on the single
+  `omega_sound` key, removed the dangling `update()` call, and wired the dock's click handler to
+  actually call `__omegaAudioToggle()`. Verified with the Chromium harness by clicking the real
+  dock button twice (not calling the function directly): first click starts the ambient engine
+  and flips the label to "♪ ON", second click mutes it and flips to "♪ OFF", `localStorage`
+  persists correctly, zero page errors either time. Also fixed a matching `zodiac_sign`→`sign`
+  column-name bug in `omega-music.js` (same bug class as elsewhere in this file) found while
+  reading the file for this — low-impact today since the surrounding `omega:user-loaded` event
+  is documented above as rarely-fired, but correct now if that's ever wired up.
 
 
 ## 9. Working in this repo — practical rules

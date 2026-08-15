@@ -196,9 +196,9 @@
     var isAct=sec.key===activeSection;
     h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
     h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'#55534e')+'">'+sec.icon+'</span>';
-    h+='<span class="on-lbl">'+sec.label+'</span>';
+    h+='<span class="on-lbl" data-i18n="nav_sec_'+sec.key+'">'+sec.label+'</span>';
     /* Tooltip */
-    h+='<div class="on-tip"><div class="tip-head" style="color:'+sec.col+'">'+sec.label+'</div>';
+    h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
     sec.sub.forEach(function(sub){
       var on=sub[0]===dp;
       h+='<a class="tip-a'+(on?' tip-on':'')+'" href="'+sub[2]+'">';
@@ -353,7 +353,7 @@
     DRAWER_SECTIONS.forEach(function(sec){
       var ds=document.createElement('div');ds.className='ds-section';
       var head=document.createElement('a');head.className='dss-head'+(sec.key===activeSection?' ds-on':'');head.href=sec.href;
-      head.innerHTML='<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
+      head.innerHTML='<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
       ds.appendChild(head);
       var links=document.createElement('div');links.className='ds-links';
       sec.links.forEach(function(lk){

@@ -1175,6 +1175,78 @@ orphaned file.
     every touched file's inline `<script>` blocks (23 files total across this entry);
     `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings throughout. No SQL/schema
     changes anywhere in this entry — every fix is static content or client-side JS data.
+- **The 6 pre-existing `scripts/audit.py` warnings: made the tool itself precise about which
+  parts are real risk vs. harmless noise, and closed a real doc gap the warnings pointed at —
+  without touching the live database, which none of these 6 can be *fully* resolved without.**
+  Each of the 6 was checked individually rather than left as an undifferentiated count:
+  - **Warning 1 (47 duplicate table definitions)** — `audit.py` only counted *how many* files
+    define each table, not whether those definitions actually differ. Added full-body comparison:
+    of the 47, **37 are byte-identical copy-paste** across chunk/bootstrap files (zero
+    live-behavior risk — `CREATE TABLE IF NOT EXISTS` makes re-running any of them a no-op) and
+    only **10 genuinely conflict** (`dispatches`, `marketplace_listings`, `family_nodes`,
+    `consult_requests`, `commission_contracts`, `media_reservations`, `publications`,
+    `task_completions`, `user_dedication`, `interest_signals` — real risk, still needs a
+    per-table live-schema check before consolidating, per §5's existing rule; not done here, no
+    live DB access this session). `audit.py` now reports the split so a reader isn't stuck
+    triaging 47 undifferentiated entries to find the 10 that matter.
+  - **Warning 2 (DROP TABLE/SCHEMA in 3 files)** — all 3 (`chunk_07_migrations.sql`,
+    `migration_runner.sql`, `omega_dispatch_reset.sql`) turned out to be the same single
+    statement (`DROP TABLE IF EXISTS public.dispatches CASCADE`), already self-documented in
+    `omega_dispatch_reset.sql`'s own header as an *optional*, conditional cleanup utility
+    ("run this ONLY if... loses nothing but old announcements", no member data). `audit.py` now
+    detects an "OPTIONAL"/"ONLY IF" guard comment near a DROP and reports it as a lower-severity
+    note instead of lumping it in with an undocumented, unguarded DROP — the two are materially
+    different risk levels and were previously indistinguishable in the output.
+  - **Warning 3 (`SYD-OMEGA-Legal-IP-Brief.docx` "unreachable but deployed")** — `audit.py` now
+    cross-references `.vercelignore` and confirms this file *is* covered by its `*.docx` pattern
+    — it's committed to git (real minor hygiene debt, still open, see §8's LFS note below) but was
+    already confirmed never actually served by Vercel. The warning previously read as more urgent
+    than it is; it now says so explicitly instead of requiring a reader to go check `.vercelignore`
+    by hand each time.
+  - **Warning 4 (3.7 MB `.mp4` in deploy root)** — same underlying debt as warning 3 (binary
+    committed directly to git, no LFS). Did not attempt a Git LFS migration: converting
+    already-committed history to LFS pointers (`git lfs migrate import`) rewrites every commit
+    touching the file and requires a force-push — a hard-to-reverse operation this file's own
+    safety rules require explicit user confirmation for, and `git-lfs` isn't installed in this
+    session's environment to even test the migration end-to-end. Left as documented, open debt;
+    ask the user before attempting.
+  - **Warning 5 (`transactions`/`wallet_balances` tables missing)** — left alone on purpose, not
+    an oversight: per this file's own earlier §8 entry, these are a deliberate, already-decided
+    dormant/pending-legal-review state (`subscriptions.html`'s own copy says as much), and
+    creating live payment/token tables here would be exactly the "ship a monetizable feature
+    without gating it first" mistake §9 exists to prevent. `audit.py`'s existing message already
+    cross-references this; no change needed beyond confirming that judgment still holds.
+  - **Warning 6 (11 client-called RPCs with diverging definitions across the SQL bag)** —
+    the actual root cause, found while investigating this: **`RUN_ORDER.md` is referenced by name
+    as the authoritative migration-ordering guide from six different `.sql` comments in
+    `supabase/`** (`targeted_fix.sql`, `omega_stats_repair.sql`, `runner_chunk_05.sql`,
+    `chunk_08_migrations.sql`, `migration_runner.sql`, `omega_governance.sql`) — **but the file
+    never existed.** `REPOSITORY_AUDIT.md` §6 already recorded finding this once, but only fixed
+    the symptom (a dead link to it in `roadmap.html`), not the actual missing file the SQL
+    comments depend on for real operational guidance. Created `supabase/RUN_ORDER.md`: documents
+    the real two-layer apply order (base bootstrap, then every `*_fix.sql`/`*_repair.sql` file
+    applied *after* it, since `CREATE OR REPLACE FUNCTION` has no "skip me, I'm already correct"
+    guard and whichever file runs last silently wins — the exact mechanism behind the
+    `apply_subscription`/`complete_task` incidents earlier in this file) and explicitly defers to
+    this file's own §8 for live-application status per fix, so the two documents don't duplicate
+    (and drift out of sync with) each other. Also improved `audit.py`'s check 8 output to flag,
+    per diverging RPC, which of its definitions looks canonical by this repo's own established
+    `*_fix.sql` naming convention — 6 of the 11 (`apply_subscription`, `check_trial_status`,
+    `complete_task`, `expire_trial`, `my_lattice`/`my_matrix`, `recall_ai_context`) now resolve to
+    an likely-correct file at a glance; the remaining 4 (`get_all_members`, `my_subscription`,
+    `order_stats`, `public_leaderboard`) have no matching fix file yet and still need a live
+    `pg_proc` query to resolve safely — the Supabase MCP connector available in this environment
+    is not yet authorized for this session (needs the user to run `claude mcp`/`/mcp`); offered,
+    not done, since guessing at a live schema is exactly the mistake this file's own history
+    warns against.
+  All 6 raw warning conditions are still real and still present in `scripts/audit.py`'s summary
+  count (6) — none of them can be *fully* resolved from source alone, by this file's own
+  standing rule (verify against the live DB before consolidating/deleting). What changed is that
+  the tool itself, and the repo's own internal documentation, now make clear which parts of each
+  warning are real risk vs. already-understood, low-risk noise — and one genuine doc gap
+  (`RUN_ORDER.md`) is closed. `python3 -m py_compile scripts/audit.py` and a full re-run
+  (0 critical / 6 warnings, same as baseline, output verified more precise not just longer) both
+  confirmed clean.
 
 
 ## 9. Working in this repo — practical rules

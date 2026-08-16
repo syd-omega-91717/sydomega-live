@@ -1453,18 +1453,37 @@ orphaned file.
 - Secrets (`STRIPE_*`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY`) are set via
   `supabase secrets set`, never committed. Run `scripts/check-secrets.sh`
   before deploying Edge Function changes.
-- Keep `REPOSITORY_AUDIT.md`, `CAPABILITY_INVENTORY.md`, and
-  `GAP_ANALYSIS.md` current as part of the same change, not a followup:
-  adding/removing a page, module, table, RPC, or Edge Function; fixing or
-  discovering a gap; or applying pending SQL to a live database all mean
-  one of these three is now stale. Update the specific section that
-  changed rather than rewriting the file. Every claim in these three
+- Keep `REPOSITORY_AUDIT.md`, `CAPABILITY_INVENTORY.md`, `GAP_ANALYSIS.md`,
+  and `OMEGA_TAXONOMY.md` current as part of the same change, not a
+  followup: adding/removing a page, module, table, RPC, or Edge Function;
+  fixing or discovering a gap; applying pending SQL to a live database; or
+  resolving/adding a term in the taxonomy's pending-terminology list all
+  mean one of these four is now stale. Update the specific section that
+  changed rather than rewriting the file. Every claim in these four
   stays evidence-cited (a file:line, a command's actual output, a query
   result) — never mark something fixed, applied, or verified unless it
   actually was in that session; an unmarked/unverified item should stay
   that way rather than be upgraded on assumption. This is how
   `REPO_AUDIT.md`'s counts drifted stale before `REPOSITORY_AUDIT.md`
   replaced them — don't repeat it.
+- **Never show a success state without checking the write's actual result
+  first.** This is the single most repeated root cause of real bugs found
+  in this repo's history (§8: `extend_trial`, `complete_task`,
+  `member_presence`, onboarding, the GDPR export, the activity ticker, the
+  dispatch fallback — each one silently did nothing while the UI reported
+  success). Every new `sb.from(...)`/`sb.rpc(...)` call that isn't a pure
+  read must check `.error` (Supabase resolves to `{data:null,error}`, it
+  does not throw) before rendering a success toast, updating in-memory
+  state optimistically, or advancing a flow — the pattern already used
+  correctly by `omega-onboard.js`, `social.html`, and `family.html` since
+  their fixes.
+- Before adopting a term, pattern, or piece of external research into this
+  repo (from a proposal, a taxonomy, or a `web-trend-scout` pass), ground
+  it against what's actually real here first rather than assuming a
+  generic version applies — see `OMEGA_TAXONOMY.md` for the categorized
+  vocabulary and its per-category "grounded in" citations. A term with no
+  clear meaning in this repo's context goes into that document's pending-
+  terminology list, not into a design decision.
 
 ## 10. Autonomous feature-proposal pipeline (`.claude/skills/`)
 
@@ -1493,3 +1512,27 @@ rather than auto-deploying to subscribers — this matches §9's rule against
 shipping monetizable/legally-sensitive features live without an explicit
 gating decision, and this repo's own history of serious bugs that shipped
 silently (§8) is the reason that rule exists.
+
+## 11. Concern taxonomy / shared vocabulary (`OMEGA_TAXONOMY.md`)
+
+`OMEGA_TAXONOMY.md` is a documentation-only reference — not a subsystem,
+registry, or runtime — that organizes the broad set of engineering/research
+concern-areas this project touches or might touch (prompting patterns,
+security, data, AI/ML, UI, infrastructure, art) into categories, each
+cross-referenced against what actually exists in this repo today. Its
+purpose is narrow: give a future `FEATURE_IDEAS.md` proposal or
+`web-trend-scout` research pass a category to point at instead of
+re-deriving context from scratch, and give unfamiliar terminology
+(commands, tool names, abbreviations encountered in a request) a place to
+be recorded honestly as "undefined here" rather than guessed at.
+
+It explicitly does **not** define a slash-command system, an AI-agent
+runtime, a prompt library, or any other structure this repo doesn't
+actually have — where the source material behind it assumed something
+this repo lacks (MCP as a runtime dependency, vector databases, 3D
+rendering), the document says so instead of building toward it. The real
+equivalent of a "command registry" here is the 4-skill pipeline in §10.
+Individual categories only become real work the normal way: a
+`FEATURE_IDEAS.md` proposal → `feature-architect` blueprint →
+`autonomous-coder` implementation → human review — the taxonomy itself is
+never a justification to build something on its own.

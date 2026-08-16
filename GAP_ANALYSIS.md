@@ -862,6 +862,56 @@ pre-existing warnings after each file. No SQL/schema changes. Remaining identifi
 (`matrix.html`, `profile.html`, `honors.html`, `news.html`, `interface-omni.html`,
 `automation.html`) covered in the next entry.
 
+### 4.20 §4.19's overclaim sweep completed: `matrix.html`, `honors.html`, `news.html`,
+`interface-omni.html`, `automation.html`, `profile.html` — closes the platform-wide "51% Master
+Stake" hunt
+
+Completed the sweep started in §4.19. A repo-wide grep for the claim's specific fingerprints
+(`467,756,700,000`, `467.8B`, `Flash-crash`, `51%`) after all fixes confirms every file containing
+them is now accounted for — either fixed this session or already correctly framed
+(`sovereign-covenant.html`, the origin of the honest pattern, already carries its own page-wide
+notice and per-article `PLANNED · NOT YET ACTIVE` tags; left untouched).
+
+- **`matrix.html`** — a fourth copy of the 11-article constitution (`THE SOVEREIGN CHARTER`)
+  already had a real legal disclaimer (covering the securities/solicitation angle) that the other
+  three copies lacked, but didn't state the figures aren't currently held — added one sentence
+  making that explicit, matching `sovereign-covenant.html`'s "not currently issued, held, or
+  backed" language, rather than rewriting the whole page.
+- **`honors.html`** — an achievement badge ("Vault Master") described the 51% vault and
+  "Flash-crash protection" as `active`, with a specific earn-date implying a member achieved
+  something real. Reworded to describe the design the badge recognizes, not a live mechanism.
+- **`news.html`** — one dispatch item ("THE Ω LEDGER HOLDS") used present-tense "locks"/"removes"
+  language, directly inconsistent with the very next dispatch item on the same feed, which
+  already correctly says the economic layer "awaits counsel." Aligned the two.
+- **`interface-omni.html`** — "Ω Token Reserve: 51%" under a "LIVE SYSTEM OVERVIEW" heading, no
+  qualifier. Added "(planned)". Its separate ECONOMY tab, which does real `platform_settings`
+  flag reads/writes, was checked and found genuinely real — left untouched.
+- **`automation.html`** — an "INCOME ALLOCATION" automation rule listed as `SYSTEM` kind
+  (same table, same color-coding as several genuinely-real automations like `expire_trial`)
+  implied it was equally implemented. Changed its kind to `PLANNED` and marked the adjacent
+  "Income Split" design card accordingly, without disturbing the real rows around it.
+- **`profile.html`** — the most instances in one file: an "Ω Token Supply" stat inconsistent with
+  its own honestly-labelled siblings on the same row; a "Physical Reserves" panel badged
+  `VAULT ACTIVE` claiming automated hourly gold/silver/rhodium purchases and "Flash-crash
+  protection active" — directly contradicting its own third line, already honestly marked
+  "DORMANT PENDING LEGAL CLEARANCE"; a fabricated 6-entry "Transaction Log" with specific past
+  dates (2026-07-01 through 2026-07-11) presenting a gold sweep, a "Master Vault lock," a token
+  genesis mint, and an identity-registration hash as completed history that never happened
+  (5 of 6 entries — the 6th, Polygon L2, was already honestly marked pending); and an
+  "Allocation Engine" panel badged `AUTO` describing a "Dead-Man's Switch" succession trigger and
+  jurisdiction-hopping governance as active protocols. Fixed all four: relabelled the stat,
+  changed the reserves panel badge to `DESIGN · DORMANT` and every claim to "planned, not yet
+  built", converted every fabricated transaction to an explicit `[EXAMPLE]` with `PLANNED`/no
+  date (matching the `compliance.html` audit-log treatment), and relabelled the allocation-engine
+  panel the same way — including softening "Dead-Man's Switch" to "Succession Trigger" for
+  consistency with §4.18's family.html treatment of the same underlying claim (a technical
+  mechanism confirmed absent from the codebase, without asserting whether a real external
+  arrangement exists).
+
+`node --check` on all six files (plain and `type="module"` scripts where present);
+`scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings throughout. No SQL/schema
+changes across the entire §4.19/§4.20 sweep — every fix is static content/label correction.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

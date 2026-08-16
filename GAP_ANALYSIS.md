@@ -770,6 +770,39 @@ LIVE" notice, rather than presented as real verified log data.
 reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes — pure content/status-
 label correction, same category as §4.10's `PAYMENT 'live'` fix.
 
+### 4.18 `family.html`'s "BLOODLINE VAULT" made unverifiable multi-sig/sealed-vault claims about
+real family succession — softened, not asserted either way (user consulted; personal/family
+content, more sensitive than §4.17)
+
+Hunting the same overclaim bug class as §4.17 turned up a second instance, but a materially
+different one: `family.html`'s "BLOODLINE VAULT" section (`VAULT STATUS: SEALED`,
+`SUCCESSION LOCK: 3-of-5 MULTISIG`, "Assets locked in multi-sig trust vault... Multi-sig
+inheritance vault") has the identical unbacked-claim shape as `compliance.html` — confirmed no
+`sid()`/`.textContent=` call anywhere updates `VAULT STATUS` or `SUCCESSION LOCK`, and a
+repo-wide grep confirms no multi-sig logic exists anywhere in this codebase — but unlike
+`compliance.html`'s abstract platform/token governance, this section names the owner's real
+family by role (wife, children) and makes claims about a real inheritance/succession mechanism.
+Whether a real legal trust exists for the owner's family *outside* this codebase isn't something
+determinable from the code, and asserting either "this is fake, here's a disclaimer" or "this is
+real, leave it" would both be guessing at a fact only the owner knows — asked directly via
+`AskUserQuestion` rather than applying the same disclosure-banner treatment as §4.17 blind.
+
+The owner's response didn't select a specific option, so the most defensible default was applied:
+softened only the concrete technical claims that are certainly false in the code sense (no
+multi-sig cryptography exists in this codebase, full stop) — `SEALED`→`DESIGNATED`,
+`3-of-5 MULTISIG`→`FAMILY-DESIGNATED`, removed "multi-sig" from all four prose mentions — without
+adding a disclosure banner and without asserting whether a real family trust exists outside this
+app. This doesn't claim the arrangement is fake (respects the possibility it's real) and doesn't
+claim it's verified-real either (removes the specific false "3-of-5 multisig cryptography"
+mechanism claim, which cannot be true regardless of any real-world arrangement, since no code
+implements it). `BLOODLINE NODES` (genuinely counts real `bloodline_nodes`/`family_nodes` rows,
+confirmed real) and the two "NODE SEALED" save-confirmation toasts (real per-node database-write
+confirmations, a different and much lower-stakes claim) were correctly left untouched — not the
+same bug.
+
+`node --check` on all three script blocks (two plain, one `type="module"`); `scripts/audit.py`
+reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

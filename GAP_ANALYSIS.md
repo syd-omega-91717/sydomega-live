@@ -1030,6 +1030,42 @@ file's own established distinction between the two).
 `node --check` on `credentials.html` after the revert; `scripts/audit.py` reconfirmed 0 critical
 / 6 pre-existing warnings. No SQL/schema changes.
 
+### 4.25 `marketplace.html`'s HOW-IT-WORKS tab described a complete buy/sell/revenue-split
+system that isn't built — only listing is real (fixed this session)
+
+Continuing the audit with extra care after §4.24's correction — verified every specific claim
+against actual code before writing anything, rather than inferring from one file. `elements.html`
+checked and confirmed fully accurate (sign assignments match `omega-elements.json` exactly,
+including correctly leaving the 4 metaphysical elements sign-less with unlock thresholds). Then
+read `marketplace.html` in full: it has a real, working LISTING flow (`marketplace_listings`
+insert, real `OmegaCanon.tierUnlocks()` and `OmegaStorage.upload()` calls — both confirmed to
+exist and be genuinely used, not assumed) — but its SCIENCE tab describes three things that don't
+exist anywhere in the codebase:
+
+- **"EARN ON SALE"** claimed "When a buyer completes a transaction, you receive 83% (the platform
+  keeps 17%)." No buy/purchase flow, payment processing, or revenue-split logic exists anywhere —
+  confirmed by grepping the whole repo (client code, Edge Functions, SQL) for anything resembling
+  a marketplace transaction. Only listing (browse/set-price/upload) is implemented.
+- **"FILE DELIVERY"** claimed "Buyers receive a signed URL... only authenticated buyers with
+  verified purchase records can access them." This is not just unbuilt but actively contradicted
+  by the real RLS policy: `marketplace_listings_read` is `FOR SELECT USING (auth.role() =
+  'authenticated')` — any signed-in member can read every listing's full row, including
+  `file_path`, with no purchase gate at all. The claim describes a security guarantee that
+  doesn't exist.
+- **"SELLER TIERS"** said "Verified members can buy" — false in the same way, no buy capability
+  exists for any tier.
+
+Fixed by describing what's actually built (listing/browsing/tier-gated selling) and marking the
+buy/revenue-split/purchase-gated-delivery mechanics as planned, not live — consistent with the
+platform's own dormant-token-economy status established throughout this file (§4.11 onward).
+
+`node --check` on both script blocks; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+warnings. No SQL/schema changes in this entry — the RLS gap identified (any member can read
+`file_path` regardless of purchase) is a real observation but wasn't independently pursued as a
+security fix in this pass (would need to confirm whether Supabase Storage's own bucket policies
+independently protect the files before concluding anything is actually exploitable) — flagged
+here for a future session rather than acted on speculatively.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

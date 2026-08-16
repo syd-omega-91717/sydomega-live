@@ -26,16 +26,27 @@
       <button class="tab-btn" data-tab="science" role="tab">SCIENCE</button>
     </div>
 
+    <div class="cw-notice">
+      <b>&#9888; DESIGN vs. LIVE STATUS.</b> This page documents the platform's compliance and
+      governance <i>design</i> — not all of it is implemented in code yet, on any tab below. The
+      GDPR/CCPA data-rights tooling (Privacy Centre) is real and live. The 3-of-5 Multi-Sig Treasury,
+      Hash-Chain Audit, and 51% Master Stake describe the same dormant token-economy governance
+      design covered in <code>sovereign-covenant.html</code> (gated behind
+      <code>platform_settings.tokens_enabled</code>, currently <code>false</code>) — no multi-sig
+      treasury exists, no database write is currently hash-chained, and no stake is currently
+      locked. Entries marked PLANNED are roadmap, not present-tense fact.
+    </div>
+
     <!-- SHIELD TAB -->
     <div class="tab-panel active pad" id="tab-shield">
       <div class="kpi-row">
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">100%</div><div class="kpi-l">CONSTITUTION LOCK</div></div>
-        <div class="kpi"><div class="kpi-n">3-of-5</div><div class="kpi-l">MULTI-SIG TREASURY</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">51%</div><div class="kpi-l">MASTER STAKE LOCKED</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">5/5</div><div class="kpi-l">CONSTITUTION ARTICLES DRAFTED</div></div>
+        <div class="kpi"><div class="kpi-n">3-of-5</div><div class="kpi-l">MULTI-SIG TREASURY (PLANNED)</div></div>
+        <div class="kpi" style="--kc:var(--muted)"><div class="kpi-n">51%</div><div class="kpi-l">MASTER STAKE (PLANNED, DORMANT)</div></div>
         <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">64+</div><div class="kpi-l">PRISMA MODELS</div></div>
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">&#x221E;</div><div class="kpi-l">AUDIT CHAIN</div></div>
+        <div class="kpi" style="--kc:var(--muted)"><div class="kpi-n">&#x2014;</div><div class="kpi-l">AUDIT CHAIN (PLANNED)</div></div>
       </div>
-      <div class="sechead">COMPLIANCE SHIELD &middot; ACTIVE MODULES</div>
+      <div class="sechead">COMPLIANCE SHIELD &middot; MODULE STATUS</div>
       <div id="shield-grid" class="card-grid"></div>
       <div class="sechead" style="margin-top:20px">JURISDICTIONAL MATRIX</div>
       <div class="tbl-wrap">
@@ -50,14 +61,20 @@
     <div class="tab-panel pad" id="tab-constitution" style="display:none">
       <div class="sechead">PLATFORM CONSTITUTION &middot; CORE ARTICLES</div>
       <div class="glass" style="margin-bottom:16px">
-        <div style="font-size:12px;line-height:1.8;color:var(--muted);max-width:72ch">The Compliance Shield enforces the Platform Constitution and ensures global legal operability. Automated cross-jurisdictional logic covers GDPR, CCPA, MiCA, and AML/KYC. Every platform action is audit-logged, hash-chained, and tamper-proof. The 3-of-5 Multi-Sig governance protocol protects treasury actions.</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--muted);max-width:72ch">The Platform Constitution defines the governance framework the Compliance Shield is designed to enforce. GDPR/CCPA data-rights tooling is real and live today; the MiCA/AML/KYC-verification layer, hash-chained audit trail, and 3-of-5 Multi-Sig treasury protocol described below are design, not yet implemented in code — see the notice above.</div>
       </div>
       <div id="constitution-list" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
 
     <!-- AUDIT LOG TAB -->
     <div class="tab-panel pad" id="tab-audit" style="display:none">
-      <div class="sechead">SOVEREIGN AUDIT LOG &middot; HASH-CHAINED &middot; TAMPER-PROOF</div>
+      <div class="sechead">SOVEREIGN AUDIT LOG &middot; DESIGN PREVIEW</div>
+      <div class="cw-notice">
+        <b>&#9888; ILLUSTRATIVE, NOT LIVE.</b> The entries below are examples of what a real
+        hash-chained audit log would show once built — no such log exists yet, and nothing here
+        was actually verified against a database. Treat this tab as a design mockup, not a
+        genuine record.
+      </div>
       <div id="audit-feed" style="display:flex;flex-direction:column;gap:0"></div>
     </div>
 
@@ -88,7 +105,9 @@
     <div class="lf"><span>&#937; COMPLIANCE &middot; SOVEREIGN CONSTITUTION &middot; HASH-CHAIN AUDIT</span><span>GDPR &middot; CCPA &middot; MiCA &middot; AML/KYC &middot; 3-of-5 MULTI-SIG</span></div>
   </main>
 </div>
-<style>.pad{padding:var(--pad)}
+<style>.cw-notice{margin:12px var(--pad,20px) 0;padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:9.5px;letter-spacing:.6px;line-height:1.7;color:var(--ink)}
+.cw-notice b{color:#E2967A}
+.pad{padding:var(--pad)}
 .tab-btn{font-family:var(--M);font-size:10.5px;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
 .tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
 .tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
@@ -96,15 +115,15 @@
 </style>
 <script>
 var SHIELDS=[
-  {label:'DATA PRIVACY',name:'GDPR / CCPA ENGINE',desc:'Automated consent management, data export/delete rights, privacy-by-design across all 21 services.',status:'active'},
-  {label:'FINANCIAL',name:'MiCA COMPLIANCE',desc:'Markets in Crypto-Assets regulation. Token classification as utility instruments. No security offering.',status:'active'},
-  {label:'IDENTITY',name:'KYC / AML LAYER',desc:'Know Your Customer and Anti-Money Laundering protocols. Identity verification before economy access.',status:'ready'},
-  {label:'TREASURY',name:'3-of-5 MULTI-SIG',desc:'All treasury actions above threshold require 3 of 5 designated signers including the Architect.',status:'active'},
-  {label:'OWNERSHIP',name:'51% MASTER STAKE',desc:'Permanently locked, non-delegatable, non-deletable stake held by Major Architect S.Y.D.',status:'active'},
-  {label:'RECORDS',name:'HASH-CHAIN AUDIT',desc:'Every database write is hash-chained. Tampering is cryptographically detectable.',status:'active'},
-  {label:'AGE GATING',name:'GDPR MINORS GUARD',desc:'Platform access requires age verification. No data collection on users under 18 in any jurisdiction.',status:'active'},
-  {label:'CONTENT',name:'IP & COPYRIGHT',desc:'Berne Convention, Madrid Protocol, trade secrets. All platform IP owned 100% by S.Y.D.',status:'active'},
-  {label:'TOKENS',name:'HOWEY TEST SHIELD',desc:'Utility token architecture designed to avoid securities classification under Howey Test analysis.',status:'ready'},
+  {label:'DATA PRIVACY',name:'GDPR / CCPA ENGINE',desc:'Automated consent management, data export/delete rights (Privacy Centre) — real and live for approved members.',status:'active'},
+  {label:'FINANCIAL',name:'MiCA COMPLIANCE',desc:'Markets in Crypto-Assets regulation. Token classification as utility instruments. Design only — no token is issued yet.',status:'planned'},
+  {label:'IDENTITY',name:'KYC / AML LAYER',desc:'Document intake and status tracking are live (profile.html). Live identity verification needs a licensed KYC/AML provider connection, pending legal counsel.',status:'ready'},
+  {label:'TREASURY',name:'3-of-5 MULTI-SIG',desc:'Designed governance protocol for treasury actions above threshold. No multi-sig treasury contract or mechanism exists in code yet.',status:'planned'},
+  {label:'OWNERSHIP',name:'51% MASTER STAKE',desc:'Planned, non-delegatable stake in the dormant Ω token economy. No token is issued and no stake is currently locked.',status:'planned'},
+  {label:'RECORDS',name:'HASH-CHAIN AUDIT',desc:'Designed tamper-evidence model for database writes. No hash-chaining runs on any table today.',status:'planned'},
+  {label:'AGE GATING',name:'GDPR MINORS GUARD',desc:'Policy requirement that platform access excludes under-18s. No automated age-verification check runs in the signup flow yet.',status:'planned'},
+  {label:'CONTENT',name:'IP & COPYRIGHT',desc:'Berne Convention, Madrid Protocol, trade secrets. All platform IP owned 100% by S.Y.D. — a legal fact by default, not a software system.',status:'active'},
+  {label:'TOKENS',name:'HOWEY TEST SHIELD',desc:'Utility token architecture designed to avoid securities classification under Howey Test analysis. Design only — dormant pending legal review.',status:'planned'},
 ];
 var JURISDICTIONS=[
   {j:'EUROPEAN UNION',fw:'GDPR + MiCA',sc:'All EU member states',st:'ok'},
@@ -122,15 +141,15 @@ var ARTICLES=[
   {n:'V',t:'NON-DELETION CLAUSE',b:'No sovereign record, achievement, lineage entry, or certified progression node may be deleted once written to the immutable archive. The audit chain is permanent.'},
 ];
 var AUDIT=[
-  {col:'var(--green)',msg:'CONSTITUTION LOCK verified — All 5 articles intact, hash 0x91717...'},
-  {col:'var(--cyan)',msg:'MASTER STAKE confirmed at 51.00% — Last verified: today'},
-  {col:'var(--solar)',msg:'MULTI-SIG protocol active — 3-of-5 threshold enforced on treasury'},
-  {col:'var(--green)',msg:'GDPR ENGINE running — Consent logs clean, 0 data requests pending'},
-  {col:'var(--gold)',msg:'KYC LAYER standing by — Ready to activate when legal counsel clears'},
-  {col:'var(--cyan)',msg:'AUDIT CHAIN continuous — Hash-verified since platform genesis'},
+  {col:'var(--muted)',msg:'[EXAMPLE] Constitution lock entry — once built, would confirm all 5 articles hash-match their signed originals'},
+  {col:'var(--muted)',msg:'[EXAMPLE] Master stake entry — once the token economy is live, would confirm the locked stake percentage on-chain'},
+  {col:'var(--muted)',msg:'[EXAMPLE] Multi-sig entry — once built, would log each 3-of-5 signature collected on a treasury action'},
+  {col:'var(--green)',msg:'GDPR ENGINE — real: Privacy Centre data export/consent tooling is live for approved members today'},
+  {col:'var(--gold)',msg:'KYC LAYER — real: document intake and status tracking are live; identity verification itself waits on a licensed provider connection'},
+  {col:'var(--muted)',msg:'[EXAMPLE] Hash-chain entry — once built, would show each write\'s hash linking to the previous record'},
 ];
-var STATUS_COL={active:'var(--green)',ready:'var(--solar)',review:'var(--crim)',ok:'var(--green)'};
-var STATUS_LBL={active:'ACTIVE',ready:'READY',review:'UNDER REVIEW',ok:'COMPLIANT',pending:'PENDING'};
+var STATUS_COL={active:'var(--green)',ready:'var(--solar)',review:'var(--crim)',ok:'var(--green)',planned:'var(--muted)'};
+var STATUS_LBL={active:'ACTIVE',ready:'READY',review:'UNDER REVIEW',ok:'COMPLIANT',pending:'PENDING',planned:'PLANNED · NOT ACTIVE'};
 function build(){
   var sg=document.getElementById('shield-grid');
   if(sg){sg.innerHTML=SHIELDS.map(function(s){

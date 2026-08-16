@@ -716,6 +716,60 @@ red thresholds matching the existing `goodColor`/status-dot conventions on the s
 critical / 6 pre-existing warnings. No SQL/schema changes — the `incidents` table and its
 columns already existed and were already used correctly elsewhere on the same page.
 
+### 4.17 `compliance.html` overclaimed an active multi-sig treasury, hash-chain audit, and
+locked token stake as present-tense fact — the same class of legally-sensitive overclaim already
+fixed in `sovereign-covenant.html`/`system_manifest.json` (`CLAUDE.md` §8), missed on this page
+(fixed this session)
+
+Highest-stakes finding of this session's audit pass. `compliance.html` ("GOVERNANCE &
+COMPLIANCE... COMPLIANCE SHIELD... CONSTITUTION ENGINE") is 100% static content with zero
+Supabase queries beyond the auth gate (confirmed by reading the full file) — every "shield,"
+status badge, and especially the AUDIT LOG tab's log entries were invented flavor text, not
+derived from any real system. That alone isn't a bug (`sci-card`-style informational content
+exists all over this platform) — the problem was the *tense and vocabulary*: status badges read
+`ACTIVE`, module descriptions used present-tense verbs ("enforces," "ensures," "protects treasury
+actions"), and the fabricated audit log used specific-sounding verified-claim language —
+`"CONSTITUTION LOCK verified — hash 0x91717..."`, `"MASTER STAKE confirmed at 51.00% — Last
+verified: today"`, `"AUDIT CHAIN continuous — Hash-verified since platform genesis"` — for
+systems that don't exist in code anywhere in this repository: no multi-sig treasury contract, no
+hash-chaining of any database write, no token stake locked (the Ω token economy remains dormant,
+`platform_settings.tokens_enabled=false`, same status as `sovereign-covenant.html`/
+`system_manifest.json` already document). This is exactly the class of claim `CLAUDE.md` §9
+warns against ("keep any user-facing copy about it in future tense until it's actually on") and
+that was already fixed once for the *same* 51%-stake claim on `sovereign-covenant.html` — this
+page just wasn't part of that sweep.
+
+Went shield-by-shield against actual code before changing anything, since some of the 9 claims
+*are* real: **DATA PRIVACY (GDPR/CCPA ENGINE)** — real, the Privacy Centre's data-export/consent
+tooling is live and already audited earlier in this file's history; kept `active`.
+**IDENTITY (KYC/AML LAYER)** — partially real: `profile.html`'s own copy already honestly says
+document intake/status tracking are live and verification itself "requires a licensed KYC/AML
+provider connection" pending legal counsel — already correctly labelled `ready` (not `active`),
+left as-is. **CONTENT (IP & COPYRIGHT)** — a legal fact by default under copyright law once
+created, not a software claim; left `active`. The remaining five —
+**FINANCIAL (MiCA)**, **TREASURY (3-of-5 multi-sig)**, **OWNERSHIP (51% master stake)**,
+**RECORDS (hash-chain audit)**, **TOKENS (Howey Test shield)** — have no supporting code
+anywhere (confirmed via repo-wide grep for multi-sig/hash-chain logic, none found) and were
+downgraded from `active`/`ready` to a new, honest `planned` status (grey, "PLANNED · NOT ACTIVE"
+label). **AGE GATING (GDPR minors guard)** — no automated age-verification step found in the
+signup flow (`enter.html`/`pending.html`) despite the claim; downgraded to `planned` as well,
+erring toward disclosure over an unverifiable claim.
+
+Fixed by: (1) adding a page-wide disclosure notice (placed outside the tab panels so it's
+visible regardless of which tab is active — unlike a first attempt that scoped it to one tab
+only and would have left the CONSTITUTION tab's Article II claim unguarded), matching the exact
+`sc-notice` pattern `sovereign-covenant.html` already established for this same underlying
+claim; (2) downgrading the five fabricated-system shields and the KPI row's "100% CONSTITUTION
+LOCK"/"51% MASTER STAKE LOCKED"/"&#8734; AUDIT CHAIN" values to honest planned/dormant framing;
+(3) rewriting the Compliance Shield intro paragraph off present-tense "enforces... ensures...
+protects treasury actions"; (4) relabelling every fabricated AUDIT tab entry as an explicit
+`[EXAMPLE]` of what a future real log would show, with its own tab-level "ILLUSTRATIVE, NOT
+LIVE" notice, rather than presented as real verified log data.
+
+`node --check` on both script blocks (plain and `type="module"`); `scripts/audit.py`
+reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes — pure content/status-
+label correction, same category as §4.10's `PAYMENT 'live'` fix.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

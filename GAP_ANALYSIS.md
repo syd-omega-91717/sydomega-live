@@ -974,6 +974,32 @@ was isolated to `cinema.html`.
 `node --check` on the page's script; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
 warnings. No SQL/schema changes — static content correction.
 
+### 4.23 `credentials.html`'s SOVEREIGN PASSPORT card described a feature `passport.html`
+doesn't actually have (fixed this session, continuing the platform-wide audit)
+
+Following up on §4.21's `credentials.html` finding, checked the file's other two "science" cards
+against the real pages they describe. `KYC PATHWAY` and `CERTIFICATES OF ASCENT` (already fixed
+in §4.21) check out; `SOVEREIGN PASSPORT` claimed "Passport number is derived from your account
+UID. The passport reflects your current authority, gate, and element assignment" — but reading
+`passport.html` in full shows it's 100% `localStorage`, with every field (name, photo, notes,
+stamps) manually entered by the member through an edit form. There is no UID-derived passport
+number anywhere in the file, and no live read of authority/gate/element into the document — the
+only `uid()` function present is a generic random-ID generator for stamp entries, unrelated to
+the account's real Supabase UID. Reworded the card to describe what the page actually is (a
+self-maintained personal document, not an auto-generated one) rather than what it was never
+built to do.
+
+Also spot-checked `kyc.html` (found honestly built — its 4-step pathway matches
+`credentials.html`'s own already-correct "Steps 1-2 are active; Steps 3-4 activate..."
+description) and swept the COMMAND realm (`decisions.html`, `missions.html`, `network.html`,
+`notes.html`, `projects.html`, `quotes.html`, `time.html`, `vision.html` — all confirmed
+`localStorage`-based by design, consistent with the platform's established pattern for personal
+productivity tools; no fabricated-data or overclaim instances found) and `factions.html`/
+`houses.html`/`agents.html` (clean).
+
+`node --check` on `credentials.html`; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+warnings. No SQL/schema changes.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

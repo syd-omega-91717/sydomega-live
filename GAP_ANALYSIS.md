@@ -945,6 +945,35 @@ before — one overclaiming card sitting next to honestly-labelled siblings:
 warnings. No SQL/schema changes. This closes the adjacent-vocabulary pass — between §4.17 and
 here, 14 files have now been checked and corrected for this bug class across the platform.
 
+### 4.22 `cinema.html`'s FILMS tab had the wrapped-9-element-sequence bug — identified in
+`CLAUDE.md` §8's own audit history but apparently never actually fixed (fixed this session,
+MEDIA realm sweep)
+
+Starting the MEDIA realm read-through (the one area flagged as unchecked at the end of §4.21).
+`cinema.html`'s FILMS tab had the exact "wrapped 9-element sequence" bug already documented in
+`CLAUDE.md` §8 for `character.html`/`horoscope.html` — 10 of 12 films tagged with the wrong
+element (Fire→Water→Wind→Sand→Soul→Metal→Space→Void→TheAll cycled positionally against the 12
+zodiac-ordered films, rather than each film's actual sign-element). `CLAUDE.md` §8's own account
+explicitly lists cinema.html as a location where "the exact same wrapped sequence" was found,
+alongside `character.html`/`horoscope.html`, but its fix description only names
+`character.html`(3 places) and `horoscope.html`(a 4th duplicate, `SORACLES`) as corrected —
+cinema.html was identified but, per the current file state, never actually fixed. Confirmed
+cross-referencing the same page's own OLYMPIANS tab, which has the fully correct sign-element
+pairing for all 12 already (e.g. "Taurus &middot; Metal &middot; Gate II") — the bug was isolated
+to the separate FILMS tab's `film-tag` elements, which never got the same correction. Fixed all
+10 wrong tags to match the OLYMPIANS tab's already-correct mapping (Film I and XII were already
+right). Also rebuilt the "BY ELEMENT" tab, which grouped films under all 9 elements including
+the 4 metaphysical ones (Soul/Space/Void/The All) as if they were sign-derived per-film
+categories — per `omega-elements.json`'s own documented structure, those 4 are class-based, not
+tied to any individual sign or film, so a film can't have one as its element. Rebuilt to the
+correct 5 physical-element groups (Fire ×3, Water ×3, Wind ×3, Metal ×2, Sand ×1, matching the
+12 films exactly) with a note explaining why the other 4 don't apply per-film.
+`series.html`/`trailers.html`/`universe.html` checked for the same tag pattern — none found; this
+was isolated to `cinema.html`.
+
+`node --check` on the page's script; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+warnings. No SQL/schema changes — static content correction.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

@@ -689,6 +689,33 @@ Two things were genuinely fixed:
 `node --check` on both the plain and `type="module"` script blocks; `scripts/audit.py`
 reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes.
 
+### 4.16 `observatory.html`'s UPTIME (30d) KPI was permanently hardcoded to 99.9% — real
+downtime data already existed to compute it genuinely (fixed this session)
+
+Continuing the same audit into GOVERN pages not yet checked this session. `observatory.html`
+("PLATFORM OBSERVATORY... SRE DASHBOARD") has real Supabase-backed KPIs for members, events,
+tasks, threats, Core Web Vitals, error budget, and incidents — all genuinely queried and
+verified against real tables (`error_budget_policy`, `incidents`, `platform_metrics` all
+confirmed to exist in `supabase/slo_monitoring.sql`/`omega_telemetry.sql`, unlike several
+tables elsewhere in this codebase's history). One KPI wasn't wired at all: `UPTIME (30d)`'s
+markup hardcodes `99.9%` directly in the HTML (`<div class="kpi-val" id="k-uptime"
+style="color:var(--green)">99.9%</div>`) — unlike every sibling KPI, which starts at `—` and is
+populated by a `sid(...)` call — and no `sid('k-uptime',...)` call existed anywhere in the
+page's script. So this always showed a static, unmeasured 99.9% in green, regardless of actual
+platform health, on the platform's own SRE status page.
+
+Unlike `dbHealth`/`REALTIME` in §4.13 (where no graduated signal exists anywhere), a genuine
+signal already exists here: the `incidents` table (already correctly queried elsewhere on this
+same page for the incident log) has real `started_at`/`resolved_at` timestamps. Fixed by summing
+real incident downtime within the last 30 days (ongoing/unresolved incidents count as down until
+now) against the 30-day window to compute an honest uptime percentage, replacing the hardcoded
+value. Colour-coded the same way the rest of the page already colour-codes health (green/amber/
+red thresholds matching the existing `goodColor`/status-dot conventions on the same page).
+
+`node --check` on the extracted `type="module"` script; `scripts/audit.py` reconfirmed 0
+critical / 6 pre-existing warnings. No SQL/schema changes — the `incidents` table and its
+columns already existed and were already used correctly elsewhere on the same page.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

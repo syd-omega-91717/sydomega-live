@@ -572,6 +572,408 @@ syntax validation on the page's inline script; `scripts/audit.py` reconfirmed 0 
 pre-existing warnings. No SQL/schema changes, no new page, no `nav.js` change needed — this
 extends a page already in the sidebar.
 
+### 4.13 `ops.html`'s "SRE Operations dashboard" showed fabricated health/latency numbers on the
+owner's own monitoring page (fixed this session)
+
+Auditing the ORDER/GOVERN realms for the same class of issue found in the Cosmos/Vault passes
+(§4.11/§4.12) — placeholder or fabricated data presented as if real — found a genuine instance
+in `ops.html`, the page whose own `<meta name="description">` calls it an "SRE Operations
+dashboard — health probes, worker metrics, circuit breakers, latency percentiles." Two distinct
+findings, both real numbers being displayed where the underlying computation wasn't actually
+measuring what the label claimed:
+
+- **`EVENT BUS` / `DATABASE` / `REALTIME` signal-strength gauges** were hardcoded constants —
+  `busHealth=window.OmegaBus?80:0`, `dbHealth=window.__omegaProfile?95:40`, and
+  `REALTIME=window.__omegaUser?85:30` — three booleans dressed up as precise-looking graduated
+  percentages. `WORKER FLEET`'s gauge on the same row is genuinely computed (real circuit-breaker
+  state ratio from `OmegaWorkers.status()`), so the other three read as equally measured but
+  weren't. Fixed `EVENT BUS` with a real computation: `OmegaBus.metrics()` already tracks real
+  per-event-type `emitted`/`errors` counts (used correctly elsewhere on the same page for the
+  event-metrics table and latency percentiles) — now aggregated into a genuine
+  errors-vs-emitted health percentage. `DATABASE`/`REALTIME` have no graduated signal available
+  anywhere in the codebase (no per-call Supabase success/failure telemetry exists yet — a bigger,
+  separate feature, not fixed here) — changed to honestly show 100/0 for their real
+  connected/not-connected boolean fact instead of an invented specific-looking number, matching
+  the same "don't overclaim precision" principle already established in this file (§4.10's
+  `PAYMENT 'live'` fix) and in `CLAUDE.md` §8 (the moon-phase panel's own honest "accurate to
+  within about a day" framing).
+- **The "LATENCY HEATMAP (WORKERS)" panel** pushed `Math.random()*totalErrors+totalProcessed*0.1`
+  into its 24-slot history every refresh — a formula that measures neither latency nor errors
+  cleanly, just a randomized blend, under a label promising real latency data. Real latency data
+  already exists in the same `OmegaBus.metrics()` object (`avgLatencyMs` per event type, already
+  used correctly for the page's own p50/p95/p99 calculation a few hundred lines earlier). Fixed
+  to push the genuine average latency across tracked event types instead.
+
+Deliberately not chased further in this pass: `omega-event-bus.js`'s own `platform.health.probe`
+emission hardcodes `latencyMs:0` at the point it's raised (`omega:user-loaded` handler) — real
+latency instrumentation would mean timing the actual Supabase auth call at its call site, a
+change spanning modules, not a quick fix. Low practical impact today (a static 0ms display, not
+a misleading invented number), flagged here rather than fixed blind.
+
+`node --check`-equivalent syntax validation on `ops.html`'s inline script;
+`scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes —
+pure client-side computation corrections, using data structures that already existed and were
+already correctly used elsewhere on the same page.
+
+### 4.14 `queue.html`'s "QUEUE DEPTHS" panel showed 5 entirely fictional queues with
+randomized numbers — real backing workers already existed, just weren't wired in (fixed
+this session)
+
+Same audit pass as §4.13, same page family (ARENA's "SOVEREIGN QUEUE" page — real, genuine
+`OmegaWorkers`/`OmegaBus` telemetry everywhere else on the page: `ACTIVE WORKERS`, `MSGS
+PROCESSED`, `EVENTS EMITTED`, `DLQ DEPTH`, `OPEN CIRCUITS`, and the worker-grid are all
+correctly computed from real data). One section wasn't: the `QUEUES` array backing the "QUEUE
+DEPTHS" bar list had one real entry (`sovereign.domain.events`, pulled from the real events-
+emitted counter) followed by 5 entries under invented dotted-namespace names —
+`notifications.email`, `analytics.aggregator`, `achievements.unlock`, `audit.log`,
+`recommendations.engine` — with `depth:Math.floor(Math.random()*N)` and a hardcoded `dlq:0`,
+regenerated every refresh. These aren't placeholder telemetry for a real system that just
+isn't instrumented yet — `omega-workers.js` (confirmed by reading it in full) really does
+register 6 real workers with genuine `processed`/`dlqDepth`/`state` stats already exposed via
+`OmegaWorkers.status()` and already used correctly a few lines earlier on the same page for the
+worker-grid: `analytics-worker`, `notification-worker`, `achievement-worker`,
+`recommendation-worker`, `audit-worker`, and `gate-monitor` (the 6th, previously absent from
+this panel entirely). The fictional names roughly rhyme with the real worker names but aren't
+what's actually running — showing them as if they were real queues, with random depths, is
+exactly the class of misleading-owner-dashboard issue as §4.13, on the same page family.
+
+Fixed by wiring the panel to the real `workers` array (already in scope in the same function)
+via each worker's real registered name, using `processed` for the bar's "depth" (matching the
+first entry's own activity-volume semantic — real events-emitted count, not a backlog) and
+`dlqDepth` for the `dlq` badge (the genuine stuck-item backlog, the only concept these
+event-reactive workers actually have that resembles "queue depth" — they process synchronously
+on receipt, so there's no real pending-backlog number distinct from `processed`/`dlqDepth`,
+confirmed by reading `Worker.prototype._receive`/`status()` in full). Renamed the display labels
+from the invented dotted-namespace names to the real worker names so a reader can cross-reference
+directly against `omega-workers.js` instead of hunting for a service that doesn't exist.
+
+`node --check` on the extracted `type="module"` script; `scripts/audit.py` reconfirmed 0
+critical / 6 pre-existing warnings. No SQL/schema changes — pure client-side wiring to data
+structures that already existed and were already correctly used elsewhere on the same page.
+
+### 4.15 `pulse.html`'s commodities/indices — one real rendering bug fixed, indices upgraded to
+attempt real quotes now that `market-price` exists; metals/energy correctly left as-is (already
+honestly labelled, not a bug)
+
+Followed the same audit pattern as §4.13/§4.14 (grep for `Math.random()*var`-shaped fabricated
+data) into `pulse.html`'s COMMODITIES tab, which sits right next to this same page's genuinely
+real exchange-rate and Fear & Greed Index data. Initially looked like the same undisclosed-fake-
+data issue as `ops.html`/`queue.html`, but reading the surrounding markup first (not just the
+JS) showed the page's own author had already handled this honestly: the METALS, ENERGY, and
+INDICES card titles already carry visible `(SIMULATED)` / `(SIMULATED — NO FREE LIVE SOURCE)`
+labels. Correcting course before making an unnecessary change: metals and energy commodities
+have no verified free/keyless source anywhere in this codebase (checked; the `fetchCommodities()`
+comment claiming "using exchangerate for XAU/XAG" was itself aspirational — no such call exists
+in the function body) and inventing one blind, unable to test outbound network calls from this
+session's environment, would risk exactly the guessed-API-shape silent-failure pattern this
+file's own history extensively warns against. Left untouched — already correctly disclosed, not
+a bug.
+
+Two things were genuinely fixed:
+- **A real, separate, visible rendering bug**: the shared `row()` renderer appends `item.unit`
+  unconditionally, but the `INDICES` array (unlike `METALS`/`ENERGY`) never defined a `unit`
+  field — so every index price literally rendered with the string `"undefined"` appended (e.g.
+  `"5,412.34undefined"`). Fixed by giving `INDICES` entries an explicit empty `unit` and
+  defaulting to `''` in the renderer.
+- **Indices now attempt a real quote** via the `market-price` Edge Function added this session
+  for `investment.html` (same dormant-until-`TWELVE_DATA_API_KEY`-is-set infra, no new secret
+  or endpoint needed) before falling back to the existing simulated value — strictly additive,
+  since any failure (unresolved symbol, key not configured, network error) falls through to
+  unchanged existing behavior. Live rows get a small `LIVE` tag; the section's own disclosure
+  label updates dynamically between "(SIMULATED — set TWELVE_DATA_API_KEY for live quotes)" and
+  "(LIVE WHERE CONFIGURED, SIMULATED OTHERWISE)" depending on whether any index actually
+  resolved, so the page never claims more than what's actually happening. Metals/energy
+  deliberately not extended the same way — no equivalent free-tier-friendly source identified
+  for spot commodity prices in this pass.
+
+`node --check` on both the plain and `type="module"` script blocks; `scripts/audit.py`
+reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes.
+
+### 4.16 `observatory.html`'s UPTIME (30d) KPI was permanently hardcoded to 99.9% — real
+downtime data already existed to compute it genuinely (fixed this session)
+
+Continuing the same audit into GOVERN pages not yet checked this session. `observatory.html`
+("PLATFORM OBSERVATORY... SRE DASHBOARD") has real Supabase-backed KPIs for members, events,
+tasks, threats, Core Web Vitals, error budget, and incidents — all genuinely queried and
+verified against real tables (`error_budget_policy`, `incidents`, `platform_metrics` all
+confirmed to exist in `supabase/slo_monitoring.sql`/`omega_telemetry.sql`, unlike several
+tables elsewhere in this codebase's history). One KPI wasn't wired at all: `UPTIME (30d)`'s
+markup hardcodes `99.9%` directly in the HTML (`<div class="kpi-val" id="k-uptime"
+style="color:var(--green)">99.9%</div>`) — unlike every sibling KPI, which starts at `—` and is
+populated by a `sid(...)` call — and no `sid('k-uptime',...)` call existed anywhere in the
+page's script. So this always showed a static, unmeasured 99.9% in green, regardless of actual
+platform health, on the platform's own SRE status page.
+
+Unlike `dbHealth`/`REALTIME` in §4.13 (where no graduated signal exists anywhere), a genuine
+signal already exists here: the `incidents` table (already correctly queried elsewhere on this
+same page for the incident log) has real `started_at`/`resolved_at` timestamps. Fixed by summing
+real incident downtime within the last 30 days (ongoing/unresolved incidents count as down until
+now) against the 30-day window to compute an honest uptime percentage, replacing the hardcoded
+value. Colour-coded the same way the rest of the page already colour-codes health (green/amber/
+red thresholds matching the existing `goodColor`/status-dot conventions on the same page).
+
+`node --check` on the extracted `type="module"` script; `scripts/audit.py` reconfirmed 0
+critical / 6 pre-existing warnings. No SQL/schema changes — the `incidents` table and its
+columns already existed and were already used correctly elsewhere on the same page.
+
+### 4.17 `compliance.html` overclaimed an active multi-sig treasury, hash-chain audit, and
+locked token stake as present-tense fact — the same class of legally-sensitive overclaim already
+fixed in `sovereign-covenant.html`/`system_manifest.json` (`CLAUDE.md` §8), missed on this page
+(fixed this session)
+
+Highest-stakes finding of this session's audit pass. `compliance.html` ("GOVERNANCE &
+COMPLIANCE... COMPLIANCE SHIELD... CONSTITUTION ENGINE") is 100% static content with zero
+Supabase queries beyond the auth gate (confirmed by reading the full file) — every "shield,"
+status badge, and especially the AUDIT LOG tab's log entries were invented flavor text, not
+derived from any real system. That alone isn't a bug (`sci-card`-style informational content
+exists all over this platform) — the problem was the *tense and vocabulary*: status badges read
+`ACTIVE`, module descriptions used present-tense verbs ("enforces," "ensures," "protects treasury
+actions"), and the fabricated audit log used specific-sounding verified-claim language —
+`"CONSTITUTION LOCK verified — hash 0x91717..."`, `"MASTER STAKE confirmed at 51.00% — Last
+verified: today"`, `"AUDIT CHAIN continuous — Hash-verified since platform genesis"` — for
+systems that don't exist in code anywhere in this repository: no multi-sig treasury contract, no
+hash-chaining of any database write, no token stake locked (the Ω token economy remains dormant,
+`platform_settings.tokens_enabled=false`, same status as `sovereign-covenant.html`/
+`system_manifest.json` already document). This is exactly the class of claim `CLAUDE.md` §9
+warns against ("keep any user-facing copy about it in future tense until it's actually on") and
+that was already fixed once for the *same* 51%-stake claim on `sovereign-covenant.html` — this
+page just wasn't part of that sweep.
+
+Went shield-by-shield against actual code before changing anything, since some of the 9 claims
+*are* real: **DATA PRIVACY (GDPR/CCPA ENGINE)** — real, the Privacy Centre's data-export/consent
+tooling is live and already audited earlier in this file's history; kept `active`.
+**IDENTITY (KYC/AML LAYER)** — partially real: `profile.html`'s own copy already honestly says
+document intake/status tracking are live and verification itself "requires a licensed KYC/AML
+provider connection" pending legal counsel — already correctly labelled `ready` (not `active`),
+left as-is. **CONTENT (IP & COPYRIGHT)** — a legal fact by default under copyright law once
+created, not a software claim; left `active`. The remaining five —
+**FINANCIAL (MiCA)**, **TREASURY (3-of-5 multi-sig)**, **OWNERSHIP (51% master stake)**,
+**RECORDS (hash-chain audit)**, **TOKENS (Howey Test shield)** — have no supporting code
+anywhere (confirmed via repo-wide grep for multi-sig/hash-chain logic, none found) and were
+downgraded from `active`/`ready` to a new, honest `planned` status (grey, "PLANNED · NOT ACTIVE"
+label). **AGE GATING (GDPR minors guard)** — no automated age-verification step found in the
+signup flow (`enter.html`/`pending.html`) despite the claim; downgraded to `planned` as well,
+erring toward disclosure over an unverifiable claim.
+
+Fixed by: (1) adding a page-wide disclosure notice (placed outside the tab panels so it's
+visible regardless of which tab is active — unlike a first attempt that scoped it to one tab
+only and would have left the CONSTITUTION tab's Article II claim unguarded), matching the exact
+`sc-notice` pattern `sovereign-covenant.html` already established for this same underlying
+claim; (2) downgrading the five fabricated-system shields and the KPI row's "100% CONSTITUTION
+LOCK"/"51% MASTER STAKE LOCKED"/"&#8734; AUDIT CHAIN" values to honest planned/dormant framing;
+(3) rewriting the Compliance Shield intro paragraph off present-tense "enforces... ensures...
+protects treasury actions"; (4) relabelling every fabricated AUDIT tab entry as an explicit
+`[EXAMPLE]` of what a future real log would show, with its own tab-level "ILLUSTRATIVE, NOT
+LIVE" notice, rather than presented as real verified log data.
+
+`node --check` on both script blocks (plain and `type="module"`); `scripts/audit.py`
+reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes — pure content/status-
+label correction, same category as §4.10's `PAYMENT 'live'` fix.
+
+### 4.18 `family.html`'s "BLOODLINE VAULT" made unverifiable multi-sig/sealed-vault claims about
+real family succession — softened, not asserted either way (user consulted; personal/family
+content, more sensitive than §4.17)
+
+Hunting the same overclaim bug class as §4.17 turned up a second instance, but a materially
+different one: `family.html`'s "BLOODLINE VAULT" section (`VAULT STATUS: SEALED`,
+`SUCCESSION LOCK: 3-of-5 MULTISIG`, "Assets locked in multi-sig trust vault... Multi-sig
+inheritance vault") has the identical unbacked-claim shape as `compliance.html` — confirmed no
+`sid()`/`.textContent=` call anywhere updates `VAULT STATUS` or `SUCCESSION LOCK`, and a
+repo-wide grep confirms no multi-sig logic exists anywhere in this codebase — but unlike
+`compliance.html`'s abstract platform/token governance, this section names the owner's real
+family by role (wife, children) and makes claims about a real inheritance/succession mechanism.
+Whether a real legal trust exists for the owner's family *outside* this codebase isn't something
+determinable from the code, and asserting either "this is fake, here's a disclaimer" or "this is
+real, leave it" would both be guessing at a fact only the owner knows — asked directly via
+`AskUserQuestion` rather than applying the same disclosure-banner treatment as §4.17 blind.
+
+The owner's response didn't select a specific option, so the most defensible default was applied:
+softened only the concrete technical claims that are certainly false in the code sense (no
+multi-sig cryptography exists in this codebase, full stop) — `SEALED`→`DESIGNATED`,
+`3-of-5 MULTISIG`→`FAMILY-DESIGNATED`, removed "multi-sig" from all four prose mentions — without
+adding a disclosure banner and without asserting whether a real family trust exists outside this
+app. This doesn't claim the arrangement is fake (respects the possibility it's real) and doesn't
+claim it's verified-real either (removes the specific false "3-of-5 multisig cryptography"
+mechanism claim, which cannot be true regardless of any real-world arrangement, since no code
+implements it). `BLOODLINE NODES` (genuinely counts real `bloodline_nodes`/`family_nodes` rows,
+confirmed real) and the two "NODE SEALED" save-confirmation toasts (real per-node database-write
+confirmations, a different and much lower-stakes claim) were correctly left untouched — not the
+same bug.
+
+`node --check` on all three script blocks (two plain, one `type="module"`); `scripts/audit.py`
+reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes.
+
+### 4.19 The same unbacked "51% Master Stake locked/active/verified" overclaim from §4.17 turned
+out to be platform-wide — found and fixed across `enter.html`, `ledger.html`, and `vault.html` so
+far (more files identified, fixed in a following entry)
+
+Hunting the §4.17 overclaim bug class specifically (per explicit instruction) found it's far more
+widespread than the two files already fixed (`compliance.html`, and previously
+`sovereign-covenant.html`/`system_manifest.json`). A repo-wide grep for `51%`, `multi-sig`, and
+`hash-chain` turned up the identical claim — sometimes word-for-word — repeated across at least
+9 more files. Fixed 3 so far, same session:
+
+- **`enter.html`** (the actual signup/login page — highest visibility of any instance found) had
+  `51% RESERVE: LOCKED` in its STATUS tab and PROTOCOL tab, plus a separate, previously-unflagged
+  instance of the same bug class: `PQC SHIELD ACTIVE (FIPS 208)` — a specific, false
+  post-quantum-cryptography claim. Confirmed via repo-wide grep that no PQC/FIPS implementation
+  exists anywhere in this codebase (the only other `quantum` mentions are `roadmap.html`'s
+  correctly-future-tense "Horizon 4 (5-25 years) envisions quantum-resistant cryptography" and
+  unrelated academic-subject content on `gaming.html`/`academy.html`/`codex.html`/`research.html`
+  — not the same bug). Also found `BIOMETRIC: ACTIVE` with no backing (confirmed via grep for
+  biometric/WebAuthn/fingerprint code — none exists; `profile.html`'s own KYC-tier roadmap
+  correctly lists "HSM biometric linked" as a future Tier 4 upgrade, not a current claim).
+  Replaced PQC/FIPS with the real, true claim already available (TLS/HTTPS transport encryption,
+  which this Vercel-deployed site genuinely has), replaced BIOMETRIC with the real KYC
+  document-intake status, and relabelled the 51% reserve claims "PLANNED (DORMANT)" — kept the
+  number, removed the false "locked/active" framing, matching the established pattern. Left a
+  themed biometric-scan loading animation (`PALM_PRINT: VERIFIED`, `RETINAL_SCAN_MATCH`) alone —
+  transient decorative loading-screen flavor text, not a persistent status claim, a materially
+  different and much lower-stakes thing than a permanent dashboard badge.
+- **`ledger.html`** — a themed, clearly-fictional 12-item "asset ledger" (Swiss Vault Gold Bars,
+  Singapore High-Rise Property, Blockchain Identity Node, etc. — left untouched as platform
+  mythology, same as Chronicle) had exactly one entry tying to the real, documented (if dormant)
+  token economy: `Ω-CORE-001... '51% Absolute Master Stake', status:'verified'`. `'verified'` is
+  explicitly defined on the same page as "cryptographically confirmed active assets" — a specific
+  false claim for something with no cryptographic verification anywhere in this codebase.
+  Changed to the page's own already-existing `'pending'` status (already used honestly for two of
+  the fictional physical assets) — no new status class needed.
+- **`vault.html`** — the most extensive instance: an entire RESERVE tab (KPIs, hero section,
+  "MASTER STAKE LOCK"/"GENESIS BLOCK SEAL" architecture cards) presented the dormant token economy
+  as actively `DISTRIBUTING` (with a pulsing glow animation implying live motion), `LOCKED`,
+  `SEALED`, and `ACTIVE` — directly contradicting the very next card on the same tab
+  (`TOKEN ECONOMY STATUS: ...pending legal review... Activation in Phase III`) and the page's own
+  second tab (`HOLDINGS`, already fully honest: "BALANCES ARE PROVISIONAL UNTIL ECONOMY GOES
+  LIVE", every NFT marked `PENDING`) — strong internal evidence this was a genuine miss, not
+  intentional inconsistent design. Relabelled the whole RESERVE tab to match the already-correct
+  HOLDINGS tab's tone (PENDING/PLANNED framing, numbers kept as real design detail). Separately,
+  the page's "11 IMMUTABLE ARTICLES" section is a third copy of the same constitution text as
+  `sovereign-covenant.html`/`compliance.html` (same Article II 51%-stake language, same
+  "sealed into the Genesis Block, irrevocable" framing) — added the same disclosure-banner pattern
+  already established on those two pages rather than rewriting all 11 articles individually. Also
+  fixed one entry in a `catch`-block DEMO fallback array (shown only when the real
+  `access_audit_log` RPC call fails/returns empty) that claimed a specific dated event, "11
+  ARTICLES SEALED INTO GENESIS BLOCK... SEALED", actually happened — changed to "DRAFTED... hash-
+  chain PLANNED". The real (non-fallback) audit log path, `sb.rpc('access_audit_log')`, is genuine
+  and was left untouched.
+
+`node --check` on all three files' script blocks; `scripts/audit.py` reconfirmed 0 critical / 6
+pre-existing warnings after each file. No SQL/schema changes. Remaining identified instances
+(`matrix.html`, `profile.html`, `honors.html`, `news.html`, `interface-omni.html`,
+`automation.html`) covered in the next entry.
+
+### 4.20 §4.19's overclaim sweep completed: `matrix.html`, `honors.html`, `news.html`,
+`interface-omni.html`, `automation.html`, `profile.html` — closes the platform-wide "51% Master
+Stake" hunt
+
+Completed the sweep started in §4.19. A repo-wide grep for the claim's specific fingerprints
+(`467,756,700,000`, `467.8B`, `Flash-crash`, `51%`) after all fixes confirms every file containing
+them is now accounted for — either fixed this session or already correctly framed
+(`sovereign-covenant.html`, the origin of the honest pattern, already carries its own page-wide
+notice and per-article `PLANNED · NOT YET ACTIVE` tags; left untouched).
+
+- **`matrix.html`** — a fourth copy of the 11-article constitution (`THE SOVEREIGN CHARTER`)
+  already had a real legal disclaimer (covering the securities/solicitation angle) that the other
+  three copies lacked, but didn't state the figures aren't currently held — added one sentence
+  making that explicit, matching `sovereign-covenant.html`'s "not currently issued, held, or
+  backed" language, rather than rewriting the whole page.
+- **`honors.html`** — an achievement badge ("Vault Master") described the 51% vault and
+  "Flash-crash protection" as `active`, with a specific earn-date implying a member achieved
+  something real. Reworded to describe the design the badge recognizes, not a live mechanism.
+- **`news.html`** — one dispatch item ("THE Ω LEDGER HOLDS") used present-tense "locks"/"removes"
+  language, directly inconsistent with the very next dispatch item on the same feed, which
+  already correctly says the economic layer "awaits counsel." Aligned the two.
+- **`interface-omni.html`** — "Ω Token Reserve: 51%" under a "LIVE SYSTEM OVERVIEW" heading, no
+  qualifier. Added "(planned)". Its separate ECONOMY tab, which does real `platform_settings`
+  flag reads/writes, was checked and found genuinely real — left untouched.
+- **`automation.html`** — an "INCOME ALLOCATION" automation rule listed as `SYSTEM` kind
+  (same table, same color-coding as several genuinely-real automations like `expire_trial`)
+  implied it was equally implemented. Changed its kind to `PLANNED` and marked the adjacent
+  "Income Split" design card accordingly, without disturbing the real rows around it.
+- **`profile.html`** — the most instances in one file: an "Ω Token Supply" stat inconsistent with
+  its own honestly-labelled siblings on the same row; a "Physical Reserves" panel badged
+  `VAULT ACTIVE` claiming automated hourly gold/silver/rhodium purchases and "Flash-crash
+  protection active" — directly contradicting its own third line, already honestly marked
+  "DORMANT PENDING LEGAL CLEARANCE"; a fabricated 6-entry "Transaction Log" with specific past
+  dates (2026-07-01 through 2026-07-11) presenting a gold sweep, a "Master Vault lock," a token
+  genesis mint, and an identity-registration hash as completed history that never happened
+  (5 of 6 entries — the 6th, Polygon L2, was already honestly marked pending); and an
+  "Allocation Engine" panel badged `AUTO` describing a "Dead-Man's Switch" succession trigger and
+  jurisdiction-hopping governance as active protocols. Fixed all four: relabelled the stat,
+  changed the reserves panel badge to `DESIGN · DORMANT` and every claim to "planned, not yet
+  built", converted every fabricated transaction to an explicit `[EXAMPLE]` with `PLANNED`/no
+  date (matching the `compliance.html` audit-log treatment), and relabelled the allocation-engine
+  panel the same way — including softening "Dead-Man's Switch" to "Succession Trigger" for
+  consistency with §4.18's family.html treatment of the same underlying claim (a technical
+  mechanism confirmed absent from the codebase, without asserting whether a real external
+  arrangement exists).
+
+`node --check` on all six files (plain and `type="module"` scripts where present);
+`scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings throughout. No SQL/schema
+changes across the entire §4.19/§4.20 sweep — every fix is static content/label correction.
+
+### 4.21 Broadened the §4.17-4.20 overclaim hunt to adjacent vocabulary (escrow, insured, SLA,
+guaranteed, cryptographically/blockchain-verified/on-chain) — two more real instances found and
+fixed, `enterprise.html` deliberately left alone
+
+Widened the search terms beyond the "51%/multi-sig/hash-chain" fingerprint to catch the same bug
+class under different wording. `escrow`/`insured` had zero hits. `SLA`/`guaranteed` hits were all
+false positives (tennis "GRAND SLAM", a DevOps curriculum topic "SLO/SLA/SLI", a dictionary
+definition of the word "heuristic") except `enterprise.html`'s SLA tiers — checked against
+`GAP_ANALYSIS.md` §3.2's own prior finding that this page is `is_owner`-gated (no member or
+public visitor can ever reach it) and already explicitly says "TARGET" rather than claiming a
+measured result; left untouched per that already-reasoned judgment rather than re-litigating a
+decision already made carefully.
+
+`cryptographically`/`blockchain-verified`/`on-chain` found two real instances, same shape as
+before — one overclaiming card sitting next to honestly-labelled siblings:
+
+- **`credentials.html`** — "CERTIFICATES OF ASCENT... Each certificate is cryptographically
+  anchored to your account" sat directly beside "KYC PATHWAY... Steps 3-4 activate when the
+  platform reaches that compliance tier" and "BLOCKCHAIN IDENTITY... Wallet activation is pending
+  integration of the sovereign chain" — both already honest. No certificate hashing/anchoring
+  exists anywhere in this codebase. Reworded to "tied to your account record."
+- **`identity.html`** — "Your identity is a cryptographically-signed record in the Supabase
+  sovereign ledger." No record-signing exists; a standard Postgres row isn't cryptographically
+  signed. Reworded to name the real, actual protection mechanism (Row-Level Security) instead of
+  an invented one.
+
+`services.html`'s "NFT... On-chain asset minting" entry was already correctly marked
+`status:'planned'` — confirmed clean, no action needed.
+
+`node --check` on both files; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+warnings. No SQL/schema changes. This closes the adjacent-vocabulary pass — between §4.17 and
+here, 14 files have now been checked and corrected for this bug class across the platform.
+
+### 4.22 `cinema.html`'s FILMS tab had the wrapped-9-element-sequence bug — identified in
+`CLAUDE.md` §8's own audit history but apparently never actually fixed (fixed this session,
+MEDIA realm sweep)
+
+Starting the MEDIA realm read-through (the one area flagged as unchecked at the end of §4.21).
+`cinema.html`'s FILMS tab had the exact "wrapped 9-element sequence" bug already documented in
+`CLAUDE.md` §8 for `character.html`/`horoscope.html` — 10 of 12 films tagged with the wrong
+element (Fire→Water→Wind→Sand→Soul→Metal→Space→Void→TheAll cycled positionally against the 12
+zodiac-ordered films, rather than each film's actual sign-element). `CLAUDE.md` §8's own account
+explicitly lists cinema.html as a location where "the exact same wrapped sequence" was found,
+alongside `character.html`/`horoscope.html`, but its fix description only names
+`character.html`(3 places) and `horoscope.html`(a 4th duplicate, `SORACLES`) as corrected —
+cinema.html was identified but, per the current file state, never actually fixed. Confirmed
+cross-referencing the same page's own OLYMPIANS tab, which has the fully correct sign-element
+pairing for all 12 already (e.g. "Taurus &middot; Metal &middot; Gate II") — the bug was isolated
+to the separate FILMS tab's `film-tag` elements, which never got the same correction. Fixed all
+10 wrong tags to match the OLYMPIANS tab's already-correct mapping (Film I and XII were already
+right). Also rebuilt the "BY ELEMENT" tab, which grouped films under all 9 elements including
+the 4 metaphysical ones (Soul/Space/Void/The All) as if they were sign-derived per-film
+categories — per `omega-elements.json`'s own documented structure, those 4 are class-based, not
+tied to any individual sign or film, so a film can't have one as its element. Rebuilt to the
+correct 5 physical-element groups (Fire ×3, Water ×3, Wind ×3, Metal ×2, Sand ×1, matching the
+12 films exactly) with a note explaining why the other 4 don't apply per-film.
+`series.html`/`trailers.html`/`universe.html` checked for the same tag pattern — none found; this
+was isolated to `cinema.html`.
+
+`node --check` on the page's script; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+warnings. No SQL/schema changes — static content correction.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

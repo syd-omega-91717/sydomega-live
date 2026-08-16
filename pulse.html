@@ -187,7 +187,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
       </div>
     </div>
     <div class="card" style="margin-bottom:12px">
-      <div class="card-title">&#9679; GLOBAL INDICES <span style="color:var(--muted);font-size:7px;letter-spacing:1px">(SIMULATED &mdash; NO FREE LIVE SOURCE)</span></div>
+      <div class="card-title">&#9679; GLOBAL INDICES <span id="cmd-indices-label" style="color:var(--muted);font-size:7px;letter-spacing:1px">(SIMULATED &mdash; NO FREE LIVE SOURCE)</span></div>
       <div id="cmd-indices"></div>
     </div>
   </div>
@@ -450,7 +450,20 @@ function renderForex(rates){
   }
 }
 
-/* ── Commodities — using exchangerate for XAU/XAG in USD ── */
+/* ── Commodities — metals/energy remain simulated (no verified free source exists;
+   honestly labelled as such in the markup, not silently faked). Indices now attempt a
+   real quote via the market-price Edge Function (same dormant-until-configured
+   TWELVE_DATA_API_KEY infra investment.html uses) and fall back to the existing
+   simulated value on any failure, so this is a strict improvement with no regression
+   risk if a given index symbol doesn't resolve. ── */
+async function fetchIndexPrice(sym){
+  try{
+    var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/market-price?symbol='+encodeURIComponent(sym));
+    var data=await r.json();
+    if(data&&data.configured&&data.price!=null)return data.price;
+  }catch(e){}
+  return null;
+}
 async function fetchCommodities(){
   var METALS=[
     {name:'GOLD (XAU)',sym:'XAU',unit:'/oz',base:2300+Math.random()*200},
@@ -465,25 +478,31 @@ async function fetchCommodities(){
     {name:'HEATING OIL',sym:'HO',unit:'/gal',base:2.4+Math.random()*.2},
   ];
   var INDICES=[
-    {name:'S&P 500',sym:'SPX',base:5400+Math.random()*200},
-    {name:'NASDAQ',sym:'NDX',base:18900+Math.random()*500},
-    {name:'DOW JONES',sym:'DJI',base:39000+Math.random()*1000},
-    {name:'FTSE 100',sym:'FTSE',base:8300+Math.random()*200},
-    {name:'DAX',sym:'DAX',base:18500+Math.random()*300},
-    {name:'NIKKEI 225',sym:'N225',base:38000+Math.random()*1000},
+    {name:'S&P 500',sym:'SPX',unit:'',base:5400+Math.random()*200},
+    {name:'NASDAQ',sym:'NDX',unit:'',base:18900+Math.random()*500},
+    {name:'DOW JONES',sym:'DJI',unit:'',base:39000+Math.random()*1000},
+    {name:'FTSE 100',sym:'FTSE',unit:'',base:8300+Math.random()*200},
+    {name:'DAX',sym:'DAX',unit:'',base:18500+Math.random()*300},
+    {name:'NIKKEI 225',sym:'N225',unit:'',base:38000+Math.random()*1000},
   ];
   function row(item){
     var chg=(Math.random()-.45)*2;
-    return '<div class="cmd-row"><div class="cmd-name">'+item.name+'</div>'
-      +'<div class="cmd-price">'+item.base.toLocaleString('en',{maximumFractionDigits:2})+item.unit+'</div>'
+    var liveTag=item.live?' <span style="color:var(--green);font-size:6.5px">LIVE</span>':'';
+    return '<div class="cmd-row"><div class="cmd-name">'+item.name+liveTag+'</div>'
+      +'<div class="cmd-price">'+item.base.toLocaleString('en',{maximumFractionDigits:2})+(item.unit||'')+'</div>'
       +'<div class="cmd-chg '+chgClass(chg)+'">'+pct(chg)+'</div></div>';
   }
   var mel=document.getElementById('cmd-metals');
   if(mel)mel.innerHTML=METALS.map(row).join('');
   var eel=document.getElementById('cmd-energy');
   if(eel)eel.innerHTML=ENERGY.map(row).join('');
+  var indexPrices=await Promise.all(INDICES.map(function(idx){return fetchIndexPrice(idx.sym);}));
+  var anyLive=false;
+  INDICES.forEach(function(idx,i){if(indexPrices[i]!=null){idx.base=indexPrices[i];idx.live=true;anyLive=true;}});
   var iel=document.getElementById('cmd-indices');
   if(iel)iel.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px">'+INDICES.map(row).join('')+'</div>';
+  var iTitle=document.getElementById('cmd-indices-label');
+  if(iTitle)iTitle.textContent=anyLive?'(LIVE WHERE CONFIGURED, SIMULATED OTHERWISE)':'(SIMULATED — set TWELVE_DATA_API_KEY for live quotes)';
   /* Ticker gold */
   var goldPrice=(2300+Math.random()*200).toFixed(0);
   ['tk-GOLD','tk-GOLD2'].forEach(function(id){

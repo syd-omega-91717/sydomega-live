@@ -773,7 +773,7 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="stat-label">&#937; Token Supply</div>
       <div class="stat-value">917.4B</div>
       <div class="stat-sub">Total Omega tokens (reference)</div>
-      <div class="stat-delta up">&#9650; 51% Master Vault reserved</div>
+      <div class="stat-delta up">&#9650; 51% Master Vault planned (dormant)</div>
     </div>
     <div class="stat-card card">
       <div class="stat-label">Physical Reserves</div>
@@ -892,7 +892,7 @@ function frame(){ctx.clearRect(0,0,120,120);
         <div class="panel-body">
           <div class="alloc-chart">
             <div class="alloc-item">
-              <div class="alloc-meta"><span class="alloc-name">&#937; Digital Tokens</span><span class="alloc-pct">51%</span></div>
+              <div class="alloc-meta"><span class="alloc-name">&#937; Digital Tokens (planned)</span><span class="alloc-pct">51%</span></div>
               <div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:51%;background:var(--gold)"></div></div>
             </div>
             <div class="alloc-item">
@@ -926,7 +926,7 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="panel">
         <div class="panel-header">
           <span class="panel-title">Physical Reserves</span>
-          <span class="panel-badge">VAULT ACTIVE</span>
+          <span class="panel-badge">DESIGN &middot; DORMANT</span>
         </div>
         <div class="panel-body">
           <div class="reserves-grid">
@@ -934,30 +934,30 @@ function frame(){ctx.clearRect(0,0,120,120);
               <div class="reserve-symbol">Au</div>
               <div class="reserve-label">Gold</div>
               <div class="reserve-amount">412,300g</div>
-              <div class="reserve-val">XAU | Auto-sweep</div>
+              <div class="reserve-val">XAU | Planned</div>
             </div>
             <div class="reserve-card card silver-res">
               <div class="reserve-symbol">Ag</div>
               <div class="reserve-label">Silver</div>
               <div class="reserve-amount">890,000g</div>
-              <div class="reserve-val">XAG | Auto-sweep</div>
+              <div class="reserve-val">XAG | Planned</div>
             </div>
             <div class="reserve-card card rhodium-res">
               <div class="reserve-symbol">Rh</div>
               <div class="reserve-label">Rhodium</div>
               <div class="reserve-amount">125,000g</div>
-              <div class="reserve-val">XRH | Flash guard</div>
+              <div class="reserve-val">XRH | Planned</div>
             </div>
             <div class="reserve-card card crypto-res">
               <div class="reserve-symbol">&#937;</div>
               <div class="reserve-label">Omega</div>
               <div class="reserve-amount">467.8B</div>
-              <div class="reserve-val">51% | Vault lock</div>
+              <div class="reserve-val">51% | Planned</div>
             </div>
           </div>
           <div style="margin-top:1rem;padding:.75rem;border:1px solid rgba(0,229,255,0.1);font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);line-height:1.6">
-            20% REINVESTMENT SWEEP // AUTO-BUYS GOLD, SILVER, RHODIUM HOURLY<br>
-            51% SAFETY NET // FLASH-CRASH PROTECTION ACTIVE<br>
+            20% REINVESTMENT SWEEP // PLANNED AUTO-BUY OF GOLD, SILVER, RHODIUM<br>
+            51% SAFETY NET // FLASH-CRASH PROTECTION PLANNED, NOT YET ACTIVE<br>
             POLYGON L2 CHAIN // DORMANT PENDING LEGAL CLEARANCE
           </div>
         </div>
@@ -1048,45 +1048,48 @@ function frame(){ctx.clearRect(0,0,120,120);
     <div class="panel">
       <div class="panel-header">
         <span class="panel-title">Transaction Log</span>
-        <span class="panel-badge">LEDGER</span>
+        <span class="panel-badge">DESIGN PREVIEW</span>
       </div>
       <div class="panel-body">
+        <div style="margin-bottom:.75rem;font-family:'Courier Prime',monospace;font-size:.65rem;color:var(--muted);line-height:1.6">
+          Illustrative -- none of these have happened. The token economy and physical-reserve system are dormant pending legal review; no real ledger backs this list yet.
+        </div>
         <div class="tx-list">
-          <div class="tx-item in">
+          <div class="tx-item pend">
             <div class="tx-type">SWEEP</div>
-            <div class="tx-desc">Auto-sweep -- Gold acquisition XAU</div>
-            <div class="tx-amount in">+412.3kg</div>
-            <div class="tx-date">2026-07-11</div>
+            <div class="tx-desc">[EXAMPLE] Auto-sweep -- Gold acquisition XAU</div>
+            <div class="tx-amount" style="color:var(--gold)">PLANNED</div>
+            <div class="tx-date">--</div>
           </div>
-          <div class="tx-item in">
+          <div class="tx-item pend">
             <div class="tx-type">LOCK</div>
-            <div class="tx-desc">Master Vault lock -- 51% &#937; tokens</div>
-            <div class="tx-amount in">+467.8B &#937;</div>
-            <div class="tx-date">2026-07-10</div>
+            <div class="tx-desc">[EXAMPLE] Master Vault lock -- 51% &#937; tokens</div>
+            <div class="tx-amount" style="color:var(--gold)">PLANNED</div>
+            <div class="tx-date">--</div>
           </div>
           <div class="tx-item pend">
             <div class="tx-type">PEND</div>
             <div class="tx-desc">Polygon L2 -- Awaiting legal clearance</div>
             <div class="tx-amount" style="color:var(--gold)">GATED</div>
-            <div class="tx-date">2026-07-09</div>
+            <div class="tx-date">--</div>
           </div>
-          <div class="tx-item in">
+          <div class="tx-item pend">
             <div class="tx-type">MINT</div>
-            <div class="tx-desc">PYRON token genesis -- Founder tier</div>
-            <div class="tx-amount in">+GENESIS</div>
-            <div class="tx-date">2026-07-08</div>
+            <div class="tx-desc">[EXAMPLE] PYRON token genesis -- Founder tier</div>
+            <div class="tx-amount" style="color:var(--gold)">PLANNED</div>
+            <div class="tx-date">--</div>
           </div>
-          <div class="tx-item out">
+          <div class="tx-item pend">
             <div class="tx-type">ALLOC</div>
-            <div class="tx-desc">Rhodium acquisition -- Flash guard</div>
-            <div class="tx-amount out">125kg Rh</div>
-            <div class="tx-date">2026-07-07</div>
+            <div class="tx-desc">[EXAMPLE] Rhodium acquisition -- Flash guard</div>
+            <div class="tx-amount" style="color:var(--gold)">PLANNED</div>
+            <div class="tx-date">--</div>
           </div>
-          <div class="tx-item in">
+          <div class="tx-item pend">
             <div class="tx-type">REG</div>
-            <div class="tx-desc">Sovereign identity registration</div>
-            <div class="tx-amount in">HASHED</div>
-            <div class="tx-date">2026-07-01</div>
+            <div class="tx-desc">[EXAMPLE] Sovereign identity registration</div>
+            <div class="tx-amount" style="color:var(--gold)">PLANNED</div>
+            <div class="tx-date">--</div>
           </div>
         </div>
       </div>
@@ -1136,29 +1139,29 @@ function frame(){ctx.clearRect(0,0,120,120);
     <div class="panel">
       <div class="panel-header">
         <span class="panel-title">Allocation Engine</span>
-        <span class="panel-badge">AUTO</span>
+        <span class="panel-badge">DESIGN &middot; DORMANT</span>
       </div>
       <div class="panel-body">
         <div style="display:flex;flex-direction:column;gap:.75rem">
           <div style="padding:.75rem;border:1px solid rgba(0,200,150,0.15);background:rgba(0,200,150,0.04)">
-            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--green);letter-spacing:.1em;margin-bottom:.3rem">ACTIVE PROTOCOL</div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">PLANNED PROTOCOL</div>
             <div style="font-size:.8rem;color:var(--ink)">20% Reinvestment Sweep</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Hourly auto-buy: Gold, Silver, Rhodium</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Designed hourly auto-buy: Gold, Silver, Rhodium &mdash; not yet built</div>
           </div>
           <div style="padding:.75rem;border:1px solid rgba(0,229,255,0.15);background:rgba(0,229,255,0.03)">
-            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:.3rem">SAFETY NET</div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">SAFETY NET &middot; PLANNED</div>
             <div style="font-size:.8rem;color:var(--ink)">51% Master Vault Lock</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Flash-crash protection via Rhodium reserves</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Designed flash-crash protection via Rhodium reserves &mdash; not yet built</div>
           </div>
           <div style="padding:.75rem;border:1px solid rgba(139,0,0,0.3);background:rgba(139,0,0,0.04)">
-            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--crim);letter-spacing:.1em;margin-bottom:.3rem">GOVERNANCE</div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">GOVERNANCE &middot; PLANNED</div>
             <div style="font-size:.8rem;color:var(--ink)">Jurisdiction Hopping</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">5-nation re-domicile if hostile environment detected</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Designed 5-nation re-domicile if hostile environment detected &mdash; not yet built</div>
           </div>
           <div style="padding:.75rem;border:1px solid var(--line)">
-            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">HERITAGE</div>
-            <div style="font-size:.8rem;color:var(--ink)">Dead-Man's Switch</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Full control transfers to bloodline on trigger</div>
+            <div style="font-family:'Courier Prime',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">HERITAGE &middot; PLANNED</div>
+            <div style="font-size:.8rem;color:var(--ink)">Succession Trigger</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">Designed control transfer to bloodline on trigger &mdash; not yet built</div>
           </div>
         </div>
       </div>

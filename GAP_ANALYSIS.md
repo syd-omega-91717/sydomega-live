@@ -803,6 +803,65 @@ same bug.
 `node --check` on all three script blocks (two plain, one `type="module"`); `scripts/audit.py`
 reconfirmed 0 critical / 6 pre-existing warnings. No SQL/schema changes.
 
+### 4.19 The same unbacked "51% Master Stake locked/active/verified" overclaim from §4.17 turned
+out to be platform-wide — found and fixed across `enter.html`, `ledger.html`, and `vault.html` so
+far (more files identified, fixed in a following entry)
+
+Hunting the §4.17 overclaim bug class specifically (per explicit instruction) found it's far more
+widespread than the two files already fixed (`compliance.html`, and previously
+`sovereign-covenant.html`/`system_manifest.json`). A repo-wide grep for `51%`, `multi-sig`, and
+`hash-chain` turned up the identical claim — sometimes word-for-word — repeated across at least
+9 more files. Fixed 3 so far, same session:
+
+- **`enter.html`** (the actual signup/login page — highest visibility of any instance found) had
+  `51% RESERVE: LOCKED` in its STATUS tab and PROTOCOL tab, plus a separate, previously-unflagged
+  instance of the same bug class: `PQC SHIELD ACTIVE (FIPS 208)` — a specific, false
+  post-quantum-cryptography claim. Confirmed via repo-wide grep that no PQC/FIPS implementation
+  exists anywhere in this codebase (the only other `quantum` mentions are `roadmap.html`'s
+  correctly-future-tense "Horizon 4 (5-25 years) envisions quantum-resistant cryptography" and
+  unrelated academic-subject content on `gaming.html`/`academy.html`/`codex.html`/`research.html`
+  — not the same bug). Also found `BIOMETRIC: ACTIVE` with no backing (confirmed via grep for
+  biometric/WebAuthn/fingerprint code — none exists; `profile.html`'s own KYC-tier roadmap
+  correctly lists "HSM biometric linked" as a future Tier 4 upgrade, not a current claim).
+  Replaced PQC/FIPS with the real, true claim already available (TLS/HTTPS transport encryption,
+  which this Vercel-deployed site genuinely has), replaced BIOMETRIC with the real KYC
+  document-intake status, and relabelled the 51% reserve claims "PLANNED (DORMANT)" — kept the
+  number, removed the false "locked/active" framing, matching the established pattern. Left a
+  themed biometric-scan loading animation (`PALM_PRINT: VERIFIED`, `RETINAL_SCAN_MATCH`) alone —
+  transient decorative loading-screen flavor text, not a persistent status claim, a materially
+  different and much lower-stakes thing than a permanent dashboard badge.
+- **`ledger.html`** — a themed, clearly-fictional 12-item "asset ledger" (Swiss Vault Gold Bars,
+  Singapore High-Rise Property, Blockchain Identity Node, etc. — left untouched as platform
+  mythology, same as Chronicle) had exactly one entry tying to the real, documented (if dormant)
+  token economy: `Ω-CORE-001... '51% Absolute Master Stake', status:'verified'`. `'verified'` is
+  explicitly defined on the same page as "cryptographically confirmed active assets" — a specific
+  false claim for something with no cryptographic verification anywhere in this codebase.
+  Changed to the page's own already-existing `'pending'` status (already used honestly for two of
+  the fictional physical assets) — no new status class needed.
+- **`vault.html`** — the most extensive instance: an entire RESERVE tab (KPIs, hero section,
+  "MASTER STAKE LOCK"/"GENESIS BLOCK SEAL" architecture cards) presented the dormant token economy
+  as actively `DISTRIBUTING` (with a pulsing glow animation implying live motion), `LOCKED`,
+  `SEALED`, and `ACTIVE` — directly contradicting the very next card on the same tab
+  (`TOKEN ECONOMY STATUS: ...pending legal review... Activation in Phase III`) and the page's own
+  second tab (`HOLDINGS`, already fully honest: "BALANCES ARE PROVISIONAL UNTIL ECONOMY GOES
+  LIVE", every NFT marked `PENDING`) — strong internal evidence this was a genuine miss, not
+  intentional inconsistent design. Relabelled the whole RESERVE tab to match the already-correct
+  HOLDINGS tab's tone (PENDING/PLANNED framing, numbers kept as real design detail). Separately,
+  the page's "11 IMMUTABLE ARTICLES" section is a third copy of the same constitution text as
+  `sovereign-covenant.html`/`compliance.html` (same Article II 51%-stake language, same
+  "sealed into the Genesis Block, irrevocable" framing) — added the same disclosure-banner pattern
+  already established on those two pages rather than rewriting all 11 articles individually. Also
+  fixed one entry in a `catch`-block DEMO fallback array (shown only when the real
+  `access_audit_log` RPC call fails/returns empty) that claimed a specific dated event, "11
+  ARTICLES SEALED INTO GENESIS BLOCK... SEALED", actually happened — changed to "DRAFTED... hash-
+  chain PLANNED". The real (non-fallback) audit log path, `sb.rpc('access_audit_log')`, is genuine
+  and was left untouched.
+
+`node --check` on all three files' script blocks; `scripts/audit.py` reconfirmed 0 critical / 6
+pre-existing warnings after each file. No SQL/schema changes. Remaining identified instances
+(`matrix.html`, `profile.html`, `honors.html`, `news.html`, `interface-omni.html`,
+`automation.html`) covered in the next entry.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

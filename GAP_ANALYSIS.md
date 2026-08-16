@@ -912,6 +912,39 @@ notice and per-article `PLANNED · NOT YET ACTIVE` tags; left untouched).
 `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings throughout. No SQL/schema
 changes across the entire §4.19/§4.20 sweep — every fix is static content/label correction.
 
+### 4.21 Broadened the §4.17-4.20 overclaim hunt to adjacent vocabulary (escrow, insured, SLA,
+guaranteed, cryptographically/blockchain-verified/on-chain) — two more real instances found and
+fixed, `enterprise.html` deliberately left alone
+
+Widened the search terms beyond the "51%/multi-sig/hash-chain" fingerprint to catch the same bug
+class under different wording. `escrow`/`insured` had zero hits. `SLA`/`guaranteed` hits were all
+false positives (tennis "GRAND SLAM", a DevOps curriculum topic "SLO/SLA/SLI", a dictionary
+definition of the word "heuristic") except `enterprise.html`'s SLA tiers — checked against
+`GAP_ANALYSIS.md` §3.2's own prior finding that this page is `is_owner`-gated (no member or
+public visitor can ever reach it) and already explicitly says "TARGET" rather than claiming a
+measured result; left untouched per that already-reasoned judgment rather than re-litigating a
+decision already made carefully.
+
+`cryptographically`/`blockchain-verified`/`on-chain` found two real instances, same shape as
+before — one overclaiming card sitting next to honestly-labelled siblings:
+
+- **`credentials.html`** — "CERTIFICATES OF ASCENT... Each certificate is cryptographically
+  anchored to your account" sat directly beside "KYC PATHWAY... Steps 3-4 activate when the
+  platform reaches that compliance tier" and "BLOCKCHAIN IDENTITY... Wallet activation is pending
+  integration of the sovereign chain" — both already honest. No certificate hashing/anchoring
+  exists anywhere in this codebase. Reworded to "tied to your account record."
+- **`identity.html`** — "Your identity is a cryptographically-signed record in the Supabase
+  sovereign ledger." No record-signing exists; a standard Postgres row isn't cryptographically
+  signed. Reworded to name the real, actual protection mechanism (Row-Level Security) instead of
+  an invented one.
+
+`services.html`'s "NFT... On-chain asset minting" entry was already correctly marked
+`status:'planned'` — confirmed clean, no action needed.
+
+`node --check` on both files; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
+warnings. No SQL/schema changes. This closes the adjacent-vocabulary pass — between §4.17 and
+here, 14 files have now been checked and corrected for this bug class across the platform.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

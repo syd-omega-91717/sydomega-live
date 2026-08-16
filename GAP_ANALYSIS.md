@@ -1000,6 +1000,36 @@ productivity tools; no fabricated-data or overclaim instances found) and `factio
 `node --check` on `credentials.html`; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
 warnings. No SQL/schema changes.
 
+### 4.24 Correction to §4.23: the SOVEREIGN PASSPORT card fix was wrong — reverted
+
+§4.23's fix was based on an incorrect assumption, caught and corrected the same session.
+`credentials.html`'s "PASSPORT" tab (same file, not the same page as the standalone
+`passport.html`) has its **own** embedded, genuinely real passport display — confirmed by
+reading the file's own boot script: `passportNo='SYD-'+u.id.replace(/-/g,'').substr(0,8)...'`
+(literally UID-derived), and `pp-sign`/`pp-elem`/`pp-auth`/`pp-gate` all populated from real
+`pr.sign`/`pr.element`/computed `auth`/computed gate. The SCIENCE tab's "SOVEREIGN PASSPORT" card
+was describing *this* embedded tab, not the separate `passport.html` page — §4.23 conflated the
+two because they share the same display name across different pages, and the fix was applied
+without first checking whether `credentials.html` had its own implementation before concluding
+the description must be describing a different file's page. Reverted the card text to its
+original (accurate) wording, with one small addition — "(the PASSPORT tab above)" — to make the
+distinction from the separate `passport.html` page explicit for a reader, since the naming
+collision across three different pages (`credentials.html`'s own tab, `profile.html`'s embedded
+section, and the standalone `passport.html`) is real and mildly confusing on its own, even though
+none of the three individually make a false claim. `passport.html` remains what §4.23 found it to
+be — a genuine, honest, `localStorage`-only personal scrapbook, correctly distinct from the two
+real "passport" displays — no error there; the error was only in which card `credentials.html`
+was being cross-referenced against. `profile.html`'s own "Your Passport is generated from your
+real standing" notice (a third, separate instance) was checked against its own `pp-rank`/
+`pp-fact`/`pp-agent`/`pp-node`/`pp-auth` fields — also genuinely real — and needed no change.
+
+Consolidating the multi-passport naming overlap into one consistent concept is a real, if minor,
+IA cleanup opportunity — out of scope here (a design decision, not a false-claim fix, per this
+file's own established distinction between the two).
+
+`node --check` on `credentials.html` after the revert; `scripts/audit.py` reconfirmed 0 critical
+/ 6 pre-existing warnings. No SQL/schema changes.
+
 ## 5. Explicitly out of scope / not verified in this pass
 
 - **5.1** A full re-audit of all 170 pages for the XSS/silent-failure/missing-table bug classes

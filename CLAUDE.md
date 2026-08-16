@@ -830,8 +830,17 @@ orphaned file.
   uploads folder → 0 rows, (7) the owner reading the same folder → the row is visible (the actual
   new capability). All 7 passed. `python3 scripts/audit.py` reconfirmed 0 critical / 6
   pre-existing warnings (file/policy counts increased by exactly 1 file / 5 policies, matching
-  the new fix file, no new duplicate-table or RLS-missing warnings introduced). **Not yet applied
-  to the live database.**
+  the new fix file, no new duplicate-table or RLS-missing warnings introduced). **Applied to the
+  live database and verified** (2026-08-17, via the Supabase MCP connector once authorized) —
+  queried `pg_policies` on the live project (`ydqhzvvoyufiiqvzcjns`) before applying and
+  confirmed all 5 gaps present exactly as described (`capability_kpi_log`/`policy_eval_log`
+  INSERT policies both `WITH CHECK(true)`, `threat_events`/`telemetry_events` INSERT unscoped,
+  `storage.objects` "uploads read" with no owner-bypass); applied
+  `omega_rls_scoping_fix.sql` via `apply_migration`; re-queried `pg_policies` afterward and
+  confirmed all 5 policies now read exactly as the fix file specifies (`owner inserts kpi`/`owner
+  inserts eval` → `is_platform_owner()`, both `threat_events`/`telemetry_events` INSERT →
+  `auth.uid() = user_id`, `uploads read` → own-folder-or-owner). `get_advisors(security)`
+  re-run afterward with zero findings referencing any of the 5 touched policies.
 - **Edge Function audit (all 7 functions read in full): 2 real findings — a daily cron job that
   has never written a single row, and a fully orphaned duplicate file.**
   - **`snapshot-leaderboard`'s upsert has always silently failed — fixed.** This function (meant
@@ -855,8 +864,16 @@ orphaned file.
     actual `entreprise_schema_v2.sql`, reproduced the exact failure with the edge function's
     literal upsert payload (`column "display_name" of relation "leaderboard_snapshots" does not
     exist`), applied the fix, confirmed the same payload now succeeds and reads back exactly the
-    shape the client expects, and confirmed the fix file is idempotent (clean second run). Not
-    yet applied to the live database.
+    shape the client expects, and confirmed the fix file is idempotent (clean second run).
+    **Applied to the live database and verified** (2026-08-17, via the Supabase MCP connector) —
+    queried `information_schema.columns` on the live project (`ydqhzvvoyufiiqvzcjns`) before
+    applying and confirmed `leaderboard_snapshots` had only the original 12 columns; applied
+    `omega_leaderboard_snapshots_columns_fix.sql` via `apply_migration`; re-queried and confirmed
+    `display_name`/`sign`/`tier`/`is_owner` now exist with the correct types (`text`/`text`/
+    `text`/`boolean`). The cron job itself wasn't separately re-triggered this session (it runs
+    on its own daily schedule), so the next scheduled or owner-triggered run is the first one
+    that will actually write rows — but the column-shape blocker that made every prior run
+    silently write 0 is now gone.
   - **`checkout/stripe-webhook/index.ts` — a fully orphaned duplicate, removed.** A second,
     45-line Stripe-webhook implementation existed nested inside the `checkout` function's own
     directory (`supabase/functions/checkout/stripe-webhook/index.ts`), structurally distinct from

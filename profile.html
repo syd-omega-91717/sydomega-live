@@ -320,9 +320,6 @@ a{color:inherit;text-decoration:none}
 .perf-chart{width:100%;height:140px}
 .perf-canvas{width:100%;height:100%;display:block}
 
-.holdings-table{width:100%;border-collapse:collapse}
-.holdings-table th{text-align:left;font-family:var(--M);font-size:.55rem;color:var(--cyan);letter-spacing:.08em;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
-.holdings-table td{padding:.6rem 1rem;font-size:.78rem;border-bottom:1px solid rgba(201,168,76,.06)}
 .asset-cell{display:flex;align-items:center;gap:.6rem}
 .asset-icon{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:.6rem;color:var(--gold);flex-shrink:0}
 .asset-name{font-size:.78rem;color:var(--ink)}
@@ -815,71 +812,19 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="panel">
         <div class="panel-header">
           <span class="panel-title">Asset Holdings</span>
-          <span class="panel-badge">18 CLASSES</span>
+          <span class="panel-badge">7 CLASSES</span>
         </div>
         <div class="panel-body" style="padding:0">
-          <table class="holdings-table">
-            <thead>
-              <tr>
-                <th>Asset</th>
-                <th>Class</th>
-                <th>Allocation</th>
-                <th>Status</th>
-                <th>Authority</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><div class="asset-cell"><div class="asset-icon">&#937;</div><div><div class="asset-name">Omega Token</div><div class="asset-ticker">OMEGA</div></div></div></td>
-                <td style="color:var(--muted);font-size:.75rem">Digital</td>
-                <td class="gold">51.00%</td>
-                <td><span class="token-status active">LOCKED</span></td>
-                <td class="green">Sovereign</td>
-              </tr>
-              <tr>
-                <td><div class="asset-cell"><div class="asset-icon" style="color:var(--gold)">Au</div><div><div class="asset-name">Gold Reserve</div><div class="asset-ticker">XAU</div></div></div></td>
-                <td style="color:var(--muted);font-size:.75rem">Physical</td>
-                <td class="gold">412,300g</td>
-                <td><span class="token-status active">ACTIVE</span></td>
-                <td class="green">Auto-sweep</td>
-              </tr>
-              <tr>
-                <td><div class="asset-cell"><div class="asset-icon" style="color:#A0B4C8">Rh</div><div><div class="asset-name">Rhodium Reserve</div><div class="asset-ticker">XRH</div></div></div></td>
-                <td style="color:var(--muted);font-size:.75rem">Physical</td>
-                <td class="gold">125,000g</td>
-                <td><span class="token-status active">ACTIVE</span></td>
-                <td class="green">Flash-crash guard</td>
-              </tr>
-              <tr>
-                <td><div class="asset-cell"><div class="asset-icon" style="color:#C0C0C0">Ag</div><div><div class="asset-name">Silver Reserve</div><div class="asset-ticker">XAG</div></div></div></td>
-                <td style="color:var(--muted);font-size:.75rem">Physical</td>
-                <td class="gold">890,000g</td>
-                <td><span class="token-status active">ACTIVE</span></td>
-                <td class="green">Auto-sweep</td>
-              </tr>
-              <tr>
-                <td><div class="asset-cell"><div class="asset-icon" style="color:var(--cyan)">PG</div><div><div class="asset-name">Polygon (L2)</div><div class="asset-ticker">MATIC</div></div></div></td>
-                <td style="color:var(--muted);font-size:.75rem">Blockchain</td>
-                <td class="gold">Dormant</td>
-                <td><span class="token-status dormant">PENDING LEGAL</span></td>
-                <td style="color:var(--muted)">Gated</td>
-              </tr>
-              <tr>
-                <td><div class="asset-cell"><div class="asset-icon" style="color:#9B59B6">IP</div><div><div class="asset-name">IP Catalog</div><div class="asset-ticker">12 FILMS</div></div></div></td>
-                <td style="color:var(--muted);font-size:.75rem">Intellectual</td>
-                <td class="gold">144 titles</td>
-                <td><span class="token-status active">BUILDING</span></td>
-                <td class="green">100% owned</td>
-              </tr>
-              <tr>
-                <td><div class="asset-cell"><div class="asset-icon" style="color:#E67E22">GM</div><div><div class="asset-name">Gaming Assets</div><div class="asset-ticker">12 GAMES</div></div></div></td>
-                <td style="color:var(--muted);font-size:.75rem">Digital</td>
-                <td class="gold">144 titles</td>
-                <td><span class="token-status dormant">ROADMAP</span></td>
-                <td style="color:var(--muted)">Sovereign</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="tbl-wrap" style="border:none;border-radius:0">
+            <div class="tbl-head" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span>Asset</span><span>Class</span><span>Allocation</span><span>Status</span><span>Authority</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span><div class="asset-cell"><div class="asset-icon">&#937;</div><div><div class="asset-name">Omega Token</div><div class="asset-ticker">OMEGA</div></div></div></span><span style="color:var(--muted);font-size:.75rem">Digital</span><span class="gold">51.00%</span><span><span class="token-status dormant">DORMANT</span></span><span class="green">Sovereign</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span><div class="asset-cell"><div class="asset-icon" style="color:var(--gold)">Au</div><div><div class="asset-name">Gold Reserve</div><div class="asset-ticker">XAU</div></div></div></span><span style="color:var(--muted);font-size:.75rem">Physical</span><span class="gold">412,300g</span><span><span class="token-status dormant">PLANNED</span></span><span style="color:var(--muted)">Not yet held</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span><div class="asset-cell"><div class="asset-icon" style="color:#A0B4C8">Rh</div><div><div class="asset-name">Rhodium Reserve</div><div class="asset-ticker">XRH</div></div></div></span><span style="color:var(--muted);font-size:.75rem">Physical</span><span class="gold">125,000g</span><span><span class="token-status dormant">PLANNED</span></span><span style="color:var(--muted)">Not yet held</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span><div class="asset-cell"><div class="asset-icon" style="color:#C0C0C0">Ag</div><div><div class="asset-name">Silver Reserve</div><div class="asset-ticker">XAG</div></div></div></span><span style="color:var(--muted);font-size:.75rem">Physical</span><span class="gold">890,000g</span><span><span class="token-status dormant">PLANNED</span></span><span style="color:var(--muted)">Not yet held</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span><div class="asset-cell"><div class="asset-icon" style="color:var(--cyan)">PG</div><div><div class="asset-name">Polygon (L2)</div><div class="asset-ticker">MATIC</div></div></div></span><span style="color:var(--muted);font-size:.75rem">Blockchain</span><span class="gold">Dormant</span><span><span class="token-status dormant">PENDING LEGAL</span></span><span style="color:var(--muted)">Gated</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span><div class="asset-cell"><div class="asset-icon" style="color:#9B59B6">IP</div><div><div class="asset-name">IP Catalog</div><div class="asset-ticker">12 FILMS</div></div></div></span><span style="color:var(--muted);font-size:.75rem">Intellectual</span><span class="gold">144 titles</span><span><span class="token-status active">BUILDING</span></span><span class="green">100% owned</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.6fr 110px 110px 140px 130px"><span><div class="asset-cell"><div class="asset-icon" style="color:#E67E22">GM</div><div><div class="asset-name">Gaming Assets</div><div class="asset-ticker">12 GAMES</div></div></div></span><span style="color:var(--muted);font-size:.75rem">Digital</span><span class="gold">144 titles</span><span><span class="token-status dormant">ROADMAP</span></span><span style="color:var(--muted)">Sovereign</span></div>
+          </div>
         </div>
       </div>
 

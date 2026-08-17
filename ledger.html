@@ -7,11 +7,7 @@
 <meta name="description" content="Sovereign asset ledger — the 12×12×9×9×9 matrix, 104,976 nodes, and your full portfolio record."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
-.ledger-table{width:100%;border-collapse:collapse}
-.ledger-table th{font-family:var(--M);font-size:7.5px;letter-spacing:2.5px;color:var(--muted);padding:10px 14px;border-bottom:2px solid var(--line);text-align:left;white-space:nowrap}
-.ledger-table th:last-child{text-align:right}
-.ledger-table td{padding:12px 14px;border-bottom:1px solid rgba(201,168,76,.07);font-size:13px;vertical-align:middle}
-.ledger-table tr:hover td{background:rgba(201,168,76,.04)}
+#ledger-table .tbl-row:hover{background:rgba(201,168,76,.04)}
 .asset-id{font-family:var(--D);font-size:11px;color:var(--solar);letter-spacing:.05em}
 .asset-cat{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block}
 .asset-cat.physical{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
@@ -70,10 +66,10 @@
     <input type="text" class="ledger-search" id="ledger-search" placeholder="Search assets&hellip;" autocomplete="off"/>
   </div>
   <div style="overflow-x:auto;border:1px solid var(--line);background:var(--surface)">
-    <table class="ledger-table">
-      <thead><tr><th>ASSET ID</th><th>NODE CATEGORY</th><th>ALLOCATION WEIGHT</th><th style="text-align:right">STATUS</th></tr></thead>
-      <tbody id="ledger-body"></tbody>
-    </table>
+    <div class="tbl-wrap" id="ledger-table">
+      <div class="tbl-head" style="grid-template-columns:1fr 1.4fr 1.2fr 150px"><span>ASSET ID</span><span>NODE CATEGORY</span><span>ALLOCATION WEIGHT</span><span style="text-align:right">STATUS</span></div>
+      <div id="ledger-body"></div>
+    </div>
   </div>
 </div>
 
@@ -122,17 +118,18 @@ var STATUS_LABELS={verified:'VERIFIED',locked:'RESONANCE LOCK',active:'ACTIVE',p
 function renderAssets(list){
   var tb=document.getElementById('ledger-body');if(!tb)return;
   var ec=document.getElementById('entry-count');if(ec)ec.textContent=list.length+' ENTRIES';
+  var cols='grid-template-columns:1fr 1.4fr 1.2fr 150px';
   if(!list.length){
-    tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted);font-family:var(--M);font-size:9px">No assets match your search.</td></tr>';
+    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted);font-family:var(--M);font-size:9px">No assets match your search.</div>';
     return;
   }
   tb.innerHTML=list.map(function(a){
-    return'<tr>'
-      +'<td><div class="asset-id">'+a.id+'</div><div style="margin-top:4px"><span class="asset-cat '+a.cat+'">'+a.cat.toUpperCase()+'</span></div></td>'
-      +'<td style="font-size:11px;color:var(--ink)">'+a.node+'</td>'
-      +'<td style="font-family:var(--M);font-size:9px;color:var(--muted)">'+a.weight+'</td>'
-      +'<td><span class="status-pill '+a.status+'">'+STATUS_LABELS[a.status]+'</span></td>'
-      +'</tr>';
+    return'<div class="tbl-row" style="'+cols+'">'
+      +'<span><div class="asset-id">'+a.id+'</div><div style="margin-top:4px"><span class="asset-cat '+a.cat+'">'+a.cat.toUpperCase()+'</span></div></span>'
+      +'<span style="font-size:11px;color:var(--ink)">'+a.node+'</span>'
+      +'<span style="font-family:var(--M);font-size:9px;color:var(--muted)">'+a.weight+'</span>'
+      +'<span style="text-align:right"><span class="status-pill '+a.status+'">'+STATUS_LABELS[a.status]+'</span></span>'
+      +'</div>';
   }).join('');
 }
 function setTab(name){

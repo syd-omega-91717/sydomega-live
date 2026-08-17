@@ -21,10 +21,8 @@
 .kyc-chip.done{color:var(--green);border-color:rgba(63,178,127,.4)}
 .kyc-chip.pending{color:var(--cyan);border-color:rgba(0,229,255,.3)}
 .kyc-chip.locked{color:var(--muted)}
-.doc-table{width:100%;border-collapse:collapse}
-.doc-table th{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
-.doc-table td{font-size:11px;color:var(--ink);padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)}
-.doc-table td:last-child{font-family:var(--M);font-size:8px;letter-spacing:1px}
+#doc-table .tbl-row{font-size:11px;color:var(--ink)}
+#doc-table .tbl-row span:last-child{font-family:var(--M);font-size:8px;letter-spacing:1px}
 </style>
 </head>
 <body>
@@ -84,17 +82,15 @@
   </div>
   <div class="sechead" style="margin-top:20px">DOCUMENT REQUIREMENTS</div>
   <div style="overflow-x:auto">
-    <table class="doc-table">
-      <thead><tr><th>DOCUMENT</th><th>STEP</th><th>STATUS</th></tr></thead>
-      <tbody>
-        <tr><td>Email confirmation</td><td>Step 1</td><td id="doc-email">—</td></tr>
-        <tr><td>Platform approval record</td><td>Step 2</td><td id="doc-appr">—</td></tr>
-        <tr><td>Government-issued photo ID</td><td>Step 3</td><td style="color:var(--muted)">FUTURE</td></tr>
-        <tr><td>Address proof (utility / bank)</td><td>Step 3</td><td style="color:var(--muted)">FUTURE</td></tr>
-        <tr><td>AML questionnaire</td><td>Step 4</td><td style="color:var(--muted)">FUTURE</td></tr>
-        <tr><td>Sanctions screening result</td><td>Step 4</td><td style="color:var(--muted)">FUTURE</td></tr>
-      </tbody>
-    </table>
+    <div class="tbl-wrap" id="doc-table">
+      <div class="tbl-head" style="grid-template-columns:1.6fr 100px 140px"><span>DOCUMENT</span><span>STEP</span><span>STATUS</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.6fr 100px 140px"><span>Email confirmation</span><span>Step 1</span><span id="doc-email">—</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.6fr 100px 140px"><span>Platform approval record</span><span>Step 2</span><span id="doc-appr">—</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.6fr 100px 140px"><span>Government-issued photo ID</span><span>Step 3</span><span style="color:var(--muted)">FUTURE</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.6fr 100px 140px"><span>Address proof (utility / bank)</span><span>Step 3</span><span style="color:var(--muted)">FUTURE</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.6fr 100px 140px"><span>AML questionnaire</span><span>Step 4</span><span style="color:var(--muted)">FUTURE</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.6fr 100px 140px"><span>Sanctions screening result</span><span>Step 4</span><span style="color:var(--muted)">FUTURE</span></div>
+    </div>
   </div>
 </div>
 

@@ -34,10 +34,9 @@
 .formula-var{color:var(--cyan)}
 .formula-result{color:var(--green);font-size:14px;font-family:var(--D);display:block;margin-top:4px}
 /* Constants table */
-.const-tbl{width:100%;border-collapse:collapse}
-.const-tbl td{padding:7px 0;border-bottom:1px solid rgba(201,168,76,.06);font-family:var(--M);font-size:8.5px;vertical-align:top}
-.const-tbl td:first-child{color:var(--muted);letter-spacing:1px;width:55%}
-.const-tbl td:last-child{color:var(--solar);text-align:right;font-size:9.5px}
+#gate-thresh-tbl .tbl-row,#const-tbl-body .tbl-row{padding:7px 0;font-family:var(--M);font-size:8.5px}
+#gate-thresh-tbl .tbl-row span:first-child,#const-tbl-body .tbl-row span:first-child{color:var(--muted);letter-spacing:1px}
+#gate-thresh-tbl .tbl-row span:last-child,#const-tbl-body .tbl-row span:last-child{color:var(--solar);text-align:right;font-size:9.5px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:700px){.grid2{grid-template-columns:1fr}.elem-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
@@ -161,7 +160,7 @@
   </div>
   <div class="card" style="margin-bottom:14px">
     <div class="sechead">GATE THRESHOLDS</div>
-    <table class="const-tbl"><tbody id="gate-thresh-tbl"></tbody></table>
+    <div class="tbl-wrap" id="gate-thresh-tbl"></div>
   </div>
   <div class="card">
     <div class="sechead">AXIS A vs AUTHORITY SCATTER</div>
@@ -173,7 +172,7 @@
 <div class="tab-panel" id="tab-science">
   <div class="card" style="margin-bottom:14px">
     <div class="sechead">SOVEREIGN MATHEMATICAL CONSTANTS</div>
-    <table class="const-tbl"><tbody id="const-tbl-body"></tbody></table>
+    <div class="tbl-wrap" id="const-tbl-body"></div>
   </div>
 
   <div class="card" style="margin-bottom:14px">
@@ -477,9 +476,9 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
 
   var gateThTbl=document.getElementById('gate-thresh-tbl');
   GATE_THRESH.forEach(function(t,i){
-    var row=document.createElement('tr');
-    var td1=document.createElement('td');td1.textContent='GATE '+(i+1)+' — '+GATE_NAMES[i];
-    var td2=document.createElement('td');td2.textContent='≥ '+t;
+    var row=document.createElement('div');row.className='tbl-row';row.style.gridTemplateColumns='55% 1fr';
+    var td1=document.createElement('span');td1.textContent='GATE '+(i+1)+' — '+GATE_NAMES[i];
+    var td2=document.createElement('span');td2.textContent='≥ '+t;
     row.appendChild(td1);row.appendChild(td2);
     gateThTbl.appendChild(row);
   });
@@ -531,9 +530,9 @@ function esc(s){var d=document.createElement('div');d.textContent=s;return d.inn
   ];
   var ctTbl=document.getElementById('const-tbl-body');
   CONSTS.forEach(function(row){
-    var tr=document.createElement('tr');
-    var td1=document.createElement('td');td1.textContent=row[0];
-    var td2=document.createElement('td');td2.textContent=row[1];
+    var tr=document.createElement('div');tr.className='tbl-row';tr.style.gridTemplateColumns='55% 1fr';
+    var td1=document.createElement('span');td1.textContent=row[0];
+    var td2=document.createElement('span');td2.textContent=row[1];
     tr.appendChild(td1);tr.appendChild(td2);
     ctTbl.appendChild(tr);
   });

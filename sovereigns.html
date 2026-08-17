@@ -7,11 +7,8 @@
 <meta name="description" content="The ranked order — sovereign leaderboard by authority, sign, and matrix standing."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
-.lb-table{width:100%;border-collapse:collapse}
-.lb-table thead th{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
-.lb-table tbody tr{border-bottom:1px dashed rgba(201,168,76,.08);transition:background .15s}
-.lb-table tbody tr:hover{background:rgba(13,13,21,.7)}
-.lb-table td{padding:12px 14px;font-family:var(--M);font-size:11px;vertical-align:middle}
+#lb-table .tbl-row{transition:background .15s}
+#lb-table .tbl-row:hover{background:rgba(13,13,21,.7)}
 .rank-cell{font-family:var(--D);font-size:18px;min-width:50px}
 .rank-1{color:var(--gold);text-shadow:0 0 16px rgba(201,168,76,.5)}
 .rank-2{color:#C7CDD6}
@@ -35,7 +32,7 @@
 .tc-sign{font-family:var(--M);font-size:9px;letter-spacing:2px;margin-top:8px;padding:2px 8px;border:1px solid rgba(201,168,76,.2);display:inline-block;color:var(--solar)}
 .priv-notice{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);padding:12px 16px;font-family:var(--M);font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.7;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
 .empty{font-family:var(--M);font-size:12px;color:var(--muted);padding:24px;text-align:center}
-@media(max-width:600px){.lb-table td:nth-child(5),.lb-table th:nth-child(5){display:none}}
+@media(max-width:600px){#lb-table .tbl-row span:nth-child(5),#lb-table .tbl-head span:nth-child(5){display:none}}
 </style>
 </head>
 <body>
@@ -59,12 +56,12 @@
     <span>SOVEREIGN PRIVACY PROTOCOL ACTIVE &mdash; All member identities are protected. Only sovereign rank numbers and matrix metrics are visible. No account names, emails, or personal details are shown.</span>
   </div>
   <div style="overflow-x:auto">
-    <table class="lb-table">
-      <thead><tr>
-        <th>RANK</th><th>SOVEREIGN</th><th>SIGN</th><th>AUTHORITY</th><th>TIER</th><th>MATRIX</th>
-      </tr></thead>
-      <tbody id="lb-body"><tr><td colspan="6" class="empty">LOADING LEADERBOARD&hellip;</td></tr></tbody>
-    </table>
+    <div class="tbl-wrap" id="lb-table">
+      <div class="tbl-head" style="grid-template-columns:70px 140px 110px 1fr 110px 160px">
+        <span>RANK</span><span>SOVEREIGN</span><span>SIGN</span><span>AUTHORITY</span><span>TIER</span><span>MATRIX</span>
+      </div>
+      <div id="lb-body"><div class="tbl-row empty" style="display:block">LOADING LEADERBOARD&hellip;</div></div>
+    </div>
   </div>
 </div>
 
@@ -116,7 +113,8 @@ function matIdx(r){return Math.min(11,Math.max(0,Math.floor(Math.min(r.a,r.b,r.c
 
 function renderLeaderboard(){
   var lb=document.getElementById('lb-body');lb.innerHTML='';
-  if(!ranked.length){lb.innerHTML='<tr><td colspan="6" class="empty">No sovereigns ranked yet. Be the first to evolve.</td></tr>';return;}
+  if(!ranked.length){lb.innerHTML='<div class="tbl-row empty" style="display:block">No sovereigns ranked yet. Be the first to evolve.</div>';return;}
+  var cols='grid-template-columns:70px 140px 110px 1fr 110px 160px';
   ranked.forEach(function(r,i){
     var rank=i+1;
     var rankCls=rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other';
@@ -125,14 +123,14 @@ function renderLeaderboard(){
     var mi=matIdx(r);var matCol=MAT_COL[mi];
     var authPct=Math.min(100,(r.auth/27.8367)*100);
     var rankCol=rank<=3?['#C9A84C','#C7CDD6','#D9B86A'][i]:'var(--ink)';
-    var tr=document.createElement('tr');
+    var tr=document.createElement('div');tr.className='tbl-row';tr.style.cssText=cols;
     if(r.isMe)tr.style.background='rgba(0,229,255,.04)';
-    tr.innerHTML='<td><span class="rank-cell '+rankCls+'">#'+rank+'</span></td>'
-      +'<td><span class="'+labelCls+'">'+label+'</span></td>'
-      +'<td><span class="sign-badge">'+esc(r.sign)+'</span></td>'
-      +'<td><span class="auth-val" style="color:'+rankCol+'">'+r.auth.toFixed(2)+'</span><div class="tier-bar"><div class="tier-fill" style="width:'+authPct+'%;background:linear-gradient(90deg,'+matCol+',transparent)"></div></div></td>'
-      +'<td><span class="mat-badge" style="color:'+matCol+';border-color:'+matCol+'44">'+MATS[mi]+'</span></td>'
-      +'<td style="color:var(--muted)">('+r.a.toFixed(1)+','+r.b.toFixed(1)+','+r.c.toFixed(1)+')</td>';
+    tr.innerHTML='<span><span class="rank-cell '+rankCls+'">#'+rank+'</span></span>'
+      +'<span><span class="'+labelCls+'">'+label+'</span></span>'
+      +'<span><span class="sign-badge">'+esc(r.sign)+'</span></span>'
+      +'<span><span class="auth-val" style="color:'+rankCol+'">'+r.auth.toFixed(2)+'</span><div class="tier-bar"><div class="tier-fill" style="width:'+authPct+'%;background:linear-gradient(90deg,'+matCol+',transparent)"></div></div></span>'
+      +'<span><span class="mat-badge" style="color:'+matCol+';border-color:'+matCol+'44">'+MATS[mi]+'</span></span>'
+      +'<span style="color:var(--muted)">('+r.a.toFixed(1)+','+r.b.toFixed(1)+','+r.c.toFixed(1)+')</span>';
     lb.appendChild(tr);
   });
 }

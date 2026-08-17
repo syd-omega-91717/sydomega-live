@@ -37,9 +37,9 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 .exer-muscle option{background:#0a0a08}
 
 /* SETS TABLE */
-.sets-table{width:100%;border-collapse:collapse;margin-bottom:8px}
-.sets-table th{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--dim);text-align:left;padding:4px 6px;border-bottom:1px solid rgba(201,168,76,.08)}
-.sets-table td{padding:4px 6px}
+.sets-table{margin-bottom:8px}
+.sets-table .tbl-head{padding:4px 6px}
+.sets-table .tbl-row{padding:4px 6px}
 .set-input{width:100%;padding:5px 6px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);color:#c8c4b0;font-family:var(--M);font-size:11px;outline:none;text-align:center}
 .set-input:focus{border-color:rgba(201,168,76,.25)}
 .set-rm{font-family:var(--M);font-size:7px;color:var(--dim);background:none;border:none;cursor:pointer;padding:0 4px}
@@ -301,10 +301,10 @@ function addExercise(){
       '<div class="exer-name-wrap"><input class="exer-name-input" type="text" list="exercise-datalist" placeholder="Exercise name (e.g. Bench Press)"/></div>'+
       '<select class="exer-muscle">'+MUSCLES.map(function(m){return'<option>'+m+'</option>';}).join('')+'</select>'+
     '</div>'+
-    '<table class="sets-table">'+
-      '<thead><tr><th>#</th><th>WEIGHT (kg)</th><th>REPS</th><th>RIR</th><th>✓</th><th></th></tr></thead>'+
-      '<tbody id="sets-'+id+'"></tbody>'+
-    '</table>'+
+    '<div class="tbl-wrap sets-table">'+
+      '<div class="tbl-head" style="grid-template-columns:30px 90px 70px 60px 40px 40px"><span>#</span><span>WEIGHT (kg)</span><span>REPS</span><span>RIR</span><span>✓</span><span></span></div>'+
+      '<div id="sets-'+id+'"></div>'+
+    '</div>'+
     '<div class="exer-actions">'+
       '<button class="btn-sm" onclick="addSet(\''+id+'\')">+ SET</button>'+
       '<button class="btn-sm del" onclick="document.getElementById(\''+id+'\').remove()">REMOVE EXERCISE</button>'+
@@ -323,14 +323,15 @@ function addExercise(){
 function addSet(exId){
   var tbody=document.getElementById('sets-'+exId);
   if(!tbody) return;
-  var i=tbody.rows.length+1;
-  var row=tbody.insertRow();
-  row.innerHTML='<td style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)">'+i+'</td>'+
-    '<td><input class="set-input" type="number" placeholder="0" min="0" step="2.5"/></td>'+
-    '<td><input class="set-input" type="number" placeholder="0" min="0"/></td>'+
-    '<td><input class="set-input" type="number" placeholder="0" min="0" max="5" title="Reps in Reserve"/></td>'+
-    '<td><input class="set-done" type="checkbox"/></td>'+
-    '<td><button class="set-rm" onclick="this.closest(\'tr\').remove()">✕</button></td>';
+  var i=tbody.children.length+1;
+  var row=document.createElement('div');row.className='tbl-row';row.style.gridTemplateColumns='30px 90px 70px 60px 40px 40px';
+  row.innerHTML='<span style="font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--dim)">'+i+'</span>'+
+    '<span><input class="set-input" type="number" placeholder="0" min="0" step="2.5"/></span>'+
+    '<span><input class="set-input" type="number" placeholder="0" min="0"/></span>'+
+    '<span><input class="set-input" type="number" placeholder="0" min="0" max="5" title="Reps in Reserve"/></span>'+
+    '<span><input class="set-done" type="checkbox"/></span>'+
+    '<span><button class="set-rm" onclick="this.closest(\'.tbl-row\').remove()">✕</button></span>';
+  tbody.appendChild(row);
 }
 
 /* ─── COLLECT SESSION ─── */
@@ -345,7 +346,7 @@ function collectSession(){
     var muscle=block.querySelector('.exer-muscle').value;
     var exNotes=block.querySelector('.exer-notes').value.trim();
     var sets=[];
-    block.querySelectorAll('.sets-table tbody tr').forEach(function(row){
+    block.querySelectorAll('.sets-table .tbl-row').forEach(function(row){
       var inputs=row.querySelectorAll('input[type=number]');
       if(inputs.length>=2){
         sets.push({weight:parseFloat(inputs[0].value)||0,reps:parseInt(inputs[1].value)||0,rir:parseInt(inputs[2]&&inputs[2].value)||null,done:row.querySelector('input[type=checkbox]').checked});

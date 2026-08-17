@@ -70,9 +70,6 @@
 #cdx-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(4,4,12,.95);border:1px solid rgba(201,168,76,.3);padding:8px 20px;font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold);z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 
 /* science */
-.sci-table{width:100%;border-collapse:collapse;font-family:var(--M);font-size:11px}
-.sci-table th{color:var(--cyan);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);font-size:9px;letter-spacing:2px}
-.sci-table td{padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.08)}
 
 @media(max-width:640px){.results-grid{grid-template-columns:1fr}}
 </style>
@@ -168,14 +165,12 @@
 
   <div class="sechead">SOURCE COMPARISON</div>
   <div class="card" style="overflow-x:auto">
-    <table class="sci-table">
-      <thead><tr><th>SOURCE</th><th>TYPE</th><th>COVERAGE</th><th>UPDATE FREQ</th><th>API</th></tr></thead>
-      <tbody>
-        <tr><td style="color:rgba(255,220,100,.7)">WIKIPEDIA</td><td>Encyclopedia</td><td>All human knowledge</td><td>Real-time</td><td>REST (public)</td></tr>
-        <tr><td style="color:rgba(0,229,255,.7)">ARXIV</td><td>Research Pre-prints</td><td>STEM, Economics, CS</td><td>Daily</td><td>Atom/RSS (public)</td></tr>
-        <tr><td style="color:rgba(0,255,136,.7)">OPEN LIBRARY</td><td>Books / Library</td><td>Public domain works</td><td>Ongoing additions</td><td>REST (public)</td></tr>
-      </tbody>
-    </table>
+    <div class="tbl-wrap">
+      <div class="tbl-head" style="grid-template-columns:150px 1fr 1.3fr 150px 150px"><span>SOURCE</span><span>TYPE</span><span>COVERAGE</span><span>UPDATE FREQ</span><span>API</span></div>
+      <div class="tbl-row" style="grid-template-columns:150px 1fr 1.3fr 150px 150px"><span style="color:rgba(255,220,100,.7)">WIKIPEDIA</span><span>Encyclopedia</span><span>All human knowledge</span><span>Real-time</span><span>REST (public)</span></div>
+      <div class="tbl-row" style="grid-template-columns:150px 1fr 1.3fr 150px 150px"><span style="color:rgba(0,229,255,.7)">ARXIV</span><span>Research Pre-prints</span><span>STEM, Economics, CS</span><span>Daily</span><span>Atom/RSS (public)</span></div>
+      <div class="tbl-row" style="grid-template-columns:150px 1fr 1.3fr 150px 150px"><span style="color:rgba(0,255,136,.7)">OPEN LIBRARY</span><span>Books / Library</span><span>Public domain works</span><span>Ongoing additions</span><span>REST (public)</span></div>
+    </div>
   </div>
 
   <div class="sechead">SOVEREIGN LEARNING DOMAINS</div>

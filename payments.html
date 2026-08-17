@@ -19,10 +19,8 @@
 .tx-filter button{font-family:var(--M);font-size:7.5px;letter-spacing:2px;padding:8px 14px;cursor:pointer;color:var(--muted);background:none;border:none;border-right:1px solid var(--line)}
 .tx-filter button:last-child{border-right:none}
 .tx-filter button.active{color:var(--gold);background:rgba(201,168,76,.08)}
-.tx-table{width:100%;border-collapse:collapse}
-.tx-table th{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
-.tx-table td{font-family:var(--M);font-size:10px;color:var(--muted);padding:10px 12px;border-bottom:1px solid rgba(201,168,76,.05);vertical-align:middle}
-.tx-table td:first-child{color:var(--solar)}
+#tx-table .tbl-row{font-family:var(--M);font-size:10px;color:var(--muted)}
+#tx-table .tbl-row span:first-child{color:var(--solar)}
 .tx-amount{font-family:var(--D);font-size:13px}
 .tx-in{color:var(--green)}
 .tx-out{color:var(--crim)}
@@ -79,10 +77,10 @@
     <button onclick="filterTx(this,'marketplace')">MARKETPLACE</button>
   </div>
   <div style="overflow-x:auto;border:1px solid var(--line);background:var(--surface)">
-    <table class="tx-table">
-      <thead><tr><th>DATE</th><th>DESCRIPTION</th><th>TYPE</th><th>STATUS</th><th>AMOUNT</th></tr></thead>
-      <tbody id="tx-body"></tbody>
-    </table>
+    <div class="tbl-wrap" id="tx-table">
+      <div class="tbl-head" style="grid-template-columns:110px 1.5fr 150px 130px 130px"><span>DATE</span><span>DESCRIPTION</span><span>TYPE</span><span>STATUS</span><span>AMOUNT</span></div>
+      <div id="tx-body"></div>
+    </div>
   </div>
 </div>
 
@@ -127,16 +125,17 @@ function renderTx(rows,filter){
     if(filter==='marketplace')return r.type==='MARKETPLACE';
     return true;
   });
+  var cols='grid-template-columns:110px 1.5fr 150px 130px 130px';
   if(!filtered.length){
-    tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">No transactions yet.</td></tr>';
+    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted)">No transactions yet.</div>';
     return;
   }
   tb.innerHTML=filtered.map(function(tx){
     var dir=tx.dir==='in'?'tx-in':tx.dir==='out'?'tx-out':'tx-pending';
     var stcl=tx.status==='completed'?'st-completed':tx.status==='pending'?'st-pending':'st-failed';
-    return'<tr><td>'+tx.date+'</td><td>'+tx.desc+'</td><td><span class="tx-type">'+tx.type+'</span></td>'
-      +'<td><span class="tx-status '+stcl+'">'+tx.status.toUpperCase()+'</span></td>'
-      +'<td><span class="tx-amount '+dir+'">'+tx.amount+'</span></td></tr>';
+    return'<div class="tbl-row" style="'+cols+'"><span>'+tx.date+'</span><span>'+tx.desc+'</span><span><span class="tx-type">'+tx.type+'</span></span>'
+      +'<span><span class="tx-status '+stcl+'">'+tx.status.toUpperCase()+'</span></span>'
+      +'<span><span class="tx-amount '+dir+'">'+tx.amount+'</span></span></div>';
   }).join('');
 }
 </script>

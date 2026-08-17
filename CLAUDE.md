@@ -1671,6 +1671,57 @@ orphaned file.
   - This closes the "blocked on live Supabase access" note attached to several items above and
     in earlier sessions' entries — production schema/RPC state for the areas checked this session
     is now confirmed, not assumed.
+- **Found and fixed a real bug the "10 conflicting duplicate tables" warning had been masking:
+  three standalone files defined an incompatible primary-key type that a byte/column-name
+  comparison alone can't see.** Asked to clean up the duplicate tables, re-examined the 3 flagged
+  files (`family_nodes.sql`, `dispatches.sql`, `publications.sql`) that a prior pass in this same
+  session had marked "harmless, just reordered/subset columns" — that comparison only checked
+  column *names*, not types, and missed that all three define their primary key as `id bigint
+  generated always as identity`, while every other definition of these tables anywhere in the
+  repo (`omega_master_deploy.sql`, `chunk_02a_migrations.sql`, `migration_runner.sql`,
+  `omega_backend_sync.sql`, and their `migrations/` mirrors) uses `id uuid DEFAULT
+  gen_random_uuid()` — the type every RLS policy, foreign key, and client-side call site in this
+  codebase assumes. `CREATE TABLE IF NOT EXISTS` only checks whether the table exists, not
+  whether its shape matches, so whichever file's version happened to run first would win
+  permanently — if one of these three ran before `omega_master_deploy.sql` on a fresh bootstrap
+  (a real risk: only 9 of 116 files in the flat `supabase/*.sql` bag are numerically ordered, so
+  nothing enforces `omega_master_deploy.sql` running first there), the table would end up with a
+  `bigint` primary key incompatible with the rest of the schema.
+  - **Why this couldn't happen on a real deploy today, and why it was still worth fixing.** The
+    `migrations/` folder has numbered mirrors of the same three files (`0037_dispatches.sql`,
+    `0038_family_nodes.sql`, `0052_publications.sql`) with the identical `bigint` definition —
+    confirmed by reading them directly, not assumed from the flat-bag copy. But because
+    `migrations/0001_omega_master_deploy.sql` always applies first in that numbered sequence, the
+    correct `uuid` table is always created before these files run, and their own `CREATE TABLE IF
+    NOT EXISTS` correctly no-ops. That's exactly why CLAUDE.md's earlier note that "all 94
+    migration files apply cleanly end-to-end" holds despite this landmine existing — order
+    protects the `migrations/` sequence but nothing protects the flat bag.
+  - **Fix scope, deliberately narrow**: deleted only the three flat-bag files
+    (`supabase/family_nodes.sql`, `supabase/dispatches.sql`, `supabase/publications.sql`) — single
+    -purpose, standalone, nothing else in them. Left the `migrations/` mirrors untouched (removing
+    a file from that numbered sequence is a different, riskier kind of change than removing a
+    redundant unordered one, and per §5 the flat bag — not `migrations/` — is "the source of
+    truth for new schema changes"). Checked for dangling references first: only
+    `GAP_ANALYSIS.md`'s historical write-up of the `dispatches` "wire insert" RLS-policy finding
+    cites `supabase/dispatches.sql` by name, alongside `chunk_06_migrations.sql` for the same
+    finding — an audit-trail citation of what was found, not a live dependency, so left as-is
+    rather than edited.
+  - **`marketplace_listings.sql` and `dedication_table.sql`** (the other two single-purpose
+    duplicate files among the 10 flagged tables) were checked and deliberately left alone:
+    both correctly use `id uuid`, so neither carries the type-incompatibility risk above.
+    `marketplace_listings.sql` is a genuinely incomplete subset (no `user_id`, no `file_path`) that
+    self-heals via `ADD COLUMN IF NOT EXISTS` elsewhere regardless of run order — harmless, not
+    just apparently so. `dedication_table.sql` is not fully redundant with
+    `chunk_09_new_features.sql`'s version: it additionally grants the owner a `FOR SELECT`
+    visibility policy on every member's `user_dedication` row that the other file's single
+    member-only `FOR ALL` policy doesn't provide — deleting it would have been a real capability
+    regression, not a cleanup.
+  - Verified: `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged — file
+    count 116→113, and `dispatches`/`family_nodes`/`publications` each show one fewer distinct
+    definition in the conflicting-tables list, confirming the removal registered without breaking
+    anything else); `python3 -m unittest discover -s scripts/tests` (25/25 pass);
+    `python3 scripts/check-inline-js.py` clean. No live database touched for this entry — pure
+    repo-file cleanup.
 
 
 ## 9. Working in this repo — practical rules

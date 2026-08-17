@@ -1449,6 +1449,93 @@ orphaned file.
   low-severity) known-unknown for an unverified claim of "fixed" — exactly the kind of claim
   this file's own rule (§9, "never mark something fixed... unless it actually was") exists to
   prevent.
+- **[Fixed] `approvals.html`'s and `profile.html`'s member-management action buttons violated
+  this file's own "never show a success state without checking the write's actual result first"
+  rule — found by a fresh, automated repo-wide audit pass (not by re-reading prior entries in
+  this file) that (a) rebuilt a table→known-columns dictionary from every `supabase/*.sql` file
+  from scratch and diffed it against every `.from().select()/.insert()/.update()/.upsert()` call
+  in every `.html`/`.js` file, and (b) grepped every `.insert(`/`.update(`/`.upsert(` call site
+  for a nearby `.error` check. The column-mismatch pass (the bug class behind the large majority
+  of this file's prior entries) came back clean except for `map.html`'s already-known,
+  deliberately-unfixed `lat`/`lon`/`country`/`gate` reference — independent confirmation that
+  that bug class really is fully resolved elsewhere in this repo, not just documented as such.
+  The missing-`.error`-check pass found two real, live instances that had escaped every prior
+  session's manual review:
+  - `approvals.html`'s `approve()`/`grantPermanent()`/`extend()`/`reject()`/`revoke()` — each
+    tries a `SECURITY DEFINER` RPC first (`approve_member`/`grant_permanent_access`/
+    `extend_trial`/`reject_member`/`revoke_member`) and falls back to a raw
+    `sb.from('profiles').update(...)` only if the RPC call fails — but the fallback's own result
+    was never checked, so every one of these 5 buttons showed its success toast ("✓ TRIAL
+    GRANTED", "∞ PERMANENT ACCESS GRANTED", etc.) unconditionally, even on a page that is the
+    single highest-privilege admin surface in the app. All 5 RPCs are documented above as fixed
+    and live, so this doesn't reproduce on every click today — but the fallback path exists
+    specifically for when an RPC call fails (network issue, a future regression, a permissions
+    edge case), and exactly then is when it would have silently lied to the owner about whether
+    access was actually granted or revoked. Fixed by capturing the fallback update's `.error` and
+    only showing the success toast when either the RPC or the fallback update actually succeeded;
+    a real failure now shows an explicit "COULD NOT ___ — try again" toast instead.
+  - `profile.html` has its own, separate, second member-approval panel (`grantAccess()`/
+    `revokeAccess()`, distinct from `approvals.html`) with the same shape of bug but no RPC
+    fallback at all — it went straight to `sb.from('profiles').update(...)` with no error check
+    and no user-facing feedback either way, just an unconditional `loadMembers()` refresh
+    afterward. Fixed by checking `.error` and alerting on failure before refreshing, matching the
+    convention this file documents as already used correctly elsewhere in this same file
+    (`social.html`, `family.html`).
+  Verified with `python3 scripts/check-inline-js.py` (both files' inline scripts still parse) and
+  `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged — this is a
+  client-side control-flow fix only, no new `.from()`/`.rpc()` call sites). Not yet applied to a
+  live database because there is nothing to apply — no SQL changed.
+- **Missing test coverage — closed for the two Python scripts that gate CI, `scripts/audit.py`
+  and `scripts/check-inline-js.py`.** Neither had any test coverage before this session; a
+  regression in either script's own regex/parsing logic (e.g. a pattern that quietly stops
+  matching) would let CI keep reporting green while no longer actually checking what its own
+  name claims to check — the exact failure mode both scripts exist to catch in the rest of the
+  codebase, just one level up. Added `scripts/tests/test_check_inline_js.py` (13 tests, importing
+  `check-inline-js.py` directly via `importlib` since its two real functions — `is_module()`,
+  `check_block()` — are unit-testable in isolation) and `scripts/tests/test_audit.py` (12 tests).
+  `audit.py` itself is a top-level script with no functions (it always resolves its own `ROOT`
+  from `__file__` and `chdir()`s there), so it can't be `import`ed against a fixture directly;
+  its tests instead build small throwaway repo fixtures on disk, copy the real `audit.py` into
+  `<fixture>/scripts/audit.py` so its own `ROOT` resolution lands on the fixture, and run it as a
+  subprocess the same way CI does, asserting on exit code and report text — black-box, but
+  testing the actual gate CI runs rather than a refactored stand-in for it. Coverage spans both
+  scripts' real behavior, not just their happy path: module-graph critical-vs-warning split,
+  RLS-missing critical, identical-vs-conflicting duplicate table bodies, missing
+  table/RPC-divergence warnings (including that an RPC nobody calls yet is correctly out of
+  scope for the diverging-RPC check), and inline-script pass/fail/module-detection cases. Found
+  and fixed one small real bug in `check-inline-js.py` while writing its tests: `main()` opened
+  every page with a bare `open(page,...).read()` and never closed the handle (a `ResourceWarning`
+  surfaced immediately under `unittest`) — changed to a `with` block; no behavior change, just no
+  longer leaking a file descriptor per page across a ~250-page run. Wired both suites into CI as
+  a new, blocking `.github/workflows/ci.yml` step ("Audit tooling self-tests", `python3 -m
+  unittest discover -s scripts/tests`) placed right after the two scripts it tests, matching this
+  repo's existing "gate between commit and production" philosophy for `ci.yml` — a broken audit
+  script is exactly the kind of regression that philosophy exists to catch, and until now nothing
+  did. All 25 tests pass locally; the full local CI-equivalent sequence (JS syntax, inline-script
+  syntax, `audit.py`, the new self-tests, broken-asset scan, service-role-key scan, `sw.js`
+  precache check, manifest icon check) was re-run end-to-end afterward and is unchanged (0
+  critical / 6 pre-existing warnings).
+- **`.nvmrc` bumped from `20.11.0` to `20.20.2`** (latest `20.x` LTS patch at the time of this
+  session, confirmed via the npm registry's `node` version listing) — CI resolves its Node
+  version from this file (`actions/setup-node` with `node-version-file: .nvmrc`), so every run
+  had been provisioning a Node patch release over a year old. Same major/minor line as
+  `package.json`'s own `"engines": {"node": ">=20.11.0"}` floor, so this doesn't change the
+  minimum supported version, only which patch CI actually runs — a pure patch bump on a
+  no-build-step static site has no code path that could regress from it. `eslint@8`/`prettier@3`
+  in `ci.yml` are invoked via `npx --yes` (not pinned in a lockfile), so they already resolve to
+  the latest release on their pinned major (`8.67.0`/`3.9.6` at time of writing) on every run —
+  nothing to bump there.
+- **GitHub connector used to check real repository state before auditing from assumptions
+  alone**: `list_issues` (0 open), the Actions API (`list_workflow_runs` on `ci.yml` — last 30
+  runs across `main` and the taxonomy branch all `completed`/`success`, confirming CI is
+  genuinely green right now, not just believed to be), and `pull_request_read`. Direct PR listing
+  (`list_pull_requests`) returned a 403 from this session's GitHub App installation scope; this
+  wasn't pursued further since the Actions run history already confirmed the same "nothing
+  currently broken" signal from a different angle. The Supabase MCP connector is configured for
+  this repo but requires an interactive OAuth authorization this non-interactive session cannot
+  complete — live-schema verification for the still-open items above (§5's 10 conflicting
+  duplicate tables, §8's 11 diverging RPC definitions) remains blocked on the user running
+  `claude mcp`/`/mcp` to authorize it, same as every prior session's note on this.
 
 
 ## 9. Working in this repo — practical rules

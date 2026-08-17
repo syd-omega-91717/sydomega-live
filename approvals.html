@@ -518,18 +518,24 @@ async function rpcOk(name,args){
 }
 async function approve(uid){
   var exp=new Date(Date.now()+557*1000).toISOString();
-  if(!(await rpcOk('approve_member',{p_uid:uid}))){
-    await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
+  var ok=await rpcOk('approve_member',{p_uid:uid});
+  if(!ok){
+    var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
+    ok=!r.error;
   }
-  toast('✓ TRIAL GRANTED — 9 MINUTES 17 SECONDS','var(--green)');
+  if(ok){toast('✓ TRIAL GRANTED — 9 MINUTES 17 SECONDS','var(--green)');}
+  else{toast('COULD NOT GRANT ACCESS — try again','var(--crim)');}
   load();
 }
 async function grantPermanent(uid){
   if(!confirm('Grant PERMANENT lifetime access to this member?'))return;
-  if(!(await rpcOk('grant_permanent_access',{p_uid:uid}))){
-    await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
+  var ok=await rpcOk('grant_permanent_access',{p_uid:uid});
+  if(!ok){
+    var r=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
+    ok=!r.error;
   }
-  toast('∞ PERMANENT ACCESS GRANTED','var(--gold)');
+  if(ok){toast('∞ PERMANENT ACCESS GRANTED','var(--gold)');}
+  else{toast('COULD NOT GRANT PERMANENT ACCESS — try again','var(--crim)');}
   load();
 }
 async function extend(uid){
@@ -537,26 +543,35 @@ async function extend(uid){
   var m=allMembers.find(function(x){return x.id===uid;});
   var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
   var exp=new Date(base+557*1000).toISOString();
-  if(!(await rpcOk('extend_trial',{p_uid:uid,p_seconds:557}))){
-    await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
+  var ok=await rpcOk('extend_trial',{p_uid:uid,p_seconds:557});
+  if(!ok){
+    var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
+    ok=!r.error;
   }
-  toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');
+  if(ok){toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');}
+  else{toast('COULD NOT EXTEND TRIAL — try again','var(--crim)');}
   load();
 }
 async function reject(uid){
   if(!confirm('Reject this access request?'))return;
-  if(!(await rpcOk('reject_member',{p_uid:uid}))){
-    await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null,is_rejected:true}).eq('id',uid);
+  var ok=await rpcOk('reject_member',{p_uid:uid});
+  if(!ok){
+    var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null,is_rejected:true}).eq('id',uid);
+    ok=!r.error;
   }
-  toast('✕ REQUEST REJECTED','var(--crim)');
+  if(ok){toast('✕ REQUEST REJECTED','var(--crim)');}
+  else{toast('COULD NOT REJECT REQUEST — try again','var(--crim)');}
   load();
 }
 async function revoke(uid){
   if(!confirm('Immediately revoke access for this member?'))return;
-  if(!(await rpcOk('revoke_member',{p_uid:uid}))){
-    await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
+  var ok=await rpcOk('revoke_member',{p_uid:uid});
+  if(!ok){
+    var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
+    ok=!r.error;
   }
-  toast('■ ACCESS REVOKED','var(--crim)');
+  if(ok){toast('■ ACCESS REVOKED','var(--crim)');}
+  else{toast('COULD NOT REVOKE ACCESS — try again','var(--crim)');}
   load();
 }
 

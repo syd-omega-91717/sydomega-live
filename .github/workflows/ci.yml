@@ -50,6 +50,14 @@ jobs:
       - name: Repository audit
         run: python3 scripts/audit.py
 
+      # ---- 2b. Self-tests for the audit tooling itself. audit.py and
+      #         check-inline-js.py are the gate everything else above runs
+      #         through; a regression in their own logic (e.g. a regex that
+      #         silently stops matching) would let broken code pass CI
+      #         without anyone noticing. Fixture-based, no live repo state.
+      - name: Audit tooling self-tests
+        run: python3 -m unittest discover -s scripts/tests -v
+
       # ---- 3. Style. Configs already existed in the repo but nothing ran them.
       - name: Prettier
         run: npx --yes prettier@3 --check . || echo "::warning::formatting drift"

@@ -1587,17 +1587,20 @@ function startCountdown(uid,expiresAt,el){
 }
 
 async function grantAccess(uid,minutes,sbRef){
+  let error;
   if(minutes<0){
-    await sbRef.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null}).eq('id',uid);
+    ({error}=await sbRef.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null}).eq('id',uid));
   } else {
     const exp=new Date(Date.now()+minutes*60000).toISOString();
-    await sbRef.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp}).eq('id',uid);
+    ({error}=await sbRef.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp}).eq('id',uid));
   }
+  if(error){alert('Could not update access. Try again.');return;}
   loadMembers();
 }
 
 async function revokeAccess(uid,sbRef){
-  await sbRef.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
+  const {error}=await sbRef.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
+  if(error){alert('Could not revoke access. Try again.');return;}
   loadMembers();
 }
 

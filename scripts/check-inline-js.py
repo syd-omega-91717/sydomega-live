@@ -59,7 +59,8 @@ def check_block(block: str, module: bool) -> str | None:
 def main() -> int:
     failures = []
     for page in sorted(glob.glob("*.html")):
-        src = open(page, encoding="utf-8", errors="ignore").read()
+        with open(page, encoding="utf-8", errors="ignore") as f:
+            src = f.read()
         for m in SCRIPT_BLOCK.finditer(src):
             attrs, block = m.group(1), m.group(2)
             if not block.strip():

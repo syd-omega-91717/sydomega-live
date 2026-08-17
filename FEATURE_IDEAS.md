@@ -329,7 +329,15 @@ different achievement sizes):
 - [The Best Gamification UI Libraries (2026) — Trophy.so](https://trophy.so/blog/gamification-ui-libraries)
 - [Microinteractions UI Best Practices: A 2026 Guide](https://createbytes.com/insights/microinteractions-ui-best-practices)
 
-## 10. Mount the already-built sigil generator on profile.html (IDENTITY)
+## 10. Mount the already-built sigil generator on profile.html (IDENTITY) — SHIPPED
+
+**Shipped** — confirmed directly in code: `profile.html:432` has `<div id="ph-sigil"
+data-sigil-mount>`, and `profile.html:2359-2364` calls `window.OmegaSigil.mount(el,{...})` from a
+`mountSigil()` function with a retry guard (`if(!window.OmegaSigil){setTimeout(mountSigil,300);
+return;}`) exactly as proposed — bypassing the shared `omega:user-loaded` event, not dispatching
+it platform-wide. Flagged and corrected here because `CAPABILITY_INVENTORY.md` already documented
+this as shipped but this file's own status marker was never updated to match, the same doc-drift
+`CLAUDE.md` §9 warns against.
 
 **Grounded in:** `omega-sigil-gen.js` (loaded platform-wide, `window.OmegaSigil.generate/mount/download`)
 is a working, deterministic, purely-client-side procedural SVG generator from a member's own
@@ -359,7 +367,12 @@ question — see the "Flagged, not proposed" note below — this idea intentiona
 attribute-injection context, and sigils only ever render the viewer's own profile, never another
 member's. Not exploitable; no fix needed.
 
-## 11. Wire the already-built passport PDF download on profile.html (IDENTITY)
+## 11. Wire the already-built passport PDF download on profile.html (IDENTITY) — SHIPPED
+
+**Shipped** — confirmed directly in code: `profile.html:431` has `<button
+data-passport-download>&#8595; PASSPORT PDF</button>` next to the share-card button, exactly as
+proposed — no JS added, the module's existing global click listener handles it. Same doc-drift
+correction as #10 above.
 
 **Grounded in:** `omega-passport.js` (loaded platform-wide, jsPDF via esm.sh, MIT) generates a
 downloadable PDF from `window.__omegaProfile` on any click of `[data-passport-download]` — that
@@ -377,7 +390,13 @@ button. No JS to write — the module's existing global click listener + `window
 
 **Data needs:** none.
 
-## 12. Owner-only FinOps cost summary on dashboard.html (COMMAND, owner-gated)
+## 12. Owner-only FinOps cost summary on dashboard.html (COMMAND, owner-gated) — SHIPPED
+
+**Shipped** — confirmed directly in code: `dashboard.html:852-853`, inside the existing
+`if(pr.is_owner)` admin block, `if(window.OmegaFinOps){try{sid('adm-finops-cost','$'+window.
+OmegaFinOps.summary().total_usd.toFixed(4));}catch(e){}}` — reads the module's in-memory summary
+exactly as proposed, no historical `platform_metrics` aggregation added. Same doc-drift correction
+as #10/#11 above.
 
 **Grounded in:** `omega-finops.js` is not dormant — it is **already actively running** on every
 page for every member: it patches `window.__omegaSb.from().select()` to count DB reads, estimates
@@ -401,7 +420,12 @@ existing RLS boundary exactly, not a new judgment call.
 session, doesn't query `platform_metrics` historically (that would be a separate, bigger
 aggregation feature).
 
-## 13. Seed the already-built (and already auto-mounting) honesty-label system (platform-wide)
+## 13. Seed the already-built (and already auto-mounting) honesty-label system (platform-wide) — SHIPPED
+
+**Shipped** — confirmed directly in code: `profile.html:429` has `AUTHORITY INDEX <span
+data-canon="mechanic"></span>`, and `agents.html:49` has `SOVEREIGN AGENTS <span
+data-canon="lore"></span>` — both exactly the two placements proposed, no `fiction` example added
+in this pass (left to #14, which shipped separately). Same doc-drift correction as #10-#12 above.
 
 **Grounded in:** `omega-canon-badge.js` (loaded platform-wide) is a small, fully self-contained
 system that auto-mounts on every page (`DOMContentLoaded` + two retry timers, no event/wiring
@@ -482,7 +506,32 @@ clean; `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing warnings (all 
 assets) on both repos after sync. Byte-identical diff confirmed between
 `-_V18_SYDOMEGA91717/chronicle.html` and `sydomega-live/chronicle.html`.
 
-## 15. Surface the already-built `member_posts` table on `feed.html`'s mislabeled "POSTS" tab (MEDIA)
+## 15. Surface the already-built `member_posts` table on `feed.html`'s mislabeled "POSTS" tab (MEDIA) — SHIPPED
+
+**Shipped** — implemented as a new, separate "MEMBER POSTS" tab (`feed.html`'s 5th tab,
+`#tab-member-posts`), deliberately not touching the existing "POSTS" tab (which correctly reads
+`publications`, per its own already-fixed bug in `CLAUDE.md` §8), exactly per this idea's own
+"scoped narrower" note. Read: `loadMemberPosts()` selects
+`post_type,title,body,tags,likes_count,comments_count,created_at` from `member_posts` where
+`status='published'`, ordered newest-first, limit 20 — matches the proposal's own SQL exactly.
+Write: a minimal compose form (title/body/post_type dropdown limited to the table's real 6 CHECK
+values) inserting `{user_id,post_type,title,body}` — `status` is left unset so the table's own
+`DEFAULT 'published'` applies, matching the RLS model (`FOR ALL USING(user_id=auth.uid())`).
+Every rendered field (`title`/`body`/`tags`) goes through a per-page `esc()` helper matching the
+established convention (`contracts.html`, `dashboard.html`, etc.) — member-writable text, same
+stored-XSS class already fixed platform-wide per `CLAUDE.md` §8. The insert path checks `.error`
+before showing "POSTED" (never a false success, per this repo's own most-repeated bug-class
+rule) and shows "POST FAILED" on a genuine failure instead.
+
+**Verified in headless Chromium** (not just read from source) against a schema-shaped mock
+Supabase client: tab renders and switches correctly (5 tabs total); 2 seeded `member_posts` rows
+render, including one with a `<script>alert(1)</script>` payload in `body` — confirmed it renders
+escaped (`&lt;script&gt;`) with zero unescaped `<script>` tags reaching the DOM; empty-body submit
+is rejected client-side with no insert call; a successful insert clears the form and shows
+"POSTED"; a forced insert failure shows "POST FAILED — TRY AGAIN," not a false success. Zero page
+errors. `node --check` on the extracted module script and `scripts/audit.py` (0 critical / 6
+pre-existing warnings, unchanged) both clean. Reactions (`likes_count` increment) intentionally
+left out, matching the original idea's own scoping note — a small follow-up, not a blocker.
 
 **Grounded in:** `supabase/platform_expansion.sql:99-122` defines `public.member_posts` — a fully
 built, RLS'd table for structured member updates (`post_type` CHECK-constrained to

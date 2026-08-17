@@ -478,7 +478,7 @@ orphaned file.
   either is real payment/token-infrastructure design work, not a bug fix
   — left undone pending an explicit decision, per this file's own rule
   against shipping monetizable features without gating them first.
-- **`user_assets` table is missing from the live schema — action needed.**
+- **`user_assets` table was missing from the live schema — fixed.**
   `portfolio.html` (SOVEREIGN ASSETS panel) and `vault.html` (NFT grid)
   both query `public.user_assets`, and portfolio.html's own copy calls it
   "the user_assets ledger... updated by mission outcomes, trade, and
@@ -547,7 +547,7 @@ orphaned file.
   by adding a per-page `esc()` helper (matching the convention already used
   elsewhere, e.g. `contracts.html`, `dashboard.html`) and escaping
   `display_name`/`email`/the avatar initial in both files.
-- **`notifications` table missing from the live schema — action needed.**
+- **`notifications` table was missing from the live schema — fixed.**
   `omega-notify.js` (injected platform-wide by `bg.js` on every approved
   page) queries `public.notifications` for the badge/toast/panel widget
   (`user_id`, `notification_type`, `message`, `content`, `created_at`,
@@ -1001,8 +1001,14 @@ orphaned file.
   ad afterward → succeeds); the module-boundary fixes with real inline-attribute clicks in
   headless Chromium. `node --check`-equivalent syntax validation on every touched page's
   inline `<script>` blocks, and `scripts/audit.py` reconfirmed 0 critical / 6 pre-existing
-  warnings throughout. Not yet applied to the live database (the one SQL change,
-  `omega_advertisements_insert_fix.sql`) — everything else is client-side only.
+  warnings throughout. **Applied to the live database and verified** (2026-08-17) — queried
+  `pg_policies` on `public.advertisements` before applying and confirmed only `owner_manage_ads`
+  and `read_approved_ads` existed, no INSERT policy for a non-owner member; applied
+  `omega_advertisements_insert_fix.sql` via the Supabase MCP connector's `apply_migration`, then
+  re-queried and confirmed `"member submits own ad"` (`FOR INSERT`, `WITH CHECK (submitted_by =
+  auth.uid())`) now exists alongside the other two. Matching local migration file added at
+  `supabase/migrations/20260817233805_omega_advertisements_insert_fix.sql`, named with the exact
+  version string the remote recorded.
   - **`dna.html` had the identical `tribe.html`-class bug, found and fixed separately**: its
     personalization panel read `pr.authority_score`/`pr.gate_level`, neither of which exists,
     so every member saw the same generic default (`gate 1`, `auth 3.14`) regardless of real
@@ -1722,6 +1728,41 @@ orphaned file.
     anything else); `python3 -m unittest discover -s scripts/tests` (25/25 pass);
     `python3 scripts/check-inline-js.py` clean. No live database touched for this entry — pure
     repo-file cleanup.
+- **The "11 diverging RPC definitions" warning (§8's original list, first raised as blocked-on-
+  live-access many sessions ago) is now fully closed — all 11 confirmed against real production,
+  not the scratch project, not source-file heuristics.** Between this session's production
+  verification pass and this entry, every one of the 11 has a confirmed, evidence-cited answer:
+  `apply_subscription`, `check_trial_status`, `complete_task`, `my_lattice`, `my_matrix`,
+  `get_all_members`, `order_stats`, `public_leaderboard` — all already correct live (the last
+  three via `compute_authority()`, `my_lattice`/`my_matrix` fixed this session to match).
+  `expire_trial` — live version differs from the repo's fix file but is independently correctly
+  authorized (self-or-owner), a legitimate alternate implementation, not a bug. `my_subscription`
+  — read in full, all column/function dependencies check out clean, nothing to fix.
+  `recall_ai_context` — confirmed via `pg_get_functiondef()` that the live body matches
+  `omega_ai_memory_recall_fix.sql` (checks `expires_at`) exactly, not the older unfixed
+  `omega_ai_memory.sql` body — the fix-file naming heuristic was correct here.
+- **`omega_advertisements_insert_fix.sql` — the one item still marked "not yet applied to the
+  live database" anywhere in this file — applied and verified.** Queried `pg_policies` on
+  `public.advertisements` before applying and confirmed the gap exactly as described: only
+  `owner_manage_ads` (owner-only) and `read_approved_ads` (SELECT) existed, no INSERT policy for
+  a non-owner member, despite `chunk_06_migrations.sql` already granting `INSERT` to
+  `authenticated` and `advertising.html`'s `submitAd()` already sending exactly the shape the fix
+  expects. Applied via `apply_migration`; re-queried and confirmed `"member submits own ad"`
+  (`FOR INSERT`, `WITH CHECK (submitted_by = auth.uid())`) now exists. Matching local migration
+  file added at `supabase/migrations/20260817233805_omega_advertisements_insert_fix.sql`, and the
+  source file's own header updated from "Not yet applied" to reflect this.
+- **Two other entries above (`user_assets`, `notifications`) had a header line reading "action
+  needed" that contradicted their own body text, which already said "Applied to the live database
+  and verified."** Corrected both headers to match — stale labels like this are exactly the kind
+  of thing that makes a real fix look like an open item to a future reader skimming section
+  headers rather than reading the full entry. No functional change, just accuracy.
+- **What's left genuinely open in this file, for a future session**: the two tables this file has
+  already deliberately decided to leave dormant (`transactions`, `wallet_balances` — token/payment
+  infrastructure gated behind an explicit product decision, not a bug), the two hygiene items the
+  user explicitly chose to leave as-is when asked directly (`.mp4`/`.docx` Git LFS migration), the
+  page-local `.tab-btn`/font-size sweep noted as a separate larger effort, and the 27 pages still
+  using native `<table>` markup instead of the shared `.tbl-wrap` system. None of these are bugs
+  masquerading as done — each already has an explicit, evidence-cited reason it's open on purpose.
 
 
 ## 9. Working in this repo — practical rules

@@ -1627,6 +1627,50 @@ orphaned file.
     Supabase change, verified against real client call sites rather than guessed from file
     conventions, per this session's own standing instruction to keep everything real rather than
     conceptual.
+- **Production access (`ydqhzvvoyufiiqvzcjns`) was authorized later this same session — and
+  verifying against it, rather than blindly replaying the scratch-project fixes above, mattered.**
+  `list_projects` still only returns the scratch project, but `get_project('ydqhzvvoyufiiqvzcjns')`
+  succeeds directly — real project, org `vztvuckpdsoriyvpdkzx`, name "sydomega", created
+  2026-06-14, genuinely live (190+ tables, real row counts: 9 `profiles`, 24 each of
+  `certificates`/`trophies`/`medals`, 69 `sovereign_points_ledger` rows, 3,304 `client_errors`
+  rows, `daily_engagement` actively populated). Checked every fix from the scratch-project pass
+  above against this real database before touching anything, per this session's own standing
+  rule about not guessing at live state:
+  - **Everything from the scratch-project pass was already applied here — in several cases in a
+    more advanced form.** `apply_subscription`/`complete_task`/`check_trial_status`/
+    `omega_is_owner`/`my_matrix`/`my_lattice`/`authority_score`/`lattice_node`, all 8
+    RLS-disabled tables (now correctly enabled with real policies, confirmed via `list_tables`
+    showing zero critical advisory), `consult_requests.domain`, and
+    `record_interest_signal()`/`my_interest_profile()` all already exist correctly. `ai_memory`/
+    `recall_ai_context()` — the one thing explicitly skipped on the scratch project for a missing
+    dependency — already exist here too.
+  - **`grant_trial_access()` uses a materially different, more sophisticated design than
+    `0005_trial_917.sql`'s, found only by reading the actual live function body rather than
+    trusting a matching return-type signature.** Production's version doesn't set
+    `trial_expires_at` at grant time at all — it records `trial_granted_at` and leaves the clock
+    unstarted until the member calls `start_trial_countdown()` for the first time (idempotent;
+    never extends). This is `supabase/migrations/0084_chronometers.sql`
+    ("APPROVAL WINDOW... starts when the member RECEIVES the approval confirmation, not when the
+    owner clicks grant"), already fully live — the same file's Part 2 (`daily_engagement`,
+    `engagement_heartbeat()`, `engagement_pause()`, `engagement_report()` — a
+    heartbeat-with-capped-credit design specifically to stop a client from faking a full day of
+    the 33,437s daily engagement obligation) is live too, confirmed by `daily_engagement` holding
+    9 real rows. Applying the scratch project's `0005_trial_917.sql`-based `grant_trial_access`
+    here would have been a real regression, not a fix — caught before applying anything by
+    checking the actual function body, not just its signature.
+  - **One genuine, low-impact inconsistency found and fixed**: `my_matrix()`/`my_lattice()`
+    still called the older `authority_score(a,b,c)` (no owner special-case) while
+    `get_all_members()`/`order_stats()`/`public_leaderboard()` already called the newer
+    `compute_authority(a,b,c,is_owner)` (returns exactly `27.8367` for the owner regardless of
+    literal axis values). No visible bug today — the owner's axes are always pinned at `9,9,9`,
+    and `authority_score(9,9,9)` already rounds to the identical `27.8367` — but two functions
+    computing the platform's one "authority" concept differently is the same inconsistency class
+    already fixed elsewhere this session. Consolidated both onto `compute_authority()`. Verified:
+    `compute_authority(9,9,9,true)` and `compute_authority(9,9,9,false)` both correctly return
+    `27.8367`.
+  - This closes the "blocked on live Supabase access" note attached to several items above and
+    in earlier sessions' entries — production schema/RPC state for the areas checked this session
+    is now confirmed, not assumed.
 
 
 ## 9. Working in this repo — practical rules

@@ -63,10 +63,6 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 .ohb-sub{font-family:var(--M);font-size:8px;letter-spacing:2.5px;color:var(--muted);margin-top:5px}
 
 /* science tab */
-.sci-table{width:100%;border-collapse:collapse;font-family:var(--M);font-size:12px;margin-top:12px}
-.sci-table th{color:var(--cyan);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:2px}
-.sci-table td{padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.08);vertical-align:top}
-.sci-table tr:last-child td{border-bottom:none}
 
 @media(max-width:680px){.builder-grid{grid-template-columns:1fr}.builder-arrow{display:none}.ohb{grid-template-columns:1fr}.ohb-c{display:none}.ohb-l{border-right:none;border-bottom:1px solid var(--line)}.ohb-r{border-left:none;text-align:left}}
 </style>
@@ -182,25 +178,21 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 
   <div class="sechead">TRIGGER → ACTION MAPPINGS</div>
   <div class="card" style="overflow-x:auto">
-    <table class="sci-table">
-      <thead>
-        <tr><th>TRIGGER</th><th>CONDITION</th><th>ACTION</th><th>KIND</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>MATRIX ADVANCE</td><td>Any task completed</td><td>Axis +0.25, intelligence stamp</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-        <tr><td>GATE UNLOCK</td><td>Auth score crosses threshold</td><td>Broadcast + intelligence event</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-        <tr><td>CERT MILESTONE</td><td>Node (3,3,3) / (6,6,6) / (9,9,9)</td><td>Issue certificate, notify owner</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-        <tr><td>TRIAL SENTINEL</td><td>trial_expires_at &lt; now()</td><td>expire_trial RPC, axis reset</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-        <tr><td>AGENT DEPLOY</td><td>Tier rank changes</td><td>Activate agent + orientation</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-        <tr><td>MARKETPLACE</td><td>Offer received on listing</td><td>Instant notification dispatch</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-        <tr><td>CONTRIBUTION RELAY</td><td>Contribution task + social linked</td><td>Queue sovereign broadcast</td><td style="color:var(--solar)">MEMBER</td></tr>
-        <tr><td>DAILY HOROSCOPE</td><td>New day begins 00:00</td><td>Dispatch celestial reading</td><td style="color:var(--solar)">MEMBER</td></tr>
-        <tr><td>FAMILY SYNC</td><td>Family node earns certificate</td><td>Milestone alert to feed</td><td style="color:var(--solar)">MEMBER</td></tr>
-        <tr><td>INTELLIGENCE SNAP</td><td>Any axis coordinate changes</td><td>Stamp timeline evolution event</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-        <tr><td>INCOME ALLOCATION</td><td>Revenue event fires</td><td>Route 51%/40%/9.17% split</td><td style="color:var(--muted)">PLANNED</td></tr>
-        <tr><td>VOID ASCENSION</td><td>Any axis approaches 9.0</td><td>Sovereign agent + Omega sequence</td><td style="color:var(--cyan)">SYSTEM</td></tr>
-      </tbody>
-    </table>
+    <div class="tbl-wrap">
+      <div class="tbl-head" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>TRIGGER</span><span>CONDITION</span><span>ACTION</span><span>KIND</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>MATRIX ADVANCE</span><span>Any task completed</span><span>Axis +0.25, intelligence stamp</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>GATE UNLOCK</span><span>Auth score crosses threshold</span><span>Broadcast + intelligence event</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>CERT MILESTONE</span><span>Node (3,3,3) / (6,6,6) / (9,9,9)</span><span>Issue certificate, notify owner</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>TRIAL SENTINEL</span><span>trial_expires_at &lt; now()</span><span>expire_trial RPC, axis reset</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>AGENT DEPLOY</span><span>Tier rank changes</span><span>Activate agent + orientation</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>MARKETPLACE</span><span>Offer received on listing</span><span>Instant notification dispatch</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>CONTRIBUTION RELAY</span><span>Contribution task + social linked</span><span>Queue sovereign broadcast</span><span style="color:var(--solar)">MEMBER</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>DAILY HOROSCOPE</span><span>New day begins 00:00</span><span>Dispatch celestial reading</span><span style="color:var(--solar)">MEMBER</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>FAMILY SYNC</span><span>Family node earns certificate</span><span>Milestone alert to feed</span><span style="color:var(--solar)">MEMBER</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>INTELLIGENCE SNAP</span><span>Any axis coordinate changes</span><span>Stamp timeline evolution event</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>INCOME ALLOCATION</span><span>Revenue event fires</span><span>Route 51%/40%/9.17% split</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>VOID ASCENSION</span><span>Any axis approaches 9.0</span><span>Sovereign agent + Omega sequence</span><span style="color:var(--cyan)">SYSTEM</span></div>
+    </div>
   </div>
 
   <div class="sechead">ALLOCATION ENGINE</div>

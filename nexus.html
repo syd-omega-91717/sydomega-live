@@ -14,11 +14,9 @@
 .feed-log{font-family:var(--M);font-size:8px;color:var(--muted);line-height:2;display:flex;flex-direction:column-reverse}
 #node-tip{position:absolute;background:rgba(10,10,15,.95);border:1px solid rgba(0,229,255,.3);border-radius:6px;padding:8px 12px;font-family:var(--M);font-size:8px;color:var(--cyan);pointer-events:none;z-index:20;display:none;backdrop-filter:blur(8px)}
 .nexus-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000005;z-index:30;font-family:var(--M);font-size:9px;letter-spacing:3px;color:var(--muted)}
-.member-table{width:100%;border-collapse:collapse;font-family:var(--M);font-size:11px}
-.member-table th{font-size:7.5px;letter-spacing:2px;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
-.member-table td{padding:8px 12px;border-bottom:1px dashed rgba(201,168,76,.07);color:var(--ink)}
-.member-table td:nth-child(2){color:var(--gold)}
-.member-table tr.is-me td{background:rgba(226,200,109,.04)}
+#member-table .tbl-row{color:var(--ink);font-family:var(--M);font-size:11px}
+#member-table .tbl-row span:nth-child(2){color:var(--gold)}
+#member-table .tbl-row.is-me{background:rgba(226,200,109,.04)}
 .elem-legend-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05);font-family:var(--M);font-size:9px;color:var(--muted)}
 .elem-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 </style>
@@ -57,10 +55,10 @@
   <div style="padding:1.25rem">
     <p class="sechead">SOVEREIGN MEMBERS</p>
     <div style="overflow-x:auto">
-      <table class="member-table" id="member-table">
-        <thead><tr><th>NAME</th><th>AUTHORITY</th><th>GATE</th><th>ELEMENT</th></tr></thead>
-        <tbody id="member-tbody"></tbody>
-      </table>
+      <div class="tbl-wrap" id="member-table">
+        <div class="tbl-head" style="grid-template-columns:1.4fr 130px 1.2fr 140px"><span>NAME</span><span>AUTHORITY</span><span>GATE</span><span>ELEMENT</span></div>
+        <div id="member-tbody"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -167,8 +165,9 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   tbody.innerHTML='';
   var sorted=[...nodes].sort(function(a,b){return b.auth-a.auth;});
   sorted.forEach(function(n,i){
-    var row=document.createElement('tr');
-    if(n.id===myId)row.className='is-me';
+    var row=document.createElement('div');
+    row.className='tbl-row'+(n.id===myId?' is-me':'');
+    row.style.gridTemplateColumns='1.4fr 130px 1.2fr 140px';
     var cells=[
       n.name+(n.id===myId?' (YOU)':''),
       n.auth.toFixed(4),
@@ -176,7 +175,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
       (ELEM_SIGILS[n.elem]||'')+' '+n.elem
     ];
     cells.forEach(function(text,ci){
-      var td=document.createElement('td');td.textContent=text;row.appendChild(td);
+      var td=document.createElement('span');td.textContent=text;row.appendChild(td);
     });
     tbody.appendChild(row);
   });

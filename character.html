@@ -37,10 +37,7 @@
 .lore-panel{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:18px;margin-bottom:1rem}
 .lore-title{font-family:var(--M);font-size:clamp(13px,2vw,18px);color:var(--cyan);margin-bottom:8px}
 .lore-body{font-size:12px;line-height:1.9;color:var(--ink);opacity:.8}
-.ref-table{width:100%;border-collapse:collapse;font-family:var(--M);font-size:11px}
-.ref-table th{font-size:7.5px;letter-spacing:1.5px;color:var(--muted);padding:6px 10px;text-align:left;border-bottom:1px solid var(--line)}
-.ref-table td{padding:7px 10px;border-bottom:1px solid rgba(201,168,76,.05);color:var(--ink);font-size:11px}
-.ref-table tr.hl td{background:rgba(0,229,255,.06)}
+#ref-table .tbl-row.hl{background:rgba(0,229,255,.06)}
 @media(max-width:700px){.id-card{grid-template-columns:1fr}.id-card-left{border-right:none;padding-right:0;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}.id-card-right{padding-left:0}.element-grid{grid-template-columns:repeat(3,1fr)}.axis-grid{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
@@ -192,24 +189,22 @@
       <div class="card"><div class="card-title">TOKEN ECONOMY</div><div class="card-body">The 9-element token system underpins the sovereign economy. Each element token is issued when the corresponding gate threshold is crossed. Omega tokens (The All element) are reserved for those who have reached APEX authority — AUTH ≥ 27.8367.</div></div>
     </div>
     <p class="sechead" style="margin-top:1.5rem">SIGN · OLYMPIAN · ELEMENT · GATE</p>
-    <div style="overflow-x:auto">
-      <table class="ref-table" id="ref-table">
-        <thead><tr><th>SIGN</th><th>OLYMPIAN</th><th>ELEMENT</th><th>GATE</th></tr></thead>
-        <tbody id="ref-tbody">
-          <tr><td>Aries</td><td>Ares</td><td>Fire ☲</td><td>I</td></tr>
-          <tr><td>Taurus</td><td>Aphrodite</td><td>Metal ☳</td><td>II</td></tr>
-          <tr><td>Gemini</td><td>Hermes</td><td>Wind ☱</td><td>III</td></tr>
-          <tr><td>Cancer</td><td>Artemis</td><td>Water ☰</td><td>IV</td></tr>
-          <tr><td>Leo</td><td>Apollo</td><td>Fire ☲</td><td>V</td></tr>
-          <tr><td>Virgo</td><td>Athena</td><td>Sand ★</td><td>VI</td></tr>
-          <tr><td>Libra</td><td>Hera</td><td>Wind ☱</td><td>VII</td></tr>
-          <tr><td>Scorpio</td><td>Demeter</td><td>Water ☰</td><td>VIII</td></tr>
-          <tr><td>Sagittarius</td><td>Zeus</td><td>Fire ☲</td><td>IX</td></tr>
-          <tr><td>Capricorn</td><td>Hestia</td><td>Metal ☳</td><td>X</td></tr>
-          <tr><td>Aquarius</td><td>Hephaestus</td><td>Wind ☱</td><td>XI</td></tr>
-          <tr><td>Pisces</td><td>Poseidon</td><td>Water ☰</td><td>XII</td></tr>
-        </tbody>
-      </table>
+    <div class="tbl-wrap" id="ref-table">
+      <div class="tbl-head" style="grid-template-columns:1fr 1fr 1fr 60px"><span>SIGN</span><span>OLYMPIAN</span><span>ELEMENT</span><span>GATE</span></div>
+      <div id="ref-tbody">
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Aries</span><span>Ares</span><span>Fire ☲</span><span>I</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Taurus</span><span>Aphrodite</span><span>Metal ☳</span><span>II</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Gemini</span><span>Hermes</span><span>Wind ☱</span><span>III</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Cancer</span><span>Artemis</span><span>Water ☰</span><span>IV</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Leo</span><span>Apollo</span><span>Fire ☲</span><span>V</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Virgo</span><span>Athena</span><span>Sand ★</span><span>VI</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Libra</span><span>Hera</span><span>Wind ☱</span><span>VII</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Scorpio</span><span>Demeter</span><span>Water ☰</span><span>VIII</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Sagittarius</span><span>Zeus</span><span>Fire ☲</span><span>IX</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Capricorn</span><span>Hestia</span><span>Metal ☳</span><span>X</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Aquarius</span><span>Hephaestus</span><span>Wind ☱</span><span>XI</span></div>
+        <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 60px"><span>Pisces</span><span>Poseidon</span><span>Water ☰</span><span>XII</span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -299,10 +294,9 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   setW('mx-a-bar',a/9*100);setW('mx-b-bar',b/9*100);setW('mx-c-bar',c/9*100);
 
   /* Highlight sign row in ref table */
-  var trKey=sign.toLowerCase();
-  var rows=document.querySelectorAll('#ref-tbody tr');
+  var rows=document.querySelectorAll('#ref-tbody .tbl-row');
   rows.forEach(function(row){
-    if(row.cells[0]&&row.cells[0].textContent===sign)row.classList.add('hl');
+    if(row.children[0]&&row.children[0].textContent===sign)row.classList.add('hl');
   });
 })();
 </script>

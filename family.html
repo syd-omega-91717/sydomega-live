@@ -134,9 +134,7 @@ a{color:inherit;text-decoration:none}
 .node-card .nc-notes{font-size:.75rem;color:var(--muted);margin-top:.4rem;line-height:1.6}
 .node-card .nc-badge{position:absolute;top:.7rem;right:.7rem;font-family:var(--M);font-size:.5rem;color:var(--green);letter-spacing:.06em}
 
-.succ-table{width:100%;border-collapse:collapse;margin-bottom:1.2rem}
-.succ-table th{text-align:left;font-family:var(--M);font-size:.58rem;color:var(--cyan);letter-spacing:.1em;padding:.6rem .5rem;border-bottom:1px solid var(--line)}
-.succ-table td{padding:.6rem .5rem;font-size:.78rem;color:var(--ink);border-bottom:1px solid rgba(201,168,76,.08)}
+#succ-table{margin-bottom:1.2rem}
 
 .form-node{border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;padding:1.2rem}
 .fn-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1rem}
@@ -367,10 +365,10 @@ a{color:inherit;text-decoration:none}
     <div class="node-grid" id="node-grid"></div>
 
     <div class="sechead" data-reveal="fade-up">SUCCESSION PROTOCOL <span data-canon-lattice="nine"></span></div>
-    <table class="succ-table">
-      <thead><tr><th>RANK</th><th>HEIR</th><th>SHARE</th><th>ACTIVATION</th><th>STATUS</th></tr></thead>
-      <tbody id="succ-body"></tbody>
-    </table>
+    <div class="tbl-wrap" id="succ-table">
+      <div class="tbl-head" style="grid-template-columns:80px 1.4fr 1fr 1fr 160px"><span>RANK</span><span>HEIR</span><span>SHARE</span><span>ACTIVATION</span><span>STATUS</span></div>
+      <div id="succ-body"></div>
+    </div>
 
     <div class="sechead" data-reveal="fade-up">REGISTER A BLOODLINE NODE <span data-canon-lattice="nine"></span></div>
     <div class="form-node">
@@ -663,7 +661,7 @@ document.getElementById('btn-add-blood').addEventListener('click',async()=>{
   setTimeout(()=>s.style.display='none',3000);
 });
 
-const sb2=document.getElementById('succ-body'); SUCCESSION.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${s.rank}</td><td>${s.heir}</td><td>${s.share}</td><td>${s.act}</td><td style="color:${s.status==='ACTIVE'?'var(--green)':'var(--muted)'}">${s.status}</td>`;sb2.appendChild(tr);});
+const sb2=document.getElementById('succ-body'); SUCCESSION.forEach(s=>{const tr=document.createElement('div');tr.className='tbl-row';tr.style.gridTemplateColumns='80px 1.4fr 1fr 1fr 160px';tr.innerHTML=`<span>${s.rank}</span><span>${s.heir}</span><span>${s.share}</span><span>${s.act}</span><span style="color:${s.status==='ACTIVE'?'var(--green)':'var(--muted)'}">${s.status}</span>`;sb2.appendChild(tr);});
 
 async function bootBloodline(){
   const sess=(await sb.auth.getSession()).data.session;

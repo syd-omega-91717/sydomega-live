@@ -60,10 +60,6 @@
 .king.crowned .th{color:var(--green)}
 
 /* science table */
-.sci-table{width:100%;border-collapse:collapse;font-family:var(--M);font-size:12px}
-.sci-table th{color:var(--cyan);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:2px}
-.sci-table td{padding:8px 12px;border-bottom:1px solid rgba(201,168,76,.08)}
-.sci-table tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
@@ -136,20 +132,18 @@
 
   <div class="sechead">ELEMENT UNLOCK THRESHOLDS</div>
   <div class="card" style="overflow-x:auto">
-    <table class="sci-table">
-      <thead><tr><th>ELEMENT</th><th>TYPE</th><th>SIGNS</th><th>UNLOCK AT</th><th>PRINCIPLE</th></tr></thead>
-      <tbody>
-        <tr><td>FIRE</td><td style="color:var(--solar)">PHYSICAL</td><td>Aries, Leo, Sagittarius</td><td style="color:var(--green)">BIRTH</td><td>Action &amp; Will</td></tr>
-        <tr><td>WATER</td><td style="color:var(--solar)">PHYSICAL</td><td>Cancer, Scorpio, Pisces</td><td style="color:var(--green)">BIRTH</td><td>Depth &amp; Intuition</td></tr>
-        <tr><td>WIND</td><td style="color:var(--solar)">PHYSICAL</td><td>Gemini, Libra, Aquarius</td><td style="color:var(--green)">BIRTH</td><td>Thought &amp; Freedom</td></tr>
-        <tr><td>METAL</td><td style="color:var(--solar)">PHYSICAL</td><td>Taurus, Capricorn</td><td style="color:var(--green)">BIRTH</td><td>Endurance &amp; Structure</td></tr>
-        <tr><td>SAND</td><td style="color:var(--solar)">PHYSICAL · AMPLIFIER</td><td>Virgo</td><td style="color:var(--green)">BIRTH</td><td>Precision &amp; Amplification</td></tr>
-        <tr><td>SOUL</td><td style="color:var(--cyan)">TRANSCENDENT</td><td>All signs</td><td style="color:var(--gold)">AUTH ≥ 5.20</td><td>Essence &amp; Inner Light</td></tr>
-        <tr><td>SPACE</td><td style="color:var(--cyan)">TRANSCENDENT</td><td>All signs</td><td style="color:var(--gold)">AUTH ≥ 9.17</td><td>Expansion &amp; Cosmos</td></tr>
-        <tr><td>VOID</td><td style="color:var(--cyan)">TRANSCENDENT</td><td>All signs</td><td style="color:var(--gold)">AUTH ≥ 12.72</td><td>Primordial &amp; Pre-creation</td></tr>
-        <tr><td>THE ALL</td><td style="color:var(--gold)">APEX</td><td>All signs</td><td style="color:var(--crim)">AUTH ≥ 27.8367</td><td>Convergence of All Forces</td></tr>
-      </tbody>
-    </table>
+    <div class="tbl-wrap">
+      <div class="tbl-head" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>ELEMENT</span><span>TYPE</span><span>SIGNS</span><span>UNLOCK AT</span><span>PRINCIPLE</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>FIRE</span><span style="color:var(--solar)">PHYSICAL</span><span>Aries, Leo, Sagittarius</span><span style="color:var(--green)">BIRTH</span><span>Action &amp; Will</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>WATER</span><span style="color:var(--solar)">PHYSICAL</span><span>Cancer, Scorpio, Pisces</span><span style="color:var(--green)">BIRTH</span><span>Depth &amp; Intuition</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>WIND</span><span style="color:var(--solar)">PHYSICAL</span><span>Gemini, Libra, Aquarius</span><span style="color:var(--green)">BIRTH</span><span>Thought &amp; Freedom</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>METAL</span><span style="color:var(--solar)">PHYSICAL</span><span>Taurus, Capricorn</span><span style="color:var(--green)">BIRTH</span><span>Endurance &amp; Structure</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>SAND</span><span style="color:var(--solar)">PHYSICAL · AMPLIFIER</span><span>Virgo</span><span style="color:var(--green)">BIRTH</span><span>Precision &amp; Amplification</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>SOUL</span><span style="color:var(--cyan)">TRANSCENDENT</span><span>All signs</span><span style="color:var(--gold)">AUTH ≥ 5.20</span><span>Essence &amp; Inner Light</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>SPACE</span><span style="color:var(--cyan)">TRANSCENDENT</span><span>All signs</span><span style="color:var(--gold)">AUTH ≥ 9.17</span><span>Expansion &amp; Cosmos</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>VOID</span><span style="color:var(--cyan)">TRANSCENDENT</span><span>All signs</span><span style="color:var(--gold)">AUTH ≥ 12.72</span><span>Primordial &amp; Pre-creation</span></div>
+      <div class="tbl-row" style="grid-template-columns:110px 150px 1.2fr 130px 1fr"><span>THE ALL</span><span style="color:var(--gold)">APEX</span><span>All signs</span><span style="color:var(--crim)">AUTH ≥ 27.8367</span><span>Convergence of All Forces</span></div>
+    </div>
   </div>
 
   <div class="sechead">THE TWELVE GATES &mdash; AUTHORITY THRESHOLDS</div>

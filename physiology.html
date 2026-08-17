@@ -31,13 +31,6 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
 .status-warn{background:rgba(201,168,76,.15);color:var(--gold)}
 .status-bad{background:rgba(231,76,60,.15);color:var(--red)}
 .status-neutral{background:#1a1a1a;color:var(--d)}
-.log-table{width:100%;border-collapse:collapse;font-size:.7rem}
-.log-table th{font-size:.55rem;color:var(--d);letter-spacing:.08em;text-align:left;padding:6px 8px;border-bottom:1px solid #222}
-.log-table td{padding:8px;border-bottom:1px solid #111;color:#aaa}
-.log-table tr:hover td{background:#111}
-.ref-table{width:100%;border-collapse:collapse;font-size:.65rem;margin-top:8px}
-.ref-table th{font-size:.55rem;color:var(--d);letter-spacing:.08em;text-align:left;padding:5px 8px;border-bottom:1px solid #222}
-.ref-table td{padding:6px 8px;border-bottom:1px solid #111;color:#aaa}
 .range-ok{color:var(--green)}
 canvas{display:block;width:100%;max-width:700px;margin:0 auto}
 .trend-wrap{margin-bottom:20px}
@@ -156,10 +149,10 @@ canvas{display:block;width:100%;max-width:700px;margin:0 auto}
       <div class="card">
         <div class="card-title">METRIC HISTORY</div>
         <div style="overflow-x:auto">
-          <table class="log-table" id="history-table">
-            <thead><tr><th>DATE</th><th>CONTEXT</th><th>RHR</th><th>HRV</th><th>BP</th><th>SPO2</th><th>WEIGHT</th><th>VO2</th><th>SLEEP</th><th>ENERGY</th></tr></thead>
-            <tbody id="history-body"><tr><td colspan="10" style="text-align:center;color:var(--d);padding:24px">NO DATA</td></tr></tbody>
-          </table>
+          <div class="tbl-wrap" id="history-table">
+            <div class="tbl-head" style="grid-template-columns:120px 100px 60px 60px 80px 60px 70px 60px 60px 70px"><span>DATE</span><span>CONTEXT</span><span>RHR</span><span>HRV</span><span>BP</span><span>SPO2</span><span>WEIGHT</span><span>VO2</span><span>SLEEP</span><span>ENERGY</span></div>
+            <div id="history-body"><div class="tbl-row" style="text-align:center;color:var(--d);padding:24px;display:block">NO DATA</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -181,19 +174,17 @@ canvas{display:block;width:100%;max-width:700px;margin:0 auto}
       <div class="card">
         <div class="card-title">CLINICAL REFERENCE RANGES</div>
         <div style="overflow-x:auto">
-          <table class="ref-table">
-            <thead><tr><th>METRIC</th><th>OPTIMAL</th><th>NORMAL</th><th>ELEVATED / AT RISK</th><th>SOURCE</th></tr></thead>
-            <tbody>
-              <tr><td>Resting Heart Rate</td><td class="range-ok">40-60 BPM (athletes)</td><td>60-100 BPM</td><td>&gt;100 BPM (tachycardia)</td><td>AHA 2021</td></tr>
-              <tr><td>HRV (RMSSD, 30s)</td><td class="range-ok">60-100 ms (elite)</td><td>25-65 ms</td><td>&lt;20 ms (low recovery)</td><td>Task Force 1996</td></tr>
-              <tr><td>Blood Pressure (sys)</td><td class="range-ok">&#8804;120 mmHg</td><td>120-129 mmHg</td><td>&#8805;130 mmHg (Stage 1 HTN)</td><td>ACC/AHA 2017</td></tr>
-              <tr><td>Blood Pressure (dia)</td><td class="range-ok">&#8804;80 mmHg</td><td>&#8804;80 mmHg</td><td>&#8805;80 mmHg (Stage 1 HTN)</td><td>ACC/AHA 2017</td></tr>
-              <tr><td>SpO2</td><td class="range-ok">98-100%</td><td>95-97%</td><td>&lt;95% (concerning)</td><td>AASM 2018</td></tr>
-              <tr><td>VO2 Max (male, 30-39)</td><td class="range-ok">&gt;52 mL/kg/min</td><td>42-51 mL/kg/min</td><td>&lt;38 mL/kg/min</td><td>ACSM 2021</td></tr>
-              <tr><td>VO2 Max (female, 30-39)</td><td class="range-ok">&gt;45 mL/kg/min</td><td>36-44 mL/kg/min</td><td>&lt;32 mL/kg/min</td><td>ACSM 2021</td></tr>
-              <tr><td>BMI</td><td class="range-ok">18.5-24.9</td><td>25-29.9 (overweight)</td><td>&#8805;30 (obese)</td><td>WHO 2000</td></tr>
-            </tbody>
-          </table>
+          <div class="tbl-wrap">
+            <div class="tbl-head" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>METRIC</span><span>OPTIMAL</span><span>NORMAL</span><span>ELEVATED / AT RISK</span><span>SOURCE</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>Resting Heart Rate</span><span class="range-ok">40-60 BPM (athletes)</span><span>60-100 BPM</span><span>&gt;100 BPM (tachycardia)</span><span>AHA 2021</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>HRV (RMSSD, 30s)</span><span class="range-ok">60-100 ms (elite)</span><span>25-65 ms</span><span>&lt;20 ms (low recovery)</span><span>Task Force 1996</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>Blood Pressure (sys)</span><span class="range-ok">&#8804;120 mmHg</span><span>120-129 mmHg</span><span>&#8805;130 mmHg (Stage 1 HTN)</span><span>ACC/AHA 2017</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>Blood Pressure (dia)</span><span class="range-ok">&#8804;80 mmHg</span><span>&#8804;80 mmHg</span><span>&#8805;80 mmHg (Stage 1 HTN)</span><span>ACC/AHA 2017</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>SpO2</span><span class="range-ok">98-100%</span><span>95-97%</span><span>&lt;95% (concerning)</span><span>AASM 2018</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>VO2 Max (male, 30-39)</span><span class="range-ok">&gt;52 mL/kg/min</span><span>42-51 mL/kg/min</span><span>&lt;38 mL/kg/min</span><span>ACSM 2021</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>VO2 Max (female, 30-39)</span><span class="range-ok">&gt;45 mL/kg/min</span><span>36-44 mL/kg/min</span><span>&lt;32 mL/kg/min</span><span>ACSM 2021</span></div>
+            <div class="tbl-row" style="grid-template-columns:1.3fr 1fr 1fr 1.2fr 110px"><span>BMI</span><span class="range-ok">18.5-24.9</span><span>25-29.9 (overweight)</span><span>&#8805;30 (obese)</span><span>WHO 2000</span></div>
+          </div>
         </div>
         <div style="margin-top:20px">
           <div class="card-title" style="margin-bottom:10px">HRV ZONES — RECOVERY INTERPRETATION</div>
@@ -305,22 +296,24 @@ function updateStrip(){
   }
 }
 
+function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 function renderHistory(){
   var tbody=document.getElementById('history-body');
-  if(!metrics.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--d);padding:24px">NO DATA</td></tr>';return;}
+  var cols='grid-template-columns:120px 100px 60px 60px 80px 60px 70px 60px 60px 70px';
+  if(!metrics.length){tbody.innerHTML='<div class="tbl-row" style="text-align:center;color:var(--d);padding:24px;display:block">NO DATA</div>';return;}
   tbody.innerHTML=metrics.slice(0,50).map(function(m){
-    return '<tr>'
-      +'<td>'+m.date.slice(0,16)+'</td>'
-      +'<td style="text-transform:uppercase">'+(m.context||'—')+'</td>'
-      +'<td style="color:var(--red)">'+(m.rhr||'—')+'</td>'
-      +'<td style="color:var(--blue)">'+(m.hrv||'—')+'</td>'
-      +'<td style="color:var(--orange)">'+(m.sys&&m.dia?m.sys+'/'+m.dia:'—')+'</td>'
-      +'<td style="color:var(--green)">'+(m.spo2||'—')+'</td>'
-      +'<td style="color:var(--gold)">'+(m.weight||'—')+'</td>'
-      +'<td>'+(m.vo2||'—')+'</td>'
-      +'<td>'+(m.sleep||'—')+'</td>'
-      +'<td>'+(m.energy||'—')+'</td>'
-      +'</tr>';
+    return '<div class="tbl-row" style="'+cols+'">'
+      +'<span>'+esc(m.date.slice(0,16))+'</span>'
+      +'<span style="text-transform:uppercase">'+esc(m.context||'—')+'</span>'
+      +'<span style="color:var(--red)">'+esc(m.rhr||'—')+'</span>'
+      +'<span style="color:var(--blue)">'+esc(m.hrv||'—')+'</span>'
+      +'<span style="color:var(--orange)">'+esc(m.sys&&m.dia?m.sys+'/'+m.dia:'—')+'</span>'
+      +'<span style="color:var(--green)">'+esc(m.spo2||'—')+'</span>'
+      +'<span style="color:var(--gold)">'+esc(m.weight||'—')+'</span>'
+      +'<span>'+esc(m.vo2||'—')+'</span>'
+      +'<span>'+esc(m.sleep||'—')+'</span>'
+      +'<span>'+esc(m.energy||'—')+'</span>'
+      +'</div>';
   }).join('');
 }
 

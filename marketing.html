@@ -7,11 +7,7 @@
 <meta name="description" content="Reserve placement across the Order's surfaces — by the hour, day, week, month, or year."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
-.rate-table{width:100%;border-collapse:collapse}
-.rate-table th{font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--muted);text-align:right;padding:9px 12px;border-bottom:1px solid var(--line)}
-.rate-table th:first-child{text-align:left}
-.rate-table td{padding:9px 12px;border-bottom:1px dashed rgba(201,168,76,.1);font-family:var(--M);font-size:11px;text-align:right}
-.rate-table td.zone-name{text-align:left;color:var(--gold);letter-spacing:1px}
+#rate-table .tbl-row span.zone-name{text-align:left;color:var(--gold);letter-spacing:1px}
 .compose-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .fld{margin-bottom:14px}
 .fld label{font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px}
@@ -63,10 +59,10 @@
 <div class="tab-panel active" id="tab-rates">
   <div class="sechead">THE RATE CARD &middot; &#937; PER PLACEMENT</div>
   <div style="overflow-x:auto;border:1px solid var(--line);background:var(--surface)">
-    <table class="rate-table">
-      <thead><tr><th>ZONE</th><th>HOUR</th><th>DAY</th><th>WEEK</th><th>MONTH</th><th>YEAR</th></tr></thead>
-      <tbody id="rate-body"></tbody>
-    </table>
+    <div class="tbl-wrap" id="rate-table">
+      <div class="tbl-head" style="grid-template-columns:1.4fr 1fr 1fr 1fr 1fr 1fr"><span>ZONE</span><span style="text-align:right">HOUR</span><span style="text-align:right">DAY</span><span style="text-align:right">WEEK</span><span style="text-align:right">MONTH</span><span style="text-align:right">YEAR</span></div>
+      <div id="rate-body"></div>
+    </div>
   </div>
   <div class="glass" style="padding:12px 14px;margin-top:12px;font-family:var(--M);font-size:9px;letter-spacing:1px;color:var(--muted)">All rates are quoted in &#937;. Payment and live rendering activate under the legal-cleared phase. No charge is made until Phase II is unlocked.</div>
 </div>
@@ -121,9 +117,9 @@ var ZONES=[['Landing Feature',3],['Hall Banner',2],['Dashboard Spotlight',1.5],[
 function buildRateCard(){
   var b=document.getElementById('rate-body');
   ZONES.forEach(function(z){
-    var tr=document.createElement('tr');
-    var cells='<td class="zone-name">'+z[0]+'</td>';
-    DURATIONS.forEach(function(d){cells+='<td>'+fmt(d[1]*z[1])+' &#937;</td>';});
+    var tr=document.createElement('div');tr.className='tbl-row';tr.style.gridTemplateColumns='1.4fr 1fr 1fr 1fr 1fr 1fr';
+    var cells='<span class="zone-name">'+z[0]+'</span>';
+    DURATIONS.forEach(function(d){cells+='<span style="text-align:right">'+fmt(d[1]*z[1])+' &#937;</span>';});
     tr.innerHTML=cells;b.appendChild(tr);
   });
   var zs=document.getElementById('m-zone');

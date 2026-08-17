@@ -56,10 +56,8 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 .mc-label{font-size:7px;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px}
 .mc-value{font-size:16px;letter-spacing:1px;color:var(--gold);font-weight:300}
 .mc-unit{font-size:7px;color:var(--dim);margin-left:3px}
-.decisions-table{width:100%;border-collapse:collapse;font-size:8px}
-.decisions-table th{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(201,168,76,.15);letter-spacing:1.5px;font-size:7px;color:var(--dim)}
-.decisions-table td{padding:8px 10px;border-bottom:1px solid rgba(201,168,76,.05);letter-spacing:.5px;color:rgba(200,190,160,.7);vertical-align:top}
-.decisions-table td:first-child{color:var(--gold);white-space:nowrap}
+#adr-table .tbl-row{font-size:8px;letter-spacing:.5px;color:rgba(200,190,160,.7)}
+#adr-table .tbl-row span:first-child{color:var(--gold);white-space:nowrap}
 .badge{display:inline-block;font-size:6.5px;letter-spacing:1px;padding:2px 6px;border-radius:2px;margin:1px}
 .badge-green{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:#4ade80}
 .badge-blue{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);color:#60a5fa}
@@ -212,12 +210,10 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
       <div class="stat-card card"><div class="stat-val">99.9%</div><div class="stat-lbl">UPTIME TARGET</div></div>
       <div class="stat-card card"><div class="stat-val">2.718</div><div class="stat-lbl">EULER'S e</div></div>
     </div>
-    <table class="decisions-table" id="adr-table">
-      <thead>
-        <tr><th>ADR</th><th>DECISION</th><th>STATUS</th><th>RATIONALE</th><th>TRADE-OFFS</th></tr>
-      </thead>
-      <tbody id="adr-body"></tbody>
-    </table>
+    <div class="tbl-wrap" id="adr-table">
+      <div class="tbl-head" style="grid-template-columns:80px 1.1fr 90px 1.6fr 1.6fr"><span>ADR</span><span>DECISION</span><span>STATUS</span><span>RATIONALE</span><span>TRADE-OFFS</span></div>
+      <div id="adr-body"></div>
+    </div>
   </div>
 
 </div>
@@ -281,8 +277,8 @@ var ADRS=[
 
 var tbody=document.getElementById('adr-body');
 ADRS.forEach(function(row){
-  var tr=document.createElement('tr');
-  tr.innerHTML=row.map(function(c,i){return '<td>'+c+'</td>';}).join('');
+  var tr=document.createElement('div');tr.className='tbl-row';tr.style.gridTemplateColumns='80px 1.1fr 90px 1.6fr 1.6fr';
+  tr.innerHTML=row.map(function(c,i){return '<span>'+c+'</span>';}).join('');
   tbody.appendChild(tr);
 });
 

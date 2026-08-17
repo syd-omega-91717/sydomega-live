@@ -672,3 +672,35 @@ table. Consolidating the 47 duplicates down to one canonical definition per tabl
 §6 item 8) should not be done by picking whichever file "looks most complete" — it needs the
 same per-table live-schema check this session did for `task_completions`, one table at a time,
 not a bulk sweep.
+
+## Two timestamp-versioned files added: `20260816231218`, `20260816231240` — breaking the `NNNN_<name>.sql` convention on purpose
+
+`omega_rls_scoping_fix.sql` and `omega_leaderboard_snapshots_columns_fix.sql` (both already
+documented in `CLAUDE.md` §8 as written, scratch-DB-tested, and previously blocked on live
+database access) were applied directly to the live production database (2026-08-17, via the
+Supabase MCP connector's `apply_migration` tool, once a session held live credentials for the
+first time). That tool is Supabase's own official migration-apply mechanism — it doesn't let the
+caller pick a version string in the `NNNN` sequence this directory otherwise uses; it recorded
+each migration on the remote's own tracking table under Supabase's default timestamp convention
+(`YYYYMMDDHHMMSS_<name>`), landing as `20260816231218_omega_rls_scoping_fix` and
+`20260816231240_omega_leaderboard_snapshots_columns_fix` — confirmed via `list_migrations` against
+the live project (`ydqhzvvoyufiiqvzcjns`) both before applying (gap present) and after (both new
+entries visible with these exact version strings).
+
+This surfaced as a real, external CI failure: the repo's "Supabase Preview" GitHub Action check
+started failing with "Remote migration versions not found in local migrations directory" —
+correct behavior, since two versions existed on the remote's tracking table with no matching file
+here. The fix is to add the missing local files under the exact version strings the remote already
+recorded (`git mv`/renumbering them into the `NNNN` sequence is not an option — the remote's
+tracking table is the source of truth for what version string a given migration is known by, and
+there's no safe way to rewrite that after the fact without another live-database operation).
+`20260816231218_omega_rls_scoping_fix.sql` and
+`20260816231240_omega_leaderboard_snapshots_columns_fix.sql` are otherwise byte-for-byte the same
+fix as their loose-file counterparts at `supabase/<name>.sql`.
+
+**Practical consequence for future sessions with live Supabase access:** any migration applied via
+`apply_migration` going forward will land on the remote under this same timestamp convention, not
+the next `NNNN` in sequence — add the matching local file immediately in the same change (not a
+followup), named with the exact version `list_migrations` reports, or the same CI check will fail
+again. This is now the established pattern for anything applied live rather than pre-numbered into
+this directory ahead of time.

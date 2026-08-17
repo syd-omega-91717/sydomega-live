@@ -149,6 +149,12 @@ real `.ocb` badges with the exact expected kind/label, zero page errors.
 `trailers.html`, `feed.html` (stored-XSS-hardened this session — see
 `REPOSITORY_AUDIT.md` §3), `social.html` ✅ (writes `public.social_connections`, error-checked
 this session — `GAP_ANALYSIS.md` §2.3), `news.html`.
+`feed.html` now also has a 5th tab, "MEMBER POSTS" (`FEATURE_IDEAS.md` #15) ✅ — real read/write
+UI on the previously-unused `public.member_posts` table (RLS already correct: published-or-own
+read, own-row write), distinct from the existing "POSTS" tab (which correctly reads
+`publications`, unchanged). Verified end-to-end in headless Chromium: renders, escapes
+member-writable text (`esc()` on `title`/`body`/`tags`), and checks `.error` before showing a
+success/failure toast on submit — see `FEATURE_IDEAS.md` #15 for full verification detail.
 
 ### VAULT / INVEST — finance, holdings, payments
 `vault.html` ⚠️✅ (NFT grid queries `public.user_assets` — table now exists as of a prior

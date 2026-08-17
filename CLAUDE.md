@@ -1536,6 +1536,97 @@ orphaned file.
   complete — live-schema verification for the still-open items above (§5's 10 conflicting
   duplicate tables, §8's 11 diverging RPC definitions) remains blocked on the user running
   `claude mcp`/`/mcp` to authorize it, same as every prior session's note on this.
+- **Supabase MCP connector was authorized this session — but connects to a different project
+  than production, and that distinction matters for everything below.** `list_projects` returns
+  exactly one project: `nvgedlxlkdzvcelimbvq` ("supabase-cinereous-planet", created
+  2026-08-15, `us-east-1`) — not `ydqhzvvoyufiiqvzcjns`, the ref hardcoded in `profile.html`/
+  `approvals.html`/`trophies.html`/`vault.html` and referenced throughout this file as live
+  production. The schema matches this repo's exactly (table names, several column shapes line
+  up with specific migration files), but `profiles` had zero rows and almost no data anywhere
+  except catalog/config tables — not what a live platform with approved members looks like.
+  Read as a scratch/staging copy seeded by running a specific, incomplete subset of the SQL bag
+  against a fresh instance, consistent with this file's own standing caution that the
+  `migrations/` sequence was validated exactly this way. Every fix below was applied to
+  `nvgedlxlkdzvcelimbvq` and independently verified there — **not yet applied to
+  `ydqhzvvoyufiiqvzcjns`**, since this session has no access to that project. Given how closely
+  several of the bugs found this way matched this file's own prior predictions for production
+  (see below), treat these as strong leads for production, not as proof of production's current
+  state.
+  - **`grant_trial_access(uuid)` had zero authorization checks — live, exploitable, most severe
+    finding of this pass.** Any authenticated member could call
+    `sb.rpc('grant_trial_access',{p_uid: their_own_id})` from the browser console and grant
+    themselves trial access, bypassing the entire approval queue — this repo's own
+    `0003_privilege_lockdown.sql` describes exactly this exploit, but that file (and
+    `0005_trial_917.sql`, which separately fixes the trial duration — the live function granted
+    `550.302` seconds, not `557`) had never actually been applied here. Fixed by applying both:
+    `omega_is_owner()` + an audit table + a real owner-only check on `grant_trial_access` (and
+    confirmed `grant_permanent_access` was already correctly gated — only `grant_trial_access`
+    was open). `expire_trial` was deliberately left untouched: it was already correctly
+    authorized (self-or-owner) here, just with a broader reset scope (also wipes
+    `evolution_events`/`trophies`/`medals`/`certificates`, not just `task_completions`) than
+    `0003`'s version — overwriting it would have been an unrequested behavior change smuggled in
+    under a security fix, not a security fix itself.
+  - **`check_trial_status` had two incompatible live-candidate definitions** (`TABLE(...)` of 6
+    columns vs. a `jsonb` blob, from `0005_trial_917.sql` and `trial_fix.sql` respectively) and
+    didn't exist at all yet on this project. Resolved by checking the actual caller —
+    `omega-chronometer.js` calls `sb.rpc("check_trial_status")` with zero arguments, which only
+    the `0005_trial_917.sql` version supports (`p_uid uuid DEFAULT auth.uid()`) — not by
+    guessing from file-naming convention. Installed that version, plus `has_active_access()` so
+    an expired trial is denied server-side even if the browser never reports it, plus
+    `trial_duration()` as the single source of truth for `557`.
+  - **`my_matrix()`/`my_lattice()`/`authority_score()`/`lattice_node()`** — applied
+    `0075_targeted_fix.sql` (fixes `my_matrix()`'s return-type change and seeds the
+    `platform_settings` authority constants); all were previously undefined or broken here.
+  - **New finding, not in any prior session's list: `get_all_members()`, `order_stats()`, and
+    `public_leaderboard()` each computed "authority" with their own inline
+    `sqrt(a²+b²+c²)` formula (max ≈15.59) instead of calling `authority_score()`** (the cubic
+    `sqrt(a³+b³+c³)×φ/e` formula every other surface uses, max `27.8367` — this file's own
+    documented APEX constant). A member's authority number differed depending on which page
+    displayed it. Fixed by pointing all three at `public.authority_score()`.
+  - **8 tables had RLS fully disabled**, flagged critical by Supabase's own advisor:
+    `conversations`, `messages`, `security_policies`, `knowledge_nodes`, `knowledge_edges`,
+    `rate_limits`, `circuit_breakers`, `content_versions`. Applied
+    `supabase/migrations/0086_rls_missing_tables.sql` verbatim (already written, idempotent,
+    correctly scoped per table — member-owns-own for `conversations`/`messages` via
+    `conversations.user_id`, authenticated-read/owner-write for the knowledge graph, owner-only
+    for the infra tables — this file already existed complete and correct in the repo; it had
+    simply never been applied. Verified afterward: every one of the 8 shows `rls_enabled: true`
+    with 1–2 real policies each, not a blind lockout.
+  - **`consult_requests` was missing a `domain` column that `consultancy.html`'s real booking
+    form (`consultancy.html:157`) has always sent** (`{domain, contact, preferred_time, brief}`)
+    — every submission would fail with "column domain does not exist" on this project. Verified
+    against the actual client `.insert()` call, not assumed from a SQL comment; fixed with a
+    single non-destructive `ADD COLUMN IF NOT EXISTS domain text`.
+  - **`record_interest_signal()`/`my_interest_profile()` didn't exist on this project at all**,
+    so `omega-recommend.js`'s signal-recording calls would fail outright. Initially misread as
+    "`omega_interest_graph.sql` is the stale file" from this project's schema alone (it only has
+    `entreprise_schema_v2.sql`'s `recorded_at`/`track_id`/`session_id` shape) — corrected before
+    touching anything by cross-checking this file's own §8 GDPR-export entry, which already
+    verified on real production that `record_interest_signal()`'s live signature matches
+    `omega-recommend.js` exactly and that `interest_signals` selects on `created_at` "were
+    already correct." `omega_interest_graph.sql` is therefore the production-verified file, not
+    a stale duplicate — it's also already defensively written to coexist with
+    `entreprise_schema_v2.sql`'s shape (`ADD COLUMN IF NOT EXISTS created_at`, never removes
+    `recorded_at`/`track_id`/`session_id`). Applied it as-is; this project was just missing it.
+  - **The "10 conflicting duplicate tables" from §5 turned out to be mostly a false-alarm from
+    text-diffing, once actually compared against live columns.** Wrote a scanner comparing every
+    `CREATE TABLE` body for these 10 tables against this project's real
+    `information_schema.columns`. 7 of 10 (`commission_contracts`, `family_nodes`,
+    `marketplace_listings`, `media_reservations`, `publications`, `dispatches`,
+    `user_dedication`) had no real conflict at all — every file's definition either exactly
+    matched live (just reordered columns, which `audit.py`'s raw-text comparison can't tell
+    apart from a real difference) or was a harmless historical subset. `user_dedication`'s
+    flagged divergence was a bug in this session's own comparison script, not the repo — it
+    mis-parsed a trailing `UNIQUE(user_id, date)` table constraint as a fake column. Of the
+    remaining 3 (`interest_signals`, `consult_requests`, `task_completions`), none needed a repo
+    file edit: `interest_signals` and `consult_requests` were live-database gaps (fixed above,
+    see entries above), and `matrix_engine.sql`'s extra `metadata` column on `task_completions`
+    turned out to be moot — the table already exists here, so its `CREATE TABLE IF NOT EXISTS`
+    is a no-op and `metadata` is never added; its RLS policies and `get_my_task_log()` were
+    already live from elsewhere. No source files were edited this pass — every fix was a live
+    Supabase change, verified against real client call sites rather than guessed from file
+    conventions, per this session's own standing instruction to keep everything real rather than
+    conceptual.
 
 
 ## 9. Working in this repo — practical rules

@@ -1763,6 +1763,36 @@ orphaned file.
   page-local `.tab-btn`/font-size sweep noted as a separate larger effort, and the 27 pages still
   using native `<table>` markup instead of the shared `.tbl-wrap` system. None of these are bugs
   masquerading as done — each already has an explicit, evidence-cited reason it's open on purpose.
+- **[Fixed — highest-severity finding of this session] `public.pending_access_requests` granted
+  every signed-in member direct read access to every other user's raw `auth.users` data — Supabase's
+  own security advisor (`get_advisors(type='security')` against production, 2 ERROR / 212 WARN /
+  83 INFO) flagged this as both its ERROR-level findings at once.** The view (from
+  `supabase/0004_signup_pipeline.sql` / `supabase/migrations/0081_signup_pipeline.sql`) joins
+  `auth.users` directly — `email`, `signed_up_at`, `email_confirmed_at`, `last_sign_in_at` — and the
+  file's own `grant select on public.pending_access_requests to authenticated;` line meant any
+  signed-in account, approved or not, owner or not, could call
+  `sb.from('pending_access_requests').select('*')` directly from the browser (the anon/publishable
+  key is public, no UI needed) and read every user's email and sign-in history — completely
+  bypassing the owner-gated `get_pending_requests()` RPC that the same file's own comment already
+  called "the safe accessor; prefer it in the UI." Confirmed the grant was real and live via
+  `aclexplode(c.relacl)` joined against `pg_roles` — `information_schema.role_table_grants`
+  misleadingly returned empty for this view, so don't trust that view alone for ACL checks.
+  Confirmed via repo-wide grep that no client `.html`/`.js` file references the view directly (only
+  `get_pending_requests()` and diagnostic SQL files do), so revoking client access breaks nothing.
+  **Applied to the live database and verified** (2026-08-17, via the Supabase MCP connector) —
+  `REVOKE SELECT ON public.pending_access_requests FROM authenticated;` applied via `apply_migration`
+  (recorded remotely as `20260817234540_revoke_pending_access_requests_select_from_authenticated`,
+  mirrored locally at `supabase/migrations/20260817234540_revoke_...sql` per this repo's established
+  timestamp-versioned-file convention); a follow-up `aclexplode` query confirmed only the implicit
+  table-owner role (`postgres`) retains SELECT. Also fixed the two source files so a future full
+  re-apply of `0004_signup_pipeline.sql`/`migrations/0081_signup_pipeline.sql` doesn't regrant the
+  same hole: replaced the `grant select ... to authenticated` line with an explicit
+  `revoke all ... from public, anon, authenticated` and a comment explaining why, in both files.
+  Not yet triaged: the other 295 advisor findings (83 `rls_enabled_no_policy`, 32
+  `function_search_path_mutable`, 179 combined `security_definer_function_executable` counts, 1
+  `auth_leaked_password_protection`) — all WARN/INFO severity, none as immediately exploitable as
+  this ERROR-level auth-data leak, left for a follow-up pass rather than rushed through in the same
+  session as this fix.
 
 
 ## 9. Working in this repo — practical rules

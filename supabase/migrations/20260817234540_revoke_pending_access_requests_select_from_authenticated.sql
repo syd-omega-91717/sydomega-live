@@ -1,0 +1,33 @@
+-- ============================================================================
+-- Ω SYD OMEGA 91717 — REVOKE pending_access_requests SELECT FROM authenticated
+--
+-- Named with the exact version string Supabase's own `apply_migration` tool
+-- recorded on the remote database's migration-tracking table when this fix
+-- was applied directly (2026-08-17, via the Supabase MCP connector) — see
+-- supabase/migrations/README.md's "Timestamp-versioned files" section for
+-- why this breaks the directory's usual NNNN_<name>.sql convention.
+--
+-- Supabase's own security advisor flagged two ERROR-level findings, both on
+-- public.pending_access_requests (from 0004_signup_pipeline.sql /
+-- migrations/0081_signup_pipeline.sql): "Exposed Auth Users" and "Security
+-- Definer View". The view joins auth.users directly (email, signed_up_at,
+-- email_confirmed_at, last_sign_in_at) and had SELECT granted to
+-- `authenticated` — meaning any signed-in member, approved or not, owner or
+-- not, could call sb.from('pending_access_requests').select('*') directly
+-- from the browser and read every user's email/signup/sign-in data,
+-- completely bypassing the owner-gated get_pending_requests() RPC that
+-- 0004_signup_pipeline.sql's own comment already calls "the safe accessor;
+-- prefer it in the UI."
+--
+-- Confirmed via aclexplode(relacl) — not information_schema.role_table_grants,
+-- which under-reports this — that `authenticated` held real SELECT on this
+-- view. Confirmed via repo-wide grep that no client code (.html/.js)
+-- references the view directly; only get_pending_requests() and diagnostic
+-- SQL files do, so revoking client access breaks nothing. After this fix,
+-- only the `postgres` role retains SELECT.
+--
+-- Idempotent (REVOKE is a no-op if the privilege isn't held), safe to re-run.
+-- Applied to the live database and verified — see CLAUDE.md §8.
+-- ============================================================================
+
+REVOKE SELECT ON public.pending_access_requests FROM authenticated;

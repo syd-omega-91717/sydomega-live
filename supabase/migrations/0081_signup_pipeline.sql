@@ -171,10 +171,17 @@ from auth.users u
 left join public.profiles p on p.id = u.id
 order by u.created_at desc;
 
-revoke all on public.pending_access_requests from public, anon;
-grant select on public.pending_access_requests to authenticated;
--- Note: views run with the definer's rights by default in older Postgres.
--- The RPC below is the safe accessor; prefer it in the UI.
+revoke all on public.pending_access_requests from public, anon, authenticated;
+-- Views run with the definer's rights by default in older Postgres, and this
+-- view joins auth.users directly (email, signed_up_at, email_confirmed_at,
+-- last_sign_in_at). Granting SELECT to `authenticated` here would let any
+-- signed-in member -- approved or not, owner or not -- read every user's
+-- auth data directly via sb.from('pending_access_requests').select('*'),
+-- bypassing the owner-gated RPC below entirely. Deliberately not granted to
+-- anyone except the implicit table owner; the RPC below is the only
+-- client-facing accessor. (A prior version of this file granted SELECT to
+-- authenticated here -- flagged as an ERROR-level finding by Supabase's own
+-- security advisor and revoked live; see CLAUDE.md §8.)
 
 
 -- ---------------------------------------------------------------------------

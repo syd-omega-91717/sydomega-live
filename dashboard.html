@@ -747,7 +747,19 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var PHI=1.6180339887,EU=2.7182818285;
 var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
-function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+function sid(id,v){
+  var el=document.getElementById(id);
+  if(!el) return;
+  var s=String(v==null?'--':v);
+  var m=/^-?\d+(\.\d+)?(%?)$/.exec(s);
+  if(window.OmegaCountUp && m){
+    var num=parseFloat(s);
+    var decimals=m[1]?m[1].length-1:0;
+    window.OmegaCountUp(el,num,{decimals:decimals,suffix:m[2],duration:900});
+  } else {
+    el.textContent=s;
+  }
+}
 
 (async function(){
   try{

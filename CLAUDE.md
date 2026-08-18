@@ -2299,6 +2299,54 @@ orphaned file.
   - `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged),
     `python3 scripts/check-inline-js.py` (clean), `python3 -m unittest discover -s scripts/tests`
     (25/25 pass) all re-confirmed after the fix.
+- **[Fixed] Platform-wide link-hijack bug in the page-transition curtain — every internal link's
+  ctrl/cmd/shift-click and middle-click ("open in new tab") has been silently broken since
+  `omega-cinematic.js` shipped, on all ~250 pages.** Found while investigating the platform's
+  existing motion-graphics infrastructure — `omega-cinematic.js` and `omega-animated.js` are both
+  loaded on every page (`bg.js:1471`, `bg.js:1528`), and reading both in full to understand the
+  overlap turned up a real bug in `omega-cinematic.js`'s page-transition curtain: its
+  document-level `click` listener intercepted every same-origin, non-hash, non-download anchor
+  click and called `e.preventDefault()` unconditionally, with no check for modifier keys
+  (ctrl/cmd/shift/alt) or which mouse button fired the click. A member trying to open any internal
+  link in a new tab — the single most common "I'll read this later" gesture on the web — had that
+  click silently redirected to navigate the *current* tab instead, on every link, on every page,
+  since this module was added. Fixed by bailing out of the interception on
+  `e.button!==0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey` (also added a stale-event
+  guard, `e.defaultPrevented`), matching the standard pattern used by SPA routers for exactly this
+  reason — the curtain transition still fires for a plain left-click, verified with a headless-
+  Chromium test using manually-dispatched `MouseEvent`s (not `page.click()`, whose real-navigation
+  side effects raced the readback and gave misleading results on first attempt — caught and
+  corrected before trusting it): plain click → `defaultPrevented: true` (curtain unchanged),
+  ctrl-click → `defaultPrevented: false` (browser's native new-tab behavior now proceeds).
+  - **The `omega-cinematic.js`/`omega-animated.js` overlap itself is real but not a bug**: both
+    implement scroll-reveal and count-up, but through different, non-conflicting mechanisms —
+    `omega-animated.js` applies automatically by CLASS NAME (`.kpi`, `.card`, etc., zero markup
+    changes needed) and exposes a callable `OmegaCountUp(el, target, opts)` already used by
+    `omega-live.js`/`omega-particles.js`; `omega-cinematic.js` requires explicit opt-in via
+    `data-reveal`/`data-countup`/`data-stagger`/`data-scan` attributes and additionally owns the
+    page-transition curtain, a feature the other module doesn't have. Checked real usage before
+    concluding anything: `data-reveal` (13 pages) and `data-stagger` (3 pages) are partially wired;
+    `data-countup` and `data-scan` have **zero** usage anywhere in this repo's markup — fully
+    dormant, same "built but never wired" shape as several other findings in this file. Left the
+    module structure as-is (consolidating two working, non-conflicting systems is a larger
+    refactor than this session's scope, and `omega-cinematic.js`'s curtain has no equivalent in
+    the other file), but used the live, already-tested `OmegaCountUp` API rather than the dormant
+    `data-countup` attribute for the fix below, since `OmegaCountUp` is the one already proven to
+    handle asynchronously-populated values correctly.
+  - **Also wired real count-up animation onto `dashboard.html`'s live KPI values**, using this
+    already-built, already-proven infrastructure instead of adding a new system: enhanced the
+    page's single shared `sid(id, v)` "set value" helper (used at 23 call sites, both numeric KPIs
+    and non-numeric text like gate/element names) to detect a purely-numeric value via a strict
+    regex and animate it through `OmegaCountUp` when available, falling through to the exact
+    original plain `textContent` assignment for anything else — non-numeric text, and any call
+    before `omega-animated.js` has finished loading (graceful degradation, not a hard dependency).
+    Verified in headless Chromium: numeric values (`7`, `99.9%`) animate and land on the correctly
+    formatted final string; non-numeric text (`SOVEREIGN`, `ORACLE`) passes through completely
+    unaffected in both the "no OmegaCountUp yet" and "OmegaCountUp loaded" cases.
+  - `node --check omega-cinematic.js`, `python3 scripts/check-inline-js.py`,
+    `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged), and
+    `python3 -m unittest discover -s scripts/tests` (25/25 pass) all confirmed clean after both
+    fixes. No SQL/schema changes — pure client-side JS, live the moment these two files deploy.
 
 
 ## 9. Working in this repo — practical rules

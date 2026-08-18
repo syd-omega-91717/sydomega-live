@@ -76,9 +76,9 @@ verifying the *current* guard says nothing about what may have happened before i
 |---|---|---|
 | Stored XSS in `approvals.html`/`profile.html` | `display_name`/`email` rendered via raw `.innerHTML`; `display_name` is self-updatable by any member (`omega_profile_fields.sql`) | **Fixed** — `esc()` helper added, both files escaped |
 | Stored XSS in `sovereigns.html` | `profiles.sign` (self-updatable, `chunk_02b_migrations.sql`'s per-column GRANT list) queried for every `access_approved` member and rendered raw via `.innerHTML` in two places (table row, throne card) — no `user_id` filter, so reachable by/visible to the whole membership, not just the owner | **Fixed** — `esc()` helper added, both occurrences escaped |
-| Stored XSS in `queue.html`'s dispatch log | `dispatches.category`/`title`/`body` are member-writable (RLS `"wire insert"` policy checks only row ownership, not column values) and were rendered raw via `.innerHTML` in the OPS queue's "PLATFORM DISPATCH LOG" panel, visible to the owner | **Fixed** — see §4.6 (bundled with the same panel's wrong-column-name fix) |
+| Stored XSS in `queue.html`'s dispatch log | `dispatches.category`/`title`/`body` are member-writable (RLS checked only row ownership, not column values — at the time of this fix via a policy named `"wire insert"`, since superseded by `dispatches_self_insert` in this session's RLS consolidation with the identical self-or-owner shape) and were rendered raw via `.innerHTML` in the OPS queue's "PLATFORM DISPATCH LOG" panel, visible to the owner | **Fixed** — see §4.6 (bundled with the same panel's wrong-column-name fix) |
 | Stored XSS in `graph.html`'s constellation-graph tooltip | `profiles.display_name` (self-updatable, every `access_approved` member queried with no `user_id` filter) rendered into the member-node tooltip's `.innerHTML`. The code *attempted* to escape it — `nm.textContent=m.name` then read `nm.textContent` back — but reading `.textContent` returns the original unescaped string (that trick only works if you read `.innerHTML` back instead), so the "escaping" was a no-op. Reachable by hovering any member node; visible to any other approved member or the owner who opens the page | **Fixed** — added a real `escGraph()` helper and used it in place of the broken round-trip |
-| Stored XSS in `approvals.html`'s reservations queue | `review_reservations()` RPC (owner-only) returns `media_reservations` rows verbatim; `title` is a `NOT NULL text` column any authenticated member can set to anything via the `mr_insert` policy (`auth.uid()=user_id`, no content restriction — the same page members use to submit ad reservations). `approvals.html`'s queue rendered `row.title` raw via `.innerHTML`, unlike every other field on the same page. The sibling `review_contracts()` render had the identical unescaped pattern; `commission_contracts` has no `title`/`type` column today so it wasn't exploitable *yet*, but was fixed defensively for the same reason | **Fixed** — both now go through the page's existing `esc()` |
+| Stored XSS in `approvals.html`'s reservations queue | `review_reservations()` RPC (owner-only) returns `media_reservations` rows verbatim; `title` is a `NOT NULL text` column any authenticated member can set to anything via the table's self-or-owner INSERT policy (`auth.uid()=user_id`, no content restriction — at the time of this fix a standalone `mr_insert` policy, since folded into the single `media_reservations_own` ALL policy by this session's RLS consolidation, same permissive shape — the same page members use to submit ad reservations). `approvals.html`'s queue rendered `row.title` raw via `.innerHTML`, unlike every other field on the same page. The sibling `review_contracts()` render had the identical unescaped pattern; `commission_contracts` has no `title`/`type` column today so it wasn't exploitable *yet*, but was fixed defensively for the same reason | **Fixed** — both now go through the page's existing `esc()` |
 | Error-monitor free text unescaped, reachable **without authentication** | `report_client_error()` is `GRANT`ed to `anon` *and* `authenticated` (by design — it needs to catch errors from signed-out visitors too) and stores `p_page`/`p_message` with only a length truncation, no sanitization. `error_summary()` (owner-only) aggregates and returns them; `approvals.html`'s error-monitor panel rendered `row.message`/`row.page` raw via `.innerHTML` — reachable by literally anyone on the internet with no login, the widest possible reach of any stored-XSS instance found across this whole audit | **Fixed** — same `esc()`, bundled with the response-shape fix below |
 | Stored XSS in `omega-live.js`'s ticker (dormant) | `activity_feed.title` rendered raw via `.innerHTML`; RLS lets any member insert their own `is_public=true` row with an arbitrary title. Currently unreachable — no page has a `[data-live-ticker]` element yet — but `bg.js` loads this module on every page and it clearly exists to power one | **Fixed preemptively** — `esc()` added |
 | Reflected XSS in `pulse.html` (external source, not a Supabase table — a different vector than the rest of this sweep) | `item.title` from a Reuters feed proxied via `api.rss2json.com` (plain `fetch()`, no `.from()` call) rendered raw via `.innerHTML` — a compromised/MITM'd feed response would execute script. Missed by the `.from()`-call-centric sweep below since it isn't a database read | **Fixed** — `esc()` added |
@@ -391,8 +391,11 @@ across its several definitions, confirmed by grep). Every real row rendered as `
 `PAYLOAD: {}`, `STATUS: PENDING` regardless of actual content — same "queried the wrong
 shape" bug class as the Authority History chart fix in §2. Separately, the columns that
 *do* exist and that the fix now reads (`title`/`category`/`body`) are member-writable: the
-`dispatches` table's `"wire insert"` RLS policy (`supabase/dispatches.sql`,
-`chunk_06_migrations.sql`) allows any authenticated user to insert a row with
+`dispatches` table's RLS INSERT policy (at the time of this fix, a standalone `"wire insert"`
+policy in `supabase/dispatches.sql`/`chunk_06_migrations.sql` — `supabase/dispatches.sql` was
+later deleted as a duplicate-table-definition cleanup, and `"wire insert"` itself was later
+dropped and superseded by `dispatches_self_insert` in this session's RLS consolidation, same
+self-or-owner shape) allows any authenticated user to insert a row with
 `auth.uid() = user_id` and no column restriction, so a member could set `category`/`title`/
 `body` to an HTML/script payload via a direct REST call (no UI required, same threat model
 as the `sovereigns.html`/`approvals.html` stored-XSS fixes) and have it render unescaped in
@@ -1048,10 +1051,14 @@ exist anywhere in the codebase:
   a marketplace transaction. Only listing (browse/set-price/upload) is implemented.
 - **"FILE DELIVERY"** claimed "Buyers receive a signed URL... only authenticated buyers with
   verified purchase records can access them." This is not just unbuilt but actively contradicted
-  by the real RLS policy: `marketplace_listings_read` is `FOR SELECT USING (auth.role() =
+  by the real RLS policy: at the time of this fix, `FOR SELECT USING (auth.role() =
   'authenticated')` — any signed-in member can read every listing's full row, including
-  `file_path`, with no purchase gate at all. The claim describes a security guarantee that
-  doesn't exist.
+  `file_path`, with no purchase gate at all. Still true today after this session's RLS
+  consolidation restructured `marketplace_listings`' policies into `marketplace_listings_select`
+  — that exact `(select auth.role()) = 'authenticated'` clause was deliberately preserved
+  unchanged (the restructuring was behavior-preserving, not a fix for this gap), so the same
+  no-purchase-gate exposure remains, just under the new policy name. The claim describes a
+  security guarantee that doesn't exist.
 - **"SELLER TIERS"** said "Verified members can buy" — false in the same way, no buy capability
   exists for any tier.
 

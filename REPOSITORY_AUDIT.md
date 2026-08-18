@@ -232,8 +232,10 @@ In commit order, both repos kept in sync throughout:
     `title`/`body`/`category`/`is_published`/`created_at`/`user_id`/`sign`), so every row
     rendered as placeholder junk (`-`, `{}`, `PENDING`) regardless of content — same
     wrong-shape-query bug class as item 2. Compounding it: the real columns are member-writable
-    (the `dispatches` `"wire insert"` RLS policy checks only `auth.uid() = user_id`, not column
-    values) and were about to be rendered raw via `.innerHTML` with no escaping — a stored-XSS
+    (the `dispatches` RLS INSERT policy checks only `auth.uid() = user_id`, not column
+    values — at the time of this fix via a policy named `"wire insert"`, since superseded by
+    `dispatches_self_insert` in a later session's RLS consolidation, same self-or-owner shape)
+    and were about to be rendered raw via `.innerHTML` with no escaping — a stored-XSS
     vector into a page the owner views, same threat model as items 1 and 11's `sovereigns.html`
     fix. Fixed both at once: corrected the query to the real columns and added escaping,
     matching `news.html`'s existing `esc()` convention for the same table. See

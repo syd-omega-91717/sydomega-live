@@ -1971,6 +1971,37 @@ orphaned file.
     recorded remotely as `20260818002535_wrap_auth_uid_calls_in_rls_policies` and
     `20260818002831_drop_redundant_duplicate_rls_policies`, both mirrored locally under
     `supabase/migrations/`.
+- **[Fixed — second RLS-consolidation pass] 15 more `multiple_permissive_policies` findings
+  resolved, dropping the count 254→209.** Continuing the follow-up at explicit request ("keep
+  going on the remaining 254"). Re-dumped all 208 live permissive policies fresh (post the first
+  merge pass) and grouped by `(table, cmd, exact roles array)` — not just "same role name," the
+  literal array, so a `{public}` (all-roles) policy is never conflated with a same-named
+  `{authenticated}`-only one even though they overlap for authenticated callers. Any group with
+  2+ policies sharing the *exact* same role scope is safe to OR-merge by construction: Postgres
+  already evaluates multiple permissive policies for the same role as an OR of all of them, so
+  merging just makes that explicit as one physical policy instead of two — zero access-control
+  change. Groups whose role scopes differed even slightly were left alone, same caution as every
+  prior pass.
+  - Found 15 such groups (30 individual policies → 15 merged): `ai_memory`, `contribution_log`
+    (×2: INSERT, SELECT), `conversations`, `expert_bookings`, `interest_signals`,
+    `marketplace_listings`, `medals`, `media_reservations`, `publications`, `sovereign_events`,
+    `task_completions`, `user_dedication`, `user_journeys`, `workflow_executions`. Generated the
+    merge SQL programmatically (not hand-written per table) to eliminate transcription risk,
+    verified no new policy name collided with an existing one on its table before applying.
+  - Verified post-apply: every merged `(table, cmd)` shows exactly 1 policy where it showed 2
+    before; every affected table confirmed to still have policies covering every command it had
+    before (no accidental total lockout on any action). `get_advisors` re-run afterward confirmed
+    `multiple_permissive_policies` dropped 254→209 — a larger drop than 15 since several merged
+    groups were on commands the advisor counts per underlying CRUD action, same pattern as the
+    first merge pass. `unused_index` (125) and `unindexed_foreign_keys` (85) unchanged, as
+    expected for untouched categories.
+  - The remaining 209 are the same category as before: genuinely different access rules that
+    happen to share a role/action (or share a role/action only partially, e.g. one `{public}`
+    policy overlapping one `{authenticated}` policy for the same command) — still needs per-table
+    judgment, not a mechanical merge. Applied to the live database and verified (2026-08-18, via
+    the Supabase MCP connector), recorded remotely as
+    `20260818063011_merge_second_pass_duplicate_role_scoped_rls_policies`, mirrored locally at
+    `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

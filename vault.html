@@ -54,11 +54,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .nft-line{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--purple);margin-bottom:5px}
 .nft-name{font-family:var(--D);font-size:11px;color:var(--ink);margin-bottom:5px}
 .nft-meta{font-family:var(--M);font-size:7.5px;color:var(--muted)}
-.ledger-table{border:1px solid var(--line);border-radius:2px;overflow:hidden}
-.ledger-head{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:8px 12px;background:rgba(226,200,109,.04);border-bottom:1px solid rgba(226,200,109,.1)}
-.ledger-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
-.ledger-row{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05);font-size:11px;transition:.15s}
-.ledger-row:hover{background:rgba(201,168,76,.02)}
+.ledger-table.tbl-wrap{border:1px solid var(--line)!important;border-radius:2px!important;overflow:hidden!important}
+.ledger-head.tbl-head{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:8px 12px;background:rgba(226,200,109,.04)!important;border-bottom:1px solid rgba(226,200,109,.1)!important}
+.ledger-hcell.tbl-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)!important}
+.ledger-row.tbl-row{display:grid;grid-template-columns:110px 1fr 70px 80px;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05)!important;font-size:11px;transition:.15s}
+.ledger-row.tbl-row:hover{background:rgba(201,168,76,.02)!important}
 .ledger-ts{font-family:var(--M);font-size:8px;color:var(--muted)}
 .ledger-pts{font-family:var(--D);font-size:11px}
 .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:14px}
@@ -68,10 +68,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .art-n{font-family:var(--D);font-size:clamp(28px,5vw,48px);color:rgba(201,168,76,.12);position:absolute;top:8px;right:14px;line-height:1}
 .art-title{font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:8px;letter-spacing:.04em}
 .art-text{font-size:11px;line-height:1.75;color:var(--ink);opacity:.75}
-.audit-table{border:1px solid rgba(0,229,255,.1);border-radius:2px;overflow:hidden}
-.audit-head{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:8px 12px;background:rgba(0,229,255,.04);border-bottom:1px solid rgba(0,229,255,.1)}
-.audit-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)}
-.audit-row{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:9px 12px;border-bottom:1px solid rgba(0,229,255,.04);font-size:11px}
+.audit-table.tbl-wrap{border:1px solid rgba(0,229,255,.1)!important;border-radius:2px!important;overflow:hidden!important}
+.audit-head.tbl-head{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:8px 12px;background:rgba(0,229,255,.04)!important;border-bottom:1px solid rgba(0,229,255,.1)!important}
+.audit-hcell.tbl-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--cyan)!important}
+.audit-row.tbl-row{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:9px 12px;border-bottom:1px solid rgba(0,229,255,.04)!important;font-size:11px}
 .sci-block{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5);margin-bottom:12px}
 .sci-label{font-family:var(--M);font-size:8px;letter-spacing:3px;color:var(--cyan);margin-bottom:8px}
 .sci-val{font-family:var(--D);font-size:clamp(20px,3.5vw,32px);color:var(--gold);line-height:1.2;margin-bottom:6px}
@@ -81,8 +81,8 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 @media(max-width:700px){
   .reserve-hero{grid-template-columns:1fr}
   .kpi-row{grid-template-columns:1fr 1fr}
-  .ledger-head,.ledger-row{grid-template-columns:80px 1fr 50px 60px}
-  .audit-head,.audit-row{grid-template-columns:80px 1fr 70px 50px}
+  .ledger-head.tbl-head,.ledger-row.tbl-row{grid-template-columns:80px 1fr 50px 60px!important}
+  .audit-head.tbl-head,.audit-row.tbl-row{grid-template-columns:80px 1fr 70px 50px!important}
 }
 </style>
 </head>
@@ -231,26 +231,26 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
 
       <div class="sechead sechead-gold">SOVEREIGN EARNING LEDGER &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
-      <div class="ledger-table" style="margin-bottom:22px">
-        <div class="ledger-head">
-          <div class="ledger-hcell">TIMESTAMP</div>
-          <div class="ledger-hcell">TASK / ACTION</div>
-          <div class="ledger-hcell">AXIS</div>
-          <div class="ledger-hcell">POINTS</div>
+      <div class="tbl-wrap ledger-table" style="margin-bottom:22px">
+        <div class="tbl-head ledger-head">
+          <div class="tbl-hcell ledger-hcell">TIMESTAMP</div>
+          <div class="tbl-hcell ledger-hcell">TASK / ACTION</div>
+          <div class="tbl-hcell ledger-hcell">AXIS</div>
+          <div class="tbl-hcell ledger-hcell">POINTS</div>
         </div>
-        <div id="earn-log"><div class="ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EARNING LEDGER&hellip;</span></div></div>
+        <div id="earn-log"><div class="tbl-row ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EARNING LEDGER&hellip;</span></div></div>
       </div>
 
       <div class="sechead" style="color:var(--cyan)">
         <span>TREASURY &amp; ACCESS AUDIT LOG &middot; SOVEREIGN EVENT CHAIN</span>
         <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px">&#8635; REFRESH</button>
       </div>
-      <div class="audit-table">
-        <div class="audit-head">
-          <div class="audit-hcell">TIMESTAMP</div>
-          <div class="audit-hcell">EVENT</div>
-          <div class="audit-hcell">TYPE</div>
-          <div class="audit-hcell">STATUS</div>
+      <div class="tbl-wrap audit-table">
+        <div class="tbl-head audit-head">
+          <div class="tbl-hcell audit-hcell">TIMESTAMP</div>
+          <div class="tbl-hcell audit-hcell">EVENT</div>
+          <div class="tbl-hcell audit-hcell">TYPE</div>
+          <div class="tbl-hcell audit-hcell">STATUS</div>
         </div>
         <div id="audit-log-list" data-loading></div>
       </div>
@@ -530,7 +530,7 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
           el.innerHTML='';
           tasks.forEach(function(t){
             var col={'a':'var(--gold)','b':'var(--purple)','c':'var(--green)'}[t.axis_type]||'var(--muted)';
-            var row=document.createElement('div');row.className='ledger-row';
+            var row=document.createElement('div');row.className='tbl-row ledger-row';
             row.innerHTML='<span class="ledger-ts">'+fmt(t.completed_at)+'</span>'
               +'<span>'+String(t.task_name||'').toUpperCase()+'</span>'
               +'<span style="font-family:var(--M);font-size:8px;color:'+col+'">AXIS '+String(t.axis_type||'A').toUpperCase()+'</span>'
@@ -572,7 +572,7 @@ window.loadAuditLog=async function(){
       var subj=escAudit(String(row.subject||'').toUpperCase().slice(0,12));
       var stat=/granted$/.test(actionRaw)?'GRANTED':/rejected/.test(actionRaw)?'REJECTED':/revoked/.test(actionRaw)?'REVOKED':/expired/.test(actionRaw)?'EXPIRED':'LOGGED';
       var col=stat==='GRANTED'?'var(--green)':(stat==='REJECTED'||stat==='REVOKED')?'var(--crim)':stat==='EXPIRED'?'var(--gold)':'var(--muted)';
-      var r2=document.createElement('div');r2.className='audit-row';
+      var r2=document.createElement('div');r2.className='tbl-row audit-row';
       r2.innerHTML='<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+ts+'</span>'
         +'<span>'+evt+'</span>'
         +'<span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+subj+'</span>'
@@ -592,7 +592,7 @@ window.loadAuditLog=async function(){
       list.innerHTML='';
       DEMO.forEach(function(r){
         var col=r.st==='CONFIRMED'?'var(--green)':r.st==='SEALED'?'var(--gold)':'var(--muted)';
-        var row=document.createElement('div');row.className='audit-row';
+        var row=document.createElement('div');row.className='tbl-row audit-row';
         row.innerHTML='<span style="font-family:var(--M);font-size:8px;color:var(--muted)">'+r.ts+'</span><span>'+r.evt+'</span><span style="font-family:var(--M);font-size:8px;color:var(--cyan)">'+r.typ+'</span><span style="font-family:var(--M);font-size:8px;color:'+col+'">'+r.st+'</span>';
         list.appendChild(row);
       });

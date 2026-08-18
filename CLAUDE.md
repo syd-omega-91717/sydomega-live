@@ -2068,6 +2068,63 @@ orphaned file.
   - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
     recorded remotely as `20260818065025_drop_more_policies_redundant_vs_all_policy`, mirrored
     locally at `supabase/migrations/`.
+- **[Fixed — fifth RLS-consolidation pass, resolves the prior blocker] The `FOR ALL`/`WITH
+  CHECK`-default question is answered; 5 tables restructured into single-purpose per-command
+  policies, fully clearing them from `multiple_permissive_policies` (123→98).** Continuing the
+  "slow, per-table" approach the user explicitly chose over further bulk passes. Resolved the
+  open question blocking the "collapse ALL + specific policies into single-purpose per-command
+  policies" technique — whether a `FOR ALL` policy with only `USING` (no explicit `WITH CHECK`)
+  implicitly reuses `USING` for `WITH CHECK` on INSERT/UPDATE, or defaults to unrestricted
+  (`WITH CHECK (true)`) — empirically, against a real throwaway table/role on this project (a
+  documentation lookup wasn't possible: the sandbox's egress policy blocks
+  `www.postgresql.org`, and Supabase's own docs search gave an inconclusive answer for this
+  specific `FOR ALL` case). A `FOR ALL USING(owner_flag = true)` policy with no explicit `WITH
+  CHECK` correctly **rejected** an INSERT violating that condition (SQLSTATE 42501) — confirming
+  `USING` is reused as `WITH CHECK`, not defaulted to permissive. (First attempt failed on
+  `permission denied to set role` — the migration role, `postgres`, was never granted membership
+  in the throwaway test role, a prerequisite for `SET LOCAL ROLE`; fixed by granting it first.
+  The failed attempt's own transaction rolled back atomically — reconfirmed via a follow-up
+  count query showing 0 rows for every object it tried to create — so nothing unsafe from it
+  persisted.) The 3 successful diagnostic `apply_migration` calls used to reach this answer each
+  landed a real, but content-free, row in the remote migration-tracking table with no matching
+  local file; removed via a follow-up migration
+  (`20260818072124_remove_throwaway_test_migration_records.sql`) rather than left as tracking-
+  history noise with nothing to point to.
+  - **5 tables** (`capability_registry`, `data_domains`, `data_entities`, `knowledge_edges`,
+    `knowledge_nodes`) previously flagged as a proven-but-unapplied fix (dropping a genuine
+    byte-duplicate `{authenticated}`-scoped `FOR SELECT USING(true)` policy, redundant against a
+    coexisting `{public}`-scoped `FOR SELECT USING(auth.uid() IS NOT NULL)` policy — for the
+    `authenticated` role specifically, that condition is always true). Applied first
+    (`20260818072250`), verified each table left with exactly 1 SELECT policy (was 2). This
+    alone did **not** clear the tables from the advisor, though — re-checked live rather than
+    assumed, and found each table still carried a real, additive overlap: the same
+    `{public}`-scoped `FOR SELECT` policy plus a `{public}`-scoped `FOR ALL USING
+    (is_platform_owner())` owner policy, both permissive and both applying to `SELECT` for every
+    role — genuinely additive (owner gets full access via ALL; any authenticated user gets read
+    via the narrower SELECT policy), not a redundancy, so correctly untouched by every prior
+    pass's redundancy-only detectors.
+  - Restructured each table's 2 remaining policies into 4 single-purpose ones (`<table>_select`
+    = `is_platform_owner() OR auth.uid() IS NOT NULL`; `<table>_owner_insert`/`_owner_update`/
+    `_owner_delete` = owner-only, explicit `WITH CHECK` on INSERT/UPDATE) — provably
+    behavior-identical, not just similar: today's SELECT access is already the OR of both
+    policies' conditions (Postgres evaluates multiple permissive policies for the same
+    role+command as an OR), and today's INSERT/UPDATE access is already owner-only via the ALL
+    policy's `USING`, already implicitly reused as `WITH CHECK` per the semantics just confirmed
+    — the new policies just make both explicit. Applied as `20260818072522`.
+  - Verified post-apply: `pg_policies` grouped by (table, cmd) shows exactly 1 policy for all 4
+    commands across all 5 tables (20 rows, no gaps, no duplicates — no lockout on any action).
+    `get_advisors` re-run afterward confirmed `multiple_permissive_policies` dropped 123→98, and
+    a direct search of the fresh advisor output for these 5 table names inside that category
+    returned 0 remaining hits — full clearance, not partial.
+  - This is the first pass in this section to use structural restructuring rather than pure
+    drop/merge, and unblocks the same technique for the other genuinely-additive ALL+specific
+    pairs still open in the remaining 98 findings (e.g. `activity_feed`, `advertisements`,
+    flagged in earlier passes as needing exactly this resolved question before touching them).
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818072124_remove_throwaway_test_migration_records`,
+    `20260818072250_drop_redundant_authenticated_read_policies_knowledge_graph`, and
+    `20260818072522_restructure_knowledge_graph_all_plus_select_into_percommand`, all mirrored
+    locally at `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

@@ -1,0 +1,53 @@
+-- ============================================================================
+-- Ω SYD OMEGA 91717 — REMOVE THROWAWAY TEST MIGRATION RECORDS
+--
+-- Named with the exact version string Supabase's own `apply_migration` tool
+-- recorded on the remote database's migration-tracking table when this fix
+-- was applied directly (2026-08-18, via the Supabase MCP connector) — see
+-- supabase/migrations/README.md's "Timestamp-versioned files" section for
+-- why this breaks the directory's usual NNNN_<name>.sql convention.
+--
+-- Housekeeping, not a schema change. While resolving the open question of
+-- whether a `FOR ALL` policy with only `USING` (no explicit `WITH CHECK`)
+-- implicitly reuses `USING` for INSERT/UPDATE enforcement or defaults to
+-- unrestricted (`WITH CHECK (true)`) — needed to safely continue the RLS
+-- consolidation follow-up beyond 123 remaining `multiple_permissive_policies`
+-- findings — an empirical test was run via three separate `apply_migration`
+-- calls (`throwaway_check_migration_role`, `throwaway_capture_migration_role`,
+-- a role-name probe using a real throwaway table since `apply_migration`
+-- doesn't return query results directly) plus a final actual test
+-- (`throwaway_rls_semantics_test_v2`, which errored and rolled back
+-- atomically — confirmed via a follow-up count query showing 0 rows for
+-- every throwaway object it created, so nothing from that failed attempt
+-- persisted).
+--
+-- The 3 successful throwaway calls each landed a real row in
+-- `supabase_migrations.schema_migrations` despite doing nothing but read a
+-- role name into a scratch table — polluting the migration-tracking history
+-- with entries that have no matching local file and no real schema content,
+-- breaking this repo's established local/remote migration-parity
+-- convention (§5). The scratch table itself (`_rls_semantics_test_role`)
+-- was already dropped in a fourth throwaway call
+-- (`cleanup_throwaway_rls_semantics_test_artifacts`) — this migration
+-- removes the 3 now-empty tracking-table rows so the remote history matches
+-- what's actually in this directory.
+--
+-- The empirical test's real finding (once retried with the missing role
+-- grant added — the first attempt failed on `permission denied to set role`
+-- since the migration role, `postgres`, was never granted membership in the
+-- throwaway test role): a `FOR ALL` policy with only `USING(...)` DOES
+-- implicitly reuse that expression as `WITH CHECK` — an INSERT violating
+-- the `USING` condition was rejected (SQLSTATE 42501, caught by the test's
+-- `insufficient_privilege` handler), not silently allowed through an
+-- unrestricted default. This resolves the blocker noted in CLAUDE.md §8 and
+-- unblocks the "collapse into single-purpose per-command policies"
+-- restructuring technique for genuinely-additive ALL+specific policy pairs
+-- (`activity_feed`, `advertisements`, etc.) going forward.
+--
+-- Idempotent (DELETE ... WHERE version IN (...) on rows that may already be
+-- gone), safe to re-run.
+-- Applied to the live database and verified — see CLAUDE.md §8.
+-- ============================================================================
+
+DELETE FROM supabase_migrations.schema_migrations
+WHERE version IN ('20260818071937', '20260818071947', '20260818072050');

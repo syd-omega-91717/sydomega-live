@@ -540,7 +540,8 @@ document.getElementById('btn-add').addEventListener('click',async()=>{
   const r=document.getElementById('af-rel').value;
   if(!n||!r){alert('Name and relation required.');return;}
   const {error}=await sb.from('family_nodes').insert({user_id:uid,name:n,relation:r,sign:document.getElementById('af-sign').value||null,is_heir:false});
-  if(!error){document.getElementById('af-name').value='';document.getElementById('af-rel').value='';const msg=document.getElementById('add-msg');msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);boot();}
+  if(error){alert('Could not add family member: '+error.message);return;}
+  document.getElementById('af-name').value='';document.getElementById('af-rel').value='';const msg=document.getElementById('add-msg');msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);boot();
 });
 
 async function boot(){

@@ -2068,6 +2068,237 @@ orphaned file.
   - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
     recorded remotely as `20260818065025_drop_more_policies_redundant_vs_all_policy`, mirrored
     locally at `supabase/migrations/`.
+- **[Fixed — fifth RLS-consolidation pass, resolves the prior blocker] The `FOR ALL`/`WITH
+  CHECK`-default question is answered; 5 tables restructured into single-purpose per-command
+  policies, fully clearing them from `multiple_permissive_policies` (123→98).** Continuing the
+  "slow, per-table" approach the user explicitly chose over further bulk passes. Resolved the
+  open question blocking the "collapse ALL + specific policies into single-purpose per-command
+  policies" technique — whether a `FOR ALL` policy with only `USING` (no explicit `WITH CHECK`)
+  implicitly reuses `USING` for `WITH CHECK` on INSERT/UPDATE, or defaults to unrestricted
+  (`WITH CHECK (true)`) — empirically, against a real throwaway table/role on this project (a
+  documentation lookup wasn't possible: the sandbox's egress policy blocks
+  `www.postgresql.org`, and Supabase's own docs search gave an inconclusive answer for this
+  specific `FOR ALL` case). A `FOR ALL USING(owner_flag = true)` policy with no explicit `WITH
+  CHECK` correctly **rejected** an INSERT violating that condition (SQLSTATE 42501) — confirming
+  `USING` is reused as `WITH CHECK`, not defaulted to permissive. (First attempt failed on
+  `permission denied to set role` — the migration role, `postgres`, was never granted membership
+  in the throwaway test role, a prerequisite for `SET LOCAL ROLE`; fixed by granting it first.
+  The failed attempt's own transaction rolled back atomically — reconfirmed via a follow-up
+  count query showing 0 rows for every object it tried to create — so nothing unsafe from it
+  persisted.) The 3 successful diagnostic `apply_migration` calls used to reach this answer each
+  landed a real, but content-free, row in the remote migration-tracking table with no matching
+  local file; removed via a follow-up migration
+  (`20260818072124_remove_throwaway_test_migration_records.sql`) rather than left as tracking-
+  history noise with nothing to point to.
+  - **5 tables** (`capability_registry`, `data_domains`, `data_entities`, `knowledge_edges`,
+    `knowledge_nodes`) previously flagged as a proven-but-unapplied fix (dropping a genuine
+    byte-duplicate `{authenticated}`-scoped `FOR SELECT USING(true)` policy, redundant against a
+    coexisting `{public}`-scoped `FOR SELECT USING(auth.uid() IS NOT NULL)` policy — for the
+    `authenticated` role specifically, that condition is always true). Applied first
+    (`20260818072250`), verified each table left with exactly 1 SELECT policy (was 2). This
+    alone did **not** clear the tables from the advisor, though — re-checked live rather than
+    assumed, and found each table still carried a real, additive overlap: the same
+    `{public}`-scoped `FOR SELECT` policy plus a `{public}`-scoped `FOR ALL USING
+    (is_platform_owner())` owner policy, both permissive and both applying to `SELECT` for every
+    role — genuinely additive (owner gets full access via ALL; any authenticated user gets read
+    via the narrower SELECT policy), not a redundancy, so correctly untouched by every prior
+    pass's redundancy-only detectors.
+  - Restructured each table's 2 remaining policies into 4 single-purpose ones (`<table>_select`
+    = `is_platform_owner() OR auth.uid() IS NOT NULL`; `<table>_owner_insert`/`_owner_update`/
+    `_owner_delete` = owner-only, explicit `WITH CHECK` on INSERT/UPDATE) — provably
+    behavior-identical, not just similar: today's SELECT access is already the OR of both
+    policies' conditions (Postgres evaluates multiple permissive policies for the same
+    role+command as an OR), and today's INSERT/UPDATE access is already owner-only via the ALL
+    policy's `USING`, already implicitly reused as `WITH CHECK` per the semantics just confirmed
+    — the new policies just make both explicit. Applied as `20260818072522`.
+  - Verified post-apply: `pg_policies` grouped by (table, cmd) shows exactly 1 policy for all 4
+    commands across all 5 tables (20 rows, no gaps, no duplicates — no lockout on any action).
+    `get_advisors` re-run afterward confirmed `multiple_permissive_policies` dropped 123→98, and
+    a direct search of the fresh advisor output for these 5 table names inside that category
+    returned 0 remaining hits — full clearance, not partial.
+  - This is the first pass in this section to use structural restructuring rather than pure
+    drop/merge, and unblocks the same technique for the other genuinely-additive ALL+specific
+    pairs still open in the remaining 98 findings (e.g. `activity_feed`, `advertisements`,
+    flagged in earlier passes as needing exactly this resolved question before touching them).
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818072124_remove_throwaway_test_migration_records`,
+    `20260818072250_drop_redundant_authenticated_read_policies_knowledge_graph`, and
+    `20260818072522_restructure_knowledge_graph_all_plus_select_into_percommand`, all mirrored
+    locally at `supabase/migrations/`.
+- **[Fixed — sixth RLS-consolidation pass, largest single pass so far] 18 more tables cleared
+  from `multiple_permissive_policies` in one reviewed batch (98→25).** A fresh full
+  `pg_policies` dump was run through a corrected detector script — fixing two real bugs found
+  while building it, both verified by hand against real examples before trusting the output: (1)
+  the OR-splitter only split one level deep, missing redundancies hidden behind nested-but-
+  logically-top-level ORs like `(A OR (B OR C))`; (2) equality clauses weren't normalized for
+  operand order, so `auth.uid() = user_id` and `user_id = auth.uid()` were treated as different
+  clauses when they're identical. Both fixes surfaced real, previously-missed live redundancies
+  (`media_reservations_select_merged`, `task_completions_select_merged` — both created by
+  earlier passes in this same session and never re-checked against a table's ALL policy after
+  being created).
+  - **7 pure drops** (redundant or logically dominated by their table's ALL policy): the 2 above,
+    plus `interest_signals`' `interest_own_insert`/`member sees own signals` (exact-duplicate or
+    subset conditions with a narrower role scope), plus `media_reservations`' `owner updates
+    media` and `publications`' `owner updates publications`/`pub_update` — none of these last 3
+    are a literal OR-term subset (so the detector correctly didn't auto-flag them), but each was
+    verified by hand to be logically dominated: they only ever pass when `is_platform_owner()` or
+    `uid=user_id` already holds, which the table's ALL policy already grants unconditionally for
+    that command regardless.
+  - **16 tables restructured** into single-purpose per-command policies, the same technique
+    proven on the 5 knowledge-graph tables in the previous pass, now applied at scale: `api_keys`,
+    `governance_policies`, `policy_rules`, `conversations`, `messages`, `member_posts`,
+    `member_presence`, `activity_feed` (the long-documented "genuinely additive, don't merge"
+    example in this file — now safely resolvable via full restructuring rather than a naive
+    OR-merge), `ai_memory`, `advertisements`, `platform_settings`, `threat_events`,
+    `feature_flags`, `platform_metrics`. Split into two groups by whether the additive policy's
+    role scope was safe to fold into a single `{public}`-scoped policy: 12 were safe (already
+    `{public}`-scoped, or a `uid`-based condition that naturally evaluates false for anon
+    regardless of scope); 2 (`feature_flags`, `platform_metrics`) had a bare `true` condition at
+    `{authenticated}` scope, where folding into `{public}` would have newly exposed anon to
+    unconditional access — these keep their exact original `TO authenticated` scope on the
+    restructured policy instead. For every table whose ALL policy only granted self-access (no
+    owner bypass — `conversations`, `messages`, `member_posts`, `member_presence`,
+    `activity_feed`, `ai_memory`), the restructured INSERT/UPDATE/DELETE policies stay self-only
+    — no owner bypass was introduced where none existed before.
+  - **Deferred, not touched this pass**: `dispatches` and `content_versions` (each mix
+    `{public}`- and `{authenticated}`-scoped additive policies with different conditions, needing
+    non-uniform per-policy scope handling rather than one clean merge), and `marketplace_listings`
+    (5 overlapping policies split across two different columns, `user_id` vs `seller_id` — needs
+    the column-consistency question this file already flagged elsewhere resolved first).
+  - Verified post-apply: `pg_policies` grouped by (table, cmd) shows exactly 1 policy for every
+    command on every one of the 18 tables touched (no gaps, no duplicates, no lockout).
+    `get_advisors` re-run afterward confirmed `multiple_permissive_policies` dropped 98→25, and a
+    search of the fresh advisor output found the only 3 tables still appearing in that category
+    are exactly the 3 deliberately deferred above — confirming this pass didn't miss anything it
+    should have caught, and didn't touch anything it shouldn't have. 94% total reduction from the
+    original 434 across all six passes combined.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818080246_rls_pass6_drops_and_percommand_restructure`, mirrored
+    locally at `supabase/migrations/`.
+- **[Fixed — seventh and final RLS-consolidation pass] `multiple_permissive_policies` fully
+  cleared: 434 → 0 across seven passes.** Resolved the 3 tables deliberately deferred from pass
+  6:
+  - `content_versions` — same "bare `true` at `{authenticated}` scope dominates" shape as
+    `feature_flags`/`platform_metrics` in pass 6. The `{authenticated}`-scoped
+    `content_versions_auth_read` (qual=`true`) already granted every authenticated user
+    (owner included) unconditional read, making both the ALL policy's SELECT component and the
+    separate `author reads own content_versions` policy fully redundant for that role. Collapsed
+    to a single `SELECT TO authenticated USING (true)` policy — exactly reproduces the original:
+    anon still gets nothing, authenticated/owner still get unconditional read.
+  - `dispatches` — the `{authenticated}`-scoped `wire read` (qual=`true`) and the
+    `{public}`-scoped `dispatch_read`/`dispatches_own` SELECT components couldn't be folded by
+    widening role scope alone (anon must keep seeing only published dispatches, not everything).
+    Resolved with the `(select auth.role()) = 'authenticated'` idiom already used live elsewhere
+    in this exact schema (`marketplace_listings_select_merged`, predating this session) — a
+    single SELECT policy (`is_published = true OR is_platform_owner() OR (select auth.role()) =
+    'authenticated'`) reproduces the original 3-policy behavior exactly. INSERT/UPDATE/DELETE had
+    no additive policies beyond the ALL policy's own self-or-owner condition, so those became
+    simple 1:1 per-command splits.
+  - `marketplace_listings` — checked the live table shape before touching anything, per this
+    file's standing rule against guessing at schema: `information_schema.columns` confirmed both
+    `user_id` (nullable) and `seller_id` (NOT NULL) exist, and a row-count query confirmed the
+    table has 0 rows total, so `user_id` has never been populated by any real insert.
+    `seller_id` is therefore the only column any real write path could have used (enforced by its
+    NOT NULL constraint), and `marketplace_listings_own`'s `user_id`-based self-access clause was
+    already dead code in practice. Restructured around `seller_id`, preserving
+    `marketplace_listings_select_merged`'s existing `auth.role()='authenticated'` broad-read
+    grant (any authenticated member can browse the whole marketplace, not just active listings —
+    an intentional, already-live design predating this session) and `ml_update`'s existing
+    seller-or-owner condition unchanged. DELETE previously had no seller-specific policy at all
+    (only the ALL policy's dead-`user_id`-OR-owner condition, in practice owner-only) — kept as
+    owner-only rather than introducing a new seller-delete capability that didn't previously
+    exist, since this pass restructures, it doesn't redesign access.
+  - Verified post-apply: `pg_policies` grouped by (table, cmd) shows exactly 1 policy for every
+    command on all 3 tables (12 rows, no gaps, no duplicates, no lockout). `get_advisors` re-run
+    afterward confirmed `multiple_permissive_policies` at exactly 0 — a 100% reduction from the
+    original 434 findings across all seven passes in this session. Only `unused_index` (125) and
+    `unindexed_foreign_keys` (85) remain in the performance-advisor output, both already-
+    documented INFO-level categories deliberately deferred to a dedicated follow-up.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as
+    `20260818081159_rls_pass7_dispatches_content_versions_marketplace_listings`, mirrored
+    locally at `supabase/migrations/`.
+- **[Fixed — first pass on `unindexed_foreign_keys`; `unused_index` deliberately left alone,
+  with reasoning] 24 missing foreign-key indexes added on real schema; the 45-table scaffold's
+  61 remaining unindexed FKs and all 125 pre-existing "unused" indexes left untouched on
+  purpose.** With `multiple_permissive_policies` fully cleared, moved to the two remaining
+  performance-advisor categories.
+  - Queried `pg_constraint`/`pg_index` directly for the authoritative list of foreign keys with
+    no covering index (85 — matched the advisor's own count exactly). Cross-referenced all 63
+    distinct tables against this repo's own `supabase/*.sql` source, the same method already
+    established earlier in this file for the RLS-disabled-scaffold finding: only 18 tables have
+    a real `CREATE TABLE` anywhere in this repo; the other 45 (`organizations`, `teams`, `tasks`,
+    `calendars`, `ai_workspaces`, `knowledge_documents`, `webhooks`, `workflows`,
+    `marketplace_orders`, `billing_invoices`, etc.) are the same unrelated, generic multi-tenant
+    SaaS scaffold this file already documented finding on this production project — left
+    untouched, matching this file's own standing rule against inventing behavior for schema this
+    repo doesn't own or understand the purpose of. Added 24 indexes
+    (`supabase/omega_..._fk_indexes` — see migration file) covering the 18 real tables' unindexed
+    foreign keys — purely additive (`CREATE INDEX IF NOT EXISTS`), no RLS or access-control
+    implication. Verified post-apply: all 24 present via `pg_indexes`; `get_advisors` re-run
+    confirmed `unindexed_foreign_keys` dropped 85→61, and every one of the 61 remaining is on a
+    scaffold table, not one of the 18 touched.
+  - **`unused_index` (125 pre-existing findings, excluding the 24 brand-new indexes just added,
+    which trivially show as "unused" until real traffic reaches them — expected, not a
+    regression) — deliberately NOT touched, with a live check behind the decision rather than a
+    guess.** Queried `pg_stat_user_tables` for a sample of the flagged tables before deciding:
+    `profiles` has 9 live rows, and nearly every other table sampled (`conversations`,
+    `messages`, `activity_feed`, `threat_events`, `platform_events`, `telemetry_events`,
+    `user_journeys`, `workflow_executions`, `notifications`, `matrix_progress`, `sovereign_events`,
+    `leaderboard_snapshots`) has **0** rows. This platform has essentially no real traffic yet —
+    confirming "unused" here reflects the platform's current near-zero usage, not that these
+    indexes are badly designed or genuinely unneeded. Nearly every flagged index is a small
+    `user_id`/foreign-key-pattern index (`idx_<table>_user_id` and equivalents) — exactly the
+    kind of index that becomes essential the moment real query volume arrives, since
+    `user_id = auth.uid()` is the single most common filter across literally every RLS policy
+    fixed across all seven consolidation passes in this session. Dropping them now would optimize
+    for a database with 9 real users, at the cost of real query performance under RLS the moment
+    the platform actually grows — not a good trade for an INFO-level, purely-advisory finding, and
+    the wrong kind of mistake to make on a stats-based linter whose "unused" signal is only as
+    good as the traffic it's observed. Recorded here as a considered decision, not an oversight —
+    matching this file's own precedent for `transactions`/`wallet_balances` and the `.mp4`/`.docx`
+    Git LFS migration, both left open by explicit choice rather than default.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818082309_add_missing_fk_indexes_real_schema`, mirrored locally at
+    `supabase/migrations/`.
+- **[Fixed — fresh full-repo re-verification sweep, one real finding] Re-ran this session's three
+  established scanners (column-name mismatches against live schema, silent-failure writes,
+  module-boundary bugs) across all 169 `.html` and 94 `.js` files as a clean re-verification, not
+  assuming prior fixes still held.**
+  - **Column-mismatch scan**: 10 candidates, 9 false positives (each individually verified
+    against `information_schema.columns`, not assumed) — `profiles.created_at`/
+    `profiles.membership_tier`/`profiles.matrix_phase` are all real live columns the static
+    parser's regex simply missed; `omega-presence.js`'s and `omega-sovereign-os.js`'s "bad"
+    fields were nested inside a `client_info`/`metrics` jsonb object, misread as top-level keys
+    by the scanner's non-recursive key extractor; `account.html`'s and `omega-memory.js`'s
+    `onConflict` hits were a Supabase client *option*, not a table column. The 10th (`map.html`'s
+    `lat`/`lon`/`gate`) is the already-documented, deliberately-unfixed geolocation gap — though
+    `country` (also flagged there) turned out to already be a real live column, a minor accuracy
+    note for that entry, not a new finding. **Net result: zero new column-mismatch bugs** — a
+    clean confirmation, not nothing.
+  - **Silent-failure-write scan**: 20 raw candidates, all individually read in context (not
+    trusted from the regex alone) — most were either a real `.error` check just outside the
+    scanner's 12-line window (`profile.html`, `travel.html`, `account.html`, `events.html`,
+    `family.html`'s other two handlers, `contracts.html`), an unrelated non-Supabase API
+    coincidentally matching `.update(`/`.insert(` (`omega-sw-register.js`'s
+    `ServiceWorkerRegistration.update()`, `omega-confetti.js`'s particle `.update()`,
+    `omega-ring.js`'s API doc-comment), or a deliberate best-effort write with no user-facing
+    success/failure state to get wrong (`bg.js`'s silent owner-profile self-heal, run on every
+    page load with no UI feedback either way; `omega-sovereign-os.js`'s unload-time telemetry
+    beacon and circuit-breaker-wrapped heartbeat flush; `omega-memory.js`'s try/catch-wrapped AI
+    memory cache write, which already has an explicit `sessionStorage` fallback regardless of
+    outcome). **One real finding**: `family.html`'s "add family member" handler checked `.error`
+    but only ever acted on success (`if(!error){...clear form, show success...}`) — on failure it
+    did nothing at all, no alert, no feedback, inconsistent with its own sibling handlers in the
+    same file (bloodline node, heritage record — both already correctly `if(error){alert(...);
+    return;}`). Fixed to match.
+  - **Module-boundary scan** (inline `onclick=`/`onchange=`/etc. attributes calling a function
+    declared only inside a `<script type="module">` block, never exposed to `window` — the bug
+    class behind the 26-instance fix earlier in this file): **0 findings**, confirming that fix
+    is still fully holding, no regression introduced by anything since.
+  - `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged),
+    `python3 scripts/check-inline-js.py` (clean), `python3 -m unittest discover -s scripts/tests`
+    (25/25 pass) all re-confirmed after the fix.
 
 
 ## 9. Working in this repo — practical rules

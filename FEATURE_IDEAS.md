@@ -765,7 +765,7 @@ follows, just not applied everywhere it could be:
 - [Skeleton Screens vs Loading Spinners: Which Improves Perceived Performance? — The Hangline](https://www.thehangline.com/skeleton-screens-vs-loading-spinners-which-improves-perceived-performance/)
 - [Dashboard Design Patterns for Modern Web Apps 2026](https://artofstyleframe.com/blog/dashboard-design-patterns-web-apps/) — notes skeleton loading states as one of the recurring "unglamorous decisions" shared by 2026's best dashboard designs (Linear, Stripe, Grafana, Vercel), alongside shipping both color themes from day one, matching this platform's own dark-first, glassmorphism design system.
 
-## 18. Document the 4 real skills with the PURPOSE/INPUT/OUTPUT/SAFETY table (docs only, no new pipeline)
+## 18. Document the 4 real skills with the PURPOSE/INPUT/OUTPUT/SAFETY table (docs only, no new pipeline) — SHIPPED
 
 **Grounded in:** a taxonomy exercise (`OMEGA_TAXONOMY.md` §8, added this session) proposed a
 formal "command registry" — every command defined by PURPOSE/INPUT/OUTPUT/AGENT/TOOLS/
@@ -775,17 +775,14 @@ Confirmed via grep that no such slash-command system exists anywhere in this rep
 same purpose, is the real 4-skill pipeline already documented in `.claude/skills/README.md`
 (`web-trend-scout` → `feature-architect` → `autonomous-coder` → `subscriber-portal`).
 
-**Idea (docs-only, small, but still a deliberate choice not made unprompted this session):**
-expand `.claude/skills/README.md`'s existing one-line-per-skill summary into the fuller
-PURPOSE/INPUT/OUTPUT/SAFETY/GATING table shape `OMEGA_TAXONOMY.md` §8 sketches, sourced entirely
-from each skill's own `SKILL.md` (no new fields invented, no new capability implied). This is a
-readability improvement to existing, accurate documentation — not a new subsystem, not a new
-command surface, and not something that changes what any skill actually does. Left as a proposal
-rather than done directly in this same session because `CLAUDE.md` §9 reserves updates to the
-three audit companion docs (and by extension `.claude/skills/README.md`, which several sessions
-already treat as living documentation) for changes made "as part of the same change" that
-prompted them — this taxonomy pass didn't change any skill's behavior, so expanding its docs
-belongs as a scoped follow-up, not a drive-by edit bundled into a documentation-only commit.
+**Implementation (docs-only, shipped as commit `73a1f51`):**
+Expanded `.claude/skills/README.md`'s existing one-line-per-skill summary into a comprehensive
+PURPOSE/INPUT/OUTPUT/SAFETY/GATING table format, sourced entirely from each skill's own
+`SKILL.md`. Added a "Detailed skill instructions" section with links to the full `SKILL.md` files
+for reference. This is a pure readability improvement to existing, accurate documentation — not a
+new subsystem, not a new command surface, and not a change to what any skill actually does. The
+table makes the 4-skill feature pipeline immediately scannable while keeping authoritative details
+in the SKILL.md files.
 
 ## Flagged, not proposed — need explicit scoping/sign-off before any code
 

@@ -122,6 +122,9 @@
   /* Intercept internal anchor clicks for transition */
   document.addEventListener('click', function(e){
     if(REDUCE) return;
+    /* Never hijack modifier-clicks (open in new tab/window) or non-primary
+       buttons (middle-click) -- the browser's own new-tab behavior must win */
+    if(e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     var a = e.target.closest('a');
     if(!a || !a.href) return;
     /* Only same-origin, non-hash, non-external, non-download links */

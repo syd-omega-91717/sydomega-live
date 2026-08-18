@@ -1793,6 +1793,82 @@ orphaned file.
   `auth_leaked_password_protection`) — all WARN/INFO severity, none as immediately exploitable as
   this ERROR-level auth-data leak, left for a follow-up pass rather than rushed through in the same
   session as this fix.
+- **[Fixed — follow-up security-advisor pass] 70 SECURITY DEFINER functions were anon-callable
+  despite their own source files showing narrower intent, and 32 more had a mutable search_path —
+  both hardened; 83 unrelated dormant scaffold tables and 1 Auth config toggle deliberately left
+  open.** Continuing the triage from the `pending_access_requests` fix above,
+  `get_advisors(type='security')` still showed 212 WARN + 83 INFO across 5 categories:
+  `anon_security_definer_function_executable` (84), `authenticated_security_definer_function_executable`
+  (95), `rls_enabled_no_policy` (83, INFO), `function_search_path_mutable` (32),
+  `auth_leaked_password_protection` (1).
+  - **Root cause of the 84 anon-executable functions**: Postgres grants `EXECUTE` to `PUBLIC`
+    automatically on `CREATE FUNCTION`. Every one of these functions' own source file already
+    carries an explicit `GRANT EXECUTE ... TO authenticated` (or, for 2, `TO service_role` only)
+    showing clear, narrower intent — but no file ever revokes the default `PUBLIC` grant first, so
+    the explicit `GRANT` was decorative and `anon` kept access regardless. Same bug shape as
+    `omega_advertisements_insert_fix.sql`'s finding ("a GRANT without a matching restriction is
+    toothless"), inverted: here a narrowing GRANT was defeated by a wider one nobody revoked.
+    Cross-referenced every one of the 84 against a full repo-wide scan of every `GRANT EXECUTE`/
+    `REVOKE` statement in `supabase/*.sql` before touching anything, sorting into: 59
+    explicitly-authenticated-only, 9 with no explicit grant anywhere (trigger functions/internal
+    helpers — `handle_new_user`, `sync_platform_owner`, `trg_award_*`, etc. — not directly callable
+    outside their trigger context), 2 explicitly `service_role`-only
+    (`compute_leaderboard_snapshot`, `record_health_metric`), and 14 deliberately left alone because
+    they're genuinely meant to be public (`order_stats` — confirmed live in `hall.html` as a
+    signed-out-visitor stats widget; `public_leaderboard`, `get_platform_flag`, `is_platform_owner`)
+    or already internally self-guard regardless of grant (`approve_member`, `grant_permanent_access`,
+    `reject_member`, `revoke_member`, `complete_task`, `log_evolution`, `record_interest_signal`,
+    `report_client_error`, `apply_subscription` — each checks `is_platform_owner()`/`auth.uid()`
+    internally before doing anything).
+  - Read the actual function bodies for the two `service_role`-only functions before fixing, since
+    an anon-callable function with zero internal guard and a real side effect is the genuinely
+    dangerous case: `record_health_metric` (`supabase/slo_monitoring.sql`) writes straight into
+    `slo_metrics`/`error_budget_policy` with no caller-identity check at all — an anonymous caller
+    could have spoofed arbitrary good/bad request counts for any surface, poisoning the owner's own
+    SRE/error-budget dashboard (data-integrity attack, not data exposure); `compute_leaderboard_snapshot`
+    (`supabase/entreprise_schema_v2.sql`) does a full-table upsert across every approved profile plus
+    a global rank recompute with no guard — anon could trigger it on demand as a minor
+    resource-exhaustion vector. Both were always meant to be `service_role`-only per their own
+    source file.
+  - Applied `REVOKE EXECUTE ... FROM PUBLIC` on all 70 (plus an explicit additional
+    `REVOKE ... FROM authenticated` on the 2 `service_role`-only ones, since no client — signed in
+    or not — should call those). Verified post-apply via `has_function_privilege()`: `extend_trial`
+    and `get_capability_health` now `anon=false, authenticated=true` (real owner call paths in
+    `approvals.html` unaffected); `record_health_metric`/`compute_leaderboard_snapshot` now
+    `anon=false, authenticated=false`; `order_stats` and `approve_member` correctly still
+    `anon=true, authenticated=true`, unchanged. `get_advisors` re-run afterward confirmed
+    `anon_security_definer_function_executable` dropped 84→14 (exactly the 70 revoked) and
+    `authenticated_security_definer_function_executable` dropped 95→84 (exactly the 9 no-grant +
+    2 service-role-only functions, which never had a *direct* `authenticated` grant either — only
+    the `PUBLIC` default both categories inherited from).
+  - **`function_search_path_mutable` (32 functions)**: a mutable `search_path` on a `SECURITY
+    DEFINER` function is a real privilege-escalation vector — a caller-influenced `search_path`
+    could redirect an unqualified table/function reference inside the function body to a
+    same-named object the caller controls. Pinned `SET search_path = public` on all 32 (all
+    functions this repo's own history has already verified correct/live — `approve_member`,
+    `extend_trial`, `authority_score`/`compute_authority`, etc. — pure hardening, no behavior
+    change).
+  - **`rls_enabled_no_policy` (83 tables, INFO) — deliberately NOT fixed.** Grepped every one of
+    the 83 table names against every file in `supabase/*.sql`: 81 appear NOWHERE in this repo's own
+    schema source at all; the 2 partial hits (`news`, `payments`) were unrelated substring matches
+    in other files' comments/table names, not real definitions. The 83 read as an unrelated,
+    generic multi-tenant SaaS scaffold (academy/LMS, AI workspace, billing, marketplace,
+    project/task management, team/org, calendar, knowledge base, workflow engine, etc.) that exists
+    live on production but was never created by anything in this repo — confirmed empty (0 rows) on
+    every table sampled except `news` (1 row). RLS enabled with zero policies is already the *safe*
+    state (total lockout for every non-owner role, including anon and authenticated) — not a live
+    exposure, so no urgency, and per this file's own standing rule against guessing: inventing RLS
+    policies for schema this repo doesn't know the purpose or intended access model of would be
+    fabricating behavior, not fixing a bug. Left open for a human decision on whether this scaffold
+    should be dropped, adopted, or left dormant.
+  - **`auth_leaked_password_protection` (1, WARN) — deliberately NOT fixed.** This is a Supabase
+    Auth-service config toggle (checks new/changed passwords against HaveIBeenPwned), not a SQL
+    object — it's set via the Supabase dashboard (Authentication → Policies) or the Management API,
+    neither of which `apply_migration`/`execute_sql` can reach. Left open for the user to enable
+    directly.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818000551_revoke_anon_execute_and_harden_search_path`, mirrored
+    locally at `supabase/migrations/20260818000551_...sql`.
 
 
 ## 9. Working in this repo — practical rules

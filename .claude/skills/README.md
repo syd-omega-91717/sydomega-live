@@ -19,6 +19,15 @@ invocation (`/web-trend-scout`, `/feature-architect`, `/autonomous-coder`,
    wires it into the real dashboard/hub pages and the real tier system
    (`OmegaCanon`/`membership_tier`), not a parallel one.
 
+## Skill reference table
+
+| Skill | Purpose | Input | Output | Safety Guardrails | Gating |
+|-------|---------|-------|--------|-------------------|--------|
+| **web-trend-scout** | Research real platforms and trends, propose new ideas grounded in this codebase | External URLs/requests + existing `FEATURE_IDEAS.md` + grep verification | New numbered proposal entry in `FEATURE_IDEAS.md` (status: proposal only) | Cannot assume frameworks/build steps; must cite real files/tables/RPCs; no code written | Never marks idea as decided—that's the owner's call |
+| **feature-architect** | Turn a proposal into exact file-by-file blueprint, architecture only | One `FEATURE_IDEAS.md` entry (or user spec) + existing codebase reference | New `## Blueprint` section in same `FEATURE_IDEAS.md` entry specifying exact filenames, nav.js changes, data-layer shape, feature flags, tier gates | Never assumes Prisma/Next.js/monorepo; RLS required on all new tables; flags defaulted `false`; no code written | Explicitly marks if feature needs `platform_settings` gate + blocks code until architect decides |
+| **autonomous-coder** | Implement the blueprint into real `.html`/`omega-*.js`/`supabase/*.sql` files | One complete `feature-architect` blueprint from `FEATURE_IDEAS.md` | Committed, pushed code on working branch (never to `main`); audit.py reports 0 new CRITICAL | Passes `node --check` + `audit.py` + broken-asset check; `service_role` never in client code; every write checks `.error`; member-writable data escaped with `esc()` | Never flips `platform_settings` flags to `true`; never merges to `main`; never edits CI/workflows |
+| **subscriber-portal** | Surface an already-built, human-approved feature in real UI | Live feature with `platform_settings` flag already `true` + confirmation flag is actually on | Feature visible and usable in dashboard/hubs with tier gating via `OmegaCanon.tierUnlocks()` | Never renders as "unlocked" for false flag state; checks real gate before rendering; uses existing systems (`omega-canon.js`, `notifications`) not new ones; silent-failure checks on every write | Only runs after human explicitly flips the flag on; same branch/audit/commit rules as autonomous-coder |
+
 ## Why it stops short of full autonomy
 
 This repo is a single-owner platform with real Stripe payments and a
@@ -38,3 +47,11 @@ enough that architecture and coding happen in one pass), that's fine — but
 the safety defaults in each `SKILL.md` (RLS required, flags default
 `false`, no auto-merge, docs updated same-commit) still apply regardless
 of which skill produced the change.
+
+## Detailed skill instructions
+
+Full instructions for each skill are available in their respective `SKILL.md` files:
+- **web-trend-scout:** [`.claude/skills/web-trend-scout/SKILL.md`](web-trend-scout/SKILL.md)
+- **feature-architect:** [`.claude/skills/feature-architect/SKILL.md`](feature-architect/SKILL.md)
+- **autonomous-coder:** [`.claude/skills/autonomous-coder/SKILL.md`](autonomous-coder/SKILL.md)
+- **subscriber-portal:** [`.claude/skills/subscriber-portal/SKILL.md`](subscriber-portal/SKILL.md)

@@ -1,0 +1,37 @@
+-- ============================================================================
+-- Ω SYD OMEGA 91717 — DROP DUPLICATE INDEXES (medals, notifications)
+--
+-- Named with the exact version string Supabase's own `apply_migration` tool
+-- recorded on the remote database's migration-tracking table when this fix
+-- was applied directly (2026-08-18, via the Supabase MCP connector) — see
+-- supabase/migrations/README.md's "Timestamp-versioned files" section for
+-- why this breaks the directory's usual NNNN_<name>.sql convention.
+--
+-- First of the (safe subset of) `get_advisors(type='performance')` findings
+-- addressed this session — see CLAUDE.md §8 for why the other 4 categories
+-- (multiple_permissive_policies x434, auth_rls_initplan x132, unused_index
+-- x126, unindexed_foreign_keys x85) were deliberately left as a scoped
+-- follow-up rather than bulk-fixed here.
+--
+-- `duplicate_index` flagged 2 tables with two functionally-identical indexes
+-- each (verified via pg_indexes.indexdef, not assumed from the advisor's
+-- name-only detail text):
+--   - public.medals: `medals_user_medal_unique` (UNIQUE INDEX ON (user_id,
+--     medal_num), backs a real UNIQUE CONSTRAINT — confirmed via
+--     pg_constraint, contype='u') vs `medals_user_num_uniq` (same UNIQUE
+--     INDEX definition, but NOT a constraint — a plain redundant index).
+--     Kept the constraint-backed one; dropping it would require
+--     ALTER TABLE ... DROP CONSTRAINT, not DROP INDEX, and would remove the
+--     actual data-integrity guarantee, not just redundant lookup structure.
+--   - public.notifications: `idx_notifications_user` and
+--     `notifications_user_id_idx` — both plain, non-constraint btree
+--     indexes on (user_id), identical. Neither backs a constraint; kept
+--     `notifications_user_id_idx` (the more conventional
+--     `<table>_<col>_idx` name), dropped the other.
+--
+-- Idempotent (DROP INDEX IF EXISTS), safe to re-run.
+-- Applied to the live database and verified — see CLAUDE.md §8.
+-- ============================================================================
+
+DROP INDEX IF EXISTS public.medals_user_num_uniq;
+DROP INDEX IF EXISTS public.idx_notifications_user;

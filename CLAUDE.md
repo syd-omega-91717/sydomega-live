@@ -1869,6 +1869,58 @@ orphaned file.
   - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
     recorded remotely as `20260818000551_revoke_anon_execute_and_harden_search_path`, mirrored
     locally at `supabase/migrations/20260818000551_...sql`.
+- **First pass on `get_advisors(type='performance')` (never checked in this repo's history before
+  this session — only `type='security'` had been triaged): 1 category fixed, 4 deliberately
+  deferred with an evidence-based reason each.** 779 findings across 5 categories:
+  `multiple_permissive_policies` (434, WARN), `auth_rls_initplan` (132, WARN), `unused_index`
+  (126, INFO), `unindexed_foreign_keys` (85, INFO), `duplicate_index` (2, WARN). Cross-referenced
+  every finding's affected table against the 83-table unrelated scaffold schema documented above
+  first, to separate real signal from scaffold noise: most findings are on this repo's real,
+  actively-used schema, not the scaffold (`multiple_permissive_policies`: 424/434 real;
+  `auth_rls_initplan`: 128/132 real; `unused_index`: 75/126 real; `unindexed_foreign_keys`:
+  24/85 real; `duplicate_index`: 2/2 real).
+  - **`duplicate_index` (2) — fixed.** Verified via `pg_indexes.indexdef`/`pg_constraint` (not
+    the advisor's name-only detail text) before touching anything: `public.medals` had
+    `medals_user_medal_unique` (backs a real UNIQUE CONSTRAINT, `pg_constraint.contype='u'`) and
+    `medals_user_num_uniq` (same index definition, but a plain redundant index, not a
+    constraint) — kept the constraint-backed one, since dropping it would need `ALTER TABLE ...
+    DROP CONSTRAINT`, not `DROP INDEX`, and would remove a real data-integrity guarantee, not
+    just a redundant lookup structure. `public.notifications` had `idx_notifications_user` and
+    `notifications_user_id_idx`, both plain non-constraint indexes on `(user_id)`, identical —
+    kept one, dropped the other. Applied via `apply_migration`
+    (`20260818001352_drop_duplicate_indexes`), mirrored locally, verified afterward via
+    `pg_indexes` that the constraint-backed/kept indexes both still exist and the redundant ones
+    are gone.
+  - **`multiple_permissive_policies` (424 real) and `auth_rls_initplan` (128 real) — deliberately
+    NOT bulk-fixed.** Read a sample finding in full first rather than assume from the category
+    name: e.g. `public.activity_feed` has 2 permissive SELECT policies for `anon`
+    ("member manages own feed", "members see public feed") — these are two *intentionally
+    different* access rules that both legitimately apply to the same role/action (own rows OR
+    public rows), not accidental duplicates; Supabase's own description calls this
+    "suboptimal for performance," not incorrect. Consolidating 424 of these safely means reading
+    each table's exact policy semantics and merging the USING/WITH CHECK logic with an OR by
+    hand, at real risk of silently changing access behavior if any single merge gets the boolean
+    logic wrong — and this repo's own history (§8, throughout) is largely a record of exactly
+    that class of RLS mistake, made worse by bulk/rushed changes. `auth_rls_initplan` (wrapping
+    `auth.uid()` in policies as `(select auth.uid())` so it's evaluated once per query instead of
+    once per row) is lower-risk since it's a pure rewrite with no semantic change, but still means
+    precisely reproducing 128 existing policies' full USING/WITH CHECK clauses one at a time — a
+    real, scoped follow-up task, not a same-session bulk edit. Both are pure performance
+    (query-planner cost), not correctness or security, so there's no urgency forcing a rushed
+    pass. Left open for a dedicated follow-up session with room to verify each table individually.
+  - **`unused_index` (75 real) and `unindexed_foreign_keys` (24 real) — deliberately NOT
+    bulk-fixed.** Both are INFO-level and lower-priority than the WARN items above.
+    `unused_index` requires confidence an index is genuinely dead (not just unused during
+    Supabase's own observation window) before dropping — wrong on even one could silently
+    reintroduce a slow query path. `unindexed_foreign_keys` (adding indexes) is lower-risk to
+    apply than dropping, but still needs a per-table check of query patterns to prioritize
+    correctly rather than blindly index all 24. Left open alongside the two WARN categories above
+    for the same follow-up pass.
+  - **Not yet checked**: whether any of the 653 real-schema findings across the 4 deferred
+    categories overlap with tables already flagged as having genuinely conflicting duplicate
+    definitions elsewhere in this file (§5's 10-table list) — if so, resolving the duplicate-
+    definition question first would likely resolve some `multiple_permissive_policies` findings
+    as a side effect, rather than as two separate efforts.
 
 
 ## 9. Working in this repo — practical rules

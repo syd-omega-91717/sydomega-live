@@ -40,7 +40,7 @@
     portfolio:'invest',privacy:'govern',revenue:'invest',
     roadmap:'govern',series:'media',sovereign_ai:'arena',
     treasury:'invest',trailers:'media',triads:'achieve',
-    universe:'media',wallet:'invest',
+    universe:'media',wallet:'invest',council:'govern',
     'sovereign-ai':'arena','design-system':'govern',
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
@@ -101,7 +101,7 @@
           ['automation','AUTOMATION','/automation.html'],['prediction','ORACLE','/prediction.html'],
           ['research','RESEARCH','/research.html'],['queue','SOVEREIGN QUEUE','/queue.html']]},
     {key:'govern', icon:'\u2736', label:'GOVERN',  href:'/governance.html',   col:'#3fb27f',
-     sub:[['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
+     sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['enterprise','ENTERPRISE','/enterprise.html'],['compliance','COMPLIANCE','/compliance.html'],
           ['privacy','PRIVACY','/privacy.html'],['roadmap','ROADMAP','/roadmap.html'],
           ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],

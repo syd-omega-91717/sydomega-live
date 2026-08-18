@@ -296,17 +296,18 @@ function renderRankings(){
 
 function renderMatrix(){
   var shortNames=ELEMENTS.map(function(el){return el.sigil+' '+el.name.slice(0,3);});
-  var header='<tr><th></th>'+shortNames.map(function(n){return'<th>'+n+'</th>';}).join('')+'</tr>';
+  var gridColsTemplate='80px '+shortNames.map(function(){return'1fr';}).join(' ');
+  var headerCells='<div></div>'+shortNames.map(function(n){return'<div style="color:rgba(138,134,118,.5);letter-spacing:1px;text-align:center;padding:6px 8px;border:1px solid rgba(255,255,255,.04)">'+n+'</div>';}).join('');
   var rows=ELEMENTS.map(function(el,i){
-    var cells=ELEMENTS.map(function(el2,j){
+    var cells='<div style="color:'+el.color+';white-space:nowrap;padding:6px 8px;border:1px solid rgba(255,255,255,.04);text-align:center">'+el.sigil+' '+el.name.slice(0,4)+'</div>'+ELEMENTS.map(function(el2,j){
       var val=AFFINITY[el.id][el2.id];
       var isSelf=i===j;
       var color=val>80?'rgba(0,255,136,.7)':val>60?'rgba(201,168,76,.6)':val>40?'rgba(0,229,255,.5)':'rgba(138,134,118,.4)';
-      return'<td class="'+(isSelf?'cell-self':'')+'" style="'+(isSelf?'':'color:'+color)+'">'+val+'</td>';
+      return'<div style="'+(isSelf?'background:rgba(201,168,76,.05);color:rgba(201,168,76,.4)':'color:'+color)+';padding:6px 8px;text-align:center;border:1px solid rgba(255,255,255,.04)">'+val+'</div>';
     }).join('');
-    return'<tr><th style="color:'+el.color+';white-space:nowrap">'+el.sigil+' '+el.name.slice(0,4)+'</th>'+cells+'</tr>';
+    return'<div class="tbl-row" style="grid-template-columns:'+gridColsTemplate+'">'+cells+'</div>';
   }).join('');
-  document.getElementById('matrixWrap').innerHTML='<table class="affinity-matrix"><thead>'+header+'</thead><tbody>'+rows+'</tbody></table>';
+  document.getElementById('matrixWrap').innerHTML='<div class="tbl-wrap" style="font-family:var(--M);font-size:7.5px"><div class="tbl-row" style="grid-template-columns:'+gridColsTemplate+'">'+headerCells+'</div>'+rows+'</div>';
 }
 
 function drawDominanceChart(){

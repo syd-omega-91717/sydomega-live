@@ -95,15 +95,22 @@
 
     .anomaly-table {
       width: 100%;
-      border-collapse: collapse;
     }
 
-    .anomaly-table thead {
+    .anomaly-table .tbl-row {
+      display: grid;
+      grid-template-columns: 30% 12% 15% 20% 15% 8%;
+      gap: 0;
+      align-items: center;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.05);
+    }
+
+    .anomaly-table .tbl-row:first-child {
       background: rgba(201, 168, 76, 0.04);
       border-bottom: 1px solid rgba(201, 168, 76, 0.1);
     }
 
-    .anomaly-table th {
+    .anomaly-table .tbl-row:first-child > div {
       font-family: var(--M);
       font-size: 10px;
       letter-spacing: 2px;
@@ -113,13 +120,12 @@
       text-transform: uppercase;
     }
 
-    .anomaly-table td {
+    .anomaly-table .tbl-row > div {
       padding: 12px;
-      border-bottom: 1px solid rgba(201, 168, 76, 0.05);
       font-size: 12px;
     }
 
-    .anomaly-table tbody tr:hover {
+    .anomaly-table .tbl-row:not(:first-child):hover {
       background: rgba(201, 168, 76, 0.02);
     }
 
@@ -277,23 +283,19 @@
         </div>
       </div>
 
-      <table class="anomaly-table">
-        <thead>
-          <tr>
-            <th style="width: 30%;">Entity / Relationship</th>
-            <th style="width: 12%;">Type</th>
-            <th style="width: 15%;">Severity</th>
-            <th style="width: 20%;">Confidence</th>
-            <th style="width: 15%;">Details</th>
-            <th style="width: 8%;">Action</th>
-          </tr>
-        </thead>
-        <tbody id="anomalyTable">
-          <tr>
-            <td colspan="6" class="empty-state">LOADING ANOMALIES...</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="tbl-wrap anomaly-table">
+        <div class="tbl-row">
+          <div>Entity / Relationship</div>
+          <div>Type</div>
+          <div>Severity</div>
+          <div>Confidence</div>
+          <div>Details</div>
+          <div>Action</div>
+        </div>
+        <div id="anomalyTable">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">LOADING ANOMALIES...</div>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -415,7 +417,7 @@
 
     function renderAnomalies(data) {
       if (!data.length) {
-        document.getElementById('anomalyTable').innerHTML = '<tr><td colspan="6" class="empty-state">NO ANOMALIES DETECTED</td></tr>';
+        document.getElementById('anomalyTable').innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">NO ANOMALIES DETECTED</div>';
         return;
       }
 
@@ -426,27 +428,27 @@
         const typeClass = `anomaly-${anomaly.type}`;
 
         return `
-          <tr>
-            <td>
+          <div class="tbl-row">
+            <div>
               <div class="entity-name">${anomaly.subject.substring(0, 40)}</div>
-            </td>
-            <td>
+            </div>
+            <div>
               <span class="anomaly-type ${typeClass}">${typeLabel}</span>
-            </td>
-            <td>
+            </div>
+            <div>
               <span class="severity-badge severity-${anomaly.severity}">${anomaly.severity.toUpperCase()}</span>
-            </td>
-            <td>
+            </div>
+            <div>
               <div style="display: flex; align-items: center; gap: 4px;">
                 <div class="confidence-bar"><div class="confidence-fill" style="width: ${Math.max(anomaly.confidence * 100, 5)}%"></div></div>
                 <span>${(anomaly.confidence * 100).toFixed(0)}%</span>
               </div>
-            </td>
-            <td style="font-size: 11px;">${anomaly.details}</td>
-            <td>
+            </div>
+            <div style="font-size: 11px;">${anomaly.details}</div>
+            <div>
               <button class="action-btn" onclick="reviewAnomaly(${idx})">REVIEW</button>
-            </td>
-          </tr>
+            </div>
+          </div>
         `;
       }).join('');
 

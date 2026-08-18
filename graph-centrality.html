@@ -95,15 +95,22 @@
 
     .centrality-table {
       width: 100%;
-      border-collapse: collapse;
     }
 
-    .centrality-table thead {
+    .centrality-table .tbl-row {
+      display: grid;
+      grid-template-columns: 30% 15% 12% 35% 8%;
+      gap: 0;
+      align-items: center;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.05);
+    }
+
+    .centrality-table .tbl-row:first-child {
       background: rgba(201, 168, 76, 0.04);
       border-bottom: 1px solid rgba(201, 168, 76, 0.1);
     }
 
-    .centrality-table th {
+    .centrality-table .tbl-row:first-child > div {
       font-family: var(--M);
       font-size: 10px;
       letter-spacing: 2px;
@@ -113,13 +120,12 @@
       text-transform: uppercase;
     }
 
-    .centrality-table td {
+    .centrality-table .tbl-row > div {
       padding: 12px;
-      border-bottom: 1px solid rgba(201, 168, 76, 0.05);
       font-size: 12px;
     }
 
-    .centrality-table tbody tr:hover {
+    .centrality-table .tbl-row:not(:first-child):hover {
       background: rgba(201, 168, 76, 0.02);
     }
 
@@ -257,29 +263,25 @@
         </div>
       </div>
 
-      <table class="centrality-table">
-        <thead>
-          <tr>
-            <th style="width: 30%;">Entity Name</th>
-            <th style="width: 15%;">Type</th>
-            <th style="width: 12%;">Connections</th>
-            <th style="width: 35%;">Centrality Score</th>
-            <th style="width: 8%;">Action</th>
-          </tr>
-        </thead>
-        <tbody id="centralityTable">
-          <tr>
-            <td colspan="5" class="empty-state">LOADING CENTRALITY DATA...</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="tbl-wrap centrality-table">
+        <div class="tbl-row">
+          <div>Entity Name</div>
+          <div>Type</div>
+          <div>Connections</div>
+          <div>Centrality Score</div>
+          <div>Action</div>
+        </div>
+        <div id="centralityTable">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">LOADING CENTRALITY DATA...</div>
+        </div>
+      </div>
     </main>
   </div>
 
   <script>
     const sb = window.OmegaSupabase?.sb;
     if (!sb) {
-      document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">SUPABASE NOT READY</td></tr>';
+      document.getElementById('centralityTable').innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">SUPABASE NOT READY</div>';
     }
 
     let allCentralityData = [];
@@ -308,7 +310,7 @@
         if (entError) throw entError;
 
         if (!entities || entities.length === 0) {
-          document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">NO ENTITIES FOUND</td></tr>';
+          document.getElementById('centralityTable').innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">NO ENTITIES FOUND</div>';
           return;
         }
 
@@ -359,7 +361,7 @@
         });
       } catch (err) {
         console.error('Failed to load centrality data:', err);
-        document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">ERROR LOADING DATA</td></tr>';
+        document.getElementById('centralityTable').innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">ERROR LOADING DATA</div>';
       }
     }
 
@@ -387,7 +389,7 @@
 
     function renderCentralityTable(data) {
       if (!data.length) {
-        document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">NO RESULTS</td></tr>';
+        document.getElementById('centralityTable').innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(224, 213, 183, 0.5);">NO RESULTS</div>';
         return;
       }
 
@@ -398,31 +400,31 @@
         const isHub = d.connectionCount >= 8;
 
         return `
-          <tr>
-            <td>
+          <div class="tbl-row">
+            <div>
               <div class="entity-name" onclick="showEntityDetails('${d.entity.canonical_name}')">
                 ${d.entity.display_name || d.entity.canonical_name}
               </div>
-            </td>
-            <td>
+            </div>
+            <div>
               <span class="entity-type">${d.entity.entity_type}</span>
-            </td>
-            <td>
+            </div>
+            <div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="connection-count">${d.connectionCount}</span>
                 ${isHub ? '<span class="hub-badge">HUB</span>' : ''}
               </div>
-            </td>
-            <td>
+            </div>
+            <div>
               <div class="centrality-score">
                 <div class="centrality-fill" style="width: ${scorePercent}%"></div>
               </div>
               <div class="centrality-label">${scorePercent.toFixed(0)}% of max</div>
-            </td>
-            <td>
+            </div>
+            <div>
               <button class="explore-btn" onclick="exploreEntity('${d.entity.canonical_name}')">EXPLORE</button>
-            </td>
-          </tr>
+            </div>
+          </div>
         `;
       }).join('');
 

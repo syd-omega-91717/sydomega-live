@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entity Relationship Explorer — SYD OMEGA</title>
+  <script src="/bg.js"></script>
+  <style>
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1600px;
+      padding: 20px;
+    }
+
+    .explorer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .explorer-header h1 {
+      font-family: var(--D);
+      font-size: 32px;
+      color: var(--gold);
+      margin: 0;
+    }
+
+    .explorer-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .explorer-controls input,
+    .explorer-controls select {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #E0D5B7;
+      border-radius: 4px;
+    }
+
+    .explorer-controls button {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px 16px;
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: var(--gold);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.14s;
+    }
+
+    .explorer-controls button:hover {
+      background: rgba(201, 168, 76, 0.2);
+      border-color: var(--gold);
+    }
+
+    .graph-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 16px;
+    }
+
+    .entity-panel {
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+    }
+
+    .entity-panel h3 {
+      font-family: var(--D);
+      font-size: 14px;
+      color: var(--gold);
+      margin: 0 0 12px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .entity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .entity-item {
+      padding: 8px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.14s;
+      font-size: 11px;
+      color: #E0D5B7;
+    }
+
+    .entity-item:hover {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: rgba(0, 229, 255, 0.4);
+    }
+
+    .entity-item.active {
+      background: rgba(201, 168, 76, 0.2);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .entity-name {
+      font-weight: 600;
+      color: var(--cyan);
+    }
+
+    .entity-type {
+      font-family: var(--M);
+      font-size: 8px;
+      color: rgba(224, 213, 183, 0.6);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .graph-visualizer {
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      min-height: 600px;
+      position: relative;
+    }
+
+    .graph-svg {
+      width: 100%;
+      height: 600px;
+    }
+
+    .relationship-info {
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .relationship-info h3 {
+      font-family: var(--D);
+      font-size: 14px;
+      color: var(--gold);
+      margin: 0 0 12px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .rel-item {
+      padding: 8px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .rel-item:last-child {
+      border-bottom: none;
+    }
+
+    .rel-type {
+      font-family: var(--M);
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .rel-strength {
+      font-size: 9px;
+      color: rgba(224, 213, 183, 0.7);
+    }
+
+    .path-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .path-depth {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .path-depth label {
+      font-family: var(--M);
+      font-size: 9px;
+      color: rgba(224, 213, 183, 0.7);
+    }
+
+    .path-depth input {
+      width: 40px;
+      padding: 4px;
+      font-size: 10px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      padding: 12px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--D);
+      font-size: 24px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: var(--M);
+      font-size: 8px;
+      letter-spacing: 1px;
+      color: rgba(224, 213, 183, 0.7);
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: rgba(224, 213, 183, 0.5);
+    }
+
+    @media (max-width: 1200px) {
+      .graph-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .entity-panel, .relationship-info {
+        max-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body data-page="graph-explorer">
+  <div class="shell">
+    <aside id="omega-side" class="side"></aside>
+    <main class="main">
+      <div class="explorer-header">
+        <h1>◈ ENTITY RELATIONSHIPS</h1>
+        <div class="explorer-controls">
+          <input type="text" id="entitySearch" placeholder="SEARCH ENTITIES" maxlength="50">
+          <div class="path-controls">
+            <div class="path-depth">
+              <label>Depth:</label>
+              <input type="number" id="pathDepth" value="2" min="1" max="5">
+            </div>
+          </div>
+          <button onclick="resetExplorer()">RESET</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="totalNodes">0</div>
+          <div class="stat-label">Visible Nodes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalEdges">0</div>
+          <div class="stat-label">Relationships</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avgStrength">0</div>
+          <div class="stat-label">Avg Strength</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="selectedEntity">—</div>
+          <div class="stat-label">Selected</div>
+        </div>
+      </div>
+
+      <div class="graph-layout">
+        <div class="entity-panel">
+          <h3>Entities</h3>
+          <div class="entity-list" id="entityList">
+            <div class="empty-state">LOADING ENTITIES...</div>
+          </div>
+        </div>
+        <div class="graph-visualizer">
+          <svg class="graph-svg" id="graphSvg">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <polygon points="0 0, 10 3, 0 6" fill="rgba(201, 168, 76, 0.6)"/>
+              </marker>
+            </defs>
+            <g id="edges"></g>
+            <g id="nodes"></g>
+          </svg>
+        </div>
+        <div class="relationship-info">
+          <h3>Relationship Details</h3>
+          <div id="relationshipList">
+            <div class="empty-state">SELECT AN ENTITY</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sb = window.OmegaSupabase?.sb;
+    if (!sb) {
+      document.getElementById('entityList').innerHTML = '<div class="empty-state">SUPABASE NOT READY</div>';
+    }
+
+    let allEntities = [];
+    let allRelationships = [];
+    let currentUser = null;
+    let selectedEntity = null;
+
+    async function initExplorer() {
+      try {
+        const sess = await sb.auth.getSession();
+        currentUser = sess?.data?.session?.user?.id;
+        if (!currentUser) return;
+
+        await loadGraphData();
+        renderEntityList();
+      } catch (err) {
+        console.error('Explorer init error:', err);
+      }
+    }
+
+    async function loadGraphData() {
+      try {
+        const { data: entities, error: entError } = await sb
+          .from('graph_entities')
+          .select('*')
+          .eq('user_id', currentUser);
+
+        if (entError) throw entError;
+        allEntities = entities || [];
+
+        const { data: relationships, error: relError } = await sb
+          .from('graph_relationships')
+          .select('*')
+          .eq('user_id', currentUser);
+
+        if (relError) throw relError;
+        allRelationships = relationships || [];
+      } catch (err) {
+        console.error('Failed to load graph data:', err);
+      }
+    }
+
+    function renderEntityList() {
+      if (!allEntities.length) {
+        document.getElementById('entityList').innerHTML = '<div class="empty-state">NO ENTITIES FOUND</div>';
+        return;
+      }
+
+      const searchTerm = (document.getElementById('entitySearch').value || '').toLowerCase();
+      const filtered = allEntities.filter(e =>
+        e.canonical_name.toLowerCase().includes(searchTerm) ||
+        (e.display_name && e.display_name.toLowerCase().includes(searchTerm))
+      );
+
+      const html = filtered.map(e => `
+        <div class="entity-item ${selectedEntity?.id === e.id ? 'active' : ''}" onclick="selectEntity(${JSON.stringify(e).replace(/"/g, '&quot;')})">
+          <div class="entity-name">${e.display_name || e.canonical_name}</div>
+          <div class="entity-type">${e.entity_type}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('entityList').innerHTML = html || '<div class="empty-state">NO MATCHES</div>';
+    }
+
+    function selectEntity(entity) {
+      selectedEntity = entity;
+      document.getElementById('selectedEntity').textContent = entity.display_name || entity.canonical_name;
+      renderEntityList();
+      renderRelationshipGraph();
+      renderRelationshipDetails();
+    }
+
+    function renderRelationshipGraph() {
+      if (!selectedEntity) {
+        document.getElementById('graphSvg').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="rgba(224,213,183,0.5)">SELECT AN ENTITY</text>';
+        return;
+      }
+
+      const depth = parseInt(document.getElementById('pathDepth').value) || 2;
+      const nodes = buildPathNodes(selectedEntity, depth);
+      const edges = buildPathEdges(selectedEntity, depth);
+
+      const svg = document.getElementById('graphSvg');
+      const edgesGroup = svg.getElementById('edges');
+      const nodesGroup = svg.getElementById('nodes');
+
+      edgesGroup.innerHTML = '';
+      nodesGroup.innerHTML = '';
+
+      const width = svg.clientWidth;
+      const height = svg.clientHeight;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const radius = Math.min(width, height) * 0.3;
+
+      const positions = new Map();
+      nodes.forEach((node, idx) => {
+        const angle = (idx / Math.max(nodes.length, 1)) * Math.PI * 2;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+        positions.set(node.id, { x, y });
+      });
+
+      edges.forEach(edge => {
+        const fromPos = positions.get(edge.source);
+        const toPos = positions.get(edge.target);
+        if (fromPos && toPos) {
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', fromPos.x);
+          line.setAttribute('y1', fromPos.y);
+          line.setAttribute('x2', toPos.x);
+          line.setAttribute('y2', toPos.y);
+          line.setAttribute('stroke', `rgba(0, 229, 255, ${0.3 + edge.strength * 0.3})`);
+          line.setAttribute('stroke-width', 1 + edge.strength * 2);
+          line.setAttribute('marker-end', 'url(#arrowhead)');
+          edgesGroup.appendChild(line);
+        }
+      });
+
+      nodes.forEach(node => {
+        const pos = positions.get(node.id);
+        if (pos) {
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', pos.x);
+          circle.setAttribute('cy', pos.y);
+          circle.setAttribute('r', node.id === selectedEntity.id ? 8 : 5);
+          circle.setAttribute('fill', node.id === selectedEntity.id ? 'var(--gold)' : 'var(--cyan)');
+          circle.setAttribute('opacity', 0.8);
+          nodesGroup.appendChild(circle);
+
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('x', pos.x);
+          text.setAttribute('y', pos.y + 12);
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('font-size', '10');
+          text.setAttribute('fill', '#E0D5B7');
+          text.textContent = (node.display_name || node.canonical_name).substring(0, 12);
+          nodesGroup.appendChild(text);
+        }
+      });
+
+      document.getElementById('totalNodes').textContent = nodes.length;
+      document.getElementById('totalEdges').textContent = edges.length;
+      const avgStrength = edges.length > 0 ? (edges.reduce((sum, e) => sum + e.strength, 0) / edges.length).toFixed(2) : 0;
+      document.getElementById('avgStrength').textContent = avgStrength;
+    }
+
+    function buildPathNodes(entity, depth) {
+      const nodes = new Set([entity.id]);
+      const queue = [[entity.id, 0]];
+
+      while (queue.length > 0) {
+        const [currentId, currentDepth] = queue.shift();
+        if (currentDepth >= depth) continue;
+
+        allRelationships.forEach(rel => {
+          let nextId = null;
+          if (rel.source_entity_id === currentId) nextId = rel.target_entity_id;
+          else if (rel.target_entity_id === currentId) nextId = rel.source_entity_id;
+
+          if (nextId && !nodes.has(nextId)) {
+            nodes.add(nextId);
+            queue.push([nextId, currentDepth + 1]);
+          }
+        });
+      }
+
+      return Array.from(nodes)
+        .map(id => allEntities.find(e => e.canonical_name === id))
+        .filter(Boolean);
+    }
+
+    function buildPathEdges(entity, depth) {
+      const nodes = buildPathNodes(entity, depth).map(n => n.id);
+      return allRelationships
+        .filter(rel =>
+          (nodes.includes(rel.source_entity_id) && nodes.includes(rel.target_entity_id)) ||
+          (nodes.includes(rel.target_entity_id) && nodes.includes(rel.source_entity_id))
+        )
+        .map(rel => ({
+          source: rel.source_entity_id,
+          target: rel.target_entity_id,
+          type: rel.relationship_type,
+          strength: rel.strength_score || 0.5
+        }));
+    }
+
+    function renderRelationshipDetails() {
+      if (!selectedEntity) {
+        document.getElementById('relationshipList').innerHTML = '<div class="empty-state">SELECT AN ENTITY</div>';
+        return;
+      }
+
+      const rels = allRelationships.filter(r =>
+        r.source_entity_id === selectedEntity.id || r.target_entity_id === selectedEntity.id
+      );
+
+      if (!rels.length) {
+        document.getElementById('relationshipList').innerHTML = '<div class="empty-state">NO RELATIONSHIPS</div>';
+        return;
+      }
+
+      const html = rels.map(r => {
+        const isSource = r.source_entity_id === selectedEntity.id;
+        const otherEntityName = isSource
+          ? allEntities.find(e => e.canonical_name === r.target_entity_id)?.display_name || r.target_entity_id
+          : allEntities.find(e => e.canonical_name === r.source_entity_id)?.display_name || r.source_entity_id;
+
+        return `
+          <div class="rel-item">
+            <div class="rel-type">${isSource ? '→' : '←'} ${r.relationship_type}</div>
+            <div>${otherEntityName}</div>
+            <div class="rel-strength">Strength: ${(r.strength_score * 100).toFixed(0)}% | Confidence: ${(r.confidence_score * 100).toFixed(0)}%</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('relationshipList').innerHTML = html;
+    }
+
+    function resetExplorer() {
+      selectedEntity = null;
+      document.getElementById('entitySearch').value = '';
+      document.getElementById('pathDepth').value = '2';
+      document.getElementById('selectedEntity').textContent = '—';
+      document.getElementById('totalNodes').textContent = '0';
+      document.getElementById('totalEdges').textContent = '0';
+      document.getElementById('avgStrength').textContent = '0';
+      renderEntityList();
+      document.getElementById('relationshipList').innerHTML = '<div class="empty-state">SELECT AN ENTITY</div>';
+      document.getElementById('graphSvg').innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="rgba(224,213,183,0.5)">SELECT AN ENTITY</text>';
+    }
+
+    document.getElementById('entitySearch').addEventListener('input', renderEntityList);
+    document.getElementById('pathDepth').addEventListener('change', renderRelationshipGraph);
+
+    document.addEventListener('DOMContentLoaded', initExplorer);
+  </script>
+</body>
+</html>

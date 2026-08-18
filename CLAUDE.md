@@ -2261,6 +2261,44 @@ orphaned file.
   - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
     recorded remotely as `20260818082309_add_missing_fk_indexes_real_schema`, mirrored locally at
     `supabase/migrations/`.
+- **[Fixed — fresh full-repo re-verification sweep, one real finding] Re-ran this session's three
+  established scanners (column-name mismatches against live schema, silent-failure writes,
+  module-boundary bugs) across all 169 `.html` and 94 `.js` files as a clean re-verification, not
+  assuming prior fixes still held.**
+  - **Column-mismatch scan**: 10 candidates, 9 false positives (each individually verified
+    against `information_schema.columns`, not assumed) — `profiles.created_at`/
+    `profiles.membership_tier`/`profiles.matrix_phase` are all real live columns the static
+    parser's regex simply missed; `omega-presence.js`'s and `omega-sovereign-os.js`'s "bad"
+    fields were nested inside a `client_info`/`metrics` jsonb object, misread as top-level keys
+    by the scanner's non-recursive key extractor; `account.html`'s and `omega-memory.js`'s
+    `onConflict` hits were a Supabase client *option*, not a table column. The 10th (`map.html`'s
+    `lat`/`lon`/`gate`) is the already-documented, deliberately-unfixed geolocation gap — though
+    `country` (also flagged there) turned out to already be a real live column, a minor accuracy
+    note for that entry, not a new finding. **Net result: zero new column-mismatch bugs** — a
+    clean confirmation, not nothing.
+  - **Silent-failure-write scan**: 20 raw candidates, all individually read in context (not
+    trusted from the regex alone) — most were either a real `.error` check just outside the
+    scanner's 12-line window (`profile.html`, `travel.html`, `account.html`, `events.html`,
+    `family.html`'s other two handlers, `contracts.html`), an unrelated non-Supabase API
+    coincidentally matching `.update(`/`.insert(` (`omega-sw-register.js`'s
+    `ServiceWorkerRegistration.update()`, `omega-confetti.js`'s particle `.update()`,
+    `omega-ring.js`'s API doc-comment), or a deliberate best-effort write with no user-facing
+    success/failure state to get wrong (`bg.js`'s silent owner-profile self-heal, run on every
+    page load with no UI feedback either way; `omega-sovereign-os.js`'s unload-time telemetry
+    beacon and circuit-breaker-wrapped heartbeat flush; `omega-memory.js`'s try/catch-wrapped AI
+    memory cache write, which already has an explicit `sessionStorage` fallback regardless of
+    outcome). **One real finding**: `family.html`'s "add family member" handler checked `.error`
+    but only ever acted on success (`if(!error){...clear form, show success...}`) — on failure it
+    did nothing at all, no alert, no feedback, inconsistent with its own sibling handlers in the
+    same file (bloodline node, heritage record — both already correctly `if(error){alert(...);
+    return;}`). Fixed to match.
+  - **Module-boundary scan** (inline `onclick=`/`onchange=`/etc. attributes calling a function
+    declared only inside a `<script type="module">` block, never exposed to `window` — the bug
+    class behind the 26-instance fix earlier in this file): **0 findings**, confirming that fix
+    is still fully holding, no regression introduced by anything since.
+  - `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged),
+    `python3 scripts/check-inline-js.py` (clean), `python3 -m unittest discover -s scripts/tests`
+    (25/25 pass) all re-confirmed after the fix.
 
 
 ## 9. Working in this repo — practical rules

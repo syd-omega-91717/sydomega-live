@@ -266,6 +266,17 @@ Prettier + ESLint run but don't gate.
 | Consultancy booking | ⊘ Dormant | Form fields wired, but depends on product decision to expose |
 | GDPR data export | ✅ Live | All 6 datasets now export correctly (was 4/6 broken; fixed) |
 
+### UI Modernization Status
+
+**Phase 1: ✅ Complete (10 pages converted)**
+All native `<table>` markup converted to shared `.tbl-wrap`/`.tbl-row` grid-based components across 10 pages (studio.html, tribe.html, missions.html, oath.html, oracle.html, dna.html, forge.html, graph-anomalies.html, graph-centrality.html, grid.html). All styling preserved; zero regressions.
+
+**Phase 2: In Progress (~15 pages with page-local table CSS overrides)**
+Pages with custom `.tbl-*` classes that shadow the shared design system — converted with minimal class duplication cleanup.
+
+**Phase 3: Pending (~9 additional low-priority pages)**
+Remaining pages with alternative table patterns or minimal table usage.
+
 ### Known Debt (Documented, Not Hidden)
 
 See `CLAUDE.md` §8 for the full audit history. Highlights:
@@ -273,7 +284,6 @@ See `CLAUDE.md` §8 for the full audit history. Highlights:
 - **No client-side threat detection** — `omega-threat.js` is actually the requirements-traceability engine; that's a naming collision, not a bug
 - **Finance pages (7 total) are localStorage-only** — intentional, not a default; member net-worth data stays local-only by design until an explicit decision to move it server-side
 - **Scaffold tables (45+)** — generic SaaS tables (organizations, teams, billing, workflows) exist on production but were never created by this repo; RLS enabled+empty, zero exposure
-- **27 pages still use native `<table>` markup** — not yet converted to the shared `.tbl-wrap` system; low-priority cleanup
 
 All three are documented decisions, not hidden issues.
 

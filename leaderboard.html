@@ -16,18 +16,18 @@
 .pod-auth{font-family:var(--D);font-size:clamp(16px,3vw,24px);color:var(--gold);line-height:1}
 .pod-label{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px}
 .pod-el{font-family:var(--M);font-size:8px;letter-spacing:1.5px;margin-top:6px}
-.lb-table{border:1px solid var(--line);overflow:hidden}
-.lb-head{display:grid;grid-template-columns:50px 1fr 90px 90px 90px 80px;padding:8px 12px;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.12)}
-.lb-hcell{font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--solar)}
-.lb-row{display:grid;grid-template-columns:50px 1fr 90px 90px 90px 80px;padding:11px 12px;border-bottom:1px solid rgba(201,168,76,.04);align-items:center;transition:.15s}
-.lb-row:hover{background:rgba(201,168,76,.025)}
-.lb-row.me{background:rgba(201,168,76,.04);border-left:2px solid var(--gold)}
-.lb-row:last-child{border-bottom:none}
+/* Leaderboard-specific styling (extends shared .tbl-* system) */
+.tbl-head{background:rgba(201,168,76,.04)!important;border-bottom:1px solid rgba(201,168,76,.12)!important}
+.tbl-hcell{color:var(--solar)!important;font-size:7px!important}
+.tbl-row{grid-template-columns:50px 1fr 90px 90px 90px 80px;padding:11px 12px;align-items:center}
+.tbl-row:hover{background:rgba(201,168,76,.025)!important}
+.tbl-row.me{background:rgba(201,168,76,.04)!important;border-left:2px solid var(--gold)!important}
 .lb-rank{font-family:var(--D);font-size:14px;text-align:center}
 .lb-name-val{font-family:var(--M);font-size:12px}
 .lb-sign-val{font-family:var(--M);font-size:7.5px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
 .lb-auth-val{font-family:var(--D);font-size:13px;color:var(--gold)}
 .lb-axis-val{font-family:var(--M);font-size:8px;text-align:center}
+.lb-row-loading{grid-template-columns:1fr!important;padding:20px!important;text-align:center}
 .my-rank-banner{border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.05);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 @media(max-width:700px){
   .podium{grid-template-columns:1fr 1fr}.pod:first-child{grid-column:1/-1}
@@ -58,16 +58,16 @@
     <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val">DAILY</div><div class="kpi-label">SNAPSHOT FREQUENCY</div></div>
   </div>
   <div class="sechead">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED</div>
-  <div class="lb-table" role="table" aria-label="Leaderboard">
-    <div class="lb-head" role="row">
-      <div class="lb-hcell" role="columnheader">RANK</div>
-      <div class="lb-hcell" role="columnheader">MEMBER</div>
-      <div class="lb-hcell" role="columnheader">AUTHORITY</div>
-      <div class="lb-hcell" role="columnheader">AXIS A</div>
-      <div class="lb-hcell" role="columnheader">AXIS B</div>
-      <div class="lb-hcell" role="columnheader">ELEMENT</div>
+  <div class="tbl-wrap" role="table" aria-label="Leaderboard">
+    <div class="tbl-head" role="row" style="grid-template-columns:50px 1fr 90px 90px 90px 80px">
+      <div class="tbl-hcell" role="columnheader">RANK</div>
+      <div class="tbl-hcell" role="columnheader">MEMBER</div>
+      <div class="tbl-hcell" role="columnheader">AUTHORITY</div>
+      <div class="tbl-hcell" role="columnheader">AXIS A</div>
+      <div class="tbl-hcell" role="columnheader">AXIS B</div>
+      <div class="tbl-hcell" role="columnheader">ELEMENT</div>
     </div>
-    <div id="lb-rows" role="rowgroup"><div class="lb-row" style="grid-template-columns:1fr;padding:20px;text-align:center"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING LEADERBOARD&hellip;</span></div></div>
+    <div id="lb-rows" role="rowgroup"><div class="tbl-row lb-row-loading" style="grid-template-columns:1fr;padding:20px;text-align:center"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING LEADERBOARD&hellip;</span></div></div>
   </div>
   <div class="glass" style="padding:14px;margin-top:12px;font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);line-height:1.8">
     LEADERBOARD METHODOLOGY &middot; Ranking uses AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e computed daily at midnight.<br>
@@ -147,7 +147,7 @@ function renderTable(rows,myUid){
   var el=document.getElementById('lb-rows');if(!el)return;
   el.innerHTML='';
   rows.forEach(function(r,i){
-    var row=document.createElement('div');row.className='lb-row'+(r.user_id===myUid||r.id===myUid?' me':'');row.setAttribute('role','row');
+    var row=document.createElement('div');row.className='tbl-row'+(r.user_id===myUid||r.id===myUid?' me':'');row.setAttribute('role','row');
     var isMe=r.user_id===myUid||r.id===myUid;
     var rank=r.rank||r.rank_global||i+1;
     var medal=rank===1?'♔':rank===2?'♕':rank===3?'♖':'';

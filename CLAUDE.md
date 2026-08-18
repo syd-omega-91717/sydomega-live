@@ -2175,6 +2175,49 @@ orphaned file.
   - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
     recorded remotely as `20260818080246_rls_pass6_drops_and_percommand_restructure`, mirrored
     locally at `supabase/migrations/`.
+- **[Fixed — seventh and final RLS-consolidation pass] `multiple_permissive_policies` fully
+  cleared: 434 → 0 across seven passes.** Resolved the 3 tables deliberately deferred from pass
+  6:
+  - `content_versions` — same "bare `true` at `{authenticated}` scope dominates" shape as
+    `feature_flags`/`platform_metrics` in pass 6. The `{authenticated}`-scoped
+    `content_versions_auth_read` (qual=`true`) already granted every authenticated user
+    (owner included) unconditional read, making both the ALL policy's SELECT component and the
+    separate `author reads own content_versions` policy fully redundant for that role. Collapsed
+    to a single `SELECT TO authenticated USING (true)` policy — exactly reproduces the original:
+    anon still gets nothing, authenticated/owner still get unconditional read.
+  - `dispatches` — the `{authenticated}`-scoped `wire read` (qual=`true`) and the
+    `{public}`-scoped `dispatch_read`/`dispatches_own` SELECT components couldn't be folded by
+    widening role scope alone (anon must keep seeing only published dispatches, not everything).
+    Resolved with the `(select auth.role()) = 'authenticated'` idiom already used live elsewhere
+    in this exact schema (`marketplace_listings_select_merged`, predating this session) — a
+    single SELECT policy (`is_published = true OR is_platform_owner() OR (select auth.role()) =
+    'authenticated'`) reproduces the original 3-policy behavior exactly. INSERT/UPDATE/DELETE had
+    no additive policies beyond the ALL policy's own self-or-owner condition, so those became
+    simple 1:1 per-command splits.
+  - `marketplace_listings` — checked the live table shape before touching anything, per this
+    file's standing rule against guessing at schema: `information_schema.columns` confirmed both
+    `user_id` (nullable) and `seller_id` (NOT NULL) exist, and a row-count query confirmed the
+    table has 0 rows total, so `user_id` has never been populated by any real insert.
+    `seller_id` is therefore the only column any real write path could have used (enforced by its
+    NOT NULL constraint), and `marketplace_listings_own`'s `user_id`-based self-access clause was
+    already dead code in practice. Restructured around `seller_id`, preserving
+    `marketplace_listings_select_merged`'s existing `auth.role()='authenticated'` broad-read
+    grant (any authenticated member can browse the whole marketplace, not just active listings —
+    an intentional, already-live design predating this session) and `ml_update`'s existing
+    seller-or-owner condition unchanged. DELETE previously had no seller-specific policy at all
+    (only the ALL policy's dead-`user_id`-OR-owner condition, in practice owner-only) — kept as
+    owner-only rather than introducing a new seller-delete capability that didn't previously
+    exist, since this pass restructures, it doesn't redesign access.
+  - Verified post-apply: `pg_policies` grouped by (table, cmd) shows exactly 1 policy for every
+    command on all 3 tables (12 rows, no gaps, no duplicates, no lockout). `get_advisors` re-run
+    afterward confirmed `multiple_permissive_policies` at exactly 0 — a 100% reduction from the
+    original 434 findings across all seven passes in this session. Only `unused_index` (125) and
+    `unindexed_foreign_keys` (85) remain in the performance-advisor output, both already-
+    documented INFO-level categories deliberately deferred to a dedicated follow-up.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as
+    `20260818081159_rls_pass7_dispatches_content_versions_marketplace_listings`, mirrored
+    locally at `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

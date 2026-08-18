@@ -72,6 +72,7 @@
 
 <div class="tab-row">
   <button class="tab-btn act" data-tab="hub" onclick="switchTab('hub',this)">&#9670; HUB</button>
+  <button class="tab-btn" data-tab="graphify" onclick="switchTab('graphify',this)">&#9670; GRAPHIFY</button>
   <button class="tab-btn" data-tab="log" onclick="switchTab('log',this)">&#9670; INTEL LOG</button>
   <button class="tab-btn" data-tab="swot" onclick="switchTab('swot',this)">&#9670; SWOT</button>
   <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
@@ -142,6 +143,27 @@
       <span class="intel-card-link">cipher.html &#8594;</span>
     </div>
   </div>
+</div>
+
+<!-- GRAPHIFY -->
+<div id="tab-graphify" class="tab-panel">
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="graph-entities">0</div><div class="stat-lbl">ENTITIES</div></div>
+    <div class="stat-box"><div class="stat-num" id="graph-relationships">0</div><div class="stat-lbl">RELATIONSHIPS</div></div>
+    <div class="stat-box"><div class="stat-num" id="graph-confidence">0%</div><div class="stat-lbl">AVG CONFIDENCE</div></div>
+    <div class="stat-box"><div class="stat-num" id="graph-events">0</div><div class="stat-lbl">EVENTS LOGGED</div></div>
+  </div>
+
+  <div class="section-label">KNOWLEDGE GRAPH INGESTION</div>
+  <div style="display:flex;gap:8px;margin-bottom:20px">
+    <button class="btn-primary" onclick="startGraphIngestion()">⟳ INGEST DATA</button>
+    <button class="btn-secondary" onclick="location.href='/graphify.html'">◆ GRAPH EXPLORER</button>
+    <button class="btn-secondary" onclick="location.href='/graph-admin.html'">⚙ ADMIN TOOLS</button>
+  </div>
+  <div id="graph-status" style="font-family:'Courier New',monospace;font-size:11px;color:#9B6BF0;margin-bottom:14px"></div>
+
+  <div class="section-label">RECENT GRAPH EVENTS</div>
+  <div id="graph-events-feed" style="max-height:400px;overflow-y:auto"></div>
 </div>
 
 <!-- INTEL LOG -->
@@ -307,6 +329,7 @@ function switchTab(id,btn){
   if(id==='hub'){renderStats();}
   if(id==='log'){renderFeed();}
   if(id==='swot'){renderSwot();}
+  if(id==='graphify'){loadGraphStats();}
 }
 
 var intel=[];
@@ -407,6 +430,78 @@ function addSwot(k){
 }
 function removeSwot(k,i){swot[k].splice(i,1);save();renderSwot();}
 function clearSwot(){if(!confirm('Clear all SWOT items?'))return;swot={S:[],W:[],O:[],T:[]};save();renderSwot();}
+
+async function loadGraphStats(){
+  try{
+    if(!window.supabaseClient||!window.supabaseClient.auth)return;
+    var sb=window.OmegaSupabase?.sb;
+    if(!sb){setTimeout(loadGraphStats,500);return;}
+
+    var u=window.currentProfile?.id;
+    if(!u)return;
+
+    var [entRes,relRes,eventRes]=await Promise.all([
+      sb.from('graph_entities').select('*',{count:'exact',head:true}).eq('user_id',u),
+      sb.from('graph_relationships').select('*',{count:'exact',head:true}).eq('user_id',u),
+      sb.from('graph_events').select('id,event_type,entity_name,created_at').eq('user_id',u).order('created_at',{ascending:false}).limit(20)
+    ]);
+
+    var ec=(entRes.count||0);
+    var rc=(relRes.count||0);
+    document.getElementById('graph-entities').textContent=ec;
+    document.getElementById('graph-relationships').textContent=rc;
+    document.getElementById('graph-events').textContent=(eventRes.data||[]).length;
+
+    var [confRes]=await Promise.all([
+      sb.from('graph_entities').select('confidence_score').eq('user_id',u)
+    ]);
+    var scores=(confRes.data||[]).map(function(x){return x.confidence_score||0;});
+    var avg=scores.length>0?Math.round((scores.reduce(function(a,b){return a+b;},0)/scores.length)*100):0;
+    document.getElementById('graph-confidence').textContent=avg+'%';
+
+    var feed=document.getElementById('graph-events-feed');
+    if(!eventRes.data||!eventRes.data.length){
+      feed.innerHTML='<div class="empty-state">NO EVENTS LOGGED</div>';
+      return;
+    }
+    feed.innerHTML=(eventRes.data||[]).map(function(e){
+      return '<div class="log-card" style="border-left-color:#9B6BF0">'
+        +'<div class="log-title">'+esc(e.event_type)+' — '+esc(e.entity_name)+'</div>'
+        +'<div class="log-meta"><span>'+new Date(e.created_at).toLocaleDateString()+'</span></div>'
+        +'</div>';
+    }).join('');
+  }catch(err){
+    console.error('Graph stats error:',err);
+  }
+}
+
+async function startGraphIngestion(){
+  try{
+    var sb=window.OmegaSupabase?.sb;
+    if(!sb){alert('Supabase not ready');return;}
+    var u=window.currentProfile?.id;
+    if(!u){alert('Not authenticated');return;}
+
+    var statusEl=document.getElementById('graph-status');
+    statusEl.textContent='INGESTING...';
+
+    var res=await fetch('/functions/v1/graphify-ai-ingest',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({user_id:u})
+    });
+    var data=await res.json();
+    if(data.error){
+      statusEl.textContent='ERROR: '+esc(data.error.message||'Ingestion failed');
+      return;
+    }
+    statusEl.textContent='INGESTED — '+data.entities_added+' entities, '+data.relationships_added+' relationships';
+    setTimeout(function(){statusEl.textContent='';},3000);
+    loadGraphStats();
+  }catch(err){
+    document.getElementById('graph-status').textContent='ERROR: '+esc(err.message);
+  }
+}
 
 load();
 renderStats();

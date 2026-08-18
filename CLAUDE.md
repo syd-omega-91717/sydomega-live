@@ -1759,10 +1759,14 @@ orphaned file.
 - **What's left genuinely open in this file, for a future session**: the two tables this file has
   already deliberately decided to leave dormant (`transactions`, `wallet_balances` — token/payment
   infrastructure gated behind an explicit product decision, not a bug), the two hygiene items the
-  user explicitly chose to leave as-is when asked directly (`.mp4`/`.docx` Git LFS migration), the
-  page-local `.tab-btn`/font-size sweep noted as a separate larger effort, and the 27 pages still
-  using native `<table>` markup instead of the shared `.tbl-wrap` system. None of these are bugs
-  masquerading as done — each already has an explicit, evidence-cited reason it's open on purpose.
+  user explicitly chose to leave as-is when asked directly (`.mp4`/`.docx` Git LFS migration), and
+  the 27 pages still using native `<table>` markup instead of the shared `.tbl-wrap` system. (The
+  page-local `.tab-btn`/`.card-title` font-size sweep referenced by an earlier draft of this bullet
+  is NOT open — it was completed in the entry above titled "The page-local `.tab-btn`/`.card-title`
+  sweep flagged above: done." This bullet was stale on that one point; corrected here rather than
+  left to mislead a future reader skimming this list, matching this file's own rule against stale
+  cross-references.) None of the items actually remaining above are bugs masquerading as done —
+  each already has an explicit, evidence-cited reason it's open on purpose.
 - **[Fixed — highest-severity finding of this session] `public.pending_access_requests` granted
   every signed-in member direct read access to every other user's raw `auth.users` data — Supabase's
   own security advisor (`get_advisors(type='security')` against production, 2 ERROR / 212 WARN /

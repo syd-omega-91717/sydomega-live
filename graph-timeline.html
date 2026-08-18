@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Graph Timeline — SYD OMEGA</title>
+  <script src="/bg.js"></script>
+  <style>
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1200px;
+      padding: 20px;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .timeline-header h1 {
+      font-family: var(--D);
+      font-size: 32px;
+      color: var(--gold);
+      margin: 0;
+    }
+
+    .timeline-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .timeline-controls input,
+    .timeline-controls select {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #E0D5B7;
+      border-radius: 4px;
+    }
+
+    .timeline-controls input::placeholder {
+      color: rgba(224, 213, 183, 0.5);
+    }
+
+    .timeline-controls button {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px 16px;
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: var(--gold);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.14s;
+    }
+
+    .timeline-controls button:hover {
+      background: rgba(201, 168, 76, 0.2);
+      border-color: var(--gold);
+    }
+
+    .timeline-container {
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(201, 168, 76, 0.8) 0%, rgba(0, 229, 255, 0.4) 100%);
+    }
+
+    .timeline-events {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-event {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .timeline-event:nth-child(odd) .event-card {
+      margin-left: auto;
+      margin-right: 50%;
+    }
+
+    .timeline-event:nth-child(even) .event-card {
+      margin-left: 50%;
+      margin-left: calc(50% + 20px);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border: 2px solid #08080F;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      top: 10px;
+      z-index: 2;
+    }
+
+    .event-card {
+      width: calc(50% - 20px);
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .event-card:hover {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: rgba(201, 168, 76, 0.4);
+      box-shadow: 0 4px 12px rgba(201, 168, 76, 0.1);
+    }
+
+    .event-type-badge {
+      display: inline-block;
+      font-family: var(--M);
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 4px 8px;
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      border-radius: 3px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .event-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+      justify-content: space-between;
+    }
+
+    .event-entity {
+      font-family: var(--R);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold);
+      flex: 1;
+    }
+
+    .event-timestamp {
+      font-family: var(--M);
+      font-size: 9px;
+      color: rgba(224, 213, 183, 0.6);
+      white-space: nowrap;
+    }
+
+    .event-action {
+      font-family: var(--R);
+      font-size: 11px;
+      color: #E0D5B7;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+
+    .event-metadata {
+      font-family: var(--M);
+      font-size: 9px;
+      color: rgba(224, 213, 183, 0.5);
+      margin-top: 8px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--D);
+      font-size: 28px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: var(--M);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: rgba(224, 213, 183, 0.7);
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: rgba(224, 213, 183, 0.5);
+    }
+
+    @media (max-width: 900px) {
+      .timeline-line {
+        display: none;
+      }
+
+      .timeline-event:nth-child(odd) .event-card,
+      .timeline-event:nth-child(even) .event-card {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+      }
+
+      .timeline-dot {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body data-page="graph-timeline">
+  <div class="shell">
+    <aside id="omega-side" class="side"></aside>
+    <main class="main">
+      <div class="timeline-header">
+        <h1>⟳ GRAPH TIMELINE</h1>
+        <div class="timeline-controls">
+          <input type="text" id="entityFilter" placeholder="ENTITY NAME" maxlength="50">
+          <select id="eventTypeFilter">
+            <option value="">ALL EVENT TYPES</option>
+            <option value="entity_created">ENTITY CREATED</option>
+            <option value="entity_updated">ENTITY UPDATED</option>
+            <option value="entity_verified">ENTITY VERIFIED</option>
+            <option value="relationship_created">RELATIONSHIP CREATED</option>
+            <option value="relationship_verified">RELATIONSHIP VERIFIED</option>
+            <option value="relationship_deleted">RELATIONSHIP DELETED</option>
+          </select>
+          <input type="date" id="dateFilter">
+          <button onclick="resetFilters()">CLEAR</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="totalEvents">0</div>
+          <div class="stat-label">Total Events</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="uniqueEntities">0</div>
+          <div class="stat-label">Unique Entities</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="verifiedCount">0</div>
+          <div class="stat-label">Verified Items</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="timelineSpan">0d</div>
+          <div class="stat-label">Timeline Span</div>
+        </div>
+      </div>
+
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <div class="timeline-events" id="timelineEvents">
+          <div class="empty-state">LOADING TIMELINE...</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sb = window.OmegaSupabase?.sb;
+    if (!sb) {
+      document.getElementById('timelineEvents').innerHTML = '<div class="empty-state">SUPABASE NOT READY</div>';
+    }
+
+    let allEvents = [];
+    let currentUser = null;
+
+    async function initTimeline() {
+      try {
+        const sess = await sb.auth.getSession();
+        currentUser = sess?.data?.session?.user?.id;
+        if (!currentUser) return;
+
+        await loadTimeline();
+      } catch (err) {
+        console.error('Timeline init error:', err);
+      }
+    }
+
+    async function loadTimeline() {
+      try {
+        const { data, error } = await sb
+          .from('graph_events')
+          .select('*')
+          .eq('user_id', currentUser)
+          .order('created_at', { ascending: false })
+          .limit(500);
+
+        if (error) throw error;
+
+        allEvents = data || [];
+        updateStats();
+        renderTimeline(allEvents);
+      } catch (err) {
+        console.error('Failed to load timeline:', err);
+        document.getElementById('timelineEvents').innerHTML = '<div class="empty-state">ERROR LOADING EVENTS</div>';
+      }
+    }
+
+    function updateStats() {
+      if (!allEvents.length) {
+        document.getElementById('totalEvents').textContent = '0';
+        document.getElementById('uniqueEntities').textContent = '0';
+        document.getElementById('verifiedCount').textContent = '0';
+        document.getElementById('timelineSpan').textContent = '0d';
+        return;
+      }
+
+      document.getElementById('totalEvents').textContent = allEvents.length;
+
+      const uniqueEntities = new Set(allEvents.map(e => e.entity_name)).size;
+      document.getElementById('uniqueEntities').textContent = uniqueEntities;
+
+      const verified = allEvents.filter(e =>
+        e.event_type.includes('verified') ||
+        e.metadata?.confidence_score >= 0.9
+      ).length;
+      document.getElementById('verifiedCount').textContent = verified;
+
+      const first = new Date(allEvents[allEvents.length - 1]?.created_at);
+      const last = new Date(allEvents[0]?.created_at);
+      const span = Math.ceil((last - first) / (1000 * 60 * 60 * 24));
+      document.getElementById('timelineSpan').textContent = span + 'd';
+    }
+
+    function renderTimeline(events) {
+      if (!events.length) {
+        document.getElementById('timelineEvents').innerHTML = '<div class="empty-state">NO EVENTS FOUND</div>';
+        return;
+      }
+
+      const html = events.map((e, idx) => {
+        const date = new Date(e.created_at);
+        const timestamp = date.toLocaleString();
+        const eventLabel = e.event_type.toUpperCase().replace(/_/g, ' ');
+        const isVerified = e.event_type.includes('verified');
+        const metadata = e.metadata || {};
+
+        return `
+          <div class="timeline-event">
+            <div class="timeline-dot"></div>
+            <div class="event-card">
+              <div class="event-type-badge" style="background: ${isVerified ? 'rgba(0, 200, 100, 0.15)' : 'rgba(0, 229, 255, 0.15)'}; border-color: ${isVerified ? 'rgba(0, 200, 100, 0.3)' : 'rgba(0, 229, 255, 0.3)'}; color: ${isVerified ? '#00C864' : 'var(--cyan)'};">
+                ${eventLabel}
+              </div>
+              <div class="event-header">
+                <div class="event-entity">${e.entity_name || 'UNNAMED'}</div>
+                <div class="event-timestamp">${timestamp}</div>
+              </div>
+              <div class="event-action">
+                ${getActionDescription(e)}
+              </div>
+              <div class="event-metadata">
+                ${metadata.confidence_score ? `<span>Confidence: ${(metadata.confidence_score * 100).toFixed(0)}%</span>` : ''}
+                ${metadata.relationship_type ? `<span>Type: ${metadata.relationship_type}</span>` : ''}
+                ${metadata.source_count ? `<span>Sources: ${metadata.source_count}</span>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('timelineEvents').innerHTML = html;
+    }
+
+    function getActionDescription(event) {
+      const meta = event.metadata || {};
+      switch (event.event_type) {
+        case 'entity_created':
+          return `New entity detected: <strong>${meta.entity_type || 'Unknown'}</strong> with ${meta.source_count || 1} source(s)`;
+        case 'entity_updated':
+          return `Entity updated with confidence: <strong>${(meta.confidence_score * 100).toFixed(0)}%</strong>`;
+        case 'entity_verified':
+          return `Entity manually verified and marked as high-confidence`;
+        case 'relationship_created':
+          return `New relationship: <strong>${meta.relationship_type || 'Unknown'}</strong> established between entities`;
+        case 'relationship_verified':
+          return `Relationship verified with strength: <strong>${(meta.strength_score * 100).toFixed(0)}%</strong>`;
+        case 'relationship_deleted':
+          return `Relationship removed from knowledge graph`;
+        default:
+          return `Graph event: ${event.event_type}`;
+      }
+    }
+
+    function applyFilters() {
+      const entityName = (document.getElementById('entityFilter').value || '').toLowerCase();
+      const eventType = document.getElementById('eventTypeFilter').value;
+      const dateStr = document.getElementById('dateFilter').value;
+
+      const filtered = allEvents.filter(e => {
+        if (entityName && !e.entity_name.toLowerCase().includes(entityName)) return false;
+        if (eventType && e.event_type !== eventType) return false;
+        if (dateStr) {
+          const eventDate = new Date(e.created_at).toDateString();
+          const filterDate = new Date(dateStr).toDateString();
+          if (eventDate !== filterDate) return false;
+        }
+        return true;
+      });
+
+      renderTimeline(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('entityFilter').value = '';
+      document.getElementById('eventTypeFilter').value = '';
+      document.getElementById('dateFilter').value = '';
+      renderTimeline(allEvents);
+    }
+
+    document.getElementById('entityFilter').addEventListener('input', applyFilters);
+    document.getElementById('eventTypeFilter').addEventListener('change', applyFilters);
+    document.getElementById('dateFilter').addEventListener('change', applyFilters);
+
+    document.addEventListener('DOMContentLoaded', initTimeline);
+  </script>
+</body>
+</html>

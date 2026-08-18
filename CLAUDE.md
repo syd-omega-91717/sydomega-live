@@ -2218,6 +2218,49 @@ orphaned file.
     recorded remotely as
     `20260818081159_rls_pass7_dispatches_content_versions_marketplace_listings`, mirrored
     locally at `supabase/migrations/`.
+- **[Fixed — first pass on `unindexed_foreign_keys`; `unused_index` deliberately left alone,
+  with reasoning] 24 missing foreign-key indexes added on real schema; the 45-table scaffold's
+  61 remaining unindexed FKs and all 125 pre-existing "unused" indexes left untouched on
+  purpose.** With `multiple_permissive_policies` fully cleared, moved to the two remaining
+  performance-advisor categories.
+  - Queried `pg_constraint`/`pg_index` directly for the authoritative list of foreign keys with
+    no covering index (85 — matched the advisor's own count exactly). Cross-referenced all 63
+    distinct tables against this repo's own `supabase/*.sql` source, the same method already
+    established earlier in this file for the RLS-disabled-scaffold finding: only 18 tables have
+    a real `CREATE TABLE` anywhere in this repo; the other 45 (`organizations`, `teams`, `tasks`,
+    `calendars`, `ai_workspaces`, `knowledge_documents`, `webhooks`, `workflows`,
+    `marketplace_orders`, `billing_invoices`, etc.) are the same unrelated, generic multi-tenant
+    SaaS scaffold this file already documented finding on this production project — left
+    untouched, matching this file's own standing rule against inventing behavior for schema this
+    repo doesn't own or understand the purpose of. Added 24 indexes
+    (`supabase/omega_..._fk_indexes` — see migration file) covering the 18 real tables' unindexed
+    foreign keys — purely additive (`CREATE INDEX IF NOT EXISTS`), no RLS or access-control
+    implication. Verified post-apply: all 24 present via `pg_indexes`; `get_advisors` re-run
+    confirmed `unindexed_foreign_keys` dropped 85→61, and every one of the 61 remaining is on a
+    scaffold table, not one of the 18 touched.
+  - **`unused_index` (125 pre-existing findings, excluding the 24 brand-new indexes just added,
+    which trivially show as "unused" until real traffic reaches them — expected, not a
+    regression) — deliberately NOT touched, with a live check behind the decision rather than a
+    guess.** Queried `pg_stat_user_tables` for a sample of the flagged tables before deciding:
+    `profiles` has 9 live rows, and nearly every other table sampled (`conversations`,
+    `messages`, `activity_feed`, `threat_events`, `platform_events`, `telemetry_events`,
+    `user_journeys`, `workflow_executions`, `notifications`, `matrix_progress`, `sovereign_events`,
+    `leaderboard_snapshots`) has **0** rows. This platform has essentially no real traffic yet —
+    confirming "unused" here reflects the platform's current near-zero usage, not that these
+    indexes are badly designed or genuinely unneeded. Nearly every flagged index is a small
+    `user_id`/foreign-key-pattern index (`idx_<table>_user_id` and equivalents) — exactly the
+    kind of index that becomes essential the moment real query volume arrives, since
+    `user_id = auth.uid()` is the single most common filter across literally every RLS policy
+    fixed across all seven consolidation passes in this session. Dropping them now would optimize
+    for a database with 9 real users, at the cost of real query performance under RLS the moment
+    the platform actually grows — not a good trade for an INFO-level, purely-advisory finding, and
+    the wrong kind of mistake to make on a stats-based linter whose "unused" signal is only as
+    good as the traffic it's observed. Recorded here as a considered decision, not an oversight —
+    matching this file's own precedent for `transactions`/`wallet_balances` and the `.mp4`/`.docx`
+    Git LFS migration, both left open by explicit choice rather than default.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818082309_add_missing_fk_indexes_real_schema`, mirrored locally at
+    `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

@@ -7,8 +7,8 @@
 <meta name="description" content="The living record of the Sovereign Order — members, certificates, and the shape of their ascent."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
-.hall-row{display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);background:var(--surface);margin-bottom:6px;transition:.14s}
-.hall-row:hover{border-color:rgba(201,168,76,.3)}
+.hall-row.tbl-row{display:grid!important;grid-template-columns:36px 1fr auto!important;gap:12px!important;align-items:center!important;padding:12px 14px!important;border:1px solid var(--line)!important;background:var(--surface)!important;margin-bottom:6px!important;transition:.14s!important}
+.hall-row.tbl-row:hover{border-color:rgba(201,168,76,.3)!important}
 .hall-row.owner{border-color:var(--gold);box-shadow:0 0 18px rgba(201,168,76,.1);background:linear-gradient(90deg,rgba(201,168,76,.06),var(--surface))}
 .h-rank{font-family:var(--D);font-size:18px;color:var(--gold);text-align:center}
 .hall-row.owner .h-rank{color:var(--cyan)}
@@ -135,7 +135,7 @@ async function boot(){
           if(m.certificates)creds.push(m.certificates+' CERT');
           if(m.trophies)creds.push(m.trophies+' TRO');
           if(m.medals)creds.push(m.medals+' MED');
-          return'<div class="hall-row'+(m.is_owner?' owner':'')+'">'
+          return'<div class="tbl-row hall-row'+(m.is_owner?' owner':'')+'">'
             +'<div class="h-rank">'+m.rank+'</div>'
             +'<div><div class="h-name">'+esc(m.name)+(m.is_owner?'<span class="h-tag">SOVEREIGN</span>':'')+'</div>'
             +'<div class="h-meta">'+sign+elem+' &middot; ('+m.axis_a+', '+m.axis_b+', '+m.axis_c+')'

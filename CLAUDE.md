@@ -2125,6 +2125,56 @@ orphaned file.
     `20260818072250_drop_redundant_authenticated_read_policies_knowledge_graph`, and
     `20260818072522_restructure_knowledge_graph_all_plus_select_into_percommand`, all mirrored
     locally at `supabase/migrations/`.
+- **[Fixed — sixth RLS-consolidation pass, largest single pass so far] 18 more tables cleared
+  from `multiple_permissive_policies` in one reviewed batch (98→25).** A fresh full
+  `pg_policies` dump was run through a corrected detector script — fixing two real bugs found
+  while building it, both verified by hand against real examples before trusting the output: (1)
+  the OR-splitter only split one level deep, missing redundancies hidden behind nested-but-
+  logically-top-level ORs like `(A OR (B OR C))`; (2) equality clauses weren't normalized for
+  operand order, so `auth.uid() = user_id` and `user_id = auth.uid()` were treated as different
+  clauses when they're identical. Both fixes surfaced real, previously-missed live redundancies
+  (`media_reservations_select_merged`, `task_completions_select_merged` — both created by
+  earlier passes in this same session and never re-checked against a table's ALL policy after
+  being created).
+  - **7 pure drops** (redundant or logically dominated by their table's ALL policy): the 2 above,
+    plus `interest_signals`' `interest_own_insert`/`member sees own signals` (exact-duplicate or
+    subset conditions with a narrower role scope), plus `media_reservations`' `owner updates
+    media` and `publications`' `owner updates publications`/`pub_update` — none of these last 3
+    are a literal OR-term subset (so the detector correctly didn't auto-flag them), but each was
+    verified by hand to be logically dominated: they only ever pass when `is_platform_owner()` or
+    `uid=user_id` already holds, which the table's ALL policy already grants unconditionally for
+    that command regardless.
+  - **16 tables restructured** into single-purpose per-command policies, the same technique
+    proven on the 5 knowledge-graph tables in the previous pass, now applied at scale: `api_keys`,
+    `governance_policies`, `policy_rules`, `conversations`, `messages`, `member_posts`,
+    `member_presence`, `activity_feed` (the long-documented "genuinely additive, don't merge"
+    example in this file — now safely resolvable via full restructuring rather than a naive
+    OR-merge), `ai_memory`, `advertisements`, `platform_settings`, `threat_events`,
+    `feature_flags`, `platform_metrics`. Split into two groups by whether the additive policy's
+    role scope was safe to fold into a single `{public}`-scoped policy: 12 were safe (already
+    `{public}`-scoped, or a `uid`-based condition that naturally evaluates false for anon
+    regardless of scope); 2 (`feature_flags`, `platform_metrics`) had a bare `true` condition at
+    `{authenticated}` scope, where folding into `{public}` would have newly exposed anon to
+    unconditional access — these keep their exact original `TO authenticated` scope on the
+    restructured policy instead. For every table whose ALL policy only granted self-access (no
+    owner bypass — `conversations`, `messages`, `member_posts`, `member_presence`,
+    `activity_feed`, `ai_memory`), the restructured INSERT/UPDATE/DELETE policies stay self-only
+    — no owner bypass was introduced where none existed before.
+  - **Deferred, not touched this pass**: `dispatches` and `content_versions` (each mix
+    `{public}`- and `{authenticated}`-scoped additive policies with different conditions, needing
+    non-uniform per-policy scope handling rather than one clean merge), and `marketplace_listings`
+    (5 overlapping policies split across two different columns, `user_id` vs `seller_id` — needs
+    the column-consistency question this file already flagged elsewhere resolved first).
+  - Verified post-apply: `pg_policies` grouped by (table, cmd) shows exactly 1 policy for every
+    command on every one of the 18 tables touched (no gaps, no duplicates, no lockout).
+    `get_advisors` re-run afterward confirmed `multiple_permissive_policies` dropped 98→25, and a
+    search of the fresh advisor output found the only 3 tables still appearing in that category
+    are exactly the 3 deliberately deferred above — confirming this pass didn't miss anything it
+    should have caught, and didn't touch anything it shouldn't have. 94% total reduction from the
+    original 434 across all six passes combined.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818080246_rls_pass6_drops_and_percommand_restructure`, mirrored
+    locally at `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

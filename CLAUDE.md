@@ -2002,6 +2002,36 @@ orphaned file.
     the Supabase MCP connector), recorded remotely as
     `20260818063011_merge_second_pass_duplicate_role_scoped_rls_policies`, mirrored locally at
     `supabase/migrations/`.
+- **[Fixed — third RLS-consolidation pass] 9 more `multiple_permissive_policies` findings
+  resolved by dropping outright (not merging), 209→171.** Continuing the follow-up at explicit
+  request ("keep going on the remaining 209"). This pass targeted a different, more common shape
+  than the first two: a table with a `FOR ALL` policy *plus* a separate command-specific policy
+  (e.g. `FOR SELECT`) whose condition is fully implied by the ALL policy's own condition for that
+  command — since `FOR ALL` already covers every command, the specific policy adds nothing.
+  - Detected programmatically, not by eye: for every table with exactly one `FOR ALL` policy,
+    checked every other policy on that table whose role scope is a subset of (or equal to) the
+    ALL policy's role scope, normalizing both conditions into OR-clause sets (handling equality-
+    operand reordering, same technique as the earlier duplicate-detection passes) and confirming
+    the specific policy's clause set is a subset of the ALL policy's — meaning the specific policy
+    can never grant access the ALL policy doesn't already grant for that role+command. Verified
+    the detector correctly *excludes* real non-redundant cases: `activity_feed`'s ALL policy
+    ("own rows") plus its separate SELECT policy ("public rows OR own rows") was correctly left
+    alone, since the SELECT policy's `is_public = true` clause isn't present in the ALL policy's
+    condition — that pair stays two policies on purpose, same as this file's standing example.
+  - 9 found and dropped, several byte-identical to their table's ALL condition, not just
+    logically implied: `commission_contracts`, `consent_records`, `consult_requests`,
+    `data_lineage`, `error_budget_policy`, `media_reservations`, `publications`, `slo_metrics`,
+    `threat_events`.
+  - Verified post-apply: every affected table's `FOR ALL` policy remains intact, and every command
+    the dropped policy covered is still covered by the surviving ALL policy — no lockout on any
+    action. `get_advisors` re-run afterward confirmed `multiple_permissive_policies` dropped
+    209→171 (again a larger drop than 9, since several affected policies were `{public}`-scoped,
+    which the advisor's per-role reporting counts against every role that inherits from `public`
+    — `anon`, `authenticated`, and Supabase's internal roles alike — not just the two member-facing
+    ones).
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818064201_drop_policies_redundant_vs_all_policy`, mirrored locally
+    at `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

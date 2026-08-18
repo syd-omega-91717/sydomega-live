@@ -1925,6 +1925,52 @@ orphaned file.
     definitions elsewhere in this file (§5's 10-table list) — if so, resolving the duplicate-
     definition question first would likely resolve some `multiple_permissive_policies` findings
     as a side effect, rather than as two separate efforts.
+- **[Fixed — RLS-policy follow-up, explicitly requested] `auth_rls_initplan` (132 real findings)
+  fully resolved; 15 of the 424 `multiple_permissive_policies` findings resolved as genuine
+  byte-identical duplicates, the other 409 deliberately left as still-open, judgment-requiring
+  work.** Continuing from the `duplicate_index` fix above at the user's explicit request to keep
+  going on the RLS-policy consolidation.
+  - **`auth_rls_initplan` (132/132 fixed)** — every policy in `public.*` whose `USING`/`WITH
+    CHECK` expression called a bare `auth.uid()`/`auth.role()` (confirmed via a full
+    `regexp_matches` scan that no other `auth.<fn>()` call exists anywhere in this schema's
+    policies) was rewritten to `(select auth.uid())`/`(select auth.role())`, letting Postgres
+    evaluate the call once per query instead of once per row — pure performance, zero
+    access-control change (spot-checked before running: `is_platform_owner()` calls in the same
+    expressions were correctly left untouched, since the regex only ever matches `auth.*`).
+    Applied as a `DO` block that dynamically finds and fixes every matching policy (not a
+    hardcoded list), so it's naturally idempotent. Verified 0 remaining afterward — the first
+    verification attempt falsely showed "132 remaining" because Postgres re-pretty-prints
+    `(select auth.uid())` as `( SELECT auth.uid() AS uid)` on storage and the case-sensitive
+    check was looking for lowercase `select`; caught by spot-checking one policy's actual stored
+    definition directly rather than trusting the aggregate count, then corrected the verification
+    query to be case-insensitive.
+  - **15 true duplicate pairs dropped.** Dumped all 223 policies in `public.*` via `pg_policies`,
+    grouped by (table, cmd, role), and normalized each qual/with_check (handling OR-clause and
+    equality-operand reordering) to separate genuine duplicates from policies that only
+    superficially look similar. Found 15 pairs that are byte-identical, not just
+    logic-equivalent — re-verified each by eye against the raw text before touching anything
+    (e.g. `messages`' two `ALL`-policies both read, word for word, `EXISTS (SELECT 1 FROM
+    conversations c WHERE c.id = messages.conversation_id AND c.user_id = (SELECT auth.uid()))`
+    under two different names: `member manages own messages` and `messages_owner_all`). Same root
+    cause as the duplicate-table-definition problem documented throughout this file — two
+    `supabase/*.sql` files each independently defined the same table and added their own copy of
+    the same policy under a different name — here surfacing as a literal runtime RLS duplicate,
+    not just a source-file one. Dropped the less-descriptive name from each pair, kept the other;
+    verified afterward that all 15 dropped names return 0 rows and every one of the 14 affected
+    tables still has ≥1 policy (no accidental total lockout).
+  - **The other ~409 `multiple_permissive_policies` findings — deliberately still NOT touched.**
+    Sampled one (`activity_feed`'s two `SELECT` policies for `anon`, `"member manages own feed"`
+    and `"members see public feed"`) and confirmed these are genuinely different rules (own rows
+    OR public rows) that Supabase's linter correctly calls "suboptimal for performance," not
+    incorrect — merging them means precisely reproducing each table's exact boolean logic as a
+    single OR'd policy by hand, at real risk of subtly changing access behavior if any one merge
+    gets it wrong, across roughly 66+ tables' worth of policies. This remains genuinely open,
+    judgment-requiring, per-table work — not attempted in this pass, consistent with the original
+    reasoning in the entry above for deferring it.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818002535_wrap_auth_uid_calls_in_rls_policies` and
+    `20260818002831_drop_redundant_duplicate_rls_policies`, both mirrored locally under
+    `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

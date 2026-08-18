@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evidence Chain — SYD OMEGA</title>
+  <script src="/bg.js"></script>
+  <style>
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1400px;
+      padding: 20px;
+    }
+
+    .evidence-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .evidence-header h1 {
+      font-family: var(--D);
+      font-size: 32px;
+      color: var(--gold);
+      margin: 0;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-controls select,
+    .filter-controls input {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #E0D5B7;
+      border-radius: 4px;
+    }
+
+    .filter-controls button {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px 16px;
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: var(--gold);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.14s;
+    }
+
+    .filter-controls button:hover {
+      background: rgba(201, 168, 76, 0.2);
+      border-color: var(--gold);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--D);
+      font-size: 28px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: var(--M);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: rgba(224, 213, 183, 0.7);
+      text-transform: uppercase;
+    }
+
+    .evidence-container {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 20px;
+      min-height: 500px;
+    }
+
+    .evidence-panel {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-y: auto;
+      max-height: 600px;
+    }
+
+    .evidence-panel h3 {
+      font-family: var(--M);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin: 0 0 12px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+    }
+
+    .evidence-item {
+      padding: 12px;
+      background: rgba(201, 168, 76, 0.04);
+      border-left: 3px solid var(--cyan);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.14s;
+    }
+
+    .evidence-item:hover {
+      background: rgba(201, 168, 76, 0.08);
+      border-left-color: var(--gold);
+    }
+
+    .evidence-item.selected {
+      background: rgba(0, 229, 255, 0.1);
+      border-left-color: var(--gold);
+    }
+
+    .evidence-timestamp {
+      font-family: var(--M);
+      font-size: 8px;
+      color: rgba(224, 213, 183, 0.5);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .evidence-entity {
+      font-family: var(--R);
+      font-weight: 600;
+      color: var(--gold);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .evidence-type {
+      font-family: var(--M);
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      border-radius: 3px;
+      display: inline-block;
+      text-transform: uppercase;
+    }
+
+    .detail-section {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .detail-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .detail-label {
+      font-family: var(--M);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: rgba(224, 213, 183, 0.7);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .detail-value {
+      font-family: var(--R);
+      font-size: 12px;
+      color: #E0D5B7;
+      word-break: break-word;
+    }
+
+    .confidence-evolution {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 60px;
+    }
+
+    .confidence-bar {
+      flex: 1;
+      background: rgba(201, 168, 76, 0.2);
+      border-radius: 2px;
+      position: relative;
+      min-width: 3px;
+    }
+
+    .confidence-bar.high {
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.6), rgba(34, 197, 94, 0.3));
+    }
+
+    .confidence-bar.medium {
+      background: linear-gradient(180deg, rgba(255, 193, 7, 0.6), rgba(255, 193, 7, 0.3));
+    }
+
+    .confidence-bar.low {
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.6), rgba(239, 68, 68, 0.3));
+    }
+
+    .timeline-viz {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .timeline-event {
+      display: flex;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .timeline-event:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--cyan);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .timeline-time {
+      font-family: var(--M);
+      font-size: 8px;
+      color: rgba(224, 213, 183, 0.5);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .timeline-message {
+      font-family: var(--R);
+      font-size: 11px;
+      color: #E0D5B7;
+      margin-bottom: 4px;
+    }
+
+    .timeline-metadata {
+      font-family: var(--M);
+      font-size: 8px;
+      color: rgba(224, 213, 183, 0.5);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(224, 213, 183, 0.5);
+      font-family: var(--M);
+      font-size: 11px;
+    }
+
+    @media (max-width: 1200px) {
+      .evidence-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .evidence-container {
+        min-height: auto;
+      }
+
+      .evidence-panel {
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body data-page="graph-evidence">
+  <div class="shell">
+    <aside id="omega-side" class="side"></aside>
+    <main class="main">
+      <div class="evidence-header">
+        <h1>🔗 EVIDENCE CHAIN</h1>
+        <div class="filter-controls">
+          <select id="eventTypeFilter">
+            <option value="">ALL EVENTS</option>
+            <option value="entity_auto_ingested">ENTITY INGESTED</option>
+            <option value="relationship_auto_ingested">RELATIONSHIP INGESTED</option>
+            <option value="entity_verified">ENTITY VERIFIED</option>
+            <option value="entity_merged">ENTITY MERGED</option>
+            <option value="entity_deleted">ENTITY DELETED</option>
+          </select>
+          <input type="text" id="entitySearch" placeholder="SEARCH ENTITY" maxlength="50">
+          <button onclick="resetFilters()">RESET</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalEvents">0</div>
+          <div class="stat-label">Total Events</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="uniqueEntities">0</div>
+          <div class="stat-label">Unique Entities</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="verificationCoverage">0%</div>
+          <div class="stat-label">Verified</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="timelineSpan">0</div>
+          <div class="stat-label">Days Span</div>
+        </div>
+      </div>
+
+      <div class="evidence-container">
+        <div class="evidence-panel">
+          <h3>Events</h3>
+          <div id="eventList"></div>
+        </div>
+
+        <div class="evidence-panel">
+          <h3>Evidence Details</h3>
+          <div id="evidenceDetail"></div>
+        </div>
+
+        <div class="evidence-panel">
+          <h3>Confidence Evolution</h3>
+          <div id="confidenceChart"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sb = window.OmegaSupabase?.sb;
+    if (!sb) {
+      document.getElementById('eventList').innerHTML = '<div class="empty-state">SUPABASE NOT READY</div>';
+    }
+
+    let allEvents = [];
+    let currentUser = null;
+    let selectedEventId = null;
+
+    async function initEvidence() {
+      try {
+        const sess = await sb.auth.getSession();
+        currentUser = sess?.data?.session?.user?.id;
+        if (!currentUser) return;
+
+        await loadEvidenceData();
+      } catch (err) {
+        console.error('Evidence init error:', err);
+      }
+    }
+
+    async function loadEvidenceData() {
+      try {
+        const { data: events, error: eventError } = await sb
+          .from('graph_events')
+          .select('*')
+          .eq('user_id', currentUser)
+          .order('created_at', { ascending: false });
+
+        if (eventError) throw eventError;
+
+        const { data: entities, error: entError } = await sb
+          .from('graph_entities')
+          .select('*')
+          .eq('user_id', currentUser);
+
+        if (entError) throw entError;
+
+        allEvents = (events || []).map(event => ({
+          ...event,
+          entity: entities?.find(e => e.canonical_name === event.entity_name)
+        }));
+
+        updateStats();
+        renderEvents(allEvents);
+      } catch (err) {
+        console.error('Failed to load evidence data:', err);
+        document.getElementById('eventList').innerHTML = '<div class="empty-state">ERROR LOADING DATA</div>';
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('totalEvents').textContent = allEvents.length;
+
+      const uniqueEntities = new Set(allEvents.map(e => e.entity_name)).size;
+      document.getElementById('uniqueEntities').textContent = uniqueEntities;
+
+      const verified = allEvents.filter(e => e.entity?.verified).length;
+      const coverage = allEvents.length > 0 ? Math.round((verified / allEvents.length) * 100) : 0;
+      document.getElementById('verificationCoverage').textContent = coverage + '%';
+
+      if (allEvents.length > 0) {
+        const dates = allEvents.map(e => new Date(e.created_at).getTime());
+        const span = Math.ceil((Math.max(...dates) - Math.min(...dates)) / (1000 * 60 * 60 * 24));
+        document.getElementById('timelineSpan').textContent = Math.max(span, 1);
+      } else {
+        document.getElementById('timelineSpan').textContent = '0';
+      }
+    }
+
+    function renderEvents(data) {
+      if (!data.length) {
+        document.getElementById('eventList').innerHTML = '<div class="empty-state">NO EVENTS</div>';
+        document.getElementById('evidenceDetail').innerHTML = '<div class="empty-state">SELECT AN EVENT</div>';
+        return;
+      }
+
+      const html = data.map((event, idx) => {
+        const date = new Date(event.created_at);
+        const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+        return `
+          <div class="evidence-item ${selectedEventId === event.id ? 'selected' : ''}" onclick="selectEvent('${event.id}', ${idx})">
+            <div class="evidence-timestamp">${dateStr} · ${timeStr}</div>
+            <div class="evidence-entity">${(event.entity_name || 'SYSTEM').substring(0, 30)}</div>
+            <span class="evidence-type">${event.event_type.toUpperCase().replace(/_/g, ' ')}</span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('eventList').innerHTML = html;
+
+      if (!selectedEventId && data.length > 0) {
+        selectEvent(data[0].id, 0);
+      }
+    }
+
+    function selectEvent(eventId, idx) {
+      selectedEventId = eventId;
+      const event = allEvents[idx];
+
+      document.querySelectorAll('.evidence-item').forEach((el, i) => {
+        if (i === idx) el.classList.add('selected');
+        else el.classList.remove('selected');
+      });
+
+      renderDetail(event);
+    }
+
+    function renderDetail(event) {
+      const date = new Date(event.created_at);
+      const fullDate = date.toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      let confidenceHtml = '';
+      if (event.entity?.confidence_score !== undefined) {
+        const conf = Math.round(event.entity.confidence_score * 100);
+        const level = conf >= 75 ? 'high' : conf >= 50 ? 'medium' : 'low';
+        confidenceHtml = `
+          <div class="detail-section">
+            <div class="detail-label">Confidence Score</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="confidence-bar ${level}" style="width: ${conf}px; height: 20px; border-radius: 4px;"></div>
+              <span class="detail-value">${conf}%</span>
+            </div>
+          </div>
+        `;
+      }
+
+      const metadataHtml = event.metadata ? `
+        <div class="detail-section">
+          <div class="detail-label">Metadata</div>
+          <div class="detail-value">${JSON.stringify(event.metadata, null, 2).substring(0, 200)}</div>
+        </div>
+      ` : '';
+
+      const html = `
+        <div class="detail-section">
+          <div class="detail-label">Event Type</div>
+          <div class="detail-value">${event.event_type.toUpperCase().replace(/_/g, ' ')}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Entity / Subject</div>
+          <div class="detail-value">${event.entity_name || 'SYSTEM'}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Timestamp</div>
+          <div class="detail-value">${fullDate}</div>
+        </div>
+        ${confidenceHtml}
+        <div class="detail-section">
+          <div class="detail-label">Entity Type</div>
+          <div class="detail-value">${event.entity?.entity_type || 'UNKNOWN'}</div>
+        </div>
+        ${metadataHtml}
+      `;
+
+      document.getElementById('evidenceDetail').innerHTML = html;
+
+      renderConfidenceEvolution(event);
+    }
+
+    function renderConfidenceEvolution(selectedEvent) {
+      const entityEvents = allEvents.filter(e => e.entity_name === selectedEvent.entity_name);
+
+      if (entityEvents.length === 0) {
+        document.getElementById('confidenceChart').innerHTML = '<div class="empty-state">NO HISTORY</div>';
+        return;
+      }
+
+      const sorted = entityEvents.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      const timelineHtml = sorted.map(event => {
+        const date = new Date(event.created_at);
+        const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        const conf = event.entity?.confidence_score;
+        const confStr = conf !== undefined ? `${Math.round(conf * 100)}%` : 'N/A';
+
+        return `
+          <div class="timeline-event">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-time">${timeStr}</div>
+              <div class="timeline-message">${event.event_type.replace(/_/g, ' ').toUpperCase()}</div>
+              <div class="timeline-metadata">Confidence: ${confStr}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('confidenceChart').innerHTML = `<div class="timeline-viz">${timelineHtml}</div>`;
+    }
+
+    function applyFilters() {
+      const typeFilter = document.getElementById('eventTypeFilter').value;
+      const searchFilter = (document.getElementById('entitySearch').value || '').toLowerCase();
+
+      const filtered = allEvents.filter(e => {
+        if (typeFilter && e.event_type !== typeFilter) return false;
+        if (searchFilter && !e.entity_name.toLowerCase().includes(searchFilter)) return false;
+        return true;
+      });
+
+      renderEvents(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('eventTypeFilter').value = '';
+      document.getElementById('entitySearch').value = '';
+      renderEvents(allEvents);
+    }
+
+    document.getElementById('eventTypeFilter').addEventListener('change', applyFilters);
+    document.getElementById('entitySearch').addEventListener('input', applyFilters);
+
+    document.addEventListener('DOMContentLoaded', initEvidence);
+  </script>
+</body>
+</html>

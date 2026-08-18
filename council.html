@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decision Engine — SYD OMEGA</title>
+  <script src="/bg.js"></script>
+  <style>
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1400px;
+      padding: 20px;
+    }
+
+    .council-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .council-header h1 {
+      font-family: var(--D);
+      font-size: 32px;
+      color: var(--gold);
+      margin: 0;
+    }
+
+    .deliberation-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .deliberation-controls input,
+    .deliberation-controls select,
+    .deliberation-controls button {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px 12px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #E0D5B7;
+      border-radius: 4px;
+      transition: all 0.14s;
+    }
+
+    .deliberation-controls button {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: rgba(201, 168, 76, 0.3);
+      color: var(--gold);
+      cursor: pointer;
+    }
+
+    .deliberation-controls button:hover {
+      background: rgba(201, 168, 76, 0.2);
+      border-color: var(--gold);
+    }
+
+    .council-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 380px;
+      gap: 20px;
+      min-height: 600px;
+    }
+
+    .council-panel {
+      background: rgba(201, 168, 76, 0.04);
+      border: 1px solid rgba(201, 168, 76, 0.1);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-y: auto;
+      max-height: 800px;
+    }
+
+    .council-panel h2 {
+      font-family: var(--M);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--solar);
+      text-transform: uppercase;
+      margin: 0 0 12px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+    }
+
+    .deliberation-item {
+      padding: 10px;
+      margin-bottom: 8px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.15);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.14s;
+    }
+
+    .deliberation-item:hover {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: rgba(201, 168, 76, 0.25);
+    }
+
+    .deliberation-item.active {
+      background: rgba(0, 229, 255, 0.1);
+      border-color: rgba(0, 229, 255, 0.3);
+    }
+
+    .deliberation-subject {
+      font-family: var(--R);
+      font-weight: 600;
+      color: var(--gold);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .deliberation-meta {
+      font-family: var(--M);
+      font-size: 8px;
+      color: rgba(224, 213, 183, 0.6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .verdict-badge {
+      display: inline-block;
+      font-family: var(--M);
+      font-size: 7px;
+      padding: 3px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .verdict-badge.ready {
+      background: rgba(34, 197, 94, 0.3);
+      color: #BBF7D0;
+    }
+
+    .verdict-badge.not-ready {
+      background: rgba(239, 68, 68, 0.3);
+      color: #FECACA;
+    }
+
+    .verdict-badge.conditional {
+      background: rgba(255, 193, 7, 0.3);
+      color: #FDE047;
+    }
+
+    .verdict-badge.pending {
+      background: rgba(107, 114, 128, 0.3);
+      color: rgba(224, 213, 183, 0.7);
+    }
+
+    .role-card {
+      padding: 12px;
+      margin-bottom: 12px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    .role-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .role-icon {
+      font-size: 16px;
+    }
+
+    .role-title {
+      font-family: var(--R);
+      font-weight: 600;
+      color: var(--cyan);
+      font-size: 11px;
+      flex: 1;
+    }
+
+    .role-verdict {
+      font-family: var(--M);
+      font-size: 8px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      text-transform: uppercase;
+    }
+
+    .role-verdict.ready {
+      background: rgba(34, 197, 94, 0.2);
+      color: #BBF7D0;
+    }
+
+    .role-verdict.not-ready {
+      background: rgba(239, 68, 68, 0.2);
+      color: #FECACA;
+    }
+
+    .role-verdict.conditional {
+      background: rgba(255, 193, 7, 0.2);
+      color: #FDE047;
+    }
+
+    .role-verdict.undecided {
+      background: rgba(107, 114, 128, 0.2);
+      color: rgba(224, 213, 183, 0.6);
+    }
+
+    .confidence-bar {
+      display: inline-block;
+      width: 60px;
+      height: 4px;
+      background: rgba(201, 168, 76, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.8), rgba(34, 197, 94, 0.8));
+      border-radius: 2px;
+    }
+
+    .role-analysis {
+      display: none;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0, 229, 255, 0.1);
+    }
+
+    .role-analysis.expanded {
+      display: block;
+    }
+
+    .analysis-text {
+      font-family: var(--R);
+      font-size: 10px;
+      color: rgba(224, 213, 183, 0.9);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .evidence-section,
+    .risks-section,
+    .questions-section {
+      margin-bottom: 8px;
+    }
+
+    .section-label {
+      font-family: var(--M);
+      font-size: 8px;
+      color: var(--solar);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .item-list {
+      list-style: none;
+      margin: 0;
+      padding-left: 12px;
+    }
+
+    .item-list li {
+      font-family: var(--R);
+      font-size: 9px;
+      color: rgba(224, 213, 183, 0.8);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .item-list li:before {
+      content: "▪ ";
+      color: var(--cyan);
+      margin-right: 4px;
+    }
+
+    .synthesis-section {
+      display: none;
+    }
+
+    .synthesis-section.active {
+      display: block;
+    }
+
+    .verdict-display {
+      text-align: center;
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .verdict-state {
+      font-family: var(--D);
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .verdict-description {
+      font-family: var(--R);
+      font-size: 10px;
+      color: rgba(224, 213, 183, 0.8);
+    }
+
+    .consensus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .consensus-card {
+      padding: 12px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .consensus-value {
+      font-family: var(--D);
+      font-size: 24px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .consensus-label {
+      font-family: var(--M);
+      font-size: 8px;
+      color: rgba(224, 213, 183, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .confidence-display {
+      font-family: var(--M);
+      font-size: 10px;
+      color: rgba(224, 213, 183, 0.8);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .aggregated-list {
+      margin-bottom: 16px;
+    }
+
+    .aggregated-list h3 {
+      font-family: var(--M);
+      font-size: 9px;
+      color: var(--solar);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0 0 8px 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(224, 213, 183, 0.4);
+      font-family: var(--R);
+      font-size: 11px;
+    }
+
+    @media (max-width: 1200px) {
+      .council-container {
+        grid-template-columns: 1fr;
+      }
+
+      .council-panel {
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body data-page="council">
+  <div class="shell">
+    <aside id="omega-side" class="side"></aside>
+    <main class="main">
+      <div class="council-header">
+        <h1>⚖ DECISION ENGINE</h1>
+        <div class="deliberation-controls">
+          <input type="text" id="subjectInput" placeholder="Decision subject..." maxlength="200">
+          <select id="depthSelect">
+            <option value="quick">QUICK</option>
+            <option value="standard" selected>STANDARD</option>
+            <option value="deep">DEEP</option>
+          </select>
+          <button onclick="startDeliberation()">DELIBERATE</button>
+        </div>
+      </div>
+
+      <div class="council-container">
+        <!-- Left Panel: Deliberation History -->
+        <div class="council-panel">
+          <h2>Recent Deliberations</h2>
+          <div id="deliberationList">
+            <div class="empty-state">No deliberations yet</div>
+          </div>
+        </div>
+
+        <!-- Center Panel: Role Analyses -->
+        <div class="council-panel">
+          <h2>Council Analysis</h2>
+          <div id="roleAnalysisPanel">
+            <div class="empty-state">Start a deliberation to see role analyses</div>
+          </div>
+        </div>
+
+        <!-- Right Panel: Synthesis & Verdict -->
+        <div class="council-panel">
+          <h2>Synthesis & Verdict</h2>
+          <div id="synthesisPanel">
+            <div class="empty-state">Awaiting synthesis</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sb = window.OmegaSupabase?.sb;
+    if (!sb) {
+      document.getElementById('roleAnalysisPanel').innerHTML = '<div class="empty-state">SUPABASE NOT READY</div>';
+    }
+
+    let currentDeliberation = null;
+    let currentUser = null;
+
+    async function initCouncil() {
+      try {
+        const sess = await sb.auth.getSession();
+        currentUser = sess?.data?.session?.user?.id;
+        if (!currentUser) return;
+
+        await loadDeliberationHistory();
+      } catch (err) {
+        console.error('Council init error:', err);
+      }
+    }
+
+    async function loadDeliberationHistory() {
+      try {
+        const deliberations = await window.OmegaCouncil?.loadDeliberations(10) || [];
+        const list = document.getElementById('deliberationList');
+
+        if (deliberations.length === 0) {
+          list.innerHTML = '<div class="empty-state">No deliberations yet</div>';
+          return;
+        }
+
+        list.innerHTML = deliberations.map((d, idx) => {
+          const verdictClass = (d.final_verdict?.label || 'PENDING').toLowerCase().replace(' ', '-');
+          const timeStr = new Date(d.created_at).toLocaleDateString();
+          return `
+            <div class="deliberation-item" onclick="selectDeliberation(${idx})">
+              <div class="deliberation-subject">${esc(d.subject)}</div>
+              <div class="deliberation-meta">
+                <span>${timeStr}</span>
+                <span class="verdict-badge ${verdictClass}">${d.final_verdict?.label || 'PENDING'}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Failed to load deliberation history:', err);
+      }
+    }
+
+    function startDeliberation() {
+      const subject = document.getElementById('subjectInput').value?.trim();
+      const depth = document.getElementById('depthSelect').value;
+
+      if (!subject) {
+        alert('Enter a decision subject to deliberate');
+        return;
+      }
+
+      currentDeliberation = window.OmegaCouncil?.deliberate(subject, '', depth);
+      if (currentDeliberation) {
+        renderRoleAnalyses();
+        renderSynthesisPanel();
+      }
+    }
+
+    function renderRoleAnalyses() {
+      if (!currentDeliberation) return;
+
+      const panel = document.getElementById('roleAnalysisPanel');
+      const roles = window.OmegaCouncil?.getRoles() || [];
+
+      panel.innerHTML = roles.map(role => {
+        const roleData = currentDeliberation.roles.find(r => r.role === role.role);
+        const analysis = roleData?.analysis || 'Awaiting analysis...';
+        const confidence = roleData?.confidence || 0;
+        const verdict = roleData?.verdict || 'undecided';
+        const evidence = roleData?.evidence || [];
+        const risks = roleData?.risks || [];
+        const questions = roleData?.questions || [];
+
+        return `
+          <div class="role-card">
+            <div class="role-header" onclick="toggleRoleDetails(this)">
+              <span class="role-icon">${role.icon}</span>
+              <span class="role-title">${role.title}</span>
+              <span class="role-verdict ${verdict}">${verdict.toUpperCase()}</span>
+            </div>
+            <div style="font-family:var(--M); font-size:8px; color:rgba(224,213,183,0.6); margin-bottom:6px;">
+              <span class="confidence-bar"><div class="confidence-fill" style="width:${confidence * 100}%"></div></span>
+              <span>${(confidence * 100).toFixed(0)}%</span>
+            </div>
+            <div class="role-analysis">
+              <div class="analysis-text">${esc(analysis)}</div>
+              ${evidence.length > 0 ? `
+                <div class="evidence-section">
+                  <div class="section-label">Evidence</div>
+                  <ul class="item-list">${evidence.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
+                </div>
+              ` : ''}
+              ${risks.length > 0 ? `
+                <div class="risks-section">
+                  <div class="section-label">Risks</div>
+                  <ul class="item-list">${risks.map(r => `<li>${esc(r)}</li>`).join('')}</ul>
+                </div>
+              ` : ''}
+              ${questions.length > 0 ? `
+                <div class="questions-section">
+                  <div class="section-label">Questions</div>
+                  <ul class="item-list">${questions.map(q => `<li>${esc(q)}</li>`).join('')}</ul>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleRoleDetails(header) {
+      const details = header.nextElementSibling?.nextElementSibling;
+      if (details?.classList.contains('role-analysis')) {
+        details.classList.toggle('expanded');
+      }
+    }
+
+    function renderSynthesisPanel() {
+      if (!currentDeliberation) return;
+
+      const panel = document.getElementById('synthesisPanel');
+
+      if (currentDeliberation.status !== 'complete') {
+        panel.innerHTML = '<div class="empty-state">Complete deliberation to see synthesis</div>';
+        return;
+      }
+
+      const syn = currentDeliberation.synthesis;
+      const verdict = currentDeliberation.final_verdict;
+      const verdictClass = (verdict.label || 'PENDING').toLowerCase().replace(' ', '-');
+
+      panel.innerHTML = `
+        <div class="verdict-display">
+          <div class="verdict-state" style="color:${verdict.color}">${verdict.label}</div>
+          <div class="verdict-description">${esc(verdict.description)}</div>
+        </div>
+
+        <div class="consensus-grid">
+          <div class="consensus-card">
+            <div class="consensus-value">${syn.consensus_ready}</div>
+            <div class="consensus-label">Ready</div>
+          </div>
+          <div class="consensus-card">
+            <div class="consensus-value">${syn.consensus_not_ready}</div>
+            <div class="consensus-label">Not Ready</div>
+          </div>
+          <div class="consensus-card">
+            <div class="consensus-value">${syn.consensus_conditional}</div>
+            <div class="consensus-label">Conditional</div>
+          </div>
+        </div>
+
+        <div class="confidence-display">
+          Avg Confidence: <strong>${(syn.avg_confidence * 100).toFixed(0)}%</strong>
+        </div>
+
+        ${syn.disagreements ? '<div style="font-family:var(--M); font-size:9px; color:var(--cyan); margin-bottom:12px; padding:8px; background:rgba(0,229,255,0.05); border-radius:4px; text-align:center;">⚠ Council disagreement detected</div>' : ''}
+
+        ${syn.all_evidence?.length > 0 ? `
+          <div class="aggregated-list">
+            <h3>Aggregated Evidence</h3>
+            <ul class="item-list">${syn.all_evidence.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
+          </div>
+        ` : ''}
+
+        ${syn.all_risks?.length > 0 ? `
+          <div class="aggregated-list">
+            <h3>Aggregated Risks</h3>
+            <ul class="item-list">${syn.all_risks.map(r => `<li>${esc(r)}</li>`).join('')}</ul>
+          </div>
+        ` : ''}
+
+        ${syn.unresolved_questions?.length > 0 ? `
+          <div class="aggregated-list">
+            <h3>Unresolved Questions</h3>
+            <ul class="item-list">${syn.unresolved_questions.map(q => `<li>${esc(q)}</li>`).join('')}</ul>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function selectDeliberation(idx) {
+      const deliberations = window.OmegaCouncil?.loadDeliberations(10);
+      if (deliberations && deliberations[idx]) {
+        currentDeliberation = deliberations[idx];
+        renderRoleAnalyses();
+        renderSynthesisPanel();
+        document.querySelectorAll('.deliberation-item').forEach((item, i) => {
+          item.classList.toggle('active', i === idx);
+        });
+      }
+    }
+
+    function esc(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    document.addEventListener('DOMContentLoaded', initCouncil);
+  </script>
+</body>
+</html>

@@ -1456,6 +1456,12 @@ setTimeout(function(){
 })();
 
 
+  /* Decision & deliberation engine */
+  if(!document.querySelector('script[data-omega-council]')){
+    var sc=document.createElement('script');sc.src='/omega-council.js';
+    sc.setAttribute('data-omega-council','1');sc.defer=true;
+    if(document.body)document.body.appendChild(sc);
+  }
   /* Presence engine */
   if(!document.querySelector('script[data-omega-presence]')){
     var sp=document.createElement('script');sp.src='/omega-presence.js';

@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Graph Anomalies — SYD OMEGA</title>
+  <script src="/bg.js"></script>
+  <style>
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1400px;
+      padding: 20px;
+    }
+
+    .anomalies-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .anomalies-header h1 {
+      font-family: var(--D);
+      font-size: 32px;
+      color: var(--gold);
+      margin: 0;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-controls select,
+    .filter-controls input {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #E0D5B7;
+      border-radius: 4px;
+    }
+
+    .filter-controls button {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px 16px;
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: var(--gold);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.14s;
+    }
+
+    .filter-controls button:hover {
+      background: rgba(201, 168, 76, 0.2);
+      border-color: var(--gold);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--D);
+      font-size: 28px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: var(--M);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: rgba(224, 213, 183, 0.7);
+      text-transform: uppercase;
+    }
+
+    .anomaly-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .anomaly-table thead {
+      background: rgba(201, 168, 76, 0.04);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .anomaly-table th {
+      font-family: var(--M);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--solar);
+      padding: 12px;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .anomaly-table td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.05);
+      font-size: 12px;
+    }
+
+    .anomaly-table tbody tr:hover {
+      background: rgba(201, 168, 76, 0.02);
+    }
+
+    .anomaly-type {
+      font-family: var(--M);
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 4px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .anomaly-low-confidence {
+      background: rgba(255, 193, 7, 0.2);
+      border: 1px solid rgba(255, 193, 7, 0.4);
+      color: #FFC107;
+    }
+
+    .anomaly-contradiction {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #EF4444;
+    }
+
+    .anomaly-orphan {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #22C55E;
+    }
+
+    .entity-name {
+      font-family: var(--R);
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .severity-badge {
+      font-family: var(--M);
+      font-size: 9px;
+      padding: 4px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .severity-high {
+      background: rgba(239, 68, 68, 0.3);
+      color: #FECACA;
+    }
+
+    .severity-medium {
+      background: rgba(255, 193, 7, 0.3);
+      color: #FDE047;
+    }
+
+    .severity-low {
+      background: rgba(34, 197, 94, 0.3);
+      color: #BBF7D0;
+    }
+
+    .action-btn {
+      font-family: var(--M);
+      font-size: 9px;
+      padding: 6px 12px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.14s;
+    }
+
+    .action-btn:hover {
+      background: rgba(0, 229, 255, 0.2);
+      border-color: var(--cyan);
+    }
+
+    .confidence-bar {
+      display: inline-block;
+      width: 60px;
+      height: 6px;
+      background: rgba(201, 168, 76, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.8), rgba(34, 197, 94, 0.8));
+      border-radius: 3px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: rgba(224, 213, 183, 0.5);
+    }
+
+    @media (max-width: 900px) {
+      .anomaly-table {
+        font-size: 11px;
+      }
+
+      .anomaly-table th,
+      .anomaly-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body data-page="graph-anomalies">
+  <div class="shell">
+    <aside id="omega-side" class="side"></aside>
+    <main class="main">
+      <div class="anomalies-header">
+        <h1>⚠ GRAPH ANOMALIES</h1>
+        <div class="filter-controls">
+          <select id="anomalyTypeFilter">
+            <option value="">ALL TYPES</option>
+            <option value="low-confidence">LOW CONFIDENCE</option>
+            <option value="contradiction">CONTRADICTION</option>
+            <option value="orphan">ORPHAN ENTITIES</option>
+          </select>
+          <select id="severityFilter">
+            <option value="">ALL SEVERITIES</option>
+            <option value="high">HIGH</option>
+            <option value="medium">MEDIUM</option>
+            <option value="low">LOW</option>
+          </select>
+          <button onclick="resetFilters()">RESET</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalAnomalies">0</div>
+          <div class="stat-label">Total Anomalies</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="highSeverity">0</div>
+          <div class="stat-label">High Severity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avgConfidence">0</div>
+          <div class="stat-label">Avg Confidence</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="reviewedCount">0</div>
+          <div class="stat-label">Reviewed</div>
+        </div>
+      </div>
+
+      <table class="anomaly-table">
+        <thead>
+          <tr>
+            <th style="width: 30%;">Entity / Relationship</th>
+            <th style="width: 12%;">Type</th>
+            <th style="width: 15%;">Severity</th>
+            <th style="width: 20%;">Confidence</th>
+            <th style="width: 15%;">Details</th>
+            <th style="width: 8%;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="anomalyTable">
+          <tr>
+            <td colspan="6" class="empty-state">LOADING ANOMALIES...</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <script>
+    const sb = window.OmegaSupabase?.sb;
+    if (!sb) {
+      document.getElementById('anomalyTable').innerHTML = '<tr><td colspan="6" class="empty-state">SUPABASE NOT READY</td></tr>';
+    }
+
+    let allAnomalies = [];
+    let currentUser = null;
+
+    async function initAnomalies() {
+      try {
+        const sess = await sb.auth.getSession();
+        currentUser = sess?.data?.session?.user?.id;
+        if (!currentUser) return;
+
+        await loadAnomalyData();
+      } catch (err) {
+        console.error('Anomalies init error:', err);
+      }
+    }
+
+    async function loadAnomalyData() {
+      try {
+        const { data: entities, error: entError } = await sb
+          .from('graph_entities')
+          .select('*')
+          .eq('user_id', currentUser);
+
+        if (entError) throw entError;
+
+        const { data: relationships, error: relError } = await sb
+          .from('graph_relationships')
+          .select('*')
+          .eq('user_id', currentUser);
+
+        if (relError) throw relError;
+
+        allAnomalies = detectAnomalies(entities || [], relationships || []);
+        updateStats();
+        renderAnomalies(allAnomalies);
+      } catch (err) {
+        console.error('Failed to load anomaly data:', err);
+        document.getElementById('anomalyTable').innerHTML = '<tr><td colspan="6" class="empty-state">ERROR LOADING DATA</td></tr>';
+      }
+    }
+
+    function detectAnomalies(entities, relationships) {
+      const anomalies = [];
+
+      entities.forEach(entity => {
+        if (entity.confidence_score < 0.75) {
+          anomalies.push({
+            type: 'low-confidence',
+            severity: entity.confidence_score < 0.5 ? 'high' : 'medium',
+            subject: entity.display_name || entity.canonical_name,
+            entityType: entity.entity_type,
+            confidence: entity.confidence_score,
+            details: `Low confidence: ${(entity.confidence_score * 100).toFixed(0)}%`,
+            reviewed: entity.verified
+          });
+        }
+      });
+
+      relationships.forEach(rel => {
+        if (rel.strength_score < 0.7) {
+          anomalies.push({
+            type: 'low-confidence',
+            severity: rel.strength_score < 0.5 ? 'medium' : 'low',
+            subject: `${rel.source_entity_id} ⟷ ${rel.target_entity_id}`,
+            entityType: rel.relationship_type,
+            confidence: rel.strength_score,
+            details: `Weak relationship: ${(rel.strength_score * 100).toFixed(0)}%`,
+            reviewed: rel.verified
+          });
+        }
+      });
+
+      const entityByName = new Map(entities.map(e => [e.canonical_name, e]));
+      relationships.forEach(rel => {
+        const source = entityByName.get(rel.source_entity_id);
+        const target = entityByName.get(rel.target_entity_id);
+
+        if (!source || !target) {
+          anomalies.push({
+            type: 'orphan',
+            severity: 'high',
+            subject: rel.source_entity_id || rel.target_entity_id,
+            entityType: 'orphan_relationship',
+            confidence: 0,
+            details: `Missing entity reference`,
+            reviewed: false
+          });
+        }
+      });
+
+      return anomalies.sort((a, b) => {
+        const severityOrder = { high: 0, medium: 1, low: 2 };
+        return severityOrder[a.severity] - severityOrder[b.severity];
+      });
+    }
+
+    function updateStats() {
+      document.getElementById('totalAnomalies').textContent = allAnomalies.length;
+
+      const highSev = allAnomalies.filter(a => a.severity === 'high').length;
+      document.getElementById('highSeverity').textContent = highSev;
+
+      const avgConf = allAnomalies.length > 0
+        ? (allAnomalies.reduce((sum, a) => sum + a.confidence, 0) / allAnomalies.length * 100).toFixed(0)
+        : 0;
+      document.getElementById('avgConfidence').textContent = avgConf + '%';
+
+      const reviewed = allAnomalies.filter(a => a.reviewed).length;
+      document.getElementById('reviewedCount').textContent = reviewed;
+    }
+
+    function renderAnomalies(data) {
+      if (!data.length) {
+        document.getElementById('anomalyTable').innerHTML = '<tr><td colspan="6" class="empty-state">NO ANOMALIES DETECTED</td></tr>';
+        return;
+      }
+
+      const html = data.map((anomaly, idx) => {
+        const typeLabel = anomaly.type === 'low-confidence' ? 'LOW CONFIDENCE'
+          : anomaly.type === 'contradiction' ? 'CONTRADICTION'
+          : 'ORPHAN ENTITY';
+        const typeClass = `anomaly-${anomaly.type}`;
+
+        return `
+          <tr>
+            <td>
+              <div class="entity-name">${anomaly.subject.substring(0, 40)}</div>
+            </td>
+            <td>
+              <span class="anomaly-type ${typeClass}">${typeLabel}</span>
+            </td>
+            <td>
+              <span class="severity-badge severity-${anomaly.severity}">${anomaly.severity.toUpperCase()}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <div class="confidence-bar"><div class="confidence-fill" style="width: ${Math.max(anomaly.confidence * 100, 5)}%"></div></div>
+                <span>${(anomaly.confidence * 100).toFixed(0)}%</span>
+              </div>
+            </td>
+            <td style="font-size: 11px;">${anomaly.details}</td>
+            <td>
+              <button class="action-btn" onclick="reviewAnomaly(${idx})">REVIEW</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('anomalyTable').innerHTML = html;
+    }
+
+    function applyFilters() {
+      const typeFilter = document.getElementById('anomalyTypeFilter').value;
+      const severityFilter = document.getElementById('severityFilter').value;
+
+      const filtered = allAnomalies.filter(a => {
+        if (typeFilter && a.type !== typeFilter) return false;
+        if (severityFilter && a.severity !== severityFilter) return false;
+        return true;
+      });
+
+      renderAnomalies(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('anomalyTypeFilter').value = '';
+      document.getElementById('severityFilter').value = '';
+      renderAnomalies(allAnomalies);
+    }
+
+    function reviewAnomaly(idx) {
+      const anomaly = allAnomalies[idx];
+      alert(`Review: ${anomaly.subject}\nType: ${anomaly.type}\nSeverity: ${anomaly.severity}\n\nJump to graph-admin.html for curation`);
+    }
+
+    document.getElementById('anomalyTypeFilter').addEventListener('change', applyFilters);
+    document.getElementById('severityFilter').addEventListener('change', applyFilters);
+
+    document.addEventListener('DOMContentLoaded', initAnomalies);
+  </script>
+</body>
+</html>

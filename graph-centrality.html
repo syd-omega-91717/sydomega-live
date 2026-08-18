@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entity Centrality — SYD OMEGA</title>
+  <script src="/bg.js"></script>
+  <style>
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1400px;
+      padding: 20px;
+    }
+
+    .centrality-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .centrality-header h1 {
+      font-family: var(--D);
+      font-size: 32px;
+      color: var(--gold);
+      margin: 0;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-controls select,
+    .filter-controls input {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #E0D5B7;
+      border-radius: 4px;
+    }
+
+    .filter-controls button {
+      font-family: var(--M);
+      font-size: 10px;
+      padding: 8px 16px;
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: var(--gold);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.14s;
+    }
+
+    .filter-controls button:hover {
+      background: rgba(201, 168, 76, 0.2);
+      border-color: var(--gold);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      padding: 16px;
+      background: rgba(201, 168, 76, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--D);
+      font-size: 28px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: var(--M);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: rgba(224, 213, 183, 0.7);
+      text-transform: uppercase;
+    }
+
+    .centrality-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .centrality-table thead {
+      background: rgba(201, 168, 76, 0.04);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .centrality-table th {
+      font-family: var(--M);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--solar);
+      padding: 12px;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .centrality-table td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.05);
+      font-size: 12px;
+    }
+
+    .centrality-table tbody tr:hover {
+      background: rgba(201, 168, 76, 0.02);
+    }
+
+    .entity-name {
+      font-family: var(--R);
+      font-weight: 600;
+      color: var(--gold);
+      cursor: pointer;
+    }
+
+    .entity-name:hover {
+      text-decoration: underline;
+    }
+
+    .entity-type {
+      font-family: var(--M);
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      border-radius: 3px;
+      display: inline-block;
+      text-transform: uppercase;
+    }
+
+    .connection-count {
+      font-family: var(--D);
+      font-size: 16px;
+      color: var(--cyan);
+    }
+
+    .centrality-score {
+      position: relative;
+      height: 20px;
+      background: rgba(201, 168, 76, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .centrality-fill {
+      height: 100%;
+      background: linear-gradient(90deg, rgba(201, 168, 76, 0.8), rgba(0, 229, 255, 0.6));
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .centrality-label {
+      font-family: var(--M);
+      font-size: 9px;
+      color: var(--muted);
+      padding-top: 4px;
+    }
+
+    .hub-badge {
+      font-family: var(--M);
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      background: rgba(63, 178, 127, 0.2);
+      border: 1px solid rgba(63, 178, 127, 0.4);
+      color: var(--green);
+      border-radius: 3px;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: rgba(224, 213, 183, 0.5);
+    }
+
+    .explore-btn {
+      font-family: var(--M);
+      font-size: 9px;
+      padding: 6px 12px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.14s;
+    }
+
+    .explore-btn:hover {
+      background: rgba(0, 229, 255, 0.2);
+      border-color: var(--cyan);
+    }
+
+    @media (max-width: 900px) {
+      .centrality-table {
+        font-size: 11px;
+      }
+
+      .centrality-table th,
+      .centrality-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body data-page="graph-centrality">
+  <div class="shell">
+    <aside id="omega-side" class="side"></aside>
+    <main class="main">
+      <div class="centrality-header">
+        <h1>◆ ENTITY CENTRALITY</h1>
+        <div class="filter-controls">
+          <select id="typeFilter">
+            <option value="">ALL ENTITY TYPES</option>
+          </select>
+          <input type="text" id="searchFilter" placeholder="SEARCH ENTITIES" maxlength="50">
+          <button onclick="resetFilters()">RESET</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalEntities">0</div>
+          <div class="stat-label">Total Entities</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="hubCount">0</div>
+          <div class="stat-label">Hub Entities (8+)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avgConnections">0</div>
+          <div class="stat-label">Avg Connections</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="maxConnections">0</div>
+          <div class="stat-label">Max Connections</div>
+        </div>
+      </div>
+
+      <table class="centrality-table">
+        <thead>
+          <tr>
+            <th style="width: 30%;">Entity Name</th>
+            <th style="width: 15%;">Type</th>
+            <th style="width: 12%;">Connections</th>
+            <th style="width: 35%;">Centrality Score</th>
+            <th style="width: 8%;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="centralityTable">
+          <tr>
+            <td colspan="5" class="empty-state">LOADING CENTRALITY DATA...</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <script>
+    const sb = window.OmegaSupabase?.sb;
+    if (!sb) {
+      document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">SUPABASE NOT READY</td></tr>';
+    }
+
+    let allCentralityData = [];
+    let currentUser = null;
+
+    async function initCentrality() {
+      try {
+        const sess = await sb.auth.getSession();
+        currentUser = sess?.data?.session?.user?.id;
+        if (!currentUser) return;
+
+        await loadCentralityData();
+      } catch (err) {
+        console.error('Centrality init error:', err);
+      }
+    }
+
+    async function loadCentralityData() {
+      try {
+        // Fetch all entities for this user
+        const { data: entities, error: entError } = await sb
+          .from('graph_entities')
+          .select('*')
+          .eq('user_id', currentUser);
+
+        if (entError) throw entError;
+
+        if (!entities || entities.length === 0) {
+          document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">NO ENTITIES FOUND</td></tr>';
+          return;
+        }
+
+        // Fetch all relationships for this user
+        const { data: relationships, error: relError } = await sb
+          .from('graph_relationships')
+          .select('*')
+          .eq('user_id', currentUser);
+
+        if (relError) throw relError;
+
+        // Calculate centrality (connection count) for each entity
+        const centralityMap = {};
+        entities.forEach(e => {
+          centralityMap[e.canonical_name] = {
+            entity: e,
+            connectionCount: 0,
+            connectedEntities: new Set()
+          };
+        });
+
+        (relationships || []).forEach(r => {
+          if (centralityMap[r.source_entity_id]) {
+            centralityMap[r.source_entity_id].connectionCount++;
+            centralityMap[r.source_entity_id].connectedEntities.add(r.target_entity_id);
+          }
+          if (centralityMap[r.target_entity_id]) {
+            centralityMap[r.target_entity_id].connectionCount++;
+            centralityMap[r.target_entity_id].connectedEntities.add(r.source_entity_id);
+          }
+        });
+
+        // Convert to array and sort by connection count
+        allCentralityData = Object.values(centralityMap)
+          .sort((a, b) => b.connectionCount - a.connectionCount);
+
+        updateCentralityStats();
+        renderCentralityTable(allCentralityData);
+
+        // Populate entity type filter
+        const types = [...new Set(entities.map(e => e.entity_type))];
+        const typeFilter = document.getElementById('typeFilter');
+        types.forEach(type => {
+          const opt = document.createElement('option');
+          opt.value = type;
+          opt.textContent = type.toUpperCase();
+          typeFilter.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Failed to load centrality data:', err);
+        document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">ERROR LOADING DATA</td></tr>';
+      }
+    }
+
+    function updateCentralityStats() {
+      if (!allCentralityData.length) {
+        document.getElementById('totalEntities').textContent = '0';
+        document.getElementById('hubCount').textContent = '0';
+        document.getElementById('avgConnections').textContent = '0';
+        document.getElementById('maxConnections').textContent = '0';
+        return;
+      }
+
+      document.getElementById('totalEntities').textContent = allCentralityData.length;
+
+      const hubs = allCentralityData.filter(d => d.connectionCount >= 8).length;
+      document.getElementById('hubCount').textContent = hubs;
+
+      const totalConnections = allCentralityData.reduce((sum, d) => sum + d.connectionCount, 0);
+      const avgConnections = (totalConnections / allCentralityData.length).toFixed(1);
+      document.getElementById('avgConnections').textContent = avgConnections;
+
+      const maxConnections = Math.max(...allCentralityData.map(d => d.connectionCount));
+      document.getElementById('maxConnections').textContent = maxConnections;
+    }
+
+    function renderCentralityTable(data) {
+      if (!data.length) {
+        document.getElementById('centralityTable').innerHTML = '<tr><td colspan="5" class="empty-state">NO RESULTS</td></tr>';
+        return;
+      }
+
+      const maxConn = Math.max(...data.map(d => d.connectionCount)) || 1;
+
+      const html = data.map((d, idx) => {
+        const scorePercent = (d.connectionCount / maxConn) * 100;
+        const isHub = d.connectionCount >= 8;
+
+        return `
+          <tr>
+            <td>
+              <div class="entity-name" onclick="showEntityDetails('${d.entity.canonical_name}')">
+                ${d.entity.display_name || d.entity.canonical_name}
+              </div>
+            </td>
+            <td>
+              <span class="entity-type">${d.entity.entity_type}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="connection-count">${d.connectionCount}</span>
+                ${isHub ? '<span class="hub-badge">HUB</span>' : ''}
+              </div>
+            </td>
+            <td>
+              <div class="centrality-score">
+                <div class="centrality-fill" style="width: ${scorePercent}%"></div>
+              </div>
+              <div class="centrality-label">${scorePercent.toFixed(0)}% of max</div>
+            </td>
+            <td>
+              <button class="explore-btn" onclick="exploreEntity('${d.entity.canonical_name}')">EXPLORE</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('centralityTable').innerHTML = html;
+    }
+
+    function applyFilters() {
+      const typeFilter = document.getElementById('typeFilter').value;
+      const searchFilter = (document.getElementById('searchFilter').value || '').toLowerCase();
+
+      const filtered = allCentralityData.filter(d => {
+        if (typeFilter && d.entity.entity_type !== typeFilter) return false;
+        if (searchFilter && !d.entity.canonical_name.toLowerCase().includes(searchFilter) &&
+            !(d.entity.display_name && d.entity.display_name.toLowerCase().includes(searchFilter))) {
+          return false;
+        }
+        return true;
+      });
+
+      renderCentralityTable(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('typeFilter').value = '';
+      document.getElementById('searchFilter').value = '';
+      renderCentralityTable(allCentralityData);
+    }
+
+    function showEntityDetails(entityName) {
+      alert(`Details for ${entityName} - Jump to graph-admin.html for full curation`);
+      // In a real implementation, this would navigate to graph-admin.html with the entity selected
+    }
+
+    function exploreEntity(entityName) {
+      // Navigate to entity relationship explorer
+      window.location.href = `/graph-explorer.html?entity=${encodeURIComponent(entityName)}`;
+    }
+
+    document.getElementById('typeFilter').addEventListener('change', applyFilters);
+    document.getElementById('searchFilter').addEventListener('input', applyFilters);
+
+    document.addEventListener('DOMContentLoaded', initCentrality);
+  </script>
+</body>
+</html>

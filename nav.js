@@ -40,12 +40,12 @@
     portfolio:'invest',privacy:'govern',revenue:'invest',
     roadmap:'govern',series:'media',sovereign_ai:'arena',
     treasury:'invest',trailers:'media',triads:'achieve',
-    universe:'media',wallet:'invest',
+    universe:'media',wallet:'invest',council:'govern',
     'sovereign-ai':'arena','design-system':'govern',
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
-    affirmations:'services',body:'services',breath:'services',fasting:'services',gratitude:'services',habits:'services',journal:'services',meditate:'services',mood:'services',nutrition:'services',oath:'services',physiology:'services',rituals:'services',sleep:'services',stoic:'services',targets:'services',water:'services',weekly:'services',workout:'services',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos',graphify:'intel','graph-admin':'intel','graph-timeline':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media',
+    affirmations:'services',body:'services',breath:'services',fasting:'services',gratitude:'services',habits:'services',journal:'services',meditate:'services',mood:'services',nutrition:'services',oath:'services',physiology:'services',rituals:'services',sleep:'services',stoic:'services',targets:'services',water:'services',weekly:'services',workout:'services',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos',graphify:'intel','graph-admin':'intel','graph-timeline':'intel','graph-centrality':'intel','graph-explorer':'intel','graph-anomalies':'intel','graph-evidence':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media',
   };
 
   var SECTIONS=[
@@ -93,7 +93,7 @@
     {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intelligence.html',col:'#9B6BF0',
      sub:[['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICT','/prediction.html'],
           ['intelligence','INTELLIGENCE','/intelligence.html'],['automation','AUTOMATION','/automation.html'],
-          ['compliance','GOVERNANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html'],['grid','THE GRID','/matrix.html#grid'],['charter','CHARTER','/matrix.html#charter'],['city','THE CITY','/city.html'],['horoscope','HOROSCOPE','/horoscope.html'],['elements','ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html'],['hall','SOVEREIGN HALL','/hall.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},
+          ['compliance','GOVERNANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html'],['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html'],['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html'],['grid','THE GRID','/matrix.html#grid'],['charter','CHARTER','/matrix.html#charter'],['city','THE CITY','/city.html'],['horoscope','HOROSCOPE','/horoscope.html'],['elements','ELEMENTS','/elements.html'],['ledger','ASSET LEDGER','/ledger.html'],['hall','SOVEREIGN HALL','/hall.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},
     /* ── NEW SECTIONS — Full 102-page coverage ─────────────── */
     {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#9B6BF0',
      sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['chatbot','CONCIERGE','/chatbot.html'],['analytics','ANALYTICS','/analytics.html'],
@@ -101,7 +101,7 @@
           ['automation','AUTOMATION','/automation.html'],['prediction','ORACLE','/prediction.html'],
           ['research','RESEARCH','/research.html'],['queue','SOVEREIGN QUEUE','/queue.html']]},
     {key:'govern', icon:'\u2736', label:'GOVERN',  href:'/governance.html',   col:'#3fb27f',
-     sub:[['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
+     sub:[['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['enterprise','ENTERPRISE','/enterprise.html'],['compliance','COMPLIANCE','/compliance.html'],
           ['privacy','PRIVACY','/privacy.html'],['roadmap','ROADMAP','/roadmap.html'],
           ['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],

@@ -40,7 +40,7 @@
     portfolio:'invest',privacy:'govern',revenue:'invest',
     roadmap:'govern',series:'media',sovereign_ai:'arena',
     treasury:'invest',trailers:'media',triads:'achieve',
-    universe:'media',wallet:'invest',council:'govern',
+    universe:'media',wallet:'invest',council:'govern',hercules:'achieve',
     'sovereign-ai':'arena','design-system':'govern',
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
@@ -116,7 +116,7 @@
           ['gates','AUTHORITY GATES','/gates.html'],['grades','GRADES','/grades.html'],
           ['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
           ['ascension','ASCENSION','/ascension.html'],['kings','KINGS LATTICE','/kings.html'],
-          ['triads','TRIADS','/triads.html'],['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html']]},
+          ['triads','TRIADS','/triads.html'],['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html']]},
     {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/heritage.html',     col:'#3fb27f',
      sub:[['heritage','HERITAGE','/heritage.html'],['bloodline','BLOODLINE','/bloodline.html'],
           ['character','CHARACTER','/character.html'],['identity','IDENTITY','/identity.html'],

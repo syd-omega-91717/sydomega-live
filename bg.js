@@ -1462,6 +1462,12 @@ setTimeout(function(){
     sc.setAttribute('data-omega-council','1');sc.defer=true;
     if(document.body)document.body.appendChild(sc);
   }
+  /* Labors & trials tracking system */
+  if(!document.querySelector('script[data-omega-hercules]')){
+    var sh=document.createElement('script');sh.src='/omega-hercules.js';
+    sh.setAttribute('data-omega-hercules','1');sh.defer=true;
+    if(document.body)document.body.appendChild(sh);
+  }
   /* Presence engine */
   if(!document.querySelector('script[data-omega-presence]')){
     var sp=document.createElement('script');sp.src='/omega-presence.js';

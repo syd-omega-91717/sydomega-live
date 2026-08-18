@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hercules — Labors & Trials</title>
+  <script src="/bg.js" defer></script>
+  <style>
+    .labors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    .labor-card { padding: 1.5rem; border-left: 4px solid var(--gold); }
+    .labor-num { font-size: 0.85rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+    .labor-title { font-size: 1.3rem; margin: 0.5rem 0; font-family: var(--D); }
+    .labor-desc { font-size: 0.95rem; line-height: 1.6; color: var(--ink); opacity: 0.9; margin: 1rem 0; }
+    .labor-progress { margin-top: 1rem; }
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--gold)); transition: width 0.3s ease; }
+    .trial-meta { display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.9rem; }
+    .trial-tag { padding: 0.25rem 0.75rem; background: rgba(255,255,255,0.05); border-radius: 12px; }
+    #labors-list { min-height: 400px; }
+  </style>
+</head>
+<body data-page="hercules">
+<div class="shell">
+  <aside id="omega-side"></aside>
+  <main class="main">
+    <section class="main-header">
+      <h1>⚔ Hercules</h1>
+      <p>Twelve Labors · Trials & Triumphs</p>
+    </section>
+
+    <section class="main-content">
+      <div class="card" style="margin-bottom: 2rem;">
+        <h2>The Twelve Labors</h2>
+        <p>Legendary trials that forge strength. Track your own labors, triumphs, and the obstacles overcome.</p>
+      </div>
+
+      <div id="labors-list" class="labors-grid">
+        <!-- Loaded dynamically -->
+      </div>
+    </section>
+
+    <section class="main-footer">
+      <small>Hercules — Strength through trials. Every labor completed is wisdom earned.</small>
+    </section>
+  </main>
+</div>
+
+<script>
+const LABORS = [
+  { num: 1, title: 'Nemean Lion', desc: 'Conquer the invulnerable beast — face what cannot be harmed by ordinary means', theme: 'courage', difficulty: 'legendary' },
+  { num: 2, title: 'Lernaean Hydra', desc: 'Defeat the ever-regenerating challenge — each obstacle solved creates new ones', theme: 'persistence', difficulty: 'extreme' },
+  { num: 3, title: 'Golden Hind', desc: 'Capture the swift and elusive goal — patience yields what force cannot', theme: 'wisdom', difficulty: 'high' },
+  { num: 4, title: 'Erymanthian Boar', desc: 'Master the wild and untamed — transform chaos through discipline', theme: 'mastery', difficulty: 'high' },
+  { num: 5, title: 'Augean Stables', desc: 'Clean the accumulated filth of neglect — massive scale, simple solution', theme: 'clarity', difficulty: 'medium' },
+  { num: 6, title: 'Stymphalian Birds', desc: 'Scatter the parasites — act with precision and timing', theme: 'discernment', difficulty: 'medium' },
+  { num: 7, title: 'Cretan Bull', desc: 'Tame the raging force — submission requires understanding', theme: 'restraint', difficulty: 'high' },
+  { num: 8, title: 'Mares of Diomedes', desc: 'Feed the devouring hunger — confront what consumes without satisfaction', theme: 'control', difficulty: 'extreme' },
+  { num: 9, title: 'Girdle of Hippolyta', desc: 'Navigate the political labyrinth — diplomacy where force fails', theme: 'strategy', difficulty: 'medium' },
+  { num: 10, title: 'Cattle of Geryon', desc: 'Journey to the ends of the known world — expand your boundaries', theme: 'vision', difficulty: 'high' },
+  { num: 11, title: 'Apples of Hesperides', desc: 'Find the golden treasure in impossible places — seek aid from unexpected allies', theme: 'humility', difficulty: 'extreme' },
+  { num: 12, title: 'Cerberus', desc: 'Return from the underworld itself — the final trial tests everything learned', theme: 'transcendence', difficulty: 'legendary' }
+];
+
+const THEMES = {
+  courage: { color: '#EF4444', icon: '⚔' },
+  persistence: { color: '#F59E0B', icon: '🔥' },
+  wisdom: { color: '#3B82F6', icon: '🧠' },
+  mastery: { color: '#8B5CF6', icon: '✦' },
+  clarity: { color: '#06B6D4', icon: '💎' },
+  discernment: { color: '#EC4899', icon: '👁' },
+  restraint: { color: '#6B7280', icon: '⚖' },
+  control: { color: '#10B981', icon: '🌪' },
+  strategy: { color: '#D97706', icon: '♟' },
+  vision: { color: '#F97316', icon: '🔭' },
+  humility: { color: '#06B6D4', icon: '🙏' },
+  transcendence: { color: '#A855F7', icon: '✨' }
+};
+
+function renderLabors() {
+  const list = document.getElementById('labors-list');
+  if (!list) return;
+  list.innerHTML = LABORS.map(labor => {
+    const theme = THEMES[labor.theme];
+    const progress = Math.floor(Math.random() * 100);
+    return `
+      <div class="card labor-card" style="border-left-color: ${theme.color}">
+        <div class="labor-num">${theme.icon} Labor ${labor.num}</div>
+        <div class="labor-title">${labor.title}</div>
+        <p class="labor-desc">${labor.desc}</p>
+        <div class="labor-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress}%; background: linear-gradient(90deg, ${theme.color}, ${theme.color}dd);"></div>
+          </div>
+          <div style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--muted);">${progress}% complete</div>
+        </div>
+        <div class="trial-meta">
+          <span class="trial-tag" style="border-left: 2px solid ${theme.color}">Theme: ${labor.theme}</span>
+          <span class="trial-tag" style="border-left: 2px solid ${theme.color}">Difficulty: ${labor.difficulty}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.addEventListener('DOMContentLoaded', renderLabors);
+</script>
+</body>
+</html>

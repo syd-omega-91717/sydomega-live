@@ -2032,6 +2032,42 @@ orphaned file.
   - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
     recorded remotely as `20260818064201_drop_policies_redundant_vs_all_policy`, mirrored locally
     at `supabase/migrations/`.
+- **[Fixed — fourth RLS-consolidation pass, real bug found and fixed in the detector itself]
+  28 more `multiple_permissive_policies` findings resolved by dropping, 171→123.** Continuing
+  the follow-up at explicit request. Before running the same "redundant-vs-ALL-policy" pattern
+  again, re-derived the detector script from scratch rather than assuming the previous pass's
+  logic was complete — and found it had a real bug: `split_top_or()` only split an expression on
+  `OR` at bracket-depth 0, but several ALL-policy conditions are wrapped in an *extra* pair of
+  parens around the whole OR expression (e.g. `((auth.uid()=user_id) OR is_platform_owner())`),
+  pushing the actual `OR` to depth 1 and hiding it from the splitter — so the previous pass's
+  detector silently treated these as a single opaque clause instead of two ORed ones. This was a
+  false-negative bug (missed real, safe redundancies), not a false-positive one — nothing unsafe
+  was ever proposed by the buggy version, it just found fewer of the safe cases than actually
+  existed. Confirmed the fix by hand against `certificates` before trusting it: its "own
+  certificates read"/"cert_self" policies (`auth.uid()=user_id`) should have been recognized as
+  implied by `certificates_own`'s `auth.uid()=user_id OR is_platform_owner()` and weren't, under
+  the old code; the fixed version correctly detects the subset relationship.
+  - Re-ran the fixed detector across every table and found **38 total candidates** — 9 were the
+    same ones already dropped in the previous pass (expected, confirms continuity), leaving 28
+    new ones across `certificates`, `commission_contracts`, `consult_requests`,
+    `contribution_log`, `dispatches`, `evolution_events`, `family_nodes`, `media_reservations`,
+    `publications`, `task_completions`, `trophies`.
+  - Notable: 2 of the 28 (`contribution_log_insert_merged`, `contribution_log_select_merged`)
+    were themselves created by the second consolidation pass earlier in this session — they
+    turned out to be fully redundant against `contribution_log_own`'s own `FOR ALL` policy once
+    correctly detected. Not a contradiction of that earlier fix, a natural continuation: the
+    second pass correctly merged two same-role-scope duplicates into one policy; this pass then
+    correctly noticed that merged policy was itself redundant against a *third*, broader ALL
+    policy on the same table that the second pass wasn't checking against.
+  - Verified post-apply: every affected table's `FOR ALL` policy remains, and every command the
+    dropped policies covered is still covered by it — no lockouts (re-checked per-table,
+    per-command policy counts before and after, same method as every prior pass in this section).
+    `get_advisors` re-run afterward confirmed `multiple_permissive_policies` dropped 171→123 —
+    a 72% reduction from the original 434 across all four passes combined, all verified, zero
+    access-control changes throughout.
+  - Applied to the live database and verified (2026-08-18, via the Supabase MCP connector),
+    recorded remotely as `20260818065025_drop_more_policies_redundant_vs_all_policy`, mirrored
+    locally at `supabase/migrations/`.
 
 
 ## 9. Working in this repo — practical rules

@@ -229,67 +229,67 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead">PLATFORM COMMAND INDEX &middot; ALL 170 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="platform_command_index">PLATFORM COMMAND INDEX &middot; ALL 170 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <div id="platform-sections"></div>
-        <div class="sechead" style="margin-top:24px">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
+        <div class="sechead" style="margin-top:24px" data-i18n="intelligence_engine">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
-          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ana-events">--</div><div class="kpi-l">EVENTS (7d)</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ana-sessions">--</div><div class="kpi-l">SESSIONS (7d)</div></div>
-          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ana-users">--</div><div class="kpi-l">UNIQUE MEMBERS (7d)</div></div>
-          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ana-cta">--</div><div class="kpi-l">CTA CLICKS (7d)</div></div>
-          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ai-queries">--</div><div class="kpi-l">AI QUERIES (7d)</div></div>
-          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ai-memories">--</div><div class="kpi-l">MEMORIES STORED</div></div>
+          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ana-events">--</div><div class="kpi-l" data-i18n="kpi_events_7d">EVENTS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ana-sessions">--</div><div class="kpi-l" data-i18n="kpi_sessions_7d">SESSIONS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="ana-users">--</div><div class="kpi-l" data-i18n="kpi_unique_members_7d">UNIQUE MEMBERS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ana-cta">--</div><div class="kpi-l" data-i18n="kpi_cta_clicks_7d">CTA CLICKS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ai-queries">--</div><div class="kpi-l" data-i18n="kpi_ai_queries_7d">AI QUERIES (7d)</div></div>
+          <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="ai-memories">--</div><div class="kpi-l" data-i18n="kpi_memories_stored">MEMORIES STORED</div></div>
         </div>
         <div class="two-col" style="align-items:start;margin-bottom:14px">
           <div>
-            <div class="sechead">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'">FULL ANALYTICS &#8594;</span></div>
+            <div class="sechead" data-i18n="axis_progression_radar">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'" data-i18n="full_analytics">FULL ANALYTICS &#8594;</span></div>
             <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="dash-radar" style="max-height:180px"></canvas>
             </div>
           </div>
           <div>
-            <div class="sechead">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
+            <div class="sechead" data-i18n="sovereign_intelligence_direct_query">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
             <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
-              <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
+              <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)" data-i18n="ai_intelligence_standby">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
               <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">
-                <input id="ai-query" type="text" placeholder="Ask the Intelligence Engine&hellip;" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none" aria-label="AI query">
-                <button onclick="askAI()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer">ASK &#8594;</button>
+                <input id="ai-query" type="text" placeholder="Ask the Intelligence Engine&hellip;" data-i18n="ai_query_placeholder" style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);color:var(--ink);font-family:var(--M);font-size:10px;padding:8px;border-radius:2px;outline:none" aria-label="AI query">
+                <button onclick="askAI()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;padding:8px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer" data-i18n="btn_ask">ASK &#8594;</button>
               </div>
             </div>
           </div>
         </div>
-        <div class="sechead">TOP PAGES &middot; SESSION DISTRIBUTION</div>
+        <div class="sechead" data-i18n="top_pages_session_distribution">TOP PAGES &middot; SESSION DISTRIBUTION</div>
         <div id="top-pages-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:24px" data-loading></div>
-        <div class="sechead">SOVEREIGN COMMAND &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
+        <div class="sechead" data-i18n="sovereign_command_operations">SOVEREIGN COMMAND &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
         <div class="kpi-row">
-          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/gaming.html'"><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l">TASKS (7d)</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/automation.html'"><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l">WORKFLOWS LIVE</div></div>
-          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="ops-incidents">0</div><div class="kpi-l">OPEN INCIDENTS</div></div>
-          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/sovereign-ai.html'"><div class="kpi-n">12</div><div class="kpi-l">AGENTS ACTIVE</div></div>
-          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/approvals.html'"><div class="kpi-n" id="adm-pending">--</div><div class="kpi-l">PENDING ACCESS</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/enterprise.html'"><div class="kpi-n" id="adm-accounts">--</div><div class="kpi-l">ENTERPRISE ACCOUNTS</div></div>
-          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l">ACTIVE POLICIES</div></div>
-          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/gaming.html'"><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l" data-i18n="kpi_tasks_7d">TASKS (7d)</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/automation.html'"><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l" data-i18n="kpi_workflows_live">WORKFLOWS LIVE</div></div>
+          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="ops-incidents">0</div><div class="kpi-l" data-i18n="kpi_open_incidents">OPEN INCIDENTS</div></div>
+          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/sovereign-ai.html'"><div class="kpi-n">12</div><div class="kpi-l" data-i18n="kpi_agents_active">AGENTS ACTIVE</div></div>
+          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/approvals.html'"><div class="kpi-n" id="adm-pending">--</div><div class="kpi-l" data-i18n="kpi_pending_access">PENDING ACCESS</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/enterprise.html'"><div class="kpi-n" id="adm-accounts">--</div><div class="kpi-l" data-i18n="kpi_enterprise_accounts">ENTERPRISE ACCOUNTS</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/governance.html'"><div class="kpi-n" id="adm-policies">10</div><div class="kpi-l" data-i18n="kpi_active_policies">ACTIVE POLICIES</div></div>
+          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l" data-i18n="kpi_threats_7d">THREATS (7d)</div></div>
           <div class="kpi" style="--kc:var(--solar)" data-tooltip="Estimated cost of this browser session only (AI tokens, DB reads, edge calls) -- not real billing data. See omega-finops.js." data-tooltip-placement="bottom"><div class="kpi-n" id="adm-finops-cost">--</div><div class="kpi-l">SESSION COST (EST.)</div></div>
         </div>
-        <div class="sechead">ACTIVE WORKFLOWS</div>
+        <div class="sechead" data-i18n="active_workflows">ACTIVE WORKFLOWS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
-          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
-          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
-          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/gaming.html'"><div class="cc-name">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate &rarr; increment axis &rarr; recompute &rarr; gate check</div></div>
-          <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
-          <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
+          <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name" data-i18n="workflow_onboarding">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
+          <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name" data-i18n="workflow_gate_unlock">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
+          <div class="cmd-card card" style="--cc:var(--cyan)"   onclick="location.href='/gaming.html'"><div class="cc-name" data-i18n="workflow_task_complete">TASK COMPLETE</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Validate &rarr; increment axis &rarr; recompute &rarr; gate check</div></div>
+          <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name" data-i18n="workflow_dedication_award">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
+          <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name" data-i18n="workflow_data_export">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
-        <div class="sechead">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
+        <div class="sechead" data-i18n="agent_quick_access">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'" data-i18n="full_command">FULL COMMAND &#8594;</span></div>
         <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
-        <div class="sechead">ADMIN ACTIONS &middot; OWNER CONTROLS</div>
+        <div class="sechead" data-i18n="admin_actions_owner_controls">ADMIN ACTIONS &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
-          <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; APPROVE ACCESS REQUESTS</button>
-          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; SRE OBSERVATORY</button>
-          <button onclick="location.href='/enterprise.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; ENTERPRISE CONTROL</button>
-          <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; GOVERNANCE BOARD</button>
-          <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; EVOLUTION ROADMAP</button>
-          <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; PRIVACY CENTRE</button>
+          <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="btn_approve_access">&#8594; APPROVE ACCESS REQUESTS</button>
+          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="btn_sre_observatory">&#8594; SRE OBSERVATORY</button>
+          <button onclick="location.href='/enterprise.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="btn_enterprise_control">&#8594; ENTERPRISE CONTROL</button>
+          <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="btn_governance_board">&#8594; GOVERNANCE BOARD</button>
+          <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="btn_evolution_roadmap">&#8594; EVOLUTION ROADMAP</button>
+          <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="btn_privacy_centre">&#8594; PRIVACY CENTRE</button>
         </div>
       </div>
     </div>
@@ -297,7 +297,7 @@
     <!-- LAYER: SCIENCE -->
     <div id="l-science" class="layer-panel">
       <div class="pad">
-        <div class="sechead">SOVEREIGN CONSTANTS &amp; SYSTEM ARCHITECTURE</div>
+        <div class="sechead" data-i18n="sovereign_constants_system_architecture">SOVEREIGN CONSTANTS &amp; SYSTEM ARCHITECTURE</div>
         <div style="margin-bottom:24px">
           <div style="font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--gold);padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.03);line-height:2;margin-bottom:16px">
             AUTH = sqrt(A&#179; + B&#179; + C&#179;) &times; &phi; / e<br>
@@ -305,36 +305,36 @@
             sqrt(2187) &times; 1.6180339887 / 2.7182818285 = <strong>27.8367</strong>
           </div>
           <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:9px;letter-spacing:1px;line-height:2">
-            <span style="color:var(--muted)">PHI (&phi;)</span><span style="color:var(--gold)">1.6180339887</span>
-            <span style="color:var(--muted)">EULER (e)</span><span style="color:var(--gold)">2.7182818285</span>
-            <span style="color:var(--muted)">AUTHORITY APEX</span><span style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
-            <span style="color:var(--muted)">TRIAL WINDOW</span><span>557 SECONDS (9 MIN 17 SEC)</span>
-            <span style="color:var(--muted)">LATTICE</span><span>12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</span>
-            <span style="color:var(--muted)">PLATFORM PAGES</span><span>170 HTML &middot; 85 JS ENGINES</span>
-            <span style="color:var(--muted)">SQL FILES</span><span>109 MIGRATIONS &middot; 95 FUNCTIONS</span>
+            <span style="color:var(--muted)" data-i18n="constant_phi">PHI (&phi;)</span><span style="color:var(--gold)">1.6180339887</span>
+            <span style="color:var(--muted)" data-i18n="constant_euler">EULER (e)</span><span style="color:var(--gold)">2.7182818285</span>
+            <span style="color:var(--muted)" data-i18n="constant_authority_apex">AUTHORITY APEX</span><span style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
+            <span style="color:var(--muted)" data-i18n="constant_trial_window">TRIAL WINDOW</span><span>557 SECONDS (9 MIN 17 SEC)</span>
+            <span style="color:var(--muted)" data-i18n="constant_lattice">LATTICE</span><span>12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</span>
+            <span style="color:var(--muted)" data-i18n="constant_platform_pages">PLATFORM PAGES</span><span>170 HTML &middot; 85 JS ENGINES</span>
+            <span style="color:var(--muted)" data-i18n="constant_sql_files">SQL FILES</span><span>109 MIGRATIONS &middot; 95 FUNCTIONS</span>
           </div>
         </div>
-        <div class="sechead">GATE THRESHOLDS &middot; 12 SOVEREIGN LEVELS</div>
+        <div class="sechead" data-i18n="gate_thresholds_12_levels">GATE THRESHOLDS &middot; 12 SOVEREIGN LEVELS</div>
         <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:9px;letter-spacing:1px;line-height:2">
-          <span style="color:var(--muted)">GATE 1 — INITIATE</span><span>AUTH &ge; 2.3197</span>
-          <span style="color:var(--muted)">GATE 2 — ACOLYTE</span><span>AUTH &ge; 4.6394</span>
-          <span style="color:var(--muted)">GATE 3 — SCHOLAR</span><span>AUTH &ge; 6.9592</span>
-          <span style="color:var(--muted)">GATE 4 — KEEPER</span><span>AUTH &ge; 9.2789</span>
-          <span style="color:var(--muted)">GATE 5 — GUARDIAN</span><span>AUTH &ge; 11.5986</span>
-          <span style="color:var(--muted)">GATE 6 — ARCHITECT</span><span>AUTH &ge; 13.9183</span>
-          <span style="color:var(--muted)">GATE 7 — SOVEREIGN</span><span>AUTH &ge; 16.2381</span>
-          <span style="color:var(--muted)">GATE 8 — VANGUARD</span><span>AUTH &ge; 18.5578</span>
-          <span style="color:var(--muted)">GATE 9 — HERALD</span><span>AUTH &ge; 20.8775</span>
-          <span style="color:var(--muted)">GATE 10 — ORACLE</span><span>AUTH &ge; 23.1972</span>
-          <span style="color:var(--muted)">GATE 11 — PRIME</span><span>AUTH &ge; 25.517</span>
-          <span style="color:var(--gold)">GATE 12 — APEX</span><span style="color:var(--gold)">AUTH = 27.8367 — INVISIBLE ARCHITECT</span>
+          <span style="color:var(--muted)" data-i18n="gate_1_initiate">GATE 1 — INITIATE</span><span>AUTH &ge; 2.3197</span>
+          <span style="color:var(--muted)" data-i18n="gate_2_acolyte">GATE 2 — ACOLYTE</span><span>AUTH &ge; 4.6394</span>
+          <span style="color:var(--muted)" data-i18n="gate_3_scholar">GATE 3 — SCHOLAR</span><span>AUTH &ge; 6.9592</span>
+          <span style="color:var(--muted)" data-i18n="gate_4_keeper">GATE 4 — KEEPER</span><span>AUTH &ge; 9.2789</span>
+          <span style="color:var(--muted)" data-i18n="gate_5_guardian">GATE 5 — GUARDIAN</span><span>AUTH &ge; 11.5986</span>
+          <span style="color:var(--muted)" data-i18n="gate_6_architect">GATE 6 — ARCHITECT</span><span>AUTH &ge; 13.9183</span>
+          <span style="color:var(--muted)" data-i18n="gate_7_sovereign">GATE 7 — SOVEREIGN</span><span>AUTH &ge; 16.2381</span>
+          <span style="color:var(--muted)" data-i18n="gate_8_vanguard">GATE 8 — VANGUARD</span><span>AUTH &ge; 18.5578</span>
+          <span style="color:var(--muted)" data-i18n="gate_9_herald">GATE 9 — HERALD</span><span>AUTH &ge; 20.8775</span>
+          <span style="color:var(--muted)" data-i18n="gate_10_oracle">GATE 10 — ORACLE</span><span>AUTH &ge; 23.1972</span>
+          <span style="color:var(--muted)" data-i18n="gate_11_prime">GATE 11 — PRIME</span><span>AUTH &ge; 25.517</span>
+          <span style="color:var(--gold)" data-i18n="gate_12_apex">GATE 12 — APEX</span><span style="color:var(--gold)" data-i18n="invisible_architect">AUTH = 27.8367 — INVISIBLE ARCHITECT</span>
         </div>
       </div>
     </div>
 
         <!-- TIMELINE -->
     <div class="timeline" id="timeline-section">
-      <div class="sechead" data-reveal="fade-up" style="padding:0 0 10px">LIVE TIMELINE &middot; RECENT SOVEREIGN EVENTS</div>
+      <div class="sechead" data-reveal="fade-up" style="padding:0 0 10px" data-i18n="live_timeline_events">LIVE TIMELINE &middot; RECENT SOVEREIGN EVENTS</div>
       <div id="timeline-items">
         <div class="tl-item"><div class="tl-dot" style="--td:var(--muted)"></div><div class="tl-content"><div class="tl-title" style="color:var(--muted)">Loading timeline&hellip;</div></div></div>
       </div>

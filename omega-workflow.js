@@ -1,23 +1,23 @@
 /* ==========================================================================
-   Ω SYD OMEGA 91717 — SOVEREIGN WORKFLOW ENGINE (omega-workflow.js)
-   
-   Multi-step workflow orchestration for sovereign platform operations.
-   Inspired by:
-   - AWS Step Functions: state machine workflows with retry/catch
-   - Salesforce Flow: declarative business process automation
-   - Zapier: trigger → action → condition pipelines
-   - Temporal.io: durable execution, long-running workflow reliability
-   
-   Built-in Sovereign Workflows:
-   W1. ONBOARDING        — New member setup: sign→element→agent→first tasks
-   W2. GATE_UNLOCK       — Gate achievement: validate→celebrate→notify→record
-   W3. TRIAL_GRANT       — Owner grants trial: set→notify→chrono→log
-   W4. TASK_COMPLETE     — Member completes task: validate→award→check gates→notify
-   W5. APPROVAL_FLOW     — Member requests access: notify owner→wait→respond
-   W6. DEDICATION_AWARD  — Daily dedication reached: celebrate→award→log
-   W7. DATA_EXPORT       — GDPR export: collect→package→notify→deliver
-   W8. REPORT_GENERATE   — Generate member progress report: query→build→cache
-   ========================================================================== */
+    Ω SYD OMEGA 91717 — SOVEREIGN WORKFLOW ENGINE (omega-workflow.js)
+    
+    Multi-step workflow orchestration for sovereign platform operations.
+    Inspired by:
+    - AWS Step Functions: state machine workflows with retry/catch
+    - Salesforce Flow: declarative business process automation
+    - Zapier: trigger → action → condition pipelines
+    - Temporal.io: durable execution, long-running workflow reliability
+    
+    Built-in Sovereign Workflows:
+    W1. ONBOARDING        — New member setup: sign→element→agent→first tasks
+    W2. GATE_UNLOCK       — Gate achievement: validate→celebrate→notify→record
+    W3. TRIAL_GRANT       — Owner grants trial: set→notify→chrono→log
+    W4. TASK_COMPLETE     — Member completes task: validate→award→check gates→notify
+    W5. APPROVAL_FLOW     — Member requests access: notify owner→wait→respond
+    W6. DEDICATION_AWARD  — Daily dedication reached: celebrate→award→log
+    W7. DATA_EXPORT       — GDPR export: collect→package→notify→deliver
+    W8. REPORT_GENERATE   — Generate member progress report: query→build→cache
+    ========================================================================== */
 (function(){
   if(window.__omegaWorkflowActive) return;
   window.__omegaWorkflowActive = true;
@@ -261,7 +261,7 @@
       var uid=sess&&sess.data&&sess.data.session&&sess.data.session.user.id;
       if(!uid) return {ok:true,_dedications:[]};
       try{
-        var r=await window.__omegaSb.from('sovereign_events').select('event_data,occurred_at').eq('user_id',uid).eq('event_type','dedication.completed').order('occurred_at',{ascending:false}).limit(30);
+        var r=await window.__omegaSb.from('sovereign_events').select('*').eq('user_id',uid).eq('event_type','dedication.completed').order('occurred_at',{ascending:false}).limit(10);
         return {ok:true,_dedications:r.data||[]};
       }catch(e){return {ok:true,_dedications:[]};}
     },

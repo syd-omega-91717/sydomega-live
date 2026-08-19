@@ -47,13 +47,15 @@ def parse_sql_files():
             schema[table_name]["files"].append(sql_file.name)
 
             # Extract column names from the CREATE TABLE body
-            # Match patterns like: column_name type [constraints]
-            col_pattern = r"^\s*(\w+)\s+\w+.*?(?:,|$)"
-            for col_match in re.finditer(col_pattern, body, re.MULTILINE):
-                col_name = col_match.group(1)
-                # Skip SQL keywords and table constraints
-                if col_name.upper() not in ("PRIMARY", "UNIQUE", "FOREIGN", "CHECK", "CONSTRAINT", "INDEX"):
-                    schema[table_name]["columns"].add(col_name)
+            # Split by commas first to handle multi-column lines
+            for segment in body.split(","):
+                # Match first identifier that is followed by a type
+                col_match = re.match(r"^\s*(\w+)\s+(?:varchar|text|int|uuid|numeric|timestamptz|boolean|jsonb|bigint|smallint|real|double|date|time|bytea|xml|interval)\b", segment, re.IGNORECASE)
+                if col_match:
+                    col_name = col_match.group(1)
+                    # Skip SQL keywords and table constraints
+                    if col_name.upper() not in ("PRIMARY", "UNIQUE", "FOREIGN", "CHECK", "CONSTRAINT", "INDEX", "GRANT", "DROP", "ALTER"):
+                        schema[table_name]["columns"].add(col_name)
 
         # Parse ALTER TABLE ADD COLUMN statements
         alter_pattern = r"ALTER\s+TABLE\s+(?:public\.)?(\w+)\s+ADD\s+COLUMN\s+IF\s+NOT\s+EXISTS\s+(\w+)"

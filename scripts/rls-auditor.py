@@ -75,14 +75,14 @@ def parse_rls_policies():
             # Find USING clause
             using_match = re.search(r'USING\s*\(', rest, re.IGNORECASE)
             if using_match:
-                paren_start = start_pos + using_match.start() + using_match.end() - 1
+                paren_start = start_pos + using_match.end() - 1
                 using_clause = extract_paren_content(content, paren_start) or ""
                 using_clause = using_clause.strip()
 
             # Find WITH CHECK clause
             with_check_match = re.search(r'WITH\s+CHECK\s*\(', rest, re.IGNORECASE)
             if with_check_match:
-                paren_start = start_pos + with_check_match.start() + with_check_match.end() - 1
+                paren_start = start_pos + with_check_match.end() - 1
                 with_check_clause = extract_paren_content(content, paren_start) or ""
                 with_check_clause = with_check_clause.strip()
 

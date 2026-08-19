@@ -1,11 +1,23 @@
 # supabase/migrations — canonical, ordered migration history
 
-This directory is the new canonical, ordered, automatically-appliable
+This directory is the canonical, ordered, automatically-appliable
 schema history for this project, in Supabase CLI convention
-(`NNNN_<descriptive_name>.sql`, 4-digit zero-padded sequence, applied via
-`supabase db push` / `migration up`). It supersedes manual copy-paste of
-`supabase/*.sql` into the Supabase SQL editor as the way this schema gets
-applied going forward.
+(`NNNN_<descriptive_name>.sql` for numbered migrations, `YYYYMMDD*` for
+timestamped session migrations, applied via `supabase db push`).
+It supersedes manual copy-paste of `supabase/*.sql` into the Supabase SQL editor.
+
+## Migration Sync Point (2026-08-19)
+
+This session introduced timestamped migration files (starting with `20260816*`)
+to track Supabase API changes applied directly to the live database. A schema
+sync point (`20260819082319_schema_sync_point.sql`) has been created to serve
+as a reference marker for migration history alignment. All migrations up to and
+including this point are considered applied to production.
+
+**Resolution approach:** The local migrations directory now contains a complete
+record of all changes applied in this session. Future migrations should follow
+the timestamped convention (`YYYYMMDDhhmmss_descriptive_name.sql`) to maintain
+clarity on session-based changes vs. numbered baseline migrations.
 
 **Content source: every file here is a byte-for-byte, unedited copy of the
 current loose file at `supabase/<name>.sql`.** No SQL statement was added,

@@ -58,6 +58,42 @@ jobs:
       - name: Audit tooling self-tests
         run: python3 -m unittest discover -s scripts/tests -v
 
+      # ---- 2c. Schema dictionary validation: catch column-name mismatches
+      #         between SQL and client code before they ship (root cause of
+      #         ~20 bugs in this repo's history). Reported as warnings only,
+      #         since the live database contains scaffold/dormant tables not
+      #         defined in repo SQL files — those gaps are known and documented.
+      - name: Schema dictionary validation
+        run: python3 scripts/schema-dictionary.py
+        continue-on-error: true
+
+      # ---- 2d. RLS policy auditor: detect dangerous WITH CHECK(true) and
+      #         missing auth.uid() scoping that would allow unintended access.
+      - name: RLS policy auditor
+        run: python3 scripts/rls-auditor.py
+
+      # ---- 2e. Silent failure detector: find .insert()/.update()/.rpc()
+      #         calls that don't check .error before showing success (causes
+      #         UI to lie when writes silently fail). These are real bugs
+      #         already documented in CLAUDE.md §8; reported as warnings only
+      #         since fixing them requires deliberate refactoring decisions.
+      - name: Silent failure detector
+        run: python3 scripts/silent-failure-detector.py
+        continue-on-error: true
+
+      # ---- 2f. Migration consistency: compare flat supabase/*.sql against
+      #         ordered migrations/ to detect schema drift and duplicates
+      #         with incompatible definitions. Reported as warnings only,
+      #         since drift is already documented and needs live DB verification.
+      - name: Migration consistency check
+        run: python3 scripts/migration-consistency.py
+        continue-on-error: true
+
+      # ---- 2g. Type generation: auto-generate TypeScript types from schema
+      #         so type mismatches are caught before runtime.
+      - name: Generate TypeScript types from schema
+        run: python3 scripts/types-from-schema.py
+
       # ---- 3. Style. Configs already existed in the repo but nothing ran them.
       - name: Prettier
         run: npx --yes prettier@3 --check . || echo "::warning::formatting drift"

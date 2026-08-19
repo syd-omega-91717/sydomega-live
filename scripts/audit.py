@@ -386,6 +386,11 @@ if diverging:
             shape.append(f"{len(body_variants)} distinct bodies")
         print(f"    - {name}: {', '.join(shape)} across {len(files)} files")
 
+        # Check for canonical fix files across all definitions of this RPC
+        canon_files = sorted([f for f in files if FIX_FILE_RE.search(f)])
+        if canon_files:
+            print(f"      likely-canonical: {', '.join(canon_files)}")
+
         # Show per-body grouping with recommendations
         for body_hash, group_defs in sorted(body_groups.items()):
             group_files = sorted({f for f, _a, _b in group_defs})

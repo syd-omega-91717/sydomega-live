@@ -220,18 +220,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 <div class="page">
   <div class="hero-band" data-reveal="fade-up">
-    <div class="hero-eyebrow">CORE ENGINE // 9x9x9</div>
-    <h1 class="hero-title">The 104,976-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
+    <div class="hero-eyebrow" data-i18n="mat_topbar_subtitle">CORE ENGINE // 9x9x9</div>
+    <h1 class="hero-title" data-i18n="mat_topbar_title">The 104,976-Node Matrix <span data-canon="mechanic" style="font-size:11px;vertical-align:middle"></span></h1>
     <p class="hero-sub">The spine of the entire platform. Three axes -- Knowledge, Mastery, Contribution -- each depth 9. Every user action is an evolution event that increments coordinates. Authority = sqrt(A³+B³+C³)×φ/e = 27.8367
     A³=B³=C³=729.000 at apex | sqrt(729+729+729)=sqrt(2187)×φ/e
 φ=1.6180339887  e=2.7182818285  i²=−1 &middot; 3×104,976 = 314,928 total</p>
   </div>
 
   <div class="mtab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,.18);max-width:1400px;margin:0 auto 1.5rem;padding:0 2rem;overflow-x:auto">
-    <div class="mtab-btn active" data-mtab="matrix" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE MATRIX</div>
-    <div class="mtab-btn" data-mtab="triads" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE TRIADS</div>
-    <div class="mtab-btn" data-mtab="grid" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE GRID</div>
-    <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
+    <div class="mtab-btn active" data-mtab="matrix" data-i18n="mat_tab_matrix" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid #C9A84C;color:#C9A84C;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE MATRIX</div>
+    <div class="mtab-btn" data-mtab="triads" data-i18n="mat_tab_triads" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE TRIADS</div>
+    <div class="mtab-btn" data-mtab="grid" data-i18n="mat_tab_grid" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; THE GRID</div>
+    <div class="mtab-btn" data-mtab="science" data-i18n="mat_tab_science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:#85837b;font-family:monospace;font-size:11px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
   </div>
 
   <div class="mtab-panel" id="mtab-matrix">
@@ -239,22 +239,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <!-- AXIS STATS -->
   <div class="axis-stats" data-reveal="fade-up" data-stagger="100">
     <div class="astat card">
-      <div class="astat-label">Axis A &middot; 12×12×9×9×9 = 104,976</div>
+      <div class="astat-label" data-i18n="mat_kpi_axis_a">Axis A &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-a">--</div>
       <div class="astat-sub" id="stat-a-sub" style="min-height:12px" data-loading></div>
     </div>
     <div class="astat card">
-      <div class="astat-label">Axis B &middot; 12×12×9×9×9 = 104,976</div>
+      <div class="astat-label" data-i18n="mat_kpi_axis_b">Axis B &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-b">--</div>
       <div class="astat-sub" id="stat-b-sub" style="min-height:12px" data-loading></div>
     </div>
     <div class="astat card">
-      <div class="astat-label">Axis C &middot; 12×12×9×9×9 = 104,976</div>
+      <div class="astat-label" data-i18n="mat_kpi_axis_c">Axis C &middot; 12×12×9×9×9 = 104,976</div>
       <div class="astat-val" id="stat-c">--</div>
       <div class="astat-sub" id="stat-c-sub" style="min-height:12px" data-loading></div>
     </div>
     <div class="astat card" style="border-color:rgba(0,229,255,0.3)">
-      <div class="astat-label" style="color:var(--cyan)">Authority Score</div>
+      <div class="astat-label" style="color:var(--cyan)" data-i18n="mat_kpi_authority">Authority Score</div>
       <div class="astat-val" style="color:var(--cyan)" id="stat-auth">--</div>
       <div class="astat-sub" id="stat-auth-sub">Computing...</div>
     </div>
@@ -265,23 +265,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <!-- Canvas -->
     <div class="matrix-canvas-panel card">
       <div class="matrix-canvas-header">
-        <span class="matrix-canvas-title">3D Matrix Projection</span>
+        <span class="matrix-canvas-title" data-i18n="mat_canvas_title">3D Matrix Projection</span>
         <span class="matrix-badge">9×9×9 = 729 inner nodes</span>
       </div>
       <canvas id="matrix-canvas" height="420"></canvas>
       <div class="coord-display">
         <div class="coord-item">
-          <div class="coord-axis">Axis A</div>
+          <div class="coord-axis" data-i18n="mat_kpi_axis_a">Axis A</div>
           <div class="coord-val" id="coord-a">--</div>
           <div class="coord-sub">Knowledge</div>
         </div>
         <div class="coord-item">
-          <div class="coord-axis">Axis B</div>
+          <div class="coord-axis" data-i18n="mat_kpi_axis_b">Axis B</div>
           <div class="coord-val" id="coord-b">--</div>
           <div class="coord-sub">Mastery</div>
         </div>
         <div class="coord-item">
-          <div class="coord-axis">Axis C</div>
+          <div class="coord-axis" data-i18n="mat_kpi_axis_c">Axis C</div>
           <div class="coord-val" id="coord-c">--</div>
           <div class="coord-sub">Contribution</div>
         </div>
@@ -292,7 +292,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="right-panels">
       <!-- Axis Detail -->
       <div class="panel">
-        <div class="panel-header"><span class="panel-title">Axis Progression</span><span class="panel-badge" id="badge-status" style="display:inline-block;min-height:14px" data-loading></span></div>
+        <div class="panel-header"><span class="panel-title" data-i18n="mat_panel_progression">Axis Progression</span><span class="panel-badge" id="badge-status" style="display:inline-block;min-height:14px" data-loading></span></div>
         <div class="panel-body">
           <div class="axis-tracks">
             <div class="axis-track-item">
@@ -325,7 +325,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
       <!-- Evolution Events -->
       <div class="panel">
-        <div class="panel-header"><span class="panel-title">Evolution Events</span><span class="panel-badge">LIVE</span></div>
+        <div class="panel-header"><span class="panel-title" data-i18n="mat_panel_evolution">Evolution Events</span><span class="panel-badge">LIVE</span></div>
         <div class="panel-body">
           <div class="ev-list" id="ev-list">
             <div class="ev-item"><span class="ev-text">Loading your evolution log...</span></div>
@@ -335,7 +335,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
       <!-- Authority Formula -->
       <div class="panel">
-        <div class="panel-header"><span class="panel-title">Authority Computation</span><span class="panel-badge">FORMULA</span></div>
+        <div class="panel-header"><span class="panel-title" data-i18n="mat_panel_authority">Authority Computation</span><span class="panel-badge">FORMULA</span></div>
         <div class="panel-body">
           <div style="font-family:monospace;font-size:.72rem;color:var(--muted);line-height:2;letter-spacing:.06em">
             <div style="color:var(--gold);font-size:.8rem;margin-bottom:.5rem">AUTH = sqrt(A³+B³+C³)×φ/e</div>
@@ -357,7 +357,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <!-- NODE GRID -->
   <div class="node-grid-section">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-      <span style="font-family:serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em">Axis A -- 9x9 Node Map (Plane 9)</span>
+      <span style="font-family:serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em" data-i18n="mat_node_grid_title">Axis A -- 9x9 Node Map (Plane 9)</span>
       <span style="font-family:monospace;font-size:.65rem;color:var(--green)" id="node-count">-- / 81 COMPLETED</span>
     </div>
     <div class="node-grid" id="node-grid"></div>
@@ -365,7 +365,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
   <!-- NESTED MATRIX -->
   <div class="nested-note">
-    <div style="font-family:serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em;margin-bottom:1rem">Nested Matrix Architecture</div>
+    <div style="font-family:serif;font-size:.85rem;color:var(--gold);letter-spacing:.1em;margin-bottom:1rem" data-i18n="mat_nested_arch_title">Nested Matrix Architecture</div>
     <div class="nested-card card">
       <div class="nested-item"><div class="nested-val">12</div><div class="nested-label">Outer Layers</div></div>
       <div class="nested-item"><div class="nested-val">729</div><div class="nested-label">Inner Cube (9x9x9)</div></div>
@@ -387,8 +387,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 </div>
 
   <div class="mtab-panel" id="mtab-triads" style="display:none">
-    
-    <div class="topbar"><div class="t">THE TWELVE TRIADS<small>TWELVE LIVING MATRICES  .  12 x 9x9x9 = 8,748 <span data-canon-lattice="twelve"></span></small></div></div>
+
+    <div class="topbar"><div class="t" data-i18n="mat_triads_title">THE TWELVE TRIADS<small data-i18n="mat_triads_intro">TWELVE LIVING MATRICES  .  12 x 9x9x9 = 8,748 <span data-canon-lattice="twelve"></span></small></div></div>
     <p class="intro" data-reveal="fade-up">A <b>triad</b> is the living shape of three axes  --  <b>Knowledge</b>, <b>Mastery</b>, <b>Contribution</b>  --  each rising to depth 9. Three axes at depth nine <b>is</b> one 9x9x9 matrix: <b>729 nodes</b>. The Order holds <b>twelve</b> triads, one for each sign and house  --  and each matrix spans 12×12×9×9×9 = <b>104,976</b> nodes. Your own triad lives below; the twelve turn beside it.</p>
 
     <div class="counts">
@@ -422,7 +422,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="mtab-panel" id="mtab-grid" style="display:none">
     
     <div class="topbar">
-      <div class="t">THE GRID<small>PILLAR 10 &middot; SOVEREIGN INFRASTRUCTURE &middot; PLANETARY COMPUTE</small></div>
+      <div class="t" data-i18n="mat_grid_title"><small data-i18n="mat_grid_subtitle">PILLAR 10 &middot; SOVEREIGN INFRASTRUCTURE &middot; PLANETARY COMPUTE</small></div>
     </div>
 
     <div class="status-banner">
@@ -432,16 +432,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
     <div class="canvas-grid"><canvas id="grid-canvas"></canvas></div>
 
-    <div class="sechead" data-reveal="fade-up">21 MICROSERVICES &mdash; LIVE STATUS <span data-canon-lattice="twelve"></span></div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="mat_grid_services">21 MICROSERVICES &mdash; LIVE STATUS <span data-canon-lattice="twelve"></span></div>
     <div class="service-grid" id="service-grid"></div>
 
-    <div class="sechead" data-reveal="fade-up">ARCHITECTURE LAYERS &mdash; 5-LAYER STACK <span data-canon-lattice="twelve"></span></div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="mat_grid_layers">ARCHITECTURE LAYERS &mdash; 5-LAYER STACK <span data-canon-lattice="twelve"></span></div>
     <div class="layer-cards" id="layer-cards"></div>
 
-    <div class="sechead" data-reveal="fade-up">MULTI-REGION DEPLOYMENT <span data-canon-lattice="twelve"></span></div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="mat_grid_deployment">MULTI-REGION DEPLOYMENT <span data-canon-lattice="twelve"></span></div>
     <div class="region-grid" id="region-grid"></div>
 
-    <div class="sechead" data-reveal="fade-up">AI MEMORY ARCHITECTURE &mdash; 5-LAYER SYSTEM <span data-canon-lattice="twelve"></span></div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="mat_grid_ai_memory">AI MEMORY ARCHITECTURE &mdash; 5-LAYER SYSTEM <span data-canon-lattice="twelve"></span></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="memory-grid"></div>
   
   </div>
@@ -449,7 +449,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="mtab-panel" id="mtab-science" style="display:none">
 
 <div class="wrap">
-  <div class="sectit">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+  <div class="sectit" data-i18n="mat_science_constants">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
   <div class="nested-card card" style="margin-bottom:1.5rem">
     <div class="nested-item"><div class="nested-val" style="font-size:1rem">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div><div class="nested-label">AUTHORITY FORMULA</div></div>
     <div class="nested-item"><div class="nested-val">27.8367</div><div class="nested-label">APEX</div></div>
@@ -467,27 +467,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <div class="wrap">
   <div class="hero">
     <div class="sig">&#937;</div>
-    <h1>THE SOVEREIGN CHARTER</h1>
-    <div class="sub">THE ELEVEN IMMUTABLE ARTICLES</div>
+    <h1 data-i18n="mat_science_charter">THE SOVEREIGN CHARTER</h1>
+    <div class="sub" data-i18n="mat_science_articles">THE ELEVEN IMMUTABLE ARTICLES</div>
     <div class="arch">ARCHITECT  --  <b>MAJOR SLEIMAN YOUSSEF DAGHER</b><br>LEBANESE ORDER OF ENGINEERS &amp; ARCHITECTS  .  No. 30875<br>ESTABLISHED 22 DECEMBER 2025  .  sydomega.com</div>
   </div>
 
-  <div class="sectit">THE ELEVEN ARTICLES OF SOVEREIGNTY</div>
+  <div class="sectit" data-i18n="mat_science_articles_header">THE ELEVEN ARTICLES OF SOVEREIGNTY</div>
   <div class="articles">
-    <div class="art"><div class="rn">I</div><div><div class="at">Absolute Ownership</div><div class="ad"><b>100% sovereign.</b> No co-founders, no partners. The Order answers to a single authority.</div></div></div>
-    <div class="art"><div class="rn">II</div><div><div class="at">The Master Stake</div><div class="ad"><b>467,756,700,000 &#937; (51%)</b> permanently locked. Control of the Order can never be diluted below sovereignty.</div></div></div>
-    <div class="art"><div class="rn">III</div><div><div class="at">Irrevocable Genesis</div><div class="ad">Foundational property is hashed into the <b>Genesis Block</b>  --  anchored to the Architect's standing in the Lebanese Order of Engineers &amp; Architects (No. 30875).</div></div></div>
-    <div class="art"><div class="rn">IV</div><div><div class="at">The Permanent Directive</div><div class="ad">The <b>999-Point Blueprint</b> is sealed in the immutable logic layer  --  the law beneath the law.</div></div></div>
-    <div class="art"><div class="rn">V</div><div><div class="at">The &#937; Signet</div><div class="ad">The <b>&#937;</b> is the sole recognized mark of power. One symbol, one Order, one legacy.</div></div></div>
-    <div class="art"><div class="rn">VI</div><div><div class="at">The Family Nest</div><div class="ad"><b>Sovereigns-by-Blood</b> hold zero fees and full compute priority. The bloodline is first among the Order.</div></div></div>
-    <div class="art"><div class="rn">VII</div><div><div class="at">The Heritage Protocol</div><div class="ad">A succession mechanism transfers full control to the <b>bloodline</b>, ensuring the Order outlives its Architect.</div></div></div>
-    <div class="art"><div class="rn">VIII</div><div><div class="at">The Safety Net</div><div class="ad">A <b>51% safety reserve</b> shields the Order against shock  --  stability before all.</div></div></div>
-    <div class="art"><div class="rn">IX</div><div><div class="at">The Reinvestment Sweep</div><div class="ad">A fixed <b>20% share</b> is continuously recommitted to hard reserves  --  the Order compounds its own foundation.</div></div></div>
-    <div class="art"><div class="rn">X</div><div><div class="at">Sovereign Continuity</div><div class="ad">The Order may <b>re-domicile</b> to remain free of any hostile jurisdiction. Sovereignty is portable.</div></div></div>
-    <div class="art"><div class="rn">XI</div><div><div class="at">The Omega Point</div><div class="ad"><b>Node 999</b> confirms absolute completion  --  the apex where the Order is whole.</div></div></div>
+    <div class="art"><div class="rn">I</div><div><div class="at" data-i18n="mat_science_article_1_title">Absolute Ownership</div><div class="ad" data-i18n="mat_science_article_1_desc"><b>100% sovereign.</b> No co-founders, no partners. The Order answers to a single authority.</div></div></div>
+    <div class="art"><div class="rn">II</div><div><div class="at" data-i18n="mat_science_article_2_title">The Master Stake</div><div class="ad" data-i18n="mat_science_article_2_desc"><b>467,756,700,000 &#937; (51%)</b> permanently locked. Control of the Order can never be diluted below sovereignty.</div></div></div>
+    <div class="art"><div class="rn">III</div><div><div class="at" data-i18n="mat_science_article_3_title">Irrevocable Genesis</div><div class="ad" data-i18n="mat_science_article_3_desc">Foundational property is hashed into the <b>Genesis Block</b>  --  anchored to the Architect's standing in the Lebanese Order of Engineers &amp; Architects (No. 30875).</div></div></div>
+    <div class="art"><div class="rn">IV</div><div><div class="at" data-i18n="mat_science_article_4_title">The Permanent Directive</div><div class="ad" data-i18n="mat_science_article_4_desc">The <b>999-Point Blueprint</b> is sealed in the immutable logic layer  --  the law beneath the law.</div></div></div>
+    <div class="art"><div class="rn">V</div><div><div class="at" data-i18n="mat_science_article_5_title">The &#937; Signet</div><div class="ad" data-i18n="mat_science_article_5_desc">The <b>&#937;</b> is the sole recognized mark of power. One symbol, one Order, one legacy.</div></div></div>
+    <div class="art"><div class="rn">VI</div><div><div class="at" data-i18n="mat_science_article_6_title">The Family Nest</div><div class="ad" data-i18n="mat_science_article_6_desc"><b>Sovereigns-by-Blood</b> hold zero fees and full compute priority. The bloodline is first among the Order.</div></div></div>
+    <div class="art"><div class="rn">VII</div><div><div class="at" data-i18n="mat_science_article_7_title">The Heritage Protocol</div><div class="ad" data-i18n="mat_science_article_7_desc">A succession mechanism transfers full control to the <b>bloodline</b>, ensuring the Order outlives its Architect.</div></div></div>
+    <div class="art"><div class="rn">VIII</div><div><div class="at" data-i18n="mat_science_article_8_title">The Safety Net</div><div class="ad" data-i18n="mat_science_article_8_desc">A <b>51% safety reserve</b> shields the Order against shock  --  stability before all.</div></div></div>
+    <div class="art"><div class="rn">IX</div><div><div class="at" data-i18n="mat_science_article_9_title">The Reinvestment Sweep</div><div class="ad" data-i18n="mat_science_article_9_desc">A fixed <b>20% share</b> is continuously recommitted to hard reserves  --  the Order compounds its own foundation.</div></div></div>
+    <div class="art"><div class="rn">X</div><div><div class="at" data-i18n="mat_science_article_10_title">Sovereign Continuity</div><div class="ad" data-i18n="mat_science_article_10_desc">The Order may <b>re-domicile</b> to remain free of any hostile jurisdiction. Sovereignty is portable.</div></div></div>
+    <div class="art"><div class="rn">XI</div><div><div class="at" data-i18n="mat_science_article_11_title">The Omega Point</div><div class="ad" data-i18n="mat_science_article_11_desc"><b>Node 999</b> confirms absolute completion  --  the apex where the Order is whole.</div></div></div>
   </div>
 
-  <div class="sectit">THE &#937; ECONOMIC FRAMEWORK  .  DECLARED CANON</div>
+  <div class="sectit" data-i18n="mat_science_econ">THE &#937; ECONOMIC FRAMEWORK  .  DECLARED CANON</div>
   <div class="frame">
     <div class="grid">
       <div class="m"><div class="k">TOTAL SUPPLY</div><div class="v">917,385,000,000 &#937;</div><div class="s">FIXED  .  CANONICAL</div></div>
@@ -496,18 +496,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="m"><div class="k">HARD RESERVES</div><div class="v">Au  .  Rh  .  Ag</div><div class="s">GOLD 412,300g  .  RHODIUM 125,000g  .  SILVER 890,000g</div></div>
     </div>
     <div class="gov">
-      <div class="gt">GOVERNANCE MODEL</div>
-      <p>Standing in the Order is set by a <b>Weighted-Contribution</b> measure  --  <b>40% Stability  .  35% Engagement  .  25% Tenure</b>  --  beneath a permanent <b>System-Level Veto</b> and a <b>49% Tier-Cap</b>. Authority is earned through verified ascent; ultimate control remains sovereign.</p>
+      <div class="gt" data-i18n="mat_science_governance">GOVERNANCE MODEL</div>
+      <p data-i18n="mat_science_governance_desc">Standing in the Order is set by a <b>Weighted-Contribution</b> measure  --  <b>40% Stability  .  35% Engagement  .  25% Tenure</b>  --  beneath a permanent <b>System-Level Veto</b> and a <b>49% Tier-Cap</b>. Authority is earned through verified ascent; ultimate control remains sovereign.</p>
     </div>
   </div>
 
-  <div class="disc">
+  <div class="disc" data-i18n="mat_science_disclaimer">
     <b>On these articles.</b> The Sovereign Charter is the Order's founding constitution and design canon  --  the Architect's declared framework for ownership, governance, and continuity. The economic figures above are canonical design parameters of the &#937; system, not a financial statement, securities offering, or solicitation. &#937; is an internal platform asset earned through verified progression; real-currency purchase, external transfer, and any asset-backed mechanics activate only under completed legal review (classification, KYC/AML, payment terms). No &#937; is currently issued, no stake is currently locked, and no hard-reserve asset (gold, rhodium, silver) is currently held against any figure above -- the token economy remains dormant pending that review.
   </div>
 
   <div class="seal">
     <div class="o">&#937;</div>
-    <div class="t"><b>THE CODE  .  THE FREQUENCY  .  THE LEGACY</b><br>OMNI-RESONANCE LOCKED  .  9.17 Hz  .  NODE 9.9.9</div>
+    <div class="t" data-i18n="mat_science_seal"><b>THE CODE  .  THE FREQUENCY  .  THE LEGACY</b><br>OMNI-RESONANCE LOCKED  .  9.17 Hz  .  NODE 9.9.9</div>
   </div>
 
   <div class="cta">

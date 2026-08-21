@@ -208,11 +208,11 @@
         </div>
 
         <!-- SOVEREIGN ACTIVITY HEATMAP (reads public.task_completions, own rows only) -->
-        <div class="sechead" style="margin-top:16px">SOVEREIGN ACTIVITY &middot; 90-DAY CONTRIBUTION HEATMAP</div>
+        <div class="sechead" style="margin-top:16px" data-i18n="dash_activity_heatmap">SOVEREIGN ACTIVITY &middot; 90-DAY CONTRIBUTION HEATMAP</div>
         <div class="heatmap-wrap"><div id="contribution-heatmap"></div></div>
 
         <!-- PERSONAL TOOL GRID -->
-        <div class="sechead" style="margin-top:16px">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
+        <div class="sechead" style="margin-top:16px" data-i18n="dash_personal_tools">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px">
           <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/journal.html'"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
           <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/vision.html'"><div class="cc-icon" style="color:var(--green)">&#11088;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
@@ -229,9 +229,9 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead">PLATFORM COMMAND INDEX &middot; ALL 170 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 170 PAGES &middot; 15 SECTIONS <span class="sechead-action" onclick="location.href='/ecosystem.html'" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <div id="platform-sections"></div>
-        <div class="sechead" style="margin-top:24px">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
+        <div class="sechead" style="margin-top:24px" data-i18n="dash_intelligence_engine">INTELLIGENCE ENGINE &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
           <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="ana-events">--</div><div class="kpi-l">EVENTS (7d)</div></div>
           <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="ana-sessions">--</div><div class="kpi-l">SESSIONS (7d)</div></div>
@@ -242,13 +242,13 @@
         </div>
         <div class="two-col" style="align-items:start;margin-bottom:14px">
           <div>
-            <div class="sechead">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'">FULL ANALYTICS &#8594;</span></div>
+            <div class="sechead" data-i18n="dash_axis_radar">AXIS PROGRESSION RADAR <span class="sechead-action" onclick="location.href='/analytics.html'" data-i18n="dash_full_analytics">FULL ANALYTICS &#8594;</span></div>
             <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="dash-radar" style="max-height:180px"></canvas>
             </div>
           </div>
           <div>
-            <div class="sechead">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
+            <div class="sechead" data-i18n="dash_sovereign_intelligence">SOVEREIGN INTELLIGENCE &middot; DIRECT QUERY</div>
             <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
               <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:11px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
               <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">
@@ -258,9 +258,9 @@
             </div>
           </div>
         </div>
-        <div class="sechead">TOP PAGES &middot; SESSION DISTRIBUTION</div>
+        <div class="sechead" data-i18n="dash_top_pages">TOP PAGES &middot; SESSION DISTRIBUTION</div>
         <div id="top-pages-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:24px" data-loading></div>
-        <div class="sechead">SOVEREIGN COMMAND &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
+        <div class="sechead" data-i18n="dash_sovereign_command">SOVEREIGN COMMAND &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
         <div class="kpi-row">
           <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/gaming.html'"><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l">TASKS (7d)</div></div>
           <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/automation.html'"><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l">WORKFLOWS LIVE</div></div>
@@ -272,7 +272,7 @@
           <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/observatory.html'"><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l">THREATS (7d)</div></div>
           <div class="kpi" style="--kc:var(--solar)" data-tooltip="Estimated cost of this browser session only (AI tokens, DB reads, edge calls) -- not real billing data. See omega-finops.js." data-tooltip-placement="bottom"><div class="kpi-n" id="adm-finops-cost">--</div><div class="kpi-l">SESSION COST (EST.)</div></div>
         </div>
-        <div class="sechead">ACTIVE WORKFLOWS</div>
+        <div class="sechead" data-i18n="dash_active_workflows">ACTIVE WORKFLOWS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
           <div class="cmd-card card" style="--cc:var(--green)"  onclick="location.href='/automation.html'"><div class="cc-name">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
           <div class="cmd-card card" style="--cc:var(--gold)"   onclick="location.href='/gates.html'"><div class="cc-name">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
@@ -280,16 +280,16 @@
           <div class="cmd-card card" style="--cc:var(--purple)" onclick="location.href='/evolution.html'"><div class="cc-name">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
           <div class="cmd-card card" style="--cc:var(--solar)"  onclick="location.href='/privacy.html'"><div class="cc-name">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
-        <div class="sechead">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'">FULL COMMAND &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_agent_quick_access">AGENT QUICK ACCESS <span class="sechead-action" onclick="location.href='/sovereign-ai.html'" data-i18n="dash_full_command">FULL COMMAND &#8594;</span></div>
         <div id="agent-quick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px"></div>
-        <div class="sechead">ADMIN ACTIONS &middot; OWNER CONTROLS</div>
+        <div class="sechead" data-i18n="dash_admin_actions">ADMIN ACTIONS &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
-          <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; APPROVE ACCESS REQUESTS</button>
-          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; SRE OBSERVATORY</button>
-          <button onclick="location.href='/enterprise.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; ENTERPRISE CONTROL</button>
-          <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; GOVERNANCE BOARD</button>
-          <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; EVOLUTION ROADMAP</button>
-          <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">&#8594; PRIVACY CENTRE</button>
+          <button onclick="location.href='/approvals.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_approve_access">&#8594; APPROVE ACCESS REQUESTS</button>
+          <button onclick="location.href='/observatory.html'" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_sre_observatory">&#8594; SRE OBSERVATORY</button>
+          <button onclick="location.href='/enterprise.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_enterprise_control">&#8594; ENTERPRISE CONTROL</button>
+          <button onclick="location.href='/governance.html'"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_governance_board">&#8594; GOVERNANCE BOARD</button>
+          <button onclick="location.href='/roadmap.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_evolution_roadmap">&#8594; EVOLUTION ROADMAP</button>
+          <button onclick="location.href='/privacy.html'"     style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'" data-i18n="dash_privacy_centre">&#8594; PRIVACY CENTRE</button>
         </div>
       </div>
     </div>

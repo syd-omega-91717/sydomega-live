@@ -266,6 +266,28 @@ prof_access_requests: {en:'Access Requests',ar:'طلبات الوصول',fr:'Dem
 prof_trial_duration:  {en:'Trial Duration',ar:'مدة المحاولة',fr:'Durée du procès',es:'Duración del ensayo',nl:'Proefperiode',zh:'试用期限',hi:'परीक्षण अवधि'},
 prof_all_members:     {en:'All Members',ar:'جميع الأعضاء',fr:'Tous les membres',es:'Todos los miembros',nl:'Alle leden',zh:'所有成员',hi:'सभी सदस्य'},
 
+/* ── DASHBOARD SECTIONS ── */
+dash_activity_heatmap:{en:'SOVEREIGN ACTIVITY · 90-DAY CONTRIBUTION HEATMAP',ar:'النشاط السيادي · خريطة حرارية للمساهمة لمدة 90 يومًا',fr:'ACTIVITÉ SOUVERAINE · CARTE THERMIQUE DE CONTRIBUTION 90 JOURS',es:'ACTIVIDAD SOBERANA · MAPA DE CALOR DE CONTRIBUCIÓN DE 90 DÍAS',nl:'SOEVEREINE ACTIVITEIT · 90-DAAGSE BIJDRAGENHEATMAP',zh:'主权活动·90天贡献热力图',hi:'संप्रभु गतिविधि·90 दिन का योगदान हीटमैप'},
+dash_personal_tools:  {en:'PERSONAL SOVEREIGN TOOLS · ALL 8 MODULES',ar:'أدوات سيادية شخصية · جميع 8 وحدات',fr:'OUTILS SOUVERAINS PERSONNELS · TOUS LES 8 MODULES',es:'HERRAMIENTAS SOBERANAS PERSONALES · LOS 8 MÓDULOS',nl:'PERSOONLIJKE SOEVEREINE TOOLS · ALLE 8 MODULES',zh:'个人主权工具·全部8个模块',hi:'व्यक्तिगत संप्रभु उपकरण·सभी 8 मॉड्यूल'},
+dash_platform_index:  {en:'PLATFORM COMMAND INDEX · ALL 170 PAGES · 15 SECTIONS',ar:'فهرس أوامر المنصة · 170 صفحة · 15 قسم',fr:'INDEX DE COMMANDE DE PLATEFORME · 170 PAGES · 15 SECTIONS',es:'ÍNDICE DE COMANDOS DE PLATAFORMA · 170 PÁGINAS · 15 SECCIONES',nl:'PLATFORMOPDRACHT INDEX · 170 PAGINA\'S · 15 SECTIES',zh:'平台命令索引·170页·15个部分',hi:'प्लेटफॉर्म आदेश सूचकांक·170 पृष्ठ·15 अनुभाग'},
+dash_ecosystem_map:   {en:'ECOSYSTEM MAP',ar:'خريطة النظام البيئي',fr:'CARTE DE L\'ÉCOSYSTÈME',es:'MAPA DEL ECOSISTEMA',nl:'ECOSYSTEEMKAART',zh:'生态系统地图',hi:'पारिस्थितिकी तंत्र मानचित्र'},
+dash_intelligence_engine:{en:'INTELLIGENCE ENGINE · ANALYTICS · RADAR · AI QUERY',ar:'محرك الذكاء · التحليلات · الرادار · استعلام الذكاء الاصطناعي',fr:'MOTEUR D\'INTELLIGENCE · ANALYTIQUE · RADAR · REQUÊTE IA',es:'MOTOR DE INTELIGENCIA · ANÁLISIS · RADAR · CONSULTA IA',nl:'INTELLIGENTIEMOTOR · ANALYSES · RADAR · AI-QUERY',zh:'智能引擎·分析·雷达·人工智能查询',hi:'बुद्धिमत्ता इंजन·विश्लेषण·रडार·एआई क्वेरी'},
+dash_axis_radar:      {en:'AXIS PROGRESSION RADAR',ar:'رادار تقدم المحور',fr:'RADAR DE PROGRESSION DES AXES',es:'RADAR DE PROGRESIÓN DE EJES',nl:'AS PROGRESSIE RADAR',zh:'轴线进展雷达',hi:'अक्ष प्रगति रडार'},
+dash_full_analytics:  {en:'FULL ANALYTICS',ar:'التحليلات الكاملة',fr:'ANALYTIQUE COMPLÈTE',es:'ANÁLISIS COMPLETO',nl:'VOLLEDIGE ANALYTIEK',zh:'完整分析',hi:'पूर्ण विश्लेषण'},
+dash_sovereign_intelligence:{en:'SOVEREIGN INTELLIGENCE · DIRECT QUERY',ar:'الذكاء السيادي · الاستعلام المباشر',fr:'INTELLIGENCE SOUVERAINE · REQUÊTE DIRECTE',es:'INTELIGENCIA SOBERANA · CONSULTA DIRECTA',nl:'SOEVEREINE INLICHTINGEN · DIRECT QUERY',zh:'主权智能·直接查询',hi:'संप्रभु बुद्धिमत्ता·सीधी क्वेरी'},
+dash_top_pages:       {en:'TOP PAGES · SESSION DISTRIBUTION',ar:'أفضل الصفحات · توزيع الجلسة',fr:'PAGES PRINCIPALES · DISTRIBUTION DES SESSIONS',es:'PÁGINAS PRINCIPALES · DISTRIBUCIÓN DE SESIONES',nl:'TOPPAGIN\'S · SESSIEVERDELINGS',zh:'热门页面·会话分布',hi:'शीर्ष पृष्ठ·सत्र वितरण'},
+dash_sovereign_command:{en:'SOVEREIGN COMMAND · OPERATIONS · AGENTS · ADMINISTRATION',ar:'القيادة السيادية · العمليات · الوكلاء · الإدارة',fr:'COMMANDE SOUVERAINE · OPÉRATIONS · AGENTS · ADMINISTRATION',es:'COMANDO SOBERANO · OPERACIONES · AGENTES · ADMINISTRACIÓN',nl:'SOEVEREIN COMMANDO · OPERATIES · AGENTEN · ADMINISTRATIE',zh:'主权命令·运营·代理·管理',hi:'संप्रभु आदेश·संचालन·एजेंट·प्रशासन'},
+dash_active_workflows:{en:'ACTIVE WORKFLOWS',ar:'سير العمل النشطة',fr:'FLUX DE TRAVAIL ACTIFS',es:'FLUJOS DE TRABAJO ACTIVOS',nl:'ACTIEVE WERKSTROMEN',zh:'活跃工作流',hi:'सक्रिय कार्यप्रवाह'},
+dash_agent_quick_access:{en:'AGENT QUICK ACCESS',ar:'الوصول السريع للوكيل',fr:'ACCÈS RAPIDE AGENT',es:'ACCESO RÁPIDO A AGENTES',nl:'AGENT SNELLE TOEGANG',zh:'代理快速访问',hi:'एजेंट त्वरित पहुंच'},
+dash_full_command:    {en:'FULL COMMAND',ar:'الأمر الكامل',fr:'COMMANDE COMPLÈTE',es:'COMANDO COMPLETO',nl:'VOLLEDIG COMMANDO',zh:'完整命令',hi:'पूर्ण आदेश'},
+dash_admin_actions:   {en:'ADMIN ACTIONS · OWNER CONTROLS',ar:'إجراءات المسؤول · عناصر تحكم المالك',fr:'ACTIONS ADMIN · CONTRÔLES PROPRIÉTAIRE',es:'ACCIONES ADMIN · CONTROLES DEL PROPIETARIO',nl:'ADMIN-ACTIES · EIGENAARBESTURINGEN',zh:'管理操作·所有者控制',hi:'प्रशासक कार्य·मालिक नियंत्रण'},
+dash_approve_access:  {en:'APPROVE ACCESS REQUESTS',ar:'الموافقة على طلبات الوصول',fr:'APPROUVER LES DEMANDES D\'ACCÈS',es:'APROBAR SOLICITUDES DE ACCESO',nl:'TOEGANGSAANVRAGEN GOEDKEUREN',zh:'批准访问请求',hi:'अभिगम अनुरोधों को मंजूरी दें'},
+dash_sre_observatory: {en:'SRE OBSERVATORY',ar:'مرصد SRE',fr:'OBSERVATOIRE SRE',es:'OBSERVATORIO SRE',nl:'SRE OBSERVATORIUM',zh:'SRE观测台',hi:'SRE वेधशाला'},
+dash_enterprise_control:{en:'ENTERPRISE CONTROL',ar:'التحكم في المؤسسة',fr:'CONTRÔLE D\'ENTREPRISE',es:'CONTROL EMPRESARIAL',nl:'BEDRIJFSCONTROLE',zh:'企业控制',hi:'एंटरप्राइज नियंत्रण'},
+dash_governance_board:{en:'GOVERNANCE BOARD',ar:'مجلس الحوكمة',fr:'CONSEIL DE GOUVERNANCE',es:'JUNTA DE GOBERNANZA',nl:'BESTUURRAAD',zh:'治理委员会',hi:'शासन बोर्ड'},
+dash_evolution_roadmap:{en:'EVOLUTION ROADMAP',ar:'خريطة طريق التطور',fr:'FEUILLE DE ROUTE ÉVOLUTION',es:'HOJA DE RUTA DE EVOLUCIÓN',nl:'EVOLUTIE ROADMAP',zh:'演进路线图',hi:'विकास रोडमैप'},
+dash_privacy_centre:  {en:'PRIVACY CENTRE',ar:'مركز الخصوصية',fr:'CENTRE DE CONFIDENTIALITÉ',es:'CENTRO DE PRIVACIDAD',nl:'PRIVACYCENTRUM',zh:'隐私中心',hi:'गोपनीयता केंद्र'},
+
 /* ── GENERAL UI ── */
 loading:              {en:'Loading',ar:'جاري التحميل',fr:'Chargement',es:'Cargando',nl:'Laden',zh:'加载中',hi:'लोड हो रहा है'},
 refresh:              {en:'Refresh',ar:'تحديث',fr:'Actualiser',es:'Actualizar',nl:'Vernieuwen',zh:'刷新',hi:'ताज़ा करें'},

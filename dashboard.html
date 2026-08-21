@@ -94,9 +94,9 @@
 
     <!-- MISSION BAR -->
     <div class="mission-bar">
-      <div style="display:flex;align-items:center;gap:10px"><div class="mb-title">&#937; COMMAND BRIDGE</div><canvas id="db-ring-auth" data-omega-ring data-ring-size="36" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
+      <div style="display:flex;align-items:center;gap:10px"><div class="mb-title" data-i18n="cmd_bridge">&#937; COMMAND BRIDGE</div><canvas id="db-ring-auth" data-omega-ring data-ring-size="36" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
       <div class="mb-meta">
-        <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label">OPERATIONAL</span></div>
+        <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label" data-i18n="operational">OPERATIONAL</span></div>
         <div class="mb-item">&#128336; <span id="mb-time">--:--:--</span></div>
         <div class="mb-item">&#9670; <span id="mb-date">--</span></div>
         <div class="mb-item">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:13px">--</span></div>
@@ -106,15 +106,15 @@
 
     <!-- STATUS STRIP -->
     <div class="status-strip" role="status" aria-label="Platform status">
-      <div class="ss-item"><div class="ss-label">MEMBERS</div><div class="ss-val" id="ss-members" data-live-members>--</div></div>
-      <div class="ss-item"><div class="ss-label">AUTH APEX</div><div class="ss-val" style="--vc:var(--gold)">27.8367</div></div>
-      <div class="ss-item"><div class="ss-label">LATTICE NODES</div><div class="ss-val" style="--vc:var(--cyan)">104,976</div></div>
-      <div class="ss-item"><div class="ss-label">JS ENGINES</div><div class="ss-val" style="--vc:var(--purple)">92</div></div>
-      <div class="ss-item"><div class="ss-label">PAGES</div><div class="ss-val" style="--vc:var(--green)">170</div></div>
-      <div class="ss-item"><div class="ss-label">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">105</div></div>
-      <div class="ss-item"><div class="ss-label">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
-      <div class="ss-item"><div class="ss-label">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
-      <div class="ss-item"><div class="ss-label">FORMULA</div><div class="ss-val" style="--vc:rgba(138,134,118,.5);font-size:8px">A&#179;+B&#179;+C&#179;</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="active_members">MEMBERS</div><div class="ss-val" id="ss-members" data-live-members>--</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="auth_apex">AUTH APEX</div><div class="ss-val" style="--vc:var(--gold)">27.8367</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="lattice_nodes">LATTICE NODES</div><div class="ss-val" style="--vc:var(--cyan)">104,976</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="js_engines">JS ENGINES</div><div class="ss-val" style="--vc:var(--purple)">92</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="pages">PAGES</div><div class="ss-val" style="--vc:var(--green)">170</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="sql_files">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">105</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="my_gate">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="my_element">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
+      <div class="ss-item"><div class="ss-label" data-i18n="formula">FORMULA</div><div class="ss-val" style="--vc:rgba(138,134,118,.5);font-size:8px">A&#179;+B&#179;+C&#179;</div></div>
     </div>
 
     <!-- PLATFORM HEALTH BAR -->
@@ -122,10 +122,10 @@
 
     <!-- 4-TAB SYSTEM -->
     <div class="layer-tabs" role="tablist">
-      <button class="ltab active" role="tab" aria-selected="true"  onclick="setTab('overview')">&#9650; OVERVIEW</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('personal')">&#9670; PERSONAL</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('platform')">&#9654; PLATFORM</button>
-      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('science')">&#8982; SCIENCE</button>
+      <button class="ltab active" role="tab" aria-selected="true"  onclick="setTab('overview')" data-i18n="tab_overview">&#9650; OVERVIEW</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('personal')" data-i18n="tab_personal">&#9670; PERSONAL</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('platform')" data-i18n="tab_platform">&#9654; PLATFORM</button>
+      <button class="ltab"        role="tab" aria-selected="false" onclick="setTab('science')" data-i18n="tab_science">&#8982; SCIENCE</button>
     </div>
 
     <!-- LAYER: OVERVIEW -->
@@ -133,19 +133,19 @@
       <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
         <div class="kpi-row" data-reveal="fade-up">
-          <div class="kpi" id="kpi-auth" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div>
-          <div class="kpi" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." onclick="location.href='/approvals.html'" style="--kc:var(--cyan)"><div class="kpi-n" id="k-members" data-live-members>--</div><div class="kpi-l">ACTIVE MEMBERS</div><div class="kpi-sub">ACCESS APPROVED</div></div>
-          <div class="kpi" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div class="kpi-n" id="k-online">--</div><div class="kpi-l">ONLINE NOW</div><div class="kpi-sub">LIVE PRESENCE</div></div>
-          <div class="kpi" data-living="tasks-today" data-tooltip="Tasks completed today across all members. Each task increments one axis by 0.001–0.25." onclick="location.href='/gaming.html'" style="--kc:var(--green)"><div class="kpi-n" id="k-tasks">--</div><div class="kpi-l">TASKS TODAY</div><div class="kpi-sub">AXIS INCREMENTS</div></div>
-          <div class="kpi" data-tooltip="Platform Meaning Index (0–100) · Measures operational discipline, system integration depth, and sovereign coherence." onclick="location.href='/observatory.html'" style="--kc:var(--purple)"><div class="kpi-n">87</div><div class="kpi-l">PLATFORM PMI</div><div class="kpi-sub">MEANING INDEX</div></div>
-          <div class="kpi" data-living="platform-health" data-tooltip="Service Level Objective · 30-day platform uptime target is 99.9% (8.7h allowed downtime per year)." onclick="location.href='/observatory.html'" style="--kc:var(--solar)"><div class="kpi-n">99.9%</div><div class="kpi-l">SLO UPTIME</div><div class="kpi-sub">30-DAY</div></div>
-          <div class="kpi" data-tooltip="Open risk items tracked under ISO 27001 information security management. Click to manage in Governance." onclick="location.href='/governance.html'" style="--kc:var(--crim)"><div class="kpi-n" id="k-risks">--</div><div class="kpi-l">OPEN RISKS</div><div class="kpi-sub">ISO 27001</div></div>
-          <div class="kpi" data-tooltip="Platform events logged today across all sovereign systems (task completions, gate unlocks, AI queries)." onclick="location.href='/vault.html'" style="--kc:var(--solar)"><div class="kpi-n" id="k-events">--</div><div class="kpi-l">EVENTS TODAY</div><div class="kpi-sub">PLATFORM PULSE</div></div>
-          <div class="kpi" data-tooltip="Authority gates reached · 12 gates from INITIATE (2.32) to APEX (27.84). Each gate unlocks platform privileges." onclick="location.href='/leaderboard.html'" style="--kc:var(--gold)"><div class="kpi-n" id="k-gates">--</div><div class="kpi-l">GATES REACHED</div><div class="kpi-sub">OF 12</div></div>
+          <div class="kpi" id="kpi-auth" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" onclick="location.href='/evolution.html'" aria-label="My authority score" style="--kc:var(--gold)"><div class="kpi-n" id="k-auth">--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div></div>
+          <div class="kpi" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." onclick="location.href='/approvals.html'" style="--kc:var(--cyan)"><div class="kpi-n" id="k-members" data-live-members>--</div><div class="kpi-l" data-i18n="active_members">ACTIVE MEMBERS</div><div class="kpi-sub" data-i18n="access_approved">ACCESS APPROVED</div></div>
+          <div class="kpi" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div class="kpi-n" id="k-online">--</div><div class="kpi-l" data-i18n="online_now">ONLINE NOW</div><div class="kpi-sub" data-i18n="live_presence">LIVE PRESENCE</div></div>
+          <div class="kpi" data-living="tasks-today" data-tooltip="Tasks completed today across all members. Each task increments one axis by 0.001–0.25." onclick="location.href='/gaming.html'" style="--kc:var(--green)"><div class="kpi-n" id="k-tasks">--</div><div class="kpi-l" data-i18n="tasks_today">TASKS TODAY</div><div class="kpi-sub" data-i18n="axis_increments">AXIS INCREMENTS</div></div>
+          <div class="kpi" data-tooltip="Platform Meaning Index (0–100) · Measures operational discipline, system integration depth, and sovereign coherence." onclick="location.href='/observatory.html'" style="--kc:var(--purple)"><div class="kpi-n">87</div><div class="kpi-l" data-i18n="platform_pmi">PLATFORM PMI</div><div class="kpi-sub" data-i18n="meaning_index">MEANING INDEX</div></div>
+          <div class="kpi" data-living="platform-health" data-tooltip="Service Level Objective · 30-day platform uptime target is 99.9% (8.7h allowed downtime per year)." onclick="location.href='/observatory.html'" style="--kc:var(--solar)"><div class="kpi-n">99.9%</div><div class="kpi-l" data-i18n="slo_uptime">SLO UPTIME</div><div class="kpi-sub" data-i18n="thirty_day">30-DAY</div></div>
+          <div class="kpi" data-tooltip="Open risk items tracked under ISO 27001 information security management. Click to manage in Governance." onclick="location.href='/governance.html'" style="--kc:var(--crim)"><div class="kpi-n" id="k-risks">--</div><div class="kpi-l" data-i18n="open_risks">OPEN RISKS</div><div class="kpi-sub" data-i18n="iso_27001">ISO 27001</div></div>
+          <div class="kpi" data-tooltip="Platform events logged today across all sovereign systems (task completions, gate unlocks, AI queries)." onclick="location.href='/vault.html'" style="--kc:var(--solar)"><div class="kpi-n" id="k-events">--</div><div class="kpi-l" data-i18n="events_today">EVENTS TODAY</div><div class="kpi-sub" data-i18n="platform_pulse">PLATFORM PULSE</div></div>
+          <div class="kpi" data-tooltip="Authority gates reached · 12 gates from INITIATE (2.32) to APEX (27.84). Each gate unlocks platform privileges." onclick="location.href='/leaderboard.html'" style="--kc:var(--gold)"><div class="kpi-n" id="k-gates">--</div><div class="kpi-l" data-i18n="gates_reached">GATES REACHED</div><div class="kpi-sub" data-i18n="of_12">OF 12</div></div>
         </div>
 
         <!-- SYSTEM GALAXY -->
-        <div class="sechead" data-reveal="fade-up">SYSTEM GALAXY &middot; 18 SOVEREIGN MODULES &middot; CLICK TO NAVIGATE <span class="sechead-action" onclick="location.href='/ecosystem.html'">FULL MAP &#8594;</span></div>
+        <div class="sechead" data-reveal="fade-up"><span data-i18n="system_galaxy">SYSTEM GALAXY</span> &middot; 18 <span data-i18n="sovereign_modules">SOVEREIGN MODULES</span> &middot; <span data-i18n="click_navigate">CLICK TO NAVIGATE</span> <span class="sechead-action" onclick="location.href='/ecosystem.html'">FULL MAP &#8594;</span></div>
         <div class="galaxy-wrap" style="height:clamp(240px,38vh,400px)">
           <canvas id="galaxy-canvas" role="img" aria-label="Sovereign platform module galaxy"></canvas>
           <div class="galaxy-center-label">
@@ -155,7 +155,7 @@
         </div>
 
         <!-- ACTION CENTER (merged alerts + recommendations) -->
-        <div class="sechead" data-reveal="fade-up">ACTION CENTRE &middot; PRIORITY ITEMS <span class="sechead-action" onclick="location.href='/observatory.html'">OBSERVATORY &#8594;</span></div>
+        <div class="sechead" data-reveal="fade-up"><span data-i18n="action_centre">ACTION CENTRE</span> &middot; <span data-i18n="priority_items">PRIORITY ITEMS</span> <span class="sechead-action" onclick="location.href='/observatory.html'">OBSERVATORY &#8594;</span></div>
         <div class="alert-list" id="alert-list" style="margin-bottom:16px">
           <div class="alert-item" style="--ac:var(--crim)"><div class="alert-icon">&#9650;</div><div><div class="alert-text">Run the SQL migrations in supabase/migrations/ (see its README.md) or the flat supabase/*.sql files against the live database.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: CRITICAL &middot; ONE-TIME SETUP</div></div></div>
           <div class="alert-item" style="--ac:var(--solar)"><div class="alert-icon">&#9888;</div><div><div class="alert-text">Set ANTHROPIC_API_KEY in Supabase secrets to activate AI concierge edge functions.</div><div class="alert-meta">ACTION REQUIRED &middot; PRIORITY: HIGH &middot; AI MODULE</div></div></div>
@@ -165,7 +165,7 @@
         </div>
 
         <!-- COMMAND INDEX — 18 MODULE PORTALS -->
-        <div class="sechead" data-reveal="fade-up">COMMAND INDEX &middot; 18 SOVEREIGN MODULE PORTALS</div>
+        <div class="sechead" data-reveal="fade-up"><span data-i18n="command_index">COMMAND INDEX</span> &middot; 18 <span data-i18n="module_portals">SOVEREIGN MODULE PORTALS</span></div>
         <div class="cmd-grid" id="cmd-grid"></div>
       </div>
     </div>
@@ -173,36 +173,36 @@
     <!-- LAYER: PERSONAL -->
     <div id="l-personal" class="layer-panel">
       <div class="pad">
-        <div class="sechead">PERSONAL OS &middot; SOVEREIGN SELF-SYSTEM &middot; LIVE FROM YOUR DEVICE <span class="sechead-action" onclick="renderPersonalOS()">&#8635; REFRESH</span></div>
+        <div class="sechead"><span data-i18n="personal_os">PERSONAL OS</span> &middot; <span data-i18n="sovereign_self_system">SOVEREIGN SELF-SYSTEM</span> &middot; <span data-i18n="live_from_device">LIVE FROM YOUR DEVICE</span> <span class="sechead-action" onclick="renderPersonalOS()">&#8635; REFRESH</span></div>
         <!-- PERSONAL KPI ROW -->
         <div class="kpi-row" id="personal-kpis">
-          <div class="kpi" style="--kc:var(--purple)" onclick="location.href='/journal.html'"><div class="kpi-n" id="pk-journal">--</div><div class="kpi-l">JOURNAL ENTRIES</div><div class="kpi-sub">SOVEREIGN VAULT</div></div>
-          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="kpi-n" id="pk-streak">--</div><div class="kpi-l">GRATITUDE STREAK</div><div class="kpi-sub">DAYS</div></div>
-          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="kpi-n" id="pk-cards">--</div><div class="kpi-l">CARDS DUE TODAY</div><div class="kpi-sub">SM-2 QUEUE</div></div>
-          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/vision.html'"><div class="kpi-n" id="pk-vision">--</div><div class="kpi-l">VISION SCORE AVG</div><div class="kpi-sub">LIFE WHEEL</div></div>
-          <div class="kpi" style="--kc:var(--solar)"  onclick="location.href='/budget.html'"><div class="kpi-n" id="pk-savings">--</div><div class="kpi-l">SAVINGS RATE</div><div class="kpi-sub">THIS MONTH</div></div>
-          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/network.html'"><div class="kpi-n" id="pk-network">--</div><div class="kpi-l">CONTACTS DUE</div><div class="kpi-sub">NEED TOUCHPOINT</div></div>
-          <div class="kpi" style="--kc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="kpi-n" id="pk-decisions">--</div><div class="kpi-l">OPEN DECISIONS</div><div class="kpi-sub">AWAITING COMMIT</div></div>
-          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/body.html'"><div class="kpi-n" id="pk-body">--</div><div class="kpi-l">BODY WEIGHT</div><div class="kpi-sub" id="pk-body-unit">KG · LAST LOG</div></div>
+          <div class="kpi" style="--kc:var(--purple)" onclick="location.href='/journal.html'"><div class="kpi-n" id="pk-journal">--</div><div class="kpi-l" data-i18n="journal_entries">JOURNAL ENTRIES</div><div class="kpi-sub">SOVEREIGN VAULT</div></div>
+          <div class="kpi" style="--kc:var(--gold)"   onclick="location.href='/gratitude.html'"><div class="kpi-n" id="pk-streak">--</div><div class="kpi-l" data-i18n="gratitude_streak">GRATITUDE STREAK</div><div class="kpi-sub">DAYS</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"   onclick="location.href='/flashcard.html'"><div class="kpi-n" id="pk-cards">--</div><div class="kpi-l" data-i18n="cards_due_today">CARDS DUE TODAY</div><div class="kpi-sub">SM-2 QUEUE</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/vision.html'"><div class="kpi-n" id="pk-vision">--</div><div class="kpi-l" data-i18n="vision_score_avg">VISION SCORE AVG</div><div class="kpi-sub">LIFE WHEEL</div></div>
+          <div class="kpi" style="--kc:var(--solar)"  onclick="location.href='/budget.html'"><div class="kpi-n" id="pk-savings">--</div><div class="kpi-l" data-i18n="savings_rate">SAVINGS RATE</div><div class="kpi-sub">THIS MONTH</div></div>
+          <div class="kpi" style="--kc:var(--crim)"   onclick="location.href='/network.html'"><div class="kpi-n" id="pk-network">--</div><div class="kpi-l" data-i18n="contacts_due">CONTACTS DUE</div><div class="kpi-sub" data-i18n="need_touchpoint">NEED TOUCHPOINT</div></div>
+          <div class="kpi" style="--kc:var(--ink)"    onclick="location.href='/decisions.html'"><div class="kpi-n" id="pk-decisions">--</div><div class="kpi-l" data-i18n="open_decisions">OPEN DECISIONS</div><div class="kpi-sub" data-i18n="awaiting_commit">AWAITING COMMIT</div></div>
+          <div class="kpi" style="--kc:var(--green)"  onclick="location.href='/body.html'"><div class="kpi-n" id="pk-body">--</div><div class="kpi-l" data-i18n="body_weight">BODY WEIGHT</div><div class="kpi-sub" id="pk-body-unit">KG · LAST LOG</div></div>
         </div>
 
         <!-- TWO-COL: VISION WHEEL + PERSONAL TOOLS -->
         <div class="two-col" style="align-items:start">
           <div>
-            <div class="sechead">LIFE WHEEL &middot; 8 DOMAINS <span class="sechead-action" onclick="location.href='/vision.html'">FULL VIEW &#8594;</span></div>
+            <div class="sechead"><span data-i18n="life_wheel">LIFE WHEEL</span> &middot; 8 <span data-i18n="eight_domains">DOMAINS</span> <span class="sechead-action" onclick="location.href='/vision.html'"><span data-i18n="full_view">FULL VIEW</span> &#8594;</span></div>
             <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.95);padding:10px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="personal-wheel" style="max-width:200px;max-height:200px"></canvas>
             </div>
           </div>
           <div>
-            <div class="sechead">TODAY&#39;S QUICK ACTIONS</div>
+            <div class="sechead" data-i18n="todays_quick_actions">TODAY&#39;S QUICK ACTIONS</div>
             <div style="display:flex;flex-direction:column;gap:7px" id="personal-actions">
-              <a href="/journal.html"   style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--purple);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(155,107,240,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9998;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">WRITE IN JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">ENCRYPTED &middot; PRIVATE</div></div></a>
-              <a href="/gratitude.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#10024;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">LOG GRATITUDE</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">3 THINGS &middot; SELIGMAN METHOD</div></div></a>
-              <a href="/flashcard.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--cyan);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(0,229,255,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span id="pa-cards-label" style="font-size:16px">&#128278;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">STUDY FLASHCARDS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-cards-sub">SM-2 SPACED REPETITION</div></div></a>
-              <a href="/body.html"      style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--green);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(63,178,127,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">LOG BODY STATS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">WEIGHT &middot; BF% &middot; MEASUREMENTS</div></div></a>
-              <a href="/budget.html"    style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--solar);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(226,200,109,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9874;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">TRACK BUDGET</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-budget-sub">MONTHLY OVERVIEW</div></div></a>
-              <a href="/decisions.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid rgba(201,168,76,.4);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.04)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)">DECISION JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px">5 FRAMEWORKS &middot; BIAS GUARD</div></div></a>
+              <a href="/journal.html"   style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--purple);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(155,107,240,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9998;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="write_in_journal">WRITE IN JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px"><span data-i18n="encrypted_private">ENCRYPTED &middot; PRIVATE</span></div></div></a>
+              <a href="/gratitude.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#10024;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="log_gratitude">LOG GRATITUDE</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px"><span data-i18n="three_things">3 THINGS</span> &middot; SELIGMAN METHOD</div></div></a>
+              <a href="/flashcard.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--cyan);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(0,229,255,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span id="pa-cards-label" style="font-size:16px">&#128278;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="study_flashcards">STUDY FLASHCARDS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-cards-sub" data-i18n="sm2_spaced_repetition">SM-2 SPACED REPETITION</div></div></a>
+              <a href="/body.html"      style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--green);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(63,178,127,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="log_body_stats">LOG BODY STATS</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" data-i18n="weight_bf_measurements">WEIGHT &middot; BF% &middot; MEASUREMENTS</div></div></a>
+              <a href="/budget.html"    style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--solar);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(226,200,109,.06)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9874;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="track_budget">TRACK BUDGET</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" id="pa-budget-sub" data-i18n="monthly_overview">MONTHLY OVERVIEW</div></div></a>
+              <a href="/decisions.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-left:3px solid rgba(201,168,76,.4);background:rgba(10,10,15,.55);border-radius:2px;text-decoration:none;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.04)'" onmouseout="this.style.background='rgba(10,10,15,.55)'"><span style="font-size:16px">&#9878;</span><div><div style="font-family:var(--M);font-size:8.5px;letter-spacing:1.5px;color:var(--ink)" data-i18n="decision_journal">DECISION JOURNAL</div><div style="font-family:var(--M);font-size:7px;color:var(--muted);margin-top:2px" data-i18n="frameworks_bias_guard">5 FRAMEWORKS &middot; BIAS GUARD</div></div></a>
             </div>
           </div>
         </div>

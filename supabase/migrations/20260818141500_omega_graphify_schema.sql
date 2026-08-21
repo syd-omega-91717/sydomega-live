@@ -287,9 +287,9 @@ SELECT
   e.entity_type,
   COALESCE((SELECT COUNT(*) FROM public.graph_relationships
     WHERE user_id = p_user_id
-    AND (source_entity_id = e.id OR target_entity_id = e.id)), 0),
+    AND (source_entity_id = e.id OR target_entity_id = e.id)), 0)::integer,
   e.confidence_score
 FROM public.graph_entities e
 WHERE e.user_id = p_user_id
-ORDER BY 4 DESC;
+ORDER BY degree DESC;
 $$ LANGUAGE SQL STABLE;

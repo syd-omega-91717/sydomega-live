@@ -445,9 +445,9 @@ a{color:inherit;text-decoration:none}
     <!-- TABS -->
     <div class="tab-nav">
       <div class="tab-btn active" data-tab="overview">&#9670; OVERVIEW</div>
-      <div class="tab-btn" data-tab="identity">&#9670; IDENTITY</div>
-      <div class="tab-btn" data-tab="passport">&#9670; PASSPORT</div>
-      <div class="tab-btn" data-tab="science">&#9670; SCIENCE</div>
+      <div class="tab-btn" data-tab="identity" data-i18n="prof_tab_identity">&#9670; IDENTITY</div>
+      <div class="tab-btn" data-tab="passport" data-i18n="prof_tab_passport">&#9670; PASSPORT</div>
+      <div class="tab-btn" data-tab="science" data-i18n="prof_tab_science">&#9670; SCIENCE</div>
     </div>
 
     <!-- TAB: OVERVIEW -->
@@ -458,9 +458,9 @@ a{color:inherit;text-decoration:none}
       <div class="sechead" data-reveal="fade-up">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
       <div class="pad" data-reveal="fade-up">
         <div class="axis-panel card">
-          <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
-          <div class="axis-row"><span class="ar-id" style="color:#E86A3A">B</span><span class="ar-name">MASTERY</span><div class="ar-wrap"><div class="ar-fill" id="bar-b" style="width:0%;background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.3))"></div></div><span class="ar-val" style="color:#E86A3A">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
-          <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
+          <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name" data-i18n="prof_axis_knowledge">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
+          <div class="axis-row"><span class="ar-id" style="color:#E86A3A">B</span><span class="ar-name" data-i18n="prof_axis_mastery">MASTERY</span><div class="ar-wrap"><div class="ar-fill" id="bar-b" style="width:0%;background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.3))"></div></div><span class="ar-val" style="color:#E86A3A">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
+          <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name" data-i18n="prof_axis_contribution">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
         </div>
       </div>
       <div class="sechead" data-reveal="fade-up">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
@@ -482,20 +482,20 @@ a{color:inherit;text-decoration:none}
     <div class="tab-panel" id="tab-identity">
       <div class="sechead" data-reveal="fade-up">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_full_name">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
-        <div class="id-field"><div class="idf-label">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
-        <div class="id-field"><div class="idf-label">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
-        <div class="id-field"><div class="idf-label">DATE OF BIRTH</div><div class="idf-val">19 APRIL 1982</div></div>
-        <div class="id-field"><div class="idf-label">PLACE OF BIRTH</div><div class="idf-val">TRIPOLI, LEBANON</div></div>
-        <div class="id-field"><div class="idf-label">NATIONALITY</div><div class="idf-val">LEBANESE</div></div>
-        <div class="id-field"><div class="idf-label">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
-        <div class="id-field"><div class="idf-label">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
-        <div class="id-field"><div class="idf-label">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_father_name">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_mother_name">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_date_of_birth">DATE OF BIRTH</div><div class="idf-val">19 APRIL 1982</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_place_of_birth">PLACE OF BIRTH</div><div class="idf-val">TRIPOLI, LEBANON</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_nationality">NATIONALITY</div><div class="idf-val">LEBANESE</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_blood_type">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_registry">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_region">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
         </div>
-        <div class="id-field"><div class="idf-label">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
-        <div class="id-field"><div class="idf-label">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
-        <div class="id-field"><div class="idf-label">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)" id="idf-token">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_platform_sign">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_agent_assigned">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_sovereign_token">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)" id="idf-token">--</div></div>
       </div>
     </div>
 

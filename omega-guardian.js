@@ -70,6 +70,25 @@
       if(window.OmegaTelemetry)window.OmegaTelemetry.track('guardian_denied',{action:actionType,score:_sessionScore});
       throw new Error('Guardian denied: '+actionType);
     }
+
+    /* Check with backend gate() for high-privilege actions (grant_permanent_access, revoke_member, extend_trial) */
+    var isHighPrivilege=actionType==='admin'||actionType==='payment'||actionType==='erasure';
+    if(isHighPrivilege&&window.__omegaSb){
+      try{
+        var gateCheck=await window.__omegaSb.rpc('check_gate',{p_action:actionType,p_risk_score:_sessionScore});
+        if(gateCheck.error||!gateCheck.data||!gateCheck.data.passed){
+          _deniedCount++;
+          _logAudit(actionType,'denied',context,'backend_gate_check_failed');
+          if(window.OmegaNotify)window.OmegaNotify.showToast('ACTION DENIED by security gate. Risk score: '+_sessionScore+'/100','error');
+          throw new Error('Guardian gate denied: '+actionType);
+        }
+      }catch(err){
+        _logAudit(actionType,'denied',context,'gate_rpc_error:'+err.message);
+        if(window.OmegaNotify)window.OmegaNotify.showToast('Security verification failed. Please try again.','error');
+        throw err;
+      }
+    }
+
     /* Verify session is still valid */
     var now=Date.now();
     if(now-_lastVerified>900000&&requiredScore>=40){  /* 15 min */

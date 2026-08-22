@@ -455,7 +455,7 @@ ON CONFLICT (key) DO NOTHING;
 -- Ensure all new tables have proper indexes for common queries
 CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON public.notifications(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_digest_preferences_enabled ON public.digest_preferences(weekly_digest_enabled) WHERE weekly_digest_enabled = true;
-CREATE INDEX IF NOT EXISTS idx_digest_queue_status ON public.weekly_digest_queue(status, created_at) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_digest_queue_status ON public.weekly_digest_queue(status, queued_at) WHERE status = 'pending';
 CREATE INDEX IF NOT EXISTS idx_gate_evaluations_user_date ON public.gate_evaluations(user_id, created_at DESC);
 
 -- Log this migration's completion in a simple way

@@ -434,20 +434,20 @@ a{color:inherit;text-decoration:none}
 
     <!-- LIVE STATS (inspired by Image 1-B: Level, Points, Achievements) -->
     <div class="stat-grid" id="stat-grid" data-reveal="fade-up">
-      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">AUTHORITY</div><div class="sgi-val" id="sg-auth" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-auth-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--cyan)"><div class="sgi-label">MATRIX COORD</div><div class="sgi-val" id="sg-coord" style="color:var(--cyan);font-size:14px">(--,--,--)</div><div class="sgi-sub" id="sg-coord-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">MATERIAL TIER</div><div class="sgi-val" id="sg-tier" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-tier-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--green)"><div class="sgi-label">GRADE</div><div class="sgi-val" id="sg-grade" style="color:var(--green)">--</div><div class="sgi-sub" id="sg-grade-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--solar)"><div class="sgi-label">ACHIEVEMENTS</div><div class="sgi-val" id="sg-ach" style="color:var(--solar)">--</div><div class="sgi-sub" id="sg-ach-sub">Loading...</div></div>
-      <div class="sg-item" style="--c:var(--purple)"><div class="sgi-label">MEMBERSHIP</div><div class="sgi-val" id="sg-member" style="color:var(--purple)">--</div><div class="sgi-sub" id="sg-member-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label" data-i18n="profile_stat_authority">AUTHORITY</div><div class="sgi-val" id="sg-auth" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-auth-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--cyan)"><div class="sgi-label" data-i18n="profile_stat_matrix_coord">MATRIX COORD</div><div class="sgi-val" id="sg-coord" style="color:var(--cyan);font-size:14px">(--,--,--)</div><div class="sgi-sub" id="sg-coord-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label" data-i18n="profile_stat_material_tier">MATERIAL TIER</div><div class="sgi-val" id="sg-tier" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-tier-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--green)"><div class="sgi-label" data-i18n="profile_stat_grade">GRADE</div><div class="sgi-val" id="sg-grade" style="color:var(--green)">--</div><div class="sgi-sub" id="sg-grade-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--solar)"><div class="sgi-label" data-i18n="profile_stat_achievements">ACHIEVEMENTS</div><div class="sgi-val" id="sg-ach" style="color:var(--solar)">--</div><div class="sgi-sub" id="sg-ach-sub">Loading...</div></div>
+      <div class="sg-item" style="--c:var(--purple)"><div class="sgi-label" data-i18n="profile_stat_membership">MEMBERSHIP</div><div class="sgi-val" id="sg-member" style="color:var(--purple)">--</div><div class="sgi-sub" id="sg-member-sub" style="min-height:9px" data-loading></div></div>
     </div>
 
     <!-- TABS -->
     <div class="tab-nav">
-      <div class="tab-btn active" data-tab="overview">&#9670; OVERVIEW</div>
-      <div class="tab-btn" data-tab="identity">&#9670; IDENTITY</div>
-      <div class="tab-btn" data-tab="passport">&#9670; PASSPORT</div>
-      <div class="tab-btn" data-tab="science">&#9670; SCIENCE</div>
+      <div class="tab-btn active" data-tab="overview" data-i18n="profile_tab_overview">&#9670; OVERVIEW</div>
+      <div class="tab-btn" data-tab="identity" data-i18n="profile_tab_identity">&#9670; IDENTITY</div>
+      <div class="tab-btn" data-tab="passport" data-i18n="profile_tab_passport">&#9670; PASSPORT</div>
+      <div class="tab-btn" data-tab="science" data-i18n="profile_tab_science">&#9670; SCIENCE</div>
     </div>
 
     <!-- TAB: OVERVIEW -->
@@ -455,7 +455,7 @@ a{color:inherit;text-decoration:none}
       <div class="sechead" data-reveal="fade-up">MEMBERSHIP</div>
       <div class="pad" data-reveal="fade-up" id="membership-card" style="border:1px solid rgba(201,168,76,.2);padding:16px;margin-bottom:20px" data-loading></div>
 
-      <div class="sechead" data-reveal="fade-up">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_matrix_axes">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
       <div class="pad" data-reveal="fade-up">
         <div class="axis-panel card">
           <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
@@ -463,7 +463,7 @@ a{color:inherit;text-decoration:none}
           <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
         </div>
       </div>
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_achievements">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
       <div class="pad" data-reveal="fade-up"><div class="ach-grid" id="ach-grid" data-reveal="fade-up" data-stagger="80"></div></div>
       <!-- Architect Console (hidden from non-owners) -->
       <div class="arch-console" id="arch-console">
@@ -482,7 +482,7 @@ a{color:inherit;text-decoration:none}
     <div class="tab-panel" id="tab-identity">
       <div class="sechead" data-reveal="fade-up">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="profile_field_full_name">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
         <div class="id-field"><div class="idf-label">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
         <div class="id-field"><div class="idf-label">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
@@ -493,9 +493,9 @@ a{color:inherit;text-decoration:none}
         <div class="id-field"><div class="idf-label">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
         <div class="id-field"><div class="idf-label">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
         </div>
-        <div class="id-field"><div class="idf-label">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
-        <div class="id-field"><div class="idf-label">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
-        <div class="id-field"><div class="idf-label">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)" id="idf-token">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="profile_field_platform_sign">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="profile_field_agent_assigned">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="profile_field_sovereign_token">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)" id="idf-token">--</div></div>
       </div>
     </div>
 
@@ -531,7 +531,7 @@ a{color:inherit;text-decoration:none}
         Professional credential cards are set individually. This section is available to the Architect only for the platform's own registration.
       </div>
       <!-- 12 Certs - all issued -->
-      <div class="sechead" data-reveal="fade-up">YOUR SOVEREIGN CERTIFICATES</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_certificates">YOUR SOVEREIGN CERTIFICATES</div>
       <div class="pad" data-reveal="fade-up" id="cert-display"></div>
     </div>
 
@@ -552,17 +552,17 @@ a{color:inherit;text-decoration:none}
 <script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
   <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--gold)" id="mat-a-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_a">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
     <div style="height:3px;background:rgba(201,168,76,.08);margin-top:8px;border-radius:1px"><div id="mat-a-pb" style="height:100%;background:var(--gold);width:0%;transition:width 1s"></div></div>
   </div>
   <div style="border:1px solid rgba(0,229,255,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--cyan)" id="mat-b-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS B &middot; B&#179;=<span id="mat-b3">--</span></div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_b">AXIS B &middot; B&#179;=<span id="mat-b3">--</span></div>
     <div style="height:3px;background:rgba(0,229,255,.06);margin-top:8px;border-radius:1px"><div id="mat-b-pb" style="height:100%;background:var(--cyan);width:0%;transition:width 1s"></div></div>
   </div>
   <div style="border:1px solid rgba(63,178,127,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--green)" id="mat-c-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS C &middot; C&#179;=<span id="mat-c3">--</span></div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_c">AXIS C &middot; C&#179;=<span id="mat-c3">--</span></div>
     <div style="height:3px;background:rgba(63,178,127,.06);margin-top:8px;border-radius:1px"><div id="mat-c-pb" style="height:100%;background:var(--green);width:0%;transition:width 1s"></div></div>
   </div>
 </div>
@@ -1391,40 +1391,40 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
 const ACHIEV=[
-  {n:1,name:'GENESIS',col:'#D9B86A',sym:'\u03A9'},{n:2,name:'KNOWLEDGE',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},
-  {n:3,name:'MASTERY',col:'#E86A3A',sym:'\u25C8'},{n:4,name:'CONTRIBUTION',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25B2'},
-  {n:5,name:'ELEMENTAL',col:'#D9B86A',sym:'\u2609'},{n:6,name:'CELESTIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736'},
-  {n:7,name:'SOVEREIGN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u03A9'},{n:8,name:'BLOODLINE',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),sym:'\u22D4'},
-  {n:9,name:'ECONOMIC',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25C8'},{n:10,name:'ORACLE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316'},
-  {n:11,name:'GUARDIAN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B6'},{n:12,name:'APEX',col:'#FFD700',sym:'\u03A9'},
-  {n:13,name:'1ST LIGHT',col:'#D9B86A',sym:'\u2726',type:'MEDAL'},{n:14,name:'PIONEER',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF',type:'MEDAL'},
-  {n:15,name:'CRAFTMASTER',col:'#E86A3A',sym:'\u2699',type:'MEDAL'},{n:16,name:'BUILDER',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B2',type:'MEDAL'},
-  {n:17,name:'NAVIGATOR',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2609',type:'MEDAL'},{n:18,name:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u22D4',type:'MEDAL'},
-  {n:19,name:'GUARDIAN',col:'#D9B86A',sym:'\u25C8',type:'MEDAL'},{n:20,name:'CONSUL',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u2726',type:'MEDAL'},
-  {n:21,name:'RESEARCHER',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316',type:'MEDAL'},{n:22,name:'PROPHET',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736',type:'MEDAL'},
-  {n:23,name:'KEEPER',col:'#D9B86A',sym:'\u21C4',type:'MEDAL'},{n:24,name:'OMEGA SVRN',col:'#FFD700',sym:'\u03A9',type:'MEDAL'},
-  {n:25,name:'GENESIS CERT',col:'#D9B86A',sym:'\u25A3',type:'CERT'},{n:26,name:'KNOWLEDGE I',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25A3',type:'CERT'},
-  {n:27,name:'MASTERY I',col:'#E86A3A',sym:'\u25A3',type:'CERT'},{n:28,name:'MASTERY II',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),sym:'\u25A3',type:'CERT'},
-  {n:29,name:'ECONOMIST',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:30,name:'CELESTIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},
-  {n:31,name:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:32,name:'HERITAGE',col:'#D9B86A',sym:'\u25A3',type:'CERT'},
-  {n:33,name:'ORACLE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},{n:34,name:'CONSULTANT',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25A3',type:'CERT'},
-  {n:35,name:'PLATFORM MST',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:36,name:'OMEGA SVRN',col:'#FFD700',sym:'\u25A3',type:'CERT'},
+  {n:1,key:'achievement_genesis',col:'#D9B86A',sym:'\u03A9'},{n:2,key:'achievement_knowledge',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},
+  {n:3,key:'achievement_mastery',col:'#E86A3A',sym:'\u25C8'},{n:4,key:'achievement_contribution',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25B2'},
+  {n:5,key:'achievement_elemental',col:'#D9B86A',sym:'\u2609'},{n:6,key:'achievement_celestial',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736'},
+  {n:7,key:'achievement_sovereign',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u03A9'},{n:8,key:'achievement_bloodline',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),sym:'\u22D4'},
+  {n:9,key:'achievement_economic',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25C8'},{n:10,key:'achievement_oracle',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316'},
+  {n:11,key:'achievement_guardian',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B6'},{n:12,key:'achievement_apex',col:'#FFD700',sym:'\u03A9'},
+  {n:13,key:'medal_1st_light',col:'#D9B86A',sym:'\u2726',type:'MEDAL'},{n:14,key:'medal_pioneer',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF',type:'MEDAL'},
+  {n:15,key:'medal_craftmaster',col:'#E86A3A',sym:'\u2699',type:'MEDAL'},{n:16,key:'medal_builder',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B2',type:'MEDAL'},
+  {n:17,key:'medal_navigator',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2609',type:'MEDAL'},{n:18,key:'medal_architect',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u22D4',type:'MEDAL'},
+  {n:19,key:'medal_consul',col:'#D9B86A',sym:'\u25C8',type:'MEDAL'},{n:20,key:'medal_consul',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u2726',type:'MEDAL'},
+  {n:21,key:'medal_researcher',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316',type:'MEDAL'},{n:22,key:'medal_prophet',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736',type:'MEDAL'},
+  {n:23,key:'medal_keeper',col:'#D9B86A',sym:'\u21C4',type:'MEDAL'},{n:24,key:'medal_keeper',col:'#FFD700',sym:'\u03A9',type:'MEDAL'},
+  {n:25,key:'cert_genesis_cert',col:'#D9B86A',sym:'\u25A3',type:'CERT'},{n:26,key:'cert_knowledge_i',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25A3',type:'CERT'},
+  {n:27,key:'cert_mastery_i',col:'#E86A3A',sym:'\u25A3',type:'CERT'},{n:28,key:'cert_mastery_ii',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),sym:'\u25A3',type:'CERT'},
+  {n:29,key:'cert_economist',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:30,key:'cert_celestial',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},
+  {n:31,key:'cert_consultant',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:32,key:'cert_heritage',col:'#D9B86A',sym:'\u25A3',type:'CERT'},
+  {n:33,key:'cert_oracle',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},{n:34,key:'cert_consultant',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25A3',type:'CERT'},
+  {n:35,key:'cert_platform_mst',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:36,key:'cert_platform_mst',col:'#FFD700',sym:'\u25A3',type:'CERT'},
 ];
 
 const MATS=[
-  {n:1,name:'SAND',col:'#D9B86A',thresh:'1.73'},{n:2,name:'GLASS',col:'#A9C2D8',thresh:'2.99'},
-  {n:3,name:'IRON',col:'#C7CDD6',thresh:'4.25'},{n:4,name:'STEEL',col:'#8B8F9C',thresh:'5.51'},
-  {n:5,name:'TITANIUM',col:'#607D8B',thresh:'6.77'},{n:6,name:'CARBON',col:'#455A64',thresh:'8.03'},
-  {n:7,name:'GOLD',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),thresh:'9.29'},{n:8,name:'PLATINUM',col:'#E8D5B7',thresh:'10.55'},
-  {n:9,name:'DIAMOND',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),thresh:'11.81'},{n:10,name:'ADAMANT',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),thresh:'13.07'},
-  {n:11,name:'PRIME',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),thresh:'25.517'},{n:12,name:'OMEGA MASTER',col:'#FFD700',thresh:'27.83679'},
+  {n:1,key:'material_sand',col:'#D9B86A',thresh:'1.73'},{n:2,key:'material_glass',col:'#A9C2D8',thresh:'2.99'},
+  {n:3,key:'material_iron',col:'#C7CDD6',thresh:'4.25'},{n:4,key:'material_steel',col:'#8B8F9C',thresh:'5.51'},
+  {n:5,key:'material_titanium',col:'#607D8B',thresh:'6.77'},{n:6,key:'material_carbon',col:'#455A64',thresh:'8.03'},
+  {n:7,key:'material_gold',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),thresh:'9.29'},{n:8,key:'material_platinum',col:'#E8D5B7',thresh:'10.55'},
+  {n:9,key:'material_diamond',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),thresh:'11.81'},{n:10,key:'material_adamant',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),thresh:'13.07'},
+  {n:11,key:'material_prime',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),thresh:'25.517'},{n:12,key:'material_omega_master',col:'#FFD700',thresh:'27.83679'},
 ];
 
 const PHASES=[
-  {n:1,name:'SAND GENESIS'},{n:2,name:'GLASS AWAKENING'},{n:3,name:'IRON FORGING'},
-  {n:4,name:'STEEL TEMPERING'},{n:5,name:'TITANIUM ASCENT'},{n:6,name:'CARBON PRECISION'},
-  {n:7,name:'GOLD SOVEREIGNTY'},{n:8,name:'PLATINUM LEGACY'},{n:9,name:'DIAMOND APPROACH'},
-  {n:10,name:'DIAMOND CLARITY'},{n:11,name:'OMEGA THRESHOLD'},{n:12,name:'OMEGA MASTER'},
+  {n:1,key:'phase_sand_genesis'},{n:2,key:'phase_glass_awakening'},{n:3,key:'phase_iron_forging'},
+  {n:4,key:'phase_steel_tempering'},{n:5,key:'phase_titanium_ascent'},{n:6,key:'phase_carbon_precision'},
+  {n:7,key:'phase_gold_sovereignty'},{n:8,key:'phase_platinum_legacy'},{n:9,key:'phase_diamond_approach'},
+  {n:10,key:'phase_diamond_clarity'},{n:11,key:'phase_omega_threshold'},{n:12,key:'phase_omega_master'},
 ];
 
 function drawAchBadge(cv,sym,col){
@@ -1471,7 +1471,8 @@ async function buildAchievements(uid){
   document.getElementById('sg-coord-sub').textContent=realAuth>=APEX_AUTH-0.001?'Apex locked':'In progress';
   const myTier=MATS.filter(m=>realAuth>=parseFloat(m.thresh));
   const curTier=myTier.length?myTier[myTier.length-1]:MATS[0];
-  document.getElementById('sg-tier').textContent=curTier.name;
+  const tierName=window.OmegaI18n?window.OmegaI18n.t(curTier.key,'en'):'';
+  document.getElementById('sg-tier').textContent=tierName||'';
   document.getElementById('sg-tier-sub').textContent=myTier.length+' of 12 sealed';
   document.getElementById('sg-grade').textContent=myTier.length+'/12';
   document.getElementById('sg-grade-sub').textContent=myTier.length>=12?'Maximum':'In progress';
@@ -1492,20 +1493,23 @@ async function buildAchievements(uid){
   });
 
   const BOUND={
-    Aries:{agent:'Sentinel',token:'PYRON',element:'Fire'},Taurus:{agent:'Merchant',token:'AURUM',element:'Metal'},
-    Gemini:{agent:'Scout',token:'ZEPHYR',element:'Wind'},Cancer:{agent:'Warden',token:'NEREID',element:'Water'},
-    Leo:{agent:'Sovereign',token:'SOLARI',element:'Fire'},Virgo:{agent:'Auditor',token:'VIRGITE',element:'Sand'},
-    Libra:{agent:'Proxy',token:'FORGEON',element:'Wind'},Scorpio:{agent:'Oracle',token:'STYX',element:'Water'},
-    Sagittarius:{agent:'Beacon',token:'EMBER',element:'Fire'},Capricorn:{agent:'Analyst',token:'FERRUM',element:'Metal'},
-    Aquarius:{agent:'Tutor',token:'PRIME',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
+    Aries:{agentKey:'profile_agent_sentinel',tokenKey:'token_pyron',elementKey:'element_fire'},Taurus:{agentKey:'profile_agent_merchant',tokenKey:'token_aurum',elementKey:'element_metal'},
+    Gemini:{agentKey:'profile_agent_scout',tokenKey:'token_zephyr',elementKey:'element_wind'},Cancer:{agentKey:'profile_agent_warden',tokenKey:'token_nereid',elementKey:'element_water'},
+    Leo:{agentKey:'profile_agent_sovereign',tokenKey:'token_solari',elementKey:'element_fire'},Virgo:{agentKey:'profile_agent_auditor',tokenKey:'token_virgite',elementKey:'element_sand'},
+    Libra:{agentKey:'profile_agent_proxy',tokenKey:'token_forgeon',elementKey:'element_wind'},Scorpio:{agentKey:'profile_agent_oracle',tokenKey:'token_styx',elementKey:'element_water'},
+    Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
+    Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
   var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){
-    document.getElementById('idf-sign').textContent=pr.sign.toUpperCase()+' -- '+bound.element.toUpperCase()+' ELEMENT';
-    document.getElementById('idf-agent').textContent=bound.agent.toUpperCase()+' AGENT';
-    document.getElementById('idf-token').textContent=bound.token;
+    const elementName=window.OmegaI18n?window.OmegaI18n.t(bound.elementKey,'en'):'';
+    const agentName=window.OmegaI18n?window.OmegaI18n.t(bound.agentKey,'en'):'';
+    const tokenName=window.OmegaI18n?window.OmegaI18n.t(bound.tokenKey,'en'):'';
+    document.getElementById('idf-sign').textContent=pr.sign.toUpperCase()+' -- '+(elementName||'').toUpperCase()+' ELEMENT';
+    document.getElementById('idf-agent').textContent=(agentName||'').toUpperCase()+' AGENT';
+    document.getElementById('idf-token').textContent=tokenName||'';
   } else {
     document.getElementById('idf-sign').textContent='SET YOUR COSMOLOGY';
     document.getElementById('idf-agent').textContent='--';

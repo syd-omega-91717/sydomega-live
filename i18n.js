@@ -150,7 +150,181 @@ olympian:             {en:'Olympian',ar:'الأولمبي',fr:'Olympien',es:'Ol�
 agent:                {en:'Agent',ar:'العميل',fr:'Agent',es:'Agente',nl:'Agent',zh:'代理',hi:'एजेंट'},
 token:                {en:'Token',ar:'الرمز',fr:'Jeton',es:'Token',nl:'Token',zh:'代币',hi:'टोकन'},
 
-/* ── ACCESS & MEMBERSHIP ── */
+	/* ── PROFILE TABS ── */
+	profile_tab_overview: {en:'Overview',ar:'نظرة عامة',fr:'Aperçu',es:'Descripción general',nl:'Overzicht',zh:'概览',hi:'अवलोकन'},
+	profile_tab_identity: {en:'Identity',ar:'الهوية',fr:'Identité',es:'Identidad',nl:'Identiteit',zh:'身份',hi:'पहचान'},
+	profile_tab_passport:{en:'Passport',ar:'جواز السفر',fr:'Passeport',es:'Pasaporte',nl:'Paspoort',zh:'护照',hi:'पासपोर्ट'},
+	profile_tab_science: {en:'Science',ar:'العلم',fr:'Science',es:'Ciencia',nl:'Wetenschap',zh:'科学',hi:'विज्ञान'},
+
+	/* ── PROFILE STATS ── */
+	profile_stat_authority: {en:'Authority Score',ar:'درجة السلطة',fr:'Score d\'autorité',es:'Puntuación de autoridad',nl:'Gezagsscores',zh:'权力评分',hi:'अधिकार स्कोर'},
+	profile_stat_matrix_coord: {en:'Matrix Coordinates',ar:'إحداثيات المصفوفة',fr:'Coordonnées Matrice',es:'Coordenadas Matriz',nl:'Matrixcoördinaten',zh:'矩阵坐标',hi:'मैट्रिक्स निर्देशांक'},
+	profile_stat_material_tier: {en:'Material Tier',ar:'المستوى المادي',fr:'Niveau Matériel',es:'Nivel Material',nl:'Materiële laag',zh:'物质级别',hi:'भौतिक स्तर'},
+	profile_stat_grade: {en:'Grade Level',ar:'مستوى الصف',fr:'Niveau Scolaire',es:'Nivel de Grado',nl:'Klasniveau',zh:'等级水平',hi:'ग्रेड स्तर'},
+	profile_stat_achievements: {en:'Achievements',ar:'الإنجازات',fr:'Réalisations',es:'Logros',nl:'Prestaties',zh:'成就',hi:'उपलब्धियाँ'},
+	profile_stat_membership: {en:'Membership',ar:'العضوية',fr:'Adhésion',es:'Membresía',nl:'Lidmaatschap',zh:'会员资格',hi:'सदस्यता'},
+
+	/* ── PROFILE FIELDS ── */
+	profile_field_full_name: {en:'Full Name',ar:'الاسم الكامل',fr:'Nom complet',es:'Nombre completo',nl:'Volledige naam',zh:'全名',hi:'पूरा नाम'},
+	profile_field_platform_sign: {en:'Zodiac Sign',ar:'برج الأبراج',fr:'Signe Zodiaque',es:'Signo Zodiacal',nl:'Dierenriemteken',zh:'星座',hi:'राशि चिन्ह'},
+	profile_field_agent_assigned: {en:'Agent Assigned',ar:'الوكيل المعين',fr:'Agent Attribué',es:'Agente Asignado',nl:'Toegewezen agent',zh:'分配代理',hi:'निर्दिष्ट एजेंट'},
+	profile_field_sovereign_token: {en:'Sovereign Token',ar:'الرمز السيادي',fr:'Jeton Souverain',es:'Token Soberano',nl:'Soeverein Token',zh:'主权令牌',hi:'संप्रभु टोकन'},
+
+	/* ── PROFILE SECTIONS ── */
+	profile_section_matrix_axes: {en:'Matrix Axes',ar:'محاور المصفوفة',fr:'Axes de la Matrice',es:'Ejes de la Matriz',nl:'Matrixassen',zh:'矩阵轴',hi:'मैट्रिक्स अक्ष'},
+	profile_section_achievements: {en:'Achievements',ar:'الإنجازات',fr:'Réalisations',es:'Logros',nl:'Prestaties',zh:'成就',hi:'उपलब्धियाँ'},
+	profile_section_certificates: {en:'Certificates',ar:'الشهادات',fr:'Certificats',es:'Certificados',nl:'Certificaten',zh:'证书',hi:'प्रमाण पत्र'},
+
+	/* ── PROFILE AXES ── */
+	profile_axis_a: {en:'Axis A',ar:'المحور أ',fr:'Axe A',es:'Eje A',nl:'As A',zh:'轴A',hi:'अक्ष A'},
+	profile_axis_b: {en:'Axis B',ar:'المحور ب',fr:'Axe B',es:'Eje B',nl:'As B',zh:'轴B',hi:'अक्ष B'},
+	profile_axis_c: {en:'Axis C',ar:'المحور ج',fr:'Axe C',es:'Eje C',nl:'As C',zh:'轴C',hi:'अक्ष C'},
+
+	/* ── PROFICIENCY RANKS ── */
+	profile_rank_initiate: {en:'Initiate',ar:'المبتدئ',fr:'Initié',es:'Iniciado',nl:'Initiaat',zh:'新手',hi:'आरंभकर्ता'},
+	profile_rank_seeker: {en:'Seeker',ar:'الباحث',fr:'Chercheur',es:'Buscador',nl:'Zoeker',zh:'求道者',hi:'साधक'},
+	profile_rank_adept: {en:'Adept',ar:'الماهر',fr:'Adepte',es:'Adepto',nl:'Adept',zh:'熟练者',hi:'निपुण'},
+	profile_rank_expert: {en:'Expert',ar:'الخبير',fr:'Expert',es:'Experto',nl:'Expert',zh:'专家',hi:'विशेषज्ञ'},
+	profile_rank_master: {en:'Master',ar:'الماجستير',fr:'Maître',es:'Maestro',nl:'Meester',zh:'大师',hi:'मास्टर'},
+	profile_rank_elite: {en:'Elite',ar:'النخبة',fr:'Élite',es:'Élite',nl:'Elite',zh:'精英',hi:'अभिजात वर्ग'},
+	profile_rank_sovereign: {en:'Sovereign',ar:'السيد',fr:'Souverain',es:'Soberano',nl:'Soeverein',zh:'主权者',hi:'संप्रभु'},
+	profile_rank_legend: {en:'Legend',ar:'الأسطورة',fr:'Légende',es:'Leyenda',nl:'Legende',zh:'传奇',hi:'किंवदंती'},
+	profile_rank_omega: {en:'Omega',ar:'أوميجا',fr:'Oméga',es:'Omega',nl:'Omega',zh:'欧米茄',hi:'ओमेगा'},
+
+	/* ── MATERIAL TIERS ── */
+	profile_material_sand: {en:'Sand',ar:'الرمل',fr:'Sable',es:'Arena',nl:'Zand',zh:'沙',hi:'रेत'},
+	profile_material_glass: {en:'Glass',ar:'الزجاج',fr:'Verre',es:'Vidrio',nl:'Glas',zh:'玻璃',hi:'कांच'},
+	profile_material_iron: {en:'Iron',ar:'الحديد',fr:'Fer',es:'Hierro',nl:'IJzer',zh:'铁',hi:'लोहा'},
+	profile_material_steel: {en:'Steel',ar:'الصلب',fr:'Acier',es:'Acero',nl:'Staal',zh:'钢',hi:'स्टील'},
+	profile_material_titanium: {en:'Titanium',ar:'التيتانيوم',fr:'Titane',es:'Titanio',nl:'Titanium',zh:'钛',hi:'टाइटेनियम'},
+	profile_material_carbon: {en:'Carbon',ar:'الكربون',fr:'Carbone',es:'Carbono',nl:'Koolstof',zh:'碳',hi:'कार्बन'},
+	profile_material_gold: {en:'Gold',ar:'الذهب',fr:'Or',es:'Oro',nl:'Goud',zh:'金',hi:'सोना'},
+	profile_material_platinum: {en:'Platinum',ar:'البلاتين',fr:'Platine',es:'Platino',nl:'Platina',zh:'铂',hi:'प्लेटिनम'},
+	profile_material_omega_master: {en:'Omega Master',ar:'أوميجا ماستر',fr:'Maître Oméga',es:'Maestro Omega',nl:'Omega Meester',zh:'欧米茄大师',hi:'ओमेगा मास्टर'},
+
+	/* ── AGENTS (BY ZODIAC) ── */
+	profile_agent_aries: {en:'Sentinel',ar:'الحارس',fr:'Sentinelle',es:'Centinela',nl:'Wachter',zh:'哨兵',hi:'रक्षक'},
+	profile_agent_taurus: {en:'Merchant',ar:'التاجر',fr:'Marchand',es:'Comerciante',nl:'Koopman',zh:'商人',hi:'व्यापारी'},
+	profile_agent_gemini: {en:'Scout',ar:'الكشاف',fr:'Éclaireur',es:'Explorador',nl:'Verkenner',zh:'侦察员',hi:'स्काउट'},
+	profile_agent_cancer: {en:'Warden',ar:'الحارس الأساسي',fr:'Gardien',es:'Guardián',nl:'Bewaker',zh:'守护者',hi:'रक्षक मुखिया'},
+	profile_agent_leo: {en:'Sovereign',ar:'السيد',fr:'Souverain',es:'Soberano',nl:'Soeverein',zh:'主权者',hi:'संप्रभु'},
+	profile_agent_virgo: {en:'Auditor',ar:'المدقق',fr:'Auditeur',es:'Auditor',nl:'Auditor',zh:'审计员',hi:'लेखा परीक्षक'},
+	profile_agent_libra: {en:'Proxy',ar:'الوسيط',fr:'Mandataire',es:'Apoderado',nl:'Plaatsvervanger',zh:'代理人',hi:'प्रतिनिधि'},
+	profile_agent_scorpio: {en:'Oracle',ar:'العرّاف',fr:'Oracle',es:'Oráculo',nl:'Orakel',zh:'神谕者',hi:'भविष्यद्वाणी'},
+	profile_agent_sagittarius: {en:'Beacon',ar:'المشعل',fr:'Phare',es:'Faro',nl:'Baken',zh:'灯塔',hi:'मशाल'},
+	profile_agent_capricorn: {en:'Analyst',ar:'المحلل',fr:'Analyste',es:'Analista',nl:'Analist',zh:'分析师',hi:'विश्लेषक'},
+	profile_agent_aquarius: {en:'Tutor',ar:'المعلم',fr:'Tuteur',es:'Tutor',nl:'Tutor',zh:'导师',hi:'शिक्षक'},
+	profile_agent_pisces: {en:'Historian',ar:'المؤرخ',fr:'Historien',es:'Historiador',nl:'Historicus',zh:'历史学家',hi:'इतिहासकार'},
+
+	/* ── FACTIONS (BY ZODIAC) ── */
+	profile_faction_aries: {en:'Aegis Order',ar:'رتبة الحماية',fr:'Ordre de l\'Égide',es:'Orden del Égida',nl:'Aegis Orde',zh:'护盾秩序',hi:'ढाल आदेश'},
+	profile_faction_taurus: {en:'Gilded Hand',ar:'اليد الذهبية',fr:'Main Dorée',es:'Mano Dorada',nl:'Gouden Hand',zh:'镀金之手',hi:'सोने का हाथ'},
+	profile_faction_gemini: {en:'Lumen Choir',ar:'جوقة النور',fr:'Choeur Lumineux',es:'Coro Luminoso',nl:'Lichtkoor',zh:'光之唱诗班',hi:'प्रकाश गायकदल'},
+	profile_faction_cancer: {en:'Tidewardens',ar:'حراس المد',fr:'Gardiens des Marées',es:'Guardianes de las Mareas',nl:'Vloedwachters',zh:'潮汐守卫',hi:'ज्वार रक्षक'},
+	profile_faction_leo: {en:'Solar Crown',ar:'التاج الشمسي',fr:'Couronne Solaire',es:'Corona Solar',nl:'Zonnekroon',zh:'太阳王冠',hi:'सूर्य मुकुट'},
+	profile_faction_virgo: {en:'Grain Covenant',ar:'ميثاق الحبوب',fr:'Pacte des Moissons',es:'Pacto del Grano',nl:'Graan Verbond',zh:'谷物契约',hi:'अनाज वाचा'},
+	profile_faction_libra: {en:'Forge Guild',ar:'نقابة الحدادين',fr:'Guilde des Forgerons',es:'Gremio de Herreros',nl:'Smidsgilde',zh:'铁匠工会',hi:'लोहार संघ'},
+	profile_faction_scorpio: {en:'Crimson Veil',ar:'الحجاب الأحمر',fr:'Voile Pourpre',es:'Velo Carmesí',nl:'Karmijnrood Sluier',zh:'深红面纱',hi:'गहरा लाल परदा'},
+	profile_faction_sagittarius: {en:'Wild Hunt',ar:'الصيد البري',fr:'Chasse Sauvage',es:'Caza Salvaje',nl:'Wilde Jacht',zh:'野性狩猎',hi:'जंगली शिकार'},
+	profile_faction_capricorn: {en:'Hearth Bastion',ar:'حصن الموقد',fr:'Bastion du Foyer',es:'Bastión del Hogar',nl:'Huisbastille',zh:'家园堡垒',hi:'घर का गढ़'},
+	profile_faction_aquarius: {en:'Aether Senate',ar:'مجلس الأثير',fr:'Sénat de l\'Éther',es:'Senado del Éter',nl:'Ether Senaat',zh:'以太元老院',hi:'आकाश सभा'},
+	profile_faction_pisces: {en:'Deep Concord',ar:'التوافق العميق',fr:'Concorde des Profondeurs',es:'Concordia de las Profundidades',nl:'Diepe Harmonie',zh:'深度协和',hi:'गहरा सहमति'},
+
+	/* ── KYC STEPS ── */
+	profile_kyc_step_1_title: {en:'Email Verification',ar:'التحقق من البريد الإلكتروني',fr:'Vérification du courrier électronique',es:'Verificación de correo electrónico',nl:'E-mailverificatie',zh:'电子邮件验证',hi:'ईमेल सत्यापन'},
+	profile_kyc_step_1_desc: {en:'Confirm your sovereign email address. A verification link has been sent upon registration.',ar:'أكد عنوان بريدك الإلكتروني السيادي. تم إرسال رابط التحقق عند التسجيل.',fr:'Confirmez votre adresse e-mail souveraine. Un lien de vérification a été envoyé lors de l\'inscription.',es:'Confirma tu dirección de correo soberana. Se envió un enlace de verificación al registrarse.',nl:'Bevestig uw soevereine e-mailadres. Een verificatiekoppeling is verzonden bij registratie.',zh:'确认您的主权电子邮件地址。注册时已发送验证链接。',hi:'अपने संप्रभु ईमेल पते की पुष्टि करें। पंजीकरण पर एक सत्यापन लिंक भेजा गया था।'},
+	profile_kyc_step_1_action: {en:'Verified',ar:'التحقق',fr:'Vérifié',es:'Verificado',nl:'Geverifieerd',zh:'已验证',hi:'सत्यापित'},
+
+	profile_kyc_step_2_title: {en:'Profile Completion',ar:'إكمال الملف الشخصي',fr:'Complétion du profil',es:'Finalización del perfil',nl:'Profielaanvulling',zh:'个人资料完成',hi:'प्रोफाइल पूर्णता'},
+	profile_kyc_step_2_desc: {en:'Fill in your complete profile: full name, date of birth, zodiac sign, and nationality. Required for KYC.',ar:'أكمل ملفك الشخصي الكامل: الاسم الكامل وتاريخ الميلاد والبرج والجنسية. مطلوب لـ KYC.',fr:'Complétez votre profil complet: nom complet, date de naissance, signe du zodiaque et nationalité. Requis pour KYC.',es:'Completa tu perfil completo: nombre completo, fecha de nacimiento, signo zodiacal y nacionalidad. Requerido para KYC.',nl:'Vul uw volledige profiel in: volledige naam, geboortedatum, sterrenbeeld en nationaliteit. Vereist voor KYC.',zh:'填写您的完整资料：全名、出生日期、星座和国籍。KYC 所需。',hi:'अपनी पूर्ण प्रोफाइल भरें: पूरा नाम, जन्म तिथि, राशि और राष्ट्रीयता। KYC के लिए आवश्यक।'},
+	profile_kyc_step_2_action: {en:'Complete Profile',ar:'أكمل الملف الشخصي',fr:'Complétez le profil',es:'Completar perfil',nl:'Profiel aanvullen',zh:'完成个人资料',hi:'प्रोफाइल पूरा करें'},
+
+	profile_kyc_step_3_title: {en:'Identity Document',ar:'وثيقة الهوية',fr:'Document d\'identité',es:'Documento de identidad',nl:'Identiteitsdocument',zh:'身份文件',hi:'पहचान दस्तावेज'},
+	profile_kyc_step_3_desc: {en:'Upload a government-issued ID: passport, national ID, or driver\'s licence. Must be valid and not expired.',ar:'قم بتحميل معرف صادر عن الحكومة: جواز سفر أو بطاقة هوية وطنية أو رخصة قيادة. يجب أن تكون صالحة وغير منتهية الصلاحية.',fr:'Téléchargez une pièce d\'identité délivrée par le gouvernement: passeport, carte d\'identité nationale ou permis de conduire. Doit être valide et non expiré.',es:'Carga una identificación emitida por el gobierno: pasaporte, cédula de identidad o licencia de conducir. Debe ser válida y no estar vencida.',nl:'Upload een door de regering uitgegeven identiteitsbewijs: paspoort, nationale identiteitskaart of rijbewijs. Moet geldig en niet verlopen zijn.',zh:'上传政府签发的身份证件：护照、国民身份证或驾驶执照。必须有效且未过期。',hi:'सरकार द्वारा जारी पहचान पत्र अपलोड करें: पासपोर्ट, राष्ट्रीय आईडी या ड्राइविंग लाइसेंस। सक्रिय और समाप्त नहीं होना चाहिए।'},
+	profile_kyc_step_3_action: {en:'Upload Document',ar:'تحميل الوثيقة',fr:'Télécharger le document',es:'Cargar documento',nl:'Document uploaden',zh:'上传文件',hi:'दस्तावेज़ अपलोड करें'},
+
+	profile_kyc_step_4_title: {en:'Liveness Check',ar:'فحص الحياة',fr:'Vérification de vie',es:'Verificación de vida',nl:'Vitaliteitscontrole',zh:'生活检查',hi:'जीवन जांच'},
+	profile_kyc_step_4_desc: {en:'A short selfie video proves you are the person in the document. AI-assisted verification. Takes 60 seconds.',ar:'تثبت مقاطع فيديو السيلفي القصيرة أنك الشخص في الوثيقة. التحقق بمساعدة الذكاء الاصطناعي. يستغرق 60 ثانية.',fr:'Une courte vidéo selfie prouve que vous êtes la personne sur le document. Vérification assistée par l\'IA. Prend 60 secondes.',es:'Un breve video de selfie prueba que eres la persona en el documento. Verificación asistida por IA. Toma 60 segundos.',nl:'Een korte selfievideo bewijst dat u de persoon op het document bent. Verificatie ondersteund door AI. Duurt 60 seconden.',zh:'简短的自拍视频证明您是文件中的人。人工智能辅助验证。需要 60 秒。',hi:'एक छोटा सेल्फी वीडियो साबित करता है कि आप दस्तावेज़ में व्यक्ति हैं। एआई-सहायक सत्यापन। 60 सेकंड लगता है।'},
+	profile_kyc_step_4_action: {en:'Start Liveness Check',ar:'ابدأ فحص الحياة',fr:'Démarrer la vérification de vie',es:'Iniciar verificación de vida',nl:'Vitaliteitscontrole starten',zh:'开始生活检查',hi:'जीवन जांच शुरू करें'},
+
+	profile_kyc_step_5_title: {en:'Address Verification',ar:'التحقق من العنوان',fr:'Vérification d\'adresse',es:'Verificación de dirección',nl:'Adresverificatie',zh:'地址验证',hi:'पता सत्यापन'},
+	profile_kyc_step_5_desc: {en:'Provide a utility bill, bank statement, or official letter dated within 90 days showing your residential address.',ar:'قدم فاتورة مرافق أو كشف حساب بنكي أو خطاب رسمي مؤرخ في غضون 90 يومًا يوضح عنوان إقامتك.',fr:'Fournissez une facture de services publics, un relevé bancaire ou une lettre officielle datant des 90 derniers jours indiquant votre adresse résidentielle.',es:'Proporciona una factura de servicios públicos, un extracto bancario o una carta oficial fechada dentro de 90 días que muestre tu dirección residencial.',nl:'Voeg een nutsbedrijf in, bankafschrift of officiële brief van de afgelopen 90 dagen met uw woonadres.',zh:'提供公用事业账单、银行对账单或官方信函，日期在 90 天内，显示您的居住地址。',hi:'एक उपयोगिता बिल, बैंक विवरण या आधिकारिक पत्र प्रदान करें जो 90 दिनों के भीतर दिनांकित है और आपका आवासीय पता दिखाता है।'},
+	profile_kyc_step_5_action: {en:'Upload Proof of Address',ar:'تحميل إثبات العنوان',fr:'Télécharger la preuve d\'adresse',es:'Cargar comprobante de dirección',nl:'Adresverification uploaden',zh:'上传地址证明',hi:'पते का प्रमाण अपलोड करें'},
+
+	profile_kyc_step_6_title: {en:'KYC Review',ar:'مراجعة KYC',fr:'Examen KYC',es:'Revisión KYC',nl:'KYC-beoordeling',zh:'KYC审查',hi:'KYC समीक्षा'},
+	profile_kyc_step_6_desc: {en:'Submitted documents are reviewed by the compliance engine. Review takes 1-3 business days. You will be notified.',ar:'تتم مراجعة الوثائق المقدمة بواسطة محرك الامتثال. يستغرق الاستعراض 1-3 أيام عمل. سيتم إخطارك.',fr:'Les documents soumis sont examinés par le moteur de conformité. L\'examen prend 1 à 3 jours ouvrables. Vous serez notifié.',es:'Los documentos presentados son revisados por el motor de cumplimiento. La revisión toma 1-3 días hábiles. Serás notificado.',nl:'Ingediende documenten worden beoordeeld door de nalevingsengine. Beoordeling duurt 1-3 werkdagen. U wordt op de hoogte gesteld.',zh:'已提交的文件由合规引擎审查。审查需要 1-3 个工作日。您将收到通知。',hi:'प्रस्तुत दस्तावेज़ों की अनुपालन इंजन द्वारा समीक्षा की जाती है। समीक्षा में 1-3 व्यावसायिक दिन लगते हैं। आपको सूचित किया जाएगा।'},
+	profile_kyc_step_6_action: {en:'Awaiting Review',ar:'في انتظار المراجعة',fr:'En attente d\'examen',es:'Pendiente de revisión',nl:'In afwachting van beoordeling',zh:'等待审核',hi:'समीक्षा की प्रतीक्षा में'},
+
+	profile_kyc_step_7_title: {en:'KYC Approved',ar:'KYC موافق عليه',fr:'KYC approuvé',es:'KYC aprobado',nl:'KYC goedgekeurd',zh:'KYC已批准',hi:'KYC मंजूरी'},
+	profile_kyc_step_7_desc: {en:'Identity verified. Full economic features, token access, and sovereign credentials are now unlocked.',ar:'تم التحقق من الهوية. تم فتح جميع الميزات الاقتصادية والوصول إلى الرموز والبيانات الاعتماديةIFORM السيادية.',fr:'Identité vérifiée. Toutes les fonctionnalités économiques, l\'accès aux tokens et les credentials souverains sont maintenant déverrouillés.',es:'Identidad verificada. Se han desbloqueado todas las funciones económicas, el acceso a tokens y las credenciales soberanas.',nl:'Identiteit geverifieerd. Alle economische functies, tokentogang en soevereine geloofsbrieven zijn nu ontgrendeld.',zh:'身份已验证。所有经济功能、代币访问权限和主权证书现已解锁。',hi:'पहचान सत्यापित। सभी आर्थिक सुविधाएं, टोकन पहुंच और संप्रभु साक्षप्त्र अब अनलॉक हैं।'},
+	profile_kyc_step_7_action: {en:'Sovereign Unlocked',ar:'السيادية مفتوحة',fr:'Souverain déverrouillé',es:'Soberano desbloqueado',nl:'Soeverein ontgrendeld',zh:'主权已解锁',hi:'संप्रभु अनलॉक'},
+
+	/* ── KYC DOCUMENTS ── */
+	profile_kyc_doc_1_title: {en:'Passport',ar:'جواز السفر',fr:'Passeport',es:'Pasaporte',nl:'Paspoort',zh:'护照',hi:'पासपोर्ट'},
+	profile_kyc_doc_1_desc: {en:'International passport, all pages. File must be under 5MB. PDF or JPEG.',ar:'جواز سفر دولي، جميع الصفحات. يجب أن يكون الملف أقل من 5 ميجابايت. PDF أو JPEG.',fr:'Passeport international, toutes les pages. Le fichier doit être inférieur à 5 Mo. PDF ou JPEG.',es:'Pasaporte internacional, todas las páginas. El archivo debe ser menor de 5 MB. PDF o JPEG.',nl:'Internationaal paspoort, alle pagina\'s. Bestand moet minder dan 5 MB zijn. PDF of JPEG.',zh:'国际护照，所有页面。文件必须小于 5MB。PDF 或 JPEG。',hi:'अंतर्राष्ट्रीय पासपोर्ट, सभी पृष्ठ। फ़ाइल 5MB से कम होनी चाहिए। PDF या JPEG।'},
+
+	profile_kyc_doc_2_title: {en:'National ID',ar:'بطاقة الهوية الوطنية',fr:'Carte d\'identité nationale',es:'Carné de identidad nacional',nl:'Nationale identiteitskaart',zh:'国民身份证',hi:'राष्ट्रीय आईडी'},
+	profile_kyc_doc_2_desc: {en:'Front and back of national identity card. Clear, unobstructed photo.',ar:'الجانب الأمامي والخلفي لبطاقة الهوية الوطنية. صورة واضحة وخالية من العوائق.',fr:'Recto et verso de la carte d\'identité nationale. Photo claire et sans obstruction.',es:'Anverso y reverso de la tarjeta de identificación nacional. Foto clara e sin obstrucciones.',nl:'Voor- en achterkant van het nationale identiteitsdocument. Duidelijke, onbelemmerde foto.',zh:'国民身份证的正面和背面。清晰、无遮挡的照片。',hi:'राष्ट्रीय पहचान पत्र के आगे और पीछे। स्पष्ट, निर्बाध फोटो।'},
+
+	profile_kyc_doc_3_title: {en:'Proof of Address',ar:'إثبات العنوان',fr:'Preuve de résidence',es:'Comprobante de domicilio',nl:'Woonplaatsbewijs',zh:'地址证明',hi:'पता प्रमाण'},
+	profile_kyc_doc_3_desc: {en:'Utility bill or bank statement. Dated within 90 days. Shows full legal address.',ar:'فاتورة مرافق أو كشف حساب بنكي. بتاريخ في غضون 90 يومًا. يعرض العنوان القانوني الكامل.',fr:'Facture de service public ou relevé bancaire. Daté dans les 90 jours. Affiche l\'adresse légale complète.',es:'Recibo de servicios públicos o extracto bancario. Fechado dentro de 90 días. Muestra la dirección legal completa.',nl:'Nutsrekening of bankafschrift. Gedateerd binnen 90 dagen. Toont het volledige juridische adres.',zh:'公用事业账单或银行对账单。90天内开具。显示完整的法律地址。',hi:'उपयोगिता बिल या बैंक विवरण। 90 दिनों के भीतर दिनांकित। पूर्ण कानूनी पता दिखाता है।'},
+
+	profile_kyc_doc_4_title: {en:'Liveness Selfie',ar:'صورة ذاتية حية',fr:'Selfie de vivacité',es:'Selfie de vivacidad',nl:'Levendigheid Selfie',zh:'活跃自拍',hi:'जीवंत सेल्फी'},
+	profile_kyc_doc_4_desc: {en:'Short video selfie holding your document. Taken in good lighting. 60 seconds.',ar:'فيديو سيلفي قصير تمسك به بوثيقتك. يتم التقاطه في إضاءة جيدة. 60 ثانية.',fr:'Courte vidéo selfie tenant votre document. Prise dans une bonne lumière. 60 secondes.',es:'Breve vídeo selfie sosteniendo tu documento. Tomado con buena iluminación. 60 segundos.',nl:'Korte selfievideo met uw document in de hand. Opgenomen in goed licht. 60 seconden.',zh:'短视频自拍，手持您的文件。在良好照明下进行。60 秒。',hi:'आपके दस्तावेज़ को पकड़ते हुए छोटा वीडियो सेल्फी। अच्छी रोशनी में लिया गया। 60 सेकंड।'},
+
+	/* ── SECURITY TIERS ── */
+	profile_sec_tier_0_name: {en:'Guest Access',ar:'وصول الضيف',fr:'Accès invité',es:'Acceso de invitado',nl:'Gasttoegang',zh:'访客访问权限',hi:'अतिथि पहुँच'},
+	profile_sec_tier_0_desc: {en:'Browsing and exploration only. No economic features.',ar:'التصفح والاستكشاف فقط. بدون ميزات اقتصادية.',fr:'Navigation et exploration uniquement. Aucune fonctionnalité économique.',es:'Solo navegación y exploración. Sin características económicas.',nl:'Alleen bladeren en verkennen. Geen economische functies.',zh:'仅浏览和探索。没有经济功能。',hi:'केवल ब्राउजिंग और अन्वेषण। कोई आर्थिक विशेषताएं नहीं।'},
+
+	profile_sec_tier_1_name: {en:'Email Verified',ar:'البريد الإلكتروني التحقق',fr:'Email vérifié',es:'Correo electrónico verificado',nl:'E-mail geverifieerd',zh:'电子邮件已验证',hi:'ईमेल सत्यापित'},
+	profile_sec_tier_1_desc: {en:'Profile complete. Can subscribe to membership tiers.',ar:'الملف الشخصي كامل. يمكن الاشتراك في مستويات العضوية.',fr:'Profil complet. Peut s\'abonner aux niveaux d\'adhésion.',es:'Perfil completo. Puede suscribirse a niveles de membresía.',nl:'Profiel voltooid. Kan zich abonneren op lidmaatschapsniveaus.',zh:'个人资料完整。可以订阅成员级别。',hi:'प्रोफाइल पूर्ण। सदस्यता स्तरों की सदस्यता ले सकते हैं।'},
+
+	profile_sec_tier_2_name: {en:'KYC Pending',ar:'KYC قيد الانتظار',fr:'KYC en attente',es:'KYC pendiente',nl:'KYC in behandeling',zh:'KYC待处理',hi:'KYC लंबित'},
+	profile_sec_tier_2_desc: {en:'Documents submitted. Awaiting review. Some features unlocked.',ar:'تم تقديم الوثائق. في انتظار المراجعة. تم فتح بعض الميزات.',fr:'Documents soumis. En attente d\'examen. Certaines fonctionnalités déverrouillées.',es:'Documentos presentados. Pendiente de revisión. Algunas características desbloqueadas.',nl:'Documenten ingediend. Wachtend op beoordeling. Enkele functies ontgrendeld.',zh:'已提交文件。等待审核。某些功能已解锁。',hi:'दस्तावेज़ जमा किए गए। समीक्षा की प्रतीक्षा में। कुछ सुविधाएं अनलॉक की गई हैं।'},
+
+	profile_sec_tier_3_name: {en:'KYC Verified',ar:'تحقق من KYC',fr:'KYC vérifié',es:'KYC verificado',nl:'KYC geverifieerd',zh:'KYC已验证',hi:'KYC सत्यापित'},
+	profile_sec_tier_3_desc: {en:'Full identity verified. Economy, tokens, marketplace fully active.',ar:'تم التحقق الكامل من الهوية. الاقتصاد والرموز والسوق نشطة بالكامل.',fr:'Identité complètement vérifiée. Économie, tokens, marché entièrement actifs.',es:'Identidad completamente verificada. Economía, tokens, mercado completamente activos.',nl:'Identiteit volledig geverifieerd. Economie, tokens, marktplaats volledig actief.',zh:'身份完全验证。经济、代币、市场完全活跃。',hi:'पहचान पूरी तरह सत्यापित। अर्थव्यवस्था, टोकन, बाजार पूरी तरह सक्रिय।'},
+
+	profile_sec_tier_4_name: {en:'Sovereign Verified',ar:'سيادية التحقق',fr:'Souverain vérifié',es:'Soberano verificado',nl:'Soeverein geverifieerd',zh:'主权已验证',hi:'संप्रभु सत्यापित'},
+	profile_sec_tier_4_desc: {en:'HSM biometric linked. Full succession and inheritance rights.',ar:'HSM بيومتري مرتبط. حقوق الخلافة والوراثة الكاملة.',fr:'HSM biométrique lié. Droits de succession et d\'héritage complets.',es:'HSM biométrico vinculado. Derechos de sucesión y herencia completos.',nl:'HSM biometrisch gekoppeld. Volledige rechten op erfopvolging en erfrecht.',zh:'HSM 生物识别已连接。完全的继承权和遗产权。',hi:'HSM बायोमेट्रिक जुड़ा हुआ। संपूर्ण उत्तराधिकार और विरासत अधिकार।'},
+
+	/* ── FEATURE UNLOCKS ── */
+	profile_unlock_1_title: {en:'Token Economy',ar:'اقتصاد الرموز',fr:'Économie des tokens',es:'Economía de tokens',nl:'Token-economie',zh:'代币经济',hi:'टोकन अर्थव्यवस्था'},
+	profile_unlock_1_desc: {en:'12 sovereign tokens fully active. Earning and spending enabled.',ar:'12 رمزًا سيادياً نشطًا بالكامل. تم تفعيل الكسب والإنفاق.',fr:'12 jetons souverains pleinement actifs. Gain et dépenses activés.',es:'12 tokens soberanos totalmente activos. Ganancias y gastos habilitados.',nl:'12 soevereine tokens volledig actief. Inkomsten en uitgaven ingeschakeld.',zh:'12 个完全激活的主权代币。启用收入和支出。',hi:'12 पूर्ण रूप से सक्रिय संप्रभु टोकन। आय और व्यय सक्षम।'},
+
+	profile_unlock_2_title: {en:'Marketplace',ar:'السوق',fr:'Marché',es:'Mercado',nl:'Marktplaats',zh:'市场',hi:'बाजार'},
+	profile_unlock_2_desc: {en:'Full listing, buying, and selling on the sovereign marketplace.',ar:'القائمة الكاملة والشراء والبيع في السوق السيادية.',fr:'Annonce complète, achat et vente sur le marché souverain.',es:'Listado completo, compra y venta en el mercado soberano.',nl:'Volledige vermelding, kopen en verkopen op de soevereine markt.',zh:'主权市场上的完整列表、购买和销售。',hi:'संप्रभु बाजार पर पूर्ण सूचीकरण, खरीद और बिक्री।'},
+
+	profile_unlock_3_title: {en:'Subscription Payments',ar:'دفع الاشتراك',fr:'Paiements par abonnement',es:'Pagos de suscripción',nl:'Abonnementsbetalingen',zh:'订阅支付',hi:'सदस्यता भुगतान'},
+	profile_unlock_3_desc: {en:'Live Stripe payment processing for all membership tiers.',ar:'معالجة دفع Stripe المباشرة لجميع مستويات العضوية.',fr:'Traitement des paiements Stripe en direct pour tous les niveaux d\'adhésion.',es:'Procesamiento de pagos de Stripe en vivo para todos los niveles de membresía.',nl:'Live Stripe-betalingsverwerking voor alle lidmaatschapsniveaus.',zh:'所有成员级别的实时 Stripe 支付处理。',hi:'सभी सदस्यता स्तरों के लिए लाइव Stripe भुगतान प्रसंस्करण।'},
+
+	profile_unlock_4_title: {en:'Consultancy Booking',ar:'حجز الاستشارات',fr:'Réservation de conseil',es:'Reserva de consultoría',nl:'Boeking van advies',zh:'咨询预订',hi:'परामर्श बुकिंग'},
+	profile_unlock_4_desc: {en:'Paid consultancy sessions across all 6 expert domains.',ar:'جلسات استشارات مدفوعة عبر جميع المجالات الستة للخبراء.',fr:'Séances de conseil payantes dans les 6 domaines d\'expertise.',es:'Sesiones de consultoría pagadas en los 6 dominios de expertos.',nl:'Betaalde adviessessies in alle 6 expertisegebieden.',zh:'六个专家领域中的付费咨询课程。',hi:'सभी 6 विशेषज्ञ डोमेन में भुगतान किए गए परामर्श सत्र।'},
+
+	profile_unlock_5_title: {en:'Inheritance Rights',ar:'حقوق الوراثة',fr:'Droits d\'héritage',es:'Derechos de herencia',nl:'Erfrechten',zh:'继承权',hi:'विरासत अधिकार'},
+	profile_unlock_5_desc: {en:'Full legal succession protocol. Bloodline vault inheritance active.',ar:'بروتوكول الخلافة القانونية الكاملة. وراثة خزان الدم نشطة.',fr:'Protocole de succession légale complet. Héritage du coffre de la lignée actif.',es:'Protocolo de sucesión legal completo. Herencia del cofre de linaje activa.',nl:'Volledig wettelijk opvolgingsprotocol. Erfenis van bloedlijnkluis actief.',zh:'完整的法律继承议定书。血统保险库继承活跃。',hi:'पूर्ण कानूनी उत्तराधिकार प्रोटोकॉल। रक्त वंश तिजोरी वारिस सक्रिय।'},
+
+	profile_unlock_6_title: {en:'Sovereign Credentials',ar:'بيانات اعتماد سيادية',fr:'Identifiants souverains',es:'Credenciales soberanas',nl:'Soevereine inloggegevens',zh:'主权凭证',hi:'संप्रभु साक्षप्त्र'},
+	profile_unlock_6_desc: {en:'Cryptographic certificate issuance. Verifiable on-chain.',ar:'إصدار الشهادات التشفيرية. قابل للتحقق على السلسلة.',fr:'Émission de certificat cryptographique. Vérifiable sur chaîne.',es:'Emisión de certificado criptográfico. Verificable en cadena.',nl:'Emissie van cryptografisch certificaat. Verifieerbaar op het net.',zh:'加密证书发行。可在链上验证。',hi:'क्रिप्टोग्राफिक प्रमाण पत्र जारी करना। श्रृंखला पर सत्यापन योग्य।'},
+
+	/* ── KYC STATUS STATES ── */
+	profile_kyc_status_not_started_title: {en:'Verification Not Started',ar:'لم يتم بدء التحقق',fr:'Vérification non commencée',es:'Verificación no iniciada',nl:'Verificatie niet gestart',zh:'验证未启动',hi:'सत्यापन शुरू नहीं हुआ'},
+	profile_kyc_status_not_started_badge: {en:'Not Started',ar:'لم تبدأ',fr:'Non commencé',es:'No iniciado',nl:'Niet gestart',zh:'未开始',hi:'शुरू नहीं किया'},
+	profile_kyc_status_not_started_desc: {en:'Complete the steps below to begin your KYC journey.',ar:'أكمل الخطوات أدناه لبدء رحلة KYC الخاصة بك.',fr:'Complétez les étapes ci-dessous pour commencer votre parcours KYC.',es:'Completa los pasos a continuación para comenzar tu viaje KYC.',nl:'Voltooi de onderstaande stappen om uw KYC-traject te beginnen.',zh:'完成以下步骤开始您的 KYC 之旅。',hi:'अपनी KYC यात्रा शुरू करने के लिए नीचे दिए गए चरणों को पूरा करें।'},
+
+	profile_kyc_status_submitted_title: {en:'Documents Submitted',ar:'تم تقديم الوثائق',fr:'Documents soumis',es:'Documentos presentados',nl:'Documenten ingediend',zh:'已提交文件',hi:'दस्तावेज़ जमा किए गए'},
+	profile_kyc_status_submitted_badge: {en:'Under Review',ar:'تحت المراجعة',fr:'En cours d\'examen',es:'Bajo revisión',nl:'In beoordeling',zh:'审查中',hi:'समीक्षा के अधीन'},
+	profile_kyc_status_submitted_desc: {en:'Your documents have been submitted and are under compliance review. This takes 1-3 business days.',ar:'تم تقديم وثائقك وتخضع لمراجعة الامتثال. هذا يستغرق 1-3 أيام عمل.',fr:'Vos documents ont été soumis et sont en cours d\'examen de conformité. Cela prend 1-3 jours ouvrables.',es:'Tus documentos han sido presentados y están bajo revisión de cumplimiento. Esto toma 1-3 días hábiles.',nl:'Uw documenten zijn ingediend en worden onderzocht op naleving. Dit duurt 1-3 werkdagen.',zh:'您的文件已提交，正在接受合规审查。这需要 1-3 个工作日。',hi:'आपके दस्तावेज़ जमा किए गए हैं और अनुपालन समीक्षा के अधीन हैं। इसमें 1-3 व्यावसायिक दिन लगते हैं।'},
+
+	profile_kyc_status_verified_title: {en:'Identity Verified',ar:'تم التحقق من الهوية',fr:'Identité vérifiée',es:'Identidad verificada',nl:'Identiteit geverifieerd',zh:'身份已验证',hi:'पहचान सत्यापित'},
+	profile_kyc_status_verified_badge: {en:'Fully Verified',ar:'التحقق الكامل',fr:'Complètement vérifiée',es:'Completamente verificado',nl:'Volledig geverifieerd',zh:'完全验证',hi:'पूरी तरह सत्यापित'},
+	profile_kyc_status_verified_desc: {en:'Your sovereign identity is confirmed. All economic features, token access, and credentials are active.',ar:'تم تأكيد هويتك السيادية. جميع الميزات الاقتصادية والوصول إلى الرموز والبيانات الاعتماديةية نشطة.',fr:'Votre identité souveraine est confirmée. Toutes les fonctionnalités économiques, l\'accès aux tokens et les identifiants sont actifs.',es:'Tu identidad soberana está confirmada. Todas las características económicas, el acceso a tokens y las credenciales están activos.',nl:'Uw soevereine identiteit is bevestigd. Alle economische functies, tokentogang en inloggegevens zijn actief.',zh:'您的主权身份已确认。所有经济功能、代币访问权限和凭证都处于活跃状态。',hi:'आपकी संप्रभु पहचान की पुष्टि की गई है। सभी आर्थिक सुविधाएं, टोकन पहुंच और साक्षप्त्र सक्रिय हैं।'},
+
+	profile_kyc_status_rejected_title: {en:'Verification Rejected',ar:'تم رفض التحقق',fr:'Vérification rejetée',es:'Verificación rechazada',nl:'Verificatie afgewezen',zh:'验证被拒绝',hi:'सत्यापन अस्वीकृत'},
+	profile_kyc_status_rejected_badge: {en:'Rejected',ar:'مرفوض',fr:'Rejetée',es:'Rechazado',nl:'Afgewezen',zh:'被拒绝',hi:'अस्वीकृत'},
+	profile_kyc_status_rejected_desc: {en:'Your documents could not be verified. Please resubmit with clear, valid documents.',ar:'لم يتمكن من التحقق من وثائقك. يرجى إعادة التقديم بوثائق واضحة وصالحة.',fr:'Vos documents n\'ont pas pu être vérifiés. Veuillez resoumettez avec des documents clairs et valides.',es:'No se pudieron verificar tus documentos. Por favor, reenvía documentos claros y válidos.',nl:'Uw documenten konden niet worden geverifieerd. Voer opnieuw in met duidelijke, geldige documenten.',zh:'您的文件无法验证。请使用清晰有效的文件重新提交。',hi:'आपके दस्तावेज़ों को सत्यापित नहीं किया जा सका। कृपया स्पष्ट, वैध दस्तावेज़ों के साथ फिर से जमा करें।'},
+
+	/* ── ACCESS & MEMBERSHIP ── */
 access_status:        {en:'Access Status',ar:'حالة الوصول',fr:'Statut d\'accès',es:'Estado de acceso',nl:'Toegangsstatus',zh:'访问状态',hi:'पहुँच स्थिति'},
 trial_active:         {en:'Trial Active',ar:'تجربة نشطة',fr:'Essai actif',es:'Prueba activa',nl:'Proef actief',zh:'试用中',hi:'परीक्षण सक्रिय'},
 permanent_access:     {en:'Permanent Access',ar:'وصول دائم',fr:'Accès permanent',es:'Acceso permanente',nl:'Permanente toegang',zh:'永久访问',hi:'स्थायी पहुँच'},
@@ -243,6 +417,97 @@ error_network:        {en:'Network error',ar:'خطأ في الشبكة',fr:'Erre
 warn_unsaved:         {en:'You have unsaved changes',ar:'لديك تغييرات غير محفوظة',fr:'Vous avez des modifications non enregistrées',es:'Tienes cambios sin guardar',nl:'Je hebt niet-opgeslagen wijzigingen',zh:'你有未保存的更改',hi:'आपके पास असहेजे गए परिवर्तन हैं'},
 warn_delete:          {en:'Are you sure?',ar:'هل أنت متأكد؟',fr:'Êtes-vous sûr?',es:'¿Estás seguro?',nl:'Weet je het zeker?',zh:'你确定吗?',hi:'क्या आप सुनिश्चित हैं?'},
 warn_required:        {en:'This field is required',ar:'هذا الحقل مطلوب',fr:'Ce champ est obligatoire',es:'Este campo es obligatorio',nl:'Dit veld is verplicht',zh:'此字段为必填项',hi:'यह फील्ड आवश्यक है'},
+
+/* ── ACHIEVEMENTS & TROPHIES ── */
+achievement_genesis:   {en:'Genesis',ar:'البداية',fr:'Genèse',es:'Génesis',nl:'Schepping',zh:'创世',hi:'निर्माण'},
+achievement_knowledge: {en:'Knowledge',ar:'المعرفة',fr:'Connaissance',es:'Conocimiento',nl:'Kennis',zh:'知识',hi:'ज्ञान'},
+achievement_mastery:   {en:'Mastery',ar:'الإتقان',fr:'Maîtrise',es:'Dominio',nl:'Meesterschap',zh:'精通',hi:'महारत'},
+achievement_contribution:{en:'Contribution',ar:'المساهمة',fr:'Contribution',es:'Contribución',nl:'Bijdrage',zh:'贡献',hi:'योगदान'},
+achievement_elemental: {en:'Elemental',ar:'العنصري',fr:'Élémentaire',es:'Elemental',nl:'Elementair',zh:'元素',hi:'प्राथमिक'},
+achievement_celestial: {en:'Celestial',ar:'السماوي',fr:'Céleste',es:'Celestial',nl:'Hemels',zh:'天体',hi:'दिव्य'},
+achievement_sovereign: {en:'Sovereign',ar:'السيادي',fr:'Souverain',es:'Soberano',nl:'Soeverein',zh:'主权',hi:'संप्रभु'},
+achievement_bloodline: {en:'Bloodline',ar:'النسب',fr:'Lignée',es:'Linaje',nl:'Afstamming',zh:'血统',hi:'वंशावली'},
+achievement_economic:  {en:'Economic',ar:'الاقتصادي',fr:'Économique',es:'Económico',nl:'Economisch',zh:'经济',hi:'आर्थिक'},
+achievement_oracle:    {en:'Oracle',ar:'الأوراكل',fr:'Oracle',es:'Oráculo',nl:'Orakel',zh:'神谕',hi:'भविष्यवक्ता'},
+achievement_guardian:  {en:'Guardian',ar:'الحارس',fr:'Gardien',es:'Guardián',nl:'Beschermer',zh:'守护者',hi:'रक्षक'},
+achievement_apex:      {en:'Apex',ar:'القمة',fr:'Apex',es:'Ápice',nl:'Top',zh:'顶点',hi:'शिखर'},
+
+/* ── MEDALS ── */
+medal_1st_light:       {en:'1st Light',ar:'النور الأول',fr:'Première Lumière',es:'Primer Destello',nl:'Eerste Licht',zh:'初光',hi:'प्रथम प्रकाश'},
+medal_pioneer:         {en:'Pioneer',ar:'الرائد',fr:'Pionnier',es:'Pionero',nl:'Pionier',zh:'先驱',hi:'अग्रदूत'},
+medal_craftmaster:     {en:'Craftmaster',ar:'سيد الحرفة',fr:'Maître Artisan',es:'Maestro Artesano',nl:'Meesterambachtsman',zh:'工艺大师',hi:'शिल्पकार प्रमुख'},
+medal_builder:         {en:'Builder',ar:'البناء',fr:'Constructeur',es:'Constructor',nl:'Bouwer',zh:'建造者',hi:'निर्माता'},
+medal_navigator:       {en:'Navigator',ar:'الملاح',fr:'Navigateur',es:'Navegante',nl:'Navigator',zh:'导航员',hi:'नेविगेटर'},
+medal_architect:       {en:'Architect',ar:'المهندس',fr:'Architecte',es:'Arquitecto',nl:'Architect',zh:'建筑师',hi:'वास्तुकार'},
+medal_consul:          {en:'Consul',ar:'القنصل',fr:'Consul',es:'Cónsul',nl:'Consul',zh:'领事',hi:'कांसूल'},
+medal_researcher:      {en:'Researcher',ar:'الباحث',fr:'Chercheur',es:'Investigador',nl:'Onderzoeker',zh:'研究员',hi:'शोधकर्ता'},
+medal_prophet:         {en:'Prophet',ar:'النبي',fr:'Prophète',es:'Profeta',nl:'Profeet',zh:'先知',hi:'पैगंबर'},
+medal_keeper:          {en:'Keeper',ar:'الحامي',fr:'Gardien',es:'Guardián',nl:'Bewaarder',zh:'守护者',hi:'रक्षक'},
+
+/* ── CERTIFICATES ── */
+cert_genesis_cert:     {en:'Genesis Cert',ar:'شهادة البداية',fr:'Cert Genèse',es:'Cert Génesis',nl:'Cert Schepping',zh:'创世证书',hi:'निर्माण प्रमाणपत्र'},
+cert_knowledge_i:      {en:'Knowledge I',ar:'المعرفة الأولى',fr:'Connaissance I',es:'Conocimiento I',nl:'Kennis I',zh:'知识 I',hi:'ज्ञान I'},
+cert_mastery_i:        {en:'Mastery I',ar:'الإتقان الأول',fr:'Maîtrise I',es:'Dominio I',nl:'Meesterschap I',zh:'精通 I',hi:'महारत I'},
+cert_mastery_ii:       {en:'Mastery II',ar:'الإتقان الثاني',fr:'Maîtrise II',es:'Dominio II',nl:'Meesterschap II',zh:'精通 II',hi:'महारत II'},
+cert_economist:        {en:'Economist',ar:'الاقتصادي',fr:'Économiste',es:'Economista',nl:'Econoom',zh:'经济学家',hi:'अर्थशास्त्री'},
+cert_celestial:        {en:'Celestial',ar:'السماوي',fr:'Céleste',es:'Celestial',nl:'Hemels',zh:'天体',hi:'दिव्य'},
+cert_heritage:         {en:'Heritage',ar:'التراث',fr:'Héritage',es:'Herencia',nl:'Erfgoed',zh:'遗产',hi:'विरासत'},
+cert_oracle:           {en:'Oracle',ar:'الأوراكل',fr:'Oracle',es:'Oráculo',nl:'Orakel',zh:'神谕',hi:'भविष्यवक्ता'},
+cert_consultant:       {en:'Consultant',ar:'الاستشاري',fr:'Consultant',es:'Consultor',nl:'Consultant',zh:'顾问',hi:'सलाहकार'},
+cert_platform_mst:     {en:'Platform Mst',ar:'إتقان المنصة',fr:'Maî Plateforme',es:'Plat Dominio',nl:'Plat Meester',zh:'平台精通',hi:'प्लेटफॉर्म महारत'},
+
+/* ── PHASES ── */
+phase_sand_genesis:    {en:'Sand Genesis',ar:'بدء الرمل',fr:'Genèse Sable',es:'Génesis Arena',nl:'Zand Schepping',zh:'沙砾创世',hi:'रेत निर्माण'},
+phase_glass_awakening: {en:'Glass Awakening',ar:'إيقاظ الزجاج',fr:'Réveil Verre',es:'Despertar Vidrio',nl:'Glas Ontwaken',zh:'玻璃觉醒',hi:'ग्लास जागरण'},
+phase_iron_forging:    {en:'Iron Forging',ar:'تطريق الحديد',fr:'Forge Fer',es:'Forja Hierro',nl:'Ijzer Smeden',zh:'铁锻',hi:'लोहा जाली'},
+phase_steel_tempering: {en:'Steel Tempering',ar:'تلطيف الفولاذ',fr:'Trempe Acier',es:'Temple Acero',nl:'Staal Hardening',zh:'钢淬火',hi:'स्टील स्वभाव'},
+phase_titanium_ascent: {en:'Titanium Ascent',ar:'صعود التيتانيوم',fr:'Ascension Titane',es:'Ascenso Titanio',nl:'Titanium Opklimming',zh:'钛上升',hi:'टाइटेनियम आरोहण'},
+phase_carbon_precision:{en:'Carbon Precision',ar:'دقة الكربون',fr:'Précision Carbone',es:'Precisión Carbono',nl:'Koolstof Precisie',zh:'碳精确',hi:'कार्बन सटीकता'},
+phase_gold_sovereignty:{en:'Gold Sovereignty',ar:'السيادة الذهبية',fr:'Souveraineté Or',es:'Soberanía Oro',nl:'Goud Soevereiniteit',zh:'黄金主权',hi:'सोना संप्रभुता'},
+phase_platinum_legacy: {en:'Platinum Legacy',ar:'إرث البلاتين',fr:'Héritage Platine',es:'Legado Platino',nl:'Platina Erfenis',zh:'铂金遗产',hi:'प्लेटिनम विरासत'},
+phase_diamond_approach:{en:'Diamond Approach',ar:'نهج الماس',fr:'Approche Diamant',es:'Enfoque Diamante',nl:'Diamant Benadering',zh:'钻石方法',hi:'हीरा दृष्टिकोण'},
+phase_diamond_clarity: {en:'Diamond Clarity',ar:'وضوح الماس',fr:'Clarté Diamant',es:'Claridad Diamante',nl:'Diamant Helderheid',zh:'钻石清晰',hi:'हीरा स्पष्टता'},
+phase_omega_threshold: {en:'Omega Threshold',ar:'عتبة أوميغا',fr:'Seuil Omega',es:'Umbral Omega',nl:'Omega Drempel',zh:'欧米茄阈值',hi:'ओमेगा दहलीज'},
+phase_omega_master:    {en:'Omega Master',ar:'سيد أوميغا',fr:'Maître Omega',es:'Maestro Omega',nl:'Omega Meester',zh:'欧米茄大师',hi:'ओमेगा मास्टर'},
+
+/* ── TOKENS ── */
+token_pyron:           {en:'Pyron',ar:'بيرون',fr:'Pyron',es:'Piron',nl:'Pyron',zh:'烈火令',hi:'पाइरॉन'},
+token_aurum:           {en:'Aurum',ar:'أوروم',fr:'Aurum',es:'Áureo',nl:'Aurum',zh:'黄金令',hi:'सोना'},
+token_zephyr:          {en:'Zephyr',ar:'زفير',fr:'Zéphyr',es:'Céfiro',nl:'Zefir',zh:'清风令',hi:'जेफिर'},
+token_nereid:          {en:'Nereid',ar:'نيريد',fr:'Néréide',es:'Nereida',nl:'Nereus',zh:'海妖令',hi:'नेरिड'},
+token_solari:          {en:'Solari',ar:'سولاري',fr:'Solaris',es:'Solaris',nl:'Solari',zh:'太阳令',hi:'सोलरी'},
+token_virgite:         {en:'Virgite',ar:'فيرجيت',fr:'Virgite',es:'Virgita',nl:'Virgiet',zh:'处女令',hi:'वर्जिट'},
+token_forgeon:         {en:'Forgeon',ar:'فورجيون',fr:'Forgeon',es:'Forjeón',nl:'Forgeon',zh:'锻造令',hi:'फोर्जन'},
+token_styx:            {en:'Styx',ar:'ستيكس',fr:'Styx',es:'Estigia',nl:'Styx',zh:'冥河令',hi:'स्टाइक्स'},
+token_ember:           {en:'Ember',ar:'جمرة',fr:'Braise',es:'Brasa',nl:'Sintels',zh:'余烬令',hi:'अंगार'},
+token_ferrum:          {en:'Ferrum',ar:'فيروم',fr:'Ferrum',es:'Hierro',nl:'Ferrum',zh:'铁令',hi:'लोहा'},
+token_prime:           {en:'Prime',ar:'برايم',fr:'Prime',es:'Primero',nl:'Prime',zh:'至尊令',hi:'प्रमुख'},
+token_abyss:           {en:'Abyss',ar:'الهاوية',fr:'Abîme',es:'Abismo',nl:'Afgrond',zh:'深渊令',hi:'गहराई'},
+
+/* ── MATERIAL TIERS ── */
+material_sand:         {en:'Sand',ar:'الرمل',fr:'Sable',es:'Arena',nl:'Zand',zh:'沙砾',hi:'रेत'},
+material_glass:        {en:'Glass',ar:'الزجاج',fr:'Verre',es:'Vidrio',nl:'Glas',zh:'玻璃',hi:'कांच'},
+material_iron:         {en:'Iron',ar:'الحديد',fr:'Fer',es:'Hierro',nl:'IJzer',zh:'铁',hi:'लोहा'},
+material_steel:        {en:'Steel',ar:'الفولاذ',fr:'Acier',es:'Acero',nl:'Staal',zh:'钢',hi:'स्टील'},
+material_titanium:     {en:'Titanium',ar:'التيتانيوم',fr:'Titane',es:'Titanio',nl:'Titanium',zh:'钛',hi:'टाइटेनियम'},
+material_carbon:       {en:'Carbon',ar:'الكربون',fr:'Carbone',es:'Carbono',nl:'Koolstof',zh:'碳',hi:'कार्बन'},
+material_gold:         {en:'Gold',ar:'الذهب',fr:'Or',es:'Oro',nl:'Goud',zh:'黄金',hi:'सोना'},
+material_platinum:     {en:'Platinum',ar:'البلاتين',fr:'Platine',es:'Platino',nl:'Platina',zh:'铂金',hi:'प्लेटिनम'},
+material_diamond:      {en:'Diamond',ar:'الماس',fr:'Diamant',es:'Diamante',nl:'Diamant',zh:'钻石',hi:'हीरा'},
+material_adamant:      {en:'Adamant',ar:'الماس الصلب',fr:'Adamant',es:'Adamantina',nl:'Adamant',zh:'刚毅',hi:'अदामांट'},
+material_prime:        {en:'Prime',ar:'برايم',fr:'Prime',es:'Primero',nl:'Prime',zh:'至尊',hi:'प्रमुख'},
+material_omega_master: {en:'Omega Master',ar:'سيد أوميغا',fr:'Maître Omega',es:'Maestro Omega',nl:'Omega Meester',zh:'欧米茄大师',hi:'ओमेगा मास्टर'},
+
+/* ── ELEMENTS ── */
+element_fire:          {en:'Fire',ar:'النار',fr:'Feu',es:'Fuego',nl:'Vuur',zh:'火',hi:'आग'},
+element_water:         {en:'Water',ar:'الماء',fr:'Eau',es:'Agua',nl:'Water',zh:'水',hi:'पानी'},
+element_wind:          {en:'Wind',ar:'الريح',fr:'Vent',es:'Viento',nl:'Wind',zh:'风',hi:'हवा'},
+element_sand:          {en:'Sand',ar:'الرمل',fr:'Sable',es:'Arena',nl:'Zand',zh:'沙',hi:'रेत'},
+element_soul:          {en:'Soul',ar:'الروح',fr:'Âme',es:'Alma',nl:'Ziel',zh:'灵魂',hi:'आत्मा'},
+element_metal:         {en:'Metal',ar:'المعدن',fr:'Métal',es:'Metal',nl:'Metaal',zh:'金属',hi:'धातु'},
+element_space:         {en:'Space',ar:'الفضاء',fr:'Espace',es:'Espacio',nl:'Ruimte',zh:'空间',hi:'अंतरिक्ष'},
+element_void:          {en:'Void',ar:'الفراغ',fr:'Vide',es:'Vacío',nl:'Leegte',zh:'虚空',hi:'रिक्त'},
+element_theall:        {en:'The All',ar:'الكل',fr:'Le Tout',es:'El Todo',nl:'Het Alles',zh:'万物',hi:'सर्वज्ञ'},
 
 /* ── PERSONAL OS SECTION ── */
 personal_os_title:     {en:'PERSONAL OS · SOVEREIGN SELF-SYSTEM',ar:'نظام التشغيل الشخصي · نظام الذات السيادي',fr:'OS PERSONNEL · SYSTÈME SOUVERAIN',es:'SO PERSONAL · SISTEMA SOBERANO',nl:'PERSOONLIJKE OS · SOEVEREIN SYSTEEM',zh:'个人操作系统 · 主权自我系统',hi:'व्यक्तिगत ओएस · संप्रभु स्व-प्रणाली'},

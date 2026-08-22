@@ -272,11 +272,10 @@ $$;
 -- ============================================================================
 
 -- Ensure platform_settings has the stripe integration flag
-INSERT INTO public.platform_settings (key, value, description)
+INSERT INTO public.platform_settings (key, bool_value)
 VALUES (
   'stripe_integration_enabled',
-  'false',
-  'Controls whether enterprise.html pricing and Stripe checkout are exposed. Requires legal/business sign-off before enabling.'
+  false
 )
 ON CONFLICT (key) DO NOTHING;
 
@@ -353,7 +352,7 @@ BEGIN
   SELECT COUNT(*) INTO achievement_count
   FROM public.certificates
   WHERE user_id = p_user_id
-    AND created_at > now() - interval '7 days';
+    AND issued_at > now() - interval '7 days';
 
   -- Insert into queue
   INSERT INTO public.weekly_digest_queue (
@@ -425,11 +424,10 @@ END;
 $$;
 
 -- Feature flag for weekly digest
-INSERT INTO public.platform_settings (key, value, description)
+INSERT INTO public.platform_settings (key, bool_value)
 VALUES (
   'weekly_digest_enabled',
-  'false',
-  'Controls whether weekly activity digests are generated and sent. When enabled, owner can manage via send_weekly_digests() RPC.'
+  false
 )
 ON CONFLICT (key) DO NOTHING;
 
@@ -457,12 +455,12 @@ ON CONFLICT (key) DO NOTHING;
 -- Ensure all new tables have proper indexes for common queries
 CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON public.notifications(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_digest_preferences_enabled ON public.digest_preferences(weekly_digest_enabled) WHERE weekly_digest_enabled = true;
-CREATE INDEX IF NOT EXISTS idx_digest_queue_status ON public.weekly_digest_queue(status, created_at) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_digest_queue_status ON public.weekly_digest_queue(status, queued_at) WHERE status = 'pending';
 CREATE INDEX IF NOT EXISTS idx_gate_evaluations_user_date ON public.gate_evaluations(user_id, created_at DESC);
 
 -- Log this migration's completion in a simple way
 -- (This is idempotent and safe to re-run)
-INSERT INTO public.platform_settings (key, value)
+INSERT INTO public.platform_settings (key, text_value)
 VALUES ('final_feature_completeness_migration_applied', 'true')
 ON CONFLICT (key) DO NOTHING;
 

@@ -529,28 +529,64 @@ async function approve(uid){
 }
 async function grantPermanent(uid){
   if(!confirm('Grant PERMANENT lifetime access to this member?'))return;
-  var ok=await rpcOk('grant_permanent_access',{p_uid:uid});
-  if(!ok){
-    var r=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
-    ok=!r.error;
+  try{
+    if(window.OmegaGuardian&&window.OmegaGuardian.gate){
+      await window.OmegaGuardian.gate('admin',async function(){
+        var ok=await rpcOk('grant_permanent_access',{p_uid:uid});
+        if(!ok){
+          var r=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
+          ok=!r.error;
+        }
+        if(ok){toast('∞ PERMANENT ACCESS GRANTED','var(--gold)');}
+        else{toast('COULD NOT GRANT PERMANENT ACCESS — try again','var(--crim)');}
+        load();
+      },{action:'grant_permanent_access',member:uid});
+    }else{
+      var ok=await rpcOk('grant_permanent_access',{p_uid:uid});
+      if(!ok){
+        var r=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
+        ok=!r.error;
+      }
+      if(ok){toast('∞ PERMANENT ACCESS GRANTED','var(--gold)');}
+      else{toast('COULD NOT GRANT PERMANENT ACCESS — try again','var(--crim)');}
+      load();
+    }
+  }catch(err){
+    toast('SECURITY GATE DENIED ACTION','var(--crim)');
   }
-  if(ok){toast('∞ PERMANENT ACCESS GRANTED','var(--gold)');}
-  else{toast('COULD NOT GRANT PERMANENT ACCESS — try again','var(--crim)');}
-  load();
 }
 async function extend(uid){
-  /* Find current expiry and add 557s on top; fall back to now+557s */
-  var m=allMembers.find(function(x){return x.id===uid;});
-  var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
-  var exp=new Date(base+557*1000).toISOString();
-  var ok=await rpcOk('extend_trial',{p_uid:uid,p_seconds:557});
-  if(!ok){
-    var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
-    ok=!r.error;
+  try{
+    if(window.OmegaGuardian&&window.OmegaGuardian.gate){
+      await window.OmegaGuardian.gate('admin',async function(){
+        var m=allMembers.find(function(x){return x.id===uid;});
+        var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
+        var exp=new Date(base+557*1000).toISOString();
+        var ok=await rpcOk('extend_trial',{p_uid:uid,p_seconds:557});
+        if(!ok){
+          var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
+          ok=!r.error;
+        }
+        if(ok){toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');}
+        else{toast('COULD NOT EXTEND TRIAL — try again','var(--crim)');}
+        load();
+      },{action:'extend_trial',member:uid});
+    }else{
+      var m=allMembers.find(function(x){return x.id===uid;});
+      var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
+      var exp=new Date(base+557*1000).toISOString();
+      var ok=await rpcOk('extend_trial',{p_uid:uid,p_seconds:557});
+      if(!ok){
+        var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
+        ok=!r.error;
+      }
+      if(ok){toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');}
+      else{toast('COULD NOT EXTEND TRIAL — try again','var(--crim)');}
+      load();
+    }
+  }catch(err){
+    toast('SECURITY GATE DENIED ACTION','var(--crim)');
   }
-  if(ok){toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');}
-  else{toast('COULD NOT EXTEND TRIAL — try again','var(--crim)');}
-  load();
 }
 async function reject(uid){
   if(!confirm('Reject this access request?'))return;
@@ -565,14 +601,31 @@ async function reject(uid){
 }
 async function revoke(uid){
   if(!confirm('Immediately revoke access for this member?'))return;
-  var ok=await rpcOk('revoke_member',{p_uid:uid});
-  if(!ok){
-    var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
-    ok=!r.error;
+  try{
+    if(window.OmegaGuardian&&window.OmegaGuardian.gate){
+      await window.OmegaGuardian.gate('admin',async function(){
+        var ok=await rpcOk('revoke_member',{p_uid:uid});
+        if(!ok){
+          var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
+          ok=!r.error;
+        }
+        if(ok){toast('■ ACCESS REVOKED','var(--crim)');}
+        else{toast('COULD NOT REVOKE ACCESS — try again','var(--crim)');}
+        load();
+      },{action:'revoke_member',member:uid});
+    }else{
+      var ok=await rpcOk('revoke_member',{p_uid:uid});
+      if(!ok){
+        var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
+        ok=!r.error;
+      }
+      if(ok){toast('■ ACCESS REVOKED','var(--crim)');}
+      else{toast('COULD NOT REVOKE ACCESS — try again','var(--crim)');}
+      load();
+    }
+  }catch(err){
+    toast('SECURITY GATE DENIED ACTION','var(--crim)');
   }
-  if(ok){toast('■ ACCESS REVOKED','var(--crim)');}
-  else{toast('COULD NOT REVOKE ACCESS — try again','var(--crim)');}
-  load();
 }
 
 /* ── QUEUE LOADERS ── */

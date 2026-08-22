@@ -32,6 +32,7 @@ import os
 import re
 import sys
 import collections
+import hashlib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
@@ -363,7 +364,12 @@ for name in rpc_calls:
     arg_variants = {a for _f, a, _b in defs}
     body_variants = {b for _f, _a, b in defs}
     if len(arg_variants) > 1 or len(body_variants) > 1:
-        diverging.append((name, defs, arg_variants, body_variants))
+        # Group definitions by body content (SHA256 hash for grouping)
+        body_groups = collections.defaultdict(list)
+        for f, a, b in defs:
+            body_hash = hashlib.sha256(b.encode()).hexdigest()[:16]
+            body_groups[body_hash].append((f, a, b))
+        diverging.append((name, defs, arg_variants, body_variants, body_groups))
 
 if diverging:
     warnings += 1
@@ -371,23 +377,44 @@ if diverging:
           f"across {SQL_DIR}/*.sql ({len(diverging)}):")
     print("  CREATE OR REPLACE FUNCTION has no \"IF NOT EXISTS\" safety net — "
           "whichever file applied to the live DB last silently wins.")
-    for name, defs, arg_variants, body_variants in sorted(diverging):
+    for name, defs, arg_variants, body_variants, body_groups in sorted(diverging):
         files = sorted({f for f, _a, _b in defs})
         shape = []
         if len(arg_variants) > 1:
             shape.append(f"{len(arg_variants)} distinct argument lists")
         if len(body_variants) > 1:
             shape.append(f"{len(body_variants)} distinct bodies")
-        canon = sorted(f for f in files if FIX_FILE_RE.search(f))
-        canon_note = (
-            f" — likely-canonical per this repo's own fix-file naming "
-            f"convention: {', '.join(canon)} (still confirm live before "
-            f"touching the others)"
-            if canon else ""
-        )
-        print(f"    - {name}: {', '.join(shape)} across {len(files)} files "
-              f"({', '.join(files[:4])}{', …' if len(files) > 4 else ''})"
-              f"{canon_note}")
+        print(f"    - {name}: {', '.join(shape)} across {len(files)} files")
+
+        # Check for canonical fix files across all definitions of this RPC
+        canon_files = sorted([f for f in files if FIX_FILE_RE.search(f)])
+        if canon_files:
+            print(f"      likely-canonical: {', '.join(canon_files)}")
+
+        # Show per-body grouping with recommendations
+        for body_hash, group_defs in sorted(body_groups.items()):
+            group_files = sorted({f for f, _a, _b in group_defs})
+            # Extract arg signature from first file in group (all have same body)
+            arg_sig = group_defs[0][1] if group_defs else "???"
+
+            # Check if files in this group are single-purpose (define only this RPC)
+            single_purpose = []
+            for f in group_files:
+                # Count functions defined in this file
+                func_count = sum(1 for fname, _a, _b in defs if fname == f)
+                if func_count == 1:
+                    single_purpose.append(f)
+
+            canon = sorted([f for f in group_files if FIX_FILE_RE.search(f)])
+            recommendation = "KEEP" if canon else ("DELETE (single-purpose dup)" if len(group_files) > 1 else "KEEP")
+
+            if len(group_files) == 1:
+                continue  # Skip single-definition bodies
+
+            print(f"      Body {body_hash}: {arg_sig}")
+            print(f"        Files ({len(group_files)}): {', '.join(group_files[:3])}{', …' if len(group_files) > 3 else ''}")
+            print(f"        Single-purpose: {', '.join(single_purpose) if single_purpose else 'none'}")
+            print(f"        Recommendation: {recommendation}")
     print("    Source analysis only — confirm which version is actually live "
           "with a pg_proc query before deleting any file (see GAP_ANALYSIS.md §3.1).")
 else:

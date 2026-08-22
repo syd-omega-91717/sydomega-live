@@ -1118,6 +1118,38 @@ function loadPack(lang){
   return p;
 }
 
+/* Write txt as the element's own text WITHOUT discarding its child elements.
+   The original did a flat el.textContent = txt, which replaces every child.
+   Seven pages nest one data-i18n element inside another -- the topbar title
+   pattern <div class="t" data-i18n="x">TITLE<small data-i18n="y">SUBTITLE
+   </small></div> on analytics, approvals, feed, matrix, profile, vault, and a
+   sechead on dashboard. Setting textContent on the parent deletes the
+   <small>, and because querySelectorAll returns a STATIC list the subtitle is
+   then "translated" while already detached, so it is simply gone. That never
+   surfaced before only because translate() itself was never running (see the
+   readyState note at the bottom of this file) -- fixing that race would have
+   turned this latent bug into a visible one, wiping the subtitle off all
+   seven pages. */
+function setOwnText(el,txt){
+  var i, hasElementChild=false;
+  for(i=0;i<el.childNodes.length;i++){
+    if(el.childNodes[i].nodeType===1){hasElementChild=true;break;}
+  }
+  if(!hasElementChild){el.textContent=txt;return;}
+  var texts=[];
+  for(i=0;i<el.childNodes.length;i++){
+    if(el.childNodes[i].nodeType===3)texts.push(el.childNodes[i]);
+  }
+  if(texts.length){
+    texts[0].nodeValue=txt;
+    for(i=1;i<texts.length;i++)texts[i].nodeValue='';
+  }else{
+    /* authored with no own text at all (approvals.html) -- put it first, so
+       it reads title-then-subtitle exactly as the markup intends */
+    el.insertBefore(document.createTextNode(txt),el.firstChild);
+  }
+}
+
 /* Apply the already-loaded dictionary to the DOM. Identical to the original
    translate() body — split out so it can run after the pack resolves. */
 function apply(lang){
@@ -1131,7 +1163,7 @@ function apply(lang){
       } else if(el.tagName==='IMG'){
         el.alt=txt;
       } else {
-        el.textContent=txt;
+        setOwnText(el,txt);
       }
     }
   });
@@ -1167,8 +1199,32 @@ function t(key,lang){
   return e?(e[lang]||e['en']||key):key;
 }
 
-/* Auto-translate on DOMContentLoaded */
-document.addEventListener('DOMContentLoaded',function(){translate(_lang);});
+/* Auto-translate once the DOM is ready.
+   This used to register a DOMContentLoaded listener unconditionally, which
+   lost a race it usually loses: bg.js injects this file by appending a
+   <script> at runtime, and a dynamically inserted script is async -- the
+   browser does NOT delay DOMContentLoaded for it. So on most pages this file
+   finished executing AFTER that event had already fired, the listener was
+   registered for something that would never happen again, and translate() was
+   never called at all. Measured on a zero-latency local server, i18n.js
+   landed after DOMContentLoaded on 3 of 4 sampled pages (approvals 172ms vs
+   187ms, dashboard 261 vs 296, vault 137 vs 258) and only matrix.html won the
+   race -- exactly the kind of intermittent behaviour that hides a bug.
+
+   Two consequences, both real: any member whose stored language is not
+   English saw no translation at all on load, and approvals.html -- the owner
+   console -- rendered with a BLANK page title, because its <div class="t">
+   and its subtitle <small> are empty in the markup and filled purely from
+   data-i18n. Confirmed by calling OmegaI18n.translate('en') by hand in the
+   console on that page: the title "INVISIBLE ARCHITECT CONSOLE" appears.
+
+   Checking readyState first is the pattern the rest of this codebase already
+   uses for exactly this reason (bg.js, omega-a11y.js, omega-cinematic.js). */
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',function(){translate(_lang);});
+}else{
+  translate(_lang);
+}
 
 /* Expose */
 window.OmegaI18n={translate:translate,t:t,getLang:getLang,LANGS:LANGS,T:T,load:loadPack};

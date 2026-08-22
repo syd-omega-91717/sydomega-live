@@ -2498,10 +2498,12 @@ orphaned file.
   the same three files. Fixed by quoting the keys. Verified deterministically: each original
   literal throws, each replacement parses, and the parsed keys and values are identical to what
   the author wrote; in-browser, the `SyntaxError` count on each page went **1 → 0**.
-  *Honest limitation*: an end-to-end "click the button and see it work" check was not possible in
-  this environment — these pages redirect through the auth and terms-acceptance gates, which need
-  real session state a local harness cannot supply, so the evidence here is that the throw which
-  killed the module is gone, not an observed successful click.
+  **End-to-end confirmed** (an earlier draft of this entry recorded that it could not be, because
+  the pages redirected to `account.html` and then `terms.html`; both gates were then satisfied in
+  the harness — the terms one is `bg.js:1002`, `if(d.sign && !d.terms_accepted)`, so the stub
+  profile needs `terms_accepted:true`): with an authenticated, approved, terms-accepted session
+  and a fresh empty `localStorage`, the handler count on the three pages goes **0/4 → 4/4,
+  0/5 → 5/5, 0/3 → 3/3** with the page staying put rather than redirecting.
 - **Method note for anyone re-running a browser scan here: stub `esm.sh` first, or the results are
   worthless.** The first pass of the dead-handler scan reported 44 pages and 66 missing functions,
   including `setTab` on 34 pages — which flatly contradicted this file's own record that the
@@ -2518,6 +2520,57 @@ orphaned file.
   (`createClient` returning working `auth.getSession`/`from().select().single()` chains) is worth
   rebuilding for any future browser scan of the gated pages; without a session they redirect to
   `account.html`, and with one they redirect to `terms.html`.
+- **[Fixed] `i18n.js`'s auto-translate lost a race it usually loses, so `translate()` never ran on
+  most page loads — and `approvals.html`, the owner console, rendered with a blank page title.**
+  `i18n.js` registered its startup unconditionally as
+  `document.addEventListener('DOMContentLoaded', …)`. But `bg.js` injects this file by appending a
+  `<script>` at runtime, and a dynamically inserted script is **async** — the browser does not
+  delay `DOMContentLoaded` for it. So the file typically finished executing *after* that event had
+  already fired, registering a listener for something that would never happen again. Measured on a
+  zero-latency local server by instrumenting both timestamps: i18n.js landed after
+  `DOMContentLoaded` on 3 of 4 sampled pages (approvals 172ms vs 187ms, dashboard 261 vs 296,
+  vault 137 vs 258); only `matrix.html` won the race. `localStorage.omega_lang`, which
+  `translate()` writes on every call, was `null` on exactly the three losers — proof it never ran.
+  Being a race is why this was never noticed: it works sometimes. Two real consequences: any
+  member whose stored language is not English got **no translation at all** on load (the entire
+  language switcher being effectively decorative on first paint), and `approvals.html` showed a
+  **blank title** because its `<div class="t">` and subtitle `<small>` are empty in the markup and
+  filled purely from `data-i18n` — confirmed by calling `OmegaI18n.translate('en')` by hand there
+  and watching "INVISIBLE ARCHITECT CONSOLE" appear. Fixed with the `document.readyState` check
+  the rest of this codebase already uses for exactly this reason (`bg.js`, `omega-a11y.js`,
+  `omega-cinematic.js`). After the fix all four sampled pages store `omega_lang`.
+- **[Fixed in the same change, and load-bearing] `translate()` destroyed nested `data-i18n`
+  elements — fixing the race above would have turned that latent bug into a visible one on 5
+  pages.** `apply()` wrote `el.textContent = txt`, which replaces *every* child node. Seven pages
+  nest one `data-i18n` element inside another — the topbar pattern
+  `<div class="t" data-i18n="x">TITLE<small data-i18n="y">SUBTITLE</small></div>` on
+  `analytics`/`approvals`/`feed`/`matrix`/`profile`/`vault`, and `.sechead` elements wrapping a
+  `<span class="sechead-action" data-i18n=…>` on `dashboard`. Setting `textContent` on the parent
+  deletes the child, and because `querySelectorAll` returns a **static** list the subtitle is then
+  "translated" while already detached from the document — so it is simply gone. This never
+  surfaced only because `translate()` itself was never running. Replaced the flat assignment with
+  `setOwnText()`, which rewrites only the element's own text nodes and leaves element children
+  intact (inserting the text first when the element was authored with no own text, as on
+  `approvals.html`, so it still reads title-then-subtitle). Verified by A/B in Chromium: with the
+  race fixed but this protection removed, the nested pairs on analytics/approvals/matrix/vault/
+  dashboard are gone; with it, all survive and the parent title applies correctly — e.g.
+  `approvals.html` now renders "INVISIBLE ARCHITECT CONSOLE" *and* keeps
+  "SOVEREIGN ACCESS CONTROL · OWNER-ONLY · ALL-TIME · IRREVOCABLE".
+- **[Improved] 160 of 178 pages had no `<h1>`; 152 now expose one without any markup change.**
+  A screen-reader user had no level-1 heading to orient on and heading-navigation landed nowhere.
+  152 of those pages already render a perfectly good title in the topbar — "ANALYTICS",
+  "BLOODLINE", "SOVEREIGN ACADEMY · EXAMS" — marked up as a semantics-free `<div class="t">`.
+  `omega-a11y.js` now promotes that existing element with `role="heading" aria-level="1"`, which
+  is preferable to injecting a hidden `<h1>`: it names the heading with the title the user can
+  actually see and adds no duplicate text for a screen reader to read twice. Nothing visual
+  changes — ARIA roles carry no styling. Skipped when the page already has a real `<h1>` (18 do),
+  when the element already carries a page-set role, or when the title text is empty once the
+  nested `<small>` subtitle is discounted. Verified across all 178 pages: pages with a level-1
+  heading went **18 → 170**, with 0 duplicates and 0 applied where a real `<h1>` already existed.
+  The 8 still without one (`dashboard`, `account`, `approvals`, `404`, `pending`, `terms`,
+  `enterprise`, `observatory`) have no honest title to promote — deriving one from
+  `document.title` would announce the same generic "Command Bridge" string on several unrelated
+  pages, so they are deliberately left alone rather than given a misleading heading.
 - **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
   reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
   the baseline is 7 both with and without this session's work), and

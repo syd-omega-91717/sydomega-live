@@ -198,6 +198,47 @@
     setTimeout(function(){ region.textContent = String(msg); }, 50);
   }
 
+  /* ── D2. PAGE HEADING ─────────────────────────────────────────────────
+     160 of 178 pages have no <h1> at all, so a screen-reader user gets no
+     level-1 heading to orient on and heading-navigation ("jump to the page
+     title") lands nowhere. 152 of those 160 already render a perfectly good
+     title in the topbar -- "ANALYTICS", "BLOODLINE", "SOVEREIGN ACADEMY ·
+     EXAMS" -- it is simply marked up as a <div class="t">, which carries no
+     semantics.
+
+     Promoting that existing element with role="heading" aria-level="1" is
+     preferable to injecting a hidden <h1>: it names the heading with the
+     title the user can actually see, and it adds no duplicate text for a
+     screen reader to read twice. Nothing visual changes -- ARIA roles carry
+     no styling.
+
+     Deliberately skipped when: the page already has a real <h1> (18 do); the
+     element already carries a role the page set itself; or the title text is
+     empty once the nested <small> subtitle is discounted (8 pages, mostly
+     ones with no topbar at all -- dashboard.html, terms.html, 404.html --
+     where there is no honest title to promote and inventing one from
+     document.title would announce the same generic "Command Bridge" string on
+     several unrelated pages). */
+  (function(){
+    function ensureHeading(){
+      if(document.querySelector('h1,[role="heading"][aria-level="1"]')) return;
+      var t = document.querySelector('.topbar .t, .topbar .topbar-title, .topbar-title');
+      if(!t || t.getAttribute('role')) return;
+      /* judge on the title text alone, ignoring the subtitle <small> */
+      var probe = t.cloneNode(true);
+      var subs = probe.querySelectorAll('small,.topbar-sub');
+      for(var i=0;i<subs.length;i++) subs[i].parentNode.removeChild(subs[i]);
+      if(!(probe.textContent || '').trim()) return;
+      t.setAttribute('role','heading');
+      t.setAttribute('aria-level','1');
+    }
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded', ensureHeading);
+    } else { ensureHeading(); }
+    /* topbars are injected by bg.js on some pages, so re-check once populated */
+    document.addEventListener('omega:populated', ensureHeading);
+  })();
+
   /* ── D. LANDMARK ARIA ───────────────────────────────────────────────── */
   (function(){
     function ensureLandmark(){

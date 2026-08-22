@@ -460,7 +460,7 @@ CREATE INDEX IF NOT EXISTS idx_gate_evaluations_user_date ON public.gate_evaluat
 
 -- Log this migration's completion in a simple way
 -- (This is idempotent and safe to re-run)
-INSERT INTO public.platform_settings (key, value)
+INSERT INTO public.platform_settings (key, text_value)
 VALUES ('final_feature_completeness_migration_applied', 'true')
 ON CONFLICT (key) DO NOTHING;
 

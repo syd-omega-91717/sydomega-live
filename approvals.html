@@ -140,9 +140,9 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <!-- GATE -->
 <div id="gate">
   <div class="gate-omega">&#937;</div>
-  <div class="gate-title">ACCESS DENIED</div>
-  <div class="gate-sub">THIS CONSOLE IS RESTRICTED TO THE INVISIBLE ARCHITECT<br>MAJOR SLEIMAN YOUSSEF DAGHER &mdash; EXCLUSIVELY<br>LEBANESE ORDER OF ENGINEERS NO. 30875</div>
-  <a href="/dashboard.html" class="gate-btn">RETURN TO DASHBOARD</a>
+  <div class="gate-title" data-i18n="access_denied"></div>
+  <div class="gate-sub"><span data-i18n="gate_access_denied_subtitle"></span><br>MAJOR SLEIMAN YOUSSEF DAGHER &mdash; EXCLUSIVELY<br>LEBANESE ORDER OF ENGINEERS NO. 30875</div>
+  <a href="/dashboard.html" class="gate-btn" data-i18n="btn_return_dashboard"></a>
 </div>
 <div id="toast"></div>
 
@@ -152,7 +152,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TOPBAR -->
     <div class="topbar">
-      <div class="t">INVISIBLE ARCHITECT CONSOLE<small>SOVEREIGN ACCESS CONTROL &middot; OWNER-ONLY &middot; ALL-TIME &middot; IRREVOCABLE &middot; <span data-canon-lattice="twelve"></span></small></div>
+      <div class="t" data-i18n="approvals_title"><small data-i18n="approvals_subtitle" style="display:block;margin-top:2px"></small></div>
       <canvas id="tb-cv" width="50" height="50" style="width:26px;height:26px;flex-shrink:0;opacity:.7"></canvas>
     </div>
 
@@ -171,11 +171,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- STATS BAR (clickable filters) -->
     <div class="stats-bar">
-      <div class="stat-cell on" data-filter="all" onclick="filterClick(this,'all')"><div class="stat-n" id="stat-total" style="color:var(--gold)">--</div><div class="stat-l">ALL MEMBERS</div></div>
-      <div class="stat-cell" data-filter="pending" onclick="filterClick(this,'pending')"><div class="stat-n" id="stat-pending" style="color:var(--crim)">--</div><div class="stat-l">PENDING</div></div>
-      <div class="stat-cell" data-filter="active" onclick="filterClick(this,'active')"><div class="stat-n" id="stat-active" style="color:var(--green)">--</div><div class="stat-l">TRIAL ACTIVE</div></div>
-      <div class="stat-cell" data-filter="approved" onclick="filterClick(this,'approved')"><div class="stat-n" id="stat-approved" style="color:var(--cyan)">--</div><div class="stat-l">PERMANENT</div></div>
-      <div class="stat-cell" data-filter="rejected" onclick="filterClick(this,'rejected')"><div class="stat-n" id="stat-rejected" style="color:var(--muted)">--</div><div class="stat-l">REJECTED</div></div>
+      <div class="stat-cell on" data-filter="all" onclick="filterClick(this,'all')"><div class="stat-n" id="stat-total" style="color:var(--gold)">--</div><div class="stat-l" data-i18n="filter_all_members"></div></div>
+      <div class="stat-cell" data-filter="pending" onclick="filterClick(this,'pending')"><div class="stat-n" id="stat-pending" style="color:var(--crim)">--</div><div class="stat-l" data-i18n="status_pending"></div></div>
+      <div class="stat-cell" data-filter="active" onclick="filterClick(this,'active')"><div class="stat-n" id="stat-active" style="color:var(--green)">--</div><div class="stat-l" data-i18n="status_trial_active"></div></div>
+      <div class="stat-cell" data-filter="approved" onclick="filterClick(this,'approved')"><div class="stat-n" id="stat-approved" style="color:var(--cyan)">--</div><div class="stat-l" data-i18n="status_permanent"></div></div>
+      <div class="stat-cell" data-filter="rejected" onclick="filterClick(this,'rejected')"><div class="stat-n" id="stat-rejected" style="color:var(--muted)">--</div><div class="stat-l" data-i18n="status_rejected"></div></div>
     </div>
 
     <!-- HERO BAND -->
@@ -187,53 +187,53 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- FILTER BAR -->
     <div class="filter-bar" id="filter-bar">
-      <button class="fb on" onclick="setFilter(this,'all')">&#9632; ALL</button>
-      <button class="fb" onclick="setFilter(this,'pending')" style="color:var(--crim);border-color:rgba(139,0,0,.35)">&#9651; PENDING</button>
-      <button class="fb" onclick="setFilter(this,'active')" style="color:var(--green);border-color:rgba(63,178,127,.35)">&#9679; TRIAL</button>
-      <button class="fb" onclick="setFilter(this,'approved')" style="color:var(--cyan);border-color:rgba(0,229,255,.3)">&#8734; PERMANENT</button>
-      <button class="fb" onclick="setFilter(this,'rejected')" style="color:var(--muted)">&#10005; REJECTED</button>
+      <button class="fb on" onclick="setFilter(this,'all')">&#9632; <span data-i18n="filter_all_members"></span></button>
+      <button class="fb" onclick="setFilter(this,'pending')" style="color:var(--crim);border-color:rgba(139,0,0,.35)">&#9651; <span data-i18n="status_pending"></span></button>
+      <button class="fb" onclick="setFilter(this,'active')" style="color:var(--green);border-color:rgba(63,178,127,.35)">&#9679; <span data-i18n="status_trial_active"></span></button>
+      <button class="fb" onclick="setFilter(this,'approved')" style="color:var(--cyan);border-color:rgba(0,229,255,.3)">&#8734; <span data-i18n="status_permanent"></span></button>
+      <button class="fb" onclick="setFilter(this,'rejected')" style="color:var(--muted)">&#10005; <span data-i18n="status_rejected"></span></button>
       <button class="fb" style="margin-left:auto;color:var(--gold)" onclick="if(window.load)load()">&#8635; REFRESH</button>
     </div>
 
     <!-- TABS -->
     <div class="tab-bar">
-      <button class="tab-btn active" onclick="setTab('members')">MEMBERS<span class="badge" id="badge-pending"></span></button>
-      <button class="tab-btn" onclick="setTab('operations')">OPERATIONS</button>
-      <button class="tab-btn" onclick="setTab('audit')">AUDIT</button>
-      <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+      <button class="tab-btn active" onclick="setTab('members')" data-i18n="tab_members"><span class="badge" id="badge-pending"></span></button>
+      <button class="tab-btn" onclick="setTab('operations')" data-i18n="tab_operations"></button>
+      <button class="tab-btn" onclick="setTab('audit')" data-i18n="tab_audit"></button>
+      <button class="tab-btn" onclick="setTab('science')" data-i18n="tab_science"></button>
     </div>
 
     <!-- TAB: MEMBERS -->
     <div class="tab-panel active" id="tab-members">
-      <div class="sechead">ACCESS CONTROL &mdash; MEMBER ROSTER</div>
+      <div class="sechead" data-i18n="section_access_control"></div>
       <div id="member-list" data-loading></div>
     </div>
 
     <!-- TAB: OPERATIONS (contracts + reservations + dispatch) -->
     <div class="tab-panel" id="tab-operations">
-      <div class="sechead">CONTRACT QUEUE<button class="q-btn" style="font-size:8px" onclick="loadContracts()">&#8635; REFRESH</button></div>
+      <div class="sechead"><span data-i18n="section_contract_queue"></span><button class="q-btn" style="font-size:8px" onclick="loadContracts()">&#8635; REFRESH</button></div>
       <div id="contracts-queue" data-loading></div>
-      <div class="sechead" style="margin-top:28px">RESERVATION QUEUE<button class="q-btn" style="font-size:8px" onclick="loadReservations()">&#8635; REFRESH</button></div>
+      <div class="sechead" style="margin-top:28px"><span data-i18n="section_reservation_queue"></span><button class="q-btn" style="font-size:8px" onclick="loadReservations()">&#8635; REFRESH</button></div>
       <div id="reservations-queue" data-loading></div>
-      <div class="sechead" style="margin-top:28px">SOVEREIGN DISPATCH</div>
+      <div class="sechead" style="margin-top:28px" data-i18n="section_sovereign_dispatch"></div>
       <div class="d-form">
-        <input id="disp-title" type="text" placeholder="DISPATCH TITLE" autocomplete="off">
+        <input id="disp-title" type="text" placeholder="" data-i18n="form_dispatch_title" autocomplete="off">
         <select id="disp-category">
-          <option value="">SELECT CATEGORY</option>
-          <option>SOVEREIGN DECREE</option>
-          <option>SYSTEM UPDATE</option>
-          <option>MARKET SIGNAL</option>
-          <option>HERITAGE NOTE</option>
-          <option>ORDER ANNOUNCEMENT</option>
+          <option value="" data-i18n="form_select_category"></option>
+          <option data-i18n="dispatch_category_decree"></option>
+          <option data-i18n="dispatch_category_system_update"></option>
+          <option data-i18n="dispatch_category_market_signal"></option>
+          <option data-i18n="dispatch_category_heritage_note"></option>
+          <option data-i18n="dispatch_category_announcement"></option>
         </select>
-        <textarea id="disp-body" placeholder="SOVEREIGN DISPATCH CONTENT..."></textarea>
-        <button class="d-send" id="disp-send" onclick="sendDispatch()">&#9654; TRANSMIT DISPATCH</button>
+        <textarea id="disp-body" placeholder="" data-i18n="form_dispatch_content"></textarea>
+        <button class="d-send" id="disp-send" onclick="sendDispatch()">&#9654; <span data-i18n="btn_transmit_dispatch"></span></button>
       </div>
     </div>
 
     <!-- TAB: AUDIT (audit log + errors) -->
     <div class="tab-panel" id="tab-audit">
-      <div class="sechead">ACCESS AUDIT LOG<button class="q-btn" style="font-size:8px" id="audit-refresh" onclick="loadAudit()">&#8635; REFRESH</button></div>
+      <div class="sechead"><span data-i18n="section_audit_log"></span><button class="q-btn" style="font-size:8px" id="audit-refresh" onclick="loadAudit()">&#8635; REFRESH</button></div>
       <div style="display:flex;align-items:center;gap:16px;padding:0 0 18px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:18px;flex-wrap:wrap">
         <canvas id="cv-audit" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
         <div>
@@ -247,7 +247,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
       </div>
       <script>(function(){var cv=document.getElementById('cv-audit');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('Ω',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script>
       <div id="audit-list" data-loading></div>
-      <div class="sechead" style="margin-top:28px">CLIENT ERROR MONITOR<button class="q-btn" style="font-size:8px" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button></div>
+      <div class="sechead" style="margin-top:28px"><span data-i18n="section_error_monitor"></span><button class="q-btn" style="font-size:8px" id="err-refresh" onclick="loadErrors()">&#8635; REFRESH</button></div>
       <div id="err-list" data-loading></div>
     </div>
 
@@ -402,11 +402,12 @@ function buildCard(m){
 
   /* status label + color */
   var col,label;
-  if(isPending){col='var(--solar)';label='PENDING';}
-  else if(isActive){col='var(--green)';label='TRIAL ACTIVE';}
-  else if(isPermanent){col='var(--cyan)';label='∞ PERMANENT';}
-  else if(isExpired){col='var(--crim)';label='EXPIRED';}
-  else{col='var(--muted)';label='REJECTED';}
+  var t=window.OmegaI18n?window.OmegaI18n.t:function(k){return k;};
+  if(isPending){col='var(--solar)';label=t('status_pending');}
+  else if(isActive){col='var(--green)';label=t('status_trial_active');}
+  else if(isPermanent){col='var(--cyan)';label='∞ '+t('status_permanent');}
+  else if(isExpired){col='var(--crim)';label=t('status_expired');}
+  else{col='var(--muted)';label=t('status_rejected');}
 
   /* initials */
   var name=m.display_name||m.email||'MEMBER';
@@ -418,22 +419,29 @@ function buildCard(m){
 
   /* action buttons */
   var btns='';
+  var btnGrantTrial=t('btn_grant_trial');
+  var btnPermanent=t('btn_grant_permanent');
+  var btnReject=window.OmegaI18n?window.OmegaI18n.t('reject','en'):'REJECT';
+  var btnExtend=t('btn_extend_trial');
+  var btnRevoke=t('btn_revoke_access');
+  var btnRenew=t('btn_renew_trial');
+  var btnReconsider=t('btn_reconsider');
   if(isPending||isExpired){
-    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; GRANT TRIAL<br><small style="font-size:7px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9M 17S WINDOW</small></button>';
-    btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
-    btns+='<button class="ac reject" data-uid="'+m.id+'" onclick="reject(this.dataset.uid)">&#10005; REJECT</button>';
+    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; '+btnGrantTrial+'<br><small style="font-size:7px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9M 17S WINDOW</small></button>';
+    btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; '+btnPermanent+'</button>';
+    btns+='<button class="ac reject" data-uid="'+m.id+'" onclick="reject(this.dataset.uid)">&#10005; '+btnReject+'</button>';
   }
   if(isActive){
-    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; EXTEND +9:17</button>';
-    btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; PERMANENT</button>';
-    btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; REVOKE</button>';
+    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="extend(this.dataset.uid)">&#8635; '+btnExtend+'</button>';
+    btns+='<button class="ac permanent" data-uid="'+m.id+'" onclick="grantPermanent(this.dataset.uid)">&#8734; '+btnPermanent+'</button>';
+    btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; '+btnRevoke+'</button>';
   }
   if(isPermanent){
-    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#8635; RENEW TRIAL</button>';
-    btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; REVOKE</button>';
+    btns+='<button class="ac extend" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#8635; '+btnRenew+'</button>';
+    btns+='<button class="ac revoke" data-uid="'+m.id+'" onclick="revoke(this.dataset.uid)">&#9632; '+btnRevoke+'</button>';
   }
   if(isRejected&&!isExpired){
-    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; RECONSIDER</button>';
+    btns+='<button class="ac approve" data-uid="'+m.id+'" onclick="approve(this.dataset.uid)">&#10003; '+btnReconsider+'</button>';
   }
 
   var card=document.createElement('div');
@@ -448,17 +456,17 @@ function buildCard(m){
       +'</div>'
       +'<div class="mc-right">'
         +'<div class="mc-pill" style="border-color:'+col+';color:'+col+'">'+label+'</div>'
-        +(isActive?'<div class="mc-chrono" id="cd-'+m.id+'" style="color:'+col+'">--:--</div><div class="mc-chrono-lbl">REMAINING</div>':'')
+        +(isActive?'<div class="mc-chrono" id="cd-'+m.id+'" style="color:'+col+'">--:--</div><div class="mc-chrono-lbl">'+t('label_remaining')+'</div>':'')
       +'</div>'
     +'</div>'
     +(isActive?'<div class="mc-progress"><div class="mc-progress-fill" id="pb-'+m.id+'" style="width:100%"></div></div>':'')
     +'<div class="mc-timeline">'
-      +'<div class="tl-item"><div class="tl-lbl">REQUESTED</div><div class="tl-val">'+(m.access_requested_at?fmtDate(m.access_requested_at):'--')+'</div></div>'
-      +'<div class="tl-item"><div class="tl-lbl">TRIAL STARTED</div><div class="tl-val">'+(startISO&&isActive?fmtTime(startISO):'--')+'</div></div>'
-      +'<div class="tl-item"><div class="tl-lbl">TRIAL EXPIRES</div><div class="tl-val" style="color:'+col+'">'+(expISO&&isActive?fmtTime(expISO):'--')+'</div></div>'
-      +'<div class="tl-item"><div class="tl-lbl">ACCESS TYPE</div><div class="tl-val">'+label+'</div></div>'
-      +'<div class="tl-item"><div class="tl-lbl">SIGN / ELEMENT</div><div class="tl-val">'+((m.sign||'--')+'/'+(m.element||'--')).toUpperCase()+'</div></div>'
-      +'<div class="tl-item"><div class="tl-lbl">AUTHORITY</div><div class="tl-val" style="color:var(--gold)">'+Number(m.authority||m.axis_a||0).toFixed(4)+'</div></div>'
+      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_requested')+'</div><div class="tl-val">'+(m.access_requested_at?fmtDate(m.access_requested_at):'--')+'</div></div>'
+      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_trial_started')+'</div><div class="tl-val">'+(startISO&&isActive?fmtTime(startISO):'--')+'</div></div>'
+      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_trial_expires')+'</div><div class="tl-val" style="color:'+col+'">'+(expISO&&isActive?fmtTime(expISO):'--')+'</div></div>'
+      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_access_type')+'</div><div class="tl-val">'+label+'</div></div>'
+      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_sign_element')+'</div><div class="tl-val">'+((m.sign||'--')+'/'+(m.element||'--')).toUpperCase()+'</div></div>'
+      +'<div class="tl-item"><div class="tl-lbl">'+t('timeline_authority')+'</div><div class="tl-val" style="color:var(--gold)">'+Number(m.authority||m.axis_a||0).toFixed(4)+'</div></div>'
     +'</div>'
     +'<div class="mc-actions">'+btns+'</div>';
 
@@ -505,7 +513,7 @@ async function load(){
   list.innerHTML='';
   var cards=allMembers.map(buildCard).filter(Boolean);
   if(!cards.length){
-    list.innerHTML='<div class="empty">NO MEMBERS IN THIS VIEW</div>';
+    list.innerHTML='<div class="empty">'+t('empty_no_members')+'</div>';
   } else {
     cards.forEach(function(c){list.appendChild(c);});
   }
@@ -523,7 +531,7 @@ async function approve(uid){
     var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
     ok=!r.error;
   }
-  if(ok){toast('✓ TRIAL GRANTED — 9 MINUTES 17 SECONDS','var(--green)');}
+  if(ok){toast(t('toast_trial_granted').replace('{TIME}','9 MINUTES 17 SECONDS'),'var(--green)');}
   else{toast('COULD NOT GRANT ACCESS — try again','var(--crim)');}
   load();
 }
@@ -534,7 +542,7 @@ async function grantPermanent(uid){
     var r=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
     ok=!r.error;
   }
-  if(ok){toast('∞ PERMANENT ACCESS GRANTED','var(--gold)');}
+  if(ok){toast(t('toast_permanent_granted'),'var(--gold)');}
   else{toast('COULD NOT GRANT PERMANENT ACCESS — try again','var(--crim)');}
   load();
 }
@@ -548,7 +556,7 @@ async function extend(uid){
     var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
     ok=!r.error;
   }
-  if(ok){toast('↻ EXTENDED +9:17 MINUTES','var(--cyan)');}
+  if(ok){toast(t('toast_extend_trial'),'var(--cyan)');}
   else{toast('COULD NOT EXTEND TRIAL — try again','var(--crim)');}
   load();
 }
@@ -559,7 +567,7 @@ async function reject(uid){
     var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null,is_rejected:true}).eq('id',uid);
     ok=!r.error;
   }
-  if(ok){toast('✕ REQUEST REJECTED','var(--crim)');}
+  if(ok){toast(t('toast_rejected'),'var(--crim)');}
   else{toast('COULD NOT REJECT REQUEST — try again','var(--crim)');}
   load();
 }
@@ -570,7 +578,7 @@ async function revoke(uid){
     var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
     ok=!r.error;
   }
-  if(ok){toast('■ ACCESS REVOKED','var(--crim)');}
+  if(ok){toast(t('toast_revoked'),'var(--crim)');}
   else{toast('COULD NOT REVOKE ACCESS — try again','var(--crim)');}
   load();
 }
@@ -581,51 +589,51 @@ async function loadContracts(){
   try{
     var r=await sb.rpc('review_contracts');
     var rows=r.data||[];
-    if(!rows.length){el.innerHTML='<div class="empty">NO PENDING CONTRACTS</div>';return;}
+    if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_contracts')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.type||'CONTRACT').toUpperCase())+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">CONTRACT RPC NOT AVAILABLE</div>';}
+  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_contract')+'</div>';}
 }
 async function loadReservations(){
   var el=document.getElementById('reservations-queue');if(!el)return;
   try{
     var r=await sb.rpc('review_reservations');
     var rows=r.data||[];
-    if(!rows.length){el.innerHTML='<div class="empty">NO PENDING RESERVATIONS</div>';return;}
+    if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_reservations')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.service||'RESERVATION').toUpperCase())+'</div><div class="q-btn" onclick="">REVIEW</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">RESERVATIONS RPC NOT AVAILABLE</div>';}
+  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_reservations')+'</div>';}
 }
 async function loadAudit(){
   var el=document.getElementById('audit-list');if(!el)return;
   try{
     var r=await sb.rpc('access_audit_log');
     var rows=(r.data&&r.data.rows)||[];
-    if(!rows.length){el.innerHTML='<div class="empty">NO AUDIT ENTRIES</div>';return;}
+    if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_audit')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="audit-row"><div class="aud-time">'+fmtTime(row.created_at)+'</div><div class="aud-evt">'+esc((row.action||'EVENT').toUpperCase())+'</div><div class="aud-uid">'+esc((row.subject||'').slice(0,10))+'</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">AUDIT LOG RPC NOT AVAILABLE</div>';}
+  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_audit')+'</div>';}
 }
 async function loadErrors(){
   var el=document.getElementById('err-list');if(!el)return;
   try{
     var r=await sb.rpc('error_summary');
     var rows=(r.data&&r.data.rows)||[];
-    if(!rows.length){el.innerHTML='<div class="empty">NO CLIENT ERRORS RECORDED</div>';return;}
+    if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_errors')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="err-row"><div class="err-msg">'+esc((row.message||'ERROR').slice(0,120))+'</div><div class="err-ctx">'+esc(row.page||'')+'  '+(row.hits?'×'+row.hits:'')+'</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">ERROR MONITOR RPC NOT AVAILABLE</div>';}
+  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_errors')+'</div>';}
 }
 async function sendDispatch(){
   var title=document.getElementById('disp-title');
   var cat=document.getElementById('disp-category');
   var body=document.getElementById('disp-body');
-  if(!title||!body||!title.value.trim()||!body.value.trim()){toast('FILL TITLE AND BODY','var(--crim)');return;}
+  if(!title||!body||!title.value.trim()||!body.value.trim()){toast(t('error_dispatch_empty'),'var(--crim)');return;}
   if(await rpcOk('post_dispatch',{p_title:title.value.trim(),p_category:cat?cat.value:'',p_body:body.value.trim()})){
     title.value='';body.value='';if(cat)cat.value='';
-    toast('✓ DISPATCH TRANSMITTED','var(--gold)');
+    toast(t('toast_dispatch_sent'),'var(--gold)');
   }else{
     /* No raw-insert fallback: public.dispatches has no INSERT policy for
        anyone (only post_dispatch(), SECURITY DEFINER, can write to it), so
        a direct .insert() here can never succeed regardless of column names
        -- surface the real failure instead of a false "recorded" success. */
-    toast('DISPATCH FAILED — post_dispatch RPC unavailable. Try again shortly.','var(--crim)');
+    toast(t('error_dispatch_rpc'),'var(--crim)');
   }
 }
 

@@ -452,10 +452,10 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: OVERVIEW -->
     <div class="tab-panel active" id="tab-overview">
-      <div class="sechead" data-reveal="fade-up">MEMBERSHIP</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_membership">MEMBERSHIP</div>
       <div class="pad" data-reveal="fade-up" id="membership-card" style="border:1px solid rgba(201,168,76,.2);padding:16px;margin-bottom:20px" data-loading></div>
 
-      <div class="sechead" data-reveal="fade-up">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_matrix_axes">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
       <div class="pad" data-reveal="fade-up">
         <div class="axis-panel card">
           <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name" data-i18n="prof_axis_knowledge">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
@@ -463,7 +463,7 @@ a{color:inherit;text-decoration:none}
           <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name" data-i18n="prof_axis_contribution">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
         </div>
       </div>
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_achievements">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
       <div class="pad" data-reveal="fade-up"><div class="ach-grid" id="ach-grid" data-reveal="fade-up" data-stagger="80"></div></div>
       <!-- Architect Console (hidden from non-owners) -->
       <div class="arch-console" id="arch-console">
@@ -480,7 +480,7 @@ a{color:inherit;text-decoration:none}
 
     <!-- TAB: IDENTITY (Official Documents data) -->
     <div class="tab-panel" id="tab-identity">
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_identity_official">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_full_name">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
@@ -502,7 +502,7 @@ a{color:inherit;text-decoration:none}
     <!-- TAB: CREDENTIALS -->
     <div class="tab-panel" id="tab-credentials">
       <div id="owner-only-credentials" style="display:none">
-      <div class="sechead" data-reveal="fade-up">OFFICIAL ENGINEERING CREDENTIALS</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_credentials">OFFICIAL ENGINEERING CREDENTIALS</div>
       <div class="pad" data-reveal="fade-up">
         <div class="credential-card card">
           <div class="cc-top">
@@ -516,12 +516,12 @@ a{color:inherit;text-decoration:none}
             </div>
           </div>
           <div class="cc-fields">
-            <div class="ccf"><div class="ccf-label">MEMBER NAME</div><div class="ccf-val"><span id="cred-name">--</span></div></div>
-            <div class="ccf"><div class="ccf-label">SPECIALTY</div><div class="ccf-val">ARCHITECTURE -- &#x645;&#x639;&#x645;&#x627;&#x631;</div></div>
-            <div class="ccf"><div class="ccf-label">REGISTRATION DATE</div><div class="ccf-val">10 APRIL 2007</div></div>
-            <div class="ccf"><div class="ccf-label">ORDER STATUS</div><div class="ccf-val" style="color:var(--green)">ACTIVE MEMBER</div></div>
-            <div class="ccf"><div class="ccf-label">PLATFORM ORDER</div><div class="ccf-val">&#937;-91717-SYD-001 . LEVEL 9.9.9</div></div>
-            <div class="ccf"><div class="ccf-label">ACCESS LEVEL</div><div class="ccf-val" style="color:var(--gold)">ALL-TIME . NO EXPIRY</div></div>
+            <div class="ccf"><div class="ccf-label" data-i18n="profile_field_member_name">MEMBER NAME</div><div class="ccf-val"><span id="cred-name">--</span></div></div>
+            <div class="ccf"><div class="ccf-label" data-i18n="profile_field_specialty">SPECIALTY</div><div class="ccf-val">ARCHITECTURE -- &#x645;&#x639;&#x645;&#x627;&#x631;</div></div>
+            <div class="ccf"><div class="ccf-label" data-i18n="profile_field_registration_date">REGISTRATION DATE</div><div class="ccf-val">10 APRIL 2007</div></div>
+            <div class="ccf"><div class="ccf-label" data-i18n="profile_field_order_status">ORDER STATUS</div><div class="ccf-val" style="color:var(--green)">ACTIVE MEMBER</div></div>
+            <div class="ccf"><div class="ccf-label" data-i18n="profile_field_platform_order">PLATFORM ORDER</div><div class="ccf-val">&#937;-91717-SYD-001 . LEVEL 9.9.9</div></div>
+            <div class="ccf"><div class="ccf-label" data-i18n="profile_field_access_level">ACCESS LEVEL</div><div class="ccf-val" style="color:var(--gold)">ALL-TIME . NO EXPIRY</div></div>
           </div>
           <div class="cc-chip"><div class="cc-chip-lines"><div></div><div></div><div></div><div></div></div></div>
         </div>
@@ -531,7 +531,7 @@ a{color:inherit;text-decoration:none}
         Professional credential cards are set individually. This section is available to the Architect only for the platform's own registration.
       </div>
       <!-- 12 Certs - all issued -->
-      <div class="sechead" data-reveal="fade-up">YOUR SOVEREIGN CERTIFICATES</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_certificates">YOUR SOVEREIGN CERTIFICATES</div>
       <div class="pad" data-reveal="fade-up" id="cert-display"></div>
     </div>
 
@@ -552,17 +552,17 @@ a{color:inherit;text-decoration:none}
 <script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
   <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--gold)" id="mat-a-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_a">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
     <div style="height:3px;background:rgba(201,168,76,.08);margin-top:8px;border-radius:1px"><div id="mat-a-pb" style="height:100%;background:var(--gold);width:0%;transition:width 1s"></div></div>
   </div>
   <div style="border:1px solid rgba(0,229,255,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--cyan)" id="mat-b-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS B &middot; B&#179;=<span id="mat-b3">--</span></div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_b">AXIS B &middot; B&#179;=<span id="mat-b3">--</span></div>
     <div style="height:3px;background:rgba(0,229,255,.06);margin-top:8px;border-radius:1px"><div id="mat-b-pb" style="height:100%;background:var(--cyan);width:0%;transition:width 1s"></div></div>
   </div>
   <div style="border:1px solid rgba(63,178,127,.12);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--green)" id="mat-c-disp">--</div>
-    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">AXIS C &middot; C&#179;=<span id="mat-c3">--</span></div>
+    <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_c">AXIS C &middot; C&#179;=<span id="mat-c3">--</span></div>
     <div style="height:3px;background:rgba(63,178,127,.06);margin-top:8px;border-radius:1px"><div id="mat-c-pb" style="height:100%;background:var(--green);width:0%;transition:width 1s"></div></div>
   </div>
 </div>
@@ -589,48 +589,48 @@ function frame(){ctx.clearRect(0,0,120,120);
 })();
 </script>
     <div style="margin:0 clamp(14px,3vw,36px)">
-      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem">LATTICE POSITION <span data-canon-lattice="twelve"></span></div>
+      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem" data-i18n="profile_section_lattice_position">LATTICE POSITION <span data-canon-lattice="twelve"></span></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.4rem">
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--gold)" id="lat-track">--</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">TRACK / 12</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_track">TRACK / 12</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--cyan)" id="lat-phase">--</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">PHASE / 12</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_phase">PHASE / 12</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--green)" id="lat-pct">--%</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE %</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_percentage">LATTICE %</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;text-align:center;border-radius:2px">
           <div style="font-family:var(--D);font-size:1.3rem;color:var(--solar)" id="lat-node">--</div>
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px">NODE / 104,976</div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_lattice_node">NODE / 104,976</div>
         </div>
       </div>
       <div style="height:5px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin-bottom:1.4rem">
         <i id="lat-bar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width .8s ease"></i>
       </div>
-      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem">AXIS MAP &mdash; AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&#981;/e <span data-canon-lattice="twelve"></span></div>
+      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem" data-i18n="profile_section_axis_map">AXIS MAP &mdash; AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&#981;/e <span data-canon-lattice="twelve"></span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.4rem">
         <div style="border:1px solid rgba(0,229,255,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">A &middot; KNOWLEDGE<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px" data-i18n="profile_axis_knowledge_label">A &middot; KNOWLEDGE<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
           <div style="font-family:var(--D);font-size:16px;color:var(--cyan)" id="mat-a">--</div>
           <div style="height:4px;background:rgba(0,229,255,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-a-bar" style="display:block;height:100%;width:0;background:var(--cyan);transition:width .6s"></i></div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">B &middot; MASTERY<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:8px" data-i18n="profile_axis_mastery_label">B &middot; MASTERY<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
           <div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="mat-b">--</div>
           <div style="height:4px;background:rgba(201,168,76,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-b-bar" style="display:block;height:100%;width:0;background:var(--gold);transition:width .6s"></i></div>
         </div>
         <div style="border:1px solid rgba(63,178,127,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green);margin-bottom:8px">C &middot; CONTRIBUTION<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--green);margin-bottom:8px" data-i18n="profile_axis_contribution_label">C &middot; CONTRIBUTION<br><small style="font-size:7px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
           <div style="font-family:var(--D);font-size:16px;color:var(--green)" id="mat-c">--</div>
           <div style="height:4px;background:rgba(63,178,127,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-c-bar" style="display:block;height:100%;width:0;background:var(--green);transition:width .6s"></i></div>
         </div>
       </div>
       <div style="border:1px solid var(--line);padding:14px;border-radius:2px">
-        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">AUTHORITY SCORE</div>
+        <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:6px" data-i18n="profile_authority_score">AUTHORITY SCORE</div>
         <div style="font-family:var(--D);font-size:22px;color:var(--gold)" id="mat-auth">--</div>
         <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:4px">/ 27.8367 APEX &middot; 12 GATES</div>
       </div>
@@ -737,10 +737,10 @@ function frame(){ctx.clearRect(0,0,120,120);
 
       <!-- FILTER TABS -->
       <div class="ac-filter">
-        <div class="acf-btn acf-on" data-filter="pending">PENDING</div>
-        <div class="acf-btn" data-filter="trial">TRIAL ACTIVE</div>
-        <div class="acf-btn" data-filter="approved">APPROVED</div>
-        <div class="acf-btn" data-filter="all">ALL MEMBERS</div>
+        <div class="acf-btn acf-on" data-filter="pending" data-i18n="filter_pending">PENDING</div>
+        <div class="acf-btn" data-filter="trial" data-i18n="filter_trial_active">TRIAL ACTIVE</div>
+        <div class="acf-btn" data-filter="approved" data-i18n="filter_approved">APPROVED</div>
+        <div class="acf-btn" data-filter="all" data-i18n="filter_all_members">ALL MEMBERS</div>
       </div>
 
       <!-- MEMBER LIST -->
@@ -1189,11 +1189,11 @@ function frame(){ctx.clearRect(0,0,120,120);
 
     <!-- CHARACTER -->
     <div class="tab-panel" id="tab-settings">
-      <div class="sechead" data-reveal="fade-up">PLATFORM SETTINGS</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_settings">PLATFORM SETTINGS</div>
       <div class="settings-grid" id="settings-grid"></div>
       <div style="margin:20px clamp(14px,3vw,32px)">
-        <button class="btn-save" id="btn-settings-save">SAVE SETTINGS</button>
-        <div class="save-msg" id="settings-save-msg">Settings saved to sovereign profile.</div>
+        <button class="btn-save" id="btn-settings-save" data-i18n="profile_btn_save_settings">SAVE SETTINGS</button>
+        <div class="save-msg" id="settings-save-msg" data-i18n="profile_msg_settings_saved">Settings saved to sovereign profile.</div>
       </div>
     </div>
   </main>
@@ -1247,21 +1247,21 @@ t++;requestAnimationFrame(f);}f();})();
     <div class="sechead" data-reveal="fade-up" data-i18n="prof_character_genealogy_header">CHARACTER GENEALOGY TREE</div>
     <canvas id="tree-cv" height="240"></canvas>
 
-    <div class="sechead" data-reveal="fade-up">CHARACTER INHERITANCE SETTINGS</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_inheritance_settings">CHARACTER INHERITANCE SETTINGS</div>
     <div class="save-form">
-      <p style="font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:14px">DEFINE HOW YOUR CHARACTER TRAITS PASS TO YOUR HEIRS</p>
+      <p style="font-family:var(--M);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:14px" data-i18n="profile_text_define_inheritance">DEFINE HOW YOUR CHARACTER TRAITS PASS TO YOUR HEIRS</p>
       <div class="sf-row">
-        <div class="sf-field"><label>CHARACTER NAME</label><input type="text" id="char-name-in" placeholder="Your sovereign name..."/></div>
-        <div class="sf-field"><label>DOMINANT TRAIT</label>
-          <select id="dom-trait"><option>Knowledge</option><option>Strength</option><option>Wisdom</option><option>Legacy</option><option>Courage</option><option>Vision</option><option>Justice</option><option>Creation</option><option>Mastery</option></select>
+        <div class="sf-field"><label data-i18n="profile_field_character_name">CHARACTER NAME</label><input type="text" id="char-name-in" placeholder="Your sovereign name..." data-i18n-placeholder="profile_placeholder_character_name"/></div>
+        <div class="sf-field"><label data-i18n="profile_field_dominant_trait">DOMINANT TRAIT</label>
+          <select id="dom-trait"><option data-i18n="profile_option_knowledge">Knowledge</option><option data-i18n="profile_option_strength">Strength</option><option data-i18n="profile_option_wisdom">Wisdom</option><option data-i18n="profile_option_legacy">Legacy</option><option data-i18n="profile_option_courage">Courage</option><option data-i18n="profile_option_vision">Vision</option><option data-i18n="profile_option_justice">Justice</option><option data-i18n="profile_option_creation">Creation</option><option data-i18n="profile_option_mastery">Mastery</option></select>
         </div>
-        <div class="sf-field"><label>INHERITANCE MODE</label>
-          <select id="inherit-mode"><option>Full Transmission</option><option>50/50 Split</option><option>Merit Only</option><option>Bloodline Lock</option></select>
+        <div class="sf-field"><label data-i18n="profile_field_inheritance_mode">INHERITANCE MODE</label>
+          <select id="inherit-mode"><option data-i18n="profile_option_full_transmission">Full Transmission</option><option data-i18n="profile_option_split_50_50">50/50 Split</option><option data-i18n="profile_option_merit_only">Merit Only</option><option data-i18n="profile_option_bloodline_lock">Bloodline Lock</option></select>
         </div>
-        <div class="sf-field"><label>LEGACY STATEMENT</label><input type="text" id="legacy-stmt" placeholder="What you pass forward..."/></div>
+        <div class="sf-field"><label data-i18n="profile_field_legacy_statement">LEGACY STATEMENT</label><input type="text" id="legacy-stmt" placeholder="What you pass forward..." data-i18n-placeholder="profile_placeholder_legacy_statement"/></div>
       </div>
-      <button class="btn-save" id="btn-char-save">SEAL CHARACTER RECORD</button>
-      <div class="saved-msg" id="char-saved-msg">Character record sealed to the immutable archive.</div>
+      <button class="btn-save" id="btn-char-save" data-i18n="profile_btn_seal_character">SEAL CHARACTER RECORD</button>
+      <div class="saved-msg" id="char-saved-msg" data-i18n="profile_msg_character_sealed">Character record sealed to the immutable archive.</div>
     </div>
 
     </div>
@@ -1391,40 +1391,40 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
 
 const ACHIEV=[
-  {n:1,name:'GENESIS',col:'#D9B86A',sym:'\u03A9'},{n:2,name:'KNOWLEDGE',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},
-  {n:3,name:'MASTERY',col:'#E86A3A',sym:'\u25C8'},{n:4,name:'CONTRIBUTION',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25B2'},
-  {n:5,name:'ELEMENTAL',col:'#D9B86A',sym:'\u2609'},{n:6,name:'CELESTIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736'},
-  {n:7,name:'SOVEREIGN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u03A9'},{n:8,name:'BLOODLINE',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),sym:'\u22D4'},
-  {n:9,name:'ECONOMIC',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25C8'},{n:10,name:'ORACLE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316'},
-  {n:11,name:'GUARDIAN',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B6'},{n:12,name:'APEX',col:'#FFD700',sym:'\u03A9'},
-  {n:13,name:'1ST LIGHT',col:'#D9B86A',sym:'\u2726',type:'MEDAL'},{n:14,name:'PIONEER',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF',type:'MEDAL'},
-  {n:15,name:'CRAFTMASTER',col:'#E86A3A',sym:'\u2699',type:'MEDAL'},{n:16,name:'BUILDER',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B2',type:'MEDAL'},
-  {n:17,name:'NAVIGATOR',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2609',type:'MEDAL'},{n:18,name:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u22D4',type:'MEDAL'},
-  {n:19,name:'GUARDIAN',col:'#D9B86A',sym:'\u25C8',type:'MEDAL'},{n:20,name:'CONSUL',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u2726',type:'MEDAL'},
-  {n:21,name:'RESEARCHER',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316',type:'MEDAL'},{n:22,name:'PROPHET',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736',type:'MEDAL'},
-  {n:23,name:'KEEPER',col:'#D9B86A',sym:'\u21C4',type:'MEDAL'},{n:24,name:'OMEGA SVRN',col:'#FFD700',sym:'\u03A9',type:'MEDAL'},
-  {n:25,name:'GENESIS CERT',col:'#D9B86A',sym:'\u25A3',type:'CERT'},{n:26,name:'KNOWLEDGE I',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25A3',type:'CERT'},
-  {n:27,name:'MASTERY I',col:'#E86A3A',sym:'\u25A3',type:'CERT'},{n:28,name:'MASTERY II',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),sym:'\u25A3',type:'CERT'},
-  {n:29,name:'ECONOMIST',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:30,name:'CELESTIAL',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},
-  {n:31,name:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:32,name:'HERITAGE',col:'#D9B86A',sym:'\u25A3',type:'CERT'},
-  {n:33,name:'ORACLE',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},{n:34,name:'CONSULTANT',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25A3',type:'CERT'},
-  {n:35,name:'PLATFORM MST',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:36,name:'OMEGA SVRN',col:'#FFD700',sym:'\u25A3',type:'CERT'},
+  {n:1,key:'achievement_genesis',col:'#D9B86A',sym:'\u03A9'},{n:2,key:'achievement_knowledge',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},
+  {n:3,key:'achievement_mastery',col:'#E86A3A',sym:'\u25C8'},{n:4,key:'achievement_contribution',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25B2'},
+  {n:5,key:'achievement_elemental',col:'#D9B86A',sym:'\u2609'},{n:6,key:'achievement_celestial',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736'},
+  {n:7,key:'achievement_sovereign',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u03A9'},{n:8,key:'achievement_bloodline',col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),sym:'\u22D4'},
+  {n:9,key:'achievement_economic',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25C8'},{n:10,key:'achievement_oracle',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316'},
+  {n:11,key:'achievement_guardian',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B6'},{n:12,key:'achievement_apex',col:'#FFD700',sym:'\u03A9'},
+  {n:13,key:'medal_1st_light',col:'#D9B86A',sym:'\u2726',type:'MEDAL'},{n:14,key:'medal_pioneer',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF',type:'MEDAL'},
+  {n:15,key:'medal_craftmaster',col:'#E86A3A',sym:'\u2699',type:'MEDAL'},{n:16,key:'medal_builder',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25B2',type:'MEDAL'},
+  {n:17,key:'medal_navigator',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2609',type:'MEDAL'},{n:18,key:'medal_architect',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u22D4',type:'MEDAL'},
+  {n:19,key:'medal_consul',col:'#D9B86A',sym:'\u25C8',type:'MEDAL'},{n:20,key:'medal_consul',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u2726',type:'MEDAL'},
+  {n:21,key:'medal_researcher',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2316',type:'MEDAL'},{n:22,key:'medal_prophet',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u2736',type:'MEDAL'},
+  {n:23,key:'medal_keeper',col:'#D9B86A',sym:'\u21C4',type:'MEDAL'},{n:24,key:'medal_keeper',col:'#FFD700',sym:'\u03A9',type:'MEDAL'},
+  {n:25,key:'cert_genesis_cert',col:'#D9B86A',sym:'\u25A3',type:'CERT'},{n:26,key:'cert_knowledge_i',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25A3',type:'CERT'},
+  {n:27,key:'cert_mastery_i',col:'#E86A3A',sym:'\u25A3',type:'CERT'},{n:28,key:'cert_mastery_ii',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),sym:'\u25A3',type:'CERT'},
+  {n:29,key:'cert_economist',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:30,key:'cert_celestial',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},
+  {n:31,key:'cert_consultant',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:32,key:'cert_heritage',col:'#D9B86A',sym:'\u25A3',type:'CERT'},
+  {n:33,key:'cert_oracle',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),sym:'\u25A3',type:'CERT'},{n:34,key:'cert_consultant',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),sym:'\u25A3',type:'CERT'},
+  {n:35,key:'cert_platform_mst',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),sym:'\u25A3',type:'CERT'},{n:36,key:'cert_platform_mst',col:'#FFD700',sym:'\u25A3',type:'CERT'},
 ];
 
 const MATS=[
-  {n:1,name:'SAND',col:'#D9B86A',thresh:'1.73'},{n:2,name:'GLASS',col:'#A9C2D8',thresh:'2.99'},
-  {n:3,name:'IRON',col:'#C7CDD6',thresh:'4.25'},{n:4,name:'STEEL',col:'#8B8F9C',thresh:'5.51'},
-  {n:5,name:'TITANIUM',col:'#607D8B',thresh:'6.77'},{n:6,name:'CARBON',col:'#455A64',thresh:'8.03'},
-  {n:7,name:'GOLD',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),thresh:'9.29'},{n:8,name:'PLATINUM',col:'#E8D5B7',thresh:'10.55'},
-  {n:9,name:'DIAMOND',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),thresh:'11.81'},{n:10,name:'ADAMANT',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),thresh:'13.07'},
-  {n:11,name:'PRIME',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),thresh:'25.517'},{n:12,name:'OMEGA MASTER',col:'#FFD700',thresh:'27.83679'},
+  {n:1,key:'material_sand',col:'#D9B86A',thresh:'1.73'},{n:2,key:'material_glass',col:'#A9C2D8',thresh:'2.99'},
+  {n:3,key:'material_iron',col:'#C7CDD6',thresh:'4.25'},{n:4,key:'material_steel',col:'#8B8F9C',thresh:'5.51'},
+  {n:5,key:'material_titanium',col:'#607D8B',thresh:'6.77'},{n:6,key:'material_carbon',col:'#455A64',thresh:'8.03'},
+  {n:7,key:'material_gold',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),thresh:'9.29'},{n:8,key:'material_platinum',col:'#E8D5B7',thresh:'10.55'},
+  {n:9,key:'material_diamond',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),thresh:'11.81'},{n:10,key:'material_adamant',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),thresh:'13.07'},
+  {n:11,key:'material_prime',col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),thresh:'25.517'},{n:12,key:'material_omega_master',col:'#FFD700',thresh:'27.83679'},
 ];
 
 const PHASES=[
-  {n:1,name:'SAND GENESIS'},{n:2,name:'GLASS AWAKENING'},{n:3,name:'IRON FORGING'},
-  {n:4,name:'STEEL TEMPERING'},{n:5,name:'TITANIUM ASCENT'},{n:6,name:'CARBON PRECISION'},
-  {n:7,name:'GOLD SOVEREIGNTY'},{n:8,name:'PLATINUM LEGACY'},{n:9,name:'DIAMOND APPROACH'},
-  {n:10,name:'DIAMOND CLARITY'},{n:11,name:'OMEGA THRESHOLD'},{n:12,name:'OMEGA MASTER'},
+  {n:1,key:'phase_sand_genesis'},{n:2,key:'phase_glass_awakening'},{n:3,key:'phase_iron_forging'},
+  {n:4,key:'phase_steel_tempering'},{n:5,key:'phase_titanium_ascent'},{n:6,key:'phase_carbon_precision'},
+  {n:7,key:'phase_gold_sovereignty'},{n:8,key:'phase_platinum_legacy'},{n:9,key:'phase_diamond_approach'},
+  {n:10,key:'phase_diamond_clarity'},{n:11,key:'phase_omega_threshold'},{n:12,key:'phase_omega_master'},
 ];
 
 function drawAchBadge(cv,sym,col){
@@ -1466,19 +1466,24 @@ async function buildAchievements(uid){
 
   /* Real top stats bar -- was hardcoded to fake absolute-apex values for every viewer */
   document.getElementById('sg-auth').textContent=realAuth.toFixed(3);
-  document.getElementById('sg-auth-sub').textContent=realAuth>=APEX_AUTH-0.001?'Absolute maximum':(realAuth.toFixed(2)+' / '+APEX_AUTH);
+  const lang=(localStorage.getItem('omega_lang')||'en');
+  document.getElementById('sg-auth-sub').textContent=realAuth>=APEX_AUTH-0.001?(window.OmegaI18n?window.OmegaI18n.t('profile_auth_absolute_maximum',lang):'Absolute maximum'):(realAuth.toFixed(2)+' / '+APEX_AUTH);
   document.getElementById('sg-coord').textContent='('+a.toFixed(3)+','+b.toFixed(3)+','+c.toFixed(3)+')';
-  document.getElementById('sg-coord-sub').textContent=realAuth>=APEX_AUTH-0.001?'Apex locked':'In progress';
+  document.getElementById('sg-coord-sub').textContent=realAuth>=APEX_AUTH-0.001?(window.OmegaI18n?window.OmegaI18n.t('profile_coord_apex_locked',lang):'Apex locked'):(window.OmegaI18n?window.OmegaI18n.t('profile_coord_in_progress',lang):'In progress');
   const myTier=MATS.filter(m=>realAuth>=parseFloat(m.thresh));
   const curTier=myTier.length?myTier[myTier.length-1]:MATS[0];
-  document.getElementById('sg-tier').textContent=curTier.name;
-  document.getElementById('sg-tier-sub').textContent=myTier.length+' of 12 sealed';
+  const tierName=window.OmegaI18n?window.OmegaI18n.t(curTier.key,lang):'';
+  document.getElementById('sg-tier').textContent=tierName||'';
+  document.getElementById('sg-tier-sub').textContent=myTier.length+' '+(window.OmegaI18n?window.OmegaI18n.t('profile_tier_of_12_sealed',lang):'of 12 sealed');
   document.getElementById('sg-grade').textContent=myTier.length+'/12';
-  document.getElementById('sg-grade-sub').textContent=myTier.length>=12?'Maximum':'In progress';
+  document.getElementById('sg-grade-sub').textContent=myTier.length>=12?(window.OmegaI18n?window.OmegaI18n.t('profile_grade_maximum',lang):'Maximum'):(window.OmegaI18n?window.OmegaI18n.t('profile_grade_in_progress',lang):'In progress');
 
   /* Real axis bars -- was hardcoded to 100% for every viewer */
   const axisHead=[...document.querySelectorAll('#tab-overview .sechead')].find(h=>h.textContent.includes('MATRIX AXES'));
-  if(axisHead) axisHead.textContent='MATRIX AXES -- YOUR STANDING ('+a.toFixed(3)+' / '+b.toFixed(3)+' / '+c.toFixed(3)+')';
+  if(axisHead){
+    const axisHeadText=window.OmegaI18n?window.OmegaI18n.t('profile_section_matrix_axes_standing',lang):'MATRIX AXES -- YOUR STANDING';
+    axisHead.textContent=axisHeadText+' ('+a.toFixed(3)+' / '+b.toFixed(3)+' / '+c.toFixed(3)+')';
+  }
   setTimeout(()=>{
     document.getElementById('bar-a').style.width=Math.min(100,(a/9)*100)+'%';
     document.getElementById('bar-b').style.width=Math.min(100,(b/9)*100)+'%';
@@ -1492,22 +1497,25 @@ async function buildAchievements(uid){
   });
 
   const BOUND={
-    Aries:{agent:'Sentinel',token:'PYRON',element:'Fire'},Taurus:{agent:'Merchant',token:'AURUM',element:'Metal'},
-    Gemini:{agent:'Scout',token:'ZEPHYR',element:'Wind'},Cancer:{agent:'Warden',token:'NEREID',element:'Water'},
-    Leo:{agent:'Sovereign',token:'SOLARI',element:'Fire'},Virgo:{agent:'Auditor',token:'VIRGITE',element:'Sand'},
-    Libra:{agent:'Proxy',token:'FORGEON',element:'Wind'},Scorpio:{agent:'Oracle',token:'STYX',element:'Water'},
-    Sagittarius:{agent:'Beacon',token:'EMBER',element:'Fire'},Capricorn:{agent:'Analyst',token:'FERRUM',element:'Metal'},
-    Aquarius:{agent:'Tutor',token:'PRIME',element:'Wind'},Pisces:{agent:'Historian',token:'ABYSS',element:'Water'},
+    Aries:{agentKey:'profile_agent_sentinel',tokenKey:'token_pyron',elementKey:'element_fire'},Taurus:{agentKey:'profile_agent_merchant',tokenKey:'token_aurum',elementKey:'element_metal'},
+    Gemini:{agentKey:'profile_agent_scout',tokenKey:'token_zephyr',elementKey:'element_wind'},Cancer:{agentKey:'profile_agent_warden',tokenKey:'token_nereid',elementKey:'element_water'},
+    Leo:{agentKey:'profile_agent_sovereign',tokenKey:'token_solari',elementKey:'element_fire'},Virgo:{agentKey:'profile_agent_auditor',tokenKey:'token_virgite',elementKey:'element_sand'},
+    Libra:{agentKey:'profile_agent_proxy',tokenKey:'token_forgeon',elementKey:'element_wind'},Scorpio:{agentKey:'profile_agent_oracle',tokenKey:'token_styx',elementKey:'element_water'},
+    Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
+    Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
   var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){
-    document.getElementById('idf-sign').textContent=pr.sign.toUpperCase()+' -- '+bound.element.toUpperCase()+' ELEMENT';
-    document.getElementById('idf-agent').textContent=bound.agent.toUpperCase()+' AGENT';
-    document.getElementById('idf-token').textContent=bound.token;
+    const elementName=window.OmegaI18n?window.OmegaI18n.t(bound.elementKey,'en'):'';
+    const agentName=window.OmegaI18n?window.OmegaI18n.t(bound.agentKey,'en'):'';
+    const tokenName=window.OmegaI18n?window.OmegaI18n.t(bound.tokenKey,'en'):'';
+    document.getElementById('idf-sign').textContent=pr.sign.toUpperCase()+' -- '+(elementName||'').toUpperCase()+' ELEMENT';
+    document.getElementById('idf-agent').textContent=(agentName||'').toUpperCase()+' AGENT';
+    document.getElementById('idf-token').textContent=tokenName||'';
   } else {
-    document.getElementById('idf-sign').textContent='SET YOUR COSMOLOGY';
+    document.getElementById('idf-sign').textContent=window.OmegaI18n?window.OmegaI18n.t('profile_action_set_cosmology',lang):'SET YOUR COSMOLOGY';
     document.getElementById('idf-agent').textContent='--';
     document.getElementById('idf-token').textContent='--';
   }
@@ -1527,13 +1535,14 @@ async function buildAchievements(uid){
   } else {
     document.getElementById('member-credentials-note').style.display='block';
   }
-  buildAchievements(sess.user.id);buildTiers(realAuth);buildPhases(realAuth);buildCerts(sess.user.id);
+  buildAchievementsGrid();buildTiers(realAuth);buildCerts(sess.user.id);
   buildMembershipCard();
 }
 
 async function buildMembershipCard(){
   const card=document.getElementById('membership-card');
   if(!card) return;
+  const lang=(localStorage.getItem('omega_lang')||'en');
   let sub={tier:'none',status:'none',period_end:null,payments_enabled:false};
   try{ const r=await sb.rpc('my_subscription'); if(r.data) sub=r.data; }catch(e){}
   const tier=(sub.tier||'none');
@@ -1541,9 +1550,12 @@ async function buildMembershipCard(){
   const active = status==='active' || status==='trialing';
   const sgMember=document.getElementById('sg-member'); const sgMemberSub=document.getElementById('sg-member-sub');
   if(!active){
-    card.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted)">NO ACTIVE MEMBERSHIP</div><div style="margin-top:6px;font-size:13px">You haven&#39;t chosen a tier yet. <a href="/subscriptions.html" style="color:var(--gold)">Choose your tier &rarr;</a></div>';
+    const noMembershipText=window.OmegaI18n?window.OmegaI18n.t('profile_msg_no_active_membership',lang):'NO ACTIVE MEMBERSHIP';
+    const chooseText=window.OmegaI18n?window.OmegaI18n.t('profile_action_choose_tier',lang):'Choose your tier';
+    const noTierText=window.OmegaI18n?window.OmegaI18n.t('profile_msg_no_active_tier',lang):'No active tier';
+    card.innerHTML='<div style="font-family:var(--M);font-size:11px;color:var(--muted)">'+noMembershipText+'</div><div style="margin-top:6px;font-size:13px">You haven&#39;t chosen a tier yet. <a href="/subscriptions.html" style="color:var(--gold)">'+chooseText+' &rarr;</a></div>';
     if(sgMember) sgMember.textContent='NONE';
-    if(sgMemberSub) sgMemberSub.textContent='No active tier';
+    if(sgMemberSub) sgMemberSub.textContent=noTierText;
     return;
   }
   if(sgMember) sgMember.textContent=tier.toUpperCase();
@@ -1551,14 +1563,16 @@ async function buildMembershipCard(){
   const end=sub.period_end ? new Date(sub.period_end) : null;
   const endStr = end ? end.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '--';
   const daysLeft = end ? Math.max(0, Math.ceil((end - new Date())/86400000)) : null;
+  const statusText=status==='trialing'?(window.OmegaI18n?window.OmegaI18n.t('profile_label_trial_ends',lang):'TRIAL ENDS'):(window.OmegaI18n?window.OmegaI18n.t('profile_label_renews',lang):'RENEWS');
+  const manageText=window.OmegaI18n?window.OmegaI18n.t('profile_action_manage_tier',lang):'Manage or change your tier';
   card.innerHTML=
     '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">'+
     '<div><div style="font-family:var(--D);font-size:16px;color:var(--gold)">'+tier.toUpperCase()+'</div>'+
     '<div style="font-family:var(--M);font-size:9px;letter-spacing:2px;color:var(--green);margin-top:4px">'+status.toUpperCase()+'</div></div>'+
-    '<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">'+(status==='trialing'?'TRIAL ENDS':'RENEWS')+'</div>'+
+    '<div style="text-align:right"><div style="font-size:11px;color:var(--muted)">'+statusText+'</div>'+
     '<div style="font-size:13px;color:var(--ink)">'+endStr+(daysLeft!==null?' ('+daysLeft+' days)':'')+'</div></div>'+
     '</div>'+
-    '<div style="margin-top:10px"><a href="/subscriptions.html" style="color:var(--cyan);font-size:12px">Manage or change your tier &rarr;</a></div>';
+    '<div style="margin-top:10px"><a href="/subscriptions.html" style="color:var(--cyan);font-size:12px">'+manageText+' &rarr;</a></div>';
 }
 /* boot() removed -- module self-initialises via IIFE below */;
 (async()=>{try{const s=(await sb.auth.getSession()).data.session;if(!s)return;const pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};const ti=document.getElementById('sub-tier');if(ti)ti.textContent=(pr.subscription_tier||'free').toUpperCase();const en=document.getElementById('sub-end');if(en&&pr.subscription_period_end)en.textContent=new Date(pr.subscription_period_end).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){console.log('sub module:',e);}})();
@@ -2212,6 +2226,40 @@ function buildDocs(){
     const sl=d.status==='verified'?'VERIFIED [*]':'PENDING SUBMISSION';
     c.innerHTML=`<div class="dc-badge">READY TO ACTIVATE</div><div class="dc-icon">${d.icon}</div><div class="dc-title">${d.title}</div><div class="dc-desc">${d.desc}</div><span class="dc-status" style="${st}">${sl}</span>`;
     c.addEventListener('click',function(){ alert('Document upload will open the KYC provider flow once activated. Your submission will be securely encrypted.'); });
+    g.appendChild(c);
+  });
+}
+
+function buildAchievementsGrid(){
+  const g=document.getElementById('ach-grid');
+  if(!g) return;
+  g.innerHTML='';
+  let totalCount=0;
+  ACHIEV.forEach((a)=>{
+    const c=document.createElement('div');c.className='ach-badge';c.style.borderColor=a.col+'44';
+    const cv=document.createElement('canvas');cv.className='ab-canvas';
+    const nameDiv=document.createElement('div');nameDiv.className='ab-name';
+    const tierDiv=document.createElement('div');tierDiv.className='ab-tier';tierDiv.style.borderColor=a.col+'77';tierDiv.style.color=a.col;
+
+    const achName=window.OmegaI18n?window.OmegaI18n.t(a.key,'en'):'';
+    nameDiv.textContent=(achName||a.key).toUpperCase().slice(0,12);
+    tierDiv.textContent=a.type||'TROPHY';
+
+    c.appendChild(cv);c.appendChild(nameDiv);c.appendChild(tierDiv);g.appendChild(c);
+    drawAchBadge(cv,a.sym,a.col);totalCount++;
+  });
+  const sg=document.getElementById('sg-ach');if(sg)sg.textContent=totalCount;
+}
+
+function buildCerts(uid){
+  const g=document.getElementById('cert-display');
+  if(!g) return;
+  g.innerHTML='';
+  const certs=ACHIEV.filter(a=>a.type==='CERT');
+  certs.forEach((cert)=>{
+    const c=document.createElement('div');c.className='cert-card';c.style.borderColor=cert.col+'44';
+    const certName=window.OmegaI18n?window.OmegaI18n.t(cert.key,'en'):'';
+    c.innerHTML=`<div style="font-size:18px;margin-bottom:8px">${cert.sym}</div><div style="color:${cert.col};font-size:9px;font-weight:700">${(certName||cert.key).toUpperCase().slice(0,14)}</div>`;
     g.appendChild(c);
   });
 }

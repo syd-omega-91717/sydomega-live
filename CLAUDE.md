@@ -2455,6 +2455,32 @@ orphaned file.
   translated sidebar on switching to Arabic, a stored non-English preference auto-loading its pack
   on a fresh page load, and an HTTP-500 pack leaving the page cleanly in English with no unhandled
   error, then recovering on retry.
+- **[Fixed] Form controls across 66 pages had no accessible name, and `omega-a11y.js`'s own label
+  audit could not have helped because it never looked at `<select>` or `<textarea>`.** The crawl
+  found 177 controls with no accessible name. Section E queried `<input>` only — but the bulk of
+  this platform's unnamed controls are `<select>` dropdowns (`p-cat`, `filter-type`, `af-rel`,
+  `triv-diff` …). Worse, its fallback chain ended in `input.type`, so where it *did* apply it
+  produced `aria-label="text"` / `"number"` / `"date"` — a screen reader then reads that out **in
+  place of** a name, which is worse than staying silent. Measured on a 10-page sample: 12 controls
+  carried such a bare type-word as their entire accessible name. The important finding is that
+  **111 of the 177 already sit next to a real `<label>` the page author wrote** — "CATEGORY",
+  "TIER", "COMMISSION RATE (%)", "ZODIAC SIGN" — which simply has no `for=` attribute and does not
+  wrap the control, so it renders correctly on screen while being invisible to assistive tech.
+  Rewrote section E to cover `input`/`select`/`textarea` and to prefer *associating* that existing
+  label (setting `for=`/`id`, generating an id only when the control lacks one) over inventing a
+  string: it recovers the author's own wording and stays correct if the page later rewrites the
+  label text, and it is idempotent because `el.labels` is non-empty on the next run. Dropped the
+  `input.type` fallback entirely. A `<select>`'s first `<option>` is used only when it reads like a
+  **prompt** ("Select a trigger…", "ALL TYPES", "-- choose --"); most first options are real values
+  ("Knowledge", "Self", "🏠 HOUSING", "1 — Individual") and naming a category dropdown "Knowledge"
+  actively misleads, so those are deliberately left unnamed rather than mislabelled. Verified in
+  Chromium with an identical-methodology A/B over a 10-page sample: named **71 → 98**, unnamed
+  **35 → 8**, bare-type-word names **12 → 5** — and the 5 remaining were confirmed by hand not to be
+  junk at all but genuine author labels that happen to read "DATE"/"EMAIL" on a date/email field.
+  Provenance spot-checked on `expenses.html`: every control now resolves through a real
+  `<label for>` ("DESCRIPTION", "AMOUNT ($)", "TYPE", "CATEGORY", "DATE", "NOTES (optional)").
+  Across all 66 affected pages: 407 controls named, 78 still unnamed (those have no label, no
+  placeholder, and no prompt-shaped option — nothing truthful to derive a name from).
 - **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
   reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
   the baseline is 7 both with and without this session's work), and

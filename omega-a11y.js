@@ -3,15 +3,21 @@
    WCAG 2.1 AA compliance layer, injected globally via bg.js.
 
    A. SKIP NAVIGATION LINK — "Skip to main content" appears on Tab press.
-      Jumps to #app, .main, or <main> — whichever exists.
+      Resolves the content region via resolveMain() below, gives it
+      tabindex="-1" and focuses it explicitly, so activating the link really
+      moves keyboard focus instead of only scrolling.
    B. FOCUS TRAP MANAGER — exported OmegaA11y.trapFocus(el) / .releaseFocus()
       for modals/overlays. Used by omega-keyboard.js help overlay, copilot, etc.
    C. LIVE REGION ANNOUNCER — OmegaA11y.announce(msg, priority) for screen readers.
       Used by omega-sdt.js gate celebrations, omega-notify.js toasts, etc.
-   D. LANDMARK ARIA — ensures every page has at least one <main> landmark.
-      Wraps #app in <main> role if no <main> exists.
-   E. FORM LABEL AUDIT — finds <input> without <label> and adds aria-label
-      from placeholder as a last-resort fallback (logs a console warning).
+   D. LANDMARK ARIA — ensures every page has at least one <main> landmark,
+      promoting the resolveMain() content region when the page has none.
+      Never promotes a container that holds the sidebar.
+   E. FORM LABEL AUDIT — names unlabelled <input>/<select>/<textarea>. Prefers
+      associating an existing <label> that has no for= attribute (the common
+      case here: the label is written and visible but not wired up), then
+      placeholder, then a <select>'s first <option> only when it reads as a
+      prompt rather than a value.
    F. MOTION PREFERENCE CSS — reinforce prefers-reduced-motion at the CSS layer,
       scoped to omega-* classes so it cannot accidentally undo page styles.
    ========================================================================== */
@@ -212,20 +218,87 @@
     } else { ensureLandmark(); }
   })();
 
-  /* ── E. FORM LABEL AUDIT ────────────────────────────────────────────── */
+  /* ── E. FORM LABEL AUDIT ──────────────────────────────────────────────
+     Rewritten. The previous version had three problems:
+
+       1. It only queried <input>. A crawl of all 178 pages found 177 controls
+          with no accessible name, and most are <select> dropdowns
+          (p-cat, filter-type, af-rel …) which were never even looked at.
+       2. Its fallback chain ended in `input.type`, producing
+          aria-label="text" / "number" / "date" -- a screen reader then reads
+          that out IN PLACE OF a name, which is worse than staying silent.
+       3. It ignored the best source available. 111 of those 177 controls sit
+          right next to a real <label> the page author already wrote
+          ("CATEGORY", "TIER", "COMMISSION RATE (%)") that simply has no
+          for= attribute and does not wrap the control -- so it looks correct
+          on screen while being purely decorative to assistive tech.
+
+     Associating that existing label recovers the author's own wording instead
+     of inventing one, and because it is a real for=/id association the name
+     stays correct if the page later rewrites the label text.
+
+     A <select>'s first <option> is used only when it reads like a PROMPT
+     ("Select a trigger...", "ALL TYPES", "-- choose --"). Most first options
+     are real values ("Knowledge", "Self", "1 - Individual"), and naming a
+     category dropdown "Knowledge" actively misleads, so those are left
+     unnamed rather than mislabelled. */
+  var _ctlSeq = 0;
+
+  function looksLikePrompt(s){
+    return /^(select|choose|pick|all|any|none)\b/i.test(s) ||
+           /(\.\.\.|…)$/.test(s) ||
+           /^\s*[-–—]{2,}/.test(s);
+  }
+
+  /* Returns {label:<el>} to associate, or {text:'…'} for an aria-label, or null. */
+  function nameSourceFor(el){
+    /* 1. an existing <label> with no for=, preceding the control in its parent */
+    var n = el.previousElementSibling, orphan = null;
+    while(n){
+      if(n.tagName === 'LABEL' && !n.getAttribute('for')){ orphan = n; break; }
+      n = n.previousElementSibling;
+    }
+    /* or the single unassociated label in the control's immediate container */
+    if(!orphan && el.parentElement){
+      var ls = el.parentElement.querySelectorAll(':scope > label:not([for])');
+      if(ls.length === 1) orphan = ls[0];
+    }
+    if(orphan && (orphan.textContent || '').trim()) return { label: orphan };
+
+    /* 2. placeholder */
+    var ph = (el.getAttribute('placeholder') || '').trim();
+    if(ph) return { text: ph };
+
+    /* 3. a select whose first option is a prompt rather than a value */
+    if(el.tagName === 'SELECT' && el.options && el.options.length){
+      var o = (el.options[0].textContent || '').trim();
+      if(o && looksLikePrompt(o)) return { text: o };
+    }
+    return null;
+  }
+
   function auditLabels(){
-    document.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button])').forEach(function(input){
-      /* Already has label via id, aria-label, or aria-labelledby */
-      if(input.labels && input.labels.length) return;
-      if(input.getAttribute('aria-label')) return;
-      if(input.getAttribute('aria-labelledby')) return;
-      /* Use placeholder as emergency fallback */
-      var ph = input.placeholder || input.name || input.type;
-      if(ph){
-        input.setAttribute('aria-label', ph);
-        if(window.__omegaDevMode){
-          console.warn('[OmegaA11y] input missing label, aria-label="'+ph+'" applied:', input);
-        }
+    var sel = 'input:not([type=hidden]):not([type=submit]):not([type=button]),select,textarea';
+    document.querySelectorAll(sel).forEach(function(el){
+      /* already named -- .labels covers <label for=> and wrapping <label> */
+      if(el.labels && el.labels.length) return;
+      if(el.getAttribute('aria-label')) return;
+      if(el.getAttribute('aria-labelledby')) return;
+      if(el.closest && el.closest('label')) return;
+
+      var src = nameSourceFor(el);
+      if(!src) return;
+
+      if(src.label){
+        if(!el.id) el.id = 'omega-ctl-' + (++_ctlSeq);
+        src.label.setAttribute('for', el.id);
+        /* now el.labels is non-empty, so re-running this audit is a no-op */
+      } else {
+        el.setAttribute('aria-label', src.text);
+      }
+      if(window.__omegaDevMode){
+        console.warn('[OmegaA11y] named an unlabelled control:',
+                     src.label ? src.label.textContent.trim() : src.text, el);
       }
     });
   }

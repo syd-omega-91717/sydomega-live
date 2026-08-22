@@ -2418,18 +2418,49 @@ orphaned file.
   clear meaning in this repo's context goes into that document's pending-
   terminology list, not into a design decision.
 
-## 10. Autonomous feature-proposal pipeline (`.claude/skills/`)
+## 10. Autonomous feature-proposal pipeline (`.claude/skills/`) — with safety gating
 
-Four skills exist for turning outside research into shipped-but-dormant
+Five skills orchestrate turning outside research into shipped-but-dormant
 features on this actual static-HTML/Supabase stack — no framework, no
-build step, adapted to the real architecture in §§1–6, not the generic
-Next.js/Prisma/monorepo shape a build tool might default to:
+build step, adapted to the real architecture in §§1–6. The pipeline
+intentionally stops at "reviewable, dormant-by-default code on a branch"
+rather than auto-deploying to subscribers, matching §9's rule against
+shipping monetizable/legally-sensitive features live without an explicit
+gating decision — and this repo's own history of serious bugs that shipped
+silently (§8) is why that gating exists.
+
+**Standard pipeline (LOW-RISK features: UI, docs, non-data changes)**:
+
+```
+web-trend-scout → feature-architect → autonomous-coder → [human review] → subscriber-portal
+```
+
+**HIGH-RISK pipeline (auth, schema, payments, RLS, new public-callable functions)**:
+
+```
+web-trend-scout → grill-me-codex [lock intent] → feature-architect → autonomous-coder → [human review] → subscriber-portal
+```
+
+**The skills**:
 
 - `web-trend-scout` — research only, writes a grounded proposal into
   `FEATURE_IDEAS.md`. No code.
-- `feature-architect` — planning only, turns one proposal into an exact
-  file-by-file blueprint (page, `nav.js` wiring, `supabase/*.sql`,
-  `platform_settings` flag). No code.
+- **`grill-me-codex` (HIGH-RISK decisions only)** — structured interrogation
+  framework. Locks down intent by forcing explicit threat-model review and
+  decision documentation before any architecture or code. Three invocation
+  modes: Standard (3 rounds, structured interrogation + Codex review),
+  Extended (5 rounds for complex decisions), Quick (single-shot wizard for
+  low-risk features). Outputs: `PLAN.md` (decision record with threat
+  analysis) + `CODEX_REVIEW.md` (audit trail of verdicts and revisions).
+  See `.claude/skills/grill-me-codex/SKILL.md` for quick start, and
+  `.claude/grill-me-codex.md` for full framework reference. Grounded in
+  eight threat classes from this repo's own failure history (CLAUDE.md §8):
+  stored XSS, silent-failure writes, RLS policy gaps, column-name
+  mismatches, module-boundary bugs, unguarded RPCs, race conditions, missing
+  edge cases.
+- `feature-architect` — planning only, turns one proposal (+ Codex approval
+  if HIGH-RISK) into an exact file-by-file blueprint (page, `nav.js`
+  wiring, `supabase/*.sql`, `platform_settings` flag). No code.
 - `autonomous-coder` — implements the blueprint for real, verifies with
   `scripts/audit.py`/`node --check`, commits to the current branch. Never
   flips a `platform_settings` flag to `true`, never merges to `main`,
@@ -2439,12 +2470,7 @@ Next.js/Prisma/monorepo shape a build tool might default to:
   `OmegaCanon.tierUnlocks()` system, not an invented one) once a human has
   already turned its flag on.
 
-See `.claude/skills/README.md` for the full pipeline and why it
-deliberately stops at "reviewable, dormant-by-default code on a branch"
-rather than auto-deploying to subscribers — this matches §9's rule against
-shipping monetizable/legally-sensitive features live without an explicit
-gating decision, and this repo's own history of serious bugs that shipped
-silently (§8) is the reason that rule exists.
+See `.claude/skills/README.md` for the full pipeline.
 
 ## 11. Concern taxonomy / shared vocabulary (`OMEGA_TAXONOMY.md`)
 

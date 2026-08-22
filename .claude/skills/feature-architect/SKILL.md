@@ -84,6 +84,25 @@ none of that exists in this repo.
    file — keeps the idea and its plan in one place, same as this repo's
    existing single-file convention for proposals).
 
+## Gating HIGH-RISK Decisions — Before You Blueprint
+
+**For any proposal touching auth, schema, payments, RLS, or new public-callable functions, run `/grill-me-codex` *before* architecting.**
+
+The `grill-me-codex` framework is a structured interrogation that locks down intent before code is written, by forcing explicit threat-model review and decision documentation. It exists specifically to prevent the silent bugs (stored XSS, RLS escapes, column-name mismatches, unguarded RPCs, silent-failure writes) this repo's own history documents in CLAUDE.md §8.
+
+| Decision Type | When | How |
+|---|---|---|
+| Auth changes (privilege, sessions, tokens) | Always | Run `/grill-me-codex type=auth <proposal>` (3 rounds, Codex review, then blueprint) |
+| Schema changes (new tables, RLS policies, migrations) | Always | Run `/grill-me-codex type=schema <proposal>` (3 rounds, Codex review, then blueprint) |
+| Payment/Stripe integration | Always | Run `/grill-me-codex type=payments <proposal>` (3 rounds, Codex review, then blueprint) |
+| New RPCs without privilege guard | Always | Run `/grill-me-codex type=auth <proposal>` (Codex checks for unguarded access) |
+| Member-writable data + rendering | Always | Run `/grill-me-codex <proposal>` (base model checks for stored XSS) |
+| Low-risk features (UI, docs, non-data) | Optional | Run `/grill-me-codex quick <proposal>` if you want a decision record (no Codex review) |
+
+**Outcome**: You'll receive a `PLAN.md` file with `# Status: APPROVED-BY-CODEX` (or `OVERRIDE` with justification), plus a `CODEX_REVIEW.md` audit trail. Proceed to blueprinting only with an APPROVED status.
+
+---
+
 ## Guardrails
 
 - No code in this step — HTML/JS/SQL file *contents* are
@@ -94,3 +113,7 @@ none of that exists in this repo.
   `platform_settings` + RLS), say so plainly in the blueprint instead of
   forcing a fit — that's a signal for the user to reconsider scope, not
   something to route around silently.
+- For HIGH-RISK decisions: blueprinting without a grill-me-codex approval is
+  a sign that intent may be unclear. If a proposal skipped `/grill-me-codex`,
+  recommend running it before proceeding to architecture — better a 3-round
+  interrogation now than silent bugs later.

@@ -31,41 +31,41 @@
 <aside id="omega-side" data-page="analytics"></aside>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
-  <div class="topbar-title">ANALYTICS<span class="topbar-sub">DATA SCIENCE · ML · INTELLIGENCE</span></div>
+  <div class="topbar-title" data-i18n="ana_topbar_title">ANALYTICS<span class="topbar-sub" data-i18n="ana_topbar_subtitle">DATA SCIENCE · ML · INTELLIGENCE</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
 <div class="kpi-row" id="an-kpis" style="padding:.75rem 1rem;border-bottom:1px solid var(--line)">
-  <div class="kpi-card"><div class="kpi-val" id="an-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="an-nodes">—</div><div class="kpi-label">NODES CLEARED</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="an-tasks">—</div><div class="kpi-label">VERIFIED ACTIONS</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="an-a3" style="color:var(--gold)">—</div><div class="kpi-label">A³ KNOWLEDGE</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="an-b3" style="color:var(--cyan)">—</div><div class="kpi-label">B³ MASTERY</div></div>
-  <div class="kpi-card"><div class="kpi-val" id="an-c3" style="color:var(--solar)">—</div><div class="kpi-label">C³ CONTRIBUTION</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="an-auth" style="color:var(--gold)">—</div><div class="kpi-label" data-i18n="ana_kpi_authority">AUTHORITY</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="an-nodes">—</div><div class="kpi-label" data-i18n="ana_kpi_nodes">NODES CLEARED</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="an-tasks">—</div><div class="kpi-label" data-i18n="ana_kpi_actions">VERIFIED ACTIONS</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="an-a3" style="color:var(--gold)">—</div><div class="kpi-label" data-i18n="ana_kpi_a3">A³ KNOWLEDGE</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="an-b3" style="color:var(--cyan)">—</div><div class="kpi-label" data-i18n="ana_kpi_b3">B³ MASTERY</div></div>
+  <div class="kpi-card"><div class="kpi-val" id="an-c3" style="color:var(--solar)">—</div><div class="kpi-label" data-i18n="ana_kpi_c3">C³ CONTRIBUTION</div></div>
 </div>
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('overview')">OVERVIEW</button>
-  <button class="tab-btn" onclick="setTab('algorithms')">ALGORITHMS</button>
-  <button class="tab-btn" onclick="setTab('data')">DATA SCIENCE</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" onclick="setTab('overview')" data-i18n="ana_tab_overview">OVERVIEW</button>
+  <button class="tab-btn" onclick="setTab('algorithms')" data-i18n="ana_tab_algorithms">ALGORITHMS</button>
+  <button class="tab-btn" onclick="setTab('data')" data-i18n="ana_tab_data">DATA SCIENCE</button>
+  <button class="tab-btn" onclick="setTab('science')" data-i18n="ana_tab_science">SCIENCE</button>
 </div>
 
 <!-- OVERVIEW TAB -->
 <div class="tab-panel active" id="tab-overview">
   <div style="padding:1rem">
-    <p class="sechead">AXIS PROGRESSION</p>
+    <p class="sechead" data-i18n="ana_overview_axis">AXIS PROGRESSION</p>
     <div class="chart-box">
-      <div class="chart-head"><span>AUTHORITY RADAR · LIVE POSITION</span><canvas id="mini-radar" width="160" height="60" style="width:80px;height:30px"></canvas></div>
+      <div class="chart-head"><span data-i18n="ana_overview_authority">AUTHORITY RADAR · LIVE POSITION</span><canvas id="mini-radar" width="160" height="60" style="width:80px;height:30px"></canvas></div>
       <div class="chart-body">
-        <div class="bar-row"><div class="bar-lbl">AXIS A · KNOWLEDGE</div><div class="bar-track"><div class="bar-fill" id="bar-a" style="background:var(--gold);width:0%"></div></div><div class="bar-val" id="val-a" style="color:var(--gold)">—</div></div>
-        <div class="bar-row"><div class="bar-lbl">AXIS B · MASTERY</div><div class="bar-track"><div class="bar-fill" id="bar-b" style="background:var(--cyan);width:0%"></div></div><div class="bar-val" id="val-b" style="color:var(--cyan)">—</div></div>
-        <div class="bar-row"><div class="bar-lbl">AXIS C · CONTRIBUTION</div><div class="bar-track"><div class="bar-fill" id="bar-c" style="background:var(--solar);width:0%"></div></div><div class="bar-val" id="val-c" style="color:var(--solar)">—</div></div>
-        <div class="bar-row" style="margin-top:.5rem"><div class="bar-lbl">AUTHORITY FIELD</div><div class="bar-track"><div class="bar-fill" id="bar-auth" style="background:linear-gradient(90deg,var(--gold),var(--solar));width:0%"></div></div><div class="bar-val" id="val-auth" style="color:var(--solar)">—</div></div>
+        <div class="bar-row"><div class="bar-lbl" data-i18n="ana_overview_axis_a">AXIS A · KNOWLEDGE</div><div class="bar-track"><div class="bar-fill" id="bar-a" style="background:var(--gold);width:0%"></div></div><div class="bar-val" id="val-a" style="color:var(--gold)">—</div></div>
+        <div class="bar-row"><div class="bar-lbl" data-i18n="ana_overview_axis_b">AXIS B · MASTERY</div><div class="bar-track"><div class="bar-fill" id="bar-b" style="background:var(--cyan);width:0%"></div></div><div class="bar-val" id="val-b" style="color:var(--cyan)">—</div></div>
+        <div class="bar-row"><div class="bar-lbl" data-i18n="ana_overview_axis_c">AXIS C · CONTRIBUTION</div><div class="bar-track"><div class="bar-fill" id="bar-c" style="background:var(--solar);width:0%"></div></div><div class="bar-val" id="val-c" style="color:var(--solar)">—</div></div>
+        <div class="bar-row" style="margin-top:.5rem"><div class="bar-lbl" data-i18n="ana_overview_field">AUTHORITY FIELD</div><div class="bar-track"><div class="bar-fill" id="bar-auth" style="background:linear-gradient(90deg,var(--gold),var(--solar));width:0%"></div></div><div class="bar-val" id="val-auth" style="color:var(--solar)">—</div></div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.85rem;margin-top:.5rem">
-      <div class="chart-box"><div class="chart-head">PROGRESS TO APEX</div><div class="chart-body apex-wrap"><canvas id="apex-cv" width="200" height="200" style="width:100px;height:100px"></canvas></div></div>
-      <div class="chart-box"><div class="chart-head">CUBE DISTRIBUTION</div><div class="chart-body"><div id="cube-bars"></div></div></div>
-      <div class="chart-box"><div class="chart-head">AUTHORITY HISTORY</div><div class="chart-body" style="min-height:100px;position:relative"><canvas id="an-chart-auth" data-omega-chart="auth"></canvas></div></div>
+      <div class="chart-box"><div class="chart-head" data-i18n="ana_overview_apex">PROGRESS TO APEX</div><div class="chart-body apex-wrap"><canvas id="apex-cv" width="200" height="200" style="width:100px;height:100px"></canvas></div></div>
+      <div class="chart-box"><div class="chart-head" data-i18n="ana_overview_cube">CUBE DISTRIBUTION</div><div class="chart-body"><div id="cube-bars"></div></div></div>
+      <div class="chart-box"><div class="chart-head" data-i18n="ana_overview_history">AUTHORITY HISTORY</div><div class="chart-body" style="min-height:100px;position:relative"><canvas id="an-chart-auth" data-omega-chart="auth"></canvas></div></div>
     </div>
   </div>
 </div>
@@ -73,46 +73,46 @@
 <!-- ALGORITHMS TAB -->
 <div class="tab-panel" id="tab-algorithms">
   <div style="padding:1rem">
-    <p class="sechead">ALGORITHMS POWERING THE PLATFORM</p>
+    <p class="sechead" data-i18n="ana_algo_title">ALGORITHMS POWERING THE PLATFORM</p>
     <div class="algo-grid">
       <div class="algo-card" style="border-top-color:var(--gold)">
-        <div class="algo-title" style="color:var(--gold)">DIJKSTRA — MATRIX PATHFINDING</div>
-        <div class="algo-sub">SHORTEST PATH · 0.001 → 9.000</div>
-        <div class="algo-body">Each task is a weighted edge in the graph. The platform finds the minimum-cost path from GENESIS (0.001) to APEX (9.000). Weight per edge = 0.001. Shortest path: 8,999 verified actions.</div>
+        <div class="algo-title" style="color:var(--gold)" data-i18n="ana_algo_dijkstra_title">DIJKSTRA — MATRIX PATHFINDING</div>
+        <div class="algo-sub" data-i18n="ana_algo_dijkstra_sub">SHORTEST PATH · 0.001 → 9.000</div>
+        <div class="algo-body" data-i18n="ana_algo_dijkstra_body">Each task is a weighted edge in the graph. The platform finds the minimum-cost path from GENESIS (0.001) to APEX (9.000). Weight per edge = 0.001. Shortest path: 8,999 verified actions.</div>
         <div class="code-block">g=Graph(nodes=104976)<br>g.add_edge(v, u, weight=0.001)<br>path=dijkstra(g, genesis, apex)<br># cost=8.999 per axis</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--cyan)">
-        <div class="algo-title" style="color:var(--cyan)">HIGGS FIELD — AUTHORITY MASS</div>
-        <div class="algo-sub">FIELD INTERACTION · MORE NODES = MORE MASS</div>
-        <div class="algo-body">Like the Higgs field giving particles mass through interaction, authority emerges from matrix interaction. The more nodes cleared, the more "mass" (authority) a member acquires.</div>
+        <div class="algo-title" style="color:var(--cyan)" data-i18n="ana_algo_higgs_title">HIGGS FIELD — AUTHORITY MASS</div>
+        <div class="algo-sub" data-i18n="ana_algo_higgs_sub">FIELD INTERACTION · MORE NODES = MORE MASS</div>
+        <div class="algo-body" data-i18n="ana_algo_higgs_body">Like the Higgs field giving particles mass through interaction, authority emerges from matrix interaction. The more nodes cleared, the more "mass" (authority) a member acquires.</div>
         <div class="code-block">auth = sqrt(A³ + B³ + C³) × φ/e<br>apex_auth = sqrt(2187) × 1.618/2.718<br>= 27.8367 (the sovereign constant)</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--green)">
-        <div class="algo-title" style="color:var(--green)">DEEP LEARNING — AXIS TRAINING</div>
-        <div class="algo-sub">SUPERVISED · REINFORCEMENT · FEDERATED</div>
-        <div class="algo-body">Axis A = supervised learning (consume curated knowledge). Axis B = reinforcement learning (achieve, score, master). Axis C = federated learning (collective contribution improves the whole).</div>
+        <div class="algo-title" style="color:var(--green)" data-i18n="ana_algo_deep_title">DEEP LEARNING — AXIS TRAINING</div>
+        <div class="algo-sub" data-i18n="ana_algo_deep_sub">SUPERVISED · REINFORCEMENT · FEDERATED</div>
+        <div class="algo-body" data-i18n="ana_algo_deep_body">Axis A = supervised learning (consume curated knowledge). Axis B = reinforcement learning (achieve, score, master). Axis C = federated learning (collective contribution improves the whole).</div>
         <div class="code-block">model.train(axis='A', type='supervised')<br>model.train(axis='B', type='RL')<br>model.train(axis='C', type='federated')</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--solar)">
-        <div class="algo-title" style="color:var(--solar)">LOOP ENGINEERING — EVENT SYSTEM</div>
-        <div class="algo-sub">ACTION → INCREMENT → MILESTONE → REWARD</div>
-        <div class="algo-body">Every action closes a loop: user acts → RPC fires → axis increments by 0.001 → authority recalculates → milestones checked → rewards issued. No partial loops. Every event is verified, signed, immutable.</div>
+        <div class="algo-title" style="color:var(--solar)" data-i18n="ana_algo_loop_title">LOOP ENGINEERING — EVENT SYSTEM</div>
+        <div class="algo-sub" data-i18n="ana_algo_loop_sub">ACTION → INCREMENT → MILESTONE → REWARD</div>
+        <div class="algo-body" data-i18n="ana_algo_loop_body">Every action closes a loop: user acts → RPC fires → axis increments by 0.001 → authority recalculates → milestones checked → rewards issued. No partial loops. Every event is verified, signed, immutable.</div>
         <div class="code-block">on_action(task) -&gt;<br>  axis += 0.001<br>  auth = sqrt(Σcube) × φ/e<br>  check_milestones(auth)</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--cyan)">
-        <div class="algo-title" style="color:var(--cyan)">i²=−1 · COMPLEX PLANE GATES</div>
-        <div class="algo-sub">IMAGINARY UNIT · GATE DAMPING</div>
-        <div class="algo-body">Gate thresholds are computed in the complex plane. The imaginary unit i (where i²=−1) introduces phase-shift damping that prevents authority runaway at tier boundaries. φ, e, and i are all built into the formula.</div>
+        <div class="algo-title" style="color:var(--cyan)" data-i18n="ana_algo_complex_title">i²=−1 · COMPLEX PLANE GATES</div>
+        <div class="algo-sub" data-i18n="ana_algo_complex_sub">IMAGINARY UNIT · GATE DAMPING</div>
+        <div class="algo-body" data-i18n="ana_algo_complex_body">Gate thresholds are computed in the complex plane. The imaginary unit i (where i²=−1) introduces phase-shift damping that prevents authority runaway at tier boundaries. φ, e, and i are all built into the formula.</div>
         <div class="code-block">gates=[2.3197,4.6394,...,27.8367]<br># spaced by auth×φ/9<br>i²=-1 ⟹ phase damping on gate cross</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--crim)">
-        <div class="algo-title" style="color:var(--crim)">GO TO CONSIDERED HARMFUL</div>
-        <div class="algo-sub">DIJKSTRA · NO SPAGHETTI LOGIC</div>
-        <div class="algo-body">The platform enforces structured progression. No jump gates, no shortcuts. Members cannot skip nodes. Every transition is sequential and verified, following Dijkstra's principle: structured code structures structured minds.</div>
+        <div class="algo-title" style="color:var(--crim)" data-i18n="ana_algo_goto_title">GO TO CONSIDERED HARMFUL</div>
+        <div class="algo-sub" data-i18n="ana_algo_goto_sub">DIJKSTRA · NO SPAGHETTI LOGIC</div>
+        <div class="algo-body" data-i18n="ana_algo_goto_body">The platform enforces structured progression. No jump gates, no shortcuts. Members cannot skip nodes. Every transition is sequential and verified, following Dijkstra's principle: structured code structures structured minds.</div>
         <div class="code-block"># No goto. No skip.<br>assert node_n+1 == node_n + step<br>assert step == 0.001<br>assert path.is_verified()</div>
       </div>
     </div>
-    <p class="sechead" style="margin-top:1rem">FORMULA DERIVATION · COMPLETE MATHEMATICAL PROOF</p>
+    <p class="sechead" style="margin-top:1rem" data-i18n="ana_algo_formula_title">FORMULA DERIVATION · COMPLETE MATHEMATICAL PROOF</p>
     <div class="code-block" style="font-size:.78rem;line-height:2">
 A, B, C ∈ [0.001, 9.000] · GENESIS=0.001 · APEX=9.000 · STEP=0.001<br>
 AUTHORITY = sqrt( A³ + B³ + C³ ) × φ / e<br>
@@ -128,38 +128,38 @@ i² = -1 ⟹ complex gate damping at each threshold crossing
 <!-- DATA SCIENCE TAB -->
 <div class="tab-panel" id="tab-data">
   <div style="padding:1rem">
-    <p class="sechead">DATA SCIENCE · PYTHON · ML · POSTGRESQL</p>
+    <p class="sechead" data-i18n="ana_data_title">DATA SCIENCE · PYTHON · ML · POSTGRESQL</p>
     <div class="algo-grid">
       <div class="algo-card" style="border-top-color:var(--cyan)">
-        <div class="algo-title" style="color:var(--cyan)">POSTGRESQL · PGBOUNCER</div>
-        <div class="algo-sub">42 TABLES · 64 RPCs · CONNECTION POOLING</div>
-        <div class="algo-body">The platform runs on PostgreSQL with RLS on every table. PgBouncer-style connection pooling via Supabase pooler handles burst traffic. All queries use parameterized RPC calls. No raw SQL from the client.</div>
+        <div class="algo-title" style="color:var(--cyan)" data-i18n="ana_data_postgresql_title">POSTGRESQL · PGBOUNCER</div>
+        <div class="algo-sub" data-i18n="ana_data_postgresql_sub">42 TABLES · 64 RPCs · CONNECTION POOLING</div>
+        <div class="algo-body" data-i18n="ana_data_postgresql_body">The platform runs on PostgreSQL with RLS on every table. PgBouncer-style connection pooling via Supabase pooler handles burst traffic. All queries use parameterized RPC calls. No raw SQL from the client.</div>
         <div class="code-block">-- Supabase RLS pattern<br>POLICY "member sees own data"<br>USING (user_id = auth.uid())</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--green)">
-        <div class="algo-title" style="color:var(--green)">PYTHON DATA PIPELINE</div>
-        <div class="algo-sub">ETL · ANALYTICS · FEATURE ENGINEERING</div>
-        <div class="algo-body">The progression data pipeline mirrors a Python ML workflow: ingest events (ETL), transform axis coordinates (feature engineering), compute authority (model inference), detect milestones (classification).</div>
+        <div class="algo-title" style="color:var(--green)" data-i18n="ana_data_python_title">PYTHON DATA PIPELINE</div>
+        <div class="algo-sub" data-i18n="ana_data_python_sub">ETL · ANALYTICS · FEATURE ENGINEERING</div>
+        <div class="algo-body" data-i18n="ana_data_python_body">The progression data pipeline mirrors a Python ML workflow: ingest events (ETL), transform axis coordinates (feature engineering), compute authority (model inference), detect milestones (classification).</div>
         <div class="code-block">df=pd.read_sql(task_log, conn)<br>df['auth']=df.apply(calc_auth,axis=1)<br>df['milestone']=df['auth']&gt;gate_n</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--solar)">
-        <div class="algo-title" style="color:var(--solar)">SYSTEM DESIGN · BACKEND</div>
-        <div class="algo-sub">MICROSERVICES · EDGE FUNCTIONS · CDN</div>
-        <div class="algo-body">Architecture: static frontend (Vercel CDN) → Supabase edge functions → PostgreSQL. The matrix engine runs as a PostgreSQL RPC. The AI concierge runs as a Supabase edge function calling the Anthropic API.</div>
+        <div class="algo-title" style="color:var(--solar)" data-i18n="ana_data_system_title">SYSTEM DESIGN · BACKEND</div>
+        <div class="algo-sub" data-i18n="ana_data_system_sub">MICROSERVICES · EDGE FUNCTIONS · CDN</div>
+        <div class="algo-body" data-i18n="ana_data_system_body">Architecture: static frontend (Vercel CDN) → Supabase edge functions → PostgreSQL. The matrix engine runs as a PostgreSQL RPC. The AI concierge runs as a Supabase edge function calling the Anthropic API.</div>
         <div class="code-block">Client → Vercel CDN<br>  → Supabase Edge Fn<br>  → PostgreSQL RPC<br>  → Anthropic API</div>
       </div>
       <div class="algo-card" style="border-top-color:var(--gold)">
-        <div class="algo-title" style="color:var(--gold)">DEVOPS · LINUX · GITHUB</div>
-        <div class="algo-sub">CI/CD · VERCEL · SUPABASE · ZERO BUILD</div>
-        <div class="algo-body">Deployment: push to GitHub main → Vercel auto-deploys static files. SQL migrations run in Supabase. Zero build steps. Pure static HTML. Fast, reliable, sovereign. TTFB &lt;100ms worldwide.</div>
+        <div class="algo-title" style="color:var(--gold)" data-i18n="ana_data_devops_title">DEVOPS · LINUX · GITHUB</div>
+        <div class="algo-sub" data-i18n="ana_data_devops_sub">CI/CD · VERCEL · SUPABASE · ZERO BUILD</div>
+        <div class="algo-body" data-i18n="ana_data_devops_body">Deployment: push to GitHub main → Vercel auto-deploys static files. SQL migrations run in Supabase. Zero build steps. Pure static HTML. Fast, reliable, sovereign. TTFB &lt;100ms worldwide.</div>
         <div class="code-block">git push origin main<br>⟹ Vercel deploys in 30s<br>⟹ CDN invalidates globally</div>
       </div>
     </div>
-    <p class="sechead" style="margin-top:1rem">LIVE PLATFORM METRICS</p>
+    <p class="sechead" style="margin-top:1rem" data-i18n="ana_data_metrics_title">LIVE PLATFORM METRICS</p>
     <div class="metrics-grid" id="live-metrics"></div>
-    <p class="sechead" style="margin-top:1rem">VERIFIED ACTION LOG <button onclick="loadTaskLog()" style="font-family:var(--M);font-size:.7rem;letter-spacing:.05em;padding:.25rem .6rem;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:3px;margin-left:.5rem">↻ REFRESH</button></p>
+    <p class="sechead" style="margin-top:1rem"><span data-i18n="ana_data_actionlog_title">VERIFIED ACTION LOG</span> <button onclick="loadTaskLog()" style="font-family:var(--M);font-size:.7rem;letter-spacing:.05em;padding:.25rem .6rem;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:3px;margin-left:.5rem">↻ REFRESH</button></p>
     <div id="task-log-wrap" style="background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden">
-      <div class="task-row task-head"><span>TIMESTAMP</span><span>TASK</span><span>AXIS</span><span>POINTS</span><span>AUTH AFTER</span></div>
+      <div class="task-row task-head"><span data-i18n="ana_table_timestamp">TIMESTAMP</span><span data-i18n="ana_table_task">TASK</span><span data-i18n="ana_table_axis">AXIS</span><span data-i18n="ana_table_points">POINTS</span><span data-i18n="ana_table_auth">AUTH AFTER</span></div>
       <div id="task-rows" style="font-family:var(--M);font-size:.72rem;color:var(--muted);padding:.75rem;text-align:center" data-loading></div>
     </div>
   </div>
@@ -168,12 +168,12 @@ i² = -1 ⟹ complex gate damping at each threshold crossing
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
-    <p class="sechead">ANALYTICS ENGINE</p>
+    <p class="sechead" data-i18n="ana_science_title">ANALYTICS ENGINE</p>
     <div class="card-grid">
-      <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = sqrt(A³+B³+C³) × φ/e. At apex (A=B=C=9), AUTH = 27.8367. φ=1.6180339887 (golden ratio), e=2.7182818285 (Euler's number). The ratio φ/e = 0.59528 is the sovereign constant.</div></div>
-      <div class="card"><div class="card-title">MATRIX DIMENSIONS</div><div class="card-body">104,976 nodes = 12×12×9×9×9. Twelve zodiac signs × twelve Olympians × nine knowledge tiers × nine mastery tiers × nine contribution tiers. Each axis runs from 0.001 (genesis) to 9.000 (apex) in steps of 0.001.</div></div>
-      <div class="card"><div class="card-title">CHART ENGINE</div><div class="card-body">All visualisations are rendered natively on HTML canvas using the OmegaChart engine (bg.js). No external charting libraries. The apex donut, axis bars, and radar are drawn directly in 2D context with requestAnimationFrame animation.</div></div>
-      <div class="card"><div class="card-title">TASK LOG</div><div class="card-body">Task completions are stored in <code>task_completions</code> with axis_type, points_earned, and auth_after. The <code>get_my_task_log</code> RPC returns the full verified action history for the authenticated member.</div></div>
+      <div class="card"><div class="card-title" data-i18n="ana_science_formula_title">AUTHORITY FORMULA</div><div class="card-body" data-i18n="ana_science_formula_body">AUTH = sqrt(A³+B³+C³) × φ/e. At apex (A=B=C=9), AUTH = 27.8367. φ=1.6180339887 (golden ratio), e=2.7182818285 (Euler's number). The ratio φ/e = 0.59528 is the sovereign constant.</div></div>
+      <div class="card"><div class="card-title" data-i18n="ana_science_matrix_title">MATRIX DIMENSIONS</div><div class="card-body" data-i18n="ana_science_matrix_body">104,976 nodes = 12×12×9×9×9. Twelve zodiac signs × twelve Olympians × nine knowledge tiers × nine mastery tiers × nine contribution tiers. Each axis runs from 0.001 (genesis) to 9.000 (apex) in steps of 0.001.</div></div>
+      <div class="card"><div class="card-title" data-i18n="ana_science_chart_title">CHART ENGINE</div><div class="card-body" data-i18n="ana_science_chart_body">All visualisations are rendered natively on HTML canvas using the OmegaChart engine (bg.js). No external charting libraries. The apex donut, axis bars, and radar are drawn directly in 2D context with requestAnimationFrame animation.</div></div>
+      <div class="card"><div class="card-title" data-i18n="ana_science_tasklog_title">TASK LOG</div><div class="card-body" data-i18n="ana_science_tasklog_body">Task completions are stored in <code>task_completions</code> with axis_type, points_earned, and auth_after. The <code>get_my_task_log</code> RPC returns the full verified action history for the authenticated member.</div></div>
     </div>
   </div>
 </div>

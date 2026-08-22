@@ -1,28 +1,66 @@
-// Graphify AI: Client-Side Knowledge Graph Visualization Engine
-// Force-directed layout + canvas rendering for entity/relationship graph exploration
+/**
+ * Graphify AI: Client-Side Knowledge Graph Visualization Engine
+ * Force-directed layout + canvas rendering for entity/relationship graph exploration
+ *
+ * @module OmegaGraphify
+ * @exports {Object} OmegaGraphify - Public API for graph visualization
+ */
 
 window.OmegaGraphify = (function() {
+  /** @type {{nodeRadius: number, nodeColor: string, nodeHoverColor: string, nodeStrokeColor: string, edgeColor: string, edgeHoverColor: string, labelFont: string, labelColor: string, selectedNodeColor: string, forces: {repulsion: number, attraction: number, dampening: number, maxVelocity: number}}} */
   const CONFIG = {
+    // Node rendering (pixels)
     nodeRadius: 8,
     nodeColor: 'rgba(201, 168, 76, 0.8)',
     nodeHoverColor: 'rgba(201, 168, 76, 1.0)',
     nodeStrokeColor: 'rgba(201, 168, 76, 0.6)',
+
+    // Edge rendering
     edgeColor: 'rgba(0, 229, 255, 0.3)',
     edgeHoverColor: 'rgba(0, 229, 255, 0.8)',
+
+    // Text rendering
     labelFont: '10px Rajdhani, sans-serif',
     labelColor: '#E0D5B7',
+
+    // Selection state
     selectedNodeColor: 'rgba(139, 0, 0, 0.9)',
+
+    // Physics simulation parameters (unitless ratios and scalar forces)
     forces: {
-      repulsion: 150,
-      attraction: 0.05,
-      dampening: 0.85,
-      maxVelocity: 3
+      repulsion: 150,        // repulsive force magnitude
+      attraction: 0.05,      // spring force coefficient
+      dampening: 0.85,       // velocity decay per frame
+      maxVelocity: 3         // pixels per frame cap
     }
   };
 
-  let canvas, ctx, viewport, nodes = [], edges = [], animationId;
-  let selectedNode = null, hoveredNode = null, isDragging = false, dragNode = null;
+  /** @type {HTMLCanvasElement|null} */
+  let canvas = null;
+  /** @type {CanvasRenderingContext2D|null} */
+  let ctx = null;
+  /** @type {Object} viewport - Camera position and zoom */
+  let viewport = null;
+  /** @type {Array<Object>} nodes - Graph entity nodes with position/velocity */
+  let nodes = [];
+  /** @type {Array<Object>} edges - Relationship edges between nodes */
+  let edges = [];
+  /** @type {number|null} animationId - requestAnimationFrame handle */
+  let animationId = null;
 
+  /** @type {Object|null} selectedNode - Currently selected node for inspection */
+  let selectedNode = null;
+  /** @type {Object|null} hoveredNode - Currently hovered node for highlight */
+  let hoveredNode = null;
+  /** @type {boolean} isDragging - Mouse/touch drag active flag */
+  let isDragging = false;
+  /** @type {Object|null} dragNode - Node currently being dragged */
+  let dragNode = null;
+
+  /**
+   * Camera viewport: world-space position and zoom level
+   * @type {{x: number, y: number, scale: number, minScale: number, maxScale: number, toCanvas: Function, toWorld: Function, pan: Function, zoom: Function}}
+   */
   const Viewport = {
     x: 0,
     y: 0,
@@ -30,7 +68,14 @@ window.OmegaGraphify = (function() {
     minScale: 0.1,
     maxScale: 5,
 
+    /**
+     * Convert world coordinates to canvas screen coordinates
+     * @param {number} worldX - World-space X
+     * @param {number} worldY - World-space Y
+     * @returns {{x: number, y: number}} Screen-space coordinates
+     */
     toCanvas: (worldX, worldY) => {
+      if (!canvas) return { x: 0, y: 0 };
       const rect = canvas.getBoundingClientRect();
       return {
         x: (worldX - Viewport.x) * Viewport.scale + rect.left,
@@ -38,7 +83,14 @@ window.OmegaGraphify = (function() {
       };
     },
 
+    /**
+     * Convert canvas screen coordinates to world coordinates
+     * @param {number} canvasX - Screen-space X
+     * @param {number} canvasY - Screen-space Y
+     * @returns {{x: number, y: number}} World-space coordinates
+     */
     toWorld: (canvasX, canvasY) => {
+      if (!canvas) return { x: 0, y: 0 };
       const rect = canvas.getBoundingClientRect();
       return {
         x: (canvasX - rect.left) / Viewport.scale + Viewport.x,
@@ -46,14 +98,28 @@ window.OmegaGraphify = (function() {
       };
     },
 
+    /**
+     * Pan viewport by delta (in screen pixels)
+     * @param {number} dx - Screen-space X delta
+     * @param {number} dy - Screen-space Y delta
+     */
     pan: (dx, dy) => {
       Viewport.x -= dx / Viewport.scale;
       Viewport.y -= dy / Viewport.scale;
     },
 
+    /**
+     * Zoom viewport with center preservation
+     * @param {number} factor - Zoom multiplier (>1 zoom in, <1 zoom out)
+     * @param {number} centerX - Screen-space zoom center X
+     * @param {number} centerY - Screen-space zoom center Y
+     */
     zoom: (factor, centerX, centerY) => {
       const oldScale = Viewport.scale;
-      Viewport.scale = Math.max(CONFIG.forces.minScale || 0.1, Math.min(CONFIG.forces.maxScale || 5, Viewport.scale * factor));
+      Viewport.scale = Math.max(
+        Viewport.minScale,
+        Math.min(Viewport.maxScale, Viewport.scale * factor)
+      );
 
       const scaleDiff = 1 - oldScale / Viewport.scale;
       Viewport.x += centerX * scaleDiff;
@@ -61,9 +127,18 @@ window.OmegaGraphify = (function() {
     }
   };
 
-  // Physics simulation for force-directed layout
+  /**
+   * Physics simulation: force-directed layout with repulsion and attraction
+   * @type {{step: Function}}
+   */
   const Physics = {
+    /**
+     * Single physics simulation step: repulsive forces, attractive forces, velocity dampening, position update
+     * @returns {void}
+     */
     step: () => {
+      if (nodes.length === 0) return;
+
       // Repulsive forces (nodes push each other apart)
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
@@ -79,10 +154,11 @@ window.OmegaGraphify = (function() {
         }
       }
 
-      // Attractive forces (connected nodes pull toward each other)
+      // Attractive forces (connected nodes pull toward each other, spring-like)
       edges.forEach(edge => {
-        const n1 = nodes.find(n => n.id === edge.source_entity_id);
-        const n2 = nodes.find(n => n.id === edge.target_entity_id);
+        if (!edge) return;
+        const n1 = nodes.find(n => n?.id === edge.source_entity_id);
+        const n2 = nodes.find(n => n?.id === edge.target_entity_id);
         if (!n1 || !n2) return;
 
         const dx = n2.x - n1.x;
@@ -116,8 +192,16 @@ window.OmegaGraphify = (function() {
     }
   };
 
-  // Canvas rendering
+  /**
+   * Canvas rendering engine with viewport transformation and physics integration
+   * @type {{frame: Function}}
+   */
   const Render = {
+    /**
+     * Render a single animation frame: clear canvas, transform viewport, draw edges, draw nodes, update physics
+     * Calls Physics.step() and requestAnimationFrame recursively
+     * @returns {void}
+     */
     frame: () => {
       if (!canvas || !ctx) return;
 
@@ -131,8 +215,9 @@ window.OmegaGraphify = (function() {
 
       // Render edges first (so they appear behind nodes)
       edges.forEach(edge => {
-        const n1 = nodes.find(n => n.id === edge.source_entity_id);
-        const n2 = nodes.find(n => n.id === edge.target_entity_id);
+        if (!edge) return;
+        const n1 = nodes.find(n => n?.id === edge.source_entity_id);
+        const n2 = nodes.find(n => n?.id === edge.target_entity_id);
         if (!n1 || !n2) return;
 
         const isHovered = hoveredNode === n1 || hoveredNode === n2;
@@ -187,11 +272,22 @@ window.OmegaGraphify = (function() {
     }
   };
 
-  // Interaction handlers
+  /**
+   * Mouse and touch event handlers for graph interaction (selection, dragging, panning, zooming)
+   * @type {{getNodeAtPoint: Function, onMouseDown: Function, onMouseMove: Function, onMouseUp: Function, onWheel: Function, onTouchStart: Function, onTouchMove: Function, onTouchEnd: Function}}
+   */
   const Interaction = {
+    /**
+     * Find node at screen coordinates (with hit-area radius = nodeRadius * 1.5)
+     * @param {number} canvasX - Screen-space X coordinate
+     * @param {number} canvasY - Screen-space Y coordinate
+     * @returns {Object|null} Node if found, null otherwise
+     */
     getNodeAtPoint: (canvasX, canvasY) => {
+      if (!nodes || nodes.length === 0) return null;
       const world = Viewport.toWorld(canvasX, canvasY);
       for (let node of nodes) {
+        if (!node) continue;
         const dx = node.x - world.x;
         const dy = node.y - world.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -200,8 +296,13 @@ window.OmegaGraphify = (function() {
       return null;
     },
 
+    /**
+     * Mouse down: select and start dragging a node
+     * @param {MouseEvent} e
+     * @returns {void}
+     */
     onMouseDown: (e) => {
-      const node = Interaction.getNodeAtPoint(e.clientX, e.clientY);
+      const node = Interaction.getNodeAtPoint(e?.clientX, e?.clientY);
       if (node) {
         isDragging = true;
         dragNode = node;
@@ -209,7 +310,13 @@ window.OmegaGraphify = (function() {
       }
     },
 
+    /**
+     * Mouse move: update hover, drag selected node, or pan viewport
+     * @param {MouseEvent} e
+     * @returns {void}
+     */
     onMouseMove: (e) => {
+      if (!e) return;
       const node = Interaction.getNodeAtPoint(e.clientX, e.clientY);
       hoveredNode = node;
 
@@ -220,47 +327,69 @@ window.OmegaGraphify = (function() {
         dragNode.vx = 0;
         dragNode.vy = 0;
       } else if (!isDragging && e.buttons === 1) {
-        // Pan when middle-dragging or alt-dragging
+        // Pan when left-button-drag without a node selected
         const dx = e.movementX || 0;
         const dy = e.movementY || 0;
         Viewport.pan(dx, dy);
       }
     },
 
+    /**
+     * Mouse up: stop dragging
+     * @returns {void}
+     */
     onMouseUp: () => {
       isDragging = false;
       dragNode = null;
     },
 
+    /**
+     * Mouse wheel: zoom viewport with center preservation
+     * @param {WheelEvent} e
+     * @returns {void}
+     */
     onWheel: (e) => {
+      if (!e) return;
       e.preventDefault();
       const factor = e.deltaY > 0 ? 0.9 : 1.1;
       Viewport.zoom(factor, e.clientX, e.clientY);
     },
 
+    /**
+     * Touch start: select and start dragging a node (single-touch only)
+     * @param {TouchEvent} e
+     * @returns {void}
+     */
     onTouchStart: (e) => {
-      if (e.touches.length === 1) {
-        const touch = e.touches[0];
-        const node = Interaction.getNodeAtPoint(touch.clientX, touch.clientY);
-        if (node) {
-          isDragging = true;
-          dragNode = node;
-          selectedNode = node;
-        }
+      if (!e || !e.touches || e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      const node = Interaction.getNodeAtPoint(touch?.clientX, touch?.clientY);
+      if (node) {
+        isDragging = true;
+        dragNode = node;
+        selectedNode = node;
       }
     },
 
+    /**
+     * Touch move: drag selected node (single-touch only)
+     * @param {TouchEvent} e
+     * @returns {void}
+     */
     onTouchMove: (e) => {
-      if (e.touches.length === 1 && isDragging && dragNode) {
-        const touch = e.touches[0];
-        const world = Viewport.toWorld(touch.clientX, touch.clientY);
-        dragNode.x = world.x;
-        dragNode.y = world.y;
-        dragNode.vx = 0;
-        dragNode.vy = 0;
-      }
+      if (!e || !e.touches || e.touches.length !== 1 || !isDragging || !dragNode) return;
+      const touch = e.touches[0];
+      const world = Viewport.toWorld(touch?.clientX, touch?.clientY);
+      dragNode.x = world.x;
+      dragNode.y = world.y;
+      dragNode.vx = 0;
+      dragNode.vy = 0;
     },
 
+    /**
+     * Touch end: stop dragging
+     * @returns {void}
+     */
     onTouchEnd: () => {
       isDragging = false;
       dragNode = null;
@@ -268,6 +397,11 @@ window.OmegaGraphify = (function() {
   };
 
   return {
+    /**
+     * Initialize graph visualization: attach canvas, setup event listeners, load data, start animation loop
+     * @param {HTMLCanvasElement} canvasEl - Canvas element for rendering
+     * @returns {Promise<void>}
+     */
     init: async (canvasEl) => {
       canvas = canvasEl;
       if (!canvas) return;
@@ -285,6 +419,11 @@ window.OmegaGraphify = (function() {
       Render.frame();
     },
 
+    /**
+     * Load graph data from Supabase: graph_entities and graph_relationships tables
+     * Initializes node positions randomly, edges from relationship data
+     * @returns {Promise<void>}
+     */
     loadGraph: async () => {
       try {
         const sb = window.OmegaSupabase?.sb;
@@ -315,11 +454,35 @@ window.OmegaGraphify = (function() {
       }
     },
 
+    /**
+     * Get currently selected node
+     * @returns {Object|null}
+     */
     getSelectedNode: () => selectedNode,
+
+    /**
+     * Set selected node
+     * @param {Object|null} node
+     * @returns {void}
+     */
     setSelectedNode: (node) => { selectedNode = node; },
+
+    /**
+     * Get all nodes in the graph
+     * @returns {Array<Object>}
+     */
     getNodes: () => nodes,
+
+    /**
+     * Get all edges (relationships) in the graph
+     * @returns {Array<Object>}
+     */
     getEdges: () => edges,
 
+    /**
+     * Cleanup: cancel animation, remove event listeners
+     * @returns {void}
+     */
     destroy: () => {
       if (animationId) cancelAnimationFrame(animationId);
       if (canvas) {

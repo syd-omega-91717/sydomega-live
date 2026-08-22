@@ -434,20 +434,20 @@ a{color:inherit;text-decoration:none}
 
     <!-- LIVE STATS (inspired by Image 1-B: Level, Points, Achievements) -->
     <div class="stat-grid" id="stat-grid" data-reveal="fade-up">
-      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">AUTHORITY</div><div class="sgi-val" id="sg-auth" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-auth-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--cyan)"><div class="sgi-label">MATRIX COORD</div><div class="sgi-val" id="sg-coord" style="color:var(--cyan);font-size:14px">(--,--,--)</div><div class="sgi-sub" id="sg-coord-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label">MATERIAL TIER</div><div class="sgi-val" id="sg-tier" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-tier-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--green)"><div class="sgi-label">GRADE</div><div class="sgi-val" id="sg-grade" style="color:var(--green)">--</div><div class="sgi-sub" id="sg-grade-sub" style="min-height:9px" data-loading></div></div>
-      <div class="sg-item" style="--c:var(--solar)"><div class="sgi-label">ACHIEVEMENTS</div><div class="sgi-val" id="sg-ach" style="color:var(--solar)">--</div><div class="sgi-sub" id="sg-ach-sub">Loading...</div></div>
-      <div class="sg-item" style="--c:var(--purple)"><div class="sgi-label">MEMBERSHIP</div><div class="sgi-val" id="sg-member" style="color:var(--purple)">--</div><div class="sgi-sub" id="sg-member-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label" data-i18n="prof_kpi_authority">AUTHORITY</div><div class="sgi-val" id="sg-auth" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-auth-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--cyan)"><div class="sgi-label" data-i18n="prof_kpi_matrix_coord">MATRIX COORD</div><div class="sgi-val" id="sg-coord" style="color:var(--cyan);font-size:14px">(--,--,--)</div><div class="sgi-sub" id="sg-coord-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--gold)"><div class="sgi-label" data-i18n="prof_kpi_material_tier">MATERIAL TIER</div><div class="sgi-val" id="sg-tier" style="color:var(--gold)">--</div><div class="sgi-sub" id="sg-tier-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--green)"><div class="sgi-label" data-i18n="prof_kpi_grade">GRADE</div><div class="sgi-val" id="sg-grade" style="color:var(--green)">--</div><div class="sgi-sub" id="sg-grade-sub" style="min-height:9px" data-loading></div></div>
+      <div class="sg-item" style="--c:var(--solar)"><div class="sgi-label" data-i18n="prof_kpi_achievements">ACHIEVEMENTS</div><div class="sgi-val" id="sg-ach" style="color:var(--solar)">--</div><div class="sgi-sub" id="sg-ach-sub">Loading...</div></div>
+      <div class="sg-item" style="--c:var(--purple)"><div class="sgi-label" data-i18n="prof_kpi_membership">MEMBERSHIP</div><div class="sgi-val" id="sg-member" style="color:var(--purple)">--</div><div class="sgi-sub" id="sg-member-sub" style="min-height:9px" data-loading></div></div>
     </div>
 
     <!-- TABS -->
     <div class="tab-nav">
       <div class="tab-btn active" data-tab="overview">&#9670; OVERVIEW</div>
-      <div class="tab-btn" data-tab="identity">&#9670; IDENTITY</div>
-      <div class="tab-btn" data-tab="passport">&#9670; PASSPORT</div>
-      <div class="tab-btn" data-tab="science">&#9670; SCIENCE</div>
+      <div class="tab-btn" data-tab="identity" data-i18n="prof_tab_identity">&#9670; IDENTITY</div>
+      <div class="tab-btn" data-tab="passport" data-i18n="prof_tab_passport">&#9670; PASSPORT</div>
+      <div class="tab-btn" data-tab="science" data-i18n="prof_tab_science">&#9670; SCIENCE</div>
     </div>
 
     <!-- TAB: OVERVIEW -->
@@ -458,9 +458,9 @@ a{color:inherit;text-decoration:none}
       <div class="sechead" data-reveal="fade-up">MATRIX AXES -- ABSOLUTE APEX (9.000 / 9.000 / 9.000)</div>
       <div class="pad" data-reveal="fade-up">
         <div class="axis-panel card">
-          <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
-          <div class="axis-row"><span class="ar-id" style="color:#E86A3A">B</span><span class="ar-name">MASTERY</span><div class="ar-wrap"><div class="ar-fill" id="bar-b" style="width:0%;background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.3))"></div></div><span class="ar-val" style="color:#E86A3A">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
-          <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
+          <div class="axis-row"><span class="ar-id" style="color:#00E5FF">A</span><span class="ar-name" data-i18n="prof_axis_knowledge">KNOWLEDGE</span><div class="ar-wrap"><div class="ar-fill" id="bar-a" style="width:0%;background:linear-gradient(90deg,#00E5FF,rgba(0,229,255,.3))"><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#00E5FF;box-shadow:0 0 8px #00E5FF;animation:np 1.5s ease-in-out infinite"></span></div></div><span class="ar-val" style="color:#00E5FF">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
+          <div class="axis-row"><span class="ar-id" style="color:#E86A3A">B</span><span class="ar-name" data-i18n="prof_axis_mastery">MASTERY</span><div class="ar-wrap"><div class="ar-fill" id="bar-b" style="width:0%;background:linear-gradient(90deg,#E86A3A,rgba(232,106,58,.3))"></div></div><span class="ar-val" style="color:#E86A3A">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
+          <div class="axis-row"><span class="ar-id" style="color:#3fb27f">C</span><span class="ar-name" data-i18n="prof_axis_contribution">CONTRIBUTION</span><div class="ar-wrap"><div class="ar-fill" id="bar-c" style="width:0%;background:linear-gradient(90deg,#3fb27f,rgba(63,178,127,.3))"></div></div><span class="ar-val" style="color:#3fb27f">9.000</span><span class="ar-apex">APEX &#x2713;</span></div>
         </div>
       </div>
       <div class="sechead" data-reveal="fade-up">SOVEREIGN ACHIEVEMENTS -- ALL 36 SEALED AT OMEGA MASTER</div>
@@ -482,20 +482,20 @@ a{color:inherit;text-decoration:none}
     <div class="tab-panel" id="tab-identity">
       <div class="sechead" data-reveal="fade-up">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_full_name">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
-        <div class="id-field"><div class="idf-label">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
-        <div class="id-field"><div class="idf-label">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
-        <div class="id-field"><div class="idf-label">DATE OF BIRTH</div><div class="idf-val">19 APRIL 1982</div></div>
-        <div class="id-field"><div class="idf-label">PLACE OF BIRTH</div><div class="idf-val">TRIPOLI, LEBANON</div></div>
-        <div class="id-field"><div class="idf-label">NATIONALITY</div><div class="idf-val">LEBANESE</div></div>
-        <div class="id-field"><div class="idf-label">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
-        <div class="id-field"><div class="idf-label">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
-        <div class="id-field"><div class="idf-label">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_father_name">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_mother_name">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_date_of_birth">DATE OF BIRTH</div><div class="idf-val">19 APRIL 1982</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_place_of_birth">PLACE OF BIRTH</div><div class="idf-val">TRIPOLI, LEBANON</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_nationality">NATIONALITY</div><div class="idf-val">LEBANESE</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_blood_type">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_registry">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_region">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
         </div>
-        <div class="id-field"><div class="idf-label">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
-        <div class="id-field"><div class="idf-label">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
-        <div class="id-field"><div class="idf-label">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)" id="idf-token">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_platform_sign">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_agent_assigned">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_sovereign_token">SOVEREIGN TOKEN</div><div class="idf-val" style="color:var(--gold)" id="idf-token">--</div></div>
       </div>
     </div>
 
@@ -638,20 +638,20 @@ function frame(){ctx.clearRect(0,0,120,120);
     </div>
 <!-- TAB: SOCIAL (inspired by Image 4) -->
     <div class="tab-panel" id="tab-social">
-      <div class="sechead" data-reveal="fade-up">SOCIAL CONNECTIONS -- @SYDOMEGA_AI</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="prof_social_connections_header">SOCIAL CONNECTIONS -- @SYDOMEGA_AI</div>
       <div class="social-panel">
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://x.com/SYDOMEGA_AI"><span class="sc-icon" style="color:#1DA1F2">&#x25CF;</span><div class="sc-body"><div class="scb-handle">@SYDOMEGA_AI</div><div class="scb-desc">Twitter / X -- Sovereign broadcast</div></div></a>
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://instagram.com/sydomega.ai"><span class="sc-icon" style="color:#E1306C">&#x25C8;</span><div class="sc-body"><div class="scb-handle">@sydomega.ai</div><div class="scb-desc">Instagram -- Cinematic universe</div></div></a>
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/search/results/people/?keywords=Sleiman%20Youssef%20Dagher"><span class="sc-icon" style="color:#0A66C2">&#x25B6;</span><div class="sc-body"><div class="scb-handle">Sleiman Youssef Dagher</div><div class="scb-desc">LinkedIn -- Professional network</div></div></a>
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://t.me/SYDOMEGA_AI"><span class="sc-icon" style="color:var(--gold)">&#x25B2;</span><div class="sc-body"><div class="scb-handle">SYDOMEGA_AI</div><div class="scb-desc">Telegram -- Order channel</div></div></a>
       </div>
-      <div class="sechead" data-reveal="fade-up">SOVEREIGN IDENTIFICATION</div>
+      <div class="sechead" data-reveal="fade-up" data-i18n="prof_social_identification_header">SOVEREIGN IDENTIFICATION</div>
       <div style="padding:0 clamp(14px,3vw,36px)">
         <div style="border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">PLATFORM HANDLE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">@SYDOMEGA_AI</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">RANK</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">9.9.9 -- ABSOLUTE</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">FREQUENCY</div><div style="font-family:var(--D);font-size:18px;color:var(--cyan);font-weight:700">9.1717 Hz</div></div>
-          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px">NODE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">NODE 9.9.9</div></div>
+          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_handle_label">PLATFORM HANDLE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">@SYDOMEGA_AI</div></div>
+          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_rank_label">RANK</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">9.9.9 -- ABSOLUTE</div></div>
+          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_frequency_label">FREQUENCY</div><div style="font-family:var(--D);font-size:18px;color:var(--cyan);font-weight:700">9.1717 Hz</div></div>
+          <div><div style="font-family:var(--M);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:5px" data-i18n="prof_social_node_label">NODE</div><div style="font-family:var(--D);font-size:18px;color:var(--gold);font-weight:700">NODE 9.9.9</div></div>
         </div>
       </div>
     </div>
@@ -660,43 +660,43 @@ function frame(){ctx.clearRect(0,0,120,120);
     <!-- ACCESS CONTROL TAB  --  OWNER ONLY  --  INVISIBLE TO MEMBERS -->
     <div class="tab-panel" id="tab-access">
 <div id="owner-console-block" style="display:none;margin:0 clamp(14px,3vw,36px) 16px">
-  <div class="sechead" data-reveal="fade-up" style="color:var(--gold)">
+  <div class="sechead" data-reveal="fade-up" style="color:var(--gold)" data-i18n="prof_access_console_header">
     INVISIBLE ARCHITECT CONSOLE <span data-canon-lattice="twelve"></span>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px">
     <a href="/approvals.html" style="display:block;border:1px solid rgba(201,168,76,.4);padding:14px;text-decoration:none;border-radius:2px;background:rgba(201,168,76,.06);transition:.2s"
        onmouseenter="this.style.background='rgba(201,168,76,.12)'" onmouseleave="this.style.background='rgba(201,168,76,.06)'">
-      <div style="font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:5px">&Omega; APPROVAL QUEUE</div>
+      <div style="font-family:var(--D);font-size:11px;color:var(--gold);margin-bottom:5px" data-i18n="prof_access_approval_queue">&Omega; APPROVAL QUEUE</div>
       <div id="owner-pending-count" style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)">LOADING...</div><div id="owner-trial-count" style="font-family:var(--M);font-size:8px;color:var(--muted);margin-top:2px"></div>
     </a>
     <a href="/matrix.html" style="display:block;border:1px solid rgba(0,229,255,.3);padding:14px;text-decoration:none;border-radius:2px;background:rgba(0,229,255,.03);transition:.2s"
        onmouseenter="this.style.background='rgba(0,229,255,.07)'" onmouseleave="this.style.background='rgba(0,229,255,.03)'">
-      <div style="font-family:var(--D);font-size:11px;color:var(--cyan);margin-bottom:5px">MATRIX ENGINE</div>
-      <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)">104,976-NODE LATTICE</div>
+      <div style="font-family:var(--D);font-size:11px;color:var(--cyan);margin-bottom:5px" data-i18n="prof_access_matrix_engine">MATRIX ENGINE</div>
+      <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)" data-i18n="prof_access_matrix_subtitle">104,976-NODE LATTICE</div>
     </a>
     <a href="/advertising.html" style="display:block;border:1px solid rgba(139,0,0,.3);padding:14px;text-decoration:none;border-radius:2px;background:rgba(139,0,0,.04);transition:.2s"
        onmouseenter="this.style.background='rgba(139,0,0,.08)'" onmouseleave="this.style.background='rgba(139,0,0,.04)'">
-      <div style="font-family:var(--D);font-size:11px;color:var(--crim);margin-bottom:5px">ADVERTISING</div>
-      <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)">SOVEREIGN PLACEMENTS</div>
+      <div style="font-family:var(--D);font-size:11px;color:var(--crim);margin-bottom:5px" data-i18n="prof_access_advertising">ADVERTISING</div>
+      <div style="font-family:var(--M);font-size:9px;letter-spacing:1.5px;color:var(--muted)" data-i18n="prof_access_advertising_subtitle">SOVEREIGN PLACEMENTS</div>
     </a>
   </div>
   <!-- OWNER APEX STATUS -->
   <div style="border:1px solid rgba(201,168,76,.25);padding:16px;border-radius:2px;background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,10,15,.8))">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">SOVEREIGN APEX STATUS</div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px" data-i18n="prof_access_apex_status">SOVEREIGN APEX STATUS</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
       <div style="text-align:center">
         <div style="font-family:var(--D);font-size:16px;color:var(--gold)">9.000</div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">AXIS A</div>
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_a">AXIS A</div>
         <div style="font-family:var(--M);font-size:7px;color:var(--muted)">A&sup3;=729.000</div>
       </div>
       <div style="text-align:center">
         <div style="font-family:var(--D);font-size:16px;color:var(--cyan)">9.000</div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">AXIS B</div>
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_b">AXIS B</div>
         <div style="font-family:var(--M);font-size:7px;color:var(--muted)">B&sup3;=729.000</div>
       </div>
       <div style="text-align:center">
         <div style="font-family:var(--D);font-size:16px;color:var(--green)">9.000</div>
-        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px">AXIS C</div>
+        <div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:3px" data-i18n="prof_access_axis_c">AXIS C</div>
         <div style="font-family:var(--M);font-size:7px;color:var(--muted)">C&sup3;=729.000</div>
       </div>
     </div>
@@ -753,35 +753,35 @@ function frame(){ctx.clearRect(0,0,120,120);
       
   <!-- HERO -->
   <div class="hero-band">
-    <div class="hero-eyebrow">M16 // INVESTMENT ENGINE</div>
-    <h1 class="hero-title">Portfolio Command</h1>
-    <p class="hero-sub">The platform's stated asset allocation model -- token reserves, precious metals, and investment intelligence. Reference model; personal portfolio tracking is dormant until the token economy is live (see /payments.html).</p>
+    <div class="hero-eyebrow" data-i18n="prof_portfolio_hero_eyebrow">M16 // INVESTMENT ENGINE</div>
+    <h1 class="hero-title" data-i18n="prof_portfolio_hero_title">Portfolio Command</h1>
+    <p class="hero-sub" data-i18n="prof_portfolio_hero_sub">The platform's stated asset allocation model -- token reserves, precious metals, and investment intelligence. Reference model; personal portfolio tracking is dormant until the token economy is live (see /payments.html).</p>
   </div>
 
   <!-- STAT ROW -->
   <div class="stat-row">
     <div class="stat-card card">
-      <div class="stat-label">Total Portfolio Value</div>
+      <div class="stat-label" data-i18n="prof_portfolio_total_value">Total Portfolio Value</div>
       <div class="stat-value" id="total-val">N/A</div>
-      <div class="stat-sub">Personal tracking dormant</div>
-      <div class="stat-delta up">&#9650; Token economy not yet live</div>
+      <div class="stat-sub" data-i18n="prof_portfolio_total_value_sub">Personal tracking dormant</div>
+      <div class="stat-delta up" data-i18n="prof_portfolio_total_value_delta">&#9650; Token economy not yet live</div>
     </div>
     <div class="stat-card card">
-      <div class="stat-label">&#937; Token Supply</div>
+      <div class="stat-label" data-i18n="prof_portfolio_token_supply">&#937; Token Supply</div>
       <div class="stat-value">917.4B</div>
-      <div class="stat-sub">Total Omega tokens (reference)</div>
-      <div class="stat-delta up">&#9650; 51% Master Vault planned (dormant)</div>
+      <div class="stat-sub" data-i18n="prof_portfolio_token_supply_sub">Total Omega tokens (reference)</div>
+      <div class="stat-delta up" data-i18n="prof_portfolio_token_supply_delta">&#9650; 51% Master Vault planned (dormant)</div>
     </div>
     <div class="stat-card card">
-      <div class="stat-label">Physical Reserves</div>
+      <div class="stat-label" data-i18n="prof_portfolio_physical_reserves">Physical Reserves</div>
       <div class="stat-value">3-Tier</div>
-      <div class="stat-sub">Gold / Rhodium / Silver</div>
-      <div class="stat-delta up">&#9650; Reserve model (dormant)</div>
+      <div class="stat-sub" data-i18n="prof_portfolio_physical_reserves_sub">Gold / Rhodium / Silver</div>
+      <div class="stat-delta up" data-i18n="prof_portfolio_physical_reserves_delta">&#9650; Reserve model (dormant)</div>
     </div>
     <div class="stat-card card">
-      <div class="stat-label">Matrix Coordinate</div>
+      <div class="stat-label" data-i18n="prof_portfolio_matrix_coord">Matrix Coordinate</div>
       <div class="stat-value" id="port-coord">(--, --, --)</div>
-      <div class="stat-sub">Axis A / B / C</div>
+      <div class="stat-sub" data-i18n="prof_portfolio_matrix_coord_sub">Axis A / B / C</div>
       <div class="stat-delta up" id="port-auth" style="min-height:12px" data-loading></div>
     </div>
   </div>
@@ -793,17 +793,17 @@ function frame(){ctx.clearRect(0,0,120,120);
       <!-- Performance -->
       <div class="panel">
         <div class="panel-header">
-          <span class="panel-title">Portfolio Performance</span>
-          <span class="panel-badge">LIVE CURVE</span>
+          <span class="panel-title" data-i18n="prof_portfolio_perf_title">Portfolio Performance</span>
+          <span class="panel-badge" data-i18n="prof_portfolio_perf_badge">LIVE CURVE</span>
         </div>
         <div class="panel-body">
           <div class="perf-chart">
             <canvas id="perf-canvas" class="perf-canvas"></canvas>
           </div>
           <div style="display:flex;gap:2rem;margin-top:.5rem">
-            <div><div class="stat-label">All-Time High</div><div style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:.9rem">9.9.9 APEX</div></div>
-            <div><div class="stat-label">Current Phase</div><div style="font-family:'Courier Prime',monospace;color:var(--cyan);font-size:.9rem">PHASE 0</div></div>
-            <div><div class="stat-label">Evolution Events</div><div style="font-family:'Courier Prime',monospace;color:var(--green);font-size:.9rem" id="ev-count">0</div></div>
+            <div><div class="stat-label" data-i18n="prof_portfolio_ath_label">All-Time High</div><div style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:.9rem">9.9.9 APEX</div></div>
+            <div><div class="stat-label" data-i18n="prof_portfolio_phase_label">Current Phase</div><div style="font-family:'Courier Prime',monospace;color:var(--cyan);font-size:.9rem">PHASE 0</div></div>
+            <div><div class="stat-label" data-i18n="prof_portfolio_events_label">Evolution Events</div><div style="font-family:'Courier Prime',monospace;color:var(--green);font-size:.9rem" id="ev-count">0</div></div>
           </div>
         </div>
       </div>
@@ -811,8 +811,8 @@ function frame(){ctx.clearRect(0,0,120,120);
       <!-- Holdings Table -->
       <div class="panel">
         <div class="panel-header">
-          <span class="panel-title">Asset Holdings</span>
-          <span class="panel-badge">7 CLASSES</span>
+          <span class="panel-title" data-i18n="prof_portfolio_holdings_title">Asset Holdings</span>
+          <span class="panel-badge" data-i18n="prof_portfolio_holdings_badge">7 CLASSES</span>
         </div>
         <div class="panel-body" style="padding:0">
           <div class="tbl-wrap" style="border:none;border-radius:0">
@@ -1117,7 +1117,7 @@ function frame(){ctx.clearRect(0,0,120,120);
 
         <div class="tab-panel" id="tab-passport">
 
-    <div class="topbar"><div class="t">SOVEREIGN PASSPORT<small>YOUR IDENTITY WITHIN THE ORDER <span data-canon-lattice="twelve"></span></small></div></div>
+    <div class="topbar"><div class="t" data-i18n="prof_passport_title">SOVEREIGN PASSPORT<small data-i18n="prof_passport_subtitle">YOUR IDENTITY WITHIN THE ORDER <span data-canon-lattice="twelve"></span></small></div></div>
 
     <div class="passport" id="pp">
       <div class="pp-top"><div class="ord">SYD OMEGA 91717<small>SOVEREIGN ORDER</small></div><div class="seal">\u03A9</div></div>
@@ -1141,11 +1141,11 @@ function frame(){ctx.clearRect(0,0,120,120);
 
     <div class="notice">Your Passport is generated from your <b>real standing</b> and is yours immediately. Identity <b>verification (KYC) is built and ready to activate</b>: when you submit a document below it is <b>stored securely and marked pending</b>  --  <b>no "verified" status is ever granted automatically</b>. Verification becomes real only when the Order connects a licensed verification provider and completes its legal arrangements.</div>
 
-    <div class="sechead" data-reveal="fade-up">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_passport_submit_header">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
     <div class="kyc">
-      <label>GOVERNMENT ID OR PASSPORT (image or PDF)</label>
+      <label data-i18n="prof_passport_file_label">GOVERNMENT ID OR PASSPORT (image or PDF)</label>
       <input id="kyc-file" type="file" accept="image/*,application/pdf" />
-      <button class="sb" id="kyc-submit">SUBMIT FOR VERIFICATION</button>
+      <button class="sb" id="kyc-submit" data-i18n="prof_passport_submit_btn">SUBMIT FOR VERIFICATION</button>
       <div class="msg" id="kyc-msg"></div>
     </div>
   
@@ -1155,34 +1155,34 @@ function frame(){ctx.clearRect(0,0,120,120);
     <div class="tab-panel" id="tab-kyc">
 
     <div class="topbar">
-      <div class="t">IDENTITY VERIFICATION<small>KYC . AML . SOVEREIGN CREDENTIAL . M13</small></div>
+      <div class="t" data-i18n="prof_kyc_title">IDENTITY VERIFICATION<small data-i18n="prof_kyc_subtitle">KYC . AML . SOVEREIGN CREDENTIAL . M13</small></div>
     </div>
-    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px">Your sovereign identity must be verified before economic features, token ownership, and advanced consultancy access are unlocked. This is a legal requirement -- not a platform choice. All documents are encrypted and handled under GDPR/CCPA compliance.</p>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px" data-i18n="prof_kyc_intro">Your sovereign identity must be verified before economic features, token ownership, and advanced consultancy access are unlocked. This is a legal requirement -- not a platform choice. All documents are encrypted and handled under GDPR/CCPA compliance.</p>
 
     <div class="ra-note">
       [*] READY TO ACTIVATE -- KYC provider integration pending legal counsel sign-off. All intake flows, status tracking, and document management are active. Live verification requires a licensed KYC/AML provider connection.
     </div>
 
-    <div class="sechead" data-reveal="fade-up">CURRENT VERIFICATION STATUS</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_kyc_status_header">CURRENT VERIFICATION STATUS</div>
     <div class="kyc-status-hero">
       <div class="ksh-icon" id="kyc-icon" style="border-color:var(--solar);color:var(--solar)">&#x25C8;</div>
       <div class="ksh-meta">
-        <div class="km-title" id="kyc-title">IDENTITY VERIFICATION</div>
-        <div class="km-status" id="kyc-status-badge" style="color:var(--solar);border-color:rgba(226,200,109,.4)">STATUS PENDING</div>
-        <div class="km-desc" id="kyc-desc">Your identity verification is in progress. Complete all required steps below to unlock economic features, token access, and advanced sovereign credentials.</div>
+        <div class="km-title" id="kyc-title" data-i18n="prof_kyc_status_title">IDENTITY VERIFICATION</div>
+        <div class="km-status" id="kyc-status-badge" style="color:var(--solar);border-color:rgba(226,200,109,.4)" data-i18n="prof_kyc_status_badge">STATUS PENDING</div>
+        <div class="km-desc" id="kyc-desc" data-i18n="prof_kyc_status_desc">Your identity verification is in progress. Complete all required steps below to unlock economic features, token access, and advanced sovereign credentials.</div>
       </div>
     </div>
 
-    <div class="sechead" data-reveal="fade-up">VERIFICATION STEPS</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_kyc_steps_header">VERIFICATION STEPS</div>
     <div class="steps-wrap" id="steps-wrap"></div>
 
-    <div class="sechead" data-reveal="fade-up">DOCUMENT SUBMISSION</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_kyc_docs_header">DOCUMENT SUBMISSION</div>
     <div class="doc-grid" id="doc-grid"></div>
 
-    <div class="sechead" data-reveal="fade-up">SECURITY TIERS</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_kyc_tiers_header">SECURITY TIERS</div>
     <div class="sec-tier-grid" id="sec-tier-grid"></div>
 
-    <div class="sechead" data-reveal="fade-up">UNLOCKS ON COMPLETION</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_kyc_unlocks_header">UNLOCKS ON COMPLETION</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="unlocks-grid"></div>
   
 </div>
@@ -1218,33 +1218,33 @@ t++;requestAnimationFrame(f);}f();})();
 
       
     <div class="topbar">
-      <div class="t">CHARACTER SYSTEM<small>M3 . SOVEREIGN IDENTITY . GENEALOGY . EVOLUTION PATH</small></div>
+      <div class="t" data-i18n="prof_character_title">CHARACTER SYSTEM<small data-i18n="prof_character_subtitle">M3 . SOVEREIGN IDENTITY . GENEALOGY . EVOLUTION PATH</small></div>
     </div>
-    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px">Your sovereign character is assigned at genesis by your zodiac sign and cannot be chosen &mdash; only evolved. Every action in the matrix refines your archetype. Your character is inherited by your heirs, gaining their traits and merging into the bloodline. This is how the Order grows across generations.</p>
+    <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px" data-i18n="prof_character_intro">Your sovereign character is assigned at genesis by your zodiac sign and cannot be chosen &mdash; only evolved. Every action in the matrix refines your archetype. Your character is inherited by your heirs, gaining their traits and merging into the bloodline. This is how the Order grows across generations.</p>
 
-    <div class="sechead" data-reveal="fade-up">YOUR SOVEREIGN CHARACTER <span data-canon-lattice="twelve"></span></div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_character_hero_header">YOUR SOVEREIGN CHARACTER <span data-canon-lattice="twelve"></span></div>
     <div class="char-hero">
       <canvas id="char-canvas" width="160" height="160" style="width:80px;height:80px"></canvas>
       <div class="char-meta">
         <div class="cm-sign" id="cm-sign" style="min-height:12px" data-loading></div>
-        <div class="cm-name" id="cm-name">SOVEREIGN</div>
+        <div class="cm-name" id="cm-name" data-i18n="prof_character_sovereign_name">SOVEREIGN</div>
         <div class="cm-role" id="cm-role" style="min-height:15px" data-loading></div>
         <div class="cm-traits" id="cm-traits"></div>
         <div class="cm-stat-row">
-          <div class="cm-stat"><div class="cs-label">STRENGTH</div><div class="cs-val" id="cs-str" style="color:var(--cyan)">--</div></div>
-          <div class="cm-stat"><div class="cs-label">WISDOM</div><div class="cs-val" id="cs-wis" style="color:var(--solar)">--</div></div>
-          <div class="cm-stat"><div class="cs-label">LEGACY</div><div class="cs-val" id="cs-leg" style="color:var(--green)">--</div></div>
+          <div class="cm-stat"><div class="cs-label" data-i18n="prof_character_stat_strength">STRENGTH</div><div class="cs-val" id="cs-str" style="color:var(--cyan)">--</div></div>
+          <div class="cm-stat"><div class="cs-label" data-i18n="prof_character_stat_wisdom">WISDOM</div><div class="cs-val" id="cs-wis" style="color:var(--solar)">--</div></div>
+          <div class="cm-stat"><div class="cs-label" data-i18n="prof_character_stat_legacy">LEGACY</div><div class="cs-val" id="cs-leg" style="color:var(--green)">--</div></div>
         </div>
       </div>
     </div>
 
-    <div class="sechead" data-reveal="fade-up">CHARACTER EVOLUTION PATH</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_character_evo_header">CHARACTER EVOLUTION PATH</div>
     <div class="evo-row" id="evo-row"></div>
 
-    <div class="sechead" data-reveal="fade-up">THE 12 SOVEREIGN ARCHETYPES</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_character_archetypes_header">THE 12 SOVEREIGN ARCHETYPES</div>
     <div class="arch-grid" id="arch-grid"></div>
 
-    <div class="sechead" data-reveal="fade-up">CHARACTER GENEALOGY TREE</div>
+    <div class="sechead" data-reveal="fade-up" data-i18n="prof_character_genealogy_header">CHARACTER GENEALOGY TREE</div>
     <canvas id="tree-cv" height="240"></canvas>
 
     <div class="sechead" data-reveal="fade-up">CHARACTER INHERITANCE SETTINGS</div>
@@ -1269,7 +1269,7 @@ t++;requestAnimationFrame(f);}f();})();
     <!-- TAB: SCIENCE -->
     <div class="tab-panel" id="tab-science">
       <div class="pad">
-        <div class="sechead">AUTHORITY FORMULA</div>
+        <div class="sechead" data-i18n="prof_science_formula_header">AUTHORITY FORMULA</div>
         <div style="border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
           <div style="font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
           <div style="font-family:var(--M);font-size:9px;color:var(--muted);line-height:2">
@@ -1279,25 +1279,25 @@ t++;requestAnimationFrame(f);}f();})();
             LATTICE = 12&times;12&times;9&times;9&times;9 = 104,976 NODES
           </div>
         </div>
-        <div class="sechead">SYSTEM CONSTANTS</div>
+        <div class="sechead" data-i18n="prof_science_constants_header">SYSTEM CONSTANTS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_frequency">SOVEREIGN FREQUENCY</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_lattice_nodes">LATTICE NODES</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_golden_ratio">GOLDEN RATIO / EULER</div></div>
+          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:18px;color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_apex_auth">APEX AUTHORITY</div></div>
         </div>
-        <div class="sechead">GATE THRESHOLDS</div>
+        <div class="sechead" data-i18n="prof_science_gate_thresholds">GATE THRESHOLDS</div>
         <div style="font-family:var(--M);font-size:9px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
-          SAND GENESIS &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
-          GLASS AWAKENING &bull; AUTH &ge; 2.99<br>
-          IRON FORGING &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
-          STEEL TEMPERING &bull; AUTH &ge; 5.51<br>
-          TITANIUM ASCENT &bull; AUTH &ge; 6.77<br>
-          CARBON PRECISION &bull; AUTH &ge; 8.03<br>
-          GOLD SOVEREIGNTY &bull; AUTH &ge; 9.29<br>
-          PLATINUM LEGACY &bull; AUTH &ge; 10.55<br>
-          OMEGA THRESHOLD &bull; AUTH &ge; 25.517<br>
-          OMEGA MASTER &nbsp;&nbsp;&bull; AUTH &ge; 27.836
+          <span data-i18n="prof_gate_sand_genesis">SAND GENESIS</span> &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
+          <span data-i18n="prof_gate_glass_awakening">GLASS AWAKENING</span> &bull; AUTH &ge; 2.99<br>
+          <span data-i18n="prof_gate_iron_forging">IRON FORGING</span> &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
+          <span data-i18n="prof_gate_steel_tempering">STEEL TEMPERING</span> &bull; AUTH &ge; 5.51<br>
+          <span data-i18n="prof_gate_titanium_ascent">TITANIUM ASCENT</span> &bull; AUTH &ge; 6.77<br>
+          <span data-i18n="prof_gate_carbon_precision">CARBON PRECISION</span> &bull; AUTH &ge; 8.03<br>
+          <span data-i18n="prof_gate_gold_sovereignty">GOLD SOVEREIGNTY</span> &bull; AUTH &ge; 9.29<br>
+          <span data-i18n="prof_gate_platinum_legacy">PLATINUM LEGACY</span> &bull; AUTH &ge; 10.55<br>
+          <span data-i18n="prof_gate_omega_threshold">OMEGA THRESHOLD</span> &bull; AUTH &ge; 25.517<br>
+          <span data-i18n="prof_gate_omega_master">OMEGA MASTER</span> &nbsp;&nbsp;&bull; AUTH &ge; 27.836
         </div>
       </div>
     </div>

@@ -40,36 +40,36 @@
 <aside id="omega-side" data-page="leaderboard" aria-label="Side navigation"></aside>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
-  <div class="topbar-title">SOVEREIGN LEADERBOARD<span class="topbar-sub">DAILY SNAPSHOT &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; UPDATED: <span id="lb-date">--</span></span></div>
+  <div class="topbar-title" data-i18n="lead_topbar_title">SOVEREIGN LEADERBOARD<span class="topbar-sub">DAILY SNAPSHOT &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; UPDATED: <span id="lb-date">--</span></span></div>
   <canvas data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('ranking')">RANKING</button>
-  <button class="tab-btn" onclick="setTab('podium')">PODIUM</button>
-  <button class="tab-btn" onclick="setTab('myrank')">MY RANK</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" onclick="setTab('ranking')" data-i18n="lead_tab_ranking">RANKING</button>
+  <button class="tab-btn" onclick="setTab('podium')" data-i18n="lead_tab_podium">PODIUM</button>
+  <button class="tab-btn" onclick="setTab('myrank')" data-i18n="lead_tab_myrank">MY RANK</button>
+  <button class="tab-btn" onclick="setTab('science')" data-i18n="lead_tab_science">SCIENCE</button>
 </div>
 
 <div class="tab-panel active" id="tab-ranking">
   <div class="kpi-row">
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="lb-total">--</div><div class="kpi-label">RANKED MEMBERS</div></div>
-    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="my-rank">--</div><div class="kpi-label">MY GLOBAL RANK</div></div>
-    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="my-auth">--</div><div class="kpi-label">MY AUTHORITY</div></div>
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val">DAILY</div><div class="kpi-label">SNAPSHOT FREQUENCY</div></div>
+    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="lb-total">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_total">RANKED MEMBERS</div></div>
+    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="my-rank">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myrank">MY GLOBAL RANK</div></div>
+    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="my-auth">--</div><div class="kpi-label" data-i18n="lead_ranking_kpi_myauth">MY AUTHORITY</div></div>
+    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val">DAILY</div><div class="kpi-label" data-i18n="lead_ranking_kpi_freq">SNAPSHOT FREQUENCY</div></div>
   </div>
-  <div class="sechead">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED</div>
+  <div class="sechead" data-i18n="lead_ranking_section">GLOBAL AUTHORITY RANKING &middot; INTEREST-GRAPH WEIGHTED</div>
   <div class="tbl-wrap" role="table" aria-label="Leaderboard">
     <div class="tbl-head" role="row" style="grid-template-columns:50px 1fr 90px 90px 90px 80px">
-      <div class="tbl-hcell" role="columnheader">RANK</div>
-      <div class="tbl-hcell" role="columnheader">MEMBER</div>
-      <div class="tbl-hcell" role="columnheader">AUTHORITY</div>
-      <div class="tbl-hcell" role="columnheader">AXIS A</div>
-      <div class="tbl-hcell" role="columnheader">AXIS B</div>
-      <div class="tbl-hcell" role="columnheader">ELEMENT</div>
+      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_rank">RANK</div>
+      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_member">MEMBER</div>
+      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_auth">AUTHORITY</div>
+      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_axis_a">AXIS A</div>
+      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_axis_b">AXIS B</div>
+      <div class="tbl-hcell" role="columnheader" data-i18n="lead_table_elem">ELEMENT</div>
     </div>
     <div id="lb-rows" role="rowgroup"><div class="tbl-row lb-row-loading" style="grid-template-columns:1fr;padding:20px;text-align:center"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING LEADERBOARD&hellip;</span></div></div>
   </div>
-  <div class="glass" style="padding:14px;margin-top:12px;font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);line-height:1.8">
+  <div class="glass" style="padding:14px;margin-top:12px;font-family:var(--M);font-size:8px;letter-spacing:1px;color:var(--muted);line-height:1.8" data-i18n="lead_ranking_methodology">
     LEADERBOARD METHODOLOGY &middot; Ranking uses AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e computed daily at midnight.<br>
     Inspired by Google PageRank: authority flows from demonstrated knowledge, mastery, and contribution — not follower count.<br>
     Daily snapshots prevent gaming. No real-time rank manipulation. Rank recalculates every 24 hours.
@@ -77,20 +77,20 @@
 </div>
 
 <div class="tab-panel" id="tab-podium">
-  <div class="sechead">TOP 3 SOVEREIGN MEMBERS &middot; RANKED BY AUTH</div>
+  <div class="sechead" data-i18n="lead_podium_title">TOP 3 SOVEREIGN MEMBERS &middot; RANKED BY AUTH</div>
   <div class="podium" id="podium">
-    <div class="pod pod-silver"><div class="pod-rank">2</div><div class="pod-auth" id="p2-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p2-name">--</div><div class="pod-el" id="p2-el">--</div></div>
-    <div class="pod pod-gold"><div class="pod-rank">1</div><div class="pod-auth" id="p1-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p1-name">--</div><div class="pod-el" id="p1-el">--</div></div>
-    <div class="pod pod-bronze"><div class="pod-rank">3</div><div class="pod-auth" id="p3-auth">--</div><div class="pod-label">AUTHORITY</div><div class="pod-name" id="p3-name">--</div><div class="pod-el" id="p3-el">--</div></div>
+    <div class="pod pod-silver"><div class="pod-rank">2</div><div class="pod-auth" id="p2-auth">--</div><div class="pod-label" data-i18n="lead_podium_auth_label">AUTHORITY</div><div class="pod-name" id="p2-name">--</div><div class="pod-el" id="p2-el">--</div></div>
+    <div class="pod pod-gold"><div class="pod-rank">1</div><div class="pod-auth" id="p1-auth">--</div><div class="pod-label" data-i18n="lead_podium_auth_label">AUTHORITY</div><div class="pod-name" id="p1-name">--</div><div class="pod-el" id="p1-el">--</div></div>
+    <div class="pod pod-bronze"><div class="pod-rank">3</div><div class="pod-auth" id="p3-auth">--</div><div class="pod-label" data-i18n="lead_podium_auth_label">AUTHORITY</div><div class="pod-name" id="p3-name">--</div><div class="pod-el" id="p3-el">--</div></div>
   </div>
   <div class="glass" style="padding:14px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">PODIUM METHODOLOGY</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.8">Top 3 sovereigns ranked by AUTH = sqrt(A³+B³+C³)×φ/e. Gold position at center elevated to signify apex standing. Daily snapshot sourced from leaderboard_snapshots table or live profiles query as fallback.</div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:8px" data-i18n="lead_podium_methodology">PODIUM METHODOLOGY</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8" data-i18n="lead_podium_methodology_text">Top 3 sovereigns ranked by AUTH = sqrt(A³+B³+C³)×φ/e. Gold position at center elevated to signify apex standing. Daily snapshot sourced from leaderboard_snapshots table or live profiles query as fallback.</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-myrank">
-  <div class="sechead">MY SOVEREIGN STANDING</div>
+  <div class="sechead" data-i18n="lead_myrank_title">MY SOVEREIGN STANDING</div>
   <div class="my-rank-banner" id="my-rank-banner">
     <div style="font-family:var(--D);font-size:28px;color:var(--gold);line-height:1">#<span id="banner-rank">--</span></div>
     <div>
@@ -99,24 +99,24 @@
     </div>
   </div>
   <div class="kpi-row">
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="my-rank-2">--</div><div class="kpi-label">GLOBAL RANK</div></div>
-    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="my-auth-2">--</div><div class="kpi-label">AUTHORITY SCORE</div></div>
-    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="my-gate">--</div><div class="kpi-label">GATE</div></div>
-    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="my-total">--</div><div class="kpi-label">TOTAL MEMBERS</div></div>
+    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="my-rank-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_rank">GLOBAL RANK</div></div>
+    <div class="kpi-card" style="--kc:var(--cyan)"><div class="kpi-val" id="my-auth-2">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_auth">AUTHORITY SCORE</div></div>
+    <div class="kpi-card" style="--kc:var(--green)"><div class="kpi-val" id="my-gate">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_gate">GATE</div></div>
+    <div class="kpi-card" style="--kc:var(--gold)"><div class="kpi-val" id="my-total">--</div><div class="kpi-label" data-i18n="lead_myrank_kpi_total">TOTAL MEMBERS</div></div>
   </div>
   <div class="glass" style="padding:14px">
-    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px">AUTHORITY FORMULA</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.8">AUTH = sqrt(A³ + B³ + C³) × φ / e &nbsp;&nbsp;where φ=1.6180339887 and e=2.7182818285. Apex AUTH = 27.8367 achieved when A=B=C=9 (all three axes at maximum). Your rank updates daily at midnight UTC.</div>
+    <div style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--solar);margin-bottom:8px" data-i18n="lead_myrank_formula_title">AUTHORITY FORMULA</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8" data-i18n="lead_myrank_formula_text">AUTH = sqrt(A³ + B³ + C³) × φ / e &nbsp;&nbsp;where φ=1.6180339887 and e=2.7182818285. Apex AUTH = 27.8367 achieved when A=B=C=9 (all three axes at maximum). Your rank updates daily at midnight UTC.</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-science">
-  <div class="sechead">LEADERBOARD ARCHITECTURE</div>
+  <div class="sechead" data-i18n="lead_science_title">LEADERBOARD ARCHITECTURE</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = sqrt(A³+B³+C³) × φ/e where φ=1.6180339887 (Golden Ratio) and e=2.7182818285 (Euler's number). The cubic weighting rewards high concentration in a single axis more than moderate scores across all three. Apex score of 27.8367 achieved at A=B=C=9.</div></div>
-    <div class="card"><div class="card-title">RANKING PIPELINE</div><div class="card-body">Three-tier fallback: (1) rankings edge function for server-computed AUTH; (2) leaderboard_snapshots table for daily snapshot data; (3) live profiles query with client-side AUTH computation. This ensures the leaderboard always renders regardless of edge function availability.</div></div>
-    <div class="card"><div class="card-title">SNAPSHOT CADENCE</div><div class="card-body">Daily snapshots prevent real-time rank manipulation and gaming. Scores are calculated server-side at midnight UTC and written to the leaderboard_snapshots table. This mirrors Google PageRank's batch computation philosophy: authority is earned over time, not gamed in the moment.</div></div>
-    <div class="card"><div class="card-title">INTEREST GRAPH</div><div class="card-body">The leaderboard is weighted by interest-graph authority: members who contribute knowledge, master skills, and build contributions earn higher axis values. The Sovereign Order values demonstrated competence over social metrics. No follower count, no engagement farming — only sovereign merit.</div></div>
+    <div class="card"><div class="card-title" data-i18n="lead_science_formula_title">AUTHORITY FORMULA</div><div class="card-body" data-i18n="lead_science_formula_body">AUTH = sqrt(A³+B³+C³) × φ/e where φ=1.6180339887 (Golden Ratio) and e=2.7182818285 (Euler's number). The cubic weighting rewards high concentration in a single axis more than moderate scores across all three. Apex score of 27.8367 achieved at A=B=C=9.</div></div>
+    <div class="card"><div class="card-title" data-i18n="lead_science_pipeline_title">RANKING PIPELINE</div><div class="card-body" data-i18n="lead_science_pipeline_body">Three-tier fallback: (1) rankings edge function for server-computed AUTH; (2) leaderboard_snapshots table for daily snapshot data; (3) live profiles query with client-side AUTH computation. This ensures the leaderboard always renders regardless of edge function availability.</div></div>
+    <div class="card"><div class="card-title" data-i18n="lead_science_cadence_title">SNAPSHOT CADENCE</div><div class="card-body" data-i18n="lead_science_cadence_body">Daily snapshots prevent real-time rank manipulation and gaming. Scores are calculated server-side at midnight UTC and written to the leaderboard_snapshots table. This mirrors Google PageRank's batch computation philosophy: authority is earned over time, not gamed in the moment.</div></div>
+    <div class="card"><div class="card-title" data-i18n="lead_science_interest_title">INTEREST GRAPH</div><div class="card-body" data-i18n="lead_science_interest_body">The leaderboard is weighted by interest-graph authority: members who contribute knowledge, master skills, and build contributions earn higher axis values. The Sovereign Order values demonstrated competence over social metrics. No follower count, no engagement farming — only sovereign merit.</div></div>
   </div>
 </div>
 <div data-page-emblem="leaderboard" style="margin:20px auto 0"></div>

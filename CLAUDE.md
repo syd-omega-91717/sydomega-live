@@ -2622,6 +2622,35 @@ orphaned file.
   the real map showed **both hyphen keys are present too**, alongside redundant underscore
   duplicates. No bug; the static scan had only flagged the underscore keys because it never
   checked whether the hyphen form also existed.
+- **[Added to the gate] `scripts/audit.py` check 9 — JSON.parse fallback literals that are not
+  valid JSON, CRITICAL.** The invalid-`'{pct:10,income:0}'` default that took three pages
+  entirely dead on a member's first visit was invisible to every existing check: the JavaScript
+  parses fine (`node --check` and `check-inline-js.py` both pass it), the column names are
+  correct, and nothing errors until a real browser hits the first-visit path where the key is
+  absent from `localStorage`. Since that bug cost three whole pages and this repo has a standing
+  philosophy of turning a manual sweep into a permanent automatic one (checks 7 and 8 exist for
+  exactly that reason), it is now gated. Implementation notes: the argument is extracted with a
+  balanced-paren, quote-aware walk rather than a `[^)]*` regex — the naive pattern stops at
+  `getItem(...)`'s own `)` and misses the fallback entirely, which is how the first version of
+  this scan reported 0 findings against a repo that had 3. Only `JSON.parse(… || '<literal>')`
+  is checked; a non-literal fallback is ignored rather than guessed at. 6 tests added to
+  `scripts/tests/test_audit.py` covering the unquoted-key failure, the quoted-key pass, the
+  common `'[]'`/`'{}'`/`'null'` forms, the nested-paren extraction, a non-literal fallback being
+  ignored, and file:line reporting — all 6 confirmed to FAIL when check 9 is deleted, so they
+  test the gate rather than passing vacuously. Suite is now 51 tests. No `ci.yml` change needed:
+  check 9 runs inside the existing "Repository audit" step.
+- **Performance: measured, but deliberately NOT acted on — recorded so the data isn't re-derived.**
+  A page load pulls **93 JS requests / ~1.01 MB** after the i18n split, and `bg.js` injects 87
+  `omega-*.js` modules totalling **747 KB** on every page. An obvious-looking optimisation is to
+  stop loading modules no page references: 41 of them (336 KB) expose a `window.Omega*` global
+  that **zero** pages and zero other modules ever call. That metric is a trap and was not acted
+  on. `omega-a11y.js` is in that list — 0 pages reference `OmegaA11y` — yet it injects the skip
+  link, the main landmark, and every form-control label, as this session's own fixes prove.
+  Self-activation on load, with no caller, is the norm here rather than the exception, so
+  "unreferenced global" says nothing about whether a module is dead. Establishing which of the 87
+  are genuinely page-specific means reading each one's activation path, and removing any of them
+  is a feature/architecture decision (§9), not a cleanup. Left for an explicit decision with the
+  measurements above as the starting point.
 - **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
   reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
   the baseline is 7 both with and without this session's work), and

@@ -2770,6 +2770,41 @@ orphaned file.
   both before and after (unchanged). An item whose title carries `<img src=x onerror=…>`
   renders as text and does not execute. `node --check` on both files, `check-inline-js.py`
   clean, `audit.py` 0 critical / 7 pre-existing warnings, 51/51 tests. No SQL/schema changes.
+- **[Fixed] On a phone, every control in the bottom dock was untappable — measured 0 of 9
+  reachable at 375px and at 414px.** Found by measuring fixed-position chrome at a real mobile
+  viewport rather than by looking at the pages. `omega-controls.js` positions its dock entirely
+  with inline styles, which no media query can reach, and `bottom:16px` put it at y 640..684 —
+  against `nav.js`'s `#omega-mob` bottom bar at y 651..700 with `z-index:9990` versus the dock's
+  `2000`. So 33 of the dock's 44px were behind the nav bar, and `elementFromPoint` over each
+  control's own centre returned the nav bar, not the control: the platform's only language
+  switcher, its sound toggle, and the search trigger added earlier this session were all dead to
+  touch. The dock also measured **389px wide inside a 375px viewport** (x −7..382), clipped past
+  both edges — and invisibly so to any overflow check, because `translateX(-50%)` overflow to the
+  left never grows `scrollWidth` (the repo-wide 178-page overflow scan run in the same session
+  correctly reported 0 pages scrolling horizontally, and was right; this is a different defect).
+  - Fixed by giving the dock a real stylesheet (`#omega-controls-css`) with a `≤760px` rule:
+    lifted to `bottom:74px` to clear the 66px nav, `max-width:calc(100vw - 12px)` with
+    `flex-wrap` as the fallback on narrower devices, and tighter button padding/font so all nine
+    controls fit one row (measured after: 187px wide at 375px, no wrap needed).
+  - Three neighbouring widgets in the same corner were measured and moved with it, since lifting
+    the dock alone would have traded one collision for another: `#omega-ded-widget`
+    (`omega-chrono.js`, `bottom:44px` — inside the nav band, clipped by it) → `122px`;
+    `#ofb-btn` (`omega-feedback.js`) already had a `bottom:78px` mobile override for the nav bar,
+    which is the precedent this fix follows, but 78px lands on the dock's new position → `126px`,
+    left-anchored beside the right-anchored dedication widget so they do not overlap
+    horizontally; `#omega-cap-badge` (`omega-capability.js`, `bottom:24px`, `z-index:200`) sat
+    wholly inside the nav band at y 655..676 and has therefore always been 100% covered on
+    mobile — hidden at `≤760px`, which matches what a member already sees rather than inventing
+    a new placement for a 6.5px diagnostic label in an already-crowded corner.
+  - Verified in headless Chromium with a touch context, A/B against `git show HEAD:` copies of
+    all four files, hit-testing each control with `elementFromPoint` after removing the genesis
+    intro overlay (geometry alone does not prove a control is reachable when six fixed widgets
+    share a corner): **375px** 0/9 → 9/9 tappable, dock clipping gone; **414px** 0/9 → 9/9;
+    **1280px byte-identical before and after** for all five widgets, so the desktop layout is
+    untouched. A real `tap()` (not a synthetic click) on the search button opens the overlay and
+    on the FR button sets `omega_lang=fr`; horizontal overflow at 375px stays 0; 0 page errors.
+    `node --check` on all four, `check-inline-js.py` clean, `audit.py` 0 critical / 7 pre-existing
+    warnings, 51/51 tests. No SQL/schema changes.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

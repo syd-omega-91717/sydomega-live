@@ -16,8 +16,33 @@
 
   var _soundOn=localStorage.getItem('omega_sound')!=='off';
 
+  /* The dock is positioned entirely with inline styles, which no media query
+     can reach. Measured at a 375px viewport it came out 389px wide (clipped
+     past BOTH edges -- and invisibly so, since translateX(-50%) overflow to
+     the left never grows scrollWidth, so an overflow scan finds nothing), and
+     bottom:16px put 33 of its 44px behind nav.js's #omega-mob bar, which is
+     z-index 9990 against this dock's 2000. Every control in here -- the only
+     language switcher, the sound toggle, the search trigger -- was therefore
+     untappable on a phone. This stylesheet lifts it clear of the 66px nav and
+     tightens the buttons enough to fit one row, with wrapping as the fallback
+     on narrower devices. */
+  function injectDockCss(){
+    if(document.getElementById('omega-controls-css'))return;
+    var st=document.createElement('style');
+    st.id='omega-controls-css';
+    st.textContent=[
+      '@media(max-width:760px){',
+      '#omega-controls-dock{bottom:74px!important;max-width:calc(100vw - 12px);',
+      'flex-wrap:wrap;justify-content:center;row-gap:4px;gap:3px!important;padding:5px 7px!important}',
+      '#omega-controls-dock button{padding:3px 5px!important;font-size:8px!important;letter-spacing:1px!important}',
+      '}'
+    ].join('');
+    (document.head||document.documentElement).appendChild(st);
+  }
+
   function buildDock(){
     if(document.getElementById('omega-controls-dock'))return;
+    injectDockCss();
     var dock=document.createElement('div');
     dock.id='omega-controls-dock';
     dock.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:2000;display:flex;align-items:center;gap:6px;background:rgba(2,2,6,.92);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:6px 10px;box-shadow:0 0 20px rgba(201,168,76,.08);backdrop-filter:blur(8px)';

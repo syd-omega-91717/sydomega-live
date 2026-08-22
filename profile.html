@@ -1531,7 +1531,7 @@ async function buildAchievements(uid){
   } else {
     document.getElementById('member-credentials-note').style.display='block';
   }
-  buildAchievements(sess.user.id);buildTiers(realAuth);buildPhases(realAuth);buildCerts(sess.user.id);
+  buildAchievementsGrid();buildTiers(realAuth);buildCerts(sess.user.id);
   buildMembershipCard();
 }
 
@@ -2216,6 +2216,40 @@ function buildDocs(){
     const sl=d.status==='verified'?'VERIFIED [*]':'PENDING SUBMISSION';
     c.innerHTML=`<div class="dc-badge">READY TO ACTIVATE</div><div class="dc-icon">${d.icon}</div><div class="dc-title">${d.title}</div><div class="dc-desc">${d.desc}</div><span class="dc-status" style="${st}">${sl}</span>`;
     c.addEventListener('click',function(){ alert('Document upload will open the KYC provider flow once activated. Your submission will be securely encrypted.'); });
+    g.appendChild(c);
+  });
+}
+
+function buildAchievementsGrid(){
+  const g=document.getElementById('ach-grid');
+  if(!g) return;
+  g.innerHTML='';
+  let totalCount=0;
+  ACHIEV.forEach((a)=>{
+    const c=document.createElement('div');c.className='ach-badge';c.style.borderColor=a.col+'44';
+    const cv=document.createElement('canvas');cv.className='ab-canvas';
+    const nameDiv=document.createElement('div');nameDiv.className='ab-name';
+    const tierDiv=document.createElement('div');tierDiv.className='ab-tier';tierDiv.style.borderColor=a.col+'77';tierDiv.style.color=a.col;
+
+    const achName=window.OmegaI18n?window.OmegaI18n.t(a.key,'en'):'';
+    nameDiv.textContent=(achName||a.key).toUpperCase().slice(0,12);
+    tierDiv.textContent=a.type||'TROPHY';
+
+    c.appendChild(cv);c.appendChild(nameDiv);c.appendChild(tierDiv);g.appendChild(c);
+    drawAchBadge(cv,a.sym,a.col);totalCount++;
+  });
+  const sg=document.getElementById('sg-ach');if(sg)sg.textContent=totalCount;
+}
+
+function buildCerts(uid){
+  const g=document.getElementById('cert-display');
+  if(!g) return;
+  g.innerHTML='';
+  const certs=ACHIEV.filter(a=>a.type==='CERT');
+  certs.forEach((cert)=>{
+    const c=document.createElement('div');c.className='cert-card';c.style.borderColor=cert.col+'44';
+    const certName=window.OmegaI18n?window.OmegaI18n.t(cert.key,'en'):'';
+    c.innerHTML=`<div style="font-size:18px;margin-bottom:8px">${cert.sym}</div><div style="color:${cert.col};font-size:9px;font-weight:700">${(certName||cert.key).toUpperCase().slice(0,14)}</div>`;
     g.appendChild(c);
   });
 }

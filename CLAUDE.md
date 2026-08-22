@@ -1781,9 +1781,9 @@ orphaned file.
   already deliberately decided to leave dormant (`transactions`, `wallet_balances` — token/payment
   infrastructure gated behind an explicit product decision, not a bug), the two hygiene items the
   user explicitly chose to leave as-is when asked directly (`.mp4`/`.docx` Git LFS migration), and
-  and the ARIA-semantics gap in the `.tbl-wrap` system described below. (The native-`<table>`
-  conversion this bullet used to list as open is **done** — a repo-wide grep now finds zero
-  `<table>` elements; see the correction below. The
+  and `ops.html`'s never-built event-bus metrics container. (The native-`<table>` conversion this
+  bullet used to list as open is **done** — a repo-wide grep now finds zero `<table>` elements —
+  and the ARIA-semantics gap that conversion left behind is now fixed too; see §8. The
   page-local `.tab-btn`/`.card-title` font-size sweep referenced by an earlier draft of this bullet
   is NOT open — it was completed in the entry above titled "The page-local `.tab-btn`/`.card-title`
   sweep flagged above: done." This bullet was stale on that one point; corrected here rather than
@@ -2650,23 +2650,39 @@ orphaned file.
     table section. Adding the container means designing UI that was never built, which is a
     feature decision, so it is recorded here rather than guessed at — same treatment as the other
     "built but never wired" gaps in this file.
-  - **[Open, measured, deliberately not shipped] The `.tbl-wrap`/`.tbl-row` system carries no
-    table semantics, so ~38 pages of data tables announce as unstructured text.** The shared
-    classes are plain `display:grid` divs; only **1 of 38** pages using `.tbl-wrap` sets
-    `role="table"`. Screen readers therefore get no row/column structure and no header-to-cell
-    association anywhere in the platform's tables — an accessibility cost of the native-`<table>`
-    conversion that the conversion note never mentioned. Central ARIA roles in `omega-a11y.js`
-    are the obvious fix and the structure mostly supports it (43 `.tbl-wrap` instances measured,
-    36 of the 40 with rows are rectangular; the 4 outliers are empty-state placeholder rows).
-    **The blocker is nesting, and it is why this was not shipped blind**: in **17 of 43**
-    instances the rows are injected into an intermediate unclassed `<div>` (e.g.
-    `<div id="anomalyTable">`), so `.tbl-row` is a *grandchild* of `.tbl-wrap`. ARIA requires
-    rows to be children of a `table` or `rowgroup`, so a naive `role="table"` + `role="row"` pass
-    would malform those tables — and a malformed ARIA table can *hide* content from a screen
-    reader, which is worse than the plain text it replaces. The correct implementation marks
-    those intermediate containers `role="rowgroup"`; it needs per-instance verification against
-    `page.accessibility.snapshot()` across all 43, which is a scoped follow-up rather than a
-    bolt-on. Measurements above are the starting point.
+  - **[Fixed] The `.tbl-wrap`/`.tbl-row` system carried no table semantics, so ~38 pages of data
+    tables announced as unstructured text.** The shared classes are plain `display:grid` divs;
+    only **1 of 38** pages using `.tbl-wrap` set `role="table"`, so screen readers got no
+    row/column structure and no header-to-cell association anywhere in the platform's tables —
+    an accessibility cost of the native-`<table>` conversion that the conversion note never
+    mentioned. `omega-a11y.js` section D3 now assigns the roles centrally.
+    The implementation is deliberately conservative, because a **malformed** ARIA table is worse
+    than none — a screen reader can drop content sitting inside a table without valid row/cell
+    ancestry. It computes the entire role assignment first and applies **nothing** to an instance
+    if anything about it is ambiguous. Two real shapes force that, both measured across the 43
+    `.tbl-wrap` instances: in **17 of 43** the rows are injected into an intermediate unclassed
+    `<div>` (e.g. `<div id="anomalyTable">`), making `.tbl-row` a *grandchild* of `.tbl-wrap` —
+    ARIA requires rows to descend from a table or rowgroup, so each such container is marked
+    `role="rowgroup"`; and some instances carry a `.tbl-row` with no element children (an
+    empty-state placeholder holding bare text), where a cell-less row can swallow its own text,
+    so the whole instance is skipped. A wrapper whose direct children are not all rows or
+    row-containers is skipped too, since a search box or footer inside would be content stranded
+    in a table.
+    **Verified with real accessibility-tree snapshots, not by reading the DOM**: 36 of 43
+    instances get `role="table"`, and snapshotting every one of them via
+    `page.accessibility.snapshot({root})` gives **36 well-formed (rows AND cells), 0 malformed,
+    0 text lost** against a roles-removed baseline of the same subtree — e.g. `character.html`
+    13 rows/52 cells, `architect.html` 11 rows/54 cells, `compliance.html` 7 rows/28 cells. The
+    7 the guards skip are exactly the ambiguous shapes: 4 whose body container was still empty at
+    load (`graph-anomalies`, `graph-centrality`, `nexus`, `vault`) and 3 with an empty-state
+    placeholder row (`physiology`, `queue`, `sovereigns`); all are re-evaluated on
+    `omega:populated`, so they pick up roles once their rows actually exist.
+    *Method note*: a first verification pass compared whole-page a11y trees and reported "text
+    lost" on 17 pages. That was the harness, not the code — the two snapshots were taken seconds
+    apart and the diffs were the live trial timer (`00:00:03 / 09:17:17`) and the cookie banner.
+    Comparing only each `.tbl-wrap` subtree removed the noise. A second limitation had to be
+    worked around too: 36 of 43 wrappers sit in `display:none` tab panels and never enter the
+    accessibility tree at load, so only 4 could be checked until the panels were force-revealed.
 - **[Improved] 47 more form controls named, from labels authors wrote in a `<div>` instead of a
   `<label>` — wired with `aria-labelledby`, not a copied string.** The earlier section-E pass
   recovered controls sitting next to a real `<label>`; measuring what was left showed 31 of 40

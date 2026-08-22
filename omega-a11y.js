@@ -239,6 +239,87 @@
     document.addEventListener('omega:populated', ensureHeading);
   })();
 
+  /* ── D3. TABLE SEMANTICS ───────────────────────────────────────────────
+     The shared .tbl-wrap/.tbl-head/.tbl-row system is plain display:grid
+     divs with no table semantics at all -- measured, only 1 of the 38 pages
+     using it sets role="table". So every data table on this platform reaches
+     a screen reader as an undifferentiated run of text: no row or column
+     structure, and no association between a .tbl-hcell header and the cells
+     beneath it. That is the accessibility cost of converting the pages off
+     native <table> markup, which the conversion never accounted for.
+
+     Applying roles centrally is the fix, but a MALFORMED aria table is worse
+     than none -- a screen reader can drop content that sits inside a table
+     without a valid row/cell ancestry. So this is deliberately conservative:
+     it computes the whole role assignment first, and if anything about the
+     instance is ambiguous it applies NOTHING to that instance and leaves it
+     as plain text. Two real shapes force that (both measured across the 43
+     .tbl-wrap instances in this repo):
+
+       - In 17 of 43, rows are injected into an intermediate unclassed <div>
+         (e.g. <div id="anomalyTable">), so .tbl-row is a GRANDCHILD of
+         .tbl-wrap. ARIA requires rows to descend from a table or rowgroup,
+         so each such container is marked role="rowgroup".
+       - 4 instances have a .tbl-row with no element children -- an
+         empty-state placeholder holding bare text. A row with no cells can
+         swallow its own text, so any instance containing one is skipped.
+
+     Likewise skipped: a .tbl-wrap whose direct children are not all rows or
+     row-containers (a search box or footer inside the wrapper would be
+     content stranded in a table), and any element that already carries a
+     page-set role. */
+  (function(){
+    function assignTableRoles(){
+      document.querySelectorAll('.tbl-wrap').forEach(function(wrap){
+        if(wrap.getAttribute('role')) return;              /* page set its own */
+
+        var rows = wrap.querySelectorAll('.tbl-row, .tbl-head');
+        if(!rows.length) return;                            /* not a table */
+
+        var i, j, plan = [], groups = [];
+
+        for(i = 0; i < rows.length; i++){
+          var row = rows[i];
+          if(row.getAttribute('role')) return;              /* already roled */
+          if(!row.children.length) return;                  /* cell-less row */
+          /* every element between the row and the wrapper is a rowgroup */
+          var p = row.parentElement;
+          while(p && p !== wrap){
+            if(p.getAttribute('role')) return;
+            if(groups.indexOf(p) === -1) groups.push(p);
+            p = p.parentElement;
+          }
+          if(!p) return;                                    /* detached */
+          var cellRole = row.classList.contains('tbl-head') ? 'columnheader' : 'cell';
+          for(j = 0; j < row.children.length; j++){
+            if(row.children[j].getAttribute('role')) return;
+            plan.push([row.children[j], cellRole]);
+          }
+          plan.push([row, 'row']);
+        }
+
+        /* every direct child of the wrapper must end up a row or a rowgroup,
+           or there is non-table content stranded inside role="table" */
+        for(i = 0; i < wrap.children.length; i++){
+          var kid = wrap.children[i];
+          var ok = kid.classList.contains('tbl-row') ||
+                   kid.classList.contains('tbl-head') ||
+                   groups.indexOf(kid) !== -1;
+          if(!ok) return;
+        }
+
+        for(i = 0; i < groups.length; i++) groups[i].setAttribute('role','rowgroup');
+        for(i = 0; i < plan.length; i++) plan[i][0].setAttribute('role', plan[i][1]);
+        wrap.setAttribute('role','table');
+      });
+    }
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded', assignTableRoles);
+    } else { assignTableRoles(); }
+    /* rows are usually rendered from data, so re-run once the page populates */
+    document.addEventListener('omega:populated', assignTableRoles);
+  })();
+
   /* ── D. LANDMARK ARIA ───────────────────────────────────────────────── */
   (function(){
     function ensureLandmark(){

@@ -669,6 +669,210 @@ error_dispatch_empty:         {en:'FILL TITLE AND BODY',ar:'ملء العنوا�
 error_dispatch_rpc:           {en:'DISPATCH FAILED — post_dispatch RPC unavailable. Try again shortly.',ar:'فشل البث — post_dispatch RPC غير متاح. حاول مرة أخرى قريبا.',fr:'ENVOI ÉCHOUÉ — post_dispatch RPC indisponible. Réessayez bientôt.',es:'DESPACHO FALLIDO — post_dispatch RPC no disponible. Intente de nuevo en breve.',nl:'VERZENDING MISLUKT — post_dispatch RPC niet beschikbaar. Probeer binnenkort opnieuw.',zh:'分发失败 — post_dispatch RPC 不可用。请稍后重试。',hi:'प्रेषण विफल — post_dispatch RPC उपलब्ध नहीं। शीघ्र ही पुनः प्रयास करें।'},
 gate_access_denied_subtitle:  {en:'THIS CONSOLE IS RESTRICTED TO THE INVISIBLE ARCHITECT',ar:'هذه الوحدة مقيدة على المعماري غير المرئي',fr:'CETTE CONSOLE EST RÉSERVÉE À L\'ARCHITECTE INVISIBLE',es:'ESTA CONSOLA ESTÁ RESTRINGIDA AL ARQUITECTO INVISIBLE',nl:'DEZE CONSOLE IS BEPERKT TOT DE ONZICHTBARE ARCHITECT',zh:'此控制台仅限隐形建筑师使用',hi:'यह कंसोल अदृश्य आर्किटेक्ट के लिए प्रतिबंधित है'},
 btn_return_dashboard:         {en:'RETURN TO DASHBOARD',ar:'العودة إلى لوحة التحكم',fr:'RETOUR AU TABLEAU DE BORD',es:'VOLVER AL PANEL',nl:'TERUG NAAR DASHBOARD',zh:'返回控制面板',hi:'डैशबोर्ड पर लौटें'},
+
+/* ── PROFILE.HTML NEW KEYS ── */
+
+/* Section Headers (6) */
+profile_section_membership:     {en:'MEMBERSHIP',ar:'العضوية',fr:'ADHÉSION',es:'MEMBRESÍA',nl:'LIDMAATSCHAP',zh:'会员资格',hi:'सदस्यता'},
+profile_section_identity_official: {en:'SOVEREIGN IDENTITY -- OFFICIAL RECORDS',ar:'الهوية المستقلة -- السجلات الرسمية',fr:'IDENTITÉ SOUVERAINE -- DOSSIERS OFFICIELS',es:'IDENTIDAD SOBERANA -- REGISTROS OFICIALES',nl:'SOEVEREINE IDENTITEIT -- OFFICIËLE DOCUMENTEN',zh:'主权身份 -- 官方记录',hi:'संप्रभु पहचान -- आधिकारिक रिकॉर्ड'},
+profile_arch_console_title:     {en:'INVISIBLE ARCHITECT CONSOLE',ar:'وحدة المعماري غير المرئي',fr:'CONSOLE DE L\'ARCHITECTE INVISIBLE',es:'CONSOLA DEL ARQUITECTO INVISIBLE',nl:'ONZICHTBARE ARCHITECT CONSOLE',zh:'隐形建筑师控制台',hi:'अदृश्य आर्किटेक्ट कंसोल'},
+profile_section_social:         {en:'SOCIAL CONNECTIONS -- @SYDOMEGA_AI',ar:'الاتصالات الاجتماعية -- @SYDOMEGA_AI',fr:'CONNEXIONS SOCIALES -- @SYDOMEGA_AI',es:'CONEXIONES SOCIALES -- @SYDOMEGA_AI',nl:'SOCIALE VERBINDINGEN -- @SYDOMEGA_AI',zh:'社交连接 -- @SYDOMEGA_AI',hi:'सामाजिक कनेक्शन -- @SYDOMEGA_AI'},
+profile_approval_queue_title:   {en:'Ω APPROVAL QUEUE',ar:'Ω قائمة الموافقة',fr:'Ω FILE D\'ATTENTE D\'APPROBATION',es:'Ω COLA DE APROBACIÓN',nl:'Ω GOEDKEURINGSWACHTRIJ',zh:'Ω 审批队列',hi:'Ω अनुमोदन कतार'},
+character_archetypes_title:     {en:'CHARACTER ARCHETYPES',ar:'النماذج الأصلية للشخصيات',fr:'ARCHÉTYPES DE PERSONNAGES',es:'ARQUETIPOS DE PERSONAJES',nl:'KARAKTERARCHETYPEN',zh:'角色原型',hi:'चरित्र आर्केटाइप'},
+
+/* Overview Tab Status & Labels (8) */
+profile_cosmology_unset:        {en:'SET YOUR COSMOLOGY',ar:'حدد تنوعك الكوني',fr:'DÉFINISSEZ VOTRE COSMOLOGIE',es:'ESTABLECE TU COSMOLOGÍA',nl:'STEL JOUW KOSMOLOGIE IN',zh:'设置您的宇宙学',hi:'अपनी खगोल विज्ञान सेट करें'},
+profile_apex_locked:            {en:'APEX LOCKED / IN PROGRESS',ar:'القمة مقفلة / قيد المعالجة',fr:'APOGÉE VERROUILLÉE / EN COURS',es:'VÉRTICE BLOQUEADO / EN PROGRESO',nl:'APEX VERGRENDELD / BEZIG',zh:'顶端锁定 / 进行中',hi:'शीर्ष लॉक / प्रगति में'},
+profile_material_sealed:        {en:'X of 12 sealed',ar:'X من 12 مختوم',fr:'X sur 12 scellé',es:'X de 12 sellado',nl:'X van 12 verzegeld',zh:'X 个中 12 个已密封',hi:'12 में से X सील किया गया'},
+profile_tier_status:            {en:'Maximum / In progress',ar:'الحد الأقصى / قيد المعالجة',fr:'Maximum / En cours',es:'Máximo / En progreso',nl:'Maximaal / Bezig',zh:'最大 / 进行中',hi:'अधिकतम / प्रगति में'},
+membership_no_active:           {en:'NO ACTIVE MEMBERSHIP',ar:'لا توجد عضوية نشطة',fr:'AUCUNE ADHÉSION ACTIVE',es:'SIN MEMBRESÍA ACTIVA',nl:'GEEN ACTIEF LIDMAATSCHAP',zh:'没有活跃的会员资格',hi:'कोई सक्रिय सदस्यता नहीं'},
+membership_choose_tier_prompt:  {en:'You haven\'t chosen a tier yet.',ar:'لم تختر مستوى بعد.',fr:'Vous n\'avez pas encore choisi un niveau.',es:'Aún no has elegido un nivel.',nl:'Je hebt nog geen niveau gekozen.',zh:'您还没有选择等级。',hi:'आपने अभी तक कोई स्तर नहीं चुना है।'},
+membership_trial_ends:          {en:'TRIAL ENDS',ar:'انتهاء التجربة',fr:'FIN DU PROCÈS',es:'FIN DE LA PRUEBA',nl:'PROEF EINDIGT',zh:'试用结束',hi:'परीक्षण समाप्त'},
+membership_days_remaining:      {en:'days',ar:'أيام',fr:'jours',es:'días',nl:'dagen',zh:'天',hi:'दिन'},
+
+/* Membership Card Buttons (2) */
+btn_choose_tier:                {en:'Choose your tier →',ar:'اختر مستواك →',fr:'Choisissez votre niveau →',es:'Elige tu nivel →',nl:'Kies jouw niveau →',zh:'选择您的等级 →',hi:'अपना स्तर चुनें →'},
+btn_manage_tier:                {en:'Manage or change your tier →',ar:'إدارة أو تغيير مستواك →',fr:'Gérer ou modifier votre niveau →',es:'Administrar o cambiar tu nivel →',nl:'Beheer of wijzig jouw niveau →',zh:'管理或更改您的等级 →',hi:'अपने स्तर को प्रबंधित या बदलें →'},
+
+/* Identity Fields - Owner-Only (9) */
+profile_field_father:           {en:'FATHER\'S NAME',ar:'اسم الأب',fr:'NOM DU PÈRE',es:'NOMBRE DEL PADRE',nl:'VADERS NAAM',zh:'父亲的名字',hi:'पिता का नाम'},
+profile_field_mother:           {en:'MOTHER\'S NAME',ar:'اسم الأم',fr:'NOM DE LA MÈRE',es:'NOMBRE DE LA MADRE',nl:'MOEDERS NAAM',zh:'母亲的名字',hi:'माता का नाम'},
+profile_field_dob:              {en:'DATE OF BIRTH',ar:'تاريخ الميلاد',fr:'DATE DE NAISSANCE',es:'FECHA DE NACIMIENTO',nl:'GEBOORTEDATUM',zh:'出生日期',hi:'जन्म तारीख'},
+profile_field_pob:              {en:'PLACE OF BIRTH',ar:'مكان الميلاد',fr:'LIEU DE NAISSANCE',es:'LUGAR DE NACIMIENTO',nl:'GEBOORTEPLAATS',zh:'出生地',hi:'जन्म स्थान'},
+profile_field_nationality:      {en:'NATIONALITY',ar:'الجنسية',fr:'NATIONALITÉ',es:'NACIONALIDAD',nl:'NATIONALITEIT',zh:'国籍',hi:'राष्ट्रीयता'},
+profile_field_blood_type:       {en:'BLOOD TYPE',ar:'فصيلة الدم',fr:'GROUPE SANGUIN',es:'TIPO DE SANGRE',nl:'BLOEDGROEP',zh:'血型',hi:'रक्त समूह'},
+profile_field_registry:         {en:'REGISTRY',ar:'السجل',fr:'REGISTRE',es:'REGISTRO',nl:'REGISTER',zh:'登记簿',hi:'रजिस्टर'},
+profile_field_region:           {en:'REGION',ar:'المنطقة',fr:'RÉGION',es:'REGIÓN',nl:'REGIO',zh:'地区',hi:'क्षेत्र'},
+
+/* Credential Labels (6) */
+profile_field_member_name:      {en:'MEMBER NAME',ar:'اسم العضو',fr:'NOM DU MEMBRE',es:'NOMBRE DEL MIEMBRO',nl:'LEDENNAAM',zh:'会员名称',hi:'सदस्य का नाम'},
+profile_field_specialty:        {en:'SPECIALTY',ar:'التخصص',fr:'SPÉCIALITÉ',es:'ESPECIALIDAD',nl:'SPECIALITEIT',zh:'专业',hi:'विशेषता'},
+profile_field_reg_date:         {en:'REGISTRATION DATE',ar:'تاريخ التسجيل',fr:'DATE D\'ENREGISTREMENT',es:'FECHA DE REGISTRO',nl:'REGISTRATIEDATUM',zh:'注册日期',hi:'पंजीकरण तारीख'},
+profile_field_order_status:     {en:'ORDER STATUS',ar:'حالة الطلب',fr:'STATUT DE LA COMMANDE',es:'ESTADO DEL PEDIDO',nl:'ORDERSTATUS',zh:'订单状态',hi:'ऑर्डर स्थिति'},
+profile_field_platform_order:   {en:'PLATFORM ORDER',ar:'طلب المنصة',fr:'COMMANDE DE PLATEFORME',es:'ORDEN DE PLATAFORMA',nl:'PLATFORMORDER',zh:'平台订单',hi:'प्लेटफॉर्म ऑर्डर'},
+profile_field_access_level:     {en:'ACCESS LEVEL',ar:'مستوى الوصول',fr:'NIVEAU D\'ACCÈS',es:'NIVEL DE ACCESO',nl:'TOEGANGSNIVEAU',zh:'访问级别',hi:'पहुंच स्तर'},
+
+/* Access Control Buttons (6) */
+filter_pending:                 {en:'PENDING',ar:'قيد الانتظار',fr:'EN ATTENTE',es:'PENDIENTE',nl:'IN BEHANDELING',zh:'待处理',hi:'लंबित'},
+filter_trial_active:            {en:'TRIAL ACTIVE',ar:'التجربة نشطة',fr:'ESSAI ACTIF',es:'PRUEBA ACTIVA',nl:'PROEF ACTIEF',zh:'试用有效',hi:'परीक्षण सक्रिय'},
+filter_approved:                {en:'APPROVED',ar:'موافق عليه',fr:'APPROUVÉ',es:'APROBADO',nl:'GOEDGEKEURD',zh:'已批准',hi:'स्वीकृत'},
+filter_all_members:             {en:'ALL MEMBERS',ar:'جميع الأعضاء',fr:'TOUS LES MEMBRES',es:'TODOS LOS MIEMBROS',nl:'ALLE LEDEN',zh:'所有会员',hi:'सभी सदस्य'},
+profile_no_members_category:    {en:'NO MEMBERS IN THIS CATEGORY',ar:'لا توجد أعضاء في هذه الفئة',fr:'AUCUN MEMBRE DANS CETTE CATÉGORIE',es:'SIN MIEMBROS EN ESTA CATEGORÍA',nl:'GEEN LEDEN IN DEZE CATEGORIE',zh:'此类别中没有成员',hi:'इस श्रेणी में कोई सदस्य नहीं'},
+btn_grant_trial_min:            {en:'GRANT 9.1717 MIN',ar:'منح 9.1717 دقيقة',fr:'ACCORDER 9.1717 MIN',es:'OTORGAR 9.1717 MIN',nl:'VERLENEN 9.1717 MIN',zh:'授予 9.1717 分钟',hi:'९.१७१७ मिनट दें'},
+
+/* Access Control Remaining (2) */
+btn_grant_permanent:            {en:'GRANT PERM',ar:'منح بشكل دائم',fr:'ACCORDER PERM',es:'OTORGAR PERM',nl:'VERLENEN PERM',zh:'永久授予',hi:'स्थायी रूप से दें'},
+btn_extend_trial:               {en:'EXTEND',ar:'تمديد',fr:'PROLONGER',es:'EXTENDER',nl:'VERLENGEN',zh:'延长',hi:'बढ़ाएं'},
+
+/* Access Control More (3) */
+btn_revoke_access:              {en:'REVOKE',ar:'سحب',fr:'RÉVOQUER',es:'REVOCAR',nl:'INTREKKEN',zh:'撤销',hi:'रद्द करें'},
+confirm_revoke_access:          {en:'Revoke access?',ar:'سحب الوصول؟',fr:'Révoquer l\'accès ?',es:'¿Revocar acceso?',nl:'Toegang intrekken?',zh:'撤销访问权限？',hi:'पहुंच रद्द करें?'},
+error_access_update:            {en:'Could not update access. Try again.',ar:'لم يتمكن من تحديث الوصول. حاول مرة أخرى.',fr:'Impossible de mettre à jour l\'accès. Réessayez.',es:'No se pudo actualizar el acceso. Intente de nuevo.',nl:'Kon toegang niet bijwerken. Probeer opnieuw.',zh:'无法更新访问权限。请重试。',hi:'पहुंच अद्यतन नहीं कर सके। पुनः प्रयास करें।'},
+
+/* Error Messages (1) */
+error_revoke_failed:            {en:'Could not revoke access. Try again.',ar:'لم يتمكن من سحب الوصول. حاول مرة أخرى.',fr:'Impossible de révoquer l\'accès. Réessayez.',es:'No se pudo revocar el acceso. Intente de nuevo.',nl:'Kon toegang niet intrekken. Probeer opnieuw.',zh:'无法撤销访问权限。请重试。',hi:'पहुंच रद्द नहीं कर सके। पुनः प्रयास करें।'},
+
+/* Profile — Authority & Achievement Status (8) */
+profile_auth_absolute_maximum:  {en:'Absolute maximum',ar:'الحد الأقصى المطلق',fr:'Maximum absolu',es:'Máximo absoluto',nl:'Absoluut maximum',zh:'绝对最大值',hi:'पूर्ण अधिकतम'},
+profile_coord_apex_locked:       {en:'Apex locked',ar:'القمة مقفلة',fr:'Apogée verrouillée',es:'Vértice bloqueado',nl:'Apex vergrendeld',zh:'顶端锁定',hi:'शीर्ष लॉक'},
+profile_coord_in_progress:       {en:'In progress',ar:'قيد المعالجة',fr:'En cours',es:'En progreso',nl:'Bezig',zh:'进行中',hi:'प्रगति में'},
+profile_tier_of_12_sealed:       {en:'of 12 sealed',ar:'من 12 مختوم',fr:'sur 12 scellé',es:'de 12 sellado',nl:'van 12 verzegeld',zh:'个已密封',hi:'सील किए गए'},
+profile_grade_maximum:           {en:'Maximum',ar:'الحد الأقصى',fr:'Maximum',es:'Máximo',nl:'Maximaal',zh:'最大',hi:'अधिकतम'},
+profile_grade_in_progress:       {en:'In progress',ar:'قيد المعالجة',fr:'En cours',es:'En progreso',nl:'Bezig',zh:'进行中',hi:'प्रगति में'},
+profile_section_matrix_axes_standing: {en:'MATRIX AXES -- YOUR STANDING',ar:'محاور المصفوفة -- موقفك',fr:'AXES MATRICIELS -- VOTRE STANDING',es:'EJES MATRICIALES -- TU POSICIÓN',nl:'MATRIX ASSEN -- JE POSITIE',zh:'矩阵轴 -- 你的地位',hi:'मैट्रिक्स अक्ष -- आपकी स्थिति'},
+profile_action_set_cosmology:    {en:'SET YOUR COSMOLOGY',ar:'حدد تنوعك الكوني',fr:'DÉFINISSEZ VOTRE COSMOLOGIE',es:'ESTABLECE TU COSMOLOGÍA',nl:'STEL JOUW KOSMOLOGIE IN',zh:'设置您的宇宙学',hi:'अपनी खगोल विज्ञान सेट करें'},
+
+/* Profile — Membership Status (6) */
+profile_msg_no_active_membership: {en:'NO ACTIVE MEMBERSHIP',ar:'لا توجد عضوية نشطة',fr:'AUCUNE ADHÉSION ACTIVE',es:'SIN MEMBRESÍA ACTIVA',nl:'GEEN ACTIEF LIDMAATSCHAP',zh:'无活跃会员资格',hi:'कोई सक्रिय सदस्यता नहीं'},
+profile_msg_no_active_tier:      {en:'No active tier',ar:'لا توجد مستوى نشط',fr:'Aucun niveau actif',es:'Sin nivel activo',nl:'Geen actief niveau',zh:'没有活跃的层级',hi:'कोई सक्रिय स्तर नहीं'},
+profile_action_choose_tier:      {en:'Choose your tier',ar:'اختر مستواك',fr:'Choisissez votre niveau',es:'Elige tu nivel',nl:'Kies je niveau',zh:'选择你的等级',hi:'अपना स्तर चुनें'},
+profile_label_trial_ends:        {en:'TRIAL ENDS',ar:'انتهاء التجربة',fr:'FIN DE L\'ESSAI',es:'FIN DE LA PRUEBA',nl:'PROEF EINDIGT',zh:'试用结束',hi:'परीक्षण समाप्त'},
+profile_label_renews:            {en:'RENEWS',ar:'يجدد',fr:'RENOUVELLE',es:'SE RENUEVA',nl:'VERLENGT',zh:'更新',hi:'नवीनीकृत'},
+profile_action_manage_tier:      {en:'Manage or change your tier',ar:'إدارة أو تغيير مستواك',fr:'Gérez ou modifiez votre niveau',es:'Administra o cambia tu nivel',nl:'Beheer of wijzig je niveau',zh:'管理或更改您的等级',hi:'अपने स्तर का प्रबंधन या परिवर्तन करें'},
+
+/* Archetypes (12) */
+archetype_warrior:              {en:'THE WARRIOR',ar:'المحارب',fr:'LE GUERRIER',es:'EL GUERRERO',nl:'DE KRIJGER',zh:'战士',hi:'योद्धा'},
+archetype_guardian:             {en:'THE GUARDIAN',ar:'الحارس',fr:'LE GARDIEN',es:'EL GUARDIÁN',nl:'DE BEWAKER',zh:'守护者',hi:'रक्षक'},
+archetype_herald:               {en:'THE HERALD',ar:'المرسل',fr:'LE HÉRAUT',es:'EL HERALDO',nl:'DE HERAUT',zh:'先驱者',hi:'दूत'},
+archetype_oracle:               {en:'THE ORACLE',ar:'النبي',fr:'L\'ORACLE',es:'EL ORÁCULO',nl:'DE ORAKEL',zh:'神谕者',hi:'दैवज्ञ'},
+archetype_sovereign:            {en:'THE SOVEREIGN',ar:'المستقل',fr:'LE SOUVERAIN',es:'EL SOBERANO',nl:'DE SOEVEREIN',zh:'君主',hi:'प्रभुसत्ता'},
+archetype_architect:            {en:'THE ARCHITECT',ar:'المعماري',fr:'L\'ARCHITECTE',es:'EL ARQUITECTO',nl:'DE ARCHITECT',zh:'建筑师',hi:'आर्किटेक्ट'},
+archetype_diplomat:             {en:'THE DIPLOMAT',ar:'الدبلوماسي',fr:'LE DIPLOMATE',es:'EL DIPLOMÁTICO',nl:'DE DIPLOMAAT',zh:'外交官',hi:'राजनयिक'},
+archetype_executor:             {en:'THE EXECUTOR',ar:'المنفذ',fr:'L\'EXÉCUTEUR',es:'EL EJECUTOR',nl:'DE UITVOERDER',zh:'执行者',hi:'कार्यकर्ता'},
+archetype_explorer:             {en:'THE EXPLORER',ar:'المستكشف',fr:'L\'EXPLORATEUR',es:'EL EXPLORADOR',nl:'DE VERKENNER',zh:'探险家',hi:'अन्वेषक'},
+archetype_master:               {en:'THE MASTER',ar:'السيد',fr:'LE MAÎTRE',es:'EL MAESTRO',nl:'DE MEESTER',zh:'大师',hi:'मास्टर'},
+archetype_visionary:            {en:'THE VISIONARY',ar:'الرائد',fr:'LE VISIONNAIRE',es:'EL VISIONARIO',nl:'DE VISIONAIR',zh:'先见者',hi:'दूरदर्शी'},
+archetype_mystic:               {en:'THE MYSTIC',ar:'الصوفي',fr:'LE MYSTIQUE',es:'EL MÍSTICO',nl:'DE MYSTICUS',zh:'神秘主义者',hi:'रहस्यवादी'},
+
+/* Passport Messages (6) */
+passport_signin_required:       {en:'Sign in to view your Passport.',ar:'قم بتسجيل الدخول لعرض جواز سفرك.',fr:'Connectez-vous pour voir votre Passeport.',es:'Inicia sesión para ver tu Pasaporte.',nl:'Log in om je Paspoort te zien.',zh:'登录以查看您的护照。',hi:'अपना पासपोर्ट देखने के लिए साइन इन करें।'},
+passport_cosmology_required:    {en:'Set your cosmology (in the Identity tab) first to receive your Passport.',ar:'حدد تنوعك الكوني (في علامة التبويب الهوية) أولاً لتلقي جواز سفرك.',fr:'Définissez d\'abord votre cosmologie (dans l\'onglet Identité) pour recevoir votre Passeport.',es:'Establece tu cosmología (en la pestaña Identidad) primero para recibir tu Pasaporte.',nl:'Stel je kosmologie eerst in (in het tabblad Identiteit) om je Paspoort te ontvangen.',zh:'首先设置您的宇宙学（在"身份"选项卡中）以接收您的护照。',hi:'अपना पासपोर्ट प्राप्त करने के लिए पहले अपनी खगोल विज्ञान सेट करें (आइडेंटिटी टैब में)।'},
+passport_verification_not_submitted: {en:'VERIFICATION: NOT SUBMITTED',ar:'التحقق: لم يتم التقديم',fr:'VÉRIFICATION: NON SOUMIS',es:'VERIFICACIÓN: NO ENVIADO',nl:'VERIFICATIE: NIET INGEDIEND',zh:'验证：未提交',hi:'सत्यापन: जमा नहीं किया गया'},
+passport_verification_pending:  {en:'VERIFICATION: SUBMITTED . PENDING',ar:'التحقق: تم التقديم . قيد الانتظار',fr:'VÉRIFICATION: SOUMIS . EN ATTENTE',es:'VERIFICACIÓN: ENVIADO . PENDIENTE',nl:'VERIFICATIE: INGEDIEND . IN AFWACHTING',zh:'验证：已提交 . 待处理',hi:'सत्यापन: प्रस्तुत . लंबित'},
+passport_verification_verified: {en:'VERIFICATION: VERIFIED',ar:'التحقق: موثق',fr:'VÉRIFICATION: VÉRIFIÉ',es:'VERIFICACIÓN: VERIFICADO',nl:'VERIFICATIE: GEVERIFIEERD',zh:'验证：已验证',hi:'सत्यापन: सत्यापित'},
+
+/* KYC Steps (21) */
+kyc_step_1_title:               {en:'EMAIL VERIFICATION',ar:'التحقق من البريد الإلكتروني',fr:'VÉRIFICATION PAR E-MAIL',es:'VERIFICACIÓN DE CORREO ELECTRÓNICO',nl:'VERIFICATIE VAN E-MAIL',zh:'电子邮件验证',hi:'ईमेल सत्यापन'},
+kyc_step_1_desc:                {en:'Confirm your sovereign email address...',ar:'أكد عنوان بريدك الإلكتروني المستقل...',fr:'Confirmez votre adresse e-mail souveraine...',es:'Confirma tu dirección de correo electrónico soberana...',nl:'Bevestig je soevereine e-mailadres...',zh:'确认您的主权电子邮件地址...',hi:'अपने संप्रभु ईमेल पते की पुष्टि करें...'},
+kyc_step_1_action:              {en:'VERIFIED',ar:'موثق',fr:'VÉRIFIÉ',es:'VERIFICADO',nl:'GEVERIFIEERD',zh:'已验证',hi:'सत्यापित'},
+kyc_step_2_title:               {en:'PROFILE COMPLETION',ar:'إكمال الملف الشخصي',fr:'ACCOMPLISSEMENT DU PROFIL',es:'COMPLETACIÓN DEL PERFIL',nl:'VOLTOOIING VAN PROFIEL',zh:'个人资料完成',hi:'प्रोफ़ाइल पूर्ण करण'},
+kyc_step_2_desc:                {en:'Fill in your complete profile...',ar:'ملء ملفك الشخصي الكامل...',fr:'Remplissez votre profil complet...',es:'Completa tu perfil completo...',nl:'Vul je volledige profiel in...',zh:'填写您的完整个人资料...',hi:'अपनी पूरी प्रोफ़ाइल भरें...'},
+kyc_step_2_action:              {en:'COMPLETE PROFILE',ar:'إكمال الملف الشخصي',fr:'PROFIL COMPLET',es:'PERFIL COMPLETO',nl:'PROFIEL VOLTOOIEN',zh:'完整个人资料',hi:'प्रोफ़ाइल पूरी करें'},
+kyc_step_3_title:               {en:'IDENTITY DOCUMENT',ar:'وثيقة الهوية',fr:'DOCUMENT D\'IDENTITÉ',es:'DOCUMENTO DE IDENTIDAD',nl:'IDENTITEITSDOCUMENT',zh:'身份证件',hi:'पहचान पत्र'},
+kyc_step_3_desc:                {en:'Upload a government-issued ID...',ar:'قم بتحميل بطاقة هوية صادرة من الحكومة...',fr:'Téléchargez une pièce d\'identité délivrée par le gouvernement...',es:'Carga una identificación emitida por el gobierno...',nl:'Upload een door de regering afgegeven ID...',zh:'上传由政府颁发的身份证...',hi:'सरकार द्वारा जारी आईडी अपलोड करें...'},
+kyc_step_3_action:              {en:'UPLOAD DOCUMENT',ar:'تحميل المستند',fr:'TÉLÉCHARGER LE DOCUMENT',es:'SUBIR DOCUMENTO',nl:'DOCUMENT UPLOADEN',zh:'上传文件',hi:'दस्तावेज़ अपलोड करें'},
+kyc_step_4_title:               {en:'LIVENESS CHECK',ar:'فحص الحياة',fr:'VÉRIFICATION DE VIVACITÉ',es:'VERIFICACIÓN DE LIVENESS',nl:'LIVENESS CHECK',zh:'活力检查',hi:'जीवंतता जांच'},
+kyc_step_4_desc:                {en:'A short selfie video proves...',ar:'مقطع فيديو سيلفي قصير يثبت...',fr:'Une courte vidéo de selfie prouve...',es:'Un breve video de selfie prueba...',nl:'Een korte selfievideo bewijst...',zh:'短自拍视频证明...',hi:'एक짧ी सेल्फी वीडियो साबित करती है...'},
+kyc_step_4_action:              {en:'START LIVENESS CHECK',ar:'ابدأ فحص الحياة',fr:'DÉMARRER LA VÉRIFICATION DE VIVACITÉ',es:'INICIAR VERIFICACIÓN DE LIVENESS',nl:'LIVENESS CHECK STARTEN',zh:'开始活力检查',hi:'जीवंतता जांच शुरू करें'},
+kyc_step_5_title:               {en:'ADDRESS VERIFICATION',ar:'التحقق من العنوان',fr:'VÉRIFICATION D\'ADRESSE',es:'VERIFICACIÓN DE DIRECCIÓN',nl:'ADRESVERIFICATIE',zh:'地址验证',hi:'पता सत्यापन'},
+kyc_step_5_desc:                {en:'Provide a utility bill...',ar:'قدم فاتورة مرافق...',fr:'Fournir une facture de services publics...',es:'Proporciona una factura de servicios...',nl:'Geef een nutsbedrijfrekening...',zh:'提供公用事业账单...',hi:'एक उपयोगिता बिल प्रदान करें...'},
+kyc_step_5_action:              {en:'UPLOAD PROOF OF ADDRESS',ar:'تحميل إثبات العنوان',fr:'TÉLÉCHARGER PREUVE D\'ADRESSE',es:'SUBIR PRUEBA DE DIRECCIÓN',nl:'ADRESBEWIJS UPLOADEN',zh:'上传地址证明',hi:'पते का प्रमाण अपलोड करें'},
+kyc_step_6_title:               {en:'KYC REVIEW',ar:'مراجعة KYC',fr:'EXAMEN DU KYC',es:'REVISIÓN DE KYC',nl:'KYC-BEOORDELING',zh:'KYC审核',hi:'KYC समीक्षा'},
+kyc_step_6_desc:                {en:'Submitted documents are reviewed...',ar:'يتم مراجعة المستندات المقدمة...',fr:'Les documents soumis sont examinés...',es:'Los documentos presentados se revisan...',nl:'Ingediende documenten worden beoordeeld...',zh:'提交的文件正在审核...',hi:'प्रस्तुत दस्तावेजों की समीक्षा की जा रही है...'},
+kyc_step_6_action:              {en:'AWAITING REVIEW',ar:'في انتظار المراجعة',fr:'EN ATTENTE D\'EXAMEN',es:'ESPERANDO REVISIÓN',nl:'WACHTEN OP BEOORDELING',zh:'等待审核',hi:'समीक्षा की प्रतीक्षा है'},
+kyc_step_7_title:               {en:'KYC APPROVED',ar:'تم الموافقة على KYC',fr:'KYC APPROUVÉ',es:'KYC APROBADO',nl:'KYC GOEDGEKEURD',zh:'KYC已批准',hi:'KYC मंजूर'},
+kyc_step_7_desc:                {en:'Identity verified. Full economic features...',ar:'تم التحقق من الهوية. الميزات الاقتصادية الكاملة...',fr:'Identité vérifiée. Fonctionnalités économiques complètes...',es:'Identidad verificada. Características económicas completas...',nl:'Identiteit geverifieerd. Volledige economische functies...',zh:'身份已验证。完整的经济功能...',hi:'पहचान सत्यापित। पूर्ण आर्थिक सुविधाएं...'},
+kyc_step_7_action:              {en:'SOVEREIGN UNLOCKED',ar:'غير مقفل المستقل',fr:'SOUVERAIN DÉVERROUILLÉ',es:'SOBERANO DESBLOQUEADO',nl:'SOEVEREIN ONTGRENDELD',zh:'主权已解锁',hi:'संप्रभु अनलॉक किया गया'},
+
+/* KYC Status (12) */
+kyc_status_not_started:         {en:'VERIFICATION NOT STARTED',ar:'لم يتم بدء التحقق',fr:'VÉRIFICATION NON COMMENCÉE',es:'VERIFICACIÓN NO INICIADA',nl:'VERIFICATIE NIET GESTART',zh:'未启动验证',hi:'सत्यापन शुरू नहीं किया गया'},
+kyc_badge_not_started:          {en:'NOT STARTED',ar:'لم يبدأ',fr:'NON COMMENCÉ',es:'NO INICIADO',nl:'NIET GESTART',zh:'未启动',hi:'शुरू नहीं किया गया'},
+kyc_desc_not_started:           {en:'Complete the steps below to begin your KYC journey.',ar:'أكمل الخطوات أدناه لبدء رحلة KYC الخاصة بك.',fr:'Complétez les étapes ci-dessous pour commencer votre parcours KYC.',es:'Completa los pasos a continuación para comenzar tu viaje de KYC.',nl:'Voltooi de onderstaande stappen om uw KYC-reis te starten.',zh:'完成以下步骤以开始您的 KYC 之旅。',hi:'अपनी KYC यात्रा शुरू करने के लिए नीचे दिए गए चरणों को पूरा करें।'},
+kyc_status_submitted:           {en:'DOCUMENTS SUBMITTED',ar:'تم تقديم المستندات',fr:'DOCUMENTS SOUMIS',es:'DOCUMENTOS PRESENTADOS',nl:'DOCUMENTEN INGEDIEND',zh:'已提交文件',hi:'दस्तावेज़ प्रस्तुत'},
+kyc_badge_submitted:            {en:'UNDER REVIEW',ar:'قيد المراجعة',fr:'EN EXAMEN',es:'BAJO REVISIÓN',nl:'ONDER BEOORDELING',zh:'审核中',hi:'समीक्षा में'},
+kyc_desc_submitted:             {en:'Your documents have been submitted...',ar:'تم تقديم مستنداتك...',fr:'Vos documents ont été soumis...',es:'Tus documentos han sido presentados...',nl:'Uw documenten zijn ingediend...',zh:'您的文件已提交...',hi:'आपके दस्तावेज़ प्रस्तुत किए गए हैं...'},
+kyc_status_verified:            {en:'IDENTITY VERIFIED',ar:'تم التحقق من الهوية',fr:'IDENTITÉ VÉRIFIÉE',es:'IDENTIDAD VERIFICADA',nl:'IDENTITEIT GEVERIFIEERD',zh:'身份已验证',hi:'पहचान सत्यापित'},
+kyc_badge_verified:             {en:'FULLY VERIFIED',ar:'موثق تماما',fr:'COMPLÈTEMENT VÉRIFIÉ',es:'COMPLETAMENTE VERIFICADO',nl:'VOLLEDIG GEVERIFIEERD',zh:'完全验证',hi:'पूरी तरह सत्यापित'},
+kyc_desc_verified:              {en:'Your sovereign identity is confirmed...',ar:'يتم تأكيد هويتك المستقلة...',fr:'Votre identité souveraine est confirmée...',es:'Tu identidad soberana está confirmada...',nl:'Je soevereine identiteit is bevestigd...',zh:'您的主权身份已确认...',hi:'आपकी संप्रभु पहचान की पुष्टि की गई है...'},
+kyc_status_rejected:            {en:'VERIFICATION REJECTED',ar:'تم رفض التحقق',fr:'VÉRIFICATION REJETÉE',es:'VERIFICACIÓN RECHAZADA',nl:'VERIFICATIE AFGEWEZEN',zh:'验证被拒绝',hi:'सत्यापन अस्वीकार किया गया'},
+kyc_badge_rejected:             {en:'REJECTED',ar:'مرفوض',fr:'REJETÉ',es:'RECHAZADO',nl:'AFGEWEZEN',zh:'被拒绝',hi:'अस्वीकार किया गया'},
+kyc_desc_rejected:              {en:'Your documents could not be verified...',ar:'لم يتمكن من التحقق من مستنداتك...',fr:'Vos documents n\'ont pas pu être vérifiés...',es:'Tus documentos no pudieron ser verificados...',nl:'Uw documenten konden niet worden geverifieerd...',zh:'无法验证您的文件...',hi:'आपके दस्तावेज़ों की पुष्टि नहीं की जा सकी...'},
+
+/* KYC Document Types (8) */
+kyc_doc_passport:               {en:'PASSPORT',ar:'جواز السفر',fr:'PASSEPORT',es:'PASAPORTE',nl:'PASPOORT',zh:'护照',hi:'पासपोर्ट'},
+kyc_doc_passport_desc:          {en:'International passport, all pages...',ar:'جواز السفر الدولي، جميع الصفحات...',fr:'Passeport international, toutes les pages...',es:'Pasaporte internacional, todas las páginas...',nl:'Internationaal paspoort, alle pagina\'s...',zh:'国际护照，所有页面...',hi:'अंतर्राष्ट्रीय पासपोर्ट, सभी पृष्ठ...'},
+kyc_doc_national_id:            {en:'NATIONAL ID',ar:'بطاقة الهوية الوطنية',fr:'CARTE D\'IDENTITÉ NATIONALE',es:'DOCUMENTO DE IDENTIDAD NACIONAL',nl:'NATIONALE IDENTITEITSKAART',zh:'国民身份证',hi:'राष्ट्रीय पहचान पत्र'},
+kyc_doc_national_id_desc:       {en:'Front and back of national identity card...',ar:'الأمام والخلف من بطاقة الهوية الوطنية...',fr:'Avant et arrière de la carte d\'identité nationale...',es:'Frente y reverso de la tarjeta de identidad nacional...',nl:'Voor- en achterkant van de nationale identiteitskaart...',zh:'国民身份证的正面和背面...',hi:'राष्ट्रीय पहचान पत्र के आगे और पीछे...'},
+kyc_doc_proof_address:          {en:'PROOF OF ADDRESS',ar:'إثبات العنوان',fr:'PREUVE D\'ADRESSE',es:'PRUEBA DE DIRECCIÓN',nl:'ADRESBEWIJS',zh:'地址证明',hi:'पते का प्रमाण'},
+kyc_doc_proof_address_desc:     {en:'Utility bill or bank statement...',ar:'فاتورة مرافق أو كشف حساب بنكي...',fr:'Facture de services publics ou relevé bancaire...',es:'Factura de servicios o estado de cuenta bancario...',nl:'Nutsbedrijfrekening of bankafschrift...',zh:'公用事业账单或银行对账单...',hi:'उपयोगिता बिल या बैंक विवरण...'},
+kyc_doc_liveness:               {en:'LIVENESS SELFIE',ar:'سيلفي الحياة',fr:'SELFIE DE VIVACITÉ',es:'SELFIE DE LIVENESS',nl:'LIVENESS SELFIE',zh:'活力自拍',hi:'जीवंतता सेल्फी'},
+kyc_doc_liveness_desc:          {en:'Short video selfie holding your document...',ar:'مقطع فيديو سيلفي قصير يحمل وثيقتك...',fr:'Courte vidéo de selfie tenant votre document...',es:'Video de selfie corto sosteniendo tu documento...',nl:'Korte selfievideo met uw document...',zh:'持有您文件的短自拍视频...',hi:'अपने दस्तावेज़ को पकड़े हुए एक짧ी सेल्फी वीडियो...'},
+
+/* KYC Security Tiers (15) */
+kyc_tier_0:                     {en:'TIER 0',ar:'المستوى 0',fr:'NIVEAU 0',es:'NIVEL 0',nl:'NIVEAU 0',zh:'第0级',hi:'स्तर 0'},
+kyc_tier_0_name:                {en:'GUEST ACCESS',ar:'الوصول للضيف',fr:'ACCÈS INVITÉ',es:'ACCESO DE INVITADO',nl:'GASTENTOEGANG',zh:'访客访问',hi:'अतिथि पहुंच'},
+kyc_tier_0_desc:                {en:'Browsing and exploration only...',ar:'التصفح والاستكشاف فقط...',fr:'Navigation et exploration uniquement...',es:'Solo navegación y exploración...',nl:'Alleen bladeren en verkennen...',zh:'仅浏览和探索...',hi:'केवल ब्राउज़िंग और अन्वेषण...'},
+kyc_tier_0_badge:               {en:'CURRENT (DEFAULT)',ar:'الحالي (الافتراضي)',fr:'COURANT (PAR DÉFAUT)',es:'ACTUAL (PREDETERMINADO)',nl:'HUIDIIG (STANDAARD)',zh:'当前（默认）',hi:'वर्तमान (डिफ़ॉल्ट)'},
+kyc_tier_1:                     {en:'TIER 1',ar:'المستوى 1',fr:'NIVEAU 1',es:'NIVEL 1',nl:'NIVEAU 1',zh:'第1级',hi:'स्तर 1'},
+kyc_tier_1_name:                {en:'EMAIL VERIFIED',ar:'تم التحقق من البريد الإلكتروني',fr:'E-MAIL VÉRIFIÉ',es:'CORREO ELECTRÓNICO VERIFICADO',nl:'E-MAIL GEVERIFIEERD',zh:'电子邮件已验证',hi:'ईमेल सत्यापित'},
+kyc_tier_1_desc:                {en:'Profile complete. Can subscribe...',ar:'ملف شخصي كامل. يمكن الاشتراك...',fr:'Profil complet. Peut s\'abonner...',es:'Perfil completo. Puede suscribirse...',nl:'Profiel compleet. Kan zich abonneren...',zh:'个人资料完整。可以订阅...',hi:'प्रोफ़ाइल पूर्ण। सदस्यता ले सकते हैं...'},
+kyc_tier_1_badge:               {en:'INITIATE UNLOCK',ar:'بدء فتح',fr:'INITIER LE DÉVERROUILLAGE',es:'INICIAR DESBLOQUEO',nl:'DEBLOKKERINGSINITATIE',zh:'启动解锁',hi:'अनलॉक शुरू करें'},
+kyc_tier_2:                     {en:'TIER 2',ar:'المستوى 2',fr:'NIVEAU 2',es:'NIVEL 2',nl:'NIVEAU 2',zh:'第2级',hi:'स्तर 2'},
+kyc_tier_2_name:                {en:'KYC PENDING',ar:'KYC قيد الانتظار',fr:'KYC EN ATTENTE',es:'KYC PENDIENTE',nl:'KYC IN BEHANDELING',zh:'KYC 待处理',hi:'KYC लंबित'},
+kyc_tier_2_desc:                {en:'Documents submitted. Awaiting review...',ar:'تم تقديم المستندات. في انتظار المراجعة...',fr:'Documents soumis. En attente d\'examen...',es:'Documentos presentados. Esperando revisión...',nl:'Documenten ingediend. Wachten op beoordeling...',zh:'已提交文件。等待审核...',hi:'दस्तावेज़ प्रस्तुत। समीक्षा की प्रतीक्षा है...'},
+kyc_tier_2_badge:               {en:'SEEKER UNLOCK',ar:'فتح المسعى',fr:'DÉVERROUILLAGE CHERCHEUR',es:'DESBLOQUEO DE BUSCADOR',nl:'ZOEKER ONTGRENDELING',zh:'寻求者解锁',hi:'खोजकर्ता अनलॉक'},
+kyc_tier_3:                     {en:'TIER 3',ar:'المستوى 3',fr:'NIVEAU 3',es:'NIVEL 3',nl:'NIVEAU 3',zh:'第3级',hi:'स्तर 3'},
+kyc_tier_3_name:                {en:'KYC VERIFIED',ar:'تم التحقق من KYC',fr:'KYC VÉRIFIÉ',es:'KYC VERIFICADO',nl:'KYC GEVERIFIEERD',zh:'KYC已验证',hi:'KYC सत्यापित'},
+kyc_tier_3_desc:                {en:'Full identity verified...',ar:'تم التحقق من الهوية الكاملة...',fr:'Identité complète vérifiée...',es:'Identidad completa verificada...',nl:'Volledige identiteit geverifieerd...',zh:'完整身份已验证...',hi:'पूर्ण पहचान सत्यापित...'},
+kyc_tier_3_badge:               {en:'FULL UNLOCK',ar:'فتح كامل',fr:'DÉVERROUILLAGE COMPLET',es:'DESBLOQUEO COMPLETO',nl:'VOLLEDIG ONTGRENDELD',zh:'完全解锁',hi:'पूर्ण अनलॉक'},
+kyc_tier_4:                     {en:'TIER 4',ar:'المستوى 4',fr:'NIVEAU 4',es:'NIVEL 4',nl:'NIVEAU 4',zh:'第4级',hi:'स्तर 4'},
+kyc_tier_4_name:                {en:'SOVEREIGN VERIFIED',ar:'تم التحقق من المستقل',fr:'SOUVERAIN VÉRIFIÉ',es:'SOBERANO VERIFICADO',nl:'SOEVEREIN GEVERIFIEERD',zh:'主权已验证',hi:'संप्रभु सत्यापित'},
+kyc_tier_4_desc:                {en:'HSM biometric linked...',ar:'HSM المرتبطة البيومترية...',fr:'HSM lié biométrique...',es:'HSM vinculado biométrico...',nl:'HSM biometrisch gekoppeld...',zh:'HSM 生物识别链接...',hi:'HSM बायोमेट्रिक लिंक...'},
+kyc_tier_4_badge:               {en:'APEX UNLOCK',ar:'فتح القمة',fr:'DÉVERROUILLAGE APEX',es:'DESBLOQUEO APEX',nl:'APEX ONTGRENDELING',zh:'顶点解锁',hi:'शीर्ष अनलॉक'},
+
+/* KYC Unlock Features (12) */
+kyc_unlock_tokens:              {en:'TOKEN ECONOMY',ar:'اقتصاد الرموز',fr:'ÉCONOMIE DE JETONS',es:'ECONOMÍA DE FICHAS',nl:'TOKEN ECONOMIE',zh:'代币经济',hi:'टोकन अर्थव्यवस्था'},
+kyc_unlock_tokens_desc:         {en:'12 sovereign tokens fully active...',ar:'12 رمز مستقل نشط بالكامل...',fr:'12 jetons souverains pleinement actifs...',es:'12 fichas soberanas completamente activas...',nl:'12 soevereine tokens volledig actief...',zh:'12个主权代币完全激活...',hi:'12 संप्रभु टोकन पूरी तरह सक्रिय...'},
+kyc_unlock_marketplace:         {en:'MARKETPLACE',ar:'سوق',fr:'MARCHÉ',es:'MERCADO',nl:'MARKTPLAATS',zh:'市场',hi:'बाज़ार'},
+kyc_unlock_marketplace_desc:    {en:'Full listing, buying, and selling...',ar:'قائمة كاملة والشراء والبيع...',fr:'Annonces complètes, achat et vente...',es:'Listado completo, compra y venta...',nl:'Volledige vermelding, koop en verkoop...',zh:'完整列表，买卖...',hi:'पूर्ण सूची, खरीद और बिक्री...'},
+kyc_unlock_payments:            {en:'SUBSCRIPTION PAYMENTS',ar:'مدفوعات الاشتراك',fr:'PAIEMENTS D\'ABONNEMENT',es:'PAGOS DE SUSCRIPCIÓN',nl:'ABONNEMENTBETALINGEN',zh:'订阅付款',hi:'सदस्यता भुगतान'},
+kyc_unlock_payments_desc:       {en:'Live Stripe payment processing...',ar:'معالجة الدفع Stripe مباشرة...',fr:'Traitement des paiements Stripe en direct...',es:'Procesamiento de pagos Stripe en vivo...',nl:'Live Stripe-betalingsverwerking...',zh:'实时 Stripe 支付处理...',hi:'लाइव Stripe भुगतान प्रसंस्करण...'},
+kyc_unlock_consultancy:         {en:'CONSULTANCY BOOKING',ar:'حجز الاستشارة',fr:'RÉSERVATION DE CONSEIL',es:'RESERVA DE CONSULTORÍA',nl:'CONSULTANCY BOEKING',zh:'咨询预订',hi:'परामर्श बुकिंग'},
+kyc_unlock_consultancy_desc:    {en:'Paid consultancy sessions...',ar:'جلسات استشارة مدفوعة...',fr:'Sessions de conseil payantes...',es:'Sesiones de consultoría pagadas...',nl:'Betaalde consultatiesessies...',zh:'付费咨询会议...',hi:'भुगतान परामर्श सत्र...'},
+kyc_unlock_inheritance:         {en:'INHERITANCE RIGHTS',ar:'حقوق الوراثة',fr:'DROITS DE SUCCESSION',es:'DERECHOS HEREDITARIOS',nl:'ERFRECHTEN',zh:'继承权',hi:'विरासत अधिकार'},
+kyc_unlock_inheritance_desc:    {en:'Full legal succession protocol...',ar:'بروتوكول الخلافة القانونية الكامل...',fr:'Protocole de succession légale complet...',es:'Protocolo de sucesión legal completo...',nl:'Volledig wettelijk opvolgingsprotocol...',zh:'完整的法律继承协议...',hi:'पूर्ण कानूनी उत्तराधिकार प्रोटोकॉल...'},
+kyc_unlock_credentials:         {en:'SOVEREIGN CREDENTIALS',ar:'بيانات اعتماد مستقلة',fr:'ACCRÉDITATIONS SOUVERAINES',es:'CREDENCIALES SOBERANAS',nl:'SOEVEREINE REFERENTIES',zh:'主权凭证',hi:'संप्रभु प्रमाण पत्र'},
+kyc_unlock_credentials_desc:    {en:'Cryptographic certificate issuance...',ar:'إصدار الشهادة الرياضية...',fr:'Émission de certificat cryptographique...',es:'Emisión de certificados criptográficos...',nl:'Uitgifte van cryptografisch certificaat...',zh:'密码证书发放...',hi:'क्रिप्टोग्राफिक प्रमाण पत्र जारी करना...'},
+
+/* Settings Section (18) */
+settings_category_display:      {en:'DISPLAY',ar:'العرض',fr:'AFFICHAGE',es:'PANTALLA',nl:'WEERGAVE',zh:'显示',hi:'प्रदर्शन'},
+settings_dark_mode:             {en:'Dark Mode',ar:'الوضع المظلم',fr:'Mode Sombre',es:'Modo Oscuro',nl:'Donkere Modus',zh:'深色模式',hi:'डार्क मोड'},
+settings_compact_layout:        {en:'Compact Layout',ar:'تخطيط مضغوط',fr:'Disposition Compacte',es:'Diseño Compacto',nl:'Compacte Indeling',zh:'紧凑布局',hi:'कॉम्पैक्ट लेआउट'},
+settings_animations:            {en:'Animations',ar:'الرسوم المتحركة',fr:'Animations',es:'Animaciones',nl:'Animaties',zh:'动画',hi:'एनिमेशन'},
+settings_cursor_trail:          {en:'Cursor Trail',ar:'مسار المؤشر',fr:'Traînée du Curseur',es:'Rastro del Cursor',nl:'Cursorpad',zh:'光标轨迹',hi:'कर्सर ट्रेल'},
+settings_category_privacy:      {en:'PRIVACY',ar:'الخصوصية',fr:'CONFIDENTIALITÉ',es:'PRIVACIDAD',nl:'PRIVACY',zh:'隐私',hi:'गोपनीयता'},
+settings_show_leaderboard:      {en:'Show in Leaderboard',ar:'عرض في قائمة الأفضل',fr:'Afficher dans le Classement',es:'Mostrar en la Tabla de Posiciones',nl:'In Ranglijst Tonen',zh:'显示在排行榜中',hi:'लीडरबोर्ड में दिखाएं'},
+settings_public_auth:           {en:'Public Authority Score',ar:'درجة السلطة العامة',fr:'Score d\'Autorité Publique',es:'Puntuación de Autoridad Pública',nl:'Openbare Autoriteitscore',zh:'公开权限分数',hi:'सार्वजनिक प्राधिकार स्कोर'},
+settings_anonymous:             {en:'Anonymous Mode',ar:'الوضع المجهول',fr:'Mode Anonyme',es:'Modo Anónimo',nl:'Anonieme Modus',zh:'匿名模式',hi:'गुमनाम मोड'},
+settings_category_notifications: {en:'NOTIFICATIONS',ar:'الإشعارات',fr:'NOTIFICATIONS',es:'NOTIFICACIONES',nl:'MELDINGEN',zh:'通知',hi:'सूचनाएं'},
+settings_matrix_alerts:         {en:'Matrix Milestone Alerts',ar:'تنبيهات معلم Matrix',fr:'Alertes Étapes Matrix',es:'Alertas de Hito de Matriz',nl:'Matrix-mijlpaalwaarschuwingen',zh:'矩阵里程碑警报',hi:'मैट्रिक्स मील का पत्थर सतर्कता'},
+settings_agent_messages:        {en:'Agent Messages',ar:'رسائل الوكيل',fr:'Messages de l\'Agent',es:'Mensajes del Agente',nl:'Agent-berichten',zh:'代理消息',hi:'एजेंट संदेश'},
+settings_daily_oracle:          {en:'Daily Oracle',ar:'أوراكل يومي',fr:'Oracle Quotidien',es:'Oráculo Diario',nl:'Dagelijkse Oracle',zh:'每日预言',hi:'दैनिक ओरेकल'},
+settings_economic_events:       {en:'Economic Events',ar:'الأحداث الاقتصادية',fr:'Événements Économiques',es:'Eventos Económicos',nl:'Economische Gebeurtenissen',zh:'经济事件',hi:'आर्थिक घटनाएं'},
+settings_category_audio:        {en:'AUDIO',ar:'صوت',fr:'AUDIO',es:'AUDIO',nl:'AUDIO',zh:'音频',hi:'ऑडियो'},
+settings_ambient:               {en:'Ambient Frequency',ar:'تردد محيطي',fr:'Fréquence Ambiante',es:'Frecuencia Ambiental',nl:'Omgevingsfrequentie',zh:'环境频率',hi:'परिवेश आवृत्ति'},
+settings_click_sounds:          {en:'Click Sounds',ar:'أصوات النقر',fr:'Sons de Clic',es:'Sonidos de Clic',nl:'Klikgeluiden',zh:'点击声',hi:'क्लिक ध्वनि'},
+settings_oracle_voice:          {en:'Oracle Voice',ar:'صوت أوراكل',fr:'Voix de l\'Oracle',es:'Voz del Oráculo',nl:'Oracle-stem',zh:'预言者语音',hi:'ओरेकल वॉयस'},
 };
 
 /* ── ENGINE ── */

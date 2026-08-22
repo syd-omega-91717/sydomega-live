@@ -272,11 +272,10 @@ $$;
 -- ============================================================================
 
 -- Ensure platform_settings has the stripe integration flag
-INSERT INTO public.platform_settings (key, value, description)
+INSERT INTO public.platform_settings (key, bool_value)
 VALUES (
   'stripe_integration_enabled',
-  'false',
-  'Controls whether enterprise.html pricing and Stripe checkout are exposed. Requires legal/business sign-off before enabling.'
+  false
 )
 ON CONFLICT (key) DO NOTHING;
 
@@ -425,11 +424,10 @@ END;
 $$;
 
 -- Feature flag for weekly digest
-INSERT INTO public.platform_settings (key, value, description)
+INSERT INTO public.platform_settings (key, bool_value)
 VALUES (
   'weekly_digest_enabled',
-  'false',
-  'Controls whether weekly activity digests are generated and sent. When enabled, owner can manage via send_weekly_digests() RPC.'
+  false
 )
 ON CONFLICT (key) DO NOTHING;
 

@@ -1150,19 +1150,49 @@ function setOwnText(el,txt){
   }
 }
 
-/* Apply the already-loaded dictionary to the DOM. Identical to the original
-   translate() body — split out so it can run after the pack resolves. */
+/* This element's own text, ignoring child elements. */
+function ownText(el){
+  var s='';
+  for(var i=0;i<el.childNodes.length;i++){
+    if(el.childNodes[i].nodeType===3)s+=el.childNodes[i].nodeValue;
+  }
+  return s.trim();
+}
+
+/* Apply the already-loaded dictionary to the DOM.
+
+   IN THE BASE LANGUAGE THE MARKUP WINS. Every page here is authored in
+   English, and the English dictionary entries are an older parallel copy that
+   has drifted: comparing all 420 plain-text data-i18n elements against the
+   dictionary found 273 identical but 106 DIFFERENT, and the dictionary is the
+   worse text in most of them -- "▲ OVERVIEW" would lose its glyph and become
+   "OVERVIEW", "Ω COMMAND BRIDGE" would become "Command Bridge", analytics.html
+   would revert to superseded algorithm copy, and dashboard.html's
+   "· 18 <span>SOVEREIGN MODULES</span>" would read "· 18 18 SOVEREIGN MODULES"
+   because the dictionary entry repeats a number the markup already renders as
+   a sibling node. Overwriting authored text with that would be a visible
+   regression on many pages, so for the base language the dictionary only FILLS
+   GAPS: it writes where the author left the text empty (41 elements, the
+   deliberate "i18n supplies this" pattern -- approvals.html's topbar title is
+   one) and otherwise leaves the markup alone.
+
+   For any other language there is nothing else to show, so the dictionary is
+   applied unconditionally, exactly as before. */
 function apply(lang){
+  var baseLang = (lang === 'en');
   document.querySelectorAll('[data-i18n]').forEach(function(el){
     var key=el.getAttribute('data-i18n');
     var entry=T[key];
     if(entry){
       var txt=entry[lang]||entry['en']||key;
       if(el.tagName==='INPUT'||el.tagName==='TEXTAREA'){
+        if(baseLang && (el.getAttribute('placeholder')||'').trim()) return;
         el.placeholder=txt;
       } else if(el.tagName==='IMG'){
+        if(baseLang && (el.getAttribute('alt')||'').trim()) return;
         el.alt=txt;
       } else {
+        if(baseLang && ownText(el)) return;
         setOwnText(el,txt);
       }
     }

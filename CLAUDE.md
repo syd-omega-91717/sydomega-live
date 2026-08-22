@@ -2556,6 +2556,24 @@ orphaned file.
   dashboard are gone; with it, all survive and the parent title applies correctly — e.g.
   `approvals.html` now renders "INVISIBLE ARCHITECT CONSOLE" *and* keeps
   "SOVEREIGN ACCESS CONTROL · OWNER-ONLY · ALL-TIME · IRREVOCABLE".
+- **[Fixed in the same change — the risk the race fix created] In the base language the markup now
+  wins; the dictionary only fills gaps.** Making `translate()` actually run meant the English
+  dictionary would, for the first time, overwrite authored page text everywhere. That is not safe
+  here: comparing all 420 plain-text `data-i18n` elements against the dictionary found 273
+  identical but **106 different**, and the dictionary is the *worse* text in most of them — it is
+  an older parallel copy that has drifted from the markup. Concretely, `dashboard.html`'s tabs
+  would have lost their glyphs (`"▲ OVERVIEW"` → `"OVERVIEW"`), the brand would have lost its
+  sigil (`"Ω COMMAND BRIDGE"` → `"Command Bridge"`), `analytics.html` would have reverted to
+  superseded algorithm copy, and `"· 18 <span data-i18n=\"sovereign_modules\">SOVEREIGN
+  MODULES</span>"` would have rendered `"· 18 18 SOVEREIGN MODULES"` because the dictionary entry
+  repeats a number the markup already renders as a sibling node. So `apply()` now skips any
+  element that already has its own authored text when the language is the base one, and writes
+  only where the author deliberately left it empty (41 elements — the "i18n supplies this"
+  pattern, of which `approvals.html`'s topbar title is one). For every other language the
+  dictionary still applies unconditionally, since there is nothing else to show. Verified in
+  Chromium: in English the tab keeps `"▲ OVERVIEW"`, the brand keeps `"Ω COMMAND BRIDGE"`, there
+  is no duplicated `18`, and the empty approvals title is still filled; switching to French still
+  yields `"APERÇU"` and `"Commande"`.
 - **[Improved] 160 of 178 pages had no `<h1>`; 152 now expose one without any markup change.**
   A screen-reader user had no level-1 heading to orient on and heading-navigation landed nowhere.
   152 of those pages already render a perfectly good title in the topbar — "ANALYTICS",

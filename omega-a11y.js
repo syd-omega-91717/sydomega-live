@@ -285,6 +285,11 @@
      unnamed rather than mislabelled. */
   var _ctlSeq = 0;
 
+  /* An element that is, or contains, one of these is never a label source --
+     a preceding <select>'s textContent is its entire option list, which would
+     have named bloodline.html's control "SelfParentGrandparent…". */
+  var LABEL_DISQUALIFY = 'input,select,textarea,button,a';
+
   function looksLikePrompt(s){
     return /^(select|choose|pick|all|any|none)\b/i.test(s) ||
            /(\.\.\.|…)$/.test(s) ||
@@ -306,7 +311,35 @@
     }
     if(orphan && (orphan.textContent || '').trim()) return { label: orphan };
 
-    /* 2. placeholder */
+    /* 2. a visible label the author wrote in something other than <label> --
+          <div class="b-label">DATE</div>, <div class="n-label">STRENGTH (1-5)</div>,
+          a bare <div>SEVERITY (1-5)</div>. 46 controls across these pages are
+          named this way and nothing else can reach them.
+
+          Returned as {describedBy:el} so the caller wires aria-labelledby
+          rather than copying the string. That matters: mirror.html's slider
+          labels hold the label AND the live value in one element
+          ("ENERGY LEVEL" + "5"), so a copied aria-label would freeze at
+          whatever the value was on page load and then lie every time the
+          member moves the slider. aria-labelledby re-reads the element, so
+          the name follows the value.
+
+          The guards below are what keep this from inventing wrong labels --
+          each rejects a real case seen while measuring: a preceding <select>
+          whose "text" is its whole option list (bloodline.html), a multi-line
+          block of prose, and a full sentence. */
+    var sib = el.previousElementSibling;
+    while(sib){
+      if(sib.matches && (sib.matches(LABEL_DISQUALIFY) || sib.querySelector(LABEL_DISQUALIFY))) break;
+      var st = (sib.textContent || '').trim();
+      if(st){
+        if(st.length <= 40 && !/[\n\r]/.test(st) && !/[.!?]$/.test(st)) return { describedBy: sib };
+        break;
+      }
+      sib = sib.previousElementSibling;
+    }
+
+    /* 3. placeholder */
     var ph = (el.getAttribute('placeholder') || '').trim();
     if(ph) return { text: ph };
 
@@ -334,12 +367,18 @@
         if(!el.id) el.id = 'omega-ctl-' + (++_ctlSeq);
         src.label.setAttribute('for', el.id);
         /* now el.labels is non-empty, so re-running this audit is a no-op */
+      } else if(src.describedBy){
+        /* reference the element, don't copy its text -- see nameSourceFor */
+        if(!src.describedBy.id) src.describedBy.id = 'omega-lbl-' + (++_ctlSeq);
+        el.setAttribute('aria-labelledby', src.describedBy.id);
       } else {
         el.setAttribute('aria-label', src.text);
       }
       if(window.__omegaDevMode){
         console.warn('[OmegaA11y] named an unlabelled control:',
-                     src.label ? src.label.textContent.trim() : src.text, el);
+                     src.label ? src.label.textContent.trim()
+                       : src.describedBy ? src.describedBy.textContent.trim()
+                       : src.text, el);
       }
     });
   }

@@ -2622,6 +2622,25 @@ orphaned file.
   the real map showed **both hyphen keys are present too**, alongside redundant underscore
   duplicates. No bug; the static scan had only flagged the underscore keys because it never
   checked whether the hyphen form also existed.
+- **[Improved] 47 more form controls named, from labels authors wrote in a `<div>` instead of a
+  `<label>` — wired with `aria-labelledby`, not a copied string.** The earlier section-E pass
+  recovered controls sitting next to a real `<label>`; measuring what was left showed 31 of 40
+  sampled had a *visible* label in a plain element — `<div class="b-label">DATE</div>`,
+  `<div class="n-label">STRENGTH (1–5)</div>`, a bare `<div>SEVERITY (1-5)</div>`. Nothing else
+  could reach those. Every accepted label was printed and read before shipping, which is how the
+  guards were chosen — each rejects a real case seen while measuring: a preceding `<select>`
+  whose `textContent` is its whole option list (`bloodline.html`, would have been named
+  "SelfParentGrandparent…"), multi-line prose, a full sentence, and anything over 40 characters.
+  **`aria-labelledby` rather than `aria-label` is the load-bearing choice.** `mirror.html`'s
+  slider labels hold the label *and* the live value in one element, so a copied string would
+  freeze as "ENERGY LEVEL5" and then lie on every subsequent move. Referencing the element makes
+  the name follow the value — verified by driving the slider: name goes "ENERGY LEVEL5" →
+  "ENERGY LEVEL9" as the value changes. Across the 66 affected pages: named **407 → 455**,
+  truly unnamed **78 → 31** (a 10-page A/B: named 86 → 128, unnamed 45 → 3, zero suspicious
+  names). The 31 that remain have no label, no placeholder, and no prompt-shaped option —
+  nothing truthful to derive a name from, so they stay unnamed rather than mislabelled.
+  Note for anyone re-measuring: a checker that resolves only `el.labels`/`aria-label`/
+  `placeholder` will undercount badly now — it must follow `aria-labelledby` to its target.
 - **[Added to the gate] `scripts/audit.py` check 9 — JSON.parse fallback literals that are not
   valid JSON, CRITICAL.** The invalid-`'{pct:10,income:0}'` default that took three pages
   entirely dead on a member's first visit was invisible to every existing check: the JavaScript

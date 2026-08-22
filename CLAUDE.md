@@ -2731,6 +2731,54 @@ orphaned file.
   are genuinely page-specific means reading each one's activation path, and removing any of them
   is a feature/architecture decision (§9), not a cleanup. Left for an explicit decision with the
   measurements above as the starting point.
+- **[Fixed] `OmegaSearch.addItems()` was called but never existed, and platform search had no
+  touch-reachable entry point at all.** `omega-ui.js:272` has always opened `enhanceSearch()`
+  with `if(!window.OmegaSearch||!window.OmegaSearch.addItems) return;` — and `omega-search.js`
+  only ever exposed `{open, close, search}`, so that guard took the early return on every page
+  load and the index stayed frozen at the 160 entries hardcoded in `omega-search.js`. Same
+  silent-failure shape as the rest of §8, one layer up from Supabase: a guard written for a
+  method that was never implemented reads as defensive coding rather than as a dead call.
+  Consequence measured, not inferred: nine pages `nav.js` links to — `council.html`,
+  `hercules.html`, and the six `graph-*.html` views — were absent from the index, so searching
+  for any of them returned nothing (0/9 findable before, 9/9 after).
+  - Implemented `addItems()` (deduped by normalised URL; calls `_fuse.setCollection(INDEX)`
+    when Fuse is already warm, since Fuse copies the collection at construction and pushing to
+    `INDEX` alone would leave new pages unfindable by fuzzy search even once indexed). That
+    alone makes the pre-existing `omega-ui.js` call work for the first time: index 160 → 200.
+  - Added a harvester that reads the anchors `nav.js` actually rendered, run on open. `nav.js`
+    is the authoritative list of member-reachable pages and it grows; a hardcoded index does
+    not, which is precisely how the 9 went missing. Index → 210. The nav label alone isn't
+    enough to find a page by name (`/council.html` is labelled "DECISION ENGINE"), so the slug
+    goes into the description in both hyphenated and spaced form — without that, `council`
+    matched nothing while `graph admin` did, caught by the verification rather than by reading.
+  - **Search was Ctrl+K-only** — an unadvertised shortcut, and one a touch device cannot press,
+    so on a phone or tablet the platform's search was simply unreachable. Added a visible
+    `⌕ SEARCH` trigger to the `omega-controls.js` dock (alongside the language/sound controls,
+    so it reaches every page). `omega-search.js` already listened for `[data-search-trigger]`,
+    but bound it with a one-shot `querySelectorAll` at module-eval time — and since `bg.js`
+    injects this file as an async script and injects the dock later still, that binding could
+    never have caught it, and no page carries the attribute in its own markup either. Switched
+    to event delegation, which also makes the attribute work for anything added later.
+  - Results are built with `.innerHTML`, and `addItems()`/the harvester now feed it text read
+    out of the DOM, so titles and descriptions are escaped before `highlight()` wraps its
+    `<mark>`. No output change for the static index (no angle brackets in it), but the dynamic
+    path is no longer trusting every future caller.
+  Verified in headless Chromium by clicking the real dock button rather than calling the API,
+  A/B against `git show HEAD:` copies of both files over a 6-page sample: **before** — visible
+  trigger on 0/6 pages, 0/9 nav-only pages findable, no `addItems` on the API at all; **after**
+  — 6/6, 9/9, index 210, focus lands in the search input, 0 page errors. Ctrl+K opens on 6/6
+  both before and after (unchanged). An item whose title carries `<img src=x onerror=…>`
+  renders as text and does not execute. `node --check` on both files, `check-inline-js.py`
+  clean, `audit.py` 0 critical / 7 pre-existing warnings, 51/51 tests. No SQL/schema changes.
+- **Clean re-verification sweeps run this session, recorded because a clean result is
+  evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
+  uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN
+  libraries the sandbox's egress policy blocks, so they'd resolve in production; 0 real page
+  errors, 0 real unhandled rejections), and a live-DOM duplicate-id scan across all 178 pages
+  (4 duplicated ids on 1 page, none of them referenced by any `for=`/`aria-labelledby`/
+  `aria-describedby`/`aria-controls`/`href="#…"`). The duplicate-id scan matters specifically
+  because this session wired `aria-labelledby` to generated ids — a duplicate would have
+  silently pointed a control at the wrong label.
 - **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
   reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
   the baseline is 7 both with and without this session's work), and

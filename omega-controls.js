@@ -68,6 +68,22 @@
     if(_soundOn)snd.style.color='#00E5FF';
     dock.appendChild(snd);
 
+    /* Search trigger. omega-search.js has always been reachable by Ctrl+K
+       only -- an unadvertised shortcut, and one a touch device cannot press
+       at all, so on phones and tablets the platform's search was simply
+       unreachable. data-search-trigger is the attribute that file already
+       listens for. */
+    var srch=document.createElement('button');
+    srch.id='omega-search-btn';
+    srch.setAttribute('data-search-trigger','');
+    srch.title='Search the platform (Ctrl+K)';
+    srch.setAttribute('aria-label','Search the platform');
+    srch.style.cssText='font-family:"Courier Prime",monospace;font-size:8.5px;letter-spacing:1.5px;padding:4px 8px;border:1px solid rgba(201,168,76,.2);color:#8a8676;background:transparent;cursor:pointer;border-radius:2px;transition:.2s';
+    srch.textContent='⌕ SEARCH';
+    srch.onmouseenter=function(){srch.style.color='#C9A84C';srch.style.borderColor='rgba(201,168,76,.5)';};
+    srch.onmouseleave=function(){srch.style.color='#8a8676';srch.style.borderColor='rgba(201,168,76,.2)';};
+    dock.appendChild(srch);
+
     document.body.appendChild(dock);
   }
 

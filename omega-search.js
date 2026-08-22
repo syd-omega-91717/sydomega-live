@@ -225,6 +225,66 @@
       _fuse=new Fuse(INDEX,{keys:[{name:'t',weight:2},{name:'d',weight:1}],threshold:0.35,includeScore:true,minMatchCharLength:2});
     });
   }
+
+  /* ── INDEX EXTENSION ────────────────────────────────────────────
+     omega-ui.js has always called OmegaSearch.addItems(...) behind an
+     `if(!window.OmegaSearch||!window.OmegaSearch.addItems) return;`
+     guard — and addItems never existed, so that call silently did
+     nothing and the index stayed frozen at whatever this file hardcodes.
+     Deduped by URL so calling it repeatedly (or from two modules) is
+     safe. Fuse copies the collection at construction, so it has to be
+     told when the collection grows or new pages stay unfindable by
+     fuzzy search even after they are in INDEX. */
+  var _seenUrl={};
+  INDEX.forEach(function(it){ _seenUrl[normUrl(it.u)]=1; });
+  function normUrl(u){
+    return String(u||'').trim().toLowerCase().replace(/\/index\.html$/,'/');
+  }
+  function addItems(items){
+    if(!items) return 0;
+    if(!Array.isArray(items)) items=[items];
+    var added=0;
+    items.forEach(function(it){
+      if(!it||!it.u||!it.t) return;
+      var k=normUrl(it.u);
+      if(_seenUrl[k]) return;
+      _seenUrl[k]=1;
+      INDEX.push({t:String(it.t),d:String(it.d||''),u:String(it.u),c:it.c||'PAGE'});
+      added++;
+    });
+    if(added&&_fuse&&typeof _fuse.setCollection==='function') _fuse.setCollection(INDEX);
+    if(added) refreshCount();
+    return added;
+  }
+
+  /* Harvest whatever nav.js actually rendered. nav.js is the authoritative
+     list of member-reachable pages and it grows; a hardcoded index does
+     not. Doing it this way means a page added to nav.js is searchable
+     without anyone remembering to also edit this file — which is exactly
+     what had not been happening (9 nav-reachable pages, among them
+     council.html, hercules.html and the six graph-* views, were absent
+     from the hardcoded index above). */
+  function harvestNav(){
+    var side=document.getElementById('omega-side')||document.body;
+    if(!side) return 0;
+    var items=[];
+    side.querySelectorAll('a[href]').forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      if(!/^\/[a-z0-9._-]+\.html(#|$)/i.test(href)) return;
+      var label=(a.textContent||'').replace(/\s+/g,' ').trim();
+      if(!label||label.length>60) return;
+      var url=href.split('#')[0];
+      /* Carry the slug in the description too. Several nav labels say nothing
+         about the URL -- /council.html is labelled "DECISION ENGINE" -- so
+         without this a member searching the page's own name finds nothing. */
+      var slug=url.replace(/^\//,'').replace(/\.html$/,'');
+      var words=slug.replace(/[-_]/g,' ');
+      items.push({t:label.toUpperCase(),
+        d:'Navigate to '+label+' · '+slug+(words===slug?'':' '+words),
+        u:url,c:'PAGE'});
+    });
+    return addItems(items);
+  }
   /* Warm Fuse.js in background after load */
   window.addEventListener('load',function(){setTimeout(initFuse,1500);});
 
@@ -268,10 +328,22 @@
       .sort(function(a,b){return b.sc-a.sc;})
       .slice(0,10).map(function(r){return r.item;});
   }
+  /* Results go through .innerHTML. The hardcoded INDEX above is static and
+     safe, but addItems()/harvestNav() feed it text read out of the DOM, so
+     escape before highlighting rather than trusting every future caller. */
+  function esc(s){
+    return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
   function highlight(t,q){
+    t=esc(t);
     if(!q)return t;
-    var re2=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    var re2=new RegExp('('+esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
     return t.replace(re2,'<mark style="background:rgba(201,168,76,.22);color:#E2C86D;border-radius:2px;padding:0 2px">$1</mark>');
+  }
+  function refreshCount(){
+    var c=document.getElementById('omega-s-count');
+    if(c)c.textContent=INDEX.length+' INDEXED';
   }
   function renderResults(results,q,el){
     if(!el)return;
@@ -286,7 +358,7 @@
           +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:2px;color:'+col+';border:1px solid;border-color:'+col+'33;padding:1px 7px;border-radius:10px;flex-shrink:0">'+item.c+'</span>'
           +'<span style="font-family:var(--R,\'Rajdhani\',sans-serif);font-size:13px;font-weight:600">'+highlight(item.t,q)+'</span>'
         +'</div>'
-        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:9px;color:rgba(138,134,118,.6);padding-left:60px">'+item.d.slice(0,80)+'</div>'
+        +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:9px;color:rgba(138,134,118,.6);padding-left:60px">'+esc(item.d.slice(0,80))+'</div>'
         +'</a>';
     }).join('');
   }
@@ -301,6 +373,7 @@
   }
   function openSearch(){
     if(_ov)return;
+    harvestNav();
     _ov=document.createElement('div');
     _ov.id='omega-search-overlay';
     _ov.setAttribute('role','dialog');_ov.setAttribute('aria-modal','true');_ov.setAttribute('aria-label','Sovereign search');
@@ -314,7 +387,7 @@
       +'<div id="omega-s-res" role="listbox" style="max-height:55vh;overflow-y:auto"></div>'
       +'<div style="padding:10px 16px;border-top:1px solid rgba(201,168,76,.07);display:flex;gap:8px;flex-wrap:wrap">'
         +Object.keys(CAT_COLORS).map(function(cat){return '<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:1.5px;color:'+CAT_COLORS[cat]+';padding:2px 8px;border:1px solid;border-color:'+CAT_COLORS[cat]+'33;border-radius:10px">'+cat+'</span>';}).join('')
-        +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-left:auto">'+INDEX.length+' INDEXED</span>'
+        +'<span id="omega-s-count" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:1.5px;color:rgba(138,134,118,.4);margin-left:auto">'+INDEX.length+' INDEXED</span>'
       +'</div>'
     +'</div>';
     document.body.appendChild(_ov);
@@ -342,6 +415,17 @@
     }
   }
   document.addEventListener('keydown',onKey);
-  document.querySelectorAll('[data-search-trigger],[href="#search"]').forEach(function(el){el.addEventListener('click',function(ev){ev.preventDefault();openSearch();});});
-  window.OmegaSearch={open:openSearch,close:closeSearch,search:doSearch};
+  /* Delegated, not a one-shot querySelectorAll at module-eval time: this file
+     is injected by bg.js as an async <script>, so it runs at an arbitrary
+     point relative to page render, and every shared chrome element (the nav
+     sidebar, the controls dock) is itself injected later still. A direct
+     binding could only ever have caught triggers that were already in the
+     markup, and no page has one. */
+  document.addEventListener('click',function(e){
+    var t=e.target&&e.target.closest&&e.target.closest('[data-search-trigger],[href="#search"]');
+    if(!t)return;
+    e.preventDefault();
+    openSearch();
+  });
+  window.OmegaSearch={open:openSearch,close:closeSearch,search:doSearch,addItems:addItems,count:function(){return INDEX.length;}};
 })();

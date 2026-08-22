@@ -306,8 +306,11 @@ through this one file with no per-page markup changes:
   chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
   raw `<button>`s with no shared class — hand-editing every occurrence
   across ~250 pages wasn't attempted; this reaches them all from one
-  file instead. 27 pages still use native `<table>` markup with
-  page-local classes instead of the `.tbl-wrap`/`.tbl-row` system —
+  file instead. (This paragraph used to say "27 pages still use native
+  `<table>` markup" — that is **stale**: a repo-wide grep now finds zero
+  `<table>` elements anywhere, so the conversion is complete. See §8's
+  correction, including what the conversion cost in ARIA semantics.)
+  Pages with page-local table classes are
   *not* addressed by the fallback skin (they already have their own
   classes, so `:not([class])` correctly skips them) and still open,
   page-by-page, structural work — not a quick CSS fix.
@@ -1778,7 +1781,9 @@ orphaned file.
   already deliberately decided to leave dormant (`transactions`, `wallet_balances` — token/payment
   infrastructure gated behind an explicit product decision, not a bug), the two hygiene items the
   user explicitly chose to leave as-is when asked directly (`.mp4`/`.docx` Git LFS migration), and
-  the 27 pages still using native `<table>` markup instead of the shared `.tbl-wrap` system. (The
+  and the ARIA-semantics gap in the `.tbl-wrap` system described below. (The native-`<table>`
+  conversion this bullet used to list as open is **done** — a repo-wide grep now finds zero
+  `<table>` elements; see the correction below. The
   page-local `.tab-btn`/`.card-title` font-size sweep referenced by an earlier draft of this bullet
   is NOT open — it was completed in the entry above titled "The page-local `.tab-btn`/`.card-title`
   sweep flagged above: done." This bullet was stale on that one point; corrected here rather than
@@ -2622,6 +2627,46 @@ orphaned file.
   the real map showed **both hyphen keys are present too**, alongside redundant underscore
   duplicates. No bug; the static scan had only flagged the underscore keys because it never
   checked whether the hyphen form also existed.
+- **[Fixed] `graph-anomalies.html` wrote `<tr><td>` into a CSS-grid `<div>`, so two empty states
+  rendered unstyled.** `#anomalyTable` is a `<div>` inside a `.tbl-row` grid, not a `<table>`, and
+  the HTML parser **discards** `<tr>`/`<td>` written into a non-table element. Measured: setting
+  `'<tr><td colspan="6" class="empty-state">SUPABASE NOT READY</td></tr>'` produced **0 child
+  elements** — the text survived only as a bare text node, landing in the first grid cell instead
+  of spanning the row, with no `.empty-state` styling. The same file already does it correctly at
+  its "NO ANOMALIES DETECTED" branch (`<div style="grid-column: 1 / -1">`), so the fix is that
+  page's own established pattern, not an invention. Both the "SUPABASE NOT READY" and "ERROR
+  LOADING DATA" branches now use it. A/B through the real code path: before 0 child elements and
+  no `grid-column`; after 1 `DIV` with `grid-column: 1 / -1`.
+- **Two corrections and one new gap, from auditing the table system**:
+  - **The "27 pages still use native `<table>`" item recorded above and in §8's open list is
+    stale — the conversion is finished.** A repo-wide case-insensitive grep finds **zero**
+    `<table>` elements. Only `ops.html` still contains `<tr>`/`<td>` strings, and that is the
+    separate dead-code case below.
+  - **`ops.html`'s event-bus metrics table never renders — flagged, not built.** Line 485 does
+    `document.getElementById('evt-metrics-body')`, but that id exists **nowhere** in the page
+    (verified in a browser: the element is absent), so the `if(tbody && window.OmegaBus)` guard is
+    always false and the whole 7-column metrics block is dead. There is no orphaned table head
+    waiting for it either — the "EVENT BUS" text on that page is a signal-strength label, not a
+    table section. Adding the container means designing UI that was never built, which is a
+    feature decision, so it is recorded here rather than guessed at — same treatment as the other
+    "built but never wired" gaps in this file.
+  - **[Open, measured, deliberately not shipped] The `.tbl-wrap`/`.tbl-row` system carries no
+    table semantics, so ~38 pages of data tables announce as unstructured text.** The shared
+    classes are plain `display:grid` divs; only **1 of 38** pages using `.tbl-wrap` sets
+    `role="table"`. Screen readers therefore get no row/column structure and no header-to-cell
+    association anywhere in the platform's tables — an accessibility cost of the native-`<table>`
+    conversion that the conversion note never mentioned. Central ARIA roles in `omega-a11y.js`
+    are the obvious fix and the structure mostly supports it (43 `.tbl-wrap` instances measured,
+    36 of the 40 with rows are rectangular; the 4 outliers are empty-state placeholder rows).
+    **The blocker is nesting, and it is why this was not shipped blind**: in **17 of 43**
+    instances the rows are injected into an intermediate unclassed `<div>` (e.g.
+    `<div id="anomalyTable">`), so `.tbl-row` is a *grandchild* of `.tbl-wrap`. ARIA requires
+    rows to be children of a `table` or `rowgroup`, so a naive `role="table"` + `role="row"` pass
+    would malform those tables — and a malformed ARIA table can *hide* content from a screen
+    reader, which is worse than the plain text it replaces. The correct implementation marks
+    those intermediate containers `role="rowgroup"`; it needs per-instance verification against
+    `page.accessibility.snapshot()` across all 43, which is a scoped follow-up rather than a
+    bolt-on. Measurements above are the starting point.
 - **[Improved] 47 more form controls named, from labels authors wrote in a `<div>` instead of a
   `<label>` — wired with `aria-labelledby`, not a copied string.** The earlier section-E pass
   recovered controls sitting next to a real `<label>`; measuring what was left showed 31 of 40

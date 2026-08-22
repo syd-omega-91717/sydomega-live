@@ -2589,6 +2589,39 @@ orphaned file.
   `enterprise`, `observatory`) have no honest title to promote — deriving one from
   `document.title` would announce the same generic "Command Bridge" string on several unrelated
   pages, so they are deliberately left alone rather than given a misleading heading.
+- **[Fixed — latent, not yet visible] `omega-sigil-gen.js` gave every generated sigil the same
+  `<defs>` ids, so two sigils on one page shared one gradient and one blur filter.** Found by a
+  duplicate-element-id sweep of the live DOM across all 178 pages (not of the source text — see
+  the false positives below). Each generated sigil embeds its own `<defs>` containing
+  `<filter id="sig-glow">` (blur `stdDeviation` derived from the member's **gate**) and
+  `<radialGradient id="sig-grad">` (stops derived from the element **palette**) — both hardcoded,
+  so N sigils produced N elements sharing one id, and `url(#id)` resolves to the **first** match
+  in the document per spec. Proved with two sigils on one page: a Fire sigil (stops
+  `#FFA07A|#FF6B35`, blur 4) and a Water sigil (`#90E0EF|#00B4D8`, blur 7.5) — the Water sigil
+  *defined* cyan and *painted* orange with the wrong blur. Fixed with a per-call counter
+  (`sig-glow-s1`, `sig-grad-s1`, …). After: each sigil resolves to its own defs; before: sigil 2
+  resolved to sigil 1's.
+  **Honest scope**: `rune.html` renders 7 sigils and is the only page doing so today, but all 7
+  currently share one palette and gate (measured: 7 gradients, 1 distinct stop-colour set, all
+  blur 3.5), so nothing was visibly wrong on screen. This was a landmine, not an active defect —
+  `OmegaSigil.mount()` is public API and any page rendering two differing sigils would have hit
+  it. Recorded that way rather than as a user-visible bug fix.
+  Three other duplicate-id findings from the same sweep were checked and deliberately left alone:
+  `forge.html`'s five `id="exitBtn"` and `clarity.html`'s two `id="total-steps"` are **source-text
+  duplicates only** — each lives in a template that *replaces* the previous one, so the live DOM
+  never holds two (confirmed by the DOM-level scan finding neither page). `habits.html` really
+  does render `hc-h0`…`hc-h3` twice (the same card appears in the "today" and "all" lists), but a
+  repo-wide grep confirms those ids are never looked up by `getElementById` or a `#hc-` selector —
+  every interaction passes the habit id as a *value* (`toggleHabit('h0')`). Invalid HTML, zero
+  functional consequence; inventing a suffix scheme there would carry risk for no behavioural gain.
+- **Checked and found clean, recorded so the next session doesn't re-investigate**: all 170
+  `.html` link targets in `nav.js` resolve to real files (0 broken nav links). `nav.js`'s `PS`
+  page→section map briefly looked like it had two broken keys (`design_system`, `sovereign_ai`
+  with underscores while the pages declare `data-page="design-system"`/`"sovereign-ai"`), which
+  would have silently fallen back to the COMMAND section via `PS[dp]||'command'` — but evaluating
+  the real map showed **both hyphen keys are present too**, alongside redundant underscore
+  duplicates. No bug; the static scan had only flagged the underscore keys because it never
+  checked whether the hyphen form also existed.
 - **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
   reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
   the baseline is 7 both with and without this session's work), and

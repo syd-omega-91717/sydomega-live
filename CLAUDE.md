@@ -2481,6 +2481,43 @@ orphaned file.
   `<label for>` ("DESCRIPTION", "AMOUNT ($)", "TYPE", "CATEGORY", "DATE", "NOTES (optional)").
   Across all 66 affected pages: 407 controls named, 78 still unnamed (those have no label, no
   placeholder, and no prompt-shaped option — nothing truthful to derive a name from).
+- **[Fixed] Three pages were entirely dead on a member's first visit: an invalid-JSON default
+  threw at module top level and killed every function below it.** `contributions.html:152`,
+  `notifications.html:134` and `treasury.html:203` each did
+  `JSON.parse(localStorage.getItem(K)||'{pct:10,income:0}')` — and `'{pct:10,income:0}'` is **not
+  valid JSON**, because JSON requires quoted keys. The fallback only runs when the key is absent
+  from `localStorage`, i.e. on **every first visit**, and the statement sits at the top level of a
+  `<script type="module">`, so the throw aborted the whole module and nothing declared below it
+  ever ran. Every `window.<fn>=` exposure further down the module was therefore never assigned:
+  `contributions.html` lost its filters plus LOG CONTRIBUTION / LOG GIFT / SET giving-target;
+  `notifications.html` lost MARK ALL READ / CLEAR ALL / SAVE REMINDER / REQUEST PERMISSION / SAVE
+  SETTINGS; `treasury.html` lost SAVE ASSET / UPDATE RESERVES / LOG FLOW. Found by scanning every
+  inline `onclick`/`onchange`/… handler on all 178 pages in a real browser and checking whether
+  the function it names actually exists at runtime, then confirmed independently by a static scan
+  for `JSON.parse(… || '<literal>')` fallbacks that do not parse — both methods returned exactly
+  the same three files. Fixed by quoting the keys. Verified deterministically: each original
+  literal throws, each replacement parses, and the parsed keys and values are identical to what
+  the author wrote; in-browser, the `SyntaxError` count on each page went **1 → 0**.
+  *Honest limitation*: an end-to-end "click the button and see it work" check was not possible in
+  this environment — these pages redirect through the auth and terms-acceptance gates, which need
+  real session state a local harness cannot supply, so the evidence here is that the throw which
+  killed the module is gone, not an observed successful click.
+- **Method note for anyone re-running a browser scan here: stub `esm.sh` first, or the results are
+  worthless.** The first pass of the dead-handler scan reported 44 pages and 66 missing functions,
+  including `setTab` on 34 pages — which flatly contradicted this file's own record that the
+  module-boundary bug was fixed and re-verified at 0 remaining. The contradiction was the tell.
+  Every gated page loads Supabase with `import{createClient}from'https://esm.sh/@supabase/supabase-js@2'`
+  at the top of a `<script type="module">`, and `esm.sh` is unreachable from a sandboxed
+  environment (`curl` returns status 000). When a module's top-level import fails, **none** of its
+  code runs, so `window.setTab = setTab` never executes and every such function looks missing.
+  Re-running with a Playwright route fulfilling `esm.sh/**` from a local stub dropped the result
+  to 9 pages / 13 functions, and `setTab`/`switchTab` disappeared entirely — confirming the
+  earlier fix is intact. Of the 13 that survived, 7 (`item`) were a scanner false positive
+  matching `item(` inside the string `'Restored '+n+' item(s)…'`, and the other 6 were the real
+  bug above. A reusable authenticated-session stub for this
+  (`createClient` returning working `auth.getSession`/`from().select().single()` chains) is worth
+  rebuilding for any future browser scan of the gated pages; without a session they redirect to
+  `account.html`, and with one they redirect to `terms.html`.
 - **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
   reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
   the baseline is 7 both with and without this session's work), and

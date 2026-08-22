@@ -131,7 +131,9 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var NK='omega_notifications',RK2='omega_reminders',SK='omega_notif_settings';
 var notifs=JSON.parse(localStorage.getItem(NK)||'[]');
 var reminders=JSON.parse(localStorage.getItem(RK2)||'[]');
-var settings=JSON.parse(localStorage.getItem(SK)||'{daily:true,reminders:true,system:false,achieve:false}');
+/* valid-JSON fallback: unquoted keys threw at module top level on first
+   visit, killing every handler defined below (see contributions.html). */
+var settings=JSON.parse(localStorage.getItem(SK)||'{"daily":true,"reminders":true,"system":false,"achieve":false}');
 
 function save(){localStorage.setItem(NK,JSON.stringify(notifs));localStorage.setItem(RK2,JSON.stringify(reminders));}
 

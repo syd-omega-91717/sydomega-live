@@ -263,6 +263,19 @@
       @media print{.side,.topbar,.layer-tabs,.lf,#omega-realtime-ticker,.omega-ticker-strip{display:none!important}.main{width:100%!important}}
       html{scroll-behavior:smooth}
       :focus-visible{outline:1px solid rgba(201,168,76,.5)!important;outline-offset:2px!important}
+      /* Touch-size floor for the shared topbar controls this file injects.
+         Measured at 375px they came out 21px tall -- under the 24px WCAG
+         2.5.8 floor -- on every page that has a .topbar, since they are
+         built with inline styles and no page can restyle them. min-height
+         and min-width are not among the properties set inline, so a
+         stylesheet rule still reaches them; nothing here overrides a
+         declaration the element already carries. */
+      @media(max-width:760px){
+        #omega-prev-next button,#omega-prev-next a,#omega-dash-link{
+          min-height:26px;min-width:26px;
+          display:inline-flex;align-items:center;justify-content:center
+        }
+      }
     `;
     if(!document.getElementById('omega-ui-responsive')) document.head.appendChild(style);
   }

@@ -31,10 +31,31 @@
     var st=document.createElement('style');
     st.id='omega-controls-css';
     st.textContent=[
+      /* Seven language buttons are what made this dock 389px wide. Squeezing
+         them to fit would have taken each control under the 24px WCAG 2.5.8
+         touch floor -- fixing reachability by making the targets too small to
+         hit is not a fix. So on a phone the seven collapse into one compact
+         <select> (built alongside them, swapped by CSS rather than by JS, so
+         a rotate or resize needs no listener and cannot desync), leaving
+         three full-size controls in a single row. */
+      '#omega-lang-select{display:none}',
       '@media(max-width:760px){',
-      '#omega-controls-dock{bottom:74px!important;max-width:calc(100vw - 12px);',
-      'flex-wrap:wrap;justify-content:center;row-gap:4px;gap:3px!important;padding:5px 7px!important}',
-      '#omega-controls-dock button{padding:3px 5px!important;font-size:8px!important;letter-spacing:1px!important}',
+      /* left:50% + width:auto caps a fixed element's available width at
+         100% - left, i.e. 50vw -- 187px on a 375px phone. That is what made
+         the original dock overflow (its content needed 389px and simply spilled
+         past both edges) and what kept forcing a wrap here even with room to
+         spare. Anchoring both edges instead gives it the real viewport width
+         and centres the contents inside it. */
+      '#omega-controls-dock{bottom:74px!important;left:6px!important;right:6px;',
+      'transform:none!important;justify-content:center;flex-wrap:wrap;row-gap:4px}',
+      '#omega-controls-dock button{padding:7px 8px!important;min-height:24px}',
+      '#omega-controls-dock button[data-lang]{display:none}',
+      /* max-width keeps the closed control compact so the dock stays one row;
+         the dropdown itself still shows each option in full. Without it the
+         select sizes to its widest option ("HI · हिन्दी") at 165px and pushes
+         the dock to two rows, which then collides with the dedication widget
+         and the feedback button. */
+      '#omega-lang-select{display:block;min-height:24px;max-width:96px}',
       '}'
     ].join('');
     (document.head||document.documentElement).appendChild(st);
@@ -62,11 +83,38 @@
           b.style.color='#8a8676';b.style.borderColor='rgba(201,168,76,.2)';b.style.background='transparent';
         });
         btn.style.color='#C9A84C';btn.style.borderColor='rgba(201,168,76,.5)';btn.style.background='rgba(201,168,76,.07)';
+        if(sel) sel.value=lg.code;   /* keep the mobile <select> in step */
         if(window.OmegaI18n){window.OmegaI18n.translate(lg.code);}
         else{localStorage.setItem('omega_lang',lg.code);location.reload();}
       };
       dock.appendChild(btn);
     });
+
+    /* Compact equivalent of the seven buttons above, shown only under 760px
+       (see injectDockCss). Same handler, so the two can never disagree. */
+    var sel=document.createElement('select');
+    sel.id='omega-lang-select';
+    sel.setAttribute('aria-label','Language');
+    sel.title='Language';
+    sel.style.cssText='font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:1px;padding:4px 6px;border:1px solid rgba(201,168,76,.2);color:#C9A84C;background:rgba(2,2,6,.9);cursor:pointer;border-radius:2px';
+    LANGS.forEach(function(lg){
+      var o=document.createElement('option');
+      o.value=lg.code; o.textContent=lg.label+' · '+lg.name;
+      sel.appendChild(o);
+    });
+    sel.value=localStorage.getItem('omega_lang')||'en';
+    sel.onchange=function(){
+      var code=sel.value;
+      dock.querySelectorAll('[data-lang]').forEach(function(b){
+        var on=b.getAttribute('data-lang')===code;
+        b.style.color=on?'#C9A84C':'#8a8676';
+        b.style.borderColor=on?'rgba(201,168,76,.5)':'rgba(201,168,76,.2)';
+        b.style.background=on?'rgba(201,168,76,.07)':'transparent';
+      });
+      if(window.OmegaI18n){window.OmegaI18n.translate(code);}
+      else{localStorage.setItem('omega_lang',code);location.reload();}
+    };
+    dock.appendChild(sel);
 
     /* Separator */
     var sep=document.createElement('div');

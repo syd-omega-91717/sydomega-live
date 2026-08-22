@@ -92,6 +92,11 @@
       'gap:10px;align-items:center;justify-content:center;padding:8px 0;',
       'border-top:1px solid rgba(201,168,76,.07);margin-top:8px}',
       '.omega-legal-footer a{color:rgba(138,134,118,.6);text-decoration:none}',
+      /* 7.5px text gives these a ~10px-tall hit area on a phone. The text
+         size is deliberate (fine print) so only the hit area grows, to the
+         24px WCAG 2.5.8 floor. */
+      '@media(max-width:760px){.omega-legal-footer a{display:inline-flex;',
+      'align-items:center;min-height:24px;padding:0 4px}}',
       '.omega-legal-footer a:hover{color:rgba(201,168,76,.8)}',
       '.omega-copyright-badge{font-family:"Courier Prime",monospace;font-size:7.5px;',
       'letter-spacing:1.5px;color:rgba(138,134,118,.45)}',

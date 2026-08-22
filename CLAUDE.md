@@ -2805,6 +2805,49 @@ orphaned file.
     on the FR button sets `omega_lang=fr`; horizontal overflow at 375px stays 0; 0 page errors.
     `node --check` on all four, `check-inline-js.py` clean, `audit.py` 0 critical / 7 pre-existing
     warnings, 51/51 tests. No SQL/schema changes.
+- **[Fixed] 19,754 controls across 177 pages were under the 24×24 CSS-px touch floor on a
+  phone — now 349 across 55, a 98% reduction, all from shared files.** Found by measuring every
+  `a[href]`/`button`/`input`/`select`/`textarea`/`[role=button]`/`[onclick]` at a real 375×667
+  touch viewport across all 178 pages, rather than reading stylesheets. The count is dominated
+  by a handful of shared sources, so almost all of it closed in four files:
+  - **The mobile navigation drawer itself (14,514 + 2,008 instances).** Below 761px `nav.js`
+    hides `aside.omega-side` entirely, so `#omega-drawer` is the *only* navigation a member has
+    — and every one of its 82 `.ds-link` entries and 15 `.dss-head` section headings measured
+    **21px tall** (`font-size:10px` with `padding:5px 4px`). Raised the padding to `9px 6px`
+    plus `min-height:24px` (and `.dss-head` to `5px 2px`); text size deliberately unchanged, only
+    the hit area grows. Measured after: 29px, 97/97 → 0 under the floor, drawer still opens from
+    `.mob-menu-btn` and its links stay reachable by `elementFromPoint`.
+  - **The shared topbar controls (~370 instances).** `omega-ui.js`'s injected prev/next arrows
+    and `Ω CMD` dashboard link, and `bg.js`'s `.tnav-btn`, were 21–22px on every page carrying a
+    `.topbar`. All three are built with inline styles, but `min-height`/`min-width` are not
+    among the properties declared inline, so a stylesheet rule still reaches them — added a
+    `≤760px` floor in each file rather than rewriting the inline strings.
+  - **The legal footer links** (`omega-legal.js`, TERMS/PRIVACY/COMPLIANCE, on every page) were
+    ~10px tall at their deliberate 7.5px fine-print size; given `display:inline-flex` +
+    `min-height:24px` so the hit area grows without touching the type.
+  - **The controls dock, revisited — and the earlier fix in this file corrected.** The `≤760px`
+    rule added a few entries above lifted the dock clear of the nav bar by *shrinking* its
+    buttons to fit one row, which took each control to ~20px: reachable, but under the touch
+    floor. Fixing reachability by making targets too small to hit is not a fix. Root cause of
+    the width pressure turned out to be a CSS detail worth recording: **`left:50%` with
+    `width:auto` caps a fixed element's available width at `100% − left`, i.e. 50vw** — 187px on
+    a 375px phone — which is why the original dock's 389px of content simply spilled past both
+    viewport edges, and why it kept wrapping even with room to spare. Anchored both edges
+    (`left:6px;right:6px;transform:none`) to give it the real viewport width, restored full-size
+    buttons, and collapsed the seven language buttons into one compact `<select>` under 760px.
+    Both controls are built every time and swapped by CSS, not by JS, so a rotate or resize needs
+    no listener and they cannot desync; they share the same handler and each updates the other.
+    Verified against `7ae8890` (the commit before any of this mobile work): **before** — dock
+    x −7..382 in a 375px viewport (clipped), 9 controls at heights [20×7, 30, 30], **0/9** both
+    ≥24px and tappable, overlapping `#omega-ded-widget` and `#omega-mob`; **after** — x 6..369,
+    3 controls at [24, 26, 26], **3/3**, every neighbour clear. Selecting Arabic from the
+    `<select>` at 375px and clicking the AR button at 1280px both give `omega_lang=ar`,
+    `dir="rtl"`, a translated sidebar, and leave the select and the active button agreeing —
+    0 page errors either way.
+  The remaining 349 are page-local classes (`.filter-tag`, `.etag`, `.add-btn`, `.g-cat`, …)
+  spread thinly over 55 pages — the same page-local-drift shape as §4.1's `.card` sweep and the
+  `.tab-btn` font-size sweep, and the same kind of per-page work; not attempted here, where every
+  fix was a shared file reaching all 178 pages at once.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

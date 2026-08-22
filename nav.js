@@ -280,13 +280,19 @@
       '.drawer-sections{display:grid;grid-template-columns:1fr 1fr;gap:0}',
       '.ds-section{border-right:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);padding:14px 16px}',
       '.ds-section:nth-child(2n){border-right:none}',
-      '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;text-decoration:none}',
+      /* padding here is what carries these to a real touch size: the drawer is
+         the ONLY navigation on a phone (the desktop aside is display:none
+         below 761px), and measured at 375px every one of its 82 links and 11
+         section heads came out 21px tall -- under the 24px WCAG 2.5.8 floor,
+         and far under 44px. The text size is left alone; only the hit area
+         grows. */
+      '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 2px;min-height:24px;cursor:pointer;text-decoration:none}',
       '.dss-icon{font-size:18px;color:#55534e}',
       '.dss-label{font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:2px;color:#85837b}',
       '.dss-head:hover .dss-icon,.dss-head.ds-on .dss-icon{color:#C9A84C;text-shadow:0 0 8px rgba(201,168,76,.5)}',
       '.dss-head:hover .dss-label,.dss-head.ds-on .dss-label{color:#C9A84C}',
-      '.ds-links{display:flex;flex-direction:column;gap:2px;padding-left:4px}',
-      '.ds-link{font-family:"Courier Prime",monospace;font-size:10px;color:#55534e;text-decoration:none;padding:5px 4px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
+      '.ds-links{display:flex;flex-direction:column;gap:3px;padding-left:4px}',
+      '.ds-link{font-family:"Courier Prime",monospace;font-size:10px;color:#55534e;text-decoration:none;padding:9px 6px;min-height:24px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
       '.ds-link:hover,.ds-link.dl-on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.04);padding-left:8px}',
       '@media(min-width:761px){#omega-mob{display:none!important}#omega-drawer{display:none!important}}',
       '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}}',

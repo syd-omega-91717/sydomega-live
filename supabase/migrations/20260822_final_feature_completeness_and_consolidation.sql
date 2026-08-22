@@ -352,7 +352,7 @@ BEGIN
   SELECT COUNT(*) INTO achievement_count
   FROM public.certificates
   WHERE user_id = p_user_id
-    AND created_at > now() - interval '7 days';
+    AND issued_at > now() - interval '7 days';
 
   -- Insert into queue
   INSERT INTO public.weekly_digest_queue (

@@ -93,8 +93,8 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TOPBAR -->
     <div class="topbar">
-      <div class="t">SOVEREIGN VAULT
-        <small>M7 &middot; RESERVE &middot; HOLDINGS &middot; LEDGER &middot; SCIENCE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small>
+      <div class="t" data-i18n="vault_topbar_title">SOVEREIGN VAULT
+        <small data-i18n="vault_topbar_subtitle">M7 &middot; RESERVE &middot; HOLDINGS &middot; LEDGER &middot; SCIENCE &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small>
       </div>
       <canvas id="vault-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" style="flex-shrink:0" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
@@ -102,10 +102,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TAB BAR -->
     <div class="tab-bar" role="tablist">
-      <button class="tab-btn active" onclick="setTab('reserve')" role="tab" aria-selected="true"><div class="tab-icon">&#9670;</div>RESERVE</button>
-      <button class="tab-btn" onclick="setTab('holdings')" role="tab" aria-selected="false"><div class="tab-icon">&#9675;</div>HOLDINGS</button>
-      <button class="tab-btn" onclick="setTab('ledger')" role="tab" aria-selected="false"><div class="tab-icon">&#9672;</div>LEDGER</button>
-      <button class="tab-btn" onclick="setTab('science')" role="tab" aria-selected="false"><div class="tab-icon">&#9881;</div>SCIENCE</button>
+      <button class="tab-btn active" onclick="setTab('reserve')" role="tab" aria-selected="true"><div class="tab-icon">&#9670;</div><span data-i18n="vault_tab_reserve">RESERVE</span></button>
+      <button class="tab-btn" onclick="setTab('holdings')" role="tab" aria-selected="false"><div class="tab-icon">&#9675;</div><span data-i18n="vault_tab_holdings">HOLDINGS</span></button>
+      <button class="tab-btn" onclick="setTab('ledger')" role="tab" aria-selected="false"><div class="tab-icon">&#9672;</div><span data-i18n="vault_tab_ledger">LEDGER</span></button>
+      <button class="tab-btn" onclick="setTab('science')" role="tab" aria-selected="false"><div class="tab-icon">&#9881;</div><span data-i18n="vault_tab_science">SCIENCE</span></button>
     </div>
 
     <div class="tab-panels">
@@ -113,12 +113,12 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- ── TAB 1: RESERVE ─────────────────────────────────────── -->
     <div class="tab-panel active" id="tab-reserve">
       <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="rsv-aum">&#937; --</div><div class="kpi-l">RESERVE (AUM) &middot; PLANNED</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="rsv-dist">PENDING</div><div class="kpi-l">STATUS &middot; PHASE III</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES (12&times;12&times;9&#179;)</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">51%</div><div class="kpi-l">MASTER STAKE &middot; PLANNED</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">467.8B</div><div class="kpi-l">&#937; PLANNED RESERVE</div></div>
-        <div class="kpi" style="--kc:var(--muted)"><div class="kpi-n">PLANNED</div><div class="kpi-l">GENESIS BLOCK STATUS</div></div>
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="rsv-aum">&#937; --</div><div class="kpi-l" data-i18n="vault_reserve_aum_label">RESERVE (AUM) &middot; PLANNED</div></div>
+        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="rsv-dist">PENDING</div><div class="kpi-l" data-i18n="vault_reserve_status_label">STATUS &middot; PHASE III</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">104,976</div><div class="kpi-l" data-i18n="vault_reserve_nodes_label">LATTICE NODES (12&times;12&times;9&#179;)</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">51%</div><div class="kpi-l" data-i18n="vault_reserve_stake_label">MASTER STAKE &middot; PLANNED</div></div>
+        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">467.8B</div><div class="kpi-l" data-i18n="vault_reserve_planned_label">&#937; PLANNED RESERVE</div></div>
+        <div class="kpi" style="--kc:var(--muted)"><div class="kpi-n">PLANNED</div><div class="kpi-l" data-i18n="vault_reserve_genesis_label">GENESIS BLOCK STATUS</div></div>
       </div>
 
       <div class="reserve-hero">
@@ -144,38 +144,38 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
       </div>
 
-      <div class="sechead sechead-gold">RESERVE ARCHITECTURE &middot; SOVEREIGN COVENANT LOCKS</div>
+      <div class="sechead sechead-gold" data-i18n="vault_reserve_arch_title">RESERVE ARCHITECTURE &middot; SOVEREIGN COVENANT LOCKS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:14px">
         <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5)">
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">MASTER STAKE &middot; PLANNED</div>
-          <div style="font-size:11px;line-height:1.75;color:var(--muted)">467,756,700,000 &#937; designed as a permanent 51% sovereign majority once the token economy activates. No token is issued and no stake is locked yet.</div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--gold);margin-bottom:6px" data-i18n="vault_reserve_card1_title">MASTER STAKE &middot; PLANNED</div>
+          <div style="font-size:11px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card1_desc">467,756,700,000 &#937; designed as a permanent 51% sovereign majority once the token economy activates. No token is issued and no stake is locked yet.</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5)">
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px">GENESIS BLOCK SEAL &middot; PLANNED</div>
-          <div style="font-size:11px;line-height:1.75;color:var(--muted)">Designed to hash property documents, identity proofs, and covenant articles into a Genesis Block once built. No hash-chaining runs today.</div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px" data-i18n="vault_reserve_card2_title">GENESIS BLOCK SEAL &middot; PLANNED</div>
+          <div style="font-size:11px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card2_desc">Designed to hash property documents, identity proofs, and covenant articles into a Genesis Block once built. No hash-chaining runs today.</div>
         </div>
         <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5)">
-          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--purple);margin-bottom:6px">TOKEN ECONOMY STATUS</div>
-          <div style="font-size:11px;line-height:1.75;color:var(--muted)">12 sovereign token types pending legal review. KYC/AML compliance required. Activation in Phase III.</div>
+          <div style="font-family:var(--M);font-size:7.5px;letter-spacing:2px;color:var(--purple);margin-bottom:6px" data-i18n="vault_reserve_card3_title">TOKEN ECONOMY STATUS</div>
+          <div style="font-size:11px;line-height:1.75;color:var(--muted)" data-i18n="vault_reserve_card3_desc">12 sovereign token types pending legal review. KYC/AML compliance required. Activation in Phase III.</div>
         </div>
       </div>
 
-      <div class="sechead sechead-gold">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
+      <div class="sechead sechead-gold" data-i18n="vault_reserve_lattice_title">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
       <div data-lattice="canonical" data-nodes="0" style="cursor:pointer;max-width:500px" title="Click for 3D lattice view"></div>
     </div>
 
     <!-- ── TAB 2: HOLDINGS (wallet + NFT) ─────────────────────── -->
     <div class="tab-panel" id="tab-holdings">
       <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="wallet-total">&#937; --</div><div class="kpi-l">TOTAL WALLET BALANCE</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="wallet-count">--</div><div class="kpi-l">TOKEN TYPES HELD</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="nft-count">--</div><div class="kpi-l">NFTs HELD</div></div>
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">12</div><div class="kpi-l">SOVEREIGN TOKEN TYPES</div></div>
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">108</div><div class="kpi-l">NFT TYPES (12&times;9)</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">PENDING</div><div class="kpi-l">ECONOMY ACTIVATION</div></div>
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="wallet-total">&#937; --</div><div class="kpi-l" data-i18n="vault_holdings_total_label">TOTAL WALLET BALANCE</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="wallet-count">--</div><div class="kpi-l" data-i18n="vault_holdings_types_label">TOKEN TYPES HELD</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="nft-count">--</div><div class="kpi-l" data-i18n="vault_holdings_nft_label">NFTs HELD</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">12</div><div class="kpi-l" data-i18n="vault_holdings_sovereign_label">SOVEREIGN TOKEN TYPES</div></div>
+        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">108</div><div class="kpi-l" data-i18n="vault_holdings_nft_types_label">NFT TYPES (12&times;9)</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n">PENDING</div><div class="kpi-l" data-i18n="vault_holdings_economy_label">ECONOMY ACTIVATION</div></div>
       </div>
 
-      <div class="sechead sechead-gold">12 SOVEREIGN TOKEN BALANCES &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
+      <div class="sechead sechead-gold" data-i18n="vault_holdings_tokens_title">12 SOVEREIGN TOKEN BALANCES &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div>
       <div class="token-grid" id="wallet-token-grid">
         <div class="token-card card"><div class="tk-sym">ARENITE</div><div class="tk-bal">--</div><div class="tk-name">ARIES &mdash; FOUNDER TOKEN</div></div>
         <div class="token-card card"><div class="tk-sym">TAURITE</div><div class="tk-bal">--</div><div class="tk-name">TAURUS SOVEREIGN</div></div>
@@ -197,7 +197,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         CURRENT STATUS: TREASURY SIMULATION &middot; BALANCES ARE PROVISIONAL UNTIL ECONOMY GOES LIVE
       </div>
 
-      <div class="sechead sechead-purple">NFT VAULT &middot; 12 SOVEREIGN LINES &middot; 9 TIERS EACH = 108 TYPES</div>
+      <div class="sechead sechead-purple" data-i18n="vault_holdings_nft_vault_title">NFT VAULT &middot; 12 SOVEREIGN LINES &middot; 9 TIERS EACH = 108 TYPES</div>
       <div class="nft-grid" id="nft-grid">
         <div class="nft-card card"><div class="nft-line">ARIES LINE</div><div class="nft-name">ARENITE GENESIS</div><div class="nft-meta">TIER 1 &middot; PHASE II &middot; PENDING</div></div>
         <div class="nft-card card"><div class="nft-line">TAURUS LINE</div><div class="nft-name">TAURITE GENESIS</div><div class="nft-meta">TIER 1 &middot; PHASE II &middot; PENDING</div></div>
@@ -222,35 +222,35 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- ── TAB 3: LEDGER (earning + audit) ────────────────────── -->
     <div class="tab-panel" id="tab-ledger">
       <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="earn-total">--</div><div class="kpi-l">TOTAL POINTS EARNED</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="earn-count">--</div><div class="kpi-l">ACTIONS COMPLETED</div></div>
-        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="earn-a">--</div><div class="kpi-l">AXIS A &mdash; KNOWLEDGE</div></div>
-        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="earn-b">--</div><div class="kpi-l">AXIS B &mdash; MASTERY</div></div>
-        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="earn-c">--</div><div class="kpi-l">AXIS C &mdash; CONTRIBUTION</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="audit-count">--</div><div class="kpi-l">AUDIT EVENTS</div></div>
+        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="earn-total">--</div><div class="kpi-l" data-i18n="vault_ledger_total_label">TOTAL POINTS EARNED</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="earn-count">--</div><div class="kpi-l" data-i18n="vault_ledger_actions_label">ACTIONS COMPLETED</div></div>
+        <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="earn-a">--</div><div class="kpi-l" data-i18n="vault_ledger_axisa_label">AXIS A &mdash; KNOWLEDGE</div></div>
+        <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="earn-b">--</div><div class="kpi-l" data-i18n="vault_ledger_axisb_label">AXIS B &mdash; MASTERY</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="earn-c">--</div><div class="kpi-l" data-i18n="vault_ledger_axisc_label">AXIS C &mdash; CONTRIBUTION</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="audit-count">--</div><div class="kpi-l" data-i18n="vault_ledger_audit_label">AUDIT EVENTS</div></div>
       </div>
 
-      <div class="sechead sechead-gold">SOVEREIGN EARNING LEDGER &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
+      <div class="sechead sechead-gold" data-i18n="vault_ledger_earning_title">SOVEREIGN EARNING LEDGER &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367</div>
       <div class="tbl-wrap ledger-table" style="margin-bottom:22px">
         <div class="tbl-head ledger-head">
-          <div class="tbl-hcell ledger-hcell">TIMESTAMP</div>
-          <div class="tbl-hcell ledger-hcell">TASK / ACTION</div>
-          <div class="tbl-hcell ledger-hcell">AXIS</div>
-          <div class="tbl-hcell ledger-hcell">POINTS</div>
+          <div class="tbl-hcell ledger-hcell" data-i18n="vault_ledger_col_timestamp">TIMESTAMP</div>
+          <div class="tbl-hcell ledger-hcell" data-i18n="vault_ledger_col_task">TASK / ACTION</div>
+          <div class="tbl-hcell ledger-hcell" data-i18n="vault_ledger_col_axis">AXIS</div>
+          <div class="tbl-hcell ledger-hcell" data-i18n="vault_ledger_col_points">POINTS</div>
         </div>
         <div id="earn-log"><div class="tbl-row ledger-row" style="grid-template-columns:1fr;padding:16px"><span style="font-family:var(--M);font-size:9px;color:var(--muted)">LOADING EARNING LEDGER&hellip;</span></div></div>
       </div>
 
       <div class="sechead" style="color:var(--cyan)">
-        <span>TREASURY &amp; ACCESS AUDIT LOG &middot; SOVEREIGN EVENT CHAIN</span>
-        <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px">&#8635; REFRESH</button>
+        <span data-i18n="vault_ledger_audit_title">TREASURY &amp; ACCESS AUDIT LOG &middot; SOVEREIGN EVENT CHAIN</span>
+        <button onclick="loadAuditLog()" style="font-family:var(--M);font-size:8px;letter-spacing:2px;color:var(--cyan);background:none;border:1px solid rgba(0,229,255,.2);padding:4px 12px;cursor:pointer;border-radius:2px" data-i18n="vault_ledger_refresh_btn">&#8635; REFRESH</button>
       </div>
       <div class="tbl-wrap audit-table">
         <div class="tbl-head audit-head">
-          <div class="tbl-hcell audit-hcell">TIMESTAMP</div>
-          <div class="tbl-hcell audit-hcell">EVENT</div>
-          <div class="tbl-hcell audit-hcell">TYPE</div>
-          <div class="tbl-hcell audit-hcell">STATUS</div>
+          <div class="tbl-hcell audit-hcell" data-i18n="vault_ledger_audit_col_timestamp">TIMESTAMP</div>
+          <div class="tbl-hcell audit-hcell" data-i18n="vault_ledger_audit_col_event">EVENT</div>
+          <div class="tbl-hcell audit-hcell" data-i18n="vault_ledger_audit_col_type">TYPE</div>
+          <div class="tbl-hcell audit-hcell" data-i18n="vault_ledger_audit_col_status">STATUS</div>
         </div>
         <div id="audit-log-list" data-loading></div>
       </div>
@@ -258,17 +258,17 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- ── TAB 4: SCIENCE ─────────────────────────────────────── -->
     <div class="tab-panel" id="tab-science">
-      <div class="sechead sechead-gold">SYSTEM CONSTANTS &middot; IMMUTABLE SOVEREIGN MATHEMATICS</div>
+      <div class="sechead sechead-gold" data-i18n="vault_science_constants_title">SYSTEM CONSTANTS &middot; IMMUTABLE SOVEREIGN MATHEMATICS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px">
-        <div class="sci-block"><div class="sci-label">AUTHORITY APEX</div><div class="sci-val">27.8367</div><div class="sci-sub">sqrt(9&#179;+9&#179;+9&#179;)&times;&phi;/e = sqrt(2187)&times;1.6180/2.7183</div></div>
-        <div class="sci-block"><div class="sci-label">GOLDEN RATIO (&phi;)</div><div class="sci-val">1.6180339887</div><div class="sci-sub">PHI &middot; FIBONACCI LIMIT &middot; SOVEREIGNTY CONSTANT</div></div>
-        <div class="sci-block"><div class="sci-label">EULER&apos;S NUMBER (e)</div><div class="sci-val">2.7182818285</div><div class="sci-sub">EU &middot; NATURAL LOGARITHM BASE &middot; GROWTH ENGINE</div></div>
-        <div class="sci-block"><div class="sci-label">SOVEREIGN FREQUENCY</div><div class="sci-val">9.17 Hz</div><div class="sci-sub">THETA-ALPHA BOUNDARY &middot; FLOW STATE &middot; 9 MIN 17 SEC TRIAL</div></div>
-        <div class="sci-block"><div class="sci-label">LATTICE NODES</div><div class="sci-val">104,976</div><div class="sci-sub">12 &times; 12 &times; 9 &times; 9 &times; 9 = CANONICAL NETWORK SIZE</div></div>
-        <div class="sci-block"><div class="sci-label">INNER CUBE (PLANE)</div><div class="sci-val">729</div><div class="sci-sub">9&#179; = SOVEREIGNTY CORE &middot; A&#179;+B&#179;+C&#179; AT APEX = 2187</div></div>
+        <div class="sci-block"><div class="sci-label" data-i18n="vault_science_apex_label">AUTHORITY APEX</div><div class="sci-val">27.8367</div><div class="sci-sub">sqrt(9&#179;+9&#179;+9&#179;)&times;&phi;/e = sqrt(2187)&times;1.6180/2.7183</div></div>
+        <div class="sci-block"><div class="sci-label" data-i18n="vault_science_phi_label">GOLDEN RATIO (&phi;)</div><div class="sci-val">1.6180339887</div><div class="sci-sub">PHI &middot; FIBONACCI LIMIT &middot; SOVEREIGNTY CONSTANT</div></div>
+        <div class="sci-block"><div class="sci-label" data-i18n="vault_science_euler_label">EULER&apos;S NUMBER (e)</div><div class="sci-val">2.7182818285</div><div class="sci-sub">EU &middot; NATURAL LOGARITHM BASE &middot; GROWTH ENGINE</div></div>
+        <div class="sci-block"><div class="sci-label" data-i18n="vault_science_frequency_label">SOVEREIGN FREQUENCY</div><div class="sci-val">9.17 Hz</div><div class="sci-sub">THETA-ALPHA BOUNDARY &middot; FLOW STATE &middot; 9 MIN 17 SEC TRIAL</div></div>
+        <div class="sci-block"><div class="sci-label" data-i18n="vault_science_lattice_label">LATTICE NODES</div><div class="sci-val">104,976</div><div class="sci-sub">12 &times; 12 &times; 9 &times; 9 &times; 9 = CANONICAL NETWORK SIZE</div></div>
+        <div class="sci-block"><div class="sci-label" data-i18n="vault_science_cube_label">INNER CUBE (PLANE)</div><div class="sci-val">729</div><div class="sci-sub">9&#179; = SOVEREIGNTY CORE &middot; A&#179;+B&#179;+C&#179; AT APEX = 2187</div></div>
       </div>
 
-      <div class="sechead sechead-gold">AUTHORITY FORMULA &middot; LIVE CALCULATION ENGINE</div>
+      <div class="sechead sechead-gold" data-i18n="vault_science_formula_title">AUTHORITY FORMULA &middot; LIVE CALCULATION ENGINE</div>
       <div style="border:1px solid rgba(201,168,76,.2);padding:20px;border-radius:2px;background:rgba(10,10,15,.8);margin-bottom:20px;font-family:var(--M);font-size:9px;letter-spacing:1.5px;line-height:2.2;color:var(--muted)">
         <div style="font-family:var(--D);font-size:18px;color:var(--gold);margin-bottom:12px">AUTH = &radic;(A&#179; + B&#179; + C&#179;) &times; &phi; / e</div>
         A = KNOWLEDGE &middot; Axis A tracks learning events<br>
@@ -279,23 +279,23 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         APEX A=B=C=9 &rarr; sqrt(2187) &times; &phi;/e = <span style="color:var(--gold)">27.8367</span>
       </div>
 
-      <div class="sechead sechead-gold">12 AUTHORITY GATES &middot; PROGRESSION THRESHOLDS</div>
+      <div class="sechead sechead-gold" data-i18n="vault_science_gates_title">12 AUTHORITY GATES &middot; PROGRESSION THRESHOLDS</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:20px">
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE I</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">2.3197</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">INITIATE</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE II</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">4.6394</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">ACOLYTE</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE III</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">6.9592</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">SCHOLAR</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IV</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">9.2789</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">KEEPER</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE V</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">11.5986</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">GUARDIAN</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">13.9183</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">ARCHITECT</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">16.2381</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">SOVEREIGN</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VIII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">18.5578</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">VANGUARD</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IX</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">20.8775</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">HERALD</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE X</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">23.1972</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">ORACLE</div></div>
-        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE XI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">25.5170</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)">PRIME</div></div>
-        <div style="border:1px solid rgba(201,168,76,.4);padding:10px 14px;border-radius:2px;background:rgba(201,168,76,.06)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold)">GATE XII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">27.8367</div><div style="font-family:var(--M);font-size:8px;color:var(--gold)">APEX &middot; SOVEREIGN FOUNDER</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE I</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">2.3197</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate1_label">INITIATE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE II</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">4.6394</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate2_label">ACOLYTE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE III</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">6.9592</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate3_label">SCHOLAR</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IV</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">9.2789</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate4_label">KEEPER</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE V</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">11.5986</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate5_label">GUARDIAN</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">13.9183</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate6_label">ARCHITECT</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">16.2381</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate7_label">SOVEREIGN</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE VIII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">18.5578</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate8_label">VANGUARD</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE IX</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">20.8775</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate9_label">HERALD</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE X</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">23.1972</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate10_label">ORACLE</div></div>
+        <div style="border:1px solid var(--line);padding:10px 14px;border-radius:2px;background:rgba(10,10,15,.5)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--muted)">GATE XI</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">25.5170</div><div style="font-family:var(--M);font-size:8px;color:var(--muted)" data-i18n="vault_science_gate11_label">PRIME</div></div>
+        <div style="border:1px solid rgba(201,168,76,.4);padding:10px 14px;border-radius:2px;background:rgba(201,168,76,.06)"><div style="font-family:var(--M);font-size:7px;letter-spacing:2px;color:var(--gold)">GATE XII</div><div style="font-family:var(--D);font-size:14px;color:var(--gold)">27.8367</div><div style="font-family:var(--M);font-size:8px;color:var(--gold)" data-i18n="vault_science_gate12_label">APEX &middot; SOVEREIGN FOUNDER</div></div>
       </div>
 
-      <div class="sechead sechead-gold">&#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY</div>
+      <div class="sechead sechead-gold" data-i18n="vault_science_articles_title">&#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY</div>
       <div style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;padding:10px 14px;border:1px solid var(--line);border-radius:2px;background:rgba(201,168,76,.03)">
         SOVEREIGN FOUNDER: MAJOR SLEIMAN YOUSSEF DAGHER &middot; LEBANESE ORDER OF ENGINEERS NO. 30875
       </div>

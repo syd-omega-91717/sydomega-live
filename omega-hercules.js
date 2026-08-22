@@ -2,11 +2,18 @@
  * Hercules — Labors & Trials Tracking System
  * Tracks major challenges, their progress, and triumphs over obstacles.
  * Integrates with the overall platform's achievement and progress systems.
+ * @module OmegaHercules
+ * @exports {Object} OmegaHercules Public API
  */
 
-window.OmegaHercules = window.OmegaHercules || {
-  // Twelve labors of Hercules mapped to challenge archetypes
-  LABORS: [
+(function() {
+  'use strict';
+
+  /**
+   * @type {Array<{id: string, num: number, title: string, theme: string, difficulty: string}>}
+   * Twelve labors of Hercules mapped to challenge archetypes
+   */
+  const LABORS = [
     { id: 'lion', num: 1, title: 'Nemean Lion', theme: 'courage', difficulty: 'legendary' },
     { id: 'hydra', num: 2, title: 'Lernaean Hydra', theme: 'persistence', difficulty: 'extreme' },
     { id: 'hind', num: 3, title: 'Golden Hind', theme: 'wisdom', difficulty: 'high' },
@@ -19,9 +26,13 @@ window.OmegaHercules = window.OmegaHercules || {
     { id: 'cattle', num: 10, title: 'Cattle of Geryon', theme: 'vision', difficulty: 'high' },
     { id: 'apples', num: 11, title: 'Apples of Hesperides', theme: 'humility', difficulty: 'extreme' },
     { id: 'cerberus', num: 12, title: 'Cerberus', theme: 'transcendence', difficulty: 'legendary' }
-  ],
+  ];
 
-  THEMES: {
+  /**
+   * @type {Object<string, {color: string, icon: string}>}
+   * Theme mapping for each labor: color and icon representation
+   */
+  const THEMES = {
     courage: { color: '#EF4444', icon: '⚔' },
     persistence: { color: '#F59E0B', icon: '🔥' },
     wisdom: { color: '#3B82F6', icon: '🧠' },
@@ -34,62 +45,127 @@ window.OmegaHercules = window.OmegaHercules || {
     vision: { color: '#F97316', icon: '🔭' },
     humility: { color: '#06B6D4', icon: '🙏' },
     transcendence: { color: '#A855F7', icon: '✨' }
-  },
+  };
 
   /**
-   * Get labor by ID or number
+   * Get labor by ID or number. Searches the LABORS array for a matching id or num.
+   * @param {string|number} idOrNum - Labor ID (string) or number (1-12)
+   * @returns {Object|undefined} Labor object or undefined if not found
    */
-  getLabor: function(idOrNum) {
-    return this.LABORS.find(l => l.id === idOrNum || l.num === idOrNum);
-  },
+  function getLabor(idOrNum) {
+    if (!LABORS || LABORS.length === 0) return undefined;
+    return LABORS.find(l => l?.id === idOrNum || l?.num === idOrNum);
+  }
 
   /**
-   * Get theme styling for a labor
+   * Get theme styling for a labor. Returns theme colors and icons.
+   * @param {string} laborId - Labor ID to look up
+   * @returns {Object} Theme object with color and icon properties; defaults to courage theme
    */
-  getTheme: function(laborId) {
-    const labor = this.getLabor(laborId);
-    return labor ? this.THEMES[labor.theme] : this.THEMES.courage;
-  },
+  function getTheme(laborId) {
+    const labor = getLabor(laborId);
+    return labor && THEMES[labor.theme] ? THEMES[labor.theme] : THEMES.courage;
+  }
 
   /**
-   * Calculate overall completion across all labors
+   * Calculate overall completion percentage across all labors.
+   * Queries task_completions to determine what percentage of the 12 labors have been started or completed.
+   * @returns {Promise<number>} Completion percentage (0-100); returns 0 on error
    */
-  getOverallProgress: function() {
-    // Placeholder - would integrate with actual progress data
-    return Math.floor(Math.random() * 100);
-  },
+  async function getOverallProgress() {
+    try {
+      if (!window.sb) return 0;
+
+      const userId = (await window.sb.auth.getUser()).data?.user?.id;
+      if (!userId) return 0;
+
+      const { data, error } = await window.sb
+        .from('task_completions')
+        .select('labor_id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .in('labor_id', LABORS.map(l => l.id));
+
+      if (error) {
+        console.warn('OmegaHercules.getOverallProgress() query failed:', error);
+        return 0;
+      }
+
+      const completedLabors = new Set(data?.map(row => row.labor_id) ?? []);
+      return Math.round((completedLabors.size / LABORS.length) * 100);
+    } catch (err) {
+      console.warn('OmegaHercules.getOverallProgress() exception:', err);
+      return 0;
+    }
+  }
 
   /**
-   * Get all labors for a theme
+   * Get all labors for a given theme. Filters LABORS by theme name.
+   * @param {string} theme - Theme name to filter by (e.g., 'courage', 'wisdom')
+   * @returns {Array<Object>} Array of labor objects matching the theme; empty array if none found
    */
-  getLaborsByTheme: function(theme) {
-    return this.LABORS.filter(l => l.theme === theme);
-  },
+  function getLaborsByTheme(theme) {
+    if (!LABORS || LABORS.length === 0) return [];
+    return LABORS.filter(l => l?.theme === theme) ?? [];
+  }
 
   /**
-   * Get all labors by difficulty
+   * Get all labors by difficulty level. Filters LABORS by difficulty name.
+   * @param {string} difficulty - Difficulty level to filter by (e.g., 'legendary', 'extreme', 'high', 'medium')
+   * @returns {Array<Object>} Array of labor objects matching the difficulty; empty array if none found
    */
-  getLaborsByDifficulty: function(difficulty) {
-    return this.LABORS.filter(l => l.difficulty === difficulty);
-  },
+  function getLaborsByDifficulty(difficulty) {
+    if (!LABORS || LABORS.length === 0) return [];
+    return LABORS.filter(l => l?.difficulty === difficulty) ?? [];
+  }
 
   /**
-   * Check if all labors are complete
+   * Check if all 12 labors have been completed by the current user.
+   * Queries task_completions to verify every labor_id has at least one entry.
+   * @returns {Promise<boolean>} True if all 12 labors completed, false otherwise; returns false on error
    */
-  allLaborsComplete: function() {
-    // Placeholder - would check against actual completion state
-    return false;
-  },
+  async function allLaborsComplete() {
+    try {
+      if (!window.sb) return false;
 
-  /**
-   * Register Hercules as ready
-   */
-  ready: true
-};
+      const userId = (await window.sb.auth.getUser()).data?.user?.id;
+      if (!userId) return false;
 
-// Fire event once loaded
-if (window.OmegaHercules.ready) {
-  window.dispatchEvent(new CustomEvent('omega:hercules-loaded', {
-    detail: { labors: window.OmegaHercules.LABORS.length }
-  }));
-}
+      const { data, error } = await window.sb
+        .from('task_completions')
+        .select('labor_id')
+        .eq('user_id', userId)
+        .in('labor_id', LABORS.map(l => l.id));
+
+      if (error) {
+        console.warn('OmegaHercules.allLaborsComplete() query failed:', error);
+        return false;
+      }
+
+      const completedLabors = new Set(data?.map(row => row.labor_id) ?? []);
+      return completedLabors.size === LABORS.length;
+    } catch (err) {
+      console.warn('OmegaHercules.allLaborsComplete() exception:', err);
+      return false;
+    }
+  }
+
+  // Public API
+  window.OmegaHercules = {
+    LABORS: LABORS,
+    THEMES: THEMES,
+    getLabor: getLabor,
+    getTheme: getTheme,
+    getOverallProgress: getOverallProgress,
+    getLaborsByTheme: getLaborsByTheme,
+    getLaborsByDifficulty: getLaborsByDifficulty,
+    allLaborsComplete: allLaborsComplete,
+    ready: true
+  };
+
+  // Fire initialization event
+  if (window.OmegaHercules.ready) {
+    window.dispatchEvent(new CustomEvent('omega:hercules-loaded', {
+      detail: { labors: LABORS.length }
+    }));
+  }
+})();

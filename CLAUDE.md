@@ -564,6 +564,24 @@ orphaned file.
   database and verified** — `scripts/verify_fixes.sql` confirmed
   `notifications` now exists, and `omega_notify_triggers.sql` (below)
   confirms the 5 member-status RPCs populate it.
+- **[Live — achievement unlock notifications wired into task completion] Task
+  completion now triggers notifications for both the task itself and any newly-
+  unlocked achievements.** `public.complete_task()` (migration 0094 / 20260818224748)
+  augmented with full achievement-unlock logic: computes milestones crossed via
+  `public.milestones_for_axis()`, awards certificates/trophies/medals for each
+  new milestone, and inserts notification rows gated behind
+  `platform_settings.notifications_enabled` (default: false per §9). Task
+  completion message: "Completed: {task_name}"; achievement messages via
+  `public.notify_achievement()`: "Certificate Earned: Knowledge {n}" / "Trophy
+  Unlocked: Mastery {n}" / "Medal Earned: Contribution {n}". Composite gate
+  logic at (3,3,3)/(6,6,6)/(9,9,9) triggers "Gate Unlocked: Level {n}" when all
+  three axes hit that threshold simultaneously. Returns jsonb with applied status,
+  final axis values, authority_score, and unlocked achievements array. **Applied
+  to live database and verified** (migration 20260818224748, confirmed via
+  `pg_get_functiondef()` on production ydqhzvvoyufiiqvzcjns) — function exists
+  with correct signature and full achievement logic deployed. Feature is live
+  but dormant by default (notifications_enabled=false); owner must explicitly
+  enable to surface achievement toasts to members.
 - **Authority-history chart queried the wrong table — fixed.**
   `omega-chart.js`'s `API.auth()` (used by `analytics.html` and
   `studio.html`'s "Authority History" chart) queried

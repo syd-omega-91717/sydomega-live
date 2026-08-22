@@ -20,6 +20,60 @@
   if(window.__omegaA11yActive) return;
   window.__omegaA11yActive = true;
 
+  /* ── SHARED CONTENT-REGION RESOLVER ─────────────────────────────────────
+     Sections A and D both need "the element that holds this page's content,
+     excluding the sidebar", and both previously resolved it themselves with
+     the same too-narrow list (main, .main, #app). On the ~100 pages built as
+
+         <div class="shell">
+           <aside id="omega-side">…</aside>
+           <div style="flex:1;min-width:0">…content…</div>
+
+     none of those three selectors match anything, so BOTH sections silently
+     did nothing: the skip link kept its default href="#omega-main-content"
+     pointing at an element that was never created (a dead fragment link --
+     verified on matrix.html, media.html and terms.html), and those same
+     pages ended up with zero <main>/[role=main] landmarks despite this
+     module's own header promising "ensures every page has at least one".
+     The content region there is the aside's next element sibling, which is
+     the last candidate below.
+
+     Every candidate is rejected if it CONTAINS the sidebar: .shell wraps the
+     aside and the content together, so promoting it to role="main" would put
+     the whole navigation inside the main landmark -- worse for a screen
+     reader than having no landmark at all. */
+  /* Tags that are never a content region. The sibling walk below needs this
+     because several pages (404.html, pending.html) put a decorative
+     full-bleed <canvas> immediately after the aside -- taking the first
+     sibling blindly pointed the skip link at that canvas and, worse, put
+     role="main" on it, so a screen reader would announce an empty canvas as
+     the page's main landmark. */
+  var NOT_CONTENT = /^(CANVAS|SCRIPT|STYLE|LINK|NOSCRIPT|TEMPLATE|SVG|VIDEO|AUDIO|IFRAME|BR|HR)$/;
+
+  function resolveMain(){
+    var side = document.getElementById('omega-side');
+    function usable(el){
+      if(!el || el === document.body || el === document.documentElement) return false;
+      if(side && el.contains(side)) return false;
+      if(NOT_CONTENT.test(el.tagName)) return false;
+      if(el.getAttribute('aria-hidden') === 'true') return false;
+      return true;
+    }
+    var cands = [
+      document.getElementById('main-content'),
+      document.getElementById('omega-main-content'),
+      document.querySelector('main'),
+      document.getElementById('app'),
+      document.querySelector('.page-shell'),
+      document.querySelector('.main')
+    ];
+    for(var i=0;i<cands.length;i++){ if(usable(cands[i])) return cands[i]; }
+    /* last resort: first real element after the sidebar, skipping decoration */
+    var n = side ? side.nextElementSibling : null;
+    while(n){ if(usable(n)) return n; n = n.nextElementSibling; }
+    return null;
+  }
+
   /* ── A. SKIP NAVIGATION LINK ────────────────────────────────────────── */
   (function(){
     if(document.getElementById('omega-skip')) return;
@@ -44,18 +98,29 @@
     }
     attach();
 
-    /* Ensure the target exists */
+    /* Ensure the target exists, is focusable, and is what the link points at.
+       tabindex="-1" is the part that makes a skip link actually work: a
+       <div>/<main> is not focusable by default, so following the fragment
+       scrolled the page but left focus on <body> -- measured on every page
+       tested, focus after activating the link was BODY, meaning the next Tab
+       restarted at the top of the document and walked straight back into the
+       ~15-section sidebar dock the link exists to skip. The explicit
+       .focus() call is needed for the same reason: fragment navigation alone
+       does not reliably focus a programmatically-focusable container. */
     function ensureTarget(){
-      if(document.getElementById('omega-main-content')) return;
-      var main = document.querySelector('main') ||
-                 document.querySelector('.main') ||
-                 document.getElementById('app');
-      if(main && !main.id) main.id = 'omega-main-content';
-      else if(main && main.id !== 'omega-main-content'){
-        main.setAttribute('id', main.id); /* keep existing id */
-        skip.href = '#' + main.id;
-      }
+      var main = resolveMain();
+      if(!main) return;
+      if(!main.id) main.id = 'omega-main-content';
+      if(!main.hasAttribute('tabindex')) main.setAttribute('tabindex','-1');
+      skip.href = '#' + main.id;
     }
+    skip.addEventListener('click', function(e){
+      var t = document.getElementById(skip.getAttribute('href').slice(1));
+      if(!t) return;
+      e.preventDefault();
+      t.focus();
+      if(t.scrollIntoView) t.scrollIntoView({block:'start'});
+    });
     if(document.readyState==='loading'){
       document.addEventListener('DOMContentLoaded', ensureTarget);
     } else { ensureTarget(); }
@@ -130,9 +195,14 @@
   /* ── D. LANDMARK ARIA ───────────────────────────────────────────────── */
   (function(){
     function ensureLandmark(){
-      /* If no <main> or [role=main] exists, promote #app */
+      /* If no <main> or [role=main] exists, promote the content region.
+         Uses the shared resolver so the ~100 pages whose content is the
+         sidebar's next sibling (no #app, no .main) are covered too -- they
+         were the pages left with zero landmarks by the old #app/.main-only
+         lookup. The resolver's sidebar-containment guard is what keeps
+         .shell from being promoted and swallowing the nav. */
       if(document.querySelector('main,[role="main"]')) return;
-      var app = document.getElementById('app') || document.querySelector('.main');
+      var app = resolveMain();
       if(app && app.tagName !== 'MAIN' && !app.getAttribute('role')){
         app.setAttribute('role','main');
       }

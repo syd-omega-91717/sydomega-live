@@ -1,11 +1,37 @@
+/* -- BODY-APPEND QUEUE (defined before every injection below) --------------
+   Each dynamic injection in this file guarded its append with
+   `if(document.body)` and SILENTLY DID NOTHING when body was absent. That is
+   harmless on the ~140 pages that load bg.js with defer or from <body>, but 7
+   pages (council.html, graphify.html and the five graph-*.html views) load it
+   as a plain <script src="/bg.js"> inside <head>, where it runs during head
+   parsing while document.body is still null. There the design-system <style>
+   still landed (it appends to <head>), so those pages LOOKED styled while
+   every one of the ~90 platform modules -- nav, the approval guard's runtime,
+   omega-a11y, copilot, notify, telemetry -- was dropped with no error.
+   Measured on council.html: 5 script tags loaded, against dashboard's 98.
+
+   Queuing instead of discarding fixes the whole class -- append now when body
+   exists, otherwise on DOMContentLoaded, preserving relative order -- and
+   keeps working for any future page however it loads bg.js. Same shape of gap
+   as the nav.js injection bug recorded in CLAUDE.md section 8.
+
+   The two `if(document.body){...}else requestAnimationFrame(...)` sites in
+   this file are deliberately left alone: they already retry rather than drop,
+   and they are the only two that were written that way. */
+function __omegaAppend(el){
+  if(document.body){ document.body.appendChild(el); return; }
+  document.addEventListener('DOMContentLoaded', function(){
+    var b = document.body; if(b) b.appendChild(el);
+  });
+}
 /* Platform nervous system */
-  if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;if(document.body)document.body.appendChild(os_data_omega_os);}
+  if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
   /* AI copilot on every page */
-  if(!document.querySelector('script[data-omega-copilot]')){var os_data_omega_copilot=document.createElement('script');os_data_omega_copilot.src='/omega-copilot.js';os_data_omega_copilot.setAttribute('data-omega-copilot','1');os_data_omega_copilot.defer=true;if(document.body)document.body.appendChild(os_data_omega_copilot);}
+  if(!document.querySelector('script[data-omega-copilot]')){var os_data_omega_copilot=document.createElement('script');os_data_omega_copilot.src='/omega-copilot.js';os_data_omega_copilot.setAttribute('data-omega-copilot','1');os_data_omega_copilot.defer=true;__omegaAppend(os_data_omega_copilot);}
   /* Zero Trust threat detection */
-  if(!document.querySelector('script[data-omega-threat]')){var os_data_omega_threat=document.createElement('script');os_data_omega_threat.src='/omega-threat.js';os_data_omega_threat.setAttribute('data-omega-threat','1');os_data_omega_threat.defer=true;if(document.body)document.body.appendChild(os_data_omega_threat);}
+  if(!document.querySelector('script[data-omega-threat]')){var os_data_omega_threat=document.createElement('script');os_data_omega_threat.src='/omega-threat.js';os_data_omega_threat.setAttribute('data-omega-threat','1');os_data_omega_threat.defer=true;__omegaAppend(os_data_omega_threat);}
   /* Real-time knowledge graph integration engine */
-  if(!document.querySelector('script[data-omega-graphify-integration]')){var os_data_omega_graphify_integration=document.createElement('script');os_data_omega_graphify_integration.src='/omega-graphify-integration.js';os_data_omega_graphify_integration.setAttribute('data-omega-graphify-integration','1');os_data_omega_graphify_integration.defer=true;if(document.body)document.body.appendChild(os_data_omega_graphify_integration);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
+  if(!document.querySelector('script[data-omega-graphify-integration]')){var os_data_omega_graphify_integration=document.createElement('script');os_data_omega_graphify_integration.src='/omega-graphify-integration.js';os_data_omega_graphify_integration.setAttribute('data-omega-graphify-integration','1');os_data_omega_graphify_integration.defer=true;__omegaAppend(os_data_omega_graphify_integration);}/* ===== APPROVAL GUARD (must run before anything reveals content) ==========
    40 pages checked only that a session EXISTS, not that the member was
    APPROVED. Each page's own boot did `#app.style.display='flex'` after the
    session check, while the approval redirect below needs three async hops
@@ -55,11 +81,15 @@
    getBoundingClientRect per animation frame, only while hovering a
    matched .card/.kpi/.glass element) to stay GPU-cheap. */
 (function(){
-  if(document.body && !document.getElementById('omega-noise-overlay')){
+  /* compound `document.body && ...` guard, so the sweep that converted the 89
+     plain guards above did not reach it -- this one dropped the overlay on the
+     same head-loading pages. getElementById works with no body (returns null),
+     so only the append needs queueing. */
+  if(!document.getElementById('omega-noise-overlay')){
     var n=document.createElement('div');
     n.id='omega-noise-overlay';
     n.setAttribute('aria-hidden','true');
-    document.body.appendChild(n);
+    __omegaAppend(n);
   }
   var sel='.card,.kpi,.kpi-card,.glass,.glass-cyan';
   var raf=null, lastEvt=null;
@@ -345,10 +375,10 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
 
 /* Audio engine (Web Audio oscillators). Its own visible button is disabled --
    omega-controls.js's unified dock is the one on-screen SOUND control. */
-(function(){if(!document.querySelector('script[data-omega-audio]')){var s=document.createElement('script');s.src='/audio.js';s.setAttribute('data-omega-audio','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-audio]')){var s=document.createElement('script');s.src='/audio.js';s.setAttribute('data-omega-audio','1');__omegaAppend(s);}})();
 /* ===== MULTI-LANGUAGE -- translation engine on every page (EN / AR-RTL / FR / ES).
    Its own visible language box is disabled -- same reason as above. ===== */
-(function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');if(document.body)document.body.appendChild(s);}
+(function(){if(!document.querySelector('script[data-omega-i18n]')){var s=document.createElement('script');s.src='/i18n.js';s.setAttribute('data-omega-i18n','1');__omegaAppend(s);}
 
   /* Ctrl+K search overlay */
   if(!document.querySelector('script[data-omega-search]')){
@@ -356,7 +386,7 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_search.src='/omega-search.js';
     _s_data_omega_search.setAttribute('data-omega-search','1');
     _s_data_omega_search.defer=true;
-    if(document.body)document.body.appendChild(_s_data_omega_search);
+    __omegaAppend(_s_data_omega_search);
   }
   /* Notification engine with badge */
   if(!document.querySelector('script[data-omega-notify]')){
@@ -364,7 +394,7 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_notify.src='/omega-notify.js';
     _s_data_omega_notify.setAttribute('data-omega-notify','1');
     _s_data_omega_notify.defer=true;
-    if(document.body)document.body.appendChild(_s_data_omega_notify);
+    __omegaAppend(_s_data_omega_notify);
   }
   /* AI concierge GraphRAG bridge */
   if(!document.querySelector('script[data-omega-ai]')){
@@ -372,7 +402,7 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_ai.src='/omega-ai.js';
     _s_data_omega_ai.setAttribute('data-omega-ai','1');
     _s_data_omega_ai.defer=true;
-    if(document.body)document.body.appendChild(_s_data_omega_ai);
+    __omegaAppend(_s_data_omega_ai);
   }
   /* Google Core Web Vitals monitor */
   if(!document.querySelector('script[data-omega-metrics]')){
@@ -380,7 +410,7 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_metrics.src='/omega-metrics.js';
     _s_data_omega_metrics.setAttribute('data-omega-metrics','1');
     _s_data_omega_metrics.defer=true;
-    if(document.body)document.body.appendChild(_s_data_omega_metrics);
+    __omegaAppend(_s_data_omega_metrics);
   }
   /* Zodiac/element first-run flow */
   if(!document.querySelector('script[data-omega-onboard]')){
@@ -388,7 +418,7 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_onboard.src='/omega-onboard.js';
     _s_data_omega_onboard.setAttribute('data-omega-onboard','1');
     _s_data_omega_onboard.defer=true;
-    if(document.body)document.body.appendChild(_s_data_omega_onboard);
+    __omegaAppend(_s_data_omega_onboard);
   }
   /* SDT gamification + gate celebrations */
   if(!document.querySelector('script[data-omega-sdt]')){
@@ -396,45 +426,45 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_sdt.src='/omega-sdt.js';
     _s_data_omega_sdt.setAttribute('data-omega-sdt','1');
     _s_data_omega_sdt.defer=true;
-    if(document.body)document.body.appendChild(_s_data_omega_sdt);
+    __omegaAppend(_s_data_omega_sdt);
   }
-  if(!document.querySelector('script[data-omega-user]')){var su=document.createElement('script');su.src='/omega-user.js';su.setAttribute('data-omega-user','1');su.defer=true;if(document.body)document.body.appendChild(su);}
-if(!document.querySelector('script[data-omega-chrono]')){var sc=document.createElement('script');sc.src='/omega-chrono.js';sc.setAttribute('data-omega-chrono','1');sc.defer=true;if(document.body)document.body.appendChild(sc);}
-if(!document.querySelector('script[data-omega-matrix]')){var sm=document.createElement('script');sm.src='/omega-matrix.js';sm.setAttribute('data-omega-matrix','1');sm.defer=true;if(document.body)document.body.appendChild(sm);}
-if(!document.querySelector('script[data-omega-lattice-3d]')){var sl3=document.createElement('script');sl3.src='/omega-lattice-3d.js';sl3.setAttribute('data-omega-lattice-3d','1');sl3.defer=true;if(document.body)document.body.appendChild(sl3);}
-if(!document.querySelector('script[data-omega-lattice]')){var sl=document.createElement('script');sl.src='/omega-lattice.js';sl.setAttribute('data-omega-lattice','1');sl.defer=true;if(document.body)document.body.appendChild(sl);}
-if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createElement('script');sc2.src='/omega-controls.js';sc2.setAttribute('data-omega-ctrl','1');sc2.defer=true;if(document.body)document.body.appendChild(sc2);}})();
+  if(!document.querySelector('script[data-omega-user]')){var su=document.createElement('script');su.src='/omega-user.js';su.setAttribute('data-omega-user','1');su.defer=true;__omegaAppend(su);}
+if(!document.querySelector('script[data-omega-chrono]')){var sc=document.createElement('script');sc.src='/omega-chrono.js';sc.setAttribute('data-omega-chrono','1');sc.defer=true;__omegaAppend(sc);}
+if(!document.querySelector('script[data-omega-matrix]')){var sm=document.createElement('script');sm.src='/omega-matrix.js';sm.setAttribute('data-omega-matrix','1');sm.defer=true;__omegaAppend(sm);}
+if(!document.querySelector('script[data-omega-lattice-3d]')){var sl3=document.createElement('script');sl3.src='/omega-lattice-3d.js';sl3.setAttribute('data-omega-lattice-3d','1');sl3.defer=true;__omegaAppend(sl3);}
+if(!document.querySelector('script[data-omega-lattice]')){var sl=document.createElement('script');sl.src='/omega-lattice.js';sl.setAttribute('data-omega-lattice','1');sl.defer=true;__omegaAppend(sl);}
+if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createElement('script');sc2.src='/omega-controls.js';sc2.setAttribute('data-omega-ctrl','1');sc2.defer=true;__omegaAppend(sc2);}})();
 /* ===== GENESIS VISUAL ENGINE -- make every page alive (armillary, particles, cinematic depth) ===== */
-(function(){if(!document.querySelector('script[data-omega-genesis]')){var s=document.createElement('script');s.src='/omega-genesis.js';s.setAttribute('data-omega-genesis','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-genesis]')){var s=document.createElement('script');s.src='/omega-genesis.js';s.setAttribute('data-omega-genesis','1');__omegaAppend(s);}})();
 /* ===== HERO BAND DATA WIRE -- populates ohb-l/ohb-r stat boxes ===== */
-(function(){if(!document.querySelector('script[data-omega-hero-wire]')){var s=document.createElement('script');s.src='/omega-hero-wire.js';s.setAttribute('data-omega-hero-wire','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-hero-wire]')){var s=document.createElement('script');s.src='/omega-hero-wire.js';s.setAttribute('data-omega-hero-wire','1');__omegaAppend(s);}})();
 /* ===== SOVEREIGN BACKDROP -- warm element-tinted base, per-page shade ===== */
-(function(){if(!document.querySelector('script[data-omega-backdrop]')){var s=document.createElement('script');s.src='/omega-backdrop.js';s.setAttribute('data-omega-backdrop','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-backdrop]')){var s=document.createElement('script');s.src='/omega-backdrop.js';s.setAttribute('data-omega-backdrop','1');__omegaAppend(s);}})();
 /* ===== 12 LIVING EMBLEMS -- per-sign animated marks ===== */
-(function(){if(!document.querySelector('script[data-omega-emblems]')){var s=document.createElement('script');s.src='/omega-emblems.js';s.setAttribute('data-omega-emblems','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-emblems]')){var s=document.createElement('script');s.src='/omega-emblems.js';s.setAttribute('data-omega-emblems','1');__omegaAppend(s);}})();
 /* ===== CONTENT MOTION -- count-up numbers, staggered reveals, tile glow (legible) ===== */
-(function(){if(!document.querySelector('script[data-omega-content]')){var s=document.createElement('script');s.src='/omega-content.js';s.setAttribute('data-omega-content','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-content]')){var s=document.createElement('script');s.src='/omega-content.js';s.setAttribute('data-omega-content','1');__omegaAppend(s);}})();
 /* ===== 9D ENGINE -- parallax, holographic glow, cinematic transitions, reactive audio ===== */
-(function(){if(!document.querySelector('script[data-omega-9d]')){var s=document.createElement('script');s.src='/omega-9d.js';s.setAttribute('data-omega-9d','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-9d]')){var s=document.createElement('script');s.src='/omega-9d.js';s.setAttribute('data-omega-9d','1');__omegaAppend(s);}})();
 /* ===== COMPONENT SYSTEM -- G12 button/card states + responsive matrix ===== */
-(function(){if(!document.querySelector('script[data-omega-components]')){var s=document.createElement('script');s.src='/omega-components.js';s.setAttribute('data-omega-components','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-components]')){var s=document.createElement('script');s.src='/omega-components.js';s.setAttribute('data-omega-components','1');__omegaAppend(s);}})();
    /* omega-sigil.js was an orphaned HTML page mislabeled with a .js extension.
    Removed from loader; delete the file from the repo. ===== */
 
 /* ===== ELEMENT MOTIFS -- shared thematic animations for the 9 elements ===== */
-(function(){if(!document.querySelector('script[data-omega-element-motif]')){var s=document.createElement('script');s.src='/omega-element-motif.js';s.setAttribute('data-omega-element-motif','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-element-motif]')){var s=document.createElement('script');s.src='/omega-element-motif.js';s.setAttribute('data-omega-element-motif','1');__omegaAppend(s);}})();
 
 /* ===== EMBLEM PANEL -- the emblem-as-function pattern, loaded once, used everywhere ===== */
-(function(){if(!document.querySelector('script[data-omega-emblem-panel]')){var s=document.createElement('script');s.src='/omega-emblem-panel.js';s.setAttribute('data-omega-emblem-panel','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-emblem-panel]')){var s=document.createElement('script');s.src='/omega-emblem-panel.js';s.setAttribute('data-omega-emblem-panel','1');__omegaAppend(s);}})();
 
 /* ===== CANON BADGE -- distinguishes real platform mechanics from lore from fiction ===== */
-(function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-canon-badge]')){var s=document.createElement('script');s.src='/omega-canon-badge.js';s.setAttribute('data-omega-canon-badge','1');__omegaAppend(s);}})();
 
 /* ===== CHROME COORDINATION -- one layout for feedback/share/language ===== */
 /* REMOVED omega-chrome.js — no file on disk; no candidate, no documented purpose. See DECISIONS.md. */
 
 /* ===== PAGE EMBLEM -- a mark derived from each page own lattice/axis ===== */
-(function(){if(!document.querySelector('script[data-omega-page-emblem]')){var s=document.createElement('script');s.src='/omega-page-emblem.js';s.setAttribute('data-omega-page-emblem','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-page-emblem]')){var s=document.createElement('script');s.src='/omega-page-emblem.js';s.setAttribute('data-omega-page-emblem','1');__omegaAppend(s);}})();
 
 /* ===== PER-MEMBER LATTICE MARKER STYLE ===== */
 (function(){try{var s=document.createElement('style');s.id='ocl-css';s.textContent=
@@ -442,36 +472,36 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 (document.head||document.documentElement).appendChild(s);}catch(e){}})();
 
 /* ===== PROGRESSION BRIDGE -- every system advances the matrix the same way ===== */
-(function(){if(!document.querySelector('script[data-omega-progress]')){var s=document.createElement('script');s.src='/omega-progress.js';s.setAttribute('data-omega-progress','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-progress]')){var s=document.createElement('script');s.src='/omega-progress.js';s.setAttribute('data-omega-progress','1');__omegaAppend(s);}})();
 
 /* ===== STREAK FREEZE -- grace-day forgiveness for the local streak pages ===== */
-(function(){if(!document.querySelector('script[data-omega-streak-freeze]')){var s=document.createElement('script');s.src='/omega-streak-freeze.js';s.setAttribute('data-omega-streak-freeze','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-streak-freeze]')){var s=document.createElement('script');s.src='/omega-streak-freeze.js';s.setAttribute('data-omega-streak-freeze','1');__omegaAppend(s);}})();
 
 /* ===== GEOMETRIC SYSTEM -- one spacing scale + canonical grid widths ===== */
-(function(){if(!document.querySelector('script[data-omega-geometry]')){var s=document.createElement('script');s.src='/omega-geometry.js';s.setAttribute('data-omega-geometry','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-geometry]')){var s=document.createElement('script');s.src='/omega-geometry.js';s.setAttribute('data-omega-geometry','1');__omegaAppend(s);}})();
 
 /* ===== MEMBERSHIP CARD -- one component, mounted via [data-membership-card] ===== */
-(function(){if(!document.querySelector('script[data-omega-membership]')){var s=document.createElement('script');s.src='/omega-membership.js';s.setAttribute('data-omega-membership','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-membership]')){var s=document.createElement('script');s.src='/omega-membership.js';s.setAttribute('data-omega-membership','1');__omegaAppend(s);}})();
 
 /* ===== SUBSCRIPTION TIER GATE -- companion to omega-gate.js (matrix gate) ===== */
-(function(){if(!document.querySelector('script[data-omega-tier-gate]')){var s=document.createElement('script');s.src='/omega-tier-gate.js';s.setAttribute('data-omega-tier-gate','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-tier-gate]')){var s=document.createElement('script');s.src='/omega-tier-gate.js';s.setAttribute('data-omega-tier-gate','1');__omegaAppend(s);}})();
 
 /* ===== SIGN CODEX -- real cross-reference: sign -> element/god/gate/token/agent/house ===== */
-(function(){if(!document.querySelector('script[data-omega-sign-codex]')){var s=document.createElement('script');s.src='/omega-sign-codex.js';s.setAttribute('data-omega-sign-codex','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-sign-codex]')){var s=document.createElement('script');s.src='/omega-sign-codex.js';s.setAttribute('data-omega-sign-codex','1');__omegaAppend(s);}})();
 /* ===== CANON LOADER -- single source of truth for the 12-fold + 9 elements ===== */
-(function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-canon]')){var s=document.createElement('script');s.src='/omega-canon.js';s.setAttribute('data-omega-canon','1');__omegaAppend(s);}})();
 /* ===== USER APPEARANCE -- member background/text/font ===== */
-(function(){if(!document.querySelector('script[data-omega-appearance]')){var s=document.createElement('script');s.src='/omega-appearance.js';s.setAttribute('data-omega-appearance','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-appearance]')){var s=document.createElement('script');s.src='/omega-appearance.js';s.setAttribute('data-omega-appearance','1');__omegaAppend(s);}})();
 /* ===== FEEDBACK WIDGET -- members leave comments + ratings ===== */
-(function(){if(!document.querySelector('script[data-omega-feedback]')){var s=document.createElement('script');s.src='/omega-feedback.js';s.setAttribute('data-omega-feedback','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-feedback]')){var s=document.createElement('script');s.src='/omega-feedback.js';s.setAttribute('data-omega-feedback','1');__omegaAppend(s);}})();
 /* ===== APP LAUNCHER -- all pages one tap (mobile + desktop) ===== */
-(function(){if(!document.querySelector('script[data-omega-menu]')){var s=document.createElement('script');s.src='/omega-menu.js';s.setAttribute('data-omega-menu','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-menu]')){var s=document.createElement('script');s.src='/omega-menu.js';s.setAttribute('data-omega-menu','1');__omegaAppend(s);}})();
 /* ===== MATRIX CONTENT GATE -- lock content by matrix position (5.1) ===== */
-(function(){if(!document.querySelector('script[data-omega-gate]')){var s=document.createElement('script');s.src='/omega-gate.js';s.setAttribute('data-omega-gate','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-gate]')){var s=document.createElement('script');s.src='/omega-gate.js';s.setAttribute('data-omega-gate','1');__omegaAppend(s);}})();
 /* ===== DE-EMOJI -- force all emoji-capable symbols to monochrome emblems ===== */
-(function(){if(!document.querySelector('script[data-omega-deemoji]')){var s=document.createElement('script');s.src='/omega-deemoji.js';s.setAttribute('data-omega-deemoji','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-deemoji]')){var s=document.createElement('script');s.src='/omega-deemoji.js';s.setAttribute('data-omega-deemoji','1');__omegaAppend(s);}})();
 /* ===== SHARE LAYER -- broadcast sovereign status to social (section 7) ===== */
-(function(){if(!document.querySelector('script[data-omega-share]')){var s=document.createElement('script');s.src='/omega-share.js';s.setAttribute('data-omega-share','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-share]')){var s=document.createElement('script');s.src='/omega-share.js';s.setAttribute('data-omega-share','1');__omegaAppend(s);}})();
 
 /* ===== GLOBAL MOBILE GUARD -- keeps every page within the phone viewport
    (no sideways scroll from wide panels/tables/media). Scoped to <=760px so the
@@ -1313,7 +1343,7 @@ setTimeout(function(){
    stacking on top of each other -- the overlap in the reported screenshot.
    Now only this dock is visible; the other two still run their real engines
    underneath it (audio playback, string translation). ===== */
-(function(){if(!document.querySelector('script[data-omega-controls]')){var s=document.createElement('script');s.src='/omega-controls.js';s.setAttribute('data-omega-controls','1');if(document.body)document.body.appendChild(s);}})();
+(function(){if(!document.querySelector('script[data-omega-controls]')){var s=document.createElement('script');s.src='/omega-controls.js';s.setAttribute('data-omega-controls','1');__omegaAppend(s);}})();
   if(!REDUCE){
     /* arrive: fade up from void */
     requestAnimationFrame(function(){veil.classList.add('show');setTimeout(function(){veil.classList.remove('show');},40);});
@@ -1460,59 +1490,59 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-council]')){
     var sc=document.createElement('script');sc.src='/omega-council.js';
     sc.setAttribute('data-omega-council','1');sc.defer=true;
-    if(document.body)document.body.appendChild(sc);
+    __omegaAppend(sc);
   }
   /* Labors & trials tracking system */
   if(!document.querySelector('script[data-omega-hercules]')){
     var sh=document.createElement('script');sh.src='/omega-hercules.js';
     sh.setAttribute('data-omega-hercules','1');sh.defer=true;
-    if(document.body)document.body.appendChild(sh);
+    __omegaAppend(sh);
   }
   /* Presence engine */
   if(!document.querySelector('script[data-omega-presence]')){
     var sp=document.createElement('script');sp.src='/omega-presence.js';
     sp.setAttribute('data-omega-presence','1');sp.defer=true;
-    if(document.body)document.body.appendChild(sp);
+    __omegaAppend(sp);
   }
   /* Recommendation engine */
   if(!document.querySelector('script[data-omega-recommend]')){
     var sr=document.createElement('script');sr.src='/omega-recommend.js';
     sr.setAttribute('data-omega-recommend','1');sr.defer=true;
-    if(document.body)document.body.appendChild(sr);
+    __omegaAppend(sr);
   }
   /* ── NEW ENGINES: Functional Validation Pass ─────────────────── */
   /* Cinematic animation engine */
-  if(!document.querySelector('script[data-omega-animate]')){var _oa=document.createElement('script');_oa.src='/omega-animated.js';_oa.setAttribute('data-omega-animate','1');_oa.defer=true;if(document.body)document.body.appendChild(_oa);}
+  if(!document.querySelector('script[data-omega-animate]')){var _oa=document.createElement('script');_oa.src='/omega-animated.js';_oa.setAttribute('data-omega-animate','1');_oa.defer=true;__omegaAppend(_oa);}
   /* Live data binding engine */
-  if(!document.querySelector('script[data-omega-live]')){var _ol=document.createElement('script');_ol.src='/omega-live.js';_ol.setAttribute('data-omega-live','1');_ol.defer=true;if(document.body)document.body.appendChild(_ol);}
+  if(!document.querySelector('script[data-omega-live]')){var _ol=document.createElement('script');_ol.src='/omega-live.js';_ol.setAttribute('data-omega-live','1');_ol.defer=true;__omegaAppend(_ol);}
   /* Universal component state machine */
-  if(!document.querySelector('script[data-omega-state]')){var _ost=document.createElement('script');_ost.src='/omega-state.js';_ost.setAttribute('data-omega-state','1');_ost.defer=true;if(document.body)document.body.appendChild(_ost);}
+  if(!document.querySelector('script[data-omega-state]')){var _ost=document.createElement('script');_ost.src='/omega-state.js';_ost.setAttribute('data-omega-state','1');_ost.defer=true;__omegaAppend(_ost);}
   /* User journey analytics */
-  if(!document.querySelector('script[data-omega-telemetry]')){var _otel=document.createElement('script');_otel.src='/omega-telemetry.js';_otel.setAttribute('data-omega-telemetry','1');_otel.defer=true;if(document.body)document.body.appendChild(_otel);}
+  if(!document.querySelector('script[data-omega-telemetry]')){var _otel=document.createElement('script');_otel.src='/omega-telemetry.js';_otel.setAttribute('data-omega-telemetry','1');_otel.defer=true;__omegaAppend(_otel);}
   /* Open-source library manager */
-  if(!document.querySelector('script[data-omega-oss]')){var _ooss=document.createElement('script');_ooss.src='/omega-oss.js';_ooss.setAttribute('data-omega-oss','1');_ooss.defer=true;if(document.body)document.body.appendChild(_ooss);}
+  if(!document.querySelector('script[data-omega-oss]')){var _ooss=document.createElement('script');_ooss.src='/omega-oss.js';_ooss.setAttribute('data-omega-oss','1');_ooss.defer=true;__omegaAppend(_ooss);}
 
   /* ── ABSOLUTE MASTER EVOLUTION ENGINES ────────────────────────── */
   /* Multi-agent AI orchestration with ReAct reasoning */
-  if(!document.querySelector('script[data-omega-intelligence]')){var _oi=document.createElement('script');_oi.src='/omega-intelligence.js';_oi.setAttribute('data-omega-intelligence','1');_oi.defer=true;if(document.body)document.body.appendChild(_oi);}
+  if(!document.querySelector('script[data-omega-intelligence]')){var _oi=document.createElement('script');_oi.src='/omega-intelligence.js';_oi.setAttribute('data-omega-intelligence','1');_oi.defer=true;__omegaAppend(_oi);}
   /* Persistent AI memory — cross-session continuity */
-  if(!document.querySelector('script[data-omega-memory]')){var _om=document.createElement('script');_om.src='/omega-memory.js';_om.setAttribute('data-omega-memory','1');_om.defer=true;if(document.body)document.body.appendChild(_om);}
+  if(!document.querySelector('script[data-omega-memory]')){var _om=document.createElement('script');_om.src='/omega-memory.js';_om.setAttribute('data-omega-memory','1');_om.defer=true;__omegaAppend(_om);}
   /* Sovereign workflow orchestration engine */
-  if(!document.querySelector('script[data-omega-workflow]')){var _ow=document.createElement('script');_ow.src='/omega-workflow.js';_ow.setAttribute('data-omega-workflow','1');_ow.defer=true;if(document.body)document.body.appendChild(_ow);}
+  if(!document.querySelector('script[data-omega-workflow]')){var _ow=document.createElement('script');_ow.src='/omega-workflow.js';_ow.setAttribute('data-omega-workflow','1');_ow.defer=true;__omegaAppend(_ow);}
   /* Voice interface — Web Speech API commands + TTS */
-  if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;if(document.body)document.body.appendChild(_ov);}
+  if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;__omegaAppend(_ov);}
   /* Zero Trust continuous auth guardian */
-  if(!document.querySelector('script[data-omega-guardian]')){var _og=document.createElement('script');_og.src='/omega-guardian.js';_og.setAttribute('data-omega-guardian','1');_og.defer=true;if(document.body)document.body.appendChild(_og);}
+  if(!document.querySelector('script[data-omega-guardian]')){var _og=document.createElement('script');_og.src='/omega-guardian.js';_og.setAttribute('data-omega-guardian','1');_og.defer=true;__omegaAppend(_og);}
 
   /* ── FIOS TRANSFORMATION ENGINES ─────────────────────────────── */
   /* Capability engine — every page becomes a business capability */
-  if(!document.querySelector('script[data-omega-capability]')){var _ocap=document.createElement('script');_ocap.src='/omega-capability.js';_ocap.setAttribute('data-omega-capability','1');_ocap.defer=true;if(document.body)document.body.appendChild(_ocap);}
+  if(!document.querySelector('script[data-omega-capability]')){var _ocap=document.createElement('script');_ocap.src='/omega-capability.js';_ocap.setAttribute('data-omega-capability','1');_ocap.defer=true;__omegaAppend(_ocap);}
   /* Policy engine — externalised business rules */
-  if(!document.querySelector('script[data-omega-policy]')){var _opol=document.createElement('script');_opol.src='/omega-policy.js';_opol.setAttribute('data-omega-policy','1');_opol.defer=true;if(document.body)document.body.appendChild(_opol);}
+  if(!document.querySelector('script[data-omega-policy]')){var _opol=document.createElement('script');_opol.src='/omega-policy.js';_opol.setAttribute('data-omega-policy','1');_opol.defer=true;__omegaAppend(_opol);}
   /* FinOps engine — cost tracking and governance */
-  if(!document.querySelector('script[data-omega-finops]')){var _ofops=document.createElement('script');_ofops.src='/omega-finops.js';_ofops.setAttribute('data-omega-finops','1');_ofops.defer=true;if(document.body)document.body.appendChild(_ofops);}
+  if(!document.querySelector('script[data-omega-finops]')){var _ofops=document.createElement('script');_ofops.src='/omega-finops.js';_ofops.setAttribute('data-omega-finops','1');_ofops.defer=true;__omegaAppend(_ofops);}
   /* Experimentation engine — A/B tests, feature flags */
-  if(!document.querySelector('script[data-omega-experiment]')){var _oexp=document.createElement('script');_oexp.src='/omega-experiment.js';_oexp.setAttribute('data-omega-experiment','1');_oexp.defer=true;if(document.body)document.body.appendChild(_oexp);}
+  if(!document.querySelector('script[data-omega-experiment]')){var _oexp=document.createElement('script');_oexp.src='/omega-experiment.js';_oexp.setAttribute('data-omega-experiment','1');_oexp.defer=true;__omegaAppend(_oexp);}
   /* Digital thread — requirements-to-telemetry traceability */
   /* No omega-thread.js on disk. The digital-thread/requirements-traceability
      content (window.OmegaThread) actually lives inside omega-threat.js
@@ -1521,76 +1551,76 @@ setTimeout(function(){
 
   /* ── IDOS TRANSFORMATION — Living Operating System ────────────── */
   /* Living Object System — hover panels, right-click menus, AI insights */
-  if(!document.querySelector('script[data-omega-actions]')){var _oac=document.createElement('script');_oac.src='/omega-actions.js';_oac.setAttribute('data-omega-actions','1');_oac.defer=true;if(document.body)document.body.appendChild(_oac);}
+  if(!document.querySelector('script[data-omega-actions]')){var _oac=document.createElement('script');_oac.src='/omega-actions.js';_oac.setAttribute('data-omega-actions','1');_oac.defer=true;__omegaAppend(_oac);}
   /* Real-time intelligence — live ticker, member pulse, activity feed */
-  if(!document.querySelector('script[data-omega-realtime]')){var _ort=document.createElement('script');_ort.src='/omega-realtime.js';_ort.setAttribute('data-omega-realtime','1');_ort.defer=true;if(document.body)document.body.appendChild(_ort);}
+  if(!document.querySelector('script[data-omega-realtime]')){var _ort=document.createElement('script');_ort.src='/omega-realtime.js';_ort.setAttribute('data-omega-realtime','1');_ort.defer=true;__omegaAppend(_ort);}
   /* Platform Meaning Index — scores, mission banners, PMI badges */
-  if(!document.querySelector('script[data-omega-pmi]')){var _opmi=document.createElement('script');_opmi.src='/omega-pml.js';_opmi.setAttribute('data-omega-pmi','1');_opmi.defer=true;if(document.body)document.body.appendChild(_opmi);}
+  if(!document.querySelector('script[data-omega-pmi]')){var _opmi=document.createElement('script');_opmi.src='/omega-pml.js';_opmi.setAttribute('data-omega-pmi','1');_opmi.defer=true;__omegaAppend(_opmi);}
 
   /* Async region shell — loading/empty/error states + retry (audit F-6) */
-  if(!document.querySelector('script[data-omega-shell]')){var _osh=document.createElement('script');_osh.src='/omega-shell.js';_osh.setAttribute('data-omega-shell','1');_osh.defer=true;if(document.body)document.body.appendChild(_osh);}
+  if(!document.querySelector('script[data-omega-shell]')){var _osh=document.createElement('script');_osh.src='/omega-shell.js';_osh.setAttribute('data-omega-shell','1');_osh.defer=true;__omegaAppend(_osh);}
 
   /* Platform keyboard navigation — g-sequences, ?, Ctrl+K, n, c shortcuts */
-  if(!document.querySelector('script[data-omega-keyboard]')){var _okb=document.createElement('script');_okb.src='/omega-keyboard.js';_okb.setAttribute('data-omega-keyboard','1');_okb.defer=true;if(document.body)document.body.appendChild(_okb);}
+  if(!document.querySelector('script[data-omega-keyboard]')){var _okb=document.createElement('script');_okb.src='/omega-keyboard.js';_okb.setAttribute('data-omega-keyboard','1');_okb.defer=true;__omegaAppend(_okb);}
   /* Legal compliance — copyright badge, GDPR consent, terms footer links */
-  if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;if(document.body)document.body.appendChild(_olegal);}
+  if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
-  if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;if(document.body)document.body.appendChild(_oqr);}
+  if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;__omegaAppend(_oqr);}
   /* Guided platform tour — Shepherd.js (MIT), first-time member walkthrough */
-  if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;if(document.body)document.body.appendChild(_otour);}
+  if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;__omegaAppend(_otour);}
   /* Cinematic transitions — curtain nav, scroll reveals, count-up, stagger */
-  if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;if(document.body)document.body.appendChild(_ocin);}
+  if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;__omegaAppend(_ocin);}
   /* WCAG 2.1 AA — skip links, focus trap, live region, landmark ARIA */
-  if(!document.querySelector('script[data-omega-a11y]')){var _oa11y=document.createElement('script');_oa11y.src='/omega-a11y.js';_oa11y.setAttribute('data-omega-a11y','1');_oa11y.defer=true;if(document.body)document.body.appendChild(_oa11y);}
+  if(!document.querySelector('script[data-omega-a11y]')){var _oa11y=document.createElement('script');_oa11y.src='/omega-a11y.js';_oa11y.setAttribute('data-omega-a11y','1');_oa11y.defer=true;__omegaAppend(_oa11y);}
   /* Sovereign chart system — Chart.js auto-mount via [data-omega-chart] */
-  if(!document.querySelector('script[data-omega-chart-mod]')){var _ochrt=document.createElement('script');_ochrt.src='/omega-chart.js';_ochrt.setAttribute('data-omega-chart-mod','1');_ochrt.defer=true;if(document.body)document.body.appendChild(_ochrt);}
+  if(!document.querySelector('script[data-omega-chart-mod]')){var _ochrt=document.createElement('script');_ochrt.src='/omega-chart.js';_ochrt.setAttribute('data-omega-chart-mod','1');_ochrt.defer=true;__omegaAppend(_ochrt);}
   /* Sovereign progress ring — Canvas SVG circular authority ring */
-  if(!document.querySelector('script[data-omega-ring]')){var _oring=document.createElement('script');_oring.src='/omega-ring.js';_oring.setAttribute('data-omega-ring','1');_oring.defer=true;if(document.body)document.body.appendChild(_oring);}
+  if(!document.querySelector('script[data-omega-ring]')){var _oring=document.createElement('script');_oring.src='/omega-ring.js';_oring.setAttribute('data-omega-ring','1');_oring.defer=true;__omegaAppend(_oring);}
 
   /* PWA install banner + offline network ribbon + native share + badge API */
-  if(!document.querySelector('script[data-omega-pwa]')){var _opwa=document.createElement('script');_opwa.src='/omega-pwa.js';_opwa.setAttribute('data-omega-pwa','1');_opwa.defer=true;if(document.body)document.body.appendChild(_opwa);}
+  if(!document.querySelector('script[data-omega-pwa]')){var _opwa=document.createElement('script');_opwa.src='/omega-pwa.js';_opwa.setAttribute('data-omega-pwa','1');_opwa.defer=true;__omegaAppend(_opwa);}
 
   /* Sovereign share-card generator — canvas identity card with download + native share */
-  if(!document.querySelector('script[data-omega-sharecard]')){var _osc=document.createElement('script');_osc.src='/omega-share-card.js';_osc.setAttribute('data-omega-sharecard','1');_osc.defer=true;if(document.body)document.body.appendChild(_osc);}
+  if(!document.querySelector('script[data-omega-sharecard]')){var _osc=document.createElement('script');_osc.src='/omega-share-card.js';_osc.setAttribute('data-omega-sharecard','1');_osc.defer=true;__omegaAppend(_osc);}
 
   /* Welcome demo video — must load on dashboard.html, the login landing page */
-  if(!document.querySelector('script[data-omega-demo]')){var _odv=document.createElement('script');_odv.src='/omega-demo-video.js';_odv.setAttribute('data-omega-demo','1');_odv.defer=true;if(document.body)document.body.appendChild(_odv);}
+  if(!document.querySelector('script[data-omega-demo]')){var _odv=document.createElement('script');_odv.src='/omega-demo-video.js';_odv.setAttribute('data-omega-demo','1');_odv.defer=true;__omegaAppend(_odv);}
 
   /* Chronometers: 9m17s approval window + 9h17m17s daily presence */
-  if(!document.querySelector('script[data-omega-chronometer]')){var _och=document.createElement('script');_och.src='/omega-chronometer.js';_och.setAttribute('data-omega-chronometer','1');_och.defer=true;if(document.body)document.body.appendChild(_och);}
+  if(!document.querySelector('script[data-omega-chronometer]')){var _och=document.createElement('script');_och.src='/omega-chronometer.js';_och.setAttribute('data-omega-chronometer','1');_och.defer=true;__omegaAppend(_och);}
 
   /* Service worker registration — sw.js existed but was never registered */
-  if(!document.querySelector('script[data-omega-swreg]')){var _osw=document.createElement('script');_osw.src='/omega-sw-register.js';_osw.setAttribute('data-omega-swreg','1');_osw.defer=true;if(document.body)document.body.appendChild(_osw);}
+  if(!document.querySelector('script[data-omega-swreg]')){var _osw=document.createElement('script');_osw.src='/omega-sw-register.js';_osw.setAttribute('data-omega-swreg','1');_osw.defer=true;__omegaAppend(_osw);}
 
   /* Unified UI — footer, prev/next nav, back button, keyboard shortcuts */
-  if(!document.querySelector('script[data-omega-ui]')){var _oui2=document.createElement('script');_oui2.src='/omega-ui.js';_oui2.setAttribute('data-omega-ui','1');_oui2.defer=true;if(document.body)document.body.appendChild(_oui2);}
+  if(!document.querySelector('script[data-omega-ui]')){var _oui2=document.createElement('script');_oui2.src='/omega-ui.js';_oui2.setAttribute('data-omega-ui','1');_oui2.defer=true;__omegaAppend(_oui2);}
 
   /* Sovereign tooltip system — Tippy.js v6 (MIT) via CDN, auto-mounts [data-tooltip] */
-  if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;if(document.body)document.body.appendChild(_ott);}
+  if(!document.querySelector('script[data-omega-tooltip]')){var _ott=document.createElement('script');_ott.src='/omega-tooltip.js';_ott.setAttribute('data-omega-tooltip','1');_ott.defer=true;__omegaAppend(_ott);}
 
   /* Sovereign celebration engine — gate unlock bursts, milestone banners, apex sequence */
-  if(!document.querySelector('script[data-omega-confetti]')){var _ocnf=document.createElement('script');_ocnf.src='/omega-confetti.js';_ocnf.setAttribute('data-omega-confetti','1');_ocnf.defer=true;if(document.body)document.body.appendChild(_ocnf);}
+  if(!document.querySelector('script[data-omega-confetti]')){var _ocnf=document.createElement('script');_ocnf.src='/omega-confetti.js';_ocnf.setAttribute('data-omega-confetti','1');_ocnf.defer=true;__omegaAppend(_ocnf);}
 
   /* Element particle backgrounds — tsParticles-slim@2 (MIT), fires on omega:user-loaded */
-  if(!document.querySelector('script[data-omega-particles]')){var _opar=document.createElement('script');_opar.src='/omega-particles.js';_opar.setAttribute('data-omega-particles','1');_opar.defer=true;if(document.body)document.body.appendChild(_opar);}
+  if(!document.querySelector('script[data-omega-particles]')){var _opar=document.createElement('script');_opar.src='/omega-particles.js';_opar.setAttribute('data-omega-particles','1');_opar.defer=true;__omegaAppend(_opar);}
 
   /* Procedural ambient soundscapes — Web Audio API, [data-ambient-toggle] to unmute */
-  if(!document.querySelector('script[data-omega-ambient]')){var _oamb=document.createElement('script');_oamb.src='/omega-ambient.js';_oamb.setAttribute('data-omega-ambient','1');_oamb.defer=true;if(document.body)document.body.appendChild(_oamb);}
+  if(!document.querySelector('script[data-omega-ambient]')){var _oamb=document.createElement('script');_oamb.src='/omega-ambient.js';_oamb.setAttribute('data-omega-ambient','1');_oamb.defer=true;__omegaAppend(_oamb);}
 
   /* Sovereign passport PDF — jsPDF@2 (MIT), [data-passport-download] triggers download */
-  if(!document.querySelector('script[data-omega-passport]')){var _opas=document.createElement('script');_opas.src='/omega-passport.js';_opas.setAttribute('data-omega-passport','1');_opas.defer=true;if(document.body)document.body.appendChild(_opas);}
+  if(!document.querySelector('script[data-omega-passport]')){var _opas=document.createElement('script');_opas.src='/omega-passport.js';_opas.setAttribute('data-omega-passport','1');_opas.defer=true;__omegaAppend(_opas);}
 
   /* 3-D element realm — Three.js r160 (MIT), mounts canvas[data-realm] */
-  if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;if(document.body)document.body.appendChild(_orlm);}
+  if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;__omegaAppend(_orlm);}
 
   /* Generative music engine — Tone.js v14 (MIT), [data-music-toggle] to play */
-  if(!document.querySelector('script[data-omega-music]')){var _omus=document.createElement('script');_omus.src='/omega-music.js';_omus.setAttribute('data-omega-music','1');_omus.defer=true;if(document.body)document.body.appendChild(_omus);}
+  if(!document.querySelector('script[data-omega-music]')){var _omus=document.createElement('script');_omus.src='/omega-music.js';_omus.setAttribute('data-omega-music','1');_omus.defer=true;__omegaAppend(_omus);}
 
   /* Procedural SVG sigil generator — deterministic from auth/element/name */
-  if(!document.querySelector('script[data-omega-sigil-gen]')){var _osig=document.createElement('script');_osig.src='/omega-sigil-gen.js';_osig.setAttribute('data-omega-sigil-gen','1');_osig.defer=true;if(document.body)document.body.appendChild(_osig);}
+  if(!document.querySelector('script[data-omega-sigil-gen]')){var _osig=document.createElement('script');_osig.src='/omega-sigil-gen.js';_osig.setAttribute('data-omega-sigil-gen','1');_osig.defer=true;__omegaAppend(_osig);}
 
   /* Platform-wide event bus — BroadcastChannel + IndexedDB + domain event catalog */
-  if(!document.querySelector('script[data-omega-event-bus]')){var _oebus=document.createElement('script');_oebus.src='/omega-event-bus.js';_oebus.setAttribute('data-omega-event-bus','1');_oebus.defer=true;if(document.body)document.body.appendChild(_oebus);}
+  if(!document.querySelector('script[data-omega-event-bus]')){var _oebus=document.createElement('script');_oebus.src='/omega-event-bus.js';_oebus.setAttribute('data-omega-event-bus','1');_oebus.defer=true;__omegaAppend(_oebus);}
 
   /* Sovereign worker fleet — 6 async consumers with circuit breaker + retry + DLQ */
-  if(!document.querySelector('script[data-omega-workers]')){var _owrk=document.createElement('script');_owrk.src='/omega-workers.js';_owrk.setAttribute('data-omega-workers','1');_owrk.defer=true;if(document.body)document.body.appendChild(_owrk);}
+  if(!document.querySelector('script[data-omega-workers]')){var _owrk=document.createElement('script');_owrk.src='/omega-workers.js';_owrk.setAttribute('data-omega-workers','1');_owrk.defer=true;__omegaAppend(_owrk);}

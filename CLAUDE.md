@@ -2365,6 +2365,103 @@ orphaned file.
     `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged), and
     `python3 -m unittest discover -s scripts/tests` (25/25 pass) all confirmed clean after both
     fixes. No SQL/schema changes — pure client-side JS, live the moment these two files deploy.
+- **[Fixed — highest-impact of this session] `bg.js` silently loaded NONE of its ~90 platform
+  modules on 7 pages, because every injection dropped its work when `document.body` was absent
+  instead of waiting for it.** Found by crawling all 178 pages in real headless Chromium and
+  noticing that `council.html` and the six `graph-*.html`/`graphify.html` views had **5 script
+  tags loaded where `dashboard.html` had 98**. Root cause: 89 separate injection sites in `bg.js`
+  were written as `if(document.body)document.body.appendChild(x)` — a guard that silently
+  discards rather than defers. Those 7 pages load bg.js as a plain `<script src="/bg.js">` inside
+  `<head>` (141 other pages use `defer` or place it in `<body>`), so it executes during head
+  parsing while `document.body` is still `null` and every one of those 89 guards evaluates false.
+  The injected design-system `<style>` still landed (it appends to `<head>`), so the pages *looked*
+  styled — which is exactly why this went unnoticed — while nav, the approval guard's runtime,
+  `omega-a11y.js`, copilot, notify and telemetry were all dropped with no error anywhere. Same
+  shape as the `nav.js` injection gap already recorded above, one layer deeper. Fixed by adding a
+  single `__omegaAppend(el)` helper at the top of `bg.js` that appends immediately when body
+  exists and otherwise queues to `DOMContentLoaded` (preserving relative order), then converting
+  all 89 sites to it via a scripted exact-string replacement with a count assertion. The
+  assertion earned its keep twice: it caught that the helper's own inner
+  `if(document.body)document.body.appendChild(el)` matched the same pattern (which would have
+  made the helper infinitely recursive), and a first attempt at also rewriting the two
+  `if(document.body){…}else requestAnimationFrame(…)` sites left a dangling `else` — those two
+  already retry rather than drop and are deliberately left untouched. The noise-overlay block
+  used a *compound* `if(document.body && !getElementById(...))` guard that the sweep did not
+  match, and was fixed separately. Verified in real Chromium: `council.html` went **5 → 97**
+  script tags with `omega-a11y` now loading and the sidebar rendering, all 7 pages now fully
+  correct, and `dashboard.html`/`matrix.html` unchanged at 98 (no regression). The remaining raw
+  `document.body.appendChild` calls (`bar`, `g`, `ov`, `warn`, `el`) were each read in context
+  and left alone: all are async runtime UI created after auth resolves, long after body exists.
+- **[Fixed] The platform-wide skip link existed on every page but never moved focus — it failed
+  its only job.** `omega-a11y.js` injects `<a id="omega-skip">` (no class, which is why a
+  `.skip-link` selector sweep missed it and initially suggested 158 pages had none). Two real
+  bugs, both measured rather than inferred: (1) the link's target never got `tabindex="-1"`, and
+  a `<div>`/`<main>` is not focusable by default — so activating it scrolled the page but left
+  focus on `<body>`, meaning the next Tab restarted at the top of the document and walked back
+  into the ~15-section sidebar dock the link exists to skip; (2) `ensureTarget()` resolved the
+  content region with `main`, `.main`, `#app` only, none of which match the ~100 pages built as
+  `.shell > aside#omega-side + div[flex:1]`, so on `matrix.html`/`media.html`/`terms.html` the
+  href stayed at the default `#omega-main-content` — an element that was never created, i.e. a
+  dead fragment link. The same too-narrow lookup is why section D left those pages with **zero**
+  `<main>`/`[role=main]` landmarks despite the module's own header promising "ensures every page
+  has at least one". Fixed with one shared `resolveMain()` used by both sections, which adds
+  `.page-shell` and the sidebar's next element sibling as candidates, sets `tabindex="-1"`, and
+  focuses the target explicitly on click. Two guards matter: any candidate that *contains*
+  `#omega-side` is rejected (`.shell` wraps nav and content together — promoting it would put the
+  whole navigation inside the main landmark, worse than no landmark), and decorative tags are
+  skipped (`404.html`/`pending.html` put a full-bleed `<canvas>` right after the aside, which the
+  naive sibling walk targeted, putting `role="main"` on an empty canvas). Verified by driving a
+  real keyboard (Tab, then Enter) with content revealed the way the approval guard reveals it:
+  **8 failures before, 18/18 assertions passing after**, and a full-178-page pass with
+  `waitUntil:'load'` showed 165 fully correct, 0 landmarks wrapping the sidebar, 0 decorative
+  targets (the shortfall being page-load timeouts under 8-way parallelism — each re-passed
+  individually). `offline.html` is correctly excluded: it deliberately loads no `bg.js` so it
+  still works with no network.
+- **[Fixed] `breath.html`'s guided breathing animation froze permanently on the first HOLD
+  phase.** `drawBreathCircle()` applied alpha by string-appending a hex pair (`col+'55'`), which
+  is valid for the five technique colors (6-digit hex) but produces the unparseable
+  `'rgba(201,168,76,.5)55'` for the gold HOLD/PAUSE and idle states — and `addColorStop` *throws*
+  on a bad color rather than ignoring it. The throw escaped into `tick()`, which schedules its
+  next `requestAnimationFrame` only *after* the draw returns, so the loop died and `done()` was
+  never called: BOX BREATHING (the default technique, INHALE/HOLD/EXHALE/HOLD, "Navy SEAL
+  standard") froze roughly four seconds into the very first session, and the idle render threw on
+  page load. Fixed with a `withAlpha()` helper that accepts either color form. Verified by
+  driving a real session through the phases: **before** = phase sequence `["INHALE","HOLD"]` and
+  2 page errors, stuck; **after** = `["INHALE","HOLD","EXHALE"]` with 0 errors.
+- **[Fixed] `omega-graphify.js` threw `this.loadGraph is not a function` on every `graphify.html`
+  load.** `init` is an arrow function on an object literal returned from an IIFE, so `this` is the
+  IIFE's `this` (window), not the object — `this.loadGraph()` resolved to `window.loadGraph`,
+  undefined. The throw aborted `init()` before `Render.frame()`, leaving the graph canvas blank.
+  Fixed by naming the returned object `API` and calling `API.loadGraph()`. Verified: `init()` now
+  returns cleanly and the TypeError is gone.
+- **[Improved] `i18n.js` cut from 297 KB to 55 KB — 242 KB off every page load, platform-wide.**
+  Measured the real payload in headless Chromium first rather than guessing: a `dashboard.html`
+  load pulled **93 JS requests totalling 1.25 MB**, of which `i18n.js` alone was 297 KB (24% of
+  all JavaScript) — eagerly loaded by `bg.js` on every one of the ~250 pages even though the
+  default language is `en` and the markup is already written in English. It inlined all 7
+  languages for all 1013 keys in one file. English **must** stay inline because `OmegaI18n.t(key)`
+  is synchronous and called at arbitrary times by `profile.html` and `approvals.html` (several
+  call sites pass `'en'` explicitly), so only the other six languages were split out to
+  `/i18n/<lang>.json`, fetched on demand. JS payload per page: **1.25 MB → 1.01 MB**. The
+  dictionary was extracted by *evaluating* `i18n.js` in a sandboxed VM rather than regex-parsing
+  it, so escaped quotes (`'S\'inscrire'`) could not corrupt the split; a browser round-trip then
+  confirmed all **1013 keys × 7 languages byte-identical** to the pre-split dictionary. Public API
+  is unchanged (`translate` now returns a Promise where it previously returned `undefined`; no
+  caller used the return value). One real bug was caught by the tests during development:
+  memoising the in-flight fetch permanently meant a *failed* pack pinned the member to English for
+  the rest of the session with re-selecting the language doing nothing — fixed by clearing the
+  in-flight entry once the request settles, so only success suppresses a refetch. Verified with 22
+  browser assertions: zero packs fetched for a default English visitor, correct RTL/`dir` and
+  translated sidebar on switching to Arabic, a stored non-English preference auto-loading its pack
+  on a fresh page load, and an HTTP-500 pack leaving the page cleanly in English with no unhandled
+  error, then recovering on retry.
+- **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
+  reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
+  the baseline is 7 both with and without this session's work), and
+  `python3 -m unittest discover -s scripts/tests` runs **45** tests, not 25. Several entries above
+  still cite "0 critical / 6 pre-existing warnings" and "25/25 pass" from when those numbers were
+  accurate; they are left as written since they were true at the time, but 7/45 is the current
+  baseline to compare against.
 
 
 ## 9. Working in this repo — practical rules

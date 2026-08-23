@@ -28,9 +28,20 @@
 -- Idempotent, matching the convention of every other *_fix.sql here: safe to
 -- re-run, adds nothing if the column already exists, and touches no data.
 --
--- STATUS: NOT YET APPLIED TO THE LIVE DATABASE. The Supabase connector is not
--- authorized in this session, so this could not be applied or verified against
--- production. Apply it before relying on the verify buttons.
+-- STATUS: APPLIED TO THE LIVE DATABASE (project ydqhzvvoyufiiqvzcjns) as
+-- migration `add_graph_verified_columns`, and verified afterwards:
+-- information_schema.columns shows verified boolean NOT NULL DEFAULT false on
+-- both tables, and pg_indexes shows both (user_id, verified) indexes.
+--
+-- Verified against the live schema BEFORE applying, not assumed: neither table
+-- had a `verified` column, graph_relationships.strength is numeric DEFAULT 1.0
+-- (so the client's `confidence` was indeed wrong), and graph_events carries
+-- entity_id/occurred_at/recorded_at with no entity_name or created_at.
+--
+-- NOTE: applying this column alone was NOT sufficient to make the feature work.
+-- All four graph_* tables had RLS policies but no table-level GRANT to
+-- `authenticated`, so every query returned 42501 permission denied regardless
+-- of the columns. See omega_grant_policied_tables.sql in this directory.
 -- ============================================================================
 
 ALTER TABLE public.graph_entities

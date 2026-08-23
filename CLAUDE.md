@@ -460,11 +460,17 @@ are listed in rough order of how often they have recurred.
    `if (document.body) document.body.appendChild(x)` drops the work entirely
    when body does not exist yet. `bg.js` now routes every injection through
    `__omegaAppend()`, which queues to `DOMContentLoaded` instead.
-6. **A `GRANT` without a matching `REVOKE`.** Postgres grants `EXECUTE` to
-   `PUBLIC` automatically on `CREATE FUNCTION`, so a narrowing
-   `GRANT ... TO authenticated` is decorative unless the default is revoked
-   first. The same shape inverted: an RLS policy with `WITH CHECK(true)` on a
-   table that has a `user_id` column is almost always a spoofing gap.
+6. **A privilege and a policy that do not meet.** Three faces of one class:
+   (a) Postgres grants `EXECUTE` to `PUBLIC` automatically on
+   `CREATE FUNCTION`, so a narrowing `GRANT ... TO authenticated` is decorative
+   unless the default is revoked first. (b) An RLS policy with
+   `WITH CHECK(true)` on a table that has a `user_id` column is almost always a
+   spoofing gap. (c) **The reverse, and the most expensive one found so far: a
+   correct RLS policy on a table with no table-level `GRANT` at all.** A GRANT
+   is checked *before* row security, so the policy never runs and every query
+   fails with `42501 permission denied` — 60 tables were in this state, 22 of
+   them queried by live client code. Check grants and policies together; either
+   one alone tells you nothing.
 7. **Two divergent copies of one canonical table.** The 12 signs/elements/gods
    and the 12 labors were each duplicated across many files and had drifted;
    in the worst case the live onboarding flow assigned the wrong god and agent
@@ -521,6 +527,23 @@ open, recorded in `FIXES_LOG.md`:
   RLS is enabled with no policies, which is the *safe* state (total lockout),
   and they are empty. Inventing policies for schema of unknown purpose would
   be fabricating behaviour. Needs a human decision: drop, adopt, or leave.
+- **`platform_events` and `platform_metrics` still have `WITH CHECK(true)` on
+  INSERT**, on tables that carry a `user_id`. That is the spoofing shape in
+  §8.1(b): any member could insert rows attributed to anyone. `authenticated`
+  is deliberately **not** granted INSERT on either, so it is currently
+  unreachable — but the policy itself is still wrong and should be scoped
+  before that grant is ever added.
+- **`feature_flags` and `governance_policies` are readable by every approved
+  member**, by pre-existing policy (`USING(true)`, and
+  `is_platform_owner() OR status='active'` respectively). Both look deliberate
+  — published governance policies and feature flags are meant to be visible —
+  but they became *reachable* only when the missing grants were added, so they
+  are recorded here rather than assumed fine. 10 governance rows are visible to
+  a non-owner and all 10 are `status='active'`; no drafts leak.
+- **38 tables still have RLS policies and no grant.** Not referenced by any
+  client code here; most are the ~83-table scaffold below. Left locked out (the
+  safe state) rather than granted on the assumption that a policy's existence
+  implies it should be reachable.
 - **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
   not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
 - **`scripts/audit.py`'s 7 warnings are all understood**, and the tool now
@@ -564,6 +587,20 @@ entries (which were accurate when written):
   executes the fixed code. Serve pinned files with the content type matching
   their extension, or an `.html` served as `text/javascript` makes every
   element report absent, which looks exactly like a dramatic improvement.
+- **Test RLS by impersonating a real member, in-database.** `execute_sql`
+  through the Supabase MCP runs privileged, so it proves nothing about what a
+  member can see. `set_config('role','authenticated',true)` plus
+  `set_config('request.jwt.claims', json_build_object('sub', <uuid>, 'role',
+  'authenticated')::text, true)` reproduces exactly what PostgREST does, and is
+  what surfaced the missing-GRANT class above. Always compare the non-owner
+  count against the privileged count — equal counts on a table that should be
+  scoped is the finding.
+- **Classifying a policy by substring is not reading it.** A qual containing
+  `is_platform_owner` was labelled "owner-only" by a first-pass classifier and
+  turned out to be `is_platform_owner() OR status = 'active'` — a second branch
+  that makes rows member-visible. The classifier's own false-positive pass is
+  what caught it, but only because the result was checked against real row
+  counts rather than trusted. Read the full `qual` before acting on a label.
 - **A repo-wide grep is a candidate generator, not a verdict.** Several
   confident source-grep findings (missing `theme-color` on 121 pages,
   131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine

@@ -682,6 +682,36 @@ web-trend-scout → grill-me-codex [lock intent] → feature-architect → auton
 
 See `.claude/skills/README.md` for the full pipeline.
 
+### 10.1 External repos and skills — what has been evaluated, and the bar
+
+This platform is a no-build, no-framework, `noindex` membership-gated static
+site with one owner. That rules out most of the public skill ecosystem, which
+targets React/Next/Tailwind, npm-packaged apps, or public marketing funnels.
+Adopting something because it is popular, rather than because it fits *this*
+stack, adds instructions a session must read and then ignore.
+
+**The bar**, adapted from `vercel-labs/skills`'s own `find-skills` guidance
+(check install count, source reputation, and repo stars before recommending —
+prefer 1K+ installs, be sceptical under 100) plus one rule this repo needs on
+top: **the skill must name a mechanism that exists here.** A skill whose steps
+assume a build step, a component tree, or a package manager does not become
+applicable by rewriting its examples.
+
+Evaluated so far — recorded so a future session does not re-clone and re-read
+the same repositories:
+
+| source | what it is | outcome |
+|---|---|---|
+| `vercel-labs/agent-skills` | React/Next/web-design skills | **2 of 9 applicable.** Its Web Interface Guidelines found the `color-scheme` bug affecting 173 pages. Which rules transfer and which are React-only is recorded in `.claude/skills/interface-guidelines/SKILL.md` — read that rather than importing the upstream list wholesale. |
+| `vercel-labs/skills` → `find-skills` | discovery wrapper over `npx skills find/add` | **Not installed.** This session already has skill discovery. Its quality-gate criteria are adopted above; that was the transferable part. |
+| `anthropics/claude-plugins-official` | official plugin directory, 39 internal + external plugins | **`claude-md-management` was the find.** Its conciseness/currency rubric is what prompted measuring CLAUDE.md, which turned out to be ~68,900 tokens loaded per session with §8 as 88% of it — see `FIXES_LOG.md`'s header. The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`, `code-review` and `pr-review-toolkit` duplicate what this session already provides. |
+| `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills (UGC ads, video hooks, ad copy) | **0 applicable.** Built for public paid-acquisition funnels. This platform is `noindex, nofollow` and invite-gated — it has no ad surface to produce for. Evaluated twice; do not re-evaluate without a change in what the platform is. |
+| `cporter202/ai-growth-stack` | 1 README, 0 code | **0 applicable.** Nothing to adopt. |
+
+Marketing/course URLs (e.g. contentcreator.com's AI creator course) are
+reading material, not sources of adoptable code — nothing in them maps to a
+file in this repo, so they are noted and not acted on.
+
 ## 11. Concern taxonomy / shared vocabulary (`OMEGA_TAXONOMY.md`)
 
 `OMEGA_TAXONOMY.md` is a documentation-only reference — not a subsystem,

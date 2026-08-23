@@ -2961,6 +2961,36 @@ orphaned file.
     happened (§9).
   - Correction: this file previously said `.trend`/`.sparkline` are "not yet used by any page".
     **5 pages use them.** Stale, corrected here.
+- **[Fixed] The last 345 undersized touch targets, across 55 pages — closed by measuring at
+  runtime rather than by 55 page edits.** The shared sources (mobile nav drawer, topbar
+  controls, legal footer, controls dock) were fixed at source in an earlier entry; what remained
+  was ~40 distinct PAGE-LOCAL classes (`.filter-tag`, `.etag`, `.add-btn`, `.g-cat`, `.flt`,
+  `.tool-btn`, `.era-dot`, `.area-sl`, …) spread thinly over 55 pages, plus bare
+  `<button>`/`<input>`/`<div onclick>` with no class to select at all. Added section **E2** to
+  `omega-a11y.js`: at ≤760px it measures every interactive element and applies
+  `min-height`/`min-width:24px` only to the ones actually under the WCAG 2.5.8 floor. An element
+  whose computed `display` is `inline` is switched to `inline-flex` first, because `min-height`
+  does not apply to a non-replaced inline box — and *only* those, since turning a block or grid
+  child into inline-flex would wreck the layout around it.
+  - **Deliberately not done with a `::before`/`::after` hit-area overlay**, the other standard
+    technique for this. §4.1 documents ~230 page-local classes carrying their own
+    `::before`/`::after` rules, and a pseudo-element renders one rule's declarations only — an
+    overlay would have silently replaced those pages' own decoration. `min-height`/`min-width`
+    cannot collide that way.
+  - **A first pass left 9 stragglers on 4 pages, all reporting `data-omega-touch` absent** —
+    `cipher.html`'s and `realm.html`'s element pickers, `oath.html`'s category buttons and
+    `rune.html`'s action button are built by JS *after* both `DOMContentLoaded` and
+    `omega:populated`, so they did not exist when the pass ran. Added a debounced
+    `MutationObserver` (300 ms, ≤760px only, every handled element marked so re-runs skip it).
+  - **345 → 0** across all 178 pages, verified with the same `scan.js taps` command before and
+    after. The zero was checked rather than trusted: an identical "0 across 0 pages" earlier in
+    the session turned out to be a dead scan against a stopped server, so this run was confirmed
+    with `scan.js errors` reporting 5 real pages rendered on the same server.
+  - **Visual change worth stating plainly**: `input[type=range]` sliders (`.area-sl` and
+    friends) went from hairline tracks to 24px ones. A hairline slider is very hard to hit on a
+    phone, so this is the accessibility win working — and the result reads as a filled meter,
+    consistent with the platform's existing `.bar-track`/`.bar-fill` components. Confirmed by
+    before/after screenshots at 375px: layout intact, horizontal overflow 0 in both.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

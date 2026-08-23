@@ -130,6 +130,15 @@ jobs:
       - name: Generate TypeScript types from schema
         run: python3 scripts/types-from-schema.py
 
+      # ---- 2h. Context budget. CLAUDE.md is loaded into every agent session
+      #         before any work starts, and that cost is invisible unless
+      #         something reports it. It reached ~68,900 tokens once, 88% of
+      #         which was closed history that now lives in FIXES_LOG.md.
+      #         Blocking on purpose: the repo's own docs rule pushes toward
+      #         appending, so without a gate this regrows silently.
+      - name: Context budget
+        run: python3 scripts/context-budget.py
+
       # ---- 3. Style. Configs already existed in the repo but nothing ran them.
       - name: Prettier
         run: npx --yes prettier@3 --check . || echo "::warning::formatting drift"

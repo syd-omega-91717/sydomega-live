@@ -543,6 +543,7 @@ entries (which were accurate when written):
 | `python3 -m unittest discover -s scripts/tests` | **51** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**11,500** approx tokens / 16,000 budget |
 | broken asset references | 0 |
 | service-role key scan | clean |
 
@@ -567,6 +568,25 @@ entries (which were accurate when written):
   confident source-grep findings (missing `theme-color` on 121 pages,
   131 unreplaced `outline:none`) were false — the runtime showed 172/173 fine
   for both, because `bg.js` injects them.
+- **A scanner needs its own false-positive pass before its number means
+  anything.** A fixed-widget collision scan first reported 177/178 pages by
+  counting full-viewport backdrops (`omega-fx`, the particle canvas, the noise
+  overlay) as colliding with everything on screen. Excluding
+  `pointer-events:none` and full-bleed elements gave the real answer — which
+  happened to be the same number, for entirely different and genuine reasons.
+  Getting the right number by luck is not the same as measuring.
+- **A programmatic edit inside `bg.js`'s injected stylesheet can silently
+  no-op.** That CSS is one single-quoted JS string, and its section headers use
+  real box-drawing characters (`──`), not escapes — so a `replace()` written
+  against `\u2500` matches nothing and returns the string unchanged. Assert the
+  match count before replacing, then confirm the rule applies *in a render*:
+  a rule that reached the file but not the cascade reports `z-index:auto` and
+  0 background layers at runtime while looking correct in the diff.
+- **Per-session context cost is now gated.** `scripts/context-budget.py` runs
+  blocking in CI. See `.claude/skills/context-budget/` for where new
+  documentation belongs and how to read this repo's very large files cheaply
+  (`FIXES_LOG.md`, `profile.html`, `bg.js` each cost more in one full read than
+  the entire auto-loaded context).
 
 
 ## 9. Working in this repo — practical rules
@@ -675,6 +695,11 @@ web-trend-scout → grill-me-codex [lock intent] → feature-architect → auton
   `scripts/audit.py`/`node --check`, commits to the current branch. Never
   flips a `platform_settings` flag to `true`, never merges to `main`,
   never edits CI or touches secrets.
+- `context-budget` — keeps the per-session context cost down: measures what
+  every session loads before it starts, says where new documentation belongs
+  so `CLAUDE.md` does not regrow, and gives cheap read recipes for this repo's
+  very large files. Backed by `scripts/context-budget.py`, which runs blocking
+  in CI. Invoke it when adding to any of the audit docs.
 - `subscriber-portal` — exposure. Only wires a feature into real
   subscriber-facing pages (using the real `membership_tier`/
   `OmegaCanon.tierUnlocks()` system, not an invented one) once a human has

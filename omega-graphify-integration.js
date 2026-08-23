@@ -163,9 +163,14 @@
 
       if (toUpsert.length === 0) return;
 
-      const { error } = await sb
+      /* .select() so the upsert returns the rows it wrote. graph_events.entity_id
+         is a real foreign key and intelligence.html resolves the entity name
+         through it; without an id the audit row cannot link to anything and
+         that page renders an em-dash for every auto-ingested event. */
+      const { data: written, error } = await sb
         .from('graph_entities')
-        .upsert(toUpsert, { onConflict: 'user_id,entity_type,canonical_name' });
+        .upsert(toUpsert, { onConflict: 'user_id,entity_type,canonical_name' })
+        .select('id,canonical_name');
 
       if (error) throw error;
 
@@ -174,7 +179,7 @@
         count: toUpsert.length,
         source_activity_id: activity.id,
         confidence_avg: toUpsert.reduce((sum, e) => sum + e.confidence_score, 0) / toUpsert.length,
-      });
+      }, written && written[0] && written[0].id);
     } catch (err) {
       console.error('[Graphify Integration] Entity upsert error:', err);
     }
@@ -240,12 +245,13 @@
 
       if (error) throw error;
 
-      // Log graph event
+      /* source_entity_id is already a real graph_entities uuid here, so the
+         audit row can point at it directly. */
       await logGraphEvent('relationship_auto_ingested', toUpsert[0]?.source_entity_id, {
         count: toUpsert.length,
         source_activity_id: activity.id,
         strength_avg: toUpsert.reduce((sum, r) => sum + r.strength, 0) / toUpsert.length,
-      });
+      }, toUpsert[0]?.source_entity_id);
     } catch (err) {
       console.error('[Graphify Integration] Relationship upsert error:', err);
     }
@@ -269,18 +275,20 @@
      The await was also inside a try/catch that could never fire: the Supabase
      client resolves to {data, error} rather than throwing, so a failed audit
      write was silently discarded. */
-  async function logGraphEvent(eventType, entityLabel, details) {
-    const { error } = await sb
-      .from('graph_events')
-      .insert([
-        {
-          user_id: currentUser,
-          event_type: eventType,
-          occurred_at: new Date().toISOString(),
-          change_summary: entityLabel || 'system',
-          after_state: details || {},
-        },
-      ]);
+  async function logGraphEvent(eventType, entityLabel, details, entityId) {
+    const row = {
+      user_id: currentUser,
+      event_type: eventType,
+      occurred_at: new Date().toISOString(),
+      change_summary: entityLabel || 'system',
+      after_state: details || {},
+    };
+    /* Only set when a real uuid is available. entity_id is a foreign key to
+       graph_entities, so a canonical_name string here would fail the
+       constraint -- which is what the old `entity_name` column was standing in
+       for. Nullable by design: an event that is not about one entity omits it. */
+    if (entityId) row.entity_id = entityId;
+    const { error } = await sb.from('graph_events').insert([row]);
     if (error) {
       console.error('[Graphify Integration] graph_events insert failed:', error.message);
     }

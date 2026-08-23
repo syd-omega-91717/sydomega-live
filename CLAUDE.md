@@ -2991,6 +2991,88 @@ orphaned file.
     phone, so this is the accessibility win working — and the result reads as a filled meter,
     consistent with the platform's existing `.bar-track`/`.bar-fill` components. Confirmed by
     before/after screenshots at 375px: layout intact, horizontal overflow 0 in both.
+- **[Improved] The two emblem systems now share one visual language.** The platform draws two
+  separate marks — `emblem.js` in the topbar (161 pages, given a shared armillary frame in an
+  earlier entry) and `omega-page-emblem.js` via `[data-page-emblem]` (160 pages) — and they had
+  no vocabulary in common: the page mark was a plain ring with N pulsing points, chords and a
+  rotating triangle. Gave it the same bezel + twelve zodiac ticks (every third longer and
+  brighter) + counter-rotating scan arc, scaled to its radius. Each page's own point count,
+  glyph and accent colour are untouched — that per-page identity is this module's whole stated
+  purpose ("forty pages spinning the same shape says nothing about any of them") — but they now
+  sit inside one recognisable instrument. Painted coverage of the 264x264 buffer went
+  **7.9% → 9.9%**, verified by reading the real pixel buffer and by screenshotting the canvas
+  before and after with the fixed chrome removed (the first capture was obscured by the controls
+  dock and the keyboard hint, which sit over that region). Frozen under
+  `prefers-reduced-motion`, since `t` never advances there.
+- **[Diagnosed + Fixed] The failing CI check is a runner that is never assigned — and separately,
+  4 of the workflow's own advisory steps had been failing every run, one of them 98% noise.**
+  Asked to focus on the failing PR check, the diagnosis was taken past "0 billable ms" to the
+  job object itself. `list_workflow_jobs` on a passing run (344, `main` @ `aab8838`) versus a
+  failing one shows the difference plainly: the passing job carries
+  `runner_id: 1000015220`, `runner_name`, `runner_group_name` and **24 steps** beginning with
+  "Set up job"; the failing job has **no runner fields at all and no `steps` array**, with
+  `started_at` → `completed_at` two seconds apart. The job is created and killed before step 1
+  can begin, so no repository code is ever executed and no code change can affect it. This is
+  billing/enablement (Settings → Billing → Actions spending limit, or Settings → Actions →
+  General), confirmed further by the same commit passing in 53s and later failing in 4s.
+  `.github/workflows/ci.yml` parses cleanly and `verify` is its only job, so the workflow file
+  itself was never the problem.
+  - **Every step run locally: all 11 BLOCKING steps pass.** The suite would go green the moment
+    a runner picks it up. Extracted the `run:` blocks straight from the workflow rather than
+    approximating them, so this tests what CI actually executes.
+  - **Three changes that cut minute burn**, which matters if the cause is exhausted included
+    minutes: a `concurrency` group so a PR pushed to repeatedly supersedes its own in-flight
+    runs instead of running the suite to completion once per push (scoped with
+    `cancel-in-progress: ${{ github.event_name == 'pull_request' }}` so a run on `main` — the
+    record for a merged commit — is never cancelled); `timeout-minutes: 15` on a job that
+    finishes in ~55s, so a hang cannot hold a runner for GitHub's 6-hour default; and an
+    `actions/cache` of `~/.npm`, because Prettier and ESLint are fetched with `npx --yes` and
+    were measured at **23s and 4s of a 53s run** — half the job, for two steps that only report
+    drift. `setup-node`'s own `cache: npm` was deliberately NOT used: there is no
+    `package-lock.json`, and it errors out without one, which would have turned a green run red
+    once runners returned.
+  - **`scripts/schema-dictionary.py` was reporting 892 "column does not exist" findings, of
+    which essentially all were false.** It is `continue-on-error`, so it has been exiting 1 on
+    every run, unread — a checker that cries wolf is one nobody looks at, and that is precisely
+    what happened. Six parser bugs, each verified against the real SQL before fixing:
+    1. **Multi-column `ALTER TABLE`** — the pattern anchored `ADD COLUMN` directly to
+       `ALTER TABLE`, capturing only the first column. `profiles.membership_tier` (real, in 32
+       files) was reported missing against `bg.js` for this reason. `IF NOT EXISTS` was also
+       required, so plain forms were missed.
+    2. **Nested jsonb keys read as columns** — `.insert({…})` was captured with `\{([^}]+)\}`,
+       which stops at the FIRST `}`. For `omega-sovereign-os.js`'s
+       `metrics:{ lcp, fcp, ttfb, load }` that meant the inner keys were checked as top-level
+       columns of `platform_events`. Replaced with brace-matched extraction plus depth-aware
+       key parsing.
+    3. **Unbounded search window** — each `.from()` scanned the entire rest of the file, so
+       every table was blamed for every `.select()` appearing later anywhere in it (this is why
+       `profiles` was reported missing `activity_type` and `title`, which belong to
+       `activity_feed`). Now bounded to the next `.from()`.
+    4. **`*` and embedded resources** counted as columns.
+    5. **SQL comments corrupting the column split** — `activity_feed`'s
+       `activity_type text NOT NULL,  -- 'task_complete','gate_unlock',…` has commas inside the
+       comment, so the split lost the real column that followed (`title`), which was then
+       reported missing against five files that all read it correctly. Same bug class CLAUDE.md
+       had already recorded for a different scanner, never fixed in this one. Comments are now
+       stripped quote-aware before parsing, and the body is split only on **top-level** commas,
+       since `CHECK (x IN ('a','b'))` has the same effect.
+    6. **Incomplete type list** — plain `timestamp` was absent (only `timestamptz` was listed),
+       so every column declared with it vanished, taking
+       `council_deliberations.created_at`/`completed_at` and `sovereign_events.id` with it.
+       Replaced with a longest-first list including serial/char/float/decimal/json/bool.
+    Plus a documented `KNOWN_LIVE_COLUMNS` allowlist for `task_completions`'
+    `kind`/`task`/`axis`/`increment`, which §8 already records as live in production but present
+    in no `CREATE TABLE` in this repo. Result: **892 → 10 findings**, parsed columns 995 → 1008.
+  - **The 10 survivors are real, and 5 of them are genuine column-name bugs that were invisible
+    under the noise** — `graph_entities.verified` and `graph_relationships.confidence`/
+    `.verified` are **writes** from `graph-admin.html` against columns that do not exist (the
+    tables have `confidence_score` and `strength`), and `intelligence.html` reads
+    `graph_events.created_at`/`entity_name` where the table has `occurred_at`/`recorded_at` and
+    `entity_id`. Not fixed here: choosing between `occurred_at` and `recorded_at`, or deciding
+    whether `verified` should be added as schema versus the code using a different column, is an
+    intent question, and this file's own rule is not to guess at it. The remaining 5 are the
+    already-documented `map.html` geolocation gap (4) and `task_completions.labor_id`, which
+    cannot be confirmed without live schema access.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

@@ -125,3 +125,27 @@ CREATE UNIQUE INDEX IF NOT EXISTS graph_relationships_natural_key
 -- are left locked out -- the safe state -- rather than granted on the
 -- assumption that a policy's existence implies it should be reachable.
 -- ----------------------------------------------------------------------------
+
+-- ----------------------------------------------------------------------------
+-- FOLLOW-UP: two more natural keys the clients already assumed.
+--
+-- Applied as migration `ai_memory_natural_key`. Same shape as
+-- graph_relationships above: omega-memory.js:37-40 upserts with
+-- onConflict:'user_id,memory_key' against a table whose only unique index was
+-- the primary key, so Postgres raised 42P10 and every memory write was
+-- discarded -- silently, since the call sits in a try/catch that cannot fire.
+-- Verified 0 rows before creating the index.
+CREATE UNIQUE INDEX IF NOT EXISTS ai_memory_user_key
+  ON public.ai_memory (user_id, memory_key);
+
+-- platform_metrics needed no schema change -- it already has
+-- UNIQUE(metric_date, metric_name). The bug was client-side: omega-metrics.js
+-- and omega-finops.js upserted with NO conflict target, which defaults to the
+-- primary key (id), a column neither payload carries. PostgREST therefore sent
+-- a plain insert and every write after the day's first for a given metric_name
+-- raised 23505. Fixed in both files with onConflict:'metric_date,metric_name'
+-- plus a real .error check. Note INSERT on platform_metrics is still NOT
+-- granted here (see the WITH CHECK(true) exclusion above), so these writes
+-- remain blocked at the permission layer until that policy is decided on --
+-- the fix is correct regardless and costs nothing.
+-- ----------------------------------------------------------------------------

@@ -396,7 +396,13 @@ window.OmegaGraphify = (function() {
     }
   };
 
-  return {
+  /* Named so the public methods can call each other. Every method here is an
+     ARROW function, so `this` is not the object literal -- it is the enclosing
+     IIFE's `this`, i.e. window in a classic script. init() called
+     `this.loadGraph()`, which resolved to window.loadGraph (undefined) and
+     threw "this.loadGraph is not a function" on every graphify.html load,
+     aborting init() before Render.frame() and leaving the graph canvas blank. */
+  const API = {
     /**
      * Initialize graph visualization: attach canvas, setup event listeners, load data, start animation loop
      * @param {HTMLCanvasElement} canvasEl - Canvas element for rendering
@@ -415,7 +421,7 @@ window.OmegaGraphify = (function() {
       canvas.addEventListener('touchmove', Interaction.onTouchMove);
       canvas.addEventListener('touchend', Interaction.onTouchEnd);
 
-      await this.loadGraph();
+      await API.loadGraph();
       Render.frame();
     },
 
@@ -496,4 +502,6 @@ window.OmegaGraphify = (function() {
       }
     }
   };
+
+  return API;
 })();

@@ -200,7 +200,9 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 
 var AK='omega_treasury_assets',RK='omega_treasury_reserves',FK='omega_treasury_flows';
 var assets=JSON.parse(localStorage.getItem(AK)||'[]');
-var reserves=JSON.parse(localStorage.getItem(RK)||'{emerg:0,opp:0,legacy:0,emergTarget:0}');
+/* valid-JSON fallback: unquoted keys threw at module top level on first
+   visit, killing every handler defined below (see contributions.html). */
+var reserves=JSON.parse(localStorage.getItem(RK)||'{"emerg":0,"opp":0,"legacy":0,"emergTarget":0}');
 var flows=JSON.parse(localStorage.getItem(FK)||'[]');
 
 function save(){localStorage.setItem(AK,JSON.stringify(assets));localStorage.setItem(RK,JSON.stringify(reserves));localStorage.setItem(FK,JSON.stringify(flows));}

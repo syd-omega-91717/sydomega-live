@@ -18,6 +18,11 @@ Checks:
      diverge (argument list or body) across files -- CREATE OR
      REPLACE silently lets whichever file applied last win, so a
      divergence here is a live-behavior risk, not just duplication
+  9. JSON.parse() fallback literals that are not valid JSON       (CRITICAL)
+     -- e.g. JSON.parse(localStorage.getItem(K) || '{pct:10}'). The
+     fallback runs only on a member's FIRST visit, and at the top level
+     of a <script type="module"> the throw aborts the whole module, so
+     every function below it silently never exists
 
 Checks 7 and 8 automate a pattern this project has repeatedly found by
 hand across several audit sessions (see GAP_ANALYSIS.md sections 2.1 and
@@ -28,6 +33,7 @@ live schema before acting -- but they turn a manual, easy-to-forget sweep
 into a permanent, automatic one.
 """
 
+import json
 import os
 import re
 import sys
@@ -419,6 +425,76 @@ if diverging:
           "with a pg_proc query before deleting any file (see GAP_ANALYSIS.md §3.1).")
 else:
     print("  OK — every client-called RPC has one consistent definition.")
+
+# ---------------------------------------------------------------- 9
+head("9 · JSON.parse FALLBACK LITERALS")
+
+# A fallback like  JSON.parse(localStorage.getItem(K) || '{pct:10,income:0}')
+# only runs when the key is ABSENT -- i.e. on a member's first visit -- and
+# '{pct:10,income:0}' is not valid JSON, because JSON requires quoted keys. In a
+# <script type="module"> the throw aborts the whole module, so every function
+# and every window.<fn>= exposure below it silently never exists and the page's
+# buttons do nothing. That shipped on contributions.html, notifications.html and
+# treasury.html and was invisible to every other check here: the syntax is valid
+# JavaScript, the column names are fine, and nothing errors until a real browser
+# hits the first-visit path. Critical, not a warning -- it takes a whole page out.
+
+
+def _balanced_arg(text, start):
+    """Return the argument text of a call whose '(' was consumed at `start`."""
+    depth, quote, i = 1, None, start
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            if ch == "\\":
+                i += 2
+                continue
+            if ch == quote:
+                quote = None
+        elif ch in "\"'`":
+            quote = ch
+        elif ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth == 0:
+                return text[start:i]
+        i += 1
+    return None
+
+
+FALLBACK_RE = re.compile(r"""\|\|\s*(['"])(.*?)\1\s*$""", re.S)
+
+bad_json = []
+for path in sorted(f for f in os.listdir(".") if f.endswith((".html", ".js"))):
+    body = read(path)
+    for m in re.finditer(r"JSON\.parse\(", body):
+        arg = _balanced_arg(body, m.end())
+        if arg is None:
+            continue
+        lit = FALLBACK_RE.search(arg.strip())
+        if not lit:
+            continue
+        try:
+            json.loads(lit.group(2))
+        except ValueError as exc:
+            bad_json.append((path, body[:m.start()].count("\n") + 1,
+                             lit.group(2), str(exc).split(":")[0]))
+
+print(f"  JSON.parse() calls with a string fallback checked across "
+      f"{len([f for f in os.listdir('.') if f.endswith(('.html', '.js'))])} files")
+
+if bad_json:
+    critical += 1
+    print(f"\n  CRITICAL — JSON.parse fallback literal is not valid JSON "
+          f"({len(bad_json)}). This throws on a member's FIRST visit and, at "
+          f"module top level, kills every function defined below it:")
+    for path, line, lit, why in bad_json:
+        shown = lit if len(lit) <= 60 else lit[:57] + "..."
+        print(f"    {path}:{line}  {shown!r}  -> {why}")
+    print("    Fix: quote the keys, e.g. '{\"pct\":10}' not '{pct:10}'.")
+else:
+    print("  OK — every JSON.parse fallback literal parses as JSON.")
 
 # ---------------------------------------------------------------- summary
 head("SUMMARY")

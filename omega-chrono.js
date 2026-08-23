@@ -185,6 +185,15 @@
     var w=document.createElement('div');
     w.id='omega-ded-widget';
     w.style.cssText='position:fixed;bottom:44px;right:14px;z-index:1999;background:rgba(2,2,6,.9);border:1px solid rgba(0,229,255,.15);border-radius:3px;padding:8px 12px;min-width:180px;box-shadow:0 4px 20px rgba(0,0,0,.4)';
+    /* bottom:44px sits inside nav.js's 66px #omega-mob bar on a phone, so the
+       widget was clipped by it and also collided with the controls dock.
+       Measured at 375px; this clears both. */
+    if(!document.getElementById('omega-ded-widget-css')){
+      var ds=document.createElement('style');
+      ds.id='omega-ded-widget-css';
+      ds.textContent='@media(max-width:760px){#omega-ded-widget{bottom:122px!important}}';
+      (document.head||document.documentElement).appendChild(ds);
+    }
     w.innerHTML=
       '<div style="font-family:\'Courier Prime\',monospace;font-size:7px;letter-spacing:2px;color:rgba(0,229,255,.5);margin-bottom:5px">\u03A9 DEDICATION TODAY</div>'
       +'<div id="omega-ded-time" style="font-family:\'Cinzel Decorative\',serif;font-size:11px;color:#00E5FF;line-height:1;margin-bottom:5px">00:00:00 / 09:17:17</div>'

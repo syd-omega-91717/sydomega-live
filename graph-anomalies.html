@@ -302,7 +302,7 @@
   <script>
     const sb = window.OmegaSupabase?.sb;
     if (!sb) {
-      document.getElementById('anomalyTable').innerHTML = '<tr><td colspan="6" class="empty-state">SUPABASE NOT READY</td></tr>';
+      document.getElementById('anomalyTable').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1">SUPABASE NOT READY</div>';
     }
 
     let allAnomalies = [];
@@ -341,7 +341,7 @@
         renderAnomalies(allAnomalies);
       } catch (err) {
         console.error('Failed to load anomaly data:', err);
-        document.getElementById('anomalyTable').innerHTML = '<tr><td colspan="6" class="empty-state">ERROR LOADING DATA</td></tr>';
+        document.getElementById('anomalyTable').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1">ERROR LOADING DATA</div>';
       }
     }
 

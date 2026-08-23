@@ -306,8 +306,11 @@ through this one file with no per-page markup changes:
   chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
   raw `<button>`s with no shared class — hand-editing every occurrence
   across ~250 pages wasn't attempted; this reaches them all from one
-  file instead. 27 pages still use native `<table>` markup with
-  page-local classes instead of the `.tbl-wrap`/`.tbl-row` system —
+  file instead. (This paragraph used to say "27 pages still use native
+  `<table>` markup" — that is **stale**: a repo-wide grep now finds zero
+  `<table>` elements anywhere, so the conversion is complete. See §8's
+  correction, including what the conversion cost in ARIA semantics.)
+  Pages with page-local table classes are
   *not* addressed by the fallback skin (they already have their own
   classes, so `:not([class])` correctly skips them) and still open,
   page-by-page, structural work — not a quick CSS fix.
@@ -1778,7 +1781,9 @@ orphaned file.
   already deliberately decided to leave dormant (`transactions`, `wallet_balances` — token/payment
   infrastructure gated behind an explicit product decision, not a bug), the two hygiene items the
   user explicitly chose to leave as-is when asked directly (`.mp4`/`.docx` Git LFS migration), and
-  the 27 pages still using native `<table>` markup instead of the shared `.tbl-wrap` system. (The
+  and `ops.html`'s never-built event-bus metrics container. (The native-`<table>` conversion this
+  bullet used to list as open is **done** — a repo-wide grep now finds zero `<table>` elements —
+  and the ARIA-semantics gap that conversion left behind is now fixed too; see §8. The
   page-local `.tab-btn`/`.card-title` font-size sweep referenced by an earlier draft of this bullet
   is NOT open — it was completed in the entry above titled "The page-local `.tab-btn`/`.card-title`
   sweep flagged above: done." This bullet was stale on that one point; corrected here rather than
@@ -2365,6 +2370,500 @@ orphaned file.
     `python3 scripts/audit.py` (0 critical / 6 pre-existing warnings, unchanged), and
     `python3 -m unittest discover -s scripts/tests` (25/25 pass) all confirmed clean after both
     fixes. No SQL/schema changes — pure client-side JS, live the moment these two files deploy.
+- **[Fixed — highest-impact of this session] `bg.js` silently loaded NONE of its ~90 platform
+  modules on 7 pages, because every injection dropped its work when `document.body` was absent
+  instead of waiting for it.** Found by crawling all 178 pages in real headless Chromium and
+  noticing that `council.html` and the six `graph-*.html`/`graphify.html` views had **5 script
+  tags loaded where `dashboard.html` had 98**. Root cause: 89 separate injection sites in `bg.js`
+  were written as `if(document.body)document.body.appendChild(x)` — a guard that silently
+  discards rather than defers. Those 7 pages load bg.js as a plain `<script src="/bg.js">` inside
+  `<head>` (141 other pages use `defer` or place it in `<body>`), so it executes during head
+  parsing while `document.body` is still `null` and every one of those 89 guards evaluates false.
+  The injected design-system `<style>` still landed (it appends to `<head>`), so the pages *looked*
+  styled — which is exactly why this went unnoticed — while nav, the approval guard's runtime,
+  `omega-a11y.js`, copilot, notify and telemetry were all dropped with no error anywhere. Same
+  shape as the `nav.js` injection gap already recorded above, one layer deeper. Fixed by adding a
+  single `__omegaAppend(el)` helper at the top of `bg.js` that appends immediately when body
+  exists and otherwise queues to `DOMContentLoaded` (preserving relative order), then converting
+  all 89 sites to it via a scripted exact-string replacement with a count assertion. The
+  assertion earned its keep twice: it caught that the helper's own inner
+  `if(document.body)document.body.appendChild(el)` matched the same pattern (which would have
+  made the helper infinitely recursive), and a first attempt at also rewriting the two
+  `if(document.body){…}else requestAnimationFrame(…)` sites left a dangling `else` — those two
+  already retry rather than drop and are deliberately left untouched. The noise-overlay block
+  used a *compound* `if(document.body && !getElementById(...))` guard that the sweep did not
+  match, and was fixed separately. Verified in real Chromium: `council.html` went **5 → 97**
+  script tags with `omega-a11y` now loading and the sidebar rendering, all 7 pages now fully
+  correct, and `dashboard.html`/`matrix.html` unchanged at 98 (no regression). The remaining raw
+  `document.body.appendChild` calls (`bar`, `g`, `ov`, `warn`, `el`) were each read in context
+  and left alone: all are async runtime UI created after auth resolves, long after body exists.
+- **[Fixed] The platform-wide skip link existed on every page but never moved focus — it failed
+  its only job.** `omega-a11y.js` injects `<a id="omega-skip">` (no class, which is why a
+  `.skip-link` selector sweep missed it and initially suggested 158 pages had none). Two real
+  bugs, both measured rather than inferred: (1) the link's target never got `tabindex="-1"`, and
+  a `<div>`/`<main>` is not focusable by default — so activating it scrolled the page but left
+  focus on `<body>`, meaning the next Tab restarted at the top of the document and walked back
+  into the ~15-section sidebar dock the link exists to skip; (2) `ensureTarget()` resolved the
+  content region with `main`, `.main`, `#app` only, none of which match the ~100 pages built as
+  `.shell > aside#omega-side + div[flex:1]`, so on `matrix.html`/`media.html`/`terms.html` the
+  href stayed at the default `#omega-main-content` — an element that was never created, i.e. a
+  dead fragment link. The same too-narrow lookup is why section D left those pages with **zero**
+  `<main>`/`[role=main]` landmarks despite the module's own header promising "ensures every page
+  has at least one". Fixed with one shared `resolveMain()` used by both sections, which adds
+  `.page-shell` and the sidebar's next element sibling as candidates, sets `tabindex="-1"`, and
+  focuses the target explicitly on click. Two guards matter: any candidate that *contains*
+  `#omega-side` is rejected (`.shell` wraps nav and content together — promoting it would put the
+  whole navigation inside the main landmark, worse than no landmark), and decorative tags are
+  skipped (`404.html`/`pending.html` put a full-bleed `<canvas>` right after the aside, which the
+  naive sibling walk targeted, putting `role="main"` on an empty canvas). Verified by driving a
+  real keyboard (Tab, then Enter) with content revealed the way the approval guard reveals it:
+  **8 failures before, 18/18 assertions passing after**, and a full-178-page pass with
+  `waitUntil:'load'` showed 165 fully correct, 0 landmarks wrapping the sidebar, 0 decorative
+  targets (the shortfall being page-load timeouts under 8-way parallelism — each re-passed
+  individually). `offline.html` is correctly excluded: it deliberately loads no `bg.js` so it
+  still works with no network.
+- **[Fixed] `breath.html`'s guided breathing animation froze permanently on the first HOLD
+  phase.** `drawBreathCircle()` applied alpha by string-appending a hex pair (`col+'55'`), which
+  is valid for the five technique colors (6-digit hex) but produces the unparseable
+  `'rgba(201,168,76,.5)55'` for the gold HOLD/PAUSE and idle states — and `addColorStop` *throws*
+  on a bad color rather than ignoring it. The throw escaped into `tick()`, which schedules its
+  next `requestAnimationFrame` only *after* the draw returns, so the loop died and `done()` was
+  never called: BOX BREATHING (the default technique, INHALE/HOLD/EXHALE/HOLD, "Navy SEAL
+  standard") froze roughly four seconds into the very first session, and the idle render threw on
+  page load. Fixed with a `withAlpha()` helper that accepts either color form. Verified by
+  driving a real session through the phases: **before** = phase sequence `["INHALE","HOLD"]` and
+  2 page errors, stuck; **after** = `["INHALE","HOLD","EXHALE"]` with 0 errors.
+- **[Fixed] `omega-graphify.js` threw `this.loadGraph is not a function` on every `graphify.html`
+  load.** `init` is an arrow function on an object literal returned from an IIFE, so `this` is the
+  IIFE's `this` (window), not the object — `this.loadGraph()` resolved to `window.loadGraph`,
+  undefined. The throw aborted `init()` before `Render.frame()`, leaving the graph canvas blank.
+  Fixed by naming the returned object `API` and calling `API.loadGraph()`. Verified: `init()` now
+  returns cleanly and the TypeError is gone.
+- **[Improved] `i18n.js` cut from 297 KB to 55 KB — 242 KB off every page load, platform-wide.**
+  Measured the real payload in headless Chromium first rather than guessing: a `dashboard.html`
+  load pulled **93 JS requests totalling 1.25 MB**, of which `i18n.js` alone was 297 KB (24% of
+  all JavaScript) — eagerly loaded by `bg.js` on every one of the ~250 pages even though the
+  default language is `en` and the markup is already written in English. It inlined all 7
+  languages for all 1013 keys in one file. English **must** stay inline because `OmegaI18n.t(key)`
+  is synchronous and called at arbitrary times by `profile.html` and `approvals.html` (several
+  call sites pass `'en'` explicitly), so only the other six languages were split out to
+  `/i18n/<lang>.json`, fetched on demand. JS payload per page: **1.25 MB → 1.01 MB**. The
+  dictionary was extracted by *evaluating* `i18n.js` in a sandboxed VM rather than regex-parsing
+  it, so escaped quotes (`'S\'inscrire'`) could not corrupt the split; a browser round-trip then
+  confirmed all **1013 keys × 7 languages byte-identical** to the pre-split dictionary. Public API
+  is unchanged (`translate` now returns a Promise where it previously returned `undefined`; no
+  caller used the return value). One real bug was caught by the tests during development:
+  memoising the in-flight fetch permanently meant a *failed* pack pinned the member to English for
+  the rest of the session with re-selecting the language doing nothing — fixed by clearing the
+  in-flight entry once the request settles, so only success suppresses a refetch. Verified with 22
+  browser assertions: zero packs fetched for a default English visitor, correct RTL/`dir` and
+  translated sidebar on switching to Arabic, a stored non-English preference auto-loading its pack
+  on a fresh page load, and an HTTP-500 pack leaving the page cleanly in English with no unhandled
+  error, then recovering on retry.
+- **[Fixed] Form controls across 66 pages had no accessible name, and `omega-a11y.js`'s own label
+  audit could not have helped because it never looked at `<select>` or `<textarea>`.** The crawl
+  found 177 controls with no accessible name. Section E queried `<input>` only — but the bulk of
+  this platform's unnamed controls are `<select>` dropdowns (`p-cat`, `filter-type`, `af-rel`,
+  `triv-diff` …). Worse, its fallback chain ended in `input.type`, so where it *did* apply it
+  produced `aria-label="text"` / `"number"` / `"date"` — a screen reader then reads that out **in
+  place of** a name, which is worse than staying silent. Measured on a 10-page sample: 12 controls
+  carried such a bare type-word as their entire accessible name. The important finding is that
+  **111 of the 177 already sit next to a real `<label>` the page author wrote** — "CATEGORY",
+  "TIER", "COMMISSION RATE (%)", "ZODIAC SIGN" — which simply has no `for=` attribute and does not
+  wrap the control, so it renders correctly on screen while being invisible to assistive tech.
+  Rewrote section E to cover `input`/`select`/`textarea` and to prefer *associating* that existing
+  label (setting `for=`/`id`, generating an id only when the control lacks one) over inventing a
+  string: it recovers the author's own wording and stays correct if the page later rewrites the
+  label text, and it is idempotent because `el.labels` is non-empty on the next run. Dropped the
+  `input.type` fallback entirely. A `<select>`'s first `<option>` is used only when it reads like a
+  **prompt** ("Select a trigger…", "ALL TYPES", "-- choose --"); most first options are real values
+  ("Knowledge", "Self", "🏠 HOUSING", "1 — Individual") and naming a category dropdown "Knowledge"
+  actively misleads, so those are deliberately left unnamed rather than mislabelled. Verified in
+  Chromium with an identical-methodology A/B over a 10-page sample: named **71 → 98**, unnamed
+  **35 → 8**, bare-type-word names **12 → 5** — and the 5 remaining were confirmed by hand not to be
+  junk at all but genuine author labels that happen to read "DATE"/"EMAIL" on a date/email field.
+  Provenance spot-checked on `expenses.html`: every control now resolves through a real
+  `<label for>` ("DESCRIPTION", "AMOUNT ($)", "TYPE", "CATEGORY", "DATE", "NOTES (optional)").
+  Across all 66 affected pages: 407 controls named, 78 still unnamed (those have no label, no
+  placeholder, and no prompt-shaped option — nothing truthful to derive a name from).
+- **[Fixed] Three pages were entirely dead on a member's first visit: an invalid-JSON default
+  threw at module top level and killed every function below it.** `contributions.html:152`,
+  `notifications.html:134` and `treasury.html:203` each did
+  `JSON.parse(localStorage.getItem(K)||'{pct:10,income:0}')` — and `'{pct:10,income:0}'` is **not
+  valid JSON**, because JSON requires quoted keys. The fallback only runs when the key is absent
+  from `localStorage`, i.e. on **every first visit**, and the statement sits at the top level of a
+  `<script type="module">`, so the throw aborted the whole module and nothing declared below it
+  ever ran. Every `window.<fn>=` exposure further down the module was therefore never assigned:
+  `contributions.html` lost its filters plus LOG CONTRIBUTION / LOG GIFT / SET giving-target;
+  `notifications.html` lost MARK ALL READ / CLEAR ALL / SAVE REMINDER / REQUEST PERMISSION / SAVE
+  SETTINGS; `treasury.html` lost SAVE ASSET / UPDATE RESERVES / LOG FLOW. Found by scanning every
+  inline `onclick`/`onchange`/… handler on all 178 pages in a real browser and checking whether
+  the function it names actually exists at runtime, then confirmed independently by a static scan
+  for `JSON.parse(… || '<literal>')` fallbacks that do not parse — both methods returned exactly
+  the same three files. Fixed by quoting the keys. Verified deterministically: each original
+  literal throws, each replacement parses, and the parsed keys and values are identical to what
+  the author wrote; in-browser, the `SyntaxError` count on each page went **1 → 0**.
+  **End-to-end confirmed** (an earlier draft of this entry recorded that it could not be, because
+  the pages redirected to `account.html` and then `terms.html`; both gates were then satisfied in
+  the harness — the terms one is `bg.js:1002`, `if(d.sign && !d.terms_accepted)`, so the stub
+  profile needs `terms_accepted:true`): with an authenticated, approved, terms-accepted session
+  and a fresh empty `localStorage`, the handler count on the three pages goes **0/4 → 4/4,
+  0/5 → 5/5, 0/3 → 3/3** with the page staying put rather than redirecting.
+- **Method note for anyone re-running a browser scan here: stub `esm.sh` first, or the results are
+  worthless.** The first pass of the dead-handler scan reported 44 pages and 66 missing functions,
+  including `setTab` on 34 pages — which flatly contradicted this file's own record that the
+  module-boundary bug was fixed and re-verified at 0 remaining. The contradiction was the tell.
+  Every gated page loads Supabase with `import{createClient}from'https://esm.sh/@supabase/supabase-js@2'`
+  at the top of a `<script type="module">`, and `esm.sh` is unreachable from a sandboxed
+  environment (`curl` returns status 000). When a module's top-level import fails, **none** of its
+  code runs, so `window.setTab = setTab` never executes and every such function looks missing.
+  Re-running with a Playwright route fulfilling `esm.sh/**` from a local stub dropped the result
+  to 9 pages / 13 functions, and `setTab`/`switchTab` disappeared entirely — confirming the
+  earlier fix is intact. Of the 13 that survived, 7 (`item`) were a scanner false positive
+  matching `item(` inside the string `'Restored '+n+' item(s)…'`, and the other 6 were the real
+  bug above. A reusable authenticated-session stub for this
+  (`createClient` returning working `auth.getSession`/`from().select().single()` chains) is worth
+  rebuilding for any future browser scan of the gated pages; without a session they redirect to
+  `account.html`, and with one they redirect to `terms.html`.
+- **[Fixed] `i18n.js`'s auto-translate lost a race it usually loses, so `translate()` never ran on
+  most page loads — and `approvals.html`, the owner console, rendered with a blank page title.**
+  `i18n.js` registered its startup unconditionally as
+  `document.addEventListener('DOMContentLoaded', …)`. But `bg.js` injects this file by appending a
+  `<script>` at runtime, and a dynamically inserted script is **async** — the browser does not
+  delay `DOMContentLoaded` for it. So the file typically finished executing *after* that event had
+  already fired, registering a listener for something that would never happen again. Measured on a
+  zero-latency local server by instrumenting both timestamps: i18n.js landed after
+  `DOMContentLoaded` on 3 of 4 sampled pages (approvals 172ms vs 187ms, dashboard 261 vs 296,
+  vault 137 vs 258); only `matrix.html` won the race. `localStorage.omega_lang`, which
+  `translate()` writes on every call, was `null` on exactly the three losers — proof it never ran.
+  Being a race is why this was never noticed: it works sometimes. Two real consequences: any
+  member whose stored language is not English got **no translation at all** on load (the entire
+  language switcher being effectively decorative on first paint), and `approvals.html` showed a
+  **blank title** because its `<div class="t">` and subtitle `<small>` are empty in the markup and
+  filled purely from `data-i18n` — confirmed by calling `OmegaI18n.translate('en')` by hand there
+  and watching "INVISIBLE ARCHITECT CONSOLE" appear. Fixed with the `document.readyState` check
+  the rest of this codebase already uses for exactly this reason (`bg.js`, `omega-a11y.js`,
+  `omega-cinematic.js`). After the fix all four sampled pages store `omega_lang`.
+- **[Fixed in the same change, and load-bearing] `translate()` destroyed nested `data-i18n`
+  elements — fixing the race above would have turned that latent bug into a visible one on 5
+  pages.** `apply()` wrote `el.textContent = txt`, which replaces *every* child node. Seven pages
+  nest one `data-i18n` element inside another — the topbar pattern
+  `<div class="t" data-i18n="x">TITLE<small data-i18n="y">SUBTITLE</small></div>` on
+  `analytics`/`approvals`/`feed`/`matrix`/`profile`/`vault`, and `.sechead` elements wrapping a
+  `<span class="sechead-action" data-i18n=…>` on `dashboard`. Setting `textContent` on the parent
+  deletes the child, and because `querySelectorAll` returns a **static** list the subtitle is then
+  "translated" while already detached from the document — so it is simply gone. This never
+  surfaced only because `translate()` itself was never running. Replaced the flat assignment with
+  `setOwnText()`, which rewrites only the element's own text nodes and leaves element children
+  intact (inserting the text first when the element was authored with no own text, as on
+  `approvals.html`, so it still reads title-then-subtitle). Verified by A/B in Chromium: with the
+  race fixed but this protection removed, the nested pairs on analytics/approvals/matrix/vault/
+  dashboard are gone; with it, all survive and the parent title applies correctly — e.g.
+  `approvals.html` now renders "INVISIBLE ARCHITECT CONSOLE" *and* keeps
+  "SOVEREIGN ACCESS CONTROL · OWNER-ONLY · ALL-TIME · IRREVOCABLE".
+- **[Fixed in the same change — the risk the race fix created] In the base language the markup now
+  wins; the dictionary only fills gaps.** Making `translate()` actually run meant the English
+  dictionary would, for the first time, overwrite authored page text everywhere. That is not safe
+  here: comparing all 420 plain-text `data-i18n` elements against the dictionary found 273
+  identical but **106 different**, and the dictionary is the *worse* text in most of them — it is
+  an older parallel copy that has drifted from the markup. Concretely, `dashboard.html`'s tabs
+  would have lost their glyphs (`"▲ OVERVIEW"` → `"OVERVIEW"`), the brand would have lost its
+  sigil (`"Ω COMMAND BRIDGE"` → `"Command Bridge"`), `analytics.html` would have reverted to
+  superseded algorithm copy, and `"· 18 <span data-i18n=\"sovereign_modules\">SOVEREIGN
+  MODULES</span>"` would have rendered `"· 18 18 SOVEREIGN MODULES"` because the dictionary entry
+  repeats a number the markup already renders as a sibling node. So `apply()` now skips any
+  element that already has its own authored text when the language is the base one, and writes
+  only where the author deliberately left it empty (41 elements — the "i18n supplies this"
+  pattern, of which `approvals.html`'s topbar title is one). For every other language the
+  dictionary still applies unconditionally, since there is nothing else to show. Verified in
+  Chromium: in English the tab keeps `"▲ OVERVIEW"`, the brand keeps `"Ω COMMAND BRIDGE"`, there
+  is no duplicated `18`, and the empty approvals title is still filled; switching to French still
+  yields `"APERÇU"` and `"Commande"`.
+- **[Improved] 160 of 178 pages had no `<h1>`; 152 now expose one without any markup change.**
+  A screen-reader user had no level-1 heading to orient on and heading-navigation landed nowhere.
+  152 of those pages already render a perfectly good title in the topbar — "ANALYTICS",
+  "BLOODLINE", "SOVEREIGN ACADEMY · EXAMS" — marked up as a semantics-free `<div class="t">`.
+  `omega-a11y.js` now promotes that existing element with `role="heading" aria-level="1"`, which
+  is preferable to injecting a hidden `<h1>`: it names the heading with the title the user can
+  actually see and adds no duplicate text for a screen reader to read twice. Nothing visual
+  changes — ARIA roles carry no styling. Skipped when the page already has a real `<h1>` (18 do),
+  when the element already carries a page-set role, or when the title text is empty once the
+  nested `<small>` subtitle is discounted. Verified across all 178 pages: pages with a level-1
+  heading went **18 → 170**, with 0 duplicates and 0 applied where a real `<h1>` already existed.
+  The 8 still without one (`dashboard`, `account`, `approvals`, `404`, `pending`, `terms`,
+  `enterprise`, `observatory`) have no honest title to promote — deriving one from
+  `document.title` would announce the same generic "Command Bridge" string on several unrelated
+  pages, so they are deliberately left alone rather than given a misleading heading.
+- **[Fixed — latent, not yet visible] `omega-sigil-gen.js` gave every generated sigil the same
+  `<defs>` ids, so two sigils on one page shared one gradient and one blur filter.** Found by a
+  duplicate-element-id sweep of the live DOM across all 178 pages (not of the source text — see
+  the false positives below). Each generated sigil embeds its own `<defs>` containing
+  `<filter id="sig-glow">` (blur `stdDeviation` derived from the member's **gate**) and
+  `<radialGradient id="sig-grad">` (stops derived from the element **palette**) — both hardcoded,
+  so N sigils produced N elements sharing one id, and `url(#id)` resolves to the **first** match
+  in the document per spec. Proved with two sigils on one page: a Fire sigil (stops
+  `#FFA07A|#FF6B35`, blur 4) and a Water sigil (`#90E0EF|#00B4D8`, blur 7.5) — the Water sigil
+  *defined* cyan and *painted* orange with the wrong blur. Fixed with a per-call counter
+  (`sig-glow-s1`, `sig-grad-s1`, …). After: each sigil resolves to its own defs; before: sigil 2
+  resolved to sigil 1's.
+  **Honest scope**: `rune.html` renders 7 sigils and is the only page doing so today, but all 7
+  currently share one palette and gate (measured: 7 gradients, 1 distinct stop-colour set, all
+  blur 3.5), so nothing was visibly wrong on screen. This was a landmine, not an active defect —
+  `OmegaSigil.mount()` is public API and any page rendering two differing sigils would have hit
+  it. Recorded that way rather than as a user-visible bug fix.
+  Three other duplicate-id findings from the same sweep were checked and deliberately left alone:
+  `forge.html`'s five `id="exitBtn"` and `clarity.html`'s two `id="total-steps"` are **source-text
+  duplicates only** — each lives in a template that *replaces* the previous one, so the live DOM
+  never holds two (confirmed by the DOM-level scan finding neither page). `habits.html` really
+  does render `hc-h0`…`hc-h3` twice (the same card appears in the "today" and "all" lists), but a
+  repo-wide grep confirms those ids are never looked up by `getElementById` or a `#hc-` selector —
+  every interaction passes the habit id as a *value* (`toggleHabit('h0')`). Invalid HTML, zero
+  functional consequence; inventing a suffix scheme there would carry risk for no behavioural gain.
+- **Checked and found clean, recorded so the next session doesn't re-investigate**: all 170
+  `.html` link targets in `nav.js` resolve to real files (0 broken nav links). `nav.js`'s `PS`
+  page→section map briefly looked like it had two broken keys (`design_system`, `sovereign_ai`
+  with underscores while the pages declare `data-page="design-system"`/`"sovereign-ai"`), which
+  would have silently fallen back to the COMMAND section via `PS[dp]||'command'` — but evaluating
+  the real map showed **both hyphen keys are present too**, alongside redundant underscore
+  duplicates. No bug; the static scan had only flagged the underscore keys because it never
+  checked whether the hyphen form also existed.
+- **[Fixed] `graph-anomalies.html` wrote `<tr><td>` into a CSS-grid `<div>`, so two empty states
+  rendered unstyled.** `#anomalyTable` is a `<div>` inside a `.tbl-row` grid, not a `<table>`, and
+  the HTML parser **discards** `<tr>`/`<td>` written into a non-table element. Measured: setting
+  `'<tr><td colspan="6" class="empty-state">SUPABASE NOT READY</td></tr>'` produced **0 child
+  elements** — the text survived only as a bare text node, landing in the first grid cell instead
+  of spanning the row, with no `.empty-state` styling. The same file already does it correctly at
+  its "NO ANOMALIES DETECTED" branch (`<div style="grid-column: 1 / -1">`), so the fix is that
+  page's own established pattern, not an invention. Both the "SUPABASE NOT READY" and "ERROR
+  LOADING DATA" branches now use it. A/B through the real code path: before 0 child elements and
+  no `grid-column`; after 1 `DIV` with `grid-column: 1 / -1`.
+- **Two corrections and one new gap, from auditing the table system**:
+  - **The "27 pages still use native `<table>`" item recorded above and in §8's open list is
+    stale — the conversion is finished.** A repo-wide case-insensitive grep finds **zero**
+    `<table>` elements. Only `ops.html` still contains `<tr>`/`<td>` strings, and that is the
+    separate dead-code case below.
+  - **`ops.html`'s event-bus metrics table never renders — flagged, not built.** Line 485 does
+    `document.getElementById('evt-metrics-body')`, but that id exists **nowhere** in the page
+    (verified in a browser: the element is absent), so the `if(tbody && window.OmegaBus)` guard is
+    always false and the whole 7-column metrics block is dead. There is no orphaned table head
+    waiting for it either — the "EVENT BUS" text on that page is a signal-strength label, not a
+    table section. Adding the container means designing UI that was never built, which is a
+    feature decision, so it is recorded here rather than guessed at — same treatment as the other
+    "built but never wired" gaps in this file.
+  - **[Fixed] The `.tbl-wrap`/`.tbl-row` system carried no table semantics, so ~38 pages of data
+    tables announced as unstructured text.** The shared classes are plain `display:grid` divs;
+    only **1 of 38** pages using `.tbl-wrap` set `role="table"`, so screen readers got no
+    row/column structure and no header-to-cell association anywhere in the platform's tables —
+    an accessibility cost of the native-`<table>` conversion that the conversion note never
+    mentioned. `omega-a11y.js` section D3 now assigns the roles centrally.
+    The implementation is deliberately conservative, because a **malformed** ARIA table is worse
+    than none — a screen reader can drop content sitting inside a table without valid row/cell
+    ancestry. It computes the entire role assignment first and applies **nothing** to an instance
+    if anything about it is ambiguous. Two real shapes force that, both measured across the 43
+    `.tbl-wrap` instances: in **17 of 43** the rows are injected into an intermediate unclassed
+    `<div>` (e.g. `<div id="anomalyTable">`), making `.tbl-row` a *grandchild* of `.tbl-wrap` —
+    ARIA requires rows to descend from a table or rowgroup, so each such container is marked
+    `role="rowgroup"`; and some instances carry a `.tbl-row` with no element children (an
+    empty-state placeholder holding bare text), where a cell-less row can swallow its own text,
+    so the whole instance is skipped. A wrapper whose direct children are not all rows or
+    row-containers is skipped too, since a search box or footer inside would be content stranded
+    in a table.
+    **Verified with real accessibility-tree snapshots, not by reading the DOM**: 36 of 43
+    instances get `role="table"`, and snapshotting every one of them via
+    `page.accessibility.snapshot({root})` gives **36 well-formed (rows AND cells), 0 malformed,
+    0 text lost** against a roles-removed baseline of the same subtree — e.g. `character.html`
+    13 rows/52 cells, `architect.html` 11 rows/54 cells, `compliance.html` 7 rows/28 cells. The
+    7 the guards skip are exactly the ambiguous shapes: 4 whose body container was still empty at
+    load (`graph-anomalies`, `graph-centrality`, `nexus`, `vault`) and 3 with an empty-state
+    placeholder row (`physiology`, `queue`, `sovereigns`); all are re-evaluated on
+    `omega:populated`, so they pick up roles once their rows actually exist.
+    *Method note*: a first verification pass compared whole-page a11y trees and reported "text
+    lost" on 17 pages. That was the harness, not the code — the two snapshots were taken seconds
+    apart and the diffs were the live trial timer (`00:00:03 / 09:17:17`) and the cookie banner.
+    Comparing only each `.tbl-wrap` subtree removed the noise. A second limitation had to be
+    worked around too: 36 of 43 wrappers sit in `display:none` tab panels and never enter the
+    accessibility tree at load, so only 4 could be checked until the panels were force-revealed.
+- **[Improved] 47 more form controls named, from labels authors wrote in a `<div>` instead of a
+  `<label>` — wired with `aria-labelledby`, not a copied string.** The earlier section-E pass
+  recovered controls sitting next to a real `<label>`; measuring what was left showed 31 of 40
+  sampled had a *visible* label in a plain element — `<div class="b-label">DATE</div>`,
+  `<div class="n-label">STRENGTH (1–5)</div>`, a bare `<div>SEVERITY (1-5)</div>`. Nothing else
+  could reach those. Every accepted label was printed and read before shipping, which is how the
+  guards were chosen — each rejects a real case seen while measuring: a preceding `<select>`
+  whose `textContent` is its whole option list (`bloodline.html`, would have been named
+  "SelfParentGrandparent…"), multi-line prose, a full sentence, and anything over 40 characters.
+  **`aria-labelledby` rather than `aria-label` is the load-bearing choice.** `mirror.html`'s
+  slider labels hold the label *and* the live value in one element, so a copied string would
+  freeze as "ENERGY LEVEL5" and then lie on every subsequent move. Referencing the element makes
+  the name follow the value — verified by driving the slider: name goes "ENERGY LEVEL5" →
+  "ENERGY LEVEL9" as the value changes. Across the 66 affected pages: named **407 → 455**,
+  truly unnamed **78 → 31** (a 10-page A/B: named 86 → 128, unnamed 45 → 3, zero suspicious
+  names). The 31 that remain have no label, no placeholder, and no prompt-shaped option —
+  nothing truthful to derive a name from, so they stay unnamed rather than mislabelled.
+  Note for anyone re-measuring: a checker that resolves only `el.labels`/`aria-label`/
+  `placeholder` will undercount badly now — it must follow `aria-labelledby` to its target.
+- **[Added to the gate] `scripts/audit.py` check 9 — JSON.parse fallback literals that are not
+  valid JSON, CRITICAL.** The invalid-`'{pct:10,income:0}'` default that took three pages
+  entirely dead on a member's first visit was invisible to every existing check: the JavaScript
+  parses fine (`node --check` and `check-inline-js.py` both pass it), the column names are
+  correct, and nothing errors until a real browser hits the first-visit path where the key is
+  absent from `localStorage`. Since that bug cost three whole pages and this repo has a standing
+  philosophy of turning a manual sweep into a permanent automatic one (checks 7 and 8 exist for
+  exactly that reason), it is now gated. Implementation notes: the argument is extracted with a
+  balanced-paren, quote-aware walk rather than a `[^)]*` regex — the naive pattern stops at
+  `getItem(...)`'s own `)` and misses the fallback entirely, which is how the first version of
+  this scan reported 0 findings against a repo that had 3. Only `JSON.parse(… || '<literal>')`
+  is checked; a non-literal fallback is ignored rather than guessed at. 6 tests added to
+  `scripts/tests/test_audit.py` covering the unquoted-key failure, the quoted-key pass, the
+  common `'[]'`/`'{}'`/`'null'` forms, the nested-paren extraction, a non-literal fallback being
+  ignored, and file:line reporting — all 6 confirmed to FAIL when check 9 is deleted, so they
+  test the gate rather than passing vacuously. Suite is now 51 tests. No `ci.yml` change needed:
+  check 9 runs inside the existing "Repository audit" step.
+- **Performance: measured, but deliberately NOT acted on — recorded so the data isn't re-derived.**
+  A page load pulls **93 JS requests / ~1.01 MB** after the i18n split, and `bg.js` injects 87
+  `omega-*.js` modules totalling **747 KB** on every page. An obvious-looking optimisation is to
+  stop loading modules no page references: 41 of them (336 KB) expose a `window.Omega*` global
+  that **zero** pages and zero other modules ever call. That metric is a trap and was not acted
+  on. `omega-a11y.js` is in that list — 0 pages reference `OmegaA11y` — yet it injects the skip
+  link, the main landmark, and every form-control label, as this session's own fixes prove.
+  Self-activation on load, with no caller, is the norm here rather than the exception, so
+  "unreferenced global" says nothing about whether a module is dead. Establishing which of the 87
+  are genuinely page-specific means reading each one's activation path, and removing any of them
+  is a feature/architecture decision (§9), not a cleanup. Left for an explicit decision with the
+  measurements above as the starting point.
+- **[Fixed] `OmegaSearch.addItems()` was called but never existed, and platform search had no
+  touch-reachable entry point at all.** `omega-ui.js:272` has always opened `enhanceSearch()`
+  with `if(!window.OmegaSearch||!window.OmegaSearch.addItems) return;` — and `omega-search.js`
+  only ever exposed `{open, close, search}`, so that guard took the early return on every page
+  load and the index stayed frozen at the 160 entries hardcoded in `omega-search.js`. Same
+  silent-failure shape as the rest of §8, one layer up from Supabase: a guard written for a
+  method that was never implemented reads as defensive coding rather than as a dead call.
+  Consequence measured, not inferred: nine pages `nav.js` links to — `council.html`,
+  `hercules.html`, and the six `graph-*.html` views — were absent from the index, so searching
+  for any of them returned nothing (0/9 findable before, 9/9 after).
+  - Implemented `addItems()` (deduped by normalised URL; calls `_fuse.setCollection(INDEX)`
+    when Fuse is already warm, since Fuse copies the collection at construction and pushing to
+    `INDEX` alone would leave new pages unfindable by fuzzy search even once indexed). That
+    alone makes the pre-existing `omega-ui.js` call work for the first time: index 160 → 200.
+  - Added a harvester that reads the anchors `nav.js` actually rendered, run on open. `nav.js`
+    is the authoritative list of member-reachable pages and it grows; a hardcoded index does
+    not, which is precisely how the 9 went missing. Index → 210. The nav label alone isn't
+    enough to find a page by name (`/council.html` is labelled "DECISION ENGINE"), so the slug
+    goes into the description in both hyphenated and spaced form — without that, `council`
+    matched nothing while `graph admin` did, caught by the verification rather than by reading.
+  - **Search was Ctrl+K-only** — an unadvertised shortcut, and one a touch device cannot press,
+    so on a phone or tablet the platform's search was simply unreachable. Added a visible
+    `⌕ SEARCH` trigger to the `omega-controls.js` dock (alongside the language/sound controls,
+    so it reaches every page). `omega-search.js` already listened for `[data-search-trigger]`,
+    but bound it with a one-shot `querySelectorAll` at module-eval time — and since `bg.js`
+    injects this file as an async script and injects the dock later still, that binding could
+    never have caught it, and no page carries the attribute in its own markup either. Switched
+    to event delegation, which also makes the attribute work for anything added later.
+  - Results are built with `.innerHTML`, and `addItems()`/the harvester now feed it text read
+    out of the DOM, so titles and descriptions are escaped before `highlight()` wraps its
+    `<mark>`. No output change for the static index (no angle brackets in it), but the dynamic
+    path is no longer trusting every future caller.
+  Verified in headless Chromium by clicking the real dock button rather than calling the API,
+  A/B against `git show HEAD:` copies of both files over a 6-page sample: **before** — visible
+  trigger on 0/6 pages, 0/9 nav-only pages findable, no `addItems` on the API at all; **after**
+  — 6/6, 9/9, index 210, focus lands in the search input, 0 page errors. Ctrl+K opens on 6/6
+  both before and after (unchanged). An item whose title carries `<img src=x onerror=…>`
+  renders as text and does not execute. `node --check` on both files, `check-inline-js.py`
+  clean, `audit.py` 0 critical / 7 pre-existing warnings, 51/51 tests. No SQL/schema changes.
+- **[Fixed] On a phone, every control in the bottom dock was untappable — measured 0 of 9
+  reachable at 375px and at 414px.** Found by measuring fixed-position chrome at a real mobile
+  viewport rather than by looking at the pages. `omega-controls.js` positions its dock entirely
+  with inline styles, which no media query can reach, and `bottom:16px` put it at y 640..684 —
+  against `nav.js`'s `#omega-mob` bottom bar at y 651..700 with `z-index:9990` versus the dock's
+  `2000`. So 33 of the dock's 44px were behind the nav bar, and `elementFromPoint` over each
+  control's own centre returned the nav bar, not the control: the platform's only language
+  switcher, its sound toggle, and the search trigger added earlier this session were all dead to
+  touch. The dock also measured **389px wide inside a 375px viewport** (x −7..382), clipped past
+  both edges — and invisibly so to any overflow check, because `translateX(-50%)` overflow to the
+  left never grows `scrollWidth` (the repo-wide 178-page overflow scan run in the same session
+  correctly reported 0 pages scrolling horizontally, and was right; this is a different defect).
+  - Fixed by giving the dock a real stylesheet (`#omega-controls-css`) with a `≤760px` rule:
+    lifted to `bottom:74px` to clear the 66px nav, `max-width:calc(100vw - 12px)` with
+    `flex-wrap` as the fallback on narrower devices, and tighter button padding/font so all nine
+    controls fit one row (measured after: 187px wide at 375px, no wrap needed).
+  - Three neighbouring widgets in the same corner were measured and moved with it, since lifting
+    the dock alone would have traded one collision for another: `#omega-ded-widget`
+    (`omega-chrono.js`, `bottom:44px` — inside the nav band, clipped by it) → `122px`;
+    `#ofb-btn` (`omega-feedback.js`) already had a `bottom:78px` mobile override for the nav bar,
+    which is the precedent this fix follows, but 78px lands on the dock's new position → `126px`,
+    left-anchored beside the right-anchored dedication widget so they do not overlap
+    horizontally; `#omega-cap-badge` (`omega-capability.js`, `bottom:24px`, `z-index:200`) sat
+    wholly inside the nav band at y 655..676 and has therefore always been 100% covered on
+    mobile — hidden at `≤760px`, which matches what a member already sees rather than inventing
+    a new placement for a 6.5px diagnostic label in an already-crowded corner.
+  - Verified in headless Chromium with a touch context, A/B against `git show HEAD:` copies of
+    all four files, hit-testing each control with `elementFromPoint` after removing the genesis
+    intro overlay (geometry alone does not prove a control is reachable when six fixed widgets
+    share a corner): **375px** 0/9 → 9/9 tappable, dock clipping gone; **414px** 0/9 → 9/9;
+    **1280px byte-identical before and after** for all five widgets, so the desktop layout is
+    untouched. A real `tap()` (not a synthetic click) on the search button opens the overlay and
+    on the FR button sets `omega_lang=fr`; horizontal overflow at 375px stays 0; 0 page errors.
+    `node --check` on all four, `check-inline-js.py` clean, `audit.py` 0 critical / 7 pre-existing
+    warnings, 51/51 tests. No SQL/schema changes.
+- **[Fixed] 19,754 controls across 177 pages were under the 24×24 CSS-px touch floor on a
+  phone — now 349 across 55, a 98% reduction, all from shared files.** Found by measuring every
+  `a[href]`/`button`/`input`/`select`/`textarea`/`[role=button]`/`[onclick]` at a real 375×667
+  touch viewport across all 178 pages, rather than reading stylesheets. The count is dominated
+  by a handful of shared sources, so almost all of it closed in four files:
+  - **The mobile navigation drawer itself (14,514 + 2,008 instances).** Below 761px `nav.js`
+    hides `aside.omega-side` entirely, so `#omega-drawer` is the *only* navigation a member has
+    — and every one of its 82 `.ds-link` entries and 15 `.dss-head` section headings measured
+    **21px tall** (`font-size:10px` with `padding:5px 4px`). Raised the padding to `9px 6px`
+    plus `min-height:24px` (and `.dss-head` to `5px 2px`); text size deliberately unchanged, only
+    the hit area grows. Measured after: 29px, 97/97 → 0 under the floor, drawer still opens from
+    `.mob-menu-btn` and its links stay reachable by `elementFromPoint`.
+  - **The shared topbar controls (~370 instances).** `omega-ui.js`'s injected prev/next arrows
+    and `Ω CMD` dashboard link, and `bg.js`'s `.tnav-btn`, were 21–22px on every page carrying a
+    `.topbar`. All three are built with inline styles, but `min-height`/`min-width` are not
+    among the properties declared inline, so a stylesheet rule still reaches them — added a
+    `≤760px` floor in each file rather than rewriting the inline strings.
+  - **The legal footer links** (`omega-legal.js`, TERMS/PRIVACY/COMPLIANCE, on every page) were
+    ~10px tall at their deliberate 7.5px fine-print size; given `display:inline-flex` +
+    `min-height:24px` so the hit area grows without touching the type.
+  - **The controls dock, revisited — and the earlier fix in this file corrected.** The `≤760px`
+    rule added a few entries above lifted the dock clear of the nav bar by *shrinking* its
+    buttons to fit one row, which took each control to ~20px: reachable, but under the touch
+    floor. Fixing reachability by making targets too small to hit is not a fix. Root cause of
+    the width pressure turned out to be a CSS detail worth recording: **`left:50%` with
+    `width:auto` caps a fixed element's available width at `100% − left`, i.e. 50vw** — 187px on
+    a 375px phone — which is why the original dock's 389px of content simply spilled past both
+    viewport edges, and why it kept wrapping even with room to spare. Anchored both edges
+    (`left:6px;right:6px;transform:none`) to give it the real viewport width, restored full-size
+    buttons, and collapsed the seven language buttons into one compact `<select>` under 760px.
+    Both controls are built every time and swapped by CSS, not by JS, so a rotate or resize needs
+    no listener and they cannot desync; they share the same handler and each updates the other.
+    Verified against `7ae8890` (the commit before any of this mobile work): **before** — dock
+    x −7..382 in a 375px viewport (clipped), 9 controls at heights [20×7, 30, 30], **0/9** both
+    ≥24px and tappable, overlapping `#omega-ded-widget` and `#omega-mob`; **after** — x 6..369,
+    3 controls at [24, 26, 26], **3/3**, every neighbour clear. Selecting Arabic from the
+    `<select>` at 375px and clicking the AR button at 1280px both give `omega_lang=ar`,
+    `dir="rtl"`, a translated sidebar, and leave the select and the active button agreeing —
+    0 page errors either way.
+  The remaining 349 are page-local classes (`.filter-tag`, `.etag`, `.add-btn`, `.g-cat`, …)
+  spread thinly over 55 pages — the same page-local-drift shape as §4.1's `.card` sweep and the
+  `.tab-btn` font-size sweep, and the same kind of per-page work; not attempted here, where every
+  fix was a shared file reaching all 178 pages at once.
+- **Clean re-verification sweeps run this session, recorded because a clean result is
+  evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
+  uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN
+  libraries the sandbox's egress policy blocks, so they'd resolve in production; 0 real page
+  errors, 0 real unhandled rejections), and a live-DOM duplicate-id scan across all 178 pages
+  (4 duplicated ids on 1 page, none of them referenced by any `for=`/`aria-labelledby`/
+  `aria-describedby`/`aria-controls`/`href="#…"`). The duplicate-id scan matters specifically
+  because this session wired `aria-labelledby` to generated ids — a duplicate would have
+  silently pointed a control at the wrong label.
+- **Two stale figures in this file, corrected against actual command output**: `scripts/audit.py`
+  reports **7** pre-existing warnings, not 6 (confirmed by stashing all changes and re-running —
+  the baseline is 7 both with and without this session's work), and
+  `python3 -m unittest discover -s scripts/tests` runs **45** tests, not 25. Several entries above
+  still cite "0 critical / 6 pre-existing warnings" and "25/25 pass" from when those numbers were
+  accurate; they are left as written since they were true at the time, but 7/45 is the current
+  baseline to compare against.
 
 
 ## 9. Working in this repo — practical rules

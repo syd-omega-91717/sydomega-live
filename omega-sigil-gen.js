@@ -40,6 +40,18 @@ function strHash(str){
 }
 
 /* Generate SVG path points for a sovereign sigil */
+/* Each generated sigil carries its own <defs>. Those defs were given the FIXED
+   ids "sig-glow"/"sig-grad", so rendering two sigils on one page produced
+   duplicate ids -- and url(#id) resolves to the FIRST match in the document,
+   per spec. The second sigil then rendered with the first one's gradient and
+   blur even though it defined its own. Measured with a Fire sigil (stops
+   #FFA07A|#FF6B35, blur 4) and a Water sigil (#90E0EF|#00B4D8, blur 7.5) on one
+   page: the Water sigil defined cyan and rendered orange. rune.html happens to
+   escape this today because its 7 variants all share one palette, but
+   OmegaSigil.mount() is public API and any page rendering two different sigils
+   hits it. A per-call counter makes the ids unique. */
+var _sigilSeq=0;
+
 function generateSigil(opts){
   var auth=opts.auth||5;
   var elem=opts.elem||'Void';
@@ -64,15 +76,17 @@ function generateSigil(opts){
   /* Inner radius ratio driven by C axis */
   var innerRatio=0.3+((c/10)*0.35);
 
+  var _uid='s'+(++_sigilSeq);
+  var GLOW='sig-glow-'+_uid, GRAD='sig-grad-'+_uid;
   var svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'">'];
   svg.push('<defs>');
   /* Glow filter */
-  svg.push('<filter id="sig-glow" x="-50%" y="-50%" width="200%" height="200%">');
+  svg.push('<filter id="'+GLOW+'" x="-50%" y="-50%" width="200%" height="200%">');
   svg.push('<feGaussianBlur in="SourceGraphic" stdDeviation="'+(3+gate*0.5)+'" result="blur"/>');
   svg.push('<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>');
   svg.push('</filter>');
   /* Radial gradient */
-  svg.push('<radialGradient id="sig-grad" cx="50%" cy="50%" r="50%">');
+  svg.push('<radialGradient id="'+GRAD+'" cx="50%" cy="50%" r="50%">');
   svg.push('<stop offset="0%" stop-color="'+pal.secondary+'" stop-opacity="0.9"/>');
   svg.push('<stop offset="100%" stop-color="'+pal.primary+'" stop-opacity="0.5"/>');
   svg.push('</radialGradient>');
@@ -83,7 +97,7 @@ function generateSigil(opts){
 
   /* Outer ring */
   var strokeW=0.5+gate*0.1;
-  svg.push('<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+pal.primary+'" stroke-width="'+strokeW.toFixed(2)+'" stroke-opacity="0.4" filter="url(#sig-glow)"/>');
+  svg.push('<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+pal.primary+'" stroke-width="'+strokeW.toFixed(2)+'" stroke-opacity="0.4" filter="url(#'+GLOW+')"/>');
 
   /* Build sigil star polygon */
   var outerPts=[],innerPts=[];
@@ -110,7 +124,7 @@ function generateSigil(opts){
   var starPath=starPts.map(function(p,k){return (k===0?'M':'L')+p.x.toFixed(2)+','+p.y.toFixed(2);}).join(' ')+'Z';
 
   /* Filled star */
-  svg.push('<path d="'+starPath+'" fill="url(#sig-grad)" fill-opacity="0.2" stroke="'+pal.primary+'" stroke-width="1" filter="url(#sig-glow)"/>');
+  svg.push('<path d="'+starPath+'" fill="url(#'+GRAD+')" fill-opacity="0.2" stroke="'+pal.primary+'" stroke-width="1" filter="url(#'+GLOW+')"/>');
 
   /* Inner web — connect outer points */
   var webOpacity=0.1+gate*0.02;
@@ -126,7 +140,7 @@ function generateSigil(opts){
 
   /* Central element — auth-scaled circle or symbol */
   var coreR=r*0.12+auth/27.8367*r*0.1;
-  svg.push('<circle cx="'+cx+'" cy="'+cy+'" r="'+coreR.toFixed(2)+'" fill="'+pal.primary+'" fill-opacity="0.7" filter="url(#sig-glow)"/>');
+  svg.push('<circle cx="'+cx+'" cy="'+cy+'" r="'+coreR.toFixed(2)+'" fill="'+pal.primary+'" fill-opacity="0.7" filter="url(#'+GLOW+')"/>');
 
   /* Three axis lines from center */
   var axisAngles=[angOffset,angOffset+2*Math.PI/3,angOffset+4*Math.PI/3];
@@ -151,14 +165,14 @@ function generateSigil(opts){
   var arcY2=cy+Math.sin(arcEnd)*arcRadius;
   var largeArc=arcFrac>.5?1:0;
   svg.push('<path d="M'+arcX1.toFixed(2)+','+arcY1.toFixed(2)+' A'+arcRadius.toFixed(2)+','+arcRadius.toFixed(2)+' 0 '+largeArc+',1 '+arcX2.toFixed(2)+','+arcY2.toFixed(2)+'"');
-  svg.push(' fill="none" stroke="'+pal.primary+'" stroke-width="2" stroke-linecap="round" filter="url(#sig-glow)"/>');
+  svg.push(' fill="none" stroke="'+pal.primary+'" stroke-width="2" stroke-linecap="round" filter="url(#'+GLOW+')"/>');
 
   /* Gate numerals at start of arc */
   svg.push('<text x="'+arcX1.toFixed(2)+'" y="'+(arcY1-5).toFixed(2)+'" fill="'+pal.primary+'" font-family="Courier Prime,monospace" font-size="8" text-anchor="middle" opacity="0.7">'+gate+'</text>');
 
   /* Name initial */
   var initial=(name||'Ω').charAt(0).toUpperCase();
-  svg.push('<text x="'+cx+'" y="'+(cy+coreR+16)+'" fill="'+pal.secondary+'" font-family="Cinzel Decorative,serif" font-size="'+Math.round(coreR*1.4)+'" text-anchor="middle" opacity="0.8" filter="url(#sig-glow)">'+initial+'</text>');
+  svg.push('<text x="'+cx+'" y="'+(cy+coreR+16)+'" fill="'+pal.secondary+'" font-family="Cinzel Decorative,serif" font-size="'+Math.round(coreR*1.4)+'" text-anchor="middle" opacity="0.8" filter="url(#'+GLOW+')">'+initial+'</text>');
 
   svg.push('</svg>');
   return svg.join('');

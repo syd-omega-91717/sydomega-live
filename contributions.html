@@ -149,7 +149,11 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var CK='omega_contributions',GK='omega_gifts',GTK='omega_giving_target';
 var contribs=JSON.parse(localStorage.getItem(CK)||'[]');
 var gifts=JSON.parse(localStorage.getItem(GK)||'[]');
-var givingTarget=JSON.parse(localStorage.getItem(GTK)||'{pct:10,income:0}');
+/* the fallback must be valid JSON -- unquoted keys made JSON.parse throw at
+   module top level on any visit where this key was absent (i.e. every first
+   visit), aborting the whole <script type="module"> so nothing below it was
+   ever defined and every button on the page did nothing. */
+var givingTarget=JSON.parse(localStorage.getItem(GTK)||'{"pct":10,"income":0}');
 var activeFilter='all';
 
 var TYPE_COL={knowledge:'#00E5FF',creative:'#9B6BF0',financial:'#C9A84C',service:'#4CAF50',legacy:'#FF9800'};

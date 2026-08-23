@@ -242,5 +242,74 @@ class DivergingRPCTests(unittest.TestCase):
         self.assertIn("OK — every client-called RPC has one consistent definition.", out)
 
 
+class JSONFallbackLiteralTests(unittest.TestCase):
+    """Check 9 — a JSON.parse fallback that is not valid JSON.
+
+    This is the bug class that took contributions.html, notifications.html and
+    treasury.html entirely dead on a member's first visit: the literal only
+    parses when localStorage already has the key, and at module top level the
+    throw kills every function declared below it. Nothing else in CI could see
+    it — the JavaScript is syntactically valid.
+    """
+
+    def setUp(self):
+        self.fx = AuditFixture()
+
+    def tearDown(self):
+        self.fx.cleanup()
+
+    def test_unquoted_keys_in_fallback_is_critical(self):
+        self.fx.write("page.html",
+                      "<script type=module>\n"
+                      "var t=JSON.parse(localStorage.getItem('k')||'{pct:10,income:0}');\n"
+                      "</script>")
+        code, out = self.fx.run()
+        self.assertEqual(code, 1)
+        self.assertIn("CRITICAL — JSON.parse fallback literal is not valid JSON", out)
+        self.assertIn("{pct:10,income:0}", out)
+
+    def test_quoted_keys_in_fallback_passes(self):
+        self.fx.write("page.html",
+                      "<script type=module>\n"
+                      "var t=JSON.parse(localStorage.getItem('k')||'{\"pct\":10,\"income\":0}');\n"
+                      "</script>")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("OK — every JSON.parse fallback literal parses as JSON.", out)
+
+    def test_array_and_scalar_fallbacks_pass(self):
+        # The overwhelmingly common forms in this repo: '[]', '{}', '0', 'null'.
+        self.fx.write("a.js", "var a=JSON.parse(localStorage.getItem('a')||'[]');")
+        self.fx.write("b.js", "var b=JSON.parse(localStorage.getItem('b')||'{}');")
+        self.fx.write("c.js", "var c=JSON.parse(localStorage.getItem('c')||'null');")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("OK — every JSON.parse fallback literal parses as JSON.", out)
+
+    def test_nested_parens_in_the_argument_do_not_break_extraction(self):
+        # The naive [^)]* pattern stops at getItem(...)'s own ")" and misses the
+        # fallback entirely; the balanced-paren walk must see through it.
+        self.fx.write("page.html",
+                      "<script>var t=JSON.parse(window.localStorage.getItem(KEY)||'{bad:1}');</script>")
+        code, out = self.fx.run()
+        self.assertEqual(code, 1)
+        self.assertIn("{bad:1}", out)
+
+    def test_json_parse_without_a_string_fallback_is_ignored(self):
+        # No literal to validate — must not be flagged, and must not crash.
+        self.fx.write("a.js", "var a=JSON.parse(someVar);")
+        self.fx.write("b.js", "var b=JSON.parse(localStorage.getItem('k')||fallbackVar);")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0)
+        self.assertIn("OK — every JSON.parse fallback literal parses as JSON.", out)
+
+    def test_reports_file_and_line(self):
+        self.fx.write("page.html",
+                      "<script>\n\n\nvar t=JSON.parse(localStorage.getItem('k')||'{oops:1}');\n</script>")
+        code, out = self.fx.run()
+        self.assertEqual(code, 1)
+        self.assertIn("page.html:4", out)
+
+
 if __name__ == "__main__":
     unittest.main()

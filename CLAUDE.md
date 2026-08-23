@@ -2991,6 +2991,19 @@ orphaned file.
     phone, so this is the accessibility win working — and the result reads as a filled meter,
     consistent with the platform's existing `.bar-track`/`.bar-fill` components. Confirmed by
     before/after screenshots at 375px: layout intact, horizontal overflow 0 in both.
+- **[Improved] The two emblem systems now share one visual language.** The platform draws two
+  separate marks — `emblem.js` in the topbar (161 pages, given a shared armillary frame in an
+  earlier entry) and `omega-page-emblem.js` via `[data-page-emblem]` (160 pages) — and they had
+  no vocabulary in common: the page mark was a plain ring with N pulsing points, chords and a
+  rotating triangle. Gave it the same bezel + twelve zodiac ticks (every third longer and
+  brighter) + counter-rotating scan arc, scaled to its radius. Each page's own point count,
+  glyph and accent colour are untouched — that per-page identity is this module's whole stated
+  purpose ("forty pages spinning the same shape says nothing about any of them") — but they now
+  sit inside one recognisable instrument. Painted coverage of the 264x264 buffer went
+  **7.9% → 9.9%**, verified by reading the real pixel buffer and by screenshotting the canvas
+  before and after with the fixed chrome removed (the first capture was obscured by the controls
+  dock and the keyboard hint, which sit over that region). Frozen under
+  `prefers-reduced-motion`, since `t` never advances there.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

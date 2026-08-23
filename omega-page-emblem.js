@@ -177,6 +177,34 @@
 
     function frame() {
       ctx.clearRect(0, 0, S * 2, S * 2);
+
+      /* ── shared armillary frame ────────────────────────────────────────
+         The same bezel + twelve zodiac ticks + counter-rotating scan arc
+         that emblem.js draws in the topbar, scaled to this mark's radius.
+         The platform had two mark systems that shared no vocabulary: the
+         topbar emblem (161 pages) and this one (160 pages). Each page's own
+         point count, glyph and accent colour are untouched -- that per-page
+         identity is the whole point of this module (see the header above) --
+         but they now sit inside one recognisable instrument.
+         Frozen under prefers-reduced-motion, since t never advances there. */
+      var BR = S * 0.92;
+      ctx.beginPath(); ctx.arc(CX, CY, BR, 0, Math.PI * 2);
+      ctx.strokeStyle = col + '22'; ctx.lineWidth = 1; ctx.stroke();
+      for (var bi = 0; bi < 12; bi++) {
+        var ba = -t * 0.18 + bi * Math.PI / 6;
+        var major = bi % 3 === 0;
+        var bin = BR - (major ? S * 0.075 : S * 0.038);
+        ctx.beginPath();
+        ctx.moveTo(CX + Math.cos(ba) * bin, CY + Math.sin(ba) * bin);
+        ctx.lineTo(CX + Math.cos(ba) * BR, CY + Math.sin(ba) * BR);
+        ctx.strokeStyle = col + (major ? '77' : '30');
+        ctx.lineWidth = major ? 1.6 : 1;
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(CX, CY, BR - S * 0.045, t * 0.5, t * 0.5 + 1.0);
+      ctx.strokeStyle = col + '66'; ctx.lineWidth = 1.8; ctx.stroke();
+
       ctx.beginPath(); ctx.arc(CX, CY, S * 0.78, 0, Math.PI * 2);
       ctx.strokeStyle = col + '33'; ctx.lineWidth = 2; ctx.stroke();
 

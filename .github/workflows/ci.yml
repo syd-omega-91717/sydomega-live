@@ -130,6 +130,17 @@ jobs:
       - name: Generate TypeScript types from schema
         run: python3 scripts/types-from-schema.py
 
+      # ---- 2i. Upsert conflict targets: an upsert only writes if its
+      #         onConflict matches a real unique index. Four separate places in
+      #         this repo got that wrong (42P10 with no matching key, or 23505
+      #         from no onConflict at all on a table with a non-PK unique
+      #         constraint), and every one failed silently because the Supabase
+      #         client resolves rather than throws. Advisory like the other
+      #         schema checks: the flat SQL bag does not always match live.
+      - name: Upsert conflict targets
+        run: python3 scripts/upsert-conflict-check.py
+        continue-on-error: true
+
       # ---- 2h. Context budget. CLAUDE.md is loaded into every agent session
       #         before any work starts, and that cost is invisible unless
       #         something reports it. It reached ~68,900 tokens once, 88% of

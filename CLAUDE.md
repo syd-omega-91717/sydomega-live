@@ -478,11 +478,20 @@ are listed in rough order of how often they have recurred.
    fails with `42501 permission denied` — 60 tables were in this state, 22 of
    them queried by live client code. Check grants and policies together; either
    one alone tells you nothing.
-7. **Two divergent copies of one canonical table.** The 12 signs/elements/gods
+7. **An upsert whose conflict target matches no unique index.** Two shapes,
+   both silent. `onConflict` naming columns with no matching unique index
+   raises `42P10` and the statement never runs; *omitting* `onConflict` on a
+   table that has a non-PK unique constraint is worse, because PostgREST then
+   defaults to the primary key — and if the payload does not carry it, the
+   write succeeds once and raises `23505` forever after, so the feature freezes
+   at its first value. Four places had this. `scripts/upsert-conflict-check.py`
+   gates it, but only against the SQL bag: a constraint the bag declares and
+   live lacks (`ai_memory`) is invisible to it.
+8. **Two divergent copies of one canonical table.** The 12 signs/elements/gods
    and the 12 labors were each duplicated across many files and had drifted;
    in the worst case the live onboarding flow assigned the wrong god and agent
    to 9 of 12 signs. Read from the one module that owns the data.
-8. **Fabricated data rendered as fact.** `hercules.html` drew
+9. **Fabricated data rendered as fact.** `hercules.html` drew
    `Math.random() * 100` as the member's own progress. Worse than a false
    success toast. If the data model records completion, show completion — do
    not invent a percentage it cannot support.
@@ -573,7 +582,8 @@ entries (which were accurate when written):
 | `python3 -m unittest discover -s scripts/tests` | **51** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**11,500** approx tokens / 16,000 budget |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**12,800** approx tokens / 16,000 budget |
+| `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | broken asset references | 0 |
 | service-role key scan | clean |
 

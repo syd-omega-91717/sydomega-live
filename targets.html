@@ -75,9 +75,9 @@
     <div class="t">TARGETS<small>SOVEREIGN OKR SYSTEM &middot; SYD OMEGA 91717</small></div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="q-nav">
-        <button onclick="shiftQuarter(-1)">◀</button>
+        <button onclick="shiftQuarter(-1)" aria-label="Previous quarter">◀</button>
         <div class="quarter-badge" id="quarter-label">Q1 2026</div>
-        <button onclick="shiftQuarter(1)">▶</button>
+        <button onclick="shiftQuarter(1)" aria-label="Next quarter">▶</button>
       </div>
       <button class="add-btn" onclick="openObjModal()">+ OBJECTIVE</button>
     </div>
@@ -356,7 +356,7 @@ function renderOKRs(){
             <span class="obj-tag">SCORE: ${(avgKR/100).toFixed(2)}</span>
           </div>
         </div>
-        <button class="del-btn" onclick="deleteObjective('${qkey}',${oi})">✕</button>
+        <button class="del-btn" onclick="deleteObjective('${qkey}',${oi})" aria-label="Delete objective ${oi+1}">✕</button>
       </div>
       <div class="kr-list">
         ${obj.krs.map((kr,ki)=>{

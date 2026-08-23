@@ -267,7 +267,7 @@ function appendWinRow(i){
   var list=document.getElementById('wins-list');
   var div=document.createElement('div'); div.className='win-row'; div.id='wr-'+i;
   div.innerHTML='<input class="win-input" type="text" id="win-'+i+'" placeholder="Win #'+(i+1)+'..."/>'+
-    (i>0?'<button class="win-rm" onclick="removeWin('+i+')">✕</button>':'');
+    (i>0?'<button class="win-rm" aria-label="Remove win" onclick="removeWin('+i+')">✕</button>':'');
   list.appendChild(div);
 }
 

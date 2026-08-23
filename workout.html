@@ -330,7 +330,7 @@ function addSet(exId){
     '<span><input class="set-input" type="number" placeholder="0" min="0"/></span>'+
     '<span><input class="set-input" type="number" placeholder="0" min="0" max="5" title="Reps in Reserve"/></span>'+
     '<span><input class="set-done" type="checkbox"/></span>'+
-    '<span><button class="set-rm" onclick="this.closest(\'.tbl-row\').remove()">✕</button></span>';
+    '<span><button class="set-rm" aria-label="Remove set" onclick="this.closest(\'.tbl-row\').remove()">✕</button></span>';
   tbody.appendChild(row);
 }
 

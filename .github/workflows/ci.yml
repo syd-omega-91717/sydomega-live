@@ -13,15 +13,45 @@ on:
 permissions:
   contents: read
 
+# Supersede in-flight runs for the same branch instead of letting them finish
+# alongside their replacement. A PR that is pushed to several times was
+# previously running the whole suite once per push, all of them to completion,
+# and only the last result was ever looked at.
+#
+# cancel-in-progress is deliberately scoped to pull_request only: a run on main
+# is the record for a merged commit, and cancelling one because another merge
+# landed seconds later would throw that record away to save ~50s.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    # The whole suite finishes in ~55s. Without a cap, a step that hangs holds
+    # a runner for GitHub's 6-hour default -- which matters a great deal on an
+    # account that has run out of included minutes.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+
+      # Prettier and ESLint are fetched with `npx --yes` rather than installed
+      # from a lockfile (there is no package-lock.json), so every run
+      # re-downloaded them: measured at 23s and 4s of a 53s run, i.e. half the
+      # job, for two steps that only report drift and cannot fail the build.
+      # Caching ~/.npm removes most of that. A cache miss simply downloads as
+      # before, so this cannot break the run -- unlike setup-node's `cache: npm`,
+      # which errors out when no lockfile exists.
+      - name: Cache npm downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-tools-${{ runner.os }}-prettier3-eslint8
+          restore-keys: npm-tools-${{ runner.os }}-
 
       - uses: actions/setup-python@v5
         with:

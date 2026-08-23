@@ -468,6 +468,91 @@
   } else { auditLabels(); }
   document.addEventListener('omega:populated', auditLabels);
 
+  /* ── E2. TOUCH-TARGET FLOOR ────────────────────────────────────────────
+     WCAG 2.5.8 asks for a 24x24 CSS-px minimum. Measured at 375x667 across
+     all 178 pages, 345 controls on 55 pages were under it. The shared
+     sources (the mobile nav drawer, the topbar controls, the legal footer,
+     the controls dock) were fixed at source; what is left is ~40 distinct
+     PAGE-LOCAL classes -- .filter-tag, .etag, .add-btn, .g-cat, .flt,
+     .tool-btn, .era-dot and so on -- spread thinly over 55 pages, plus bare
+     <button>/<input>/<div onclick> with no class to select at all.
+
+     Doing that as CSS would mean either 55 page edits or a blanket rule that
+     also hits controls which are already fine. Measuring instead means only
+     the elements that actually fail are touched, it covers the unclassed
+     ones, and any page added later is handled without another sweep.
+
+     Deliberately NOT done with a ::before/::after hit-area overlay, the
+     other common technique: this codebase has ~230 page-local classes with
+     their own ::before/::after rules (CLAUDE.md §4.1), and a pseudo-element
+     can only render one rule's declarations -- an overlay would silently
+     replace a page's own decoration. min-height/min-width cannot collide
+     that way.
+
+     Only applied at <=760px, where touch is the input. Desktop is untouched. */
+  var TOUCH_MIN = 24;
+  var touchMQ = window.matchMedia ? window.matchMedia('(max-width:760px)') : null;
+
+  function raiseTouchTargets(){
+    if(!touchMQ || !touchMQ.matches) return;
+    var sel = 'a[href],button,[role=button],[onclick],summary,' +
+              'input:not([type=hidden]),select,textarea';
+    var raised = 0;
+    document.querySelectorAll(sel).forEach(function(el){
+      if(el.hasAttribute('data-omega-touch')) return;
+      var cs = getComputedStyle(el);
+      if(cs.display === 'none' || cs.visibility === 'hidden') return;
+      var b = el.getBoundingClientRect();
+      if(!b.width || !b.height) return;                 /* not laid out */
+      if(b.width >= TOUCH_MIN && b.height >= TOUCH_MIN) return;
+      /* min-height does not apply to a non-replaced inline box, so an inline
+         <span onclick> or <a> has to become inline-level-flex first. Only the
+         ones that are actually inline are converted -- turning a block or a
+         grid child into inline-flex would wreck the layout it sits in. */
+      if(cs.display === 'inline'){
+        el.style.display = 'inline-flex';
+        el.style.alignItems = 'center';
+        el.style.justifyContent = 'center';
+      }
+      if(b.height < TOUCH_MIN) el.style.minHeight = TOUCH_MIN + 'px';
+      if(b.width  < TOUCH_MIN) el.style.minWidth  = TOUCH_MIN + 'px';
+      el.setAttribute('data-omega-touch','1');
+      raised++;
+    });
+    return raised;
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', raiseTouchTargets);
+  } else { raiseTouchTargets(); }
+  /* Re-run when rows are rendered from data, and when the viewport crosses
+     the breakpoint (a rotate), since elements measured on desktop were skipped. */
+  document.addEventListener('omega:populated', raiseTouchTargets);
+  if(touchMQ && touchMQ.addEventListener) touchMQ.addEventListener('change', raiseTouchTargets);
+
+  /* Several pages build their controls from JS well after both of the events
+     above -- cipher.html's and realm.html's element pickers, oath.html's
+     category buttons, rune.html's action button were all still under the
+     floor because they simply did not exist yet when the pass ran. A
+     debounced observer catches those. It is cheap: the callback only sets a
+     timer, the scan itself runs at most once per 300ms and only after a real
+     mutation, and every element it handles is marked data-omega-touch so
+     re-runs skip it. Disconnected above the breakpoint, where none of this
+     applies. */
+  if(window.MutationObserver && touchMQ){
+    var _touchTimer = null;
+    var _mo = new MutationObserver(function(){
+      if(!touchMQ.matches) return;
+      clearTimeout(_touchTimer);
+      _touchTimer = setTimeout(raiseTouchTargets, 300);
+    });
+    function _observe(){
+      if(!document.body) { requestAnimationFrame(_observe); return; }
+      _mo.observe(document.body, {childList:true, subtree:true});
+    }
+    _observe();
+  }
+
   /* ── F. MOTION PREFERENCE CSS ───────────────────────────────────────── */
   (function(){
     if(document.getElementById('omega-a11y-motion')) return;
@@ -490,5 +575,6 @@
     releaseFocus: releaseFocus,
     announce:     announce,
     auditLabels:  auditLabels,
+    raiseTouchTargets: raiseTouchTargets,
   };
 })();

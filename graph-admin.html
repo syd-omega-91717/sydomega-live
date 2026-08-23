@@ -243,7 +243,13 @@ async function showAuditEvent(eid){
 
 async function verifyEntity(eid){
   try{
-    await sb.from('graph_entities').update({confidence_score:1.0,verified:true}).eq('id',eid);
+    /* Supabase resolves to {data,error} rather than throwing, so the catch
+       below never fired: PostgREST rejected the whole update on the unknown
+       `verified` column, confidence_score was never written either, and the
+       UI reloaded and re-rendered as though it had worked. `verified` is
+       added by supabase/omega_graph_verified_fix.sql. */
+    const {error}=await sb.from('graph_entities').update({confidence_score:1.0,verified:true}).eq('id',eid);
+    if(error){alert('Could not verify entity: '+error.message);return;}
     await loadEntities();
     renderList();
     showEntity(eid);
@@ -252,7 +258,11 @@ async function verifyEntity(eid){
 
 async function verifyRelationship(rid){
   try{
-    await sb.from('graph_relationships').update({confidence:1.0,verified:true}).eq('id',rid);
+    /* `confidence` is not a column on this table -- the confidence analogue is
+       `strength numeric(3,2) DEFAULT 1.0`, an exact match for the 1.0 being
+       written here. Same silent-failure shape as verifyEntity above. */
+    const {error}=await sb.from('graph_relationships').update({strength:1.0,verified:true}).eq('id',rid);
+    if(error){alert('Could not verify relationship: '+error.message);return;}
     await loadRelationships();
     renderList();
     showRelationship(rid);
@@ -263,7 +273,11 @@ async function deleteEntity(eid,ev){
   if(ev)ev.stopPropagation();
   if(!confirm('Delete entity? This will remove related relationships.'))return;
   try{
-    await sb.from('graph_entities').delete().eq('id',eid);
+    /* .error checked, not try/catch: Supabase resolves rather than throws,
+       so the catch below never saw a failed delete and the row vanished from
+       the UI while still existing in the database. */
+    const {error}=await sb.from('graph_entities').delete().eq('id',eid);
+    if(error){alert('Could not delete entity: '+error.message);return;}
     await loadEntities();
     selectedId=null;
     renderList();
@@ -275,7 +289,8 @@ async function deleteRelationship(rid,ev){
   if(ev)ev.stopPropagation();
   if(!confirm('Delete relationship?'))return;
   try{
-    await sb.from('graph_relationships').delete().eq('id',rid);
+    const {error}=await sb.from('graph_relationships').delete().eq('id',rid);
+    if(error){alert('Could not delete relationship: '+error.message);return;}
     await loadRelationships();
     selectedId=null;
     renderList();

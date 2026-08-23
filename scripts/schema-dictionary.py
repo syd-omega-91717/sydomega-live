@@ -306,7 +306,13 @@ def validate_client_calls(schema):
             for pattern, op_type, is_write in patterns:
                 for match in re.finditer(pattern, content[search_start:window_end]):
                     if op_type == "select":
-                        fields = [f.strip() for f in match.group(1).split(",")]
+                        # Paren-aware, because a PostgREST embedded resource
+                        # carries its own comma-separated field list:
+                        #   'id,occurred_at,graph_entities(display_name,canonical_name)'
+                        # A plain .split(",") tears that apart and leaves the
+                        # fragment `canonical_name)`, which is not a column of
+                        # this table and was reported as a missing one.
+                        fields = [f.strip() for f in _split_top_level(match.group(1))]
                     else:
                         body = _object_body(content, search_start + match.end() - 1)
                         fields = _top_level_keys(body)
@@ -344,7 +350,8 @@ def validate_client_calls(schema):
             for pattern, op_type, is_write in patterns:
                 for match in re.finditer(pattern, content[search_start:window_end]):
                     if op_type == "select":
-                        fields = [f.strip() for f in match.group(1).split(",")]
+                        # Paren-aware -- see the .html loop above.
+                        fields = [f.strip() for f in _split_top_level(match.group(1))]
                     else:
                         body = _object_body(content, search_start + match.end() - 1)
                         fields = _top_level_keys(body)

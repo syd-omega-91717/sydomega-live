@@ -508,6 +508,7 @@ export interface GraphEntities {
   lastUpdatedAt: string | null;
   metadata: Record<string, any> | null;
   sourceSystem: string | null;
+  verified: boolean | null;
   xPos: number | null;
   yPos: number | null;
   zCluster: number | null;
@@ -546,6 +547,7 @@ export interface GraphRelationships {
   properties: Record<string, any> | null;
   relationshipType: string;
   sourceSystem: string | null;
+  verified: boolean | null;
 }
 
 export interface HabitLogs {

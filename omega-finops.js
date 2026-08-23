@@ -144,7 +144,14 @@
         metric_name:'session_cost_usd',
         metric_value:summary.total_usd,
         dimensions:summary
-      }).catch(function(){});
+      },{onConflict:'metric_date,metric_name'}).then(function(res){
+        /* platform_metrics has UNIQUE(metric_date, metric_name); an upsert
+           with no conflict target defaults to the PRIMARY KEY (id), which this
+           payload does not carry -- so PostgREST sent a plain insert and every
+           write after the day's first for a given metric_name raised 23505.
+           .catch() never fired: the client resolves to {data, error}. */
+        if(res&&res.error){console.warn('[omega-finops] platform_metrics upsert failed:',res.error.message);}
+      });
     }
   });
 

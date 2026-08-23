@@ -137,14 +137,31 @@
     window.__omegaSb.auth.getSession().then(function(r){
       var s=r.data&&r.data.session;
       if(!s) return;
-      /* upsert today's dedication seconds */
+      /* Upsert today's dedication seconds.
+
+         onConflict is required, not optional: user_dedication has
+         UNIQUE(user_id, date), but an upsert with no conflict target defaults
+         to the PRIMARY KEY, and this payload carries no id -- so PostgREST
+         sends a plain insert every time. Proven against the live database:
+         the first tick of a day inserts, and every tick after it raises
+         23505 unique_violation, so the timer froze at whatever it read first
+         each day and never advanced.
+
+         The failure was invisible twice over: .catch() never fires because the
+         Supabase client resolves to {data, error} rather than throwing, and
+         until the GRANT was added the request never reached the constraint at
+         all. */
       window.__omegaSb.from('user_dedication').upsert({
         user_id:s.user.id,
         date:today(),
         seconds_today:_dedSec,
         target_seconds:DEDICATION_TARGET,
         updated_at:new Date().toISOString()
-      }).catch(function(){});
+      },{onConflict:'user_id,date'}).then(function(res){
+        if(res&&res.error){
+          console.warn('[omega-chrono] dedication sync failed:',res.error.message);
+        }
+      });
     }).catch(function(){});
   }
 

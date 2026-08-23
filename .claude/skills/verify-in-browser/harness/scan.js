@@ -155,6 +155,72 @@ const MODES = {
     }
   },
 
+  /* Web Interface Guidelines checks, restricted to the rules that actually
+     apply to this stack. The upstream list (vercel-labs/web-interface-
+     guidelines) is largely React/Next/Tailwind -- `focus-visible:ring-*`,
+     `htmlFor`, `spellCheck={false}`, nuqs, `priority` -- none of which exist
+     here. These are the vanilla-HTML ones, checked at RUNTIME rather than by
+     grepping source, because grepping source got three of them wrong: it
+     reported <meta theme-color> missing on 121 pages (bg.js injects it, so
+     172/173 have it live) and 131 bare `outline:none` (a global
+     :focus-visible rule replaces them on 172/173). */
+  guidelines: {
+    collect: page => page.evaluate(() => {
+      const cs = getComputedStyle(document.documentElement);
+      const out = { url: location.pathname.replace(/^\//, ''), issues: [] };
+      if (cs.colorScheme !== 'dark') out.issues.push('color-scheme not dark (native selects/scrollbars render light)');
+      if (!document.querySelector('meta[name="theme-color"]')) out.issues.push('no <meta name="theme-color">');
+      const vp = document.querySelector('meta[name="viewport"]');
+      if (vp && /user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(?!\d)/.test(vp.content || ''))
+        out.issues.push('viewport disables zoom');
+      let imgNoDim = 0, imgNoAlt = 0;
+      document.querySelectorAll('img').forEach(im => {
+        if (!im.getAttribute('alt') && im.getAttribute('alt') !== '') imgNoAlt++;
+        if (!im.getAttribute('width') || !im.getAttribute('height')) imgNoDim++;
+      });
+      if (imgNoAlt) out.issues.push(imgNoAlt + ' <img> without alt');
+      if (imgNoDim) out.issues.push(imgNoDim + ' <img> without width/height (CLS)');
+      /* Controls with no accessible name. The first version of this rule
+         flagged any control whose text was under 3 characters, which is
+         wrong: a button reading "7" announces as "7" and is perfectly named.
+         Flag only a control that is genuinely nameless -- empty text -- or one
+         whose entire label is a symbol glyph with no letter or digit in it
+         (an unlabelled "✕" or "◀" announces as a glyph name or not at all). */
+      let iconNoName = 0;
+      document.querySelectorAll('button,[role=button]').forEach(b => {
+        if (b.getAttribute('aria-label') || b.getAttribute('aria-labelledby') || b.getAttribute('title')) return;
+        const t = (b.textContent || '').trim();
+        if (t && /[\p{L}\p{N}]/u.test(t)) return;      // has real text: named
+        const r = b.getBoundingClientRect();
+        if (r.width && r.height) iconNoName++;
+      });
+      if (iconNoName) out.issues.push(iconNoName + ' icon-only control(s) with no accessible name');
+      /* transition:all is not compositor-friendly and animates properties
+         nobody intended. Counted on rendered elements, not in source. */
+      let transAll = 0;
+      document.querySelectorAll('body *').forEach(e => {
+        const p = getComputedStyle(e).transitionProperty;
+        if (p === 'all') transAll++;
+      });
+      if (transAll > 0) out.issues.push(transAll + ' element(s) with transition-property:all');
+      return out;
+    }),
+    report: rows => {
+      const seen = new Map();
+      rows.forEach(r => { if (r.result) seen.set(r.result.url, r.result); });
+      const v = [...seen.values()];
+      const agg = {};
+      v.forEach(pg => pg.issues.forEach(i => {
+        const key = i.replace(/^\d+/, 'N');
+        (agg[key] = agg[key] || []).push(pg.url);
+      }));
+      console.log(`distinct pages rendered: ${v.length}`);
+      console.log(`pages fully clean: ${v.filter(x => !x.issues.length).length}`);
+      Object.entries(agg).sort((a, b) => b[1].length - a[1].length).forEach(([k, pages]) =>
+        console.log(`  ${String(pages.length).padStart(4)} pages  ${k}   e.g. ${pages.slice(0, 3).join(', ')}`));
+    }
+  },
+
   /* A canvas whose drawing buffer is 0 can never paint, no matter how big its
      CSS box is. This happens when a page sizes its canvas from offsetWidth at
      DOMContentLoaded -- which is before bg.js's approval guard reveals #app,

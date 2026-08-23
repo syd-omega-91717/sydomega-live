@@ -2895,6 +2895,40 @@ orphaned file.
     `.055`, plus a slow radar sweep, a twelve-tick armillary ring around the core, and
     phase-offset node breathing. Motion is frozen under `prefers-reduced-motion` by pinning the
     time counter, so the full structure still draws — it just stops moving.
+- **[Fixed] `color-scheme` was never declared, so every native control on the platform rendered
+  light-mode chrome on a near-black page.** Found by auditing this repo against the Web Interface
+  Guidelines (`vercel-labs/web-interface-guidelines`, reached via `vercel-labs/agent-skills`),
+  adapted to a no-build vanilla-HTML stack — see the new `.claude/skills/interface-guidelines`
+  skill for which upstream rules transfer and which are React/Next/Tailwind-only and must not be
+  imported. Measured at runtime across all 173 rendered pages: `color-scheme` resolved to
+  `normal` on **173 of 173**, meaning the browser drew its own UI light — every scrollbar, every
+  date/time picker, and **312 native `<select>` elements across 172 pages**. Fixed with one
+  declaration on `:root` in `bg.js`, which reaches every page. Verified A/B against `HEAD`:
+  `color-scheme: dark` 0/6 → 6/6 on a sample, and `<select>` elements now inherit it. The single
+  page still reporting `normal` is `offline.html`, which deliberately loads no `bg.js` so it works
+  with no network — correct, not a miss.
+  - `touch-action: manipulation` added in the same block for `a[href]`, `button`, `[role=button]`,
+    `label`, `summary`, `select` and checkbox/radio inputs — only 2 occurrences existed
+    platform-wide, so nearly every control carried the 300 ms double-tap-zoom delay on a phone.
+    Verified: computed `touch-action` on a button goes `auto` → `manipulation`.
+  - **8 icon-only controls across 5 pages had no accessible name** — `command.html`'s three
+    priority toggles (empty `<button>`), `budget.html`'s month steppers (`◂`/`▸`),
+    `targets.html`'s quarter steppers (`◀`/`▶`) and its templated delete button (`✕`),
+    `weekly.html`'s remove-win and `workout.html`'s remove-set buttons. A screen reader announced
+    "button" with no name for a *delete* action. All given `aria-label`; the scan now reports 0.
+  - **Two of the findings were false, and measuring is what caught them.** A source grep claimed
+    `<meta name="theme-color">` was missing on 121 pages and that 131 bare `outline:none`
+    declarations had no focus replacement. Rendering the pages showed `bg.js` injects the meta tag
+    (172/173) and a global `:focus-visible` rule in `omega-ui.js` covers the outlines (172/173).
+    Neither was a bug. A third false positive was in the new scanner itself: its icon-only rule
+    flagged any control under 3 characters, which caught score buttons labelled `1`–`10` — those
+    are correctly named. The rule now flags only empty labels or pure-symbol glyphs.
+  - **`transition: all` left open on purpose.** The scan reports it on all 173 pages, but only
+    **2 literal instances** existed in shared code (one fixed, on `.tnav-btn`). The rest come from
+    the `transition:.2s` shorthand, which implicitly sets `transition-property: all` and is a
+    pervasive idiom throughout this codebase. Rewriting it across ~250 pages risks silently
+    killing transitions that currently work, for a performance/polish gain — recorded as debt,
+    not swept.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

@@ -2929,6 +2929,38 @@ orphaned file.
     pervasive idiom throughout this codebase. Rewriting it across ~250 pages risks silently
     killing transitions that currently work, for a performance/polish gain — recorded as debt,
     not swept.
+- **[Fixed] The danger colour was effectively invisible, and KPI tiles were 64% empty — both found
+  by running the `dataviz` skill's palette validator and measuring tiles, rather than by eye.**
+  - **`--crim` re-stepped.** `scripts/validate_palette.js` scored the platform's categorical
+    tokens against the real dark surface: **CVD separation PASSES** (worst adjacent pair
+    `#3fb27f`↔`#00E5FF`, deutan ΔE 18.9 / normal 19.6 — the gold/cyan/green/purple set is
+    genuinely colourblind-safe, worth knowing and not re-deriving), but `--crim:#8B0000` came
+    back at **1.74:1 contrast against the surface**, i.e. barely visible on near-black. That
+    token is used 191 times via `var(--crim)`, and **77 of those are text `color`** — a real
+    legibility failure, not a style preference. Re-stepped to `#C4453C`, the deepest crimson
+    that still clears 3:1, re-validated (contrast now PASSES for all slots, CVD separation
+    unchanged). Only the token was changed: the 118 raw `#8B0000` literals were deliberately
+    left alone, because a raw dark red used as a *background fill* should stay dark and a
+    blanket sweep would have lightened those wrongly.
+    The validator's remaining "lightness band" FAIL on gold/cyan/green is a design-intent
+    difference, not a defect — those are deliberately luminous brand accents on a near-black
+    UI, and the band assumes a neutral chart surface. Desaturating the brand to satisfy a
+    linter would be the wrong trade; recorded rather than "fixed".
+  - **KPI tiles composed instead of pooled.** `.kpi-row` is a grid, so every tile stretched to
+    match the tallest — the authority gauge. Measured on `dashboard.html`: six tiles were 188px
+    tall carrying 67px of content, leaving **121px (64% of the card) empty** with everything
+    pooled at the top. Fixed in two parts, both layout-only: `.kpi` is now a flex column with
+    its `.kpi-sub` caption pinned to the bottom edge, and `.kpi-row` gets `align-items:start`
+    so a short tile is no longer stretched to a tall neighbour's height. Across
+    `dashboard`/`vault`, total dead space went **890px → 255px (−71%)**, worst single tile
+    **121px → 17px** (17px is the padding, i.e. correct). `vault.html` improved too without
+    being touched.
+    No sparkline or trend badge was invented for the empty space: there is no historical series
+    behind counts like ACTIVE MEMBERS or TASKS TODAY, and drawing one would have been
+    fabricating data — the same failure mode as a success toast over a write that never
+    happened (§9).
+  - Correction: this file previously said `.trend`/`.sparkline` are "not yet used by any page".
+    **5 pages use them.** Stale, corrected here.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

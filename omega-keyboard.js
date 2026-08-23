@@ -213,7 +213,17 @@
     }catch(e){ return; } /* privacy mode — skip hint */
     setTimeout(function(){
       var hint=document.createElement('div');
+      hint.id='omega-kbd-hint';
       hint.setAttribute('role','status');
+      /* bottom:80px lands on the controls dock, which sits at bottom:74px on a
+         phone to clear nav.js's 66px bar. The id + !important rule is needed
+         because `bottom` IS declared inline here, so a plain rule cannot win. */
+      if(!document.getElementById('omega-kbd-hint-css')){
+        var ks=document.createElement('style');
+        ks.id='omega-kbd-hint-css';
+        ks.textContent='@media(max-width:760px){#omega-kbd-hint{bottom:215px!important}}';
+        (document.head||document.documentElement).appendChild(ks);
+      }
       hint.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(12px);'
         +'z-index:9000;background:rgba(10,10,15,.92);border:1px solid rgba(201,168,76,.2);'
         +'border-radius:3px;padding:8px 16px;font-family:"Courier Prime",monospace;font-size:9px;'

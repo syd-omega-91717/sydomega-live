@@ -2848,6 +2848,53 @@ orphaned file.
   spread thinly over 55 pages — the same page-local-drift shape as §4.1's `.card` sweep and the
   `.tab-btn` font-size sweep, and the same kind of per-page work; not attempted here, where every
   fix was a shared file reaching all 178 pages at once.
+- **[Fixed] The largest element on the dashboard has never rendered a single pixel, and
+  `ecosystem.html`'s map neither.** Found with the new `scan.js canvas` detector, not by eye.
+  `#galaxy-canvas` sizes itself from `cv.offsetWidth` at DOMContentLoaded — which is *before*
+  bg.js's approval guard reveals `#app`/`.shell` (§3) — so it measured 0, set `canvas.width = 0`,
+  and **a canvas with a zero drawing buffer can never paint anything**. Its `window.resize`
+  listener would have recovered it, but revealing `#app` fires no resize event. Measured live:
+  buffer `0x360` against a CSS box of `1286x360`, **0 pixels painted**. `ecosystem.html`'s
+  `#eco-canvas` had the identical trap (`0x0` against `1242x458`). Same root cause as the
+  skeleton-shimmer bug already in this file — measuring an element before the approval guard
+  reveals it. Fixed with a `ResizeObserver` in each page, which fires whenever the element
+  actually gets a size, whatever reveals it. After: `1286x360` / **5,944 px painted** and
+  `1242x458` / **9,872 px painted**; the repo-wide canvas scan now reports **0** zero-buffer
+  canvases, down from 2.
+  - **Method note, because the first pass got this wrong:** the scan initially reported *seven*
+    dead canvases, naming `account.html`, `pending.html`, `terms.html`, `enterprise.html` and
+    `observatory.html` as well. Those five contain no `#galaxy-canvas` at all — with a signed-in
+    session they **redirect to the dashboard**, and the scanner was labelling the dashboard's DOM
+    with the filename it had requested. Only `dashboard.html` and `ecosystem.html` are real.
+    `scan.js canvas` now records `location.pathname` after load and dedupes on it.
+  - **Not a bug, recorded so it is not re-investigated:** `#omega-particles-canvas` reads blank at
+    the 300x150 default on all ~178 pages. `omega-particles.js` hands it to tsParticles from a CDN
+    the sandbox blocks, and it carries `opacity:0` until that loads — it works in production. The
+    detector skips it by name. Eleven other canvases paint nothing at load
+    (`#an-chart-auth`, three `#bg-canvas`, `#cipher-wave`, …); several plausibly have no data to
+    draw under the Supabase stub, so they are flagged as candidates, not asserted as bugs.
+- **[Improved] The topbar emblem, on 161 of 173 pages, was a faint arc that barely registered.**
+  With the galaxy fixed it was clear the platform's persistent mark was the weaker of the two.
+  `emblem.js` was already well built — five motifs, pointer parallax, reduced-motion safe — and
+  each page's motif is deliberately different (`omega-page-emblem.js`'s own header explains why:
+  "forty pages spinning the same shape says nothing about any of them"), so nothing about the
+  per-page motifs was touched. Added a *shared armillary frame* drawn underneath every motif, so
+  the mark reads as one instrument platform-wide while each page keeps its own identity inside
+  it: a fixed outer bezel, twelve zodiac ticks with every third longer and brighter so the
+  twelve-fold structure reads at 64px, and one counter-rotating scan arc in the page's own accent
+  colour. All three freeze under `prefers-reduced-motion` (the existing `ti` pin already handles
+  it). Painted coverage of the 64x64 mark went **5.8% → 13.1%**, verified by reading the real
+  pixel buffer and by screenshotting the element before and after.
+  - Coverage was measured rather than assumed, and the assumption would have been wrong:
+    `emblem.js` requires a `.topbar`, and **`dashboard.html` has none**, so the emblem never
+    renders there — 162 of 173 rendered pages have one, 161 get the emblem. The mark visible on
+    the dashboard is `omega-page-emblem.js`'s separate `[data-page-emblem]` canvas.
+  - The galaxy's own visual language was raised in the same pass, now that it paints at all: its
+    orbit rings were at `.04` alpha and its node-to-core links at `.02` — both invisible, so the
+    field read as scattered dots rather than a system. Rings are now dashed at `.2`, links at
+    `.055`, plus a slow radar sweep, a twelve-tick armillary ring around the core, and
+    phase-offset node breathing. Motion is frozen under `prefers-reduced-motion` by pinning the
+    time counter, so the full structure still draws — it just stops moving.
 - **Clean re-verification sweeps run this session, recorded because a clean result is
   evidence too**: a full 178-page runtime-error crawl with the authenticated stub (only 3
   uncaught errors, all of them sandbox artefacts — `d3`, `Leaflet` and `three.js` are CDN

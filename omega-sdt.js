@@ -78,6 +78,16 @@
     checkGateUnlock(newAuth);
     /* Micro-toast (bottom center, 3 seconds) */
     var toast=document.createElement('div');
+    toast.className='omega-sdt-toast';
+    /* Same collision as the keyboard hint: bottom:80px is where the controls
+       dock now sits on a phone. `bottom` is declared inline, so this needs the
+       class + !important to win. */
+    if(!document.getElementById('omega-sdt-toast-css')){
+      var ts=document.createElement('style');
+      ts.id='omega-sdt-toast-css';
+      ts.textContent='@media(max-width:760px){.omega-sdt-toast{bottom:215px!important}}';
+      (document.head||document.documentElement).appendChild(ts);
+    }
     toast.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:5000;font-family:\'Courier Prime\',monospace;font-size:9px;letter-spacing:2px;padding:8px 16px;background:rgba(2,2,6,.95);border:1px solid rgba(201,168,76,.3);border-radius:2px;color:var(--gold,#C9A84C);white-space:nowrap;animation:fadeIn .25s ease';
     var axLabel={a:'KNOWLEDGE',b:'MASTERY',c:'CONTRIBUTION'}[axis]||'AXIS';
     toast.textContent='+'+Number(delta||0.001).toFixed(3)+' \u2192 AXIS '+axLabel+' \u00b7 AUTH='+Number(newAuth||0).toFixed(4);

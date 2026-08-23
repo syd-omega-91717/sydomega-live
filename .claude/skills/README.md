@@ -19,6 +19,20 @@ invocation (`/web-trend-scout`, `/feature-architect`, `/autonomous-coder`,
    wires it into the real dashboard/hub pages and the real tier system
    (`OmegaCanon`/`membership_tier`), not a parallel one.
 
+## Standalone skills (not part of the pipeline)
+
+- **verify-in-browser** — renders the real pages in headless Chromium and runs
+  repo-wide scans (page errors, mobile tap targets, horizontal overflow,
+  duplicate ids, fixed-chrome collisions, dead inline handlers). Not a stage in
+  the pipeline: it is the check you run *after* any change to `bg.js`, `nav.js`,
+  an `omega-*.js` module, or page markup, and before claiming a UI fix works.
+  It carries the reusable harness (`harness/session.js`, `harness/sbstub.js`,
+  `harness/serve.js`, `harness/scan.js`) plus the sandbox gotchas that have
+  produced a wrong conclusion at least once each — the blocked `esm.sh` import
+  that makes every module look broken, the service worker that defeats
+  `page.route`, the four first-visit overlays that swallow clicks, and why
+  `git stash` cannot give you a working "before".
+
 ## Skill reference table
 
 | Skill | Purpose | Input | Output | Safety Guardrails | Gating |

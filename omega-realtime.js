@@ -109,6 +109,16 @@
     strip.id='omega-ticker-strip';
     strip.setAttribute('aria-live','polite');
     strip.setAttribute('aria-label','Live platform activity');
+    /* bottom:0 with z-index 200 puts this entirely inside nav.js's 66px
+       #omega-mob bar (z-index 9990), so on a phone the live feed has always
+       been 100% covered -- measured at 375x667 as y 639..667 against the
+       bar's 618..667. Sits directly on top of the bar instead. */
+    if(!document.getElementById('omega-ticker-strip-css')){
+      var ss=document.createElement('style');
+      ss.id='omega-ticker-strip-css';
+      ss.textContent='@media(max-width:760px){#omega-ticker-strip{bottom:66px!important}}';
+      (document.head||document.documentElement).appendChild(ss);
+    }
     strip.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(2,2,6,.9);border-top:1px solid rgba(201,168,76,.08);padding:5px var(--pad,20px);display:flex;align-items:center;gap:12px;overflow:hidden;height:28px';
     strip.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7px;letter-spacing:3px;color:rgba(201,168,76,.4);flex-shrink:0">\u03A9 LIVE</span>'
       +'<span id="omega-ticker-text" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:7.5px;letter-spacing:1px;color:rgba(138,134,118,.5);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">LOADING LIVE FEED\u2026</span>'

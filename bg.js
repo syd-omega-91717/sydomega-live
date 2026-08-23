@@ -1296,6 +1296,7 @@ setTimeout(function(){
   var st=document.createElement('style');
   st.textContent=[
     '#omega-toasts{position:fixed;right:18px;bottom:80px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none}',
+    '@media(max-width:760px){#omega-toasts{bottom:215px;right:10px;left:10px;align-items:flex-end}}',
     '.omega-toast{font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#0A0A0F;background:linear-gradient(90deg,#C9A84C,#E2C86D);padding:12px 18px;box-shadow:0 12px 34px -10px rgba(201,168,76,.55);transform:translateX(130%);transition:transform .5s cubic-bezier(.2,.8,.2,1);max-width:320px;border-left:3px solid #fff7d6}',
     '.omega-toast.in{transform:none}',
     '.omega-toast.cyan{background:linear-gradient(90deg,#00E5FF,#7fe9ff)}',

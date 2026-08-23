@@ -26,12 +26,12 @@
     '.ofb-b.primary{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.6);color:#E2C86D}',
     '.ofb-b:disabled{opacity:.5;cursor:default}',
     '#ofb-note{font-size:12px;margin-top:10px;min-height:16px}',
-    /* bottom:78px cleared nav.js's 66px bar but still landed on the controls
-       dock once that was lifted above the bar too (measured at 375px: dock
-       occupies y 586..626, this button was y 584..622). 126px sits it beside
-       the dedication widget instead -- no horizontal overlap, that one is
-       right-anchored and this is left-anchored. */
-    '@media(max-width:760px){#ofb-btn{left:10px;bottom:126px}}'
+    /* Part of the mobile bottom ladder (see omega-controls.js for the full
+       stack): nav 0..66, ticker 66..94, controls dock 102..142, then this row
+       at 150. bottom:78px cleared the nav bar but landed on the dock once that
+       was lifted above the bar too. Left-anchored here, beside the
+       right-anchored dedication widget, so the two never overlap. */
+    '@media(max-width:760px){#ofb-btn{left:10px;bottom:150px}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'ofb-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);

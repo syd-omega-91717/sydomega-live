@@ -122,6 +122,38 @@
     ctx.save();
     ctx.translate(cx + tx, cy + ty2);
 
+    /* --- shared armillary frame ---------------------------------------
+       Drawn under every motif so the mark reads as one instrument across all
+       ~250 pages, while each page keeps its own motif inside it. Measured
+       before this: the emblem was a faint arc that barely registered against
+       the topbar at 64px. Three cheap layers fix that without touching any
+       page's motif: a fixed outer bezel, twelve ticks on the zodiac (every
+       third longer and brighter, so the twelve-fold structure reads at a
+       glance), and one counter-rotating scan arc. Frozen when `reduce` is
+       set, since ti is pinned to 0 above. */
+    var BR = R * 0.96;
+    ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(0, 0, BR, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(201,168,76,.22)'; ctx.lineWidth = 0.7; ctx.stroke();
+
+    for (var bi = 0; bi < 12; bi++) {
+      var ba = -ti * 0.35 + bi * Math.PI / 6;
+      var major = bi % 3 === 0;
+      var bin = BR - (major ? 5 : 2.5);
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(ba) * bin, Math.sin(ba) * bin);
+      ctx.lineTo(Math.cos(ba) * BR, Math.sin(ba) * BR);
+      ctx.strokeStyle = major ? 'rgba(226,200,109,.5)' : 'rgba(201,168,76,.24)';
+      ctx.lineWidth = major ? 1 : 0.6;
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(0, 0, BR - 3, ti * 0.6, ti * 0.6 + 1.1);
+    ctx.strokeStyle = col; ctx.globalAlpha = 0.42; ctx.lineWidth = 1.2;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
     if (motif === 'ring') {
       for (var i = 0; i < n; i++) {
         var a = (ti * 0.8 + i * (Math.PI * 2 / n));

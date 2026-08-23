@@ -220,6 +220,18 @@ function buildNavGrid(){
   });
 
   window.addEventListener('resize',resize);
+  /* Same zero-buffer trap as dashboard.html's galaxy: this runs while bg.js's
+     approval guard still hides the shell, so the wrapper measures 0x0, the
+     canvas gets a 0x0 drawing buffer and can never paint. Revealing the shell
+     fires no resize event -- measured live as attr=0x0 against a css box of
+     1242x458. */
+  if(window.ResizeObserver){
+    var _ro=new ResizeObserver(function(){
+      var wrap=cv.parentElement;
+      if(wrap.clientWidth&&wrap.clientWidth!==cv.width) resize();
+    });
+    _ro.observe(cv.parentElement);
+  }
   resize();
   if(!reduce){var af=function(){draw();requestAnimationFrame(af);};af();}
 })();

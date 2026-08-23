@@ -3089,6 +3089,88 @@ orphaned file.
   still cite "0 critical / 6 pre-existing warnings" and "25/25 pass" from when those numbers were
   accurate; they are left as written since they were true at the time, but 7/45 is the current
   baseline to compare against.
+- **[Fixed] The 5 real findings the de-noised schema checker surfaced — 3 write/read bugs in the
+  knowledge-graph pages, plus a `task_completions` column that has never existed — and one
+  fabricated-data bug found while fixing the last of them.** The `scripts/schema-dictionary.py`
+  parser fixes in the entry above cut it from 892 findings to 10; 5 of those were the already-
+  documented `map.html` geolocation gap and an unconfirmable one, and the other 5 were real. Each
+  was checked against the actual `CREATE TABLE` before touching anything:
+  - **`graph-admin.html`'s two verify buttons wrote a column that does not exist, inside a
+    `try/catch` that could never fire.** `verifyEntity()` wrote `{confidence_score, verified}` to
+    `graph_entities` and `verifyRelationship()` wrote `{confidence, verified}` to
+    `graph_relationships` — but `omega_graphify_schema.sql` gives neither table a `verified`
+    column, and `graph_relationships`'s strength column is `strength numeric(3,2)`, not
+    `confidence`. PostgREST rejects the whole update when any column is unknown, and the Supabase
+    client resolves to `{data:null,error}` rather than throwing, so the `try/catch` wrapped around
+    both calls never caught anything: the update was discarded in full (so `confidence_score` /
+    `strength` were never written either) and the panel reloaded as though the entity had been
+    verified — the exact silent-failure shape §9 exists to prevent. Fixed all three parts:
+    `confidence` → the real `strength`, an explicit `.error` check that now shows the failure
+    instead of a false success, and `supabase/omega_graph_verified_fix.sql` to add the `verified`
+    column the feature was written against (idempotent `ADD COLUMN IF NOT EXISTS` + a
+    `(user_id, verified)` index matching how both tables' RLS already scopes). **Not applied to
+    the live database** — the Supabase connector is unauthorized in this session.
+  - **`intelligence.html` read two columns `graph_events` does not have.** It selected
+    `entity_name` (no such column; the table carries `entity_id`, a foreign key) and
+    `created_at` (the real columns are `occurred_at NOT NULL` and `recorded_at DEFAULT now()`),
+    and ordered by the latter — so the activity log has always rendered empty. Fixed with a
+    PostgREST embedded resource, `graph_entities(display_name,canonical_name)`, which resolves
+    the real entity name through the existing foreign key rather than inventing a denormalised
+    column, and `occurred_at` for both the select and the order (chosen over `recorded_at`
+    because it is the NOT NULL "when it happened" column, not the bookkeeping timestamp).
+  - **A false positive the embed fix then introduced in the checker itself, caught and fixed.**
+    The select-field parser split on every comma, so `graph_entities(display_name,canonical_name)`
+    was torn into two fragments and the trailing `canonical_name)` was reported as a missing
+    column of `graph_events`. The existing guard (`"(" in field`) could not catch it — that
+    fragment has only the closing paren. Fixed by splitting with the file's own paren-aware
+    `_split_top_level()` rather than `.split(",")`, so an embedded resource stays one field and
+    the existing guard skips it correctly. Findings: 10 → 5.
+  - **`omega-hercules.js` queried a `labor_id` column that exists nowhere, via a client accessor
+    that is never set, using a query shape that returns nothing — three independent bugs, so both
+    its database functions have always returned their zero value.** (1) `task_completions` has no
+    `labor_id` column in any definition in the SQL bag, and none live per this file's own
+    `complete_task()` entry. (2) Both functions guarded on `window.sb`, which **nothing in this
+    codebase ever assigns** — bg.js exposes the client as `window.OmegaSB.get()` — so each
+    returned early before reaching the network regardless. (3) `getOverallProgress()` passed
+    `{count:'exact', head:true}`, which by design returns `data:null`, then mapped over
+    `data ?? []` — so it would have reported 0% even on a fully successful query. Rewritten
+    against columns that exist, using the platform's own live convention: `task_type='labor'`,
+    `task_name='labor-<id>'`, recorded through the already-verified `complete_task()` RPC (which
+    dedups on `(user_id, task_name)`), with a `getSB()` helper that resolves `OmegaSB` and a
+    `completedLaborIds()` that returns `{ids, error}` so a caller cannot mistake a failed query
+    for an empty result.
+  - **`hercules.html` displayed `Math.floor(Math.random() * 100)` as each labor's completion
+    percentage** — a fabricated number, different on every page load, presented to the member as
+    their own progress. Worse than a false success toast, which at least corresponds to an action
+    the member took. Replaced with real recorded state: each labor reads completed or not (the
+    table records completion, not partial progress, so a per-labor percentage would be inventing
+    precision the data does not have), and the only percentage on the page is the genuine N-of-12
+    figure. Added a MARK COMPLETE action — the page's own copy already states its purpose as
+    "track your own labors", so this implements written intent rather than inventing product
+    behaviour — wired to `complete_task` with a real `.error` check and an honest failure
+    message. It deliberately passes `p_points: 0`: `complete_task` advances an axis by that
+    amount, and deciding what a Hercules labor is worth against knowledge/self/contribution is a
+    progression-balance decision for the owner, not one to guess at (it remains a one-number
+    edit). The page's own duplicate copies of the 12 labors and 12 themes were deleted in favour
+    of the module's — they had already drifted (the module had ids and no descriptions, the page
+    had descriptions and no ids), the same two-divergent-copies bug class this file documents at
+    length for `SIGN_ELEM`.
+  **Verified in real headless Chromium, A/B against the pre-fix files pinned from git**, driving
+  the page through a client that rejects unknown columns the way PostgREST does, seeded with two
+  real completions (`labor-lion`, `labor-hydra`): **before** — 12 cards showing fabricated
+  percentages that changed between two renders of the same page (`83% → 65%`, `24% → 92%`), 0 of
+  the 2 seeded completions shown, no overall figure at all, and the module reporting `progress: 0`
+  with no `completedLaborIds` on its API; **after** — "2 / 12 LABORS COMPLETE", exactly the two
+  seeded labors marked complete, `ids: ["lion","hydra"]`, `progress: 17`, identical across
+  re-renders, and a real click on a third labor issuing `complete_task({task_name:'labor-hind',
+  task_type:'labor'})` and re-rendering to "3 / 12". 0 page errors in both runs. The failure path
+  was verified separately against a client whose read fails: the page shows
+  `COULD NOT LOAD YOUR RECORD — column "x" does not exist` and hides the action buttons rather
+  than rendering "0 / 12", since an empty set means "none completed" only when the query actually
+  succeeded. Full local CI re-run clean afterward: `node --check` on every root `.js`,
+  `check-inline-js.py` clean, `audit.py` 0 critical / 7 pre-existing warnings (unchanged),
+  51/51 self-tests, 0 broken asset references, service-role scan clean, `sw.js` precache and
+  manifest icons both intact.
 
 
 ## 9. Working in this repo — practical rules

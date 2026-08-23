@@ -14,9 +14,21 @@
     .labor-progress { margin-top: 1rem; }
     .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--gold)); transition: width 0.3s ease; }
-    .trial-meta { display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.9rem; }
+    .trial-meta { display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.9rem; flex-wrap: wrap; }
     .trial-tag { padding: 0.25rem 0.75rem; background: rgba(255,255,255,0.05); border-radius: 12px; }
     #labors-list { min-height: 400px; }
+    .labor-state { font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 0.75rem; }
+    .labor-state.done { color: var(--green); }
+    .labor-state.open { color: var(--muted); }
+    .labor-act { margin-top: 1rem; min-height: 24px; padding: 0.4rem 0.9rem; font-size: 0.8rem;
+      letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;
+      background: rgba(255,255,255,0.05); color: var(--ink);
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; }
+    .labor-act[disabled] { opacity: 0.45; cursor: default; }
+    .labor-msg { font-size: 0.8rem; margin-top: 0.5rem; min-height: 1em; }
+    .labor-msg.err { color: var(--crim); }
+    .labor-card.done { opacity: 1; }
+    #labors-error { color: var(--crim); font-size: 0.9rem; }
   </style>
 </head>
 <body data-page="hercules">
@@ -32,9 +44,15 @@
       <div class="card" style="margin-bottom: 2rem;">
         <h2>The Twelve Labors</h2>
         <p>Legendary trials that forge strength. Track your own labors, triumphs, and the obstacles overcome.</p>
+        <div class="labor-progress" style="margin-top:1.25rem;">
+          <div class="progress-bar">
+            <div id="overall-fill" class="progress-fill" style="width:0%"></div>
+          </div>
+          <div id="overall-label" style="font-size:0.85rem;margin-top:0.5rem;color:var(--muted);">LOADING YOUR RECORD…</div>
+        </div>
       </div>
 
-      <div id="labors-list" class="labors-grid">
+      <div id="labors-list" class="labors-grid" data-loading>
         <!-- Loaded dynamically -->
       </div>
     </section>
@@ -46,61 +64,102 @@
 </div>
 
 <script>
-const LABORS = [
-  { num: 1, title: 'Nemean Lion', desc: 'Conquer the invulnerable beast — face what cannot be harmed by ordinary means', theme: 'courage', difficulty: 'legendary' },
-  { num: 2, title: 'Lernaean Hydra', desc: 'Defeat the ever-regenerating challenge — each obstacle solved creates new ones', theme: 'persistence', difficulty: 'extreme' },
-  { num: 3, title: 'Golden Hind', desc: 'Capture the swift and elusive goal — patience yields what force cannot', theme: 'wisdom', difficulty: 'high' },
-  { num: 4, title: 'Erymanthian Boar', desc: 'Master the wild and untamed — transform chaos through discipline', theme: 'mastery', difficulty: 'high' },
-  { num: 5, title: 'Augean Stables', desc: 'Clean the accumulated filth of neglect — massive scale, simple solution', theme: 'clarity', difficulty: 'medium' },
-  { num: 6, title: 'Stymphalian Birds', desc: 'Scatter the parasites — act with precision and timing', theme: 'discernment', difficulty: 'medium' },
-  { num: 7, title: 'Cretan Bull', desc: 'Tame the raging force — submission requires understanding', theme: 'restraint', difficulty: 'high' },
-  { num: 8, title: 'Mares of Diomedes', desc: 'Feed the devouring hunger — confront what consumes without satisfaction', theme: 'control', difficulty: 'extreme' },
-  { num: 9, title: 'Girdle of Hippolyta', desc: 'Navigate the political labyrinth — diplomacy where force fails', theme: 'strategy', difficulty: 'medium' },
-  { num: 10, title: 'Cattle of Geryon', desc: 'Journey to the ends of the known world — expand your boundaries', theme: 'vision', difficulty: 'high' },
-  { num: 11, title: 'Apples of Hesperides', desc: 'Find the golden treasure in impossible places — seek aid from unexpected allies', theme: 'humility', difficulty: 'extreme' },
-  { num: 12, title: 'Cerberus', desc: 'Return from the underworld itself — the final trial tests everything learned', theme: 'transcendence', difficulty: 'legendary' }
-];
+/* Labor data lives in /omega-hercules.js (injected by bg.js on every page) and
+   is read from there rather than duplicated here. This page used to carry its
+   own second copy of the 12 labors and 12 themes, which had already drifted
+   from the module's: the module had ids and no descriptions, the page had
+   descriptions and no ids. Two divergent copies of one canonical table is the
+   bug class documented in CLAUDE.md section 8 for SIGN_ELEM. */
 
-const THEMES = {
-  courage: { color: '#EF4444', icon: '⚔' },
-  persistence: { color: '#F59E0B', icon: '🔥' },
-  wisdom: { color: '#3B82F6', icon: '🧠' },
-  mastery: { color: '#8B5CF6', icon: '✦' },
-  clarity: { color: '#06B6D4', icon: '💎' },
-  discernment: { color: '#EC4899', icon: '👁' },
-  restraint: { color: '#6B7280', icon: '⚖' },
-  control: { color: '#10B981', icon: '🌪' },
-  strategy: { color: '#D97706', icon: '♟' },
-  vision: { color: '#F97316', icon: '🔭' },
-  humility: { color: '#06B6D4', icon: '🙏' },
-  transcendence: { color: '#A855F7', icon: '✨' }
-};
+var listEl, overallFill, overallLabel;
 
-function renderLabors() {
-  const list = document.getElementById('labors-list');
-  if (!list) return;
-  list.innerHTML = LABORS.map(labor => {
-    const theme = THEMES[labor.theme];
-    const progress = Math.floor(Math.random() * 100);
-    return `
-      <div class="card labor-card" style="border-left-color: ${theme.color}">
-        <div class="labor-num">${theme.icon} Labor ${labor.num}</div>
-        <div class="labor-title">${labor.title}</div>
-        <p class="labor-desc">${labor.desc}</p>
-        <div class="labor-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: ${progress}%; background: linear-gradient(90deg, ${theme.color}, ${theme.color}dd);"></div>
-          </div>
-          <div style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--muted);">${progress}% complete</div>
-        </div>
-        <div class="trial-meta">
-          <span class="trial-tag" style="border-left: 2px solid ${theme.color}">Theme: ${labor.theme}</span>
-          <span class="trial-tag" style="border-left: 2px solid ${theme.color}">Difficulty: ${labor.difficulty}</span>
-        </div>
-      </div>
-    `;
+function laborCard(labor, theme, done, canAct) {
+  return '<div class="card labor-card' + (done ? ' done' : '') + '" style="border-left-color: ' + theme.color + '">'
+    + '<div class="labor-num">' + theme.icon + ' Labor ' + labor.num + '</div>'
+    + '<div class="labor-title">' + labor.title + '</div>'
+    + '<p class="labor-desc">' + labor.desc + '</p>'
+    + '<div class="labor-state ' + (done ? 'done' : 'open') + '">'
+    +   (done ? '\u2713 Completed' : 'Not yet recorded')
+    + '</div>'
+    + (done || !canAct ? '' :
+        '<button type="button" class="labor-act" data-labor="' + labor.id + '">Mark complete</button>')
+    + '<div class="labor-msg" data-msg="' + labor.id + '"></div>'
+    + '<div class="trial-meta">'
+    +   '<span class="trial-tag" style="border-left: 2px solid ' + theme.color + '">Theme: ' + labor.theme + '</span>'
+    +   '<span class="trial-tag" style="border-left: 2px solid ' + theme.color + '">Difficulty: ' + labor.difficulty + '</span>'
+    + '</div>'
+    + '</div>';
+}
+
+function renderOverall(doneCount, total) {
+  if (!overallFill || !overallLabel) return;
+  var pct = total ? Math.round((doneCount / total) * 100) : 0;
+  overallFill.style.width = pct + '%';
+  overallLabel.textContent = doneCount + ' / ' + total + ' LABORS COMPLETE';
+}
+
+/* Renders real recorded state only.
+
+   This page previously drew Math.floor(Math.random() * 100) as each labor's
+   "% complete" -- a fabricated number, different on every reload, presented to
+   the member as their own progress. task_completions records completion, not
+   partial progress, so each labor is shown as completed or not, and the only
+   percentage on the page is the genuine N-of-12 figure. */
+async function renderLabors() {
+  listEl = document.getElementById('labors-list');
+  overallFill = document.getElementById('overall-fill');
+  overallLabel = document.getElementById('overall-label');
+  if (!listEl) return;
+
+  var H = window.OmegaHercules;
+  if (!H) {
+    listEl.innerHTML = '<div id="labors-error">Labor data unavailable \u2014 /omega-hercules.js did not load.</div>';
+    if (overallLabel) overallLabel.textContent = 'RECORD UNAVAILABLE';
+    return;
+  }
+
+  var res = await H.completedLaborIds();
+  listEl.removeAttribute('data-loading');
+
+  /* An empty set means "none completed" only when the query actually
+     succeeded. On error it means "we do not know", and saying 0/12 there
+     would be the same class of lie as the random numbers this replaced. */
+  if (res.error) {
+    if (overallLabel) overallLabel.textContent = 'COULD NOT LOAD YOUR RECORD \u2014 ' + (res.error.message || 'query failed');
+    listEl.innerHTML = H.LABORS.map(function (l) {
+      return laborCard(l, H.getTheme(l.id), false, false);
+    }).join('');
+    return;
+  }
+
+  renderOverall(res.ids.size, H.LABORS.length);
+  listEl.innerHTML = H.LABORS.map(function (l) {
+    return laborCard(l, H.getTheme(l.id), res.ids.has(l.id), true);
   }).join('');
 }
+
+/* Delegated so it survives every re-render. */
+document.addEventListener('click', async function (e) {
+  var btn = e.target && e.target.closest ? e.target.closest('.labor-act[data-labor]') : null;
+  if (!btn) return;
+
+  var id = btn.getAttribute('data-labor');
+  var msg = document.querySelector('.labor-msg[data-msg="' + id + '"]');
+  btn.disabled = true;
+  btn.textContent = 'Recording\u2026';
+  if (msg) { msg.className = 'labor-msg'; msg.textContent = ''; }
+
+  var out = await window.OmegaHercules.completeLabor(id);
+
+  /* Never report success without checking the write's actual result. */
+  if (!out.ok) {
+    btn.disabled = false;
+    btn.textContent = 'Mark complete';
+    if (msg) { msg.className = 'labor-msg err'; msg.textContent = 'Could not record: ' + out.error; }
+    return;
+  }
+  await renderLabors();
+}, false);
 
 window.addEventListener('DOMContentLoaded', renderLabors);
 </script>

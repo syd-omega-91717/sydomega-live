@@ -443,7 +443,7 @@ async function loadGraphStats(){
     var [entRes,relRes,eventRes]=await Promise.all([
       sb.from('graph_entities').select('*',{count:'exact',head:true}).eq('user_id',u),
       sb.from('graph_relationships').select('*',{count:'exact',head:true}).eq('user_id',u),
-      sb.from('graph_events').select('id,event_type,entity_name,created_at').eq('user_id',u).order('created_at',{ascending:false}).limit(20)
+      sb.from('graph_events').select('id,event_type,occurred_at,graph_entities(display_name,canonical_name)').eq('user_id',u).order('occurred_at',{ascending:false}).limit(20)
     ]);
 
     var ec=(entRes.count||0);
@@ -466,8 +466,8 @@ async function loadGraphStats(){
     }
     feed.innerHTML=(eventRes.data||[]).map(function(e){
       return '<div class="log-card" style="border-left-color:#9B6BF0">'
-        +'<div class="log-title">'+esc(e.event_type)+' — '+esc(e.entity_name)+'</div>'
-        +'<div class="log-meta"><span>'+new Date(e.created_at).toLocaleDateString()+'</span></div>'
+        +'<div class="log-title">'+esc(e.event_type)+' — '+esc((e.graph_entities&&(e.graph_entities.display_name||e.graph_entities.canonical_name))||'\u2014')+'</div>'
+        +'<div class="log-meta"><span>'+new Date(e.occurred_at).toLocaleDateString()+'</span></div>'
         +'</div>';
     }).join('');
   }catch(err){

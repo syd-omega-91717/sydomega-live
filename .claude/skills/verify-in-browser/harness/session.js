@@ -86,9 +86,18 @@ async function launch(opts = {}) {
   await ctx.route('https://fonts.gstatic.com/**', r => r.fulfill({ status: 200, body: '' }));
 
   if (pin) {
+    /* Content type must follow the extension. Serving a pinned .html as
+       text/javascript makes the browser refuse to parse it as a document, and
+       the "before" run then reports every element as absent -- which looks
+       exactly like a dramatic improvement and is not one. */
+    const TYPES = {
+      '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json',
+      '.css': 'text/css', '.svg': 'image/svg+xml'
+    };
     for (const [file, body] of Object.entries(pin)) {
-      await ctx.route('**/' + file, r =>
-        r.fulfill({ status: 200, contentType: 'text/javascript', body }));
+      const ext = file.slice(file.lastIndexOf('.'));
+      const contentType = TYPES[ext] || 'text/plain';
+      await ctx.route('**/' + file, r => r.fulfill({ status: 200, contentType, body }));
     }
   }
 

@@ -40,6 +40,7 @@ node .claude/skills/verify-in-browser/harness/scan.js overflow   # pages scrolli
 node .claude/skills/verify-in-browser/harness/scan.js dupids     # duplicate ids in the live DOM
 node .claude/skills/verify-in-browser/harness/scan.js chrome     # fixed bottom widgets, clipped/covered
 node .claude/skills/verify-in-browser/harness/scan.js handlers   # inline onclick naming a missing fn
+node .claude/skills/verify-in-browser/harness/scan.js canvas     # canvases that can never paint
 PAGES=dashboard.html,vault.html node .../scan.js taps            # limit the sweep
 ```
 
@@ -109,6 +110,30 @@ taken seconds apart shows the live trial timer and the cookie banner as
 **36 of 43 `.tbl-wrap` instances live in `display:none` tab panels** and never
 enter the accessibility tree at load. Force the panels visible before
 measuring, or report honestly that you measured 4 of 43.
+
+**Pages redirect, so the filename you asked for is not the page you measured.**
+With a signed-in session, `account.html`, `pending.html` and `terms.html` land
+on the dashboard. A scan that labels results by requested filename turned one
+real dead canvas into six phantom ones. Always record `location.pathname` after
+load and dedupe on it — `scan.js canvas` does.
+
+**`pin` must serve each file with the content type its extension implies.**
+Serving a pinned `.html` as `text/javascript` makes the browser refuse to parse
+it as a document, and the "before" run then reports every element as absent —
+which reads as a dramatic improvement and is not one. `session.js` handles this;
+if you hand-roll a `ctx.route`, do the same.
+
+**`#omega-particles-canvas` reads blank on every page and is not a bug.**
+`omega-particles.js` hands its canvas to tsParticles from a CDN the sandbox
+blocks, so it sits at the 300x150 default with `opacity:0`. It works in
+production. `scan.js canvas` skips it by name.
+
+**A canvas sized from `offsetWidth` at DOMContentLoaded gets a zero buffer.**
+The approval guard still hides `#app` at that point, so the page measures 0,
+sets `canvas.width = 0`, and a zero-width buffer can never paint — and
+revealing `#app` fires no resize event to recover. This killed the dashboard's
+`#galaxy-canvas` and `ecosystem.html`'s `#eco-canvas` outright. A
+`ResizeObserver` is the fix; `scan.js canvas` is the detector.
 
 **Three pages throw from blocked CDNs, not from bugs**: `graph.html` (d3),
 `map.html` (Leaflet), `realm.html` (three.js). Expected in the sandbox,

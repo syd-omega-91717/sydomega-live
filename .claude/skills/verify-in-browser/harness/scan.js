@@ -155,6 +155,62 @@ const MODES = {
     }
   },
 
+  /* A canvas whose drawing buffer is 0 can never paint, no matter how big its
+     CSS box is. This happens when a page sizes its canvas from offsetWidth at
+     DOMContentLoaded -- which is before bg.js's approval guard reveals #app,
+     so it measures 0 -- and only re-sizes on a window resize event that the
+     reveal never fires. It killed the largest element on the dashboard.
+     IGNORE #omega-particles-canvas here: omega-particles.js hands its canvas
+     to tsParticles from a CDN the sandbox blocks, so it correctly sits at the
+     300x150 default with opacity 0 and would work in production. */
+  canvas: {
+    collect: page => page.evaluate(() => {
+      const out = [];
+      document.querySelectorAll('canvas').forEach(cv => {
+        if (cv.id === 'omega-particles-canvas') return;
+        const cs = getComputedStyle(cv);
+        if (cs.display === 'none' || cs.visibility === 'hidden') return;
+        const b = cv.getBoundingClientRect();
+        if (b.width < 2 || b.height < 2) return;
+        let painted = 0, err = false;
+        try {
+          const g = cv.getContext('2d');
+          if (g && cv.width && cv.height) {
+            const d = g.getImageData(0, 0, cv.width, cv.height).data;
+            for (let i = 3; i < d.length; i += 4) if (d[i] > 8) { painted++; if (painted > 40) break; }
+          }
+        } catch (e) { err = true; }        // WebGL / tainted: not a 2d canvas
+        if (err) return;
+        out.push({
+          id: cv.id || cv.className || 'canvas',
+          buffer: cv.width + 'x' + cv.height,
+          css: Math.round(b.width) + 'x' + Math.round(b.height),
+          zero: cv.width === 0 || cv.height === 0,
+          blank: cv.width > 0 && cv.height > 0 && painted === 0
+        });
+      });
+      return { url: location.pathname.replace(/^\//, ''), canvases: out };
+    }),
+    report: rows => {
+      /* Dedupe by the page actually landed on: account/pending/terms redirect
+         a signed-in member to the dashboard, so the requested filename is not
+         the page that was measured. Reporting per requested file turns one
+         real bug into six phantom ones. */
+      const seen = new Map();
+      rows.forEach(r => { if (r.result) seen.set(r.result.url, r.result); });
+      const zero = [], blank = [];
+      [...seen.values()].forEach(pg => pg.canvases.forEach(c => {
+        if (c.zero) zero.push(`${pg.url} #${c.id} buffer=${c.buffer} css=${c.css}`);
+        else if (c.blank) blank.push(`${pg.url} #${c.id} ${c.buffer}`);
+      }));
+      console.log(`distinct pages rendered: ${seen.size}`);
+      console.log(`canvases that can NEVER paint (zero drawing buffer): ${zero.length}`);
+      zero.forEach(z => console.log('  ' + z));
+      console.log(`canvases sized but painting nothing: ${blank.length}`);
+      blank.slice(0, 20).forEach(z => console.log('  ' + z));
+    }
+  },
+
   /* Inline onclick= that names a function declared only inside a
      <script type="module"> and never put on window. Module top-level
      declarations are not global, so the click throws silently. */

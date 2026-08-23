@@ -359,6 +359,7 @@ function setTab(name){
 (function(){
   var cv=document.getElementById('galaxy-canvas');if(!cv) return;
   var ctx=cv.getContext('2d');var W,H,t=0;
+  var _galaxyReduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   var MODULES=[
     {name:'CORE',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),href:'/dashboard.html',r:0},
     {name:'IDENTITY',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),href:'/profile.html',r:1},{name:'MASTERY',col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),href:'/gaming.html',r:1},
@@ -389,11 +390,51 @@ function setTab(name){
   function draw(){
     ctx.clearRect(0,0,W,H);
     var cx=W/2,cy=H/2;
-    /* Orbit rings */
+    /* Orbit rings. Were .04 alpha, i.e. invisible -- with the canvas finally
+       painting, the structure has to actually read or the whole thing looks
+       like scattered dots rather than a system. Dashed, so the rings register
+       as orbital tracks rather than solid circles. */
+    ctx.save();
+    ctx.setLineDash([3,5]);
     [Math.min(W,H)*.22,Math.min(W,H)*.42].forEach(function(r){
       ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
-      ctx.strokeStyle='rgba(201,168,76,.04)';ctx.lineWidth=.5;ctx.stroke();
+      ctx.strokeStyle='rgba(201,168,76,.2)';ctx.lineWidth=.7;ctx.stroke();
     });
+    ctx.restore();
+
+    /* Radar sweep -- one slow rotating wedge, the single cheapest thing that
+       turns a static diagram into a live instrument. */
+    var sweep=t*0.0016;
+    var sg=ctx.createConicGradient?null:null;
+    ctx.save();
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,Math.min(W,H)*.46,sweep-0.42,sweep);
+    ctx.closePath();
+    var swg=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*.46);
+    swg.addColorStop(0,'rgba(201,168,76,.055)');
+    swg.addColorStop(1,'rgba(201,168,76,0)');
+    ctx.fillStyle=swg;ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+Math.cos(sweep)*Math.min(W,H)*.46,cy+Math.sin(sweep)*Math.min(W,H)*.46);
+    ctx.strokeStyle='rgba(201,168,76,.16)';ctx.lineWidth=.7;ctx.stroke();
+    ctx.restore();
+
+    /* Armillary ring around the core: 12 ticks, counter-rotating. */
+    var cr=Math.min(W,H)*.105, spin=-t*0.0011;
+    ctx.save();
+    ctx.beginPath();ctx.arc(cx,cy,cr,0,Math.PI*2);
+    ctx.strokeStyle='rgba(201,168,76,.16)';ctx.lineWidth=.6;ctx.stroke();
+    for(var ti=0;ti<12;ti++){
+      var ta=spin+ti*Math.PI/6;
+      var inner=cr-(ti%3===0?5:2.5);
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(ta)*inner,cy+Math.sin(ta)*inner);
+      ctx.lineTo(cx+Math.cos(ta)*cr,cy+Math.sin(ta)*cr);
+      ctx.strokeStyle=ti%3===0?'rgba(226,200,109,.42)':'rgba(201,168,76,.2)';
+      ctx.lineWidth=ti%3===0?1:.6;ctx.stroke();
+    }
+    ctx.restore();
     /* Nodes */
     nodes.forEach(function(n,i){
       if(n.orbit===0){n.x=cx;n.y=cy;}
@@ -404,7 +445,10 @@ function setTab(name){
         n.y=cy+Math.sin(angle)*n.orbit;
       }
       var isH=hovered===i;
-      var r=n.orbit===0?10:isH?7:5;
+      /* Phase-offset breathing, so the field reads as alive rather than
+         frozen. Frozen entirely under prefers-reduced-motion, since t stops. */
+      var pulse=1+Math.sin(t*0.02+i*0.7)*0.12;
+      var r=(n.orbit===0?10:isH?7:5)*(isH?1:pulse);
       var col=n.mod.col;
       /* Glow */
       var grd=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,r*2.5);
@@ -425,10 +469,13 @@ function setTab(name){
       /* Connection to center */
       if(n.orbit>0){
         ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(n.x,n.y);
-        ctx.strokeStyle='rgba(201,168,76,0.02)';ctx.lineWidth=.5;ctx.stroke();
+        ctx.strokeStyle='rgba(201,168,76,0.055)';ctx.lineWidth=.5;ctx.stroke();
       }
     });
-    t++;requestAnimationFrame(draw);
+    /* Freeze the animation, not the render, under prefers-reduced-motion: the
+       galaxy still draws its full structure, it just stops moving. */
+    if(!_galaxyReduce) t++;
+    requestAnimationFrame(draw);
   }
   cv.addEventListener('mousemove',function(e){
     var rect=cv.getBoundingClientRect();var mx=e.clientX-rect.left,my=e.clientY-rect.top;
@@ -441,6 +488,19 @@ function setTab(name){
   });
   cv.addEventListener('mouseleave',function(){hovered=null;});
   window.addEventListener('resize',function(){resize();layout();});
+  /* bg.js's approval guard hides #app/.shell until the profile is confirmed
+     approved, so this runs while the canvas has no layout box: offsetWidth is
+     0, cv.width is set to 0, and a canvas with a zero drawing buffer can never
+     paint anything. Revealing #app does not fire a window resize event, so the
+     listener above never revived it -- measured live as attr=0x360 against a
+     css box of 1286x360, 0 pixels painted. A ResizeObserver fires the moment
+     the element actually gets a size, whatever reveals it. */
+  if(window.ResizeObserver){
+    var _ro=new ResizeObserver(function(){
+      if(cv.offsetWidth&&cv.offsetWidth!==cv.width){resize();layout();}
+    });
+    _ro.observe(cv);
+  }
   resize();layout();draw();
 })();
 

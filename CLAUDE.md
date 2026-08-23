@@ -452,10 +452,17 @@ are listed in rough order of how often they have recurred.
    `offsetHeight`/`getBoundingClientRect` at `DOMContentLoaded` reads 0. A
    canvas sized that way gets a zero drawing buffer and can never paint. Use a
    `ResizeObserver`, or check for an already-set value before overriding.
-4. **A function declared inside `<script type="module">` but called from an
-   inline `onclick=`.** Module top-level declarations are not global, so the
-   click throws `ReferenceError` silently. Fix by assigning `window.fn = fn`.
-   Swept to 0 platform-wide; re-check after adding any inline handler.
+4. **A global that only one page ever assigns.** Two shapes. (a) A function
+   declared inside `<script type="module">` but called from an inline
+   `onclick=` — module top-level declarations are not global, so the click
+   throws `ReferenceError` silently; fix with `window.fn = fn`. Swept to 0.
+   (b) **A shared accessor that nothing publishes.** `window.OmegaSupabase` was
+   read by 11 files and assigned by exactly one (`graphify.html:168`), so the
+   entire knowledge-graph and council feature set never initialised anywhere
+   else — `graph-admin.html:83` re-polled every 100ms forever. `bg.js` now
+   publishes it from `OmegaSB.get()`. The same shape broke `omega-hercules.js`,
+   which guarded on `window.sb`, a global nothing assigns. **Before using a
+   `window.*` accessor, grep for its assignment, not just its readers.**
 5. **An injection guard that discards instead of deferring.**
    `if (document.body) document.body.appendChild(x)` drops the work entirely
    when body does not exist yet. `bg.js` now routes every injection through

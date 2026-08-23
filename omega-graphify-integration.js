@@ -165,7 +165,7 @@
 
       const { error } = await sb
         .from('graph_entities')
-        .upsert(toUpsert, { onConflict: 'user_id,canonical_name' });
+        .upsert(toUpsert, { onConflict: 'user_id,entity_type,canonical_name' });
 
       if (error) throw error;
 
@@ -201,9 +201,18 @@
         verified: false,
       }));
 
-      await sb
+      /* Checked, like every other write here: Supabase resolves to
+         {data, error} rather than throwing, so the enclosing try/catch never
+         saw a failure and the stub entities silently did not exist -- which
+         then made every relationship below reference a missing row. */
+      const stubRes = await sb
         .from('graph_entities')
-        .upsert(entities, { onConflict: 'user_id,canonical_name' });
+        .upsert(entities, { onConflict: 'user_id,entity_type,canonical_name' });
+      if (stubRes.error) {
+        console.error('[Graphify Integration] stub entity upsert failed:',
+          stubRes.error.message);
+        return;
+      }
 
       // Now upsert relationships
       const toUpsert = relationships
@@ -213,7 +222,7 @@
           source_entity_id: r.source_entity, // Will be resolved by foreign key
           target_entity_id: r.target_entity,
           relationship_type: r.type || 'related_to',
-          strength_score: r.strength || 0.5,
+          strength: r.strength || 0.5,
           confidence_score: r.confidence || r.strength || 0.5,
           verified: false,
           metadata: {
@@ -235,29 +244,45 @@
       await logGraphEvent('relationship_auto_ingested', toUpsert[0]?.source_entity_id, {
         count: toUpsert.length,
         source_activity_id: activity.id,
-        strength_avg: toUpsert.reduce((sum, r) => sum + r.strength_score, 0) / toUpsert.length,
+        strength_avg: toUpsert.reduce((sum, r) => sum + r.strength, 0) / toUpsert.length,
       });
     } catch (err) {
       console.error('[Graphify Integration] Relationship upsert error:', err);
     }
   }
 
-  // Log a graph event to the audit trail
-  async function logGraphEvent(eventType, entityName, metadata) {
-    try {
-      await sb
-        .from('graph_events')
-        .insert([
-          {
-            user_id: currentUser,
-            event_type: eventType,
-            entity_name: entityName || 'system',
-            metadata: metadata || {},
-            created_at: new Date().toISOString(),
-          },
-        ]);
-    } catch (err) {
-      console.error('[Graphify Integration] Log error:', err);
+  /* Log a graph event to the audit trail.
+
+     Every column this used to write was wrong, and nothing surfaced it because
+     the table had no GRANT to `authenticated` at all -- the request failed with
+     42501 before Postgres ever looked at the column list. Against the live
+     schema:
+       entity_name  -- does not exist. The column is entity_id uuid, and the
+                       callers pass a canonical_name string, so there is no
+                       uuid to put there; the human-readable identifier goes to
+                       change_summary instead of inventing a lookup.
+       metadata     -- does not exist. The structured payload column is
+                       after_state jsonb.
+       created_at   -- does not exist. occurred_at is NOT NULL WITH NO DEFAULT,
+                       so omitting it failed the insert on its own.
+
+     The await was also inside a try/catch that could never fire: the Supabase
+     client resolves to {data, error} rather than throwing, so a failed audit
+     write was silently discarded. */
+  async function logGraphEvent(eventType, entityLabel, details) {
+    const { error } = await sb
+      .from('graph_events')
+      .insert([
+        {
+          user_id: currentUser,
+          event_type: eventType,
+          occurred_at: new Date().toISOString(),
+          change_summary: entityLabel || 'system',
+          after_state: details || {},
+        },
+      ]);
+    if (error) {
+      console.error('[Graphify Integration] graph_events insert failed:', error.message);
     }
   }
 

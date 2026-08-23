@@ -273,7 +273,11 @@ async function deleteEntity(eid,ev){
   if(ev)ev.stopPropagation();
   if(!confirm('Delete entity? This will remove related relationships.'))return;
   try{
-    await sb.from('graph_entities').delete().eq('id',eid);
+    /* .error checked, not try/catch: Supabase resolves rather than throws,
+       so the catch below never saw a failed delete and the row vanished from
+       the UI while still existing in the database. */
+    const {error}=await sb.from('graph_entities').delete().eq('id',eid);
+    if(error){alert('Could not delete entity: '+error.message);return;}
     await loadEntities();
     selectedId=null;
     renderList();
@@ -285,7 +289,8 @@ async function deleteRelationship(rid,ev){
   if(ev)ev.stopPropagation();
   if(!confirm('Delete relationship?'))return;
   try{
-    await sb.from('graph_relationships').delete().eq('id',rid);
+    const {error}=await sb.from('graph_relationships').delete().eq('id',rid);
+    if(error){alert('Could not delete relationship: '+error.message);return;}
     await loadRelationships();
     selectedId=null;
     renderList();

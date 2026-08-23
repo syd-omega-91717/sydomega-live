@@ -162,19 +162,44 @@ function __omegaAppend(el){
   var URL = "https://ydqhzvvoyufiiqvzcjns.supabase.co";
   var KEY = "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
   var _p = null;
+  /* Compatibility slot for the knowledge-graph and council code.
+
+     Eleven files read `window.OmegaSupabase.sb`, and exactly ONE ever assigned
+     it: graphify.html:168. Confirmed by rendering all nine consumer pages --
+     OmegaSupabase was `undefined` on eight of them (intelligence, graph-admin,
+     graph-explorer, graph-timeline, graph-anomalies, graph-centrality,
+     graph-evidence, council) while window.OmegaSB was present on every one.
+
+     So that whole feature set has never initialised anywhere but graphify.html.
+     graph-admin.html:83 does `if(!window.OmegaSupabase){setTimeout(init,100);
+     return;}` -- it has been re-polling every 100ms forever, never advancing.
+     It also means the column bugs in those pages could never surface as
+     symptoms: the code never got far enough to issue a query.
+
+     Publishing here rather than editing eleven call sites keeps one source of
+     truth for the client (still window.__omegaSb) and fixes every consumer at
+     once. Deliberately NOT resolved eagerly: that would add an esm.sh import to
+     public pages that currently never build a client. Gated pages already call
+     get() during the approval-guard check, which is well before any page
+     script reads the slot. */
+  function publish(sb) {
+    if (!window.OmegaSupabase) window.OmegaSupabase = { sb: sb };
+    else if (!window.OmegaSupabase.sb) window.OmegaSupabase.sb = sb;
+    return sb;
+  }
   function get() {
     /* A page module may already have built a client (window.__omegaSb). Which
        runs first depends on where bg.js sits relative to the module, so BOTH
        directions must converge on the same slot -- otherwise the page builds
        one, this builds another, and two GoTrueClients share the storage key. */
-    if (window.__omegaSb) return Promise.resolve(window.__omegaSb);
+    if (window.__omegaSb) return Promise.resolve(publish(window.__omegaSb));
     if (_p) return _p;
     _p = import('https://esm.sh/@supabase/supabase-js@2').then(function (mod) {
       var cc = mod.createClient || (mod.default && mod.default.createClient);
       if (!cc) throw new Error('supabase createClient unavailable');
       /* publish it so any page module loading later reuses this one */
       window.__omegaSb = window.__omegaSb || cc(URL, KEY);
-      return window.__omegaSb;
+      return publish(window.__omegaSb);
     }).catch(function (e) { _p = null; throw e; });
     return _p;
   }

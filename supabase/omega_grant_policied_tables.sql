@@ -86,13 +86,36 @@ GRANT SELECT, INSERT                 ON public.workflow_executions   TO authenti
 
 -- The knowledge-graph tables, same root cause. Privileges match demonstrated
 -- client usage: entities and relationships are selected, upserted
--- (omega-graphify-integration.js) and deleted (graph-admin.html); events and
--- evidence are read-only from the client, their rows written by trigger /
--- SECURITY DEFINER paths that run as the table owner and need no grant.
+-- (omega-graphify-integration.js) and deleted (graph-admin.html); graph_events
+-- is read and appended to by logGraphEvent(); graph_evidence is read-only.
+-- (graph_events INSERT was missed on the first pass -- see the correction
+-- immediately below.)
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.graph_entities      TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.graph_relationships TO authenticated;
-GRANT SELECT                         ON public.graph_events        TO authenticated;
+GRANT SELECT, INSERT                 ON public.graph_events        TO authenticated;
 GRANT SELECT                         ON public.graph_evidence      TO authenticated;
+
+-- CORRECTION, applied as migration `graph_events_insert_and_relationship_natural_key`:
+-- graph_events was first granted SELECT only, on the strength of a grep that
+-- matched only methods chained directly onto .from(). That missed
+-- omega-graphify-integration.js:249, `sb.from('graph_events').insert([...])`
+-- inside logGraphEvent(), which runs after every entity and relationship
+-- ingestion -- so every audit write would have failed 42501, the same class
+-- the grant was meant to fix. graph_evidence genuinely has no client writes
+-- (re-checked across every .html and .js) and stays SELECT-only.
+
+-- graph_relationships had no natural key, so its upsert could never run:
+--   onConflict: 'user_id,source_entity_id,target_entity_id,relationship_type'
+-- against a table whose only unique index was the primary key raises
+--   42P10: there is no unique or exclusion constraint matching the ON CONFLICT
+-- graph_entities already has its equivalent (UNIQUE(user_id, entity_type,
+-- canonical_name), omega_graphify_schema.sql:26); relationships was never
+-- given one. This is the single place here where intent is inferred from the
+-- client rather than read from the schema: the four columns are a genuine
+-- natural key for a graph edge, the client already encodes that assumption,
+-- and the table is empty (0 rows, verified) so nothing can conflict.
+CREATE UNIQUE INDEX IF NOT EXISTS graph_relationships_natural_key
+  ON public.graph_relationships (user_id, source_entity_id, target_entity_id, relationship_type);
 
 -- ----------------------------------------------------------------------------
 -- STILL OPEN, deliberately: 38 further tables have policies and no grant but

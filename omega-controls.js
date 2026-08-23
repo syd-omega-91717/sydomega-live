@@ -39,6 +39,16 @@
          a rotate or resize needs no listener and cannot desync), leaving
          three full-size controls in a single row. */
       '#omega-lang-select{display:none}',
+      /* THE MOBILE BOTTOM LADDER (<=760px), measured at 375x667. Every band
+         below is occupied by a fixed widget from a different module; if you
+         move one, re-run scan.js chrome and the mutual-overlap check, because
+         they were all landing on each other before this was laid out:
+             0..66    #omega-mob            nav.js       (z 9990)
+            66..94    #omega-ticker-strip   omega-realtime.js
+           102..142   #omega-controls-dock  this file
+           150..      #ofb-btn / #omega-voice-btn / #omega-ded-widget
+           215..      transient toasts      omega-sdt / omega-keyboard / bg.js
+         #omega-cap-badge is hidden below 760px -- it was 100% covered. */
       '@media(max-width:760px){',
       /* left:50% + width:auto caps a fixed element's available width at
          100% - left, i.e. 50vw -- 187px on a 375px phone. That is what made
@@ -46,7 +56,7 @@
          past both edges) and what kept forcing a wrap here even with room to
          spare. Anchoring both edges instead gives it the real viewport width
          and centres the contents inside it. */
-      '#omega-controls-dock{bottom:74px!important;left:6px!important;right:6px;',
+      '#omega-controls-dock{bottom:102px!important;left:6px!important;right:6px;',
       'transform:none!important;justify-content:center;flex-wrap:wrap;row-gap:4px}',
       '#omega-controls-dock button{padding:7px 8px!important;min-height:24px}',
       '#omega-controls-dock button[data-lang]{display:none}',

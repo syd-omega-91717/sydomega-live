@@ -132,6 +132,15 @@
     _btn.title='Voice Commands — Click to speak';
     _btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
     _btn.style.cssText='position:fixed;bottom:90px;left:24px;z-index:4500;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gold,#C9A84C);transition:.2s;box-shadow:0 2px 12px rgba(0,0,0,.3)';
+    /* bottom:90px overlaps the controls dock, which sits at bottom:74px on a
+       phone to clear nav.js's 66px bar. left:24px would also collide with
+       #ofb-btn once both are lifted, so this goes to the right of it. */
+    if(!document.getElementById('omega-voice-btn-css')){
+      var vs=document.createElement('style');
+      vs.id='omega-voice-btn-css';
+      vs.textContent='@media(max-width:760px){#omega-voice-btn{bottom:150px!important;left:120px!important}}';
+      (document.head||document.documentElement).appendChild(vs);
+    }
     _btn.addEventListener('click',startListening);
     _btn.addEventListener('mouseenter',function(){_btn.style.background='rgba(201,168,76,.12)';});
     _btn.addEventListener('mouseleave',function(){if(!_listening)_btn.style.background='rgba(201,168,76,.05)';});

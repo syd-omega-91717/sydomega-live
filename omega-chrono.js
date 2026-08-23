@@ -191,7 +191,7 @@
     if(!document.getElementById('omega-ded-widget-css')){
       var ds=document.createElement('style');
       ds.id='omega-ded-widget-css';
-      ds.textContent='@media(max-width:760px){#omega-ded-widget{bottom:122px!important}}';
+      ds.textContent='@media(max-width:760px){#omega-ded-widget{bottom:150px!important}}';
       (document.head||document.documentElement).appendChild(ds);
     }
     w.innerHTML=

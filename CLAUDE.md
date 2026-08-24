@@ -560,6 +560,15 @@ open, recorded in `FIXES_LOG.md`:
   client code here; most are the ~83-table scaffold below. Left locked out (the
   safe state) rather than granted on the assumption that a policy's existence
   implies it should be reachable.
+- **GitHub Actions cannot assign a runner on this account.** Since 2026-08-22
+  every run fails in 2–5s with `runner_id: 0`, no `steps` array, 0 billable ms
+  and a completely empty check-run output — reproduced on `pull_request`,
+  `push` to `main`, and `workflow_dispatch` alike, so it is not trigger- or
+  branch-specific. This repo is **private on a personal account**, so Actions
+  minutes draw on the account allowance; the last green run was #344 on Aug 22
+  at 11:56 UTC. Nothing in the code affects it — clear it under Settings →
+  Billing and licensing → Budgets and alerts. Meanwhile `./scripts/ci-local.sh`
+  runs every blocking step locally, so a commit can still be verified.
 - **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
   not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
 - **`scripts/audit.py`'s 7 warnings are all understood**, and the tool now

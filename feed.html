@@ -36,70 +36,70 @@
 </header>
 
 <div class="kpi-row" style="padding:0 var(--page-pad);margin-bottom:12px">
-  <div class="kpi" style="border-top-color:var(--green)"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
-  <div class="kpi" style="border-top-color:var(--cyan)"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div>
-  <div class="kpi" style="border-top-color:var(--gold)"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div>
-  <div class="kpi" style="border-top-color:var(--green)"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div>
+  <div class="kpi" style="border-top-color:var(--green)"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l" data-i18n="feed_kpi_authority_label">AUTHORITY</div></div>
+  <div class="kpi" style="border-top-color:var(--cyan)"><div class="kpi-n" id="s-a">--</div><div class="kpi-l" data-i18n="feed_kpi_axisa_label">AXIS A</div></div>
+  <div class="kpi" style="border-top-color:var(--gold)"><div class="kpi-n" id="s-b">--</div><div class="kpi-l" data-i18n="feed_kpi_axisb_label">AXIS B</div></div>
+  <div class="kpi" style="border-top-color:var(--green)"><div class="kpi-n" id="s-c">--</div><div class="kpi-l" data-i18n="feed_kpi_axisc_label">AXIS C</div></div>
 </div>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('feed')">FEED</button>
-  <button class="tab-btn" onclick="setTab('posts')">POSTS</button>
-  <button class="tab-btn" onclick="setTab('member-posts')">MEMBER POSTS</button>
-  <button class="tab-btn" onclick="setTab('mine')">MY ACTIVITY</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" onclick="setTab('feed')" data-i18n="feed_tab_feed">FEED</button>
+  <button class="tab-btn" onclick="setTab('posts')" data-i18n="feed_tab_posts">POSTS</button>
+  <button class="tab-btn" onclick="setTab('member-posts')" data-i18n="feed_tab_member_posts">MEMBER POSTS</button>
+  <button class="tab-btn" onclick="setTab('mine')" data-i18n="feed_tab_mine">MY ACTIVITY</button>
+  <button class="tab-btn" onclick="setTab('science')" data-i18n="feed_tab_science">SCIENCE</button>
 </div>
 
 <div class="tab-panel active" id="tab-feed">
-  <div class="sechead">PLATFORM ACTIVITY &middot; LIVE MEMBER STREAM</div>
+  <div class="sechead" data-i18n="feed_sec_platform_title">PLATFORM ACTIVITY &middot; LIVE MEMBER STREAM</div>
   <div class="glass" id="feed-list" style="padding:14px 16px" data-loading></div>
-  <div class="sechead" style="margin-top:20px">TRENDING &middot; LAST 7 DAYS</div>
+  <div class="sechead" style="margin-top:20px" data-i18n="feed_sec_trending_title">TRENDING &middot; LAST 7 DAYS</div>
   <div class="glass" id="trend-list" style="padding:14px 16px" data-loading></div>
 </div>
 
 <div class="tab-panel" id="tab-posts">
-  <div class="sechead">SOVEREIGN POSTS &middot; MEMBER PUBLICATIONS</div>
+  <div class="sechead" data-i18n="feed_sec_posts_title">SOVEREIGN POSTS &middot; MEMBER PUBLICATIONS</div>
   <div id="posts-list" data-loading></div>
 </div>
 
 <div class="tab-panel" id="tab-member-posts">
-  <div class="sechead">MEMBER POSTS &middot; MILESTONES, ACHIEVEMENTS &amp; INSIGHTS</div>
+  <div class="sechead" data-i18n="feed_sec_member_posts_title">MEMBER POSTS &middot; MILESTONES, ACHIEVEMENTS &amp; INSIGHTS</div>
   <div class="card" style="margin-bottom:14px;padding:14px">
     <select id="mp-type" class="inp" style="margin-bottom:8px;width:100%">
-      <option value="text">UPDATE</option>
-      <option value="achievement">ACHIEVEMENT</option>
-      <option value="milestone">MILESTONE</option>
-      <option value="question">QUESTION</option>
-      <option value="insight">INSIGHT</option>
-      <option value="announcement">ANNOUNCEMENT</option>
+      <option value="text" data-i18n="feed_post_type_update">UPDATE</option>
+      <option value="achievement" data-i18n="feed_post_type_achievement">ACHIEVEMENT</option>
+      <option value="milestone" data-i18n="feed_post_type_milestone">MILESTONE</option>
+      <option value="question" data-i18n="feed_post_type_question">QUESTION</option>
+      <option value="insight" data-i18n="feed_post_type_insight">INSIGHT</option>
+      <option value="announcement" data-i18n="feed_post_type_announcement">ANNOUNCEMENT</option>
     </select>
-    <input id="mp-title" class="inp" placeholder="Title" style="margin-bottom:8px;width:100%" maxlength="120"/>
-    <textarea id="mp-body" class="inp" placeholder="What did you accomplish, learn, or want to ask the Order?" style="margin-bottom:8px;width:100%;min-height:70px" maxlength="2000"></textarea>
-    <button class="btn-gold" onclick="submitMemberPost()">POST</button>
+    <input id="mp-title" class="inp" placeholder="Title" style="margin-bottom:8px;width:100%" maxlength="120" data-i18n="feed_form_title_placeholder"/>
+    <textarea id="mp-body" class="inp" placeholder="What did you accomplish, learn, or want to ask the Order?" style="margin-bottom:8px;width:100%;min-height:70px" maxlength="2000" data-i18n="feed_form_body_placeholder"></textarea>
+    <button class="btn-gold" onclick="submitMemberPost()" data-i18n="feed_form_submit">POST</button>
     <span id="mp-status" style="font-family:var(--M);font-size:8px;letter-spacing:1.5px;margin-left:10px"></span>
   </div>
   <div id="member-posts-list" data-loading></div>
 </div>
 
 <div class="tab-panel" id="tab-mine">
-  <div class="sechead">MY ACTIVITY &middot; YOUR SOVEREIGN RECORD</div>
+  <div class="sechead" data-i18n="feed_sec_mine_title">MY ACTIVITY &middot; YOUR SOVEREIGN RECORD</div>
   <div class="glass" id="my-list" style="padding:14px 16px" data-loading></div>
 </div>
 
 <div class="tab-panel" id="tab-science">
-  <div class="sechead">SOVEREIGN COMMUNICATION LAYER</div>
+  <div class="sechead" data-i18n="feed_sec_science_title">SOVEREIGN COMMUNICATION LAYER</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">ACTIVITY AS EVIDENCE</div><div class="card-body">The activity feed is not social media. Every entry in the feed is a recorded matrix action — a task completed, a gate crossed, a certificate earned. Activity is the proof of sovereignty, not the performance of it.</div></div>
-    <div class="card"><div class="card-title">AXIS ATTRIBUTION</div><div class="card-body">Every action in the platform is tagged to an axis: A (Knowledge), B (Mastery), or C (Contribution). The feed reflects this tagging. Watching the feed reveals where the Order's collective energy flows and which axes are being built fastest.</div></div>
-    <div class="card"><div class="card-title">PUBLICATIONS AS PROOF</div><div class="card-body">Sovereign posts are not social updates. Each publication is a piece of sovereign intelligence — a report, essay, or analysis submitted to the Order's knowledge base. Publications advance Axis A and earn certificates when reviewed and approved.</div></div>
-    <div class="card"><div class="card-title">PLATFORM ARCHITECTURE</div><div class="card-body">The activity stream reads from the task_completions table via Supabase Realtime. The feed is live and RLS-protected: platform owners see all activity; members see public records only. No user data is exposed beyond what the profile owner has approved.</div></div>
+    <div class="card"><div class="card-title" data-i18n="feed_science_activity_title">ACTIVITY AS EVIDENCE</div><div class="card-body" data-i18n="feed_science_activity_desc">The activity feed is not social media. Every entry in the feed is a recorded matrix action — a task completed, a gate crossed, a certificate earned. Activity is the proof of sovereignty, not the performance of it.</div></div>
+    <div class="card"><div class="card-title" data-i18n="feed_science_axis_title">AXIS ATTRIBUTION</div><div class="card-body" data-i18n="feed_science_axis_desc">Every action in the platform is tagged to an axis: A (Knowledge), B (Mastery), or C (Contribution). The feed reflects this tagging. Watching the feed reveals where the Order's collective energy flows and which axes are being built fastest.</div></div>
+    <div class="card"><div class="card-title" data-i18n="feed_science_publications_title">PUBLICATIONS AS PROOF</div><div class="card-body" data-i18n="feed_science_publications_desc">Sovereign posts are not social updates. Each publication is a piece of sovereign intelligence — a report, essay, or analysis submitted to the Order's knowledge base. Publications advance Axis A and earn certificates when reviewed and approved.</div></div>
+    <div class="card"><div class="card-title" data-i18n="feed_science_architecture_title">PLATFORM ARCHITECTURE</div><div class="card-body" data-i18n="feed_science_architecture_desc">The activity stream reads from the task_completions table via Supabase Realtime. The feed is live and RLS-protected: platform owners see all activity; members see public records only. No user data is exposed beyond what the profile owner has approved.</div></div>
   </div>
-  <div class="sechead" style="margin-top:24px">FEED ITEM KIND LEGEND</div>
+  <div class="sechead" style="margin-top:24px" data-i18n="feed_sec_legend_title">FEED ITEM KIND LEGEND</div>
   <div class="tbl-wrap">
-    <div class="tbl-head" style="grid-template-columns:1fr 1fr 2fr"><span>AXIS</span><span>COLOUR</span><span>DESCRIPTION</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--cyan)">AXIS A</span><span>CYAN</span><span>Knowledge tasks: exams, study, library reads</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--gold)">AXIS B</span><span>GOLD</span><span>Mastery tasks: training, games, crafts, art</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--green)">AXIS C</span><span>GREEN</span><span>Contribution tasks: events, missions, publishing</span></div>
+    <div class="tbl-head" style="grid-template-columns:1fr 1fr 2fr"><span data-i18n="feed_table_axis_header">AXIS</span><span data-i18n="feed_table_colour_header">COLOUR</span><span data-i18n="feed_table_description_header">DESCRIPTION</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--cyan)" data-i18n="feed_table_a_label">AXIS A</span><span data-i18n="feed_table_a_colour">CYAN</span><span data-i18n="feed_table_a_desc">Knowledge tasks: exams, study, library reads</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--gold)" data-i18n="feed_table_b_label">AXIS B</span><span data-i18n="feed_table_b_colour">GOLD</span><span data-i18n="feed_table_b_desc">Mastery tasks: training, games, crafts, art</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 2fr"><span style="color:var(--green)" data-i18n="feed_table_c_label">AXIS C</span><span data-i18n="feed_table_c_colour">GREEN</span><span data-i18n="feed_table_c_desc">Contribution tasks: events, missions, publishing</span></div>
   </div>
 </div>
 <div data-page-emblem="feed" style="margin:20px auto 0"></div>
@@ -111,6 +111,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 function esc(s){return(s==null?'':String(s)).replace(/[<>&]/g,function(ch){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[ch];});}
+function t(key,fallback){return(window.OmegaI18n&&window.OmegaI18n.translate(key))||fallback;}
 window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['feed','posts','member-posts','mine','science'][i]===name);});
@@ -147,7 +148,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
         var fl=document.getElementById('feed-list');
         var res=await sb.from('task_completions').select('user_id,task,axis,created_at').order('created_at',{ascending:false}).limit(30);
         var rows=res.data||[];
-        if(!rows.length){fl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ACTIVITY RECORDED YET</div>';return;}
+        if(!rows.length){fl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">'+t('feed_msg_no_activity','NO ACTIVITY RECORDED YET')+'</div>';return;}
         fl.innerHTML=rows.map(function(r){
           var col=kindCol(r.axis);
           return '<div class="feed-item"><div class="feed-dot" style="--fd:'+col+'"></div>'
@@ -155,7 +156,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
             +'<span class="feed-kind" style="color:'+col+';border-color:'+col+'33">AXIS '+String(r.axis||'').toUpperCase()+'</span></div>'
             +'<div class="feed-meta">'+timeAgo(r.created_at)+'</div></div></div>';
         }).join('');
-      }catch(e){var fl=document.getElementById('feed-list');if(fl)fl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">FEED UNAVAILABLE</div>';}
+      }catch(e){var fl=document.getElementById('feed-list');if(fl)fl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">'+t('feed_msg_feed_unavailable','FEED UNAVAILABLE')+'</div>';}
     })();
 
     (async function loadMine(){
@@ -163,14 +164,14 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
         var ml=document.getElementById('my-list');
         var res=await sb.from('task_completions').select('task,axis,created_at').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20);
         var rows=res.data||[];
-        if(!rows.length){ml.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">NO ACTIVITY YET &mdash; COMPLETE TASKS TO SEE YOUR RECORD</div>';return;}
+        if(!rows.length){ml.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px">'+t('feed_msg_no_activity_yet','NO ACTIVITY YET &mdash; COMPLETE TASKS TO SEE YOUR RECORD')+'</div>';return;}
         ml.innerHTML=rows.map(function(r){
           var col=kindCol(r.axis);
           return '<div class="feed-item"><div class="feed-dot" style="--fd:'+col+'"></div>'
             +'<div class="feed-body"><div class="feed-text">'+String(r.task||'Task completed').replace(/</g,'&lt;').substr(0,80)+'</div>'
             +'<div class="feed-meta">AXIS '+String(r.axis||'').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div></div>';
         }).join('');
-      }catch(e){var ml=document.getElementById('my-list');if(ml)ml.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">ACTIVITY UNAVAILABLE</div>';}
+      }catch(e){var ml=document.getElementById('my-list');if(ml)ml.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">'+t('feed_msg_activity_unavailable','ACTIVITY UNAVAILABLE')+'</div>';}
     })();
 
     (async function loadPosts(){
@@ -178,21 +179,21 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
         var pl=document.getElementById('posts-list');
         var res=await sb.from('publications').select('title,created_at,kind').order('created_at',{ascending:false}).limit(12);
         var rows=res.data||[];
-        if(!rows.length){pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">NO PUBLICATIONS YET &mdash; BE THE FIRST TO PUBLISH IN THE SOVEREIGN NETWORK</div>';return;}
+        if(!rows.length){pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">'+t('feed_msg_no_publications','NO PUBLICATIONS YET &mdash; BE THE FIRST TO PUBLISH IN THE SOVEREIGN NETWORK')+'</div>';return;}
         pl.innerHTML=rows.map(function(r){
           return '<div class="post-card"><div class="post-title">'+String(r.title||'Untitled').replace(/</g,'&lt;').substr(0,80)+'</div>'
             +'<div class="post-meta">'+String(r.kind||'ESSAY').replace(/</g,'&lt;').toUpperCase()+' &middot; '+timeAgo(r.created_at)+'</div></div>';
         }).join('');
-      }catch(e){var pl=document.getElementById('posts-list');if(pl)pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">PUBLICATIONS UNAVAILABLE</div>';}
+      }catch(e){var pl=document.getElementById('posts-list');if(pl)pl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">'+t('feed_msg_publications_unavailable','PUBLICATIONS UNAVAILABLE')+'</div>';}
     })();
 
     async function loadMemberPosts(){
       try{
         var mpl=document.getElementById('member-posts-list');
         var res=await sb.from('member_posts').select('post_type,title,body,tags,likes_count,comments_count,created_at').eq('status','published').order('created_at',{ascending:false}).limit(20);
-        if(res.error){mpl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">MEMBER POSTS UNAVAILABLE</div>';return;}
+        if(res.error){mpl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">'+t('feed_msg_member_posts_unavailable','MEMBER POSTS UNAVAILABLE')+'</div>';return;}
         var rows=res.data||[];
-        if(!rows.length){mpl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">NO POSTS YET &mdash; SHARE A MILESTONE, ACHIEVEMENT, OR INSIGHT WITH THE ORDER</div>';return;}
+        if(!rows.length){mpl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">'+t('feed_msg_no_posts','NO POSTS YET &mdash; SHARE A MILESTONE, ACHIEVEMENT, OR INSIGHT WITH THE ORDER')+'</div>';return;}
         mpl.innerHTML=rows.map(function(r){
           var tags=(r.tags||[]).map(function(t){return esc(t);}).join(', ');
           return '<div class="post-card"><span class="mp-type">'+esc((r.post_type||'text').toUpperCase())+'</span>'
@@ -201,7 +202,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
             +(tags?'<div class="post-meta">TAGS: '+tags+'</div>':'')
             +'<div class="mp-stats">'+(r.likes_count||0)+' LIKES &middot; '+(r.comments_count||0)+' COMMENTS &middot; '+timeAgo(r.created_at)+'</div></div>';
         }).join('');
-      }catch(e){var mpl=document.getElementById('member-posts-list');if(mpl)mpl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">MEMBER POSTS UNAVAILABLE</div>';}
+      }catch(e){var mpl=document.getElementById('member-posts-list');if(mpl)mpl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:20px;border:1px solid var(--line)">'+t('feed_msg_member_posts_unavailable','MEMBER POSTS UNAVAILABLE')+'</div>';}
     }
     loadMemberPosts();
 
@@ -209,17 +210,17 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
     async function submitMemberPost(){
       var st=document.getElementById('mp-status');
       var body=(document.getElementById('mp-body').value||'').trim();
-      if(!body){st.textContent='WRITE SOMETHING FIRST';st.style.color='var(--crim)';return;}
+      if(!body){st.textContent=t('feed_msg_write_something','WRITE SOMETHING FIRST');st.style.color='var(--crim)';return;}
       var payload={
         user_id:s.user.id,
         post_type:document.getElementById('mp-type').value||'text',
         title:(document.getElementById('mp-title').value||'').trim()||null,
         body:body
       };
-      st.textContent='POSTING...';st.style.color='var(--muted)';
+      st.textContent=t('feed_msg_posting','POSTING...');st.style.color='var(--muted)';
       var res=await sb.from('member_posts').insert(payload);
-      if(res.error){st.textContent='POST FAILED &mdash; TRY AGAIN';st.style.color='var(--crim)';return;}
-      st.textContent='POSTED';st.style.color='var(--green)';
+      if(res.error){st.textContent=t('feed_msg_post_failed','POST FAILED &mdash; TRY AGAIN');st.style.color='var(--crim)';return;}
+      st.textContent=t('feed_msg_posted','POSTED');st.style.color='var(--green)';
       document.getElementById('mp-title').value='';
       document.getElementById('mp-body').value='';
       loadMemberPosts();
@@ -248,7 +249,7 @@ function kindCol(k){var m={a:'#00E5FF',b:'#C9A84C',c:'#3fb27f'};return m[k]||'#3
               +'<span style="font-family:var(--D);font-size:11px;color:'+COLORS[k]+'">'+v+' ('+pct+'%)</span></div>'
               +'<div class="bar-track"><div class="bar-fill-anim" style="width:'+pct+'%;background:'+COLORS[k]+'"></div></div></div>';
           }).join('');
-      }catch(e){var tl=document.getElementById('trend-list');if(tl)tl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">TRENDS UNAVAILABLE</div>';}
+      }catch(e){var tl=document.getElementById('trend-list');if(tl)tl.innerHTML='<div style="font-family:var(--M);font-size:9px;color:var(--muted);text-align:center;padding:16px">'+t('feed_msg_trends_unavailable','TRENDS UNAVAILABLE')+'</div>';}
     })();
   }catch(e){document.getElementById('app').style.display='flex';}
 })();

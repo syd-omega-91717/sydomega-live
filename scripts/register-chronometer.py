@@ -4,6 +4,11 @@ Register omega-chronometer.js in the bg.js loader.
 Run from the repository root:  python3 scripts/register-chronometer.py
 Idempotent. Creates bg.js.bak. Verifies with `node --check`.
 """
+
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 import os, shutil, subprocess, sys
 TARGET="bg.js"
 ANCHOR="  /* Unified UI — footer, prev/next nav, back button, keyboard shortcuts */"

@@ -46,6 +46,11 @@ USAGE
     python3 scripts/upsert-conflict-check.py
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import importlib.util
 import re
 import sys

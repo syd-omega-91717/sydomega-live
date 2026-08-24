@@ -141,6 +141,19 @@ jobs:
         run: python3 scripts/upsert-conflict-check.py
         continue-on-error: true
 
+      # ---- 2j. Skill/agent registry. Every hand-typed count describing this
+      #         repo's own agent infrastructure had drifted: the skills README
+      #         said "Four skills", CLAUDE.md said "Five" in one section and
+      #         "4-skill pipeline" in another, and 8 exist. CLAUDE.md also said
+      #         "~250 .html pages" (178) and that bg.js was loaded by "104+" of
+      #         them (all 178). OMEGA_SKILL_REGISTRY.md is generated from the
+      #         filesystem instead; this fails when it drifts. Blocking, and it
+      #         also hard-fails a SKILL.md with no name/description -- which is
+      #         what had happened to grill-me-codex, the safety gate for auth/
+      #         schema/payments work, leaving it the least discoverable skill.
+      - name: Skill/agent registry
+        run: python3 scripts/omega-registry.py --check
+
       # ---- 2h. Context budget. CLAUDE.md is loaded into every agent session
       #         before any work starts, and that cost is invisible unless
       #         something reports it. It reached ~68,900 tokens once, 88% of

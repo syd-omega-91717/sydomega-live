@@ -33,6 +33,11 @@ live schema before acting -- but they turn a manual, easy-to-forget sweep
 into a permanent, automatic one.
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import json
 import os
 import re

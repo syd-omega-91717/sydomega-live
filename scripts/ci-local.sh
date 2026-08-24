@@ -21,6 +21,21 @@
 # tree, on this machine's toolchain, with no clean checkout. It is a pre-push
 # gate, not a merge gate.
 
+case "${1:-}" in
+  --help|-h)
+    cat <<'OMEGA_HELP'
+Run the full CI suite locally, exactly as .github/workflows/ci.yml does.
+
+Usage: scripts/ci-local.sh [--all] [--help]
+
+  (no flags)  run the blocking steps only -- what gates a merge
+  --all       also run the advisory checks
+  --help      show this text
+OMEGA_HELP
+    exit 0
+    ;;
+esac
+
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 

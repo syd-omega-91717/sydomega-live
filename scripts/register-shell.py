@@ -7,6 +7,11 @@ Run from the repository root, AFTER copying omega-shell.js there:
 
 Idempotent. Creates bg.js.bak. Verifies with `node --check` if node is present.
 """
+
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 import os, re, shutil, subprocess, sys
 
 TARGET = "bg.js"

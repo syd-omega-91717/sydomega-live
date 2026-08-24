@@ -21,7 +21,7 @@ effectively invisible unless invoked by exact name.
 | `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-15 |
 | `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
-| `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-22 |
+| `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
 | `subscriber-portal` | yes | — | 1,156 | CLAUDE.md, README.md | 2026-08-15 |
 | `verify-in-browser` | yes | 4 | 1,971 | CLAUDE.md, README.md | 2026-08-23 |

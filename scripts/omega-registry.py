@@ -34,6 +34,11 @@ discovery rather than merely describing it wrongly:
   - a frontmatter with no `name:` or no `description:`
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import os
 import re
 import subprocess

@@ -10,6 +10,21 @@
 # it can never be served, or (b) a stale backup. Each is grepped for references
 # before removal — nothing is deleted blind.
 # ============================================================================
+case "${1:-}" in
+  --help|-h)
+    cat <<'OMEGA_HELP'
+Remove files the repository audit reports as dead.
+
+Usage: scripts/cleanup-dead-files.sh [--apply] [--help]
+
+  (no flags)  DRY RUN -- list what would be removed, change nothing
+  --apply     actually delete the listed files
+  --help      show this text
+OMEGA_HELP
+    exit 0
+    ;;
+esac
+
 set -euo pipefail
 
 APPLY=0

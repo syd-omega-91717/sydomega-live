@@ -11,6 +11,11 @@ Validates Row Level Security policies for dangerous patterns:
 Exit code 0 if clean, 1 if critical findings.
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import os
 import re
 import sys
@@ -18,9 +23,7 @@ from pathlib import Path
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
-# DEBUG
 import sys
-print(f"DEBUG: __file__={__file__}, ROOT={ROOT}, cwd={os.getcwd()}", file=sys.stderr)
 
 # ============================================================================
 # RLS PARSING
@@ -48,7 +51,6 @@ def parse_rls_policies():
 
     if not sql_dir.exists():
         import sys
-        print(f"DEBUG: sql_dir does not exist. CWD={os.getcwd()}, sql_dir={sql_dir.absolute()}", file=sys.stderr)
         return policies
 
     for sql_file in sorted(sql_dir.glob("*.sql")):

@@ -10,6 +10,20 @@
 # Requires: supabase CLI logged in and project linked
 #           (supabase login && supabase link --project-ref ydqhzvvoyufiiqvzcjns)
 # ============================================================================
+case "${1:-}" in
+  --help|-h)
+    cat <<'OMEGA_HELP'
+Verify the Supabase Edge Function secrets are set before deploying.
+
+Usage: scripts/check-secrets.sh [--help]
+
+  Reads the expected secret names and reports which are missing.
+  Reports only -- it never sets, prints, or commits a secret value.
+OMEGA_HELP
+    exit 0
+    ;;
+esac
+
 set -euo pipefail
 
 PROJECT_REF="ydqhzvvoyufiiqvzcjns"

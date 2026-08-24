@@ -568,7 +568,10 @@ open, recorded in `FIXES_LOG.md`:
   minutes draw on the account allowance; the last green run was #344 on Aug 22
   at 11:56 UTC. Nothing in the code affects it — clear it under Settings →
   Billing and licensing → Budgets and alerts. Meanwhile `./scripts/ci-local.sh`
-  runs every blocking step locally, so a commit can still be verified.
+  runs every blocking step locally, so a commit can still be verified, and
+  `.githooks/pre-push` runs it automatically on every push — enable per clone
+  with `git config core.hooksPath .githooks`, bypass one push with
+  `git push --no-verify`.
 - **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
   not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
 - **`scripts/audit.py`'s 7 warnings are all understood**, and the tool now

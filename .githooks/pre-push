@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Pre-push gate: run the local CI suite before anything leaves this machine.
+#
+# WHY THIS EXISTS
+#
+# GitHub Actions on this account cannot assign a runner (see CLAUDE.md 8.2), so
+# no commit has been verified automatically since 2026-08-22. scripts/ci-local.sh
+# reproduces every blocking step from ci.yml, but a script only helps if someone
+# remembers to run it -- CI's actual value was that it ran by itself. This hook
+# restores that: the checks run on every push, with no Actions minutes.
+#
+# ENABLE ONCE PER CLONE (hooks are not tracked by git, hooksPath is):
+#     git config core.hooksPath .githooks
+#
+# BYPASS a single push (git's own standard escape hatch):
+#     git push --no-verify
+#
+# Bypassing is legitimate -- pushing a WIP branch, or a docs-only change you
+# have already reasoned about. It is not legitimate for main.
+
+repo_root="$(git rev-parse --show-toplevel)" || exit 0
+[ -x "$repo_root/scripts/ci-local.sh" ] || exit 0
+
+printf '\n\033[1mpre-push: running local CI (skip with --no-verify)\033[0m\n'
+if "$repo_root/scripts/ci-local.sh"; then
+  exit 0
+fi
+
+printf '\n\033[31mPush aborted: local CI failed.\033[0m\n'
+printf 'Fix the failures above, or re-run with: git push --no-verify\n\n'
+exit 1

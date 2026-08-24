@@ -2845,3 +2845,83 @@ points here for the evidence behind each.
   synchronized. No pending conflicts." while `CLAUDE.md:532` records the
   migration sequence as validated against a blank database only. Nothing in
   this session can break that tie.
+
+- **The 43-page persistence gap now has a fix, shipped dormant:
+  `public.member_state` + `omega-member-state.js`.** The measurement above said
+  43 pages hold member data with no server copy and no export path. This is the
+  server side of that: one row per `(user_id, key)`, RLS scoped to
+  `auth.uid()`, and — the part that has bitten this repo hardest — an explicit
+  `GRANT SELECT, INSERT, UPDATE, DELETE ... TO authenticated` alongside the
+  policies, since a grant is checked *before* row security and a policy without
+  one never runs (CLAUDE.md §8.1 class 6).
+  **Verified against a real PostgreSQL 16, not by reading the SQL.** A scratch
+  cluster with a minimal Supabase-shaped scaffold (`anon`/`authenticated`
+  roles, `auth.users`, `auth.uid()` reading `request.jwt.claims`) ran the file,
+  then five assertions: member A sees 1 row while the privileged role sees 2
+  (equal counts would have meant RLS was not scoping at all — the check
+  CLAUDE.md §8.4 insists on); A inserting a row attributed to B raises
+  `new row violates row-level security policy`; the same `(user_id, key)`
+  upserted twice updates in place with no `23505`, because the conflict target
+  *is* the primary key (class 7); `anon` raises `permission denied`. Re-running
+  the file is idempotent and the seeded row survives.
+  **The first version of these tests was worthless and said so loudly.** Written
+  without transaction blocks, every `SET LOCAL role` was a no-op — psql warned
+  `SET LOCAL can only be used in transaction blocks`, every statement ran as
+  superuser (which bypasses RLS regardless), so "member A" saw 2 rows, the spoof
+  insert "succeeded", and `anon` "read" 3 rows. Wrapping each case in
+  `begin/commit` produced the real results above. A permission test that runs as
+  superuser proves nothing and looks like a pass.
+  **`bg.js` regression, caught only in the browser.** `window.OmegaSB.get()`
+  returns a *promise*, not a client (`bg.js:190-206`). The first draft used it
+  synchronously, so `client.auth` was `undefined` and every page threw
+  `Cannot read properties of undefined (reading 'getSession')`:
+  `scan.js errors` went from the documented baseline of 3 pages to **177 of
+  178**. `node --check` passed the whole time. Fixed by resolving the promise
+  and tolerating its rejection (the sandbox blocks esm.sh, and a real network
+  can too); the scan is back to 3, and those 3 are the known CDN-blocked pages
+  (`graph.html` d3, `map.html` Leaflet, `realm.html` three.js).
+  **Named `omega-member-state.js`, not `omega-state.js`.** That filename was
+  already taken by an unrelated module — a UI component state machine owning
+  `window.OmegaState` — which `bg.js:1610` already injects. An earlier draft
+  overwrote it and added a second injection; both were reverted with
+  `git checkout HEAD --` and the new module took a distinct filename, guard
+  attribute (`data-omega-member-state`) and global (`window.OmegaMemberState`).
+  Check `git cat-file -e HEAD:<path>` before creating a file whose name follows
+  an obvious convention — in a repo with 90 `omega-*.js` modules the obvious
+  name is usually taken.
+  **It is a mirror, not a sync, and that is a safety decision.** Data moves up
+  only; restore is an explicit call. A hydrating two-way sync would race each
+  LOCAL_ONLY page's synchronous render — the page paints from an empty cache,
+  the member edits what they see, and that empty-derived write overwrites good
+  server data, losing real data to a feature meant to prevent exactly that.
+  It also polls and diffs rather than wrapping `localStorage.setItem`:
+  patching `Storage.prototype` would mutate a global for all 178 pages,
+  including the ~130 this module has no business touching.
+  **Failure path verified, not assumed.** Against a client stubbed to return
+  PostgREST's `42P01`, the module disables itself, reports
+  `disabled: 42P01 relation "public.member_state" does not exist (has
+  supabase/omega_member_state.sql been applied?)`, leaves `lastSync` **null**
+  rather than claiming a success it did not get (class 1), returns the error
+  from `restore()`, and leaves the page's own `localStorage` byte-identical.
+  The harness's *default* stub returns a fake success, so an early run showing
+  `lastError: null` proved nothing — that reading was discarded rather than
+  reported.
+  **Not applied to production.** `apply_migration` against the live project was
+  permission-blocked, so `member_state` does not exist yet and the module is
+  inert by design until someone applies
+  `supabase/omega_member_state.sql` (or `migrations/0095_omega_member_state.sql`,
+  byte-identical). `types/database.types.ts` already regenerated to include it
+  via the repo's own `types-from-schema.py`.
+  **Live database facts established the same session** (project
+  `ydqhzvvoyufiiqvzcjns`, confirmed as production by 21 client references):
+  190 base tables and 5 views live against 118 declared in `supabase/`;
+  **194** policies, not the 398 quoted in an earlier brief; 9 profiles.
+  `transactions` and `wallet_balances` genuinely do **not** exist live,
+  confirming `subscriptions.html:224` and `vault.html` as real silent
+  empty-states rather than a repo/live drift. `top_pages` *is* a live view, so
+  classifying it as an undefined relation would have been a false positive.
+  `check_gate` — which `audit.py` flags as called by `omega-guardian.js` but
+  never `CREATE FUNCTION`'d anywhere in `supabase/` — **does exist live**, so
+  that warning is a source-of-truth gap in the SQL bag, not a broken call.
+  Full local CI re-run clean afterward: all 10 blocking checks, `audit.py`
+  0 critical / 7 pre-existing warnings (unchanged).

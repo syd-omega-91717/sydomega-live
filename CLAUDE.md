@@ -518,6 +518,16 @@ open, recorded in `FIXES_LOG.md`:
   chosen it for the other 41 pages. A further 24 pages are `PARTIAL` — they
   write to Postgres *and* keep a parallel `localStorage` copy. Run the scanner
   for the current list rather than quoting these numbers.
+  **A fix now exists but is not applied yet**: `supabase/omega_member_state.sql`
+  (+ `migrations/0095`) and `omega-member-state.js` mirror those keys to
+  `public.member_state`. The module ships dormant — until that SQL is applied it
+  hits `42P01`, disables itself, and reports why in
+  `OmegaMemberState.status().reason`. It is a **mirror, not a sync**: writes go
+  up only, restore is explicit (`OmegaMemberState.restore()`), because a
+  hydrating two-way sync races each page's synchronous render and would let an
+  empty-cache render overwrite good server data. Applying the SQL needs live
+  database access (`apply_migration` was permission-blocked in the session that
+  wrote it).
 - **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** The user was asked
   directly and chose to leave it; `.vercelignore` already keeps both out of
   the deploy, so this is hygiene debt, not a functional bug. A real fix means
@@ -567,7 +577,13 @@ open, recorded in `FIXES_LOG.md`:
 - **38 tables still have RLS policies and no grant.** Not referenced by any
   client code here; most are the ~83-table scaffold below. Left locked out (the
   safe state) rather than granted on the assumption that a policy's existence
-  implies it should be reachable.
+  implies it should be reachable. **Five were confirmed live** by role
+  impersonation on 2026-08-24 — `conversations`, `messages`, `knowledge_nodes`,
+  `knowledge_edges`, `subscriptions` all raise `42501` for `authenticated`
+  despite carrying 1–4 policies each. A repo-wide `.from()` grep finds **no
+  client code calling any of them**, so this is still locked-but-unused, not a
+  broken live feature — do not "fix" it by granting without deciding the
+  feature is wanted.
 - **GitHub Actions cannot assign a runner on this account.** Since 2026-08-22
   every run fails in 2–5s with `runner_id: 0`, no `steps` array, 0 billable ms
   and a completely empty check-run output — reproduced on `pull_request`,

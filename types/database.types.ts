@@ -735,6 +735,12 @@ export interface MemberPresence {
   userId: string | null;
 }
 
+export interface MemberState {
+  key: string;
+  updatedAt: string;
+  value: Record<string, any>;
+}
+
 export interface Messages {
   content: string | null;
   conversationId: string | null;
@@ -1601,6 +1607,7 @@ export interface Database {
       member_perks: MemberPerks;
       member_posts: MemberPosts;
       member_presence: MemberPresence;
+      member_state: MemberState;
       messages: Messages;
       notifications: Notifications;
       oaths: Oaths;

@@ -272,7 +272,7 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 117 |
+| tables + views declared in `supabase/` | 118 |
 | functions declared in `supabase/` | 127 |
 | tables defined in more than one root SQL file | 47 |
 

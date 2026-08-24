@@ -3003,3 +3003,71 @@ Five functions had `search_path` pinned to `public, pg_temp`.
 **Still open:** `authenticated_security_definer_function_executable` × 93 — a
 separate decision, recorded in CLAUDE.md §8.2. Also
 `auth_leaked_password_protection`, which is a dashboard toggle no SQL can reach.
+
+---
+
+## The other 93 advisor findings: three real, ninety already guarded
+
+**Context:** after the anon pass above, the security advisor still reported
+`authenticated_security_definer_function_executable` × 93.
+
+**What the number actually was.** The advisor reports every SECURITY DEFINER
+function `authenticated` can execute; it cannot see an internal guard, so the
+count reads far worse than the exposure. Reading the real bodies on production,
+the owner-sensitive ones already guard themselves — through
+`public.omega_is_owner()` rather than `is_platform_owner()`:
+
+```
+get_pending_requests():
+  if not public.omega_is_owner() then
+    raise exception 'Not authorised.' using errcode = '42501';
+```
+
+A first-pass classifier here searched only for `is_platform_owner`,
+`auth.uid()` and `auth.role()`, and so reported `get_pending_requests` (which
+returns pending access requests) and `engagement_report` (which returns member
+emails) as unguarded. **Both are fine.** Caught by reading the bodies instead of
+trusting the label — CLAUDE.md §8.4, "classifying a policy by substring is not
+reading it", now demonstrated for functions too.
+
+Of the genuinely unguarded remainder, most are unguarded deliberately and have
+real callers: `published_dispatches` (body is `WHERE is_published = true`),
+`public_leaderboard`, `order_stats` (aggregate counts only), `get_platform_flag`.
+Revoking those would break member-facing pages to clear an advisor line.
+
+**Fixed** in `supabase/omega_authenticated_execute_hardening.sql`
+(+ `migrations/0097`), applied live 2026-08-24 — the three that are unguarded
+**and** called by nothing in this repo:
+
+| function | why |
+|---|---|
+| `get_activity_feed(int,int)` | joins `activity_feed` to `profiles`, returning every member's `display_name`, `element` and activity — the only cross-member read path in the authenticated surface, and unused |
+| `get_capability_health()` | internal capability registry: health, lifecycle, SLO p95 timings |
+| `log_evolution(text,text)` | a write; delegates to `complete_task` so it was never a spoofing hole, but an uncalled write endpoint is still surface |
+
+**The check that mattered more than the function count.** The leak question is
+not "how many functions can a member call" but "can one member read another's
+rows". Tested on production by impersonating a real non-owner member across 17
+member-data tables, comparing member-visible counts against privileged counts:
+
+```
+certificates 0/24 · sovereign_points_ledger 0/69 · task_completions 0/10
+trophies 0/24 · medals 0/24 · exam_results 0/3 · feedback 0/1
+```
+
+Every populated table scoped; none leaked. `profiles` policy is
+`((SELECT auth.uid()) = id) OR is_platform_owner()`, so no member email is
+reachable by another member.
+
+**Verified:** post-apply, `get_activity_feed` / `get_capability_health` /
+`log_evolution` are `anon:false, authed:false`; `order_stats`,
+`public_leaderboard`, `published_dispatches`, `get_pending_requests`,
+`my_matrix`, `complete_task` all still `authed:true`. Browser error scan 3/178
+unchanged; `audit.py` 0 critical / 7 warnings.
+
+**Not fixable from here:** `auth_leaked_password_protection` is Pro-plan-gated
+(docs: "available on the Pro Plan and above") and the org is on `free`
+(`get_organization` → `"plan":"free"`), so the toggle is absent from the
+dashboard entirely and this advisor line cannot be cleared without upgrading.
+The free-tier substitute for the same threat is raising minimum password length
+and required characters under Auth → Providers → Email.

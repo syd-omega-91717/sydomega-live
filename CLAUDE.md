@@ -596,17 +596,21 @@ open, recorded in `FIXES_LOG.md`:
   `.githooks/pre-push` runs it automatically on every push — enable per clone
   with `git config core.hooksPath .githooks`, bypass one push with
   `git push --no-verify`.
-- **`authenticated` can EXECUTE 93 `SECURITY DEFINER` functions.** The `anon`
-  half of this was closed on 2026-08-24 (23 → 2; see `FIXES_LOG.md`), but the
-  authenticated surface was deliberately left alone in that pass: narrowing it
-  needs each function checked against its real member-facing caller, and doing
-  both at once would make any breakage impossible to attribute. This is a
-  smaller risk — reaching it needs an approved account on an invite-gated
-  platform — but it is not zero, and it is the obvious next hardening step.
-  **When adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same
-  file**: Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the
-  insecure state returns on its own with each new or replaced function. That is
-  exactly how 70 previously-revoked functions became 23 again.
+- **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
+  The advisor reports 93; reading the bodies, the owner-sensitive ones guard
+  themselves via `public.omega_is_owner()`, which a substring classifier looking
+  for `is_platform_owner` misses. Three unguarded-and-uncalled functions were
+  revoked (`migrations/0097`); the rest have real callers and are unguarded on
+  purpose. Cross-member leakage was tested directly by member impersonation
+  across 17 tables — every populated table scoped, `profiles` included. **When
+  adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same file**:
+  Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the insecure state
+  returns on its own. That is how 70 previously-revoked functions became 23.
+- **`auth_leaked_password_protection` cannot be enabled on this plan.** It is
+  Pro-and-above; the org is `free`, so the toggle is absent from the dashboard
+  and the advisor line cannot be cleared without upgrading. Raising minimum
+  password length and required characters (Auth → Providers → Email) is the
+  free-tier substitute for the same credential-stuffing threat.
 - **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
   not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
 - **`scripts/audit.py`'s 7 warnings are all understood**, and the tool now

@@ -48,13 +48,42 @@ CREATE TABLE IF NOT EXISTS public.member_state (
 );
 
 COMMENT ON TABLE public.member_state IS
-  'Server-side mirror of browser-local member data. Written by omega-state.js '
-  'on every localStorage write; read back only on an explicit member restore. '
-  'Not the source of truth -- see supabase/omega_member_state.sql.';
+  'Server-side mirror of browser-local member data. Written by '
+  'omega-member-state.js on every sync; read back only on an explicit member '
+  'restore. Not the source of truth -- see supabase/omega_member_state.sql.';
 
 -- Every RLS policy on this platform filters on user_id; without this index
 -- each policy check is a sequential scan. The PK covers (user_id, key) so
 -- user_id-only lookups already use it as a prefix -- no separate index needed.
+
+-- ---------------------------------------------------------------------------
+-- updated_at is server-authoritative.
+--
+-- The client sends a value, but a column DEFAULT only fires on INSERT -- so an
+-- upsert that resolves to UPDATE would keep whatever timestamp the browser
+-- chose, including a backdated one. This trigger makes the column mean "when
+-- the server accepted this row" rather than "what the client claimed".
+-- Verified on the live table by inserting with updated_at = 1999-01-01 and
+-- reading back a current timestamp.
+-- ---------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.member_state_touch()
+RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER
+SET search_path = public, pg_temp AS $$
+BEGIN
+  NEW.updated_at := now();
+  RETURN NEW;
+END;
+$$;
+
+-- CREATE FUNCTION grants EXECUTE to PUBLIC by default, and a trigger function
+-- has no business being callable over the REST API. Revoking here is the rule
+-- recorded in CLAUDE.md §8.2 after 70 previously-revoked functions came back.
+REVOKE EXECUTE ON FUNCTION public.member_state_touch() FROM PUBLIC, anon, authenticated;
+
+DROP TRIGGER IF EXISTS member_state_touch_trg ON public.member_state;
+CREATE TRIGGER member_state_touch_trg
+  BEFORE INSERT OR UPDATE ON public.member_state
+  FOR EACH ROW EXECUTE FUNCTION public.member_state_touch();
 
 ALTER TABLE public.member_state ENABLE ROW LEVEL SECURITY;
 

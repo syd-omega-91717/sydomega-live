@@ -518,16 +518,20 @@ open, recorded in `FIXES_LOG.md`:
   chosen it for the other 41 pages. A further 24 pages are `PARTIAL` — they
   write to Postgres *and* keep a parallel `localStorage` copy. Run the scanner
   for the current list rather than quoting these numbers.
-  **A fix now exists but is not applied yet**: `supabase/omega_member_state.sql`
-  (+ `migrations/0095`) and `omega-member-state.js` mirror those keys to
-  `public.member_state`. The module ships dormant — until that SQL is applied it
-  hits `42P01`, disables itself, and reports why in
-  `OmegaMemberState.status().reason`. It is a **mirror, not a sync**: writes go
-  up only, restore is explicit (`OmegaMemberState.restore()`), because a
-  hydrating two-way sync races each page's synchronous render and would let an
-  empty-cache render overwrite good server data. Applying the SQL needs live
-  database access (`apply_migration` was permission-blocked in the session that
-  wrote it).
+  **Fixed and applied 2026-08-24**: `public.member_state`
+  (`supabase/omega_member_state.sql`, `migrations/0095`) plus
+  `omega-member-state.js` mirror those keys server-side. It is a **mirror, not a
+  sync**: writes go up only, restore is explicit (`OmegaMemberState.restore()`),
+  because a hydrating two-way sync races each page's synchronous render and
+  would let an empty-cache render overwrite good server data. RLS verified live
+  by two-member impersonation (own-row write OK, write-as-other 42501, other
+  member sees 0 rows, anon 42501); `updated_at` is server-authoritative via
+  trigger. Client-side encryption was considered and rejected — no stable client
+  secret exists, so the key would either die with the cache it exists to survive
+  or rest on a forgettable passphrase; and this changes no trust boundary, since
+  `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` and
+  `bloodline_nodes` already hold comparable data server-side under the same,
+  tested RLS.
 - **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** The user was asked
   directly and chose to leave it; `.vercelignore` already keeps both out of
   the deploy, so this is hygiene debt, not a functional bug. A real fix means

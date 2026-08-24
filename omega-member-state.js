@@ -76,9 +76,32 @@
    or a grant is absent, the mirror disables itself and records why in
    OmegaMemberState.status().reason. It never reports a success it did not get.
 
-   The module is therefore inert-but-harmless until
-   supabase/omega_member_state.sql has actually been applied. That is
-   deliberate: it ships dormant.
+   The table was applied to production on 2026-08-24, so the mirror is live.
+   The disable-on-42P01/42501 path is kept regardless: it is what makes the
+   module safe on a branch, a fresh project, or a restored database where the
+   migration has not run yet.
+
+   ---------------------------------------------------------------------------
+   WHY THE MIRROR IS NOT ENCRYPTED CLIENT-SIDE
+   ---------------------------------------------------------------------------
+
+   Considered and rejected, on key management. There is no stable client-side
+   secret to derive a key from -- Supabase hands the browser a JWT, not the
+   member's password -- which leaves two options, both worse than plaintext
+   here:
+
+     a random key kept in localStorage  -- dies with the very cache clear this
+       feature exists to survive, producing a backup that silently fails to
+       restore. That is CLAUDE.md §8.1 class 1 wearing a different hat.
+     a member-remembered passphrase     -- losing it destroys the backup, and
+       it needs real crypto plus a recovery flow for a 9-member platform.
+
+   The deciding fact is that this changes no trust boundary: health_logs,
+   ai_memory, family_nodes, heritage_records and bloodline_nodes already hold
+   medical, genealogical and AI-memory data server-side in plaintext under the
+   same RLS. That boundary was tested by member impersonation across 17 tables
+   before this was applied -- every populated table scoped, zero cross-member
+   reads. member_state extends a defended boundary rather than opening a new one.
    ============================================================================ */
 (function () {
   'use strict';

@@ -3071,3 +3071,72 @@ unchanged; `audit.py` 0 critical / 7 warnings.
 dashboard entirely and this advisor line cannot be cleared without upgrading.
 The free-tier substitute for the same threat is raising minimum password length
 and required characters under Auth → Providers → Email.
+
+---
+
+## member_state applied: the 43 unpersisted pages now have a server copy
+
+**Applied live 2026-08-24** (`supabase/omega_member_state.sql`, `migrations/0095`).
+
+**The decision, and the evidence that changed it.** An earlier note in this
+session recommended holding this back on the grounds that mirroring member data
+server-side *increases breach surface* — it centralizes mood logs, body
+measurements, journals and finances where today they are device-local.
+
+That reasoning rested on an assumption that was never checked, and it was wrong.
+Querying live:
+
+| table | policies | `authenticated` data grants |
+|---|---|---|
+| `health_logs` | 1 | INSERT, SELECT |
+| `ai_memory` | 4 | DELETE, INSERT, SELECT, UPDATE |
+| `family_nodes` | 1 | DELETE, INSERT, SELECT, UPDATE |
+| `heritage_records` | 1 | DELETE, INSERT, SELECT |
+| `bloodline_nodes` | 1 | DELETE, INSERT, SELECT |
+
+Medical, genealogical and AI-memory data is **already** stored server-side in
+plaintext under exactly this RLS boundary — and that boundary was tested by
+member impersonation across 17 tables immediately before (every populated table
+scoped, zero cross-member reads, `profiles` = `auth.uid() = id OR owner`).
+`member_state` therefore extends a defended boundary rather than opening a new
+one, and holding it back would have left 43 pages losing member data on a cache
+clear to avoid a risk the platform already carries and already defends.
+
+**Client-side encryption considered and rejected**, on key management. There is
+no stable client-side secret — Supabase hands the browser a JWT, not the
+password. That leaves a random key in `localStorage` (dies with the very cache
+clear the feature exists to survive, producing a backup that silently fails to
+restore — §8.1 class 1 in a new hat) or a member-remembered passphrase (loses
+the backup when forgotten, and needs real crypto plus a recovery flow for nine
+members). Crypto that fails closed without saying so is worse than plaintext
+behind working RLS.
+
+**One hardening added over the reviewed version:** `updated_at` is now
+server-authoritative via a `BEFORE INSERT OR UPDATE` trigger. A column DEFAULT
+fires only on INSERT, so an upsert resolving to UPDATE would have kept whatever
+timestamp the browser sent, including a backdated one. The trigger function is
+`REVOKE`d from `PUBLIC`/`anon`/`authenticated` — a trigger function has no
+business being REST-callable, and `CREATE FUNCTION` grants PUBLIC by default.
+
+**Verified on the live table** by impersonating two real members:
+
+```
+A writes own row                      OK
+backdated ts overridden by trigger    YES (inserted 1999-01-01, read back now())
+A writes as B                         blocked: 42501
+B sees A's rows (expect 0)            0
+anon reads                            blocked: 42501
+probe rows cleaned up                 OK
+```
+
+Security advisor after the whole session: **205 → 168** findings.
+`anon_security_definer_function_executable` 23 → **2**,
+`function_search_path_mutable` 5 → **0**, and `member_state` contributes
+**zero** findings of its own.
+
+**Limit of this verification, stated plainly:** the database side is proven
+live. The client side was exercised against the browser harness's *stubbed*
+Supabase client, not a real signed-in session — so "the module writes real rows
+from a real browser" is confirmed by construction and by the SQL-side proof, not
+by an end-to-end browser run. First real member session will settle it;
+`OmegaMemberState.status()` reports `lastError` and `lastSync` for exactly that.

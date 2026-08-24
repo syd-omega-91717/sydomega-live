@@ -1715,3 +1715,4 @@ setTimeout(function(){
 
   /* Sovereign worker fleet — 6 async consumers with circuit breaker + retry + DLQ */
   if(!document.querySelector('script[data-omega-workers]')){var _owrk=document.createElement('script');_owrk.src='/omega-workers.js';_owrk.setAttribute('data-omega-workers','1');_owrk.defer=true;__omegaAppend(_owrk);}
+  if(!document.querySelector('script[data-omega-member-state]')){var _omst=document.createElement('script');_omst.src='/omega-member-state.js';_omst.setAttribute('data-omega-member-state','1');_omst.defer=true;__omegaAppend(_omst);}

@@ -509,10 +509,32 @@ open, recorded in `FIXES_LOG.md`:
   infrastructure is dormant pending legal review, per §9's gating rule.
   `subscriptions.html`'s own copy already says so. The user was asked directly
   and chose to keep it dormant.
-- **Finance pages persist to `localStorage` only** (`wealth`, `wallet`,
-  `treasury`, `revenue`, `investment`, `expenses`, `budget`). Decided, not
-  defaulted: unusually sensitive data, hard to walk back once member data
-  lives server-side. Mitigated with `omega-local-backup.js` export/import.
+- **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
+  (`wealth`, `wallet`, `treasury`, `revenue`, `investment`, `expenses`,
+  `budget`) were a decision, not a default: unusually sensitive data, hard to
+  walk back once member data lives server-side, mitigated with
+  `omega-local-backup.js` export/import. `scripts/evidence-audit.py` shows the
+  same shape reaches 48 pages, and only 5 of them carry that export path — 43
+  store member data with no server copy and no way to get it out
+  (`achievements`, `notes`, `projects`, `passport`, `targets`, `mood`,
+  `reading`, `workout` …). That is a scope finding, not a decision: nobody has
+  chosen it for the other 41 pages. A further 24 pages are `PARTIAL` — they
+  write to Postgres *and* keep a parallel `localStorage` copy. Run the scanner
+  for the current list rather than quoting these numbers.
+  **Fixed and applied 2026-08-24**: `public.member_state`
+  (`supabase/omega_member_state.sql`, `migrations/0095`) plus
+  `omega-member-state.js` mirror those keys server-side. It is a **mirror, not a
+  sync**: writes go up only, restore is explicit (`OmegaMemberState.restore()`),
+  because a hydrating two-way sync races each page's synchronous render and
+  would let an empty-cache render overwrite good server data. RLS verified live
+  by two-member impersonation (own-row write OK, write-as-other 42501, other
+  member sees 0 rows, anon 42501); `updated_at` is server-authoritative via
+  trigger. Client-side encryption was considered and rejected — no stable client
+  secret exists, so the key would either die with the cache it exists to survive
+  or rest on a forgettable passphrase; and this changes no trust boundary, since
+  `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` and
+  `bloodline_nodes` already hold comparable data server-side under the same,
+  tested RLS.
 - **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** The user was asked
   directly and chose to leave it; `.vercelignore` already keeps both out of
   the deploy, so this is hygiene debt, not a functional bug. A real fix means
@@ -562,7 +584,13 @@ open, recorded in `FIXES_LOG.md`:
 - **38 tables still have RLS policies and no grant.** Not referenced by any
   client code here; most are the ~83-table scaffold below. Left locked out (the
   safe state) rather than granted on the assumption that a policy's existence
-  implies it should be reachable.
+  implies it should be reachable. **Five were confirmed live** by role
+  impersonation on 2026-08-24 — `conversations`, `messages`, `knowledge_nodes`,
+  `knowledge_edges`, `subscriptions` all raise `42501` for `authenticated`
+  despite carrying 1–4 policies each. A repo-wide `.from()` grep finds **no
+  client code calling any of them**, so this is still locked-but-unused, not a
+  broken live feature — do not "fix" it by granting without deciding the
+  feature is wanted.
 - **GitHub Actions cannot assign a runner on this account.** Since 2026-08-22
   every run fails in 2–5s with `runner_id: 0`, no `steps` array, 0 billable ms
   and a completely empty check-run output — reproduced on `pull_request`,
@@ -575,6 +603,21 @@ open, recorded in `FIXES_LOG.md`:
   `.githooks/pre-push` runs it automatically on every push — enable per clone
   with `git config core.hooksPath .githooks`, bypass one push with
   `git push --no-verify`.
+- **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
+  The advisor reports 93; reading the bodies, the owner-sensitive ones guard
+  themselves via `public.omega_is_owner()`, which a substring classifier looking
+  for `is_platform_owner` misses. Three unguarded-and-uncalled functions were
+  revoked (`migrations/0097`); the rest have real callers and are unguarded on
+  purpose. Cross-member leakage was tested directly by member impersonation
+  across 17 tables — every populated table scoped, `profiles` included. **When
+  adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same file**:
+  Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the insecure state
+  returns on its own. That is how 70 previously-revoked functions became 23.
+- **`auth_leaked_password_protection` cannot be enabled on this plan.** It is
+  Pro-and-above; the org is `free`, so the toggle is absent from the dashboard
+  and the advisor line cannot be cleared without upgrading. Raising minimum
+  password length and required characters (Auth → Providers → Email) is the
+  free-tier substitute for the same credential-stuffing threat.
 - **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
   not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
 - **`scripts/audit.py`'s 7 warnings are all understood**, and the tool now
@@ -594,12 +637,13 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **64** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **71** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**14,100** approx tokens / 16,000 budget |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,090** approx tokens / 16,000 budget |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
 | `python3 scripts/omega-registry.py --check` | matches the repo |
+| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
 | `./scripts/ci-local.sh` | **11** blocking checks, all passing |
 | broken asset references | 0 |
 | service-role key scan | clean |
@@ -653,6 +697,15 @@ entries (which were accurate when written):
   match count before replacing, then confirm the rule applies *in a render*:
   a rule that reached the file but not the cascade reports `z-index:auto` and
   0 background layers at runtime while looking correct in the diff.
+- **"Built" is three different claims, so measure which one you mean.**
+  `scripts/evidence-audit.py` classifies every page by what the repo can prove
+  — reaches Postgres, keeps data in the browser, names a relation nothing
+  declares, or is unreachable from `nav.js` — and writes `EVIDENCE_MATRIX.md`.
+  It is deliberately report-only (`--strict` to gate). What it cannot do is the
+  important half: it has no database connection, so a `BUILT` row means the
+  *client* is wired and nothing more. The live table, its columns, its `GRANT`
+  and its policy are all still unverified, and each has been a real shipped bug
+  (§8.1 classes 2 and 6). Do not let a green matrix stand in for a live check.
 - **A number stored in prose drifts; derive it instead.** Every hand-typed count
   describing this repo — skills (3 documented values, all wrong), `.html` pages
   (~250 vs 178), bg.js coverage (104+ vs all 178), module size (747 vs 807 KB) —

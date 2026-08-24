@@ -2793,6 +2793,353 @@ points here for the evidence behind each.
   51/51 self-tests, 0 broken asset references, service-role scan clean, `sw.js` precache and
   manifest icons both intact.
 
+- **The `localStorage`-only persistence gap is 48 pages, not the 7 finance
+  pages CLAUDE.md §8.2 recorded — and 43 of them have no export path.**
+  Not a fix; a measurement, and the reason a new scanner
+  (`scripts/evidence-audit.py`) now exists instead of another prose audit.
+  §8.2 documented `wealth`/`wallet`/`treasury`/`revenue`/`investment`/
+  `expenses`/`budget` as a deliberate decision — sensitive data, hard to walk
+  back once it lives server-side — mitigated by `omega-local-backup.js`
+  export/import. That decision stands for those 7. What was never measured is
+  how far the same shape spread: scanning every page for a `localStorage
+  .setItem` with no `.from()`/`.rpc()`/Edge-Function call finds 48
+  (`python3 scripts/evidence-audit.py --summary` → `LOCAL_ONLY 48`), of which
+  exactly 5 reference `OmegaLocalBackup` (`budget`, `expenses`, `revenue`,
+  `wallet`, `wealth`). The other 43 — `achievements.html`, `notes.html`,
+  `projects.html`, `passport.html`, `targets.html`, `mood.html`,
+  `reading.html`, `workout.html`, `vocabulary.html` and 34 more — hold member
+  data with no server copy and no way to export it. The 5 pages carrying
+  that export path are exactly the 5 finance pages that classify
+  `LOCAL_ONLY`; the other two of the original 7 (`treasury.html`,
+  `investment.html`) each make one Supabase call and so classify `PARTIAL`
+  — Postgres *and* a parallel browser copy, a quieter version of the same
+  problem that 24 pages are in.
+  **False-positive pass, because the raw number would otherwise mean nothing
+  (CLAUDE.md §8.4).** The obvious way to be wrong here is a page that persists
+  through a shared module rather than its own call, which the per-page scan
+  would miss. `omega-chrono.js:121`, `omega-matrix.js:58` and `omega-user.js:244`
+  do exactly that for their own state, so the risk is real — but grepping all
+  48 pages for every persisting global those modules publish
+  (`OmegaMatrix`, `OmegaChrono`, `omegaCompleteTask`, `omegaProgress`,
+  `omegaTaskButton`, `OmegaLocalBackup`) returns 0 hits for anything except the
+  5 `OmegaLocalBackup` pages above. No generic localStorage→Postgres sync
+  exists; the 43 are genuinely unpersisted.
+  Two further scanner bugs were caught the same way and are covered by
+  regression tests in `scripts/tests/test_evidence_audit.py`: SQL comments were
+  being matched as DDL (`-- create table for …` produced phantom tables named
+  `for`, `is`, `above`, `alone`, `bodies`, inflating the duplicate-definition
+  count to 52 against `audit.py`'s correct 47), and Supabase Auth calls were
+  not counted as backend contact, which classified `reset.html` — a page that
+  is entirely an auth operation, and complete — as making no backend call at
+  all. Both fixed; the two tools now agree at 47.
+  Verified: `./scripts/ci-local.sh` all 10 blocking checks pass,
+  `python3 -m unittest discover -s scripts/tests` 58/58 (51 pre-existing + 7
+  new), `audit.py` 0 critical / 7 pre-existing warnings unchanged,
+  `context-budget.py` CLAUDE.md ~13,546 / 16,000.
+  **Still unverified, and deliberately left that way:** whether the live
+  database matches any of this. The Supabase MCP server required
+  authentication this session and none was available, so no table, column,
+  `GRANT` or policy was checked against production. `EVIDENCE_MATRIX.md`'s
+  UNVERIFIED section lists what that leaves open, including a live conflict
+  between two committed docs — `MIGRATION_STATE.md:5` states "All migrations
+  synchronized. No pending conflicts." while `CLAUDE.md:532` records the
+  migration sequence as validated against a blank database only. Nothing in
+  this session can break that tie.
+
+- **The 43-page persistence gap now has a fix, shipped dormant:
+  `public.member_state` + `omega-member-state.js`.** The measurement above said
+  43 pages hold member data with no server copy and no export path. This is the
+  server side of that: one row per `(user_id, key)`, RLS scoped to
+  `auth.uid()`, and — the part that has bitten this repo hardest — an explicit
+  `GRANT SELECT, INSERT, UPDATE, DELETE ... TO authenticated` alongside the
+  policies, since a grant is checked *before* row security and a policy without
+  one never runs (CLAUDE.md §8.1 class 6).
+  **Verified against a real PostgreSQL 16, not by reading the SQL.** A scratch
+  cluster with a minimal Supabase-shaped scaffold (`anon`/`authenticated`
+  roles, `auth.users`, `auth.uid()` reading `request.jwt.claims`) ran the file,
+  then five assertions: member A sees 1 row while the privileged role sees 2
+  (equal counts would have meant RLS was not scoping at all — the check
+  CLAUDE.md §8.4 insists on); A inserting a row attributed to B raises
+  `new row violates row-level security policy`; the same `(user_id, key)`
+  upserted twice updates in place with no `23505`, because the conflict target
+  *is* the primary key (class 7); `anon` raises `permission denied`. Re-running
+  the file is idempotent and the seeded row survives.
+  **The first version of these tests was worthless and said so loudly.** Written
+  without transaction blocks, every `SET LOCAL role` was a no-op — psql warned
+  `SET LOCAL can only be used in transaction blocks`, every statement ran as
+  superuser (which bypasses RLS regardless), so "member A" saw 2 rows, the spoof
+  insert "succeeded", and `anon` "read" 3 rows. Wrapping each case in
+  `begin/commit` produced the real results above. A permission test that runs as
+  superuser proves nothing and looks like a pass.
+  **`bg.js` regression, caught only in the browser.** `window.OmegaSB.get()`
+  returns a *promise*, not a client (`bg.js:190-206`). The first draft used it
+  synchronously, so `client.auth` was `undefined` and every page threw
+  `Cannot read properties of undefined (reading 'getSession')`:
+  `scan.js errors` went from the documented baseline of 3 pages to **177 of
+  178**. `node --check` passed the whole time. Fixed by resolving the promise
+  and tolerating its rejection (the sandbox blocks esm.sh, and a real network
+  can too); the scan is back to 3, and those 3 are the known CDN-blocked pages
+  (`graph.html` d3, `map.html` Leaflet, `realm.html` three.js).
+  **Named `omega-member-state.js`, not `omega-state.js`.** That filename was
+  already taken by an unrelated module — a UI component state machine owning
+  `window.OmegaState` — which `bg.js:1610` already injects. An earlier draft
+  overwrote it and added a second injection; both were reverted with
+  `git checkout HEAD --` and the new module took a distinct filename, guard
+  attribute (`data-omega-member-state`) and global (`window.OmegaMemberState`).
+  Check `git cat-file -e HEAD:<path>` before creating a file whose name follows
+  an obvious convention — in a repo with 90 `omega-*.js` modules the obvious
+  name is usually taken.
+  **It is a mirror, not a sync, and that is a safety decision.** Data moves up
+  only; restore is an explicit call. A hydrating two-way sync would race each
+  LOCAL_ONLY page's synchronous render — the page paints from an empty cache,
+  the member edits what they see, and that empty-derived write overwrites good
+  server data, losing real data to a feature meant to prevent exactly that.
+  It also polls and diffs rather than wrapping `localStorage.setItem`:
+  patching `Storage.prototype` would mutate a global for all 178 pages,
+  including the ~130 this module has no business touching.
+  **Failure path verified, not assumed.** Against a client stubbed to return
+  PostgREST's `42P01`, the module disables itself, reports
+  `disabled: 42P01 relation "public.member_state" does not exist (has
+  supabase/omega_member_state.sql been applied?)`, leaves `lastSync` **null**
+  rather than claiming a success it did not get (class 1), returns the error
+  from `restore()`, and leaves the page's own `localStorage` byte-identical.
+  The harness's *default* stub returns a fake success, so an early run showing
+  `lastError: null` proved nothing — that reading was discarded rather than
+  reported.
+  **Not applied to production.** `apply_migration` against the live project was
+  permission-blocked, so `member_state` does not exist yet and the module is
+  inert by design until someone applies
+  `supabase/omega_member_state.sql` (or `migrations/0095_omega_member_state.sql`,
+  byte-identical). `types/database.types.ts` already regenerated to include it
+  via the repo's own `types-from-schema.py`.
+  **Live database facts established the same session** (project
+  `ydqhzvvoyufiiqvzcjns`, confirmed as production by 21 client references):
+  190 base tables and 5 views live against 118 declared in `supabase/`;
+  **194** policies, not the 398 quoted in an earlier brief; 9 profiles.
+  `transactions` and `wallet_balances` genuinely do **not** exist live,
+  confirming `subscriptions.html:224` and `vault.html` as real silent
+  empty-states rather than a repo/live drift. `top_pages` *is* a live view, so
+  classifying it as an undefined relation would have been a false positive.
+  `check_gate` — which `audit.py` flags as called by `omega-guardian.js` but
+  never `CREATE FUNCTION`'d anywhere in `supabase/` — **does exist live**, so
+  that warning is a source-of-truth gap in the SQL bag, not a broken call.
+  Full local CI re-run clean afterward: all 10 blocking checks, `audit.py`
+  0 critical / 7 pre-existing warnings (unchanged).
+
+---
+
+## Close the unauthenticated RPC surface: 23 anon-callable SECURITY DEFINER functions → 2
+
+**Found:** Supabase security advisor on project `ydqhzvvoyufiiqvzcjns`, 2026-08-24:
+205 findings, of which `anon_security_definer_function_executable` × 23 and
+`function_search_path_mutable` × 5.
+
+`anon` is the role the publishable key maps to, and that key ships in client
+code by design (`bg.js`). Anything `anon` can EXECUTE is reachable by anyone on
+the internet at `POST /rest/v1/rpc/<name>` with no account, on an otherwise
+invite-gated platform.
+
+Querying `pg_proc` for an internal guard (`is_platform_owner` / `auth.uid()` /
+`auth.role()` anywhere in the body) split the 23 into 13 guarded and **10 with
+no authorization check of their own**:
+
+| function | why it mattered |
+|---|---|
+| `notify_member(p_user_id, p_type, p_message, p_content)` | writes a notification with attacker-chosen body to any member id — phishing inside the platform's own trusted UI |
+| `upsert_graph_entity(p_user_id, …)` | takes the owning user id as a parameter; unauthenticated write-as-anyone |
+| `add_graph_relationship(p_user_id, …)` | same shape |
+| `log_evolution(p_axis, p_note)` | unauthenticated arbitrary row insert |
+| `order_stats()` | commerce aggregates to unauthenticated callers |
+| `_notify_approved`, `_notify_owner_member_approved`, `_notify_owner_member_rejected` | trigger functions, directly REST-callable |
+| `get_platform_flag`, `public_leaderboard` | flag values / leaderboard to anon; only callers are gated pages |
+
+`upsert_graph_entity` and `add_graph_relationship` were additionally
+`SECURITY DEFINER` with a mutable `search_path` — the classic definer-privilege
+escalation shape.
+
+**The mistake worth recording.** The first draft wrote
+`REVOKE EXECUTE … FROM anon`. Run against live inside a transaction, the
+verification query came back **completely unchanged at 24** before rollback.
+The privilege was never granted to `anon` individually — it was granted to
+**PUBLIC** on `CREATE FUNCTION`, and `anon` merely inherits it, so revoking from
+`anon` removes a grant that does not exist and silently does nothing. This is
+CLAUDE.md §8.1 class 6(a) from the other direction, and it is why an earlier
+pass (`migrations/20260818000551_…`) that revoked 70 of these saw 23 return:
+every `CREATE OR REPLACE FUNCTION` re-grants PUBLIC.
+
+**Fixed** in `supabase/omega_anon_execute_hardening.sql` (+ `migrations/0096`),
+applied live 2026-08-24: revoke from `PUBLIC`, then grant back per **actual
+caller**, each checked in this repo first — `authenticated` for the gated-page
+callers (`order_stats`, `public_leaderboard`, `get_platform_flag`,
+`get_all_members`, `complete_task`, `check_gate`, `record_interest_signal`) and
+the owner-guarded membership functions (`approve_member`, `reject_member`,
+`revoke_member`, `grant_permanent_access`), `service_role` only for the
+Edge-Function-invoked ones (`queue_weekly_digest`, `send_weekly_digests`), and
+**nothing at all** for the four unguarded functions with no caller anywhere.
+Five functions had `search_path` pinned to `public, pg_temp`.
+
+**Deliberately left reachable by `anon`** — the two remaining:
+- `report_client_error` — `bg.js` installs the error reporter on every page
+  including the public ones; revoking blinds error reporting exactly where a
+  signed-out member hits a problem. It has its own guard.
+- `is_platform_owner` — called from inside RLS policies across the schema.
+  Policy evaluation runs in the caller's role, so revoking risks breaking policy
+  evaluation for anonymous requests rather than merely denying an RPC. It
+  already returns false for anon.
+
+**Verified:**
+- Whole script run against live inside `BEGIN … ROLLBACK` first, asserting the
+  end state per function before anything was committed.
+- Post-apply, live: `anon_secdef_remaining` **2** (was 23),
+  `secdef_mutable_path` **0** (was 5).
+- Per-function grants confirmed: `notify_member`/`upsert_graph_entity` reachable
+  by no role; `approve_member`/`get_all_members`/`complete_task`/`order_stats`
+  still `authenticated`; `send_weekly_digests` `service_role` only.
+- No signed-out surface calls a revoked function — `account`, `enter`, `reset`,
+  `terms`, `pending`, `404`, `offline`, plus `bg.js` and `nav.js`, all clean.
+- `scripts/audit.py` 0 critical / 7 warnings; `./scripts/ci-local.sh` 10/10;
+  browser error scan 3/178, the documented CDN-blocked pages, unchanged.
+
+**Still open:** `authenticated_security_definer_function_executable` × 93 — a
+separate decision, recorded in CLAUDE.md §8.2. Also
+`auth_leaked_password_protection`, which is a dashboard toggle no SQL can reach.
+
+---
+
+## The other 93 advisor findings: three real, ninety already guarded
+
+**Context:** after the anon pass above, the security advisor still reported
+`authenticated_security_definer_function_executable` × 93.
+
+**What the number actually was.** The advisor reports every SECURITY DEFINER
+function `authenticated` can execute; it cannot see an internal guard, so the
+count reads far worse than the exposure. Reading the real bodies on production,
+the owner-sensitive ones already guard themselves — through
+`public.omega_is_owner()` rather than `is_platform_owner()`:
+
+```
+get_pending_requests():
+  if not public.omega_is_owner() then
+    raise exception 'Not authorised.' using errcode = '42501';
+```
+
+A first-pass classifier here searched only for `is_platform_owner`,
+`auth.uid()` and `auth.role()`, and so reported `get_pending_requests` (which
+returns pending access requests) and `engagement_report` (which returns member
+emails) as unguarded. **Both are fine.** Caught by reading the bodies instead of
+trusting the label — CLAUDE.md §8.4, "classifying a policy by substring is not
+reading it", now demonstrated for functions too.
+
+Of the genuinely unguarded remainder, most are unguarded deliberately and have
+real callers: `published_dispatches` (body is `WHERE is_published = true`),
+`public_leaderboard`, `order_stats` (aggregate counts only), `get_platform_flag`.
+Revoking those would break member-facing pages to clear an advisor line.
+
+**Fixed** in `supabase/omega_authenticated_execute_hardening.sql`
+(+ `migrations/0097`), applied live 2026-08-24 — the three that are unguarded
+**and** called by nothing in this repo:
+
+| function | why |
+|---|---|
+| `get_activity_feed(int,int)` | joins `activity_feed` to `profiles`, returning every member's `display_name`, `element` and activity — the only cross-member read path in the authenticated surface, and unused |
+| `get_capability_health()` | internal capability registry: health, lifecycle, SLO p95 timings |
+| `log_evolution(text,text)` | a write; delegates to `complete_task` so it was never a spoofing hole, but an uncalled write endpoint is still surface |
+
+**The check that mattered more than the function count.** The leak question is
+not "how many functions can a member call" but "can one member read another's
+rows". Tested on production by impersonating a real non-owner member across 17
+member-data tables, comparing member-visible counts against privileged counts:
+
+```
+certificates 0/24 · sovereign_points_ledger 0/69 · task_completions 0/10
+trophies 0/24 · medals 0/24 · exam_results 0/3 · feedback 0/1
+```
+
+Every populated table scoped; none leaked. `profiles` policy is
+`((SELECT auth.uid()) = id) OR is_platform_owner()`, so no member email is
+reachable by another member.
+
+**Verified:** post-apply, `get_activity_feed` / `get_capability_health` /
+`log_evolution` are `anon:false, authed:false`; `order_stats`,
+`public_leaderboard`, `published_dispatches`, `get_pending_requests`,
+`my_matrix`, `complete_task` all still `authed:true`. Browser error scan 3/178
+unchanged; `audit.py` 0 critical / 7 warnings.
+
+**Not fixable from here:** `auth_leaked_password_protection` is Pro-plan-gated
+(docs: "available on the Pro Plan and above") and the org is on `free`
+(`get_organization` → `"plan":"free"`), so the toggle is absent from the
+dashboard entirely and this advisor line cannot be cleared without upgrading.
+The free-tier substitute for the same threat is raising minimum password length
+and required characters under Auth → Providers → Email.
+
+---
+
+## member_state applied: the 43 unpersisted pages now have a server copy
+
+**Applied live 2026-08-24** (`supabase/omega_member_state.sql`, `migrations/0095`).
+
+**The decision, and the evidence that changed it.** An earlier note in this
+session recommended holding this back on the grounds that mirroring member data
+server-side *increases breach surface* — it centralizes mood logs, body
+measurements, journals and finances where today they are device-local.
+
+That reasoning rested on an assumption that was never checked, and it was wrong.
+Querying live:
+
+| table | policies | `authenticated` data grants |
+|---|---|---|
+| `health_logs` | 1 | INSERT, SELECT |
+| `ai_memory` | 4 | DELETE, INSERT, SELECT, UPDATE |
+| `family_nodes` | 1 | DELETE, INSERT, SELECT, UPDATE |
+| `heritage_records` | 1 | DELETE, INSERT, SELECT |
+| `bloodline_nodes` | 1 | DELETE, INSERT, SELECT |
+
+Medical, genealogical and AI-memory data is **already** stored server-side in
+plaintext under exactly this RLS boundary — and that boundary was tested by
+member impersonation across 17 tables immediately before (every populated table
+scoped, zero cross-member reads, `profiles` = `auth.uid() = id OR owner`).
+`member_state` therefore extends a defended boundary rather than opening a new
+one, and holding it back would have left 43 pages losing member data on a cache
+clear to avoid a risk the platform already carries and already defends.
+
+**Client-side encryption considered and rejected**, on key management. There is
+no stable client-side secret — Supabase hands the browser a JWT, not the
+password. That leaves a random key in `localStorage` (dies with the very cache
+clear the feature exists to survive, producing a backup that silently fails to
+restore — §8.1 class 1 in a new hat) or a member-remembered passphrase (loses
+the backup when forgotten, and needs real crypto plus a recovery flow for nine
+members). Crypto that fails closed without saying so is worse than plaintext
+behind working RLS.
+
+**One hardening added over the reviewed version:** `updated_at` is now
+server-authoritative via a `BEFORE INSERT OR UPDATE` trigger. A column DEFAULT
+fires only on INSERT, so an upsert resolving to UPDATE would have kept whatever
+timestamp the browser sent, including a backdated one. The trigger function is
+`REVOKE`d from `PUBLIC`/`anon`/`authenticated` — a trigger function has no
+business being REST-callable, and `CREATE FUNCTION` grants PUBLIC by default.
+
+**Verified on the live table** by impersonating two real members:
+
+```
+A writes own row                      OK
+backdated ts overridden by trigger    YES (inserted 1999-01-01, read back now())
+A writes as B                         blocked: 42501
+B sees A's rows (expect 0)            0
+anon reads                            blocked: 42501
+probe rows cleaned up                 OK
+```
+
+Security advisor after the whole session: **205 → 168** findings.
+`anon_security_definer_function_executable` 23 → **2**,
+`function_search_path_mutable` 5 → **0**, and `member_state` contributes
+**zero** findings of its own.
+
+**Limit of this verification, stated plainly:** the database side is proven
+live. The client side was exercised against the browser harness's *stubbed*
+Supabase client, not a real signed-in session — so "the module writes real rows
+from a real browser" is confirmed by construction and by the SQL-side proof, not
+by an end-to-end browser run. First real member session will settle it;
+`OmegaMemberState.status()` reports `lastError` and `lastSync` for exactly that.
 ---
 
 - **The safety gate for high-risk changes was the least discoverable skill in the repo.**

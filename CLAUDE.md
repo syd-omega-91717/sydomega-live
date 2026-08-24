@@ -596,6 +596,17 @@ open, recorded in `FIXES_LOG.md`:
   `.githooks/pre-push` runs it automatically on every push — enable per clone
   with `git config core.hooksPath .githooks`, bypass one push with
   `git push --no-verify`.
+- **`authenticated` can EXECUTE 93 `SECURITY DEFINER` functions.** The `anon`
+  half of this was closed on 2026-08-24 (23 → 2; see `FIXES_LOG.md`), but the
+  authenticated surface was deliberately left alone in that pass: narrowing it
+  needs each function checked against its real member-facing caller, and doing
+  both at once would make any breakage impossible to attribute. This is a
+  smaller risk — reaching it needs an approved account on an invite-gated
+  platform — but it is not zero, and it is the obvious next hardening step.
+  **When adding any function, `REVOKE EXECUTE ... FROM PUBLIC` in the same
+  file**: Postgres grants it to PUBLIC on every `CREATE FUNCTION`, so the
+  insecure state returns on its own with each new or replaced function. That is
+  exactly how 70 previously-revoked functions became 23 again.
 - **`auth_leaked_password_protection`** is a Supabase Auth dashboard toggle,
   not a SQL object — `apply_migration`/`execute_sql` cannot reach it.
 - **`scripts/audit.py`'s 7 warnings are all understood**, and the tool now

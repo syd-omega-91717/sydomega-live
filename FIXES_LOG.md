@@ -2925,3 +2925,81 @@ points here for the evidence behind each.
   that warning is a source-of-truth gap in the SQL bag, not a broken call.
   Full local CI re-run clean afterward: all 10 blocking checks, `audit.py`
   0 critical / 7 pre-existing warnings (unchanged).
+
+---
+
+## Close the unauthenticated RPC surface: 23 anon-callable SECURITY DEFINER functions → 2
+
+**Found:** Supabase security advisor on project `ydqhzvvoyufiiqvzcjns`, 2026-08-24:
+205 findings, of which `anon_security_definer_function_executable` × 23 and
+`function_search_path_mutable` × 5.
+
+`anon` is the role the publishable key maps to, and that key ships in client
+code by design (`bg.js`). Anything `anon` can EXECUTE is reachable by anyone on
+the internet at `POST /rest/v1/rpc/<name>` with no account, on an otherwise
+invite-gated platform.
+
+Querying `pg_proc` for an internal guard (`is_platform_owner` / `auth.uid()` /
+`auth.role()` anywhere in the body) split the 23 into 13 guarded and **10 with
+no authorization check of their own**:
+
+| function | why it mattered |
+|---|---|
+| `notify_member(p_user_id, p_type, p_message, p_content)` | writes a notification with attacker-chosen body to any member id — phishing inside the platform's own trusted UI |
+| `upsert_graph_entity(p_user_id, …)` | takes the owning user id as a parameter; unauthenticated write-as-anyone |
+| `add_graph_relationship(p_user_id, …)` | same shape |
+| `log_evolution(p_axis, p_note)` | unauthenticated arbitrary row insert |
+| `order_stats()` | commerce aggregates to unauthenticated callers |
+| `_notify_approved`, `_notify_owner_member_approved`, `_notify_owner_member_rejected` | trigger functions, directly REST-callable |
+| `get_platform_flag`, `public_leaderboard` | flag values / leaderboard to anon; only callers are gated pages |
+
+`upsert_graph_entity` and `add_graph_relationship` were additionally
+`SECURITY DEFINER` with a mutable `search_path` — the classic definer-privilege
+escalation shape.
+
+**The mistake worth recording.** The first draft wrote
+`REVOKE EXECUTE … FROM anon`. Run against live inside a transaction, the
+verification query came back **completely unchanged at 24** before rollback.
+The privilege was never granted to `anon` individually — it was granted to
+**PUBLIC** on `CREATE FUNCTION`, and `anon` merely inherits it, so revoking from
+`anon` removes a grant that does not exist and silently does nothing. This is
+CLAUDE.md §8.1 class 6(a) from the other direction, and it is why an earlier
+pass (`migrations/20260818000551_…`) that revoked 70 of these saw 23 return:
+every `CREATE OR REPLACE FUNCTION` re-grants PUBLIC.
+
+**Fixed** in `supabase/omega_anon_execute_hardening.sql` (+ `migrations/0096`),
+applied live 2026-08-24: revoke from `PUBLIC`, then grant back per **actual
+caller**, each checked in this repo first — `authenticated` for the gated-page
+callers (`order_stats`, `public_leaderboard`, `get_platform_flag`,
+`get_all_members`, `complete_task`, `check_gate`, `record_interest_signal`) and
+the owner-guarded membership functions (`approve_member`, `reject_member`,
+`revoke_member`, `grant_permanent_access`), `service_role` only for the
+Edge-Function-invoked ones (`queue_weekly_digest`, `send_weekly_digests`), and
+**nothing at all** for the four unguarded functions with no caller anywhere.
+Five functions had `search_path` pinned to `public, pg_temp`.
+
+**Deliberately left reachable by `anon`** — the two remaining:
+- `report_client_error` — `bg.js` installs the error reporter on every page
+  including the public ones; revoking blinds error reporting exactly where a
+  signed-out member hits a problem. It has its own guard.
+- `is_platform_owner` — called from inside RLS policies across the schema.
+  Policy evaluation runs in the caller's role, so revoking risks breaking policy
+  evaluation for anonymous requests rather than merely denying an RPC. It
+  already returns false for anon.
+
+**Verified:**
+- Whole script run against live inside `BEGIN … ROLLBACK` first, asserting the
+  end state per function before anything was committed.
+- Post-apply, live: `anon_secdef_remaining` **2** (was 23),
+  `secdef_mutable_path` **0** (was 5).
+- Per-function grants confirmed: `notify_member`/`upsert_graph_entity` reachable
+  by no role; `approve_member`/`get_all_members`/`complete_task`/`order_stats`
+  still `authenticated`; `send_weekly_digests` `service_role` only.
+- No signed-out surface calls a revoked function — `account`, `enter`, `reset`,
+  `terms`, `pending`, `404`, `offline`, plus `bg.js` and `nav.js`, all clean.
+- `scripts/audit.py` 0 critical / 7 warnings; `./scripts/ci-local.sh` 10/10;
+  browser error scan 3/178, the documented CDN-blocked pages, unchanged.
+
+**Still open:** `authenticated_security_definer_function_executable` × 93 — a
+separate decision, recorded in CLAUDE.md §8.2. Also
+`auth_leaked_password_protection`, which is a dashboard toggle no SQL can reach.

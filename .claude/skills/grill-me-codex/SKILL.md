@@ -1,3 +1,8 @@
+---
+name: grill-me-codex
+description: Safety gate for HIGH-RISK changes in this repo — auth, database schema, payments/Stripe, RLS policies, or any new public-callable function/RPC. Forces an explicit threat-model review against this repo's eight real failure classes and writes a decision record (PLAN.md) plus an audit trail (CODEX_REVIEW.md) before any architecture or code is produced. Use before feature-architect whenever a change touches one of those areas, or when a reviewer needs proof the security implications were thought through.
+---
+
 # Grill-Me-Codex: Safety Gate for High-Risk Decisions
 
 **Purpose**: Structured interrogation framework for catching intent-mismatch bugs before they become code. Locks down HIGH-RISK decisions (auth, schema, payments, RLS changes) by forcing explicit threat-model review and decision documentation.

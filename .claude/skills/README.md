@@ -1,8 +1,17 @@
-# Autonomous feature-proposal pipeline
+# Skills
 
-Four skills, meant to run in this order, each a separate Claude Code
-invocation (`/web-trend-scout`, `/feature-architect`, `/autonomous-coder`,
-`/subscriber-portal`):
+**8 skills live here.** The full generated inventory — including which reference
+doc names each one, and whether its frontmatter makes it discoverable at all —
+is `OMEGA_SKILL_REGISTRY.md` at the repo root, produced by
+`scripts/omega-registry.py` and gated in CI. Prefer it over any count written
+into prose here: this file said "Four skills" for long enough that three of the
+eight went undocumented, and `CLAUDE.md` disagreed with it in two places.
+
+## Autonomous feature-proposal pipeline
+
+Four of the eight form a pipeline, meant to run in this order, each a separate
+Claude Code invocation (`/web-trend-scout`, `/feature-architect`,
+`/autonomous-coder`, `/subscriber-portal`):
 
 1. **web-trend-scout** — research only. Writes a grounded, proposal-only
    idea into `FEATURE_IDEAS.md`. No code.
@@ -19,6 +28,18 @@ invocation (`/web-trend-scout`, `/feature-architect`, `/autonomous-coder`,
    wires it into the real dashboard/hub pages and the real tier system
    (`OmegaCanon`/`membership_tier`), not a parallel one.
 
+## Safety gate (HIGH-RISK changes only)
+
+- **grill-me-codex** — runs *before* `feature-architect` when a change touches
+  auth, database schema, payments/Stripe, RLS policies, or adds a new
+  public-callable function/RPC. Forces a threat-model review against this
+  repo's eight real failure classes and writes a decision record (`PLAN.md`)
+  plus an audit trail (`CODEX_REVIEW.md`). It carries `THREAT_MODEL.md`.
+  Until 2026-08-24 this skill had no YAML frontmatter at all — so it had no
+  `name:` or `description:` for an agent to match on, making the one skill
+  whose job is stopping unexamined high-risk changes the least discoverable
+  skill in the repo. `scripts/omega-registry.py` now fails CI on that shape.
+
 ## Standalone skills (not part of the pipeline)
 
 - **verify-in-browser** — renders the real pages in headless Chromium and runs
@@ -32,6 +53,17 @@ invocation (`/web-trend-scout`, `/feature-architect`, `/autonomous-coder`,
   that makes every module look broken, the service worker that defeats
   `page.route`, the four first-visit overlays that swallow clicks, and why
   `git stash` cannot give you a working "before".
+
+- **context-budget** — keeps the per-session context cost down: measures what
+  every session loads before it starts, says where new documentation belongs so
+  `CLAUDE.md` does not regrow, and gives cheap read recipes for this repo's very
+  large files. Backed by `scripts/context-budget.py`, blocking in CI. Invoke it
+  when adding to any audit doc.
+
+- **interface-guidelines** — audits the platform against the Web Interface
+  Guidelines, using only the rules that transfer to a no-build vanilla-HTML
+  stack. Records which upstream rules are React-only rather than importing the
+  list wholesale (see `CLAUDE.md` §10.1).
 
 ## Skill reference table
 

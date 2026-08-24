@@ -16,6 +16,11 @@ bg.js loads on 104 of 105 pages, so registering here guarantees the demo is
 present everywhere a member can land. The existing per-page <script> tags stay
 harmless: the module's __omegaDemoVideo guard makes a second load a no-op.
 """
+
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
 import os, shutil, subprocess, sys
 
 TARGET = "bg.js"

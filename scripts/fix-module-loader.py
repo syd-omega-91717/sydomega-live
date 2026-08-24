@@ -37,6 +37,11 @@ inventing requirements, which is the failure mode this whole process exists to
 prevent.
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import re
 import shutil
 import sys

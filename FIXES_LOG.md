@@ -3140,3 +3140,75 @@ Supabase client, not a real signed-in session — so "the module writes real row
 from a real browser" is confirmed by construction and by the SQL-side proof, not
 by an end-to-end browser run. First real member session will settle it;
 `OmegaMemberState.status()` reports `lastError` and `lastSync` for exactly that.
+---
+
+- **The safety gate for high-risk changes was the least discoverable skill in the repo.**
+  `.claude/skills/grill-me-codex/SKILL.md` began at line 1 with
+  `# Grill-Me-Codex: Safety Gate for High-Risk Decisions` — **no YAML frontmatter at all**,
+  where the other 7 skills all open with `---\nname:\ndescription:\n---`. A skill with no
+  frontmatter has no `name:` and no `description:`, and the description is what a coding
+  agent matches against to decide a skill applies. Its listing fell back to the `#` heading,
+  which states what the skill *is* and never says **when to use it** — so the one skill whose
+  entire job is stopping an unexamined auth / schema / payments / RLS change from going in was
+  the single hardest one to select. Confirmed as the contract, not a house preference, against
+  first-party Anthropic material: `anthropics/skills`' `template/SKILL.md` (fetched, 140 bytes,
+  HTTP 200) is exactly `name:` + `description:`, and its description field reads *"Replace with
+  description of the skill and when Claude should use it."* Fixed by adding frontmatter whose
+  description names the four trigger areas. **Verified live in-session, not by inspection**: the
+  harness re-emitted its available-skills list immediately after the write, and `grill-me-codex`
+  now appears with the real trigger description instead of the heading text. Guarded against
+  recurrence — `scripts/omega-registry.py` hard-fails, in both generate and `--check` mode, on
+  any `SKILL.md` with no frontmatter or a frontmatter missing `name:`/`description:` (3 of the
+  13 new tests cover exactly that shape).
+
+- **Every hand-typed count describing this repo's own agent infrastructure had drifted.**
+  `.claude/skills/README.md:3` said *"Four skills"*, `CLAUDE.md:718` said *"Five skills"*, and
+  `CLAUDE.md:824` said *"the 4-skill pipeline"* — three documented counts of one thing, all
+  three wrong: `ls .claude/skills/*/SKILL.md` returns **8**. The README named only 4 of them;
+  `context-budget`, `grill-me-codex` and `interface-guidelines` had **0 mentions** in it. The
+  same class in `CLAUDE.md` §2: *"~250 standalone .html pages"* (`ls *.html` → **178**), bg.js
+  *"104+ of ~250 pages depend on it"* (`grep -l bg.js *.html` → **178 of 178**, i.e. a total
+  rather than partial single point of failure), and §8.2's *"87 `omega-*.js` modules (747 KB)"*
+  (**90** modules, **807 KB**). Not a typo problem — what happens when a number that changes is
+  stored in prose. Fixed by deriving all of it from the filesystem:
+  `scripts/omega-registry.py` generates `OMEGA_SKILL_REGISTRY.md`, and `--check` fails CI on
+  drift, the same generated-artifact pattern `types-from-schema.py` already uses. Wired blocking
+  into both `.github/workflows/ci.yml` (step 2j) and `scripts/ci-local.sh`. Prose corrected in
+  place rather than left to drift again, and the two skill-count claims now point at the
+  generated registry instead of restating a number. **Verified in both directions** — the gate
+  passing on a clean tree proves nothing on its own (`CLAUDE.md` §8.4: *"a scan against a
+  stopped static server also reports 0"*), so each of the 13 new tests pairs a positive
+  assertion with a perturbation asserting a non-zero exit: hand-editing a count, adding a skill,
+  deleting the registry, and each of the three frontmatter defects. 51 → **64 tests, all
+  passing**; `ci-local.sh` 11/11 blocking checks; `audit.py` unchanged at 0 critical / 7 warnings.
+  One correction surfaced while counting: `migrations/README.md`'s *"Full 94-file sequence
+  validated"* against a scratch PostgreSQL 16 instance is accurate **only for the numbered
+  `0001`–`0094` files**; the directory now holds **117** (94 numbered + 23 later timestamped),
+  and no run has covered all 117. The registry reports that split so the validated scope stays
+  visible instead of being rounded into a single number.
+
+- **All 18 agent-facing scripts in `scripts/` ran their full job when asked for `--help`.**
+  Found by grounding an external skill against this repo instead of installing it:
+  `cursor/plugins`' `cli-for-agent` states its use as *"reviewing whether an existing tool will
+  block agents (interactive prompts, missing examples, ambiguous errors)"*. Tested — every one
+  of the 15 `.py` and 3 `.sh` scripts ignored the unknown flag and executed; not one printed a
+  usage line. Two costs. **Discovery:** learning what `scripts/rls-auditor.py` does required
+  reading it, in a repo that gates per-session context cost precisely because reading is where
+  sessions spend themselves (`scripts/context-budget.py`, blocking in CI). **Unrequested
+  writes:** `register-shell.py`, `register-chronometer.py`, `register-demo-video.py`,
+  `patch-account-auth.py` and `fix-module-loader.py` all modify tracked files and had **no argv
+  handling whatsoever** (`grep -cE 'sys\.argv|argparse' → 0` for the three `register-*`), so
+  `--help` was a write — masked only because all five are idempotent and already applied, each
+  printing *"Already registered. Nothing to do."* On a fresh clone it would have edited the repo.
+  `cleanup-dead-files.sh` was **checked rather than assumed** and was already correct: dry-run by
+  default, `rm` reached only under `[ "$APPLY" -eq 1 ]`. Fixed by having each script print its
+  own module docstring (all 15 `.py` files already had a real one) and exit 0 before any work.
+  The guard is deliberately **self-contained per file rather than a shared import**:
+  `scripts/tests/` builds fixtures by copying a single script into a temp directory, so a
+  `from _agentcli import …` would have raised `ImportError` in every existing test.
+  **Verified:** all 18 return a real usage/description and exit 0, and `git status --porcelain`
+  is clean afterward — proving no script mutated anything while being asked for help. Normal
+  behaviour unchanged: 64 tests, 11/11 blocking checks, `audit.py` 0 critical / 7 warnings,
+  `rls-auditor.py` still reporting its one finding. Also removed that script's leftover
+  `print(f"DEBUG: __file__={__file__}, ROOT={ROOT}, cwd={os.getcwd()}", file=sys.stderr)`, which
+  had been firing on every CI run.

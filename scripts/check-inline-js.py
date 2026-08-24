@@ -21,6 +21,11 @@ Run from the repository root: python3 scripts/check-inline-js.py
 Exit code 1 if any block fails to parse, so it can gate CI.
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import glob
 import os
 import re

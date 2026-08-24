@@ -31,7 +31,7 @@ bundler.
 ## 2. Repository layout
 
 ```
-/                    ~250 standalone .html pages, one per feature/page.
+/                    178 standalone .html pages, one per feature/page.
                      Each is a full HTML document with inline <script>,
                      not a component — there is no shared page template
                      engine. Shared behavior comes from loader scripts
@@ -40,12 +40,13 @@ bg.js                The "nervous system": injected first, loaded by every
                      page. Injects the global design-system <style> block,
                      the approval-guard CSS, and defer-loads the other
                      omega-*.js modules. If bg.js fails to parse, the
-                     entire platform is down (see ci.yml comment) — 104+
-                     of ~250 pages depend on it.
+                     entire platform is down (see ci.yml comment) — all
+                     178 pages load it, so it is a total, not partial,
+                     single point of failure.
 nav.js               Sidebar navigation: maps every page slug to a nav
                      section (COMMAND, IDENTITY, ASCEND, COSMOS, VAULT,
                      ORDER, INTEL, ...) and renders the icon dock.
-omega-*.js           ~90 single-purpose modules (auth gate, AI copilot,
+omega-*.js           90 single-purpose modules (auth gate, AI copilot,
                      threat/telemetry, chart rendering, share cards,
                      progress tracking, PWA/service-worker registration,
                      etc.), each loaded on-demand by bg.js or by the pages
@@ -132,7 +133,7 @@ in `bg.js` rather than defining page-local styles that will drift.
 above: an additive "Glass-Vector Platform" layer (search `Ω-GVP` in
 `bg.js`) that upgrades the existing shared classes rather than
 replacing them — every rule targets `.card`/`.kpi`/`.kpi-card`/`.glass`/
-`.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all ~250 pages
+`.glass-cyan`/`.tbl-row`/`.inp`/`.btn-*`, so it reaches all 178 pages
 through this one file with no per-page markup changes:
 
 - **Glass shimmer + cursor-reactive light** — `.card`/`.kpi`/`.glass`
@@ -305,7 +306,7 @@ through this one file with no per-page markup changes:
   always wins the cascade regardless) is left untouched. This was
   chosen after a repo-wide audit found ~380 raw `<input>`s and dozens of
   raw `<button>`s with no shared class — hand-editing every occurrence
-  across ~250 pages wasn't attempted; this reaches them all from one
+  across 178 pages wasn't attempted; this reaches them all from one
   file instead. (This paragraph used to say "27 pages still use native
   `<table>` markup" — that is **stale**: a repo-wide grep now finds zero
   `<table>` elements anywhere, so the conversion is complete. See `FIXES_LOG.md`'s
@@ -353,9 +354,11 @@ headless Chromium — not just `node --check` on the syntax.
   `supabase/migrations/README.md` for how the order and content were
   derived, what was deliberately excluded (a conditional `DROP TABLE`
   file, the legacy manual SQL-editor-paste bootstrap bundle, diagnostic-
-  only scripts). All 94 files now apply cleanly end-to-end against a fresh
-  scratch PostgreSQL 16 instance (`migrations/README.md`'s "Full 94-file
-  sequence validated" entry) — but that only proves the sequence is
+  only scripts). The 94-file numbered sequence (`0001`–`0094`) applies
+  cleanly end-to-end against a fresh scratch PostgreSQL 16 instance
+  (`migrations/README.md`'s "Full 94-file sequence validated" entry) — but the
+  directory now holds **117** files: 23 later timestamped ones were never part
+  of that validation and no run has covered all 117 — but that only proves the sequence is
   internally consistent on a **blank** database, not that it matches the
   owner's actual live schema; `task_completions` is a proven
   counterexample (live `id bigint` + `axis`/`increment` columns match none
@@ -621,7 +624,7 @@ open, recorded in `FIXES_LOG.md`:
   reports which parts of each are real risk vs. known noise. They cannot be
   driven to 0 from source alone without live-schema verification, and forcing
   them down would trade a known-unknown for an unverified "fixed".
-- **87 `omega-*.js` modules (747 KB) load on every page.** 41 expose a global
+- **90 `omega-*.js` modules (807 KB) load on every page.** 41 expose a global
   nothing calls — but that metric is a trap: `omega-a11y.js` is one of them
   and does real work on every page. Self-activation with no caller is the norm
   here. Establishing which are genuinely page-specific is a real audit.
@@ -634,13 +637,14 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **58** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **71** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**13,550** approx tokens / 16,000 budget |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**15,090** approx tokens / 16,000 budget |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
+| `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
-| `./scripts/ci-local.sh` | all **10** blocking checks pass |
+| `./scripts/ci-local.sh` | **11** blocking checks, all passing |
 | broken asset references | 0 |
 | service-role key scan | clean |
 
@@ -702,6 +706,28 @@ entries (which were accurate when written):
   *client* is wired and nothing more. The live table, its columns, its `GRANT`
   and its policy are all still unverified, and each has been a real shipped bug
   (§8.1 classes 2 and 6). Do not let a green matrix stand in for a live check.
+- **A number stored in prose drifts; derive it instead.** Every hand-typed count
+  describing this repo — skills (3 documented values, all wrong), `.html` pages
+  (~250 vs 178), bg.js coverage (104+ vs all 178), module size (747 vs 807 KB) —
+  had gone stale, and one (`grill-me-codex`'s missing frontmatter) had silently
+  broken skill discovery. Before quoting a count from any doc, re-derive it:
+  `python3 scripts/omega-registry.py --check` regenerates the whole census and
+  fails on drift. When adding a fact that is a *number*, put it in the generator,
+  not the paragraph.
+- **Ask a script what it does before reading it.** All 18 `scripts/*.py|sh` now
+  answer `--help` with their module docstring and exit 0 (they previously ran the
+  full job instead, which for the five `register-*`/`patch-*`/`fix-*` writers was
+  an unrequested write). One `--help` call is far cheaper than reading the file,
+  which matters here for the reason §8.4's context note gives.
+- **External repo research is partly blocked at the egress proxy.**
+  `raw.githubusercontent.com` returns 200, so named files (`README.md`,
+  `template/SKILL.md`) are fetchable — but `api.github.com/repos/...`,
+  `github.com` HTML and `codeload` tarballs are all **403**, and `agentskills.io`
+  is blocked outright. So stars, contributor counts, commit recency and
+  dependency-tree security **cannot be measured** in this environment, and a repo
+  cannot be cloned or its tree listed. Do not present those dimensions as
+  assessed; `OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md` marks them NOT VERIFIED. Also:
+  the file tree cannot be enumerated, so a path guess that 404s means nothing.
 - **Per-session context cost is now gated.** `scripts/context-budget.py` runs
   blocking in CI. See `.claude/skills/context-budget/` for where new
   documentation belongs and how to read this repo's very large files cheaply
@@ -769,7 +795,8 @@ entries (which were accurate when written):
 
 ## 10. Autonomous feature-proposal pipeline (`.claude/skills/`) — with safety gating
 
-Five skills orchestrate turning outside research into shipped-but-dormant
+Eight skills exist (`OMEGA_SKILL_REGISTRY.md`, generated); five of them
+orchestrate turning outside research into shipped-but-dormant
 features on this actual static-HTML/Supabase stack — no framework, no
 build step, adapted to the real architecture in §§1–6. The pipeline
 intentionally stops at "reviewable, dormant-by-default code on a branch"
@@ -852,6 +879,16 @@ the same repositories:
 | `anthropics/claude-plugins-official` | official plugin directory, 39 internal + external plugins | **`claude-md-management` was the find.** Its conciseness/currency rubric is what prompted measuring CLAUDE.md, which turned out to be ~68,900 tokens loaded per session with §8 as 88% of it — see `FIXES_LOG.md`'s header. The LSP plugins target languages this repo barely has; `frontend-design` is React-oriented; `skill-creator`, `code-review` and `pr-review-toolkit` duplicate what this session already provides. |
 | `krusemediallc/arcads-claude-code` | 247 files, 10 ad-production skills (UGC ads, video hooks, ad copy) | **0 applicable.** Built for public paid-acquisition funnels. This platform is `noindex, nofollow` and invite-gated — it has no ad surface to produce for. Evaluated twice; do not re-evaluate without a change in what the platform is. |
 | `cporter202/ai-growth-stack` | 1 README, 0 code | **0 applicable.** Nothing to adopt. |
+| `anthropics/skills` | official skills + Agent Skills spec/template | **Concept adopted.** `template/SKILL.md` confirms `name`+`description` are the whole required frontmatter contract, and that a description must say *when* to use the skill — which is what `grill-me-codex` was missing. Nothing installed. |
+| `cursor/plugins` | 17 official Cursor plugins | **Concept adopted, 0 installed.** `cli-for-agent`'s review criteria, applied to `scripts/`, found all 18 agent-facing scripts ran their job on `--help`. |
+| `affaan-m/everything-claude-code` (+ the 4 forks) | Claude Code config collection | **WATCH.** The four separately-listed repos are forks of this one upstream. Stars/activity unverifiable — GitHub API is egress-blocked. |
+| `vercel-labs/agent-browser`, `vercel-labs/json-render`, `deepseek-ai/deepseek-harness`, `openai/*`, `google*/*`, `cursor/cookbook` | agent harnesses, generative-UI framework, other providers' SDKs | **0 applicable.** Each needs npm, a build step, a component tree, or a non-Anthropic server runtime. `agent-browser` duplicates the existing `verify-in-browser` harness. |
+
+Full evidence, per-repo blockers, and what could not be verified this session:
+**`OMEGA_EXTERNAL_ECOSYSTEM_AUDIT.md`**. Read that before re-evaluating any of
+the above; the GitHub REST API, `github.com` HTML and `codeload` tarballs are all
+403 at the egress proxy, so stars/activity/dependency dimensions stay
+**NOT VERIFIED** until a session has API access.
 
 Marketing/course URLs (e.g. contentcreator.com's AI creator course) are
 reading material, not sources of adoptable code — nothing in them maps to a
@@ -875,7 +912,8 @@ runtime, a prompt library, or any other structure this repo doesn't
 actually have — where the source material behind it assumed something
 this repo lacks (MCP as a runtime dependency, vector databases, 3D
 rendering), the document says so instead of building toward it. The real
-equivalent of a "command registry" here is the 4-skill pipeline in §10.
+equivalent of a "command registry" here is the skill pipeline in §10, with
+the full generated inventory in `OMEGA_SKILL_REGISTRY.md`.
 Individual categories only become real work the normal way: a
 `FEATURE_IDEAS.md` proposal → `feature-architect` blueprint →
 `autonomous-coder` implementation → human review — the taxonomy itself is

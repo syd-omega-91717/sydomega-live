@@ -21,6 +21,21 @@
 # tree, on this machine's toolchain, with no clean checkout. It is a pre-push
 # gate, not a merge gate.
 
+case "${1:-}" in
+  --help|-h)
+    cat <<'OMEGA_HELP'
+Run the full CI suite locally, exactly as .github/workflows/ci.yml does.
+
+Usage: scripts/ci-local.sh [--all] [--help]
+
+  (no flags)  run the blocking steps only -- what gates a merge
+  --all       also run the advisory checks
+  --help      show this text
+OMEGA_HELP
+    exit 0
+    ;;
+esac
+
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 
@@ -110,6 +125,7 @@ step "2.  Repository audit"             python3 scripts/audit.py
 step "2b. Audit tooling self-tests"     python3 -m unittest discover -s scripts/tests
 step "2g. TypeScript types from schema" python3 scripts/types-from-schema.py
 step "2h. Context budget"               python3 scripts/context-budget.py
+step "2j. Skill/agent registry"          python3 scripts/omega-registry.py --check
 step "4.  Broken local asset refs"      broken_assets
 step "5.  Service-role key scan"        service_role_scan
 step "7.  Service worker precache"      sw_precache

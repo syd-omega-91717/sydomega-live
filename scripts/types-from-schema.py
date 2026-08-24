@@ -11,6 +11,11 @@ mismatches between client code and database.
 Exit code 0 if successful, 1 if generation failed.
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import os
 import re
 import sys

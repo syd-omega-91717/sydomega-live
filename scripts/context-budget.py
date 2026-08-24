@@ -36,6 +36,11 @@ USAGE
 Exit code 1 if any hard budget is exceeded, 0 otherwise.
 """
 
+import sys as _sys
+if "--help" in _sys.argv[1:] or "-h" in _sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import os
 import sys
 

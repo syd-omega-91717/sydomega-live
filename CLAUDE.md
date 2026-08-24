@@ -506,10 +506,18 @@ open, recorded in `FIXES_LOG.md`:
   infrastructure is dormant pending legal review, per §9's gating rule.
   `subscriptions.html`'s own copy already says so. The user was asked directly
   and chose to keep it dormant.
-- **Finance pages persist to `localStorage` only** (`wealth`, `wallet`,
-  `treasury`, `revenue`, `investment`, `expenses`, `budget`). Decided, not
-  defaulted: unusually sensitive data, hard to walk back once member data
-  lives server-side. Mitigated with `omega-local-backup.js` export/import.
+- **48 pages persist to `localStorage` only — not 7.** The 7 finance pages
+  (`wealth`, `wallet`, `treasury`, `revenue`, `investment`, `expenses`,
+  `budget`) were a decision, not a default: unusually sensitive data, hard to
+  walk back once member data lives server-side, mitigated with
+  `omega-local-backup.js` export/import. `scripts/evidence-audit.py` shows the
+  same shape reaches 48 pages, and only 5 of them carry that export path — 43
+  store member data with no server copy and no way to get it out
+  (`achievements`, `notes`, `projects`, `passport`, `targets`, `mood`,
+  `reading`, `workout` …). That is a scope finding, not a decision: nobody has
+  chosen it for the other 41 pages. A further 24 pages are `PARTIAL` — they
+  write to Postgres *and* keep a parallel `localStorage` copy. Run the scanner
+  for the current list rather than quoting these numbers.
 - **`.mp4` (3.7 MB) and `.docx` committed to git, no LFS.** The user was asked
   directly and chose to leave it; `.vercelignore` already keeps both out of
   the deploy, so this is hygiene debt, not a functional bug. A real fix means
@@ -591,11 +599,13 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **7** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **51** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **58** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
-| `python3 scripts/context-budget.py` | CLAUDE.md ~**12,800** approx tokens / 16,000 budget |
+| `python3 scripts/context-budget.py` | CLAUDE.md ~**13,550** approx tokens / 16,000 budget |
 | `python3 scripts/upsert-conflict-check.py` | 0 findings |
+| `python3 scripts/evidence-audit.py --summary` | 95 BUILT / 24 PARTIAL / 48 LOCAL_ONLY / 8 STATIC / 2 BROKEN / 1 UNREACHABLE |
+| `./scripts/ci-local.sh` | all **10** blocking checks pass |
 | broken asset references | 0 |
 | service-role key scan | clean |
 
@@ -648,6 +658,15 @@ entries (which were accurate when written):
   match count before replacing, then confirm the rule applies *in a render*:
   a rule that reached the file but not the cascade reports `z-index:auto` and
   0 background layers at runtime while looking correct in the diff.
+- **"Built" is three different claims, so measure which one you mean.**
+  `scripts/evidence-audit.py` classifies every page by what the repo can prove
+  — reaches Postgres, keeps data in the browser, names a relation nothing
+  declares, or is unreachable from `nav.js` — and writes `EVIDENCE_MATRIX.md`.
+  It is deliberately report-only (`--strict` to gate). What it cannot do is the
+  important half: it has no database connection, so a `BUILT` row means the
+  *client* is wired and nothing more. The live table, its columns, its `GRANT`
+  and its policy are all still unverified, and each has been a real shipped bug
+  (§8.1 classes 2 and 6). Do not let a green matrix stand in for a live check.
 - **Per-session context cost is now gated.** `scripts/context-budget.py` runs
   blocking in CI. See `.claude/skills/context-budget/` for where new
   documentation belongs and how to read this repo's very large files cheaply

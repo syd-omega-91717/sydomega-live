@@ -2792,3 +2792,56 @@ points here for the evidence behind each.
   `check-inline-js.py` clean, `audit.py` 0 critical / 7 pre-existing warnings (unchanged),
   51/51 self-tests, 0 broken asset references, service-role scan clean, `sw.js` precache and
   manifest icons both intact.
+
+- **The `localStorage`-only persistence gap is 48 pages, not the 7 finance
+  pages CLAUDE.md §8.2 recorded — and 43 of them have no export path.**
+  Not a fix; a measurement, and the reason a new scanner
+  (`scripts/evidence-audit.py`) now exists instead of another prose audit.
+  §8.2 documented `wealth`/`wallet`/`treasury`/`revenue`/`investment`/
+  `expenses`/`budget` as a deliberate decision — sensitive data, hard to walk
+  back once it lives server-side — mitigated by `omega-local-backup.js`
+  export/import. That decision stands for those 7. What was never measured is
+  how far the same shape spread: scanning every page for a `localStorage
+  .setItem` with no `.from()`/`.rpc()`/Edge-Function call finds 48
+  (`python3 scripts/evidence-audit.py --summary` → `LOCAL_ONLY 48`), of which
+  exactly 5 reference `OmegaLocalBackup` (`budget`, `expenses`, `revenue`,
+  `wallet`, `wealth`). The other 43 — `achievements.html`, `notes.html`,
+  `projects.html`, `passport.html`, `targets.html`, `mood.html`,
+  `reading.html`, `workout.html`, `vocabulary.html` and 34 more — hold member
+  data with no server copy and no way to export it. The 5 pages carrying
+  that export path are exactly the 5 finance pages that classify
+  `LOCAL_ONLY`; the other two of the original 7 (`treasury.html`,
+  `investment.html`) each make one Supabase call and so classify `PARTIAL`
+  — Postgres *and* a parallel browser copy, a quieter version of the same
+  problem that 24 pages are in.
+  **False-positive pass, because the raw number would otherwise mean nothing
+  (CLAUDE.md §8.4).** The obvious way to be wrong here is a page that persists
+  through a shared module rather than its own call, which the per-page scan
+  would miss. `omega-chrono.js:121`, `omega-matrix.js:58` and `omega-user.js:244`
+  do exactly that for their own state, so the risk is real — but grepping all
+  48 pages for every persisting global those modules publish
+  (`OmegaMatrix`, `OmegaChrono`, `omegaCompleteTask`, `omegaProgress`,
+  `omegaTaskButton`, `OmegaLocalBackup`) returns 0 hits for anything except the
+  5 `OmegaLocalBackup` pages above. No generic localStorage→Postgres sync
+  exists; the 43 are genuinely unpersisted.
+  Two further scanner bugs were caught the same way and are covered by
+  regression tests in `scripts/tests/test_evidence_audit.py`: SQL comments were
+  being matched as DDL (`-- create table for …` produced phantom tables named
+  `for`, `is`, `above`, `alone`, `bodies`, inflating the duplicate-definition
+  count to 52 against `audit.py`'s correct 47), and Supabase Auth calls were
+  not counted as backend contact, which classified `reset.html` — a page that
+  is entirely an auth operation, and complete — as making no backend call at
+  all. Both fixed; the two tools now agree at 47.
+  Verified: `./scripts/ci-local.sh` all 10 blocking checks pass,
+  `python3 -m unittest discover -s scripts/tests` 58/58 (51 pre-existing + 7
+  new), `audit.py` 0 critical / 7 pre-existing warnings unchanged,
+  `context-budget.py` CLAUDE.md ~13,546 / 16,000.
+  **Still unverified, and deliberately left that way:** whether the live
+  database matches any of this. The Supabase MCP server required
+  authentication this session and none was available, so no table, column,
+  `GRANT` or policy was checked against production. `EVIDENCE_MATRIX.md`'s
+  UNVERIFIED section lists what that leaves open, including a live conflict
+  between two committed docs — `MIGRATION_STATE.md:5` states "All migrations
+  synchronized. No pending conflicts." while `CLAUDE.md:532` records the
+  migration sequence as validated against a blank database only. Nothing in
+  this session can break that tie.

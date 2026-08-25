@@ -4,5 +4,19 @@
   "version": 1,
   "status_order": ["STATIC", "LOCAL_ONLY", "PARTIAL", "BUILT", "CONNECTED", "PERSISTED", "SECURED", "TESTED", "DEPLOYED", "VERIFIED", "BROKEN", "UNREACHABLE"],
   "confidence_scale": "0-100",
-  "capabilities": []
+  "source_of_truth": "source-controlled evidence; live verification is required before VERIFIED",
+  "capabilities": [
+    {"id":"platform-runtime","name":"Platform Runtime","status":"BUILT","confidence":90,"entrypoints":["bg.js"],"evidence":["shared runtime dependency"],"verified":false},
+    {"id":"identity","name":"Identity and Session","status":"PARTIAL","confidence":60,"entrypoints":["profile.html","login.html"],"evidence":["authentication/session paths exist"],"verified":false},
+    {"id":"feed","name":"Feed","status":"PARTIAL","confidence":60,"entrypoints":["feed.html"],"evidence":["feed UI and i18n implementation require re-verification"],"verified":false},
+    {"id":"approvals","name":"Approvals","status":"PARTIAL","confidence":55,"entrypoints":["approvals.html"],"evidence":["approval UI and persistence paths exist"],"verified":false},
+    {"id":"family","name":"Family","status":"PARTIAL","confidence":55,"entrypoints":["family.html"],"evidence":["member-state persistence work exists"],"verified":false},
+    {"id":"social","name":"Social","status":"PARTIAL","confidence":55,"entrypoints":["social.html"],"evidence":["member-state persistence work exists"],"verified":false},
+    {"id":"transactions","name":"Transactions","status":"BROKEN","confidence":20,"entrypoints":["transactions.html"],"evidence":["previous evidence audit identified broken capability"],"verified":false},
+    {"id":"wallet-balances","name":"Wallet Balances","status":"BROKEN","confidence":20,"entrypoints":[],"evidence":["previous evidence audit identified broken capability; exact production entrypoint requires live verification"],"verified":false},
+    {"id":"search","name":"Search","status":"PARTIAL","confidence":50,"entrypoints":["search.html"],"evidence":["search capability requires connected-backend verification"],"verified":false},
+    {"id":"roadmap","name":"Roadmap","status":"BUILT","confidence":70,"entrypoints":["roadmap.html"],"evidence":["page and runtime reference fixed in prior hardening"],"verified":false},
+    {"id":"internationalization","name":"Internationalization","status":"PARTIAL","confidence":60,"entrypoints":["i18n.js"],"evidence":["multi-language runtime exists; feed PR was closed for rework"],"verified":false},
+    {"id":"production-contract","name":"Production Contract","status":"TESTED","confidence":85,"entrypoints":["scripts/production-contract.py"],"evidence":["CI production contract gate exists"],"verified":false}
+  ]
 }

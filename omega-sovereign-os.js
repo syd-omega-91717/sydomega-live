@@ -1,13 +1,13 @@
 /* ==========================================================================
    Ω SYD OMEGA 91717 — SOVEREIGN OPERATING SYSTEM (omega-sovereign-os.js)
-   
+
    The platform's central nervous system. Inspired by:
    - Google SRE: Error budgets, SLOs, automated incident detection
    - Netflix: Chaos engineering, circuit breakers, self-healing
    - Palantir Foundry: Operational intelligence, data ontology
    - SpaceX: First-principles reliability, autonomous failure recovery
    - Tesla: Real-time telemetry, over-the-air evolution
-   
+
    Responsibilities:
    A. HEALTH MONITORING — Core Web Vitals, API latency, error rates
    B. EVENT BUS         — Platform-wide typed event system
@@ -15,12 +15,13 @@
    D. SELF-HEALING      — Retry logic, fallback chains, recovery
    E. TELEMETRY         — All signals piped to Supabase for SRE dashboard
    F. LIFECYCLE         — Page load → session → exit tracking
+   G. VISUAL EVOLUTION  — Shared cinematic production layer
    ========================================================================== */
 (function(){
   if(window.__omegaOS) return;
   window.__omegaOS = true;
 
-  var OS_VERSION = '1.0.0';
+  var OS_VERSION = '1.1.0';
   var PHI = 1.6180339887, EU = 2.7182818285;
   var SESSION_ID = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,function(c){
     return (c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16);
@@ -34,7 +35,6 @@
     emit: function(event, data){
       var handlers = _listeners[event]||[];
       handlers.forEach(function(fn){ try{fn(data);}catch(e){} });
-      /* Also emit as DOM CustomEvent for cross-engine communication */
       try{ document.dispatchEvent(new CustomEvent('omega:'+event,{detail:data,bubbles:false})); }catch(e){}
     }
   };
@@ -43,7 +43,7 @@
   function CircuitBreaker(name, opts){
     opts = opts||{};
     this.name = name;
-    this.state = 'CLOSED'; /* CLOSED=normal, OPEN=failing, HALF_OPEN=testing */
+    this.state = 'CLOSED';
     this.failures = 0;
     this.threshold = opts.threshold||3;
     this.timeout = opts.timeout||10000;
@@ -81,7 +81,6 @@
     all: function(){ return Object.assign({},this._metrics); }
   };
 
-  /* Page load performance */
   window.addEventListener('load',function(){
     try{
       var nav = performance.getEntriesByType('navigation')[0];
@@ -96,7 +95,6 @@
     }catch(e){}
   });
 
-  /* LCP observer */
   try{
     new PerformanceObserver(function(list){
       var e = list.getEntries();
@@ -108,12 +106,10 @@
   var _session_start = Date.now();
   var _page = location.pathname.replace(/^\/|\.html$/g,'') || 'home';
 
-  /* Exit tracking */
   window.addEventListener('beforeunload',function(){
     var duration = Math.round((Date.now()-_session_start)/1000);
     Health.record('session_duration', duration, 's');
     EventBus.emit('page_exit',{page:_page,duration:duration,session:SESSION_ID});
-    /* Beacon to Supabase (best-effort) */
     if(window.__omegaSb && navigator.sendBeacon){
       try{
         var sb = window.__omegaSb;
@@ -128,7 +124,6 @@
     }
   });
 
-  /* Visibility change — pause dedication when hidden */
   document.addEventListener('visibilitychange',function(){
     EventBus.emit(document.hidden?'session_hidden':'session_visible',{
       page:_page, session:SESSION_ID, ts:Date.now()
@@ -159,7 +154,6 @@
       });
     });
   }
-  /* First flush 5s after load, then every 60s */
   setTimeout(function(){
     flush();
     setInterval(flush,60000);
@@ -178,6 +172,28 @@
     });
   });
 
+  /* ── H. VISUAL EVOLUTION ──────────────────────────────────────── */
+  function mountVisualLayer(){
+    if(document.querySelector('link[data-omega-visual]')) return;
+    var link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='/omega-visual-evolution.css';
+    link.setAttribute('data-omega-visual','1');
+    (document.head||document.documentElement).appendChild(link);
+
+    function rail(){
+      if(document.querySelector('.omega-visual-rail')) return;
+      var el=document.createElement('div');
+      el.className='omega-visual-rail';
+      el.setAttribute('aria-hidden','true');
+      (document.body||document.documentElement).appendChild(el);
+    }
+    if(document.body) rail();
+    else document.addEventListener('DOMContentLoaded',rail,{once:true});
+    EventBus.emit('visual_layer_ready',{version:'1.0.0',page:_page});
+  }
+  mountVisualLayer();
+
   /* ── PUBLIC API ────────────────────────────────────────────────── */
   window.OmegaOS = {
     version: OS_VERSION,
@@ -193,6 +209,7 @@
     TRIAL: 557,
     DEDICATION: 33437,
     FORMULA: 'sqrt(A³+B³+C³)×φ/e',
+    visual: {version:'1.0.0',stylesheet:'/omega-visual-evolution.css'},
     auth: function(a,b,c){
       return Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     }

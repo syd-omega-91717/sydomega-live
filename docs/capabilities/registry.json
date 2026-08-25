@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "SYD OMEGA 91717 Capability Registry",
+  "version": 1,
+  "status_order": ["STATIC", "LOCAL_ONLY", "PARTIAL", "BUILT", "CONNECTED", "PERSISTED", "SECURED", "TESTED", "DEPLOYED", "VERIFIED", "BROKEN", "UNREACHABLE"],
+  "confidence_scale": "0-100",
+  "capabilities": []
+}

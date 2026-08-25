@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: capability-evidence-${{ github.ref }}
@@ -27,13 +27,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Generate capability registry
+      - name: Validate capability registry
+        run: python3 scripts/capability-audit.py --check
+
+      - name: Source runtime audit
         run: python3 scripts/capability-audit.py
 
       - name: Validate registry JSON
         run: python3 -m json.tool docs/capabilities/registry.json >/dev/null
-
-      - name: Verify generated registry is committed
-        if: github.event_name == 'pull_request'
-        run: |
-          git diff --exit-code -- docs/capabilities/registry.json

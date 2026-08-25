@@ -1,0 +1,36 @@
+{
+  "name": "SYD OMEGA 91717",
+  "layer": "sovereign-platform",
+  "manifestVersion": "1.0.0",
+  "principles": [
+    "evidence-before-claim",
+    "least-privilege-by-default",
+    "human-control-for-privileged-actions",
+    "observable-by-design",
+    "reversible-production-changes",
+    "accessible-interface",
+    "progressive-enhancement"
+  ],
+  "planes": {
+    "experience": ["unified-interface", "command-palette", "responsive-visual-system"],
+    "intelligence": ["command-catalog", "agent-routing", "evidence-engine"],
+    "data": ["canonical-schema", "rls", "provenance"],
+    "security": ["identity", "authorization", "audit", "threat-detection"],
+    "operations": ["ci", "deployment", "observability", "rollback"]
+  },
+  "commandSystem": {
+    "catalog": "/omega-command-catalog.js",
+    "palette": "/omega-command-palette.js",
+    "event": "omega:command",
+    "privilegedExecution": "server-authorized-only"
+  },
+  "releaseGate": [
+    "syntax",
+    "security",
+    "capability-evidence",
+    "data-contract",
+    "accessibility",
+    "runtime",
+    "deployment"
+  ]
+}

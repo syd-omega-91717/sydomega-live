@@ -22,7 +22,7 @@ run() {
 }
 
 # Keep the Vercel gate aligned with the repository's local blocking CI suite.
-run 'Repository CI contract' ./scripts/ci-local.sh
+run 'Repository CI contract' bash ./scripts/ci-local.sh
 ci_status=$?
 if [ "$ci_status" -ne 0 ]; then
   echo 'Vercel build blocked: repository CI contract failed.'

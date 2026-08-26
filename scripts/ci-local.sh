@@ -13,9 +13,6 @@
 #
 # A local pass is execution evidence, never a fabricated GitHub Actions pass.
 # GitHub remains the authoritative merge gate when its runners are available.
-#
-#   ./scripts/ci-local.sh          # all blocking contracts
-#   ./scripts/ci-local.sh --all    # blocking + advisory checks
 
 case "${1:-}" in
   --help|-h)
@@ -109,26 +106,22 @@ manifest_icons() {
 
 printf '\033[1mLocal CI — complete production verification\033[0m\n'
 
-# Core CI workflow gates.
-step "1.   JavaScript syntax"                 js_syntax
-step "1b.  Inline <script> syntax"            python3 scripts/check-inline-js.py
-step "2.   Repository audit"                  python3 scripts/audit.py
-step "2b.  Audit tooling self-tests"          python3 -m unittest discover -s scripts/tests
-step "2g.  TypeScript types from schema"      python3 scripts/types-from-schema.py
-step "2h.  Context budget"                    python3 scripts/context-budget.py
-step "2j.  Skill/agent registry"              python3 scripts/omega-registry.py --check
-step "4.   Broken local asset refs"           broken_assets
-step "5.   Service-role key scan"              service_role_scan
-step "7.   Service worker precache"            sw_precache
-step "8.   PWA manifest icons"                 manifest_icons
-
-# Separate production contracts are blocking on GitHub and therefore blocking
-# here too. This closes the previous gap where local CI did not mirror those
-# two workflows.
-step "9.   Production contract"                python3 scripts/production-contract.py
-step "10.  Capability evidence contract"      python3 scripts/capability-audit.py --check
-step "10b. Capability registry JSON"           python3 -m json.tool docs/capabilities/registry.json >/dev/null
-step "11.  Production JavaScript syntax"      js_syntax
+step "0.   Workflow contract"                  python3 scripts/workflow-contract.py
+step "1.   JavaScript syntax"                  js_syntax
+step "1b.  Inline <script> syntax"             python3 scripts/check-inline-js.py
+step "2.   Repository audit"                   python3 scripts/audit.py
+step "2b.  Audit tooling self-tests"           python3 -m unittest discover -s scripts/tests
+step "2g.  TypeScript types from schema"       python3 scripts/types-from-schema.py
+step "2h.  Context budget"                     python3 scripts/context-budget.py
+step "2j.  Skill/agent registry"               python3 scripts/omega-registry.py --check
+step "4.   Broken local asset refs"            broken_assets
+step "5.   Service-role key scan"               service_role_scan
+step "7.   Service worker precache"             sw_precache
+step "8.   PWA manifest icons"                  manifest_icons
+step "9.   Production contract"                 python3 scripts/production-contract.py
+step "10.  Capability evidence contract"       python3 scripts/capability-audit.py --check
+step "10b. Capability registry JSON"            python3 -m json.tool docs/capabilities/registry.json >/dev/null
+step "11.  Production JavaScript syntax"       js_syntax
 
 if [ "$RUN_ALL" -eq 1 ]; then
   printf '\n\033[1m── advisory (never blocks a merge) ─────────────────────────\033[0m\n'

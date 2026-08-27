@@ -10,15 +10,29 @@ on:
 permissions:
   contents: read
 
+# Evidence is a release gate. Never cancel an already-started/queued gate merely
+# because another commit arrived; cancellation before runner allocation can
+# produce a check with runner_id=0 and zero executed steps, which is not useful
+# evidence. New commits are queued and evaluated in order.
 concurrency:
   group: capability-evidence-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   evidence:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
+      - name: Runner diagnostics
+        run: |
+          set -euo pipefail
+          echo "runner=${RUNNER_NAME}"
+          echo "os=${RUNNER_OS}"
+          echo "arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+          test -n "${RUNNER_NAME}"
+
       - name: Checkout
         uses: actions/checkout@v4
 

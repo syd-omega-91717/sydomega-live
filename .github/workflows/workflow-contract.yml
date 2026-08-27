@@ -10,15 +10,27 @@ on:
 permissions:
   contents: read
 
+# Critical validation must execute; do not cancel a queued gate before a
+# hosted runner is allocated, otherwise GitHub can report zero-step checks.
 concurrency:
   group: workflow-contract-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   workflow-contract:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
+      - name: Runner diagnostics
+        run: |
+          set -euo pipefail
+          echo "runner=${RUNNER_NAME}"
+          echo "os=${RUNNER_OS}"
+          echo "arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+          test -n "${RUNNER_NAME}"
+
       - name: Checkout
         uses: actions/checkout@v4
 

@@ -10,15 +10,27 @@ on:
 permissions:
   contents: read
 
+# This is a release gate. Do not cancel queued work on a newer commit:
+# cancellation before runner allocation can yield runner_id=0/zero-step checks.
 concurrency:
   group: production-contract-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   contract:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
+      - name: Runner diagnostics
+        run: |
+          set -euo pipefail
+          echo "runner=${RUNNER_NAME}"
+          echo "os=${RUNNER_OS}"
+          echo "arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+          test -n "${RUNNER_NAME}"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -34,6 +46,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in *.js; do
+          shopt -s nullglob
+          files=( *.js )
+          test "${#files[@]}" -gt 0
+          for f in "${files[@]}"; do
             node --check "$f"
           done

@@ -42,5 +42,8 @@ jobs:
       - name: Validate workflow contracts
         run: python3 scripts/workflow-contract.py
 
+      - name: Validate architecture contract
+        run: python3 scripts/architecture-contract.py
+
       - name: Validate local production gate help path
         run: bash scripts/ci-local.sh --help

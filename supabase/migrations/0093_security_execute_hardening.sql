@@ -1,9 +1,10 @@
 -- SYD OMEGA 91717 security execute hardening
--- Keep privileged SECURITY DEFINER RPCs callable by authenticated owners where
--- the existing product contract requires them, but never expose the owner
--- predicate itself to anonymous callers.
+-- PUBLIC is an implicit PostgreSQL grant path. Revoking only from anon is
+-- insufficient when PUBLIC still has EXECUTE. Keep the owner predicate
+-- available to authenticated owner-gated operations, never anonymously.
 BEGIN;
-REVOKE EXECUTE ON FUNCTION public.is_platform_owner() FROM anon;
+REVOKE EXECUTE ON FUNCTION public.is_platform_owner() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_platform_owner() TO authenticated;
 COMMENT ON FUNCTION public.is_platform_owner() IS
-  'Internal authorization predicate. Anonymous EXECUTE is intentionally revoked; owner-gated SECURITY DEFINER operations use it internally.';
+  'Internal authorization predicate. PUBLIC/anonymous EXECUTE is revoked; authenticated owner-gated operations may use it internally.';
 COMMIT;

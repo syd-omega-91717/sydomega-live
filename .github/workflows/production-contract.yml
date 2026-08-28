@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   contract:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, windows, x64]
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
@@ -51,5 +51,6 @@ jobs:
           for file in "${files[@]}"; do node --check "$file"; done
       - name: Execution marker
         run: |
+          test -n "${RUNNER_NAME:-}"
           echo 'PRODUCTION_CONTRACT_EXECUTED=true'
           echo "PRODUCTION_CONTRACT_RUN_ID=${GITHUB_RUN_ID}"

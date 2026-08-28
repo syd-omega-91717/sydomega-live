@@ -59,7 +59,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | What | Count |
 |---|---|
 | `.html` pages | 179 |
-| pages loading `bg.js` | 178 of 179 |
+| pages loading `bg.js` | 179 of 179 |
 | `omega-*.js` modules | 114 (882 KB) |
 | root `.js` files | 123 |
 | `supabase/*.sql` (flat bag) | 121 |
@@ -74,6 +74,7 @@ PostgreSQL 16 instance. The 23 timestamped files added since were **not part of
 that validation**, and no run has covered all
 122. Treat the validated scope as the numbered sequence only.
 
-**1 page(s) do not load `bg.js`** and therefore get no design system, no
-approval guard, and no platform modules.
+**`bg.js` is loaded by all 179 pages.** It is a hard single point of
+failure for the entire platform, not a partial one — if it fails to parse, every
+page is down. This is why `node --check` on it gates CI.
 

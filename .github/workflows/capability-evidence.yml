@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   evidence:
-    runs-on: [self-hosted, windows, x64]
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics

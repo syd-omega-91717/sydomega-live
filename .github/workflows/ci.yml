@@ -16,113 +16,87 @@ concurrency:
 
 jobs:
   verify:
-    runs-on: [self-hosted, windows, x64]
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Runner diagnostics
-        shell: pwsh
+        shell: bash
         run: |
-          $ErrorActionPreference = 'Stop'
-          Write-Host "runner=$env:RUNNER_NAME"
-          Write-Host "os=$env:RUNNER_OS"
-          Write-Host "arch=$env:RUNNER_ARCH"
-          Write-Host "run=$env:GITHUB_RUN_ID"
-          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
-          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner name is empty' }
-
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          echo "runner=${RUNNER_NAME}"
+          echo "runner_id=${RUNNER_TRACKING_ID:-unknown}"
+          echo "os=${RUNNER_OS}"
+          echo "arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-
       - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: JavaScript syntax
-        shell: pwsh
+        shell: bash
         run: |
-          $ErrorActionPreference = 'Stop'
-          $files = @(Get-ChildItem -Path . -Filter '*.js' -File -ErrorAction SilentlyContinue)
-          if ($files.Count -eq 0) { throw 'No root-level JavaScript files found' }
-          foreach ($file in $files) { node --check $file.FullName }
-
+          set -euo pipefail
+          mapfile -t files < <(find . -maxdepth 1 -type f -name '*.js' -print)
+          test "${#files[@]}" -gt 0
+          for file in "${files[@]}"; do node --check "$file"; done
       - name: Inline JavaScript syntax
         run: python scripts/check-inline-js.py
-
       - name: Repository audit
         run: python scripts/audit.py
-
       - name: Audit tooling tests
         run: python -m unittest discover -s scripts/tests -v
-
       - name: Production contract
         run: python scripts/production-contract.py
-
       - name: Workflow contract
         run: python scripts/workflow-contract.py
-
       - name: 16-block architecture contract
         run: python scripts/architecture-contract.py
-
       - name: 16-block implementation readiness
         run: python scripts/architecture-readiness.py
-
       - name: Capability registry
         run: python scripts/capability-audit.py --check
-
       - name: Capability runtime audit
         run: python scripts/capability-audit.py
-
       - name: Registry JSON
         run: python -m json.tool docs/capabilities/registry.json
-
       - name: Schema dictionary
         run: python scripts/schema-dictionary.py
         continue-on-error: true
-
       - name: RLS audit
         run: python scripts/rls-auditor.py
         continue-on-error: true
-
       - name: Silent failure audit
         run: python scripts/silent-failure-detector.py
         continue-on-error: true
-
       - name: Migration consistency
         run: python scripts/migration-consistency.py
         continue-on-error: true
-
       - name: Upsert conflict audit
         run: python scripts/upsert-conflict-check.py
         continue-on-error: true
-
       - name: Skill and agent registry
         run: python scripts/omega-registry.py --check
-
       - name: Context budget
         run: python scripts/context-budget.py
-
       - name: Client credential scan
-        shell: pwsh
+        shell: bash
         run: |
-          $ErrorActionPreference = 'Stop'
-          $matches = Get-ChildItem -Path . -Recurse -File -Include *.js,*.html,*.json |
-            Select-String -Pattern 'service_role','SUPABASE_SERVICE_ROLE_KEY' -SimpleMatch -ErrorAction SilentlyContinue
-          if ($matches) {
-            $matches | ForEach-Object { Write-Host $_.Path ':' $_.LineNumber ':' $_.Line }
-            throw 'Client credential marker detected'
-          }
-
+          set -euo pipefail
+          if grep -RInE --include='*.js' --include='*.html' --include='*.json' 'service_role|SUPABASE_SERVICE_ROLE_KEY' .; then
+            echo 'Client credential marker detected'
+            exit 1
+          fi
       - name: Final execution marker
-        shell: pwsh
         run: |
-          $ErrorActionPreference = 'Stop'
-          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner name is empty' }
-          Write-Host 'CI_EXECUTED=true'
-          Write-Host "CI_RUN_ID=$env:GITHUB_RUN_ID"
-          Write-Host "CI_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"
+          test -n "${RUNNER_NAME:-}"
+          echo 'CI_EXECUTED=true'
+          echo "CI_RUN_ID=${GITHUB_RUN_ID}"
+          echo "CI_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"

@@ -16,19 +16,20 @@ concurrency:
 
 jobs:
   evidence:
-    runs-on: [self-hosted, windows, x64]
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics
-        shell: pwsh
+        shell: bash
         run: |
-          $ErrorActionPreference = 'Stop'
-          Write-Host "runner=$env:RUNNER_NAME"
-          Write-Host "os=$env:RUNNER_OS"
-          Write-Host "arch=$env:RUNNER_ARCH"
-          Write-Host "run=$env:GITHUB_RUN_ID"
-          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
-          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner name is empty' }
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          echo "runner=${RUNNER_NAME}"
+          echo "runner_id=${RUNNER_TRACKING_ID:-unknown}"
+          echo "os=${RUNNER_OS}"
+          echo "arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python
@@ -41,3 +42,9 @@ jobs:
         run: python scripts/capability-audit.py
       - name: Validate registry JSON
         run: python -m json.tool docs/capabilities/registry.json
+      - name: Validate architecture runtime
+        run: python scripts/architecture-readiness.py
+      - name: Execution marker
+        run: |
+          test -n "${RUNNER_NAME:-}"
+          echo 'CAPABILITY_EVIDENCE_EXECUTED=true'

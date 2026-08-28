@@ -10,15 +10,13 @@ on:
 permissions:
   contents: read
 
-# Critical validation must execute; never cancel queued work before runner
-# allocation. A zero-step check is not executable evidence and is never green.
 concurrency:
   group: workflow-contract-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   workflow-contract:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
       - name: Runner diagnostics
@@ -30,20 +28,15 @@ jobs:
           echo "run=${GITHUB_RUN_ID}"
           echo "attempt=${GITHUB_RUN_ATTEMPT}"
           test -n "${RUNNER_NAME}"
-
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Validate workflow contracts
         run: python3 scripts/workflow-contract.py
-
       - name: Validate architecture contract
         run: python3 scripts/architecture-contract.py
-
       - name: Validate local production gate help path
         run: bash scripts/ci-local.sh --help

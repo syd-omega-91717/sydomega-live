@@ -10,17 +10,15 @@ on:
 permissions:
   contents: read
 
-# Evidence is a release gate. Never cancel an already-started/queued gate merely
-# because another commit arrived; cancellation before runner allocation can
-# produce a check with runner_id=0 and zero executed steps, which is not useful
-# evidence. New commits are queued and evaluated in order.
+# Evidence is a release gate. Never cancel queued work before runner allocation.
+# A cancelled pre-allocation job is not evidence and must never be interpreted as green.
 concurrency:
   group: capability-evidence-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   evidence:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Runner diagnostics

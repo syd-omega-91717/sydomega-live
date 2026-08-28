@@ -10,15 +10,13 @@ on:
 permissions:
   contents: read
 
-# Evidence is a release gate. Never cancel queued work before runner allocation.
-# A cancelled pre-allocation job is not evidence and must never be interpreted as green.
 concurrency:
   group: capability-evidence-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   evidence:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       - name: Runner diagnostics
@@ -30,20 +28,15 @@ jobs:
           echo "run=${GITHUB_RUN_ID}"
           echo "attempt=${GITHUB_RUN_ATTEMPT}"
           test -n "${RUNNER_NAME}"
-
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Validate capability registry
         run: python3 scripts/capability-audit.py --check
-
       - name: Source runtime audit
         run: python3 scripts/capability-audit.py
-
       - name: Validate registry JSON
         run: python3 -m json.tool docs/capabilities/registry.json >/dev/null

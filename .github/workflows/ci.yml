@@ -69,6 +69,9 @@ jobs:
       - name: 16-block architecture contract
         run: python scripts/architecture-contract.py
 
+      - name: 16-block implementation readiness
+        run: python scripts/architecture-readiness.py
+
       - name: Capability registry
         run: python scripts/capability-audit.py --check
 

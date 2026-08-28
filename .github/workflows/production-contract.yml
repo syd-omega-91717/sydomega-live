@@ -10,15 +10,13 @@ on:
 permissions:
   contents: read
 
-# Release gate: never cancel queued work before runner allocation.
-# This prevents zero-step/runner_id=0 checks from being created by concurrency.
 concurrency:
   group: production-contract-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   contract:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       - name: Runner diagnostics
@@ -30,18 +28,14 @@ jobs:
           echo "run=${GITHUB_RUN_ID}"
           echo "attempt=${GITHUB_RUN_ATTEMPT}"
           test -n "${RUNNER_NAME}"
-
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Production contract
         run: python3 scripts/production-contract.py
-
       - name: JavaScript syntax
         shell: bash
         run: |
@@ -49,6 +43,4 @@ jobs:
           shopt -s nullglob
           files=( *.js )
           test "${#files[@]}" -gt 0
-          for f in "${files[@]}"; do
-            node --check "$f"
-          done
+          for f in "${files[@]}"; do node --check "$f"; done

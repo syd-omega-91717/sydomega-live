@@ -16,31 +16,35 @@ concurrency:
 
 jobs:
   contract:
-    runs-on: ubuntu-22.04
-    timeout-minutes: 10
+    runs-on: [self-hosted, windows, x64]
+    timeout-minutes: 20
     steps:
       - name: Runner diagnostics
+        shell: pwsh
         run: |
-          set -euo pipefail
-          echo "runner=${RUNNER_NAME}"
-          echo "os=${RUNNER_OS}"
-          echo "arch=${RUNNER_ARCH}"
-          echo "run=${GITHUB_RUN_ID}"
-          echo "attempt=${GITHUB_RUN_ATTEMPT}"
-          test -n "${RUNNER_NAME}"
+          $ErrorActionPreference = 'Stop'
+          Write-Host "runner=$env:RUNNER_NAME"
+          Write-Host "os=$env:RUNNER_OS"
+          Write-Host "arch=$env:RUNNER_ARCH"
+          Write-Host "run=$env:GITHUB_RUN_ID"
+          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner name is empty' }
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Production contract
-        run: python3 scripts/production-contract.py
+        run: python scripts/production-contract.py
       - name: JavaScript syntax
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          shopt -s nullglob
-          files=( *.js )
-          test "${#files[@]}" -gt 0
-          for f in "${files[@]}"; do node --check "$f"; done
+          $ErrorActionPreference = 'Stop'
+          $files = @(Get-ChildItem -Path . -Filter '*.js' -File -ErrorAction SilentlyContinue)
+          if ($files.Count -eq 0) { throw 'No root-level JavaScript files found' }
+          foreach ($file in $files) { node --check $file.FullName }

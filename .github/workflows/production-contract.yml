@@ -10,15 +10,15 @@ on:
 permissions:
   contents: read
 
-# This is a release gate. Do not cancel queued work on a newer commit:
-# cancellation before runner allocation can yield runner_id=0/zero-step checks.
+# Release gate: never cancel queued work before runner allocation.
+# This prevents zero-step/runner_id=0 checks from being created by concurrency.
 concurrency:
   group: production-contract-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   contract:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Runner diagnostics

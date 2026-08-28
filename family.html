@@ -527,7 +527,7 @@ function buildMemberCards(rows){
   const g=document.getElementById('member-grid');g.innerHTML='';
   if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:11px;color:var(--muted)">No family nodes registered yet. Add your first bloodline node below.</div>';return;}
   rows.forEach(m=>{
-    const c=document.createElement('div');c.className='mc card'+(m.is_heir?' heir':'');
+    const c=document.createElement('div');c.className='mc card'+(m.is_heir?' heir':'');c.id='node-'+m.id;
     c.innerHTML=`<div class="mc-rel">${m.relation?.toUpperCase()||'FAMILY'}</div><div class="mc-name">${m.name}</div><div class="mc-sign">${m.sign||'SIGN NOT SET'}</div><div class="mc-actions"><button class="mc-btn mc-heir-btn" data-id="${m.id}" data-heir="${m.is_heir?1:0}">${m.is_heir?'REVOKE HEIR':'SET HEIR'}</button><button class="mc-btn mc-del" data-id="${m.id}">REMOVE</button></div>`;
     c.querySelector('.mc-heir-btn').addEventListener('click',async e=>{const id=e.target.dataset.id;const h=e.target.dataset.heir==='1';let err=null;if(!h){err=(await sb.from('family_nodes').update({is_heir:false}).eq('user_id',uid)).error;if(!err)err=(await sb.from('family_nodes').update({is_heir:true}).eq('id',id).eq('user_id',uid)).error;}else{err=(await sb.from('family_nodes').update({is_heir:false}).eq('id',id).eq('user_id',uid)).error;}if(err)alert('Could not update heir status. Try again.');boot();});
     c.querySelector('.mc-del').addEventListener('click',async e=>{if(confirm('Remove node?')){const{error}=await sb.from('family_nodes').delete().eq('id',e.target.dataset.id).eq('user_id',uid);if(error)alert('Could not remove node. Try again.');boot();}});

@@ -230,6 +230,7 @@ function drawRing(pct){
   ctx.fillStyle=pct>=1?'var(--green)':'var(--gold)';ctx.font='bold 20px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(Math.round(pct*100)+'%',cx,cy);
   document.getElementById('ring-label').innerHTML=sessionState.stepsDone.length+' OF <span id="total-steps">'+steps.length+'</span> STEPS COMPLETE';
+  document.getElementById('total-steps').textContent=steps.length;
 }
 
 function startSession(){

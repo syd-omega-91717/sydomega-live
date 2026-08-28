@@ -16,18 +16,19 @@ concurrency:
 
 jobs:
   verify:
-    runs-on: ubuntu-22.04
-    timeout-minutes: 15
+    runs-on: [self-hosted, windows, x64]
+    timeout-minutes: 30
     steps:
       - name: Runner diagnostics
+        shell: pwsh
         run: |
-          set -euo pipefail
-          echo "runner=${RUNNER_NAME}"
-          echo "os=${RUNNER_OS}"
-          echo "arch=${RUNNER_ARCH}"
-          echo "run=${GITHUB_RUN_ID}"
-          echo "attempt=${GITHUB_RUN_ATTEMPT}"
-          test -n "${RUNNER_NAME}"
+          $ErrorActionPreference = 'Stop'
+          Write-Host "runner=$env:RUNNER_NAME"
+          Write-Host "os=$env:RUNNER_OS"
+          Write-Host "arch=$env:RUNNER_ARCH"
+          Write-Host "run=$env:GITHUB_RUN_ID"
+          Write-Host "attempt=$env:GITHUB_RUN_ATTEMPT"
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner name is empty' }
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,81 +44,82 @@ jobs:
           python-version: '3.12'
 
       - name: JavaScript syntax
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          shopt -s nullglob
-          files=( *.js )
-          test "${#files[@]}" -gt 0
-          for f in "${files[@]}"; do node --check "$f"; done
+          $ErrorActionPreference = 'Stop'
+          $files = @(Get-ChildItem -Path . -Filter '*.js' -File -ErrorAction SilentlyContinue)
+          if ($files.Count -eq 0) { throw 'No root-level JavaScript files found' }
+          foreach ($file in $files) { node --check $file.FullName }
 
       - name: Inline JavaScript syntax
-        run: python3 scripts/check-inline-js.py
+        run: python scripts/check-inline-js.py
 
       - name: Repository audit
-        run: python3 scripts/audit.py
+        run: python scripts/audit.py
 
       - name: Audit tooling tests
-        run: python3 -m unittest discover -s scripts/tests -v
+        run: python -m unittest discover -s scripts/tests -v
 
       - name: Production contract
-        run: python3 scripts/production-contract.py
+        run: python scripts/production-contract.py
 
       - name: Workflow contract
-        run: python3 scripts/workflow-contract.py
+        run: python scripts/workflow-contract.py
 
       - name: 16-block architecture contract
-        run: python3 scripts/architecture-contract.py
+        run: python scripts/architecture-contract.py
 
       - name: Capability registry
-        run: python3 scripts/capability-audit.py --check
+        run: python scripts/capability-audit.py --check
 
       - name: Capability runtime audit
-        run: python3 scripts/capability-audit.py
+        run: python scripts/capability-audit.py
 
       - name: Registry JSON
-        run: python3 -m json.tool docs/capabilities/registry.json >/dev/null
+        run: python -m json.tool docs/capabilities/registry.json
 
       - name: Schema dictionary
-        run: python3 scripts/schema-dictionary.py
+        run: python scripts/schema-dictionary.py
         continue-on-error: true
 
       - name: RLS audit
-        run: python3 scripts/rls-auditor.py
+        run: python scripts/rls-auditor.py
         continue-on-error: true
 
       - name: Silent failure audit
-        run: python3 scripts/silent-failure-detector.py
+        run: python scripts/silent-failure-detector.py
         continue-on-error: true
 
       - name: Migration consistency
-        run: python3 scripts/migration-consistency.py
+        run: python scripts/migration-consistency.py
         continue-on-error: true
 
       - name: Upsert conflict audit
-        run: python3 scripts/upsert-conflict-check.py
+        run: python scripts/upsert-conflict-check.py
         continue-on-error: true
 
       - name: Skill and agent registry
-        run: python3 scripts/omega-registry.py --check
+        run: python scripts/omega-registry.py --check
 
       - name: Context budget
-        run: python3 scripts/context-budget.py
+        run: python scripts/context-budget.py
 
       - name: Client credential scan
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          if grep -rIn --exclude-dir=.git --include='*.js' --include='*.html' --include='*.json' \
-            -e 'service_role' -e 'SUPABASE_SERVICE_ROLE_KEY' .; then
-            echo 'client credential marker detected'
-            exit 1
-          fi
+          $ErrorActionPreference = 'Stop'
+          $matches = Get-ChildItem -Path . -Recurse -File -Include *.js,*.html,*.json |
+            Select-String -Pattern 'service_role','SUPABASE_SERVICE_ROLE_KEY' -SimpleMatch -ErrorAction SilentlyContinue
+          if ($matches) {
+            $matches | ForEach-Object { Write-Host $_.Path ':' $_.LineNumber ':' $_.Line }
+            throw 'Client credential marker detected'
+          }
 
       - name: Final execution marker
+        shell: pwsh
         run: |
-          set -euo pipefail
-          test -n "${RUNNER_NAME}"
-          echo "CI_EXECUTED=true"
-          echo "CI_RUN_ID=${GITHUB_RUN_ID}"
-          echo "CI_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:RUNNER_NAME)) { throw 'Runner name is empty' }
+          Write-Host 'CI_EXECUTED=true'
+          Write-Host "CI_RUN_ID=$env:GITHUB_RUN_ID"
+          Write-Host "CI_RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT"

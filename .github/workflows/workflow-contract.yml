@@ -10,15 +10,15 @@ on:
 permissions:
   contents: read
 
-# Critical validation must execute; do not cancel a queued gate before a
-# hosted runner is allocated, otherwise GitHub can report zero-step checks.
+# Critical validation must execute; never cancel queued work before runner
+# allocation. A zero-step check is not executable evidence and is never green.
 concurrency:
   group: workflow-contract-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   workflow-contract:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Runner diagnostics

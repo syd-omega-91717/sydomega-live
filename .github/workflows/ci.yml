@@ -95,7 +95,7 @@ jobs:
             echo 'Client credential marker detected'
             exit 1
           fi
-      - name: Final execution marker
+      - name: Execution marker
         run: |
           test -n "${RUNNER_NAME:-}"
           echo 'CI_EXECUTED=true'

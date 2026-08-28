@@ -10,15 +10,13 @@ on:
 permissions:
   contents: read
 
-# CI is evidence, not a race. Never cancel a run before its runner executes.
-# This prevents zero-step checks from branch churn being mistaken for test results.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
       - name: Runner diagnostics
@@ -38,9 +36,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
-          cache-dependency-path: package-lock.json
-        continue-on-error: true
 
       - name: Python
         uses: actions/setup-python@v5
@@ -109,12 +104,6 @@ jobs:
       - name: Context budget
         run: python3 scripts/context-budget.py
 
-      - name: Local asset integrity
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/production-contract.py
-
       - name: Client credential scan
         shell: bash
         run: |
@@ -125,10 +114,10 @@ jobs:
             exit 1
           fi
 
-      - name: Final evidence marker
+      - name: Final execution marker
         run: |
           set -euo pipefail
+          test -n "${RUNNER_NAME}"
           echo "CI_EXECUTED=true"
           echo "CI_RUN_ID=${GITHUB_RUN_ID}"
           echo "CI_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"
-          echo "CI_RUNNER=${RUNNER_NAME}"

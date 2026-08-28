@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Validate the repository's GitHub Actions workflow contracts without GitHub access.
+"""Validate GitHub Actions workflow contracts before execution.
 
-This is deliberately structural: it catches future workflow drift locally before
-an unavailable runner hides the mistake. It never claims that GitHub executed a
-workflow; only GitHub's run/job data can prove execution.
+This check is intentionally source-level. It may prove that the workflow is
+well formed and blocking, but it must never claim that GitHub executed it.
+Execution is proven only by GitHub run/job evidence with a real runner and
+executed steps.
 """
 
 from pathlib import Path
@@ -17,26 +18,26 @@ REQUIRED = {
         "actions/checkout@v4",
         "actions/setup-node@v4",
         "actions/setup-python@v5",
-        "python3 scripts/audit.py",
-        "python3 -m unittest discover -s scripts/tests -v",
-        "python3 scripts/omega-registry.py --check",
+        "python scripts/audit.py",
+        "python -m unittest discover -s scripts/tests -v",
+        "python scripts/omega-registry.py --check",
     ],
     "production-contract.yml": [
         "actions/checkout@v4",
         "actions/setup-python@v5",
-        "python3 scripts/production-contract.py",
-        'node --check "$f"',
+        "python scripts/production-contract.py",
+        "node --check \"$file\"",
     ],
     "capability-evidence.yml": [
         "actions/checkout@v4",
         "actions/setup-python@v5",
-        "python3 scripts/capability-audit.py --check",
-        "python3 scripts/capability-audit.py",
-        "python3 -m json.tool docs/capabilities/registry.json >/dev/null",
+        "python scripts/capability-audit.py --check",
+        "python scripts/capability-audit.py",
+        "python -m json.tool docs/capabilities/registry.json",
     ],
 }
 
-ERRORS = []
+ERRORS: list[str] = []
 
 for name, required in REQUIRED.items():
     path = WORKFLOWS / name
@@ -61,13 +62,24 @@ for name, required in REQUIRED.items():
         if needle not in text:
             ERRORS.append(f"{name}: missing required contract: {needle}")
 
-# Production contracts must never be made advisory accidentally.
+# Production evidence gates are never advisory.
 for name in ("production-contract.yml", "capability-evidence.yml"):
     path = WORKFLOWS / name
     if path.is_file():
         text = path.read_text(encoding="utf-8")
         if "continue-on-error: true" in text:
             ERRORS.append(f"{name}: production gate cannot use continue-on-error")
+
+# Every blocking workflow must expose an execution marker. This makes a
+# successful source check distinguishable from a job that never executed.
+for name in REQUIRED:
+    path = WORKFLOWS / name
+    if path.is_file():
+        text = path.read_text(encoding="utf-8")
+        if "Execution marker" not in text:
+            ERRORS.append(f"{name}: missing execution marker step")
+        if "RUNNER_NAME" not in text:
+            ERRORS.append(f"{name}: missing runner identity diagnostic")
 
 if ERRORS:
     print("WORKFLOW CONTRACT: FAIL")
@@ -77,5 +89,5 @@ if ERRORS:
 
 print("WORKFLOW CONTRACT: PASS")
 for name in REQUIRED:
-    print(f"- {name}: structure and blocking contracts verified")
-print("- This check validates workflow source only; it does not fabricate GitHub execution evidence.")
+    print(f"- {name}: structure, blocking behavior and execution evidence hooks verified")
+print("- Runtime execution is evaluated separately from this source-level contract.")

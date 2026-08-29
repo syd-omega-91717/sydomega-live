@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   contract:
-    runs-on: self-hosted
+    runs-on: ubuntu-slim
     timeout-minutes: 20
     steps:
       - name: Runner diagnostics

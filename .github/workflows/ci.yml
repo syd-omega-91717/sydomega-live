@@ -14,13 +14,16 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: false
 
+defaults:
+  run:
+    shell: cmd
+
 jobs:
   verify:
     runs-on: self-hosted
     timeout-minutes: 30
     steps:
       - name: Runner diagnostics
-        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1
@@ -42,7 +45,6 @@ jobs:
         with:
           python-version: '3.12'
       - name: JavaScript syntax
-        shell: cmd
         run: |
           @echo off
           for %%F in (*.js) do node --check "%%F" || exit /b 1
@@ -86,7 +88,6 @@ jobs:
       - name: Context budget
         run: python scripts/context-budget.py
       - name: Client credential scan
-        shell: cmd
         run: |
           @echo off
           findstr /S /I /N /C:"service_role" /C:"SUPABASE_SERVICE_ROLE_KEY" *.js *.html *.json > "%TEMP%\sydomega-credential-scan.txt" 2>nul
@@ -97,7 +98,6 @@ jobs:
           )
           del "%TEMP%\sydomega-credential-scan.txt" >nul 2>&1
       - name: Execution marker
-        shell: cmd
         run: |
           @echo off
           if "%RUNNER_NAME%"=="" exit /b 1

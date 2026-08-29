@@ -605,18 +605,17 @@ open, recorded in `FIXES_LOG.md`:
   against client `.from(...)` calls: **none is reachable from any page**, so
   this remains locked-but-unused, not a broken feature. Do not "fix" it by
   granting without deciding the feature is wanted.
-- **GitHub Actions cannot assign a runner on this account.** Since 2026-08-22
-  every run fails in 2–5s with `runner_id: 0`, no `steps` array, 0 billable ms
-  and a completely empty check-run output — reproduced on `pull_request`,
-  `push` to `main`, and `workflow_dispatch` alike, so it is not trigger- or
-  branch-specific. This repo is **private on a personal account**, so Actions
-  minutes draw on the account allowance; the last green run was #344 on Aug 22
-  at 11:56 UTC. Nothing in the code affects it — clear it under Settings →
-  Billing and licensing → Budgets and alerts. Meanwhile `./scripts/ci-local.sh`
-  runs every blocking step locally, so a commit can still be verified, and
-  `.githooks/pre-push` runs it automatically on every push — enable per clone
-  with `git config core.hooksPath .githooks`, bypass one push with
-  `git push --no-verify`.
+- **GitHub Actions runs on a SELF-HOSTED WINDOWS runner** (`C:\actions-runner`
+  in the job log). Cloud minutes still look unavailable — this repo is private
+  on a personal account — so queued jobs drain slowly, one at a time, and a
+  check can sit `queued` for a long while. But a red check is now real output
+  from a real run, to be read rather than dismissed as the old
+  `runner_id: 0` infra no-op. Two Windows-specific traps: paths and the console
+  codec differ, and a crashed child process yields empty stdout, which makes
+  any assertion on that stdout misreport (see `FIXES_LOG.md`).
+  `./scripts/ci-local.sh` still runs every blocking step locally, and
+  `.githooks/pre-push` runs it on every push — enable per clone with
+  `git config core.hooksPath .githooks`, bypass with `--no-verify`.
 - **The `authenticated` SECURITY DEFINER count is mostly noise, and was checked.**
   The advisor reports 93; reading the bodies, the owner-sensitive ones guard
   themselves via `public.omega_is_owner()`, which a substring classifier looking

@@ -64,6 +64,29 @@ class EvidenceAuditFixture(unittest.TestCase):
             encoding=forced, errors='replace' if forced else None, **kwargs)
         return proc
 
+    def audit_stdout(self, *args, **kwargs):
+        """run_audit(), but prove the child actually ran before asserting on it.
+
+        A crashed child yields empty stdout, and `assertIn('UNREACHABLE 1', '')`
+        reports only that the needle is missing -- it says nothing about the
+        traceback that caused it. That is exactly how a Windows-runner failure
+        read: six assertions all reporting `not found in \'\'`, with the real
+        cause only visible by opening the raw job log. Surfacing the exit code
+        and stderr here turns the next such failure into a one-line diagnosis.
+
+        Only for calls whose stdout is asserted on; the deliberate non-zero
+        cases (--strict) keep using run_audit() and check returncode directly.
+        """
+        proc = self.run_audit(*args, **kwargs)
+        if proc.returncode != 0:
+            self.fail(
+                'evidence-audit.py exited {} (expected 0), so its stdout is '
+                'empty and every assertion below would be misleading.\n'
+                '--- stderr ---\n{}\n--- stdout ---\n{}'.format(
+                    proc.returncode, proc.stderr or '(empty)',
+                    proc.stdout or '(empty)'))
+        return proc.stdout
+
     def report(self):
         with open(os.path.join(self.dir, 'EVIDENCE_MATRIX.md'),
                   encoding='utf-8') as fh:
@@ -81,7 +104,7 @@ class TestCommentStripping(EvidenceAuditFixture):
         self.write('supabase/b.sql',
                    '/* create table for the same thing, described above */\n'
                    'CREATE TABLE IF NOT EXISTS public.real_one (id uuid);\n')
-        out = self.run_audit().stdout
+        out = self.audit_stdout()
         # real_one is genuinely in both files; `for` and `above` are not tables.
         self.assertIn('tables defined in >1 root SQL file: 1', out)
         body = self.report()
@@ -109,7 +132,7 @@ class TestAuthIsBackendContact(EvidenceAuditFixture):
                    "<script>sb.auth.getSession();"
                    "localStorage.setItem('k',v);</script>")
         self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
-        out = self.run_audit().stdout
+        out = self.audit_stdout()
         self.assertIn('LOCAL_ONLY     1', out)
         self.assertIn('signs the member in', self.report())
 
@@ -120,7 +143,7 @@ class TestViewsCountAsRelations(EvidenceAuditFixture):
         self.write('dash.html', "<script>sb.from('top_pages').select('page');</script>")
         self.write('supabase/a.sql',
                    'CREATE OR REPLACE VIEW public.top_pages AS SELECT 1;')
-        out = self.run_audit().stdout
+        out = self.audit_stdout()
         self.assertIn('BROKEN         0', out)
 
 
@@ -130,7 +153,7 @@ class TestBrokenDetection(EvidenceAuditFixture):
         self.write('vaultish.html',
                    "<script>sb.from('wallet_balances').select('*');</script>")
         self.write('supabase/a.sql', 'CREATE TABLE public.other (id uuid);')
-        out = self.run_audit().stdout
+        out = self.audit_stdout()
         self.assertIn('BROKEN         1', out)
         self.assertEqual(self.run_audit('--strict').returncode, 1)
         self.assertEqual(self.run_audit().returncode, 0,
@@ -144,13 +167,13 @@ class TestReachability(EvidenceAuditFixture):
         for slug in ('index', 'enter', 'terms', 'pending', '404', 'offline',
                      'account', 'reset'):
             self.write(slug + '.html', '<html></html>')
-        out = self.run_audit().stdout
+        out = self.audit_stdout()
         self.assertIn('UNREACHABLE    0', out)
 
     def test_orphan_page_is_unreachable(self):
         self.write('nav.js', "var PS={};")
         self.write('orphan.html', '<html></html>')
-        out = self.run_audit().stdout
+        out = self.audit_stdout()
         self.assertIn('UNREACHABLE    1', out)
 
 

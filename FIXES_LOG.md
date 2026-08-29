@@ -4019,3 +4019,56 @@ reference existing columns`. Dictionary size went from the bag's tables to
 Regeneration query and the reasoning live in `supabase/live-schema.README.md`.
 Regenerate whenever schema is applied live — a stale snapshot silently re-opens
 the false positives it was written to close.
+
+
+---
+
+## The Windows runner, and a test that could not say why it failed
+
+**GitHub Actions runs again.** CLAUDE.md §8.2 recorded that no runner could be
+assigned on this account since 2026-08-22 (every run dying in 2-5s with
+`runner_id: 0`). That is no longer the whole picture: jobs now execute on a
+**self-hosted Windows runner** (`C:\actions-runner`, `C:\Users\HP` in the job
+log), which is what the owner's `ci: explicitly pin every run step to cmd on
+Windows runner` commit is for. Cloud-hosted minutes still appear unavailable --
+queued jobs drain slowly, one at a time -- but a red check is now real output
+from a real run, not an infrastructure no-op, so it has to be read rather than
+dismissed.
+
+**The failure that arrived was stale.** `verify` failed on `db24aa46` with 6
+failures + 1 error, all of this shape:
+
+    AssertionError: 'UNREACHABLE    1' not found in ''
+
+`db24aa46` is an ancestor of `main`, and the run reports `Ran 88 tests` while the
+suite is now 92 -- so it predates the current tree and is superseded, not a
+failure of the branch it was delivered against.
+
+**But it exposed a genuine defect in the tests.** Every one of those assertions
+is on `self.run_audit().stdout`, and none checked the child's exit code. An
+empty stdout means `evidence-audit.py` died; the assertion then reports only
+that a needle is missing from an empty string, and says nothing whatsoever about
+the traceback that caused it. Six assertions all reading `not found in ''` is
+maximally uninformative -- the real cause was only visible by opening the raw
+job log, which is precisely the situation CI exists to avoid.
+
+Added `EvidenceAuditFixture.audit_stdout()`: it runs the child, and if the exit
+code is non-zero it fails with the code, the stderr and the stdout inline,
+instead of letting six downstream assertions misreport. The six stdout-asserting
+call sites now use it. The deliberate non-zero cases (`--strict`, which must
+exit 1) keep using `run_audit()` and check `returncode` directly, so nothing
+about the intended semantics changed.
+
+Verified with a negative control rather than assumed -- a checker that never
+fires looks exactly like one that has nothing to report. `evidence-audit.py` was
+temporarily made to exit 3, and the test then reported:
+
+    AssertionError: evidence-audit.py exited 3 (expected 0), so its stdout is
+    empty and every assertion below would be misleading.
+    --- stderr ---
+    SIMULATED WINDOWS CRASH
+    --- stdout ---
+    (empty)
+
+The script was restored (`git status` clean) and the suite returns to 92
+passing.

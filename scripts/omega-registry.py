@@ -111,15 +111,84 @@ def first_sentence(text: str, limit: int = 155) -> str:
     return text if len(text) <= limit else text[: limit - 1].rsplit(" ", 1)[0] + "…"
 
 
+def _shallow_boundary() -> set:
+    """SHAs of this clone's graft points, empty for a complete clone.
+
+    A shallow clone's history stops at these commits: git has the commit
+    objects but not their parents, so anything older is invisible. That is what
+    makes `git log -1 -- <path>` unreliable here -- see git_last_touched.
+    """
+    try:
+        gd = subprocess.run(["git", "rev-parse", "--git-dir"],
+                            capture_output=True, text=True, timeout=20).stdout.strip()
+        if not gd:
+            return set()
+        f = Path(gd) / "shallow"
+        if not f.is_file():
+            return set()
+        return {ln.strip() for ln in f.read_text().splitlines() if ln.strip()}
+    except Exception:
+        return set()
+
+
+_SHALLOW = None
+_UNRELIABLE_DATES = []
+
+
 def git_last_touched(path: Path) -> str:
+    """Date of the commit that last touched `path`, or a refusal to guess.
+
+    THE TRAP: in a shallow clone `git log -1 -- <path>` does not fail when the
+    real commit is beyond the graft boundary -- it silently reports the
+    BOUNDARY commit instead. At `--depth 1` that means every file in the repo
+    dates to the moment of the clone. `actions/checkout@v4` is shallow by
+    default, so CI would regenerate every "Last touched" cell as the CI run's
+    own date, compare it against real dates committed from a deeper clone, and
+    fail `--check` on drift that does not exist. Reproduced: a depth-1 clone of
+    this repo reports 2026-08-29 for a file whose only commit is 90c310d7 on
+    2026-08-11, and three skills sit committed as 2026-08-15 for exactly this
+    reason.
+
+    Being shallow is not itself the problem -- this repo is routinely cloned at
+    depth ~480, which is deep enough that every skill's real commit is present.
+    The problem is only when the answer IS the boundary, so that is what is
+    detected, rather than refusing on any shallow clone and breaking a checkout
+    that can answer correctly.
+    """
+    global _SHALLOW
+    if _SHALLOW is None:
+        _SHALLOW = _shallow_boundary()
     try:
         out = subprocess.run(
-            ["git", "log", "-1", "--format=%ad", "--date=short", "--", str(path)],
+            ["git", "log", "-1", "--format=%H %ad", "--date=short", "--", str(path)],
             capture_output=True, text=True, timeout=20,
         )
-        return out.stdout.strip() or "uncommitted"
+        line = out.stdout.strip()
+        if not line:
+            return "uncommitted"
+        sha, _, date = line.partition(" ")
+        if sha in _SHALLOW:
+            _UNRELIABLE_DATES.append(str(path))
+            return "unknown"
+        return date.strip() or "uncommitted"
     except Exception:
         return "unknown"
+
+
+def report_unreliable_dates() -> None:
+    """Fail loudly rather than commit dates the clone could not actually know."""
+    if not _UNRELIABLE_DATES:
+        return
+    raise SystemExit(
+        "omega-registry: %d file(s) last changed at or before this shallow\n"
+        "  clone's graft boundary, so their real dates are unknowable here and\n"
+        "  writing them would silently poison the generated registry:\n%s\n"
+        "  Fix: deepen the clone (`git fetch --unshallow`), or in CI set\n"
+        "       - uses: actions/checkout@v4\n"
+        "         with:\n"
+        "           fetch-depth: 0"
+        % (len(_UNRELIABLE_DATES),
+           "".join("    %s\n" % p for p in _UNRELIABLE_DATES[:10])))
 
 
 def collect_skills():
@@ -360,6 +429,7 @@ def main():
 
     skills, errors = collect_skills()
     agents = collect_agents()
+    report_unreliable_dates()
     census = platform_census()
     generated = render(skills, agents, census)
 

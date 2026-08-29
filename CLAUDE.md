@@ -651,7 +651,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **8** warnings |
-| `python3 -m unittest discover -s scripts/tests` | **91** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **92** tests, all passing |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **4** findings, all the `map.html` gap |
 | `python3 scripts/context-budget.py` | CLAUDE.md ~**15,220** approx tokens / 16,000 budget |
@@ -694,6 +694,17 @@ entries (which were accurate when written):
   that makes rows member-visible. The classifier's own false-positive pass is
   what caught it, but only because the result was checked against real row
   counts rather than trusted. Read the full `qual` before acting on a label.
+- **A shallow clone answers `git log -1 -- <path>` with the graft boundary; it does
+  not fail.** So any per-file date derived that way is a guess the moment the real
+  commit sits beyond the boundary — at `--depth 1` every file dates to the clone
+  itself. `actions/checkout@v4` is shallow by default, so this made
+  `omega-registry.py --check` a guaranteed CI failure and had already put three
+  wrong dates in the committed registry (`90c310d7` turned out to *be* a boundary
+  commit; the real date was 2026-08-11, not the 2026-08-15 recorded). The generator
+  now compares the reported SHA against `.git/shallow` and refuses rather than
+  writing a date it cannot know, and `ci.yml` sets `fetch-depth: 0`. Being shallow
+  is not itself the problem — this session's clone was shallow at 480 commits and
+  still correct for most files — so detect the boundary, not the shallowness.
 - **A browser check that reuses one context measures the wrong baseline.** `i18n.js`
   auto-applies `localStorage['omega_lang']` on load, and `localStorage` survives
   `page.goto()` within an origin — so a loop that snapshots "English", switches

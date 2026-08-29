@@ -123,6 +123,47 @@ class TestGeneration(unittest.TestCase):
         self.fx.run()
         self.assertIn("named in no reference doc", self.fx.registry())
 
+    def _git(self, *args):
+        return subprocess.run(["git", *args], cwd=self.fx.dir,
+                              capture_output=True, text=True, timeout=60)
+
+    def test_refuses_dates_the_shallow_clone_cannot_know(self):
+        """A shallow clone reports the GRAFT BOUNDARY, it does not fail.
+
+        `git log -1 -- <path>` in a shallow clone silently returns the boundary
+        commit when the real one is beyond it, so at depth 1 every file dates
+        to the clone itself. `actions/checkout@v4` is shallow by default, which
+        would make CI regenerate every date as the CI run's own and fail
+        --check on drift that does not exist. Writing a wrong date into a
+        generated artifact is worse than refusing: it is indistinguishable from
+        real drift.
+        """
+        for cmd in (["init", "-q", "-b", "main"],
+                    ["config", "user.email", "t@example.com"],
+                    ["config", "user.name", "t"]):
+            self._git(*cmd)
+        self._git("add", "-A")
+        self._git("commit", "-q", "-m", "first")
+        write(self.fx.path("later.txt"), "x")
+        self._git("add", "-A")
+        self._git("commit", "-q", "-m", "second")
+
+        # Deep enough: dates are knowable, so it must NOT refuse.
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+        # Now graft the history so the skills' commit is the boundary.
+        head = self._git("rev-parse", "HEAD~1").stdout.strip()
+        gitdir = self._git("rev-parse", "--git-dir").stdout.strip()
+        shallow = os.path.join(self.fx.dir, gitdir, "shallow")
+        with open(shallow, "w", encoding="utf-8") as f:
+            f.write(head + "\n")
+
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("graft boundary", r.stdout + r.stderr)
+        self.assertIn("fetch-depth: 0", r.stdout + r.stderr)
+
     def _seed_i18n(self, en_keys, pack_keys):
         body = ",\n".join('"k%d":"v%d"' % (i, i) for i in range(en_keys))
         write(self.fx.path("i18n.js"), "var T_EN={\n%s\n};\n" % body)

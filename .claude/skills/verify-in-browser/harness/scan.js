@@ -134,7 +134,29 @@ const MODES = {
         /* A closed drawer parks itself below the fold on purpose. Reporting it
            as COVERED is noise, not a finding. */
         if (b.top >= vh || b.bottom <= 0) return;
+        /* elementFromPoint SKIPS pointer-events:none, so a decorative element
+           can never hit-test as itself and always reports COVERED. Two ship on
+           every page -- .omega-visual-rail (a 2px aria-hidden hairline) and
+           #omega-kbd-hint (opacity:0 until summoned) -- and between them they
+           were pinning this headline at 179/179 while the real interactive
+           collisions numbered 3. A decoration that sits under things is doing
+           its job, not colliding; an invisible one cannot collide at all.
+           Excluding both is what makes the number mean something. */
+        if (cs.pointerEvents === 'none') return;
+        if (parseFloat(cs.opacity) < 0.05) return;
         const hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+        /* A page that is deliberately gated -- journal.html's #j-lock,
+           approvals.html's #gate -- puts a full-viewport interactive layer over
+           everything until it is satisfied. Every widget beneath then reports
+           COVERED, which is the modal working, not a layout collision. Walk the
+           hit's ancestry: if what intercepted the point is itself full-viewport,
+           this is a gated page, not a broken one. */
+        let gated = false;
+        for (let n = hit; n && n !== document.body; n = n.parentElement) {
+          const nb = n.getBoundingClientRect();
+          if (nb.width >= innerWidth * 0.9 && nb.height >= vh * 0.9) { gated = true; break; }
+        }
+        if (gated) return;
         out.push({
           id: e.id || e.className || e.tagName, z: cs.zIndex,
           box: `x ${Math.round(b.left)}..${Math.round(b.right)} y ${Math.round(b.top)}..${Math.round(b.bottom)}`,
@@ -152,6 +174,11 @@ const MODES = {
           `${w.clipped ? ' CLIPPED' : ''}${w.covered ? ' COVERED' : ''}`));
       const broken = rows.filter(r => (r.result || []).some(w => w.clipped || w.covered));
       console.log(`pages with a clipped or covered fixed widget: ${broken.length}/${rows.length}`);
+      /* Name them. A bare headline gives you nothing to act on once the number
+         is small, and this one is meant to be driven to a number you can read. */
+      broken.forEach(r => (r.result || []).filter(w => w.clipped || w.covered).forEach(w =>
+        console.log(`    ${r.file} -> ${w.id} ${w.box}` +
+          `${w.clipped ? ' CLIPPED' : ''}${w.covered ? ' COVERED' : ''}`)));
     }
   },
 

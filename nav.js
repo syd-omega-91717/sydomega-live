@@ -139,7 +139,7 @@
          clipped, not scrollable, just unreachable. Sidebar items below the
          fold could never be scrolled to. Changed to overflow-y:auto so the
          dock scrolls independently of the page. */
-      '#omega-side{width:80px!important;flex-shrink:0!important;height:100vh!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:visible!important;z-index:200!important;background:#08080F!important;border-right:1px solid rgba(201,168,76,0.12)!important}',
+      '#omega-side{width:80px!important;flex-shrink:0!important;height:100vh!important;position:sticky!important;top:0!important;overflow-y:auto!important;overflow-x:visible!important;z-index:200!important;background:linear-gradient(180deg,rgba(201,168,76,0.09) 0%,rgba(0,0,0,0) 42%,rgba(0,229,255,0.06) 100%),linear-gradient(180deg,#08080F,#05050C)!important;box-shadow:inset -1px 0 0 rgba(201,168,76,0.16),22px 0 48px -34px rgba(0,229,255,0.5)!important;border-right:1px solid rgba(201,168,76,0.12)!important}',
       '.side{width:80px!important}',
       /* Icon dock */
       '.omega-side{width:80px;flex-shrink:0;background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.35) transparent;z-index:200;border-right:1px solid rgba(201,168,76,0.12)}','.omega-side::-webkit-scrollbar{width:4px}','.omega-side::-webkit-scrollbar-thumb{background:rgba(201,168,76,.35);border-radius:2px}',
@@ -169,7 +169,28 @@
       '.on-logout{font-family:"Courier Prime",monospace;font-size:7px;letter-spacing:2px;color:#55534e;padding:6px;cursor:pointer;border-top:1px solid rgba(201,168,76,0.08);width:100%;text-align:center;transition:color .15s;margin-top:4px}',
       '.on-logout:hover{color:#C9A84C}',
       /* Mobile bottom nav */
-      '#omega-mob{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9990;background:rgba(8,8,15,0.97);border-top:1px solid rgba(201,168,76,0.15);backdrop-filter:blur(12px)}',
+      /* top/height/padding/border-bottom are declared DEFENSIVELY, not because
+         this bar needs them. #omega-mob is a real <nav> element, and three pages
+         (honors, matrix, media) carry a page-local BARE element rule:
+
+             nav{position:fixed;top:0;left:0;right:0;height:64px;...}
+
+         An id selector outranks `nav`, but specificity only decides a property
+         both rules declare. This rule never set `top`, so the page's `top:0`
+         applied unopposed -- and with `bottom:0` also in force the element became
+         over-constrained, where CSS resolves in favour of `top`. The bottom nav
+         rendered as a 64px bar across the TOP of the phone, on top of whatever
+         that page put there (measured: 38x34px over #om-open on media.html).
+         `height:64px` leaked the same way, which is why it measured 64 there and
+         49 everywhere else.
+
+         This is the bug class CLAUDE.md 4.1 already records for `body::before` --
+         a bare-selector page rule colliding with a shared injected element -- so
+         the same defence applies: declare the properties a bare `nav{}` can
+         reach, and let id specificity do its job. */
+      '#omega-mob{display:none;position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;',
+      'padding:0;border-bottom:0;z-index:9990;background:rgba(8,8,15,0.97);',
+      'border-top:1px solid rgba(201,168,76,0.15);backdrop-filter:blur(12px)}',
       '#omega-mob ul{display:flex;list-style:none;margin:0;padding:0}',
       '#omega-mob ul li{flex:1}',
       '#omega-mob ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 11px;text-decoration:none;gap:3px}',
